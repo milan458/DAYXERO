@@ -1,0 +1,112 @@
+# XcodeGen spec. Generate the project with: xcodegen generate
+name: DayXero
+options:
+  bundleIdPrefix: app.dayxero
+  deploymentTarget:
+    iOS: "18.0"
+  developmentLanguage: en
+  createIntermediateGroups: true
+  groupSortPosition: top
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    DEVELOPMENT_TEAM: ""            # set to Milan's team ID for device builds
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    TARGETED_DEVICE_FAMILY: "1"     # iPhone only in v1
+    LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+    SWIFT_EMIT_LOC_STRINGS: YES
+
+packages:
+  RevenueCat:
+    url: https://github.com/RevenueCat/purchases-ios-spm
+    from: "5.0.0"
+
+targets:
+  DayXeroCore:
+    type: framework
+    platform: iOS
+    sources:
+      - path: DayXeroCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.dayxero.core
+        GENERATE_INFOPLIST_FILE: YES
+        APPLICATION_EXTENSION_API_ONLY: YES
+
+  DayXero:
+    type: application
+    platform: iOS
+    sources:
+      - path: DayXero
+    dependencies:
+      - target: DayXeroCore
+      - target: DayXeroWidgets
+      - package: RevenueCat
+    entitlements:
+      path: DayXero/DayXero.entitlements
+      properties:
+        com.apple.security.application-groups: [group.app.dayxero]
+    info:
+      path: DayXero/Info.plist
+      properties:
+        CFBundleDisplayName: DayXero
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        NSSupportsLiveActivities: true
+        ITSAppUsesNonExemptEncryption: false
+        DXRevenueCatAPIKey: $(DX_REVENUECAT_API_KEY)
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.dayxero
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        DX_REVENUECAT_API_KEY: ""     # filled from a local, untracked xcconfig later
+
+  DayXeroWidgets:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: DayXeroWidgets
+    dependencies:
+      - target: DayXeroCore
+      - sdk: WidgetKit.framework
+      - sdk: SwiftUI.framework
+    entitlements:
+      path: DayXeroWidgets/DayXeroWidgets.entitlements
+      properties:
+        com.apple.security.application-groups: [group.app.dayxero]
+    info:
+      path: DayXeroWidgets/Info.plist
+      properties:
+        CFBundleDisplayName: DayXero
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.dayxero.widgets
+
+  DayXeroTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: DayXeroTests
+    dependencies:
+      - target: DayXeroCore
+      - target: DayXero
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: app.dayxero.tests
+
+schemes:
+  DayXero:
+    build:
+      targets:
+        DayXero: all
+        DayXeroTests: [test]
+    test:
+      targets:
+        - DayXeroTests
+      gatherCoverageData: true
