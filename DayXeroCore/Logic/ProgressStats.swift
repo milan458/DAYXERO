@@ -37,9 +37,19 @@ public struct DayClock: Sendable {
         return calendar.startOfDay(for: shifted)
     }
 
-    /// Whole days from `start`'s day to `date`'s day.
-    public func days(from start: Date, to date: Date) -> Int {
-        calendar.dateComponents([.day], from: day(containing: start), to: day(containing: date)).day ?? 0
+    /// Start of a calendar date such as Quit Day. Dates aren't moments, so the boundary doesn't shift them.
+    public func startOfDate(_ date: Date) -> Date {
+        calendar.startOfDay(for: date)
+    }
+
+    /// Whole days from the day `moment` falls in to the calendar date `date`.
+    public func days(from moment: Date, toDate date: Date) -> Int {
+        calendar.dateComponents([.day], from: day(containing: moment), to: startOfDate(date)).day ?? 0
+    }
+
+    /// Whole days from the calendar date `date` to the day `moment` falls in.
+    public func days(fromDate date: Date, to moment: Date) -> Int {
+        calendar.dateComponents([.day], from: startOfDate(date), to: day(containing: moment)).day ?? 0
     }
 }
 
@@ -56,22 +66,22 @@ public struct ProgressStats: Sendable {
     }
 
     public func isPrep(at now: Date) -> Bool {
-        clock.day(containing: now) < clock.day(containing: quitDay)
+        clock.day(containing: now) < clock.startOfDate(quitDay)
     }
 
     /// Days until Quit Day during prep; 0 on and after Quit Day.
     public func daysUntilQuitDay(at now: Date) -> Int {
-        max(clock.days(from: now, to: quitDay), 0)
+        max(clock.days(from: now, toDate: quitDay), 0)
     }
 
     /// Days clear counts Quit Day itself as day 1. Logged slips are deliberately not an input.
     public func daysClear(at now: Date) -> Int {
-        isPrep(at: now) ? 0 : clock.days(from: quitDay, to: now) + 1
+        isPrep(at: now) ? 0 : clock.days(fromDate: quitDay, to: now) + 1
     }
 
-    /// Time since the start of Quit Day, in days (fractional). Zero during prep.
+    /// Time since Quit Day began (its date plus the day boundary), in days. Zero during prep.
     public func elapsedDays(at now: Date) -> Double {
-        let start = clock.day(containing: quitDay)
+        let start = clock.startOfDate(quitDay)
         let realStart = clock.calendar.date(byAdding: .hour, value: clock.boundaryHour, to: start) ?? start
         return max(now.timeIntervalSince(realStart) / 86_400, 0)
     }

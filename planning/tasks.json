@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-22T20:40:00.965Z"
+    "updated": "2026-10-22T20:49:09.009Z"
   },
   "now": {
     "section": "S2",
@@ -113,7 +113,7 @@
           "id": "S1.8",
           "title": "Unit-test target; basic CI build check if feasible.",
           "status": "in_progress",
-          "notes": "Code written; waiting on the first CI build (macOS runner) to verify.\nCI run: whole project compiles on Xcode 26 (iOS 26.2 sim). Tests crashed at app launch (unsigned build has no App Group). Fixed in 36e2228; re-running.",
+          "notes": "Code written; waiting on the first CI build (macOS runner) to verify.\nCI run: whole project compiles on Xcode 26 (iOS 26.2 sim). Tests crashed at app launch (unsigned build has no App Group). Fixed in 36e2228; re-running.\nFirst full test run: 5 passed, 4 failed. Tests caught a real bug: Quit Day (a date) was shifted by the 4am day boundary, making every count a day off. Fixed.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -1097,6 +1097,11 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-22T20:49:09.009Z",
+      "type": "note",
+      "message": "S1.8: First full test run: 5 passed, 4 failed. Tests caught a real bug: Quit Day (a date) was shifted by the 4am day boundary, making every count a day off. Fixed."
+    },
     {
       "time": "2026-10-22T20:40:00.965Z",
       "type": "now",
