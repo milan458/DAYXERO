@@ -27,11 +27,14 @@ struct OnboardingFlow: View {
         }
         .background(alignment: .bottom) {
             if model.step == .welcome {
-                Hills()
-                    .frame(height: 400)
-                    .ignoresSafeArea()
-                    .transition(.opacity)
-                    .accessibilityHidden(true)
+                // A flexible container is what stretches past the safe area; a fixed-height frame can't.
+                VStack(spacing: 0) {
+                    Spacer(minLength: 0)
+                    Hills().frame(height: 400)
+                }
+                .ignoresSafeArea()
+                .transition(.opacity)
+                .accessibilityHidden(true)
             }
         }
         .dxCanvas()
