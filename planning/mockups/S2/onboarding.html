@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DayXero Onboarding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Tokens: identical to the signed-off Section 1 sheet. */
+  :root {
+    --sage: #BCC388; --moss: #43511C; --amber: #E5A93C; --coral: #C85A54;
+    --ease: cubic-bezier(.16, 1, .3, 1);
+    --font: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --canvas: #000; --surface1: #121212; --surface2: #161616; --surface3: #1C1C1E;
+    --fg-rgb: 255,255,255; --text: #fff; --text2: rgba(255,255,255,.6); --muted: rgba(255,255,255,.5); --faint: rgba(255,255,255,.35);
+    --hairline: rgba(255,255,255,.08); --glass-highlight: rgba(255,255,255,.16);
+    --glass-fill: linear-gradient(135deg, rgba(67,81,28,.35), rgba(20,20,20,.65));
+    --primary: #fff; --on-primary: #000; --accent-ink: #BCC388; --accent-soft: rgba(67,81,28,.5);
+    --hills-a: #1d2410; --hills-b: #2c3816; --hills-c: #43511C;
+    --page: #0b0b0b; --bezel: #262626;
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --canvas: #F3F4EE; --surface1: #fff; --surface2: #ECEEE4; --surface3: #E2E5D8;
+    --fg-rgb: 17,20,10; --text: #11140A; --text2: rgba(17,20,10,.66); --muted: rgba(17,20,10,.56); --faint: rgba(17,20,10,.38);
+    --hairline: rgba(17,20,10,.09); --glass-highlight: rgba(255,255,255,.9);
+    --glass-fill: linear-gradient(135deg, rgba(188,195,136,.55), rgba(255,255,255,.85));
+    --primary: #11140A; --on-primary: #fff; --accent-ink: #55621F; --accent-soft: rgba(188,195,136,.45);
+    --hills-a: #dfe3cf; --hills-b: #c9d0a8; --hills-c: #BCC388;
+    --page: #e6e8df; --bezel: #cfd2c4;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--text); font-family: var(--font); -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 1320px; margin: 0 auto; padding: 28px 16px 80px; }
+  .micro { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  h1 { font-size: 28px; letter-spacing: -.02em; margin: 4px 0; }
+  .lede { font-size: 14px; color: var(--text2); max-width: 760px; line-height: 1.5; }
+  .toggle { display: inline-flex; background: var(--surface2); border-radius: 999px; padding: 4px; margin: 14px 0 6px; }
+  .toggle button { background: none; border: 0; color: var(--text2); font: 600 13px var(--font); padding: 8px 16px; border-radius: 999px; cursor: pointer; }
+  .toggle button[aria-pressed="true"] { background: var(--primary); color: var(--on-primary); }
+  .flow { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 34px 22px; margin-top: 26px; }
+  .shot { display: grid; gap: 10px; align-content: start; }
+  .shot-head { display: flex; gap: 8px; align-items: baseline; }
+  .shot-head b { font-size: 14px; }
+  .tag { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: var(--surface3); color: var(--text2); }
+  .shot p.n { margin: 0; font-size: 12.5px; color: var(--text2); line-height: 1.45; }
+  .shot p.n b { color: var(--text); }
+  .flag { border-left: 3px solid var(--amber); padding-left: 8px; }
+
+  /* Phone */
+  .phone { width: 300px; height: 640px; border-radius: 46px; padding: 9px; background: var(--bezel); justify-self: start; }
+  .screen { position: relative; width: 100%; height: 100%; border-radius: 38px; background: var(--canvas); overflow: hidden; display: flex; flex-direction: column; padding: 46px 18px 22px; }
+  .island { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 88px; height: 25px; border-radius: 99px; background: #000; }
+  .topbar { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; min-height: 32px; }
+  .back { width: 32px; height: 32px; border-radius: 99px; background: var(--surface1); border: 1px solid var(--hairline); display: grid; place-items: center; color: var(--text); flex: none; }
+  .steps { flex: 1; height: 4px; border-radius: 99px; background: rgba(var(--fg-rgb), .12); overflow: hidden; }
+  .steps i { display: block; height: 100%; background: var(--accent-ink); border-radius: 99px; }
+  .skip { font-size: 13px; color: var(--text2); font-weight: 500; flex: none; }
+  .title { font-size: 24px; font-weight: 700; letter-spacing: -.02em; line-height: 1.15; margin: 0 0 8px; }
+  .sub { font-size: 13px; color: var(--text2); line-height: 1.45; margin: 0; }
+  .body { display: grid; gap: 10px; margin-top: 20px; align-content: start; }
+  .grow { flex: 1; }
+  .footer { display: grid; gap: 8px; }
+  .btn { height: 52px; border-radius: 999px; border: 0; font: 600 15px var(--font); letter-spacing: -.01em; display: grid; place-items: center; }
+  .btn.primary { background: var(--primary); color: var(--on-primary); }
+  .btn.primary.off { background: var(--surface3); color: var(--faint); }
+  .btn.secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--hairline); height: 46px; }
+  .btn.quiet { background: none; color: var(--text2); height: 36px; font-weight: 500; }
+  .fine { font-size: 11px; color: var(--muted); text-align: center; line-height: 1.4; }
+  svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* Option cards (single and multi select) */
+  .opt { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 22px; background: var(--surface1); border: 1px solid var(--hairline); }
+  .opt .ic { width: 38px; height: 38px; border-radius: 99px; background: var(--surface2); display: grid; place-items: center; color: var(--text); flex: none; }
+  .opt .t { font-size: 15px; font-weight: 600; }
+  .opt .d { font-size: 12px; color: var(--text2); margin-top: 1px; }
+  .opt .tx { flex: 1; min-width: 0; }
+  .check { width: 24px; height: 24px; border-radius: 99px; border: 1.5px solid rgba(var(--fg-rgb), .25); flex: none; display: grid; place-items: center; }
+  .opt.on { border-color: var(--accent-ink); background: var(--surface1); box-shadow: inset 0 0 0 1px var(--accent-ink); }
+  .opt.on .check { background: var(--sage); border-color: var(--sage); color: #000; }
+  .opt.on .check svg { width: 14px; height: 14px; stroke-width: 3; }
+  .opt.on .ic { background: var(--accent-soft); color: var(--accent-ink); }
+  .round .check { border-radius: 99px; }
+
+  /* Chips */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { padding: 8px 14px; border-radius: 99px; background: var(--surface2); color: var(--text2); font-size: 13px; }
+  .chip.on { background: var(--primary); color: var(--on-primary); font-weight: 600; }
+  .group-label { margin-top: 6px; }
+
+  /* Fields */
+  .field { display: grid; gap: 6px; }
+  .input { height: 48px; border-radius: 18px; background: var(--surface2); border: 1px solid var(--hairline); padding: 0 16px; display: flex; align-items: center; justify-content: space-between; font-size: 15px; }
+  .input .ph { color: var(--faint); }
+  .input.focus { border-color: rgba(188,195,136,.8); box-shadow: 0 0 0 4px rgba(188,195,136,.16); }
+  .input.err { border-color: var(--coral); }
+  .input .unit { color: var(--muted); font-size: 13px; }
+  .err-msg { font-size: 12px; color: var(--coral); }
+  :root[data-theme="light"] .err-msg { color: #A6403A; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .stepper { display: flex; align-items: center; justify-content: space-between; padding: 8px; border-radius: 26px; background: var(--surface1); border: 1px solid var(--hairline); }
+  .stepper .num { font-size: 34px; font-weight: 700; letter-spacing: -.03em; font-variant-numeric: tabular-nums; text-align: center; }
+  .stepper .num small { display: block; font-size: 12px; font-weight: 500; letter-spacing: 0; color: var(--muted); margin-top: -2px; }
+  .sbtn { width: 44px; height: 44px; border-radius: 99px; background: var(--surface2); display: grid; place-items: center; color: var(--text); }
+  .textarea { min-height: 76px; border-radius: 20px; background: var(--surface2); border: 1px solid var(--hairline); padding: 12px 14px; font-size: 14px; line-height: 1.4; }
+  .photo { height: 92px; border-radius: 20px; border: 1px dashed rgba(var(--fg-rgb), .25); display: grid; place-items: center; color: var(--text2); font-size: 13px; gap: 4px; text-align: center; }
+  .reason { display: flex; gap: 10px; align-items: center; padding: 10px; border-radius: 20px; background: var(--surface1); border: 1px solid var(--hairline); font-size: 14px; }
+  .thumb { width: 44px; height: 44px; border-radius: 14px; flex: none; background: linear-gradient(135deg, #8aa06a, #3b5a3a 60%, #c9b98a); }
+
+  /* Welcome hills */
+  .hills { position: absolute; inset: auto 0 0 0; width: 100%; height: 62%; pointer-events: none; stroke: none; }
+  .welcome .content { position: relative; z-index: 1; display: flex; flex-direction: column; height: 100%; }
+  .wordmark { font-size: 15px; font-weight: 700; letter-spacing: -.01em; display: flex; align-items: center; gap: 6px; }
+  .wordmark i { width: 9px; height: 9px; border-radius: 99px; background: var(--sage); display: inline-block; }
+  .promise { font-size: 34px; font-weight: 700; letter-spacing: -.035em; line-height: 1.05; margin: 26px 0 12px; }
+  .promise span { color: var(--accent-ink); }
+
+  /* Calendar strip */
+  .cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
+  .cal .dl { font-size: 10px; color: var(--muted); padding-bottom: 4px; }
+  .cal .d { height: 34px; border-radius: 99px; display: grid; place-items: center; font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .cal .d.past { color: var(--faint); font-weight: 400; }
+  .cal .d.today { box-shadow: inset 0 0 0 1px rgba(var(--fg-rgb), .3); }
+  .cal .d.prep { background: var(--accent-soft); color: var(--accent-ink); }
+  .cal .d.sel { background: var(--primary); color: var(--on-primary); }
+  .cal .d.rec { position: relative; }
+  .recnote { display: flex; gap: 8px; align-items: center; font-size: 12px; color: var(--text2); padding: 10px 12px; border-radius: 16px; background: var(--surface1); border: 1px solid var(--hairline); }
+  .recnote b { color: var(--text); }
+
+  /* Plan reveal */
+  .glass { position: relative; background: var(--glass-fill); border: 1px solid var(--hairline); border-top-color: var(--glass-highlight); border-radius: 30px; padding: 18px; overflow: hidden; }
+  .glass::before { content: ""; position: absolute; inset: auto -20% -70% -20%; height: 120%; background: radial-gradient(ellipse at 30% 0%, rgba(188,195,136,.2), transparent 60%); }
+  .glass > * { position: relative; }
+  .big { font-size: 30px; font-weight: 700; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+  .big small { font-size: 15px; font-weight: 500; color: var(--faint); letter-spacing: 0; }
+  .tl { display: grid; gap: 0; }
+  .tl-row { display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; align-items: center; padding: 7px 0; font-size: 13px; }
+  .tl-dot { width: 26px; height: 26px; border-radius: 99px; display: grid; place-items: center; font-size: 11px; font-weight: 700; }
+  .tl-dot.prep { background: var(--accent-soft); color: var(--accent-ink); }
+  .tl-dot.quit { background: var(--primary); color: var(--on-primary); }
+  .tl-row .when { color: var(--muted); font-size: 12px; }
+  .stat2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .mini { padding: 12px 14px; border-radius: 20px; background: var(--surface1); border: 1px solid var(--hairline); }
+  .mini .v { font-size: 18px; font-weight: 700; letter-spacing: -.02em; margin-top: 4px; font-variant-numeric: tabular-nums; }
+
+  /* Loading */
+  .ring { width: 120px; height: 120px; border-radius: 99px; border: 3px solid rgba(var(--fg-rgb), .1); border-top-color: var(--accent-ink); animation: spin 1.4s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .center { flex: 1; display: grid; place-items: center; text-align: center; align-content: center; gap: 18px; }
+  .ticks { display: grid; gap: 8px; text-align: left; font-size: 13px; color: var(--text2); }
+  .ticks span { display: flex; gap: 8px; align-items: center; }
+  .ticks .ok { color: var(--accent-ink); }
+
+  /* Notification preview */
+  .notif { display: flex; gap: 10px; padding: 12px; border-radius: 20px; background: var(--surface1); border: 1px solid var(--hairline); font-size: 12.5px; line-height: 1.35; }
+  .notif .app { width: 34px; height: 34px; border-radius: 9px; background: #000; display: grid; place-items: center; flex: none; }
+  .notif .app i { width: 10px; height: 10px; border-radius: 99px; background: var(--sage); }
+  .notif b { font-size: 13px; }
+  .notif .time { color: var(--muted); font-size: 11px; margin-left: auto; }
+  .bell { width: 76px; height: 76px; border-radius: 99px; background: var(--accent-soft); color: var(--accent-ink); display: grid; place-items: center; margin: 4px 0 2px; }
+  .bell svg { width: 32px; height: 32px; }
+
+  @media (prefers-reduced-motion: reduce) { .ring { animation: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="micro">Section 2 · mockups for sign-off</div>
+  <h1>Onboarding</h1>
+  <p class="lede">Twelve screens and their key states, in flow order. Goal: build commitment and personalise the plan before the paywall, with one tap to skip anything optional. Every screen uses the signed-off Section 1 components. Notes flagged in amber need your input.</p>
+  <div class="toggle" role="group" aria-label="Theme">
+    <button aria-pressed="true" data-theme-btn="dark">Dark</button>
+    <button aria-pressed="false" data-theme-btn="light">Light</button>
+  </div>
+
+  <div class="flow">
+
+  <!-- S2.1 Welcome -->
+  <section class="shot">
+    <div class="shot-head"><span class="tag">S2.1</span><b>Welcome</b></div>
+    <div class="phone"><div class="screen welcome"><div class="island"></div>
+      <svg class="hills" viewBox="0 0 300 400" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 210 C70 150 130 190 190 150 S280 120 300 140 V400 H0Z" fill="var(--hills-a)"/>
+        <path d="M0 270 C60 230 120 250 170 220 S260 200 300 215 V400 H0Z" fill="var(--hills-b)"/>
+        <path d="M0 330 C80 300 150 320 210 295 S280 285 300 290 V400 H0Z" fill="var(--hills-c)" opacity=".85"/>
+      </svg>
+      <div class="content">
+        <div class="wordmark"><i></i>DayXero</div>
+        <div class="promise">Don't quit today.<br><span>Quit on your Quit Day.</span></div>
+        <p class="sub">A 7-day program for cigarettes, vapes and pouches. Keep using while you prepare, then quit on a day you choose.</p>
+        <div class="grow"></div>
+        <div class="footer">
+          <div class="btn primary">Build my plan</div>
+          <div class="fine" style="color:var(--text2)">Takes about 3 minutes</div>
+        </div>
+      </div>
+    </div></div>
+    <p class="n">The headline is your line from the plan. Rolling moss hills are the methodology's "organic topography", drawn flat so they read in both themes.</p>
+    <p class="n flag">Supporting line and "about 3 minutes" are my draft copy.</p>
+  </section>
+
+  <!-- S2.2 Age -->
+  <section class="shot">
+    <div class="shot-head"><span class="tag">S2.2</span><b>Age check</b></div>
+    <div class="phone"><div class="screen"><div class="island"></div>
+      <div class="topbar"><div class="back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></div><div class="steps"><i style="width:8%"></i></div></div>
+      <h2 class="title">Are you 18 or older?</h2>
+      <p class="sub">DayXero is built for adults. This keeps the program and its advice right for you.</p>
+      <div class="body">
+        <div class="opt on round"><div class="tx"><div class="t">Yes, I'm 18 or older</div></div><div class="check"><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></div></div>
+        <div class="opt round"><div class="tx"><div class="t">No, I'm under 18</div></div><div class="check"></div></div>
+      </div>
+      <div class="grow"></div>
+      <div class="footer"><div class="btn primary">Continue</div></div>
+    </div></div>
+    <p class="n">Two plain choices, no birthday field: we only need the yes/no and it keeps data minimal.</p>
+  </section>
+
+  <!-- S2.2 under-18 exit -->
+  <section class="shot">
+    <div class="shot-head"><span class="tag">S2.2</span><b>Under 18: friendly exit</b></div>
+    <div class="phone"><div class="screen"><div class="island"></div>
+      <div class="topbar"><div class="back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></div></div>
+      <div class="bell" style="margin-top:6px"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.5-7 10-7 10z"/></svg></div>
+      <h2 class="title" style="margin-top:14px">Wanting to quit is a great call</h2>
+      <p class="sub">DayXero is for adults, but there's free support made for people your age.</p>
+      <div class="body">
+        <div class="opt"><div class="tx"><div class="t">Youth quit support (US)</div><div class="d">Free text-message program</div></div><svg viewBox="0 0 24 24" style="color:var(--muted)"><path d="M7 17L17 7M9 7h8v8"/></svg></div>
+        <div class="opt"><div class="tx"><div class="t">Youth quit support (UK)</div><div class="d">Free local stop smoking service</div></div><svg viewBox="0 0 24 24" style="color:var(--muted)"><path d="M7 17L17 7M9 7h8v8"/></svg></div>
+        <div class="opt"><div class="tx"><div class="t">Youth quit support (AU, CA)</div><div class="d">Free quitline</div></div><svg viewBox="0 0 24 24" style="color:var(--muted)"><path d="M7 17L17 7M9 7h8v8"/></svg></div>
+      </div>
+      <div class="grow"></div>
+      <div class="fine">You can also talk to a parent, school nurse or doctor.</div>
+    </div></div>
+    <p class="n">No guilt, no dead end: a warm message and links out. The app stays closed to them after this.</p>
+    <p class="n flag">Which youth resources to link per country is a health-content call. Placeholders until you confirm the services and URLs.</p>
+  </section>
+
+  <!-- Name -->
+  <section class="shot">
+    <div class="shot-head"><span class="tag">S2.2b</span><b>Your name</b></div>
+    <div class="phone"><div class="screen"><div class="island"></div>
+      <div class="topbar"><div class="back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></div><div class="steps"><i style="width:16%"></i></div></div>
+      <h2 class="title">What should we call you?</h2>
+      <p class="sub">Just a first name or nickname. It stays on this phone.</p>
+      <div class="body">
+        <div class="input focus"><span>Milan</span></div>
+      </div>
+      <div class="grow"></div>
+      <div class="footer"><div class="btn primary">Continue</div></div>
+    </div></div>
+    <p class="n flag"><b>Added screen.</b> The paywall (S3.1) and Home greet people by name, but the plan has no step that asks for it. Proposed here; drop it if you'd rather not ask.</p>
+  </section>
+
+  <!-- S2.3 Products -->
+  <section class="shot">
+    <div class="shot-head"><span class="tag">S2.3</span><b>What do you use?</b></div>
+    <div class="phone"><div class="screen"><div class="island"></div>
+      <div class="topbar"><div class="back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></div><div class="steps"><i style="width:24%"></i></div></div>
+      <h2 class="title">What do you use?</h2>
+      <p class="sub">Pick everything that applies. Each one gets its own counter.</p>
+      <div class="body">
+        <div class="opt on"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 15h14v3H3zM19 15v3M21 15v3M18 12c0-2 2-2 2-4"/></svg></div><div class="tx"><div class="t">Cigarettes</div><div class="d">Including roll-ups</div></div><div class="check"><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></div></div>
+        <div class="opt on"><div class="ic"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="18" rx="3"/><path d="M12 7v3"/></svg></div><div class="tx"><div class="t">Vape</div><div class="d">Disposables, pods or tanks</div></div><div class="check"><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></div></div>
+        <div class="opt"><div class="ic"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="8" ry="5"/></svg></div><div class="tx"><div class="t">Nicotine pouches</div><div class="d">Zyn, Velo and others</div></div><div class="check"></div></div>
+        <div class="micro group-label">Already using</div>
+        <div class="opt"><div class="ic"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="4"/><path d="M12 9v6M9 12h6"/></svg></div><div class="tx"><div class="t">Nicotine replacement</div><div class="d">Patch, gum, lozenge or inhaler</div></div><div class="check"></div></div>
+      </div>
+      <div class="grow"></div>
+      <div class="footer"><div class="btn primary">Continue</div></div>
+    </div></div>
+    <p class="n">Multi-select; dual use is just two ticks. Continue stays disabled until at least one product is picked. NRT is separate because it's support, not something to quit.</p>
+    <p class="n flag">Naming brands (Zyn, Velo) helps recognition; say if you'd rather avoid brand names.</p>
+  </section>
+
+  <!-- S2.4 Baseline, per product -->
+  <section class="shot">
+    <div class="shot-head"><span class="tag">S2.4</span><b>Baseline: vape (1 of 2)</b></div>
+    <div class="phone"><div class="screen"><div class="island"></div>
+      <div class="topbar"><div class="back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></div><div class="steps"><i style="width:32%"></i></div></div>
+      <div class="micro" style="margin-bottom:6px">Vape · 1 of 2</div>
+      <h2 class="title">How much do you vape a day?</h2>
+      <p class="sub">A rough guess is fine. You can change it later.</p>
+      <div class="body">
+        <div class="stepper"><div class="sbtn">–</div><div class="num">200<small>puffs a day</small></div><div class="sbtn">+</div></div>
+        <div class="row2">
+          <div class="field"><span class="micro">Price</span><div class="input"><span>£8.50</span><span class="unit">GBP</span></div></div>
+          <div class="field"><span class="micro">Puffs in one</span><div class="input"><span>600</span><span class="unit">per pod</span></div></div>
+        </div>
+        <div class="field"><span class="micro">How long have you vaped?</span>
+          <div class="chips"><span class="chip">&lt; 1 yr</span><span class="chip on">1–3 yrs</span><span class="chip">3–5 yrs</span><span class="chip">5+ yrs</span></div></div>
+      </div>
+      <div class="grow"></div>
+      <div class="footer"><div class="btn primary">Next: cigarettes</div></div>
+    </div></div>
+    <p class="n">One screen per product picked, so dual users see "1 of 2". Currency defaults from the phone's region. Puffs are hard to count, so the stepper moves in tens and the copy says a guess is fine.</p>
+  </section>
+
+  <!-- S2.4 pouch variant + error -->
+  <section class="shot">
+    <div class="shot-head"><span class="tag">S2.4</span><b>Baseline: pouches, with an error</b></div>
+    <div class="phone"><div class="screen"><div class="island"></div>
+      <div class="topbar"><div class="back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></div><div class="steps"><i style="width:32%"></i></div></div>
+      <div class="micro" style="margin-bottom:6px">Pouches</div>
+      <h2 class="title">How many pouches a day?</h2>
+      <div class="body" style="margin-top:12px">
+        <div class="stepper"><div class="sbtn">–</div><div class="num">8<small>pouches a day</small></div><div class="sbtn">+</div></div>
+        <div class="field"><span class="micro">Strength</span>
+          <div class="chips"><span class="chip">3 mg</span><span class="chip">6 mg</span><span class="chip on">11 mg</span><span class="chip">15+ mg</span><span class="chip">Not sure</span></div></div>
+        <div class="row2">
+          <div class="field"><span class="micro">Price</span><div class="input err"><span>$0</span><span class="unit">USD</span></div></div>
+          <div class="field"><span class="micro">Pouches in one</span><div class="input"><span>15</span><span class="unit">per can</span></div></div>
+        </div>
+        <div class="err-msg">Add what a can costs so we can show the money you keep.</div>
+      </div>
+      <div class="grow"></div>
+      <div class="footer"><div class="btn primary off">Continue</div></div>
+    </div></div>
+    <p class="n">Pouch users also pick strength (used later for the taper plan in Section 9). Validation errors say what to do, in terracotta, never red-alarm.</p>
+  </section>
+
+  <!-- S2.5 Triggers -->
+  <section class="shot">
+    <div class="shot-head"><span class="tag">S2.5</span><b>Triggers</b></div>
+    <div class="phone"><div class="screen"><div class="island"></div>
+      <div class="topbar"><div class="back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></div><div class="steps"><i style="width:44%"></i></div><span class="skip">Skip</span></div>
+      <h2 class="title">When do cravings hit?</h2>
+      <p class="sub">We'll plan around these and check in at the right moments.</p>
+      <div class="body">
+        <div class="micro">Situations</div>
+        <div class="chips">
+          <span class="chip on">Waking up</span><span class="chip on">Coffee</span><span class="chip">After meals</span><span class="chip on">Stress</span><span class="chip">Drinking</span><span class="chip">Boredom</span><span class="chip">With friends</span><span class="chip">Driving</span><span class="chip on">Work breaks</span><span class="chip">On my phone</span><span class="chip">Something else</span>
+        </div>
+        <div class="micro group-label">Time of day</div>
+        <div class="chips"><span class="chip on">Morning</span><span class="chip">Midday</span><span class="chip on">Afternoon</span><span class="chip">Evening</span><span class="chip">Late night</span></div>
+      </div>
+      <div class="grow"></div>
+      <div class="footer"><div class="btn primary">Continue</div></div>
+    </div></div>
+    <p class="n">Optional, so Skip sits top right on this and every optional step (S2.13).</p>
+  </section>
+
+  <!-- S2.6 Reasons -->
+  <section class="shot">
+    <div class="shot-head"><span class="tag">S2.6</span><b>Your reasons</b></div>
+    <div class="phone"><div class="screen"><div class="island"></div>
+      <div class="topbar"><div class="back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></div><div class="steps"><i style="width:54%"></i></div><span class="skip">Skip</span></div>
+      <h2 class="title">Why do you want to quit?</h2>
+      <p class="sub">In your own words. We'll show these back to you on hard days.</p>
+      <div class="body">
+        <div class="reason"><div class="thumb"></div><span>Run with Aria without stopping to catch my breath</span></div>
+        <div class="textarea"><span style="color:var(--faint)">Add another reason…</span></div>
+        <div class="photo"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="4"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg>Add a photo that reminds you<br><span style="font-size:11px;color:var(--muted)">Optional · stays on this phone</span></div>
+      </div>
+      <div class="grow"></div>
+      <div class="footer"><div class="btn primary">Continue</div></div>
+    </div></div>
+    <p class="n">Reasons and the photo reappear in the morning pledge and in Craving SOS. Photos are stored only on the phone.</p>
+  </section>
+
+  <!-- S2.6 empty -->
+  <section class="shot">
+    <div class="shot-head"><span class="tag">S2.6</span><b>Your reasons: empty state</b></div>
+    <div class="phone"><div class="screen"><div class="island"></div>
+      <div class="topbar"><div class="back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></div><div class="steps"><i style="width:54%"></i></div><span class="skip">Skip</span></div>
+      <h2 class="title">Why do you want to quit?</h2>
+      <p class="sub">In your own words. We'll show these back to you on hard days.</p>
+      <div class="body">
+        <div class="textarea input focus" style="height:auto;align-items:flex-start"><span style="color:var(--faint)">e.g. More energy for the kids</span></div>
+        <div class="micro group-label">Need a starting point?</div>
+        <div class="chips"><span class="chip">Money</span><span class="chip">Health</span><span class="chip">Family</span><span class="chip">Fitness</span><span class="chip">Freedom</span></div>
+      </div>
+      <div class="grow"></div>
+      <div class="footer"><div class="btn primary off">Continue</div></div>
+    </div></div>
+    <p class="n">Tapping a starter chip fills a sentence the user can edit, so nobody faces a blank box.</p>
+  </section>
+
+  <!-- S2.7 Past attempts -->
+  <section class="shot">
+    <div class="shot-head"><span class="tag">S2.7</span><b>Past attempts</b></div>
+    <div class="phone"><div class="screen"><div class="island"></div>
+      <div class="topbar"><div class="back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></div><div class="steps"><i style="width:62%"></i></div><span class="skip">Skip</span></div>
+      <h2 class="title">Have you tried to quit before?</h2>
+      <p class="sub">Every attempt teaches something. This helps us pick what to focus on.</p>
+      <div class="body">
+        <div class="chips"><span class="chip">Not yet</span><span class="chip on">Once or twice</span><span class="chip">Lots of times</span></div>
+        <div class="micro group-label">What got in the way?</div>
+        <div class="chips"><span class="chip on">Cravings</span><span class="chip">Stress</span><span class="chip">Social situations</span><span class="chip on">Irritability</span><span class="chip">Weight</span><span class="chip">Sleep</span><span class="chip">Other</span></div>
+      </div>
+      <div class="grow"></div>
+      <div class="footer"><div class="btn primary">Continue</div></div>
+    </div></div>
+    <p class="n">Short and tappable rather than free text. Framed as learning, never as failure.</p>
+  </section>
+
+  <!-- S2.8 Quit Day -->
+  <section class="shot">
+    <div class="shot-head"><span class="tag">S2.8</span><b>Choose your Quit Day</b></div>
+    <div class="phone"><div class="screen"><div class="island"></div>
+      <div class="topbar"><div class="back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></div><div class="steps"><i style="width:72%"></i></div></div>
+      <h2 class="title">Pick your Quit Day</h2>
+      <p class="sub">Until then, use as normal while you prepare. On Quit Day, you stop.</p>
+      <div class="body">
+        <div class="micro" style="text-align:center">October – November 2026</div>
+        <div class="cal">
+          <div class="dl">Mo</div><div class="dl">Tu</div><div class="dl">We</div><div class="dl">Th</div><div class="dl">Fr</div><div class="dl">Sa</div><div class="dl">Su</div>
+          <div class="d past">19</div><div class="d past">20</div><div class="d past">21</div><div class="d today">22</div><div class="d prep">23</div><div class="d prep">24</div><div class="d prep">25</div>
+          <div class="d prep">26</div><div class="d prep">27</div><div class="d prep">28</div><div class="d sel">29</div><div class="d">30</div><div class="d">31</div><div class="d">1</div>
+          <div class="d">2</div><div class="d">3</div><div class="d">4</div><div class="d">5</div><div class="d">6</div><div class="d">7</div><div class="d">8</div>
+        </div>
+        <div class="recnote"><svg viewBox="0 0 24 24" style="color:var(--accent-ink);flex:none"><path d="M12 3l2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5z"/></svg><span><b>Recommended: Thursday 29 Oct.</b> A week to prepare, on a weekday with your usual routine.</span></div>
+      </div>
+      <div class="grow"></div>
+      <div class="footer"><div class="btn primary">Set Thu 29 Oct as Quit Day</div></div>
+    </div></div>
+    <p class="n">Recommended date is pre-selected; the shaded days are the prep phase. The button repeats the date so the commitment is explicit.</p>
+    <p class="n flag">The default (7 days out) and the earliest/latest allowed dates are product decisions. Placeholder until the Flutter program content tells us the prep length.</p>
+  </section>
+
+  <!-- S2.9 NRT -->
+  <section class="shot">
+    <div class="shot-head"><span class="tag">S2.9</span><b>Nicotine replacement</b></div>
+    <div class="phone"><div class="screen"><div class="island"></div>
+      <div class="topbar"><div class="back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></div><div class="steps"><i style="width:80%"></i></div><span class="skip">Skip</span></div>
+      <h2 class="title">Want to use nicotine replacement?</h2>
+      <p class="sub">Patches, gum and lozenges can make quitting easier. We'll help you plan around the label.</p>
+      <div class="body">
+        <div class="opt on round"><div class="tx"><div class="t">I'm already using it</div></div><div class="check"><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></div></div>
+        <div class="opt round"><div class="tx"><div class="t">I'd like to</div><div class="d">We'll suggest talking to a pharmacist</div></div><div class="check"></div></div>
+        <div class="opt round"><div class="tx"><div class="t">Not for me</div></div><div class="check"></div></div>
+      </div>
+      <div class="grow"></div>
+      <div class="fine">Follow the product label and ask a pharmacist or doctor.</div>
+      <div class="footer" style="margin-top:8px"><div class="btn primary">Continue</div></div>
+    </div></div>
+    <p class="n">Pre-selected when "Nicotine replacement" was ticked on S2.3. The label line appears wherever NRT does.</p>
+    <p class="n flag">"Can make quitting easier" is a health claim: needs your sign-off and a source.</p>
+  </section>
+
+  <!-- S2.10 loading -->
+  <section class="shot">
+    <div class="shot-head"><span class="tag">S2.10</span><b>Building the plan (loading)</b></div>
+    <div class="phone"><div class="screen"><div class="island"></div>
+      <div class="center">
+        <div class="ring" aria-hidden="true"></div>
+        <h2 class="title" style="margin:0">Building your plan, Milan</h2>
+        <div class="ticks">
+          <span><svg class="ok" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg>Vape and cigarette programs</span>
+          <span><svg class="ok" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg>Prep week to Thu 29 Oct</span>
+          <span><svg viewBox="0 0 24 24" style="color:var(--faint)"><circle cx="12" cy="12" r="8"/></svg>Your money and milestones</span>
+        </div>
+      </div>
+    </div></div>
+    <p class="n">About two seconds. The work is instant, but a short build moment makes the plan feel made for them. Reduce Motion shows a still ring.</p>
+  </section>
+
+  <!-- S2.10 Plan reveal -->
+  <section class="shot">
+    <div class="shot-head"><span class="tag">S2.10</span><b>Plan reveal</b></div>
+    <div class="phone"><div class="screen"><div class="island"></div>
+      <div class="micro">Your plan</div>
+      <h2 class="title" style="margin-top:4px">Quit Day is Thursday, Milan</h2>
+      <div class="body" style="margin-top:12px;gap:8px">
+        <div class="glass">
+          <div class="micro">Money you'll keep in a year</div>
+          <div class="big">£2,190 <small>/ year</small></div>
+          <div class="sub" style="margin-top:2px">Based on your vaping and smoking</div>
+        </div>
+        <div class="stat2">
+          <div class="mini"><div class="micro">Puffs a day</div><div class="v">200 → 0</div></div>
+          <div class="mini"><div class="micro">Cigarettes</div><div class="v">6 → 0</div></div>
+        </div>
+        <div class="mini" style="padding:8px 12px">
+          <div class="micro" style="margin:4px 0 2px">Your next 7 days</div>
+          <div class="tl">
+            <div class="tl-row"><span class="tl-dot prep">1</span><span>Prep: know your triggers</span><span class="when">Fri</span></div>
+            <div class="tl-row"><span class="tl-dot prep">2</span><span>Prep: plan for cravings</span><span class="when">Sat</span></div>
+            <div class="tl-row"><span class="tl-dot prep">…</span><span>Three more prep days</span><span class="when">Sun–Tue</span></div>
+            <div class="tl-row"><span class="tl-dot quit">Q</span><span><b>Quit Day</b></span><span class="when">Thu</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="grow"></div>
+      <div class="footer"><div class="btn primary">Continue</div></div>
+    </div></div>
+    <p class="n">Everything here is computed from their answers. Comes before the paywall, as the plan requires. Continue goes to notifications, then the paywall.</p>
+    <p class="n flag">Lesson titles are placeholders until the Flutter content is ported.</p>
+  </section>
+
+  <!-- S2.11 Notifications -->
+  <section class="shot">
+    <div class="shot-head"><span class="tag">S2.11</span><b>Reminders permission</b></div>
+    <div class="phone"><div class="screen"><div class="island"></div>
+      <div class="topbar"><div class="steps"><i style="width:94%"></i></div></div>
+      <div class="bell"><svg viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15zM10 20a2 2 0 0 0 4 0"/></svg></div>
+      <h2 class="title" style="margin-top:12px">A nudge when it helps</h2>
+      <p class="sub">Each day's lesson, your Quit Day countdown and milestones. Never guilt, and you choose the times.</p>
+      <div class="body">
+        <div class="notif"><div class="app"><i></i></div><div><b>Day 2 is ready</b><br>Plan for cravings · 6 min</div><span class="time">9:00</span></div>
+        <div class="notif"><div class="app"><i></i></div><div><b>3 days until Quit Day</b><br>You've finished every prep day so far.</div><span class="time">Tue</span></div>
+      </div>
+      <div class="grow"></div>
+      <div class="footer"><div class="btn primary">Turn on reminders</div><div class="btn quiet">Not now</div></div>
+    </div></div>
+    <p class="n">Our own screen first, then iOS's permission prompt only after "Turn on reminders", so a "Not now" doesn't burn the one system prompt.</p>
+  </section>
+
+  </div>
+
+  <div class="lede" style="margin-top:40px;display:grid;gap:10px">
+    <div class="micro">Not shown as screens</div>
+    <p style="margin:0"><b>S2.12 App Store review prompt.</b> My recommendation is to not ask during onboarding, since they haven't used the program yet. Ask after they complete Day 1 or their first ridden-out craving, using Apple's built-in prompt (it limits itself to three times a year). Your call.</p>
+    <p style="margin:0"><b>S2.13 Analytics and skips.</b> Every screen sends a "step viewed" event and every Skip sends "step skipped", so PostHog shows the drop-off per screen. Optional steps (triggers, reasons, past attempts, NRT) all have Skip; required ones (age, products, baseline, Quit Day) don't.</p>
+    <p style="margin:0"><b>Accessibility.</b> All screens scroll at the largest text sizes with the button pinned to the bottom; the stepper supports VoiceOver swipe up/down; every option card reads as one element with its selected state.</p>
+  </div>
+</div>
+<script>
+function setTheme(t) {
+  document.documentElement.dataset.theme = t;
+  document.querySelectorAll('[data-theme-btn]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.themeBtn === t));
+}
+document.querySelectorAll('[data-theme-btn]').forEach((b) => b.addEventListener('click', () => setTheme(b.dataset.themeBtn)));
+setTheme(new URLSearchParams(location.search).get('theme') === 'light' ? 'light' : 'dark');
+</script>
+</body>
+</html>

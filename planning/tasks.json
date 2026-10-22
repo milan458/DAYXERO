@@ -2,12 +2,13 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-22T20:36:53.503Z"
+    "updated": "2026-10-22T20:40:00.965Z"
   },
   "now": {
     "section": "S2",
     "task": "S2.1",
     "waiting_on_milan": [
+      "Review the Section 2 onboarding mockups",
       "Create Config/Secrets.xcconfig on the Mac (S1.21)"
     ]
   },
@@ -227,10 +228,22 @@
       "title": "Onboarding",
       "goal": "build commitment and personalise the plan before the paywall. Target 60%+ of installs completing it.",
       "signoff": {
-        "state": "not_started",
-        "history": []
+        "state": "mockups_ready",
+        "history": [
+          {
+            "time": "2026-10-22T20:40:00.843Z",
+            "state": "mockups_ready",
+            "by": "Claude",
+            "comment": ""
+          }
+        ]
       },
-      "mockups": [],
+      "mockups": [
+        {
+          "title": "Onboarding: all screens and states",
+          "path": "mockups/S2/onboarding.html"
+        }
+      ],
       "tasks": [
         {
           "id": "S2.1",
@@ -244,7 +257,7 @@
           "id": "S2.2",
           "title": "Age confirmation (18+). Under 18: friendly exit with a pointer to free youth resources.",
           "status": "pending",
-          "notes": "",
+          "notes": "Needs Milan: youth resources and URLs per country for the under-18 exit.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -292,7 +305,7 @@
           "id": "S2.8",
           "title": "Choose Quit Day: the date the prep phase ends, with a recommended default.",
           "status": "pending",
-          "notes": "",
+          "notes": "Needs Milan: default Quit Day (mocked as 7 days out) and allowed range; depends on prep length in Flutter content.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -300,7 +313,7 @@
           "id": "S2.9",
           "title": "NRT interest: using it, want it, not interested.",
           "status": "pending",
-          "notes": "",
+          "notes": "Needs Milan: sign-off + source for 'NRT can make quitting easier'.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -324,7 +337,7 @@
           "id": "S2.12",
           "title": "Optional App Store review prompt placement (ask Milan).",
           "status": "pending",
-          "notes": "Question for Milan: show the App Store review prompt in onboarding? If so, where?",
+          "notes": "Question for Milan: show the App Store review prompt in onboarding? If so, where?\nRecommendation in mockups: no review prompt during onboarding; ask after Day 1 complete or first ridden-out craving.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -334,6 +347,14 @@
           "status": "pending",
           "notes": "",
           "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S2.14",
+          "title": "Name step (S2.2b) proposed: paywall and Home greet by name but the plan never asks",
+          "status": "pending",
+          "notes": "From S2 mockups; Milan to confirm.",
+          "created": "2026-10-22T20:40:00.864Z",
           "completed": null
         }
       ]
@@ -1076,6 +1097,46 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-22T20:40:00.965Z",
+      "type": "now",
+      "message": "Now: S2 / S2.1"
+    },
+    {
+      "time": "2026-10-22T20:40:00.945Z",
+      "type": "note",
+      "message": "S2.12: Recommendation in mockups: no review prompt during onboarding; ask after Day 1 complete or first ridden-out craving."
+    },
+    {
+      "time": "2026-10-22T20:40:00.926Z",
+      "type": "note",
+      "message": "S2.9: Needs Milan: sign-off + source for 'NRT can make quitting easier'."
+    },
+    {
+      "time": "2026-10-22T20:40:00.906Z",
+      "type": "note",
+      "message": "S2.8: Needs Milan: default Quit Day (mocked as 7 days out) and allowed range; depends on prep length in Flutter content."
+    },
+    {
+      "time": "2026-10-22T20:40:00.886Z",
+      "type": "note",
+      "message": "S2.2: Needs Milan: youth resources and URLs per country for the under-18 exit."
+    },
+    {
+      "time": "2026-10-22T20:40:00.864Z",
+      "type": "task_added",
+      "message": "S2.14 added: Name step (S2.2b) proposed: paywall and Home greet by name but the plan never asks"
+    },
+    {
+      "time": "2026-10-22T20:40:00.843Z",
+      "type": "signoff",
+      "message": "S2 mockups → mockups_ready"
+    },
+    {
+      "time": "2026-10-22T20:40:00.823Z",
+      "type": "mockup",
+      "message": "S2 mockup posted: Onboarding: all screens and states"
+    },
     {
       "time": "2026-10-22T20:36:53.503Z",
       "type": "now",
