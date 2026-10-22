@@ -77,7 +77,7 @@ struct PlanRevealScreen: View {
             }
             DXCard(padding: 14) {
                 VStack(alignment: .leading, spacing: DX.Space.xs) {
-                    Text("Your next 7 days").dxText(.micro)
+                    Text("Your week ahead").dxText(.micro)
                     ForEach(timeline, id: \.date) { item in
                         HStack(spacing: 10) {
                             Text(item.badge)
@@ -107,15 +107,16 @@ struct PlanRevealScreen: View {
         let isQuitDay: Bool
     }
 
-    /// The next seven days: prep days, then Quit Day and the first quit days. Lesson titles arrive with the ported content.
+    /// Today plus the next six days, always ending with Quit Day if it falls later. Day 1 starts today.
+    /// Lesson titles arrive with the ported content.
     private var timeline: [TimelineItem] {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: .now)
         let prep = model.prepDays
-        return (1...7).compactMap { offset in
+        var items: [TimelineItem] = (0..<7).compactMap { offset in
             guard let date = calendar.date(byAdding: .day, value: offset, to: today) else { return nil }
             if offset < prep {
-                return TimelineItem(date: date, badge: "\(offset)", title: String(localized: "Prep day \(offset)"), isQuitDay: false)
+                return TimelineItem(date: date, badge: "\(offset + 1)", title: String(localized: "Prep day \(offset + 1)"), isQuitDay: false)
             } else if offset == prep {
                 return TimelineItem(date: date, badge: "Q", title: String(localized: "Quit Day"), isQuitDay: true)
             } else {
@@ -123,6 +124,11 @@ struct PlanRevealScreen: View {
                 return TimelineItem(date: date, badge: "\(day)", title: String(localized: "Day \(day) clear"), isQuitDay: false)
             }
         }
+        if prep >= 7, let quitDate = calendar.date(byAdding: .day, value: prep, to: today) {
+            items.removeLast()
+            items.append(TimelineItem(date: quitDate, badge: "Q", title: String(localized: "Quit Day"), isQuitDay: true))
+        }
+        return items
     }
 }
 

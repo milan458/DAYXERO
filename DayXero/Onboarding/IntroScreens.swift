@@ -5,39 +5,38 @@ struct WelcomeScreen: View {
     let model: OnboardingModel
 
     var body: some View {
-        ZStack(alignment: .bottom) {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(spacing: 6) {
+                Circle().fill(DX.Palette.sage).frame(width: 9, height: 9)
+                Text("DayXero").font(.custom(DX.Typeface.bold, size: 16, relativeTo: .headline))
+            }
+            .foregroundStyle(DX.Palette.text)
+            .accessibilityElement(children: .combine)
+            VStack(alignment: .leading, spacing: 0) {
+                Text("Don't quit today.").foregroundStyle(DX.Palette.text)
+                Text("Quit on your Quit Day.").foregroundStyle(DX.Palette.accentInk)
+            }
+            .font(.custom(DX.Typeface.bold, size: 38, relativeTo: .largeTitle))
+            .tracking(-1.3)
+            .padding(.top, 28)
+            .accessibilityElement(children: .combine)
+            .accessibilityAddTraits(.isHeader)
+            Text("A 7-day program for cigarettes, vapes and pouches. Keep using while you prepare, then quit on a day you choose.")
+                .dxText(.subtitle)
+                .font(.custom(DX.Typeface.regular, size: 15, relativeTo: .body))
+                .padding(.top, DX.Space.s)
+            Spacer()
+            Button("Build my plan") { model.next() }.buttonStyle(.dxPrimary)
+            Text("Takes about 3 minutes").dxText(.subtitle).frame(maxWidth: .infinity).padding(.top, DX.Space.xs)
+        }
+        .padding(.horizontal, DX.Space.l)
+        .padding(.top, DX.Space.xxl)
+        .padding(.bottom, DX.Space.xs)
+        .background(alignment: .bottom) {
             Hills()
-                .frame(maxWidth: .infinity)
                 .frame(height: 380)
                 .ignoresSafeArea(edges: .bottom)
                 .accessibilityHidden(true)
-            VStack(alignment: .leading, spacing: 0) {
-                HStack(spacing: 6) {
-                    Circle().fill(DX.Palette.sage).frame(width: 9, height: 9)
-                    Text("DayXero").font(.custom(DX.Typeface.bold, size: 16, relativeTo: .headline))
-                }
-                .foregroundStyle(DX.Palette.text)
-                .accessibilityElement(children: .combine)
-                VStack(alignment: .leading, spacing: 0) {
-                    Text("Don't quit today.").foregroundStyle(DX.Palette.text)
-                    Text("Quit on your Quit Day.").foregroundStyle(DX.Palette.accentInk)
-                }
-                .font(.custom(DX.Typeface.bold, size: 38, relativeTo: .largeTitle))
-                .tracking(-1.3)
-                .padding(.top, 28)
-                .accessibilityElement(children: .combine)
-                .accessibilityAddTraits(.isHeader)
-                Text("A 7-day program for cigarettes, vapes and pouches. Keep using while you prepare, then quit on a day you choose.")
-                    .dxText(.subtitle)
-                    .font(.custom(DX.Typeface.regular, size: 15, relativeTo: .body))
-                    .padding(.top, DX.Space.s)
-                Spacer()
-                Button("Build my plan") { model.next() }.buttonStyle(.dxPrimary)
-                Text("Takes about 3 minutes").dxText(.subtitle).frame(maxWidth: .infinity).padding(.top, DX.Space.xs)
-            }
-            .padding(.horizontal, DX.Space.l)
-            .padding(.top, DX.Space.xxl)
-            .padding(.bottom, DX.Space.xs)
         }
     }
 }
@@ -168,7 +167,7 @@ struct ProductsScreen: View {
                            subtitle: "Pick everything that applies. Each one gets its own counter.",
                            model: model) {
             product(.cigarettes, detail: "Including roll-ups", icon: "smoke")
-            product(.vape, detail: "Disposables, pods or tanks", icon: "cloud")
+            product(.vape, detail: "Disposables, pods or tanks", icon: "wind")
             product(.pouches, detail: "Zyn, Velo and others", icon: "capsule")
             Text("Already using").dxText(.micro).padding(.top, DX.Space.xs)
             DXOptionCard("Nicotine replacement", detail: "Patch, gum, lozenge or inhaler", systemImage: "cross.case",

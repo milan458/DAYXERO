@@ -5,6 +5,7 @@ import SwiftUI
 struct BaselineScreen: View {
     @Bindable var model: OnboardingModel
     let product: Product
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     private var draft: Binding<BaselineDraft> {
         Binding(get: { model.baseline(for: product) }, set: { model.setBaseline($0, for: product) })
@@ -38,7 +39,9 @@ struct BaselineScreen: View {
                 }
             }
 
-            HStack(alignment: .top, spacing: DX.Space.xs) {
+            let fieldsLayout = typeSize.isAccessibilitySize
+                ? AnyLayout(VStackLayout(spacing: DX.Space.xs)) : AnyLayout(HStackLayout(alignment: .top, spacing: DX.Space.xs))
+            fieldsLayout {
                 LabeledField(label: "Price") {
                     TextField("", value: draft.price, format: .currency(code: model.currencyCode),
                               prompt: Text(Decimal(0), format: .currency(code: model.currencyCode)).foregroundStyle(DX.Palette.faint))

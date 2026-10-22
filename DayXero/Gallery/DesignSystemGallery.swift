@@ -212,7 +212,7 @@ struct DesignSystemGallery: View {
                 .fill(color)
                 .frame(height: 56)
                 .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(DX.Palette.hairline))
-            Text(name).dxText(.subtitle)
+            Text(name).dxText(.subtitle).lineLimit(1).minimumScaleFactor(0.5)
         }
         .accessibilityElement(children: .combine)
     }

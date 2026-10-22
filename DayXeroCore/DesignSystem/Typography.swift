@@ -81,20 +81,23 @@ private final class BundleToken {}
 
 public extension View {
     /// Applies a DayXero text style: face, Dynamic Type scaling, tracking and, for micro labels, uppercase.
-    func dxText(_ style: DX.TextStyle) -> some View {
-        modifier(DXTextModifier(style: style))
+    /// Pass `color` to override the style's default colour; a later `.foregroundStyle` won't, because
+    /// the innermost style wins in SwiftUI.
+    func dxText(_ style: DX.TextStyle, color: Color? = nil) -> some View {
+        modifier(DXTextModifier(style: style, color: color))
     }
 }
 
 private struct DXTextModifier: ViewModifier {
     let style: DX.TextStyle
+    let color: Color?
 
     func body(content: Content) -> some View {
         content
             .font(style.font)
             .tracking(style.tracking)
             .textCase(style == .micro ? .uppercase : nil)
-            .foregroundStyle(defaultColor)
+            .foregroundStyle(color ?? defaultColor)
             .monospacedDigit()
     }
 

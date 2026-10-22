@@ -7,8 +7,7 @@ public struct DXPrimaryButtonStyle: ButtonStyle {
     public func makeBody(configuration: Configuration) -> some View {
         DXPressable(configuration: configuration) {
             configuration.label
-                .dxText(.button)
-                .foregroundStyle(DX.Palette.onPrimary)
+                .dxText(.button, color: DX.Palette.onPrimary)
                 .frame(maxWidth: .infinity, minHeight: DX.Size.buttonHeight)
                 .padding(.horizontal, DX.Space.xl)
                 .background(DX.Palette.primary, in: Capsule())
@@ -35,9 +34,8 @@ public struct DXSecondaryButtonStyle: ButtonStyle {
     public func makeBody(configuration: Configuration) -> some View {
         DXPressable(configuration: configuration) {
             configuration.label
-                .dxText(.button)
+                .dxText(.button, color: foreground)
                 .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .callout))
-                .foregroundStyle(foreground)
                 .frame(minHeight: kind == .quiet ? 44 : DX.Size.compactButtonHeight)
                 .padding(.horizontal, DX.Space.xl)
                 .background {

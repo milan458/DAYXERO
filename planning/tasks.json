@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-22T21:20:09.595Z"
+    "updated": "2026-10-22T21:29:24.275Z"
   },
   "now": {
     "section": "S2",
@@ -255,7 +255,7 @@
           "id": "S2.1",
           "title": "Welcome and promise: \"Don't quit today. Quit on your Quit Day.\"",
           "status": "in_progress",
-          "notes": "Built; waiting on CI build, tests and screenshots.",
+          "notes": "Built; waiting on CI build, tests and screenshots.\nCI screenshot review found: primary button labels invisible (text style colour overrode button colour), hills short of bottom edge, price fields clipped at largest text, duplicate cigarette/vape icon, reveal timeline starting tomorrow. All fixed; re-verifying.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -1129,6 +1129,11 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-22T21:29:24.275Z",
+      "type": "note",
+      "message": "S2.1: CI screenshot review found: primary button labels invisible (text style colour overrode button colour), hills short of bottom edge, price fields clipped at largest text, duplicate cigarette/vape icon, reveal timeline starting tomorrow. All fixed; re-verifying."
+    },
     {
       "time": "2026-10-22T21:20:09.595Z",
       "type": "now",
