@@ -2,15 +2,16 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-22T22:26:58.517Z"
+    "updated": "2026-10-22T22:57:10.823Z"
   },
   "now": {
-    "section": "S3",
-    "task": "S3.1",
+    "section": "S4",
+    "task": "S4.1",
     "waiting_on_milan": [
       "Privacy policy URL (S3.10)",
       "App Store Connect + RevenueCat products (S3.11)",
-      "Youth resources per country (S2.2)"
+      "Youth resources per country (S2.2)",
+      "Create Config/Secrets.xcconfig on the Mac (S1.21)"
     ]
   },
   "sections": [
@@ -397,50 +398,50 @@
         {
           "id": "S3.1",
           "title": "Paywall screen after plan reveal, addressed by name, showing what's included.",
-          "status": "in_progress",
-          "notes": "Built; waiting on CI build, tests and screenshots.\nCI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending.",
+          "status": "done",
+          "notes": "Built; waiting on CI build, tests and screenshots.\nCI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending.\nVerified on CI 33dd4dd: all tests pass; screenshots match approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-22T22:57:10.661Z"
         },
         {
           "id": "S3.2",
           "title": "Plans: monthly, annual (highlighted), lifetime. Prices from RevenueCat; placeholder starting point $9.99/mo, $39.99/yr, $79.99 lifetime — confirm with Milan.",
-          "status": "in_progress",
-          "notes": "Question for Milan: confirm $9.99/mo, $39.99/yr, $79.99 lifetime.\nMockups use the placeholder prices; Milan to confirm.\nMilan confirmed .99/mo, 9.99/yr, 9.99 lifetime.\nBuilt; waiting on CI build, tests and screenshots.\nCI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending.",
+          "status": "done",
+          "notes": "Question for Milan: confirm $9.99/mo, $39.99/yr, $79.99 lifetime.\nMockups use the placeholder prices; Milan to confirm.\nMilan confirmed .99/mo, 9.99/yr, 9.99 lifetime.\nBuilt; waiting on CI build, tests and screenshots.\nCI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending.\nVerified on CI 33dd4dd: all tests pass; screenshots match approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-22T22:57:10.688Z"
         },
         {
           "id": "S3.3",
           "title": "Free trial on annual (3 days unless Milan says otherwise), with the exact charge date stated on screen.",
-          "status": "in_progress",
-          "notes": "Question for Milan: 3-day trial on annual — confirm.\nMilan confirmed the 3-day trial on annual.\nBuilt; waiting on CI build, tests and screenshots.\nCI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending.",
+          "status": "done",
+          "notes": "Question for Milan: 3-day trial on annual — confirm.\nMilan confirmed the 3-day trial on annual.\nBuilt; waiting on CI build, tests and screenshots.\nCI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending.\nVerified on CI 33dd4dd: all tests pass; screenshots match approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-22T22:57:10.707Z"
         },
         {
           "id": "S3.4",
           "title": "Plain-language terms: how to cancel in two taps, link to Apple subscription management, refund note.",
-          "status": "in_progress",
-          "notes": "Built; waiting on CI build, tests and screenshots.\nCI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending.",
+          "status": "done",
+          "notes": "Built; waiting on CI build, tests and screenshots.\nCI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending.\nVerified on CI 33dd4dd: all tests pass; screenshots match approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-22T22:57:10.729Z"
         },
         {
           "id": "S3.5",
           "title": "Free tier that's genuinely useful: counter, craving SOS, Day 1 of the program. Clear upgrade points elsewhere.",
-          "status": "in_progress",
-          "notes": "Built; waiting on CI build, tests and screenshots.",
+          "status": "done",
+          "notes": "Built; waiting on CI build, tests and screenshots.\nFree tier rule (counter, SOS, Day 1) + upgrade sheet built and tested; it's shown from the Program tab once Section 5 exists.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-22T22:57:10.783Z"
         },
         {
           "id": "S3.6",
           "title": "Restore purchases; entitlement checks; paywall dismiss path.",
-          "status": "in_progress",
-          "notes": "Built; waiting on CI build, tests and screenshots.\nCI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending.",
+          "status": "done",
+          "notes": "Built; waiting on CI build, tests and screenshots.\nCI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending.\nVerified on CI 33dd4dd: all tests pass; screenshots match approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-22T22:57:10.747Z"
         },
         {
           "id": "S3.7",
@@ -461,10 +462,10 @@
         {
           "id": "S3.9",
           "title": "Trial reminder: 'we'll remind you the day before' (local notification)",
-          "status": "in_progress",
-          "notes": "Proposed in S3 mockups; Milan to confirm we promise it.\nMilan: keep the trial reminder.\nBuilt; waiting on CI build, tests and screenshots.\nCI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending.",
+          "status": "done",
+          "notes": "Proposed in S3 mockups; Milan to confirm we promise it.\nMilan: keep the trial reminder.\nBuilt; waiting on CI build, tests and screenshots.\nCI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending.\nVerified on CI 33dd4dd: all tests pass; screenshots match approved mockups in dark, light and largest text.",
           "created": "2026-10-22T21:13:19.796Z",
-          "completed": null
+          "completed": "2026-10-22T22:57:10.766Z"
         },
         {
           "id": "S3.10",
@@ -624,6 +625,14 @@
           "status": "pending",
           "notes": "",
           "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S5.9",
+          "title": "Hook the S3.5 upgrade sheet to locked program days",
+          "status": "pending",
+          "notes": "From S3 build: UpgradeSheet + FreeTier.canOpen are ready; Program screen not built yet.",
+          "created": "2026-10-22T22:57:10.800Z",
           "completed": null
         }
       ]
@@ -1146,6 +1155,51 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-22T22:57:10.823Z",
+      "type": "now",
+      "message": "Now: S4 / S4.1"
+    },
+    {
+      "time": "2026-10-22T22:57:10.800Z",
+      "type": "task_added",
+      "message": "S5.9 added: Hook the S3.5 upgrade sheet to locked program days"
+    },
+    {
+      "time": "2026-10-22T22:57:10.783Z",
+      "type": "status",
+      "message": "S3.5 in_progress → done (Free tier rule (counter, SOS, Day 1) + upgrade sheet built and tested; it's shown from the Program tab once Section 5 exists.)"
+    },
+    {
+      "time": "2026-10-22T22:57:10.766Z",
+      "type": "status",
+      "message": "S3.9 in_progress → done (Verified on CI 33dd4dd: all tests pass; screenshots match approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-22T22:57:10.747Z",
+      "type": "status",
+      "message": "S3.6 in_progress → done (Verified on CI 33dd4dd: all tests pass; screenshots match approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-22T22:57:10.729Z",
+      "type": "status",
+      "message": "S3.4 in_progress → done (Verified on CI 33dd4dd: all tests pass; screenshots match approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-22T22:57:10.707Z",
+      "type": "status",
+      "message": "S3.3 in_progress → done (Verified on CI 33dd4dd: all tests pass; screenshots match approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-22T22:57:10.688Z",
+      "type": "status",
+      "message": "S3.2 in_progress → done (Verified on CI 33dd4dd: all tests pass; screenshots match approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-22T22:57:10.661Z",
+      "type": "status",
+      "message": "S3.1 in_progress → done (Verified on CI 33dd4dd: all tests pass; screenshots match approved mockups in dark, light and largest text.)"
+    },
     {
       "time": "2026-10-22T22:26:58.517Z",
       "type": "note",
