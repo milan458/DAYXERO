@@ -2,14 +2,12 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-22T20:34:38.093Z"
+    "updated": "2026-10-22T20:35:53.094Z"
   },
   "now": {
     "section": "S1",
     "task": "S1.8",
     "waiting_on_milan": [
-      "Where is the old Flutter build? (S5.1)",
-      "Inactivity reset decision (S5.7)",
       "Create Config/Secrets.xcconfig on the Mac (S1.21)"
     ]
   },
@@ -497,8 +495,8 @@
         {
           "id": "S5.1",
           "title": "Port program content from the Flutter build: prep phase, 7-day program, 4-week maintenance arc.",
-          "status": "blocked",
-          "notes": "Question for Milan: where is the previous Flutter build (repo URL or path)? Needed to port content.",
+          "status": "pending",
+          "notes": "Question for Milan: where is the previous Flutter build (repo URL or path)? Needed to port content.\nMilan: port program content later. Section 5 build waits on it; mockups can use placeholder lessons.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -545,8 +543,8 @@
         {
           "id": "S5.7",
           "title": "Inactivity behaviour per Milan's answer to the open decision in part 1.",
-          "status": "blocked",
-          "notes": "Open decision from plan §1: keep the 3-idle-day reset to Day 1, or pause and replay the last day?",
+          "status": "pending",
+          "notes": "Open decision from plan §1: keep the 3-idle-day reset to Day 1, or pause and replay the last day?\nMilan decided: no reset to Day 1. After inactivity, pause and replay the last completed day, then continue. Build in Section 5.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -934,7 +932,7 @@
           "id": "S14.1",
           "title": "Notification plan: pledge, check-in, lesson available, milestone, NRT reminders, inactivity nudges per the open decision.",
           "status": "pending",
-          "notes": "",
+          "notes": "Inactivity nudges follow the pause-and-replay rule (no reset), per Milan.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -1078,6 +1076,26 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-22T20:35:53.094Z",
+      "type": "now",
+      "message": "Now: S1 / S1.8"
+    },
+    {
+      "time": "2026-10-22T20:35:53.075Z",
+      "type": "note",
+      "message": "S14.1: Inactivity nudges follow the pause-and-replay rule (no reset), per Milan."
+    },
+    {
+      "time": "2026-10-22T20:35:53.056Z",
+      "type": "status",
+      "message": "S5.1 blocked → pending (Milan: port program content later. Section 5 build waits on it; mockups can use placeholder lessons.)"
+    },
+    {
+      "time": "2026-10-22T20:35:53.036Z",
+      "type": "status",
+      "message": "S5.7 blocked → pending (Milan decided: no reset to Day 1. After inactivity, pause and replay the last completed day, then continue. Build in Section 5.)"
+    },
     {
       "time": "2026-10-22T20:34:38.093Z",
       "type": "now",
