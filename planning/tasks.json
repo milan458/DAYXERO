@@ -2,14 +2,15 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-22T21:10:10.012Z"
+    "updated": "2026-10-22T21:13:19.817Z"
   },
   "now": {
-    "section": "S2",
-    "task": "S2.1",
+    "section": "S3",
+    "task": "S3.1",
     "waiting_on_milan": [
-      "Youth resources per country for the under-18 exit (S2.2)",
-      "Create Config/Secrets.xcconfig on the Mac (S1.21)"
+      "Review the Section 3 paywall mockups",
+      "Confirm prices + 3-day trial (S3.2, S3.3)",
+      "Youth resources per country (S2.2)"
     ]
   },
   "sections": [
@@ -370,10 +371,22 @@
       "title": "Paywall",
       "goal": "honest, high-converting. Billing traps were the top one-star theme across competitors.",
       "signoff": {
-        "state": "not_started",
-        "history": []
+        "state": "mockups_ready",
+        "history": [
+          {
+            "time": "2026-10-22T21:13:19.758Z",
+            "state": "mockups_ready",
+            "by": "Claude",
+            "comment": ""
+          }
+        ]
       },
-      "mockups": [],
+      "mockups": [
+        {
+          "title": "Paywall: plans, trial, billing terms, states, free-tier upgrade",
+          "path": "mockups/S3/paywall.html"
+        }
+      ],
       "tasks": [
         {
           "id": "S3.1",
@@ -387,7 +400,7 @@
           "id": "S3.2",
           "title": "Plans: monthly, annual (highlighted), lifetime. Prices from RevenueCat; placeholder starting point $9.99/mo, $39.99/yr, $79.99 lifetime — confirm with Milan.",
           "status": "pending",
-          "notes": "Question for Milan: confirm $9.99/mo, $39.99/yr, $79.99 lifetime.",
+          "notes": "Question for Milan: confirm $9.99/mo, $39.99/yr, $79.99 lifetime.\nMockups use the placeholder prices; Milan to confirm.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -437,6 +450,14 @@
           "status": "pending",
           "notes": "",
           "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S3.9",
+          "title": "Trial reminder: 'we'll remind you the day before' (local notification)",
+          "status": "pending",
+          "notes": "Proposed in S3 mockups; Milan to confirm we promise it.",
+          "created": "2026-10-22T21:13:19.796Z",
           "completed": null
         }
       ]
@@ -1103,6 +1124,36 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-22T21:13:19.817Z",
+      "type": "now",
+      "message": "Now: S3 / S3.1"
+    },
+    {
+      "time": "2026-10-22T21:13:19.796Z",
+      "type": "task_added",
+      "message": "S3.9 added: Trial reminder: 'we'll remind you the day before' (local notification)"
+    },
+    {
+      "time": "2026-10-22T21:13:19.777Z",
+      "type": "note",
+      "message": "S3.2: Mockups use the placeholder prices; Milan to confirm."
+    },
+    {
+      "time": "2026-10-22T21:13:19.758Z",
+      "type": "signoff",
+      "message": "S3 mockups → mockups_ready"
+    },
+    {
+      "time": "2026-10-22T21:13:19.738Z",
+      "type": "mockup",
+      "message": "S3 mockup posted: Paywall: plans, trial, billing terms, states, free-tier upgrade"
+    },
+    {
+      "time": "2026-10-22T21:11:22.671Z",
+      "type": "now",
+      "message": "Now: S3 / S3.1"
+    },
     {
       "time": "2026-10-22T21:10:10.012Z",
       "type": "note",
