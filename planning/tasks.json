@@ -2,13 +2,14 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-22T20:07:35.644Z"
+    "updated": "2026-10-22T20:13:55.422Z"
   },
   "now": {
     "section": "S1",
-    "task": "S1.1",
+    "task": "S1.8",
     "waiting_on_milan": [
       "Analytics: PostHog or Mixpanel? (S1.5)",
+      "Bundle ID + Apple team ID (S1.19)",
       "Where is the old Flutter build? (S5.1)",
       "Inactivity reset decision (S5.7)"
     ]
@@ -65,16 +66,16 @@
         {
           "id": "S1.2",
           "title": "Add extension targets: Widget extension (home and lock screen widgets, Live Activities), and an App Group shared by the app and extensions.",
-          "status": "pending",
-          "notes": "",
+          "status": "in_progress",
+          "notes": "Code written; waiting on the first CI build (macOS runner) to verify.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S1.3",
           "title": "Data layer: SwiftData models for user profile, products used, usage baselines, program progress, logs (cravings, slips, uses), pledges and check-ins, NRT plan. Local-first; no account in v1.",
-          "status": "pending",
-          "notes": "",
+          "status": "in_progress",
+          "notes": "Code written; waiting on the first CI build (macOS runner) to verify.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -90,31 +91,31 @@
           "id": "S1.5",
           "title": "Analytics: wire PostHog or Mixpanel (ask Milan which). Define the event list for the onboarding funnel, paywall, program day starts and completions, craving sessions, slips and shares.",
           "status": "blocked",
-          "notes": "Question for Milan: PostHog or Mixpanel?",
+          "notes": "Question for Milan: PostHog or Mixpanel?\nEvent list defined in DayXero/Services/Analytics.swift; provider still blocked on Milan's choice.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S1.6",
           "title": "Subscriptions plumbing: RevenueCat (and Superwall if Milan wants paywall tests). Products: monthly, annual, lifetime. Restore purchases.",
-          "status": "pending",
-          "notes": "Question for Milan: add Superwall for paywall A/B tests, or RevenueCat paywalls only?",
+          "status": "in_progress",
+          "notes": "Question for Milan: add Superwall for paywall A/B tests, or RevenueCat paywalls only?\nCode written; waiting on the first CI build (macOS runner) to verify.\nProduct IDs dayxero.monthly/annual/lifetime, entitlement 'pro'. API key goes in an untracked xcconfig; needs Milan's RevenueCat project.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S1.7",
           "title": "Localisation setup (String Catalogs), even though v1 ships in English.",
-          "status": "pending",
-          "notes": "",
+          "status": "in_progress",
+          "notes": "Code written; waiting on the first CI build (macOS runner) to verify.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S1.8",
           "title": "Unit-test target; basic CI build check if feasible.",
-          "status": "pending",
-          "notes": "",
+          "status": "in_progress",
+          "notes": "Code written; waiting on the first CI build (macOS runner) to verify.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -197,6 +198,14 @@
           "notes": "Milan hit 'Could not save: malformed or exceeds a limit' while on Can view access. Fix: check write access and explain.\nPage checks write access up front and explains view-only; raw error replaced.",
           "created": "2026-10-22T20:02:32.312Z",
           "completed": "2026-10-22T20:05:00.868Z"
+        },
+        {
+          "id": "S1.19",
+          "title": "Bundle ID and Apple team: using app.dayxero / group.app.dayxero placeholders",
+          "status": "blocked",
+          "notes": "Found while setting up the project. Milan to confirm the bundle ID and give the Apple Developer team ID for device builds and TestFlight.",
+          "created": "2026-10-22T20:13:55.401Z",
+          "completed": null
         }
       ]
     },
@@ -414,7 +423,7 @@
           "id": "S4.2",
           "title": "Per-product counters: cigarettes, puffs or pouches not used; money kept; time regained.",
           "status": "pending",
-          "notes": "",
+          "notes": "Question for Milan: what should 'time regained' mean? Any minutes-per-cigarette figure is a health claim and needs a source.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -1054,6 +1063,56 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-22T20:13:55.422Z",
+      "type": "now",
+      "message": "Now: S1 / S1.8"
+    },
+    {
+      "time": "2026-10-22T20:13:55.401Z",
+      "type": "task_added",
+      "message": "S1.19 added: Bundle ID and Apple team: using app.dayxero / group.app.dayxero placeholders"
+    },
+    {
+      "time": "2026-10-22T20:13:55.383Z",
+      "type": "note",
+      "message": "S4.2: Question for Milan: what should 'time regained' mean? Any minutes-per-cigarette figure is a health claim and needs a source."
+    },
+    {
+      "time": "2026-10-22T20:13:55.366Z",
+      "type": "note",
+      "message": "S1.6: Product IDs dayxero.monthly/annual/lifetime, entitlement 'pro'. API key goes in an untracked xcconfig; needs Milan's RevenueCat project."
+    },
+    {
+      "time": "2026-10-22T20:13:55.348Z",
+      "type": "note",
+      "message": "S1.5: Event list defined in DayXero/Services/Analytics.swift; provider still blocked on Milan's choice."
+    },
+    {
+      "time": "2026-10-22T20:13:55.331Z",
+      "type": "status",
+      "message": "S1.8 pending → in_progress (Code written; waiting on the first CI build (macOS runner) to verify.)"
+    },
+    {
+      "time": "2026-10-22T20:13:55.313Z",
+      "type": "status",
+      "message": "S1.7 pending → in_progress (Code written; waiting on the first CI build (macOS runner) to verify.)"
+    },
+    {
+      "time": "2026-10-22T20:13:55.294Z",
+      "type": "status",
+      "message": "S1.6 pending → in_progress (Code written; waiting on the first CI build (macOS runner) to verify.)"
+    },
+    {
+      "time": "2026-10-22T20:13:55.276Z",
+      "type": "status",
+      "message": "S1.3 pending → in_progress (Code written; waiting on the first CI build (macOS runner) to verify.)"
+    },
+    {
+      "time": "2026-10-22T20:13:55.256Z",
+      "type": "status",
+      "message": "S1.2 pending → in_progress (Code written; waiting on the first CI build (macOS runner) to verify.)"
+    },
     {
       "time": "2026-10-22T20:07:35.644Z",
       "type": "status",
