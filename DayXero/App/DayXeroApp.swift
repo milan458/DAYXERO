@@ -5,6 +5,7 @@ import SwiftUI
 @main
 struct DayXeroApp: App {
     private let container: ModelContainer
+    @State private var entitlement: Entitlement
 
     init() {
         DX.Typeface.register()
@@ -17,13 +18,25 @@ struct DayXeroApp: App {
         }
         Subscriptions.shared.configure()
         Analytics.configure()
+        _entitlement = State(initialValue: Entitlement(store: Self.makeStore()))
     }
 
     var body: some Scene {
         WindowGroup {
             RootView()
+                .environment(entitlement)
+                .task { await entitlement.refresh() }
         }
         .modelContainer(container)
+    }
+
+    private static func makeStore() -> PurchaseStore {
+        #if DEBUG
+        if let mode = UserDefaults.standard.string(forKey: "dx.store").flatMap(MockStore.Mode.init(rawValue:)) {
+            return MockStore(mode: mode)
+        }
+        #endif
+        return Subscriptions.shared
     }
 }
 
@@ -31,11 +44,17 @@ struct DayXeroApp: App {
 struct RootView: View {
     @Query private var profiles: [UserProfile]
     @AppStorage("dx.underAge") private var underAge = false
+    /// The full paywall shows once, right after onboarding. After that, upgrades happen at locked days.
+    @AppStorage("dx.paywallDone") private var paywallDone = false
+    @Environment(Entitlement.self) private var entitlement
 
     var body: some View {
         #if DEBUG
         if UserDefaults.standard.bool(forKey: "dx.showGallery") {
             DesignSystemGallery()
+        } else if UserDefaults.standard.bool(forKey: "dx.paywallPreview") {
+            PaywallView(name: "Milan", quitDay: Calendar.current.date(byAdding: .day, value: 7, to: .now) ?? .now,
+                        model: PaywallModel(store: entitlement.store, entitlement: entitlement), onClose: {})
         } else {
             content
         }
@@ -49,7 +68,13 @@ struct RootView: View {
         if underAge {
             UnderAgeScreen().dxCanvas()
         } else if let profile = profiles.first {
-            PlaceholderHome(profile: profile)
+            if paywallDone || entitlement.isPro {
+                PlaceholderHome(profile: profile)
+            } else {
+                PaywallView(name: profile.name, quitDay: profile.quitDay,
+                            model: PaywallModel(store: entitlement.store, entitlement: entitlement),
+                            onClose: { paywallDone = true })
+            }
         } else {
             OnboardingFlow(onFinished: {})
         }
@@ -60,6 +85,7 @@ struct RootView: View {
 private struct PlaceholderHome: View {
     let profile: UserProfile
     @Environment(\.modelContext) private var context
+    @Environment(Entitlement.self) private var entitlement
     @State private var showGallery = false
 
     var body: some View {
@@ -67,13 +93,15 @@ private struct PlaceholderHome: View {
             Text("Plan saved").dxText(.micro)
             Text("Hi \(profile.name)").dxText(.title)
             Text("Quit Day: \(profile.quitDay, format: .dateTime.weekday(.wide).day().month())").dxText(.subtitle)
-            Text("The paywall (Section 3) and Home (Section 4) come next.").dxText(.subtitle)
+            Text(entitlement.isPro ? "Full program unlocked." : "Free version: counter, Craving SOS and Day 1.").dxText(.subtitle)
+            Text("Home (Section 4) comes next.").dxText(.subtitle)
             Spacer()
             Button("Design system gallery") { showGallery = true }.buttonStyle(.dxSecondary)
             #if DEBUG
             Button("Restart onboarding") {
                 context.delete(profile)
                 try? context.save()
+                UserDefaults.standard.set(false, forKey: "dx.paywallDone")
             }
             .buttonStyle(.dxQuiet)
             #endif

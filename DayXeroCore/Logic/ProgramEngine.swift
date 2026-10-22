@@ -51,3 +51,15 @@ public struct ProgramEngine: Sendable {
         return Double(outline.filter(completed.contains).count) / Double(outline.count)
     }
 }
+
+/// What the free tier includes (S3.5): the counter, Craving SOS and the first program day.
+public enum FreeTier {
+    public static func isFree(_ day: ProgramDayID, in outline: [ProgramDayID]) -> Bool {
+        day == outline.first
+    }
+
+    /// Whether a day can be opened: unlocked by progress, and either free or paid for.
+    public static func canOpen(_ day: ProgramDayID, engine: ProgramEngine, completed: Set<ProgramDayID>, isPro: Bool) -> Bool {
+        engine.canStart(day, completed: completed) && (isPro || isFree(day, in: engine.outline))
+    }
+}
