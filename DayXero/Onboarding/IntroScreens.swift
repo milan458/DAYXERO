@@ -32,17 +32,12 @@ struct WelcomeScreen: View {
         .padding(.horizontal, DX.Space.l)
         .padding(.top, DX.Space.xxl)
         .padding(.bottom, DX.Space.xs)
-        .background(alignment: .bottom) {
-            Hills()
-                .frame(height: 380)
-                .ignoresSafeArea(edges: .bottom)
-                .accessibilityHidden(true)
-        }
     }
 }
 
 /// Rolling moss hills: the methodology's organic topography, flat so it works in both themes.
-private struct Hills: View {
+/// Drawn by OnboardingFlow behind the welcome step so they run to the screen's bottom edge.
+struct Hills: View {
     var body: some View {
         GeometryReader { geo in
             let w = geo.size.width, h = geo.size.height

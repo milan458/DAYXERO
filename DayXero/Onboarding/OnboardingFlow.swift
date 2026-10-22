@@ -25,6 +25,15 @@ struct OnboardingFlow: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+        .background(alignment: .bottom) {
+            if model.step == .welcome {
+                Hills()
+                    .frame(height: 400)
+                    .ignoresSafeArea()
+                    .transition(.opacity)
+                    .accessibilityHidden(true)
+            }
+        }
         .dxCanvas()
         .animation(DX.Motion.animation(DX.Motion.glide, reduceMotion: reduceMotion), value: model.step)
         #if DEBUG
