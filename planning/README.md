@@ -6,3 +6,7 @@ Start the tracker: `npm run tracker` → http://localhost:4321 (if the port is t
 - `task.js` is how Claude updates it (status, new tasks, notes, sign-off state, mockups, the "Now" panel). Every change lands in the change log. Run `node planning/task.js` for usage.
 - `mockups/<section>/` holds the mockups shown on each section.
 - `seed.js` built the first `tasks.json` from `docs/DAYXERO_V1_HANDOFF.md`; it won't overwrite an existing file.
+
+## Hosted copy
+
+While work runs in a cloud session, localhost isn't reachable from Milan's devices, so the tracker is also published at https://claude.ai/artifact/2hv4n7pLXDDZn862Bpxocp (`artifact.html` + `tasks.json` + mockups). Sign-offs made there are saved in the page's database; Claude reads them, writes them into `tasks.json`, and republishes.
