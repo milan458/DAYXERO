@@ -200,19 +200,26 @@ struct PaywallView: View {
             if model.selected != .lifetime {
                 Text("Cancel in Settings › Apple ID › Subscriptions.").multilineTextAlignment(.center)
             }
-            DXFlowLayout(spacing: 6) {
-                Button("How billing works") { showBilling = true }.buttonStyle(.plain).underline()
-                Text(verbatim: "·")
-                Link("Terms", destination: AppLinks.terms).underline()
-                if let privacy = AppLinks.privacy {
-                    Text(verbatim: "·")
-                    Link("Privacy", destination: privacy).underline()
-                }
+            // One centred line when it fits, stacked when text is large.
+            ViewThatFits {
+                HStack(spacing: 6) { termsLinks(separators: true) }
+                VStack(spacing: 4) { termsLinks(separators: false) }
             }
         }
         .font(.custom(DX.Typeface.regular, size: 11, relativeTo: .caption2))
         .foregroundStyle(DX.Palette.muted)
         .tint(DX.Palette.text2)
+    }
+
+    @ViewBuilder
+    private func termsLinks(separators: Bool) -> some View {
+        Button("How billing works") { showBilling = true }.buttonStyle(.plain).underline()
+        if separators { Text(verbatim: "·") }
+        Link("Terms", destination: AppLinks.terms).underline()
+        if let privacy = AppLinks.privacy {
+            if separators { Text(verbatim: "·") }
+            Link("Privacy", destination: privacy).underline()
+        }
     }
 
     // MARK: Failed
