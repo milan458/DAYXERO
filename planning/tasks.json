@@ -1,0 +1,1128 @@
+{
+  "meta": {
+    "project": "DayXero v1",
+    "source": "docs/DAYXERO_V1_HANDOFF.md",
+    "updated": "2026-10-22T19:50:02.742Z"
+  },
+  "now": {
+    "section": "S1",
+    "task": "S1.4",
+    "waiting_on_milan": [
+      "Answer the questions on the blocked tasks",
+      "Create the empty GitHub repo milan458/dayxero"
+    ]
+  },
+  "sections": [
+    {
+      "id": "S1",
+      "title": "Foundations",
+      "goal": "",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S1.1",
+          "title": "Create the Xcode project: SwiftUI app target, iOS 18 deployment target, Liquid Glass on iOS 26 behind `if #available(iOS 26, *)` with solid fallbacks.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S1.2",
+          "title": "Add extension targets: Widget extension (home and lock screen widgets, Live Activities), and an App Group shared by the app and extensions.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S1.3",
+          "title": "Data layer: SwiftData models for user profile, products used, usage baselines, program progress, logs (cravings, slips, uses), pledges and check-ins, NRT plan. Local-first; no account in v1.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S1.4",
+          "title": "Design system in code from DESIGN_METHODOLOGY.md: colour, type, spacing, radius, glass, motion and haptic tokens, plus core components. Build a preview gallery screen; this is Section 1's mockup for sign-off.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S1.5",
+          "title": "Analytics: wire PostHog or Mixpanel (ask Milan which). Define the event list for the onboarding funnel, paywall, program day starts and completions, craving sessions, slips and shares.",
+          "status": "blocked",
+          "notes": "Question for Milan: PostHog or Mixpanel?",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S1.6",
+          "title": "Subscriptions plumbing: RevenueCat (and Superwall if Milan wants paywall tests). Products: monthly, annual, lifetime. Restore purchases.",
+          "status": "pending",
+          "notes": "Question for Milan: add Superwall for paywall A/B tests, or RevenueCat paywalls only?",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S1.7",
+          "title": "Localisation setup (String Catalogs), even though v1 ships in English.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S1.8",
+          "title": "Unit-test target; basic CI build check if feasible.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S1.9",
+          "title": "Build the localhost task tracker (plan §0.1)",
+          "status": "done",
+          "notes": "From plan §0.1; done before section 1 work.\nNode server + one page; verified API, sign-off write-back, error paths.",
+          "created": "2026-10-22T19:49:40.909Z",
+          "completed": "2026-10-22T19:50:02.236Z"
+        },
+        {
+          "id": "S1.10",
+          "title": "Design conflict: the methodology's dock has 5 tabs; the plan has 3 (Today, Program, Progress)",
+          "status": "blocked",
+          "notes": "From reading both docs. Proposal: keep the plan's 3 tabs, styled as the morphing white-capsule dock. Confirm.",
+          "created": "2026-10-22T19:50:02.609Z",
+          "completed": null
+        },
+        {
+          "id": "S1.11",
+          "title": "Design conflict: the methodology is OLED black only; the plan tests light and dark",
+          "status": "blocked",
+          "notes": "From reading both docs. Proposal: dark-only v1 (appearance setting in S15.1 dropped or deferred). Confirm.",
+          "created": "2026-10-22T19:50:02.633Z",
+          "completed": null
+        },
+        {
+          "id": "S1.12",
+          "title": "Design question: Inter (bundled) or SF Pro (system) for type?",
+          "status": "blocked",
+          "notes": "Methodology names Inter first with -apple-system fallback. SF Pro gives free Dynamic Type and optical sizing; Inter matches the spec literally. Confirm.",
+          "created": "2026-10-22T19:50:02.656Z",
+          "completed": null
+        },
+        {
+          "id": "S1.13",
+          "title": "Design question: iOS 26 Liquid Glass vs the methodology's custom frosted glass",
+          "status": "blocked",
+          "notes": "Plan says Liquid Glass on iOS 26; the methodology specifies solid white active capsules and moss-tinted frosted cards. Proposal: Liquid Glass for the dock container and sheets only; cards stay as specified. Confirm.",
+          "created": "2026-10-22T19:50:02.677Z",
+          "completed": null
+        },
+        {
+          "id": "S1.14",
+          "title": "Build environment: this cloud session runs Linux with no Xcode",
+          "status": "pending",
+          "notes": "Swift code can be written here, but builds, simulator runs and SwiftUI preview exports need macOS. Proposal: XcodeGen project.yml + GitHub Actions macOS runner for build/test (S1.8), and Milan runs the simulator locally. Confirm.",
+          "created": "2026-10-22T19:50:02.702Z",
+          "completed": null
+        },
+        {
+          "id": "S1.15",
+          "title": "Create GitHub repo milan458/dayxero and push",
+          "status": "blocked",
+          "notes": "This session cannot create GitHub repos. Milan to create an empty repo; Claude then attaches it and pushes.",
+          "created": "2026-10-22T19:50:02.722Z",
+          "completed": null
+        }
+      ]
+    },
+    {
+      "id": "S2",
+      "title": "Onboarding",
+      "goal": "build commitment and personalise the plan before the paywall. Target 60%+ of installs completing it.",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S2.1",
+          "title": "Welcome and promise: \"Don't quit today. Quit on your Quit Day.\"",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S2.2",
+          "title": "Age confirmation (18+). Under 18: friendly exit with a pointer to free youth resources.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S2.3",
+          "title": "Product selection, multi-select: cigarettes, vape, pouches, NRT already in use. Dual use supported.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S2.4",
+          "title": "Usage baseline per product: amount per day (cigarettes, puffs or sessions, pouches with strength in mg), cost per unit or per pack and currency, years of use.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S2.5",
+          "title": "Triggers and when cravings usually hit (multi-select).",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S2.6",
+          "title": "Reasons to quit, in the user's own words, with an optional photo. Reused in pledge and SOS.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S2.7",
+          "title": "Past quit attempts and what happened (short, optional).",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S2.8",
+          "title": "Choose Quit Day: the date the prep phase ends, with a recommended default.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S2.9",
+          "title": "NRT interest: using it, want it, not interested.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S2.10",
+          "title": "Plan reveal: personal summary of their program, Quit Day, money they'll keep, what the next 7 days look like. This comes **before** the paywall.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S2.11",
+          "title": "Notification permission, asked after the plan reveal with a clear reason.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S2.12",
+          "title": "Optional App Store review prompt placement (ask Milan).",
+          "status": "pending",
+          "notes": "Question for Milan: show the App Store review prompt in onboarding? If so, where?",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S2.13",
+          "title": "Funnel analytics on every screen; one-tap skip where a question is optional.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        }
+      ]
+    },
+    {
+      "id": "S3",
+      "title": "Paywall",
+      "goal": "honest, high-converting. Billing traps were the top one-star theme across competitors.",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S3.1",
+          "title": "Paywall screen after plan reveal, addressed by name, showing what's included.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S3.2",
+          "title": "Plans: monthly, annual (highlighted), lifetime. Prices from RevenueCat; placeholder starting point $9.99/mo, $39.99/yr, $79.99 lifetime — confirm with Milan.",
+          "status": "pending",
+          "notes": "Question for Milan: confirm .99/mo, 9.99/yr, 9.99 lifetime.",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S3.3",
+          "title": "Free trial on annual (3 days unless Milan says otherwise), with the exact charge date stated on screen.",
+          "status": "pending",
+          "notes": "Question for Milan: 3-day trial on annual — confirm.",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S3.4",
+          "title": "Plain-language terms: how to cancel in two taps, link to Apple subscription management, refund note.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S3.5",
+          "title": "Free tier that's genuinely useful: counter, craving SOS, Day 1 of the program. Clear upgrade points elsewhere.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S3.6",
+          "title": "Restore purchases; entitlement checks; paywall dismiss path.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S3.7",
+          "title": "No ads anywhere in the app.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S3.8",
+          "title": "Regional pricing hook for India (configured in App Store Connect later).",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        }
+      ]
+    },
+    {
+      "id": "S4",
+      "title": "Home / Today",
+      "goal": "",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S4.1",
+          "title": "Hero progress visual (direction set by DESIGN_METHODOLOGY.md) showing days clear and progress; slips do not reset it.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S4.2",
+          "title": "Per-product counters: cigarettes, puffs or pouches not used; money kept; time regained.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S4.3",
+          "title": "Prep-phase state: countdown to Quit Day, \"you can still use during prep\", today's prep lesson.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S4.4",
+          "title": "Today's program card: day N of 7, lesson title, duration, start or continue.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S4.5",
+          "title": "Craving button always reachable from Home (thumb zone).",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S4.6",
+          "title": "Upcoming milestone hint.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S4.7",
+          "title": "Glass navigation (tab bar: Today, Program, Progress) with iOS 26 Liquid Glass and fallback.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        }
+      ]
+    },
+    {
+      "id": "S5",
+      "title": "Program",
+      "goal": "",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S5.1",
+          "title": "Port program content from the Flutter build: prep phase, 7-day program, 4-week maintenance arc.",
+          "status": "blocked",
+          "notes": "Question for Milan: where is the previous Flutter build (repo URL or path)? Needed to port content.",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S5.2",
+          "title": "Product variants: smoking, vaping, pouches; dual users get the variant for their main product plus notes for the others (confirm rule with Milan).",
+          "status": "pending",
+          "notes": "Question for Milan: dual users — main-product variant plus notes for the others. Confirm the rule.",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S5.3",
+          "title": "Day locking: a day unlocks only after the previous day is completed.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S5.4",
+          "title": "Lesson player: text, audio or short exercises as content requires; completion tracking.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S5.5",
+          "title": "Prep phase until Quit Day, then the quit days.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S5.6",
+          "title": "Maintenance arc (weeks 2–5) changes format, not just content, to avoid the week 3–4 drop-off.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S5.7",
+          "title": "Inactivity behaviour per Milan's answer to the open decision in part 1.",
+          "status": "blocked",
+          "notes": "Open decision from plan §1: keep the 3-idle-day reset to Day 1, or pause and replay the last day?",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S5.8",
+          "title": "Program overview screen: past, current and locked days.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        }
+      ]
+    },
+    {
+      "id": "S6",
+      "title": "Craving SOS",
+      "goal": "opens in under a second, from anywhere.",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S6.1",
+          "title": "SOS screen: urge-surfing timer (about 3 minutes), guided breathing, the user's reasons and photo.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S6.2",
+          "title": "Core Haptics pattern that slows as the session progresses; Reduce Motion and haptics-off fallbacks.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S6.3",
+          "title": "Outcomes: \"It passed\" (logs a craving resisted), \"I slipped\" (goes to slip debrief), \"Ping a friend\" (share sheet in v1; buddy system comes later).",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S6.4",
+          "title": "Live Activity and Dynamic Island showing the countdown with an \"It passed\" action.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S6.5",
+          "title": "Entry points: Home button, home screen widget, lock screen widget, Control Center control, App Intent / Siri (\"I'm having a craving\").",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S6.6",
+          "title": "Log every SOS session with time and trigger for insights.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        }
+      ]
+    },
+    {
+      "id": "S7",
+      "title": "Logging and insights",
+      "goal": "",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S7.1",
+          "title": "One-tap logging per product (cigarette, puff session, pouch) from the app, an interactive widget and an App Intent.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S7.2",
+          "title": "Trigger and craving log with optional mood and context.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S7.3",
+          "title": "Insights screen: time-of-day heat map of cravings and uses, top triggers, trend over time. Shows \"needs a week of data\" until there's enough.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S7.4",
+          "title": "Progress screen: money kept, units avoided, time regained, cravings ridden out.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        }
+      ]
+    },
+    {
+      "id": "S8",
+      "title": "Slip handling",
+      "goal": "",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S8.1",
+          "title": "Slip logging from SOS, Home and the widget.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S8.2",
+          "title": "Sixty-second slip debrief: what happened, what triggered it, one thing to try next time.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S8.3",
+          "title": "Supportive messages (copy from Milan; placeholders until then). Streak and progress visual unchanged.",
+          "status": "pending",
+          "notes": "Needs supportive slip copy from Milan (placeholders until then).",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S8.4",
+          "title": "Slips feed the insights screen.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        }
+      ]
+    },
+    {
+      "id": "S9",
+      "title": "NRT and taper co-pilot",
+      "goal": "",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S9.1",
+          "title": "NRT setup: patch, gum, lozenge, inhaler; strength.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S9.2",
+          "title": "Step-down schedules that follow standard product-label guidance only; every screen says to follow the label and ask a pharmacist or doctor. No dosing advice beyond the label.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S9.3",
+          "title": "Pouch-strength taper plan for pouch users (e.g. stepping down mg over weeks), with reminders.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S9.4",
+          "title": "Reminders for patch changes and step-down dates.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S9.5",
+          "title": "NRT shown on Home and Progress.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        }
+      ]
+    },
+    {
+      "id": "S10",
+      "title": "Health timeline",
+      "goal": "",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S10.1",
+          "title": "Per-product timeline (smoking, vaping, pouches) of what changes in the body over time.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S10.2",
+          "title": "Every item carries a source citation the user can open. Best public sources for now; keep wording conservative.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S10.3",
+          "title": "Store timeline content as data (JSON) so it can be corrected without code changes.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        }
+      ]
+    },
+    {
+      "id": "S11",
+      "title": "Daily pledge and evening check-in",
+      "goal": "",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S11.1",
+          "title": "Morning pledge with the user's own reason and photo.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S11.2",
+          "title": "Evening check-in: how today went, cravings, mood.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S11.3",
+          "title": "User-set day boundary (when \"today\" ends) so late-night check-ins count for the right day.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S11.4",
+          "title": "Gentle reminders for both, user-controllable.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        }
+      ]
+    },
+    {
+      "id": "S12",
+      "title": "Stress and anxiety toolkit",
+      "goal": "",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S12.1",
+          "title": "Three to five short exercises: breathing patterns, grounding, a brief ACT-style \"notice and name\" exercise.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S12.2",
+          "title": "Reachable from SOS and the Program tab.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S12.3",
+          "title": "A plain line pointing to professional help and local helplines; no diagnosis or clinical claims.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        }
+      ]
+    },
+    {
+      "id": "S13",
+      "title": "Milestones and share cards",
+      "goal": "",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S13.1",
+          "title": "Milestone schedule (confirm with Milan; suggested: Quit Day, day 1, 3, 7, 14, 30, 60, 90, 100, 180, 365).",
+          "status": "pending",
+          "notes": "Question for Milan: confirm milestone schedule (Quit Day, day 1, 3, 7, 14, 30, 60, 90, 100, 180, 365).",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S13.2",
+          "title": "Milestone celebration moment in-app, with haptics and motion; respects Reduce Motion.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S13.3",
+          "title": "Share cards rendered with `ImageRenderer` for Instagram Stories (9:16) and WhatsApp; opt-in, user picks what to show (days, money, cravings ridden out).",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S13.4",
+          "title": "Wordmark on every card; no personal data shown by default.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        }
+      ]
+    },
+    {
+      "id": "S14",
+      "title": "Notifications",
+      "goal": "",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S14.1",
+          "title": "Notification plan: pledge, check-in, lesson available, milestone, NRT reminders, inactivity nudges per the open decision.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S14.2",
+          "title": "Quiet hours and per-type toggles in Settings.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S14.3",
+          "title": "No guilt copy in any notification.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        }
+      ]
+    },
+    {
+      "id": "S15",
+      "title": "Settings, privacy and accessibility",
+      "goal": "",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S15.1",
+          "title": "Settings: products and baselines, Quit Day, day boundary, notifications, haptics, appearance.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S15.2",
+          "title": "Subscription management link, restore purchases.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S15.3",
+          "title": "Data export and delete-all-data.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S15.4",
+          "title": "Privacy: local-first; analytics disclosure; privacy policy and terms links (ask Milan for URLs).",
+          "status": "pending",
+          "notes": "Needs privacy policy and terms URLs from Milan.",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S15.5",
+          "title": "Accessibility pass across the whole app: VoiceOver labels on every control and the hero visual, full Dynamic Type, Reduce Motion, Reduce Transparency, contrast.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S15.6",
+          "title": "Health disclaimer: educational support, not medical treatment.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        }
+      ]
+    },
+    {
+      "id": "S16",
+      "title": "QA and launch prep",
+      "goal": "",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S16.1",
+          "title": "End-to-end test of the full journey: onboarding → paywall → prep → Quit Day → day 7 → maintenance.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S16.2",
+          "title": "Test on small and large iPhones, iOS 18 and iOS 26, light and dark, largest text size.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S16.3",
+          "title": "App Store assets: screenshots, preview video, description (ask Milan for copy).",
+          "status": "pending",
+          "notes": "Needs App Store copy from Milan.",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S16.4",
+          "title": "TestFlight build for Milan.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S16.5",
+          "title": "Prepare an App Store featuring nomination (App Store Connect → Featuring → Nominations → App Launch), at least 3 weeks before launch.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S16.6",
+          "title": "Launch checklist in the tracker.",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        }
+      ]
+    }
+  ],
+  "log": [
+    {
+      "time": "2026-10-22T19:50:02.742Z",
+      "type": "now",
+      "message": "Now: S1 / S1.4"
+    },
+    {
+      "time": "2026-10-22T19:50:02.722Z",
+      "type": "task_added",
+      "message": "S1.15 added: Create GitHub repo milan458/dayxero and push"
+    },
+    {
+      "time": "2026-10-22T19:50:02.702Z",
+      "type": "task_added",
+      "message": "S1.14 added: Build environment: this cloud session runs Linux with no Xcode"
+    },
+    {
+      "time": "2026-10-22T19:50:02.677Z",
+      "type": "task_added",
+      "message": "S1.13 added: Design question: iOS 26 Liquid Glass vs the methodology's custom frosted glass"
+    },
+    {
+      "time": "2026-10-22T19:50:02.656Z",
+      "type": "task_added",
+      "message": "S1.12 added: Design question: Inter (bundled) or SF Pro (system) for type?"
+    },
+    {
+      "time": "2026-10-22T19:50:02.633Z",
+      "type": "task_added",
+      "message": "S1.11 added: Design conflict: the methodology is OLED black only; the plan tests light and dark"
+    },
+    {
+      "time": "2026-10-22T19:50:02.609Z",
+      "type": "task_added",
+      "message": "S1.10 added: Design conflict: the methodology's dock has 5 tabs; the plan has 3 (Today, Program, Progress)"
+    },
+    {
+      "time": "2026-10-22T19:50:02.586Z",
+      "type": "note",
+      "message": "S16.3: Needs App Store copy from Milan."
+    },
+    {
+      "time": "2026-10-22T19:50:02.568Z",
+      "type": "note",
+      "message": "S15.4: Needs privacy policy and terms URLs from Milan."
+    },
+    {
+      "time": "2026-10-22T19:50:02.547Z",
+      "type": "note",
+      "message": "S13.1: Question for Milan: confirm milestone schedule (Quit Day, day 1, 3, 7, 14, 30, 60, 90, 100, 180, 365)."
+    },
+    {
+      "time": "2026-10-22T19:50:02.522Z",
+      "type": "note",
+      "message": "S8.3: Needs supportive slip copy from Milan (placeholders until then)."
+    },
+    {
+      "time": "2026-10-22T19:50:02.504Z",
+      "type": "status",
+      "message": "S5.7 pending → blocked"
+    },
+    {
+      "time": "2026-10-22T19:50:02.480Z",
+      "type": "note",
+      "message": "S5.7: Open decision from plan §1: keep the 3-idle-day reset to Day 1, or pause and replay the last day?"
+    },
+    {
+      "time": "2026-10-22T19:50:02.463Z",
+      "type": "note",
+      "message": "S5.2: Question for Milan: dual users — main-product variant plus notes for the others. Confirm the rule."
+    },
+    {
+      "time": "2026-10-22T19:50:02.440Z",
+      "type": "status",
+      "message": "S5.1 pending → blocked"
+    },
+    {
+      "time": "2026-10-22T19:50:02.412Z",
+      "type": "note",
+      "message": "S5.1: Question for Milan: where is the previous Flutter build (repo URL or path)? Needed to port content."
+    },
+    {
+      "time": "2026-10-22T19:50:02.388Z",
+      "type": "note",
+      "message": "S3.3: Question for Milan: 3-day trial on annual — confirm."
+    },
+    {
+      "time": "2026-10-22T19:50:02.365Z",
+      "type": "note",
+      "message": "S3.2: Question for Milan: confirm .99/mo, 9.99/yr, 9.99 lifetime."
+    },
+    {
+      "time": "2026-10-22T19:50:02.343Z",
+      "type": "note",
+      "message": "S2.12: Question for Milan: show the App Store review prompt in onboarding? If so, where?"
+    },
+    {
+      "time": "2026-10-22T19:50:02.297Z",
+      "type": "note",
+      "message": "S1.6: Question for Milan: add Superwall for paywall A/B tests, or RevenueCat paywalls only?"
+    },
+    {
+      "time": "2026-10-22T19:50:02.278Z",
+      "type": "status",
+      "message": "S1.5 pending → blocked"
+    },
+    {
+      "time": "2026-10-22T19:50:02.257Z",
+      "type": "note",
+      "message": "S1.5: Question for Milan: PostHog or Mixpanel?"
+    },
+    {
+      "time": "2026-10-22T19:50:02.236Z",
+      "type": "status",
+      "message": "S1.9 pending → done (Node server + one page; verified API, sign-off write-back, error paths.)"
+    },
+    {
+      "time": "2026-10-22T19:49:40.909Z",
+      "type": "task_added",
+      "message": "S1.9 added: Build the localhost task tracker (plan §0.1)"
+    },
+    {
+      "time": "2026-10-22T19:48:52.060Z",
+      "type": "task_added",
+      "message": "Loaded 92 tasks across 16 sections from the handoff plan"
+    }
+  ]
+}

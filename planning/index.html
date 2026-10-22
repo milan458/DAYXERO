@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DayXero Tracker</title>
+<style>
+  :root {
+    --bg: #000; --s1: #121212; --s2: #161616; --s3: #1c1c1e;
+    --line: rgba(255,255,255,.08); --text: #fff; --text2: rgba(255,255,255,.6); --muted: rgba(255,255,255,.38);
+    --sage: #bcc388; --moss: #43511c; --amber: #e5a93c; --coral: #c85a54;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif; }
+  main { max-width: 1040px; margin: 0 auto; padding: 24px 16px 80px; }
+  h1 { font-size: 26px; letter-spacing: -.02em; margin: 0; }
+  .sub { color: var(--text2); font-size: 13px; }
+  .label { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  header { display: flex; justify-content: space-between; align-items: end; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+  .card { background: var(--s1); border: 1px solid var(--line); border-radius: 24px; padding: 18px 20px; margin-bottom: 14px; }
+  .now { background: linear-gradient(135deg, rgba(67,81,28,.45), rgba(20,20,20,.75)); border-color: rgba(255,255,255,.14); }
+  .now-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 10px; }
+  .now-val { font-size: 17px; font-weight: 600; margin-top: 4px; }
+  .now ul { margin: 6px 0 0; padding-left: 18px; color: var(--text2); }
+  .bar { height: 5px; background: rgba(255,255,255,.12); border-radius: 99px; overflow: hidden; margin-top: 8px; }
+  .bar > i { display: block; height: 100%; background: var(--sage); border-radius: 99px; }
+  details.section > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  details.section > summary::-webkit-details-marker { display: none; }
+  .sec-title { font-size: 16px; font-weight: 600; flex: 1; min-width: 180px; }
+  .pill { display: inline-block; padding: 3px 10px; border-radius: 99px; font-size: 12px; font-weight: 600; white-space: nowrap; background: var(--s3); color: var(--text2); }
+  .st-done, .so-signed_off { background: var(--sage); color: #000; }
+  .st-in_progress { background: #fff; color: #000; }
+  .st-blocked, .so-changes_requested { background: var(--coral); color: #fff; }
+  .st-awaiting_signoff, .so-mockups_ready { background: var(--amber); color: #000; }
+  table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+  th { text-align: left; font-weight: 600; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding: 6px 8px; border-bottom: 1px solid var(--line); }
+  td { padding: 9px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  td.id { font-variant-numeric: tabular-nums; color: var(--text2); white-space: nowrap; }
+  td.notes { color: var(--text2); white-space: pre-wrap; font-size: 13px; }
+  td.date { color: var(--muted); font-size: 12px; white-space: nowrap; }
+  .table-wrap { overflow-x: auto; }
+  .mockups { margin-top: 14px; display: grid; gap: 12px; }
+  .mockups a { color: var(--sage); }
+  .mockups iframe { width: 100%; height: 720px; border: 1px solid var(--line); border-radius: 18px; background: #000; }
+  .mockups img { max-width: 100%; border-radius: 18px; border: 1px solid var(--line); }
+  .signoff { margin-top: 14px; display: grid; gap: 10px; }
+  textarea { width: 100%; min-height: 64px; background: var(--s2); color: var(--text); border: 1px solid var(--line); border-radius: 16px; padding: 10px 14px; font: inherit; resize: vertical; }
+  textarea:focus { outline: none; border-color: rgba(188,195,136,.6); }
+  .btns { display: flex; gap: 10px; flex-wrap: wrap; }
+  button { border: 0; border-radius: 99px; padding: 10px 18px; font: 600 14px/1 inherit; font-family: inherit; cursor: pointer; }
+  .approve { background: #fff; color: #000; }
+  .changes { background: var(--s3); color: #fff; border: 1px solid var(--line); }
+  button:active { transform: scale(.97); }
+  .history { color: var(--muted); font-size: 12px; margin: 0; padding-left: 18px; }
+  .log { list-style: none; margin: 10px 0 0; padding: 0; }
+  .log li { padding: 7px 0; border-bottom: 1px solid var(--line); display: flex; gap: 14px; }
+  .log time { color: var(--muted); font-size: 12px; white-space: nowrap; min-width: 130px; font-variant-numeric: tabular-nums; }
+  .err { color: var(--coral); }
+  @media (max-width: 640px) { td.date, th.date { display: none; } .log li { flex-direction: column; gap: 2px; } }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div>
+      <div class="label">DayXero v1</div>
+      <h1>Build tracker</h1>
+    </div>
+    <div class="sub" id="updated">Loading…</div>
+  </header>
+  <section class="card now" id="now"></section>
+  <div id="sections"></div>
+  <section class="card">
+    <div class="label">Change log</div>
+    <ul class="log" id="log"></ul>
+  </section>
+</main>
+<script>
+const fmt = (iso) => iso ? new Date(iso).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const label = (s) => s.replace(/_/g, ' ');
+let lastStamp = null;
+const open = new Set();
+
+function renderNow(d) {
+  const sec = d.sections.find((s) => s.id === d.now.section);
+  let task = null;
+  for (const s of d.sections) task = task || s.tasks.find((t) => t.id === d.now.task);
+  const all = d.sections.flatMap((s) => s.tasks);
+  const done = all.filter((t) => t.status === 'done').length;
+  const waiting = [
+    ...d.now.waiting_on_milan,
+    ...d.sections.filter((s) => s.signoff.state === 'mockups_ready').map((s) => `${s.id} mockups ready for sign-off`),
+  ];
+  const blocked = all.filter((t) => t.status === 'blocked');
+  document.getElementById('now').innerHTML = `
+    <div class="label">Now</div>
+    <div class="now-grid">
+      <div><div class="sub">Current section</div><div class="now-val">${sec ? `${esc(sec.id)} · ${esc(sec.title)}` : '—'}</div>
+        ${sec ? `<div class="sub" style="margin-top:4px">Mockups: <span class="pill so-${sec.signoff.state}">${label(sec.signoff.state)}</span></div>` : ''}</div>
+      <div><div class="sub">Current task</div><div class="now-val">${task ? `${esc(task.id)} · ${esc(task.title)}` : '—'}</div></div>
+      <div><div class="sub">Overall</div><div class="now-val">${done} / ${all.length} done</div>
+        <div class="bar"><i style="width:${(done / all.length) * 100}%"></i></div></div>
+    </div>
+    <div style="margin-top:16px"><div class="sub">Waiting on Milan (${waiting.length + blocked.length})</div>
+      <ul>${waiting.map((w) => `<li>${esc(w)}</li>`).join('')}
+      ${blocked.map((t) => `<li><b>${esc(t.id)}</b> ${esc(t.title)}${t.notes ? ` — <i>${esc(t.notes.split('\n').pop())}</i>` : ''}</li>`).join('')}</ul>
+    </div>`;
+}
+
+function renderSection(s) {
+  const done = s.tasks.filter((t) => t.status === 'done').length;
+  const mockups = s.mockups.map((m) => {
+    const isImg = /\.(png|jpe?g|svg)$/i.test(m.path);
+    return `<div><a href="${esc(m.path)}" target="_blank" rel="noopener">${esc(m.title)} ↗</a>
+      ${isImg ? `<img src="${esc(m.path)}" alt="${esc(m.title)}">` : `<iframe src="${esc(m.path)}" title="${esc(m.title)}" loading="lazy"></iframe>`}</div>`;
+  }).join('');
+  return `
+  <details class="card section" data-id="${s.id}" ${open.has(s.id) ? 'open' : ''}>
+    <summary>
+      <span class="sec-title">${esc(s.id)} · ${esc(s.title)}</span>
+      <span class="sub">${done}/${s.tasks.length} done</span>
+      <span class="pill so-${s.signoff.state}">mockups: ${label(s.signoff.state)}</span>
+    </summary>
+    ${s.goal ? `<p class="sub">Goal: ${esc(s.goal)}</p>` : ''}
+    <div class="table-wrap"><table>
+      <thead><tr><th>ID</th><th>Task</th><th>Status</th><th>Notes</th><th class="date">Created</th><th class="date">Completed</th></tr></thead>
+      <tbody>${s.tasks.map((t) => `<tr>
+        <td class="id">${esc(t.id)}</td><td>${esc(t.title)}</td>
+        <td><span class="pill st-${t.status}">${label(t.status)}</span></td>
+        <td class="notes">${esc(t.notes)}</td>
+        <td class="date">${fmt(t.created)}</td><td class="date">${fmt(t.completed)}</td></tr>`).join('')}</tbody>
+    </table></div>
+    <div class="mockups"><div class="label">Mockups</div>${mockups || '<div class="sub">No mockups posted yet.</div>'}</div>
+    <div class="signoff">
+      <div class="label">Sign-off</div>
+      <textarea id="c-${s.id}" placeholder="What should change? (required for Request changes)"></textarea>
+      <div class="btns">
+        <button class="approve" data-act="approve" data-sec="${s.id}">Approve mockups</button>
+        <button class="changes" data-act="request_changes" data-sec="${s.id}">Request changes</button>
+        <span class="sub err" id="e-${s.id}"></span>
+      </div>
+      ${s.signoff.history.length ? `<ul class="history">${s.signoff.history.slice().reverse().map((h) =>
+        `<li>${fmt(h.time)} — ${label(h.state)} (${esc(h.by)})${h.comment ? `: ${esc(h.comment)}` : ''}</li>`).join('')}</ul>` : ''}
+    </div>
+  </details>`;
+}
+
+async function load(force) {
+  try {
+    const d = await (await fetch('/api/tasks', { cache: 'no-store' })).json();
+    document.getElementById('updated').textContent = `Updated ${fmt(d.meta.updated)} · refreshes every 4s`;
+    if (!force && d.meta.updated === lastStamp) return;
+    // Don't clobber a comment Milan is typing.
+    const drafts = {};
+    document.querySelectorAll('textarea').forEach((t) => { if (t.value) drafts[t.id] = t.value; });
+    const focused = document.activeElement && document.activeElement.id;
+    if (!force && focused && focused.startsWith('c-')) return;
+    if (lastStamp === null) d.sections.forEach((s) => { if (s.id === d.now.section) open.add(s.id); });
+    lastStamp = d.meta.updated;
+    renderNow(d);
+    document.getElementById('sections').innerHTML = d.sections.map(renderSection).join('');
+    for (const [id, v] of Object.entries(drafts)) { const t = document.getElementById(id); if (t) t.value = v; }
+    document.getElementById('log').innerHTML = d.log.map((l) =>
+      `<li><time>${fmt(l.time)}</time><span>${esc(l.message)}</span></li>`).join('');
+  } catch (e) {
+    document.getElementById('updated').textContent = 'Tracker server not reachable';
+  }
+}
+
+document.addEventListener('toggle', (e) => {
+  const el = e.target;
+  if (el.matches && el.matches('details.section')) el.open ? open.add(el.dataset.id) : open.delete(el.dataset.id);
+}, true);
+
+document.addEventListener('click', async (e) => {
+  const b = e.target.closest('button[data-act]');
+  if (!b) return;
+  const section = b.dataset.sec;
+  const box = document.getElementById(`c-${section}`);
+  const err = document.getElementById(`e-${section}`);
+  const res = await fetch('/api/signoff', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ section, action: b.dataset.act, comment: box.value }),
+  });
+  if (!res.ok) { err.textContent = (await res.json()).error; return; }
+  box.value = '';
+  box.blur();
+  load(true);
+});
+
+load(true);
+setInterval(load, 4000);
+</script>
+</body>
+</html>
