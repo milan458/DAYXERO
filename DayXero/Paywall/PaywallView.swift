@@ -17,6 +17,9 @@ struct PaywallView: View {
 
     @State private var showBilling = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// At accessibility text sizes the footer scrolls with the content instead of being pinned,
+    /// so the charge line and button are never squeezed or truncated.
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -73,13 +76,19 @@ struct PaywallView: View {
                     }
                     .padding(.vertical, DX.Space.s)
                     plans
+                    if typeSize.isAccessibilitySize {
+                        footer.padding(.top, DX.Space.l)
+                    }
                 }
                 .padding(.horizontal, DX.Space.m)
                 .padding(.top, DX.Space.m)
+                .padding(.bottom, typeSize.isAccessibilitySize ? DX.Space.xl : 0)
             }
-            footer
-                .padding(.horizontal, DX.Space.m)
-                .padding(.bottom, DX.Space.xs)
+            if !typeSize.isAccessibilitySize {
+                footer
+                    .padding(.horizontal, DX.Space.m)
+                    .padding(.bottom, DX.Space.xs)
+            }
         }
     }
 
@@ -189,9 +198,9 @@ struct PaywallView: View {
     private var terms: some View {
         VStack(spacing: 2) {
             if model.selected != .lifetime {
-                Text("Cancel in Settings › Apple ID › Subscriptions.")
+                Text("Cancel in Settings › Apple ID › Subscriptions.").multilineTextAlignment(.center)
             }
-            HStack(spacing: 6) {
+            DXFlowLayout(spacing: 6) {
                 Button("How billing works") { showBilling = true }.buttonStyle(.plain).underline()
                 Text(verbatim: "·")
                 Link("Terms", destination: AppLinks.terms).underline()

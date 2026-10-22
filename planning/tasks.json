@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-22T22:01:09.552Z"
+    "updated": "2026-10-22T22:26:58.517Z"
   },
   "now": {
     "section": "S3",
@@ -242,6 +242,12 @@
             "state": "signed_off",
             "by": "Milan",
             "comment": "keep the name screen, approve onboarding (sent in chat)"
+          },
+          {
+            "time": "2026-10-22T22:26:58.403Z",
+            "state": "signed_off",
+            "by": "Claude",
+            "comment": ""
           }
         ]
       },
@@ -255,10 +261,10 @@
         {
           "id": "S2.1",
           "title": "Welcome and promise: \"Don't quit today. Quit on your Quit Day.\"",
-          "status": "in_progress",
-          "notes": "Built; waiting on CI build, tests and screenshots.\nCI screenshot review found: primary button labels invisible (text style colour overrode button colour), hills short of bottom edge, price fields clipped at largest text, duplicate cigarette/vape icon, reveal timeline starting tomorrow. All fixed; re-verifying.\nAll screens verified except the welcome hills' bottom strip; fix in next push.",
+          "status": "done",
+          "notes": "Built; waiting on CI build, tests and screenshots.\nCI screenshot review found: primary button labels invisible (text style colour overrode button colour), hills short of bottom edge, price fields clipped at largest text, duplicate cigarette/vape icon, reveal timeline starting tomorrow. All fixed; re-verifying.\nAll screens verified except the welcome hills' bottom strip; fix in next push.\nWelcome hills now reach the bottom edge (verified on CI 797854b screenshots).",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-22T22:26:58.381Z"
         },
         {
           "id": "S2.2",
@@ -398,7 +404,7 @@
           "id": "S3.1",
           "title": "Paywall screen after plan reveal, addressed by name, showing what's included.",
           "status": "in_progress",
-          "notes": "Built; waiting on CI build, tests and screenshots.",
+          "notes": "Built; waiting on CI build, tests and screenshots.\nCI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -406,7 +412,7 @@
           "id": "S3.2",
           "title": "Plans: monthly, annual (highlighted), lifetime. Prices from RevenueCat; placeholder starting point $9.99/mo, $39.99/yr, $79.99 lifetime — confirm with Milan.",
           "status": "in_progress",
-          "notes": "Question for Milan: confirm $9.99/mo, $39.99/yr, $79.99 lifetime.\nMockups use the placeholder prices; Milan to confirm.\nMilan confirmed .99/mo, 9.99/yr, 9.99 lifetime.\nBuilt; waiting on CI build, tests and screenshots.",
+          "notes": "Question for Milan: confirm $9.99/mo, $39.99/yr, $79.99 lifetime.\nMockups use the placeholder prices; Milan to confirm.\nMilan confirmed .99/mo, 9.99/yr, 9.99 lifetime.\nBuilt; waiting on CI build, tests and screenshots.\nCI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -414,7 +420,7 @@
           "id": "S3.3",
           "title": "Free trial on annual (3 days unless Milan says otherwise), with the exact charge date stated on screen.",
           "status": "in_progress",
-          "notes": "Question for Milan: 3-day trial on annual — confirm.\nMilan confirmed the 3-day trial on annual.\nBuilt; waiting on CI build, tests and screenshots.",
+          "notes": "Question for Milan: 3-day trial on annual — confirm.\nMilan confirmed the 3-day trial on annual.\nBuilt; waiting on CI build, tests and screenshots.\nCI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -422,7 +428,7 @@
           "id": "S3.4",
           "title": "Plain-language terms: how to cancel in two taps, link to Apple subscription management, refund note.",
           "status": "in_progress",
-          "notes": "Built; waiting on CI build, tests and screenshots.",
+          "notes": "Built; waiting on CI build, tests and screenshots.\nCI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -438,7 +444,7 @@
           "id": "S3.6",
           "title": "Restore purchases; entitlement checks; paywall dismiss path.",
           "status": "in_progress",
-          "notes": "Built; waiting on CI build, tests and screenshots.",
+          "notes": "Built; waiting on CI build, tests and screenshots.\nCI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -462,7 +468,7 @@
           "id": "S3.9",
           "title": "Trial reminder: 'we'll remind you the day before' (local notification)",
           "status": "in_progress",
-          "notes": "Proposed in S3 mockups; Milan to confirm we promise it.\nMilan: keep the trial reminder.\nBuilt; waiting on CI build, tests and screenshots.",
+          "notes": "Proposed in S3 mockups; Milan to confirm we promise it.\nMilan: keep the trial reminder.\nBuilt; waiting on CI build, tests and screenshots.\nCI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending.",
           "created": "2026-10-22T21:13:19.796Z",
           "completed": null
         },
@@ -1146,6 +1152,46 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-22T22:26:58.517Z",
+      "type": "note",
+      "message": "S3.9: CI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending."
+    },
+    {
+      "time": "2026-10-22T22:26:58.501Z",
+      "type": "note",
+      "message": "S3.6: CI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending."
+    },
+    {
+      "time": "2026-10-22T22:26:58.483Z",
+      "type": "note",
+      "message": "S3.4: CI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending."
+    },
+    {
+      "time": "2026-10-22T22:26:58.465Z",
+      "type": "note",
+      "message": "S3.3: CI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending."
+    },
+    {
+      "time": "2026-10-22T22:26:58.447Z",
+      "type": "note",
+      "message": "S3.2: CI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending."
+    },
+    {
+      "time": "2026-10-22T22:26:58.428Z",
+      "type": "note",
+      "message": "S3.1: CI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending."
+    },
+    {
+      "time": "2026-10-22T22:26:58.403Z",
+      "type": "signoff",
+      "message": "S2 mockups → signed_off"
+    },
+    {
+      "time": "2026-10-22T22:26:58.381Z",
+      "type": "status",
+      "message": "S2.1 in_progress → done (Welcome hills now reach the bottom edge (verified on CI 797854b screenshots).)"
+    },
     {
       "time": "2026-10-22T22:01:09.552Z",
       "type": "now",
