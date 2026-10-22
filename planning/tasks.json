@@ -2,13 +2,13 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-22T20:13:55.422Z"
+    "updated": "2026-10-22T20:18:09.026Z"
   },
   "now": {
     "section": "S1",
     "task": "S1.8",
     "waiting_on_milan": [
-      "Analytics: PostHog or Mixpanel? (S1.5)",
+      "PostHog API key + US/EU cloud (S1.20)",
       "Bundle ID + Apple team ID (S1.19)",
       "Where is the old Flutter build? (S5.1)",
       "Inactivity reset decision (S5.7)"
@@ -90,8 +90,8 @@
         {
           "id": "S1.5",
           "title": "Analytics: wire PostHog or Mixpanel (ask Milan which). Define the event list for the onboarding funnel, paywall, program day starts and completions, craving sessions, slips and shares.",
-          "status": "blocked",
-          "notes": "Question for Milan: PostHog or Mixpanel?\nEvent list defined in DayXero/Services/Analytics.swift; provider still blocked on Milan's choice.",
+          "status": "in_progress",
+          "notes": "Question for Milan: PostHog or Mixpanel?\nEvent list defined in DayXero/Services/Analytics.swift; provider still blocked on Milan's choice.\nMilan chose PostHog. Wired posthog-ios 3.x: explicit events only, no autocapture/screen views/replay. Key + host via build settings (default US cloud).",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -205,6 +205,14 @@
           "status": "blocked",
           "notes": "Found while setting up the project. Milan to confirm the bundle ID and give the Apple Developer team ID for device builds and TestFlight.",
           "created": "2026-10-22T20:13:55.401Z",
+          "completed": null
+        },
+        {
+          "id": "S1.20",
+          "title": "PostHog project API key, and US or EU cloud",
+          "status": "blocked",
+          "notes": "From S1.5. Milan to create the PostHog project and share the phc_ key; EU cloud may suit UK users better.",
+          "created": "2026-10-22T20:18:09.002Z",
           "completed": null
         }
       ]
@@ -1063,6 +1071,26 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-22T20:18:09.026Z",
+      "type": "now",
+      "message": "Now: S1 / S1.8"
+    },
+    {
+      "time": "2026-10-22T20:18:09.002Z",
+      "type": "task_added",
+      "message": "S1.20 added: PostHog project API key, and US or EU cloud"
+    },
+    {
+      "time": "2026-10-22T20:18:08.980Z",
+      "type": "status",
+      "message": "S1.5 blocked → in_progress"
+    },
+    {
+      "time": "2026-10-22T20:18:08.957Z",
+      "type": "note",
+      "message": "S1.5: Milan chose PostHog. Wired posthog-ios 3.x: explicit events only, no autocapture/screen views/replay. Key + host via build settings (default US cloud)."
+    },
     {
       "time": "2026-10-22T20:13:55.422Z",
       "type": "now",

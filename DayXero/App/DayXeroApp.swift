@@ -14,6 +14,7 @@ struct DayXeroApp: App {
             fatalError("Could not open the DayXero store: \(error)")
         }
         Subscriptions.shared.configure()
+        Analytics.configure()
     }
 
     var body: some Scene {

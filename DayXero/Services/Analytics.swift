@@ -1,7 +1,7 @@
 import Foundation
+import PostHog
 
-/// Analytics events (S1.5). The provider (PostHog or Mixpanel) is still Milan's call,
-/// so events go through `Analytics.track` and are only logged in debug builds until then.
+/// Analytics events (S1.5), sent to PostHog.
 enum AnalyticsEvent {
     // Onboarding funnel (S2.13): one event per screen, plus skips.
     case onboardingStepViewed(step: String)
@@ -60,10 +60,32 @@ enum AnalyticsEvent {
     }
 }
 
+@MainActor
 enum Analytics {
+    private static var isConfigured = false
+
+    /// Sets up PostHog when an API key is present in Info.plist (DXPostHogAPIKey).
+    /// Without a key (local builds, CI) events are only printed in debug builds.
+    /// Only the explicit events above are sent: no autocapture, no screen views, no session replay.
+    static func configure() {
+        guard !isConfigured,
+              let key = Bundle.main.object(forInfoDictionaryKey: "DXPostHogAPIKey") as? String,
+              !key.isEmpty
+        else { return }
+        let host = (Bundle.main.object(forInfoDictionaryKey: "DXPostHogHost") as? String)
+            .flatMap { $0.isEmpty ? nil : $0 } ?? "https://us.i.posthog.com"
+        let config = PostHogConfig(apiKey: key, host: host)
+        config.captureScreenViews = false
+        config.captureApplicationLifecycleEvents = true
+        PostHogSDK.shared.setup(config)
+        isConfigured = true
+    }
+
     static func track(_ event: AnalyticsEvent) {
         #if DEBUG
         print("[analytics] \(event.name) \(event.properties)")
         #endif
+        guard isConfigured else { return }
+        PostHogSDK.shared.capture(event.name, properties: event.properties)
     }
 }
