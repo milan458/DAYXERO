@@ -9,7 +9,9 @@ struct DayXeroApp: App {
     init() {
         DX.Typeface.register()
         do {
-            container = try DataStore.makeContainer()
+            // Unit tests run inside the app; give them a throwaway store.
+            let isTesting = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
+            container = try DataStore.makeContainer(inMemory: isTesting)
         } catch {
             fatalError("Could not open the DayXero store: \(error)")
         }

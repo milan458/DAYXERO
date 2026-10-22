@@ -15,10 +15,8 @@ public extension DX {
             guard !registered else { return }
             let bundle = Bundle(for: BundleToken.self)
             for name in [regular, medium, semibold, bold] {
-                guard let url = bundle.url(forResource: name, withExtension: "ttf") else {
-                    assertionFailure("Missing font \(name)")
-                    continue
-                }
+                // A missing face falls back to the system font rather than crashing.
+                guard let url = bundle.url(forResource: name, withExtension: "ttf") else { continue }
                 CTFontManagerRegisterFontsForURL(url as CFURL, .process, nil)
             }
             registered = true

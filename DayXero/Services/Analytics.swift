@@ -74,7 +74,7 @@ enum Analytics {
         else { return }
         let host = (Bundle.main.object(forInfoDictionaryKey: "DXPostHogHost") as? String)
             .flatMap { $0.isEmpty ? nil : $0 } ?? "https://us.i.posthog.com"
-        let config = PostHogConfig(apiKey: key, host: host)
+        let config = PostHogConfig(projectToken: key, host: host)
         config.captureScreenViews = false
         config.captureApplicationLifecycleEvents = true
         PostHogSDK.shared.setup(config)

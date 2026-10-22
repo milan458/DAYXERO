@@ -19,8 +19,11 @@ public enum DataStore {
         let configuration: ModelConfiguration
         if inMemory {
             configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-        } else {
+        } else if FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroup) != nil {
             configuration = ModelConfiguration(schema: schema, groupContainer: .identifier(appGroup))
+        } else {
+            // Unsigned builds (CI, some simulator runs) have no App Group; keep the store in the app's own container.
+            configuration = ModelConfiguration(schema: schema, groupContainer: .none)
         }
         return try ModelContainer(for: schema, configurations: configuration)
     }
