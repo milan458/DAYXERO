@@ -242,12 +242,6 @@
             "state": "signed_off",
             "by": "Milan",
             "comment": "keep the name screen, approve onboarding (sent in chat)"
-          },
-          {
-            "time": "2026-10-22T22:26:58.403Z",
-            "state": "signed_off",
-            "by": "Claude",
-            "comment": ""
           }
         ]
       },
@@ -1181,11 +1175,6 @@
       "time": "2026-10-22T22:26:58.428Z",
       "type": "note",
       "message": "S3.1: CI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending."
-    },
-    {
-      "time": "2026-10-22T22:26:58.403Z",
-      "type": "signoff",
-      "message": "S2 mockups → signed_off"
     },
     {
       "time": "2026-10-22T22:26:58.381Z",
