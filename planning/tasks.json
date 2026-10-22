@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-22T20:49:09.009Z"
+    "updated": "2026-10-22T20:55:53.346Z"
   },
   "now": {
     "section": "S2",
@@ -56,32 +56,32 @@
         {
           "id": "S1.1",
           "title": "Create the Xcode project: SwiftUI app target, iOS 18 deployment target, Liquid Glass on iOS 26 behind `if #available(iOS 26, *)` with solid fallbacks.",
-          "status": "in_progress",
-          "notes": "Compiles on CI (Xcode 26, iPhone 17 Pro sim).",
+          "status": "done",
+          "notes": "Compiles on CI (Xcode 26, iPhone 17 Pro sim).\nCI green on 9ea1291: builds on Xcode 26, app launches on iOS 26.2 simulator, 9/9 tests pass.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-22T20:55:53.214Z"
         },
         {
           "id": "S1.2",
           "title": "Add extension targets: Widget extension (home and lock screen widgets, Live Activities), and an App Group shared by the app and extensions.",
-          "status": "in_progress",
-          "notes": "Code written; waiting on the first CI build (macOS runner) to verify.",
+          "status": "done",
+          "notes": "Code written; waiting on the first CI build (macOS runner) to verify.\nCI green on 9ea1291: builds on Xcode 26, app launches on iOS 26.2 simulator, 9/9 tests pass.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-22T20:55:53.233Z"
         },
         {
           "id": "S1.3",
           "title": "Data layer: SwiftData models for user profile, products used, usage baselines, program progress, logs (cravings, slips, uses), pledges and check-ins, NRT plan. Local-first; no account in v1.",
-          "status": "in_progress",
-          "notes": "Code written; waiting on the first CI build (macOS runner) to verify.",
+          "status": "done",
+          "notes": "Code written; waiting on the first CI build (macOS runner) to verify.\nCI green on 9ea1291: builds on Xcode 26, app launches on iOS 26.2 simulator, 9/9 tests pass.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-22T20:55:53.252Z"
         },
         {
           "id": "S1.4",
           "title": "Design system in code from DESIGN_METHODOLOGY.md: colour, type, spacing, radius, glass, motion and haptic tokens, plus core components. Build a preview gallery screen; this is Section 1's mockup for sign-off.",
           "status": "in_progress",
-          "notes": "Starting the token & component sheet (Section 1 mockup).\nToken & component sheet posted (HTML; SwiftUI preview export needs macOS, see S1.14).\nSign-off received; building the SwiftUI design system.",
+          "notes": "Starting the token & component sheet (Section 1 mockup).\nToken & component sheet posted (HTML; SwiftUI preview export needs macOS, see S1.14).\nSign-off received; building the SwiftUI design system.\nBuilds and runs. Remaining: visual, Dynamic Type and VoiceOver check via CI simulator screenshots.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -96,26 +96,26 @@
         {
           "id": "S1.6",
           "title": "Subscriptions plumbing: RevenueCat (and Superwall if Milan wants paywall tests). Products: monthly, annual, lifetime. Restore purchases.",
-          "status": "in_progress",
-          "notes": "Question for Milan: add Superwall for paywall A/B tests, or RevenueCat paywalls only?\nCode written; waiting on the first CI build (macOS runner) to verify.\nProduct IDs dayxero.monthly/annual/lifetime, entitlement 'pro'. API key goes in an untracked xcconfig; needs Milan's RevenueCat project.",
+          "status": "done",
+          "notes": "Question for Milan: add Superwall for paywall A/B tests, or RevenueCat paywalls only?\nCode written; waiting on the first CI build (macOS runner) to verify.\nProduct IDs dayxero.monthly/annual/lifetime, entitlement 'pro'. API key goes in an untracked xcconfig; needs Milan's RevenueCat project.\nCI green on 9ea1291: builds on Xcode 26, app launches on iOS 26.2 simulator, 9/9 tests pass.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-22T20:55:53.272Z"
         },
         {
           "id": "S1.7",
           "title": "Localisation setup (String Catalogs), even though v1 ships in English.",
-          "status": "in_progress",
-          "notes": "Code written; waiting on the first CI build (macOS runner) to verify.",
+          "status": "done",
+          "notes": "Code written; waiting on the first CI build (macOS runner) to verify.\nCI green on 9ea1291: builds on Xcode 26, app launches on iOS 26.2 simulator, 9/9 tests pass.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-22T20:55:53.291Z"
         },
         {
           "id": "S1.8",
           "title": "Unit-test target; basic CI build check if feasible.",
-          "status": "in_progress",
-          "notes": "Code written; waiting on the first CI build (macOS runner) to verify.\nCI run: whole project compiles on Xcode 26 (iOS 26.2 sim). Tests crashed at app launch (unsigned build has no App Group). Fixed in 36e2228; re-running.\nFirst full test run: 5 passed, 4 failed. Tests caught a real bug: Quit Day (a date) was shifted by the 4am day boundary, making every count a day off. Fixed.",
+          "status": "done",
+          "notes": "Code written; waiting on the first CI build (macOS runner) to verify.\nCI run: whole project compiles on Xcode 26 (iOS 26.2 sim). Tests crashed at app launch (unsigned build has no App Group). Fixed in 36e2228; re-running.\nFirst full test run: 5 passed, 4 failed. Tests caught a real bug: Quit Day (a date) was shifted by the 4am day boundary, making every count a day off. Fixed.\nUnit tests (Swift Testing) + GitHub Actions macOS build/test, errors and test results surfaced as annotations. Green on 9ea1291.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-22T20:55:53.328Z"
         },
         {
           "id": "S1.9",
@@ -160,10 +160,10 @@
         {
           "id": "S1.14",
           "title": "Build environment: this cloud session runs Linux with no Xcode",
-          "status": "in_progress",
-          "notes": "Swift code can be written here, but builds, simulator runs and SwiftUI preview exports need macOS. Proposal: XcodeGen project.yml + GitHub Actions macOS runner for build/test (S1.8), and Milan runs the simulator locally. Confirm.\nSetting up XcodeGen + GitHub Actions macOS build.",
+          "status": "done",
+          "notes": "Swift code can be written here, but builds, simulator runs and SwiftUI preview exports need macOS. Proposal: XcodeGen project.yml + GitHub Actions macOS runner for build/test (S1.8), and Milan runs the simulator locally. Confirm.\nSetting up XcodeGen + GitHub Actions macOS build.\nCI green on 9ea1291: builds on Xcode 26, app launches on iOS 26.2 simulator, 9/9 tests pass.",
           "created": "2026-10-22T19:50:02.702Z",
-          "completed": null
+          "completed": "2026-10-22T20:55:53.309Z"
         },
         {
           "id": "S1.15",
@@ -1097,6 +1097,46 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-22T20:55:53.346Z",
+      "type": "note",
+      "message": "S1.4: Builds and runs. Remaining: visual, Dynamic Type and VoiceOver check via CI simulator screenshots."
+    },
+    {
+      "time": "2026-10-22T20:55:53.328Z",
+      "type": "status",
+      "message": "S1.8 in_progress → done (Unit tests (Swift Testing) + GitHub Actions macOS build/test, errors and test results surfaced as annotations. Green on 9ea1291.)"
+    },
+    {
+      "time": "2026-10-22T20:55:53.309Z",
+      "type": "status",
+      "message": "S1.14 in_progress → done (CI green on 9ea1291: builds on Xcode 26, app launches on iOS 26.2 simulator, 9/9 tests pass.)"
+    },
+    {
+      "time": "2026-10-22T20:55:53.291Z",
+      "type": "status",
+      "message": "S1.7 in_progress → done (CI green on 9ea1291: builds on Xcode 26, app launches on iOS 26.2 simulator, 9/9 tests pass.)"
+    },
+    {
+      "time": "2026-10-22T20:55:53.272Z",
+      "type": "status",
+      "message": "S1.6 in_progress → done (CI green on 9ea1291: builds on Xcode 26, app launches on iOS 26.2 simulator, 9/9 tests pass.)"
+    },
+    {
+      "time": "2026-10-22T20:55:53.252Z",
+      "type": "status",
+      "message": "S1.3 in_progress → done (CI green on 9ea1291: builds on Xcode 26, app launches on iOS 26.2 simulator, 9/9 tests pass.)"
+    },
+    {
+      "time": "2026-10-22T20:55:53.233Z",
+      "type": "status",
+      "message": "S1.2 in_progress → done (CI green on 9ea1291: builds on Xcode 26, app launches on iOS 26.2 simulator, 9/9 tests pass.)"
+    },
+    {
+      "time": "2026-10-22T20:55:53.214Z",
+      "type": "status",
+      "message": "S1.1 in_progress → done (CI green on 9ea1291: builds on Xcode 26, app launches on iOS 26.2 simulator, 9/9 tests pass.)"
+    },
     {
       "time": "2026-10-22T20:49:09.009Z",
       "type": "note",
