@@ -52,6 +52,30 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             -quiet 2>&1 | tee build.log
 
+      # Logs live in blob storage that some readers can't reach, so surface the
+      # errors as annotations (readable through the checks API) as well.
+      - name: Annotate errors
+        if: failure()
+        run: |
+          python3 - <<'PY'
+          import os, re
+          seen, out = set(), []
+          for line in open("build.log", errors="replace"):
+              m = re.match(r"^(/[^:]+):(\d+):(\d+): (error|warning): (.*)$", line.strip())
+              if m and m.group(4) == "error":
+                  path = os.path.relpath(m.group(1), os.getcwd())
+                  key = (path, m.group(2), m.group(5))
+                  if key not in seen:
+                      seen.add(key)
+                      out.append(f"::error file={path},line={m.group(2)},col={m.group(3)}::{m.group(5)}")
+              elif re.search(r"(Test .* failed|✘|error: -|xcodebuild: error|Fatal error|failed with exit code)", line):
+                  out.append("::error::" + line.strip()[:900])
+          if not out:
+              tail = open("build.log", errors="replace").read()[-3000:].replace("\n", "%0A")
+              out.append("::error title=Build log tail::" + tail)
+          print("\n".join(out[:45]))
+          PY
+
       - name: Upload log
         if: always()
         uses: actions/upload-artifact@v4
