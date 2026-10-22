@@ -2,15 +2,15 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-22T20:31:13.506Z"
+    "updated": "2026-10-22T20:34:38.093Z"
   },
   "now": {
     "section": "S1",
     "task": "S1.8",
     "waiting_on_milan": [
-      "Apple Developer team ID (S1.19)",
       "Where is the old Flutter build? (S5.1)",
-      "Inactivity reset decision (S5.7)"
+      "Inactivity reset decision (S5.7)",
+      "Create Config/Secrets.xcconfig on the Mac (S1.21)"
     ]
   },
   "sections": [
@@ -201,10 +201,10 @@
         {
           "id": "S1.19",
           "title": "Bundle ID and Apple team: using app.dayxero / group.app.dayxero placeholders",
-          "status": "blocked",
-          "notes": "Found while setting up the project. Milan to confirm the bundle ID and give the Apple Developer team ID for device builds and TestFlight.\nMilan shared App Store Connect: bundle ID in.dayxero.app (Apple ID 6822799921, SKU dayxero-ios). Project updated: widgets in.dayxero.app.widgets, App Group group.in.dayxero.app. Still need the Apple team ID.",
+          "status": "done",
+          "notes": "Found while setting up the project. Milan to confirm the bundle ID and give the Apple Developer team ID for device builds and TestFlight.\nMilan shared App Store Connect: bundle ID in.dayxero.app (Apple ID 6822799921, SKU dayxero-ios). Project updated: widgets in.dayxero.app.widgets, App Group group.in.dayxero.app. Still need the Apple team ID.\nTeam ID ZDAH8F8P24 set with automatic signing. Milan to register App Group group.in.dayxero.app (Xcode does it on first signed build).",
           "created": "2026-10-22T20:13:55.401Z",
-          "completed": null
+          "completed": "2026-10-22T20:34:38.071Z"
         },
         {
           "id": "S1.20",
@@ -1078,6 +1078,16 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-22T20:34:38.093Z",
+      "type": "now",
+      "message": "Now: S1 / S1.8"
+    },
+    {
+      "time": "2026-10-22T20:34:38.071Z",
+      "type": "status",
+      "message": "S1.19 blocked → done (Team ID ZDAH8F8P24 set with automatic signing. Milan to register App Group group.in.dayxero.app (Xcode does it on first signed build).)"
+    },
     {
       "time": "2026-10-22T20:31:13.506Z",
       "type": "note",
