@@ -13,13 +13,15 @@ public final class UserProfile {
     public var dayBoundaryHour: Int
     public var currencyCode: String
     public var nrtInterestRaw: String?
-    public var pastAttempts: String?
 
     @Relationship(deleteRule: .cascade) public var products: [ProductUse] = []
     @Relationship(deleteRule: .cascade) public var reasons: [Reason] = []
     @Relationship(deleteRule: .cascade) public var progress: ProgramProgress?
     @Relationship(deleteRule: .cascade) public var nrtPlan: NRTPlan?
     public var triggersRaw: [String] = []
+    public var cravingTimesRaw: [String] = []
+    public var pastAttemptsRaw: String?
+    public var obstaclesRaw: [String] = []
 
     public init(name: String, quitDay: Date, currencyCode: String, dayBoundaryHour: Int = 4, createdAt: Date = .now) {
         self.name = name
