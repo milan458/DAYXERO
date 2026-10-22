@@ -93,6 +93,17 @@ jobs:
             shoot light large "onb-$step-light" -dx.onboardingStep "$step"
           done
           shoot dark accessibility-extra-extra-extra-large onb-baseline_vape-dark-ax5 -dx.onboardingStep baseline_vape
+          P="-dx.paywallPreview YES -dx.store"
+          shoot dark large pw-annual-dark $P mock
+          shoot light large pw-annual-light $P mock
+          shoot dark large pw-monthly-dark $P mock -dx.paywallPlan monthly
+          shoot dark large pw-lifetime-dark $P mock -dx.paywallPlan lifetime
+          shoot dark large pw-loading-dark $P slow
+          shoot dark large pw-failed-dark $P failing
+          shoot dark large pw-unlocked-dark $P mock -dx.paywallPhase unlocked
+          shoot dark large pw-pending-dark $P mock -dx.paywallPhase pending
+          shoot dark large pw-notice-dark $P mock -dx.paywallPhase notice
+          shoot dark accessibility-extra-extra-extra-large pw-annual-dark-ax5 $P mock
           # Last: the under-18 screen persists its flag, so everything after it would show the exit.
           shoot dark large onb-under_age-dark -dx.onboardingStep under_age
           cd shots

@@ -2,14 +2,15 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-22T21:45:08.758Z"
+    "updated": "2026-10-22T22:01:09.552Z"
   },
   "now": {
-    "section": "S2",
-    "task": "S2.1",
+    "section": "S3",
+    "task": "S3.1",
     "waiting_on_milan": [
-      "Youth resources per country (S2.2)",
-      "Create Config/Secrets.xcconfig on the Mac (S1.21)"
+      "Privacy policy URL (S3.10)",
+      "App Store Connect + RevenueCat products (S3.11)",
+      "Youth resources per country (S2.2)"
     ]
   },
   "sections": [
@@ -255,7 +256,7 @@
           "id": "S2.1",
           "title": "Welcome and promise: \"Don't quit today. Quit on your Quit Day.\"",
           "status": "in_progress",
-          "notes": "Built; waiting on CI build, tests and screenshots.\nCI screenshot review found: primary button labels invisible (text style colour overrode button colour), hills short of bottom edge, price fields clipped at largest text, duplicate cigarette/vape icon, reveal timeline starting tomorrow. All fixed; re-verifying.",
+          "notes": "Built; waiting on CI build, tests and screenshots.\nCI screenshot review found: primary button labels invisible (text style colour overrode button colour), hills short of bottom edge, price fields clipped at largest text, duplicate cigarette/vape icon, reveal timeline starting tomorrow. All fixed; re-verifying.\nAll screens verified except the welcome hills' bottom strip; fix in next push.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -270,74 +271,74 @@
         {
           "id": "S2.3",
           "title": "Product selection, multi-select: cigarettes, vape, pouches, NRT already in use. Dual use supported.",
-          "status": "in_progress",
-          "notes": "Built; waiting on CI build, tests and screenshots.",
+          "status": "done",
+          "notes": "Built; waiting on CI build, tests and screenshots.\nVerified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-22T22:01:09.090Z"
         },
         {
           "id": "S2.4",
           "title": "Usage baseline per product: amount per day (cigarettes, puffs or sessions, pouches with strength in mg), cost per unit or per pack and currency, years of use.",
-          "status": "in_progress",
-          "notes": "Built; waiting on CI build, tests and screenshots.",
+          "status": "done",
+          "notes": "Built; waiting on CI build, tests and screenshots.\nVerified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-22T22:01:09.116Z"
         },
         {
           "id": "S2.5",
           "title": "Triggers and when cravings usually hit (multi-select).",
-          "status": "in_progress",
-          "notes": "Built; waiting on CI build, tests and screenshots.",
+          "status": "done",
+          "notes": "Built; waiting on CI build, tests and screenshots.\nVerified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-22T22:01:09.137Z"
         },
         {
           "id": "S2.6",
           "title": "Reasons to quit, in the user's own words, with an optional photo. Reused in pledge and SOS.",
-          "status": "in_progress",
-          "notes": "Built; waiting on CI build, tests and screenshots.",
+          "status": "done",
+          "notes": "Built; waiting on CI build, tests and screenshots.\nVerified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-22T22:01:09.156Z"
         },
         {
           "id": "S2.7",
           "title": "Past quit attempts and what happened (short, optional).",
-          "status": "in_progress",
-          "notes": "Built; waiting on CI build, tests and screenshots.",
+          "status": "done",
+          "notes": "Built; waiting on CI build, tests and screenshots.\nVerified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-22T22:01:09.175Z"
         },
         {
           "id": "S2.8",
           "title": "Choose Quit Day: the date the prep phase ends, with a recommended default.",
-          "status": "in_progress",
-          "notes": "Needs Milan: default Quit Day (mocked as 7 days out) and allowed range; depends on prep length in Flutter content.\nBuilt; waiting on CI build, tests and screenshots.\nMilan: keep Apple's native calendar (no prep-day shading).",
+          "status": "done",
+          "notes": "Needs Milan: default Quit Day (mocked as 7 days out) and allowed range; depends on prep length in Flutter content.\nBuilt; waiting on CI build, tests and screenshots.\nMilan: keep Apple's native calendar (no prep-day shading).\nVerified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-22T22:01:09.193Z"
         },
         {
           "id": "S2.9",
           "title": "NRT interest: using it, want it, not interested.",
-          "status": "in_progress",
-          "notes": "Needs Milan: sign-off + source for 'NRT can make quitting easier'.\nBuilding without the 'can make quitting easier' line until Milan confirms the claim and source.\nBuilt; waiting on CI build, tests and screenshots.\nMilan approved the NRT claim. Added 'Research shows ... can make quitting easier' with a link to the Cochrane review (Hartmann-Boyce 2018, CD000146.pub5: 133 trials, 64,640 people, quit rates up 50–60%).",
+          "status": "done",
+          "notes": "Needs Milan: sign-off + source for 'NRT can make quitting easier'.\nBuilding without the 'can make quitting easier' line until Milan confirms the claim and source.\nBuilt; waiting on CI build, tests and screenshots.\nMilan approved the NRT claim. Added 'Research shows ... can make quitting easier' with a link to the Cochrane review (Hartmann-Boyce 2018, CD000146.pub5: 133 trials, 64,640 people, quit rates up 50–60%).\nVerified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-22T22:01:09.213Z"
         },
         {
           "id": "S2.10",
           "title": "Plan reveal: personal summary of their program, Quit Day, money they'll keep, what the next 7 days look like. This comes **before** the paywall.",
-          "status": "in_progress",
-          "notes": "Built; waiting on CI build, tests and screenshots.",
+          "status": "done",
+          "notes": "Built; waiting on CI build, tests and screenshots.\nVerified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-22T22:01:09.231Z"
         },
         {
           "id": "S2.11",
           "title": "Notification permission, asked after the plan reveal with a clear reason.",
-          "status": "in_progress",
-          "notes": "Built; waiting on CI build, tests and screenshots.",
+          "status": "done",
+          "notes": "Built; waiting on CI build, tests and screenshots.\nVerified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-22T22:01:09.251Z"
         },
         {
           "id": "S2.12",
@@ -350,18 +351,18 @@
         {
           "id": "S2.13",
           "title": "Funnel analytics on every screen; one-tap skip where a question is optional.",
-          "status": "in_progress",
-          "notes": "Built; waiting on CI build, tests and screenshots.",
+          "status": "done",
+          "notes": "Built; waiting on CI build, tests and screenshots.\nVerified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-22T22:01:09.271Z"
         },
         {
           "id": "S2.14",
           "title": "Name step (S2.2b) proposed: paywall and Home greet by name but the plan never asks",
-          "status": "in_progress",
-          "notes": "From S2 mockups; Milan to confirm.\nMilan: keep the name screen.\nBuilt; waiting on CI.",
+          "status": "done",
+          "notes": "From S2 mockups; Milan to confirm.\nMilan: keep the name screen.\nBuilt; waiting on CI.\nVerified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.",
           "created": "2026-10-22T20:40:00.864Z",
-          "completed": null
+          "completed": "2026-10-22T22:01:09.291Z"
         }
       ]
     },
@@ -396,73 +397,89 @@
         {
           "id": "S3.1",
           "title": "Paywall screen after plan reveal, addressed by name, showing what's included.",
-          "status": "pending",
-          "notes": "",
+          "status": "in_progress",
+          "notes": "Built; waiting on CI build, tests and screenshots.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S3.2",
           "title": "Plans: monthly, annual (highlighted), lifetime. Prices from RevenueCat; placeholder starting point $9.99/mo, $39.99/yr, $79.99 lifetime — confirm with Milan.",
-          "status": "pending",
-          "notes": "Question for Milan: confirm $9.99/mo, $39.99/yr, $79.99 lifetime.\nMockups use the placeholder prices; Milan to confirm.\nMilan confirmed .99/mo, 9.99/yr, 9.99 lifetime.",
+          "status": "in_progress",
+          "notes": "Question for Milan: confirm $9.99/mo, $39.99/yr, $79.99 lifetime.\nMockups use the placeholder prices; Milan to confirm.\nMilan confirmed .99/mo, 9.99/yr, 9.99 lifetime.\nBuilt; waiting on CI build, tests and screenshots.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S3.3",
           "title": "Free trial on annual (3 days unless Milan says otherwise), with the exact charge date stated on screen.",
-          "status": "pending",
-          "notes": "Question for Milan: 3-day trial on annual — confirm.\nMilan confirmed the 3-day trial on annual.",
+          "status": "in_progress",
+          "notes": "Question for Milan: 3-day trial on annual — confirm.\nMilan confirmed the 3-day trial on annual.\nBuilt; waiting on CI build, tests and screenshots.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S3.4",
           "title": "Plain-language terms: how to cancel in two taps, link to Apple subscription management, refund note.",
-          "status": "pending",
-          "notes": "",
+          "status": "in_progress",
+          "notes": "Built; waiting on CI build, tests and screenshots.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S3.5",
           "title": "Free tier that's genuinely useful: counter, craving SOS, Day 1 of the program. Clear upgrade points elsewhere.",
-          "status": "pending",
-          "notes": "",
+          "status": "in_progress",
+          "notes": "Built; waiting on CI build, tests and screenshots.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S3.6",
           "title": "Restore purchases; entitlement checks; paywall dismiss path.",
-          "status": "pending",
-          "notes": "",
+          "status": "in_progress",
+          "notes": "Built; waiting on CI build, tests and screenshots.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S3.7",
           "title": "No ads anywhere in the app.",
-          "status": "pending",
-          "notes": "",
+          "status": "done",
+          "notes": "No ad SDKs or ad placements anywhere; dependencies are RevenueCat and PostHog only.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-22T22:01:09.465Z"
         },
         {
           "id": "S3.8",
           "title": "Regional pricing hook for India (configured in App Store Connect later).",
-          "status": "pending",
-          "notes": "",
+          "status": "done",
+          "notes": "Nothing in the app: prices come from the App Store per region. India pricing gets set in App Store Connect.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-22T22:01:09.484Z"
         },
         {
           "id": "S3.9",
           "title": "Trial reminder: 'we'll remind you the day before' (local notification)",
-          "status": "pending",
-          "notes": "Proposed in S3 mockups; Milan to confirm we promise it.\nMilan: keep the trial reminder.",
+          "status": "in_progress",
+          "notes": "Proposed in S3 mockups; Milan to confirm we promise it.\nMilan: keep the trial reminder.\nBuilt; waiting on CI build, tests and screenshots.",
           "created": "2026-10-22T21:13:19.796Z",
+          "completed": null
+        },
+        {
+          "id": "S3.10",
+          "title": "Privacy policy URL for the paywall (App Review requires it)",
+          "status": "blocked",
+          "notes": "Found building S3.4: Terms links to Apple's standard EULA; Privacy link hidden until Milan provides a URL (also S15.4).",
+          "created": "2026-10-22T22:01:09.501Z",
+          "completed": null
+        },
+        {
+          "id": "S3.11",
+          "title": "Set up products in App Store Connect + RevenueCat: dayxero.annual (3-day trial), dayxero.monthly, dayxero.lifetime, entitlement 'pro'",
+          "status": "blocked",
+          "notes": "From S3 build. Needs Milan's App Store Connect and RevenueCat accounts; then add the RevenueCat key to Config/Secrets.xcconfig.",
+          "created": "2026-10-22T22:01:09.531Z",
           "completed": null
         }
       ]
@@ -1129,6 +1146,126 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-22T22:01:09.552Z",
+      "type": "now",
+      "message": "Now: S3 / S3.1"
+    },
+    {
+      "time": "2026-10-22T22:01:09.531Z",
+      "type": "task_added",
+      "message": "S3.11 added: Set up products in App Store Connect + RevenueCat: dayxero.annual (3-day trial), dayxero.monthly, dayxero.lifetime, entitlement 'pro'"
+    },
+    {
+      "time": "2026-10-22T22:01:09.501Z",
+      "type": "task_added",
+      "message": "S3.10 added: Privacy policy URL for the paywall (App Review requires it)"
+    },
+    {
+      "time": "2026-10-22T22:01:09.484Z",
+      "type": "status",
+      "message": "S3.8 pending → done (Nothing in the app: prices come from the App Store per region. India pricing gets set in App Store Connect.)"
+    },
+    {
+      "time": "2026-10-22T22:01:09.465Z",
+      "type": "status",
+      "message": "S3.7 pending → done (No ad SDKs or ad placements anywhere; dependencies are RevenueCat and PostHog only.)"
+    },
+    {
+      "time": "2026-10-22T22:01:09.447Z",
+      "type": "status",
+      "message": "S3.9 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+    },
+    {
+      "time": "2026-10-22T22:01:09.429Z",
+      "type": "status",
+      "message": "S3.6 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+    },
+    {
+      "time": "2026-10-22T22:01:09.411Z",
+      "type": "status",
+      "message": "S3.5 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+    },
+    {
+      "time": "2026-10-22T22:01:09.391Z",
+      "type": "status",
+      "message": "S3.4 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+    },
+    {
+      "time": "2026-10-22T22:01:09.372Z",
+      "type": "status",
+      "message": "S3.3 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+    },
+    {
+      "time": "2026-10-22T22:01:09.355Z",
+      "type": "status",
+      "message": "S3.2 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+    },
+    {
+      "time": "2026-10-22T22:01:09.336Z",
+      "type": "status",
+      "message": "S3.1 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+    },
+    {
+      "time": "2026-10-22T22:01:09.318Z",
+      "type": "note",
+      "message": "S2.1: All screens verified except the welcome hills' bottom strip; fix in next push."
+    },
+    {
+      "time": "2026-10-22T22:01:09.291Z",
+      "type": "status",
+      "message": "S2.14 in_progress → done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-22T22:01:09.271Z",
+      "type": "status",
+      "message": "S2.13 in_progress → done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-22T22:01:09.251Z",
+      "type": "status",
+      "message": "S2.11 in_progress → done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-22T22:01:09.231Z",
+      "type": "status",
+      "message": "S2.10 in_progress → done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-22T22:01:09.213Z",
+      "type": "status",
+      "message": "S2.9 in_progress → done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-22T22:01:09.193Z",
+      "type": "status",
+      "message": "S2.8 in_progress → done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-22T22:01:09.175Z",
+      "type": "status",
+      "message": "S2.7 in_progress → done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-22T22:01:09.156Z",
+      "type": "status",
+      "message": "S2.6 in_progress → done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-22T22:01:09.137Z",
+      "type": "status",
+      "message": "S2.5 in_progress → done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-22T22:01:09.116Z",
+      "type": "status",
+      "message": "S2.4 in_progress → done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-22T22:01:09.090Z",
+      "type": "status",
+      "message": "S2.3 in_progress → done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
+    },
     {
       "time": "2026-10-22T21:45:08.758Z",
       "type": "note",
