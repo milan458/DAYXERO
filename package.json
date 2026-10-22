@@ -1,0 +1,9 @@
+{
+  "name": "dayxero",
+  "private": true,
+  "description": "DayXero v1 — planning tools. The iOS app lives in the Xcode project.",
+  "scripts": {
+    "tracker": "node planning/server.js",
+    "task": "node planning/task.js"
+  }
+}
