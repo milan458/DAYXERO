@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-22T20:27:03.645Z"
+    "updated": "2026-10-22T20:28:17.887Z"
   },
   "now": {
     "section": "S1",
@@ -211,7 +211,7 @@
           "id": "S1.20",
           "title": "PostHog project API key, and US or EU cloud",
           "status": "done",
-          "notes": "From S1.5. Milan to create the PostHog project and share the phc_ key; EU cloud may suit UK users better.\nMilan sent the phc_ key; stored in git-ignored Config/Secrets.xcconfig (template committed). Release builds only. Region not stated: using US cloud.",
+          "notes": "From S1.5. Milan to create the PostHog project and share the phc_ key; EU cloud may suit UK users better.\nMilan sent the phc_ key; stored in git-ignored Config/Secrets.xcconfig (template committed). Release builds only. Region not stated: using US cloud.\nMilan confirmed US cloud.",
           "created": "2026-10-22T20:18:09.002Z",
           "completed": "2026-10-22T20:27:03.601Z"
         },
@@ -1079,6 +1079,11 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-22T20:28:17.887Z",
+      "type": "note",
+      "message": "S1.20: Milan confirmed US cloud."
+    },
     {
       "time": "2026-10-22T20:27:03.645Z",
       "type": "task_added",
