@@ -55,6 +55,7 @@ jobs:
             -scheme DayXero \
             -destination "id=${{ steps.sim.outputs.udid }}" \
             CODE_SIGNING_ALLOWED=NO \
+            -resultBundlePath TestResults.xcresult \
             -quiet 2>&1 | tee build.log
 
       # Logs live in blob storage that some readers can't reach, so surface the
@@ -75,11 +76,22 @@ jobs:
                       out.append(f"::error file={path},line={m.group(2)},col={m.group(3)}::{m.group(5)}")
               elif re.search(r"(Test .* failed|✘|error: -|xcodebuild: error|Fatal error|failed with exit code)", line):
                   out.append("::error::" + line.strip()[:900])
-          if not out:
-              tail = open("build.log", errors="replace").read()[-3000:].replace("\n", "%0A")
-              out.append("::error title=Build log tail::" + tail)
-          print("\n".join(out[:45]))
+          tail = open("build.log", errors="replace").read()[-6000:].replace("\n", "%0A")
+          out.append("::error title=Build log tail::" + tail)
+          print("\n".join(out[-45:]))
           PY
+          if [ -d TestResults.xcresult ]; then
+            xcrun xcresulttool get test-results summary --path TestResults.xcresult --compact > summary.json 2>&1 || true
+            xcrun xcresulttool get test-results tests --path TestResults.xcresult --compact > tests.json 2>&1 || true
+            python3 - <<'PY'
+          for f in ("summary.json", "tests.json"):
+              try:
+                  txt = open(f).read()
+              except OSError:
+                  continue
+              print("::error title=" + f + "::" + txt[:8000].replace("\n", "%0A"))
+          PY
+          fi
 
       - name: Upload log
         if: always()
