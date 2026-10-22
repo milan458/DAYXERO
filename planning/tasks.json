@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-22T20:18:09.026Z"
+    "updated": "2026-10-22T20:27:03.645Z"
   },
   "now": {
     "section": "S1",
@@ -90,10 +90,10 @@
         {
           "id": "S1.5",
           "title": "Analytics: wire PostHog or Mixpanel (ask Milan which). Define the event list for the onboarding funnel, paywall, program day starts and completions, craving sessions, slips and shares.",
-          "status": "in_progress",
-          "notes": "Question for Milan: PostHog or Mixpanel?\nEvent list defined in DayXero/Services/Analytics.swift; provider still blocked on Milan's choice.\nMilan chose PostHog. Wired posthog-ios 3.x: explicit events only, no autocapture/screen views/replay. Key + host via build settings (default US cloud).",
+          "status": "done",
+          "notes": "Question for Milan: PostHog or Mixpanel?\nEvent list defined in DayXero/Services/Analytics.swift; provider still blocked on Milan's choice.\nMilan chose PostHog. Wired posthog-ios 3.x: explicit events only, no autocapture/screen views/replay. Key + host via build settings (default US cloud).\nPostHog wired; key set up locally via Secrets.xcconfig. Verified by build once CI is green.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-22T20:27:03.625Z"
         },
         {
           "id": "S1.6",
@@ -210,9 +210,17 @@
         {
           "id": "S1.20",
           "title": "PostHog project API key, and US or EU cloud",
-          "status": "blocked",
-          "notes": "From S1.5. Milan to create the PostHog project and share the phc_ key; EU cloud may suit UK users better.",
+          "status": "done",
+          "notes": "From S1.5. Milan to create the PostHog project and share the phc_ key; EU cloud may suit UK users better.\nMilan sent the phc_ key; stored in git-ignored Config/Secrets.xcconfig (template committed). Release builds only. Region not stated: using US cloud.",
           "created": "2026-10-22T20:18:09.002Z",
+          "completed": "2026-10-22T20:27:03.601Z"
+        },
+        {
+          "id": "S1.21",
+          "title": "Milan: create Config/Secrets.xcconfig on the Mac (copy the example, add the phc_ key)",
+          "status": "pending",
+          "notes": "Key can't be committed; the cloud session's copy is lost when the container ends.",
+          "created": "2026-10-22T20:27:03.645Z",
           "completed": null
         }
       ]
@@ -1071,6 +1079,26 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-22T20:27:03.645Z",
+      "type": "task_added",
+      "message": "S1.21 added: Milan: create Config/Secrets.xcconfig on the Mac (copy the example, add the phc_ key)"
+    },
+    {
+      "time": "2026-10-22T20:27:03.625Z",
+      "type": "status",
+      "message": "S1.5 in_progress → done (PostHog wired; key set up locally via Secrets.xcconfig. Verified by build once CI is green.)"
+    },
+    {
+      "time": "2026-10-22T20:27:03.601Z",
+      "type": "status",
+      "message": "S1.20 blocked → done"
+    },
+    {
+      "time": "2026-10-22T20:27:03.580Z",
+      "type": "note",
+      "message": "S1.20: Milan sent the phc_ key; stored in git-ignored Config/Secrets.xcconfig (template committed). Release builds only. Region not stated: using US cloud."
+    },
     {
       "time": "2026-10-22T20:18:09.026Z",
       "type": "now",

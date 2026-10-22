@@ -1,0 +1,3 @@
+// Shared build settings. Keys live in Secrets.xcconfig, which git ignores.
+// Copy Secrets.example.xcconfig to Secrets.xcconfig and fill it in.
+#include? "Secrets.xcconfig"
