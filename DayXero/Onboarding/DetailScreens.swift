@@ -377,7 +377,17 @@ struct NRTScreen: View {
 
     var body: some View {
         OnboardingScaffold(title: "Want to use nicotine replacement?",
-                           subtitle: "Patches, gum, lozenges and inhalers. We'll help you plan around the label.") {
+                           subtitle: "Research shows patches, gum, lozenges and inhalers can make quitting easier. We'll help you plan around the label.") {
+            Link(destination: HealthSources.nrtCochrane2018.url) {
+                Label {
+                    Text(HealthSources.nrtCochrane2018.label)
+                } icon: {
+                    Image(systemName: "doc.text.magnifyingglass")
+                }
+                .font(.custom(DX.Typeface.medium, size: 12, relativeTo: .caption))
+                .foregroundStyle(DX.Palette.accentInk)
+            }
+            .accessibilityHint(Text("Opens the study summary"))
             DXOptionCard("I'm already using it", isSelected: model.nrtInterest == .using) { model.nrtInterest = .using }
             DXOptionCard("I'd like to", detail: "We'll suggest talking to a pharmacist", isSelected: model.nrtInterest == .wantIt) {
                 model.nrtInterest = .wantIt

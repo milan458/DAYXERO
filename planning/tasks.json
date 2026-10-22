@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-22T21:06:49.943Z"
+    "updated": "2026-10-22T21:10:10.012Z"
   },
   "now": {
     "section": "S2",
@@ -319,7 +319,7 @@
           "id": "S2.9",
           "title": "NRT interest: using it, want it, not interested.",
           "status": "in_progress",
-          "notes": "Needs Milan: sign-off + source for 'NRT can make quitting easier'.\nBuilding without the 'can make quitting easier' line until Milan confirms the claim and source.\nBuilt; waiting on CI build, tests and screenshots.",
+          "notes": "Needs Milan: sign-off + source for 'NRT can make quitting easier'.\nBuilding without the 'can make quitting easier' line until Milan confirms the claim and source.\nBuilt; waiting on CI build, tests and screenshots.\nMilan approved the NRT claim. Added 'Research shows ... can make quitting easier' with a link to the Cochrane review (Hartmann-Boyce 2018, CD000146.pub5: 133 trials, 64,640 people, quit rates up 50–60%).",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -1103,6 +1103,11 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-22T21:10:10.012Z",
+      "type": "note",
+      "message": "S2.9: Milan approved the NRT claim. Added 'Research shows ... can make quitting easier' with a link to the Cochrane review (Hartmann-Boyce 2018, CD000146.pub5: 133 trials, 64,640 people, quit rates up 50–60%)."
+    },
     {
       "time": "2026-10-22T21:06:49.943Z",
       "type": "status",
