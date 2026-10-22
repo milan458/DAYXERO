@@ -73,17 +73,28 @@ jobs:
           xcrun simctl bootstatus "$UDID" -b
           xcrun simctl install "$UDID" "$APP"
           mkdir -p shots
+          # shoot <appearance> <content size> <name> [launch args...]
           shoot() {
-            xcrun simctl ui "$UDID" appearance "$1"
-            xcrun simctl ui "$UDID" content_size "$2"
+            local appearance=$1 size=$2 name=$3; shift 3
+            xcrun simctl ui "$UDID" appearance "$appearance"
+            xcrun simctl ui "$UDID" content_size "$size"
             xcrun simctl terminate "$UDID" in.dayxero.app 2>/dev/null || true
-            xcrun simctl launch "$UDID" in.dayxero.app
-            sleep 6
-            xcrun simctl io "$UDID" screenshot "shots/$3.png"
+            xcrun simctl launch "$UDID" in.dayxero.app "$@"
+            sleep 5
+            xcrun simctl io "$UDID" screenshot "shots/$name.png"
           }
-          shoot dark large gallery-dark
-          shoot light large gallery-light
-          shoot dark accessibility-extra-extra-extra-large gallery-dark-ax5
+          shoot dark large gallery-dark -dx.showGallery YES
+          shoot light large gallery-light -dx.showGallery YES
+          shoot dark accessibility-extra-extra-extra-large gallery-dark-ax5 -dx.showGallery YES
+          for step in welcome age name products baseline_vape baseline_cigarettes triggers reasons past_attempts quit_day nrt reveal reminders; do
+            shoot dark large "onb-$step-dark" -dx.onboardingStep "$step"
+          done
+          for step in welcome products baseline_vape reveal; do
+            shoot light large "onb-$step-light" -dx.onboardingStep "$step"
+          done
+          shoot dark accessibility-extra-extra-extra-large onb-baseline_vape-dark-ax5 -dx.onboardingStep baseline_vape
+          # Last: the under-18 screen persists its flag, so everything after it would show the exit.
+          shoot dark large onb-under_age-dark -dx.onboardingStep under_age
           cd shots
           git init -q -b ci-screens
           git config user.name "ci" && git config user.email "ci@users.noreply.github.com"

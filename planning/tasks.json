@@ -2,13 +2,13 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-22T20:55:53.346Z"
+    "updated": "2026-10-22T21:06:49.943Z"
   },
   "now": {
     "section": "S2",
     "task": "S2.1",
     "waiting_on_milan": [
-      "Review the Section 2 onboarding mockups",
+      "Youth resources per country for the under-18 exit (S2.2)",
       "Create Config/Secrets.xcconfig on the Mac (S1.21)"
     ]
   },
@@ -228,13 +228,19 @@
       "title": "Onboarding",
       "goal": "build commitment and personalise the plan before the paywall. Target 60%+ of installs completing it.",
       "signoff": {
-        "state": "mockups_ready",
+        "state": "signed_off",
         "history": [
           {
             "time": "2026-10-22T20:40:00.843Z",
             "state": "mockups_ready",
             "by": "Claude",
             "comment": ""
+          },
+          {
+            "time": "2026-10-22T21:02:06.597Z",
+            "state": "signed_off",
+            "by": "Milan",
+            "comment": "keep the name screen, approve onboarding (sent in chat)"
           }
         ]
       },
@@ -248,88 +254,88 @@
         {
           "id": "S2.1",
           "title": "Welcome and promise: \"Don't quit today. Quit on your Quit Day.\"",
-          "status": "pending",
-          "notes": "",
+          "status": "in_progress",
+          "notes": "Built; waiting on CI build, tests and screenshots.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S2.2",
           "title": "Age confirmation (18+). Under 18: friendly exit with a pointer to free youth resources.",
-          "status": "pending",
-          "notes": "Needs Milan: youth resources and URLs per country for the under-18 exit.",
+          "status": "blocked",
+          "notes": "Needs Milan: youth resources and URLs per country for the under-18 exit.\nBuilding the exit screen; youth resource names/URLs per country still needed from Milan.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S2.3",
           "title": "Product selection, multi-select: cigarettes, vape, pouches, NRT already in use. Dual use supported.",
-          "status": "pending",
-          "notes": "",
+          "status": "in_progress",
+          "notes": "Built; waiting on CI build, tests and screenshots.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S2.4",
           "title": "Usage baseline per product: amount per day (cigarettes, puffs or sessions, pouches with strength in mg), cost per unit or per pack and currency, years of use.",
-          "status": "pending",
-          "notes": "",
+          "status": "in_progress",
+          "notes": "Built; waiting on CI build, tests and screenshots.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S2.5",
           "title": "Triggers and when cravings usually hit (multi-select).",
-          "status": "pending",
-          "notes": "",
+          "status": "in_progress",
+          "notes": "Built; waiting on CI build, tests and screenshots.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S2.6",
           "title": "Reasons to quit, in the user's own words, with an optional photo. Reused in pledge and SOS.",
-          "status": "pending",
-          "notes": "",
+          "status": "in_progress",
+          "notes": "Built; waiting on CI build, tests and screenshots.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S2.7",
           "title": "Past quit attempts and what happened (short, optional).",
-          "status": "pending",
-          "notes": "",
+          "status": "in_progress",
+          "notes": "Built; waiting on CI build, tests and screenshots.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S2.8",
           "title": "Choose Quit Day: the date the prep phase ends, with a recommended default.",
-          "status": "pending",
-          "notes": "Needs Milan: default Quit Day (mocked as 7 days out) and allowed range; depends on prep length in Flutter content.",
+          "status": "in_progress",
+          "notes": "Needs Milan: default Quit Day (mocked as 7 days out) and allowed range; depends on prep length in Flutter content.\nBuilt; waiting on CI build, tests and screenshots.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S2.9",
           "title": "NRT interest: using it, want it, not interested.",
-          "status": "pending",
-          "notes": "Needs Milan: sign-off + source for 'NRT can make quitting easier'.",
+          "status": "in_progress",
+          "notes": "Needs Milan: sign-off + source for 'NRT can make quitting easier'.\nBuilding without the 'can make quitting easier' line until Milan confirms the claim and source.\nBuilt; waiting on CI build, tests and screenshots.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S2.10",
           "title": "Plan reveal: personal summary of their program, Quit Day, money they'll keep, what the next 7 days look like. This comes **before** the paywall.",
-          "status": "pending",
-          "notes": "",
+          "status": "in_progress",
+          "notes": "Built; waiting on CI build, tests and screenshots.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S2.11",
           "title": "Notification permission, asked after the plan reveal with a clear reason.",
-          "status": "pending",
-          "notes": "",
+          "status": "in_progress",
+          "notes": "Built; waiting on CI build, tests and screenshots.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -337,23 +343,23 @@
           "id": "S2.12",
           "title": "Optional App Store review prompt placement (ask Milan).",
           "status": "pending",
-          "notes": "Question for Milan: show the App Store review prompt in onboarding? If so, where?\nRecommendation in mockups: no review prompt during onboarding; ask after Day 1 complete or first ridden-out craving.",
+          "notes": "Question for Milan: show the App Store review prompt in onboarding? If so, where?\nRecommendation in mockups: no review prompt during onboarding; ask after Day 1 complete or first ridden-out craving.\nApproved with mockups: no review prompt in onboarding; ask after Day 1 or first ridden-out craving (built in S5/S6).",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S2.13",
           "title": "Funnel analytics on every screen; one-tap skip where a question is optional.",
-          "status": "pending",
-          "notes": "",
+          "status": "in_progress",
+          "notes": "Built; waiting on CI build, tests and screenshots.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S2.14",
           "title": "Name step (S2.2b) proposed: paywall and Home greet by name but the plan never asks",
-          "status": "pending",
-          "notes": "From S2 mockups; Milan to confirm.",
+          "status": "in_progress",
+          "notes": "From S2 mockups; Milan to confirm.\nMilan: keep the name screen.\nBuilt; waiting on CI.",
           "created": "2026-10-22T20:40:00.864Z",
           "completed": null
         }
@@ -1097,6 +1103,96 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-22T21:06:49.943Z",
+      "type": "status",
+      "message": "S2.14 in_progress → in_progress (Built; waiting on CI.)"
+    },
+    {
+      "time": "2026-10-22T21:06:49.924Z",
+      "type": "status",
+      "message": "S2.13 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+    },
+    {
+      "time": "2026-10-22T21:06:49.906Z",
+      "type": "status",
+      "message": "S2.11 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+    },
+    {
+      "time": "2026-10-22T21:06:49.888Z",
+      "type": "status",
+      "message": "S2.10 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+    },
+    {
+      "time": "2026-10-22T21:06:49.868Z",
+      "type": "status",
+      "message": "S2.9 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+    },
+    {
+      "time": "2026-10-22T21:06:49.850Z",
+      "type": "status",
+      "message": "S2.8 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+    },
+    {
+      "time": "2026-10-22T21:06:49.831Z",
+      "type": "status",
+      "message": "S2.7 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+    },
+    {
+      "time": "2026-10-22T21:06:49.812Z",
+      "type": "status",
+      "message": "S2.6 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+    },
+    {
+      "time": "2026-10-22T21:06:49.792Z",
+      "type": "status",
+      "message": "S2.5 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+    },
+    {
+      "time": "2026-10-22T21:06:49.773Z",
+      "type": "status",
+      "message": "S2.4 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+    },
+    {
+      "time": "2026-10-22T21:06:49.754Z",
+      "type": "status",
+      "message": "S2.3 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+    },
+    {
+      "time": "2026-10-22T21:06:49.734Z",
+      "type": "status",
+      "message": "S2.1 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+    },
+    {
+      "time": "2026-10-22T21:02:06.700Z",
+      "type": "now",
+      "message": "Now: S2 / S2.1"
+    },
+    {
+      "time": "2026-10-22T21:02:06.681Z",
+      "type": "note",
+      "message": "S2.12: Approved with mockups: no review prompt in onboarding; ask after Day 1 or first ridden-out craving (built in S5/S6)."
+    },
+    {
+      "time": "2026-10-22T21:02:06.661Z",
+      "type": "note",
+      "message": "S2.9: Building without the 'can make quitting easier' line until Milan confirms the claim and source."
+    },
+    {
+      "time": "2026-10-22T21:02:06.642Z",
+      "type": "status",
+      "message": "S2.2 pending → blocked (Building the exit screen; youth resource names/URLs per country still needed from Milan.)"
+    },
+    {
+      "time": "2026-10-22T21:02:06.623Z",
+      "type": "status",
+      "message": "S2.14 pending → in_progress (Milan: keep the name screen.)"
+    },
+    {
+      "time": "2026-10-22T21:02:06.597Z",
+      "type": "signoff",
+      "message": "S2 mockups approved by Milan; name screen kept"
+    },
     {
       "time": "2026-10-22T20:55:53.346Z",
       "type": "note",
