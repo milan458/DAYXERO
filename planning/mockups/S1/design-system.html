@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DayXero Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Tokens — mirror of DesignSystem/Tokens.swift (to be built after sign-off) */
+  :root {
+    --canvas: #000000; --sage: #BCC388; --moss: #43511C; --white: #FFFFFF;
+    --surface1: #121212; --surface2: #161616; --surface3: #1C1C1E;
+    --hairline: rgba(255,255,255,.08); --glass-highlight: rgba(255,255,255,.16);
+    --glass-fill: linear-gradient(135deg, rgba(67,81,28,.35) 0%, rgba(20,20,20,.65) 100%);
+    --amber: #E5A93C; --coral: #C85A54;
+    --text: #FFFFFF; --text2: rgba(255,255,255,.60); --muted: rgba(255,255,255,.50);
+    --ease: cubic-bezier(.16, 1, .3, 1);
+    --r-card: 28px; --r-card-lg: 36px; --r-input: 20px;
+    --font: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  body.sf { --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--canvas); color: var(--text); font-family: var(--font); -webkit-font-smoothing: antialiased; }
+  main { max-width: 980px; margin: 0 auto; padding: 28px 16px 120px; }
+  h1 { font-size: 28px; font-weight: 700; letter-spacing: -.02em; margin: 0 0 4px; }
+  h2 { font-size: 24px; font-weight: 700; letter-spacing: -.02em; margin: 56px 0 6px; }
+  .micro { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .sub { font-size: 13px; color: var(--text2); }
+  .note { font-size: 13px; color: var(--text2); background: var(--surface1); border: 1px solid var(--hairline); border-left: 3px solid var(--amber); border-radius: 16px; padding: 12px 16px; margin: 14px 0; }
+  .note b { color: var(--text); }
+  code { font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--sage); }
+  .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); margin-top: 18px; }
+  .row { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; margin-top: 18px; }
+  .stack { display: grid; gap: 14px; margin-top: 18px; }
+  .toggle { display: inline-flex; background: var(--surface2); border-radius: 999px; padding: 4px; margin-top: 14px; }
+  .toggle button { background: none; border: 0; color: var(--text2); font: 600 13px var(--font); padding: 8px 16px; border-radius: 999px; cursor: pointer; }
+  .toggle button[aria-pressed="true"] { background: var(--white); color: #000; }
+
+  /* Swatches */
+  .swatch { background: var(--surface1); border: 1px solid var(--hairline); border-radius: 24px; overflow: hidden; }
+  .swatch .chip { height: 76px; border-bottom: 1px solid var(--hairline); }
+  .swatch div.meta { padding: 12px 14px; display: grid; gap: 2px; }
+  .swatch b { font-size: 14px; font-weight: 600; }
+
+  /* Type */
+  .type-row { display: grid; grid-template-columns: 170px 1fr; gap: 16px; align-items: baseline; padding: 14px 0; border-bottom: 1px solid var(--hairline); }
+  @media (max-width: 600px) { .type-row { grid-template-columns: 1fr; gap: 4px; } }
+  .t-hero { font-size: 36px; font-weight: 700; letter-spacing: -.03em; }
+  .t-hero small { font-size: 20px; font-weight: 400; color: rgba(255,255,255,.45); letter-spacing: 0; }
+  .t-title { font-size: 26px; font-weight: 700; letter-spacing: -.02em; }
+  .t-card { font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
+  .t-sub { font-size: 13px; color: var(--text2); }
+  .t-micro { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .t-btn { font-size: 16px; font-weight: 600; letter-spacing: -.01em; }
+
+  /* Scale bars */
+  .scale { display: flex; align-items: end; gap: 14px; flex-wrap: wrap; margin-top: 18px; }
+  .scale div { display: grid; gap: 6px; justify-items: center; font-size: 12px; color: var(--text2); }
+  .scale i { display: block; background: var(--sage); border-radius: 4px; }
+  .radius-demo { width: 96px; height: 72px; background: var(--surface2); border: 1px solid var(--hairline); display: grid; place-items: center; font-size: 12px; color: var(--text2); }
+
+  /* Buttons */
+  .btn { border: 0; cursor: pointer; font: 600 16px/1 var(--font); letter-spacing: -.01em; border-radius: 999px; height: 56px; padding: 0 28px; transition: transform .24s var(--ease); }
+  .btn:active, .btn.pressed { transform: scale(.97); }
+  .btn-primary { background: var(--white); color: #000; width: 100%; max-width: 360px; }
+  .btn-secondary { background: var(--surface2); color: var(--white); border: 1px solid var(--hairline); height: 48px; font-size: 15px; }
+  .btn-sage { background: var(--sage); color: #000; height: 48px; font-size: 15px; }
+  .btn-quiet { background: none; color: var(--text2); height: 44px; font-size: 15px; }
+  .btn-primary:disabled { background: var(--surface3); color: rgba(255,255,255,.35); }
+  .icon-btn { width: 48px; height: 48px; border-radius: 999px; background: var(--surface1); border: 1px solid var(--hairline); display: grid; place-items: center; color: var(--white); cursor: pointer; }
+  .fab { width: 56px; height: 56px; border-radius: 999px; background: var(--white); color: #000; border: 0; display: grid; place-items: center; box-shadow: 0 8px 24px rgba(0,0,0,.6); cursor: pointer; }
+  svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* Chips */
+  .chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+  .chip-btn { flex: none; border: 0; cursor: pointer; border-radius: 999px; padding: 9px 18px; font: 400 14px var(--font); background: var(--surface2); color: rgba(255,255,255,.6); transition: all .24s var(--ease); }
+  .chip-btn[aria-pressed="true"] { background: var(--white); color: #000; font-weight: 600; }
+
+  /* Inputs */
+  .field { display: grid; gap: 8px; max-width: 360px; }
+  .input { height: 52px; border-radius: var(--r-input); background: var(--surface2); border: 1px solid var(--hairline); color: var(--white); padding: 0 18px; font: 400 16px var(--font); outline: none; transition: border-color .24s var(--ease), box-shadow .24s var(--ease); }
+  .input::placeholder { color: rgba(255,255,255,.35); }
+  .input:focus, .input.focus { border-color: rgba(188,195,136,.6); box-shadow: 0 0 0 4px rgba(188,195,136,.12); }
+
+  /* Cards */
+  .card { background: var(--surface1); border: 1px solid var(--hairline); border-radius: var(--r-card); padding: 20px; }
+  .glass { position: relative; background: var(--glass-fill); border: 1px solid var(--hairline); border-top-color: var(--glass-highlight); border-radius: var(--r-card-lg); padding: 22px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); overflow: hidden; }
+  .glass::before { content: ""; position: absolute; inset: auto -20% -60% -20%; height: 120%; background: radial-gradient(ellipse at 30% 0%, rgba(188,195,136,.18), transparent 60%); pointer-events: none; }
+  body.no-transparency .glass { background: var(--surface1); backdrop-filter: none; }
+  body.no-transparency .glass::before { display: none; }
+
+  /* Progress */
+  .metric { display: grid; gap: 8px; }
+  .metric-head { display: flex; justify-content: space-between; align-items: baseline; }
+  .metric-head span:last-child { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .track { height: 6px; border-radius: 999px; background: rgba(255,255,255,.12); overflow: hidden; }
+  .fill { height: 100%; border-radius: 999px; background: var(--sage); transition: width .6s var(--ease); }
+  .fill.white { background: var(--white); }
+
+  /* Craving slider */
+  .slider-wrap { display: grid; gap: 14px; max-width: 420px; }
+  .slider-val { font-size: 36px; font-weight: 700; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+  .slider-val small { font-size: 20px; font-weight: 400; color: rgba(255,255,255,.45); }
+  input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 999px; background: linear-gradient(90deg, var(--sage), var(--amber), var(--coral)); outline: none; margin: 10px 0; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 28px; height: 28px; border-radius: 50%; background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,.5); cursor: grab; }
+  input[type=range]::-moz-range-thumb { width: 28px; height: 28px; border: 0; border-radius: 50%; background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,.5); }
+  input[type=range]:focus-visible::-webkit-slider-thumb { outline: 3px solid var(--sage); outline-offset: 2px; }
+
+  /* Week strip */
+  .week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; max-width: 420px; }
+  .day { display: grid; gap: 8px; justify-items: center; }
+  .day span { font-size: 11px; color: rgba(255,255,255,.5); }
+  .bubble { width: 40px; height: 40px; border-radius: 999px; display: grid; place-items: center; font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .b-clear { background: var(--sage); color: #000; }
+  .b-today { background: var(--white); color: #000; font-weight: 700; }
+  .b-future { background: var(--surface2); color: rgba(255,255,255,.45); }
+  .b-prep { background: transparent; border: 1px dashed rgba(188,195,136,.5); color: var(--sage); }
+
+  /* Swipe row */
+  .swipe { position: relative; height: 64px; border-radius: 999px; background: var(--surface1); overflow: hidden; max-width: 460px; }
+  .swipe-actions { position: absolute; inset: 0; display: flex; justify-content: flex-end; align-items: center; gap: 8px; padding-right: 8px; }
+  .act { width: 48px; height: 48px; border-radius: 999px; display: grid; place-items: center; border: 0; }
+  .act-sage { background: var(--sage); color: #000; } .act-amber { background: var(--amber); color: #000; } .act-coral { background: var(--coral); color: #fff; }
+  .swipe-face { position: absolute; inset: 0; background: #141414; border: 1px solid var(--hairline); border-radius: 999px; display: flex; align-items: center; gap: 14px; padding: 0 10px 0 8px; transition: transform .32s var(--ease); cursor: pointer; }
+  .swipe.open .swipe-face { transform: translateX(-176px); }
+  .swipe-face .icon-btn { width: 44px; height: 44px; flex: none; }
+  .swipe-face .grow { flex: 1; min-width: 0; }
+  .dot { width: 8px; height: 8px; border-radius: 99px; background: var(--sage); }
+
+  /* Dock */
+  .dock-stage { height: 120px; display: grid; place-items: end center; background: radial-gradient(ellipse at 50% 140%, rgba(67,81,28,.35), transparent 70%); border-radius: var(--r-card); border: 1px solid var(--hairline); padding-bottom: 24px; }
+  .dock { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 999px; background: rgba(10,10,10,.9); border: 1px solid rgba(255,255,255,.1); backdrop-filter: blur(20px); }
+  .tab { width: 48px; height: 48px; border-radius: 999px; background: var(--surface1); border: 1px solid var(--hairline); color: rgba(255,255,255,.5); display: grid; place-items: center; cursor: pointer;
+         transition: height .26s cubic-bezier(.3,1.35,.5,1), background .2s var(--ease), color .2s var(--ease); }
+  .tab[aria-selected="true"] { height: 64px; background: var(--white); color: #000; border-color: transparent; }
+  .tab[aria-selected="true"] svg { stroke-width: 2.4; }
+  .dock .fab { margin-left: 6px; width: 52px; height: 52px; }
+
+  /* Island banner */
+  .island { display: inline-flex; align-items: center; gap: 12px; background: #000; border: 1px solid rgba(255,255,255,.14); border-radius: 999px; padding: 10px 16px 10px 12px; font-size: 14px; }
+  .island .pulse { width: 10px; height: 10px; border-radius: 99px; background: var(--sage); box-shadow: 0 0 0 0 rgba(188,195,136,.6); animation: pulse 2s infinite; }
+  .island b { font-variant-numeric: tabular-nums; }
+  @keyframes pulse { 70% { box-shadow: 0 0 0 10px rgba(188,195,136,0); } 100% { box-shadow: 0 0 0 0 rgba(188,195,136,0); } }
+
+  /* States */
+  .skel { background: linear-gradient(90deg, var(--surface2) 0%, var(--surface3) 50%, var(--surface2) 100%); background-size: 200% 100%; animation: shimmer 1.6s linear infinite; border-radius: 999px; }
+  @keyframes shimmer { to { background-position: -200% 0; } }
+  .empty { text-align: center; display: grid; gap: 10px; justify-items: center; padding: 28px 20px; }
+  .empty .ring { width: 64px; height: 64px; border-radius: 999px; border: 1px dashed rgba(188,195,136,.5); display: grid; place-items: center; color: var(--sage); }
+
+  table.tok { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 13px; }
+  table.tok th { text-align: left; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; padding: 8px; border-bottom: 1px solid var(--hairline); }
+  table.tok td { padding: 10px 8px; border-bottom: 1px solid var(--hairline); color: var(--text2); vertical-align: top; }
+  table.tok td:first-child { color: var(--text); font-weight: 500; }
+  .tbl { overflow-x: auto; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
+  }
+  body.reduce-motion *, body.reduce-motion *::before { animation: none !important; transition-duration: .01ms !important; }
+</style>
+</head>
+<body>
+<main>
+  <div class="micro">Section 1 · mockup for sign-off</div>
+  <h1>DayXero design system</h1>
+  <p class="sub">Tokens and core components from DESIGN_METHODOLOGY.md, ready to become <code>DesignSystem/</code> in SwiftUI. Everything here is interactive: tap tabs, chips, the slider and the list row.</p>
+  <div class="row" style="margin-top:8px">
+    <div class="toggle" role="group" aria-label="Typeface">
+      <button aria-pressed="true" data-font="inter">Inter</button>
+      <button aria-pressed="false" data-font="sf">SF Pro</button>
+    </div>
+    <div class="toggle" role="group" aria-label="Accessibility previews">
+      <button aria-pressed="false" data-flag="reduce-motion">Reduce Motion</button>
+      <button aria-pressed="false" data-flag="no-transparency">Reduce Transparency</button>
+    </div>
+  </div>
+
+  <!-- 1. Colour -->
+  <h2>Colour</h2>
+  <p class="sub">Dark only: pure OLED black canvas, sage for progress, moss for depth, white for the one thing that matters on screen.</p>
+  <div class="grid" id="swatches"></div>
+  <div class="note"><b>Contrast changes (proposed).</b> The methodology's muted text at 35% white on black measures about 3.0:1, below WCAG AA (4.5:1) for small text. I've raised muted text to <b>50% (≈5.3:1)</b> here, and upcoming-day numerals from <code>#555555</code> to 45% white. White text on terracotta (<code>#C85A54</code>) is about 4.2:1, so it's used only at 15pt semibold or larger, or on icons.</div>
+
+  <!-- 2. Type -->
+  <h2>Type</h2>
+  <p class="sub">Each style maps to a Dynamic Type text style so it scales with the user's text size. Use the toggle above to compare Inter with SF Pro.</p>
+  <div class="stack" style="gap:0">
+    <div class="type-row"><div><div class="micro">Hero numeral</div><code>36 Bold · .largeTitle</code></div><div class="t-hero">3 <small>/ 7 days</small></div></div>
+    <div class="type-row"><div><div class="micro">Page title</div><code>26 Bold · .title</code></div><div class="t-title">Your Quit Day plan</div></div>
+    <div class="type-row"><div><div class="micro">Card heading</div><code>17 Semibold · .headline</code></div><div class="t-card">Day 3 · Riding out the urge</div></div>
+    <div class="type-row"><div><div class="micro">Subtitle</div><code>13 Regular · .footnote</code></div><div class="t-sub">Rode out a craving 2h ago</div></div>
+    <div class="type-row"><div><div class="micro">Micro label</div><code>11 Semibold +0.1em · .caption2</code></div><div class="t-micro">Money kept</div></div>
+    <div class="type-row"><div><div class="micro">Button</div><code>16 Semibold · .callout</code></div><div class="t-btn">Start today's lesson</div></div>
+  </div>
+
+  <!-- 3. Spacing, radius -->
+  <h2>Spacing &amp; shape</h2>
+  <p class="sub">4-point spacing. No sharp corners: pills and buttons are capsules, cards are 28–36pt.</p>
+  <div class="scale" id="spacing"></div>
+  <div class="row">
+    <div class="radius-demo" style="border-radius:20px">input · 20</div>
+    <div class="radius-demo" style="border-radius:28px">card · 28</div>
+    <div class="radius-demo" style="border-radius:36px">hero · 36</div>
+    <div class="radius-demo" style="border-radius:999px">capsule</div>
+  </div>
+
+  <!-- 4. Motion & haptics -->
+  <h2>Motion &amp; haptics</h2>
+  <div class="tbl"><table class="tok">
+    <thead><tr><th>Token</th><th>Value</th><th>SwiftUI</th><th>Used for</th></tr></thead>
+    <tbody>
+      <tr><td>motion.morph</td><td>spring, stiffness 350, damping 28 (~240ms)</td><td><code>.interpolatingSpring(stiffness: 350, damping: 28)</code></td><td>Dock tab, chips, selection</td></tr>
+      <tr><td>motion.glide</td><td>cubic-bezier(0.16, 1, 0.3, 1), 500ms</td><td><code>.timingCurve(0.16, 1, 0.3, 1, duration: 0.5)</code></td><td>Progress fills, sheets, page transitions</td></tr>
+      <tr><td>motion.press</td><td>scale 0.97, spring return</td><td><code>.spring(response: 0.25, dampingFraction: 0.7)</code></td><td>Every tappable surface</td></tr>
+      <tr><td>motion.reduced</td><td>cross-fade 200ms, no scale or travel</td><td><code>@Environment(\.accessibilityReduceMotion)</code></td><td>Replaces all of the above when Reduce Motion is on</td></tr>
+      <tr><td>haptic.select</td><td>selection tick</td><td><code>.sensoryFeedback(.selection, …)</code></td><td>Tabs, chips, slider steps</td></tr>
+      <tr><td>haptic.commit</td><td>success</td><td><code>.sensoryFeedback(.success, …)</code></td><td>Lesson done, "It passed", pledge made</td></tr>
+      <tr><td>haptic.gentle</td><td>soft impact, 0.5</td><td><code>.sensoryFeedback(.impact(flexibility: .soft, intensity: 0.5), …)</code></td><td>Slip logged (never the error haptic)</td></tr>
+      <tr><td>haptic.breath</td><td>Core Haptics pattern, slowing</td><td><code>CHHapticEngine</code></td><td>Craving SOS (Section 6)</td></tr>
+    </tbody>
+  </table></div>
+
+  <!-- 5. Buttons -->
+  <h2>Buttons</h2>
+  <div class="stack">
+    <button class="btn btn-primary">Commit to my Quit Day</button>
+    <button class="btn btn-primary pressed">Pressed · 0.97 scale</button>
+    <button class="btn btn-primary" disabled>Disabled</button>
+  </div>
+  <div class="row">
+    <button class="btn btn-secondary">Skip for now</button>
+    <button class="btn btn-sage">It passed</button>
+    <button class="btn btn-quiet">Not now</button>
+    <button class="icon-btn" aria-label="Settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+    <button class="fab" aria-label="Craving SOS"><svg viewBox="0 0 24 24" style="stroke-width:2.6"><path d="M12 5v14M5 12h14"/></svg></button>
+  </div>
+
+  <!-- 6. Chips & inputs -->
+  <h2>Chips &amp; inputs</h2>
+  <div class="chips" id="chips" role="group" aria-label="Products">
+    <button class="chip-btn" aria-pressed="true">Cigarettes</button>
+    <button class="chip-btn" aria-pressed="true">Vape</button>
+    <button class="chip-btn" aria-pressed="false">Pouches</button>
+    <button class="chip-btn" aria-pressed="false">Already using NRT</button>
+  </div>
+  <div class="row" style="align-items:start">
+    <label class="field"><span class="micro">Puffs per day</span><input class="input" placeholder="e.g. 200" inputmode="numeric"></label>
+    <label class="field"><span class="micro">Focused</span><input class="input focus" value="£8.50 per pod"></label>
+  </div>
+
+  <!-- 7. Cards & progress -->
+  <h2>Cards &amp; progress</h2>
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
+    <div class="glass">
+      <div class="micro">Days clear</div>
+      <div class="t-hero" style="margin:6px 0 2px">3 <small>/ 7</small></div>
+      <div class="t-sub">Quit week · Day 4 unlocks when you finish today</div>
+      <div class="metric" style="margin-top:18px">
+        <div class="metric-head"><span class="micro">Program</span><span id="pct">43%</span></div>
+        <div class="track"><div class="fill white" id="fill" style="width:43%"></div></div>
+      </div>
+    </div>
+    <div class="card" style="display:grid;gap:16px">
+      <div class="metric"><div class="metric-head"><span class="micro">Money kept</span><span>$42.50</span></div><div class="track"><div class="fill" style="width:62%"></div></div></div>
+      <div class="metric"><div class="metric-head"><span class="micro">Puffs not taken</span><span>1,840</span></div><div class="track"><div class="fill" style="width:80%"></div></div></div>
+      <div class="metric"><div class="metric-head"><span class="micro">Cravings ridden out</span><span>12</span></div><div class="track"><div class="fill" style="width:35%"></div></div></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px;border-radius:999px;display:flex;align-items:center;gap:14px;padding:12px 14px 12px 22px">
+    <div style="flex:1"><div class="micro">Next milestone</div><div class="t-card" style="font-size:15px;margin-top:2px">One full week clear · in 4 days</div></div>
+    <div class="icon-btn" style="background:rgba(67,81,28,.5);color:var(--sage)" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3c3 4 6 6.5 6 10a6 6 0 0 1-12 0c0-3.5 3-6 6-10z"/></svg></div>
+  </div>
+
+  <!-- 8. Craving slider -->
+  <h2>Craving intensity</h2>
+  <div class="card slider-wrap">
+    <div class="metric-head"><span class="micro">How strong is it?</span><span class="sub" id="slider-word">Moderate</span></div>
+    <div class="slider-val"><span id="slider-num">5</span> <small>/ 10</small></div>
+    <input type="range" min="1" max="10" value="5" id="slider" aria-label="Craving intensity, 1 to 10">
+  </div>
+
+  <!-- 9. Week strip -->
+  <h2>Week strip</h2>
+  <div class="card">
+    <div class="week" id="week"></div>
+    <div class="row" style="margin-top:16px;gap:18px">
+      <span class="sub"><span class="bubble b-clear" style="display:inline-grid;width:14px;height:14px;vertical-align:middle"></span> Clear day</span>
+      <span class="sub"><span class="bubble b-prep" style="display:inline-grid;width:14px;height:14px;vertical-align:middle"></span> Prep day</span>
+      <span class="sub"><span class="bubble b-today" style="display:inline-grid;width:14px;height:14px;vertical-align:middle"></span> Today</span>
+    </div>
+  </div>
+  <div class="note"><b>Plan overrides methodology here.</b> The methodology colours slip days terracotta in the week strip. The plan locks "a logged slip has no effect on the streak or progress visual," so slip days look like any other day. Slips show up only in Insights.</div>
+
+  <!-- 10. List row -->
+  <h2>List row with actions</h2>
+  <p class="sub">Tap the row to reveal actions (swipe on device).</p>
+  <div class="swipe" id="swipe">
+    <div class="swipe-actions">
+      <button class="act act-sage" aria-label="Rode it out"><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></button>
+      <button class="act act-amber" aria-label="Edit trigger"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg></button>
+      <button class="act act-coral" aria-label="Delete"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="swipe-face" role="button" tabindex="0" aria-label="Morning craving, 8:12, rode it out. Show actions">
+      <span class="icon-btn" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M6 6l2 2M16 16l2 2M6 18l2-2M16 8l2-2"/></svg></span>
+      <span class="grow"><div class="t-card" style="font-size:15px">Morning craving</div><div class="t-sub">8:12 · after coffee</div></span>
+      <span class="dot" aria-hidden="true"></span>
+    </div>
+  </div>
+
+  <!-- 11. Dock -->
+  <h2>Navigation dock</h2>
+  <p class="sub">The plan's three tabs (Today, Program, Progress) in the methodology's morphing capsule, plus the craving SOS button always in thumb reach.</p>
+  <div class="dock-stage">
+    <nav class="dock" role="tablist" aria-label="Main">
+      <button class="tab" role="tab" aria-selected="true" aria-label="Today"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></button>
+      <button class="tab" role="tab" aria-selected="false" aria-label="Program"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5"/></svg></button>
+      <button class="tab" role="tab" aria-selected="false" aria-label="Progress"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></button>
+      <button class="fab" aria-label="Craving SOS"><svg viewBox="0 0 24 24"><path d="M12 3c3 4 6 6.5 6 10a6 6 0 0 1-12 0c0-3.5 3-6 6-10z"/></svg></button>
+    </nav>
+  </div>
+  <div class="note"><b>On iOS 26</b> the dock container would use Liquid Glass (<code>.glassEffect()</code>) with the solid white active capsule on top; on iOS 18 it falls back to the 90% black frosted bar shown here. Pending your answer on S1.13.</div>
+
+  <!-- 12. Banner -->
+  <h2>Timer banner</h2>
+  <p class="sub">In-app version of the craving Live Activity.</p>
+  <div class="row"><div class="island"><span class="pulse"></span><span>Craving wave</span><b id="timer">02:45</b><span class="sub">left</span></div></div>
+
+  <!-- 13. States -->
+  <h2>Empty, loading, error</h2>
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+    <div class="card" style="display:grid;gap:12px" aria-label="Loading">
+      <div class="micro">Loading</div>
+      <div class="skel" style="height:14px;width:40%"></div>
+      <div class="skel" style="height:28px;width:70%"></div>
+      <div class="skel" style="height:6px;width:100%"></div>
+    </div>
+    <div class="card empty">
+      <div class="ring"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7"/></svg></div>
+      <div class="t-card">Insights need a week</div>
+      <div class="t-sub">Log cravings as they come. Your patterns show up here after 7 days.</div>
+    </div>
+    <div class="card empty">
+      <div class="ring" style="border-color:rgba(229,169,60,.5);color:var(--amber)"><svg viewBox="0 0 24 24"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/></svg></div>
+      <div class="t-card">Couldn't load your plan</div>
+      <div class="t-sub">Nothing's lost. Your progress is saved on this phone.</div>
+      <button class="btn btn-secondary">Try again</button>
+    </div>
+  </div>
+</main>
+<script>
+const swatches = [
+  ['Canvas', '#000000', 'dx.canvas', 'Every screen and sheet'],
+  ['Sage', '#BCC388', 'dx.sage', 'Progress, clear days, completion'],
+  ['Moss', '#43511C', 'dx.moss', 'Glass tint, ambient depth'],
+  ['White', '#FFFFFF', 'dx.white', 'Primary CTA, active tab, key numbers'],
+  ['Surface 1', '#121212', 'dx.surface1', 'Cards, idle tabs, icon buttons'],
+  ['Surface 2', '#161616', 'dx.surface2', 'Inputs, chips, list rows'],
+  ['Surface 3', '#1C1C1E', 'dx.surface3', 'Pressed states'],
+  ['Amber', '#E5A93C', 'dx.amber', 'Edit, moderate craving'],
+  ['Terracotta', '#C85A54', 'dx.terracotta', 'Delete, intense craving (never shaming)'],
+  ['Text 2', 'rgba(255,255,255,.60)', 'dx.text2', 'Subtitles, helper text'],
+  ['Muted', 'rgba(255,255,255,.50)', 'dx.muted', 'Micro labels, units (raised from .35)'],
+  ['Hairline', 'rgba(255,255,255,.08)', 'dx.hairline', '1px borders'],
+];
+document.getElementById('swatches').innerHTML = swatches.map(([n, v, t, u]) =>
+  `<div class="swatch"><div class="chip" style="background:${v}"></div><div class="meta"><b>${n}</b><code>${t}</code><span class="sub">${v}</span><span class="sub">${u}</span></div></div>`).join('');
+
+document.getElementById('spacing').innerHTML = [4, 8, 12, 16, 20, 24, 32, 48].map((s) =>
+  `<div><i style="width:${s}px;height:${s}px"></i>${s}</div>`).join('');
+
+const week = [['Mo', 21, 'b-prep'], ['Tu', 22, 'b-prep'], ['We', 23, 'b-clear'], ['Th', 24, 'b-clear'], ['Fr', 25, 'b-clear'], ['Sa', 26, 'b-today'], ['Su', 27, 'b-future']];
+document.getElementById('week').innerHTML = week.map(([d, n, c]) =>
+  `<div class="day"><span>${d}</span><div class="bubble ${c}">${n}</div></div>`).join('');
+
+document.querySelectorAll('[data-font]').forEach((b) => b.addEventListener('click', () => {
+  document.body.classList.toggle('sf', b.dataset.font === 'sf');
+  document.querySelectorAll('[data-font]').forEach((x) => x.setAttribute('aria-pressed', x === b));
+}));
+document.querySelectorAll('[data-flag]').forEach((b) => b.addEventListener('click', () => {
+  const on = document.body.classList.toggle(b.dataset.flag);
+  b.setAttribute('aria-pressed', on);
+}));
+document.getElementById('chips').addEventListener('click', (e) => {
+  const c = e.target.closest('.chip-btn');
+  if (c) c.setAttribute('aria-pressed', c.getAttribute('aria-pressed') !== 'true');
+});
+document.querySelectorAll('.tab').forEach((t) => t.addEventListener('click', () =>
+  document.querySelectorAll('.tab').forEach((x) => x.setAttribute('aria-selected', x === t))));
+
+const slider = document.getElementById('slider');
+slider.addEventListener('input', () => {
+  const v = +slider.value;
+  document.getElementById('slider-num').textContent = v;
+  document.getElementById('slider-word').textContent = v <= 3 ? 'Mild' : v <= 7 ? 'Moderate' : 'Intense';
+});
+
+const swipe = document.getElementById('swipe');
+swipe.querySelector('.swipe-face').addEventListener('click', () => swipe.classList.toggle('open'));
+swipe.querySelector('.swipe-face').addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); swipe.classList.toggle('open'); } });
+
+let secs = 165;
+setInterval(() => {
+  secs = secs > 0 ? secs - 1 : 165;
+  document.getElementById('timer').textContent = `${String(Math.floor(secs / 60)).padStart(2, '0')}:${String(secs % 60).padStart(2, '0')}`;
+}, 1000);
+</script>
+</body>
+</html>

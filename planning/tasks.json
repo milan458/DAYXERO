@@ -2,12 +2,13 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-22T19:50:02.742Z"
+    "updated": "2026-10-22T19:52:45.198Z"
   },
   "now": {
     "section": "S1",
     "task": "S1.4",
     "waiting_on_milan": [
+      "Review and sign off the S1 design system sheet",
       "Answer the questions on the blocked tasks",
       "Create the empty GitHub repo milan458/dayxero"
     ]
@@ -18,10 +19,22 @@
       "title": "Foundations",
       "goal": "",
       "signoff": {
-        "state": "not_started",
-        "history": []
+        "state": "mockups_ready",
+        "history": [
+          {
+            "time": "2026-10-22T19:52:45.180Z",
+            "state": "mockups_ready",
+            "by": "Claude",
+            "comment": ""
+          }
+        ]
       },
-      "mockups": [],
+      "mockups": [
+        {
+          "title": "Design system: tokens & components",
+          "path": "mockups/S1/design-system.html"
+        }
+      ],
       "tasks": [
         {
           "id": "S1.1",
@@ -50,8 +63,8 @@
         {
           "id": "S1.4",
           "title": "Design system in code from DESIGN_METHODOLOGY.md: colour, type, spacing, radius, glass, motion and haptic tokens, plus core components. Build a preview gallery screen; this is Section 1's mockup for sign-off.",
-          "status": "pending",
-          "notes": "",
+          "status": "awaiting_signoff",
+          "notes": "Starting the token & component sheet (Section 1 mockup).\nToken & component sheet posted (HTML; SwiftUI preview export needs macOS, see S1.14).",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -283,7 +296,7 @@
           "id": "S3.2",
           "title": "Plans: monthly, annual (highlighted), lifetime. Prices from RevenueCat; placeholder starting point $9.99/mo, $39.99/yr, $79.99 lifetime — confirm with Milan.",
           "status": "pending",
-          "notes": "Question for Milan: confirm .99/mo, 9.99/yr, 9.99 lifetime.",
+          "notes": "Question for Milan: confirm $9.99/mo, $39.99/yr, $79.99 lifetime.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -1000,6 +1013,31 @@
   ],
   "log": [
     {
+      "time": "2026-10-22T19:52:45.198Z",
+      "type": "now",
+      "message": "Now: S1 / S1.4"
+    },
+    {
+      "time": "2026-10-22T19:52:45.180Z",
+      "type": "signoff",
+      "message": "S1 mockups → mockups_ready"
+    },
+    {
+      "time": "2026-10-22T19:52:45.162Z",
+      "type": "status",
+      "message": "S1.4 in_progress → awaiting_signoff (Token & component sheet posted (HTML; SwiftUI preview export needs macOS, see S1.14).)"
+    },
+    {
+      "time": "2026-10-22T19:52:17.307Z",
+      "type": "mockup",
+      "message": "S1 mockup posted: Design system: tokens & components"
+    },
+    {
+      "time": "2026-10-22T19:50:07.457Z",
+      "type": "status",
+      "message": "S1.4 pending → in_progress (Starting the token & component sheet (Section 1 mockup).)"
+    },
+    {
       "time": "2026-10-22T19:50:02.742Z",
       "type": "now",
       "message": "Now: S1 / S1.4"
@@ -1087,7 +1125,7 @@
     {
       "time": "2026-10-22T19:50:02.365Z",
       "type": "note",
-      "message": "S3.2: Question for Milan: confirm .99/mo, 9.99/yr, 9.99 lifetime."
+      "message": "S3.2: Question for Milan: confirm $9.99/mo, $39.99/yr, $79.99 lifetime."
     },
     {
       "time": "2026-10-22T19:50:02.343Z",
