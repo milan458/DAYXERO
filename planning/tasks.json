@@ -2,14 +2,15 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-22T20:05:00.906Z"
+    "updated": "2026-10-22T20:07:35.644Z"
   },
   "now": {
     "section": "S1",
-    "task": "S1.4",
+    "task": "S1.1",
     "waiting_on_milan": [
-      "Review revision 2 of the S1 sheet (now with light mode)",
-      "Answer the questions on the blocked tasks"
+      "Analytics: PostHog or Mixpanel? (S1.5)",
+      "Where is the old Flutter build? (S5.1)",
+      "Inactivity reset decision (S5.7)"
     ]
   },
   "sections": [
@@ -18,7 +19,7 @@
       "title": "Foundations",
       "goal": "",
       "signoff": {
-        "state": "mockups_ready",
+        "state": "signed_off",
         "history": [
           {
             "time": "2026-10-22T19:52:45.180Z",
@@ -37,6 +38,12 @@
             "state": "mockups_ready",
             "by": "Claude",
             "comment": ""
+          },
+          {
+            "time": "2026-10-22T20:07:35.398Z",
+            "state": "signed_off",
+            "by": "Milan",
+            "comment": "both themes, approved (sent in chat)"
           }
         ]
       },
@@ -50,7 +57,7 @@
         {
           "id": "S1.1",
           "title": "Create the Xcode project: SwiftUI app target, iOS 18 deployment target, Liquid Glass on iOS 26 behind `if #available(iOS 26, *)` with solid fallbacks.",
-          "status": "pending",
+          "status": "in_progress",
           "notes": "",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
@@ -74,8 +81,8 @@
         {
           "id": "S1.4",
           "title": "Design system in code from DESIGN_METHODOLOGY.md: colour, type, spacing, radius, glass, motion and haptic tokens, plus core components. Build a preview gallery screen; this is Section 1's mockup for sign-off.",
-          "status": "awaiting_signoff",
-          "notes": "Starting the token & component sheet (Section 1 mockup).\nToken & component sheet posted (HTML; SwiftUI preview export needs macOS, see S1.14).",
+          "status": "in_progress",
+          "notes": "Starting the token & component sheet (Section 1 mockup).\nToken & component sheet posted (HTML; SwiftUI preview export needs macOS, see S1.14).\nSign-off received; building the SwiftUI design system.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -122,40 +129,40 @@
         {
           "id": "S1.10",
           "title": "Design conflict: the methodology's dock has 5 tabs; the plan has 3 (Today, Program, Progress)",
-          "status": "blocked",
-          "notes": "From reading both docs. Proposal: keep the plan's 3 tabs, styled as the morphing white-capsule dock. Confirm.",
+          "status": "done",
+          "notes": "From reading both docs. Proposal: keep the plan's 3 tabs, styled as the morphing white-capsule dock. Confirm.\nApproved sheet shows the 3-tab dock (Today, Program, Progress) + SOS button; building that. Milan can still override.",
           "created": "2026-10-22T19:50:02.609Z",
-          "completed": null
+          "completed": "2026-10-22T20:07:35.474Z"
         },
         {
           "id": "S1.11",
           "title": "Design conflict: the methodology is OLED black only; the plan tests light and dark",
-          "status": "blocked",
-          "notes": "From reading both docs. Proposal: dark-only v1 (appearance setting in S15.1 dropped or deferred). Confirm.\nMilan asked to see light mockups (S1 change request); decide after reviewing them.",
+          "status": "done",
+          "notes": "From reading both docs. Proposal: dark-only v1 (appearance setting in S15.1 dropped or deferred). Confirm.\nMilan asked to see light mockups (S1 change request); decide after reviewing them.\nMilan: ship both themes (dark and light). Appearance setting stays in S15.1.",
           "created": "2026-10-22T19:50:02.633Z",
-          "completed": null
+          "completed": "2026-10-22T20:07:35.421Z"
         },
         {
           "id": "S1.12",
           "title": "Design question: Inter (bundled) or SF Pro (system) for type?",
-          "status": "blocked",
-          "notes": "Methodology names Inter first with -apple-system fallback. SF Pro gives free Dynamic Type and optical sizing; Inter matches the spec literally. Confirm.",
+          "status": "done",
+          "notes": "Methodology names Inter first with -apple-system fallback. SF Pro gives free Dynamic Type and optical sizing; Inter matches the spec literally. Confirm.\nApproved sheet defaults to Inter; building with Inter bundled + Dynamic Type, swap is one token if Milan prefers SF Pro.",
           "created": "2026-10-22T19:50:02.656Z",
-          "completed": null
+          "completed": "2026-10-22T20:07:35.562Z"
         },
         {
           "id": "S1.13",
           "title": "Design question: iOS 26 Liquid Glass vs the methodology's custom frosted glass",
-          "status": "blocked",
-          "notes": "Plan says Liquid Glass on iOS 26; the methodology specifies solid white active capsules and moss-tinted frosted cards. Proposal: Liquid Glass for the dock container and sheets only; cards stay as specified. Confirm.",
+          "status": "done",
+          "notes": "Plan says Liquid Glass on iOS 26; the methodology specifies solid white active capsules and moss-tinted frosted cards. Proposal: Liquid Glass for the dock container and sheets only; cards stay as specified. Confirm.\nApproved sheet: Liquid Glass for dock container/sheets on iOS 26, cards as specified. Building that.",
           "created": "2026-10-22T19:50:02.677Z",
-          "completed": null
+          "completed": "2026-10-22T20:07:35.518Z"
         },
         {
           "id": "S1.14",
           "title": "Build environment: this cloud session runs Linux with no Xcode",
-          "status": "pending",
-          "notes": "Swift code can be written here, but builds, simulator runs and SwiftUI preview exports need macOS. Proposal: XcodeGen project.yml + GitHub Actions macOS runner for build/test (S1.8), and Milan runs the simulator locally. Confirm.",
+          "status": "in_progress",
+          "notes": "Swift code can be written here, but builds, simulator runs and SwiftUI preview exports need macOS. Proposal: XcodeGen project.yml + GitHub Actions macOS runner for build/test (S1.8), and Milan runs the simulator locally. Confirm.\nSetting up XcodeGen + GitHub Actions macOS build.",
           "created": "2026-10-22T19:50:02.702Z",
           "completed": null
         },
@@ -1047,6 +1054,66 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-22T20:07:35.644Z",
+      "type": "status",
+      "message": "S1.1 pending → in_progress"
+    },
+    {
+      "time": "2026-10-22T20:07:35.625Z",
+      "type": "now",
+      "message": "Now: S1 / S1.1"
+    },
+    {
+      "time": "2026-10-22T20:07:35.607Z",
+      "type": "status",
+      "message": "S1.14 pending → in_progress (Setting up XcodeGen + GitHub Actions macOS build.)"
+    },
+    {
+      "time": "2026-10-22T20:07:35.588Z",
+      "type": "status",
+      "message": "S1.4 awaiting_signoff → in_progress (Sign-off received; building the SwiftUI design system.)"
+    },
+    {
+      "time": "2026-10-22T20:07:35.562Z",
+      "type": "status",
+      "message": "S1.12 blocked → done"
+    },
+    {
+      "time": "2026-10-22T20:07:35.537Z",
+      "type": "note",
+      "message": "S1.12: Approved sheet defaults to Inter; building with Inter bundled + Dynamic Type, swap is one token if Milan prefers SF Pro."
+    },
+    {
+      "time": "2026-10-22T20:07:35.518Z",
+      "type": "status",
+      "message": "S1.13 blocked → done"
+    },
+    {
+      "time": "2026-10-22T20:07:35.500Z",
+      "type": "note",
+      "message": "S1.13: Approved sheet: Liquid Glass for dock container/sheets on iOS 26, cards as specified. Building that."
+    },
+    {
+      "time": "2026-10-22T20:07:35.474Z",
+      "type": "status",
+      "message": "S1.10 blocked → done"
+    },
+    {
+      "time": "2026-10-22T20:07:35.448Z",
+      "type": "note",
+      "message": "S1.10: Approved sheet shows the 3-tab dock (Today, Program, Progress) + SOS button; building that. Milan can still override."
+    },
+    {
+      "time": "2026-10-22T20:07:35.421Z",
+      "type": "status",
+      "message": "S1.11 blocked → done (Milan: ship both themes (dark and light). Appearance setting stays in S15.1.)"
+    },
+    {
+      "time": "2026-10-22T20:07:35.398Z",
+      "type": "signoff",
+      "message": "S1 mockups approved by Milan: both themes"
+    },
     {
       "time": "2026-10-22T20:05:00.906Z",
       "type": "now",
