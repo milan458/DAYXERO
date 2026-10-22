@@ -2,14 +2,13 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-22T20:28:17.887Z"
+    "updated": "2026-10-22T20:30:37.049Z"
   },
   "now": {
     "section": "S1",
     "task": "S1.8",
     "waiting_on_milan": [
-      "PostHog API key + US/EU cloud (S1.20)",
-      "Bundle ID + Apple team ID (S1.19)",
+      "Apple Developer team ID (S1.19)",
       "Where is the old Flutter build? (S5.1)",
       "Inactivity reset decision (S5.7)"
     ]
@@ -203,7 +202,7 @@
           "id": "S1.19",
           "title": "Bundle ID and Apple team: using app.dayxero / group.app.dayxero placeholders",
           "status": "blocked",
-          "notes": "Found while setting up the project. Milan to confirm the bundle ID and give the Apple Developer team ID for device builds and TestFlight.",
+          "notes": "Found while setting up the project. Milan to confirm the bundle ID and give the Apple Developer team ID for device builds and TestFlight.\nMilan shared App Store Connect: bundle ID in.dayxero.app (Apple ID 6822799921, SKU dayxero-ios). Project updated: widgets in.dayxero.app.widgets, App Group group.in.dayxero.app. Still need the Apple team ID.",
           "created": "2026-10-22T20:13:55.401Z",
           "completed": null
         },
@@ -1079,6 +1078,16 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-22T20:30:37.049Z",
+      "type": "now",
+      "message": "Now: S1 / S1.8"
+    },
+    {
+      "time": "2026-10-22T20:30:37.026Z",
+      "type": "note",
+      "message": "S1.19: Milan shared App Store Connect: bundle ID in.dayxero.app (Apple ID 6822799921, SKU dayxero-ios). Project updated: widgets in.dayxero.app.widgets, App Group group.in.dayxero.app. Still need the Apple team ID."
+    },
     {
       "time": "2026-10-22T20:28:17.887Z",
       "type": "note",

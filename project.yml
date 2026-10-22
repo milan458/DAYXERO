@@ -1,7 +1,7 @@
 # XcodeGen spec. Generate the project with: xcodegen generate
 name: DayXero
 options:
-  bundleIdPrefix: app.dayxero
+  bundleIdPrefix: in.dayxero
   deploymentTarget:
     iOS: "18.0"
   developmentLanguage: en
@@ -39,7 +39,7 @@ targets:
       - path: DayXeroCore
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: app.dayxero.core
+        PRODUCT_BUNDLE_IDENTIFIER: in.dayxero.app.core
         GENERATE_INFOPLIST_FILE: YES
         APPLICATION_EXTENSION_API_ONLY: YES
 
@@ -56,7 +56,7 @@ targets:
     entitlements:
       path: DayXero/DayXero.entitlements
       properties:
-        com.apple.security.application-groups: [group.app.dayxero]
+        com.apple.security.application-groups: [group.in.dayxero.app]
     info:
       path: DayXero/Info.plist
       properties:
@@ -70,7 +70,7 @@ targets:
         DXPostHogHost: $(DX_POSTHOG_HOST)
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: app.dayxero
+        PRODUCT_BUNDLE_IDENTIFIER: in.dayxero.app
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
       configs:
         # Keys come from Config/Secrets.xcconfig; analytics only in Release.
@@ -91,7 +91,7 @@ targets:
     entitlements:
       path: DayXeroWidgets/DayXeroWidgets.entitlements
       properties:
-        com.apple.security.application-groups: [group.app.dayxero]
+        com.apple.security.application-groups: [group.in.dayxero.app]
     info:
       path: DayXeroWidgets/Info.plist
       properties:
@@ -100,7 +100,7 @@ targets:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: app.dayxero.widgets
+        PRODUCT_BUNDLE_IDENTIFIER: in.dayxero.app.widgets
 
   DayXeroTests:
     type: bundle.unit-test
@@ -113,7 +113,7 @@ targets:
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES
-        PRODUCT_BUNDLE_IDENTIFIER: app.dayxero.tests
+        PRODUCT_BUNDLE_IDENTIFIER: in.dayxero.app.tests
 
 schemes:
   DayXero:

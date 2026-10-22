@@ -3,7 +3,7 @@ import SwiftData
 
 /// The SwiftData store, kept in the App Group so the app and its widgets share it.
 public enum DataStore {
-    public static let appGroup = "group.app.dayxero"
+    public static let appGroup = "group.in.dayxero.app"
 
     public static var schema: Schema {
         Schema([
