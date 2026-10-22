@@ -2,13 +2,13 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-22T19:58:42.096Z"
+    "updated": "2026-10-22T20:05:00.906Z"
   },
   "now": {
     "section": "S1",
     "task": "S1.4",
     "waiting_on_milan": [
-      "Review and sign off the S1 design system sheet",
+      "Review revision 2 of the S1 sheet (now with light mode)",
       "Answer the questions on the blocked tasks"
     ]
   },
@@ -22,6 +22,18 @@
         "history": [
           {
             "time": "2026-10-22T19:52:45.180Z",
+            "state": "mockups_ready",
+            "by": "Claude",
+            "comment": ""
+          },
+          {
+            "time": "2026-10-22T20:02:32.248Z",
+            "state": "changes_requested",
+            "by": "Milan",
+            "comment": "its all dark now. can you show me mockups of light version also? (sent in chat; the page could not save it)"
+          },
+          {
+            "time": "2026-10-22T20:05:00.888Z",
             "state": "mockups_ready",
             "by": "Claude",
             "comment": ""
@@ -119,7 +131,7 @@
           "id": "S1.11",
           "title": "Design conflict: the methodology is OLED black only; the plan tests light and dark",
           "status": "blocked",
-          "notes": "From reading both docs. Proposal: dark-only v1 (appearance setting in S15.1 dropped or deferred). Confirm.",
+          "notes": "From reading both docs. Proposal: dark-only v1 (appearance setting in S15.1 dropped or deferred). Confirm.\nMilan asked to see light mockups (S1 change request); decide after reviewing them.",
           "created": "2026-10-22T19:50:02.633Z",
           "completed": null
         },
@@ -162,6 +174,22 @@
           "notes": "Milan reported the tracker not working: localhost:4321 runs inside the cloud session. Published at https://claude.ai/artifact/2hv4n7pLXDDZn862Bpxocp; sign-offs save to the page's db and Claude folds them into tasks.json.\nPublished; db sign-off collection verified readable.",
           "created": "2026-10-22T19:56:07.994Z",
           "completed": "2026-10-22T19:56:08.022Z"
+        },
+        {
+          "id": "S1.17",
+          "title": "Add light-theme mockups to the design system sheet",
+          "status": "done",
+          "notes": "Milan, S1 change request: show a light version as well.\nTheme toggle (dark/light) across every component, light palette tokens, and side-by-side Today screen phones.",
+          "created": "2026-10-22T20:02:32.278Z",
+          "completed": "2026-10-22T20:05:00.844Z"
+        },
+        {
+          "id": "S1.18",
+          "title": "Tracker sign-off failed with a raw error for view-only viewers",
+          "status": "done",
+          "notes": "Milan hit 'Could not save: malformed or exceeds a limit' while on Can view access. Fix: check write access and explain.\nPage checks write access up front and explains view-only; raw error replaced.",
+          "created": "2026-10-22T20:02:32.312Z",
+          "completed": "2026-10-22T20:05:00.868Z"
         }
       ]
     },
@@ -1019,6 +1047,56 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-22T20:05:00.906Z",
+      "type": "now",
+      "message": "Now: S1 / S1.4"
+    },
+    {
+      "time": "2026-10-22T20:05:00.888Z",
+      "type": "signoff",
+      "message": "S1 mockups → mockups_ready"
+    },
+    {
+      "time": "2026-10-22T20:05:00.868Z",
+      "type": "status",
+      "message": "S1.18 in_progress → done (Page checks write access up front and explains view-only; raw error replaced.)"
+    },
+    {
+      "time": "2026-10-22T20:05:00.844Z",
+      "type": "status",
+      "message": "S1.17 in_progress → done (Theme toggle (dark/light) across every component, light palette tokens, and side-by-side Today screen phones.)"
+    },
+    {
+      "time": "2026-10-22T20:02:32.375Z",
+      "type": "note",
+      "message": "S1.11: Milan asked to see light mockups (S1 change request); decide after reviewing them."
+    },
+    {
+      "time": "2026-10-22T20:02:32.356Z",
+      "type": "status",
+      "message": "S1.18 pending → in_progress"
+    },
+    {
+      "time": "2026-10-22T20:02:32.336Z",
+      "type": "status",
+      "message": "S1.17 pending → in_progress"
+    },
+    {
+      "time": "2026-10-22T20:02:32.312Z",
+      "type": "task_added",
+      "message": "S1.18 added: Tracker sign-off failed with a raw error for view-only viewers"
+    },
+    {
+      "time": "2026-10-22T20:02:32.278Z",
+      "type": "task_added",
+      "message": "S1.17 added: Add light-theme mockups to the design system sheet"
+    },
+    {
+      "time": "2026-10-22T20:02:32.248Z",
+      "type": "signoff",
+      "message": "S1 mockups changes requested by Milan: its all dark now. can you show me mockups of light version also?"
+    },
     {
       "time": "2026-10-22T19:58:42.096Z",
       "type": "now",
