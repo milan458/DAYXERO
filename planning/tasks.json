@@ -2,15 +2,14 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-22T21:13:19.817Z"
+    "updated": "2026-10-22T21:20:09.595Z"
   },
   "now": {
-    "section": "S3",
-    "task": "S3.1",
+    "section": "S2",
+    "task": "S2.1",
     "waiting_on_milan": [
-      "Review the Section 3 paywall mockups",
-      "Confirm prices + 3-day trial (S3.2, S3.3)",
-      "Youth resources per country (S2.2)"
+      "Youth resources per country (S2.2)",
+      "Create Config/Secrets.xcconfig on the Mac (S1.21)"
     ]
   },
   "sections": [
@@ -371,13 +370,19 @@
       "title": "Paywall",
       "goal": "honest, high-converting. Billing traps were the top one-star theme across competitors.",
       "signoff": {
-        "state": "mockups_ready",
+        "state": "signed_off",
         "history": [
           {
             "time": "2026-10-22T21:13:19.758Z",
             "state": "mockups_ready",
             "by": "Claude",
             "comment": ""
+          },
+          {
+            "time": "2026-10-22T21:20:09.446Z",
+            "state": "signed_off",
+            "by": "Milan",
+            "comment": "prices fine, keep trial and reminder, approve paywall (sent in chat)"
           }
         ]
       },
@@ -400,7 +405,7 @@
           "id": "S3.2",
           "title": "Plans: monthly, annual (highlighted), lifetime. Prices from RevenueCat; placeholder starting point $9.99/mo, $39.99/yr, $79.99 lifetime — confirm with Milan.",
           "status": "pending",
-          "notes": "Question for Milan: confirm $9.99/mo, $39.99/yr, $79.99 lifetime.\nMockups use the placeholder prices; Milan to confirm.",
+          "notes": "Question for Milan: confirm $9.99/mo, $39.99/yr, $79.99 lifetime.\nMockups use the placeholder prices; Milan to confirm.\nMilan confirmed .99/mo, 9.99/yr, 9.99 lifetime.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -408,7 +413,7 @@
           "id": "S3.3",
           "title": "Free trial on annual (3 days unless Milan says otherwise), with the exact charge date stated on screen.",
           "status": "pending",
-          "notes": "Question for Milan: 3-day trial on annual — confirm.",
+          "notes": "Question for Milan: 3-day trial on annual — confirm.\nMilan confirmed the 3-day trial on annual.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -456,7 +461,7 @@
           "id": "S3.9",
           "title": "Trial reminder: 'we'll remind you the day before' (local notification)",
           "status": "pending",
-          "notes": "Proposed in S3 mockups; Milan to confirm we promise it.",
+          "notes": "Proposed in S3 mockups; Milan to confirm we promise it.\nMilan: keep the trial reminder.",
           "created": "2026-10-22T21:13:19.796Z",
           "completed": null
         }
@@ -1124,6 +1129,31 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-22T21:20:09.595Z",
+      "type": "now",
+      "message": "Now: S2 / S2.1"
+    },
+    {
+      "time": "2026-10-22T21:20:09.574Z",
+      "type": "note",
+      "message": "S3.9: Milan: keep the trial reminder."
+    },
+    {
+      "time": "2026-10-22T21:20:09.529Z",
+      "type": "note",
+      "message": "S3.3: Milan confirmed the 3-day trial on annual."
+    },
+    {
+      "time": "2026-10-22T21:20:09.495Z",
+      "type": "note",
+      "message": "S3.2: Milan confirmed .99/mo, 9.99/yr, 9.99 lifetime."
+    },
+    {
+      "time": "2026-10-22T21:20:09.446Z",
+      "type": "signoff",
+      "message": "S3 mockups approved by Milan: prices, 3-day trial and trial reminder confirmed"
+    },
     {
       "time": "2026-10-22T21:13:19.817Z",
       "type": "now",
