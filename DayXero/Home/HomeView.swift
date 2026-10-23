@@ -67,6 +67,7 @@ struct TodayView: View {
     @State private var openLesson: ProgramDayID?
     @State private var showUpgrade = false
     @State private var showPaywall = false
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
         // Re-evaluates each minute so counters tick and the day rolls over on its own.
@@ -150,7 +151,7 @@ struct TodayView: View {
                         Text("\(days == 1 ? String(localized: "day") : String(localized: "days")) · \(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)))")
                             .dxText(.heroDenominator)
                     }
-                    Text(prepLine).dxText(.subtitle)
+                    Text(verbatim: prepLine).dxText(.subtitle)
                     DXWeekStrip(days: snap.weekStrip).padding(.top, DX.Space.s)
                 case .quitDay:
                     Text("Days clear").dxText(.micro)
@@ -161,8 +162,9 @@ struct TodayView: View {
                 case let .quitWeek(day):
                     Text("Days clear").dxText(.micro)
                     DXFraction(day, of: ProgramSchedule.quitWeekDays)
-                    DXMetric("Quit week", value: snap.programFraction.formatted(.percent.precision(.fractionLength(0))),
-                             progress: Double(day) / Double(ProgramSchedule.quitWeekDays), tint: .primary)
+                    let weekFraction = Double(snap.quitWeekDone) / Double(ProgramSchedule.quitWeekDays)
+                    DXMetric("Quit week", value: weekFraction.formatted(.percent.precision(.fractionLength(0))),
+                             progress: weekFraction, tint: .primary)
                         .padding(.top, DX.Space.xs)
                     DXWeekStrip(days: snap.weekStrip).padding(.top, DX.Space.s)
                 case let .after(days):
@@ -179,12 +181,16 @@ struct TodayView: View {
         .accessibilityElement(children: .combine)
     }
 
-    private var prepLine: LocalizedStringKey {
-        let products = profile.products.map(\.product)
-        if products == [.vape] { return "You can still vape while you prepare." }
-        if products == [.cigarettes] { return "You can still smoke while you prepare." }
-        if products == [.pouches] { return "You can still use pouches while you prepare." }
-        return "You can still use nicotine while you prepare."
+    private var prepLine: String {
+        let verbs = Product.allCases.filter { p in profile.products.contains { $0.product == p } }.map { product -> String in
+            switch product {
+            case .cigarettes: String(localized: "smoke")
+            case .vape: String(localized: "vape")
+            case .pouches: String(localized: "use pouches")
+            }
+        }
+        let joined = ListFormatter.localizedString(byJoining: verbs.reversed())
+        return String(localized: "You can still \(joined) while you prepare.")
     }
 
     @ViewBuilder
@@ -251,7 +257,9 @@ struct TodayView: View {
 
     @ViewBuilder
     private func tiles(_ snap: HomeSnapshot) -> some View {
-        let columns = [GridItem(.adaptive(minimum: 150), spacing: DX.Space.xs)]
+        let columns = typeSize.isAccessibilitySize
+            ? [GridItem(.flexible())]
+            : [GridItem(.flexible(), spacing: DX.Space.xs), GridItem(.flexible())]
         LazyVGrid(columns: columns, alignment: .leading, spacing: DX.Space.xs) {
             if isPrep(snap) {
                 tile("You'll keep", value: snap.moneyPerYear.formatted(.currency(code: snap.currencyCode).precision(.fractionLength(0))),
@@ -263,7 +271,7 @@ struct TodayView: View {
                          caption: "\(counter.perDayBefore) a day before")
                 }
                 tile("Money kept", value: snap.moneyKept.formatted(.currency(code: snap.currencyCode)),
-                     caption: "since \(profile.quitDay.formatted(.dateTime.weekday(.wide)))")
+                     caption: snap.phase == .quitDay ? "since this morning" : "since \(profile.quitDay.formatted(.dateTime.weekday(.wide)))")
             }
         }
     }
@@ -284,6 +292,7 @@ struct TodayView: View {
                     .contentTransition(.numericText())
                 Text(caption).dxText(.subtitle)
             }
+            .frame(maxWidth: .infinity, minHeight: 84, alignment: .topLeading)
         }
         .accessibilityElement(children: .combine)
     }

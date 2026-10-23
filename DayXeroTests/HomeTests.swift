@@ -83,6 +83,7 @@ struct HomeTests {
         #expect(snap.prepDone == 3)
         #expect(snap.weekStrip.first?.state == .today)
         #expect(snap.weekStrip[4].state == .quitDay)
+        #expect(snap.weekStrip[1].state == .prep)
         #expect(snap.lesson?.day == ProgramDayID(phase: .prep, index: 4))
     }
 
@@ -95,6 +96,7 @@ struct HomeTests {
         #expect(snap.counters.first?.product == .vape)
         #expect((snap.counters.first?.avoided ?? 0) > 400)
         #expect(snap.nextMilestone == 7)
+        #expect(snap.quitWeekDone == 2)
         #expect(snap.lesson?.availability == .available)
     }
 

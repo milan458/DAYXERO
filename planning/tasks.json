@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-23T04:17:33.594Z"
+    "updated": "2026-10-23T04:40:48.935Z"
   },
   "now": {
     "section": "S4",
@@ -518,7 +518,7 @@
           "id": "S4.1",
           "title": "Hero progress visual (direction set by DESIGN_METHODOLOGY.md) showing days clear and progress; slips do not reset it.",
           "status": "in_progress",
-          "notes": "Mockups in progress.\nMockups ready in tracker.\nBuilding.\nBuilt; waiting on CI build, tests and screenshots.",
+          "notes": "Mockups in progress.\nMockups ready in tracker.\nBuilding.\nBuilt; waiting on CI build, tests and screenshots.\nCI 05b173a screenshot review: fixed quit-week % vs bar mismatch, future prep days styling, uneven tiles/primary first, week strip at AX5, dual-user prep line, 'since this morning' on Quit Day.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -1182,6 +1182,11 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-23T04:40:48.935Z",
+      "type": "note",
+      "message": "S4.1: CI 05b173a screenshot review: fixed quit-week % vs bar mismatch, future prep days styling, uneven tiles/primary first, week strip at AX5, dual-user prep line, 'since this morning' on Quit Day."
+    },
     {
       "time": "2026-10-23T04:17:33.594Z",
       "type": "note",

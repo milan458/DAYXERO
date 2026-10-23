@@ -40,6 +40,8 @@ public struct DXWeekStrip: View {
                 .accessibilityValue(Text(stateLabel(day.state)))
             }
         }
+        // A compact visual: it keeps its layout at accessibility sizes; VoiceOver reads each day in full.
+        .dynamicTypeSize(...DynamicTypeSize.xLarge)
     }
 
     @ViewBuilder

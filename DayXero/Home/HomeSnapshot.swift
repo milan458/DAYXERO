@@ -52,6 +52,8 @@ struct HomeSnapshot {
     /// Which prep day today is on the calendar (Day 1 is the day onboarding finished).
     let prepDayNumber: Int
     let programFraction: Double
+    /// Quit-week lessons done, out of seven.
+    let quitWeekDone: Int
     let nextMilestone: Int?
     /// Progress from the previous milestone to the next, for the after-quit-week bar.
     let milestoneFraction: Double
@@ -88,8 +90,9 @@ struct HomeSnapshot {
             guard let date = calendar.date(byAdding: .day, value: offset, to: stripStart) else { return nil }
             let state: DXDayState
             if date == today { state = .today }
-            else if date < today { state = date < quitDate ? .prep : .clear }
-            else { state = date == quitDate ? .quitDay : .upcoming }
+            else if date == quitDate { state = .quitDay }
+            else if date < quitDate { state = .prep }
+            else { state = date < today ? .clear : .upcoming }
             return DXWeekDay(date: date, state: state)
         }
 
@@ -116,8 +119,9 @@ struct HomeSnapshot {
             .max { $0.completedAt < $1.completedAt }?.dayID
 
         let avoided = stats.unitsAvoided(at: now)
+        // Primary product first, then the others in their usual order.
         counters = profile.products
-            .sorted { Product.allCases.firstIndex(of: $0.product)! < Product.allCases.firstIndex(of: $1.product)! }
+            .sorted { ($0.isPrimary ? 0 : 1, Product.allCases.firstIndex(of: $0.product)!) < ($1.isPrimary ? 0 : 1, Product.allCases.firstIndex(of: $1.product)!) }
             .map { Counter(product: $0.product, avoided: avoided[$0.product] ?? 0, perDayBefore: Int($0.unitsPerDay)) }
         moneyKept = stats.moneyKept(at: now)
         moneyPerYear = stats.moneyPerYear
@@ -126,6 +130,7 @@ struct HomeSnapshot {
         prepDone = completed.filter { $0.phase == .prep }.count
         prepDayNumber = (calendar.dateComponents([.day], from: clock.startOfDate(profile.createdAt), to: today).day ?? 0) + 1
         programFraction = schedule.engine.fractionComplete(completed: completed)
+        quitWeekDone = completed.filter { $0.phase == .quit }.count
         nextMilestone = Milestones.next(after: daysClear)
         if let next = nextMilestone {
             let previous = Milestones.previous(atOrBefore: daysClear)
