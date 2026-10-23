@@ -17,7 +17,9 @@ settings:
     SWIFT_VERSION: "6.0"
     SWIFT_STRICT_CONCURRENCY: complete
     DEVELOPMENT_TEAM: 6DJM927Z95
-    CODE_SIGN_STYLE: Automatic
+    # Automatic locally; CI's TestFlight job signs manually (see Config/Base.xcconfig).
+    CODE_SIGN_STYLE: $(DX_SIGN_STYLE)
+    CODE_SIGN_IDENTITY: $(DX_SIGN_IDENTITY)
     MARKETING_VERSION: "0.1.0"
     CURRENT_PROJECT_VERSION: "1"
     TARGETED_DEVICE_FAMILY: "1"     # iPhone only in v1
@@ -77,6 +79,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: in.dayxero.app
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        PROVISIONING_PROFILE_SPECIFIER: $(DX_PROFILE_APP)
       configs:
         # Keys come from Config/Secrets.xcconfig; analytics only in Release.
         Debug:
@@ -107,6 +110,7 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: in.dayxero.app.widgets
+        PROVISIONING_PROFILE_SPECIFIER: $(DX_PROFILE_WIDGETS)
 
   DayXeroTests:
     type: bundle.unit-test

@@ -1,3 +1,10 @@
 // Shared build settings. Keys live in Secrets.xcconfig, which git ignores.
 // Copy Secrets.example.xcconfig to Secrets.xcconfig and fill it in.
 #include? "Secrets.xcconfig"
+
+// Signing. Automatic for local builds; the TestFlight workflow overrides these on the command line
+// with a distribution certificate and profiles it makes through the App Store Connect API.
+DX_SIGN_STYLE = Automatic
+DX_SIGN_IDENTITY = Apple Development
+DX_PROFILE_APP =
+DX_PROFILE_WIDGETS =
