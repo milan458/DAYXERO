@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-23T07:32:34.756Z"
+    "updated": "2026-10-23T08:17:20.134Z"
   },
   "now": {
     "section": "S5",
@@ -896,16 +896,28 @@
       "title": "NRT and taper co-pilot",
       "goal": "",
       "signoff": {
-        "state": "not_started",
-        "history": []
+        "state": "mockups_ready",
+        "history": [
+          {
+            "time": "2026-10-23T08:17:20.048Z",
+            "state": "mockups_ready",
+            "by": "Claude",
+            "comment": ""
+          }
+        ]
       },
-      "mockups": [],
+      "mockups": [
+        {
+          "title": "NRT and taper co-pilot",
+          "path": "mockups/S9/nrt.html"
+        }
+      ],
       "tasks": [
         {
           "id": "S9.1",
           "title": "NRT setup: patch, gum, lozenge, inhaler; strength.",
           "status": "pending",
-          "notes": "",
+          "notes": "Mockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -913,7 +925,7 @@
           "id": "S9.2",
           "title": "Step-down schedules that follow standard product-label guidance only; every screen says to follow the label and ask a pharmacist or doctor. No dosing advice beyond the label.",
           "status": "pending",
-          "notes": "",
+          "notes": "Mockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -921,7 +933,7 @@
           "id": "S9.3",
           "title": "Pouch-strength taper plan for pouch users (e.g. stepping down mg over weeks), with reminders.",
           "status": "pending",
-          "notes": "",
+          "notes": "Mockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -929,7 +941,7 @@
           "id": "S9.4",
           "title": "Reminders for patch changes and step-down dates.",
           "status": "pending",
-          "notes": "",
+          "notes": "Mockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -937,7 +949,7 @@
           "id": "S9.5",
           "title": "NRT shown on Home and Progress.",
           "status": "pending",
-          "notes": "",
+          "notes": "Mockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         }
@@ -1269,6 +1281,41 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-23T08:17:20.134Z",
+      "type": "note",
+      "message": "S9.5: Mockups ready in tracker."
+    },
+    {
+      "time": "2026-10-23T08:17:20.117Z",
+      "type": "note",
+      "message": "S9.4: Mockups ready in tracker."
+    },
+    {
+      "time": "2026-10-23T08:17:20.101Z",
+      "type": "note",
+      "message": "S9.3: Mockups ready in tracker."
+    },
+    {
+      "time": "2026-10-23T08:17:20.083Z",
+      "type": "note",
+      "message": "S9.2: Mockups ready in tracker."
+    },
+    {
+      "time": "2026-10-23T08:17:20.066Z",
+      "type": "note",
+      "message": "S9.1: Mockups ready in tracker."
+    },
+    {
+      "time": "2026-10-23T08:17:20.048Z",
+      "type": "signoff",
+      "message": "S9 mockups → mockups_ready"
+    },
+    {
+      "time": "2026-10-23T08:17:20.030Z",
+      "type": "mockup",
+      "message": "S9 mockup posted: NRT and taper co-pilot"
+    },
     {
       "time": "2026-10-23T07:32:34.756Z",
       "type": "status",
