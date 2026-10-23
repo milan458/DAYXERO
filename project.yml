@@ -65,6 +65,9 @@ targets:
       path: DayXero/Info.plist
       properties:
         CFBundleDisplayName: DayXero
+        # XcodeGen writes a literal 1 otherwise; CI sets CURRENT_PROJECT_VERSION per upload.
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        CFBundleShortVersionString: $(MARKETING_VERSION)
         UILaunchScreen: {}
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         NSSupportsLiveActivities: true
@@ -108,6 +111,8 @@ targets:
       path: DayXeroWidgets/Info.plist
       properties:
         CFBundleDisplayName: DayXero
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        CFBundleShortVersionString: $(MARKETING_VERSION)
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
     settings:
