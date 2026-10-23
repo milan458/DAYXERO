@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-23T05:56:02.368Z"
+    "updated": "2026-10-23T06:33:58.147Z"
   },
   "now": {
     "section": "S5",
@@ -616,74 +616,74 @@
         {
           "id": "S5.2",
           "title": "Product variants: smoking, vaping, pouches; dual users get the variant for their main product plus notes for the others (confirm rule with Milan).",
-          "status": "in_progress",
-          "notes": "Question for Milan: dual users — main-product variant plus notes for the others. Confirm the rule.\nMockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nMilan: come back to the dual-user variant rule later; building with main product + notes for now.\nBuilding.",
+          "status": "done",
+          "notes": "Question for Milan: dual users — main-product variant plus notes for the others. Confirm the rule.\nMockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nMilan: come back to the dual-user variant rule later; building with main product + notes for now.\nBuilding.\nBuilt and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-23T06:33:57.999Z"
         },
         {
           "id": "S5.3",
           "title": "Day locking: a day unlocks only after the previous day is completed.",
-          "status": "in_progress",
-          "notes": "Mockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nBuilding.",
+          "status": "done",
+          "notes": "Mockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nBuilding.\nBuilt and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-23T06:33:58.020Z"
         },
         {
           "id": "S5.4",
           "title": "Lesson player: text, audio or short exercises as content requires; completion tracking.",
-          "status": "in_progress",
-          "notes": "Mockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nBuilding.\nBuilt; waiting on CI build, tests and screenshots.",
+          "status": "done",
+          "notes": "Mockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nBuilding.\nBuilt; waiting on CI build, tests and screenshots.\nBuilt and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-23T06:33:58.038Z"
         },
         {
           "id": "S5.5",
           "title": "Prep phase until Quit Day, then the quit days.",
-          "status": "in_progress",
-          "notes": "Mockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nBuilding.",
+          "status": "done",
+          "notes": "Mockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nBuilding.\nBuilt and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-23T06:33:58.055Z"
         },
         {
           "id": "S5.6",
           "title": "Maintenance arc (weeks 2–5) changes format, not just content, to avoid the week 3–4 drop-off.",
-          "status": "in_progress",
-          "notes": "Mockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nBuilding.",
+          "status": "done",
+          "notes": "Mockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nBuilding.\nBuilt and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-23T06:33:58.073Z"
         },
         {
           "id": "S5.7",
           "title": "Inactivity behaviour per Milan's answer to the open decision in part 1.",
-          "status": "in_progress",
-          "notes": "Open decision from plan §1: keep the 3-idle-day reset to Day 1, or pause and replay the last day?\nMilan decided: no reset to Day 1. After inactivity, pause and replay the last completed day, then continue. Build in Section 5.\nMockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nMockup assumes the pause kicks in after 3 idle days (old spec's number); Milan to confirm.\nMilan: 3 idle days before the program pauses (then replay last finished day).\nBuilding.",
+          "status": "done",
+          "notes": "Open decision from plan §1: keep the 3-idle-day reset to Day 1, or pause and replay the last day?\nMilan decided: no reset to Day 1. After inactivity, pause and replay the last completed day, then continue. Build in Section 5.\nMockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nMockup assumes the pause kicks in after 3 idle days (old spec's number); Milan to confirm.\nMilan: 3 idle days before the program pauses (then replay last finished day).\nBuilding.\nBuilt and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-23T06:33:58.091Z"
         },
         {
           "id": "S5.8",
           "title": "Program overview screen: past, current and locked days.",
-          "status": "in_progress",
-          "notes": "Mockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nBuilding.",
+          "status": "done",
+          "notes": "Mockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nBuilding.\nBuilt and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-23T06:33:58.113Z"
         },
         {
           "id": "S5.9",
           "title": "Hook the S3.5 upgrade sheet to locked program days",
-          "status": "in_progress",
-          "notes": "From S3 build: UpgradeSheet + FreeTier.canOpen are ready; Program screen not built yet.\nBuilding.",
+          "status": "done",
+          "notes": "From S3 build: UpgradeSheet + FreeTier.canOpen are ready; Program screen not built yet.\nBuilding.\nBuilt and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).",
           "created": "2026-10-22T22:57:10.800Z",
-          "completed": null
+          "completed": "2026-10-23T06:33:58.130Z"
         },
         {
           "id": "S5.10",
           "title": "Replace the temporary lesson page ('Mark as done') with the lesson player",
-          "status": "in_progress",
-          "notes": "From S4 build: lets the program be moved through until S5.4.\nBuilding.",
+          "status": "done",
+          "notes": "From S4 build: lets the program be moved through until S5.4.\nBuilding.\nBuilt and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).",
           "created": "2026-10-23T05:18:11.591Z",
-          "completed": null
+          "completed": "2026-10-23T06:33:58.147Z"
         }
       ]
     },
@@ -1221,6 +1221,51 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-23T06:33:58.147Z",
+      "type": "status",
+      "message": "S5.10 in_progress → done (Built and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).)"
+    },
+    {
+      "time": "2026-10-23T06:33:58.130Z",
+      "type": "status",
+      "message": "S5.9 in_progress → done (Built and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).)"
+    },
+    {
+      "time": "2026-10-23T06:33:58.113Z",
+      "type": "status",
+      "message": "S5.8 in_progress → done (Built and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).)"
+    },
+    {
+      "time": "2026-10-23T06:33:58.091Z",
+      "type": "status",
+      "message": "S5.7 in_progress → done (Built and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).)"
+    },
+    {
+      "time": "2026-10-23T06:33:58.073Z",
+      "type": "status",
+      "message": "S5.6 in_progress → done (Built and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).)"
+    },
+    {
+      "time": "2026-10-23T06:33:58.055Z",
+      "type": "status",
+      "message": "S5.5 in_progress → done (Built and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).)"
+    },
+    {
+      "time": "2026-10-23T06:33:58.038Z",
+      "type": "status",
+      "message": "S5.4 in_progress → done (Built and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).)"
+    },
+    {
+      "time": "2026-10-23T06:33:58.020Z",
+      "type": "status",
+      "message": "S5.3 in_progress → done (Built and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).)"
+    },
+    {
+      "time": "2026-10-23T06:33:57.999Z",
+      "type": "status",
+      "message": "S5.2 in_progress → done (Built and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).)"
+    },
     {
       "time": "2026-10-23T05:56:02.368Z",
       "type": "note",
