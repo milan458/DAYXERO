@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-23T10:28:52.276Z"
+    "updated": "2026-10-23T10:46:21.584Z"
   },
   "now": {
     "section": "S5",
@@ -1338,10 +1338,22 @@
       "title": "QA and launch prep",
       "goal": "",
       "signoff": {
-        "state": "not_started",
-        "history": []
+        "state": "mockups_ready",
+        "history": [
+          {
+            "time": "2026-10-23T10:46:21.530Z",
+            "state": "mockups_ready",
+            "by": "Claude",
+            "comment": ""
+          }
+        ]
       },
-      "mockups": [],
+      "mockups": [
+        {
+          "title": "Launch prep: store screenshots, copy, nomination, checklist",
+          "path": "mockups/S16/launch.html"
+        }
+      ],
       "tasks": [
         {
           "id": "S16.1",
@@ -1363,7 +1375,7 @@
           "id": "S16.3",
           "title": "App Store assets: screenshots, preview video, description (ask Milan for copy).",
           "status": "pending",
-          "notes": "Needs App Store copy from Milan.",
+          "notes": "Needs App Store copy from Milan.\nScreenshot set, name, subtitle, promotional text, description and keywords drafted for Milan's OK.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -1379,22 +1391,112 @@
           "id": "S16.5",
           "title": "Prepare an App Store featuring nomination (App Store Connect → Featuring → Nominations → App Launch), at least 3 weeks before launch.",
           "status": "pending",
-          "notes": "",
+          "notes": "Nomination text drafted on the S16 page; Milan submits in App Store Connect at least 3 weeks before launch.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S16.6",
           "title": "Launch checklist in the tracker.",
+          "status": "done",
+          "notes": "Checklist on the S16 page and as tasks S16.7–S16.11.",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": "2026-10-23T10:46:21.548Z"
+        },
+        {
+          "id": "S16.7",
+          "title": "Milan: privacy policy URL and support URL (App Review requires both)",
           "status": "pending",
           "notes": "",
-          "created": "2026-10-22T19:48:52.060Z",
+          "created": "2026-10-23T10:46:13.644Z",
+          "completed": null
+        },
+        {
+          "id": "S16.8",
+          "title": "Milan: App Privacy answers in App Store Connect (Usage Data, not linked, not tracking; purchases via RevenueCat)",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-23T10:46:13.666Z",
+          "completed": null
+        },
+        {
+          "id": "S16.9",
+          "title": "Milan: age rating questionnaire",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-23T10:46:13.688Z",
+          "completed": null
+        },
+        {
+          "id": "S16.10",
+          "title": "Milan: check NRT label presets against official leaflets (FDA, MHRA/eMC, TGA, BfArM)",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-23T10:46:13.710Z",
+          "completed": null
+        },
+        {
+          "id": "S16.11",
+          "title": "Milan + Claude: device pass on TestFlight (VoiceOver, haptics, widgets, Control Center, Siri, Live Activity, notifications)",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-23T10:46:13.732Z",
           "completed": null
         }
       ]
     }
   ],
   "log": [
+    {
+      "time": "2026-10-23T10:46:21.584Z",
+      "type": "note",
+      "message": "S16.5: Nomination text drafted on the S16 page; Milan submits in App Store Connect at least 3 weeks before launch."
+    },
+    {
+      "time": "2026-10-23T10:46:21.567Z",
+      "type": "note",
+      "message": "S16.3: Screenshot set, name, subtitle, promotional text, description and keywords drafted for Milan's OK."
+    },
+    {
+      "time": "2026-10-23T10:46:21.548Z",
+      "type": "status",
+      "message": "S16.6 pending → done (Checklist on the S16 page and as tasks S16.7–S16.11.)"
+    },
+    {
+      "time": "2026-10-23T10:46:21.530Z",
+      "type": "signoff",
+      "message": "S16 mockups → mockups_ready"
+    },
+    {
+      "time": "2026-10-23T10:46:21.511Z",
+      "type": "mockup",
+      "message": "S16 mockup posted: Launch prep: store screenshots, copy, nomination, checklist"
+    },
+    {
+      "time": "2026-10-23T10:46:13.732Z",
+      "type": "task_added",
+      "message": "S16.11 added: Milan + Claude: device pass on TestFlight (VoiceOver, haptics, widgets, Control Center, Siri, Live Activity, notifications)"
+    },
+    {
+      "time": "2026-10-23T10:46:13.710Z",
+      "type": "task_added",
+      "message": "S16.10 added: Milan: check NRT label presets against official leaflets (FDA, MHRA/eMC, TGA, BfArM)"
+    },
+    {
+      "time": "2026-10-23T10:46:13.688Z",
+      "type": "task_added",
+      "message": "S16.9 added: Milan: age rating questionnaire"
+    },
+    {
+      "time": "2026-10-23T10:46:13.666Z",
+      "type": "task_added",
+      "message": "S16.8 added: Milan: App Privacy answers in App Store Connect (Usage Data, not linked, not tracking; purchases via RevenueCat)"
+    },
+    {
+      "time": "2026-10-23T10:46:13.644Z",
+      "type": "task_added",
+      "message": "S16.7 added: Milan: privacy policy URL and support URL (App Review requires both)"
+    },
     {
       "time": "2026-10-23T10:28:52.276Z",
       "type": "status",
