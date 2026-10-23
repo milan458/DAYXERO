@@ -98,11 +98,57 @@ public final class Reason {
 public final class ProgramProgress {
     @Relationship(deleteRule: .cascade) public var completions: [DayCompletion] = []
     public var lastActiveAt: Date?
+    /// Set when the program paused after a break (S5.7): this finished day is replayed before moving on.
+    public var replayDayRaw: String?
 
     public init() {}
 
     public var completedDayIDs: Set<ProgramDayID> {
         Set(completions.compactMap(\.dayID))
+    }
+
+    public var replayDay: ProgramDayID? {
+        get { replayDayRaw.flatMap(ProgramDayID.init(description:)) }
+        set { replayDayRaw = newValue?.description }
+    }
+
+    /// The most recently finished program day.
+    public var lastCompleted: ProgramDayID? {
+        completions.max { $0.completedAt < $1.completedAt }?.dayID
+    }
+}
+
+/// An if-then plan made in a lesson exercise; shown again in Craving SOS.
+@Model
+public final class IfThenPlan {
+    public var situation: String
+    public var action: String
+    public var createdAt: Date
+
+    public init(situation: String, action: String, createdAt: Date = .now) {
+        self.situation = situation
+        self.action = action
+        self.createdAt = createdAt
+    }
+}
+
+/// Answers from a weekly check-in in the weeks after the quit week (S5.6).
+@Model
+public final class WeeklyCheckIn {
+    public var week: Int
+    /// 0 (easy) ... 1 (tough).
+    public var cravingRating: Double
+    /// Weekday indexes (0 = first day of the week) on which last week's challenge was done.
+    public var challengeDays: [Int]
+    public var nextChallenge: String?
+    public var createdAt: Date
+
+    public init(week: Int, cravingRating: Double, challengeDays: [Int], nextChallenge: String?, createdAt: Date = .now) {
+        self.week = week
+        self.cravingRating = cravingRating
+        self.challengeDays = challengeDays
+        self.nextChallenge = nextChallenge
+        self.createdAt = createdAt
     }
 }
 

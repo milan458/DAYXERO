@@ -13,6 +13,13 @@ public struct ProgramDayID: Hashable, Codable, Sendable, CustomStringConvertible
 
     public var description: String { "\(phase.rawValue)-\(index)" }
     public var id: String { description }
+
+    /// Parses "quit-3" style identifiers.
+    public init?(description: String) {
+        let parts = description.split(separator: "-")
+        guard parts.count == 2, let phase = ProgramPhase(rawValue: String(parts[0])), let index = Int(parts[1]) else { return nil }
+        self.init(phase: phase, index: index)
+    }
 }
 
 public enum ProgramDayState: Equatable, Sendable {
