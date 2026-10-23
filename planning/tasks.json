@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-23T10:24:01.469Z"
+    "updated": "2026-10-23T10:28:52.276Z"
   },
   "now": {
     "section": "S5",
@@ -1252,11 +1252,17 @@
       "title": "Settings, privacy and accessibility",
       "goal": "",
       "signoff": {
-        "state": "mockups_ready",
+        "state": "signed_off",
         "history": [
           {
             "time": "2026-10-23T10:24:01.325Z",
             "state": "mockups_ready",
+            "by": "Claude",
+            "comment": ""
+          },
+          {
+            "time": "2026-10-23T10:28:52.083Z",
+            "state": "signed_off",
             "by": "Claude",
             "comment": ""
           }
@@ -1272,56 +1278,56 @@
         {
           "id": "S15.1",
           "title": "Settings: products and baselines, Quit Day, day boundary, notifications, haptics, appearance.",
-          "status": "pending",
-          "notes": "Mockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups ready in tracker.\nMilan: allow setting a new Quit Day after it has passed, with a clear confirmation.\nMilan approved S15 in chat.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S15.2",
           "title": "Subscription management link, restore purchases.",
-          "status": "pending",
-          "notes": "Mockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups ready in tracker.\nMilan approved S15 in chat.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S15.3",
           "title": "Data export and delete-all-data.",
-          "status": "pending",
-          "notes": "Mockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups ready in tracker.\nMilan approved S15 in chat.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S15.4",
           "title": "Privacy: local-first; analytics disclosure; privacy policy and terms links (ask Milan for URLs).",
-          "status": "pending",
-          "notes": "Needs privacy policy and terms URLs from Milan.\nMockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Needs privacy policy and terms URLs from Milan.\nMockups ready in tracker.\nMilan: analytics opt-in for EU (off by default there); privacy policy URL still needed.\nMilan approved S15 in chat.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S15.5",
           "title": "Accessibility pass across the whole app: VoiceOver labels on every control and the hero visual, full Dynamic Type, Reduce Motion, Reduce Transparency, contrast.",
-          "status": "pending",
-          "notes": "Includes a live VoiceOver run on device for Sections 1–3 (screenshots can't check speech).\nMockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Includes a live VoiceOver run on device for Sections 1–3 (screenshots can't check speech).\nMockups ready in tracker.\nMilan approved S15 in chat.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S15.6",
           "title": "Health disclaimer: educational support, not medical treatment.",
-          "status": "pending",
-          "notes": "Mockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups ready in tracker.\nMilan approved S15 in chat.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S15.7",
           "title": "Profile button on Home opens Settings",
-          "status": "pending",
-          "notes": "From S4 build: the person icon on Home does nothing yet.\nMockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "From S4 build: the person icon on Home does nothing yet.\nMockups ready in tracker.\nMilan approved S15 in chat.",
           "created": "2026-10-23T05:18:11.612Z",
           "completed": null
         }
@@ -1389,6 +1395,56 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-23T10:28:52.276Z",
+      "type": "status",
+      "message": "S15.7 pending → in_progress (Milan approved S15 in chat.)"
+    },
+    {
+      "time": "2026-10-23T10:28:52.256Z",
+      "type": "status",
+      "message": "S15.6 pending → in_progress (Milan approved S15 in chat.)"
+    },
+    {
+      "time": "2026-10-23T10:28:52.237Z",
+      "type": "status",
+      "message": "S15.5 pending → in_progress (Milan approved S15 in chat.)"
+    },
+    {
+      "time": "2026-10-23T10:28:52.216Z",
+      "type": "status",
+      "message": "S15.4 pending → in_progress (Milan approved S15 in chat.)"
+    },
+    {
+      "time": "2026-10-23T10:28:52.195Z",
+      "type": "status",
+      "message": "S15.3 pending → in_progress (Milan approved S15 in chat.)"
+    },
+    {
+      "time": "2026-10-23T10:28:52.172Z",
+      "type": "status",
+      "message": "S15.2 pending → in_progress (Milan approved S15 in chat.)"
+    },
+    {
+      "time": "2026-10-23T10:28:52.153Z",
+      "type": "status",
+      "message": "S15.1 pending → in_progress (Milan approved S15 in chat.)"
+    },
+    {
+      "time": "2026-10-23T10:28:52.130Z",
+      "type": "note",
+      "message": "S15.4: Milan: analytics opt-in for EU (off by default there); privacy policy URL still needed."
+    },
+    {
+      "time": "2026-10-23T10:28:52.109Z",
+      "type": "note",
+      "message": "S15.1: Milan: allow setting a new Quit Day after it has passed, with a clear confirmation."
+    },
+    {
+      "time": "2026-10-23T10:28:52.083Z",
+      "type": "signoff",
+      "message": "S15 mockups → signed_off"
+    },
     {
       "time": "2026-10-23T10:24:01.469Z",
       "type": "note",

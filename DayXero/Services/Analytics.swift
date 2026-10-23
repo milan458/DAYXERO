@@ -78,6 +78,8 @@ enum Analytics {
         config.captureScreenViews = false
         config.captureApplicationLifecycleEvents = true
         PostHogSDK.shared.setup(config)
+        // Nothing at all is sent, lifecycle events included, until there's consent (S15.4).
+        if !AnalyticsConsent.isOn { PostHogSDK.shared.optOut() }
         isConfigured = true
     }
 
@@ -85,7 +87,32 @@ enum Analytics {
         #if DEBUG
         print("[analytics] \(event.name) \(event.properties)")
         #endif
-        guard isConfigured else { return }
+        guard isConfigured, AnalyticsConsent.isOn else { return }
         PostHogSDK.shared.capture(event.name, properties: event.properties)
+    }
+}
+
+/// Anonymous usage data consent (S15.4, Milan's rule): off until people opt in for the EU and EEA, on elsewhere.
+/// Changeable any time in Settings → Privacy.
+enum AnalyticsConsent {
+    static let key = "dx.analyticsConsent"
+    /// EU member states plus Iceland, Liechtenstein and Norway.
+    static let optInRegions: Set<String> = [
+        "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT",
+        "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE", "IS", "LI", "NO",
+    ]
+
+    static func defaultValue(region: String?) -> Bool {
+        !optInRegions.contains(region?.uppercased() ?? "")
+    }
+
+    static var isOn: Bool {
+        UserDefaults.standard.object(forKey: key) as? Bool ?? defaultValue(region: Locale.current.region?.identifier)
+    }
+
+    @MainActor
+    static func set(_ on: Bool) {
+        UserDefaults.standard.set(on, forKey: key)
+        if on { PostHogSDK.shared.optIn() } else { PostHogSDK.shared.optOut() }
     }
 }

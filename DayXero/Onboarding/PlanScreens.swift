@@ -95,6 +95,8 @@ struct PlanRevealScreen: View {
                     }
                 }
             }
+            // The one-line health disclaimer, before the paywall (S15.6).
+            Text(HealthInfoView.oneLine).dxText(.subtitle).frame(maxWidth: .infinity).multilineTextAlignment(.center)
         } footer: {
             Button("Continue", action: onContinue).buttonStyle(.dxPrimary)
         }

@@ -44,6 +44,20 @@ protocol PurchaseStore: AnyObject {
     /// True when a restore found an active purchase.
     func restore() async throws -> Bool
     func hasPro() async -> Bool
+    /// The active plan for Settings (S15.2), or nil when there isn't one.
+    func currentPlan() async -> CurrentPlan?
+}
+
+extension PurchaseStore {
+    func currentPlan() async -> CurrentPlan? { nil }
+}
+
+/// What Settings shows about the person's subscription.
+struct CurrentPlan: Equatable, Sendable {
+    let plan: Plan
+    /// Renewal or end date; nil for lifetime.
+    let renews: Date?
+    let willRenew: Bool
 }
 
 /// RevenueCat plumbing (S1.6, S3.6).
@@ -112,6 +126,13 @@ final class Subscriptions: PurchaseStore {
         }
     }
 
+    func currentPlan() async -> CurrentPlan? {
+        guard isConfigured, let info = try? await Purchases.shared.customerInfo(),
+              let pro = info.entitlements[Self.entitlement], pro.isActive,
+              let plan = Plan(rawValue: pro.productIdentifier) else { return nil }
+        return CurrentPlan(plan: plan, renews: pro.expirationDate, willRenew: pro.willRenew)
+    }
+
     /// Restore purchases (also offered in Settings, S15.2).
     func restore() async throws -> Bool {
         guard isConfigured else { throw StoreError.unavailable }
@@ -156,5 +177,8 @@ final class MockStore: PurchaseStore {
     func purchase(_ plan: Plan) async throws -> PurchaseOutcome { .purchased }
     func restore() async throws -> Bool { false }
     func hasPro() async -> Bool { mode == .pro }
+    func currentPlan() async -> CurrentPlan? {
+        mode == .pro ? CurrentPlan(plan: .annual, renews: Calendar.current.date(byAdding: .year, value: 1, to: .now), willRenew: true) : nil
+    }
 }
 #endif

@@ -61,9 +61,11 @@ struct RootView: View {
     @State private var log = LogRouter()
     @State private var nrt = NRTRouter()
     @State private var logDetent = PresentationDetent.medium
+    @AppStorage(AppearanceSetting.key) private var appearance = AppearanceSetting.automatic.rawValue
 
     var body: some View {
         routed
+            .preferredColorScheme(AppearanceSetting(rawValue: appearance)?.colorScheme)
             .environment(sos)
             .environment(log)
             .environment(nrt)

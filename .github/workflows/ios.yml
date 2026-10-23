@@ -200,6 +200,16 @@ jobs:
           shoot dark large ms-row-dark $P12 -dx.tab progress
           shoot dark large ms-share-dark $P12 -dx.tab progress -dx.shareCard YES
           shoot light large ms-share-light $P12 -dx.tab progress -dx.shareCard YES
+          shoot dark large set-main-dark $P12 -dx.openSettings settings
+          shoot light large set-main-light $P12 -dx.openSettings settings
+          shoot dark accessibility-extra-extra-extra-large set-main-dark-ax5 $P12 -dx.openSettings settings
+          shoot dark large set-products-dark $P12 -dx.openSettings products
+          shoot dark large set-quitday-dark $P12 -dx.openSettings quitDay
+          shoot dark large set-quitday-prep-dark -dx.homeScenario prep -dx.store pro -dx.openSettings quitDay
+          shoot dark large set-subscription-dark $P12 -dx.openSettings subscription
+          shoot dark large set-privacy-dark $P12 -dx.openSettings privacy
+          shoot dark large set-health-dark $P12 -dx.openSettings health
+          shoot dark large onb-reveal-disclaimer-dark -dx.onboardingStep reveal
           # Last: the under-18 screen persists its flag, so everything after it would show the exit.
           shoot dark large onb-under_age-dark -dx.onboardingStep under_age
           cd shots
