@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-23T04:10:24.298Z"
+    "updated": "2026-10-23T04:17:33.594Z"
   },
   "now": {
     "section": "S4",
@@ -491,13 +491,19 @@
       "title": "Home / Today",
       "goal": "",
       "signoff": {
-        "state": "mockups_ready",
+        "state": "signed_off",
         "history": [
           {
             "time": "2026-10-23T04:10:24.121Z",
             "state": "mockups_ready",
             "by": "Claude",
             "comment": ""
+          },
+          {
+            "time": "2026-10-23T04:14:43.815Z",
+            "state": "signed_off",
+            "by": "Milan",
+            "comment": "\"Start\" (sent in chat); open questions taken with Claude's recommended defaults"
           }
         ]
       },
@@ -511,64 +517,64 @@
         {
           "id": "S4.1",
           "title": "Hero progress visual (direction set by DESIGN_METHODOLOGY.md) showing days clear and progress; slips do not reset it.",
-          "status": "awaiting_signoff",
-          "notes": "Mockups in progress.\nMockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups in progress.\nMockups ready in tracker.\nBuilding.\nBuilt; waiting on CI build, tests and screenshots.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S4.2",
           "title": "Per-product counters: cigarettes, puffs or pouches not used; money kept; time regained.",
-          "status": "awaiting_signoff",
-          "notes": "Question for Milan: what should 'time regained' mean? Any minutes-per-cigarette figure is a health claim and needs a source.\nMockups in progress.\nMockups ready in tracker.\nMockup flags options: drop 'time regained' for v1, or ask 'how long does one take?' in onboarding. A published per-cigarette figure would be a health claim needing a source.",
+          "status": "in_progress",
+          "notes": "Question for Milan: what should 'time regained' mean? Any minutes-per-cigarette figure is a health claim and needs a source.\nMockups in progress.\nMockups ready in tracker.\nMockup flags options: drop 'time regained' for v1, or ask 'how long does one take?' in onboarding. A published per-cigarette figure would be a health claim needing a source.\nBuilding.\nDefault taken: 'time regained' left out of v1 (no health claim needed). Can add later via an onboarding question.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S4.3",
           "title": "Prep-phase state: countdown to Quit Day, \"you can still use during prep\", today's prep lesson.",
-          "status": "awaiting_signoff",
-          "notes": "Mockups in progress.\nMockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups in progress.\nMockups ready in tracker.\nBuilding.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S4.4",
           "title": "Today's program card: day N of 7, lesson title, duration, start or continue.",
-          "status": "awaiting_signoff",
-          "notes": "Mockups in progress.\nMockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups in progress.\nMockups ready in tracker.\nBuilding.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S4.5",
           "title": "Craving button always reachable from Home (thumb zone).",
-          "status": "awaiting_signoff",
-          "notes": "Mockups in progress.\nMockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups in progress.\nMockups ready in tracker.\nBuilding.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S4.6",
           "title": "Upcoming milestone hint.",
-          "status": "awaiting_signoff",
-          "notes": "Mockups in progress.\nMockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups in progress.\nMockups ready in tracker.\nBuilding.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S4.7",
           "title": "Glass navigation (tab bar: Today, Program, Progress) with iOS 26 Liquid Glass and fallback.",
-          "status": "awaiting_signoff",
-          "notes": "Mockups in progress.\nMockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups in progress.\nMockups ready in tracker.\nBuilding.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S4.8",
           "title": "Do quit-week lessons open as soon as the previous one is done, or the next morning?",
-          "status": "blocked",
-          "notes": "From S4 mockups (today's lesson done screen). Plan says a day unlocks after the previous is completed; unclear whether it's also calendar-gated.",
+          "status": "pending",
+          "notes": "From S4 mockups (today's lesson done screen). Plan says a day unlocks after the previous is completed; unclear whether it's also calendar-gated.\nDefault taken (Milan said 'Start' without answering): quit-week lessons open on their calendar day after the previous is done; prep lessons open on completion. Easy to change.",
           "created": "2026-10-23T04:10:24.262Z",
           "completed": null
         }
@@ -1176,6 +1182,61 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-23T04:17:33.594Z",
+      "type": "note",
+      "message": "S4.1: Built; waiting on CI build, tests and screenshots."
+    },
+    {
+      "time": "2026-10-23T04:14:44.010Z",
+      "type": "note",
+      "message": "S4.2: Default taken: 'time regained' left out of v1 (no health claim needed). Can add later via an onboarding question."
+    },
+    {
+      "time": "2026-10-23T04:14:43.992Z",
+      "type": "status",
+      "message": "S4.8 blocked → pending (Default taken (Milan said 'Start' without answering): quit-week lessons open on their calendar day after the previous is done; prep lessons open on completion. Easy to change.)"
+    },
+    {
+      "time": "2026-10-23T04:14:43.974Z",
+      "type": "status",
+      "message": "S4.7 awaiting_signoff → in_progress (Building.)"
+    },
+    {
+      "time": "2026-10-23T04:14:43.952Z",
+      "type": "status",
+      "message": "S4.6 awaiting_signoff → in_progress (Building.)"
+    },
+    {
+      "time": "2026-10-23T04:14:43.933Z",
+      "type": "status",
+      "message": "S4.5 awaiting_signoff → in_progress (Building.)"
+    },
+    {
+      "time": "2026-10-23T04:14:43.914Z",
+      "type": "status",
+      "message": "S4.4 awaiting_signoff → in_progress (Building.)"
+    },
+    {
+      "time": "2026-10-23T04:14:43.892Z",
+      "type": "status",
+      "message": "S4.3 awaiting_signoff → in_progress (Building.)"
+    },
+    {
+      "time": "2026-10-23T04:14:43.867Z",
+      "type": "status",
+      "message": "S4.2 awaiting_signoff → in_progress (Building.)"
+    },
+    {
+      "time": "2026-10-23T04:14:43.844Z",
+      "type": "status",
+      "message": "S4.1 awaiting_signoff → in_progress (Building.)"
+    },
+    {
+      "time": "2026-10-23T04:14:43.815Z",
+      "type": "signoff",
+      "message": "S4 mockups approved by Milan (\"Start\")"
+    },
     {
       "time": "2026-10-23T04:10:24.298Z",
       "type": "now",
