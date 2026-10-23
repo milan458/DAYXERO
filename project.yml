@@ -20,7 +20,7 @@ settings:
     # Automatic locally; CI's TestFlight job signs manually (see Config/Base.xcconfig).
     CODE_SIGN_STYLE: $(DX_SIGN_STYLE)
     CODE_SIGN_IDENTITY: $(DX_SIGN_IDENTITY)
-    MARKETING_VERSION: "0.1.0"
+    MARKETING_VERSION: "1.0.0"
     CURRENT_PROJECT_VERSION: "1"
     TARGETED_DEVICE_FAMILY: "1"     # iPhone only in v1
     LOCALIZATION_PREFERS_STRING_CATALOGS: YES
