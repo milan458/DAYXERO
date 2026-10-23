@@ -81,6 +81,11 @@ public struct Insights: Sendable {
     public struct Peak: Sendable, Equatable {
         public let weekend: Bool
         public let time: TimeOfDay
+
+        public init(weekend: Bool, time: TimeOfDay) {
+            self.weekend = weekend
+            self.time = time
+        }
     }
 
     /// The two busiest stretches, busiest first. Weekend cells count per day so two days can match five.
