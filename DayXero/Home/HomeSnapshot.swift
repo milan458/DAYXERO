@@ -90,9 +90,9 @@ struct HomeSnapshot {
             guard let date = calendar.date(byAdding: .day, value: offset, to: stripStart) else { return nil }
             let state: DXDayState
             if date == today { state = .today }
-            else if date == quitDate { state = .quitDay }
             else if date < quitDate { state = .prep }
-            else { state = date < today ? .clear : .upcoming }
+            else if date < today { state = .clear }
+            else { state = date == quitDate ? .quitDay : .upcoming }
             return DXWeekDay(date: date, state: state)
         }
 

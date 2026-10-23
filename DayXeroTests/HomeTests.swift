@@ -97,6 +97,8 @@ struct HomeTests {
         #expect((snap.counters.first?.avoided ?? 0) > 400)
         #expect(snap.nextMilestone == 7)
         #expect(snap.quitWeekDone == 2)
+        // Quit Day (Thu 29) is past by Saturday, so it shows as a clear day, not the upcoming-Quit-Day ring.
+        #expect(snap.weekStrip.first { calendar.isDate($0.date, inSameDayAs: date(29)) }?.state == .clear)
         #expect(snap.lesson?.availability == .available)
     }
 
