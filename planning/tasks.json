@@ -2,16 +2,14 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-23T05:44:45.521Z"
+    "updated": "2026-10-23T05:50:47.345Z"
   },
   "now": {
     "section": "S5",
     "task": "S5.8",
     "waiting_on_milan": [
-      "Review the Section 5 Program mockups",
-      "Idle days before pause (S5.7)",
-      "Variant rule for dual users (S5.2)",
-      "Lesson unlock timing default (S4.8)"
+      "Sign off the Section 5 Program mockups",
+      "Later: variant rule (S5.2), lesson timing (S4.8)"
     ]
   },
   "sections": [
@@ -573,7 +571,7 @@
           "id": "S4.8",
           "title": "Do quit-week lessons open as soon as the previous one is done, or the next morning?",
           "status": "pending",
-          "notes": "From S4 mockups (today's lesson done screen). Plan says a day unlocks after the previous is completed; unclear whether it's also calendar-gated.\nDefault taken (Milan said 'Start' without answering): quit-week lessons open on their calendar day after the previous is done; prep lessons open on completion. Easy to change.",
+          "notes": "From S4 mockups (today's lesson done screen). Plan says a day unlocks after the previous is completed; unclear whether it's also calendar-gated.\nDefault taken (Milan said 'Start' without answering): quit-week lessons open on their calendar day after the previous is done; prep lessons open on completion. Easy to change.\nMilan: come back to lesson timing later; current default stays.",
           "created": "2026-10-23T04:10:24.262Z",
           "completed": null
         }
@@ -613,7 +611,7 @@
           "id": "S5.2",
           "title": "Product variants: smoking, vaping, pouches; dual users get the variant for their main product plus notes for the others (confirm rule with Milan).",
           "status": "awaiting_signoff",
-          "notes": "Question for Milan: dual users — main-product variant plus notes for the others. Confirm the rule.\nMockups in progress (placeholder content, per Milan).\nMockups ready in tracker.",
+          "notes": "Question for Milan: dual users — main-product variant plus notes for the others. Confirm the rule.\nMockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nMilan: come back to the dual-user variant rule later; building with main product + notes for now.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -653,7 +651,7 @@
           "id": "S5.7",
           "title": "Inactivity behaviour per Milan's answer to the open decision in part 1.",
           "status": "awaiting_signoff",
-          "notes": "Open decision from plan §1: keep the 3-idle-day reset to Day 1, or pause and replay the last day?\nMilan decided: no reset to Day 1. After inactivity, pause and replay the last completed day, then continue. Build in Section 5.\nMockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nMockup assumes the pause kicks in after 3 idle days (old spec's number); Milan to confirm.",
+          "notes": "Open decision from plan §1: keep the 3-idle-day reset to Day 1, or pause and replay the last day?\nMilan decided: no reset to Day 1. After inactivity, pause and replay the last completed day, then continue. Build in Section 5.\nMockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nMockup assumes the pause kicks in after 3 idle days (old spec's number); Milan to confirm.\nMilan: 3 idle days before the program pauses (then replay last finished day).",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -1217,6 +1215,26 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-23T05:50:47.345Z",
+      "type": "now",
+      "message": "Now: S5 / S5.8"
+    },
+    {
+      "time": "2026-10-23T05:50:47.326Z",
+      "type": "note",
+      "message": "S4.8: Milan: come back to lesson timing later; current default stays."
+    },
+    {
+      "time": "2026-10-23T05:50:47.303Z",
+      "type": "note",
+      "message": "S5.2: Milan: come back to the dual-user variant rule later; building with main product + notes for now."
+    },
+    {
+      "time": "2026-10-23T05:50:47.282Z",
+      "type": "note",
+      "message": "S5.7: Milan: 3 idle days before the program pauses (then replay last finished day)."
+    },
     {
       "time": "2026-10-23T05:44:45.521Z",
       "type": "now",
