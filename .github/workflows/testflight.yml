@@ -148,9 +148,9 @@ jobs:
           security cms -D -i "$RUNNER_TEMP/in.dayxero.app.mobileprovision" > "$RUNNER_TEMP/app.plist"
           TEAM=$(/usr/libexec/PlistBuddy -c "Print :TeamIdentifier:0" "$RUNNER_TEMP/app.plist")
           echo "Team $TEAM"; echo "DX_TEAM=$TEAM" >> "$GITHUB_ENV"
-          GROUPS=$(/usr/libexec/PlistBuddy -c "Print :Entitlements:com.apple.security.application-groups" "$RUNNER_TEMP/app.plist" 2>/dev/null || true)
-          echo "App Groups in profile: $GROUPS"
-          if ! echo "$GROUPS" | grep -q "group.in.dayxero.app"; then
+          APP_GROUPS=$(/usr/libexec/PlistBuddy -c "Print :Entitlements:com.apple.security.application-groups" "$RUNNER_TEMP/app.plist" 2>/dev/null || true)
+          echo "App Groups in profile: $APP_GROUPS"
+          if ! echo "$APP_GROUPS" | grep -q "group.in.dayxero.app"; then
             KEYS=$(/usr/libexec/PlistBuddy -c "Print :Entitlements" "$RUNNER_TEMP/app.plist" | tr '\n' ' ' | tr -s ' ')
             NAME=$(/usr/libexec/PlistBuddy -c "Print :Name" "$RUNNER_TEMP/app.plist")
             echo "::error title=Profile entitlements::$NAME → $KEYS"
