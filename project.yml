@@ -80,6 +80,7 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: in.dayxero.app
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         PROVISIONING_PROFILE_SPECIFIER: $(DX_PROFILE_APP)
+        TARGETED_DEVICE_FAMILY: "1"   # iPhone only; XcodeGen defaults app targets to iPhone and iPad
         CODE_SIGN_IDENTITY: $(DX_SIGN_IDENTITY)
         CODE_SIGN_STYLE: $(DX_SIGN_STYLE)
       configs:
@@ -113,6 +114,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: in.dayxero.app.widgets
         PROVISIONING_PROFILE_SPECIFIER: $(DX_PROFILE_WIDGETS)
+        TARGETED_DEVICE_FAMILY: "1"   # iPhone only; XcodeGen defaults app targets to iPhone and iPad
         CODE_SIGN_IDENTITY: $(DX_SIGN_IDENTITY)
         CODE_SIGN_STYLE: $(DX_SIGN_STYLE)
 
