@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-23T09:18:42.292Z"
+    "updated": "2026-10-23T09:27:02.602Z"
   },
   "now": {
     "section": "S5",
@@ -1082,16 +1082,28 @@
       "title": "Stress and anxiety toolkit",
       "goal": "",
       "signoff": {
-        "state": "not_started",
-        "history": []
+        "state": "mockups_ready",
+        "history": [
+          {
+            "time": "2026-10-23T09:27:02.544Z",
+            "state": "mockups_ready",
+            "by": "Claude",
+            "comment": ""
+          }
+        ]
       },
-      "mockups": [],
+      "mockups": [
+        {
+          "title": "Calm tools",
+          "path": "mockups/S12/calm.html"
+        }
+      ],
       "tasks": [
         {
           "id": "S12.1",
           "title": "Three to five short exercises: breathing patterns, grounding, a brief ACT-style \"notice and name\" exercise.",
           "status": "pending",
-          "notes": "",
+          "notes": "Mockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -1099,7 +1111,7 @@
           "id": "S12.2",
           "title": "Reachable from SOS and the Program tab.",
           "status": "pending",
-          "notes": "",
+          "notes": "Mockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -1107,7 +1119,7 @@
           "id": "S12.3",
           "title": "A plain line pointing to professional help and local helplines; no diagnosis or clinical claims.",
           "status": "pending",
-          "notes": "",
+          "notes": "Mockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         }
@@ -1323,6 +1335,31 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-23T09:27:02.602Z",
+      "type": "note",
+      "message": "S12.3: Mockups ready in tracker."
+    },
+    {
+      "time": "2026-10-23T09:27:02.583Z",
+      "type": "note",
+      "message": "S12.2: Mockups ready in tracker."
+    },
+    {
+      "time": "2026-10-23T09:27:02.563Z",
+      "type": "note",
+      "message": "S12.1: Mockups ready in tracker."
+    },
+    {
+      "time": "2026-10-23T09:27:02.544Z",
+      "type": "signoff",
+      "message": "S12 mockups → mockups_ready"
+    },
+    {
+      "time": "2026-10-23T09:27:02.523Z",
+      "type": "mockup",
+      "message": "S12 mockup posted: Calm tools"
+    },
     {
       "time": "2026-10-23T09:18:42.292Z",
       "type": "note",
