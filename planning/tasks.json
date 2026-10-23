@@ -1388,8 +1388,8 @@
         {
           "id": "S16.4",
           "title": "TestFlight build for Milan.",
-          "status": "blocked",
-          "notes": "TestFlight workflow (.github/workflows/testflight.yml) uploads after main goes green. Needs repo secrets from Milan: ASC_KEY_ID, ASC_ISSUER_ID, ASC_KEY_P8 (Admin key), POSTHOG_API_KEY, REVENUECAT_API_KEY; and the app record for in.dayxero.app in App Store Connect. Placeholder app icon added until the real one.",
+          "status": "in_progress",
+          "notes": "First TestFlight upload succeeded (0.1.0 build 118). CI signs through the App Store Connect API (scripts/ci/asc_signing.py) and uploads after main goes green. Team 6DJM927Z95; App Group group.in.dayxero.app registered. Milan to confirm the build in TestFlight and add testers; then revoke the old ZDAH8F8P24 key.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
