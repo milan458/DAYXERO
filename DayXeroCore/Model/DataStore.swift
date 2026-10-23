@@ -10,7 +10,7 @@ public enum DataStore {
             UserProfile.self, ProductUse.self, Reason.self,
             ProgramProgress.self, DayCompletion.self,
             LogEntry.self, Pledge.self, CheckIn.self,
-            NRTPlan.self, NRTStep.self,
+            NRTPlan.self, PouchTaper.self,
             IfThenPlan.self, WeeklyCheckIn.self,
         ])
     }

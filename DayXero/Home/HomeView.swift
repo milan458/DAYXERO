@@ -72,6 +72,7 @@ struct TodayView: View {
     @State private var showPaywall = false
     @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(LogRouter.self) private var log
+    @Environment(NRTRouter.self) private var nrt
     @Query(sort: \LogEntry.timestamp, order: .reverse) private var logs: [LogEntry]
     @Query(sort: \IfThenPlan.createdAt, order: .reverse) private var plans: [IfThenPlan]
     /// The use just logged with one tap, for the Undo / Add details toast (S7.1).
@@ -102,6 +103,7 @@ struct TodayView: View {
                         == DayClock(boundaryHour: profile.dayBoundaryHour).day(containing: timeline.date) {
                         PlanCard(situation: plan.situation, action: plan.action, title: "Your plan for next time")
                     }
+                    nrtSection(snap, now: timeline.date)
                     if isPrep(snap) { useRows(now: timeline.date) }
                     tiles(snap)
                     if let next = snap.nextMilestone, !isPrep(snap) { milestone(next: next, daysClear: snap.daysClear) }
@@ -138,6 +140,35 @@ struct TodayView: View {
             PaywallView(name: profile.name, quitDay: profile.quitDay,
                         model: PaywallModel(store: entitlement.store, entitlement: entitlement),
                         onClose: { showPaywall = false })
+        }
+    }
+
+    // MARK: NRT and pouch taper (S9.5)
+
+    @ViewBuilder
+    private func nrtSection(_ snap: HomeSnapshot, now: Date) -> some View {
+        let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
+        // Plans stay on Home until a week after they finish.
+        let shown = profile.nrtPlans.filter { plan in
+            guard let end = StepSchedule(startDate: plan.startDate, steps: plan.steps, clock: clock).end else { return false }
+            return clock.day(containing: now) < (clock.calendar.date(byAdding: .day, value: 7, to: end) ?? end)
+        }
+        ForEach(shown.sorted { $0.createdAt < $1.createdAt }) { plan in
+            NRTCard(plan: plan, clock: clock, now: now)
+        }
+        if profile.nrtPlans.isEmpty, profile.nrtInterest == .using || profile.nrtInterest == .wantIt {
+            NRTInviteRow(title: "Set up your NRT", detail: "Reminders for patches and step-downs", systemImage: "bandage") {
+                nrt.sheet = .setup
+            }
+        }
+        if isPrep(snap), profile.products.contains(where: { $0.product == .pouches }) {
+            if let taper = profile.pouchTaper {
+                Button { nrt.sheet = .taper } label: { TaperCard(taper: taper, clock: clock, now: now) }.buttonStyle(.plain)
+            } else {
+                NRTInviteRow(title: "Step down your pouches", detail: "Optional, before Quit Day", systemImage: "chart.line.downtrend.xyaxis") {
+                    nrt.sheet = .taper
+                }
+            }
         }
     }
 

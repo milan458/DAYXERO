@@ -38,6 +38,17 @@ enum DebugScenario: String {
             profile.products.append(ProductUse(product: .cigarettes, isPrimary: false, unitsPerDay: 6, pricePerPurchase: 15, unitsPerPurchase: 20))
         }
         let reasonsAt = day(start).addingTimeInterval(9 * 3600)
+        if UserDefaults.standard.bool(forKey: "dx.seedPouches") {
+            profile.products.append(ProductUse(product: .pouches, isPrimary: false, unitsPerDay: 8, pricePerPurchase: 6,
+                                               unitsPerPurchase: 20, strengthMg: 6))
+        }
+        // A patch plan from the 10-week US label, started on Quit Day (S9).
+        if UserDefaults.standard.bool(forKey: "dx.seedNRT") {
+            profile.nrtInterest = .using
+            profile.nrtPlans.append(NRTPlan(type: .patch, startDate: day(quit),
+                                            steps: [PlanStep(strengthMg: 21, weeks: 6), PlanStep(strengthMg: 14, weeks: 2), PlanStep(strengthMg: 7, weeks: 2)],
+                                            presetID: "us-patch-10", dailyReminderMinute: 450))
+        }
         profile.reasons.append(Reason(text: "Run with Aria without stopping to catch my breath", createdAt: reasonsAt))
         if self != .free {
             profile.reasons.append(Reason(text: "Save for the trip to Lisbon", createdAt: reasonsAt.addingTimeInterval(1)))

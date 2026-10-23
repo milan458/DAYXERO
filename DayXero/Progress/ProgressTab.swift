@@ -23,6 +23,10 @@ struct ProgressTab: View {
                     header(snap)
                     hero(snap)
                     tiles(snap, insights: insights)
+                    // The full step plan for each NRT product (S9.5).
+                    ForEach(profile.nrtPlans.sorted { $0.createdAt < $1.createdAt }) { plan in
+                        NRTCard(plan: plan, clock: DayClock(boundaryHour: profile.dayBoundaryHour), now: now, showAllSteps: true)
+                    }
                     HStack(alignment: .firstTextBaseline) {
                         Text("Your patterns").dxText(.micro)
                         Spacer()

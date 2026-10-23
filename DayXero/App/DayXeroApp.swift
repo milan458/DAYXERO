@@ -58,12 +58,22 @@ struct RootView: View {
     @Environment(\.scenePhase) private var scenePhase
     @State private var sos = SOSRouter()
     @State private var log = LogRouter()
+    @State private var nrt = NRTRouter()
     @State private var logDetent = PresentationDetent.medium
 
     var body: some View {
         routed
             .environment(sos)
             .environment(log)
+            .environment(nrt)
+            .fullScreenCover(item: $nrt.sheet) { sheet in
+                if let profile = profiles.first {
+                    switch sheet {
+                    case .setup: NRTSetupView(profile: profile) { nrt.sheet = nil }
+                    case .taper: TaperSetupView(profile: profile) { nrt.sheet = nil }
+                    }
+                }
+            }
             .sheet(item: $log.page) { page in
                 LogSheet(profile: profiles.first, start: page, detent: $logDetent) { log.page = nil }
                     .environment(sos)
@@ -86,6 +96,7 @@ struct RootView: View {
             }
             .onChange(of: scenePhase, initial: true) { _, phase in
                 guard phase == .active else { return }
+                NRTReminders.refresh(profile: profiles.first)
                 SOSBridge.openSession = { [sos] source in sos.open(source: source) }
                 SOSBridge.openCravingLog = { [log] in log.open(.craving) }
                 if let source = SOSState.consumeOpenRequest() { sos.open(source: source) }
@@ -101,6 +112,8 @@ struct RootView: View {
                 case "menu": log.open(.menu)
                 case "craving": log.open(.craving)
                 case "slip": log.open(.slip)
+                case "nrt": nrt.sheet = .setup
+                case "taper": nrt.sheet = .taper
                 default: break
                 }
                 #endif

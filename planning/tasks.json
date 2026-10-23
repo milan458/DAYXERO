@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-23T08:36:10.130Z"
+    "updated": "2026-10-23T08:37:55.797Z"
   },
   "now": {
     "section": "S5",
@@ -896,11 +896,17 @@
       "title": "NRT and taper co-pilot",
       "goal": "",
       "signoff": {
-        "state": "mockups_ready",
+        "state": "signed_off",
         "history": [
           {
             "time": "2026-10-23T08:17:20.048Z",
             "state": "mockups_ready",
+            "by": "Claude",
+            "comment": ""
+          },
+          {
+            "time": "2026-10-23T08:37:55.710Z",
+            "state": "signed_off",
             "by": "Claude",
             "comment": ""
           }
@@ -916,40 +922,40 @@
         {
           "id": "S9.1",
           "title": "NRT setup: patch, gum, lozenge, inhaler; strength.",
-          "status": "pending",
-          "notes": "Mockups ready in tracker.\nMilan: support two products together (e.g. patch plus gum or lozenge).",
+          "status": "in_progress",
+          "notes": "Mockups ready in tracker.\nMilan: support two products together (e.g. patch plus gum or lozenge).\nMilan approved S9 in chat ('go for section 9').",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S9.2",
           "title": "Step-down schedules that follow standard product-label guidance only; every screen says to follow the label and ask a pharmacist or doctor. No dosing advice beyond the label.",
-          "status": "pending",
-          "notes": "Mockups ready in tracker.\nMilan: label presets for US, UK, Australia and Germany; everywhere else uses 'enter my own'.",
+          "status": "in_progress",
+          "notes": "Mockups ready in tracker.\nMilan: label presets for US, UK, Australia and Germany; everywhere else uses 'enter my own'.\nMilan approved S9 in chat ('go for section 9').",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S9.3",
           "title": "Pouch-strength taper plan for pouch users (e.g. stepping down mg over weeks), with reminders.",
-          "status": "pending",
-          "notes": "Mockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups ready in tracker.\nMilan: pouch taper is optional. Offered in prep only if there's room before Quit Day; the person can move Quit Day themselves for a full taper. Nothing changes automatically.\nMilan approved S9 in chat ('go for section 9').",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S9.4",
           "title": "Reminders for patch changes and step-down dates.",
-          "status": "pending",
-          "notes": "Mockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups ready in tracker.\nMilan approved S9 in chat ('go for section 9').",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S9.5",
           "title": "NRT shown on Home and Progress.",
-          "status": "pending",
-          "notes": "Mockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups ready in tracker.\nMilan approved S9 in chat ('go for section 9').",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         }
@@ -1281,6 +1287,41 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-23T08:37:55.797Z",
+      "type": "status",
+      "message": "S9.5 pending → in_progress (Milan approved S9 in chat ('go for section 9').)"
+    },
+    {
+      "time": "2026-10-23T08:37:55.780Z",
+      "type": "status",
+      "message": "S9.4 pending → in_progress (Milan approved S9 in chat ('go for section 9').)"
+    },
+    {
+      "time": "2026-10-23T08:37:55.763Z",
+      "type": "status",
+      "message": "S9.3 pending → in_progress (Milan approved S9 in chat ('go for section 9').)"
+    },
+    {
+      "time": "2026-10-23T08:37:55.745Z",
+      "type": "status",
+      "message": "S9.2 pending → in_progress (Milan approved S9 in chat ('go for section 9').)"
+    },
+    {
+      "time": "2026-10-23T08:37:55.727Z",
+      "type": "status",
+      "message": "S9.1 pending → in_progress (Milan approved S9 in chat ('go for section 9').)"
+    },
+    {
+      "time": "2026-10-23T08:37:55.710Z",
+      "type": "signoff",
+      "message": "S9 mockups → signed_off"
+    },
+    {
+      "time": "2026-10-23T08:37:55.691Z",
+      "type": "note",
+      "message": "S9.3: Milan: pouch taper is optional. Offered in prep only if there's room before Quit Day; the person can move Quit Day themselves for a full taper. Nothing changes automatically."
+    },
     {
       "time": "2026-10-23T08:36:10.130Z",
       "type": "note",

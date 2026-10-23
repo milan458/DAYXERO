@@ -155,6 +155,18 @@ jobs:
           shoot dark accessibility-extra-extra-extra-large slip-plan-dark-ax5 $P12 -dx.logSheet slip -dx.slipStage plan
           shoot dark large slip-home-dark $P12 -dx.seedSlip YES
           shoot dark large slip-progress-dark $P12 -dx.seedSlip YES -dx.tab progress
+          shoot dark large nrt-intro-dark $P12 -dx.logSheet nrt
+          shoot light large nrt-intro-light $P12 -dx.logSheet nrt
+          shoot dark large nrt-products-dark $P12 -dx.logSheet nrt -dx.nrtStage products
+          shoot dark large nrt-schedule-dark $P12 -dx.logSheet nrt -dx.nrtStage schedule
+          shoot dark large nrt-plan-dark $P12 -dx.logSheet nrt -dx.nrtStage plan
+          shoot dark large nrt-reminders-dark $P12 -dx.logSheet nrt -dx.nrtStage reminders
+          shoot dark accessibility-extra-extra-extra-large nrt-schedule-dark-ax5 $P12 -dx.logSheet nrt -dx.nrtStage schedule
+          shoot dark large nrt-home-dark $P12 -dx.seedNRT YES
+          shoot light large nrt-home-light $P12 -dx.seedNRT YES
+          shoot dark large nrt-progress-dark $P12 -dx.seedNRT YES -dx.tab progress
+          shoot dark large taper-home-dark -dx.homeScenario prep -dx.store pro -dx.seedPouches YES
+          shoot dark large taper-setup-dark -dx.homeScenario prep -dx.store pro -dx.seedPouches YES -dx.logSheet taper
           # Last: the under-18 screen persists its flag, so everything after it would show the exit.
           shoot dark large onb-under_age-dark -dx.onboardingStep under_age
           cd shots

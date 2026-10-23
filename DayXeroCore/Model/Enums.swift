@@ -188,6 +188,15 @@ public enum Place: String, Codable, CaseIterable, Sendable {
 
 public enum NRTType: String, Codable, CaseIterable, Sendable {
     case patch, gum, lozenge, inhaler
+
+    public var title: LocalizedStringResource {
+        switch self {
+        case .patch: "Patch"
+        case .gum: "Gum"
+        case .lozenge: "Lozenge"
+        case .inhaler: "Inhaler"
+        }
+    }
 }
 
 public enum NRTInterest: String, Codable, Sendable {

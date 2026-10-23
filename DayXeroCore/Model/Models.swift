@@ -17,7 +17,8 @@ public final class UserProfile {
     @Relationship(deleteRule: .cascade) public var products: [ProductUse] = []
     @Relationship(deleteRule: .cascade) public var reasons: [Reason] = []
     @Relationship(deleteRule: .cascade) public var progress: ProgramProgress?
-    @Relationship(deleteRule: .cascade) public var nrtPlan: NRTPlan?
+    @Relationship(deleteRule: .cascade) public var nrtPlans: [NRTPlan] = []
+    @Relationship(deleteRule: .cascade) public var pouchTaper: PouchTaper?
     public var triggersRaw: [String] = []
     public var cravingTimesRaw: [String] = []
     public var pastAttemptsRaw: String?
@@ -252,30 +253,64 @@ public final class CheckIn {
     public var mood: Mood { Mood(rawValue: moodRaw) ?? .okay }
 }
 
-/// NRT the user is on. Step-down schedules follow the product label only (Section 9).
+/// One step of an NRT step-down or a pouch taper: a strength for a number of weeks.
+public struct PlanStep: Codable, Hashable, Sendable {
+    public var strengthMg: Double
+    public var weeks: Int
+    /// From the label, for gum and lozenges: how often, e.g. "1 piece every 1–2 hours".
+    public var note: String?
+
+    public init(strengthMg: Double, weeks: Int, note: String? = nil) {
+        self.strengthMg = strengthMg
+        self.weeks = weeks
+        self.note = note
+    }
+}
+
+/// NRT the user is on (S9.1, S9.2). The steps are copied from the person's own pack; DayXero never chooses a dose.
 @Model
 public final class NRTPlan {
     public var typeRaw: String
-    public var strengthMg: Double
     public var startDate: Date
-    @Relationship(deleteRule: .cascade) public var steps: [NRTStep] = []
+    public var steps: [PlanStep]
+    /// The label preset the steps started from, if any.
+    public var presetID: String?
+    /// Minutes after midnight for the daily reminder (fresh patch, or the first piece for gum and lozenges). nil = off.
+    public var dailyReminderMinute: Int?
+    /// Gum and lozenges: remind every this many hours in waking hours. nil = off (the default).
+    public var pieceReminderHours: Int?
+    public var stepReminders: Bool
+    /// The last day "Patch on today" was ticked.
+    public var lastCheckedDay: Date?
+    public var createdAt: Date
 
-    public init(type: NRTType, strengthMg: Double, startDate: Date) {
+    public init(type: NRTType, startDate: Date, steps: [PlanStep], presetID: String? = nil,
+                dailyReminderMinute: Int? = nil, pieceReminderHours: Int? = nil, stepReminders: Bool = true, createdAt: Date = .now) {
         self.typeRaw = type.rawValue
-        self.strengthMg = strengthMg
         self.startDate = startDate
+        self.steps = steps
+        self.presetID = presetID
+        self.dailyReminderMinute = dailyReminderMinute
+        self.pieceReminderHours = pieceReminderHours
+        self.stepReminders = stepReminders
+        self.createdAt = createdAt
     }
 
     public var type: NRTType { NRTType(rawValue: typeRaw) ?? .patch }
 }
 
+/// An optional pouch-strength taper before Quit Day (S9.3). Pouches aren't NRT; this is a plan the person sets.
 @Model
-public final class NRTStep {
-    public var strengthMg: Double
+public final class PouchTaper {
     public var startDate: Date
+    public var steps: [PlanStep]
+    public var stepReminders: Bool
+    public var createdAt: Date
 
-    public init(strengthMg: Double, startDate: Date) {
-        self.strengthMg = strengthMg
+    public init(startDate: Date, steps: [PlanStep], stepReminders: Bool = true, createdAt: Date = .now) {
         self.startDate = startDate
+        self.steps = steps
+        self.stepReminders = stepReminders
+        self.createdAt = createdAt
     }
 }

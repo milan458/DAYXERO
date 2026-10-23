@@ -62,9 +62,8 @@ struct SlipFlow: View {
         .animation(DX.Motion.animation(DX.Motion.glide, reduceMotion: false), value: stage)
         .sensoryFeedback(DX.Haptic.commit, trigger: savedFeedback)
         .onAppear(perform: prefill)
-        .sheet(isPresented: $showNRT) {
-            ComingSoon(title: "NRT", message: "Help with nicotine replacement arrives in Section 9.", systemImage: "cross.case")
-                .presentationDetents([.medium])
+        .fullScreenCover(isPresented: $showNRT) {
+            if let profile { NRTSetupView(profile: profile) { showNRT = false } }
         }
     }
 
