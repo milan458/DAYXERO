@@ -12,7 +12,8 @@ permissions:
 
 concurrency:
   group: ios-${{ github.ref }}
-  cancel-in-progress: true
+  # Queue behind a running build instead of cancelling it, so every build finishes its screenshots.
+  cancel-in-progress: false
 
 jobs:
   build-test:
