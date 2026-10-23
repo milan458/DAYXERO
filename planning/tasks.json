@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-23T08:50:48.836Z"
+    "updated": "2026-10-23T09:07:29.662Z"
   },
   "now": {
     "section": "S5",
@@ -1020,16 +1020,28 @@
       "title": "Daily pledge and evening check-in",
       "goal": "",
       "signoff": {
-        "state": "not_started",
-        "history": []
+        "state": "mockups_ready",
+        "history": [
+          {
+            "time": "2026-10-23T09:07:29.581Z",
+            "state": "mockups_ready",
+            "by": "Claude",
+            "comment": ""
+          }
+        ]
       },
-      "mockups": [],
+      "mockups": [
+        {
+          "title": "Daily pledge and evening check-in",
+          "path": "mockups/S11/pledge.html"
+        }
+      ],
       "tasks": [
         {
           "id": "S11.1",
           "title": "Morning pledge with the user's own reason and photo.",
           "status": "pending",
-          "notes": "",
+          "notes": "Mockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -1037,7 +1049,7 @@
           "id": "S11.2",
           "title": "Evening check-in: how today went, cravings, mood.",
           "status": "pending",
-          "notes": "",
+          "notes": "Mockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -1045,7 +1057,7 @@
           "id": "S11.3",
           "title": "User-set day boundary (when \"today\" ends) so late-night check-ins count for the right day.",
           "status": "pending",
-          "notes": "",
+          "notes": "Mockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -1053,7 +1065,7 @@
           "id": "S11.4",
           "title": "Gentle reminders for both, user-controllable.",
           "status": "pending",
-          "notes": "",
+          "notes": "Mockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         }
@@ -1305,6 +1317,36 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-23T09:07:29.662Z",
+      "type": "note",
+      "message": "S11.4: Mockups ready in tracker."
+    },
+    {
+      "time": "2026-10-23T09:07:29.643Z",
+      "type": "note",
+      "message": "S11.3: Mockups ready in tracker."
+    },
+    {
+      "time": "2026-10-23T09:07:29.624Z",
+      "type": "note",
+      "message": "S11.2: Mockups ready in tracker."
+    },
+    {
+      "time": "2026-10-23T09:07:29.599Z",
+      "type": "note",
+      "message": "S11.1: Mockups ready in tracker."
+    },
+    {
+      "time": "2026-10-23T09:07:29.581Z",
+      "type": "signoff",
+      "message": "S11 mockups → mockups_ready"
+    },
+    {
+      "time": "2026-10-23T09:07:29.560Z",
+      "type": "mockup",
+      "message": "S11 mockup posted: Daily pledge and evening check-in"
+    },
     {
       "time": "2026-10-23T08:50:48.836Z",
       "type": "status",
