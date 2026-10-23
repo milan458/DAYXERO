@@ -11,6 +11,11 @@ on:
     types: [completed]
     branches: [main]
   workflow_dispatch:
+    inputs:
+      check_only:
+        description: "Only list the builds App Store Connect has"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -118,6 +123,17 @@ jobs:
               raise SystemExit(1)
           PY2
 
+      - name: Builds so far
+        if: steps.keys.outputs.ready == 'true'
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+        run: python3 scripts/ci/asc_signing.py builds
+
+      - name: Stop after the check
+        if: inputs.check_only
+        run: exit 0
+
       - name: Build Release (unsigned)
         if: steps.keys.outputs.ready != 'true'
         run: |
@@ -128,7 +144,7 @@ jobs:
 
       # xcodebuild's automatic signing rejects the API key, so the certificate and profiles are made through the API.
       - name: Signing
-        if: steps.keys.outputs.ready == 'true'
+        if: steps.keys.outputs.ready == 'true' && !inputs.check_only
         env:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
@@ -159,7 +175,7 @@ jobs:
           fi
 
       - name: Archive
-        if: steps.keys.outputs.ready == 'true'
+        if: steps.keys.outputs.ready == 'true' && !inputs.check_only
         run: |
           set -o pipefail
           # Build numbers only go up: this workflow's run number, offset past any manual uploads.
@@ -174,7 +190,7 @@ jobs:
             CURRENT_PROJECT_VERSION=$BUILD -quiet 2>&1 | tee release.log
 
       - name: Upload to TestFlight
-        if: steps.keys.outputs.ready == 'true'
+        if: steps.keys.outputs.ready == 'true' && !inputs.check_only
         env:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
@@ -206,7 +222,12 @@ jobs:
           IPA=$(ls "$RUNNER_TEMP"/export/*.ipa)
           mkdir -p ~/.appstoreconnect/private_keys
           cp "$RUNNER_TEMP/AuthKey_$ASC_KEY_ID.p8" ~/.appstoreconnect/private_keys/
-          xcrun altool --upload-app --type ios -f "$IPA" --apiKey "$ASC_KEY_ID" --apiIssuer "$ASC_ISSUER_ID" 2>&1 | tee -a release.log
+          xcrun altool --upload-app --type ios -f "$IPA" --apiKey "$ASC_KEY_ID" --apiIssuer "$ASC_ISSUER_ID" 2>&1 | tee altool.log
+          cat altool.log >> release.log
+          grep -iE "error|fail|invalid" altool.log | head -20 | sed 's/^/::error title=altool::/' || true
+          grep -iE "UPLOAD SUCCEEDED|No errors uploading|Delivery UUID" altool.log | head -5 | sed 's/^/::notice title=altool::/' || true
+          # altool can exit 0 without uploading, so wait for App Store Connect to list the build.
+          python3 scripts/ci/asc_signing.py wait $(( ${{ github.run_number }} + 100 ))
 
       - name: Annotate errors
         if: failure()

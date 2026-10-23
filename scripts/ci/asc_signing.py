@@ -4,6 +4,8 @@ xcodebuild's automatic signing rejects our API key, so CI signs by hand:
   setup    registers the App IDs if needed, creates a distribution certificate and
            App Store profiles, and writes the .p12, profiles and build settings to $RUNNER_TEMP.
   cleanup  revokes that certificate and deletes the profiles. Builds already uploaded stay valid.
+  builds   lists the builds App Store Connect has for the app.
+  wait N   waits for build N to show up after an upload, since altool can report success when nothing arrived.
 
 Needs ASC_KEY_ID, ASC_ISSUER_ID and $RUNNER_TEMP/AuthKey_<id>.p8, plus pyjwt and cryptography.
 """
@@ -134,5 +136,41 @@ def cleanup():
         print("Certificate revoked and profiles deleted")
 
 
+def app_id():
+    apps = call("GET", "apps?filter[bundleId]=in.dayxero.app")["data"]
+    if not apps:
+        print("::error title=No app record::App Store Connect has no app with bundle ID in.dayxero.app")
+        raise SystemExit(1)
+    return apps[0]["id"]
+
+
+def recent_builds():
+    data = call("GET", f"builds?filter[app]={app_id()}&sort=-uploadedDate&limit=10&fields[builds]=version,processingState,uploadedDate")["data"]
+    return [(b["attributes"]["version"], b["attributes"]["processingState"], b["attributes"]["uploadedDate"]) for b in data]
+
+
+def builds():
+    found = recent_builds()
+    print(f"::notice title=Builds in App Store Connect::{found or 'none yet'}")
+
+
+def wait(version):
+    for _ in range(40):   # about 20 minutes
+        for v, state, uploaded in recent_builds():
+            if v == version:
+                print(f"::notice title=Build {v} received::{state}, uploaded {uploaded}")
+                if state == "INVALID":
+                    print(f"::error title=Build {v} was rejected::Apple marked it invalid; the account holder gets an email with the reason.")
+                    raise SystemExit(1)
+                return
+        time.sleep(30)
+    print(f"::error title=Build {version} never arrived::The upload reported success but App Store Connect has no build {version}. Latest: {recent_builds()}")
+    raise SystemExit(1)
+
+
 if __name__ == "__main__":
-    {"setup": setup, "cleanup": cleanup}[sys.argv[1]]()
+    commands = {"setup": setup, "cleanup": cleanup, "builds": builds}
+    if sys.argv[1] == "wait":
+        wait(sys.argv[2])
+    else:
+        commands[sys.argv[1]]()
