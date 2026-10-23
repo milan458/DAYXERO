@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DayXero Notifications</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Tokens: identical to the signed-off Section 1 sheet. */
+  :root {
+    --sage: #BCC388; --moss: #43511C; --amber: #E5A93C; --coral: #C85A54;
+    --ease: cubic-bezier(.16, 1, .3, 1);
+    --font: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --canvas: #000; --surface1: #121212; --surface2: #161616; --surface3: #1C1C1E;
+    --fg-rgb: 255,255,255; --text: #fff; --text2: rgba(255,255,255,.6); --muted: rgba(255,255,255,.5); --faint: rgba(255,255,255,.35);
+    --hairline: rgba(255,255,255,.08); --glass-highlight: rgba(255,255,255,.16);
+    --glass-fill: linear-gradient(135deg, rgba(67,81,28,.35), rgba(20,20,20,.65));
+    --primary: #fff; --on-primary: #000; --accent-ink: #BCC388; --accent-soft: rgba(67,81,28,.5);
+    --hills-a: #1d2410; --hills-b: #2c3816; --hills-c: #43511C;
+    --page: #0b0b0b; --bezel: #262626;
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --canvas: #F3F4EE; --surface1: #fff; --surface2: #ECEEE4; --surface3: #E2E5D8;
+    --fg-rgb: 17,20,10; --text: #11140A; --text2: rgba(17,20,10,.66); --muted: rgba(17,20,10,.56); --faint: rgba(17,20,10,.38);
+    --hairline: rgba(17,20,10,.09); --glass-highlight: rgba(255,255,255,.9);
+    --glass-fill: linear-gradient(135deg, rgba(188,195,136,.55), rgba(255,255,255,.85));
+    --primary: #11140A; --on-primary: #fff; --accent-ink: #55621F; --accent-soft: rgba(188,195,136,.45);
+    --hills-a: #dfe3cf; --hills-b: #c9d0a8; --hills-c: #BCC388;
+    --page: #e6e8df; --bezel: #cfd2c4;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--text); font-family: var(--font); -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 1320px; margin: 0 auto; padding: 28px 16px 80px; }
+  .micro { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  h1 { font-size: 28px; letter-spacing: -.02em; margin: 4px 0; }
+  .lede { font-size: 14px; color: var(--text2); max-width: 760px; line-height: 1.5; }
+  .toggle { display: inline-flex; background: var(--surface2); border-radius: 999px; padding: 4px; margin: 14px 0 6px; }
+  .toggle button { background: none; border: 0; color: var(--text2); font: 600 13px var(--font); padding: 8px 16px; border-radius: 999px; cursor: pointer; }
+  .toggle button[aria-pressed="true"] { background: var(--primary); color: var(--on-primary); }
+  .flow { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 34px 22px; margin-top: 26px; }
+  .shot { display: grid; gap: 10px; align-content: start; }
+  .shot-head { display: flex; gap: 8px; align-items: baseline; }
+  .shot-head b { font-size: 14px; }
+  .tag { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: var(--surface3); color: var(--text2); }
+  .shot p.n { margin: 0; font-size: 12.5px; color: var(--text2); line-height: 1.45; }
+  .shot p.n b { color: var(--text); }
+  .flag { border-left: 3px solid var(--amber); padding-left: 8px; }
+
+  /* Phone */
+  .phone { width: 300px; height: 640px; border-radius: 46px; padding: 9px; background: var(--bezel); justify-self: start; }
+  .screen { position: relative; width: 100%; height: 100%; border-radius: 38px; background: var(--canvas); overflow: hidden; display: flex; flex-direction: column; padding: 46px 18px 22px; }
+  .island { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 88px; height: 25px; border-radius: 99px; background: #000; }
+  .topbar { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; min-height: 32px; }
+  .back { width: 32px; height: 32px; border-radius: 99px; background: var(--surface1); border: 1px solid var(--hairline); display: grid; place-items: center; color: var(--text); flex: none; }
+  .steps { flex: 1; height: 4px; border-radius: 99px; background: rgba(var(--fg-rgb), .12); overflow: hidden; }
+  .steps i { display: block; height: 100%; background: var(--accent-ink); border-radius: 99px; }
+  .skip { font-size: 13px; color: var(--text2); font-weight: 500; flex: none; }
+  .title { font-size: 24px; font-weight: 700; letter-spacing: -.02em; line-height: 1.15; margin: 0 0 8px; }
+  .sub { font-size: 13px; color: var(--text2); line-height: 1.45; margin: 0; }
+  .body { display: grid; gap: 10px; margin-top: 20px; align-content: start; }
+  .grow { flex: 1; }
+  .footer { display: grid; gap: 8px; }
+  .btn { height: 52px; border-radius: 999px; border: 0; font: 600 15px var(--font); letter-spacing: -.01em; display: grid; place-items: center; }
+  .btn.primary { background: var(--primary); color: var(--on-primary); }
+  .btn.primary.off { background: var(--surface3); color: var(--faint); }
+  .btn.secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--hairline); height: 46px; }
+  .btn.quiet { background: none; color: var(--text2); height: 36px; font-weight: 500; }
+  .fine { font-size: 11px; color: var(--muted); text-align: center; line-height: 1.4; }
+  svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* Option cards (single and multi select) */
+  .opt { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 22px; background: var(--surface1); border: 1px solid var(--hairline); }
+  .opt .ic { width: 38px; height: 38px; border-radius: 99px; background: var(--surface2); display: grid; place-items: center; color: var(--text); flex: none; }
+  .opt .t { font-size: 15px; font-weight: 600; }
+  .opt .d { font-size: 12px; color: var(--text2); margin-top: 1px; }
+  .opt .tx { flex: 1; min-width: 0; }
+  .check { width: 24px; height: 24px; border-radius: 99px; border: 1.5px solid rgba(var(--fg-rgb), .25); flex: none; display: grid; place-items: center; }
+  .opt.on { border-color: var(--accent-ink); background: var(--surface1); box-shadow: inset 0 0 0 1px var(--accent-ink); }
+  .opt.on .check { background: var(--sage); border-color: var(--sage); color: #000; }
+  .opt.on .check svg { width: 14px; height: 14px; stroke-width: 3; }
+  .opt.on .ic { background: var(--accent-soft); color: var(--accent-ink); }
+  .round .check { border-radius: 99px; }
+
+  /* Chips */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { padding: 8px 14px; border-radius: 99px; background: var(--surface2); color: var(--text2); font-size: 13px; }
+  .chip.on { background: var(--primary); color: var(--on-primary); font-weight: 600; }
+  .group-label { margin-top: 6px; }
+
+  /* Fields */
+  .field { display: grid; gap: 6px; }
+  .input { height: 48px; border-radius: 18px; background: var(--surface2); border: 1px solid var(--hairline); padding: 0 16px; display: flex; align-items: center; justify-content: space-between; font-size: 15px; }
+  .input .ph { color: var(--faint); }
+  .input.focus { border-color: rgba(188,195,136,.8); box-shadow: 0 0 0 4px rgba(188,195,136,.16); }
+  .input.err { border-color: var(--coral); }
+  .input .unit { color: var(--muted); font-size: 13px; }
+  .err-msg { font-size: 12px; color: var(--coral); }
+  :root[data-theme="light"] .err-msg { color: #A6403A; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .stepper { display: flex; align-items: center; justify-content: space-between; padding: 8px; border-radius: 26px; background: var(--surface1); border: 1px solid var(--hairline); }
+  .stepper .num { font-size: 34px; font-weight: 700; letter-spacing: -.03em; font-variant-numeric: tabular-nums; text-align: center; }
+  .stepper .num small { display: block; font-size: 12px; font-weight: 500; letter-spacing: 0; color: var(--muted); margin-top: -2px; }
+  .sbtn { width: 44px; height: 44px; border-radius: 99px; background: var(--surface2); display: grid; place-items: center; color: var(--text); }
+  .textarea { min-height: 76px; border-radius: 20px; background: var(--surface2); border: 1px solid var(--hairline); padding: 12px 14px; font-size: 14px; line-height: 1.4; }
+  .photo { height: 92px; border-radius: 20px; border: 1px dashed rgba(var(--fg-rgb), .25); display: grid; place-items: center; color: var(--text2); font-size: 13px; gap: 4px; text-align: center; }
+  .reason { display: flex; gap: 10px; align-items: center; padding: 10px; border-radius: 20px; background: var(--surface1); border: 1px solid var(--hairline); font-size: 14px; }
+  .thumb { width: 44px; height: 44px; border-radius: 14px; flex: none; background: linear-gradient(135deg, #8aa06a, #3b5a3a 60%, #c9b98a); }
+
+  /* Welcome hills */
+  .hills { position: absolute; inset: auto 0 0 0; width: 100%; height: 62%; pointer-events: none; stroke: none; }
+  .welcome .content { position: relative; z-index: 1; display: flex; flex-direction: column; height: 100%; }
+  .wordmark { font-size: 15px; font-weight: 700; letter-spacing: -.01em; display: flex; align-items: center; gap: 6px; }
+  .wordmark i { width: 9px; height: 9px; border-radius: 99px; background: var(--sage); display: inline-block; }
+  .promise { font-size: 34px; font-weight: 700; letter-spacing: -.035em; line-height: 1.05; margin: 26px 0 12px; }
+  .promise span { color: var(--accent-ink); }
+
+  /* Calendar strip */
+  .cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
+  .cal .dl { font-size: 10px; color: var(--muted); padding-bottom: 4px; }
+  .cal .d { height: 34px; border-radius: 99px; display: grid; place-items: center; font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .cal .d.past { color: var(--faint); font-weight: 400; }
+  .cal .d.today { box-shadow: inset 0 0 0 1px rgba(var(--fg-rgb), .3); }
+  .cal .d.prep { background: var(--accent-soft); color: var(--accent-ink); }
+  .cal .d.sel { background: var(--primary); color: var(--on-primary); }
+  .cal .d.rec { position: relative; }
+  .recnote { display: flex; gap: 8px; align-items: center; font-size: 12px; color: var(--text2); padding: 10px 12px; border-radius: 16px; background: var(--surface1); border: 1px solid var(--hairline); }
+  .recnote b { color: var(--text); }
+
+  /* Plan reveal */
+  .glass { position: relative; background: var(--glass-fill); border: 1px solid var(--hairline); border-top-color: var(--glass-highlight); border-radius: 30px; padding: 18px; overflow: hidden; }
+  .glass::before { content: ""; position: absolute; inset: auto -20% -70% -20%; height: 120%; background: radial-gradient(ellipse at 30% 0%, rgba(188,195,136,.2), transparent 60%); }
+  .glass > * { position: relative; }
+  .big { font-size: 30px; font-weight: 700; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+  .big small { font-size: 15px; font-weight: 500; color: var(--faint); letter-spacing: 0; }
+  .tl { display: grid; gap: 0; }
+  .tl-row { display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; align-items: center; padding: 7px 0; font-size: 13px; }
+  .tl-dot { width: 26px; height: 26px; border-radius: 99px; display: grid; place-items: center; font-size: 11px; font-weight: 700; }
+  .tl-dot.prep { background: var(--accent-soft); color: var(--accent-ink); }
+  .tl-dot.quit { background: var(--primary); color: var(--on-primary); }
+  .tl-row .when { color: var(--muted); font-size: 12px; }
+  .stat2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .mini { padding: 12px 14px; border-radius: 20px; background: var(--surface1); border: 1px solid var(--hairline); }
+  .mini .v { font-size: 18px; font-weight: 700; letter-spacing: -.02em; margin-top: 4px; font-variant-numeric: tabular-nums; }
+
+  /* Loading */
+  .ring { width: 120px; height: 120px; border-radius: 99px; border: 3px solid rgba(var(--fg-rgb), .1); border-top-color: var(--accent-ink); animation: spin 1.4s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .center { flex: 1; display: grid; place-items: center; text-align: center; align-content: center; gap: 18px; }
+  .ticks { display: grid; gap: 8px; text-align: left; font-size: 13px; color: var(--text2); }
+  .ticks span { display: flex; gap: 8px; align-items: center; }
+  .ticks .ok { color: var(--accent-ink); }
+
+  /* Notification preview */
+  .notif { display: flex; gap: 10px; padding: 12px; border-radius: 20px; background: var(--surface1); border: 1px solid var(--hairline); font-size: 12.5px; line-height: 1.35; }
+  .notif .app { width: 34px; height: 34px; border-radius: 9px; background: #000; display: grid; place-items: center; flex: none; }
+  .notif .app i { width: 10px; height: 10px; border-radius: 99px; background: var(--sage); }
+  .notif b { font-size: 13px; }
+  .notif .time { color: var(--muted); font-size: 11px; margin-left: auto; }
+  .bell { width: 76px; height: 76px; border-radius: 99px; background: var(--accent-soft); color: var(--accent-ink); display: grid; place-items: center; margin: 4px 0 2px; }
+  .bell svg { width: 32px; height: 32px; }
+
+  @media (prefers-reduced-motion: reduce) { .ring { animation: none; } }
+  /* Program additions */
+  .screen.app { padding: 0; }
+  .screen.app .content { height: 100%; overflow-y: auto; padding: 46px 16px 96px; scrollbar-width: none; }
+  .screen.app .content::-webkit-scrollbar { display: none; }
+  .phone.tall { height: 720px; }
+  .ph { display: inline-block; font-size: 9.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 2px 7px; border-radius: 99px; background: rgba(229,169,60,.18); color: #B07A14; vertical-align: middle; }
+  :root[data-theme="dark"] .ph { color: var(--amber); }
+  .hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .hdr .t { font-size: 24px; font-weight: 700; letter-spacing: -.02em; }
+  .variant { display: flex; gap: 8px; align-items: center; padding: 10px 12px; border-radius: 18px; background: var(--surface1); border: 1px solid var(--hairline); font-size: 12px; color: var(--text2); margin-bottom: 14px; }
+  .variant svg { width: 16px; height: 16px; color: var(--accent-ink); flex: none; }
+  .group { margin: 16px 0 8px; display: flex; justify-content: space-between; align-items: baseline; }
+  .group span:last-child { font-size: 11px; color: var(--muted); }
+  .rows { display: grid; gap: 6px; }
+  .row { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 20px; background: var(--surface1); border: 1px solid var(--hairline); }
+  .row .dn { width: 30px; height: 30px; border-radius: 99px; display: grid; place-items: center; font-size: 12px; font-weight: 700; flex: none; font-variant-numeric: tabular-nums; }
+  .dn.done { background: var(--sage); color: #000; }
+  .dn.now { background: var(--primary); color: var(--on-primary); }
+  .dn.later { background: rgba(var(--fg-rgb), .07); color: var(--muted); }
+  .dn.wk { border-radius: 10px; }
+  .row .rt { font-size: 14px; font-weight: 600; }
+  .row .rs { font-size: 11.5px; color: var(--text2); margin-top: 1px; }
+  .row .end { margin-left: auto; color: var(--muted); font-size: 11.5px; display: flex; align-items: center; gap: 4px; }
+  .row .end svg { width: 14px; height: 14px; }
+  .row.now { box-shadow: inset 0 0 0 1.5px var(--accent-ink); border-color: var(--accent-ink); }
+  .row.dim { opacity: .62; }
+  .collapsed { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 20px; background: transparent; border: 1px dashed rgba(var(--fg-rgb), .18); font-size: 12.5px; color: var(--text2); }
+  /* Player */
+  .screen.player { padding: 46px 18px 22px; }
+  .segs { display: grid; grid-auto-flow: column; gap: 4px; margin-bottom: 14px; }
+  .segs i { height: 4px; border-radius: 99px; background: rgba(var(--fg-rgb), .15); }
+  .segs i.on { background: var(--text); }
+  .ptop { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .close { width: 34px; height: 34px; border-radius: 99px; background: var(--surface1); border: 1px solid var(--hairline); display: grid; place-items: center; color: var(--text2); }
+  .close svg { width: 14px; height: 14px; }
+  .reading { font-size: 18px; line-height: 1.45; letter-spacing: -.005em; }
+  .reading p { margin: 0 0 14px; }
+  .reading .lead { font-size: 26px; font-weight: 700; letter-spacing: -.02em; line-height: 1.15; }
+  .callout { padding: 12px 14px; border-radius: 18px; background: var(--accent-soft); font-size: 13px; line-height: 1.45; }
+  .callout b { display: block; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-ink); margin-bottom: 3px; }
+  .audio { padding: 18px; border-radius: 30px; text-align: center; }
+  .playbtn { width: 72px; height: 72px; border-radius: 99px; background: var(--primary); color: var(--on-primary); display: grid; place-items: center; margin: 14px auto 12px; }
+  .playbtn svg { width: 26px; height: 26px; fill: currentColor; stroke: none; }
+  .scrub { height: 4px; border-radius: 99px; background: rgba(var(--fg-rgb), .14); position: relative; margin: 10px 0 6px; }
+  .scrub i { position: absolute; left: 0; top: 0; bottom: 0; width: 34%; border-radius: 99px; background: var(--accent-ink); }
+  .scrub b { position: absolute; left: 34%; top: 50%; width: 14px; height: 14px; border-radius: 99px; background: #fff; transform: translate(-50%, -50%); box-shadow: 0 2px 6px rgba(0,0,0,.4); }
+  .times { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .wave { display: flex; align-items: center; justify-content: center; gap: 3px; height: 40px; }
+  .wave i { width: 3px; border-radius: 99px; background: var(--accent-ink); opacity: .7; }
+  .choice { display: grid; gap: 8px; }
+  .ifthen { padding: 14px; border-radius: 22px; background: var(--surface1); border: 1px solid var(--hairline); font-size: 15px; line-height: 1.5; }
+  .ifthen .slot { display: inline-block; padding: 2px 10px; border-radius: 99px; background: var(--primary); color: var(--on-primary); font-weight: 600; font-size: 13.5px; }
+  .ifthen .slot.empty { background: transparent; color: var(--text2); border: 1px dashed rgba(var(--fg-rgb), .3); font-weight: 400; }
+  .ring { width: 96px; height: 96px; border-radius: 99px; background: var(--sage); color: #000; display: grid; place-items: center; margin: 0 auto; }
+  .ring svg { width: 40px; height: 40px; stroke-width: 2.6; }
+  .weekcard { padding: 16px; border-radius: 26px; background: var(--surface1); border: 1px solid var(--hairline); }
+  .checks { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 10px; text-align: center; font-size: 10px; color: var(--muted); }
+  .checks span { display: grid; gap: 4px; justify-items: center; }
+  .checks i { width: 28px; height: 28px; border-radius: 99px; border: 1.5px solid rgba(var(--fg-rgb), .2); display: grid; place-items: center; }
+  .checks i.y { background: var(--sage); border-color: var(--sage); color: #000; }
+  .checks i.y svg { width: 13px; height: 13px; stroke-width: 3; }
+  .slider { height: 6px; border-radius: 99px; background: linear-gradient(90deg, var(--sage), var(--amber), var(--coral)); position: relative; margin: 16px 6px 6px; }
+  .slider b { position: absolute; left: 30%; top: 50%; width: 24px; height: 24px; border-radius: 99px; background: #fff; transform: translate(-50%, -50%); box-shadow: 0 3px 10px rgba(0,0,0,.4); }
+  .welcome-back { padding: 16px; border-radius: 26px; background: var(--glass-fill); border: 1px solid var(--hairline); border-top-color: var(--glass-highlight); }
+  .dockwrap { position: absolute; left: 0; right: 0; bottom: 18px; display: flex; justify-content: center; }
+  .dock { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 99px; background: rgba(14,14,14,.86); border: 1px solid var(--hairline); box-shadow: 0 10px 30px rgba(0,0,0,.35); }
+  :root[data-theme="light"] .dock { background: rgba(255,255,255,.88); box-shadow: 0 10px 30px rgba(17,20,10,.14); }
+  .tab { width: 42px; height: 42px; border-radius: 99px; background: rgba(var(--fg-rgb), .06); border: 1px solid var(--hairline); color: var(--muted); display: grid; place-items: center; }
+  .tab.on { height: 56px; background: var(--primary); color: var(--on-primary); border-color: transparent; }
+  .tab svg { width: 18px; height: 18px; }
+  .sos { width: 46px; height: 46px; border-radius: 99px; background: var(--sage); color: #000; display: grid; place-items: center; margin-left: 4px; }
+  .sos svg { width: 20px; height: 20px; }
+  .fade { position: absolute; left: 0; right: 0; bottom: 0; height: 90px; background: linear-gradient(to bottom, transparent, var(--canvas) 70%); pointer-events: none; border-radius: 0 0 38px 38px; }
+  /* Section 14 additions */
+  .list { flex-shrink: 0; border-radius: 22px; background: var(--surface1); border: 1px solid var(--hairline); overflow: hidden; }
+  .li { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-bottom: 1px solid var(--hairline); }
+  .li:last-child { border-bottom: 0; }
+  .li > div { flex: 1; min-width: 0; }
+  .li .ic { width: 30px; height: 30px; border-radius: 9px; background: var(--accent-soft); color: var(--accent-ink); display: grid; place-items: center; flex: none; }
+  .li .ic svg { width: 16px; height: 16px; }
+  .li .t { font-size: 14px; font-weight: 600; }
+  .li .d { font-size: 10.5px; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .li .time { margin-left: auto; font-size: 12.5px; color: var(--text2); }
+  .sw { margin-left: 10px; width: 42px; height: 26px; border-radius: 99px; background: var(--sage); position: relative; flex: none; }
+  .sw::after { content: ""; position: absolute; right: 3px; top: 3px; width: 20px; height: 20px; border-radius: 99px; background: #fff; }
+  .sw.off { background: rgba(var(--fg-rgb), .15); }
+  .sw.off::after { right: auto; left: 3px; }
+  .sect { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 14px 4px 6px; }
+  .foot { font-size: 11.5px; color: var(--text2); margin: 6px 4px 0; line-height: 1.4; }
+  .screen.lockscreen { padding: 46px 12px 22px; background: linear-gradient(170deg, #2a3320, #11160b 55%, #050505); color: #fff; }
+  .lockdate { text-align: center; font-size: 14px; font-weight: 600; color: rgba(255,255,255,.8); }
+  .locktime { text-align: center; font-size: 64px; font-weight: 700; letter-spacing: -.04em; line-height: 1; color: rgba(255,255,255,.92); margin-bottom: 14px; }
+  .nt { display: flex; gap: 10px; padding: 11px 12px; border-radius: 20px; background: rgba(40,40,42,.78); backdrop-filter: blur(18px); font-size: 12px; line-height: 1.35; margin-bottom: 7px; color: #fff; }
+  .nt .app { width: 30px; height: 30px; border-radius: 8px; background: #000; display: grid; place-items: center; flex: none; }
+  .nt .app i { width: 9px; height: 9px; border-radius: 99px; background: var(--sage); }
+  .nt b { font-size: 12.5px; }
+  .nt .when { margin-left: auto; color: rgba(255,255,255,.55); font-size: 10.5px; white-space: nowrap; }
+  .nt .ty { display: block; font-size: 9.5px; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.45); margin-bottom: 1px; }
+  .tline { display: grid; gap: 0; }
+  .tl { display: grid; grid-template-columns: 70px 1fr; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--hairline); font-size: 13px; }
+  .tl:last-child { border-bottom: 0; }
+  .tl .w { font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+  .tl .msg { padding: 10px 12px; border-radius: 16px; background: var(--surface1); border: 1px solid var(--hairline); }
+  .tl .msg b { display: block; font-size: 13px; }
+  .tl .msg span { font-size: 12px; color: var(--text2); }
+  .tl .none { font-size: 12px; color: var(--text2); padding-top: 2px; }
+  .qtimes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .qtimes > div { padding: 14px; border-radius: 20px; background: var(--surface1); border: 1px solid var(--hairline); text-align: center; }
+  .qtimes > div b { display: block; font-size: 26px; font-weight: 700; margin-top: 4px; }
+  .bar24 { position: relative; height: 34px; border-radius: 12px; background: var(--surface1); border: 1px solid var(--hairline); overflow: hidden; margin-top: 12px; }
+  .bar24 i { position: absolute; top: 0; bottom: 0; background: rgba(var(--fg-rgb), .1); }
+  .bar24 span { position: absolute; top: 9px; width: 8px; height: 14px; border-radius: 4px; background: var(--sage); }
+  .ticks24 { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); margin-top: 4px; }
+  .banner { display: flex; gap: 10px; align-items: center; padding: 12px 14px; border-radius: 20px; background: rgba(229,169,60,.12); border: 1px solid rgba(229,169,60,.35); font-size: 12.5px; line-height: 1.4; }
+  .banner .go { margin-left: auto; padding: 7px 12px; border-radius: 99px; background: var(--primary); color: var(--on-primary); font-weight: 600; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="micro">Section 14 · mockups for sign-off</div>
+  <h1>Notifications</h1>
+  <p class="lede">One plan for every notification DayXero sends, each with its own switch, plus quiet hours. The rules: never guilt, never "streak" talk, never more than three a day from the program (NRT reminders you set yourself don't count), and nothing once something's already done. After a few quiet days we send two gentle notes and then stop, following your pause-and-replay rule.</p>
+  <div class="toggle" role="group" aria-label="Theme">
+    <button aria-pressed="true" data-theme-btn="dark">Dark</button>
+    <button aria-pressed="false" data-theme-btn="light">Light</button>
+  </div>
+  <div class="flow" id="flow"></div>
+  <div class="lede" style="margin-top:40px;display:grid;gap:10px;max-width:900px">
+    <div class="micro">The plan</div>
+    <p style="margin:0"><b>Morning pledge</b> 8:00, skipped once pledged · <b>Lesson ready</b> 12:00 on days a new lesson opens, skipped once started · <b>Evening check-in</b> 21:00, skipped once checked in · <b>Milestones</b> 9:00 on the day · <b>NRT</b> at the times you set in Section 9 · <b>Away</b> two notes after 2 and 3 quiet days, then nothing · <b>Trial ending</b> the day before, from Section 3.</p>
+    <p style="margin:0"><b>Daily cap.</b> At most three program notifications a day. If more are due, the order is milestone, pledge, lesson, check-in; the lowest drops. NRT and trial reminders are always sent.</p>
+    <p style="margin:0"><b>Quiet hours</b> (default 22:30 to 7:30). Anything due inside them waits until they end, except times you've set yourself.</p>
+    <p style="margin:0"><b>Words we never use</b> in notifications: streak, broke, missed, lose, failed, "don't forget", "you haven't". Every notification is checked against this list by a test.</p>
+  </div>
+</div>
+
+<script>
+const I = {
+  sun: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>',
+  book: '<svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5"/></svg>',
+  moon: '<svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>',
+  flag: '<svg viewBox="0 0 24 24"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg>',
+  patch: '<svg viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="10" rx="3"/><circle cx="12" cy="12" r="2"/></svg>',
+  wave: '<svg viewBox="0 0 24 24"><path d="M2 12c3 0 3-4 6-4s3 8 6 8 3-4 6-4"/></svg>',
+  clock: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  x: '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  back: '<svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>',
+};
+const li = (ic, t, d, time, on = true) => `<div class="li"><span class="ic">${ic}</span><div><div class="t">${t}</div>${d ? `<div class="d">${d}</div>` : ''}</div>${time ? `<span class="time">${time}</span>` : '<span class="time"></span>'}<span class="sw ${on ? '' : 'off'}"></span></div>`;
+const nt = (type, title, body, when) => `<div class="nt"><span class="app"><i></i></span><div><span class="ty">${type}</span><b>${title}</b><br>${body}</div><span class="when">${when}</span></div>`;
+const topbar = (label) => `<div class="ptop"><span class="close">${I.back.replace('<svg', '<svg style="width:14px;height:14px"')}</span><span class="micro">${label}</span><span style="width:34px"></span></div>`;
+
+const screens = [
+  { tag: 'S14.1, S14.2', title: 'Notifications settings',
+    body: `${topbar('Settings')}
+      <h2 class="title" style="font-size:22px;margin:0">Notifications</h2>
+      <div class="sect">Your day</div>
+      <div class="list">
+        ${li(I.sun, 'Morning pledge', 'Skipped once you\'ve pledged', '8:00')}
+        ${li(I.book, 'Lesson ready', 'When a new day opens', '12:00')}
+        ${li(I.moon, 'Evening check-in', 'Skipped once you\'ve checked in', '21:00')}
+        ${li(I.flag, 'Milestones', 'On the day', '9:00')}
+      </div>
+      <div class="sect">Your plan</div>
+      <div class="list">
+        ${li(I.patch, 'NRT', 'Patch changes and step-downs', '7:30')}
+        ${li(I.wave, 'When you\'ve been away', 'Two gentle notes, then quiet', '')}
+      </div>
+      <div class="sect">Quiet hours</div>
+      <div class="list"><div class="li"><span class="ic">${I.clock}</span><div><div class="t">Quiet hours</div><div class="d">Nothing between these times</div></div><span class="time">22:30 – 7:30</span></div></div>
+      <div class="foot">At most three a day from the program. NRT reminders you set always arrive.</div>`,
+    notes: ['One place for every notification, grouped as "your day" and "your plan", each with its own switch and time. This replaces the small reminders screen from Section 11 and lives in Settings (Section 15).'], flags: [] },
+  { tag: 'S14.2', title: 'Quiet hours',
+    body: `${topbar('Notifications')}
+      <h2 class="title" style="font-size:22px">Quiet hours</h2>
+      <p class="sub">Nothing arrives between these times. Anything due waits until they end.</p>
+      <div class="qtimes" style="margin-top:14px"><div><div class="micro">From</div><b>22:30</b></div><div><div class="micro">Until</div><b>7:30</b></div></div>
+      <div class="bar24"><i style="left:0;width:31%"></i><i style="left:93.75%;width:6.25%"></i><span style="left:31%"></span><span style="left:33%"></span><span style="left:50%"></span><span style="left:87.5%"></span></div>
+      <div class="ticks24"><span>0:00</span><span>6:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div>
+      <p class="foot" style="margin-top:10px">Grey is quiet. Sage marks are today's notifications: patch 7:30, pledge 8:00, lesson 12:00, check-in 21:00.</p>
+      <div class="grow"></div>
+      <div class="list">${li(I.patch, 'Let my NRT times through', 'Times you set yourself', '')}</div>`,
+    notes: ['A simple from/until with a 24-hour strip that shows today\'s notifications against the quiet band, so it\'s obvious what moves. NRT times you set yourself can be allowed through.'], flags: [] },
+  { tag: 'S14.1, S14.3', title: 'What they say', lock: true,
+    body: `<div class="lockdate">Saturday 24 October</div><div class="locktime">8:00</div>
+      ${nt('Pledge', 'Good morning', 'Ten seconds for today\'s pledge?', 'now')}
+      ${nt('Lesson', 'Day 4 is ready', 'Seven minutes, whenever suits you.', '12:00')}
+      ${nt('Check-in', 'How did today go?', 'A one-minute check-in, if you have it.', '21:00')}
+      ${nt('Milestone', 'One week clear today', 'Open DayXero to see it.', '9:00')}
+      ${nt('NRT', 'Fresh patch time', 'Swap today\'s patch. Follow the label on your pack.', '7:30')}`,
+    notes: ['Every type, as it would look. Short, warm, and never about what you haven\'t done. Each one opens the right screen.'],
+    flags: ['All copy is drafted by me; edit freely. Milestone notifications say "Open DayXero to see it" so the number isn\'t shown on a locked screen to anyone nearby. OK?'] },
+  { tag: 'S14.1, S14.3', title: 'When you\'ve been away',
+    body: `${topbar('How it works')}
+      <h2 class="title" style="font-size:22px">When you've been away</h2>
+      <p class="sub">Two gentle notes, then quiet. Days clear never change.</p>
+      <div class="tline" style="margin-top:12px">
+        <div class="tl"><span class="w">Day 1</span><span class="none">Nothing extra. Your usual reminders only.</span></div>
+        <div class="tl"><span class="w">Day 2</span><div class="msg"><b>Day 4 is here when you are</b><span>No catch-up needed.</span></div></div>
+        <div class="tl"><span class="w">Day 3</span><div class="msg"><b>Welcome back, whenever you're ready</b><span>We'll start with a quick replay of Day 3. Your days clear haven't changed.</span></div></div>
+        <div class="tl"><span class="w">After</span><span class="none">Nothing more. The program waits, paused, with the replay ready.</span></div>
+      </div>`,
+    notes: ['Follows your pause-and-replay rule from Section 5: after 3 quiet days the program pauses and the next open starts with a replay. Two notes at most, then silence; the daily pledge and check-in reminders also pause until you\'re back.'],
+    flags: ['Should the pledge and check-in reminders pause too while someone\'s away (my suggestion), or keep coming?'] },
+  { tag: 'S14.2', title: 'Notifications turned off',
+    body: `${topbar('Settings')}
+      <h2 class="title" style="font-size:22px">Notifications</h2>
+      <div class="banner" style="margin-top:12px"><span>Notifications are off for DayXero in iPhone Settings.</span><span class="go">Turn on</span></div>
+      <div class="sect">Your day</div>
+      <div class="list" style="opacity:.5">
+        ${li(I.sun, 'Morning pledge', '', '8:00')}
+        ${li(I.book, 'Lesson ready', '', '12:00')}
+        ${li(I.moon, 'Evening check-in', '', '21:00')}
+      </div>`,
+    notes: ['If iOS notifications are off, a plain banner explains and "Turn on" opens the app\'s page in iPhone Settings. The switches stay visible but dimmed, so nothing is lost.'], flags: [] },
+];
+
+document.getElementById('flow').innerHTML = screens.map((s) => `
+  <section class="shot">
+    <div class="shot-head"><span class="tag">${s.tag}</span><b>${s.title}</b></div>
+    <div class="phone tall"><div class="screen ${s.lock ? 'lockscreen' : 'player'}">${s.lock ? '' : '<div class="island" style="z-index:5"></div>'}
+      ${s.body}</div></div>
+    ${s.notes.map((n) => `<p class="n">${n}</p>`).join('')}
+    ${s.flags.map((n) => `<p class="n flag">${n}</p>`).join('')}
+  </section>`).join('');
+
+function setTheme(t) {
+  document.documentElement.dataset.theme = t;
+  document.querySelectorAll('[data-theme-btn]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.themeBtn === t));
+}
+document.querySelectorAll('[data-theme-btn]').forEach((b) => b.addEventListener('click', () => setTheme(b.dataset.themeBtn)));
+setTheme(new URLSearchParams(location.search).get('theme') === 'light' ? 'light' : 'dark');
+</script>
+</body>
+</html>
