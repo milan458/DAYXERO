@@ -2,17 +2,16 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-23T05:18:11.632Z"
+    "updated": "2026-10-23T05:44:45.521Z"
   },
   "now": {
     "section": "S5",
-    "task": "S5.1",
+    "task": "S5.8",
     "waiting_on_milan": [
-      "Program content from the Flutter build (S5.1)",
-      "Lesson unlock timing default (S4.8)",
-      "Privacy policy URL (S3.10)",
-      "App Store Connect + RevenueCat products (S3.11)",
-      "Youth resources per country (S2.2)"
+      "Review the Section 5 Program mockups",
+      "Idle days before pause (S5.7)",
+      "Variant rule for dual users (S5.2)",
+      "Lesson unlock timing default (S4.8)"
     ]
   },
   "sections": [
@@ -585,72 +584,84 @@
       "title": "Program",
       "goal": "",
       "signoff": {
-        "state": "not_started",
-        "history": []
+        "state": "mockups_ready",
+        "history": [
+          {
+            "time": "2026-10-23T05:44:45.357Z",
+            "state": "mockups_ready",
+            "by": "Claude",
+            "comment": ""
+          }
+        ]
       },
-      "mockups": [],
+      "mockups": [
+        {
+          "title": "Program: overview, free version, lesson player (reading, audio, exercise, done), weekly check-in, back after a break",
+          "path": "mockups/S5/program.html"
+        }
+      ],
       "tasks": [
         {
           "id": "S5.1",
           "title": "Port program content from the Flutter build: prep phase, 7-day program, 4-week maintenance arc.",
           "status": "pending",
-          "notes": "Question for Milan: where is the previous Flutter build (repo URL or path)? Needed to port content.\nMilan: port program content later. Section 5 build waits on it; mockups can use placeholder lessons.",
+          "notes": "Question for Milan: where is the previous Flutter build (repo URL or path)? Needed to port content.\nMilan: port program content later. Section 5 build waits on it; mockups can use placeholder lessons.\nMilan: design with placeholder lessons for now; content port later.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S5.2",
           "title": "Product variants: smoking, vaping, pouches; dual users get the variant for their main product plus notes for the others (confirm rule with Milan).",
-          "status": "pending",
-          "notes": "Question for Milan: dual users — main-product variant plus notes for the others. Confirm the rule.",
+          "status": "awaiting_signoff",
+          "notes": "Question for Milan: dual users — main-product variant plus notes for the others. Confirm the rule.\nMockups in progress (placeholder content, per Milan).\nMockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S5.3",
           "title": "Day locking: a day unlocks only after the previous day is completed.",
-          "status": "pending",
-          "notes": "",
+          "status": "awaiting_signoff",
+          "notes": "Mockups in progress (placeholder content, per Milan).\nMockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S5.4",
           "title": "Lesson player: text, audio or short exercises as content requires; completion tracking.",
-          "status": "pending",
-          "notes": "",
+          "status": "awaiting_signoff",
+          "notes": "Mockups in progress (placeholder content, per Milan).\nMockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S5.5",
           "title": "Prep phase until Quit Day, then the quit days.",
-          "status": "pending",
-          "notes": "",
+          "status": "awaiting_signoff",
+          "notes": "Mockups in progress (placeholder content, per Milan).\nMockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S5.6",
           "title": "Maintenance arc (weeks 2–5) changes format, not just content, to avoid the week 3–4 drop-off.",
-          "status": "pending",
-          "notes": "",
+          "status": "awaiting_signoff",
+          "notes": "Mockups in progress (placeholder content, per Milan).\nMockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S5.7",
           "title": "Inactivity behaviour per Milan's answer to the open decision in part 1.",
-          "status": "pending",
-          "notes": "Open decision from plan §1: keep the 3-idle-day reset to Day 1, or pause and replay the last day?\nMilan decided: no reset to Day 1. After inactivity, pause and replay the last completed day, then continue. Build in Section 5.",
+          "status": "awaiting_signoff",
+          "notes": "Open decision from plan §1: keep the 3-idle-day reset to Day 1, or pause and replay the last day?\nMilan decided: no reset to Day 1. After inactivity, pause and replay the last completed day, then continue. Build in Section 5.\nMockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nMockup assumes the pause kicks in after 3 idle days (old spec's number); Milan to confirm.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S5.8",
           "title": "Program overview screen: past, current and locked days.",
-          "status": "pending",
-          "notes": "",
+          "status": "awaiting_signoff",
+          "notes": "Mockups in progress (placeholder content, per Milan).\nMockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -1206,6 +1217,106 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-23T05:44:45.521Z",
+      "type": "now",
+      "message": "Now: S5 / S5.8"
+    },
+    {
+      "time": "2026-10-23T05:44:45.501Z",
+      "type": "note",
+      "message": "S5.7: Mockup assumes the pause kicks in after 3 idle days (old spec's number); Milan to confirm."
+    },
+    {
+      "time": "2026-10-23T05:44:45.483Z",
+      "type": "status",
+      "message": "S5.8 in_progress → awaiting_signoff (Mockups ready in tracker.)"
+    },
+    {
+      "time": "2026-10-23T05:44:45.465Z",
+      "type": "status",
+      "message": "S5.7 in_progress → awaiting_signoff (Mockups ready in tracker.)"
+    },
+    {
+      "time": "2026-10-23T05:44:45.444Z",
+      "type": "status",
+      "message": "S5.6 in_progress → awaiting_signoff (Mockups ready in tracker.)"
+    },
+    {
+      "time": "2026-10-23T05:44:45.426Z",
+      "type": "status",
+      "message": "S5.5 in_progress → awaiting_signoff (Mockups ready in tracker.)"
+    },
+    {
+      "time": "2026-10-23T05:44:45.408Z",
+      "type": "status",
+      "message": "S5.4 in_progress → awaiting_signoff (Mockups ready in tracker.)"
+    },
+    {
+      "time": "2026-10-23T05:44:45.390Z",
+      "type": "status",
+      "message": "S5.3 in_progress → awaiting_signoff (Mockups ready in tracker.)"
+    },
+    {
+      "time": "2026-10-23T05:44:45.374Z",
+      "type": "status",
+      "message": "S5.2 in_progress → awaiting_signoff (Mockups ready in tracker.)"
+    },
+    {
+      "time": "2026-10-23T05:44:45.357Z",
+      "type": "signoff",
+      "message": "S5 mockups → mockups_ready"
+    },
+    {
+      "time": "2026-10-23T05:44:45.339Z",
+      "type": "mockup",
+      "message": "S5 mockup posted: Program: overview, free version, lesson player (reading, audio, exercise, done), weekly check-in, back after a break"
+    },
+    {
+      "time": "2026-10-23T05:42:26.265Z",
+      "type": "now",
+      "message": "Now: S5 / S5.8"
+    },
+    {
+      "time": "2026-10-23T05:42:26.235Z",
+      "type": "note",
+      "message": "S5.1: Milan: design with placeholder lessons for now; content port later."
+    },
+    {
+      "time": "2026-10-23T05:42:26.194Z",
+      "type": "status",
+      "message": "S5.8 pending → in_progress (Mockups in progress (placeholder content, per Milan).)"
+    },
+    {
+      "time": "2026-10-23T05:42:26.176Z",
+      "type": "status",
+      "message": "S5.7 pending → in_progress (Mockups in progress (placeholder content, per Milan).)"
+    },
+    {
+      "time": "2026-10-23T05:42:26.155Z",
+      "type": "status",
+      "message": "S5.6 pending → in_progress (Mockups in progress (placeholder content, per Milan).)"
+    },
+    {
+      "time": "2026-10-23T05:42:26.132Z",
+      "type": "status",
+      "message": "S5.5 pending → in_progress (Mockups in progress (placeholder content, per Milan).)"
+    },
+    {
+      "time": "2026-10-23T05:42:26.106Z",
+      "type": "status",
+      "message": "S5.4 pending → in_progress (Mockups in progress (placeholder content, per Milan).)"
+    },
+    {
+      "time": "2026-10-23T05:42:26.077Z",
+      "type": "status",
+      "message": "S5.3 pending → in_progress (Mockups in progress (placeholder content, per Milan).)"
+    },
+    {
+      "time": "2026-10-23T05:42:26.021Z",
+      "type": "status",
+      "message": "S5.2 pending → in_progress (Mockups in progress (placeholder content, per Milan).)"
+    },
     {
       "time": "2026-10-23T05:18:11.632Z",
       "type": "now",

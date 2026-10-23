@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DayXero Program</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Tokens: identical to the signed-off Section 1 sheet. */
+  :root {
+    --sage: #BCC388; --moss: #43511C; --amber: #E5A93C; --coral: #C85A54;
+    --ease: cubic-bezier(.16, 1, .3, 1);
+    --font: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --canvas: #000; --surface1: #121212; --surface2: #161616; --surface3: #1C1C1E;
+    --fg-rgb: 255,255,255; --text: #fff; --text2: rgba(255,255,255,.6); --muted: rgba(255,255,255,.5); --faint: rgba(255,255,255,.35);
+    --hairline: rgba(255,255,255,.08); --glass-highlight: rgba(255,255,255,.16);
+    --glass-fill: linear-gradient(135deg, rgba(67,81,28,.35), rgba(20,20,20,.65));
+    --primary: #fff; --on-primary: #000; --accent-ink: #BCC388; --accent-soft: rgba(67,81,28,.5);
+    --hills-a: #1d2410; --hills-b: #2c3816; --hills-c: #43511C;
+    --page: #0b0b0b; --bezel: #262626;
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --canvas: #F3F4EE; --surface1: #fff; --surface2: #ECEEE4; --surface3: #E2E5D8;
+    --fg-rgb: 17,20,10; --text: #11140A; --text2: rgba(17,20,10,.66); --muted: rgba(17,20,10,.56); --faint: rgba(17,20,10,.38);
+    --hairline: rgba(17,20,10,.09); --glass-highlight: rgba(255,255,255,.9);
+    --glass-fill: linear-gradient(135deg, rgba(188,195,136,.55), rgba(255,255,255,.85));
+    --primary: #11140A; --on-primary: #fff; --accent-ink: #55621F; --accent-soft: rgba(188,195,136,.45);
+    --hills-a: #dfe3cf; --hills-b: #c9d0a8; --hills-c: #BCC388;
+    --page: #e6e8df; --bezel: #cfd2c4;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--text); font-family: var(--font); -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 1320px; margin: 0 auto; padding: 28px 16px 80px; }
+  .micro { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  h1 { font-size: 28px; letter-spacing: -.02em; margin: 4px 0; }
+  .lede { font-size: 14px; color: var(--text2); max-width: 760px; line-height: 1.5; }
+  .toggle { display: inline-flex; background: var(--surface2); border-radius: 999px; padding: 4px; margin: 14px 0 6px; }
+  .toggle button { background: none; border: 0; color: var(--text2); font: 600 13px var(--font); padding: 8px 16px; border-radius: 999px; cursor: pointer; }
+  .toggle button[aria-pressed="true"] { background: var(--primary); color: var(--on-primary); }
+  .flow { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 34px 22px; margin-top: 26px; }
+  .shot { display: grid; gap: 10px; align-content: start; }
+  .shot-head { display: flex; gap: 8px; align-items: baseline; }
+  .shot-head b { font-size: 14px; }
+  .tag { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: var(--surface3); color: var(--text2); }
+  .shot p.n { margin: 0; font-size: 12.5px; color: var(--text2); line-height: 1.45; }
+  .shot p.n b { color: var(--text); }
+  .flag { border-left: 3px solid var(--amber); padding-left: 8px; }
+
+  /* Phone */
+  .phone { width: 300px; height: 640px; border-radius: 46px; padding: 9px; background: var(--bezel); justify-self: start; }
+  .screen { position: relative; width: 100%; height: 100%; border-radius: 38px; background: var(--canvas); overflow: hidden; display: flex; flex-direction: column; padding: 46px 18px 22px; }
+  .island { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 88px; height: 25px; border-radius: 99px; background: #000; }
+  .topbar { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; min-height: 32px; }
+  .back { width: 32px; height: 32px; border-radius: 99px; background: var(--surface1); border: 1px solid var(--hairline); display: grid; place-items: center; color: var(--text); flex: none; }
+  .steps { flex: 1; height: 4px; border-radius: 99px; background: rgba(var(--fg-rgb), .12); overflow: hidden; }
+  .steps i { display: block; height: 100%; background: var(--accent-ink); border-radius: 99px; }
+  .skip { font-size: 13px; color: var(--text2); font-weight: 500; flex: none; }
+  .title { font-size: 24px; font-weight: 700; letter-spacing: -.02em; line-height: 1.15; margin: 0 0 8px; }
+  .sub { font-size: 13px; color: var(--text2); line-height: 1.45; margin: 0; }
+  .body { display: grid; gap: 10px; margin-top: 20px; align-content: start; }
+  .grow { flex: 1; }
+  .footer { display: grid; gap: 8px; }
+  .btn { height: 52px; border-radius: 999px; border: 0; font: 600 15px var(--font); letter-spacing: -.01em; display: grid; place-items: center; }
+  .btn.primary { background: var(--primary); color: var(--on-primary); }
+  .btn.primary.off { background: var(--surface3); color: var(--faint); }
+  .btn.secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--hairline); height: 46px; }
+  .btn.quiet { background: none; color: var(--text2); height: 36px; font-weight: 500; }
+  .fine { font-size: 11px; color: var(--muted); text-align: center; line-height: 1.4; }
+  svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* Option cards (single and multi select) */
+  .opt { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 22px; background: var(--surface1); border: 1px solid var(--hairline); }
+  .opt .ic { width: 38px; height: 38px; border-radius: 99px; background: var(--surface2); display: grid; place-items: center; color: var(--text); flex: none; }
+  .opt .t { font-size: 15px; font-weight: 600; }
+  .opt .d { font-size: 12px; color: var(--text2); margin-top: 1px; }
+  .opt .tx { flex: 1; min-width: 0; }
+  .check { width: 24px; height: 24px; border-radius: 99px; border: 1.5px solid rgba(var(--fg-rgb), .25); flex: none; display: grid; place-items: center; }
+  .opt.on { border-color: var(--accent-ink); background: var(--surface1); box-shadow: inset 0 0 0 1px var(--accent-ink); }
+  .opt.on .check { background: var(--sage); border-color: var(--sage); color: #000; }
+  .opt.on .check svg { width: 14px; height: 14px; stroke-width: 3; }
+  .opt.on .ic { background: var(--accent-soft); color: var(--accent-ink); }
+  .round .check { border-radius: 99px; }
+
+  /* Chips */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { padding: 8px 14px; border-radius: 99px; background: var(--surface2); color: var(--text2); font-size: 13px; }
+  .chip.on { background: var(--primary); color: var(--on-primary); font-weight: 600; }
+  .group-label { margin-top: 6px; }
+
+  /* Fields */
+  .field { display: grid; gap: 6px; }
+  .input { height: 48px; border-radius: 18px; background: var(--surface2); border: 1px solid var(--hairline); padding: 0 16px; display: flex; align-items: center; justify-content: space-between; font-size: 15px; }
+  .input .ph { color: var(--faint); }
+  .input.focus { border-color: rgba(188,195,136,.8); box-shadow: 0 0 0 4px rgba(188,195,136,.16); }
+  .input.err { border-color: var(--coral); }
+  .input .unit { color: var(--muted); font-size: 13px; }
+  .err-msg { font-size: 12px; color: var(--coral); }
+  :root[data-theme="light"] .err-msg { color: #A6403A; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .stepper { display: flex; align-items: center; justify-content: space-between; padding: 8px; border-radius: 26px; background: var(--surface1); border: 1px solid var(--hairline); }
+  .stepper .num { font-size: 34px; font-weight: 700; letter-spacing: -.03em; font-variant-numeric: tabular-nums; text-align: center; }
+  .stepper .num small { display: block; font-size: 12px; font-weight: 500; letter-spacing: 0; color: var(--muted); margin-top: -2px; }
+  .sbtn { width: 44px; height: 44px; border-radius: 99px; background: var(--surface2); display: grid; place-items: center; color: var(--text); }
+  .textarea { min-height: 76px; border-radius: 20px; background: var(--surface2); border: 1px solid var(--hairline); padding: 12px 14px; font-size: 14px; line-height: 1.4; }
+  .photo { height: 92px; border-radius: 20px; border: 1px dashed rgba(var(--fg-rgb), .25); display: grid; place-items: center; color: var(--text2); font-size: 13px; gap: 4px; text-align: center; }
+  .reason { display: flex; gap: 10px; align-items: center; padding: 10px; border-radius: 20px; background: var(--surface1); border: 1px solid var(--hairline); font-size: 14px; }
+  .thumb { width: 44px; height: 44px; border-radius: 14px; flex: none; background: linear-gradient(135deg, #8aa06a, #3b5a3a 60%, #c9b98a); }
+
+  /* Welcome hills */
+  .hills { position: absolute; inset: auto 0 0 0; width: 100%; height: 62%; pointer-events: none; stroke: none; }
+  .welcome .content { position: relative; z-index: 1; display: flex; flex-direction: column; height: 100%; }
+  .wordmark { font-size: 15px; font-weight: 700; letter-spacing: -.01em; display: flex; align-items: center; gap: 6px; }
+  .wordmark i { width: 9px; height: 9px; border-radius: 99px; background: var(--sage); display: inline-block; }
+  .promise { font-size: 34px; font-weight: 700; letter-spacing: -.035em; line-height: 1.05; margin: 26px 0 12px; }
+  .promise span { color: var(--accent-ink); }
+
+  /* Calendar strip */
+  .cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
+  .cal .dl { font-size: 10px; color: var(--muted); padding-bottom: 4px; }
+  .cal .d { height: 34px; border-radius: 99px; display: grid; place-items: center; font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .cal .d.past { color: var(--faint); font-weight: 400; }
+  .cal .d.today { box-shadow: inset 0 0 0 1px rgba(var(--fg-rgb), .3); }
+  .cal .d.prep { background: var(--accent-soft); color: var(--accent-ink); }
+  .cal .d.sel { background: var(--primary); color: var(--on-primary); }
+  .cal .d.rec { position: relative; }
+  .recnote { display: flex; gap: 8px; align-items: center; font-size: 12px; color: var(--text2); padding: 10px 12px; border-radius: 16px; background: var(--surface1); border: 1px solid var(--hairline); }
+  .recnote b { color: var(--text); }
+
+  /* Plan reveal */
+  .glass { position: relative; background: var(--glass-fill); border: 1px solid var(--hairline); border-top-color: var(--glass-highlight); border-radius: 30px; padding: 18px; overflow: hidden; }
+  .glass::before { content: ""; position: absolute; inset: auto -20% -70% -20%; height: 120%; background: radial-gradient(ellipse at 30% 0%, rgba(188,195,136,.2), transparent 60%); }
+  .glass > * { position: relative; }
+  .big { font-size: 30px; font-weight: 700; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+  .big small { font-size: 15px; font-weight: 500; color: var(--faint); letter-spacing: 0; }
+  .tl { display: grid; gap: 0; }
+  .tl-row { display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; align-items: center; padding: 7px 0; font-size: 13px; }
+  .tl-dot { width: 26px; height: 26px; border-radius: 99px; display: grid; place-items: center; font-size: 11px; font-weight: 700; }
+  .tl-dot.prep { background: var(--accent-soft); color: var(--accent-ink); }
+  .tl-dot.quit { background: var(--primary); color: var(--on-primary); }
+  .tl-row .when { color: var(--muted); font-size: 12px; }
+  .stat2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .mini { padding: 12px 14px; border-radius: 20px; background: var(--surface1); border: 1px solid var(--hairline); }
+  .mini .v { font-size: 18px; font-weight: 700; letter-spacing: -.02em; margin-top: 4px; font-variant-numeric: tabular-nums; }
+
+  /* Loading */
+  .ring { width: 120px; height: 120px; border-radius: 99px; border: 3px solid rgba(var(--fg-rgb), .1); border-top-color: var(--accent-ink); animation: spin 1.4s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .center { flex: 1; display: grid; place-items: center; text-align: center; align-content: center; gap: 18px; }
+  .ticks { display: grid; gap: 8px; text-align: left; font-size: 13px; color: var(--text2); }
+  .ticks span { display: flex; gap: 8px; align-items: center; }
+  .ticks .ok { color: var(--accent-ink); }
+
+  /* Notification preview */
+  .notif { display: flex; gap: 10px; padding: 12px; border-radius: 20px; background: var(--surface1); border: 1px solid var(--hairline); font-size: 12.5px; line-height: 1.35; }
+  .notif .app { width: 34px; height: 34px; border-radius: 9px; background: #000; display: grid; place-items: center; flex: none; }
+  .notif .app i { width: 10px; height: 10px; border-radius: 99px; background: var(--sage); }
+  .notif b { font-size: 13px; }
+  .notif .time { color: var(--muted); font-size: 11px; margin-left: auto; }
+  .bell { width: 76px; height: 76px; border-radius: 99px; background: var(--accent-soft); color: var(--accent-ink); display: grid; place-items: center; margin: 4px 0 2px; }
+  .bell svg { width: 32px; height: 32px; }
+
+  @media (prefers-reduced-motion: reduce) { .ring { animation: none; } }
+  /* Program additions */
+  .screen.app { padding: 0; }
+  .screen.app .content { height: 100%; overflow-y: auto; padding: 46px 16px 96px; scrollbar-width: none; }
+  .screen.app .content::-webkit-scrollbar { display: none; }
+  .phone.tall { height: 720px; }
+  .ph { display: inline-block; font-size: 9.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 2px 7px; border-radius: 99px; background: rgba(229,169,60,.18); color: #B07A14; vertical-align: middle; }
+  :root[data-theme="dark"] .ph { color: var(--amber); }
+  .hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .hdr .t { font-size: 24px; font-weight: 700; letter-spacing: -.02em; }
+  .variant { display: flex; gap: 8px; align-items: center; padding: 10px 12px; border-radius: 18px; background: var(--surface1); border: 1px solid var(--hairline); font-size: 12px; color: var(--text2); margin-bottom: 14px; }
+  .variant svg { width: 16px; height: 16px; color: var(--accent-ink); flex: none; }
+  .group { margin: 16px 0 8px; display: flex; justify-content: space-between; align-items: baseline; }
+  .group span:last-child { font-size: 11px; color: var(--muted); }
+  .rows { display: grid; gap: 6px; }
+  .row { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 20px; background: var(--surface1); border: 1px solid var(--hairline); }
+  .row .dn { width: 30px; height: 30px; border-radius: 99px; display: grid; place-items: center; font-size: 12px; font-weight: 700; flex: none; font-variant-numeric: tabular-nums; }
+  .dn.done { background: var(--sage); color: #000; }
+  .dn.now { background: var(--primary); color: var(--on-primary); }
+  .dn.later { background: rgba(var(--fg-rgb), .07); color: var(--muted); }
+  .dn.wk { border-radius: 10px; }
+  .row .rt { font-size: 14px; font-weight: 600; }
+  .row .rs { font-size: 11.5px; color: var(--text2); margin-top: 1px; }
+  .row .end { margin-left: auto; color: var(--muted); font-size: 11.5px; display: flex; align-items: center; gap: 4px; }
+  .row .end svg { width: 14px; height: 14px; }
+  .row.now { box-shadow: inset 0 0 0 1.5px var(--accent-ink); border-color: var(--accent-ink); }
+  .row.dim { opacity: .62; }
+  .collapsed { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 20px; background: transparent; border: 1px dashed rgba(var(--fg-rgb), .18); font-size: 12.5px; color: var(--text2); }
+  /* Player */
+  .screen.player { padding: 46px 18px 22px; }
+  .segs { display: grid; grid-auto-flow: column; gap: 4px; margin-bottom: 14px; }
+  .segs i { height: 4px; border-radius: 99px; background: rgba(var(--fg-rgb), .15); }
+  .segs i.on { background: var(--text); }
+  .ptop { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .close { width: 34px; height: 34px; border-radius: 99px; background: var(--surface1); border: 1px solid var(--hairline); display: grid; place-items: center; color: var(--text2); }
+  .close svg { width: 14px; height: 14px; }
+  .reading { font-size: 18px; line-height: 1.45; letter-spacing: -.005em; }
+  .reading p { margin: 0 0 14px; }
+  .reading .lead { font-size: 26px; font-weight: 700; letter-spacing: -.02em; line-height: 1.15; }
+  .callout { padding: 12px 14px; border-radius: 18px; background: var(--accent-soft); font-size: 13px; line-height: 1.45; }
+  .callout b { display: block; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-ink); margin-bottom: 3px; }
+  .audio { padding: 18px; border-radius: 30px; text-align: center; }
+  .playbtn { width: 72px; height: 72px; border-radius: 99px; background: var(--primary); color: var(--on-primary); display: grid; place-items: center; margin: 14px auto 12px; }
+  .playbtn svg { width: 26px; height: 26px; fill: currentColor; stroke: none; }
+  .scrub { height: 4px; border-radius: 99px; background: rgba(var(--fg-rgb), .14); position: relative; margin: 10px 0 6px; }
+  .scrub i { position: absolute; left: 0; top: 0; bottom: 0; width: 34%; border-radius: 99px; background: var(--accent-ink); }
+  .scrub b { position: absolute; left: 34%; top: 50%; width: 14px; height: 14px; border-radius: 99px; background: #fff; transform: translate(-50%, -50%); box-shadow: 0 2px 6px rgba(0,0,0,.4); }
+  .times { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .wave { display: flex; align-items: center; justify-content: center; gap: 3px; height: 40px; }
+  .wave i { width: 3px; border-radius: 99px; background: var(--accent-ink); opacity: .7; }
+  .choice { display: grid; gap: 8px; }
+  .ifthen { padding: 14px; border-radius: 22px; background: var(--surface1); border: 1px solid var(--hairline); font-size: 15px; line-height: 1.5; }
+  .ifthen .slot { display: inline-block; padding: 2px 10px; border-radius: 99px; background: var(--primary); color: var(--on-primary); font-weight: 600; font-size: 13.5px; }
+  .ifthen .slot.empty { background: transparent; color: var(--text2); border: 1px dashed rgba(var(--fg-rgb), .3); font-weight: 400; }
+  .ring { width: 96px; height: 96px; border-radius: 99px; background: var(--sage); color: #000; display: grid; place-items: center; margin: 0 auto; }
+  .ring svg { width: 40px; height: 40px; stroke-width: 2.6; }
+  .weekcard { padding: 16px; border-radius: 26px; background: var(--surface1); border: 1px solid var(--hairline); }
+  .checks { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 10px; text-align: center; font-size: 10px; color: var(--muted); }
+  .checks span { display: grid; gap: 4px; justify-items: center; }
+  .checks i { width: 28px; height: 28px; border-radius: 99px; border: 1.5px solid rgba(var(--fg-rgb), .2); display: grid; place-items: center; }
+  .checks i.y { background: var(--sage); border-color: var(--sage); color: #000; }
+  .checks i.y svg { width: 13px; height: 13px; stroke-width: 3; }
+  .slider { height: 6px; border-radius: 99px; background: linear-gradient(90deg, var(--sage), var(--amber), var(--coral)); position: relative; margin: 16px 6px 6px; }
+  .slider b { position: absolute; left: 30%; top: 50%; width: 24px; height: 24px; border-radius: 99px; background: #fff; transform: translate(-50%, -50%); box-shadow: 0 3px 10px rgba(0,0,0,.4); }
+  .welcome-back { padding: 16px; border-radius: 26px; background: var(--glass-fill); border: 1px solid var(--hairline); border-top-color: var(--glass-highlight); }
+  .dockwrap { position: absolute; left: 0; right: 0; bottom: 18px; display: flex; justify-content: center; }
+  .dock { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 99px; background: rgba(14,14,14,.86); border: 1px solid var(--hairline); box-shadow: 0 10px 30px rgba(0,0,0,.35); }
+  :root[data-theme="light"] .dock { background: rgba(255,255,255,.88); box-shadow: 0 10px 30px rgba(17,20,10,.14); }
+  .tab { width: 42px; height: 42px; border-radius: 99px; background: rgba(var(--fg-rgb), .06); border: 1px solid var(--hairline); color: var(--muted); display: grid; place-items: center; }
+  .tab.on { height: 56px; background: var(--primary); color: var(--on-primary); border-color: transparent; }
+  .tab svg { width: 18px; height: 18px; }
+  .sos { width: 46px; height: 46px; border-radius: 99px; background: var(--sage); color: #000; display: grid; place-items: center; margin-left: 4px; }
+  .sos svg { width: 20px; height: 20px; }
+  .fade { position: absolute; left: 0; right: 0; bottom: 0; height: 90px; background: linear-gradient(to bottom, transparent, var(--canvas) 70%); pointer-events: none; border-radius: 0 0 38px 38px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="micro">Section 5 · mockups for sign-off</div>
+  <h1>Program</h1>
+  <p class="lede">The Program tab, the lesson player, and the weeks after the quit week. All lesson wording here is <span class="ph">placeholder</span> until the Flutter content is ported; the screens are built to take that content as data. Example: Milan, vapes (main) and smokes, on quit-week Day 3.</p>
+  <div class="toggle" role="group" aria-label="Theme">
+    <button aria-pressed="true" data-theme-btn="dark">Dark</button>
+    <button aria-pressed="false" data-theme-btn="light">Light</button>
+  </div>
+  <div class="flow" id="flow"></div>
+  <div class="lede" style="margin-top:40px;display:grid;gap:10px">
+    <div class="micro">Not shown as screens</div>
+    <p style="margin:0"><b>Content as data (S5.1).</b> Each lesson is a list of steps (text, audio, exercise) per product variant, stored as JSON in the app. Porting the Flutter content means filling those files, not changing screens.</p>
+    <p style="margin:0"><b>Leaving mid-lesson.</b> The ✕ saves your place; the Home card then says "Continue" instead of "Start".</p>
+    <p style="margin:0"><b>Audio.</b> Plays with the screen locked and shows in Control Center; every audio step has a transcript.</p>
+    <p style="margin:0"><b>Accessibility.</b> Steps also advance with a VoiceOver "next" action; text steps use the reading size, which scales to the largest Dynamic Type.</p>
+  </div>
+</div>
+
+<script>
+const I = {
+  check: '<svg viewBox="0 0 24 24" style="stroke-width:2.6"><path d="M5 12l5 5 9-10"/></svg>',
+  lock: '<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
+  clock: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  chev: '<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>',
+  x: '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  info: '<svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5"/></svg>',
+  play: '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
+  replay: '<svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 3-6.2M4 4v4h4"/></svg>',
+};
+const dock = `<div class="dockwrap"><nav class="dock">
+  <span class="tab"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></span>
+  <span class="tab on"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5"/></svg></span>
+  <span class="tab"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span>
+  <span class="sos"><svg viewBox="0 0 24 24"><path d="M12 3c3 4 6 6.5 6 10a6 6 0 0 1-12 0c0-3.5 3-6 6-10z"/></svg></span></nav></div>`;
+const row = (cls, dn, dnCls, title, sub, end) => `<div class="row ${cls}"><span class="dn ${dnCls}">${dn}</span><div><div class="rt">${title}</div><div class="rs">${sub}</div></div><span class="end">${end}</span></div>`;
+const segs = (n, on) => `<div class="segs" style="grid-template-columns:repeat(${n},1fr)">${Array.from({length: n}, (_, i) => `<i class="${i < on ? 'on' : ''}"></i>`).join('')}</div>`;
+const ptop = (label) => `<div class="ptop"><span class="close">${I.x}</span><span class="micro">${label}</span><span style="width:34px"></span></div>`;
+
+const overview = (free) => `
+  <div class="hdr"><div><div class="micro">Your program</div><div class="t">Program</div></div></div>
+  <div class="variant">${I.info}<span><b style="color:var(--text)">Vaping program</b>, with notes for cigarettes</span></div>
+  <div class="group"><span class="micro">Prep · done</span><span>7 of 7</span></div>
+  <div class="collapsed"><span class="dn done" style="width:24px;height:24px;border-radius:99px;display:grid;place-items:center">${I.check.replace('<svg','<svg style="width:12px;height:12px"')}</span>7 prep days done · show</div>
+  <div class="group"><span class="micro">Quit week</span><span>2 of 7</span></div>
+  <div class="rows">
+    ${row('', I.check.replace('<svg','<svg style="width:13px;height:13px"'), 'done', 'Your Quit Day plan <span class="ph">placeholder</span>', 'Day 1 · Thu · 8 min', 'Review')}
+    ${row('', I.check.replace('<svg','<svg style="width:13px;height:13px"'), 'done', 'The first 48 hours <span class="ph">placeholder</span>', 'Day 2 · Fri · 6 min', 'Review')}
+    ${free
+      ? row('now', '3', 'now', 'Riding out the urge <span class="ph">placeholder</span>', 'Day 3 · Today · 7 min', I.lock + 'Unlock')
+      : row('now', '3', 'now', 'Riding out the urge <span class="ph">placeholder</span>', 'Day 3 · Today · 7 min', 'Start ' + I.chev)}
+    ${row('dim', '4', 'later', 'When stress hits <span class="ph">placeholder</span>', 'Day 4 · Sun', free ? I.lock : I.clock + 'Sun')}
+    ${row('dim', '5', 'later', 'Social situations <span class="ph">placeholder</span>', 'Day 5 · Mon', free ? I.lock : I.clock + 'Mon')}
+    ${row('dim', '6', 'later', 'Your new routines <span class="ph">placeholder</span>', 'Day 6 · Tue', free ? I.lock : I.clock + 'Tue')}
+    ${row('dim', '7', 'later', 'One week clear <span class="ph">placeholder</span>', 'Day 7 · Wed', free ? I.lock : I.clock + 'Wed')}
+  </div>
+  <div class="group"><span class="micro">The four weeks after</span><span>Weekly</span></div>
+  <div class="rows">
+    ${[2,3,4,5].map((w) => row('dim', 'W' + w, 'later wk', `Week ${w} check-in`, 'Weekly · 5 min', free ? I.lock : I.clock + ['Thu 5 Nov','Thu 12 Nov','Thu 19 Nov','Thu 26 Nov'][w-2])).join('')}
+  </div>`;
+
+const screens = [
+  { tag: 'S5.8, S5.3, S5.2', title: 'Program tab', body: overview(false), dock: true,
+    notes: ['Past, current and coming days in one list. Done days show a sage check and can be reviewed; today\'s day is outlined; later days show when they open. Prep folds away once it\'s done.', 'The variant line says which program this is. Dual users get their main product\'s program, with short notes for the other one inside lessons (S5.2).'],
+    flags: ['Variant rule (main product + notes for the others) is the plan\'s suggestion; confirm (S5.2).'] },
+  { tag: 'S3.5, S5.3', title: 'Program tab · free version', dock: true, body: `
+  <div class="hdr"><div><div class="micro">Your program</div><div class="t">Program</div></div></div>
+  <div class="variant">${I.info}<span><b style="color:var(--text)">Vaping program</b>, with notes for cigarettes</span></div>
+  <div class="group"><span class="micro">Prep</span><span>1 of 7</span></div>
+  <div class="rows">
+    ${row('', I.check.replace('<svg','<svg style="width:13px;height:13px"'), 'done', 'Know your triggers <span class="ph">placeholder</span>', 'Prep day 1 · Thu · 6 min', 'Review')}
+    ${row('now', '2', 'now', 'Plan for cravings <span class="ph">placeholder</span>', 'Prep day 2 · Today · 6 min', I.lock + 'Unlock')}
+    ${[3,4,5,6,7].map((d) => row('dim', String(d), 'later', `Prep day ${d} <span class="ph">placeholder</span>`, 'Full program', I.lock)).join('')}
+  </div>
+  <div class="group"><span class="micro">Quit week</span><span>From Thu 29 Oct</span></div>
+  <div class="rows">${row('dim', '1', 'later', 'Your Quit Day plan <span class="ph">placeholder</span>', 'Full program', I.lock)}</div>`,
+    notes: ['Free covers Prep day 1 (the plan\'s "Day 1 of the program"). The next day shows "Unlock", which opens the approved upgrade sheet; later days show a lock, so free people can still see what\'s ahead.'], flags: [] },
+  { tag: 'S5.4', title: 'Lesson · reading step', player: true,
+    body: `${segs(5, 1)}${ptop('Day 3 · 1 of 5')}
+      <div class="reading">
+        <p class="lead">Cravings rise, peak and pass. <span class="ph">placeholder</span></p>
+        <p>Most last a few minutes. Today you'll practise noticing one without acting on it. <span class="ph">placeholder</span></p>
+      </div>
+      <div class="callout"><b>If you also smoke</b>The same skill works for cigarette cravings. <span class="ph">placeholder</span></div>
+      <div class="grow"></div>
+      <div class="footer"><div class="btn primary">Next</div></div>`,
+    notes: ['The player shows one step at a time, with segments at the top (like stories) so you always know how far you are. Tap Next or swipe.', 'The sage callout is how dual users get notes for their other product (S5.2).'], flags: ['Lesson text and any timing claims ("a few minutes") come from the ported content and need sources where they\'re health claims.'] },
+  { tag: 'S5.4', title: 'Lesson · audio step', player: true,
+    body: `${segs(5, 2)}${ptop('Day 3 · 2 of 5')}
+      <h2 class="title">Urge-surfing practice <span class="ph">placeholder</span></h2>
+      <p class="sub">Find a comfortable spot. Headphones help.</p>
+      <div class="glass audio" style="margin-top:18px">
+        <div class="wave">${[10,18,26,14,30,22,12,28,20,34,16,24,12,20,28,14,22,10].map((h) => `<i style="height:${h}px"></i>`).join('')}</div>
+        <div class="playbtn">${I.play}</div>
+        <div class="scrub"><i></i><b></b></div>
+        <div class="times"><span>1:02</span><span>3:00</span></div>
+      </div>
+      <div style="text-align:center;margin-top:12px" class="sub">Show transcript</div>
+      <div class="grow"></div>
+      <div class="footer"><div class="btn secondary">Skip audio</div></div>`,
+    notes: ['Audio steps have big play controls, a scrubber and a transcript. "Next" appears when the audio ends; "Skip audio" is always there, no guilt.'], flags: ['Whether the content has audio at all depends on the Flutter build; the player supports it either way.'] },
+  { tag: 'S5.4', title: 'Lesson · exercise step', player: true,
+    body: `${segs(5, 3)}${ptop('Day 3 · 3 of 5')}
+      <h2 class="title">Make an if-then plan <span class="ph">placeholder</span></h2>
+      <p class="sub">Pick a moment you know is coming, and what you'll do instead.</p>
+      <div class="body">
+        <div class="ifthen">If it's <span class="slot">after coffee</span>,<br>then I'll <span class="slot">open Craving SOS</span></div>
+        <div class="micro">Then I'll…</div>
+        <div class="chips"><span class="chip">take a short walk</span><span class="chip on">open Craving SOS</span><span class="chip">drink water</span><span class="chip">text a friend</span><span class="chip">write my own</span></div>
+      </div>
+      <div class="grow"></div>
+      <div class="footer"><div class="btn primary">Save my plan</div></div>`,
+    notes: ['Exercises are short and tappable. The first slot is pre-filled from the triggers chosen in onboarding. Answers are saved and can show up again in Craving SOS.'], flags: [] },
+  { tag: 'S5.4', title: 'Lesson complete', player: true,
+    body: `${segs(5, 5)}
+      <div class="center" style="gap:14px">
+        <div class="ring">${I.check}</div>
+        <h2 class="title" style="margin:0">Day 3 done</h2>
+        <p class="sub">You're 3 days clear and you've finished 3 of 7 quit-week lessons.</p>
+        <div class="row" style="width:100%"><span class="dn later">4</span><div style="text-align:left"><div class="rt">When stress hits <span class="ph">placeholder</span></div><div class="rs">Opens tomorrow morning</div></div></div>
+      </div>
+      <div class="footer"><div class="btn primary">Back to Today</div></div>`,
+    notes: ['Completion is saved when this screen appears (S5.4). Success haptic and a short sage pulse; Reduce Motion shows it still.'], flags: [] },
+  { tag: 'S5.6', title: 'Weeks after · weekly check-in', player: true,
+    body: `${segs(3, 1)}${ptop('Week 2 check-in · 1 of 3')}
+      <h2 class="title">How was this week?</h2>
+      <p class="sub">A quick look back, then one thing to try next week.</p>
+      <div class="weekcard" style="margin-top:16px">
+        <div class="micro">Cravings this week</div>
+        <div class="slider"><b></b></div>
+        <div class="times"><span>Easy</span><span>Tough</span></div>
+      </div>
+      <div class="weekcard" style="margin-top:10px">
+        <div class="micro">Last week's challenge: a walk after lunch <span class="ph">placeholder</span></div>
+        <div class="checks">${['M','T','W','T','F','S','S'].map((d, i) => `<span>${d}<i class="${[0,1,3,4].includes(i) ? 'y' : ''}">${[0,1,3,4].includes(i) ? I.check : ''}</i></span>`).join('')}</div>
+      </div>
+      <div class="grow"></div>
+      <div class="footer"><div class="btn primary">Next</div></div>`,
+    notes: ['The format changes after the quit week (S5.6): instead of a daily lesson, a short weekly check-in. Look back (slider), review last week\'s challenge (tap the days you did it), then pick one new skill and one challenge for the coming week.', 'Shorter, more about you than about content, to carry people past the week 3–4 drop-off.'], flags: ['The weekly skills and challenges are placeholders until the content is ported.'] },
+  { tag: 'S5.7', title: 'Back after a break', dock: true,
+    body: `<div class="hdr"><div><div class="micro">Tuesday · Day 7</div><div class="t">Welcome back, Milan</div></div></div>
+      <div class="welcome-back">
+        <div class="micro">Pick up where you left off</div>
+        <div style="font-size:18px;font-weight:700;letter-spacing:-.01em;margin:6px 0 4px">Let's replay Day 3, then carry on</div>
+        <p class="sub" style="margin:0">A quick refresher of your last lesson. Your days clear and progress haven't changed.</p>
+        <div class="btn primary" style="margin-top:14px;height:46px;font-size:14px">Replay Day 3 · 7 min</div>
+      </div>
+      <div class="group"><span class="micro">After that</span><span></span></div>
+      <div class="rows">
+        ${row('dim', '4', 'later', 'When stress hits <span class="ph">placeholder</span>', 'Opens when Day 3 is replayed', '')}
+      </div>`,
+    notes: ['Your rule: no reset. After a few days without opening a lesson, the program pauses. Coming back shows a warm "welcome back" and a replay of the last finished day, then the next day opens as usual. Nothing is taken away: days clear, money and progress stay.'],
+    flags: ['How many idle days before the pause? The old spec used 3 days; I\'ve assumed 3. Confirm.'] },
+];
+
+document.getElementById('flow').innerHTML = screens.map((s) => `
+  <section class="shot">
+    <div class="shot-head"><span class="tag">${s.tag}</span><b>${s.title}</b></div>
+    <div class="phone tall"><div class="screen ${s.player ? 'player' : 'app'}"><div class="island" style="z-index:3"></div>
+      ${s.player ? s.body : `<div class="content">${s.body}</div><div class="fade"></div>`}${s.dock ? dock : ''}</div></div>
+    ${s.notes.map((n) => `<p class="n">${n}</p>`).join('')}
+    ${s.flags.map((n) => `<p class="n flag">${n}</p>`).join('')}
+  </section>`).join('');
+
+function setTheme(t) {
+  document.documentElement.dataset.theme = t;
+  document.querySelectorAll('[data-theme-btn]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.themeBtn === t));
+}
+document.querySelectorAll('[data-theme-btn]').forEach((b) => b.addEventListener('click', () => setTheme(b.dataset.themeBtn)));
+setTheme(new URLSearchParams(location.search).get('theme') === 'light' ? 'light' : 'dark');
+</script>
+</body>
+</html>
