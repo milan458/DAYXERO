@@ -1,0 +1,1766 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DayXero — Engineered to End Nicotine. Quit on your Quit Day.</title>
+  <meta name="description" content="DayXero is a native iOS quit program for cigarettes, vapes and nicotine pouches. Prep for your Quit Day, surf urges, and never lose your streak to a slip.">
+  <meta name="theme-color" content="#000000">
+  <link rel="canonical" href="https://dayxero.in/">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta property="og:title" content="DayXero — Quit on your Quit Day.">
+  <meta property="og:description" content="A native iOS quit program for cigarettes, vapes and nicotine pouches.">
+  <meta property="og:url" content="https://dayxero.in/">
+  <meta property="og:type" content="website">
+  
+  <!-- Inter Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.js"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            canvas: '#000000',
+            sage: '#BCC388',
+            'forest-moss': '#43511C',
+            porcelain: '#FFFFFF',
+            surface: {
+              1: '#121212',
+              2: '#161616',
+              3: '#1E1E1E',
+            },
+            coral: '#C85A54',
+            amber: '#E5A93C',
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          borderRadius: {
+            'card': '32px',
+            'capsule': '9999px',
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* OLED Baseline & Typography */
+    body {
+      background-color: #000000;
+      color: #FFFFFF;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      selection-background-color: #BCC388;
+      selection-color: #000000;
+    }
+    ::selection {
+      background: #BCC388;
+      color: #000000;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #000000;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #262626;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #BCC388;
+    }
+
+    /* Spring-Physics Transitions */
+    .spring-trans {
+      transition: all 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Cards with High-Contrast Flair */
+    .porcelain-card {
+      background: #FFFFFF;
+      color: #000000;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5), 0 0 40px rgba(188, 195, 136, 0.15);
+    }
+    .dark-card {
+      background: #121212;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8);
+    }
+    .glass-card-green {
+      background: linear-gradient(135deg, rgba(67, 81, 28, 0.40) 0%, rgba(18, 18, 18, 0.85) 100%);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(188, 195, 136, 0.25);
+    }
+    .moss-pedestal {
+      background: linear-gradient(180deg, rgba(67, 81, 28, 0.3) 0%, rgba(20, 26, 10, 0.9) 60%, #000000 100%);
+      box-shadow: 0 -20px 50px rgba(67, 81, 28, 0.25);
+    }
+
+    /* 3D Glass Bottle Shimmer */
+    .glass-specular {
+      background: linear-gradient(105deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.05) 45%, transparent 60%);
+    }
+
+    /* Device frame reflections */
+    .device-screen {
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12), 0 35px 80px -20px rgba(0, 0, 0, 0.95), 0 0 60px rgba(67, 81, 28, 0.2);
+    }
+  </style>
+</head>
+
+<body class="bg-black text-white antialiased min-h-screen relative flex flex-col justify-between">
+
+  <!-- AMBIENT TOP LIGHT BEAMS -->
+  <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[380px] bg-gradient-to-b from-[#43511C]/25 via-[#BCC388]/10 to-transparent blur-[140px] pointer-events-none z-0"></div>
+
+  <!-- FLOATING NAVIGATION BAR -->
+  <header class="fixed top-6 inset-x-0 z-50 flex justify-center px-4 pointer-events-none">
+    <nav class="pointer-events-auto flex items-center justify-between gap-4 md:gap-8 px-5 py-3 rounded-full bg-black/85 backdrop-blur-2xl border border-white/15 shadow-2xl shadow-black max-w-5xl w-full">
+      
+      <!-- Brand Monogram + Title -->
+      <a href="#hero" class="flex items-center gap-3 group">
+        <div class="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center font-extrabold text-sm shadow-md group-hover:scale-105 spring-trans">
+          <!-- Monogram b mark from image_7.png -->
+          <svg class="w-4 h-4 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 3v18"/>
+            <circle cx="13" cy="14" r="7"/>
+          </svg>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-bold text-sm tracking-tight text-white group-hover:text-[#BCC388] spring-trans">DayXero</span>
+          <span class="text-[9px] text-white/40 tracking-widest uppercase font-mono -mt-0.5">Nicotine Protocol</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Items -->
+      <div class="hidden md:flex items-center gap-1 text-xs font-medium text-white/70">
+        <a href="#showcase" class="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-white/10 spring-trans">Showcase</a>
+        <a href="#methodology" class="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-white/10 spring-trans">Methodology</a>
+        <a href="#interactive-preview" class="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-white/10 spring-trans">Live App</a>
+        <a href="#breath-chamber" class="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-white/10 spring-trans">Urge Surfing</a>
+        <a href="#recovery-timeline" class="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-white/10 spring-trans">Timeline</a>
+        <a href="#calculator" class="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-white/10 spring-trans">Calculator</a>
+        <a href="#pricing" class="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-white/10 spring-trans">Pricing</a>
+      </div>
+
+      <!-- Action Cluster -->
+      <div class="flex items-center gap-2.5">
+        <!-- Audio Synth Ambient Toggle -->
+        <button id="btn-audio-toggle" title="Toggle 432Hz Meditative Sound" aria-label="Toggle Sound" class="w-8 h-8 rounded-full bg-[#161616] border border-white/15 hover:border-white/40 text-white/70 hover:text-white flex items-center justify-center spring-trans">
+          <i data-lucide="volume-x" id="audio-icon" class="w-4 h-4"></i>
+        </button>
+
+        <!-- Signature High-Contrast CTA Button -->
+        <a href="#pricing" class="px-4 py-2 rounded-full bg-white text-black font-semibold text-xs tracking-tight hover:bg-[#BCC388] active:scale-95 spring-trans flex items-center gap-1.5 shadow-lg shadow-white/10">
+          <span>Get DayXero</span>
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="relative z-10 flex-1">
+
+    <!-- HERO SECTION WITH DUAL-TONE DESKTOP SHOWCASE (Matching Image 7 & 8) -->
+    <section id="hero" class="relative pt-32 pb-16 md:pt-40 md:pb-24 px-4 flex flex-col items-center">
+      
+      <!-- Subtle Ambient Top Status Pill -->
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#161616] border border-white/15 text-xs font-medium text-white/80 mb-8 backdrop-blur-md shadow-lg">
+        <span class="w-2 h-2 rounded-full bg-[#BCC388] animate-ping"></span>
+        <span class="text-[#BCC388] font-bold">2026 Native iOS Protocol</span>
+        <span class="text-white/20">|</span>
+        <span class="text-white/80">Don't quit today. Quit on your Quit Day.</span>
+      </div>
+
+      <!-- MASTER HEADLINE (Directly matching typography in Image 7) -->
+      <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-center text-white max-w-5xl leading-[1.05] mb-6">
+        Engineered for <br class="hidden sm:inline" />
+        <span class="text-white">Strength,</span> <span class="text-white/40">Focus</span> <br class="hidden sm:inline" />
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-[#BCC388]">And Longevity.</span>
+      </h1>
+
+      <p class="text-base sm:text-lg md:text-xl text-white/60 text-center max-w-2xl font-normal leading-relaxed mb-12">
+        A clinical recovery system designed in biophilic minimalism. Active prep-phase conditioning, zero-reset slip architecture, and 3-minute ACT urge surfing for vapers, pouch users, and smokers.
+      </p>
+
+      <!-- COLOR SYSTEM PALETTE STRIP (Directly from Image 3) -->
+      <div class="flex items-center justify-center mb-16">
+        <div class="flex items-center p-1 rounded-full bg-[#121212] border border-white/15 shadow-2xl">
+          <div class="flex items-center h-8 rounded-full overflow-hidden text-[10px] font-mono font-semibold">
+            <span class="px-4 h-full flex items-center bg-white text-black">White #FFFFFF</span>
+            <span class="px-4 h-full flex items-center bg-[#BCC388] text-black">White Green #BCC388</span>
+            <span class="px-4 h-full flex items-center bg-[#43511C] text-white">Dark Green #43511C</span>
+            <span class="px-4 h-full flex items-center bg-black text-white/70">Black #000000</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- FLAGSHIP DUAL-PANE SHOWCASE CONTAINER (Matching Image 7 Website Presentation) -->
+      <div id="showcase" class="w-full max-w-5xl relative">
+        
+        <!-- The Dual-Tone Monitor Canvas -->
+        <div class="rounded-[40px] border-[5px] border-[#222222] bg-[#0E0E0E] shadow-[0_30px_100px_rgba(0,0,0,0.95)] overflow-hidden relative">
+          
+          <div class="grid grid-cols-1 lg:grid-cols-2 relative min-h-[520px]">
+            
+            <!-- LEFT PANE: PURE PORCELAIN WHITE LUXURY (#FFFFFF with Black text) -->
+            <div class="porcelain-card p-8 sm:p-12 flex flex-col justify-between relative overflow-hidden">
+              
+              <!-- Top Left Header Cluster -->
+              <div class="flex items-center justify-between mb-8">
+                <div class="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center font-extrabold text-sm shadow">
+                  <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M6 3v18"/>
+                    <circle cx="13" cy="14" r="7"/>
+                  </svg>
+                </div>
+                <div class="flex items-center gap-4 text-xs font-mono text-black/50">
+                  <span class="hover:text-black cursor-pointer">FORMULA</span>
+                  <span class="hover:text-black cursor-pointer">PERFORMANCE</span>
+                  <span class="hover:text-black cursor-pointer">RESEARCH</span>
+                </div>
+              </div>
+
+              <!-- Main Editorial Hero Title (From Image 7) -->
+              <div class="my-auto py-6">
+                <div class="text-[11px] font-mono tracking-widest uppercase text-black/40 mb-2">CLINICALLY FORMULATED</div>
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black leading-[1.08] tracking-tight mb-4">
+                  Engineered <span class="text-black/40 font-normal">For</span> <br/>
+                  Strength, Focus <br/>
+                  And Longevity
+                </h2>
+                <p class="text-xs sm:text-sm text-black/70 leading-relaxed max-w-sm mb-6">
+                  Premature quitting leads to 95% relapse. DayXero prepares your neurochemistry during an active prep phase before your Quit Day.
+                </p>
+
+                <!-- Signature Black Pill Button with White Circular Arrow (Exact match to Image 7) -->
+                <a href="#interactive-preview" class="inline-flex items-center gap-3 pl-6 pr-2 py-2 rounded-full bg-black text-white font-semibold text-xs tracking-tight hover:bg-[#202020] active:scale-95 spring-trans group shadow-xl">
+                  <span>Explore Program</span>
+                  <div class="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center group-hover:translate-x-1 spring-trans shadow">
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                  </div>
+                </a>
+              </div>
+
+              <!-- Bottom Proof Chips on White -->
+              <div class="flex items-center gap-2 pt-6 border-t border-black/10 text-[11px] font-mono text-black/60">
+                <span class="px-2.5 py-1 rounded-full bg-black/5">7-Day Protocol</span>
+                <span class="px-2.5 py-1 rounded-full bg-black/5">0-Reset Slips</span>
+                <span class="px-2.5 py-1 rounded-full bg-black/5">100% Offline</span>
+              </div>
+            </div>
+
+            <!-- RIGHT PANE: OLED DARK LUXURY (#0C0C0C with White/Green elements) -->
+            <div class="bg-[#0C0C0C] p-8 sm:p-12 flex flex-col justify-between relative overflow-hidden border-t lg:border-t-0 lg:border-l border-white/10">
+              
+              <!-- Top Right Controls -->
+              <div class="flex items-center justify-between lg:justify-end gap-3 mb-8">
+                <div class="flex items-center gap-2 bg-[#161616] border border-white/10 px-3 py-1.5 rounded-full text-xs text-white/50">
+                  <i data-lucide="search" class="w-3.5 h-3.5"></i>
+                  <span class="font-mono text-[10px]">Search Biomarkers...</span>
+                </div>
+                <div class="w-8 h-8 rounded-full bg-[#161616] border border-white/10 flex items-center justify-center text-white/60">
+                  <i data-lucide="user" class="w-4 h-4"></i>
+                </div>
+              </div>
+
+              <!-- Product Floating Cards (Matching right-side cards in Image 7 & 9) -->
+              <div class="space-y-4 my-auto py-4">
+                
+                <!-- Card 1: Solid White Product Card (from Image 9) -->
+                <div class="porcelain-card p-4 rounded-2xl flex items-center justify-between relative shadow-lg">
+                  <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#43511C] to-[#121212] flex items-center justify-center text-[#BCC388] shadow-inner">
+                      <i data-lucide="shield-check" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                      <div class="text-[9px] font-mono uppercase text-black/50">ACTIVE PREP FORMULA</div>
+                      <div class="text-sm font-bold text-black">Day 4: Urge Surfing Mastery</div>
+                      <div class="text-[11px] text-black/70">4 min audio exercise · Unlocked</div>
+                    </div>
+                  </div>
+                  <div class="w-8 h-8 rounded-full bg-[#BCC388] text-black font-bold text-xs flex items-center justify-center shadow">
+                    1
+                  </div>
+                </div>
+
+                <!-- Card 2: Dark Green Glass Metric Card -->
+                <div class="glass-card-green p-4 rounded-2xl flex items-center justify-between">
+                  <div>
+                    <div class="text-[9px] font-mono text-[#BCC388] uppercase tracking-wider mb-0.5">CURRENT ADHERENCE</div>
+                    <div class="text-2xl font-extrabold text-white flex items-baseline gap-1">
+                      <span>4</span><span class="text-sm font-normal text-white/40">/ 7 Days</span>
+                    </div>
+                    <div class="text-[11px] text-white/70">3 days remaining until Quit Day</div>
+                  </div>
+                  <div class="text-right">
+                    <span class="text-xs font-mono font-bold text-[#BCC388]">82% COMPLETE</span>
+                    <div class="w-24 h-1.5 bg-white/10 rounded-full overflow-hidden mt-1.5">
+                      <div class="h-full bg-[#BCC388] rounded-full w-[82%]"></div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Bottom Right Manifesto Text (Matching Image 7 text) -->
+              <div class="pt-6 border-t border-white/10">
+                <p class="text-xs text-white/50 leading-relaxed">
+                  Engineered to support neurochemical stabilization, focus, cardiovascular health, and long-term nicotine independence for modern high performers.
+                </p>
+              </div>
+
+            </div>
+
+            <!-- CENTER FLOATING GLASS AMPOULE (The Signature Bottle from Image 7) -->
+            <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none hidden md:block">
+              <div class="w-56 h-64 relative flex items-center justify-center filter drop-shadow-[0_20px_40px_rgba(0,0,0,0.85)]">
+                
+                <!-- Bottle Glass Body Container -->
+                <div class="w-40 h-52 rounded-[36px] bg-gradient-to-b from-[#43511C]/90 via-[#2C3812]/95 to-[#161E0A] border-2 border-[#BCC388]/40 relative overflow-hidden shadow-2xl flex flex-col justify-between p-4">
+                  
+                  <!-- Top Specular Glass Reflection Sheen -->
+                  <div class="absolute inset-x-0 top-0 h-24 glass-specular rounded-t-[34px] pointer-events-none"></div>
+                  
+                  <!-- Bottle Cap -->
+                  <div class="w-24 h-6 rounded-t-xl bg-[#141414] border border-white/20 mx-auto -mt-6 shadow-md flex items-center justify-center">
+                    <div class="w-16 h-1 bg-white/20 rounded-full"></div>
+                  </div>
+
+                  <!-- Center Monogram on Bottle -->
+                  <div class="text-center my-auto">
+                    <div class="w-8 h-8 rounded-full bg-black/40 border border-[#BCC388]/30 mx-auto flex items-center justify-center text-[#BCC388] text-xs font-bold mb-2">
+                      b
+                    </div>
+                    <div class="text-xs font-extrabold text-white tracking-wide">Daily Formula</div>
+                    <div class="text-[9px] font-mono text-[#BCC388]/80 uppercase mt-0.5">Nicotine Recovery</div>
+                  </div>
+
+                  <!-- Bottom Label -->
+                  <div class="text-center text-[8px] font-mono text-white/40 tracking-widest border-t border-white/10 pt-1">
+                    DAYXERO · 100% PREP
+                  </div>
+                </div>
+
+                <!-- Floating + Tag Badge (From Image 7) -->
+                <div class="absolute bottom-6 right-2 w-8 h-8 rounded-full bg-[#181818] border border-white/20 text-white flex items-center justify-center shadow-lg">
+                  <i data-lucide="plus" class="w-4 h-4 text-[#BCC388]"></i>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- THE LIVING MOSS BED PEDESTAL (Directly matching Image 7 & 8) -->
+        <div class="relative w-full h-32 -mt-6 rounded-b-[40px] moss-pedestal overflow-hidden z-10 flex flex-col justify-end pb-4 items-center">
+          <!-- 2D Procedural Moss Tufts Canvas -->
+          <canvas id="moss-pedestal-canvas" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
+          
+          <!-- Floating circular buttons on moss (Matching Image 8) -->
+          <div class="relative z-20 flex items-center gap-3">
+            <button class="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center shadow-xl hover:scale-110 spring-trans" title="Adherence Chart">
+              <i data-lucide="trending-up" class="w-4 h-4"></i>
+            </button>
+            <button class="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center shadow-xl hover:scale-110 spring-trans" title="Quick Log">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+            </button>
+            <button class="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center shadow-xl hover:scale-110 spring-trans" title="Search Protocol">
+              <i data-lucide="search" class="w-4 h-4"></i>
+            </button>
+            <button class="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center shadow-xl hover:scale-110 spring-trans" title="Supplies & NRT">
+              <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- INTERACTIVE APP SHOWCASE (Phone in Hand with Alternating White/Dark Cards - Image 6 & 9) -->
+    <section id="interactive-preview" class="py-20 md:py-32 relative px-4 flex flex-col items-center">
+      
+      <div class="text-center max-w-2xl mb-12">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#161616] border border-white/10 text-xs font-mono text-[#BCC388] mb-3">
+          <span>HIGH-CONTRAST UI ARCHITECTURE</span>
+        </div>
+        <h2 class="text-3xl md:text-5xl font-extrabold tracking-tight text-white mb-4">
+          Experience DayXero Native in Hand
+        </h2>
+        <p class="text-sm md:text-base text-white/60">
+          Notice how crisp porcelain white cards alternate with deep OLED surfaces and tactile sage green chips to create supreme visual elegance.
+        </p>
+
+        <!-- Product Switcher Chips -->
+        <div class="flex items-center justify-center gap-2 mt-6">
+          <button data-product="vape" class="product-pill px-5 py-2 rounded-full text-xs font-medium bg-white text-black spring-trans shadow">
+            Vape (Puffs)
+          </button>
+          <button data-product="cigs" class="product-pill px-5 py-2 rounded-full text-xs font-medium bg-[#161616] text-white/60 hover:text-white border border-white/10 spring-trans">
+            Cigarettes (Sticks)
+          </button>
+          <button data-product="pouches" class="product-pill px-5 py-2 rounded-full text-xs font-medium bg-[#161616] text-white/60 hover:text-white border border-white/10 spring-trans">
+            Nicotine Pouches (mg)
+          </button>
+        </div>
+      </div>
+
+      <!-- PHONE SIMULATOR CONTAINER -->
+      <div class="relative w-full max-w-[390px] h-[780px] bg-black rounded-[52px] border-[6px] border-[#222222] flex flex-col overflow-hidden device-screen">
+        
+        <!-- Status Bar -->
+        <div class="h-11 w-full flex items-center justify-between px-7 pt-2 select-none z-30 shrink-0">
+          <span class="text-xs font-semibold tracking-tight text-white/90">9:41</span>
+          <!-- Dynamic Island Notch -->
+          <div class="w-24 h-5 bg-[#121212] rounded-full border border-white/10 flex items-center justify-between px-2.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#BCC388] animate-ping"></span>
+            <span class="text-[9px] font-mono text-white/70">DayXero</span>
+            <div class="w-2.5 h-2.5 rounded-full bg-[#202020]"></div>
+          </div>
+          <div class="flex items-center gap-1.5 text-white/80">
+            <i data-lucide="wifi" class="w-3.5 h-3.5"></i>
+            <i data-lucide="battery-charging" class="w-4 h-4 text-[#BCC388]"></i>
+          </div>
+        </div>
+
+        <!-- APP SCREEN CONTENT VIEWPORT (Scrollable) -->
+        <div id="app-viewport" class="flex-1 overflow-y-auto px-5 pt-2 pb-24 relative select-none">
+          
+          <!-- TAB 1: TODAY / HOME VIEW (With Moss Landscape Header & White Cards) -->
+          <div id="screen-today" class="app-screen block">
+            
+            <!-- User Header with White Action Badge (from Image 6) -->
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <div class="text-[10px] font-mono text-white/40 uppercase tracking-wider">Good morning</div>
+                <div class="text-2xl font-extrabold text-white tracking-tight">Milan C.</div>
+              </div>
+              <div class="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center font-bold text-xs shadow-lg">
+                <i data-lucide="trending-up" class="w-5 h-5"></i>
+              </div>
+            </div>
+
+            <!-- Rolling Moss Landscape Header Section (Directly from Image 6) -->
+            <div class="w-full h-28 rounded-2xl relative overflow-hidden mb-4 border border-[#BCC388]/20">
+              <canvas id="phone-moss-canvas" class="w-full h-full"></canvas>
+              <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+              
+              <!-- Floating Quick Pills over Moss Header -->
+              <div class="absolute bottom-2.5 left-3 flex items-center gap-2">
+                <span class="px-2.5 py-1 rounded-full bg-black/75 backdrop-blur-md text-[10px] font-mono text-[#BCC388] border border-white/10">
+                  0/6 Cravings Today
+                </span>
+                <span class="px-2.5 py-1 rounded-full bg-black/75 backdrop-blur-md text-[10px] font-mono text-white/80 border border-white/10">
+                  Next: 2h
+                </span>
+              </div>
+            </div>
+
+            <!-- RHYTHM CARD 1: SOLID PORCELAIN WHITE CARD (Matching Image 9 top card!) -->
+            <div class="porcelain-card p-4 rounded-card mb-4 relative overflow-hidden">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[9px] font-mono uppercase tracking-widest text-black/50">PREP PROGRAM · DAY 4</span>
+                <span class="px-2 py-0.5 rounded-full bg-[#BCC388] text-black text-[10px] font-bold">UNLOCKED</span>
+              </div>
+              <div class="text-base font-extrabold text-black mb-1">Notice & Name the Craving</div>
+              <p class="text-xs text-black/70 mb-3">ACT-style cognitive defusion exercise. 3 min audio session.</p>
+              
+              <button id="btn-start-lesson-demo" class="w-full py-2.5 rounded-full bg-black text-white font-semibold text-xs hover:bg-[#222222] active:scale-95 spring-trans flex items-center justify-center gap-2 shadow">
+                <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>
+                <span>Start Today's Lesson (3:45)</span>
+              </button>
+            </div>
+
+            <!-- RHYTHM CARD 2: DARK GREEN GLASS HERO FRACTION (Matching Image 6!) -->
+            <div class="glass-card-green rounded-card p-4 mb-4">
+              <div class="flex justify-between items-start mb-3">
+                <div>
+                  <div class="text-[9px] font-mono text-[#BCC388] tracking-widest uppercase">SMOKE-FREE PREP STREAK</div>
+                  <div class="flex items-baseline gap-1 mt-0.5">
+                    <span class="text-3xl font-extrabold text-white">4</span>
+                    <span class="text-base font-normal text-white/40">/ 7 Days</span>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <div class="text-[10px] font-mono text-white/50 uppercase">ADHERENCE</div>
+                  <div class="text-sm font-bold text-[#BCC388]">82%</div>
+                </div>
+              </div>
+
+              <!-- Linear Adherence Bar (From Image 6) -->
+              <div class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                <div class="h-full bg-white rounded-full w-[82%]"></div>
+              </div>
+            </div>
+
+            <!-- RHYTHM CARD 3: DUAL-CHAMBER PILL CARTRIDGE CARD (From Image 6) -->
+            <div class="bg-[#121212] border border-white/10 rounded-card p-3.5 flex items-center justify-between mb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-[#181818] border border-white/10 flex items-center justify-center text-[#BCC388]">
+                  <i data-lucide="sparkles" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-white">Nicotine Clearance Taper</div>
+                  <div class="text-[10px] text-white/50">Next milestone: Lung Cilia Surge (in 3h)</div>
+                </div>
+              </div>
+              <div class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-white/60">
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+              </div>
+            </div>
+
+            <!-- Per-Product Counter Cards -->
+            <div class="grid grid-cols-3 gap-2">
+              <div class="bg-[#141414] border border-white/5 p-3 rounded-2xl text-center">
+                <div id="app-counter-units" class="text-lg font-bold text-white">0</div>
+                <div id="app-counter-unit-label" class="text-[9px] text-white/40 uppercase font-mono mt-0.5">Puffs today</div>
+              </div>
+              <div class="bg-[#141414] border border-white/5 p-3 rounded-2xl text-center">
+                <div class="text-lg font-bold text-[#BCC388]">$28.40</div>
+                <div class="text-[9px] text-white/40 uppercase font-mono mt-0.5">Money Saved</div>
+              </div>
+              <div class="bg-[#141414] border border-white/5 p-3 rounded-2xl text-center">
+                <div class="text-lg font-bold text-white">16h</div>
+                <div class="text-[9px] text-white/40 uppercase font-mono mt-0.5">Clean Air</div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- TAB 2: CRAVING SOS / URGE SURFER VIEW -->
+          <div id="screen-cravings" class="app-screen hidden">
+            <div class="text-center pt-2 mb-4">
+              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#C85A54]/20 border border-[#C85A54]/30 text-[10px] font-semibold text-[#C85A54] uppercase tracking-wider mb-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#C85A54] animate-ping"></span>
+                <span>Urge Surfing in Progress</span>
+              </div>
+              <div class="text-xl font-bold text-white">Ride the Wave</div>
+              <div class="text-xs text-white/50">Cravings peak and fade within 3 minutes.</div>
+            </div>
+
+            <!-- Interactive Circular Timer & Breath Animation -->
+            <div class="flex flex-col items-center justify-center my-6">
+              <div class="relative w-44 h-44 flex items-center justify-center">
+                <div class="absolute inset-0 rounded-full border border-[#BCC388]/20 animate-ping opacity-30"></div>
+                <div class="absolute inset-2 rounded-full border border-[#BCC388]/30"></div>
+                
+                <div class="w-36 h-36 rounded-full bg-[#121212] border border-white/10 flex flex-col items-center justify-center shadow-inner">
+                  <span id="sos-timer-display" class="font-mono text-3xl font-bold text-white">02:47</span>
+                  <span id="sos-phase-display" class="text-[10px] font-mono text-[#BCC388] tracking-widest uppercase mt-0.5">Breathe In...</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Personal Anchor Card -->
+            <div class="porcelain-card rounded-card p-3.5 mb-5 text-center shadow-lg">
+              <div class="text-[9px] font-mono text-black/50 uppercase mb-0.5">YOUR PERSONAL PROMISE</div>
+              <p class="text-xs italic text-black/90 font-medium">"For my marathon training, clean mornings, and deep lung recovery."</p>
+            </div>
+
+            <!-- Dual Outcome Buttons -->
+            <div class="grid grid-cols-2 gap-2.5">
+              <button id="btn-sos-passed" class="py-3 px-2 rounded-full bg-[#BCC388] text-black font-bold text-xs hover:bg-white active:scale-95 spring-trans flex items-center justify-center gap-1 shadow">
+                <i data-lucide="check" class="w-4 h-4"></i>
+                <span>It Passed</span>
+              </button>
+              <button id="btn-sos-slipped" class="py-3 px-2 rounded-full bg-[#161616] text-[#C85A54] border border-[#C85A54]/30 font-semibold text-xs hover:bg-[#1E1E1E] active:scale-95 spring-trans flex items-center justify-center gap-1">
+                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                <span>I Slipped</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- TAB 3: 7-DAY PROGRAM VIEW -->
+          <div id="screen-program" class="app-screen hidden">
+            <div class="text-left mb-4">
+              <div class="text-[10px] font-mono text-white/40 uppercase">CURRICULUM</div>
+              <div class="text-xl font-bold text-white">The 7-Day Protocol</div>
+              <div class="text-xs text-white/50">Each day unlocks once the previous is completed.</div>
+            </div>
+
+            <div class="space-y-2.5">
+              <!-- Day 1 -->
+              <div class="bg-[#141414] border border-white/5 p-3.5 rounded-2xl flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-full bg-[#BCC388] text-black font-bold text-xs flex items-center justify-center">✓</div>
+                  <div>
+                    <div class="text-xs font-semibold text-white">Day 1: Mapping Triggers</div>
+                    <div class="text-[10px] text-white/40">Completed</div>
+                  </div>
+                </div>
+                <span class="text-[10px] font-mono text-[#BCC388]">Done</span>
+              </div>
+
+              <!-- Day 2 -->
+              <div class="bg-[#141414] border border-white/5 p-3.5 rounded-2xl flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-full bg-[#BCC388] text-black font-bold text-xs flex items-center justify-center">✓</div>
+                  <div>
+                    <div class="text-xs font-semibold text-white">Day 2: The Physical Wave</div>
+                    <div class="text-[10px] text-white/40">Completed</div>
+                  </div>
+                </div>
+                <span class="text-[10px] font-mono text-[#BCC388]">Done</span>
+              </div>
+
+              <!-- Day 3 -->
+              <div class="bg-[#141414] border border-white/5 p-3.5 rounded-2xl flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-full bg-[#BCC388] text-black font-bold text-xs flex items-center justify-center">✓</div>
+                  <div>
+                    <div class="text-xs font-semibold text-white">Day 3: NRT Step-Down Plan</div>
+                    <div class="text-[10px] text-white/40">Completed</div>
+                  </div>
+                </div>
+                <span class="text-[10px] font-mono text-[#BCC388]">Done</span>
+              </div>
+
+              <!-- Day 4 (Active in White!) -->
+              <div class="porcelain-card p-3.5 rounded-2xl flex items-center justify-between shadow-lg">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-full bg-black text-white font-bold text-xs flex items-center justify-center">4</div>
+                  <div>
+                    <div class="text-xs font-extrabold text-black">Day 4: Urge Surfing Practice</div>
+                    <div class="text-[10px] text-black/60 font-semibold">Today's Active Lesson</div>
+                  </div>
+                </div>
+                <span class="text-[10px] font-bold text-white px-2.5 py-0.5 bg-black rounded-full">Start</span>
+              </div>
+
+              <!-- Day 5 (Locked) -->
+              <div class="bg-[#101010] border border-white/5 p-3.5 rounded-2xl flex items-center justify-between opacity-50">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-full bg-[#1A1A1A] text-white/40 font-bold text-xs flex items-center justify-center">
+                    <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+                  </div>
+                  <div>
+                    <div class="text-xs font-semibold text-white/60">Day 5: Night Before Quit Day</div>
+                    <div class="text-[10px] text-white/30">Unlocks tomorrow</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 4: CALENDAR & STREAKS (From Image 9) -->
+          <div id="screen-calendar" class="app-screen hidden">
+            <div class="text-left mb-3">
+              <div class="text-[10px] font-mono text-white/40 uppercase">INTAKE & STREAK TRACKER</div>
+              <div class="text-xl font-bold text-white">October 2026</div>
+              <div class="text-xs text-white/50">Slips never reset your progress.</div>
+            </div>
+
+            <!-- Weekly 7-Day Pill Strip (From Image 9) -->
+            <div class="bg-[#121212] border border-white/5 rounded-card p-3.5 mb-4">
+              <div class="grid grid-cols-7 gap-1 text-center mb-2">
+                <span class="text-[10px] font-mono text-white/40">Mo</span>
+                <span class="text-[10px] font-mono text-white/40">Tu</span>
+                <span class="text-[10px] font-mono text-white/40">We</span>
+                <span class="text-[10px] font-mono text-white/40">Th</span>
+                <span class="text-[10px] font-mono text-white/40">Fr</span>
+                <span class="text-[10px] font-mono text-white/40">Sa</span>
+                <span class="text-[10px] font-mono text-white/40">Su</span>
+              </div>
+              <div class="grid grid-cols-7 gap-1 place-items-center">
+                <div class="w-8 h-8 rounded-full bg-[#BCC388] text-black font-bold text-xs flex items-center justify-center">19</div>
+                <div class="w-8 h-8 rounded-full bg-[#BCC388] text-black font-bold text-xs flex items-center justify-center">20</div>
+                <div class="w-8 h-8 rounded-full bg-[#BCC388] text-black font-bold text-xs flex items-center justify-center">21</div>
+                <!-- Slip: Muted Terracotta (Compassionate) -->
+                <div class="w-8 h-8 rounded-full bg-[#C85A54] text-white font-bold text-xs flex items-center justify-center" title="1 Slip logged - Streak intact">22</div>
+                <div class="w-8 h-8 rounded-full bg-[#BCC388] text-black font-bold text-xs flex items-center justify-center">23</div>
+                <!-- Active Day: Solid Brilliant White circle (Image 9) -->
+                <div class="w-8 h-8 rounded-full bg-white text-black font-bold text-xs flex items-center justify-center shadow-lg ring-2 ring-[#BCC388]">24</div>
+                <div class="w-8 h-8 rounded-full bg-[#1A1A1A] text-white/40 font-bold text-xs flex items-center justify-center">25</div>
+              </div>
+            </div>
+
+            <!-- Zero-Reset Callout in White Card -->
+            <div class="p-3.5 rounded-2xl porcelain-card flex items-start gap-3 mb-4 shadow">
+              <i data-lucide="shield-check" class="w-4 h-4 text-black shrink-0 mt-0.5"></i>
+              <div class="text-xs text-black/80 leading-relaxed">
+                <span class="font-bold text-black">Thursday Slip (Oct 22):</span> Logged & debriefed in 60s. Your 6-day streak continues unbroken.
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 5: BODY TIMELINE -->
+          <div id="screen-timeline" class="app-screen hidden">
+            <div class="text-left mb-3">
+              <div class="text-[10px] font-mono text-white/40 uppercase">EVIDENCE-BASED RECOVERY</div>
+              <div class="text-xl font-bold text-white">Body Timeline</div>
+              <div class="text-xs text-white/50">Verified clinical milestones with public sources.</div>
+            </div>
+
+            <div class="space-y-3">
+              <div class="p-3.5 rounded-2xl porcelain-card shadow">
+                <div class="flex justify-between items-center text-[10px] font-mono text-black/60 mb-1">
+                  <span class="font-bold text-black">20 MINUTES</span>
+                  <span>AHA Citation</span>
+                </div>
+                <div class="text-xs font-bold text-black">Heart Rate & Blood Pressure Drop</div>
+                <div class="text-[11px] text-black/70 mt-1">Peripheral circulation begins to normalize.</div>
+              </div>
+
+              <div class="p-3.5 rounded-2xl bg-[#121212] border border-white/10">
+                <div class="flex justify-between items-center text-[10px] font-mono text-[#BCC388] mb-1">
+                  <span>8 HOURS</span>
+                  <span class="text-white/40">WHO Citation</span>
+                </div>
+                <div class="text-xs font-semibold text-white">Carbon Monoxide Clears by 50%</div>
+                <div class="text-[11px] text-white/50 mt-1">Blood oxygen levels return to healthy baseline.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MORPHING FLOATING DOCK (Exact Signature Specification) -->
+        <div class="absolute bottom-5 inset-x-0 flex justify-center z-40 px-4 pointer-events-none">
+          <nav class="pointer-events-auto flex items-center gap-1.5 p-1.5 rounded-full bg-black/95 backdrop-blur-2xl border border-white/15 shadow-2xl">
+            
+            <button data-tab="today" class="nav-tab spring-trans flex items-center justify-center w-11 h-14 bg-white text-black rounded-full shadow-lg" title="Today">
+              <i data-lucide="home" class="w-5 h-5"></i>
+            </button>
+
+            <button data-tab="cravings" class="nav-tab spring-trans flex items-center justify-center w-11 h-11 bg-[#121212] text-white/40 hover:text-white rounded-full border border-white/5" title="Craving SOS">
+              <i data-lucide="waves" class="w-5 h-5"></i>
+            </button>
+
+            <button data-tab="program" class="nav-tab spring-trans flex items-center justify-center w-11 h-11 bg-[#121212] text-white/40 hover:text-white rounded-full border border-white/5" title="7-Day Program">
+              <i data-lucide="book-open" class="w-5 h-5"></i>
+            </button>
+
+            <button data-tab="calendar" class="nav-tab spring-trans flex items-center justify-center w-11 h-11 bg-[#121212] text-white/40 hover:text-white rounded-full border border-white/5" title="Calendar Streak">
+              <i data-lucide="calendar" class="w-5 h-5"></i>
+            </button>
+
+            <button data-tab="timeline" class="nav-tab spring-trans flex items-center justify-center w-11 h-11 bg-[#121212] text-white/40 hover:text-white rounded-full border border-white/5" title="Health Timeline">
+              <i data-lucide="activity" class="w-5 h-5"></i>
+            </button>
+          </nav>
+        </div>
+
+        <!-- Simulated Home Bar -->
+        <div class="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/30 rounded-full pointer-events-none"></div>
+      </div>
+    </section>
+
+    <!-- METHODOLOGY: 4 NON-NEGOTIABLE PILLARS WITH WHITE/DARK CARD RHYTHM -->
+    <section id="methodology" class="py-20 md:py-32 max-w-5xl mx-auto px-4">
+      
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#161616] border border-white/10 text-xs font-mono text-[#BCC388] mb-3">
+          <span>CLINICAL ARCHITECTURE</span>
+        </div>
+        <h2 class="text-3xl md:text-5xl font-extrabold tracking-tight text-white mb-4">
+          Why DayXero Succeeds Where Trackers Fail
+        </h2>
+        <p class="text-sm md:text-base text-white/60">
+          Stand-alone counter apps barely alter long-term quit rates. Lasting freedom requires neurological prep, non-punitive slip psychology, and evidence-based urge riding.
+        </p>
+      </div>
+
+      <!-- Alternating White & Dark Cards Grid (Instant Flair!) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Pillar 1: PORCELAIN WHITE CARD -->
+        <div class="porcelain-card p-8 rounded-card relative overflow-hidden group hover:scale-[1.02] spring-trans">
+          <div class="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center mb-6 shadow">
+            <i data-lucide="calendar-check" class="w-6 h-6"></i>
+          </div>
+          <div class="text-[11px] font-mono uppercase tracking-widest text-black/50 mb-2">PILLAR ONE</div>
+          <h3 class="text-2xl font-extrabold text-black mb-3">Don't Quit Today. Quit on Quit Day.</h3>
+          <p class="text-sm text-black/70 leading-relaxed">
+            Abrupt cold-turkey quit attempts create immediate anxiety and executive dysfunction. In DayXero, you continue your baseline habit while completing a 5-day cognitive prep phase that dismantles conditioning before your Quit Day.
+          </p>
+        </div>
+
+        <!-- Pillar 2: DARK GREEN GLASS CARD -->
+        <div class="glass-card-green p-8 rounded-card relative overflow-hidden group hover:scale-[1.02] spring-trans">
+          <div class="w-12 h-12 rounded-full bg-[#161616] border border-[#BCC388]/30 flex items-center justify-center text-[#BCC388] mb-6 shadow">
+            <i data-lucide="shield" class="w-6 h-6"></i>
+          </div>
+          <div class="text-[11px] font-mono uppercase tracking-widest text-[#BCC388] mb-2">PILLAR TWO</div>
+          <h3 class="text-2xl font-extrabold text-white mb-3">The Non-Punitive Slip Law</h3>
+          <p class="text-sm text-white/70 leading-relaxed">
+            The #1 complaint across competitor apps is streak resets that induce the "Abstinence Violation Effect". In DayXero, a slip is simply data. Your streak remains intact while a 60-second debrief isolates the trigger.
+          </p>
+        </div>
+
+        <!-- Pillar 3: DEEP CHARCOAL OLED CARD -->
+        <div class="dark-card p-8 rounded-card relative overflow-hidden group hover:scale-[1.02] spring-trans">
+          <div class="w-12 h-12 rounded-full bg-white text-black flex items-center justify-center mb-6 shadow">
+            <i data-lucide="waves" class="w-6 h-6"></i>
+          </div>
+          <div class="text-[11px] font-mono uppercase tracking-widest text-white/50 mb-2">PILLAR THREE</div>
+          <h3 class="text-2xl font-extrabold text-white mb-3">ACT Urge Surfing Over Willpower</h3>
+          <p class="text-sm text-white/60 leading-relaxed">
+            Fighting an urge fuels obsessive craving. Acceptance and Commitment Therapy (ACT) teaches you to view a craving like an ocean wave: observe the physical sensations, breathe through the 90-second peak, and watch it naturally dissipate.
+          </p>
+        </div>
+
+        <!-- Pillar 4: PORCELAIN WHITE CARD -->
+        <div class="porcelain-card p-8 rounded-card relative overflow-hidden group hover:scale-[1.02] spring-trans">
+          <div class="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center mb-6 shadow">
+            <i data-lucide="pill" class="w-6 h-6"></i>
+          </div>
+          <div class="text-[11px] font-mono uppercase tracking-widest text-black/50 mb-2">PILLAR FOUR</div>
+          <h3 class="text-2xl font-extrabold text-black mb-3">NRT & Pouch Taper Co-Pilot</h3>
+          <p class="text-sm text-black/70 leading-relaxed">
+            Nicotine Replacement Therapy (patches, gums, inhalers) double cessation rates when stepped down systematically. DayXero pairs official manufacturer taper schedules and pouch mg step-downs with intelligent reminder cues.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- INTERACTIVE 2D URGE-SURFING BREATH CHAMBER -->
+    <section id="breath-chamber" class="py-20 md:py-32 bg-[#080808] border-y border-white/10 relative overflow-hidden px-4">
+      
+      <div class="max-w-4xl mx-auto flex flex-col items-center text-center">
+        
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#161616] border border-white/10 text-xs font-mono text-[#BCC388] mb-4">
+          <i data-lucide="activity" class="w-3.5 h-3.5"></i>
+          <span>PHYSIOLOGICAL PACER</span>
+        </div>
+
+        <h2 class="text-3xl md:text-5xl font-extrabold tracking-tight text-white mb-4">
+          The 3-Minute Urge Surfer
+        </h2>
+        <p class="text-sm md:text-base text-white/60 max-w-xl mb-8">
+          When an intense craving strikes, follow the 2D biophilic wave circle to down-regulate your sympathetic nervous system.
+        </p>
+
+        <!-- Breathing Pattern Selector Chips -->
+        <div class="flex flex-wrap items-center justify-center gap-2 mb-10">
+          <button data-pattern="box" class="pattern-pill px-4 py-2 rounded-full text-xs font-semibold bg-white text-black spring-trans shadow">
+            4-4-4-4 Box Breathing (Focus)
+          </button>
+          <button data-pattern="478" class="pattern-pill px-4 py-2 rounded-full text-xs font-semibold bg-[#161616] text-white/60 hover:text-white border border-white/10 spring-trans">
+            4-7-8 Deep Calm (Urge Peak)
+          </button>
+          <button data-pattern="wave" class="pattern-pill px-4 py-2 rounded-full text-xs font-semibold bg-[#161616] text-white/60 hover:text-white border border-white/10 spring-trans">
+            ACT Wave Riding (Continuous)
+          </button>
+        </div>
+
+        <!-- 2D Canvas Wave Visualizer -->
+        <div class="relative w-72 h-72 sm:w-80 sm:h-80 flex items-center justify-center mb-8">
+          <canvas id="breath-canvas" class="w-full h-full"></canvas>
+          
+          <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+            <span id="breath-phase-text" class="text-sm font-bold tracking-wide text-white uppercase font-mono">Inhale</span>
+            <span id="breath-counter-number" class="text-5xl font-extrabold text-[#BCC388] font-mono mt-1">4</span>
+            <span id="breath-cycle-label" class="text-[11px] text-white/40 mt-1">Cycle 1 of 4</span>
+          </div>
+        </div>
+
+        <!-- Interactive Session Controls -->
+        <div class="flex items-center gap-3">
+          <button id="btn-toggle-breath" class="px-8 py-3.5 rounded-full bg-white text-black font-bold text-xs tracking-tight hover:bg-[#BCC388] active:scale-95 spring-trans flex items-center gap-2 shadow-xl">
+            <i data-lucide="play" id="breath-play-icon" class="w-4 h-4 fill-current"></i>
+            <span id="breath-btn-label">Start Surfing Session</span>
+          </button>
+          <button id="btn-reset-breath" class="px-5 py-3.5 rounded-full bg-[#161616] text-white/60 hover:text-white border border-white/10 text-xs font-medium active:scale-95 spring-trans">
+            Reset
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- EVIDENCE-BASED BODY RECOVERY TIMELINE -->
+    <section id="recovery-timeline" class="py-20 md:py-32 max-w-5xl mx-auto px-4">
+      
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#161616] border border-white/10 text-xs font-mono text-[#BCC388] mb-3">
+          <span>MEDICAL GROUNDING</span>
+        </div>
+        <h2 class="text-3xl md:text-5xl font-extrabold tracking-tight text-white mb-4">
+          What Happens in Your Body
+        </h2>
+        <p class="text-sm md:text-base text-white/60">
+          Drag the recovery scrubber to witness how your cardiovascular, respiratory, and nervous systems heal with verified public citations.
+        </p>
+      </div>
+
+      <!-- Interactive Scrubber Bar -->
+      <div class="bg-[#121212] border border-white/10 rounded-card p-6 md:p-8 mb-8 shadow-2xl">
+        
+        <div class="flex justify-between items-center mb-6">
+          <div class="text-xs font-mono text-white/40 uppercase tracking-wider">RECOVERY SCRUBBER</div>
+          <div class="px-3.5 py-1.5 rounded-full bg-[#BCC388] text-black text-xs font-mono font-bold shadow" id="timeline-time-badge">
+            48 Hours
+          </div>
+        </div>
+
+        <div class="relative w-full mb-8">
+          <input type="range" id="timeline-slider" min="0" max="6" value="3" step="1" class="w-full h-2 bg-white/10 rounded-full appearance-none cursor-pointer accent-[#BCC388]">
+          <div class="flex justify-between text-[10px] font-mono text-white/40 mt-2 px-1">
+            <span>20m</span>
+            <span>8h</span>
+            <span>24h</span>
+            <span>48h</span>
+            <span>72h</span>
+            <span>2w</span>
+            <span>1yr</span>
+          </div>
+        </div>
+
+        <!-- Dynamic Timeline Card Details in Crisp Porcelain White -->
+        <div id="timeline-detail-card" class="porcelain-card rounded-2xl p-6 transition-all duration-300 shadow-xl">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+            <h3 id="timeline-detail-title" class="text-lg font-extrabold text-black">Nerve Endings Regrow & Sensory Receptors Awaken</h3>
+            <span id="timeline-detail-source" class="text-[11px] font-mono text-black font-semibold bg-[#BCC388] px-3 py-1 rounded-full self-start shadow-sm">Source: CDC Cessation Guidelines</span>
+          </div>
+          <p id="timeline-detail-desc" class="text-sm text-black/75 leading-relaxed mb-4">
+            Damaged nerve endings begin physiological regeneration. Your sense of smell and taste sharpen noticeably. Nicotine is 100% eliminated from bodily tissues.
+          </p>
+          <div class="flex items-center gap-4 text-xs font-mono text-black/60 pt-3 border-t border-black/10">
+            <div class="flex items-center gap-1.5">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-black"></i>
+              <span id="timeline-detail-stat" class="font-bold">CO Level: 0.0 ppm</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <i data-lucide="heart" class="w-4 h-4 text-black"></i>
+              <span>Pulse Normalized</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CALCULATOR: FINANCIAL & LIFE REGAINED -->
+    <section id="calculator" class="py-20 md:py-32 bg-[#0A0A0A] border-t border-white/5 px-4">
+      <div class="max-w-4xl mx-auto">
+        
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#161616] border border-white/10 text-xs font-mono text-[#BCC388] mb-3">
+            <span>MEASURABLE VALUE</span>
+          </div>
+          <h2 class="text-3xl md:text-5xl font-extrabold tracking-tight text-white mb-4">
+            Calculate Your Freedom
+          </h2>
+          <p class="text-sm md:text-base text-white/60">
+            Adjust your daily baseline consumption to calculate money kept and hours of active life regained.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+          
+          <!-- Inputs Column -->
+          <div class="md:col-span-6 dark-card p-6 md:p-8 rounded-card space-y-6">
+            
+            <div>
+              <label class="block text-xs font-mono text-white/50 uppercase tracking-wider mb-2">Nicotine Product</label>
+              <div class="grid grid-cols-3 gap-2">
+                <button data-calc-product="vape" class="calc-type-btn py-2 rounded-full text-xs font-semibold bg-white text-black spring-trans shadow">Vape</button>
+                <button data-calc-product="cigs" class="calc-type-btn py-2 rounded-full text-xs font-semibold bg-[#161616] text-white/60 border border-white/10 spring-trans">Cigarettes</button>
+                <button data-calc-product="pouches" class="calc-type-btn py-2 rounded-full text-xs font-semibold bg-[#161616] text-white/60 border border-white/10 spring-trans">Pouches</button>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs font-mono text-white/60 mb-2">
+                <span id="calc-consumption-label">Daily Pods / Sticks</span>
+                <span id="calc-consumption-val" class="font-bold text-white text-sm">1 pack / 20 sticks</span>
+              </div>
+              <input type="range" id="calc-slider-units" min="1" max="50" value="20" class="w-full h-2 bg-white/10 rounded-full appearance-none cursor-pointer accent-[#BCC388]">
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs font-mono text-white/60 mb-2">
+                <span>Cost Per Pack / Pod</span>
+                <span id="calc-cost-val" class="font-bold text-white text-sm">$12.00</span>
+              </div>
+              <input type="range" id="calc-slider-cost" min="3" max="30" value="12" step="0.5" class="w-full h-2 bg-white/10 rounded-full appearance-none cursor-pointer accent-[#BCC388]">
+            </div>
+
+          </div>
+
+          <!-- Output Card (Luminous White Card!) -->
+          <div class="md:col-span-6 porcelain-card p-6 md:p-8 rounded-card flex flex-col justify-between shadow-2xl">
+            <div>
+              <div class="text-[10px] font-mono text-black/50 tracking-widest uppercase mb-1">ANNUAL PROJECTION</div>
+              <div class="text-4xl md:text-6xl font-extrabold text-black tracking-tight" id="calc-result-annual-money">
+                $4,380
+              </div>
+              <div class="text-xs text-black/70 mt-1 font-medium">Direct cash remaining in your bank account yearly.</div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 my-8 pt-6 border-t border-black/10">
+              <div>
+                <div class="text-[10px] font-mono text-black/40 uppercase">UNITS AVOIDED</div>
+                <div class="text-2xl font-extrabold text-black mt-0.5" id="calc-result-units">7,300</div>
+                <div class="text-[11px] text-black/60">Pods / Sticks</div>
+              </div>
+              <div>
+                <div class="text-[10px] font-mono text-black/40 uppercase">TIME RECLAIMED</div>
+                <div class="text-2xl font-extrabold text-black mt-0.5" id="calc-result-time">608 hrs</div>
+                <div class="text-[11px] text-black/60">25 full days of life</div>
+              </div>
+            </div>
+
+            <button id="btn-calc-commit" class="w-full py-3.5 rounded-full bg-black text-white font-bold text-xs tracking-tight hover:bg-[#222222] active:scale-95 spring-trans shadow-lg">
+              Pledge to Keep This Capital
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PRICING & SUBSCRIPTIONS (With White Hero Card!) -->
+    <section id="pricing" class="py-20 md:py-32 max-w-5xl mx-auto px-4">
+      
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#161616] border border-white/10 text-xs font-mono text-[#BCC388] mb-3">
+          <span>HONEST MONETIZATION</span>
+        </div>
+        <h2 class="text-3xl md:text-5xl font-extrabold tracking-tight text-white mb-4">
+          Transparent, Fair Pricing. No Billing Traps.
+        </h2>
+        <p class="text-sm md:text-base text-white/60">
+          Billing trickery was the #1 theme in competitor complaints. DayXero offers a genuinely useful free tier, 2-tap Apple cancellation, and zero advertising.
+        </p>
+      </div>
+
+      <!-- Pricing Cards Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+        
+        <!-- Tier 1: Monthly -->
+        <div class="dark-card p-6 rounded-card flex flex-col justify-between">
+          <div>
+            <div class="text-xs font-mono uppercase text-white/40 mb-2">MONTHLY PROGRAM</div>
+            <div class="text-3xl font-extrabold text-white mb-1">$9.99<span class="text-sm font-normal text-white/40">/mo</span></div>
+            <p class="text-xs text-white/60 mb-6">Flexibility to pay as you progress through maintenance.</p>
+            
+            <ul class="space-y-3 text-xs text-white/70 mb-6">
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-[#BCC388]"></i> Full 7-Day Protocol & Audio</li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-[#BCC388]"></i> Unlimited Urge-Surfing SOS</li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-[#BCC388]"></i> NRT & Pouch Step-Down Plans</li>
+            </ul>
+          </div>
+
+          <button class="btn-purchase w-full py-3 rounded-full bg-[#1A1A1A] text-white/90 border border-white/10 font-semibold text-xs hover:bg-[#222222] spring-trans" data-plan="Monthly">
+            Select Monthly
+          </button>
+        </div>
+
+        <!-- Tier 2: Annual (LUMINOUS PORCELAIN WHITE CARD!) -->
+        <div class="porcelain-card p-6 md:p-8 rounded-card flex flex-col justify-between relative shadow-2xl scale-105 border-4 border-[#BCC388] z-20">
+          <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 py-1 rounded-full bg-black text-[#BCC388] text-[10px] font-mono font-bold uppercase tracking-wider shadow">
+            RECOMMENDED · 3-DAY TRIAL
+          </div>
+
+          <div>
+            <div class="text-xs font-mono uppercase text-black/50 mb-2 mt-2">ANNUAL MASTERY</div>
+            <div class="text-4xl font-extrabold text-black mb-1">$39.99<span class="text-sm font-normal text-black/50">/yr</span></div>
+            <div class="text-xs text-black font-mono font-bold mb-6">$3.33/month · Save 67%</div>
+            
+            <ul class="space-y-3 text-xs text-black/80 font-medium mb-6">
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-black"></i> 3-Day Free Trial Included</li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-black"></i> Full 4-Week Maintenance Arc</li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-black"></i> Advanced Craving Heatmaps</li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-black"></i> Live Activity & Dynamic Island</li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-black"></i> Priority Feature Updates</li>
+            </ul>
+          </div>
+
+          <button class="btn-purchase w-full py-3.5 rounded-full bg-black text-white font-extrabold text-xs tracking-tight hover:bg-[#202020] active:scale-95 spring-trans shadow-xl" data-plan="Annual">
+            Start 3-Day Free Trial
+          </button>
+        </div>
+
+        <!-- Tier 3: Lifetime -->
+        <div class="dark-card p-6 rounded-card flex flex-col justify-between">
+          <div>
+            <div class="text-xs font-mono uppercase text-white/40 mb-2">LIFETIME ACCESS</div>
+            <div class="text-3xl font-extrabold text-white mb-1">$79.99<span class="text-sm font-normal text-white/40"> once</span></div>
+            <p class="text-xs text-white/60 mb-6">Pay once, own forever. Zero recurring charges.</p>
+            
+            <ul class="space-y-3 text-xs text-white/70 mb-6">
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-[#BCC388]"></i> Permanent Unrestricted Access</li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-[#BCC388]"></i> All Future Program Additions</li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-[#BCC388]"></i> Family Sharing Capable</li>
+            </ul>
+          </div>
+
+          <button class="btn-purchase w-full py-3 rounded-full bg-[#1A1A1A] text-white/90 border border-white/10 font-semibold text-xs hover:bg-[#222222] spring-trans" data-plan="Lifetime">
+            Get Lifetime
+          </button>
+        </div>
+
+      </div>
+
+      <div class="mt-8 text-center text-xs text-white/40">
+        Looking for the free tier? The base DayXero download includes the core counter, emergency Craving SOS, and Day 1 of the prep program completely free.
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-white/10 bg-black py-16 px-4 relative z-10 text-white/60">
+    <div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+      
+      <div class="flex flex-col gap-2">
+        <div class="flex items-center gap-3">
+          <div class="w-7 h-7 rounded-full bg-white text-black flex items-center justify-center font-bold text-xs">
+            b
+          </div>
+          <span class="font-bold text-white tracking-tight">DayXero</span>
+        </div>
+        <p class="text-xs text-white/40 max-w-sm">
+          Quit on your Quit Day. Biophilic minimalism engineered for nicotine recovery across cigarettes, vapes, and pouches.
+        </p>
+      </div>
+
+      <div class="flex flex-wrap gap-6 text-xs text-white/60 font-medium">
+        <a href="#hero" class="hover:text-white spring-trans">Back to top</a>
+        <a href="#showcase" class="hover:text-white spring-trans">Showcase</a>
+        <a href="#methodology" class="hover:text-white spring-trans">Philosophy</a>
+        <a href="#interactive-preview" class="hover:text-white spring-trans">Live App</a>
+        <a href="#breath-chamber" class="hover:text-white spring-trans">Breath Pacer</a>
+        <a href="#pricing" class="hover:text-white spring-trans">Subscription Plans</a>
+      </div>
+    </div>
+
+    <div class="max-w-5xl mx-auto mt-12 pt-6 border-t border-white/5 text-[11px] text-white/30 flex flex-col sm:flex-row justify-between gap-4">
+      <div>
+        Medical Disclaimer: DayXero provides educational habit and wellness support, not diagnostic medical treatment. Always consult a healthcare professional regarding NRT dosing and smoking cessation.
+      </div>
+      <div class="shrink-0">
+        © 2026 DayXero. Local-first & Private.
+      </div>
+    </div>
+  </footer>
+
+  <!-- INTERACTIVE TOAST NOTIFICATION CONTAINER -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 pointer-events-none flex flex-col gap-2"></div>
+
+  <!-- JAVASCRIPT: 2D PROCEDURAL MOSS, INTERACTION & AUDIO SYNTHESIS -->
+  <script>
+    // 1. WEB AUDIO API SYNTHESIZER (432Hz Calm Frequency & Clicks)
+    let audioCtx = null;
+    let isSoundOn = false;
+    let ambientOsc1 = null;
+    let ambientOsc2 = null;
+    let masterGain = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        try {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          audioCtx = new AudioContext();
+          masterGain = audioCtx.createGain();
+          masterGain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+          masterGain.connect(audioCtx.destination);
+        } catch(e) {}
+      }
+    }
+
+    function playTactileClick() {
+      if (!audioCtx) return;
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(240, audioCtx.currentTime + 0.04);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.05);
+      } catch(e) {}
+    }
+
+    function toggleAmbientSound() {
+      initAudio();
+      if (!audioCtx) return;
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+
+      const btn = document.getElementById('btn-audio-toggle');
+      const icon = document.getElementById('audio-icon');
+
+      if (!isSoundOn) {
+        ambientOsc1 = audioCtx.createOscillator();
+        ambientOsc2 = audioCtx.createOscillator();
+        const droneGain = audioCtx.createGain();
+        
+        ambientOsc1.type = 'sine';
+        ambientOsc1.frequency.setValueAtTime(216, audioCtx.currentTime);
+        ambientOsc2.type = 'triangle';
+        ambientOsc2.frequency.setValueAtTime(432, audioCtx.currentTime);
+        
+        droneGain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+        droneGain.gain.exponentialRampToValueAtTime(0.03, audioCtx.currentTime + 1.5);
+        
+        ambientOsc1.connect(droneGain);
+        ambientOsc2.connect(droneGain);
+        droneGain.connect(masterGain);
+        
+        ambientOsc1.start();
+        ambientOsc2.start();
+        
+        isSoundOn = true;
+        btn.classList.add('border-[#BCC388]', 'text-[#BCC388]');
+        showToast('Calming 432Hz Soundscape Active');
+        if (icon) icon.setAttribute('data-lucide', 'volume-2');
+      } else {
+        if (ambientOsc1) ambientOsc1.stop(audioCtx.currentTime + 0.5);
+        if (ambientOsc2) ambientOsc2.stop(audioCtx.currentTime + 0.5);
+        isSoundOn = false;
+        btn.classList.remove('border-[#BCC388]', 'text-[#BCC388]');
+        showToast('Sound Muted');
+        if (icon) icon.setAttribute('data-lucide', 'volume-x');
+      }
+      lucide.createIcons();
+    }
+    document.getElementById('btn-audio-toggle').addEventListener('click', toggleAmbientSound);
+
+    // 2. PROCEDURAL LIVING MOSS PEDESTAL CANVAS (From Image 7 & 8)
+    const mossCanvas = document.getElementById('moss-pedestal-canvas');
+    if (mossCanvas) {
+      const mctx = mossCanvas.getContext('2d');
+      let mw, mh;
+      let mtime = 0;
+
+      function resizeMoss() {
+        mw = mossCanvas.width = mossCanvas.offsetWidth;
+        mh = mossCanvas.height = mossCanvas.offsetHeight;
+      }
+      window.addEventListener('resize', resizeMoss);
+      resizeMoss();
+
+      function drawMossHedge() {
+        mtime += 0.01;
+        mctx.clearRect(0, 0, mw, mh);
+
+        // Volumetric green glow
+        const glow = mctx.createRadialGradient(mw / 2, mh * 0.5, 20, mw / 2, mh * 0.5, mw * 0.6);
+        glow.addColorStop(0, 'rgba(188, 195, 136, 0.25)');
+        glow.addColorStop(0.5, 'rgba(67, 81, 28, 0.15)');
+        glow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        mctx.fillStyle = glow;
+        mctx.fillRect(0, 0, mw, mh);
+
+        // Multi-layered moss waves with organic leafy tufts
+        for (let layer = 0; layer < 3; layer++) {
+          mctx.beginPath();
+          mctx.moveTo(0, mh);
+          const yBase = mh * (0.35 + layer * 0.22);
+          for (let x = 0; x <= mw; x += 12) {
+            const y = yBase + Math.sin(x * 0.02 + mtime + layer) * 8 + Math.cos(x * 0.05) * 4;
+            mctx.lineTo(x, y);
+          }
+          mctx.lineTo(mw, mh);
+          mctx.closePath();
+
+          if (layer === 0) mctx.fillStyle = 'rgba(43, 58, 18, 0.9)';
+          if (layer === 1) mctx.fillStyle = 'rgba(67, 81, 28, 0.95)';
+          if (layer === 2) mctx.fillStyle = 'rgba(188, 195, 136, 0.35)';
+          mctx.fill();
+        }
+
+        requestAnimationFrame(drawMossHedge);
+      }
+      drawMossHedge();
+    }
+
+    // 3. PHONE MOSS HEADER CANVAS (From Image 6)
+    const phoneMoss = document.getElementById('phone-moss-canvas');
+    if (phoneMoss) {
+      const pctx = phoneMoss.getContext('2d');
+      phoneMoss.width = 350;
+      phoneMoss.height = 112;
+      let ptime = 0;
+
+      function drawPhoneMoss() {
+        ptime += 0.008;
+        pctx.clearRect(0, 0, 350, 112);
+
+        // Gradient Background
+        const grad = pctx.createLinearGradient(0, 0, 0, 112);
+        grad.addColorStop(0, '#1E280C');
+        grad.addColorStop(0.6, '#43511C');
+        grad.addColorStop(1, '#000000');
+        pctx.fillStyle = grad;
+        pctx.fillRect(0, 0, 350, 112);
+
+        // Hill 1
+        pctx.beginPath();
+        pctx.moveTo(0, 112);
+        for (let x = 0; x <= 350; x += 10) {
+          const y = 50 + Math.sin(x * 0.015 + ptime) * 18 + Math.cos(x * 0.03) * 6;
+          pctx.lineTo(x, y);
+        }
+        pctx.lineTo(350, 112);
+        pctx.closePath();
+        pctx.fillStyle = 'rgba(188, 195, 136, 0.45)';
+        pctx.fill();
+
+        // Hill 2
+        pctx.beginPath();
+        pctx.moveTo(0, 112);
+        for (let x = 0; x <= 350; x += 8) {
+          const y = 68 + Math.sin(x * 0.02 - ptime * 1.2) * 15;
+          pctx.lineTo(x, y);
+        }
+        pctx.lineTo(350, 112);
+        pctx.closePath();
+        pctx.fillStyle = 'rgba(40, 52, 16, 0.95)';
+        pctx.fill();
+
+        requestAnimationFrame(drawPhoneMoss);
+      }
+      drawPhoneMoss();
+    }
+
+    // 4. MORPHING DOCK & APP VIEWPORT CONTROLS
+    const navTabs = document.querySelectorAll('.nav-tab');
+    const screens = {
+      today: document.getElementById('screen-today'),
+      cravings: document.getElementById('screen-cravings'),
+      program: document.getElementById('screen-program'),
+      calendar: document.getElementById('screen-calendar'),
+      timeline: document.getElementById('screen-timeline'),
+    };
+
+    navTabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        playTactileClick();
+        const targetId = tab.getAttribute('data-tab');
+
+        navTabs.forEach((t) => {
+          t.className = 'nav-tab spring-trans flex items-center justify-center w-11 h-11 bg-[#121212] text-white/40 hover:text-white rounded-full border border-white/5';
+        });
+
+        tab.className = 'nav-tab spring-trans flex items-center justify-center w-11 h-14 bg-white text-black rounded-full shadow-lg';
+
+        Object.keys(screens).forEach((key) => {
+          if (screens[key]) {
+            if (key === targetId) {
+              screens[key].classList.remove('hidden');
+              screens[key].classList.add('block');
+            } else {
+              screens[key].classList.add('hidden');
+              screens[key].classList.remove('block');
+            }
+          }
+        });
+      });
+    });
+
+    // Product Switcher inside Phone Preview
+    const productPills = document.querySelectorAll('.product-pill');
+    const unitCounter = document.getElementById('app-counter-units');
+    const unitLabel = document.getElementById('app-counter-unit-label');
+
+    productPills.forEach((pill) => {
+      pill.addEventListener('click', () => {
+        playTactileClick();
+        productPills.forEach((p) => {
+          p.className = 'product-pill px-5 py-2 rounded-full text-xs font-medium bg-[#161616] text-white/60 hover:text-white border border-white/10 spring-trans';
+        });
+        pill.className = 'product-pill px-5 py-2 rounded-full text-xs font-semibold bg-white text-black spring-trans shadow';
+
+        const prod = pill.getAttribute('data-product');
+        if (prod === 'vape') {
+          unitCounter.textContent = '0';
+          unitLabel.textContent = 'Puffs today';
+          showToast('Switched to Vape Mode');
+        } else if (prod === 'cigs') {
+          unitCounter.textContent = '0';
+          unitLabel.textContent = 'Cigarettes today';
+          showToast('Switched to Cigarettes Mode');
+        } else if (prod === 'pouches') {
+          unitCounter.textContent = '0';
+          unitLabel.textContent = 'Pouches today';
+          showToast('Switched to Nicotine Pouches Mode');
+        }
+      });
+    });
+
+    document.getElementById('btn-start-lesson-demo').addEventListener('click', () => {
+      playTactileClick();
+      showToast('Playing Lesson 4: Notice & Name the Craving');
+    });
+
+    document.getElementById('btn-sos-passed').addEventListener('click', () => {
+      playTactileClick();
+      showToast('Victory Logged! (+1 Smoke-Free Day Recorded)');
+    });
+
+    document.getElementById('btn-sos-slipped').addEventListener('click', () => {
+      playTactileClick();
+      showToast('Slip Logged. Streak Intact! 60s Debrief Active.');
+    });
+
+    // 5. 2D URGE-SURFING BREATH CHAMBER (Canvas & Waves)
+    const breathCanvas = document.getElementById('breath-canvas');
+    let breathCtx = null;
+    let breathRunning = false;
+    let breathInterval = null;
+    let currentPattern = 'box';
+    let currentPhase = 'Inhale';
+    let phaseSecondsRemaining = 4;
+    let cycleCount = 1;
+
+    const patternConfigs = {
+      box: { inhale: 4, hold1: 4, exhale: 4, hold2: 4 },
+      '478': { inhale: 4, hold1: 7, exhale: 8, hold2: 0 },
+      wave: { inhale: 5, hold1: 2, exhale: 5, hold2: 2 },
+    };
+
+    if (breathCanvas) {
+      breathCtx = breathCanvas.getContext('2d');
+      breathCanvas.width = 320;
+      breathCanvas.height = 320;
+
+      function drawBreathWave(scale = 1.0) {
+        if (!breathCtx) return;
+        breathCtx.clearRect(0, 0, 320, 320);
+
+        const cx = 160;
+        const cy = 160;
+        const baseRadius = 75 * scale;
+
+        // Outer soft glow
+        const glow = breathCtx.createRadialGradient(cx, cy, 20, cx, cy, baseRadius * 1.5);
+        glow.addColorStop(0, 'rgba(188, 195, 136, 0.3)');
+        glow.addColorStop(0.7, 'rgba(67, 81, 28, 0.15)');
+        glow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        breathCtx.fillStyle = glow;
+        breathCtx.beginPath();
+        breathCtx.arc(cx, cy, baseRadius * 1.5, 0, Math.PI * 2);
+        breathCtx.fill();
+
+        // Concentric Rings
+        breathCtx.strokeStyle = 'rgba(188, 195, 136, 0.5)';
+        breathCtx.lineWidth = 1.5;
+        breathCtx.beginPath();
+        breathCtx.arc(cx, cy, baseRadius * 1.15, 0, Math.PI * 2);
+        breathCtx.stroke();
+
+        breathCtx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+        breathCtx.setLineDash([4, 4]);
+        breathCtx.beginPath();
+        breathCtx.arc(cx, cy, baseRadius * 1.35, 0, Math.PI * 2);
+        breathCtx.stroke();
+        breathCtx.setLineDash([]);
+
+        // Core circle
+        const coreGrad = breathCtx.createRadialGradient(cx, cy, 5, cx, cy, baseRadius);
+        coreGrad.addColorStop(0, '#FFFFFF');
+        coreGrad.addColorStop(0.3, '#BCC388');
+        coreGrad.addColorStop(0.85, '#43511C');
+        coreGrad.addColorStop(1, '#1A240C');
+        breathCtx.fillStyle = coreGrad;
+        breathCtx.beginPath();
+        breathCtx.arc(cx, cy, baseRadius, 0, Math.PI * 2);
+        breathCtx.fill();
+        breathCtx.strokeStyle = '#FFFFFF';
+        breathCtx.lineWidth = 2;
+        breathCtx.stroke();
+      }
+      drawBreathWave(1.0);
+    }
+
+    const btnToggleBreath = document.getElementById('btn-toggle-breath');
+    const btnResetBreath = document.getElementById('btn-reset-breath');
+    const breathPhaseText = document.getElementById('breath-phase-text');
+    const breathCounterNum = document.getElementById('breath-counter-number');
+    const breathCycleLabel = document.getElementById('breath-cycle-label');
+    const breathBtnLabel = document.getElementById('breath-btn-label');
+    const breathPlayIcon = document.getElementById('breath-play-icon');
+
+    function updateBreathStep() {
+      const cfg = patternConfigs[currentPattern];
+      phaseSecondsRemaining--;
+      if (phaseSecondsRemaining <= 0) {
+        if (currentPhase === 'Inhale') {
+          currentPhase = cfg.hold1 > 0 ? 'Hold' : 'Exhale';
+          phaseSecondsRemaining = cfg.hold1 > 0 ? cfg.hold1 : cfg.exhale;
+        } else if (currentPhase === 'Hold') {
+          currentPhase = 'Exhale';
+          phaseSecondsRemaining = cfg.exhale;
+        } else if (currentPhase === 'Exhale') {
+          if (cfg.hold2 > 0) {
+            currentPhase = 'Rest';
+            phaseSecondsRemaining = cfg.hold2;
+          } else {
+            currentPhase = 'Inhale';
+            phaseSecondsRemaining = cfg.inhale;
+            cycleCount++;
+          }
+        } else if (currentPhase === 'Rest') {
+          currentPhase = 'Inhale';
+          phaseSecondsRemaining = cfg.inhale;
+          cycleCount++;
+        }
+      }
+
+      breathPhaseText.textContent = currentPhase;
+      breathCounterNum.textContent = phaseSecondsRemaining;
+      breathCycleLabel.textContent = `Cycle ${cycleCount} of 4`;
+
+      let targetScale = 1.0;
+      if (currentPhase === 'Inhale' || currentPhase === 'Hold') targetScale = 1.35;
+      if (currentPhase === 'Exhale' || currentPhase === 'Rest') targetScale = 0.85;
+      drawBreathWave(targetScale);
+    }
+
+    btnToggleBreath.addEventListener('click', () => {
+      playTactileClick();
+      initAudio();
+      breathRunning = !breathRunning;
+
+      if (breathRunning) {
+        breathBtnLabel.textContent = 'Pause Surfing Session';
+        breathPlayIcon.setAttribute('data-lucide', 'pause');
+        breathInterval = setInterval(updateBreathStep, 1000);
+        showToast('Urge Surfing Active. Down-regulating nervous system.');
+      } else {
+        breathBtnLabel.textContent = 'Resume Surfing Session';
+        breathPlayIcon.setAttribute('data-lucide', 'play');
+        clearInterval(breathInterval);
+      }
+      lucide.createIcons();
+    });
+
+    btnResetBreath.addEventListener('click', () => {
+      playTactileClick();
+      clearInterval(breathInterval);
+      breathRunning = false;
+      currentPhase = 'Inhale';
+      phaseSecondsRemaining = patternConfigs[currentPattern].inhale;
+      cycleCount = 1;
+      breathBtnLabel.textContent = 'Start Surfing Session';
+      breathPlayIcon.setAttribute('data-lucide', 'play');
+      breathPhaseText.textContent = 'Inhale';
+      breathCounterNum.textContent = '4';
+      breathCycleLabel.textContent = 'Cycle 1 of 4';
+      drawBreathWave(1.0);
+      lucide.createIcons();
+      showToast('Breath pacer reset');
+    });
+
+    const patternPills = document.querySelectorAll('.pattern-pill');
+    patternPills.forEach((p) => {
+      p.addEventListener('click', () => {
+        playTactileClick();
+        patternPills.forEach((btn) => {
+          btn.className = 'pattern-pill px-4 py-2 rounded-full text-xs font-semibold bg-[#161616] text-white/60 hover:text-white border border-white/10 spring-trans';
+        });
+        p.className = 'pattern-pill px-4 py-2 rounded-full text-xs font-semibold bg-white text-black spring-trans shadow';
+        currentPattern = p.getAttribute('data-pattern');
+        phaseSecondsRemaining = patternConfigs[currentPattern].inhale;
+        breathCounterNum.textContent = phaseSecondsRemaining;
+        showToast(`Pattern: ${p.textContent.trim()}`);
+      });
+    });
+
+    // 6. RECOVERY TIMELINE SCRUBBER
+    const timelineData = [
+      {
+        time: '20 Minutes',
+        title: 'Heart Rate Drops & Peripheral Circulation Awakens',
+        source: 'American Heart Association (AHA)',
+        desc: 'Within 20 minutes of your last cigarette, vape session, or pouch, blood pressure and heart rate settle toward normal resting levels. Constricted capillaries in extremities open up.',
+        stat: 'Pulse: Settling to Normal',
+      },
+      {
+        time: '8 Hours',
+        title: 'Carbon Monoxide Drops by 50%',
+        source: 'World Health Organization (WHO)',
+        desc: 'Carbon monoxide molecules release hemoglobin bonds in your blood. Cellular oxygen saturation climbs back toward normal capacity, immediately relieving myocardial strain.',
+        stat: 'CO Reduction: 50% Cleared',
+      },
+      {
+        time: '24 Hours',
+        title: 'Myocardial Infarction (Heart Attack) Risk Declines',
+        source: 'CDC Tobacco Free Guidelines',
+        desc: 'Just one full day clear, your risk of acute coronary events begins its steep decline. Bronchial passages commence clearing residual aerosol deposits.',
+        stat: 'Cardiac Strain: -35%',
+      },
+      {
+        time: '48 Hours',
+        title: 'Nerve Endings Regrow & Sensory Receptors Awaken',
+        source: 'CDC Cessation Guidelines',
+        desc: 'Damaged nerve endings begin physiological regeneration. Your sense of smell and taste sharpen noticeably. Nicotine is 100% eliminated from bodily tissues.',
+        stat: 'Tissue Nicotine: 0.0 mg',
+      },
+      {
+        time: '72 Hours',
+        title: 'Bronchial Relaxation & Respiratory Ease',
+        source: 'National Health Service (NHS)',
+        desc: 'Breathing becomes easier as the bronchial tree relaxes and lung volume capacity increases. Physical nicotine withdrawal reaches its zenith and commences rapid decline.',
+        stat: 'Lung Capacity: +15%',
+      },
+      {
+        time: '2-12 Weeks',
+        title: 'Circulation & Pulmonary Function Expand Significantly',
+        source: 'American Cancer Society (ACS)',
+        desc: 'Walking and exercise stamina increase by up to 30%. Coughing fits, wheezing, and throat clearing subside. Micro-cilia in airways are fully restored and cleaning the lungs.',
+        stat: 'Walking Endurance: +30%',
+      },
+      {
+        time: '1 Year',
+        title: 'Excess Risk of Coronary Heart Disease Cut in Half',
+        source: 'American Heart Association (AHA)',
+        desc: 'Your excess risk of ischemic heart disease is now half that of a continuing user. Blood vessel flexibility is restored to near non-smoker baselines.',
+        stat: 'Coronary Risk: Cut by 50%',
+      },
+    ];
+
+    const timelineSlider = document.getElementById('timeline-slider');
+    const timelineBadge = document.getElementById('timeline-time-badge');
+    const timelineTitle = document.getElementById('timeline-detail-title');
+    const timelineSource = document.getElementById('timeline-detail-source');
+    const timelineDesc = document.getElementById('timeline-detail-desc');
+    const timelineStat = document.getElementById('timeline-detail-stat');
+
+    if (timelineSlider) {
+      timelineSlider.addEventListener('input', (e) => {
+        const idx = parseInt(e.target.value, 10);
+        const item = timelineData[idx];
+        if (item) {
+          timelineBadge.textContent = item.time;
+          timelineTitle.textContent = item.title;
+          timelineSource.textContent = `Source: ${item.source}`;
+          timelineDesc.textContent = item.desc;
+          timelineStat.textContent = item.stat;
+        }
+      });
+    }
+
+    // 7. FINANCIAL & TIME SAVED CALCULATOR
+    let calcProduct = 'vape';
+    const sliderUnits = document.getElementById('calc-slider-units');
+    const sliderCost = document.getElementById('calc-slider-cost');
+    const consumptionLabel = document.getElementById('calc-consumption-label');
+    const consumptionVal = document.getElementById('calc-consumption-val');
+    const costVal = document.getElementById('calc-cost-val');
+    const resultMoney = document.getElementById('calc-result-annual-money');
+    const resultUnits = document.getElementById('calc-result-units');
+    const resultTime = document.getElementById('calc-result-time');
+
+    function updateCalculator() {
+      const units = parseFloat(sliderUnits.value);
+      const cost = parseFloat(sliderCost.value);
+
+      if (calcProduct === 'vape') {
+        consumptionLabel.textContent = 'Pods / Tanks per week';
+        consumptionVal.textContent = `${units} pods/wk`;
+        costVal.textContent = `$${cost.toFixed(2)}/pod`;
+        const annualMoney = units * cost * 52;
+        const annualUnits = units * 52;
+        const hoursSaved = Math.round(annualUnits * 1.5);
+        resultMoney.textContent = `$${annualMoney.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+        resultUnits.textContent = `${annualUnits.toLocaleString('en-US')}`;
+        resultTime.textContent = `${hoursSaved} hrs`;
+      } else if (calcProduct === 'cigs') {
+        consumptionLabel.textContent = 'Cigarettes per day';
+        consumptionVal.textContent = `${units} sticks/day`;
+        costVal.textContent = `$${cost.toFixed(2)}/pack`;
+        const packsPerDay = units / 20;
+        const annualMoney = packsPerDay * cost * 365;
+        const annualUnits = units * 365;
+        const hoursSaved = Math.round((annualUnits * 11) / 60);
+        resultMoney.textContent = `$${annualMoney.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+        resultUnits.textContent = `${annualUnits.toLocaleString('en-US')}`;
+        resultTime.textContent = `${hoursSaved} hrs`;
+      } else if (calcProduct === 'pouches') {
+        consumptionLabel.textContent = 'Pouches per day';
+        consumptionVal.textContent = `${units} pouches/day`;
+        costVal.textContent = `$${cost.toFixed(2)}/tin`;
+        const tinsPerDay = units / 15;
+        const annualMoney = tinsPerDay * cost * 365;
+        const annualUnits = units * 365;
+        const hoursSaved = Math.round(annualUnits * 0.4);
+        resultMoney.textContent = `$${annualMoney.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+        resultUnits.textContent = `${annualUnits.toLocaleString('en-US')}`;
+        resultTime.textContent = `${hoursSaved} hrs`;
+      }
+    }
+
+    const calcButtons = document.querySelectorAll('.calc-type-btn');
+    calcButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        playTactileClick();
+        calcButtons.forEach((b) => {
+          b.className = 'calc-type-btn py-2 rounded-full text-xs font-semibold bg-[#161616] text-white/60 border border-white/10 spring-trans';
+        });
+        btn.className = 'calc-type-btn py-2 rounded-full text-xs font-semibold bg-white text-black spring-trans shadow';
+        calcProduct = btn.getAttribute('data-calc-product');
+        updateCalculator();
+      });
+    });
+
+    if (sliderUnits && sliderCost) {
+      sliderUnits.addEventListener('input', updateCalculator);
+      sliderCost.addEventListener('input', updateCalculator);
+    }
+
+    document.getElementById('btn-calc-commit').addEventListener('click', () => {
+      playTactileClick();
+      showToast('Capital Pledge Recorded! Vault Updated.');
+    });
+
+    const purchaseButtons = document.querySelectorAll('.btn-purchase');
+    purchaseButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        playTactileClick();
+        const plan = btn.getAttribute('data-plan');
+        showToast(`Selected ${plan} Plan. Ready for App Store Checkout.`);
+      });
+    });
+
+    // 8. TOAST NOTIFICATION HELPER
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+
+      const toast = document.createElement('div');
+      toast.className = 'pointer-events-auto flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-[#181818] border border-[#BCC388]/40 shadow-2xl text-xs font-medium text-white transition-all duration-300 transform translate-y-4 opacity-0';
+      toast.innerHTML = `
+        <span class="w-2 h-2 rounded-full bg-[#BCC388]"></span>
+        <span>${message}</span>
+      `;
+
+      container.appendChild(toast);
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-4', 'opacity-0');
+      });
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
