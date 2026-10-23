@@ -88,7 +88,7 @@ struct PledgeView: View {
             .accessibilityHint(Text("Double-tap to pledge"))
             .accessibilityAddTraits(.isButton)
             .accessibilityAction { pledge() }
-            Text(pledged ? " " : "Press and hold to pledge").dxText(.subtitle, color: .white.opacity(0.75))
+            Text(pledged ? " " : "Press and hold to pledge").dxText(.subtitle, color: .white.opacity(0.75)).multilineTextAlignment(.center).fixedSize(horizontal: false, vertical: true)
         }
         .disabled(pledged)
     }
