@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-23T06:33:58.147Z"
+    "updated": "2026-10-23T06:40:17.291Z"
   },
   "now": {
     "section": "S5",
@@ -695,7 +695,12 @@
         "state": "not_started",
         "history": []
       },
-      "mockups": [],
+      "mockups": [
+        {
+          "title": "Craving SOS: session, outcomes, Live Activity, ways in",
+          "path": "mockups/S6/sos.html"
+        }
+      ],
       "tasks": [
         {
           "id": "S6.1",
@@ -1221,6 +1226,11 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-23T06:40:17.291Z",
+      "type": "mockup",
+      "message": "S6 mockup posted: Craving SOS: session, outcomes, Live Activity, ways in"
+    },
     {
       "time": "2026-10-23T06:33:58.147Z",
       "type": "status",
