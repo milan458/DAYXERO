@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-23T09:07:29.662Z"
+    "updated": "2026-10-23T09:18:42.292Z"
   },
   "now": {
     "section": "S5",
@@ -922,42 +922,42 @@
         {
           "id": "S9.1",
           "title": "NRT setup: patch, gum, lozenge, inhaler; strength.",
-          "status": "in_progress",
-          "notes": "Mockups ready in tracker.\nMilan: support two products together (e.g. patch plus gum or lozenge).\nMilan approved S9 in chat ('go for section 9').",
+          "status": "done",
+          "notes": "Mockups ready in tracker.\nMilan: support two products together (e.g. patch plus gum or lozenge).\nMilan approved S9 in chat ('go for section 9').\nBuilt and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-23T09:18:42.111Z"
         },
         {
           "id": "S9.2",
           "title": "Step-down schedules that follow standard product-label guidance only; every screen says to follow the label and ask a pharmacist or doctor. No dosing advice beyond the label.",
-          "status": "in_progress",
-          "notes": "Mockups ready in tracker.\nMilan: label presets for US, UK, Australia and Germany; everywhere else uses 'enter my own'.\nMilan approved S9 in chat ('go for section 9').",
+          "status": "done",
+          "notes": "Mockups ready in tracker.\nMilan: label presets for US, UK, Australia and Germany; everywhere else uses 'enter my own'.\nMilan approved S9 in chat ('go for section 9').\nBuilt and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.\nBefore launch: check every label preset against the official leaflets (FDA DailyMed, MHRA/eMC, TGA, BfArM); some sources are pharmacy pages.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-23T09:18:42.133Z"
         },
         {
           "id": "S9.3",
           "title": "Pouch-strength taper plan for pouch users (e.g. stepping down mg over weeks), with reminders.",
-          "status": "in_progress",
-          "notes": "Mockups ready in tracker.\nMilan: pouch taper is optional. Offered in prep only if there's room before Quit Day; the person can move Quit Day themselves for a full taper. Nothing changes automatically.\nMilan approved S9 in chat ('go for section 9').",
+          "status": "done",
+          "notes": "Mockups ready in tracker.\nMilan: pouch taper is optional. Offered in prep only if there's room before Quit Day; the person can move Quit Day themselves for a full taper. Nothing changes automatically.\nMilan approved S9 in chat ('go for section 9').\nBuilt and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-23T09:18:42.157Z"
         },
         {
           "id": "S9.4",
           "title": "Reminders for patch changes and step-down dates.",
-          "status": "in_progress",
-          "notes": "Mockups ready in tracker.\nMilan approved S9 in chat ('go for section 9').",
+          "status": "done",
+          "notes": "Mockups ready in tracker.\nMilan approved S9 in chat ('go for section 9').\nBuilt and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.\nReminders need a device to check delivery; scheduling logic is unit-tested.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-23T09:18:42.181Z"
         },
         {
           "id": "S9.5",
           "title": "NRT shown on Home and Progress.",
-          "status": "in_progress",
-          "notes": "Mockups ready in tracker.\nMilan approved S9 in chat ('go for section 9').",
+          "status": "done",
+          "notes": "Mockups ready in tracker.\nMilan approved S9 in chat ('go for section 9').\nBuilt and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-23T09:18:42.199Z"
         }
       ]
     },
@@ -992,26 +992,26 @@
         {
           "id": "S10.1",
           "title": "Per-product timeline (smoking, vaping, pouches) of what changes in the body over time.",
-          "status": "in_progress",
-          "notes": "Mockups ready in tracker.\nMilan approved S10 in chat; slip wording on the timeline approved.",
+          "status": "done",
+          "notes": "Mockups ready in tracker.\nMilan approved S10 in chat; slip wording on the timeline approved.\nBuilt and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-23T09:18:42.217Z"
         },
         {
           "id": "S10.2",
           "title": "Every item carries a source citation the user can open. Best public sources for now; keep wording conservative.",
-          "status": "in_progress",
-          "notes": "Mockups ready in tracker.\nMilan approved S10 in chat; slip wording on the timeline approved.",
+          "status": "done",
+          "notes": "Mockups ready in tracker.\nMilan approved S10 in chat; slip wording on the timeline approved.\nBuilt and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-23T09:18:42.236Z"
         },
         {
           "id": "S10.3",
           "title": "Store timeline content as data (JSON) so it can be corrected without code changes.",
-          "status": "in_progress",
-          "notes": "Mockups ready in tracker.\nMilan approved S10 in chat; slip wording on the timeline approved.",
+          "status": "done",
+          "notes": "Mockups ready in tracker.\nMilan approved S10 in chat; slip wording on the timeline approved.\nBuilt and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-23T09:18:42.254Z"
         }
       ]
     },
@@ -1020,11 +1020,17 @@
       "title": "Daily pledge and evening check-in",
       "goal": "",
       "signoff": {
-        "state": "mockups_ready",
+        "state": "signed_off",
         "history": [
           {
             "time": "2026-10-23T09:07:29.581Z",
             "state": "mockups_ready",
+            "by": "Claude",
+            "comment": ""
+          },
+          {
+            "time": "2026-10-23T09:18:12.201Z",
+            "state": "signed_off",
             "by": "Claude",
             "comment": ""
           }
@@ -1040,32 +1046,32 @@
         {
           "id": "S11.1",
           "title": "Morning pledge with the user's own reason and photo.",
-          "status": "pending",
-          "notes": "Mockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups ready in tracker.\nMilan approved S11 in chat; pledge wording kept.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S11.2",
           "title": "Evening check-in: how today went, cravings, mood.",
-          "status": "pending",
-          "notes": "Mockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups ready in tracker.\nMilan approved S11 in chat; pledge wording kept.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S11.3",
           "title": "User-set day boundary (when \"today\" ends) so late-night check-ins count for the right day.",
-          "status": "pending",
-          "notes": "Mockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups ready in tracker.\nMilan approved S11 in chat; pledge wording kept.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S11.4",
           "title": "Gentle reminders for both, user-controllable.",
-          "status": "pending",
-          "notes": "Mockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups ready in tracker.\nMilan approved S11 in chat; pledge wording kept.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         }
@@ -1317,6 +1323,81 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-23T09:18:42.292Z",
+      "type": "note",
+      "message": "S9.4: Reminders need a device to check delivery; scheduling logic is unit-tested."
+    },
+    {
+      "time": "2026-10-23T09:18:42.273Z",
+      "type": "note",
+      "message": "S9.2: Before launch: check every label preset against the official leaflets (FDA DailyMed, MHRA/eMC, TGA, BfArM); some sources are pharmacy pages."
+    },
+    {
+      "time": "2026-10-23T09:18:42.254Z",
+      "type": "status",
+      "message": "S10.3 in_progress → done (Built and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-23T09:18:42.236Z",
+      "type": "status",
+      "message": "S10.2 in_progress → done (Built and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-23T09:18:42.217Z",
+      "type": "status",
+      "message": "S10.1 in_progress → done (Built and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-23T09:18:42.199Z",
+      "type": "status",
+      "message": "S9.5 in_progress → done (Built and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-23T09:18:42.181Z",
+      "type": "status",
+      "message": "S9.4 in_progress → done (Built and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-23T09:18:42.157Z",
+      "type": "status",
+      "message": "S9.3 in_progress → done (Built and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-23T09:18:42.133Z",
+      "type": "status",
+      "message": "S9.2 in_progress → done (Built and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-23T09:18:42.111Z",
+      "type": "status",
+      "message": "S9.1 in_progress → done (Built and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-23T09:18:12.287Z",
+      "type": "status",
+      "message": "S11.4 pending → in_progress (Milan approved S11 in chat; pledge wording kept.)"
+    },
+    {
+      "time": "2026-10-23T09:18:12.267Z",
+      "type": "status",
+      "message": "S11.3 pending → in_progress (Milan approved S11 in chat; pledge wording kept.)"
+    },
+    {
+      "time": "2026-10-23T09:18:12.249Z",
+      "type": "status",
+      "message": "S11.2 pending → in_progress (Milan approved S11 in chat; pledge wording kept.)"
+    },
+    {
+      "time": "2026-10-23T09:18:12.228Z",
+      "type": "status",
+      "message": "S11.1 pending → in_progress (Milan approved S11 in chat; pledge wording kept.)"
+    },
+    {
+      "time": "2026-10-23T09:18:12.201Z",
+      "type": "signoff",
+      "message": "S11 mockups → signed_off"
+    },
     {
       "time": "2026-10-23T09:07:29.662Z",
       "type": "note",

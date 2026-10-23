@@ -409,7 +409,7 @@ struct StepRow: View {
                 Text(verbatim: dates).dxText(.subtitle)
             }
             Spacer(minLength: DX.Space.xs)
-            Text("\(span.step.weeks) weeks").dxText(.subtitle)
+            Text("^[\(span.step.weeks) week](inflect: true)").dxText(.subtitle)
         }
         .padding(.vertical, 10)
         .contentShape(Rectangle())
@@ -455,7 +455,7 @@ struct StepEditor: View {
                            isOn: Binding(get: { step.strengthMg == mg }, set: { if $0 { step.strengthMg = mg } }))
                 }
             }
-            Stepper("\(step.weeks) weeks", value: $step.weeks, in: 1...24)
+            Stepper("^[\(step.weeks) week](inflect: true)", value: $step.weeks, in: 1...24)
                 .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body))
             LabelNotice()
             Spacer()

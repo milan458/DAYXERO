@@ -75,6 +75,12 @@ struct TodayView: View {
     @Environment(NRTRouter.self) private var nrt
     @Query(sort: \LogEntry.timestamp, order: .reverse) private var logs: [LogEntry]
     @Query(sort: \IfThenPlan.createdAt, order: .reverse) private var plans: [IfThenPlan]
+    @Query(sort: \Pledge.madeAt, order: .reverse) private var pledges: [Pledge]
+    @Query private var checkIns: [CheckIn]
+    @State private var showPledge = UserDefaults.standard.bool(forKey: "dx.openPledge")
+    @State private var showCheckIn = UserDefaults.standard.bool(forKey: "dx.openCheckIn")
+    @State private var settingsPage: SettingsSheet.Page? = UserDefaults.standard.string(forKey: "dx.openSettings").flatMap(SettingsSheet.Page.init(rawValue:))
+    @State private var showSettings = UserDefaults.standard.string(forKey: "dx.openSettings") != nil
     /// The use just logged with one tap, for the Undo / Add details toast (S7.1).
     @State private var justLogged: LogEntry?
     @State private var detailsFor: LogEntry?
@@ -88,6 +94,7 @@ struct TodayView: View {
                 VStack(alignment: .leading, spacing: 10) {
                     header(snap, now: timeline.date)
                     hero(snap)
+                    dailyCard(now: timeline.date)
                     if let lesson = snap.lesson {
                         if lesson.isReplay {
                             ReplayCard(title: lesson.title, minutes: LessonLibrary.lesson(for: lesson.day, product: profile.primaryProduct?.product ?? .cigarettes).minutes) {
@@ -127,6 +134,15 @@ struct TodayView: View {
             CravingLogForm(profile: profile, editing: entry, onSaved: { detailsFor = nil })
                 .presentationDetents([.large])
         }
+        .fullScreenCover(isPresented: $showPledge) {
+            PledgeView(profile: profile) { showPledge = false }
+        }
+        .fullScreenCover(isPresented: $showCheckIn) {
+            CheckInView(profile: profile) { showCheckIn = false }
+        }
+        .sheet(isPresented: $showSettings) {
+            SettingsSheet(profile: profile, start: settingsPage)
+        }
         .fullScreenCover(item: $openLesson) { item in
             LessonPlayer(day: item.day, profile: profile, isReplay: item.isReplay)
         }
@@ -141,6 +157,36 @@ struct TodayView: View {
                         model: PaywallModel(store: entitlement.store, entitlement: entitlement),
                         onClose: { showPaywall = false })
         }
+    }
+
+    // MARK: Pledge and check-in (S11)
+
+    @ViewBuilder
+    private func dailyCard(now: Date) -> some View {
+        let rhythm = DailyRhythm(clock: DayClock(boundaryHour: profile.dayBoundaryHour))
+        let pledgedToday = rhythm.hasPledged(pledges.map(\.day), at: now)
+        let force = debugDaily
+        if force == "checkin" || (force == nil && rhythm.isCheckInTime(now) && !rhythm.hasCheckedIn(checkIns.map(\.day), at: now)) {
+            DailyCard(systemImage: "moon", title: "Evening check-in", detail: "A minute on how today went", action: "Check in") {
+                showCheckIn = true
+            }
+        } else if force == "pledge" || (force == nil && rhythm.isPledgeTime(now) && !pledgedToday) {
+            DailyCard(systemImage: "sun.max", title: "Today's pledge", detail: "10 seconds, with one of your reasons", action: "Pledge") {
+                showPledge = true
+            }
+        } else if force == "pledged" || (force == nil && rhythm.isPledgeTime(now) && pledgedToday), let pledge = pledges.first {
+            DailyCard(systemImage: "checkmark", title: "Pledged at \(pledge.madeAt.formatted(date: .omitted, time: .shortened))",
+                      detail: nil, action: nil, done: true) {}
+        }
+    }
+
+    /// Screenshots can't choose the time of day, so DEBUG builds can force which card shows.
+    private var debugDaily: String? {
+        #if DEBUG
+        UserDefaults.standard.string(forKey: "dx.forceDaily")
+        #else
+        nil
+        #endif
     }
 
     // MARK: NRT and pouch taper (S9.5)
@@ -267,7 +313,7 @@ struct TodayView: View {
             }
             Spacer()
             LogButton { log.open() }
-            Button {} label: { Image(systemName: "person").accessibilityLabel(Text("Profile and settings")) }
+            Button { settingsPage = nil; showSettings = true } label: { Image(systemName: "person").accessibilityLabel(Text("Profile and settings")) }
                 .buttonStyle(.dxIcon)
         }
         .padding(.bottom, DX.Space.xxs)
@@ -494,3 +540,41 @@ struct TodayView: View {
     }
 }
 
+/// The pledge or check-in card on Home (S11).
+struct DailyCard: View {
+    let systemImage: String
+    let title: LocalizedStringKey
+    let detail: LocalizedStringKey?
+    let action: LocalizedStringKey?
+    var done = false
+    let onTap: () -> Void
+
+    var body: some View {
+        Button(action: onTap) {
+            HStack(spacing: DX.Space.s) {
+                Image(systemName: systemImage).font(.system(size: 17, weight: done ? .bold : .regular))
+                    .foregroundStyle(done ? DX.Palette.onAccent : DX.Palette.accentInk)
+                    .frame(width: 40, height: 40)
+                    .background(done ? DX.Palette.sage : DX.Palette.accentSoft, in: Circle())
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(title).font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
+                    if let detail { Text(detail).dxText(.subtitle) }
+                }
+                Spacer(minLength: DX.Space.xs)
+                if let action {
+                    Text(action).font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
+                        .foregroundStyle(DX.Palette.onPrimary)
+                        .padding(.vertical, 8).padding(.horizontal, 14)
+                        .background(DX.Palette.primary, in: Capsule())
+                }
+            }
+            .padding(14)
+            .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 26, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 26, style: .continuous)
+                .strokeBorder(done ? DX.Palette.sage.opacity(0.45) : DX.Palette.hairline))
+        }
+        .buttonStyle(.plain)
+        .disabled(done)
+        .accessibilityElement(children: .combine)
+    }
+}

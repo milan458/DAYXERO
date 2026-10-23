@@ -171,6 +171,16 @@ jobs:
           shoot light large health-smoking-light $P12 -dx.tab progress -dx.openHealth YES
           shoot dark accessibility-extra-extra-extra-large health-smoking-dark-ax5 $P12 -dx.tab progress -dx.openHealth YES
           shoot dark large health-prep-dark -dx.homeScenario prep -dx.store pro -dx.tab progress -dx.openHealth YES
+          shoot dark large daily-pledgecard-dark $P12 -dx.forceDaily pledge
+          shoot light large daily-pledgecard-light $P12 -dx.forceDaily pledge
+          shoot dark large daily-pledge-dark $P12 -dx.openPledge YES
+          shoot dark accessibility-extra-extra-extra-large daily-pledge-dark-ax5 $P12 -dx.openPledge YES
+          shoot dark large daily-pledged-dark $P12 -dx.forceDaily pledged -dx.seedPledge YES
+          shoot dark large daily-checkin-dark $P12 -dx.openCheckIn YES
+          shoot light large daily-checkin-light $P12 -dx.openCheckIn YES
+          shoot dark large daily-checkin-done-dark $P12 -dx.openCheckIn YES -dx.checkInDone YES
+          shoot dark large daily-dayend-dark $P12 -dx.openSettings dayEnd
+          shoot dark large daily-reminders-dark $P12 -dx.openSettings reminders
           # Last: the under-18 screen persists its flag, so everything after it would show the exit.
           shoot dark large onb-under_age-dark -dx.onboardingStep under_age
           cd shots

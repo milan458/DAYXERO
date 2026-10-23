@@ -65,6 +65,16 @@ enum DebugScenario: String {
                 if when < now { context.insert(LogEntry(kind: .use, product: product, timestamp: when)) }
             }
         }
+        // Pledged an hour ago, for the "Pledged at" card (S11.1).
+        if UserDefaults.standard.bool(forKey: "dx.seedPledge") {
+            context.insert(Pledge(day: DayClock(calendar: calendar, boundaryHour: 4).day(containing: now), madeAt: now.addingTimeInterval(-3600)))
+        }
+        // Check-ins earlier this week, for the week row after checking in (S11.2).
+        if self == .day12 {
+            for back in 1...3 {
+                context.insert(CheckIn(day: day(-back), mood: .good, cravingCount: 2, madeAt: day(-back).addingTimeInterval(21 * 3600)))
+            }
+        }
         // A slip this morning, talked through, so Home shows today's plan (S8.3).
         if UserDefaults.standard.bool(forKey: "dx.seedSlip"), now.timeIntervalSince(calendar.startOfDay(for: now)) > 3600 {
             let slip = LogEntry(kind: .slip, product: .vape, timestamp: now.addingTimeInterval(-1800), trigger: .coffee, mood: .meh)

@@ -241,12 +241,15 @@ public final class CheckIn {
     public var moodRaw: Int
     public var cravingCount: Int
     public var note: String?
+    /// "Clear day" or "Had a slip" (S11.2). Never changes days clear.
+    public var clearDay: Bool = true
 
-    public init(day: Date, mood: Mood, cravingCount: Int, note: String? = nil, madeAt: Date = .now) {
+    public init(day: Date, mood: Mood, cravingCount: Int, note: String? = nil, clearDay: Bool = true, madeAt: Date = .now) {
         self.day = day
         self.moodRaw = mood.rawValue
         self.cravingCount = cravingCount
         self.note = note
+        self.clearDay = clearDay
         self.madeAt = madeAt
     }
 

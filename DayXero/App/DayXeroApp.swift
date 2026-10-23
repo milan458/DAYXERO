@@ -56,6 +56,7 @@ struct RootView: View {
     @AppStorage("dx.paywallDone") private var paywallDone = false
     @Environment(Entitlement.self) private var entitlement
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.modelContext) private var modelContext
     @State private var sos = SOSRouter()
     @State private var log = LogRouter()
     @State private var nrt = NRTRouter()
@@ -97,6 +98,7 @@ struct RootView: View {
             .onChange(of: scenePhase, initial: true) { _, phase in
                 guard phase == .active else { return }
                 NRTReminders.refresh(profile: profiles.first)
+                DailyReminders.refresh(in: modelContext)
                 SOSBridge.openSession = { [sos] source in sos.open(source: source) }
                 SOSBridge.openCravingLog = { [log] in log.open(.craving) }
                 if let source = SOSState.consumeOpenRequest() { sos.open(source: source) }
