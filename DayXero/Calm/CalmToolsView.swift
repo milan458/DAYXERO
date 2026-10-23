@@ -60,17 +60,29 @@ struct CalmToolsView: View {
 
 struct CalmToolRow: View {
     let tool: CalmTool
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
-        HStack(spacing: DX.Space.s) {
-            Image(systemName: tool.systemImage).font(.system(size: 17)).foregroundStyle(DX.Palette.accentInk)
-                .frame(width: 40, height: 40).background(DX.Palette.accentSoft, in: Circle())
+        // At the largest text sizes the icon and minutes move above the words, so the words get the full width.
+        let layout = typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(alignment: .leading, spacing: DX.Space.xs))
+            : AnyLayout(HStackLayout(spacing: DX.Space.s))
+        layout {
+            HStack {
+                Image(systemName: tool.systemImage).font(.system(size: 17)).foregroundStyle(DX.Palette.accentInk)
+                    .frame(width: 40, height: 40).background(DX.Palette.accentSoft, in: Circle())
+                if typeSize.isAccessibilitySize {
+                    Spacer()
+                    Text("\(tool.minutes) min").dxText(.subtitle)
+                }
+            }
             VStack(alignment: .leading, spacing: 1) {
                 Text(tool.title).font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
                 Text(tool.detail).dxText(.subtitle).multilineTextAlignment(.leading)
             }
-            Spacer(minLength: DX.Space.xs)
-            Text("\(tool.minutes) min").dxText(.subtitle).fixedSize()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            if !typeSize.isAccessibilitySize {
+                Text("\(tool.minutes) min").dxText(.subtitle).fixedSize()
+            }
         }
         .padding(12)
         .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 22, style: .continuous))

@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-23T10:09:42.930Z"
+    "updated": "2026-10-23T10:15:54.333Z"
   },
   "now": {
     "section": "S5",
@@ -1047,7 +1047,7 @@
           "id": "S11.1",
           "title": "Morning pledge with the user's own reason and photo.",
           "status": "in_progress",
-          "notes": "Mockups ready in tracker.\nMilan approved S11 in chat; pledge wording kept.",
+          "notes": "Mockups ready in tracker.\nMilan approved S11 in chat; pledge wording kept.\nCI 5c3fdb3 green (all tests pass). Screenshot fixes pushed: pledge photo layout, calm tool rows at largest text.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -1055,7 +1055,7 @@
           "id": "S11.2",
           "title": "Evening check-in: how today went, cravings, mood.",
           "status": "in_progress",
-          "notes": "Mockups ready in tracker.\nMilan approved S11 in chat; pledge wording kept.",
+          "notes": "Mockups ready in tracker.\nMilan approved S11 in chat; pledge wording kept.\nCI 5c3fdb3 green (all tests pass). Screenshot fixes pushed: pledge photo layout, calm tool rows at largest text.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -1063,7 +1063,7 @@
           "id": "S11.3",
           "title": "User-set day boundary (when \"today\" ends) so late-night check-ins count for the right day.",
           "status": "in_progress",
-          "notes": "Mockups ready in tracker.\nMilan approved S11 in chat; pledge wording kept.",
+          "notes": "Mockups ready in tracker.\nMilan approved S11 in chat; pledge wording kept.\nCI 5c3fdb3 green (all tests pass). Screenshot fixes pushed: pledge photo layout, calm tool rows at largest text.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -1071,7 +1071,7 @@
           "id": "S11.4",
           "title": "Gentle reminders for both, user-controllable.",
           "status": "in_progress",
-          "notes": "Mockups ready in tracker.\nMilan approved S11 in chat; pledge wording kept.",
+          "notes": "Mockups ready in tracker.\nMilan approved S11 in chat; pledge wording kept.\nCI 5c3fdb3 green (all tests pass). Screenshot fixes pushed: pledge photo layout, calm tool rows at largest text.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         }
@@ -1109,7 +1109,7 @@
           "id": "S12.1",
           "title": "Three to five short exercises: breathing patterns, grounding, a brief ACT-style \"notice and name\" exercise.",
           "status": "in_progress",
-          "notes": "Mockups ready in tracker.\nMilan approved S12 in chat; findahelpline.com for helplines.",
+          "notes": "Mockups ready in tracker.\nMilan approved S12 in chat; findahelpline.com for helplines.\nCI 5c3fdb3 green (all tests pass). Screenshot fixes pushed: pledge photo layout, calm tool rows at largest text.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -1117,7 +1117,7 @@
           "id": "S12.2",
           "title": "Reachable from SOS and the Program tab.",
           "status": "in_progress",
-          "notes": "Mockups ready in tracker.\nMilan approved S12 in chat; findahelpline.com for helplines.",
+          "notes": "Mockups ready in tracker.\nMilan approved S12 in chat; findahelpline.com for helplines.\nCI 5c3fdb3 green (all tests pass). Screenshot fixes pushed: pledge photo layout, calm tool rows at largest text.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -1125,7 +1125,7 @@
           "id": "S12.3",
           "title": "A plain line pointing to professional help and local helplines; no diagnosis or clinical claims.",
           "status": "in_progress",
-          "notes": "Mockups ready in tracker.\nMilan approved S12 in chat; findahelpline.com for helplines.",
+          "notes": "Mockups ready in tracker.\nMilan approved S12 in chat; findahelpline.com for helplines.\nCI 5c3fdb3 green (all tests pass). Screenshot fixes pushed: pledge photo layout, calm tool rows at largest text.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         }
@@ -1371,6 +1371,41 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-23T10:15:54.333Z",
+      "type": "note",
+      "message": "S12.3: CI 5c3fdb3 green (all tests pass). Screenshot fixes pushed: pledge photo layout, calm tool rows at largest text."
+    },
+    {
+      "time": "2026-10-23T10:15:54.314Z",
+      "type": "note",
+      "message": "S12.2: CI 5c3fdb3 green (all tests pass). Screenshot fixes pushed: pledge photo layout, calm tool rows at largest text."
+    },
+    {
+      "time": "2026-10-23T10:15:54.294Z",
+      "type": "note",
+      "message": "S12.1: CI 5c3fdb3 green (all tests pass). Screenshot fixes pushed: pledge photo layout, calm tool rows at largest text."
+    },
+    {
+      "time": "2026-10-23T10:15:54.277Z",
+      "type": "note",
+      "message": "S11.4: CI 5c3fdb3 green (all tests pass). Screenshot fixes pushed: pledge photo layout, calm tool rows at largest text."
+    },
+    {
+      "time": "2026-10-23T10:15:54.257Z",
+      "type": "note",
+      "message": "S11.3: CI 5c3fdb3 green (all tests pass). Screenshot fixes pushed: pledge photo layout, calm tool rows at largest text."
+    },
+    {
+      "time": "2026-10-23T10:15:54.237Z",
+      "type": "note",
+      "message": "S11.2: CI 5c3fdb3 green (all tests pass). Screenshot fixes pushed: pledge photo layout, calm tool rows at largest text."
+    },
+    {
+      "time": "2026-10-23T10:15:54.216Z",
+      "type": "note",
+      "message": "S11.1: CI 5c3fdb3 green (all tests pass). Screenshot fixes pushed: pledge photo layout, calm tool rows at largest text."
+    },
     {
       "time": "2026-10-23T10:09:42.930Z",
       "type": "note",

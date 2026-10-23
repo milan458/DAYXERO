@@ -18,9 +18,7 @@ struct PledgeView: View {
         let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
         let day = clock.days(fromDate: profile.quitDay, to: .now) + 1
         let reason = todaysReason(dayNumber: day)
-        ZStack {
-            background(reason)
-            VStack(alignment: .leading, spacing: 0) {
+        VStack(alignment: .leading, spacing: 0) {
                 HStack {
                     Text(day > 0 ? "Day \(day) · \(Date.now.formatted(.dateTime.weekday(.wide)))" : "\(Date.now.formatted(.dateTime.weekday(.wide)))")
                         .dxText(.micro, color: .white.opacity(0.75))
@@ -47,10 +45,12 @@ struct PledgeView: View {
                     .frame(maxWidth: .infinity)
                     .padding(.top, DX.Space.xl)
             }
-            .padding(.horizontal, DX.Space.l)
-            .padding(.top, DX.Space.s)
-            .padding(.bottom, DX.Space.l)
-        }
+        .padding(.horizontal, DX.Space.l)
+        .padding(.top, DX.Space.s)
+        .padding(.bottom, DX.Space.l)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+        // As a background, the photo fills the screen without widening the layout.
+        .background { background(reason) }
         .sensoryFeedback(.impact(flexibility: .soft, intensity: 0.4), trigger: pressing)
         .sensoryFeedback(DX.Haptic.commit, trigger: pledged)
         .preferredColorScheme(.dark)
@@ -96,7 +96,7 @@ struct PledgeView: View {
     private func background(_ reason: Reason?) -> some View {
         ZStack {
             if let data = reason?.photo, let image = UIImage(data: data) {
-                Image(uiImage: image).resizable().scaledToFill()
+                Color.clear.overlay { Image(uiImage: image).resizable().scaledToFill() }.clipped()
             } else {
                 LinearGradient(colors: [Color(hex: 0x5F7C52), Color(hex: 0x2F4A30), Color(hex: 0x111A0F)],
                                startPoint: .top, endPoint: .bottom)
