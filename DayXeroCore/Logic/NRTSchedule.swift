@@ -214,6 +214,13 @@ public enum NRTReminderPlan {
         public let date: Date
         public let title: String
         public let body: String
+
+        public init(id: String, date: Date, title: String, body: String) {
+            self.id = id
+            self.date = date
+            self.title = title
+            self.body = body
+        }
     }
 
     /// How far ahead daily reminders are scheduled. iOS keeps at most 64 pending; this leaves room for the rest.

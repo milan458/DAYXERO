@@ -260,51 +260,6 @@ struct DayEndSettings: View {
     }
 }
 
-/// Pledge and check-in reminders (S11.4).
-struct DailyReminderSettingsView: View {
-    @AppStorage(DailyReminderSettings.pledgeKey) private var pledgeMinute = DailyReminderSettings.defaultPledge
-    @AppStorage(DailyReminderSettings.checkInKey) private var checkInMinute = DailyReminderSettings.defaultCheckIn
-    @Environment(\.modelContext) private var context
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: DX.Space.xs) {
-            Text("Daily reminders").dxText(.title).padding(.top, DX.Space.xl)
-            Text("Gentle, and only if you haven't done it yet.").dxText(.subtitle).padding(.bottom, DX.Space.s)
-            row("Morning pledge", detail: "Skipped once you've pledged", minute: $pledgeMinute, fallback: DailyReminderSettings.defaultPledge)
-            row("Evening check-in", detail: "Skipped once you've checked in", minute: $checkInMinute, fallback: DailyReminderSettings.defaultCheckIn)
-            Spacer()
-            Button("Done") { dismiss() }.buttonStyle(.dxPrimary)
-        }
-        .padding(.horizontal, DX.Space.m)
-        .padding(.bottom, DX.Space.xs)
-        .dxCanvas()
-        .tint(DX.Palette.sage)
-        .onChange(of: pledgeMinute) { DailyReminders.refresh(in: context) }
-        .onChange(of: checkInMinute) { DailyReminders.refresh(in: context) }
-    }
-
-    private func row(_ title: LocalizedStringKey, detail: LocalizedStringKey, minute: Binding<Int>, fallback: Int) -> some View {
-        DXCard(padding: 14) {
-            VStack(alignment: .leading, spacing: DX.Space.xs) {
-                Toggle(isOn: Binding(get: { minute.wrappedValue >= 0 }, set: { minute.wrappedValue = $0 ? fallback : -1 })) {
-                    VStack(alignment: .leading, spacing: 1) {
-                        Text(title).font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body))
-                        Text(detail).dxText(.subtitle)
-                    }
-                }
-                if minute.wrappedValue >= 0 {
-                    DatePicker("Time", selection: Binding(
-                        get: { Calendar.current.date(bySettingHour: minute.wrappedValue / 60, minute: minute.wrappedValue % 60, second: 0, of: .now) ?? .now },
-                        set: { minute.wrappedValue = Calendar.current.component(.hour, from: $0) * 60 + Calendar.current.component(.minute, from: $0) }
-                    ), displayedComponents: .hourAndMinute)
-                    .font(DX.TextStyle.subtitle.font)
-                }
-            }
-        }
-    }
-}
-
 /// A first, small Settings sheet behind the Home profile button. Section 15 fills in the rest.
 struct SettingsSheet: View {
     let profile: UserProfile
@@ -312,7 +267,7 @@ struct SettingsSheet: View {
     @Environment(\.dismiss) private var dismiss
 
     enum Page: String, Hashable {
-        case reminders, dayEnd
+        case reminders, dayEnd, quietHours
     }
 
     @State private var path: [Page] = []
@@ -321,7 +276,7 @@ struct SettingsSheet: View {
         NavigationStack(path: $path) {
             List {
                 Section {
-                    NavigationLink(value: Page.reminders) { Label("Daily reminders", systemImage: "bell") }
+                    NavigationLink(value: Page.reminders) { Label("Notifications", systemImage: "bell") }
                     NavigationLink(value: Page.dayEnd) {
                         LabeledContent { Text(DayEndSettings.label(profile.dayBoundaryHour)) } label: {
                             Label("When your day ends", systemImage: "moon")
@@ -333,7 +288,8 @@ struct SettingsSheet: View {
             .toolbar { ToolbarItem(placement: .topBarTrailing) { Button("Done") { dismiss() } } }
             .navigationDestination(for: Page.self) { page in
                 switch page {
-                case .reminders: DailyReminderSettingsView()
+                case .reminders: NotificationSettingsView()
+                case .quietHours: QuietHoursView()
                 case .dayEnd: DayEndSettings(profile: profile)
                 }
             }

@@ -25,6 +25,15 @@ enum NRTReminders {
             for plan in profile.nrtPlans { reminders += NRTReminderPlan.reminders(for: plan, now: now, clock: clock) }
             if let taper = profile.pouchTaper { reminders += NRTReminderPlan.reminders(for: taper, now: now, clock: clock) }
         }
+        // Section 14: the NRT switch, and quiet hours unless NRT times may come through.
+        if !DailyReminderSettings.nrtOn { reminders = [] }
+        if !DailyReminderSettings.nrtThroughQuiet {
+            let plan = DailyReminderSettings.plan
+            reminders = reminders.map {
+                NRTReminderPlan.Reminder(id: $0.id, date: NotificationPlan.outOfQuietHours($0.date, start: plan.quietStart, end: plan.quietEnd, calendar: .current),
+                                         title: $0.title, body: $0.body)
+            }
+        }
         let wanted = reminders
         Task { await apply(wanted) }
     }

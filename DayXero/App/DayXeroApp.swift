@@ -84,6 +84,10 @@ struct RootView: View {
             .fullScreenCover(item: $sos.launch) { launch in
                 CravingSOSView(profile: profiles.first, source: launch.source) { sos.launch = nil }
             }
+            .onChange(of: entitlement.isPro) { _, pro in
+                DailyReminders.isPro = pro
+                DailyReminders.refresh(in: modelContext)
+            }
             .onOpenURL { url in
                 guard url.scheme == "dayxero" else { return }
                 if url.host() == "log" {
@@ -98,6 +102,7 @@ struct RootView: View {
             .onChange(of: scenePhase, initial: true) { _, phase in
                 guard phase == .active else { return }
                 NRTReminders.refresh(profile: profiles.first)
+                DailyReminders.isPro = entitlement.isPro
                 DailyReminders.refresh(in: modelContext)
                 SOSBridge.openSession = { [sos] source in sos.open(source: source) }
                 SOSBridge.openCravingLog = { [log] in log.open(.craving) }

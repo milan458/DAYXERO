@@ -181,7 +181,10 @@ jobs:
           shoot light large daily-checkin-light $P12 -dx.openCheckIn YES
           shoot dark large daily-checkin-done-dark $P12 -dx.openCheckIn YES -dx.checkInDone YES
           shoot dark large daily-dayend-dark $P12 -dx.openSettings dayEnd
-          shoot dark large daily-reminders-dark $P12 -dx.openSettings reminders
+          shoot dark large notif-settings-dark $P12 -dx.openSettings reminders
+          shoot light large notif-settings-light $P12 -dx.openSettings reminders
+          shoot dark accessibility-extra-extra-extra-large notif-settings-dark-ax5 $P12 -dx.openSettings reminders
+          shoot dark large notif-quiet-dark $P12 -dx.openSettings quietHours
           shoot dark large calm-program-dark $P12 -dx.tab program
           shoot dark large calm-list-dark $P12 -dx.tab program -dx.openCalmList YES
           shoot light large calm-list-light $P12 -dx.tab program -dx.openCalmList YES

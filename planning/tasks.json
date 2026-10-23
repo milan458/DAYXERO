@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-23T10:15:54.333Z"
+    "updated": "2026-10-23T10:19:17.904Z"
   },
   "now": {
     "section": "S5",
@@ -1198,11 +1198,17 @@
       "title": "Notifications",
       "goal": "",
       "signoff": {
-        "state": "mockups_ready",
+        "state": "signed_off",
         "history": [
           {
             "time": "2026-10-23T10:09:42.875Z",
             "state": "mockups_ready",
+            "by": "Claude",
+            "comment": ""
+          },
+          {
+            "time": "2026-10-23T10:19:17.826Z",
+            "state": "signed_off",
             "by": "Claude",
             "comment": ""
           }
@@ -1218,24 +1224,24 @@
         {
           "id": "S14.1",
           "title": "Notification plan: pledge, check-in, lesson available, milestone, NRT reminders, inactivity nudges per the open decision.",
-          "status": "pending",
-          "notes": "Inactivity nudges follow the pause-and-replay rule (no reset), per Milan.\nMockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Inactivity nudges follow the pause-and-replay rule (no reset), per Milan.\nMockups ready in tracker.\nMilan: keep the wording; pledge and check-in reminders pause while someone's away.\nMilan approved S14 in chat.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S14.2",
           "title": "Quiet hours and per-type toggles in Settings.",
-          "status": "pending",
-          "notes": "Mockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups ready in tracker.\nMilan approved S14 in chat.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S14.3",
           "title": "No guilt copy in any notification.",
-          "status": "pending",
-          "notes": "Mockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups ready in tracker.\nMilan approved S14 in chat.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         }
@@ -1371,6 +1377,31 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-23T10:19:17.904Z",
+      "type": "status",
+      "message": "S14.3 pending → in_progress (Milan approved S14 in chat.)"
+    },
+    {
+      "time": "2026-10-23T10:19:17.884Z",
+      "type": "status",
+      "message": "S14.2 pending → in_progress (Milan approved S14 in chat.)"
+    },
+    {
+      "time": "2026-10-23T10:19:17.866Z",
+      "type": "status",
+      "message": "S14.1 pending → in_progress (Milan approved S14 in chat.)"
+    },
+    {
+      "time": "2026-10-23T10:19:17.847Z",
+      "type": "note",
+      "message": "S14.1: Milan: keep the wording; pledge and check-in reminders pause while someone's away."
+    },
+    {
+      "time": "2026-10-23T10:19:17.826Z",
+      "type": "signoff",
+      "message": "S14 mockups → signed_off"
+    },
     {
       "time": "2026-10-23T10:15:54.333Z",
       "type": "note",
