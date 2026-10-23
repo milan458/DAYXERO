@@ -1,0 +1,108 @@
+{
+  "version": 1,
+  "sources": {
+    "acs": {
+      "label": "Source: American Cancer Society",
+      "title": "American Cancer Society, \"Health benefits of quitting smoking over time\"",
+      "url": "https://www.cancer.org/cancer/risk-prevention/tobacco/benefits-of-quitting-smoking-over-time.html"
+    },
+    "smokefree": {
+      "label": "Source: smokefree.gov",
+      "title": "Smokefree.gov (US National Cancer Institute), \"Nicotine withdrawal\"",
+      "url": "https://smokefree.gov/challenges-when-quitting/withdrawal"
+    },
+    "smokefree-mood": {
+      "label": "Source: smokefree.gov",
+      "title": "Smokefree.gov, \"Managing nicotine withdrawal\"",
+      "url": "https://smokefree.gov/challenges-when-quitting/withdrawal/managing-nicotine-withdrawal"
+    },
+    "smokefree-vaping": {
+      "label": "Source: smokefree.gov",
+      "title": "Smokefree.gov, \"Nicotine withdrawal and vaping\"",
+      "url": "https://smokefree.gov/quit-vaping-resources/nicotine-withdrawal-vaping"
+    },
+    "cdc-cotinine": {
+      "label": "Source: CDC",
+      "title": "CDC, National Health and Nutrition Examination Survey: cotinine documentation",
+      "url": "https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2021/DataFiles/COT_L.htm"
+    }
+  },
+  "groups": {
+    "smoking": [
+      { "id": "heart-rate", "fromHours": 0, "toHours": 1, "when": "Within minutes",
+        "title": "Heart rate and blood pressure start to come down",
+        "line": "From your first smoke-free hours.",
+        "detail": "Soon after your last cigarette, your heart rate and blood pressure begin to settle.",
+        "source": "acs" },
+      { "id": "carbon-monoxide", "fromHours": 12, "toHours": 72, "when": "A few days",
+        "title": "Carbon monoxide in your blood drops to normal",
+        "line": "More oxygen reaches your body.",
+        "detail": "Carbon monoxide from smoke takes the place of oxygen in your blood. Within a few days it falls back to normal.",
+        "source": "acs" },
+      { "id": "circulation", "fromHours": 336, "toHours": 2184, "when": "2 weeks to 3 months",
+        "title": "Circulation and lung function improve",
+        "line": "",
+        "detail": "Somewhere in this window, blood flow and breathing start to work better.",
+        "source": "acs" },
+      { "id": "coughing", "fromHours": 720, "toHours": 8760, "when": "1 to 12 months",
+        "title": "Coughing and shortness of breath ease",
+        "line": "",
+        "detail": "The tiny hairs that clear your lungs start working again, so coughing and breathlessness ease.",
+        "source": "acs" },
+      { "id": "heart-attack", "fromHours": 8760, "toHours": 17520, "when": "1 to 2 years",
+        "title": "Heart attack risk drops sharply",
+        "line": "",
+        "detail": "One to two years after quitting, the risk of a heart attack drops sharply.",
+        "source": "acs" },
+      { "id": "mouth-cancer", "fromHours": 43800, "toHours": 87600, "when": "5 to 10 years",
+        "title": "Risk of mouth, throat and voice-box cancer is about halved",
+        "line": "Stroke risk falls too.",
+        "detail": "Five to ten years after quitting, the risk of these cancers is cut by about half, and the risk of stroke goes down.",
+        "source": "acs" },
+      { "id": "lung-cancer", "fromHours": 87600, "toHours": 87600, "when": "10 years",
+        "title": "Lung cancer risk is about half that of someone who still smokes",
+        "line": "",
+        "detail": "Ten years after quitting, the risk of dying from lung cancer is about half that of a person who still smokes.",
+        "source": "acs" },
+      { "id": "heart-disease", "fromHours": 131400, "toHours": 131400, "when": "15 years",
+        "title": "Heart disease risk is close to that of a non-smoker",
+        "line": "",
+        "detail": "Fifteen years after quitting, the risk of coronary heart disease is close to that of someone who never smoked.",
+        "source": "acs" }
+    ],
+    "nicotine": [
+      { "id": "withdrawal-start", "fromHours": 0, "toHours": 4, "when": "A few hours",
+        "title": "Withdrawal can start",
+        "line": "Cravings, restlessness or irritability are common.",
+        "detail": "Withdrawal can begin within a few hours of your last nicotine. It's a sign your body is adjusting.",
+        "source": "smokefree" },
+      { "id": "nicotine-gone", "fromHours": 24, "toHours": 72, "when": "A few days",
+        "title": "Most nicotine has left your body",
+        "line": "Its by-product, cotinine, halves about every 15 to 20 hours.",
+        "detail": "Nicotine itself clears within hours. Cotinine, what your body turns it into, halves about every 15 to 20 hours, so within a few days most of it is gone.",
+        "source": "cdc-cotinine" },
+      { "id": "withdrawal-peak", "fromHours": 0, "toHours": 168, "when": "First week",
+        "title": "Withdrawal is usually at its strongest",
+        "line": "The hardest stretch for most people.",
+        "detail": "For most people, withdrawal is strongest in the first days to week, then weakens the longer you stay nicotine-free.",
+        "source": "smokefree" },
+      { "id": "mood", "fromHours": 168, "toHours": 336, "when": "1 to 2 weeks",
+        "title": "Mood changes from withdrawal usually ease",
+        "line": "",
+        "detail": "Low mood, irritability or anxiety from withdrawal usually get better within a week or two. If they don't, talk to a doctor.",
+        "source": "smokefree-mood" },
+      { "id": "cravings-fade", "fromHours": 336, "toHours": 672, "when": "A few weeks",
+        "title": "Cravings come less often",
+        "line": "",
+        "detail": "Cravings can last longer than the physical symptoms, but they come less often and feel weaker as the weeks go by.",
+        "source": "smokefree" }
+    ]
+  },
+  "products": {
+    "cigarettes": { "groups": ["smoking"] },
+    "vape": { "groups": ["nicotine"], "sourceOverride": { "withdrawal-start": "smokefree-vaping" },
+              "note": "Research on the long-term effects of vaping is still young, so this timeline sticks to what's known." },
+    "pouches": { "groups": ["nicotine"],
+                 "note": "Research on the long-term effects of nicotine pouches is still young, so this timeline sticks to what's known." }
+  }
+}

@@ -167,6 +167,10 @@ jobs:
           shoot dark large nrt-progress-dark $P12 -dx.seedNRT YES -dx.tab progress
           shoot dark large taper-home-dark -dx.homeScenario prep -dx.store pro -dx.seedPouches YES
           shoot dark large taper-setup-dark -dx.homeScenario prep -dx.store pro -dx.seedPouches YES -dx.logSheet taper
+          shoot dark large health-smoking-dark $P12 -dx.tab progress -dx.openHealth YES
+          shoot light large health-smoking-light $P12 -dx.tab progress -dx.openHealth YES
+          shoot dark accessibility-extra-extra-extra-large health-smoking-dark-ax5 $P12 -dx.tab progress -dx.openHealth YES
+          shoot dark large health-prep-dark -dx.homeScenario prep -dx.store pro -dx.tab progress -dx.openHealth YES
           # Last: the under-18 screen persists its flag, so everything after it would show the exit.
           shoot dark large onb-under_age-dark -dx.onboardingStep under_age
           cd shots

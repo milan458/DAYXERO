@@ -12,6 +12,7 @@ struct ProgressTab: View {
     @Query(sort: \LogEntry.timestamp, order: .reverse) private var entries: [LogEntry]
     @State private var series = Insights.Series.cravings
     @State private var editing: LogEntry?
+    @State private var showHealth = UserDefaults.standard.bool(forKey: "dx.openHealth")
 
     var body: some View {
         TimelineView(.everyMinute) { timeline in
@@ -23,6 +24,8 @@ struct ProgressTab: View {
                     header(snap)
                     hero(snap)
                     tiles(snap, insights: insights)
+                    // What's changing in the body, from Quit Day (S10).
+                    HealthSummaryCard(profile: profile, now: now) { showHealth = true }
                     // The full step plan for each NRT product (S9.5).
                     ForEach(profile.nrtPlans.sorted { $0.createdAt < $1.createdAt }) { plan in
                         NRTCard(plan: plan, clock: DayClock(boundaryHour: profile.dayBoundaryHour), now: now, showAllSteps: true)
@@ -47,6 +50,10 @@ struct ProgressTab: View {
                 .padding(.top, DX.Space.s)
                 .padding(.bottom, 120)
             }
+        }
+        .sheet(isPresented: $showHealth) {
+            HealthTimelineView(profile: profile, onClose: { showHealth = false })
+                .presentationDetents([.large])
         }
         .sheet(item: $editing) { entry in
             Group {

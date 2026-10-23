@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-23T08:46:23.563Z"
+    "updated": "2026-10-23T08:50:48.836Z"
   },
   "now": {
     "section": "S5",
@@ -966,11 +966,17 @@
       "title": "Health timeline",
       "goal": "",
       "signoff": {
-        "state": "mockups_ready",
+        "state": "signed_off",
         "history": [
           {
             "time": "2026-10-23T08:46:23.509Z",
             "state": "mockups_ready",
+            "by": "Claude",
+            "comment": ""
+          },
+          {
+            "time": "2026-10-23T08:50:48.747Z",
+            "state": "signed_off",
             "by": "Claude",
             "comment": ""
           }
@@ -986,24 +992,24 @@
         {
           "id": "S10.1",
           "title": "Per-product timeline (smoking, vaping, pouches) of what changes in the body over time.",
-          "status": "pending",
-          "notes": "Mockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups ready in tracker.\nMilan approved S10 in chat; slip wording on the timeline approved.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S10.2",
           "title": "Every item carries a source citation the user can open. Best public sources for now; keep wording conservative.",
-          "status": "pending",
-          "notes": "Mockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups ready in tracker.\nMilan approved S10 in chat; slip wording on the timeline approved.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S10.3",
           "title": "Store timeline content as data (JSON) so it can be corrected without code changes.",
-          "status": "pending",
-          "notes": "Mockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups ready in tracker.\nMilan approved S10 in chat; slip wording on the timeline approved.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         }
@@ -1299,6 +1305,26 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-23T08:50:48.836Z",
+      "type": "status",
+      "message": "S10.3 pending → in_progress (Milan approved S10 in chat; slip wording on the timeline approved.)"
+    },
+    {
+      "time": "2026-10-23T08:50:48.810Z",
+      "type": "status",
+      "message": "S10.2 pending → in_progress (Milan approved S10 in chat; slip wording on the timeline approved.)"
+    },
+    {
+      "time": "2026-10-23T08:50:48.786Z",
+      "type": "status",
+      "message": "S10.1 pending → in_progress (Milan approved S10 in chat; slip wording on the timeline approved.)"
+    },
+    {
+      "time": "2026-10-23T08:50:48.747Z",
+      "type": "signoff",
+      "message": "S10 mockups → signed_off"
+    },
     {
       "time": "2026-10-23T08:46:23.563Z",
       "type": "note",
