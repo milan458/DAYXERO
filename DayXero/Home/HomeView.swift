@@ -73,6 +73,7 @@ struct TodayView: View {
     @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(LogRouter.self) private var log
     @Query(sort: \LogEntry.timestamp, order: .reverse) private var logs: [LogEntry]
+    @Query(sort: \IfThenPlan.createdAt, order: .reverse) private var plans: [IfThenPlan]
     /// The use just logged with one tap, for the Undo / Add details toast (S7.1).
     @State private var justLogged: LogEntry?
     @State private var detailsFor: LogEntry?
@@ -96,6 +97,11 @@ struct TodayView: View {
                         }
                     }
                     if snap.phase == .quitDay, !sosHintSeen { sosHint }
+                    // A plan made today, after a slip or in a lesson, stays on Home for the rest of the day (S8.3).
+                    if let plan = plans.first, DayClock(boundaryHour: profile.dayBoundaryHour).day(containing: plan.createdAt)
+                        == DayClock(boundaryHour: profile.dayBoundaryHour).day(containing: timeline.date) {
+                        PlanCard(situation: plan.situation, action: plan.action, title: "Your plan for next time")
+                    }
                     if isPrep(snap) { useRows(now: timeline.date) }
                     tiles(snap)
                     if let next = snap.nextMilestone, !isPrep(snap) { milestone(next: next, daysClear: snap.daysClear) }

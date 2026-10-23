@@ -7,6 +7,8 @@ import SwiftUI
 final class LogRouter {
     enum Page: Hashable, Identifiable {
         case menu, craving
+        /// "Slipped? Log it" from the widget: logs a slip of the main product and opens the talk-through.
+        case slip
         var id: Self { self }
     }
 
@@ -39,14 +41,19 @@ struct LogSheet: View {
                         sos.open(source: "log")
                     })
                 }
-                .navigationDestination(item: $slip) { _ in
-                    SlipAcknowledgement(onDone: onClose)
+                .navigationDestination(item: $slip) { entry in
+                    SlipFlow(entry: entry, profile: profile, onDone: onClose)
                         .navigationBarBackButtonHidden()
+                        .toolbar(.hidden, for: .navigationBar)
                 }
         }
         .sensoryFeedback(DX.Haptic.commit, trigger: logged)
         .onAppear {
             if start == .craving, path.isEmpty { path = [.craving] }
+            if start == .slip, slip == nil, let product = products.first {
+                slip = UseLog.log(product, in: context)
+                Analytics.track(.slipLogged(source: "widget"))
+            }
             detent = path.isEmpty ? .medium : .large
         }
         // The menu fits half the screen; the craving form and the slip screen get the full height.
@@ -284,49 +291,5 @@ struct CravingLogForm: View {
         try? context.save()
         saved.toggle()
         onSaved()
-    }
-}
-
-/// After a slip is logged: supportive, and nothing resets (S6.3, S7.1). The talk-through comes in Section 8.
-struct SlipAcknowledgement: View {
-    let onDone: () -> Void
-    @State private var showTalk = false
-
-    var body: some View {
-        VStack(spacing: DX.Space.s) {
-            ScrollView {
-                VStack(spacing: DX.Space.s) {
-                    Image(systemName: "heart")
-                        .font(.system(size: 30))
-                        .foregroundStyle(DX.Palette.accentInk)
-                        .frame(width: 76, height: 76)
-                        .background(DX.Palette.accentSoft, in: Circle())
-                        .accessibilityHidden(true)
-                        .padding(.top, DX.Space.xxl)
-                    Text("Thanks for being honest").dxText(.title).multilineTextAlignment(.center)
-                    Text("A slip is one moment, not a restart. Your days clear and progress stay as they are.")
-                        .dxText(.subtitle).multilineTextAlignment(.center)
-                    DXCard(padding: 14) {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("One minute, if you have it").dxText(.micro)
-                            Text("A few quick questions about what happened, so we can plan for next time.")
-                                .font(DX.TextStyle.subtitle.font).foregroundStyle(DX.Palette.text)
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    .padding(.top, DX.Space.l)
-                }
-            }
-            .scrollBounceBehavior(.basedOnSize)
-            Button("Talk it through · 1 min") { showTalk = true }.buttonStyle(.dxPrimary)
-            Button("Not now", action: onDone).buttonStyle(.dxQuiet)
-        }
-        .padding(.horizontal, DX.Space.m)
-        .padding(.bottom, DX.Space.xs)
-        .dxCanvas()
-        .sheet(isPresented: $showTalk) {
-            ComingSoon(title: "Talk it through", message: "The one-minute slip talk-through arrives in Section 8.", systemImage: "heart")
-                .presentationDetents([.medium])
-        }
     }
 }

@@ -146,6 +146,15 @@ jobs:
           shoot dark large log-craving-dark $P12 -dx.logSheet craving
           shoot light large log-craving-light $P12 -dx.logSheet craving
           shoot dark large home-prep-uses-dark -dx.homeScenario prep -dx.store pro
+          shoot dark large slip-ack-dark $P12 -dx.logSheet slip
+          shoot light large slip-ack-light $P12 -dx.logSheet slip
+          shoot dark large slip-what-dark $P12 -dx.logSheet slip -dx.slipStage what
+          shoot dark large slip-trigger-dark $P12 -dx.logSheet slip -dx.slipStage trigger
+          shoot dark large slip-plan-dark $P12 -dx.logSheet slip -dx.slipStage plan
+          shoot dark large slip-done-dark $P12 -dx.logSheet slip -dx.slipStage done
+          shoot dark accessibility-extra-extra-extra-large slip-plan-dark-ax5 $P12 -dx.logSheet slip -dx.slipStage plan
+          shoot dark large slip-home-dark $P12 -dx.seedSlip YES
+          shoot dark large slip-progress-dark $P12 -dx.seedSlip YES -dx.tab progress
           # Last: the under-18 screen persists its flag, so everything after it would show the exit.
           shoot dark large onb-under_age-dark -dx.onboardingStep under_age
           cd shots

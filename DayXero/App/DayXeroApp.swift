@@ -76,7 +76,7 @@ struct RootView: View {
             .onOpenURL { url in
                 guard url.scheme == "dayxero" else { return }
                 if url.host() == "log" {
-                    log.open(url.path().contains("craving") ? .craving : .menu)
+                    log.open(url.path().contains("craving") ? .craving : url.path().contains("slip") ? .slip : .menu)
                     return
                 }
                 guard url.host() == "sos" else { return }
@@ -100,6 +100,7 @@ struct RootView: View {
                 switch UserDefaults.standard.string(forKey: "dx.logSheet") {
                 case "menu": log.open(.menu)
                 case "craving": log.open(.craving)
+                case "slip": log.open(.slip)
                 default: break
                 }
                 #endif

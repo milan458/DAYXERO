@@ -54,6 +54,13 @@ enum DebugScenario: String {
                 if when < now { context.insert(LogEntry(kind: .use, product: product, timestamp: when)) }
             }
         }
+        // A slip this morning, talked through, so Home shows today's plan (S8.3).
+        if UserDefaults.standard.bool(forKey: "dx.seedSlip"), now.timeIntervalSince(calendar.startOfDay(for: now)) > 3600 {
+            let slip = LogEntry(kind: .slip, product: .vape, timestamp: now.addingTimeInterval(-1800), trigger: .coffee, mood: .meh)
+            slip.nextTime = "take a short walk"
+            context.insert(slip)
+            context.insert(IfThenPlan(situation: "after coffee", action: "take a short walk", createdAt: now.addingTimeInterval(-1700)))
+        }
         // A few cravings ridden out earlier today, for "That's 4 this week" in Craving SOS.
         if self == .day3 {
             for hours in 1...3 {

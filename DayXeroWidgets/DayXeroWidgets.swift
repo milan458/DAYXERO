@@ -229,6 +229,13 @@ struct LogWidgetView: View {
                     }
                     .accessibilityLabel(Text("Craving SOS"))
                 }
+                if family == .systemMedium {
+                    // A quiet way to log a slip; it opens the talk-through (S8.1).
+                    Link(destination: URL(string: "dayxero://log/slip")!) {
+                        Text("Slipped? \(Text("Log it").underline())").font(.system(size: 12)).foregroundStyle(DX.Palette.text2)
+                    }
+                    .padding(.top, 2)
+                }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }

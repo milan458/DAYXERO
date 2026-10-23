@@ -186,6 +186,8 @@ public final class LogEntry {
     public var outcomeRaw: String?
     /// Slip debrief: one thing to try next time.
     public var nextTime: String?
+    /// Slip debrief: roughly how much.
+    public var amountRaw: String?
 
     public init(kind: LogKind, product: Product? = nil, timestamp: Date = .now, intensity: Int? = nil,
                 trigger: Trigger? = nil, mood: Mood? = nil, note: String? = nil) {
@@ -208,6 +210,10 @@ public final class LogEntry {
     public var place: Place? {
         get { placeRaw.flatMap(Place.init(rawValue:)) }
         set { placeRaw = newValue?.rawValue }
+    }
+    public var amount: SlipAmount? {
+        get { amountRaw.flatMap(SlipAmount.init(rawValue:)) }
+        set { amountRaw = newValue?.rawValue }
     }
     public var outcome: CravingOutcome? {
         get { outcomeRaw.flatMap(CravingOutcome.init(rawValue:)) }

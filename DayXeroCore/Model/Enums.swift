@@ -64,6 +64,23 @@ public enum Trigger: String, Codable, CaseIterable, Sendable {
         }
     }
 
+    /// "Then I'll…" ideas for the slip talk-through (S8.2), drafted by Claude and approved by Milan.
+    public var nextTimeSuggestions: [LocalizedStringResource] {
+        switch self {
+        case .morning: ["drink water before anything else", "shower first", "step outside for fresh air", "open Craving SOS"]
+        case .coffee: ["take a short walk", "switch to tea for a week", "have it somewhere new", "open Craving SOS"]
+        case .meals: ["get up from the table straight away", "brush my teeth", "chew sugar-free gum", "take a short walk"]
+        case .stress: ["open Craving SOS", "breathe slowly for one minute", "step away for five minutes", "text a friend"]
+        case .alcohol: ["alternate with water", "stand away from smokers", "leave a little earlier", "keep gum in my pocket"]
+        case .boredom: ["do something with my hands", "go for a walk", "play a quick game", "open Craving SOS"]
+        case .social: ["tell a friend I'm quitting", "stand with non-smokers", "have gum ready", "step away and breathe"]
+        case .driving: ["keep mints in the car", "put on a podcast", "clear the car of vapes and lighters", "open the window and breathe"]
+        case .work: ["take my break somewhere new", "walk around the block", "take a break with a non-smoker", "drink water"]
+        case .phone: ["put the phone down for five minutes", "move to another room", "chew sugar-free gum", "open Craving SOS"]
+        case .other: ["open Craving SOS", "take a short walk", "drink water", "text a friend"]
+        }
+    }
+
     /// Completes "If it's …" in an if-then plan.
     public var situation: LocalizedStringResource {
         switch self {
@@ -148,6 +165,11 @@ public enum Mood: Int, Codable, CaseIterable, Sendable {
         case .great: "Great"
         }
     }
+}
+
+/// Roughly how much was used in a slip (S8.2).
+public enum SlipAmount: String, Codable, CaseIterable, Sendable {
+    case aLittle, one, more
 }
 
 /// Where a craving happened (S7.2, optional).

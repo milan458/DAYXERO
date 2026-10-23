@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-23T07:30:04.957Z"
+    "updated": "2026-10-23T07:32:34.756Z"
   },
   "now": {
     "section": "S5",
@@ -834,11 +834,17 @@
       "title": "Slip handling",
       "goal": "",
       "signoff": {
-        "state": "mockups_ready",
+        "state": "signed_off",
         "history": [
           {
             "time": "2026-10-23T07:10:54.928Z",
             "state": "mockups_ready",
+            "by": "Claude",
+            "comment": ""
+          },
+          {
+            "time": "2026-10-23T07:32:34.670Z",
+            "state": "signed_off",
             "by": "Claude",
             "comment": ""
           }
@@ -854,32 +860,32 @@
         {
           "id": "S8.1",
           "title": "Slip logging from SOS, Home and the widget.",
-          "status": "pending",
-          "notes": "Mockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups ready in tracker.\nMilan approved S8 in chat, with the drafted copy and suggestions.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S8.2",
           "title": "Sixty-second slip debrief: what happened, what triggered it, one thing to try next time.",
-          "status": "pending",
-          "notes": "Mockups ready in tracker.\nPer-trigger 'Then I'll…' suggestions drafted in the S8 mockup.",
+          "status": "in_progress",
+          "notes": "Mockups ready in tracker.\nPer-trigger 'Then I'll…' suggestions drafted in the S8 mockup.\nMilan approved S8 in chat, with the drafted copy and suggestions.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S8.3",
           "title": "Supportive messages (copy from Milan; placeholders until then). Streak and progress visual unchanged.",
-          "status": "pending",
-          "notes": "Needs supportive slip copy from Milan (placeholders until then).\nMockups ready in tracker.\nMilan asked me to draft the slip copy and per-trigger suggestions; drafts are in the S8 mockup for him to edit. Third-slip-in-a-day note (offer NRT or go over the plan) kept.",
+          "status": "in_progress",
+          "notes": "Needs supportive slip copy from Milan (placeholders until then).\nMockups ready in tracker.\nMilan asked me to draft the slip copy and per-trigger suggestions; drafts are in the S8 mockup for him to edit. Third-slip-in-a-day note (offer NRT or go over the plan) kept.\nMilan approved S8 in chat, with the drafted copy and suggestions.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S8.4",
           "title": "Slips feed the insights screen.",
-          "status": "pending",
-          "notes": "Mockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups ready in tracker.\nMilan approved S8 in chat, with the drafted copy and suggestions.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         }
@@ -1263,6 +1269,31 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-23T07:32:34.756Z",
+      "type": "status",
+      "message": "S8.4 pending → in_progress (Milan approved S8 in chat, with the drafted copy and suggestions.)"
+    },
+    {
+      "time": "2026-10-23T07:32:34.735Z",
+      "type": "status",
+      "message": "S8.3 pending → in_progress (Milan approved S8 in chat, with the drafted copy and suggestions.)"
+    },
+    {
+      "time": "2026-10-23T07:32:34.717Z",
+      "type": "status",
+      "message": "S8.2 pending → in_progress (Milan approved S8 in chat, with the drafted copy and suggestions.)"
+    },
+    {
+      "time": "2026-10-23T07:32:34.696Z",
+      "type": "status",
+      "message": "S8.1 pending → in_progress (Milan approved S8 in chat, with the drafted copy and suggestions.)"
+    },
+    {
+      "time": "2026-10-23T07:32:34.670Z",
+      "type": "signoff",
+      "message": "S8 mockups → signed_off"
+    },
     {
       "time": "2026-10-23T07:30:04.957Z",
       "type": "note",

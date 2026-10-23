@@ -20,6 +20,7 @@ struct CravingSOSView: View {
     @Environment(\.scenePhase) private var scenePhase
     @AppStorage("dx.sosHaptics") private var hapticsOn = true
     @Query(filter: #Predicate<LogEntry> { $0.kindRaw == "craving" }) private var cravings: [LogEntry]
+    @Query(sort: \IfThenPlan.createdAt, order: .reverse) private var plans: [IfThenPlan]
 
     @State private var startedAt: Date
     @State private var roundStartedAt: Date
@@ -102,6 +103,10 @@ struct CravingSOSView: View {
                                 caption(roundElapsed: roundElapsed)
                                 if let reason { reasonCard(reason) }
                                 dots
+                                // The latest if-then plan, from a lesson or a slip talk-through (S5, S8.2).
+                                if let plan = plans.first {
+                                    PlanCard(situation: plan.situation, action: plan.action).padding(.top, DX.Space.xxs)
+                                }
                             }
                         }
                     }
@@ -356,7 +361,7 @@ struct CravingSOSView: View {
     // MARK: I slipped
 
     private var slippedView: some View {
-        SlipAcknowledgement(onDone: onClose)
+        SlipFlow(entry: CravingLog.entry(startedAt: startedAt, in: context), profile: profile, onDone: onClose)
     }
 
     // MARK: Flow

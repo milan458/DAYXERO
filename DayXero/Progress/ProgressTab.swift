@@ -45,8 +45,14 @@ struct ProgressTab: View {
             }
         }
         .sheet(item: $editing) { entry in
-            CravingLogForm(profile: profile, editing: entry, onSaved: { editing = nil })
-                .presentationDetents([.large])
+            Group {
+                if entry.kind == .slip {
+                    SlipFlow(entry: entry, profile: profile, startInTalkThrough: true) { editing = nil }
+                } else {
+                    CravingLogForm(profile: profile, editing: entry, onSaved: { editing = nil })
+                }
+            }
+            .presentationDetents([.large])
         }
     }
 
@@ -143,12 +149,19 @@ struct ProgressTab: View {
                 if let summary = summary(peaks) {
                     Text(summary).dxText(.subtitle)
                 }
-                HeatMap(grid: grid)
+                // Uses and slips in amber, so they read differently from cravings (S8.4).
+                HeatMap(grid: grid, tint: series == .cravings ? DX.Palette.sage : DX.Palette.amber)
             }
         }
     }
 
     private func summary(_ peaks: [Insights.Peak]) -> AttributedString? {
+        if series == .uses, let first = peaks.first {
+            var text = AttributedString(peakName(first))
+            text.font = .custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote)
+            text.foregroundColor = DX.Palette.text
+            return text + AttributedString(String(localized: " are when you've used most."))
+        }
         guard let first = peaks.first else { return nil }
         var text = AttributedString(peakName(first))
         text.font = .custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote)
@@ -366,6 +379,7 @@ private struct SeriesToggle: View {
 /// Time of day (rows) by weekday (columns, Monday first).
 struct HeatMap: View {
     let grid: [[Int]]
+    var tint: Color = DX.Palette.sage
 
     var body: some View {
         let most = max(grid.flatMap { $0 }.max() ?? 1, 1)
@@ -388,7 +402,7 @@ struct HeatMap: View {
                     ForEach(0..<7, id: \.self) { col in
                         let value = grid[row][col]
                         RoundedRectangle(cornerRadius: 6, style: .continuous)
-                            .fill(value == 0 ? DX.Palette.track.opacity(0.5) : DX.Palette.sage.opacity(0.2 + 0.8 * Double(value) / Double(most)))
+                            .fill(value == 0 ? DX.Palette.track.opacity(0.5) : tint.opacity(0.2 + 0.8 * Double(value) / Double(most)))
                             .frame(height: 22)
                             .frame(maxWidth: .infinity)
                             .accessibilityElement()
@@ -448,15 +462,20 @@ struct LogEntryRow: View {
     private var title: LocalizedStringKey {
         switch entry.kind {
         case .craving: entry.outcome == .passed ? "Craving ridden out" : "Craving"
-        case .slip: "Slip"
+        case .slip:
+            if let product = entry.product {
+                "Slip · \(Text(product.title))"
+            } else {
+                "Slip"
+            }
         case .use: entry.product.map(LogSheet.useTitle) ?? "Use"
         }
     }
 
     private var detail: String {
         var parts = [Self.when(entry.timestamp)]
-        if entry.kind == .slip, let product = entry.product { parts.append(String(localized: product.title)) }
         if let trigger = entry.trigger { parts.append(String(localized: trigger.title)) }
+        if entry.kind == .slip, entry.nextTime != nil { parts.append(String(localized: "plan made")) }
         if let intensity = entry.intensity {
             parts.append(intensity <= 3 ? String(localized: "mild") : intensity <= 7 ? String(localized: "moderate") : String(localized: "strong"))
         }
