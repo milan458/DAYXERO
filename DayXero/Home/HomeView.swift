@@ -6,7 +6,7 @@ import SwiftUI
 struct HomeView: View {
     let profile: UserProfile
     @State private var tab = UserDefaults.standard.string(forKey: "dx.tab") ?? "today"
-    @State private var showSOS = false
+    @Environment(SOSRouter.self) private var sos
     @Environment(Entitlement.self) private var entitlement
     @Environment(\.scenePhase) private var scenePhase
 
@@ -31,7 +31,7 @@ struct HomeView: View {
                     DXDockItem(id: "progress", title: "Progress", systemImage: "chart.bar"),
                 ],
                 selection: $tab,
-                sosAction: { showSOS = true }
+                sosAction: { sos.open(source: "dock") }
             )
             .padding(.bottom, DX.Space.xxs)
         }
@@ -40,15 +40,11 @@ struct HomeView: View {
         .onChange(of: scenePhase, initial: true) { _, phase in
             if phase == .active { ProgramUpkeep.checkForBreak(profile, isPro: entitlement.isPro) }
         }
-        .sheet(isPresented: $showSOS) {
-            ComingSoon(title: "Craving SOS", message: "The 3-minute urge timer, breathing and your reasons arrive in Section 6.", systemImage: "flame")
-                .presentationDetents([.medium])
-        }
     }
 }
 
-/// Stand-in for tabs that later sections fill in.
-private struct ComingSoon: View {
+/// Stand-in for tabs and steps that later sections fill in.
+struct ComingSoon: View {
     let title: LocalizedStringKey
     let message: LocalizedStringKey
     let systemImage: String

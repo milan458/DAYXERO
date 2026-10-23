@@ -22,6 +22,8 @@ struct DayXeroApp: App {
         } catch {
             fatalError("Could not open the DayXero store: \(error)")
         }
+        SOSBridge.container = container
+        SOSBridge.endLiveActivity = { await SOSLiveActivity.endAll() }
         Subscriptions.shared.configure()
         Analytics.configure()
         _entitlement = State(initialValue: Entitlement(store: Self.makeStore()))
@@ -53,8 +55,34 @@ struct RootView: View {
     /// The full paywall shows once, right after onboarding. After that, upgrades happen at locked days.
     @AppStorage("dx.paywallDone") private var paywallDone = false
     @Environment(Entitlement.self) private var entitlement
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var sos = SOSRouter()
 
     var body: some View {
+        routed
+            .environment(sos)
+            // Craving SOS sits above everything, so every way in reaches it in one step (S6.5).
+            .fullScreenCover(item: $sos.launch) { launch in
+                CravingSOSView(profile: profiles.first, source: launch.source) { sos.launch = nil }
+            }
+            .onOpenURL { url in
+                guard url.scheme == "dayxero", url.host() == "sos" else { return }
+                let source = URLComponents(url: url, resolvingAgainstBaseURL: false)?
+                    .queryItems?.first { $0.name == "source" }?.value
+                sos.open(source: source ?? "link")
+            }
+            .onChange(of: scenePhase, initial: true) { _, phase in
+                guard phase == .active else { return }
+                SOSBridge.openSession = { [sos] source in sos.open(source: source) }
+                if let source = SOSState.consumeOpenRequest() { sos.open(source: source) }
+                #if DEBUG
+                if UserDefaults.standard.bool(forKey: "dx.sos") { sos.open(source: "debug") }
+                #endif
+            }
+    }
+
+    @ViewBuilder
+    private var routed: some View {
         #if DEBUG
         if UserDefaults.standard.bool(forKey: "dx.showGallery") {
             DesignSystemGallery()

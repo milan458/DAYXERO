@@ -40,6 +40,8 @@ public enum LogKind: String, Codable, CaseIterable, Sendable {
 
 public enum CravingOutcome: String, Codable, Sendable {
     case passed, slipped, pingedFriend
+    /// The session was closed with ✕ before choosing an outcome.
+    case closed
 }
 
 /// Situations that bring on cravings, in the order onboarding shows them.

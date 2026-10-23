@@ -12,6 +12,8 @@ struct DayXeroWidgets: WidgetBundle {
 
     var body: some Widget {
         DaysClearWidget()
+        SOSWidget()
+        CravingSOSControl()
         CravingLiveActivity()
     }
 }
@@ -109,39 +111,145 @@ struct DaysClearView: View {
     }
 }
 
-// MARK: - Craving Live Activity (built out in Section 6)
+// MARK: - Craving SOS widgets and control (S6.5)
+
+private let sosURL = URL(string: "dayxero://sos?source=widget")!
+
+/// Home screen and Lock Screen button straight into a Craving SOS session.
+struct SOSWidget: Widget {
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: "CravingSOS", provider: DaysClearProvider()) { entry in
+            SOSWidgetView(entry: entry)
+                .containerBackground(DX.Palette.canvas, for: .widget)
+                .widgetURL(sosURL)
+        }
+        .configurationDisplayName("Craving SOS")
+        .description("One tap into a three-minute session to ride out a craving.")
+        .supportedFamilies([.systemSmall, .accessoryCircular])
+    }
+}
+
+struct SOSWidgetView: View {
+    let entry: DaysClearEntry
+    @Environment(\.widgetFamily) private var family
+
+    var body: some View {
+        switch family {
+        case .accessoryCircular:
+            ZStack {
+                AccessoryWidgetBackground()
+                Image(systemName: "flame").font(.system(size: 22, weight: .semibold))
+            }
+            .accessibilityLabel(Text("Craving SOS"))
+        default:
+            VStack(alignment: .leading, spacing: DX.Space.xxs) {
+                if let days = entry.daysClear {
+                    Text("Day \(days) clear").dxText(.micro)
+                } else {
+                    Text("Craving SOS").dxText(.micro)
+                }
+                Text("Craving? Ride it out.").font(.custom(DX.Typeface.semibold, size: 16, relativeTo: .headline))
+                    .foregroundStyle(DX.Palette.text)
+                Spacer(minLength: 0)
+                Image(systemName: "flame").font(.system(size: 18, weight: .semibold))
+                    .foregroundStyle(DX.Palette.onAccent)
+                    .frame(width: 40, height: 40)
+                    .background(DX.Palette.sage, in: Circle())
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+        }
+    }
+}
+
+/// Control Center and Action button control.
+struct CravingSOSControl: ControlWidget {
+    var body: some ControlWidgetConfiguration {
+        StaticControlConfiguration(kind: "in.dayxero.app.sos-control") {
+            ControlWidgetButton(action: StartCravingSOSIntent()) {
+                Label("Craving SOS", systemImage: "flame")
+            }
+        }
+        .displayName("Craving SOS")
+        .description("Start a three-minute session to ride out a craving.")
+    }
+}
+
+// MARK: - Craving Live Activity (S6.4)
 
 struct CravingLiveActivity: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: CravingActivityAttributes.self) { context in
-            HStack {
-                Circle().fill(DX.Palette.sage).frame(width: 10, height: 10)
-                Text("Craving wave")
-                Spacer()
-                Text(timerInterval: Date.now...max(context.state.endsAt, .now), countsDown: true)
-                    .monospacedDigit()
-                    .frame(maxWidth: 64)
+            VStack(spacing: 12) {
+                HStack(spacing: 10) {
+                    appMark
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text("Riding it out").font(.system(size: 15, weight: .semibold))
+                        Text("Breathe out slowly").font(.system(size: 12)).foregroundStyle(.white.opacity(0.6))
+                    }
+                    Spacer()
+                    countdown(context.state.endsAt).font(.system(size: 28, weight: .bold)).foregroundStyle(DX.Palette.sage)
+                        .frame(maxWidth: 90, alignment: .trailing)
+                }
+                ProgressView(timerInterval: context.state.endsAt.addingTimeInterval(-CravingSession.length)...context.state.endsAt,
+                             countsDown: false) { EmptyView() } currentValueLabel: { EmptyView() }
+                    .tint(DX.Palette.sage)
+                actions
             }
             .foregroundStyle(.white)
-            .padding()
-            .activityBackgroundTint(.black)
+            .padding(16)
+            .activityBackgroundTint(Color(white: 0.11).opacity(0.85))
+            .activitySystemActionForegroundColor(.white)
         } dynamicIsland: { context in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
-                    Text("Craving wave")
+                    HStack(spacing: 8) {
+                        appMark
+                        VStack(alignment: .leading, spacing: 1) {
+                            Text("Riding it out").font(.system(size: 14, weight: .semibold))
+                            Text("Breathe out slowly").font(.system(size: 11)).foregroundStyle(.white.opacity(0.6))
+                        }
+                    }
                 }
                 DynamicIslandExpandedRegion(.trailing) {
-                    Text(timerInterval: Date.now...max(context.state.endsAt, .now), countsDown: true)
-                        .monospacedDigit()
+                    countdown(context.state.endsAt).font(.system(size: 26, weight: .bold)).foregroundStyle(DX.Palette.sage)
+                        .frame(maxWidth: 80, alignment: .trailing)
+                }
+                DynamicIslandExpandedRegion(.bottom) {
+                    actions.padding(.top, 6)
                 }
             } compactLeading: {
-                Circle().fill(DX.Palette.sage).frame(width: 10, height: 10)
+                Image(systemName: "wind").foregroundStyle(DX.Palette.sage)
             } compactTrailing: {
-                Text(timerInterval: Date.now...max(context.state.endsAt, .now), countsDown: true)
-                    .monospacedDigit()
-                    .frame(maxWidth: 40)
+                countdown(context.state.endsAt).foregroundStyle(DX.Palette.sage).frame(maxWidth: 44)
             } minimal: {
-                Circle().fill(DX.Palette.sage).frame(width: 10, height: 10)
+                Image(systemName: "wind").foregroundStyle(DX.Palette.sage)
+            }
+            .widgetURL(URL(string: "dayxero://sos?source=live_activity"))
+            .keylineTint(DX.Palette.sage)
+        }
+    }
+
+    private var appMark: some View {
+        Circle().fill(DX.Palette.sage).frame(width: 9, height: 9)
+            .frame(width: 28, height: 28)
+            .background(.black, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+    }
+
+    private func countdown(_ endsAt: Date) -> some View {
+        Text(timerInterval: Date.now...max(endsAt, .now), countsDown: true).monospacedDigit()
+    }
+
+    private var actions: some View {
+        HStack(spacing: 8) {
+            Button(intent: CravingPassedIntent()) {
+                Text("It passed").font(.system(size: 14, weight: .semibold)).frame(maxWidth: .infinity, minHeight: 36)
+            }
+            .buttonStyle(.plain)
+            .foregroundStyle(.black)
+            .background(DX.Palette.sage, in: Capsule())
+            Link(destination: URL(string: "dayxero://sos?source=live_activity")!) {
+                Text("Open").font(.system(size: 14, weight: .semibold)).frame(maxWidth: .infinity, minHeight: 36)
+                    .background(.white.opacity(0.14), in: Capsule())
             }
         }
     }

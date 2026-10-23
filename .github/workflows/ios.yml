@@ -124,6 +124,19 @@ jobs:
           shoot dark large home-returning-dark -dx.homeScenario returning -dx.store pro
           shoot dark large prog-returning-dark -dx.homeScenario returning -dx.store pro -dx.tab program
           shoot dark accessibility-extra-extra-extra-large lesson-reading-dark-ax5 $D3 -dx.openLesson quit-3
+          S="-dx.homeScenario day3 -dx.store pro -dx.sos YES"
+          shoot dark large sos-session-dark $S -dx.sosElapsed 19
+          shoot light large sos-session-light $S -dx.sosElapsed 19
+          shoot dark large sos-photo-dark $S -dx.sosElapsed 92
+          shoot dark large sos-timeup-dark $S -dx.sosElapsed 181
+          shoot dark large sos-passed-dark $S -dx.sosOutcome passed
+          shoot light large sos-passed-light $S -dx.sosOutcome passed
+          shoot dark large sos-slipped-dark $S -dx.sosOutcome slipped
+          shoot dark accessibility-extra-extra-extra-large sos-session-dark-ax5 $S -dx.sosElapsed 19
+          # Leave the session running and switch apps: the countdown moves to the Dynamic Island (S6.4).
+          xcrun simctl launch "$UDID" com.apple.Preferences || true
+          sleep 3
+          xcrun simctl io "$UDID" screenshot shots/sos-island-dark.png || true
           # Last: the under-18 screen persists its flag, so everything after it would show the exit.
           shoot dark large onb-under_age-dark -dx.onboardingStep under_age
           cd shots

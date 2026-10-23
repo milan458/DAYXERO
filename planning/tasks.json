@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-23T06:40:17.291Z"
+    "updated": "2026-10-23T06:43:52.121Z"
   },
   "now": {
     "section": "S5",
@@ -692,8 +692,15 @@
       "title": "Craving SOS",
       "goal": "opens in under a second, from anywhere.",
       "signoff": {
-        "state": "not_started",
-        "history": []
+        "state": "signed_off",
+        "history": [
+          {
+            "time": "2026-10-23T06:43:52.121Z",
+            "state": "signed_off",
+            "by": "Claude",
+            "comment": ""
+          }
+        ]
       },
       "mockups": [
         {
@@ -705,7 +712,7 @@
         {
           "id": "S6.1",
           "title": "SOS screen: urge-surfing timer (about 3 minutes), guided breathing, the user's reasons and photo.",
-          "status": "pending",
+          "status": "in_progress",
           "notes": "",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
@@ -713,7 +720,7 @@
         {
           "id": "S6.2",
           "title": "Core Haptics pattern that slows as the session progresses; Reduce Motion and haptics-off fallbacks.",
-          "status": "pending",
+          "status": "in_progress",
           "notes": "",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
@@ -721,7 +728,7 @@
         {
           "id": "S6.3",
           "title": "Outcomes: \"It passed\" (logs a craving resisted), \"I slipped\" (goes to slip debrief), \"Ping a friend\" (share sheet in v1; buddy system comes later).",
-          "status": "pending",
+          "status": "in_progress",
           "notes": "",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
@@ -729,7 +736,7 @@
         {
           "id": "S6.4",
           "title": "Live Activity and Dynamic Island showing the countdown with an \"It passed\" action.",
-          "status": "pending",
+          "status": "in_progress",
           "notes": "",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
@@ -737,7 +744,7 @@
         {
           "id": "S6.5",
           "title": "Entry points: Home button, home screen widget, lock screen widget, Control Center control, App Intent / Siri (\"I'm having a craving\").",
-          "status": "pending",
+          "status": "in_progress",
           "notes": "",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
@@ -745,7 +752,7 @@
         {
           "id": "S6.6",
           "title": "Log every SOS session with time and trigger for insights.",
-          "status": "pending",
+          "status": "in_progress",
           "notes": "",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
@@ -753,7 +760,7 @@
         {
           "id": "S6.7",
           "title": "Replace the Home craving-button placeholder with Craving SOS",
-          "status": "pending",
+          "status": "in_progress",
           "notes": "From S4 build: dock SOS button opens a 'coming soon' sheet for now.",
           "created": "2026-10-23T05:18:11.565Z",
           "completed": null
@@ -1226,6 +1233,46 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-23T06:43:52.121Z",
+      "type": "signoff",
+      "message": "S6 mockups → signed_off"
+    },
+    {
+      "time": "2026-10-23T06:43:13.322Z",
+      "type": "status",
+      "message": "S6.7 pending → in_progress"
+    },
+    {
+      "time": "2026-10-23T06:43:13.299Z",
+      "type": "status",
+      "message": "S6.6 pending → in_progress"
+    },
+    {
+      "time": "2026-10-23T06:43:13.278Z",
+      "type": "status",
+      "message": "S6.5 pending → in_progress"
+    },
+    {
+      "time": "2026-10-23T06:43:13.255Z",
+      "type": "status",
+      "message": "S6.4 pending → in_progress"
+    },
+    {
+      "time": "2026-10-23T06:43:13.234Z",
+      "type": "status",
+      "message": "S6.3 pending → in_progress"
+    },
+    {
+      "time": "2026-10-23T06:43:13.205Z",
+      "type": "status",
+      "message": "S6.2 pending → in_progress"
+    },
+    {
+      "time": "2026-10-23T06:43:13.172Z",
+      "type": "status",
+      "message": "S6.1 pending → in_progress"
+    },
     {
       "time": "2026-10-23T06:40:17.291Z",
       "type": "mockup",
