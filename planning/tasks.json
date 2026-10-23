@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-23T05:50:47.345Z"
+    "updated": "2026-10-23T05:56:02.368Z"
   },
   "now": {
     "section": "S5",
@@ -582,13 +582,19 @@
       "title": "Program",
       "goal": "",
       "signoff": {
-        "state": "mockups_ready",
+        "state": "signed_off",
         "history": [
           {
             "time": "2026-10-23T05:44:45.357Z",
             "state": "mockups_ready",
             "by": "Claude",
             "comment": ""
+          },
+          {
+            "time": "2026-10-23T05:51:53.164Z",
+            "state": "signed_off",
+            "by": "Milan",
+            "comment": "approve, start building (sent in chat)"
           }
         ]
       },
@@ -610,72 +616,72 @@
         {
           "id": "S5.2",
           "title": "Product variants: smoking, vaping, pouches; dual users get the variant for their main product plus notes for the others (confirm rule with Milan).",
-          "status": "awaiting_signoff",
-          "notes": "Question for Milan: dual users — main-product variant plus notes for the others. Confirm the rule.\nMockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nMilan: come back to the dual-user variant rule later; building with main product + notes for now.",
+          "status": "in_progress",
+          "notes": "Question for Milan: dual users — main-product variant plus notes for the others. Confirm the rule.\nMockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nMilan: come back to the dual-user variant rule later; building with main product + notes for now.\nBuilding.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S5.3",
           "title": "Day locking: a day unlocks only after the previous day is completed.",
-          "status": "awaiting_signoff",
-          "notes": "Mockups in progress (placeholder content, per Milan).\nMockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nBuilding.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S5.4",
           "title": "Lesson player: text, audio or short exercises as content requires; completion tracking.",
-          "status": "awaiting_signoff",
-          "notes": "Mockups in progress (placeholder content, per Milan).\nMockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nBuilding.\nBuilt; waiting on CI build, tests and screenshots.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S5.5",
           "title": "Prep phase until Quit Day, then the quit days.",
-          "status": "awaiting_signoff",
-          "notes": "Mockups in progress (placeholder content, per Milan).\nMockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nBuilding.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S5.6",
           "title": "Maintenance arc (weeks 2–5) changes format, not just content, to avoid the week 3–4 drop-off.",
-          "status": "awaiting_signoff",
-          "notes": "Mockups in progress (placeholder content, per Milan).\nMockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nBuilding.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S5.7",
           "title": "Inactivity behaviour per Milan's answer to the open decision in part 1.",
-          "status": "awaiting_signoff",
-          "notes": "Open decision from plan §1: keep the 3-idle-day reset to Day 1, or pause and replay the last day?\nMilan decided: no reset to Day 1. After inactivity, pause and replay the last completed day, then continue. Build in Section 5.\nMockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nMockup assumes the pause kicks in after 3 idle days (old spec's number); Milan to confirm.\nMilan: 3 idle days before the program pauses (then replay last finished day).",
+          "status": "in_progress",
+          "notes": "Open decision from plan §1: keep the 3-idle-day reset to Day 1, or pause and replay the last day?\nMilan decided: no reset to Day 1. After inactivity, pause and replay the last completed day, then continue. Build in Section 5.\nMockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nMockup assumes the pause kicks in after 3 idle days (old spec's number); Milan to confirm.\nMilan: 3 idle days before the program pauses (then replay last finished day).\nBuilding.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S5.8",
           "title": "Program overview screen: past, current and locked days.",
-          "status": "awaiting_signoff",
-          "notes": "Mockups in progress (placeholder content, per Milan).\nMockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nBuilding.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S5.9",
           "title": "Hook the S3.5 upgrade sheet to locked program days",
-          "status": "pending",
-          "notes": "From S3 build: UpgradeSheet + FreeTier.canOpen are ready; Program screen not built yet.",
+          "status": "in_progress",
+          "notes": "From S3 build: UpgradeSheet + FreeTier.canOpen are ready; Program screen not built yet.\nBuilding.",
           "created": "2026-10-22T22:57:10.800Z",
           "completed": null
         },
         {
           "id": "S5.10",
           "title": "Replace the temporary lesson page ('Mark as done') with the lesson player",
-          "status": "pending",
-          "notes": "From S4 build: lets the program be moved through until S5.4.",
+          "status": "in_progress",
+          "notes": "From S4 build: lets the program be moved through until S5.4.\nBuilding.",
           "created": "2026-10-23T05:18:11.591Z",
           "completed": null
         }
@@ -1215,6 +1221,61 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-23T05:56:02.368Z",
+      "type": "note",
+      "message": "S5.4: Built; waiting on CI build, tests and screenshots."
+    },
+    {
+      "time": "2026-10-23T05:51:53.342Z",
+      "type": "status",
+      "message": "S5.10 pending → in_progress (Building.)"
+    },
+    {
+      "time": "2026-10-23T05:51:53.323Z",
+      "type": "status",
+      "message": "S5.9 pending → in_progress (Building.)"
+    },
+    {
+      "time": "2026-10-23T05:51:53.305Z",
+      "type": "status",
+      "message": "S5.8 awaiting_signoff → in_progress (Building.)"
+    },
+    {
+      "time": "2026-10-23T05:51:53.286Z",
+      "type": "status",
+      "message": "S5.7 awaiting_signoff → in_progress (Building.)"
+    },
+    {
+      "time": "2026-10-23T05:51:53.268Z",
+      "type": "status",
+      "message": "S5.6 awaiting_signoff → in_progress (Building.)"
+    },
+    {
+      "time": "2026-10-23T05:51:53.247Z",
+      "type": "status",
+      "message": "S5.5 awaiting_signoff → in_progress (Building.)"
+    },
+    {
+      "time": "2026-10-23T05:51:53.225Z",
+      "type": "status",
+      "message": "S5.4 awaiting_signoff → in_progress (Building.)"
+    },
+    {
+      "time": "2026-10-23T05:51:53.204Z",
+      "type": "status",
+      "message": "S5.3 awaiting_signoff → in_progress (Building.)"
+    },
+    {
+      "time": "2026-10-23T05:51:53.182Z",
+      "type": "status",
+      "message": "S5.2 awaiting_signoff → in_progress (Building.)"
+    },
+    {
+      "time": "2026-10-23T05:51:53.164Z",
+      "type": "signoff",
+      "message": "S5 mockups approved by Milan"
+    },
     {
       "time": "2026-10-23T05:50:47.345Z",
       "type": "now",
