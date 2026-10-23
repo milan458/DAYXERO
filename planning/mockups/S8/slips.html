@@ -278,7 +278,7 @@
 <div class="wrap">
   <div class="micro">Section 8 · mockups for sign-off</div>
   <h1>Slip handling</h1>
-  <p class="lede">A slip never resets anything and never shames. You can log one from Craving SOS, the Log sheet or the widget. Then there's an optional one-minute talk-through: what happened, what set it off, and one thing to try next time, saved as an if-then plan that Craving SOS shows you later. All supportive wording is <span class="ph">placeholder</span> until your copy arrives. Example: Milan, Day 12.</p>
+  <p class="lede">A slip never resets anything and never shames. You can log one from Craving SOS, the Log sheet or the widget. Then there's an optional one-minute talk-through: what happened, what set it off, and one thing to try next time, saved as an if-then plan that Craving SOS shows you later. Supportive wording is my <span class="ph">draft</span> for you to edit; the full list is under the screens. Example: Milan, Day 12.</p>
   <div class="toggle" role="group" aria-label="Theme">
     <button aria-pressed="true" data-theme-btn="dark">Dark</button>
     <button aria-pressed="false" data-theme-btn="light">Light</button>
@@ -289,7 +289,29 @@
     <p style="margin:0"><b>Nothing resets.</b> Days clear, the Home hero, the week strip, money kept and milestones are all unchanged by a slip. The only places a slip appears are the Progress tab's patterns and recent logs.</p>
     <p style="margin:0"><b>Skippable at every step.</b> "Not now" and "Skip" are always there. A slip is saved the moment it's logged; the talk-through only adds details.</p>
     <p style="margin:0"><b>No streak language.</b> No "you broke your streak", no counters going back to zero, no red. The error haptic is never used for slips; a soft one is.</p>
-    <p style="margin:0" class="flag"><b>Question: several slips in one day.</b> My suggestion: from the third slip in a day, the talk-through ends with a gentle note offering to look at NRT (Section 9) or to talk the plan through again. It never suggests starting over. Keep, change, or leave out?</p>
+    <p style="margin:0"><b>Several slips in one day.</b> From the third slip in a day, the talk-through ends with a gentle note offering to look at NRT (Section 9) or to go over the plan again. It never suggests starting over.</p>
+  </div>
+
+  <div class="lede" style="margin-top:34px;display:grid;gap:10px;max-width:900px">
+    <div class="micro">Draft copy for you to edit (S8.3)</div>
+    <p style="margin:0"><b>Slip logged.</b> Heading: "Thanks for telling us". Body: "A slip is one moment, not a restart. Your {N} days clear stay as they are." Before Quit Day the body is "Logged. Prep is for learning your patterns, and this helps." Alternatives for the heading: "That's okay. Let's look at it." · "One moment, not a restart."</p>
+    <p style="margin:0"><b>Talk-through prompts.</b> "What happened? No judgement, just the facts so we can plan." · "What set it off? Pick the closest one." · "One thing to try next time. Make a plan for the next time it's {trigger}."</p>
+    <p style="margin:0"><b>Plan saved.</b> "Every slip shows you something about your cravings. Now you've got a plan for this one." Then: "Still Day {N} clear. Nothing has changed on Home."</p>
+    <p style="margin:0"><b>Not now.</b> No message; it just closes. The slip is saved.</p>
+    <p style="margin:0"><b>Third slip in a day.</b> "It's been a tough day. That happens, especially early on. Want to look at NRT options, or go over your plan again?" Buttons: "Look at NRT" · "Go over my plan" · "Not now".</p>
+    <div class="micro" style="margin-top:8px">"Then I'll…" suggestions per trigger</div>
+    <p style="margin:0"><b>Waking up:</b> drink water before anything else · shower first · step outside for fresh air · open Craving SOS<br>
+    <b>Coffee:</b> take a short walk · switch to tea for a week · have it somewhere new · open Craving SOS<br>
+    <b>After meals:</b> get up from the table straight away · brush my teeth · chew sugar-free gum · take a short walk<br>
+    <b>Stress:</b> open Craving SOS · breathe slowly for one minute · step away for five minutes · text a friend<br>
+    <b>Drinking:</b> alternate with water · stand away from smokers · leave a little earlier · keep gum in my pocket<br>
+    <b>Boredom:</b> do something with my hands · go for a walk · play a quick game · open Craving SOS<br>
+    <b>With friends:</b> tell a friend I'm quitting · stand with non-smokers · have gum ready · step away and breathe<br>
+    <b>Driving:</b> keep mints in the car · put on a podcast · clear the car of vapes and lighters · open the window and breathe<br>
+    <b>Work breaks:</b> take my break somewhere new · walk around the block · take a break with a non-smoker · drink water<br>
+    <b>On my phone:</b> put the phone down for five minutes · move to another room · chew sugar-free gum · open Craving SOS<br>
+    <b>Something else:</b> open Craving SOS · take a short walk · drink water · text a friend</p>
+    <p style="margin:0">Every list also ends with "write my own". None of these make health claims, so none need a source.</p>
   </div>
 </div>
 
@@ -302,7 +324,7 @@ const I = {
   x: '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>',
   user: '<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>',
 };
-const ph = '<span class="ph">placeholder</span>';
+const ph = '<span class="ph">draft</span>';
 const segs = (n, on) => `<div class="segs" style="grid-template-columns:repeat(${n},1fr)">${Array.from({length: n}, (_, i) => `<i class="${i < on ? 'on' : ''}"></i>`).join('')}</div>`;
 const ptop = (label, skip) => `<div class="ptop"><span class="close">${I.x}</span><span class="micro">${label}</span><span class="micro" style="width:34px;text-align:right">${skip ? 'Skip' : ''}</span></div>`;
 const dock = (on) => `<div class="dockwrap"><nav class="dock">
@@ -318,14 +340,14 @@ const screens = [
   { tag: 'S8.1, S8.3', title: 'Slip logged', player: true,
     body: `<div class="center" style="gap:12px;flex:none;margin-top:46px">
         <div class="soft">${I.heart}</div>
-        <h2 class="title" style="margin:0">Thanks for being honest ${ph}</h2>
+        <h2 class="title" style="margin:0">Thanks for telling us ${ph}</h2>
         <p class="sub">A slip is one moment, not a restart. Your 12 days clear stay as they are. ${ph}</p>
       </div>
       <div class="msg" style="margin-top:24px"><div class="micro" style="margin-bottom:4px">One minute, if you have it</div>Three quick questions so we can plan for next time.</div>
       <div class="grow"></div>
       <div class="footer"><div class="btn primary">Talk it through · 1 min</div><div class="btn quiet">Not now</div></div>`,
     notes: ['The same screen from every way in: "I slipped" in Craving SOS, a use logged after Quit Day in the Log sheet, or the widget. The slip is already saved here. Soft haptic, no red, no numbers going back.'],
-    flags: ['The heading and message are placeholders for your copy (S8.3). I can write a few options if that helps.'] },
+    flags: [] },
   { tag: 'S8.2', title: 'Talk-through · what happened', player: true,
     body: `${segs(3, 1)}${ptop('1 of 3', true)}
       <h2 class="title">What happened?</h2>
@@ -361,24 +383,24 @@ const screens = [
       <div class="body">
         <div class="ifthen">If it's <span class="slot">after coffee</span>,<br>then I'll <span class="slot">take a short walk</span></div>
         <div class="micro">Then I'll…</div>
-        <div class="chips"><span class="chip on">take a short walk</span><span class="chip">open Craving SOS</span><span class="chip">switch to tea for a week</span><span class="chip">chew gum</span><span class="chip">text a friend</span><span class="chip">write my own</span></div>
+        <div class="chips"><span class="chip on">take a short walk</span><span class="chip">switch to tea for a week</span><span class="chip">have it somewhere new</span><span class="chip">open Craving SOS</span><span class="chip">write my own</span></div>
       </div>
       <div class="grow"></div>
       <div class="footer"><div class="btn primary">Save my plan</div></div>`,
     notes: ['The same if-then format as the Program\'s exercise (S5). Suggestions change with the trigger you picked. The plan is saved and shows at the top of Craving SOS next time a craving hits.'],
-    flags: ['The suggested actions are placeholders. Do you want to supply a list per trigger, or should I draft one for you to edit?'] },
+    flags: [] },
   { tag: 'S8.3', title: 'Talk-through done', player: true,
     body: `${segs(3, 3)}
       <div class="center" style="gap:12px">
         <div class="soft">${I.check}</div>
         <h2 class="title" style="margin:0">Plan saved</h2>
-        <p class="sub">You've learned something about your cravings today. That's how this works. ${ph}</p>
+        <p class="sub">Every slip shows you something about your cravings. Now you've got a plan for this one. ${ph}</p>
         <div class="plancard" style="width:100%;text-align:left"><div class="micro" style="margin-bottom:6px">Your plan</div><div class="ifthen">If it's <span class="slot">after coffee</span>, then I'll <span class="slot">take a short walk</span></div></div>
         <div class="msg" style="width:100%;text-align:left;display:flex;gap:10px;align-items:center"><span style="color:var(--accent-ink)">${I.check}</span><span>Still <b>Day 12 clear</b>. Nothing has changed on Home.</span></div>
       </div>
       <div class="footer"><div class="btn primary">Back to Today</div></div>`,
     notes: ['Ends on the plan and an explicit reminder that nothing reset. Same success haptic as finishing a lesson, not a celebration.'],
-    flags: ['Closing message is placeholder copy (S8.3).'] },
+    flags: [] },
   { tag: 'S8.3', title: 'Home after a slip', app: true, dock: 0,
     body: `<div class="hdr"><div><div class="micro">Friday · Week 2</div><div class="t">Good evening, Milan</div></div><span style="display:flex;gap:8px"><span class="logbtn">${I.plus} Log</span><span class="back" style="width:36px;height:36px">${I.user.replace('<svg', '<svg style="width:16px;height:16px"')}</span></span></div>
       <div class="glass">
