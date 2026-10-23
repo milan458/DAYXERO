@@ -198,13 +198,13 @@ struct ProductsSettingsView: View {
                     .foregroundStyle(DX.Palette.text)
                 }
                 Menu {
-                    ForEach(Product.allCases.filter { p in !profile.products.contains { $0.product == p } }, id: \.self) { p in
+                    ForEach(DayXeroCore.Product.allCases.filter { p in !profile.products.contains { $0.product == p } }, id: \.self) { p in
                         Button(String(localized: p.title)) { add(p) }
                     }
                 } label: {
                     Label("Add a product", systemImage: "plus")
                 }
-                .disabled(profile.products.count == Product.allCases.count)
+                .disabled(profile.products.count == DayXeroCore.Product.allCases.count)
             } footer: {
                 Text("Changing a baseline updates money kept and counters from Quit Day. Days clear don't change.")
             }
@@ -216,7 +216,7 @@ struct ProductsSettingsView: View {
         }
     }
 
-    private func add(_ product: Product) {
+    private func add(_ product: DayXeroCore.Product) {
         let use = ProductUse(product: product, isPrimary: profile.products.isEmpty, unitsPerDay: product == .vape ? 100 : 10,
                              pricePerPurchase: 10, unitsPerPurchase: product == .vape ? 600 : 20)
         profile.products.append(use)
