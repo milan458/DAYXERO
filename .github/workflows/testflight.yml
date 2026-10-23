@@ -100,7 +100,21 @@ jobs:
               data = json.load(urllib.request.urlopen(urllib.request.Request(url, headers={"Authorization": f"Bearer {token}"})))
               print("Login OK. Apps:", [a["attributes"] for a in data["data"]])
           except urllib.error.HTTPError as e:
-              print(f"::error title=App Store Connect login failed ({e.code})::{e.read().decode()[:600]}")
+              print(f"::error title=App Store Connect login failed ({e.code})::{e.read().decode().replace(chr(10), ' ')[:600]}")
+              raise SystemExit(1)
+          # Signing needs the key to manage certificates, identifiers and profiles (Admin role).
+          failed = []
+          for path in ["bundleIds?limit=1", "certificates?limit=1", "profiles?limit=1"]:
+              req = urllib.request.Request(f"https://api.appstoreconnect.apple.com/v1/{path}", headers={"Authorization": f"Bearer {token}"})
+              try:
+                  urllib.request.urlopen(req)
+                  print(f"{path.split('?')[0]}: OK")
+              except urllib.error.HTTPError as e:
+                  detail = json.loads(e.read() or b"{}").get("errors", [{}])[0].get("detail", "")
+                  print(f"{path.split('?')[0]}: {e.code} {detail}")
+                  failed.append(f"{path.split('?')[0]} ({e.code})")
+          if failed:
+              print("::error title=Key can't manage signing::No access to " + ", ".join(failed) + ". Give the key the Admin role in App Store Connect.")
               raise SystemExit(1)
           PY2
 
