@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-23T09:49:56.302Z"
+    "updated": "2026-10-23T09:52:11.036Z"
   },
   "now": {
     "section": "S5",
@@ -1136,11 +1136,17 @@
       "title": "Milestones and share cards",
       "goal": "",
       "signoff": {
-        "state": "mockups_ready",
+        "state": "signed_off",
         "history": [
           {
             "time": "2026-10-23T09:49:56.220Z",
             "state": "mockups_ready",
+            "by": "Claude",
+            "comment": ""
+          },
+          {
+            "time": "2026-10-23T09:52:10.933Z",
+            "state": "signed_off",
             "by": "Claude",
             "comment": ""
           }
@@ -1156,32 +1162,32 @@
         {
           "id": "S13.1",
           "title": "Milestone schedule (confirm with Milan; suggested: Quit Day, day 1, 3, 7, 14, 30, 60, 90, 100, 180, 365).",
-          "status": "pending",
-          "notes": "Question for Milan: confirm milestone schedule (Quit Day, day 1, 3, 7, 14, 30, 60, 90, 100, 180, 365).\nMockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Question for Milan: confirm milestone schedule (Quit Day, day 1, 3, 7, 14, 30, 60, 90, 100, 180, 365).\nMockups ready in tracker.\nMilan: keep the schedule (Quit Day, 1, 3, 7, 14, 30, 60, 90, 100, 180, 365). Claude drafts one line per milestone.\nMilan approved S13 in chat.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S13.2",
           "title": "Milestone celebration moment in-app, with haptics and motion; respects Reduce Motion.",
-          "status": "pending",
-          "notes": "Mockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups ready in tracker.\nMilan approved S13 in chat.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S13.3",
           "title": "Share cards rendered with `ImageRenderer` for Instagram Stories (9:16) and WhatsApp; opt-in, user picks what to show (days, money, cravings ridden out).",
-          "status": "pending",
-          "notes": "Mockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups ready in tracker.\nMilan approved S13 in chat.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S13.4",
           "title": "Wordmark on every card; no personal data shown by default.",
-          "status": "pending",
-          "notes": "Mockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups ready in tracker.\nMilan approved S13 in chat.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         }
@@ -1353,6 +1359,36 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-23T09:52:11.036Z",
+      "type": "status",
+      "message": "S13.4 pending → in_progress (Milan approved S13 in chat.)"
+    },
+    {
+      "time": "2026-10-23T09:52:11.019Z",
+      "type": "status",
+      "message": "S13.3 pending → in_progress (Milan approved S13 in chat.)"
+    },
+    {
+      "time": "2026-10-23T09:52:11.000Z",
+      "type": "status",
+      "message": "S13.2 pending → in_progress (Milan approved S13 in chat.)"
+    },
+    {
+      "time": "2026-10-23T09:52:10.978Z",
+      "type": "status",
+      "message": "S13.1 pending → in_progress (Milan approved S13 in chat.)"
+    },
+    {
+      "time": "2026-10-23T09:52:10.959Z",
+      "type": "note",
+      "message": "S13.1: Milan: keep the schedule (Quit Day, 1, 3, 7, 14, 30, 60, 90, 100, 180, 365). Claude drafts one line per milestone."
+    },
+    {
+      "time": "2026-10-23T09:52:10.933Z",
+      "type": "signoff",
+      "message": "S13 mockups → signed_off"
+    },
     {
       "time": "2026-10-23T09:49:56.302Z",
       "type": "note",

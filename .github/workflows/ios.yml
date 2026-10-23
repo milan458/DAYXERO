@@ -190,6 +190,12 @@ jobs:
           shoot dark large calm-notice1-dark $P12 -dx.tab program -dx.openCalm noticeAndName
           shoot dark large calm-notice2-dark $P12 -dx.tab program -dx.openCalm noticeAndName -dx.calmStep 1
           shoot dark large calm-done-dark $P12 -dx.tab program -dx.openCalm dropAnchor -dx.calmDone YES
+          shoot dark large ms-moment-dark $P12 -dx.milestone 7
+          shoot light large ms-moment-light $P12 -dx.milestone 7
+          shoot dark accessibility-extra-extra-extra-large ms-moment-dark-ax5 $P12 -dx.milestone 7
+          shoot dark large ms-row-dark $P12 -dx.tab progress
+          shoot dark large ms-share-dark $P12 -dx.tab progress -dx.shareCard YES
+          shoot light large ms-share-light $P12 -dx.tab progress -dx.shareCard YES
           # Last: the under-18 screen persists its flag, so everything after it would show the exit.
           shoot dark large onb-under_age-dark -dx.onboardingStep under_age
           cd shots

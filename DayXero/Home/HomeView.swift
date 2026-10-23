@@ -81,6 +81,7 @@ struct TodayView: View {
     @State private var showCheckIn = UserDefaults.standard.bool(forKey: "dx.openCheckIn")
     @State private var settingsPage: SettingsSheet.Page? = UserDefaults.standard.string(forKey: "dx.openSettings").flatMap(SettingsSheet.Page.init(rawValue:))
     @State private var showSettings = UserDefaults.standard.string(forKey: "dx.openSettings") != nil
+    @State private var celebrating: Milestone?
     /// The use just logged with one tap, for the Undo / Add details toast (S7.1).
     @State private var justLogged: LogEntry?
     @State private var detailsFor: LogEntry?
@@ -134,6 +135,13 @@ struct TodayView: View {
             CravingLogForm(profile: profile, editing: entry, onSaved: { detailsFor = nil })
                 .presentationDetents([.large])
         }
+        .onAppear { checkMilestone() }
+        .fullScreenCover(item: $celebrating) { milestone in
+            MilestoneMoment(milestone: milestone, stats: MilestoneStats(profile: profile, logs: logs)) {
+                CelebratedMilestones.markReached(daysClear: HomeSnapshot(profile: profile, isPro: entitlement.isPro).daysClear)
+                celebrating = nil
+            }
+        }
         .fullScreenCover(isPresented: $showPledge) {
             PledgeView(profile: profile) { showPledge = false }
         }
@@ -156,6 +164,24 @@ struct TodayView: View {
             PaywallView(name: profile.name, quitDay: profile.quitDay,
                         model: PaywallModel(store: entitlement.store, entitlement: entitlement),
                         onClose: { showPaywall = false })
+        }
+    }
+
+    // MARK: Milestones (S13.2)
+
+    /// The first time Home shows on a milestone day, celebrate the latest milestone not yet celebrated.
+    private func checkMilestone() {
+        #if DEBUG
+        if let raw = UserDefaults.standard.string(forKey: "dx.milestone") {
+            celebrating = Milestone(id: raw)
+            return
+        }
+        // Screenshot scenarios show Home itself, not the moment.
+        if DebugScenario.current != nil { return }
+        #endif
+        let days = HomeSnapshot(profile: profile, isPro: entitlement.isPro).daysClear
+        if let milestone = Milestone.toCelebrate(daysClear: days, celebrated: CelebratedMilestones.ids) {
+            celebrating = milestone
         }
     }
 
