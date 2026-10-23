@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-23T07:02:16.836Z"
+    "updated": "2026-10-23T07:10:54.999Z"
   },
   "now": {
     "section": "S5",
@@ -834,16 +834,28 @@
       "title": "Slip handling",
       "goal": "",
       "signoff": {
-        "state": "not_started",
-        "history": []
+        "state": "mockups_ready",
+        "history": [
+          {
+            "time": "2026-10-23T07:10:54.928Z",
+            "state": "mockups_ready",
+            "by": "Claude",
+            "comment": ""
+          }
+        ]
       },
-      "mockups": [],
+      "mockups": [
+        {
+          "title": "Slip handling: slip logged, talk-through, Home unchanged, widget, insights",
+          "path": "mockups/S8/slips.html"
+        }
+      ],
       "tasks": [
         {
           "id": "S8.1",
           "title": "Slip logging from SOS, Home and the widget.",
           "status": "pending",
-          "notes": "",
+          "notes": "Mockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -851,7 +863,7 @@
           "id": "S8.2",
           "title": "Sixty-second slip debrief: what happened, what triggered it, one thing to try next time.",
           "status": "pending",
-          "notes": "",
+          "notes": "Mockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -859,7 +871,7 @@
           "id": "S8.3",
           "title": "Supportive messages (copy from Milan; placeholders until then). Streak and progress visual unchanged.",
           "status": "pending",
-          "notes": "Needs supportive slip copy from Milan (placeholders until then).",
+          "notes": "Needs supportive slip copy from Milan (placeholders until then).\nMockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -867,7 +879,7 @@
           "id": "S8.4",
           "title": "Slips feed the insights screen.",
           "status": "pending",
-          "notes": "",
+          "notes": "Mockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         }
@@ -1251,6 +1263,36 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-23T07:10:54.999Z",
+      "type": "note",
+      "message": "S8.4: Mockups ready in tracker."
+    },
+    {
+      "time": "2026-10-23T07:10:54.982Z",
+      "type": "note",
+      "message": "S8.3: Mockups ready in tracker."
+    },
+    {
+      "time": "2026-10-23T07:10:54.964Z",
+      "type": "note",
+      "message": "S8.2: Mockups ready in tracker."
+    },
+    {
+      "time": "2026-10-23T07:10:54.946Z",
+      "type": "note",
+      "message": "S8.1: Mockups ready in tracker."
+    },
+    {
+      "time": "2026-10-23T07:10:54.928Z",
+      "type": "signoff",
+      "message": "S8 mockups → mockups_ready"
+    },
+    {
+      "time": "2026-10-23T07:10:54.909Z",
+      "type": "mockup",
+      "message": "S8 mockup posted: Slip handling: slip logged, talk-through, Home unchanged, widget, insights"
+    },
     {
       "time": "2026-10-23T07:02:16.836Z",
       "type": "status",
