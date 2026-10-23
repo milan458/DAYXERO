@@ -90,8 +90,12 @@ struct SlipFlow: View {
                 }
             }
             .scrollBounceBehavior(.basedOnSize)
-            Button("Talk it through · 1 min") { stage = .what }.buttonStyle(.dxPrimary)
-            Button("Not now", action: onDone).buttonStyle(.dxQuiet)
+            // Capped so the buttons leave room for the message at the largest text sizes.
+            VStack(spacing: DX.Space.s) {
+                Button("Talk it through · 1 min") { stage = .what }.buttonStyle(.dxPrimary)
+                Button("Not now", action: onDone).buttonStyle(.dxQuiet)
+            }
+            .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
         }
     }
 

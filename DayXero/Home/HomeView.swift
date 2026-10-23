@@ -575,18 +575,26 @@ struct DailyCard: View {
     var done = false
     let onTap: () -> Void
 
+    @Environment(\.dynamicTypeSize) private var typeSize
+
     var body: some View {
         Button(action: onTap) {
-            HStack(spacing: DX.Space.s) {
-                Image(systemName: systemImage).font(.system(size: 17, weight: done ? .bold : .regular))
-                    .foregroundStyle(done ? DX.Palette.onAccent : DX.Palette.accentInk)
-                    .frame(width: 40, height: 40)
-                    .background(done ? DX.Palette.sage : DX.Palette.accentSoft, in: Circle())
-                VStack(alignment: .leading, spacing: 1) {
-                    Text(title).font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
-                    if let detail { Text(detail).dxText(.subtitle) }
+            // At accessibility sizes the action moves under the text so neither is squeezed.
+            let layout = typeSize.isAccessibilitySize
+                ? AnyLayout(VStackLayout(alignment: .leading, spacing: DX.Space.s)) : AnyLayout(HStackLayout(spacing: DX.Space.s))
+            layout {
+                HStack(spacing: DX.Space.s) {
+                    Image(systemName: systemImage).font(.system(size: 17, weight: done ? .bold : .regular))
+                        .foregroundStyle(done ? DX.Palette.onAccent : DX.Palette.accentInk)
+                        .frame(width: 40, height: 40)
+                        .background(done ? DX.Palette.sage : DX.Palette.accentSoft, in: Circle())
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text(title).font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
+                        if let detail { Text(detail).dxText(.subtitle) }
+                    }
+                    .fixedSize(horizontal: false, vertical: true)
                 }
-                Spacer(minLength: DX.Space.xs)
+                if !typeSize.isAccessibilitySize { Spacer(minLength: DX.Space.xs) }
                 if let action {
                     Text(action).font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
                         .foregroundStyle(DX.Palette.onPrimary)
@@ -594,6 +602,7 @@ struct DailyCard: View {
                         .background(DX.Palette.primary, in: Capsule())
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             .padding(14)
             .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 26, style: .continuous))
             .overlay(RoundedRectangle(cornerRadius: 26, style: .continuous)

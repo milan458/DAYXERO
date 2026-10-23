@@ -16,15 +16,15 @@ final class JourneyUITests: XCTestCase {
         snap(app, "01-welcome")
         tap(app.buttons["Build my plan"])
         tap(button(app, "18 or older"))
-        tap(app.buttons["Continue"])
+        tapSettled(app, "Continue")
         let name = app.textFields.firstMatch
         XCTAssert(name.waitForExistence(timeout: 5))
         name.tap()
         name.typeText("Sam")
-        tap(app.buttons["Continue"])
+        tapSettled(app, "Continue")
         tap(button(app, "Disposables"))
         snap(app, "02-products")
-        tap(app.buttons["Continue"])
+        tapSettled(app, "Continue")
         // Baseline: the price commits when focus moves to the next field.
         let price = app.textFields.element(boundBy: 0)
         XCTAssert(price.waitForExistence(timeout: 5))
@@ -32,16 +32,15 @@ final class JourneyUITests: XCTestCase {
         price.typeText("8.5")
         app.textFields.element(boundBy: 1).tap()
         snap(app, "03-baseline")
-        tap(app.buttons["Continue"])
-        for _ in 0..<3 { tap(app.buttons["Skip"]) }   // triggers, reasons, past attempts
+        tapSettled(app, "Continue")
+        for _ in 0..<3 { tapSettled(app, "Skip") }   // triggers, reasons, past attempts
         snap(app, "04-quit-day")
         tap(button(app, "as Quit Day"))
-        tap(app.buttons["Skip"])                       // NRT
-        let reveal = app.buttons["Continue"]
-        XCTAssert(reveal.waitForExistence(timeout: 15), "Plan reveal didn't appear")
+        tapSettled(app, "Skip")                       // NRT
+        XCTAssert(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Quit Day is")).firstMatch.waitForExistence(timeout: 15), "Plan reveal didn't appear")
         snap(app, "05-reveal")
-        reveal.tap()
-        tap(app.buttons["Not now"])                    // reminders
+        tapSettled(app, "Continue")
+        tapSettled(app, "Not now")                    // reminders
 
         // Paywall (S3), against the mock store
         let cta = app.buttons["paywall.cta"]
@@ -75,7 +74,7 @@ final class JourneyUITests: XCTestCase {
         tap(button(app, "Puff session"))
         XCTAssert(app.staticTexts["Thanks for telling us"].waitForExistence(timeout: 5))
         snap(app, "21-slip")
-        tap(app.buttons["Not now"])
+        tapSettled(app, "Not now")
         XCTAssert(app.buttons["Craving SOS"].waitForExistence(timeout: 5))
         visitTabs(app, prefix: "22-day3")
     }
@@ -107,6 +106,7 @@ final class JourneyUITests: XCTestCase {
     private func visitTabs(_ app: XCUIApplication, prefix: String) {
         for tab in ["Program", "Progress", "Today"] {
             tap(app.buttons[tab].firstMatch)
+            RunLoop.current.run(until: .now.addingTimeInterval(1))   // let the tab cross-fade finish
             snap(app, "\(prefix)-\(tab.lowercased())")
         }
     }
@@ -118,6 +118,19 @@ final class JourneyUITests: XCTestCase {
         app.launchArguments = ["-dx.uiTest", "YES"] + arguments
         app.launch()
         return app
+    }
+
+    /// Taps the button with this label once exactly one is on screen, so a step's slide-in has finished.
+    private func tapSettled(_ app: XCUIApplication, _ label: String, file: StaticString = #filePath, line: UInt = #line) {
+        let query = app.buttons.matching(NSPredicate(format: "label == %@", label))
+        let deadline = Date.now.addingTimeInterval(10)
+        while query.count != 1, Date.now < deadline { RunLoop.current.run(until: .now.addingTimeInterval(0.2)) }
+        XCTAssertEqual(query.count, 1, "Expected one \"\(label)\" button", file: file, line: line)
+        let button = query.element
+        let enabled = NSPredicate(format: "isEnabled == true AND isHittable == true")
+        let wait = XCTNSPredicateExpectation(predicate: enabled, object: button)
+        XCTAssertEqual(XCTWaiter().wait(for: [wait], timeout: 5), .completed, "\"\(label)\" never became tappable", file: file, line: line)
+        button.tap()
     }
 
     private func button(_ app: XCUIApplication, _ text: String) -> XCUIElement {
