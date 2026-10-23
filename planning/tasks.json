@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-23T08:17:20.134Z"
+    "updated": "2026-10-23T08:34:21.766Z"
   },
   "now": {
     "section": "S5",
@@ -712,58 +712,58 @@
         {
           "id": "S6.1",
           "title": "SOS screen: urge-surfing timer (about 3 minutes), guided breathing, the user's reasons and photo.",
-          "status": "in_progress",
-          "notes": "",
+          "status": "done",
+          "notes": "Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-23T08:34:21.495Z"
         },
         {
           "id": "S6.2",
           "title": "Core Haptics pattern that slows as the session progresses; Reduce Motion and haptics-off fallbacks.",
-          "status": "in_progress",
-          "notes": "",
+          "status": "done",
+          "notes": "Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.\nHaptics need a real device to feel; simulator has no Core Haptics.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-23T08:34:21.514Z"
         },
         {
           "id": "S6.3",
           "title": "Outcomes: \"It passed\" (logs a craving resisted), \"I slipped\" (goes to slip debrief), \"Ping a friend\" (share sheet in v1; buddy system comes later).",
-          "status": "in_progress",
-          "notes": "",
+          "status": "done",
+          "notes": "Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-23T08:34:21.532Z"
         },
         {
           "id": "S6.4",
           "title": "Live Activity and Dynamic Island showing the countdown with an \"It passed\" action.",
-          "status": "in_progress",
-          "notes": "",
+          "status": "done",
+          "notes": "Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-23T08:34:21.551Z"
         },
         {
           "id": "S6.5",
           "title": "Entry points: Home button, home screen widget, lock screen widget, Control Center control, App Intent / Siri (\"I'm having a craving\").",
-          "status": "in_progress",
-          "notes": "",
+          "status": "done",
+          "notes": "Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text. Widgets, Control Center control and Siri phrases are built and compile; they can't be screenshotted on CI, so check them on a device.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-23T08:34:21.749Z"
         },
         {
           "id": "S6.6",
           "title": "Log every SOS session with time and trigger for insights.",
-          "status": "in_progress",
-          "notes": "",
+          "status": "done",
+          "notes": "Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-23T08:34:21.571Z"
         },
         {
           "id": "S6.7",
           "title": "Replace the Home craving-button placeholder with Craving SOS",
-          "status": "in_progress",
-          "notes": "From S4 build: dock SOS button opens a 'coming soon' sheet for now.",
+          "status": "done",
+          "notes": "From S4 build: dock SOS button opens a 'coming soon' sheet for now.\nBuilt and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.",
           "created": "2026-10-23T05:18:11.565Z",
-          "completed": null
+          "completed": "2026-10-23T08:34:21.591Z"
         }
       ]
     },
@@ -798,34 +798,34 @@
         {
           "id": "S7.1",
           "title": "One-tap logging per product (cigarette, puff session, pouch) from the app, an interactive widget and an App Intent.",
-          "status": "in_progress",
-          "notes": "Mockups ready in tracker.\nMilan: 'Puff session' is fine as the vape logging unit.\nMilan approved S7 in chat.",
+          "status": "done",
+          "notes": "Mockups ready in tracker.\nMilan: 'Puff session' is fine as the vape logging unit.\nMilan approved S7 in chat.\nBuilt and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-23T08:34:21.609Z"
         },
         {
           "id": "S7.2",
           "title": "Trigger and craving log with optional mood and context.",
-          "status": "in_progress",
-          "notes": "Mockups ready in tracker.\nMilan: keep the optional 'Where?' (home, work, out, driving) on the craving log.\nMilan approved S7 in chat.",
+          "status": "done",
+          "notes": "Mockups ready in tracker.\nMilan: keep the optional 'Where?' (home, work, out, driving) on the craving log.\nMilan approved S7 in chat.\nBuilt and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-23T08:34:21.627Z"
         },
         {
           "id": "S7.3",
           "title": "Insights screen: time-of-day heat map of cravings and uses, top triggers, trend over time. Shows \"needs a week of data\" until there's enough.",
-          "status": "in_progress",
-          "notes": "Mockups ready in tracker.\nMilan approved S7 in chat.",
+          "status": "done",
+          "notes": "Mockups ready in tracker.\nMilan approved S7 in chat.\nBuilt and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-23T08:34:21.644Z"
         },
         {
           "id": "S7.4",
           "title": "Progress screen: money kept, units avoided, time regained, cravings ridden out.",
-          "status": "in_progress",
-          "notes": "Mockups ready in tracker.\nMilan: show 'puffs not taken' only for people who picked vapes. Already the rule: counters, log rows and widget buttons come from the products chosen in onboarding.\nMilan: leave 'time regained' out.\nMilan approved S7 in chat.",
+          "status": "done",
+          "notes": "Mockups ready in tracker.\nMilan: show 'puffs not taken' only for people who picked vapes. Already the rule: counters, log rows and widget buttons come from the products chosen in onboarding.\nMilan: leave 'time regained' out.\nMilan approved S7 in chat.\nBuilt and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-23T08:34:21.662Z"
         }
       ]
     },
@@ -860,34 +860,34 @@
         {
           "id": "S8.1",
           "title": "Slip logging from SOS, Home and the widget.",
-          "status": "in_progress",
-          "notes": "Mockups ready in tracker.\nMilan approved S8 in chat, with the drafted copy and suggestions.",
+          "status": "done",
+          "notes": "Mockups ready in tracker.\nMilan approved S8 in chat, with the drafted copy and suggestions.\nBuilt and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-23T08:34:21.680Z"
         },
         {
           "id": "S8.2",
           "title": "Sixty-second slip debrief: what happened, what triggered it, one thing to try next time.",
-          "status": "in_progress",
-          "notes": "Mockups ready in tracker.\nPer-trigger 'Then I'll…' suggestions drafted in the S8 mockup.\nMilan approved S8 in chat, with the drafted copy and suggestions.",
+          "status": "done",
+          "notes": "Mockups ready in tracker.\nPer-trigger 'Then I'll…' suggestions drafted in the S8 mockup.\nMilan approved S8 in chat, with the drafted copy and suggestions.\nBuilt and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-23T08:34:21.697Z"
         },
         {
           "id": "S8.3",
           "title": "Supportive messages (copy from Milan; placeholders until then). Streak and progress visual unchanged.",
-          "status": "in_progress",
-          "notes": "Needs supportive slip copy from Milan (placeholders until then).\nMockups ready in tracker.\nMilan asked me to draft the slip copy and per-trigger suggestions; drafts are in the S8 mockup for him to edit. Third-slip-in-a-day note (offer NRT or go over the plan) kept.\nMilan approved S8 in chat, with the drafted copy and suggestions.",
+          "status": "done",
+          "notes": "Needs supportive slip copy from Milan (placeholders until then).\nMockups ready in tracker.\nMilan asked me to draft the slip copy and per-trigger suggestions; drafts are in the S8 mockup for him to edit. Third-slip-in-a-day note (offer NRT or go over the plan) kept.\nMilan approved S8 in chat, with the drafted copy and suggestions.\nBuilt and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-23T08:34:21.714Z"
         },
         {
           "id": "S8.4",
           "title": "Slips feed the insights screen.",
-          "status": "in_progress",
-          "notes": "Mockups ready in tracker.\nMilan approved S8 in chat, with the drafted copy and suggestions.",
+          "status": "done",
+          "notes": "Mockups ready in tracker.\nMilan approved S8 in chat, with the drafted copy and suggestions.\nBuilt and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-23T08:34:21.732Z"
         }
       ]
     },
@@ -1281,6 +1281,86 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-23T08:34:21.766Z",
+      "type": "note",
+      "message": "S6.2: Haptics need a real device to feel; simulator has no Core Haptics."
+    },
+    {
+      "time": "2026-10-23T08:34:21.749Z",
+      "type": "status",
+      "message": "S6.5 in_progress → done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text. Widgets, Control Center control and Siri phrases are built and compile; they can't be screenshotted on CI, so check them on a device.)"
+    },
+    {
+      "time": "2026-10-23T08:34:21.732Z",
+      "type": "status",
+      "message": "S8.4 in_progress → done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-23T08:34:21.714Z",
+      "type": "status",
+      "message": "S8.3 in_progress → done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-23T08:34:21.697Z",
+      "type": "status",
+      "message": "S8.2 in_progress → done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-23T08:34:21.680Z",
+      "type": "status",
+      "message": "S8.1 in_progress → done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-23T08:34:21.662Z",
+      "type": "status",
+      "message": "S7.4 in_progress → done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-23T08:34:21.644Z",
+      "type": "status",
+      "message": "S7.3 in_progress → done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-23T08:34:21.627Z",
+      "type": "status",
+      "message": "S7.2 in_progress → done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-23T08:34:21.609Z",
+      "type": "status",
+      "message": "S7.1 in_progress → done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-23T08:34:21.591Z",
+      "type": "status",
+      "message": "S6.7 in_progress → done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-23T08:34:21.571Z",
+      "type": "status",
+      "message": "S6.6 in_progress → done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-23T08:34:21.551Z",
+      "type": "status",
+      "message": "S6.4 in_progress → done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-23T08:34:21.532Z",
+      "type": "status",
+      "message": "S6.3 in_progress → done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-23T08:34:21.514Z",
+      "type": "status",
+      "message": "S6.2 in_progress → done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+    },
+    {
+      "time": "2026-10-23T08:34:21.495Z",
+      "type": "status",
+      "message": "S6.1 in_progress → done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+    },
     {
       "time": "2026-10-23T08:17:20.134Z",
       "type": "note",
