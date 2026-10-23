@@ -84,6 +84,7 @@ struct LessonPlayer: View {
             Spacer()
             if content.placeholder { PlaceholderTag() } else { Color.clear.frame(width: 36, height: 36) }
         }
+        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
         .padding(.bottom, DX.Space.xs)
     }
 
@@ -208,8 +209,7 @@ struct LessonPlayer: View {
 
     /// The if-then situation, from the person's own triggers.
     private var situation: String {
-        if let trigger = profile.triggers.first { return String(localized: trigger.title).lowercased() }
-        return String(localized: "a craving hits")
+        String(localized: (profile.triggers.first ?? .other).situation)
     }
 
     // MARK: Flow
@@ -219,7 +219,7 @@ struct LessonPlayer: View {
         content = lesson
         index = min(ProgramState.savedStep(for: day), max(lesson.steps.count - 1, 0))
         #if DEBUG
-        if UserDefaults.standard.bool(forKey: "dx.lessonFinishedPreview") { finished = true; return }
+        if UserDefaults.standard.bool(forKey: "dx.lessonFinishedPreview") { complete(); return }
         if let action = UserDefaults.standard.string(forKey: "dx.ifThenPreview") { ifThenAction = action }
         #endif
         profile.progress?.lastActiveAt = .now

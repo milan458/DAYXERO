@@ -61,6 +61,23 @@ public enum Trigger: String, Codable, CaseIterable, Sendable {
         case .other: "Something else"
         }
     }
+
+    /// Completes "If it's …" in an if-then plan.
+    public var situation: LocalizedStringResource {
+        switch self {
+        case .morning: "first thing in the morning"
+        case .coffee: "after coffee"
+        case .meals: "after a meal"
+        case .stress: "a stressful moment"
+        case .alcohol: "a night of drinking"
+        case .boredom: "a bored moment"
+        case .social: "time with friends"
+        case .driving: "a drive"
+        case .work: "a work break"
+        case .phone: "scrolling time"
+        case .other: "a strong craving"
+        }
+    }
 }
 
 public enum TimeOfDay: String, Codable, CaseIterable, Sendable {
