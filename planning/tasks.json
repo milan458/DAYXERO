@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-23T06:53:18.965Z"
+    "updated": "2026-10-23T06:58:23.187Z"
   },
   "now": {
     "section": "S5",
@@ -817,7 +817,7 @@
           "id": "S7.4",
           "title": "Progress screen: money kept, units avoided, time regained, cravings ridden out.",
           "status": "pending",
-          "notes": "Mockups ready in tracker.",
+          "notes": "Mockups ready in tracker.\nMilan: show 'puffs not taken' only for people who picked vapes. Already the rule: counters, log rows and widget buttons come from the products chosen in onboarding.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         }
@@ -1245,6 +1245,11 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-23T06:58:23.187Z",
+      "type": "note",
+      "message": "S7.4: Milan: show 'puffs not taken' only for people who picked vapes. Already the rule: counters, log rows and widget buttons come from the products chosen in onboarding."
+    },
     {
       "time": "2026-10-23T06:53:18.965Z",
       "type": "note",
