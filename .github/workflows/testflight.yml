@@ -1,0 +1,131 @@
+name: TestFlight
+
+# Archives a Release build and uploads it to TestFlight after main builds and tests green (S16.4).
+# Signing is automatic, using an App Store Connect API key (Admin role) stored as repo secrets:
+#   ASC_KEY_ID, ASC_ISSUER_ID, ASC_KEY_P8 (the .p8 file's contents),
+#   POSTHOG_API_KEY, REVENUECAT_API_KEY (optional until the products exist).
+# Without the secrets it still builds Release, unsigned, so Release-only errors show up.
+on:
+  workflow_run:
+    workflows: ["iOS build and test"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: testflight
+  cancel-in-progress: false
+
+jobs:
+  upload:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: macos-15
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - name: Check secrets
+        id: keys
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+        run: |
+          if [ -n "$ASC_KEY_ID" ] && [ -n "$ASC_ISSUER_ID" ] && [ -n "$ASC_KEY_P8" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::App Store Connect key not set; building Release unsigned without uploading."
+          fi
+
+      - name: Select newest Xcode
+        run: |
+          XCODE=$(ls -d /Applications/Xcode_26*.app 2>/dev/null | sort -V | tail -1)
+          [ -z "$XCODE" ] && XCODE=$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)
+          sudo xcode-select -s "$XCODE"
+          xcodebuild -version
+
+      - name: Generate project
+        run: brew install xcodegen && xcodegen generate
+
+      - name: Write keys
+        env:
+          POSTHOG_API_KEY: ${{ secrets.POSTHOG_API_KEY }}
+          REVENUECAT_API_KEY: ${{ secrets.REVENUECAT_API_KEY }}
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+        run: |
+          {
+            echo "DX_POSTHOG_API_KEY_RELEASE = $POSTHOG_API_KEY"
+            echo 'DX_POSTHOG_HOST = https:/$()/us.i.posthog.com'
+            echo "DX_REVENUECAT_API_KEY = $REVENUECAT_API_KEY"
+          } > Config/Secrets.xcconfig
+          if [ -n "$ASC_KEY_P8" ]; then
+            printf '%s\n' "$ASC_KEY_P8" > "$RUNNER_TEMP/AuthKey_$ASC_KEY_ID.p8"
+          fi
+
+      - name: Build Release (unsigned)
+        if: steps.keys.outputs.ready != 'true'
+        run: |
+          set -o pipefail
+          xcodebuild build -project DayXero.xcodeproj -scheme DayXero -configuration Release \
+            -destination "generic/platform=iOS" -derivedDataPath DerivedData \
+            CODE_SIGNING_ALLOWED=NO -quiet 2>&1 | tee release.log
+
+      - name: Archive
+        if: steps.keys.outputs.ready == 'true'
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+        run: |
+          set -o pipefail
+          # Build numbers only go up: this workflow's run number, offset past any manual uploads.
+          BUILD=$(( ${{ github.run_number }} + 100 ))
+          echo "Build $BUILD"
+          xcodebuild archive -project DayXero.xcodeproj -scheme DayXero -configuration Release \
+            -destination "generic/platform=iOS" -archivePath "$RUNNER_TEMP/DayXero.xcarchive" \
+            -derivedDataPath DerivedData \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$RUNNER_TEMP/AuthKey_$ASC_KEY_ID.p8" \
+            -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
+            CURRENT_PROJECT_VERSION=$BUILD -quiet 2>&1 | tee release.log
+
+      - name: Upload to TestFlight
+        if: steps.keys.outputs.ready == 'true'
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+        run: |
+          set -o pipefail
+          cat > "$RUNNER_TEMP/ExportOptions.plist" <<'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key><string>app-store-connect</string>
+            <key>destination</key><string>upload</string>
+            <key>teamID</key><string>ZDAH8F8P24</string>
+            <key>signingStyle</key><string>automatic</string>
+            <key>manageAppVersionAndBuildNumber</key><false/>
+            <key>uploadSymbols</key><true/>
+          </dict>
+          </plist>
+          PLIST
+          xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/DayXero.xcarchive" \
+            -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" -exportPath "$RUNNER_TEMP/export" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$RUNNER_TEMP/AuthKey_$ASC_KEY_ID.p8" \
+            -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID" 2>&1 | tee -a release.log
+
+      - name: Annotate errors
+        if: failure()
+        run: |
+          grep -E "error:|ERROR|failed" release.log | sort -u | head -40 | sed 's/^/::error::/' || true
+
+      - name: Remove key
+        if: always()
+        run: rm -f "$RUNNER_TEMP"/AuthKey_*.p8 Config/Secrets.xcconfig

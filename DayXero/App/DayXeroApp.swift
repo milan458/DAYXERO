@@ -13,8 +13,11 @@ struct DayXeroApp: App {
             // Unit tests run inside the app; give them a throwaway store.
             let isTesting = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
             #if DEBUG
+            // UI tests (-dx.uiTest) start every launch as a fresh install.
+            let uiTest = UserDefaults.standard.bool(forKey: "dx.uiTest")
+            if uiTest, let id = Bundle.main.bundleIdentifier { UserDefaults.standard.removePersistentDomain(forName: id) }
             let scenario = DebugScenario.current
-            container = try DataStore.makeContainer(inMemory: isTesting || scenario != nil)
+            container = try DataStore.makeContainer(inMemory: isTesting || uiTest || scenario != nil)
             scenario?.seed(into: container)
             #else
             container = try DataStore.makeContainer(inMemory: isTesting)

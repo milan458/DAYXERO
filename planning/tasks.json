@@ -1338,13 +1338,19 @@
       "title": "QA and launch prep",
       "goal": "",
       "signoff": {
-        "state": "mockups_ready",
+        "state": "signed_off",
         "history": [
           {
             "time": "2026-10-23T10:46:21.530Z",
             "state": "mockups_ready",
             "by": "Claude",
             "comment": ""
+          },
+          {
+            "time": "2026-10-23T10:53:38.000Z",
+            "state": "signed_off",
+            "by": "Claude",
+            "comment": "Milan approved the store copy and screenshots; TestFlight via CI upload (option b)."
           }
         ]
       },
@@ -1358,16 +1364,16 @@
         {
           "id": "S16.1",
           "title": "End-to-end test of the full journey: onboarding → paywall → prep → Quit Day → day 7 → maintenance.",
-          "status": "pending",
-          "notes": "",
+          "status": "in_progress",
+          "notes": "DayXeroUITests/JourneyUITests: onboarding → paywall → prep (log, SOS, tabs); Quit Day; day 3 slip; day 12 maintenance and settings. Later stages use seeded scenarios.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S16.2",
           "title": "Test on small and large iPhones, iOS 18 and iOS 26, light and dark, largest text size.",
-          "status": "pending",
-          "notes": "",
+          "status": "in_progress",
+          "notes": "Device matrix workflow (.github/workflows/devices.yml): small dark, Pro Max light, iOS 18 dark, Pro Max at the largest text size. Screens on ci-devices-* branches.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -1375,15 +1381,15 @@
           "id": "S16.3",
           "title": "App Store assets: screenshots, preview video, description (ask Milan for copy).",
           "status": "pending",
-          "notes": "Needs App Store copy from Milan.\nScreenshot set, name, subtitle, promotional text, description and keywords drafted for Milan's OK.",
+          "notes": "Copy and screenshot set approved by Milan. Next: capture the six screens on a 6.9\" simulator and add captions.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S16.4",
           "title": "TestFlight build for Milan.",
-          "status": "pending",
-          "notes": "",
+          "status": "blocked",
+          "notes": "TestFlight workflow (.github/workflows/testflight.yml) uploads after main goes green. Needs repo secrets from Milan: ASC_KEY_ID, ASC_ISSUER_ID, ASC_KEY_P8 (Admin key), POSTHOG_API_KEY, REVENUECAT_API_KEY; and the app record for in.dayxero.app in App Store Connect. Placeholder app icon added until the real one.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },

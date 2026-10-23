@@ -160,6 +160,7 @@ struct PaywallView: View {
             }
             .buttonStyle(.dxPrimary)
             .disabled(model.phase != .ready)
+            .accessibilityIdentifier("paywall.cta")
             terms
         }
     }

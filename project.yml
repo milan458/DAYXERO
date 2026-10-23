@@ -121,6 +121,19 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         PRODUCT_BUNDLE_IDENTIFIER: in.dayxero.app.tests
 
+  DayXeroUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: DayXeroUITests
+    dependencies:
+      - target: DayXero
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: in.dayxero.app.uitests
+        TEST_TARGET_NAME: DayXero
+
 schemes:
   DayXero:
     build:
@@ -131,3 +144,12 @@ schemes:
       targets:
         - DayXeroTests
       gatherCoverageData: true
+  # The full journey (S16.1), run on several devices by the device-matrix job (S16.2).
+  DayXeroUITests:
+    build:
+      targets:
+        DayXero: all
+        DayXeroUITests: [test]
+    test:
+      targets:
+        - DayXeroUITests
