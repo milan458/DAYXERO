@@ -74,6 +74,17 @@ struct RootView: View {
         if underAge {
             UnderAgeScreen().dxCanvas()
         } else if let profile = profiles.first {
+            #if DEBUG
+            if let raw = UserDefaults.standard.string(forKey: "dx.openLesson"), let day = ProgramDayID(description: raw) {
+                LessonPlayer(day: day, profile: profile)
+            } else if paywallDone || entitlement.isPro {
+                HomeView(profile: profile)
+            } else {
+                PaywallView(name: profile.name, quitDay: profile.quitDay,
+                            model: PaywallModel(store: entitlement.store, entitlement: entitlement),
+                            onClose: { paywallDone = true })
+            }
+            #else
             if paywallDone || entitlement.isPro {
                 HomeView(profile: profile)
             } else {
@@ -81,6 +92,7 @@ struct RootView: View {
                             model: PaywallModel(store: entitlement.store, entitlement: entitlement),
                             onClose: { paywallDone = true })
             }
+            #endif
         } else {
             OnboardingFlow(onFinished: {})
         }

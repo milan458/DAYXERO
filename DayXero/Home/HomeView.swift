@@ -5,15 +5,17 @@ import SwiftUI
 /// The app after onboarding: Today, Program and Progress tabs in the floating dock, with Craving SOS always one tap away.
 struct HomeView: View {
     let profile: UserProfile
-    @State private var tab = "today"
+    @State private var tab = UserDefaults.standard.string(forKey: "dx.tab") ?? "today"
     @State private var showSOS = false
+    @Environment(Entitlement.self) private var entitlement
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         ZStack(alignment: .bottom) {
             Group {
                 switch tab {
                 case "program":
-                    ComingSoon(title: "Program", message: "Your full program, day by day, arrives in Section 5.", systemImage: "book.closed")
+                    ProgramView(profile: profile)
                 case "progress":
                     ComingSoon(title: "Progress", message: "Money kept, cravings ridden out and your insights arrive in Section 7.", systemImage: "chart.bar")
                 default:
@@ -34,6 +36,10 @@ struct HomeView: View {
             .padding(.bottom, DX.Space.xxs)
         }
         .dxCanvas()
+        // A break of 3+ days pauses the program until the last day is replayed (S5.7).
+        .onChange(of: scenePhase, initial: true) { _, phase in
+            if phase == .active { ProgramUpkeep.checkForBreak(profile, isPro: entitlement.isPro) }
+        }
         .sheet(isPresented: $showSOS) {
             ComingSoon(title: "Craving SOS", message: "The 3-minute urge timer, breathing and your reasons arrive in Section 6.", systemImage: "flame")
                 .presentationDetents([.medium])
@@ -64,7 +70,8 @@ struct TodayView: View {
     @Environment(Entitlement.self) private var entitlement
     @Environment(\.modelContext) private var context
     @AppStorage("dx.sosHintSeen") private var sosHintSeen = false
-    @State private var openLesson: ProgramDayID?
+    @State private var openLesson: ProgramView.LessonOpen?
+    @State private var upgradeTitle: String?
     @State private var showUpgrade = false
     @State private var showPaywall = false
     @Environment(\.dynamicTypeSize) private var typeSize
@@ -77,7 +84,15 @@ struct TodayView: View {
                 VStack(alignment: .leading, spacing: 10) {
                     header(snap, now: timeline.date)
                     hero(snap)
-                    if let lesson = snap.lesson { lessonCard(lesson, finished: snap.finishedToday) }
+                    if let lesson = snap.lesson {
+                        if lesson.isReplay {
+                            ReplayCard(title: lesson.title, minutes: LessonLibrary.lesson(for: lesson.day, product: profile.primaryProduct?.product ?? .cigarettes).minutes) {
+                                openLesson = .init(day: lesson.day, isReplay: true)
+                            }
+                        } else {
+                            lessonCard(lesson, finished: snap.finishedToday)
+                        }
+                    }
                     if snap.phase == .quitDay, !sosHintSeen { sosHint }
                     tiles(snap)
                     if let next = snap.nextMilestone, !isPrep(snap) { milestone(next: next, daysClear: snap.daysClear) }
@@ -87,11 +102,11 @@ struct TodayView: View {
                 .padding(.bottom, 120)
             }
         }
-        .sheet(item: $openLesson) { day in
-            LessonPlaceholder(day: day, profile: profile)
+        .fullScreenCover(item: $openLesson) { item in
+            LessonPlayer(day: item.day, profile: profile, isReplay: item.isReplay)
         }
         .sheet(isPresented: $showUpgrade) {
-            UpgradeSheet(dayTitle: "Day 2", model: PaywallModel(store: entitlement.store, entitlement: entitlement),
+            UpgradeSheet(dayTitle: upgradeTitle ?? "", model: PaywallModel(store: entitlement.store, entitlement: entitlement),
                          showAllPlans: { showUpgrade = false; showPaywall = true },
                          onUnlocked: { showUpgrade = false })
                 .presentationDetents([.medium])
@@ -205,7 +220,10 @@ struct TodayView: View {
                     }
                 }
                 Text(finished == nil ? "Today · \(lesson.position)" : "Next · \(lesson.position)").dxText(.micro)
-                Text(lesson.title).dxText(.cardHeading)
+                HStack(spacing: 6) {
+                    Text(lesson.title).dxText(.cardHeading)
+                    if lesson.placeholder { PlaceholderTag() }
+                }
                 switch lesson.availability {
                 case let .opensOn(date):
                     Label {
@@ -219,10 +237,12 @@ struct TodayView: View {
                     } icon: {
                         Image(systemName: "lock").foregroundStyle(DX.Palette.muted)
                     }
-                    Button("Unlock \(lesson.title)") { showUpgrade = true }
+                    Button("Unlock \(lesson.title)") { upgradeTitle = lesson.title; showUpgrade = true }
                         .buttonStyle(.dxPrimary).padding(.top, DX.Space.xs)
                 case .available:
-                    Button(finished == nil ? "Start" : "Start next") { openLesson = lesson.day }
+                    Button(lesson.resumeStep > 0 ? "Continue" : finished == nil ? "Start" : "Start next") {
+                        openLesson = .init(day: lesson.day, isReplay: false)
+                    }
                         .buttonStyle(.dxPrimary).padding(.top, DX.Space.xs)
                 case .completed, .locked:
                     EmptyView()
@@ -339,30 +359,3 @@ struct TodayView: View {
     }
 }
 
-/// Stand-in for the lesson player (S5.4) so the program can be moved through today.
-private struct LessonPlaceholder: View {
-    let day: ProgramDayID
-    let profile: UserProfile
-    @Environment(\.modelContext) private var context
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: DX.Space.s) {
-            Text(LessonCatalog.title(for: day)).dxText(.title).padding(.top, DX.Space.xl)
-            Text("The lesson player and the program content arrive in Section 5.").dxText(.subtitle)
-            Spacer()
-            Button("Mark as done") {
-                if profile.progress == nil { profile.progress = ProgramProgress() }
-                profile.progress?.completions.append(DayCompletion(day: day))
-                profile.progress?.lastActiveAt = .now
-                try? context.save()
-                Analytics.track(.programDayCompleted(day: day.description))
-                dismiss()
-            }
-            .buttonStyle(.dxPrimary)
-        }
-        .padding(DX.Space.l)
-        .dxCanvas()
-        .onAppear { Analytics.track(.programDayStarted(day: day.description)) }
-    }
-}

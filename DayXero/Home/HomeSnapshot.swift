@@ -35,6 +35,11 @@ struct HomeSnapshot {
         /// e.g. "Prep day 4 of 7", "Day 3 of 7", "Week 2".
         let position: String
         let needsUpgrade: Bool
+        /// Replaying the last finished day after a break (S5.7).
+        var isReplay = false
+        /// Step to resume at when the lesson was left part-way.
+        var resumeStep = 0
+        var placeholder = false
     }
 
     let phase: Phase
@@ -96,20 +101,22 @@ struct HomeSnapshot {
             return DXWeekDay(date: date, state: state)
         }
 
-        if let day = schedule.featuredDay(completed: completed) {
-            let position: String
-            switch day.phase {
-            case .prep: position = String(localized: "Prep day \(day.index) of \(schedule.prepDays)")
-            case .quit: position = String(localized: "Day \(day.index) of \(ProgramSchedule.quitWeekDays)")
-            case .maintenance: position = String(localized: "Week \(day.index + 1)")
-            }
+        let program = ProgramState(profile: profile, isPro: isPro, now: now, calendar: calendar)
+        if let replay = program.replayDay {
+            let content = program.lesson(replay)
+            lesson = Lesson(day: replay, title: content.title, availability: .available,
+                            position: program.position(replay), needsUpgrade: false, isReplay: true,
+                            resumeStep: ProgramState.savedStep(for: replay), placeholder: content.placeholder)
+        } else if let day = schedule.featuredDay(completed: completed) {
+            let content = program.lesson(day)
             lesson = Lesson(
                 day: day,
-                title: LessonCatalog.title(for: day),
+                title: content.title,
                 availability: schedule.availability(of: day, completed: completed, at: now),
-                position: position,
-                needsUpgrade: !FreeTier.canOpen(day, engine: schedule.engine, completed: completed, isPro: isPro)
-                    && schedule.engine.canStart(day, completed: completed)
+                position: program.position(day),
+                needsUpgrade: program.needsUpgrade(day) && schedule.engine.canStart(day, completed: completed),
+                resumeStep: ProgramState.savedStep(for: day),
+                placeholder: content.placeholder
             )
         } else {
             lesson = nil
