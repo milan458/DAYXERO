@@ -121,7 +121,7 @@ struct LogSheet: View {
     static func icon(_ product: Product) -> String {
         switch product {
         case .cigarettes: "smoke"
-        case .vape: "cloud"
+        case .vape: "wind"
         case .pouches: "circle.grid.2x1"
         }
     }

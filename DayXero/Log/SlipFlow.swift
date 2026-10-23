@@ -137,8 +137,8 @@ struct SlipFlow: View {
                     button: "Save my plan", next: .done, skippable: false, enabled: chosenAction != nil) {
             DXCard(padding: 14) {
                 VStack(alignment: .leading, spacing: 6) {
-                    HStack(spacing: 6) { Text("If it's"); slot(situation, filled: true) }
-                    HStack(spacing: 6) { Text("then I'll"); slot(chosenAction ?? String(localized: "choose one"), filled: chosenAction != nil) }
+                    DXFlowLayout(spacing: 6) { Text("If it's"); slot(situation, filled: true) }
+                    DXFlowLayout(spacing: 6) { Text("then I'll"); slot(chosenAction ?? String(localized: "choose one"), filled: chosenAction != nil) }
                 }
                 .font(.custom(DX.Typeface.regular, size: 16, relativeTo: .body))
                 .foregroundStyle(DX.Palette.text)
@@ -241,7 +241,7 @@ struct SlipFlow: View {
             }
             .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
         }
-        .padding(.top, DX.Space.xs)
+        .padding(.top, DX.Space.l)
         .padding(.bottom, DX.Space.s)
     }
 
@@ -307,8 +307,9 @@ struct SlipFlow: View {
             .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body))
             .foregroundStyle(filled ? DX.Palette.onPrimary : DX.Palette.text2)
             .padding(.vertical, 3).padding(.horizontal, 12)
-            .background(filled ? DX.Palette.primary : .clear, in: Capsule())
-            .overlay(Capsule().strokeBorder(filled ? .clear : DX.Palette.faint, style: StrokeStyle(lineWidth: 1, dash: [3, 3])))
+            .background(filled ? DX.Palette.primary : .clear, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .strokeBorder(filled ? .clear : DX.Palette.faint, style: StrokeStyle(lineWidth: 1, dash: [3, 3])))
     }
 
     private func whenTitle(_ w: Slips.When) -> LocalizedStringKey {

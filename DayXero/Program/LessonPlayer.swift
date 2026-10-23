@@ -310,8 +310,8 @@ private struct IfThenStep: View {
             Text(subtitle).dxText(.subtitle)
             DXCard {
                 VStack(alignment: .leading, spacing: 6) {
-                    HStack(spacing: 6) { Text("If it's"); slot(situation, filled: true) }
-                    HStack(spacing: 6) { Text("then I'll"); slot(selection ?? String(localized: "choose one"), filled: selection != nil) }
+                    DXFlowLayout(spacing: 6) { Text("If it's"); slot(situation, filled: true) }
+                    DXFlowLayout(spacing: 6) { Text("then I'll"); slot(selection ?? String(localized: "choose one"), filled: selection != nil) }
                 }
                 .font(.custom(DX.Typeface.regular, size: 16, relativeTo: .body))
                 .foregroundStyle(DX.Palette.text)
@@ -333,10 +333,12 @@ private struct IfThenStep: View {
             .foregroundStyle(filled ? DX.Palette.onPrimary : DX.Palette.text2)
             .padding(.vertical, 3).padding(.horizontal, 10)
             .background {
+                // A rounded rectangle, not a capsule, so wrapped text at large sizes stays readable.
                 if filled {
-                    Capsule().fill(DX.Palette.primary)
+                    RoundedRectangle(cornerRadius: 14, style: .continuous).fill(DX.Palette.primary)
                 } else {
-                    Capsule().strokeBorder(DX.Palette.faint, style: StrokeStyle(lineWidth: 1, dash: [3, 3]))
+                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                        .strokeBorder(DX.Palette.faint, style: StrokeStyle(lineWidth: 1, dash: [3, 3]))
                 }
             }
     }

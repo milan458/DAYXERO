@@ -279,6 +279,7 @@ struct CravingSOSView: View {
                 VStack(spacing: DX.Space.xs) { slippedButton; pingButton }
             }
         }
+        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
         .padding(.top, DX.Space.xs)
     }
 
