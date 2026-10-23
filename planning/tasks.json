@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-23T06:58:23.187Z"
+    "updated": "2026-10-23T07:00:39.274Z"
   },
   "now": {
     "section": "S5",
@@ -793,7 +793,7 @@
           "id": "S7.1",
           "title": "One-tap logging per product (cigarette, puff session, pouch) from the app, an interactive widget and an App Intent.",
           "status": "pending",
-          "notes": "Mockups ready in tracker.",
+          "notes": "Mockups ready in tracker.\nMilan: 'Puff session' is fine as the vape logging unit.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -801,7 +801,7 @@
           "id": "S7.2",
           "title": "Trigger and craving log with optional mood and context.",
           "status": "pending",
-          "notes": "Mockups ready in tracker.",
+          "notes": "Mockups ready in tracker.\nMilan: keep the optional 'Where?' (home, work, out, driving) on the craving log.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -817,7 +817,7 @@
           "id": "S7.4",
           "title": "Progress screen: money kept, units avoided, time regained, cravings ridden out.",
           "status": "pending",
-          "notes": "Mockups ready in tracker.\nMilan: show 'puffs not taken' only for people who picked vapes. Already the rule: counters, log rows and widget buttons come from the products chosen in onboarding.",
+          "notes": "Mockups ready in tracker.\nMilan: show 'puffs not taken' only for people who picked vapes. Already the rule: counters, log rows and widget buttons come from the products chosen in onboarding.\nMilan: leave 'time regained' out.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         }
@@ -1245,6 +1245,21 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-23T07:00:39.274Z",
+      "type": "note",
+      "message": "S7.4: Milan: leave 'time regained' out."
+    },
+    {
+      "time": "2026-10-23T07:00:39.252Z",
+      "type": "note",
+      "message": "S7.2: Milan: keep the optional 'Where?' (home, work, out, driving) on the craving log."
+    },
+    {
+      "time": "2026-10-23T07:00:39.227Z",
+      "type": "note",
+      "message": "S7.1: Milan: 'Puff session' is fine as the vape logging unit."
+    },
     {
       "time": "2026-10-23T06:58:23.187Z",
       "type": "note",

@@ -408,7 +408,7 @@ const trendCard = `
 const screens = [
   { tag: 'S7.4', title: 'Progress tab', app: true, dock: 2, body: progressTop + insightCards,
     notes: ['Counters only appear for products picked in onboarding: someone who only smokes sees "Cigarettes not smoked" and never "Puffs not taken". Same rule for the log sheet\'s product rows and the widget buttons.', 'What you\'ve gained, from Quit Day: money kept, each product not used, cravings ridden out (from Craving SOS and logged cravings) and days clear. Same numbers as Home, so they never disagree.', 'The "Log" button opens the log sheet from here; Home has the same button in its header (and during prep, a "Log a use" row).'],
-    flags: ['"Time regained" is left out, as on Home (your S4 default). It can come back later with an onboarding question.'] },
+    flags: [] },
   { tag: 'S7.3', title: 'Insights (scrolled)', app: true, dock: 2, scroll: true, body: insightCards,
     notes: ['The heat map shows when cravings hit, by time of day and weekday, over the last four weeks. Switch to "Uses" to see prep uses and slips the same way.', 'Top triggers count what you tagged in SOS and in craving logs.'],
     flags: [] },
@@ -444,7 +444,7 @@ const screens = [
         <p class="fine" style="margin-top:12px">A use after Quit Day is logged as a slip. Nothing resets.</p>
       </div>`,
     notes: ['One sheet for everything. "A craving" opens the details on the next screen. Each product you use has its own one-tap row: tap + and it\'s logged, with an Undo.', 'After Quit Day a use is a slip, so the + leads into the 60-second slip debrief (Section 8). Days clear and Home don\'t change.'],
-    flags: ['Is "Puff session" the right unit for vaping logs? Counting individual puffs isn\'t realistic to log; a session is one sitting. Your baseline is in puffs, so sessions only feed patterns, not the "puffs not taken" counter.'] },
+    flags: [] },
   { tag: 'S7.2', title: 'Log a craving', app: true, dock: 2, body: progressTop + `<div class="scrim"></div>
       <div class="sheet tall"><div class="grab"></div>
         <div class="ct" style="font-size:20px;font-weight:700;letter-spacing:-.02em">A craving</div>
@@ -462,7 +462,7 @@ const screens = [
         <div class="footer"><div class="btn primary">Save</div><div class="btn quiet">Ride it out with SOS instead</div></div>
       </div>`,
     notes: ['For a craving you want to note without starting a session. Strength and trigger up top, mood and place optional. Your onboarding triggers come first in the chips.', 'If it\'s still strong, "Ride it out with SOS instead" starts a session and keeps what you\'ve picked.'],
-    flags: ['"Where?" (home, work, out, driving) is my guess at "context" in the plan. Keep it, or drop it to keep logging faster?'] },
+    flags: [] },
   { tag: 'S7.1', title: 'One-tap log · prep', app: true, dock: 0, body: `<div class="hdr"><div><div class="micro">Saturday · Prep day 5</div><div class="t">Good morning, Milan</div></div><span class="logbtn">${I.plus} Log</span></div>
       <div class="glass hero"><div class="micro">Quit Day in</div><div class="money">2 days</div><div class="s">Mon 12 Oct · prep is going well</div></div>
       <div class="micro" style="margin:16px 0 8px">Log a use · today</div>
