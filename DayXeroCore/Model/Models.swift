@@ -317,3 +317,20 @@ public final class PouchTaper {
         self.createdAt = createdAt
     }
 }
+
+/// A calm tool used (S12), for Insights to show which ones someone comes back to.
+@Model
+public final class ToolUse {
+    public var toolRaw: String
+    public var startedAt: Date
+    public var finished: Bool
+    /// "A bit calmer?" if answered.
+    public var calmer: Bool?
+
+    public init(tool: String, startedAt: Date = .now, finished: Bool = false, calmer: Bool? = nil) {
+        self.toolRaw = tool
+        self.startedAt = startedAt
+        self.finished = finished
+        self.calmer = calmer
+    }
+}

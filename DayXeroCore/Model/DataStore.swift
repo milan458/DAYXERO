@@ -11,7 +11,7 @@ public enum DataStore {
             ProgramProgress.self, DayCompletion.self,
             LogEntry.self, Pledge.self, CheckIn.self,
             NRTPlan.self, PouchTaper.self,
-            IfThenPlan.self, WeeklyCheckIn.self,
+            IfThenPlan.self, WeeklyCheckIn.self, ToolUse.self,
         ])
     }
 

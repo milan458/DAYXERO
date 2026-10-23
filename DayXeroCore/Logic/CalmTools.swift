@@ -1,0 +1,114 @@
+import Foundation
+
+/// Short exercises for stressful moments (S12). Practical, not clinical: descriptions say what you do, not what it treats.
+public enum CalmTool: String, CaseIterable, Sendable, Identifiable {
+    case boxBreathing, longerOutBreath, grounding, noticeAndName, dropAnchor
+
+    public var id: String { rawValue }
+
+    public var title: LocalizedStringResource {
+        switch self {
+        case .boxBreathing: "Box breathing"
+        case .longerOutBreath: "Longer out-breath"
+        case .grounding: "5-4-3-2-1"
+        case .noticeAndName: "Notice and name"
+        case .dropAnchor: "Drop anchor"
+        }
+    }
+
+    public var detail: LocalizedStringResource {
+        switch self {
+        case .boxBreathing: "In, hold, out, hold. Four counts each."
+        case .longerOutBreath: "Breathe out a little longer than you breathe in."
+        case .grounding: "Name what you can see, feel, hear, smell and taste."
+        case .noticeAndName: "Spot the thought, give it a label, let it be."
+        case .dropAnchor: "Feet on the floor, notice the room, come back."
+        }
+    }
+
+    public var minutes: Int {
+        switch self {
+        case .boxBreathing, .longerOutBreath, .grounding: 2
+        case .noticeAndName, .dropAnchor: 1
+        }
+    }
+
+    public var systemImage: String {
+        switch self {
+        case .boxBreathing: "square"
+        case .longerOutBreath: "wind"
+        case .grounding: "eye"
+        case .noticeAndName: "tag"
+        case .dropAnchor: "figure.stand"
+        }
+    }
+
+    /// Timed tools run this long; step-through tools are as long as you take.
+    public var seconds: TimeInterval? {
+        switch self {
+        case .boxBreathing, .longerOutBreath: 120
+        case .grounding, .noticeAndName, .dropAnchor: nil
+        }
+    }
+}
+
+/// Box breathing: four equal sides of four seconds (S12.1).
+public enum BoxBreath {
+    public static let sideSeconds: TimeInterval = 4
+
+    public enum Side: Int, CaseIterable, Sendable {
+        case breatheIn, holdIn, breatheOut, holdOut
+    }
+
+    public struct Moment: Sendable, Equatable {
+        public let side: Side
+        /// 0…1 along the current side.
+        public let progress: Double
+        /// 4, 3, 2, 1 counting down on each side.
+        public let count: Int
+        /// 0…1 around the whole square.
+        public let around: Double
+    }
+
+    public static func moment(at elapsed: TimeInterval) -> Moment {
+        let t = max(elapsed, 0).truncatingRemainder(dividingBy: sideSeconds * 4)
+        let index = min(Int(t / sideSeconds), 3)
+        let into = t - Double(index) * sideSeconds
+        return Moment(side: Side(rawValue: index) ?? .breatheIn, progress: into / sideSeconds,
+                      count: max(Int(sideSeconds - into.rounded(.down)), 1), around: t / (sideSeconds * 4))
+    }
+}
+
+/// 5-4-3-2-1 grounding: one sense per step.
+public enum Grounding {
+    public struct Step: Sendable, Equatable {
+        public let count: Int
+        public let sense: LocalizedStringResource
+        public let hint: LocalizedStringResource
+    }
+
+    public static let steps: [Step] = [
+        Step(count: 5, sense: "things you can see", hint: "Look around slowly. Colours, shapes, light."),
+        Step(count: 4, sense: "things you can feel", hint: "Your feet on the floor, the chair, your clothes, the air."),
+        Step(count: 3, sense: "things you can hear", hint: "Near and far. Traffic, voices, your own breathing."),
+        Step(count: 2, sense: "things you can smell", hint: "Or two smells you like, if nothing's around."),
+        Step(count: 1, sense: "thing you can taste", hint: "A sip of water, or just what's in your mouth now."),
+    ]
+}
+
+/// Notice and name, a brief ACT-style exercise.
+public enum NoticeAndName {
+    public static let thoughts: [LocalizedStringResource] = [
+        "I need one", "I can't cope", "Just one won't hurt", "I deserve it", "This will never get easier",
+    ]
+    public static let breaths = 3
+}
+
+/// Drop anchor, a brief ACT-style exercise in three steps.
+public enum DropAnchor {
+    public static let steps: [(title: LocalizedStringResource, body: LocalizedStringResource)] = [
+        ("Notice what's here", "Notice the thoughts and feelings that are here right now. You don't have to change them."),
+        ("Feel your body", "Push your feet into the floor. Straighten your back. Feel your hands, your shoulders, your breath."),
+        ("Come back to the room", "Look around. Notice where you are and what you're doing. Then carry on with it."),
+    ]
+}

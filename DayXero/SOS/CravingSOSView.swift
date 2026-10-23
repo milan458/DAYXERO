@@ -33,6 +33,8 @@ struct CravingSOSView: View {
     @State private var trigger: Trigger?
     @State private var strength = 5
     @State private var strengthTouched = false
+    /// Calm tools pause the countdown (S12.2); the round resumes where it left off.
+    @State private var pausedAt: Date?
 
     init(profile: UserProfile?, source: String, onClose: @escaping () -> Void) {
         self.profile = profile
@@ -69,6 +71,9 @@ struct CravingSOSView: View {
                 haptics.stop()
                 stage = .passed
             }
+        }
+        .fullScreenCover(isPresented: Binding(get: { pausedAt != nil }, set: { if !$0 { resume() } })) {
+            CalmToolsView(onClose: { resume() }, fromSOS: true)
         }
         .sensoryFeedback(DX.Haptic.commit, trigger: celebrate)
         .sensoryFeedback(DX.Haptic.gentle, trigger: slipFeedback)
@@ -134,6 +139,7 @@ struct CravingSOSView: View {
             Text(title).dxText(.micro)
             Spacer()
             Menu {
+                Button("Calm tools", systemImage: "wind") { pausedAt = .now; haptics.stop() }
                 Toggle("Haptics", isOn: $hapticsOn)
             } label: {
                 Image(systemName: "ellipsis").font(.system(size: 14, weight: .semibold)).foregroundStyle(DX.Palette.text2)
@@ -405,6 +411,10 @@ struct CravingSOSView: View {
         var lastBreath = -1
         var lastPhase: CravingWave.Phase?
         while !Task.isCancelled, stage == .session {
+            if pausedAt != nil {
+                try? await Task.sleep(for: .milliseconds(200))
+                continue
+            }
             let now = Date.now
             if CravingWave.remaining(roundElapsed: now.timeIntervalSince(roundStartedAt)) <= 0 {
                 haptics.stop()
@@ -424,6 +434,15 @@ struct CravingSOSView: View {
             }
             try? await Task.sleep(for: .milliseconds(100))
         }
+    }
+
+    private func resume() {
+        guard let paused = pausedAt else { return }
+        let gap = Date.now.timeIntervalSince(paused)
+        roundStartedAt = roundStartedAt.addingTimeInterval(gap)
+        pausedAt = nil
+        let ends = roundStartedAt.addingTimeInterval(CravingWave.roundLength)
+        Task { await SOSLiveActivity.update(endsAt: ends) }
     }
 
     private func anotherRound() {

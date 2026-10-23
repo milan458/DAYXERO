@@ -181,6 +181,15 @@ jobs:
           shoot dark large daily-checkin-done-dark $P12 -dx.openCheckIn YES -dx.checkInDone YES
           shoot dark large daily-dayend-dark $P12 -dx.openSettings dayEnd
           shoot dark large daily-reminders-dark $P12 -dx.openSettings reminders
+          shoot dark large calm-program-dark $P12 -dx.tab program
+          shoot dark large calm-list-dark $P12 -dx.tab program -dx.openCalmList YES
+          shoot light large calm-list-light $P12 -dx.tab program -dx.openCalmList YES
+          shoot dark accessibility-extra-extra-extra-large calm-list-dark-ax5 $P12 -dx.tab program -dx.openCalmList YES
+          shoot dark large calm-box-dark $P12 -dx.tab program -dx.openCalm boxBreathing -dx.calmElapsed 6
+          shoot dark large calm-grounding-dark $P12 -dx.tab program -dx.openCalm grounding -dx.calmStep 1 -dx.calmTicked 2
+          shoot dark large calm-notice1-dark $P12 -dx.tab program -dx.openCalm noticeAndName
+          shoot dark large calm-notice2-dark $P12 -dx.tab program -dx.openCalm noticeAndName -dx.calmStep 1
+          shoot dark large calm-done-dark $P12 -dx.tab program -dx.openCalm dropAnchor -dx.calmDone YES
           # Last: the under-18 screen persists its flag, so everything after it would show the exit.
           shoot dark large onb-under_age-dark -dx.onboardingStep under_age
           cd shots
