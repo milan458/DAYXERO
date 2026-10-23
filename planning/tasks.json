@@ -1389,7 +1389,7 @@
           "id": "S16.4",
           "title": "TestFlight build for Milan.",
           "status": "in_progress",
-          "notes": "First TestFlight upload succeeded (0.1.0 build 118). CI signs through the App Store Connect API (scripts/ci/asc_signing.py) and uploads after main goes green. Team 6DJM927Z95; App Group group.in.dayxero.app registered. Milan to confirm the build in TestFlight and add testers; then revoke the old ZDAH8F8P24 key.",
+          "notes": "First build on TestFlight: 1.0.0 (1), uploaded 23 Oct 15:03 UTC, processed VALID. CI signs through the App Store Connect API (scripts/ci/asc_signing.py), uploads after main goes green with time-based build numbers, and waits for App Store Connect to list the build. Team 6DJM927Z95; App Group group.in.dayxero.app registered. Milan: add internal testers; revoke the old ZDAH8F8P24 key.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
