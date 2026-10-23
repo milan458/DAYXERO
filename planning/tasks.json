@@ -2,16 +2,17 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-22T22:57:22.734Z"
+    "updated": "2026-10-23T04:10:24.298Z"
   },
   "now": {
     "section": "S4",
     "task": "S4.1",
     "waiting_on_milan": [
+      "Review the Section 4 Home mockups",
+      "Lesson unlock timing (S4.8)",
+      "Time regained: drop or define (S4.2)",
       "Privacy policy URL (S3.10)",
-      "App Store Connect + RevenueCat products (S3.11)",
-      "Youth resources per country (S2.2)",
-      "Create Config/Secrets.xcconfig on the Mac (S1.21)"
+      "App Store Connect + RevenueCat products (S3.11)"
     ]
   },
   "sections": [
@@ -490,65 +491,85 @@
       "title": "Home / Today",
       "goal": "",
       "signoff": {
-        "state": "not_started",
-        "history": []
+        "state": "mockups_ready",
+        "history": [
+          {
+            "time": "2026-10-23T04:10:24.121Z",
+            "state": "mockups_ready",
+            "by": "Claude",
+            "comment": ""
+          }
+        ]
       },
-      "mockups": [],
+      "mockups": [
+        {
+          "title": "Home / Today: prep, Quit Day, quit week, lesson done, weeks after, free version",
+          "path": "mockups/S4/home.html"
+        }
+      ],
       "tasks": [
         {
           "id": "S4.1",
           "title": "Hero progress visual (direction set by DESIGN_METHODOLOGY.md) showing days clear and progress; slips do not reset it.",
-          "status": "pending",
-          "notes": "",
+          "status": "awaiting_signoff",
+          "notes": "Mockups in progress.\nMockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S4.2",
           "title": "Per-product counters: cigarettes, puffs or pouches not used; money kept; time regained.",
-          "status": "pending",
-          "notes": "Question for Milan: what should 'time regained' mean? Any minutes-per-cigarette figure is a health claim and needs a source.",
+          "status": "awaiting_signoff",
+          "notes": "Question for Milan: what should 'time regained' mean? Any minutes-per-cigarette figure is a health claim and needs a source.\nMockups in progress.\nMockups ready in tracker.\nMockup flags options: drop 'time regained' for v1, or ask 'how long does one take?' in onboarding. A published per-cigarette figure would be a health claim needing a source.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S4.3",
           "title": "Prep-phase state: countdown to Quit Day, \"you can still use during prep\", today's prep lesson.",
-          "status": "pending",
-          "notes": "",
+          "status": "awaiting_signoff",
+          "notes": "Mockups in progress.\nMockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S4.4",
           "title": "Today's program card: day N of 7, lesson title, duration, start or continue.",
-          "status": "pending",
-          "notes": "",
+          "status": "awaiting_signoff",
+          "notes": "Mockups in progress.\nMockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S4.5",
           "title": "Craving button always reachable from Home (thumb zone).",
-          "status": "pending",
-          "notes": "",
+          "status": "awaiting_signoff",
+          "notes": "Mockups in progress.\nMockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S4.6",
           "title": "Upcoming milestone hint.",
-          "status": "pending",
-          "notes": "",
+          "status": "awaiting_signoff",
+          "notes": "Mockups in progress.\nMockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S4.7",
           "title": "Glass navigation (tab bar: Today, Program, Progress) with iOS 26 Liquid Glass and fallback.",
-          "status": "pending",
-          "notes": "",
+          "status": "awaiting_signoff",
+          "notes": "Mockups in progress.\nMockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
+          "completed": null
+        },
+        {
+          "id": "S4.8",
+          "title": "Do quit-week lessons open as soon as the previous one is done, or the next morning?",
+          "status": "blocked",
+          "notes": "From S4 mockups (today's lesson done screen). Plan says a day unlocks after the previous is completed; unclear whether it's also calendar-gated.",
+          "created": "2026-10-23T04:10:24.262Z",
           "completed": null
         }
       ]
@@ -1155,6 +1176,106 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-23T04:10:24.298Z",
+      "type": "now",
+      "message": "Now: S4 / S4.1"
+    },
+    {
+      "time": "2026-10-23T04:10:24.281Z",
+      "type": "note",
+      "message": "S4.2: Mockup flags options: drop 'time regained' for v1, or ask 'how long does one take?' in onboarding. A published per-cigarette figure would be a health claim needing a source."
+    },
+    {
+      "time": "2026-10-23T04:10:24.262Z",
+      "type": "task_added",
+      "message": "S4.8 added: Do quit-week lessons open as soon as the previous one is done, or the next morning?"
+    },
+    {
+      "time": "2026-10-23T04:10:24.244Z",
+      "type": "status",
+      "message": "S4.7 in_progress → awaiting_signoff (Mockups ready in tracker.)"
+    },
+    {
+      "time": "2026-10-23T04:10:24.227Z",
+      "type": "status",
+      "message": "S4.6 in_progress → awaiting_signoff (Mockups ready in tracker.)"
+    },
+    {
+      "time": "2026-10-23T04:10:24.209Z",
+      "type": "status",
+      "message": "S4.5 in_progress → awaiting_signoff (Mockups ready in tracker.)"
+    },
+    {
+      "time": "2026-10-23T04:10:24.192Z",
+      "type": "status",
+      "message": "S4.4 in_progress → awaiting_signoff (Mockups ready in tracker.)"
+    },
+    {
+      "time": "2026-10-23T04:10:24.174Z",
+      "type": "status",
+      "message": "S4.3 in_progress → awaiting_signoff (Mockups ready in tracker.)"
+    },
+    {
+      "time": "2026-10-23T04:10:24.158Z",
+      "type": "status",
+      "message": "S4.2 in_progress → awaiting_signoff (Mockups ready in tracker.)"
+    },
+    {
+      "time": "2026-10-23T04:10:24.139Z",
+      "type": "status",
+      "message": "S4.1 in_progress → awaiting_signoff (Mockups ready in tracker.)"
+    },
+    {
+      "time": "2026-10-23T04:10:24.121Z",
+      "type": "signoff",
+      "message": "S4 mockups → mockups_ready"
+    },
+    {
+      "time": "2026-10-23T04:10:24.101Z",
+      "type": "mockup",
+      "message": "S4 mockup posted: Home / Today: prep, Quit Day, quit week, lesson done, weeks after, free version"
+    },
+    {
+      "time": "2026-10-23T04:08:04.092Z",
+      "type": "status",
+      "message": "S4.7 pending → in_progress (Mockups in progress.)"
+    },
+    {
+      "time": "2026-10-23T04:08:04.068Z",
+      "type": "status",
+      "message": "S4.6 pending → in_progress (Mockups in progress.)"
+    },
+    {
+      "time": "2026-10-23T04:08:04.050Z",
+      "type": "status",
+      "message": "S4.5 pending → in_progress (Mockups in progress.)"
+    },
+    {
+      "time": "2026-10-23T04:08:04.025Z",
+      "type": "status",
+      "message": "S4.4 pending → in_progress (Mockups in progress.)"
+    },
+    {
+      "time": "2026-10-23T04:08:03.992Z",
+      "type": "status",
+      "message": "S4.3 pending → in_progress (Mockups in progress.)"
+    },
+    {
+      "time": "2026-10-23T04:08:03.970Z",
+      "type": "status",
+      "message": "S4.2 pending → in_progress (Mockups in progress.)"
+    },
+    {
+      "time": "2026-10-23T04:08:03.940Z",
+      "type": "status",
+      "message": "S4.1 pending → in_progress (Mockups in progress.)"
+    },
+    {
+      "time": "2026-10-23T04:08:03.910Z",
+      "type": "now",
+      "message": "Now: S4 / S4.1"
+    },
     {
       "time": "2026-10-22T22:57:22.734Z",
       "type": "note",
