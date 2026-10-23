@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-23T08:34:21.766Z"
+    "updated": "2026-10-23T08:36:10.130Z"
   },
   "now": {
     "section": "S5",
@@ -917,7 +917,7 @@
           "id": "S9.1",
           "title": "NRT setup: patch, gum, lozenge, inhaler; strength.",
           "status": "pending",
-          "notes": "Mockups ready in tracker.",
+          "notes": "Mockups ready in tracker.\nMilan: support two products together (e.g. patch plus gum or lozenge).",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -925,7 +925,7 @@
           "id": "S9.2",
           "title": "Step-down schedules that follow standard product-label guidance only; every screen says to follow the label and ask a pharmacist or doctor. No dosing advice beyond the label.",
           "status": "pending",
-          "notes": "Mockups ready in tracker.",
+          "notes": "Mockups ready in tracker.\nMilan: label presets for US, UK, Australia and Germany; everywhere else uses 'enter my own'.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -1281,6 +1281,16 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-23T08:36:10.130Z",
+      "type": "note",
+      "message": "S9.1: Milan: support two products together (e.g. patch plus gum or lozenge)."
+    },
+    {
+      "time": "2026-10-23T08:36:10.107Z",
+      "type": "note",
+      "message": "S9.2: Milan: label presets for US, UK, Australia and Germany; everywhere else uses 'enter my own'."
+    },
     {
       "time": "2026-10-23T08:34:21.766Z",
       "type": "note",
