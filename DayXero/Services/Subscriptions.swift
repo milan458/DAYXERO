@@ -136,7 +136,7 @@ final class Subscriptions: PurchaseStore {
 /// Stand-in store for previews and CI screenshots (`-dx.store mock|failing`).
 @MainActor
 final class MockStore: PurchaseStore {
-    enum Mode: String { case mock, failing, slow }
+    enum Mode: String { case mock, failing, slow, pro }
     let mode: Mode
 
     init(mode: Mode) {
@@ -155,6 +155,6 @@ final class MockStore: PurchaseStore {
 
     func purchase(_ plan: Plan) async throws -> PurchaseOutcome { .purchased }
     func restore() async throws -> Bool { false }
-    func hasPro() async -> Bool { false }
+    func hasPro() async -> Bool { mode == .pro }
 }
 #endif

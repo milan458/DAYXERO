@@ -104,6 +104,13 @@ jobs:
           shoot dark large pw-pending-dark $P mock -dx.paywallPhase pending
           shoot dark large pw-notice-dark $P mock -dx.paywallPhase notice
           shoot dark accessibility-extra-extra-extra-large pw-annual-dark-ax5 $P mock
+          for sc in prep quitday day3 done day12; do
+            shoot dark large "home-$sc-dark" -dx.homeScenario "$sc" -dx.store pro
+          done
+          shoot dark large home-free-dark -dx.homeScenario free -dx.store mock -dx.paywallDone YES
+          shoot light large home-day3-light -dx.homeScenario day3 -dx.store pro
+          shoot light large home-prep-light -dx.homeScenario prep -dx.store pro
+          shoot dark accessibility-extra-extra-extra-large home-day3-dark-ax5 -dx.homeScenario day3 -dx.store pro
           # Last: the under-18 screen persists its flag, so everything after it would show the exit.
           shoot dark large onb-under_age-dark -dx.onboardingStep under_age
           cd shots

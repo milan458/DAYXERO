@@ -12,7 +12,13 @@ struct DayXeroApp: App {
         do {
             // Unit tests run inside the app; give them a throwaway store.
             let isTesting = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
+            #if DEBUG
+            let scenario = DebugScenario.current
+            container = try DataStore.makeContainer(inMemory: isTesting || scenario != nil)
+            scenario?.seed(into: container)
+            #else
             container = try DataStore.makeContainer(inMemory: isTesting)
+            #endif
         } catch {
             fatalError("Could not open the DayXero store: \(error)")
         }
@@ -40,7 +46,7 @@ struct DayXeroApp: App {
     }
 }
 
-/// Routes between onboarding and the app. Home (Section 4) and the paywall (Section 3) slot in here.
+/// Routes between onboarding, the one-time paywall and Home.
 struct RootView: View {
     @Query private var profiles: [UserProfile]
     @AppStorage("dx.underAge") private var underAge = false
@@ -69,7 +75,7 @@ struct RootView: View {
             UnderAgeScreen().dxCanvas()
         } else if let profile = profiles.first {
             if paywallDone || entitlement.isPro {
-                PlaceholderHome(profile: profile)
+                HomeView(profile: profile)
             } else {
                 PaywallView(name: profile.name, quitDay: profile.quitDay,
                             model: PaywallModel(store: entitlement.store, entitlement: entitlement),
@@ -78,37 +84,5 @@ struct RootView: View {
         } else {
             OnboardingFlow(onFinished: {})
         }
-    }
-}
-
-/// Temporary landing after onboarding until Sections 3 and 4 are built.
-private struct PlaceholderHome: View {
-    let profile: UserProfile
-    @Environment(\.modelContext) private var context
-    @Environment(Entitlement.self) private var entitlement
-    @State private var showGallery = false
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: DX.Space.m) {
-            Text("Plan saved").dxText(.micro)
-            Text("Hi \(profile.name)").dxText(.title)
-            Text("Quit Day: \(profile.quitDay, format: .dateTime.weekday(.wide).day().month())").dxText(.subtitle)
-            Text(entitlement.isPro ? "Full program unlocked." : "Free version: counter, Craving SOS and Day 1.").dxText(.subtitle)
-            Text("Home (Section 4) comes next.").dxText(.subtitle)
-            Spacer()
-            Button("Design system gallery") { showGallery = true }.buttonStyle(.dxSecondary)
-            #if DEBUG
-            Button("Restart onboarding") {
-                context.delete(profile)
-                try? context.save()
-                UserDefaults.standard.set(false, forKey: "dx.paywallDone")
-            }
-            .buttonStyle(.dxQuiet)
-            #endif
-        }
-        .padding(DX.Space.l)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .dxCanvas()
-        .sheet(isPresented: $showGallery) { DesignSystemGallery() }
     }
 }
