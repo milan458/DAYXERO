@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-23T06:43:52.121Z"
+    "updated": "2026-10-23T06:53:18.965Z"
   },
   "now": {
     "section": "S5",
@@ -772,16 +772,28 @@
       "title": "Logging and insights",
       "goal": "",
       "signoff": {
-        "state": "not_started",
-        "history": []
+        "state": "mockups_ready",
+        "history": [
+          {
+            "time": "2026-10-23T06:53:18.897Z",
+            "state": "mockups_ready",
+            "by": "Claude",
+            "comment": ""
+          }
+        ]
       },
-      "mockups": [],
+      "mockups": [
+        {
+          "title": "Progress, insights and logging",
+          "path": "mockups/S7/insights.html"
+        }
+      ],
       "tasks": [
         {
           "id": "S7.1",
           "title": "One-tap logging per product (cigarette, puff session, pouch) from the app, an interactive widget and an App Intent.",
           "status": "pending",
-          "notes": "",
+          "notes": "Mockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -789,7 +801,7 @@
           "id": "S7.2",
           "title": "Trigger and craving log with optional mood and context.",
           "status": "pending",
-          "notes": "",
+          "notes": "Mockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -797,7 +809,7 @@
           "id": "S7.3",
           "title": "Insights screen: time-of-day heat map of cravings and uses, top triggers, trend over time. Shows \"needs a week of data\" until there's enough.",
           "status": "pending",
-          "notes": "",
+          "notes": "Mockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -805,7 +817,7 @@
           "id": "S7.4",
           "title": "Progress screen: money kept, units avoided, time regained, cravings ridden out.",
           "status": "pending",
-          "notes": "",
+          "notes": "Mockups ready in tracker.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         }
@@ -1233,6 +1245,36 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-23T06:53:18.965Z",
+      "type": "note",
+      "message": "S7.4: Mockups ready in tracker."
+    },
+    {
+      "time": "2026-10-23T06:53:18.948Z",
+      "type": "note",
+      "message": "S7.3: Mockups ready in tracker."
+    },
+    {
+      "time": "2026-10-23T06:53:18.931Z",
+      "type": "note",
+      "message": "S7.2: Mockups ready in tracker."
+    },
+    {
+      "time": "2026-10-23T06:53:18.914Z",
+      "type": "note",
+      "message": "S7.1: Mockups ready in tracker."
+    },
+    {
+      "time": "2026-10-23T06:53:18.897Z",
+      "type": "signoff",
+      "message": "S7 mockups → mockups_ready"
+    },
+    {
+      "time": "2026-10-23T06:53:18.879Z",
+      "type": "mockup",
+      "message": "S7 mockup posted: Progress, insights and logging"
+    },
     {
       "time": "2026-10-23T06:43:52.121Z",
       "type": "signoff",
