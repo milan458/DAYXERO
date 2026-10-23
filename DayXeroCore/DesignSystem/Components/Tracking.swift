@@ -3,6 +3,8 @@ import SwiftUI
 /// Day state in the week strip. There is deliberately no "slip" state: slips never change the streak visual.
 public enum DXDayState: Sendable {
     case prep, clear, today, upcoming
+    /// Quit Day while it's still ahead: outlined so it stands out in the strip.
+    case quitDay
 }
 
 public struct DXWeekDay: Identifiable, Sendable {
@@ -56,6 +58,10 @@ public struct DXWeekStrip: View {
         case .prep:
             number.foregroundStyle(DX.Palette.accentInk)
                 .overlay(Circle().strokeBorder(DX.Palette.accentInk, style: StrokeStyle(lineWidth: 1, dash: [3, 3])))
+        case .quitDay:
+            number.foregroundStyle(DX.Palette.text)
+                .background(DX.Palette.surface2, in: Circle())
+                .overlay(Circle().strokeBorder(DX.Palette.text, lineWidth: 1.5))
         }
     }
 
@@ -65,6 +71,7 @@ public struct DXWeekStrip: View {
         case .clear: "Clear day"
         case .today: "Today"
         case .upcoming: "Upcoming"
+        case .quitDay: "Quit Day"
         }
     }
 }

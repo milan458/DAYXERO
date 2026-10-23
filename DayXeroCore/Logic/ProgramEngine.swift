@@ -1,7 +1,7 @@
 import Foundation
 
 /// Identifies one program day, e.g. quit day 3 or maintenance day 12.
-public struct ProgramDayID: Hashable, Codable, Sendable, CustomStringConvertible {
+public struct ProgramDayID: Hashable, Codable, Sendable, CustomStringConvertible, Identifiable {
     public let phase: ProgramPhase
     /// 1-based within the phase.
     public let index: Int
@@ -12,6 +12,7 @@ public struct ProgramDayID: Hashable, Codable, Sendable, CustomStringConvertible
     }
 
     public var description: String { "\(phase.rawValue)-\(index)" }
+    public var id: String { description }
 }
 
 public enum ProgramDayState: Equatable, Sendable {
