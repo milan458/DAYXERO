@@ -80,6 +80,8 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: in.dayxero.app
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         PROVISIONING_PROFILE_SPECIFIER: $(DX_PROFILE_APP)
+        CODE_SIGN_IDENTITY: $(DX_SIGN_IDENTITY)
+        CODE_SIGN_STYLE: $(DX_SIGN_STYLE)
       configs:
         # Keys come from Config/Secrets.xcconfig; analytics only in Release.
         Debug:
@@ -111,6 +113,8 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: in.dayxero.app.widgets
         PROVISIONING_PROFILE_SPECIFIER: $(DX_PROFILE_WIDGETS)
+        CODE_SIGN_IDENTITY: $(DX_SIGN_IDENTITY)
+        CODE_SIGN_STYLE: $(DX_SIGN_STYLE)
 
   DayXeroTests:
     type: bundle.unit-test
