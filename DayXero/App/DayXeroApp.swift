@@ -57,16 +57,29 @@ struct RootView: View {
     @Environment(Entitlement.self) private var entitlement
     @Environment(\.scenePhase) private var scenePhase
     @State private var sos = SOSRouter()
+    @State private var log = LogRouter()
+    @State private var logDetent = PresentationDetent.medium
 
     var body: some View {
         routed
             .environment(sos)
+            .environment(log)
+            .sheet(item: $log.page) { page in
+                LogSheet(profile: profiles.first, start: page, detent: $logDetent) { log.page = nil }
+                    .environment(sos)
+                    .presentationDetents([.medium, .large], selection: $logDetent)
+            }
             // Craving SOS sits above everything, so every way in reaches it in one step (S6.5).
             .fullScreenCover(item: $sos.launch) { launch in
                 CravingSOSView(profile: profiles.first, source: launch.source) { sos.launch = nil }
             }
             .onOpenURL { url in
-                guard url.scheme == "dayxero", url.host() == "sos" else { return }
+                guard url.scheme == "dayxero" else { return }
+                if url.host() == "log" {
+                    log.open(url.path().contains("craving") ? .craving : .menu)
+                    return
+                }
+                guard url.host() == "sos" else { return }
                 let source = URLComponents(url: url, resolvingAgainstBaseURL: false)?
                     .queryItems?.first { $0.name == "source" }?.value
                 sos.open(source: source ?? "link")
@@ -74,9 +87,21 @@ struct RootView: View {
             .onChange(of: scenePhase, initial: true) { _, phase in
                 guard phase == .active else { return }
                 SOSBridge.openSession = { [sos] source in sos.open(source: source) }
+                SOSBridge.openCravingLog = { [log] in log.open(.craving) }
                 if let source = SOSState.consumeOpenRequest() { sos.open(source: source) }
+                if LogRequest.consumeCravingLog() { log.open(.craving) }
                 #if DEBUG
-                if UserDefaults.standard.bool(forKey: "dx.sos") { sos.open(source: "debug") }
+                if UserDefaults.standard.bool(forKey: "dx.sos") {
+                    sos.open(source: "debug")
+                } else {
+                    // Screenshots run one after another; don't carry a countdown into the next one.
+                    Task { await SOSLiveActivity.endAll() }
+                }
+                switch UserDefaults.standard.string(forKey: "dx.logSheet") {
+                case "menu": log.open(.menu)
+                case "craving": log.open(.craving)
+                default: break
+                }
                 #endif
             }
     }

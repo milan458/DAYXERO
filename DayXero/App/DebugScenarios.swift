@@ -45,6 +45,15 @@ enum DebugScenario: String {
                                           createdAt: reasonsAt.addingTimeInterval(2)))
         }
         profile.triggers = [.coffee, .stress]
+        // Day 12 has a few weeks of logs, so Progress shows real insights (S7.3).
+        if self == .day12 { Self.seedLogs(into: context, from: day(start), to: now, quitDay: day(quit), calendar: calendar) }
+        // Prep has a few uses logged today and yesterday (S7.1).
+        if self == .prep {
+            for (offset, hour, product) in [(-1, 8, Product.vape), (-1, 9, .vape), (-1, 13, .cigarettes), (0, 8, .vape), (0, 9, .vape), (0, 7, .cigarettes)] {
+                let when = day(offset).addingTimeInterval(Double(hour) * 3600)
+                if when < now { context.insert(LogEntry(kind: .use, product: product, timestamp: when)) }
+            }
+        }
         // A few cravings ridden out earlier today, for "That's 4 this week" in Craving SOS.
         if self == .day3 {
             for hours in 1...3 {
@@ -78,6 +87,45 @@ enum DebugScenario: String {
         // Everyone except "returning" opened the app within the last hour, so no pause is due.
         progress.lastActiveAt = self == .returning ? progress.completions.map(\.completedAt).max() : now.addingTimeInterval(-3600)
         try? context.save()
+    }
+
+    /// Cravings and uses with a clear shape: weekday mornings with coffee, weekend evenings with friends,
+    /// some stress in the afternoons, easing off after Quit Day.
+    private static func seedLogs(into context: ModelContext, from start: Date, to now: Date, quitDay: Date, calendar: Calendar) {
+        var seed: UInt64 = 42
+        func roll() -> Double {
+            seed = seed &* 6364136223846793005 &+ 1442695040888963407
+            return Double(seed >> 33) / Double(1 << 31)
+        }
+        var day = start
+        while day <= now {
+            let weekday = calendar.component(.weekday, from: day)
+            let weekend = weekday == 1 || weekday == 7
+            let afterQuit = day >= quitDay
+            let ease = afterQuit ? max(0.35, 1 - Double(calendar.dateComponents([.day], from: quitDay, to: day).day ?? 0) * 0.06) : 1
+            var moments: [(Double, Trigger)] = []
+            if !weekend { moments.append((8.2, .coffee)) }
+            if roll() < 0.5 { moments.append((15.3, .stress)) }
+            if weekend { moments.append((19.6, .social)) }
+            if roll() < 0.35 { moments.append((12.8, .meals)) }
+            if roll() < 0.15 { moments.append((7.6, .driving)) }
+            for (hour, trigger) in moments where roll() < ease {
+                let when = day.addingTimeInterval(hour * 3600 + roll() * 1800)
+                guard when < now else { continue }
+                if afterQuit {
+                    let entry = LogEntry(kind: .craving, timestamp: when, intensity: Int(3 + roll() * 6), trigger: trigger)
+                    if roll() < 0.8 {
+                        entry.outcome = .passed
+                        entry.sosDurationSeconds = 180
+                    }
+                    context.insert(entry)
+                } else {
+                    context.insert(LogEntry(kind: .use, product: roll() < 0.7 ? .vape : .cigarettes, timestamp: when, trigger: trigger))
+                    if roll() < 0.6 { context.insert(LogEntry(kind: .craving, timestamp: when.addingTimeInterval(-600), trigger: trigger)) }
+                }
+            }
+            day = calendar.date(byAdding: .day, value: 1, to: day) ?? now
+        }
     }
 
     /// A stand-in photo for a reason: soft hills under an evening sky.

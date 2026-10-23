@@ -13,5 +13,20 @@ struct DayXeroShortcuts: AppShortcutsProvider {
             shortTitle: "Craving SOS",
             systemImageName: "flame"
         )
+        AppShortcut(
+            intent: LogUseIntent(),
+            phrases: [
+                "Log a \(\.$product) in \(.applicationName)",
+                "Log \(\.$product) in \(.applicationName)",
+            ],
+            shortTitle: "Log a use",
+            systemImageName: "plus.circle"
+        )
+        AppShortcut(
+            intent: LogCravingIntent(),
+            phrases: ["Log a craving in \(.applicationName)"],
+            shortTitle: "Log a craving",
+            systemImageName: "square.and.pencil"
+        )
     }
 }

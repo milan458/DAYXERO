@@ -179,6 +179,7 @@ public final class LogEntry {
     public var intensity: Int?
     public var triggerRaw: String?
     public var moodRaw: Int?
+    public var placeRaw: String?
     public var note: String?
     /// Set for SOS sessions.
     public var sosDurationSeconds: Double?
@@ -200,6 +201,14 @@ public final class LogEntry {
     public var kind: LogKind { LogKind(rawValue: kindRaw) ?? .craving }
     public var product: Product? { productRaw.flatMap(Product.init(rawValue:)) }
     public var trigger: Trigger? { triggerRaw.flatMap(Trigger.init(rawValue:)) }
+    public var mood: Mood? {
+        get { moodRaw.flatMap(Mood.init(rawValue:)) }
+        set { moodRaw = newValue?.rawValue }
+    }
+    public var place: Place? {
+        get { placeRaw.flatMap(Place.init(rawValue:)) }
+        set { placeRaw = newValue?.rawValue }
+    }
     public var outcome: CravingOutcome? {
         get { outcomeRaw.flatMap(CravingOutcome.init(rawValue:)) }
         set { outcomeRaw = newValue?.rawValue }

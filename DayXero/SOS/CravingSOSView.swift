@@ -32,7 +32,6 @@ struct CravingSOSView: View {
     @State private var trigger: Trigger?
     @State private var strength = 5
     @State private var strengthTouched = false
-    @State private var showSlipTalk = false
 
     init(profile: UserProfile?, source: String, onClose: @escaping () -> Void) {
         self.profile = profile
@@ -72,10 +71,6 @@ struct CravingSOSView: View {
         }
         .sensoryFeedback(DX.Haptic.commit, trigger: celebrate)
         .sensoryFeedback(DX.Haptic.gentle, trigger: slipFeedback)
-        .sheet(isPresented: $showSlipTalk) {
-            ComingSoon(title: "Talk it through", message: "The one-minute slip talk-through arrives in Section 8.", systemImage: "heart")
-                .presentationDetents([.medium])
-        }
     }
 
     // MARK: Session
@@ -361,36 +356,7 @@ struct CravingSOSView: View {
     // MARK: I slipped
 
     private var slippedView: some View {
-        VStack(spacing: DX.Space.s) {
-            ScrollView {
-                VStack(spacing: DX.Space.s) {
-                    Image(systemName: "heart")
-                        .font(.system(size: 30))
-                        .foregroundStyle(DX.Palette.accentInk)
-                        .frame(width: 76, height: 76)
-                        .background(DX.Palette.accentSoft, in: Circle())
-                        .accessibilityHidden(true)
-                        .padding(.top, DX.Space.xxl)
-                    Text("Thanks for being honest").dxText(.title).multilineTextAlignment(.center)
-                    Text("A slip is one moment, not a restart. Your days clear and progress stay as they are.")
-                        .dxText(.subtitle).multilineTextAlignment(.center)
-                    DXCard(padding: 14) {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("One minute, if you have it").dxText(.micro)
-                            Text("A few quick questions about what happened, so we can plan for next time.")
-                                .font(DX.TextStyle.subtitle.font).foregroundStyle(DX.Palette.text)
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    .padding(.top, DX.Space.l)
-                }
-            }
-            .scrollBounceBehavior(.basedOnSize)
-            Button("Talk it through · 1 min") { showSlipTalk = true }.buttonStyle(.dxPrimary)
-            Button("Not now", action: onClose).buttonStyle(.dxQuiet)
-        }
-        .padding(.horizontal, DX.Space.m)
-        .padding(.bottom, DX.Space.xs)
+        SlipAcknowledgement(onDone: onClose)
     }
 
     // MARK: Flow
@@ -416,7 +382,8 @@ struct CravingSOSView: View {
         began = true
         _ = SOSState.consumeFinishedOutside()
         SOSState.startedAt = startedAt
-        SOSLiveActivity.start(startedAt: startedAt, endsAt: roundStartedAt.addingTimeInterval(CravingWave.roundLength))
+        let start = startedAt, ends = roundStartedAt.addingTimeInterval(CravingWave.roundLength)
+        Task { await SOSLiveActivity.start(startedAt: start, endsAt: ends) }
         Analytics.track(.cravingSessionStarted(source: source))
         #if DEBUG
         switch UserDefaults.standard.string(forKey: "dx.sosOutcome") {

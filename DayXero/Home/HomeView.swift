@@ -17,7 +17,7 @@ struct HomeView: View {
                 case "program":
                     ProgramView(profile: profile)
                 case "progress":
-                    ComingSoon(title: "Progress", message: "Money kept, cravings ridden out and your insights arrive in Section 7.", systemImage: "chart.bar")
+                    ProgressTab(profile: profile)
                 default:
                     TodayView(profile: profile)
                 }
@@ -71,6 +71,12 @@ struct TodayView: View {
     @State private var showUpgrade = false
     @State private var showPaywall = false
     @Environment(\.dynamicTypeSize) private var typeSize
+    @Environment(LogRouter.self) private var log
+    @Query(sort: \LogEntry.timestamp, order: .reverse) private var logs: [LogEntry]
+    /// The use just logged with one tap, for the Undo / Add details toast (S7.1).
+    @State private var justLogged: LogEntry?
+    @State private var detailsFor: LogEntry?
+    @State private var loggedFeedback = false
 
     var body: some View {
         // Re-evaluates each minute so counters tick and the day rolls over on its own.
@@ -90,6 +96,7 @@ struct TodayView: View {
                         }
                     }
                     if snap.phase == .quitDay, !sosHintSeen { sosHint }
+                    if isPrep(snap) { useRows(now: timeline.date) }
                     tiles(snap)
                     if let next = snap.nextMilestone, !isPrep(snap) { milestone(next: next, daysClear: snap.daysClear) }
                 }
@@ -97,6 +104,20 @@ struct TodayView: View {
                 .padding(.top, DX.Space.s)
                 .padding(.bottom, 120)
             }
+        }
+        .overlay(alignment: .bottom) {
+            if let entry = justLogged { loggedToast(entry) }
+        }
+        .animation(DX.Motion.animation(DX.Motion.glide, reduceMotion: false), value: justLogged)
+        .task(id: justLogged) {
+            guard justLogged != nil else { return }
+            try? await Task.sleep(for: .seconds(5))
+            justLogged = nil
+        }
+        .sensoryFeedback(DX.Haptic.commit, trigger: loggedFeedback)
+        .sheet(item: $detailsFor) { entry in
+            CravingLogForm(profile: profile, editing: entry, onSaved: { detailsFor = nil })
+                .presentationDetents([.large])
         }
         .fullScreenCover(item: $openLesson) { item in
             LessonPlayer(day: item.day, profile: profile, isReplay: item.isReplay)
@@ -114,6 +135,86 @@ struct TodayView: View {
         }
     }
 
+    // MARK: One-tap logging in prep (S7.1)
+
+    @ViewBuilder
+    private func useRows(now: Date) -> some View {
+        Text("Log a use · today").dxText(.micro).padding(.top, DX.Space.xs)
+        ForEach(profile.products.sorted { ($0.isPrimary ? 0 : 1) < ($1.isPrimary ? 0 : 1) }) { use in
+            let counts = useCounts(use.product, now: now)
+            Button { logUse(use.product) } label: {
+                HStack(spacing: DX.Space.s) {
+                    Image(systemName: LogSheet.icon(use.product)).font(.system(size: 18)).foregroundStyle(DX.Palette.text)
+                        .frame(width: 42, height: 42).background(DX.Palette.surface2, in: Circle())
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text(usePlural(use.product)).font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
+                        Text("\(counts.today) today · \(counts.yesterday) yesterday").dxText(.subtitle)
+                    }
+                    Spacer(minLength: DX.Space.xs)
+                    Image(systemName: "plus").font(.system(size: 16, weight: .bold)).foregroundStyle(DX.Palette.onPrimary)
+                        .frame(width: 40, height: 40).background(DX.Palette.primary, in: Circle())
+                }
+                .padding(.vertical, DX.Space.s).padding(.horizontal, 14)
+                .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(DX.Palette.hairline))
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityElement(children: .combine)
+            .accessibilityHint(Text("Logs one now"))
+        }
+    }
+
+    private func useCounts(_ product: Product, now: Date) -> (today: Int, yesterday: Int) {
+        let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
+        let today = clock.day(containing: now)
+        let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: today) ?? today
+        let mine = logs.filter { $0.product == product && $0.kind != .craving && $0.timestamp >= yesterday }
+        let todayCount = mine.filter { clock.day(containing: $0.timestamp) == today }.count
+        return (todayCount, mine.count - todayCount)
+    }
+
+    private func usePlural(_ product: Product) -> LocalizedStringKey {
+        switch product {
+        case .cigarettes: "Cigarettes"
+        case .vape: "Puff sessions"
+        case .pouches: "Pouches"
+        }
+    }
+
+    private func logUse(_ product: Product) {
+        justLogged = UseLog.log(product, in: context)
+        loggedFeedback.toggle()
+    }
+
+    private func loggedToast(_ entry: LogEntry) -> some View {
+        let count = entry.product.map { useCounts($0, now: .now).today } ?? 0
+        return HStack(spacing: DX.Space.s) {
+            Image(systemName: "checkmark").font(.system(size: 13, weight: .bold))
+            Text("Logged · \(count) today").font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
+            Spacer(minLength: DX.Space.xs)
+            Button("Undo") {
+                UseLog.undo(entry, in: context)
+                justLogged = nil
+            }
+            .opacity(0.75)
+            Button("Add details") {
+                detailsFor = entry
+                justLogged = nil
+            }
+        }
+        .font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
+        .foregroundStyle(DX.Palette.onPrimary)
+        .buttonStyle(.plain)
+        .padding(.vertical, DX.Space.s).padding(.horizontal, 14)
+        .background(DX.Palette.primary, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .shadow(color: DX.Palette.shadow, radius: 16, y: 8)
+        .padding(.horizontal, DX.Space.m)
+        .padding(.bottom, 96)
+        .transition(.move(edge: .bottom).combined(with: .opacity))
+        .accessibilityElement(children: .contain)
+    }
+
     private func isPrep(_ snap: HomeSnapshot) -> Bool {
         if case .prep = snap.phase { return true }
         return false
@@ -128,6 +229,7 @@ struct TodayView: View {
                 Text(title(snap, now: now)).dxText(.title).font(.custom(DX.Typeface.bold, size: 24, relativeTo: .title))
             }
             Spacer()
+            LogButton { log.open() }
             Button {} label: { Image(systemName: "person").accessibilityLabel(Text("Profile and settings")) }
                 .buttonStyle(.dxIcon)
         }

@@ -94,6 +94,17 @@ public enum TimeOfDay: String, Codable, CaseIterable, Sendable {
         case .lateNight: "Late night"
         }
     }
+
+    /// Morning 5–11, midday 11–14, afternoon 14–17, evening 17–22, late night 22–5.
+    public init(hour: Int) {
+        switch hour {
+        case 5..<11: self = .morning
+        case 11..<14: self = .midday
+        case 14..<17: self = .afternoon
+        case 17..<22: self = .evening
+        default: self = .lateNight
+        }
+    }
 }
 
 public enum PastAttempts: String, Codable, CaseIterable, Sendable {
@@ -127,6 +138,30 @@ public enum Obstacle: String, Codable, CaseIterable, Sendable {
 
 public enum Mood: Int, Codable, CaseIterable, Sendable {
     case low = 1, meh, okay, good, great
+
+    public var title: LocalizedStringResource {
+        switch self {
+        case .low: "Low"
+        case .meh: "Meh"
+        case .okay: "Okay"
+        case .good: "Good"
+        case .great: "Great"
+        }
+    }
+}
+
+/// Where a craving happened (S7.2, optional).
+public enum Place: String, Codable, CaseIterable, Sendable {
+    case home, work, out, driving
+
+    public var title: LocalizedStringResource {
+        switch self {
+        case .home: "Home"
+        case .work: "Work"
+        case .out: "Out"
+        case .driving: "Driving"
+        }
+    }
 }
 
 public enum NRTType: String, Codable, CaseIterable, Sendable {

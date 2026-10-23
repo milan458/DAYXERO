@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-23T07:00:39.274Z"
+    "updated": "2026-10-23T07:02:16.836Z"
   },
   "now": {
     "section": "S5",
@@ -772,11 +772,17 @@
       "title": "Logging and insights",
       "goal": "",
       "signoff": {
-        "state": "mockups_ready",
+        "state": "signed_off",
         "history": [
           {
             "time": "2026-10-23T06:53:18.897Z",
             "state": "mockups_ready",
+            "by": "Claude",
+            "comment": ""
+          },
+          {
+            "time": "2026-10-23T07:02:16.754Z",
+            "state": "signed_off",
             "by": "Claude",
             "comment": ""
           }
@@ -792,32 +798,32 @@
         {
           "id": "S7.1",
           "title": "One-tap logging per product (cigarette, puff session, pouch) from the app, an interactive widget and an App Intent.",
-          "status": "pending",
-          "notes": "Mockups ready in tracker.\nMilan: 'Puff session' is fine as the vape logging unit.",
+          "status": "in_progress",
+          "notes": "Mockups ready in tracker.\nMilan: 'Puff session' is fine as the vape logging unit.\nMilan approved S7 in chat.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S7.2",
           "title": "Trigger and craving log with optional mood and context.",
-          "status": "pending",
-          "notes": "Mockups ready in tracker.\nMilan: keep the optional 'Where?' (home, work, out, driving) on the craving log.",
+          "status": "in_progress",
+          "notes": "Mockups ready in tracker.\nMilan: keep the optional 'Where?' (home, work, out, driving) on the craving log.\nMilan approved S7 in chat.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S7.3",
           "title": "Insights screen: time-of-day heat map of cravings and uses, top triggers, trend over time. Shows \"needs a week of data\" until there's enough.",
-          "status": "pending",
-          "notes": "Mockups ready in tracker.",
+          "status": "in_progress",
+          "notes": "Mockups ready in tracker.\nMilan approved S7 in chat.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
         {
           "id": "S7.4",
           "title": "Progress screen: money kept, units avoided, time regained, cravings ridden out.",
-          "status": "pending",
-          "notes": "Mockups ready in tracker.\nMilan: show 'puffs not taken' only for people who picked vapes. Already the rule: counters, log rows and widget buttons come from the products chosen in onboarding.\nMilan: leave 'time regained' out.",
+          "status": "in_progress",
+          "notes": "Mockups ready in tracker.\nMilan: show 'puffs not taken' only for people who picked vapes. Already the rule: counters, log rows and widget buttons come from the products chosen in onboarding.\nMilan: leave 'time regained' out.\nMilan approved S7 in chat.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         }
@@ -1245,6 +1251,31 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-23T07:02:16.836Z",
+      "type": "status",
+      "message": "S7.4 pending → in_progress (Milan approved S7 in chat.)"
+    },
+    {
+      "time": "2026-10-23T07:02:16.817Z",
+      "type": "status",
+      "message": "S7.3 pending → in_progress (Milan approved S7 in chat.)"
+    },
+    {
+      "time": "2026-10-23T07:02:16.795Z",
+      "type": "status",
+      "message": "S7.2 pending → in_progress (Milan approved S7 in chat.)"
+    },
+    {
+      "time": "2026-10-23T07:02:16.774Z",
+      "type": "status",
+      "message": "S7.1 pending → in_progress (Milan approved S7 in chat.)"
+    },
+    {
+      "time": "2026-10-23T07:02:16.754Z",
+      "type": "signoff",
+      "message": "S7 mockups → signed_off"
+    },
     {
       "time": "2026-10-23T07:00:39.274Z",
       "type": "note",

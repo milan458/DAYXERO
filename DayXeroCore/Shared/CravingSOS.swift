@@ -75,6 +75,7 @@ public enum SOSBridge {
     public static var container: ModelContainer?
     public static var endLiveActivity: (@MainActor () async -> Void)?
     public static var openSession: (@MainActor (String) -> Void)?
+    public static var openCravingLog: (@MainActor () -> Void)?
 
     /// "It passed" from the Lock Screen or Dynamic Island: save the craving and end the countdown.
     public static func passedOutside() async {
@@ -84,6 +85,11 @@ public enum SOSBridge {
         }
         SOSState.startedAt = nil
         await endLiveActivity?()
+    }
+
+    /// Siri, Shortcuts, the widget: open the craving log now if the app is running, or as soon as it is.
+    public static func requestCravingLog() {
+        if let openCravingLog { openCravingLog() } else { LogRequest.requestCravingLog() }
     }
 
     /// Siri, Shortcuts, Control Center: open a session now if the app is running, or as soon as it is.
