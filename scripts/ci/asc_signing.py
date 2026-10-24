@@ -146,10 +146,11 @@ def app_id():
 
 def recent_builds():
     res = call("GET", f"builds?filter[app]={app_id()}&sort=-uploadedDate&limit=10&include=preReleaseVersion"
-                      "&fields[builds]=version,processingState,uploadedDate,preReleaseVersion&fields[preReleaseVersions]=version")
+                      "&fields[builds]=version,processingState,uploadedDate,preReleaseVersion,iconAssetToken&fields[preReleaseVersions]=version")
     versions = {v["id"]: v["attributes"]["version"] for v in res.get("included", [])}
     return [(b["attributes"]["version"], b["attributes"]["processingState"], b["attributes"]["uploadedDate"],
-             versions.get((b["relationships"]["preReleaseVersion"]["data"] or {}).get("id"), "?")) for b in res["data"]]
+             versions.get((b["relationships"]["preReleaseVersion"]["data"] or {}).get("id"), "?"),
+             "icon" if b["attributes"].get("iconAssetToken") else "no icon") for b in res["data"]]
 
 
 def builds():
@@ -159,7 +160,7 @@ def builds():
 
 def wait(version):
     for _ in range(40):   # about 20 minutes
-        for v, state, uploaded, _ in recent_builds():
+        for v, state, uploaded, *_ in recent_builds():
             if v == version:
                 print(f"::notice title=Build {v} received::{state}, uploaded {uploaded}")
                 if state == "INVALID":
