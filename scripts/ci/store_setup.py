@@ -346,7 +346,14 @@ if __name__ == "__main__":
             trial = len(all_pages(f"/v1/subscriptions/{sid}/introductoryOffers?limit=200"))
             summary.append(f"{a['productId']}: {a.get('state')}, {prices} prices, trial in {trial} territories")
         _, data = asc("GET", f"/v2/inAppPurchases/{lid}")
-        summary.append(f"{LIFETIME[0]}: {data['data']['attributes'].get('state')}")
+        parts = []
+        for label, path in [("price", f"/v2/inAppPurchases/{lid}/iapPriceSchedule"),
+                            ("availability", f"/v2/inAppPurchases/{lid}/inAppPurchaseAvailability"),
+                            ("screenshot", f"/v2/inAppPurchases/{lid}/appStoreReviewScreenshot")]:
+            status, got = asc("GET", path, allow=(404,))
+            parts.append(f"{label} {'yes' if status == 200 and got.get('data') else 'no'}")
+        locs = len(all_pages(f"/v2/inAppPurchases/{lid}/inAppPurchaseLocalizations"))
+        summary.append(f"{LIFETIME[0]}: {data['data']['attributes'].get('state')} ({', '.join(parts)}, {locs} localizations)")
         print("::notice title=App Store Connect products::" + " | ".join(summary))
     if step in ("all", "revenuecat"):
         if os.environ.get("RC_SECRET_KEY") and os.environ.get("RC_PROJECT_ID"):
