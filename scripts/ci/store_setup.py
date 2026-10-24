@@ -22,14 +22,14 @@ import jwt
 BUNDLE_ID = "in.dayxero.app"
 GROUP = "DayXero Pro"
 SUBSCRIPTIONS = [
-    # product ID, reference name, period, level, USD price, name and description on the App Store
+    # product ID, reference name, period, level, USD price, App Store name (30 max) and description (55 max)
     ("dayxero.annual", "Annual", "ONE_YEAR", 1, "39.99", "DayXero Pro Annual",
-     "The full quit program, insights, NRT planner and more, for a year."),
+     "Full quit program, insights and NRT planner, yearly."),
     ("dayxero.monthly", "Monthly", "ONE_MONTH", 2, "9.99", "DayXero Pro Monthly",
-     "The full quit program, insights, NRT planner and more, month to month."),
+     "Full quit program, insights and NRT planner, monthly."),
 ]
 LIFETIME = ("dayxero.lifetime", "Lifetime", "79.99", "DayXero Pro Lifetime",
-            "The full quit program, insights, NRT planner and more, for good.")
+            "Full quit program, insights and NRT planner, for good.")
 TRIAL = {"dayxero.annual": "THREE_DAYS"}
 REVIEW_NOTE = "Unlocks DayXero Pro. The paywall appears after onboarding and from locked lessons."
 SCREENSHOT = os.environ.get("REVIEW_SCREENSHOT", "")
