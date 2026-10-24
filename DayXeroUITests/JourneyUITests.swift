@@ -20,8 +20,8 @@ final class JourneyUITests: XCTestCase {
         let name = app.textFields.firstMatch
         XCTAssert(name.waitForExistence(timeout: 5))
         name.tap()
-        name.typeText("Sam")
-        tapSettled(app, "Continue")
+        // Submit from the keyboard: its return key is also labelled "Continue", so tapping by label finds two.
+        name.typeText("Sam\n")
         tap(button(app, "Disposables"))
         snap(app, "02-products")
         tapSettled(app, "Continue")
