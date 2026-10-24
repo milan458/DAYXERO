@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DayXero Bio-Orb</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Tokens: identical to the signed-off Section 1 sheet. Each phone carries its own theme so dark and light sit side by side. */
+  :root {
+    --sage: #BCC388; --moss: #43511C; --amber: #E5A93C; --coral: #C85A54;
+    --font: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    --page: #e6e8df; --page-text: #11140A; --page-text2: rgba(17,20,10,.66); --page-muted: rgba(17,20,10,.56); --page-card: #fff; --page-line: rgba(17,20,10,.09);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --page: #0b0b0b; --page-text: #fff; --page-text2: rgba(255,255,255,.6); --page-muted: rgba(255,255,255,.5); --page-card: #121212; --page-line: rgba(255,255,255,.08); }
+  }
+  :root[data-theme="dark"] { --page: #0b0b0b; --page-text: #fff; --page-text2: rgba(255,255,255,.6); --page-muted: rgba(255,255,255,.5); --page-card: #121212; --page-line: rgba(255,255,255,.08); }
+
+  .t-dark {
+    color-scheme: dark;
+    --canvas: #000; --surface1: #121212; --surface2: #161616; --surface3: #1C1C1E;
+    --fg-rgb: 255,255,255; --text: #fff; --text2: rgba(255,255,255,.6); --muted: rgba(255,255,255,.5); --faint: rgba(255,255,255,.35);
+    --hairline: rgba(255,255,255,.08); --primary: #fff; --on-primary: #000; --accent-ink: #BCC388; --accent-soft: rgba(67,81,28,.5);
+    --bezel: #262626; --wash: rgba(67,81,28,.55);
+  }
+  .t-light {
+    color-scheme: light;
+    --canvas: #F3F4EE; --surface1: #fff; --surface2: #ECEEE4; --surface3: #E2E5D8;
+    --fg-rgb: 17,20,10; --text: #11140A; --text2: rgba(17,20,10,.66); --muted: rgba(17,20,10,.56); --faint: rgba(17,20,10,.38);
+    --hairline: rgba(17,20,10,.09); --primary: #11140A; --on-primary: #fff; --accent-ink: #55621F; --accent-soft: rgba(188,195,136,.45);
+    --bezel: #cfd2c4; --wash: rgba(188,195,136,.6);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--page-text); font-family: var(--font); -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 1320px; margin: 0 auto; padding: 28px 16px 80px; }
+  .micro { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted, var(--page-muted)); }
+  h1 { font-size: 28px; letter-spacing: -.02em; margin: 4px 0; }
+  .lede { font-size: 14px; color: var(--page-text2); max-width: 760px; line-height: 1.5; }
+  .bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 16px 0 4px; }
+  .bar button { background: var(--page-card); border: 1px solid var(--page-line); color: var(--page-text); font: 600 13px var(--font); padding: 9px 16px; border-radius: 999px; cursor: pointer; }
+  .bar button[aria-pressed="true"] { background: var(--page-text); color: var(--page); }
+  .spec { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 18px; }
+  .spec div { background: var(--page-card); border: 1px solid var(--page-line); border-radius: 18px; padding: 14px; font-size: 12.5px; line-height: 1.5; color: var(--page-text2); }
+  .spec b { color: var(--page-text); display: block; font-size: 13px; margin-bottom: 2px; }
+
+  .row { margin-top: 40px; }
+  .row-head { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+  .row-head b { font-size: 16px; }
+  .tag { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: var(--page-card); border: 1px solid var(--page-line); color: var(--page-text2); }
+  .row-body { display: flex; flex-wrap: wrap; gap: 22px; margin-top: 14px; align-items: flex-start; }
+  .pair { display: flex; flex-wrap: wrap; gap: 18px; }
+  .pair figure { margin: 0; display: grid; gap: 8px; justify-items: center; }
+  .pair figcaption { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--page-muted); }
+  .notes { flex: 1 1 260px; max-width: 420px; display: grid; gap: 10px; align-content: start; }
+  .notes p { margin: 0; font-size: 12.5px; color: var(--page-text2); line-height: 1.5; }
+  .notes p b { color: var(--page-text); }
+  .flag { border-left: 3px solid var(--amber); padding-left: 8px; }
+
+  /* Phone */
+  .phone { width: 300px; height: 640px; border-radius: 46px; padding: 9px; background: var(--bezel); flex: none; }
+  .screen { position: relative; width: 100%; height: 100%; border-radius: 38px; overflow: hidden; display: flex; flex-direction: column; padding: 46px 18px 22px; color: var(--text);
+    background: radial-gradient(120% 70% at 50% 34%, var(--wash), transparent 70%), var(--canvas); }
+  .screen.plain { background: var(--canvas); }
+  .island { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 88px; height: 25px; border-radius: 99px; background: #000; z-index: 2; }
+  .ptop { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .close { width: 34px; height: 34px; border-radius: 99px; background: var(--surface1); border: 1px solid var(--hairline); display: grid; place-items: center; color: var(--text2); }
+  svg.i { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .grow { flex: 1; }
+  .footer { display: grid; gap: 8px; }
+  .btn { height: 52px; border-radius: 999px; border: 0; font: 600 15px var(--font); letter-spacing: -.01em; display: grid; place-items: center; }
+  .btn.sage { background: var(--sage); color: #000; }
+  .btn.secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--hairline); height: 46px; }
+  .btn.ghost { background: transparent; border: 1px solid rgba(var(--fg-rgb), .16); color: var(--text); height: 44px; font-size: 14px; font-weight: 500; }
+  .outrow { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .title { font-size: 24px; font-weight: 700; letter-spacing: -.02em; line-height: 1.15; margin: 0 0 8px; }
+  .sub { font-size: 13px; color: var(--text2); line-height: 1.45; margin: 0; }
+  .wavecap { text-align: center; font-size: 13px; color: var(--text2); margin: 10px 8px 0; line-height: 1.45; min-height: 38px; }
+  .rcard { display: flex; gap: 12px; align-items: center; padding: 10px; border-radius: 22px; background: var(--surface1); border: 1px solid var(--hairline); margin-top: 12px; }
+  .thumb { width: 52px; height: 52px; border-radius: 16px; flex: none; background: linear-gradient(135deg, #8aa06a, #3b5a3a 60%, #c9b98a); }
+  .rt { font-size: 14px; font-weight: 600; line-height: 1.3; }
+  .dots { display: flex; gap: 4px; justify-content: center; margin-top: 8px; }
+  .dots i { width: 5px; height: 5px; border-radius: 99px; background: rgba(var(--fg-rgb), .2); }
+  .dots i.on { background: var(--text); }
+  .pill { display: inline-flex; gap: 6px; align-items: center; font-size: 12px; color: var(--text2); padding: 6px 10px; border-radius: 99px; background: var(--surface1); border: 1px solid var(--hairline); }
+  .pill.live { color: var(--accent-ink); }
+  .pill.live i { width: 6px; height: 6px; border-radius: 99px; background: var(--accent-ink); display: block; }
+  .center-row { display: flex; justify-content: center; }
+  .ticks { display: flex; justify-content: space-between; margin-top: 14px; padding: 0 22px; }
+  .ticks span { font-size: 12px; color: var(--muted); }
+  .ticks span.on { color: var(--text); font-weight: 600; }
+
+  /* Orb */
+  .orbwrap { position: relative; margin: 0 auto; display: grid; place-items: center; }
+  .orbwrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .arc { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+  .arc circle { fill: none; stroke-width: 3; }
+  .arc .bg { stroke: rgba(var(--fg-rgb), .1); }
+  .arc .fg { stroke: var(--text); stroke-linecap: round; }
+  .orbtext { position: relative; text-align: center; }
+  .orbtext .cue { font-size: 15px; font-weight: 600; letter-spacing: -.01em; }
+  .orbtext .clock { font-size: 40px; font-weight: 700; letter-spacing: -.03em; font-variant-numeric: tabular-nums; line-height: 1.05; margin-top: 2px; }
+  .orbtext .left { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .orbtext .big { font-size: 20px; font-weight: 600; letter-spacing: -.01em; }
+  .orbtext .count { font-size: 40px; font-weight: 700; letter-spacing: -.03em; font-variant-numeric: tabular-nums; line-height: 1.05; }
+  .coach { text-align: center; font-size: 15px; line-height: 1.45; margin: 14px 6px 0; min-height: 66px; color: var(--muted); }
+  .coach .w { transition: color .25s; }
+  .coach .w.on { color: var(--text); }
+  @media (max-width: 680px) { .pair { justify-content: center; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="micro">Section 6 &amp; 12 · component</div>
+  <h1>Bio-Orb in the app</h1>
+  <p class="lede">The Bio-Orb replaces the flat breathing circle on the Craving SOS session (S6) and the Longer out-breath tool (S12). Every phone below is live: it runs the app's own breathing timing (4 s in, 6 s out, slowing toward 5 breaths a minute), so dark and light move together. Each screen is shown in both themes.</p>
+  <div class="bar">
+    <button id="pause" aria-pressed="false">Pause motion</button>
+    <button id="rm" aria-pressed="false">Preview Reduce Motion on all</button>
+  </div>
+  <div class="spec">
+    <div><b>Core</b>A glassy sage sphere. It grows on the in-breath and shrinks on the out-breath, eased with the same cosine curve as <code>CravingWave.breath</code>.</div>
+    <div><b>Rings</b>Three sage rings follow the core with increasing lag (breath damping), so the outer ring is the last to arrive. That trailing edge is what makes it feel like breath, not a pulse.</div>
+    <div><b>Speech energy</b>When a coaching line plays, the voice's loudness ripples the rings. Silence leaves a faint resting shimmer.</div>
+    <div><b>Theme</b>Dark: the orb glows out of black. Light: a paler core with a darker sage rim (accent ink <code>#55621F</code>), so it doesn't wash out on <code>#F3F4EE</code>.</div>
+  </div>
+
+  <div id="rows"></div>
+</div>
+
+<script>
+const I = {
+  x: '<svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  more: '<svg class="i" viewBox="0 0 24 24" style="width:16px;height:16px"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>',
+  back: '<svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>',
+  wave: '<svg class="i" viewBox="0 0 24 24"><path d="M3 12h2M7 8v8M11 5v14M15 8v8M19 11v2"/></svg>',
+};
+const ROUND = 180;
+
+// Port of CravingWave.breath(at:): 10 s breath slowing to 12 s over the first round, 40 % in.
+function breath(elapsed) {
+  const t = Math.max(elapsed, 0);
+  let start = 0, index = 0;
+  for (;;) {
+    const len = 10 + 2 * Math.min(start / ROUND, 1);
+    if (t < start + len) {
+      const inhale = len * 0.4, local = t - start;
+      if (local < inhale) { const p = local / inhale; return { inhale: true, p, scale: ease(p), secsLeft: inhale - local }; }
+      const p = (local - inhale) / (len - inhale);
+      return { inhale: false, p, scale: 1 - ease(p), secsLeft: len - local };
+    }
+    start += len; index++;
+  }
+}
+const ease = (x) => (1 - Math.cos(Math.PI * Math.min(Math.max(x, 0), 1))) / 2;
+const clock = (s) => { s = Math.max(0, Math.ceil(s)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
+
+const topbar = (label) => `<div class="ptop"><span class="close">${I.x}</span><span class="micro">${label}</span><span class="close">${I.more}</span></div>`;
+const outcomes = `<div class="footer"><div class="btn sage">It passed</div><div class="outrow"><div class="btn ghost">I slipped</div><div class="btn ghost">Ping a friend</div></div></div>`;
+const reason = (t) => `<div class="rcard"><span class="thumb"></span><div><div class="micro">Why you're doing this</div><div class="rt">${t}</div></div></div>`;
+const R = 2 * Math.PI * 121;
+const orbBox = (size, inner, arc) => `
+  <div class="orbwrap" style="width:${size}px;height:${size}px">
+    <canvas></canvas>
+    ${arc ? `<svg class="arc" viewBox="0 0 250 250"><circle class="bg" cx="125" cy="125" r="121"/><circle class="fg" cx="125" cy="125" r="121" stroke-dasharray="${R}" stroke-dashoffset="${R}"/></svg>` : ''}
+    <div class="orbtext">${inner}</div>
+  </div>`;
+const sosText = `<div class="cue" data-cue></div><div class="clock" data-clock></div><div class="left" data-left>left</div>`;
+const COACH = 'Breathe in slowly through your nose… and let it go, longer, out through your mouth.';
+
+// Each screen: markup, the orb's role, and how far into the session it starts.
+const screens = [
+  { tag: 'S6.1', title: 'Craving SOS · session', offset: 19, kind: 'sos',
+    body: () => `${topbar('Riding it out')}
+      ${orbBox(250, sosText, true)}
+      <p class="wavecap">Urges rise, peak and fall, like a wave. You don't have to fight it, just let it pass.</p>
+      ${reason('Run with Aria without stopping to catch my breath')}
+      <div class="dots"><i class="on"></i><i></i><i></i></div>
+      <div class="grow"></div>${outcomes}`,
+    notes: ['<b>Where it goes.</b> Same spot and size as today\'s circle (now 250 pt to give the rings room). The countdown ring stays outside the orb so the three minutes are still readable at a glance.',
+      '<b>Text on the orb.</b> The core is translucent, so the cue and clock keep the normal text colour in both themes and pass contrast even at the smallest breath.'] },
+  { tag: 'S6.2', title: 'Craving SOS · coaching voice', offset: 61, kind: 'voice',
+    body: () => `${topbar('Riding it out')}
+      ${orbBox(250, sosText, true)}
+      <div class="center-row" style="margin-top:10px"><span class="pill live"><i></i>Coach speaking</span></div>
+      <p class="coach" data-coach>${COACH.split(' ').map((w) => `<span class="w">${w}</span>`).join(' ')}</p>
+      <div class="grow"></div>${outcomes}`,
+    notes: ['<b>Speech energy.</b> While a coaching line plays, its loudness drives the ring ripple, so the orb looks like it\'s the one talking. Words light up as they\'re spoken, which doubles as captions.',
+      '<b>Voice off.</b> The pill and caption disappear and the orb falls back to the resting shimmer on the first screen.'],
+    flags: ['Simulated envelope. On the phone it would come from the audio player\'s meter on each coaching clip.'] },
+  { tag: 'S12', title: 'Calm tools · Longer out-breath', offset: 4, kind: 'calm', plain: true,
+    body: () => `<div class="ptop"><span class="close">${I.back}</span><span class="micro">Longer out-breath</span><span style="width:34px;display:block"></span></div>
+      <p class="sub" style="text-align:center" data-left2></p>
+      <div class="grow"></div>
+      ${orbBox(260, `<div class="big" data-cue></div><div class="count" data-count></div>`, false)}
+      <div class="ticks"><span data-tin>In · 4</span><span data-tout>Out · 6</span></div>
+      <p class="sub" style="text-align:center;margin-top:14px">In for about four, out for about six. Let the out-breath be slow.</p>
+      <div class="grow"></div>
+      <div class="footer"><div class="btn secondary">Stop</div></div>`,
+    notes: ['<b>Calm screen.</b> Without the countdown ring the orb can be a touch larger. The count in the middle shows seconds left in the phase, which the flat circle never had room for.',
+      '<b>Plain background.</b> Calm tools keep the flat canvas, so the orb\'s own glow is the only colour on screen.'] },
+  { tag: 'S6.1', title: 'Reduce Motion', offset: 33, kind: 'sos', still: true,
+    body: () => `${topbar('Riding it out')}
+      ${orbBox(250, sosText, true)}
+      <p class="wavecap">Urges rise, peak and fall, like a wave. You don't have to fight it, just let it pass.</p>
+      ${reason('Save £1,200 this year for the trip')}
+      <div class="dots"><i></i><i class="on"></i><i></i></div>
+      <div class="grow"></div>${outcomes}`,
+    notes: ['<b>Reduce Motion on.</b> The ring waves freeze and the orb holds still at its resting size. Only the words change ("Breathe in", "Breathe out") and the countdown ring keeps moving, as in the current spec.',
+      '<b>Haptics carry the rhythm.</b> The soft pulse still plays each breath, so the pacing isn\'t lost.'] },
+  { tag: 'S6.1', title: 'Time\'s up', offset: 0, kind: 'done',
+    body: () => `${topbar('Three minutes done')}
+      ${orbBox(250, `<div class="cue">You rode it out</div><div class="clock">3:00</div><div class="left">done</div>`, true)}
+      <h2 class="title" style="text-align:center;margin-top:14px">How's the craving now?</h2>
+      <p class="sub" style="text-align:center">However it went, you gave it three minutes. That counts.</p>
+      <div class="grow"></div>
+      <div class="footer"><div class="btn sage">It passed</div><div class="btn secondary">Another three minutes</div><div class="outrow"><div class="btn ghost">I slipped</div><div class="btn ghost">Ping a friend</div></div></div>`,
+    notes: ['<b>Settled.</b> When the round ends the rings slowly gather into the core and the orb rests at full glow, with a very slow shimmer so the screen doesn\'t look frozen.'] },
+];
+
+const rows = document.getElementById('rows');
+const orbs = [];
+for (const s of screens) {
+  const row = document.createElement('section');
+  row.className = 'row';
+  const phone = (theme) => `<figure><div class="phone t-${theme}"><div class="screen ${s.plain ? 'plain' : ''}"><div class="island"></div>${s.body()}</div></div><figcaption>${theme}</figcaption></figure>`;
+  row.innerHTML = `<div class="row-head"><span class="tag">${s.tag}</span><b>${s.title}</b></div>
+    <div class="row-body"><div class="pair">${phone('dark')}${phone('light')}</div>
+    <div class="notes">${s.notes.map((n) => `<p>${n}</p>`).join('')}${(s.flags || []).map((f) => `<p class="flag">${f}</p>`).join('')}</div></div>`;
+  rows.appendChild(row);
+  row.querySelectorAll('.phone').forEach((ph) => {
+    const canvas = ph.querySelector('canvas');
+    orbs.push({ s, ph, canvas, ctx: canvas.getContext('2d'), light: ph.classList.contains('t-light'),
+      lag: [0.5, 0.5, 0.5, 0.5], energy: 0.15 });
+  });
+}
+
+const sysReduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let paused = false, forceReduce = sysReduce, clockT = 0, last = performance.now();
+const pauseBtn = document.getElementById('pause'), rmBtn = document.getElementById('rm');
+pauseBtn.onclick = () => { paused = !paused; pauseBtn.setAttribute('aria-pressed', paused); };
+rmBtn.setAttribute('aria-pressed', forceReduce);
+rmBtn.onclick = () => { forceReduce = !forceReduce; rmBtn.setAttribute('aria-pressed', forceReduce); };
+
+// Speech envelope for the coaching line: syllable bursts over a 7 s line, then 4 s of silence.
+const LINE = 7, GAP = 4;
+function speech(t) {
+  const c = t % (LINE + GAP);
+  if (c > LINE) return { e: 0, word: -1 };
+  const syl = Math.max(0, Math.sin(c * 2 * Math.PI * 2.6)) ** 1.5;
+  const phrase = 0.55 + 0.45 * Math.sin(c * 1.3 + 0.6);
+  const pauseMid = c > 3.0 && c < 3.6 ? 0.1 : 1;
+  return { e: Math.min(1, 0.25 + 0.75 * syl * phrase) * pauseMid, word: Math.floor(c / LINE * COACH.split(' ').length) };
+}
+
+function draw(o, t, dt) {
+  const { ctx, canvas, light, s } = o;
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.clientWidth;
+  if (canvas.width !== Math.round(w * dpr)) { canvas.width = canvas.height = Math.round(w * dpr); }
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, w, w);
+  const c = w / 2;
+  const still = s.still || forceReduce;
+  const elapsed = t + s.offset;
+  const b = breath(elapsed);
+  const done = s.kind === 'done';
+
+  // Target breath: still and done screens rest at a fixed size.
+  const target = done ? 1 : still ? 0.55 : b.scale;
+  // Breath damping: each layer eases toward the target, outer rings later.
+  const taus = [0.12, 0.45, 0.8, 1.2];
+  o.lag = o.lag.map((v, i) => v + (target - v) * (1 - Math.exp(-dt / taus[i])));
+
+  let energy = 0.12;
+  if (s.kind === 'voice') {
+    const sp = speech(t);
+    energy = 0.12 + 0.88 * sp.e;
+    const words = o.ph.querySelectorAll('[data-coach] .w');
+    words.forEach((el, i) => el.classList.toggle('on', i <= sp.word));
+  }
+  if (done) energy = 0.05;
+  o.energy += (energy - o.energy) * (1 - Math.exp(-dt / 0.08));
+  const amp = still ? 0 : o.energy;
+
+  const small = s.kind !== 'calm';
+  const baseR = small ? 58 : 64, grow = small ? 18 : 24;
+  const coreR = baseR + grow * o.lag[0];
+  const sage = light ? [140, 150, 85] : [188, 195, 136];
+  const rgba = (rgb, a) => `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${a})`;
+
+  // Halo
+  const haloR = Math.min(coreR * 1.9, c);
+  const halo = ctx.createRadialGradient(c, c, coreR * 0.6, c, c, haloR);
+  halo.addColorStop(0, rgba(light ? [188, 195, 136] : [120, 135, 60], light ? 0.55 : 0.5 + 0.15 * o.lag[0]));
+  halo.addColorStop(1, rgba(light ? [188, 195, 136] : [67, 81, 28], 0));
+  ctx.fillStyle = halo;
+  ctx.beginPath(); ctx.arc(c, c, haloR, 0, Math.PI * 2); ctx.fill();
+
+  // Rings: wavy closed paths that trail the core.
+  const offs = small ? [12, 22, 32] : [14, 26, 38];
+  for (let i = 0; i < 3; i++) {
+    const r0 = baseR + grow * o.lag[i + 1] + offs[i] * (0.8 + 0.2 * o.lag[i + 1]) - (done ? offs[i] * 0.55 : 0);
+    const A = (1.2 + 6.5 * amp) * (1 - i * 0.18);
+    const k = 3 + i, ph = i * 1.7;
+    ctx.beginPath();
+    for (let a = 0; a <= 120; a++) {
+      const th = (a / 120) * Math.PI * 2;
+      const wob = still ? 0 : A * (0.6 * Math.sin(k * th + t * (0.9 + 0.3 * i) + ph) + 0.4 * Math.sin((k + 2) * th - t * (1.4 + 0.5 * amp) - ph));
+      const r = r0 + wob;
+      const x = c + r * Math.cos(th), y = c + r * Math.sin(th);
+      a ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+    }
+    ctx.closePath();
+    const alpha = (light ? [0.75, 0.5, 0.3] : [0.7, 0.42, 0.22])[i] * (done ? 0.7 : 1);
+    ctx.strokeStyle = light ? rgba([85, 98, 31], alpha) : rgba(sage, alpha);
+    ctx.lineWidth = [1.6, 1.2, 1][i];
+    ctx.stroke();
+  }
+
+  // Core: translucent glass sphere with a highlight up and to the left.
+  const g = ctx.createRadialGradient(c - coreR * 0.32, c - coreR * 0.38, coreR * 0.05, c, c, coreR);
+  if (light) {
+    g.addColorStop(0, 'rgba(255,255,255,.95)');
+    g.addColorStop(0.55, 'rgba(225,230,196,.9)');
+    g.addColorStop(1, 'rgba(188,195,136,.95)');
+  } else {
+    g.addColorStop(0, `rgba(188,195,136,${0.5 + 0.12 * o.lag[0]})`);
+    g.addColorStop(0.6, 'rgba(110,125,55,.42)');
+    g.addColorStop(1, 'rgba(67,81,28,.55)');
+  }
+  ctx.fillStyle = g;
+  ctx.beginPath(); ctx.arc(c, c, coreR, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = light ? 'rgba(85,98,31,.55)' : 'rgba(188,195,136,.55)';
+  ctx.lineWidth = 1.2;
+  ctx.stroke();
+
+  // Text and countdown
+  const roundElapsed = Math.min(elapsed, ROUND);
+  const cue = o.ph.querySelector('[data-cue]');
+  if (cue) cue.textContent = b.inhale ? 'Breathe in' : 'Breathe out';
+  const ck = o.ph.querySelector('[data-clock]');
+  if (ck) ck.textContent = clock(ROUND - roundElapsed);
+  const fg = o.ph.querySelector('.arc .fg');
+  if (fg) fg.setAttribute('stroke-dashoffset', done ? 0 : R * (1 - roundElapsed / ROUND));
+  const cnt = o.ph.querySelector('[data-count]');
+  if (cnt) cnt.textContent = Math.ceil(b.secsLeft);
+  const l2 = o.ph.querySelector('[data-left2]');
+  if (l2) l2.textContent = `${clock(120 - (elapsed % 120))} left`;
+  const tin = o.ph.querySelector('[data-tin]'), tout = o.ph.querySelector('[data-tout]');
+  if (tin) { tin.classList.toggle('on', b.inhale); tout.classList.toggle('on', !b.inhale); }
+}
+
+function frame(now) {
+  const dt = Math.min((now - last) / 1000, 0.1);
+  last = now;
+  if (!paused) clockT += dt;
+  // Loop each SOS session at the end of its round so the countdown never sits at 0:00.
+  for (const o of orbs) draw(o, clockT % (ROUND - 40), paused ? 0 : dt);
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
