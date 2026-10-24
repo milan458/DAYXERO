@@ -234,7 +234,7 @@ jobs:
                   if key not in seen:
                       seen.add(key)
                       out.append(f"::error file={path},line={m.group(2)},col={m.group(3)}::{m.group(5)}")
-              elif re.search(r"(Test .* failed|✘|error|Fatal error|failed with exit code|Multiple commands produce)", line, re.I) and len(line) < 1500:
+              elif re.search(r"(Test .* failed|✘|error|Fatal error|failed with exit code|Multiple commands produce|While |Stack dump|^\d+\.\t)", line, re.I) and len(line) < 1500:
                   out.append("::error::" + line.strip()[:900])
           tail = open("build.log", errors="replace").read()[-6000:].replace("\n", "%0A")
           out.append("::error title=Build log tail::" + tail)
