@@ -162,7 +162,9 @@ struct CravingSOSView: View {
     }
 
     private func pauseButton(_ labels: OrbData.Labels) -> some View {
-        Button(action: paused ? resume : pause) {
+        Button {
+            if paused { resume() } else { pause() }
+        } label: {
             Label(paused ? labels.resume : labels.pause, systemImage: paused ? "play.fill" : "pause.fill")
         }
         .buttonStyle(OrbButtonStyle(kind: .porcelain))

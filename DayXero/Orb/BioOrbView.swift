@@ -44,7 +44,7 @@ struct BioOrbView: View {
         .accessibilityValue(Text(accessibilityValue))
         .accessibilityHint(Text("Double-tap to hear a coaching line"))
         .accessibilityAddTraits(.isButton)
-        .accessibilityAction(perform: onTap)
+        .accessibilityAction { onTap() }
     }
 
     private var accessibilityValue: String {
@@ -183,13 +183,15 @@ private struct OrbBars: View {
 
     var body: some View {
         Canvas { context, canvas in
-            let E = engine.drawEnergy
-            let T = engine.orbTime
-            let k = engine.motionSpeaking ? 6.5 : 2.2
+            let E: Double = engine.drawEnergy
+            let T: Double = engine.orbTime
+            let k: Double = engine.motionSpeaking ? 6.5 : 2.2
+            let level: Double = min(1, E * 1.2)
             for b in 0..<4 {
-                let h = engine.reduceMotion ? 4
-                    : 3 + (size.barMaxHeight - 3) * min(1, E * 1.2) * (0.35 + 0.65 * abs(sin(T * k + Double(b) * 1.3)))
-                let rect = CGRect(x: Double(b) * (size.barWidth + size.barGap), y: (canvas.height - h) / 2, width: size.barWidth, height: h)
+                let wave: Double = abs(sin(T * k + Double(b) * 1.3))
+                let h: Double = engine.reduceMotion ? 4 : 3 + (size.barMaxHeight - 3) * level * (0.35 + 0.65 * wave)
+                let x: Double = Double(b) * (size.barWidth + size.barGap)
+                let rect = CGRect(x: x, y: (canvas.height - h) / 2, width: size.barWidth, height: h)
                 context.fill(Path(roundedRect: rect, cornerRadius: 2),
                              with: .color(b.isMultiple(of: 2) ? Color(orbHex: engine.data.tokens.sage) : .white))
             }
