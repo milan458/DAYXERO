@@ -128,7 +128,7 @@ struct CravingSOSView: View {
                     Button("It passed", systemImage: "checkmark") { finish(.passed) }
                     Button("I slipped", systemImage: "arrow.uturn.backward") { finish(.slipped) }
                     Divider()
-                    Picker(selection: Binding(get: { patternID }, set: choosePattern)) {
+                    Picker(selection: Binding(get: { patternID }, set: { choosePattern($0) })) {
                         ForEach(OrbData.bundled.breathingPatterns) { p in
                             Text("\(p.name) · \(p.counts)").tag(p.id)
                         }
