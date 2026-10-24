@@ -1,0 +1,348 @@
+{
+  "version": "2.0.0",
+  "tokens": {
+    "canvasBlack": "#000000",
+    "sage": "#BCC388",
+    "moss": "#43511C",
+    "porcelain": "#FFFFFF",
+    "lensGradient": [
+      {
+        "stop": 0.0,
+        "hex": "#10160A",
+        "alpha": 1.0
+      },
+      {
+        "stop": 0.55,
+        "hex": "#070A04",
+        "alpha": 1.0
+      },
+      {
+        "stop": 0.9,
+        "hex": "#040602",
+        "alpha": 1.0
+      },
+      {
+        "stop": 1.0,
+        "hex": "#040602",
+        "alpha": 0.0
+      }
+    ],
+    "haloGradient": [
+      {
+        "stop": 0.0,
+        "hex": "#43511C",
+        "alpha": 0.42
+      },
+      {
+        "stop": 0.7,
+        "hex": "#BCC388",
+        "alpha": 0.18
+      },
+      {
+        "stop": 1.0,
+        "hex": "#BCC388",
+        "alpha": 0.0
+      }
+    ]
+  },
+  "geometry": {
+    "sizeFull": 320,
+    "sizeMini": 180,
+    "ringBaseFactor": 0.3432,
+    "haloInner": 0.4,
+    "haloOuter": 1.25,
+    "lensFactor": 0.8,
+    "lensFeather": 1.06,
+    "vertices": 120
+  },
+  "motion": {
+    "orbTimeStepPerFrame": 0.035,
+    "breathDampingPerFrame": 0.035,
+    "speechDampingPerFrame": 0.12,
+    "holdShimmerAmp": 0.015,
+    "holdShimmerFreq": 2.5,
+    "phaseRippleSeconds": 2.2,
+    "finishedScale": 0.86,
+    "initialBreathScale": 0.9,
+    "initialSpeechEnergy": 0.3
+  },
+  "plasmaLayers": [
+    {
+      "id": "moss_sub_aura",
+      "hex": "#43511C",
+      "opacity": 0.75,
+      "widthFull": 24.0,
+      "widthMini": 14.0,
+      "glowHex": "#BCC388",
+      "glowFull": 18.0,
+      "glowMini": 10.0,
+      "amp": 5.5,
+      "freq1": 3,
+      "freq2": 5,
+      "speed": 1.1,
+      "radiusMult": 1.03
+    },
+    {
+      "id": "outer_sage_wave",
+      "hex": "#BCC388",
+      "opacity": 0.65,
+      "widthFull": 12.0,
+      "widthMini": 7.0,
+      "glowHex": "#BCC388",
+      "glowFull": 12.0,
+      "glowMini": 6.0,
+      "amp": 4.2,
+      "freq1": 4,
+      "freq2": 7,
+      "speed": -1.5,
+      "radiusMult": 1.0
+    },
+    {
+      "id": "talking_harmonic_ring",
+      "hex": "#BCC388",
+      "opacity": 0.9,
+      "widthFull": 5.5,
+      "widthMini": 3.5,
+      "glowHex": "#BCC388",
+      "glowFull": 6.0,
+      "glowMini": 3.0,
+      "amp": 3.2,
+      "freq1": 5,
+      "freq2": 9,
+      "speed": 2.2,
+      "radiusMult": 0.985
+    },
+    {
+      "id": "white_specular_filament",
+      "hex": "#FFFFFF",
+      "opacity": 0.92,
+      "widthFull": 2.6,
+      "widthMini": 1.8,
+      "glowHex": "#FFFFFF",
+      "glowFull": 3.0,
+      "glowMini": 1.0,
+      "amp": 2.4,
+      "freq1": 6,
+      "freq2": 11,
+      "speed": -2.6,
+      "radiusMult": 0.975
+    }
+  ],
+  "readout": {
+    "full": {
+      "labelSize": 12,
+      "rowHeight": 14,
+      "gap": 8,
+      "heroSize": 48,
+      "heroSizeSOS": 40,
+      "cycleSize": 10,
+      "cycleTracking": 0.06,
+      "barWidth": 2.5,
+      "barMaxHeight": 12,
+      "barGap": 2,
+      "cycleToBars": 6
+    },
+    "mini": {
+      "labelSize": 8.5,
+      "rowHeight": 10,
+      "gap": 4,
+      "heroSize": 24,
+      "heroSizeSOS": 19,
+      "cycleSize": 7,
+      "cycleTracking": 0.03,
+      "barWidth": 2.0,
+      "barMaxHeight": 7,
+      "barGap": 2,
+      "cycleToBars": 4
+    },
+    "labelOpacity": 0.85,
+    "cycleOpacity": 0.4
+  },
+  "sos": {
+    "sessionSeconds": 180,
+    "defaultPattern": "wave",
+    "coachingTriggers": {
+      "sos_start": 180,
+      "mid_session": 90,
+      "near_completion": 30
+    }
+  },
+  "breathingPatterns": [
+    {
+      "id": "box",
+      "name": "Box breathing",
+      "counts": "4·4·4·4",
+      "subtitle": "Even counts to steady your focus",
+      "recommendedCycles": 4,
+      "phases": {
+        "Inhale": 4,
+        "Hold": 4,
+        "Exhale": 4,
+        "Rest": 4
+      },
+      "scaleTargets": {
+        "Inhale": 1.12,
+        "Hold": 1.14,
+        "Exhale": 0.84,
+        "Rest": 0.82
+      },
+      "haptics": {
+        "Inhale": {
+          "intensityStart": 0.3,
+          "intensityEnd": 0.85,
+          "sharpness": 0.4
+        },
+        "Hold": {
+          "intensityStart": 0.25,
+          "intensityEnd": 0.25,
+          "sharpness": 0.2
+        },
+        "Exhale": {
+          "intensityStart": 0.8,
+          "intensityEnd": 0.15,
+          "sharpness": 0.15
+        },
+        "Rest": {
+          "intensityStart": 0.0,
+          "intensityEnd": 0.0,
+          "sharpness": 0.1
+        }
+      }
+    },
+    {
+      "id": "478",
+      "name": "Deep calm",
+      "counts": "4·7·8",
+      "subtitle": "A long exhale to help you settle",
+      "recommendedCycles": 4,
+      "phases": {
+        "Inhale": 4,
+        "Hold": 7,
+        "Exhale": 8,
+        "Rest": 0
+      },
+      "scaleTargets": {
+        "Inhale": 1.12,
+        "Hold": 1.15,
+        "Exhale": 0.82,
+        "Rest": 0.82
+      },
+      "haptics": {
+        "Inhale": {
+          "intensityStart": 0.35,
+          "intensityEnd": 0.9,
+          "sharpness": 0.45
+        },
+        "Hold": {
+          "intensityStart": 0.3,
+          "intensityEnd": 0.2,
+          "sharpness": 0.2
+        },
+        "Exhale": {
+          "intensityStart": 0.85,
+          "intensityEnd": 0.1,
+          "sharpness": 0.1
+        },
+        "Rest": {
+          "intensityStart": 0.0,
+          "intensityEnd": 0.0,
+          "sharpness": 0.1
+        }
+      }
+    },
+    {
+      "id": "wave",
+      "name": "Wave riding",
+      "counts": "5·2·5·2",
+      "subtitle": "Ride the urge like a wave",
+      "recommendedCycles": 6,
+      "phases": {
+        "Inhale": 5,
+        "Hold": 2,
+        "Exhale": 5,
+        "Rest": 2
+      },
+      "scaleTargets": {
+        "Inhale": 1.14,
+        "Hold": 1.14,
+        "Exhale": 0.84,
+        "Rest": 0.84
+      },
+      "haptics": {
+        "Inhale": {
+          "intensityStart": 0.25,
+          "intensityEnd": 0.75,
+          "sharpness": 0.3
+        },
+        "Hold": {
+          "intensityStart": 0.4,
+          "intensityEnd": 0.4,
+          "sharpness": 0.25
+        },
+        "Exhale": {
+          "intensityStart": 0.75,
+          "intensityEnd": 0.2,
+          "sharpness": 0.15
+        },
+        "Rest": {
+          "intensityStart": 0.1,
+          "intensityEnd": 0.1,
+          "sharpness": 0.1
+        }
+      }
+    }
+  ],
+  "labels": {
+    "badgeSpeaking": "COACH SPEAKING",
+    "badgeIdle": "PACING BREATH",
+    "coachButton": "Coach me",
+    "pause": "Pause",
+    "resume": "Resume",
+    "start": "Start",
+    "breathingDoneLabel": "done",
+    "breathingDoneTranscript": "Nice work. You finished {N} cycles.",
+    "sosDoneLabel": "urge surfed",
+    "sosDoneTranscript": "Three minutes done. Did the craving pass?"
+  },
+  "phaseScripts": {
+    "Inhale": [
+      "Inhale slowly through your nose... watch the sage ring expand.",
+      "Draw clean air deep into your lower ribs... let the wave rise.",
+      "Breathe in slowly... let your shoulders drop."
+    ],
+    "Hold": [
+      "Hold gently at the crest... notice the sensation without fighting it.",
+      "Pause in stillness... a craving is a wave, and waves pass.",
+      "Suspend the breath... your streak and progress are completely safe."
+    ],
+    "Exhale": [
+      "Exhale softly... release the tension from your jaw and shoulders.",
+      "Let the urge dissolve into the dark moss core... you are in control.",
+      "Breathe out slowly... longer than you breathed in."
+    ],
+    "Rest": [
+      "Rest at zero... steady and calm, zero guilt.",
+      "Notice the calm between waves... you rode it out."
+    ]
+  },
+  "coachingLines": [
+    {
+      "id": "urge_peak",
+      "trigger": "sos_start",
+      "durationSeconds": 12,
+      "text": "I'm right here with you. Cravings rise, peak and fade, usually within a few minutes. Let's ride this one together—inhale slowly with the sage light."
+    },
+    {
+      "id": "act_notice_and_name",
+      "trigger": "mid_session",
+      "durationSeconds": 15,
+      "text": "Notice where you feel the urge—maybe tightness in your chest or restless hands. Name it gently. You don't need nicotine to make it pass."
+    },
+    {
+      "id": "proof_you_can",
+      "trigger": "near_completion",
+      "durationSeconds": 10,
+      "text": "You're nearly through it. Every craving you ride out is proof you can do it again. Stay with the glowing ring a little longer."
+    }
+  ]
+}

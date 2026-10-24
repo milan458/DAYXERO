@@ -3,10 +3,10 @@ import SwiftData
 import SwiftUI
 import UIKit
 
-/// Craving SOS (S6.1–S6.3): about three minutes of guided breathing and an urge-surfing countdown, with the
-/// person's own reasons, then how it went. Opens straight into the session, with nothing to load first.
+/// Craving SOS (S6.1–S6.3, S6.9): three minutes riding the urge with the Bio-Orb, then how it went.
+/// Opens straight into the session, with nothing to load first.
 struct CravingSOSView: View {
-    /// nil before onboarding is finished; the session still works, just without reasons.
+    /// nil before onboarding is finished; the session still works.
     let profile: UserProfile?
     let source: String
     let onClose: () -> Void
@@ -19,61 +19,68 @@ struct CravingSOSView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.scenePhase) private var scenePhase
     @AppStorage("dx.sosHaptics") private var hapticsOn = true
+    @AppStorage("dx.voiceGuidance") private var voiceOn = true
+    /// The breathing pattern, wave riding unless the person picks another (spec §5).
+    @AppStorage("dx.sosPattern") private var patternID = OrbData.bundled.sos.defaultPattern
     @Query(filter: #Predicate<LogEntry> { $0.kindRaw == "craving" }) private var cravings: [LogEntry]
-    @Query(sort: \IfThenPlan.createdAt, order: .reverse) private var plans: [IfThenPlan]
 
     @State private var startedAt: Date
-    @State private var roundStartedAt: Date
     @State private var stage = Stage.session
     @State private var began = false
-    @State private var reasonSkip = 0
-    @State private var haptics = BreathHaptics()
+    @State private var engine: OrbEngine
+    @State private var clock = OrbClock()
+    @State private var coach = OrbCoach()
+    @State private var haptics = OrbHaptics()
+    /// Paused by the person, or because the app left the foreground; Resume carries on.
+    @State private var paused = false
     @State private var celebrate = false
     @State private var slipFeedback = false
     @State private var trigger: Trigger?
     @State private var strength = 5
     @State private var strengthTouched = false
-    /// Calm tools pause the countdown (S12.2); the round resumes where it left off.
-    @State private var pausedAt: Date?
+    @State private var showCalmTools = false
 
     init(profile: UserProfile?, source: String, onClose: @escaping () -> Void) {
         self.profile = profile
         self.source = source
         self.onClose = onClose
+        let pattern = UserDefaults.standard.string(forKey: "dx.sosPattern") ?? OrbData.bundled.sos.defaultPattern
+        let engine = OrbEngine(mode: .sos(seconds: OrbData.bundled.sos.sessionSeconds), pattern: pattern)
         var start = Date.now
         #if DEBUG
-        start = start.addingTimeInterval(-UserDefaults.standard.double(forKey: "dx.sosElapsed"))
+        let elapsed = UserDefaults.standard.integer(forKey: "dx.sosElapsed")
+        start = start.addingTimeInterval(-Double(elapsed))
+        engine.skip(seconds: elapsed)
         #endif
+        _engine = State(initialValue: engine)
         _startedAt = State(initialValue: start)
-        _roundStartedAt = State(initialValue: start)
     }
 
     var body: some View {
         ZStack {
-            DX.Palette.canvas.ignoresSafeArea()
-            RadialGradient(colors: [DX.Palette.accentSoft, .clear], center: UnitPoint(x: 0.5, y: 0.3),
-                           startRadius: 0, endRadius: 440)
-                .ignoresSafeArea()
-                .opacity(stage == .session || stage == .timeUp ? 1 : 0)
+            Color.black.ignoresSafeArea()
             switch stage {
             case .session, .timeUp: sessionView
             case .passed: passedView
             case .slipped: slippedView
             }
         }
+        // The orb is specified for a pure black canvas, so the whole SOS stays dark.
+        .preferredColorScheme(.dark)
         .onAppear(perform: begin)
-        .task(id: stage) {
-            if stage == .session { await tick() }
-        }
+        .onDisappear(perform: tearDown)
         .onChange(of: scenePhase) { _, phase in
             // "It passed" on the Lock Screen already saved the craving; show the same screen as in the app.
             if phase == .active, SOSState.consumeFinishedOutside() == .passed, stage == .session || stage == .timeUp {
-                haptics.stop()
+                tearDown()
                 stage = .passed
+            } else if phase != .active, stage == .session {
+                pause()
             }
         }
-        .fullScreenCover(isPresented: Binding(get: { pausedAt != nil }, set: { if !$0 { resume() } })) {
-            CalmToolsView(onClose: { resume() }, fromSOS: true)
+        .onChange(of: hapticsOn) { _, on in if !on { haptics.stop() } }
+        .fullScreenCover(isPresented: $showCalmTools) {
+            CalmToolsView(onClose: { showCalmTools = false }, fromSOS: true)
         }
         .sensoryFeedback(DX.Haptic.commit, trigger: celebrate)
         .sensoryFeedback(DX.Haptic.gentle, trigger: slipFeedback)
@@ -82,47 +89,25 @@ struct CravingSOSView: View {
     // MARK: Session
 
     private var sessionView: some View {
-        TimelineView(.animation(minimumInterval: reduceMotion ? 1 : 1.0 / 30, paused: stage != .session)) { timeline in
-            let now = timeline.date
-            let elapsed = now.timeIntervalSince(startedAt)
-            let roundElapsed = stage == .timeUp ? CravingWave.roundLength : now.timeIntervalSince(roundStartedAt)
-            let breath = CravingWave.breath(at: elapsed)
-            let reason = currentReason(elapsed: elapsed)
-            let photo = stage == .session ? reason?.photo.flatMap(UIImage.init(data:)) : nil
-            VStack(spacing: 0) {
-                topBar(stage == .timeUp ? "Three minutes done" : "Riding it out")
+        VStack(spacing: 0) {
+            topBar(stage == .timeUp ? "Three minutes done" : "Riding it out")
+            GeometryReader { geo in
                 ScrollView {
-                    VStack(spacing: DX.Space.s) {
-                        if let photo, let reason {
-                            pill(breath, roundElapsed: roundElapsed)
-                            photoCard(photo, text: reason.text)
-                            dots
-                            caption(roundElapsed: roundElapsed)
-                        } else {
-                            orb(breath, roundElapsed: roundElapsed)
-                            if stage == .timeUp {
-                                Text("How's the craving now?").dxText(.title).multilineTextAlignment(.center).padding(.top, DX.Space.s)
-                                Text("However it went, you gave it three minutes. That counts.").dxText(.subtitle)
-                                    .multilineTextAlignment(.center)
-                            } else {
-                                caption(roundElapsed: roundElapsed)
-                                if let reason { reasonCard(reason) }
-                                dots
-                                // The latest if-then plan, from a lesson or a slip talk-through (S5, S8.2).
-                                if let plan = plans.first {
-                                    PlanCard(situation: plan.situation, action: plan.action).padding(.top, DX.Space.xxs)
-                                }
-                            }
-                        }
+                    VStack(spacing: 24) {
+                        BioOrbView(engine: engine, side: BioOrbView.side(mini: false, available: geo.size.width), onTap: coachMe)
+                            .padding(.top, DX.Space.l)
+                        OrbTranscriptPill(engine: engine)
+                        if stage == .session { controls }
                     }
-                    .padding(.vertical, DX.Space.xs)
+                    .frame(maxWidth: .infinity)
+                    .padding(.bottom, DX.Space.m)
                 }
                 .scrollBounceBehavior(.basedOnSize)
-                outcomes
             }
-            .padding(.horizontal, DX.Space.m)
-            .padding(.bottom, DX.Space.xs)
+            if stage == .timeUp { outcomes }
         }
+        .padding(.horizontal, DX.Space.m)
+        .padding(.bottom, DX.Space.xs)
     }
 
     private func topBar(_ title: LocalizedStringKey) -> some View {
@@ -139,7 +124,20 @@ struct CravingSOSView: View {
             Text(title).dxText(.micro)
             Spacer()
             Menu {
-                Button("Calm tools", systemImage: "wind") { pausedAt = .now; haptics.stop() }
+                if stage == .session {
+                    Button("It passed", systemImage: "checkmark") { finish(.passed) }
+                    Button("I slipped", systemImage: "arrow.uturn.backward") { finish(.slipped) }
+                    Divider()
+                    Picker(selection: Binding(get: { patternID }, set: choosePattern)) {
+                        ForEach(OrbData.bundled.breathingPatterns) { p in
+                            Text("\(p.name) · \(p.counts)").tag(p.id)
+                        }
+                    } label: {
+                        Label("Breathing pattern", systemImage: "wind")
+                    }
+                    Button("Calm tools", systemImage: "leaf") { pause(); showCalmTools = true }
+                }
+                Toggle("Voice guidance", isOn: $voiceOn)
                 Toggle("Haptics", isOn: $hapticsOn)
             } label: {
                 Image(systemName: "ellipsis").font(.system(size: 14, weight: .semibold)).foregroundStyle(DX.Palette.text2)
@@ -151,135 +149,38 @@ struct CravingSOSView: View {
         }
         .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
         .padding(.top, DX.Space.xs)
-        .padding(.bottom, DX.Space.s)
     }
 
-    private func orb(_ breath: CravingWave.Breath, roundElapsed: TimeInterval) -> some View {
-        let done = stage == .timeUp
-        return ZStack {
-            Circle()
-                .fill(RadialGradient(colors: [DX.Palette.sage.opacity(0.6), DX.Palette.sage.opacity(0.22), .clear],
-                                     center: UnitPoint(x: 0.5, y: 0.42), startRadius: 0, endRadius: 108))
-                .scaleEffect(reduceMotion || done ? 0.86 : 0.72 + 0.28 * breath.scale)
-            Circle().stroke(DX.Palette.track, lineWidth: 3)
-            Circle()
-                .trim(from: 0, to: CravingWave.fraction(roundElapsed: roundElapsed))
-                .stroke(DX.Palette.text, style: StrokeStyle(lineWidth: 3, lineCap: .round))
-                .rotationEffect(.degrees(-90))
-            VStack(spacing: 2) {
-                Text(done ? "You rode it out" : cue(breath.phase))
-                    .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .callout))
-                Text(verbatim: clock(done ? CravingWave.roundLength : CravingWave.remaining(roundElapsed: roundElapsed)))
-                    .font(.custom(DX.Typeface.bold, size: 40, relativeTo: .largeTitle)).monospacedDigit()
-                Text(done ? "done" : "left").font(.custom(DX.Typeface.regular, size: 11, relativeTo: .caption2))
-                    .foregroundStyle(DX.Palette.muted)
-            }
-            .foregroundStyle(DX.Palette.text)
-            .dynamicTypeSize(...DynamicTypeSize.xxLarge)
+    /// Pause or Resume, and Coach me (spec §5, labels from the data file).
+    private var controls: some View {
+        let labels = engine.data.labels
+        return ViewThatFits {
+            HStack(spacing: 10) { pauseButton(labels); coachButton(labels) }
+            VStack(spacing: 10) { pauseButton(labels); coachButton(labels) }
         }
-        .frame(width: 210, height: 210)
-        .padding(.top, DX.Space.xxs)
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text(done ? "You rode it out" : cue(breath.phase)))
-        .accessibilityValue(Text("\(clock(CravingWave.remaining(roundElapsed: roundElapsed))) left"))
+        .dynamicTypeSize(...DynamicTypeSize.accessibility2)
     }
 
-    private func pill(_ breath: CravingWave.Breath, roundElapsed: TimeInterval) -> some View {
-        HStack(spacing: 6) {
-            Image(systemName: "wind").font(.system(size: 12))
-            Text("\(Text(cue(breath.phase))) · \(clock(CravingWave.remaining(roundElapsed: roundElapsed))) left")
+    private func pauseButton(_ labels: OrbData.Labels) -> some View {
+        Button(action: paused ? resume : pause) {
+            Label(paused ? labels.resume : labels.pause, systemImage: paused ? "play.fill" : "pause.fill")
         }
-        .font(.custom(DX.Typeface.medium, size: 12, relativeTo: .caption))
-        .foregroundStyle(DX.Palette.text2)
-        .padding(.vertical, 6).padding(.horizontal, 10)
-        .background(DX.Palette.surface1, in: Capsule())
-        .overlay(Capsule().strokeBorder(DX.Palette.hairline))
+        .buttonStyle(OrbButtonStyle(kind: .porcelain))
     }
 
-    private func photoCard(_ image: UIImage, text: String) -> some View {
-        Image(uiImage: image)
-            .resizable()
-            .scaledToFill()
-            .frame(maxWidth: .infinity)
-            .frame(height: 260)
-            .overlay(LinearGradient(colors: [.black.opacity(0.65), .clear], startPoint: .bottom, endPoint: .center))
-            .overlay(alignment: .bottomLeading) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Why you're doing this").dxText(.micro, color: .white.opacity(0.75))
-                    Text(text).font(.custom(DX.Typeface.bold, size: 19, relativeTo: .title3)).foregroundStyle(.white)
-                }
-                .padding(DX.Space.m)
-            }
-            .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
-            .onTapGesture { reasonSkip += 1 }
-            .accessibilityElement(children: .combine)
-            .accessibilityAddTraits(.isButton)
-            .accessibilityHint(Text("Shows your next reason"))
-    }
-
-    private func reasonCard(_ reason: Reason) -> some View {
-        Button { reasonSkip += 1 } label: {
-            HStack(spacing: DX.Space.s) {
-                Group {
-                    if let image = reason.photo.flatMap(UIImage.init(data:)) {
-                        Image(uiImage: image).resizable().scaledToFill()
-                    } else {
-                        Image(systemName: "heart").font(.system(size: 18)).foregroundStyle(DX.Palette.accentInk)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .background(DX.Palette.accentSoft)
-                    }
-                }
-                .frame(width: 52, height: 52)
-                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Why you're doing this").dxText(.micro)
-                    Text(reason.text).font(.custom(DX.Typeface.semibold, size: 14, relativeTo: .subheadline))
-                        .foregroundStyle(DX.Palette.text)
-                        .multilineTextAlignment(.leading)
-                }
-                Spacer(minLength: 0)
-            }
-            .padding(10)
-            .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(DX.Palette.hairline))
+    private func coachButton(_ labels: OrbData.Labels) -> some View {
+        Button(action: coachMe) {
+            Label(labels.coachButton, systemImage: "waveform")
         }
-        .buttonStyle(.plain)
-        .padding(.top, DX.Space.xs)
-        .accessibilityHint(Text("Shows your next reason"))
-    }
-
-    @ViewBuilder
-    private var dots: some View {
-        if reasons.count > 1 {
-            let current = CravingWave.reasonIndex(elapsed: Date.now.timeIntervalSince(startedAt), count: reasons.count)
-                .map { ($0 + reasonSkip) % reasons.count }
-            HStack(spacing: 4) {
-                ForEach(reasons.indices, id: \.self) { i in
-                    Circle().fill(i == current ? DX.Palette.text : DX.Palette.track).frame(width: 5, height: 5)
-                }
-            }
-            .accessibilityHidden(true)
-        }
-    }
-
-    private func caption(roundElapsed: TimeInterval) -> some View {
-        Text(CravingWave.isPastPeak(roundElapsed: roundElapsed)
-             ? "It's past its peak. Keep breathing slowly."
-             : "Urges rise, peak and fall, like a wave. You don't have to fight it, just let it pass.")
-            .dxText(.subtitle)
-            .multilineTextAlignment(.center)
-            .padding(.horizontal, DX.Space.xs)
-            .padding(.top, DX.Space.xs)
+        .buttonStyle(OrbButtonStyle(kind: .moss))
     }
 
     private var outcomes: some View {
         VStack(spacing: DX.Space.xs) {
             Button { finish(.passed) } label: { Text("It passed").frame(maxWidth: .infinity) }
                 .buttonStyle(.dxSage)
-            if stage == .timeUp {
-                Button(action: anotherRound) { Text("Another three minutes").frame(maxWidth: .infinity) }
-                    .buttonStyle(.dxSecondary)
-            }
+            Button(action: anotherRound) { Text("Another three minutes").frame(maxWidth: .infinity) }
+                .buttonStyle(.dxSecondary)
             ViewThatFits {
                 HStack(spacing: DX.Space.xs) { slippedButton; pingButton }
                 VStack(spacing: DX.Space.xs) { slippedButton; pingButton }
@@ -373,30 +274,19 @@ struct CravingSOSView: View {
 
     // MARK: Flow
 
-    private var reasons: [Reason] {
-        (profile?.reasons ?? []).sorted { $0.createdAt < $1.createdAt }
-    }
-
-    private func currentReason(elapsed: TimeInterval) -> Reason? {
-        CravingWave.reasonIndex(elapsed: elapsed, count: reasons.count).map { reasons[($0 + reasonSkip) % reasons.count] }
-    }
-
-    private func cue(_ phase: CravingWave.Phase) -> LocalizedStringKey {
-        phase == .breatheIn ? "Breathe in" : "Breathe out"
-    }
-
-    private func clock(_ seconds: TimeInterval) -> String {
-        Duration.seconds(seconds.rounded(.up)).formatted(.time(pattern: .minuteSecond))
-    }
-
     private func begin() {
         guard !began else { return }
         began = true
         _ = SOSState.consumeFinishedOutside()
         SOSState.startedAt = startedAt
-        let start = startedAt, ends = roundStartedAt.addingTimeInterval(CravingWave.roundLength)
-        Task { await SOSLiveActivity.start(startedAt: start, endsAt: ends) }
+        wire(engine)
+        Task { await SOSLiveActivity.start(startedAt: startedAt, endsAt: endsAt) }
         Analytics.track(.cravingSessionStarted(source: source))
+        if engine.session.finished {
+            stage = .timeUp
+        } else {
+            engine.start()
+        }
         #if DEBUG
         switch UserDefaults.standard.string(forKey: "dx.sosOutcome") {
         case "passed": finish(.passed)
@@ -406,50 +296,71 @@ struct CravingSOSView: View {
         #endif
     }
 
-    /// Keeps time: ends the round, plays a haptic pulse at the start of each breath, and reads cues to VoiceOver.
-    private func tick() async {
-        var lastBreath = -1
-        var lastPhase: CravingWave.Phase?
-        while !Task.isCancelled, stage == .session {
-            if pausedAt != nil {
-                try? await Task.sleep(for: .milliseconds(200))
-                continue
-            }
-            let now = Date.now
-            if CravingWave.remaining(roundElapsed: now.timeIntervalSince(roundStartedAt)) <= 0 {
+    /// Connects the engine to the display clock, the voice and the haptics.
+    private func wire(_ engine: OrbEngine) {
+        clock.attach(engine, reduceMotion: reduceMotion)
+        coach.attach(engine)
+        engine.onEvent = { event in
+            switch event {
+            case let .phaseChanged(phase):
+                let pattern = engine.pattern
+                if hapticsOn {
+                    let total = Double(engine.data.sos.sessionSeconds)
+                    haptics.play(phase, pattern: pattern, progress: (total - Double(engine.session.sosRemaining)) / total)
+                }
+                AccessibilityNotification.Announcement(
+                    String(localized: "\(String(localized: String.LocalizationValue(phase.rawValue))), \(pattern.seconds(phase)) seconds")).post()
+            case let .coach(trigger):
+                if let line = engine.data.coachingLine(trigger: trigger) { coach.play(line, voice: voiceOn) }
+            case .finished:
+                coach.stop()
                 haptics.stop()
                 stage = .timeUp
-                return
             }
-            let breath = CravingWave.breath(at: now.timeIntervalSince(startedAt))
-            if breath.index != lastBreath {
-                if lastBreath >= 0, hapticsOn { haptics.play(inhale: breath.inhaleSeconds, exhale: breath.exhaleSeconds) }
-                lastBreath = breath.index
-            }
-            if breath.phase != lastPhase {
-                if lastPhase != nil, UIAccessibility.isVoiceOverRunning {
-                    AccessibilityNotification.Announcement(breath.phase == .breatheIn ? String(localized: "Breathe in") : String(localized: "Breathe out")).post()
-                }
-                lastPhase = breath.phase
-            }
-            try? await Task.sleep(for: .milliseconds(100))
         }
     }
 
+    private var endsAt: Date { Date.now.addingTimeInterval(Double(engine.session.sosRemaining)) }
+
+    private func coachMe() {
+        coach.play(engine.nextLine(), voice: voiceOn)
+    }
+
+    private func choosePattern(_ id: String) {
+        patternID = id
+        engine.switchPattern(to: id)
+    }
+
+    private func pause() {
+        guard stage == .session else { return }
+        paused = true
+        engine.pause()
+        coach.stop()
+        haptics.stop()
+    }
+
     private func resume() {
-        guard let paused = pausedAt else { return }
-        let gap = Date.now.timeIntervalSince(paused)
-        roundStartedAt = roundStartedAt.addingTimeInterval(gap)
-        pausedAt = nil
-        let ends = roundStartedAt.addingTimeInterval(CravingWave.roundLength)
-        Task { await SOSLiveActivity.update(endsAt: ends) }
+        paused = false
+        engine.start()
+        Task { await SOSLiveActivity.update(endsAt: endsAt) }
     }
 
     private func anotherRound() {
-        roundStartedAt = .now
+        let next = OrbEngine(mode: .sos(seconds: engine.data.sos.sessionSeconds), pattern: patternID)
+        engine.onEvent = nil
+        engine = next
+        wire(next)
+        paused = false
         stage = .session
-        let ends = roundStartedAt.addingTimeInterval(CravingWave.roundLength)
-        Task { await SOSLiveActivity.update(endsAt: ends) }
+        next.start()
+        Task { await SOSLiveActivity.update(endsAt: endsAt) }
+    }
+
+    private func tearDown() {
+        coach.stop()
+        haptics.stop()
+        clock.stop()
+        engine.pause()
     }
 
     private func close() {
@@ -460,7 +371,7 @@ struct CravingSOSView: View {
         let end = Date.now
         CravingLog.record(outcome, startedAt: startedAt, endedAt: end, in: context)
         SOSState.startedAt = nil
-        haptics.stop()
+        tearDown()
         Task { await SOSLiveActivity.endAll() }
         Analytics.track(.cravingSessionEnded(outcome: outcome.rawValue, seconds: Int(end.timeIntervalSince(startedAt))))
         switch outcome {
@@ -473,6 +384,31 @@ struct CravingSOSView: View {
             slipFeedback.toggle()
         case .closed, .pingedFriend:
             onClose()
+        }
+    }
+}
+
+/// The orb screen's two buttons: porcelain for Pause and Resume, moss for Coach me.
+private struct OrbButtonStyle: ButtonStyle {
+    enum Kind { case porcelain, moss }
+    let kind: Kind
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .labelStyle(OrbButtonLabel())
+            .font(.custom(DX.Typeface.bold, size: 13, relativeTo: .subheadline))
+            .foregroundStyle(kind == .porcelain ? Color.black : Color(orbHex: OrbData.bundled.tokens.sage))
+            .padding(.vertical, 14).padding(.horizontal, 20)
+            .background(kind == .porcelain ? Color(orbHex: OrbData.bundled.tokens.porcelain) : Color(orbHex: OrbData.bundled.tokens.moss), in: Capsule())
+            .opacity(configuration.isPressed ? 0.8 : 1)
+    }
+}
+
+private struct OrbButtonLabel: LabelStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        HStack(spacing: 8) {
+            configuration.icon.font(.system(size: 12, weight: .bold))
+            configuration.title
         }
     }
 }

@@ -19,6 +19,7 @@ struct SettingsSheet: View {
     @Environment(\.modelContext) private var context
     @Environment(Entitlement.self) private var entitlement
     @AppStorage("dx.sosHaptics") private var haptics = true
+    @AppStorage("dx.voiceGuidance") private var voiceGuidance = true
     @AppStorage(AppearanceSetting.key) private var appearance = AppearanceSetting.automatic.rawValue
     @State private var path: [Page] = []
     @State private var confirmDelete = false
@@ -43,6 +44,7 @@ struct SettingsSheet: View {
                 Section {
                     NavigationLink(value: Page.reminders) { SettingLabel("Notifications", systemImage: "bell") }
                     Toggle(isOn: $haptics) { SettingLabel("Breathing haptics", systemImage: "water.waves") }
+                    Toggle(isOn: $voiceGuidance) { SettingLabel("Voice guidance", systemImage: "waveform") }
                     Picker(selection: $appearance) {
                         ForEach(AppearanceSetting.allCases, id: \.rawValue) { Text($0.title).tag($0.rawValue) }
                     } label: {

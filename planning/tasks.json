@@ -764,6 +764,30 @@
           "notes": "From S4 build: dock SOS button opens a 'coming soon' sheet for now.\nBuilt and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.",
           "created": "2026-10-23T05:18:11.565Z",
           "completed": "2026-10-23T08:34:21.591Z"
+        },
+        {
+          "id": "S6.8",
+          "title": "Add the orb (full and mini, all states) to the S1.4 component gallery.",
+          "status": "in_progress",
+          "notes": "From DAYXERO_BIO_ORB_SPEC.md.",
+          "created": "2026-10-24T11:47:52.000Z",
+          "completed": null
+        },
+        {
+          "id": "S6.9",
+          "title": "Wire the orb into the SOS screen (3-minute session, S6.3 outcomes).",
+          "status": "in_progress",
+          "notes": "From DAYXERO_BIO_ORB_SPEC.md. Pause/Resume and Coach me under the pill; It passed / I slipped in the session menu until time's up, then the full outcomes. Reasons rotation and if-then plan card removed from the session per Milan's preview.",
+          "created": "2026-10-24T11:47:52.000Z",
+          "completed": null
+        },
+        {
+          "id": "S6.10",
+          "title": "Milan to confirm the coach copy and labels (spec section 9).",
+          "status": "blocked",
+          "notes": "From DAYXERO_BIO_ORB_SPEC.md. Built with the revised wording (COACH SPEAKING, Coach me, no lung/CO claims).",
+          "created": "2026-10-24T11:47:52.000Z",
+          "completed": null
         }
       ]
     },
@@ -1128,6 +1152,14 @@
           "notes": "Mockups ready in tracker.\nMilan approved S12 in chat; findahelpline.com for helplines.\nCI 5c3fdb3 green (all tests pass). Screenshot fixes pushed: pledge photo layout, calm tool rows at largest text.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": "2026-10-23T11:22:52.000Z"
+        },
+        {
+          "id": "S12.4",
+          "title": "Reuse the orb for the breathing exercises in the stress toolkit.",
+          "status": "pending",
+          "notes": "From DAYXERO_BIO_ORB_SPEC.md.",
+          "created": "2026-10-24T11:47:52.000Z",
+          "completed": null
         }
       ]
     },

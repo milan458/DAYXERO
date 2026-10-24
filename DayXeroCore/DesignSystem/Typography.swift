@@ -9,12 +9,16 @@ public extension DX {
         public static let medium = "Inter-Medium"
         public static let semibold = "Inter-SemiBold"
         public static let bold = "Inter-Bold"
+        /// The Bio-Orb's numeral (S6.7).
+        public static let extraBold = "Inter-ExtraBold"
+        /// The Bio-Orb's cycle row and badge (S6.7).
+        public static let mono = "JetBrainsMono-SemiBold"
 
-        /// Registers the bundled Inter faces. Call once at launch in the app and in each extension.
+        /// Registers the bundled Inter and JetBrains Mono faces. Call once at launch in the app and in each extension.
         public static func register() {
             guard !registered else { return }
             let bundle = Bundle(for: BundleToken.self)
-            for name in [regular, medium, semibold, bold] {
+            for name in [regular, medium, semibold, bold, extraBold, mono] {
                 // A missing face falls back to the system font rather than crashing.
                 guard let url = bundle.url(forResource: name, withExtension: "ttf") else { continue }
                 CTFontManagerRegisterFontsForURL(url as CFURL, .process, nil)
