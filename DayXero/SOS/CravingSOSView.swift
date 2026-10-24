@@ -74,7 +74,8 @@ struct CravingSOSView: View {
             if phase == .active, SOSState.consumeFinishedOutside() == .passed, stage == .session || stage == .timeUp {
                 tearDown()
                 stage = .passed
-            } else if phase != .active, stage == .session {
+            } else if phase == .background, stage == .session {
+                // Only a real background pauses: pulling down Control Center or a notification shouldn't.
                 pause()
             }
         }

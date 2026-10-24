@@ -127,6 +127,15 @@ jobs:
           shoot dark accessibility-extra-extra-extra-large lesson-reading-dark-ax5 $D3 -dx.openLesson quit-3
           S="-dx.homeScenario day3 -dx.store pro -dx.sos YES"
           shoot dark large sos-session-dark $S -dx.sosElapsed 19
+          # The orb must move between frames: compare the ring's left edge half a second apart.
+          sleep 0.5
+          xcrun simctl io "$UDID" screenshot motion-b.png
+          sips -c 500 250 --cropOffset 500 150 shots/sos-session-dark.png --out motion-a-crop.png >/dev/null
+          sips -c 500 250 --cropOffset 500 150 motion-b.png --out motion-b-crop.png >/dev/null
+          if cmp -s motion-a-crop.png motion-b-crop.png; then
+            echo "::error title=Bio-Orb isn't animating::The ring looks the same in two frames half a second apart."
+            exit 1
+          fi
           shoot light large sos-session-light $S -dx.sosElapsed 19
           shoot dark large sos-photo-dark $S -dx.sosElapsed 92
           shoot dark large sos-timeup-dark $S -dx.sosElapsed 181

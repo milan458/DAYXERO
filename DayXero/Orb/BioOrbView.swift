@@ -23,15 +23,19 @@ struct BioOrbView: View {
     }
 
     var body: some View {
-        TimelineView(.animation(minimumInterval: reduceMotion ? 1.0 / 30 : nil)) { _ in
+        TimelineView(.animation(minimumInterval: reduceMotion ? 1.0 / 30 : nil)) { timeline in
+            // The frame's time goes into every drawing closure: SwiftUI only redraws a view whose inputs change,
+            // and the engine's per-frame values aren't observed.
+            let frame = timeline.date.timeIntervalSinceReferenceDate
             ZStack {
                 Canvas(rendersAsynchronously: false) { context, size in
+                    _ = frame
                     draw(in: &context, size: size)
                 }
                 // Glow and halo spill past the orb's frame; give the canvas room instead of clipping.
                 .frame(width: side + 120, height: side + 120)
                 .allowsHitTesting(false)
-                OrbReadout(engine: engine, mini: mini)
+                OrbReadout(engine: engine, mini: mini, frame: frame)
             }
             .frame(width: side, height: side)
         }
@@ -121,6 +125,8 @@ struct BioOrbView: View {
 private struct OrbReadout: View {
     let engine: OrbEngine
     let mini: Bool
+    /// The display frame's time, so the bars redraw every frame.
+    let frame: TimeInterval
 
     var body: some View {
         let data = engine.data
@@ -153,7 +159,7 @@ private struct OrbReadout: View {
                     .tracking(r.cycleTracking * r.cycleSize)
                     .foregroundStyle(.white.opacity(data.readout.cycleOpacity))
                     .lineLimit(1)
-                OrbBars(engine: engine, size: r)
+                OrbBars(engine: engine, size: r, frame: frame)
             }
             .frame(height: r.rowHeight)
         }
@@ -180,9 +186,11 @@ private struct OrbReadout: View {
 private struct OrbBars: View {
     let engine: OrbEngine
     let size: OrbData.ReadoutSize
+    let frame: TimeInterval
 
     var body: some View {
         Canvas { context, canvas in
+            _ = frame
             let E: Double = engine.drawEnergy
             let T: Double = engine.orbTime
             let k: Double = engine.motionSpeaking ? 6.5 : 2.2
