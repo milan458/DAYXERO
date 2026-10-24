@@ -94,10 +94,6 @@
   .coach .q .w.on { opacity: 1; }
   .coach b { font: 700 8px var(--mono); letter-spacing: .1em; background: var(--sage); color: #000; padding: 5px 8px; border-radius: 99px; flex: none; }
   .coach.speaking i { background: var(--sage); box-shadow: 0 0 0 3px rgba(188,195,136,.3); }
-  .orbwrap.moss { filter: drop-shadow(0 14px 28px rgba(17,20,10,.22)); }
-  .orbwrap.moss .orbtext { color: #fff; }
-  .orbwrap.moss .orbtext .ph { color: #BCC388; }
-  .orbwrap.moss .orbtext .meta { color: rgba(255,255,255,.5); }
   @media (max-width: 680px) { .pair { justify-content: center; } }
 </style>
 </head>
@@ -105,7 +101,7 @@
 <div class="wrap">
   <div class="micro">Section 6 &amp; 12 · component</div>
   <h1>Bio-Orb in the app</h1>
-  <p class="lede">Your Bio-Orb (the glowing sage ring in a dark dish) placed on the app's breathing screens: Craving SOS (S6) and the calm tools (S12). Each screen is shown in dark and light, and all of them are live. The ring swells on the in-breath, holds, and draws in on the out-breath. While a coaching line plays, the voice makes it ripple. In light mode the dish stays a deep moss so the ring still glows; a pale-dish option is in the second row.</p>
+  <p class="lede">Your Bio-Orb (the glowing sage ring) placed on the app's breathing screens: Craving SOS (S6) and the calm tools (S12). Each screen is shown in dark and light, and all of them are live. The ring swells on the in-breath, holds, and draws in on the out-breath. While a coaching line plays, the voice makes it ripple. The ring sits straight on the screen background, with no dish behind it.</p>
   <div class="bar">
     <button id="pause" aria-pressed="false">Pause motion</button>
     <button id="rm" aria-pressed="false">Preview Reduce Motion on all</button>
@@ -171,16 +167,9 @@ const screens = [
       ${coach(false)}
       <div class="rcard"><span class="thumb"></span><div><div class="micro">Why you're doing this</div><div class="rt">Run with Aria without stopping</div></div></div>
       <div class="grow"></div>${outcomes}`,
-    notes: ['<b>Replaces the breathing circle.</b> The Bio-Orb sits where the circle is now. The faint arc inside the dish counts down the three minutes, so the separate outer countdown ring goes away.',
+    notes: ['<b>Replaces the breathing circle.</b> The Bio-Orb sits where the circle is now. The faint arc inside the ring counts down the three minutes, so the separate outer countdown ring goes away.',
       '<b>Centre text.</b> Seconds left in this breath ("4 seconds · inhale", big 4), and the time left in the round in mono underneath. The SOS uses the app\'s ACT wave-riding pace: 4 in, 6 out, slowing toward 5 breaths a minute.',
       '<b>Coaching line.</b> The pill keeps the last coaching line on screen. Here the voice is quiet, so the ring only drifts gently.'] },
-  { tag: 'S6.1', title: 'Light mode alternative · pale dish', pattern: 'sos', offset: 22, voice: false, lightDish: true,
-    body: () => `${topbar('Riding it out')}${label}${orb(250)}
-      ${coach(false)}
-      <div class="rcard"><span class="thumb"></span><div><div class="micro">Why you're doing this</div><div class="rt">Run with Aria without stopping</div></div></div>
-      <div class="grow"></div>${outcomes}`,
-    notes: ['<b>Option B for light mode.</b> The dish turns pale to match the light screen, and the ring is drawn as a soft sage band with a white highlight instead of a glow.',
-      '<b>My pick is the moss dish above.</b> The orb is a light source, and a light ring on a pale dish loses most of its glow. A dark dish on the light screen keeps it looking like the same object in both themes, the way Apple Watch\'s Breathe does. Dark mode is the same either way.'] },
   { tag: 'S6.2', title: 'Craving SOS · coach speaking', pattern: 'sos', offset: 64, voice: true,
     body: () => `${topbar('Riding it out')}${label}${orb(250)}
       ${coach(true)}
@@ -206,7 +195,7 @@ const screens = [
       <div style="height:10px"></div>
       <div class="footer"><div class="btn secondary">Stop</div></div>`,
     notes: ['<b>Same orb, slower out-breath.</b> In for 4, out for 6. The inner arc counts down the tool\'s two minutes.',
-      '<b>Plain background.</b> The dish is the only thing drawing the eye.'] },
+      '<b>Plain background.</b> The ring is the only thing drawing the eye.'] },
   { tag: 'S6.1', title: 'Reduce Motion', pattern: 'sos', offset: 37, voice: false, still: true,
     body: () => `${topbar('Riding it out')}${label}${orb(250)}
       ${coach(false)}
@@ -227,7 +216,6 @@ for (const s of screens) {
   rows.appendChild(row);
   row.querySelectorAll('.phone').forEach((ph) => {
     const canvas = ph.querySelector('canvas');
-    if (ph.classList.contains('t-light') && !s.lightDish) canvas.parentElement.classList.add('moss');
     orbs.push({ s, ph, canvas, ctx: canvas.getContext('2d'), light: ph.classList.contains('t-light'), size: 0.5, energy: 0.1, kick: 0 });
     canvas.parentElement.addEventListener('click', () => { orbs.filter((o) => o.s === s).forEach((o) => (o.kick = 1)); });
   });
@@ -276,8 +264,7 @@ function strand(ctx, c, r0, amp, t, seed) {
 
 function draw(o, t, dt) {
   const { ctx, canvas, s } = o;
-  // Light phones keep a deep moss dish so the ring still glows; the light-dish variant is shown separately.
-  const light = o.light && s.lightDish, moss = o.light && !s.lightDish;
+  const light = o.light;
   const dpr = window.devicePixelRatio || 1;
   const w = canvas.clientWidth;
   if (canvas.width !== Math.round(w * dpr)) canvas.width = canvas.height = Math.round(w * dpr);
@@ -298,34 +285,9 @@ function draw(o, t, dt) {
   o.energy += (target - o.energy) * (1 - Math.exp(-dt / 0.07));
   const e = still ? 0 : o.energy;
 
-  // Dish: outer bezel, recessed well, dark pit.
-  const rimR = c - 2, wellR = c * 0.88, pitR = c * 0.5;
-  if (light) {
-    let g = ctx.createRadialGradient(c, c - c * 0.3, c * 0.2, c, c, rimR);
-    g.addColorStop(0, '#FAFBF6'); g.addColorStop(1, '#E3E6D9');
-    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(c, c, rimR, 0, 7); ctx.fill();
-    ctx.strokeStyle = 'rgba(17,20,10,.08)'; ctx.lineWidth = 1; ctx.stroke();
-    g = ctx.createRadialGradient(c, c + wellR * 0.15, wellR * 0.4, c, c, wellR);
-    g.addColorStop(0, '#ECEEE4'); g.addColorStop(1, '#E0E3D5');
-    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(c, c, wellR, 0, 7); ctx.fill();
-    g = ctx.createRadialGradient(c, c - pitR * 0.2, 0, c, c, pitR);
-    g.addColorStop(0, '#F7F8F2'); g.addColorStop(0.8, '#EEF0E6'); g.addColorStop(1, '#DADECB');
-    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(c, c, pitR, 0, 7); ctx.fill();
-  } else {
-    let g = ctx.createRadialGradient(c, c, wellR, c, c, rimR);
-    g.addColorStop(0, moss ? '#232a14' : '#141414'); g.addColorStop(1, moss ? '#1a1f0f' : '#0b0b0b');
-    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(c, c, rimR, 0, 7); ctx.fill();
-    ctx.strokeStyle = 'rgba(255,255,255,.06)'; ctx.lineWidth = 1; ctx.stroke();
-    g = ctx.createRadialGradient(c, c, pitR, c, c, wellR);
-    g.addColorStop(0, moss ? '#0b0d06' : '#050505'); g.addColorStop(1, moss ? '#20261a' : '#151515');
-    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(c, c, wellR, 0, 7); ctx.fill();
-    ctx.strokeStyle = 'rgba(255,255,255,.05)'; ctx.stroke();
-    g = ctx.createRadialGradient(c, c, 0, c, c, pitR);
-    g.addColorStop(0, moss ? '#1d2312' : '#16190f'); g.addColorStop(0.7, moss ? '#0f120a' : '#0a0a08'); g.addColorStop(1, moss ? '#070805' : '#030303');
-    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(c, c, pitR, 0, 7); ctx.fill();
-  }
+  const pitR = c * 0.5;
 
-  // Progress arc just inside the pit.
+  // Progress arc inside the ring.
   const arcR = pitR - 7;
   ctx.lineCap = 'round';
   ctx.lineWidth = 2;
