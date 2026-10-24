@@ -338,7 +338,16 @@ if __name__ == "__main__":
         gid = subscription_group(app)
         for s in SUBSCRIPTIONS:
             subscription(gid, *s, all_territories)
-        lifetime(app, all_territories)
+        lid = lifetime(app, all_territories)
+        summary = []
+        for sub in all_pages(f"/v1/subscriptionGroups/{gid}/subscriptions?limit=50"):
+            sid, a = sub["id"], sub["attributes"]
+            prices = len(all_pages(f"/v1/subscriptions/{sid}/prices?limit=200"))
+            trial = len(all_pages(f"/v1/subscriptions/{sid}/introductoryOffers?limit=200"))
+            summary.append(f"{a['productId']}: {a.get('state')}, {prices} prices, trial in {trial} territories")
+        _, data = asc("GET", f"/v2/inAppPurchases/{lid}")
+        summary.append(f"{LIFETIME[0]}: {data['data']['attributes'].get('state')}")
+        print("::notice title=App Store Connect products::" + " | ".join(summary))
     if step in ("all", "revenuecat"):
         if os.environ.get("RC_SECRET_KEY") and os.environ.get("RC_PROJECT_ID"):
             revenuecat()
