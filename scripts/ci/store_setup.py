@@ -293,9 +293,13 @@ def revenuecat():
         else:
             print(f"RevenueCat: product {store_id} exists")
 
-    ents = {e["lookup_key"]: e["id"] for e in rc_items("/entitlements")}
+    existing = rc_items("/entitlements")
+    print("::notice title=RevenueCat entitlements before setup::" + ", ".join(f"{e['lookup_key']} ({e.get('display_name')})" for e in existing))
+    ents = {e["lookup_key"]: e["id"] for e in existing}
     if "pro" not in ents:
-        _, data = rc("POST", "/entitlements", {"lookup_key": "pro", "display_name": "DayXero Pro"})
+        # The app checks the "pro" lookup key; the display name only has to be unique.
+        taken = {e.get("display_name") for e in existing}
+        _, data = rc("POST", "/entitlements", {"lookup_key": "pro", "display_name": "Pro" if "Pro" not in taken else "DayXero Pro (app)"})
         ents["pro"] = data["id"]
         print("RevenueCat: entitlement 'pro' added")
     rc("POST", f"/entitlements/{ents['pro']}/actions/attach_products", {"product_ids": [products[w[0]] for w in wanted]}, allow=(409, 422))
@@ -303,7 +307,8 @@ def revenuecat():
 
     offerings = {o["lookup_key"]: o for o in rc_items("/offerings")}
     if "default" not in offerings:
-        _, data = rc("POST", "/offerings", {"lookup_key": "default", "display_name": "DayXero Pro"})
+        taken = {o.get("display_name") for o in offerings.values()}
+        _, data = rc("POST", "/offerings", {"lookup_key": "default", "display_name": "Default" if "Default" not in taken else "DayXero default"})
         offerings["default"] = data
         print("RevenueCat: offering 'default' added")
     offering = offerings["default"]["id"]
