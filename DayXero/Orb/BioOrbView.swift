@@ -205,33 +205,48 @@ private struct OrbBars: View {
 struct OrbTranscriptPill: View {
     let engine: OrbEngine
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
-        let data = engine.data
-        HStack(spacing: 10) {
-            dot
-            Text(verbatim: engine.transcript)
-                .font(.custom(DX.Typeface.semibold, size: 12, relativeTo: .caption))
-                .foregroundStyle(.black)
-                .lineSpacing(2)
-                .fixedSize(horizontal: false, vertical: true)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            Text(verbatim: engine.coachSpeaking ? data.labels.badgeSpeaking : data.labels.badgeIdle)
-                .font(.custom(DX.Typeface.mono, size: 9, relativeTo: .caption2))
-                .tracking(0.36)
-                .foregroundStyle(.black)
-                .lineLimit(1)
-                .fixedSize()
-                .padding(.vertical, 4).padding(.horizontal, 8)
-                .background(Color(orbHex: data.tokens.sage), in: Capsule())
+        Group {
+            // At accessibility sizes the dot and badge go above the line, so the line keeps the full width.
+            if typeSize.isAccessibilitySize {
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack(spacing: 10) { dot; Spacer(minLength: 0); badge }
+                    transcript
+                }
+            } else {
+                HStack(spacing: 10) { dot; transcript; badge }
+            }
         }
         .padding(.top, 11).padding(.trailing, 12).padding(.bottom, 11).padding(.leading, 16)
         .frame(maxWidth: .infinity)
-        .background(Color(orbHex: data.tokens.porcelain), in: RoundedRectangle(cornerRadius: 28, style: .continuous))
+        .background(Color(orbHex: engine.data.tokens.porcelain), in: RoundedRectangle(cornerRadius: 28, style: .continuous))
         .accessibilityElement(children: .combine)
         .onChange(of: engine.transcript) { _, text in
             AccessibilityNotification.Announcement(text).post()
         }
+    }
+
+    private var transcript: some View {
+        Text(verbatim: engine.transcript)
+            .font(.custom(DX.Typeface.semibold, size: 12, relativeTo: .caption))
+            .foregroundStyle(.black)
+            .lineSpacing(2)
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var badge: some View {
+        let labels = engine.data.labels
+        return Text(verbatim: engine.coachSpeaking ? labels.badgeSpeaking : labels.badgeIdle)
+            .font(.custom(DX.Typeface.mono, size: 9, relativeTo: .caption2))
+            .tracking(0.36)
+            .foregroundStyle(.black)
+            .lineLimit(1)
+            .fixedSize()
+            .padding(.vertical, 4).padding(.horizontal, 8)
+            .background(Color(orbHex: engine.data.tokens.sage), in: Capsule())
     }
 
     @ViewBuilder
