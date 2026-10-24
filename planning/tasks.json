@@ -475,9 +475,9 @@
         },
         {
           "id": "S3.11",
-          "title": "Set up products in App Store Connect + RevenueCat: dayxero.annual (3-day trial), dayxero.monthly, dayxero.lifetime, entitlement 'pro'",
-          "status": "blocked",
-          "notes": "From S3 build. Needs Milan's App Store Connect and RevenueCat accounts; then add the RevenueCat key to Config/Secrets.xcconfig.",
+          "title": "Set up products in App Store Connect + RevenueCat: dayxero.annual (3-day trial), dayxero.monthly, dayxero.lifetimetime, entitlement 'pro'",
+          "status": "in_progress",
+          "notes": "From S3 build. Needs Milan's App Store Connect and RevenueCat accounts; then add the RevenueCat key to Config/Secrets.xcconfig.\nStore setup workflow (.github/workflows/store-setup.yml, scripts/ci/store_setup.py) creates the App Store Connect products and the RevenueCat entitlement, offering and packages.",
           "created": "2026-10-22T22:01:09.531Z",
           "completed": null
         }
