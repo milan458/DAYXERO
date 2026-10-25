@@ -21,7 +21,7 @@ struct HomeView: View {
                 case "water":
                     WaterTrackerView(profile: profile)
                 default:
-                    TodayView(profile: profile)
+                    TodayView(profile: profile, openWater: { tab = "water" })
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -68,6 +68,8 @@ struct ComingSoon: View {
 
 struct TodayView: View {
     let profile: UserProfile
+    /// Switches the dock to the water tracker.
+    var openWater: () -> Void = {}
     @Environment(Entitlement.self) private var entitlement
     @Environment(\.modelContext) private var context
     @AppStorage("dx.sosHintSeen") private var sosHintSeen = false
@@ -101,6 +103,7 @@ struct TodayView: View {
                     header(snap, now: timeline.date)
                     hero(snap)
                     dailyCard(now: timeline.date)
+                    WaterHomeCard(profile: profile, now: timeline.date, onOpen: openWater)
                     if let lesson = snap.lesson {
                         if lesson.isReplay {
                             ReplayCard(title: lesson.title, minutes: LessonLibrary.lesson(for: lesson.day, product: profile.primaryProduct?.product ?? .cigarettes).minutes) {

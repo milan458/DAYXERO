@@ -87,7 +87,7 @@ jobs:
           shoot dark large gallery-dark -dx.showGallery YES
           shoot light large gallery-light -dx.showGallery YES
           shoot dark accessibility-extra-extra-extra-large gallery-dark-ax5 -dx.showGallery YES
-          for step in welcome age name products baseline_vape baseline_cigarettes triggers reasons past_attempts quit_day nrt reveal reminders; do
+          for step in welcome age name products baseline_vape baseline_cigarettes triggers reasons past_attempts quit_day nrt water_body water_day water_goal reveal reminders; do
             shoot dark large "onb-$step-dark" -dx.onboardingStep "$step"
           done
           for step in welcome products baseline_vape reveal; do
@@ -214,6 +214,9 @@ jobs:
           shoot dark large water-tracker-full-dark $P12 -dx.tab water -dx.seedWater full
           shoot dark accessibility-extra-extra-extra-large water-tracker-dark-ax5 $P12 -dx.tab water -dx.seedWater partial
           shoot dark large water-tracker-empty-dark $P12 -dx.tab water
+          shoot light large onb-water_body-light -dx.onboardingStep water_body
+          shoot dark accessibility-extra-extra-extra-large onb-water_goal-dark-ax5 -dx.onboardingStep water_goal
+          shoot dark large home-water-dark $P12 -dx.seedWater partial
           shoot dark large calm-box-orb-dark $P12 -dx.tab program -dx.openCalm boxBreathing -dx.calmElapsed 6
           shoot dark large calm-478-orb-dark $P12 -dx.tab program -dx.openCalm longerOutBreath
           shoot dark large set-main-dark $P12 -dx.openSettings settings

@@ -90,4 +90,32 @@ struct WaterTests {
         #expect(undone?.drink == .tea)
         #expect(WaterDay.total(try context.fetch(FetchDescriptor<WaterEntry>()), on: today, clock: clock) == 750)
     }
+
+    @MainActor @Test func onboardingSkipUsesTwoLitresAndSkipsTwoScreens() throws {
+        let model = OnboardingModel()
+        #expect(model.sequence.contains(.waterDay) && model.sequence.contains(.waterGoal))
+        model.waterSkipped = true
+        #expect(!model.sequence.contains(.waterDay) && !model.sequence.contains(.waterGoal))
+        #expect(model.waterGoalMl == 2000)
+    }
+
+    @MainActor @Test func onboardingAdjustmentOverridesTheCalculation() throws {
+        let model = OnboardingModel()
+        model.weightKg = 72
+        model.waterActivity = .worksOut
+        #expect(model.waterGoalMl == 2750)
+        model.waterGoalOverride = WaterGoal.adjusted(model.waterGoalMl, by: 1)
+        #expect(model.waterGoalMl == 3000)
+
+        let container = try DataStore.makeContainer(inMemory: true)
+        model.name = "Sam"
+        model.products = [.vape]
+        model.setBaseline(BaselineDraft(unitsPerDay: 100, price: 10, unitsPerPurchase: 600), for: .vape)
+        try model.save(into: container.mainContext)
+        let saved = try #require(try container.mainContext.fetch(FetchDescriptor<WaterProfile>()).first)
+        #expect(saved.goalMl == 2750)
+        #expect(saved.goalOverrideMl == 3000)
+        #expect(saved.effectiveGoalMl == 3000)
+        #expect(saved.activity == .worksOut)
+    }
 }
