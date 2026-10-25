@@ -33,9 +33,14 @@ struct WaterTrackerView: View {
 
         ScrollView {
             VStack(spacing: 0) {
-                header(streak: streak)
-                readout(total: total, goal: goal, units: units, reached: reached)
-                    .padding(.top, 18)
+                // The header and big numbers are part of the drawing; they stop growing where they'd wrap.
+                // VoiceOver reads the same information from the pill.
+                Group {
+                    header(streak: streak)
+                    readout(total: total, goal: goal, units: units, reached: reached)
+                        .padding(.top, 18)
+                }
+                .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
                 WaterPillView(level: Double(total) / Double(goal), drink: last, reached: reached)
                     .padding(.top, 18)
                     .accessibilityElement(children: .ignore)
