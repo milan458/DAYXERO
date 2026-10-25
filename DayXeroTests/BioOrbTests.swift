@@ -16,6 +16,13 @@ struct BioOrbTests {
         for phase in BreathPhase.allCases { #expect(!data.scripts(phase).isEmpty) }
     }
 
+    /// The toolkit's breathing exercises run on the orb with real patterns (S12.4).
+    @Test func calmBreathingToolsUseOrbPatterns() {
+        let breathing = CalmTool.allCases.compactMap(\.orbPattern)
+        #expect(breathing == ["box", "478"])
+        for id in breathing { #expect(data.breathingPatterns.contains { $0.id == id }) }
+    }
+
     /// No "AI" in the labels, and no lung or carbon monoxide claims (spec §9 defaults).
     @Test func copyFollowsTheRevisedWording() {
         #expect(data.labels.badgeSpeaking == "COACH SPEAKING")

@@ -119,7 +119,6 @@ struct CalmToolPlayer: View {
 
     @Environment(\.modelContext) private var context
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @AppStorage("dx.sosHaptics") private var hapticsOn = true
     @State private var startedAt = Date.now
     @State private var finished = false
     @State private var step = 0
@@ -128,7 +127,6 @@ struct CalmToolPlayer: View {
     @State private var ownThought = ""
     @State private var writingOwn = false
     @State private var use: ToolUse?
-    @State private var haptics = BreathHaptics()
     @State private var answered: Bool?
 
     init(tool: CalmTool, fromSOS: Bool = false, onDone: @escaping (Bool) -> Void) {
@@ -151,14 +149,13 @@ struct CalmToolPlayer: View {
         }
         .padding(.horizontal, DX.Space.m)
         .padding(.bottom, DX.Space.xs)
-        .dxCanvas()
+        .modifier(PlayerCanvas(orb: tool.orbPattern != nil && !finished))
         .onAppear {
             let record = ToolUse(tool: tool.rawValue, startedAt: startedAt)
             context.insert(record)
             try? context.save()
             use = record
         }
-        .onDisappear { haptics.stop() }
         .sensoryFeedback(DX.Haptic.commit, trigger: finished)
         .sensoryFeedback(DX.Haptic.select, trigger: ticked)
     }
@@ -169,8 +166,8 @@ struct CalmToolPlayer: View {
     private var running: some View {
         topBar
         switch tool {
-        case .boxBreathing: timed { elapsed in box(elapsed) }
-        case .longerOutBreath: timed { elapsed in longerOut(elapsed) }
+        case .boxBreathing, .longerOutBreath:
+            OrbBreathingPanel(pattern: tool.orbPattern ?? "box") { finish(early: false) }
         case .grounding: grounding
         case .noticeAndName: notice
         case .dropAnchor: anchor
@@ -206,77 +203,6 @@ struct CalmToolPlayer: View {
         case .noticeAndName: 3
         case .dropAnchor: DropAnchor.steps.count
         case .boxBreathing, .longerOutBreath: nil
-        }
-    }
-
-    /// Breathing tools: a two-minute clock, a soft haptic each breath, then the close.
-    private func timed(@ViewBuilder content: @escaping (TimeInterval) -> some View) -> some View {
-        TimelineView(.animation(minimumInterval: reduceMotion ? 1 : 1.0 / 30)) { timeline in
-            let elapsed = timeline.date.timeIntervalSince(startedAt)
-            let left = max((tool.seconds ?? 120) - elapsed, 0)
-            VStack(spacing: DX.Space.s) {
-                Text("\(Duration.seconds(left.rounded(.up)).formatted(.time(pattern: .minuteSecond))) left").dxText(.subtitle)
-                Spacer()
-                content(elapsed)
-                Spacer()
-                Button("Stop") { finish(early: true) }.buttonStyle(.dxSecondary)
-            }
-            .frame(maxWidth: .infinity)
-        }
-        .task { await tick() }
-    }
-
-    private func box(_ elapsed: TimeInterval) -> some View {
-        let m = BoxBreath.moment(at: elapsed)
-        let size: CGFloat = 200
-        return VStack(spacing: DX.Space.m) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 36, style: .continuous).stroke(DX.Palette.track, lineWidth: 3)
-                RoundedRectangle(cornerRadius: 36, style: .continuous)
-                    .trim(from: 0, to: reduceMotion ? Double(m.side.rawValue + 1) / 4 : m.around)
-                    .stroke(DX.Palette.text, style: StrokeStyle(lineWidth: 3, lineCap: .round))
-                    .rotationEffect(.degrees(-90))
-                VStack(spacing: 2) {
-                    Text(sideTitle(m.side)).font(.custom(DX.Typeface.semibold, size: 20, relativeTo: .title3))
-                    Text(verbatim: "\(m.count)").font(.custom(DX.Typeface.bold, size: 40, relativeTo: .largeTitle)).monospacedDigit()
-                }
-                .foregroundStyle(DX.Palette.text)
-            }
-            .frame(width: size, height: size)
-            .accessibilityElement(children: .ignore)
-            .accessibilityLabel(Text(sideTitle(m.side)))
-            HStack {
-                ForEach(BoxBreath.Side.allCases, id: \.self) { side in
-                    Text(sideTitle(side)).font(.custom(side == m.side ? DX.Typeface.semibold : DX.Typeface.regular, size: 12, relativeTo: .caption))
-                        .foregroundStyle(side == m.side ? DX.Palette.text : DX.Palette.muted)
-                        .frame(maxWidth: .infinity)
-                }
-            }
-            .accessibilityHidden(true)
-            Text("Follow the line around the square. Four counts on each side.").dxText(.subtitle).multilineTextAlignment(.center)
-        }
-    }
-
-    private func longerOut(_ elapsed: TimeInterval) -> some View {
-        let breath = CravingWave.breath(at: elapsed)
-        return VStack(spacing: DX.Space.m) {
-            Circle()
-                .fill(RadialGradient(colors: [DX.Palette.sage.opacity(0.6), DX.Palette.sage.opacity(0.2), .clear],
-                                     center: .center, startRadius: 0, endRadius: 110))
-                .scaleEffect(reduceMotion ? 0.86 : 0.7 + 0.3 * breath.scale)
-                .overlay(Text(breath.phase == .breatheIn ? "Breathe in" : "Breathe out")
-                    .font(.custom(DX.Typeface.semibold, size: 20, relativeTo: .title3)).foregroundStyle(DX.Palette.text))
-                .frame(width: 220, height: 220)
-                .accessibilityElement(children: .combine)
-            Text("In for about four, out for about six. Let the out-breath be slow.").dxText(.subtitle).multilineTextAlignment(.center)
-        }
-    }
-
-    private func sideTitle(_ side: BoxBreath.Side) -> LocalizedStringKey {
-        switch side {
-        case .breatheIn: "In"
-        case .holdIn, .holdOut: "Hold"
-        case .breatheOut: "Out"
         }
     }
 
@@ -437,33 +363,26 @@ struct CalmToolPlayer: View {
 
     // MARK: Flow
 
-    private func tick() async {
-        var lastBreath = -1
-        while !Task.isCancelled, !finished {
-            let elapsed = Date.now.timeIntervalSince(startedAt)
-            if elapsed >= tool.seconds ?? .infinity {
-                finish(early: false)
-                return
-            }
-            if tool == .longerOutBreath, hapticsOn {
-                let breath = CravingWave.breath(at: elapsed)
-                if breath.index != lastBreath {
-                    if lastBreath >= 0 { haptics.play(inhale: breath.inhaleSeconds, exhale: breath.exhaleSeconds) }
-                    lastBreath = breath.index
-                }
-            }
-            try? await Task.sleep(for: .milliseconds(200))
-        }
-    }
-
     private func finish(early: Bool) {
-        haptics.stop()
         use?.finished = !early
         try? context.save()
         if early {
             onDone(false)
         } else {
             finished = true
+        }
+    }
+}
+
+/// Breathing tools sit on the orb's black canvas; the rest use the app's canvas.
+private struct PlayerCanvas: ViewModifier {
+    let orb: Bool
+
+    func body(content: Content) -> some View {
+        if orb {
+            content.background(Color.black.ignoresSafeArea()).environment(\.colorScheme, .dark)
+        } else {
+            content.dxCanvas()
         }
     }
 }

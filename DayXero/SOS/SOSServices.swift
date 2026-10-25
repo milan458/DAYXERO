@@ -1,5 +1,4 @@
 import ActivityKit
-import CoreHaptics
 import DayXeroCore
 import Foundation
 import Observation
@@ -43,43 +42,5 @@ enum SOSLiveActivity {
         for activity in Activity<CravingActivityAttributes>.activities {
             await activity.end(nil, dismissalPolicy: .immediate)
         }
-    }
-}
-
-/// A soft pulse that follows each breath: rising on the in-breath, fading on the out-breath (S6.2).
-/// The breaths lengthen over the session, so the pulse slows with them.
-@MainActor
-final class BreathHaptics {
-    private var engine: CHHapticEngine?
-    private let supported = CHHapticEngine.capabilitiesForHardware().supportsHaptics
-
-    func play(inhale: Double, exhale: Double) {
-        guard supported else { return }
-        do {
-            if engine == nil {
-                let engine = try CHHapticEngine()
-                engine.isAutoShutdownEnabled = true
-                self.engine = engine
-            }
-            try engine?.start()
-            let event = CHHapticEvent(eventType: .hapticContinuous, parameters: [
-                CHHapticEventParameter(parameterID: .hapticIntensity, value: 1),
-                CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.1),
-            ], relativeTime: 0, duration: inhale + exhale)
-            let curve = CHHapticParameterCurve(parameterID: .hapticIntensityControl, controlPoints: [
-                .init(relativeTime: 0, value: 0.06),
-                .init(relativeTime: inhale, value: 0.42),
-                .init(relativeTime: inhale + exhale * 0.85, value: 0.02),
-            ], relativeTime: 0)
-            let pattern = try CHHapticPattern(events: [event], parameterCurves: [curve])
-            try engine?.makePlayer(with: pattern).start(atTime: CHHapticTimeImmediate)
-        } catch {
-            engine = nil
-        }
-    }
-
-    func stop() {
-        engine?.stop(completionHandler: nil)
-        engine = nil
     }
 }
