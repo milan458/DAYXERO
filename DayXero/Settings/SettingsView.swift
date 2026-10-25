@@ -507,6 +507,8 @@ enum DataTools {
         let pledges = (try? context.fetch(FetchDescriptor<Pledge>(sortBy: [SortDescriptor(\.day)]))) ?? []
         let plans = (try? context.fetch(FetchDescriptor<IfThenPlan>())) ?? []
         let tools = (try? context.fetch(FetchDescriptor<ToolUse>())) ?? []
+        let water = (try? context.fetch(FetchDescriptor<WaterEntry>(sortBy: [SortDescriptor(\.timestamp)]))) ?? []
+        let waterGoal = (try? context.fetch(FetchDescriptor<WaterProfile>()))?.first?.effectiveGoalMl
         typealias J = [String: Any]
         let products: [J] = profile.products.map {
             ["product": $0.productRaw, "main": $0.isPrimary, "perDay": $0.unitsPerDay, "price": "\($0.pricePerPurchase)", "perPurchase": $0.unitsPerPurchase]
@@ -530,9 +532,12 @@ enum DataTools {
         }
         let plansJSON: [J] = plans.map { ["situation": $0.situation, "action": $0.action] }
         let toolsJSON: [J] = tools.map { ["tool": $0.toolRaw, "at": n(date($0.startedAt)), "calmer": n($0.calmer)] }
+        // Water drinks and the goal; height and weight stay out of exports (handoff A4).
+        let waterJSON: J = ["goalMl": n(waterGoal), "drinks": water.map { ["at": n(date($0.timestamp)), "drink": $0.drinkId, "ml": $0.amountMl] as J }]
         let json: J = [
             "exportedAt": iso.string(from: .now), "profile": profileJSON, "program": program, "logs": logsJSON,
             "checkIns": checkInsJSON, "pledges": pledges.map { n(date($0.madeAt)) }, "plans": plansJSON, "calmTools": toolsJSON,
+            "water": waterJSON,
         ]
         guard let data = try? JSONSerialization.data(withJSONObject: json, options: [.prettyPrinted, .sortedKeys]) else { return nil }
         let name = "dayxero-export-\(Date.now.formatted(.iso8601.year().month().day())).json"
@@ -548,6 +553,8 @@ enum DataTools {
         try? context.delete(model: IfThenPlan.self)
         try? context.delete(model: WeeklyCheckIn.self)
         try? context.delete(model: ToolUse.self)
+        try? context.delete(model: WaterEntry.self)
+        try? context.delete(model: WaterProfile.self)
         try? context.delete(model: UserProfile.self)
         try? context.save()
         for key in UserDefaults.standard.dictionaryRepresentation().keys where key.hasPrefix("dx.") {
