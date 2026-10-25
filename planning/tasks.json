@@ -358,10 +358,18 @@
         {
           "id": "S2.14",
           "title": "Name step (S2.2b) proposed: paywall and Home greet by name but the plan never asks",
-          "status": "done",
-          "notes": "From S2 mockups; Milan to confirm.\nMilan: keep the name screen.\nBuilt; waiting on CI.\nVerified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.",
+          "status": "in_progress",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md. Built per WOnbBody/WOnbDay/WOnbGoal. Themed with the app (matches the references in dark mode); the goal screen keeps a short title because every onboarding step has one.",
           "created": "2026-10-22T20:40:00.864Z",
           "completed": "2026-10-22T22:01:09.291Z"
+        },
+        {
+          "id": "S2.15",
+          "title": "Show the water goal in the plan reveal.",
+          "status": "in_progress",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
         }
       ]
     },
@@ -788,6 +796,14 @@
           "notes": "From DAYXERO_BIO_ORB_SPEC.md. Built with the revised wording (COACH SPEAKING, Coach me, no lung/CO claims).",
           "created": "2026-10-24T11:47:52.000Z",
           "completed": null
+        },
+        {
+          "id": "S6.11",
+          "title": "SOS Live Activity upgrade (B3.1).",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
         }
       ]
     },
@@ -850,6 +866,62 @@
           "notes": "Mockups ready in tracker.\nMilan: show 'puffs not taken' only for people who picked vapes. Already the rule: counters, log rows and widget buttons come from the products chosen in onboarding.\nMilan: leave 'time regained' out.\nMilan approved S7 in chat.\nBuilt and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": "2026-10-23T08:34:21.662Z"
+        },
+        {
+          "id": "S7.5",
+          "title": "Water data model, goal calculation and logging (A3, A4).",
+          "status": "in_progress",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md. WaterProfile, WaterEntry, WaterGoal, WaterLog; unit tests for the worked example, clamps, half-glass rounding and lb input.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
+        },
+        {
+          "id": "S7.6",
+          "title": "WaterPillView, the signed-off tracker, exactly as drawn (A5).",
+          "status": "in_progress",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md. Screen recording next to reference/water/water-pill-preview.html still to attach.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
+        },
+        {
+          "id": "S7.7",
+          "title": "Water tracker screen (A6).",
+          "status": "in_progress",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md. Second button in the dock. Today list deletes by long-press menu (no swipe outside a List).",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
+        },
+        {
+          "id": "S7.8",
+          "title": "Water on Home: mini pill card with one-tap +1 (A7).",
+          "status": "in_progress",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
+        },
+        {
+          "id": "S7.9",
+          "title": "Water widget and Control Center control (+1 glass via App Intent) (A7).",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
+        },
+        {
+          "id": "S7.10",
+          "title": "Apple Health sync for water: optional, off by default (A7).",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
+        },
+        {
+          "id": "S7.11",
+          "title": "Water in Insights (A7).",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
         }
       ]
     },
@@ -1156,9 +1228,17 @@
         {
           "id": "S12.4",
           "title": "Reuse the orb for the breathing exercises in the stress toolkit.",
-          "status": "pending",
-          "notes": "From DAYXERO_BIO_ORB_SPEC.md.",
+          "status": "in_progress",
+          "notes": "From DAYXERO_BIO_ORB_SPEC.md.\nBox breathing → Box pattern, Longer out-breath → Deep calm (4·7·8), with Start, Pause/Resume, Coach me, then Continue or Again.",
           "created": "2026-10-24T11:47:52.000Z",
+          "completed": null
+        },
+        {
+          "id": "S12.5",
+          "title": "Breathing Live Activity (B3.2).",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
           "completed": null
         }
       ]
@@ -1254,28 +1334,124 @@
       ],
       "tasks": [
         {
-          "id": "S14.1",
+          "id": "S14.01",
           "title": "Notification plan: pledge, check-in, lesson available, milestone, NRT reminders, inactivity nudges per the open decision.",
           "status": "done",
-          "notes": "Inactivity nudges follow the pause-and-replay rule (no reset), per Milan.\nMockups ready in tracker.\nMilan: keep the wording; pledge and check-in reminders pause while someone's away.\nMilan approved S14 in chat.",
+          "notes": "Inactivity nudges follow the pause-and-replay rule (no reset), per Milan.\nMockups ready in tracker.\nMilan: keep the wording; pledge and check-in reminders pause while someone's away.\nMilan approved S14 in chat.\nSuperseded by the notifications handoff tasks S14.1–S14.12.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": "2026-10-23T11:22:52.000Z"
+        },
+        {
+          "id": "S14.02",
+          "title": "Quiet hours and per-type toggles in Settings.",
+          "status": "done",
+          "notes": "Mockups ready in tracker.\nMilan approved S14 in chat.\nSuperseded by the notifications handoff tasks S14.1–S14.12.",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": "2026-10-23T11:22:52.000Z"
+        },
+        {
+          "id": "S14.03",
+          "title": "No guilt copy in any notification.",
+          "status": "done",
+          "notes": "Mockups ready in tracker.\nMilan approved S14 in chat.\nSuperseded by the notifications handoff tasks S14.1–S14.12.",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": "2026-10-23T11:22:52.000Z"
+        },
+        {
+          "id": "S14.1",
+          "title": "NotificationPlanner: scheduling, caps, merging, quiet hours, 64-pending limit (B4).",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
         },
         {
           "id": "S14.2",
-          "title": "Quiet hours and per-type toggles in Settings.",
-          "status": "done",
-          "notes": "Mockups ready in tracker.\nMilan approved S14 in chat.",
-          "created": "2026-10-22T19:48:52.060Z",
-          "completed": "2026-10-23T11:22:52.000Z"
+          "title": "CravingPredictor: high-risk windows from logs (B4.3).",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
         },
         {
           "id": "S14.3",
-          "title": "No guilt copy in any notification.",
-          "status": "done",
-          "notes": "Mockups ready in tracker.\nMilan approved S14 in chat.",
-          "created": "2026-10-22T19:48:52.060Z",
-          "completed": "2026-10-23T11:22:52.000Z"
+          "title": "Notification categories, actions and App Intents for every type (B2).",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
+        },
+        {
+          "id": "S14.4",
+          "title": "Notification Content Extension with interactive expanded views (B2.2).",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
+        },
+        {
+          "id": "S14.5",
+          "title": "Rich attachments: lesson covers and milestone share cards.",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
+        },
+        {
+          "id": "S14.6",
+          "title": "Day Xero all-day Live Activity (B3.3).",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
+        },
+        {
+          "id": "S14.7",
+          "title": "Craving Window Guard Live Activity (B3.4).",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
+        },
+        {
+          "id": "S14.8",
+          "title": "Live Activity manager: relevance, limits, clean-up (B3.5).",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
+        },
+        {
+          "id": "S14.9",
+          "title": "Phase-based cadence (B5).",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
+        },
+        {
+          "id": "S14.10",
+          "title": "Adaptive back-off (B4.4).",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
+        },
+        {
+          "id": "S14.11",
+          "title": "Analytics events and guardrails (B7).",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
+        },
+        {
+          "id": "S14.12",
+          "title": "Milan to approve notification copy (B6 has the defaults; build with those).",
+          "status": "blocked",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
         }
       ]
     },
@@ -1358,8 +1534,8 @@
         {
           "id": "S15.7",
           "title": "Profile button on Home opens Settings",
-          "status": "done",
-          "notes": "From S4 build: the person icon on Home does nothing yet.\nMockups ready in tracker.\nMilan approved S15 in chat.",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
           "created": "2026-10-23T05:18:11.612Z",
           "completed": "2026-10-23T11:22:52.000Z"
         }
