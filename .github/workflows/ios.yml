@@ -209,6 +209,13 @@ jobs:
           shoot dark large ms-row-dark $P12 -dx.tab progress
           shoot dark large ms-share-dark $P12 -dx.tab progress -dx.shareCard YES
           shoot light large ms-share-light $P12 -dx.tab progress -dx.shareCard YES
+          shoot dark large water-tracker-dark $P12 -dx.tab water -dx.seedWater partial
+          shoot light large water-tracker-light $P12 -dx.tab water -dx.seedWater partial
+          shoot dark large water-tracker-full-dark $P12 -dx.tab water -dx.seedWater full
+          shoot dark accessibility-extra-extra-extra-large water-tracker-dark-ax5 $P12 -dx.tab water -dx.seedWater partial
+          shoot dark large water-tracker-empty-dark $P12 -dx.tab water
+          shoot dark large calm-box-orb-dark $P12 -dx.tab program -dx.openCalm boxBreathing -dx.calmElapsed 6
+          shoot dark large calm-478-orb-dark $P12 -dx.tab program -dx.openCalm longerOutBreath
           shoot dark large set-main-dark $P12 -dx.openSettings settings
           shoot light large set-main-light $P12 -dx.openSettings settings
           shoot dark accessibility-extra-extra-extra-large set-main-dark-ax5 $P12 -dx.openSettings settings
