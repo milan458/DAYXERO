@@ -2,7 +2,7 @@ import DayXeroCore
 import SwiftData
 import SwiftUI
 
-/// The app after onboarding: Today, Program and Progress tabs in the floating dock, with Craving SOS always one tap away.
+/// The app after onboarding: Today, Water, Program and Progress in the floating dock, with Craving SOS in the middle.
 struct HomeView: View {
     let profile: UserProfile
     @State private var tab = UserDefaults.standard.string(forKey: "dx.tab") ?? "today"
@@ -18,6 +18,8 @@ struct HomeView: View {
                     ProgramView(profile: profile)
                 case "progress":
                     ProgressTab(profile: profile)
+                case "water":
+                    WaterTrackerView(profile: profile)
                 default:
                     TodayView(profile: profile)
                 }
@@ -27,10 +29,13 @@ struct HomeView: View {
             DXDock(
                 items: [
                     DXDockItem(id: "today", title: "Today", systemImage: "house"),
+                    DXDockItem(id: "water", title: "Water", systemImage: "drop"),
                     DXDockItem(id: "program", title: "Program", systemImage: "book.closed"),
                     DXDockItem(id: "progress", title: "Progress", systemImage: "chart.bar"),
                 ],
                 selection: $tab,
+                // Today, Water, Craving SOS in the middle, Program, Progress.
+                sosPosition: 2,
                 sosAction: { sos.open(source: "dock") }
             )
             .padding(.bottom, DX.Space.xxs)

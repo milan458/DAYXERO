@@ -21,32 +21,44 @@ public struct DXDock: View {
     let items: [DXDockItem]
     @Binding var selection: String
     let sosAction: () -> Void
+    /// Where Craving SOS sits among the tabs; nil puts it at the end.
+    let sosPosition: Int?
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    public init(items: [DXDockItem], selection: Binding<String>, sosAction: @escaping () -> Void) {
+    public init(items: [DXDockItem], selection: Binding<String>, sosPosition: Int? = nil, sosAction: @escaping () -> Void) {
         self.items = items
         self._selection = selection
+        self.sosPosition = sosPosition
         self.sosAction = sosAction
     }
 
     public var body: some View {
+        let split = min(sosPosition ?? items.count, items.count)
         HStack(spacing: 10) {
-            ForEach(items) { item in
+            ForEach(items.prefix(split)) { item in
                 tab(item)
             }
-            Button(action: sosAction) {
-                Image(systemName: "flame")
-                    .accessibilityLabel(Text("Craving SOS"))
+            sosButton
+                .padding(.horizontal, sosPosition == nil ? 0 : 2)
+                .padding(.leading, sosPosition == nil ? 6 : 0)
+            ForEach(items.dropFirst(split)) { item in
+                tab(item)
             }
-            .buttonStyle(DXFABStyle(.sage))
-            .padding(.leading, 6)
         }
         .padding(.vertical, DX.Space.xs)
         .padding(.horizontal, DX.Space.s)
         .frame(height: DX.Size.tabActiveHeight + DX.Space.m)
         .modifier(DockBackground())
         .sensoryFeedback(DX.Haptic.select, trigger: selection)
+    }
+
+    private var sosButton: some View {
+        Button(action: sosAction) {
+            Image(systemName: "flame")
+                .accessibilityLabel(Text("Craving SOS"))
+        }
+        .buttonStyle(DXFABStyle(.sage))
     }
 
     private func tab(_ item: DXDockItem) -> some View {
