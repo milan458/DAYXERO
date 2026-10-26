@@ -5,7 +5,7 @@ name: Device matrix
 on:
   push:
     branches: [main]
-    paths-ignore: ["planning/**", "docs/**", "**.md"]
+    paths-ignore: ["planning/**", "docs/**", "website/**", "**.md"]
   workflow_dispatch:
 
 permissions:
