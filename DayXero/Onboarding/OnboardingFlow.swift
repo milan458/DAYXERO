@@ -106,6 +106,9 @@ struct OnboardingFlow: View {
         case .pastAttempts: PastAttemptsScreen(model: model)
         case .quitDay: QuitDayScreen(model: model)
         case .nrt: NRTScreen(model: model)
+        case .waterBody: WaterBodyScreen(model: model)
+        case .waterDay: WaterDayScreen(model: model)
+        case .waterGoal: WaterGoalScreen(model: model)
         case .building: BuildingScreen(model: model)
         case .reveal: PlanRevealScreen(model: model) { saveAndContinue() }
         case .reminders: RemindersScreen(onDone: onFinished)

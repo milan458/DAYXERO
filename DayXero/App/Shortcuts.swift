@@ -23,6 +23,18 @@ struct DayXeroShortcuts: AppShortcutsProvider {
             systemImageName: "plus.circle"
         )
         AppShortcut(
+            intent: LogWaterIntent(),
+            phrases: ["Log water in \(.applicationName)", "Log a glass of water in \(.applicationName)"],
+            shortTitle: "Log water",
+            systemImageName: "drop"
+        )
+        AppShortcut(
+            intent: StartBreathingIntent(),
+            phrases: ["Breathe with \(.applicationName)"],
+            shortTitle: "Breathe",
+            systemImageName: "circle.circle"
+        )
+        AppShortcut(
             intent: LogCravingIntent(),
             phrases: ["Log a craving in \(.applicationName)"],
             shortTitle: "Log a craving",

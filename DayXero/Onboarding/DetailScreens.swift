@@ -39,19 +39,29 @@ struct BaselineScreen: View {
                 }
             }
 
-            let fieldsLayout = typeSize.isAccessibilitySize
+            // Cigarettes are often bought loose; say how, so the price means what the person thinks it means.
+            if product == .cigarettes {
+                Text("How do you buy them?").dxText(.micro).padding(.top, DX.Space.xs)
+                DXFlowLayout {
+                    DXChip("By the pack", isOn: Binding(get: { !buysSingles }, set: { if $0 { setSingles(false) } }))
+                    DXChip("One at a time", isOn: Binding(get: { buysSingles }, set: { if $0 { setSingles(true) } }))
+                }
+            }
+            let fieldsLayout = typeSize.isAccessibilitySize || buysSingles
                 ? AnyLayout(VStackLayout(spacing: DX.Space.xs)) : AnyLayout(HStackLayout(alignment: .top, spacing: DX.Space.xs))
             fieldsLayout {
-                LabeledField(label: "Price") {
+                LabeledField(label: priceLabel) {
                     TextField("", value: draft.price, format: .currency(code: model.currencyCode),
                               prompt: Text(Decimal(0), format: .currency(code: model.currencyCode)).foregroundStyle(DX.Palette.faint))
                         .keyboardType(.decimalPad)
                 }
-                LabeledField(label: perPurchaseLabel) {
-                    HStack {
-                        TextField("", value: draft.unitsPerPurchase, format: .number)
-                            .keyboardType(.numberPad)
-                        Text(purchaseUnit).dxText(.subtitle)
+                if !buysSingles {
+                    LabeledField(label: perPurchaseLabel) {
+                        HStack {
+                            TextField("", value: draft.unitsPerPurchase, format: .number)
+                                .keyboardType(.numberPad)
+                            Text(purchaseUnit).dxText(.subtitle)
+                        }
                     }
                 }
             }
@@ -60,6 +70,11 @@ struct BaselineScreen: View {
                 Text("Add what one costs so we can show the money you keep.")
                     .font(DX.TextStyle.subtitle.font)
                     .foregroundStyle(DX.Palette.terracotta)
+            } else if let yearly = yearlyCost {
+                // The sum spelled out, so a price entered the wrong way shows up straight away.
+                Text("That's about \(yearly, format: .currency(code: model.currencyCode).precision(.fractionLength(0))) a year.")
+                    .font(DX.TextStyle.subtitle.font)
+                    .foregroundStyle(DX.Palette.text2)
             }
 
             Text(yearsLabel).dxText(.micro).padding(.top, DX.Space.xs)
@@ -72,6 +87,26 @@ struct BaselineScreen: View {
                 }
             }
         }
+    }
+
+    private var buysSingles: Bool { product == .cigarettes && draft.wrappedValue.unitsPerPurchase == 1 }
+
+    private func setSingles(_ singles: Bool) {
+        draft.wrappedValue.unitsPerPurchase = singles ? 1 : 20
+    }
+
+    private var priceLabel: LocalizedStringKey {
+        switch product {
+        case .cigarettes: buysSingles ? "Price of one cigarette" : "Price of a pack"
+        case .vape: "Price of a pod"
+        case .pouches: "Price of a can"
+        }
+    }
+
+    private var yearlyCost: Decimal? {
+        let d = draft.wrappedValue
+        guard let price = d.price, price > 0, d.unitsPerPurchase > 0 else { return nil }
+        return price * Decimal(d.unitsPerDay) / Decimal(d.unitsPerPurchase) * 365
     }
 
     private var eyebrow: LocalizedStringKey {

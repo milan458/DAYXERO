@@ -20,8 +20,8 @@ final class JourneyUITests: XCTestCase {
         let name = app.textFields.firstMatch
         XCTAssert(name.waitForExistence(timeout: 5))
         name.tap()
-        name.typeText("Sam")
-        tapSettled(app, "Continue")
+        // Submit from the keyboard: its return key is also labelled "Continue", so tapping by label finds two.
+        name.typeText("Sam\n")
         tap(button(app, "Disposables"))
         snap(app, "02-products")
         tapSettled(app, "Continue")
@@ -94,10 +94,12 @@ final class JourneyUITests: XCTestCase {
 
     private func rideOutCraving(_ app: XCUIApplication) {
         tap(app.buttons["Craving SOS"])
-        let passed = app.buttons["It passed"]
-        XCTAssert(passed.waitForExistence(timeout: 5))
+        // The Bio-Orb session: Pause and Coach me on screen, the outcomes in the session menu until time's up.
+        XCTAssert(app.buttons["Breathing guide"].waitForExistence(timeout: 5))
+        XCTAssert(app.buttons["Coach me"].exists)
         snap(app, "sos-session")
-        passed.tap()
+        tap(app.buttons["Session options"])
+        tap(app.buttons["It passed"])
         XCTAssert(app.staticTexts["Craving ridden out"].waitForExistence(timeout: 5))
         tap(app.buttons["Done"])
         XCTAssert(app.buttons["Craving SOS"].waitForExistence(timeout: 5))

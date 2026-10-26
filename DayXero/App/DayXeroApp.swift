@@ -89,6 +89,10 @@ struct RootView: View {
             .fullScreenCover(item: $sos.launch) { launch in
                 CravingSOSView(profile: profiles.first, source: launch.source) { sos.launch = nil }
             }
+            // Widgets read a snapshot; rebuild it after anything is saved (S17.1).
+            .onReceive(NotificationCenter.default.publisher(for: ModelContext.didSave)) { _ in
+                WidgetSync.refresh(in: modelContext, isPro: entitlement.isPro)
+            }
             .onChange(of: entitlement.isPro) { _, pro in
                 DailyReminders.isPro = pro
                 DailyReminders.refresh(in: modelContext)
@@ -105,7 +109,9 @@ struct RootView: View {
                 sos.open(source: source ?? "link")
             }
             .onChange(of: scenePhase, initial: true) { _, phase in
+                if phase == .background { WidgetSync.refresh(in: modelContext, isPro: entitlement.isPro) }
                 guard phase == .active else { return }
+                WidgetSync.refresh(in: modelContext, isPro: entitlement.isPro)
                 NRTReminders.refresh(profile: profiles.first)
                 DailyReminders.isPro = entitlement.isPro
                 DailyReminders.refresh(in: modelContext)
@@ -137,6 +143,8 @@ struct RootView: View {
         #if DEBUG
         if UserDefaults.standard.bool(forKey: "dx.showGallery") {
             DesignSystemGallery()
+        } else if let page = UserDefaults.standard.string(forKey: "dx.widgetGallery") {
+            WidgetGallery(page: page)
         } else if UserDefaults.standard.bool(forKey: "dx.paywallPreview") {
             PaywallView(name: "Milan", quitDay: Calendar.current.date(byAdding: .day, value: 7, to: .now) ?? .now,
                         model: PaywallModel(store: entitlement.store, entitlement: entitlement), onClose: {})

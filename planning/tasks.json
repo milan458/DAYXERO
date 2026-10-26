@@ -358,10 +358,18 @@
         {
           "id": "S2.14",
           "title": "Name step (S2.2b) proposed: paywall and Home greet by name but the plan never asks",
-          "status": "done",
-          "notes": "From S2 mockups; Milan to confirm.\nMilan: keep the name screen.\nBuilt; waiting on CI.\nVerified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.",
+          "status": "in_progress",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md. Built per WOnbBody/WOnbDay/WOnbGoal. Themed with the app (matches the references in dark mode); the goal screen keeps a short title because every onboarding step has one.",
           "created": "2026-10-22T20:40:00.864Z",
           "completed": "2026-10-22T22:01:09.291Z"
+        },
+        {
+          "id": "S2.15",
+          "title": "Show the water goal in the plan reveal.",
+          "status": "in_progress",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
         }
       ]
     },
@@ -475,9 +483,9 @@
         },
         {
           "id": "S3.11",
-          "title": "Set up products in App Store Connect + RevenueCat: dayxero.annual (3-day trial), dayxero.monthly, dayxero.lifetime, entitlement 'pro'",
-          "status": "blocked",
-          "notes": "From S3 build. Needs Milan's App Store Connect and RevenueCat accounts; then add the RevenueCat key to Config/Secrets.xcconfig.",
+          "title": "Set up products in App Store Connect + RevenueCat: dayxero.annual (3-day trial), dayxero.monthly, dayxero.lifetimetime, entitlement 'pro'",
+          "status": "in_progress",
+          "notes": "From S3 build. Needs Milan's App Store Connect and RevenueCat accounts; then add the RevenueCat key to Config/Secrets.xcconfig.\nStore setup workflow (.github/workflows/store-setup.yml, scripts/ci/store_setup.py) creates the App Store Connect products and the RevenueCat entitlement, offering and packages.\nApp Store Connect done: group DayXero Pro; dayxero.annual ($39.99/yr, 3-day trial) and dayxero.monthly ($9.99) READY_TO_SUBMIT with prices in 175 territories; dayxero.lifetime ($79.99) has price, availability, text and screenshot (state was MISSING_METADATA right after upload, recheck). Next: Milan creates the RevenueCat project and app, uploads the In-App Purchase key, adds RC_SECRET_KEY and RC_PROJECT_ID secrets; then run Store setup → revenuecat and save the public key as REVENUECAT_API_KEY.\nRevenueCat done: products added, entitlement 'pro' (all three products), current offering 'default' with $rc_annual, $rc_monthly, $rc_lifetime. Public SDK key in Config/Base.xcconfig. Milan's earlier entitlement 'dayxero_pro' is unused and can be deleted. Left: Paid Apps Agreement active; lifetime state to recheck; sandbox purchase on TestFlight.",
           "created": "2026-10-22T22:01:09.531Z",
           "completed": null
         }
@@ -764,6 +772,38 @@
           "notes": "From S4 build: dock SOS button opens a 'coming soon' sheet for now.\nBuilt and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.",
           "created": "2026-10-23T05:18:11.565Z",
           "completed": "2026-10-23T08:34:21.591Z"
+        },
+        {
+          "id": "S6.8",
+          "title": "Add the orb (full and mini, all states) to the S1.4 component gallery.",
+          "status": "in_progress",
+          "notes": "From DAYXERO_BIO_ORB_SPEC.md.",
+          "created": "2026-10-24T11:47:52.000Z",
+          "completed": null
+        },
+        {
+          "id": "S6.9",
+          "title": "Wire the orb into the SOS screen (3-minute session, S6.3 outcomes).",
+          "status": "in_progress",
+          "notes": "From DAYXERO_BIO_ORB_SPEC.md. Pause/Resume and Coach me under the pill; It passed / I slipped in the session menu until time's up, then the full outcomes. Reasons rotation and if-then plan card removed from the session per Milan's preview.",
+          "created": "2026-10-24T11:47:52.000Z",
+          "completed": null
+        },
+        {
+          "id": "S6.10",
+          "title": "Milan to confirm the coach copy and labels (spec section 9).",
+          "status": "blocked",
+          "notes": "From DAYXERO_BIO_ORB_SPEC.md. Built with the revised wording (COACH SPEAKING, Coach me, no lung/CO claims).",
+          "created": "2026-10-24T11:47:52.000Z",
+          "completed": null
+        },
+        {
+          "id": "S6.11",
+          "title": "SOS Live Activity upgrade (B3.1).",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
         }
       ]
     },
@@ -826,6 +866,62 @@
           "notes": "Mockups ready in tracker.\nMilan: show 'puffs not taken' only for people who picked vapes. Already the rule: counters, log rows and widget buttons come from the products chosen in onboarding.\nMilan: leave 'time regained' out.\nMilan approved S7 in chat.\nBuilt and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": "2026-10-23T08:34:21.662Z"
+        },
+        {
+          "id": "S7.5",
+          "title": "Water data model, goal calculation and logging (A3, A4).",
+          "status": "in_progress",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md. WaterProfile, WaterEntry, WaterGoal, WaterLog; unit tests for the worked example, clamps, half-glass rounding and lb input.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
+        },
+        {
+          "id": "S7.6",
+          "title": "WaterPillView, the signed-off tracker, exactly as drawn (A5).",
+          "status": "in_progress",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md. Screen recording next to reference/water/water-pill-preview.html still to attach.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
+        },
+        {
+          "id": "S7.7",
+          "title": "Water tracker screen (A6).",
+          "status": "in_progress",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md. Second button in the dock. Today list deletes by long-press menu (no swipe outside a List).",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
+        },
+        {
+          "id": "S7.8",
+          "title": "Water on Home: mini pill card with one-tap +1 (A7).",
+          "status": "in_progress",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
+        },
+        {
+          "id": "S7.9",
+          "title": "Water widget and Control Center control (+1 glass via App Intent) (A7).",
+          "status": "done",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md. Superseded by S17.7 and S17.9.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": "2026-10-26T08:25:11.000Z"
+        },
+        {
+          "id": "S7.10",
+          "title": "Apple Health sync for water: optional, off by default (A7).",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
+        },
+        {
+          "id": "S7.11",
+          "title": "Water in Insights (A7).",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
         }
       ]
     },
@@ -1128,6 +1224,22 @@
           "notes": "Mockups ready in tracker.\nMilan approved S12 in chat; findahelpline.com for helplines.\nCI 5c3fdb3 green (all tests pass). Screenshot fixes pushed: pledge photo layout, calm tool rows at largest text.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": "2026-10-23T11:22:52.000Z"
+        },
+        {
+          "id": "S12.4",
+          "title": "Reuse the orb for the breathing exercises in the stress toolkit.",
+          "status": "in_progress",
+          "notes": "From DAYXERO_BIO_ORB_SPEC.md.\nBox breathing → Box pattern, Longer out-breath → Deep calm (4·7·8), with Start, Pause/Resume, Coach me, then Continue or Again.",
+          "created": "2026-10-24T11:47:52.000Z",
+          "completed": null
+        },
+        {
+          "id": "S12.5",
+          "title": "Breathing Live Activity (B3.2).",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
         }
       ]
     },
@@ -1222,28 +1334,124 @@
       ],
       "tasks": [
         {
-          "id": "S14.1",
+          "id": "S14.01",
           "title": "Notification plan: pledge, check-in, lesson available, milestone, NRT reminders, inactivity nudges per the open decision.",
           "status": "done",
-          "notes": "Inactivity nudges follow the pause-and-replay rule (no reset), per Milan.\nMockups ready in tracker.\nMilan: keep the wording; pledge and check-in reminders pause while someone's away.\nMilan approved S14 in chat.",
+          "notes": "Inactivity nudges follow the pause-and-replay rule (no reset), per Milan.\nMockups ready in tracker.\nMilan: keep the wording; pledge and check-in reminders pause while someone's away.\nMilan approved S14 in chat.\nSuperseded by the notifications handoff tasks S14.1–S14.12.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": "2026-10-23T11:22:52.000Z"
+        },
+        {
+          "id": "S14.02",
+          "title": "Quiet hours and per-type toggles in Settings.",
+          "status": "done",
+          "notes": "Mockups ready in tracker.\nMilan approved S14 in chat.\nSuperseded by the notifications handoff tasks S14.1–S14.12.",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": "2026-10-23T11:22:52.000Z"
+        },
+        {
+          "id": "S14.03",
+          "title": "No guilt copy in any notification.",
+          "status": "done",
+          "notes": "Mockups ready in tracker.\nMilan approved S14 in chat.\nSuperseded by the notifications handoff tasks S14.1–S14.12.",
+          "created": "2026-10-22T19:48:52.060Z",
+          "completed": "2026-10-23T11:22:52.000Z"
+        },
+        {
+          "id": "S14.1",
+          "title": "NotificationPlanner: scheduling, caps, merging, quiet hours, 64-pending limit (B4).",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
         },
         {
           "id": "S14.2",
-          "title": "Quiet hours and per-type toggles in Settings.",
-          "status": "done",
-          "notes": "Mockups ready in tracker.\nMilan approved S14 in chat.",
-          "created": "2026-10-22T19:48:52.060Z",
-          "completed": "2026-10-23T11:22:52.000Z"
+          "title": "CravingPredictor: high-risk windows from logs (B4.3).",
+          "status": "in_progress",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md. CravingPredictor built with tests (3pm habit, sparse, fading, max 3 a day).",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
         },
         {
           "id": "S14.3",
-          "title": "No guilt copy in any notification.",
-          "status": "done",
-          "notes": "Mockups ready in tracker.\nMilan approved S14 in chat.",
-          "created": "2026-10-22T19:48:52.060Z",
-          "completed": "2026-10-23T11:22:52.000Z"
+          "title": "Notification categories, actions and App Intents for every type (B2).",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
+        },
+        {
+          "id": "S14.4",
+          "title": "Notification Content Extension with interactive expanded views (B2.2).",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
+        },
+        {
+          "id": "S14.5",
+          "title": "Rich attachments: lesson covers and milestone share cards.",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
+        },
+        {
+          "id": "S14.6",
+          "title": "Day Xero all-day Live Activity (B3.3).",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
+        },
+        {
+          "id": "S14.7",
+          "title": "Craving Window Guard Live Activity (B3.4).",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
+        },
+        {
+          "id": "S14.8",
+          "title": "Live Activity manager: relevance, limits, clean-up (B3.5).",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
+        },
+        {
+          "id": "S14.9",
+          "title": "Phase-based cadence (B5).",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
+        },
+        {
+          "id": "S14.10",
+          "title": "Adaptive back-off (B4.4).",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
+        },
+        {
+          "id": "S14.11",
+          "title": "Analytics events and guardrails (B7).",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
+        },
+        {
+          "id": "S14.12",
+          "title": "Milan to approve notification copy (B6 has the defaults; build with those).",
+          "status": "blocked",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "created": "2026-10-25T20:03:07.000Z",
+          "completed": null
         }
       ]
     },
@@ -1326,10 +1534,133 @@
         {
           "id": "S15.7",
           "title": "Profile button on Home opens Settings",
-          "status": "done",
-          "notes": "From S4 build: the person icon on Home does nothing yet.\nMockups ready in tracker.\nMilan approved S15 in chat.",
+          "status": "pending",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
           "created": "2026-10-23T05:18:11.612Z",
           "completed": "2026-10-23T11:22:52.000Z"
+        }
+      ]
+    },
+    {
+      "id": "S17",
+      "title": "Widgets and controls",
+      "goal": "Home Screen, Lock Screen and StandBy widgets plus Control Center controls, signed off as drawn in reference/widgets/.",
+      "signoff": {
+        "state": "signed_off",
+        "history": [
+          {
+            "time": "2026-10-26T08:25:11.000Z",
+            "state": "signed_off",
+            "by": "Claude",
+            "comment": "References signed off by Milan on 26 Oct 2026; build exactly as drawn."
+          }
+        ]
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S17.1",
+          "title": "Shared widget data snapshot in the App Group, and reload rules (section 2)",
+          "status": "in_progress",
+          "notes": "From DAYXERO_WIDGETS_HANDOFF.md. WidgetSnapshot in Core; WidgetSync rebuilds it after every save and reloads only the changed kinds.",
+          "created": "2026-10-26T08:25:11.000Z",
+          "completed": null
+        },
+        {
+          "id": "S17.2",
+          "title": "App Intents: Log water, Open SOS, Start breathing, Guard next window (section 3)",
+          "status": "in_progress",
+          "notes": "From DAYXERO_WIDGETS_HANDOFF.md. Breathing and Window Guard Live Activities built in a first version so the intents work.",
+          "created": "2026-10-26T08:25:11.000Z",
+          "completed": null
+        },
+        {
+          "id": "S17.3",
+          "title": "Custom SF Symbols: wave, pill, ring, shield (section 3.2)",
+          "status": "pending",
+          "notes": "From DAYXERO_WIDGETS_HANDOFF.md. Widgets draw these shapes directly. Controls use the closest system symbols (alternatingcurrent, capsule.portrait.bottomhalf.filled, circle.circle, shield) until the custom symbols are exported from SF Symbols on a Mac.",
+          "created": "2026-10-26T08:25:11.000Z",
+          "completed": null
+        },
+        {
+          "id": "S17.4",
+          "title": "Day counter widget: small, inline, StandBy (4.1)",
+          "status": "in_progress",
+          "notes": "From DAYXERO_WIDGETS_HANDOFF.md. Shows days clear as on Home (Quit Day counts as day 1; it reads \"Day Xero\" that day).",
+          "created": "2026-10-26T08:25:11.000Z",
+          "completed": null
+        },
+        {
+          "id": "S17.5",
+          "title": "Craving SOS widget: small and circular (4.2)",
+          "status": "in_progress",
+          "notes": "From DAYXERO_WIDGETS_HANDOFF.md.",
+          "created": "2026-10-26T08:25:11.000Z",
+          "completed": null
+        },
+        {
+          "id": "S17.6",
+          "title": "Today widget: medium (4.3)",
+          "status": "in_progress",
+          "notes": "From DAYXERO_WIDGETS_HANDOFF.md.",
+          "created": "2026-10-26T08:25:11.000Z",
+          "completed": null
+        },
+        {
+          "id": "S17.7",
+          "title": "Water widget: small and circular (4.4)",
+          "status": "in_progress",
+          "notes": "From DAYXERO_WIDGETS_HANDOFF.md.",
+          "created": "2026-10-26T08:25:11.000Z",
+          "completed": null
+        },
+        {
+          "id": "S17.8",
+          "title": "Craving forecast widget: small and rectangular (4.5)",
+          "status": "in_progress",
+          "notes": "From DAYXERO_WIDGETS_HANDOFF.md. Uses CravingPredictor (S14.2).",
+          "created": "2026-10-26T08:25:11.000Z",
+          "completed": null
+        },
+        {
+          "id": "S17.9",
+          "title": "Controls: Craving SOS, Log water, Breathe, Guard 30 min (section 5)",
+          "status": "in_progress",
+          "notes": "From DAYXERO_WIDGETS_HANDOFF.md.",
+          "created": "2026-10-26T08:25:11.000Z",
+          "completed": null
+        },
+        {
+          "id": "S17.10",
+          "title": "Rendering modes: full colour, tinted/accented, clear, vibrant (section 6)",
+          "status": "in_progress",
+          "notes": "From DAYXERO_WIDGETS_HANDOFF.md. Checked in the debug widget gallery; on-device check still needed.",
+          "created": "2026-10-26T08:25:11.000Z",
+          "completed": null
+        },
+        {
+          "id": "S17.11",
+          "title": "Privacy mode setting and redaction (section 7)",
+          "status": "in_progress",
+          "notes": "From DAYXERO_WIDGETS_HANDOFF.md. Settings › Widgets.",
+          "created": "2026-10-26T08:25:11.000Z",
+          "completed": null
+        },
+        {
+          "id": "S17.12",
+          "title": "Phase and empty states (section 8)",
+          "status": "in_progress",
+          "notes": "From DAYXERO_WIDGETS_HANDOFF.md.",
+          "created": "2026-10-26T08:25:11.000Z",
+          "completed": null
+        },
+        {
+          "id": "S17.13",
+          "title": "Widget gallery names, descriptions and previews (section 9)",
+          "status": "in_progress",
+          "notes": "From DAYXERO_WIDGETS_HANDOFF.md.",
+          "created": "2026-10-26T08:25:11.000Z",
+          "completed": null
         }
       ]
     },

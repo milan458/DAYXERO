@@ -87,7 +87,7 @@ jobs:
           shoot dark large gallery-dark -dx.showGallery YES
           shoot light large gallery-light -dx.showGallery YES
           shoot dark accessibility-extra-extra-extra-large gallery-dark-ax5 -dx.showGallery YES
-          for step in welcome age name products baseline_vape baseline_cigarettes triggers reasons past_attempts quit_day nrt reveal reminders; do
+          for step in welcome age name products baseline_vape baseline_cigarettes triggers reasons past_attempts quit_day nrt water_body water_day water_goal reveal reminders; do
             shoot dark large "onb-$step-dark" -dx.onboardingStep "$step"
           done
           for step in welcome products baseline_vape reveal; do
@@ -127,6 +127,15 @@ jobs:
           shoot dark accessibility-extra-extra-extra-large lesson-reading-dark-ax5 $D3 -dx.openLesson quit-3
           S="-dx.homeScenario day3 -dx.store pro -dx.sos YES"
           shoot dark large sos-session-dark $S -dx.sosElapsed 19
+          # The orb must move between frames: compare the ring's left edge half a second apart.
+          sleep 0.5
+          xcrun simctl io "$UDID" screenshot motion-b.png
+          sips -c 500 250 --cropOffset 500 150 shots/sos-session-dark.png --out motion-a-crop.png >/dev/null
+          sips -c 500 250 --cropOffset 500 150 motion-b.png --out motion-b-crop.png >/dev/null
+          if cmp -s motion-a-crop.png motion-b-crop.png; then
+            echo "::error title=Bio-Orb isn't animating::The ring looks the same in two frames half a second apart."
+            exit 1
+          fi
           shoot light large sos-session-light $S -dx.sosElapsed 19
           shoot dark large sos-photo-dark $S -dx.sosElapsed 92
           shoot dark large sos-timeup-dark $S -dx.sosElapsed 181
@@ -200,6 +209,19 @@ jobs:
           shoot dark large ms-row-dark $P12 -dx.tab progress
           shoot dark large ms-share-dark $P12 -dx.tab progress -dx.shareCard YES
           shoot light large ms-share-light $P12 -dx.tab progress -dx.shareCard YES
+          shoot dark large water-tracker-dark $P12 -dx.tab water -dx.seedWater partial
+          shoot light large water-tracker-light $P12 -dx.tab water -dx.seedWater partial
+          shoot dark large water-tracker-full-dark $P12 -dx.tab water -dx.seedWater full
+          shoot dark accessibility-extra-extra-extra-large water-tracker-dark-ax5 $P12 -dx.tab water -dx.seedWater partial
+          shoot dark large water-tracker-empty-dark $P12 -dx.tab water
+          shoot light large onb-water_body-light -dx.onboardingStep water_body
+          shoot dark accessibility-extra-extra-extra-large onb-water_goal-dark-ax5 -dx.onboardingStep water_goal
+          shoot dark large home-water-dark $P12 -dx.seedWater partial
+          shoot dark large calm-box-orb-dark $P12 -dx.tab program -dx.openCalm boxBreathing -dx.calmElapsed 6
+          shoot dark large calm-478-orb-dark $P12 -dx.tab program -dx.openCalm longerOutBreath
+          for page in home clear lock private standby states; do
+            shoot dark large "widgets-$page" -dx.widgetGallery "$page"
+          done
           shoot dark large set-main-dark $P12 -dx.openSettings settings
           shoot light large set-main-light $P12 -dx.openSettings settings
           shoot dark accessibility-extra-extra-extra-large set-main-dark-ax5 $P12 -dx.openSettings settings
@@ -234,7 +256,7 @@ jobs:
                   if key not in seen:
                       seen.add(key)
                       out.append(f"::error file={path},line={m.group(2)},col={m.group(3)}::{m.group(5)}")
-              elif re.search(r"(Test .* failed|✘|error: -|xcodebuild: error|Fatal error|failed with exit code)", line):
+              elif re.search(r"(Test .* failed|✘|error|Fatal error|failed with exit code|Multiple commands produce|While |Stack dump|^\d+\.\t)", line, re.I) and len(line) < 1500:
                   out.append("::error::" + line.strip()[:900])
           tail = open("build.log", errors="replace").read()[-6000:].replace("\n", "%0A")
           out.append("::error title=Build log tail::" + tail)

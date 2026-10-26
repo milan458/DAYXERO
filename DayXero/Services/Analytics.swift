@@ -24,6 +24,11 @@ enum AnalyticsEvent {
     case shareCardCreated(milestone: String)
     case shareCardShared(destination: String)
 
+    /// Water (handoff B7): the goal as a bucket only; never height or weight.
+    case waterGoalSet(source: String, goalBucket: String)
+    case waterLogged(source: String, drink: String)
+    case waterGoalMet
+
     var name: String {
         switch self {
         case .onboardingStepViewed: "onboarding_step_viewed"
@@ -41,6 +46,9 @@ enum AnalyticsEvent {
         case .slipLogged: "slip_logged"
         case .shareCardCreated: "share_card_created"
         case .shareCardShared: "share_card_shared"
+        case .waterGoalSet: "water_goal_set"
+        case .waterLogged: "water_logged"
+        case .waterGoalMet: "water_goal_met"
         }
     }
 
@@ -55,7 +63,9 @@ enum AnalyticsEvent {
         case let .cravingSessionEnded(outcome, seconds): ["outcome": outcome, "seconds": String(seconds)]
         case let .shareCardCreated(milestone): ["milestone": milestone]
         case let .shareCardShared(destination): ["destination": destination]
-        case .onboardingCompleted, .paywallViewed, .paywallDismissed: [:]
+        case let .waterGoalSet(source, goalBucket): ["source": source, "goal_bucket": goalBucket]
+        case let .waterLogged(source, drink): ["source": source, "drink": drink]
+        case .onboardingCompleted, .paywallViewed, .paywallDismissed, .waterGoalMet: [:]
         }
     }
 }

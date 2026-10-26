@@ -19,6 +19,9 @@ struct SettingsSheet: View {
     @Environment(\.modelContext) private var context
     @Environment(Entitlement.self) private var entitlement
     @AppStorage("dx.sosHaptics") private var haptics = true
+    @AppStorage("dx.voiceGuidance") private var voiceGuidance = true
+    @AppStorage(WidgetSync.privacyKey) private var widgetPrivacy = false
+    @AppStorage(WidgetSync.privacyHomeKey) private var widgetPrivacyHome = false
     @AppStorage(AppearanceSetting.key) private var appearance = AppearanceSetting.automatic.rawValue
     @State private var path: [Page] = []
     @State private var confirmDelete = false
@@ -43,6 +46,7 @@ struct SettingsSheet: View {
                 Section {
                     NavigationLink(value: Page.reminders) { SettingLabel("Notifications", systemImage: "bell") }
                     Toggle(isOn: $haptics) { SettingLabel("Breathing haptics", systemImage: "water.waves") }
+                    Toggle(isOn: $voiceGuidance) { SettingLabel("Voice guidance", systemImage: "waveform") }
                     Picker(selection: $appearance) {
                         ForEach(AppearanceSetting.allCases, id: \.rawValue) { Text($0.title).tag($0.rawValue) }
                     } label: {
@@ -53,6 +57,25 @@ struct SettingsSheet: View {
                 } footer: {
                     Text("Other haptics follow System Haptics in iPhone Settings.")
                 }
+                // Widgets (S17.11): what widgets anyone can see show.
+                Section {
+                    Toggle(isOn: $widgetPrivacy) { SettingLabel("Privacy mode on the Lock Screen", systemImage: "eye.slash") }
+                    if widgetPrivacy {
+                        Toggle(isOn: $widgetPrivacyHome) { SettingLabel("Apply to Home Screen", systemImage: "apps.iphone") }
+                    }
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Add Craving SOS to your Lock Screen").font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body))
+                        Text("Long-press the Lock Screen, tap Customize, then swap the torch or camera button for Craving SOS.")
+                            .dxText(.subtitle)
+                    }
+                    .padding(.vertical, 2)
+                } header: {
+                    Text("Widgets")
+                } footer: {
+                    Text("Hides money and the word nicotine from widgets anyone can see.")
+                }
+                .onChange(of: widgetPrivacy) { WidgetSync.refresh(in: context, isPro: entitlement.isPro) }
+                .onChange(of: widgetPrivacyHome) { WidgetSync.refresh(in: context, isPro: entitlement.isPro) }
                 Section("Subscription") {
                     NavigationLink(value: Page.subscription) {
                         LabeledContent { Text(entitlement.isPro ? "Pro" : "Free") } label: { SettingLabel("DayXero Pro", systemImage: "star") }
@@ -232,6 +255,22 @@ struct ProductEditor: View {
     @Environment(\.dismiss) private var dismiss
     @State private var price = ""
 
+    private var priceLabel: LocalizedStringKey {
+        switch use.product {
+        case .cigarettes: use.unitsPerPurchase == 1 ? "Price of one cigarette" : "Price of a pack"
+        case .vape: "Price of a pod"
+        case .pouches: "Price of a can"
+        }
+    }
+
+    private var perPurchaseLabel: LocalizedStringKey {
+        switch use.product {
+        case .cigarettes: "Cigarettes in a pack"
+        case .vape: "Puffs in a pod"
+        case .pouches: "Pouches in a can"
+        }
+    }
+
     var body: some View {
         NavigationStack {
             Form {
@@ -239,11 +278,25 @@ struct ProductEditor: View {
                     Stepper(value: $use.unitsPerDay, in: 1...2000, step: use.product == .vape ? 10 : 1) {
                         LabeledContent { Text(verbatim: "\(Int(use.unitsPerDay))") } label: { Text("\(Text(use.product.unit).foregroundStyle(DX.Palette.text)) a day") }
                     }
-                    LabeledContent("Price") {
+                    if use.product == .cigarettes {
+                        Picker("How you buy them", selection: Binding(get: { use.unitsPerPurchase == 1 },
+                                                                      set: { use.unitsPerPurchase = $0 ? 1 : 20 })) {
+                            Text("By the pack").tag(false)
+                            Text("One at a time").tag(true)
+                        }
+                    }
+                    LabeledContent(priceLabel) {
                         TextField("10.00", text: $price).keyboardType(.decimalPad).multilineTextAlignment(.trailing)
                     }
-                    Stepper(value: $use.unitsPerPurchase, in: 1...5000, step: use.product == .vape ? 50 : 1) {
-                        LabeledContent { Text(verbatim: "\(Int(use.unitsPerPurchase))") } label: { Text("\(Text(use.product.unit)) per purchase") }
+                    if !(use.product == .cigarettes && use.unitsPerPurchase == 1) {
+                        Stepper(value: $use.unitsPerPurchase, in: 1...5000, step: use.product == .vape ? 50 : 1) {
+                            LabeledContent { Text(verbatim: "\(Int(use.unitsPerPurchase))") } label: { Text(perPurchaseLabel) }
+                        }
+                    }
+                } footer: {
+                    if let value = Decimal(string: price.replacingOccurrences(of: ",", with: ".")), value > 0, use.unitsPerPurchase > 0 {
+                        let yearly = value * Decimal(use.unitsPerDay) / Decimal(use.unitsPerPurchase) * 365
+                        Text("That's about \(yearly, format: .currency(code: profile.currencyCode).precision(.fractionLength(0))) a year.")
                     }
                 }
                 if !use.isPrimary {
@@ -505,6 +558,8 @@ enum DataTools {
         let pledges = (try? context.fetch(FetchDescriptor<Pledge>(sortBy: [SortDescriptor(\.day)]))) ?? []
         let plans = (try? context.fetch(FetchDescriptor<IfThenPlan>())) ?? []
         let tools = (try? context.fetch(FetchDescriptor<ToolUse>())) ?? []
+        let water = (try? context.fetch(FetchDescriptor<WaterEntry>(sortBy: [SortDescriptor(\.timestamp)]))) ?? []
+        let waterGoal = (try? context.fetch(FetchDescriptor<WaterProfile>()))?.first?.effectiveGoalMl
         typealias J = [String: Any]
         let products: [J] = profile.products.map {
             ["product": $0.productRaw, "main": $0.isPrimary, "perDay": $0.unitsPerDay, "price": "\($0.pricePerPurchase)", "perPurchase": $0.unitsPerPurchase]
@@ -528,9 +583,12 @@ enum DataTools {
         }
         let plansJSON: [J] = plans.map { ["situation": $0.situation, "action": $0.action] }
         let toolsJSON: [J] = tools.map { ["tool": $0.toolRaw, "at": n(date($0.startedAt)), "calmer": n($0.calmer)] }
+        // Water drinks and the goal; height and weight stay out of exports (handoff A4).
+        let waterJSON: J = ["goalMl": n(waterGoal), "drinks": water.map { ["at": n(date($0.timestamp)), "drink": $0.drinkId, "ml": $0.amountMl] as J }]
         let json: J = [
             "exportedAt": iso.string(from: .now), "profile": profileJSON, "program": program, "logs": logsJSON,
             "checkIns": checkInsJSON, "pledges": pledges.map { n(date($0.madeAt)) }, "plans": plansJSON, "calmTools": toolsJSON,
+            "water": waterJSON,
         ]
         guard let data = try? JSONSerialization.data(withJSONObject: json, options: [.prettyPrinted, .sortedKeys]) else { return nil }
         let name = "dayxero-export-\(Date.now.formatted(.iso8601.year().month().day())).json"
@@ -546,6 +604,8 @@ enum DataTools {
         try? context.delete(model: IfThenPlan.self)
         try? context.delete(model: WeeklyCheckIn.self)
         try? context.delete(model: ToolUse.self)
+        try? context.delete(model: WaterEntry.self)
+        try? context.delete(model: WaterProfile.self)
         try? context.delete(model: UserProfile.self)
         try? context.save()
         for key in UserDefaults.standard.dictionaryRepresentation().keys where key.hasPrefix("dx.") {

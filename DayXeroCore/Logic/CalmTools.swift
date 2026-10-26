@@ -19,7 +19,7 @@ public enum CalmTool: String, CaseIterable, Sendable, Identifiable {
     public var detail: LocalizedStringResource {
         switch self {
         case .boxBreathing: "In, hold, out, hold. Four counts each."
-        case .longerOutBreath: "Breathe out a little longer than you breathe in."
+        case .longerOutBreath: "In for 4, hold for 7, out for 8."
         case .grounding: "Name what you can see, feel, hear, smell and taste."
         case .noticeAndName: "Spot the thought, give it a label, let it be."
         case .dropAnchor: "Feet on the floor, notice the room, come back."
@@ -28,8 +28,8 @@ public enum CalmTool: String, CaseIterable, Sendable, Identifiable {
 
     public var minutes: Int {
         switch self {
-        case .boxBreathing, .longerOutBreath, .grounding: 2
-        case .noticeAndName, .dropAnchor: 1
+        case .grounding: 2
+        case .boxBreathing, .longerOutBreath, .noticeAndName, .dropAnchor: 1
         }
     }
 
@@ -43,10 +43,12 @@ public enum CalmTool: String, CaseIterable, Sendable, Identifiable {
         }
     }
 
-    /// Timed tools run this long; step-through tools are as long as you take.
-    public var seconds: TimeInterval? {
+    /// Breathing tools run on the Bio-Orb with this pattern from breathing_orb_data.json (S12.4).
+    /// They end after the pattern's recommended cycles; the other tools are as long as you take.
+    public var orbPattern: String? {
         switch self {
-        case .boxBreathing, .longerOutBreath: 120
+        case .boxBreathing: "box"
+        case .longerOutBreath: "478"
         case .grounding, .noticeAndName, .dropAnchor: nil
         }
     }

@@ -24,6 +24,7 @@ struct DesignSystemGallery: View {
                     rows
                     DXTimerBanner("Craving wave", endDate: .now.addingTimeInterval(CravingSession.length))
                     states
+                    bioOrb
                 }
                 .padding(.horizontal, DX.Space.m)
                 .padding(.top, DX.Space.xl)
@@ -199,6 +200,23 @@ struct DesignSystemGallery: View {
         }
     }
 
+    /// The Bio-Orb (S6.8): full and mini, breathing, SOS and finished.
+    private var bioOrb: some View {
+        section("Bio-Orb") {
+            VStack(spacing: 24) {
+                GalleryOrb(mode: .sos(seconds: 180), pattern: "wave", mini: false, showPill: true)
+                HStack(spacing: 0) {
+                    GalleryOrb(mode: .breathing, pattern: "box", mini: true)
+                    GalleryOrb(mode: .breathing, pattern: "478", mini: true, finished: true)
+                }
+                GalleryOrb(mode: .sos(seconds: 180), pattern: "wave", mini: true, finished: true)
+            }
+            .padding(.vertical, DX.Space.l)
+            .frame(maxWidth: .infinity)
+            .background(Color.black, in: RoundedRectangle(cornerRadius: 40, style: .continuous))
+        }
+    }
+
     private func section<Content: View>(_ title: LocalizedStringKey, @ViewBuilder content: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: DX.Space.m) {
             Text(title).dxText(.title).accessibilityAddTraits(.isHeader)
@@ -237,4 +255,33 @@ struct DesignSystemGallery: View {
 
 #Preview("Largest text") {
     DesignSystemGallery().environment(\.dynamicTypeSize, .accessibility3)
+}
+
+/// A running orb for the gallery, with its own clock.
+private struct GalleryOrb: View {
+    @State private var engine: OrbEngine
+    @State private var clock = OrbClock()
+    let mini: Bool
+    var showPill = false
+
+    init(mode: BreathSession.Mode, pattern: String, mini: Bool, showPill: Bool = false, finished: Bool = false) {
+        let engine = OrbEngine(mode: mode, pattern: pattern)
+        if finished { engine.skip(seconds: 10_000) }
+        _engine = State(initialValue: engine)
+        self.mini = mini
+        self.showPill = showPill
+    }
+
+    var body: some View {
+        VStack(spacing: 24) {
+            BioOrbView(engine: engine, mini: mini, side: BioOrbView.side(mini: mini, available: mini ? 216 : 390))
+                .frame(width: mini ? 200 : 340, height: mini ? 200 : 340)
+            if showPill { OrbTranscriptPill(engine: engine).padding(.horizontal, DX.Space.s) }
+        }
+        .onAppear {
+            clock.attach(engine, reduceMotion: false)
+            engine.start()
+        }
+        .onDisappear { clock.stop() }
+    }
 }

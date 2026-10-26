@@ -65,6 +65,23 @@ enum DebugScenario: String {
                 if when < now { context.insert(LogEntry(kind: .use, product: product, timestamp: when)) }
             }
         }
+        // Water like the reference: 72 kg, works out, 2.75 L goal, 1.25 L today, five goal days before it (S7.7).
+        // -dx.seedWater full fills today to the goal.
+        if let water = UserDefaults.standard.string(forKey: "dx.seedWater") {
+            let clock = DayClock(calendar: calendar, boundaryHour: 4)
+            let goal = WaterGoal.calculate(weightKg: 72, activity: .worksOut, climate: .mild).goalMl
+            context.insert(WaterProfile(heightCm: 178, weightKg: 72, activity: .worksOut, climate: .mild, units: .metric, goalMl: goal))
+            for back in 1...5 {
+                let day = clock.day(containing: now.addingTimeInterval(Double(-back) * 86_400))
+                for glass in 0..<11 { context.insert(WaterEntry(drink: .glass, timestamp: day.addingTimeInterval(Double(9 * 3600 + glass * 3000)))) }
+            }
+            let today = clock.day(containing: now)
+            let start = max(today.addingTimeInterval(5 * 3600), now.addingTimeInterval(-4 * 3600))
+            let glasses = water == "full" ? 11 : 5
+            for glass in 0..<glasses {
+                context.insert(WaterEntry(drink: .glass, timestamp: min(start.addingTimeInterval(Double(glass) * 600), now.addingTimeInterval(-60))))
+            }
+        }
         // Pledged an hour ago, for the "Pledged at" card (S11.1).
         if UserDefaults.standard.bool(forKey: "dx.seedPledge") {
             context.insert(Pledge(day: DayClock(calendar: calendar, boundaryHour: 4).day(containing: now), madeAt: now.addingTimeInterval(-3600)))
