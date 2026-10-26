@@ -902,10 +902,10 @@
         {
           "id": "S7.9",
           "title": "Water widget and Control Center control (+1 glass via App Intent) (A7).",
-          "status": "pending",
-          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "status": "done",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md. Superseded by S17.7 and S17.9.",
           "created": "2026-10-25T20:03:07.000Z",
-          "completed": null
+          "completed": "2026-10-26T08:25:11.000Z"
         },
         {
           "id": "S7.10",
@@ -1368,8 +1368,8 @@
         {
           "id": "S14.2",
           "title": "CravingPredictor: high-risk windows from logs (B4.3).",
-          "status": "pending",
-          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "status": "in_progress",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md. CravingPredictor built with tests (3pm habit, sparse, fading, max 3 a day).",
           "created": "2026-10-25T20:03:07.000Z",
           "completed": null
         },
@@ -1538,6 +1538,129 @@
           "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
           "created": "2026-10-23T05:18:11.612Z",
           "completed": "2026-10-23T11:22:52.000Z"
+        }
+      ]
+    },
+    {
+      "id": "S17",
+      "title": "Widgets and controls",
+      "goal": "Home Screen, Lock Screen and StandBy widgets plus Control Center controls, signed off as drawn in reference/widgets/.",
+      "signoff": {
+        "state": "signed_off",
+        "history": [
+          {
+            "time": "2026-10-26T08:25:11.000Z",
+            "state": "signed_off",
+            "by": "Claude",
+            "comment": "References signed off by Milan on 26 Oct 2026; build exactly as drawn."
+          }
+        ]
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S17.1",
+          "title": "Shared widget data snapshot in the App Group, and reload rules (section 2)",
+          "status": "in_progress",
+          "notes": "From DAYXERO_WIDGETS_HANDOFF.md. WidgetSnapshot in Core; WidgetSync rebuilds it after every save and reloads only the changed kinds.",
+          "created": "2026-10-26T08:25:11.000Z",
+          "completed": null
+        },
+        {
+          "id": "S17.2",
+          "title": "App Intents: Log water, Open SOS, Start breathing, Guard next window (section 3)",
+          "status": "in_progress",
+          "notes": "From DAYXERO_WIDGETS_HANDOFF.md. Breathing and Window Guard Live Activities built in a first version so the intents work.",
+          "created": "2026-10-26T08:25:11.000Z",
+          "completed": null
+        },
+        {
+          "id": "S17.3",
+          "title": "Custom SF Symbols: wave, pill, ring, shield (section 3.2)",
+          "status": "pending",
+          "notes": "From DAYXERO_WIDGETS_HANDOFF.md. Widgets draw these shapes directly. Controls use the closest system symbols (alternatingcurrent, capsule.portrait.bottomhalf.filled, circle.circle, shield) until the custom symbols are exported from SF Symbols on a Mac.",
+          "created": "2026-10-26T08:25:11.000Z",
+          "completed": null
+        },
+        {
+          "id": "S17.4",
+          "title": "Day counter widget: small, inline, StandBy (4.1)",
+          "status": "in_progress",
+          "notes": "From DAYXERO_WIDGETS_HANDOFF.md. Shows days clear as on Home (Quit Day counts as day 1; it reads \"Day Xero\" that day).",
+          "created": "2026-10-26T08:25:11.000Z",
+          "completed": null
+        },
+        {
+          "id": "S17.5",
+          "title": "Craving SOS widget: small and circular (4.2)",
+          "status": "in_progress",
+          "notes": "From DAYXERO_WIDGETS_HANDOFF.md.",
+          "created": "2026-10-26T08:25:11.000Z",
+          "completed": null
+        },
+        {
+          "id": "S17.6",
+          "title": "Today widget: medium (4.3)",
+          "status": "in_progress",
+          "notes": "From DAYXERO_WIDGETS_HANDOFF.md.",
+          "created": "2026-10-26T08:25:11.000Z",
+          "completed": null
+        },
+        {
+          "id": "S17.7",
+          "title": "Water widget: small and circular (4.4)",
+          "status": "in_progress",
+          "notes": "From DAYXERO_WIDGETS_HANDOFF.md.",
+          "created": "2026-10-26T08:25:11.000Z",
+          "completed": null
+        },
+        {
+          "id": "S17.8",
+          "title": "Craving forecast widget: small and rectangular (4.5)",
+          "status": "in_progress",
+          "notes": "From DAYXERO_WIDGETS_HANDOFF.md. Uses CravingPredictor (S14.2).",
+          "created": "2026-10-26T08:25:11.000Z",
+          "completed": null
+        },
+        {
+          "id": "S17.9",
+          "title": "Controls: Craving SOS, Log water, Breathe, Guard 30 min (section 5)",
+          "status": "in_progress",
+          "notes": "From DAYXERO_WIDGETS_HANDOFF.md.",
+          "created": "2026-10-26T08:25:11.000Z",
+          "completed": null
+        },
+        {
+          "id": "S17.10",
+          "title": "Rendering modes: full colour, tinted/accented, clear, vibrant (section 6)",
+          "status": "in_progress",
+          "notes": "From DAYXERO_WIDGETS_HANDOFF.md. Checked in the debug widget gallery; on-device check still needed.",
+          "created": "2026-10-26T08:25:11.000Z",
+          "completed": null
+        },
+        {
+          "id": "S17.11",
+          "title": "Privacy mode setting and redaction (section 7)",
+          "status": "in_progress",
+          "notes": "From DAYXERO_WIDGETS_HANDOFF.md. Settings › Widgets.",
+          "created": "2026-10-26T08:25:11.000Z",
+          "completed": null
+        },
+        {
+          "id": "S17.12",
+          "title": "Phase and empty states (section 8)",
+          "status": "in_progress",
+          "notes": "From DAYXERO_WIDGETS_HANDOFF.md.",
+          "created": "2026-10-26T08:25:11.000Z",
+          "completed": null
+        },
+        {
+          "id": "S17.13",
+          "title": "Widget gallery names, descriptions and previews (section 9)",
+          "status": "in_progress",
+          "notes": "From DAYXERO_WIDGETS_HANDOFF.md.",
+          "created": "2026-10-26T08:25:11.000Z",
+          "completed": null
         }
       ]
     },
