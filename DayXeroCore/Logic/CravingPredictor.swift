@@ -62,8 +62,11 @@ public enum CravingPredictor {
             for d in days { for s in 0..<slotsPerDay { row[s] += grid[d][s] / Double(days.count) } }
         }
         // ±30 minutes of smoothing.
-        let smoothed = (0..<slotsPerDay).map { s in
-            (row[max(s - 1, 0)] * 0.5 + row[s] + row[min(s + 1, slotsPerDay - 1)] * 0.5) / 2
+        var smoothed = Array(repeating: 0.0, count: slotsPerDay)
+        for s in 0..<slotsPerDay {
+            let before: Double = row[max(s - 1, 0)] * 0.5
+            let after: Double = row[min(s + 1, slotsPerDay - 1)] * 0.5
+            smoothed[s] = (before + row[s] + after) / 2
         }
         guard let peak = smoothed.max(), peak > 0 else { return [] }
 
@@ -76,7 +79,7 @@ public enum CravingPredictor {
             if !busy, let begun = start { runs.append((begun, s)); start = nil }
         }
         let dayStart = calendar.startOfDay(for: day)
-        let result: [Window] = runs.compactMap { run in
+        let result: [Window] = runs.compactMap { run -> Window? in
             let begin = dayStart.addingTimeInterval(Double(run.0) * 1800)
             let finish = dayStart.addingTimeInterval(Double(run.1) * 1800)
             // At least three recent events fell in this stretch of the day (on any day).
