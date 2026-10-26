@@ -255,6 +255,22 @@ struct ProductEditor: View {
     @Environment(\.dismiss) private var dismiss
     @State private var price = ""
 
+    private var priceLabel: LocalizedStringKey {
+        switch use.product {
+        case .cigarettes: use.unitsPerPurchase == 1 ? "Price of one cigarette" : "Price of a pack"
+        case .vape: "Price of a pod"
+        case .pouches: "Price of a can"
+        }
+    }
+
+    private var perPurchaseLabel: LocalizedStringKey {
+        switch use.product {
+        case .cigarettes: "Cigarettes in a pack"
+        case .vape: "Puffs in a pod"
+        case .pouches: "Pouches in a can"
+        }
+    }
+
     var body: some View {
         NavigationStack {
             Form {
@@ -262,11 +278,25 @@ struct ProductEditor: View {
                     Stepper(value: $use.unitsPerDay, in: 1...2000, step: use.product == .vape ? 10 : 1) {
                         LabeledContent { Text(verbatim: "\(Int(use.unitsPerDay))") } label: { Text("\(Text(use.product.unit).foregroundStyle(DX.Palette.text)) a day") }
                     }
-                    LabeledContent("Price") {
+                    if use.product == .cigarettes {
+                        Picker("How you buy them", selection: Binding(get: { use.unitsPerPurchase == 1 },
+                                                                      set: { use.unitsPerPurchase = $0 ? 1 : 20 })) {
+                            Text("By the pack").tag(false)
+                            Text("One at a time").tag(true)
+                        }
+                    }
+                    LabeledContent(priceLabel) {
                         TextField("10.00", text: $price).keyboardType(.decimalPad).multilineTextAlignment(.trailing)
                     }
-                    Stepper(value: $use.unitsPerPurchase, in: 1...5000, step: use.product == .vape ? 50 : 1) {
-                        LabeledContent { Text(verbatim: "\(Int(use.unitsPerPurchase))") } label: { Text("\(Text(use.product.unit)) per purchase") }
+                    if !(use.product == .cigarettes && use.unitsPerPurchase == 1) {
+                        Stepper(value: $use.unitsPerPurchase, in: 1...5000, step: use.product == .vape ? 50 : 1) {
+                            LabeledContent { Text(verbatim: "\(Int(use.unitsPerPurchase))") } label: { Text(perPurchaseLabel) }
+                        }
+                    }
+                } footer: {
+                    if let value = Decimal(string: price.replacingOccurrences(of: ",", with: ".")), value > 0, use.unitsPerPurchase > 0 {
+                        let yearly = value * Decimal(use.unitsPerDay) / Decimal(use.unitsPerPurchase) * 365
+                        Text("That's about \(yearly, format: .currency(code: profile.currencyCode).precision(.fractionLength(0))) a year.")
                     }
                 }
                 if !use.isPrimary {
