@@ -8,18 +8,19 @@ import WidgetKit
 
 /// Where a water log came from, for analytics and the entry's source.
 enum WaterLogSource: String, AppEnum {
-    case widget, controlCenter, siri, liveActivity
+    // App Intent enum names can't contain "Siri" (ITMS-90626), so voice and Shortcuts logs are "shortcut".
+    case widget, controlCenter, shortcut, liveActivity
 
     static var typeDisplayRepresentation: TypeDisplayRepresentation { "Source" }
     static var caseDisplayRepresentations: [WaterLogSource: DisplayRepresentation] {
-        [.widget: "Widget", .controlCenter: "Control Center", .siri: "Siri", .liveActivity: "Live Activity"]
+        [.widget: "Widget", .controlCenter: "Control Center", .shortcut: "Shortcut", .liveActivity: "Live Activity"]
     }
 
     var source: WaterSource {
         switch self {
         case .widget: .widget
         case .controlCenter: .controlCenter
-        case .siri: .siri
+        case .shortcut: .siri
         case .liveActivity: .liveActivity
         }
     }
@@ -30,7 +31,7 @@ struct LogWaterIntent: AppIntent {
     static let title: LocalizedStringResource = "Log water"
     static let description = IntentDescription("Logs a glass of water, or your usual drink.")
 
-    @Parameter(title: "Source", default: .siri) var from: WaterLogSource
+    @Parameter(title: "Source", default: .shortcut) var from: WaterLogSource
 
     init() {}
 
