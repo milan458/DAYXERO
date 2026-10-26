@@ -1,0 +1,12 @@
+{
+  // Static site for dayxero.in, served by the "dayxero" Cloudflare Worker.
+  "name": "dayxero",                  // must match the Worker name exactly
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": ".",                 // this folder
+    "not_found_handling": "404-page"  // shows 404.html for missing pages
+  },
+  "observability": { "enabled": true },
+  "workers_dev": true,
+  "preview_urls": true
+}
