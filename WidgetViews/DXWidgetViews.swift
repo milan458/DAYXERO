@@ -352,7 +352,7 @@ struct ForecastWidgetView: View {
             }
             if let window {
                 if !isPrivate(snapshot, family) {
-                    Text(window.start, format: .dateTime.hour().minute()).font(.system(size: 22, weight: .bold))
+                    Text(verbatim: "\(hourText(window.start, prefix: false)) \(meridiem(window.start))").font(.system(size: 22, weight: .bold))
                 }
                 HStack(spacing: 0) {
                     if !isPrivate(snapshot, family), let trigger = window.trigger {
