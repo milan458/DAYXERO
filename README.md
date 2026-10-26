@@ -5,4 +5,4 @@ A native iOS (SwiftUI) quit program for nicotine: cigarettes, vapes and pouches,
 - Build plan: [`docs/DAYXERO_V1_HANDOFF.md`](docs/DAYXERO_V1_HANDOFF.md)
 - Design methodology: [`docs/DESIGN_METHODOLOGY.md`](docs/DESIGN_METHODOLOGY.md) (it overrides the plan on visual questions)
 - Task tracker: `npm run tracker` → http://localhost:4321 (see [`planning/README.md`](planning/README.md))
-- Website: [`website/`](website/) is served at https://dayxero.in by the `dayxero` Cloudflare Worker, which deploys every push to `main` (root directory `/website`)
+- Website: [`website/`](website/) is served at https://dayxero.in by the `dayxero` Cloudflare Worker; the `Website` workflow deploys it on every push to `main` that touches `website/`
