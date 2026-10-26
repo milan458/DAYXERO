@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=844">
+<meta charset="utf-8">
+<title>StandBy widgets</title>
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;800&amp;family=JetBrains+Mono:wght@600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+<div style="width: 844px; height: 390px; box-sizing: border-box; background: #000000; font-family: Inter, sans-serif; color: #FFFFFF; display: flex; gap: 20px; padding: 24px 40px;">
+
+  <div style="flex: 1 1 0; border-radius: 36px; background: #050604; display: flex; align-items: center; gap: 24px; padding: 0 28px;">
+    <svg width="206" height="206" viewBox="0 0 230 230" role="img" aria-label="12 days nicotine-free" style="flex-shrink: 0;">
+      <defs>
+        <radialGradient id="ws-halo" cx="50%" cy="50%" r="50%"><stop offset="0.32" stop-color="#43511C" stop-opacity="0.5"/><stop offset="0.76" stop-color="#BCC388" stop-opacity="0.18"/><stop offset="1" stop-color="#BCC388" stop-opacity="0"/></radialGradient>
+        <radialGradient id="ws-lens" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#10160A"/><stop offset="0.55" stop-color="#070A04"/><stop offset="0.9" stop-color="#040602"/><stop offset="1" stop-color="#040602" stop-opacity="0"/></radialGradient>
+        <filter id="ws-g1" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="7"/></filter>
+        <filter id="ws-g2" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3"/></filter>
+      </defs>
+      <circle cx="115" cy="115" r="112" fill="url(#ws-halo)"/>
+      <g style="mix-blend-mode: screen;">
+        <ellipse cx="115" cy="115" rx="80" ry="77" fill="none" stroke="#BCC388" stroke-width="18" stroke-opacity="0.5" filter="url(#ws-g1)" transform="rotate(18 115 115)"/>
+        <ellipse cx="115" cy="115" rx="80" ry="77" fill="none" stroke="#43511C" stroke-width="16" stroke-opacity="0.8" transform="rotate(18 115 115)"/>
+        <ellipse cx="115" cy="115" rx="77" ry="79" fill="none" stroke="#BCC388" stroke-width="8" stroke-opacity="0.65" filter="url(#ws-g2)" transform="rotate(-24 115 115)"/>
+        <ellipse cx="115" cy="115" rx="76" ry="75" fill="none" stroke="#BCC388" stroke-width="4" stroke-opacity="0.9" transform="rotate(40 115 115)"/>
+        <ellipse cx="115" cy="115" rx="75" ry="76.5" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-opacity="0.92" transform="rotate(-62 115 115)"/>
+      </g>
+      <circle cx="115" cy="115" r="64" fill="url(#ws-lens)"/>
+      <text x="115" y="132" text-anchor="middle" font-family="Inter, sans-serif" font-size="50" font-weight="800" letter-spacing="-1.5" fill="#FFFFFF">12</text>
+    </svg>
+    <div style="display: flex; flex-direction: column; gap: 4px;">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; letter-spacing: 1px; color: #BCC388;">DAYS FREE</span>
+      <span style="font-size: 40px; font-weight: 800; letter-spacing: -1px; line-height: 1;">6:42:18</span>
+      <span style="font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.55);">into day 13</span>
+      <span style="margin-top: 14px; font-size: 22px; font-weight: 800;">$84 <span style="font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.55);">kept</span></span>
+    </div>
+  </div>
+
+  <div style="flex: 0 0 290px; border-radius: 36px; background: #050604; display: flex; align-items: center; gap: 22px; padding: 0 26px;">
+    <svg width="110" height="250" viewBox="0 0 110 250" role="img" aria-label="Water, 6 of 11 glasses">
+      <defs>
+        <clipPath id="ws-pill"><rect x="5" y="5" width="100" height="240" rx="50"/></clipPath>
+        <linearGradient id="ws-liq" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E9EECF"/><stop offset="1" stop-color="#9DA66A"/></linearGradient>
+      </defs>
+      <g clip-path="url(#ws-pill)">
+        <rect x="0" y="0" width="110" height="250" fill="#0C0F08"/>
+        <path d="M0 114 Q 13.75 106 27.5 114 T 55 114 T 82.5 114 T 110 114 L 110 250 L 0 250 Z" fill="url(#ws-liq)"/>
+        <rect x="17" y="30" width="7" height="170" rx="3.5" fill="#FFFFFF" fill-opacity="0.16"/>
+      </g>
+      <rect x="5" y="5" width="100" height="240" rx="50" fill="none" stroke="#FFFFFF" stroke-opacity="0.75" stroke-width="2"/>
+    </svg>
+    <div style="display: flex; flex-direction: column; gap: 4px;">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; letter-spacing: 1px; color: rgba(255,255,255,0.5);">WATER</span>
+      <span style="font-size: 44px; font-weight: 800; letter-spacing: -1.5px; line-height: 1;">6<span style="font-size: 20px; color: rgba(255,255,255,0.5);">/11</span></span>
+      <span style="font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.55);">glasses</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>

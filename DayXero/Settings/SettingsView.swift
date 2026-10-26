@@ -20,6 +20,8 @@ struct SettingsSheet: View {
     @Environment(Entitlement.self) private var entitlement
     @AppStorage("dx.sosHaptics") private var haptics = true
     @AppStorage("dx.voiceGuidance") private var voiceGuidance = true
+    @AppStorage(WidgetSync.privacyKey) private var widgetPrivacy = false
+    @AppStorage(WidgetSync.privacyHomeKey) private var widgetPrivacyHome = false
     @AppStorage(AppearanceSetting.key) private var appearance = AppearanceSetting.automatic.rawValue
     @State private var path: [Page] = []
     @State private var confirmDelete = false
@@ -55,6 +57,25 @@ struct SettingsSheet: View {
                 } footer: {
                     Text("Other haptics follow System Haptics in iPhone Settings.")
                 }
+                // Widgets (S17.11): what widgets anyone can see show.
+                Section {
+                    Toggle(isOn: $widgetPrivacy) { SettingLabel("Privacy mode on the Lock Screen", systemImage: "eye.slash") }
+                    if widgetPrivacy {
+                        Toggle(isOn: $widgetPrivacyHome) { SettingLabel("Apply to Home Screen", systemImage: "apps.iphone") }
+                    }
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Add Craving SOS to your Lock Screen").font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body))
+                        Text("Long-press the Lock Screen, tap Customize, then swap the torch or camera button for Craving SOS.")
+                            .dxText(.subtitle)
+                    }
+                    .padding(.vertical, 2)
+                } header: {
+                    Text("Widgets")
+                } footer: {
+                    Text("Hides money and the word nicotine from widgets anyone can see.")
+                }
+                .onChange(of: widgetPrivacy) { WidgetSync.refresh(in: context, isPro: entitlement.isPro) }
+                .onChange(of: widgetPrivacyHome) { WidgetSync.refresh(in: context, isPro: entitlement.isPro) }
                 Section("Subscription") {
                     NavigationLink(value: Page.subscription) {
                         LabeledContent { Text(entitlement.isPro ? "Pro" : "Free") } label: { SettingLabel("DayXero Pro", systemImage: "star") }

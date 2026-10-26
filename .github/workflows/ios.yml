@@ -219,6 +219,9 @@ jobs:
           shoot dark large home-water-dark $P12 -dx.seedWater partial
           shoot dark large calm-box-orb-dark $P12 -dx.tab program -dx.openCalm boxBreathing -dx.calmElapsed 6
           shoot dark large calm-478-orb-dark $P12 -dx.tab program -dx.openCalm longerOutBreath
+          for page in home clear lock private standby states; do
+            shoot dark large "widgets-$page" -dx.widgetGallery "$page"
+          done
           shoot dark large set-main-dark $P12 -dx.openSettings settings
           shoot light large set-main-light $P12 -dx.openSettings settings
           shoot dark accessibility-extra-extra-extra-large set-main-dark-ax5 $P12 -dx.openSettings settings

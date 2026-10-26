@@ -52,6 +52,7 @@ targets:
     sources:
       - path: DayXero
       - path: Intents
+      - path: WidgetViews
     dependencies:
       - target: DayXeroCore
       - target: DayXeroWidgets
@@ -99,6 +100,7 @@ targets:
     sources:
       - path: DayXeroWidgets
       - path: Intents
+      - path: WidgetViews
     dependencies:
       - target: DayXeroCore
       - sdk: WidgetKit.framework
