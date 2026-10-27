@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-27T20:11:34.751Z"
+    "updated": "2026-10-27T20:32:08.658Z"
   },
   "now": {
     "section": "S18",
@@ -1709,7 +1709,7 @@
           "id": "S16.3",
           "title": "App Store assets: screenshots, preview video, description (ask Milan for copy).",
           "status": "pending",
-          "notes": "Copy and screenshot set approved by Milan. Next: capture the six screens on a 6.9\" simulator and add captions.\n27 Oct: pipeline built (S18.16). The 'App Store screenshots' workflow produces the approved six at 6.9\" and 6.3\" too. The Program shot shows PLACEHOLDER lessons until S5.1; the slip shot uses 'Plan saved', because the first slip screen captures blank in CI.",
+          "notes": "Copy and screenshot set approved by Milan. Next: capture the six screens on a 6.9\" simulator and add captions.\n27 Oct: pipeline built (S18.16). The 'App Store screenshots' workflow produces the approved six at 6.9\" and 6.3\" too. The Program shot shows PLACEHOLDER lessons until S5.1; the slip shot uses 'Plan saved', because the first slip screen captures blank in CI.\n27 Oct: with S18.18 fixed, the slip shot uses 'Thanks for telling us' as approved.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -1924,11 +1924,34 @@
           "notes": "Milan, 27 Oct. 877fa4d: CurrencyChoice (Core, tested) gives the region's currency in onboarding; Settings › Your quit › Currency lists every currency with search. Changing it relabels amounts, it doesn't convert them.\nVerifying on CI.",
           "created": "2026-10-27T20:11:34.596Z",
           "completed": null
+        },
+        {
+          "id": "S18.18",
+          "title": "Blank sheet when a slip or craving is opened from a widget or Siri",
+          "status": "in_progress",
+          "notes": "Found 27 Oct while building the App Store screenshots (slip-ack and log-craving CI shots were blank). Cause: the log sheet pushed the page while it was still presenting and resizing. 3eb233b: the page is the sheet's first page and the height is set before it opens; UI test testWidgetOpensSlipAndCravingLog.\nVerifying on CI (iOS workflow and the device-matrix UI tests).",
+          "created": "2026-10-27T20:32:08.583Z",
+          "completed": null
         }
       ]
     }
   ],
   "log": [
+    {
+      "time": "2026-10-27T20:32:08.658Z",
+      "type": "note",
+      "message": "S16.3: 27 Oct: with S18.18 fixed, the slip shot uses 'Thanks for telling us' as approved."
+    },
+    {
+      "time": "2026-10-27T20:32:08.627Z",
+      "type": "status",
+      "message": "S18.18 pending → in_progress (Verifying on CI (iOS workflow and the device-matrix UI tests).)"
+    },
+    {
+      "time": "2026-10-27T20:32:08.583Z",
+      "type": "task_added",
+      "message": "S18.18 added: Blank sheet when a slip or craving is opened from a widget or Siri"
+    },
     {
       "time": "2026-10-27T20:11:34.751Z",
       "type": "now",

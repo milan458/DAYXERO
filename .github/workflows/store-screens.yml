@@ -102,7 +102,7 @@ jobs:
             shot home -dx.homeScenario day12 -dx.store pro
             shot sos -dx.homeScenario day12 -dx.store pro -dx.sos YES -dx.sosElapsed 23
             shot program -dx.homeScenario day3 -dx.store pro -dx.tab program
-            shot slip -dx.homeScenario day12 -dx.store pro -dx.logSheet slip -dx.slipStage done
+            shot slip -dx.homeScenario day12 -dx.store pro -dx.logSheet slip
             shot insights -dx.homeScenario day12 -dx.store pro -dx.tab progress -dx.progressScroll patterns
             shot nrt -dx.homeScenario day12 -dx.store pro -dx.seedNRT YES -dx.seedPouches YES
           }
