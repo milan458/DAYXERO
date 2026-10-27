@@ -141,6 +141,16 @@ jobs:
             CODE_SIGNING_ALLOWED=NO -quiet 2>&1 | tee release.log
 
       # xcodebuild's automatic signing rejects the API key, so the certificate and profiles are made through the API.
+      # The distribution certificate's .p12 lives in the Actions cache, encrypted with a password derived from the
+      # App Store Connect key (fork pull requests can read caches but never get that secret).
+      - name: Restore signing certificate
+        if: steps.keys.outputs.ready == 'true' && !inputs.check_only
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ runner.temp }}/dist-cache
+          key: dist-cert-v1-${{ github.run_id }}
+          restore-keys: dist-cert-v1-
+
       - name: Signing
         if: steps.keys.outputs.ready == 'true' && !inputs.check_only
         env:
@@ -148,8 +158,13 @@ jobs:
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
         run: |
           set -eo pipefail
-          P12_PASSWORD=$(openssl rand -hex 16); echo "::add-mask::$P12_PASSWORD"
+          P12_PASSWORD=$(cat "$RUNNER_TEMP"/AuthKey_*.p8 | shasum -a 256 | cut -c1-64); echo "::add-mask::$P12_PASSWORD"
+          if [ -f "$RUNNER_TEMP/dist-cache/dist.p12" ]; then
+            cp "$RUNNER_TEMP/dist-cache/dist.p12" "$RUNNER_TEMP/dist-cache/dist-cert.json" "$RUNNER_TEMP/"
+          fi
           P12_PASSWORD=$P12_PASSWORD python3 scripts/ci/asc_signing.py setup
+          mkdir -p "$RUNNER_TEMP/dist-cache"
+          cp "$RUNNER_TEMP/dist.p12" "$RUNNER_TEMP/dist-cert.json" "$RUNNER_TEMP/dist-cache/"
           KC="$RUNNER_TEMP/signing.keychain-db"
           security create-keychain -p "$P12_PASSWORD" "$KC"
           security set-keychain-settings -lut 3600 "$KC"
@@ -171,6 +186,13 @@ jobs:
             echo "::error title=App Group not assigned::Register group.in.dayxero.app at developer.apple.com → Identifiers → App Groups, then add it to the App IDs in.dayxero.app and in.dayxero.app.widgets (App Groups → Configure)."
             exit 1
           fi
+
+      - name: Keep the new signing certificate
+        if: env.DX_NEW_CERT != ''
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ runner.temp }}/dist-cache
+          key: dist-cert-v1-${{ env.DX_NEW_CERT }}
 
       - name: Archive
         if: steps.keys.outputs.ready == 'true' && !inputs.check_only
@@ -233,7 +255,7 @@ jobs:
         run: |
           grep -E "error:|ERROR|failed" release.log | sort -u | head -40 | sed 's/^/::error::/' || true
 
-      # Revokes this run's certificate and deletes its profiles; the uploaded build stays valid.
+      # Deletes this run's profiles. The certificate is kept for the next run.
       - name: Clean up signing
         if: always() && steps.keys.outputs.ready == 'true'
         env:
@@ -245,4 +267,4 @@ jobs:
 
       - name: Remove key
         if: always()
-        run: rm -rf "$RUNNER_TEMP"/AuthKey_*.p8 "$RUNNER_TEMP"/dist.p12 ~/.appstoreconnect Config/Secrets.xcconfig
+        run: rm -rf "$RUNNER_TEMP"/AuthKey_*.p8 "$RUNNER_TEMP"/dist.p12 "$RUNNER_TEMP"/dist-cache ~/.appstoreconnect Config/Secrets.xcconfig

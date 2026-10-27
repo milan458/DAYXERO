@@ -3,7 +3,8 @@
 xcodebuild's automatic signing rejects our API key, so CI signs by hand:
   setup    registers the App IDs if needed, creates a distribution certificate and
            App Store profiles, and writes the .p12, profiles and build settings to $RUNNER_TEMP.
-  cleanup  revokes that certificate and deletes the profiles. Builds already uploaded stay valid.
+  cleanup  deletes this run's profiles. The certificate is kept (encrypted in the Actions cache) and reused,
+           because revoking it invalidates builds still waiting for review (ITMS-90035).
   builds   lists the builds App Store Connect has for the app.
   wait N   waits for build N to show up after an upload, since altool can report success when nothing arrived.
 
@@ -108,11 +109,42 @@ def profile(identifier, bid, cert_id):
     return data["id"], name
 
 
+CERT_INFO = os.path.join(TEMP, "dist-cert.json")
+
+
+def reusable_certificate():
+    """The certificate kept from an earlier run (restored from the Actions cache), if Apple still has it valid."""
+    if not (os.path.exists(CERT_INFO) and os.path.exists(os.path.join(TEMP, "dist.p12"))):
+        return None
+    cert_id = json.load(open(CERT_INFO)).get("id")
+    req = urllib.request.Request(f"{API}/certificates/{cert_id}", headers={"Authorization": f"Bearer {token()}"})
+    try:
+        with urllib.request.urlopen(req) as r:
+            attrs = json.loads(r.read())["data"]["attributes"]
+    except urllib.error.HTTPError:
+        print(f"Kept certificate {cert_id} is gone; making a new one")
+        return None
+    expires = attrs.get("expirationDate", "")
+    if expires and expires[:10] < time.strftime("%Y-%m-%d", time.gmtime(time.time() + 14 * 86400)):
+        print(f"Kept certificate {cert_id} expires {expires[:10]}; making a new one")
+        return None
+    print(f"Reusing distribution certificate {cert_id} (expires {expires[:10]})")
+    return cert_id
+
+
 def setup():
     state = {"profiles": {}}
     ids = {identifier: bundle_id(identifier, name) for identifier, name in TARGETS.items()}
-    state["certificate"] = certificate(os.environ["P12_PASSWORD"])
-    json.dump(state, open(STATE, "w"))   # saved early, so cleanup revokes the certificate even if a profile fails
+    # One long-lived certificate: builds waiting for TestFlight or App Store review need it to stay valid,
+    # so it's kept between runs and never revoked here (ITMS-90035).
+    cert_id = reusable_certificate()
+    if cert_id is None:
+        cert_id = certificate(os.environ["P12_PASSWORD"])
+        json.dump({"id": cert_id}, open(CERT_INFO, "w"))
+        with open(os.environ["GITHUB_ENV"], "a") as env:
+            env.write(f"DX_NEW_CERT={cert_id}\n")
+    state["certificate"] = cert_id
+    json.dump(state, open(STATE, "w"))
     for identifier, bid in ids.items():
         pid, name = profile(identifier, bid, state["certificate"])
         state["profiles"][identifier] = {"id": pid, "name": name}
@@ -131,9 +163,8 @@ def cleanup():
             call("DELETE", f"profiles/{p['id']}")
         except SystemExit:
             pass
-    if state.get("certificate"):
-        call("DELETE", f"certificates/{state['certificate']}")
-        print("Certificate revoked and profiles deleted")
+    # The certificate stays: revoking it invalidates builds still waiting for review.
+    print("Profiles deleted; certificate kept for the next run")
 
 
 def app_id():
