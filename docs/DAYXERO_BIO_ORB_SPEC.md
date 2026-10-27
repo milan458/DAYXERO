@@ -135,6 +135,9 @@ Fonts: bundle Inter (500, 800) and JetBrains Mono (600). Both are under the SIL 
 The whole stack must stay inside the lens at the smallest breath scale (0.82). The sizes above were checked for that, so don't increase them.
 
 ### 3.5 Transcript pill
+
+> **Changed 27 Oct 2026 (Milan, S18.11):** the white pill is replaced by a caption. It is muted text (white at 60%, 15pt semibold, centred) straight on the black, with no box, dot or badge. It shows one sentence of the coaching line at a time and fades between sentences. With voice on it follows the speech; with voice off, each sentence gets a share of the line's duration in proportion to its length. Phase scripts show whole. VoiceOver still hears each whole line once. The `badgeIdle` and `badgeSpeaking` labels in the data file are no longer shown. The original spec follows.
+
 - Sits 24pt below the orb. Full width of the content column.
 - Background `#FFFFFF`, corner radius 28, padding top 11, right 12, bottom 11, left 16. Grows to fit the text.
 - Status dot: 8pt black circle. While the coach is speaking it pulses 0.85 → 1.25 → 0.85 over 1s, ease-in-out; static at 0.85 under Reduce Motion.

@@ -209,63 +209,30 @@ private struct OrbBars: View {
     }
 }
 
-/// The white transcript pill under the orb (spec §3.5): status dot, the line, and the badge. Wraps, never truncates.
-struct OrbTranscriptPill: View {
+/// What the coach says, as a quiet caption on the black: one sentence at a time, fading between them, so the
+/// ring stays the brightest thing on screen (S18.11, replacing the white transcript pill of spec §3.5).
+struct OrbCaption: View {
     let engine: OrbEngine
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
-        Group {
-            // At accessibility sizes the dot and badge go above the line, so the line keeps the full width.
-            if typeSize.isAccessibilitySize {
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack(spacing: 10) { dot; Spacer(minLength: 0); badge }
-                    transcript
-                }
-            } else {
-                HStack(spacing: 10) { dot; transcript; badge }
-            }
+        ZStack {
+            Text(verbatim: engine.caption)
+                .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .callout))
+                .foregroundStyle(.white.opacity(0.6))
+                .multilineTextAlignment(.center)
+                .lineSpacing(3)
+                .fixedSize(horizontal: false, vertical: true)
+                .id(engine.caption)
+                .transition(.opacity)
         }
-        .padding(.top, 11).padding(.trailing, 12).padding(.bottom, 11).padding(.leading, 16)
-        .frame(maxWidth: .infinity)
-        .background(Color(orbHex: engine.data.tokens.porcelain), in: RoundedRectangle(cornerRadius: 28, style: .continuous))
-        .accessibilityElement(children: .combine)
+        // Room for two lines, so the controls below don't move as sentences change.
+        .frame(maxWidth: .infinity, minHeight: 48, alignment: .top)
+        .animation(.easeInOut(duration: 0.4), value: engine.caption)
+        // VoiceOver hears each whole line once, not sentence by sentence.
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(verbatim: engine.transcript))
         .onChange(of: engine.transcript) { _, text in
             AccessibilityNotification.Announcement(text).post()
-        }
-    }
-
-    private var transcript: some View {
-        Text(verbatim: engine.transcript)
-            .font(.custom(DX.Typeface.semibold, size: 12, relativeTo: .caption))
-            .foregroundStyle(.black)
-            .lineSpacing(2)
-            .fixedSize(horizontal: false, vertical: true)
-            .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
-    private var badge: some View {
-        let labels = engine.data.labels
-        return Text(verbatim: engine.coachSpeaking ? labels.badgeSpeaking : labels.badgeIdle)
-            .font(.custom(DX.Typeface.mono, size: 9, relativeTo: .caption2))
-            .tracking(0.36)
-            .foregroundStyle(.black)
-            .lineLimit(1)
-            .fixedSize()
-            .padding(.vertical, 4).padding(.horizontal, 8)
-            .background(Color(orbHex: engine.data.tokens.sage), in: Capsule())
-    }
-
-    @ViewBuilder
-    private var dot: some View {
-        let circle = Circle().fill(.black).frame(width: 8, height: 8)
-        if engine.coachSpeaking && !reduceMotion {
-            PhaseAnimator([0.85, 1.25]) { scale in
-                circle.scaleEffect(scale)
-            } animation: { _ in .easeInOut(duration: 0.5) }
-        } else {
-            circle.scaleEffect(0.85)
         }
     }
 }
@@ -336,6 +303,17 @@ final class OrbCoach: NSObject, AVSpeechSynthesizerDelegate {
     nonisolated func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
         let id = ObjectIdentifier(utterance)
         Task { @MainActor in self.ended(id) }
+    }
+
+    /// Keeps the caption on the sentence being spoken.
+    nonisolated func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, willSpeakRangeOfSpeechString characterRange: NSRange,
+                                       utterance: AVSpeechUtterance) {
+        let id = ObjectIdentifier(utterance)
+        let location = characterRange.location
+        Task { @MainActor in
+            guard id == self.current else { return }
+            self.engine?.spoke(upTo: location)
+        }
     }
 
     nonisolated func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {

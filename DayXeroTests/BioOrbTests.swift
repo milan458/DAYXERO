@@ -117,4 +117,52 @@ struct BioOrbTests {
         while t < line.durationSeconds + 0.1 { t += 1.0 / 60; engine.advance(to: t) }
         #expect(!engine.coachSpeaking)
     }
+
+    // MARK: Caption (S18.11)
+
+    @Test func linesSplitIntoSentencesWithTheirOffsets() {
+        let text = "I'm right here with you. Cravings rise, peak and fade. Let's ride this one together—inhale slowly."
+        let parts = OrbCaptionText.fragments(text)
+        #expect(parts.map(\.text) == ["I'm right here with you.", "Cravings rise, peak and fade.", "Let's ride this one together—inhale slowly."])
+        let ns = text as NSString
+        #expect(parts[1].start == ns.range(of: "Cravings").location)
+        #expect(parts[2].start == ns.range(of: "Let's").location)
+        #expect(OrbCaptionText.fragment(containing: 0, in: parts) == 0)
+        #expect(OrbCaptionText.fragment(containing: ns.range(of: "peak").location, in: parts) == 1)
+    }
+
+    @Test func ellipsesSplitButShortLinesStayWhole() {
+        #expect(OrbCaptionText.fragments("Breathe in slowly... let your shoulders drop.").map(\.text)
+            == ["Breathe in slowly...", "let your shoulders drop."])
+        #expect(OrbCaptionText.fragments("Hold gently").map(\.text) == ["Hold gently"])
+        #expect(OrbCaptionText.fragments("Use 3.5 mg.").map(\.text) == ["Use 3.5 mg."])
+    }
+
+    @Test func withoutVoiceEachSentenceGetsTimeForItsLength() {
+        let parts = OrbCaptionText.fragments("Short one. A much longer second sentence here.")
+        #expect(OrbCaptionText.fragment(at: 0.5, duration: 10, in: parts) == 0)
+        #expect(OrbCaptionText.fragment(at: 4, duration: 10, in: parts) == 1)
+        #expect(OrbCaptionText.fragment(at: 12, duration: 10, in: parts) == 1)
+    }
+
+    @MainActor @Test func theCaptionFollowsTheLineThenTheScript() {
+        let engine = OrbEngine(mode: .breathing, pattern: "box", data: data)
+        engine.advance(to: 0)
+        let line = data.coachingLines[0]
+        let parts = OrbCaptionText.fragments(line.text)
+        #expect(parts.count > 1)
+        engine.beginLine(line, voiced: true)
+        #expect(engine.caption == parts[0].text)
+        engine.spoke(upTo: parts[1].start)
+        #expect(engine.caption == parts[1].text)
+        engine.lineEnded()
+        #expect(engine.caption == parts[1].text)
+
+        let quiet = OrbEngine(mode: .breathing, pattern: "box", data: data)
+        quiet.advance(to: 0)
+        quiet.beginLine(line, voiced: false)
+        var t = 0.0
+        while t < line.durationSeconds - 0.2 { t += 1.0 / 60; quiet.advance(to: t) }
+        #expect(quiet.caption == parts[parts.count - 1].text)
+    }
 }

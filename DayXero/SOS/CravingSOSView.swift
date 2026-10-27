@@ -100,7 +100,7 @@ struct CravingSOSView: View {
                         // After the three minutes the orb steps back so the person's own reason fits above the choices (S18.6).
                         BioOrbView(engine: engine, side: BioOrbView.side(mini: stage == .timeUp, available: geo.size.width), onTap: coachMe)
                             .padding(.top, stage == .timeUp ? DX.Space.s : DX.Space.l)
-                        OrbTranscriptPill(engine: engine)
+                        OrbCaption(engine: engine)
                         if stage == .session { controls }
                         if stage == .timeUp, let reason = currentReason {
                             ReasonCard(reason: reason, canAdvance: reasons.count > 1) { reasonSkip += 1 }

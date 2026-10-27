@@ -33,7 +33,7 @@ struct OrbBreathingPanel: View {
                     Text(verbatim: "\(engine.pattern.name) · \(engine.pattern.counts)").dxText(.micro)
                         .padding(.top, DX.Space.s)
                     BioOrbView(engine: engine, side: BioOrbView.side(mini: false, available: geo.size.width), onTap: coachMe)
-                    OrbTranscriptPill(engine: engine)
+                    OrbCaption(engine: engine)
                     controls
                 }
                 .frame(maxWidth: .infinity)
