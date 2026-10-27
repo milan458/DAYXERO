@@ -278,6 +278,7 @@ struct WaterGoalScreen: View {
 }
 
 /// A horizontal ruler with a sage centre line: drag to pick, snapping to whole steps with a tick of haptics.
+/// Only sideways drags move it, so scrolling the screen past the ruler can't change the value (S18.1).
 struct RulerPicker: View {
     @Binding var value: Double
     let range: ClosedRange<Double>
@@ -292,6 +293,8 @@ struct RulerPicker: View {
     let accessibilityValue: (Double) -> String
 
     @State private var dragStart: Double?
+    /// The current drag started mostly up or down: it's a scroll, so the ruler ignores it.
+    @State private var ignoringDrag = false
 
     var body: some View {
         Canvas { context, size in
@@ -322,14 +325,21 @@ struct RulerPicker: View {
         .frame(height: 54)
         .contentShape(Rectangle())
         .gesture(
-            DragGesture(minimumDistance: 0)
+            DragGesture(minimumDistance: 8)
                 .onChanged { drag in
+                    if dragStart == nil, !ignoringDrag, abs(drag.translation.height) > abs(drag.translation.width) {
+                        ignoringDrag = true
+                    }
+                    guard !ignoringDrag else { return }
                     let start = dragStart ?? value
                     dragStart = start
                     let moved = -Double(drag.translation.width / pointsPerStep) * step
                     value = min(max(((start + moved) / step).rounded() * step, range.lowerBound), range.upperBound)
                 }
-                .onEnded { _ in dragStart = nil }
+                .onEnded { _ in
+                    dragStart = nil
+                    ignoringDrag = false
+                }
         )
         .sensoryFeedback(.selection, trigger: value)
         .accessibilityElement()
