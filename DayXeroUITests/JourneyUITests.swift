@@ -136,13 +136,22 @@ final class JourneyUITests: XCTestCase {
         return app
     }
 
-    /// Taps the button with this label once exactly one is on screen, so a step's slide-in has finished.
+    /// Taps the button with this label once exactly one is on screen and it has stopped moving, so a step's
+    /// slide-in or a sheet growing to full height has finished. A tap mid-slide can miss.
     private func tapSettled(_ app: XCUIApplication, _ label: String, file: StaticString = #filePath, line: UInt = #line) {
         let query = app.buttons.matching(NSPredicate(format: "label == %@", label))
         let deadline = Date.now.addingTimeInterval(10)
         while query.count != 1, Date.now < deadline { RunLoop.current.run(until: .now.addingTimeInterval(0.2)) }
         XCTAssertEqual(query.count, 1, "Expected one \"\(label)\" button", file: file, line: line)
         let button = query.element
+        var last = CGRect.null
+        let still = Date.now.addingTimeInterval(5)
+        while Date.now < still {
+            let frame = button.frame
+            if frame == last, !frame.isEmpty { break }
+            last = frame
+            RunLoop.current.run(until: .now.addingTimeInterval(0.3))
+        }
         let enabled = NSPredicate(format: "isEnabled == true AND isHittable == true")
         let wait = XCTNSPredicateExpectation(predicate: enabled, object: button)
         XCTAssertEqual(XCTWaiter().wait(for: [wait], timeout: 5), .completed, "\"\(label)\" never became tappable", file: file, line: line)

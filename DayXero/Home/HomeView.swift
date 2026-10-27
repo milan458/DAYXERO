@@ -480,7 +480,6 @@ struct TodayView: View {
         return String(localized: "You can still \(joined) while you prepare.")
     }
 
-    @ViewBuilder
     /// "1 of 9 · 6 min"; weekly sessions just say how long.
     private func lessonDetail(_ lesson: HomeSnapshot.Lesson, prepTotal: Int) -> String {
         let minutes = LessonLibrary.lesson(for: lesson.day, product: profile.primaryProduct?.product ?? .cigarettes).minutes
