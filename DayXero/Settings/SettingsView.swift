@@ -12,7 +12,7 @@ struct SettingsSheet: View {
     var start: Page?
 
     enum Page: String, Hashable {
-        case reminders, dayEnd, quietHours, products, quitDay, subscription, privacy, health
+        case reminders, dayEnd, quietHours, products, quitDay, currency, subscription, privacy, health
     }
 
     @Environment(\.dismiss) private var dismiss
@@ -41,6 +41,11 @@ struct SettingsSheet: View {
                     }
                     NavigationLink(value: Page.dayEnd) {
                         LabeledContent { Text(DayEndSettings.label(profile.dayBoundaryHour)) } label: { SettingLabel("Day ends at", systemImage: "moon") }
+                    }
+                    NavigationLink(value: Page.currency) {
+                        LabeledContent { Text(verbatim: "\(profile.currencyCode) · \(CurrencyChoice.symbol(profile.currencyCode))") } label: {
+                            SettingLabel("Currency", systemImage: "banknote")
+                        }
                     }
                 }
                 Section {
@@ -113,6 +118,7 @@ struct SettingsSheet: View {
                 case .dayEnd: DayEndSettings(profile: profile)
                 case .products: ProductsSettingsView(profile: profile)
                 case .quitDay: QuitDaySettingsView(profile: profile)
+                case .currency: CurrencySettingsView(profile: profile)
                 case .subscription: SubscriptionSettingsView()
                 case .privacy: PrivacySettingsView()
                 case .health: HealthInfoView()
@@ -252,6 +258,60 @@ struct ProductsSettingsView: View {
         profile.products.append(use)
         try? context.save()
         editing = use
+    }
+}
+
+/// The currency money is shown in (S18.17): the region's to begin with, any other on request. It relabels
+/// amounts; it doesn't convert them.
+struct CurrencySettingsView: View {
+    let profile: UserProfile
+    @Environment(\.modelContext) private var context
+    @Environment(Entitlement.self) private var entitlement
+    @State private var search = ""
+
+    var body: some View {
+        let codes = CurrencyChoice.codes()
+        let regional = CurrencyChoice.defaultCode()
+        List {
+            Section {
+                ForEach(codes.filter(matches), id: \.self) { code in
+                    Button { choose(code) } label: {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(verbatim: CurrencyChoice.name(code)).foregroundStyle(DX.Palette.text)
+                                Text(verbatim: code == regional ? "\(code) · \(CurrencyChoice.symbol(code)) · \(String(localized: "your region"))"
+                                                                : "\(code) · \(CurrencyChoice.symbol(code))")
+                                    .dxText(.subtitle)
+                            }
+                            Spacer()
+                            if code == profile.currencyCode {
+                                Image(systemName: "checkmark").foregroundStyle(DX.Palette.accentInk)
+                            }
+                        }
+                    }
+                    .accessibilityAddTraits(code == profile.currencyCode ? .isSelected : [])
+                }
+            } footer: {
+                Text("Changes the currency your money is shown in. Prices you've entered keep their numbers, so if they were in another currency, update them in Products.")
+            }
+        }
+        .searchable(text: $search, prompt: Text("Search currencies"))
+        .navigationTitle("Currency")
+        .tint(DX.Palette.sage)
+    }
+
+    private func matches(_ code: String) -> Bool {
+        let query = search.trimmingCharacters(in: .whitespaces)
+        guard !query.isEmpty else { return true }
+        return code.localizedCaseInsensitiveContains(query) || CurrencyChoice.name(code).localizedCaseInsensitiveContains(query)
+    }
+
+    private func choose(_ code: String) {
+        guard code != profile.currencyCode else { return }
+        profile.currencyCode = code
+        try? context.save()
+        WidgetSync.refresh(in: context, isPro: entitlement.isPro)
+        Analytics.track(.currencyChanged(code: code))
     }
 }
 

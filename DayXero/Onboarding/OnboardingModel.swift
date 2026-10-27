@@ -128,7 +128,7 @@ final class OnboardingModel {
         self.calendar = calendar
         self.today = calendar.startOfDay(for: now)
         self.quitDay = calendar.date(byAdding: .day, value: QuitDayPolicy.recommendedDaysAhead, to: today) ?? today
-        self.currencyCode = locale.currency?.identifier ?? "USD"
+        self.currencyCode = CurrencyChoice.defaultCode(for: locale)
     }
 
     /// Products in display order, which is also the order of their baseline screens.

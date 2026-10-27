@@ -28,6 +28,8 @@ enum AnalyticsEvent {
     case waterGoalSet(source: String, goalBucket: String)
     case waterLogged(source: String, drink: String)
     case waterGoalMet
+    /// Settings (S18.17): the currency code only.
+    case currencyChanged(code: String)
 
     var name: String {
         switch self {
@@ -49,6 +51,7 @@ enum AnalyticsEvent {
         case .waterGoalSet: "water_goal_set"
         case .waterLogged: "water_logged"
         case .waterGoalMet: "water_goal_met"
+        case .currencyChanged: "currency_changed"
         }
     }
 
@@ -65,6 +68,7 @@ enum AnalyticsEvent {
         case let .shareCardShared(destination): ["destination": destination]
         case let .waterGoalSet(source, goalBucket): ["source": source, "goal_bucket": goalBucket]
         case let .waterLogged(source, drink): ["source": source, "drink": drink]
+        case let .currencyChanged(code): ["code": code]
         case .onboardingCompleted, .paywallViewed, .paywallDismissed, .waterGoalMet: [:]
         }
     }

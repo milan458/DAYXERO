@@ -233,6 +233,7 @@ jobs:
           done
           shoot dark large set-main-dark $P12 -dx.openSettings settings
           shoot light large set-main-light $P12 -dx.openSettings settings
+          shoot dark large set-currency-dark $P12 -dx.openSettings currency
           shoot dark accessibility-extra-extra-extra-large set-main-dark-ax5 $P12 -dx.openSettings settings
           shoot dark large set-products-dark $P12 -dx.openSettings products
           shoot dark large set-quitday-dark $P12 -dx.openSettings quitDay
