@@ -58,12 +58,20 @@ struct ProgressTab: View {
     // MARK: Layout
 
     private func column<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: DX.Space.xs) { content() }
-                .padding(.horizontal, DX.Space.m)
-                .dxReadableColumn()
-                .padding(.top, DX.Space.s)
-                .padding(.bottom, DX.Space.l)
+        ScrollViewReader { proxy in
+            ScrollView {
+                VStack(alignment: .leading, spacing: DX.Space.xs) { content() }
+                    .padding(.horizontal, DX.Space.m)
+                    .dxReadableColumn()
+                    .padding(.top, DX.Space.s)
+                    .padding(.bottom, DX.Space.l)
+            }
+            #if DEBUG
+            // App Store screenshots open on the patterns (`-dx.progressScroll patterns`).
+            .onAppear {
+                if UserDefaults.standard.string(forKey: "dx.progressScroll") == "patterns" { proxy.scrollTo("patterns", anchor: .top) }
+            }
+            #endif
         }
     }
 
@@ -92,6 +100,7 @@ struct ProgressTab: View {
         }
         .padding(.top, DX.Space.m)
         .accessibilityAddTraits(.isHeader)
+        .id("patterns")
         if insights.isReady {
             heatCard(insights)
             triggersCard(insights)
