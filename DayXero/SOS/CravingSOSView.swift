@@ -39,6 +39,8 @@ struct CravingSOSView: View {
     @State private var strength = 5
     @State private var strengthTouched = false
     @State private var showCalmTools = false
+    /// Taps on the reason card, to step to the next reason.
+    @State private var reasonSkip = 0
 
     init(profile: UserProfile?, source: String, onClose: @escaping () -> Void) {
         self.profile = profile
@@ -95,10 +97,14 @@ struct CravingSOSView: View {
             GeometryReader { geo in
                 ScrollView {
                     VStack(spacing: 24) {
-                        BioOrbView(engine: engine, side: BioOrbView.side(mini: false, available: geo.size.width), onTap: coachMe)
-                            .padding(.top, DX.Space.l)
+                        // After the three minutes the orb steps back so the person's own reason fits above the choices (S18.6).
+                        BioOrbView(engine: engine, side: BioOrbView.side(mini: stage == .timeUp, available: geo.size.width), onTap: coachMe)
+                            .padding(.top, stage == .timeUp ? DX.Space.s : DX.Space.l)
                         OrbTranscriptPill(engine: engine)
                         if stage == .session { controls }
+                        if stage == .timeUp, let reason = currentReason {
+                            ReasonCard(reason: reason, canAdvance: reasons.count > 1) { reasonSkip += 1 }
+                        }
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.bottom, DX.Space.m)
@@ -203,6 +209,18 @@ struct CravingSOSView: View {
             Text("Ping a friend").frame(maxWidth: .infinity)
         }
         .buttonStyle(.dxSecondary)
+    }
+
+    // MARK: Your why (S18.6)
+
+    private var reasons: [Reason] {
+        (profile?.reasons ?? []).sorted { $0.createdAt < $1.createdAt }
+    }
+
+    /// Reasons with a photo first, a different one each session; a tap moves to the next.
+    private var currentReason: Reason? {
+        let reasons = reasons
+        return DailyRhythm.reasonIndex(hasPhoto: reasons.map { $0.photo != nil }, dayNumber: cravings.count + reasonSkip).map { reasons[$0] }
     }
 
     // MARK: It passed
@@ -388,6 +406,49 @@ struct CravingSOSView: View {
         case .closed, .pingedFriend:
             onClose()
         }
+    }
+}
+
+/// One of the person's reasons, after the three minutes: their photo with the words over it, or the words alone.
+private struct ReasonCard: View {
+    let reason: Reason
+    let canAdvance: Bool
+    let next: () -> Void
+
+    var body: some View {
+        Button(action: next) {
+            Group {
+                if let data = reason.photo, let image = UIImage(data: data) {
+                    // As an overlay on a fixed-height frame, the photo fills the card without widening the layout.
+                    Color.clear
+                        .frame(height: 168)
+                        .overlay { Image(uiImage: image).resizable().scaledToFill() }
+                        .overlay {
+                            LinearGradient(colors: [.clear, .black.opacity(0.75)], startPoint: .center, endPoint: .bottom)
+                        }
+                        .overlay(alignment: .bottomLeading) { words.padding(DX.Space.s) }
+                        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+                } else {
+                    words
+                        .padding(DX.Space.s)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+                }
+            }
+        }
+        .buttonStyle(.plain)
+        .disabled(!canAdvance)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text("Your reason: \(reason.text)"))
+        .accessibilityHint(canAdvance ? Text("Shows your next reason") : Text(verbatim: ""))
+    }
+
+    private var words: some View {
+        Text(verbatim: reason.text)
+            .font(.custom(DX.Typeface.semibold, size: 17, relativeTo: .body))
+            .foregroundStyle(.white)
+            .multilineTextAlignment(.leading)
+            .fixedSize(horizontal: false, vertical: true)
     }
 }
 
