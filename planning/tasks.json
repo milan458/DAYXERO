@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-27T19:25:39.855Z"
+    "updated": "2026-10-27T19:48:53.586Z"
   },
   "now": {
     "section": "S18",
@@ -1794,24 +1794,24 @@
         {
           "id": "S18.1",
           "title": "Weight ruler ignores vertical drags (bug 1: 72 kg read as 66 kg)",
-          "status": "pending",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. The ruler's drag started on a vertical scroll and nudged the weight. Now only horizontal drags move it.",
+          "status": "in_progress",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. The ruler's drag started on a vertical scroll and nudged the weight. Now only horizontal drags move it.\n0a6bf06: ruler waits 8 pt and ignores drags that start vertical. Verifying on CI.",
           "created": "2026-10-27T19:25:39.028Z",
           "completed": null
         },
         {
           "id": "S18.2",
           "title": "Plan reveal week list never skips prep days (bug 2)",
-          "status": "pending",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. With 7+ prep days the list jumped from Prep day 6 to Quit Day. Now: days 1–5, '+N more prep days', then Quit Day with its date.",
+          "status": "in_progress",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. With 7+ prep days the list jumped from Prep day 6 to Quit Day. Now: days 1–5, '+N more prep days', then Quit Day with its date.\ndc1de06: PlanTimeline (Core, tested): days 1–5, '+N more prep days', Quit Day with its date. Verifying on CI.",
           "created": "2026-10-27T19:25:39.078Z",
           "completed": null
         },
         {
           "id": "S18.3",
           "title": "Name the per-cigarette price in the sum line (bug 3)",
-          "status": "pending",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Pack buyers see 'That's ₹1.25 a cigarette, about ₹4,563 a year', so a single-stick price typed as a pack price is obvious. USD on the paywall comes from the App Store storefront, not the code.",
+          "status": "in_progress",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Pack buyers see 'That's ₹1.25 a cigarette, about ₹4,563 a year', so a single-stick price typed as a pack price is obvious. USD on the paywall comes from the App Store storefront, not the code.\na3f54e1: 'That's ₹1.25 a cigarette, about ₹4,563 a year' in onboarding and Settings. USD on the paywall is the App Store storefront, not code. Verifying on CI.",
           "created": "2026-10-27T19:25:39.118Z",
           "completed": null
         },
@@ -1826,56 +1826,56 @@
         {
           "id": "S18.5",
           "title": "Water goal out of onboarding, into the Water tab (no height)",
-          "status": "pending",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Everyone starts on 2.0 L. 'Personalise goal' in the Water tab: weight, activity, climate, Adjust. Height is no longer collected.",
+          "status": "in_progress",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Everyone starts on 2.0 L. 'Personalise goal' in the Water tab: weight, activity, climate, Adjust. Height is no longer collected.\n0273b11: onboarding water screens removed; 'Personalise goal' sheet in the Water tab (WaterGoalDraft, tested). Verifying on CI.",
           "created": "2026-10-27T19:25:39.192Z",
           "completed": null
         },
         {
           "id": "S18.6",
           "title": "Your why after the 3 minutes in Craving SOS",
-          "status": "pending",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Photo and reason on the 'Three minutes done' screen, above the outcomes. The session itself stays as signed off.",
+          "status": "in_progress",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Photo and reason on the 'Three minutes done' screen, above the outcomes. The session itself stays as signed off.\n6b2cc8a: reason and photo on 'Three minutes done', mini orb, next reason on tap. Verifying on CI.",
           "created": "2026-10-27T19:25:39.225Z",
           "completed": null
         },
         {
           "id": "S18.7",
           "title": "Early patterns on Progress from Day 1",
-          "status": "pending",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Replaces 'Insights need a week of logs' with real time-of-day bars from the first log and the triggers from setup. Full insights still open at 7 days and 5 logs.",
+          "status": "in_progress",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Replaces 'Insights need a week of logs' with real time-of-day bars from the first log and the triggers from setup. Full insights still open at 7 days and 5 logs.\n0a47c9f: time-of-day bars from the first log, setup triggers and times, 'Full patterns in N days'. Verifying on CI.",
           "created": "2026-10-27T19:25:39.257Z",
           "completed": null
         },
         {
           "id": "S18.8",
           "title": "Vape: pods a week, and 'Vaped' for the one-tap log",
-          "status": "pending",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Onboarding and Settings ask for pods or disposables a week; puffs a day is worked out. 'Puff session' becomes 'Vaped' / 'Times vaped' in the log sheet, Home, widget and Siri.",
+          "status": "in_progress",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Onboarding and Settings ask for pods or disposables a week; puffs a day is worked out. 'Puff session' becomes 'Vaped' / 'Times vaped' in the log sheet, Home, widget and Siri.\n5d84ef4: pods a week in onboarding and Settings (VapeUsage, tested); 'Vaped' / 'Times vaped'; Siri reads 'Log a Vape'. Verifying on CI.",
           "created": "2026-10-27T19:25:39.292Z",
           "completed": null
         },
         {
           "id": "S18.9",
           "title": "Kicker rule in the design methodology",
-          "status": "pending",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. All-caps labels only for a screen's eyebrow and section headers, never inside a card. A card is a value plus one sentence-case caption, with no repeated words.",
+          "status": "done",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. All-caps labels only for a screen's eyebrow and section headers, never inside a card. A card is a value plus one sentence-case caption, with no repeated words.\nRule added to DESIGN_METHODOLOGY.md section 3.",
           "created": "2026-10-27T19:25:39.326Z",
-          "completed": null
+          "completed": "2026-10-27T19:48:53.376Z"
         },
         {
           "id": "S18.10",
           "title": "Copy de-clutter pass",
-          "status": "pending",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Home (hero, water, lesson card, prep tiles removed), log sheet, Program rows, Progress tiles and hero, and in-card kickers on other screens.",
+          "status": "in_progress",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Home (hero, water, lesson card, prep tiles removed), log sheet, Program rows, Progress tiles and hero, and in-card kickers on other screens.\n6c9a548: Home, log sheet, Program, Progress and other in-card labels. Verifying on CI screenshots.",
           "created": "2026-10-27T19:25:39.366Z",
           "completed": null
         },
         {
           "id": "S18.11",
           "title": "SOS caption replaces the white transcript pill",
-          "status": "pending",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Muted text on black, one sentence at a time in step with the voice, with no box or badge. Updates Bio-Orb spec 3.5.",
+          "status": "in_progress",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Muted text on black, one sentence at a time in step with the voice, with no box or badge. Updates Bio-Orb spec 3.5.\necf6039: OrbCaption with sentence sync (OrbCaptionText, tested); Bio-Orb spec 3.5 notes the change. Verifying on CI.",
           "created": "2026-10-27T19:25:39.400Z",
           "completed": null
         },
@@ -1883,31 +1883,31 @@
           "id": "S18.12",
           "title": "iPhone Duo: build with Xcode 27.1 (CI and TestFlight)",
           "status": "in_progress",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Builds with Xcode 26 are letterboxed on iPhone Duo. CI and TestFlight move to GitHub's xcode-27 runner; the iOS 18 test leg stays on Xcode 26.",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Builds with Xcode 26 are letterboxed on iPhone Duo. CI and TestFlight move to GitHub's xcode-27 runner; the iOS 18 test leg stays on Xcode 26.\n2fce393: ios.yml, testflight.yml and devices.yml on the xcode-27 runner with Xcode 27.1; iOS 18 leg stays on Xcode 26. First CI run in progress.",
           "created": "2026-10-27T19:25:39.435Z",
           "completed": null
         },
         {
           "id": "S18.13",
           "title": "iPhone Duo: resizing (readable column, height-aware orb, dock on the side)",
-          "status": "pending",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. The inner display ignores portrait lock (951 x 669 pt when unfolded). Content capped at 600 pt, orb sized to the height, dock moves to the side where the system puts bars.",
+          "status": "in_progress",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. The inner display ignores portrait lock (951 x 669 pt when unfolded). Content capped at 600 pt, orb sized to the height, dock moves to the side where the system puts bars.\n1607829: 600 pt readable column, height-aware orb, dock on the system's bar edge, one safe-area inset for the dock.",
           "created": "2026-10-27T19:25:39.481Z",
           "completed": null
         },
         {
           "id": "S18.14",
           "title": "iPhone Duo: fold-aware SOS, Home and Progress",
-          "status": "pending",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. When half-open, ArrangementView splits each screen on either side of the fold; other screens keep their column off the fold.",
+          "status": "in_progress",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. When half-open, ArrangementView splits each screen on either side of the fold; other screens keep their column off the fold.\n1607829: columns avoid a book-pose fold; Today, Progress and SOS split with ArrangementView when half open.",
           "created": "2026-10-27T19:25:39.522Z",
           "completed": null
         },
         {
           "id": "S18.15",
           "title": "iPhone Duo: CI screenshots closed, open and half-folded",
-          "status": "pending",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. A separate CI job folds the iPhone Duo simulator with hinge and captures the cover and inner displays.",
+          "status": "in_progress",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. A separate CI job folds the iPhone Duo simulator with hinge and captures the cover and inner displays.\n2eba4b7: 'duo' CI job with hinge v0.3.0, four poses, shots to ci-screens-duo.",
           "created": "2026-10-27T19:25:39.555Z",
           "completed": null
         },
@@ -1923,6 +1923,81 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-27T19:48:53.586Z",
+      "type": "now",
+      "message": "Now: S18 / S18.12"
+    },
+    {
+      "time": "2026-10-27T19:48:53.557Z",
+      "type": "status",
+      "message": "S18.15 pending → in_progress (2eba4b7: 'duo' CI job with hinge v0.3.0, four poses, shots to ci-screens-duo.)"
+    },
+    {
+      "time": "2026-10-27T19:48:53.528Z",
+      "type": "status",
+      "message": "S18.14 pending → in_progress (1607829: columns avoid a book-pose fold; Today, Progress and SOS split with ArrangementView when half open.)"
+    },
+    {
+      "time": "2026-10-27T19:48:53.501Z",
+      "type": "status",
+      "message": "S18.13 pending → in_progress (1607829: 600 pt readable column, height-aware orb, dock on the system's bar edge, one safe-area inset for the dock.)"
+    },
+    {
+      "time": "2026-10-27T19:48:53.472Z",
+      "type": "note",
+      "message": "S18.12: 2fce393: ios.yml, testflight.yml and devices.yml on the xcode-27 runner with Xcode 27.1; iOS 18 leg stays on Xcode 26. First CI run in progress."
+    },
+    {
+      "time": "2026-10-27T19:48:53.433Z",
+      "type": "status",
+      "message": "S18.11 pending → in_progress (ecf6039: OrbCaption with sentence sync (OrbCaptionText, tested); Bio-Orb spec 3.5 notes the change. Verifying on CI.)"
+    },
+    {
+      "time": "2026-10-27T19:48:53.405Z",
+      "type": "status",
+      "message": "S18.10 pending → in_progress (6c9a548: Home, log sheet, Program, Progress and other in-card labels. Verifying on CI screenshots.)"
+    },
+    {
+      "time": "2026-10-27T19:48:53.376Z",
+      "type": "status",
+      "message": "S18.9 pending → done (Rule added to DESIGN_METHODOLOGY.md section 3.)"
+    },
+    {
+      "time": "2026-10-27T19:48:53.348Z",
+      "type": "status",
+      "message": "S18.8 pending → in_progress (5d84ef4: pods a week in onboarding and Settings (VapeUsage, tested); 'Vaped' / 'Times vaped'; Siri reads 'Log a Vape'. Verifying on CI.)"
+    },
+    {
+      "time": "2026-10-27T19:48:53.320Z",
+      "type": "status",
+      "message": "S18.7 pending → in_progress (0a47c9f: time-of-day bars from the first log, setup triggers and times, 'Full patterns in N days'. Verifying on CI.)"
+    },
+    {
+      "time": "2026-10-27T19:48:53.293Z",
+      "type": "status",
+      "message": "S18.6 pending → in_progress (6b2cc8a: reason and photo on 'Three minutes done', mini orb, next reason on tap. Verifying on CI.)"
+    },
+    {
+      "time": "2026-10-27T19:48:53.265Z",
+      "type": "status",
+      "message": "S18.5 pending → in_progress (0273b11: onboarding water screens removed; 'Personalise goal' sheet in the Water tab (WaterGoalDraft, tested). Verifying on CI.)"
+    },
+    {
+      "time": "2026-10-27T19:48:53.236Z",
+      "type": "status",
+      "message": "S18.3 pending → in_progress (a3f54e1: 'That's ₹1.25 a cigarette, about ₹4,563 a year' in onboarding and Settings. USD on the paywall is the App Store storefront, not code. Verifying on CI.)"
+    },
+    {
+      "time": "2026-10-27T19:48:53.200Z",
+      "type": "status",
+      "message": "S18.2 pending → in_progress (dc1de06: PlanTimeline (Core, tested): days 1–5, '+N more prep days', Quit Day with its date. Verifying on CI.)"
+    },
+    {
+      "time": "2026-10-27T19:48:53.165Z",
+      "type": "status",
+      "message": "S18.1 pending → in_progress (0a6bf06: ruler waits 8 pt and ignores drags that start vertical. Verifying on CI.)"
+    },
     {
       "time": "2026-10-27T19:25:39.855Z",
       "type": "status",
