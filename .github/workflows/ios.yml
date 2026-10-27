@@ -155,6 +155,9 @@ jobs:
           shoot dark large prog-progress-dark $P12 -dx.tab progress
           shoot light large prog-progress-light $P12 -dx.tab progress
           shoot dark large prog-progress-firstweek-dark -dx.homeScenario day3 -dx.store pro -dx.tab progress
+          # Early patterns before a week of logs: with a few logs (prep), and with none (S18.7).
+          shoot dark large prog-progress-prep-dark -dx.homeScenario prep -dx.store pro -dx.tab progress
+          shoot light large prog-progress-empty-light -dx.homeScenario free -dx.store mock -dx.paywallDone YES -dx.tab progress
           shoot dark accessibility-extra-extra-extra-large prog-progress-dark-ax5 $P12 -dx.tab progress
           shoot dark large log-menu-dark $P12 -dx.logSheet menu
           shoot dark large log-craving-dark $P12 -dx.logSheet craving

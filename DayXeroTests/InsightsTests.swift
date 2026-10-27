@@ -37,6 +37,31 @@ struct InsightsTests {
         #expect(ready.isReady && ready.readiness == 1)
     }
 
+    @Test func saysHowFarFromReadyItIs() {
+        let empty = Insights(points: [], now: now, calendar: calendar)
+        #expect(empty.daysUntilReady == 7 && empty.logsUntilReady == 5)
+        let two = Insights(points: [craving(20, 9), craving(21, 9)], now: now, calendar: calendar)
+        #expect(two.daysUntilReady == 4 && two.logsUntilReady == 3)
+        let ready = Insights(points: (16...20).map { craving($0, 9) }, now: now, calendar: calendar)
+        #expect(ready.daysUntilReady == 0 && ready.logsUntilReady == 0)
+    }
+
+    // MARK: Early patterns (S18.7)
+
+    @Test func earlyPatternsCountEveryKindByTimeOfDayFromTheFirstLog() {
+        let points = [
+            craving(22, 8),
+            Insights.Point(timestamp: at(22, 9), kind: .use),
+            Insights.Point(timestamp: at(23, 7), kind: .slip),
+            craving(21, 19),
+            // Outside the four-week window.
+            craving(20, 8, nil, month: 9),
+        ]
+        let counts = Insights(points: points, now: now, calendar: calendar).timeOfDayCounts
+        #expect(counts.map(\.time) == TimeOfDay.allCases)
+        #expect(counts.map(\.count) == [3, 0, 0, 1, 0])
+    }
+
     @Test func timeOfDayBuckets() {
         #expect(TimeOfDay(hour: 4) == .lateNight)
         #expect(TimeOfDay(hour: 5) == .morning)

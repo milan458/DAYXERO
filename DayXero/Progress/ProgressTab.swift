@@ -48,7 +48,7 @@ struct ProgressTab: View {
                         trendCard(insights)
                         recentLogs
                     } else {
-                        notReady(insights)
+                        earlyPatterns(insights)
                     }
                 }
                 .padding(.horizontal, DX.Space.m)
@@ -315,23 +315,61 @@ struct ProgressTab: View {
         try? context.save()
     }
 
-    private func notReady(_ insights: Insights) -> some View {
+    /// Before there's a week of logs (S18.7): from the first log, when they happen so far; before any, one line
+    /// over the blurred map. Either way, what the person told us in setup.
+    private func earlyPatterns(_ insights: Insights) -> some View {
         DXCard(padding: 14) {
-            ZStack {
-                HeatMap(grid: Self.sampleGrid)
-                    .blur(radius: 4)
-                    .opacity(0.4)
-                    .accessibilityHidden(true)
-                VStack(spacing: DX.Space.xs) {
-                    Text("Insights need a week of logs").dxText(.cardHeading).multilineTextAlignment(.center)
-                    DXProgressBar(value: insights.readiness).frame(maxWidth: 180)
-                    Text("\(insights.daysOfData) of \(Insights.minimumDays) days · \(insights.points.count) logs so far").dxText(.subtitle)
-                    Text("Log cravings as they happen and your patterns appear here.").dxText(.subtitle)
-                        .multilineTextAlignment(.center)
+            VStack(alignment: .leading, spacing: DX.Space.s) {
+                if insights.points.isEmpty {
+                    ZStack {
+                        HeatMap(grid: Self.sampleGrid)
+                            .blur(radius: 4)
+                            .opacity(0.4)
+                            .accessibilityHidden(true)
+                        Text("Your first log starts the map")
+                            .font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
+                            .foregroundStyle(DX.Palette.text)
+                            .padding(.vertical, 8).padding(.horizontal, 14)
+                            .background(DX.Palette.surface2, in: Capsule())
+                    }
+                } else {
+                    let counts = insights.timeOfDayCounts
+                    let most = max(counts.map(\.count).max() ?? 1, 1)
+                    Text("When you've logged so far").dxText(.cardHeading)
+                    ForEach(counts, id: \.time) { item in
+                        HStack(spacing: DX.Space.xs) {
+                            Text(item.time.title).font(DX.TextStyle.subtitle.font).foregroundStyle(DX.Palette.text)
+                                .frame(width: typeSize.isAccessibilitySize ? nil : 84, alignment: .leading)
+                            DXProgressBar(value: Double(item.count) / Double(most))
+                            Text(verbatim: item.count.formatted()).font(DX.TextStyle.subtitle.font).foregroundStyle(DX.Palette.muted)
+                                .monospacedDigit().frame(minWidth: 22, alignment: .trailing)
+                        }
+                        .accessibilityElement(children: .combine)
+                    }
+                    Text(readyLine(insights)).dxText(.subtitle)
                 }
-                .padding(DX.Space.s)
+                if let setup = fromSetup {
+                    Text(setup).dxText(.subtitle)
+                }
             }
         }
+    }
+
+    private func readyLine(_ insights: Insights) -> String {
+        let days = insights.daysUntilReady
+        if days == 1 { return String(localized: "Full patterns tomorrow") }
+        if days > 1 { return String(localized: "Full patterns in \(days) days") }
+        let logs = insights.logsUntilReady
+        return logs == 1 ? String(localized: "Full patterns after 1 more log") : String(localized: "Full patterns after \(logs) more logs")
+    }
+
+    /// The triggers and craving times from onboarding, e.g. "You said: Coffee · Stress · mornings".
+    private var fromSetup: String? {
+        let triggers = profile.triggers.prefix(3).map { String(localized: $0.title) }
+        let times = profile.cravingTimesRaw.compactMap(TimeOfDay.init(rawValue:)).map { String(localized: $0.title).lowercased() }
+        let all = triggers + times
+        guard !all.isEmpty else { return nil }
+        return String(localized: "You said: \(all.joined(separator: " · "))")
     }
 
     /// A made-up shape for the blurred placeholder only; never shown as data.
