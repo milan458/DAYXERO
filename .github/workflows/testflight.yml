@@ -27,7 +27,7 @@ concurrency:
 jobs:
   upload:
     if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
-    runs-on: macos-15
+    runs-on: xcode-27
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
@@ -47,10 +47,14 @@ jobs:
             echo "::notice::App Store Connect key not set; building Release unsigned without uploading."
           fi
 
-      - name: Select newest Xcode
+      # Built with the iOS 27.1 SDK so the app fills both iPhone Duo displays (S18.12).
+      - name: Select Xcode 27.1
         run: |
-          XCODE=$(ls -d /Applications/Xcode_26*.app 2>/dev/null | sort -V | tail -1)
-          [ -z "$XCODE" ] && XCODE=$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)
+          XCODE=/Applications/Xcode_27.1.app
+          if [ ! -d "$XCODE" ]; then
+            echo "::error title=Xcode 27.1 missing::This runner has no $XCODE"
+            exit 1
+          fi
           sudo xcode-select -s "$XCODE"
           xcodebuild -version
 

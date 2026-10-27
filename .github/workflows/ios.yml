@@ -17,17 +17,20 @@ concurrency:
 
 jobs:
   build-test:
-    runs-on: macos-15
+    runs-on: xcode-27
     timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
 
-      - name: Select newest Xcode
+      # Xcode 27.1 has the iOS 27.1 SDK: without it the app is letterboxed on iPhone Duo (S18.12).
+      - name: Select Xcode 27.1
         run: |
           ls -d /Applications/Xcode*.app
-          XCODE=$(ls -d /Applications/Xcode_26*.app 2>/dev/null | sort -V | tail -1)
-          [ -z "$XCODE" ] && XCODE=$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)
-          echo "Using $XCODE"
+          XCODE=/Applications/Xcode_27.1.app
+          if [ ! -d "$XCODE" ]; then
+            echo "::error title=Xcode 27.1 missing::This runner has no $XCODE"
+            exit 1
+          fi
           sudo xcode-select -s "$XCODE"
           xcodebuild -version
 
@@ -40,14 +43,15 @@ jobs:
       - name: Pick a simulator
         id: sim
         run: |
+          # iPhone 17 keeps the screenshots comparable between runs. The newest runtime only has
+          # iPhone Duo, which gets its own job below.
           UDID=$(xcrun simctl list devices available -j | python3 -c '
           import json, sys
           d = json.load(sys.stdin)["devices"]
           rt = sorted([k for k in d if "iOS" in k], key=lambda k: [int(x) for x in k.split("iOS-")[1].split("-")])
-          for k in reversed(rt):
-              for dev in d[k]:
-                  if dev["name"].startswith("iPhone"):
-                      print(dev["udid"]); sys.exit()
+          phones = [dev for k in reversed(rt) for dev in d[k] if dev["name"].startswith("iPhone") and "Duo" not in dev["name"]]
+          pick = next((p for p in phones if p["name"] == "iPhone 17"), phones[0] if phones else None)
+          if pick: print(pick["udid"])
           ')
           echo "udid=$UDID" >> "$GITHUB_OUTPUT"
 
