@@ -83,7 +83,16 @@ jobs:
           xcrun simctl bootstatus "$UDID" -b
           xcrun simctl install "$UDID" "$APP"
           mkdir -p shots
-          # shoot <appearance> <content size> <name> [launch args...]
+          # drawn <png>: false while the shot is still the blank launch screen. Blank shots compress to under
+          # 0.032 bytes a pixel (about 70 KB on a 6.3-inch screen); every real screen is well over (118 KB and up).
+          drawn() {
+            local w h size
+            w=$(sips -g pixelWidth "$1" | awk '/pixelWidth/ {print $2}')
+            h=$(sips -g pixelHeight "$1" | awk '/pixelHeight/ {print $2}')
+            size=$(stat -f%z "$1")
+            [ $((size * 1000)) -gt $((w * h * 32)) ]
+          }
+          # shoot <appearance> <content size> <name> [launch args...]: retakes the shot until the app has drawn.
           shoot() {
             local appearance=$1 size=$2 name=$3; shift 3
             xcrun simctl ui "$UDID" appearance "$appearance"
@@ -91,7 +100,12 @@ jobs:
             xcrun simctl terminate "$UDID" in.dayxero.app 2>/dev/null || true
             xcrun simctl launch "$UDID" in.dayxero.app "$@"
             sleep 5
-            xcrun simctl io "$UDID" screenshot "shots/$name.png"
+            for try in 1 2 3 4 5; do
+              xcrun simctl io "$UDID" screenshot "shots/$name.png" > /dev/null 2>&1
+              drawn "shots/$name.png" && return
+              sleep 2
+            done
+            echo "::warning title=Blank screenshot::$name was still blank after 15 seconds"
           }
           shoot dark large gallery-dark -dx.showGallery YES
           shoot light large gallery-light -dx.showGallery YES
@@ -377,13 +391,27 @@ jobs:
             sleep 3
             hinge posture
           }
-          # shoot <pose> <name> [launch args...]
+          # drawn <png>: false while the shot is still the blank launch screen. Blank shots compress to under
+          # 0.032 bytes a pixel (about 70 KB on a 6.3-inch screen); every real screen is well over (118 KB and up).
+          drawn() {
+            local w h size
+            w=$(sips -g pixelWidth "$1" | awk '/pixelWidth/ {print $2}')
+            h=$(sips -g pixelHeight "$1" | awk '/pixelHeight/ {print $2}')
+            size=$(stat -f%z "$1")
+            [ $((size * 1000)) -gt $((w * h * 32)) ]
+          }
+          # shoot <pose> <name> [launch args...]: retakes the shot until the app has drawn.
           shoot() {
             local p=$1 name=$2; shift 2
             xcrun simctl terminate "$UDID" in.dayxero.app 2>/dev/null || true
             xcrun simctl launch "$UDID" in.dayxero.app "$@"
             sleep 6
-            hinge screenshot "shots/duo-$p-$name.png"
+            for try in 1 2 3 4 5; do
+              hinge screenshot "shots/duo-$p-$name.png" > /dev/null
+              drawn "shots/duo-$p-$name.png" && return
+              sleep 2
+            done
+            echo "::warning title=Blank screenshot::duo-$p-$name was still blank after 16 seconds"
           }
           for p in closed open-wide open-tall half-book half-laptop; do
             pose "$p"

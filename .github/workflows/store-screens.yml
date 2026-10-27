@@ -79,6 +79,15 @@ jobs:
         run: |
           APP=$(find DerivedData/Build/Products -name "DayXero.app" -path "*iphonesimulator*" | head -1)
           mkdir -p raw/iphone raw/duo-cover raw/duo-inner
+          # drawn <png>: false while the shot is still the blank launch screen. Blank shots compress to under
+          # 0.032 bytes a pixel (about 70 KB on a 6.3-inch screen); every real screen is well over (118 KB and up).
+          drawn() {
+            local w h size
+            w=$(sips -g pixelWidth "$1" | awk '/pixelWidth/ {print $2}')
+            h=$(sips -g pixelHeight "$1" | awk '/pixelHeight/ {print $2}')
+            size=$(stat -f%z "$1")
+            [ $((size * 1000)) -gt $((w * h * 32)) ]
+          }
           prepare() {
             xcrun simctl boot "$1" 2>/dev/null || true
             xcrun simctl bootstatus "$1" -b
@@ -97,7 +106,14 @@ jobs:
               xcrun simctl terminate "$udid" in.dayxero.app 2>/dev/null || true
               xcrun simctl launch "$udid" in.dayxero.app "$@" > /dev/null
               sleep 7
-              $capture "raw/$folder/$key.png"
+              for try in 1 2 3 4 5; do
+                $capture "raw/$folder/$key.png" > /dev/null
+                drawn "raw/$folder/$key.png" && return
+                sleep 2
+              done
+              # A blank App Store screenshot is never fine.
+              echo "::error title=Blank screenshot::$folder/$key was still blank after 17 seconds"
+              exit 1
             }
             shot home -dx.homeScenario day12 -dx.store pro
             shot sos -dx.homeScenario day12 -dx.store pro -dx.sos YES -dx.sosElapsed 23
