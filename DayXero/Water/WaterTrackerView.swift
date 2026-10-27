@@ -17,6 +17,7 @@ struct WaterTrackerView: View {
     @State private var floatID = 0
     @State private var customDrink: Drink?
     @State private var customAmount = ""
+    @State private var editingGoal = UserDefaults.standard.bool(forKey: "dx.waterGoalSheet")
 
     var body: some View {
         let water = waterProfile
@@ -41,6 +42,13 @@ struct WaterTrackerView: View {
                         .padding(.top, 18)
                 }
                 .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+                // The goal starts at 8 glasses for everyone; this is where it gets personal (S18.5).
+                Button(water?.weightKg == nil ? LocalizedStringKey("Personalise goal") : LocalizedStringKey("Edit goal")) { editingGoal = true }
+                    .font(.custom(DX.Typeface.semibold, size: 14, relativeTo: .subheadline))
+                    .foregroundStyle(.white.opacity(0.6))
+                    .frame(minHeight: 36)
+                    .padding(.horizontal, 16)
+                    .disabled(water == nil)
                 WaterPillView(level: Double(total) / Double(goal), drink: last, reached: reached)
                     .padding(.top, 18)
                     .accessibilityElement(children: .ignore)
@@ -74,6 +82,12 @@ struct WaterTrackerView: View {
         .sensoryFeedback(.impact(weight: .medium), trigger: logged)
         .sensoryFeedback(.success, trigger: goalHit)
         .onAppear(perform: ensureProfile)
+        .sheet(isPresented: $editingGoal) {
+            if let water {
+                WaterGoalSheet(profile: water) { editingGoal = false }
+                    .presentationDetents([.large])
+            }
+        }
         .alert("Custom amount", isPresented: Binding(get: { customDrink != nil }, set: { if !$0 { customDrink = nil } })) {
             TextField(units == .metric ? "ml" : "fl oz", text: $customAmount).keyboardType(.numberPad)
             Button("Log") {

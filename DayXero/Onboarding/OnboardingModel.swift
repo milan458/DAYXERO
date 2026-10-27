@@ -53,7 +53,7 @@ struct ReasonDraft: Identifiable, Equatable {
 
 enum OnboardingStep: Hashable {
     case welcome, age, underAge, name, products, baseline(Product), triggers, reasons, pastAttempts,
-         quitDay, nrt, waterBody, waterDay, waterGoal, building, reveal, reminders
+         quitDay, nrt, building, reveal, reminders
 
     /// Analytics name.
     var key: String {
@@ -69,9 +69,6 @@ enum OnboardingStep: Hashable {
         case .pastAttempts: "past_attempts"
         case .quitDay: "quit_day"
         case .nrt: "nrt"
-        case .waterBody: "water_body"
-        case .waterDay: "water_day"
-        case .waterGoal: "water_goal"
         case .building: "building"
         case .reveal: "reveal"
         case .reminders: "reminders"
@@ -103,17 +100,6 @@ final class OnboardingModel {
     var quitDay: Date
     var nrtInterest: NRTInterest?
     let currencyCode: String
-
-    // Water goal (S2.14). Height and weight stay on the phone and are never shown as a BMI.
-    var waterUnits = WaterUnits.default()
-    var heightCm = 175.0
-    var weightKg = 72.0
-    var waterActivity: WaterActivity?
-    var waterClimate = WaterClimate.mild
-    /// Set by the Adjust stepper; always wins over the calculation.
-    var waterGoalOverride: Int?
-    /// "Skip, use 8 glasses": 2 L, and the activity and goal screens are skipped.
-    var waterSkipped = false
 
     // Navigation
     private(set) var path: [OnboardingStep] = [.welcome]
@@ -149,9 +135,7 @@ final class OnboardingModel {
     /// Steps in order for the current answers. Baselines repeat per product.
     var sequence: [OnboardingStep] {
         [.welcome, .age, .name, .products] + orderedProducts.map(OnboardingStep.baseline)
-            + [.triggers, .reasons, .pastAttempts, .quitDay, .nrt, .waterBody]
-            + (waterSkipped ? [] : [.waterDay, .waterGoal])
-            + [.building, .reveal, .reminders]
+            + [.triggers, .reasons, .pastAttempts, .quitDay, .nrt, .building, .reveal, .reminders]
     }
 
     /// 0...1 for the progress bar.
@@ -177,7 +161,6 @@ final class OnboardingModel {
         case let .baseline(product): baseline(for: product).isComplete
         case .reasons: reasons.contains { !$0.text.trimmingCharacters(in: .whitespaces).isEmpty }
         case .quitDay: quitDayRange.contains(calendar.startOfDay(for: quitDay))
-        case .waterDay: waterActivity != nil
         default: true
         }
     }
@@ -189,7 +172,6 @@ final class OnboardingModel {
             path.append(.underAge)
             return
         }
-        if step == .waterBody { waterSkipped = false }
         if step == .products, usesNRT, nrtInterest == nil {
             nrtInterest = .using
         }
@@ -197,23 +179,6 @@ final class OnboardingModel {
         guard let index = steps.firstIndex(of: step), index + 1 < steps.count else { return }
         path.append(steps[index + 1])
     }
-
-    /// "Skip, use 8 glasses."
-    func skipWater() {
-        waterSkipped = true
-        waterGoalOverride = nil
-        Analytics.track(.onboardingStepSkipped(step: step.key))
-        let steps = sequence
-        guard let index = steps.firstIndex(of: step), index + 1 < steps.count else { return }
-        path.append(steps[index + 1])
-    }
-
-    /// How the goal was worked out, from the answers so far.
-    var waterBreakdown: WaterGoal.Breakdown {
-        WaterGoal.calculate(weightKg: weightKg, activity: waterActivity ?? .mostlySitting, climate: waterClimate)
-    }
-
-    var waterGoalMl: Int { waterSkipped ? WaterGoal.skippedMl : (waterGoalOverride ?? waterBreakdown.goalMl) }
 
     func skip() {
         Analytics.track(.onboardingStepSkipped(step: step.key))
@@ -247,8 +212,6 @@ final class OnboardingModel {
         pastAttempts = .onceOrTwice
         obstacles = [.cravings, .irritability]
         nrtInterest = .using
-        waterUnits = .metric
-        waterActivity = .worksOut
         let steps = sequence + [.underAge]
         if let target = steps.first(where: { $0.key == key }) {
             path = [.welcome, target]
@@ -291,20 +254,12 @@ final class OnboardingModel {
             profile.reasons.append(Reason(text: reason.text, photo: reason.photo))
         }
 
-        context.insert(WaterProfile(
-            heightCm: waterSkipped ? nil : heightCm,
-            weightKg: waterSkipped ? nil : weightKg,
-            activity: waterActivity ?? .mostlySitting,
-            climate: waterClimate,
-            units: waterUnits,
-            goalMl: waterSkipped ? WaterGoal.skippedMl : waterBreakdown.goalMl,
-            goalOverrideMl: waterSkipped ? nil : waterGoalOverride
-        ))
+        // Everyone starts on 8 glasses; the Water tab personalises it (S18.5).
+        context.insert(WaterProfile(units: .default(), goalMl: WaterGoal.skippedMl))
 
         try context.save()
         Analytics.track(.onboardingCompleted)
-        let source = waterSkipped ? "skipped" : waterGoalOverride != nil ? "override" : "calculated"
-        Analytics.track(.waterGoalSet(source: source, goalBucket: "\(waterGoalMl / 500 * 500)"))
+        Analytics.track(.waterGoalSet(source: "default", goalBucket: "\(WaterGoal.skippedMl)"))
         return profile
     }
 

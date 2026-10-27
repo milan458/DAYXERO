@@ -75,18 +75,6 @@ struct PlanRevealScreen: View {
                     }
                 }
             }
-            // The water goal from the screens before (S2.15).
-            DXCard(padding: 14) {
-                HStack(spacing: 10) {
-                    Image(systemName: "drop").font(.system(size: 15, weight: .semibold)).foregroundStyle(DX.Palette.accentInk)
-                        .frame(width: 26, height: 26).background(DX.Palette.accentSoft, in: Circle())
-                        .accessibilityHidden(true)
-                    Text("Water: \(WaterFormat.amount(model.waterGoalMl, units: model.waterUnits)) \(WaterFormat.unit(model.waterUnits)) a day (\(model.waterGoalMl / WaterGoal.glassMl) glasses)")
-                        .font(.custom(DX.Typeface.semibold, size: 14, relativeTo: .subheadline))
-                        .foregroundStyle(DX.Palette.text)
-                    Spacer(minLength: 0)
-                }
-            }
             DXCard(padding: 14) {
                 VStack(alignment: .leading, spacing: DX.Space.xs) {
                     Text(PlanTimeline.isLong(prepDays: model.prepDays) ? "Up to Quit Day" : "Your week ahead").dxText(.micro)
