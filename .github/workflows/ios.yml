@@ -290,3 +290,114 @@ jobs:
         with:
           name: build-log
           path: build.log
+
+  # iPhone Duo closed, open (portrait and landscape) and half-folded, pushed to the ci-screens-duo branch (S18.15).
+  # Apple has no command to fold the simulator, so this uses hinge (MIT, pinned). It runs apart from build-test so a
+  # change in that tooling can't block builds; a fold that doesn't happen fails this job rather than passing quietly.
+  duo:
+    if: github.event_name != 'pull_request'
+    runs-on: xcode-27
+    timeout-minutes: 60
+    env:
+      HINGE_VERSION: v0.3.0
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode 27.1
+        run: |
+          XCODE=/Applications/Xcode_27.1.app
+          if [ ! -d "$XCODE" ]; then
+            echo "::error title=Xcode 27.1 missing::This runner has no $XCODE"
+            exit 1
+          fi
+          sudo xcode-select -s "$XCODE"
+          xcodebuild -version
+
+      - name: Install XcodeGen and hinge
+        run: |
+          brew install xcodegen
+          git clone -q --depth 1 --branch "$HINGE_VERSION" https://github.com/artemnovichkov/hinge.git "$RUNNER_TEMP/hinge"
+          echo "$RUNNER_TEMP/hinge/bin" >> "$GITHUB_PATH"
+
+      - name: Generate project
+        run: xcodegen generate
+
+      - name: Pick the iPhone Duo simulator
+        id: sim
+        run: |
+          UDID=$(xcrun simctl list devices available -j | python3 -c '
+          import json, sys
+          d = json.load(sys.stdin)["devices"]
+          print(next((dev["udid"] for k in d for dev in d[k] if dev["name"] == "iPhone Duo"), ""))
+          ')
+          if [ -z "$UDID" ]; then
+            echo "::error title=No iPhone Duo simulator::$(xcrun simctl list runtimes)"
+            exit 1
+          fi
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+
+      - name: Build for iPhone Duo
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -project DayXero.xcodeproj \
+            -scheme DayXero \
+            -destination "id=${{ steps.sim.outputs.udid }}" \
+            CODE_SIGNING_ALLOWED=NO \
+            -derivedDataPath DerivedData \
+            -quiet 2>&1 | tee build.log
+
+      - name: Screenshots in each pose
+        run: |
+          UDID=${{ steps.sim.outputs.udid }}
+          export HINGE_DEVICE="$UDID"
+          APP=$(find DerivedData/Build/Products -name "DayXero.app" -path "*iphonesimulator*" | head -1)
+          xcrun simctl boot "$UDID" 2>/dev/null || true
+          xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl install "$UDID" "$APP"
+          xcrun simctl ui "$UDID" appearance dark
+          hinge --version
+          mkdir -p shots
+          # pose <name>: fold to it, then wait for the display to switch (1–2.5 s after the angle).
+          pose() {
+            case "$1" in
+              closed) hinge close; hinge orient portrait ;;
+              open) hinge open; hinge orient portrait ;;
+              landscape) hinge open; hinge orient landscape-left ;;
+              half) hinge orient landscape-left; hinge half ;;
+            esac
+            sleep 3
+            hinge posture
+          }
+          # shoot <pose> <name> [launch args...]
+          shoot() {
+            local p=$1 name=$2; shift 2
+            xcrun simctl terminate "$UDID" in.dayxero.app 2>/dev/null || true
+            xcrun simctl launch "$UDID" in.dayxero.app "$@"
+            sleep 6
+            hinge screenshot "shots/duo-$p-$name.png"
+          }
+          for p in closed open landscape half; do
+            pose "$p"
+            shoot "$p" home-prep -dx.homeScenario prep -dx.store pro
+            shoot "$p" home-day3 -dx.homeScenario day3 -dx.store pro
+            shoot "$p" sos-session -dx.homeScenario day3 -dx.store pro -dx.sos YES -dx.sosElapsed 19
+            shoot "$p" sos-timeup -dx.homeScenario day3 -dx.store pro -dx.sos YES -dx.sosElapsed 181
+            shoot "$p" progress -dx.homeScenario day12 -dx.store pro -dx.tab progress
+            shoot "$p" program -dx.homeScenario day3 -dx.store pro -dx.tab program
+            shoot "$p" water-goal -dx.homeScenario day12 -dx.store pro -dx.tab water -dx.waterGoalSheet YES
+            shoot "$p" paywall -dx.paywallPreview YES -dx.store mock
+            shoot "$p" onb-reveal -dx.onboardingStep reveal
+          done
+          cd shots
+          git init -q -b ci-screens-duo
+          git config user.name "ci" && git config user.email "ci@users.noreply.github.com"
+          git add . && git commit -qm "iPhone Duo screenshots for ${GITHUB_SHA::7}"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" ci-screens-duo
+
+      - name: Upload log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: duo-build-log
+          path: build.log
