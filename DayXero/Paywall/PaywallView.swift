@@ -63,7 +63,7 @@ struct PaywallView: View {
 
     private var main: some View {
         VStack(spacing: 0) {
-            header.padding(.horizontal, DX.Space.m).padding(.top, DX.Space.xs)
+            header.padding(.horizontal, DX.Space.m).padding(.top, DX.Space.xs).dxReadableColumn()
             ScrollView {
                 VStack(alignment: .leading, spacing: DX.Space.xs) {
                     Text("\(name), your plan is ready").dxText(.title).accessibilityAddTraits(.isHeader)
@@ -81,12 +81,14 @@ struct PaywallView: View {
                     }
                 }
                 .padding(.horizontal, DX.Space.m)
+                .dxReadableColumn()
                 .padding(.top, DX.Space.m)
                 .padding(.bottom, typeSize.isAccessibilitySize ? DX.Space.xl : 0)
             }
             if !typeSize.isAccessibilitySize {
                 footer
                     .padding(.horizontal, DX.Space.m)
+                    .dxReadableColumn()
                     .padding(.bottom, DX.Space.xs)
             }
         }
@@ -227,7 +229,7 @@ struct PaywallView: View {
 
     private var failed: some View {
         VStack(spacing: 0) {
-            header.padding(.horizontal, DX.Space.m).padding(.top, DX.Space.xs)
+            header.padding(.horizontal, DX.Space.m).padding(.top, DX.Space.xs).dxReadableColumn()
             Spacer()
             DXStateView(.error, systemImage: "exclamationmark.circle", title: "Couldn't reach the App Store",
                         message: "Check your connection and try again. Day 1, your counter and Craving SOS work without it.",
@@ -352,6 +354,7 @@ private struct PaywallMessage: View {
             Button(button, action: action).buttonStyle(.dxPrimary)
         }
         .padding(.horizontal, DX.Space.l)
+        .dxReadableColumn()
         .padding(.bottom, DX.Space.xs)
     }
 }

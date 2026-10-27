@@ -17,9 +17,12 @@ struct BioOrbView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     /// Full 320 or mini 180, or narrower when the container is: min(target, width − 36).
-    static func side(mini: Bool, available: CGFloat, data: OrbData = .bundled) -> CGFloat {
+    /// The orb's size for the space it has: the spec's size, narrower containers less 36 pt, and on short windows
+    /// (iPhone Duo's cover, its inner display in landscape) no more than 45% of the height (S18.13).
+    static func side(mini: Bool, available: CGFloat, availableHeight: CGFloat? = nil, data: OrbData = .bundled) -> CGFloat {
         let target = mini ? data.geometry.sizeMini : data.geometry.sizeFull
-        return max(120, min(target, available - 36))
+        let byHeight = availableHeight.map { $0 * 0.45 } ?? .infinity
+        return max(120, min(target, available - 36, byHeight))
     }
 
     var body: some View {

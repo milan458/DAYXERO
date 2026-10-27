@@ -45,6 +45,7 @@ struct LessonPlayer: View {
             }
         }
         .padding(.horizontal, DX.Space.l)
+        .dxReadableColumn()
         .padding(.top, DX.Space.s)
         .padding(.bottom, DX.Space.xs)
         .dxCanvas()

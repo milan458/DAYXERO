@@ -37,12 +37,14 @@ struct WaterGoalSheet: View {
                             .padding(.top, DX.Space.xs)
                     }
                     .padding(.horizontal, DX.Space.m)
+                    .dxReadableColumn()
                     .padding(.top, DX.Space.s)
                     .padding(.bottom, DX.Space.xl)
                 }
                 Button("Save goal", action: save)
                     .buttonStyle(.dxPrimary)
                     .padding(.horizontal, DX.Space.m)
+                    .dxReadableColumn()
                     .padding(.bottom, DX.Space.xs)
             }
             .dxCanvas()

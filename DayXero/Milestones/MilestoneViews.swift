@@ -90,6 +90,7 @@ struct MilestoneMoment: View {
                 .buttonStyle(.dxSecondary)
         }
         .padding(.horizontal, DX.Space.m)
+        .dxReadableColumn()
         .padding(.bottom, DX.Space.xs)
         .background {
             ZStack {
@@ -211,6 +212,7 @@ struct ShareCardMaker: View {
             }
         }
         .padding(.horizontal, DX.Space.m)
+        .dxReadableColumn()
         .padding(.bottom, DX.Space.xs)
         .dxCanvas()
         .onAppear { Analytics.track(.shareCardCreated(milestone: milestone?.id ?? "days-\(stats.daysClear)")) }

@@ -9,42 +9,73 @@ struct HomeView: View {
     @Environment(SOSRouter.self) private var sos
     @Environment(Entitlement.self) private var entitlement
     @Environment(\.scenePhase) private var scenePhase
+    /// Where iPhone Duo puts vertical bars right now; nil on other iPhones and where it doesn't (S18.13).
+    @State private var barEdge: HorizontalEdge?
 
     var body: some View {
-        ZStack(alignment: .bottom) {
-            Group {
-                switch tab {
-                case "program":
-                    ProgramView(profile: profile)
-                case "progress":
-                    ProgressTab(profile: profile)
-                case "water":
-                    WaterTrackerView(profile: profile)
-                default:
-                    TodayView(profile: profile, openWater: { tab = "water" })
-                }
+        GeometryReader { geo in
+            let edge = dockEdge(in: geo.size)
+            let alignment: Alignment = edge == nil ? .bottom : edge == .leading ? .leading : .trailing
+            let dockPadding: Edge.Set = edge == nil ? .bottom : edge == .leading ? .leading : .trailing
+            ZStack(alignment: alignment) {
+                tabContent
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    // Every tab scrolls clear of the dock, on whichever edge it stands (S18.13).
+                    .safeAreaInset(edge: .bottom, spacing: 0) {
+                        if edge == nil { Color.clear.frame(height: DXDock.thickness + DX.Space.xs) }
+                    }
+                    .safeAreaInset(edge: edge ?? .trailing, spacing: 0) {
+                        if edge != nil { Color.clear.frame(width: DXDock.thickness + DX.Space.xs) }
+                    }
+                dock(axis: edge == nil ? .horizontal : .vertical)
+                    .padding(dockPadding, DX.Space.xxs)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-
-            DXDock(
-                items: [
-                    DXDockItem(id: "today", title: "Today", systemImage: "house"),
-                    DXDockItem(id: "water", title: "Water", systemImage: "drop"),
-                    DXDockItem(id: "program", title: "Program", systemImage: "book.closed"),
-                    DXDockItem(id: "progress", title: "Progress", systemImage: "chart.bar"),
-                ],
-                selection: $tab,
-                // Today, Water, Craving SOS in the middle, Program, Progress.
-                sosPosition: 2,
-                sosAction: { sos.open(source: "dock") }
-            )
-            .padding(.bottom, DX.Space.xxs)
         }
+        .readVerticalBarEdge($barEdge)
         .dxCanvas()
         // A break of 3+ days pauses the program until the last day is replayed (S5.7).
         .onChange(of: scenePhase, initial: true) { _, phase in
             if phase == .active { ProgramUpkeep.checkForBreak(profile, isPro: entitlement.isPro) }
         }
+    }
+}
+
+extension HomeView {
+    @ViewBuilder
+    private var tabContent: some View {
+        switch tab {
+        case "program":
+            ProgramView(profile: profile)
+        case "progress":
+            ProgressTab(profile: profile)
+        case "water":
+            WaterTrackerView(profile: profile)
+        default:
+            TodayView(profile: profile, openWater: { tab = "water" })
+        }
+    }
+
+    private func dock(axis: Axis) -> some View {
+        DXDock(
+            items: [
+                DXDockItem(id: "today", title: "Today", systemImage: "house"),
+                DXDockItem(id: "water", title: "Water", systemImage: "drop"),
+                DXDockItem(id: "program", title: "Program", systemImage: "book.closed"),
+                DXDockItem(id: "progress", title: "Progress", systemImage: "chart.bar"),
+            ],
+            selection: $tab,
+            // Today, Water, Craving SOS in the middle, Program, Progress.
+            sosPosition: 2,
+            axis: axis,
+            sosAction: { sos.open(source: "dock") }
+        )
+    }
+
+    /// The dock stands on the edge where iPhone Duo puts vertical bars; in a window wider than it is tall it
+    /// stands on the trailing edge anyway, so it never eats into a short screen's height.
+    private func dockEdge(in size: CGSize) -> HorizontalEdge? {
+        if let barEdge { return barEdge }
+        return size.width > size.height ? .trailing : nil
     }
 }
 
@@ -62,6 +93,7 @@ struct ComingSoon: View {
             Spacer()
         }
         .padding(.horizontal, DX.Space.m)
+        .dxReadableColumn()
         .dxCanvas()
     }
 }
@@ -98,36 +130,16 @@ struct TodayView: View {
         // Re-evaluates each minute so counters tick and the day rolls over on its own.
         TimelineView(.everyMinute) { timeline in
             let snap = HomeSnapshot(profile: profile, isPro: entitlement.isPro, now: timeline.date)
-            ScrollView {
-                VStack(alignment: .leading, spacing: 10) {
-                    header(snap, now: timeline.date)
-                    hero(snap)
-                    dailyCard(now: timeline.date)
-                    WaterHomeCard(profile: profile, now: timeline.date, onOpen: openWater)
-                    if let lesson = snap.lesson {
-                        if lesson.isReplay {
-                            ReplayCard(title: lesson.title, minutes: LessonLibrary.lesson(for: lesson.day, product: profile.primaryProduct?.product ?? .cigarettes).minutes) {
-                                openLesson = .init(day: lesson.day, isReplay: true)
-                            }
-                        } else {
-                            lessonCard(lesson, finished: snap.finishedToday, prepTotal: snap.prepTotal)
-                        }
-                    }
-                    if snap.phase == .quitDay, !sosHintSeen { sosHint }
-                    // A plan made today, after a slip or in a lesson, stays on Home for the rest of the day (S8.3).
-                    if let plan = plans.first, DayClock(boundaryHour: profile.dayBoundaryHour).day(containing: plan.createdAt)
-                        == DayClock(boundaryHour: profile.dayBoundaryHour).day(containing: timeline.date) {
-                        PlanCard(situation: plan.situation, action: plan.action, title: "Your plan for next time")
-                    }
-                    nrtSection(snap, now: timeline.date)
-                    if isPrep(snap) { useRows(now: timeline.date) }
-                    // In prep, money and prep days live on Progress; Home keeps only what to do today (S18.10).
-                    if !isPrep(snap) { tiles(snap) }
-                    if let next = snap.nextMilestone, !isPrep(snap) { milestone(next: next, daysClear: snap.daysClear) }
+            // Half-open iPhone Duo: today at a glance on one side of the fold, what to do on the other (S18.14).
+            FoldAware {
+                column { overview(snap, now: timeline.date) }
+            } secondary: {
+                column { actions(snap, now: timeline.date) }
+            } flat: {
+                column {
+                    overview(snap, now: timeline.date)
+                    actions(snap, now: timeline.date)
                 }
-                .padding(.horizontal, DX.Space.m)
-                .padding(.top, DX.Space.s)
-                .padding(.bottom, 120)
             }
         }
         .overlay(alignment: .bottom) {
@@ -192,6 +204,52 @@ struct TodayView: View {
         if let milestone = Milestone.toCelebrate(daysClear: days, celebrated: CelebratedMilestones.ids) {
             celebrating = milestone
         }
+    }
+
+    // MARK: Layout
+
+    private func column<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 10) { content() }
+                .padding(.horizontal, DX.Space.m)
+                .dxReadableColumn()
+                .padding(.top, DX.Space.s)
+                .padding(.bottom, DX.Space.l)
+        }
+    }
+
+    /// Where things stand: the header, Quit Day or days clear, today's pledge or check-in, and water.
+    @ViewBuilder
+    private func overview(_ snap: HomeSnapshot, now: Date) -> some View {
+        header(snap, now: now)
+        hero(snap)
+        dailyCard(now: now)
+        WaterHomeCard(profile: profile, now: now, onOpen: openWater)
+    }
+
+    /// What to do: the lesson, today's plan, NRT, logging in prep, the counters and the next milestone.
+    @ViewBuilder
+    private func actions(_ snap: HomeSnapshot, now: Date) -> some View {
+        if let lesson = snap.lesson {
+            if lesson.isReplay {
+                ReplayCard(title: lesson.title, minutes: LessonLibrary.lesson(for: lesson.day, product: profile.primaryProduct?.product ?? .cigarettes).minutes) {
+                    openLesson = .init(day: lesson.day, isReplay: true)
+                }
+            } else {
+                lessonCard(lesson, finished: snap.finishedToday, prepTotal: snap.prepTotal)
+            }
+        }
+        if snap.phase == .quitDay, !sosHintSeen { sosHint }
+        // A plan made today, after a slip or in a lesson, stays on Home for the rest of the day (S8.3).
+        if let plan = plans.first, DayClock(boundaryHour: profile.dayBoundaryHour).day(containing: plan.createdAt)
+            == DayClock(boundaryHour: profile.dayBoundaryHour).day(containing: now) {
+            PlanCard(situation: plan.situation, action: plan.action, title: "Your plan for next time")
+        }
+        nrtSection(snap, now: now)
+        if isPrep(snap) { useRows(now: now) }
+        // In prep, money and prep days live on Progress; Home keeps only what to do today (S18.10).
+        if !isPrep(snap) { tiles(snap) }
+        if let next = snap.nextMilestone, !isPrep(snap) { milestone(next: next, daysClear: snap.daysClear) }
     }
 
     // MARK: Pledge and check-in (S11)
@@ -328,7 +386,8 @@ struct TodayView: View {
         .background(DX.Palette.primary, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
         .shadow(color: DX.Palette.shadow, radius: 16, y: 8)
         .padding(.horizontal, DX.Space.m)
-        .padding(.bottom, 96)
+        .dxReadableColumn()
+        .padding(.bottom, DX.Space.xs)
         .transition(.move(edge: .bottom).combined(with: .opacity))
         .accessibilityElement(children: .contain)
     }

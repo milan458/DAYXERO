@@ -16,39 +16,47 @@ public struct DXDockItem: Identifiable, Hashable, Sendable {
 }
 
 /// Floating navigation dock. The active tab morphs from a 48pt circle into a 64pt capsule.
-/// On iOS 26 the container is Liquid Glass; earlier it is a frosted bar.
+/// On iOS 26 the container is Liquid Glass; earlier it is a frosted bar. On iPhone Duo it can stand on its side
+/// along the edge where the system puts vertical bars (S18.13).
 public struct DXDock: View {
     let items: [DXDockItem]
     @Binding var selection: String
     let sosAction: () -> Void
     /// Where Craving SOS sits among the tabs; nil puts it at the end.
     let sosPosition: Int?
+    let axis: Axis
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    public init(items: [DXDockItem], selection: Binding<String>, sosPosition: Int? = nil, sosAction: @escaping () -> Void) {
+    public init(items: [DXDockItem], selection: Binding<String>, sosPosition: Int? = nil, axis: Axis = .horizontal,
+                sosAction: @escaping () -> Void) {
         self.items = items
         self._selection = selection
         self.sosPosition = sosPosition
+        self.axis = axis
         self.sosAction = sosAction
     }
 
+    /// The dock's thickness across its axis: its height lying down, its width standing up.
+    public static let thickness = DX.Size.tabActiveHeight + DX.Space.m
+
     public var body: some View {
         let split = min(sosPosition ?? items.count, items.count)
-        HStack(spacing: 10) {
+        let layout = axis == .horizontal ? AnyLayout(HStackLayout(spacing: 10)) : AnyLayout(VStackLayout(spacing: 10))
+        layout {
             ForEach(items.prefix(split)) { item in
                 tab(item)
             }
             sosButton
-                .padding(.horizontal, sosPosition == nil ? 0 : 2)
-                .padding(.leading, sosPosition == nil ? 6 : 0)
+                .padding(axis == .horizontal ? .horizontal : .vertical, sosPosition == nil ? 0 : 2)
+                .padding(axis == .horizontal ? .leading : .top, sosPosition == nil ? 6 : 0)
             ForEach(items.dropFirst(split)) { item in
                 tab(item)
             }
         }
-        .padding(.vertical, DX.Space.xs)
-        .padding(.horizontal, DX.Space.s)
-        .frame(height: DX.Size.tabActiveHeight + DX.Space.m)
+        .padding(axis == .horizontal ? .vertical : .horizontal, DX.Space.xs)
+        .padding(axis == .horizontal ? .horizontal : .vertical, DX.Space.s)
+        .frame(width: axis == .vertical ? Self.thickness : nil, height: axis == .horizontal ? Self.thickness : nil)
         .modifier(DockBackground())
         .sensoryFeedback(DX.Haptic.select, trigger: selection)
     }
@@ -71,7 +79,8 @@ public struct DXDock: View {
             Image(systemName: item.systemImage)
                 .font(.system(size: 18, weight: active ? .semibold : .regular))
                 .foregroundStyle(active ? DX.Palette.onPrimary : DX.Palette.muted)
-                .frame(width: DX.Size.tab, height: active ? DX.Size.tabActiveHeight : DX.Size.tab)
+                .frame(width: active && axis == .vertical ? DX.Size.tabActiveHeight : DX.Size.tab,
+                       height: active && axis == .horizontal ? DX.Size.tabActiveHeight : DX.Size.tab)
                 .background(active ? DX.Palette.primary : DX.Palette.surface2, in: Capsule())
                 .overlay(Capsule().strokeBorder(active ? .clear : DX.Palette.hairline))
         }

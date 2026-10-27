@@ -117,6 +117,7 @@ struct CheckInView: View {
                 .disabled(mood == nil)
         }
         .padding(.horizontal, DX.Space.m)
+        .dxReadableColumn()
         .padding(.bottom, DX.Space.xs)
     }
 
@@ -195,6 +196,7 @@ struct CheckInView: View {
             Button("Done", action: onDone).buttonStyle(.dxPrimary)
         }
         .padding(.horizontal, DX.Space.m)
+        .dxReadableColumn()
         .padding(.bottom, DX.Space.xs)
     }
 
@@ -249,6 +251,7 @@ struct DayEndSettings: View {
             Button("Done") { dismiss() }.buttonStyle(.dxPrimary)
         }
         .padding(.horizontal, DX.Space.m)
+        .dxReadableColumn()
         .padding(.bottom, DX.Space.xs)
         .dxCanvas()
     }

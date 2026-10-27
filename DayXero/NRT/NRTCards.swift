@@ -228,6 +228,7 @@ struct TaperSetupView: View {
             }
         }
         .padding(.horizontal, DX.Space.m)
+        .dxReadableColumn()
         .padding(.bottom, DX.Space.xs)
         .dxCanvas()
         .sensoryFeedback(DX.Haptic.commit, trigger: saved)

@@ -57,6 +57,7 @@ struct SlipFlow: View {
             }
         }
         .padding(.horizontal, DX.Space.m)
+        .dxReadableColumn()
         .padding(.bottom, DX.Space.xs)
         .dxCanvas()
         .animation(DX.Motion.animation(DX.Motion.glide, reduceMotion: false), value: stage)

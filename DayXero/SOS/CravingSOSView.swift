@@ -94,27 +94,61 @@ struct CravingSOSView: View {
     private var sessionView: some View {
         VStack(spacing: 0) {
             topBar(stage == .timeUp ? "Three minutes done" : "Riding it out")
-            GeometryReader { geo in
-                ScrollView {
+            // Half-open iPhone Duo: the orb on one side of the fold, the controls on the other (S18.14).
+            FoldAware {
+                GeometryReader { geo in
                     VStack(spacing: 24) {
-                        // After the three minutes the orb steps back so the person's own reason fits above the choices (S18.6).
-                        BioOrbView(engine: engine, side: BioOrbView.side(mini: stage == .timeUp, available: geo.size.width), onTap: coachMe)
-                            .padding(.top, stage == .timeUp ? DX.Space.s : DX.Space.l)
+                        orb(geo)
                         OrbCaption(engine: engine)
-                        if stage == .session { controls }
-                        if stage == .timeUp, let reason = currentReason {
-                            ReasonCard(reason: reason, canAdvance: reasons.count > 1) { reasonSkip += 1 }
-                        }
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding(.bottom, DX.Space.m)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
-                .scrollBounceBehavior(.basedOnSize)
+            } secondary: {
+                VStack(spacing: 0) {
+                    ScrollView {
+                        VStack(spacing: 24) { sessionExtras }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, DX.Space.m)
+                    }
+                    .scrollBounceBehavior(.basedOnSize)
+                    if stage == .timeUp { outcomes }
+                }
+            } flat: {
+                VStack(spacing: 0) {
+                    GeometryReader { geo in
+                        ScrollView {
+                            VStack(spacing: 24) {
+                                orb(geo).padding(.top, stage == .timeUp ? DX.Space.s : DX.Space.l)
+                                OrbCaption(engine: engine)
+                                sessionExtras
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.bottom, DX.Space.m)
+                        }
+                        .scrollBounceBehavior(.basedOnSize)
+                    }
+                    if stage == .timeUp { outcomes }
+                }
             }
-            if stage == .timeUp { outcomes }
         }
         .padding(.horizontal, DX.Space.m)
+        .dxReadableColumn(avoidingFold: false)
         .padding(.bottom, DX.Space.xs)
+    }
+
+    /// After the three minutes the orb steps back so the person's own reason fits above the choices (S18.6).
+    private func orb(_ geo: GeometryProxy) -> some View {
+        BioOrbView(engine: engine, side: BioOrbView.side(mini: stage == .timeUp, available: geo.size.width, availableHeight: geo.size.height),
+                   onTap: coachMe)
+    }
+
+    /// Pause and Coach me during the session; the person's reason once it's done.
+    @ViewBuilder
+    private var sessionExtras: some View {
+        if stage == .session { controls }
+        if stage == .timeUp, let reason = currentReason {
+            ReasonCard(reason: reason, canAdvance: reasons.count > 1) { reasonSkip += 1 }
+        }
     }
 
     private func topBar(_ title: LocalizedStringKey) -> some View {
@@ -271,6 +305,7 @@ struct CravingSOSView: View {
             .padding(.top, DX.Space.xs)
         }
         .padding(.horizontal, DX.Space.m)
+        .dxReadableColumn()
         .padding(.bottom, DX.Space.xs)
     }
 

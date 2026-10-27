@@ -30,5 +30,7 @@ public extension DX {
         public static let inputHeight: CGFloat = 52
         public static let dayBubble: CGFloat = 40
         public static let progressHeight: CGFloat = 6
+        /// The widest a column of cards or text gets. Wider windows (iPhone Duo's inner display, S18.13) centre it.
+        public static let readableWidth: CGFloat = 600
     }
 }

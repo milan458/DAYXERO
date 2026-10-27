@@ -21,39 +21,16 @@ struct ProgressTab: View {
             let now = timeline.date
             let snap = HomeSnapshot(profile: profile, isPro: entitlement.isPro, now: now)
             let insights = Insights(points: entries.map(Insights.Point.init), now: now)
-            ScrollView {
-                VStack(alignment: .leading, spacing: DX.Space.xs) {
-                    header(snap)
-                    hero(snap)
-                    tiles(snap, insights: insights)
-                    if !isPrepPhase(snap) {
-                        MilestonesRow(daysClear: snap.daysClear) { milestoneOpen = $0 }
-                    }
-                    // What's changing in the body, from Quit Day (S10).
-                    HealthSummaryCard(profile: profile, now: now) { showHealth = true }
-                    // The full step plan for each NRT product (S9.5).
-                    ForEach(profile.nrtPlans.sorted { $0.createdAt < $1.createdAt }) { plan in
-                        NRTCard(plan: plan, clock: DayClock(boundaryHour: profile.dayBoundaryHour), now: now, showAllSteps: true)
-                    }
-                    HStack(alignment: .firstTextBaseline) {
-                        Text("Your patterns").dxText(.micro)
-                        Spacer()
-                        if insights.isReady { Text("Last 4 weeks").font(.custom(DX.Typeface.regular, size: 11, relativeTo: .caption2)).foregroundStyle(DX.Palette.muted) }
-                    }
-                    .padding(.top, DX.Space.m)
-                    .accessibilityAddTraits(.isHeader)
-                    if insights.isReady {
-                        heatCard(insights)
-                        triggersCard(insights)
-                        trendCard(insights)
-                        recentLogs
-                    } else {
-                        earlyPatterns(insights)
-                    }
+            // Half-open iPhone Duo: what you've gained on one side of the fold, the details on the other (S18.14).
+            FoldAware {
+                column { gained(snap, insights: insights) }
+            } secondary: {
+                column { details(insights, now: now) }
+            } flat: {
+                column {
+                    gained(snap, insights: insights)
+                    details(insights, now: now)
                 }
-                .padding(.horizontal, DX.Space.m)
-                .padding(.top, DX.Space.s)
-                .padding(.bottom, 120)
             }
         }
         .fullScreenCover(item: $milestoneOpen) { milestone in
@@ -75,6 +52,53 @@ struct ProgressTab: View {
                 }
             }
             .presentationDetents([.large])
+        }
+    }
+
+    // MARK: Layout
+
+    private func column<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: DX.Space.xs) { content() }
+                .padding(.horizontal, DX.Space.m)
+                .dxReadableColumn()
+                .padding(.top, DX.Space.s)
+                .padding(.bottom, DX.Space.l)
+        }
+    }
+
+    @ViewBuilder
+    private func gained(_ snap: HomeSnapshot, insights: Insights) -> some View {
+        header(snap)
+        hero(snap)
+        tiles(snap, insights: insights)
+        if !isPrepPhase(snap) {
+            MilestonesRow(daysClear: snap.daysClear) { milestoneOpen = $0 }
+        }
+    }
+
+    @ViewBuilder
+    private func details(_ insights: Insights, now: Date) -> some View {
+        // What's changing in the body, from Quit Day (S10).
+        HealthSummaryCard(profile: profile, now: now) { showHealth = true }
+        // The full step plan for each NRT product (S9.5).
+        ForEach(profile.nrtPlans.sorted { $0.createdAt < $1.createdAt }) { plan in
+            NRTCard(plan: plan, clock: DayClock(boundaryHour: profile.dayBoundaryHour), now: now, showAllSteps: true)
+        }
+        HStack(alignment: .firstTextBaseline) {
+            Text("Your patterns").dxText(.micro)
+            Spacer()
+            if insights.isReady { Text("Last 4 weeks").font(.custom(DX.Typeface.regular, size: 11, relativeTo: .caption2)).foregroundStyle(DX.Palette.muted) }
+        }
+        .padding(.top, DX.Space.m)
+        .accessibilityAddTraits(.isHeader)
+        if insights.isReady {
+            heatCard(insights)
+            triggersCard(insights)
+            trendCard(insights)
+            recentLogs
+        } else {
+            earlyPatterns(insights)
         }
     }
 

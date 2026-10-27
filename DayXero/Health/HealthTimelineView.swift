@@ -37,6 +37,7 @@ struct HealthTimelineView: View {
                     if let text = timeline?.note(for: product) { note(text) }
                 }
                 .padding(.horizontal, DX.Space.m)
+                .dxReadableColumn()
                 .padding(.top, DX.Space.s)
                 .padding(.bottom, DX.Space.xxl)
             }
@@ -205,6 +206,7 @@ struct HealthItemDetail: View {
                     .dxText(.subtitle)
             }
             .padding(.horizontal, DX.Space.m)
+            .dxReadableColumn()
             .padding(.bottom, DX.Space.l)
         }
         .dxCanvas()

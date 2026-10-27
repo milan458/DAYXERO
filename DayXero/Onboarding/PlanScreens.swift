@@ -37,6 +37,7 @@ struct BuildingScreen: View {
             Spacer()
         }
         .padding(.horizontal, DX.Space.l)
+        .dxReadableColumn()
         .accessibilityElement(children: .combine)
         .task {
             for i in 1...lines.count {

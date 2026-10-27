@@ -73,8 +73,9 @@ struct WaterTrackerView: View {
                     .padding(.top, DX.Space.l)
             }
             .padding(.horizontal, 24)
+            .dxReadableColumn()
             .padding(.top, DX.Space.l)
-            .padding(.bottom, 140)
+            .padding(.bottom, DX.Space.l)
         }
         .scrollBounceBehavior(.basedOnSize)
         .background(Color.black.ignoresSafeArea())

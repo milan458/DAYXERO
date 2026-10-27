@@ -30,6 +30,7 @@ struct WelcomeScreen: View {
             Text("Takes about 3 minutes").dxText(.subtitle).frame(maxWidth: .infinity).padding(.top, DX.Space.xs)
         }
         .padding(.horizontal, DX.Space.l)
+        .dxReadableColumn()
         .padding(.top, DX.Space.xxl)
         .padding(.bottom, DX.Space.xs)
     }

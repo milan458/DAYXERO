@@ -82,6 +82,7 @@ struct NRTSetupView: View {
                 }
             }
             .padding(.horizontal, DX.Space.m)
+            .dxReadableColumn()
             .padding(.bottom, DX.Space.xs)
             .dxCanvas()
             .toolbar {
@@ -473,6 +474,7 @@ struct StepEditor: View {
             }
         }
         .padding(.horizontal, DX.Space.m)
+        .dxReadableColumn()
         .padding(.bottom, DX.Space.xs)
         .dxCanvas()
     }

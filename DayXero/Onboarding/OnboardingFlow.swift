@@ -16,6 +16,7 @@ struct OnboardingFlow: View {
             if showsTopBar {
                 topBar
                     .padding(.horizontal, DX.Space.m)
+                    .dxReadableColumn()
                     .padding(.top, DX.Space.xs)
             }
             ZStack {
@@ -30,7 +31,8 @@ struct OnboardingFlow: View {
                 // A flexible container is what stretches past the safe area; a fixed-height frame can't.
                 VStack(spacing: 0) {
                     Spacer(minLength: 0)
-                    Hills().frame(height: 400)
+                    // 400 pt, or less on short windows such as iPhone Duo's cover (S18.13).
+                    Hills().containerRelativeFrame(.vertical) { length, _ in min(400, length * 0.45) }
                 }
                 .ignoresSafeArea()
                 .transition(.opacity)
@@ -148,12 +150,14 @@ struct OnboardingScaffold<Content: View, Footer: View>: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, DX.Space.m)
+                .dxReadableColumn()
                 .padding(.top, DX.Space.m)
                 .padding(.bottom, DX.Space.xl)
             }
             .scrollDismissesKeyboard(.interactively)
             VStack(spacing: DX.Space.xs) { footer() }
                 .padding(.horizontal, DX.Space.m)
+                .dxReadableColumn()
                 .padding(.bottom, DX.Space.xs)
         }
     }

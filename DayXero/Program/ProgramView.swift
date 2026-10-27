@@ -39,8 +39,9 @@ struct ProgramView: View {
                     section("The four weeks after", detail: String(localized: "Weekly"), rows: state.rows(.maintenance), state: state)
                 }
                 .padding(.horizontal, DX.Space.m)
+                .dxReadableColumn()
                 .padding(.top, DX.Space.xl)
-                .padding(.bottom, 120)
+                .padding(.bottom, DX.Space.l)
             }
         }
         .fullScreenCover(isPresented: $showCalm) {
