@@ -79,6 +79,20 @@ final class JourneyUITests: XCTestCase {
         visitTabs(app, prefix: "22-day3")
     }
 
+    /// A slip or a craving opened straight from a widget or Siri shows its page, not a blank sheet (S18.18).
+    func testWidgetOpensSlipAndCravingLog() {
+        let app = launch(["-dx.homeScenario", "day3", "-dx.store", "pro"])
+        XCTAssert(app.buttons["Craving SOS"].waitForExistence(timeout: 10))
+        app.open(URL(string: "dayxero://log/slip")!)
+        XCTAssert(app.staticTexts["Thanks for telling us"].waitForExistence(timeout: 5), "The slip screen didn't appear")
+        snap(app, "23-widget-slip")
+        tapSettled(app, "Not now")
+        XCTAssert(app.buttons["Craving SOS"].waitForExistence(timeout: 5))
+        app.open(URL(string: "dayxero://log/craving")!)
+        XCTAssert(app.buttons["Save"].waitForExistence(timeout: 5), "The craving log didn't appear")
+        snap(app, "24-widget-craving")
+    }
+
     func testMaintenance() {
         let app = launch(["-dx.homeScenario", "day12", "-dx.store", "pro"])
         XCTAssert(app.buttons["Craving SOS"].waitForExistence(timeout: 10))

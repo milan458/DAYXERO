@@ -13,8 +13,12 @@ final class LogRouter {
     }
 
     var page: Page?
+    /// The sheet's height. Set before the sheet opens, so a craving or a slip opens full height straight away
+    /// instead of growing mid-presentation.
+    var detent = PresentationDetent.medium
 
     func open(_ page: Page = .menu) {
+        detent = page == .menu ? .medium : .large
         self.page = page
     }
 }
@@ -30,36 +34,61 @@ struct LogSheet: View {
     @Environment(SOSRouter.self) private var sos
     @State private var path: [LogRouter.Page] = []
     @State private var slip: LogEntry?
+    /// The slip logged when the sheet opens straight to one (the widget's "Slipped? Log it").
+    @State private var startSlip: LogEntry?
     @State private var logged = false
     @Query(filter: #Predicate<LogEntry> { $0.kindRaw != "craving" }) private var uses: [LogEntry]
 
     var body: some View {
         NavigationStack(path: $path) {
-            menu
-                .navigationDestination(for: LogRouter.Page.self) { _ in
-                    CravingLogForm(profile: profile, onSaved: onClose, onSOS: {
-                        onClose()
-                        sos.open(source: "log")
-                    })
-                }
-                .navigationDestination(item: $slip) { entry in
-                    SlipFlow(entry: entry, profile: profile, onDone: onClose)
-                        .navigationBarBackButtonHidden()
-                        .toolbar(.hidden, for: .navigationBar)
-                }
+            root
+                .navigationDestination(for: LogRouter.Page.self) { _ in cravingForm }
+                .navigationDestination(item: $slip) { entry in slipFlow(entry) }
         }
         .sensoryFeedback(DX.Haptic.commit, trigger: logged)
         .onAppear {
-            if start == .craving, path.isEmpty { path = [.craving] }
-            if start == .slip, slip == nil, let product = products.first {
-                slip = UseLog.log(product, in: context)
+            if start == .slip, startSlip == nil, let product = products.first {
+                startSlip = UseLog.log(product, in: context)
                 Analytics.track(.slipLogged(source: "widget"))
             }
-            detent = path.isEmpty ? .medium : .large
         }
         // The menu fits half the screen; the craving form and the slip screen get the full height.
-        .onChange(of: path) { detent = path.isEmpty && slip == nil ? .medium : .large }
-        .onChange(of: slip) { detent = path.isEmpty && slip == nil ? .medium : .large }
+        .onChange(of: path) { detent = fullHeight ? .large : .medium }
+        .onChange(of: slip) { detent = fullHeight ? .large : .medium }
+    }
+
+    /// What the sheet opens on. A craving or a slip opened from a widget, Siri or a link is the sheet's first page,
+    /// not a push: pushing while the sheet was still presenting left the page blank (S18.18).
+    @ViewBuilder
+    private var root: some View {
+        switch start {
+        case .menu: menu
+        case .craving: cravingForm
+        case .slip:
+            if let startSlip {
+                slipFlow(startSlip)
+            } else if products.isEmpty {
+                menu
+            } else {
+                // For the moment before the slip is saved on appear.
+                Color.clear.dxCanvas()
+            }
+        }
+    }
+
+    private var fullHeight: Bool { start != .menu || !path.isEmpty || slip != nil }
+
+    private var cravingForm: some View {
+        CravingLogForm(profile: profile, onSaved: onClose, onSOS: {
+            onClose()
+            sos.open(source: "log")
+        })
+    }
+
+    private func slipFlow(_ entry: LogEntry) -> some View {
+        SlipFlow(entry: entry, profile: profile, onDone: onClose)
+            .navigationBarBackButtonHidden()
+            .toolbar(.hidden, for: .navigationBar)
     }
 
     private var menu: some View {

@@ -63,7 +63,6 @@ struct RootView: View {
     @State private var sos = SOSRouter()
     @State private var log = LogRouter()
     @State private var nrt = NRTRouter()
-    @State private var logDetent = PresentationDetent.medium
     @AppStorage(AppearanceSetting.key) private var appearance = AppearanceSetting.automatic.rawValue
 
     var body: some View {
@@ -81,9 +80,9 @@ struct RootView: View {
                 }
             }
             .sheet(item: $log.page) { page in
-                LogSheet(profile: profiles.first, start: page, detent: $logDetent) { log.page = nil }
+                LogSheet(profile: profiles.first, start: page, detent: $log.detent) { log.page = nil }
                     .environment(sos)
-                    .presentationDetents([.medium, .large], selection: $logDetent)
+                    .presentationDetents([.medium, .large], selection: $log.detent)
             }
             // Craving SOS sits above everything, so every way in reaches it in one step (S6.5).
             .fullScreenCover(item: $sos.launch) { launch in
