@@ -5,6 +5,8 @@ name: App Store screenshots
 # (scripts/store/compose.py). Results go to the store-screens branch, ready to upload in App Store Connect.
 on:
   workflow_dispatch:
+  # Also run from 'iOS build and test' with its store_screens input, so branches can make them before merging.
+  workflow_call:
 
 permissions:
   contents: write
