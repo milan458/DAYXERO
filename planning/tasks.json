@@ -2,14 +2,12 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-27T19:48:53.586Z"
+    "updated": "2026-10-27T20:11:34.751Z"
   },
   "now": {
     "section": "S18",
-    "task": "S18.12",
-    "waiting_on_milan": [
-      "Decide the trial length vs prep (S18.4)"
-    ]
+    "task": "S18.16",
+    "waiting_on_milan": []
   },
   "sections": [
     {
@@ -1711,7 +1709,7 @@
           "id": "S16.3",
           "title": "App Store assets: screenshots, preview video, description (ask Milan for copy).",
           "status": "pending",
-          "notes": "Copy and screenshot set approved by Milan. Next: capture the six screens on a 6.9\" simulator and add captions.",
+          "notes": "Copy and screenshot set approved by Milan. Next: capture the six screens on a 6.9\" simulator and add captions.\n27 Oct: pipeline built (S18.16). The 'App Store screenshots' workflow produces the approved six at 6.9\" and 6.3\" too. The Program shot shows PLACEHOLDER lessons until S5.1; the slip shot uses 'Plan saved', because the first slip screen captures blank in CI.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -1818,10 +1816,10 @@
         {
           "id": "S18.4",
           "title": "Trial length vs prep window (bug 4)",
-          "status": "blocked",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. The 3-day trial ends before a 7-day prep reaches Quit Day, and free users stop after Prep day 1. Options: 2-week trial, 1-week trial, prep free and pay from Quit Day, 1-month trial. Waiting on Milan.",
+          "status": "done",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. The 3-day trial ends before a 7-day prep reaches Quit Day, and free users stop after Prep day 1. Options: 2-week trial, 1-week trial, prep free and pay from Quit Day, 1-month trial. Waiting on Milan.\nMilan, 27 Oct: keep the paywall as it is for now (3-day trial on yearly, Prep day 1 free).",
           "created": "2026-10-27T19:25:39.154Z",
-          "completed": null
+          "completed": "2026-10-27T20:11:34.553Z"
         },
         {
           "id": "S18.5",
@@ -1914,15 +1912,53 @@
         {
           "id": "S18.16",
           "title": "iPhone Duo: App Store screenshots",
-          "status": "pending",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Needed from April 2027 for apps built with the iOS 27.1 SDK. Not started.",
+          "status": "in_progress",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Needed from April 2027 for apps built with the iOS 27.1 SDK. Not started.\nMilan, 27 Oct: do it now; Duo screenshots put a 'optimized for iPhone Duo' badge on the product page. 246fb5d: 'App Store screenshots' workflow captures the six approved screens on iPhone 6.9\" and both Duo displays and composes them at 1320x2868, 1206x2622, 1398x2034 and 2007x2853 (scripts/store/compose.py). Results on the store-screens branch.",
           "created": "2026-10-27T19:25:39.590Z",
+          "completed": null
+        },
+        {
+          "id": "S18.17",
+          "title": "Currency follows the phone's region, with a Settings option to change it",
+          "status": "in_progress",
+          "notes": "Milan, 27 Oct. 877fa4d: CurrencyChoice (Core, tested) gives the region's currency in onboarding; Settings › Your quit › Currency lists every currency with search. Changing it relabels amounts, it doesn't convert them.\nVerifying on CI.",
+          "created": "2026-10-27T20:11:34.596Z",
           "completed": null
         }
       ]
     }
   ],
   "log": [
+    {
+      "time": "2026-10-27T20:11:34.751Z",
+      "type": "now",
+      "message": "Now: S18 / S18.16"
+    },
+    {
+      "time": "2026-10-27T20:11:34.721Z",
+      "type": "note",
+      "message": "S16.3: 27 Oct: pipeline built (S18.16). The 'App Store screenshots' workflow produces the approved six at 6.9\" and 6.3\" too. The Program shot shows PLACEHOLDER lessons until S5.1; the slip shot uses 'Plan saved', because the first slip screen captures blank in CI."
+    },
+    {
+      "time": "2026-10-27T20:11:34.685Z",
+      "type": "status",
+      "message": "S18.16 pending → in_progress (Milan, 27 Oct: do it now; Duo screenshots put a 'optimized for iPhone Duo' badge on the product page. 246fb5d: 'App Store screenshots' workflow captures the six approved screens on iPhone 6.9\" and both Duo displays and composes them at 1320x2868, 1206x2622, 1398x2034 and 2007x2853 (scripts/store/compose.py). Results on the store-screens branch.)"
+    },
+    {
+      "time": "2026-10-27T20:11:34.644Z",
+      "type": "status",
+      "message": "S18.17 pending → in_progress (Verifying on CI.)"
+    },
+    {
+      "time": "2026-10-27T20:11:34.596Z",
+      "type": "task_added",
+      "message": "S18.17 added: Currency follows the phone's region, with a Settings option to change it"
+    },
+    {
+      "time": "2026-10-27T20:11:34.553Z",
+      "type": "status",
+      "message": "S18.4 blocked → done (Milan, 27 Oct: keep the paywall as it is for now (3-day trial on yearly, Prep day 1 free).)"
+    },
     {
       "time": "2026-10-27T19:48:53.586Z",
       "type": "now",
