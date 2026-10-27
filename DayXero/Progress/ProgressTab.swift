@@ -58,9 +58,11 @@ struct ProgressTab: View {
     // MARK: Layout
 
     private func column<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
-        ScrollViewReader { proxy in
+        // Built here: ScrollViewReader's closure escapes, and `content` doesn't.
+        let built = content()
+        return ScrollViewReader { proxy in
             ScrollView {
-                VStack(alignment: .leading, spacing: DX.Space.xs) { content() }
+                VStack(alignment: .leading, spacing: DX.Space.xs) { built }
                     .padding(.horizontal, DX.Space.m)
                     .dxReadableColumn()
                     .padding(.top, DX.Space.s)
