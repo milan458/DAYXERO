@@ -2,14 +2,13 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-23T10:46:21.584Z"
+    "updated": "2026-10-27T19:25:39.855Z"
   },
   "now": {
-    "section": "S5",
-    "task": "S5.8",
+    "section": "S18",
+    "task": "S18.12",
     "waiting_on_milan": [
-      "Sign off the Section 5 Program mockups",
-      "Later: variant rule (S5.2), lesson timing (S4.8)"
+      "Decide the trial length vs prep (S18.4)"
     ]
   },
   "sections": [
@@ -359,7 +358,7 @@
           "id": "S2.14",
           "title": "Name step (S2.2b) proposed: paywall and Home greet by name but the plan never asks",
           "status": "in_progress",
-          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md. Built per WOnbBody/WOnbDay/WOnbGoal. Themed with the app (matches the references in dark mode); the goal screen keeps a short title because every onboarding step has one.",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md. Built per WOnbBody/WOnbDay/WOnbGoal. Themed with the app (matches the references in dark mode); the goal screen keeps a short title because every onboarding step has one.\n27 Oct: moved out of onboarding into the Water tab, without height (S18.5, Milan's call).",
           "created": "2026-10-22T20:40:00.864Z",
           "completed": "2026-10-22T22:01:09.291Z"
         },
@@ -367,7 +366,7 @@
           "id": "S2.15",
           "title": "Show the water goal in the plan reveal.",
           "status": "in_progress",
-          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.\n27 Oct: the plan reveal no longer shows a water line; everyone starts on 2.0 L (S18.5).",
           "created": "2026-10-25T20:03:07.000Z",
           "completed": null
         }
@@ -421,7 +420,7 @@
           "id": "S3.3",
           "title": "Free trial on annual (3 days unless Milan says otherwise), with the exact charge date stated on screen.",
           "status": "done",
-          "notes": "Question for Milan: 3-day trial on annual — confirm.\nMilan confirmed the 3-day trial on annual.\nBuilt; waiting on CI build, tests and screenshots.\nCI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending.\nVerified on CI 33dd4dd: all tests pass; screenshots match approved mockups in dark, light and largest text.",
+          "notes": "Question for Milan: 3-day trial on annual — confirm.\nMilan confirmed the 3-day trial on annual.\nBuilt; waiting on CI build, tests and screenshots.\nCI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending.\nVerified on CI 33dd4dd: all tests pass; screenshots match approved mockups in dark, light and largest text.\n27 Oct: trial length vs prep window under review (S18.4, waiting on Milan).",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": "2026-10-22T22:57:10.707Z"
         },
@@ -721,7 +720,7 @@
           "id": "S6.1",
           "title": "SOS screen: urge-surfing timer (about 3 minutes), guided breathing, the user's reasons and photo.",
           "status": "done",
-          "notes": "Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.",
+          "notes": "Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.\n27 Oct: reasons and photo come back on the 'Three minutes done' screen (S18.6).",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": "2026-10-23T08:34:21.495Z"
         },
@@ -785,7 +784,7 @@
           "id": "S6.9",
           "title": "Wire the orb into the SOS screen (3-minute session, S6.3 outcomes).",
           "status": "in_progress",
-          "notes": "From DAYXERO_BIO_ORB_SPEC.md. Pause/Resume and Coach me under the pill; It passed / I slipped in the session menu until time's up, then the full outcomes. Reasons rotation and if-then plan card removed from the session per Milan's preview.",
+          "notes": "From DAYXERO_BIO_ORB_SPEC.md. Pause/Resume and Coach me under the pill; It passed / I slipped in the session menu until time's up, then the full outcomes. Reasons rotation and if-then plan card removed from the session per Milan's preview.\n27 Oct: the white transcript pill becomes a muted caption (S18.11).",
           "created": "2026-10-24T11:47:52.000Z",
           "completed": null
         },
@@ -855,7 +854,7 @@
           "id": "S7.3",
           "title": "Insights screen: time-of-day heat map of cravings and uses, top triggers, trend over time. Shows \"needs a week of data\" until there's enough.",
           "status": "done",
-          "notes": "Mockups ready in tracker.\nMilan approved S7 in chat.\nBuilt and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.",
+          "notes": "Mockups ready in tracker.\nMilan approved S7 in chat.\nBuilt and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.\n27 Oct: early patterns from the first log (S18.7).",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": "2026-10-23T08:34:21.644Z"
         },
@@ -1781,9 +1780,274 @@
           "completed": null
         }
       ]
+    },
+    {
+      "id": "S18",
+      "title": "Review fixes and iPhone Duo",
+      "goal": "Fixes and changes from Argon's review of TestFlight build and copy audit (27 Oct 2026), plus iPhone Duo support.",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S18.1",
+          "title": "Weight ruler ignores vertical drags (bug 1: 72 kg read as 66 kg)",
+          "status": "pending",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. The ruler's drag started on a vertical scroll and nudged the weight. Now only horizontal drags move it.",
+          "created": "2026-10-27T19:25:39.028Z",
+          "completed": null
+        },
+        {
+          "id": "S18.2",
+          "title": "Plan reveal week list never skips prep days (bug 2)",
+          "status": "pending",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. With 7+ prep days the list jumped from Prep day 6 to Quit Day. Now: days 1–5, '+N more prep days', then Quit Day with its date.",
+          "created": "2026-10-27T19:25:39.078Z",
+          "completed": null
+        },
+        {
+          "id": "S18.3",
+          "title": "Name the per-cigarette price in the sum line (bug 3)",
+          "status": "pending",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Pack buyers see 'That's ₹1.25 a cigarette, about ₹4,563 a year', so a single-stick price typed as a pack price is obvious. USD on the paywall comes from the App Store storefront, not the code.",
+          "created": "2026-10-27T19:25:39.118Z",
+          "completed": null
+        },
+        {
+          "id": "S18.4",
+          "title": "Trial length vs prep window (bug 4)",
+          "status": "blocked",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. The 3-day trial ends before a 7-day prep reaches Quit Day, and free users stop after Prep day 1. Options: 2-week trial, 1-week trial, prep free and pay from Quit Day, 1-month trial. Waiting on Milan.",
+          "created": "2026-10-27T19:25:39.154Z",
+          "completed": null
+        },
+        {
+          "id": "S18.5",
+          "title": "Water goal out of onboarding, into the Water tab (no height)",
+          "status": "pending",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Everyone starts on 2.0 L. 'Personalise goal' in the Water tab: weight, activity, climate, Adjust. Height is no longer collected.",
+          "created": "2026-10-27T19:25:39.192Z",
+          "completed": null
+        },
+        {
+          "id": "S18.6",
+          "title": "Your why after the 3 minutes in Craving SOS",
+          "status": "pending",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Photo and reason on the 'Three minutes done' screen, above the outcomes. The session itself stays as signed off.",
+          "created": "2026-10-27T19:25:39.225Z",
+          "completed": null
+        },
+        {
+          "id": "S18.7",
+          "title": "Early patterns on Progress from Day 1",
+          "status": "pending",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Replaces 'Insights need a week of logs' with real time-of-day bars from the first log and the triggers from setup. Full insights still open at 7 days and 5 logs.",
+          "created": "2026-10-27T19:25:39.257Z",
+          "completed": null
+        },
+        {
+          "id": "S18.8",
+          "title": "Vape: pods a week, and 'Vaped' for the one-tap log",
+          "status": "pending",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Onboarding and Settings ask for pods or disposables a week; puffs a day is worked out. 'Puff session' becomes 'Vaped' / 'Times vaped' in the log sheet, Home, widget and Siri.",
+          "created": "2026-10-27T19:25:39.292Z",
+          "completed": null
+        },
+        {
+          "id": "S18.9",
+          "title": "Kicker rule in the design methodology",
+          "status": "pending",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. All-caps labels only for a screen's eyebrow and section headers, never inside a card. A card is a value plus one sentence-case caption, with no repeated words.",
+          "created": "2026-10-27T19:25:39.326Z",
+          "completed": null
+        },
+        {
+          "id": "S18.10",
+          "title": "Copy de-clutter pass",
+          "status": "pending",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Home (hero, water, lesson card, prep tiles removed), log sheet, Program rows, Progress tiles and hero, and in-card kickers on other screens.",
+          "created": "2026-10-27T19:25:39.366Z",
+          "completed": null
+        },
+        {
+          "id": "S18.11",
+          "title": "SOS caption replaces the white transcript pill",
+          "status": "pending",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Muted text on black, one sentence at a time in step with the voice, with no box or badge. Updates Bio-Orb spec 3.5.",
+          "created": "2026-10-27T19:25:39.400Z",
+          "completed": null
+        },
+        {
+          "id": "S18.12",
+          "title": "iPhone Duo: build with Xcode 27.1 (CI and TestFlight)",
+          "status": "in_progress",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Builds with Xcode 26 are letterboxed on iPhone Duo. CI and TestFlight move to GitHub's xcode-27 runner; the iOS 18 test leg stays on Xcode 26.",
+          "created": "2026-10-27T19:25:39.435Z",
+          "completed": null
+        },
+        {
+          "id": "S18.13",
+          "title": "iPhone Duo: resizing (readable column, height-aware orb, dock on the side)",
+          "status": "pending",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. The inner display ignores portrait lock (951 x 669 pt when unfolded). Content capped at 600 pt, orb sized to the height, dock moves to the side where the system puts bars.",
+          "created": "2026-10-27T19:25:39.481Z",
+          "completed": null
+        },
+        {
+          "id": "S18.14",
+          "title": "iPhone Duo: fold-aware SOS, Home and Progress",
+          "status": "pending",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. When half-open, ArrangementView splits each screen on either side of the fold; other screens keep their column off the fold.",
+          "created": "2026-10-27T19:25:39.522Z",
+          "completed": null
+        },
+        {
+          "id": "S18.15",
+          "title": "iPhone Duo: CI screenshots closed, open and half-folded",
+          "status": "pending",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. A separate CI job folds the iPhone Duo simulator with hinge and captures the cover and inner displays.",
+          "created": "2026-10-27T19:25:39.555Z",
+          "completed": null
+        },
+        {
+          "id": "S18.16",
+          "title": "iPhone Duo: App Store screenshots",
+          "status": "pending",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Needed from April 2027 for apps built with the iOS 27.1 SDK. Not started.",
+          "created": "2026-10-27T19:25:39.590Z",
+          "completed": null
+        }
+      ]
     }
   ],
   "log": [
+    {
+      "time": "2026-10-27T19:25:39.855Z",
+      "type": "status",
+      "message": "S18.12 pending → in_progress"
+    },
+    {
+      "time": "2026-10-27T19:25:39.821Z",
+      "type": "now",
+      "message": "Now: S18 / S18.12"
+    },
+    {
+      "time": "2026-10-27T19:25:39.791Z",
+      "type": "note",
+      "message": "S7.3: 27 Oct: early patterns from the first log (S18.7)."
+    },
+    {
+      "time": "2026-10-27T19:25:39.762Z",
+      "type": "note",
+      "message": "S6.9: 27 Oct: the white transcript pill becomes a muted caption (S18.11)."
+    },
+    {
+      "time": "2026-10-27T19:25:39.732Z",
+      "type": "note",
+      "message": "S6.1: 27 Oct: reasons and photo come back on the 'Three minutes done' screen (S18.6)."
+    },
+    {
+      "time": "2026-10-27T19:25:39.696Z",
+      "type": "note",
+      "message": "S3.3: 27 Oct: trial length vs prep window under review (S18.4, waiting on Milan)."
+    },
+    {
+      "time": "2026-10-27T19:25:39.663Z",
+      "type": "note",
+      "message": "S2.15: 27 Oct: the plan reveal no longer shows a water line; everyone starts on 2.0 L (S18.5)."
+    },
+    {
+      "time": "2026-10-27T19:25:39.627Z",
+      "type": "note",
+      "message": "S2.14: 27 Oct: moved out of onboarding into the Water tab, without height (S18.5, Milan's call)."
+    },
+    {
+      "time": "2026-10-27T19:25:39.590Z",
+      "type": "task_added",
+      "message": "S18.16 added: iPhone Duo: App Store screenshots"
+    },
+    {
+      "time": "2026-10-27T19:25:39.555Z",
+      "type": "task_added",
+      "message": "S18.15 added: iPhone Duo: CI screenshots closed, open and half-folded"
+    },
+    {
+      "time": "2026-10-27T19:25:39.522Z",
+      "type": "task_added",
+      "message": "S18.14 added: iPhone Duo: fold-aware SOS, Home and Progress"
+    },
+    {
+      "time": "2026-10-27T19:25:39.481Z",
+      "type": "task_added",
+      "message": "S18.13 added: iPhone Duo: resizing (readable column, height-aware orb, dock on the side)"
+    },
+    {
+      "time": "2026-10-27T19:25:39.435Z",
+      "type": "task_added",
+      "message": "S18.12 added: iPhone Duo: build with Xcode 27.1 (CI and TestFlight)"
+    },
+    {
+      "time": "2026-10-27T19:25:39.400Z",
+      "type": "task_added",
+      "message": "S18.11 added: SOS caption replaces the white transcript pill"
+    },
+    {
+      "time": "2026-10-27T19:25:39.366Z",
+      "type": "task_added",
+      "message": "S18.10 added: Copy de-clutter pass"
+    },
+    {
+      "time": "2026-10-27T19:25:39.326Z",
+      "type": "task_added",
+      "message": "S18.9 added: Kicker rule in the design methodology"
+    },
+    {
+      "time": "2026-10-27T19:25:39.292Z",
+      "type": "task_added",
+      "message": "S18.8 added: Vape: pods a week, and 'Vaped' for the one-tap log"
+    },
+    {
+      "time": "2026-10-27T19:25:39.257Z",
+      "type": "task_added",
+      "message": "S18.7 added: Early patterns on Progress from Day 1"
+    },
+    {
+      "time": "2026-10-27T19:25:39.225Z",
+      "type": "task_added",
+      "message": "S18.6 added: Your why after the 3 minutes in Craving SOS"
+    },
+    {
+      "time": "2026-10-27T19:25:39.192Z",
+      "type": "task_added",
+      "message": "S18.5 added: Water goal out of onboarding, into the Water tab (no height)"
+    },
+    {
+      "time": "2026-10-27T19:25:39.154Z",
+      "type": "task_added",
+      "message": "S18.4 added: Trial length vs prep window (bug 4)"
+    },
+    {
+      "time": "2026-10-27T19:25:39.118Z",
+      "type": "task_added",
+      "message": "S18.3 added: Name the per-cigarette price in the sum line (bug 3)"
+    },
+    {
+      "time": "2026-10-27T19:25:39.078Z",
+      "type": "task_added",
+      "message": "S18.2 added: Plan reveal week list never skips prep days (bug 2)"
+    },
+    {
+      "time": "2026-10-27T19:25:39.028Z",
+      "type": "task_added",
+      "message": "S18.1 added: Weight ruler ignores vertical drags (bug 1: 72 kg read as 66 kg)"
+    },
+    {
+      "time": "2026-10-27T19:25:38.978Z",
+      "type": "section_added",
+      "message": "S18 added: Review fixes and iPhone Duo"
+    },
     {
       "time": "2026-10-23T10:46:21.584Z",
       "type": "note",
