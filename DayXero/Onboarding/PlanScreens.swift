@@ -89,7 +89,7 @@ struct PlanRevealScreen: View {
             }
             DXCard(padding: 14) {
                 VStack(alignment: .leading, spacing: DX.Space.xs) {
-                    Text("Your week ahead").dxText(.micro)
+                    Text(PlanTimeline.isLong(prepDays: model.prepDays) ? "Up to Quit Day" : "Your week ahead").dxText(.micro)
                     ForEach(timeline, id: \.date) { item in
                         HStack(spacing: 10) {
                             Text(item.badge)
@@ -99,9 +99,15 @@ struct PlanRevealScreen: View {
                                 .background(item.isQuitDay ? DX.Palette.primary : DX.Palette.accentSoft, in: Circle())
                             Text(item.title)
                                 .font(.custom(item.isQuitDay ? DX.Typeface.semibold : DX.Typeface.regular, size: 13, relativeTo: .footnote))
-                                .foregroundStyle(DX.Palette.text)
+                                .foregroundStyle(item.isMore ? DX.Palette.text2 : DX.Palette.text)
                             Spacer()
-                            Text(item.date, format: .dateTime.weekday(.abbreviated)).dxText(.subtitle)
+                            if !item.isMore {
+                                // Past the first week the weekday alone would be ambiguous, so Quit Day shows its date.
+                                let full = item.isQuitDay && PlanTimeline.isLong(prepDays: model.prepDays)
+                                Text(item.date, format: full ? Date.FormatStyle.dateTime.weekday(.abbreviated).day().month(.abbreviated)
+                                                             : Date.FormatStyle.dateTime.weekday(.abbreviated))
+                                    .dxText(.subtitle)
+                            }
                         }
                         .accessibilityElement(children: .combine)
                     }
@@ -119,30 +125,25 @@ struct PlanRevealScreen: View {
         let badge: String
         let title: String
         let isQuitDay: Bool
+        let isMore: Bool
     }
 
-    /// Today plus the next six days, always ending with Quit Day if it falls later. Day 1 starts today.
+    /// The days from today to Quit Day (Day 1 starts today), never skipping one silently.
     /// Lesson titles arrive with the ported content.
     private var timeline: [TimelineItem] {
-        let calendar = Calendar.current
-        let today = calendar.startOfDay(for: .now)
-        let prep = model.prepDays
-        var items: [TimelineItem] = (0..<7).compactMap { offset in
-            guard let date = calendar.date(byAdding: .day, value: offset, to: today) else { return nil }
-            if offset < prep {
-                return TimelineItem(date: date, badge: "\(offset + 1)", title: String(localized: "Prep day \(offset + 1)"), isQuitDay: false)
-            } else if offset == prep {
-                return TimelineItem(date: date, badge: "Q", title: String(localized: "Quit Day"), isQuitDay: true)
-            } else {
-                let day = offset - prep + 1
-                return TimelineItem(date: date, badge: "\(day)", title: String(localized: "Day \(day) clear"), isQuitDay: false)
+        let today = Calendar.current.startOfDay(for: .now)
+        return PlanTimeline.items(prepDays: model.prepDays, today: today).map { item in
+            switch item.kind {
+            case let .prep(n):
+                TimelineItem(date: item.date, badge: "\(n)", title: String(localized: "Prep day \(n)"), isQuitDay: false, isMore: false)
+            case let .morePrep(count):
+                TimelineItem(date: item.date, badge: "…", title: String(localized: "+\(count) more prep days"), isQuitDay: false, isMore: true)
+            case .quitDay:
+                TimelineItem(date: item.date, badge: "Q", title: String(localized: "Quit Day"), isQuitDay: true, isMore: false)
+            case let .clear(n):
+                TimelineItem(date: item.date, badge: "\(n)", title: String(localized: "Day \(n) clear"), isQuitDay: false, isMore: false)
             }
         }
-        if prep >= 7, let quitDate = calendar.date(byAdding: .day, value: prep, to: today) {
-            items.removeLast()
-            items.append(TimelineItem(date: quitDate, badge: "Q", title: String(localized: "Quit Day"), isQuitDay: true))
-        }
-        return items
     }
 }
 
