@@ -297,7 +297,7 @@ jobs:
           name: build-log
           path: build.log
 
-  # iPhone Duo closed, open (portrait and landscape) and half-folded, pushed to the ci-screens-duo branch (S18.15).
+  # iPhone Duo closed, open (wide and tall) and half-folded (book and laptop), pushed to ci-screens-duo (S18.15).
   # Apple has no command to fold the simulator, so this uses hinge (MIT, pinned). It runs apart from build-test so a
   # change in that tooling can't block builds; a fold that doesn't happen fails this job rather than passing quietly.
   duo:
@@ -365,12 +365,14 @@ jobs:
           hinge --version
           mkdir -p shots
           # pose <name>: fold to it, then wait for the display to switch (1–2.5 s after the angle).
+          # Held upright and unfolded, the inner display is wider than it is tall; turned on its side it's tall.
           pose() {
             case "$1" in
               closed) hinge close; hinge orient portrait ;;
-              open) hinge open; hinge orient portrait ;;
-              landscape) hinge open; hinge orient landscape-left ;;
-              half) hinge orient landscape-left; hinge half ;;
+              open-wide) hinge open; hinge orient portrait ;;
+              open-tall) hinge open; hinge orient landscape-left ;;
+              half-book) hinge orient portrait; hinge half ;;
+              half-laptop) hinge orient landscape-left; hinge half ;;
             esac
             sleep 3
             hinge posture
@@ -383,7 +385,7 @@ jobs:
             sleep 6
             hinge screenshot "shots/duo-$p-$name.png"
           }
-          for p in closed open landscape half; do
+          for p in closed open-wide open-tall half-book half-laptop; do
             pose "$p"
             shoot "$p" home-prep -dx.homeScenario prep -dx.store pro
             shoot "$p" home-day3 -dx.homeScenario day3 -dx.store pro

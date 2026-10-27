@@ -117,7 +117,8 @@ jobs:
           prepare "$HINGE_DEVICE"
           hinge close; hinge orient portrait; sleep 3; hinge posture
           screens "$HINGE_DEVICE" duo-cover duo_capture
-          hinge open; hinge orient portrait; sleep 3; hinge posture
+          # The inner display is tall (2007 x 2853) with the phone turned on its side.
+          hinge open; hinge orient landscape-left; sleep 3; hinge posture
           screens "$HINGE_DEVICE" duo-inner duo_capture
 
       - name: Compose
