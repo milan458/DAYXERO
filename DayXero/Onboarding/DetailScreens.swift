@@ -71,10 +71,17 @@ struct BaselineScreen: View {
                     .font(DX.TextStyle.subtitle.font)
                     .foregroundStyle(DX.Palette.terracotta)
             } else if let yearly = yearlyCost {
-                // The sum spelled out, so a price entered the wrong way shows up straight away.
-                Text("That's about \(yearly, format: .currency(code: model.currencyCode).precision(.fractionLength(0))) a year.")
-                    .font(DX.TextStyle.subtitle.font)
-                    .foregroundStyle(DX.Palette.text2)
+                // The sum spelled out, so a price entered the wrong way shows up straight away. For packs it names
+                // the price of one cigarette too: a single cigarette's price typed as a pack's looks wrong at once.
+                if let each = pricePerCigarette {
+                    Text("That's \(each, format: .currency(code: model.currencyCode)) a cigarette, about \(yearly, format: .currency(code: model.currencyCode).precision(.fractionLength(0))) a year.")
+                        .font(DX.TextStyle.subtitle.font)
+                        .foregroundStyle(DX.Palette.text2)
+                } else {
+                    Text("That's about \(yearly, format: .currency(code: model.currencyCode).precision(.fractionLength(0))) a year.")
+                        .font(DX.TextStyle.subtitle.font)
+                        .foregroundStyle(DX.Palette.text2)
+                }
             }
 
             Text(yearsLabel).dxText(.micro).padding(.top, DX.Space.xs)
@@ -101,6 +108,13 @@ struct BaselineScreen: View {
         case .vape: "Price of a pod"
         case .pouches: "Price of a can"
         }
+    }
+
+    /// One cigarette's share of the pack price; nil unless cigarettes are bought by the pack.
+    private var pricePerCigarette: Decimal? {
+        let d = draft.wrappedValue
+        guard product == .cigarettes, !buysSingles, let price = d.price, price > 0, d.unitsPerPurchase > 1 else { return nil }
+        return price / Decimal(d.unitsPerPurchase)
     }
 
     private var yearlyCost: Decimal? {

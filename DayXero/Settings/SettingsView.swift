@@ -296,7 +296,11 @@ struct ProductEditor: View {
                 } footer: {
                     if let value = Decimal(string: price.replacingOccurrences(of: ",", with: ".")), value > 0, use.unitsPerPurchase > 0 {
                         let yearly = value * Decimal(use.unitsPerDay) / Decimal(use.unitsPerPurchase) * 365
-                        Text("That's about \(yearly, format: .currency(code: profile.currencyCode).precision(.fractionLength(0))) a year.")
+                        if use.product == .cigarettes, use.unitsPerPurchase > 1 {
+                            Text("That's \(value / Decimal(use.unitsPerPurchase), format: .currency(code: profile.currencyCode)) a cigarette, about \(yearly, format: .currency(code: profile.currencyCode).precision(.fractionLength(0))) a year.")
+                        } else {
+                            Text("That's about \(yearly, format: .currency(code: profile.currencyCode).precision(.fractionLength(0))) a year.")
+                        }
                     }
                 }
                 if !use.isPrimary {
