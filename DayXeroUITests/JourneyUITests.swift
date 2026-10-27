@@ -53,7 +53,7 @@ final class JourneyUITests: XCTestCase {
         XCTAssert(app.buttons["Craving SOS"].waitForExistence(timeout: 10))
         snap(app, "07-home-prep")
         tap(button(app, "Log"))
-        tap(button(app, "Puff session"))
+        tap(button(app, "Vaped"))
         rideOutCraving(app)
         visitTabs(app, prefix: "08-prep")
     }
@@ -71,7 +71,7 @@ final class JourneyUITests: XCTestCase {
         snap(app, "20-home-day3")
         // A use after Quit Day is a slip: talked through, and nothing resets (S8).
         tap(button(app, "Log"))
-        tap(button(app, "Puff session"))
+        tap(button(app, "Vaped"))
         XCTAssert(app.staticTexts["Thanks for telling us"].waitForExistence(timeout: 5))
         snap(app, "21-slip")
         tapSettled(app, "Not now")

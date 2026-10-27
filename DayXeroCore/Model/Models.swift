@@ -47,6 +47,28 @@ public final class UserProfile {
     }
 }
 
+/// Vapers tell us pods or disposables a week, which they know; puffs a day, which they don't, is worked out
+/// from it, so the counter and the money maths keep counting puffs (S18.8).
+public enum VapeUsage {
+    /// The pods-a-week stepper moves by half a pod.
+    public static let podsStep = 0.5
+
+    public static func puffsPerDay(podsPerWeek: Double, puffsPerPod: Double) -> Double {
+        podsPerWeek * puffsPerPod / 7
+    }
+
+    /// Pods a week to the nearest half pod.
+    public static func podsPerWeek(puffsPerDay: Double, puffsPerPod: Double) -> Double {
+        guard puffsPerPod > 0 else { return 0 }
+        return (puffsPerDay * 7 / puffsPerPod / podsStep).rounded() * podsStep
+    }
+
+    /// "2" or "2.5".
+    public static func format(_ pods: Double) -> String {
+        pods.formatted(.number.precision(.fractionLength(0...1)))
+    }
+}
+
 /// One product the user uses, with their baseline before quitting.
 @Model
 public final class ProductUse {
@@ -77,6 +99,21 @@ public final class ProductUse {
 
     public var baseline: Baseline {
         Baseline(product: product, unitsPerDay: unitsPerDay, pricePerPurchase: pricePerPurchase, unitsPerPurchase: unitsPerPurchase)
+    }
+}
+
+extension ProductUse {
+    /// Vapes only: pods or disposables a week, stored as puffs a day (S18.8).
+    public var podsPerWeek: Double {
+        get { VapeUsage.podsPerWeek(puffsPerDay: unitsPerDay, puffsPerPod: unitsPerPurchase) }
+        set { unitsPerDay = VapeUsage.puffsPerDay(podsPerWeek: newValue, puffsPerPod: unitsPerPurchase) }
+    }
+
+    /// Changes puffs per pod without changing pods a week.
+    public func setPuffsPerPod(_ puffs: Double) {
+        let pods = podsPerWeek
+        unitsPerPurchase = puffs
+        if pods > 0, puffs > 0 { podsPerWeek = pods }
     }
 }
 

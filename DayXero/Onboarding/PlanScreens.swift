@@ -68,9 +68,15 @@ struct PlanRevealScreen: View {
                 ForEach(model.orderedProducts, id: \.self) { product in
                     DXCard(padding: 14) {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("\(Text(product.unit)) a day").dxText(.micro)
-                            Text("\(Int(model.baseline(for: product).unitsPerDay)) → 0").dxText(.cardHeading)
-                                .font(.custom(DX.Typeface.bold, size: 18, relativeTo: .headline))
+                            if product == .vape {
+                                Text("Pods a week").dxText(.micro)
+                                Text("\(VapeUsage.format(model.baseline(for: product).podsPerWeek)) → 0").dxText(.cardHeading)
+                                    .font(.custom(DX.Typeface.bold, size: 18, relativeTo: .headline))
+                            } else {
+                                Text("\(Text(product.unit)) a day").dxText(.micro)
+                                Text("\(Int(model.baseline(for: product).unitsPerDay)) → 0").dxText(.cardHeading)
+                                    .font(.custom(DX.Typeface.bold, size: 18, relativeTo: .headline))
+                            }
                         }
                     }
                 }

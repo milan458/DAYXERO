@@ -113,7 +113,7 @@ struct LogSheet: View {
     static func useTitle(_ product: Product) -> LocalizedStringKey {
         switch product {
         case .cigarettes: "Cigarette"
-        case .vape: "Puff session"
+        case .vape: "Vaped"
         case .pouches: "Pouch"
         }
     }

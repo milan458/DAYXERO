@@ -27,7 +27,12 @@ struct BaselineScreen: View {
     var body: some View {
         OnboardingScaffold(title: title, subtitle: "A rough guess is fine. You can change it later.",
                            eyebrow: eyebrow, model: model, continueTitle: nextTitle) {
-            AmountStepper(value: draft.unitsPerDay, step: step, product: product)
+            if product == .vape {
+                // Pods a week is what vapers know; puffs a day is worked out from it (S18.8).
+                AmountStepper(value: draft.podsPerWeek, step: VapeUsage.podsStep, unitLine: String(localized: "pods a week"))
+            } else {
+                AmountStepper(value: draft.unitsPerDay, step: 1, unitLine: String(localized: "\(String(localized: product.unit)) a day"))
+            }
 
             if product == .pouches {
                 Text("Strength").dxText(.micro).padding(.top, DX.Space.xs)
@@ -58,7 +63,7 @@ struct BaselineScreen: View {
                 if !buysSingles {
                     LabeledField(label: perPurchaseLabel) {
                         HStack {
-                            TextField("", value: draft.unitsPerPurchase, format: .number)
+                            TextField("", value: product == .vape ? draft.puffsPerPod : draft.unitsPerPurchase, format: .number)
                                 .keyboardType(.numberPad)
                             Text(purchaseUnit).dxText(.subtitle)
                         }
@@ -105,7 +110,7 @@ struct BaselineScreen: View {
     private var priceLabel: LocalizedStringKey {
         switch product {
         case .cigarettes: buysSingles ? "Price of one cigarette" : "Price of a pack"
-        case .vape: "Price of a pod"
+        case .vape: "Price of one"
         case .pouches: "Price of a can"
         }
     }
@@ -139,13 +144,9 @@ struct BaselineScreen: View {
     private var title: LocalizedStringKey {
         switch product {
         case .cigarettes: "How many cigarettes a day?"
-        case .vape: "How much do you vape a day?"
+        case .vape: "How many pods or disposables a week?"
         case .pouches: "How many pouches a day?"
         }
-    }
-
-    private var step: Double {
-        product == .vape ? 10 : 1
     }
 
     private var perPurchaseLabel: LocalizedStringKey {
@@ -177,18 +178,17 @@ struct BaselineScreen: View {
 private struct AmountStepper: View {
     @Binding var value: Double
     let step: Double
-    let product: Product
+    /// What the number counts, e.g. "cigarettes a day" or "pods a week".
+    let unitLine: String
 
-    private var unitLine: String {
-        String(localized: "\(String(localized: product.unit)) a day")
-    }
+    private var valueText: String { value.formatted(.number.precision(.fractionLength(0...1))) }
 
     var body: some View {
         HStack {
             button("minus") { value = max(step, value - step) }
             Spacer()
             VStack(spacing: 0) {
-                Text(Int(value), format: .number).dxText(.hero).contentTransition(.numericText())
+                Text(verbatim: valueText).dxText(.hero).contentTransition(.numericText())
                 Text(unitLine).font(.custom(DX.Typeface.medium, size: 12, relativeTo: .caption)).foregroundStyle(DX.Palette.muted)
             }
             Spacer()
@@ -199,8 +199,8 @@ private struct AmountStepper: View {
         .overlay(RoundedRectangle(cornerRadius: 26, style: .continuous).strokeBorder(DX.Palette.hairline))
         .sensoryFeedback(DX.Haptic.select, trigger: value)
         .accessibilityElement()
-        .accessibilityLabel(Text("Amount per day"))
-        .accessibilityValue(Text("\(Int(value)) \(unitLine)"))
+        .accessibilityLabel(Text("Amount"))
+        .accessibilityValue(Text(verbatim: "\(valueText) \(unitLine)"))
         .accessibilityAdjustableAction { direction in
             switch direction {
             case .increment: value += step

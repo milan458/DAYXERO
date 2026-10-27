@@ -21,7 +21,7 @@ struct BaselineDraft: Equatable {
     static func starting(for product: Product) -> BaselineDraft {
         switch product {
         case .cigarettes: BaselineDraft(unitsPerDay: 10, unitsPerPurchase: 20)
-        case .vape: BaselineDraft(unitsPerDay: 200, unitsPerPurchase: 600)
+        case .vape: BaselineDraft(unitsPerDay: VapeUsage.puffsPerDay(podsPerWeek: 2, puffsPerPod: 600), unitsPerPurchase: 600)
         case .pouches: BaselineDraft(unitsPerDay: 8, unitsPerPurchase: 20)
         }
     }
@@ -29,6 +29,22 @@ struct BaselineDraft: Equatable {
     var isComplete: Bool {
         guard let price else { return false }
         return unitsPerDay > 0 && price > 0 && unitsPerPurchase > 0
+    }
+
+    /// Vapes only: what the baseline screen asks, stored as puffs a day (S18.8).
+    var podsPerWeek: Double {
+        get { VapeUsage.podsPerWeek(puffsPerDay: unitsPerDay, puffsPerPod: unitsPerPurchase) }
+        set { unitsPerDay = VapeUsage.puffsPerDay(podsPerWeek: newValue, puffsPerPod: unitsPerPurchase) }
+    }
+
+    /// Vapes only: a new puffs-per-pod figure keeps pods a week where it was.
+    var puffsPerPod: Double {
+        get { unitsPerPurchase }
+        set {
+            let pods = podsPerWeek
+            unitsPerPurchase = newValue
+            if pods > 0, newValue > 0 { podsPerWeek = pods }
+        }
     }
 }
 
@@ -203,7 +219,8 @@ final class OnboardingModel {
         name = "Milan"
         products = [.cigarettes, .vape]
         baselines = [
-            .vape: BaselineDraft(unitsPerDay: 200, price: 8.5, unitsPerPurchase: 600, years: .oneToThree),
+            .vape: BaselineDraft(unitsPerDay: VapeUsage.puffsPerDay(podsPerWeek: 2.5, puffsPerPod: 600), price: 8.5,
+                                 unitsPerPurchase: 600, years: .oneToThree),
             .cigarettes: BaselineDraft(unitsPerDay: 6, price: 15, unitsPerPurchase: 20, years: .threeToFive),
         ]
         triggers = [.morning, .coffee, .stress, .work]

@@ -214,8 +214,14 @@ struct ProductsSettingsView: View {
                                 Spacer()
                                 if use.isPrimary { Text("Main").dxText(.micro, color: DX.Palette.accentInk) }
                             }
-                            Text("\(Int(use.unitsPerDay)) \(Text(use.product.unit)) a day · \(use.pricePerPurchase.formatted(.currency(code: profile.currencyCode))) for \(Int(use.unitsPerPurchase))")
-                                .dxText(.subtitle)
+                            Group {
+                                if use.product == .vape {
+                                    Text("\(VapeUsage.format(use.podsPerWeek)) pods a week · \(use.pricePerPurchase.formatted(.currency(code: profile.currencyCode))) each")
+                                } else {
+                                    Text("\(Int(use.unitsPerDay)) \(Text(use.product.unit)) a day · \(use.pricePerPurchase.formatted(.currency(code: profile.currencyCode))) for \(Int(use.unitsPerPurchase))")
+                                }
+                            }
+                            .dxText(.subtitle)
                         }
                     }
                     .foregroundStyle(DX.Palette.text)
@@ -240,7 +246,8 @@ struct ProductsSettingsView: View {
     }
 
     private func add(_ product: DayXeroCore.Product) {
-        let use = ProductUse(product: product, isPrimary: profile.products.isEmpty, unitsPerDay: product == .vape ? 100 : 10,
+        let use = ProductUse(product: product, isPrimary: profile.products.isEmpty,
+                             unitsPerDay: product == .vape ? VapeUsage.puffsPerDay(podsPerWeek: 2, puffsPerPod: 600) : 10,
                              pricePerPurchase: 10, unitsPerPurchase: product == .vape ? 600 : 20)
         profile.products.append(use)
         try? context.save()
@@ -258,7 +265,7 @@ struct ProductEditor: View {
     private var priceLabel: LocalizedStringKey {
         switch use.product {
         case .cigarettes: use.unitsPerPurchase == 1 ? "Price of one cigarette" : "Price of a pack"
-        case .vape: "Price of a pod"
+        case .vape: "Price of one"
         case .pouches: "Price of a can"
         }
     }
@@ -275,8 +282,15 @@ struct ProductEditor: View {
         NavigationStack {
             Form {
                 Section {
-                    Stepper(value: $use.unitsPerDay, in: 1...2000, step: use.product == .vape ? 10 : 1) {
-                        LabeledContent { Text(verbatim: "\(Int(use.unitsPerDay))") } label: { Text("\(Text(use.product.unit).foregroundStyle(DX.Palette.text)) a day") }
+                    if use.product == .vape {
+                        // Pods a week is what vapers know; puffs a day is worked out from it (S18.8).
+                        Stepper(value: $use.podsPerWeek, in: VapeUsage.podsStep...100, step: VapeUsage.podsStep) {
+                            LabeledContent { Text(verbatim: VapeUsage.format(use.podsPerWeek)) } label: { Text("Pods a week") }
+                        }
+                    } else {
+                        Stepper(value: $use.unitsPerDay, in: 1...2000, step: 1) {
+                            LabeledContent { Text(verbatim: "\(Int(use.unitsPerDay))") } label: { Text("\(Text(use.product.unit).foregroundStyle(DX.Palette.text)) a day") }
+                        }
                     }
                     if use.product == .cigarettes {
                         Picker("How you buy them", selection: Binding(get: { use.unitsPerPurchase == 1 },
@@ -289,7 +303,9 @@ struct ProductEditor: View {
                         TextField("10.00", text: $price).keyboardType(.decimalPad).multilineTextAlignment(.trailing)
                     }
                     if !(use.product == .cigarettes && use.unitsPerPurchase == 1) {
-                        Stepper(value: $use.unitsPerPurchase, in: 1...5000, step: use.product == .vape ? 50 : 1) {
+                        Stepper(value: Binding(get: { use.unitsPerPurchase },
+                                               set: { if use.product == .vape { use.setPuffsPerPod($0) } else { use.unitsPerPurchase = $0 } }),
+                                in: 1...5000, step: use.product == .vape ? 50 : 1) {
                             LabeledContent { Text(verbatim: "\(Int(use.unitsPerPurchase))") } label: { Text(perPurchaseLabel) }
                         }
                     }

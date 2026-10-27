@@ -97,4 +97,38 @@ struct OnboardingModelTests {
         #expect(profile.triggers == [.coffee])
         #expect(profile.progress != nil)
     }
+
+    // MARK: Vapes in pods a week (S18.8)
+
+    @Test func vapersStartOnTwoPodsAWeek() {
+        let draft = BaselineDraft.starting(for: .vape)
+        #expect(draft.podsPerWeek == 2)
+        #expect(abs(draft.unitsPerDay - 1200.0 / 7) < 0.001)
+    }
+
+    @Test func changingPuffsPerPodKeepsPodsAWeek() {
+        var draft = BaselineDraft.starting(for: .vape)
+        draft.podsPerWeek = 3.5
+        draft.puffsPerPod = 800
+        #expect(draft.podsPerWeek == 3.5)
+        #expect(abs(draft.unitsPerDay - 400) < 0.001)
+    }
+
+    @Test func podsAWeekRoundToHalfAPodAndMoneyStaysTheSame() {
+        #expect(VapeUsage.podsPerWeek(puffsPerDay: 200, puffsPerPod: 600) == 2.5)
+        #expect(VapeUsage.format(2) == "2" && VapeUsage.format(2.5) == "2.5")
+        // A pod at 8.50, two a week, is 8.50 × 2 × 365 / 7 a year however puffs per pod is set.
+        let puffs = VapeUsage.puffsPerDay(podsPerWeek: 2, puffsPerPod: 600)
+        let yearly = 8.5 * puffs / 600 * 365
+        #expect(abs(yearly - 8.5 * 2 * 365 / 7) < 0.001)
+    }
+
+    @Test func savedVapeUsePodsAWeekKeepPodsWhenPuffsChange() {
+        let use = ProductUse(product: .vape, isPrimary: true, unitsPerDay: VapeUsage.puffsPerDay(podsPerWeek: 2, puffsPerPod: 600),
+                             pricePerPurchase: 8, unitsPerPurchase: 600)
+        #expect(use.podsPerWeek == 2)
+        use.setPuffsPerPod(1000)
+        #expect(use.podsPerWeek == 2)
+        #expect(abs(use.unitsPerDay - 2000.0 / 7) < 0.001)
+    }
 }
