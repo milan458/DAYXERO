@@ -22,8 +22,8 @@ struct NRTCard: View {
                         .foregroundStyle(DX.Palette.accentInk)
                         .frame(width: 38, height: 38)
                         .background(DX.Palette.accentSoft, in: Circle())
+                    // The product's icon says it's NRT; the line says what this week is (S18.10).
                     VStack(alignment: .leading, spacing: 1) {
-                        Text("Your NRT").dxText(.micro)
                         Text(verbatim: headline(schedule, current: current))
                             .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
                     }
@@ -104,7 +104,7 @@ struct TaperCard: View {
         let schedule = StepSchedule(startDate: taper.startDate, steps: taper.steps, clock: clock)
         DXCard(padding: 14) {
             VStack(alignment: .leading, spacing: DX.Space.xs) {
-                Text("Your pouch taper").dxText(.micro)
+                Text("Your pouch taper").dxText(.cardHeading)
                 if let current = schedule.current(at: now) {
                     Text("\(NRTReminderPlan.strength(current.step.strengthMg)) this week · step \(current.index + 1) of \(schedule.spans.count)")
                         .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
@@ -285,7 +285,7 @@ private struct StrengthBars: View {
         let most = max(steps.map(\.strengthMg).max() ?? 1, 1)
         DXCard(padding: 14) {
             VStack(alignment: .leading, spacing: DX.Space.xs) {
-                Text("Strength by step").dxText(.micro)
+                Text("Strength by step").dxText(.cardHeading)
                 HStack(alignment: .bottom, spacing: DX.Space.xs) {
                     ForEach(Array(steps.enumerated()), id: \.offset) { i, step in
                         VStack(spacing: 4) {

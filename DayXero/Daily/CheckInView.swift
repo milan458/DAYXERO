@@ -173,7 +173,7 @@ struct CheckInView: View {
             Text("Rest well. Tomorrow's pledge will be here in the morning.").dxText(.subtitle).multilineTextAlignment(.center)
             DXCard(padding: 14) {
                 VStack(alignment: .leading, spacing: DX.Space.xs) {
-                    Text("This week's check-ins").dxText(.micro)
+                    Text("This week's check-ins").dxText(.cardHeading)
                     HStack(spacing: 4) {
                         ForEach(0..<7, id: \.self) { i in
                             VStack(spacing: 4) {

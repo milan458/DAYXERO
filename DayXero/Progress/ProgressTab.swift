@@ -104,16 +104,15 @@ struct ProgressTab: View {
         let isPrep: Bool = if case .prep = snap.phase { true } else { false }
         return DXGlassCard {
             VStack(alignment: .leading, spacing: 4) {
-                Text(isPrep ? LocalizedStringKey("You'll keep") : LocalizedStringKey("Money kept")).dxText(.micro)
                 Text(verbatim: (isPrep ? snap.moneyPerYear : snap.moneyKept)
                     .formatted(.currency(code: snap.currencyCode).precision(.fractionLength(isPrep ? 0 : 2))))
                     .font(.custom(DX.Typeface.bold, size: 40, relativeTo: .largeTitle))
                     .foregroundStyle(DX.Palette.text)
                     .contentTransition(.numericText())
                 if isPrep {
-                    Text("a year, from Quit Day").dxText(.subtitle)
+                    Text("a year, yours to keep from Quit Day").dxText(.subtitle)
                 } else {
-                    Text("\(perDay.formatted(.currency(code: snap.currencyCode))) a day · on track for \(snap.moneyPerYear.formatted(.currency(code: snap.currencyCode).precision(.fractionLength(0)))) this year")
+                    Text("kept so far · \(perDay.formatted(.currency(code: snap.currencyCode))) a day, \(snap.moneyPerYear.formatted(.currency(code: snap.currencyCode).precision(.fractionLength(0)))) this year")
                         .dxText(.subtitle)
                 }
             }
@@ -133,17 +132,17 @@ struct ProgressTab: View {
             // Only the products picked in onboarding get a counter.
             if !isPrep {
                 ForEach(snap.counters) { counter in
-                    ProgressTile(label: avoidedLabel(counter.product), value: counter.avoided.formatted(),
-                                 caption: "\(counter.perDayBefore) a day before")
+                    ProgressTile(value: counter.avoided.formatted(),
+                                 caption: "\(Text(avoidedLabel(counter.product))) · \(counter.perDayBefore) a day before")
                 }
             }
-            ProgressTile(label: "Cravings ridden out", value: ridden.formatted(),
-                         caption: "\(CravingStats.passedThisWeek(entries, now: insights.now)) this week")
+            ProgressTile(value: ridden.formatted(),
+                         caption: "cravings ridden out · \(CravingStats.passedThisWeek(entries, now: insights.now)) this week")
             if isPrep {
-                ProgressTile(label: "Prep days done", value: "\(snap.prepDone) / \(snap.prepTotal)", caption: "before Quit Day")
+                ProgressTile(value: String(localized: "\(snap.prepDone) of \(snap.prepTotal)"), caption: "prep days done")
             } else {
-                ProgressTile(label: "Days clear", value: snap.daysClear.formatted(),
-                             caption: "since \(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).day().month()))")
+                ProgressTile(value: snap.daysClear.formatted(),
+                             caption: "days clear since \(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).day().month()))")
             }
         }
     }
@@ -155,9 +154,9 @@ struct ProgressTab: View {
 
     private func avoidedLabel(_ product: Product) -> LocalizedStringKey {
         switch product {
-        case .cigarettes: "Cigarettes not smoked"
-        case .vape: "Puffs not taken"
-        case .pouches: "Pouches not used"
+        case .cigarettes: "cigarettes not smoked"
+        case .vape: "puffs not taken"
+        case .pouches: "pouches not used"
         }
     }
 
@@ -394,20 +393,19 @@ struct LogButton: View {
     }
 }
 
+/// A value and what it is, in one sentence-case line (S18.10).
 private struct ProgressTile: View {
-    let label: LocalizedStringKey
     let value: String
     let caption: LocalizedStringKey
 
     var body: some View {
         DXCard(padding: 14) {
             VStack(alignment: .leading, spacing: 4) {
-                Text(label).dxText(.micro).fixedSize(horizontal: false, vertical: true)
                 Text(verbatim: value).dxText(.cardHeading).font(.custom(DX.Typeface.bold, size: 20, relativeTo: .title3))
                     .contentTransition(.numericText())
-                Text(caption).dxText(.subtitle)
+                Text(caption).dxText(.subtitle).fixedSize(horizontal: false, vertical: true)
             }
-            .frame(maxWidth: .infinity, minHeight: 84, alignment: .topLeading)
+            .frame(maxWidth: .infinity, minHeight: 64, alignment: .topLeading)
         }
         .accessibilityElement(children: .combine)
     }

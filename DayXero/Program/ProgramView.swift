@@ -203,13 +203,9 @@ struct ProgramView: View {
         .foregroundStyle(DX.Palette.muted)
     }
 
+    /// When and how long, e.g. "Today · 6 min". The badge and section header already say which day it is (S18.10).
     private func subtitle(_ row: ProgramState.Row) -> String {
         var parts: [String] = []
-        switch row.day.phase {
-        case .prep: parts.append(String(localized: "Prep day \(row.day.index)"))
-        case .quit: parts.append(String(localized: "Day \(row.day.index)"))
-        case .maintenance: parts.append(String(localized: "Weekly"))
-        }
         if let date = row.date {
             parts.append(Calendar.current.isDateInToday(date) ? String(localized: "Today") : date.formatted(.dateTime.weekday(.abbreviated)))
         }

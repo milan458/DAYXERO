@@ -141,8 +141,8 @@ struct MilestoneMoment: View {
     private func stat(_ label: String, _ value: String) -> some View {
         DXCard(padding: 12) {
             VStack(alignment: .leading, spacing: 4) {
-                Text(verbatim: label).dxText(.micro)
                 Text(verbatim: value).font(.custom(DX.Typeface.bold, size: 18, relativeTo: .title3)).foregroundStyle(DX.Palette.text)
+                Text(verbatim: label).dxText(.subtitle)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }

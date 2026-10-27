@@ -191,7 +191,7 @@ struct HealthItemDetail: View {
                 if let source {
                     DXCard(padding: 14) {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("Source").dxText(.micro)
+                            Text("Source").dxText(.subtitle)
                             Text(verbatim: source.title).font(DX.TextStyle.subtitle.font).foregroundStyle(DX.Palette.text)
                             Link(destination: source.url) {
                                 Text("Open \(source.url.host()?.replacingOccurrences(of: "www.", with: "") ?? "source")")
@@ -231,12 +231,11 @@ struct HealthSummaryCard: View {
                 Image(systemName: "heart").font(.system(size: 17)).foregroundStyle(DX.Palette.accentInk)
                     .frame(width: 40, height: 40).background(DX.Palette.accentSoft, in: Circle())
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Your body").dxText(.micro)
                     Text(verbatim: (current ?? next ?? items.last)?.title ?? "")
                         .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
                         .multilineTextAlignment(.leading)
                     if elapsed < 0 {
-                        Text("Starts on Quit Day").dxText(.subtitle)
+                        Text("What changes in your body, from Quit Day").dxText(.subtitle)
                     } else if let next {
                         Text("\(done) done · next: \(next.title.prefix(1).lowercased() + String(next.title.dropFirst()))").dxText(.subtitle)
                             .multilineTextAlignment(.leading)

@@ -148,7 +148,7 @@ struct LessonPlayer: View {
                 Text("A quick look back, then one thing to try next week.").dxText(.subtitle)
                 DXCard {
                     VStack(alignment: .leading, spacing: DX.Space.s) {
-                        Text("Cravings this week").dxText(.micro)
+                        Text("Cravings this week").dxText(.cardHeading)
                         Slider(value: $weekRating, in: 0...1).tint(DX.Palette.accentInk)
                             .accessibilityValue(Text(weekRating < 0.34 ? "Easy" : weekRating < 0.67 ? "Mixed" : "Tough"))
                         HStack { Text("Easy"); Spacer(); Text("Tough") }.dxText(.subtitle)
@@ -447,9 +447,10 @@ private struct LessonComplete: View {
                 let content = state.lesson(next)
                 DXCard(padding: 14) {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Next · \(state.position(next))").dxText(.micro)
                         Text(content.title).dxText(.cardHeading)
-                        Text(opens(state.availability(next), upgrade: state.needsUpgrade(next))).dxText(.subtitle)
+                        let when = opens(state.availability(next), upgrade: state.needsUpgrade(next))
+                        Text(verbatim: when.isEmpty ? String(localized: "Next · \(state.position(next))")
+                                                    : String(localized: "Next · \(state.position(next)) · \(when)")).dxText(.subtitle)
                     }
                 }
                 .padding(.top, DX.Space.s)

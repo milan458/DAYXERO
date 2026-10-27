@@ -110,7 +110,7 @@ struct TodayView: View {
                                 openLesson = .init(day: lesson.day, isReplay: true)
                             }
                         } else {
-                            lessonCard(lesson, finished: snap.finishedToday)
+                            lessonCard(lesson, finished: snap.finishedToday, prepTotal: snap.prepTotal)
                         }
                     }
                     if snap.phase == .quitDay, !sosHintSeen { sosHint }
@@ -121,7 +121,8 @@ struct TodayView: View {
                     }
                     nrtSection(snap, now: timeline.date)
                     if isPrep(snap) { useRows(now: timeline.date) }
-                    tiles(snap)
+                    // In prep, money and prep days live on Progress; Home keeps only what to do today (S18.10).
+                    if !isPrep(snap) { tiles(snap) }
                     if let next = snap.nextMilestone, !isPrep(snap) { milestone(next: next, daysClear: snap.daysClear) }
                 }
                 .padding(.horizontal, DX.Space.m)
@@ -256,7 +257,7 @@ struct TodayView: View {
 
     @ViewBuilder
     private func useRows(now: Date) -> some View {
-        Text("Log a use · today").dxText(.micro).padding(.top, DX.Space.xs)
+        Text("Log a use").dxText(.micro).padding(.top, DX.Space.xs)
         ForEach(profile.products.sorted { ($0.isPrimary ? 0 : 1) < ($1.isPrimary ? 0 : 1) }) { use in
             let counts = useCounts(use.product, now: now)
             Button { logUse(use.product) } label: {
@@ -375,31 +376,28 @@ struct TodayView: View {
             VStack(alignment: .leading, spacing: 4) {
                 switch snap.phase {
                 case let .prep(days):
-                    Text("Quit Day in").dxText(.micro)
                     HStack(alignment: .firstTextBaseline, spacing: 6) {
                         Text(days, format: .number).dxText(.hero)
-                        Text("\(days == 1 ? String(localized: "day") : String(localized: "days")) · \(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)))")
+                        Text(days == 1 ? LocalizedStringKey("day to Quit Day") : LocalizedStringKey("days to Quit Day"))
                             .dxText(.heroDenominator)
                     }
-                    Text(verbatim: prepLine).dxText(.subtitle)
+                    Text(verbatim: "\(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))) · \(prepLine)")
+                        .dxText(.subtitle)
                     DXWeekStrip(days: snap.weekStrip).padding(.top, DX.Space.s)
                 case .quitDay:
-                    Text("Days clear").dxText(.micro)
-                    DXFraction(1, of: ProgramSchedule.quitWeekDays)
+                    DXFraction(1, of: ProgramSchedule.quitWeekDays, unit: "days clear")
                     Text("Your first day. One craving at a time.").dxText(.subtitle)
                     DXProgressBar(value: 1.0 / Double(ProgramSchedule.quitWeekDays), tint: .primary).padding(.top, DX.Space.s)
                     DXWeekStrip(days: snap.weekStrip).padding(.top, DX.Space.s)
                 case let .quitWeek(day):
-                    Text("Days clear").dxText(.micro)
-                    DXFraction(day, of: ProgramSchedule.quitWeekDays)
+                    DXFraction(day, of: ProgramSchedule.quitWeekDays, unit: "days clear")
                     let weekFraction = Double(snap.quitWeekDone) / Double(ProgramSchedule.quitWeekDays)
                     DXMetric("Quit week", value: weekFraction.formatted(.percent.precision(.fractionLength(0))),
                              progress: weekFraction, tint: .primary)
                         .padding(.top, DX.Space.xs)
                     DXWeekStrip(days: snap.weekStrip).padding(.top, DX.Space.s)
                 case let .after(days):
-                    Text("Days clear").dxText(.micro)
-                    DXFraction(days, unit: "days")
+                    DXFraction(days, unit: "days clear")
                     if let next = snap.nextMilestone {
                         DXMetric(LocalizedStringKey(milestoneLabel(next)), value: "\(days) / \(next)",
                                  progress: snap.milestoneFraction, tint: .accent)
@@ -424,7 +422,18 @@ struct TodayView: View {
     }
 
     @ViewBuilder
-    private func lessonCard(_ lesson: HomeSnapshot.Lesson, finished: ProgramDayID?) -> some View {
+    /// "1 of 9 · 6 min"; weekly sessions just say how long.
+    private func lessonDetail(_ lesson: HomeSnapshot.Lesson, prepTotal: Int) -> String {
+        let minutes = LessonLibrary.lesson(for: lesson.day, product: profile.primaryProduct?.product ?? .cigarettes).minutes
+        let place: String? = switch lesson.day.phase {
+        case .prep: String(localized: "\(lesson.day.index) of \(prepTotal)")
+        case .quit: String(localized: "\(lesson.day.index) of \(ProgramSchedule.quitWeekDays)")
+        case .maintenance: nil
+        }
+        return [place, String(localized: "\(minutes) min")].compactMap { $0 }.joined(separator: " · ")
+    }
+
+    private func lessonCard(_ lesson: HomeSnapshot.Lesson, finished: ProgramDayID?, prepTotal: Int) -> some View {
         DXCard(padding: DX.Space.m) {
             VStack(alignment: .leading, spacing: 4) {
                 if let finished {
@@ -434,11 +443,12 @@ struct TodayView: View {
                         Image(systemName: "checkmark.circle.fill").foregroundStyle(DX.Palette.sage)
                     }
                 }
-                Text(finished == nil ? "Today · \(lesson.position)" : "Next · \(lesson.position)").dxText(.micro)
                 HStack(spacing: 6) {
                     Text(lesson.title).dxText(.cardHeading)
                     if lesson.placeholder { PlaceholderTag() }
                 }
+                // The header already says which day it is; the card adds where it sits and how long it takes (S18.10).
+                Text(verbatim: lessonDetail(lesson, prepTotal: prepTotal)).dxText(.subtitle)
                 switch lesson.availability {
                 case let .opensOn(date):
                     Label {
@@ -496,38 +506,31 @@ struct TodayView: View {
             ? [GridItem(.flexible())]
             : [GridItem(.flexible(), spacing: DX.Space.xs), GridItem(.flexible())]
         LazyVGrid(columns: columns, alignment: .leading, spacing: DX.Space.xs) {
-            if isPrep(snap) {
-                tile("You'll keep", value: snap.moneyPerYear.formatted(.currency(code: snap.currencyCode).precision(.fractionLength(0))),
-                     caption: "a year, from Quit Day")
-                tile("Prep days done", value: "\(snap.prepDone) / \(snap.prepTotal)", caption: snap.prepDone > 0 ? "on track" : "starts today")
-            } else {
-                ForEach(snap.counters) { counter in
-                    tile(avoidedLabel(counter.product), value: counter.avoided.formatted(),
-                         caption: "\(counter.perDayBefore) a day before")
-                }
-                tile("Money kept", value: snap.moneyKept.formatted(.currency(code: snap.currencyCode)),
-                     caption: snap.phase == .quitDay ? "since this morning" : "since \(profile.quitDay.formatted(.dateTime.weekday(.wide)))")
+            ForEach(snap.counters) { counter in
+                tile(value: counter.avoided.formatted(), caption: avoidedLabel(counter.product))
             }
+            tile(value: snap.moneyKept.formatted(.currency(code: snap.currencyCode)),
+                 caption: snap.phase == .quitDay ? "kept since this morning" : "kept since \(profile.quitDay.formatted(.dateTime.weekday(.wide)))")
         }
     }
 
     private func avoidedLabel(_ product: Product) -> LocalizedStringKey {
         switch product {
-        case .cigarettes: "Cigarettes not smoked"
-        case .vape: "Puffs not taken"
-        case .pouches: "Pouches not used"
+        case .cigarettes: "cigarettes not smoked"
+        case .vape: "puffs not taken"
+        case .pouches: "pouches not used"
         }
     }
 
-    private func tile(_ label: LocalizedStringKey, value: String, caption: LocalizedStringKey) -> some View {
+    /// A value and what it is, in one sentence-case line (S18.10).
+    private func tile(value: String, caption: LocalizedStringKey) -> some View {
         DXCard(padding: 14) {
             VStack(alignment: .leading, spacing: 4) {
-                Text(label).dxText(.micro).fixedSize(horizontal: false, vertical: true)
                 Text(verbatim: value).dxText(.cardHeading).font(.custom(DX.Typeface.bold, size: 20, relativeTo: .title3))
                     .contentTransition(.numericText())
-                Text(caption).dxText(.subtitle)
+                Text(caption).dxText(.subtitle).fixedSize(horizontal: false, vertical: true)
             }
-            .frame(maxWidth: .infinity, minHeight: 84, alignment: .topLeading)
+            .frame(maxWidth: .infinity, minHeight: 64, alignment: .topLeading)
         }
         .accessibilityElement(children: .combine)
     }
@@ -555,13 +558,12 @@ struct TodayView: View {
 
     private func milestone(next: Int, daysClear: Int) -> some View {
         let remaining = next - daysClear
+        let line = "\(milestoneName(next)) · \(remaining == 1 ? String(localized: "tomorrow") : String(localized: "in \(remaining) days"))"
         return DXCapsuleCard {
             HStack {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Next milestone").dxText(.micro)
-                    Text("\(milestoneName(next)) · \(remaining == 1 ? String(localized: "tomorrow") : String(localized: "in \(remaining) days"))")
-                        .dxText(.cardHeading).font(.custom(DX.Typeface.semibold, size: 14, relativeTo: .subheadline))
-                }
+                // The flag says it's a milestone; the line says which and when (S18.10).
+                Text(verbatim: line)
+                    .dxText(.cardHeading).font(.custom(DX.Typeface.semibold, size: 14, relativeTo: .subheadline))
                 Spacer()
                 Image(systemName: "flag")
                     .foregroundStyle(DX.Palette.accentInk)
@@ -570,7 +572,8 @@ struct TodayView: View {
                     .accessibilityHidden(true)
             }
         }
-        .accessibilityElement(children: .combine)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text("Next milestone: \(line)"))
     }
 }
 

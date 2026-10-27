@@ -80,7 +80,7 @@ struct SlipFlow: View {
                         .dxText(.subtitle).multilineTextAlignment(.center)
                     DXCard(padding: 14) {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("One minute, if you have it").dxText(.micro)
+                            Text("One minute, if you have it").dxText(.cardHeading)
                             Text("Three quick questions so we can plan for next time.")
                                 .font(DX.TextStyle.subtitle.font).foregroundStyle(DX.Palette.text)
                         }
@@ -427,7 +427,7 @@ struct PlanCard: View {
     var body: some View {
         DXCard(padding: 14) {
             VStack(alignment: .leading, spacing: 6) {
-                Text(title).dxText(.micro)
+                Text(title).dxText(.subtitle)
                 Text("If it's \(Text(verbatim: situation).font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body))), then I'll \(Text(verbatim: action).font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)))")
                     .font(.custom(DX.Typeface.regular, size: 15, relativeTo: .body))
                     .foregroundStyle(DX.Palette.text)

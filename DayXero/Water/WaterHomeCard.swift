@@ -20,7 +20,6 @@ struct WaterHomeCard: View {
         let total = todays.reduce(0) { $0 + $1.countedMl }
         let goal = waterProfiles.first?.effectiveGoalMl ?? WaterGoal.skippedMl
         let drink = waterProfiles.first?.selectedDrink ?? .glass
-        let units = waterProfiles.first?.units ?? .default()
         let reached = total >= goal
 
         HStack(spacing: DX.Space.s) {
@@ -28,12 +27,11 @@ struct WaterHomeCard: View {
                 HStack(spacing: DX.Space.s) {
                     WaterPillView(level: Double(total) / Double(goal), drink: todays.last?.drink ?? .glass, reached: reached, size: .mini)
                         .environment(\.colorScheme, .dark)
+                    // One unit on Home; litres are in the Water tab (S18.10).
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Water").dxText(.micro)
-                        Text(reached ? "Goal reached. Nice." : "\(WaterFormat.glasses(total)) of \(goal / WaterGoal.glassMl) glasses")
-                            .font(.custom(DX.Typeface.semibold, size: 16, relativeTo: .body))
+                        Text("Water").font(.custom(DX.Typeface.semibold, size: 16, relativeTo: .body))
                             .foregroundStyle(DX.Palette.text)
-                        Text(verbatim: "\(WaterFormat.amount(total, units: units)) / \(WaterFormat.amount(goal, units: units)) \(WaterFormat.unit(units))")
+                        Text(reached ? "Goal reached. Nice." : "\(WaterFormat.glasses(total)) of \(goal / WaterGoal.glassMl) glasses")
                             .dxText(.subtitle)
                     }
                     Spacer(minLength: 0)

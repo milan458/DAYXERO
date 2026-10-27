@@ -31,6 +31,7 @@ struct LogSheet: View {
     @State private var path: [LogRouter.Page] = []
     @State private var slip: LogEntry?
     @State private var logged = false
+    @Query(filter: #Predicate<LogEntry> { $0.kindRaw != "craving" }) private var uses: [LogEntry]
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -72,7 +73,8 @@ struct LogSheet: View {
                 Text("I used").dxText(.micro).padding(.top, DX.Space.s)
                 ForEach(products, id: \.self) { product in
                     Button { logUse(product) } label: {
-                        LogRow(title: LogSheet.useTitle(product), detail: LocalizedStringKey(String(localized: product.title)),
+                        // How many today, rather than the product's name a second time (S18.10).
+                        LogRow(title: LogSheet.useTitle(product), detail: "\(todayCount(product)) today",
                                systemImage: LogSheet.icon(product), accent: false)
                     }
                     .buttonStyle(.plain)
@@ -98,6 +100,12 @@ struct LogSheet: View {
     }
 
     private var isSlip: Bool { UseLog.isSlip(profile: profile) }
+
+    private func todayCount(_ product: Product) -> Int {
+        let clock = DayClock(boundaryHour: profile?.dayBoundaryHour ?? 4)
+        let today = clock.day(containing: .now)
+        return uses.filter { $0.product == product && clock.day(containing: $0.timestamp) == today }.count
+    }
 
     private func logUse(_ product: Product) {
         let entry = UseLog.log(product, in: context)
