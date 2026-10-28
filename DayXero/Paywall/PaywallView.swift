@@ -15,7 +15,7 @@ struct PaywallContext {
     /// Nicotine spending a day, in the profile's currency.
     let moneyPerDay: Decimal
     let currencyCode: String
-    let products: [Product]
+    let products: [DayXeroCore.Product]
     /// What a pack of their cigarettes costs, when they buy by the pack.
     let packPrice: Decimal?
 
