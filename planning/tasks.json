@@ -2,11 +2,11 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-28T10:03:44.511Z"
+    "updated": "2026-10-28T10:52:28.377Z"
   },
   "now": {
     "section": "S20",
-    "task": "S20.1",
+    "task": "S20.4",
     "waiting_on_milan": []
   },
   "sections": [
@@ -2048,26 +2048,26 @@
         {
           "id": "S20.1",
           "title": "Install SuperwallKit and configure it at launch with RevenueCat as the purchase controller",
-          "status": "in_progress",
-          "notes": "Asked by Milan 28 Oct (Superwall set-up steps).\n3656053; iOS run 99 verifying the build with SuperwallKit.",
+          "status": "done",
+          "notes": "Asked by Milan 28 Oct (Superwall set-up steps).\n3656053; iOS run 99 verifying the build with SuperwallKit.\nVerified: iOS run 99 (build with SuperwallKit, unit tests) and device matrix run 54 (all four legs) green on 3656053.",
           "created": "2026-10-28T09:57:59.130Z",
-          "completed": null
+          "completed": "2026-10-28T10:52:28.167Z"
         },
         {
           "id": "S20.2",
           "title": "Placements: onboarding_complete, unlock_program_day, upgrade_from_settings, falling back to DayXero's paywall",
-          "status": "in_progress",
-          "notes": "Asked by Milan 28 Oct (Superwall set-up steps).\n3656053.",
+          "status": "done",
+          "notes": "Asked by Milan 28 Oct (Superwall set-up steps).\n3656053.\nVerified on CI with the fallback path (Superwall is off in tests). Live Superwall paywalls wait on campaigns (S20.4).",
           "created": "2026-10-28T09:57:59.173Z",
-          "completed": null
+          "completed": "2026-10-28T10:52:28.290Z"
         },
         {
           "id": "S20.3",
           "title": "User attributes, deep links (paywall previews) and analytics forwarding",
-          "status": "in_progress",
-          "notes": "Asked by Milan 28 Oct (Superwall set-up steps).\n3656053.",
+          "status": "done",
+          "notes": "Asked by Milan 28 Oct (Superwall set-up steps).\n3656053.\n3656053; CI green.",
           "created": "2026-10-28T09:57:59.217Z",
-          "completed": null
+          "completed": "2026-10-28T10:52:28.338Z"
         },
         {
           "id": "S20.4",
@@ -2081,6 +2081,26 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-28T10:52:28.377Z",
+      "type": "now",
+      "message": "Now: S20 / S20.4"
+    },
+    {
+      "time": "2026-10-28T10:52:28.338Z",
+      "type": "status",
+      "message": "S20.3 in_progress → done (3656053; CI green.)"
+    },
+    {
+      "time": "2026-10-28T10:52:28.290Z",
+      "type": "status",
+      "message": "S20.2 in_progress → done (Verified on CI with the fallback path (Superwall is off in tests). Live Superwall paywalls wait on campaigns (S20.4).)"
+    },
+    {
+      "time": "2026-10-28T10:52:28.167Z",
+      "type": "status",
+      "message": "S20.1 in_progress → done (Verified: iOS run 99 (build with SuperwallKit, unit tests) and device matrix run 54 (all four legs) green on 3656053.)"
+    },
     {
       "time": "2026-10-28T10:03:44.511Z",
       "type": "now",
