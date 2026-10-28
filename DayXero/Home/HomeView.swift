@@ -127,10 +127,8 @@ struct TodayView: View {
     @State private var showSettings = UserDefaults.standard.string(forKey: "dx.openSettings") != nil
     @State private var celebrating: Milestone?
     @State private var showHealth = false
-    /// The use just logged with one tap, for the Undo / Add details toast (S7.1).
-    @State private var justLogged: LogEntry?
-    @State private var detailsFor: LogEntry?
-    @State private var loggedFeedback = false
+    @Environment(\.dynamicTypeSize) private var typeSize
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         // Re-evaluates each minute so counters tick and the day rolls over on its own.
@@ -147,20 +145,6 @@ struct TodayView: View {
                     actions(snap, now: timeline.date)
                 }
             }
-        }
-        .overlay(alignment: .bottom) {
-            if let entry = justLogged { loggedToast(entry) }
-        }
-        .animation(DX.Motion.animation(DX.Motion.glide, reduceMotion: false), value: justLogged)
-        .task(id: justLogged) {
-            guard justLogged != nil else { return }
-            try? await Task.sleep(for: .seconds(5))
-            justLogged = nil
-        }
-        .sensoryFeedback(DX.Haptic.commit, trigger: loggedFeedback)
-        .sheet(item: $detailsFor) { entry in
-            CravingLogForm(profile: profile, editing: entry, onSaved: { detailsFor = nil })
-                .presentationDetents([.large])
         }
         .onAppear {
             checkMilestone()
@@ -247,18 +231,17 @@ struct TodayView: View {
         }
     }
 
-    /// The top of Home, as on dayxero.in (S19): the header, the moss wave, today's lesson, and the streak.
+    /// The top of Home (S24, the Figma mockup): the header, today's lesson, logging, and the streak.
     @ViewBuilder
     private func overview(_ snap: HomeSnapshot, now: Date) -> some View {
         header(snap, now: now)
-        mossHeader(now: now)
         if let lesson = snap.lesson {
             if lesson.isReplay {
                 ReplayCard(title: lesson.title, minutes: LessonLibrary.lesson(for: lesson.day, product: profile.primaryProduct?.product ?? .cigarettes).minutes) {
                     openLesson = .init(day: lesson.day, isReplay: true)
                 }
             } else {
-                lessonCard(lesson, finished: snap.finishedToday, prepTotal: snap.prepTotal)
+                lessonCard(lesson, finished: snap.finishedToday, prepTotal: snap.prepTotal, prep: isPrep(snap))
             }
         }
         if snap.phase == .quitDay, !sosHintSeen { sosHint }
@@ -267,17 +250,16 @@ struct TodayView: View {
             == DayClock(boundaryHour: profile.dayBoundaryHour).day(containing: now) {
             PlanCard(situation: plan.situation, action: plan.action, title: "Your plan for next time")
         }
+        quickLog(snap, now: now)
         streakCard(snap)
     }
 
-    /// Then: the next change in the body, NRT set-up, logging in prep, today's pledge or check-in, and water.
+    /// Then: NRT set-up, the next change in the body, and today's pledge or check-in.
     @ViewBuilder
     private func actions(_ snap: HomeSnapshot, now: Date) -> some View {
-        milestoneRow(now: now).id("lower")
         nrtSection(snap, now: now)
-        if isPrep(snap) { useRows(now: now) }
+        milestoneRow(now: now).id("lower")
         dailyCard(now: now)
-        WaterHomeCard(profile: profile, now: now, onOpen: openWater)
     }
 
     // MARK: Pledge and check-in (S11)
@@ -327,78 +309,95 @@ struct TodayView: View {
         }
     }
 
-    // MARK: One-tap logging in prep (S7.1)
+    // MARK: Logging (S24)
+
+    private enum LogCell: Identifiable, Hashable {
+        case product(Product)
+        case water
+        var id: Self { self }
+    }
+
+    /// A card per product, two to a row. With one product or three, water fills the gap so the grid stays even.
+    @ViewBuilder
+    private func quickLog(_ snap: HomeSnapshot, now: Date) -> some View {
+        let products = profile.products.sorted { ($0.isPrimary ? 0 : 1) < ($1.isPrimary ? 0 : 1) }.map(\.product)
+        let cells = products.map(LogCell.product) + (products.count % 2 == 1 ? [LogCell.water] : [])
+        if typeSize.isAccessibilitySize {
+            VStack(spacing: DX.Space.s) {
+                ForEach(cells) { logCell($0, snap: snap, now: now) }
+            }
+        } else {
+            Grid(horizontalSpacing: DX.Space.s, verticalSpacing: DX.Space.s) {
+                ForEach(Array(stride(from: 0, to: cells.count, by: 2)), id: \.self) { start in
+                    GridRow {
+                        ForEach(cells[start..<min(start + 2, cells.count)]) { logCell($0, snap: snap, now: now) }
+                    }
+                }
+            }
+        }
+    }
 
     @ViewBuilder
-    private func useRows(now: Date) -> some View {
-        Text("Log a use").dxText(.micro).padding(.top, DX.Space.xs)
-        ForEach(profile.products.sorted { ($0.isPrimary ? 0 : 1) < ($1.isPrimary ? 0 : 1) }) { use in
-            let counts = useCounts(use.product, now: now)
-            Button { logUse(use.product) } label: {
-                HStack(spacing: DX.Space.s) {
-                    Image(systemName: LogSheet.icon(use.product)).font(.system(size: 18)).foregroundStyle(DX.Palette.text)
-                        .frame(width: 42, height: 42).background(DX.Palette.surface2, in: Circle())
-                    VStack(alignment: .leading, spacing: 1) {
-                        // The same name as in the log sheet (S19.7).
-                        Text(LogSheet.useTitle(use.product)).font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
-                        Text("\(counts.today) today · \(counts.yesterday) yesterday").dxText(.subtitle)
-                    }
-                    Spacer(minLength: DX.Space.xs)
-                    Image(systemName: "plus").font(.system(size: 16, weight: .bold)).foregroundStyle(DX.Palette.onPrimary)
-                        .frame(width: 40, height: 40).background(DX.Palette.primary, in: Circle())
-                }
-                .padding(.vertical, DX.Space.s).padding(.horizontal, 14)
-                .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
-                .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(DX.Palette.hairline))
-                .contentShape(Rectangle())
+    private func logCell(_ cell: LogCell, snap: HomeSnapshot, now: Date) -> some View {
+        switch cell {
+        case let .product(product): productCard(product, snap: snap, now: now)
+        case .water: WaterHomeCard(profile: profile, now: now, onOpen: openWater)
+        }
+    }
+
+    /// In prep: today's uses. From Quit Day: what's not been used since. Log opens the sheet, where a use,
+    /// a craving or a slip is one more tap.
+    private func productCard(_ product: Product, snap: HomeSnapshot, now: Date) -> some View {
+        let prep = isPrep(snap)
+        let count = prep ? useCount(product, now: now) : (snap.counters.first { $0.product == product }?.avoided ?? 0)
+        let title: LocalizedStringKey = switch (product, prep) {
+        case (.cigarettes, true): "Cigarettes today"
+        case (.vape, true): "Puffs and urges"
+        case (.pouches, true): "Pouches today"
+        case (.cigarettes, false): "Not smoked"
+        case (.vape, false): "Puffs not taken"
+        case (.pouches, false): "Pouches skipped"
+        }
+        let button: LocalizedStringKey = switch (product, prep) {
+        case (.cigarettes, true): "+ Log cigarette"
+        case (.vape, true): "+ Log puff or urge"
+        case (.pouches, true): "+ Log pouch"
+        case (_, false): "+ Log craving or slip"
+        }
+        return VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: DX.Space.xs) {
+                Image(systemName: LogSheet.icon(product)).font(.system(size: 13, weight: .light)).foregroundStyle(DX.Palette.accentInk)
+                    .frame(width: 28, height: 28).background(DX.Palette.accentSoft, in: Circle())
+                Text(title).font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote)).foregroundStyle(DX.Palette.text2)
+                    .lineLimit(2).minimumScaleFactor(0.85)
+            }
+            HStack(alignment: .firstTextBaseline, spacing: 6) {
+                Text(count, format: .number).font(.custom(DX.Typeface.bold, size: 28, relativeTo: .title)).foregroundStyle(DX.Palette.text)
+                    .contentTransition(.numericText())
+                Text(prep ? "logged" as LocalizedStringKey : "since Quit Day").font(.custom(DX.Typeface.regular, size: 12, relativeTo: .caption))
+                    .foregroundStyle(DX.Palette.muted)
+            }
+            Spacer(minLength: 0)
+            Button { log.open() } label: {
+                Text(button).font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote)).foregroundStyle(DX.Palette.text)
+                    .lineLimit(1).minimumScaleFactor(0.8)
+                    .frame(maxWidth: .infinity, minHeight: 40)
+                    .background(DX.Palette.surface2, in: Capsule())
+                    .overlay(Capsule().strokeBorder(DX.Palette.hairline))
             }
             .buttonStyle(.plain)
-            .accessibilityElement(children: .combine)
-            .accessibilityHint(Text("Logs one now"))
+            .accessibilityIdentifier("home.log.\(product.rawValue)")
         }
+        .padding(14)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 24, style: .continuous).strokeBorder(DX.Palette.hairline))
     }
 
-    private func useCounts(_ product: Product, now: Date) -> (today: Int, yesterday: Int) {
+    private func useCount(_ product: Product, now: Date) -> Int {
         let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
         let today = clock.day(containing: now)
-        let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: today) ?? today
-        let mine = logs.filter { $0.product == product && $0.kind != .craving && $0.timestamp >= yesterday }
-        let todayCount = mine.filter { clock.day(containing: $0.timestamp) == today }.count
-        return (todayCount, mine.count - todayCount)
-    }
-
-    private func logUse(_ product: Product) {
-        justLogged = UseLog.log(product, in: context)
-        loggedFeedback.toggle()
-    }
-
-    private func loggedToast(_ entry: LogEntry) -> some View {
-        let count = entry.product.map { useCounts($0, now: .now).today } ?? 0
-        return HStack(spacing: DX.Space.s) {
-            Image(systemName: "checkmark").font(.system(size: 13, weight: .bold))
-            Text("Logged · \(count) today").font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
-            Spacer(minLength: DX.Space.xs)
-            Button("Undo") {
-                UseLog.undo(entry, in: context)
-                justLogged = nil
-            }
-            .opacity(0.75)
-            Button("Add details") {
-                detailsFor = entry
-                justLogged = nil
-            }
-        }
-        .font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
-        .foregroundStyle(DX.Palette.onPrimary)
-        .buttonStyle(.plain)
-        .padding(.vertical, DX.Space.s).padding(.horizontal, 14)
-        .background(DX.Palette.primary, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
-        .shadow(color: DX.Palette.shadow, radius: 16, y: 8)
-        .padding(.horizontal, DX.Space.m)
-        .dxReadableColumn()
-        .padding(.bottom, DX.Space.xs)
-        .transition(.move(edge: .bottom).combined(with: .opacity))
-        .accessibilityElement(children: .contain)
+        return logs.filter { $0.product == product && $0.kind != .craving && clock.day(containing: $0.timestamp) == today }.count
     }
 
     private func isPrep(_ snap: HomeSnapshot) -> Bool {
@@ -408,34 +407,44 @@ struct TodayView: View {
 
     // MARK: Sections
 
-    /// "Good morning" over the name, and Settings (S19.1). Progress is the dock's tab only (S21.5).
+    /// "GOOD EVENING, MILAN" over where they are ("Prep day 1", with "1 of 7"), and their initial for Settings (S24).
     private func header(_ snap: HomeSnapshot, now: Date) -> some View {
-        HStack(alignment: .center, spacing: DX.Space.xs) {
-            VStack(alignment: .leading, spacing: 2) {
-                Text(snap.phase == .quitDay ? String(localized: "Today's the day") : HomeSnapshot.greeting(at: now)).dxText(.micro)
-                Text(verbatim: profile.name).dxText(.title).font(.custom(DX.Typeface.bold, size: 24, relativeTo: .title))
+        let greeting = snap.phase == .quitDay ? String(localized: "Today's the day") : HomeSnapshot.greeting(at: now)
+        let (title, chip): (String, String?) = switch snap.phase {
+        case .prep: (String(localized: "Prep day \(snap.prepDayNumber)"), String(localized: "\(snap.prepDayNumber) of \(snap.prepTotal)"))
+        case .quitDay: (String(localized: "Quit Day"), nil)
+        case let .quitWeek(day): (String(localized: "Day \(day)"), String(localized: "\(day) of \(ProgramSchedule.quitWeekDays)"))
+        case let .after(days): (days == 1 ? String(localized: "1 day clear") : String(localized: "\(days) days clear"), nil)
+        }
+        return HStack(alignment: .center, spacing: DX.Space.s) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(verbatim: profile.name.isEmpty ? greeting : "\(greeting), \(profile.name)").dxText(.micro)
+                HStack(spacing: DX.Space.xs) {
+                    Text(verbatim: title).font(.custom(DX.Typeface.bold, size: 26, relativeTo: .title)).tracking(-0.5)
+                        .foregroundStyle(DX.Palette.text)
+                    if let chip {
+                        Label(chip, systemImage: "flame")
+                            .font(.custom(DX.Typeface.semibold, size: 12, relativeTo: .caption))
+                            .foregroundStyle(DX.Palette.accentInk)
+                            .padding(.vertical, 4).padding(.horizontal, 10)
+                            .background(DX.Palette.accentSoft, in: Capsule())
+                    }
+                }
             }
             .accessibilityElement(children: .combine)
             .accessibilityAddTraits(.isHeader)
             Spacer()
-            Button { settingsPage = nil; showSettings = true } label: { Image(systemName: "person").accessibilityLabel(Text("Profile and settings")) }
-                .buttonStyle(.dxIcon)
+            Button { settingsPage = nil; showSettings = true } label: {
+                Text(verbatim: String(profile.name.prefix(1)).uppercased())
+                    .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
+                    .frame(width: 40, height: 40)
+                    .background(DX.Palette.surface2, in: Circle())
+                    .overlay(Circle().strokeBorder(DX.Palette.hairline))
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(Text("Profile and settings"))
         }
         .padding(.bottom, DX.Space.xxs)
-    }
-
-    /// The moss wave with today's cravings, the next likely one, and Log (S19.2).
-    private func mossHeader(now: Date) -> some View {
-        let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
-        let cravings = logs.filter { $0.kind == .craving }.map(\.timestamp)
-        let prep = ProgressStats(quitDay: profile.quitDay, baselines: [], clock: clock).isPrep(at: now)
-        // The same events the widgets' forecast learns from (WidgetSync).
-        let events = logs.filter { $0.kind == .craving || $0.kind == .slip || (prep && $0.kind == .use) }
-            .map { CravingPredictor.Event(date: $0.timestamp, trigger: $0.trigger) }
-        return MossWaveHeader(cravingsToday: CravingPace.today(cravingsAt: cravings, clock: clock, now: now),
-                              usualCravings: CravingPace.usual(cravingsAt: cravings, clock: clock, now: now),
-                              nextCraving: CravingPredictor.nextWindow(events: events, now: now),
-                              now: now, onLog: { log.open() })
     }
 
     // MARK: Today's lesson (S19.3)
@@ -461,33 +470,47 @@ struct TodayView: View {
         return [place, String(localized: "\(content.minutes) min")].compactMap { $0 }.joined(separator: " · ")
     }
 
-    /// The lesson spotlight: a white card on dark, and the other way round on light, like dayxero.in.
-    /// Its eyebrow is the one micro label inside a card (DESIGN_METHODOLOGY.md, S19.3).
-    private func lessonCard(_ lesson: HomeSnapshot.Lesson, finished: ProgramDayID?, prepTotal: Int) -> some View {
+    /// The lesson spotlight (S24): a white card on dark, and the other way round on light, with soft hills along
+    /// its foot. Its eyebrow is the one micro label inside a card (DESIGN_METHODOLOGY.md, S19.3).
+    private func lessonCard(_ lesson: HomeSnapshot.Lesson, finished: ProgramDayID?, prepTotal: Int, prep: Bool) -> some View {
         let ink = DX.Palette.onPrimary
-        let minutes = LessonLibrary.lesson(for: lesson.day, product: profile.primaryProduct?.product ?? .cigarettes).minutes
-        return VStack(alignment: .leading, spacing: 6) {
+        // Sage on the dark card, deep olive on the white one.
+        let accent = Color(light: 0xBCC388, dark: 0x55621F)
+        let content = LessonLibrary.lesson(for: lesson.day, product: profile.primaryProduct?.product ?? .cigarettes)
+        let minutes = content.minutes
+        let hasAudio = content.steps.contains { if case .audio = $0 { true } else { false } }
+        let shape = RoundedRectangle(cornerRadius: DX.Radius.hero, style: .continuous)
+        return VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: DX.Space.xs) {
-                Text(verbatim: lessonEyebrow(lesson.day)).dxText(.micro, color: ink.opacity(0.5))
+                Text(verbatim: lessonEyebrow(lesson.day)).dxText(.micro, color: accent)
                 Spacer(minLength: DX.Space.xs)
                 if lesson.placeholder { PlaceholderTag() }
                 if let badge = lessonBadge(lesson) {
                     Text(badge).font(.custom(DX.Typeface.bold, size: 10, relativeTo: .caption2))
                         .textCase(.uppercase)
                         .foregroundStyle(DX.Palette.onAccent)
-                        .padding(.vertical, 3).padding(.horizontal, 8)
+                        .padding(.vertical, 4).padding(.horizontal, 10)
                         .background(DX.Palette.sage, in: Capsule())
                 }
             }
+            Label {
+                Text(hasAudio ? "Audio + exercise · \(minutes) min" as LocalizedStringKey : "\(minutes) min")
+            } icon: {
+                Image(systemName: hasAudio ? "headphones" : "clock").foregroundStyle(accent)
+            }
+            .font(.custom(DX.Typeface.medium, size: 12, relativeTo: .caption))
+            .foregroundStyle(ink.opacity(0.6))
             if let finished {
                 Label {
                     Text("\(LessonCatalog.title(for: finished)) done").dxText(.subtitle, color: ink.opacity(0.7))
                 } icon: {
-                    Image(systemName: "checkmark.circle.fill").foregroundStyle(DX.Palette.accentInk)
+                    Image(systemName: "checkmark.circle.fill").foregroundStyle(accent)
                 }
             }
-            Text(lesson.title).dxText(.cardHeading, color: ink).font(.custom(DX.Typeface.bold, size: 17, relativeTo: .headline))
-            Text(verbatim: lessonDetail(lesson, prepTotal: prepTotal)).dxText(.subtitle, color: ink.opacity(0.7))
+            Text(lesson.title).font(.custom(DX.Typeface.bold, size: 22, relativeTo: .title2)).tracking(-0.4).foregroundStyle(ink)
+                .fixedSize(horizontal: false, vertical: true)
+            Text(verbatim: lessonLine(lesson, content: content, prepTotal: prepTotal, prep: prep))
+                .font(.custom(DX.Typeface.regular, size: 14, relativeTo: .subheadline)).foregroundStyle(ink.opacity(0.65))
                 .fixedSize(horizontal: false, vertical: true)
             switch lesson.availability {
             case let .opensOn(date):
@@ -509,19 +532,42 @@ struct TodayView: View {
                     }
                 }
             case .available:
-                let title = lesson.resumeStep > 0 ? String(localized: "Continue (\(minutes) min)")
-                    : finished == nil ? String(localized: "Start today's lesson (\(minutes) min)")
-                    : String(localized: "Start the next one (\(minutes) min)")
+                let title = lesson.resumeStep > 0 ? String(localized: "Continue · \(minutes) min")
+                    : finished == nil ? String(localized: "Start \(LessonCatalog.title(for: lesson.day).lowercased()) lesson · \(minutes) min")
+                    : String(localized: "Start the next one · \(minutes) min")
                 lessonButton(title, systemImage: "play.fill") { openLesson = .init(day: lesson.day, isReplay: false) }
             case .completed, .locked:
                 EmptyView()
             }
         }
-        .padding(DX.Space.m)
+        .padding(DX.Space.l)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(DX.Palette.primary, in: RoundedRectangle(cornerRadius: DX.Radius.card, style: .continuous))
+        .background {
+            ZStack(alignment: .bottom) {
+                shape.fill(DX.Palette.primary)
+                // The welcome screen's hills, in the card's own palette: light hills on the white card.
+                Hills(still: true).frame(height: 64).opacity(0.55)
+                    .environment(\.colorScheme, colorScheme == .dark ? .light : .dark)
+            }
+            .clipShape(shape)
+        }
         .shadow(color: DX.Palette.sage.opacity(0.15), radius: 20)
         .shadow(color: DX.Palette.shadow, radius: 24, y: 12)
+    }
+
+    /// Prep: what to do with today's lesson. Otherwise its summary, or where it sits in the program.
+    private func lessonLine(_ lesson: HomeSnapshot.Lesson, content: LessonContent, prepTotal: Int, prep: Bool) -> String {
+        if let summary = content.summary, !summary.isEmpty { return summary }
+        guard prep else { return lessonDetail(lesson, prepTotal: prepTotal) }
+        let things = profile.products.sorted { ($0.isPrimary ? 0 : 1) < ($1.isPrimary ? 0 : 1) }.prefix(2).map { use in
+            switch use.product {
+            case .cigarettes: String(localized: "cigarette")
+            case .vape: String(localized: "vape")
+            case .pouches: String(localized: "pouch")
+            }
+        }
+        let next = things.count > 1 ? String(localized: "\(things[0]) or \(things[1])") : (things.first ?? String(localized: "cigarette"))
+        return String(localized: "Keep using normally today. Do this \(content.minutes)-minute session before your next \(next).")
     }
 
     private func lessonBadge(_ lesson: HomeSnapshot.Lesson) -> LocalizedStringKey? {
@@ -537,9 +583,9 @@ struct TodayView: View {
     private func lessonButton(_ title: String, systemImage: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Label(title, systemImage: systemImage)
-                .font(.custom(DX.Typeface.semibold, size: 14, relativeTo: .subheadline))
+                .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .subheadline))
                 .foregroundStyle(DX.Palette.primary)
-                .frame(maxWidth: .infinity, minHeight: 44)
+                .frame(maxWidth: .infinity, minHeight: DX.Size.compactButtonHeight)
                 .background(DX.Palette.onPrimary, in: Capsule())
         }
         .buttonStyle(.plain)
@@ -570,51 +616,53 @@ struct TodayView: View {
         .accessibilityHint(Text("Dismisses this tip"))
     }
 
-    // MARK: Streak and adherence (S19.4)
+    // MARK: Streak (S19.4, S24)
 
-    /// Prep: lessons done in a row and the Quit Day countdown. From Quit Day: days clear toward the next milestone.
-    /// Both with adherence: program days done out of those due.
+    /// Prep: lessons done in a row, the Quit Day countdown, and a segment per prep day. From Quit Day: days clear
+    /// and the way to the next milestone (S24).
     private func streakCard(_ snap: HomeSnapshot) -> some View {
-        let percent = snap.adherence.formatted(.percent.precision(.fractionLength(0)))
-        return DXGlassCard {
-            VStack(alignment: .leading, spacing: DX.Space.s) {
-                HStack(alignment: .top) {
-                    VStack(alignment: .leading, spacing: 2) {
-                        switch snap.phase {
-                        case let .prep(days):
-                            Text("Prep streak").dxText(.micro, color: DX.Palette.accentInk)
-                            streakNumber(snap.lessonStreak, of: snap.prepTotal)
-                            Text(verbatim: "\(String(localized: "Quit Day")) \(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))) · \(days == 1 ? String(localized: "1 day to go") : String(localized: "\(days) days to go"))")
-                                .dxText(.subtitle)
-                        default:
-                            Text("Smoke-free streak").dxText(.micro, color: DX.Palette.accentInk)
-                            streakNumber(snap.daysClear, of: snap.nextMilestone)
-                            if snap.phase == .quitDay { Text("Your first day. One craving at a time.").dxText(.subtitle) }
-                        }
-                    }
-                    Spacer(minLength: DX.Space.s)
-                    VStack(alignment: .trailing, spacing: 2) {
-                        Text("Adherence").dxText(.micro)
-                        Text(verbatim: percent).font(.custom(DX.Typeface.bold, size: 15, relativeTo: .subheadline))
-                            .foregroundStyle(DX.Palette.accentInk)
+        VStack(alignment: .leading, spacing: DX.Space.s) {
+            HStack(alignment: .firstTextBaseline, spacing: DX.Space.xs) {
+                switch snap.phase {
+                case let .prep(days):
+                    Text("Prep streak · \(snap.lessonStreak) / \(snap.prepTotal)").dxText(.micro, color: DX.Palette.accentInk)
+                    Spacer(minLength: DX.Space.xs)
+                    Text(verbatim: "\(String(localized: "Quit Day")) \(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))) · \(days == 1 ? String(localized: "1 day") : String(localized: "\(days) days"))")
+                        .font(.custom(DX.Typeface.medium, size: 12, relativeTo: .caption)).foregroundStyle(DX.Palette.text2)
+                default:
+                    Text("Smoke-free · \(snap.daysClear) \(snap.daysClear == 1 ? String(localized: "day") : String(localized: "days"))")
+                        .dxText(.micro, color: DX.Palette.accentInk)
+                    Spacer(minLength: DX.Space.xs)
+                    if let next = snap.nextMilestone {
+                        Text("Next milestone · \(next) days").font(.custom(DX.Typeface.medium, size: 12, relativeTo: .caption))
+                            .foregroundStyle(DX.Palette.text2)
                     }
                 }
-                DXProgressBar(value: snap.adherence, tint: .primary)
             }
-        }
-        .accessibilityElement(children: .combine)
-    }
-
-    /// "4 / 7 days", or "12 days" past the last milestone.
-    private func streakNumber(_ value: Int, of total: Int?) -> some View {
-        HStack(alignment: .firstTextBaseline, spacing: 6) {
-            Text(value, format: .number).dxText(.hero).contentTransition(.numericText())
-            if let total {
-                Text("/ \(total) days").dxText(.heroDenominator)
+            if case .prep = snap.phase, snap.prepTotal <= 14 {
+                // One segment per prep day: done ones full, today's half, the rest waiting.
+                HStack(spacing: 6) {
+                    ForEach(0..<max(snap.prepTotal, 1), id: \.self) { index in
+                        Capsule()
+                            .fill(index < snap.prepDone ? DX.Palette.sage : DX.Palette.track)
+                            .overlay(alignment: .leading) {
+                                if index == snap.prepDone, index == snap.prepDayNumber - 1 {
+                                    GeometryReader { geo in Capsule().fill(DX.Palette.sage.opacity(0.6)).frame(width: geo.size.width / 2) }
+                                }
+                            }
+                            .frame(height: 6)
+                    }
+                }
+            } else if case .prep = snap.phase {
+                DXProgressBar(value: Double(snap.prepDone) / Double(max(snap.prepTotal, 1)))
             } else {
-                Text(value == 1 ? LocalizedStringKey("day") : LocalizedStringKey("days")).dxText(.heroDenominator)
+                DXProgressBar(value: snap.nextMilestone == nil ? 1 : snap.milestoneFraction)
             }
         }
+        .padding(.vertical, 14).padding(.horizontal, DX.Space.m)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(DX.Palette.accentSoft, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .accessibilityElement(children: .combine)
     }
 
     // MARK: Next change in the body (S19.5)

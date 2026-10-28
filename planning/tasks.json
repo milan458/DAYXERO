@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-28T20:15:08.631Z"
+    "updated": "2026-10-28T22:12:08.265Z"
   },
   "now": {
     "section": "S22",
@@ -2298,9 +2298,65 @@
           "completed": null
         }
       ]
+    },
+    {
+      "id": "S24",
+      "title": "Home and dock from the mockup",
+      "goal": "Home rebuilt as the Figma Home (screen 15) and the dock laid out like it, with the glass look and sliding lens of iOS 26 tab bars (Milan's WhatsApp recording, 29 Oct).",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S24.1",
+          "title": "Home: greeting header with day chip and initial, white lesson card with hills, logging cards two to a row (water joins one or three products), prep-streak segments",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-28T22:12:08.189Z",
+          "completed": null
+        },
+        {
+          "id": "S24.2",
+          "title": "Dock: one glass bar; selected tab a white pill with its name that slides and squashes between tabs; drag along the bar to switch",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-28T22:12:08.231Z",
+          "completed": null
+        },
+        {
+          "id": "S24.3",
+          "title": "CI, screenshots and TestFlight",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-28T22:12:08.265Z",
+          "completed": null
+        }
+      ]
     }
   ],
   "log": [
+    {
+      "time": "2026-10-28T22:12:08.265Z",
+      "type": "task_added",
+      "message": "S24.3 added: CI, screenshots and TestFlight"
+    },
+    {
+      "time": "2026-10-28T22:12:08.231Z",
+      "type": "task_added",
+      "message": "S24.2 added: Dock: one glass bar; selected tab a white pill with its name that slides and squashes between tabs; drag along the bar to switch"
+    },
+    {
+      "time": "2026-10-28T22:12:08.189Z",
+      "type": "task_added",
+      "message": "S24.1 added: Home: greeting header with day chip and initial, white lesson card with hills, logging cards two to a row (water joins one or three products), prep-streak segments"
+    },
+    {
+      "time": "2026-10-28T22:12:08.152Z",
+      "type": "section_added",
+      "message": "S24 added: Home and dock from the mockup"
+    },
     {
       "time": "2026-10-28T20:15:08.631Z",
       "type": "status",
