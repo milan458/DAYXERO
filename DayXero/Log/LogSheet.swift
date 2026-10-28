@@ -108,6 +108,8 @@ struct LogSheet: View {
                     }
                     .buttonStyle(.plain)
                     .accessibilityHint(Text(isSlip ? "Logs a slip. Nothing resets." : "Logs one now"))
+                    // Home's prep rows share the name, so UI tests find the sheet's by this.
+                    .accessibilityIdentifier("log.use.\(product.rawValue)")
                 }
                 if isSlip {
                     Text("A use after Quit Day is logged as a slip. Nothing resets.")

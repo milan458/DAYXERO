@@ -148,6 +148,8 @@ struct RootView: View {
         #if DEBUG
         if UserDefaults.standard.bool(forKey: "dx.showGallery") {
             DesignSystemGallery()
+        } else if UserDefaults.standard.bool(forKey: "dx.illustrationGallery") {
+            MilestoneIllustrationGallery()
         } else if let page = UserDefaults.standard.string(forKey: "dx.widgetGallery") {
             WidgetGallery(page: page)
         } else if UserDefaults.standard.bool(forKey: "dx.paywallPreview") {

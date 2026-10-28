@@ -88,6 +88,7 @@ Adhere strictly to these exact HEX and RGBA values:
      - Size: `10px` – `11px` | Weight: `Medium (500)` or `SemiBold (600)` | Text-Transform: `UPPERCASE` | Letter-spacing: `+0.08em` to `+0.12em` | Color: `rgba(255, 255, 255, 0.45)`
      - Example: `TODAY'S RESISTANCE`, `WEEKLY ADHERENCE`, `CRAVING PEAK`, `RECOVERY STAGE`.
      - **Where they go (Milan, 27 Oct 2026, S18.9):** only a screen's top eyebrow (e.g. `TUESDAY · PREP DAY 1`) and the section headers between groups of cards (e.g. `YOUR PATTERNS`). **Never inside a card.** When every card opens with an all-caps label the screen reads like a form; one or two per screen keeps it calm.
+     - **Exceptions on Home (Milan, 28 Oct 2026, S19):** Home follows the dayxero.in phone preview, so the lesson spotlight card (`PREP PROGRAM · DAY 4`) and the streak card (`PREP STREAK` / `ADHERENCE`) keep their in-card labels. They're the two cards the preview defines that way; everywhere else the rule above stands.
      - **Inside a card:** a value plus one sentence-case caption that says what it is ("0 of 9" / "prep days done"). If the icon or value already says what the card is, leave the label out.
      - **No repeated words** between a card's lines, or between a card and the badge or header right next to it ("Prep day 1" as a title doesn't also go in the subtitle).
   6. **Button Typography**:

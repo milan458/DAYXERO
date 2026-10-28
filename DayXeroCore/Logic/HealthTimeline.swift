@@ -93,6 +93,14 @@ public struct HealthTimeline: Sendable {
         now.timeIntervalSince(clock.startOfDate(quitDay)) / 3600
     }
 
+    /// What Home and Progress feature: the change under way now (the latest to start, if several overlap) and the
+    /// next one still ahead. Before Quit Day nothing is under way and `next` is the first item.
+    public static func nowAndNext(_ items: [Item], elapsedHours: Double) -> (now: Item?, next: Item?) {
+        let underWay = items.filter { if case .underWay = state(of: $0, elapsedHours: elapsedHours) { true } else { false } }
+        let ahead = items.filter { state(of: $0, elapsedHours: elapsedHours) == .ahead }
+        return (underWay.max { $0.fromHours < $1.fromHours }, ahead.min { $0.fromHours < $1.fromHours })
+    }
+
     public static func state(of item: Item, elapsedHours: Double) -> State {
         if elapsedHours < 0 || elapsedHours < item.fromHours { return .ahead }
         if elapsedHours >= item.toHours { return .done }

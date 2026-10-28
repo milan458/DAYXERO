@@ -198,10 +198,17 @@ jobs:
           shoot dark large nrt-plan-dark $P12 -dx.logSheet nrt -dx.nrtStage plan
           shoot dark large nrt-reminders-dark $P12 -dx.logSheet nrt -dx.nrtStage reminders
           shoot dark accessibility-extra-extra-extra-large nrt-schedule-dark-ax5 $P12 -dx.logSheet nrt -dx.nrtStage schedule
-          shoot dark large nrt-home-dark $P12 -dx.seedNRT YES
-          shoot light large nrt-home-light $P12 -dx.seedNRT YES
+          # Home only invites to set NRT up; set-up plans live in Program (S19.6).
+          shoot dark large nrt-program-dark $P12 -dx.seedNRT YES -dx.tab program
+          shoot light large nrt-program-light $P12 -dx.seedNRT YES -dx.tab program
           shoot dark large nrt-progress-dark $P12 -dx.seedNRT YES -dx.tab progress
-          shoot dark large taper-home-dark -dx.homeScenario prep -dx.store pro -dx.seedPouches YES
+          shoot dark large taper-program-dark -dx.homeScenario prep -dx.store pro -dx.seedPouches YES -dx.tab program
+          # Home's lower half: milestone, NRT invite, log a use, pledge and water (S19).
+          shoot dark large home-prep-lower-dark -dx.homeScenario prep -dx.store pro -dx.homeScroll lower
+          shoot light large home-prep-lower-light -dx.homeScenario prep -dx.store pro -dx.homeScroll lower
+          shoot dark large home-day12-lower-dark $P12 -dx.homeScroll lower
+          shoot dark large illustrations-dark -dx.illustrationGallery YES
+          shoot light large illustrations-light -dx.illustrationGallery YES
           shoot dark large taper-setup-dark -dx.homeScenario prep -dx.store pro -dx.seedPouches YES -dx.logSheet taper
           shoot dark large health-smoking-dark $P12 -dx.tab progress -dx.openHealth YES
           shoot light large health-smoking-light $P12 -dx.tab progress -dx.openHealth YES

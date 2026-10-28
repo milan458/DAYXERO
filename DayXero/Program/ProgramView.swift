@@ -11,6 +11,7 @@ struct ProgramView: View {
     @State private var showPaywall = false
     @State private var showCalm = UserDefaults.standard.bool(forKey: "dx.openCalmList") || UserDefaults.standard.string(forKey: "dx.openCalm") != nil
     @Environment(SOSRouter.self) private var sos
+    @Environment(NRTRouter.self) private var nrt
 
     struct LessonOpen: Identifiable {
         let day: ProgramDayID
@@ -28,6 +29,7 @@ struct ProgramView: View {
                     variantLine.padding(.vertical, DX.Space.xs)
                     // Calm tools, always here and free for everyone (S12.2).
                     NRTInviteRow(title: "Calm tools", detail: "5 short exercises for stressful moments", systemImage: "wind") { showCalm = true }
+                    nrtGroup(now: timeline.date)
                     if let replay = state.replayDay {
                         ReplayCard(title: state.lesson(replay).title, minutes: state.lesson(replay).minutes) {
                             open = LessonOpen(day: replay, isReplay: true)
@@ -61,6 +63,27 @@ struct ProgramView: View {
             PaywallView(name: profile.name, quitDay: profile.quitDay,
                         model: PaywallModel(store: entitlement.store, entitlement: entitlement),
                         onClose: { showPaywall = false })
+        }
+    }
+
+    /// NRT plans and the pouch step-down live here once they're set up; Home only invites (S19.6).
+    /// A plan stays until a week after its last step.
+    @ViewBuilder
+    private func nrtGroup(now: Date) -> some View {
+        let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
+        let plans = profile.nrtPlans.filter { plan in
+            guard let end = StepSchedule(startDate: plan.startDate, steps: plan.steps, clock: clock).end else { return false }
+            return clock.day(containing: now) < (clock.calendar.date(byAdding: .day, value: 7, to: end) ?? end)
+        }
+        let taper = ProgressStats(quitDay: profile.quitDay, baselines: [], clock: clock).isPrep(at: now) ? profile.pouchTaper : nil
+        if !plans.isEmpty || taper != nil {
+            Text("Your NRT").dxText(.micro).padding(.top, DX.Space.s)
+            ForEach(plans.sorted { $0.createdAt < $1.createdAt }) { plan in
+                NRTCard(plan: plan, clock: clock, now: now)
+            }
+            if let taper {
+                Button { nrt.sheet = .taper } label: { TaperCard(taper: taper, clock: clock, now: now) }.buttonStyle(.plain)
+            }
         }
     }
 

@@ -226,8 +226,7 @@ struct HealthSummaryCard: View {
                                                  clock: DayClock(boundaryHour: profile.dayBoundaryHour))
         let states = items.map { HealthTimeline.state(of: $0, elapsedHours: elapsed) }
         let done = states.filter { $0 == .done }.count
-        let current = zip(items, states).first { if case .underWay = $0.1 { true } else { false } }?.0
-        let next = zip(items, states).first { $0.1 == .ahead }?.0
+        let (current, next) = HealthTimeline.nowAndNext(items, elapsedHours: elapsed)
         Button(action: action) {
             HStack(spacing: DX.Space.s) {
                 Image(systemName: "heart").font(.system(size: 17)).foregroundStyle(DX.Palette.accentInk)

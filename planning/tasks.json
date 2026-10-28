@@ -2,11 +2,11 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-28T07:30:07.753Z"
+    "updated": "2026-10-28T08:56:07.902Z"
   },
   "now": {
-    "section": "S18",
-    "task": "S18.16",
+    "section": "S19",
+    "task": "S19.1",
     "waiting_on_milan": []
   },
   "sections": [
@@ -1958,9 +1958,135 @@
           "completed": "2026-10-28T07:30:07.669Z"
         }
       ]
+    },
+    {
+      "id": "S19",
+      "title": "Home from the website mockup",
+      "goal": "Home matches the dayxero.in phone preview: moss wave, lesson spotlight, streak and adherence, milestone with illustration, NRT set-up, log a use (Milan, 28 Oct).",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S19.1",
+          "title": "Header: greeting, name, profile and the white trend button to Progress",
+          "status": "pending",
+          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).",
+          "created": "2026-10-28T08:56:07.440Z",
+          "completed": null
+        },
+        {
+          "id": "S19.2",
+          "title": "S1: flowing moss wave with cravings-today, next-craving and Log pills",
+          "status": "pending",
+          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).",
+          "created": "2026-10-28T08:56:07.497Z",
+          "completed": null
+        },
+        {
+          "id": "S19.3",
+          "title": "S2: lesson spotlight card (white; black in light theme)",
+          "status": "pending",
+          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).",
+          "created": "2026-10-28T08:56:07.561Z",
+          "completed": null
+        },
+        {
+          "id": "S19.4",
+          "title": "S3: streak and adherence card (Quit Day countdown folds in)",
+          "status": "pending",
+          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).",
+          "created": "2026-10-28T08:56:07.617Z",
+          "completed": null
+        },
+        {
+          "id": "S19.5",
+          "title": "S4: next health milestone with an animated illustration",
+          "status": "pending",
+          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).",
+          "created": "2026-10-28T08:56:07.680Z",
+          "completed": null
+        },
+        {
+          "id": "S19.6",
+          "title": "S5: NRT set-up invite on Home; set-up plans move to Program",
+          "status": "pending",
+          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).",
+          "created": "2026-10-28T08:56:07.730Z",
+          "completed": null
+        },
+        {
+          "id": "S19.7",
+          "title": "S6: log a use during prep, per product",
+          "status": "pending",
+          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).",
+          "created": "2026-10-28T08:56:07.832Z",
+          "completed": null
+        },
+        {
+          "id": "S19.8",
+          "title": "Tests, CI screenshots and TestFlight for the new Home",
+          "status": "pending",
+          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).",
+          "created": "2026-10-28T08:56:07.867Z",
+          "completed": null
+        }
+      ]
     }
   ],
   "log": [
+    {
+      "time": "2026-10-28T08:56:07.902Z",
+      "type": "now",
+      "message": "Now: S19 / S19.1"
+    },
+    {
+      "time": "2026-10-28T08:56:07.867Z",
+      "type": "task_added",
+      "message": "S19.8 added: Tests, CI screenshots and TestFlight for the new Home"
+    },
+    {
+      "time": "2026-10-28T08:56:07.832Z",
+      "type": "task_added",
+      "message": "S19.7 added: S6: log a use during prep, per product"
+    },
+    {
+      "time": "2026-10-28T08:56:07.730Z",
+      "type": "task_added",
+      "message": "S19.6 added: S5: NRT set-up invite on Home; set-up plans move to Program"
+    },
+    {
+      "time": "2026-10-28T08:56:07.680Z",
+      "type": "task_added",
+      "message": "S19.5 added: S4: next health milestone with an animated illustration"
+    },
+    {
+      "time": "2026-10-28T08:56:07.617Z",
+      "type": "task_added",
+      "message": "S19.4 added: S3: streak and adherence card (Quit Day countdown folds in)"
+    },
+    {
+      "time": "2026-10-28T08:56:07.561Z",
+      "type": "task_added",
+      "message": "S19.3 added: S2: lesson spotlight card (white; black in light theme)"
+    },
+    {
+      "time": "2026-10-28T08:56:07.497Z",
+      "type": "task_added",
+      "message": "S19.2 added: S1: flowing moss wave with cravings-today, next-craving and Log pills"
+    },
+    {
+      "time": "2026-10-28T08:56:07.440Z",
+      "type": "task_added",
+      "message": "S19.1 added: Header: greeting, name, profile and the white trend button to Progress"
+    },
+    {
+      "time": "2026-10-28T08:56:07.390Z",
+      "type": "section_added",
+      "message": "S19 added: Home from the website mockup"
+    },
     {
       "time": "2026-10-28T07:30:07.753Z",
       "type": "now",

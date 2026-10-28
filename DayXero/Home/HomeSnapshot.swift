@@ -62,6 +62,10 @@ struct HomeSnapshot {
     let nextMilestone: Int?
     /// Progress from the previous milestone to the next, for the after-quit-week bar.
     let milestoneFraction: Double
+    /// Program days done out of those due before today, 0...1 (S19.4).
+    let adherence: Double
+    /// Days in a row with a lesson done (S19.4).
+    let lessonStreak: Int
 
     @MainActor
     init(profile: UserProfile, isPro: Bool, now: Date = .now, calendar: Calendar = .current) {
@@ -145,6 +149,8 @@ struct HomeSnapshot {
         } else {
             milestoneFraction = 1
         }
+        adherence = Adherence.fraction(schedule: schedule, startedOn: profile.createdAt, completed: completed, now: now)
+        lessonStreak = Adherence.streak(completedAt: completions.map(\.completedAt), clock: clock, now: now)
     }
 
     static func greeting(at date: Date, calendar: Calendar = .current) -> String {

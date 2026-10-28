@@ -2,7 +2,7 @@ import DayXeroCore
 import SwiftData
 import SwiftUI
 
-/// An NRT plan on Home and Progress (S9.5): current step, progress through it, and when the next step starts.
+/// An NRT plan in Program and on Progress (S9.5, S19.6): current step, progress through it, and when the next step starts.
 struct NRTCard: View {
     let plan: NRTPlan
     let clock: DayClock

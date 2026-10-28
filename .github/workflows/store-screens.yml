@@ -120,7 +120,7 @@ jobs:
             shot program -dx.homeScenario day3 -dx.store pro -dx.tab program
             shot slip -dx.homeScenario day12 -dx.store pro -dx.logSheet slip
             shot insights -dx.homeScenario day12 -dx.store pro -dx.tab progress -dx.progressScroll patterns
-            shot nrt -dx.homeScenario day12 -dx.store pro -dx.seedNRT YES -dx.seedPouches YES
+            shot nrt -dx.homeScenario day12 -dx.store pro -dx.seedNRT YES -dx.seedPouches YES -dx.tab program
           }
           phone_capture() { xcrun simctl io "${{ steps.sim.outputs.phone }}" screenshot "$1"; }
           duo_capture() { hinge screenshot "$1"; }
