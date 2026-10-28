@@ -45,7 +45,11 @@ final class JourneyUITests: XCTestCase {
         XCTAssert(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Quit Day is")).firstMatch.waitForExistence(timeout: 15), "Plan reveal didn't appear")
         snap(app, "05-reveal")
         tapSettled(app, "Continue")
-        tapSettled(app, "Maybe later")               // reminders
+        // The trial screen (S22): the reminder is on, so continuing asks for notifications.
+        snap(app, "05b-trial")
+        tapSettled(app, "Remind me & continue")
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        if springboard.alerts.buttons["Allow"].waitForExistence(timeout: 5) { springboard.alerts.buttons["Allow"].tap() }
 
         // Paywall (S3), against the mock store
         let cta = app.buttons["paywall.cta"]
@@ -55,10 +59,15 @@ final class JourneyUITests: XCTestCase {
         XCTAssertEqual(XCTWaiter().wait(for: [loaded], timeout: 10), .completed, "The paywall's plans never loaded")
         snap(app, "06-paywall")
         tapWhenStill(app, cta, name: "paywall.cta")
-        // Starting the trial asks for notifications, for the reminder the day before it ends (S3.9).
+        // Notifications were already answered on the trial screen; allow again in case it was skipped.
         let allow = XCUIApplication(bundleIdentifier: "com.apple.springboard").alerts.buttons["Allow"]
-        if allow.waitForExistence(timeout: 5) { allow.tap() }
+        if allow.waitForExistence(timeout: 3) { allow.tap() }
         tapSettled(app, "Start prep day 1")
+        // Prep day 1 opens by itself after the paywall (S22); close it to reach Home.
+        let closeLesson = button(app, "Your place is saved")
+        XCTAssert(closeLesson.waitForExistence(timeout: 10), "Prep day 1 didn't open after the paywall")
+        snap(app, "06b-day1")
+        tapWhenStill(app, closeLesson, name: "Close lesson")
 
         // Prep Home (S4): log a use, ride out a craving, visit each tab.
         XCTAssert(app.buttons["Craving SOS"].waitForExistence(timeout: 10))

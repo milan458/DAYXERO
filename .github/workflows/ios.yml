@@ -115,7 +115,7 @@ jobs:
           shoot dark large gallery-dark -dx.showGallery YES
           shoot light large gallery-light -dx.showGallery YES
           shoot dark accessibility-extra-extra-extra-large gallery-dark-ax5 -dx.showGallery YES
-          for step in welcome products baseline_cigarettes baseline_vape baseline_summary triggers personal past_attempts nrt quit_day reveal reminders; do
+          for step in welcome products baseline_cigarettes baseline_vape baseline_summary triggers personal past_attempts nrt quit_day reveal trial; do
             shoot dark large "onb-$step-dark" -dx.onboardingStep "$step"
           done
           for step in welcome products baseline_vape baseline_summary quit_day reveal; do
@@ -277,6 +277,10 @@ jobs:
           shoot dark large set-privacy-dark $P12 -dx.openSettings privacy
           shoot dark large set-health-dark $P12 -dx.openSettings health
           shoot dark large onb-reveal-disclaimer-dark -dx.onboardingStep reveal
+          shoot dark large onb-trial-mock-dark -dx.onboardingStep trial -dx.store mock
+          shoot light large onb-trial-mock-light -dx.onboardingStep trial -dx.store mock
+          shoot dark large pw-firstrun-dark $P mock -dx.paywallFirstRun YES
+          shoot light large pw-firstrun-light $P mock -dx.paywallFirstRun YES
           cd shots
           git init -q -b ci-screens
           git config user.name "ci" && git config user.email "ci@users.noreply.github.com"

@@ -85,7 +85,7 @@ struct ReasonDraft: Identifiable, Equatable {
 /// The onboarding steps (S22). The age check is the welcome screen's footer; the name is asked with the reason.
 enum OnboardingStep: Hashable {
     case welcome, products, baseline(Product), baselineSummary, triggers, personal, pastAttempts,
-         nrt, quitDay, building, reveal, reminders
+         nrt, quitDay, building, reveal, trial
 
     /// Analytics and screenshot name.
     var key: String {
@@ -101,7 +101,7 @@ enum OnboardingStep: Hashable {
         case .quitDay: "quit_day"
         case .building: "building"
         case .reveal: "reveal"
-        case .reminders: "reminders"
+        case .trial: "trial"
         }
     }
 }
@@ -161,7 +161,7 @@ final class OnboardingModel {
     /// Steps in order for the current answers. Baselines repeat per product.
     var sequence: [OnboardingStep] {
         [.welcome, .products] + orderedProducts.map(OnboardingStep.baseline)
-            + [.baselineSummary, .triggers, .personal, .pastAttempts, .nrt, .quitDay, .building, .reveal, .reminders]
+            + [.baselineSummary, .triggers, .personal, .pastAttempts, .nrt, .quitDay, .building, .reveal, .trial]
     }
 
     /// 0...1 for the progress bar.
@@ -210,7 +210,7 @@ final class OnboardingModel {
     }
 
     var canGoBack: Bool {
-        path.count > 1 && step != .reveal && step != .reminders && step != .building
+        path.count > 1 && step != .reveal && step != .trial && step != .building
     }
 
     #if DEBUG
@@ -239,7 +239,7 @@ final class OnboardingModel {
 
     // MARK: Saving
 
-    /// Writes the answers to the store. Called once, before the reminders screen.
+    /// Writes the answers to the store. Called once, before the trial screen.
     @discardableResult
     func save(into context: ModelContext, now: Date = .now) throws -> UserProfile {
         let profile = UserProfile(

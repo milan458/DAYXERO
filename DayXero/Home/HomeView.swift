@@ -98,6 +98,12 @@ struct ComingSoon: View {
     }
 }
 
+/// Prep day 1 opens by itself the first time Home shows after the paywall (S22), so the first thing after starting
+/// a trial is the program working, not a dashboard.
+enum FirstLesson {
+    static let key = "dx.openFirstLesson"
+}
+
 struct TodayView: View {
     let profile: UserProfile
     /// Switches the dock to the water tracker.
@@ -156,7 +162,10 @@ struct TodayView: View {
             CravingLogForm(profile: profile, editing: entry, onSaved: { detailsFor = nil })
                 .presentationDetents([.large])
         }
-        .onAppear { checkMilestone() }
+        .onAppear {
+            checkMilestone()
+            openQueuedFirstLesson()
+        }
         .fullScreenCover(item: $celebrating) { milestone in
             MilestoneMoment(milestone: milestone, stats: MilestoneStats(profile: profile, logs: logs)) {
                 CelebratedMilestones.markReached(daysClear: HomeSnapshot(profile: profile, isPro: entitlement.isPro).daysClear)
@@ -189,6 +198,14 @@ struct TodayView: View {
                         model: PaywallModel(store: entitlement.store, entitlement: entitlement),
                         onClose: { showPaywall = false })
         }
+    }
+
+    private func openQueuedFirstLesson() {
+        guard UserDefaults.standard.bool(forKey: FirstLesson.key) else { return }
+        UserDefaults.standard.set(false, forKey: FirstLesson.key)
+        let snap = HomeSnapshot(profile: profile, isPro: entitlement.isPro)
+        guard celebrating == nil, let lesson = snap.lesson, lesson.availability == .available, !lesson.needsUpgrade else { return }
+        openLesson = .init(day: lesson.day, isReplay: false)
     }
 
     // MARK: Milestones (S13.2)

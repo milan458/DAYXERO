@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-28T18:02:29.440Z"
+    "updated": "2026-10-28T18:48:06.749Z"
   },
   "now": {
     "section": "S22",
@@ -2244,11 +2244,50 @@
           "notes": "Pushed 9e798e3 + fixes. CI couldn't start: GitHub says 'recent account payments have failed or your spending limit needs to be increased' (Billing & plans). Re-run ios.yml (screenshots: true) and devices.yml once billing is fixed.",
           "created": "2026-10-28T18:00:05.760Z",
           "completed": null
+        },
+        {
+          "id": "S22.8",
+          "title": "Screen 13 becomes the free-trial screen (today, reminder, first charge) with 'Remind me 2 days before' on by default; asking for notifications there",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-28T18:48:06.641Z",
+          "completed": null
+        },
+        {
+          "id": "S22.9",
+          "title": "First-run paywall made a clean hard paywall: one promise, three bullets, a trust card, yearly/monthly side by side, ✕ after 3 s, no basic-tracker link",
+          "status": "pending",
+          "notes": "No made-up rating or review: the app isn't out, so it shows plain facts until there are real reviews. Prices and trial length come from App Store Connect; build the Superwall version and run the price/header tests there (S20.4).",
+          "created": "2026-10-28T18:48:06.705Z",
+          "completed": null
+        },
+        {
+          "id": "S22.10",
+          "title": "Prep day 1 opens by itself after the paywall (Day-0 'aha')",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-28T18:48:06.749Z",
+          "completed": null
         }
       ]
     }
   ],
   "log": [
+    {
+      "time": "2026-10-28T18:48:06.749Z",
+      "type": "task_added",
+      "message": "S22.10 added: Prep day 1 opens by itself after the paywall (Day-0 'aha')"
+    },
+    {
+      "time": "2026-10-28T18:48:06.705Z",
+      "type": "task_added",
+      "message": "S22.9 added: First-run paywall made a clean hard paywall: one promise, three bullets, a trust card, yearly/monthly side by side, ✕ after 3 s, no basic-tracker link"
+    },
+    {
+      "time": "2026-10-28T18:48:06.641Z",
+      "type": "task_added",
+      "message": "S22.8 added: Screen 13 becomes the free-trial screen (today, reminder, first charge) with 'Remind me 2 days before' on by default; asking for notifications there"
+    },
     {
       "time": "2026-10-28T18:02:29.440Z",
       "type": "note",

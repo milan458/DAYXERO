@@ -501,7 +501,119 @@ struct PlanRevealScreen: View {
     }
 }
 
-// MARK: Screen 13: reminders
+// MARK: Screen 13: the free trial and its reminder
+
+/// Screen 13 (S22): the trial laid out before the paywall (today, the reminder, the first charge), with the reminder
+/// on by default. "Remind me & continue" asks for notifications. Without a trial to offer, or once they're Pro,
+/// it's the plain reminders screen.
+struct TrialScreen: View {
+    let name: String
+    let quitDay: Date
+    let dualUse: Bool
+    let onDone: () -> Void
+
+    @Environment(Entitlement.self) private var entitlement
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var model: PaywallModel?
+    @State private var remind = true
+    @State private var asking = false
+
+    var body: some View {
+        Group {
+            if entitlement.isPro {
+                RemindersScreen(onDone: onDone)
+            } else if let model, model.phase != .loading {
+                if let option = model.plans.first(where: { $0.plan == .annual }), let days = option.trialDays {
+                    trial(option, days: days)
+                } else {
+                    RemindersScreen(onDone: onDone)
+                }
+            } else {
+                ProgressView().tint(DX.Palette.accentInk).frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+        }
+        .task {
+            guard model == nil, !entitlement.isPro else { return }
+            let loading = PaywallModel(store: entitlement.store, entitlement: entitlement)
+            await loading.load(trackView: false)
+            model = loading
+        }
+    }
+
+    private func trial(_ option: PlanOption, days: Int) -> some View {
+        let now = Date.now
+        let end = Calendar.current.date(byAdding: .day, value: days, to: now) ?? now
+        let lead = TrialReminder.leadDays(trialEndsAt: end, now: now)
+        let remindOn = Calendar.current.date(byAdding: .day, value: -lead, to: end) ?? end
+        let short = Date.FormatStyle.dateTime.weekday(.abbreviated).day().month(.abbreviated)
+        let zero = Decimal(0).formatted(.currency(code: option.currencyCode).precision(.fractionLength(0)))
+        let leadText = lead == 2 ? String(localized: "2 days") : String(localized: "the day")
+        let endsOnQuitDay = Calendar.current.isDate(end, inSameDayAs: quitDay)
+        return OnboardingScaffold(title: name.isEmpty ? "We want you to try DayXero for free" : "We want you to try DayXero for free, \(name).",
+                                  eyebrow: "A risk-free start") {
+            VStack(alignment: .leading, spacing: 0) {
+                stop("lock.open", when: String(localized: "Today · \(zero) due"),
+                     detail: dualUse ? String(localized: "Full access to every prep day, the dual-use tracker and Craving SOS.")
+                                     : String(localized: "Full access to every prep day, your tracker and Craving SOS."), last: false)
+                stop("bell", when: String(localized: "\(remindOn.formatted(short)) · Trial reminder"),
+                     detail: remind ? String(localized: "We'll notify you \(leadText) before your trial ends, so you're never billed by surprise.")
+                                    : String(localized: "Reminder off. You can still cancel any time before it ends."),
+                     last: false, dimmed: !remind)
+                stop("star", when: endsOnQuitDay ? String(localized: "\(end.formatted(short)) · Quit Day · First billing")
+                                                 : String(localized: "\(end.formatted(short)) · First billing"),
+                     detail: String(localized: "\(option.priceText) a year unless you cancel. Cancel any time in Settings."), last: true)
+            }
+            .padding(DX.Space.m)
+            .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 24, style: .continuous).strokeBorder(DX.Palette.hairline))
+            Toggle(isOn: $remind) {
+                Label("Remind me \(leadText) before my trial ends", systemImage: "bell")
+                    .font(.custom(DX.Typeface.semibold, size: 14, relativeTo: .subheadline))
+                    .foregroundStyle(DX.Palette.text)
+            }
+            .tint(DX.Palette.sage)
+            .padding(.vertical, 12).padding(.horizontal, DX.Space.m)
+            .background(DX.Palette.accentSoft, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .padding(.top, DX.Space.xs)
+        } footer: {
+            Button(remind ? "Remind me & continue" as LocalizedStringKey : "Continue") {
+                UserDefaults.standard.set(remind, forKey: TrialReminder.wantedKey)
+                guard remind else { return onDone() }
+                asking = true
+                Task {
+                    _ = try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge])
+                    onDone()
+                }
+            }
+            .buttonStyle(.dxPrimary)
+            .disabled(asking)
+        }
+        .background(alignment: .bottom) {
+            Hills(still: reduceMotion).frame(height: 170).opacity(0.5).ignoresSafeArea().allowsHitTesting(false)
+        }
+    }
+
+    private func stop(_ systemImage: String, when: String, detail: String, last: Bool, dimmed: Bool = false) -> some View {
+        HStack(alignment: .top, spacing: DX.Space.s) {
+            Image(systemName: systemImage).font(.system(size: 14, weight: .regular)).foregroundStyle(DX.Palette.accentInk)
+                .frame(width: 34, height: 34).background(DX.Palette.accentSoft, in: Circle())
+            VStack(alignment: .leading, spacing: 2) {
+                Text(verbatim: when).font(.custom(DX.Typeface.semibold, size: 14, relativeTo: .subheadline)).foregroundStyle(DX.Palette.text)
+                Text(verbatim: detail).dxText(.subtitle).fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(.bottom, last ? 0 : DX.Space.l)
+        }
+        .opacity(dimmed ? 0.5 : 1)
+        .background(alignment: .topLeading) {
+            if !last {
+                Rectangle().fill(DX.Palette.sage.opacity(0.6)).frame(width: 2).padding(.top, 34).padding(.leading, 16)
+            }
+        }
+        .accessibilityElement(children: .combine)
+    }
+}
+
+// MARK: Reminders (when there's no trial to show)
 
 struct RemindersScreen: View {
     let onDone: () -> Void

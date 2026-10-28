@@ -37,7 +37,7 @@ struct OnboardingModelTests {
         let model = makeModel()
         model.products = [.cigarettes, .vape]
         #expect(model.sequence == [.welcome, .products, .baseline(.cigarettes), .baseline(.vape), .baselineSummary, .triggers,
-                                   .personal, .pastAttempts, .nrt, .quitDay, .building, .reveal, .reminders])
+                                   .personal, .pastAttempts, .nrt, .quitDay, .building, .reveal, .trial])
     }
 
     @Test func requiredStepsBlockContinueUntilAnswered() {
@@ -89,6 +89,13 @@ struct OnboardingModelTests {
         #expect(india.baseline(for: .vape).strengthMg == 50)
         let elsewhere = OnboardingModel(now: now, calendar: .init(identifier: .gregorian), locale: Locale(identifier: "ja_JP"))
         #expect(elsewhere.baseline(for: .cigarettes).price == nil, "No presets: they type the price")
+    }
+
+    @Test func theTrialReminderComesTwoDaysBeforeUnlessTheTrialIsTooShort() {
+        let day: TimeInterval = 86_400
+        #expect(TrialReminder.leadDays(trialEndsAt: now.addingTimeInterval(7 * day), now: now) == 2)
+        #expect(TrialReminder.leadDays(trialEndsAt: now.addingTimeInterval(3 * day), now: now) == 2)
+        #expect(TrialReminder.leadDays(trialEndsAt: now.addingTimeInterval(2 * day), now: now) == 1)
     }
 
     @Test func packPresetsFollowPackSize() {

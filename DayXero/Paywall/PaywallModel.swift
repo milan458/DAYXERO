@@ -74,9 +74,10 @@ final class PaywallModel {
         return percent >= 5 ? percent : nil
     }
 
-    func load() async {
+    /// - Parameter trackView: false when only the prices are wanted (the trial screen before the paywall).
+    func load(trackView: Bool = true) async {
         phase = .loading
-        Analytics.track(.paywallViewed)
+        if trackView { Analytics.track(.paywallViewed) }
         do {
             plans = try await store.loadPlans()
             if !plans.contains(where: { $0.plan == selected }), let first = plans.first { selected = first.plan }
@@ -119,7 +120,9 @@ final class PaywallModel {
             switch try await store.purchase(option.plan) {
             case .purchased:
                 entitlement.grant()
-                if let end = trialEndDate { await TrialReminder.schedule(trialEndsAt: end, price: option.priceText) }
+                if let end = trialEndDate, TrialReminder.wanted {
+                    await TrialReminder.schedule(trialEndsAt: end, price: option.priceText, now: now())
+                }
                 Analytics.track(.paywallPurchased(plan: option.plan.rawValue))
                 phase = .unlocked
             case .pending:
@@ -154,22 +157,33 @@ final class PaywallModel {
     }
 }
 
-/// The day-before reminder promised on the paywall for free trials.
+/// The reminder before a free trial ends (S22: two days before, as the trial screen promises).
 enum TrialReminder {
     static let identifier = "trial-reminder"
+    /// Whether they kept "Remind me 2 days before my trial ends" on. On unless they turned it off.
+    static let wantedKey = "dx.trialReminder"
 
-    static func schedule(trialEndsAt end: Date, price: String, calendar: Calendar = .current) async {
+    static var wanted: Bool { UserDefaults.standard.object(forKey: wantedKey) as? Bool ?? true }
+
+    /// Days before the end the reminder comes: two, or one for a trial too short for that.
+    static func leadDays(trialEndsAt end: Date, now: Date, calendar: Calendar = .current) -> Int {
+        let days = calendar.dateComponents([.day], from: calendar.startOfDay(for: now), to: calendar.startOfDay(for: end)).day ?? 0
+        return days >= 3 ? 2 : 1
+    }
+
+    static func schedule(trialEndsAt end: Date, price: String, now: Date = .now, calendar: Calendar = .current) async {
         let center = UNUserNotificationCenter.current()
         let status = await center.notificationSettings().authorizationStatus
         if status == .notDetermined {
             _ = try? await center.requestAuthorization(options: [.alert, .sound, .badge])
         }
-        guard let dayBefore = calendar.date(byAdding: .day, value: -1, to: end) else { return }
-        var components = calendar.dateComponents([.year, .month, .day], from: dayBefore)
+        let lead = leadDays(trialEndsAt: end, now: now, calendar: calendar)
+        guard let remindOn = calendar.date(byAdding: .day, value: -lead, to: end) else { return }
+        var components = calendar.dateComponents([.year, .month, .day], from: remindOn)
         components.hour = 10
         let content = UNMutableNotificationContent()
-        content.title = String(localized: "Your free trial ends tomorrow")
-        content.body = String(localized: "You'll be charged \(price) for a year unless you cancel. Cancel in Settings › Apple ID › Subscriptions.")
+        content.title = lead == 2 ? String(localized: "Your free trial ends in 2 days") : String(localized: "Your free trial ends tomorrow")
+        content.body = String(localized: "You'll be charged \(price) for a year on \(end.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))) unless you cancel. Cancel in Settings › Apple ID › Subscriptions.")
         let request = UNNotificationRequest(identifier: identifier, content: content,
                                             trigger: UNCalendarNotificationTrigger(dateMatching: components, repeats: false))
         try? await center.add(request)

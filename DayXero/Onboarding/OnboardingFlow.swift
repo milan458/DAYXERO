@@ -99,7 +99,7 @@ struct OnboardingFlow: View {
         case .quitDay: QuitDayScreen(model: model)
         case .building: BuildingScreen(model: model)
         case .reveal: PlanRevealScreen(model: model) { saveAndContinue() }
-        case .reminders: RemindersScreen(onDone: onFinished)
+        case .trial: TrialScreen(name: model.name, quitDay: model.quitDay, dualUse: model.products.count > 1, onDone: onFinished)
         }
     }
 

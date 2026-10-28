@@ -171,7 +171,9 @@ struct RootView: View {
             WidgetGallery(page: page)
         } else if UserDefaults.standard.bool(forKey: "dx.paywallPreview") {
             PaywallView(name: "Milan", quitDay: Calendar.current.date(byAdding: .day, value: 7, to: .now) ?? .now,
-                        model: PaywallModel(store: entitlement.store, entitlement: entitlement), onClose: {})
+                        model: PaywallModel(store: entitlement.store, entitlement: entitlement),
+                        context: UserDefaults.standard.bool(forKey: "dx.paywallFirstRun") ? PaywallContext(sampleCurrency: "USD") : nil,
+                        onClose: {})
         } else {
             content
         }
@@ -192,14 +194,20 @@ struct RootView: View {
                 HomeView(profile: profile)
             } else {
                 FirstRunPaywall(profile: profile, model: PaywallModel(store: entitlement.store, entitlement: entitlement),
-                                onClose: { paywallDone = true }, onPurchaseStarted: { buyingOnPaywall = true })
+                                onClose: {
+                                    UserDefaults.standard.set(true, forKey: FirstLesson.key)
+                                    paywallDone = true
+                                }, onPurchaseStarted: { buyingOnPaywall = true })
             }
             #else
             if paywallDone || (entitlement.isPro && !buyingOnPaywall) {
                 HomeView(profile: profile)
             } else {
                 FirstRunPaywall(profile: profile, model: PaywallModel(store: entitlement.store, entitlement: entitlement),
-                                onClose: { paywallDone = true }, onPurchaseStarted: { buyingOnPaywall = true })
+                                onClose: {
+                                    UserDefaults.standard.set(true, forKey: FirstLesson.key)
+                                    paywallDone = true
+                                }, onPurchaseStarted: { buyingOnPaywall = true })
             }
             #endif
         } else {
