@@ -121,7 +121,8 @@ final class JourneyUITests: XCTestCase {
         tap(app.buttons["Water"].firstMatch)
         let pill = app.descendants(matching: .any)["Water today"]
         XCTAssert(pill.waitForExistence(timeout: 5), "No water pill")
-        let log = button(app, "Log 250")
+        // "Log 250 ml", or "Log 8 fl oz" where the simulator's region uses US units.
+        let log = app.buttons.matching(NSPredicate(format: "label CONTAINS[c] 'Log 250 ml' OR label CONTAINS[c] 'Log 8 fl oz'")).firstMatch
         XCTAssert(log.waitForExistence(timeout: 5), "No Log button")
         RunLoop.current.run(until: .now.addingTimeInterval(1))
         snap(app, "40-water-start")
