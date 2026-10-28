@@ -61,12 +61,19 @@ public struct DXDock: View {
         .sensoryFeedback(DX.Haptic.select, trigger: selection)
     }
 
+    /// The word "SOS" in a slowly sliding rainbow, on the same circle as a tab that isn't selected (S21.4):
+    /// the flame read as confusing.
     private var sosButton: some View {
         Button(action: sosAction) {
-            Image(systemName: "flame")
+            RainbowSOS()
+                .frame(width: DX.Size.tab, height: DX.Size.tab)
+                .background(DX.Palette.surface2, in: Circle())
+                .overlay(Circle().strokeBorder(DX.Palette.hairline))
+                .contentShape(Circle())
+                .accessibilityElement(children: .ignore)
                 .accessibilityLabel(Text("Craving SOS"))
         }
-        .buttonStyle(DXFABStyle(.sage))
+        .buttonStyle(.plain)
     }
 
     private func tab(_ item: DXDockItem) -> some View {
@@ -77,8 +84,8 @@ public struct DXDock: View {
             }
         } label: {
             Image(systemName: item.systemImage)
-                .font(.system(size: 18, weight: active ? .semibold : .regular))
-                .foregroundStyle(active ? DX.Palette.onPrimary : DX.Palette.muted)
+                .font(.system(size: 18, weight: .semibold))
+                .foregroundStyle(active ? DX.Palette.onPrimary : DX.Palette.text2)
                 .frame(width: active && axis == .vertical ? DX.Size.tabActiveHeight : DX.Size.tab,
                        height: active && axis == .horizontal ? DX.Size.tabActiveHeight : DX.Size.tab)
                 .background(active ? DX.Palette.primary : DX.Palette.surface2, in: Capsule())
@@ -87,6 +94,36 @@ public struct DXDock: View {
         .buttonStyle(.plain)
         .accessibilityLabel(Text(item.title))
         .accessibilityAddTraits(active ? [.isSelected, .isButton] : .isButton)
+    }
+}
+
+/// "SOS" filled with a rainbow that slides across the word every three seconds; still with Reduce Motion.
+/// Deeper colours in light mode so the word stays readable on the light dock.
+private struct RainbowSOS: View {
+    @Environment(\.colorScheme) private var scheme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    private static let bright: [UInt32] = [0xFF6B6B, 0xFFB86B, 0xFFE36B, 0x7BE495, 0x6BC8FF, 0x9B8CFF, 0xFF7BD0]
+    private static let deep: [UInt32] = [0xD7263D, 0xE4572E, 0xB88500, 0x16897C, 0x2667C9, 0x6C45CF, 0xB8236E]
+
+    var body: some View {
+        TimelineView(.animation(minimumInterval: 1.0 / 30, paused: reduceMotion)) { timeline in
+            let phase = reduceMotion ? 0 : timeline.date.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: 3) / 3
+            Text(verbatim: "SOS")
+                .font(.system(size: 15, weight: .heavy, design: .rounded))
+                .tracking(0.5)
+                .foregroundStyle(rainbow(phase: phase))
+                .dynamicTypeSize(.large)
+        }
+    }
+
+    /// Two rainbows end to end across four widths of the word, shifted left by up to two widths: the pattern
+    /// repeats every two widths, so the loop has no seam.
+    private func rainbow(phase: Double) -> LinearGradient {
+        let hexes = scheme == .dark ? Self.bright : Self.deep
+        let colors = (hexes + hexes + [hexes[0]]).map { Color(hex: $0) }
+        let start = -2 * phase
+        return LinearGradient(colors: colors, startPoint: UnitPoint(x: start, y: 0.5), endPoint: UnitPoint(x: start + 4, y: 0.5))
     }
 }
 

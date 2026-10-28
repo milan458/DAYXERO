@@ -131,6 +131,14 @@ struct MilestoneMoment: View {
             .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
         }
         .frame(width: 240, height: 240)
+        .overlay(alignment: .bottomTrailing) {
+            // The change in the body this milestone talks about, from the health illustrations (S21.6).
+            if let id = milestone.healthItemID {
+                HealthBadge(id: id, state: .done, size: 64)
+                    .opacity(appeared ? 1 : 0)
+                    .offset(x: -14, y: -14)
+            }
+        }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(verbatim: milestone.title))
     }

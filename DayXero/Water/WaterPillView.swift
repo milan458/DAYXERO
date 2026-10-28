@@ -15,7 +15,6 @@ struct WaterPillView: View {
     var size: Size = .full
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @State private var fill = LevelAnimation()
 
     private var scale: CGFloat { size == .full ? 1 : 56.0 / 200.0 }
     private var width: CGFloat { 200 * scale }
@@ -24,20 +23,19 @@ struct WaterPillView: View {
     var body: some View {
         ZStack {
             if size == .full {
-                // Sage glow, brighter once the goal is reached.
-                EllipticalGradient(colors: [Color(hex: 0xBCC388, opacity: 0.22), Color(hex: 0xBCC388, opacity: 0)])
+                // Blue glow, brighter once the goal is reached.
+                EllipticalGradient(colors: [Color(hex: 0x5FA4EA, opacity: 0.26), Color(hex: 0x5FA4EA, opacity: 0)])
                     .frame(width: 280, height: 380)
                     .opacity(reached ? 1 : 0.35)
                     .animation(.easeInOut(duration: 0.6), value: reached)
                     .allowsHitTesting(false)
             }
-            TimelineView(.animation(paused: false)) { timeline in
-                let t = timeline.date.timeIntervalSinceReferenceDate
-                Canvas { context, canvas in
-                    draw(in: &context, size: canvas, time: t)
-                }
-            }
-            .frame(width: width, height: height)
+            // SwiftUI animates the level itself (S21.2), so the water rises on every tap even when the
+            // timeline's frames stall; the timeline only moves the waves and bubbles.
+            Liquid(pill: self, level: clampedLevel, still: reduceMotion)
+                .animation(reduceMotion ? .easeInOut(duration: 0.25) : .timingCurve(0.22, 1, 0.36, 1, duration: 0.9),
+                           value: clampedLevel)
+                .frame(width: width, height: height)
             .clipShape(Capsule())
             Capsule()
                 .strokeBorder(Color.white.opacity(0.75), lineWidth: max(2 * scale, 1))
@@ -45,10 +43,6 @@ struct WaterPillView: View {
             if size == .full { ticks }
         }
         .frame(width: width, height: height)
-        .onAppear { fill.jump(to: clampedLevel) }
-        .onChange(of: clampedLevel) { _, new in
-            fill.animate(to: new, now: Date.now.timeIntervalSinceReferenceDate, reduceMotion: reduceMotion)
-        }
     }
 
     private var clampedLevel: Double { min(max(level, 0), 1) }
@@ -67,16 +61,35 @@ struct WaterPillView: View {
 
     // MARK: Drawing
 
-    private func draw(in context: inout GraphicsContext, size canvas: CGSize, time t: TimeInterval) {
+    /// The liquid at `level`, which SwiftUI animates frame by frame, while the clock runs the waves and bubbles.
+    private struct Liquid: View, Animatable {
+        let pill: WaterPillView
+        var level: Double
+        let still: Bool
+
+        nonisolated var animatableData: Double {
+            get { level }
+            set { level = newValue }
+        }
+
+        var body: some View {
+            TimelineView(.animation(paused: false)) { timeline in
+                let t = timeline.date.timeIntervalSinceReferenceDate
+                Canvas { context, canvas in
+                    pill.draw(in: &context, size: canvas, time: t, level: level, still: still)
+                }
+            }
+        }
+    }
+
+    fileprivate func draw(in context: inout GraphicsContext, size canvas: CGSize, time t: TimeInterval, level: Double, still: Bool) {
         let s = scale
         let w = canvas.width, h = canvas.height
         context.fill(Path(CGRect(origin: .zero, size: canvas)), with: .color(Color(hex: 0x0C0F08)))
 
-        let level = fill.value(at: t)
         let top = h * (1 - level)
         let colours = drink.gradient
         let topColour = Color(hex: colours.top)
-        let still = reduceMotion
 
         if level > 0 {
             // Back wave: 8 pt above the surface, 45%, scrolling right 260 pt every 4.5 s.
@@ -171,43 +184,11 @@ private struct Bubble {
     }
 }
 
-/// The fill level's 0.9 s change on the reference's curve (0.22, 1, 0.36, 1); 0.25 s ease under Reduce Motion.
-struct LevelAnimation {
-    private var from = 0.0
-    private var to = 0.0
-    private var start = 0.0
-    private var duration = 0.0
-    private var curve = CubicBezier.fill
-
-    mutating func jump(to level: Double) {
-        from = level
-        to = level
-        duration = 0
-    }
-
-    mutating func animate(to level: Double, now: TimeInterval, reduceMotion: Bool) {
-        from = value(at: now)
-        to = level
-        start = now
-        duration = reduceMotion ? 0.25 : 0.9
-        curve = reduceMotion ? .ease : .fill
-    }
-
-    func value(at t: TimeInterval) -> Double {
-        guard duration > 0 else { return to }
-        let p = min(max((t - start) / duration, 0), 1)
-        return from + (to - from) * curve.y(atX: p)
-    }
-}
-
 /// A CSS-style cubic-bezier timing curve.
 struct CubicBezier {
     let x1, y1, x2, y2: Double
 
-    static let fill = CubicBezier(x1: 0.22, y1: 1, x2: 0.36, y2: 1)
     static let easeIn = CubicBezier(x1: 0.42, y1: 0, x2: 1, y2: 1)
-    static let easeOut = CubicBezier(x1: 0, y1: 0, x2: 0.58, y2: 1)
-    static let ease = CubicBezier(x1: 0.25, y1: 0.1, x2: 0.25, y2: 1)
 
     func y(atX x: Double) -> Double {
         if x <= 0 { return 0 }
@@ -237,7 +218,7 @@ struct CubicBezier {
     private func dbx(_ t: Double) -> Double { 3 * (1 - t) * (1 - t) * x1 + 6 * (1 - t) * t * (x2 - x1) + 3 * t * t * (1 - x2) }
 }
 
-/// A still pill for Live Activities, which ignore custom animation: outline and a flat sage fill.
+/// A still pill for Live Activities, which ignore custom animation: outline and a flat blue fill.
 struct WaterPillGlyph: View {
     let level: Double
     var width: CGFloat = 16
@@ -246,7 +227,7 @@ struct WaterPillGlyph: View {
         let height = width * 1.7
         ZStack(alignment: .bottom) {
             Capsule().fill(Color(hex: 0x0C0F08))
-            Rectangle().fill(Color(hex: 0xBCC388)).frame(height: height * min(max(level, 0), 1))
+            Rectangle().fill(Color(hex: 0x5FA4EA)).frame(height: height * min(max(level, 0), 1))
         }
         .frame(width: width, height: height)
         .clipShape(Capsule())

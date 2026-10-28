@@ -51,7 +51,7 @@ extension HomeView {
         case "water":
             WaterTrackerView(profile: profile)
         default:
-            TodayView(profile: profile, openWater: { tab = "water" }, openProgress: { tab = "progress" })
+            TodayView(profile: profile, openWater: { tab = "water" })
         }
     }
 
@@ -61,7 +61,7 @@ extension HomeView {
                 DXDockItem(id: "today", title: "Today", systemImage: "house"),
                 DXDockItem(id: "water", title: "Water", systemImage: "drop"),
                 DXDockItem(id: "program", title: "Program", systemImage: "book.closed"),
-                DXDockItem(id: "progress", title: "Progress", systemImage: "chart.bar"),
+                DXDockItem(id: "progress", title: "Progress", systemImage: "chart.line.uptrend.xyaxis"),
             ],
             selection: $tab,
             // Today, Water, Craving SOS in the middle, Program, Progress.
@@ -102,8 +102,6 @@ struct TodayView: View {
     let profile: UserProfile
     /// Switches the dock to the water tracker.
     var openWater: () -> Void = {}
-    /// Switches the dock to Progress (the header's round button).
-    var openProgress: () -> Void = {}
     @Environment(Entitlement.self) private var entitlement
     @Environment(\.modelContext) private var context
     @AppStorage("dx.sosHintSeen") private var sosHintSeen = false
@@ -393,7 +391,7 @@ struct TodayView: View {
 
     // MARK: Sections
 
-    /// "Good morning" over the name, Settings, and the round button to Progress (S19.1).
+    /// "Good morning" over the name, and Settings (S19.1). Progress is the dock's tab only (S21.5).
     private func header(_ snap: HomeSnapshot, now: Date) -> some View {
         HStack(alignment: .center, spacing: DX.Space.xs) {
             VStack(alignment: .leading, spacing: 2) {
@@ -405,10 +403,6 @@ struct TodayView: View {
             Spacer()
             Button { settingsPage = nil; showSettings = true } label: { Image(systemName: "person").accessibilityLabel(Text("Profile and settings")) }
                 .buttonStyle(.dxIcon)
-            Button(action: openProgress) {
-                Image(systemName: "chart.line.uptrend.xyaxis").accessibilityLabel(Text("Your progress"))
-            }
-            .buttonStyle(.dxRound)
         }
         .padding(.bottom, DX.Space.xxs)
     }
@@ -544,8 +538,8 @@ struct TodayView: View {
     private var sosHint: some View {
         Button { sosHintSeen = true } label: {
             HStack(spacing: DX.Space.xs) {
-                Image(systemName: "flame").foregroundStyle(DX.Palette.accentInk)
-                Text("Craving? Tap the green button any time. It takes 3 minutes.")
+                Image(systemName: "sos.circle").foregroundStyle(DX.Palette.accentInk)
+                Text("Craving? Tap SOS any time. It takes 3 minutes.")
                     .font(DX.TextStyle.subtitle.font).foregroundStyle(DX.Palette.text2)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 Image(systemName: "xmark").font(.system(size: 11, weight: .semibold)).foregroundStyle(DX.Palette.muted)
@@ -608,7 +602,7 @@ struct TodayView: View {
 
     // MARK: Next change in the body (S19.5)
 
-    /// What's changing in the body now and what's next, with its illustration. Opens the health timeline.
+    /// What's changing in the body now and what's next, with its illustration (S21.6). Opens the health timeline.
     private func milestoneRow(now: Date) -> some View {
         let product = profile.primaryProduct?.product ?? .cigarettes
         let items = HealthTimeline.bundled?.items(for: product) ?? []
@@ -624,7 +618,11 @@ struct TodayView: View {
         }
         return Button { showHealth = true } label: {
             HStack(spacing: DX.Space.s) {
-                MilestoneIllustration(id: featured?.id ?? "")
+                // The change under way gets its progress ring; before Quit Day the first change shows in colour, as a preview.
+                HealthBadge(id: featured?.id ?? "",
+                            state: current.map { HealthTimeline.state(of: $0, elapsedHours: elapsed) } ?? .underWay(0),
+                            size: 44, showsRing: current != nil)
+                    .padding(current != nil ? 4 : 0)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(verbatim: featured?.title ?? String(localized: "Your body is recovering"))
                         .font(.custom(DX.Typeface.semibold, size: 14, relativeTo: .subheadline)).foregroundStyle(DX.Palette.text)

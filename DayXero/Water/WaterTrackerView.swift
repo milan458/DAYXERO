@@ -4,6 +4,7 @@ import SwiftUI
 
 /// The water tracker (S7.7), signed off as drawn in `reference/water/water-pill-preview.html`:
 /// header and streak, today's amount, the pill, the drink picker, Log and Undo, then today's drinks.
+/// The water is blue and each drink has its own drawing (S21).
 struct WaterTrackerView: View {
     let profile: UserProfile
 
@@ -173,6 +174,8 @@ struct WaterTrackerView: View {
                 let on = drink == selected
                 Button { waterProfile?.selectedDrink = drink; try? context.save() } label: {
                     VStack(spacing: 2) {
+                        DrinkIllustration(drink: drink, size: 30)
+                            .padding(.bottom, 2)
                         Text(drink.name).font(.custom(DX.Typeface.semibold, size: 14, relativeTo: .subheadline))
                         Text(verbatim: WaterFormat.size(drink.ml, units: units))
                             .font(.custom(DX.Typeface.medium, size: 12, relativeTo: .caption))
@@ -181,7 +184,7 @@ struct WaterTrackerView: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
                     .foregroundStyle(.white)
-                    .frame(maxWidth: .infinity, minHeight: 62)
+                    .frame(maxWidth: .infinity, minHeight: 92)
                     .background(on ? Color(hex: 0xBCC388, opacity: 0.12) : Color.white.opacity(0.04),
                                 in: RoundedRectangle(cornerRadius: 18, style: .continuous))
                     .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous)
@@ -224,6 +227,7 @@ struct WaterTrackerView: View {
                             .font(.custom(DX.Typeface.medium, size: 14, relativeTo: .subheadline))
                             .foregroundStyle(.white.opacity(0.55))
                             .frame(width: 72, alignment: .leading)
+                        DrinkIllustration(drink: entry.drink, size: 24)
                         Text(entry.drink.name).font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(.white)
                         Spacer()
                         Text(verbatim: WaterFormat.size(entry.amountMl, units: units))

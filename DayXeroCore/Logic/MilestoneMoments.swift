@@ -106,6 +106,17 @@ public enum Milestone: Hashable, Sendable, Identifiable {
         }
     }
 
+    /// The health-timeline change the line talks about, for its illustration (S21.6).
+    public var healthItemID: String? {
+        switch self {
+        case .days(3): "nicotine-gone"
+        case .days(7): "withdrawal-peak"
+        case .days(14): "mood"
+        case .days(30): "cravings-fade"
+        default: nil
+        }
+    }
+
     /// "days clear" / "day clear" under the number.
     public var caption: String {
         switch self {

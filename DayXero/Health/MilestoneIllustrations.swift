@@ -1,280 +1,488 @@
 import DayXeroCore
 import SwiftUI
 
-/// A small, slowly looping drawing for each change on the health timeline (S19.5), shown in Home's milestone row.
-/// Drawn in code in sage on the theme's soft accent, so it follows light and dark; still with Reduce Motion.
-struct MilestoneIllustration: View {
+/// The health-timeline illustration set (S21.6), one drawing per change, as signed off on the illustration kit board:
+/// chunky filled shapes, a darker bottom edge, one white highlight and one slow loop each. The colour says which
+/// part of the body is healing and is the same in both themes; only the soft circle behind it follows the theme.
+/// Every screen that shows the health timeline draws it with `HealthBadge` (DESIGN_METHODOLOGY.md).
+struct HealthBadge: View {
     /// A health-timeline item id (health-timeline.json). Unknown ids get a sparkle.
     let id: String
+    /// Reached gets a check, under way a progress ring, ahead goes grey and still.
+    var state: HealthTimeline.State = .underWay(0)
+    var size: CGFloat = 48
+    /// The ring round an under-way change; off where the card shows its own progress.
+    var showsRing = true
+
+    var body: some View {
+        let ahead = state == .ahead
+        ZStack {
+            Circle().fill(ahead ? Self.aheadFill : Self.tint(for: id))
+            HealthArt(id: id, size: size * 0.68, still: ahead)
+                .grayscale(ahead ? 1 : 0)
+                .opacity(ahead ? 0.5 : 1)
+        }
+        .frame(width: size, height: size)
+        .overlay {
+            if showsRing, case .underWay(let progress) = state {
+                Circle()
+                    .trim(from: 0, to: CGFloat(max(progress, 0.03)))
+                    .stroke(DX.Palette.accentInk, style: StrokeStyle(lineWidth: max(2, size / 22), lineCap: .round))
+                    .rotationEffect(.degrees(-90))
+                    .padding(-size * 0.09)
+            }
+        }
+        .overlay(alignment: .bottomTrailing) {
+            if state == .done {
+                let d = max(size * 0.36, 14)
+                Image(systemName: "checkmark")
+                    .font(.system(size: d * 0.5, weight: .heavy))
+                    .foregroundStyle(DX.Palette.onPrimary)
+                    .frame(width: d, height: d)
+                    .background(DX.Palette.accentInk, in: Circle())
+                    .overlay(Circle().strokeBorder(DX.Palette.surface1, lineWidth: 2))
+                    .offset(x: d * 0.15, y: d * 0.15)
+            }
+        }
+        .accessibilityHidden(true)
+    }
+
+    private static let aheadFill = Color(light: (0xE7E9DD, 1), dark: (0xFFFFFF, 0.07))
+
+    /// The soft circle in the drawing's body-part colour.
+    static func tint(for id: String) -> Color {
+        switch MilestoneDrawing.hue(id) {
+        case .coral: Color(light: (0xFFE5DF, 1), dark: (0xFF7A66, 0.18))
+        case .sky: Color(light: (0xE1F0FD, 1), dark: (0x7FC0F5, 0.18))
+        case .sage: Color(light: (0xE9ECD7, 1), dark: (0xBCC388, 0.2))
+        case .lilac: Color(light: (0xEEEAFD, 1), dark: (0xB7A4F2, 0.2))
+        case .sun: Color(light: (0xFDF2D2, 1), dark: (0xF7C548, 0.18))
+        }
+    }
+}
+
+/// One drawing on its own, on a 64-point grid scaled to `size`. Loops gently; still with Reduce Motion or `still`.
+struct HealthArt: View {
+    let id: String
     var size: CGFloat = 40
+    var still = false
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
-        TimelineView(.animation(minimumInterval: 1.0 / 30, paused: reduceMotion)) { timeline in
-            // One loop every four seconds; 0...1.
-            let p = reduceMotion ? 0.25 : timeline.date.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: 4) / 4
+        let frozen = still || reduceMotion
+        TimelineView(.animation(minimumInterval: 1.0 / 30, paused: frozen)) { timeline in
+            let clock = MilestoneDrawing.Clock(t: timeline.date.timeIntervalSinceReferenceDate, still: frozen)
             Canvas { context, canvas in
-                let inset = canvas.width * 0.22
-                let r = CGRect(origin: .zero, size: canvas).insetBy(dx: inset, dy: inset)
-                MilestoneDrawing.draw(id, in: r, phase: p, context: &context)
+                context.scaleBy(x: canvas.width / 64, y: canvas.height / 64)
+                MilestoneDrawing.draw(id, clock: clock, in: &context)
             }
         }
         .frame(width: size, height: size)
-        .background(DX.Palette.accentSoft, in: Circle())
         .accessibilityHidden(true)
     }
 }
 
-/// The drawings, in a unit box. `phase` runs 0...1 and loops.
+/// The drawings, ported from the kit's SVG (planning mockups, "Illustration kit"), on a 64 × 64 grid.
 enum MilestoneDrawing {
     static let ids = ["heart-rate", "carbon-monoxide", "circulation", "coughing", "heart-attack", "mouth-cancer",
                       "lung-cancer", "heart-disease", "withdrawal-start", "nicotine-gone", "withdrawal-peak", "mood",
                       "cravings-fade"]
 
-    static func draw(_ id: String, in r: CGRect, phase p: Double, context c: inout GraphicsContext) {
-        let ink = GraphicsContext.Shading.color(DX.Palette.accentInk)
-        let line = StrokeStyle(lineWidth: max(r.width * 0.09, 1.2), lineCap: .round, lineJoin: .round)
-        let wave = sin(p * 2 * .pi)
+    enum Hue { case coral, sky, sage, lilac, sun }
+
+    static func hue(_ id: String) -> Hue {
+        switch id {
+        case "heart-rate", "circulation", "heart-disease": .coral
+        case "carbon-monoxide", "coughing", "lung-cancer": .sky
+        case "withdrawal-start", "cravings-fade": .lilac
+        case "nicotine-gone", "mood": .sun
+        default: .sage
+        }
+    }
+
+    /// Time for the loops. `still` holds each one at rest.
+    struct Clock {
+        let t: Double
+        let still: Bool
+
+        func phase(_ period: Double, delay: Double = 0) -> Double {
+            let p = (t - delay).truncatingRemainder(dividingBy: period) / period
+            return p < 0 ? p + 1 : p
+        }
+
+        /// 0 at the start of each loop, 1 halfway, back to 0, eased; `rest` when still.
+        func swing(_ period: Double, delay: Double = 0, rest: Double = 0) -> Double {
+            still ? rest : 0.5 - 0.5 * cos(2 * .pi * phase(period, delay: delay))
+        }
+
+        /// A heartbeat: two pulses, then a pause, every 1.6 s.
+        var beat: CGFloat {
+            guard !still else { return 1 }
+            let keys: [(Double, Double)] = [(0, 1), (0.14, 1.1), (0.28, 1), (0.42, 1.06), (0.6, 1), (1, 1)]
+            let p = phase(1.6)
+            for (a, b) in zip(keys, keys.dropFirst()) where p <= b.0 {
+                return CGFloat(a.1 + (b.1 - a.1) * (p - a.0) / (b.0 - a.0))
+            }
+            return 1
+        }
+    }
+
+    private enum Ink {
+        static let coral = Color(hex: 0xFF7A66), coralDeep = Color(hex: 0xE2563F)
+        static let sky = Color(hex: 0x7FC0F5), skyDeep = Color(hex: 0x4F9BE6)
+        static let sage = Color(hex: 0xBCC388), sageDeep = Color(hex: 0x8E9A55)
+        static let olive = Color(hex: 0x55621F), oliveDeep = Color(hex: 0x3C4614)
+        static let sun = Color(hex: 0xF7C548)
+        static let lilac = Color(hex: 0xB7A4F2), lilacDeep = Color(hex: 0x8E78E0)
+        static let grey = Color(hex: 0xB3B6A4), greyDeep = Color(hex: 0x868A74)
+        static let cloudShade = Color(hex: 0xD9DCCB)
+    }
+
+    private static let heart = "M32 54 C15 43 8 33 8 23 C8 15 14 9.5 21.5 9.5 C26.5 9.5 30 12.5 32 16.5 C34 12.5 37.5 9.5 42.5 9.5 C50 9.5 56 15 56 23 C56 33 49 43 32 54 Z"
+    private static let lobeLeft = "M29 20 C22 18 12 26 11 40 C10 50 16 54 22 52 C27 50 29 46 29 40 Z"
+    private static let lobeRight = "M35 20 C42 18 52 26 53 40 C54 50 48 54 42 52 C37 50 35 46 35 40 Z"
+    private static let shield = "M32 6 L53 13.5 V30 C53 43 44 52 32 58 C20 52 11 43 11 30 V13.5 Z"
+    private static let bubble = "M14 12 H50 Q56 12 56 18 V38 Q56 44 50 44 H30 L20 53 V44 H14 Q8 44 8 38 V18 Q8 12 14 12 Z"
+    private static let vessel = "M9 44 C9 22 28 18 32 32 C36 46 55 42 55 20"
+    private static let cloud = "M14 54 H40 C45 54 48 50.5 48 46 C48 41.5 44.5 38 40 38 C39 33 35 30 30 30 C24.5 30 20 34 20 39.5 C16 39.5 12 42.5 12 46.5 C12 50.5 14 54 14 54 Z"
+
+    static func draw(_ id: String, clock k: Clock, in c: inout GraphicsContext) {
+        func width(_ w: CGFloat) -> StrokeStyle { StrokeStyle(lineWidth: w, lineCap: .round, lineJoin: .round) }
+
         switch id {
         case "heart-rate":
-            // A heart that beats, with a pulse running under it.
-            c.fill(heart(in: scaled(r.offsetBy(dx: 0, dy: -r.height * 0.12), by: 0.62 + 0.06 * max(wave, 0))), with: ink)
-            c.stroke(pulse(in: CGRect(x: r.minX, y: r.maxY - r.height * 0.28, width: r.width, height: r.height * 0.28), phase: p),
-                     with: ink, style: line)
+            drawHeart(scaled(c, by: k.beat, around: CGPoint(x: 32, y: 32)))
+            let trace = svg("M10 32 H21 L25 25 L30 39 L34 28 L37 32 H54")
+            c.stroke(k.still ? trace : trace.trimmedPath(from: 0, to: min(1, k.phase(1.6) / 0.55)), with: .color(.white), style: width(3.2))
         case "carbon-monoxide":
-            // Bubbles rising and clearing.
-            for i in 0..<3 {
-                let f = (p + Double(i) / 3).truncatingRemainder(dividingBy: 1)
-                let d = r.width * (0.34 - 0.08 * CGFloat(i))
-                let x = r.minX + r.width * [0.3, 0.68, 0.48][i]
-                let y = r.maxY - CGFloat(f) * r.height
-                var bubble = c
-                bubble.opacity = 1 - f
-                bubble.stroke(Path(ellipseIn: CGRect(x: x - d / 2, y: y - d / 2, width: d, height: d)), with: ink, style: line)
+            c.fill(ellipse(30, 43, 19, 13), with: .color(Ink.coralDeep))
+            c.fill(ellipse(30, 41, 19, 13), with: .color(Ink.coral))
+            c.fill(ellipse(30, 41, 9, 5.5), with: .color(Ink.coralDeep.opacity(0.55)))
+            var shine = c
+            shine.translateBy(x: 20, y: 36)
+            shine.rotate(by: .degrees(-20))
+            shine.fill(ellipse(0, 0, 4, 2), with: .color(.white.opacity(0.55)))
+            for (x, y, r, delay) in [(16.0, 20.0, 6.0, 0.0), (34, 14, 7.5, 0.9), (50, 22, 5, 1.7)] as [(CGFloat, CGFloat, CGFloat, Double)] {
+                var o = c
+                if !k.still {
+                    let p = k.phase(2.6, delay: delay)
+                    o.translateBy(x: 0, y: CGFloat(6 - 15 * p))
+                    o.opacity = p < 0.25 ? p / 0.25 : 1 - (p - 0.25) / 0.75
+                }
+                o.fill(ellipse(x, y, r, r), with: .color(Ink.sky))
+                o.fill(ellipse(x - r * 0.33, y - r * 0.33, r * 0.3, r * 0.3), with: .color(.white.opacity(0.85)))
             }
+            var co = scaled(c, by: 1 - 0.18 * CGFloat(k.swing(3)), around: CGPoint(x: 55, y: 45))
+            co.opacity = 0.95 - 0.7 * k.swing(3)
+            co.fill(ellipse(55, 45, 3.6, 3.6), with: .color(Ink.grey))
         case "circulation":
-            // A vessel with the flow moving along it.
-            let path = sinePath(in: r, amplitude: 0.18, cycles: 1, phase: 0)
-            c.stroke(path, with: .color(DX.Palette.accentInk.opacity(0.35)), style: line)
-            var flow = line
-            flow.dash = [r.width * 0.14, r.width * 0.2]
-            flow.dashPhase = -CGFloat(p) * r.width * 0.68
-            c.stroke(path, with: ink, style: flow)
+            let v = svg(vessel)
+            c.stroke(v.offsetBy(dx: 0, dy: 2.5), with: .color(Ink.coralDeep), style: width(9))
+            c.stroke(v, with: .color(Ink.coral), style: width(9))
+            var flow = width(2.6)
+            flow.dash = [3, 7]
+            flow.dashPhase = k.still ? 0 : CGFloat(20 * k.phase(1.1))
+            c.stroke(v, with: .color(.white), style: flow)
+            sparkle(c, 50, 50, 5, k, delay: 0)
+            sparkle(c, 15, 13, 4, k, delay: 0.7)
         case "coughing":
-            // Lungs breathing easily.
-            c.stroke(lungs(in: scaled(r, by: 0.88 + 0.08 * wave)), with: ink, style: line)
+            drawLungs(scaled(c, by: breathe(k), around: CGPoint(x: 32, y: 36)))
+            c.stroke(svg("M32 7 V25 M32 24 Q32 28 27 31 M32 24 Q32 28 37 31"), with: .color(Ink.olive), style: width(4))
+            for (d, delay) in [("M43 11 Q47.5 8.5 52 11", 0.0), ("M45 16.5 Q50 14 55.5 16.5", 0.7)] {
+                var w = c
+                if !k.still { w.opacity = 0.25 + 0.75 * k.swing(2.2, delay: delay) }
+                w.stroke(svg(d), with: .color(Ink.skyDeep), style: width(2.6))
+            }
         case "heart-attack":
-            // A heart held in a shield.
-            c.stroke(shield(in: r), with: ink, style: line)
-            c.fill(heart(in: scaled(r, by: 0.42 + 0.04 * wave)), with: ink)
+            let s = svg(shield)
+            c.fill(s.offsetBy(dx: 0, dy: 2.5), with: .color(Ink.oliveDeep))
+            c.fill(s, with: .color(Ink.olive))
+            c.fill(svg("M32 6 L53 13.5 V30 C53 43 44 52 32 58 Z"), with: .color(.white.opacity(0.08)))
+            var inner = c
+            inner.translateBy(x: 17.6, y: 16.6)
+            inner.scaleBy(x: 0.45, y: 0.45)
+            drawHeart(scaled(inner, by: k.beat, around: CGPoint(x: 32, y: 32)))
+            sparkle(c, 53, 9, 4.5, k, delay: 0)
         case "mouth-cancer":
-            // A clear voice: arcs spreading out.
-            c.fill(Path(ellipseIn: CGRect(x: r.minX, y: r.midY - r.height * 0.1, width: r.width * 0.2, height: r.height * 0.2)), with: ink)
-            for i in 0..<3 {
-                let f = (p + Double(i) / 3).truncatingRemainder(dividingBy: 1)
-                var arc = c
-                arc.opacity = 1 - f
-                let radius = r.width * (0.25 + 0.6 * CGFloat(f))
-                arc.stroke(Path { $0.addArc(center: CGPoint(x: r.minX + r.width * 0.1, y: r.midY), radius: radius,
-                                            startAngle: .degrees(-40), endAngle: .degrees(40), clockwise: false) },
-                           with: ink, style: line)
+            let b = svg(bubble)
+            c.fill(b.offsetBy(dx: 0, dy: 2.5), with: .color(Ink.sageDeep))
+            c.fill(b, with: .color(Ink.sage))
+            for i in 0..<4 {
+                let height = 16 * CGFloat(k.still ? 0.7 : 0.35 + 0.65 * k.swing(1.1, delay: Double(i) * 0.2))
+                let x = 19.5 + CGFloat(i) * 7
+                c.fill(Path(roundedRect: CGRect(x: x, y: 28 - height / 2, width: 4.5, height: height), cornerRadius: 2.25), with: .color(.white))
             }
         case "lung-cancer":
-            // Lungs with a leaf growing.
-            c.stroke(lungs(in: scaled(r, by: 0.9)), with: ink, style: line)
-            c.fill(leaf(in: CGRect(x: r.midX - r.width * 0.06, y: r.minY - r.height * 0.12, width: r.width * 0.32,
-                                   height: r.height * 0.32 * (0.85 + 0.15 * CGFloat(wave)))), with: ink)
+            var lungs = c
+            lungs.translateBy(x: 4.8, y: 6)
+            lungs.scaleBy(x: 0.85, y: 0.85)
+            drawLungs(scaled(lungs, by: breathe(k), around: CGPoint(x: 32, y: 36)))
+            c.stroke(svg("M32 13 V27 M32 26 Q32 29 28 31.5 M32 26 Q32 29 36 31.5"), with: .color(Ink.olive), style: width(3.6))
+            let leaves = rotated(c, by: sway(k), around: CGPoint(x: 32, y: 14))
+            leaves.fill(svg("M32 14 C26 14 20 10.5 19 4.5 C25 4.5 31 7.5 32 14 Z"), with: .color(Ink.sage))
+            leaves.fill(svg("M32 14 C38 13 44 8.5 45 3.5 C39 3.5 33 7 32 14 Z"), with: .color(Ink.sageDeep))
         case "heart-disease":
-            // A whole heart with a leaf.
-            c.stroke(heart(in: scaled(r, by: 0.82)), with: ink, style: line)
-            c.fill(leaf(in: CGRect(x: r.midX + r.width * 0.05, y: r.minY - r.height * 0.1, width: r.width * 0.34,
-                                   height: r.height * 0.34)).applying(rotation(CGFloat(wave) * 0.12, around: CGPoint(x: r.midX, y: r.minY + r.height * 0.2))),
-                   with: ink)
+            var h = c
+            h.translateBy(x: 6.4, y: 12.5)
+            h.scaleBy(x: 0.8, y: 0.8)
+            drawHeart(scaled(h, by: k.beat, around: CGPoint(x: 32, y: 32)))
+            c.stroke(svg("M32 26 Q32 18 33 11"), with: .color(Ink.sageDeep), style: width(3))
+            let leaves = rotated(c, by: sway(k), around: CGPoint(x: 33, y: 13))
+            leaves.fill(svg("M33 13 C28 13 24 10 23 5 C28 5 32 8 33 13 Z"), with: .color(Ink.sage))
+            leaves.fill(svg("M33 11 C37 10 41 7 42 3 C37 3 34 6 33 11 Z"), with: .color(Ink.sageDeep))
         case "withdrawal-start":
-            // A wave starting to rise.
-            c.stroke(sinePath(in: r, amplitude: 0.08 + 0.18 * CGFloat(p), cycles: 1.5, phase: p), with: ink, style: line)
+            c.fill(svg("M6 40 Q14 32 22 40 T38 40 T58 40 V54 Q58 57 55 57 H9 Q6 57 6 54 Z"), with: .color(Ink.lilacDeep))
+            var boat = c
+            boat.translateBy(x: 0, y: -2.5 * CGFloat(k.swing(2.8)))
+            boat.stroke(svg("M33 13 V36"), with: .color(Ink.olive), style: width(2.4))
+            boat.fill(svg("M34.5 15 L46 34 H34.5 Z"), with: .color(Ink.coral))
+            boat.fill(svg("M31.5 19 L23 34 H31.5 Z"), with: .color(.white))
+            boat.fill(svg("M20 36 H46 L41.5 43 H24.5 Z"), with: .color(Ink.olive))
+            c.fill(svg("M6 46 Q14 40 22 46 T38 46 T58 46 V54 Q58 57 55 57 H9 Q6 57 6 54 Z"), with: .color(Ink.lilac))
+            c.stroke(svg("M12 50 Q16 48 20 50"), with: .color(.white.opacity(0.7)), style: width(2))
         case "nicotine-gone":
-            // A molecule fading out and back.
-            var mol = c
-            mol.opacity = 0.35 + 0.65 * (0.5 + 0.5 * cos(p * 2 * .pi))
-            let center = CGPoint(x: r.midX, y: r.midY)
-            let hex = Path { path in
-                for k in 0..<6 {
-                    let a = Double(k) / 6 * 2 * .pi
-                    let pt = CGPoint(x: center.x + r.width * 0.32 * CGFloat(cos(a)), y: center.y + r.width * 0.32 * CGFloat(sin(a)))
-                    if k == 0 { path.move(to: pt) } else { path.addLine(to: pt) }
-                }
-                path.closeSubpath()
-            }
-            mol.stroke(hex, with: ink, style: line)
-            for k in [0, 2, 4] {
-                let a = Double(k) / 6 * 2 * .pi
-                let pt = CGPoint(x: center.x + r.width * 0.32 * CGFloat(cos(a)), y: center.y + r.width * 0.32 * CGFloat(sin(a)))
-                let d = r.width * 0.2
-                mol.fill(Path(ellipseIn: CGRect(x: pt.x - d / 2, y: pt.y - d / 2, width: d, height: d)), with: ink)
-            }
+            var molecule = scaled(c, by: 1 - 0.18 * CGFloat(k.swing(3)), around: CGPoint(x: 34, y: 33))
+            molecule.opacity = 0.95 - 0.7 * k.swing(3)
+            molecule.stroke(svg("M22 38 L38 25 L46 42"), with: .color(Ink.greyDeep), style: width(3.5))
+            molecule.fill(ellipse(22, 38, 8, 8), with: .color(Ink.grey))
+            molecule.fill(ellipse(38, 25, 6, 6), with: .color(Ink.grey))
+            molecule.fill(ellipse(46, 42, 6.5, 6.5), with: .color(Ink.grey))
+            molecule.fill(ellipse(19.5, 35.5, 2.2, 2.2), with: .color(.white.opacity(0.6)))
+            sparkle(c, 52, 13, 5.5, k, delay: 0)
+            sparkle(c, 13, 18, 4, k, delay: 0.7)
+            sparkle(c, 32, 53, 3.5, k, delay: 1.4)
         case "withdrawal-peak":
-            // A wave cresting.
-            c.stroke(sinePath(in: r, amplitude: 0.3, cycles: 1, phase: p), with: ink, style: line)
+            c.fill(svg("M30 55 L45.5 27 L60 55 Z"), with: .color(Ink.sage))
+            c.fill(svg("M4 55 L26 15 L48 55 Z"), with: .color(Ink.olive))
+            c.fill(svg("M26 15 L33 27.7 L29.5 25 L26 29 L22.5 25 L19 27.7 Z"), with: .color(.white))
+            var trail = width(1.8)
+            trail.dash = [3, 7]
+            trail.dashPhase = k.still ? 0 : CGFloat(20 * k.phase(1.1))
+            c.stroke(svg("M12 55 Q20 47 17 42 Q24 37 24.5 31"), with: .color(.white.opacity(0.75)), style: trail)
+            c.stroke(svg("M26 15 V4"), with: .color(Ink.oliveDeep), style: width(2))
+            var flag = c
+            flag.translateBy(x: 26, y: 7.5)
+            flag.concatenate(CGAffineTransform(a: 1, b: tan(-10 * .pi / 180 * CGFloat(k.swing(1.4))), c: 0, d: 1, tx: 0, ty: 0))
+            flag.translateBy(x: -26, y: -7.5)
+            flag.fill(svg("M26 4.5 L37 7.5 L26 10.5 Z"), with: .color(Ink.coral))
+            c.stroke(svg("M4 55 H60"), with: .color(Ink.oliveDeep), style: width(2.4))
         case "mood":
-            // The sun coming out from behind a cloud.
-            let sun = CGRect(x: r.minX, y: r.minY, width: r.width * 0.55, height: r.width * 0.55)
-            c.fill(Path(ellipseIn: sun), with: ink)
-            for k in 0..<8 {
-                let a = Double(k) / 8 * 2 * .pi + p * .pi / 4
-                let inner = r.width * 0.36, outer = r.width * 0.46
-                c.stroke(Path { $0.move(to: CGPoint(x: sun.midX + inner * CGFloat(cos(a)), y: sun.midY + inner * CGFloat(sin(a))))
-                                $0.addLine(to: CGPoint(x: sun.midX + outer * CGFloat(cos(a)), y: sun.midY + outer * CGFloat(sin(a)))) },
-                         with: ink, style: line)
+            let rays = rotated(c, by: .degrees(k.still ? 0 : 360 * k.phase(24)), around: CGPoint(x: 40, y: 24))
+            for i in 0..<8 {
+                let a = Double(i) * .pi / 4
+                rays.stroke(Path { p in
+                    p.move(to: CGPoint(x: 40 + 14 * cos(a), y: 24 + 14 * sin(a)))
+                    p.addLine(to: CGPoint(x: 40 + 18.5 * cos(a), y: 24 + 18.5 * sin(a)))
+                }, with: .color(Ink.sun), style: width(3))
             }
-            let drift = CGFloat(wave) * r.width * 0.08
-            c.fill(cloud(in: CGRect(x: r.minX + r.width * 0.28 + drift, y: r.midY, width: r.width * 0.72, height: r.height * 0.42)),
-                   with: .color(DX.Palette.accentInk.opacity(0.6)))
+            c.fill(ellipse(40, 24, 10.5, 10.5), with: .color(Ink.sun))
+            c.fill(ellipse(36.5, 20.5, 2.6, 2.6), with: .color(.white.opacity(0.6)))
+            var drift = c
+            drift.translateBy(x: 0, y: -2.5 * CGFloat(k.swing(2.8)))
+            drift.fill(svg(cloud).offsetBy(dx: 0, dy: 2.5), with: .color(Ink.cloudShade))
+            drift.fill(svg(cloud), with: .color(.white))
         case "cravings-fade":
-            // Waves calming, each smaller than the last.
-            for i in 0..<3 {
-                let band = CGRect(x: r.minX, y: r.minY + r.height * CGFloat(i) * 0.33, width: r.width, height: r.height * 0.34)
-                var w = c
-                w.opacity = 1 - 0.28 * Double(i)
-                w.stroke(sinePath(in: band, amplitude: 0.4 * (1 - 0.35 * CGFloat(i)), cycles: 1.5, phase: p), with: ink, style: line)
-            }
+            var top = c
+            top.translateBy(x: 0, y: -2.5 * CGFloat(k.swing(2.8)))
+            top.stroke(svg("M8 21 Q14 11 20 21 T32 21 T44 21 T56 21"), with: .color(Ink.lilacDeep.opacity(0.55)), style: width(4))
+            c.stroke(svg("M8 35 Q14 29.5 20 35 T32 35 T44 35 T56 35"), with: .color(Ink.lilac), style: width(4))
+            c.stroke(svg("M8 48 Q14 46.5 20 48 T32 48 T44 48 T50 48"), with: .color(Ink.skyDeep), style: width(4))
+            sparkle(c, 56, 48, 4.5, k, delay: 0)
         default:
-            // A sparkle that twinkles.
-            c.fill(sparkle(in: scaled(r, by: 0.85 + 0.12 * wave)), with: ink)
+            sparkle(c, 32, 32, 20, k, delay: 0)
         }
     }
 
-    // MARK: Shapes
+    // MARK: Parts
 
-    static func scaled(_ r: CGRect, by factor: Double) -> CGRect {
-        let f = CGFloat(factor)
-        return CGRect(x: r.midX - r.width * f / 2, y: r.midY - r.height * f / 2, width: r.width * f, height: r.height * f)
+    private static func drawHeart(_ c: GraphicsContext) {
+        let h = svg(heart)
+        c.fill(h.offsetBy(dx: 0, dy: 3), with: .color(Ink.coralDeep))
+        c.fill(h, with: .color(Ink.coral))
+        var shine = c
+        shine.translateBy(x: 20, y: 19)
+        shine.rotate(by: .degrees(-35))
+        shine.fill(ellipse(0, 0, 5, 3), with: .color(.white.opacity(0.55)))
     }
 
-    static func heart(in r: CGRect) -> Path {
-        Path { p in
-            let w = r.width, h = r.height
-            p.move(to: CGPoint(x: r.midX, y: r.maxY))
-            p.addCurve(to: CGPoint(x: r.minX, y: r.minY + h * 0.3),
-                       control1: CGPoint(x: r.midX - w * 0.1, y: r.maxY - h * 0.15), control2: CGPoint(x: r.minX, y: r.minY + h * 0.6))
-            p.addArc(center: CGPoint(x: r.minX + w * 0.25, y: r.minY + h * 0.3), radius: w * 0.25,
-                     startAngle: .degrees(180), endAngle: .degrees(0), clockwise: false)
-            p.addArc(center: CGPoint(x: r.minX + w * 0.75, y: r.minY + h * 0.3), radius: w * 0.25,
-                     startAngle: .degrees(180), endAngle: .degrees(0), clockwise: false)
-            p.addCurve(to: CGPoint(x: r.midX, y: r.maxY),
-                       control1: CGPoint(x: r.maxX, y: r.minY + h * 0.6), control2: CGPoint(x: r.midX + w * 0.1, y: r.maxY - h * 0.15))
-            p.closeSubpath()
+    private static func drawLungs(_ c: GraphicsContext) {
+        let left = svg(lobeLeft), right = svg(lobeRight)
+        c.fill(left.offsetBy(dx: 0, dy: 2), with: .color(Ink.skyDeep))
+        c.fill(right.offsetBy(dx: 0, dy: 2), with: .color(Ink.skyDeep))
+        c.fill(left, with: .color(Ink.sky))
+        c.fill(right, with: .color(Ink.sky))
+        var shine = c
+        shine.translateBy(x: 18, y: 34)
+        shine.rotate(by: .degrees(18))
+        shine.fill(ellipse(0, 0, 2.4, 6), with: .color(.white.opacity(0.5)))
+    }
+
+    /// A four-point star that twinkles every 2.2 s.
+    private static func sparkle(_ c: GraphicsContext, _ x: CGFloat, _ y: CGFloat, _ s: CGFloat, _ k: Clock, delay: Double) {
+        let p = k.swing(2.2, delay: delay, rest: 1)
+        var g = scaled(c, by: 0.55 + 0.45 * CGFloat(p), around: CGPoint(x: x, y: y))
+        g.opacity = 0.25 + 0.75 * p
+        g.fill(Path { path in
+            let center = CGPoint(x: x, y: y)
+            path.move(to: CGPoint(x: x, y: y - s))
+            path.addQuadCurve(to: CGPoint(x: x + s, y: y), control: center)
+            path.addQuadCurve(to: CGPoint(x: x, y: y + s), control: center)
+            path.addQuadCurve(to: CGPoint(x: x - s, y: y), control: center)
+            path.addQuadCurve(to: CGPoint(x: x, y: y - s), control: center)
+            path.closeSubpath()
+        }, with: .color(Ink.sun))
+    }
+
+    private static func breathe(_ k: Clock) -> CGFloat { 0.93 + 0.11 * CGFloat(k.swing(3.8, rest: 0.6)) }
+    private static func sway(_ k: Clock) -> Angle { .degrees(k.still ? 0 : -7 + 14 * k.swing(3.2)) }
+
+    private static func ellipse(_ cx: CGFloat, _ cy: CGFloat, _ rx: CGFloat, _ ry: CGFloat) -> Path {
+        Path(ellipseIn: CGRect(x: cx - rx, y: cy - ry, width: 2 * rx, height: 2 * ry))
+    }
+
+    private static func scaled(_ c: GraphicsContext, by s: CGFloat, around p: CGPoint) -> GraphicsContext {
+        var g = c
+        g.translateBy(x: p.x, y: p.y)
+        g.scaleBy(x: s, y: s)
+        g.translateBy(x: -p.x, y: -p.y)
+        return g
+    }
+
+    private static func rotated(_ c: GraphicsContext, by angle: Angle, around p: CGPoint) -> GraphicsContext {
+        var g = c
+        g.translateBy(x: p.x, y: p.y)
+        g.rotate(by: angle)
+        g.translateBy(x: -p.x, y: -p.y)
+        return g
+    }
+
+    // MARK: SVG path data
+
+    private enum Token { case command(Character), number(CGFloat) }
+
+    /// Absolute SVG path data, as the kit's drawings are written: M L H V C S Q T Z.
+    static func svg(_ d: String) -> Path {
+        var tokens: [Token] = []
+        var number = ""
+        func endNumber() {
+            if let v = Double(number) { tokens.append(.number(CGFloat(v))) }
+            number = ""
         }
-    }
-
-    /// A heartbeat trace drawing itself across, then starting again.
-    static func pulse(in r: CGRect, phase: Double) -> Path {
-        Path { p in
-            let points: [(CGFloat, CGFloat)] = [(0, 0.6), (0.3, 0.6), (0.4, 0.1), (0.5, 1), (0.6, 0.4), (0.7, 0.6), (1, 0.6)]
-            p.move(to: CGPoint(x: r.minX, y: r.minY + r.height * 0.6))
-            for (x, y) in points.dropFirst() {
-                p.addLine(to: CGPoint(x: r.minX + x * r.width, y: r.minY + y * r.height))
+        for ch in d {
+            if ch.isLetter {
+                endNumber()
+                tokens.append(.command(ch))
+            } else if ch == "-" {
+                endNumber()
+                number = "-"
+            } else if ch.isNumber || ch == "." {
+                number.append(ch)
+            } else {
+                endNumber()
             }
         }
-        .trimmedPath(from: 0, to: min(1, 0.15 + CGFloat(phase) * 1.1))
-    }
+        endNumber()
 
-    static func sinePath(in r: CGRect, amplitude: CGFloat, cycles: CGFloat, phase: Double) -> Path {
-        Path { p in
-            let steps = 24
-            for i in 0...steps {
-                let f = CGFloat(i) / CGFloat(steps)
-                let y = r.midY + sin((f * cycles + CGFloat(phase)) * 2 * .pi) * amplitude * r.height
-                let pt = CGPoint(x: r.minX + f * r.width, y: y)
-                if i == 0 { p.move(to: pt) } else { p.addLine(to: pt) }
+        var path = Path()
+        var i = 0
+        var command: Character = "M"
+        var previous: Character = "M"
+        var current = CGPoint.zero
+        var control = CGPoint.zero
+        func next() -> CGFloat {
+            defer { i += 1 }
+            if case .number(let v) = tokens[i] { return v }
+            return 0
+        }
+        func point() -> CGPoint {
+            let x = next()
+            return CGPoint(x: x, y: next())
+        }
+        func reflected() -> CGPoint { CGPoint(x: 2 * current.x - control.x, y: 2 * current.y - control.y) }
+
+        while i < tokens.count {
+            if case .command(let c) = tokens[i] {
+                command = c
+                i += 1
+                if c == "Z" {
+                    path.closeSubpath()
+                    previous = c
+                    continue
+                }
             }
+            guard i < tokens.count, case .number = tokens[i] else { continue }
+            switch command {
+            case "M":
+                current = point()
+                path.move(to: current)
+                command = "L"
+            case "L":
+                current = point()
+                path.addLine(to: current)
+            case "H":
+                current.x = next()
+                path.addLine(to: current)
+            case "V":
+                current.y = next()
+                path.addLine(to: current)
+            case "C":
+                let c1 = point(), c2 = point()
+                current = point()
+                path.addCurve(to: current, control1: c1, control2: c2)
+                control = c2
+            case "S":
+                let c1 = previous == "C" || previous == "S" ? reflected() : current
+                let c2 = point()
+                current = point()
+                path.addCurve(to: current, control1: c1, control2: c2)
+                control = c2
+            case "Q":
+                let c1 = point()
+                current = point()
+                path.addQuadCurve(to: current, control: c1)
+                control = c1
+            case "T":
+                let c1 = previous == "Q" || previous == "T" ? reflected() : current
+                current = point()
+                path.addQuadCurve(to: current, control: c1)
+                control = c1
+            default:
+                i += 1
+            }
+            previous = command
         }
-    }
-
-    static func lungs(in r: CGRect) -> Path {
-        Path { p in
-            let w = r.width, h = r.height
-            // Windpipe.
-            p.move(to: CGPoint(x: r.midX, y: r.minY))
-            p.addLine(to: CGPoint(x: r.midX, y: r.minY + h * 0.38))
-            // Left lobe.
-            p.move(to: CGPoint(x: r.midX - w * 0.08, y: r.minY + h * 0.3))
-            p.addCurve(to: CGPoint(x: r.midX - w * 0.1, y: r.maxY),
-                       control1: CGPoint(x: r.minX - w * 0.05, y: r.minY + h * 0.2), control2: CGPoint(x: r.minX - w * 0.05, y: r.maxY + h * 0.05))
-            p.closeSubpath()
-            // Right lobe.
-            p.move(to: CGPoint(x: r.midX + w * 0.08, y: r.minY + h * 0.3))
-            p.addCurve(to: CGPoint(x: r.midX + w * 0.1, y: r.maxY),
-                       control1: CGPoint(x: r.maxX + w * 0.05, y: r.minY + h * 0.2), control2: CGPoint(x: r.maxX + w * 0.05, y: r.maxY + h * 0.05))
-            p.closeSubpath()
-        }
-    }
-
-    static func leaf(in r: CGRect) -> Path {
-        Path { p in
-            p.move(to: CGPoint(x: r.minX, y: r.maxY))
-            p.addQuadCurve(to: CGPoint(x: r.maxX, y: r.minY), control: CGPoint(x: r.minX, y: r.minY))
-            p.addQuadCurve(to: CGPoint(x: r.minX, y: r.maxY), control: CGPoint(x: r.maxX, y: r.maxY))
-            p.closeSubpath()
-        }
-    }
-
-    static func shield(in r: CGRect) -> Path {
-        Path { p in
-            p.move(to: CGPoint(x: r.midX, y: r.minY))
-            p.addLine(to: CGPoint(x: r.maxX, y: r.minY + r.height * 0.18))
-            p.addQuadCurve(to: CGPoint(x: r.midX, y: r.maxY), control: CGPoint(x: r.maxX, y: r.maxY - r.height * 0.15))
-            p.addQuadCurve(to: CGPoint(x: r.minX, y: r.minY + r.height * 0.18), control: CGPoint(x: r.minX, y: r.maxY - r.height * 0.15))
-            p.closeSubpath()
-        }
-    }
-
-    static func cloud(in r: CGRect) -> Path {
-        Path { p in
-            p.addRoundedRect(in: CGRect(x: r.minX, y: r.midY, width: r.width, height: r.height / 2), cornerSize: CGSize(width: r.height / 4, height: r.height / 4))
-            p.addEllipse(in: CGRect(x: r.minX + r.width * 0.15, y: r.minY + r.height * 0.15, width: r.width * 0.4, height: r.height * 0.7))
-            p.addEllipse(in: CGRect(x: r.minX + r.width * 0.4, y: r.minY, width: r.width * 0.45, height: r.height * 0.85))
-        }
-    }
-
-    static func sparkle(in r: CGRect) -> Path {
-        Path { p in
-            let c = CGPoint(x: r.midX, y: r.midY), w = r.width / 2, k = r.width * 0.12
-            p.move(to: CGPoint(x: c.x, y: c.y - w))
-            p.addQuadCurve(to: CGPoint(x: c.x + w, y: c.y), control: CGPoint(x: c.x + k, y: c.y - k))
-            p.addQuadCurve(to: CGPoint(x: c.x, y: c.y + w), control: CGPoint(x: c.x + k, y: c.y + k))
-            p.addQuadCurve(to: CGPoint(x: c.x - w, y: c.y), control: CGPoint(x: c.x - k, y: c.y + k))
-            p.addQuadCurve(to: CGPoint(x: c.x, y: c.y - w), control: CGPoint(x: c.x - k, y: c.y - k))
-            p.closeSubpath()
-        }
-    }
-
-    static func rotation(_ angle: CGFloat, around point: CGPoint) -> CGAffineTransform {
-        CGAffineTransform(translationX: point.x, y: point.y).rotated(by: angle).translatedBy(x: -point.x, y: -point.y)
+        return path
     }
 }
 
 #if DEBUG
-/// Every illustration, large, for review (`-dx.illustrationGallery YES`), with the moss header above them.
+/// Every illustration in its three states, for review (`-dx.illustrationGallery YES`).
 struct MilestoneIllustrationGallery: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DX.Space.m) {
-                Text("Home · S19").dxText(.micro)
-                Text("Milestone illustrations").dxText(.title)
-                MossWaveHeader(cravingsToday: 2, usualCravings: 6, nextCraving: nil, now: .now, onLog: {})
+                Text("Your body · S21").dxText(.micro)
+                Text("Health illustrations").dxText(.title)
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 96), spacing: DX.Space.s)], spacing: DX.Space.m) {
                     ForEach(MilestoneDrawing.ids + ["sparkle"], id: \.self) { id in
                         VStack(spacing: 6) {
-                            MilestoneIllustration(id: id, size: 72)
+                            HealthBadge(id: id, state: .underWay(0.6), size: 72, showsRing: false)
                             Text(verbatim: id).dxText(.subtitle).lineLimit(1).minimumScaleFactor(0.7)
                         }
                     }
                 }
+                Text("Reached · under way · ahead").dxText(.micro)
+                HStack(spacing: DX.Space.l) {
+                    HealthBadge(id: "mood", state: .done, size: 56)
+                    HealthBadge(id: "mood", state: .underWay(0.8), size: 56)
+                    HealthBadge(id: "mood", state: .ahead, size: 56)
+                }
+                .padding(.leading, DX.Space.xs)
             }
             .padding(.horizontal, DX.Space.m)
             .padding(.top, DX.Space.xl)
+            .padding(.bottom, DX.Space.xxl)
         }
         .dxCanvas()
     }
