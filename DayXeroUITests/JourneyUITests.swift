@@ -59,7 +59,10 @@ final class JourneyUITests: XCTestCase {
         XCTAssert(app.buttons["Craving SOS"].waitForExistence(timeout: 10))
         snap(app, "07-home-prep")
         tap(button(app, "Log"))
-        tap(button(app, "Vaped"))
+        let vaped = logSheetRow(app, "Vaped")
+        tapWhenStill(app, vaped, name: "Vaped")
+        // A use during prep is just counted: the sheet closes.
+        XCTAssert(vaped.waitForNonExistence(timeout: 5), "The log sheet didn't close")
         rideOutCraving(app)
         visitTabs(app, prefix: "08-prep")
     }
@@ -77,7 +80,7 @@ final class JourneyUITests: XCTestCase {
         snap(app, "20-home-day3")
         // A use after Quit Day is a slip: talked through, and nothing resets (S8).
         tap(button(app, "Log"))
-        tap(button(app, "Vaped"))
+        tapWhenStill(app, logSheetRow(app, "Vaped"), name: "Vaped")
         XCTAssert(app.staticTexts["Thanks for telling us"].waitForExistence(timeout: 5))
         snap(app, "21-slip")
         tapSettled(app, "Not now")
@@ -171,6 +174,15 @@ final class JourneyUITests: XCTestCase {
         }
         XCTAssert(settled, "\"\(name)\" never settled on screen", file: file, line: line)
         element.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+    }
+
+    /// The log sheet's "Vaped" row, once the sheet is up. During prep Home has its own row, "Times vaped", which a
+    /// plain match on "Vaped" could find first while the sheet is still sliding up.
+    private func logSheetRow(_ app: XCUIApplication, _ title: String, file: StaticString = #filePath, line: UInt = #line) -> XCUIElement {
+        let sheetOnly = NSPredicate(format: "label CONTAINS[c] %@ AND NOT (label CONTAINS[c] %@)", title, "Times \(title)")
+        let row = app.buttons.matching(sheetOnly).firstMatch
+        XCTAssert(row.waitForExistence(timeout: 5), "No \"\(title)\" row in the log sheet", file: file, line: line)
+        return row
     }
 
     private func button(_ app: XCUIApplication, _ text: String) -> XCUIElement {
