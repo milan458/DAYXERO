@@ -8,11 +8,36 @@ enum AppLinks {
     static let privacy: URL? = nil
 }
 
-/// The full paywall shown after the plan reveal (S3.1–S3.6).
+/// What onboarding learnt, so the first-run paywall can speak to it (S22).
+struct PaywallContext {
+    let triggers: [Trigger]
+    let obstacles: [Obstacle]
+    /// Nicotine spending a day, in the profile's currency.
+    let moneyPerDay: Decimal
+    let currencyCode: String
+
+    init(profile: UserProfile) {
+        triggers = profile.triggers
+        obstacles = profile.obstaclesRaw.compactMap(Obstacle.init(rawValue:))
+        moneyPerDay = profile.products.reduce(Decimal(0)) { $0 + $1.baseline.costPerDay }
+        currencyCode = profile.currencyCode
+    }
+
+    /// "stress and cravings", from what got in the way before, or else their triggers.
+    var focus: String? {
+        let words = obstacles.contains(.stress) || obstacles.contains(.cravings)
+            ? [Obstacle.stress, .cravings].filter(obstacles.contains).map { String(localized: $0.title).lowercased() }
+            : Array(triggers.prefix(2)).map { String(localized: $0.title).lowercased() }
+        return words.isEmpty ? nil : ListFormatter.localizedString(byJoining: words)
+    }
+}
+
+/// The full paywall shown after the plan reveal (S3.1–S3.6), with S22's trial timeline.
 struct PaywallView: View {
     let name: String
     let quitDay: Date
     @State var model: PaywallModel
+    var context: PaywallContext? = nil
     let onClose: () -> Void
     /// Called as a purchase or restore starts, before the person can turn Pro.
     var onPurchaseStarted: () -> Void = {}
@@ -68,16 +93,29 @@ struct PaywallView: View {
             header.padding(.horizontal, DX.Space.m).padding(.top, DX.Space.xs).dxReadableColumn()
             ScrollView {
                 VStack(alignment: .leading, spacing: DX.Space.xs) {
-                    Text("\(name), your plan is ready").dxText(.title).accessibilityAddTraits(.isHeader)
-                    Text("Everything for your \(quitDay, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)) Quit Day.")
-                        .dxText(.subtitle)
-                    VStack(alignment: .leading, spacing: 7) {
-                        included("All of prep, Quit week and 4 weeks after")
-                        included("Insights on your triggers")
-                        included("NRT planner, health timeline, share cards")
+                    Text(context == nil ? "\(name), your plan is ready" : "\(name), your prep and craving plan is ready")
+                        .dxText(.title).accessibilityAddTraits(.isHeader)
+                    Group {
+                        if let focus = context?.focus {
+                            Text("Built around \(focus), ready for your \(quitDay, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)) Quit Day.")
+                        } else {
+                            Text("Everything for your \(quitDay, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)) Quit Day.")
+                        }
                     }
-                    .padding(.vertical, DX.Space.s)
+                    .font(.custom(DX.Typeface.regular, size: 15, relativeTo: .body))
+                    .foregroundStyle(DX.Palette.text2)
+                    if let option = model.selectedOption, option.trialDays != nil, let end = model.trialEndDate {
+                        trialTimeline(option, end: end).padding(.vertical, DX.Space.s)
+                    } else {
+                        VStack(alignment: .leading, spacing: 7) {
+                            included("All of prep, Quit week and 4 weeks after")
+                            included("Insights on your triggers")
+                            included("NRT planner, health timeline, share cards")
+                        }
+                        .padding(.vertical, DX.Space.s)
+                    }
                     plans
+                    if let anchor { anchorLine(anchor) }
                     if typeSize.isAccessibilitySize {
                         footer.padding(.top, DX.Space.l)
                     }
@@ -130,6 +168,69 @@ struct PaywallView: View {
         }
     }
 
+    /// Today, the reminder, and the first charge, so nothing about the trial is a surprise (S22).
+    private func trialTimeline(_ option: PlanOption, end: Date) -> some View {
+        let dayBefore = Calendar.current.date(byAdding: .day, value: -1, to: end) ?? end
+        let endsOnQuitDay = Calendar.current.isDate(end, inSameDayAs: quitDay)
+        var rows: [(emoji: String, when: String, what: LocalizedStringKey, detail: LocalizedStringKey)] = [
+            ("🔓", String(localized: "Today"), "Nothing to pay", "The full program unlocks: every lesson, insights and the NRT planner."),
+        ]
+        if model.canRemind {
+            rows.append(("🔔", dayBefore.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)), "Reminder",
+                         "We'll remind you the day before your trial ends."))
+        }
+        rows.append(("⭐", end.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)), endsOnQuitDay ? "Quit Day" : "Trial ends",
+                     "First charge of \(option.priceText) a year, unless you cancel before in Settings."))
+        return VStack(alignment: .leading, spacing: 0) {
+            ForEach(Array(rows.enumerated()), id: \.offset) { index, row in
+                HStack(alignment: .top, spacing: DX.Space.s) {
+                    Text(verbatim: row.emoji).font(.system(size: 15))
+                        .frame(width: 34, height: 34).background(DX.Palette.accentSoft, in: Circle())
+                    VStack(alignment: .leading, spacing: 2) {
+                        (Text(verbatim: row.when).foregroundStyle(DX.Palette.text) + Text(verbatim: " · ").foregroundStyle(DX.Palette.muted)
+                         + Text(row.what).foregroundStyle(DX.Palette.accentInk))
+                            .font(.custom(DX.Typeface.semibold, size: 14, relativeTo: .subheadline))
+                        Text(row.detail).dxText(.subtitle).fixedSize(horizontal: false, vertical: true)
+                    }
+                    .padding(.bottom, index < rows.count - 1 ? DX.Space.m : 0)
+                }
+                // The line down to the next row runs the full height of this one.
+                .background(alignment: .topLeading) {
+                    if index < rows.count - 1 {
+                        Rectangle().fill(DX.Palette.sage.opacity(0.6)).frame(width: 2).padding(.top, 34).padding(.leading, 16)
+                    }
+                }
+                .accessibilityElement(children: .combine)
+            }
+        }
+        .padding(DX.Space.m)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 24, style: .continuous).strokeBorder(DX.Palette.hairline))
+    }
+
+    /// Their daily nicotine spend next to DayXero's daily cost, when both are in the same currency.
+    private var anchor: (spend: String, cost: String)? {
+        guard let context, context.moneyPerDay > 0,
+              let annual = model.plans.first(where: { $0.plan == .annual }), annual.currencyCode == context.currencyCode else { return nil }
+        let style = Decimal.FormatStyle.Currency(code: annual.currencyCode).precision(.fractionLength(0))
+        return (context.moneyPerDay.formatted(style), (annual.price / 365).formatted(style))
+    }
+
+    private func anchorLine(_ anchor: (spend: String, cost: String)) -> some View {
+        Label {
+            Text("You spend \(anchor.spend) a day on nicotine. DayXero is about \(anchor.cost) a day.")
+        } icon: {
+            Image(systemName: "creditcard").font(.system(size: 13, weight: .light))
+        }
+        .font(.custom(DX.Typeface.semibold, size: 12, relativeTo: .caption))
+        .foregroundStyle(DX.Palette.accentInk)
+        .padding(.vertical, 10).padding(.horizontal, 14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(DX.Palette.accentSoft, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .padding(.top, DX.Space.xs)
+    }
+
     @ViewBuilder
     private var plans: some View {
         VStack(spacing: DX.Space.xs) {
@@ -169,6 +270,11 @@ struct PaywallView: View {
             .buttonStyle(.dxPrimary)
             .disabled(model.phase != .ready)
             .accessibilityIdentifier("paywall.cta")
+            Button("Continue with the basic tracker") {
+                model.dismissed()
+                onClose()
+            }
+            .buttonStyle(.dxQuiet)
             terms
         }
     }
@@ -197,7 +303,7 @@ struct PaywallView: View {
         guard let option = model.selectedOption else { return "Loading prices…" }
         switch option.plan {
         case .annual:
-            if let days = option.trialDays { return "Start my free \(days) days" }
+            if let days = option.trialDays { return "Start my \(days)-day free trial" }
             return "Subscribe for \(option.priceText) a year"
         case .monthly: return "Subscribe for \(option.priceText) a month"
         case .lifetime: return "Buy lifetime for \(option.priceText)"
@@ -288,7 +394,7 @@ private struct PlanRow: View {
             )
             .overlay(alignment: .topTrailing) {
                 if let days = option.trialDays {
-                    Text("\(days) DAYS FREE")
+                    Text(savingPercent.map { "\(days) DAYS FREE · SAVE \($0)%" as LocalizedStringKey } ?? "\(days) DAYS FREE")
                         .font(.custom(DX.Typeface.bold, size: 10, relativeTo: .caption2))
                         .tracking(0.4)
                         .foregroundStyle(DX.Palette.onAccent)
@@ -317,7 +423,8 @@ private struct PlanRow: View {
         switch option.plan {
         case .annual:
             if let perMonth = option.perMonthText {
-                if let savingPercent { return "\(perMonth) a month · save \(savingPercent)%" }
+                // With a trial, the badge carries the saving.
+                if let savingPercent, option.trialDays == nil { return "\(perMonth) a month · save \(savingPercent)%" }
                 return "\(perMonth) a month"
             }
             return "Billed yearly"

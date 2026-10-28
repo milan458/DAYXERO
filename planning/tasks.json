@@ -2,11 +2,11 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-28T15:50:56.530Z"
+    "updated": "2026-10-28T18:00:05.797Z"
   },
   "now": {
-    "section": "S21",
-    "task": "S21.8",
+    "section": "S22",
+    "task": "S22.7",
     "waiting_on_milan": []
   },
   "sections": [
@@ -2166,9 +2166,144 @@
           "completed": "2026-10-28T15:50:56.491Z"
         }
       ]
+    },
+    {
+      "id": "S22",
+      "title": "Onboarding v2",
+      "goal": "Screens 1–14 rebuilt from the Figma mockups (https://www.figma.com/design/CJzm1xsQryPsdG5m8KWRx6), with the welcome hills rolling like Home's header (Milan, 28 Oct).",
+      "signoff": {
+        "state": "signed_off",
+        "history": [
+          {
+            "time": "2026-10-28T18:00:05.459Z",
+            "state": "signed_off",
+            "by": "Claude",
+            "comment": ""
+          }
+        ]
+      },
+      "mockups": [
+        {
+          "title": "Onboarding v2 in Figma",
+          "path": "https://www.figma.com/design/CJzm1xsQryPsdG5m8KWRx6"
+        }
+      ],
+      "tasks": [
+        {
+          "id": "S22.1",
+          "title": "Welcome: animated hills with a dotted path to a Quit Day flag, Restore link, 18+ in the footer (age screen removed)",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-28T18:00:05.503Z",
+          "completed": null
+        },
+        {
+          "id": "S22.2",
+          "title": "Products with the dual-use note; cigarette, vape and pouch baselines with one-tap regional prices, pack size, vape strength and puffs",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-28T18:00:05.542Z",
+          "completed": null
+        },
+        {
+          "id": "S22.3",
+          "title": "New baseline screen: daily nicotine in cigarettes, yearly money and time back",
+          "status": "pending",
+          "notes": "Nicotine figures are labelled rough estimates. Needs a source link (Benowitz & Jacob 1984, ~1 mg a cigarette; the vape puff conversion is an assumption) before release; pubmed is blocked in this session.",
+          "created": "2026-10-28T18:00:05.584Z",
+          "completed": null
+        },
+        {
+          "id": "S22.4",
+          "title": "Triggers with first use after waking; name and reason on one screen with tap-to-add phrases and photo; past attempts with confidence; NRT formats",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-28T18:00:05.634Z",
+          "completed": null
+        },
+        {
+          "id": "S22.5",
+          "title": "Quit Day calendar with the prep track and press-and-hold to commit; plan-building ring; plan reveal with savings split and runway; reminder previews",
+          "status": "pending",
+          "notes": "Reminder previews show the real notifications (morning pledge, lesson ready). Trigger-timed nudges like 'before your morning coffee' don't exist yet.",
+          "created": "2026-10-28T18:00:05.677Z",
+          "completed": null
+        },
+        {
+          "id": "S22.6",
+          "title": "Paywall: trial timeline (today, reminder, first charge), daily-spend comparison, basic-tracker link",
+          "status": "pending",
+          "notes": "Trial length comes from App Store Connect; set a 7-day intro offer on the yearly plan to match the prep week.",
+          "created": "2026-10-28T18:00:05.718Z",
+          "completed": null
+        },
+        {
+          "id": "S22.7",
+          "title": "Tests and CI: model and journey tests, screenshot steps; CI green",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-28T18:00:05.760Z",
+          "completed": null
+        }
+      ]
     }
   ],
   "log": [
+    {
+      "time": "2026-10-28T18:00:05.797Z",
+      "type": "now",
+      "message": "Now: S22 / S22.7"
+    },
+    {
+      "time": "2026-10-28T18:00:05.760Z",
+      "type": "task_added",
+      "message": "S22.7 added: Tests and CI: model and journey tests, screenshot steps; CI green"
+    },
+    {
+      "time": "2026-10-28T18:00:05.718Z",
+      "type": "task_added",
+      "message": "S22.6 added: Paywall: trial timeline (today, reminder, first charge), daily-spend comparison, basic-tracker link"
+    },
+    {
+      "time": "2026-10-28T18:00:05.677Z",
+      "type": "task_added",
+      "message": "S22.5 added: Quit Day calendar with the prep track and press-and-hold to commit; plan-building ring; plan reveal with savings split and runway; reminder previews"
+    },
+    {
+      "time": "2026-10-28T18:00:05.634Z",
+      "type": "task_added",
+      "message": "S22.4 added: Triggers with first use after waking; name and reason on one screen with tap-to-add phrases and photo; past attempts with confidence; NRT formats"
+    },
+    {
+      "time": "2026-10-28T18:00:05.584Z",
+      "type": "task_added",
+      "message": "S22.3 added: New baseline screen: daily nicotine in cigarettes, yearly money and time back"
+    },
+    {
+      "time": "2026-10-28T18:00:05.542Z",
+      "type": "task_added",
+      "message": "S22.2 added: Products with the dual-use note; cigarette, vape and pouch baselines with one-tap regional prices, pack size, vape strength and puffs"
+    },
+    {
+      "time": "2026-10-28T18:00:05.503Z",
+      "type": "task_added",
+      "message": "S22.1 added: Welcome: animated hills with a dotted path to a Quit Day flag, Restore link, 18+ in the footer (age screen removed)"
+    },
+    {
+      "time": "2026-10-28T18:00:05.459Z",
+      "type": "signoff",
+      "message": "S22 mockups → signed_off"
+    },
+    {
+      "time": "2026-10-28T18:00:05.422Z",
+      "type": "mockup",
+      "message": "S22 mockup posted: Onboarding v2 in Figma"
+    },
+    {
+      "time": "2026-10-28T18:00:05.379Z",
+      "type": "section_added",
+      "message": "S22 added: Onboarding v2"
+    },
     {
       "time": "2026-10-28T15:50:56.530Z",
       "type": "note",

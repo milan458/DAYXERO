@@ -12,35 +12,40 @@ final class JourneyUITests: XCTestCase {
     func testOnboardingPaywallAndPrep() {
         let app = launch(["-dx.store", "mock"])
 
-        // Onboarding (S2)
+        // Onboarding (S22): the 18+ confirmation is the welcome screen's footer.
         snap(app, "01-welcome")
         tap(app.buttons["Build my plan"])
-        tap(button(app, "18 or older"))
-        tapSettled(app, "Continue")
-        let name = app.textFields.firstMatch
-        XCTAssert(name.waitForExistence(timeout: 5))
-        name.tap()
-        // Submit from the keyboard: its return key is also labelled "Continue", so tapping by label finds two.
-        name.typeText("Sam\n")
         tap(button(app, "Disposables"))
         snap(app, "02-products")
         tapSettled(app, "Continue")
-        // Baseline: the price commits when focus moves to the next field.
-        let price = app.textFields.element(boundBy: 0)
-        XCTAssert(price.waitForExistence(timeout: 5))
-        price.tap()
-        price.typeText("8.5")
-        app.textFields.element(boundBy: 1).tap()
+        // The vape baseline starts on the region's usual price, so it can go straight on.
         snap(app, "03-baseline")
+        tapSettled(app, "Calculate my baseline")
+        XCTAssert(app.staticTexts["Total daily nicotine load"].waitForExistence(timeout: 5) ||
+                  app.staticTexts["TOTAL DAILY NICOTINE LOAD"].exists, "Baseline summary didn't appear")
         tapSettled(app, "Continue")
-        for _ in 0..<3 { tapSettled(app, "Skip") }   // triggers, reasons, past attempts
+        tap(button(app, "6–30 min"))
+        tap(button(app, "Coffee"))
+        tapSettled(app, "Continue")
+        // Name, then the reason: submitting the name moves to the reason field.
+        let name = app.textFields.firstMatch
+        XCTAssert(name.waitForExistence(timeout: 5))
+        name.tap()
+        name.typeText("Sam\n")
+        app.typeText("Breathe easier")
+        tapSettled(app, "Save my reason")
+        tap(button(app, "First time"))
+        tapSettled(app, "Continue")
+        tap(button(app, "Not for me"))
+        tapSettled(app, "Continue")
         snap(app, "04-quit-day")
-        tap(button(app, "as Quit Day"))
-        tapSettled(app, "Skip")                       // NRT
+        let hold = app.buttons["onboarding.hold"]
+        XCTAssert(hold.waitForExistence(timeout: 5))
+        hold.press(forDuration: 2.2)
         XCTAssert(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Quit Day is")).firstMatch.waitForExistence(timeout: 15), "Plan reveal didn't appear")
         snap(app, "05-reveal")
         tapSettled(app, "Continue")
-        tapSettled(app, "Not now")                    // reminders
+        tapSettled(app, "Maybe later")               // reminders
 
         // Paywall (S3), against the mock store
         let cta = app.buttons["paywall.cta"]

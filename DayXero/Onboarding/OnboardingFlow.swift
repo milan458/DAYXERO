@@ -2,12 +2,11 @@ import DayXeroCore
 import SwiftData
 import SwiftUI
 
-/// Hosts the onboarding steps with a shared top bar (back, progress, skip) and step transitions.
+/// Hosts the onboarding steps with a shared top bar (back, progress) and step transitions.
 struct OnboardingFlow: View {
     @State private var model = OnboardingModel()
     @Environment(\.modelContext) private var context
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @AppStorage("dx.underAge") private var underAge = false
 
     /// Called just before the profile is saved, so the app keeps showing onboarding until `onFinished`.
     var onSaving: () -> Void = {}
@@ -34,7 +33,8 @@ struct OnboardingFlow: View {
                 VStack(spacing: 0) {
                     Spacer(minLength: 0)
                     // 400 pt, or less on short windows such as iPhone Duo's cover (S18.13).
-                    Hills().containerRelativeFrame(.vertical) { length, _ in min(400, length * 0.45) }
+                    Hills(quitDay: model.recommendedQuitDay, still: reduceMotion)
+                        .containerRelativeFrame(.vertical) { length, _ in min(400, length * 0.45) }
                 }
                 .ignoresSafeArea()
                 .transition(.opacity)
@@ -50,7 +50,6 @@ struct OnboardingFlow: View {
         #endif
         .onChange(of: model.step, initial: true) { _, step in
             Analytics.track(.onboardingStepViewed(step: step.key))
-            if step == .underAge { underAge = true }
         }
     }
 
@@ -71,27 +70,17 @@ struct OnboardingFlow: View {
             if model.canGoBack {
                 Button { model.back() } label: {
                     Image(systemName: "chevron.left").font(.system(size: 14, weight: .semibold))
-                        .frame(width: 36, height: 36)
-                        .background(DX.Palette.surface1, in: Circle())
+                        .frame(width: 40, height: 40)
+                        .background(DX.Palette.surface2, in: Circle())
                         .overlay(Circle().strokeBorder(DX.Palette.hairline))
                         .foregroundStyle(DX.Palette.text)
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(Text("Back"))
             }
-            if model.step != .underAge {
-                DXProgressBar(value: model.progress)
-                    .frame(height: 4)
-                    .accessibilityLabel(Text("Setup progress"))
-            } else {
-                Spacer()
-            }
-            if model.step.isSkippable {
-                Button("Skip") { model.skip() }
-                    .font(.custom(DX.Typeface.medium, size: 14, relativeTo: .subheadline))
-                    .foregroundStyle(DX.Palette.text2)
-                    .buttonStyle(.plain)
-            }
+            DXProgressBar(value: model.progress)
+                .frame(height: 6)
+                .accessibilityLabel(Text("Setup progress"))
         }
         .frame(minHeight: 44)
     }
@@ -100,16 +89,14 @@ struct OnboardingFlow: View {
     private func screen(for step: OnboardingStep) -> some View {
         switch step {
         case .welcome: WelcomeScreen(model: model)
-        case .age: AgeScreen(model: model)
-        case .underAge: UnderAgeScreen()
-        case .name: NameScreen(model: model)
         case .products: ProductsScreen(model: model)
         case let .baseline(product): BaselineScreen(model: model, product: product)
+        case .baselineSummary: BaselineSummaryScreen(model: model)
         case .triggers: TriggersScreen(model: model)
-        case .reasons: ReasonsScreen(model: model)
+        case .personal: PersonalScreen(model: model)
         case .pastAttempts: PastAttemptsScreen(model: model)
-        case .quitDay: QuitDayScreen(model: model)
         case .nrt: NRTScreen(model: model)
+        case .quitDay: QuitDayScreen(model: model)
         case .building: BuildingScreen(model: model)
         case .reveal: PlanRevealScreen(model: model) { saveAndContinue() }
         case .reminders: RemindersScreen(onDone: onFinished)
@@ -144,7 +131,11 @@ struct OnboardingScaffold<Content: View, Footer: View>: View {
                     Text(title).dxText(.title).fixedSize(horizontal: false, vertical: true)
                         .accessibilityAddTraits(.isHeader)
                     if let subtitle {
-                        Text(subtitle).dxText(.subtitle).fixedSize(horizontal: false, vertical: true)
+                        Text(subtitle)
+                            .font(.custom(DX.Typeface.regular, size: 15, relativeTo: .body))
+                            .foregroundStyle(DX.Palette.text2)
+                            .lineSpacing(2)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                     VStack(alignment: .leading, spacing: 10) {
                         content()

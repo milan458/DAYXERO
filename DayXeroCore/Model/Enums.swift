@@ -138,7 +138,7 @@ public enum PastAttempts: String, Codable, CaseIterable, Sendable {
 
 /// What got in the way of a past attempt.
 public enum Obstacle: String, Codable, CaseIterable, Sendable {
-    case cravings, stress, social, irritability, weight, sleep, other
+    case cravings, stress, social, irritability, weight, sleep, motivation, other
 
     public var title: LocalizedStringResource {
         switch self {
@@ -148,9 +148,27 @@ public enum Obstacle: String, Codable, CaseIterable, Sendable {
         case .irritability: "Irritability"
         case .weight: "Weight"
         case .sleep: "Sleep"
+        case .motivation: "Lost motivation"
         case .other: "Other"
         }
     }
+}
+
+/// How soon after waking the first cigarette, vape or pouch comes: the Fagerström test's strongest question.
+public enum FirstUse: String, Codable, CaseIterable, Sendable {
+    case withinFive, withinThirty, withinHour, later
+
+    public var title: LocalizedStringResource {
+        switch self {
+        case .withinFive: "Within 5 min"
+        case .withinThirty: "6–30 min"
+        case .withinHour: "31–60 min"
+        case .later: "After 60 min"
+        }
+    }
+
+    /// Within half an hour of waking is the clearest sign of strong dependence.
+    public var isEarly: Bool { self == .withinFive || self == .withinThirty }
 }
 
 public enum Mood: Int, Codable, CaseIterable, Sendable {

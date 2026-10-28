@@ -15,14 +15,23 @@ struct BaselineDraft: Equatable {
     var price: Decimal?
     var unitsPerPurchase: Double
     var years: YearsOfUse?
-    /// Pouches only. nil means "Not sure".
+    /// Pouches in mg, vapes in mg/ml (S22). nil means "Not sure".
     var strengthMg: Double?
+    /// Vapes only: counted in puffs a day rather than pods a week (S22).
+    var byPuffs = false
 
-    static func starting(for product: Product) -> BaselineDraft {
+    static func starting(for product: Product, currency: String = "") -> BaselineDraft {
         switch product {
-        case .cigarettes: BaselineDraft(unitsPerDay: 10, unitsPerPurchase: 20)
-        case .vape: BaselineDraft(unitsPerDay: VapeUsage.puffsPerDay(podsPerWeek: 2, puffsPerPod: 600), unitsPerPurchase: 600)
-        case .pouches: BaselineDraft(unitsPerDay: 8, unitsPerPurchase: 20)
+        case .cigarettes:
+            let presets = PricePresets.pack(currency: currency, size: 20)
+            return BaselineDraft(unitsPerDay: 10, price: presets.count == 3 ? presets[1] : nil, unitsPerPurchase: 20)
+        case .vape:
+            return BaselineDraft(unitsPerDay: VapeUsage.puffsPerDay(podsPerWeek: 2, puffsPerPod: 600),
+                                 price: PricePresets.vape(currency: currency)?.price, unitsPerPurchase: 600,
+                                 strengthMg: currency.isEmpty ? nil : PricePresets.vapeStrength(currency: currency))
+        case .pouches:
+            let presets = PricePresets.can(currency: currency)
+            return BaselineDraft(unitsPerDay: 8, price: presets.count == 3 ? presets[1] : nil, unitsPerPurchase: 20, strengthMg: 6)
         }
     }
 
@@ -43,8 +52,14 @@ struct BaselineDraft: Equatable {
         set {
             let pods = podsPerWeek
             unitsPerPurchase = newValue
-            if pods > 0, newValue > 0 { podsPerWeek = pods }
+            if pods > 0, newValue > 0, !byPuffs { podsPerWeek = pods }
         }
+    }
+
+    /// Money a year at this baseline.
+    var yearlyCost: Decimal? {
+        guard let price, price > 0, unitsPerPurchase > 0 else { return nil }
+        return price * Decimal(unitsPerDay) / Decimal(unitsPerPurchase) * 365
     }
 }
 
@@ -67,34 +82,26 @@ struct ReasonDraft: Identifiable, Equatable {
     var photo: Data?
 }
 
+/// The onboarding steps (S22). The age check is the welcome screen's footer; the name is asked with the reason.
 enum OnboardingStep: Hashable {
-    case welcome, age, underAge, name, products, baseline(Product), triggers, reasons, pastAttempts,
-         quitDay, nrt, building, reveal, reminders
+    case welcome, products, baseline(Product), baselineSummary, triggers, personal, pastAttempts,
+         nrt, quitDay, building, reveal, reminders
 
-    /// Analytics name.
+    /// Analytics and screenshot name.
     var key: String {
         switch self {
         case .welcome: "welcome"
-        case .age: "age"
-        case .underAge: "under_age"
-        case .name: "name"
         case .products: "products"
         case let .baseline(product): "baseline_\(product.rawValue)"
+        case .baselineSummary: "baseline_summary"
         case .triggers: "triggers"
-        case .reasons: "reasons"
+        case .personal: "personal"
         case .pastAttempts: "past_attempts"
-        case .quitDay: "quit_day"
         case .nrt: "nrt"
+        case .quitDay: "quit_day"
         case .building: "building"
         case .reveal: "reveal"
         case .reminders: "reminders"
-        }
-    }
-
-    var isSkippable: Bool {
-        switch self {
-        case .triggers, .reasons, .pastAttempts, .nrt: true
-        default: false
         }
     }
 }
@@ -103,26 +110,29 @@ enum OnboardingStep: Hashable {
 @Observable
 final class OnboardingModel {
     // Answers
-    var isAdult: Bool?
     var name = ""
     var products: Set<Product> = []
-    var usesNRT = false
     var baselines: [Product: BaselineDraft] = [:]
+    var firstUse: FirstUse?
     var triggers: Set<Trigger> = []
-    var cravingTimes: Set<TimeOfDay> = []
-    var reasons: [ReasonDraft] = []
+    /// Their reason, in their words, with an optional photo.
+    var why = ReasonDraft(text: "")
     var pastAttempts: PastAttempts?
     var obstacles: Set<Obstacle> = []
+    /// 0–10.
+    var confidence: Double = 5
     var quitDay: Date
     var nrtInterest: NRTInterest?
+    var nrtFormats: Set<NRTType> = []
     let currencyCode: String
 
     // Navigation
     private(set) var path: [OnboardingStep] = [.welcome]
     var step: OnboardingStep { path.last ?? .welcome }
 
-    private let calendar: Calendar
-    private let today: Date
+    let calendar: Calendar
+    /// The start of today.
+    let today: Date
 
     init(now: Date = .now, calendar: Calendar = .current, locale: Locale = .current) {
         self.calendar = calendar
@@ -150,8 +160,8 @@ final class OnboardingModel {
 
     /// Steps in order for the current answers. Baselines repeat per product.
     var sequence: [OnboardingStep] {
-        [.welcome, .age, .name, .products] + orderedProducts.map(OnboardingStep.baseline)
-            + [.triggers, .reasons, .pastAttempts, .quitDay, .nrt, .building, .reveal, .reminders]
+        [.welcome, .products] + orderedProducts.map(OnboardingStep.baseline)
+            + [.baselineSummary, .triggers, .personal, .pastAttempts, .nrt, .quitDay, .building, .reveal, .reminders]
     }
 
     /// 0...1 for the progress bar.
@@ -162,7 +172,7 @@ final class OnboardingModel {
     }
 
     func baseline(for product: Product) -> BaselineDraft {
-        baselines[product] ?? .starting(for: product)
+        baselines[product] ?? .starting(for: product, currency: currencyCode)
     }
 
     func setBaseline(_ draft: BaselineDraft, for product: Product) {
@@ -171,34 +181,25 @@ final class OnboardingModel {
 
     var canContinue: Bool {
         switch step {
-        case .age: isAdult != nil
-        case .name: !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         case .products: !products.isEmpty
         case let .baseline(product): baseline(for: product).isComplete
-        case .reasons: reasons.contains { !$0.text.trimmingCharacters(in: .whitespaces).isEmpty }
+        case .triggers: firstUse != nil && !triggers.isEmpty
+        case .personal: !trimmedName.isEmpty && !why.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        case .pastAttempts: pastAttempts == .notYet || (pastAttempts != nil && !obstacles.isEmpty)
+        case .nrt: nrtInterest != nil
         case .quitDay: quitDayRange.contains(calendar.startOfDay(for: quitDay))
         default: true
         }
     }
 
+    private var trimmedName: String { name.trimmingCharacters(in: .whitespacesAndNewlines) }
+
     // MARK: Navigation
 
     func next() {
-        if step == .age, isAdult == false {
-            path.append(.underAge)
-            return
-        }
-        if step == .products, usesNRT, nrtInterest == nil {
-            nrtInterest = .using
-        }
         let steps = sequence
         guard let index = steps.firstIndex(of: step), index + 1 < steps.count else { return }
         path.append(steps[index + 1])
-    }
-
-    func skip() {
-        Analytics.track(.onboardingStepSkipped(step: step.key))
-        next()
     }
 
     func back() {
@@ -215,21 +216,21 @@ final class OnboardingModel {
     #if DEBUG
     /// Jumps to a step with sample answers, for screenshots (launch with `-dx.onboardingStep <key>`).
     func loadSample(jumpingTo key: String) {
-        isAdult = true
         name = "Milan"
         products = [.cigarettes, .vape]
-        baselines = [
-            .vape: BaselineDraft(unitsPerDay: VapeUsage.puffsPerDay(podsPerWeek: 2.5, puffsPerPod: 600), price: 8.5,
-                                 unitsPerPurchase: 600, years: .oneToThree),
-            .cigarettes: BaselineDraft(unitsPerDay: 6, price: 15, unitsPerPurchase: 20, years: .threeToFive),
-        ]
-        triggers = [.morning, .coffee, .stress, .work]
-        cravingTimes = [.morning, .afternoon]
-        reasons = [ReasonDraft(text: "Run with Aria without stopping to catch my breath")]
+        var vape = BaselineDraft.starting(for: .vape, currency: currencyCode)
+        vape.years = .oneToThree
+        var cigarettes = BaselineDraft.starting(for: .cigarettes, currency: currencyCode)
+        cigarettes.years = .threeToFive
+        baselines = [.vape: vape, .cigarettes: cigarettes]
+        firstUse = .withinThirty
+        triggers = [.coffee, .stress, .meals]
+        why = ReasonDraft(text: "More energy for the kids, and the money back.")
         pastAttempts = .onceOrTwice
-        obstacles = [.cravings, .irritability]
+        obstacles = [.cravings, .stress]
         nrtInterest = .using
-        let steps = sequence + [.underAge]
+        nrtFormats = [.patch, .gum]
+        let steps = sequence
         if let target = steps.first(where: { $0.key == key }) {
             path = [.welcome, target]
         }
@@ -247,9 +248,13 @@ final class OnboardingModel {
             currencyCode: currencyCode
         )
         context.insert(profile)
+        // Continuing past the welcome screen confirms they're 18 or older (S22).
         profile.ageConfirmedAt = now
         profile.triggers = Trigger.allCases.filter(triggers.contains)
-        profile.cravingTimesRaw = TimeOfDay.allCases.filter(cravingTimes.contains).map(\.rawValue)
+        profile.cravingTimesRaw = cravingTimes.map(\.rawValue)
+        profile.firstUse = firstUse
+        profile.confidence = Int(confidence.rounded())
+        profile.nrtFormats = nrtInterest == .using ? NRTType.allCases.filter(nrtFormats.contains) : []
         profile.pastAttemptsRaw = pastAttempts?.rawValue
         profile.obstaclesRaw = Obstacle.allCases.filter(obstacles.contains).map(\.rawValue)
         profile.nrtInterest = nrtInterest
@@ -264,11 +269,12 @@ final class OnboardingModel {
                 pricePerPurchase: draft.price ?? 0,
                 unitsPerPurchase: draft.unitsPerPurchase,
                 yearsOfUse: draft.years?.rawValue,
-                strengthMg: product == .pouches ? draft.strengthMg : nil
+                strengthMg: product == .cigarettes ? nil : draft.strengthMg
             ))
         }
-        for reason in reasons where !reason.text.trimmingCharacters(in: .whitespaces).isEmpty {
-            profile.reasons.append(Reason(text: reason.text, photo: reason.photo))
+        let reason = why.text.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !reason.isEmpty {
+            profile.reasons.append(Reason(text: reason, photo: why.photo))
         }
 
         // Everyone starts on 8 glasses; the Water tab personalises it (S18.5).
@@ -278,6 +284,33 @@ final class OnboardingModel {
         Analytics.track(.onboardingCompleted)
         Analytics.track(.waterGoalSet(source: "default", goalBucket: "\(WaterGoal.skippedMl)"))
         return profile
+    }
+
+    /// Craving times for the predictor, now that onboarding asks about mornings instead (S22).
+    var cravingTimes: [TimeOfDay] {
+        var times: [TimeOfDay] = []
+        if (firstUse != nil && firstUse != .later) || triggers.contains(.coffee) || triggers.contains(.morning) { times.append(.morning) }
+        if triggers.contains(.meals) || triggers.contains(.work) { times.append(.midday) }
+        if triggers.contains(.alcohol) || triggers.contains(.social) { times.append(.evening) }
+        return times
+    }
+
+    /// Nicotine a day, all products together, in mg.
+    var nicotinePerDay: Double {
+        orderedProducts.reduce(0) { sum, product in
+            let d = baseline(for: product)
+            return sum + NicotineEstimate.mgPerDay(product, unitsPerDay: d.unitsPerDay, strength: d.strengthMg)
+        }
+    }
+
+    /// Hours a year spent smoking or vaping.
+    var hoursPerYear: Double {
+        orderedProducts.reduce(0) { $0 + TimeSpent.hoursPerYear($1, unitsPerDay: baseline(for: $1).unitsPerDay) }
+    }
+
+    /// Money a day, all products together.
+    var moneyPerDay: Decimal {
+        orderedProducts.reduce(Decimal(0)) { $0 + (baseline(for: $1).yearlyCost ?? 0) } / 365
     }
 
     /// Plan-reveal numbers, computed with the same logic Home uses.

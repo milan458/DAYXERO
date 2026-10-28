@@ -221,7 +221,7 @@ struct FirstRunPaywall: View {
 
     var body: some View {
         if showOwn {
-            PaywallView(name: profile.name, quitDay: profile.quitDay, model: model,
+            PaywallView(name: profile.name, quitDay: profile.quitDay, model: model, context: PaywallContext(profile: profile),
                         onClose: onClose, onPurchaseStarted: onPurchaseStarted)
         } else {
             // A moment while Superwall decides; its paywall slides up over this, or ours replaces it.

@@ -115,10 +115,10 @@ jobs:
           shoot dark large gallery-dark -dx.showGallery YES
           shoot light large gallery-light -dx.showGallery YES
           shoot dark accessibility-extra-extra-extra-large gallery-dark-ax5 -dx.showGallery YES
-          for step in welcome age name products baseline_vape baseline_cigarettes triggers reasons past_attempts quit_day nrt reveal reminders; do
+          for step in welcome products baseline_cigarettes baseline_vape baseline_summary triggers personal past_attempts nrt quit_day reveal reminders; do
             shoot dark large "onb-$step-dark" -dx.onboardingStep "$step"
           done
-          for step in welcome products baseline_vape reveal; do
+          for step in welcome products baseline_vape baseline_summary quit_day reveal; do
             shoot light large "onb-$step-light" -dx.onboardingStep "$step"
           done
           shoot dark accessibility-extra-extra-extra-large onb-baseline_vape-dark-ax5 -dx.onboardingStep baseline_vape
@@ -277,8 +277,6 @@ jobs:
           shoot dark large set-privacy-dark $P12 -dx.openSettings privacy
           shoot dark large set-health-dark $P12 -dx.openSettings health
           shoot dark large onb-reveal-disclaimer-dark -dx.onboardingStep reveal
-          # Last: the under-18 screen persists its flag, so everything after it would show the exit.
-          shoot dark large onb-under_age-dark -dx.onboardingStep under_age
           cd shots
           git init -q -b ci-screens
           git config user.name "ci" && git config user.email "ci@users.noreply.github.com"

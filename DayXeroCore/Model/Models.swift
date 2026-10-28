@@ -23,6 +23,12 @@ public final class UserProfile {
     public var cravingTimesRaw: [String] = []
     public var pastAttemptsRaw: String?
     public var obstaclesRaw: [String] = []
+    /// How soon after waking they first use (S22).
+    public var firstUseRaw: String?
+    /// How confident they felt about quitting at onboarding, 0–10 (S22).
+    public var confidence: Int?
+    /// NRT formats they already use (S22).
+    public var nrtFormatsRaw: [String] = []
 
     public init(name: String, quitDay: Date, currencyCode: String, dayBoundaryHour: Int = 4, createdAt: Date = .now) {
         self.name = name
@@ -35,6 +41,16 @@ public final class UserProfile {
     public var triggers: [Trigger] {
         get { triggersRaw.compactMap(Trigger.init(rawValue:)) }
         set { triggersRaw = newValue.map(\.rawValue) }
+    }
+
+    public var firstUse: FirstUse? {
+        get { firstUseRaw.flatMap(FirstUse.init(rawValue:)) }
+        set { firstUseRaw = newValue?.rawValue }
+    }
+
+    public var nrtFormats: [NRTType] {
+        get { nrtFormatsRaw.compactMap(NRTType.init(rawValue:)) }
+        set { nrtFormatsRaw = newValue.map(\.rawValue) }
     }
 
     public var nrtInterest: NRTInterest? {
@@ -81,7 +97,7 @@ public final class ProductUse {
     /// Units in one purchase (cigarettes per pack, puffs per pod, pouches per can).
     public var unitsPerPurchase: Double
     public var yearsOfUse: Double?
-    /// Pouch strength in mg, pouches only.
+    /// Pouch strength in mg, or a vape's e-liquid strength in mg/ml (S22). nil when not known.
     public var strengthMg: Double?
 
     public init(product: Product, isPrimary: Bool, unitsPerDay: Double, pricePerPurchase: Decimal,
