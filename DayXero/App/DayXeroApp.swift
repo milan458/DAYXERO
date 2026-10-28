@@ -27,9 +27,13 @@ struct DayXeroApp: App {
         }
         SOSBridge.container = container
         SOSBridge.endLiveActivity = { await SOSLiveActivity.endAll() }
+        let store = Self.makeStore()
+        // Superwall first, then RevenueCat, then keep Superwall's subscription status in step with RevenueCat's (S20).
+        Paywalls.configure(usingStandInStore: Self.usesStandIns || !(store is Subscriptions))
         Subscriptions.shared.configure()
+        Paywalls.syncWithRevenueCat()
         Analytics.configure()
-        _entitlement = State(initialValue: Entitlement(store: Self.makeStore()))
+        _entitlement = State(initialValue: Entitlement(store: store))
     }
 
     var body: some Scene {
@@ -39,6 +43,15 @@ struct DayXeroApp: App {
                 .task { await entitlement.refresh() }
         }
         .modelContainer(container)
+    }
+
+    /// Tests, screenshots and seeded scenarios launch with `-dx.` arguments; they keep to DayXero's own paywall.
+    private static var usesStandIns: Bool {
+        #if DEBUG
+        ProcessInfo.processInfo.arguments.contains { $0.hasPrefix("-dx.") }
+        #else
+        false
+        #endif
     }
 
     private static func makeStore() -> PurchaseStore {
@@ -103,12 +116,15 @@ struct RootView: View {
                 DailyReminders.refresh(in: modelContext)
             }
             .onOpenURL { url in
-                guard url.scheme == "dayxero" else { return }
+                // DayXero's own links first; anything else may be a Superwall paywall preview or web-checkout link (S20).
+                guard url.scheme == "dayxero", url.host() == "log" || url.host() == "sos" else {
+                    _ = Paywalls.handleDeepLink(url)
+                    return
+                }
                 if url.host() == "log" {
                     log.open(url.path().contains("craving") ? .craving : url.path().contains("slip") ? .slip : .menu)
                     return
                 }
-                guard url.host() == "sos" else { return }
                 let source = URLComponents(url: url, resolvingAgainstBaseURL: false)?
                     .queryItems?.first { $0.name == "source" }?.value
                 sos.open(source: source ?? "link")
@@ -118,6 +134,7 @@ struct RootView: View {
                 guard phase == .active else { return }
                 WidgetSync.refresh(in: modelContext, isPro: entitlement.isPro)
                 NRTReminders.refresh(profile: profiles.first)
+                if let profile = profiles.first { Paywalls.setAttributes(for: profile) }
                 DailyReminders.isPro = entitlement.isPro
                 DailyReminders.refresh(in: modelContext)
                 SOSBridge.openSession = { [sos] source in sos.open(source: source) }
@@ -174,21 +191,56 @@ struct RootView: View {
             } else if paywallDone || (entitlement.isPro && !buyingOnPaywall) {
                 HomeView(profile: profile)
             } else {
-                PaywallView(name: profile.name, quitDay: profile.quitDay,
-                            model: PaywallModel(store: entitlement.store, entitlement: entitlement),
-                            onClose: { paywallDone = true }, onPurchaseStarted: { buyingOnPaywall = true })
+                FirstRunPaywall(profile: profile, model: PaywallModel(store: entitlement.store, entitlement: entitlement),
+                                onClose: { paywallDone = true }, onPurchaseStarted: { buyingOnPaywall = true })
             }
             #else
             if paywallDone || (entitlement.isPro && !buyingOnPaywall) {
                 HomeView(profile: profile)
             } else {
-                PaywallView(name: profile.name, quitDay: profile.quitDay,
-                            model: PaywallModel(store: entitlement.store, entitlement: entitlement),
-                            onClose: { paywallDone = true }, onPurchaseStarted: { buyingOnPaywall = true })
+                FirstRunPaywall(profile: profile, model: PaywallModel(store: entitlement.store, entitlement: entitlement),
+                                onClose: { paywallDone = true }, onPurchaseStarted: { buyingOnPaywall = true })
             }
             #endif
         } else {
             OnboardingFlow(onSaving: { finishingOnboarding = true }, onFinished: { finishingOnboarding = false })
+        }
+    }
+}
+
+/// The one-time paywall after onboarding: Superwall's when a campaign shows one at `onboarding_complete`,
+/// DayXero's own otherwise (S20).
+struct FirstRunPaywall: View {
+    let profile: UserProfile
+    let model: PaywallModel
+    let onClose: () -> Void
+    let onPurchaseStarted: () -> Void
+
+    @Environment(Entitlement.self) private var entitlement
+    @State private var showOwn = !Paywalls.isEnabled
+
+    var body: some View {
+        if showOwn {
+            PaywallView(name: profile.name, quitDay: profile.quitDay, model: model,
+                        onClose: onClose, onPurchaseStarted: onPurchaseStarted)
+        } else {
+            // A moment while Superwall decides; its paywall slides up over this, or ours replaces it.
+            ProgressView()
+                .tint(DX.Palette.accentInk)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .dxCanvas()
+                .task {
+                    Paywalls.setAttributes(for: profile)
+                    Paywalls.present(.onboardingComplete) { outcome in
+                        switch outcome {
+                        case .fallback: showOwn = true
+                        case .unlocked:
+                            entitlement.grant()
+                            onClose()
+                        case .closed: onClose()
+                        }
+                    }
+                }
         }
     }
 }

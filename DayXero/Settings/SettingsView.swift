@@ -515,7 +515,16 @@ struct SubscriptionSettingsView: View {
                 } else if entitlement.isPro {
                     Text("DayXero Pro is active.")
                 } else {
-                    Button("Unlock the full program") { showPaywall = true }
+                    Button("Unlock the full program") {
+                        // Superwall's paywall when a campaign has one here; DayXero's otherwise (S20).
+                        Paywalls.present(.upgradeFromSettings) { outcome in
+                            switch outcome {
+                            case .fallback: showPaywall = true
+                            case .unlocked: entitlement.grant()
+                            case .closed: break
+                            }
+                        }
+                    }
                 }
                 Button(restoring ? "Restoring…" : "Restore purchases") {
                     Task {

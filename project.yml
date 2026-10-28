@@ -33,6 +33,9 @@ packages:
   PostHog:
     url: https://github.com/PostHog/posthog-ios
     from: "3.0.0"
+  Superwall:
+    url: https://github.com/superwall/Superwall-iOS
+    from: "4.0.0"
 
 targets:
   DayXeroCore:
@@ -58,6 +61,8 @@ targets:
       - target: DayXeroWidgets
       - package: RevenueCat
       - package: PostHog
+      - package: Superwall
+        product: SuperwallKit
     entitlements:
       path: DayXero/DayXero.entitlements
       properties:
@@ -77,6 +82,7 @@ targets:
             CFBundleURLSchemes: [dayxero]
         ITSAppUsesNonExemptEncryption: false
         DXRevenueCatAPIKey: $(DX_REVENUECAT_API_KEY)
+        DXSuperwallAPIKey: $(DX_SUPERWALL_API_KEY)
         DXPostHogAPIKey: $(DX_POSTHOG_API_KEY)
         DXPostHogHost: $(DX_POSTHOG_HOST)
     settings:

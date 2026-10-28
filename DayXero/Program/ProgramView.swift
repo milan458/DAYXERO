@@ -163,7 +163,14 @@ struct ProgramView: View {
             if row.availability == .completed || (isNow && !row.needsUpgrade) {
                 open = LessonOpen(day: row.day, isReplay: false)
             } else if isNow && row.needsUpgrade {
-                upgradeFor = row.day
+                // Superwall's paywall when a campaign has one here; the upgrade sheet otherwise (S20).
+                Paywalls.present(.unlockProgramDay, params: ["day": row.day.description]) { outcome in
+                    switch outcome {
+                    case .fallback: upgradeFor = row.day
+                    case .unlocked: entitlement.grant()
+                    case .closed: break
+                    }
+                }
             }
         } label: {
             HStack(spacing: DX.Space.s) {

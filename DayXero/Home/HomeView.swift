@@ -488,7 +488,14 @@ struct TodayView: View {
             case .available where lesson.needsUpgrade:
                 lessonButton(String(localized: "Unlock \(lesson.title)"), systemImage: "lock.open") {
                     upgradeTitle = lesson.title
-                    showUpgrade = true
+                    // Superwall's paywall when a campaign has one here; the upgrade sheet otherwise (S20).
+                    Paywalls.present(.unlockProgramDay, params: ["day": lesson.day.description]) { outcome in
+                        switch outcome {
+                        case .fallback: showUpgrade = true
+                        case .unlocked: entitlement.grant()
+                        case .closed: break
+                        }
+                    }
                 }
             case .available:
                 let title = lesson.resumeStep > 0 ? String(localized: "Continue (\(minutes) min)")

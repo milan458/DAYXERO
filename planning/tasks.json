@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-28T09:04:29.106Z"
+    "updated": "2026-10-28T09:57:59.295Z"
   },
   "now": {
     "section": "S19",
@@ -2034,9 +2034,83 @@
           "completed": null
         }
       ]
+    },
+    {
+      "id": "S20",
+      "title": "Superwall",
+      "goal": "Superwall paywalls from the dashboard (app 58855), bought through RevenueCat, with DayXero's own paywall as the fallback (Milan, 28 Oct).",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S20.1",
+          "title": "Install SuperwallKit and configure it at launch with RevenueCat as the purchase controller",
+          "status": "pending",
+          "notes": "Asked by Milan 28 Oct (Superwall set-up steps).",
+          "created": "2026-10-28T09:57:59.130Z",
+          "completed": null
+        },
+        {
+          "id": "S20.2",
+          "title": "Placements: onboarding_complete, unlock_program_day, upgrade_from_settings, falling back to DayXero's paywall",
+          "status": "pending",
+          "notes": "Asked by Milan 28 Oct (Superwall set-up steps).",
+          "created": "2026-10-28T09:57:59.173Z",
+          "completed": null
+        },
+        {
+          "id": "S20.3",
+          "title": "User attributes, deep links (paywall previews) and analytics forwarding",
+          "status": "pending",
+          "notes": "Asked by Milan 28 Oct (Superwall set-up steps).",
+          "created": "2026-10-28T09:57:59.217Z",
+          "completed": null
+        },
+        {
+          "id": "S20.4",
+          "title": "Dashboard: products on the pro entitlement, RevenueCat as revenue provider, campaigns, URL scheme",
+          "status": "blocked",
+          "notes": "Asked by Milan 28 Oct (Superwall set-up steps).\nNeeds Milan in the Superwall dashboard (or the superwall CLI with superwall.com allowed): see docs/SUPERWALL.md.",
+          "created": "2026-10-28T09:57:59.259Z",
+          "completed": null
+        }
+      ]
     }
   ],
   "log": [
+    {
+      "time": "2026-10-28T09:57:59.295Z",
+      "type": "status",
+      "message": "S20.4 pending → blocked (Needs Milan in the Superwall dashboard (or the superwall CLI with superwall.com allowed): see docs/SUPERWALL.md.)"
+    },
+    {
+      "time": "2026-10-28T09:57:59.259Z",
+      "type": "task_added",
+      "message": "S20.4 added: Dashboard: products on the pro entitlement, RevenueCat as revenue provider, campaigns, URL scheme"
+    },
+    {
+      "time": "2026-10-28T09:57:59.217Z",
+      "type": "task_added",
+      "message": "S20.3 added: User attributes, deep links (paywall previews) and analytics forwarding"
+    },
+    {
+      "time": "2026-10-28T09:57:59.173Z",
+      "type": "task_added",
+      "message": "S20.2 added: Placements: onboarding_complete, unlock_program_day, upgrade_from_settings, falling back to DayXero's paywall"
+    },
+    {
+      "time": "2026-10-28T09:57:59.130Z",
+      "type": "task_added",
+      "message": "S20.1 added: Install SuperwallKit and configure it at launch with RevenueCat as the purchase controller"
+    },
+    {
+      "time": "2026-10-28T09:57:59.084Z",
+      "type": "section_added",
+      "message": "S20 added: Superwall"
+    },
     {
       "time": "2026-10-28T09:04:29.106Z",
       "type": "status",

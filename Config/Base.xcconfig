@@ -5,6 +5,9 @@
 // RevenueCat's public SDK key. It ships inside the app by design, so it lives here rather than in Secrets.
 DX_REVENUECAT_API_KEY = appl_WaGCbcIFBThDzSOzqIgAUUOwCkA
 
+// Superwall's public API key (app 58855). Public by design, like RevenueCat's (S20).
+DX_SUPERWALL_API_KEY = pk_hsY_OVFZs0lTKx7K3gpkA
+
 // Signing. Automatic for local builds; the TestFlight workflow overrides these on the command line
 // with a distribution certificate and profiles it makes through the App Store Connect API.
 DX_SIGN_STYLE = Automatic
