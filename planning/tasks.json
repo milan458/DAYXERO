@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-28T08:56:07.902Z"
+    "updated": "2026-10-28T09:04:29.106Z"
   },
   "now": {
     "section": "S19",
@@ -1972,56 +1972,56 @@
         {
           "id": "S19.1",
           "title": "Header: greeting, name, profile and the white trend button to Progress",
-          "status": "pending",
-          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).",
+          "status": "in_progress",
+          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).\n49d702c; verifying on CI.",
           "created": "2026-10-28T08:56:07.440Z",
           "completed": null
         },
         {
           "id": "S19.2",
           "title": "S1: flowing moss wave with cravings-today, next-craving and Log pills",
-          "status": "pending",
-          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).",
+          "status": "in_progress",
+          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).\n49d702c; verifying on CI.",
           "created": "2026-10-28T08:56:07.497Z",
           "completed": null
         },
         {
           "id": "S19.3",
           "title": "S2: lesson spotlight card (white; black in light theme)",
-          "status": "pending",
-          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).",
+          "status": "in_progress",
+          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).\n49d702c; verifying on CI.",
           "created": "2026-10-28T08:56:07.561Z",
           "completed": null
         },
         {
           "id": "S19.4",
           "title": "S3: streak and adherence card (Quit Day countdown folds in)",
-          "status": "pending",
-          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).",
+          "status": "in_progress",
+          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).\n49d702c; verifying on CI.",
           "created": "2026-10-28T08:56:07.617Z",
           "completed": null
         },
         {
           "id": "S19.5",
           "title": "S4: next health milestone with an animated illustration",
-          "status": "pending",
-          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).",
+          "status": "in_progress",
+          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).\n49d702c; verifying on CI.",
           "created": "2026-10-28T08:56:07.680Z",
           "completed": null
         },
         {
           "id": "S19.6",
           "title": "S5: NRT set-up invite on Home; set-up plans move to Program",
-          "status": "pending",
-          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).",
+          "status": "in_progress",
+          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).\n49d702c; verifying on CI.",
           "created": "2026-10-28T08:56:07.730Z",
           "completed": null
         },
         {
           "id": "S19.7",
           "title": "S6: log a use during prep, per product",
-          "status": "pending",
-          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).",
+          "status": "in_progress",
+          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).\n49d702c; verifying on CI.",
           "created": "2026-10-28T08:56:07.832Z",
           "completed": null
         },
@@ -2037,6 +2037,41 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-28T09:04:29.106Z",
+      "type": "status",
+      "message": "S19.7 pending → in_progress (49d702c; verifying on CI.)"
+    },
+    {
+      "time": "2026-10-28T09:04:29.078Z",
+      "type": "status",
+      "message": "S19.6 pending → in_progress (49d702c; verifying on CI.)"
+    },
+    {
+      "time": "2026-10-28T09:04:29.047Z",
+      "type": "status",
+      "message": "S19.5 pending → in_progress (49d702c; verifying on CI.)"
+    },
+    {
+      "time": "2026-10-28T09:04:29.017Z",
+      "type": "status",
+      "message": "S19.4 pending → in_progress (49d702c; verifying on CI.)"
+    },
+    {
+      "time": "2026-10-28T09:04:28.989Z",
+      "type": "status",
+      "message": "S19.3 pending → in_progress (49d702c; verifying on CI.)"
+    },
+    {
+      "time": "2026-10-28T09:04:28.958Z",
+      "type": "status",
+      "message": "S19.2 pending → in_progress (49d702c; verifying on CI.)"
+    },
+    {
+      "time": "2026-10-28T09:04:28.920Z",
+      "type": "status",
+      "message": "S19.1 pending → in_progress (49d702c; verifying on CI.)"
+    },
     {
       "time": "2026-10-28T08:56:07.902Z",
       "type": "now",
