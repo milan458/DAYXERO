@@ -2,11 +2,11 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-28T04:59:19.192Z"
+    "updated": "2026-10-28T05:32:58.566Z"
   },
   "now": {
     "section": "S18",
-    "task": "S18.19",
+    "task": "S18.21",
     "waiting_on_milan": []
   },
   "sections": [
@@ -1948,11 +1948,34 @@
           "notes": "Found 28 Oct in the sos-timeup CI shot: 00:00 spilled past the ring (regression from S18.6).\n5573368: the time-up orb passes mini: true, and any orb smaller than the spec's size scales its readout with it. Verifying on iOS run 96.\nVerified: sos-timeup-dark (iOS run 96, 5573368) shows 'urge surfed / 00:00 / cycle' inside the mini ring.",
           "created": "2026-10-28T04:15:15.621Z",
           "completed": "2026-10-28T04:59:19.133Z"
+        },
+        {
+          "id": "S18.21",
+          "title": "Purchase confirmation replaced by Home the moment the person turns Pro",
+          "status": "in_progress",
+          "notes": "Found 28 Oct by the device-matrix journey test: a purchase grants Pro at once and RootView then showed Home, so 'You're all set' (trial end date, reminder the day before, Start prep day 1) never showed. Pre-dates S18.\nbd5d8b5: the first-run paywall stays up once a purchase or restore starts, until the person taps through; someone already Pro still skips it. Verifying on device matrix run 50 and iOS run 97.",
+          "created": "2026-10-28T05:32:58.473Z",
+          "completed": null
         }
       ]
     }
   ],
   "log": [
+    {
+      "time": "2026-10-28T05:32:58.566Z",
+      "type": "now",
+      "message": "Now: S18 / S18.21"
+    },
+    {
+      "time": "2026-10-28T05:32:58.531Z",
+      "type": "status",
+      "message": "S18.21 pending → in_progress (bd5d8b5: the first-run paywall stays up once a purchase or restore starts, until the person taps through; someone already Pro still skips it. Verifying on device matrix run 50 and iOS run 97.)"
+    },
+    {
+      "time": "2026-10-28T05:32:58.473Z",
+      "type": "task_added",
+      "message": "S18.21 added: Purchase confirmation replaced by Home the moment the person turns Pro"
+    },
     {
       "time": "2026-10-28T04:59:19.192Z",
       "type": "note",
