@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-28T13:45:34.328Z"
+    "updated": "2026-10-28T15:36:38.078Z"
   },
   "now": {
     "section": "S21",
@@ -2104,64 +2104,64 @@
         {
           "id": "S21.1",
           "title": "Water turns blue (pill, glow, widget glyph); tea stays amber",
-          "status": "in_progress",
-          "notes": "Asked by Milan 28 Oct (screen recording).\ncd7ceed; verifying on CI.",
+          "status": "done",
+          "notes": "Asked by Milan 28 Oct (screen recording).\ncd7ceed; verifying on CI.\nf3f84d7: exactly the WTracker spec (glass #BFE6FF→#3D8BF2, sparkling #E6F6FF→#7CC4F2, glow 84,164,255 @ 24%); waves are 14 pt bands as in the reference. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.",
           "created": "2026-10-28T13:33:59.724Z",
-          "completed": null
+          "completed": "2026-10-28T15:36:37.692Z"
         },
         {
           "id": "S21.2",
           "title": "Fix the water not rising on tap, then jumping; UI test taps Log repeatedly with a screenshot after each tap",
-          "status": "in_progress",
-          "notes": "Asked by Milan 28 Oct: 'Sometimes when you click, you dont see the water rise, but suddenly it would rise to all the click you did till now.'\ncd7ceed; verifying on CI.\ncb93dea: UI test pushed alone first; device matrix run 55 tells whether CI reproduces the stall on the old code. Fix in cd7ceed: SwiftUI animates the level (Animatable), the timeline only drives waves.",
+          "status": "done",
+          "notes": "Asked by Milan 28 Oct: 'Sometimes when you click, you dont see the water rise, but suddenly it would rise to all the click you did till now.'\ncd7ceed; verifying on CI.\ncb93dea: UI test pushed alone first; device matrix run 55 tells whether CI reproduces the stall on the old code. Fix in cd7ceed: SwiftUI animates the level (Animatable), the timeline only drives waves.\nFix in cd7ceed (SwiftUI animates the level). testWaterRisesOnEveryTap: the water rose after each of 6 taps on every leg; dc10543 keeps Log above the dock on 6.1-inch phones. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.",
           "created": "2026-10-28T13:33:59.766Z",
-          "completed": null
+          "completed": "2026-10-28T15:36:37.767Z"
         },
         {
           "id": "S21.3",
           "title": "Drink illustrations on the Water page (picker and Today's list)",
-          "status": "in_progress",
-          "notes": "Asked by Milan 28 Oct.\ncd7ceed; verifying on CI.",
+          "status": "done",
+          "notes": "Asked by Milan 28 Oct.\ncd7ceed; verifying on CI.\ncd7ceed. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.",
           "created": "2026-10-28T13:33:59.809Z",
-          "completed": null
+          "completed": "2026-10-28T15:36:37.834Z"
         },
         {
           "id": "S21.4",
           "title": "Dock: SOS as the word with a shimmering rainbow on an unselected-style circle; bolder unselected icons; trend icon for Progress",
-          "status": "in_progress",
-          "notes": "Asked by Milan 28 Oct.\ncd7ceed; verifying on CI.",
+          "status": "done",
+          "notes": "Asked by Milan 28 Oct.\ncd7ceed; verifying on CI.\ncd7ceed. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.",
           "created": "2026-10-28T13:33:59.853Z",
-          "completed": null
+          "completed": "2026-10-28T15:36:37.871Z"
         },
         {
           "id": "S21.5",
           "title": "Remove Home's top-right Progress button (same as the Progress tab)",
-          "status": "in_progress",
-          "notes": "Asked by Milan 28 Oct (screenshot).\ncd7ceed; verifying on CI.",
+          "status": "done",
+          "notes": "Asked by Milan 28 Oct (screenshot).\ncd7ceed; verifying on CI.\ncd7ceed. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.",
           "created": "2026-10-28T13:33:59.891Z",
-          "completed": null
+          "completed": "2026-10-28T15:36:37.912Z"
         },
         {
           "id": "S21.6",
           "title": "New illustration set (13 drawings) with reached / now / ahead states, used everywhere a health timeline shows",
-          "status": "in_progress",
-          "notes": "Asked by Milan 28 Oct: change the illustration everywhere in the app wherever the timelines show.\ncd7ceed; verifying on CI.",
+          "status": "done",
+          "notes": "Asked by Milan 28 Oct: change the illustration everywhere in the app wherever the timelines show.\ncd7ceed; verifying on CI.\ncd7ceed; rule in docs/DESIGN_METHODOLOGY.md. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.",
           "created": "2026-10-28T13:33:59.932Z",
-          "completed": null
+          "completed": "2026-10-28T15:36:37.980Z"
         },
         {
           "id": "S21.7",
           "title": "Your body rebuilt as Body B, timeline path",
-          "status": "in_progress",
-          "notes": "Asked by Milan 28 Oct.\ncd7ceed; verifying on CI.",
+          "status": "done",
+          "notes": "Asked by Milan 28 Oct.\ncd7ceed; verifying on CI.\ncd7ceed. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.",
           "created": "2026-10-28T13:33:59.968Z",
-          "completed": null
+          "completed": "2026-10-28T15:36:38.026Z"
         },
         {
           "id": "S21.8",
           "title": "CI green (iOS + device matrix), screenshots reviewed, TestFlight upload",
           "status": "in_progress",
-          "notes": "iOS run on cd7ceed started.",
+          "notes": "iOS run on cd7ceed started.\nCI screenshots are now opt-in (screenshots input, fcbb2d8), per Milan. Device matrix green on f3f84d7; TestFlight run 40717624494 started.",
           "created": "2026-10-28T13:34:00.008Z",
           "completed": null
         }
@@ -2169,6 +2169,46 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-28T15:36:38.078Z",
+      "type": "note",
+      "message": "S21.8: CI screenshots are now opt-in (screenshots input, fcbb2d8), per Milan. Device matrix green on f3f84d7; TestFlight run 40717624494 started."
+    },
+    {
+      "time": "2026-10-28T15:36:38.026Z",
+      "type": "status",
+      "message": "S21.7 in_progress → done (cd7ceed. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.)"
+    },
+    {
+      "time": "2026-10-28T15:36:37.980Z",
+      "type": "status",
+      "message": "S21.6 in_progress → done (cd7ceed; rule in docs/DESIGN_METHODOLOGY.md. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.)"
+    },
+    {
+      "time": "2026-10-28T15:36:37.912Z",
+      "type": "status",
+      "message": "S21.5 in_progress → done (cd7ceed. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.)"
+    },
+    {
+      "time": "2026-10-28T15:36:37.871Z",
+      "type": "status",
+      "message": "S21.4 in_progress → done (cd7ceed. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.)"
+    },
+    {
+      "time": "2026-10-28T15:36:37.834Z",
+      "type": "status",
+      "message": "S21.3 in_progress → done (cd7ceed. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.)"
+    },
+    {
+      "time": "2026-10-28T15:36:37.767Z",
+      "type": "status",
+      "message": "S21.2 in_progress → done (Fix in cd7ceed (SwiftUI animates the level). testWaterRisesOnEveryTap: the water rose after each of 6 taps on every leg; dc10543 keeps Log above the dock on 6.1-inch phones. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.)"
+    },
+    {
+      "time": "2026-10-28T15:36:37.692Z",
+      "type": "status",
+      "message": "S21.1 in_progress → done (f3f84d7: exactly the WTracker spec (glass #BFE6FF→#3D8BF2, sparkling #E6F6FF→#7CC4F2, glow 84,164,255 @ 24%); waves are 14 pt bands as in the reference. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.)"
+    },
     {
       "time": "2026-10-28T13:45:34.328Z",
       "type": "now",
