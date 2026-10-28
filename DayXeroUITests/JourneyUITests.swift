@@ -136,26 +136,30 @@ final class JourneyUITests: XCTestCase {
         return app
     }
 
-    /// Taps the button with this label once exactly one is on screen and it has stopped moving, so a step's
-    /// slide-in or a sheet growing to full height has finished. A tap mid-slide can miss.
+    /// Taps the button with this label once exactly one is on screen, enabled and still, so a step's slide-in or a
+    /// sheet growing to full height has finished: a tap mid-slide can miss. It taps the button's centre rather than
+    /// asking XCUITest whether it's hittable, which on iOS 27 can fail outright while a sheet resizes.
     private func tapSettled(_ app: XCUIApplication, _ label: String, file: StaticString = #filePath, line: UInt = #line) {
         let query = app.buttons.matching(NSPredicate(format: "label == %@", label))
         let deadline = Date.now.addingTimeInterval(10)
         while query.count != 1, Date.now < deadline { RunLoop.current.run(until: .now.addingTimeInterval(0.2)) }
         XCTAssertEqual(query.count, 1, "Expected one \"\(label)\" button", file: file, line: line)
         let button = query.element
+        let screen = app.windows.firstMatch.frame
         var last = CGRect.null
+        var settled = false
         let still = Date.now.addingTimeInterval(5)
         while Date.now < still {
             let frame = button.frame
-            if frame == last, !frame.isEmpty { break }
+            if frame == last, !frame.isEmpty, screen.contains(CGPoint(x: frame.midX, y: frame.midY)), button.isEnabled {
+                settled = true
+                break
+            }
             last = frame
             RunLoop.current.run(until: .now.addingTimeInterval(0.3))
         }
-        let enabled = NSPredicate(format: "isEnabled == true AND isHittable == true")
-        let wait = XCTNSPredicateExpectation(predicate: enabled, object: button)
-        XCTAssertEqual(XCTWaiter().wait(for: [wait], timeout: 5), .completed, "\"\(label)\" never became tappable", file: file, line: line)
-        button.tap()
+        XCTAssert(settled, "\"\(label)\" never settled on screen", file: file, line: line)
+        button.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
     }
 
     private func button(_ app: XCUIApplication, _ text: String) -> XCUIElement {

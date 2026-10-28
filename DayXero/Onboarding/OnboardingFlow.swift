@@ -9,6 +9,8 @@ struct OnboardingFlow: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @AppStorage("dx.underAge") private var underAge = false
 
+    /// Called just before the profile is saved, so the app keeps showing onboarding until `onFinished`.
+    var onSaving: () -> Void = {}
     let onFinished: () -> Void
 
     var body: some View {
@@ -116,6 +118,7 @@ struct OnboardingFlow: View {
 
     private func saveAndContinue() {
         do {
+            onSaving()
             try model.save(into: context)
             model.next()
         } catch {

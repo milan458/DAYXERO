@@ -64,6 +64,9 @@ struct RootView: View {
     @State private var log = LogRouter()
     @State private var nrt = NRTRouter()
     @AppStorage(AppearanceSetting.key) private var appearance = AppearanceSetting.automatic.rawValue
+    /// Onboarding saves the profile before its last screen (reminders). This keeps that screen up until it's done,
+    /// instead of the new profile swapping the paywall in underneath it.
+    @State private var finishingOnboarding = false
 
     var body: some View {
         routed
@@ -159,7 +162,7 @@ struct RootView: View {
     private var content: some View {
         if underAge {
             UnderAgeScreen().dxCanvas()
-        } else if let profile = profiles.first {
+        } else if let profile = profiles.first, !finishingOnboarding {
             #if DEBUG
             if let raw = UserDefaults.standard.string(forKey: "dx.openLesson"), let day = ProgramDayID(description: raw) {
                 LessonPlayer(day: day, profile: profile)
@@ -180,7 +183,7 @@ struct RootView: View {
             }
             #endif
         } else {
-            OnboardingFlow(onFinished: {})
+            OnboardingFlow(onSaving: { finishingOnboarding = true }, onFinished: { finishingOnboarding = false })
         }
     }
 }
