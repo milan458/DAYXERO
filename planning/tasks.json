@@ -2,11 +2,11 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-28T09:57:59.295Z"
+    "updated": "2026-10-28T10:03:44.511Z"
   },
   "now": {
-    "section": "S19",
-    "task": "S19.1",
+    "section": "S20",
+    "task": "S20.1",
     "waiting_on_milan": []
   },
   "sections": [
@@ -1972,66 +1972,66 @@
         {
           "id": "S19.1",
           "title": "Header: greeting, name, profile and the white trend button to Progress",
-          "status": "in_progress",
-          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).\n49d702c; verifying on CI.",
+          "status": "done",
+          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).\n49d702c; verifying on CI.\nVerified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.",
           "created": "2026-10-28T08:56:07.440Z",
-          "completed": null
+          "completed": "2026-10-28T10:03:44.150Z"
         },
         {
           "id": "S19.2",
           "title": "S1: flowing moss wave with cravings-today, next-craving and Log pills",
-          "status": "in_progress",
-          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).\n49d702c; verifying on CI.",
+          "status": "done",
+          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).\n49d702c; verifying on CI.\nVerified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.",
           "created": "2026-10-28T08:56:07.497Z",
-          "completed": null
+          "completed": "2026-10-28T10:03:44.193Z"
         },
         {
           "id": "S19.3",
           "title": "S2: lesson spotlight card (white; black in light theme)",
-          "status": "in_progress",
-          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).\n49d702c; verifying on CI.",
+          "status": "done",
+          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).\n49d702c; verifying on CI.\nVerified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.",
           "created": "2026-10-28T08:56:07.561Z",
-          "completed": null
+          "completed": "2026-10-28T10:03:44.224Z"
         },
         {
           "id": "S19.4",
           "title": "S3: streak and adherence card (Quit Day countdown folds in)",
-          "status": "in_progress",
-          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).\n49d702c; verifying on CI.",
+          "status": "done",
+          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).\n49d702c; verifying on CI.\nVerified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.",
           "created": "2026-10-28T08:56:07.617Z",
-          "completed": null
+          "completed": "2026-10-28T10:03:44.261Z"
         },
         {
           "id": "S19.5",
           "title": "S4: next health milestone with an animated illustration",
-          "status": "in_progress",
-          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).\n49d702c; verifying on CI.",
+          "status": "done",
+          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).\n49d702c; verifying on CI.\nVerified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.",
           "created": "2026-10-28T08:56:07.680Z",
-          "completed": null
+          "completed": "2026-10-28T10:03:44.292Z"
         },
         {
           "id": "S19.6",
           "title": "S5: NRT set-up invite on Home; set-up plans move to Program",
-          "status": "in_progress",
-          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).\n49d702c; verifying on CI.",
+          "status": "done",
+          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).\n49d702c; verifying on CI.\nVerified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.",
           "created": "2026-10-28T08:56:07.730Z",
-          "completed": null
+          "completed": "2026-10-28T10:03:44.331Z"
         },
         {
           "id": "S19.7",
           "title": "S6: log a use during prep, per product",
-          "status": "in_progress",
-          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).\n49d702c; verifying on CI.",
+          "status": "done",
+          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).\n49d702c; verifying on CI.\nVerified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.",
           "created": "2026-10-28T08:56:07.832Z",
-          "completed": null
+          "completed": "2026-10-28T10:03:44.366Z"
         },
         {
           "id": "S19.8",
           "title": "Tests, CI screenshots and TestFlight for the new Home",
-          "status": "pending",
-          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).",
+          "status": "done",
+          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).\niOS run 98 and device matrix run 53 green; TestFlight build 202610280955 (1.0.0), processed VALID 28 Oct 10:01 UTC.",
           "created": "2026-10-28T08:56:07.867Z",
-          "completed": null
+          "completed": "2026-10-28T10:03:44.398Z"
         }
       ]
     },
@@ -2048,24 +2048,24 @@
         {
           "id": "S20.1",
           "title": "Install SuperwallKit and configure it at launch with RevenueCat as the purchase controller",
-          "status": "pending",
-          "notes": "Asked by Milan 28 Oct (Superwall set-up steps).",
+          "status": "in_progress",
+          "notes": "Asked by Milan 28 Oct (Superwall set-up steps).\n3656053; iOS run 99 verifying the build with SuperwallKit.",
           "created": "2026-10-28T09:57:59.130Z",
           "completed": null
         },
         {
           "id": "S20.2",
           "title": "Placements: onboarding_complete, unlock_program_day, upgrade_from_settings, falling back to DayXero's paywall",
-          "status": "pending",
-          "notes": "Asked by Milan 28 Oct (Superwall set-up steps).",
+          "status": "in_progress",
+          "notes": "Asked by Milan 28 Oct (Superwall set-up steps).\n3656053.",
           "created": "2026-10-28T09:57:59.173Z",
           "completed": null
         },
         {
           "id": "S20.3",
           "title": "User attributes, deep links (paywall previews) and analytics forwarding",
-          "status": "pending",
-          "notes": "Asked by Milan 28 Oct (Superwall set-up steps).",
+          "status": "in_progress",
+          "notes": "Asked by Milan 28 Oct (Superwall set-up steps).\n3656053.",
           "created": "2026-10-28T09:57:59.217Z",
           "completed": null
         },
@@ -2081,6 +2081,66 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-28T10:03:44.511Z",
+      "type": "now",
+      "message": "Now: S20 / S20.1"
+    },
+    {
+      "time": "2026-10-28T10:03:44.481Z",
+      "type": "status",
+      "message": "S20.3 pending → in_progress (3656053.)"
+    },
+    {
+      "time": "2026-10-28T10:03:44.454Z",
+      "type": "status",
+      "message": "S20.2 pending → in_progress (3656053.)"
+    },
+    {
+      "time": "2026-10-28T10:03:44.428Z",
+      "type": "status",
+      "message": "S20.1 pending → in_progress (3656053; iOS run 99 verifying the build with SuperwallKit.)"
+    },
+    {
+      "time": "2026-10-28T10:03:44.398Z",
+      "type": "status",
+      "message": "S19.8 pending → done (iOS run 98 and device matrix run 53 green; TestFlight build 202610280955 (1.0.0), processed VALID 28 Oct 10:01 UTC.)"
+    },
+    {
+      "time": "2026-10-28T10:03:44.366Z",
+      "type": "status",
+      "message": "S19.7 in_progress → done (Verified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.)"
+    },
+    {
+      "time": "2026-10-28T10:03:44.331Z",
+      "type": "status",
+      "message": "S19.6 in_progress → done (Verified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.)"
+    },
+    {
+      "time": "2026-10-28T10:03:44.292Z",
+      "type": "status",
+      "message": "S19.5 in_progress → done (Verified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.)"
+    },
+    {
+      "time": "2026-10-28T10:03:44.261Z",
+      "type": "status",
+      "message": "S19.4 in_progress → done (Verified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.)"
+    },
+    {
+      "time": "2026-10-28T10:03:44.224Z",
+      "type": "status",
+      "message": "S19.3 in_progress → done (Verified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.)"
+    },
+    {
+      "time": "2026-10-28T10:03:44.193Z",
+      "type": "status",
+      "message": "S19.2 in_progress → done (Verified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.)"
+    },
+    {
+      "time": "2026-10-28T10:03:44.150Z",
+      "type": "status",
+      "message": "S19.1 in_progress → done (Verified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.)"
+    },
     {
       "time": "2026-10-28T09:57:59.295Z",
       "type": "status",
