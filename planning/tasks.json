@@ -2,11 +2,11 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-28T10:52:28.377Z"
+    "updated": "2026-10-28T13:34:04.523Z"
   },
   "now": {
-    "section": "S20",
-    "task": "S20.4",
+    "section": "S21",
+    "task": "S21.2",
     "waiting_on_milan": []
   },
   "sections": [
@@ -2078,9 +2078,192 @@
           "completed": null
         }
       ]
+    },
+    {
+      "id": "S21",
+      "title": "Water, dock and Your body",
+      "goal": "Blue water and the water-rise bug, drink illustrations, the SOS rainbow dock, one Progress button, and Your body rebuilt as the timeline path with the new illustration set used everywhere (Milan, 28 Oct; mockups at https://claude.ai/artifact/MtDjY5mqY7u96dbwf7yvK3).",
+      "signoff": {
+        "state": "signed_off",
+        "history": [
+          {
+            "time": "2026-10-28T13:34:04.107Z",
+            "state": "signed_off",
+            "by": "Claude",
+            "comment": ""
+          }
+        ]
+      },
+      "mockups": [
+        {
+          "title": "Water, dock and Your body mockups",
+          "path": "https://claude.ai/artifact/MtDjY5mqY7u96dbwf7yvK3"
+        }
+      ],
+      "tasks": [
+        {
+          "id": "S21.1",
+          "title": "Water turns blue (pill, glow, widget glyph); tea stays amber",
+          "status": "in_progress",
+          "notes": "Asked by Milan 28 Oct (screen recording).",
+          "created": "2026-10-28T13:33:59.724Z",
+          "completed": null
+        },
+        {
+          "id": "S21.2",
+          "title": "Fix the water not rising on tap, then jumping; UI test taps Log repeatedly with a screenshot after each tap",
+          "status": "in_progress",
+          "notes": "Asked by Milan 28 Oct: 'Sometimes when you click, you dont see the water rise, but suddenly it would rise to all the click you did till now.'",
+          "created": "2026-10-28T13:33:59.766Z",
+          "completed": null
+        },
+        {
+          "id": "S21.3",
+          "title": "Drink illustrations on the Water page (picker and Today's list)",
+          "status": "in_progress",
+          "notes": "Asked by Milan 28 Oct.",
+          "created": "2026-10-28T13:33:59.809Z",
+          "completed": null
+        },
+        {
+          "id": "S21.4",
+          "title": "Dock: SOS as the word with a shimmering rainbow on an unselected-style circle; bolder unselected icons; trend icon for Progress",
+          "status": "in_progress",
+          "notes": "Asked by Milan 28 Oct.",
+          "created": "2026-10-28T13:33:59.853Z",
+          "completed": null
+        },
+        {
+          "id": "S21.5",
+          "title": "Remove Home's top-right Progress button (same as the Progress tab)",
+          "status": "in_progress",
+          "notes": "Asked by Milan 28 Oct (screenshot).",
+          "created": "2026-10-28T13:33:59.891Z",
+          "completed": null
+        },
+        {
+          "id": "S21.6",
+          "title": "New illustration set (13 drawings) with reached / now / ahead states, used everywhere a health timeline shows",
+          "status": "in_progress",
+          "notes": "Asked by Milan 28 Oct: change the illustration everywhere in the app wherever the timelines show.",
+          "created": "2026-10-28T13:33:59.932Z",
+          "completed": null
+        },
+        {
+          "id": "S21.7",
+          "title": "Your body rebuilt as Body B, timeline path",
+          "status": "in_progress",
+          "notes": "Asked by Milan 28 Oct.",
+          "created": "2026-10-28T13:33:59.968Z",
+          "completed": null
+        },
+        {
+          "id": "S21.8",
+          "title": "CI green (iOS + device matrix), screenshots reviewed, TestFlight upload",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-28T13:34:00.008Z",
+          "completed": null
+        }
+      ]
     }
   ],
   "log": [
+    {
+      "time": "2026-10-28T13:34:04.523Z",
+      "type": "status",
+      "message": "S21.7 pending → in_progress"
+    },
+    {
+      "time": "2026-10-28T13:34:04.488Z",
+      "type": "status",
+      "message": "S21.6 pending → in_progress"
+    },
+    {
+      "time": "2026-10-28T13:34:04.452Z",
+      "type": "status",
+      "message": "S21.5 pending → in_progress"
+    },
+    {
+      "time": "2026-10-28T13:34:04.397Z",
+      "type": "status",
+      "message": "S21.4 pending → in_progress"
+    },
+    {
+      "time": "2026-10-28T13:34:04.280Z",
+      "type": "status",
+      "message": "S21.3 pending → in_progress"
+    },
+    {
+      "time": "2026-10-28T13:34:04.213Z",
+      "type": "status",
+      "message": "S21.2 pending → in_progress"
+    },
+    {
+      "time": "2026-10-28T13:34:04.180Z",
+      "type": "status",
+      "message": "S21.1 pending → in_progress"
+    },
+    {
+      "time": "2026-10-28T13:34:04.143Z",
+      "type": "now",
+      "message": "Now: S21 / S21.2"
+    },
+    {
+      "time": "2026-10-28T13:34:04.107Z",
+      "type": "signoff",
+      "message": "S21 mockups → signed_off"
+    },
+    {
+      "time": "2026-10-28T13:34:00.041Z",
+      "type": "mockup",
+      "message": "S21 mockup posted: Water, dock and Your body mockups"
+    },
+    {
+      "time": "2026-10-28T13:34:00.008Z",
+      "type": "task_added",
+      "message": "S21.8 added: CI green (iOS + device matrix), screenshots reviewed, TestFlight upload"
+    },
+    {
+      "time": "2026-10-28T13:33:59.968Z",
+      "type": "task_added",
+      "message": "S21.7 added: Your body rebuilt as Body B, timeline path"
+    },
+    {
+      "time": "2026-10-28T13:33:59.932Z",
+      "type": "task_added",
+      "message": "S21.6 added: New illustration set (13 drawings) with reached / now / ahead states, used everywhere a health timeline shows"
+    },
+    {
+      "time": "2026-10-28T13:33:59.891Z",
+      "type": "task_added",
+      "message": "S21.5 added: Remove Home's top-right Progress button (same as the Progress tab)"
+    },
+    {
+      "time": "2026-10-28T13:33:59.853Z",
+      "type": "task_added",
+      "message": "S21.4 added: Dock: SOS as the word with a shimmering rainbow on an unselected-style circle; bolder unselected icons; trend icon for Progress"
+    },
+    {
+      "time": "2026-10-28T13:33:59.809Z",
+      "type": "task_added",
+      "message": "S21.3 added: Drink illustrations on the Water page (picker and Today's list)"
+    },
+    {
+      "time": "2026-10-28T13:33:59.766Z",
+      "type": "task_added",
+      "message": "S21.2 added: Fix the water not rising on tap, then jumping; UI test taps Log repeatedly with a screenshot after each tap"
+    },
+    {
+      "time": "2026-10-28T13:33:59.724Z",
+      "type": "task_added",
+      "message": "S21.1 added: Water turns blue (pill, glow, widget glyph); tea stays amber"
+    },
+    {
+      "time": "2026-10-28T13:33:59.693Z",
+      "type": "section_added",
+      "message": "S21 added: Water, dock and Your body"
+    },
     {
       "time": "2026-10-28T10:52:28.377Z",
       "type": "now",
