@@ -666,9 +666,11 @@ struct PersonalScreen: View {
                     }
                 }
             }
+            // Read here: PhotosPicker's label closure isn't on the main actor.
+            let photo = model.why.photo
             PhotosPicker(selection: $photoItem, matching: .images) {
                 HStack(spacing: DX.Space.s) {
-                    if let data = model.why.photo, let image = UIImage(data: data) {
+                    if let data = photo, let image = UIImage(data: data) {
                         Image(uiImage: image).resizable().scaledToFill()
                             .frame(width: 40, height: 40).clipShape(Circle())
                     } else {
@@ -676,7 +678,7 @@ struct PersonalScreen: View {
                             .frame(width: 40, height: 40).background(DX.Palette.accentSoft, in: Circle())
                     }
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(model.why.photo == nil ? "Add a photo of who you're doing this for" as LocalizedStringKey : "Photo added. Tap to change it")
+                        Text(photo == nil ? "Add a photo of who you're doing this for" as LocalizedStringKey : "Photo added. Tap to change it")
                             .font(.custom(DX.Typeface.semibold, size: 14, relativeTo: .subheadline)).foregroundStyle(DX.Palette.text)
                         Text("Optional · stays on this phone").font(.custom(DX.Typeface.regular, size: 12, relativeTo: .caption))
                             .foregroundStyle(DX.Palette.text2)
