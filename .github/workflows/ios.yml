@@ -7,6 +7,10 @@ on:
   pull_request:
   workflow_dispatch:
     inputs:
+      screenshots:
+        description: "Also take the review screenshots (iPhone and iPhone Duo); off for everyday builds"
+        type: boolean
+        default: false
       store_screens:
         description: "Also make the App Store screenshots (iPhone and iPhone Duo)"
         type: boolean
@@ -17,7 +21,7 @@ permissions:
 
 concurrency:
   group: ios-${{ github.ref }}
-  # Queue behind a running build instead of cancelling it, so every build finishes its screenshots.
+  # Queue behind a running build instead of cancelling it, so a build asked for screenshots finishes them.
   cancel-in-progress: false
 
 jobs:
@@ -74,8 +78,9 @@ jobs:
 
       # Screenshots of the running app (dark, light, largest text), pushed to the
       # ci-screens branch so they can be reviewed without downloading artifacts.
+      # Screenshots only on request (Milan, 28 Oct): everyday builds just build and test.
       - name: Screenshots
-        if: github.event_name != 'pull_request'
+        if: github.event_name == 'workflow_dispatch' && inputs.screenshots
         run: |
           UDID=${{ steps.sim.outputs.udid }}
           APP=$(find DerivedData/Build/Products -name "DayXero.app" -path "*iphonesimulator*" | head -1)
@@ -326,7 +331,7 @@ jobs:
   # Apple has no command to fold the simulator, so this uses hinge (MIT, pinned). It runs apart from build-test so a
   # change in that tooling can't block builds; a fold that doesn't happen fails this job rather than passing quietly.
   duo:
-    if: github.event_name != 'pull_request'
+    if: github.event_name == 'workflow_dispatch' && inputs.screenshots
     runs-on: xcode-27
     timeout-minutes: 60
     env:
