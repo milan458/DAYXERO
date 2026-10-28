@@ -67,6 +67,9 @@ struct RootView: View {
     /// Onboarding saves the profile before its last screen (reminders). This keeps that screen up until it's done,
     /// instead of the new profile swapping the paywall in underneath it.
     @State private var finishingOnboarding = false
+    /// Set when a purchase or restore starts on the first-run paywall, so a successful one shows its confirmation
+    /// (when the trial ends, Start prep day 1) instead of Home replacing the paywall the moment the person is Pro.
+    @State private var buyingOnPaywall = false
 
     var body: some View {
         routed
@@ -166,20 +169,20 @@ struct RootView: View {
             #if DEBUG
             if let raw = UserDefaults.standard.string(forKey: "dx.openLesson"), let day = ProgramDayID(description: raw) {
                 LessonPlayer(day: day, profile: profile)
-            } else if paywallDone || entitlement.isPro {
+            } else if paywallDone || (entitlement.isPro && !buyingOnPaywall) {
                 HomeView(profile: profile)
             } else {
                 PaywallView(name: profile.name, quitDay: profile.quitDay,
                             model: PaywallModel(store: entitlement.store, entitlement: entitlement),
-                            onClose: { paywallDone = true })
+                            onClose: { paywallDone = true }, onPurchaseStarted: { buyingOnPaywall = true })
             }
             #else
-            if paywallDone || entitlement.isPro {
+            if paywallDone || (entitlement.isPro && !buyingOnPaywall) {
                 HomeView(profile: profile)
             } else {
                 PaywallView(name: profile.name, quitDay: profile.quitDay,
                             model: PaywallModel(store: entitlement.store, entitlement: entitlement),
-                            onClose: { paywallDone = true })
+                            onClose: { paywallDone = true }, onPurchaseStarted: { buyingOnPaywall = true })
             }
             #endif
         } else {

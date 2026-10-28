@@ -14,6 +14,8 @@ struct PaywallView: View {
     let quitDay: Date
     @State var model: PaywallModel
     let onClose: () -> Void
+    /// Called as a purchase or restore starts, before the person can turn Pro.
+    var onPurchaseStarted: () -> Void = {}
 
     @State private var showBilling = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -109,7 +111,10 @@ struct PaywallView: View {
             .buttonStyle(.plain)
             .accessibilityLabel(Text("Close and continue with the free version"))
             Spacer()
-            Button("Restore purchases") { Task { await model.restore() } }
+            Button("Restore purchases") {
+                onPurchaseStarted()
+                Task { await model.restore() }
+            }
                 .font(.custom(DX.Typeface.medium, size: 13, relativeTo: .footnote))
                 .foregroundStyle(DX.Palette.text2)
                 .buttonStyle(.plain)
@@ -152,6 +157,7 @@ struct PaywallView: View {
                     .frame(maxWidth: .infinity)
             }
             Button {
+                onPurchaseStarted()
                 Task { await model.purchase() }
             } label: {
                 if model.phase == .purchasing {
