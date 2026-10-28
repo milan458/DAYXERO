@@ -24,7 +24,7 @@ struct WaterPillView: View {
         ZStack {
             if size == .full {
                 // Blue glow, brighter once the goal is reached.
-                EllipticalGradient(colors: [Color(hex: 0x5FA4EA, opacity: 0.26), Color(hex: 0x5FA4EA, opacity: 0)])
+                EllipticalGradient(colors: [Color(hex: 0x54A4FF, opacity: 0.24), Color(hex: 0x54A4FF, opacity: 0)])
                     .frame(width: 280, height: 380)
                     .opacity(reached ? 1 : 0.35)
                     .animation(.easeInOut(duration: 0.6), value: reached)
@@ -92,19 +92,19 @@ struct WaterPillView: View {
         let topColour = Color(hex: colours.top)
 
         if level > 0 {
-            // Back wave: 8 pt above the surface, 45%, scrolling right 260 pt every 4.5 s.
+            // Back wave: a 14 pt band 8 pt above the surface, 45%, scrolling right 260 pt every 4.5 s.
             let backShift = still ? -65 * s : (-260 + 260 * phase(t, 4.5)) * s
-            context.fill(wave(baseline: top - 8 * s, amplitude: 6 * s, shift: backShift, width: w, bottom: h, scale: s),
+            context.fill(wave(baseline: top - 8 * s, amplitude: 6 * s, shift: backShift, width: w, bottom: top + 6 * s, scale: s),
                          with: .color(topColour.opacity(0.45)))
             // The liquid, its gradient spanning just the liquid's height.
             let liquid = Path(CGRect(x: 0, y: top, width: w, height: h - top))
             context.fill(liquid, with: .linearGradient(Gradient(colors: [topColour, Color(hex: colours.bottom)]),
                                                        startPoint: CGPoint(x: 0, y: top), endPoint: CGPoint(x: 0, y: h)))
-            // Front wave: baseline on the surface, scrolling left 260 pt every 3 s, in the liquid's gradient so the blue shows.
+            // Front wave: a 14 pt band on the surface, scrolling left 260 pt every 3 s. Bands, as in the reference's
+            // 28 pt wave SVGs, so the liquid's gradient shows below them.
             let frontShift = still ? 0 : -260 * phase(t, 3) * s
-            context.fill(wave(baseline: top, amplitude: 7 * s, shift: frontShift, width: w, bottom: h, scale: s),
-                         with: .linearGradient(Gradient(colors: [topColour, Color(hex: colours.bottom)]),
-                                               startPoint: CGPoint(x: 0, y: top - 7 * s), endPoint: CGPoint(x: 0, y: h)))
+            context.fill(wave(baseline: top, amplitude: 7 * s, shift: frontShift, width: w, bottom: top + 14 * s, scale: s),
+                         with: .color(topColour))
 
             // Bubbles rise through the liquid and never show above its surface.
             if size == .full, !still {
@@ -228,7 +228,7 @@ struct WaterPillGlyph: View {
         let height = width * 1.7
         ZStack(alignment: .bottom) {
             Capsule().fill(Color(hex: 0x0C0F08))
-            Rectangle().fill(Color(hex: 0x5FA4EA)).frame(height: height * min(max(level, 0), 1))
+            Rectangle().fill(Color(hex: 0x3D8BF2)).frame(height: height * min(max(level, 0), 1))
         }
         .frame(width: width, height: height)
         .clipShape(Capsule())
