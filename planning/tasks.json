@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-28T18:48:06.749Z"
+    "updated": "2026-10-28T20:15:08.631Z"
   },
   "now": {
     "section": "S22",
@@ -2270,9 +2270,57 @@
           "completed": null
         }
       ]
+    },
+    {
+      "id": "S23",
+      "title": "TestFlight via Xcode Cloud",
+      "goal": "Uploads move to Xcode Cloud so they don't depend on GitHub Actions billing (Milan, 28 Oct). GitHub keeps the device-matrix tests.",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S23.1",
+          "title": "ci_scripts/ci_post_clone.sh: XcodeGen, package resolution, PostHog secret; docs/XCODE_CLOUD.md",
+          "status": "done",
+          "notes": "",
+          "created": "2026-10-28T20:15:08.548Z",
+          "completed": "2026-10-28T20:15:08.631Z"
+        },
+        {
+          "id": "S23.2",
+          "title": "Milan: create the TestFlight workflow in Xcode, add POSTHOG_API_KEY, set the next build number to 202610300000, start the first build",
+          "status": "blocked",
+          "notes": "",
+          "created": "2026-10-28T20:15:08.594Z",
+          "completed": null
+        }
+      ]
     }
   ],
   "log": [
+    {
+      "time": "2026-10-28T20:15:08.631Z",
+      "type": "status",
+      "message": "S23.1 pending → done"
+    },
+    {
+      "time": "2026-10-28T20:15:08.594Z",
+      "type": "task_added",
+      "message": "S23.2 added: Milan: create the TestFlight workflow in Xcode, add POSTHOG_API_KEY, set the next build number to 202610300000, start the first build"
+    },
+    {
+      "time": "2026-10-28T20:15:08.548Z",
+      "type": "task_added",
+      "message": "S23.1 added: ci_scripts/ci_post_clone.sh: XcodeGen, package resolution, PostHog secret; docs/XCODE_CLOUD.md"
+    },
+    {
+      "time": "2026-10-28T20:15:08.497Z",
+      "type": "section_added",
+      "message": "S23 added: TestFlight via Xcode Cloud"
+    },
     {
       "time": "2026-10-28T18:48:06.749Z",
       "type": "task_added",
