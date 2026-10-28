@@ -100,10 +100,11 @@ struct WaterPillView: View {
             let liquid = Path(CGRect(x: 0, y: top, width: w, height: h - top))
             context.fill(liquid, with: .linearGradient(Gradient(colors: [topColour, Color(hex: colours.bottom)]),
                                                        startPoint: CGPoint(x: 0, y: top), endPoint: CGPoint(x: 0, y: h)))
-            // Front wave: baseline on the surface, scrolling left 260 pt every 3 s.
+            // Front wave: baseline on the surface, scrolling left 260 pt every 3 s, in the liquid's gradient so the blue shows.
             let frontShift = still ? 0 : -260 * phase(t, 3) * s
             context.fill(wave(baseline: top, amplitude: 7 * s, shift: frontShift, width: w, bottom: h, scale: s),
-                         with: .color(topColour))
+                         with: .linearGradient(Gradient(colors: [topColour, Color(hex: colours.bottom)]),
+                                               startPoint: CGPoint(x: 0, y: top - 7 * s), endPoint: CGPoint(x: 0, y: h)))
 
             // Bubbles rise through the liquid and never show above its surface.
             if size == .full, !still {

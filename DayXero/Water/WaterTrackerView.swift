@@ -19,6 +19,8 @@ struct WaterTrackerView: View {
     @State private var customDrink: Drink?
     @State private var customAmount = ""
     @State private var editingGoal = UserDefaults.standard.bool(forKey: "dx.waterGoalSheet")
+    /// The screen's full height, so the pill can shrink on shorter phones and keep Log clear of the dock.
+    @State private var screenHeight: CGFloat = 0
 
     var body: some View {
         let water = waterProfile
@@ -51,6 +53,8 @@ struct WaterTrackerView: View {
                     .padding(.horizontal, 16)
                     .disabled(water == nil)
                 WaterPillView(level: Double(total) / Double(goal), drink: last, reached: reached)
+                    .scaleEffect(pillScale)
+                    .frame(width: 200 * pillScale, height: 340 * pillScale)
                     .padding(.top, 18)
                     .accessibilityElement(children: .ignore)
                     .accessibilityLabel(Text("Water today"))
@@ -79,6 +83,9 @@ struct WaterTrackerView: View {
             .padding(.bottom, DX.Space.l)
         }
         .scrollBounceBehavior(.basedOnSize)
+        .onGeometryChange(for: CGFloat.self) { $0.size.height + $0.safeAreaInsets.top + $0.safeAreaInsets.bottom } action: {
+            screenHeight = $0
+        }
         .background(Color.black.ignoresSafeArea())
         .environment(\.colorScheme, .dark)
         .sensoryFeedback(.impact(weight: .medium), trigger: logged)
@@ -104,6 +111,13 @@ struct WaterTrackerView: View {
         } message: {
             Text("How much \(Text(customDrink?.name ?? Drink.glass.name).foregroundStyle(.primary))?")
         }
+    }
+
+    /// Full size from 940 pt tall, down to 0.7 on the shortest phones. Everything but the pill, down to Log and the dock,
+    /// takes about 600 pt, so on a 6.1" phone (844 pt) the pill gives up the room Log needs to sit above the dock.
+    private var pillScale: CGFloat {
+        guard screenHeight > 0 else { return 1 }
+        return min(max((screenHeight - 600) / 340, 0.7), 1)
     }
 
     // MARK: Parts

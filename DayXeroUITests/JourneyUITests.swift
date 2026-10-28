@@ -125,6 +125,11 @@ final class JourneyUITests: XCTestCase {
         let log = app.buttons.matching(NSPredicate(format: "label CONTAINS[c] 'Log 250 ml' OR label CONTAINS[c] 'Log 8 fl oz'")).firstMatch
         XCTAssert(log.waitForExistence(timeout: 5), "No Log button")
         RunLoop.current.run(until: .now.addingTimeInterval(1))
+        // Very large text can still push Log under the dock; scroll it clear so a tap can't land on a tab.
+        if log.frame.maxY > app.buttons["Craving SOS"].frame.minY - 4 {
+            app.scrollViews.firstMatch.swipeUp()
+            RunLoop.current.run(until: .now.addingTimeInterval(1))
+        }
         snap(app, "40-water-start")
         var glasses = glassCount(pill)
         var height = liquidHeight(app, pill)

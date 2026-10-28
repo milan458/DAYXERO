@@ -83,9 +83,9 @@ public enum Drink: String, CaseIterable, Sendable, Identifiable {
     /// The liquid's gradient, top and bottom, while this was the latest drink (A5); water is blue (S21.1).
     public var gradient: (top: UInt32, bottom: UInt32) {
         switch self {
-        case .glass, .bottle: (0xEAF5FF, 0x5FA4EA)
+        case .glass, .bottle: (0xBFE0FB, 0x3F8FE0)
         case .tea: (0xEBCB92, 0xA8763A)
-        case .sparkling: (0xF3F9FF, 0xA9D2F7)
+        case .sparkling: (0xDDEEFF, 0x7FB8F0)
         }
     }
 }
