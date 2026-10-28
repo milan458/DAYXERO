@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-28T15:36:38.078Z"
+    "updated": "2026-10-28T15:50:56.530Z"
   },
   "now": {
     "section": "S21",
@@ -2073,7 +2073,7 @@
           "id": "S20.4",
           "title": "Dashboard: products on the pro entitlement, RevenueCat as revenue provider, campaigns, URL scheme",
           "status": "blocked",
-          "notes": "Asked by Milan 28 Oct (Superwall set-up steps).\nNeeds Milan in the Superwall dashboard (or the superwall CLI with superwall.com allowed): see docs/SUPERWALL.md.",
+          "notes": "Asked by Milan 28 Oct (Superwall set-up steps).\nNeeds Milan in the Superwall dashboard (or the superwall CLI with superwall.com allowed): see docs/SUPERWALL.md.\nStill waiting on the Superwall dashboard set-up (Milan).",
           "created": "2026-10-28T09:57:59.259Z",
           "completed": null
         }
@@ -2160,15 +2160,25 @@
         {
           "id": "S21.8",
           "title": "CI green (iOS + device matrix), screenshots reviewed, TestFlight upload",
-          "status": "in_progress",
-          "notes": "iOS run on cd7ceed started.\nCI screenshots are now opt-in (screenshots input, fcbb2d8), per Milan. Device matrix green on f3f84d7; TestFlight run 40717624494 started.",
+          "status": "done",
+          "notes": "iOS run on cd7ceed started.\nCI screenshots are now opt-in (screenshots input, fcbb2d8), per Milan. Device matrix green on f3f84d7; TestFlight run 40717624494 started.\nShipped in TestFlight build 202610281536 (version 1.0.0, f3f84d7), processed VALID by App Store Connect.",
           "created": "2026-10-28T13:34:00.008Z",
-          "completed": null
+          "completed": "2026-10-28T15:50:56.491Z"
         }
       ]
     }
   ],
   "log": [
+    {
+      "time": "2026-10-28T15:50:56.530Z",
+      "type": "note",
+      "message": "S20.4: Still waiting on the Superwall dashboard set-up (Milan)."
+    },
+    {
+      "time": "2026-10-28T15:50:56.491Z",
+      "type": "status",
+      "message": "S21.8 in_progress → done (Shipped in TestFlight build 202610281536 (version 1.0.0, f3f84d7), processed VALID by App Store Connect.)"
+    },
     {
       "time": "2026-10-28T15:36:38.078Z",
       "type": "note",
