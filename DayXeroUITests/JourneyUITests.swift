@@ -50,6 +50,9 @@ final class JourneyUITests: XCTestCase {
         XCTAssertEqual(XCTWaiter().wait(for: [loaded], timeout: 10), .completed, "The paywall's plans never loaded")
         snap(app, "06-paywall")
         tapWhenStill(app, cta, name: "paywall.cta")
+        // Starting the trial asks for notifications, for the reminder the day before it ends (S3.9).
+        let allow = XCUIApplication(bundleIdentifier: "com.apple.springboard").alerts.buttons["Allow"]
+        if allow.waitForExistence(timeout: 5) { allow.tap() }
         tapSettled(app, "Start prep day 1")
 
         // Prep Home (S4): log a use, ride out a craving, visit each tab.
