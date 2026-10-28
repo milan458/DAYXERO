@@ -2,11 +2,11 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-28T13:34:04.523Z"
+    "updated": "2026-10-28T13:45:34.328Z"
   },
   "now": {
     "section": "S21",
-    "task": "S21.2",
+    "task": "S21.8",
     "waiting_on_milan": []
   },
   "sections": [
@@ -2105,7 +2105,7 @@
           "id": "S21.1",
           "title": "Water turns blue (pill, glow, widget glyph); tea stays amber",
           "status": "in_progress",
-          "notes": "Asked by Milan 28 Oct (screen recording).",
+          "notes": "Asked by Milan 28 Oct (screen recording).\ncd7ceed; verifying on CI.",
           "created": "2026-10-28T13:33:59.724Z",
           "completed": null
         },
@@ -2113,7 +2113,7 @@
           "id": "S21.2",
           "title": "Fix the water not rising on tap, then jumping; UI test taps Log repeatedly with a screenshot after each tap",
           "status": "in_progress",
-          "notes": "Asked by Milan 28 Oct: 'Sometimes when you click, you dont see the water rise, but suddenly it would rise to all the click you did till now.'",
+          "notes": "Asked by Milan 28 Oct: 'Sometimes when you click, you dont see the water rise, but suddenly it would rise to all the click you did till now.'\ncd7ceed; verifying on CI.\ncb93dea: UI test pushed alone first; device matrix run 55 tells whether CI reproduces the stall on the old code. Fix in cd7ceed: SwiftUI animates the level (Animatable), the timeline only drives waves.",
           "created": "2026-10-28T13:33:59.766Z",
           "completed": null
         },
@@ -2121,7 +2121,7 @@
           "id": "S21.3",
           "title": "Drink illustrations on the Water page (picker and Today's list)",
           "status": "in_progress",
-          "notes": "Asked by Milan 28 Oct.",
+          "notes": "Asked by Milan 28 Oct.\ncd7ceed; verifying on CI.",
           "created": "2026-10-28T13:33:59.809Z",
           "completed": null
         },
@@ -2129,7 +2129,7 @@
           "id": "S21.4",
           "title": "Dock: SOS as the word with a shimmering rainbow on an unselected-style circle; bolder unselected icons; trend icon for Progress",
           "status": "in_progress",
-          "notes": "Asked by Milan 28 Oct.",
+          "notes": "Asked by Milan 28 Oct.\ncd7ceed; verifying on CI.",
           "created": "2026-10-28T13:33:59.853Z",
           "completed": null
         },
@@ -2137,7 +2137,7 @@
           "id": "S21.5",
           "title": "Remove Home's top-right Progress button (same as the Progress tab)",
           "status": "in_progress",
-          "notes": "Asked by Milan 28 Oct (screenshot).",
+          "notes": "Asked by Milan 28 Oct (screenshot).\ncd7ceed; verifying on CI.",
           "created": "2026-10-28T13:33:59.891Z",
           "completed": null
         },
@@ -2145,7 +2145,7 @@
           "id": "S21.6",
           "title": "New illustration set (13 drawings) with reached / now / ahead states, used everywhere a health timeline shows",
           "status": "in_progress",
-          "notes": "Asked by Milan 28 Oct: change the illustration everywhere in the app wherever the timelines show.",
+          "notes": "Asked by Milan 28 Oct: change the illustration everywhere in the app wherever the timelines show.\ncd7ceed; verifying on CI.",
           "created": "2026-10-28T13:33:59.932Z",
           "completed": null
         },
@@ -2153,15 +2153,15 @@
           "id": "S21.7",
           "title": "Your body rebuilt as Body B, timeline path",
           "status": "in_progress",
-          "notes": "Asked by Milan 28 Oct.",
+          "notes": "Asked by Milan 28 Oct.\ncd7ceed; verifying on CI.",
           "created": "2026-10-28T13:33:59.968Z",
           "completed": null
         },
         {
           "id": "S21.8",
           "title": "CI green (iOS + device matrix), screenshots reviewed, TestFlight upload",
-          "status": "pending",
-          "notes": "",
+          "status": "in_progress",
+          "notes": "iOS run on cd7ceed started.",
           "created": "2026-10-28T13:34:00.008Z",
           "completed": null
         }
@@ -2169,6 +2169,56 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-28T13:45:34.328Z",
+      "type": "now",
+      "message": "Now: S21 / S21.8"
+    },
+    {
+      "time": "2026-10-28T13:45:34.296Z",
+      "type": "status",
+      "message": "S21.8 pending → in_progress (iOS run on cd7ceed started.)"
+    },
+    {
+      "time": "2026-10-28T13:45:34.259Z",
+      "type": "note",
+      "message": "S21.2: cb93dea: UI test pushed alone first; device matrix run 55 tells whether CI reproduces the stall on the old code. Fix in cd7ceed: SwiftUI animates the level (Animatable), the timeline only drives waves."
+    },
+    {
+      "time": "2026-10-28T13:45:34.221Z",
+      "type": "status",
+      "message": "S21.7 in_progress → in_progress (cd7ceed; verifying on CI.)"
+    },
+    {
+      "time": "2026-10-28T13:45:34.192Z",
+      "type": "status",
+      "message": "S21.6 in_progress → in_progress (cd7ceed; verifying on CI.)"
+    },
+    {
+      "time": "2026-10-28T13:45:34.156Z",
+      "type": "status",
+      "message": "S21.5 in_progress → in_progress (cd7ceed; verifying on CI.)"
+    },
+    {
+      "time": "2026-10-28T13:45:34.118Z",
+      "type": "status",
+      "message": "S21.4 in_progress → in_progress (cd7ceed; verifying on CI.)"
+    },
+    {
+      "time": "2026-10-28T13:45:34.090Z",
+      "type": "status",
+      "message": "S21.3 in_progress → in_progress (cd7ceed; verifying on CI.)"
+    },
+    {
+      "time": "2026-10-28T13:45:34.060Z",
+      "type": "status",
+      "message": "S21.2 in_progress → in_progress (cd7ceed; verifying on CI.)"
+    },
+    {
+      "time": "2026-10-28T13:45:34.021Z",
+      "type": "status",
+      "message": "S21.1 in_progress → in_progress (cd7ceed; verifying on CI.)"
+    },
     {
       "time": "2026-10-28T13:34:04.523Z",
       "type": "status",
