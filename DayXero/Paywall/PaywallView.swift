@@ -93,7 +93,7 @@ struct PaywallView: View {
             header.padding(.horizontal, DX.Space.m).padding(.top, DX.Space.xs).dxReadableColumn()
             ScrollView {
                 VStack(alignment: .leading, spacing: DX.Space.xs) {
-                    Text(context == nil ? "\(name), your plan is ready" : "\(name), your prep and craving plan is ready")
+                    Text(context == nil ? "\(name), your plan is ready" as LocalizedStringKey : "\(name), your prep and craving plan is ready")
                         .dxText(.title).accessibilityAddTraits(.isHeader)
                     Group {
                         if let focus = context?.focus {
@@ -213,8 +213,11 @@ struct PaywallView: View {
     private var anchor: (spend: String, cost: String)? {
         guard let context, context.moneyPerDay > 0,
               let annual = model.plans.first(where: { $0.plan == .annual }), annual.currencyCode == context.currencyCode else { return nil }
-        let style = Decimal.FormatStyle.Currency(code: annual.currencyCode).precision(.fractionLength(0))
-        return (context.moneyPerDay.formatted(style), (annual.price / 365).formatted(style))
+        // Whole units for big numbers, cents where the daily cost is small (about $0.11 a day).
+        func text(_ value: Decimal) -> String {
+            value.formatted(.currency(code: annual.currencyCode).precision(.fractionLength(value >= 10 ? 0...0 : 0...2)))
+        }
+        return (text(context.moneyPerDay), text(annual.price / 365))
     }
 
     private func anchorLine(_ anchor: (spend: String, cost: String)) -> some View {

@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-28T18:00:05.797Z"
+    "updated": "2026-10-28T18:02:29.440Z"
   },
   "now": {
     "section": "S22",
@@ -2241,7 +2241,7 @@
           "id": "S22.7",
           "title": "Tests and CI: model and journey tests, screenshot steps; CI green",
           "status": "pending",
-          "notes": "",
+          "notes": "Pushed 9e798e3 + fixes. CI couldn't start: GitHub says 'recent account payments have failed or your spending limit needs to be increased' (Billing & plans). Re-run ios.yml (screenshots: true) and devices.yml once billing is fixed.",
           "created": "2026-10-28T18:00:05.760Z",
           "completed": null
         }
@@ -2249,6 +2249,11 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-28T18:02:29.440Z",
+      "type": "note",
+      "message": "S22.7: Pushed 9e798e3 + fixes. CI couldn't start: GitHub says 'recent account payments have failed or your spending limit needs to be increased' (Billing & plans). Re-run ios.yml (screenshots: true) and devices.yml once billing is fixed."
+    },
     {
       "time": "2026-10-28T18:00:05.797Z",
       "type": "now",
