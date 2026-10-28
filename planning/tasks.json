@@ -2,11 +2,11 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-27T20:32:08.658Z"
+    "updated": "2026-10-28T04:15:43.060Z"
   },
   "now": {
     "section": "S18",
-    "task": "S18.16",
+    "task": "S18.19",
     "waiting_on_milan": []
   },
   "sections": [
@@ -1792,26 +1792,26 @@
         {
           "id": "S18.1",
           "title": "Weight ruler ignores vertical drags (bug 1: 72 kg read as 66 kg)",
-          "status": "in_progress",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. The ruler's drag started on a vertical scroll and nudged the weight. Now only horizontal drags move it.\n0a6bf06: ruler waits 8 pt and ignores drags that start vertical. Verifying on CI.",
+          "status": "done",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. The ruler's drag started on a vertical scroll and nudged the weight. Now only horizontal drags move it.\n0a6bf06: ruler waits 8 pt and ignores drags that start vertical. Verifying on CI.\nVerified in CI (water-goal-sheet shots show 72 kg on the ruler). The drag itself needs a finger: check it in the next TestFlight build.",
           "created": "2026-10-27T19:25:39.028Z",
-          "completed": null
+          "completed": "2026-10-28T04:15:42.697Z"
         },
         {
           "id": "S18.2",
           "title": "Plan reveal week list never skips prep days (bug 2)",
-          "status": "in_progress",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. With 7+ prep days the list jumped from Prep day 6 to Quit Day. Now: days 1–5, '+N more prep days', then Quit Day with its date.\ndc1de06: PlanTimeline (Core, tested): days 1–5, '+N more prep days', Quit Day with its date. Verifying on CI.",
+          "status": "done",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. With 7+ prep days the list jumped from Prep day 6 to Quit Day. Now: days 1–5, '+N more prep days', then Quit Day with its date.\ndc1de06: PlanTimeline (Core, tested): days 1–5, '+N more prep days', Quit Day with its date. Verifying on CI.\nVerified: PlanTimelineTests green (iOS run 93); onb-reveal shot lists prep days 1-5, '+2 more prep days', then Quit Day with its date.",
           "created": "2026-10-27T19:25:39.078Z",
-          "completed": null
+          "completed": "2026-10-28T04:15:42.726Z"
         },
         {
           "id": "S18.3",
           "title": "Name the per-cigarette price in the sum line (bug 3)",
-          "status": "in_progress",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Pack buyers see 'That's ₹1.25 a cigarette, about ₹4,563 a year', so a single-stick price typed as a pack price is obvious. USD on the paywall comes from the App Store storefront, not the code.\na3f54e1: 'That's ₹1.25 a cigarette, about ₹4,563 a year' in onboarding and Settings. USD on the paywall is the App Store storefront, not code. Verifying on CI.",
+          "status": "done",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Pack buyers see 'That's ₹1.25 a cigarette, about ₹4,563 a year', so a single-stick price typed as a pack price is obvious. USD on the paywall comes from the App Store storefront, not the code.\na3f54e1: 'That's ₹1.25 a cigarette, about ₹4,563 a year' in onboarding and Settings. USD on the paywall is the App Store storefront, not code. Verifying on CI.\nVerified: onb-baseline_cigarettes shot reads 'That's $0.75 a cigarette, about $1,642 a year.'",
           "created": "2026-10-27T19:25:39.118Z",
-          "completed": null
+          "completed": "2026-10-28T04:15:42.754Z"
         },
         {
           "id": "S18.4",
@@ -1824,34 +1824,34 @@
         {
           "id": "S18.5",
           "title": "Water goal out of onboarding, into the Water tab (no height)",
-          "status": "in_progress",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Everyone starts on 2.0 L. 'Personalise goal' in the Water tab: weight, activity, climate, Adjust. Height is no longer collected.\n0273b11: onboarding water screens removed; 'Personalise goal' sheet in the Water tab (WaterGoalDraft, tested). Verifying on CI.",
+          "status": "done",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Everyone starts on 2.0 L. 'Personalise goal' in the Water tab: weight, activity, climate, Adjust. Height is no longer collected.\n0273b11: onboarding water screens removed; 'Personalise goal' sheet in the Water tab (WaterGoalDraft, tested). Verifying on CI.\nVerified: onboarding goes NRT → building → reveal (journey test); water-goal-sheet shots (dark, light, ax5); WaterGoalDraft tests green.",
           "created": "2026-10-27T19:25:39.192Z",
-          "completed": null
+          "completed": "2026-10-28T04:15:42.787Z"
         },
         {
           "id": "S18.6",
           "title": "Your why after the 3 minutes in Craving SOS",
-          "status": "in_progress",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Photo and reason on the 'Three minutes done' screen, above the outcomes. The session itself stays as signed off.\n6b2cc8a: reason and photo on 'Three minutes done', mini orb, next reason on tap. Verifying on CI.",
+          "status": "done",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Photo and reason on the 'Three minutes done' screen, above the outcomes. The session itself stays as signed off.\n6b2cc8a: reason and photo on 'Three minutes done', mini orb, next reason on tap. Verifying on CI.\nVerified: sos-timeup shot shows the photo reason card under the caption. Orb readout fix in S18.20.",
           "created": "2026-10-27T19:25:39.225Z",
-          "completed": null
+          "completed": "2026-10-28T04:15:42.815Z"
         },
         {
           "id": "S18.7",
           "title": "Early patterns on Progress from Day 1",
-          "status": "in_progress",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Replaces 'Insights need a week of logs' with real time-of-day bars from the first log and the triggers from setup. Full insights still open at 7 days and 5 logs.\n0a47c9f: time-of-day bars from the first log, setup triggers and times, 'Full patterns in N days'. Verifying on CI.",
+          "status": "done",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Replaces 'Insights need a week of logs' with real time-of-day bars from the first log and the triggers from setup. Full insights still open at 7 days and 5 logs.\n0a47c9f: time-of-day bars from the first log, setup triggers and times, 'Full patterns in N days'. Verifying on CI.\nVerified: prog-progress-empty (pill + 'You said: Coffee · Stress') and prog-progress-prep (so-far bars + 'Full patterns in 6 days'); Insights tests green.",
           "created": "2026-10-27T19:25:39.257Z",
-          "completed": null
+          "completed": "2026-10-28T04:15:42.845Z"
         },
         {
           "id": "S18.8",
           "title": "Vape: pods a week, and 'Vaped' for the one-tap log",
-          "status": "in_progress",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Onboarding and Settings ask for pods or disposables a week; puffs a day is worked out. 'Puff session' becomes 'Vaped' / 'Times vaped' in the log sheet, Home, widget and Siri.\n5d84ef4: pods a week in onboarding and Settings (VapeUsage, tested); 'Vaped' / 'Times vaped'; Siri reads 'Log a Vape'. Verifying on CI.",
+          "status": "done",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Onboarding and Settings ask for pods or disposables a week; puffs a day is worked out. 'Puff session' becomes 'Vaped' / 'Times vaped' in the log sheet, Home, widget and Siri.\n5d84ef4: pods a week in onboarding and Settings (VapeUsage, tested); 'Vaped' / 'Times vaped'; Siri reads 'Log a Vape'. Verifying on CI.\nVerified: onb-baseline_vape shot (2.5 pods a week, price of one, puffs in one), reveal tile 'Pods a week 2.5 → 0'; journey test logs 'Vaped'.",
           "created": "2026-10-27T19:25:39.292Z",
-          "completed": null
+          "completed": "2026-10-28T04:15:42.873Z"
         },
         {
           "id": "S18.9",
@@ -1864,79 +1864,200 @@
         {
           "id": "S18.10",
           "title": "Copy de-clutter pass",
-          "status": "in_progress",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Home (hero, water, lesson card, prep tiles removed), log sheet, Program rows, Progress tiles and hero, and in-card kickers on other screens.\n6c9a548: Home, log sheet, Program, Progress and other in-card labels. Verifying on CI screenshots.",
+          "status": "done",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Home (hero, water, lesson card, prep tiles removed), log sheet, Program rows, Progress tiles and hero, and in-card kickers on other screens.\n6c9a548: Home, log sheet, Program, Progress and other in-card labels. Verifying on CI screenshots.\nVerified across the CI set (Home prep, Progress tiles, lesson row '4 of 7 · 6 min', log rows).",
           "created": "2026-10-27T19:25:39.366Z",
-          "completed": null
+          "completed": "2026-10-28T04:15:42.899Z"
         },
         {
           "id": "S18.11",
           "title": "SOS caption replaces the white transcript pill",
-          "status": "in_progress",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Muted text on black, one sentence at a time in step with the voice, with no box or badge. Updates Bio-Orb spec 3.5.\necf6039: OrbCaption with sentence sync (OrbCaptionText, tested); Bio-Orb spec 3.5 notes the change. Verifying on CI.",
+          "status": "done",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Muted text on black, one sentence at a time in step with the voice, with no box or badge. Updates Bio-Orb spec 3.5.\necf6039: OrbCaption with sentence sync (OrbCaptionText, tested); Bio-Orb spec 3.5 notes the change. Verifying on CI.\nVerified: sos-session shot shows the muted caption with no box; OrbCaption tests green.",
           "created": "2026-10-27T19:25:39.400Z",
-          "completed": null
+          "completed": "2026-10-28T04:15:42.926Z"
         },
         {
           "id": "S18.12",
           "title": "iPhone Duo: build with Xcode 27.1 (CI and TestFlight)",
           "status": "in_progress",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Builds with Xcode 26 are letterboxed on iPhone Duo. CI and TestFlight move to GitHub's xcode-27 runner; the iOS 18 test leg stays on Xcode 26.\n2fce393: ios.yml, testflight.yml and devices.yml on the xcode-27 runner with Xcode 27.1; iOS 18 leg stays on Xcode 26. First CI run in progress.",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Builds with Xcode 26 are letterboxed on iPhone Duo. CI and TestFlight move to GitHub's xcode-27 runner; the iOS 18 test leg stays on Xcode 26.\n2fce393: ios.yml, testflight.yml and devices.yml on the xcode-27 runner with Xcode 27.1; iOS 18 leg stays on Xcode 26. First CI run in progress.\n28 Oct: unit tests green on Xcode 27.1 (iOS run 93). TestFlight upload follows once the device matrix is green.",
           "created": "2026-10-27T19:25:39.435Z",
           "completed": null
         },
         {
           "id": "S18.13",
           "title": "iPhone Duo: resizing (readable column, height-aware orb, dock on the side)",
-          "status": "in_progress",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. The inner display ignores portrait lock (951 x 669 pt when unfolded). Content capped at 600 pt, orb sized to the height, dock moves to the side where the system puts bars.\n1607829: 600 pt readable column, height-aware orb, dock on the system's bar edge, one safe-area inset for the dock.",
+          "status": "done",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. The inner display ignores portrait lock (951 x 669 pt when unfolded). Content capped at 600 pt, orb sized to the height, dock moves to the side where the system puts bars.\n1607829: 600 pt readable column, height-aware orb, dock on the system's bar edge, one safe-area inset for the dock.\nVerified on the Duo CI shots (run 93): readable column, height-aware orb, dock on the side on the cover and in the wide pose.",
           "created": "2026-10-27T19:25:39.481Z",
-          "completed": null
+          "completed": "2026-10-28T04:15:42.954Z"
         },
         {
           "id": "S18.14",
           "title": "iPhone Duo: fold-aware SOS, Home and Progress",
-          "status": "in_progress",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. When half-open, ArrangementView splits each screen on either side of the fold; other screens keep their column off the fold.\n1607829: columns avoid a book-pose fold; Today, Progress and SOS split with ArrangementView when half open.",
+          "status": "done",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. When half-open, ArrangementView splits each screen on either side of the fold; other screens keep their column off the fold.\n1607829: columns avoid a book-pose fold; Today, Progress and SOS split with ArrangementView when half open.\nVerified on the Duo half-folded shots (run 89/93): Today, Progress and SOS split at the fold.",
           "created": "2026-10-27T19:25:39.522Z",
-          "completed": null
+          "completed": "2026-10-28T04:15:42.978Z"
         },
         {
           "id": "S18.15",
           "title": "iPhone Duo: CI screenshots closed, open and half-folded",
-          "status": "in_progress",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. A separate CI job folds the iPhone Duo simulator with hinge and captures the cover and inner displays.\n2eba4b7: 'duo' CI job with hinge v0.3.0, four poses, shots to ci-screens-duo.",
+          "status": "done",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. A separate CI job folds the iPhone Duo simulator with hinge and captures the cover and inner displays.\n2eba4b7: 'duo' CI job with hinge v0.3.0, four poses, shots to ci-screens-duo.\nci-screens-duo branch: closed, open-wide, open-tall, half-book and half-laptop for 9 screens.",
           "created": "2026-10-27T19:25:39.555Z",
-          "completed": null
+          "completed": "2026-10-28T04:15:43.005Z"
         },
         {
           "id": "S18.16",
           "title": "iPhone Duo: App Store screenshots",
           "status": "in_progress",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Needed from April 2027 for apps built with the iOS 27.1 SDK. Not started.\nMilan, 27 Oct: do it now; Duo screenshots put a 'optimized for iPhone Duo' badge on the product page. 246fb5d: 'App Store screenshots' workflow captures the six approved screens on iPhone 6.9\" and both Duo displays and composes them at 1320x2868, 1206x2622, 1398x2034 and 2007x2853 (scripts/store/compose.py). Results on the store-screens branch.",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Needed from April 2027 for apps built with the iOS 27.1 SDK. Not started.\nMilan, 27 Oct: do it now; Duo screenshots put a 'optimized for iPhone Duo' badge on the product page. 246fb5d: 'App Store screenshots' workflow captures the six approved screens on iPhone 6.9\" and both Duo displays and composes them at 1320x2868, 1206x2622, 1398x2034 and 2007x2853 (scripts/store/compose.py). Results on the store-screens branch.\n28 Oct: the set builds and composes in CI (store-screens branch, run 93): iPhone 6.9 and 6.3, Duo cover 1398x2034, Duo inner 2007x2853. Still not uploadable: Program shots show PLACEHOLDER tags until S5.1, and the Duo cover Home is cramped (greeting wraps to three lines next to the side dock).",
           "created": "2026-10-27T19:25:39.590Z",
           "completed": null
         },
         {
           "id": "S18.17",
           "title": "Currency follows the phone's region, with a Settings option to change it",
-          "status": "in_progress",
-          "notes": "Milan, 27 Oct. 877fa4d: CurrencyChoice (Core, tested) gives the region's currency in onboarding; Settings › Your quit › Currency lists every currency with search. Changing it relabels amounts, it doesn't convert them.\nVerifying on CI.",
+          "status": "done",
+          "notes": "Milan, 27 Oct. 877fa4d: CurrencyChoice (Core, tested) gives the region's currency in onboarding; Settings › Your quit › Currency lists every currency with search. Changing it relabels amounts, it doesn't convert them.\nVerifying on CI.\nVerified: set-currency shot (region's currency first with a check mark, search); SettingsTests currency green.",
           "created": "2026-10-27T20:11:34.596Z",
-          "completed": null
+          "completed": "2026-10-28T04:15:43.031Z"
         },
         {
           "id": "S18.18",
           "title": "Blank sheet when a slip or craving is opened from a widget or Siri",
-          "status": "in_progress",
-          "notes": "Found 27 Oct while building the App Store screenshots (slip-ack and log-craving CI shots were blank). Cause: the log sheet pushed the page while it was still presenting and resizing. 3eb233b: the page is the sheet's first page and the height is set before it opens; UI test testWidgetOpensSlipAndCravingLog.\nVerifying on CI (iOS workflow and the device-matrix UI tests).",
+          "status": "done",
+          "notes": "Found 27 Oct while building the App Store screenshots (slip-ack and log-craving CI shots were blank). Cause: the log sheet pushed the page while it was still presenting and resizing. 3eb233b: the page is the sheet's first page and the height is set before it opens; UI test testWidgetOpensSlipAndCravingLog.\nVerifying on CI (iOS workflow and the device-matrix UI tests).\nVerified: testWidgetOpensSlipAndCravingLog passed on all four device-matrix legs (run 46), and the slip-ack and log-craving CI shots render (iOS run 93).",
           "created": "2026-10-27T20:32:08.583Z",
+          "completed": "2026-10-28T04:15:15.500Z"
+        },
+        {
+          "id": "S18.19",
+          "title": "Reminders screen swapped out by the paywall at the end of onboarding",
+          "status": "in_progress",
+          "notes": "Found 28 Oct by the device-matrix journey test: saving the profile on the plan reveal made RootView switch to the paywall at once, so 'A nudge when it helps' only flashed (or never showed). Pre-dates S18.\n6a123cb: RootView keeps onboarding on screen from the save until the reminders screen finishes. Journey test tapSettled now waits for a still, enabled, on-screen button (iOS 27 hittability checks were flaky). Verifying on device matrix run 48.",
+          "created": "2026-10-28T04:15:15.540Z",
+          "completed": null
+        },
+        {
+          "id": "S18.20",
+          "title": "SOS time-up orb drew the full-size readout inside the mini orb",
+          "status": "in_progress",
+          "notes": "Found 28 Oct in the sos-timeup CI shot: 00:00 spilled past the ring (regression from S18.6).\n5573368: the time-up orb passes mini: true, and any orb smaller than the spec's size scales its readout with it. Verifying on iOS run 96.",
+          "created": "2026-10-28T04:15:15.621Z",
           "completed": null
         }
       ]
     }
   ],
   "log": [
+    {
+      "time": "2026-10-28T04:15:43.060Z",
+      "type": "now",
+      "message": "Now: S18 / S18.19"
+    },
+    {
+      "time": "2026-10-28T04:15:43.031Z",
+      "type": "status",
+      "message": "S18.17 in_progress → done (Verified: set-currency shot (region's currency first with a check mark, search); SettingsTests currency green.)"
+    },
+    {
+      "time": "2026-10-28T04:15:43.005Z",
+      "type": "status",
+      "message": "S18.15 in_progress → done (ci-screens-duo branch: closed, open-wide, open-tall, half-book and half-laptop for 9 screens.)"
+    },
+    {
+      "time": "2026-10-28T04:15:42.978Z",
+      "type": "status",
+      "message": "S18.14 in_progress → done (Verified on the Duo half-folded shots (run 89/93): Today, Progress and SOS split at the fold.)"
+    },
+    {
+      "time": "2026-10-28T04:15:42.954Z",
+      "type": "status",
+      "message": "S18.13 in_progress → done (Verified on the Duo CI shots (run 93): readable column, height-aware orb, dock on the side on the cover and in the wide pose.)"
+    },
+    {
+      "time": "2026-10-28T04:15:42.926Z",
+      "type": "status",
+      "message": "S18.11 in_progress → done (Verified: sos-session shot shows the muted caption with no box; OrbCaption tests green.)"
+    },
+    {
+      "time": "2026-10-28T04:15:42.899Z",
+      "type": "status",
+      "message": "S18.10 in_progress → done (Verified across the CI set (Home prep, Progress tiles, lesson row '4 of 7 · 6 min', log rows).)"
+    },
+    {
+      "time": "2026-10-28T04:15:42.873Z",
+      "type": "status",
+      "message": "S18.8 in_progress → done (Verified: onb-baseline_vape shot (2.5 pods a week, price of one, puffs in one), reveal tile 'Pods a week 2.5 → 0'; journey test logs 'Vaped'.)"
+    },
+    {
+      "time": "2026-10-28T04:15:42.845Z",
+      "type": "status",
+      "message": "S18.7 in_progress → done (Verified: prog-progress-empty (pill + 'You said: Coffee · Stress') and prog-progress-prep (so-far bars + 'Full patterns in 6 days'); Insights tests green.)"
+    },
+    {
+      "time": "2026-10-28T04:15:42.815Z",
+      "type": "status",
+      "message": "S18.6 in_progress → done (Verified: sos-timeup shot shows the photo reason card under the caption. Orb readout fix in S18.20.)"
+    },
+    {
+      "time": "2026-10-28T04:15:42.787Z",
+      "type": "status",
+      "message": "S18.5 in_progress → done (Verified: onboarding goes NRT → building → reveal (journey test); water-goal-sheet shots (dark, light, ax5); WaterGoalDraft tests green.)"
+    },
+    {
+      "time": "2026-10-28T04:15:42.754Z",
+      "type": "status",
+      "message": "S18.3 in_progress → done (Verified: onb-baseline_cigarettes shot reads 'That's $0.75 a cigarette, about $1,642 a year.')"
+    },
+    {
+      "time": "2026-10-28T04:15:42.726Z",
+      "type": "status",
+      "message": "S18.2 in_progress → done (Verified: PlanTimelineTests green (iOS run 93); onb-reveal shot lists prep days 1-5, '+2 more prep days', then Quit Day with its date.)"
+    },
+    {
+      "time": "2026-10-28T04:15:42.697Z",
+      "type": "status",
+      "message": "S18.1 in_progress → done (Verified in CI (water-goal-sheet shots show 72 kg on the ruler). The drag itself needs a finger: check it in the next TestFlight build.)"
+    },
+    {
+      "time": "2026-10-28T04:15:15.727Z",
+      "type": "note",
+      "message": "S18.16: 28 Oct: the set builds and composes in CI (store-screens branch, run 93): iPhone 6.9 and 6.3, Duo cover 1398x2034, Duo inner 2007x2853. Still not uploadable: Program shots show PLACEHOLDER tags until S5.1, and the Duo cover Home is cramped (greeting wraps to three lines next to the side dock)."
+    },
+    {
+      "time": "2026-10-28T04:15:15.693Z",
+      "type": "note",
+      "message": "S18.12: 28 Oct: unit tests green on Xcode 27.1 (iOS run 93). TestFlight upload follows once the device matrix is green."
+    },
+    {
+      "time": "2026-10-28T04:15:15.657Z",
+      "type": "status",
+      "message": "S18.20 pending → in_progress (5573368: the time-up orb passes mini: true, and any orb smaller than the spec's size scales its readout with it. Verifying on iOS run 96.)"
+    },
+    {
+      "time": "2026-10-28T04:15:15.621Z",
+      "type": "task_added",
+      "message": "S18.20 added: SOS time-up orb drew the full-size readout inside the mini orb"
+    },
+    {
+      "time": "2026-10-28T04:15:15.593Z",
+      "type": "status",
+      "message": "S18.19 pending → in_progress (6a123cb: RootView keeps onboarding on screen from the save until the reminders screen finishes. Journey test tapSettled now waits for a still, enabled, on-screen button (iOS 27 hittability checks were flaky). Verifying on device matrix run 48.)"
+    },
+    {
+      "time": "2026-10-28T04:15:15.540Z",
+      "type": "task_added",
+      "message": "S18.19 added: Reminders screen swapped out by the paywall at the end of onboarding"
+    },
+    {
+      "time": "2026-10-28T04:15:15.500Z",
+      "type": "status",
+      "message": "S18.18 in_progress → done (Verified: testWidgetOpensSlipAndCravingLog passed on all four device-matrix legs (run 46), and the slip-ack and log-craving CI shots render (iOS run 93).)"
+    },
     {
       "time": "2026-10-27T20:32:08.658Z",
       "type": "note",
