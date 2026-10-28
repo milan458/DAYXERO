@@ -2,11 +2,11 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-28T05:32:58.566Z"
+    "updated": "2026-10-28T07:30:07.753Z"
   },
   "now": {
     "section": "S18",
-    "task": "S18.21",
+    "task": "S18.16",
     "waiting_on_milan": []
   },
   "sections": [
@@ -1880,10 +1880,10 @@
         {
           "id": "S18.12",
           "title": "iPhone Duo: build with Xcode 27.1 (CI and TestFlight)",
-          "status": "in_progress",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Builds with Xcode 26 are letterboxed on iPhone Duo. CI and TestFlight move to GitHub's xcode-27 runner; the iOS 18 test leg stays on Xcode 26.\n2fce393: ios.yml, testflight.yml and devices.yml on the xcode-27 runner with Xcode 27.1; iOS 18 leg stays on Xcode 26. First CI run in progress.\n28 Oct: unit tests green on Xcode 27.1 (iOS run 93). TestFlight upload follows once the device matrix is green.",
+          "status": "done",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Builds with Xcode 26 are letterboxed on iPhone Duo. CI and TestFlight move to GitHub's xcode-27 runner; the iOS 18 test leg stays on Xcode 26.\n2fce393: ios.yml, testflight.yml and devices.yml on the xcode-27 runner with Xcode 27.1; iOS 18 leg stays on Xcode 26. First CI run in progress.\n28 Oct: unit tests green on Xcode 27.1 (iOS run 93). TestFlight upload follows once the device matrix is green.\nTestFlight build 202610280722 (1.0.0), archived with Xcode 27.1 from f3b493b on this branch (TestFlight run 60), processed VALID in App Store Connect 28 Oct 07:29 UTC.",
           "created": "2026-10-27T19:25:39.435Z",
-          "completed": null
+          "completed": "2026-10-28T07:30:07.580Z"
         },
         {
           "id": "S18.13",
@@ -1929,17 +1929,17 @@
           "id": "S18.18",
           "title": "Blank sheet when a slip or craving is opened from a widget or Siri",
           "status": "done",
-          "notes": "Found 27 Oct while building the App Store screenshots (slip-ack and log-craving CI shots were blank). Cause: the log sheet pushed the page while it was still presenting and resizing. 3eb233b: the page is the sheet's first page and the height is set before it opens; UI test testWidgetOpensSlipAndCravingLog.\nVerifying on CI (iOS workflow and the device-matrix UI tests).\nVerified: testWidgetOpensSlipAndCravingLog passed on all four device-matrix legs (run 46), and the slip-ack and log-craving CI shots render (iOS run 93).",
+          "notes": "Found 27 Oct while building the App Store screenshots (slip-ack and log-craving CI shots were blank). Cause: the log sheet pushed the page while it was still presenting and resizing. 3eb233b: the page is the sheet's first page and the height is set before it opens; UI test testWidgetOpensSlipAndCravingLog.\nVerifying on CI (iOS workflow and the device-matrix UI tests).\nVerified: testWidgetOpensSlipAndCravingLog passed on all four device-matrix legs (run 46), and the slip-ack and log-craving CI shots render (iOS run 93).\nShipped in TestFlight build 202610280722.",
           "created": "2026-10-27T20:32:08.583Z",
           "completed": "2026-10-28T04:15:15.500Z"
         },
         {
           "id": "S18.19",
           "title": "Reminders screen swapped out by the paywall at the end of onboarding",
-          "status": "in_progress",
-          "notes": "Found 28 Oct by the device-matrix journey test: saving the profile on the plan reveal made RootView switch to the paywall at once, so 'A nudge when it helps' only flashed (or never showed). Pre-dates S18.\n6a123cb: RootView keeps onboarding on screen from the save until the reminders screen finishes. Journey test tapSettled now waits for a still, enabled, on-screen button (iOS 27 hittability checks were flaky). Verifying on device matrix run 48.\nDevice matrix run 48: every leg now reaches the paywall after the reminders screen. The next failure was the test tapping the paywall button before its plans loaded (87b204c waits for it); run 49 verifying.",
+          "status": "done",
+          "notes": "Found 28 Oct by the device-matrix journey test: saving the profile on the plan reveal made RootView switch to the paywall at once, so 'A nudge when it helps' only flashed (or never showed). Pre-dates S18.\n6a123cb: RootView keeps onboarding on screen from the save until the reminders screen finishes. Journey test tapSettled now waits for a still, enabled, on-screen button (iOS 27 hittability checks were flaky). Verifying on device matrix run 48.\nDevice matrix run 48: every leg now reaches the paywall after the reminders screen. The next failure was the test tapping the paywall button before its plans loaded (87b204c waits for it); run 49 verifying.\nVerified: the full onboarding journey passes on all four device-matrix legs (run 52): reveal → reminders (Not now) → paywall.",
           "created": "2026-10-28T04:15:15.540Z",
-          "completed": null
+          "completed": "2026-10-28T07:30:07.633Z"
         },
         {
           "id": "S18.20",
@@ -1952,15 +1952,40 @@
         {
           "id": "S18.21",
           "title": "Purchase confirmation replaced by Home the moment the person turns Pro",
-          "status": "in_progress",
-          "notes": "Found 28 Oct by the device-matrix journey test: a purchase grants Pro at once and RootView then showed Home, so 'You're all set' (trial end date, reminder the day before, Start prep day 1) never showed. Pre-dates S18.\nbd5d8b5: the first-run paywall stays up once a purchase or restore starts, until the person taps through; someone already Pro still skips it. Verifying on device matrix run 50 and iOS run 97.",
+          "status": "done",
+          "notes": "Found 28 Oct by the device-matrix journey test: a purchase grants Pro at once and RootView then showed Home, so 'You're all set' (trial end date, reminder the day before, Start prep day 1) never showed. Pre-dates S18.\nbd5d8b5: the first-run paywall stays up once a purchase or restore starts, until the person taps through; someone already Pro still skips it. Verifying on device matrix run 50 and iOS run 97.\nVerified: device matrix run 52 buys the trial on the mock store, allows notifications for the trial reminder, sees 'You're all set' and taps Start prep day 1 on all four legs.",
           "created": "2026-10-28T05:32:58.473Z",
-          "completed": null
+          "completed": "2026-10-28T07:30:07.669Z"
         }
       ]
     }
   ],
   "log": [
+    {
+      "time": "2026-10-28T07:30:07.753Z",
+      "type": "now",
+      "message": "Now: S18 / S18.16"
+    },
+    {
+      "time": "2026-10-28T07:30:07.713Z",
+      "type": "note",
+      "message": "S18.18: Shipped in TestFlight build 202610280722."
+    },
+    {
+      "time": "2026-10-28T07:30:07.669Z",
+      "type": "status",
+      "message": "S18.21 in_progress → done (Verified: device matrix run 52 buys the trial on the mock store, allows notifications for the trial reminder, sees 'You're all set' and taps Start prep day 1 on all four legs.)"
+    },
+    {
+      "time": "2026-10-28T07:30:07.633Z",
+      "type": "status",
+      "message": "S18.19 in_progress → done (Verified: the full onboarding journey passes on all four device-matrix legs (run 52): reveal → reminders (Not now) → paywall.)"
+    },
+    {
+      "time": "2026-10-28T07:30:07.580Z",
+      "type": "status",
+      "message": "S18.12 in_progress → done (TestFlight build 202610280722 (1.0.0), archived with Xcode 27.1 from f3b493b on this branch (TestFlight run 60), processed VALID in App Store Connect 28 Oct 07:29 UTC.)"
+    },
     {
       "time": "2026-10-28T05:32:58.566Z",
       "type": "now",
