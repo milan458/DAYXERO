@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-28T04:15:43.060Z"
+    "updated": "2026-10-28T04:59:19.192Z"
   },
   "now": {
     "section": "S18",
@@ -1937,22 +1937,32 @@
           "id": "S18.19",
           "title": "Reminders screen swapped out by the paywall at the end of onboarding",
           "status": "in_progress",
-          "notes": "Found 28 Oct by the device-matrix journey test: saving the profile on the plan reveal made RootView switch to the paywall at once, so 'A nudge when it helps' only flashed (or never showed). Pre-dates S18.\n6a123cb: RootView keeps onboarding on screen from the save until the reminders screen finishes. Journey test tapSettled now waits for a still, enabled, on-screen button (iOS 27 hittability checks were flaky). Verifying on device matrix run 48.",
+          "notes": "Found 28 Oct by the device-matrix journey test: saving the profile on the plan reveal made RootView switch to the paywall at once, so 'A nudge when it helps' only flashed (or never showed). Pre-dates S18.\n6a123cb: RootView keeps onboarding on screen from the save until the reminders screen finishes. Journey test tapSettled now waits for a still, enabled, on-screen button (iOS 27 hittability checks were flaky). Verifying on device matrix run 48.\nDevice matrix run 48: every leg now reaches the paywall after the reminders screen. The next failure was the test tapping the paywall button before its plans loaded (87b204c waits for it); run 49 verifying.",
           "created": "2026-10-28T04:15:15.540Z",
           "completed": null
         },
         {
           "id": "S18.20",
           "title": "SOS time-up orb drew the full-size readout inside the mini orb",
-          "status": "in_progress",
-          "notes": "Found 28 Oct in the sos-timeup CI shot: 00:00 spilled past the ring (regression from S18.6).\n5573368: the time-up orb passes mini: true, and any orb smaller than the spec's size scales its readout with it. Verifying on iOS run 96.",
+          "status": "done",
+          "notes": "Found 28 Oct in the sos-timeup CI shot: 00:00 spilled past the ring (regression from S18.6).\n5573368: the time-up orb passes mini: true, and any orb smaller than the spec's size scales its readout with it. Verifying on iOS run 96.\nVerified: sos-timeup-dark (iOS run 96, 5573368) shows 'urge surfed / 00:00 / cycle' inside the mini ring.",
           "created": "2026-10-28T04:15:15.621Z",
-          "completed": null
+          "completed": "2026-10-28T04:59:19.133Z"
         }
       ]
     }
   ],
   "log": [
+    {
+      "time": "2026-10-28T04:59:19.192Z",
+      "type": "note",
+      "message": "S18.19: Device matrix run 48: every leg now reaches the paywall after the reminders screen. The next failure was the test tapping the paywall button before its plans loaded (87b204c waits for it); run 49 verifying."
+    },
+    {
+      "time": "2026-10-28T04:59:19.133Z",
+      "type": "status",
+      "message": "S18.20 in_progress → done (Verified: sos-timeup-dark (iOS run 96, 5573368) shows 'urge surfed / 00:00 / cycle' inside the mini ring.)"
+    },
     {
       "time": "2026-10-28T04:15:43.060Z",
       "type": "now",
