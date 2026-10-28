@@ -39,6 +39,8 @@ struct BioOrbView: View {
                 .frame(width: side + 120, height: side + 120)
                 .allowsHitTesting(false)
                 OrbReadout(engine: engine, mini: mini, frame: frame)
+                    // The readout is set for the spec's size; on a smaller orb (short windows) it shrinks with it.
+                    .scaleEffect(min(1, side / CGFloat(mini ? engine.data.geometry.sizeMini : engine.data.geometry.sizeFull)))
             }
             .frame(width: side, height: side)
         }

@@ -138,8 +138,10 @@ struct CravingSOSView: View {
 
     /// After the three minutes the orb steps back so the person's own reason fits above the choices (S18.6).
     private func orb(_ geo: GeometryProxy) -> some View {
-        BioOrbView(engine: engine, side: BioOrbView.side(mini: stage == .timeUp, available: geo.size.width, availableHeight: geo.size.height),
-                   onTap: coachMe)
+        let mini = stage == .timeUp
+        return BioOrbView(engine: engine, mini: mini,
+                          side: BioOrbView.side(mini: mini, available: geo.size.width, availableHeight: geo.size.height),
+                          onTap: coachMe)
     }
 
     /// Pause and Coach me during the session; the person's reason once it's done.
