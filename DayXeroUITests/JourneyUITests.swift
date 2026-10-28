@@ -45,9 +45,12 @@ final class JourneyUITests: XCTestCase {
         // Paywall (S3), against the mock store
         let cta = app.buttons["paywall.cta"]
         XCTAssert(cta.waitForExistence(timeout: 10))
+        // The button is disabled until the plans have loaded; a tap before that does nothing.
+        let loaded = XCTNSPredicateExpectation(predicate: NSPredicate(format: "isEnabled == true"), object: cta)
+        XCTAssertEqual(XCTWaiter().wait(for: [loaded], timeout: 10), .completed, "The paywall's plans never loaded")
         snap(app, "06-paywall")
-        tap(cta)
-        tap(app.buttons["Start prep day 1"], timeout: 10)
+        tapWhenStill(app, cta, name: "paywall.cta")
+        tapSettled(app, "Start prep day 1")
 
         // Prep Home (S4): log a use, ride out a craving, visit each tab.
         XCTAssert(app.buttons["Craving SOS"].waitForExistence(timeout: 10))
@@ -136,30 +139,35 @@ final class JourneyUITests: XCTestCase {
         return app
     }
 
-    /// Taps the button with this label once exactly one is on screen, enabled and still, so a step's slide-in or a
-    /// sheet growing to full height has finished: a tap mid-slide can miss. It taps the button's centre rather than
-    /// asking XCUITest whether it's hittable, which on iOS 27 can fail outright while a sheet resizes.
+    /// Taps the button with this label once exactly one is on screen, enabled and still (see `tapWhenStill`).
     private func tapSettled(_ app: XCUIApplication, _ label: String, file: StaticString = #filePath, line: UInt = #line) {
         let query = app.buttons.matching(NSPredicate(format: "label == %@", label))
         let deadline = Date.now.addingTimeInterval(10)
         while query.count != 1, Date.now < deadline { RunLoop.current.run(until: .now.addingTimeInterval(0.2)) }
         XCTAssertEqual(query.count, 1, "Expected one \"\(label)\" button", file: file, line: line)
-        let button = query.element
+        tapWhenStill(app, query.element, name: label, file: file, line: line)
+    }
+
+    /// Taps an element once it's enabled and has stopped moving, so a step's slide-in or a sheet growing to full
+    /// height has finished: a tap mid-slide can miss. It taps the element's centre rather than asking XCUITest
+    /// whether it's hittable, which on iOS 27 can fail outright while a sheet resizes.
+    private func tapWhenStill(_ app: XCUIApplication, _ element: XCUIElement, name: String,
+                              file: StaticString = #filePath, line: UInt = #line) {
         let screen = app.windows.firstMatch.frame
         var last = CGRect.null
         var settled = false
-        let still = Date.now.addingTimeInterval(5)
-        while Date.now < still {
-            let frame = button.frame
-            if frame == last, !frame.isEmpty, screen.contains(CGPoint(x: frame.midX, y: frame.midY)), button.isEnabled {
+        let deadline = Date.now.addingTimeInterval(10)
+        while Date.now < deadline {
+            let frame = element.frame
+            if frame == last, !frame.isEmpty, screen.contains(CGPoint(x: frame.midX, y: frame.midY)), element.isEnabled {
                 settled = true
                 break
             }
             last = frame
             RunLoop.current.run(until: .now.addingTimeInterval(0.3))
         }
-        XCTAssert(settled, "\"\(label)\" never settled on screen", file: file, line: line)
-        button.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+        XCTAssert(settled, "\"\(name)\" never settled on screen", file: file, line: line)
+        element.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
     }
 
     private func button(_ app: XCUIApplication, _ text: String) -> XCUIElement {
