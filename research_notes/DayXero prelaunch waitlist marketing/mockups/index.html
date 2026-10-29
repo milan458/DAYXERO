@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DayXero pre-launch mockups</title>
+  <meta name="description" content="Index of DayXero pre-launch waitlist mockups.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#000000">
+  <!-- MOCKUP: same fonts and compiled stylesheet as the live site -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../website/assets/site.css">
+  <!-- Copied verbatim from website/index.html <style> -->
+  <style>
+    /* OLED Baseline & Typography */
+    body {
+      background-color: #000000;
+      color: #FFFFFF;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      selection-background-color: #BCC388;
+      selection-color: #000000;
+    }
+    ::selection {
+      background: #BCC388;
+      color: #000000;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #000000;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #262626;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #BCC388;
+    }
+
+    /* Spring-Physics Transitions */
+    .spring-trans {
+      transition: all 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Cards with High-Contrast Flair */
+    .porcelain-card {
+      background: #FFFFFF;
+      color: #000000;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5), 0 0 40px rgba(188, 195, 136, 0.15);
+    }
+    .dark-card {
+      background: #121212;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8);
+    }
+    .glass-card-green {
+      background: linear-gradient(135deg, rgba(67, 81, 28, 0.40) 0%, rgba(18, 18, 18, 0.85) 100%);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(188, 195, 136, 0.25);
+    }
+    .moss-pedestal {
+      background: linear-gradient(180deg, rgba(67, 81, 28, 0.3) 0%, rgba(20, 26, 10, 0.9) 60%, #000000 100%);
+      box-shadow: 0 -20px 50px rgba(67, 81, 28, 0.25);
+    }
+
+    /* 3D Glass Bottle Shimmer */
+    .glass-specular {
+      background: linear-gradient(105deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.05) 45%, transparent 60%);
+    }
+
+    /* Device frame reflections */
+    .device-screen {
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12), 0 35px 80px -20px rgba(0, 0, 0, 0.95), 0 0 60px rgba(67, 81, 28, 0.2);
+    }
+
+  </style>
+  <!-- Tailwind utilities used by this mockup that are not yet in the compiled site.css.
+       Generated with tailwindcss@3.4.17 + website/tailwind.config.js. They disappear once the
+       markup ships and `npm run website:css` is re-run. -->
+  <style id="mockup-utilities">
+/*MOCKUP-UTILITIES*/
+.visible {
+  visibility: visible
+}
+.col-span-2 {
+  grid-column: span 2 / span 2
+}
+.inline {
+  display: inline
+}
+.h-40 {
+  height: 10rem
+}
+.object-cover {
+  -o-object-fit: cover;
+     object-fit: cover
+}
+.object-top {
+  -o-object-position: top;
+     object-position: top
+}
+.pb-10 {
+  padding-bottom: 2.5rem
+}
+@media (min-width: 768px) {
+  .md\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr))
+  }
+  .md\:pt-24 {
+    padding-top: 6rem
+  }
+  .md\:text-6xl {
+    font-size: 3.75rem;
+    line-height: 1
+  }
+  .md\:text-base {
+    font-size: 1rem;
+    line-height: 1.5rem
+  }
+}
+  </style>
+</head>
+<body class="bg-black text-white antialiased font-sans min-h-screen flex flex-col">
+  <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[1000px] max-w-full h-[300px] bg-gradient-to-b from-[#43511C]/25 via-[#BCC388]/10 to-transparent blur-[140px] pointer-events-none z-0"></div>
+  <main class="relative z-10 flex-1 px-4">
+    <section class="max-w-5xl mx-auto pt-16 md:pt-24 pb-10 text-center">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#161616] border border-white/10 text-xs font-mono text-[#BCC388] mb-3">
+          <span>PRE-LAUNCH MOCKUPS</span>
+        </div>
+      <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.05] mb-4">Waitlist <span class="text-white/40">&amp;</span> Beta Signups</h1>
+      <p class="text-sm md:text-base text-white/60 max-w-2xl mx-auto">Each mockup links the live <span class="font-mono text-white/80">website/assets/site.css</span> and reuses markup from index.html and the guide template. Utilities not yet in the compiled CSS are inlined per page. Full rationale, change table and backend spec: <span class="font-mono text-white/80">../website_changes_and_mockups.md</span>.</p>
+    </section>
+    <section class="max-w-5xl mx-auto pb-24 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <a href="a-hero-waitlist.html" class="porcelain-card rounded-card p-6 flex flex-col gap-3 hover:scale-[1.02] spring-trans">
+        <span class="text-[10px] font-mono uppercase tracking-widest text-black/50">a-hero-waitlist.html</span>
+        <span class="text-xl font-extrabold tracking-tight text-black">(a) Hero waitlist</span>
+        <span class="text-sm text-black/60 leading-relaxed">Homepage hero: status pill becomes "iOS beta · Now enrolling", subhead says the app is in development, the palette strip slot becomes a one-field email form with honeypot + Turnstile, honest proof chips, nav CTA "Get DayXero" becomes "Join the beta". Showcase copy de-medicalised (removes "Clinically formulated", "95% relapse", "neurochemical stabilization").</span>
+        <span class="grid grid-cols-3 gap-2 mt-2 items-start">
+          <img src="a-hero-waitlist-desktop.png" alt="(a) Hero waitlist at 1440px" loading="lazy" class="col-span-2 w-full h-40 object-cover object-top rounded-2xl border border-white/10">
+          <img src="a-hero-waitlist-mobile.png" alt="(a) Hero waitlist at 390px" loading="lazy" class="w-full h-40 object-cover object-top rounded-2xl border border-white/10">
+        </span>
+      </a>
+      <a href="b-pricing-founding.html" class="glass-card-green rounded-card p-6 flex flex-col gap-3 hover:scale-[1.02] spring-trans">
+        <span class="text-[10px] font-mono uppercase tracking-widest text-[#BCC388]">b-pricing-founding.html</span>
+        <span class="text-xl font-extrabold tracking-tight text-white">(b) Founding-member pricing</span>
+        <span class="text-sm text-white/60 leading-relaxed">Pricing keeps the three-card rhythm but labels prices as planned. Plan buttons no longer fire the "Ready for App Store Checkout" toast: Monthly/Lifetime expand into a "Notify me" form (plan interest captured), Annual carries the founding offer and its own form. FAQ rewritten for pre-launch.</span>
+        <span class="grid grid-cols-3 gap-2 mt-2 items-start">
+          <img src="b-pricing-founding-desktop.png" alt="(b) Founding-member pricing at 1440px" loading="lazy" class="col-span-2 w-full h-40 object-cover object-top rounded-2xl border border-white/10">
+          <img src="b-pricing-founding-mobile.png" alt="(b) Founding-member pricing at 390px" loading="lazy" class="w-full h-40 object-cover object-top rounded-2xl border border-white/10">
+        </span>
+      </a>
+      <a href="c-success-referral.html" class="dark-card rounded-card p-6 flex flex-col gap-3 hover:scale-[1.02] spring-trans">
+        <span class="text-[10px] font-mono uppercase tracking-widest text-[#BCC388]">c-success-referral.html</span>
+        <span class="text-xl font-extrabold tracking-tight text-white">(c) After signup</span>
+        <span class="text-sm text-white/60 leading-relaxed">State 1 replaces the form inline: confirm-your-email card (double opt-in). State 2 is /beta/confirmed: queue position, founding badge, copyable referral link, share buttons, friends-joined progress bar and what happens next.</span>
+        <span class="grid grid-cols-3 gap-2 mt-2 items-start">
+          <img src="c-success-referral-desktop.png" alt="(c) After signup at 1440px" loading="lazy" class="col-span-2 w-full h-40 object-cover object-top rounded-2xl border border-white/10">
+          <img src="c-success-referral-mobile.png" alt="(c) After signup at 390px" loading="lazy" class="w-full h-40 object-cover object-top rounded-2xl border border-white/10">
+        </span>
+      </a>
+      <a href="d-guide-cta-sticky.html" class="dark-card rounded-card p-6 flex flex-col gap-3 hover:scale-[1.02] spring-trans">
+        <span class="text-[10px] font-mono uppercase tracking-widest text-[#BCC388]">d-guide-cta-sticky.html</span>
+        <span class="text-xl font-extrabold tracking-tight text-white">(d) Guide CTAs + sticky bar</span>
+        <span class="text-sm text-white/60 leading-relaxed">Guide pages (build_guides.py): nav CTA to /beta/, a glass mid-article CTA after the 3rd section, the end porcelain aside becomes a form, and a sticky mobile pill bar that hides while a form is visible and can be dismissed.</span>
+        <span class="grid grid-cols-3 gap-2 mt-2 items-start">
+          <img src="d-guide-cta-sticky-desktop.png" alt="(d) Guide CTAs + sticky bar at 1440px" loading="lazy" class="col-span-2 w-full h-40 object-cover object-top rounded-2xl border border-white/10">
+          <img src="d-guide-cta-sticky-mobile.png" alt="(d) Guide CTAs + sticky bar at 390px" loading="lazy" class="w-full h-40 object-cover object-top rounded-2xl border border-white/10">
+        </span>
+      </a>
+      <a href="e-beta-page.html" class="glass-card-green rounded-card p-6 flex flex-col gap-3 hover:scale-[1.02] spring-trans">
+        <span class="text-[10px] font-mono uppercase tracking-widest text-[#BCC388]">e-beta-page.html</span>
+        <span class="text-xl font-extrabold tracking-tight text-white">(e) /beta page</span>
+        <span class="text-sm text-white/60 leading-relaxed">Dedicated waitlist URL for social bios, Reddit/TikTok links and referral links (?r=CODE shows the "A friend invited you" pill). Form, three benefit cards, how-the-beta-works steps, beta FAQ.</span>
+        <span class="grid grid-cols-3 gap-2 mt-2 items-start">
+          <img src="e-beta-page-desktop.png" alt="(e) /beta page at 1440px" loading="lazy" class="col-span-2 w-full h-40 object-cover object-top rounded-2xl border border-white/10">
+          <img src="e-beta-page-mobile.png" alt="(e) /beta page at 390px" loading="lazy" class="w-full h-40 object-cover object-top rounded-2xl border border-white/10">
+        </span>
+      </a>
+      <div class="dark-card rounded-card p-6 flex flex-col gap-3">
+        <span class="text-[10px] font-mono uppercase tracking-widest text-white/50">Extra screenshots</span>
+        <span class="text-xl font-extrabold tracking-tight text-white">Sticky bar in context (390px)</span>
+        <span class="grid grid-cols-2 gap-2 mt-2">
+          <img src="d-guide-cta-sticky-mobile-viewport-sticky.png" alt="Sticky bar visible while reading" class="w-full rounded-2xl border border-white/10">
+          <img src="d-guide-cta-sticky-mobile-viewport-inline.png" alt="Sticky bar hidden while the inline form is visible" class="w-full rounded-2xl border border-white/10">
+        </span>
+        <span class="text-sm text-white/60">Left: bar visible mid-article. Right: bar hidden because the inline form is on screen.</span>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Join the DayXero iOS Beta</title>
+  <meta name="description" content="Join the DayXero iOS beta: early TestFlight access and founding-member pricing.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#000000">
+  <!-- MOCKUP: same fonts and compiled stylesheet as the live site -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../website/assets/site.css">
+  <!-- Copied verbatim from website/index.html <style> -->
+  <style>
+    /* OLED Baseline & Typography */
+    body {
+      background-color: #000000;
+      color: #FFFFFF;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      selection-background-color: #BCC388;
+      selection-color: #000000;
+    }
+    ::selection {
+      background: #BCC388;
+      color: #000000;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #000000;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #262626;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #BCC388;
+    }
+
+    /* Spring-Physics Transitions */
+    .spring-trans {
+      transition: all 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Cards with High-Contrast Flair */
+    .porcelain-card {
+      background: #FFFFFF;
+      color: #000000;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5), 0 0 40px rgba(188, 195, 136, 0.15);
+    }
+    .dark-card {
+      background: #121212;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8);
+    }
+    .glass-card-green {
+      background: linear-gradient(135deg, rgba(67, 81, 28, 0.40) 0%, rgba(18, 18, 18, 0.85) 100%);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(188, 195, 136, 0.25);
+    }
+    .moss-pedestal {
+      background: linear-gradient(180deg, rgba(67, 81, 28, 0.3) 0%, rgba(20, 26, 10, 0.9) 60%, #000000 100%);
+      box-shadow: 0 -20px 50px rgba(67, 81, 28, 0.25);
+    }
+
+    /* 3D Glass Bottle Shimmer */
+    .glass-specular {
+      background: linear-gradient(105deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.05) 45%, transparent 60%);
+    }
+
+    /* Device frame reflections */
+    .device-screen {
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12), 0 35px 80px -20px rgba(0, 0, 0, 0.95), 0 0 60px rgba(67, 81, 28, 0.2);
+    }
+
+  </style>
+  <!-- Tailwind utilities used by this mockup that are not yet in the compiled site.css.
+       Generated with tailwindcss@3.4.17 + website/tailwind.config.js. They disappear once the
+       markup ships and `npm run website:css` is re-run. -->
+  <style id="mockup-utilities">
+/*MOCKUP-UTILITIES*/
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0
+}
+.invisible {
+  visibility: hidden
+}
+.mt-3 {
+  margin-top: 0.75rem
+}
+.min-w-0 {
+  min-width: 0px
+}
+.rounded-\[28px\] {
+  border-radius: 28px
+}
+.p-2 {
+  padding: 0.5rem
+}
+.placeholder\:text-white\/30::-moz-placeholder {
+  color: rgb(255 255 255 / 0.3)
+}
+.placeholder\:text-white\/30::placeholder {
+  color: rgb(255 255 255 / 0.3)
+}
+.focus\:border-\[\#BCC388\]\/60:focus {
+  border-color: rgb(188 195 136 / 0.6)
+}
+.focus\:outline-none:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px
+}
+@media (min-width: 640px) {
+  .sm\:flex-1 {
+    flex: 1 1 0%
+  }
+  .sm\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr))
+  }
+  .sm\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr))
+  }
+  .sm\:flex-row {
+    flex-direction: row
+  }
+  .sm\:rounded-full {
+    border-radius: 9999px
+  }
+  .sm\:text-6xl {
+    font-size: 3.75rem;
+    line-height: 1
+  }
+  .sm\:text-lg {
+    font-size: 1.125rem;
+    line-height: 1.75rem
+  }
+}
+@media (min-width: 768px) {
+  .md\:flex {
+    display: flex
+  }
+  .md\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr))
+  }
+  .md\:p-8 {
+    padding: 2rem
+  }
+  .md\:pt-24 {
+    padding-top: 6rem
+  }
+  .md\:text-3xl {
+    font-size: 1.875rem;
+    line-height: 2.25rem
+  }
+  .md\:text-7xl {
+    font-size: 4.5rem;
+    line-height: 1
+  }
+}
+@media (min-width: 1024px) {
+  .lg\:grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr))
+  }
+}
+  </style>
+</head>
+<body class="bg-black text-white antialiased font-sans min-h-screen flex flex-col">
+  <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[1000px] max-w-full h-[300px] bg-gradient-to-b from-[#43511C]/25 via-[#BCC388]/10 to-transparent blur-[140px] pointer-events-none z-0"></div>
+  <header class="sticky top-4 z-50 flex justify-center px-4 pt-4">
+    <nav class="flex items-center justify-between gap-4 px-5 py-3 rounded-full bg-black/85 backdrop-blur-2xl border border-white/15 shadow-2xl shadow-black max-w-5xl w-full" aria-label="Main">
+      <a href="/" class="flex items-center gap-3 group">
+        <span class="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center shadow-md"><svg class="w-4 h-4 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3v18"/><circle cx="13" cy="14" r="7"/></svg></span>
+        <span class="flex flex-col">
+          <span class="font-bold text-sm tracking-tight text-white group-hover:text-[#BCC388]">DayXero</span>
+          <span class="text-[9px] text-white/40 tracking-widest uppercase font-mono -mt-0.5">Nicotine Protocol</span>
+        </span>
+      </a>
+      <div class="hidden md:flex items-center gap-1 text-xs font-medium text-white/70">
+        <a href="/quit-vaping/" class="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-white/10">Quit Vaping</a>
+        <a href="/quit-smoking/" class="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-white/10">Quit Smoking</a>
+        <a href="/quit-nicotine-pouches/" class="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-white/10">Quit Pouches</a>
+        <a href="/nicotine-withdrawal-timeline/" class="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-white/10">Withdrawal</a>
+        <a href="/guides/" class="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-white/10">All Guides</a>
+      </div>
+      <a href="#join" class="shrink-0 whitespace-nowrap px-4 py-2 rounded-full bg-[#BCC388] text-black font-semibold text-xs tracking-tight hover:bg-white">Join the beta</a>
+    </nav>
+  </header>
+
+  <main class="relative z-10 flex-1 px-4">
+    <section id="join" class="max-w-3xl mx-auto pt-16 md:pt-24 pb-16 flex flex-col items-center text-center">
+      <!-- Shown only when ?r= is present (referral landing) -->
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#161616] border border-[#BCC388]/30 text-xs font-medium text-white/80 mb-4">
+        <span class="w-2 h-2 rounded-full bg-[#BCC388]"></span>
+        <span>A friend invited you. Join and you both move up the queue.</span>
+      </div>
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#161616] border border-white/10 text-xs font-mono text-[#BCC388] mb-6">
+        <span>DAYXERO iOS BETA · NOW ENROLLING</span>
+      </div>
+      <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.05] mb-6">
+        Be First <span class="text-white/40">to Quit on</span> <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-[#BCC388]">Your Quit Day.</span>
+      </h1>
+      <p class="text-base sm:text-lg text-white/60 leading-relaxed max-w-2xl mb-10">DayXero is an iPhone app in development for quitting vaping, smoking and nicotine pouches. Beta members test it on TestFlight before anyone else and get founding-member pricing at launch.</p>
+      <div class="w-full max-w-xl">
+        <form id="beta-form" class="waitlist-form w-full" action="/api/waitlist" method="post" novalidate>
+      <div class="flex flex-col sm:flex-row gap-2 p-2 rounded-[28px] sm:rounded-full bg-[#121212] border border-white/15 shadow-2xl">
+        <label for="beta-form-email" class="sr-only">Email address</label>
+        <input id="beta-form-email" type="email" name="email" required autocomplete="email" inputmode="email" placeholder="you@example.com" class="w-full sm:flex-1 min-w-0 h-12 px-5 rounded-full bg-[#161616] border border-white/10 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-[#BCC388]/60 spring-trans">
+        <button type="submit" class="h-12 px-6 rounded-full bg-white text-black font-semibold text-sm tracking-tight hover:bg-[#BCC388] active:scale-95 spring-trans flex items-center justify-center gap-2 shadow-xl whitespace-nowrap">
+          <span>Join the beta</span>
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </button>
+      </div>
+      <!-- Honeypot: hidden from people, bots fill it. Server silently drops any submission that has it. -->
+      <div class="hidden" aria-hidden="true"><label>Company <input type="text" name="company" tabindex="-1" autocomplete="off"></label></div>
+      <input type="hidden" name="source" value="beta-page">
+      <!-- Cloudflare Turnstile (managed, interaction-only: invisible for most visitors). Script:
+           https://challenges.cloudflare.com/turnstile/v0/api.js — not loaded in this mockup. -->
+      <div class="cf-turnstile" data-sitekey="TURNSTILE_SITE_KEY" data-appearance="interaction-only" data-size="flexible"></div>
+    </form>
+        <p class="text-[11px] text-white/40 text-center leading-relaxed mt-3">Free to join. We'll email your TestFlight invite and the App Store link at launch, nothing else. Unsubscribe anytime. <a href="/privacy/#waitlist" class="underline underline-offset-4 decoration-white/30 hover:text-white">Privacy</a></p>
+      </div>
+    </section>
+
+    <section class="max-w-5xl mx-auto pb-16" aria-label="What beta members get">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="porcelain-card p-8 rounded-card">
+          <div class="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center mb-6 shadow"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2v7.31"/><path d="M14 9.3V1.99"/><path d="M8.5 2h7"/><path d="M14 9.3a6.5 6.5 0 1 1-4 0"/></svg></div>
+          <div class="text-[11px] font-mono uppercase tracking-widest text-black/50 mb-2">EARLY ACCESS</div>
+          <h3 class="text-2xl font-extrabold text-black mb-3">TestFlight before launch</h3>
+          <p class="text-sm text-black/70 leading-relaxed">Invites go out in waves. Try the five-day prep program, Craving SOS and slip debriefs while they're still being shaped.</p>
+        </div>
+        <div class="glass-card-green p-8 rounded-card">
+          <div class="w-12 h-12 rounded-full bg-[#161616] border border-[#BCC388]/30 flex items-center justify-center text-[#BCC388] mb-6 shadow"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/></svg></div>
+          <div class="text-[11px] font-mono uppercase tracking-widest text-[#BCC388] mb-2">FOUNDING PRICE</div>
+          <h3 class="text-2xl font-extrabold text-white mb-3">Half off your first year</h3>
+          <p class="text-sm text-white/70 leading-relaxed">The first 500 confirmed members get Annual at $19.99 for year one (planned $39.99), via an App Store offer code at launch.</p>
+        </div>
+        <div class="dark-card p-8 rounded-card">
+          <div class="w-12 h-12 rounded-full bg-white text-black flex items-center justify-center mb-6 shadow"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/><path d="M8 12h.01"/><path d="M12 12h.01"/><path d="M16 12h.01"/></svg></div>
+          <div class="text-[11px] font-mono uppercase tracking-widest text-white/50 mb-2">SHAPE IT</div>
+          <h3 class="text-2xl font-extrabold text-white mb-3">Tell us what helps</h3>
+          <p class="text-sm text-white/60 leading-relaxed">Beta feedback goes straight to the people building it. Vapes, cigarettes and pouches are all in scope.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="max-w-5xl mx-auto pb-16" aria-labelledby="how-heading">
+      <div class="bg-[#121212] border border-white/10 rounded-card p-6 md:p-8 shadow-2xl">
+        <div class="flex justify-between items-center mb-6">
+          <h2 id="how-heading" class="text-xs font-mono text-white/40 uppercase tracking-wider">HOW THE BETA WORKS</h2>
+          <div class="px-3.5 py-1.5 rounded-full bg-[#BCC388] text-black text-xs font-mono font-bold shadow">4 steps</div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div class="bg-[#141414] border border-white/5 p-4 rounded-2xl"><div class="w-8 h-8 rounded-full bg-[#BCC388] text-black font-bold text-xs flex items-center justify-center mb-3">1</div><div class="text-sm font-semibold text-white">Join with your email</div><div class="text-xs text-white/50 mt-1">One field. No account, no payment.</div></div>
+          <div class="bg-[#141414] border border-white/5 p-4 rounded-2xl"><div class="w-8 h-8 rounded-full bg-[#BCC388] text-black font-bold text-xs flex items-center justify-center mb-3">2</div><div class="text-sm font-semibold text-white">Confirm the link</div><div class="text-xs text-white/50 mt-1">Saves your spot and founding price.</div></div>
+          <div class="porcelain-card p-4 rounded-2xl"><div class="w-8 h-8 rounded-full bg-black text-white font-bold text-xs flex items-center justify-center mb-3">3</div><div class="text-sm font-extrabold text-black">Get a TestFlight invite</div><div class="text-xs text-black/60 mt-1">Sent in waves as spots open.</div></div>
+          <div class="bg-[#101010] border border-white/5 p-4 rounded-2xl"><div class="w-8 h-8 rounded-full bg-[#1A1A1A] text-white/40 font-bold text-xs flex items-center justify-center mb-3">4</div><div class="text-sm font-semibold text-white/70">App Store link at launch</div><div class="text-xs text-white/40 mt-1">Plus your offer code.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="max-w-3xl mx-auto pb-24" aria-labelledby="beta-faq">
+      <h2 id="beta-faq" class="text-2xl md:text-3xl font-extrabold tracking-tight mb-6 text-center">Beta questions</h2>
+      <div class="flex flex-col gap-3">
+        <details class="faq-item" open><summary>Is the beta free?</summary><p>Yes. TestFlight builds are free to install. You only pay if you choose a paid plan after launch.</p></details>
+        <details class="faq-item"><summary>Do I need an iPhone?</summary><p>Yes. DayXero is a native iPhone app. TestFlight is Apple's official beta app, and we'll send instructions with your invite.</p></details>
+        <details class="faq-item"><summary>When does DayXero launch?</summary><p>We haven't set a date yet. Beta members hear first, and the launch email includes the App Store link.</p></details>
+        <details class="faq-item"><summary>Is DayXero medical treatment?</summary><p>No. DayXero is a habit and wellness tool, not a medical device or treatment. Talk to a doctor or pharmacist about nicotine replacement or stop-smoking medicines.</p></details>
+      </div>
+    </section>
+  </main>
+  <footer class="border-t border-white/10 bg-black py-14 px-4 relative z-10 text-white/60 mt-auto">
+    <div class="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8 text-xs">
+      <div class="flex flex-col gap-2">
+        <span class="font-bold text-white tracking-tight text-sm">DayXero</span>
+        <p class="text-white/40 max-w-xs">Quit on your Quit Day. An iPhone app in development to quit vaping, smoking and nicotine pouches.</p>
+      </div>
+      <div class="flex flex-col gap-2">
+        <span class="font-mono uppercase tracking-widest text-[10px] text-white/40">Guides</span>
+        <a href="/quit-vaping/" class="hover:text-white">How to Quit Vaping</a>
+        <a href="/quit-smoking/" class="hover:text-white">How to Quit Smoking</a>
+        <a href="/quit-nicotine-pouches/" class="hover:text-white">How to Quit Nicotine Pouches</a>
+        <a href="/nicotine-withdrawal-timeline/" class="hover:text-white">Nicotine Withdrawal Timeline</a>
+        <a href="/nicotine-cravings/" class="hover:text-white">How to Handle Nicotine Cravings</a>
+      </div>
+      <div class="flex flex-col gap-2">
+        <span class="font-mono uppercase tracking-widest text-[10px] text-white/40">DayXero</span>
+        <a href="/" class="hover:text-white">Home</a>
+        <a href="/beta/" class="hover:text-white">Join the beta</a>
+        <a href="/#pricing" class="hover:text-white">Founding offer</a>
+        <a href="/#faq" class="hover:text-white">FAQ</a>
+        <a href="/about/" class="hover:text-white">About</a>
+        <a href="/privacy/" class="hover:text-white">Privacy</a>
+      </div>
+    </div>
+    <div class="max-w-5xl mx-auto mt-10 pt-6 border-t border-white/5 text-[11px] text-white/30 flex flex-col sm:flex-row justify-between gap-4">
+      <div>Medical Disclaimer: DayXero provides educational habit and wellness support, not diagnostic medical treatment. Always consult a healthcare professional regarding NRT dosing and smoking cessation.</div>
+      <div class="shrink-0">© 2026 DayXero.</div>
+    </div>
+  </footer>
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 pointer-events-none flex flex-col gap-2"></div>
+  <script>
+    // MOCKUP behaviour only: progressive enhancement over a plain <form method="post">.
+    // In production this POSTs to /api/waitlist (see website_changes_and_mockups.md, Backend).
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = 'pointer-events-auto flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-[#181818] border border-[#BCC388]/40 shadow-2xl text-xs font-medium text-white transition-all duration-300 transform translate-y-4 opacity-0';
+      toast.innerHTML = `<span class="w-2 h-2 rounded-full bg-[#BCC388]"></span><span>${message}</span>`;
+      container.appendChild(toast);
+      requestAnimationFrame(() => toast.classList.remove('translate-y-4', 'opacity-0'));
+      setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-2'); setTimeout(() => toast.remove(), 300); }, 3500);
+    }
+    document.querySelectorAll('.waitlist-form').forEach((form) => {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = form.querySelector('input[type=email]');
+        if (!email.value || !email.checkValidity()) { email.focus(); showToast('Enter a valid email to join the beta'); return; }
+        window.location.href = 'c-success-referral.html';
+      });
+    });
+    document.querySelectorAll('[data-notify-plan]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const slot = document.getElementById(btn.dataset.target);
+        if (slot) { btn.classList.add('hidden'); slot.classList.remove('hidden'); slot.querySelector('input[type=email]').focus(); }
+      });
+    });
+  </script>
+</body>
+</html>
