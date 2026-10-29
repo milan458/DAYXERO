@@ -6,6 +6,8 @@ import SwiftUI
 /// header and streak, today's amount, the pill, the drink picker, Log and Undo, then today's drinks.
 struct WaterTrackerView: View {
     let profile: UserProfile
+    /// Shown as a close button when the tracker opens over the Toolkit tab or Home.
+    var onClose: (() -> Void)?
 
     @Environment(\.modelContext) private var context
     @Query(sort: \WaterEntry.timestamp) private var entries: [WaterEntry]
@@ -66,7 +68,7 @@ struct WaterTrackerView: View {
             }
             .padding(.horizontal, 24)
             .padding(.top, DX.Space.l)
-            .padding(.bottom, 140)
+            .padding(.bottom, DX.Space.l)
         }
         .scrollBounceBehavior(.basedOnSize)
         .background(Color.black.ignoresSafeArea())
@@ -108,6 +110,12 @@ struct WaterTrackerView: View {
                     .padding(.vertical, 6).padding(.horizontal, 10)
                     .background(Color(hex: 0xBCC388, opacity: 0.12), in: Capsule())
                     .accessibilityLabel(Text("\(streak) day water streak"))
+            }
+            if let onClose {
+                Button(action: onClose) { Image(systemName: "xmark") }
+                    .buttonStyle(.dxIcon)
+                    .accessibilityLabel(Text("Close"))
+                    .padding(.leading, DX.Space.xxs)
             }
         }
     }

@@ -160,9 +160,9 @@ struct NRTSetupView: View {
             Text("Labels differ by brand and country. Pick the one that matches, or enter your own.").dxText(.subtitle)
             DXFlowLayout {
                 ForEach(LabelCountry.allCases, id: \.self) { c in
-                    DXChip(LocalizedStringKey(String(localized: c.title)), isOn: Binding(get: { country == c }, set: { if $0 { country = c; drafts[i].presetID = nil } }))
+                    DXChip(LocalizedStringKey(String(localized: c.title)), isOn: Binding(get: { country == c }, set: { if $0 { switchCountry(c, for: i) } }))
                 }
-                DXChip("Elsewhere", isOn: Binding(get: { country == nil }, set: { if $0 { country = nil; drafts[i].presetID = nil } }))
+                DXChip("Elsewhere", isOn: Binding(get: { country == nil }, set: { if $0 { switchCountry(nil, for: i) } }))
             }
             .padding(.top, DX.Space.xs)
             if draft.type == .gum || draft.type == .lozenge {
@@ -176,7 +176,7 @@ struct NRTSetupView: View {
             }
             VStack(spacing: DX.Space.xs) {
                 ForEach(presets) { preset in
-                    presetCard(preset, selected: draft.presetID == preset.id) { drafts[i].presetID = preset.id }
+                    presetCard(preset, selected: draft.presetID == preset.id) { choose(preset, for: i) }
                 }
                 presetCard(nil, selected: draft.presetID == nil && !draft.steps.isEmpty) {
                     drafts[i].presetID = nil
@@ -350,13 +350,33 @@ struct NRTSetupView: View {
         stage = .schedule(0)
     }
 
+    /// Picking a label copies its steps straight away, so the plan always shows the card that's ticked.
+    private func choose(_ preset: NRTPreset, for i: Int) {
+        drafts[i].presetID = preset.id
+        drafts[i].steps = steps(of: preset, strength: drafts[i].strength)
+    }
+
+    /// A new country clears any label from the old one; steps typed in by hand are kept.
+    private func switchCountry(_ c: LabelCountry?, for i: Int) {
+        country = c
+        if drafts[i].presetID != nil {
+            drafts[i].presetID = nil
+            drafts[i].steps = []
+        }
+    }
+
+    private func steps(of preset: NRTPreset, strength: Double) -> [PlanStep] {
+        preset.steps.map { step in
+            var copy = step
+            if copy.strengthMg == 0 { copy.strengthMg = strength }
+            return copy
+        }
+    }
+
     private func confirmSchedule(_ i: Int) {
+        // Gum and lozenge strength can change after the label was picked.
         if let preset = NRTLabels.preset(id: drafts[i].presetID) {
-            drafts[i].steps = preset.steps.map { step in
-                var copy = step
-                if copy.strengthMg == 0 { copy.strengthMg = drafts[i].strength }
-                return copy
-            }
+            drafts[i].steps = steps(of: preset, strength: drafts[i].strength)
         }
         stage = .plan(i)
     }

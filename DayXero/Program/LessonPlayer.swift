@@ -1,4 +1,3 @@
-import AVFoundation
 import DayXeroCore
 import SwiftData
 import SwiftUI
@@ -103,15 +102,15 @@ struct LessonPlayer: View {
             Button(nextTitle(step, isLast: index == content.steps.count - 1)) { advance() }
                 .buttonStyle(.dxPrimary)
                 .disabled(!canAdvance(step))
-            if case .audio = step {
-                Button("Skip audio") { advance() }.buttonStyle(.dxQuiet)
-            }
         }
         .padding(.top, DX.Space.xs)
     }
 
     private func nextTitle(_ step: LessonStep, isLast: Bool) -> LocalizedStringKey {
         if case .ifThen = step { return "Save my plan" }
+        if case .audio = step, let content, content.steps.indices.contains(index + 1), case .ifThen = content.steps[index + 1] {
+            return "Skip to the exercise"
+        }
         return isLast ? "Finish" : "Next"
     }
 
@@ -139,7 +138,10 @@ struct LessonPlayer: View {
                 }
             }
         case let .audio(title, subtitle, file, seconds, transcript):
-            AudioStep(title: title, subtitle: subtitle, file: file, seconds: seconds, transcript: transcript)
+            LessonAudioStep(title: title, subtitle: subtitle, file: file, seconds: seconds, transcript: transcript) {
+                // When the audio ends, the lesson moves on to its exercise by itself.
+                if content?.steps.indices.contains(index) == true, case .audio = content?.steps[index] { advance() }
+            }
         case let .ifThen(title, subtitle, actions):
             IfThenStep(title: title, subtitle: subtitle, situation: situation, actions: actions, selection: $ifThenAction)
         case .weekRating:
@@ -341,82 +343,6 @@ private struct IfThenStep: View {
                         .strokeBorder(DX.Palette.faint, style: StrokeStyle(lineWidth: 1, dash: [3, 3]))
                 }
             }
-    }
-}
-
-/// Guided audio with play/pause, a scrubber and a transcript. Works without a file (shows the transcript).
-private struct AudioStep: View {
-    let title: String
-    let subtitle: String
-    let file: String?
-    let seconds: Int
-    let transcript: String
-
-    @State private var player: AVPlayer?
-    @State private var playing = false
-    @State private var showTranscript = false
-
-    private var url: URL? {
-        guard let file else { return nil }
-        let name = (file as NSString).deletingPathExtension, ext = (file as NSString).pathExtension
-        return Bundle.main.url(forResource: name, withExtension: ext.isEmpty ? nil : ext)
-    }
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: DX.Space.xs) {
-            Text(title).dxText(.title)
-            Text(subtitle).dxText(.subtitle)
-            DXGlassCard {
-                VStack(spacing: DX.Space.s) {
-                    Button {
-                        toggle()
-                    } label: {
-                        Image(systemName: playing ? "pause.fill" : "play.fill")
-                            .font(.system(size: 26))
-                            .foregroundStyle(DX.Palette.onPrimary)
-                            .frame(width: 72, height: 72)
-                            .background(DX.Palette.primary, in: Circle())
-                    }
-                    .buttonStyle(.plain)
-                    .disabled(url == nil)
-                    .accessibilityLabel(Text(playing ? "Pause" : "Play"))
-                    TimelineView(.periodic(from: .now, by: 0.5)) { _ in
-                        let elapsed = player?.currentTime().seconds ?? 0
-                        VStack(spacing: 4) {
-                            DXProgressBar(value: seconds > 0 ? elapsed / Double(seconds) : 0)
-                            HStack {
-                                Text(Duration.seconds(elapsed.isFinite ? elapsed : 0), format: .time(pattern: .minuteSecond))
-                                Spacer()
-                                Text(Duration.seconds(seconds), format: .time(pattern: .minuteSecond))
-                            }
-                            .dxText(.subtitle)
-                        }
-                    }
-                    if url == nil {
-                        Text("Recording coming soon. Read the transcript instead.").dxText(.subtitle).multilineTextAlignment(.center)
-                    }
-                }
-                .frame(maxWidth: .infinity)
-            }
-            .padding(.top, DX.Space.m)
-            Button(showTranscript || url == nil ? "Hide transcript" : "Show transcript") { showTranscript.toggle() }
-                .buttonStyle(.dxQuiet)
-                .frame(maxWidth: .infinity)
-            if showTranscript || url == nil {
-                Text(transcript).font(DX.TextStyle.body.font).foregroundStyle(DX.Palette.text2)
-            }
-        }
-        .onDisappear { player?.pause() }
-    }
-
-    private func toggle() {
-        guard let url else { return }
-        if player == nil {
-            try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio)
-            player = AVPlayer(url: url)
-        }
-        if playing { player?.pause() } else { player?.play() }
-        playing.toggle()
     }
 }
 

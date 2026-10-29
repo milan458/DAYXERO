@@ -100,13 +100,13 @@ final class JourneyUITests: XCTestCase {
         snap(app, "sos-session")
         tap(app.buttons["Session options"])
         tap(app.buttons["It passed"])
-        XCTAssert(app.staticTexts["Craving ridden out"].waitForExistence(timeout: 5))
+        XCTAssert(app.staticTexts["Wave survived, Sam."].waitForExistence(timeout: 5))
         tap(app.buttons["Done"])
         XCTAssert(app.buttons["Craving SOS"].waitForExistence(timeout: 5))
     }
 
     private func visitTabs(_ app: XCUIApplication, prefix: String) {
-        for tab in ["Program", "Progress", "Today"] {
+        for tab in ["Toolkit", "Program", "Progress", "Today"] {
             tap(app.buttons[tab].firstMatch)
             RunLoop.current.run(until: .now.addingTimeInterval(1))   // let the tab cross-fade finish
             snap(app, "\(prefix)-\(tab.lowercased())")

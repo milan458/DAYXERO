@@ -2,7 +2,7 @@ import DayXeroCore
 import SwiftData
 import SwiftUI
 
-/// The app after onboarding: Today, Water, Program and Progress in the floating dock, with Craving SOS in the middle.
+/// The app after onboarding: Today, Toolkit, Program and Progress in the floating dock, with Craving SOS in the middle.
 struct HomeView: View {
     let profile: UserProfile
     @State private var tab = UserDefaults.standard.string(forKey: "dx.tab") ?? "today"
@@ -11,30 +11,31 @@ struct HomeView: View {
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
-        ZStack(alignment: .bottom) {
-            Group {
-                switch tab {
-                case "program":
-                    ProgramView(profile: profile)
-                case "progress":
-                    ProgressTab(profile: profile)
-                case "water":
-                    WaterTrackerView(profile: profile)
-                default:
-                    TodayView(profile: profile, openWater: { tab = "water" })
-                }
+        Group {
+            switch tab {
+            case "program":
+                ProgramView(profile: profile)
+            case "progress":
+                ProgressTab(profile: profile)
+            case "toolkit", "water":
+                // "water" is the old tab id: open the toolkit with the tracker showing.
+                ToolkitView(profile: profile, openWater: tab == "water")
+            default:
+                TodayView(profile: profile)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        // The dock floats over the tabs; the inset lets every tab's last row scroll clear of it.
+        .safeAreaInset(edge: .bottom, spacing: 0) {
             DXDock(
                 items: [
                     DXDockItem(id: "today", title: "Today", systemImage: "house"),
-                    DXDockItem(id: "water", title: "Water", systemImage: "drop"),
+                    DXDockItem(id: "toolkit", title: "Toolkit", systemImage: "shield"),
                     DXDockItem(id: "program", title: "Program", systemImage: "book.closed"),
                     DXDockItem(id: "progress", title: "Progress", systemImage: "chart.bar"),
                 ],
-                selection: $tab,
-                // Today, Water, Craving SOS in the middle, Program, Progress.
+                selection: dockSelection,
+                // Today, Toolkit, Craving SOS in the middle, Program, Progress.
                 sosPosition: 2,
                 sosAction: { sos.open(source: "dock") }
             )
@@ -45,6 +46,10 @@ struct HomeView: View {
         .onChange(of: scenePhase, initial: true) { _, phase in
             if phase == .active { ProgramUpkeep.checkForBreak(profile, isPro: entitlement.isPro) }
         }
+    }
+
+    private var dockSelection: Binding<String> {
+        Binding(get: { tab == "water" ? "toolkit" : tab }, set: { tab = $0 })
     }
 }
 
@@ -68,8 +73,7 @@ struct ComingSoon: View {
 
 struct TodayView: View {
     let profile: UserProfile
-    /// Switches the dock to the water tracker.
-    var openWater: () -> Void = {}
+    @State private var showWater = false
     @Environment(Entitlement.self) private var entitlement
     @Environment(\.modelContext) private var context
     @AppStorage("dx.sosHintSeen") private var sosHintSeen = false
@@ -103,7 +107,7 @@ struct TodayView: View {
                     header(snap, now: timeline.date)
                     hero(snap)
                     dailyCard(now: timeline.date)
-                    WaterHomeCard(profile: profile, now: timeline.date, onOpen: openWater)
+                    WaterHomeCard(profile: profile, now: timeline.date, onOpen: { showWater = true })
                     if let lesson = snap.lesson {
                         if lesson.isReplay {
                             ReplayCard(title: lesson.title, minutes: LessonLibrary.lesson(for: lesson.day, product: profile.primaryProduct?.product ?? .cigarettes).minutes) {
@@ -126,7 +130,7 @@ struct TodayView: View {
                 }
                 .padding(.horizontal, DX.Space.m)
                 .padding(.top, DX.Space.s)
-                .padding(.bottom, 120)
+                .padding(.bottom, DX.Space.l)
             }
         }
         .overlay(alignment: .bottom) {
@@ -152,6 +156,9 @@ struct TodayView: View {
         }
         .fullScreenCover(isPresented: $showPledge) {
             PledgeView(profile: profile) { showPledge = false }
+        }
+        .fullScreenCover(isPresented: $showWater) {
+            WaterTrackerView(profile: profile, onClose: { showWater = false })
         }
         .fullScreenCover(isPresented: $showCheckIn) {
             CheckInView(profile: profile) { showCheckIn = false }
@@ -280,6 +287,37 @@ struct TodayView: View {
             .accessibilityElement(children: .combine)
             .accessibilityHint(Text("Logs one now"))
         }
+        urgeRow(now: now)
+    }
+
+    /// An urge goes straight to the craving form (strength, trigger, or ride it out with SOS), not via the Log menu.
+    private func urgeRow(now: Date) -> some View {
+        let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
+        let today = clock.day(containing: now)
+        let urges = logs.prefix(300).filter { $0.kind == .craving && clock.day(containing: $0.timestamp) == today }
+        let ridden = urges.filter { $0.outcome == .passed }.count
+        return Button { log.open(.craving) } label: {
+            HStack(spacing: DX.Space.s) {
+                Image(systemName: "flame").font(.system(size: 18)).foregroundStyle(DX.Palette.accentInk)
+                    .frame(width: 42, height: 42).background(DX.Palette.accentSoft, in: Circle())
+                VStack(alignment: .leading, spacing: 1) {
+                    Text("Urges").font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
+                    Text("\(urges.count) today · \(ridden) ridden out").dxText(.subtitle)
+                }
+                Spacer(minLength: DX.Space.xs)
+                Text("+ Urge").font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
+                    .foregroundStyle(DX.Palette.onAccent)
+                    .padding(.horizontal, 14).frame(height: 40)
+                    .background(DX.Palette.sage, in: Capsule())
+            }
+            .padding(.vertical, DX.Space.s).padding(.horizontal, 14)
+            .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(DX.Palette.hairline))
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityElement(children: .combine)
+        .accessibilityHint(Text("Logs an urge: how strong, and what set it off"))
     }
 
     private func useCounts(_ product: Product, now: Date) -> (today: Int, yesterday: Int) {
@@ -308,14 +346,15 @@ struct TodayView: View {
         let count = entry.product.map { useCounts($0, now: .now).today } ?? 0
         return HStack(spacing: DX.Space.s) {
             Image(systemName: "checkmark").font(.system(size: 13, weight: .bold))
-            Text("Logged · \(count) today").font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
+            Text(toastTitle(entry.product, count: count)).font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
+                .lineLimit(2)
             Spacer(minLength: DX.Space.xs)
             Button("Undo") {
                 UseLog.undo(entry, in: context)
                 justLogged = nil
             }
             .opacity(0.75)
-            Button("Add details") {
+            Button("Add trigger") {
                 detailsFor = entry
                 justLogged = nil
             }
@@ -327,9 +366,18 @@ struct TodayView: View {
         .background(DX.Palette.primary, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
         .shadow(color: DX.Palette.shadow, radius: 16, y: 8)
         .padding(.horizontal, DX.Space.m)
-        .padding(.bottom, 96)
+        .padding(.bottom, DX.Space.s)
         .transition(.move(edge: .bottom).combined(with: .opacity))
         .accessibilityElement(children: .contain)
+    }
+
+    private func toastTitle(_ product: Product?, count: Int) -> String {
+        switch product {
+        case .cigarettes: String(localized: "Cigarette #\(count) logged")
+        case .vape: String(localized: "Puff session #\(count) logged")
+        case .pouches: String(localized: "Pouch #\(count) logged")
+        case nil: String(localized: "Logged")
+        }
     }
 
     private func isPrep(_ snap: HomeSnapshot) -> Bool {
