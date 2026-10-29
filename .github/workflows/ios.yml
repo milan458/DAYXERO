@@ -226,6 +226,11 @@ jobs:
           shoot light large health-prep-light -dx.homeScenario prep -dx.store pro -dx.tab progress -dx.openHealth YES
           shoot dark large health-day3-dark -dx.homeScenario day3 -dx.store pro -dx.tab progress -dx.openHealth YES
           shoot light large health-day3-light -dx.homeScenario day3 -dx.store pro -dx.tab progress -dx.openHealth YES
+          shoot dark large health-lips-dark $P12 -dx.tab progress -dx.openHealth YES -dx.openHealthItem lips
+          shoot light large health-lips-light $P12 -dx.tab progress -dx.openHealth YES -dx.openHealthItem lips
+          shoot light large health-hair-light $P12 -dx.tab progress -dx.openHealth YES -dx.openHealthItem hair
+          shoot dark large health-heart-dark $P12 -dx.tab progress -dx.openHealth YES -dx.openHealthItem heart-rate
+          shoot dark accessibility-extra-extra-extra-large health-lips-dark-ax5 $P12 -dx.tab progress -dx.openHealth YES -dx.openHealthItem lips
           shoot dark large daily-pledgecard-dark $P12 -dx.forceDaily pledge
           shoot light large daily-pledgecard-light $P12 -dx.forceDaily pledge
           shoot dark large daily-pledge-dark $P12 -dx.openPledge YES

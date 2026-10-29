@@ -4,16 +4,20 @@ import Foundation
 import Testing
 
 struct HealthTimelineTests {
-    @Test func theBundledTimelineLoadsAndEveryItemHasASource() throws {
+    @Test func theBundledTimelineLoadsAndEveryHealthItemHasASource() throws {
         let timeline = try #require(HealthTimeline.bundled)
         for product in Product.allCases {
             let items = timeline.items(for: product)
             #expect(!items.isEmpty)
             for item in items {
+                #expect(item.toHours >= item.fromHours)
+                // Looks changes are wellness notes; every health claim cites a source.
+                if item.isLooks { continue }
                 let source = try #require(timeline.source(item.source), "\(item.id) has no source")
                 #expect(source.url.scheme == "https")
-                #expect(item.toHours >= item.fromHours)
             }
+            #expect(items.contains { $0.isLooks }, "no looks changes for \(product)")
+            #expect(!timeline.sources(for: product).isEmpty)
         }
     }
 

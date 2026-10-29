@@ -87,16 +87,16 @@ struct HealthArt: View {
 enum MilestoneDrawing {
     static let ids = ["heart-rate", "carbon-monoxide", "circulation", "coughing", "heart-attack", "mouth-cancer",
                       "lung-cancer", "heart-disease", "withdrawal-start", "nicotine-gone", "withdrawal-peak", "mood",
-                      "cravings-fade"]
+                      "cravings-fade", "taste", "fresh-breath", "lips", "skin-glow", "hair", "even-tone", "sleep"]
 
     enum Hue { case coral, sky, sage, lilac, sun }
 
     static func hue(_ id: String) -> Hue {
         switch id {
-        case "heart-rate", "circulation", "heart-disease": .coral
-        case "carbon-monoxide", "coughing", "lung-cancer": .sky
-        case "withdrawal-start", "cravings-fade": .lilac
-        case "nicotine-gone", "mood": .sun
+        case "heart-rate", "circulation", "heart-disease", "lips": .coral
+        case "carbon-monoxide", "coughing", "lung-cancer", "fresh-breath": .sky
+        case "withdrawal-start", "cravings-fade", "hair", "sleep": .lilac
+        case "nicotine-gone", "mood", "skin-glow": .sun
         default: .sage
         }
     }
@@ -133,7 +133,7 @@ enum MilestoneDrawing {
         static let sky = Color(hex: 0x7FC0F5), skyDeep = Color(hex: 0x4F9BE6)
         static let sage = Color(hex: 0xBCC388), sageDeep = Color(hex: 0x8E9A55)
         static let olive = Color(hex: 0x55621F), oliveDeep = Color(hex: 0x3C4614)
-        static let sun = Color(hex: 0xF7C548)
+        static let sun = Color(hex: 0xF7C548), sunDeep = Color(hex: 0xD9A52E), glass = Color(hex: 0xFFF3CF)
         static let lilac = Color(hex: 0xB7A4F2), lilacDeep = Color(hex: 0x8E78E0)
         static let grey = Color(hex: 0xB3B6A4), greyDeep = Color(hex: 0x868A74)
         static let cloudShade = Color(hex: 0xD9DCCB)
@@ -145,6 +145,9 @@ enum MilestoneDrawing {
     private static let shield = "M32 6 L53 13.5 V30 C53 43 44 52 32 58 C20 52 11 43 11 30 V13.5 Z"
     private static let bubble = "M14 12 H50 Q56 12 56 18 V38 Q56 44 50 44 H30 L20 53 V44 H14 Q8 44 8 38 V18 Q8 12 14 12 Z"
     private static let vessel = "M9 44 C9 22 28 18 32 32 C36 46 55 42 55 20"
+    private static let toothShape = "M18 14 C24 10 28 13 32 13 C36 13 40 10 46 14 C52 18 50 30 47 38 C45 45 44 54 40 54 C36 54 36 42 32 42 C28 42 28 54 24 54 C20 54 19 45 17 38 C14 30 12 18 18 14 Z"
+    private static let lipsShape = "M10 32 C14 24 20 20 26 22 C29 23 31 25 32 26 C33 25 35 23 38 22 C44 20 50 24 54 32 C48 44 40 48 32 48 C24 48 16 44 10 32 Z"
+    private static let moonShape = "M36 10 C24 12 16 22 16 34 C16 46 26 56 38 56 C44 56 48 54 51 50 C36 50 26 40 26 28 C26 20 30 14 36 10 Z"
     private static let cloud = "M14 54 H40 C45 54 48 50.5 48 46 C48 41.5 44.5 38 40 38 C39 33 35 30 30 30 C24.5 30 20 34 20 39.5 C16 39.5 12 42.5 12 46.5 C12 50.5 14 54 14 54 Z"
 
     static func draw(_ id: String, clock k: Clock, in c: inout GraphicsContext) {
@@ -289,6 +292,104 @@ enum MilestoneDrawing {
             c.stroke(svg("M8 35 Q14 29.5 20 35 T32 35 T44 35 T56 35"), with: .color(Ink.lilac), style: width(4))
             c.stroke(svg("M8 48 Q14 46.5 20 48 T32 48 T44 48 T50 48"), with: .color(Ink.skyDeep), style: width(4))
             sparkle(c, 56, 48, 4.5, k, delay: 0)
+        // The looks changes (S25): same kit rules, chunky fills, a darker edge, one highlight, one slow loop.
+        case "taste":
+            // Two cherries swinging gently from their stalk.
+            let bunch = rotated(c, by: sway(k), around: CGPoint(x: 36, y: 11))
+            bunch.stroke(svg("M22 36 Q25 21 36 11 M43 38 Q40 23 36 11"), with: .color(Ink.olive), style: width(3))
+            bunch.fill(svg("M36 11 C41 6 50 6 53 11 C48 15 41 15 36 11 Z"), with: .color(Ink.sageDeep))
+            for (x, y) in [(21.0, 42.0), (43, 44)] as [(CGFloat, CGFloat)] {
+                bunch.fill(ellipse(x, y + 2.5, 10.5, 10.5), with: .color(Ink.coralDeep))
+                bunch.fill(ellipse(x, y, 10.5, 10.5), with: .color(Ink.coral))
+                var shine = bunch
+                shine.translateBy(x: x - 4.5, y: y - 4)
+                shine.rotate(by: .degrees(-30))
+                shine.fill(ellipse(0, 0, 3.6, 2), with: .color(.white.opacity(0.55)))
+            }
+        case "fresh-breath":
+            // A clean tooth that bobs a little, with twinkles.
+            var tooth = c
+            tooth.translateBy(x: 0, y: -2 * CGFloat(k.swing(2.8)))
+            let t = svg(toothShape)
+            tooth.fill(t.offsetBy(dx: 0, dy: 2.5), with: .color(Ink.cloudShade))
+            tooth.fill(t, with: .color(.white))
+            var shine = tooth
+            shine.translateBy(x: 22, y: 22)
+            shine.rotate(by: .degrees(-15))
+            shine.fill(ellipse(0, 0, 2.4, 5), with: .color(Ink.sky.opacity(0.6)))
+            sparkle(c, 53, 11, 5, k, delay: 0)
+            sparkle(c, 10, 29, 3.2, k, delay: 0.9)
+        case "lips":
+            // Lips that soften and fill out, slowly.
+            let l = scaled(c, by: 0.96 + 0.06 * CGFloat(k.swing(2.6, rest: 0.6)), around: CGPoint(x: 32, y: 35))
+            let shape = svg(lipsShape)
+            l.fill(shape.offsetBy(dx: 0, dy: 2.5), with: .color(Ink.coralDeep))
+            l.fill(shape, with: .color(Ink.coral))
+            l.stroke(svg("M11 32 Q32 37 53 32"), with: .color(Ink.coralDeep), style: width(2.6))
+            var shine = l
+            shine.translateBy(x: 24, y: 40.5)
+            shine.rotate(by: .degrees(-10))
+            shine.fill(ellipse(0, 0, 5, 2.2), with: .color(.white.opacity(0.55)))
+            sparkle(c, 53, 12, 5, k, delay: 0.4)
+        case "skin-glow":
+            // A hand mirror with a glint sweeping across the glass.
+            c.fill(Path(roundedRect: CGRect(x: 28.5, y: 40, width: 7, height: 19), cornerRadius: 3.5), with: .color(Ink.oliveDeep))
+            c.fill(Path(roundedRect: CGRect(x: 28.5, y: 38, width: 7, height: 19), cornerRadius: 3.5), with: .color(Ink.olive))
+            c.fill(ellipse(32, 27.5, 17, 17), with: .color(Ink.sunDeep))
+            c.fill(ellipse(32, 25, 17, 17), with: .color(Ink.sun))
+            c.fill(ellipse(32, 25, 11.5, 11.5), with: .color(Ink.glass))
+            var glass = c
+            glass.clip(to: ellipse(32, 25, 11.5, 11.5))
+            let sweep = CGFloat(k.still ? 0.3 : k.phase(3.2))
+            var glint = glass
+            glint.translateBy(x: -14 + 28 * sweep, y: 0)
+            glint.rotate(by: .degrees(25))
+            glint.fill(Path(CGRect(x: 28, y: -10, width: 4, height: 60)), with: .color(.white.opacity(0.8)))
+            sparkle(c, 54, 11, 5, k, delay: 0)
+            sparkle(c, 9, 17, 3.2, k, delay: 1.1)
+        case "hair":
+            // Three strands swaying from the root, each a beat behind the last.
+            for (i, x) in ([20, 32, 44] as [CGFloat]).enumerated() {
+                let strand = rotated(c, by: .degrees(k.still ? 0 : -5 + 10 * k.swing(3.2, delay: Double(i) * 0.35)),
+                                     around: CGPoint(x: x, y: 56))
+                let d = "M\(x) 56 C\(x - 4) 40 \(x + 6) 28 \(x) \(i == 1 ? 8 : 11)"
+                strand.stroke(svg(d).offsetBy(dx: 0, dy: 2), with: .color(Ink.lilacDeep), style: width(7))
+                strand.stroke(svg(d), with: .color(Ink.lilac), style: width(7))
+                if i == 1 { strand.stroke(svg("M33.5 13 C35 19 34.5 23 33.5 26"), with: .color(.white.opacity(0.7)), style: width(2)) }
+            }
+            sparkle(c, 54, 9, 4.5, k, delay: 0.6)
+        case "even-tone":
+            // Two tones in one circle, the sun side slowly giving way.
+            c.fill(ellipse(32, 36.5, 19, 19), with: .color(Ink.sageDeep))
+            c.fill(ellipse(32, 34, 19, 19), with: .color(Ink.sage))
+            var half = c
+            half.opacity = k.still ? 1 : 1 - 0.45 * k.swing(4)
+            half.fill(svg("M32 15 C26 23 38 29 32 35 C26 41 38 46 32 53 A19 19 0 0 1 32 15 Z"), with: .color(Ink.sun))
+            var shine = c
+            shine.translateBy(x: 22, y: 26)
+            shine.rotate(by: .degrees(-35))
+            shine.fill(ellipse(0, 0, 4, 2.4), with: .color(.white.opacity(0.55)))
+            sparkle(c, 53, 11, 5, k, delay: 0)
+        case "sleep":
+            // A moon bobbing gently while the Zs drift up.
+            var moon = c
+            moon.translateBy(x: 0, y: -2.5 * CGFloat(k.swing(2.8)))
+            let m = svg(moonShape)
+            moon.fill(m.offsetBy(dx: 0, dy: 2.5), with: .color(Ink.lilacDeep))
+            moon.fill(m, with: .color(Ink.lilac))
+            var shine = moon
+            shine.translateBy(x: 22, y: 30)
+            shine.rotate(by: .degrees(12))
+            shine.fill(ellipse(0, 0, 2.4, 6), with: .color(.white.opacity(0.5)))
+            for (d, delay, w) in [("M40 14 H48 L40 22 H48", 0.0, 2.6), ("M50 28 H55 L50 33 H55", 0.8, 2.2)] as [(String, Double, CGFloat)] {
+                var z = c
+                if !k.still {
+                    let p = k.phase(2.8, delay: delay)
+                    z.translateBy(x: 0, y: CGFloat(3 - 6 * p))
+                    z.opacity = p < 0.3 ? p / 0.3 : 1 - (p - 0.3) / 0.7
+                }
+                z.stroke(svg(d), with: .color(.white), style: width(w))
+            }
         default:
             sparkle(c, 32, 32, 20, k, delay: 0)
         }

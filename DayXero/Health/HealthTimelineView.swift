@@ -14,7 +14,14 @@ struct HealthTimelineView: View {
     init(profile: UserProfile, onClose: (() -> Void)? = nil) {
         self.profile = profile
         self.onClose = onClose
-        _product = State(initialValue: profile.primaryProduct?.product ?? .cigarettes)
+        let product = profile.primaryProduct?.product ?? .cigarettes
+        _product = State(initialValue: product)
+        #if DEBUG
+        // Screenshots of one change's full story: `-dx.openHealthItem lips`.
+        if let id = UserDefaults.standard.string(forKey: "dx.openHealthItem") {
+            _open = State(initialValue: HealthTimeline.bundled?.items(for: product).first { $0.id == id })
+        }
+        #endif
     }
 
     var body: some View {
@@ -38,12 +45,13 @@ struct HealthTimelineView: View {
                         ForEach(Array(path.enumerated()), id: \.element.id) { index, item in
                             Button { open = item } label: {
                                 HealthPathStop(item: item, state: HealthTimeline.state(of: item, elapsedHours: elapsed),
-                                               source: timeline?.source(item.source), isLast: index == path.count - 1)
+                                               isLast: index == path.count - 1)
                             }
                             .buttonStyle(.plain)
                         }
                     }
                     if let text = timeline?.note(for: product) { note(text) }
+                    sources(timeline)
                 }
                 .padding(.horizontal, DX.Space.m)
                 .dxReadableColumn()
@@ -53,8 +61,11 @@ struct HealthTimelineView: View {
         }
         .dxCanvas()
         .sheet(item: $open) { item in
-            HealthItemDetail(item: item, source: HealthTimeline.bundled?.source(item.source))
-                .presentationDetents([.medium, .large])
+            let elapsed = HealthTimeline.elapsedHours(quitDay: profile.quitDay, now: .now,
+                                                      clock: DayClock(boundaryHour: profile.dayBoundaryHour))
+            HealthItemDetail(item: item, elapsedHours: elapsed, source: HealthTimeline.bundled?.source(item.source))
+                .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
         }
     }
 
@@ -127,7 +138,7 @@ struct HealthTimelineView: View {
         }
         .buttonStyle(.plain)
         .accessibilityElement(children: .combine)
-        .accessibilityHint(Text("Opens the detail and its source"))
+        .accessibilityHint(Text("Opens the full story"))
     }
 
     private var switcher: some View {
@@ -159,6 +170,31 @@ struct HealthTimelineView: View {
         }
     }
 
+    /// Sources once, under the timeline, instead of on every card.
+    @ViewBuilder
+    private func sources(_ timeline: HealthTimeline?) -> some View {
+        let list = timeline?.sources(for: product) ?? []
+        let looks = timeline?.items(for: product).contains(where: \.isLooks) ?? false
+        VStack(alignment: .leading, spacing: 6) {
+            Text("Sources").dxText(.micro)
+            ForEach(list, id: \.url) { source in
+                Link(destination: source.url) {
+                    Text(verbatim: source.title).font(.custom(DX.Typeface.regular, size: 12, relativeTo: .caption))
+                        .underline().foregroundStyle(DX.Palette.accentInk).multilineTextAlignment(.leading)
+                }
+            }
+            if looks {
+                Text("Looks changes (lips, skin, hair, taste, breath, sleep) are general wellness information about how nicotine and smoke affect blood flow and skin.")
+                    .font(.custom(DX.Typeface.regular, size: 12, relativeTo: .caption)).foregroundStyle(DX.Palette.muted)
+            }
+            Text("Everyone's body moves at its own pace, and a slip doesn't undo what's already healed. Not medical advice.")
+                .font(.custom(DX.Typeface.regular, size: 12, relativeTo: .caption)).foregroundStyle(DX.Palette.muted)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.top, DX.Space.m)
+        .padding(.horizontal, DX.Space.xxs)
+    }
+
     private func note(_ text: String) -> some View {
         Text(verbatim: text)
             .dxText(.subtitle)
@@ -175,7 +211,6 @@ struct HealthTimelineView: View {
 struct HealthPathStop: View {
     let item: HealthTimeline.Item
     let state: HealthTimeline.State
-    let source: HealthTimeline.Source?
     let isLast: Bool
 
     private static let node: CGFloat = 48
@@ -188,7 +223,7 @@ struct HealthPathStop: View {
                 .frame(width: Self.node + 8)
                 .frame(maxHeight: .infinity, alignment: .top)
                 .background { rail }
-            HealthItemCard(item: item, state: state, source: source)
+            HealthItemCard(item: item, state: state)
                 .padding(.bottom, isLast ? 0 : DX.Space.s)
         }
         .fixedSize(horizontal: false, vertical: true)
@@ -217,7 +252,6 @@ struct HealthPathStop: View {
 struct HealthItemCard: View {
     let item: HealthTimeline.Item
     let state: HealthTimeline.State
-    let source: HealthTimeline.Source?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -234,10 +268,6 @@ struct HealthItemCard: View {
             if case let .underWay(fraction) = state {
                 DXProgressBar(value: fraction).padding(.top, 4)
             }
-            if let source {
-                Text(verbatim: source.label).font(DX.TextStyle.subtitle.font).underline().foregroundStyle(DX.Palette.accentInk)
-                    .padding(.top, 2)
-            }
         }
         .padding(.vertical, 14)
         .padding(.horizontal, DX.Space.m)
@@ -248,7 +278,7 @@ struct HealthItemCard: View {
         .opacity(state == .ahead ? 0.62 : 1)
         .accessibilityElement(children: .combine)
         .accessibilityValue(Text(stateText))
-        .accessibilityHint(Text("Opens the detail and its source"))
+        .accessibilityHint(Text("Opens the full story"))
     }
 
     private var badge: some View {
@@ -277,38 +307,118 @@ struct HealthItemCard: View {
     }
 }
 
-/// The claim in a little more depth, the source in full, and the disclaimer on every item (S10.2).
+/// The full story of one change (S25): its illustration, where it's up to, a warm longer read, what you might notice,
+/// what helps, and the source in small print at the bottom.
 struct HealthItemDetail: View {
     let item: HealthTimeline.Item
+    let elapsedHours: Double
     let source: HealthTimeline.Source?
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
+        let state = HealthTimeline.state(of: item, elapsedHours: elapsedHours)
         ScrollView {
-            VStack(alignment: .leading, spacing: DX.Space.s) {
-                Text(verbatim: item.when).dxText(.micro).padding(.top, DX.Space.l)
-                Text(verbatim: item.title).dxText(.title)
-                Text(verbatim: item.detail).font(DX.TextStyle.body.font).foregroundStyle(DX.Palette.text2)
-                if let source {
-                    DXCard(padding: 14) {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Source").dxText(.subtitle)
-                            Text(verbatim: source.title).font(DX.TextStyle.subtitle.font).foregroundStyle(DX.Palette.text)
-                            Link(destination: source.url) {
-                                Text("Open \(source.url.host()?.replacingOccurrences(of: "www.", with: "") ?? "source")")
-                                    .font(DX.TextStyle.subtitle.font).underline().foregroundStyle(DX.Palette.accentInk)
-                            }
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
+            VStack(alignment: .leading, spacing: DX.Space.m) {
+                hero(state)
+                VStack(spacing: 6) {
+                    Text(verbatim: eyebrow(state)).dxText(.micro, color: state == .ahead ? DX.Palette.muted : DX.Palette.accentInk)
+                    Text(verbatim: item.title).dxText(.title).multilineTextAlignment(.center)
+                    if let status = status(state) {
+                        Text(verbatim: status).dxText(.subtitle).multilineTextAlignment(.center)
                     }
                 }
-                Text("These changes assume you've stayed smoke-free; a slip doesn't undo your progress. Health information, not medical advice. Everyone's body is different.")
-                    .dxText(.subtitle)
+                .frame(maxWidth: .infinity)
+                ForEach(item.paragraphs, id: \.self) { paragraph in
+                    Text(verbatim: paragraph)
+                        .font(.custom(DX.Typeface.regular, size: 17, relativeTo: .body)).lineSpacing(5)
+                        .foregroundStyle(DX.Palette.text.opacity(0.86))
+                }
+                if let notice = item.notice, !notice.isEmpty {
+                    VStack(alignment: .leading, spacing: DX.Space.s) {
+                        Text("What you might notice").dxText(.micro)
+                        ForEach(notice, id: \.self) { line in
+                            HStack(spacing: DX.Space.s) {
+                                Image(systemName: "sparkle").font(.system(size: 13, weight: .semibold))
+                                    .foregroundStyle(DX.Palette.accentInk)
+                                    .frame(width: 34, height: 34)
+                                    .background(HealthBadge.tint(for: item.id), in: Circle())
+                                    .accessibilityHidden(true)
+                                Text(verbatim: line).font(.custom(DX.Typeface.regular, size: 15, relativeTo: .body))
+                                    .foregroundStyle(DX.Palette.text)
+                            }
+                        }
+                    }
+                    .accessibilityElement(children: .combine)
+                }
+                if let helps = item.helps {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Help it along").dxText(.micro, color: DX.Palette.accentInk)
+                        Text(verbatim: helps).font(.custom(DX.Typeface.regular, size: 15, relativeTo: .body))
+                            .foregroundStyle(DX.Palette.text)
+                    }
+                    .padding(DX.Space.m)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(DX.Palette.accentSoft, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+                    .accessibilityElement(children: .combine)
+                }
+                footer
             }
-            .padding(.horizontal, DX.Space.m)
+            .padding(.horizontal, DX.Space.l)
             .dxReadableColumn()
             .padding(.bottom, DX.Space.l)
         }
         .dxCanvas()
+    }
+
+    private func hero(_ state: HealthTimeline.State) -> some View {
+        ZStack(alignment: .topTrailing) {
+            HealthBadge(id: item.id, state: state, size: 150)
+                .padding(.vertical, DX.Space.l)
+                .frame(maxWidth: .infinity)
+                .background(RadialGradient(colors: [HealthBadge.tint(for: item.id), .clear], center: .center,
+                                           startRadius: 40, endRadius: 190))
+            Button { dismiss() } label: { Image(systemName: "xmark") }
+                .buttonStyle(.dxIcon).accessibilityLabel(Text("Close"))
+                .padding(.top, DX.Space.s)
+        }
+    }
+
+    private func eyebrow(_ state: HealthTimeline.State) -> String {
+        switch state {
+        case .done: String(localized: "Reached · \(item.when)")
+        case .underWay: String(localized: "Happening now · \(item.when)")
+        case .ahead: String(localized: "Ahead · \(item.when)")
+        }
+    }
+
+    private func status(_ state: HealthTimeline.State) -> String? {
+        switch state {
+        case let .underWay(fraction):
+            String(localized: "\(Int((fraction * 100).rounded()))% of the way · done \(TodayView.relative(hours: item.toHours - elapsedHours))")
+        case .ahead where elapsedHours >= 0:
+            String(localized: "Starts \(TodayView.relative(hours: item.fromHours - elapsedHours))")
+        case .ahead:
+            String(localized: "Counts from Quit Day")
+        case .done:
+            nil
+        }
+    }
+
+    private var footer: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            if let source {
+                Link(destination: source.url) {
+                    Text(verbatim: source.title).font(.custom(DX.Typeface.regular, size: 12, relativeTo: .caption))
+                        .underline().foregroundStyle(DX.Palette.accentInk).multilineTextAlignment(.leading)
+                }
+            } else if item.isLooks {
+                Text("General wellness information.").font(.custom(DX.Typeface.regular, size: 12, relativeTo: .caption))
+                    .foregroundStyle(DX.Palette.muted)
+            }
+            Text("Everyone's body moves at its own pace, and a slip doesn't undo what's already healed. Not medical advice.")
+                .font(.custom(DX.Typeface.regular, size: 12, relativeTo: .caption)).foregroundStyle(DX.Palette.muted)
+        }
+        .padding(.top, DX.Space.xs)
     }
 }
 
