@@ -46,6 +46,7 @@ struct PledgeView: View {
                     .padding(.top, DX.Space.xl)
             }
         .padding(.horizontal, DX.Space.l)
+        .dxReadableColumn()
         .padding(.top, DX.Space.s)
         .padding(.bottom, DX.Space.l)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)

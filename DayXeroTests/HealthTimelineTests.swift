@@ -4,16 +4,20 @@ import Foundation
 import Testing
 
 struct HealthTimelineTests {
-    @Test func theBundledTimelineLoadsAndEveryItemHasASource() throws {
+    @Test func theBundledTimelineLoadsAndEveryHealthItemHasASource() throws {
         let timeline = try #require(HealthTimeline.bundled)
         for product in Product.allCases {
             let items = timeline.items(for: product)
             #expect(!items.isEmpty)
             for item in items {
+                #expect(item.toHours >= item.fromHours)
+                // Looks changes are wellness notes; every health claim cites a source.
+                if item.isLooks { continue }
                 let source = try #require(timeline.source(item.source), "\(item.id) has no source")
                 #expect(source.url.scheme == "https")
-                #expect(item.toHours >= item.fromHours)
             }
+            #expect(items.contains { $0.isLooks }, "no looks changes for \(product)")
+            #expect(!timeline.sources(for: product).isEmpty)
         }
     }
 
@@ -57,5 +61,21 @@ struct HealthTimelineTests {
         let timeline = try HealthTimeline(data: Data(json.utf8))
         #expect(timeline.items(for: .cigarettes).map(\.id) == ["a"])
         #expect(timeline.items(for: .vape).isEmpty)
+    }
+
+    @Test func homeFeaturesTheChangeUnderWayAndTheNextOne() {
+        func item(_ id: String, _ from: Double, _ to: Double) -> HealthTimeline.Item {
+            HealthTimeline.Item(id: id, fromHours: from, toHours: to, when: "", title: id, line: "", detail: "", source: "acs")
+        }
+        let items = [item("a", 0, 2), item("b", 1, 72), item("c", 24, 168), item("d", 336, 2184)]
+        // Before Quit Day: nothing under way, the first change is next.
+        let before = HealthTimeline.nowAndNext(items, elapsedHours: -10)
+        #expect(before.now == nil && before.next?.id == "a")
+        // 30 hours in: b and c overlap, the later one is featured; d is next.
+        let day2 = HealthTimeline.nowAndNext(items, elapsedHours: 30)
+        #expect(day2.now?.id == "c" && day2.next?.id == "d")
+        // Past everything.
+        let late = HealthTimeline.nowAndNext(items, elapsedHours: 5000)
+        #expect(late.now == nil && late.next == nil)
     }
 }

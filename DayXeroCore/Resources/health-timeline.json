@@ -29,80 +29,459 @@
   },
   "groups": {
     "smoking": [
-      { "id": "heart-rate", "fromHours": 0, "toHours": 1, "when": "Within minutes",
+      {
+        "id": "heart-rate",
+        "fromHours": 0,
+        "toHours": 1,
+        "when": "Within minutes",
         "title": "Heart rate and blood pressure start to come down",
         "line": "From your first smoke-free hours.",
         "detail": "Soon after your last cigarette, your heart rate and blood pressure begin to settle.",
-        "source": "acs" },
-      { "id": "carbon-monoxide", "fromHours": 12, "toHours": 72, "when": "A few days",
+        "source": "acs",
+        "story": [
+          "Nicotine keeps your heart on a gentle sprint all day: a little faster, a little tighter, a little more pressure in every beat. The moment it stops arriving, your heart gets to ease off the pedal.",
+          "In your first smoke-free hours your pulse and blood pressure start drifting back towards where they want to be. You won't feel fireworks. You might feel a bit calmer in your chest, a bit warmer in your hands. That's your heart getting a breather it hasn't had in a long time."
+        ],
+        "notice": [
+          "Warmer hands and feet",
+          "A steadier, slower heartbeat at rest",
+          "Feeling a little calmer in your chest"
+        ],
+        "helps": "Slow breaths help this along. Try the breathing orb when you feel wired."
+      },
+      {
+        "id": "carbon-monoxide",
+        "fromHours": 12,
+        "toHours": 72,
+        "when": "A few days",
         "title": "Carbon monoxide in your blood drops to normal",
         "line": "More oxygen reaches your body.",
         "detail": "Carbon monoxide from smoke takes the place of oxygen in your blood. Within a few days it falls back to normal.",
-        "source": "acs" },
-      { "id": "circulation", "fromHours": 336, "toHours": 2184, "when": "2 weeks to 3 months",
+        "source": "acs",
+        "story": [
+          "Smoke carries carbon monoxide, the same gas that comes out of a car exhaust. It sneaks into your blood and sits where oxygen should be, so every part of you runs on a little less air than it needs.",
+          "Within a few days it's gone. Your blood carries a full load of oxygen again, to your muscles, your brain, your skin. Many people notice more energy and clearer thinking in this first stretch, even while cravings are loud."
+        ],
+        "notice": [
+          "More energy as the days go on",
+          "Clearer, less foggy thinking",
+          "Easier breath on a short walk"
+        ],
+        "helps": "Get outside and move a little. Fresh air and a short walk make the most of all that new oxygen."
+      },
+      {
+        "id": "circulation",
+        "fromHours": 336,
+        "toHours": 2184,
+        "when": "2 weeks to 3 months",
         "title": "Circulation and lung function improve",
         "line": "",
         "detail": "Somewhere in this window, blood flow and breathing start to work better.",
-        "source": "acs" },
-      { "id": "coughing", "fromHours": 720, "toHours": 8760, "when": "1 to 12 months",
+        "source": "acs",
+        "story": [
+          "Smoking narrows your blood vessels and makes your blood a bit stickier. Over these weeks, both start to change. Blood moves more freely, and your lungs begin to clear and work better.",
+          "This is when stairs stop feeling like a climb and a brisk walk stops leaving you out of breath. It builds slowly, so look back in a month and you'll be surprised how far you've come."
+        ],
+        "notice": [
+          "Stairs and hills feel easier",
+          "Better stamina when you exercise",
+          "Warmer fingers and toes"
+        ],
+        "helps": "Gentle exercise is the best friend of this change. A daily walk counts."
+      },
+      {
+        "id": "coughing",
+        "fromHours": 720,
+        "toHours": 8760,
+        "when": "1 to 12 months",
         "title": "Coughing and shortness of breath ease",
         "line": "",
         "detail": "The tiny hairs that clear your lungs start working again, so coughing and breathlessness ease.",
-        "source": "acs" },
-      { "id": "heart-attack", "fromHours": 8760, "toHours": 17520, "when": "1 to 2 years",
+        "source": "acs",
+        "story": [
+          "Your airways are lined with tiny hairs that sweep dirt and mucus up and out. Smoke flattens them. Without it, they slowly stand back up and get back to work.",
+          "At first that can mean a bit more coughing as your lungs clear out. That's a good sign. Over the following months the morning cough fades, and so does that tight, short-of-breath feeling."
+        ],
+        "notice": [
+          "The morning cough fades",
+          "Fewer chest colds",
+          "Deeper, easier breaths"
+        ],
+        "helps": "Plenty of water keeps mucus thin and easy to clear. Steam from a hot shower helps too."
+      },
+      {
+        "id": "heart-attack",
+        "fromHours": 8760,
+        "toHours": 17520,
+        "when": "1 to 2 years",
         "title": "Heart attack risk drops sharply",
         "line": "",
         "detail": "One to two years after quitting, the risk of a heart attack drops sharply.",
-        "source": "acs" },
-      { "id": "mouth-cancer", "fromHours": 43800, "toHours": 87600, "when": "5 to 10 years",
+        "source": "acs",
+        "story": [
+          "This is one of the biggest rewards of all. One to two years after your last cigarette, your risk of a heart attack drops sharply.",
+          "Every smoke-free day adds to it, quietly, in the background, whether or not you're thinking about it. You're giving your heart years it didn't have before."
+        ],
+        "notice": [
+          "You won't feel this one day to day, but it's real"
+        ],
+        "helps": "Moving most days and eating more plants keeps building on this."
+      },
+      {
+        "id": "mouth-cancer",
+        "fromHours": 43800,
+        "toHours": 87600,
+        "when": "5 to 10 years",
         "title": "Risk of mouth, throat and voice-box cancer is about halved",
         "line": "Stroke risk falls too.",
         "detail": "Five to ten years after quitting, the risk of these cancers is cut by about half, and the risk of stroke goes down.",
-        "source": "acs" },
-      { "id": "lung-cancer", "fromHours": 87600, "toHours": 87600, "when": "10 years",
+        "source": "acs",
+        "story": [
+          "Five to ten years after quitting, your risk of cancers of the mouth, throat and voice box is about halved, and your risk of stroke goes down too.",
+          "It's a long road, and you're already on it. Each day you stay smoke-free counts towards it."
+        ],
+        "notice": [
+          "Healthier gums and mouth along the way"
+        ],
+        "helps": "Regular dental check-ups help you keep an eye on your mouth's health."
+      },
+      {
+        "id": "lung-cancer",
+        "fromHours": 87600,
+        "toHours": 87600,
+        "when": "10 years",
         "title": "Lung cancer risk is about half that of someone who still smokes",
         "line": "",
         "detail": "Ten years after quitting, the risk of dying from lung cancer is about half that of a person who still smokes.",
-        "source": "acs" },
-      { "id": "heart-disease", "fromHours": 131400, "toHours": 131400, "when": "15 years",
+        "source": "acs",
+        "story": [
+          "Ten years after quitting, the risk of dying from lung cancer is about half that of someone who still smokes.",
+          "It's far off, but it's the direction you're already heading in, one day at a time."
+        ],
+        "notice": [
+          "Lungs that keep healing year after year"
+        ]
+      },
+      {
+        "id": "heart-disease",
+        "fromHours": 131400,
+        "toHours": 131400,
+        "when": "15 years",
         "title": "Heart disease risk is close to that of a non-smoker",
         "line": "",
         "detail": "Fifteen years after quitting, the risk of coronary heart disease is close to that of someone who never smoked.",
-        "source": "acs" }
+        "source": "acs",
+        "story": [
+          "Fifteen years after quitting, your risk of heart disease is close to that of someone who never smoked.",
+          "That's the full circle: your heart, back where it would have been. The work you're doing now is how you get there."
+        ],
+        "notice": [
+          "A heart that's had years to recover"
+        ]
+      },
+      {
+        "id": "taste",
+        "fromHours": 48,
+        "toHours": 120,
+        "when": "2 to 5 days",
+        "title": "Food starts tasting like food again",
+        "line": "Taste and smell wake back up.",
+        "detail": "Smoke dulls the tiny taste buds on your tongue and the nerves in your nose. Give them a few days without it and they start waking up.",
+        "kind": "looks",
+        "story": [
+          "Smoke dulls the tiny taste buds on your tongue and the nerves in your nose. Give them a few days without it and they start waking up.",
+          "Coffee smells richer. Fruit tastes sweeter. Your favourite meal suddenly has more to it. Enjoy it; it's one of the first little rewards, and it's yours to keep."
+        ],
+        "notice": [
+          "Stronger smells, good and bad",
+          "Food tasting sweeter and richer",
+          "Noticing flavours you'd forgotten"
+        ],
+        "helps": "Try something you love and really taste it. Fresh fruit makes a great craving snack, too."
+      },
+      {
+        "id": "fresh-breath",
+        "fromHours": 168,
+        "toHours": 336,
+        "when": "1 to 2 weeks",
+        "title": "Fresher breath, brighter smile",
+        "line": "No more smoke on your breath, fewer new stains.",
+        "detail": "The smell of smoke on your breath, hair and clothes fades within days of your last cigarette. No more mints and gum to cover it up.",
+        "kind": "looks",
+        "story": [
+          "The smell of smoke on your breath, hair and clothes fades within days of your last cigarette. No more mints and gum to cover it up.",
+          "With no new tar landing on your teeth, new stains stop building up, and your gums get better blood flow. A clean at the dentist now stays clean."
+        ],
+        "notice": [
+          "Breath that just smells like you",
+          "Clothes and hair that stay fresh",
+          "Gums that bleed less when you brush"
+        ],
+        "helps": "A dental clean is a great way to mark the milestone. Your smile stays brighter from here."
+      },
+      {
+        "id": "lips",
+        "fromHours": 336,
+        "toHours": 1344,
+        "when": "2 to 8 weeks",
+        "title": "Your lips get their colour back",
+        "line": "That smoker's darkening slowly fades.",
+        "detail": "That darker, dusky shade smokers' lips pick up isn't who you are. It's what heat, smoke and nicotine's squeeze on tiny blood vessels leave behind. Take those away, and your lips quietly start doing what they've always wanted to do: heal.",
+        "kind": "looks",
+        "story": [
+          "That darker, dusky shade smokers' lips pick up isn't who you are. It's what heat, smoke and nicotine's squeeze on tiny blood vessels leave behind. Take those away, and your lips quietly start doing what they've always wanted to do: heal.",
+          "As blood moves more freely, a little more natural colour comes through each week. Dry, cracked corners settle down too. It's slow and gentle, the kind of change you notice one morning in the mirror, or when someone asks what you've been doing differently."
+        ],
+        "notice": [
+          "Softer lips that don't need balm every hour",
+          "A warmer, pinker tone, starting at the edges",
+          "Gums that look pinker and healthier too"
+        ],
+        "helps": "Keep sipping water through the day, wear a lip balm with SPF outdoors, and skip the harsh scrubs. Your lips are doing the work; just give them a calm place to do it."
+      },
+      {
+        "id": "skin-glow",
+        "fromHours": 336,
+        "toHours": 1008,
+        "when": "2 to 6 weeks",
+        "title": "Your skin starts to glow",
+        "line": "Better blood flow, a brighter, fresher face.",
+        "detail": "Nicotine narrows the small blood vessels in your skin, so it gets less oxygen and fewer nutrients. Smoke adds stress your skin has to keep repairing. Together they leave it looking tired and grey.",
+        "kind": "looks",
+        "story": [
+          "Nicotine narrows the small blood vessels in your skin, so it gets less oxygen and fewer nutrients. Smoke adds stress your skin has to keep repairing. Together they leave it looking tired and grey.",
+          "With better blood flow, your skin gets fed properly again. Over a few weeks many people see a brighter, fresher face, a little more colour in their cheeks, and less of that tired look under the eyes."
+        ],
+        "notice": [
+          "A brighter, less grey complexion",
+          "More colour in your cheeks",
+          "Looking more rested"
+        ],
+        "helps": "Water, sleep and sunscreen are your skin's best friends right now."
+      },
+      {
+        "id": "hair",
+        "fromHours": 1440,
+        "toHours": 2880,
+        "when": "2 to 4 months",
+        "title": "Stronger, fuller-feeling hair",
+        "line": "Better-fed roots, less in the shower drain.",
+        "detail": "Every hair grows from a tiny root that lives on what your blood brings it. Nicotine narrows the small vessels that feed those roots, and smoke adds stress your body has to keep cleaning up. Over time, that can mean thinner strands and more of them on your pillow.",
+        "kind": "looks",
+        "story": [
+          "Every hair grows from a tiny root that lives on what your blood brings it. Nicotine narrows the small vessels that feed those roots, and smoke adds stress your body has to keep cleaning up. Over time, that can mean thinner strands and more of them on your pillow.",
+          "Once you stop, the roots get fed properly again. Hair grows slowly, so this one asks for a little patience. A few months in, many people notice less in the shower drain, and hair that feels thicker and looks shinier. You're already doing the biggest thing for it."
+        ],
+        "notice": [
+          "Less hair in your brush and drain",
+          "More shine, fewer brittle ends",
+          "No smoky smell clinging to it"
+        ],
+        "helps": "Good sleep, enough protein and steady water all feed your roots. Hair loves a calm, well-fed body, and that's exactly what you're building."
+      },
+      {
+        "id": "even-tone",
+        "fromHours": 2184,
+        "toHours": 4380,
+        "when": "3 to 6 months",
+        "title": "Dull, tanned patches start to even out",
+        "line": "Your natural tone comes through.",
+        "detail": "Smoking can leave skin looking dull and uneven, with darker patches around the mouth and eyes. As your skin renews itself month after month without smoke, those patches start to fade.",
+        "kind": "looks",
+        "story": [
+          "Smoking can leave skin looking dull and uneven, with darker patches around the mouth and eyes. As your skin renews itself month after month without smoke, those patches start to fade.",
+          "Skin replaces itself slowly, about once a month, so this change builds over a season. The tone that comes through is simply yours, without the smoke."
+        ],
+        "notice": [
+          "Darker patches around the mouth fading",
+          "A more even, natural tone",
+          "Less dullness overall"
+        ],
+        "helps": "Daily sunscreen helps new skin come through evenly."
+      }
     ],
     "nicotine": [
-      { "id": "withdrawal-start", "fromHours": 0, "toHours": 4, "when": "A few hours",
+      {
+        "id": "withdrawal-start",
+        "fromHours": 0,
+        "toHours": 4,
+        "when": "A few hours",
         "title": "Withdrawal can start",
         "line": "Cravings, restlessness or irritability are common.",
         "detail": "Withdrawal can begin within a few hours of your last nicotine. It's a sign your body is adjusting.",
-        "source": "smokefree" },
-      { "id": "nicotine-gone", "fromHours": 24, "toHours": 72, "when": "A few days",
+        "source": "smokefree",
+        "story": [
+          "A few hours after your last nicotine, your brain notices it's missing. That's when the first cravings, restlessness or a short fuse can show up.",
+          "It feels uncomfortable, but it's a good sign: your body has started adjusting to life without nicotine. Each wave rises, peaks and passes, usually within a few minutes."
+        ],
+        "notice": [
+          "Cravings that come in waves",
+          "Feeling restless or snappy",
+          "Wanting something in your hands"
+        ],
+        "helps": "When a wave comes, open Craving SOS and breathe with the orb for three minutes."
+      },
+      {
+        "id": "nicotine-gone",
+        "fromHours": 24,
+        "toHours": 72,
+        "when": "A few days",
         "title": "Most nicotine has left your body",
         "line": "Its by-product, cotinine, halves about every 15 to 20 hours.",
         "detail": "Nicotine itself clears within hours. Cotinine, what your body turns it into, halves about every 15 to 20 hours, so within a few days most of it is gone.",
-        "source": "cdc-cotinine" },
-      { "id": "withdrawal-peak", "fromHours": 0, "toHours": 168, "when": "First week",
+        "source": "cdc-cotinine",
+        "story": [
+          "Nicotine itself leaves your blood within hours. What your body turns it into, cotinine, halves about every 15 to 20 hours, so within a few days most of it is gone.",
+          "From here on, the cravings you feel aren't your body needing nicotine. They're old habits and cues, and every one you ride out makes them weaker."
+        ],
+        "notice": [
+          "Your body running nicotine-free",
+          "Cravings that are more about habit than need"
+        ],
+        "helps": "Notice what sets each craving off. Naming the trigger takes away some of its power."
+      },
+      {
+        "id": "withdrawal-peak",
+        "fromHours": 0,
+        "toHours": 168,
+        "when": "First week",
         "title": "Withdrawal is usually at its strongest",
         "line": "The hardest stretch for most people.",
         "detail": "For most people, withdrawal is strongest in the first days to week, then weakens the longer you stay nicotine-free.",
-        "source": "smokefree" },
-      { "id": "mood", "fromHours": 168, "toHours": 336, "when": "1 to 2 weeks",
+        "source": "smokefree",
+        "story": [
+          "For most people the first days to a week are the steepest part of the climb. Cravings can be loud and your mood can wobble.",
+          "This is your brain rebalancing. Every craving you ride out turns the volume down on the next one, so the path gets flatter from here."
+        ],
+        "notice": [
+          "Cravings at their loudest, then easing",
+          "Some irritability or low mood",
+          "Trouble focusing for a few days"
+        ],
+        "helps": "Lean on your toolkit: Craving SOS, water, a short walk, a friend."
+      },
+      {
+        "id": "mood",
+        "fromHours": 168,
+        "toHours": 336,
+        "when": "1 to 2 weeks",
         "title": "Mood changes from withdrawal usually ease",
         "line": "",
         "detail": "Low mood, irritability or anxiety from withdrawal usually get better within a week or two. If they don't, talk to a doctor.",
-        "source": "smokefree-mood" },
-      { "id": "cravings-fade", "fromHours": 336, "toHours": 672, "when": "A few weeks",
+        "source": "smokefree-mood",
+        "story": [
+          "Nicotine gives a quick lift, then a dip, over and over, many times a day. Without it, those ups and downs start to settle.",
+          "Within a week or two most people find their mood steadier and calmer than it was between hits. If low mood or anxiety hangs around, talk to a doctor; you don't have to push through alone."
+        ],
+        "notice": [
+          "Fewer sudden mood swings",
+          "Less tension between the old hit times",
+          "A calmer baseline"
+        ],
+        "helps": "Sleep, daylight and movement all help your mood find its feet."
+      },
+      {
+        "id": "cravings-fade",
+        "fromHours": 336,
+        "toHours": 672,
+        "when": "A few weeks",
         "title": "Cravings come less often",
         "line": "",
         "detail": "Cravings can last longer than the physical symptoms, but they come less often and feel weaker as the weeks go by.",
-        "source": "smokefree" }
+        "source": "smokefree",
+        "story": [
+          "Cravings can outlast the physical side of withdrawal, but they come less often and feel weaker as the weeks go by.",
+          "Eventually they become a quiet whisper: rarer, softer, over faster. And you'll have a toolkit of things that work for you when one does show up."
+        ],
+        "notice": [
+          "Longer gaps between cravings",
+          "Cravings that pass more quickly",
+          "Days where you forget to think about it"
+        ],
+        "helps": "Keep riding them out. Each one you get through teaches your brain it doesn't need nicotine."
+      },
+      {
+        "id": "sleep",
+        "fromHours": 168,
+        "toHours": 336,
+        "when": "1 to 2 weeks",
+        "title": "Deeper, steadier sleep",
+        "line": "No more waking up reaching for a hit.",
+        "detail": "Nicotine is a stimulant, and its comings and goings can break up your sleep, sometimes waking you up wanting more. In the first days without it, sleep can be a bit restless.",
+        "kind": "looks",
+        "story": [
+          "Nicotine is a stimulant, and its comings and goings can break up your sleep, sometimes waking you up wanting more. In the first days without it, sleep can be a bit restless.",
+          "Then it settles. Within a week or two most people sleep more deeply and wake up feeling more rested, without that first-thing reach for a hit."
+        ],
+        "notice": [
+          "Falling asleep more easily",
+          "Fewer night-time wake-ups",
+          "Waking up more rested"
+        ],
+        "helps": "Keep a steady bedtime, and wind down without screens for a few minutes. The breathing orb works well in bed."
+      },
+      {
+        "id": "lips",
+        "fromHours": 336,
+        "toHours": 1008,
+        "when": "2 to 6 weeks",
+        "title": "Healthier lips and gums",
+        "line": "Less dryness, more of your natural colour.",
+        "detail": "Nicotine squeezes the tiny blood vessels in your lips and gums, and constant hits dry out your mouth. Take it away, and they start to recover.",
+        "kind": "looks",
+        "story": [
+          "Nicotine squeezes the tiny blood vessels in your lips and gums, and constant hits dry out your mouth. Take it away, and they start to recover.",
+          "Over a few weeks your lips get softer and your gums look pinker and healthier. It's quiet and gradual, the kind of thing you notice in the mirror one morning."
+        ],
+        "notice": [
+          "Softer, less dry lips",
+          "Pinker, healthier-looking gums",
+          "A mouth that feels less dry"
+        ],
+        "helps": "Sip water through the day, and keep up with brushing and flossing."
+      },
+      {
+        "id": "skin-glow",
+        "fromHours": 720,
+        "toHours": 2184,
+        "when": "1 to 3 months",
+        "title": "Clearer, better-hydrated skin",
+        "line": "Less dullness, fewer breakouts.",
+        "detail": "Nicotine narrows the small blood vessels that feed your skin, and that shows as dullness. Without it, your skin gets better blood flow and holds on to moisture better.",
+        "kind": "looks",
+        "story": [
+          "Nicotine narrows the small blood vessels that feed your skin, and that shows as dullness. Without it, your skin gets better blood flow and holds on to moisture better.",
+          "Over a month or two many people notice clearer, brighter, better-hydrated skin. A fresher face, simply from giving it what it needs."
+        ],
+        "notice": [
+          "A fresher, brighter complexion",
+          "Skin that feels less dry",
+          "Fewer breakouts for some people"
+        ],
+        "helps": "Water, sleep and sunscreen are your skin's best friends right now."
+      }
     ]
   },
   "products": {
-    "cigarettes": { "groups": ["smoking"] },
-    "vape": { "groups": ["nicotine"], "sourceOverride": { "withdrawal-start": "smokefree-vaping" },
-              "note": "Research on the long-term effects of vaping is still young, so this timeline sticks to what's known." },
-    "pouches": { "groups": ["nicotine"],
-                 "note": "Research on the long-term effects of nicotine pouches is still young, so this timeline sticks to what's known." }
+    "cigarettes": {
+      "groups": [
+        "smoking"
+      ]
+    },
+    "vape": {
+      "groups": [
+        "nicotine"
+      ],
+      "sourceOverride": {
+        "withdrawal-start": "smokefree-vaping"
+      },
+      "note": "Research on the long-term effects of vaping is still young, so this timeline sticks to what's known."
+    },
+    "pouches": {
+      "groups": [
+        "nicotine"
+      ],
+      "note": "Research on the long-term effects of nicotine pouches is still young, so this timeline sticks to what's known."
+    }
   }
 }

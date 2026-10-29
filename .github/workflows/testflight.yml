@@ -27,7 +27,7 @@ concurrency:
 jobs:
   upload:
     if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
-    runs-on: macos-15
+    runs-on: xcode-27
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
@@ -47,10 +47,14 @@ jobs:
             echo "::notice::App Store Connect key not set; building Release unsigned without uploading."
           fi
 
-      - name: Select newest Xcode
+      # Built with the iOS 27.1 SDK so the app fills both iPhone Duo displays (S18.12).
+      - name: Select Xcode 27.1
         run: |
-          XCODE=$(ls -d /Applications/Xcode_26*.app 2>/dev/null | sort -V | tail -1)
-          [ -z "$XCODE" ] && XCODE=$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)
+          XCODE=/Applications/Xcode_27.1.app
+          if [ ! -d "$XCODE" ]; then
+            echo "::error title=Xcode 27.1 missing::This runner has no $XCODE"
+            exit 1
+          fi
           sudo xcode-select -s "$XCODE"
           xcodebuild -version
 
@@ -245,7 +249,7 @@ jobs:
           cp "$RUNNER_TEMP/AuthKey_$ASC_KEY_ID.p8" ~/.appstoreconnect/private_keys/
           xcrun altool --upload-app --type ios -f "$IPA" --apiKey "$ASC_KEY_ID" --apiIssuer "$ASC_ISSUER_ID" 2>&1 | tee altool.log
           cat altool.log >> release.log
-          grep -iE "error|fail|invalid" altool.log | head -20 | sed 's/^/::error title=altool::/' || true
+          grep -iE "error|fail|invalid" altool.log | grep -viE "no errors|UPLOAD SUCCEEDED" | head -20 | sed 's/^/::error title=altool::/' || true
           grep -iE "UPLOAD SUCCEEDED|No errors uploading|Delivery UUID" altool.log | head -5 | sed 's/^/::notice title=altool::/' || true
           # altool can exit 0 without uploading, so wait for App Store Connect to list the build.
           python3 scripts/ci/asc_signing.py wait $DX_BUILD

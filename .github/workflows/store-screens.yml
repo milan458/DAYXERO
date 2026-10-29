@@ -1,0 +1,159 @@
+name: App Store screenshots
+
+# The approved App Store set (S16.3) for iPhone 6.9" and 6.3", and for iPhone Duo's cover and inner displays
+# (S18.16). Real app screens from a debug build with sample data, under the approved captions
+# (scripts/store/compose.py). Results go to the store-screens branch, ready to upload in App Store Connect.
+on:
+  workflow_dispatch:
+  # Also run from 'iOS build and test' with its store_screens input, so branches can make them before merging.
+  workflow_call:
+
+permissions:
+  contents: write
+
+jobs:
+  shoot:
+    runs-on: xcode-27
+    timeout-minutes: 60
+    env:
+      HINGE_VERSION: v0.3.0
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode 27.1
+        run: |
+          XCODE=/Applications/Xcode_27.1.app
+          if [ ! -d "$XCODE" ]; then
+            echo "::error title=Xcode 27.1 missing::This runner has no $XCODE"
+            exit 1
+          fi
+          sudo xcode-select -s "$XCODE"
+          xcodebuild -version
+
+      - name: Install tools
+        run: |
+          brew install xcodegen
+          git clone -q --depth 1 --branch "$HINGE_VERSION" https://github.com/artemnovichkov/hinge.git "$RUNNER_TEMP/hinge"
+          echo "$RUNNER_TEMP/hinge/bin" >> "$GITHUB_PATH"
+          python3 -m pip install --quiet --break-system-packages pillow || python3 -m pip install --quiet pillow
+
+      - name: Generate project
+        run: xcodegen generate
+
+      - name: Build
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -project DayXero.xcodeproj \
+            -scheme DayXero \
+            -destination "generic/platform=iOS Simulator" \
+            CODE_SIGNING_ALLOWED=NO \
+            -derivedDataPath DerivedData \
+            -quiet 2>&1 | tee build.log
+
+      - name: Pick simulators
+        id: sim
+        run: |
+          xcrun simctl list devices available -j > devices.json
+          pick() {
+            python3 - "$@" <<'PY'
+          import json, sys
+          d = json.load(open("devices.json"))["devices"]
+          for name in sys.argv[1:]:
+              for runtime in sorted(d, reverse=True):
+                  for dev in d[runtime]:
+                      if dev["name"] == name:
+                          print(dev["udid"]); sys.exit()
+          PY
+          }
+          PHONE=$(pick "iPhone 18 Pro Max" "iPhone 17 Pro Max" "iPhone Air")
+          DUO=$(pick "iPhone Duo")
+          if [ -z "$PHONE" ] || [ -z "$DUO" ]; then
+            echo "::error title=Missing simulator::phone=$PHONE duo=$DUO"
+            exit 1
+          fi
+          echo "phone=$PHONE" >> "$GITHUB_OUTPUT"
+          echo "duo=$DUO" >> "$GITHUB_OUTPUT"
+
+      - name: Capture screens
+        run: |
+          APP=$(find DerivedData/Build/Products -name "DayXero.app" -path "*iphonesimulator*" | head -1)
+          mkdir -p raw/iphone raw/duo-cover raw/duo-inner
+          # drawn <png>: false while the shot is still the blank launch screen. Blank shots compress to under
+          # 0.032 bytes a pixel (about 70 KB on a 6.3-inch screen); every real screen is well over (118 KB and up).
+          drawn() {
+            local w h size
+            w=$(sips -g pixelWidth "$1" | awk '/pixelWidth/ {print $2}')
+            h=$(sips -g pixelHeight "$1" | awk '/pixelHeight/ {print $2}')
+            size=$(stat -f%z "$1")
+            [ $((size * 1000)) -gt $((w * h * 32)) ]
+          }
+          prepare() {
+            xcrun simctl boot "$1" 2>/dev/null || true
+            xcrun simctl bootstatus "$1" -b
+            xcrun simctl install "$1" "$APP"
+            xcrun simctl ui "$1" appearance dark
+            # A tidy status bar, as on Apple's own screenshots; not every simulator supports it.
+            xcrun simctl status_bar "$1" override --time 9:41 --dataNetwork wifi --wifiMode active --wifiBars 3 \
+              --cellularMode active --cellularBars 4 --batteryState charged --batteryLevel 100 \
+              || echo "::warning::Status bar override not supported on $1"
+          }
+          # screens <udid> <folder> <capture command>: the six approved screens, in order.
+          screens() {
+            local udid=$1 folder=$2 capture=$3
+            shot() {
+              local key=$1; shift
+              xcrun simctl terminate "$udid" in.dayxero.app 2>/dev/null || true
+              xcrun simctl launch "$udid" in.dayxero.app "$@" > /dev/null
+              sleep 7
+              for try in 1 2 3 4 5; do
+                $capture "raw/$folder/$key.png" > /dev/null
+                drawn "raw/$folder/$key.png" && return
+                sleep 2
+              done
+              # A blank App Store screenshot is never fine.
+              echo "::error title=Blank screenshot::$folder/$key was still blank after 17 seconds"
+              exit 1
+            }
+            shot home -dx.homeScenario day12 -dx.store pro
+            shot sos -dx.homeScenario day12 -dx.store pro -dx.sos YES -dx.sosElapsed 23
+            shot program -dx.homeScenario day3 -dx.store pro -dx.tab program
+            shot slip -dx.homeScenario day12 -dx.store pro -dx.logSheet slip
+            shot insights -dx.homeScenario day12 -dx.store pro -dx.tab progress -dx.progressScroll patterns
+            shot nrt -dx.homeScenario day12 -dx.store pro -dx.seedNRT YES -dx.seedPouches YES -dx.tab program
+          }
+          phone_capture() { xcrun simctl io "${{ steps.sim.outputs.phone }}" screenshot "$1"; }
+          duo_capture() { hinge screenshot "$1"; }
+
+          prepare "${{ steps.sim.outputs.phone }}"
+          screens "${{ steps.sim.outputs.phone }}" iphone phone_capture
+          xcrun simctl shutdown "${{ steps.sim.outputs.phone }}"
+
+          export HINGE_DEVICE="${{ steps.sim.outputs.duo }}"
+          prepare "$HINGE_DEVICE"
+          hinge close; hinge orient portrait; sleep 3; hinge posture
+          screens "$HINGE_DEVICE" duo-cover duo_capture
+          # The inner display is tall (2007 x 2853) with the phone turned on its side.
+          hinge open; hinge orient landscape-left; sleep 3; hinge posture
+          screens "$HINGE_DEVICE" duo-inner duo_capture
+
+      - name: Compose
+        run: python3 scripts/store/compose.py raw store iphone-6.9 iphone-6.3 duo-cover duo-inner
+
+      - name: Publish to the store-screens branch
+        run: |
+          cp -R raw store/raw
+          cd store
+          git init -q -b store-screens
+          git config user.name "ci" && git config user.email "ci@users.noreply.github.com"
+          git add . && git commit -qm "App Store screenshots for ${GITHUB_SHA::7}"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" store-screens
+
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-store-screenshots
+          path: |
+            store
+            build.log

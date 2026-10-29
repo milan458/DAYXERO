@@ -226,6 +226,10 @@ public final class OrbEngine {
     /// True only while a coaching line plays: drives the badge and the dot.
     public private(set) var coachSpeaking = false
     public private(set) var currentLine: OrbData.CoachingLine?
+    /// Which sentence of a coaching line the caption shows (S18.11).
+    public private(set) var captionIndex = 0
+    /// Whether the transcript is a coaching line, shown a sentence at a time, rather than a short script.
+    public private(set) var captionFromLine = false
 
     @ObservationIgnored public private(set) var orbTime = 0.0
     @ObservationIgnored public private(set) var breathScale: Double
@@ -237,6 +241,9 @@ public final class OrbEngine {
     @ObservationIgnored private var lineEndsAt: TimeInterval?
     @ObservationIgnored private var now: TimeInterval = 0
     @ObservationIgnored private var lineIndex = 0
+    @ObservationIgnored private var lineStartedAt: TimeInterval?
+    @ObservationIgnored private var lineVoiced = false
+    @ObservationIgnored private var lineFragments: [OrbCaptionText.Fragment] = []
 
     /// Phase changes, coaching cues and the finish, for haptics, speech and the screen around the orb.
     @ObservationIgnored public var onEvent: ((BreathSession.Event) -> Void)?
@@ -276,7 +283,7 @@ public final class OrbEngine {
 
     public func switchPattern(to id: String) {
         session.switchPattern(to: id, data: data)
-        if !coachSpeaking { transcript = data.scripts(.inhale).first ?? transcript }
+        if !coachSpeaking { showScript(data.scripts(.inhale).first ?? transcript) }
         rippleUntil = now + data.motion.phaseRippleSeconds
     }
 
@@ -286,13 +293,41 @@ public final class OrbEngine {
         currentLine = line
         coachSpeaking = true
         transcript = line.text
+        captionFromLine = true
+        captionIndex = 0
+        lineFragments = OrbCaptionText.fragments(line.text)
+        lineStartedAt = now
+        lineVoiced = voiced
         lineEndsAt = now + (voiced ? line.durationSeconds + 8 : line.durationSeconds)
     }
 
+    /// The speech synthesiser is about to speak from this UTF-16 offset of the current line.
+    public func spoke(upTo location: Int) {
+        guard coachSpeaking, lineVoiced else { return }
+        let index = OrbCaptionText.fragment(containing: location, in: lineFragments)
+        if index != captionIndex { captionIndex = index }
+    }
+
+    /// The caption text: the sentence of the coaching line being said, or the whole phase script.
+    public var caption: String {
+        guard captionFromLine else { return transcript }
+        let parts = OrbCaptionText.fragments(transcript)
+        guard !parts.isEmpty else { return transcript }
+        return parts[min(captionIndex, parts.count - 1)].text
+    }
+
+    /// Ends the line; the caption keeps its last sentence until the next script replaces it.
     public func lineEnded() {
         coachSpeaking = false
         currentLine = nil
         lineEndsAt = nil
+        lineStartedAt = nil
+    }
+
+    private func showScript(_ text: String) {
+        transcript = text
+        captionFromLine = false
+        captionIndex = 0
     }
 
     /// The next line in rotation, for a tap on the orb or the coach button.
@@ -316,6 +351,11 @@ public final class OrbEngine {
                 tickAccumulator -= 1
                 tick()
             }
+        }
+        // Without voice, the caption moves through the line's sentences over its set duration.
+        if coachSpeaking, !lineVoiced, let start = lineStartedAt, let line = currentLine {
+            let index = OrbCaptionText.fragment(at: now - start, duration: line.durationSeconds, in: lineFragments)
+            if index != captionIndex { captionIndex = index }
         }
         if let end = lineEndsAt, now >= end { lineEnded() }
 
@@ -345,7 +385,7 @@ public final class OrbEngine {
                 rippleUntil = now + data.motion.phaseRippleSeconds
                 if !coachSpeaking {
                     let pool = data.scripts(phase)
-                    if !pool.isEmpty { transcript = pool[session.cycle % pool.count] }
+                    if !pool.isEmpty { showScript(pool[session.cycle % pool.count]) }
                 }
             case .finished:
                 finish()
@@ -359,8 +399,66 @@ public final class OrbEngine {
     private func finish() {
         running = false
         lineEnded()
-        transcript = session.isSOS
+        showScript(session.isSOS
             ? data.labels.sosDoneTranscript
-            : data.labels.breathingDoneTranscript.replacingOccurrences(of: "{N}", with: "\(pattern.recommendedCycles)")
+            : data.labels.breathingDoneTranscript.replacingOccurrences(of: "{N}", with: "\(pattern.recommendedCycles)"))
+    }
+}
+
+/// The SOS caption shows a coaching line one sentence at a time, in step with the voice (S18.11).
+public enum OrbCaptionText {
+    public struct Fragment: Equatable, Sendable {
+        public let text: String
+        /// UTF-16 offset in the full line where this sentence starts, as the speech synthesiser counts.
+        public let start: Int
+    }
+
+    /// The line's sentences, split after `.`, `!`, `?` or an ellipsis that's followed by a space.
+    /// A line with one sentence comes back whole.
+    public static func fragments(_ text: String) -> [Fragment] {
+        var result: [Fragment] = []
+        var current = ""
+        var start = 0
+        var offset = 0
+        var lastWasEnd = false
+        for character in text {
+            let width = String(character).utf16.count
+            if lastWasEnd, character.isWhitespace {
+                let trimmed = current.trimmingCharacters(in: .whitespaces)
+                if !trimmed.isEmpty { result.append(Fragment(text: trimmed, start: start)) }
+                current = ""
+                start = offset + width
+                lastWasEnd = false
+            } else {
+                if current.isEmpty, character.isWhitespace {
+                    start = offset + width
+                } else {
+                    current.append(character)
+                }
+                lastWasEnd = ".!?…".contains(character)
+            }
+            offset += width
+        }
+        let trimmed = current.trimmingCharacters(in: .whitespaces)
+        if !trimmed.isEmpty { result.append(Fragment(text: trimmed, start: start)) }
+        return result
+    }
+
+    /// The sentence holding UTF-16 offset `location`.
+    public static func fragment(containing location: Int, in fragments: [Fragment]) -> Int {
+        fragments.lastIndex { $0.start <= location } ?? 0
+    }
+
+    /// The sentence showing `elapsed` seconds into a line that lasts `duration`, giving each sentence time in
+    /// proportion to its length.
+    public static func fragment(at elapsed: Double, duration: Double, in fragments: [Fragment]) -> Int {
+        guard fragments.count > 1, duration > 0 else { return 0 }
+        let total = Double(fragments.reduce(0) { $0 + $1.text.count })
+        var end = 0.0
+        for (index, fragment) in fragments.enumerated() {
+            end += duration * Double(fragment.text.count) / total
+            if elapsed < end { return index }
+        }
+        return fragments.count - 1
     }
 }

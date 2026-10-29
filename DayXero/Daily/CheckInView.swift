@@ -16,6 +16,7 @@ struct CheckInView: View {
     @Query private var checkIns: [CheckIn]
     @State private var stage = Stage.form
     @State private var clearDay = true
+    @State private var mindful = true
     @State private var cravings: Int?
     @State private var mood: Mood?
     @State private var note = ""
@@ -60,18 +61,23 @@ struct CheckInView: View {
             .padding(.top, DX.Space.s)
             ScrollView {
                 VStack(alignment: .leading, spacing: DX.Space.xs) {
-                    Text("How did today go?").dxText(.title)
-                    HStack(spacing: DX.Space.xs) {
-                        dayOption(true, title: "Clear day", detail: "no nicotine")
-                        dayOption(false, title: "Had a slip", detail: "it happens")
+                    if prep {
+                        prepHeader
+                    } else {
+                        Text("How did today go?").dxText(.title)
+                        HStack(spacing: DX.Space.xs) {
+                            dayOption(true, title: "Clear day", detail: "no nicotine")
+                            dayOption(false, title: "Had a slip", detail: "it happens")
+                        }
+                        .padding(.top, DX.Space.xs)
                     }
-                    .padding(.top, DX.Space.xs)
-                    if !clearDay {
+                    if !prep, !clearDay {
                         Text(today.contains { $0.kind == .slip }
                              ? "You've already logged it. Nothing resets."
                              : "We'll help you log it after this. Nothing resets.")
                             .dxText(.subtitle)
                     }
+                    if prep { usedToday(today) }
                     Text("Cravings today").dxText(.micro).padding(.top, DX.Space.s)
                     let count = cravings ?? logged.count
                     HStack {
@@ -97,7 +103,7 @@ struct CheckInView: View {
                         ForEach(Mood.allCases, id: \.self) { m in moodButton(m) }
                     }
                     Text("Anything to remember? \(Text("· optional").foregroundStyle(DX.Palette.faint))").dxText(.micro).padding(.top, DX.Space.s)
-                    TextField("", text: $note, prompt: Text("Busy day at work, coffee was hard").foregroundStyle(DX.Palette.faint), axis: .vertical)
+                    TextField("", text: $note, prompt: Text(prep ? "My 4 pm one didn't really help the stress" : "Busy day at work, coffee was hard").foregroundStyle(DX.Palette.faint), axis: .vertical)
                         .lineLimit(2...4)
                         .font(DX.TextStyle.subtitle.font)
                         .padding(DX.Space.s)
@@ -112,12 +118,90 @@ struct CheckInView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
             .scrollBounceBehavior(.basedOnSize)
-            Button("Save") { save(defaultCount: logged.count, slipLogged: today.contains { $0.kind == .slip }) }
+            Button(prep ? "Save prep day \(prepDay) check-in" : "Save") {
+                save(defaultCount: logged.count, slipLogged: today.contains { $0.kind == .slip })
+            }
                 .buttonStyle(.dxPrimary)
                 .disabled(mood == nil)
         }
         .padding(.horizontal, DX.Space.m)
+        .dxReadableColumn()
         .padding(.bottom, DX.Space.xs)
+    }
+
+    // MARK: Prep week (before Quit Day using is part of the plan, so there's no "clear day" or "slip")
+
+    private var stats: ProgressStats {
+        ProgressStats(quitDay: profile.quitDay, baselines: [], clock: DayClock(boundaryHour: profile.dayBoundaryHour))
+    }
+
+    private var prep: Bool { stats.isPrep(at: .now) }
+
+    private var prepDay: Int {
+        let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
+        return max(clock.days(fromDate: profile.createdAt, to: .now) + 1, 1)
+    }
+
+    private var prepHeader: some View {
+        let left = stats.daysUntilQuitDay(at: .now)
+        return VStack(alignment: .leading, spacing: DX.Space.xs) {
+            Text("Prep day \(prepDay) check-in · \(left) days to Quit Day").dxText(.micro)
+            Text("How did your prep go today?").dxText(.title)
+            Text("Using normally is part of prep week. No guilt, just noticing.").dxText(.subtitle)
+            HStack(spacing: DX.Space.xs) {
+                prepOption(true, title: "Mindful & observant", detail: "Noticed my triggers")
+                prepOption(false, title: "Mostly autopilot", detail: "Busy day, that's fine")
+            }
+            .padding(.top, DX.Space.xs)
+        }
+    }
+
+    private func prepOption(_ value: Bool, title: LocalizedStringKey, detail: LocalizedStringKey) -> some View {
+        let on = mindful == value
+        return Button { mindful = value } label: {
+            VStack(spacing: 2) {
+                Text(title).font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
+                    .multilineTextAlignment(.center)
+                Text(detail).dxText(.subtitle).multilineTextAlignment(.center)
+            }
+            .padding(.horizontal, DX.Space.xs)
+            .padding(.vertical, DX.Space.xs)
+            .frame(maxWidth: .infinity, minHeight: 72)
+            .background(on ? DX.Palette.accentSoft : DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .strokeBorder(on ? DX.Palette.accentInk : DX.Palette.hairline, lineWidth: on ? 1.5 : 1))
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(on ? .isSelected : [])
+    }
+
+    /// What was used today, per product, with steppers for anything not logged at the time.
+    private func usedToday(_ today: [LogEntry]) -> some View {
+        VStack(alignment: .leading, spacing: DX.Space.xs) {
+            Text("Logged today").dxText(.micro).padding(.top, DX.Space.s)
+            ForEach(profile.products.map(\.product), id: \.self) { product in
+                let uses = today.filter { $0.kind != .craving && $0.product == product }
+                HStack {
+                    Text(verbatim: String(localized: product.unit).localizedCapitalized)
+                        .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
+                    Spacer()
+                    Button {
+                        if let last = uses.first { UseLog.undo(last, in: context) }
+                    } label: { Image(systemName: "minus") }
+                        .buttonStyle(.dxIcon).disabled(uses.isEmpty).accessibilityLabel(Text("One fewer"))
+                    Text(verbatim: uses.count.formatted())
+                        .font(.custom(DX.Typeface.bold, size: 20, relativeTo: .title3)).foregroundStyle(DX.Palette.text)
+                        .frame(minWidth: 36)
+                    Button { UseLog.log(product, in: context) } label: { Image(systemName: "plus") }
+                        .buttonStyle(.dxIcon).accessibilityLabel(Text("One more"))
+                }
+                .padding(.horizontal, DX.Space.s).padding(.vertical, 6)
+                .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(DX.Palette.hairline))
+                .accessibilityElement(children: .contain)
+                .accessibilityLabel(Text("\(uses.count) \(Text(product.unit)) today"))
+            }
+        }
     }
 
     private func dayOption(_ value: Bool, title: LocalizedStringKey, detail: LocalizedStringKey) -> some View {
@@ -169,11 +253,11 @@ struct CheckInView: View {
             Image(systemName: "moon").font(.system(size: 30)).foregroundStyle(DX.Palette.accentInk)
                 .frame(width: 76, height: 76).background(DX.Palette.accentSoft, in: Circle())
                 .accessibilityHidden(true)
-            Text(day > 0 ? "Day \(day), done" : "Check-in saved").dxText(.title)
+            Text(day > 0 ? "Day \(day), done" : prep ? "Prep day \(prepDay), done" : "Check-in saved").dxText(.title)
             Text("Rest well. Tomorrow's pledge will be here in the morning.").dxText(.subtitle).multilineTextAlignment(.center)
             DXCard(padding: 14) {
                 VStack(alignment: .leading, spacing: DX.Space.xs) {
-                    Text("This week's check-ins").dxText(.micro)
+                    Text("This week's check-ins").dxText(.cardHeading)
                     HStack(spacing: 4) {
                         ForEach(0..<7, id: \.self) { i in
                             VStack(spacing: 4) {
@@ -195,6 +279,7 @@ struct CheckInView: View {
             Button("Done", action: onDone).buttonStyle(.dxPrimary)
         }
         .padding(.horizontal, DX.Space.m)
+        .dxReadableColumn()
         .padding(.bottom, DX.Space.xs)
     }
 
@@ -208,13 +293,15 @@ struct CheckInView: View {
 
     private func save(defaultCount: Int, slipLogged: Bool) {
         let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
+        let prep = prep
         context.insert(CheckIn(day: clock.day(containing: .now), mood: mood ?? .okay, cravingCount: cravings ?? defaultCount,
-                               note: note.isEmpty ? nil : note, clearDay: clearDay))
+                               note: note.isEmpty ? nil : note, clearDay: prep ? true : clearDay,
+                               prepMindful: prep ? mindful : nil))
         try? context.save()
         saved.toggle()
         DailyReminders.refresh(in: context)
         // "Had a slip" with nothing logged today: log it and open the talk-through (S8).
-        if !clearDay, !slipLogged, let product = profile.primaryProduct?.product {
+        if !prep, !clearDay, !slipLogged, let product = profile.primaryProduct?.product {
             slipEntry = UseLog.log(product, in: context)
             Analytics.track(.slipLogged(source: "checkin"))
             stage = .slip
@@ -249,6 +336,7 @@ struct DayEndSettings: View {
             Button("Done") { dismiss() }.buttonStyle(.dxPrimary)
         }
         .padding(.horizontal, DX.Space.m)
+        .dxReadableColumn()
         .padding(.bottom, DX.Space.xs)
         .dxCanvas()
     }

@@ -90,6 +90,7 @@ struct MilestoneMoment: View {
                 .buttonStyle(.dxSecondary)
         }
         .padding(.horizontal, DX.Space.m)
+        .dxReadableColumn()
         .padding(.bottom, DX.Space.xs)
         .background {
             ZStack {
@@ -130,6 +131,14 @@ struct MilestoneMoment: View {
             .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
         }
         .frame(width: 240, height: 240)
+        .overlay(alignment: .bottomTrailing) {
+            // The change in the body this milestone talks about, from the health illustrations (S21.6).
+            if let id = milestone.healthItemID {
+                HealthBadge(id: id, state: .done, size: 64)
+                    .opacity(appeared ? 1 : 0)
+                    .offset(x: -14, y: -14)
+            }
+        }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(verbatim: milestone.title))
     }
@@ -141,8 +150,8 @@ struct MilestoneMoment: View {
     private func stat(_ label: String, _ value: String) -> some View {
         DXCard(padding: 12) {
             VStack(alignment: .leading, spacing: 4) {
-                Text(verbatim: label).dxText(.micro)
                 Text(verbatim: value).font(.custom(DX.Typeface.bold, size: 18, relativeTo: .title3)).foregroundStyle(DX.Palette.text)
+                Text(verbatim: label).dxText(.subtitle)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -211,6 +220,7 @@ struct ShareCardMaker: View {
             }
         }
         .padding(.horizontal, DX.Space.m)
+        .dxReadableColumn()
         .padding(.bottom, DX.Space.xs)
         .dxCanvas()
         .onAppear { Analytics.track(.shareCardCreated(milestone: milestone?.id ?? "days-\(stats.daysClear)")) }

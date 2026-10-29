@@ -49,7 +49,11 @@ public struct DXWeekStrip: View {
         let number = Text(day.date, format: .dateTime.day())
             .font(.custom(day.state == .today ? DX.Typeface.bold : DX.Typeface.semibold, size: 14, relativeTo: .subheadline))
             .monospacedDigit()
-            .frame(width: DX.Size.dayBubble, height: DX.Size.dayBubble)
+            // 40 pt circles, shrinking to 26 pt so a week still fits a narrow window such as iPhone Duo's cover
+            // beside the side dock (S18.13).
+            .frame(minWidth: 26, idealWidth: DX.Size.dayBubble, maxWidth: DX.Size.dayBubble,
+                   minHeight: 26, idealHeight: DX.Size.dayBubble, maxHeight: DX.Size.dayBubble)
+            .aspectRatio(1, contentMode: .fit)
         switch day.state {
         case .clear:
             number.foregroundStyle(DX.Palette.onAccent).background(DX.Palette.sage, in: Circle())

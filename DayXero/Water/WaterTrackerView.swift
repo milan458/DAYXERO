@@ -4,8 +4,11 @@ import SwiftUI
 
 /// The water tracker (S7.7), signed off as drawn in `reference/water/water-pill-preview.html`:
 /// header and streak, today's amount, the pill, the drink picker, Log and Undo, then today's drinks.
+/// The water is blue and each drink has its own drawing (S21).
 struct WaterTrackerView: View {
     let profile: UserProfile
+    /// Shown as a close button when the tracker opens over the Toolkit tab or Home.
+    var onClose: (() -> Void)?
 
     @Environment(\.modelContext) private var context
     @Query(sort: \WaterEntry.timestamp) private var entries: [WaterEntry]
@@ -17,6 +20,9 @@ struct WaterTrackerView: View {
     @State private var floatID = 0
     @State private var customDrink: Drink?
     @State private var customAmount = ""
+    @State private var editingGoal = UserDefaults.standard.bool(forKey: "dx.waterGoalSheet")
+    /// The screen's full height, so the pill can shrink on shorter phones and keep Log clear of the dock.
+    @State private var screenHeight: CGFloat = 0
 
     var body: some View {
         let water = waterProfile
@@ -41,7 +47,16 @@ struct WaterTrackerView: View {
                         .padding(.top, 18)
                 }
                 .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+                // The goal starts at 8 glasses for everyone; this is where it gets personal (S18.5).
+                Button(water?.weightKg == nil ? LocalizedStringKey("Personalise goal") : LocalizedStringKey("Edit goal")) { editingGoal = true }
+                    .font(.custom(DX.Typeface.semibold, size: 14, relativeTo: .subheadline))
+                    .foregroundStyle(.white.opacity(0.6))
+                    .frame(minHeight: 36)
+                    .padding(.horizontal, 16)
+                    .disabled(water == nil)
                 WaterPillView(level: Double(total) / Double(goal), drink: last, reached: reached)
+                    .scaleEffect(pillScale)
+                    .frame(width: 200 * pillScale, height: 340 * pillScale)
                     .padding(.top, 18)
                     .accessibilityElement(children: .ignore)
                     .accessibilityLabel(Text("Water today"))
@@ -65,15 +80,25 @@ struct WaterTrackerView: View {
                     .padding(.top, DX.Space.l)
             }
             .padding(.horizontal, 24)
+            .dxReadableColumn()
             .padding(.top, DX.Space.l)
-            .padding(.bottom, 140)
+            .padding(.bottom, DX.Space.l)
         }
         .scrollBounceBehavior(.basedOnSize)
+        .onGeometryChange(for: CGFloat.self) { $0.size.height + $0.safeAreaInsets.top + $0.safeAreaInsets.bottom } action: {
+            screenHeight = $0
+        }
         .background(Color.black.ignoresSafeArea())
         .environment(\.colorScheme, .dark)
         .sensoryFeedback(.impact(weight: .medium), trigger: logged)
         .sensoryFeedback(.success, trigger: goalHit)
         .onAppear(perform: ensureProfile)
+        .sheet(isPresented: $editingGoal) {
+            if let water {
+                WaterGoalSheet(profile: water) { editingGoal = false }
+                    .presentationDetents([.large])
+            }
+        }
         .alert("Custom amount", isPresented: Binding(get: { customDrink != nil }, set: { if !$0 { customDrink = nil } })) {
             TextField(units == .metric ? "ml" : "fl oz", text: $customAmount).keyboardType(.numberPad)
             Button("Log") {
@@ -88,6 +113,13 @@ struct WaterTrackerView: View {
         } message: {
             Text("How much \(Text(customDrink?.name ?? Drink.glass.name).foregroundStyle(.primary))?")
         }
+    }
+
+    /// Full size from 940 pt tall, down to 0.7 on the shortest phones. Everything but the pill, down to Log and the dock,
+    /// takes about 600 pt, so on a 6.1" phone (844 pt) the pill gives up the room Log needs to sit above the dock.
+    private var pillScale: CGFloat {
+        guard screenHeight > 0 else { return 1 }
+        return min(max((screenHeight - 600) / 340, 0.7), 1)
     }
 
     // MARK: Parts
@@ -108,6 +140,12 @@ struct WaterTrackerView: View {
                     .padding(.vertical, 6).padding(.horizontal, 10)
                     .background(Color(hex: 0xBCC388, opacity: 0.12), in: Capsule())
                     .accessibilityLabel(Text("\(streak) day water streak"))
+            }
+            if let onClose {
+                Button(action: onClose) { Image(systemName: "xmark") }
+                    .buttonStyle(.dxIcon)
+                    .accessibilityLabel(Text("Close"))
+                    .padding(.leading, DX.Space.xxs)
             }
         }
     }
@@ -158,6 +196,8 @@ struct WaterTrackerView: View {
                 let on = drink == selected
                 Button { waterProfile?.selectedDrink = drink; try? context.save() } label: {
                     VStack(spacing: 2) {
+                        DrinkIllustration(drink: drink, size: 30)
+                            .padding(.bottom, 2)
                         Text(drink.name).font(.custom(DX.Typeface.semibold, size: 14, relativeTo: .subheadline))
                         Text(verbatim: WaterFormat.size(drink.ml, units: units))
                             .font(.custom(DX.Typeface.medium, size: 12, relativeTo: .caption))
@@ -166,7 +206,7 @@ struct WaterTrackerView: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
                     .foregroundStyle(.white)
-                    .frame(maxWidth: .infinity, minHeight: 62)
+                    .frame(maxWidth: .infinity, minHeight: 92)
                     .background(on ? Color(hex: 0xBCC388, opacity: 0.12) : Color.white.opacity(0.04),
                                 in: RoundedRectangle(cornerRadius: 18, style: .continuous))
                     .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous)
@@ -209,6 +249,7 @@ struct WaterTrackerView: View {
                             .font(.custom(DX.Typeface.medium, size: 14, relativeTo: .subheadline))
                             .foregroundStyle(.white.opacity(0.55))
                             .frame(width: 72, alignment: .leading)
+                        DrinkIllustration(drink: entry.drink, size: 24)
                         Text(entry.drink.name).font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(.white)
                         Spacer()
                         Text(verbatim: WaterFormat.size(entry.amountMl, units: units))

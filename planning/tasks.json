@@ -2,14 +2,13 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-23T10:46:21.584Z"
+    "updated": "2026-10-29T17:10:00.000Z"
   },
   "now": {
-    "section": "S5",
-    "task": "S5.8",
+    "section": "S24",
+    "task": "S24.4",
     "waiting_on_milan": [
-      "Sign off the Section 5 Program mockups",
-      "Later: variant rule (S5.2), lesson timing (S4.8)"
+      "Milan: build d05b7df in Xcode and try the dock"
     ]
   },
   "sections": [
@@ -359,7 +358,7 @@
           "id": "S2.14",
           "title": "Name step (S2.2b) proposed: paywall and Home greet by name but the plan never asks",
           "status": "in_progress",
-          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md. Built per WOnbBody/WOnbDay/WOnbGoal. Themed with the app (matches the references in dark mode); the goal screen keeps a short title because every onboarding step has one.",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md. Built per WOnbBody/WOnbDay/WOnbGoal. Themed with the app (matches the references in dark mode); the goal screen keeps a short title because every onboarding step has one.\n27 Oct: moved out of onboarding into the Water tab, without height (S18.5, Milan's call).",
           "created": "2026-10-22T20:40:00.864Z",
           "completed": "2026-10-22T22:01:09.291Z"
         },
@@ -367,7 +366,7 @@
           "id": "S2.15",
           "title": "Show the water goal in the plan reveal.",
           "status": "in_progress",
-          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.",
+          "notes": "From DAYXERO_NOTIFICATIONS_WATER_HANDOFF.md.\n27 Oct: the plan reveal no longer shows a water line; everyone starts on 2.0 L (S18.5).",
           "created": "2026-10-25T20:03:07.000Z",
           "completed": null
         }
@@ -421,7 +420,7 @@
           "id": "S3.3",
           "title": "Free trial on annual (3 days unless Milan says otherwise), with the exact charge date stated on screen.",
           "status": "done",
-          "notes": "Question for Milan: 3-day trial on annual — confirm.\nMilan confirmed the 3-day trial on annual.\nBuilt; waiting on CI build, tests and screenshots.\nCI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending.\nVerified on CI 33dd4dd: all tests pass; screenshots match approved mockups in dark, light and largest text.",
+          "notes": "Question for Milan: 3-day trial on annual — confirm.\nMilan confirmed the 3-day trial on annual.\nBuilt; waiting on CI build, tests and screenshots.\nCI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending.\nVerified on CI 33dd4dd: all tests pass; screenshots match approved mockups in dark, light and largest text.\n27 Oct: trial length vs prep window under review (S18.4, waiting on Milan).",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": "2026-10-22T22:57:10.707Z"
         },
@@ -721,7 +720,7 @@
           "id": "S6.1",
           "title": "SOS screen: urge-surfing timer (about 3 minutes), guided breathing, the user's reasons and photo.",
           "status": "done",
-          "notes": "Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.",
+          "notes": "Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.\n27 Oct: reasons and photo come back on the 'Three minutes done' screen (S18.6).",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": "2026-10-23T08:34:21.495Z"
         },
@@ -785,7 +784,7 @@
           "id": "S6.9",
           "title": "Wire the orb into the SOS screen (3-minute session, S6.3 outcomes).",
           "status": "in_progress",
-          "notes": "From DAYXERO_BIO_ORB_SPEC.md. Pause/Resume and Coach me under the pill; It passed / I slipped in the session menu until time's up, then the full outcomes. Reasons rotation and if-then plan card removed from the session per Milan's preview.",
+          "notes": "From DAYXERO_BIO_ORB_SPEC.md. Pause/Resume and Coach me under the pill; It passed / I slipped in the session menu until time's up, then the full outcomes. Reasons rotation and if-then plan card removed from the session per Milan's preview.\n27 Oct: the white transcript pill becomes a muted caption (S18.11).",
           "created": "2026-10-24T11:47:52.000Z",
           "completed": null
         },
@@ -855,7 +854,7 @@
           "id": "S7.3",
           "title": "Insights screen: time-of-day heat map of cravings and uses, top triggers, trend over time. Shows \"needs a week of data\" until there's enough.",
           "status": "done",
-          "notes": "Mockups ready in tracker.\nMilan approved S7 in chat.\nBuilt and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.",
+          "notes": "Mockups ready in tracker.\nMilan approved S7 in chat.\nBuilt and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.\n27 Oct: early patterns from the first log (S18.7).",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": "2026-10-23T08:34:21.644Z"
         },
@@ -1712,7 +1711,7 @@
           "id": "S16.3",
           "title": "App Store assets: screenshots, preview video, description (ask Milan for copy).",
           "status": "pending",
-          "notes": "Copy and screenshot set approved by Milan. Next: capture the six screens on a 6.9\" simulator and add captions.",
+          "notes": "Copy and screenshot set approved by Milan. Next: capture the six screens on a 6.9\" simulator and add captions.\n27 Oct: pipeline built (S18.16). The 'App Store screenshots' workflow produces the approved six at 6.9\" and 6.3\" too. The Program shot shows PLACEHOLDER lessons until S5.1; the slip shot uses 'Plan saved', because the first slip screen captures blank in CI.\n27 Oct: with S18.18 fixed, the slip shot uses 'Thanks for telling us' as approved.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -1781,9 +1780,1610 @@
           "completed": null
         }
       ]
+    },
+    {
+      "id": "S18",
+      "title": "Review fixes and iPhone Duo",
+      "goal": "Fixes and changes from Argon's review of TestFlight build and copy audit (27 Oct 2026), plus iPhone Duo support.",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S18.1",
+          "title": "Weight ruler ignores vertical drags (bug 1: 72 kg read as 66 kg)",
+          "status": "done",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. The ruler's drag started on a vertical scroll and nudged the weight. Now only horizontal drags move it.\n0a6bf06: ruler waits 8 pt and ignores drags that start vertical. Verifying on CI.\nVerified in CI (water-goal-sheet shots show 72 kg on the ruler). The drag itself needs a finger: check it in the next TestFlight build.",
+          "created": "2026-10-27T19:25:39.028Z",
+          "completed": "2026-10-28T04:15:42.697Z"
+        },
+        {
+          "id": "S18.2",
+          "title": "Plan reveal week list never skips prep days (bug 2)",
+          "status": "done",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. With 7+ prep days the list jumped from Prep day 6 to Quit Day. Now: days 1–5, '+N more prep days', then Quit Day with its date.\ndc1de06: PlanTimeline (Core, tested): days 1–5, '+N more prep days', Quit Day with its date. Verifying on CI.\nVerified: PlanTimelineTests green (iOS run 93); onb-reveal shot lists prep days 1-5, '+2 more prep days', then Quit Day with its date.",
+          "created": "2026-10-27T19:25:39.078Z",
+          "completed": "2026-10-28T04:15:42.726Z"
+        },
+        {
+          "id": "S18.3",
+          "title": "Name the per-cigarette price in the sum line (bug 3)",
+          "status": "done",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Pack buyers see 'That's ₹1.25 a cigarette, about ₹4,563 a year', so a single-stick price typed as a pack price is obvious. USD on the paywall comes from the App Store storefront, not the code.\na3f54e1: 'That's ₹1.25 a cigarette, about ₹4,563 a year' in onboarding and Settings. USD on the paywall is the App Store storefront, not code. Verifying on CI.\nVerified: onb-baseline_cigarettes shot reads 'That's $0.75 a cigarette, about $1,642 a year.'",
+          "created": "2026-10-27T19:25:39.118Z",
+          "completed": "2026-10-28T04:15:42.754Z"
+        },
+        {
+          "id": "S18.4",
+          "title": "Trial length vs prep window (bug 4)",
+          "status": "done",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. The 3-day trial ends before a 7-day prep reaches Quit Day, and free users stop after Prep day 1. Options: 2-week trial, 1-week trial, prep free and pay from Quit Day, 1-month trial. Waiting on Milan.\nMilan, 27 Oct: keep the paywall as it is for now (3-day trial on yearly, Prep day 1 free).",
+          "created": "2026-10-27T19:25:39.154Z",
+          "completed": "2026-10-27T20:11:34.553Z"
+        },
+        {
+          "id": "S18.5",
+          "title": "Water goal out of onboarding, into the Water tab (no height)",
+          "status": "done",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Everyone starts on 2.0 L. 'Personalise goal' in the Water tab: weight, activity, climate, Adjust. Height is no longer collected.\n0273b11: onboarding water screens removed; 'Personalise goal' sheet in the Water tab (WaterGoalDraft, tested). Verifying on CI.\nVerified: onboarding goes NRT → building → reveal (journey test); water-goal-sheet shots (dark, light, ax5); WaterGoalDraft tests green.",
+          "created": "2026-10-27T19:25:39.192Z",
+          "completed": "2026-10-28T04:15:42.787Z"
+        },
+        {
+          "id": "S18.6",
+          "title": "Your why after the 3 minutes in Craving SOS",
+          "status": "done",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Photo and reason on the 'Three minutes done' screen, above the outcomes. The session itself stays as signed off.\n6b2cc8a: reason and photo on 'Three minutes done', mini orb, next reason on tap. Verifying on CI.\nVerified: sos-timeup shot shows the photo reason card under the caption. Orb readout fix in S18.20.",
+          "created": "2026-10-27T19:25:39.225Z",
+          "completed": "2026-10-28T04:15:42.815Z"
+        },
+        {
+          "id": "S18.7",
+          "title": "Early patterns on Progress from Day 1",
+          "status": "done",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Replaces 'Insights need a week of logs' with real time-of-day bars from the first log and the triggers from setup. Full insights still open at 7 days and 5 logs.\n0a47c9f: time-of-day bars from the first log, setup triggers and times, 'Full patterns in N days'. Verifying on CI.\nVerified: prog-progress-empty (pill + 'You said: Coffee · Stress') and prog-progress-prep (so-far bars + 'Full patterns in 6 days'); Insights tests green.",
+          "created": "2026-10-27T19:25:39.257Z",
+          "completed": "2026-10-28T04:15:42.845Z"
+        },
+        {
+          "id": "S18.8",
+          "title": "Vape: pods a week, and 'Vaped' for the one-tap log",
+          "status": "done",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Onboarding and Settings ask for pods or disposables a week; puffs a day is worked out. 'Puff session' becomes 'Vaped' / 'Times vaped' in the log sheet, Home, widget and Siri.\n5d84ef4: pods a week in onboarding and Settings (VapeUsage, tested); 'Vaped' / 'Times vaped'; Siri reads 'Log a Vape'. Verifying on CI.\nVerified: onb-baseline_vape shot (2.5 pods a week, price of one, puffs in one), reveal tile 'Pods a week 2.5 → 0'; journey test logs 'Vaped'.",
+          "created": "2026-10-27T19:25:39.292Z",
+          "completed": "2026-10-28T04:15:42.873Z"
+        },
+        {
+          "id": "S18.9",
+          "title": "Kicker rule in the design methodology",
+          "status": "done",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. All-caps labels only for a screen's eyebrow and section headers, never inside a card. A card is a value plus one sentence-case caption, with no repeated words.\nRule added to DESIGN_METHODOLOGY.md section 3.",
+          "created": "2026-10-27T19:25:39.326Z",
+          "completed": "2026-10-27T19:48:53.376Z"
+        },
+        {
+          "id": "S18.10",
+          "title": "Copy de-clutter pass",
+          "status": "done",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Home (hero, water, lesson card, prep tiles removed), log sheet, Program rows, Progress tiles and hero, and in-card kickers on other screens.\n6c9a548: Home, log sheet, Program, Progress and other in-card labels. Verifying on CI screenshots.\nVerified across the CI set (Home prep, Progress tiles, lesson row '4 of 7 · 6 min', log rows).",
+          "created": "2026-10-27T19:25:39.366Z",
+          "completed": "2026-10-28T04:15:42.899Z"
+        },
+        {
+          "id": "S18.11",
+          "title": "SOS caption replaces the white transcript pill",
+          "status": "done",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Muted text on black, one sentence at a time in step with the voice, with no box or badge. Updates Bio-Orb spec 3.5.\necf6039: OrbCaption with sentence sync (OrbCaptionText, tested); Bio-Orb spec 3.5 notes the change. Verifying on CI.\nVerified: sos-session shot shows the muted caption with no box; OrbCaption tests green.",
+          "created": "2026-10-27T19:25:39.400Z",
+          "completed": "2026-10-28T04:15:42.926Z"
+        },
+        {
+          "id": "S18.12",
+          "title": "iPhone Duo: build with Xcode 27.1 (CI and TestFlight)",
+          "status": "done",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Builds with Xcode 26 are letterboxed on iPhone Duo. CI and TestFlight move to GitHub's xcode-27 runner; the iOS 18 test leg stays on Xcode 26.\n2fce393: ios.yml, testflight.yml and devices.yml on the xcode-27 runner with Xcode 27.1; iOS 18 leg stays on Xcode 26. First CI run in progress.\n28 Oct: unit tests green on Xcode 27.1 (iOS run 93). TestFlight upload follows once the device matrix is green.\nTestFlight build 202610280722 (1.0.0), archived with Xcode 27.1 from f3b493b on this branch (TestFlight run 60), processed VALID in App Store Connect 28 Oct 07:29 UTC.",
+          "created": "2026-10-27T19:25:39.435Z",
+          "completed": "2026-10-28T07:30:07.580Z"
+        },
+        {
+          "id": "S18.13",
+          "title": "iPhone Duo: resizing (readable column, height-aware orb, dock on the side)",
+          "status": "done",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. The inner display ignores portrait lock (951 x 669 pt when unfolded). Content capped at 600 pt, orb sized to the height, dock moves to the side where the system puts bars.\n1607829: 600 pt readable column, height-aware orb, dock on the system's bar edge, one safe-area inset for the dock.\nVerified on the Duo CI shots (run 93): readable column, height-aware orb, dock on the side on the cover and in the wide pose.",
+          "created": "2026-10-27T19:25:39.481Z",
+          "completed": "2026-10-28T04:15:42.954Z"
+        },
+        {
+          "id": "S18.14",
+          "title": "iPhone Duo: fold-aware SOS, Home and Progress",
+          "status": "done",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. When half-open, ArrangementView splits each screen on either side of the fold; other screens keep their column off the fold.\n1607829: columns avoid a book-pose fold; Today, Progress and SOS split with ArrangementView when half open.\nVerified on the Duo half-folded shots (run 89/93): Today, Progress and SOS split at the fold.",
+          "created": "2026-10-27T19:25:39.522Z",
+          "completed": "2026-10-28T04:15:42.978Z"
+        },
+        {
+          "id": "S18.15",
+          "title": "iPhone Duo: CI screenshots closed, open and half-folded",
+          "status": "done",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. A separate CI job folds the iPhone Duo simulator with hinge and captures the cover and inner displays.\n2eba4b7: 'duo' CI job with hinge v0.3.0, four poses, shots to ci-screens-duo.\nci-screens-duo branch: closed, open-wide, open-tall, half-book and half-laptop for 9 screens.",
+          "created": "2026-10-27T19:25:39.555Z",
+          "completed": "2026-10-28T04:15:43.005Z"
+        },
+        {
+          "id": "S18.16",
+          "title": "iPhone Duo: App Store screenshots",
+          "status": "in_progress",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Needed from April 2027 for apps built with the iOS 27.1 SDK. Not started.\nMilan, 27 Oct: do it now; Duo screenshots put a 'optimized for iPhone Duo' badge on the product page. 246fb5d: 'App Store screenshots' workflow captures the six approved screens on iPhone 6.9\" and both Duo displays and composes them at 1320x2868, 1206x2622, 1398x2034 and 2007x2853 (scripts/store/compose.py). Results on the store-screens branch.\n28 Oct: the set builds and composes in CI (store-screens branch, run 93): iPhone 6.9 and 6.3, Duo cover 1398x2034, Duo inner 2007x2853. Still not uploadable: Program shots show PLACEHOLDER tags until S5.1, and the Duo cover Home is cramped (greeting wraps to three lines next to the side dock).",
+          "created": "2026-10-27T19:25:39.590Z",
+          "completed": null
+        },
+        {
+          "id": "S18.17",
+          "title": "Currency follows the phone's region, with a Settings option to change it",
+          "status": "done",
+          "notes": "Milan, 27 Oct. 877fa4d: CurrencyChoice (Core, tested) gives the region's currency in onboarding; Settings › Your quit › Currency lists every currency with search. Changing it relabels amounts, it doesn't convert them.\nVerifying on CI.\nVerified: set-currency shot (region's currency first with a check mark, search); SettingsTests currency green.",
+          "created": "2026-10-27T20:11:34.596Z",
+          "completed": "2026-10-28T04:15:43.031Z"
+        },
+        {
+          "id": "S18.18",
+          "title": "Blank sheet when a slip or craving is opened from a widget or Siri",
+          "status": "done",
+          "notes": "Found 27 Oct while building the App Store screenshots (slip-ack and log-craving CI shots were blank). Cause: the log sheet pushed the page while it was still presenting and resizing. 3eb233b: the page is the sheet's first page and the height is set before it opens; UI test testWidgetOpensSlipAndCravingLog.\nVerifying on CI (iOS workflow and the device-matrix UI tests).\nVerified: testWidgetOpensSlipAndCravingLog passed on all four device-matrix legs (run 46), and the slip-ack and log-craving CI shots render (iOS run 93).\nShipped in TestFlight build 202610280722.",
+          "created": "2026-10-27T20:32:08.583Z",
+          "completed": "2026-10-28T04:15:15.500Z"
+        },
+        {
+          "id": "S18.19",
+          "title": "Reminders screen swapped out by the paywall at the end of onboarding",
+          "status": "done",
+          "notes": "Found 28 Oct by the device-matrix journey test: saving the profile on the plan reveal made RootView switch to the paywall at once, so 'A nudge when it helps' only flashed (or never showed). Pre-dates S18.\n6a123cb: RootView keeps onboarding on screen from the save until the reminders screen finishes. Journey test tapSettled now waits for a still, enabled, on-screen button (iOS 27 hittability checks were flaky). Verifying on device matrix run 48.\nDevice matrix run 48: every leg now reaches the paywall after the reminders screen. The next failure was the test tapping the paywall button before its plans loaded (87b204c waits for it); run 49 verifying.\nVerified: the full onboarding journey passes on all four device-matrix legs (run 52): reveal → reminders (Not now) → paywall.",
+          "created": "2026-10-28T04:15:15.540Z",
+          "completed": "2026-10-28T07:30:07.633Z"
+        },
+        {
+          "id": "S18.20",
+          "title": "SOS time-up orb drew the full-size readout inside the mini orb",
+          "status": "done",
+          "notes": "Found 28 Oct in the sos-timeup CI shot: 00:00 spilled past the ring (regression from S18.6).\n5573368: the time-up orb passes mini: true, and any orb smaller than the spec's size scales its readout with it. Verifying on iOS run 96.\nVerified: sos-timeup-dark (iOS run 96, 5573368) shows 'urge surfed / 00:00 / cycle' inside the mini ring.",
+          "created": "2026-10-28T04:15:15.621Z",
+          "completed": "2026-10-28T04:59:19.133Z"
+        },
+        {
+          "id": "S18.21",
+          "title": "Purchase confirmation replaced by Home the moment the person turns Pro",
+          "status": "done",
+          "notes": "Found 28 Oct by the device-matrix journey test: a purchase grants Pro at once and RootView then showed Home, so 'You're all set' (trial end date, reminder the day before, Start prep day 1) never showed. Pre-dates S18.\nbd5d8b5: the first-run paywall stays up once a purchase or restore starts, until the person taps through; someone already Pro still skips it. Verifying on device matrix run 50 and iOS run 97.\nVerified: device matrix run 52 buys the trial on the mock store, allows notifications for the trial reminder, sees 'You're all set' and taps Start prep day 1 on all four legs.",
+          "created": "2026-10-28T05:32:58.473Z",
+          "completed": "2026-10-28T07:30:07.669Z"
+        }
+      ]
+    },
+    {
+      "id": "S19",
+      "title": "Home from the website mockup",
+      "goal": "Home matches the dayxero.in phone preview: moss wave, lesson spotlight, streak and adherence, milestone with illustration, NRT set-up, log a use (Milan, 28 Oct).",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S19.1",
+          "title": "Header: greeting, name, profile and the white trend button to Progress",
+          "status": "done",
+          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).\n49d702c; verifying on CI.\nVerified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.",
+          "created": "2026-10-28T08:56:07.440Z",
+          "completed": "2026-10-28T10:03:44.150Z"
+        },
+        {
+          "id": "S19.2",
+          "title": "S1: flowing moss wave with cravings-today, next-craving and Log pills",
+          "status": "done",
+          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).\n49d702c; verifying on CI.\nVerified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.",
+          "created": "2026-10-28T08:56:07.497Z",
+          "completed": "2026-10-28T10:03:44.193Z"
+        },
+        {
+          "id": "S19.3",
+          "title": "S2: lesson spotlight card (white; black in light theme)",
+          "status": "done",
+          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).\n49d702c; verifying on CI.\nVerified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.",
+          "created": "2026-10-28T08:56:07.561Z",
+          "completed": "2026-10-28T10:03:44.224Z"
+        },
+        {
+          "id": "S19.4",
+          "title": "S3: streak and adherence card (Quit Day countdown folds in)",
+          "status": "done",
+          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).\n49d702c; verifying on CI.\nVerified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.",
+          "created": "2026-10-28T08:56:07.617Z",
+          "completed": "2026-10-28T10:03:44.261Z"
+        },
+        {
+          "id": "S19.5",
+          "title": "S4: next health milestone with an animated illustration",
+          "status": "done",
+          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).\n49d702c; verifying on CI.\nVerified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.",
+          "created": "2026-10-28T08:56:07.680Z",
+          "completed": "2026-10-28T10:03:44.292Z"
+        },
+        {
+          "id": "S19.6",
+          "title": "S5: NRT set-up invite on Home; set-up plans move to Program",
+          "status": "done",
+          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).\n49d702c; verifying on CI.\nVerified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.",
+          "created": "2026-10-28T08:56:07.730Z",
+          "completed": "2026-10-28T10:03:44.331Z"
+        },
+        {
+          "id": "S19.7",
+          "title": "S6: log a use during prep, per product",
+          "status": "done",
+          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).\n49d702c; verifying on CI.\nVerified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.",
+          "created": "2026-10-28T08:56:07.832Z",
+          "completed": "2026-10-28T10:03:44.366Z"
+        },
+        {
+          "id": "S19.8",
+          "title": "Tests, CI screenshots and TestFlight for the new Home",
+          "status": "done",
+          "notes": "Plan approved by Milan 28 Oct (screen recording of the website preview).\niOS run 98 and device matrix run 53 green; TestFlight build 202610280955 (1.0.0), processed VALID 28 Oct 10:01 UTC.",
+          "created": "2026-10-28T08:56:07.867Z",
+          "completed": "2026-10-28T10:03:44.398Z"
+        }
+      ]
+    },
+    {
+      "id": "S20",
+      "title": "Superwall",
+      "goal": "Superwall paywalls from the dashboard (app 58855), bought through RevenueCat, with DayXero's own paywall as the fallback (Milan, 28 Oct).",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S20.1",
+          "title": "Install SuperwallKit and configure it at launch with RevenueCat as the purchase controller",
+          "status": "done",
+          "notes": "Asked by Milan 28 Oct (Superwall set-up steps).\n3656053; iOS run 99 verifying the build with SuperwallKit.\nVerified: iOS run 99 (build with SuperwallKit, unit tests) and device matrix run 54 (all four legs) green on 3656053.",
+          "created": "2026-10-28T09:57:59.130Z",
+          "completed": "2026-10-28T10:52:28.167Z"
+        },
+        {
+          "id": "S20.2",
+          "title": "Placements: onboarding_complete, unlock_program_day, upgrade_from_settings, falling back to DayXero's paywall",
+          "status": "done",
+          "notes": "Asked by Milan 28 Oct (Superwall set-up steps).\n3656053.\nVerified on CI with the fallback path (Superwall is off in tests). Live Superwall paywalls wait on campaigns (S20.4).",
+          "created": "2026-10-28T09:57:59.173Z",
+          "completed": "2026-10-28T10:52:28.290Z"
+        },
+        {
+          "id": "S20.3",
+          "title": "User attributes, deep links (paywall previews) and analytics forwarding",
+          "status": "done",
+          "notes": "Asked by Milan 28 Oct (Superwall set-up steps).\n3656053.\n3656053; CI green.",
+          "created": "2026-10-28T09:57:59.217Z",
+          "completed": "2026-10-28T10:52:28.338Z"
+        },
+        {
+          "id": "S20.4",
+          "title": "Dashboard: products on the pro entitlement, RevenueCat as revenue provider, campaigns, URL scheme",
+          "status": "blocked",
+          "notes": "Asked by Milan 28 Oct (Superwall set-up steps).\nNeeds Milan in the Superwall dashboard (or the superwall CLI with superwall.com allowed): see docs/SUPERWALL.md.\nStill waiting on the Superwall dashboard set-up (Milan).",
+          "created": "2026-10-28T09:57:59.259Z",
+          "completed": null
+        }
+      ]
+    },
+    {
+      "id": "S21",
+      "title": "Water, dock and Your body",
+      "goal": "Blue water and the water-rise bug, drink illustrations, the SOS rainbow dock, one Progress button, and Your body rebuilt as the timeline path with the new illustration set used everywhere (Milan, 28 Oct; mockups at https://claude.ai/artifact/MtDjY5mqY7u96dbwf7yvK3).",
+      "signoff": {
+        "state": "signed_off",
+        "history": [
+          {
+            "time": "2026-10-28T13:34:04.107Z",
+            "state": "signed_off",
+            "by": "Claude",
+            "comment": ""
+          }
+        ]
+      },
+      "mockups": [
+        {
+          "title": "Water, dock and Your body mockups",
+          "path": "https://claude.ai/artifact/MtDjY5mqY7u96dbwf7yvK3"
+        }
+      ],
+      "tasks": [
+        {
+          "id": "S21.1",
+          "title": "Water turns blue (pill, glow, widget glyph); tea stays amber",
+          "status": "done",
+          "notes": "Asked by Milan 28 Oct (screen recording).\ncd7ceed; verifying on CI.\nf3f84d7: exactly the WTracker spec (glass #BFE6FF→#3D8BF2, sparkling #E6F6FF→#7CC4F2, glow 84,164,255 @ 24%); waves are 14 pt bands as in the reference. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.",
+          "created": "2026-10-28T13:33:59.724Z",
+          "completed": "2026-10-28T15:36:37.692Z"
+        },
+        {
+          "id": "S21.2",
+          "title": "Fix the water not rising on tap, then jumping; UI test taps Log repeatedly with a screenshot after each tap",
+          "status": "done",
+          "notes": "Asked by Milan 28 Oct: 'Sometimes when you click, you dont see the water rise, but suddenly it would rise to all the click you did till now.'\ncd7ceed; verifying on CI.\ncb93dea: UI test pushed alone first; device matrix run 55 tells whether CI reproduces the stall on the old code. Fix in cd7ceed: SwiftUI animates the level (Animatable), the timeline only drives waves.\nFix in cd7ceed (SwiftUI animates the level). testWaterRisesOnEveryTap: the water rose after each of 6 taps on every leg; dc10543 keeps Log above the dock on 6.1-inch phones. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.",
+          "created": "2026-10-28T13:33:59.766Z",
+          "completed": "2026-10-28T15:36:37.767Z"
+        },
+        {
+          "id": "S21.3",
+          "title": "Drink illustrations on the Water page (picker and Today's list)",
+          "status": "done",
+          "notes": "Asked by Milan 28 Oct.\ncd7ceed; verifying on CI.\ncd7ceed. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.",
+          "created": "2026-10-28T13:33:59.809Z",
+          "completed": "2026-10-28T15:36:37.834Z"
+        },
+        {
+          "id": "S21.4",
+          "title": "Dock: SOS as the word with a shimmering rainbow on an unselected-style circle; bolder unselected icons; trend icon for Progress",
+          "status": "done",
+          "notes": "Asked by Milan 28 Oct.\ncd7ceed; verifying on CI.\ncd7ceed. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.",
+          "created": "2026-10-28T13:33:59.853Z",
+          "completed": "2026-10-28T15:36:37.871Z"
+        },
+        {
+          "id": "S21.5",
+          "title": "Remove Home's top-right Progress button (same as the Progress tab)",
+          "status": "done",
+          "notes": "Asked by Milan 28 Oct (screenshot).\ncd7ceed; verifying on CI.\ncd7ceed. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.",
+          "created": "2026-10-28T13:33:59.891Z",
+          "completed": "2026-10-28T15:36:37.912Z"
+        },
+        {
+          "id": "S21.6",
+          "title": "New illustration set (13 drawings) with reached / now / ahead states, used everywhere a health timeline shows",
+          "status": "done",
+          "notes": "Asked by Milan 28 Oct: change the illustration everywhere in the app wherever the timelines show.\ncd7ceed; verifying on CI.\ncd7ceed; rule in docs/DESIGN_METHODOLOGY.md. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.",
+          "created": "2026-10-28T13:33:59.932Z",
+          "completed": "2026-10-28T15:36:37.980Z"
+        },
+        {
+          "id": "S21.7",
+          "title": "Your body rebuilt as Body B, timeline path",
+          "status": "done",
+          "notes": "Asked by Milan 28 Oct.\ncd7ceed; verifying on CI.\ncd7ceed. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.",
+          "created": "2026-10-28T13:33:59.968Z",
+          "completed": "2026-10-28T15:36:38.026Z"
+        },
+        {
+          "id": "S21.8",
+          "title": "CI green (iOS + device matrix), screenshots reviewed, TestFlight upload",
+          "status": "done",
+          "notes": "iOS run on cd7ceed started.\nCI screenshots are now opt-in (screenshots input, fcbb2d8), per Milan. Device matrix green on f3f84d7; TestFlight run 40717624494 started.\nShipped in TestFlight build 202610281536 (version 1.0.0, f3f84d7), processed VALID by App Store Connect.",
+          "created": "2026-10-28T13:34:00.008Z",
+          "completed": "2026-10-28T15:50:56.491Z"
+        }
+      ]
+    },
+    {
+      "id": "S22",
+      "title": "Onboarding v2",
+      "goal": "Screens 1–14 rebuilt from the Figma mockups (https://www.figma.com/design/CJzm1xsQryPsdG5m8KWRx6), with the welcome hills rolling like Home's header (Milan, 28 Oct).",
+      "signoff": {
+        "state": "signed_off",
+        "history": [
+          {
+            "time": "2026-10-28T18:00:05.459Z",
+            "state": "signed_off",
+            "by": "Claude",
+            "comment": ""
+          }
+        ]
+      },
+      "mockups": [
+        {
+          "title": "Onboarding v2 in Figma",
+          "path": "https://www.figma.com/design/CJzm1xsQryPsdG5m8KWRx6"
+        }
+      ],
+      "tasks": [
+        {
+          "id": "S22.1",
+          "title": "Welcome: animated hills with a dotted path to a Quit Day flag, Restore link, 18+ in the footer (age screen removed)",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-28T18:00:05.503Z",
+          "completed": null
+        },
+        {
+          "id": "S22.2",
+          "title": "Products with the dual-use note; cigarette, vape and pouch baselines with one-tap regional prices, pack size, vape strength and puffs",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-28T18:00:05.542Z",
+          "completed": null
+        },
+        {
+          "id": "S22.3",
+          "title": "New baseline screen: daily nicotine in cigarettes, yearly money and time back",
+          "status": "pending",
+          "notes": "Nicotine figures are labelled rough estimates. Needs a source link (Benowitz & Jacob 1984, ~1 mg a cigarette; the vape puff conversion is an assumption) before release; pubmed is blocked in this session.",
+          "created": "2026-10-28T18:00:05.584Z",
+          "completed": null
+        },
+        {
+          "id": "S22.4",
+          "title": "Triggers with first use after waking; name and reason on one screen with tap-to-add phrases and photo; past attempts with confidence; NRT formats",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-28T18:00:05.634Z",
+          "completed": null
+        },
+        {
+          "id": "S22.5",
+          "title": "Quit Day calendar with the prep track and press-and-hold to commit; plan-building ring; plan reveal with savings split and runway; reminder previews",
+          "status": "pending",
+          "notes": "Reminder previews show the real notifications (morning pledge, lesson ready). Trigger-timed nudges like 'before your morning coffee' don't exist yet.",
+          "created": "2026-10-28T18:00:05.677Z",
+          "completed": null
+        },
+        {
+          "id": "S22.6",
+          "title": "Paywall: trial timeline (today, reminder, first charge), daily-spend comparison, basic-tracker link",
+          "status": "pending",
+          "notes": "Trial length comes from App Store Connect; set a 7-day intro offer on the yearly plan to match the prep week.",
+          "created": "2026-10-28T18:00:05.718Z",
+          "completed": null
+        },
+        {
+          "id": "S22.7",
+          "title": "Tests and CI: model and journey tests, screenshot steps; CI green",
+          "status": "pending",
+          "notes": "Pushed 9e798e3 + fixes. CI couldn't start: GitHub says 'recent account payments have failed or your spending limit needs to be increased' (Billing & plans). Re-run ios.yml (screenshots: true) and devices.yml once billing is fixed.",
+          "created": "2026-10-28T18:00:05.760Z",
+          "completed": null
+        },
+        {
+          "id": "S22.8",
+          "title": "Screen 13 becomes the free-trial screen (today, reminder, first charge) with 'Remind me 2 days before' on by default; asking for notifications there",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-28T18:48:06.641Z",
+          "completed": null
+        },
+        {
+          "id": "S22.9",
+          "title": "First-run paywall made a clean hard paywall: one promise, three bullets, a trust card, yearly/monthly side by side, ✕ after 3 s, no basic-tracker link",
+          "status": "pending",
+          "notes": "No made-up rating or review: the app isn't out, so it shows plain facts until there are real reviews. Prices and trial length come from App Store Connect; build the Superwall version and run the price/header tests there (S20.4).",
+          "created": "2026-10-28T18:48:06.705Z",
+          "completed": null
+        },
+        {
+          "id": "S22.10",
+          "title": "Prep day 1 opens by itself after the paywall (Day-0 'aha')",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-28T18:48:06.749Z",
+          "completed": null
+        }
+      ]
+    },
+    {
+      "id": "S23",
+      "title": "TestFlight via Xcode Cloud",
+      "goal": "Uploads move to Xcode Cloud so they don't depend on GitHub Actions billing (Milan, 28 Oct). GitHub keeps the device-matrix tests.",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S23.1",
+          "title": "ci_scripts/ci_post_clone.sh: XcodeGen, package resolution, PostHog secret; docs/XCODE_CLOUD.md",
+          "status": "done",
+          "notes": "",
+          "created": "2026-10-28T20:15:08.548Z",
+          "completed": "2026-10-28T20:15:08.631Z"
+        },
+        {
+          "id": "S23.2",
+          "title": "Milan: create the TestFlight workflow in Xcode, add POSTHOG_API_KEY, set the next build number to 202610300000, start the first build",
+          "status": "blocked",
+          "notes": "",
+          "created": "2026-10-28T20:15:08.594Z",
+          "completed": null
+        }
+      ]
+    },
+    {
+      "id": "S24",
+      "title": "Home and dock from the mockup",
+      "goal": "Home rebuilt as the Figma Home (screen 15) and the dock laid out like it, with the glass look and sliding lens of iOS 26 tab bars (Milan's WhatsApp recording, 29 Oct).",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S24.1",
+          "title": "Home: greeting header with day chip and initial, white lesson card with hills, logging cards two to a row (water joins one or three products), prep-streak segments",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-28T22:12:08.189Z",
+          "completed": null
+        },
+        {
+          "id": "S24.2",
+          "title": "Dock: one glass bar; selected tab a white pill with its name that slides and squashes between tabs; drag along the bar to switch",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-10-28T22:12:08.231Z",
+          "completed": null
+        },
+        {
+          "id": "S24.3",
+          "title": "CI, screenshots and TestFlight",
+          "status": "blocked",
+          "notes": "GitHub Actions jobs not starting: billing. Build from Xcode or Xcode Cloud.",
+          "created": "2026-10-28T22:12:08.265Z",
+          "completed": null
+        },
+        {
+          "id": "S24.4",
+          "title": "Dock v2: dark resting pill (black in the dark theme, like WhatsApp); touch swells it into a clear lens taller than the bar that follows the finger, magnifies the icons and has a rainbow rim",
+          "status": "awaiting_signoff",
+          "notes": "Milan's WhatsApp recording and screenshots, 29 Oct\nd05b7df. Not CI-built: GitHub Actions blocked by billing. Milan to build in Xcode and try on device.\n2382214: other tabs hollow, selected icon and name filled in sage (accentInk); Progress uses chart.line.uptrend.xyaxis.circle so it has both forms.",
+          "created": "2026-10-29T06:11:15.460Z",
+          "completed": null
+        }
+      ]
+    },
+    {
+      "id": "S25",
+      "title": "Post-onboarding audit fixes",
+      "goal": "Fixes from the TestFlight walkthrough audit (Milan, 29 Oct). Branch claude/audit-fixes, on top of S24.",
+      "signoff": {
+        "state": "signed_off",
+        "history": [
+          {
+            "time": "2026-10-29T13:00:00.000Z",
+            "state": "mockups_ready",
+            "by": "Claude",
+            "comment": "Your body mocks (path layout, illustration kit, new looks drawings): https://claude.ai/artifact/4Y7kJrQagE6gF3pgFCwsvT"
+          },
+          {
+            "time": "2026-10-29T17:10:00.000Z",
+            "state": "signed_off",
+            "by": "Claude",
+            "comment": "Milan approved the Your body mocks in chat (theme follows the phone; animate the new drawings)."
+          }
+        ]
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S25.1",
+          "title": "Evening check-in knows the phase: prep week asks 'Mindful & observant' or 'Mostly autopilot' and shows today's logs with steppers; clear day / slip only from Quit Day.",
+          "status": "done",
+          "notes": "CheckInView prepHeader/usedToday; CheckIn.prepMindful.",
+          "created": "2026-10-29T13:00:00.000Z",
+          "completed": "2026-10-29T13:00:00.000Z"
+        },
+        {
+          "id": "S25.2",
+          "title": "Home log cards log in one tap during prep (toast: 'Cigarette #3 logged · Undo · Add trigger'); vape card splits into +1 Puff and + Urge (craving form directly).",
+          "status": "done",
+          "notes": "HomeView productCard/logUse/loggedToast.",
+          "created": "2026-10-29T13:00:00.000Z",
+          "completed": "2026-10-29T13:00:00.000Z"
+        },
+        {
+          "id": "S25.3",
+          "title": "Toolkit tab replaces Water: your why, Craving SOS, water card (opens the tracker), calm tools, help line. Calm tools leave Program.",
+          "status": "done",
+          "notes": "DayXero/Toolkit/ToolkitView.swift; '-dx.tab water' opens the tracker over Toolkit.",
+          "created": "2026-10-29T13:00:00.000Z",
+          "completed": "2026-10-29T13:00:00.000Z"
+        },
+        {
+          "id": "S25.4",
+          "title": "NRT: picking a label applies its steps at once (no stale 25 mg step); India presets.",
+          "status": "done",
+          "notes": "NRTSetupView choose/switchCountry; LabelCountry.india.",
+          "created": "2026-10-29T13:00:00.000Z",
+          "completed": "2026-10-29T13:00:00.000Z"
+        },
+        {
+          "id": "S25.5",
+          "title": "SOS: after a minute 'It's passing · log as ridden out'; time-up 'Log as ridden out (+1)'; win screen 'Wave survived, <name>.'",
+          "status": "done",
+          "notes": "",
+          "created": "2026-10-29T13:00:00.000Z",
+          "completed": "2026-10-29T13:00:00.000Z"
+        },
+        {
+          "id": "S25.6",
+          "title": "Audio lesson player: synced transcript, on-device voice until recordings exist, waveform scrubber, ±15 s, speed; moves on to the exercise.",
+          "status": "done",
+          "notes": "DayXero/Program/LessonAudio.swift.",
+          "created": "2026-10-29T13:00:00.000Z",
+          "completed": "2026-10-29T13:00:00.000Z"
+        },
+        {
+          "id": "S25.7",
+          "title": "Your body: lighter wording, looks changes (lips, skin glow, tan, hair, taste, breath, sleep) with new kit drawings, warm long detail per tile.",
+          "status": "done",
+          "notes": "Seven animated looks drawings, full story per change, sources once at the bottom. CI green.",
+          "created": "2026-10-29T13:00:00.000Z",
+          "completed": "2026-10-29T17:10:00.000Z"
+        },
+        {
+          "id": "S25.8",
+          "title": "Program lesson titles from the audit JSON replace PLACEHOLDER labels.",
+          "status": "pending",
+          "notes": "Waiting on Milan to approve the titles.",
+          "created": "2026-10-29T13:00:00.000Z",
+          "completed": null
+        },
+        {
+          "id": "S25.9",
+          "title": "CI green and TestFlight for the audit fixes.",
+          "status": "in_progress",
+          "notes": "CI green on claude/audit-fixes. Milan uploads to TestFlight from Xcode.",
+          "created": "2026-10-29T13:00:00.000Z",
+          "completed": null
+        }
+      ]
     }
   ],
   "log": [
+    {
+      "time": "2026-10-29T17:10:00.000Z",
+      "type": "status",
+      "message": "S25.7 done: Your body looks changes and full stories (CI green)"
+    },
+    {
+      "time": "2026-10-29T13:00:00.000Z",
+      "type": "task_added",
+      "message": "Added S25: post-onboarding audit fixes (branch claude/audit-fixes)"
+    },
+    {
+      "time": "2026-10-29T06:12:22.679Z",
+      "type": "note",
+      "message": "S24.4: 2382214: other tabs hollow, selected icon and name filled in sage (accentInk); Progress uses chart.line.uptrend.xyaxis.circle so it has both forms."
+    },
+    {
+      "time": "2026-10-29T06:11:15.595Z",
+      "type": "now",
+      "message": "Now: S24 / S24.4"
+    },
+    {
+      "time": "2026-10-29T06:11:15.543Z",
+      "type": "status",
+      "message": "S24.3 pending → blocked (GitHub Actions jobs not starting: billing. Build from Xcode or Xcode Cloud.)"
+    },
+    {
+      "time": "2026-10-29T06:11:15.502Z",
+      "type": "status",
+      "message": "S24.4 pending → awaiting_signoff (d05b7df. Not CI-built: GitHub Actions blocked by billing. Milan to build in Xcode and try on device.)"
+    },
+    {
+      "time": "2026-10-29T06:11:15.460Z",
+      "type": "task_added",
+      "message": "S24.4 added: Dock v2: dark resting pill (black in the dark theme, like WhatsApp); touch swells it into a clear lens taller than the bar that follows the finger, magnifies the icons and has a rainbow rim"
+    },
+    {
+      "time": "2026-10-28T22:12:08.265Z",
+      "type": "task_added",
+      "message": "S24.3 added: CI, screenshots and TestFlight"
+    },
+    {
+      "time": "2026-10-28T22:12:08.231Z",
+      "type": "task_added",
+      "message": "S24.2 added: Dock: one glass bar; selected tab a white pill with its name that slides and squashes between tabs; drag along the bar to switch"
+    },
+    {
+      "time": "2026-10-28T22:12:08.189Z",
+      "type": "task_added",
+      "message": "S24.1 added: Home: greeting header with day chip and initial, white lesson card with hills, logging cards two to a row (water joins one or three products), prep-streak segments"
+    },
+    {
+      "time": "2026-10-28T22:12:08.152Z",
+      "type": "section_added",
+      "message": "S24 added: Home and dock from the mockup"
+    },
+    {
+      "time": "2026-10-28T20:15:08.631Z",
+      "type": "status",
+      "message": "S23.1 pending → done"
+    },
+    {
+      "time": "2026-10-28T20:15:08.594Z",
+      "type": "task_added",
+      "message": "S23.2 added: Milan: create the TestFlight workflow in Xcode, add POSTHOG_API_KEY, set the next build number to 202610300000, start the first build"
+    },
+    {
+      "time": "2026-10-28T20:15:08.548Z",
+      "type": "task_added",
+      "message": "S23.1 added: ci_scripts/ci_post_clone.sh: XcodeGen, package resolution, PostHog secret; docs/XCODE_CLOUD.md"
+    },
+    {
+      "time": "2026-10-28T20:15:08.497Z",
+      "type": "section_added",
+      "message": "S23 added: TestFlight via Xcode Cloud"
+    },
+    {
+      "time": "2026-10-28T18:48:06.749Z",
+      "type": "task_added",
+      "message": "S22.10 added: Prep day 1 opens by itself after the paywall (Day-0 'aha')"
+    },
+    {
+      "time": "2026-10-28T18:48:06.705Z",
+      "type": "task_added",
+      "message": "S22.9 added: First-run paywall made a clean hard paywall: one promise, three bullets, a trust card, yearly/monthly side by side, ✕ after 3 s, no basic-tracker link"
+    },
+    {
+      "time": "2026-10-28T18:48:06.641Z",
+      "type": "task_added",
+      "message": "S22.8 added: Screen 13 becomes the free-trial screen (today, reminder, first charge) with 'Remind me 2 days before' on by default; asking for notifications there"
+    },
+    {
+      "time": "2026-10-28T18:02:29.440Z",
+      "type": "note",
+      "message": "S22.7: Pushed 9e798e3 + fixes. CI couldn't start: GitHub says 'recent account payments have failed or your spending limit needs to be increased' (Billing & plans). Re-run ios.yml (screenshots: true) and devices.yml once billing is fixed."
+    },
+    {
+      "time": "2026-10-28T18:00:05.797Z",
+      "type": "now",
+      "message": "Now: S22 / S22.7"
+    },
+    {
+      "time": "2026-10-28T18:00:05.760Z",
+      "type": "task_added",
+      "message": "S22.7 added: Tests and CI: model and journey tests, screenshot steps; CI green"
+    },
+    {
+      "time": "2026-10-28T18:00:05.718Z",
+      "type": "task_added",
+      "message": "S22.6 added: Paywall: trial timeline (today, reminder, first charge), daily-spend comparison, basic-tracker link"
+    },
+    {
+      "time": "2026-10-28T18:00:05.677Z",
+      "type": "task_added",
+      "message": "S22.5 added: Quit Day calendar with the prep track and press-and-hold to commit; plan-building ring; plan reveal with savings split and runway; reminder previews"
+    },
+    {
+      "time": "2026-10-28T18:00:05.634Z",
+      "type": "task_added",
+      "message": "S22.4 added: Triggers with first use after waking; name and reason on one screen with tap-to-add phrases and photo; past attempts with confidence; NRT formats"
+    },
+    {
+      "time": "2026-10-28T18:00:05.584Z",
+      "type": "task_added",
+      "message": "S22.3 added: New baseline screen: daily nicotine in cigarettes, yearly money and time back"
+    },
+    {
+      "time": "2026-10-28T18:00:05.542Z",
+      "type": "task_added",
+      "message": "S22.2 added: Products with the dual-use note; cigarette, vape and pouch baselines with one-tap regional prices, pack size, vape strength and puffs"
+    },
+    {
+      "time": "2026-10-28T18:00:05.503Z",
+      "type": "task_added",
+      "message": "S22.1 added: Welcome: animated hills with a dotted path to a Quit Day flag, Restore link, 18+ in the footer (age screen removed)"
+    },
+    {
+      "time": "2026-10-28T18:00:05.459Z",
+      "type": "signoff",
+      "message": "S22 mockups → signed_off"
+    },
+    {
+      "time": "2026-10-28T18:00:05.422Z",
+      "type": "mockup",
+      "message": "S22 mockup posted: Onboarding v2 in Figma"
+    },
+    {
+      "time": "2026-10-28T18:00:05.379Z",
+      "type": "section_added",
+      "message": "S22 added: Onboarding v2"
+    },
+    {
+      "time": "2026-10-28T15:50:56.530Z",
+      "type": "note",
+      "message": "S20.4: Still waiting on the Superwall dashboard set-up (Milan)."
+    },
+    {
+      "time": "2026-10-28T15:50:56.491Z",
+      "type": "status",
+      "message": "S21.8 in_progress → done (Shipped in TestFlight build 202610281536 (version 1.0.0, f3f84d7), processed VALID by App Store Connect.)"
+    },
+    {
+      "time": "2026-10-28T15:36:38.078Z",
+      "type": "note",
+      "message": "S21.8: CI screenshots are now opt-in (screenshots input, fcbb2d8), per Milan. Device matrix green on f3f84d7; TestFlight run 40717624494 started."
+    },
+    {
+      "time": "2026-10-28T15:36:38.026Z",
+      "type": "status",
+      "message": "S21.7 in_progress → done (cd7ceed. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.)"
+    },
+    {
+      "time": "2026-10-28T15:36:37.980Z",
+      "type": "status",
+      "message": "S21.6 in_progress → done (cd7ceed; rule in docs/DESIGN_METHODOLOGY.md. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.)"
+    },
+    {
+      "time": "2026-10-28T15:36:37.912Z",
+      "type": "status",
+      "message": "S21.5 in_progress → done (cd7ceed. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.)"
+    },
+    {
+      "time": "2026-10-28T15:36:37.871Z",
+      "type": "status",
+      "message": "S21.4 in_progress → done (cd7ceed. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.)"
+    },
+    {
+      "time": "2026-10-28T15:36:37.834Z",
+      "type": "status",
+      "message": "S21.3 in_progress → done (cd7ceed. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.)"
+    },
+    {
+      "time": "2026-10-28T15:36:37.767Z",
+      "type": "status",
+      "message": "S21.2 in_progress → done (Fix in cd7ceed (SwiftUI animates the level). testWaterRisesOnEveryTap: the water rose after each of 6 taps on every leg; dc10543 keeps Log above the dock on 6.1-inch phones. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.)"
+    },
+    {
+      "time": "2026-10-28T15:36:37.692Z",
+      "type": "status",
+      "message": "S21.1 in_progress → done (f3f84d7: exactly the WTracker spec (glass #BFE6FF→#3D8BF2, sparkling #E6F6FF→#7CC4F2, glow 84,164,255 @ 24%); waves are 14 pt bands as in the reference. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.)"
+    },
+    {
+      "time": "2026-10-28T13:45:34.328Z",
+      "type": "now",
+      "message": "Now: S21 / S21.8"
+    },
+    {
+      "time": "2026-10-28T13:45:34.296Z",
+      "type": "status",
+      "message": "S21.8 pending → in_progress (iOS run on cd7ceed started.)"
+    },
+    {
+      "time": "2026-10-28T13:45:34.259Z",
+      "type": "note",
+      "message": "S21.2: cb93dea: UI test pushed alone first; device matrix run 55 tells whether CI reproduces the stall on the old code. Fix in cd7ceed: SwiftUI animates the level (Animatable), the timeline only drives waves."
+    },
+    {
+      "time": "2026-10-28T13:45:34.221Z",
+      "type": "status",
+      "message": "S21.7 in_progress → in_progress (cd7ceed; verifying on CI.)"
+    },
+    {
+      "time": "2026-10-28T13:45:34.192Z",
+      "type": "status",
+      "message": "S21.6 in_progress → in_progress (cd7ceed; verifying on CI.)"
+    },
+    {
+      "time": "2026-10-28T13:45:34.156Z",
+      "type": "status",
+      "message": "S21.5 in_progress → in_progress (cd7ceed; verifying on CI.)"
+    },
+    {
+      "time": "2026-10-28T13:45:34.118Z",
+      "type": "status",
+      "message": "S21.4 in_progress → in_progress (cd7ceed; verifying on CI.)"
+    },
+    {
+      "time": "2026-10-28T13:45:34.090Z",
+      "type": "status",
+      "message": "S21.3 in_progress → in_progress (cd7ceed; verifying on CI.)"
+    },
+    {
+      "time": "2026-10-28T13:45:34.060Z",
+      "type": "status",
+      "message": "S21.2 in_progress → in_progress (cd7ceed; verifying on CI.)"
+    },
+    {
+      "time": "2026-10-28T13:45:34.021Z",
+      "type": "status",
+      "message": "S21.1 in_progress → in_progress (cd7ceed; verifying on CI.)"
+    },
+    {
+      "time": "2026-10-28T13:34:04.523Z",
+      "type": "status",
+      "message": "S21.7 pending → in_progress"
+    },
+    {
+      "time": "2026-10-28T13:34:04.488Z",
+      "type": "status",
+      "message": "S21.6 pending → in_progress"
+    },
+    {
+      "time": "2026-10-28T13:34:04.452Z",
+      "type": "status",
+      "message": "S21.5 pending → in_progress"
+    },
+    {
+      "time": "2026-10-28T13:34:04.397Z",
+      "type": "status",
+      "message": "S21.4 pending → in_progress"
+    },
+    {
+      "time": "2026-10-28T13:34:04.280Z",
+      "type": "status",
+      "message": "S21.3 pending → in_progress"
+    },
+    {
+      "time": "2026-10-28T13:34:04.213Z",
+      "type": "status",
+      "message": "S21.2 pending → in_progress"
+    },
+    {
+      "time": "2026-10-28T13:34:04.180Z",
+      "type": "status",
+      "message": "S21.1 pending → in_progress"
+    },
+    {
+      "time": "2026-10-28T13:34:04.143Z",
+      "type": "now",
+      "message": "Now: S21 / S21.2"
+    },
+    {
+      "time": "2026-10-28T13:34:04.107Z",
+      "type": "signoff",
+      "message": "S21 mockups → signed_off"
+    },
+    {
+      "time": "2026-10-28T13:34:00.041Z",
+      "type": "mockup",
+      "message": "S21 mockup posted: Water, dock and Your body mockups"
+    },
+    {
+      "time": "2026-10-28T13:34:00.008Z",
+      "type": "task_added",
+      "message": "S21.8 added: CI green (iOS + device matrix), screenshots reviewed, TestFlight upload"
+    },
+    {
+      "time": "2026-10-28T13:33:59.968Z",
+      "type": "task_added",
+      "message": "S21.7 added: Your body rebuilt as Body B, timeline path"
+    },
+    {
+      "time": "2026-10-28T13:33:59.932Z",
+      "type": "task_added",
+      "message": "S21.6 added: New illustration set (13 drawings) with reached / now / ahead states, used everywhere a health timeline shows"
+    },
+    {
+      "time": "2026-10-28T13:33:59.891Z",
+      "type": "task_added",
+      "message": "S21.5 added: Remove Home's top-right Progress button (same as the Progress tab)"
+    },
+    {
+      "time": "2026-10-28T13:33:59.853Z",
+      "type": "task_added",
+      "message": "S21.4 added: Dock: SOS as the word with a shimmering rainbow on an unselected-style circle; bolder unselected icons; trend icon for Progress"
+    },
+    {
+      "time": "2026-10-28T13:33:59.809Z",
+      "type": "task_added",
+      "message": "S21.3 added: Drink illustrations on the Water page (picker and Today's list)"
+    },
+    {
+      "time": "2026-10-28T13:33:59.766Z",
+      "type": "task_added",
+      "message": "S21.2 added: Fix the water not rising on tap, then jumping; UI test taps Log repeatedly with a screenshot after each tap"
+    },
+    {
+      "time": "2026-10-28T13:33:59.724Z",
+      "type": "task_added",
+      "message": "S21.1 added: Water turns blue (pill, glow, widget glyph); tea stays amber"
+    },
+    {
+      "time": "2026-10-28T13:33:59.693Z",
+      "type": "section_added",
+      "message": "S21 added: Water, dock and Your body"
+    },
+    {
+      "time": "2026-10-28T10:52:28.377Z",
+      "type": "now",
+      "message": "Now: S20 / S20.4"
+    },
+    {
+      "time": "2026-10-28T10:52:28.338Z",
+      "type": "status",
+      "message": "S20.3 in_progress → done (3656053; CI green.)"
+    },
+    {
+      "time": "2026-10-28T10:52:28.290Z",
+      "type": "status",
+      "message": "S20.2 in_progress → done (Verified on CI with the fallback path (Superwall is off in tests). Live Superwall paywalls wait on campaigns (S20.4).)"
+    },
+    {
+      "time": "2026-10-28T10:52:28.167Z",
+      "type": "status",
+      "message": "S20.1 in_progress → done (Verified: iOS run 99 (build with SuperwallKit, unit tests) and device matrix run 54 (all four legs) green on 3656053.)"
+    },
+    {
+      "time": "2026-10-28T10:03:44.511Z",
+      "type": "now",
+      "message": "Now: S20 / S20.1"
+    },
+    {
+      "time": "2026-10-28T10:03:44.481Z",
+      "type": "status",
+      "message": "S20.3 pending → in_progress (3656053.)"
+    },
+    {
+      "time": "2026-10-28T10:03:44.454Z",
+      "type": "status",
+      "message": "S20.2 pending → in_progress (3656053.)"
+    },
+    {
+      "time": "2026-10-28T10:03:44.428Z",
+      "type": "status",
+      "message": "S20.1 pending → in_progress (3656053; iOS run 99 verifying the build with SuperwallKit.)"
+    },
+    {
+      "time": "2026-10-28T10:03:44.398Z",
+      "type": "status",
+      "message": "S19.8 pending → done (iOS run 98 and device matrix run 53 green; TestFlight build 202610280955 (1.0.0), processed VALID 28 Oct 10:01 UTC.)"
+    },
+    {
+      "time": "2026-10-28T10:03:44.366Z",
+      "type": "status",
+      "message": "S19.7 in_progress → done (Verified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.)"
+    },
+    {
+      "time": "2026-10-28T10:03:44.331Z",
+      "type": "status",
+      "message": "S19.6 in_progress → done (Verified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.)"
+    },
+    {
+      "time": "2026-10-28T10:03:44.292Z",
+      "type": "status",
+      "message": "S19.5 in_progress → done (Verified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.)"
+    },
+    {
+      "time": "2026-10-28T10:03:44.261Z",
+      "type": "status",
+      "message": "S19.4 in_progress → done (Verified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.)"
+    },
+    {
+      "time": "2026-10-28T10:03:44.224Z",
+      "type": "status",
+      "message": "S19.3 in_progress → done (Verified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.)"
+    },
+    {
+      "time": "2026-10-28T10:03:44.193Z",
+      "type": "status",
+      "message": "S19.2 in_progress → done (Verified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.)"
+    },
+    {
+      "time": "2026-10-28T10:03:44.150Z",
+      "type": "status",
+      "message": "S19.1 in_progress → done (Verified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.)"
+    },
+    {
+      "time": "2026-10-28T09:57:59.295Z",
+      "type": "status",
+      "message": "S20.4 pending → blocked (Needs Milan in the Superwall dashboard (or the superwall CLI with superwall.com allowed): see docs/SUPERWALL.md.)"
+    },
+    {
+      "time": "2026-10-28T09:57:59.259Z",
+      "type": "task_added",
+      "message": "S20.4 added: Dashboard: products on the pro entitlement, RevenueCat as revenue provider, campaigns, URL scheme"
+    },
+    {
+      "time": "2026-10-28T09:57:59.217Z",
+      "type": "task_added",
+      "message": "S20.3 added: User attributes, deep links (paywall previews) and analytics forwarding"
+    },
+    {
+      "time": "2026-10-28T09:57:59.173Z",
+      "type": "task_added",
+      "message": "S20.2 added: Placements: onboarding_complete, unlock_program_day, upgrade_from_settings, falling back to DayXero's paywall"
+    },
+    {
+      "time": "2026-10-28T09:57:59.130Z",
+      "type": "task_added",
+      "message": "S20.1 added: Install SuperwallKit and configure it at launch with RevenueCat as the purchase controller"
+    },
+    {
+      "time": "2026-10-28T09:57:59.084Z",
+      "type": "section_added",
+      "message": "S20 added: Superwall"
+    },
+    {
+      "time": "2026-10-28T09:04:29.106Z",
+      "type": "status",
+      "message": "S19.7 pending → in_progress (49d702c; verifying on CI.)"
+    },
+    {
+      "time": "2026-10-28T09:04:29.078Z",
+      "type": "status",
+      "message": "S19.6 pending → in_progress (49d702c; verifying on CI.)"
+    },
+    {
+      "time": "2026-10-28T09:04:29.047Z",
+      "type": "status",
+      "message": "S19.5 pending → in_progress (49d702c; verifying on CI.)"
+    },
+    {
+      "time": "2026-10-28T09:04:29.017Z",
+      "type": "status",
+      "message": "S19.4 pending → in_progress (49d702c; verifying on CI.)"
+    },
+    {
+      "time": "2026-10-28T09:04:28.989Z",
+      "type": "status",
+      "message": "S19.3 pending → in_progress (49d702c; verifying on CI.)"
+    },
+    {
+      "time": "2026-10-28T09:04:28.958Z",
+      "type": "status",
+      "message": "S19.2 pending → in_progress (49d702c; verifying on CI.)"
+    },
+    {
+      "time": "2026-10-28T09:04:28.920Z",
+      "type": "status",
+      "message": "S19.1 pending → in_progress (49d702c; verifying on CI.)"
+    },
+    {
+      "time": "2026-10-28T08:56:07.902Z",
+      "type": "now",
+      "message": "Now: S19 / S19.1"
+    },
+    {
+      "time": "2026-10-28T08:56:07.867Z",
+      "type": "task_added",
+      "message": "S19.8 added: Tests, CI screenshots and TestFlight for the new Home"
+    },
+    {
+      "time": "2026-10-28T08:56:07.832Z",
+      "type": "task_added",
+      "message": "S19.7 added: S6: log a use during prep, per product"
+    },
+    {
+      "time": "2026-10-28T08:56:07.730Z",
+      "type": "task_added",
+      "message": "S19.6 added: S5: NRT set-up invite on Home; set-up plans move to Program"
+    },
+    {
+      "time": "2026-10-28T08:56:07.680Z",
+      "type": "task_added",
+      "message": "S19.5 added: S4: next health milestone with an animated illustration"
+    },
+    {
+      "time": "2026-10-28T08:56:07.617Z",
+      "type": "task_added",
+      "message": "S19.4 added: S3: streak and adherence card (Quit Day countdown folds in)"
+    },
+    {
+      "time": "2026-10-28T08:56:07.561Z",
+      "type": "task_added",
+      "message": "S19.3 added: S2: lesson spotlight card (white; black in light theme)"
+    },
+    {
+      "time": "2026-10-28T08:56:07.497Z",
+      "type": "task_added",
+      "message": "S19.2 added: S1: flowing moss wave with cravings-today, next-craving and Log pills"
+    },
+    {
+      "time": "2026-10-28T08:56:07.440Z",
+      "type": "task_added",
+      "message": "S19.1 added: Header: greeting, name, profile and the white trend button to Progress"
+    },
+    {
+      "time": "2026-10-28T08:56:07.390Z",
+      "type": "section_added",
+      "message": "S19 added: Home from the website mockup"
+    },
+    {
+      "time": "2026-10-28T07:30:07.753Z",
+      "type": "now",
+      "message": "Now: S18 / S18.16"
+    },
+    {
+      "time": "2026-10-28T07:30:07.713Z",
+      "type": "note",
+      "message": "S18.18: Shipped in TestFlight build 202610280722."
+    },
+    {
+      "time": "2026-10-28T07:30:07.669Z",
+      "type": "status",
+      "message": "S18.21 in_progress → done (Verified: device matrix run 52 buys the trial on the mock store, allows notifications for the trial reminder, sees 'You're all set' and taps Start prep day 1 on all four legs.)"
+    },
+    {
+      "time": "2026-10-28T07:30:07.633Z",
+      "type": "status",
+      "message": "S18.19 in_progress → done (Verified: the full onboarding journey passes on all four device-matrix legs (run 52): reveal → reminders (Not now) → paywall.)"
+    },
+    {
+      "time": "2026-10-28T07:30:07.580Z",
+      "type": "status",
+      "message": "S18.12 in_progress → done (TestFlight build 202610280722 (1.0.0), archived with Xcode 27.1 from f3b493b on this branch (TestFlight run 60), processed VALID in App Store Connect 28 Oct 07:29 UTC.)"
+    },
+    {
+      "time": "2026-10-28T05:32:58.566Z",
+      "type": "now",
+      "message": "Now: S18 / S18.21"
+    },
+    {
+      "time": "2026-10-28T05:32:58.531Z",
+      "type": "status",
+      "message": "S18.21 pending → in_progress (bd5d8b5: the first-run paywall stays up once a purchase or restore starts, until the person taps through; someone already Pro still skips it. Verifying on device matrix run 50 and iOS run 97.)"
+    },
+    {
+      "time": "2026-10-28T05:32:58.473Z",
+      "type": "task_added",
+      "message": "S18.21 added: Purchase confirmation replaced by Home the moment the person turns Pro"
+    },
+    {
+      "time": "2026-10-28T04:59:19.192Z",
+      "type": "note",
+      "message": "S18.19: Device matrix run 48: every leg now reaches the paywall after the reminders screen. The next failure was the test tapping the paywall button before its plans loaded (87b204c waits for it); run 49 verifying."
+    },
+    {
+      "time": "2026-10-28T04:59:19.133Z",
+      "type": "status",
+      "message": "S18.20 in_progress → done (Verified: sos-timeup-dark (iOS run 96, 5573368) shows 'urge surfed / 00:00 / cycle' inside the mini ring.)"
+    },
+    {
+      "time": "2026-10-28T04:15:43.060Z",
+      "type": "now",
+      "message": "Now: S18 / S18.19"
+    },
+    {
+      "time": "2026-10-28T04:15:43.031Z",
+      "type": "status",
+      "message": "S18.17 in_progress → done (Verified: set-currency shot (region's currency first with a check mark, search); SettingsTests currency green.)"
+    },
+    {
+      "time": "2026-10-28T04:15:43.005Z",
+      "type": "status",
+      "message": "S18.15 in_progress → done (ci-screens-duo branch: closed, open-wide, open-tall, half-book and half-laptop for 9 screens.)"
+    },
+    {
+      "time": "2026-10-28T04:15:42.978Z",
+      "type": "status",
+      "message": "S18.14 in_progress → done (Verified on the Duo half-folded shots (run 89/93): Today, Progress and SOS split at the fold.)"
+    },
+    {
+      "time": "2026-10-28T04:15:42.954Z",
+      "type": "status",
+      "message": "S18.13 in_progress → done (Verified on the Duo CI shots (run 93): readable column, height-aware orb, dock on the side on the cover and in the wide pose.)"
+    },
+    {
+      "time": "2026-10-28T04:15:42.926Z",
+      "type": "status",
+      "message": "S18.11 in_progress → done (Verified: sos-session shot shows the muted caption with no box; OrbCaption tests green.)"
+    },
+    {
+      "time": "2026-10-28T04:15:42.899Z",
+      "type": "status",
+      "message": "S18.10 in_progress → done (Verified across the CI set (Home prep, Progress tiles, lesson row '4 of 7 · 6 min', log rows).)"
+    },
+    {
+      "time": "2026-10-28T04:15:42.873Z",
+      "type": "status",
+      "message": "S18.8 in_progress → done (Verified: onb-baseline_vape shot (2.5 pods a week, price of one, puffs in one), reveal tile 'Pods a week 2.5 → 0'; journey test logs 'Vaped'.)"
+    },
+    {
+      "time": "2026-10-28T04:15:42.845Z",
+      "type": "status",
+      "message": "S18.7 in_progress → done (Verified: prog-progress-empty (pill + 'You said: Coffee · Stress') and prog-progress-prep (so-far bars + 'Full patterns in 6 days'); Insights tests green.)"
+    },
+    {
+      "time": "2026-10-28T04:15:42.815Z",
+      "type": "status",
+      "message": "S18.6 in_progress → done (Verified: sos-timeup shot shows the photo reason card under the caption. Orb readout fix in S18.20.)"
+    },
+    {
+      "time": "2026-10-28T04:15:42.787Z",
+      "type": "status",
+      "message": "S18.5 in_progress → done (Verified: onboarding goes NRT → building → reveal (journey test); water-goal-sheet shots (dark, light, ax5); WaterGoalDraft tests green.)"
+    },
+    {
+      "time": "2026-10-28T04:15:42.754Z",
+      "type": "status",
+      "message": "S18.3 in_progress → done (Verified: onb-baseline_cigarettes shot reads 'That's $0.75 a cigarette, about $1,642 a year.')"
+    },
+    {
+      "time": "2026-10-28T04:15:42.726Z",
+      "type": "status",
+      "message": "S18.2 in_progress → done (Verified: PlanTimelineTests green (iOS run 93); onb-reveal shot lists prep days 1-5, '+2 more prep days', then Quit Day with its date.)"
+    },
+    {
+      "time": "2026-10-28T04:15:42.697Z",
+      "type": "status",
+      "message": "S18.1 in_progress → done (Verified in CI (water-goal-sheet shots show 72 kg on the ruler). The drag itself needs a finger: check it in the next TestFlight build.)"
+    },
+    {
+      "time": "2026-10-28T04:15:15.727Z",
+      "type": "note",
+      "message": "S18.16: 28 Oct: the set builds and composes in CI (store-screens branch, run 93): iPhone 6.9 and 6.3, Duo cover 1398x2034, Duo inner 2007x2853. Still not uploadable: Program shots show PLACEHOLDER tags until S5.1, and the Duo cover Home is cramped (greeting wraps to three lines next to the side dock)."
+    },
+    {
+      "time": "2026-10-28T04:15:15.693Z",
+      "type": "note",
+      "message": "S18.12: 28 Oct: unit tests green on Xcode 27.1 (iOS run 93). TestFlight upload follows once the device matrix is green."
+    },
+    {
+      "time": "2026-10-28T04:15:15.657Z",
+      "type": "status",
+      "message": "S18.20 pending → in_progress (5573368: the time-up orb passes mini: true, and any orb smaller than the spec's size scales its readout with it. Verifying on iOS run 96.)"
+    },
+    {
+      "time": "2026-10-28T04:15:15.621Z",
+      "type": "task_added",
+      "message": "S18.20 added: SOS time-up orb drew the full-size readout inside the mini orb"
+    },
+    {
+      "time": "2026-10-28T04:15:15.593Z",
+      "type": "status",
+      "message": "S18.19 pending → in_progress (6a123cb: RootView keeps onboarding on screen from the save until the reminders screen finishes. Journey test tapSettled now waits for a still, enabled, on-screen button (iOS 27 hittability checks were flaky). Verifying on device matrix run 48.)"
+    },
+    {
+      "time": "2026-10-28T04:15:15.540Z",
+      "type": "task_added",
+      "message": "S18.19 added: Reminders screen swapped out by the paywall at the end of onboarding"
+    },
+    {
+      "time": "2026-10-28T04:15:15.500Z",
+      "type": "status",
+      "message": "S18.18 in_progress → done (Verified: testWidgetOpensSlipAndCravingLog passed on all four device-matrix legs (run 46), and the slip-ack and log-craving CI shots render (iOS run 93).)"
+    },
+    {
+      "time": "2026-10-27T20:32:08.658Z",
+      "type": "note",
+      "message": "S16.3: 27 Oct: with S18.18 fixed, the slip shot uses 'Thanks for telling us' as approved."
+    },
+    {
+      "time": "2026-10-27T20:32:08.627Z",
+      "type": "status",
+      "message": "S18.18 pending → in_progress (Verifying on CI (iOS workflow and the device-matrix UI tests).)"
+    },
+    {
+      "time": "2026-10-27T20:32:08.583Z",
+      "type": "task_added",
+      "message": "S18.18 added: Blank sheet when a slip or craving is opened from a widget or Siri"
+    },
+    {
+      "time": "2026-10-27T20:11:34.751Z",
+      "type": "now",
+      "message": "Now: S18 / S18.16"
+    },
+    {
+      "time": "2026-10-27T20:11:34.721Z",
+      "type": "note",
+      "message": "S16.3: 27 Oct: pipeline built (S18.16). The 'App Store screenshots' workflow produces the approved six at 6.9\" and 6.3\" too. The Program shot shows PLACEHOLDER lessons until S5.1; the slip shot uses 'Plan saved', because the first slip screen captures blank in CI."
+    },
+    {
+      "time": "2026-10-27T20:11:34.685Z",
+      "type": "status",
+      "message": "S18.16 pending → in_progress (Milan, 27 Oct: do it now; Duo screenshots put a 'optimized for iPhone Duo' badge on the product page. 246fb5d: 'App Store screenshots' workflow captures the six approved screens on iPhone 6.9\" and both Duo displays and composes them at 1320x2868, 1206x2622, 1398x2034 and 2007x2853 (scripts/store/compose.py). Results on the store-screens branch.)"
+    },
+    {
+      "time": "2026-10-27T20:11:34.644Z",
+      "type": "status",
+      "message": "S18.17 pending → in_progress (Verifying on CI.)"
+    },
+    {
+      "time": "2026-10-27T20:11:34.596Z",
+      "type": "task_added",
+      "message": "S18.17 added: Currency follows the phone's region, with a Settings option to change it"
+    },
+    {
+      "time": "2026-10-27T20:11:34.553Z",
+      "type": "status",
+      "message": "S18.4 blocked → done (Milan, 27 Oct: keep the paywall as it is for now (3-day trial on yearly, Prep day 1 free).)"
+    },
+    {
+      "time": "2026-10-27T19:48:53.586Z",
+      "type": "now",
+      "message": "Now: S18 / S18.12"
+    },
+    {
+      "time": "2026-10-27T19:48:53.557Z",
+      "type": "status",
+      "message": "S18.15 pending → in_progress (2eba4b7: 'duo' CI job with hinge v0.3.0, four poses, shots to ci-screens-duo.)"
+    },
+    {
+      "time": "2026-10-27T19:48:53.528Z",
+      "type": "status",
+      "message": "S18.14 pending → in_progress (1607829: columns avoid a book-pose fold; Today, Progress and SOS split with ArrangementView when half open.)"
+    },
+    {
+      "time": "2026-10-27T19:48:53.501Z",
+      "type": "status",
+      "message": "S18.13 pending → in_progress (1607829: 600 pt readable column, height-aware orb, dock on the system's bar edge, one safe-area inset for the dock.)"
+    },
+    {
+      "time": "2026-10-27T19:48:53.472Z",
+      "type": "note",
+      "message": "S18.12: 2fce393: ios.yml, testflight.yml and devices.yml on the xcode-27 runner with Xcode 27.1; iOS 18 leg stays on Xcode 26. First CI run in progress."
+    },
+    {
+      "time": "2026-10-27T19:48:53.433Z",
+      "type": "status",
+      "message": "S18.11 pending → in_progress (ecf6039: OrbCaption with sentence sync (OrbCaptionText, tested); Bio-Orb spec 3.5 notes the change. Verifying on CI.)"
+    },
+    {
+      "time": "2026-10-27T19:48:53.405Z",
+      "type": "status",
+      "message": "S18.10 pending → in_progress (6c9a548: Home, log sheet, Program, Progress and other in-card labels. Verifying on CI screenshots.)"
+    },
+    {
+      "time": "2026-10-27T19:48:53.376Z",
+      "type": "status",
+      "message": "S18.9 pending → done (Rule added to DESIGN_METHODOLOGY.md section 3.)"
+    },
+    {
+      "time": "2026-10-27T19:48:53.348Z",
+      "type": "status",
+      "message": "S18.8 pending → in_progress (5d84ef4: pods a week in onboarding and Settings (VapeUsage, tested); 'Vaped' / 'Times vaped'; Siri reads 'Log a Vape'. Verifying on CI.)"
+    },
+    {
+      "time": "2026-10-27T19:48:53.320Z",
+      "type": "status",
+      "message": "S18.7 pending → in_progress (0a47c9f: time-of-day bars from the first log, setup triggers and times, 'Full patterns in N days'. Verifying on CI.)"
+    },
+    {
+      "time": "2026-10-27T19:48:53.293Z",
+      "type": "status",
+      "message": "S18.6 pending → in_progress (6b2cc8a: reason and photo on 'Three minutes done', mini orb, next reason on tap. Verifying on CI.)"
+    },
+    {
+      "time": "2026-10-27T19:48:53.265Z",
+      "type": "status",
+      "message": "S18.5 pending → in_progress (0273b11: onboarding water screens removed; 'Personalise goal' sheet in the Water tab (WaterGoalDraft, tested). Verifying on CI.)"
+    },
+    {
+      "time": "2026-10-27T19:48:53.236Z",
+      "type": "status",
+      "message": "S18.3 pending → in_progress (a3f54e1: 'That's ₹1.25 a cigarette, about ₹4,563 a year' in onboarding and Settings. USD on the paywall is the App Store storefront, not code. Verifying on CI.)"
+    },
+    {
+      "time": "2026-10-27T19:48:53.200Z",
+      "type": "status",
+      "message": "S18.2 pending → in_progress (dc1de06: PlanTimeline (Core, tested): days 1–5, '+N more prep days', Quit Day with its date. Verifying on CI.)"
+    },
+    {
+      "time": "2026-10-27T19:48:53.165Z",
+      "type": "status",
+      "message": "S18.1 pending → in_progress (0a6bf06: ruler waits 8 pt and ignores drags that start vertical. Verifying on CI.)"
+    },
+    {
+      "time": "2026-10-27T19:25:39.855Z",
+      "type": "status",
+      "message": "S18.12 pending → in_progress"
+    },
+    {
+      "time": "2026-10-27T19:25:39.821Z",
+      "type": "now",
+      "message": "Now: S18 / S18.12"
+    },
+    {
+      "time": "2026-10-27T19:25:39.791Z",
+      "type": "note",
+      "message": "S7.3: 27 Oct: early patterns from the first log (S18.7)."
+    },
+    {
+      "time": "2026-10-27T19:25:39.762Z",
+      "type": "note",
+      "message": "S6.9: 27 Oct: the white transcript pill becomes a muted caption (S18.11)."
+    },
+    {
+      "time": "2026-10-27T19:25:39.732Z",
+      "type": "note",
+      "message": "S6.1: 27 Oct: reasons and photo come back on the 'Three minutes done' screen (S18.6)."
+    },
+    {
+      "time": "2026-10-27T19:25:39.696Z",
+      "type": "note",
+      "message": "S3.3: 27 Oct: trial length vs prep window under review (S18.4, waiting on Milan)."
+    },
+    {
+      "time": "2026-10-27T19:25:39.663Z",
+      "type": "note",
+      "message": "S2.15: 27 Oct: the plan reveal no longer shows a water line; everyone starts on 2.0 L (S18.5)."
+    },
+    {
+      "time": "2026-10-27T19:25:39.627Z",
+      "type": "note",
+      "message": "S2.14: 27 Oct: moved out of onboarding into the Water tab, without height (S18.5, Milan's call)."
+    },
+    {
+      "time": "2026-10-27T19:25:39.590Z",
+      "type": "task_added",
+      "message": "S18.16 added: iPhone Duo: App Store screenshots"
+    },
+    {
+      "time": "2026-10-27T19:25:39.555Z",
+      "type": "task_added",
+      "message": "S18.15 added: iPhone Duo: CI screenshots closed, open and half-folded"
+    },
+    {
+      "time": "2026-10-27T19:25:39.522Z",
+      "type": "task_added",
+      "message": "S18.14 added: iPhone Duo: fold-aware SOS, Home and Progress"
+    },
+    {
+      "time": "2026-10-27T19:25:39.481Z",
+      "type": "task_added",
+      "message": "S18.13 added: iPhone Duo: resizing (readable column, height-aware orb, dock on the side)"
+    },
+    {
+      "time": "2026-10-27T19:25:39.435Z",
+      "type": "task_added",
+      "message": "S18.12 added: iPhone Duo: build with Xcode 27.1 (CI and TestFlight)"
+    },
+    {
+      "time": "2026-10-27T19:25:39.400Z",
+      "type": "task_added",
+      "message": "S18.11 added: SOS caption replaces the white transcript pill"
+    },
+    {
+      "time": "2026-10-27T19:25:39.366Z",
+      "type": "task_added",
+      "message": "S18.10 added: Copy de-clutter pass"
+    },
+    {
+      "time": "2026-10-27T19:25:39.326Z",
+      "type": "task_added",
+      "message": "S18.9 added: Kicker rule in the design methodology"
+    },
+    {
+      "time": "2026-10-27T19:25:39.292Z",
+      "type": "task_added",
+      "message": "S18.8 added: Vape: pods a week, and 'Vaped' for the one-tap log"
+    },
+    {
+      "time": "2026-10-27T19:25:39.257Z",
+      "type": "task_added",
+      "message": "S18.7 added: Early patterns on Progress from Day 1"
+    },
+    {
+      "time": "2026-10-27T19:25:39.225Z",
+      "type": "task_added",
+      "message": "S18.6 added: Your why after the 3 minutes in Craving SOS"
+    },
+    {
+      "time": "2026-10-27T19:25:39.192Z",
+      "type": "task_added",
+      "message": "S18.5 added: Water goal out of onboarding, into the Water tab (no height)"
+    },
+    {
+      "time": "2026-10-27T19:25:39.154Z",
+      "type": "task_added",
+      "message": "S18.4 added: Trial length vs prep window (bug 4)"
+    },
+    {
+      "time": "2026-10-27T19:25:39.118Z",
+      "type": "task_added",
+      "message": "S18.3 added: Name the per-cigarette price in the sum line (bug 3)"
+    },
+    {
+      "time": "2026-10-27T19:25:39.078Z",
+      "type": "task_added",
+      "message": "S18.2 added: Plan reveal week list never skips prep days (bug 2)"
+    },
+    {
+      "time": "2026-10-27T19:25:39.028Z",
+      "type": "task_added",
+      "message": "S18.1 added: Weight ruler ignores vertical drags (bug 1: 72 kg read as 66 kg)"
+    },
+    {
+      "time": "2026-10-27T19:25:38.978Z",
+      "type": "section_added",
+      "message": "S18 added: Review fixes and iPhone Duo"
+    },
     {
       "time": "2026-10-23T10:46:21.584Z",
       "type": "note",

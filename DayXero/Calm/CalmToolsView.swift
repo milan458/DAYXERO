@@ -45,6 +45,7 @@ struct CalmToolsView: View {
             .scrollBounceBehavior(.basedOnSize)
         }
         .padding(.horizontal, DX.Space.m)
+        .dxReadableColumn()
         .dxCanvas()
         .fullScreenCover(item: $open) { tool in
             CalmToolPlayer(tool: tool, fromSOS: fromSOS) { backToSOS in
@@ -148,6 +149,7 @@ struct CalmToolPlayer: View {
             if finished { done } else { running }
         }
         .padding(.horizontal, DX.Space.m)
+        .dxReadableColumn()
         .padding(.bottom, DX.Space.xs)
         .modifier(PlayerCanvas(orb: tool.orbPattern != nil && !finished))
         .onAppear {

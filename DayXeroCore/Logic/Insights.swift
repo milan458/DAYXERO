@@ -65,6 +65,28 @@ public struct Insights: Sendable {
         return min(days, logs)
     }
 
+    /// Days left until the first log is a week old; 0 once it is.
+    public var daysUntilReady: Int { max(Self.minimumDays - daysOfData, 0) }
+
+    /// Logs still needed before insights open; 0 once there are enough.
+    public var logsUntilReady: Int { max(Self.minimumLogs - points.count, 0) }
+
+    // MARK: Early patterns (S18.7)
+
+    public struct TimeCount: Sendable, Equatable {
+        public let time: TimeOfDay
+        public let count: Int
+    }
+
+    /// Every log in the window by time of day (cravings, uses and slips together), in `TimeOfDay.allCases`
+    /// order. Shown from the first log, before there's enough for the heat map.
+    public var timeOfDayCounts: [TimeCount] {
+        let recent = points.filter { $0.timestamp >= windowStart }
+        return TimeOfDay.allCases.map { time in
+            TimeCount(time: time, count: recent.filter { TimeOfDay(hour: calendar.component(.hour, from: $0.timestamp)) == time }.count)
+        }
+    }
+
     // MARK: Heat map
 
     /// Counts by time of day (rows, in `TimeOfDay.allCases` order) and weekday (columns, Monday first).

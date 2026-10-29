@@ -102,6 +102,8 @@ Copy rules:
 
 ## A2. Onboarding (S2.14, S2.15) — signed off
 
+> **Changed 27 Oct 2026 (Milan, S18.5):** these screens are no longer in onboarding. Everyone starts on 2.0 L (8 glasses), and the plan reveal has no water line. The same questions, without height, are one optional "Personalise goal" sheet in the Water tab. Height is no longer collected. The rest of this section describes the original screens.
+
 Three screens, matching `WOnbBody.html`, `WOnbDay.html` and `WOnbGoal.html`. They sit after S2.9 and before the plan reveal. Every screen has a back button and the onboarding progress bar.
 
 **Screen 1 · Your body**

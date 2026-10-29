@@ -87,6 +87,10 @@ Adhere strictly to these exact HEX and RGBA values:
   5. **Micro-Tracked Metric Labels**:
      - Size: `10px` – `11px` | Weight: `Medium (500)` or `SemiBold (600)` | Text-Transform: `UPPERCASE` | Letter-spacing: `+0.08em` to `+0.12em` | Color: `rgba(255, 255, 255, 0.45)`
      - Example: `TODAY'S RESISTANCE`, `WEEKLY ADHERENCE`, `CRAVING PEAK`, `RECOVERY STAGE`.
+     - **Where they go (Milan, 27 Oct 2026, S18.9):** only a screen's top eyebrow (e.g. `TUESDAY · PREP DAY 1`) and the section headers between groups of cards (e.g. `YOUR PATTERNS`). **Never inside a card.** When every card opens with an all-caps label the screen reads like a form; one or two per screen keeps it calm.
+     - **Exceptions on Home (Milan, 28 Oct 2026, S19):** Home follows the dayxero.in phone preview, so the lesson spotlight card (`PREP PROGRAM · DAY 4`) and the streak card (`PREP STREAK` / `ADHERENCE`) keep their in-card labels. They're the two cards the preview defines that way; everywhere else the rule above stands.
+     - **Inside a card:** a value plus one sentence-case caption that says what it is ("0 of 9" / "prep days done"). If the icon or value already says what the card is, leave the label out.
+     - **No repeated words** between a card's lines, or between a card and the badge or header right next to it ("Prep day 1" as a title doesn't also go in the subtitle).
   6. **Button Typography**:
      - Size: `15px` – `16px` | Weight: `SemiBold (600)` | Letter-spacing: `-0.01em`
      - On white buttons: `#000000`. On dark secondary pills: `#FFFFFF`.
@@ -114,6 +118,7 @@ The navigation bar is a signature design element. It floats above the bottom saf
   - Animation: Spring physics (`stiffness: 350`, `damping: 28`, duration ~`240ms`).
 - **Contextual Action FAB (when applicable)**:
   - Floating circular white button (`#FFFFFF`) with a bold black plus icon (`+`), `width: 52px`, `height: 52px`, positioned centrally or above the dock.
+- **DayXero's dock (Milan, 28 Oct 2026, S21):** inactive icons are semibold in `text2`, not thin outlines, so they read at a glance. Craving SOS sits in the middle as the word **SOS** in a slowly sliding rainbow (deeper colours in light mode, still with Reduce Motion) on the same circle as an inactive tab: no flame, no sage fill. Progress uses the trend-line icon, and it's the only way to Progress: no second button for it in Home's header.
 
 ### 4.2. Metric Sliders & Progress Bars
 - **Progress Track Architecture**:
@@ -191,6 +196,8 @@ Translate standard health tracking concepts into this exact visual paradigm:
 | **Craving SOS / Quick Log** | Floating white FAB `+`. Tapping opens a hyper-rounded modal sheet with a tactile 1-10 slider that moves with spring resistance, shifting from Sage Green (`#BCC388`) to Terracotta (`#C85A54`). |
 | **Recovery Streak Calendar** | Weekly strip at the top with solid Sage Green circles for 100% smoke-free days. Monthly calendar below with pure white disc highlighting today's date. |
 | **Health Timeline List** | Vertical stack of hyper-rounded stadium cards (`#141414`, `border-radius: 28px`): "Blood Pressure Normalized" (Done badge in `#BCC388`), "Taste & Smell Receptors" (Progress bar at 75%), "Lung Function Recovery" (Pending). |
+
+**Health timeline illustrations (Milan, 28 Oct 2026, S21):** every change on the health timeline has one drawing, from one set (`DayXero/Health/MilestoneIllustrations.swift`, signed off on the illustration kit board): chunky filled shapes, a darker bottom edge, one white highlight, one slow loop, coloured by the part of the body that's healing. Wherever the app shows the timeline (Home's milestone row, "Your body", Progress, milestone moments, and anything new), it draws them with `HealthBadge`, in its three states: reached (check), under way (ring) and ahead (grey and still). Don't draw a timeline change any other way. "Your body" itself is the timeline path: the change happening now featured on top, then each change as a stop on a line that turns solid as it's reached.
 
 ---
 

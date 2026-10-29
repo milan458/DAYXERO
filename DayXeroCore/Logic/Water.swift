@@ -80,12 +80,13 @@ public enum Drink: String, CaseIterable, Sendable, Identifiable {
 
     public var hydrationFactor: Double { 1.0 }
 
-    /// The liquid's gradient, top and bottom, while this was the latest drink (A5).
+    /// The liquid's gradient, top and bottom, while this was the latest drink (A5); water is blue, exactly as the
+    /// signed-off tracker (DayXero UI Directions, WTracker) draws it (S21.1).
     public var gradient: (top: UInt32, bottom: UInt32) {
         switch self {
-        case .glass, .bottle: (0xE9EECF, 0x9DA66A)
+        case .glass, .bottle: (0xBFE6FF, 0x3D8BF2)
         case .tea: (0xEBCB92, 0xA8763A)
-        case .sparkling: (0xF3F5E6, 0xBFC79A)
+        case .sparkling: (0xE6F6FF, 0x7CC4F2)
         }
     }
 }
@@ -126,6 +127,55 @@ public enum WaterGoal {
     /// The onboarding and Settings stepper: one glass at a time, within the limits.
     public static func adjusted(_ goalMl: Int, by glasses: Int) -> Int {
         min(max(goalMl + glasses * glassMl, minMl), maxMl)
+    }
+}
+
+/// The "Personalise goal" sheet's answers before they're saved (S18.5). Height isn't asked: the goal only
+/// uses weight, activity and climate.
+public struct WaterGoalDraft: Equatable, Sendable {
+    /// Where the weight ruler starts for someone who hasn't given one.
+    public static let startingWeightKg = 70.0
+
+    public var units: WaterUnits
+    public var weightKg: Double
+    public var activity: WaterActivity
+    public var climate: WaterClimate
+    /// Set by the Adjust stepper; always wins over the calculation.
+    public var override: Int?
+
+    public init(units: WaterUnits, weightKg: Double, activity: WaterActivity, climate: WaterClimate, override: Int? = nil) {
+        self.units = units
+        self.weightKg = weightKg
+        self.activity = activity
+        self.climate = climate
+        self.override = override
+    }
+
+    public init(profile: WaterProfile) {
+        self.init(units: profile.units, weightKg: profile.weightKg ?? Self.startingWeightKg, activity: profile.activity,
+                  climate: profile.climate, override: profile.goalOverrideMl)
+    }
+
+    public var breakdown: WaterGoal.Breakdown {
+        WaterGoal.calculate(weightKg: weightKg, activity: activity, climate: climate)
+    }
+
+    public var goalMl: Int { override ?? breakdown.goalMl }
+
+    /// One glass more or less. Landing back on the calculated goal clears the adjustment.
+    public mutating func adjust(by glasses: Int) {
+        let adjusted = WaterGoal.adjusted(goalMl, by: glasses)
+        override = adjusted == breakdown.goalMl ? nil : adjusted
+    }
+
+    /// Writes the answers to the profile. Height is left as it was.
+    public func apply(to profile: WaterProfile) {
+        profile.units = units
+        profile.weightKg = weightKg
+        profile.activity = activity
+        profile.climate = climate
+        profile.goalMl = breakdown.goalMl
+        profile.goalOverrideMl = override
     }
 }
 

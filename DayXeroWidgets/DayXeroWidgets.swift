@@ -159,7 +159,7 @@ struct LogWidgetView: View {
     private func label(_ product: Product) -> LocalizedStringKey {
         switch product {
         case .cigarettes: "Cigarettes"
-        case .vape: "Puff sessions"
+        case .vape: "Times vaped"
         case .pouches: "Pouches"
         }
     }

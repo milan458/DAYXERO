@@ -1,7 +1,8 @@
 import Foundation
 
 /// What changes in the body after stopping (S10). Content lives in `health-timeline.json` so wording and sources
-/// can be corrected without code changes (S10.3). Every item names a source the person can open (S10.2).
+/// can be corrected without code changes (S10.3). Every health item names a source the person can open (S10.2);
+/// the sources are listed once, under the timeline.
 public struct HealthTimeline: Sendable {
     public struct Source: Codable, Sendable, Equatable {
         public let label: String
@@ -19,10 +20,20 @@ public struct HealthTimeline: Sendable {
         public let title: String
         public let line: String
         public let detail: String
-        public let source: String
+        /// The source behind a health claim. Looks changes (lips, skin, hair…) are general wellness notes and have none.
+        public let source: String?
+        /// "looks" for the appearance changes; nil for health.
+        public let kind: String?
+        /// The longer, warmer read on the detail sheet, one string per paragraph. Falls back to `detail`.
+        public let story: [String]?
+        /// "What you might notice".
+        public let notice: [String]?
+        /// "Help it along".
+        public let helps: String?
 
         public init(id: String, fromHours: Double, toHours: Double, when: String, title: String, line: String,
-                    detail: String, source: String) {
+                    detail: String, source: String?, kind: String? = nil, story: [String]? = nil, notice: [String]? = nil,
+                    helps: String? = nil) {
             self.id = id
             self.fromHours = fromHours
             self.toHours = toHours
@@ -31,6 +42,20 @@ public struct HealthTimeline: Sendable {
             self.line = line
             self.detail = detail
             self.source = source
+            self.kind = kind
+            self.story = story
+            self.notice = notice
+            self.helps = helps
+        }
+
+        public var isLooks: Bool { kind == "looks" }
+
+        /// The paragraphs for the detail sheet.
+        public var paragraphs: [String] { story ?? [detail] }
+
+        func with(source: String) -> Item {
+            Item(id: id, fromHours: fromHours, toHours: toHours, when: when, title: title, line: line, detail: detail,
+                 source: source, kind: kind, story: story, notice: notice, helps: helps)
         }
     }
 
@@ -73,8 +98,7 @@ public struct HealthTimeline: Sendable {
         return entry.groups.flatMap { file.groups[$0] ?? [] }
             .map { item in
                 guard let swap = entry.sourceOverride?[item.id] else { return item }
-                return Item(id: item.id, fromHours: item.fromHours, toHours: item.toHours, when: item.when, title: item.title,
-                            line: item.line, detail: item.detail, source: swap)
+                return item.with(source: swap)
             }
             .sorted { ($0.toHours, $0.fromHours) < ($1.toHours, $1.fromHours) }
     }
@@ -84,13 +108,30 @@ public struct HealthTimeline: Sendable {
         file.products[product.rawValue]?.note
     }
 
-    public func source(_ id: String) -> Source? {
-        file.sources[id]
+    public func source(_ id: String?) -> Source? {
+        id.flatMap { file.sources[$0] }
+    }
+
+    /// Every source a product's timeline cites, once each, in the order they first appear.
+    public func sources(for product: Product) -> [Source] {
+        var seen = Set<String>()
+        return items(for: product).compactMap { item in
+            guard let id = item.source, seen.insert(id).inserted else { return nil }
+            return file.sources[id]
+        }
     }
 
     /// Hours since the start of Quit Day. Negative before it. Slips don't reset it, like days clear.
     public static func elapsedHours(quitDay: Date, now: Date, clock: DayClock) -> Double {
         now.timeIntervalSince(clock.startOfDate(quitDay)) / 3600
+    }
+
+    /// What Home and Progress feature: the change under way now (the latest to start, if several overlap) and the
+    /// next one still ahead. Before Quit Day nothing is under way and `next` is the first item.
+    public static func nowAndNext(_ items: [Item], elapsedHours: Double) -> (now: Item?, next: Item?) {
+        let underWay = items.filter { if case .underWay = state(of: $0, elapsedHours: elapsedHours) { true } else { false } }
+        let ahead = items.filter { state(of: $0, elapsedHours: elapsedHours) == .ahead }
+        return (underWay.max { $0.fromHours < $1.fromHours }, ahead.min { $0.fromHours < $1.fromHours })
     }
 
     public static func state(of item: Item, elapsedHours: Double) -> State {

@@ -91,21 +91,9 @@ struct WaterTests {
         #expect(WaterDay.total(try context.fetch(FetchDescriptor<WaterEntry>()), on: today, clock: clock) == 750)
     }
 
-    @MainActor @Test func onboardingSkipUsesTwoLitresAndSkipsTwoScreens() throws {
+    @MainActor @Test func onboardingAsksNoWaterQuestionsAndStartsOnTwoLitres() throws {
         let model = OnboardingModel()
-        #expect(model.sequence.contains(.waterDay) && model.sequence.contains(.waterGoal))
-        model.waterSkipped = true
-        #expect(!model.sequence.contains(.waterDay) && !model.sequence.contains(.waterGoal))
-        #expect(model.waterGoalMl == 2000)
-    }
-
-    @MainActor @Test func onboardingAdjustmentOverridesTheCalculation() throws {
-        let model = OnboardingModel()
-        model.weightKg = 72
-        model.waterActivity = .worksOut
-        #expect(model.waterGoalMl == 2750)
-        model.waterGoalOverride = WaterGoal.adjusted(model.waterGoalMl, by: 1)
-        #expect(model.waterGoalMl == 3000)
+        #expect(!model.sequence.map(\.key).contains { $0.hasPrefix("water") })
 
         let container = try DataStore.makeContainer(inMemory: true)
         model.name = "Sam"
@@ -113,9 +101,42 @@ struct WaterTests {
         model.setBaseline(BaselineDraft(unitsPerDay: 100, price: 10, unitsPerPurchase: 600), for: .vape)
         try model.save(into: container.mainContext)
         let saved = try #require(try container.mainContext.fetch(FetchDescriptor<WaterProfile>()).first)
-        #expect(saved.goalMl == 2750)
-        #expect(saved.goalOverrideMl == 3000)
-        #expect(saved.effectiveGoalMl == 3000)
-        #expect(saved.activity == .worksOut)
+        #expect(saved.effectiveGoalMl == 2000)
+        #expect(saved.weightKg == nil && saved.heightCm == nil)
+    }
+
+    // MARK: Personalise goal (S18.5)
+
+    @Test func theSheetStartsFromTheProfileAndCalculates() {
+        let profile = WaterProfile(units: .metric)
+        var draft = WaterGoalDraft(profile: profile)
+        #expect(draft.weightKg == WaterGoalDraft.startingWeightKg)
+        draft.weightKg = 72
+        draft.activity = .worksOut
+        #expect(draft.goalMl == 2750)
+    }
+
+    @Test func adjustingBackToTheCalculationClearsTheOverride() {
+        var draft = WaterGoalDraft(units: .metric, weightKg: 72, activity: .worksOut, climate: .mild)
+        draft.adjust(by: 1)
+        #expect(draft.override == 3000 && draft.goalMl == 3000)
+        draft.adjust(by: -1)
+        #expect(draft.override == nil && draft.goalMl == 2750)
+    }
+
+    @Test func savingWritesTheGoalAndLeavesHeightAlone() {
+        let profile = WaterProfile(heightCm: 180, weightKg: 60, units: .metric)
+        var draft = WaterGoalDraft(profile: profile)
+        draft.weightKg = 72
+        draft.activity = .worksOut
+        draft.climate = .hot
+        draft.adjust(by: 1)
+        draft.apply(to: profile)
+        #expect(profile.weightKg == 72)
+        #expect(profile.heightCm == 180)
+        #expect(profile.activity == .worksOut && profile.climate == .hot)
+        #expect(profile.goalMl == 3250)
+        #expect(profile.goalOverrideMl == 3500)
+        #expect(profile.effectiveGoalMl == 3500)
     }
 }

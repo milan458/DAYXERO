@@ -34,7 +34,7 @@ struct DesignSystemGallery: View {
                 items: [
                     DXDockItem(id: "today", title: "Today", systemImage: "house"),
                     DXDockItem(id: "program", title: "Program", systemImage: "book.closed"),
-                    DXDockItem(id: "progress", title: "Progress", systemImage: "chart.bar"),
+                    DXDockItem(id: "progress", title: "Progress", systemImage: "chart.line.uptrend.xyaxis.circle"),
                 ],
                 selection: $tab,
                 sosAction: {}
@@ -276,7 +276,7 @@ private struct GalleryOrb: View {
         VStack(spacing: 24) {
             BioOrbView(engine: engine, mini: mini, side: BioOrbView.side(mini: mini, available: mini ? 216 : 390))
                 .frame(width: mini ? 200 : 340, height: mini ? 200 : 340)
-            if showPill { OrbTranscriptPill(engine: engine).padding(.horizontal, DX.Space.s) }
+            if showPill { OrbCaption(engine: engine).padding(.horizontal, DX.Space.s) }
         }
         .onAppear {
             clock.attach(engine, reduceMotion: false)

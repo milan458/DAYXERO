@@ -21,39 +21,16 @@ struct ProgressTab: View {
             let now = timeline.date
             let snap = HomeSnapshot(profile: profile, isPro: entitlement.isPro, now: now)
             let insights = Insights(points: entries.map(Insights.Point.init), now: now)
-            ScrollView {
-                VStack(alignment: .leading, spacing: DX.Space.xs) {
-                    header(snap)
-                    hero(snap)
-                    tiles(snap, insights: insights)
-                    if !isPrepPhase(snap) {
-                        MilestonesRow(daysClear: snap.daysClear) { milestoneOpen = $0 }
-                    }
-                    // What's changing in the body, from Quit Day (S10).
-                    HealthSummaryCard(profile: profile, now: now) { showHealth = true }
-                    // The full step plan for each NRT product (S9.5).
-                    ForEach(profile.nrtPlans.sorted { $0.createdAt < $1.createdAt }) { plan in
-                        NRTCard(plan: plan, clock: DayClock(boundaryHour: profile.dayBoundaryHour), now: now, showAllSteps: true)
-                    }
-                    HStack(alignment: .firstTextBaseline) {
-                        Text("Your patterns").dxText(.micro)
-                        Spacer()
-                        if insights.isReady { Text("Last 4 weeks").font(.custom(DX.Typeface.regular, size: 11, relativeTo: .caption2)).foregroundStyle(DX.Palette.muted) }
-                    }
-                    .padding(.top, DX.Space.m)
-                    .accessibilityAddTraits(.isHeader)
-                    if insights.isReady {
-                        heatCard(insights)
-                        triggersCard(insights)
-                        trendCard(insights)
-                        recentLogs
-                    } else {
-                        notReady(insights)
-                    }
+            // Half-open iPhone Duo: what you've gained on one side of the fold, the details on the other (S18.14).
+            FoldAware {
+                column { gained(snap, insights: insights) }
+            } secondary: {
+                column { details(insights, now: now) }
+            } flat: {
+                column {
+                    gained(snap, insights: insights)
+                    details(insights, now: now)
                 }
-                .padding(.horizontal, DX.Space.m)
-                .padding(.top, DX.Space.s)
-                .padding(.bottom, 120)
             }
         }
         .fullScreenCover(item: $milestoneOpen) { milestone in
@@ -75,6 +52,64 @@ struct ProgressTab: View {
                 }
             }
             .presentationDetents([.large])
+        }
+    }
+
+    // MARK: Layout
+
+    private func column<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
+        // Built here: ScrollViewReader's closure escapes, and `content` doesn't.
+        let built = content()
+        return ScrollViewReader { proxy in
+            ScrollView {
+                VStack(alignment: .leading, spacing: DX.Space.xs) { built }
+                    .padding(.horizontal, DX.Space.m)
+                    .dxReadableColumn()
+                    .padding(.top, DX.Space.s)
+                    .padding(.bottom, DX.Space.l)
+            }
+            #if DEBUG
+            // App Store screenshots open on the patterns (`-dx.progressScroll patterns`).
+            .onAppear {
+                if UserDefaults.standard.string(forKey: "dx.progressScroll") == "patterns" { proxy.scrollTo("patterns", anchor: .top) }
+            }
+            #endif
+        }
+    }
+
+    @ViewBuilder
+    private func gained(_ snap: HomeSnapshot, insights: Insights) -> some View {
+        header(snap)
+        hero(snap)
+        tiles(snap, insights: insights)
+        if !isPrepPhase(snap) {
+            MilestonesRow(daysClear: snap.daysClear) { milestoneOpen = $0 }
+        }
+    }
+
+    @ViewBuilder
+    private func details(_ insights: Insights, now: Date) -> some View {
+        // What's changing in the body, from Quit Day (S10).
+        HealthSummaryCard(profile: profile, now: now) { showHealth = true }
+        // The full step plan for each NRT product (S9.5).
+        ForEach(profile.nrtPlans.sorted { $0.createdAt < $1.createdAt }) { plan in
+            NRTCard(plan: plan, clock: DayClock(boundaryHour: profile.dayBoundaryHour), now: now, showAllSteps: true)
+        }
+        HStack(alignment: .firstTextBaseline) {
+            Text("Your patterns").dxText(.micro)
+            Spacer()
+            if insights.isReady { Text("Last 4 weeks").font(.custom(DX.Typeface.regular, size: 11, relativeTo: .caption2)).foregroundStyle(DX.Palette.muted) }
+        }
+        .padding(.top, DX.Space.m)
+        .accessibilityAddTraits(.isHeader)
+        .id("patterns")
+        if insights.isReady {
+            heatCard(insights)
+            triggersCard(insights)
+            trendCard(insights)
+            recentLogs
+        } else {
+            earlyPatterns(insights)
         }
     }
 
@@ -104,16 +139,15 @@ struct ProgressTab: View {
         let isPrep: Bool = if case .prep = snap.phase { true } else { false }
         return DXGlassCard {
             VStack(alignment: .leading, spacing: 4) {
-                Text(isPrep ? LocalizedStringKey("You'll keep") : LocalizedStringKey("Money kept")).dxText(.micro)
                 Text(verbatim: (isPrep ? snap.moneyPerYear : snap.moneyKept)
                     .formatted(.currency(code: snap.currencyCode).precision(.fractionLength(isPrep ? 0 : 2))))
                     .font(.custom(DX.Typeface.bold, size: 40, relativeTo: .largeTitle))
                     .foregroundStyle(DX.Palette.text)
                     .contentTransition(.numericText())
                 if isPrep {
-                    Text("a year, from Quit Day").dxText(.subtitle)
+                    Text("a year, yours to keep from Quit Day").dxText(.subtitle)
                 } else {
-                    Text("\(perDay.formatted(.currency(code: snap.currencyCode))) a day · on track for \(snap.moneyPerYear.formatted(.currency(code: snap.currencyCode).precision(.fractionLength(0)))) this year")
+                    Text("kept so far · \(perDay.formatted(.currency(code: snap.currencyCode))) a day, \(snap.moneyPerYear.formatted(.currency(code: snap.currencyCode).precision(.fractionLength(0)))) this year")
                         .dxText(.subtitle)
                 }
             }
@@ -133,17 +167,17 @@ struct ProgressTab: View {
             // Only the products picked in onboarding get a counter.
             if !isPrep {
                 ForEach(snap.counters) { counter in
-                    ProgressTile(label: avoidedLabel(counter.product), value: counter.avoided.formatted(),
-                                 caption: "\(counter.perDayBefore) a day before")
+                    ProgressTile(value: counter.avoided.formatted(),
+                                 caption: "\(Text(avoidedLabel(counter.product))) · \(counter.perDayBefore) a day before")
                 }
             }
-            ProgressTile(label: "Cravings ridden out", value: ridden.formatted(),
-                         caption: "\(CravingStats.passedThisWeek(entries, now: insights.now)) this week")
+            ProgressTile(value: ridden.formatted(),
+                         caption: "cravings ridden out · \(CravingStats.passedThisWeek(entries, now: insights.now)) this week")
             if isPrep {
-                ProgressTile(label: "Prep days done", value: "\(snap.prepDone) / \(snap.prepTotal)", caption: "before Quit Day")
+                ProgressTile(value: String(localized: "\(snap.prepDone) of \(snap.prepTotal)"), caption: "prep days done")
             } else {
-                ProgressTile(label: "Days clear", value: snap.daysClear.formatted(),
-                             caption: "since \(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).day().month()))")
+                ProgressTile(value: snap.daysClear.formatted(),
+                             caption: "days clear since \(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).day().month()))")
             }
         }
     }
@@ -155,9 +189,9 @@ struct ProgressTab: View {
 
     private func avoidedLabel(_ product: Product) -> LocalizedStringKey {
         switch product {
-        case .cigarettes: "Cigarettes not smoked"
-        case .vape: "Puffs not taken"
-        case .pouches: "Pouches not used"
+        case .cigarettes: "cigarettes not smoked"
+        case .vape: "puffs not taken"
+        case .pouches: "pouches not used"
         }
     }
 
@@ -315,23 +349,61 @@ struct ProgressTab: View {
         try? context.save()
     }
 
-    private func notReady(_ insights: Insights) -> some View {
+    /// Before there's a week of logs (S18.7): from the first log, when they happen so far; before any, one line
+    /// over the blurred map. Either way, what the person told us in setup.
+    private func earlyPatterns(_ insights: Insights) -> some View {
         DXCard(padding: 14) {
-            ZStack {
-                HeatMap(grid: Self.sampleGrid)
-                    .blur(radius: 4)
-                    .opacity(0.4)
-                    .accessibilityHidden(true)
-                VStack(spacing: DX.Space.xs) {
-                    Text("Insights need a week of logs").dxText(.cardHeading).multilineTextAlignment(.center)
-                    DXProgressBar(value: insights.readiness).frame(maxWidth: 180)
-                    Text("\(insights.daysOfData) of \(Insights.minimumDays) days · \(insights.points.count) logs so far").dxText(.subtitle)
-                    Text("Log cravings as they happen and your patterns appear here.").dxText(.subtitle)
-                        .multilineTextAlignment(.center)
+            VStack(alignment: .leading, spacing: DX.Space.s) {
+                if insights.points.isEmpty {
+                    ZStack {
+                        HeatMap(grid: Self.sampleGrid)
+                            .blur(radius: 4)
+                            .opacity(0.4)
+                            .accessibilityHidden(true)
+                        Text("Your first log starts the map")
+                            .font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
+                            .foregroundStyle(DX.Palette.text)
+                            .padding(.vertical, 8).padding(.horizontal, 14)
+                            .background(DX.Palette.surface2, in: Capsule())
+                    }
+                } else {
+                    let counts = insights.timeOfDayCounts
+                    let most = max(counts.map(\.count).max() ?? 1, 1)
+                    Text("When you've logged so far").dxText(.cardHeading)
+                    ForEach(counts, id: \.time) { item in
+                        HStack(spacing: DX.Space.xs) {
+                            Text(item.time.title).font(DX.TextStyle.subtitle.font).foregroundStyle(DX.Palette.text)
+                                .frame(width: typeSize.isAccessibilitySize ? nil : 84, alignment: .leading)
+                            DXProgressBar(value: Double(item.count) / Double(most))
+                            Text(verbatim: item.count.formatted()).font(DX.TextStyle.subtitle.font).foregroundStyle(DX.Palette.muted)
+                                .monospacedDigit().frame(minWidth: 22, alignment: .trailing)
+                        }
+                        .accessibilityElement(children: .combine)
+                    }
+                    Text(readyLine(insights)).dxText(.subtitle)
                 }
-                .padding(DX.Space.s)
+                if let setup = fromSetup {
+                    Text(setup).dxText(.subtitle)
+                }
             }
         }
+    }
+
+    private func readyLine(_ insights: Insights) -> String {
+        let days = insights.daysUntilReady
+        if days == 1 { return String(localized: "Full patterns tomorrow") }
+        if days > 1 { return String(localized: "Full patterns in \(days) days") }
+        let logs = insights.logsUntilReady
+        return logs == 1 ? String(localized: "Full patterns after 1 more log") : String(localized: "Full patterns after \(logs) more logs")
+    }
+
+    /// The triggers and craving times from onboarding, e.g. "You said: Coffee · Stress · mornings".
+    private var fromSetup: String? {
+        let triggers = profile.triggers.prefix(3).map { String(localized: $0.title) }
+        let times = profile.cravingTimesRaw.compactMap(TimeOfDay.init(rawValue:)).map { String(localized: $0.title).lowercased() }
+        let all = triggers + times
+        guard !all.isEmpty else { return nil }
+        return String(localized: "You said: \(all.joined(separator: " · "))")
     }
 
     /// A made-up shape for the blurred placeholder only; never shown as data.
@@ -356,20 +428,19 @@ struct LogButton: View {
     }
 }
 
+/// A value and what it is, in one sentence-case line (S18.10).
 private struct ProgressTile: View {
-    let label: LocalizedStringKey
     let value: String
     let caption: LocalizedStringKey
 
     var body: some View {
         DXCard(padding: 14) {
             VStack(alignment: .leading, spacing: 4) {
-                Text(label).dxText(.micro).fixedSize(horizontal: false, vertical: true)
                 Text(verbatim: value).dxText(.cardHeading).font(.custom(DX.Typeface.bold, size: 20, relativeTo: .title3))
                     .contentTransition(.numericText())
-                Text(caption).dxText(.subtitle)
+                Text(caption).dxText(.subtitle).fixedSize(horizontal: false, vertical: true)
             }
-            .frame(maxWidth: .infinity, minHeight: 84, alignment: .topLeading)
+            .frame(maxWidth: .infinity, minHeight: 64, alignment: .topLeading)
         }
         .accessibilityElement(children: .combine)
     }

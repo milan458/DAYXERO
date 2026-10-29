@@ -31,6 +31,16 @@ struct MilestoneTests {
         #expect(Milestone.days(7).sourceID != nil)
     }
 
+    /// Each milestone's illustration is a real change on the timeline, so it has its own drawing (S21.6).
+    @Test func illustratedMilestonesPointAtTimelineItems() throws {
+        let timeline = try #require(HealthTimeline.bundled)
+        let ids = Set(timeline.items(for: .vape).map(\.id) + timeline.items(for: .cigarettes).map(\.id))
+        for milestone in Milestone.all {
+            if let id = milestone.healthItemID { #expect(ids.contains(id), "\(id)") }
+        }
+        #expect(Milestone.days(3).healthItemID == "nicotine-gone")
+    }
+
     @Test func idsRoundTrip() {
         for milestone in Milestone.all { #expect(Milestone(id: milestone.id) == milestone) }
         #expect(Milestone(id: "5") == nil)

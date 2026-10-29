@@ -7,6 +7,7 @@
 //   node planning/task.js signoff S1 mockups_ready
 //   node planning/task.js mockup S1 "Title" mockups/S1/file.html
 //   node planning/task.js now S1 S1.4 ["waiting item" ...]
+//   node planning/task.js section S18 "Title" "goal"
 const fs = require('fs');
 const path = require('path');
 
@@ -83,8 +84,15 @@ switch (cmd) {
     log('now', `Now: ${sid} / ${tid}`);
     break;
   }
+  case 'section': {
+    const [sid, title, goal] = args;
+    if (data.sections.some((s) => s.id === sid)) die(`Section ${sid} already exists`);
+    data.sections.push({ id: sid, title, goal: goal || '', signoff: { state: 'not_started', history: [] }, mockups: [], tasks: [] });
+    log('section_added', `${sid} added: ${title}`);
+    break;
+  }
   default:
-    die('Commands: status | add | note | signoff | mockup | now');
+    die('Commands: status | add | note | signoff | mockup | now | section');
 }
 
 data.meta.updated = now;

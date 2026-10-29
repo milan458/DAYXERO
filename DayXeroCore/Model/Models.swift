@@ -23,6 +23,12 @@ public final class UserProfile {
     public var cravingTimesRaw: [String] = []
     public var pastAttemptsRaw: String?
     public var obstaclesRaw: [String] = []
+    /// How soon after waking they first use (S22).
+    public var firstUseRaw: String?
+    /// How confident they felt about quitting at onboarding, 0–10 (S22).
+    public var confidence: Int?
+    /// NRT formats they already use (S22).
+    public var nrtFormatsRaw: [String] = []
 
     public init(name: String, quitDay: Date, currencyCode: String, dayBoundaryHour: Int = 4, createdAt: Date = .now) {
         self.name = name
@@ -37,6 +43,16 @@ public final class UserProfile {
         set { triggersRaw = newValue.map(\.rawValue) }
     }
 
+    public var firstUse: FirstUse? {
+        get { firstUseRaw.flatMap(FirstUse.init(rawValue:)) }
+        set { firstUseRaw = newValue?.rawValue }
+    }
+
+    public var nrtFormats: [NRTType] {
+        get { nrtFormatsRaw.compactMap(NRTType.init(rawValue:)) }
+        set { nrtFormatsRaw = newValue.map(\.rawValue) }
+    }
+
     public var nrtInterest: NRTInterest? {
         get { nrtInterestRaw.flatMap(NRTInterest.init(rawValue:)) }
         set { nrtInterestRaw = newValue?.rawValue }
@@ -44,6 +60,28 @@ public final class UserProfile {
 
     public var primaryProduct: ProductUse? {
         products.first(where: \.isPrimary) ?? products.first
+    }
+}
+
+/// Vapers tell us pods or disposables a week, which they know; puffs a day, which they don't, is worked out
+/// from it, so the counter and the money maths keep counting puffs (S18.8).
+public enum VapeUsage {
+    /// The pods-a-week stepper moves by half a pod.
+    public static let podsStep = 0.5
+
+    public static func puffsPerDay(podsPerWeek: Double, puffsPerPod: Double) -> Double {
+        podsPerWeek * puffsPerPod / 7
+    }
+
+    /// Pods a week to the nearest half pod.
+    public static func podsPerWeek(puffsPerDay: Double, puffsPerPod: Double) -> Double {
+        guard puffsPerPod > 0 else { return 0 }
+        return (puffsPerDay * 7 / puffsPerPod / podsStep).rounded() * podsStep
+    }
+
+    /// "2" or "2.5".
+    public static func format(_ pods: Double) -> String {
+        pods.formatted(.number.precision(.fractionLength(0...1)))
     }
 }
 
@@ -59,7 +97,7 @@ public final class ProductUse {
     /// Units in one purchase (cigarettes per pack, puffs per pod, pouches per can).
     public var unitsPerPurchase: Double
     public var yearsOfUse: Double?
-    /// Pouch strength in mg, pouches only.
+    /// Pouch strength in mg, or a vape's e-liquid strength in mg/ml (S22). nil when not known.
     public var strengthMg: Double?
 
     public init(product: Product, isPrimary: Bool, unitsPerDay: Double, pricePerPurchase: Decimal,
@@ -77,6 +115,21 @@ public final class ProductUse {
 
     public var baseline: Baseline {
         Baseline(product: product, unitsPerDay: unitsPerDay, pricePerPurchase: pricePerPurchase, unitsPerPurchase: unitsPerPurchase)
+    }
+}
+
+extension ProductUse {
+    /// Vapes only: pods or disposables a week, stored as puffs a day (S18.8).
+    public var podsPerWeek: Double {
+        get { VapeUsage.podsPerWeek(puffsPerDay: unitsPerDay, puffsPerPod: unitsPerPurchase) }
+        set { unitsPerDay = VapeUsage.puffsPerDay(podsPerWeek: newValue, puffsPerPod: unitsPerPurchase) }
+    }
+
+    /// Changes puffs per pod without changing pods a week.
+    public func setPuffsPerPod(_ puffs: Double) {
+        let pods = podsPerWeek
+        unitsPerPurchase = puffs
+        if pods > 0, puffs > 0 { podsPerWeek = pods }
     }
 }
 
@@ -243,9 +296,13 @@ public final class CheckIn {
     public var note: String?
     /// "Clear day" or "Had a slip" (S11.2). Never changes days clear.
     public var clearDay: Bool = true
+    /// Prep week only: "Mindful & observant" (true) or "Mostly autopilot" (false). nil after Quit Day.
+    public var prepMindful: Bool?
 
-    public init(day: Date, mood: Mood, cravingCount: Int, note: String? = nil, clearDay: Bool = true, madeAt: Date = .now) {
+    public init(day: Date, mood: Mood, cravingCount: Int, note: String? = nil, clearDay: Bool = true, prepMindful: Bool? = nil,
+                madeAt: Date = .now) {
         self.day = day
+        self.prepMindful = prepMindful
         self.moodRaw = mood.rawValue
         self.cravingCount = cravingCount
         self.note = note

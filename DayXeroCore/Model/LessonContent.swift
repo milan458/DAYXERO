@@ -13,19 +13,22 @@ public struct LessonContent: Codable, Equatable, Sendable {
     public var day: ProgramDayID
     public var title: String
     public var minutes: Int
+    /// One line on what the lesson is, for Home's lesson card (S19.3). Optional until the content carries it.
+    public var summary: String?
     /// True for stand-in content; the UI tags it so it can't be mistaken for the real thing.
     public var placeholder: Bool
     public var steps: [LessonStep]
 
-    public init(day: ProgramDayID, title: String, minutes: Int, placeholder: Bool, steps: [LessonStep]) {
+    public init(day: ProgramDayID, title: String, minutes: Int, summary: String? = nil, placeholder: Bool, steps: [LessonStep]) {
         self.day = day
         self.title = title
         self.minutes = minutes
+        self.summary = summary
         self.placeholder = placeholder
         self.steps = steps
     }
 
-    enum CodingKeys: String, CodingKey { case day, title, minutes, placeholder, steps }
+    enum CodingKeys: String, CodingKey { case day, title, minutes, summary, placeholder, steps }
 
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
@@ -36,6 +39,7 @@ public struct LessonContent: Codable, Equatable, Sendable {
         self.day = day
         title = try c.decode(String.self, forKey: .title)
         minutes = try c.decode(Int.self, forKey: .minutes)
+        summary = try c.decodeIfPresent(String.self, forKey: .summary)
         placeholder = try c.decodeIfPresent(Bool.self, forKey: .placeholder) ?? false
         steps = try c.decode([LessonStep].self, forKey: .steps)
     }
@@ -45,6 +49,7 @@ public struct LessonContent: Codable, Equatable, Sendable {
         try c.encode(day.description, forKey: .day)
         try c.encode(title, forKey: .title)
         try c.encode(minutes, forKey: .minutes)
+        try c.encodeIfPresent(summary, forKey: .summary)
         try c.encode(placeholder, forKey: .placeholder)
         try c.encode(steps, forKey: .steps)
     }

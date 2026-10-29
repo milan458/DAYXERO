@@ -13,8 +13,12 @@ final class LogRouter {
     }
 
     var page: Page?
+    /// The sheet's height. Set before the sheet opens, so a craving or a slip opens full height straight away
+    /// instead of growing mid-presentation.
+    var detent = PresentationDetent.medium
 
     func open(_ page: Page = .menu) {
+        detent = page == .menu ? .medium : .large
         self.page = page
     }
 }
@@ -30,35 +34,61 @@ struct LogSheet: View {
     @Environment(SOSRouter.self) private var sos
     @State private var path: [LogRouter.Page] = []
     @State private var slip: LogEntry?
+    /// The slip logged when the sheet opens straight to one (the widget's "Slipped? Log it").
+    @State private var startSlip: LogEntry?
     @State private var logged = false
+    @Query(filter: #Predicate<LogEntry> { $0.kindRaw != "craving" }) private var uses: [LogEntry]
 
     var body: some View {
         NavigationStack(path: $path) {
-            menu
-                .navigationDestination(for: LogRouter.Page.self) { _ in
-                    CravingLogForm(profile: profile, onSaved: onClose, onSOS: {
-                        onClose()
-                        sos.open(source: "log")
-                    })
-                }
-                .navigationDestination(item: $slip) { entry in
-                    SlipFlow(entry: entry, profile: profile, onDone: onClose)
-                        .navigationBarBackButtonHidden()
-                        .toolbar(.hidden, for: .navigationBar)
-                }
+            root
+                .navigationDestination(for: LogRouter.Page.self) { _ in cravingForm }
+                .navigationDestination(item: $slip) { entry in slipFlow(entry) }
         }
         .sensoryFeedback(DX.Haptic.commit, trigger: logged)
         .onAppear {
-            if start == .craving, path.isEmpty { path = [.craving] }
-            if start == .slip, slip == nil, let product = products.first {
-                slip = UseLog.log(product, in: context)
+            if start == .slip, startSlip == nil, let product = products.first {
+                startSlip = UseLog.log(product, in: context)
                 Analytics.track(.slipLogged(source: "widget"))
             }
-            detent = path.isEmpty ? .medium : .large
         }
         // The menu fits half the screen; the craving form and the slip screen get the full height.
-        .onChange(of: path) { detent = path.isEmpty && slip == nil ? .medium : .large }
-        .onChange(of: slip) { detent = path.isEmpty && slip == nil ? .medium : .large }
+        .onChange(of: path) { detent = fullHeight ? .large : .medium }
+        .onChange(of: slip) { detent = fullHeight ? .large : .medium }
+    }
+
+    /// What the sheet opens on. A craving or a slip opened from a widget, Siri or a link is the sheet's first page,
+    /// not a push: pushing while the sheet was still presenting left the page blank (S18.18).
+    @ViewBuilder
+    private var root: some View {
+        switch start {
+        case .menu: menu
+        case .craving: cravingForm
+        case .slip:
+            if let startSlip {
+                slipFlow(startSlip)
+            } else if products.isEmpty {
+                menu
+            } else {
+                // For the moment before the slip is saved on appear.
+                Color.clear.dxCanvas()
+            }
+        }
+    }
+
+    private var fullHeight: Bool { start != .menu || !path.isEmpty || slip != nil }
+
+    private var cravingForm: some View {
+        CravingLogForm(profile: profile, onSaved: onClose, onSOS: {
+            onClose()
+            sos.open(source: "log")
+        })
+    }
+
+    private func slipFlow(_ entry: LogEntry) -> some View {
+        SlipFlow(entry: entry, profile: profile, onDone: onClose)
+            .navigationBarBackButtonHidden()
+            .toolbar(.hidden, for: .navigationBar)
     }
 
     private var menu: some View {
@@ -72,11 +102,14 @@ struct LogSheet: View {
                 Text("I used").dxText(.micro).padding(.top, DX.Space.s)
                 ForEach(products, id: \.self) { product in
                     Button { logUse(product) } label: {
-                        LogRow(title: LogSheet.useTitle(product), detail: LocalizedStringKey(String(localized: product.title)),
+                        // How many today, rather than the product's name a second time (S18.10).
+                        LogRow(title: LogSheet.useTitle(product), detail: "\(todayCount(product)) today",
                                systemImage: LogSheet.icon(product), accent: false)
                     }
                     .buttonStyle(.plain)
                     .accessibilityHint(Text(isSlip ? "Logs a slip. Nothing resets." : "Logs one now"))
+                    // Home's prep rows share the name, so UI tests find the sheet's by this.
+                    .accessibilityIdentifier("log.use.\(product.rawValue)")
                 }
                 if isSlip {
                     Text("A use after Quit Day is logged as a slip. Nothing resets.")
@@ -99,6 +132,12 @@ struct LogSheet: View {
 
     private var isSlip: Bool { UseLog.isSlip(profile: profile) }
 
+    private func todayCount(_ product: Product) -> Int {
+        let clock = DayClock(boundaryHour: profile?.dayBoundaryHour ?? 4)
+        let today = clock.day(containing: .now)
+        return uses.filter { $0.product == product && clock.day(containing: $0.timestamp) == today }.count
+    }
+
     private func logUse(_ product: Product) {
         let entry = UseLog.log(product, in: context)
         logged.toggle()
@@ -113,7 +152,7 @@ struct LogSheet: View {
     static func useTitle(_ product: Product) -> LocalizedStringKey {
         switch product {
         case .cigarettes: "Cigarette"
-        case .vape: "Puff session"
+        case .vape: "Vaped"
         case .pouches: "Pouch"
         }
     }
@@ -218,6 +257,7 @@ struct CravingLogForm: View {
                 }
             }
             .padding(.horizontal, DX.Space.m)
+            .dxReadableColumn()
             .padding(.bottom, DX.Space.xs)
         }
         .dxCanvas()

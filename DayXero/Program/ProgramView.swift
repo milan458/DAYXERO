@@ -9,8 +9,7 @@ struct ProgramView: View {
     @State private var open: LessonOpen?
     @State private var upgradeFor: ProgramDayID?
     @State private var showPaywall = false
-    @State private var showCalm = UserDefaults.standard.bool(forKey: "dx.openCalmList") || UserDefaults.standard.string(forKey: "dx.openCalm") != nil
-    @Environment(SOSRouter.self) private var sos
+    @Environment(NRTRouter.self) private var nrt
 
     struct LessonOpen: Identifiable {
         let day: ProgramDayID
@@ -26,8 +25,7 @@ struct ProgramView: View {
                     Text("Your program").dxText(.micro)
                     Text("Program").dxText(.title).accessibilityAddTraits(.isHeader)
                     variantLine.padding(.vertical, DX.Space.xs)
-                    // Calm tools, always here and free for everyone (S12.2).
-                    NRTInviteRow(title: "Calm tools", detail: "5 short exercises for stressful moments", systemImage: "wind") { showCalm = true }
+                    nrtGroup(now: timeline.date)
                     if let replay = state.replayDay {
                         ReplayCard(title: state.lesson(replay).title, minutes: state.lesson(replay).minutes) {
                             open = LessonOpen(day: replay, isReplay: true)
@@ -39,12 +37,10 @@ struct ProgramView: View {
                     section("The four weeks after", detail: String(localized: "Weekly"), rows: state.rows(.maintenance), state: state)
                 }
                 .padding(.horizontal, DX.Space.m)
+                .dxReadableColumn()
                 .padding(.top, DX.Space.xl)
-                .padding(.bottom, 120)
+                .padding(.bottom, DX.Space.l)
             }
-        }
-        .fullScreenCover(isPresented: $showCalm) {
-            CalmToolsView(onClose: { showCalm = false }, startSOS: { sos.open(source: "calm") })
         }
         .fullScreenCover(item: $open) { item in
             LessonPlayer(day: item.day, profile: profile, isReplay: item.isReplay)
@@ -60,6 +56,27 @@ struct ProgramView: View {
             PaywallView(name: profile.name, quitDay: profile.quitDay,
                         model: PaywallModel(store: entitlement.store, entitlement: entitlement),
                         onClose: { showPaywall = false })
+        }
+    }
+
+    /// NRT plans and the pouch step-down live here once they're set up; Home only invites (S19.6).
+    /// A plan stays until a week after its last step.
+    @ViewBuilder
+    private func nrtGroup(now: Date) -> some View {
+        let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
+        let plans = profile.nrtPlans.filter { plan in
+            guard let end = StepSchedule(startDate: plan.startDate, steps: plan.steps, clock: clock).end else { return false }
+            return clock.day(containing: now) < (clock.calendar.date(byAdding: .day, value: 7, to: end) ?? end)
+        }
+        let taper = ProgressStats(quitDay: profile.quitDay, baselines: [], clock: clock).isPrep(at: now) ? profile.pouchTaper : nil
+        if !plans.isEmpty || taper != nil {
+            Text("Your NRT").dxText(.micro).padding(.top, DX.Space.s)
+            ForEach(plans.sorted { $0.createdAt < $1.createdAt }) { plan in
+                NRTCard(plan: plan, clock: clock, now: now)
+            }
+            if let taper {
+                Button { nrt.sheet = .taper } label: { TaperCard(taper: taper, clock: clock, now: now) }.buttonStyle(.plain)
+            }
         }
     }
 
@@ -139,7 +156,14 @@ struct ProgramView: View {
             if row.availability == .completed || (isNow && !row.needsUpgrade) {
                 open = LessonOpen(day: row.day, isReplay: false)
             } else if isNow && row.needsUpgrade {
-                upgradeFor = row.day
+                // Superwall's paywall when a campaign has one here; the upgrade sheet otherwise (S20).
+                Paywalls.present(.unlockProgramDay, params: ["day": row.day.description]) { outcome in
+                    switch outcome {
+                    case .fallback: upgradeFor = row.day
+                    case .unlocked: entitlement.grant()
+                    case .closed: break
+                    }
+                }
             }
         } label: {
             HStack(spacing: DX.Space.s) {
@@ -203,13 +227,9 @@ struct ProgramView: View {
         .foregroundStyle(DX.Palette.muted)
     }
 
+    /// When and how long, e.g. "Today · 6 min". The badge and section header already say which day it is (S18.10).
     private func subtitle(_ row: ProgramState.Row) -> String {
         var parts: [String] = []
-        switch row.day.phase {
-        case .prep: parts.append(String(localized: "Prep day \(row.day.index)"))
-        case .quit: parts.append(String(localized: "Day \(row.day.index)"))
-        case .maintenance: parts.append(String(localized: "Weekly"))
-        }
         if let date = row.date {
             parts.append(Calendar.current.isDateInToday(date) ? String(localized: "Today") : date.formatted(.dateTime.weekday(.abbreviated)))
         }

@@ -37,4 +37,28 @@ struct SettingsTests {
         #expect(AppearanceSetting.automatic.colorScheme == nil)
         #expect(AppearanceSetting.dark.colorScheme == .dark)
     }
+
+    // MARK: Currency (S18.17)
+
+    @Test func currencyStartsFromTheRegion() {
+        #expect(CurrencyChoice.defaultCode(for: Locale(identifier: "en_IN")) == "INR")
+        #expect(CurrencyChoice.defaultCode(for: Locale(identifier: "hi_IN")) == "INR")
+        #expect(CurrencyChoice.defaultCode(for: Locale(identifier: "en_GB")) == "GBP")
+        #expect(CurrencyChoice.defaultCode(for: Locale(identifier: "de_DE")) == "EUR")
+        #expect(CurrencyChoice.defaultCode(for: Locale(identifier: "en_US")) == "USD")
+    }
+
+    @Test func theRegionsCurrencyIsListedFirstAndEveryOtherOnce() {
+        let india = Locale(identifier: "en_IN")
+        let codes = CurrencyChoice.codes(for: india)
+        #expect(codes.first == "INR")
+        #expect(codes.count == Set(codes).count)
+        #expect(codes.contains("USD") && codes.contains("EUR"))
+        #expect(CurrencyChoice.symbol("INR", locale: india) == "₹")
+    }
+
+    @Test func onboardingUsesTheRegionsCurrency() {
+        let model = OnboardingModel(locale: Locale(identifier: "en_IN"))
+        #expect(model.currencyCode == "INR")
+    }
 }

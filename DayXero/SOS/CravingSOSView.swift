@@ -39,6 +39,8 @@ struct CravingSOSView: View {
     @State private var strength = 5
     @State private var strengthTouched = false
     @State private var showCalmTools = false
+    /// Taps on the reason card, to step to the next reason.
+    @State private var reasonSkip = 0
 
     init(profile: UserProfile?, source: String, onClose: @escaping () -> Void) {
         self.profile = profile
@@ -92,23 +94,64 @@ struct CravingSOSView: View {
     private var sessionView: some View {
         VStack(spacing: 0) {
             topBar(stage == .timeUp ? "Three minutes done" : "Riding it out")
-            GeometryReader { geo in
-                ScrollView {
+            // Half-open iPhone Duo: the orb on one side of the fold, the controls on the other (S18.14).
+            FoldAware {
+                GeometryReader { geo in
                     VStack(spacing: 24) {
-                        BioOrbView(engine: engine, side: BioOrbView.side(mini: false, available: geo.size.width), onTap: coachMe)
-                            .padding(.top, DX.Space.l)
-                        OrbTranscriptPill(engine: engine)
-                        if stage == .session { controls }
+                        orb(geo)
+                        OrbCaption(engine: engine)
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding(.bottom, DX.Space.m)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
-                .scrollBounceBehavior(.basedOnSize)
+            } secondary: {
+                VStack(spacing: 0) {
+                    ScrollView {
+                        VStack(spacing: 24) { sessionExtras }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, DX.Space.m)
+                    }
+                    .scrollBounceBehavior(.basedOnSize)
+                    if stage == .timeUp { outcomes }
+                }
+            } flat: {
+                VStack(spacing: 0) {
+                    GeometryReader { geo in
+                        ScrollView {
+                            VStack(spacing: 24) {
+                                orb(geo).padding(.top, stage == .timeUp ? DX.Space.s : DX.Space.l)
+                                OrbCaption(engine: engine)
+                                sessionExtras
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.bottom, DX.Space.m)
+                        }
+                        .scrollBounceBehavior(.basedOnSize)
+                    }
+                    if stage == .timeUp { outcomes }
+                }
             }
-            if stage == .timeUp { outcomes }
         }
         .padding(.horizontal, DX.Space.m)
+        .dxReadableColumn(avoidingFold: false)
         .padding(.bottom, DX.Space.xs)
+    }
+
+    /// After the three minutes the orb steps back so the person's own reason fits above the choices (S18.6).
+    private func orb(_ geo: GeometryProxy) -> some View {
+        let mini = stage == .timeUp
+        return BioOrbView(engine: engine, mini: mini,
+                          side: BioOrbView.side(mini: mini, available: geo.size.width, availableHeight: geo.size.height),
+                          onTap: coachMe)
+    }
+
+    /// Pause and Coach me during the session; the person's reason once it's done.
+    @ViewBuilder
+    private var sessionExtras: some View {
+        if stage == .session { controls }
+        if stage == .session, passedMinute { earlyWin }
+        if stage == .timeUp, let reason = currentReason {
+            ReasonCard(reason: reason, canAdvance: reasons.count > 1) { reasonSkip += 1 }
+        }
     }
 
     private func topBar(_ title: LocalizedStringKey) -> some View {
@@ -178,9 +221,27 @@ struct CravingSOSView: View {
         .buttonStyle(OrbButtonStyle(kind: .moss))
     }
 
+    /// After the first minute the wave is usually past its peak: one tap logs the win without waiting for the end.
+    private var passedMinute: Bool {
+        engine.data.sos.sessionSeconds - engine.session.sosRemaining >= 60
+    }
+
+    private var earlyWin: some View {
+        Button { finish(.passed) } label: {
+            Label("It's passing · log as ridden out", systemImage: "checkmark")
+                .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body))
+                .foregroundStyle(DX.Palette.onAccent)
+                .padding(.horizontal, 18).frame(minHeight: 46)
+                .background(DX.Palette.sage, in: Capsule())
+        }
+        .buttonStyle(.plain)
+        .dynamicTypeSize(...DynamicTypeSize.accessibility2)
+        .transition(.opacity.combined(with: .scale(scale: 0.96)))
+    }
+
     private var outcomes: some View {
         VStack(spacing: DX.Space.xs) {
-            Button { finish(.passed) } label: { Text("It passed").frame(maxWidth: .infinity) }
+            Button { finish(.passed) } label: { Text("Log as ridden out (+1)").frame(maxWidth: .infinity) }
                 .buttonStyle(.dxSage)
             Button(action: anotherRound) { Text("Another three minutes").frame(maxWidth: .infinity) }
                 .buttonStyle(.dxSecondary)
@@ -205,7 +266,24 @@ struct CravingSOSView: View {
         .buttonStyle(.dxSecondary)
     }
 
+    // MARK: Your why (S18.6)
+
+    private var reasons: [Reason] {
+        (profile?.reasons ?? []).sorted { $0.createdAt < $1.createdAt }
+    }
+
+    /// Reasons with a photo first, a different one each session; a tap moves to the next.
+    private var currentReason: Reason? {
+        let reasons = reasons
+        return DailyRhythm.reasonIndex(hasPhoto: reasons.map { $0.photo != nil }, dayNumber: cravings.count + reasonSkip).map { reasons[$0] }
+    }
+
     // MARK: It passed
+
+    private var wonTitle: String {
+        if let name = profile?.name, !name.isEmpty { return String(localized: "Wave survived, \(name).") }
+        return String(localized: "Wave survived.")
+    }
 
     private var passedView: some View {
         let count = CravingStats.passedThisWeek(cravings, now: .now)
@@ -219,10 +297,13 @@ struct CravingSOSView: View {
                         .background(DX.Palette.sage, in: Circle())
                         .accessibilityHidden(true)
                         .padding(.top, DX.Space.xl)
-                    Text("Craving ridden out").dxText(.title).multilineTextAlignment(.center)
-                    Text(count > 1 ? "That's \(count) this week. Each one makes the next a little easier."
-                         : "That's your first this week. Each one makes the next a little easier.")
+                    Text(wonTitle).dxText(.title).multilineTextAlignment(.center)
+                    Text("The craving peaked and passed, and you're still here. Each wave you ride out makes the next one a little quieter.")
                         .dxText(.subtitle).multilineTextAlignment(.center)
+                    Text(count > 1 ? "+1 ridden out · \(count) this week" : "+1 ridden out · your first this week")
+                        .font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
+                        .foregroundStyle(DX.Palette.accentInk)
+                        .multilineTextAlignment(.center)
                     HStack(spacing: 6) {
                         ForEach(0..<7, id: \.self) { i in
                             Circle().fill(i < count ? DX.Palette.sage : DX.Palette.track).frame(width: 22, height: 22)
@@ -253,6 +334,7 @@ struct CravingSOSView: View {
             .padding(.top, DX.Space.xs)
         }
         .padding(.horizontal, DX.Space.m)
+        .dxReadableColumn()
         .padding(.bottom, DX.Space.xs)
     }
 
@@ -388,6 +470,49 @@ struct CravingSOSView: View {
         case .closed, .pingedFriend:
             onClose()
         }
+    }
+}
+
+/// One of the person's reasons, after the three minutes: their photo with the words over it, or the words alone.
+private struct ReasonCard: View {
+    let reason: Reason
+    let canAdvance: Bool
+    let next: () -> Void
+
+    var body: some View {
+        Button(action: next) {
+            Group {
+                if let data = reason.photo, let image = UIImage(data: data) {
+                    // As an overlay on a fixed-height frame, the photo fills the card without widening the layout.
+                    Color.clear
+                        .frame(height: 168)
+                        .overlay { Image(uiImage: image).resizable().scaledToFill() }
+                        .overlay {
+                            LinearGradient(colors: [.clear, .black.opacity(0.75)], startPoint: .center, endPoint: .bottom)
+                        }
+                        .overlay(alignment: .bottomLeading) { words.padding(DX.Space.s) }
+                        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+                } else {
+                    words
+                        .padding(DX.Space.s)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+                }
+            }
+        }
+        .buttonStyle(.plain)
+        .disabled(!canAdvance)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text("Your reason: \(reason.text)"))
+        .accessibilityHint(canAdvance ? Text("Shows your next reason") : Text(verbatim: ""))
+    }
+
+    private var words: some View {
+        Text(verbatim: reason.text)
+            .font(.custom(DX.Typeface.semibold, size: 17, relativeTo: .body))
+            .foregroundStyle(.white)
+            .multilineTextAlignment(.leading)
+            .fixedSize(horizontal: false, vertical: true)
     }
 }
 

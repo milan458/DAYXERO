@@ -6,28 +6,40 @@ on:
     paths-ignore: ["planning/**", "docs/**", "website/**", "scripts/website/**", "**.md"]
   pull_request:
   workflow_dispatch:
+    inputs:
+      screenshots:
+        description: "Also take the review screenshots (iPhone and iPhone Duo); off for everyday builds"
+        type: boolean
+        default: false
+      store_screens:
+        description: "Also make the App Store screenshots (iPhone and iPhone Duo)"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
 
 concurrency:
   group: ios-${{ github.ref }}
-  # Queue behind a running build instead of cancelling it, so every build finishes its screenshots.
+  # Queue behind a running build instead of cancelling it, so a build asked for screenshots finishes them.
   cancel-in-progress: false
 
 jobs:
   build-test:
-    runs-on: macos-15
+    runs-on: xcode-27
     timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
 
-      - name: Select newest Xcode
+      # Xcode 27.1 has the iOS 27.1 SDK: without it the app is letterboxed on iPhone Duo (S18.12).
+      - name: Select Xcode 27.1
         run: |
           ls -d /Applications/Xcode*.app
-          XCODE=$(ls -d /Applications/Xcode_26*.app 2>/dev/null | sort -V | tail -1)
-          [ -z "$XCODE" ] && XCODE=$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)
-          echo "Using $XCODE"
+          XCODE=/Applications/Xcode_27.1.app
+          if [ ! -d "$XCODE" ]; then
+            echo "::error title=Xcode 27.1 missing::This runner has no $XCODE"
+            exit 1
+          fi
           sudo xcode-select -s "$XCODE"
           xcodebuild -version
 
@@ -40,14 +52,15 @@ jobs:
       - name: Pick a simulator
         id: sim
         run: |
+          # iPhone 17 keeps the screenshots comparable between runs. The newest runtime only has
+          # iPhone Duo, which gets its own job below.
           UDID=$(xcrun simctl list devices available -j | python3 -c '
           import json, sys
           d = json.load(sys.stdin)["devices"]
           rt = sorted([k for k in d if "iOS" in k], key=lambda k: [int(x) for x in k.split("iOS-")[1].split("-")])
-          for k in reversed(rt):
-              for dev in d[k]:
-                  if dev["name"].startswith("iPhone"):
-                      print(dev["udid"]); sys.exit()
+          phones = [dev for k in reversed(rt) for dev in d[k] if dev["name"].startswith("iPhone") and "Duo" not in dev["name"]]
+          pick = next((p for p in phones if p["name"] == "iPhone 17"), phones[0] if phones else None)
+          if pick: print(pick["udid"])
           ')
           echo "udid=$UDID" >> "$GITHUB_OUTPUT"
 
@@ -65,8 +78,9 @@ jobs:
 
       # Screenshots of the running app (dark, light, largest text), pushed to the
       # ci-screens branch so they can be reviewed without downloading artifacts.
+      # Screenshots only on request (Milan, 28 Oct): everyday builds just build and test.
       - name: Screenshots
-        if: github.event_name != 'pull_request'
+        if: github.event_name == 'workflow_dispatch' && inputs.screenshots
         run: |
           UDID=${{ steps.sim.outputs.udid }}
           APP=$(find DerivedData/Build/Products -name "DayXero.app" -path "*iphonesimulator*" | head -1)
@@ -74,7 +88,16 @@ jobs:
           xcrun simctl bootstatus "$UDID" -b
           xcrun simctl install "$UDID" "$APP"
           mkdir -p shots
-          # shoot <appearance> <content size> <name> [launch args...]
+          # drawn <png>: false while the shot is still the blank launch screen. Blank shots compress to under
+          # 0.032 bytes a pixel (about 70 KB on a 6.3-inch screen); every real screen is well over (118 KB and up).
+          drawn() {
+            local w h size
+            w=$(sips -g pixelWidth "$1" | awk '/pixelWidth/ {print $2}')
+            h=$(sips -g pixelHeight "$1" | awk '/pixelHeight/ {print $2}')
+            size=$(stat -f%z "$1")
+            [ $((size * 1000)) -gt $((w * h * 32)) ]
+          }
+          # shoot <appearance> <content size> <name> [launch args...]: retakes the shot until the app has drawn.
           shoot() {
             local appearance=$1 size=$2 name=$3; shift 3
             xcrun simctl ui "$UDID" appearance "$appearance"
@@ -82,15 +105,20 @@ jobs:
             xcrun simctl terminate "$UDID" in.dayxero.app 2>/dev/null || true
             xcrun simctl launch "$UDID" in.dayxero.app "$@"
             sleep 5
-            xcrun simctl io "$UDID" screenshot "shots/$name.png"
+            for try in 1 2 3 4 5; do
+              xcrun simctl io "$UDID" screenshot "shots/$name.png" > /dev/null 2>&1
+              drawn "shots/$name.png" && return
+              sleep 2
+            done
+            echo "::warning title=Blank screenshot::$name was still blank after 15 seconds"
           }
           shoot dark large gallery-dark -dx.showGallery YES
           shoot light large gallery-light -dx.showGallery YES
           shoot dark accessibility-extra-extra-extra-large gallery-dark-ax5 -dx.showGallery YES
-          for step in welcome age name products baseline_vape baseline_cigarettes triggers reasons past_attempts quit_day nrt water_body water_day water_goal reveal reminders; do
+          for step in welcome products baseline_cigarettes baseline_vape baseline_summary triggers personal past_attempts nrt quit_day reveal trial; do
             shoot dark large "onb-$step-dark" -dx.onboardingStep "$step"
           done
-          for step in welcome products baseline_vape reveal; do
+          for step in welcome products baseline_vape baseline_summary quit_day reveal; do
             shoot light large "onb-$step-light" -dx.onboardingStep "$step"
           done
           shoot dark accessibility-extra-extra-extra-large onb-baseline_vape-dark-ax5 -dx.onboardingStep baseline_vape
@@ -119,6 +147,8 @@ jobs:
           shoot dark large lesson-reading-dark $D3 -dx.openLesson quit-3
           shoot light large lesson-reading-light $D3 -dx.openLesson quit-3
           shoot dark large lesson-audio-dark $D3 -dx.openLesson quit-3 -dx.lessonStep.quit-3 1
+          shoot light large lesson-audio-light $D3 -dx.openLesson quit-3 -dx.lessonStep.quit-3 1
+          shoot dark accessibility-extra-extra-extra-large lesson-audio-dark-ax5 $D3 -dx.openLesson quit-3 -dx.lessonStep.quit-3 1
           shoot dark large lesson-exercise-dark $D3 -dx.openLesson quit-3 -dx.lessonStep.quit-3 2 -dx.ifThenPreview "open Craving SOS"
           shoot dark large lesson-done-dark $D3 -dx.openLesson quit-3 -dx.lessonFinishedPreview YES
           shoot dark large lesson-weekly-dark -dx.homeScenario day12 -dx.store pro -dx.openLesson maintenance-1
@@ -138,6 +168,7 @@ jobs:
           fi
           shoot light large sos-session-light $S -dx.sosElapsed 19
           shoot dark large sos-photo-dark $S -dx.sosElapsed 92
+          shoot dark large sos-earlywin-dark $S -dx.sosElapsed 75
           shoot dark large sos-timeup-dark $S -dx.sosElapsed 181
           shoot dark large sos-passed-dark $S -dx.sosOutcome passed
           shoot light large sos-passed-light $S -dx.sosOutcome passed
@@ -151,6 +182,9 @@ jobs:
           shoot dark large prog-progress-dark $P12 -dx.tab progress
           shoot light large prog-progress-light $P12 -dx.tab progress
           shoot dark large prog-progress-firstweek-dark -dx.homeScenario day3 -dx.store pro -dx.tab progress
+          # Early patterns before a week of logs: with a few logs (prep), and with none (S18.7).
+          shoot dark large prog-progress-prep-dark -dx.homeScenario prep -dx.store pro -dx.tab progress
+          shoot light large prog-progress-empty-light -dx.homeScenario free -dx.store mock -dx.paywallDone YES -dx.tab progress
           shoot dark accessibility-extra-extra-extra-large prog-progress-dark-ax5 $P12 -dx.tab progress
           shoot dark large log-menu-dark $P12 -dx.logSheet menu
           shoot dark large log-craving-dark $P12 -dx.logSheet craving
@@ -172,15 +206,31 @@ jobs:
           shoot dark large nrt-plan-dark $P12 -dx.logSheet nrt -dx.nrtStage plan
           shoot dark large nrt-reminders-dark $P12 -dx.logSheet nrt -dx.nrtStage reminders
           shoot dark accessibility-extra-extra-extra-large nrt-schedule-dark-ax5 $P12 -dx.logSheet nrt -dx.nrtStage schedule
-          shoot dark large nrt-home-dark $P12 -dx.seedNRT YES
-          shoot light large nrt-home-light $P12 -dx.seedNRT YES
+          # Home only invites to set NRT up; set-up plans live in Program (S19.6).
+          shoot dark large nrt-program-dark $P12 -dx.seedNRT YES -dx.tab program
+          shoot light large nrt-program-light $P12 -dx.seedNRT YES -dx.tab program
           shoot dark large nrt-progress-dark $P12 -dx.seedNRT YES -dx.tab progress
-          shoot dark large taper-home-dark -dx.homeScenario prep -dx.store pro -dx.seedPouches YES
+          shoot dark large taper-program-dark -dx.homeScenario prep -dx.store pro -dx.seedPouches YES -dx.tab program
+          # Home's lower half: milestone, NRT invite, log a use, pledge and water (S19).
+          shoot dark large home-prep-lower-dark -dx.homeScenario prep -dx.store pro -dx.homeScroll lower
+          shoot light large home-prep-lower-light -dx.homeScenario prep -dx.store pro -dx.homeScroll lower
+          shoot dark large home-day12-lower-dark $P12 -dx.homeScroll lower
+          shoot dark large illustrations-dark -dx.illustrationGallery YES
+          shoot light large illustrations-light -dx.illustrationGallery YES
           shoot dark large taper-setup-dark -dx.homeScenario prep -dx.store pro -dx.seedPouches YES -dx.logSheet taper
           shoot dark large health-smoking-dark $P12 -dx.tab progress -dx.openHealth YES
           shoot light large health-smoking-light $P12 -dx.tab progress -dx.openHealth YES
           shoot dark accessibility-extra-extra-extra-large health-smoking-dark-ax5 $P12 -dx.tab progress -dx.openHealth YES
           shoot dark large health-prep-dark -dx.homeScenario prep -dx.store pro -dx.tab progress -dx.openHealth YES
+          # The timeline path (S21.7): before Quit Day, and on day 3 with changes reached and under way.
+          shoot light large health-prep-light -dx.homeScenario prep -dx.store pro -dx.tab progress -dx.openHealth YES
+          shoot dark large health-day3-dark -dx.homeScenario day3 -dx.store pro -dx.tab progress -dx.openHealth YES
+          shoot light large health-day3-light -dx.homeScenario day3 -dx.store pro -dx.tab progress -dx.openHealth YES
+          shoot dark large health-lips-dark $P12 -dx.tab progress -dx.openHealth YES -dx.openHealthItem lips
+          shoot light large health-lips-light $P12 -dx.tab progress -dx.openHealth YES -dx.openHealthItem lips
+          shoot light large health-hair-light $P12 -dx.tab progress -dx.openHealth YES -dx.openHealthItem hair
+          shoot dark large health-heart-dark $P12 -dx.tab progress -dx.openHealth YES -dx.openHealthItem heart-rate
+          shoot dark accessibility-extra-extra-extra-large health-lips-dark-ax5 $P12 -dx.tab progress -dx.openHealth YES -dx.openHealthItem lips
           shoot dark large daily-pledgecard-dark $P12 -dx.forceDaily pledge
           shoot light large daily-pledgecard-light $P12 -dx.forceDaily pledge
           shoot dark large daily-pledge-dark $P12 -dx.openPledge YES
@@ -189,20 +239,25 @@ jobs:
           shoot dark large daily-checkin-dark $P12 -dx.openCheckIn YES
           shoot light large daily-checkin-light $P12 -dx.openCheckIn YES
           shoot dark large daily-checkin-done-dark $P12 -dx.openCheckIn YES -dx.checkInDone YES
+          shoot dark large daily-checkin-prep-dark -dx.homeScenario prep -dx.store pro -dx.openCheckIn YES
+          shoot light large daily-checkin-prep-light -dx.homeScenario prep -dx.store pro -dx.openCheckIn YES
+          shoot dark accessibility-extra-extra-extra-large daily-checkin-prep-dark-ax5 -dx.homeScenario prep -dx.store pro -dx.openCheckIn YES
           shoot dark large daily-dayend-dark $P12 -dx.openSettings dayEnd
           shoot dark large notif-settings-dark $P12 -dx.openSettings reminders
           shoot light large notif-settings-light $P12 -dx.openSettings reminders
           shoot dark accessibility-extra-extra-extra-large notif-settings-dark-ax5 $P12 -dx.openSettings reminders
           shoot dark large notif-quiet-dark $P12 -dx.openSettings quietHours
-          shoot dark large calm-program-dark $P12 -dx.tab program
-          shoot dark large calm-list-dark $P12 -dx.tab program -dx.openCalmList YES
-          shoot light large calm-list-light $P12 -dx.tab program -dx.openCalmList YES
-          shoot dark accessibility-extra-extra-extra-large calm-list-dark-ax5 $P12 -dx.tab program -dx.openCalmList YES
-          shoot dark large calm-box-dark $P12 -dx.tab program -dx.openCalm boxBreathing -dx.calmElapsed 6
-          shoot dark large calm-grounding-dark $P12 -dx.tab program -dx.openCalm grounding -dx.calmStep 1 -dx.calmTicked 2
-          shoot dark large calm-notice1-dark $P12 -dx.tab program -dx.openCalm noticeAndName
-          shoot dark large calm-notice2-dark $P12 -dx.tab program -dx.openCalm noticeAndName -dx.calmStep 1
-          shoot dark large calm-done-dark $P12 -dx.tab program -dx.openCalm dropAnchor -dx.calmDone YES
+          shoot dark large toolkit-dark $P12 -dx.tab toolkit
+          shoot light large toolkit-light $P12 -dx.tab toolkit -dx.seedWater partial
+          shoot dark accessibility-extra-extra-extra-large toolkit-dark-ax5 $P12 -dx.tab toolkit
+          shoot dark large calm-list-dark $P12 -dx.tab toolkit -dx.openCalmList YES
+          shoot light large calm-list-light $P12 -dx.tab toolkit -dx.openCalmList YES
+          shoot dark accessibility-extra-extra-extra-large calm-list-dark-ax5 $P12 -dx.tab toolkit -dx.openCalmList YES
+          shoot dark large calm-box-dark $P12 -dx.tab toolkit -dx.openCalm boxBreathing -dx.calmElapsed 6
+          shoot dark large calm-grounding-dark $P12 -dx.tab toolkit -dx.openCalm grounding -dx.calmStep 1 -dx.calmTicked 2
+          shoot dark large calm-notice1-dark $P12 -dx.tab toolkit -dx.openCalm noticeAndName
+          shoot dark large calm-notice2-dark $P12 -dx.tab toolkit -dx.openCalm noticeAndName -dx.calmStep 1
+          shoot dark large calm-done-dark $P12 -dx.tab toolkit -dx.openCalm dropAnchor -dx.calmDone YES
           shoot dark large ms-moment-dark $P12 -dx.milestone 7
           shoot light large ms-moment-light $P12 -dx.milestone 7
           shoot dark accessibility-extra-extra-extra-large ms-moment-dark-ax5 $P12 -dx.milestone 7
@@ -214,16 +269,19 @@ jobs:
           shoot dark large water-tracker-full-dark $P12 -dx.tab water -dx.seedWater full
           shoot dark accessibility-extra-extra-extra-large water-tracker-dark-ax5 $P12 -dx.tab water -dx.seedWater partial
           shoot dark large water-tracker-empty-dark $P12 -dx.tab water
-          shoot light large onb-water_body-light -dx.onboardingStep water_body
-          shoot dark accessibility-extra-extra-extra-large onb-water_goal-dark-ax5 -dx.onboardingStep water_goal
+          # Personalise goal, from the Water tab (S18.5).
+          shoot dark large water-goal-sheet-dark $P12 -dx.tab water -dx.seedWater partial -dx.waterGoalSheet YES
+          shoot light large water-goal-sheet-light $P12 -dx.tab water -dx.waterGoalSheet YES
+          shoot dark accessibility-extra-extra-extra-large water-goal-sheet-dark-ax5 $P12 -dx.tab water -dx.waterGoalSheet YES
           shoot dark large home-water-dark $P12 -dx.seedWater partial
-          shoot dark large calm-box-orb-dark $P12 -dx.tab program -dx.openCalm boxBreathing -dx.calmElapsed 6
-          shoot dark large calm-478-orb-dark $P12 -dx.tab program -dx.openCalm longerOutBreath
+          shoot dark large calm-box-orb-dark $P12 -dx.tab toolkit -dx.openCalm boxBreathing -dx.calmElapsed 6
+          shoot dark large calm-478-orb-dark $P12 -dx.tab toolkit -dx.openCalm longerOutBreath
           for page in home clear lock private standby states; do
             shoot dark large "widgets-$page" -dx.widgetGallery "$page"
           done
           shoot dark large set-main-dark $P12 -dx.openSettings settings
           shoot light large set-main-light $P12 -dx.openSettings settings
+          shoot dark large set-currency-dark $P12 -dx.openSettings currency
           shoot dark accessibility-extra-extra-extra-large set-main-dark-ax5 $P12 -dx.openSettings settings
           shoot dark large set-products-dark $P12 -dx.openSettings products
           shoot dark large set-quitday-dark $P12 -dx.openSettings quitDay
@@ -232,8 +290,10 @@ jobs:
           shoot dark large set-privacy-dark $P12 -dx.openSettings privacy
           shoot dark large set-health-dark $P12 -dx.openSettings health
           shoot dark large onb-reveal-disclaimer-dark -dx.onboardingStep reveal
-          # Last: the under-18 screen persists its flag, so everything after it would show the exit.
-          shoot dark large onb-under_age-dark -dx.onboardingStep under_age
+          shoot dark large onb-trial-mock-dark -dx.onboardingStep trial -dx.store mock
+          shoot light large onb-trial-mock-light -dx.onboardingStep trial -dx.store mock
+          shoot dark large pw-firstrun-dark $P mock -dx.paywallFirstRun YES
+          shoot light large pw-firstrun-light $P mock -dx.paywallFirstRun YES
           cd shots
           git init -q -b ci-screens
           git config user.name "ci" && git config user.email "ci@users.noreply.github.com"
@@ -281,3 +341,135 @@ jobs:
         with:
           name: build-log
           path: build.log
+
+  # iPhone Duo closed, open (wide and tall) and half-folded (book and laptop), pushed to ci-screens-duo (S18.15).
+  # Apple has no command to fold the simulator, so this uses hinge (MIT, pinned). It runs apart from build-test so a
+  # change in that tooling can't block builds; a fold that doesn't happen fails this job rather than passing quietly.
+  duo:
+    if: github.event_name == 'workflow_dispatch' && inputs.screenshots
+    runs-on: xcode-27
+    timeout-minutes: 60
+    env:
+      HINGE_VERSION: v0.3.0
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode 27.1
+        run: |
+          XCODE=/Applications/Xcode_27.1.app
+          if [ ! -d "$XCODE" ]; then
+            echo "::error title=Xcode 27.1 missing::This runner has no $XCODE"
+            exit 1
+          fi
+          sudo xcode-select -s "$XCODE"
+          xcodebuild -version
+
+      - name: Install XcodeGen and hinge
+        run: |
+          brew install xcodegen
+          git clone -q --depth 1 --branch "$HINGE_VERSION" https://github.com/artemnovichkov/hinge.git "$RUNNER_TEMP/hinge"
+          echo "$RUNNER_TEMP/hinge/bin" >> "$GITHUB_PATH"
+
+      - name: Generate project
+        run: xcodegen generate
+
+      - name: Pick the iPhone Duo simulator
+        id: sim
+        run: |
+          UDID=$(xcrun simctl list devices available -j | python3 -c '
+          import json, sys
+          d = json.load(sys.stdin)["devices"]
+          print(next((dev["udid"] for k in d for dev in d[k] if dev["name"] == "iPhone Duo"), ""))
+          ')
+          if [ -z "$UDID" ]; then
+            echo "::error title=No iPhone Duo simulator::$(xcrun simctl list runtimes)"
+            exit 1
+          fi
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+
+      - name: Build for iPhone Duo
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -project DayXero.xcodeproj \
+            -scheme DayXero \
+            -destination "id=${{ steps.sim.outputs.udid }}" \
+            CODE_SIGNING_ALLOWED=NO \
+            -derivedDataPath DerivedData \
+            -quiet 2>&1 | tee build.log
+
+      - name: Screenshots in each pose
+        run: |
+          UDID=${{ steps.sim.outputs.udid }}
+          export HINGE_DEVICE="$UDID"
+          APP=$(find DerivedData/Build/Products -name "DayXero.app" -path "*iphonesimulator*" | head -1)
+          xcrun simctl boot "$UDID" 2>/dev/null || true
+          xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl install "$UDID" "$APP"
+          xcrun simctl ui "$UDID" appearance dark
+          hinge --version
+          mkdir -p shots
+          # pose <name>: fold to it, then wait for the display to switch (1–2.5 s after the angle).
+          # Held upright and unfolded, the inner display is wider than it is tall; turned on its side it's tall.
+          pose() {
+            case "$1" in
+              closed) hinge close; hinge orient portrait ;;
+              open-wide) hinge open; hinge orient portrait ;;
+              open-tall) hinge open; hinge orient landscape-left ;;
+              half-book) hinge orient portrait; hinge half ;;
+              half-laptop) hinge orient landscape-left; hinge half ;;
+            esac
+            sleep 3
+            hinge posture
+          }
+          # drawn <png>: false while the shot is still the blank launch screen. Blank shots compress to under
+          # 0.032 bytes a pixel (about 70 KB on a 6.3-inch screen); every real screen is well over (118 KB and up).
+          drawn() {
+            local w h size
+            w=$(sips -g pixelWidth "$1" | awk '/pixelWidth/ {print $2}')
+            h=$(sips -g pixelHeight "$1" | awk '/pixelHeight/ {print $2}')
+            size=$(stat -f%z "$1")
+            [ $((size * 1000)) -gt $((w * h * 32)) ]
+          }
+          # shoot <pose> <name> [launch args...]: retakes the shot until the app has drawn.
+          shoot() {
+            local p=$1 name=$2; shift 2
+            xcrun simctl terminate "$UDID" in.dayxero.app 2>/dev/null || true
+            xcrun simctl launch "$UDID" in.dayxero.app "$@"
+            sleep 6
+            for try in 1 2 3 4 5; do
+              hinge screenshot "shots/duo-$p-$name.png" > /dev/null
+              drawn "shots/duo-$p-$name.png" && return
+              sleep 2
+            done
+            echo "::warning title=Blank screenshot::duo-$p-$name was still blank after 16 seconds"
+          }
+          for p in closed open-wide open-tall half-book half-laptop; do
+            pose "$p"
+            shoot "$p" home-prep -dx.homeScenario prep -dx.store pro
+            shoot "$p" home-day3 -dx.homeScenario day3 -dx.store pro
+            shoot "$p" sos-session -dx.homeScenario day3 -dx.store pro -dx.sos YES -dx.sosElapsed 19
+            shoot "$p" sos-timeup -dx.homeScenario day3 -dx.store pro -dx.sos YES -dx.sosElapsed 181
+            shoot "$p" progress -dx.homeScenario day12 -dx.store pro -dx.tab progress
+            shoot "$p" program -dx.homeScenario day3 -dx.store pro -dx.tab program
+            shoot "$p" water-goal -dx.homeScenario day12 -dx.store pro -dx.tab water -dx.waterGoalSheet YES
+            shoot "$p" paywall -dx.paywallPreview YES -dx.store mock
+            shoot "$p" onb-reveal -dx.onboardingStep reveal
+          done
+          cd shots
+          git init -q -b ci-screens-duo
+          git config user.name "ci" && git config user.email "ci@users.noreply.github.com"
+          git add . && git commit -qm "iPhone Duo screenshots for ${GITHUB_SHA::7}"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" ci-screens-duo
+
+      - name: Upload log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: duo-build-log
+          path: build.log
+
+  # The App Store screenshot set, on request (S16.3, S18.16).
+  store:
+    if: github.event_name == 'workflow_dispatch' && inputs.store_screens
+    uses: ./.github/workflows/store-screens.yml

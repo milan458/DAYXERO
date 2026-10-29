@@ -38,7 +38,7 @@ enum LoggedProduct: String, AppEnum {
 
     static var typeDisplayRepresentation: TypeDisplayRepresentation { "Product" }
     static var caseDisplayRepresentations: [LoggedProduct: DisplayRepresentation] {
-        [.cigarette: "Cigarette", .puffSession: "Puff session", .pouch: "Pouch"]
+        [.cigarette: "Cigarette", .puffSession: "Vape", .pouch: "Pouch"]
     }
 
     init(_ product: Product) {
@@ -61,7 +61,7 @@ enum LoggedProduct: String, AppEnum {
 /// Logs one use from the widget, Siri or Shortcuts. Before Quit Day it's tracking; after, it's a slip.
 struct LogUseIntent: AppIntent {
     static let title: LocalizedStringResource = "Log a use"
-    static let description = IntentDescription("Logs a cigarette, puff session or pouch.")
+    static let description = IntentDescription("Logs a cigarette, a vape or a pouch.")
 
     @Parameter(title: "Product") var product: LoggedProduct
 

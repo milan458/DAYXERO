@@ -77,6 +77,22 @@ public struct DXIconButtonStyle: ButtonStyle {
     }
 }
 
+/// A filled round icon button: white on dark, near-black on light (Home's progress button, S19.1).
+public struct DXRoundButtonStyle: ButtonStyle {
+    public init() {}
+
+    public func makeBody(configuration: Configuration) -> some View {
+        DXPressable(configuration: configuration) {
+            configuration.label
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundStyle(DX.Palette.onPrimary)
+                .frame(width: DX.Size.iconButton, height: DX.Size.iconButton)
+                .background(DX.Palette.primary, in: Circle())
+                .shadow(color: DX.Palette.shadow, radius: 10, y: 4)
+        }
+    }
+}
+
 /// Floating action button. `.sage` is the craving SOS button, the same in both themes.
 public struct DXFABStyle: ButtonStyle {
     public enum Tint: Sendable { case primary, sage }
@@ -124,6 +140,10 @@ public extension ButtonStyle where Self == DXSecondaryButtonStyle {
     static var dxSecondary: DXSecondaryButtonStyle { DXSecondaryButtonStyle(.surface) }
     static var dxSage: DXSecondaryButtonStyle { DXSecondaryButtonStyle(.sage) }
     static var dxQuiet: DXSecondaryButtonStyle { DXSecondaryButtonStyle(.quiet) }
+}
+
+public extension ButtonStyle where Self == DXRoundButtonStyle {
+    static var dxRound: DXRoundButtonStyle { DXRoundButtonStyle() }
 }
 
 public extension ButtonStyle where Self == DXIconButtonStyle {
