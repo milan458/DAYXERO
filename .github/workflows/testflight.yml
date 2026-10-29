@@ -200,6 +200,9 @@ jobs:
 
       - name: Archive
         if: steps.keys.outputs.ready == 'true' && !inputs.check_only
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
         run: |
           set -o pipefail
           # Build numbers only go up: the UTC time, or one above the highest build in App Store Connect when
