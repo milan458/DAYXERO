@@ -2344,9 +2344,105 @@
           "completed": null
         }
       ]
+    },
+    {
+      "id": "S25",
+      "title": "Post-onboarding audit fixes",
+      "goal": "Fixes from the TestFlight walkthrough audit (Milan, 29 Oct). Branch claude/audit-fixes, on top of S24.",
+      "signoff": {
+        "state": "mockups_ready",
+        "history": [
+          {
+            "time": "2026-10-29T13:00:00.000Z",
+            "state": "mockups_ready",
+            "by": "Claude",
+            "comment": "Your body mocks (path layout, illustration kit, new looks drawings): https://claude.ai/artifact/4Y7kJrQagE6gF3pgFCwsvT"
+          }
+        ]
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S25.1",
+          "title": "Evening check-in knows the phase: prep week asks 'Mindful & observant' or 'Mostly autopilot' and shows today's logs with steppers; clear day / slip only from Quit Day.",
+          "status": "done",
+          "notes": "CheckInView prepHeader/usedToday; CheckIn.prepMindful.",
+          "created": "2026-10-29T13:00:00.000Z",
+          "completed": "2026-10-29T13:00:00.000Z"
+        },
+        {
+          "id": "S25.2",
+          "title": "Home log cards log in one tap during prep (toast: 'Cigarette #3 logged · Undo · Add trigger'); vape card splits into +1 Puff and + Urge (craving form directly).",
+          "status": "done",
+          "notes": "HomeView productCard/logUse/loggedToast.",
+          "created": "2026-10-29T13:00:00.000Z",
+          "completed": "2026-10-29T13:00:00.000Z"
+        },
+        {
+          "id": "S25.3",
+          "title": "Toolkit tab replaces Water: your why, Craving SOS, water card (opens the tracker), calm tools, help line. Calm tools leave Program.",
+          "status": "done",
+          "notes": "DayXero/Toolkit/ToolkitView.swift; '-dx.tab water' opens the tracker over Toolkit.",
+          "created": "2026-10-29T13:00:00.000Z",
+          "completed": "2026-10-29T13:00:00.000Z"
+        },
+        {
+          "id": "S25.4",
+          "title": "NRT: picking a label applies its steps at once (no stale 25 mg step); India presets.",
+          "status": "done",
+          "notes": "NRTSetupView choose/switchCountry; LabelCountry.india.",
+          "created": "2026-10-29T13:00:00.000Z",
+          "completed": "2026-10-29T13:00:00.000Z"
+        },
+        {
+          "id": "S25.5",
+          "title": "SOS: after a minute 'It's passing · log as ridden out'; time-up 'Log as ridden out (+1)'; win screen 'Wave survived, <name>.'",
+          "status": "done",
+          "notes": "",
+          "created": "2026-10-29T13:00:00.000Z",
+          "completed": "2026-10-29T13:00:00.000Z"
+        },
+        {
+          "id": "S25.6",
+          "title": "Audio lesson player: synced transcript, on-device voice until recordings exist, waveform scrubber, ±15 s, speed; moves on to the exercise.",
+          "status": "done",
+          "notes": "DayXero/Program/LessonAudio.swift.",
+          "created": "2026-10-29T13:00:00.000Z",
+          "completed": "2026-10-29T13:00:00.000Z"
+        },
+        {
+          "id": "S25.7",
+          "title": "Your body: lighter wording, looks changes (lips, skin glow, tan, hair, taste, breath, sleep) with new kit drawings, warm long detail per tile.",
+          "status": "awaiting_signoff",
+          "notes": "Mocks first; build after Milan signs off.",
+          "created": "2026-10-29T13:00:00.000Z",
+          "completed": null
+        },
+        {
+          "id": "S25.8",
+          "title": "Program lesson titles from the audit JSON replace PLACEHOLDER labels.",
+          "status": "pending",
+          "notes": "Waiting on Milan to approve the titles.",
+          "created": "2026-10-29T13:00:00.000Z",
+          "completed": null
+        },
+        {
+          "id": "S25.9",
+          "title": "CI green and TestFlight for the audit fixes.",
+          "status": "in_progress",
+          "notes": "Branch claude/audit-fixes.",
+          "created": "2026-10-29T13:00:00.000Z",
+          "completed": null
+        }
+      ]
     }
   ],
   "log": [
+    {
+      "time": "2026-10-29T13:00:00.000Z",
+      "type": "task_added",
+      "message": "Added S25: post-onboarding audit fixes (branch claude/audit-fixes)"
+    },
     {
       "time": "2026-10-29T06:12:22.679Z",
       "type": "note",
