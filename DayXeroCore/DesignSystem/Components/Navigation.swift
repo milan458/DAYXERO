@@ -15,11 +15,12 @@ public struct DXDockItem: Identifiable, Hashable, Sendable {
     public func hash(into hasher: inout Hasher) { hasher.combine(id) }
 }
 
-/// Floating navigation dock (S24): one glass bar, laid out like the Home mockup. The selected tab is a white pill with
-/// its icon and name; the others are icons on faint glass circles, with Craving SOS in the middle. The pill slides
-/// between tabs and stretches as it goes, and a finger dragged along the bar carries it, like iOS 26's tab bars.
-/// On iOS 26 the bar is Liquid Glass; earlier it is a frosted bar. On iPhone Duo it can stand on its side along
-/// the edge where the system puts vertical bars (S18.13), showing icons only.
+/// Floating navigation dock (S24), laid out like the Home mockup and behaving like iOS 26 tab bars (WhatsApp's):
+/// one glass bar; the selected tab sits in a dark pill with its icon filled and its name beside it; Craving SOS is in
+/// the middle. Touch the bar and the pill swells into a clear glass lens, taller than the bar, that follows the
+/// finger, magnifies the icons under it and splits light into a rainbow at its rim; let go and it settles back into
+/// the pill, on the tab nearest the finger. With Reduce Motion the pill simply moves. On iPhone Duo the dock can
+/// stand on its side along the edge where the system puts vertical bars (S18.13), icons only and without the lens.
 public struct DXDock: View {
     let items: [DXDockItem]
     @Binding var selection: String
@@ -29,12 +30,13 @@ public struct DXDock: View {
     let axis: Axis
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @Namespace private var lens
-    /// The tab under a finger dragged along the bar; the pill follows it until the finger lifts.
-    @State private var dragTarget: String?
+    /// Tab and SOS frames, and the bar's size, in the bar's own space.
     @State private var frames: [String: CGRect] = [:]
-    /// The pill's squash and stretch as it lands.
-    @State private var stretched = false
+    @State private var barSize: CGSize = .zero
+    /// The lens's centre while a finger is on the bar; nil when nothing touches it.
+    @State private var lensX: CGFloat?
+    /// The tab nearest the lens, for a tick as the lens passes each one.
+    @State private var hovered: String?
 
     public init(items: [DXDockItem], selection: Binding<String>, sosPosition: Int? = nil, axis: Axis = .horizontal,
                 sosAction: @escaping () -> Void) {
@@ -48,121 +50,214 @@ public struct DXDock: View {
     /// The dock's thickness across its axis: its height lying down, its width standing up.
     public static let thickness = DX.Size.tab + 2 * DX.Space.xs
 
-    private var shown: String { dragTarget ?? selection }
+    private static let space = "dx.dock"
+    private static let sosID = "dx.dock.sos"
+    /// The lens is about two tabs wide and rises 11 pt above and below the bar, like WhatsApp's.
+    private static let lensSize = CGSize(width: 2 * DX.Size.tab, height: thickness + 22)
+    private static let magnification: CGFloat = 1.28
+
+    /// At rest the pill is black at 55% on the dark bar, like WhatsApp's; a faint grey on the light one.
+    private static let pillFill = Color(light: (0x11140A, 0.09), dark: (0x000000, 0.55))
+
+    private var lensShown: Bool { lensX != nil }
 
     public var body: some View {
+        bar(interactive: true)
+            .background(alignment: .topLeading) { pill }
+            .overlay(alignment: .topLeading) {
+                if let lensX { magnifier(at: lensX) }
+            }
+            .coordinateSpace(.named(Self.space))
+            .onGeometryChange(for: CGSize.self) { $0.size } action: { barSize = $0 }
+            .modifier(DockBackground())
+            .simultaneousGesture(touch, including: axis == .horizontal && !reduceMotion ? .all : .none)
+            .dynamicTypeSize(...DynamicTypeSize.xLarge)
+            .sensoryFeedback(DX.Haptic.select, trigger: hovered) { old, new in old != nil && new != nil }
+            .sensoryFeedback(DX.Haptic.select, trigger: selection)
+    }
+
+    // MARK: Items
+
+    /// The tabs and SOS, padded to the bar's size. Drawn twice while touched: once to use, once magnified in the lens.
+    private func bar(interactive: Bool) -> some View {
         let split = min(sosPosition ?? items.count, items.count)
-        let layout = axis == .horizontal ? AnyLayout(HStackLayout(spacing: 6)) : AnyLayout(VStackLayout(spacing: 6))
-        layout {
-            ForEach(items.prefix(split)) { item in
-                tab(item)
-            }
-            sosButton
-            ForEach(items.dropFirst(split)) { item in
-                tab(item)
-            }
+        let layout = axis == .horizontal ? AnyLayout(HStackLayout(spacing: 4)) : AnyLayout(VStackLayout(spacing: 4))
+        return layout {
+            ForEach(items.prefix(split)) { tab($0, interactive: interactive) }
+            sos(interactive: interactive)
+            ForEach(items.dropFirst(split)) { tab($0, interactive: interactive) }
         }
         .padding(DX.Space.xs)
         .frame(width: axis == .vertical ? Self.thickness : nil, height: axis == .horizontal ? Self.thickness : nil)
-        .coordinateSpace(.named(Self.space))
-        .modifier(DockBackground())
-        .simultaneousGesture(drag)
-        .dynamicTypeSize(...DynamicTypeSize.xLarge)
-        .sensoryFeedback(DX.Haptic.select, trigger: shown)
     }
 
-    private static let space = "dx.dock"
+    @ViewBuilder
+    private func tab(_ item: DXDockItem, interactive: Bool) -> some View {
+        let active = item.id == selection
+        let label = tabLabel(item, active: active)
+        if interactive {
+            Button { select(item.id) } label: { label }
+                .buttonStyle(.plain)
+                .onGeometryChange(for: CGRect.self) { $0.frame(in: .named(Self.space)) } action: { frames[item.id] = $0 }
+                .accessibilityLabel(Text(item.title))
+                .accessibilityAddTraits(active ? [.isSelected, .isButton] : .isButton)
+        } else {
+            label
+        }
+    }
 
-    /// The word "SOS" in a slowly sliding rainbow, on the same faint circle as a tab that isn't selected (S21.4).
-    private var sosButton: some View {
-        Button(action: sosAction) {
-            RainbowSOS()
-                .frame(width: DX.Size.tab, height: DX.Size.tab)
-                .background(DX.Palette.text.opacity(0.07), in: Circle())
-                .contentShape(Circle())
+    private func tabLabel(_ item: DXDockItem, active: Bool) -> some View {
+        let labelled = active && axis == .horizontal
+        return HStack(spacing: 6) {
+            Image(systemName: item.systemImage)
+                .symbolVariant(active ? .fill : .none)
+                .font(.system(size: 18, weight: active ? .bold : .semibold))
+            if labelled {
+                Text(item.title)
+                    .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .subheadline))
+                    .lineLimit(1)
+                    .fixedSize()
+                    .transition(.opacity.combined(with: .scale(scale: 0.7, anchor: .leading)))
+            }
+        }
+        .foregroundStyle(DX.Palette.text.opacity(active ? 1 : 0.85))
+        .padding(.horizontal, labelled ? DX.Space.m : 0)
+        .frame(minWidth: DX.Size.tab, minHeight: DX.Size.tab)
+        .frame(maxHeight: DX.Size.tab)
+        .contentShape(Capsule())
+    }
+
+    /// The word "SOS" in a slowly sliding rainbow (S21.4).
+    @ViewBuilder
+    private func sos(interactive: Bool) -> some View {
+        let label = RainbowSOS()
+            .frame(width: DX.Size.tab, height: DX.Size.tab)
+            .contentShape(Circle())
+        if interactive {
+            Button(action: sosAction) { label }
+                .buttonStyle(.plain)
+                .onGeometryChange(for: CGRect.self) { $0.frame(in: .named(Self.space)) } action: { frames[Self.sosID] = $0 }
                 .accessibilityElement(children: .ignore)
                 .accessibilityLabel(Text("Craving SOS"))
+                .accessibilityAddTraits(.isButton)
+        } else {
+            label
         }
-        .buttonStyle(DockPress())
-    }
-
-    private func tab(_ item: DXDockItem) -> some View {
-        let active = item.id == shown
-        let labelled = active && axis == .horizontal
-        return Button { select(item.id) } label: {
-            HStack(spacing: 6) {
-                Image(systemName: item.systemImage)
-                    .font(.system(size: 18, weight: .semibold))
-                if labelled {
-                    Text(item.title)
-                        .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .subheadline))
-                        .lineLimit(1)
-                        .fixedSize()
-                        .transition(.opacity.combined(with: .scale(scale: 0.7, anchor: .leading)))
-                }
-            }
-            .foregroundStyle(active ? DX.Palette.onPrimary : DX.Palette.text.opacity(0.85))
-            .padding(.horizontal, labelled ? DX.Space.m : 0)
-            .frame(minWidth: DX.Size.tab, minHeight: DX.Size.tab)
-            .frame(maxHeight: DX.Size.tab)
-            .background {
-                if active {
-                    Capsule()
-                        .fill(DX.Palette.primary)
-                        .shadow(color: DX.Palette.shadow, radius: dragTarget == nil ? 6 : 14, y: 4)
-                        .matchedGeometryEffect(id: "lens", in: lens)
-                        .scaleEffect(x: stretched ? 1.1 : (dragTarget == nil ? 1 : 1.06),
-                                     y: stretched ? 0.9 : (dragTarget == nil ? 1 : 1.06))
-                } else {
-                    Circle().fill(DX.Palette.text.opacity(0.07))
-                }
-            }
-            .contentShape(Capsule())
-        }
-        .buttonStyle(DockPress())
-        .onGeometryChange(for: CGRect.self) { $0.frame(in: .named(Self.space)) } action: { frames[item.id] = $0 }
-        .accessibilityLabel(Text(item.title))
-        .accessibilityAddTraits(active ? [.isSelected, .isButton] : .isButton)
     }
 
     private func select(_ id: String) {
-        let changed = id != selection
-        withAnimation(reduceMotion ? DX.Motion.reduced : .spring(response: 0.42, dampingFraction: 0.7)) {
+        withAnimation(reduceMotion ? DX.Motion.reduced : Self.settle) {
             selection = id
-        }
-        guard changed, !reduceMotion else { return }
-        // Squash as it lands, then settle with a little wobble.
-        withAnimation(.easeOut(duration: 0.12)) { stretched = true }
-        Task { @MainActor in
-            try? await Task.sleep(for: .milliseconds(140))
-            withAnimation(.spring(response: 0.32, dampingFraction: 0.45)) { stretched = false }
         }
     }
 
-    /// Drag along the bar and the pill follows the finger; lift to choose that tab.
-    private var drag: some Gesture {
-        DragGesture(minimumDistance: 10, coordinateSpace: .named(Self.space))
+    private static let settle = Animation.spring(response: 0.42, dampingFraction: 0.72)
+
+    // MARK: Pill and lens
+
+    /// At rest, the dark pill under the selected tab. While touched it swells into the lens's clear body, centred on
+    /// the finger, and springs back into the pill when the finger lifts.
+    private var pill: some View {
+        let rest = frames[selection] ?? .zero
+        let size = lensShown ? Self.lensSize : rest.size
+        let center = lensX.map { CGPoint(x: $0, y: barSize.height / 2) } ?? CGPoint(x: rest.midX, y: rest.midY)
+        return Capsule()
+            .fill(lensShown ? DX.Palette.text.opacity(0.04) : Self.pillFill)
+            .frame(width: size.width, height: size.height)
+            .shadow(color: .black.opacity(lensShown ? 0.28 : 0), radius: 14, y: 6)
+            .offset(x: center.x - size.width / 2, y: center.y - size.height / 2)
+            .opacity(frames[selection] == nil ? 0 : 1)
+            .allowsHitTesting(false)
+    }
+
+    /// The bar again, larger, seen through the lens: magnified in the middle and stretched a little more at the rim,
+    /// where real glass bends light most, with the rainbow edge on top.
+    private func magnifier(at x: CGFloat) -> some View {
+        let size = Self.lensSize
+        let origin = CGPoint(x: x - size.width / 2, y: barSize.height / 2 - size.height / 2)
+        let anchor = UnitPoint(x: barSize.width > 0 ? x / barSize.width : 0.5, y: 0.5)
+        let lens = Capsule().frame(width: size.width, height: size.height).offset(x: origin.x, y: origin.y)
+        let rim = Capsule()
+            .strokeBorder(lineWidth: 12)
+            .blur(radius: 4)
+            .frame(width: size.width, height: size.height)
+            .offset(x: origin.x, y: origin.y)
+        return ZStack(alignment: .topLeading) {
+            bar(interactive: false)
+                .scaleEffect(Self.magnification, anchor: anchor)
+                .mask(alignment: .topLeading) { lens }
+            bar(interactive: false)
+                .scaleEffect(Self.magnification * 1.14, anchor: anchor)
+                .blur(radius: 1.2)
+                .mask(alignment: .topLeading) { rim.mask(alignment: .topLeading) { lens } }
+            LensRim(phase: Double(x))
+                .frame(width: size.width, height: size.height)
+                .offset(x: origin.x, y: origin.y)
+        }
+        .frame(width: barSize.width, height: barSize.height, alignment: .topLeading)
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
+        .transition(.opacity.combined(with: .scale(scale: 0.7, anchor: anchor)))
+    }
+
+    /// The lens follows the finger along the bar; letting go after a drag picks the nearest tab. A tap without a drag
+    /// belongs to the button under it: the lens swells, then settles on whatever the tap chose.
+    private var touch: some Gesture {
+        DragGesture(minimumDistance: 0, coordinateSpace: .named(Self.space))
             .onChanged { value in
-                let hit = frames.first { $0.value.insetBy(dx: -3, dy: -16).contains(value.location) }?.key
-                guard let hit, hit != dragTarget else { return }
-                withAnimation(reduceMotion ? DX.Motion.reduced : .spring(response: 0.3, dampingFraction: 0.75)) { dragTarget = hit }
+                let centres = frames.values.map(\.midX)
+                guard let first = centres.min(), let last = centres.max() else { return }
+                let x = min(max(value.location.x, first), last)
+                withAnimation(lensX == nil ? Animation.spring(response: 0.3, dampingFraction: 0.66)
+                                           : Animation.interactiveSpring(response: 0.18, dampingFraction: 0.86)) {
+                    lensX = x
+                }
+                hovered = nearestTab(to: x)
             }
-            .onEnded { _ in
-                guard let target = dragTarget else { return }
-                select(target)
-                dragTarget = nil
+            .onEnded { value in
+                if abs(value.translation.width) > 10, let target = nearestTab(to: lensX ?? value.location.x) {
+                    select(target)
+                }
+                withAnimation(Self.settle) { lensX = nil }
+                hovered = nil
             }
+    }
+
+    private func nearestTab(to x: CGFloat) -> String? {
+        items.compactMap { item in frames[item.id].map { (item.id, abs($0.midX - x)) } }.min { $0.1 < $1.1 }?.0
     }
 }
 
-/// A press that sinks a little, like the glass giving under a finger.
-private struct DockPress: ButtonStyle {
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+/// The lens's edge, as in WhatsApp's: a thin dark outline, light split into a rainbow that is strongest at the two
+/// ends, and a white highlight along the top. The colours turn as the lens moves.
+private struct LensRim: View {
+    let phase: Double
 
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .scaleEffect(configuration.isPressed && !reduceMotion ? 0.92 : 1)
-            .animation(DX.Motion.press, value: configuration.isPressed)
+    private static let spectrum: [Color] = ([0xFF4D6D, 0xFFA94D, 0xFFF06B, 0x6BFFA8, 0x4DD2FF, 0x7A6BFF, 0xFF4DDB, 0xFF4D6D] as [UInt32])
+        .map { Color(hex: $0) }
+
+    var body: some View {
+        ZStack {
+            Capsule()
+                .strokeBorder(AngularGradient(colors: Self.spectrum, center: .center, angle: .degrees(phase * 0.8)), lineWidth: 4)
+                .blur(radius: 2)
+                .mask(LinearGradient(stops: [.init(color: .white, location: 0), .init(color: .white.opacity(0.3), location: 0.3),
+                                             .init(color: .white.opacity(0.3), location: 0.7), .init(color: .white, location: 1)],
+                                     startPoint: .leading, endPoint: .trailing))
+            // A fainter second band inside, as light bends again on its way out of the glass.
+            Capsule()
+                .inset(by: 4)
+                .strokeBorder(AngularGradient(colors: Self.spectrum.reversed(), center: .center, angle: .degrees(-phase * 0.5)),
+                              lineWidth: 2)
+                .blur(radius: 2.5)
+                .opacity(0.4)
+            Capsule()
+                .strokeBorder(LinearGradient(colors: [.white.opacity(0.7), .white.opacity(0.05), .white.opacity(0.2)],
+                                             startPoint: .top, endPoint: .bottom), lineWidth: 1)
+            Capsule()
+                .strokeBorder(.black.opacity(0.45), lineWidth: 0.6)
+        }
+        .compositingGroup()
     }
 }
 
