@@ -17,6 +17,12 @@
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8);
   }
+  .glass-card-green {
+    background: linear-gradient(135deg, rgba(67, 81, 28, 0.40) 0%, rgba(18, 18, 18, 0.85) 100%);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(188, 195, 136, 0.25);
+  }
 
   /* Long-form guide text */
   .prose-dx {

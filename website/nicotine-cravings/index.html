@@ -135,7 +135,7 @@
         <a href="/nicotine-withdrawal-timeline/" class="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-white/10">Withdrawal</a>
         <a href="/guides/" class="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-white/10">All Guides</a>
       </div>
-      <a href="/#pricing" class="px-4 py-2 rounded-full bg-[#BCC388] text-black font-semibold text-xs tracking-tight hover:bg-white">Get DayXero</a>
+      <a href="/beta/" class="shrink-0 whitespace-nowrap px-4 py-2 rounded-full bg-[#BCC388] text-black font-semibold text-xs tracking-tight hover:bg-white">Join the beta</a>
     </nav>
   </header>
   <main class="relative z-10 flex-1 px-4">
@@ -163,7 +163,7 @@
   <li><strong>Ride the wave.</strong> Notice the craving getting stronger, peaking, and then starting to fade.</li>
   <li><strong>Choose what's next.</strong> Once it's passed, carry on with what you were doing.</li>
 </ol>
-<p>DayXero's Craving SOS guides you through this in three minutes, with a breathing pacer you can follow.</p>
+<p>DayXero's Craving SOS is being built to guide you through this in three minutes, with a breathing pacer you can follow.</p>
 
 <h2 id="quick">Quick techniques that work</h2>
 <ul>
@@ -173,6 +173,26 @@
   <li><strong>Change your surroundings:</strong> leave the room or step outside somewhere new.</li>
   <li><strong>Text someone</strong> who knows you're quitting.</li>
 </ul>
+
+<aside id="guide-cta-inline" class="glass-card-green rounded-card p-6 md:p-8 my-10" aria-label="Join the DayXero beta" data-hide-sticky>
+  <div class="flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-[#BCC388] mb-2"><span class="w-1.5 h-1.5 rounded-full bg-[#BCC388]"></span>DayXero iOS beta</div>
+  <div class="text-xl md:text-2xl font-extrabold tracking-tight text-white leading-snug mb-2">Want this plan on your iPhone?</div>
+  <div class="text-sm text-white/65 leading-relaxed mb-5">DayXero is being built around exactly this: a Quit Day, five days of prep and a 3-minute craving tool. Join the beta for an early TestFlight invite.</div>
+  <div data-waitlist-block>
+        <form id="guide-inline-form" class="waitlist-form w-full" action="/api/waitlist" method="post" novalidate>
+          <div class="flex flex-col sm:flex-row gap-2 rounded-[28px] sm:rounded-full p-2 bg-[#121212] border border-white/15 shadow-2xl">
+            <label for="guide-inline-form-email" class="sr-only">Email address</label>
+            <input id="guide-inline-form-email" type="email" name="email" required autocomplete="email" inputmode="email" placeholder="you@example.com" class="w-full sm:flex-1 min-w-0 h-11 px-5 rounded-full text-sm focus:outline-none bg-[#161616] border border-white/10 text-white placeholder:text-white/30 focus:border-[#BCC388]/60 spring-trans">
+            <button type="submit" class="h-11 px-6 rounded-full bg-white text-black hover:bg-[#BCC388] font-semibold text-sm tracking-tight active:scale-95 spring-trans flex items-center justify-center gap-2 shadow-xl whitespace-nowrap">
+              <span>Join the beta</span>
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </button>
+          </div>
+          <div class="hidden" aria-hidden="true"><label>Company <input type="text" name="company" tabindex="-1" autocomplete="off"></label></div>
+          <input type="hidden" name="source" value="guide-nicotine-cravings-inline">
+        </form>
+  </div>
+</aside>
 
 <h2 id="triggers">A plan for your biggest triggers</h2>
 <div class="table-wrap"><table>
@@ -203,11 +223,25 @@
 
       </div>
 
-      <aside class="porcelain-card rounded-card p-8 my-14 text-black">
-        <div class="text-[10px] font-mono uppercase tracking-widest text-black/50 mb-2">The DayXero app</div>
+      <aside id="beta-cta" class="porcelain-card rounded-card p-8 my-14 text-black scroll-mt-28" data-hide-sticky>
+        <div class="text-[10px] font-mono uppercase tracking-widest text-black/50 mb-2">The DayXero app · iOS beta</div>
         <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight mb-3">Turn this plan into a daily routine</h2>
-        <p class="text-sm text-black/70 leading-relaxed mb-6">DayXero guides you through a five-day prep phase before your Quit Day, gets you through cravings in three minutes, and never resets your progress for a slip. Built for iPhone, for vapes, cigarettes and pouches.</p>
-        <a href="/#pricing" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-black text-white font-semibold text-xs hover:bg-[#202020]">See plans, free tier included →</a>
+        <p class="text-sm text-black/70 leading-relaxed mb-6">DayXero is an iPhone app in development that walks you through five days of prep before your Quit Day, gets you through cravings in three minutes, and never resets your progress for a slip. Join the beta and we'll send your TestFlight invite, then the App Store link at launch.</p>
+        <div data-waitlist-block>
+        <form id="guide-end-form" class="waitlist-form w-full" action="/api/waitlist" method="post" novalidate data-theme="light">
+          <div class="flex flex-col sm:flex-row gap-2 rounded-[28px] sm:rounded-full p-1.5 bg-black/5 border border-black/10">
+            <label for="guide-end-form-email" class="sr-only">Email address</label>
+            <input id="guide-end-form-email" type="email" name="email" required autocomplete="email" inputmode="email" placeholder="you@example.com" class="w-full sm:flex-1 min-w-0 h-12 px-5 rounded-full text-sm focus:outline-none bg-white border border-black/10 text-black placeholder:text-black/40 focus:border-[#43511C]/60 spring-trans">
+            <button type="submit" class="h-12 px-6 rounded-full bg-black text-white hover:bg-[#202020] font-semibold text-sm tracking-tight active:scale-95 spring-trans flex items-center justify-center gap-2 shadow-xl whitespace-nowrap">
+              <span>Join the beta</span>
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </button>
+          </div>
+          <div class="hidden" aria-hidden="true"><label>Company <input type="text" name="company" tabindex="-1" autocomplete="off"></label></div>
+          <input type="hidden" name="source" value="guide-nicotine-cravings-end">
+        </form>
+        <p class="text-[11px] text-black/50 text-left leading-relaxed mt-3">No payment now. One confirmation email, then your invite and launch link. Unsubscribe anytime. <a href="/privacy/#waitlist" class="underline underline-offset-4 decoration-black/30 hover:text-black">Privacy</a></p>
+        </div>
       </aside>
 
       <section class="prose-dx" aria-labelledby="faq-heading">
@@ -267,11 +301,26 @@
       </div>
     </section>
   </main>
+  <div id="sticky-cta" class="fixed bottom-4 inset-x-0 z-50 px-4 md:hidden" style="transform: translateY(160%)" aria-hidden="true">
+    <div class="flex items-center justify-between gap-3 pl-4 pr-1.5 py-1.5 rounded-full bg-black/85 backdrop-blur-2xl border border-white/15 shadow-2xl shadow-black">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <span class="w-2 h-2 shrink-0 rounded-full bg-[#BCC388] animate-ping"></span>
+        <div class="flex flex-col min-w-0">
+          <span class="text-xs font-bold text-white tracking-tight truncate">DayXero iOS beta</span>
+          <span class="text-[9px] text-white/40 tracking-widest uppercase font-mono -mt-0.5 truncate">Free · Founding spots</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-1.5 shrink-0">
+        <a href="#beta-cta" class="px-4 py-2.5 rounded-full bg-[#BCC388] text-black font-semibold text-xs tracking-tight hover:bg-white active:scale-95 spring-trans flex items-center gap-1.5">Join the beta</a>
+        <button type="button" data-action="dismiss" aria-label="Dismiss" class="w-8 h-8 rounded-full bg-[#161616] border border-white/15 text-white/60 hover:text-white flex items-center justify-center spring-trans"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4l16 16"/><path d="M20 4 4 20"/></svg></button>
+      </div>
+    </div>
+  </div>
   <footer class="border-t border-white/10 bg-black py-14 px-4 relative z-10 text-white/60 mt-auto">
     <div class="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8 text-xs">
       <div class="flex flex-col gap-2">
         <span class="font-bold text-white tracking-tight text-sm">DayXero</span>
-        <p class="text-white/40 max-w-xs">Quit on your Quit Day. An iPhone app to quit vaping, smoking and nicotine pouches.</p>
+        <p class="text-white/40 max-w-xs">Quit on your Quit Day. An iPhone app in development to quit vaping, smoking and nicotine pouches.</p>
       </div>
       <div class="flex flex-col gap-2">
         <span class="font-mono uppercase tracking-widest text-[10px] text-white/40">Guides</span>
@@ -285,7 +334,8 @@
         <span class="font-mono uppercase tracking-widest text-[10px] text-white/40">DayXero</span>
         <a href="/" class="hover:text-white">Home</a>
         <a href="/#methodology" class="hover:text-white">How it works</a>
-        <a href="/#pricing" class="hover:text-white">Pricing</a>
+        <a href="/beta/" class="hover:text-white">Join the beta</a>
+        <a href="/#pricing" class="hover:text-white">Founding offer</a>
         <a href="/#faq" class="hover:text-white">FAQ</a>
         <a href="/about/" class="hover:text-white">About</a>
         <a href="/contact/" class="hover:text-white">Contact</a>
@@ -298,5 +348,6 @@
       <div class="shrink-0">© 2026 DayXero.</div>
     </div>
   </footer>
+  <script src="/assets/waitlist.js" defer></script>
 </body>
 </html>

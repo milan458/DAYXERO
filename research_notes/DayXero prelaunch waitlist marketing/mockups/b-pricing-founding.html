@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mockup (b): Founding pricing | DayXero</title>
+  <meta name="description" content="Pricing reframed as pre-launch founding-member offer.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#000000">
+  <!-- MOCKUP: same fonts and compiled stylesheet as the live site -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../website/assets/site.css">
+  <!-- Copied verbatim from website/index.html <style> -->
+  <style>
+    /* OLED Baseline & Typography */
+    body {
+      background-color: #000000;
+      color: #FFFFFF;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      selection-background-color: #BCC388;
+      selection-color: #000000;
+    }
+    ::selection {
+      background: #BCC388;
+      color: #000000;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #000000;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #262626;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #BCC388;
+    }
+
+    /* Spring-Physics Transitions */
+    .spring-trans {
+      transition: all 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Cards with High-Contrast Flair */
+    .porcelain-card {
+      background: #FFFFFF;
+      color: #000000;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5), 0 0 40px rgba(188, 195, 136, 0.15);
+    }
+    .dark-card {
+      background: #121212;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8);
+    }
+    .glass-card-green {
+      background: linear-gradient(135deg, rgba(67, 81, 28, 0.40) 0%, rgba(18, 18, 18, 0.85) 100%);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(188, 195, 136, 0.25);
+    }
+    .moss-pedestal {
+      background: linear-gradient(180deg, rgba(67, 81, 28, 0.3) 0%, rgba(20, 26, 10, 0.9) 60%, #000000 100%);
+      box-shadow: 0 -20px 50px rgba(67, 81, 28, 0.25);
+    }
+
+    /* 3D Glass Bottle Shimmer */
+    .glass-specular {
+      background: linear-gradient(105deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.05) 45%, transparent 60%);
+    }
+
+    /* Device frame reflections */
+    .device-screen {
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12), 0 35px 80px -20px rgba(0, 0, 0, 0.95), 0 0 60px rgba(67, 81, 28, 0.2);
+    }
+
+  </style>
+  <!-- Tailwind utilities used by this mockup that are not yet in the compiled site.css.
+       Generated with tailwindcss@3.4.17 + website/tailwind.config.js. They disappear once the
+       markup ships and `npm run website:css` is re-run. -->
+  <style id="mockup-utilities">
+/*MOCKUP-UTILITIES*/
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0
+}
+.invisible {
+  visibility: hidden
+}
+.mt-3 {
+  margin-top: 0.75rem
+}
+.min-w-0 {
+  min-width: 0px
+}
+.rounded-\[28px\] {
+  border-radius: 28px
+}
+.p-2 {
+  padding: 0.5rem
+}
+.pt-24 {
+  padding-top: 6rem
+}
+.line-through {
+  text-decoration-line: line-through
+}
+.decoration-black\/30 {
+  text-decoration-color: rgb(0 0 0 / 0.3)
+}
+.placeholder\:text-black\/40::-moz-placeholder {
+  color: rgb(0 0 0 / 0.4)
+}
+.placeholder\:text-black\/40::placeholder {
+  color: rgb(0 0 0 / 0.4)
+}
+.placeholder\:text-white\/30::-moz-placeholder {
+  color: rgb(255 255 255 / 0.3)
+}
+.placeholder\:text-white\/30::placeholder {
+  color: rgb(255 255 255 / 0.3)
+}
+.focus\:border-\[\#43511C\]\/60:focus {
+  border-color: rgb(67 81 28 / 0.6)
+}
+.focus\:border-\[\#BCC388\]\/60:focus {
+  border-color: rgb(188 195 136 / 0.6)
+}
+.focus\:outline-none:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px
+}
+@media (min-width: 640px) {
+  .sm\:flex-row {
+    flex-direction: row
+  }
+}
+@media (min-width: 768px) {
+  .md\:scale-105 {
+    --tw-scale-x: 1.05;
+    --tw-scale-y: 1.05;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
+  }
+  .md\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr))
+  }
+  .md\:flex-row {
+    flex-direction: row
+  }
+  .md\:items-center {
+    align-items: center
+  }
+  .md\:gap-8 {
+    gap: 2rem
+  }
+  .md\:p-8 {
+    padding: 2rem
+  }
+  .md\:py-28 {
+    padding-top: 7rem;
+    padding-bottom: 7rem
+  }
+  .md\:py-32 {
+    padding-top: 8rem;
+    padding-bottom: 8rem
+  }
+  .md\:text-5xl {
+    font-size: 3rem;
+    line-height: 1
+  }
+  .md\:text-base {
+    font-size: 1rem;
+    line-height: 1.5rem
+  }
+}
+@media (min-width: 1280px) {
+  .xl\:flex {
+    display: flex
+  }
+}
+  </style>
+</head>
+<body class="bg-black text-white antialiased min-h-screen relative flex flex-col justify-between">
+  <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[380px] bg-gradient-to-b from-[#43511C]/25 via-[#BCC388]/10 to-transparent blur-[140px] pointer-events-none z-0"></div>
+  <header class="fixed top-6 inset-x-0 z-50 flex justify-center px-4 pointer-events-none">
+    <nav class="pointer-events-auto flex items-center justify-between gap-4 md:gap-8 px-5 py-3 rounded-full bg-black/85 backdrop-blur-2xl border border-white/15 shadow-2xl shadow-black max-w-5xl w-full">
+      <a href="#hero" class="flex items-center gap-3 group">
+        <div class="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center font-extrabold text-sm shadow-md group-hover:scale-105 spring-trans"><svg class="w-4 h-4 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3v18"/><circle cx="13" cy="14" r="7"/></svg></div>
+        <div class="flex flex-col whitespace-nowrap">
+          <span class="font-bold text-sm tracking-tight text-white group-hover:text-[#BCC388] spring-trans">DayXero</span>
+          <span class="text-[9px] text-white/40 tracking-widest uppercase font-mono -mt-0.5">Nicotine Protocol</span>
+        </div>
+      </a>
+      <div class="hidden xl:flex items-center gap-1 text-xs font-medium text-white/70 whitespace-nowrap">
+        <a href="#showcase" class="px-3 py-1.5 rounded-full hover:text-white hover:bg-white/10 spring-trans">Showcase</a>
+        <a href="#methodology" class="px-3 py-1.5 rounded-full hover:text-white hover:bg-white/10 spring-trans">Methodology</a>
+        <a href="#interactive-preview" class="px-3 py-1.5 rounded-full hover:text-white hover:bg-white/10 spring-trans">App Preview</a>
+        <a href="#breath-chamber" class="px-3 py-1.5 rounded-full hover:text-white hover:bg-white/10 spring-trans">Urge Surfing</a>
+        <a href="#recovery-timeline" class="px-3 py-1.5 rounded-full hover:text-white hover:bg-white/10 spring-trans">Timeline</a>
+        <a href="#calculator" class="px-3 py-1.5 rounded-full hover:text-white hover:bg-white/10 spring-trans">Calculator</a>
+        <a href="#pricing" class="px-3 py-1.5 rounded-full hover:text-white hover:bg-white/10 spring-trans">Founding Offer</a>
+      </div>
+      <div class="flex items-center gap-2.5">
+        <a href="#waitlist" class="shrink-0 whitespace-nowrap px-4 py-2 rounded-full bg-[#BCC388] text-black font-semibold text-xs tracking-tight hover:bg-white active:scale-95 spring-trans flex items-center gap-1.5 shadow-lg shadow-[#BCC388]/20">
+          <span>Join the beta</span>
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="relative z-10 flex-1 pt-24">
+    <section id="pricing" class="py-20 md:py-32 max-w-5xl mx-auto px-4">
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#161616] border border-white/10 text-xs font-mono text-[#BCC388] mb-3">
+          <span>FOUNDING MEMBER PRICING</span>
+        </div>
+        <h2 class="text-3xl md:text-5xl font-extrabold tracking-tight text-white mb-4">
+          Planned Pricing. Founding Members Pay Less.
+        </h2>
+        <p class="text-sm md:text-base text-white/60">
+          DayXero isn't on the App Store yet. Join the list now and the first 500 members get the Annual plan at half price for their first year, applied with an App Store offer code at launch. No payment today, and still no billing traps.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+
+        <!-- Tier 1: Monthly (button now registers launch interest instead of checkout) -->
+        <div class="dark-card p-6 rounded-card flex flex-col justify-between">
+          <div>
+            <div class="text-xs font-mono uppercase text-white/40 mb-2">MONTHLY PROGRAM · PLANNED</div>
+            <div class="text-3xl font-extrabold text-white mb-1">$9.99<span class="text-sm font-normal text-white/40">/mo</span></div>
+            <p class="text-xs text-white/60 mb-6">Flexibility to pay as you progress through maintenance.</p>
+            <ul class="space-y-3 text-xs text-white/70 mb-6">
+              <li class="flex items-center gap-2"><svg class="w-4 h-4 text-[#BCC388]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Full 7-Day Protocol &amp; Audio</li>
+              <li class="flex items-center gap-2"><svg class="w-4 h-4 text-[#BCC388]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Unlimited Urge-Surfing SOS</li>
+              <li class="flex items-center gap-2"><svg class="w-4 h-4 text-[#BCC388]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> NRT &amp; Pouch Step-Down Plans</li>
+            </ul>
+          </div>
+          <div>
+            <button type="button" data-notify-plan="Monthly" data-target="notify-monthly" class="w-full py-3 rounded-full bg-[#1A1A1A] text-white/90 border border-white/10 font-semibold text-xs hover:bg-[#222222] spring-trans">
+              Notify me at launch
+            </button>
+            <div id="notify-monthly" class="hidden"><form id="notify-monthly-form" class="waitlist-form w-full" action="/api/waitlist" method="post" novalidate>
+      <div class="flex flex-col gap-2 p-2 rounded-[28px] bg-[#121212] border border-white/15 shadow-2xl">
+        <label for="notify-monthly-form-email" class="sr-only">Email address</label>
+        <input id="notify-monthly-form-email" type="email" name="email" required autocomplete="email" inputmode="email" placeholder="you@example.com" class="w-full min-w-0 h-11 px-5 rounded-full bg-[#161616] border border-white/10 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-[#BCC388]/60 spring-trans">
+        <button type="submit" class="h-11 px-6 rounded-full bg-white text-black font-semibold text-sm tracking-tight hover:bg-[#BCC388] active:scale-95 spring-trans flex items-center justify-center gap-2 shadow-xl whitespace-nowrap">
+          <span>Notify me</span>
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </button>
+      </div>
+      <!-- Honeypot: hidden from people, bots fill it. Server silently drops any submission that has it. -->
+      <div class="hidden" aria-hidden="true"><label>Company <input type="text" name="company" tabindex="-1" autocomplete="off"></label></div>
+      <input type="hidden" name="source" value="pricing-monthly">
+      <input type="hidden" name="plan_interest" value="Monthly">
+      <!-- Cloudflare Turnstile (managed, interaction-only: invisible for most visitors). Script:
+           https://challenges.cloudflare.com/turnstile/v0/api.js — not loaded in this mockup. -->
+      <div class="cf-turnstile" data-sitekey="TURNSTILE_SITE_KEY" data-appearance="interaction-only" data-size="flexible"></div>
+    </form></div>
+          </div>
+        </div>
+
+        <!-- Tier 2: Annual, founding offer with the email form embedded -->
+        <div class="porcelain-card p-6 md:p-8 rounded-card flex flex-col justify-between relative shadow-2xl md:scale-105 border-4 border-[#BCC388] z-20">
+          <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 py-1 rounded-full bg-black text-[#BCC388] text-[10px] font-mono font-bold uppercase tracking-wider shadow whitespace-nowrap">
+            FOUNDING OFFER · FIRST 500
+          </div>
+          <div>
+            <div class="text-xs font-mono uppercase text-black/50 mb-2 mt-2">ANNUAL MASTERY</div>
+            <div class="flex items-baseline gap-2 mb-1">
+              <span class="text-4xl font-extrabold text-black">$19.99</span>
+              <span class="text-sm font-normal text-black/40 line-through">$39.99</span>
+              <span class="text-sm font-normal text-black/50">/first yr</span>
+            </div>
+            <div class="text-xs text-black font-mono font-bold mb-6">Founding price · then $39.99/yr</div>
+            <ul class="space-y-3 text-xs text-black/80 font-medium mb-6">
+              <li class="flex items-center gap-2"><svg class="w-4 h-4 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Early TestFlight beta access</li>
+              <li class="flex items-center gap-2"><svg class="w-4 h-4 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> 3-Day Free Trial at launch</li>
+              <li class="flex items-center gap-2"><svg class="w-4 h-4 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Full 4-Week Maintenance Arc</li>
+              <li class="flex items-center gap-2"><svg class="w-4 h-4 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Advanced Craving Heatmaps</li>
+              <li class="flex items-center gap-2"><svg class="w-4 h-4 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Live Activity &amp; Dynamic Island</li>
+            </ul>
+          </div>
+          <div>
+            <form id="founding-form" class="waitlist-form w-full" action="/api/waitlist" method="post" novalidate>
+      <div class="flex flex-col gap-2 p-1.5 rounded-[28px] bg-black/5 border border-black/10">
+        <label for="founding-form-email" class="sr-only">Email address</label>
+        <input id="founding-form-email" type="email" name="email" required autocomplete="email" inputmode="email" placeholder="you@example.com" class="w-full min-w-0 h-11 px-5 rounded-full bg-white border border-black/10 text-sm text-black placeholder:text-black/40 focus:outline-none focus:border-[#43511C]/60 spring-trans">
+        <button type="submit" class="h-11 px-6 rounded-full bg-black text-white font-semibold text-sm tracking-tight hover:bg-[#202020] active:scale-95 spring-trans flex items-center justify-center gap-2 shadow-xl whitespace-nowrap">
+          <span>Reserve</span>
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </button>
+      </div>
+      <!-- Honeypot: hidden from people, bots fill it. Server silently drops any submission that has it. -->
+      <div class="hidden" aria-hidden="true"><label>Company <input type="text" name="company" tabindex="-1" autocomplete="off"></label></div>
+      <input type="hidden" name="source" value="pricing-annual">
+      <input type="hidden" name="plan_interest" value="Annual-founding">
+      <!-- Cloudflare Turnstile (managed, interaction-only: invisible for most visitors). Script:
+           https://challenges.cloudflare.com/turnstile/v0/api.js — not loaded in this mockup. -->
+      <div class="cf-turnstile" data-sitekey="TURNSTILE_SITE_KEY" data-appearance="interaction-only" data-size="flexible"></div>
+    </form>
+            <p class="text-[11px] text-black/50 text-center leading-relaxed mt-3">No payment now. One confirmation email, then your invite and launch link. Unsubscribe anytime. <a href="/privacy/#waitlist" class="underline underline-offset-4 decoration-black/30 hover:text-black">Privacy</a></p>
+          </div>
+        </div>
+
+        <!-- Tier 3: Lifetime, shown in its expanded "after tap" state -->
+        <div class="dark-card p-6 rounded-card flex flex-col justify-between">
+          <div>
+            <div class="text-xs font-mono uppercase text-white/40 mb-2">LIFETIME ACCESS · PLANNED</div>
+            <div class="text-3xl font-extrabold text-white mb-1">$79.99<span class="text-sm font-normal text-white/40"> once</span></div>
+            <p class="text-xs text-white/60 mb-6">Pay once, own forever. Zero recurring charges.</p>
+            <ul class="space-y-3 text-xs text-white/70 mb-6">
+              <li class="flex items-center gap-2"><svg class="w-4 h-4 text-[#BCC388]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Permanent Unrestricted Access</li>
+              <li class="flex items-center gap-2"><svg class="w-4 h-4 text-[#BCC388]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> All Future Program Additions</li>
+              <li class="flex items-center gap-2"><svg class="w-4 h-4 text-[#BCC388]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Family Sharing Capable</li>
+            </ul>
+          </div>
+          <div>
+            <div class="text-[10px] font-mono uppercase tracking-widest text-[#BCC388] mb-2">STATE AFTER TAPPING "NOTIFY ME"</div>
+            <form id="notify-lifetime-form" class="waitlist-form w-full" action="/api/waitlist" method="post" novalidate>
+      <div class="flex flex-col gap-2 p-2 rounded-[28px] bg-[#121212] border border-white/15 shadow-2xl">
+        <label for="notify-lifetime-form-email" class="sr-only">Email address</label>
+        <input id="notify-lifetime-form-email" type="email" name="email" required autocomplete="email" inputmode="email" placeholder="you@example.com" class="w-full min-w-0 h-11 px-5 rounded-full bg-[#161616] border border-white/10 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-[#BCC388]/60 spring-trans">
+        <button type="submit" class="h-11 px-6 rounded-full bg-white text-black font-semibold text-sm tracking-tight hover:bg-[#BCC388] active:scale-95 spring-trans flex items-center justify-center gap-2 shadow-xl whitespace-nowrap">
+          <span>Notify me</span>
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </button>
+      </div>
+      <!-- Honeypot: hidden from people, bots fill it. Server silently drops any submission that has it. -->
+      <div class="hidden" aria-hidden="true"><label>Company <input type="text" name="company" tabindex="-1" autocomplete="off"></label></div>
+      <input type="hidden" name="source" value="pricing-lifetime">
+      <input type="hidden" name="plan_interest" value="Lifetime">
+      <!-- Cloudflare Turnstile (managed, interaction-only: invisible for most visitors). Script:
+           https://challenges.cloudflare.com/turnstile/v0/api.js — not loaded in this mockup. -->
+      <div class="cf-turnstile" data-sitekey="TURNSTILE_SITE_KEY" data-appearance="interaction-only" data-size="flexible"></div>
+    </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-10 text-center text-xs text-white/40 max-w-2xl mx-auto leading-relaxed">
+        Prices are planned and may change before launch. At launch, payments and cancellation are handled by Apple. The free tier will include the core counter, emergency Craving SOS and Day 1 of the prep program.
+      </div>
+    </section>
+
+    <!-- FAQ: rewritten for pre-launch -->
+    <section id="faq" class="py-20 md:py-28 max-w-3xl mx-auto px-4">
+      <div class="text-center mb-12">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#161616] border border-white/10 text-xs font-mono text-[#BCC388] mb-3">
+          <span>FAQ</span>
+        </div>
+        <h2 class="text-3xl md:text-5xl font-extrabold tracking-tight text-white">Questions, Answered</h2>
+      </div>
+      <div class="flex flex-col gap-3">
+        <details class="faq-item" open>
+          <summary>When can I download DayXero?</summary>
+          <p>DayXero is in development and not on the App Store yet. Join the beta list and we'll email you a TestFlight invite as beta spots open, then the App Store link on launch day.</p>
+        </details>
+        <details class="faq-item">
+          <summary>What is the founding-member offer?</summary>
+          <p>The first 500 people who join and confirm their email get the Annual plan at half price for their first year. We'll send a personal App Store offer code at launch. You don't pay anything now.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Will DayXero be free?</summary>
+          <p>Yes, there will be a free version with the core counter, the Craving SOS urge surfer and Day 1 of the prep program. The full program is planned at $9.99 a month, $39.99 a year with a 3-day free trial, or $79.99 once.</p>
+        </details>
+        <details class="faq-item">
+          <summary>What will you do with my email?</summary>
+          <p>Send a confirmation, your TestFlight invite, the launch link and rare beta updates. We don't sell or share it, and every email has a one-click unsubscribe.</p>
+        </details>
+      </div>
+    </section>
+  </main>
+  <footer class="border-t border-white/10 bg-black py-16 px-4 relative z-10 text-white/60">
+    <div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+      <div class="flex flex-col gap-2">
+        <div class="flex items-center gap-3">
+          <div class="w-7 h-7 rounded-full bg-white text-black flex items-center justify-center font-bold text-xs">b</div>
+          <span class="font-bold text-white tracking-tight">DayXero</span>
+        </div>
+        <p class="text-xs text-white/40 max-w-sm">Quit on your Quit Day. An iPhone app in development for quitting cigarettes, vapes and pouches.</p>
+      </div>
+      <div class="flex flex-wrap gap-6 text-xs text-white/60 font-medium">
+        <a href="#hero" class="hover:text-white spring-trans">Back to top</a>
+        <a href="/beta/" class="hover:text-white spring-trans">Join the beta</a>
+        <a href="#pricing" class="hover:text-white spring-trans">Founding offer</a>
+        <a href="#faq" class="hover:text-white spring-trans">FAQ</a>
+        <a href="/guides/" class="hover:text-white spring-trans">Quit Guides</a>
+        <a href="/about/" class="hover:text-white spring-trans">About</a>
+        <a href="/contact/" class="hover:text-white spring-trans">Contact</a>
+        <a href="/privacy/" class="hover:text-white spring-trans">Privacy</a>
+        <a href="/terms/" class="hover:text-white spring-trans">Terms</a>
+      </div>
+    </div>
+    <div class="max-w-5xl mx-auto mt-12 pt-6 border-t border-white/5 text-[11px] text-white/30 flex flex-col sm:flex-row justify-between gap-4">
+      <div>Medical Disclaimer: DayXero provides educational habit and wellness support, not diagnostic medical treatment. Always consult a healthcare professional regarding NRT dosing and smoking cessation.</div>
+      <div class="shrink-0">© 2026 DayXero. Local-first &amp; Private.</div>
+    </div>
+  </footer>
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 pointer-events-none flex flex-col gap-2"></div>
+  <script>
+    // MOCKUP behaviour only: progressive enhancement over a plain <form method="post">.
+    // In production this POSTs to /api/waitlist (see website_changes_and_mockups.md, Backend).
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = 'pointer-events-auto flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-[#181818] border border-[#BCC388]/40 shadow-2xl text-xs font-medium text-white transition-all duration-300 transform translate-y-4 opacity-0';
+      toast.innerHTML = `<span class="w-2 h-2 rounded-full bg-[#BCC388]"></span><span>${message}</span>`;
+      container.appendChild(toast);
+      requestAnimationFrame(() => toast.classList.remove('translate-y-4', 'opacity-0'));
+      setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-2'); setTimeout(() => toast.remove(), 300); }, 3500);
+    }
+    document.querySelectorAll('.waitlist-form').forEach((form) => {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = form.querySelector('input[type=email]');
+        if (!email.value || !email.checkValidity()) { email.focus(); showToast('Enter a valid email to join the beta'); return; }
+        window.location.href = 'c-success-referral.html';
+      });
+    });
+    document.querySelectorAll('[data-notify-plan]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const slot = document.getElementById(btn.dataset.target);
+        if (slot) { btn.classList.add('hidden'); slot.classList.remove('hidden'); slot.querySelector('input[type=email]').focus(); }
+      });
+    });
+  </script>
+</body>
+</html>

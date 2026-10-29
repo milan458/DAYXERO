@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mockup (a): Hero waitlist | DayXero</title>
+  <meta name="description" content="Pre-launch hero with inline email waitlist form.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#000000">
+  <!-- MOCKUP: same fonts and compiled stylesheet as the live site -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../website/assets/site.css">
+  <!-- Copied verbatim from website/index.html <style> -->
+  <style>
+    /* OLED Baseline & Typography */
+    body {
+      background-color: #000000;
+      color: #FFFFFF;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      selection-background-color: #BCC388;
+      selection-color: #000000;
+    }
+    ::selection {
+      background: #BCC388;
+      color: #000000;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #000000;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #262626;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #BCC388;
+    }
+
+    /* Spring-Physics Transitions */
+    .spring-trans {
+      transition: all 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Cards with High-Contrast Flair */
+    .porcelain-card {
+      background: #FFFFFF;
+      color: #000000;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5), 0 0 40px rgba(188, 195, 136, 0.15);
+    }
+    .dark-card {
+      background: #121212;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8);
+    }
+    .glass-card-green {
+      background: linear-gradient(135deg, rgba(67, 81, 28, 0.40) 0%, rgba(18, 18, 18, 0.85) 100%);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(188, 195, 136, 0.25);
+    }
+    .moss-pedestal {
+      background: linear-gradient(180deg, rgba(67, 81, 28, 0.3) 0%, rgba(20, 26, 10, 0.9) 60%, #000000 100%);
+      box-shadow: 0 -20px 50px rgba(67, 81, 28, 0.25);
+    }
+
+    /* 3D Glass Bottle Shimmer */
+    .glass-specular {
+      background: linear-gradient(105deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.05) 45%, transparent 60%);
+    }
+
+    /* Device frame reflections */
+    .device-screen {
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12), 0 35px 80px -20px rgba(0, 0, 0, 0.95), 0 0 60px rgba(67, 81, 28, 0.2);
+    }
+
+  </style>
+  <!-- Tailwind utilities used by this mockup that are not yet in the compiled site.css.
+       Generated with tailwindcss@3.4.17 + website/tailwind.config.js. They disappear once the
+       markup ships and `npm run website:css` is re-run. -->
+  <style id="mockup-utilities">
+/*MOCKUP-UTILITIES*/
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0
+}
+.invisible {
+  visibility: hidden
+}
+.mt-3 {
+  margin-top: 0.75rem
+}
+.inline {
+  display: inline
+}
+.min-w-0 {
+  min-width: 0px
+}
+.gap-x-2 {
+  -moz-column-gap: 0.5rem;
+       column-gap: 0.5rem
+}
+.gap-y-1 {
+  row-gap: 0.25rem
+}
+.rounded-\[28px\] {
+  border-radius: 28px
+}
+.p-2 {
+  padding: 0.5rem
+}
+.placeholder\:text-white\/30::-moz-placeholder {
+  color: rgb(255 255 255 / 0.3)
+}
+.placeholder\:text-white\/30::placeholder {
+  color: rgb(255 255 255 / 0.3)
+}
+.focus\:border-\[\#BCC388\]\/60:focus {
+  border-color: rgb(188 195 136 / 0.6)
+}
+.focus\:outline-none:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px
+}
+@media (min-width: 640px) {
+  .sm\:inline {
+    display: inline
+  }
+  .sm\:flex-1 {
+    flex: 1 1 0%
+  }
+  .sm\:flex-row {
+    flex-direction: row
+  }
+  .sm\:rounded-full {
+    border-radius: 9999px
+  }
+  .sm\:p-12 {
+    padding: 3rem
+  }
+  .sm\:text-4xl {
+    font-size: 2.25rem;
+    line-height: 2.5rem
+  }
+  .sm\:text-6xl {
+    font-size: 3.75rem;
+    line-height: 1
+  }
+  .sm\:text-lg {
+    font-size: 1.125rem;
+    line-height: 1.75rem
+  }
+  .sm\:text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem
+  }
+}
+@media (min-width: 768px) {
+  .md\:block {
+    display: block
+  }
+  .md\:flex-row {
+    flex-direction: row
+  }
+  .md\:items-center {
+    align-items: center
+  }
+  .md\:gap-8 {
+    gap: 2rem
+  }
+  .md\:pb-24 {
+    padding-bottom: 6rem
+  }
+  .md\:pt-40 {
+    padding-top: 10rem
+  }
+  .md\:text-7xl {
+    font-size: 4.5rem;
+    line-height: 1
+  }
+  .md\:text-xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem
+  }
+}
+@media (min-width: 1024px) {
+  .lg\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr))
+  }
+  .lg\:justify-end {
+    justify-content: flex-end
+  }
+  .lg\:border-l {
+    border-left-width: 1px
+  }
+  .lg\:border-t-0 {
+    border-top-width: 0px
+  }
+  .lg\:text-5xl {
+    font-size: 3rem;
+    line-height: 1
+  }
+  .lg\:text-8xl {
+    font-size: 6rem;
+    line-height: 1
+  }
+}
+@media (min-width: 1280px) {
+  .xl\:flex {
+    display: flex
+  }
+}
+  </style>
+</head>
+<body class="bg-black text-white antialiased min-h-screen relative flex flex-col justify-between">
+  <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[380px] bg-gradient-to-b from-[#43511C]/25 via-[#BCC388]/10 to-transparent blur-[140px] pointer-events-none z-0"></div>
+  <header class="fixed top-6 inset-x-0 z-50 flex justify-center px-4 pointer-events-none">
+    <nav class="pointer-events-auto flex items-center justify-between gap-4 md:gap-8 px-5 py-3 rounded-full bg-black/85 backdrop-blur-2xl border border-white/15 shadow-2xl shadow-black max-w-5xl w-full">
+      <a href="#hero" class="flex items-center gap-3 group">
+        <div class="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center font-extrabold text-sm shadow-md group-hover:scale-105 spring-trans"><svg class="w-4 h-4 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3v18"/><circle cx="13" cy="14" r="7"/></svg></div>
+        <div class="flex flex-col whitespace-nowrap">
+          <span class="font-bold text-sm tracking-tight text-white group-hover:text-[#BCC388] spring-trans">DayXero</span>
+          <span class="text-[9px] text-white/40 tracking-widest uppercase font-mono -mt-0.5">Nicotine Protocol</span>
+        </div>
+      </a>
+      <div class="hidden xl:flex items-center gap-1 text-xs font-medium text-white/70 whitespace-nowrap">
+        <a href="#showcase" class="px-3 py-1.5 rounded-full hover:text-white hover:bg-white/10 spring-trans">Showcase</a>
+        <a href="#methodology" class="px-3 py-1.5 rounded-full hover:text-white hover:bg-white/10 spring-trans">Methodology</a>
+        <a href="#interactive-preview" class="px-3 py-1.5 rounded-full hover:text-white hover:bg-white/10 spring-trans">App Preview</a>
+        <a href="#breath-chamber" class="px-3 py-1.5 rounded-full hover:text-white hover:bg-white/10 spring-trans">Urge Surfing</a>
+        <a href="#recovery-timeline" class="px-3 py-1.5 rounded-full hover:text-white hover:bg-white/10 spring-trans">Timeline</a>
+        <a href="#calculator" class="px-3 py-1.5 rounded-full hover:text-white hover:bg-white/10 spring-trans">Calculator</a>
+        <a href="#pricing" class="px-3 py-1.5 rounded-full hover:text-white hover:bg-white/10 spring-trans">Founding Offer</a>
+      </div>
+      <div class="flex items-center gap-2.5">
+        <a href="#waitlist" class="shrink-0 whitespace-nowrap px-4 py-2 rounded-full bg-[#BCC388] text-black font-semibold text-xs tracking-tight hover:bg-white active:scale-95 spring-trans flex items-center gap-1.5 shadow-lg shadow-[#BCC388]/20">
+          <span>Join the beta</span>
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="relative z-10 flex-1">
+    <section id="hero" class="relative pt-32 pb-16 md:pt-40 md:pb-24 px-4 flex flex-col items-center">
+
+      <!-- CHANGED: status pill says the app is in beta, not a live "2026 Native iOS Protocol" -->
+      <div class="inline-flex flex-wrap justify-center items-center gap-x-2 gap-y-1 px-4 py-1.5 rounded-full bg-[#161616] border border-white/15 text-xs font-medium text-white/80 mb-8 backdrop-blur-md shadow-lg text-center">
+        <span class="w-2 h-2 rounded-full bg-[#BCC388] animate-ping"></span>
+        <span class="text-[#BCC388] font-bold">iOS beta · Now enrolling</span>
+        <span class="text-white/20 hidden sm:inline">|</span>
+        <span class="text-white/80 hidden sm:inline">Don't quit today. Quit on your Quit Day.</span>
+      </div>
+
+      <!-- UNCHANGED headline -->
+      <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-center text-white max-w-5xl leading-[1.05] mb-6">
+        Quit Nicotine <br class="hidden sm:inline" />
+        <span class="text-white/40">on Your</span> <br class="hidden sm:inline" />
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-[#BCC388]">Quit Day.</span>
+      </h1>
+
+      <!-- CHANGED: subhead states it's in development and what joining gets you -->
+      <p class="text-base sm:text-lg md:text-xl text-white/60 text-center max-w-2xl font-normal leading-relaxed mb-10">
+        DayXero is an iPhone app in development for quitting vaping, smoking and nicotine pouches: five days of prep before your Quit Day, slips that never reset your progress, and 3-minute urge surfing for cravings. Join the beta to test it first.
+      </p>
+
+      <!-- NEW: inline waitlist form replaces the colour-palette strip in this slot -->
+      <div class="w-full max-w-xl flex flex-col items-center mb-8">
+        <form id="waitlist" class="waitlist-form w-full" action="/api/waitlist" method="post" novalidate>
+      <div class="flex flex-col sm:flex-row gap-2 p-2 rounded-[28px] sm:rounded-full bg-[#121212] border border-white/15 shadow-2xl">
+        <label for="waitlist-email" class="sr-only">Email address</label>
+        <input id="waitlist-email" type="email" name="email" required autocomplete="email" inputmode="email" placeholder="you@example.com" class="w-full sm:flex-1 min-w-0 h-12 px-5 rounded-full bg-[#161616] border border-white/10 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-[#BCC388]/60 spring-trans">
+        <button type="submit" class="h-12 px-6 rounded-full bg-white text-black font-semibold text-sm tracking-tight hover:bg-[#BCC388] active:scale-95 spring-trans flex items-center justify-center gap-2 shadow-xl whitespace-nowrap">
+          <span>Join the beta</span>
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </button>
+      </div>
+      <!-- Honeypot: hidden from people, bots fill it. Server silently drops any submission that has it. -->
+      <div class="hidden" aria-hidden="true"><label>Company <input type="text" name="company" tabindex="-1" autocomplete="off"></label></div>
+      <input type="hidden" name="source" value="home-hero">
+      <!-- Cloudflare Turnstile (managed, interaction-only: invisible for most visitors). Script:
+           https://challenges.cloudflare.com/turnstile/v0/api.js — not loaded in this mockup. -->
+      <div class="cf-turnstile" data-sitekey="TURNSTILE_SITE_KEY" data-appearance="interaction-only" data-size="flexible"></div>
+    </form>
+        <p class="text-[11px] text-white/40 text-center leading-relaxed mt-3">Free to join. We'll email your TestFlight invite and the App Store link at launch, nothing else. Unsubscribe anytime. <a href="/privacy/#waitlist" class="underline underline-offset-4 decoration-white/30 hover:text-white">Privacy</a></p>
+      </div>
+
+      <!-- NEW: honest proof chips (no fabricated counter; see notes for when to add a live count) -->
+      <div class="flex flex-wrap items-center justify-center gap-2 mb-16 text-[11px] font-mono text-white/60">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#121212] border border-white/10"><span class="w-1.5 h-1.5 rounded-full bg-[#BCC388]"></span>First 500 get founding pricing</span>
+        <span class="px-3 py-1.5 rounded-full bg-[#121212] border border-white/10">Vapes · Cigarettes · Pouches</span>
+        <span class="px-3 py-1.5 rounded-full bg-[#121212] border border-white/10">No account needed</span>
+      </div>
+
+      <!-- UNCHANGED layout; copy de-medicalised (see notes table) -->
+      <div id="showcase" class="w-full max-w-5xl relative">
+        
+        <!-- The Dual-Tone Monitor Canvas -->
+        <div class="rounded-[40px] border-[5px] border-[#222222] bg-[#0E0E0E] shadow-[0_30px_100px_rgba(0,0,0,0.95)] overflow-hidden relative">
+          
+          <div class="grid grid-cols-1 lg:grid-cols-2 relative min-h-[520px]">
+            
+            <!-- LEFT PANE: PURE PORCELAIN WHITE LUXURY (#FFFFFF with Black text) -->
+            <div class="porcelain-card p-8 sm:p-12 flex flex-col justify-between relative overflow-hidden">
+              
+              <!-- Top Left Header Cluster -->
+              <div class="flex items-center justify-between mb-8">
+                <div class="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center font-extrabold text-sm shadow">
+                  <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M6 3v18"/>
+                    <circle cx="13" cy="14" r="7"/>
+                  </svg>
+                </div>
+                <div class="flex items-center gap-4 text-xs font-mono text-black/50">
+                  <span class="hover:text-black cursor-pointer">FORMULA</span>
+                  <span class="hover:text-black cursor-pointer">PERFORMANCE</span>
+                  <span class="hover:text-black cursor-pointer">RESEARCH</span>
+                </div>
+              </div>
+
+              <!-- Main Editorial Hero Title (From Image 7) -->
+              <div class="my-auto py-6">
+                <div class="text-[11px] font-mono tracking-widest uppercase text-black/40 mb-2">PREP BEFORE YOU QUIT</div>
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black leading-[1.08] tracking-tight mb-4">
+                  Prepared, <span class="text-black/40 font-normal">Not</span> <br/>
+                  Pressured Into <br/>
+                  Your Quit Day
+                </h2>
+                <p class="text-xs sm:text-sm text-black/70 leading-relaxed max-w-sm mb-6">
+                  Quitting on impulse is hard. DayXero is being built around five days of practice before your Quit Day, so the day itself feels familiar.
+                </p>
+
+                <!-- Signature Black Pill Button with White Circular Arrow (Exact match to Image 7) -->
+                <a href="#waitlist" class="inline-flex items-center gap-3 pl-6 pr-2 py-2 rounded-full bg-black text-white font-semibold text-xs tracking-tight hover:bg-[#202020] active:scale-95 spring-trans group shadow-xl">
+                  <span>Join the beta</span>
+                  <div class="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center group-hover:translate-x-1 spring-trans shadow">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                  </div>
+                </a>
+              </div>
+
+              <!-- Bottom Proof Chips on White -->
+              <div class="flex items-center gap-2 pt-6 border-t border-black/10 text-[11px] font-mono text-black/60">
+                <span class="px-2.5 py-1 rounded-full bg-black/5">7-Day Protocol</span>
+                <span class="px-2.5 py-1 rounded-full bg-black/5">0-Reset Slips</span>
+                <span class="px-2.5 py-1 rounded-full bg-black/5">Data on your iPhone</span>
+              </div>
+            </div>
+
+            <!-- RIGHT PANE: OLED DARK LUXURY (#0C0C0C with White/Green elements) -->
+            <div class="bg-[#0C0C0C] p-8 sm:p-12 flex flex-col justify-between relative overflow-hidden border-t lg:border-t-0 lg:border-l border-white/10">
+              
+              <!-- Top Right Controls -->
+              <div class="flex items-center justify-between lg:justify-end gap-3 mb-8">
+                <div class="flex items-center gap-2 bg-[#161616] border border-white/10 px-3 py-1.5 rounded-full text-xs text-white/50">
+                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+                  <span class="font-mono text-[10px]">Search Biomarkers...</span>
+                </div>
+                <div class="w-8 h-8 rounded-full bg-[#161616] border border-white/10 flex items-center justify-center text-white/60">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+              </div>
+
+              <!-- Product Floating Cards (Matching right-side cards in Image 7 & 9) -->
+              <div class="space-y-4 my-auto py-4">
+                
+                <!-- Card 1: Solid White Product Card (from Image 9) -->
+                <div class="porcelain-card p-4 rounded-2xl flex items-center justify-between relative shadow-lg">
+                  <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#43511C] to-[#121212] flex items-center justify-center text-[#BCC388] shadow-inner">
+                      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+                    </div>
+                    <div>
+                      <div class="text-[9px] font-mono uppercase text-black/50">ACTIVE PREP FORMULA</div>
+                      <div class="text-sm font-bold text-black">Day 4: Urge Surfing Mastery</div>
+                      <div class="text-[11px] text-black/70">4 min audio exercise · Preview</div>
+                    </div>
+                  </div>
+                  <div class="w-8 h-8 rounded-full bg-[#BCC388] text-black font-bold text-xs flex items-center justify-center shadow">
+                    1
+                  </div>
+                </div>
+
+                <!-- Card 2: Dark Green Glass Metric Card -->
+                <div class="glass-card-green p-4 rounded-2xl flex items-center justify-between">
+                  <div>
+                    <div class="text-[9px] font-mono text-[#BCC388] uppercase tracking-wider mb-0.5">CURRENT ADHERENCE</div>
+                    <div class="text-2xl font-extrabold text-white flex items-baseline gap-1">
+                      <span>4</span><span class="text-sm font-normal text-white/40">/ 7 Days</span>
+                    </div>
+                    <div class="text-[11px] text-white/70">3 days remaining until Quit Day</div>
+                  </div>
+                  <div class="text-right">
+                    <span class="text-xs font-mono font-bold text-[#BCC388]">82% COMPLETE</span>
+                    <div class="w-24 h-1.5 bg-white/10 rounded-full overflow-hidden mt-1.5">
+                      <div class="h-full bg-[#BCC388] rounded-full w-[82%]"></div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Bottom Right Manifesto Text (Matching Image 7 text) -->
+              <div class="pt-6 border-t border-white/10">
+                <p class="text-xs text-white/50 leading-relaxed">
+                  Designed for people quitting cigarettes, vapes or pouches who want a plan, not just a counter. In development for iPhone.
+                </p>
+              </div>
+
+            </div>
+
+            <!-- CENTER FLOATING GLASS AMPOULE (The Signature Bottle from Image 7) -->
+            <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none hidden md:block">
+              <div class="w-56 h-64 relative flex items-center justify-center filter drop-shadow-[0_20px_40px_rgba(0,0,0,0.85)]">
+                
+                <!-- Bottle Glass Body Container -->
+                <div class="w-40 h-52 rounded-[36px] bg-gradient-to-b from-[#43511C]/90 via-[#2C3812]/95 to-[#161E0A] border-2 border-[#BCC388]/40 relative overflow-hidden shadow-2xl flex flex-col justify-between p-4">
+                  
+                  <!-- Top Specular Glass Reflection Sheen -->
+                  <div class="absolute inset-x-0 top-0 h-24 glass-specular rounded-t-[34px] pointer-events-none"></div>
+                  
+                  <!-- Bottle Cap -->
+                  <div class="w-24 h-6 rounded-t-xl bg-[#141414] border border-white/20 mx-auto -mt-6 shadow-md flex items-center justify-center">
+                    <div class="w-16 h-1 bg-white/20 rounded-full"></div>
+                  </div>
+
+                  <!-- Center Monogram on Bottle -->
+                  <div class="text-center my-auto">
+                    <div class="w-8 h-8 rounded-full bg-black/40 border border-[#BCC388]/30 mx-auto flex items-center justify-center text-[#BCC388] text-xs font-bold mb-2">
+                      b
+                    </div>
+                    <div class="text-xs font-extrabold text-white tracking-wide">Daily Formula</div>
+                    <div class="text-[9px] font-mono text-[#BCC388]/80 uppercase mt-0.5">Nicotine Recovery</div>
+                  </div>
+
+                  <!-- Bottom Label -->
+                  <div class="text-center text-[8px] font-mono text-white/40 tracking-widest border-t border-white/10 pt-1">
+                    DAYXERO · 100% PREP
+                  </div>
+                </div>
+
+                <!-- Floating + Tag Badge (From Image 7) -->
+                <div class="absolute bottom-6 right-2 w-8 h-8 rounded-full bg-[#181818] border border-white/20 text-white flex items-center justify-center shadow-lg">
+                  <svg class="w-4 h-4 text-[#BCC388]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- THE LIVING MOSS BED PEDESTAL (Directly matching Image 7 & 8) -->
+        <div class="relative w-full h-32 -mt-6 rounded-b-[40px] moss-pedestal overflow-hidden z-10 flex flex-col justify-end pb-4 items-center">
+          <!-- 2D Procedural Moss Tufts Canvas -->
+          <canvas id="moss-pedestal-canvas" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
+          
+          <!-- Floating circular buttons on moss (Matching Image 8) -->
+          <div class="relative z-20 flex items-center gap-3">
+            <button class="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center shadow-xl hover:scale-110 spring-trans" title="Adherence Chart">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/></svg>
+            </button>
+            <button class="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center shadow-xl hover:scale-110 spring-trans" title="Quick Log">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+            </button>
+            <button class="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center shadow-xl hover:scale-110 spring-trans" title="Search Protocol">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+            </button>
+            <button class="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center shadow-xl hover:scale-110 spring-trans" title="Supplies & NRT">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 10a4 4 0 0 1-8 0"/><path d="M3.103 6.034h17.794"/><path d="M3.4 5.467a2 2 0 0 0-.4 1.2V20a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6.667a2 2 0 0 0-.4-1.2l-2-2.667A2 2 0 0 0 17 2H7a2 2 0 0 0-1.6.8z"/></svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+  </main>
+  <footer class="border-t border-white/10 bg-black py-16 px-4 relative z-10 text-white/60">
+    <div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+      <div class="flex flex-col gap-2">
+        <div class="flex items-center gap-3">
+          <div class="w-7 h-7 rounded-full bg-white text-black flex items-center justify-center font-bold text-xs">b</div>
+          <span class="font-bold text-white tracking-tight">DayXero</span>
+        </div>
+        <p class="text-xs text-white/40 max-w-sm">Quit on your Quit Day. An iPhone app in development for quitting cigarettes, vapes and pouches.</p>
+      </div>
+      <div class="flex flex-wrap gap-6 text-xs text-white/60 font-medium">
+        <a href="#hero" class="hover:text-white spring-trans">Back to top</a>
+        <a href="/beta/" class="hover:text-white spring-trans">Join the beta</a>
+        <a href="#pricing" class="hover:text-white spring-trans">Founding offer</a>
+        <a href="#faq" class="hover:text-white spring-trans">FAQ</a>
+        <a href="/guides/" class="hover:text-white spring-trans">Quit Guides</a>
+        <a href="/about/" class="hover:text-white spring-trans">About</a>
+        <a href="/contact/" class="hover:text-white spring-trans">Contact</a>
+        <a href="/privacy/" class="hover:text-white spring-trans">Privacy</a>
+        <a href="/terms/" class="hover:text-white spring-trans">Terms</a>
+      </div>
+    </div>
+    <div class="max-w-5xl mx-auto mt-12 pt-6 border-t border-white/5 text-[11px] text-white/30 flex flex-col sm:flex-row justify-between gap-4">
+      <div>Medical Disclaimer: DayXero provides educational habit and wellness support, not diagnostic medical treatment. Always consult a healthcare professional regarding NRT dosing and smoking cessation.</div>
+      <div class="shrink-0">© 2026 DayXero. Local-first &amp; Private.</div>
+    </div>
+  </footer>
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 pointer-events-none flex flex-col gap-2"></div>
+  <script>
+    // MOCKUP behaviour only: progressive enhancement over a plain <form method="post">.
+    // In production this POSTs to /api/waitlist (see website_changes_and_mockups.md, Backend).
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = 'pointer-events-auto flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-[#181818] border border-[#BCC388]/40 shadow-2xl text-xs font-medium text-white transition-all duration-300 transform translate-y-4 opacity-0';
+      toast.innerHTML = `<span class="w-2 h-2 rounded-full bg-[#BCC388]"></span><span>${message}</span>`;
+      container.appendChild(toast);
+      requestAnimationFrame(() => toast.classList.remove('translate-y-4', 'opacity-0'));
+      setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-2'); setTimeout(() => toast.remove(), 300); }, 3500);
+    }
+    document.querySelectorAll('.waitlist-form').forEach((form) => {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = form.querySelector('input[type=email]');
+        if (!email.value || !email.checkValidity()) { email.focus(); showToast('Enter a valid email to join the beta'); return; }
+        window.location.href = 'c-success-referral.html';
+      });
+    });
+    document.querySelectorAll('[data-notify-plan]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const slot = document.getElementById(btn.dataset.target);
+        if (slot) { btn.classList.add('hidden'); slot.classList.remove('hidden'); slot.querySelector('input[type=email]').focus(); }
+      });
+    });
+  </script>
+</body>
+</html>

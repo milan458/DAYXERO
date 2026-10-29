@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mockup (d): Guide CTAs | DayXero</title>
+  <meta name="description" content="Guide page with in-content waitlist CTA and sticky mobile bar.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#000000">
+  <!-- MOCKUP: same fonts and compiled stylesheet as the live site -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../website/assets/site.css">
+  <!-- Copied verbatim from website/index.html <style> -->
+  <style>
+    /* OLED Baseline & Typography */
+    body {
+      background-color: #000000;
+      color: #FFFFFF;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      selection-background-color: #BCC388;
+      selection-color: #000000;
+    }
+    ::selection {
+      background: #BCC388;
+      color: #000000;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #000000;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #262626;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #BCC388;
+    }
+
+    /* Spring-Physics Transitions */
+    .spring-trans {
+      transition: all 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Cards with High-Contrast Flair */
+    .porcelain-card {
+      background: #FFFFFF;
+      color: #000000;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5), 0 0 40px rgba(188, 195, 136, 0.15);
+    }
+    .dark-card {
+      background: #121212;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8);
+    }
+    .glass-card-green {
+      background: linear-gradient(135deg, rgba(67, 81, 28, 0.40) 0%, rgba(18, 18, 18, 0.85) 100%);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(188, 195, 136, 0.25);
+    }
+    .moss-pedestal {
+      background: linear-gradient(180deg, rgba(67, 81, 28, 0.3) 0%, rgba(20, 26, 10, 0.9) 60%, #000000 100%);
+      box-shadow: 0 -20px 50px rgba(67, 81, 28, 0.25);
+    }
+
+    /* 3D Glass Bottle Shimmer */
+    .glass-specular {
+      background: linear-gradient(105deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.05) 45%, transparent 60%);
+    }
+
+    /* Device frame reflections */
+    .device-screen {
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12), 0 35px 80px -20px rgba(0, 0, 0, 0.95), 0 0 60px rgba(67, 81, 28, 0.2);
+    }
+
+  </style>
+  <!-- Tailwind utilities used by this mockup that are not yet in the compiled site.css.
+       Generated with tailwindcss@3.4.17 + website/tailwind.config.js. They disappear once the
+       markup ships and `npm run website:css` is re-run. -->
+  <style id="mockup-utilities">
+/*MOCKUP-UTILITIES*/
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0
+}
+.visible {
+  visibility: visible
+}
+.invisible {
+  visibility: hidden
+}
+.bottom-4 {
+  bottom: 1rem
+}
+.my-10 {
+  margin-top: 2.5rem;
+  margin-bottom: 2.5rem
+}
+.mt-3 {
+  margin-top: 0.75rem
+}
+.min-w-0 {
+  min-width: 0px
+}
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap
+}
+.rounded-\[28px\] {
+  border-radius: 28px
+}
+.p-2 {
+  padding: 0.5rem
+}
+.pl-4 {
+  padding-left: 1rem
+}
+.pr-1\.5 {
+  padding-right: 0.375rem
+}
+.leading-snug {
+  line-height: 1.375
+}
+.text-white\/65 {
+  color: rgb(255 255 255 / 0.65)
+}
+.decoration-black\/30 {
+  text-decoration-color: rgb(0 0 0 / 0.3)
+}
+.placeholder\:text-black\/40::-moz-placeholder {
+  color: rgb(0 0 0 / 0.4)
+}
+.placeholder\:text-black\/40::placeholder {
+  color: rgb(0 0 0 / 0.4)
+}
+.placeholder\:text-white\/30::-moz-placeholder {
+  color: rgb(255 255 255 / 0.3)
+}
+.placeholder\:text-white\/30::placeholder {
+  color: rgb(255 255 255 / 0.3)
+}
+.focus\:border-\[\#43511C\]\/60:focus {
+  border-color: rgb(67 81 28 / 0.6)
+}
+.focus\:border-\[\#BCC388\]\/60:focus {
+  border-color: rgb(188 195 136 / 0.6)
+}
+.focus\:outline-none:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px
+}
+@media (min-width: 640px) {
+  .sm\:flex-1 {
+    flex: 1 1 0%
+  }
+  .sm\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr))
+  }
+  .sm\:flex-row {
+    flex-direction: row
+  }
+  .sm\:rounded-full {
+    border-radius: 9999px
+  }
+}
+@media (min-width: 768px) {
+  .md\:flex {
+    display: flex
+  }
+  .md\:hidden {
+    display: none
+  }
+  .md\:p-8 {
+    padding: 2rem
+  }
+  .md\:pt-24 {
+    padding-top: 6rem
+  }
+  .md\:text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem
+  }
+  .md\:text-3xl {
+    font-size: 1.875rem;
+    line-height: 2.25rem
+  }
+  .md\:text-6xl {
+    font-size: 3.75rem;
+    line-height: 1
+  }
+  .md\:text-xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem
+  }
+}
+  </style>
+</head>
+<body class="bg-black text-white antialiased font-sans min-h-screen flex flex-col">
+  <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[1000px] max-w-full h-[300px] bg-gradient-to-b from-[#43511C]/25 via-[#BCC388]/10 to-transparent blur-[140px] pointer-events-none z-0"></div>
+  <header class="sticky top-4 z-50 flex justify-center px-4 pt-4">
+    <nav class="flex items-center justify-between gap-4 px-5 py-3 rounded-full bg-black/85 backdrop-blur-2xl border border-white/15 shadow-2xl shadow-black max-w-5xl w-full" aria-label="Main">
+      <a href="/" class="flex items-center gap-3 group">
+        <span class="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center shadow-md"><svg class="w-4 h-4 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3v18"/><circle cx="13" cy="14" r="7"/></svg></span>
+        <span class="flex flex-col">
+          <span class="font-bold text-sm tracking-tight text-white group-hover:text-[#BCC388]">DayXero</span>
+          <span class="text-[9px] text-white/40 tracking-widest uppercase font-mono -mt-0.5">Nicotine Protocol</span>
+        </span>
+      </a>
+      <div class="hidden md:flex items-center gap-1 text-xs font-medium text-white/70">
+        <a href="/quit-vaping/" class="px-3.5 py-1.5 rounded-full text-white bg-white/10">Quit Vaping</a>
+        <a href="/quit-smoking/" class="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-white/10">Quit Smoking</a>
+        <a href="/quit-nicotine-pouches/" class="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-white/10">Quit Pouches</a>
+        <a href="/nicotine-withdrawal-timeline/" class="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-white/10">Withdrawal</a>
+        <a href="/guides/" class="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-white/10">All Guides</a>
+      </div>
+      <a href="/beta/" class="shrink-0 whitespace-nowrap px-4 py-2 rounded-full bg-[#BCC388] text-black font-semibold text-xs tracking-tight hover:bg-white">Join the beta</a>
+    </nav>
+  </header>
+
+  <main class="relative z-10 flex-1 px-4">
+    <article class="max-w-3xl mx-auto pt-16 md:pt-24 pb-16">
+      <nav class="text-xs text-white/40 font-mono mb-6" aria-label="Breadcrumb">
+        <a href="/" class="hover:text-white">Home</a> <span aria-hidden="true">/</span>
+        <a href="/guides/" class="hover:text-white">Guides</a> <span aria-hidden="true">/</span>
+        <span class="text-white/70">Quit vaping</span>
+      </nav>
+      <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.05] mb-6">How to Quit Vaping: A Step-by-Step Plan</h1>
+      <p class="text-lg md:text-xl text-white/70 leading-relaxed mb-6">Vaping is easy to start and hard to stop, because you can do it almost anywhere. The habit ends up attached to waking up, driving, studying, stress and boredom all at once. Willpower alone rarely beats that. A plan does. Here is the one DayXero is built around.</p>
+      <p class="text-xs text-white/40 font-mono mb-12">By <a href="/about/#editorial" class="underline underline-offset-4 decoration-white/30 hover:text-white">the DayXero team</a> · Updated <time datetime="2026-10-29">29 October 2026</time></p>
+      <div class="prose-dx">
+<h2 id="why">Why quitting vaping feels so hard</h2>
+<p>Most vapes deliver nicotine, and nicotine is highly addictive. Two things make vaping especially sticky:</p>
+<ul>
+  <li><strong>No natural stopping point.</strong> A cigarette ends. A vape doesn't, so many people take small puffs all day long.</li>
+  <li><strong>Strong nicotine salts.</strong> Many disposables and pods use high-strength nicotine salts, which feel smooth and deliver a lot of nicotine quickly.</li>
+</ul>
+<p>The upside: the same thing that makes vaping constant (lots of small, cue-driven puffs) also gives you lots of chances to break the pattern.</p>
+<h2 id="step-1">Step 1: Pick a Quit Day, not "today"</h2>
+<p>Choose a date one to two weeks away. A fixed Quit Day gives you time to prepare, and stop-smoking services such as the NHS build their programmes around one. Pick a day that's normal for you, not your most stressful week or a big night out.</p>
+<h2 id="step-2">Step 2: Learn your triggers before you quit</h2>
+<p>For three to five days, keep vaping as usual but note when you reach for it: what you were doing, where you were and how you felt. Most people find the same handful of triggers:</p>
+<ul>
+  <li>Waking up and the first coffee</li>
+  <li>After meals</li>
+  <li>Driving, commuting or walking between places</li>
+  <li>Stress, boredom or a hard moment at work or study</li>
+  <li>Alcohol and being around other people who vape</li>
+</ul>
+<p>For each trigger, decide now what you'll do instead on Quit Day. A plan made in advance is much easier to follow than one made mid-craving.</p>
+<!-- NEW: mid-article CTA (inserted by build_guides.py after the 3rd <h2> section) -->
+<aside id="guide-cta-inline" class="glass-card-green rounded-card p-6 md:p-8 my-10" aria-label="Join the DayXero beta">
+  <div class="flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-[#BCC388] mb-2"><span class="w-1.5 h-1.5 rounded-full bg-[#BCC388]"></span>DAYXERO iOS BETA</div>
+  <div class="text-xl md:text-2xl font-extrabold tracking-tight text-white leading-snug mb-2">Want this plan on your iPhone?</div>
+  <div class="text-sm text-white/65 leading-relaxed mb-5">DayXero is being built around exactly this: a Quit Day, five days of prep and a 3-minute craving tool. Join the beta for an early TestFlight invite.</div>
+  <form id="guide-inline-form" class="waitlist-form w-full" action="/api/waitlist" method="post" novalidate>
+      <div class="flex flex-col sm:flex-row gap-2 p-2 rounded-[28px] sm:rounded-full bg-[#121212] border border-white/15 shadow-2xl">
+        <label for="guide-inline-form-email" class="sr-only">Email address</label>
+        <input id="guide-inline-form-email" type="email" name="email" required autocomplete="email" inputmode="email" placeholder="you@example.com" class="w-full sm:flex-1 min-w-0 h-11 px-5 rounded-full bg-[#161616] border border-white/10 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-[#BCC388]/60 spring-trans">
+        <button type="submit" class="h-11 px-6 rounded-full bg-white text-black font-semibold text-sm tracking-tight hover:bg-[#BCC388] active:scale-95 spring-trans flex items-center justify-center gap-2 shadow-xl whitespace-nowrap">
+          <span>Join the beta</span>
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </button>
+      </div>
+      <!-- Honeypot: hidden from people, bots fill it. Server silently drops any submission that has it. -->
+      <div class="hidden" aria-hidden="true"><label>Company <input type="text" name="company" tabindex="-1" autocomplete="off"></label></div>
+      <input type="hidden" name="source" value="guide-quit-vaping-inline">
+      <!-- Cloudflare Turnstile (managed, interaction-only: invisible for most visitors). Script:
+           https://challenges.cloudflare.com/turnstile/v0/api.js — not loaded in this mockup. -->
+      <div class="cf-turnstile" data-sitekey="TURNSTILE_SITE_KEY" data-appearance="interaction-only" data-size="flexible"></div>
+    </form>
+</aside>
+
+<h2 id="step-3">Step 3: Decide how you'll stop</h2>
+<p>There are two common approaches, and both can work:</p>
+<ul>
+  <li><strong>Stop completely on Quit Day.</strong> Simple and clear. Best paired with a strong plan for cravings and, if you're very dependent, nicotine replacement.</li>
+  <li><strong>Cut down first, then stop.</strong> Lower your e-liquid strength step by step, delay your first vape of the day, and set vape-free places (bedroom, car) before Quit Day.</li>
+</ul>
+<h2 id="step-6">Step 6: Ride out cravings, don't fight them</h2>
+<p>A craving rises, peaks and fades, usually within a few minutes. Trying to push it away tends to make it louder. <a href="/nicotine-cravings/">Urge surfing</a> works the other way: notice where you feel it, breathe slowly, and watch it pass like a wave. DayXero's Craving SOS is being built to walk you through this in three minutes.</p>
+<h2 id="step-7">Step 7: Treat a slip as information</h2>
+<p>One puff isn't a relapse, and it doesn't erase your progress. The danger is the "I've blown it anyway" thinking that turns one slip into a week of vaping. Note what triggered it, adjust your plan, and carry on. That's why DayXero never resets your streak for a slip.</p>
+      </div>
+
+      <!-- CHANGED: end-of-article aside keeps its porcelain card, swaps "See plans" link for the form -->
+      <aside id="beta-cta" class="porcelain-card rounded-card p-8 my-14 text-black">
+        <div class="text-[10px] font-mono uppercase tracking-widest text-black/50 mb-2">The DayXero app · iOS beta</div>
+        <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight mb-3">Turn this plan into a daily routine</h2>
+        <p class="text-sm text-black/70 leading-relaxed mb-6">DayXero is an iPhone app in development that walks you through five days of prep before your Quit Day, gets you through cravings in three minutes, and never resets your progress for a slip. Join the beta and we'll send your TestFlight invite, then the App Store link at launch.</p>
+        <form id="guide-end-form" class="waitlist-form w-full" action="/api/waitlist" method="post" novalidate>
+      <div class="flex flex-col sm:flex-row gap-2 p-1.5 rounded-[28px] sm:rounded-full bg-black/5 border border-black/10">
+        <label for="guide-end-form-email" class="sr-only">Email address</label>
+        <input id="guide-end-form-email" type="email" name="email" required autocomplete="email" inputmode="email" placeholder="you@example.com" class="w-full sm:flex-1 min-w-0 h-12 px-5 rounded-full bg-white border border-black/10 text-sm text-black placeholder:text-black/40 focus:outline-none focus:border-[#43511C]/60 spring-trans">
+        <button type="submit" class="h-12 px-6 rounded-full bg-black text-white font-semibold text-sm tracking-tight hover:bg-[#202020] active:scale-95 spring-trans flex items-center justify-center gap-2 shadow-xl whitespace-nowrap">
+          <span>Join the beta</span>
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </button>
+      </div>
+      <!-- Honeypot: hidden from people, bots fill it. Server silently drops any submission that has it. -->
+      <div class="hidden" aria-hidden="true"><label>Company <input type="text" name="company" tabindex="-1" autocomplete="off"></label></div>
+      <input type="hidden" name="source" value="guide-quit-vaping-end">
+      <!-- Cloudflare Turnstile (managed, interaction-only: invisible for most visitors). Script:
+           https://challenges.cloudflare.com/turnstile/v0/api.js — not loaded in this mockup. -->
+      <div class="cf-turnstile" data-sitekey="TURNSTILE_SITE_KEY" data-appearance="interaction-only" data-size="flexible"></div>
+    </form>
+        <p class="text-[11px] text-black/50 text-left leading-relaxed mt-3">No payment now. One confirmation email, then your invite and launch link. Unsubscribe anytime. <a href="/privacy/#waitlist" class="underline underline-offset-4 decoration-black/30 hover:text-black">Privacy</a></p>
+      </aside>
+    </article>
+  </main>
+
+  <!-- NEW: sticky mobile CTA bar (md:hidden). Appears after 25% scroll; hides while a form is on screen;
+       dismiss is remembered in localStorage for 7 days. Matches the floating nav pill. -->
+  <div id="sticky-cta" class="fixed bottom-4 inset-x-0 z-50 px-4 md:hidden">
+    <div class="flex items-center justify-between gap-3 pl-4 pr-1.5 py-1.5 rounded-full bg-black/85 backdrop-blur-2xl border border-white/15 shadow-2xl shadow-black">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <span class="w-2 h-2 shrink-0 rounded-full bg-[#BCC388] animate-ping"></span>
+        <div class="flex flex-col min-w-0">
+          <span class="text-xs font-bold text-white tracking-tight truncate">DayXero iOS beta</span>
+          <span class="text-[9px] text-white/40 tracking-widest uppercase font-mono -mt-0.5 truncate">Free · Founding spots</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-1.5 shrink-0">
+        <a href="#beta-cta" class="px-4 py-2.5 rounded-full bg-[#BCC388] text-black font-semibold text-xs tracking-tight hover:bg-white active:scale-95 spring-trans flex items-center gap-1.5">Join the beta <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+        <button type="button" aria-label="Dismiss" class="w-8 h-8 rounded-full bg-[#161616] border border-white/15 text-white/60 hover:text-white flex items-center justify-center spring-trans"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4l16 16"/><path d="M20 4 4 20"/></svg></button>
+      </div>
+    </div>
+  </div>
+  <footer class="border-t border-white/10 bg-black py-14 px-4 relative z-10 text-white/60 mt-auto">
+    <div class="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8 text-xs">
+      <div class="flex flex-col gap-2">
+        <span class="font-bold text-white tracking-tight text-sm">DayXero</span>
+        <p class="text-white/40 max-w-xs">Quit on your Quit Day. An iPhone app in development to quit vaping, smoking and nicotine pouches.</p>
+      </div>
+      <div class="flex flex-col gap-2">
+        <span class="font-mono uppercase tracking-widest text-[10px] text-white/40">Guides</span>
+        <a href="/quit-vaping/" class="hover:text-white">How to Quit Vaping</a>
+        <a href="/quit-smoking/" class="hover:text-white">How to Quit Smoking</a>
+        <a href="/quit-nicotine-pouches/" class="hover:text-white">How to Quit Nicotine Pouches</a>
+        <a href="/nicotine-withdrawal-timeline/" class="hover:text-white">Nicotine Withdrawal Timeline</a>
+        <a href="/nicotine-cravings/" class="hover:text-white">How to Handle Nicotine Cravings</a>
+      </div>
+      <div class="flex flex-col gap-2">
+        <span class="font-mono uppercase tracking-widest text-[10px] text-white/40">DayXero</span>
+        <a href="/" class="hover:text-white">Home</a>
+        <a href="/beta/" class="hover:text-white">Join the beta</a>
+        <a href="/#pricing" class="hover:text-white">Founding offer</a>
+        <a href="/#faq" class="hover:text-white">FAQ</a>
+        <a href="/about/" class="hover:text-white">About</a>
+        <a href="/privacy/" class="hover:text-white">Privacy</a>
+      </div>
+    </div>
+    <div class="max-w-5xl mx-auto mt-10 pt-6 border-t border-white/5 text-[11px] text-white/30 flex flex-col sm:flex-row justify-between gap-4">
+      <div>Medical Disclaimer: DayXero provides educational habit and wellness support, not diagnostic medical treatment. Always consult a healthcare professional regarding NRT dosing and smoking cessation.</div>
+      <div class="shrink-0">© 2026 DayXero.</div>
+    </div>
+  </footer>
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 pointer-events-none flex flex-col gap-2"></div>
+  <script>
+    // MOCKUP behaviour only: progressive enhancement over a plain <form method="post">.
+    // In production this POSTs to /api/waitlist (see website_changes_and_mockups.md, Backend).
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = 'pointer-events-auto flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-[#181818] border border-[#BCC388]/40 shadow-2xl text-xs font-medium text-white transition-all duration-300 transform translate-y-4 opacity-0';
+      toast.innerHTML = `<span class="w-2 h-2 rounded-full bg-[#BCC388]"></span><span>${message}</span>`;
+      container.appendChild(toast);
+      requestAnimationFrame(() => toast.classList.remove('translate-y-4', 'opacity-0'));
+      setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-2'); setTimeout(() => toast.remove(), 300); }, 3500);
+    }
+    document.querySelectorAll('.waitlist-form').forEach((form) => {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = form.querySelector('input[type=email]');
+        if (!email.value || !email.checkValidity()) { email.focus(); showToast('Enter a valid email to join the beta'); return; }
+        window.location.href = 'c-success-referral.html';
+      });
+    });
+    document.querySelectorAll('[data-notify-plan]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const slot = document.getElementById(btn.dataset.target);
+        if (slot) { btn.classList.add('hidden'); slot.classList.remove('hidden'); slot.querySelector('input[type=email]').focus(); }
+      });
+    });
+  </script>
+  <script>
+    // Sticky bar: visible after the reader passes the intro, hidden while a CTA block with a form is on screen,
+    // dismissal remembered for 7 days (wrapped in try/catch: storage can be blocked).
+    (function () {
+      const bar = document.getElementById('sticky-cta');
+      let dismissed = false;
+      try { dismissed = Date.now() < Number(localStorage.getItem('dx_sticky_dismissed_until') || 0); } catch (e) {}
+      const forms = new Set();
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((en) => en.isIntersecting ? forms.add(en.target) : forms.delete(en.target));
+        update();
+      });
+      document.querySelectorAll('#guide-cta-inline, #beta-cta').forEach((f) => io.observe(f));
+      function update() {
+        const show = !dismissed && window.scrollY > 300 && forms.size === 0;
+        bar.style.transform = show ? 'translateY(0)' : 'translateY(160%)';
+      }
+      bar.style.transition = 'transform 0.38s cubic-bezier(0.16, 1, 0.3, 1)';
+      bar.querySelector('button').addEventListener('click', () => {
+        dismissed = true; update();
+        try { localStorage.setItem('dx_sticky_dismissed_until', String(Date.now() + 7 * 864e5)); } catch (e) {}
+      });
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
+  </script>
+</body>
+</html>

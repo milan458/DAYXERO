@@ -14,3 +14,7 @@ Config/Secrets.xcconfig
 
 # Wrangler local state
 website/.wrangler/
+
+# Local Worker testing (see website/worker/README.md)
+website/wrangler.dev.jsonc
+website/.wrangler/
