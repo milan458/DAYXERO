@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-29T06:12:22.679Z"
+    "updated": "2026-10-29T17:10:00.000Z"
   },
   "now": {
     "section": "S24",
@@ -2350,13 +2350,19 @@
       "title": "Post-onboarding audit fixes",
       "goal": "Fixes from the TestFlight walkthrough audit (Milan, 29 Oct). Branch claude/audit-fixes, on top of S24.",
       "signoff": {
-        "state": "mockups_ready",
+        "state": "signed_off",
         "history": [
           {
             "time": "2026-10-29T13:00:00.000Z",
             "state": "mockups_ready",
             "by": "Claude",
             "comment": "Your body mocks (path layout, illustration kit, new looks drawings): https://claude.ai/artifact/4Y7kJrQagE6gF3pgFCwsvT"
+          },
+          {
+            "time": "2026-10-29T17:10:00.000Z",
+            "state": "signed_off",
+            "by": "Claude",
+            "comment": "Milan approved the Your body mocks in chat (theme follows the phone; animate the new drawings)."
           }
         ]
       },
@@ -2413,10 +2419,10 @@
         {
           "id": "S25.7",
           "title": "Your body: lighter wording, looks changes (lips, skin glow, tan, hair, taste, breath, sleep) with new kit drawings, warm long detail per tile.",
-          "status": "awaiting_signoff",
-          "notes": "Mocks first; build after Milan signs off.",
+          "status": "done",
+          "notes": "Seven animated looks drawings, full story per change, sources once at the bottom. CI green.",
           "created": "2026-10-29T13:00:00.000Z",
-          "completed": null
+          "completed": "2026-10-29T17:10:00.000Z"
         },
         {
           "id": "S25.8",
@@ -2430,7 +2436,7 @@
           "id": "S25.9",
           "title": "CI green and TestFlight for the audit fixes.",
           "status": "in_progress",
-          "notes": "Branch claude/audit-fixes.",
+          "notes": "CI green on claude/audit-fixes. Milan uploads to TestFlight from Xcode.",
           "created": "2026-10-29T13:00:00.000Z",
           "completed": null
         }
@@ -2438,6 +2444,11 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-29T17:10:00.000Z",
+      "type": "status",
+      "message": "S25.7 done: Your body looks changes and full stories (CI green)"
+    },
     {
       "time": "2026-10-29T13:00:00.000Z",
       "type": "task_added",
