@@ -159,7 +159,7 @@ final class LessonNarrator: NSObject, AVSpeechSynthesizerDelegate {
         let utterance = AVSpeechUtterance(string: sentences[i])
         utterance.voice = AVSpeechSynthesisVoice(language: Locale.current.language.languageCode?.identifier == "en" ? nil : "en-US")
             ?? AVSpeechSynthesisVoice(language: "en-US")
-        utterance.rate = Float(min(max(0.46 * speed, AVSpeechUtteranceMinimumSpeechRate), AVSpeechUtteranceMaximumSpeechRate))
+        utterance.rate = min(max(Float(0.46 * speed), AVSpeechUtteranceMinimumSpeechRate), AVSpeechUtteranceMaximumSpeechRate)
         utterance.pitchMultiplier = 0.96
         utterance.postUtteranceDelay = 0.35
         current = ObjectIdentifier(utterance)
