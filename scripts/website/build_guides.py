@@ -11,6 +11,7 @@ import sys
 SITE = pathlib.Path(sys.argv[1])
 BASE = "https://dayxero.in"
 DATE = "2026-10-29"
+CONTACT_EMAIL = "hello@dayxero.in"
 
 SOURCES = {
     "who": ("World Health Organization: Tobacco fact sheet", "https://www.who.int/news-room/fact-sheets/detail/tobacco"),
@@ -469,6 +470,10 @@ FOOTER = """  <footer class="border-t border-white/10 bg-black py-14 px-4 relati
         <a href="/#methodology" class="hover:text-white">How it works</a>
         <a href="/#pricing" class="hover:text-white">Pricing</a>
         <a href="/#faq" class="hover:text-white">FAQ</a>
+        <a href="/about/" class="hover:text-white">About</a>
+        <a href="/contact/" class="hover:text-white">Contact</a>
+        <a href="/privacy/" class="hover:text-white">Privacy</a>
+        <a href="/terms/" class="hover:text-white">Terms</a>
       </div>
     </div>
     <div class="max-w-5xl mx-auto mt-10 pt-6 border-t border-white/5 text-[11px] text-white/30 flex flex-col sm:flex-row justify-between gap-4">
@@ -505,7 +510,7 @@ def ld_json(obj):
 
 
 ORG = {"@type": "Organization", "@id": f"{BASE}/#organization", "name": "DayXero", "url": f"{BASE}/",
-       "logo": f"{BASE}/logo.png"}
+       "logo": f"{BASE}/logo.png", "email": CONTACT_EMAIL}
 
 
 def page(path, title, meta, og_type, og_title, ld, main, current):
@@ -550,7 +555,7 @@ for g in GUIDES:
       </nav>
       <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.05] mb-6">{html.escape(g['h1'])}</h1>
       <p class="text-lg md:text-xl text-white/70 leading-relaxed mb-6">{html.escape(g['intro'])}</p>
-      <p class="text-xs text-white/40 font-mono mb-12">By the DayXero team · Updated <time datetime="{DATE}">29 October 2026</time></p>
+      <p class="text-xs text-white/40 font-mono mb-12">By <a href="/about/#editorial" class="underline underline-offset-4 decoration-white/30 hover:text-white">the DayXero team</a> · Updated <time datetime="{DATE}">29 October 2026</time></p>
 
       <div class="prose-dx">
 {g['body']}
@@ -627,10 +632,189 @@ page("/guides/", "Quit Nicotine Guides: Vaping, Smoking & Pouches | DayXero",
      "withdrawal timeline and how to handle cravings.",
      "website", "Quit Nicotine Guides", hub_ld, hub_main, "/guides/")
 
+INFO_PAGES = []
+
+
+def info_page(slug, title, meta, h1, intro, body, ld_type):
+    INFO_PAGES.append(dict(slug=slug, title=title, meta=meta, h1=h1, intro=intro, body=body, ld_type=ld_type))
+
+
+MAIL = f'<a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a>'
+
+info_page(
+    slug="about",
+    title="About DayXero: A Quit Nicotine App Built Around Quit Day",
+    meta="Who makes DayXero, why it plans around a Quit Day, and how we research, write and update our "
+         "quit-nicotine guides.",
+    h1="About DayXero",
+    intro="DayXero is an iPhone app that helps people quit vaping, smoking and nicotine pouches. It plans "
+          "everything around one date: your Quit Day.",
+    ld_type="AboutPage",
+    body=f"""
+<h2 id="why">Why we built it</h2>
+<p>Most quit apps start counting the moment you install them. That suits people who have already stopped, but most people aren't there yet. They want to quit, and they need a plan for getting to the day they stop.</p>
+<p>DayXero starts earlier. A five-day prep phase helps you learn your triggers, plan what you'll do instead and decide whether to use nicotine replacement. Then it supports you on Quit Day and the weeks after.</p>
+
+<h2 id="principles">What DayXero stands for</h2>
+<ul>
+  <li><strong>A slip is not a reset.</strong> One puff, pouch or cigarette doesn't erase your progress, so the app never resets your count for a slip. It helps you learn from it instead.</li>
+  <li><strong>Cravings pass.</strong> Craving SOS walks you through a three-minute urge-surfing session, because a craving peaks and fades within minutes.</li>
+  <li><strong>Every kind of nicotine.</strong> Cigarettes, vapes and pouches all work in the app, and so does stepping down nicotine replacement.</li>
+  <li><strong>Private by default.</strong> Your quit data stays on your phone. See our <a href="/privacy/">privacy policy</a>.</li>
+</ul>
+
+<h2 id="editorial">How we write our guides</h2>
+<p>The <a href="/guides/">DayXero guides</a> are written by the DayXero team. Every guide follows the same rules:</p>
+<ul>
+  <li><strong>Based on public health guidance.</strong> We work from the World Health Organization, the NHS, the US CDC and National Cancer Institute (Smokefree.gov), and India's National Tobacco Control Programme. Each guide lists its sources.</li>
+  <li><strong>Plain and practical.</strong> We write for someone who wants to quit this week, not for a textbook.</li>
+  <li><strong>Dated and updated.</strong> Each guide shows the date it was last updated. We review guides when health guidance changes.</li>
+  <li><strong>Information, not medical advice.</strong> Our guides don't replace a doctor or pharmacist, especially for nicotine replacement doses, pregnancy, heart conditions or anyone under 18.</li>
+</ul>
+<p>Spotted a mistake or an out-of-date fact? Email {MAIL} and we'll check it and correct the guide.</p>
+
+<h2 id="contact">Get in touch</h2>
+<p>For support, press or partnerships, see our <a href="/contact/">contact page</a>.</p>
+""",
+)
+
+info_page(
+    slug="contact",
+    title="Contact DayXero",
+    meta="Contact DayXero for app support, guide corrections, press and partnerships, plus free quitlines "
+         "if you want to talk to a quit coach.",
+    h1="Contact DayXero",
+    intro="We read every message. Email is the fastest way to reach us.",
+    ld_type="ContactPage",
+    body=f"""
+<h2 id="email">Email</h2>
+<p>{MAIL}</p>
+<p>Use this address for:</p>
+<ul>
+  <li>Help with the app, subscriptions or restoring purchases</li>
+  <li>Corrections to one of our <a href="/guides/">guides</a></li>
+  <li>Privacy requests, such as questions about your data</li>
+  <li>Press and partnerships</li>
+</ul>
+<p>To cancel a subscription or ask for a refund, use your Apple ID settings, because Apple handles all App Store payments. There's more on this in our <a href="/terms/#subscriptions">terms</a>.</p>
+""" + HELPLINES + """
+<p><strong>In an emergency,</strong> call your local emergency number (112 in India, 911 in the US, 999 in the UK).</p>
+""",
+)
+
+info_page(
+    slug="privacy",
+    title="Privacy Policy | DayXero",
+    meta="How DayXero handles your data: quit data stays on your iPhone, there is no account, and the website "
+         "uses cookie-free analytics.",
+    h1="Privacy Policy",
+    intro="Short version: your quit data stays on your iPhone. We don't ask you to create an account, we don't sell "
+          "data, and we never send what you log about cravings, slips or your health to our analytics.",
+    ld_type="WebPage",
+    body=f"""
+<h2 id="app">The DayXero app</h2>
+<p><strong>Stored on your device.</strong> Your Quit Day, nicotine use, cravings, slips, notes, program progress and any health details you enter (such as height and weight) are stored on your iPhone. Home Screen and Lock Screen widgets read the same data on your device. We don't run a server that receives this data, and you don't need an account.</p>
+<p><strong>Purchases.</strong> Apple processes all payments. We use RevenueCat to check which plan you have. RevenueCat receives an anonymous app user ID and your purchase details from Apple, not your name, email or payment card.</p>
+<p><strong>Usage analytics.</strong> To improve the app, it sends anonymous usage events to a product analytics service, such as which screens you open, when you start a program day and whether a craving session was completed. These events never include what you write or log, or your health details.</p>
+<p><strong>Notifications.</strong> Reminders are scheduled on your device and you can turn them off at any time in iOS Settings.</p>
+
+<h2 id="website">This website</h2>
+<ul>
+  <li><strong>Hosting.</strong> dayxero.in is served by Cloudflare, which processes technical data such as IP addresses to deliver the site and protect it from abuse.</li>
+  <li><strong>Analytics.</strong> We use Cloudflare Web Analytics, which counts visits without cookies and without tracking you across other sites.</li>
+  <li><strong>Fonts.</strong> Pages load fonts from Google Fonts, so your browser connects to Google's servers.</li>
+  <li><strong>No cookies, no ads.</strong> The website sets no cookies and shows no advertising.</li>
+</ul>
+
+<h2 id="sharing">Who we share data with</h2>
+<p>Only the service providers named above, and only so they can do their job for us. We don't sell your data or share it with advertisers, and we don't share it with tobacco or nicotine companies.</p>
+
+<h2 id="choices">Your choices</h2>
+<ul>
+  <li><strong>Delete your data</strong> by deleting the app. Because your quit data lives on your phone, this removes it.</li>
+  <li><strong>Ask us anything</strong> about your data, or ask us to delete analytics data linked to your anonymous ID, by emailing {MAIL}.</li>
+</ul>
+
+<h2 id="children">Children</h2>
+<p>DayXero isn't directed at children under 13, and we don't knowingly collect data from them.</p>
+
+<h2 id="changes">Changes to this policy</h2>
+<p>If we change this policy, we'll update the date at the top of this page. For significant changes, we'll also tell you in the app.</p>
+
+<h2 id="contact">Contact</h2>
+<p>Questions about privacy: {MAIL}</p>
+""",
+)
+
+info_page(
+    slug="terms",
+    title="Terms of Use | DayXero",
+    meta="The terms for using the DayXero app and website, including subscriptions, free trials, cancellation "
+         "and our medical disclaimer.",
+    h1="Terms of Use",
+    intro="These terms cover your use of the DayXero iPhone app and this website. By using either one, you agree "
+          "to them.",
+    ld_type="WebPage",
+    body=f"""
+<h2 id="medical">Not medical advice</h2>
+<p>DayXero provides educational habit and wellness support. It doesn't diagnose or treat any condition, and it doesn't replace a doctor, pharmacist or stop-smoking service. Talk to a healthcare professional before using nicotine replacement or stop-smoking medicines, especially if you are pregnant, have a heart condition, take regular medicine or are under 18. In an emergency, call your local emergency number.</p>
+
+<h2 id="subscriptions">Subscriptions and payments</h2>
+<ul>
+  <li>DayXero has a free tier and paid plans: monthly, annual and a one-time lifetime purchase. Current prices are shown in the app and on our <a href="/#pricing">pricing section</a>.</li>
+  <li>Apple handles all payments through your Apple ID. Monthly and annual plans renew automatically unless you cancel at least 24 hours before the end of the current period.</li>
+  <li>If a plan includes a free trial, it converts to a paid subscription when the trial ends unless you cancel before then.</li>
+  <li>You can manage or cancel a subscription in your Apple ID settings. Refunds are handled by Apple under its policies.</li>
+</ul>
+
+<h2 id="use">Using DayXero</h2>
+<p>You may use the app and website for your own personal, non-commercial use. Don't copy, resell or reverse-engineer the app, or use the website in a way that harms it or other people.</p>
+<p>If you're under 18, use DayXero with the permission of a parent or guardian.</p>
+
+<h2 id="content">Our content</h2>
+<p>The app, its programs and this website, including the guides, belong to DayXero. You're welcome to link to and quote short parts of our guides with credit.</p>
+
+<h2 id="liability">No guarantees</h2>
+<p>We work hard to make DayXero helpful and accurate, but we provide it "as is". We can't promise that it will help you quit, that it will always be available, or that it is free of errors. To the extent the law allows, DayXero isn't liable for indirect or consequential losses arising from your use of the app or website.</p>
+
+<h2 id="changes">Changes</h2>
+<p>We may update these terms as DayXero changes. We'll update the date at the top of this page, and for significant changes we'll tell you in the app.</p>
+
+<h2 id="contact">Contact</h2>
+<p>Questions about these terms: {MAIL}</p>
+""",
+)
+
+for ip in INFO_PAGES:
+    path = f"/{ip['slug']}/"
+    url = f"{BASE}{path}"
+    main = f"""  <main class="relative z-10 flex-1 px-4">
+    <article class="max-w-3xl mx-auto pt-16 md:pt-24 pb-24">
+      <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.05] mb-6">{html.escape(ip['h1'])}</h1>
+      <p class="text-lg md:text-xl text-white/70 leading-relaxed mb-6">{html.escape(ip['intro'])}</p>
+      <p class="text-xs text-white/40 font-mono mb-12">Updated <time datetime="{DATE}">29 October 2026</time></p>
+
+      <div class="prose-dx">
+{ip['body']}
+      </div>
+    </article>
+  </main>
+"""
+    ld = {"@context": "https://schema.org", "@graph": [
+        ORG,
+        {"@type": ip["ld_type"], "name": ip["h1"], "description": ip["meta"], "url": url,
+         "dateModified": DATE, "inLanguage": "en", "publisher": {"@id": f"{BASE}/#organization"}},
+        {"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Home", "item": f"{BASE}/"},
+            {"@type": "ListItem", "position": 2, "name": ip["h1"], "item": url}]},
+    ]}
+    page(path, ip["title"], ip["meta"], "website", ip["h1"], ld, main, path)
+
 sitemap = ['<?xml version="1.0" encoding="UTF-8"?>',
            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
-for path in ["/", "/guides/"] + [f"/{g['slug']}/" for g in GUIDES]:
+for path in (["/", "/guides/"] + [f"/{g['slug']}/" for g in GUIDES]
+             + [f"/{ip['slug']}/" for ip in INFO_PAGES]):
     sitemap += ["  <url>", f"    <loc>{BASE}{path}</loc>", f"    <lastmod>{DATE}</lastmod>", "  </url>"]
 sitemap.append("</urlset>")
 (SITE / "sitemap.xml").write_text("\n".join(sitemap) + "\n")
-print("wrote", len(GUIDES) + 1, "pages")
+print("wrote", len(GUIDES) + len(INFO_PAGES) + 1, "pages")
