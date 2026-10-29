@@ -18,7 +18,7 @@ Signing is automatic with team 6DJM927Z95, as in `project.yml`; Xcode Cloud mana
 
 1. Clone the branch and generate the project:
    ```
-   git clone -b claude/dazzling-fermat-154qa3 https://github.com/milan458/DAYXERO.git
+   git clone -b main https://github.com/milan458/DAYXERO.git
    cd DAYXERO && brew install xcodegen && xcodegen generate && open DayXero.xcodeproj
    ```
 2. In Xcode: **Product → Xcode Cloud → Create Workflow**, choose the **DayXero** app and sign in with the Apple
@@ -31,7 +31,7 @@ Signing is automatic with team 6DJM927Z95, as in `project.yml`; Xcode Cloud mana
      Add an environment variable `POSTHOG_API_KEY`, ticked **Secret**, with the PostHog project key
      (the same value as the GitHub secret).
    - **Start Conditions:** remove the default and add **Manual Start** only, on branch
-     `claude/dazzling-fermat-154qa3`. (Each start uses compute hours; start it when a build should go out.)
+     `main`. (`main` has the current app; feature branches are merged into it first.) (Each start uses compute hours; start it when a build should go out.)
    - **Actions:** **Archive**, platform iOS, scheme **DayXero**, deployment preparation
      **TestFlight (Internal Testing Only)**.
    - **Post-Actions:** **TestFlight Internal Testing**, with the internal tester group.
