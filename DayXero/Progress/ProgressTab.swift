@@ -53,7 +53,7 @@ struct ProgressTab: View {
                 }
                 .padding(.horizontal, DX.Space.m)
                 .padding(.top, DX.Space.s)
-                .padding(.bottom, DX.Space.l)
+                .padding(.bottom, 120)
             }
         }
         .fullScreenCover(item: $milestoneOpen) { milestone in

@@ -119,8 +119,6 @@ jobs:
           shoot dark large lesson-reading-dark $D3 -dx.openLesson quit-3
           shoot light large lesson-reading-light $D3 -dx.openLesson quit-3
           shoot dark large lesson-audio-dark $D3 -dx.openLesson quit-3 -dx.lessonStep.quit-3 1
-          shoot light large lesson-audio-light $D3 -dx.openLesson quit-3 -dx.lessonStep.quit-3 1
-          shoot dark accessibility-extra-extra-extra-large lesson-audio-dark-ax5 $D3 -dx.openLesson quit-3 -dx.lessonStep.quit-3 1
           shoot dark large lesson-exercise-dark $D3 -dx.openLesson quit-3 -dx.lessonStep.quit-3 2 -dx.ifThenPreview "open Craving SOS"
           shoot dark large lesson-done-dark $D3 -dx.openLesson quit-3 -dx.lessonFinishedPreview YES
           shoot dark large lesson-weekly-dark -dx.homeScenario day12 -dx.store pro -dx.openLesson maintenance-1
@@ -140,7 +138,6 @@ jobs:
           fi
           shoot light large sos-session-light $S -dx.sosElapsed 19
           shoot dark large sos-photo-dark $S -dx.sosElapsed 92
-          shoot dark large sos-earlywin-dark $S -dx.sosElapsed 75
           shoot dark large sos-timeup-dark $S -dx.sosElapsed 181
           shoot dark large sos-passed-dark $S -dx.sosOutcome passed
           shoot light large sos-passed-light $S -dx.sosOutcome passed
@@ -192,25 +189,20 @@ jobs:
           shoot dark large daily-checkin-dark $P12 -dx.openCheckIn YES
           shoot light large daily-checkin-light $P12 -dx.openCheckIn YES
           shoot dark large daily-checkin-done-dark $P12 -dx.openCheckIn YES -dx.checkInDone YES
-          shoot dark large daily-checkin-prep-dark -dx.homeScenario prep -dx.store pro -dx.openCheckIn YES
-          shoot light large daily-checkin-prep-light -dx.homeScenario prep -dx.store pro -dx.openCheckIn YES
-          shoot dark accessibility-extra-extra-extra-large daily-checkin-prep-dark-ax5 -dx.homeScenario prep -dx.store pro -dx.openCheckIn YES
           shoot dark large daily-dayend-dark $P12 -dx.openSettings dayEnd
           shoot dark large notif-settings-dark $P12 -dx.openSettings reminders
           shoot light large notif-settings-light $P12 -dx.openSettings reminders
           shoot dark accessibility-extra-extra-extra-large notif-settings-dark-ax5 $P12 -dx.openSettings reminders
           shoot dark large notif-quiet-dark $P12 -dx.openSettings quietHours
-          shoot dark large toolkit-dark $P12 -dx.tab toolkit
-          shoot light large toolkit-light $P12 -dx.tab toolkit -dx.seedWater partial
-          shoot dark accessibility-extra-extra-extra-large toolkit-dark-ax5 $P12 -dx.tab toolkit
-          shoot dark large calm-list-dark $P12 -dx.tab toolkit -dx.openCalmList YES
-          shoot light large calm-list-light $P12 -dx.tab toolkit -dx.openCalmList YES
-          shoot dark accessibility-extra-extra-extra-large calm-list-dark-ax5 $P12 -dx.tab toolkit -dx.openCalmList YES
-          shoot dark large calm-box-dark $P12 -dx.tab toolkit -dx.openCalm boxBreathing -dx.calmElapsed 6
-          shoot dark large calm-grounding-dark $P12 -dx.tab toolkit -dx.openCalm grounding -dx.calmStep 1 -dx.calmTicked 2
-          shoot dark large calm-notice1-dark $P12 -dx.tab toolkit -dx.openCalm noticeAndName
-          shoot dark large calm-notice2-dark $P12 -dx.tab toolkit -dx.openCalm noticeAndName -dx.calmStep 1
-          shoot dark large calm-done-dark $P12 -dx.tab toolkit -dx.openCalm dropAnchor -dx.calmDone YES
+          shoot dark large calm-program-dark $P12 -dx.tab program
+          shoot dark large calm-list-dark $P12 -dx.tab program -dx.openCalmList YES
+          shoot light large calm-list-light $P12 -dx.tab program -dx.openCalmList YES
+          shoot dark accessibility-extra-extra-extra-large calm-list-dark-ax5 $P12 -dx.tab program -dx.openCalmList YES
+          shoot dark large calm-box-dark $P12 -dx.tab program -dx.openCalm boxBreathing -dx.calmElapsed 6
+          shoot dark large calm-grounding-dark $P12 -dx.tab program -dx.openCalm grounding -dx.calmStep 1 -dx.calmTicked 2
+          shoot dark large calm-notice1-dark $P12 -dx.tab program -dx.openCalm noticeAndName
+          shoot dark large calm-notice2-dark $P12 -dx.tab program -dx.openCalm noticeAndName -dx.calmStep 1
+          shoot dark large calm-done-dark $P12 -dx.tab program -dx.openCalm dropAnchor -dx.calmDone YES
           shoot dark large ms-moment-dark $P12 -dx.milestone 7
           shoot light large ms-moment-light $P12 -dx.milestone 7
           shoot dark accessibility-extra-extra-extra-large ms-moment-dark-ax5 $P12 -dx.milestone 7
@@ -225,8 +217,8 @@ jobs:
           shoot light large onb-water_body-light -dx.onboardingStep water_body
           shoot dark accessibility-extra-extra-extra-large onb-water_goal-dark-ax5 -dx.onboardingStep water_goal
           shoot dark large home-water-dark $P12 -dx.seedWater partial
-          shoot dark large calm-box-orb-dark $P12 -dx.tab toolkit -dx.openCalm boxBreathing -dx.calmElapsed 6
-          shoot dark large calm-478-orb-dark $P12 -dx.tab toolkit -dx.openCalm longerOutBreath
+          shoot dark large calm-box-orb-dark $P12 -dx.tab program -dx.openCalm boxBreathing -dx.calmElapsed 6
+          shoot dark large calm-478-orb-dark $P12 -dx.tab program -dx.openCalm longerOutBreath
           for page in home clear lock private standby states; do
             shoot dark large "widgets-$page" -dx.widgetGallery "$page"
           done

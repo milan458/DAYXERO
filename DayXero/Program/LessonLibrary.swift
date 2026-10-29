@@ -42,9 +42,7 @@ enum LessonLibrary {
                          body: String(localized: "This is placeholder text. The real lesson arrives when the program content is ported."),
                          notes: [Product.cigarettes.rawValue: String(localized: "A short note for people who also smoke goes here.")]),
                 .audio(title: String(localized: "Guided practice"), subtitle: String(localized: "Find a comfortable spot. Headphones help."),
-                       file: nil, seconds: 180, transcript: String(localized: """
-                           This is a placeholder practice until the real lesson audio is ready.                            Sit back and let your shoulders drop.                            Breathe in slowly through your nose.                            And let the breath go, a little longer on the way out.                            Notice where you are right now: the chair, the floor, the sounds around you.                            If a craving shows up, just name it. "There's a craving."                            You don't have to do anything with it.                            Watch it rise, and watch it start to fall.                            One more slow breath in, and out.                            That's it. Let's turn this into a plan.
-                           """)),
+                       file: nil, seconds: 180, transcript: String(localized: "Placeholder transcript for the guided practice.")),
                 .ifThen(title: String(localized: "Make an if-then plan"),
                         subtitle: String(localized: "Pick a moment you know is coming, and what you'll do instead."),
                         actions: [String(localized: "take a short walk"), String(localized: "open Craving SOS"),

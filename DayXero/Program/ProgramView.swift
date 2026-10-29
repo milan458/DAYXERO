@@ -9,6 +9,8 @@ struct ProgramView: View {
     @State private var open: LessonOpen?
     @State private var upgradeFor: ProgramDayID?
     @State private var showPaywall = false
+    @State private var showCalm = UserDefaults.standard.bool(forKey: "dx.openCalmList") || UserDefaults.standard.string(forKey: "dx.openCalm") != nil
+    @Environment(SOSRouter.self) private var sos
 
     struct LessonOpen: Identifiable {
         let day: ProgramDayID
@@ -24,6 +26,8 @@ struct ProgramView: View {
                     Text("Your program").dxText(.micro)
                     Text("Program").dxText(.title).accessibilityAddTraits(.isHeader)
                     variantLine.padding(.vertical, DX.Space.xs)
+                    // Calm tools, always here and free for everyone (S12.2).
+                    NRTInviteRow(title: "Calm tools", detail: "5 short exercises for stressful moments", systemImage: "wind") { showCalm = true }
                     if let replay = state.replayDay {
                         ReplayCard(title: state.lesson(replay).title, minutes: state.lesson(replay).minutes) {
                             open = LessonOpen(day: replay, isReplay: true)
@@ -36,8 +40,11 @@ struct ProgramView: View {
                 }
                 .padding(.horizontal, DX.Space.m)
                 .padding(.top, DX.Space.xl)
-                .padding(.bottom, DX.Space.l)
+                .padding(.bottom, 120)
             }
+        }
+        .fullScreenCover(isPresented: $showCalm) {
+            CalmToolsView(onClose: { showCalm = false }, startSOS: { sos.open(source: "calm") })
         }
         .fullScreenCover(item: $open) { item in
             LessonPlayer(day: item.day, profile: profile, isReplay: item.isReplay)

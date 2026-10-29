@@ -2,7 +2,7 @@ import Foundation
 
 /// Countries with label presets (S9.2). Everywhere else enters the pack's schedule by hand.
 public enum LabelCountry: String, CaseIterable, Sendable {
-    case us, uk, au, de, india
+    case us, uk, au, de
 
     public var title: LocalizedStringResource {
         switch self {
@@ -10,7 +10,6 @@ public enum LabelCountry: String, CaseIterable, Sendable {
         case .uk: "UK"
         case .au: "Australia"
         case .de: "Germany"
-        case .india: "India"
         }
     }
 
@@ -21,7 +20,6 @@ public enum LabelCountry: String, CaseIterable, Sendable {
         case "GB": self = .uk
         case "AU": self = .au
         case "DE": self = .de
-        case "IN": self = .india
         default: return nil
         }
     }
@@ -89,25 +87,6 @@ public enum NRTLabels {
                   labelNote: "German packs: fewer than 20 a day, start on 14 mg.",
                   steps: [PlanStep(strengthMg: 14, weeks: 4), PlanStep(strengthMg: 7, weeks: 4)],
                   source: HealthSources.dePatch),
-        // India: patches and gum on sale follow either the international 10-week label or the Nicotinell steps.
-        NRTPreset(id: "in-patch-10", country: .india, types: [.patch], title: "10 weeks, starting on 21 mg",
-                  labelNote: "Packs sold in India vary by brand. Usually 10 or more a day starts on 21 mg; check yours matches.",
-                  steps: [PlanStep(strengthMg: 21, weeks: 6), PlanStep(strengthMg: 14, weeks: 2), PlanStep(strengthMg: 7, weeks: 2)],
-                  source: HealthSources.usPatch10),
-        NRTPreset(id: "in-patch-steps", country: .india, types: [.patch], title: "3 steps from 21 mg, about 4 weeks each",
-                  labelNote: "Nicotinell-style packs: each step runs 3–4 weeks; set yours to match.",
-                  steps: [PlanStep(strengthMg: 21, weeks: 4), PlanStep(strengthMg: 14, weeks: 4), PlanStep(strengthMg: 7, weeks: 4)],
-                  source: HealthSources.dePatch),
-        NRTPreset(id: "in-patch-14", country: .india, types: [.patch], title: "8 weeks, starting on 14 mg",
-                  labelNote: "Usually for fewer than 10 a day.",
-                  steps: [PlanStep(strengthMg: 14, weeks: 6), PlanStep(strengthMg: 7, weeks: 2)],
-                  source: HealthSources.usPatch10),
-        NRTPreset(id: "in-gum-12", country: .india, types: [.gum, .lozenge], title: "12 weeks, as on the pack",
-                  labelNote: "Gum like Nicotex: 4 mg if you smoke within 30 minutes of waking, otherwise 2 mg. Check your pack.",
-                  steps: [PlanStep(strengthMg: 0, weeks: 6, note: "1 piece every 1–2 hours"),
-                          PlanStep(strengthMg: 0, weeks: 3, note: "1 piece every 2–4 hours"),
-                          PlanStep(strengthMg: 0, weeks: 3, note: "1 piece every 4–8 hours")],
-                  source: HealthSources.usGum),
     ]
 
     public static func presets(for type: NRTType, country: LabelCountry?) -> [NRTPreset] {
