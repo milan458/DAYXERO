@@ -61,7 +61,7 @@ extension HomeView {
                 DXDockItem(id: "today", title: "Today", systemImage: "house"),
                 DXDockItem(id: "water", title: "Water", systemImage: "drop"),
                 DXDockItem(id: "program", title: "Program", systemImage: "book.closed"),
-                DXDockItem(id: "progress", title: "Progress", systemImage: "chart.line.uptrend.xyaxis"),
+                DXDockItem(id: "progress", title: "Progress", systemImage: "chart.line.uptrend.xyaxis.circle"),
             ],
             selection: $tab,
             // Today, Water, Craving SOS in the middle, Program, Progress.

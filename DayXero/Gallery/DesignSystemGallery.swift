@@ -34,7 +34,7 @@ struct DesignSystemGallery: View {
                 items: [
                     DXDockItem(id: "today", title: "Today", systemImage: "house"),
                     DXDockItem(id: "program", title: "Program", systemImage: "book.closed"),
-                    DXDockItem(id: "progress", title: "Progress", systemImage: "chart.line.uptrend.xyaxis"),
+                    DXDockItem(id: "progress", title: "Progress", systemImage: "chart.line.uptrend.xyaxis.circle"),
                 ],
                 selection: $tab,
                 sosAction: {}
