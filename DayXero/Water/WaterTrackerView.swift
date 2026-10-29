@@ -7,6 +7,8 @@ import SwiftUI
 /// The water is blue and each drink has its own drawing (S21).
 struct WaterTrackerView: View {
     let profile: UserProfile
+    /// Shown as a close button when the tracker opens over the Toolkit tab or Home.
+    var onClose: (() -> Void)?
 
     @Environment(\.modelContext) private var context
     @Query(sort: \WaterEntry.timestamp) private var entries: [WaterEntry]
@@ -138,6 +140,12 @@ struct WaterTrackerView: View {
                     .padding(.vertical, 6).padding(.horizontal, 10)
                     .background(Color(hex: 0xBCC388, opacity: 0.12), in: Capsule())
                     .accessibilityLabel(Text("\(streak) day water streak"))
+            }
+            if let onClose {
+                Button(action: onClose) { Image(systemName: "xmark") }
+                    .buttonStyle(.dxIcon)
+                    .accessibilityLabel(Text("Close"))
+                    .padding(.leading, DX.Space.xxs)
             }
         }
     }

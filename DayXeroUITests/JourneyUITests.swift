@@ -130,17 +130,16 @@ final class JourneyUITests: XCTestCase {
     /// Every tap on Log raises the water straight away, quick taps or slow (S21.2): Milan saw it sit still and
     /// then jump up by all the taps at once. Reads the amount from VoiceOver and the water's height from the pixels.
     func testWaterRisesOnEveryTap() {
-        let app = launch(["-dx.homeScenario", "day3", "-dx.store", "pro"])
-        XCTAssert(app.buttons["Craving SOS"].waitForExistence(timeout: 10))
-        tap(app.buttons["Water"].firstMatch)
+        // Water lives in the Toolkit tab; "-dx.tab water" opens the toolkit with the tracker showing.
+        let app = launch(["-dx.homeScenario", "day3", "-dx.store", "pro", "-dx.tab", "water"])
         let pill = app.descendants(matching: .any)["Water today"]
-        XCTAssert(pill.waitForExistence(timeout: 5), "No water pill")
+        XCTAssert(pill.waitForExistence(timeout: 10), "No water pill")
         // "Log 250 ml", or "Log 8 fl oz" where the simulator's region uses US units.
         let log = app.buttons.matching(NSPredicate(format: "label CONTAINS[c] 'Log 250 ml' OR label CONTAINS[c] 'Log 8 fl oz'")).firstMatch
         XCTAssert(log.waitForExistence(timeout: 5), "No Log button")
         RunLoop.current.run(until: .now.addingTimeInterval(1))
-        // Very large text can still push Log under the dock; scroll it clear so a tap can't land on a tab.
-        if log.frame.maxY > app.buttons["Craving SOS"].frame.minY - 4 {
+        // Very large text can push Log to the bottom edge; scroll it clear.
+        if log.frame.maxY > app.frame.maxY - 40 {
             app.scrollViews.firstMatch.swipeUp()
             RunLoop.current.run(until: .now.addingTimeInterval(1))
         }
@@ -175,13 +174,13 @@ final class JourneyUITests: XCTestCase {
         snap(app, "sos-session")
         tap(app.buttons["Session options"])
         tap(app.buttons["It passed"])
-        XCTAssert(app.staticTexts["Craving ridden out"].waitForExistence(timeout: 5))
+        XCTAssert(app.staticTexts["Wave survived, Sam."].waitForExistence(timeout: 5))
         tap(app.buttons["Done"])
         XCTAssert(app.buttons["Craving SOS"].waitForExistence(timeout: 5))
     }
 
     private func visitTabs(_ app: XCUIApplication, prefix: String) {
-        for tab in ["Program", "Progress", "Today"] {
+        for tab in ["Toolkit", "Program", "Progress", "Today"] {
             tap(app.buttons[tab].firstMatch)
             RunLoop.current.run(until: .now.addingTimeInterval(1))   // let the tab cross-fade finish
             snap(app, "\(prefix)-\(tab.lowercased())")

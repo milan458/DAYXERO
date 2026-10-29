@@ -2,7 +2,7 @@ import DayXeroCore
 import SwiftData
 import SwiftUI
 
-/// The app after onboarding: Today, Water, Program and Progress in the floating dock, with Craving SOS in the middle.
+/// The app after onboarding: Today, Toolkit, Program and Progress in the floating dock, with Craving SOS in the middle.
 struct HomeView: View {
     let profile: UserProfile
     @State private var tab = UserDefaults.standard.string(forKey: "dx.tab") ?? "today"
@@ -48,10 +48,11 @@ extension HomeView {
             ProgramView(profile: profile)
         case "progress":
             ProgressTab(profile: profile)
-        case "water":
-            WaterTrackerView(profile: profile)
+        case "toolkit", "water":
+            // "water" is the old tab id: open the toolkit with the tracker showing.
+            ToolkitView(profile: profile, openWater: tab == "water")
         default:
-            TodayView(profile: profile, openWater: { tab = "water" })
+            TodayView(profile: profile)
         }
     }
 
@@ -59,12 +60,12 @@ extension HomeView {
         DXDock(
             items: [
                 DXDockItem(id: "today", title: "Today", systemImage: "house"),
-                DXDockItem(id: "water", title: "Water", systemImage: "drop"),
+                DXDockItem(id: "toolkit", title: "Toolkit", systemImage: "shield"),
                 DXDockItem(id: "program", title: "Program", systemImage: "book.closed"),
                 DXDockItem(id: "progress", title: "Progress", systemImage: "chart.line.uptrend.xyaxis.circle"),
             ],
-            selection: $tab,
-            // Today, Water, Craving SOS in the middle, Program, Progress.
+            selection: Binding(get: { tab == "water" ? "toolkit" : tab }, set: { tab = $0 }),
+            // Today, Toolkit, Craving SOS in the middle, Program, Progress.
             sosPosition: 2,
             axis: axis,
             sosAction: { sos.open(source: "dock") }
@@ -106,8 +107,11 @@ enum FirstLesson {
 
 struct TodayView: View {
     let profile: UserProfile
-    /// Switches the dock to the water tracker.
-    var openWater: () -> Void = {}
+    @State private var showWater = false
+    /// The use just logged with one tap, for the Undo / Add trigger toast.
+    @State private var justLogged: LogEntry?
+    @State private var detailsFor: LogEntry?
+    @State private var loggedFeedback = false
     @Environment(Entitlement.self) private var entitlement
     @Environment(\.modelContext) private var context
     @AppStorage("dx.sosHintSeen") private var sosHintSeen = false
@@ -145,6 +149,23 @@ struct TodayView: View {
                     actions(snap, now: timeline.date)
                 }
             }
+        }
+        .overlay(alignment: .bottom) {
+            if let entry = justLogged { loggedToast(entry) }
+        }
+        .animation(DX.Motion.animation(DX.Motion.glide, reduceMotion: false), value: justLogged)
+        .task(id: justLogged) {
+            guard justLogged != nil else { return }
+            try? await Task.sleep(for: .seconds(4))
+            justLogged = nil
+        }
+        .sensoryFeedback(DX.Haptic.commit, trigger: loggedFeedback)
+        .sheet(item: $detailsFor) { entry in
+            CravingLogForm(profile: profile, editing: entry, onSaved: { detailsFor = nil })
+                .presentationDetents([.large])
+        }
+        .fullScreenCover(isPresented: $showWater) {
+            WaterTrackerView(profile: profile, onClose: { showWater = false })
         }
         .onAppear {
             checkMilestone()
@@ -341,12 +362,12 @@ struct TodayView: View {
     private func logCell(_ cell: LogCell, snap: HomeSnapshot, now: Date) -> some View {
         switch cell {
         case let .product(product): productCard(product, snap: snap, now: now)
-        case .water: WaterHomeCard(profile: profile, now: now, onOpen: openWater)
+        case .water: WaterHomeCard(profile: profile, now: now, onOpen: { showWater = true })
         }
     }
 
-    /// In prep: today's uses. From Quit Day: what's not been used since. Log opens the sheet, where a use,
-    /// a craving or a slip is one more tap.
+    /// In prep: today's uses, logged in one tap (with Undo), and for vapes an Urge button straight to the craving form.
+    /// From Quit Day: what's not been used since; Log opens the sheet, where a craving or a slip is one more tap.
     private func productCard(_ product: Product, snap: HomeSnapshot, now: Date) -> some View {
         let prep = isPrep(snap)
         let count = prep ? useCount(product, now: now) : (snap.counters.first { $0.product == product }?.avoided ?? 0)
@@ -360,7 +381,7 @@ struct TodayView: View {
         }
         let button: LocalizedStringKey = switch (product, prep) {
         case (.cigarettes, true): "+ Log cigarette"
-        case (.vape, true): "+ Log puff or urge"
+        case (.vape, true): "+1 Puff"
         case (.pouches, true): "+ Log pouch"
         case (_, false): "+ Log craving or slip"
         }
@@ -378,20 +399,74 @@ struct TodayView: View {
                     .foregroundStyle(DX.Palette.muted)
             }
             Spacer(minLength: 0)
-            Button { log.open() } label: {
-                Text(button).font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote)).foregroundStyle(DX.Palette.text)
-                    .lineLimit(1).minimumScaleFactor(0.8)
-                    .frame(maxWidth: .infinity, minHeight: 40)
-                    .background(DX.Palette.surface2, in: Capsule())
-                    .overlay(Capsule().strokeBorder(DX.Palette.hairline))
+            HStack(spacing: 6) {
+                Button { if prep { logUse(product) } else { log.open() } } label: { pill(button) }
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("home.log.\(product.rawValue)")
+                    .accessibilityHint(prep ? Text("Logs one now") : Text("Opens the log"))
+                // A puff and an urge are opposite things: the urge goes straight to the craving form.
+                if prep, product == .vape {
+                    Button { log.open(.craving) } label: { pill("+ Urge", accent: true) }
+                        .buttonStyle(.plain)
+                        .accessibilityIdentifier("home.log.urge")
+                }
             }
-            .buttonStyle(.plain)
-            .accessibilityIdentifier("home.log.\(product.rawValue)")
         }
         .padding(14)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
         .overlay(RoundedRectangle(cornerRadius: 24, style: .continuous).strokeBorder(DX.Palette.hairline))
+    }
+
+    private func pill(_ title: LocalizedStringKey, accent: Bool = false) -> some View {
+        Text(title).font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
+            .foregroundStyle(accent ? DX.Palette.onAccent : DX.Palette.text)
+            .lineLimit(1).minimumScaleFactor(0.8)
+            .frame(maxWidth: .infinity, minHeight: 40)
+            .background(accent ? DX.Palette.sage : DX.Palette.surface2, in: Capsule())
+            .overlay(Capsule().strokeBorder(accent ? .clear : DX.Palette.hairline))
+    }
+
+    private func logUse(_ product: Product) {
+        justLogged = UseLog.log(product, in: context)
+        loggedFeedback.toggle()
+    }
+
+    private func loggedToast(_ entry: LogEntry) -> some View {
+        let count = entry.product.map { useCount($0, now: .now) } ?? 0
+        return HStack(spacing: DX.Space.s) {
+            Image(systemName: "checkmark").font(.system(size: 13, weight: .bold))
+            Text(toastTitle(entry.product, count: count)).lineLimit(2)
+            Spacer(minLength: DX.Space.xs)
+            Button("Undo") {
+                UseLog.undo(entry, in: context)
+                justLogged = nil
+            }
+            .opacity(0.75)
+            Button("Add trigger") {
+                detailsFor = entry
+                justLogged = nil
+            }
+        }
+        .font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
+        .foregroundStyle(DX.Palette.onPrimary)
+        .buttonStyle(.plain)
+        .padding(.vertical, DX.Space.s).padding(.horizontal, 14)
+        .background(DX.Palette.primary, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .shadow(color: DX.Palette.shadow, radius: 16, y: 8)
+        .padding(.horizontal, DX.Space.m)
+        .padding(.bottom, DX.Space.s)
+        .transition(.move(edge: .bottom).combined(with: .opacity))
+        .accessibilityElement(children: .contain)
+    }
+
+    private func toastTitle(_ product: Product?, count: Int) -> String {
+        switch product {
+        case .cigarettes: String(localized: "Cigarette #\(count) logged")
+        case .vape: String(localized: "Puff #\(count) logged")
+        case .pouches: String(localized: "Pouch #\(count) logged")
+        case nil: String(localized: "Logged")
+        }
     }
 
     private func useCount(_ product: Product, now: Date) -> Int {

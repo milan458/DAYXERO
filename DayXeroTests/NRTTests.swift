@@ -32,12 +32,14 @@ struct NRTTests {
         #expect(NRTLabels.preset(id: "us-gum-12")?.totalWeeks == 12)
         #expect(NRTLabels.preset(id: "uk-patch-16")?.steps.map(\.strengthMg) == [25, 15, 10])
         #expect(NRTLabels.preset(id: "au-patch")?.steps.map(\.weeks) == [6, 2, 2])
+        #expect(NRTLabels.preset(id: "in-patch-10")?.steps.map(\.strengthMg) == [21, 14, 7])
     }
 
     @Test func regionsMapToLabelCountries() {
         #expect(LabelCountry(region: "GB") == .uk)
         #expect(LabelCountry(region: "de") == .de)
-        #expect(LabelCountry(region: "IN") == nil)
+        #expect(LabelCountry(region: "IN") == .india)
+        #expect(LabelCountry(region: "FR") == nil)
     }
 
     // MARK: Step schedule (S9.2, S9.5)

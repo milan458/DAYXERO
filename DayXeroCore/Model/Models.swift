@@ -296,9 +296,13 @@ public final class CheckIn {
     public var note: String?
     /// "Clear day" or "Had a slip" (S11.2). Never changes days clear.
     public var clearDay: Bool = true
+    /// Prep week only: "Mindful & observant" (true) or "Mostly autopilot" (false). nil after Quit Day.
+    public var prepMindful: Bool?
 
-    public init(day: Date, mood: Mood, cravingCount: Int, note: String? = nil, clearDay: Bool = true, madeAt: Date = .now) {
+    public init(day: Date, mood: Mood, cravingCount: Int, note: String? = nil, clearDay: Bool = true, prepMindful: Bool? = nil,
+                madeAt: Date = .now) {
         self.day = day
+        self.prepMindful = prepMindful
         self.moodRaw = mood.rawValue
         self.cravingCount = cravingCount
         self.note = note

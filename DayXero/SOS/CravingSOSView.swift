@@ -148,6 +148,7 @@ struct CravingSOSView: View {
     @ViewBuilder
     private var sessionExtras: some View {
         if stage == .session { controls }
+        if stage == .session, passedMinute { earlyWin }
         if stage == .timeUp, let reason = currentReason {
             ReasonCard(reason: reason, canAdvance: reasons.count > 1) { reasonSkip += 1 }
         }
@@ -220,9 +221,27 @@ struct CravingSOSView: View {
         .buttonStyle(OrbButtonStyle(kind: .moss))
     }
 
+    /// After the first minute the wave is usually past its peak: one tap logs the win without waiting for the end.
+    private var passedMinute: Bool {
+        engine.data.sos.sessionSeconds - engine.session.sosRemaining >= 60
+    }
+
+    private var earlyWin: some View {
+        Button { finish(.passed) } label: {
+            Label("It's passing · log as ridden out", systemImage: "checkmark")
+                .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body))
+                .foregroundStyle(DX.Palette.onAccent)
+                .padding(.horizontal, 18).frame(minHeight: 46)
+                .background(DX.Palette.sage, in: Capsule())
+        }
+        .buttonStyle(.plain)
+        .dynamicTypeSize(...DynamicTypeSize.accessibility2)
+        .transition(.opacity.combined(with: .scale(scale: 0.96)))
+    }
+
     private var outcomes: some View {
         VStack(spacing: DX.Space.xs) {
-            Button { finish(.passed) } label: { Text("It passed").frame(maxWidth: .infinity) }
+            Button { finish(.passed) } label: { Text("Log as ridden out (+1)").frame(maxWidth: .infinity) }
                 .buttonStyle(.dxSage)
             Button(action: anotherRound) { Text("Another three minutes").frame(maxWidth: .infinity) }
                 .buttonStyle(.dxSecondary)
@@ -261,6 +280,11 @@ struct CravingSOSView: View {
 
     // MARK: It passed
 
+    private var wonTitle: String {
+        if let name = profile?.name, !name.isEmpty { return String(localized: "Wave survived, \(name).") }
+        return String(localized: "Wave survived.")
+    }
+
     private var passedView: some View {
         let count = CravingStats.passedThisWeek(cravings, now: .now)
         return VStack(spacing: 0) {
@@ -273,10 +297,13 @@ struct CravingSOSView: View {
                         .background(DX.Palette.sage, in: Circle())
                         .accessibilityHidden(true)
                         .padding(.top, DX.Space.xl)
-                    Text("Craving ridden out").dxText(.title).multilineTextAlignment(.center)
-                    Text(count > 1 ? "That's \(count) this week. Each one makes the next a little easier."
-                         : "That's your first this week. Each one makes the next a little easier.")
+                    Text(wonTitle).dxText(.title).multilineTextAlignment(.center)
+                    Text("The craving peaked and passed, and you're still here. Each wave you ride out makes the next one a little quieter.")
                         .dxText(.subtitle).multilineTextAlignment(.center)
+                    Text(count > 1 ? "+1 ridden out · \(count) this week" : "+1 ridden out · your first this week")
+                        .font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
+                        .foregroundStyle(DX.Palette.accentInk)
+                        .multilineTextAlignment(.center)
                     HStack(spacing: 6) {
                         ForEach(0..<7, id: \.self) { i in
                             Circle().fill(i < count ? DX.Palette.sage : DX.Palette.track).frame(width: 22, height: 22)
