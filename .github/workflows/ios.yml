@@ -3,7 +3,7 @@ name: iOS build and test
 on:
   push:
     branches: [main]
-    paths-ignore: ["planning/**", "docs/**", "website/**", "**.md"]
+    paths-ignore: ["planning/**", "docs/**", "website/**", "scripts/website/**", "**.md"]
   pull_request:
   workflow_dispatch:
 

@@ -5,7 +5,7 @@ name: Website
 on:
   push:
     branches: [main]
-    paths: ["website/**", ".github/workflows/website.yml"]
+    paths: ["website/**", "scripts/website/**", ".github/workflows/website.yml"]
   workflow_dispatch:
 
 permissions:
@@ -20,6 +20,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # Rebuild generated files so a stale commit can't ship old pages or missing CSS classes.
+      - name: Build guides and CSS
+        run: |
+          npm run website:guides
+          npm run website:css
       - uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}

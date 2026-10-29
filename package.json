@@ -4,6 +4,8 @@
   "description": "DayXero v1 — planning tools. The iOS app lives in the Xcode project.",
   "scripts": {
     "tracker": "node planning/server.js",
-    "task": "node planning/task.js"
+    "task": "node planning/task.js",
+    "website:css": "cd website && npx -y tailwindcss@3.4.17 -c tailwind.config.js -i tailwind.css -o assets/site.css --minify",
+    "website:guides": "python3 scripts/website/build_guides.py website"
   }
 }

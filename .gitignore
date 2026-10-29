@@ -11,3 +11,6 @@ DayXero.xcodeproj/
 
 # Local keys
 Config/Secrets.xcconfig
+
+# Wrangler local state
+website/.wrangler/
