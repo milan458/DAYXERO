@@ -2,12 +2,14 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-28T22:12:08.265Z"
+    "updated": "2026-10-29T06:11:15.595Z"
   },
   "now": {
-    "section": "S22",
-    "task": "S22.7",
-    "waiting_on_milan": []
+    "section": "S24",
+    "task": "S24.4",
+    "waiting_on_milan": [
+      "Milan: build d05b7df in Xcode and try the dock"
+    ]
   },
   "sections": [
     {
@@ -2328,15 +2330,43 @@
         {
           "id": "S24.3",
           "title": "CI, screenshots and TestFlight",
-          "status": "pending",
-          "notes": "",
+          "status": "blocked",
+          "notes": "GitHub Actions jobs not starting: billing. Build from Xcode or Xcode Cloud.",
           "created": "2026-10-28T22:12:08.265Z",
+          "completed": null
+        },
+        {
+          "id": "S24.4",
+          "title": "Dock v2: dark resting pill (black in the dark theme, like WhatsApp); touch swells it into a clear lens taller than the bar that follows the finger, magnifies the icons and has a rainbow rim",
+          "status": "awaiting_signoff",
+          "notes": "Milan's WhatsApp recording and screenshots, 29 Oct\nd05b7df. Not CI-built: GitHub Actions blocked by billing. Milan to build in Xcode and try on device.",
+          "created": "2026-10-29T06:11:15.460Z",
           "completed": null
         }
       ]
     }
   ],
   "log": [
+    {
+      "time": "2026-10-29T06:11:15.595Z",
+      "type": "now",
+      "message": "Now: S24 / S24.4"
+    },
+    {
+      "time": "2026-10-29T06:11:15.543Z",
+      "type": "status",
+      "message": "S24.3 pending → blocked (GitHub Actions jobs not starting: billing. Build from Xcode or Xcode Cloud.)"
+    },
+    {
+      "time": "2026-10-29T06:11:15.502Z",
+      "type": "status",
+      "message": "S24.4 pending → awaiting_signoff (d05b7df. Not CI-built: GitHub Actions blocked by billing. Milan to build in Xcode and try on device.)"
+    },
+    {
+      "time": "2026-10-29T06:11:15.460Z",
+      "type": "task_added",
+      "message": "S24.4 added: Dock v2: dark resting pill (black in the dark theme, like WhatsApp); touch swells it into a clear lens taller than the bar that follows the finger, magnifies the icons and has a rainbow rim"
+    },
     {
       "time": "2026-10-28T22:12:08.265Z",
       "type": "task_added",
