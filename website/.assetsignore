@@ -7,3 +7,5 @@ CNAME
 .wrangler
 tailwind.config.js
 tailwind.css
+worker
+wrangler.dev.jsonc

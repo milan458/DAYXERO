@@ -1,4 +1,4 @@
-"""Generates the DayXero guide pages, the guides hub and sitemap.xml.
+"""Generates the DayXero guide pages, the guides hub, the info pages, /beta/ and sitemap.xml.
 
 Run from the repo root: python3 scripts/website/build_guides.py website
 Then rebuild the CSS: npm run website:css
@@ -92,10 +92,10 @@ guide(
 <p>The night before your Quit Day, get rid of devices, pods, spare disposables and chargers. Tell a few people you trust, and ask friends not to offer you a vape. Removing easy access matters most in the first week.</p>
 
 <h2 id="step-6">Step 6: Ride out cravings, don't fight them</h2>
-<p>A craving rises, peaks and fades, usually within a few minutes. Trying to push it away tends to make it louder. <a href="/nicotine-cravings/">Urge surfing</a> works the other way: notice where you feel it, breathe slowly, and watch it pass like a wave. DayXero's Craving SOS walks you through this in three minutes.</p>
+<p>A craving rises, peaks and fades, usually within a few minutes. Trying to push it away tends to make it louder. <a href="/nicotine-cravings/">Urge surfing</a> works the other way: notice where you feel it, breathe slowly, and watch it pass like a wave. DayXero's Craving SOS is being built to walk you through this in three minutes.</p>
 
 <h2 id="step-7">Step 7: Treat a slip as information</h2>
-<p>One puff isn't a relapse, and it doesn't erase your progress. The danger is the "I've blown it anyway" thinking that turns one slip into a week of vaping. Note what triggered it, adjust your plan, and carry on. That's why DayXero never resets your streak for a slip.</p>
+<p>One puff isn't a relapse, and it doesn't erase your progress. The danger is the "I've blown it anyway" thinking that turns one slip into a week of vaping. Note what triggered it, adjust your plan, and carry on. That's why DayXero won't reset your streak for a slip.</p>
 
 <h2 id="withdrawal">What withdrawal will feel like</h2>
 <p>Expect irritability, restlessness, poor concentration, trouble sleeping and stronger appetite. Symptoms usually start within hours, are strongest in the first few days, and ease over two to four weeks. See the full <a href="/nicotine-withdrawal-timeline/">nicotine withdrawal timeline</a>.</p>
@@ -149,7 +149,7 @@ guide(
   <li><strong>Tell people.</strong> Ask friends and family for support, and ask smokers around you not to offer you one.</li>
   <li><strong>Clear out.</strong> The night before Quit Day, get rid of cigarettes, lighters and ashtrays.</li>
 </ul>
-<p>DayXero builds this into a five-day prep phase so that by Quit Day you've already practised getting through your hardest moments.</p>
+<p>DayXero is being built around a five-day prep phase like this, so that by Quit Day you've already practised getting through your hardest moments.</p>
 
 <h2 id="aids">Step 3: Choose your stop-smoking aids</h2>
 <p>Using a stop-smoking aid makes quitting much more likely to succeed than willpower alone. The main options are:</p>
@@ -235,7 +235,7 @@ guide(
     <tr><td>Week 4</td><td>Quit Day. Stop completely, with a plan for cravings in place.</td></tr>
   </tbody>
 </table></div>
-<p>This is an example, not a prescription. If you use a very high strength or a lot of pouches, a slower taper or nicotine replacement may suit you better. DayXero builds a step-down schedule from your own numbers.</p>
+<p>This is an example, not a prescription. If you use a very high strength or a lot of pouches, a slower taper or nicotine replacement may suit you better. DayXero is being built to create a step-down schedule from your own numbers.</p>
 
 <h2 id="nrt">Step 3: Consider switching to licensed NRT</h2>
 <p>Nicotine gum and lozenges are used in a similar way to pouches, but they are licensed medicines with clear dosing and step-down instructions. Some people switch from pouches to NRT, then taper the NRT. A pharmacist can help you choose a strength.</p>
@@ -354,7 +354,7 @@ guide(
   <li><strong>Ride the wave.</strong> Notice the craving getting stronger, peaking, and then starting to fade.</li>
   <li><strong>Choose what's next.</strong> Once it's passed, carry on with what you were doing.</li>
 </ol>
-<p>DayXero's Craving SOS guides you through this in three minutes, with a breathing pacer you can follow.</p>
+<p>DayXero's Craving SOS is being built to guide you through this in three minutes, with a breathing pacer you can follow.</p>
 
 <h2 id="quick">Quick techniques that work</h2>
 <ul>
@@ -409,7 +409,7 @@ HEAD = """<!DOCTYPE html>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{title}</title>
-  <meta name="description" content="{meta}">
+  <meta name="description" content="{meta}">{robots}
   <link rel="canonical" href="{url}">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -449,16 +449,16 @@ NAV = """<body class="bg-black text-white antialiased font-sans min-h-screen fle
       <div class="hidden md:flex items-center gap-1 text-xs font-medium text-white/70">
 {navlinks}
       </div>
-      <a href="/#pricing" class="px-4 py-2 rounded-full bg-[#BCC388] text-black font-semibold text-xs tracking-tight hover:bg-white">Get DayXero</a>
+      <a href="/beta/" class="shrink-0 whitespace-nowrap px-4 py-2 rounded-full bg-[#BCC388] text-black font-semibold text-xs tracking-tight hover:bg-white">Join the beta</a>
     </nav>
   </header>
 """
 
-FOOTER = """  <footer class="border-t border-white/10 bg-black py-14 px-4 relative z-10 text-white/60 mt-auto">
+FOOTER = """{sticky}  <footer class="border-t border-white/10 bg-black py-14 px-4 relative z-10 text-white/60 mt-auto">
     <div class="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8 text-xs">
       <div class="flex flex-col gap-2">
         <span class="font-bold text-white tracking-tight text-sm">DayXero</span>
-        <p class="text-white/40 max-w-xs">Quit on your Quit Day. An iPhone app to quit vaping, smoking and nicotine pouches.</p>
+        <p class="text-white/40 max-w-xs">Quit on your Quit Day. An iPhone app in development to quit vaping, smoking and nicotine pouches.</p>
       </div>
       <div class="flex flex-col gap-2">
         <span class="font-mono uppercase tracking-widest text-[10px] text-white/40">Guides</span>
@@ -468,7 +468,8 @@ FOOTER = """  <footer class="border-t border-white/10 bg-black py-14 px-4 relati
         <span class="font-mono uppercase tracking-widest text-[10px] text-white/40">DayXero</span>
         <a href="/" class="hover:text-white">Home</a>
         <a href="/#methodology" class="hover:text-white">How it works</a>
-        <a href="/#pricing" class="hover:text-white">Pricing</a>
+        <a href="/beta/" class="hover:text-white">Join the beta</a>
+        <a href="/#pricing" class="hover:text-white">Founding offer</a>
         <a href="/#faq" class="hover:text-white">FAQ</a>
         <a href="/about/" class="hover:text-white">About</a>
         <a href="/contact/" class="hover:text-white">Contact</a>
@@ -481,8 +482,85 @@ FOOTER = """  <footer class="border-t border-white/10 bg-black py-14 px-4 relati
       <div class="shrink-0">© 2026 DayXero.</div>
     </div>
   </footer>
+  <script src="/assets/waitlist.js" defer></script>
 </body>
 </html>
+"""
+
+ARROW = ('<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+         'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>')
+
+PRIVACY_NOTE = {
+    "dark": '<p class="text-[11px] text-white/40 text-center leading-relaxed mt-3">Free to join. We\'ll email your '
+            'TestFlight invite and the App Store link at launch, nothing else. Unsubscribe anytime. <a href="/privacy/#waitlist" '
+            'class="underline underline-offset-4 decoration-white/30 hover:text-white">Privacy</a></p>',
+    "light": '<p class="text-[11px] text-black/50 text-left leading-relaxed mt-3">No payment now. One confirmation email, '
+             'then your invite and launch link. Unsubscribe anytime. <a href="/privacy/#waitlist" '
+             'class="underline underline-offset-4 decoration-black/30 hover:text-black">Privacy</a></p>',
+}
+
+
+def waitlist_form(fid, source, theme="dark", h="h-12"):
+    """One-field beta signup form. assets/waitlist.js posts it to the Worker at /api/waitlist."""
+    if theme == "dark":
+        wrap = "p-2 bg-[#121212] border border-white/15 shadow-2xl"
+        inp = "bg-[#161616] border border-white/10 text-white placeholder:text-white/30 focus:border-[#BCC388]/60"
+        btn = "bg-white text-black hover:bg-[#BCC388]"
+    else:
+        wrap = "p-1.5 bg-black/5 border border-black/10"
+        inp = "bg-white border border-black/10 text-black placeholder:text-black/40 focus:border-[#43511C]/60"
+        btn = "bg-black text-white hover:bg-[#202020]"
+    theme_attr = ' data-theme="light"' if theme == "light" else ""
+    return f"""<form id="{fid}" class="waitlist-form w-full" action="/api/waitlist" method="post" novalidate{theme_attr}>
+          <div class="flex flex-col sm:flex-row gap-2 rounded-[28px] sm:rounded-full {wrap}">
+            <label for="{fid}-email" class="sr-only">Email address</label>
+            <input id="{fid}-email" type="email" name="email" required autocomplete="email" inputmode="email" placeholder="you@example.com" class="w-full sm:flex-1 min-w-0 {h} px-5 rounded-full text-sm focus:outline-none {inp} spring-trans">
+            <button type="submit" class="{h} px-6 rounded-full {btn} font-semibold text-sm tracking-tight active:scale-95 spring-trans flex items-center justify-center gap-2 shadow-xl whitespace-nowrap">
+              <span>Join the beta</span>
+              {ARROW}
+            </button>
+          </div>
+          <div class="hidden" aria-hidden="true"><label>Company <input type="text" name="company" tabindex="-1" autocomplete="off"></label></div>
+          <input type="hidden" name="source" value="{source}">
+        </form>"""
+
+
+def inline_cta(slug):
+    return f"""
+<aside id="guide-cta-inline" class="glass-card-green rounded-card p-6 md:p-8 my-10" aria-label="Join the DayXero beta" data-hide-sticky>
+  <div class="flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-[#BCC388] mb-2"><span class="w-1.5 h-1.5 rounded-full bg-[#BCC388]"></span>DayXero iOS beta</div>
+  <div class="text-xl md:text-2xl font-extrabold tracking-tight text-white leading-snug mb-2">Want this plan on your iPhone?</div>
+  <div class="text-sm text-white/65 leading-relaxed mb-5">DayXero is being built around exactly this: a Quit Day, five days of prep and a 3-minute craving tool. Join the beta for an early TestFlight invite.</div>
+  <div data-waitlist-block>
+        {waitlist_form("guide-inline-form", f"guide-{slug}-inline", h="h-11")}
+  </div>
+</aside>
+"""
+
+
+def with_inline_cta(body, slug):
+    """Puts the mid-article signup block after the third section, just before the fourth <h2>."""
+    parts = body.split("\n<h2 ")
+    if len(parts) < 5:
+        return body
+    return "\n<h2 ".join(parts[:4]) + inline_cta(slug) + "\n<h2 " + "\n<h2 ".join(parts[4:])
+
+
+STICKY = """  <div id="sticky-cta" class="fixed bottom-4 inset-x-0 z-50 px-4 md:hidden" style="transform: translateY(160%)" aria-hidden="true">
+    <div class="flex items-center justify-between gap-3 pl-4 pr-1.5 py-1.5 rounded-full bg-black/85 backdrop-blur-2xl border border-white/15 shadow-2xl shadow-black">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <span class="w-2 h-2 shrink-0 rounded-full bg-[#BCC388] animate-ping"></span>
+        <div class="flex flex-col min-w-0">
+          <span class="text-xs font-bold text-white tracking-tight truncate">DayXero iOS beta</span>
+          <span class="text-[9px] text-white/40 tracking-widest uppercase font-mono -mt-0.5 truncate">Free · Founding spots</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-1.5 shrink-0">
+        <a href="#beta-cta" class="px-4 py-2.5 rounded-full bg-[#BCC388] text-black font-semibold text-xs tracking-tight hover:bg-white active:scale-95 spring-trans flex items-center gap-1.5">Join the beta</a>
+        <button type="button" data-action="dismiss" aria-label="Dismiss" class="w-8 h-8 rounded-full bg-[#161616] border border-white/15 text-white/60 hover:text-white flex items-center justify-center spring-trans"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4l16 16"/><path d="M20 4 4 20"/></svg></button>
+      </div>
+    </div>
+  </div>
 """
 
 NAV_ITEMS = [("/quit-vaping/", "Quit Vaping"), ("/quit-smoking/", "Quit Smoking"),
@@ -513,13 +591,14 @@ ORG = {"@type": "Organization", "@id": f"{BASE}/#organization", "name": "DayXero
        "logo": f"{BASE}/logo.png", "email": CONTACT_EMAIL}
 
 
-def page(path, title, meta, og_type, og_title, ld, main, current):
+def page(path, title, meta, og_type, og_title, ld, main, current, sticky=False, noindex=False):
     url = f"{BASE}{path}"
+    robots = '\n  <meta name="robots" content="noindex">' if noindex else ""
     out = HEAD.format(title=html.escape(title), meta=html.escape(meta), url=url, og_type=og_type,
-                      og_title=html.escape(og_title), base=BASE, ld=ld_json(ld))
+                      og_title=html.escape(og_title), base=BASE, ld=ld_json(ld), robots=robots)
     out += NAV.format(navlinks=navlinks(current))
     out += main
-    out += FOOTER.format(footerlinks=footerlinks())
+    out += FOOTER.format(footerlinks=footerlinks(), sticky=STICKY if sticky else "")
     dest = SITE / path.strip("/") / "index.html"
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(out)
@@ -558,14 +637,17 @@ for g in GUIDES:
       <p class="text-xs text-white/40 font-mono mb-12">By <a href="/about/#editorial" class="underline underline-offset-4 decoration-white/30 hover:text-white">the DayXero team</a> · Updated <time datetime="{DATE}">29 October 2026</time></p>
 
       <div class="prose-dx">
-{g['body']}
+{with_inline_cta(g['body'], g['slug'])}
       </div>
 
-      <aside class="porcelain-card rounded-card p-8 my-14 text-black">
-        <div class="text-[10px] font-mono uppercase tracking-widest text-black/50 mb-2">The DayXero app</div>
+      <aside id="beta-cta" class="porcelain-card rounded-card p-8 my-14 text-black scroll-mt-28" data-hide-sticky>
+        <div class="text-[10px] font-mono uppercase tracking-widest text-black/50 mb-2">The DayXero app · iOS beta</div>
         <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight mb-3">Turn this plan into a daily routine</h2>
-        <p class="text-sm text-black/70 leading-relaxed mb-6">DayXero guides you through a five-day prep phase before your Quit Day, gets you through cravings in three minutes, and never resets your progress for a slip. Built for iPhone, for vapes, cigarettes and pouches.</p>
-        <a href="/#pricing" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-black text-white font-semibold text-xs hover:bg-[#202020]">See plans, free tier included →</a>
+        <p class="text-sm text-black/70 leading-relaxed mb-6">DayXero is an iPhone app in development that walks you through five days of prep before your Quit Day, gets you through cravings in three minutes, and never resets your progress for a slip. Join the beta and we'll send your TestFlight invite, then the App Store link at launch.</p>
+        <div data-waitlist-block>
+        {waitlist_form("guide-end-form", f"guide-{g['slug']}-end", theme="light")}
+        {PRIVACY_NOTE["light"]}
+        </div>
       </aside>
 
       <section class="prose-dx" aria-labelledby="faq-heading">
@@ -606,7 +688,7 @@ for g in GUIDES:
             {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}}
             for q, a in g["faqs"]]},
     ]}
-    page(path, g["title"], g["meta"], "article", g["h1"], ld, main, path)
+    page(path, g["title"], g["meta"], "article", g["h1"], ld, main, path, sticky=True)
 
 hub_main = f"""  <main class="relative z-10 flex-1 px-4">
     <section class="max-w-5xl mx-auto pt-16 md:pt-24 pb-24">
@@ -647,8 +729,8 @@ info_page(
     meta="Who makes DayXero, why it plans around a Quit Day, and how we research, write and update our "
          "quit-nicotine guides.",
     h1="About DayXero",
-    intro="DayXero is an iPhone app that helps people quit vaping, smoking and nicotine pouches. It plans "
-          "everything around one date: your Quit Day.",
+    intro="DayXero is an iPhone app in development that helps people quit vaping, smoking and nicotine pouches. "
+          "It plans everything around one date: your Quit Day.",
     ld_type="AboutPage",
     body=f"""
 <h2 id="why">Why we built it</h2>
@@ -658,7 +740,7 @@ info_page(
 <h2 id="principles">What DayXero stands for</h2>
 <ul>
   <li><strong>A slip is not a reset.</strong> One puff, pouch or cigarette doesn't erase your progress, so the app never resets your count for a slip. It helps you learn from it instead.</li>
-  <li><strong>Cravings pass.</strong> Craving SOS walks you through a three-minute urge-surfing session, because a craving peaks and fades within minutes.</li>
+  <li><strong>Cravings pass.</strong> Craving SOS will walk you through a three-minute urge-surfing session, because a craving peaks and fades within minutes.</li>
   <li><strong>Every kind of nicotine.</strong> Cigarettes, vapes and pouches all work in the app, and so does stepping down nicotine replacement.</li>
   <li><strong>Private by default.</strong> Your quit data stays on your phone. See our <a href="/privacy/">privacy policy</a>.</li>
 </ul>
@@ -672,6 +754,9 @@ info_page(
   <li><strong>Information, not medical advice.</strong> Our guides don't replace a doctor or pharmacist, especially for nicotine replacement doses, pregnancy, heart conditions or anyone under 18.</li>
 </ul>
 <p>Spotted a mistake or an out-of-date fact? Email {MAIL} and we'll check it and correct the guide.</p>
+
+<h2 id="beta">Try it early</h2>
+<p>DayXero is in beta. <a href="/beta/">Join the beta list</a> to get a TestFlight invite before launch.</p>
 
 <h2 id="contact">Get in touch</h2>
 <p>For support, press or partnerships, see our <a href="/contact/">contact page</a>.</p>
@@ -705,8 +790,8 @@ info_page(
 info_page(
     slug="privacy",
     title="Privacy Policy | DayXero",
-    meta="How DayXero handles your data: quit data stays on your iPhone, there is no account, and the website "
-         "uses cookie-free analytics.",
+    meta="How DayXero handles your data: quit data stays on your iPhone, there is no account, and beta list "
+         "emails are only used to send your invite and launch link.",
     h1="Privacy Policy",
     intro="Short version: your quit data stays on your iPhone. We don't ask you to create an account, we don't sell "
           "data, and we never send what you log about cravings, slips or your health to our analytics.",
@@ -723,7 +808,18 @@ info_page(
   <li><strong>Hosting.</strong> dayxero.in is served by Cloudflare, which processes technical data such as IP addresses to deliver the site and protect it from abuse.</li>
   <li><strong>Analytics.</strong> We use Cloudflare Web Analytics, which counts visits without cookies and without tracking you across other sites.</li>
   <li><strong>Fonts.</strong> Pages load fonts from Google Fonts, so your browser connects to Google's servers.</li>
-  <li><strong>No cookies, no ads.</strong> The website sets no cookies and shows no advertising.</li>
+  <li><strong>No cookies, no ads.</strong> The website sets no cookies and shows no advertising. It uses your browser's own storage for two small conveniences: remembering a referral code during your visit, and remembering for 7 days that you closed the beta bar on guide pages.</li>
+</ul>
+
+<h2 id="waitlist">The beta list</h2>
+<p>If you join the DayXero beta list, here is what happens to your email address.</p>
+<ul>
+  <li><strong>What we collect.</strong> Your email address, the page and form you signed up from, the plan you said you're interested in (if any), the referral code that brought you (if any), your approximate country from Cloudflare, the time you joined and confirmed, the consent wording you agreed to, and a one-way hash of your IP address used only to stop spam signups.</li>
+  <li><strong>Why.</strong> To send you a confirmation link, your TestFlight invite, the App Store link and your founding offer at launch, and occasional beta updates. We use it for nothing else, and we process it because you asked us to (your consent).</li>
+  <li><strong>Who handles it.</strong> Cloudflare stores the list and may check that you're not a bot (Cloudflare Turnstile). Resend sends the confirmation email. If we send the launch email through an email service such as Kit or Brevo, they will hold a copy of confirmed addresses for that purpose only.</li>
+  <li><strong>How long we keep it.</strong> Until you unsubscribe, or 12 months after DayXero launches, whichever comes first. Unconfirmed signups are deleted after 30 days.</li>
+  <li><strong>Leaving.</strong> Every email has a one-click unsubscribe link, or email {MAIL} and we'll delete your address.</li>
+  <li><strong>Age.</strong> The beta list is for people 18 and over.</li>
 </ul>
 
 <h2 id="sharing">Who we share data with</h2>
@@ -761,7 +857,7 @@ info_page(
 
 <h2 id="subscriptions">Subscriptions and payments</h2>
 <ul>
-  <li>DayXero has a free tier and paid plans: monthly, annual and a one-time lifetime purchase. Current prices are shown in the app and on our <a href="/#pricing">pricing section</a>.</li>
+  <li>DayXero will have a free tier and paid plans: monthly, annual and a one-time lifetime purchase. Planned prices are shown in our <a href="/#pricing">pricing section</a>. Once the app is released, current prices are shown in the app.</li>
   <li>Apple handles all payments through your Apple ID. Monthly and annual plans renew automatically unless you cancel at least 24 hours before the end of the current period.</li>
   <li>If a plan includes a free trial, it converts to a paid subscription when the trial ends unless you cancel before then.</li>
   <li>You can manage or cancel a subscription in your Apple ID settings. Refunds are handled by Apple under its policies.</li>
@@ -810,11 +906,182 @@ for ip in INFO_PAGES:
     ]}
     page(path, ip["title"], ip["meta"], "website", ip["h1"], ld, main, path)
 
+BETA_CARD_ICON = {
+    "flask": '<path d="M10 2v7.31"/><path d="M14 9.3V1.99"/><path d="M8.5 2h7"/><path d="M14 9.3a6.5 6.5 0 1 1-4 0"/>',
+    "gift": '<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/>',
+    "chat": '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/><path d="M8 12h.01"/><path d="M12 12h.01"/><path d="M16 12h.01"/>',
+}
+
+
+def svg(name, cls="w-6 h-6"):
+    return (f'<svg class="{cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+            f'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{BETA_CARD_ICON[name]}</svg>')
+
+
+BETA_FAQ = [
+    ("Is the beta free?", "Yes. TestFlight builds are free to install. You only pay if you choose a paid plan after launch."),
+    ("Do I need an iPhone?", "Yes. DayXero is a native iPhone app. TestFlight is Apple's official beta app, and we'll send instructions with your invite."),
+    ("When does DayXero launch?", "We haven't set a date yet. Beta members hear first, and the launch email includes the App Store link."),
+    ("Is DayXero medical treatment?", "No. DayXero is a habit and wellness tool, not a medical device or treatment. Talk to a doctor or pharmacist about nicotine replacement or stop-smoking medicines."),
+]
+
+beta_faq_html = "\n".join(
+    f"""        <details class="faq-item"{' open' if i == 0 else ''}>
+          <summary>{html.escape(q)}</summary>
+          <p>{html.escape(a)}</p>
+        </details>""" for i, (q, a) in enumerate(BETA_FAQ))
+
+beta_main = f"""  <main class="relative z-10 flex-1 px-4">
+    <section id="join" class="max-w-3xl mx-auto pt-16 md:pt-24 pb-16 flex flex-col items-center text-center">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#161616] border border-[#BCC388]/30 text-xs font-medium text-white/80 mb-4" data-ref-only hidden>
+        <span class="w-2 h-2 rounded-full bg-[#BCC388]"></span>
+        <span>A friend invited you. Join and you both move up the queue.</span>
+      </div>
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#161616] border border-white/10 text-xs font-mono text-[#BCC388] mb-6">
+        <span>DAYXERO iOS BETA · NOW ENROLLING</span>
+      </div>
+      <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.05] mb-6">
+        Be First <span class="text-white/40">to Quit on</span> <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-[#BCC388]">Your Quit Day.</span>
+      </h1>
+      <p class="text-base sm:text-lg text-white/60 leading-relaxed max-w-2xl mb-10">DayXero is an iPhone app in development for quitting vaping, smoking and nicotine pouches. Beta members test it on TestFlight before anyone else and get founding-member pricing at launch.</p>
+      <div class="w-full max-w-xl" data-waitlist-block>
+        {waitlist_form("beta-form", "beta-page")}
+        {PRIVACY_NOTE["dark"]}
+      </div>
+    </section>
+
+    <section class="max-w-5xl mx-auto pb-16" aria-label="What beta members get">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="porcelain-card p-8 rounded-card">
+          <div class="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center mb-6 shadow">{svg("flask")}</div>
+          <div class="text-[11px] font-mono uppercase tracking-widest text-black/50 mb-2">EARLY ACCESS</div>
+          <h2 class="text-2xl font-extrabold text-black mb-3">TestFlight before launch</h2>
+          <p class="text-sm text-black/70 leading-relaxed">Invites go out in waves. Try the five-day prep program, Craving SOS and slip debriefs while they're still being shaped.</p>
+        </div>
+        <div class="glass-card-green p-8 rounded-card">
+          <div class="w-12 h-12 rounded-full bg-[#161616] border border-[#BCC388]/30 flex items-center justify-center text-[#BCC388] mb-6 shadow">{svg("gift")}</div>
+          <div class="text-[11px] font-mono uppercase tracking-widest text-[#BCC388] mb-2">FOUNDING PRICE</div>
+          <h2 class="text-2xl font-extrabold text-white mb-3">Half off your first year</h2>
+          <p class="text-sm text-white/70 leading-relaxed">The first 500 confirmed members get Annual at $19.99 for year one (planned $39.99), via an App Store offer code at launch.</p>
+        </div>
+        <div class="dark-card p-8 rounded-card">
+          <div class="w-12 h-12 rounded-full bg-white text-black flex items-center justify-center mb-6 shadow">{svg("chat")}</div>
+          <div class="text-[11px] font-mono uppercase tracking-widest text-white/50 mb-2">SHAPE IT</div>
+          <h2 class="text-2xl font-extrabold text-white mb-3">Tell us what helps</h2>
+          <p class="text-sm text-white/60 leading-relaxed">Beta feedback goes straight to the people building it. Vapes, cigarettes and pouches are all in scope.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="max-w-5xl mx-auto pb-16" aria-labelledby="how-heading">
+      <div class="bg-[#121212] border border-white/10 rounded-card p-6 md:p-8 shadow-2xl">
+        <div class="flex justify-between items-center mb-6">
+          <h2 id="how-heading" class="text-xs font-mono text-white/40 uppercase tracking-wider">HOW THE BETA WORKS</h2>
+          <div class="px-3.5 py-1.5 rounded-full bg-[#BCC388] text-black text-xs font-mono font-bold shadow">4 steps</div>
+        </div>
+        <ol class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <li class="bg-[#141414] border border-white/5 p-4 rounded-2xl"><div class="w-8 h-8 rounded-full bg-[#BCC388] text-black font-bold text-xs flex items-center justify-center mb-3">1</div><div class="text-sm font-semibold text-white">Join with your email</div><div class="text-xs text-white/50 mt-1">One field. No account, no payment.</div></li>
+          <li class="bg-[#141414] border border-white/5 p-4 rounded-2xl"><div class="w-8 h-8 rounded-full bg-[#BCC388] text-black font-bold text-xs flex items-center justify-center mb-3">2</div><div class="text-sm font-semibold text-white">Confirm the link</div><div class="text-xs text-white/50 mt-1">Saves your spot and founding price.</div></li>
+          <li class="porcelain-card p-4 rounded-2xl"><div class="w-8 h-8 rounded-full bg-black text-white font-bold text-xs flex items-center justify-center mb-3">3</div><div class="text-sm font-extrabold text-black">Get a TestFlight invite</div><div class="text-xs text-black/60 mt-1">Sent in waves as spots open.</div></li>
+          <li class="bg-[#101010] border border-white/5 p-4 rounded-2xl"><div class="w-8 h-8 rounded-full bg-[#1A1A1A] text-white/40 font-bold text-xs flex items-center justify-center mb-3">4</div><div class="text-sm font-semibold text-white/70">App Store link at launch</div><div class="text-xs text-white/40 mt-1">Plus your offer code.</div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="max-w-3xl mx-auto pb-24" aria-labelledby="beta-faq">
+      <h2 id="beta-faq" class="text-2xl md:text-3xl font-extrabold tracking-tight mb-6 text-center">Beta questions</h2>
+      <div class="flex flex-col gap-3">
+{beta_faq_html}
+      </div>
+    </section>
+  </main>
+"""
+beta_ld = {"@context": "https://schema.org", "@graph": [
+    ORG,
+    {"@type": "WebPage", "name": "Join the DayXero iOS beta", "url": f"{BASE}/beta/", "inLanguage": "en",
+     "publisher": {"@id": f"{BASE}/#organization"}},
+    {"@type": "FAQPage", "mainEntity": [
+        {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in BETA_FAQ]},
+]}
+page("/beta/", "Join the DayXero iOS Beta: Quit Nicotine App for iPhone",
+     "Join the DayXero iOS beta: early TestFlight access to the quit vaping, smoking and pouches app, plus "
+     "founding-member pricing at launch.",
+     "website", "Join the DayXero iOS beta", beta_ld, beta_main, "/beta/")
+
+SHARE_ICONS = {
+    "share": '<path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" x2="12" y1="2" y2="15"/>',
+    "sms": '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
+    "x": '<path d="M4 4l16 16"/><path d="M20 4 4 20"/>',
+    "email": '<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',
+}
+
+
+def share_icon(name):
+    return (f'<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+            f'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{SHARE_ICONS[name]}</svg>')
+
+
+SHARE_BTN = "w-11 h-11 rounded-full bg-black text-white flex items-center justify-center shadow hover:scale-110 spring-trans"
+confirmed_main = f"""  <main class="relative z-10 flex-1 px-4">
+    <section id="beta-confirmed" class="max-w-xl mx-auto pt-16 md:pt-24 pb-24">
+      <p id="confirmed-status" class="text-sm text-white/70 leading-relaxed mb-6 text-center" role="status" hidden></p>
+      <div class="porcelain-card rounded-card p-6 md:p-8">
+        <div class="flex items-center justify-between mb-6">
+          <div class="w-12 h-12 rounded-full bg-[#BCC388] text-black flex items-center justify-center shadow"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></div>
+          <span class="px-3 py-1 rounded-full bg-black text-[#BCC388] text-[10px] font-mono font-bold uppercase tracking-wider">FOUNDING MEMBER</span>
+        </div>
+        <div class="text-[11px] font-mono uppercase tracking-widest text-black/50 mb-2">STEP 2 OF 2 · CONFIRMED</div>
+        <h1 class="text-2xl font-extrabold tracking-tight text-black mb-2">You're on the DayXero beta list.</h1>
+        <div id="queue-row" class="flex items-baseline gap-1 mb-4" hidden>
+          <span id="queue-position" class="text-3xl font-extrabold text-black tracking-tight"></span>
+          <span class="text-sm font-normal text-black/40">in the TestFlight queue</span>
+        </div>
+        <div data-needs-code hidden>
+          <p class="text-sm text-black/70 leading-relaxed mb-5">Know someone who wants to quit too? Each friend who joins and confirms moves you 10 spots closer to the first TestFlight wave. Sharing is optional, and your link never says why you joined.</p>
+          <label for="ref-link" class="block text-[10px] font-mono uppercase tracking-widest text-black/50 mb-2">YOUR INVITE LINK</label>
+          <div class="flex items-center gap-2 p-1.5 rounded-full bg-black/5 border border-black/10 mb-4">
+            <input id="ref-link" readonly value="" class="flex-1 min-w-0 h-10 px-4 rounded-full bg-white border border-black/10 text-xs sm:text-sm font-mono text-black focus:outline-none">
+            <button id="btn-copy-ref" type="button" class="h-10 px-5 rounded-full bg-black text-white font-semibold text-xs hover:bg-[#202020] active:scale-95 spring-trans flex items-center gap-2 whitespace-nowrap"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span>Copy</span></button>
+          </div>
+          <div class="flex items-center gap-2.5 mb-6">
+            <button id="btn-share" type="button" title="Share" aria-label="Share" class="{SHARE_BTN}">{share_icon("share")}</button>
+            <a id="btn-share-sms" href="#" title="Send as a message" aria-label="Send as a message" class="{SHARE_BTN}">{share_icon("sms")}</a>
+            <a id="btn-share-x" href="#" target="_blank" rel="noopener" title="Post on X" aria-label="Post on X" class="{SHARE_BTN}">{share_icon("x")}</a>
+            <a id="btn-share-email" href="#" title="Email a friend" aria-label="Email a friend" class="{SHARE_BTN}">{share_icon("email")}</a>
+          </div>
+          <div class="pt-5 border-t border-black/10">
+            <div class="flex justify-between items-center text-[11px] font-medium tracking-[0.08em] uppercase text-black/50 mb-2">
+              <span>Friends joined</span>
+              <span id="friends-count" class="font-mono text-black">0 / 3 · first-wave access</span>
+            </div>
+            <div class="h-1.5 w-full bg-black/10 rounded-full overflow-hidden">
+              <div id="friends-bar" class="h-full bg-[#43511C] rounded-full" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 dark-card rounded-card p-6 md:p-8">
+        <div class="text-[11px] font-mono uppercase tracking-widest text-white/50 mb-4">WHAT HAPPENS NEXT</div>
+        <ol class="flex flex-col gap-4 text-sm">
+          <li class="flex items-start gap-3"><span class="w-8 h-8 shrink-0 rounded-full bg-[#BCC388] text-black font-bold text-xs flex items-center justify-center">1</span><span class="text-white/70">TestFlight invites go out in waves, highest in the queue first.</span></li>
+          <li class="flex items-start gap-3"><span class="w-8 h-8 shrink-0 rounded-full bg-white text-black font-bold text-xs flex items-center justify-center">2</span><span class="text-white/70">On launch day you get the App Store link and your founding offer code.</span></li>
+          <li class="flex items-start gap-3"><span class="w-8 h-8 shrink-0 rounded-full bg-[#161616] border border-white/10 text-white/60 font-bold text-xs flex items-center justify-center">3</span><span class="text-white/70">That's it. No newsletter unless you ask. Unsubscribe in one tap.</span></li>
+        </ol>
+      </div>
+    </section>
+  </main>
+"""
+page("/beta/confirmed/", "You're on the DayXero Beta List",
+     "Your spot on the DayXero iOS beta is confirmed.",
+     "website", "You're on the DayXero beta list", {"@context": "https://schema.org", "@graph": [ORG]},
+     confirmed_main, "/beta/confirmed/", noindex=True)
+
 sitemap = ['<?xml version="1.0" encoding="UTF-8"?>',
            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
-for path in (["/", "/guides/"] + [f"/{g['slug']}/" for g in GUIDES]
+for path in (["/", "/beta/", "/guides/"] + [f"/{g['slug']}/" for g in GUIDES]
              + [f"/{ip['slug']}/" for ip in INFO_PAGES]):
     sitemap += ["  <url>", f"    <loc>{BASE}{path}</loc>", f"    <lastmod>{DATE}</lastmod>", "  </url>"]
 sitemap.append("</urlset>")
 (SITE / "sitemap.xml").write_text("\n".join(sitemap) + "\n")
-print("wrote", len(GUIDES) + len(INFO_PAGES) + 1, "pages")
+print("wrote", len(GUIDES) + len(INFO_PAGES) + 3, "pages")

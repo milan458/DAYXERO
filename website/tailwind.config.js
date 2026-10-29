@@ -1,7 +1,7 @@
 // Tailwind theme for the DayXero website. Build with `npm run website:css` from the repo root,
 // which writes assets/site.css. The Website workflow rebuilds it before every deploy.
 module.exports = {
-  content: ['./**/*.html', '!./node_modules/**'],
+  content: ['./**/*.html', './assets/waitlist.js', './worker/**/*.js', '!./node_modules/**'],
   theme: {
     extend: {
       colors: {
