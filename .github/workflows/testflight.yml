@@ -202,8 +202,9 @@ jobs:
         if: steps.keys.outputs.ready == 'true' && !inputs.check_only
         run: |
           set -o pipefail
-          # Build numbers only go up: the UTC time, like the builds already in App Store Connect (202610191728).
-          BUILD=$(date -u +%Y%m%d%H%M)
+          # Build numbers only go up: the UTC time, or one above the highest build in App Store Connect when
+          # Xcode Cloud has already counted past it.
+          BUILD=$(python3 scripts/ci/asc_signing.py next)
           echo "DX_BUILD=$BUILD" >> "$GITHUB_ENV"
           echo "Build $BUILD"
           xcodebuild archive -project DayXero.xcodeproj -scheme DayXero -configuration Release \

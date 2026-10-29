@@ -189,6 +189,14 @@ def builds():
     print(f"::notice title=Builds in App Store Connect::{found or 'none yet'}")
 
 
+def next_build():
+    """The UTC time as a build number, or one more than the highest build already uploaded (Xcode Cloud counts
+    up from its own start number), whichever is higher, so TestFlight always lists the newest build on top."""
+    stamp = int(time.strftime("%Y%m%d%H%M", time.gmtime()))
+    numbers = [int(v) for v, *_ in recent_builds() if v.isdigit()]
+    print(max([stamp] + [n + 1 for n in numbers]))
+
+
 def wait(version):
     for _ in range(40):   # about 20 minutes
         for v, state, uploaded, *_ in recent_builds():
@@ -204,7 +212,7 @@ def wait(version):
 
 
 if __name__ == "__main__":
-    commands = {"setup": setup, "cleanup": cleanup, "builds": builds}
+    commands = {"setup": setup, "cleanup": cleanup, "builds": builds, "next": next_build}
     if sys.argv[1] == "wait":
         wait(sys.argv[2])
     else:
