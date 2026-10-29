@@ -1,0 +1,1300 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DayXero Colour Lab</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a contact sheet of real app screens on a neutral light table, with the colour rail docked right
+   (a bottom sheet on phones). The chrome stays neutral grey on purpose so it never tints colour judgement. */
+:root {
+  --bg: #0E0E0F;
+  --panel: #161617;
+  --raised: #1F1F21;
+  --sunk: #0A0A0B;
+  --line: #29292C;
+  --line-2: #3B3B3F;
+  --fg: #EEEEF0;
+  --fg-2: #A6A6AC;
+  --fg-3: #74747A;
+  --ring: #FFFFFF;
+  --mask: #FF40BF;
+  --sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --head: 56px;
+  --card: 164px;
+  --rail: 372px;
+  color-scheme: dark;
+}
+[hidden] { display: none !important; }
+html, body { background: var(--bg); color: var(--fg); }
+body { font: 13px/1.45 var(--sans); -webkit-font-smoothing: antialiased; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 40; background: var(--bg); }
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.label { font-size: 10.5px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-3); }
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding-inline: 11px; border-radius: 8px;
+  border: 1px solid var(--line-2); background: var(--raised); font-size: 12.5px; font-weight: 500; white-space: nowrap; }
+.btn:hover { border-color: #55555b; }
+.btn[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.btn.quiet { background: transparent; border-color: transparent; color: var(--fg-2); padding-inline: 8px; }
+.btn.quiet:hover { color: var(--fg); border-color: var(--line-2); }
+.btn.solid { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.btn:disabled { opacity: 0.4; cursor: default; }
+.btn svg { width: 14px; height: 14px; flex: none; }
+.link { background: none; border: 0; padding: 0; color: var(--fg); text-decoration: underline; text-underline-offset: 2px; text-decoration-color: var(--fg-3); }
+
+/* Header */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30; height: var(--head); display: flex; align-items: center; gap: 16px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  background: var(--bg); border-bottom: 1px solid var(--line); }
+.brand { display: flex; flex-direction: column; min-width: 0; }
+.brand b { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+.brand span { font-size: 11.5px; color: var(--fg-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.top .actions { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+.mask-key { display: none; align-items: center; gap: 6px; font-size: 12px; color: var(--fg-2); }
+.mask-key i { width: 10px; height: 10px; border-radius: 3px; background: var(--mask); }
+body.mask .mask-key { display: inline-flex; }
+
+/* App grid */
+.app { display: grid; grid-template-columns: minmax(0, 1fr) var(--rail); align-items: start; }
+.board { min-width: 0; padding-block: 14px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: 20px; }
+.board-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-bottom: 18px; color: var(--fg-2); }
+.board-bar .count { color: var(--fg); font-weight: 500; }
+.board-bar .spacer { flex: 1; }
+.size { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; }
+.size input { width: 96px; accent-color: var(--fg); }
+
+/* Sections and cards */
+.sec + .sec { margin-top: 30px; }
+.sec-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+.sec-head h2 { margin: 0; font-size: 14px; font-weight: 600; }
+.sec-head .n { color: var(--fg-3); font-size: 12px; }
+.sec-head button { margin-left: auto; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(var(--card), 1fr)); gap: 22px 16px; }
+.card { min-width: 0; display: flex; flex-direction: column; gap: 8px; border-radius: 4px; outline: none; }
+.shot { position: relative; aspect-ratio: 1206 / 2622; max-width: 100%; border-radius: 11.5% / 5.3%; overflow: hidden;
+  background: var(--sunk); box-shadow: 0 0 0 1px var(--line); cursor: pointer; transition: box-shadow .12s; }
+.shot canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.card:hover .shot { box-shadow: 0 0 0 1px #5a5a60; }
+.card[aria-pressed="true"] .shot { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--ring); }
+.card:focus-visible .shot { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px #8a8a90; }
+.tick { position: absolute; top: 8%; left: 9%; width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,.85);
+  background: rgba(0,0,0,.45); display: grid; place-items: center; opacity: 0; transition: opacity .12s; }
+.tick svg { width: 12px; height: 12px; opacity: 0; }
+.card:hover .tick, .card[aria-pressed="true"] .tick, body.selecting .tick { opacity: 1; }
+.card[aria-pressed="true"] .tick { background: #fff; border-color: #fff; }
+.card[aria-pressed="true"] .tick svg { opacity: 1; }
+.zoom { position: absolute; top: 7.5%; right: 8%; width: 28px; height: 28px; border-radius: 50%; border: 0; background: rgba(0,0,0,.6);
+  display: grid; place-items: center; opacity: 0; transition: opacity .12s; }
+.zoom svg { width: 14px; height: 14px; }
+.card:hover .zoom, .zoom:focus-visible { opacity: 1; }
+@media (hover: none) { .zoom { opacity: 1; } }
+.own { position: absolute; left: 50%; bottom: 3.2%; transform: translateX(-50%); display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 8px 3px 4px; border-radius: 99px; background: rgba(0,0,0,.72); font-size: 10.5px; font-weight: 500; white-space: nowrap; }
+.own i { width: 12px; height: 12px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(255,255,255,.25); }
+.cap { display: flex; gap: 6px; align-items: baseline; font-size: 12px; color: var(--fg-2); min-width: 0; }
+.cap b { font-weight: 500; color: var(--fg); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cap .step { font-family: var(--mono); font-size: 11px; color: var(--fg-3); }
+
+/* Viewer */
+.viewer-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 14px; }
+.viewer-bar .title { font-weight: 600; font-size: 14px; margin-inline: 6px; }
+.viewer-bar .title span { color: var(--fg-3); font-weight: 400; }
+.viewer-bar .spacer { flex: 1; }
+.viewer-body { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 24px; align-items: start; }
+.stage { position: relative; height: min(calc(100vh - var(--head) - 120px), 1311px); min-height: 420px; aspect-ratio: 1206 / 2622; max-width: 100%;
+  border-radius: 11.5% / 5.3%; overflow: hidden; box-shadow: 0 0 0 1px var(--line); cursor: crosshair; touch-action: none; background: var(--sunk); }
+.stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.split { position: absolute; top: 0; bottom: 0; width: 28px; margin-left: -14px; cursor: ew-resize; display: flex; justify-content: center; touch-action: none; }
+.split::before { content: ""; width: 2px; background: #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.5); }
+.split i { position: absolute; top: 50%; width: 26px; height: 26px; margin-top: -13px; border-radius: 50%; background: #fff; box-shadow: 0 1px 6px rgba(0,0,0,.5);
+  display: grid; place-items: center; color: #000; font-style: normal; font-size: 12px; font-weight: 600; }
+.stage-wrap { display: grid; gap: 8px; justify-items: start; min-width: 0; }
+.stage-tags { display: flex; justify-content: space-between; width: 100%; font-size: 11.5px; color: var(--fg-2); }
+.cross { position: absolute; width: 18px; height: 18px; margin: -9px 0 0 -9px; border: 1.5px solid #fff; border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.6); pointer-events: none; }
+.probe { display: grid; gap: 14px; max-width: 320px; }
+.probe-row { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 10px; align-items: center; }
+.probe-row i { width: 44px; height: 44px; border-radius: 10px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.12); }
+.probe-row b { display: block; font-weight: 500; }
+.probe-row span { color: var(--fg-2); font-size: 12px; }
+.hint { color: var(--fg-3); font-size: 12px; line-height: 1.5; max-width: 34ch; }
+
+/* Rail */
+.rail { position: sticky; top: calc(var(--head) + env(safe-area-inset-top, 0px)); height: calc(100vh - var(--head) - env(safe-area-inset-top, 0px));
+  overflow-y: auto; overscroll-behavior: contain; background: var(--panel); border-left: 1px solid var(--line);
+  padding-block: 0 40px; padding-left: 18px; padding-right: max(18px, env(safe-area-inset-right, 0px)); }
+.rail-sec { padding-block: 16px; border-bottom: 1px solid var(--line); display: grid; gap: 12px; }
+.rail-sec:last-child { border-bottom: 0; }
+.rail-sec > .label { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.sheet-toggle { display: none; }
+.seg { display: grid; grid-template-columns: 1fr 1fr; padding: 3px; border-radius: 10px; background: var(--sunk); border: 1px solid var(--line); }
+.seg button { height: 30px; border: 0; border-radius: 7px; background: transparent; color: var(--fg-2); font-weight: 500; font-size: 12.5px; }
+.seg button[aria-pressed="true"] { background: var(--raised); color: var(--fg); box-shadow: 0 0 0 1px var(--line-2); }
+.seg button:disabled { opacity: .4; cursor: default; }
+.scope-note { margin: 0; font-size: 12px; color: var(--fg-2); line-height: 1.5; }
+.scope-note .link { font-size: 12px; }
+
+.ramp canvas { width: 100%; height: 52px; display: block; border-radius: 8px; }
+.ramp-labels { position: relative; height: 14px; font-size: 10.5px; color: var(--fg-3); }
+.ramp-labels span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
+.ramp-legend { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--fg-3); }
+
+.stops { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.stop { display: grid; gap: 6px; padding: 0; border: 0; background: none; text-align: left; min-width: 0; }
+.stop .sw { position: relative; aspect-ratio: 1.25 / 1; border-radius: 10px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.12); }
+.stop .sw i { position: absolute; right: 6px; bottom: 6px; width: 14px; height: 14px; border-radius: 50%; box-shadow: 0 0 0 1.5px rgba(255,255,255,.7); }
+.stop[aria-pressed="true"] .sw { box-shadow: 0 0 0 2px var(--panel), 0 0 0 4px var(--ring); }
+.stop b { font-size: 12px; font-weight: 500; }
+.stop span { font-family: var(--mono); font-size: 10.5px; color: var(--fg-2); }
+.stop-role { margin: 0; font-size: 12px; color: var(--fg-2); }
+.stop-role b { color: var(--fg); font-weight: 500; }
+.check { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--fg-2); }
+.check input { accent-color: var(--fg); width: 15px; height: 15px; margin: 0; }
+
+.sv { position: relative; aspect-ratio: 1.5 / 1; max-width: 100%; border-radius: 10px; overflow: hidden; touch-action: none; cursor: crosshair; }
+.sv canvas, .hue canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.knob { position: absolute; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; border: 2px solid #fff;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.4), 0 2px 6px rgba(0,0,0,.4); pointer-events: none; }
+.hue { position: relative; height: 16px; border-radius: 8px; overflow: hidden; touch-action: none; cursor: ew-resize; }
+.hue .knob { top: 50%; }
+.fields { display: grid; grid-template-columns: 1.7fr repeat(3, 1fr); gap: 6px; }
+.field { display: grid; gap: 4px; min-width: 0; }
+.field span { font-size: 10.5px; color: var(--fg-3); }
+.field input { width: 100%; min-width: 0; height: 30px; padding-inline: 8px; border-radius: 7px; border: 1px solid var(--line-2); background: var(--sunk);
+  font-family: var(--mono); font-size: 12px; font-variant-numeric: tabular-nums; }
+.field input:focus { border-color: var(--fg-2); outline: none; }
+.field input.bad { border-color: #d9534f; }
+.lch { display: grid; gap: 9px; }
+.lch-row { display: grid; grid-template-columns: 74px minmax(0, 1fr) 46px; gap: 8px; align-items: center; font-size: 11.5px; color: var(--fg-2); }
+.lch-row output { font-family: var(--mono); font-size: 11.5px; text-align: right; color: var(--fg); }
+.gamut { font-size: 11px; color: var(--fg-3); }
+input[type=range].grad { -webkit-appearance: none; appearance: none; width: 100%; height: 12px; border-radius: 6px; background: var(--track, var(--line)); margin: 0;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); }
+input[type=range].grad::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: #fff; border: 0; box-shadow: 0 0 0 1px rgba(0,0,0,.5), 0 1px 4px rgba(0,0,0,.5); }
+input[type=range].grad::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: #fff; border: 0; box-shadow: 0 0 0 1px rgba(0,0,0,.5), 0 1px 4px rgba(0,0,0,.5); }
+input[type=range].plain { width: 100%; accent-color: var(--fg); margin: 0; }
+.recent { display: flex; flex-wrap: wrap; gap: 6px; }
+.recent button { width: 22px; height: 22px; border-radius: 6px; border: 0; box-shadow: inset 0 0 0 1px rgba(255,255,255,.15); }
+
+.presets { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.preset { display: grid; gap: 5px; padding: 6px; border-radius: 9px; border: 1px solid var(--line); background: var(--sunk); text-align: left; min-width: 0; }
+.preset:hover { border-color: var(--line-2); }
+.preset i { height: 18px; border-radius: 5px; }
+.preset span { font-size: 11.5px; color: var(--fg-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+details.adv summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+details.adv summary::-webkit-details-marker { display: none; }
+details.adv summary::after { content: "+"; color: var(--fg-3); font-size: 15px; }
+details.adv[open] summary::after { content: "–"; }
+.adv-body { display: grid; gap: 10px; margin-top: 12px; }
+.adv-row { display: grid; grid-template-columns: minmax(0, 1fr) 54px; gap: 4px 10px; align-items: center; font-size: 12px; color: var(--fg-2); }
+.adv-row input { grid-column: 1 / -1; }
+.adv-row output { font-family: var(--mono); font-size: 11.5px; text-align: right; color: var(--fg); }
+
+.save-row { display: flex; gap: 6px; }
+.save-row input { flex: 1; min-width: 0; height: 30px; padding-inline: 9px; border-radius: 8px; border: 1px solid var(--line-2); background: var(--sunk); font-size: 12.5px; }
+.looks { display: grid; gap: 6px; }
+.look { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 6px; border-radius: 9px; border: 1px solid var(--line); background: var(--sunk); }
+.look i { height: 28px; border-radius: 6px; }
+.look b { display: block; font-weight: 500; font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.look span { font-size: 11px; color: var(--fg-3); }
+.look .row-actions { display: flex; gap: 2px; }
+.badge { display: inline-block; margin-left: 4px; padding: 1px 6px; border-radius: 99px; background: var(--fg); color: var(--bg); font-size: 10px; font-weight: 600; vertical-align: 1px; }
+.empty { font-size: 12px; color: var(--fg-3); margin: 0; }
+.final { padding: 10px 12px; border-radius: 9px; border: 1px solid var(--line-2); background: var(--sunk); font-size: 12px; color: var(--fg-2); }
+.final b { color: var(--fg); font-weight: 500; }
+.export-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.changes { max-height: 340px; overflow: auto; border: 1px solid var(--line); border-radius: 9px; background: var(--sunk); }
+.change-file { position: sticky; top: 0; padding: 6px 10px; background: var(--raised); font-family: var(--mono); font-size: 10.5px; color: var(--fg-2); border-bottom: 1px solid var(--line); }
+.change { display: grid; grid-template-columns: 16px 16px minmax(0, 1fr); gap: 6px; align-items: center; padding: 5px 10px; border-bottom: 1px solid var(--line); font-size: 11.5px; }
+.change:last-child { border-bottom: 0; }
+.change i { width: 16px; height: 16px; border-radius: 4px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.15); }
+.change span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--fg-2); }
+.change span b { font-family: var(--mono); font-weight: 400; color: var(--fg); }
+.notice { margin: 0; padding: 10px 12px; border-radius: 9px; background: var(--raised); color: var(--fg-2); font-size: 12px; }
+
+.toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 20px); opacity: 0; z-index: 60;
+  padding: 9px 14px; border-radius: 10px; background: var(--fg); color: var(--bg); font-weight: 500; font-size: 12.5px; transition: opacity .18s, transform .18s; pointer-events: none; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+.boot { display: grid; place-items: center; min-height: 50vh; color: var(--fg-3); text-align: center; }
+
+@media (max-width: 1080px) { :root { --rail: 336px; --card: 140px; } }
+@media (max-width: 760px) {
+  :root { --head: 52px; --card: 132px; }
+  .brand span { display: none; }
+  .top .actions .btn .txt { display: none; }
+  .app { display: block; }
+  .board { padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-bottom: 300px; }
+  .rail { position: fixed; top: auto; left: 0; right: 0; bottom: 0; height: auto; max-height: 74vh; z-index: 35; border-left: 0; border-top: 1px solid var(--line-2);
+    border-radius: 16px 16px 0 0; box-shadow: 0 -12px 40px rgba(0,0,0,.6); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+  .sheet-toggle { display: flex; justify-content: center; position: sticky; top: 0; z-index: 2; margin-inline: -16px; padding-block: 8px 2px; background: var(--panel); }
+  .sheet-toggle button { display: inline-flex; align-items: center; gap: 8px; height: 26px; padding-inline: 12px; border-radius: 99px; border: 1px solid var(--line-2); background: var(--raised); font-size: 12px; color: var(--fg-2); }
+  .rail.collapsed .more, .rail.collapsed .scope-note, .rail.collapsed .rail-sec > .label, .rail.collapsed .stop span { display: none; }
+  .rail.collapsed .rail-sec { padding-block: 10px; }
+  .rail.collapsed .stop .sw { aspect-ratio: 2.2 / 1; }
+  .rail.collapsed .rail-sec.stops-sec { border-bottom: 0; }
+  .viewer-body { grid-template-columns: minmax(0, 1fr); }
+  .stage-wrap { justify-items: stretch; width: min(100%, 420px); margin-inline: auto; }
+  .stage { height: auto; width: 100%; min-height: 0; }
+  .probe { max-width: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<header class="top">
+  <div class="brand"><b>DayXero Colour Lab</b><span id="meta">Loading screens…</span></div>
+  <div class="actions">
+    <span class="mask-key"><i></i>Recoloured pixels</span>
+    <button class="btn" id="btnOriginal" aria-pressed="false" title="Show the screens as they are in the app today (O)">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1.5 8s2.4-4.5 6.5-4.5S14.5 8 14.5 8 12.1 12.5 8 12.5 1.5 8 1.5 8Z"/><circle cx="8" cy="8" r="2"/></svg><span class="txt">Original</span></button>
+    <button class="btn" id="btnMask" aria-pressed="false" title="Highlight the pixels the lab recolours (M)">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="3"/><path d="M2 10.5 6 7l3 3 2-2 3 2.5"/></svg><span class="txt">Mask</span></button>
+  </div>
+</header>
+
+<div class="app">
+  <main class="board" id="board">
+    <div class="boot" id="boot">Loading the latest screenshots…</div>
+    <div id="gridView" hidden>
+      <div class="board-bar">
+        <span><span class="count" id="selCount">0 selected</span> of <span id="total">0</span> screens</span>
+        <button class="link" id="selAll">Select all</button>
+        <button class="link" id="selNone">Clear selection</button>
+        <span class="spacer"></span>
+        <label class="size" for="cardSize">Size <input type="range" id="cardSize" min="110" max="280" value="164"></label>
+      </div>
+      <div id="sections"></div>
+    </div>
+    <section id="viewer" hidden>
+      <div class="viewer-bar">
+        <button class="btn" id="vBack"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10 3 5 8l5 5"/></svg>All screens</button>
+        <div class="title" id="vTitle"></div>
+        <span class="spacer"></span>
+        <button class="btn quiet" id="vPrev" aria-label="Previous screen"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10 3 5 8l5 5"/></svg></button>
+        <button class="btn quiet" id="vNext" aria-label="Next screen"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m6 3 5 5-5 5"/></svg></button>
+        <button class="btn" id="vCompare" aria-pressed="true">Before / after</button>
+        <button class="btn" id="vOnly">Edit only this screen</button>
+      </div>
+      <div class="viewer-body">
+        <div class="stage-wrap" id="stageWrap">
+          <div class="stage-tags" id="stageTags"><span>← Today</span><span>Yours →</span></div>
+          <div class="stage" id="stage">
+            <canvas id="vCanvas" width="1206" height="2622"></canvas>
+            <div class="split" id="split"><i>⇆</i></div>
+            <div class="cross" id="cross" hidden></div>
+          </div>
+        </div>
+        <div class="probe">
+          <div class="label">Colour under the pointer</div>
+          <div class="probe-row"><i id="pOrigSw"></i><div><b class="mono" id="pOrig">—</b><span>In the app today</span></div></div>
+          <div class="probe-row"><i id="pNewSw"></i><div><b class="mono" id="pNew">—</b><span id="pNote">With your gradient</span></div></div>
+          <p class="hint">Move over the screen to read colours. Drag the white handle to compare today's screen with yours. Arrow keys switch screens, Esc goes back.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <aside class="rail collapsed" id="rail" aria-label="Colour controls">
+    <div class="sheet-toggle"><button id="sheetToggle" aria-expanded="false">Show colour picker</button></div>
+
+    <div class="rail-sec">
+      <div class="label">Apply changes to</div>
+      <div class="seg" role="group" aria-label="Apply changes to">
+        <button id="scopeAll" aria-pressed="true">All screens</button>
+        <button id="scopeSel" aria-pressed="false" disabled>Selected</button>
+      </div>
+      <p class="scope-note" id="scopeNote"></p>
+    </div>
+
+    <div class="rail-sec stops-sec">
+      <div class="label">The app gradient <span class="mono" style="letter-spacing:0;text-transform:none">tints → shades</span></div>
+      <div class="ramp more">
+        <canvas id="ramp" width="320" height="52"></canvas>
+      </div>
+      <div class="ramp-legend more"><span>Top row: today</span><span>Bottom row: yours</span></div>
+      <div class="stops" id="stops"></div>
+      <p class="stop-role more" id="stopRole"></p>
+      <label class="check more" for="link"><input type="checkbox" id="link"> Mid and Deep follow Light</label>
+    </div>
+
+    <div class="rail-sec more">
+      <div class="label">Colour <span class="mono" id="pickerFor" style="letter-spacing:0;text-transform:none"></span></div>
+      <div class="sv" id="sv"><canvas id="svCanvas"></canvas><div class="knob" id="svKnob"></div></div>
+      <div class="hue" id="hue"><canvas id="hueCanvas"></canvas><div class="knob" id="hueKnob"></div></div>
+      <div class="fields">
+        <label class="field" for="fHex"><span>Hex</span><input id="fHex" spellcheck="false" autocomplete="off" maxlength="7"></label>
+        <label class="field" for="fR"><span>R</span><input id="fR" type="number" min="0" max="255" inputmode="numeric"></label>
+        <label class="field" for="fG"><span>G</span><input id="fG" type="number" min="0" max="255" inputmode="numeric"></label>
+        <label class="field" for="fB"><span>B</span><input id="fB" type="number" min="0" max="255" inputmode="numeric"></label>
+      </div>
+      <div class="lch">
+        <div class="lch-row"><label for="lL">Lightness</label><input type="range" class="grad" id="lL" min="0" max="100" step="0.1"><output id="oL" for="lL"></output></div>
+        <div class="lch-row"><label for="lC">Chroma</label><input type="range" class="grad" id="lC" min="0" max="0.32" step="0.001"><output id="oC" for="lC"></output></div>
+        <div class="lch-row"><label for="lH">Hue</label><input type="range" class="grad" id="lH" min="0" max="360" step="0.5"><output id="oH" for="lH"></output></div>
+        <div class="gamut">Perceptual OKLCH sliders. The square covers all 16,777,216 sRGB colours.</div>
+      </div>
+      <div class="recent" id="recent" aria-label="Recent colours"></div>
+    </div>
+
+    <div class="rail-sec more">
+      <div class="label">Starting points</div>
+      <div class="presets" id="presets"></div>
+    </div>
+
+    <div class="rail-sec more">
+      <details class="adv">
+        <summary class="label">What gets recoloured</summary>
+        <div class="adv-body">
+          <div class="adv-row"><label for="dCenter">Hue centre</label><output id="oCenter"></output><input type="range" class="plain" id="dCenter" min="90" max="160" step="1"></div>
+          <div class="adv-row"><label for="dWidth">Hue range ±</label><output id="oWidth"></output><input type="range" class="plain" id="dWidth" min="8" max="45" step="1"></div>
+          <div class="adv-row"><label for="dFeather">Edge softness</label><output id="oFeather"></output><input type="range" class="plain" id="dFeather" min="2" max="24" step="1"></div>
+          <div class="adv-row"><label for="dSens">Faintest tint picked up</label><output id="oSens"></output><input type="range" class="plain" id="dSens" min="0.004" max="0.03" step="0.001"></div>
+          <div class="adv-row"><label for="dKeep">Keep hue nuances</label><output id="oKeep"></output><input type="range" class="plain" id="dKeep" min="0" max="1" step="0.01"></div>
+          <div class="adv-row"><label for="dStrength">Strength</label><output id="oStrength"></output><input type="range" class="plain" id="dStrength" min="0" max="1" step="0.01"></div>
+          <p class="hint">The lab finds the sage and moss pixels by hue and recolours them along your gradient. Whites, blacks, the water blue, amber chips and the rainbow SOS stay as they are. Turn on Mask to see the selection.</p>
+          <div><button class="btn" id="dReset">Reset these settings</button></div>
+        </div>
+      </details>
+    </div>
+
+    <div class="rail-sec more">
+      <div class="label">Saved looks <span id="storeState" style="letter-spacing:0;text-transform:none;font-weight:400"></span></div>
+      <div class="save-row"><input id="lookName" placeholder="Name this look" maxlength="40" autocomplete="off"><button class="btn" id="saveLook">Save</button></div>
+      <div class="looks" id="looks"><p class="empty">Saved looks appear here so you can compare a few before you decide.</p></div>
+    </div>
+
+    <div class="rail-sec more" id="exportSec">
+      <div class="label">Finalise</div>
+      <div class="final" id="finalBox">No final look yet. When you're happy, save it as final and Claude can apply it to the app code.</div>
+      <div class="export-actions">
+        <button class="btn solid" id="saveFinal">Save as final</button>
+        <button class="btn" id="copyText">Copy changes</button>
+        <button class="btn" id="copyJson">Copy JSON</button>
+      </div>
+      <div class="label" id="changesLabel">Colours in the code</div>
+      <div class="changes" id="changes"></div>
+    </div>
+  </aside>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+'use strict';
+const $ = (s, el = document) => el.querySelector(s);
+const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+const DEG = Math.PI / 180;
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+
+/* ---------- Colour maths (the shader below mirrors transfer()) ---------- */
+const hexToRgb = hex => { const n = parseInt(hex.slice(1), 16); return [(n >> 16 & 255) / 255, (n >> 8 & 255) / 255, (n & 255) / 255]; };
+const rgbToHex = rgb => '#' + rgb.map(c => Math.round(clamp(c, 0, 1) * 255).toString(16).padStart(2, '0')).join('').toUpperCase();
+const toLin = c => c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+const toSrgb = c => { c = clamp(c, 0, 1); return c <= 0.0031308 ? c * 12.92 : 1.055 * Math.pow(c, 1 / 2.4) - 0.055; };
+function rgbToLab(rgb) {
+  const [r, g, b] = rgb.map(toLin);
+  const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
+  const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
+  const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+  return [0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s,
+          1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s,
+          0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s];
+}
+function labToLinear([L, a, b]) {
+  const l = (L + 0.3963377774 * a + 0.2158037573 * b) ** 3;
+  const m = (L - 0.1055613458 * a - 0.0638541728 * b) ** 3;
+  const s = (L - 0.0894841775 * a - 1.2914855480 * b) ** 3;
+  return [4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+          -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+          -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s];
+}
+const labToRgb = lab => labToLinear(lab).map(toSrgb);
+function lch(hex) { const [L, a, b] = rgbToLab(hexToRgb(hex)); return { L, C: Math.hypot(a, b), h: Math.atan2(b, a) }; }
+const inGamut = lin => lin.every(c => c >= -1e-4 && c <= 1 + 1e-4);
+/** OKLCH (h in radians) to hex, lowering chroma until the colour fits sRGB. */
+function lchToHex(L, C, h) {
+  L = clamp(L, 0, 1); C = Math.max(0, C);
+  const at = c => labToLinear([L, c * Math.cos(h), c * Math.sin(h)]);
+  if (inGamut(at(C))) return rgbToHex(at(C).map(toSrgb));
+  let lo = 0, hi = C;
+  for (let i = 0; i < 22; i++) { const mid = (lo + hi) / 2; if (inGamut(at(mid))) lo = mid; else hi = mid; }
+  return rgbToHex(at(lo).map(toSrgb));
+}
+const adiff = (a, b) => { const d = a - b; return d - 2 * Math.PI * Math.floor((d + Math.PI) / (2 * Math.PI)); };
+const smooth = (e0, e1, x) => { const t = clamp((x - e0) / (e1 - e0), 0, 1); return t * t * (3 - 2 * t); };
+function rgbToHsv([r, g, b]) {
+  const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
+  let h = 0;
+  if (d) h = max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
+  return [((h * 60) + 360) % 360, max ? d / max : 0, max];
+}
+function hsvToRgb(h, s, v) {
+  const f = n => { const k = (n + h / 60) % 6; return v - v * s * Math.max(0, Math.min(k, 4 - k, 1)); };
+  return [f(5), f(3), f(1)];
+}
+
+/* ---------- The app's current gradient ---------- */
+const SOURCE = { light: '#BCC388', mid: '#43511C', deep: '#1D2410', canvas: '#000000' };
+const SRC = { light: lch(SOURCE.light), mid: lch(SOURCE.mid), deep: lch(SOURCE.deep) };
+const STOPS = [
+  { key: 'light', name: 'Light', token: 'DX.Palette.sage', role: 'buttons, highlights, progress, accent text' },
+  { key: 'mid', name: 'Mid', token: 'DX.Palette.moss', role: 'glass cards, chips, onboarding hills' },
+  { key: 'deep', name: 'Deep', token: '0x1D2410 / 0x2C3816', role: 'gradient floors, card glow, widget backdrops' },
+  { key: 'canvas', name: 'Canvas', token: 'DX.Palette.canvas', role: 'the dark app background behind everything' },
+];
+const CMAX = [0.125, 0.165];          // vivid colours (rainbow SOS, emoji) are never brand pixels
+const DETECT = { center: 122, width: 26, feather: 12, sens: 0.010, keep: 1, strength: 1 };
+const PRESETS = [
+  { name: 'Sage (today)', light: '#BCC388', mid: '#43511C', deep: '#1D2410' },
+  { name: 'Pistachio', light: '#A6CA93' }, { name: 'Fern', light: '#8FC990' }, { name: 'Eucalyptus', light: '#9ACBB4' },
+  { name: 'Sea glass', light: '#89CDC3' }, { name: 'Lagoon', light: '#6BC8D3' }, { name: 'Mist blue', light: '#95C4E7' },
+  { name: 'Periwinkle', light: '#A6B3F1' }, { name: 'Heather', light: '#CCA9D4' }, { name: 'Rose clay', light: '#E4A59F' },
+  { name: 'Sand', light: '#D9C099' }, { name: 'Honey', light: '#E5BF6D' },
+];
+const defaultTheme = () => ({ light: SOURCE.light, mid: SOURCE.mid, deep: SOURCE.deep, canvas: SOURCE.canvas, link: true });
+
+/** Mid and Deep for a new Light, keeping today's lightness, chroma and hue steps between the stops. */
+function derive(lightHex) {
+  const p = lch(lightHex);
+  const one = st => lchToHex(p.L * st.L / SRC.light.L, p.C * st.C / SRC.light.C, p.h + adiff(st.h, SRC.light.h));
+  return { mid: one(SRC.mid), deep: one(SRC.deep) };
+}
+
+/** Everything one recolour needs, shared by the shader uniforms and transfer(). */
+function prepare(theme, detect, faintTints) {
+  return {
+    S: [SRC.light, SRC.mid, SRC.deep],
+    D: [lch(theme.light), lch(theme.mid), lch(theme.deep)],
+    center: detect.center * DEG, half: detect.width * DEG, feather: detect.feather * DEG,
+    chroma: faintTints ? [0.003, 0.008, CMAX[0], CMAX[1]] : [detect.sens, detect.sens + 0.015, CMAX[0], CMAX[1]],
+    keep: detect.keep, strength: detect.strength, bg: hexToRgb(theme.canvas),
+  };
+}
+function transfer(rgb, P) {
+  const [L, a, b] = rgbToLab(rgb);
+  const C = Math.hypot(a, b), h = Math.atan2(b, a);
+  const d = Math.abs(adiff(h, P.center));
+  const w = (1 - smooth(P.half, P.half + P.feather, d)) * smooth(P.chroma[0], P.chroma[1], C) * (1 - smooth(P.chroma[2], P.chroma[3], C));
+  let out = rgb;
+  if (w > 0.0005) {
+    const [s0, s1, s2] = P.S, [d0, d1, d2] = P.D;
+    let Cs, hs, Lt, Ct, ht;
+    const seg = (A, B, DA, DB) => {
+      const t = (L - B.L) / (A.L - B.L);
+      Cs = B.C + (A.C - B.C) * t; hs = B.h + adiff(A.h, B.h) * t;
+      Lt = DB.L + (DA.L - DB.L) * t; Ct = DB.C + (DA.C - DB.C) * t; ht = DB.h + adiff(DA.h, DB.h) * t;
+    };
+    if (L >= s0.L) { const f = (1 - L) / (1 - s0.L); Cs = s0.C * f; hs = s0.h; Lt = 1 - (1 - d0.L) * f; Ct = d0.C * f; ht = d0.h; }
+    else if (L >= s1.L) seg(s0, s1, d0, d1);
+    else if (L >= s2.L) seg(s1, s2, d1, d2);
+    else { const f = L / s2.L; Cs = s2.C * f; hs = s2.h; Lt = d2.L * f; Ct = d2.C * f; ht = d2.h; }
+    // k: how close the pixel is to the ramp (edges and faint tints < 1). Chroma scales by target/source, so an untouched gradient maps to itself.
+    const k = Math.min(C / Math.max(Cs, 1e-4), 1);
+    const L2 = L + (Lt - L) * k, C2 = C * Math.min(Ct / Math.max(Cs, 1e-4), 6), h2 = ht + adiff(h, hs) * P.keep;
+    const m = labToRgb([L2, C2 * Math.cos(h2), C2 * Math.sin(h2)]);
+    const s = w * P.strength;
+    out = rgb.map((c, i) => c + (m[i] - c) * s);
+  }
+  return { rgb: out.map((c, i) => 1 - (1 - c) * (1 - P.bg[i])), w };
+}
+
+/* ---------- WebGL renderer ---------- */
+const VERT = `attribute vec2 p; varying vec2 vUv; void main(){ vUv = p * 0.5 + 0.5; gl_Position = vec4(p, 0.0, 1.0); }`;
+const FRAG = `
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#else
+precision mediump float;
+#endif
+varying vec2 vUv;
+uniform sampler2D uTex;
+uniform vec3 uS0, uS1, uS2, uD0, uD1, uD2, uBg;
+uniform vec4 uChroma;
+uniform float uCenter, uHalf, uFeather, uKeep, uStrength, uMode, uSplit;
+const float PI = 3.14159265;
+float adiff(float a, float b){ float d = a - b; return d - 2.0 * PI * floor((d + PI) / (2.0 * PI)); }
+vec3 toLin(vec3 c){ return mix(c / 12.92, pow((c + 0.055) / 1.055, vec3(2.4)), step(0.04045, c)); }
+vec3 toSrgb(vec3 c){ c = clamp(c, 0.0, 1.0); return mix(c * 12.92, 1.055 * pow(c, vec3(1.0 / 2.4)) - 0.055, step(0.0031308, c)); }
+vec3 toLab(vec3 c){
+  vec3 x = toLin(c);
+  float l = pow(max(dot(x, vec3(0.4122214708, 0.5363325363, 0.0514459929)), 0.0), 1.0 / 3.0);
+  float m = pow(max(dot(x, vec3(0.2119034982, 0.6806995451, 0.1073969566)), 0.0), 1.0 / 3.0);
+  float s = pow(max(dot(x, vec3(0.0883024619, 0.2817188376, 0.6299787005)), 0.0), 1.0 / 3.0);
+  return vec3(0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s,
+              1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s,
+              0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s);
+}
+vec3 fromLab(vec3 c){
+  float l = c.x + 0.3963377774 * c.y + 0.2158037573 * c.z;
+  float m = c.x - 0.1055613458 * c.y - 0.0638541728 * c.z;
+  float s = c.x - 0.0894841775 * c.y - 1.2914855480 * c.z;
+  l = l * l * l; m = m * m * m; s = s * s * s;
+  return toSrgb(vec3(4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+                    -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+                    -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s));
+}
+void main(){
+  vec3 c = texture2D(uTex, vUv).rgb;
+  if ((uMode > 0.5 && uMode < 1.5) || vUv.x < uSplit) { gl_FragColor = vec4(c, 1.0); return; }
+  vec3 o = toLab(c);
+  float L = o.x, C = length(o.yz), h = atan(o.z, o.y);
+  float w = (1.0 - smoothstep(uHalf, uHalf + uFeather, abs(adiff(h, uCenter))))
+          * smoothstep(uChroma.x, uChroma.y, C) * (1.0 - smoothstep(uChroma.z, uChroma.w, C));
+  vec3 outc = c;
+  if (w > 0.0005) {
+    float Cs, hs, Lt, Ct, ht, t, f;
+    if (L >= uS0.x) { f = (1.0 - L) / (1.0 - uS0.x); Cs = uS0.y * f; hs = uS0.z; Lt = 1.0 - (1.0 - uD0.x) * f; Ct = uD0.y * f; ht = uD0.z; }
+    else if (L >= uS1.x) { t = (L - uS1.x) / (uS0.x - uS1.x); Cs = mix(uS1.y, uS0.y, t); hs = uS1.z + adiff(uS0.z, uS1.z) * t;
+      Lt = mix(uD1.x, uD0.x, t); Ct = mix(uD1.y, uD0.y, t); ht = uD1.z + adiff(uD0.z, uD1.z) * t; }
+    else if (L >= uS2.x) { t = (L - uS2.x) / (uS1.x - uS2.x); Cs = mix(uS2.y, uS1.y, t); hs = uS2.z + adiff(uS1.z, uS2.z) * t;
+      Lt = mix(uD2.x, uD1.x, t); Ct = mix(uD2.y, uD1.y, t); ht = uD2.z + adiff(uD1.z, uD2.z) * t; }
+    else { f = L / uS2.x; Cs = uS2.y * f; hs = uS2.z; Lt = uD2.x * f; Ct = uD2.y * f; ht = uD2.z; }
+    float k = min(C / max(Cs, 1e-4), 1.0);
+    float L2 = L + (Lt - L) * k, C2 = C * min(Ct / max(Cs, 1e-4), 6.0), h2 = ht + adiff(h, hs) * uKeep;
+    outc = mix(c, fromLab(vec3(L2, C2 * cos(h2), C2 * sin(h2))), w * uStrength);
+  }
+  outc = 1.0 - (1.0 - outc) * (1.0 - uBg);
+  if (uMode > 1.5) { float g = dot(c, vec3(0.299, 0.587, 0.114)) * 0.4; outc = mix(vec3(g), vec3(1.0, 0.25, 0.75), w); }
+  gl_FragColor = vec4(outc, 1.0);
+}`;
+
+const GL = {
+  canvas: null, gl: null, prog: null, u: {}, W: 1206, H: 2622,
+  init() {
+    this.canvas = document.createElement('canvas');
+    this.canvas.width = this.W; this.canvas.height = this.H;
+    const opts = { premultipliedAlpha: false, preserveDrawingBuffer: true, antialias: false, alpha: false, depth: false };
+    const gl = this.canvas.getContext('webgl2', opts) || this.canvas.getContext('webgl', opts);
+    if (!gl) return false;
+    this.gl = gl;
+    const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
+      if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; };
+    const p = gl.createProgram();
+    gl.attachShader(p, sh(gl.VERTEX_SHADER, VERT)); gl.attachShader(p, sh(gl.FRAGMENT_SHADER, FRAG));
+    gl.bindAttribLocation(p, 0, 'p'); gl.linkProgram(p);
+    if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p));
+    gl.useProgram(p); this.prog = p;
+    const buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+    for (const n of ['uTex', 'uS0', 'uS1', 'uS2', 'uD0', 'uD1', 'uD2', 'uBg', 'uChroma', 'uCenter', 'uHalf', 'uFeather', 'uKeep', 'uStrength', 'uMode', 'uSplit'])
+      this.u[n] = gl.getUniformLocation(p, n);
+    gl.uniform1i(this.u.uTex, 0);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    gl.pixelStorei(gl.UNPACK_COLORSPACE_CONVERSION_WEBGL, gl.NONE);
+    return true;
+  },
+  texture(img) {
+    const gl = this.gl, t = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, t);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+    return t;
+  },
+  /** Recolour a texture into a 2D canvas of w x h pixels. */
+  render(tex, ctx, w, h, P, mode, split) {
+    const gl = this.gl, u = this.u, v3 = s => [s.L, s.C, s.h];
+    gl.viewport(0, 0, w, h);
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.uniform3fv(u.uS0, v3(P.S[0])); gl.uniform3fv(u.uS1, v3(P.S[1])); gl.uniform3fv(u.uS2, v3(P.S[2]));
+    gl.uniform3fv(u.uD0, v3(P.D[0])); gl.uniform3fv(u.uD1, v3(P.D[1])); gl.uniform3fv(u.uD2, v3(P.D[2]));
+    gl.uniform3fv(u.uBg, P.bg); gl.uniform4fv(u.uChroma, P.chroma);
+    gl.uniform1f(u.uCenter, P.center); gl.uniform1f(u.uHalf, P.half); gl.uniform1f(u.uFeather, P.feather);
+    gl.uniform1f(u.uKeep, P.keep); gl.uniform1f(u.uStrength, P.strength);
+    gl.uniform1f(u.uMode, mode); gl.uniform1f(u.uSplit, split);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    ctx.drawImage(this.canvas, 0, this.H - h, w, h, 0, 0, w, h);
+  },
+};
+
+/* ---------- State ---------- */
+const state = { global: defaultTheme(), overrides: {}, detect: { ...DETECT } };
+const ui = { scope: 'all', selected: new Set(), active: 'light', mode: 0, viewer: null, compare: true, split: 0.5, recent: [], edited: false };
+let screens = [], build = null, codeColours = [];
+const cards = new Map();                  // id -> { el, ctx, own, ownDot }
+const thumbs = new Map();                 // id -> texture
+const full = new Map();                   // id -> { tex, data }
+const R = { dirty: new Set(), visible: new Set(), viewerDirty: false, raf: 0 };
+
+const themeFor = id => state.overrides[id] || state.global;
+const ownCount = () => Object.keys(state.overrides).length;
+const editorTheme = () => ui.scope === 'selected' && ui.selected.size ? themeFor([...ui.selected][0]) : state.global;
+
+/* ---------- Rendering schedule ---------- */
+function invalidate(ids) {
+  for (const id of ids || screens.map(s => s.id)) R.dirty.add(id);
+  R.viewerDirty = true;
+  schedule();
+}
+const schedule = () => { if (!R.raf) R.raf = requestAnimationFrame(tick); };
+function tick() {
+  R.raf = 0;
+  const t0 = performance.now();
+  if (R.viewerDirty && ui.viewer) { renderViewer(); R.viewerDirty = false; }
+  const order = [...R.dirty].filter(id => thumbs.has(id)).sort((a, b) => R.visible.has(b) - R.visible.has(a));
+  for (const id of order) {
+    const c = cards.get(id);
+    GL.render(thumbs.get(id), c.ctx, 402, 874, prepare(themeFor(id), state.detect), ui.mode, -1);
+    R.dirty.delete(id);
+    if (performance.now() - t0 > 12) break;
+  }
+  if ([...R.dirty].some(id => thumbs.has(id))) schedule();
+}
+
+/* ---------- Board ---------- */
+const svgTick = '<svg viewBox="0 0 12 12" fill="none" stroke="#000" stroke-width="2"><path d="m2.5 6.2 2.4 2.3 4.6-5"/></svg>';
+const svgZoom = '<svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="1.6"><path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5 9 7M2.5 13.5 7 9"/></svg>';
+function buildBoard() {
+  const host = $('#sections');
+  host.textContent = '';
+  const io = new IntersectionObserver(entries => {
+    for (const e of entries) { const id = e.target.dataset.id; if (e.isIntersecting) R.visible.add(id); else R.visible.delete(id); }
+    schedule();
+  }, { rootMargin: '300px' });
+  const sections = [...new Set(screens.map(s => s.section))];
+  for (const name of sections) {
+    const list = screens.filter(s => s.section === name);
+    const sec = el('section', 'sec');
+    const head = el('div', 'sec-head');
+    head.append(el('h2', null, name), el('span', 'n', `${list.length} ${list.length === 1 ? 'screen' : 'screens'}`));
+    const pick = el('button', 'link', 'Select section');
+    pick.addEventListener('click', () => {
+      const all = list.every(s => ui.selected.has(s.id));
+      list.forEach(s => all ? ui.selected.delete(s.id) : ui.selected.add(s.id));
+      selectionChanged();
+    });
+    head.append(pick);
+    const grid = el('div', 'cards');
+    list.forEach((s, i) => {
+      const card = el('div', 'card');
+      card.dataset.id = s.id;
+      card.tabIndex = 0;
+      card.setAttribute('role', 'button');
+      card.setAttribute('aria-pressed', 'false');
+      card.setAttribute('aria-label', `${name}: ${s.label}`);
+      const shot = el('div', 'shot');
+      const canvas = el('canvas'); canvas.width = 402; canvas.height = 874;
+      const tick = el('span', 'tick'); tick.innerHTML = svgTick;
+      const zoom = el('button', 'zoom'); zoom.innerHTML = svgZoom; zoom.setAttribute('aria-label', `Open ${s.label} large`);
+      const own = el('span', 'own'); const ownDot = el('i'); own.append(ownDot, document.createTextNode('Own look')); own.hidden = true;
+      shot.append(canvas, tick, zoom, own);
+      const cap = el('div', 'cap');
+      if (name === 'Onboarding') cap.append(el('span', 'step', String(i + 1).padStart(2, '0')));
+      cap.append(el('b', null, s.label));
+      card.append(shot, cap);
+      grid.append(card);
+      const toggle = () => { ui.selected.has(s.id) ? ui.selected.delete(s.id) : ui.selected.add(s.id); selectionChanged(); };
+      card.addEventListener('click', e => { if (!e.target.closest('.zoom')) toggle(); });
+      card.addEventListener('keydown', e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); e.key === 'Enter' ? openViewer(s.id) : toggle(); } });
+      card.addEventListener('dblclick', () => openViewer(s.id));
+      zoom.addEventListener('click', () => openViewer(s.id));
+      cards.set(s.id, { el: card, ctx: canvas.getContext('2d'), own, ownDot });
+      io.observe(card);
+    });
+    sec.append(head, grid);
+    host.append(sec);
+  }
+  $('#total').textContent = screens.length;
+}
+function loadThumbs() {
+  for (const s of screens) {
+    const img = new Image();
+    img.decoding = 'async';
+    img.onload = () => { thumbs.set(s.id, GL.texture(img)); invalidate([s.id]); };
+    img.src = `screens/${s.id}.thumb.webp`;
+  }
+}
+function paintBadges() {
+  for (const [id, c] of cards) {
+    const t = state.overrides[id];
+    c.own.hidden = !t;
+    if (t) c.ownDot.style.background = `linear-gradient(135deg, ${t.light} 0 50%, ${t.mid} 50% 100%)`;
+    c.el.setAttribute('aria-pressed', String(ui.selected.has(id)));
+  }
+}
+
+/* ---------- Selection and scope ---------- */
+function selectionChanged() {
+  const n = ui.selected.size;
+  if (n && ui.scope === 'all' && !ui.lastN) ui.scope = 'selected';
+  if (!n) ui.scope = 'all';
+  ui.lastN = n;
+  document.body.classList.toggle('selecting', n > 0);
+  $('#selCount').textContent = `${n} selected`;
+  paintBadges();
+  paintScope();
+  syncEditor();
+}
+function paintScope() {
+  const n = ui.selected.size;
+  $('#scopeAll').setAttribute('aria-pressed', String(ui.scope === 'all'));
+  $('#scopeSel').setAttribute('aria-pressed', String(ui.scope === 'selected'));
+  $('#scopeSel').disabled = !n;
+  $('#scopeSel').textContent = n ? `Selected (${n})` : 'Selected';
+  const note = $('#scopeNote');
+  note.textContent = '';
+  const own = ownCount();
+  if (ui.scope === 'all') {
+    note.append(own ? `Every screen except ${own} with ${own === 1 ? 'its' : 'their'} own look. ` : 'Every screen. Select screens to give them their own look.');
+    if (own) { const b = el('button', 'link', own === 1 ? 'Reset it' : 'Reset them'); b.onclick = () => { state.overrides = {}; changed(); toast('Every screen uses the shared look again'); }; note.append(b); }
+  } else {
+    note.append(`Only the ${n} selected ${n === 1 ? 'screen' : 'screens'}. `);
+    const a = el('button', 'link', 'Use this look everywhere');
+    a.onclick = () => { state.global = { ...editorTheme() }; state.overrides = {}; ui.selected.clear(); selectionChanged(); changed(); toast('This look now applies to every screen'); };
+    const b = el('button', 'link', 'Back to shared look');
+    b.onclick = () => { ui.selected.forEach(id => delete state.overrides[id]); changed(); syncEditor(); toast('Selected screens use the shared look'); };
+    note.append(a, ' · ', b);
+  }
+}
+
+/* ---------- Editing ---------- */
+function applyTheme(patch) {
+  ui.edited = true;
+  if (ui.scope === 'selected' && ui.selected.size) {
+    const base = editorTheme();
+    ui.selected.forEach(id => { state.overrides[id] = { ...base, ...patch }; });
+  } else {
+    state.global = { ...state.global, ...patch };
+  }
+  changed();
+}
+function setStop(key, hex, fromPicker) {
+  const t = editorTheme();
+  const patch = { [key]: hex };
+  if (key === 'light' && t.link) Object.assign(patch, derive(hex));
+  if ((key === 'mid' || key === 'deep') && t.link && fromPicker) { patch.link = false; toast('Mid and Deep no longer follow Light'); }
+  applyTheme(patch);
+  if (!fromPicker) syncPicker();
+}
+function changed() {
+  invalidate();
+  paintBadges();
+  paintScope();
+  paintStops();
+  paintRamp();
+  queueExport();
+  store.saveWorking();
+}
+
+/* ---------- Stops, ramp ---------- */
+function paintStops() {
+  const t = editorTheme(), host = $('#stops');
+  if (!host.childElementCount) {
+    for (const s of STOPS) {
+      const b = el('button', 'stop');
+      b.dataset.key = s.key;
+      b.innerHTML = '<div class="sw"><i></i></div><b></b><span></span>';
+      b.querySelector('b').textContent = s.name;
+      b.addEventListener('click', () => {
+        ui.active = s.key; paintStops(); syncPicker();
+        if (rail.classList.contains('collapsed') && matchMedia('(max-width: 760px)').matches) setSheet(true);
+      });
+      host.append(b);
+    }
+  }
+  for (const b of host.children) {
+    const k = b.dataset.key;
+    b.setAttribute('aria-pressed', String(k === ui.active));
+    b.querySelector('.sw').style.background = t[k];
+    b.querySelector('.sw i').style.background = SOURCE[k];
+    b.querySelector('.sw i').title = `Today: ${SOURCE[k]}`;
+    b.querySelector('span').textContent = t[k];
+    b.setAttribute('aria-label', `${b.querySelector('b').textContent}: ${t[k]} (today ${SOURCE[k]})`);
+  }
+  const s = STOPS.find(x => x.key === ui.active);
+  const role = $('#stopRole'); role.textContent = '';
+  role.append(el('b', null, s.name), ` replaces ${s.token} (${SOURCE[s.key]}): ${s.role}.`);
+  $('#link').checked = !!t.link;
+  $('#pickerFor').textContent = `· ${s.name}`;
+}
+function sourceAt(L) {
+  const [s0, s1, s2] = [SRC.light, SRC.mid, SRC.deep];
+  let C, h;
+  const seg = (A, B) => { const t = (L - B.L) / (A.L - B.L); C = B.C + (A.C - B.C) * t; h = B.h + adiff(A.h, B.h) * t; };
+  if (L >= s0.L) { C = s0.C * (1 - L) / (1 - s0.L); h = s0.h; }
+  else if (L >= s1.L) seg(s0, s1);
+  else if (L >= s2.L) seg(s1, s2);
+  else { C = s2.C * L / s2.L; h = s2.h; }
+  return hexToRgb(lchToHex(L, C, h));
+}
+const RAMP_TOP = 0.95, RAMP_BOTTOM = 0.12;
+function paintRamp() {
+  const cv = $('#ramp'), w = cv.width = Math.round(cv.clientWidth * (devicePixelRatio || 1)) || 320, h = cv.height = Math.round(52 * (devicePixelRatio || 1));
+  const ctx = cv.getContext('2d'), P = prepare(editorTheme(), state.detect);
+  const img = ctx.createImageData(w, h), split = Math.round(h * 0.38);
+  for (let x = 0; x < w; x++) {
+    const L = RAMP_TOP - (x / (w - 1)) * (RAMP_TOP - RAMP_BOTTOM);
+    const src = sourceAt(L), dst = transfer(src, P).rgb;
+    for (let y = 0; y < h; y++) {
+      const c = y < split ? src : y < split + 2 ? [0.086, 0.086, 0.09] : dst, i = (y * w + x) * 4;
+      img.data[i] = c[0] * 255; img.data[i + 1] = c[1] * 255; img.data[i + 2] = c[2] * 255; img.data[i + 3] = 255;
+    }
+  }
+  ctx.putImageData(img, 0, 0);
+  // Ticks where today's Light, Mid and Deep sit on the ramp.
+  const dpr = devicePixelRatio || 1;
+  ctx.fillStyle = 'rgba(255,255,255,.9)';
+  for (const s of [SRC.light, SRC.mid, SRC.deep]) ctx.fillRect((RAMP_TOP - s.L) / (RAMP_TOP - RAMP_BOTTOM) * w - dpr / 2, 0, dpr, split);
+}
+
+/* ---------- Picker ---------- */
+const pk = { h: 0, s: 0, v: 0 };
+const sv = $('#sv'), svCanvas = $('#svCanvas'), hue = $('#hue'), hueCanvas = $('#hueCanvas');
+function drawHue() {
+  const w = hueCanvas.width = hue.clientWidth * (devicePixelRatio || 1) || 300, h = hueCanvas.height = 16 * (devicePixelRatio || 1);
+  const ctx = hueCanvas.getContext('2d'), g = ctx.createLinearGradient(0, 0, w, 0);
+  for (let i = 0; i <= 12; i++) g.addColorStop(i / 12, rgbToHex(hsvToRgb(i * 30 % 360, 1, 1)));
+  ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+}
+function drawSV() {
+  const w = svCanvas.width = sv.clientWidth * (devicePixelRatio || 1) || 300, h = svCanvas.height = sv.clientHeight * (devicePixelRatio || 1) || 200;
+  const ctx = svCanvas.getContext('2d');
+  ctx.fillStyle = rgbToHex(hsvToRgb(pk.h, 1, 1)); ctx.fillRect(0, 0, w, h);
+  let g = ctx.createLinearGradient(0, 0, w, 0); g.addColorStop(0, '#fff'); g.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+  g = ctx.createLinearGradient(0, 0, 0, h); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, '#000');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+}
+function paintPicker(hex, skip) {
+  const rgb = hexToRgb(hex);
+  $('#svKnob').style.left = `${pk.s * 100}%`; $('#svKnob').style.top = `${(1 - pk.v) * 100}%`; $('#svKnob').style.background = hex;
+  $('#hueKnob').style.left = `${pk.h / 360 * 100}%`; $('#hueKnob').style.background = rgbToHex(hsvToRgb(pk.h, 1, 1));
+  if (skip !== 'hex') { $('#fHex').value = hex; $('#fHex').classList.remove('bad'); }
+  if (skip !== 'rgb') { $('#fR').value = Math.round(rgb[0] * 255); $('#fG').value = Math.round(rgb[1] * 255); $('#fB').value = Math.round(rgb[2] * 255); }
+  const c = lch(hex), hdeg = ((c.h / DEG) + 360) % 360;
+  if (skip !== 'lch') { $('#lL').value = (c.L * 100).toFixed(1); $('#lC').value = c.C.toFixed(3); if (c.C > 0.002) $('#lH').value = hdeg.toFixed(1); }
+  $('#oL').textContent = `${(c.L * 100).toFixed(1)}%`; $('#oC').textContent = c.C.toFixed(3); $('#oH').textContent = `${Math.round(c.C > 0.002 ? hdeg : +$('#lH').value)}°`;
+  const L = +$('#lL').value / 100, C = +$('#lC').value, H = +$('#lH').value * DEG;
+  const stops = n => Array.from({ length: n + 1 }, (_, i) => i / n);
+  $('#lL').style.setProperty('--track', `linear-gradient(90deg, ${stops(8).map(t => lchToHex(t, C, H)).join(',')})`);
+  $('#lC').style.setProperty('--track', `linear-gradient(90deg, ${stops(8).map(t => lchToHex(L, t * 0.32, H)).join(',')})`);
+  $('#lH').style.setProperty('--track', `linear-gradient(90deg, ${stops(12).map(t => lchToHex(L, Math.max(C, 0.04), t * 2 * Math.PI)).join(',')})`);
+}
+function syncPicker() {
+  const hex = editorTheme()[ui.active];
+  const [h, s, v] = rgbToHsv(hexToRgb(hex));
+  if (s > 0 && v > 0) pk.h = h;
+  pk.s = s; pk.v = v;
+  drawSV(); paintPicker(hex);
+}
+function syncEditor() { paintStops(); paintRamp(); syncPicker(); }
+function pickerSet(hex, skip) {
+  setStop(ui.active, hex, true);
+  paintPicker(hex, skip);
+  remember(hex);
+}
+let recentTimer = 0;
+function remember(hex) {
+  clearTimeout(recentTimer);
+  recentTimer = setTimeout(() => {
+    ui.recent = [hex, ...ui.recent.filter(x => x !== hex)].slice(0, 12);
+    const host = $('#recent'); host.textContent = '';
+    for (const c of ui.recent) { const b = el('button'); b.style.background = c; b.title = c; b.setAttribute('aria-label', `Use ${c}`); b.onclick = () => { const [h, s, v] = rgbToHsv(hexToRgb(c)); if (s > 0 && v > 0) pk.h = h; pk.s = s; pk.v = v; drawSV(); pickerSet(c); }; host.append(b); }
+    lsSet('recent', ui.recent);
+  }, 600);
+}
+function drag(target, onMove) {
+  target.addEventListener('pointerdown', e => {
+    target.setPointerCapture(e.pointerId);
+    const r = target.getBoundingClientRect();
+    const move = ev => onMove(clamp((ev.clientX - r.left) / r.width, 0, 1), clamp((ev.clientY - r.top) / r.height, 0, 1));
+    move(e);
+    const up = () => { target.removeEventListener('pointermove', move); target.removeEventListener('pointerup', up); target.removeEventListener('pointercancel', up); };
+    target.addEventListener('pointermove', move); target.addEventListener('pointerup', up); target.addEventListener('pointercancel', up);
+  });
+}
+drag(sv, (x, y) => { pk.s = x; pk.v = 1 - y; pickerSet(rgbToHex(hsvToRgb(pk.h, pk.s, pk.v))); });
+drag(hue, x => { pk.h = x * 359.9; drawSV(); pickerSet(rgbToHex(hsvToRgb(pk.h, pk.s, pk.v))); });
+function parseHex(v) {
+  v = v.trim().replace(/^#/, '');
+  if (/^[0-9a-f]{3}$/i.test(v)) v = v.split('').map(c => c + c).join('');
+  return /^[0-9a-f]{6}$/i.test(v) ? '#' + v.toUpperCase() : null;
+}
+$('#fHex').addEventListener('input', e => {
+  const hex = parseHex(e.target.value);
+  e.target.classList.toggle('bad', !hex);
+  if (!hex) return;
+  const [h, s, v] = rgbToHsv(hexToRgb(hex)); if (s > 0 && v > 0) pk.h = h; pk.s = s; pk.v = v; drawSV(); pickerSet(hex, 'hex');
+});
+$('#fHex').addEventListener('blur', () => paintPicker(editorTheme()[ui.active]));
+for (const id of ['fR', 'fG', 'fB']) $('#' + id).addEventListener('input', () => {
+  const rgb = ['fR', 'fG', 'fB'].map(i => clamp(+$('#' + i).value || 0, 0, 255) / 255);
+  const hex = rgbToHex(rgb), [h, s, v] = rgbToHsv(rgb);
+  if (s > 0 && v > 0) pk.h = h; pk.s = s; pk.v = v; drawSV(); pickerSet(hex, 'rgb');
+});
+for (const id of ['lL', 'lC', 'lH']) $('#' + id).addEventListener('input', () => {
+  const hex = lchToHex(+$('#lL').value / 100, +$('#lC').value, +$('#lH').value * DEG);
+  const [h, s, v] = rgbToHsv(hexToRgb(hex)); if (s > 0 && v > 0) pk.h = h; pk.s = s; pk.v = v; drawSV(); pickerSet(hex, 'lch');
+});
+$('#link').addEventListener('change', e => {
+  const t = editorTheme();
+  applyTheme(e.target.checked ? { link: true, ...derive(t.light) } : { link: false });
+  syncPicker();
+});
+
+/* ---------- Presets ---------- */
+function buildPresets() {
+  const host = $('#presets');
+  for (const p of PRESETS) {
+    const stops = p.mid ? { mid: p.mid, deep: p.deep } : derive(p.light);
+    const b = el('button', 'preset');
+    const bar = el('i'); bar.style.background = `linear-gradient(90deg, ${p.light}, ${stops.mid} 62%, ${stops.deep})`;
+    b.append(bar, el('span', null, p.name));
+    b.title = `${p.light} · ${stops.mid} · ${stops.deep}`;
+    b.addEventListener('click', () => {
+      applyTheme({ light: p.light, ...stops, link: true }); syncPicker();
+      const n = ui.selected.size;
+      toast(`${p.name} applied to ${ui.scope === 'selected' ? `${n} selected ${n === 1 ? 'screen' : 'screens'}` : 'every screen'}`);
+    });
+    host.append(b);
+  }
+}
+
+/* ---------- Detection settings ---------- */
+const DCTRL = [
+  ['center', 'dCenter', 'oCenter', v => `${v}°`], ['width', 'dWidth', 'oWidth', v => `${v}°`], ['feather', 'dFeather', 'oFeather', v => `${v}°`],
+  ['sens', 'dSens', 'oSens', v => v.toFixed(3)], ['keep', 'dKeep', 'oKeep', v => `${Math.round(v * 100)}%`], ['strength', 'dStrength', 'oStrength', v => `${Math.round(v * 100)}%`],
+];
+function paintDetect() { for (const [k, i, o, f] of DCTRL) { $('#' + i).value = state.detect[k]; $('#' + o).textContent = f(state.detect[k]); } }
+for (const [k, i, o, f] of DCTRL) $('#' + i).addEventListener('input', e => { state.detect[k] = +e.target.value; $('#' + o).textContent = f(state.detect[k]); ui.edited = true; changed(); });
+$('#dReset').addEventListener('click', () => { state.detect = { ...DETECT }; paintDetect(); changed(); });
+
+/* ---------- Viewer ---------- */
+const vctx = $('#vCanvas').getContext('2d');
+function openViewer(id) {
+  ui.viewer = id;
+  $('#gridView').hidden = true; $('#viewer').hidden = false;
+  const s = screens.find(x => x.id === id), list = screens.filter(x => x.section === s.section);
+  const t = $('#vTitle'); t.textContent = '';
+  t.append(s.label, el('span', null, ` · ${s.section} ${list.indexOf(s) + 1} of ${list.length}`));
+  $('#cross').hidden = true;
+  $('#pOrig').textContent = $('#pNew').textContent = '—';
+  $('#pOrigSw').style.background = $('#pNewSw').style.background = 'transparent';
+  paintSplit();
+  if (!full.has(id)) {
+    const img = new Image();
+    img.decoding = 'async';
+    img.onload = () => {
+      const c = document.createElement('canvas'); c.width = img.naturalWidth; c.height = img.naturalHeight;
+      const x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(img, 0, 0);
+      full.set(id, { tex: GL.texture(img), data: x.getImageData(0, 0, c.width, c.height) });
+      if (full.size > 4) { const old = full.keys().next().value; if (old !== ui.viewer) { GL.gl.deleteTexture(full.get(old).tex); full.delete(old); } }
+      if (ui.viewer === id) { R.viewerDirty = true; schedule(); }
+    };
+    img.src = `screens/${id}.webp`;
+  }
+  R.viewerDirty = true; schedule();
+  window.scrollTo({ top: 0 });
+}
+function closeViewer() {
+  const id = ui.viewer;
+  ui.viewer = null;
+  $('#viewer').hidden = true; $('#gridView').hidden = false;
+  const c = cards.get(id); if (c) { c.el.scrollIntoView({ block: 'center' }); c.el.focus({ preventScroll: true }); }
+}
+function stepViewer(d) {
+  const i = screens.findIndex(s => s.id === ui.viewer);
+  openViewer(screens[(i + d + screens.length) % screens.length].id);
+}
+function renderViewer() {
+  const id = ui.viewer, f = full.get(id), tex = f ? f.tex : thumbs.get(id);
+  if (!tex) return;
+  GL.render(tex, vctx, 1206, 2622, prepare(themeFor(id), state.detect), ui.mode, ui.compare && ui.mode === 0 ? ui.split : -1);
+}
+function paintSplit() {
+  const on = ui.compare && ui.mode === 0;
+  $('#split').hidden = !on;
+  $('#stageTags').style.visibility = on ? 'visible' : 'hidden';
+  $('#split').style.left = `${ui.split * 100}%`;
+  $('#vCompare').setAttribute('aria-pressed', String(ui.compare));
+}
+$('#vBack').addEventListener('click', closeViewer);
+$('#vPrev').addEventListener('click', () => stepViewer(-1));
+$('#vNext').addEventListener('click', () => stepViewer(1));
+$('#vCompare').addEventListener('click', () => { ui.compare = !ui.compare; paintSplit(); R.viewerDirty = true; schedule(); });
+$('#vOnly').addEventListener('click', () => { ui.selected = new Set([ui.viewer]); ui.lastN = 0; selectionChanged(); ui.scope = 'selected'; paintScope(); syncEditor(); toast('Colour changes now apply to this screen only'); });
+$('#split').addEventListener('pointerdown', e => {
+  e.stopPropagation();
+  const split = e.currentTarget; split.setPointerCapture(e.pointerId);
+  const r = $('#stage').getBoundingClientRect();
+  const move = ev => { ui.split = clamp((ev.clientX - r.left) / r.width, 0, 1); paintSplit(); R.viewerDirty = true; schedule(); };
+  const up = () => { split.removeEventListener('pointermove', move); split.removeEventListener('pointerup', up); split.removeEventListener('pointercancel', up); };
+  split.addEventListener('pointermove', move); split.addEventListener('pointerup', up); split.addEventListener('pointercancel', up);
+});
+function probe(e) {
+  const f = full.get(ui.viewer); if (!f) return;
+  const r = $('#stage').getBoundingClientRect();
+  const u = (e.clientX - r.left) / r.width, v = (e.clientY - r.top) / r.height;
+  if (u < 0 || u > 1 || v < 0 || v > 1) return;
+  const x = Math.min(f.data.width - 1, Math.floor(u * f.data.width)), y = Math.min(f.data.height - 1, Math.floor(v * f.data.height)), i = (y * f.data.width + x) * 4;
+  const rgb = [f.data.data[i] / 255, f.data.data[i + 1] / 255, f.data.data[i + 2] / 255];
+  const res = transfer(rgb, prepare(themeFor(ui.viewer), state.detect));
+  const o = rgbToHex(rgb), n = rgbToHex(res.rgb);
+  $('#pOrig').textContent = o; $('#pOrigSw').style.background = o;
+  $('#pNew').textContent = n; $('#pNewSw').style.background = n;
+  $('#pNote').textContent = res.w > 0.01 ? `Recoloured ${Math.round(res.w * 100)}% with your gradient` : 'Not part of the gradient, stays as is';
+  const cross = $('#cross'); cross.hidden = false; cross.style.left = `${u * 100}%`; cross.style.top = `${v * 100}%`;
+}
+$('#stage').addEventListener('pointermove', probe);
+$('#stage').addEventListener('pointerdown', probe);
+
+/* ---------- Header toggles ---------- */
+function setMode(m) {
+  ui.mode = ui.mode === m ? 0 : m;
+  $('#btnOriginal').setAttribute('aria-pressed', String(ui.mode === 1));
+  $('#btnMask').setAttribute('aria-pressed', String(ui.mode === 2));
+  document.body.classList.toggle('mask', ui.mode === 2);
+  paintSplit();
+  invalidate();
+}
+$('#btnOriginal').addEventListener('click', () => setMode(1));
+$('#btnMask').addEventListener('click', () => setMode(2));
+document.addEventListener('keydown', e => {
+  if (e.target.closest('input, textarea, select') || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.key === 'o' || e.key === 'O') setMode(1);
+  else if (e.key === 'm' || e.key === 'M') setMode(2);
+  else if (ui.viewer && e.key === 'Escape') closeViewer();
+  else if (ui.viewer && e.key === 'ArrowLeft') stepViewer(-1);
+  else if (ui.viewer && e.key === 'ArrowRight') stepViewer(1);
+});
+$('#scopeAll').addEventListener('click', () => { ui.scope = 'all'; paintScope(); syncEditor(); });
+$('#scopeSel').addEventListener('click', () => { if (ui.selected.size) { ui.scope = 'selected'; paintScope(); syncEditor(); } });
+$('#selAll').addEventListener('click', () => { screens.forEach(s => ui.selected.add(s.id)); selectionChanged(); });
+$('#selNone').addEventListener('click', () => { ui.selected.clear(); selectionChanged(); });
+$('#cardSize').addEventListener('input', e => { document.documentElement.style.setProperty('--card', `${e.target.value}px`); lsSet('card', +e.target.value); });
+const rail = $('#rail');
+function setSheet(open) {
+  rail.classList.toggle('collapsed', !open);
+  $('#sheetToggle').setAttribute('aria-expanded', String(open));
+  $('#sheetToggle').textContent = open ? 'Hide colour picker' : 'Show colour picker';
+  if (open) requestAnimationFrame(() => { drawSV(); drawHue(); paintRamp(); paintPicker(editorTheme()[ui.active]); });
+}
+$('#sheetToggle').addEventListener('click', () => setSheet(rail.classList.contains('collapsed')));
+if (!matchMedia('(max-width: 760px)').matches) rail.classList.remove('collapsed');
+let resizeTimer = 0;
+addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { drawSV(); drawHue(); paintRamp(); paintPicker(editorTheme()[ui.active]); }, 120); });
+
+/* ---------- Export ---------- */
+let exportTimer = 0;
+const queueExport = () => { clearTimeout(exportTimer); exportTimer = setTimeout(paintExport, 160); };
+function codeChanges() {
+  // Code colours pick up faint light-mode tints too, and never the canvas tint (that's a separate token).
+  const P = { ...prepare(state.global, state.detect, true), bg: [0, 0, 0] }, seen = new Set(), rows = [];
+  for (const c of codeColours) {
+    const key = `${c.file}:${c.line}:${c.hex}:${c.appearance}`;
+    if (seen.has(key)) continue; seen.add(key);
+    const res = transfer(hexToRgb(c.hex), P);
+    if (res.w < 0.01) continue;
+    const after = rgbToHex(res.rgb);
+    if (after !== c.hex) rows.push({ ...c, after });
+  }
+  const bg = state.global.canvas;
+  if (bg !== SOURCE.canvas) rows.unshift({ file: 'DayXeroCore/DesignSystem/Colors.swift', line: null, name: 'canvas', appearance: 'dark', hex: SOURCE.canvas, after: bg, alpha: null });
+  return rows;
+}
+function paintExport() {
+  const rows = codeChanges(), host = $('#changes');
+  host.textContent = '';
+  const files = new Set(rows.map(r => r.file));
+  $('#changesLabel').textContent = rows.length ? `${rows.length} colour${rows.length === 1 ? '' : 's'} change in ${files.size} file${files.size === 1 ? '' : 's'}` : 'Colours in the code';
+  if (!rows.length) { host.append(el('p', 'notice', 'Nothing changes yet. These are today\'s colours.')); return; }
+  let last = '';
+  for (const r of rows) {
+    if (r.file !== last) { host.append(el('div', 'change-file', r.file.replace(/^DayXero(Core)?\//, ''))); last = r.file; }
+    const row = el('div', 'change');
+    const a = el('i'); a.style.background = r.hex; a.title = r.hex;
+    const b = el('i'); b.style.background = r.after; b.title = r.after;
+    const txt = el('span');
+    txt.append(el('b', null, `${r.hex} → ${r.after}`), ` ${r.name || ''}${r.appearance ? ` · ${r.appearance}` : ''}${r.alpha != null && r.alpha < 1 ? ` · ${Math.round(r.alpha * 100)}%` : ''}${r.line ? ` · line ${r.line}` : ''}`);
+    row.title = r.code || '';
+    row.append(a, b, txt);
+    host.append(row);
+  }
+}
+function changesText() {
+  const g = state.global, lines = [];
+  lines.push(`DayXero colour change${build ? ` (screens from build ${build.sha})` : ''}`, '', 'Gradient stops, shared look:');
+  for (const s of STOPS) lines.push(`  ${s.name.padEnd(7)} ${SOURCE[s.key]} -> ${g[s.key]}   ${s.token}`);
+  const own = Object.entries(state.overrides);
+  if (own.length) {
+    lines.push('', 'Screens with their own look:');
+    for (const [id, t] of own) { const s = screens.find(x => x.id === id); lines.push(`  ${s ? `${s.section} / ${s.label}` : id}: light ${t.light}, mid ${t.mid}, deep ${t.deep}, canvas ${t.canvas}`); }
+  }
+  const d = state.detect;
+  if (JSON.stringify(d) !== JSON.stringify(DETECT)) lines.push('', `Recolour settings: hue ${d.center}° ±${d.width}°, softness ${d.feather}°, faintest tint ${d.sens}, nuance ${d.keep}, strength ${d.strength}`);
+  const rows = codeChanges();
+  if (rows.length) {
+    lines.push('', 'Swift colours (shared look):');
+    for (const r of rows) lines.push(`  ${r.file}${r.line ? ':' + r.line : ''}  ${r.name ? r.name + ' ' : ''}${r.appearance ? `(${r.appearance}) ` : ''}0x${r.hex.slice(1)} -> 0x${r.after.slice(1)}`);
+  }
+  return lines.join('\n');
+}
+async function copy(text, what) {
+  try { await navigator.clipboard.writeText(text); toast(`${what} copied`); }
+  catch {
+    const ta = el('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.append(ta); ta.select();
+    let ok = false; try { ok = document.execCommand('copy'); } catch {}
+    ta.remove(); toast(ok ? `${what} copied` : 'Copy is blocked here. Use Save as final instead.');
+  }
+}
+const snapshot = () => JSON.parse(JSON.stringify({ global: state.global, overrides: state.overrides, detect: state.detect }));
+$('#copyText').addEventListener('click', () => copy(changesText(), 'Changes'));
+$('#copyJson').addEventListener('click', () => copy(JSON.stringify({ ...snapshot(), build }, null, 2), 'JSON'));
+
+/* ---------- Storage: the artifact's database when available, this browser otherwise ---------- */
+const lsGet = k => { try { return JSON.parse(localStorage.getItem('dxlab:' + k)); } catch { return null; } };
+const lsSet = (k, v) => { try { localStorage.setItem('dxlab:' + k, JSON.stringify(v)); } catch {} };
+const store = {
+  db: null, looks: [], final: null, saving: false, pending: false, timer: 0, readOnly: false,
+  async init() {
+    try { this.db = window.claude && window.claude.use ? await window.claude.use('db') : null; } catch { this.db = null; }
+    paintStoreState();
+    if (!this.db) { this.looks = lsGet('looks') || []; this.final = lsGet('final'); paintLooks(); paintFinal(); return; }
+    try {
+      const w = await this.db.doc('lab/working').get();
+      if (w.exists && !ui.edited) { load(w.data()); }
+      const f = await this.db.doc('lab/final').get();
+      this.final = f.exists ? f.data() : null; paintFinal();
+    } catch (e) { console.warn(e); }
+    this.db.collection('looks').orderBy('createdAt', 'desc').limit(60).onSnapshot(snap => {
+      this.looks = snap.docs.map(d => ({ id: d.id, ...d.data() })); paintLooks();
+    }, err => console.warn(err));
+  },
+  saveWorking() {
+    lsSet('working', snapshot());
+    if (!this.db || this.readOnly) return;
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => this.flush(), 1200);
+  },
+  async flush() {
+    if (this.saving) { this.pending = true; return; }
+    this.saving = true;
+    try { await this.db.doc('lab/working').set({ ...snapshot(), updatedAt: new Date().toISOString() }); }
+    catch (e) { this.denied(e); }
+    this.saving = false;
+    if (this.pending) { this.pending = false; this.flush(); }
+  },
+  denied(e) {
+    if (e && e.code === 'invalid_argument') { this.readOnly = true; paintStoreState(); }
+    else console.warn(e);
+  },
+  async saveLook(name) {
+    const look = { name, ...snapshot(), createdAt: new Date().toISOString() };
+    if (this.db && !this.readOnly) {
+      try { await this.db.collection('looks').add(look); return true; } catch (e) { this.denied(e); if (this.readOnly) return false; }
+    }
+    this.looks = [{ id: 'l' + Date.now(), local: true, ...look }, ...this.looks]; lsSet('looks', this.looks); paintLooks(); return true;
+  },
+  async deleteLook(look) {
+    if (this.db && !look.local) { try { await this.db.doc('looks/' + look.id).delete(); } catch (e) { this.denied(e); } return; }
+    this.looks = this.looks.filter(l => l.id !== look.id); lsSet('looks', this.looks); paintLooks();
+  },
+  async saveFinal() {
+    const name = $('#lookName').value.trim() || (this.final && this.final.name) || 'Final look';
+    const fin = { name, ...snapshot(), build, changes: changesText(), savedAt: new Date().toISOString() };
+    if (this.db && !this.readOnly) { try { await this.db.doc('lab/final').set(fin); } catch (e) { this.denied(e); } }
+    if (!this.db || this.readOnly) lsSet('final', fin);
+    this.final = fin; paintFinal();
+    return !this.readOnly;
+  },
+};
+function paintStoreState() {
+  $('#storeState').textContent = store.readOnly ? '· view only, kept in this browser' : store.db ? '· shared with Claude' : '· kept in this browser';
+}
+function load(data) {
+  if (!data) return;
+  if (data.global) state.global = { ...defaultTheme(), ...data.global };
+  state.overrides = data.overrides && typeof data.overrides === 'object' ? { ...data.overrides } : {};
+  for (const id of Object.keys(state.overrides)) if (!screens.some(s => s.id === id)) delete state.overrides[id];
+  state.detect = { ...DETECT, ...(data.detect || {}) };
+  paintDetect();
+  changed();
+  syncEditor();
+}
+const fmtDate = iso => { try { return new Date(iso).toLocaleString(undefined, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); } catch { return ''; } };
+function paintLooks() {
+  const host = $('#looks'); host.textContent = '';
+  if (!store.looks.length) { host.append(el('p', 'empty', 'Saved looks appear here so you can compare a few before you decide.')); return; }
+  for (const l of store.looks) {
+    const row = el('div', 'look'), g = l.global || defaultTheme();
+    const bar = el('i'); bar.style.background = `linear-gradient(90deg, ${g.light}, ${g.mid} 62%, ${g.deep})`;
+    const txt = el('div'); const name = el('b', null, l.name || 'Untitled');
+    const own = l.overrides ? Object.keys(l.overrides).length : 0;
+    txt.append(name, el('span', null, `${fmtDate(l.createdAt)}${own ? ` · ${own} own` : ''}`));
+    const act = el('div', 'row-actions');
+    const use = el('button', 'btn quiet', 'Load'); use.onclick = () => { load(l); ui.edited = true; toast(`Loaded ${l.name}`); };
+    const del = el('button', 'btn quiet', 'Delete'); del.setAttribute('aria-label', `Delete ${l.name}`);
+    del.onclick = () => {
+      if (del.dataset.armed) { store.deleteLook(l); return; }
+      del.dataset.armed = '1'; del.textContent = 'Confirm';
+      setTimeout(() => { delete del.dataset.armed; del.textContent = 'Delete'; }, 2500);
+    };
+    act.append(use, del);
+    row.append(bar, txt, act);
+    host.append(row);
+  }
+}
+function paintFinal() {
+  const f = store.final, box = $('#finalBox');
+  box.textContent = '';
+  if (!f) { box.append('No final look yet. When you\'re happy, save it as final and Claude can apply it to the app code.'); return; }
+  const g = f.global || defaultTheme();
+  box.append(el('b', null, f.name), el('span', 'badge', 'Final'), document.createElement('br'),
+    `Light ${g.light} · Mid ${g.mid} · Deep ${g.deep} · Canvas ${g.canvas}`, document.createElement('br'),
+    `Saved ${fmtDate(f.savedAt)}${f.overrides && Object.keys(f.overrides).length ? ` · ${Object.keys(f.overrides).length} screens with their own look` : ''}`);
+}
+$('#saveLook').addEventListener('click', async () => {
+  const name = $('#lookName').value.trim() || `Look ${store.looks.length + 1}`;
+  if (await store.saveLook(name)) { $('#lookName').value = ''; toast(`Saved ${name}`); }
+});
+$('#lookName').addEventListener('keydown', e => { if (e.key === 'Enter') $('#saveLook').click(); });
+$('#saveFinal').addEventListener('click', async () => {
+  const ok = await store.saveFinal();
+  toast(ok && store.db ? 'Saved as final. Tell Claude to apply it.' : 'Saved as final in this browser. Use Copy changes to share it.');
+});
+
+/* ---------- Toast ---------- */
+let toastTimer = 0;
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+/* ---------- Boot ---------- */
+async function boot() {
+  const card = lsGet('card'); if (card) { $('#cardSize').value = card; document.documentElement.style.setProperty('--card', `${card}px`); }
+  ui.recent = lsGet('recent') || [];
+  try {
+    if (!GL.init()) throw new Error('WebGL is not available in this browser, so the screens cannot be recoloured.');
+  } catch (e) { $('#boot').textContent = e.message; return; }
+  GL.canvas.addEventListener('webglcontextlost', e => { e.preventDefault(); toast('The graphics context was lost. Reload the page to keep previewing.'); });
+  let data;
+  try { data = await (await fetch('screens/screens.json')).json(); }
+  catch { $('#boot').textContent = 'The screenshots did not load. Run npm run colour-lab:build, then npm run colour-lab.'; return; }
+  screens = data.screens; build = data.build; codeColours = data.codeColours || [];
+  const d = new Date(build.date);
+  $('#meta').textContent = `${screens.length} screens · build ${build.sha} · ${d.toLocaleDateString(undefined, { day: 'numeric', month: 'short' })} · iPhone 6.3″ · dark mode`;
+  $('#boot').hidden = true; $('#gridView').hidden = false;
+  buildBoard(); buildPresets();
+  const saved = lsGet('working');
+  if (saved) load(saved); else { paintDetect(); changed(); }
+  drawHue(); syncEditor(); selectionChanged();
+  if (ui.recent.length) { const r = ui.recent; ui.recent = r.slice(1); remember(r[0]); }
+  loadThumbs();
+  store.init();
+}
+boot();
+})();
+</script>

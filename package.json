@@ -6,6 +6,8 @@
     "tracker": "node planning/server.js",
     "task": "node planning/task.js",
     "website:css": "cd website && npx -y tailwindcss@3.4.17 -c tailwind.config.js -i tailwind.css -o assets/site.css --minify",
-    "website:guides": "python3 scripts/website/build_guides.py website"
+    "website:guides": "python3 scripts/website/build_guides.py website",
+    "colour-lab:build": "python3 tools/colour-lab/build.py",
+    "colour-lab": "python3 -m http.server 4330 -d tools/colour-lab"
   }
 }
