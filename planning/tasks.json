@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-29T06:11:15.595Z"
+    "updated": "2026-10-29T06:12:22.679Z"
   },
   "now": {
     "section": "S24",
@@ -2339,7 +2339,7 @@
           "id": "S24.4",
           "title": "Dock v2: dark resting pill (black in the dark theme, like WhatsApp); touch swells it into a clear lens taller than the bar that follows the finger, magnifies the icons and has a rainbow rim",
           "status": "awaiting_signoff",
-          "notes": "Milan's WhatsApp recording and screenshots, 29 Oct\nd05b7df. Not CI-built: GitHub Actions blocked by billing. Milan to build in Xcode and try on device.",
+          "notes": "Milan's WhatsApp recording and screenshots, 29 Oct\nd05b7df. Not CI-built: GitHub Actions blocked by billing. Milan to build in Xcode and try on device.\n2382214: other tabs hollow, selected icon and name filled in sage (accentInk); Progress uses chart.line.uptrend.xyaxis.circle so it has both forms.",
           "created": "2026-10-29T06:11:15.460Z",
           "completed": null
         }
@@ -2347,6 +2347,11 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-10-29T06:12:22.679Z",
+      "type": "note",
+      "message": "S24.4: 2382214: other tabs hollow, selected icon and name filled in sage (accentInk); Progress uses chart.line.uptrend.xyaxis.circle so it has both forms."
+    },
     {
       "time": "2026-10-29T06:11:15.595Z",
       "type": "now",
