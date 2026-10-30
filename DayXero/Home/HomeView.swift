@@ -33,10 +33,8 @@ struct HomeView: View {
         }
         .readVerticalBarEdge($barEdge)
         .dxCanvas()
-        // A break of 3+ days pauses the program until the last day is replayed (S5.7).
-        .onChange(of: scenePhase, initial: true) { _, phase in
-            if phase == .active { ProgramUpkeep.checkForBreak(profile, isPro: entitlement.isPro) }
-        }
+        // Program v2 missions ask their quick question after a logged use or an SOS session (handoff 4.4).
+        .modifier(MissionPrompts(profile: profile))
     }
 }
 
@@ -422,6 +420,7 @@ struct TodayView: View {
     private func logUse(_ product: Product) {
         justLogged = UseLog.log(product, in: context)
         loggedFeedback.toggle()
+        if justLogged?.kind == .use { NotificationCenter.default.post(name: .dxUseLogged, object: nil) }
     }
 
     private func loggedToast(_ entry: LogEntry) -> some View {

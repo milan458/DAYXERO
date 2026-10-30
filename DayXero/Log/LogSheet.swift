@@ -146,6 +146,7 @@ struct LogSheet: View {
             slip = entry
         } else {
             onClose()
+            NotificationCenter.default.post(name: .dxUseLogged, object: nil)
         }
     }
 
