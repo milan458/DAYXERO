@@ -190,6 +190,9 @@ struct RootView: View {
             #if DEBUG
             if let raw = UserDefaults.standard.string(forKey: "dx.openLesson"), let day = ProgramDayID(description: raw) {
                 LessonPlayer(day: day, profile: profile)
+            } else if let session = UserDefaults.standard.string(forKey: "dx.openSession") {
+                // Screenshots: a program v2 session, at the step given by -dx.sessionStep.
+                SessionFlowView(sessionId: session, profile: profile)
             } else if paywallDone || (entitlement.isPro && !buyingOnPaywall) {
                 HomeView(profile: profile)
             } else {

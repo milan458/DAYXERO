@@ -422,3 +422,12 @@ private struct LessonComplete: View {
         }
     }
 }
+
+extension ProgramView {
+    /// The first program's day to open. Program v2 opens sessions with `SessionOpen`.
+    struct LessonOpen: Identifiable {
+        let day: ProgramDayID
+        let isReplay: Bool
+        var id: String { day.description + (isReplay ? "-replay" : "") }
+    }
+}

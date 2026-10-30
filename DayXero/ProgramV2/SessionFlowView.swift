@@ -65,6 +65,11 @@ struct SessionFlowView: View {
         } else {
             index = min(record.currentStep, built.count - 1)
         }
+        #if DEBUG
+        if UserDefaults.standard.object(forKey: "dx.sessionStep") != nil {
+            index = min(max(UserDefaults.standard.integer(forKey: "dx.sessionStep"), 0), built.count - 1)
+        }
+        #endif
         Analytics.track(isReplay || record.completedAt != nil ? .programReplayStarted(sessionId: session.id)
                         : .programSessionStarted(sessionId: session.id, variant: ctx.variant.rawValue))
     }

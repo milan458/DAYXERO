@@ -169,7 +169,6 @@ struct TodayView: View {
         }
         .onAppear {
             checkMilestone()
-            openQueuedFirstLesson()
         }
         .fullScreenCover(item: $celebrating) { milestone in
             MilestoneMoment(milestone: milestone, stats: MilestoneStats(profile: profile, logs: logs)) {
@@ -256,15 +255,8 @@ struct TodayView: View {
     @ViewBuilder
     private func overview(_ snap: HomeSnapshot, now: Date) -> some View {
         header(snap, now: now)
-        if let lesson = snap.lesson {
-            if lesson.isReplay {
-                ReplayCard(title: lesson.title, minutes: LessonLibrary.lesson(for: lesson.day, product: profile.primaryProduct?.product ?? .cigarettes).minutes) {
-                    openLesson = .init(day: lesson.day, isReplay: true)
-                }
-            } else {
-                lessonCard(lesson, finished: snap.finishedToday, prepTotal: snap.prepTotal, prep: isPrep(snap))
-            }
-        }
+        // Program v2's session, mission or what's next (handoff 4.5).
+        ProgramTodayCard(profile: profile)
         if snap.phase == .quitDay, !sosHintSeen { sosHint }
         // A plan made today, after a slip or in a lesson, stays on Home for the rest of the day (S8.3).
         if let plan = plans.first, DayClock(boundaryHour: profile.dayBoundaryHour).day(containing: plan.createdAt)
