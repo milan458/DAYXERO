@@ -6,7 +6,8 @@ import SwiftData
 /// Quit Day defaults. Placeholder until the ported program content sets the prep length (S2.8).
 enum QuitDayPolicy {
     static let recommendedDaysAhead = 7
-    static let earliestDaysAhead = 1
+    /// Program v2 runs seven prep sessions, one a day, so Quit Day is at least a week out (handoff S2.8).
+    static let earliestDaysAhead = 7
     static let latestDaysAhead = 30
 }
 
