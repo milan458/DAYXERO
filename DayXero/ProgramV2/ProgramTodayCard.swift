@@ -13,7 +13,7 @@ enum ProgramV2Access {
     static let freeSessions: Set<String> = ["P1"]
 
     static func needsUpgrade(_ sessionId: String, isPro: Bool) -> Bool {
-        !isPro && !freeSessions.contains(sessionId)
+        !isPro && !DemoMode.isOn && !freeSessions.contains(sessionId)
     }
 }
 

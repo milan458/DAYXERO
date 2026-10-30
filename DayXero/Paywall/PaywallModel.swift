@@ -7,19 +7,29 @@ import UserNotifications
 @MainActor
 @Observable
 final class Entitlement {
-    private(set) var isPro = false
+    /// Bought, restored or in the trial.
+    private(set) var purchased = false
+    /// Demo mode unlocks everything without a purchase (TestFlight and debug builds only).
+    private(set) var demo = DemoMode.isOn
     let store: PurchaseStore
+
+    var isPro: Bool { purchased || demo }
 
     init(store: PurchaseStore) {
         self.store = store
     }
 
     func refresh() async {
-        isPro = await store.hasPro()
+        purchased = await store.hasPro()
     }
 
     func grant() {
-        isPro = true
+        purchased = true
+    }
+
+    func setDemo(_ on: Bool) {
+        UserDefaults.standard.set(on, forKey: DemoMode.key)
+        demo = DemoMode.isOn
     }
 }
 

@@ -44,7 +44,15 @@ struct ProgramStore {
     }
 
     func states(now: Date = .now) -> [(id: String, state: ProgramUnlock.State)] {
-        unlock()?.states(records: unlockRecords(), quitDay: profile.quitDay, quitTimestamp: profile.progress?.quitTimestamp, now: now) ?? []
+        let records = unlockRecords()
+        let states = unlock()?.states(records: records, quitDay: profile.quitDay, quitTimestamp: profile.progress?.quitTimestamp, now: now) ?? []
+        guard DemoMode.isOn else { return states }
+        // Demo mode: every session open at any time, in any order.
+        return states.map { item -> (id: String, state: ProgramUnlock.State) in
+            if case .completed = item.state { return item }
+            let open: ProgramUnlock.State = records[item.id]?.startedAt != nil ? .inProgress : .available
+            return (id: item.id, state: open)
+        }
     }
 
     func state(of sessionId: String, now: Date = .now) -> ProgramUnlock.State {
@@ -52,7 +60,10 @@ struct ProgramStore {
     }
 
     func current(now: Date = .now) -> (id: String, state: ProgramUnlock.State)? {
-        unlock()?.current(records: unlockRecords(), quitDay: profile.quitDay, quitTimestamp: profile.progress?.quitTimestamp, now: now)
+        states(now: now).first {
+            if case .completed = $0.state { return false }
+            return true
+        }
     }
 
     /// Opens a session: its record if it has one, a new one otherwise. A session left unfinished under older content
