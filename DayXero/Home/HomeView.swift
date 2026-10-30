@@ -168,6 +168,13 @@ struct TodayView: View {
         .onAppear {
             checkMilestone()
         }
+        // Holding Day Xero's commit starts the counter; celebrate as soon as the session closes.
+        .onReceive(NotificationCenter.default.publisher(for: .dxDayXeroStarted)) { _ in
+            Task {
+                try? await Task.sleep(for: .seconds(1))
+                checkMilestone()
+            }
+        }
         .fullScreenCover(item: $celebrating) { milestone in
             MilestoneMoment(milestone: milestone, stats: MilestoneStats(profile: profile, logs: logs)) {
                 CelebratedMilestones.markReached(daysClear: HomeSnapshot(profile: profile, isPro: entitlement.isPro).daysClear)

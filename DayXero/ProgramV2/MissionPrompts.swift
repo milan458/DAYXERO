@@ -7,6 +7,8 @@ extension Notification.Name {
     static let dxUseLogged = Notification.Name("dx.useLogged")
     /// A Craving SOS session just ended.
     static let dxSOSEnded = Notification.Name("dx.sosEnded")
+    /// Day Xero's commit was held: the counter starts, and Home celebrates.
+    static let dxDayXeroStarted = Notification.Name("dx.dayXeroStarted")
 }
 
 /// What today's mission asks for when the person logs (handoff 4.4): the P3 follow-up after the next use,
