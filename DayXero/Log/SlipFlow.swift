@@ -11,6 +11,8 @@ struct SlipFlow: View {
     let onDone: () -> Void
     /// Start straight at the talk-through, for a slip reopened from Progress.
     var startInTalkThrough = false
+    /// Program v2's Day 27 rehearsal: the same screens with a "Practice" tag, and nothing logged.
+    var practice = false
 
     enum Stage: Int, CaseIterable {
         case acknowledge, what, trigger, plan, done
@@ -31,10 +33,12 @@ struct SlipFlow: View {
     @State private var savedFeedback = false
     private let loggedAt: Date
 
-    init(entry: LogEntry?, profile: UserProfile?, startInTalkThrough: Bool = false, onDone: @escaping () -> Void) {
-        self.entry = entry
+    init(entry: LogEntry?, profile: UserProfile?, startInTalkThrough: Bool = false, practice: Bool = false,
+         onDone: @escaping () -> Void) {
+        self.entry = practice ? nil : entry
         self.profile = profile
         self.startInTalkThrough = startInTalkThrough
+        self.practice = practice
         self.onDone = onDone
         loggedAt = entry?.timestamp ?? .now
         var start = startInTalkThrough ? Stage.what : .acknowledge
@@ -47,6 +51,14 @@ struct SlipFlow: View {
 
     var body: some View {
         VStack(spacing: 0) {
+            if practice {
+                Label("Practice · nothing is logged", systemImage: "figure.walk.motion")
+                    .font(.custom(DX.Typeface.bold, size: 11, relativeTo: .caption2)).tracking(0.8).textCase(.uppercase)
+                    .foregroundStyle(DX.Palette.accentInk)
+                    .padding(.horizontal, 12).padding(.vertical, 6)
+                    .overlay(Capsule().strokeBorder(DX.Palette.accentInk, style: StrokeStyle(lineWidth: 1.5, dash: [4, 3])))
+                    .padding(.top, DX.Space.s)
+            }
             if stage != .acknowledge { progress }
             switch stage {
             case .acknowledge: acknowledge

@@ -143,11 +143,14 @@ public struct BreathSession: Sendable, Equatable {
     /// SOS only: seconds left in the session.
     public private(set) var sosRemaining: Int
     public private(set) var finished = false
+    /// A breathing session's length in cycles, when it isn't the pattern's recommended count (a program activity sets it).
+    public let cycleLimit: Int?
     private let triggers: [String: Int]
 
-    public init(mode: Mode, pattern: String, data: OrbData = .bundled) {
+    public init(mode: Mode, pattern: String, cycles: Int? = nil, data: OrbData = .bundled) {
         self.mode = mode
         self.pattern = pattern
+        cycleLimit = cycles
         remaining = data.pattern(pattern).seconds(.inhale)
         if case let .sos(seconds) = mode { sosRemaining = seconds } else { sosRemaining = 0 }
         triggers = data.sos.coachingTriggers
@@ -189,12 +192,13 @@ public struct BreathSession: Sendable, Equatable {
         if remaining <= 0 {
             let (next, wrapped) = nextPhase(after: phase, in: pattern)
             if wrapped {
-                if mode == .breathing, cycle >= pattern.recommendedCycles {
+                let cycles = cycleLimit ?? pattern.recommendedCycles
+                if mode == .breathing, cycle >= cycles {
                     finished = true
                     remaining = 0
                     return events + [.finished]
                 }
-                cycle = cycle % pattern.recommendedCycles + 1
+                cycle = cycle % cycles + 1
             }
             phase = next
             remaining = pattern.seconds(next)
@@ -250,16 +254,19 @@ public final class OrbEngine {
     /// Phase changes, coaching cues and the finish, for haptics, speech and the screen around the orb.
     @ObservationIgnored public var onEvent: ((BreathSession.Event) -> Void)?
 
-    public init(mode: BreathSession.Mode, pattern: String? = nil, data: OrbData = .bundled) {
+    public init(mode: BreathSession.Mode, pattern: String? = nil, cycles: Int? = nil, data: OrbData = .bundled) {
         self.data = data
         let id = pattern ?? data.sos.defaultPattern
-        session = BreathSession(mode: mode, pattern: id, data: data)
+        session = BreathSession(mode: mode, pattern: id, cycles: cycles, data: data)
         breathScale = data.motion.initialBreathScale
         speechEnergy = data.motion.initialSpeechEnergy
         transcript = data.scripts(.inhale).first ?? ""
     }
 
     public var pattern: OrbData.Pattern { data.pattern(session.pattern) }
+
+    /// How many cycles this breathing session runs.
+    public var cycleCount: Int { session.cycleLimit ?? pattern.recommendedCycles }
 
     /// Motion counts as "speaking" during a coaching line and for a moment after each phase change.
     public var motionSpeaking: Bool { coachSpeaking || now < rippleUntil }
@@ -403,7 +410,7 @@ public final class OrbEngine {
         lineEnded()
         showScript(session.isSOS
             ? data.labels.sosDoneTranscript
-            : data.labels.breathingDoneTranscript.replacingOccurrences(of: "{N}", with: "\(pattern.recommendedCycles)"))
+            : data.labels.breathingDoneTranscript.replacingOccurrences(of: "{N}", with: "\(cycleCount)"))
     }
 }
 

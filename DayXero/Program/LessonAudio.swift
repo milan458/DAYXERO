@@ -57,6 +57,23 @@ final class LessonNarrator: NSObject, AVSpeechSynthesizerDelegate {
         }
     }
 
+    /// A recording with its transcript already timed (program v2's `tx_<session>_<variant>.json`).
+    init(segments: [(start: Double, text: String)], url: URL, seconds: Double) {
+        let ordered = segments.sorted { $0.start < $1.start }
+        sentences = ordered.map(\.text)
+        self.url = url
+        let length = max(seconds, (ordered.last?.start ?? 0) + 1)
+        starts = ordered.map(\.start)
+        durations = ordered.indices.map { i in (i + 1 < ordered.count ? ordered[i + 1].start : length) - ordered[i].start }
+        total = length
+        super.init()
+        synthesizer.delegate = self
+        Task.detached(priority: .utility) {
+            let values = Self.loudness(of: url)
+            await MainActor.run { self.loudness = values }
+        }
+    }
+
     /// Reads the recording once and keeps how loud each thirtieth of a second is, scaled so normal speech reaches 1.
     nonisolated static func loudness(of url: URL) -> [Float] {
         guard let file = try? AVAudioFile(forReading: url) else { return [] }
@@ -264,6 +281,10 @@ struct LessonAudioStep: View {
 
     @State private var narrator: LessonNarrator
     @State private var scrubbing: Double?
+    /// Where to start, for a session resumed mid-audio.
+    private var startAt: Double = 0
+    /// Called every few seconds and on pause with the position, so a closed session resumes there.
+    private var onPosition: ((Double) -> Void)?
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     init(title: String, subtitle: String, file: String?, seconds: Int, transcript: String, onFinish: @escaping () -> Void) {
@@ -275,6 +296,16 @@ struct LessonAudioStep: View {
             return Bundle.main.url(forResource: name, withExtension: ext.isEmpty ? nil : ext)
         }
         _narrator = State(initialValue: LessonNarrator(transcript: transcript, url: url, seconds: seconds))
+    }
+
+    /// For a program v2 session: a narrator built from a timed transcript, resuming at `startAt`.
+    init(title: String, narrator: LessonNarrator, startAt: Double, onPosition: @escaping (Double) -> Void, onFinish: @escaping () -> Void) {
+        self.title = title
+        self.subtitle = ""
+        self.onFinish = onFinish
+        self.startAt = startAt
+        self.onPosition = onPosition
+        _narrator = State(initialValue: narrator)
     }
 
     var body: some View {
@@ -296,8 +327,22 @@ struct LessonAudioStep: View {
                     .foregroundStyle(DX.Palette.accentInk)
             }
         }
-        .onAppear { narrator.onFinish = { finished() } }
-        .onDisappear { narrator.stop() }
+        .onAppear {
+            narrator.onFinish = { finished() }
+            if startAt > 0 { narrator.seek(to: startAt) }
+        }
+        .onChange(of: narrator.playing) { _, playing in if !playing { onPosition?(narrator.elapsed()) } }
+        .task(id: narrator.playing) {
+            // Every few seconds while playing, so a force-quit loses at most a moment.
+            while narrator.playing, !Task.isCancelled {
+                try? await Task.sleep(for: .seconds(4))
+                onPosition?(narrator.elapsed())
+            }
+        }
+        .onDisappear {
+            onPosition?(narrator.elapsed())
+            narrator.stop()
+        }
     }
 
     private func finished() {

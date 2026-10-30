@@ -206,6 +206,12 @@ public struct Beat: Decodable, Sendable, Identifiable {
         public let text: String
         /// Takes priority over the beat's feedback when this option is chosen.
         public let feedback: String?
+
+        public init(id: String, text: String, feedback: String? = nil) {
+            self.id = id
+            self.text = text
+            self.feedback = feedback
+        }
     }
 
     public struct Card: Decodable, Sendable, Equatable {
