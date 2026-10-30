@@ -9,7 +9,7 @@ struct BioOrbTests {
     @Test func dataFileLoadsWithEverythingTheOrbDraws() {
         #expect(data.plasmaLayers.count == 4)
         #expect(data.geometry.vertices == 120)
-        #expect(Set(data.breathingPatterns.map(\.id)) == ["box", "478", "wave"])
+        #expect(Set(data.breathingPatterns.map(\.id)) == ["box", "478", "wave", "sigh"])
         #expect(data.sos.sessionSeconds == 180)
         #expect(data.sos.defaultPattern == "wave")
         #expect(data.coachingLines.count == 3)

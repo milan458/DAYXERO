@@ -464,6 +464,13 @@ extension ProgramContent {
                 problems.append("\(place) has nothing for \(variant.rawValue)")
             }
         }
+        func checkPlaceholders(_ value: Varied<String>?, _ place: String) {
+            for text in value?.all ?? [] {
+                for name in ProgramPlaceholders.names(in: text) where !ProgramPlaceholders.known.contains(name) {
+                    problems.append("\(place) uses unknown placeholder {\(name)}")
+                }
+            }
+        }
         func checkText(_ value: Varied<String>?, _ place: String) {
             check(value, place)
             for text in value?.all ?? [] {
@@ -493,7 +500,14 @@ extension ProgramContent {
 
             for beat in session.beats + (session.mission?.followUp ?? []) {
                 let place = "\(session.id)/\(beat.id)"
-                for field in beat.textFields { checkText(field.value, "\(place).\(field.name)") }
+                for field in beat.textFields {
+                    // A footer may be for some products only (P7's battery note is for vaping); missing means none.
+                    if field.name == "footer" {
+                        checkPlaceholders(field.value, "\(place).footer")
+                    } else {
+                        checkText(field.value, "\(place).\(field.name)")
+                    }
+                }
                 check(beat.options, "\(place).options")
                 check(beat.checklist, "\(place).items")
                 if beat.type == .quiz {
