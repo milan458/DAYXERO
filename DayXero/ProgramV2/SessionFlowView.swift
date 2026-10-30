@@ -200,7 +200,7 @@ struct SessionIntro: View {
                     }
                 }
             }
-            Button(isReplay ? "Replay" : "Begin", action: onBegin).buttonStyle(.dxPrimary)
+            Button(isReplay ? "Replay" : "Begin", action: onBegin).buttonStyle(.dxPrimary).dynamicTypeSize(...DynamicTypeSize.accessibility1)
         }
     }
 }
@@ -257,7 +257,7 @@ struct ProgramAudioStep: View {
                                 onFinish: { finished = true })
                     .frame(maxHeight: .infinity)
                 if finished || ctx.isReplay {
-                    Button("Continue", action: onDone).buttonStyle(.dxPrimary)
+                    Button("Continue", action: onDone).buttonStyle(.dxPrimary).dynamicTypeSize(...DynamicTypeSize.accessibility1)
                 }
             } else {
                 comingSoon
@@ -279,7 +279,7 @@ struct ProgramAudioStep: View {
             Text("The guided audio for this session is on its way. Everything after it works now, so carry on.")
                 .dxText(.subtitle).multilineTextAlignment(.center)
             Spacer()
-            Button("Continue", action: onDone).buttonStyle(.dxPrimary)
+            Button("Continue", action: onDone).buttonStyle(.dxPrimary).dynamicTypeSize(...DynamicTypeSize.accessibility1)
         }
         .onAppear {
             guard !ctx.isReplay, let record else { return }
@@ -316,7 +316,7 @@ struct MissionCard: View {
                 .overlay(RoundedRectangle(cornerRadius: 24, style: .continuous).strokeBorder(DX.Palette.hairline))
             }
             Spacer()
-            Button("Got it", action: onDone).buttonStyle(.dxPrimary)
+            Button("Got it", action: onDone).buttonStyle(.dxPrimary).dynamicTypeSize(...DynamicTypeSize.accessibility1)
         }
     }
 }
@@ -366,7 +366,7 @@ struct SessionCompletion: View {
                     .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
                     .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(DX.Palette.hairline))
             }
-            Button("Done", action: onDone).buttonStyle(.dxPrimary)
+            Button("Done", action: onDone).buttonStyle(.dxPrimary).dynamicTypeSize(...DynamicTypeSize.accessibility1)
         }
         .sensoryFeedback(.success, trigger: shown)
         .onAppear {

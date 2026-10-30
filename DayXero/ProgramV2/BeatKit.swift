@@ -64,12 +64,16 @@ struct BeatFrame<Content: View>: View {
                     .padding(.bottom, DX.Space.m)
             }
             .scrollBounceBehavior(.basedOnSize)
-            Button(continueTitle, action: onContinue)
-                .buttonStyle(.dxPrimary)
-                .disabled(!canContinue)
-            if beat.optional, let onSkip {
-                Button("Skip", action: onSkip).buttonStyle(.dxQuiet)
+            Group {
+                Button(continueTitle, action: onContinue)
+                    .buttonStyle(.dxPrimary)
+                    .disabled(!canContinue)
+                if beat.optional, let onSkip {
+                    Button("Skip", action: onSkip).buttonStyle(.dxQuiet)
+                }
             }
+            // The buttons stay a readable size; everything above them grows and scrolls.
+            .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         }
     }
 }

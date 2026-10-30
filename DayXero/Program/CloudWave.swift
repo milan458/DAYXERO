@@ -15,7 +15,7 @@ struct CloudWave: View {
     @State private var motion = Motion()
 
     /// How full the cloud sits before play and while paused: visible and drifting, not a flat line.
-    static let restingLevel = 0.32
+    static let restingLevel = 0.45
 
     /// Time and a smoothed level carried from frame to frame.
     final class Motion {
@@ -100,6 +100,8 @@ struct CloudWave: View {
         let deep = dark ? (40.0, 50.0, 255.0) : (60.0, 70.0, 230.0)
         let y0 = H * 0.62, up = H * 0.64, down = H * 0.4
         let rows = 36, points = 80
+        // A pale canvas needs denser layers to read as a cloud; on black the layers add up into glow.
+        let boost = dark ? 1.0 : 1.7
 
         // Two swells of energy travel across, one each way.
         let wrap = { (v: Double) in v - floor(v) }
@@ -169,18 +171,18 @@ struct CloudWave: View {
             glow.addFilter(.blur(radius: 10))
             glow.blendMode = dark ? .plusLighter : .normal
             for (k, r) in built.enumerated() where k % 3 == 0 {
-                glow.fill(upper(r), with: .color(rgb(body.0, body.1, body.2, (dark ? 0.012 + 0.02 * r.front : 0.014 + 0.018 * r.front) * 2.1)))
-                glow.fill(lower(r), with: .color(rgb(deep.0, deep.1, deep.2, (dark ? 0.01 + 0.014 * r.front : 0.01 + 0.012 * r.front) * 2.1)))
+                glow.fill(upper(r), with: .color(rgb(body.0, body.1, body.2, (dark ? 0.012 + 0.02 * r.front : 0.014 + 0.018 * r.front) * 2.1 * boost)))
+                glow.fill(lower(r), with: .color(rgb(deep.0, deep.1, deep.2, (dark ? 0.01 + 0.014 * r.front : 0.01 + 0.012 * r.front) * 2.1 * boost)))
             }
         }
 
         for (k, r) in built.enumerated() {
             let f = r.front
-            context.fill(upper(r), with: .color(rgb(body.0, body.1, body.2, (dark ? 0.012 + 0.02 * f : 0.014 + 0.018 * f) * 1.15)))
+            context.fill(upper(r), with: .color(rgb(body.0, body.1, body.2, (dark ? 0.012 + 0.02 * f : 0.014 + 0.018 * f) * 1.15 * boost)))
             let edge = f > 0.55 ? rim : body
             context.stroke(ridge(r), with: .color(rgb(edge.0, edge.1, edge.2, dark ? 0.025 + 0.12 * f * f : 0.025 + 0.1 * f * f)),
                            lineWidth: 0.7)
-            context.fill(lower(r), with: .color(rgb(deep.0, deep.1, deep.2, (dark ? 0.01 + 0.014 * f : 0.01 + 0.012 * f) * 1.15)))
+            context.fill(lower(r), with: .color(rgb(deep.0, deep.1, deep.2, (dark ? 0.01 + 0.014 * f : 0.01 + 0.012 * f) * 1.15 * boost)))
             if k % 2 == 0 {
                 let hanging = Path { p in
                     for j in 0...points {
