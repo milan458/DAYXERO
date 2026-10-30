@@ -56,7 +56,8 @@ struct MissionPrompts: ViewModifier {
         if let next = content.session(after: session.id), store.record(next.id) != nil { return }
         switch (type, afterSOS) {
         case (.mindfulUse, false):
-            var descriptor = FetchDescriptor<MissionRecord>(predicate: #Predicate { $0.sessionId == latest.sessionId })
+            let sessionId = latest.sessionId
+            var descriptor = FetchDescriptor<MissionRecord>(predicate: #Predicate { $0.sessionId == sessionId })
             descriptor.fetchLimit = 1
             let record = try? context.fetch(descriptor).first
             if record?.followUpCompletedAt == nil, mission.followUp?.isEmpty == false { prompt = .followUp(session.id) }
@@ -103,6 +104,7 @@ struct FollowUpSheet: View {
     }
 
     private func finish(_ store: ProgramStore) {
+        let sessionId = sessionId
         var descriptor = FetchDescriptor<MissionRecord>(predicate: #Predicate { $0.sessionId == sessionId })
         descriptor.fetchLimit = 1
         let record = (try? context.fetch(descriptor).first) ?? {
