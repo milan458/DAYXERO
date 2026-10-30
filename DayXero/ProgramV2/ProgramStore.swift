@@ -179,7 +179,7 @@ struct ProgramStore {
             values["daily_units"] = Int(primary.unitsPerDay.rounded()).formatted()
             values["yearly_units"] = Int((primary.unitsPerDay * 365).rounded()).formatted()
         }
-        values["currency"] = Currency.symbol(profile.currencyCode)
+        values["currency"] = CurrencyChoice.symbol(profile.currencyCode)
         let stats = ProgressStats(quitDay: profile.quitDay, baselines: profile.products.map(\.baseline), clock: clock)
         let yearly = NSDecimalNumber(decimal: stats.moneyPerYear).doubleValue
         if yearly > 0 { values["yearly_cost"] = Int(yearly.rounded()).formatted() }
