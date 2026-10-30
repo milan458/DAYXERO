@@ -14,6 +14,9 @@ struct CloudWave: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var motion = Motion()
 
+    /// How full the cloud sits before play and while paused: visible and drifting, not a flat line.
+    static let restingLevel = 0.32
+
     /// Time and a smoothed level carried from frame to frame.
     final class Motion {
         var time = 0.0
@@ -31,7 +34,7 @@ struct CloudWave: View {
 
     var body: some View {
         TimelineView(.animation(minimumInterval: 1.0 / 60, paused: reduceMotion)) { timeline in
-            let target = playing ? (reduceMotion ? 0.6 : level(timeline.date)) : 0.1
+            let target = playing ? (reduceMotion ? 0.6 : level(timeline.date)) : CloudWave.restingLevel
             let frame = motion.advance(to: timeline.date, playing: playing, target: target, settle: reduceMotion)
             let dark = scheme == .dark
             Canvas { context, size in
