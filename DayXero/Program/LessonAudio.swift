@@ -27,6 +27,11 @@ final class LessonNarrator: NSObject, AVSpeechSynthesizerDelegate {
     @ObservationIgnored private let starts: [Double]
     @ObservationIgnored private let durations: [Double]
     @ObservationIgnored var onFinish: (() -> Void)?
+    /// Loudness of the recording, 30 readings a second, 0…1.
+    @ObservationIgnored private var loudness: [Float] = []
+    /// When the on-device voice last started a word, and how long that word is.
+    @ObservationIgnored private var wordAt: Date?
+    @ObservationIgnored private var wordLength = 0
 
     init(transcript: String, url: URL?, seconds: Int) {
         sentences = Self.split(transcript)
@@ -44,6 +49,46 @@ final class LessonNarrator: NSObject, AVSpeechSynthesizerDelegate {
         total = length
         super.init()
         synthesizer.delegate = self
+        if let url {
+            Task.detached(priority: .utility) {
+                let values = Self.loudness(of: url)
+                await MainActor.run { self.loudness = values }
+            }
+        }
+    }
+
+    /// Reads the recording once and keeps how loud each thirtieth of a second is, scaled so normal speech reaches 1.
+    nonisolated static func loudness(of url: URL) -> [Float] {
+        guard let file = try? AVAudioFile(forReading: url) else { return [] }
+        let window = AVAudioFrameCount(max(file.processingFormat.sampleRate / 30, 1))
+        guard let buffer = AVAudioPCMBuffer(pcmFormat: file.processingFormat, frameCapacity: window) else { return [] }
+        var values: [Float] = []
+        while file.framePosition < file.length {
+            do { try file.read(into: buffer, frameCount: window) } catch { break }
+            let count = Int(buffer.frameLength)
+            guard count > 0, let samples = buffer.floatChannelData?[0] else { break }
+            var sum: Float = 0
+            for i in 0..<count { sum += samples[i] * samples[i] }
+            values.append((sum / Float(count)).squareRoot())
+        }
+        guard !values.isEmpty else { return [] }
+        let peak = max(values.sorted()[Int(Double(values.count - 1) * 0.95)], 0.0001)
+        return values.map { min($0 / peak, 1) }
+    }
+
+    /// How loud the voice is right now, 0…1, for the wave.
+    func level(at now: Date = .now) -> Double {
+        guard playing else { return 0.1 }
+        if player != nil {
+            guard !loudness.isEmpty else { return 0.55 }
+            let i = min(max(Int(elapsed(at: now) * 30), 0), loudness.count - 1)
+            return 0.15 + 0.85 * Double(loudness[i])
+        }
+        // The on-device voice gives no samples, so the wave pulses on each word and settles between sentences.
+        guard let wordAt else { return 0.2 }
+        let since = now.timeIntervalSince(wordAt) * speed
+        let weight = 0.6 + 0.4 * min(Double(wordLength) / 8, 1)
+        return 0.18 + 0.82 * weight * exp(-since / 0.32)
     }
 
     static func split(_ text: String) -> [String] {
@@ -172,6 +217,16 @@ final class LessonNarrator: NSObject, AVSpeechSynthesizerDelegate {
         if synthesizer.isSpeaking { synthesizer.stopSpeaking(at: .immediate) }
     }
 
+    nonisolated func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, willSpeakRangeOfSpeechString characterRange: NSRange,
+                                       utterance: AVSpeechUtterance) {
+        let id = ObjectIdentifier(utterance), length = characterRange.length
+        Task { @MainActor in
+            guard id == self.current else { return }
+            self.wordAt = .now
+            self.wordLength = length
+        }
+    }
+
     nonisolated func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
         let id = ObjectIdentifier(utterance)
         Task { @MainActor in self.spoke(id) }
@@ -199,8 +254,9 @@ final class LessonNarrator: NSObject, AVSpeechSynthesizerDelegate {
     }
 }
 
-/// The audio step of a lesson: a synced transcript that follows the voice, a waveform scrubber,
-/// ±15 seconds, speed, and play/pause. The lesson moves on to its exercise when the audio ends.
+/// The audio step of a lesson. The top half holds the cloud wave, which swells with the voice, and the controls under it.
+/// The bottom half holds captions that rise from below and fade out at the top, the current line in the middle.
+/// The lesson moves on to its exercise when the audio ends.
 struct LessonAudioStep: View {
     let title: String
     let subtitle: String
@@ -222,14 +278,23 @@ struct LessonAudioStep: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: DX.Space.s) {
-            VStack(alignment: .leading, spacing: 4) {
+        VStack(spacing: DX.Space.s) {
+            VStack(spacing: 4) {
                 Label("Audio session", systemImage: "headphones").dxText(.micro)
-                Text(title).dxText(.title)
-                if !subtitle.isEmpty { Text(subtitle).dxText(.subtitle) }
+                Text(title).dxText(.title).multilineTextAlignment(.center)
             }
-            transcript
-            playerCard
+            .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+            CloudWave(level: { narrator.level(at: $0) }, playing: narrator.playing)
+                .frame(height: 190)
+            scrubber
+            controls
+            captions
+                .frame(maxHeight: .infinity)
+            if narrator.finished {
+                Label("Nice. On to the exercise.", systemImage: "checkmark")
+                    .font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
+                    .foregroundStyle(DX.Palette.accentInk)
+            }
         }
         .onAppear { narrator.onFinish = { finished() } }
         .onDisappear { narrator.stop() }
@@ -242,142 +307,122 @@ struct LessonAudioStep: View {
         }
     }
 
-    // MARK: Transcript
+    // MARK: Captions
 
-    private var transcript: some View {
-        ScrollViewReader { proxy in
-            ScrollView {
-                VStack(alignment: .leading, spacing: DX.Space.s) {
-                    ForEach(Array(narrator.sentences.enumerated()), id: \.offset) { i, sentence in
-                        let now = i == narrator.index
-                        Button { narrator.jump(toSentence: i) } label: {
-                            Text(verbatim: sentence)
-                                .font(.custom(now ? DX.Typeface.semibold : DX.Typeface.regular, size: now ? 21 : 18, relativeTo: .body))
-                                .foregroundStyle(now ? DX.Palette.text : DX.Palette.faint)
-                                .lineSpacing(4)
-                                .multilineTextAlignment(.leading)
-                                .frame(maxWidth: .infinity, alignment: .leading)
+    private var captions: some View {
+        GeometryReader { geo in
+            ScrollViewReader { proxy in
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: DX.Space.m) {
+                        ForEach(Array(narrator.sentences.enumerated()), id: \.offset) { i, sentence in
+                            let distance = abs(i - narrator.index)
+                            Button { narrator.jump(toSentence: i) } label: {
+                                Text(verbatim: sentence)
+                                    .font(.custom(distance == 0 ? DX.Typeface.bold : DX.Typeface.medium, size: 22, relativeTo: .title3))
+                                    .tracking(-0.3)
+                                    .lineSpacing(3)
+                                    .foregroundStyle(DX.Palette.text)
+                                    .opacity(distance == 0 ? 1 : distance == 1 ? 0.45 : distance == 2 ? 0.2 : 0.08)
+                                    .multilineTextAlignment(.center)
+                                    .frame(maxWidth: .infinity)
+                            }
+                            .buttonStyle(.plain)
+                            .id(i)
+                            .accessibilityHint(Text("Plays from here"))
                         }
-                        .buttonStyle(.plain)
-                        .id(i)
-                        .accessibilityHint(Text("Plays from here"))
                     }
+                    // Room above and below, so the first and last lines can sit in the middle too.
+                    .padding(.vertical, max(geo.size.height / 2 - 30, 0))
+                    .animation(DX.Motion.animation(DX.Motion.glide, reduceMotion: reduceMotion), value: narrator.index)
                 }
-                .padding(.vertical, DX.Space.s)
-                .animation(DX.Motion.animation(DX.Motion.glide, reduceMotion: reduceMotion), value: narrator.index)
-            }
-            .frame(minHeight: 220, maxHeight: 320)
-            .mask(LinearGradient(stops: [.init(color: .clear, location: 0), .init(color: .black, location: 0.08),
-                                         .init(color: .black, location: 0.88), .init(color: .clear, location: 1)],
-                                 startPoint: .top, endPoint: .bottom))
-            .onChange(of: narrator.index) { _, i in
-                withAnimation(DX.Motion.animation(DX.Motion.glide, reduceMotion: reduceMotion)) { proxy.scrollTo(i, anchor: .center) }
+                .mask(LinearGradient(stops: [.init(color: .clear, location: 0), .init(color: .black, location: 0.24),
+                                             .init(color: .black, location: 0.76), .init(color: .clear, location: 1)],
+                                     startPoint: .top, endPoint: .bottom))
+                .onAppear { proxy.scrollTo(narrator.index, anchor: .center) }
+                .onChange(of: narrator.index) { _, i in
+                    withAnimation(DX.Motion.animation(DX.Motion.glide, reduceMotion: reduceMotion)) { proxy.scrollTo(i, anchor: .center) }
+                }
             }
         }
+        .frame(minHeight: 180)
     }
 
     // MARK: Player
 
-    private var playerCard: some View {
-        VStack(spacing: DX.Space.s) {
-            TimelineView(.periodic(from: .now, by: 0.25)) { context in
-                let elapsed = scrubbing ?? narrator.elapsed(at: context.date)
-                let fraction = narrator.total > 0 ? elapsed / narrator.total : 0
-                VStack(spacing: 6) {
-                    LessonWaveform(progress: fraction)
-                        .frame(height: 36)
-                        .overlay {
-                            GeometryReader { geo in
-                                Color.clear.contentShape(Rectangle())
-                                    .gesture(DragGesture(minimumDistance: 0)
-                                        .onChanged { value in
-                                            scrubbing = narrator.total * min(max(value.location.x / geo.size.width, 0), 1)
-                                        }
-                                        .onEnded { _ in
-                                            if let scrubbing { narrator.seek(to: scrubbing) }
-                                            scrubbing = nil
-                                        })
-                            }
-                        }
-                        .accessibilityElement()
-                        .accessibilityLabel(Text("Position"))
-                        .accessibilityValue(Text(Duration.seconds(elapsed), format: .time(pattern: .minuteSecond)))
-                        .accessibilityAdjustableAction { direction in
-                            narrator.skip(direction == .increment ? 15 : -15)
-                        }
-                    HStack {
-                        Text(Duration.seconds(elapsed), format: .time(pattern: .minuteSecond))
-                        Spacer()
-                        Text(Duration.seconds(narrator.total), format: .time(pattern: .minuteSecond))
+    private var scrubber: some View {
+        TimelineView(.periodic(from: .now, by: 0.25)) { context in
+            let elapsed = scrubbing ?? narrator.elapsed(at: context.date)
+            let fraction = narrator.total > 0 ? min(max(elapsed / narrator.total, 0), 1) : 0
+            VStack(spacing: 6) {
+                GeometryReader { geo in
+                    ZStack(alignment: .leading) {
+                        Capsule().fill(DX.Palette.track).frame(height: 4)
+                        Capsule().fill(DX.Palette.primary).frame(width: geo.size.width * fraction, height: 4)
+                        Circle().fill(DX.Palette.primary).frame(width: 14, height: 14)
+                            .offset(x: geo.size.width * fraction - 7)
                     }
-                    .font(.custom(DX.Typeface.mono, size: 12, relativeTo: .caption))
-                    .foregroundStyle(DX.Palette.muted)
+                    .frame(maxHeight: .infinity)
+                    .contentShape(Rectangle())
+                    .gesture(DragGesture(minimumDistance: 0)
+                        .onChanged { value in
+                            scrubbing = narrator.total * min(max(value.location.x / geo.size.width, 0), 1)
+                        }
+                        .onEnded { _ in
+                            if let scrubbing { narrator.seek(to: scrubbing) }
+                            scrubbing = nil
+                        })
                 }
-            }
-            HStack(spacing: 0) {
-                Button { narrator.cycleSpeed() } label: {
-                    Text(verbatim: narrator.speed.formatted(.number.precision(.fractionLength(1...2))) + "×")
-                        .font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
-                        .foregroundStyle(DX.Palette.text)
-                        .frame(minWidth: 52, minHeight: 34)
-                        .background(DX.Palette.surface2, in: Capsule())
+                .frame(height: 24)
+                .accessibilityElement()
+                .accessibilityLabel(Text("Position"))
+                .accessibilityValue(Text(Duration.seconds(elapsed), format: .time(pattern: .minuteSecond)))
+                .accessibilityAdjustableAction { direction in
+                    narrator.skip(direction == .increment ? 15 : -15)
                 }
-                .accessibilityLabel(Text("Speed"))
-                .accessibilityValue(Text(verbatim: "\(narrator.speed)×"))
-                Spacer()
-                Button { narrator.skip(-15) } label: { Image(systemName: "gobackward.15").font(.system(size: 22)) }
-                    .accessibilityLabel(Text("Back 15 seconds"))
-                    .frame(width: 48, height: 48)
-                Button { narrator.toggle() } label: {
-                    Image(systemName: narrator.playing ? "pause.fill" : "play.fill")
-                        .font(.system(size: 22))
-                        .foregroundStyle(DX.Palette.onPrimary)
-                        .frame(width: 56, height: 56)
-                        .background(DX.Palette.primary, in: Circle())
+                HStack {
+                    Text(Duration.seconds(elapsed), format: .time(pattern: .minuteSecond))
+                    Spacer()
+                    Text(Duration.seconds(max(narrator.total - elapsed, 0)), format: .time(pattern: .minuteSecond))
                 }
-                .padding(.horizontal, DX.Space.s)
-                .accessibilityLabel(Text(narrator.playing ? "Pause" : "Play"))
-                Button { narrator.skip(15) } label: { Image(systemName: "goforward.15").font(.system(size: 22)) }
-                    .accessibilityLabel(Text("Forward 15 seconds"))
-                    .frame(width: 48, height: 48)
-                Spacer()
-                Color.clear.frame(width: 52, height: 34)
-            }
-            .buttonStyle(.plain)
-            .foregroundStyle(DX.Palette.text)
-            .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
-            if narrator.finished {
-                Label("Nice. On to the exercise.", systemImage: "checkmark")
-                    .font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
-                    .foregroundStyle(DX.Palette.accentInk)
+                .font(.custom(DX.Typeface.mono, size: 12, relativeTo: .caption))
+                .foregroundStyle(DX.Palette.muted)
+                .dynamicTypeSize(...DynamicTypeSize.accessibility1)
             }
         }
-        .padding(DX.Space.m)
-        .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 28, style: .continuous).strokeBorder(DX.Palette.hairline))
     }
-}
 
-/// A still sage waveform: played bars in sage, the rest as track.
-struct LessonWaveform: View {
-    let progress: Double
-
-    var body: some View {
-        Canvas { context, size in
-            let bar: CGFloat = 3, gap: CGFloat = 3
-            let count = Int((size.width + gap) / (bar + gap))
-            for i in 0..<max(count, 1) {
-                // A fixed, speech-like shape so the bars don't jump about.
-                let t = Double(i)
-                let h = 0.25 + 0.75 * abs(sin(t * 0.55) * 0.6 + sin(t * 1.7 + 1) * 0.3 + sin(t * 0.13) * 0.1)
-                let height = max(size.height * h, 4)
-                let x = CGFloat(i) * (bar + gap)
-                let rect = CGRect(x: x, y: (size.height - height) / 2, width: bar, height: height)
-                let played = (x + bar / 2) / size.width <= progress
-                context.fill(Path(roundedRect: rect, cornerRadius: bar / 2),
-                             with: .color(played ? DX.Palette.sage : DX.Palette.track))
+    private var controls: some View {
+        HStack(spacing: 0) {
+            Button { narrator.cycleSpeed() } label: {
+                Text(verbatim: narrator.speed.formatted(.number.precision(.fractionLength(1...2))) + "×")
+                    .font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
+                    .foregroundStyle(DX.Palette.text)
+                    .frame(minWidth: 52, minHeight: 34)
+                    .background(DX.Palette.surface2, in: Capsule())
             }
+            .accessibilityLabel(Text("Speed"))
+            .accessibilityValue(Text(verbatim: "\(narrator.speed)×"))
+            Spacer()
+            Button { narrator.skip(-15) } label: { Image(systemName: "gobackward.15").font(.system(size: 22)) }
+                .accessibilityLabel(Text("Back 15 seconds"))
+                .frame(width: 48, height: 48)
+            Button { narrator.toggle() } label: {
+                Image(systemName: narrator.playing ? "pause.fill" : "play.fill")
+                    .font(.system(size: 22))
+                    .foregroundStyle(DX.Palette.onPrimary)
+                    .frame(width: 60, height: 60)
+                    .background(DX.Palette.primary, in: Circle())
+            }
+            .padding(.horizontal, DX.Space.s)
+            .accessibilityLabel(Text(narrator.playing ? "Pause" : "Play"))
+            Button { narrator.skip(15) } label: { Image(systemName: "goforward.15").font(.system(size: 22)) }
+                .accessibilityLabel(Text("Forward 15 seconds"))
+                .frame(width: 48, height: 48)
+            Spacer()
+            Color.clear.frame(width: 52, height: 34)
         }
-        .accessibilityHidden(true)
+        .buttonStyle(.plain)
+        .foregroundStyle(DX.Palette.text)
+        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
     }
 }
