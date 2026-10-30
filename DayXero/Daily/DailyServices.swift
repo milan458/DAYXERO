@@ -69,32 +69,32 @@ enum DailyReminders {
             now: now,
             pledgedToday: rhythm.hasPledged(pledges, at: now),
             checkedInToday: rhythm.hasCheckedIn(checkIns, at: now),
-            lessons: lessons(profile: profile, clock: clock, now: now),
+            lessons: sessions(store: ProgramStore(context: context, profile: profile), now: now),
             milestones: milestones(profile: profile, clock: clock),
-            replayName: profile.progress?.lastCompleted.map(name),
-            nextLessonName: nextLesson(profile: profile, clock: clock).map(name)
+            replayName: nil,
+            nextLessonName: ProgramStore(context: context, profile: profile).current(now: now)
+                .flatMap { ProgramStore(context: context, profile: profile).content?.session($0.id)?.label }
         )
         let wanted = NotificationPlan.plan(DailyReminderSettings.plan, inputs: inputs, calendar: .current)
         Task { await apply(wanted) }
     }
 
-    /// The day a lesson becomes available (or today, if it's waiting), within the next two days.
-    private static func lessons(profile: UserProfile, clock: DayClock, now: Date) -> [(day: Date, name: String, minutes: Int)] {
-        guard let day = nextLesson(profile: profile, clock: clock) else { return [] }
-        let schedule = ProgramSchedule(startedOn: profile.createdAt, quitDay: profile.quitDay, clock: clock)
-        let completed = profile.progress?.completedDayIDs ?? []
-        let minutes = LessonLibrary.lesson(for: day, product: profile.primaryProduct?.product ?? .cigarettes).minutes
-        if !isPro && !FreeTier.isFree(day, in: schedule.engine.outline) { return [] }
-        switch schedule.availability(of: day, completed: completed, at: now) {
-        case .available: return [(clock.day(containing: now), name(day), minutes)]
-        case let .opensOn(date): return [(date, name(day), minutes)]
-        case .completed, .locked: return []
+    /// The day the next program session opens (today if it's open now), so "ready" fires when it unlocks.
+    /// A session that needs Pro is never announced as ready.
+    private static func sessions(store: ProgramStore, now: Date) -> [(day: Date, name: String, minutes: Int)] {
+        guard let current = store.current(now: now), let session = store.content?.session(current.id),
+              !ProgramV2Access.needsUpgrade(session.id, isPro: isPro) else { return [] }
+        let clock = store.clock
+        let name = "\(session.label) · \(session.title.resolve(store.variant) ?? "")"
+        let day: Date? = switch current.state {
+        case .available, .inProgress: clock.day(containing: now)
+        case .scheduled(.tomorrow): clock.calendar.date(byAdding: .day, value: 1, to: clock.day(containing: now))
+        case let .scheduled(.dayXero(date)): date
+        case let .scheduled(.quitDay(n)): store.profile.progress?.quitTimestamp
+            .flatMap { clock.calendar.date(byAdding: .day, value: n, to: clock.day(containing: $0)) }
+        case .locked, .completed: nil
         }
-    }
-
-    private static func nextLesson(profile: UserProfile, clock: DayClock) -> ProgramDayID? {
-        let schedule = ProgramSchedule(startedOn: profile.createdAt, quitDay: profile.quitDay, clock: clock)
-        return schedule.featuredDay(completed: profile.progress?.completedDayIDs ?? [])
+        return day.map { [($0, name, session.durationMinutes)] } ?? []
     }
 
     private static func milestones(profile: UserProfile, clock: DayClock) -> [(day: Date, title: String)] {
