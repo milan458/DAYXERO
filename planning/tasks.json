@@ -2,13 +2,14 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-29T17:10:00.000Z"
+    "updated": "2026-10-30T09:30:00.000Z"
   },
   "now": {
-    "section": "S24",
-    "task": "S24.4",
+    "section": "S26",
+    "task": "S26.19",
     "waiting_on_milan": [
-      "Milan: build d05b7df in Xcode and try the dock"
+      "Milan: try program v2 and demo mode in the next TestFlight build",
+      "Milan: approve program copy (S26.12)"
     ]
   },
   "sections": [
@@ -615,10 +616,10 @@
         {
           "id": "S5.1",
           "title": "Port program content from the Flutter build: prep phase, 7-day program, 4-week maintenance arc.",
-          "status": "pending",
-          "notes": "Question for Milan: where is the previous Flutter build (repo URL or path)? Needed to port content.\nMilan: port program content later. Section 5 build waits on it; mockups can use placeholder lessons.\nMilan: design with placeholder lessons for now; content port later.",
+          "status": "done",
+          "notes": "Question for Milan: where is the previous Flutter build (repo URL or path)? Needed to port content.\nMilan: port program content later. Section 5 build waits on it; mockups can use placeholder lessons.\nMilan: design with placeholder lessons for now; content port later.\nSuperseded by Program v2 (S26): program_v2.json is the source; nothing is ported from Flutter.",
           "created": "2026-10-22T19:48:52.060Z",
-          "completed": null
+          "completed": "2026-10-30T09:30:00.000Z"
         },
         {
           "id": "S5.2",
@@ -2439,6 +2440,166 @@
           "notes": "CI green on claude/audit-fixes. Milan uploads to TestFlight from Xcode.",
           "created": "2026-10-29T13:00:00.000Z",
           "completed": null
+        }
+      ]
+    },
+    {
+      "id": "S26",
+      "title": "Program v2 (DAYXERO_PROGRAM_HANDOFF.md)",
+      "tasks": [
+        {
+          "id": "S26.1",
+          "title": "S5.9 Load program.json, resolve wording by product, NRT/product/default audio, placeholders that never show braces, content validation tests.",
+          "status": "done",
+          "notes": "ProgramContent + ProgramContentTests. Checks phases, beat IDs, quiz answers, saved-answer order, placeholders, wording per product, breathing patterns. From DAYXERO_PROGRAM_HANDOFF.md.",
+          "created": "2026-10-30T09:30:00.000Z",
+          "completed": "2026-10-30T09:30:00.000Z"
+        },
+        {
+          "id": "S26.2",
+          "title": "S5.10 Unlock engine and session states (locked, scheduled, available, in progress, completed).",
+          "status": "done",
+          "notes": "ProgramUnlock + ProgramUnlockTests: one prep session a day, Day Xero on the later of Quit Day and the morning after prep, weeks by days since Day Xero, catching up after a gap, slips change nothing. From DAYXERO_PROGRAM_HANDOFF.md.",
+          "created": "2026-10-30T09:30:00.000Z",
+          "completed": "2026-10-30T09:30:00.000Z"
+        },
+        {
+          "id": "S26.3",
+          "title": "S5.11 Session flow: intro, before-audio beats, audio, beats, mission, completion, with resume.",
+          "status": "done",
+          "notes": "SessionFlowView. Saves after every step; close never asks. From DAYXERO_PROGRAM_HANDOFF.md.",
+          "created": "2026-10-30T09:30:00.000Z",
+          "completed": "2026-10-30T09:30:00.000Z"
+        },
+        {
+          "id": "S26.4",
+          "title": "S5.12 Audio player: cloud wave, Spotify-style captions, transcript timing, no-audio fallback.",
+          "status": "in_progress",
+          "notes": "Plays bundled vo_/tx_ files with the cloud wave; 'Audio coming soon' until they exist. Milan: no skipping, Continue only when the audio ends. Still to do once audio exists: Now Playing and Lock Screen controls. From DAYXERO_PROGRAM_HANDOFF.md.",
+          "created": "2026-10-30T09:30:00.000Z"
+        },
+        {
+          "id": "S26.5",
+          "title": "S5.13 Beat components, one per type (19).",
+          "status": "done",
+          "notes": "BeatsA/BeatsB, built to the signed-off mockups. CI screenshots v2-*. From DAYXERO_PROGRAM_HANDOFF.md.",
+          "created": "2026-10-30T09:30:00.000Z",
+          "completed": "2026-10-30T09:30:00.000Z"
+        },
+        {
+          "id": "S26.6",
+          "title": "S5.14 Missions, follow-ups and mission log types.",
+          "status": "done",
+          "notes": "MissionCard; P3 follow-up after the next use; quick questions for morning_buffer, stress_sigh, surf_practice. From DAYXERO_PROGRAM_HANDOFF.md.",
+          "created": "2026-10-30T09:30:00.000Z",
+          "completed": "2026-10-30T09:30:00.000Z"
+        },
+        {
+          "id": "S26.7",
+          "title": "S5.15 Saved answers and the places they appear.",
+          "status": "in_progress",
+          "notes": "ProgramAnswer store; Craving SOS 'Your lines', 'Try instead', identity line; plan card. Still to do: identity line in Home's header, mood lifts after a low check-in, wind-down tip. From DAYXERO_PROGRAM_HANDOFF.md.",
+          "created": "2026-10-30T09:30:00.000Z"
+        },
+        {
+          "id": "S26.8",
+          "title": "S5.16 Completion screen and Home Today card states.",
+          "status": "done",
+          "notes": "SessionCompletion; ProgramTodayCard: open, continue, waiting with mission, scheduled for a later day, prep runs past Quit Day, program complete. From DAYXERO_PROGRAM_HANDOFF.md.",
+          "created": "2026-10-30T09:30:00.000Z",
+          "completed": "2026-10-30T09:30:00.000Z"
+        },
+        {
+          "id": "S26.9",
+          "title": "S5.17 Replay of finished sessions and editing past answers.",
+          "status": "done",
+          "notes": "Replays from the Program tab; answers can be edited and update everywhere; commits show 'Done on'. From DAYXERO_PROGRAM_HANDOFF.md.",
+          "created": "2026-10-30T09:30:00.000Z",
+          "completed": "2026-10-30T09:30:00.000Z"
+        },
+        {
+          "id": "S26.10",
+          "title": "S5.18 Program analytics events.",
+          "status": "done",
+          "notes": "IDs and buckets only, no answers. From DAYXERO_PROGRAM_HANDOFF.md.",
+          "created": "2026-10-30T09:30:00.000Z",
+          "completed": "2026-10-30T09:30:00.000Z"
+        },
+        {
+          "id": "S26.11",
+          "title": "S5.19 Accessibility pass on program screens.",
+          "status": "in_progress",
+          "notes": "VoiceOver labels, Commit action, flip cards announced, quiz right answer named in words, Reduce Motion. Largest text size checked in CI; buttons capped. From DAYXERO_PROGRAM_HANDOFF.md.",
+          "created": "2026-10-30T09:30:00.000Z"
+        },
+        {
+          "id": "S26.12",
+          "title": "S5.20 Milan to approve all on-screen copy in program.json.",
+          "status": "blocked",
+          "notes": "Built with the draft copy; edits are JSON only. From DAYXERO_PROGRAM_HANDOFF.md.",
+          "created": "2026-10-30T09:30:00.000Z"
+        },
+        {
+          "id": "S26.13",
+          "title": "S5.21 Quit Day pacing rule.",
+          "status": "done",
+          "notes": "Milan: as written in the handoff. From DAYXERO_PROGRAM_HANDOFF.md.",
+          "created": "2026-10-30T09:30:00.000Z",
+          "completed": "2026-10-30T09:30:00.000Z"
+        },
+        {
+          "id": "S26.14",
+          "title": "S5.22 Audio skip rule.",
+          "status": "done",
+          "notes": "Milan: no skipping. From DAYXERO_PROGRAM_HANDOFF.md.",
+          "created": "2026-10-30T09:30:00.000Z",
+          "completed": "2026-10-30T09:30:00.000Z"
+        },
+        {
+          "id": "S26.15",
+          "title": "S6.12 SOS 'Guide me' track picker and playback.",
+          "status": "pending",
+          "notes": "Hidden until SOS track audio exists, per the handoff. From DAYXERO_PROGRAM_HANDOFF.md.",
+          "created": "2026-10-30T09:30:00.000Z"
+        },
+        {
+          "id": "S26.16",
+          "title": "S12.6 Physiological sigh pattern with a top-up phase.",
+          "status": "done",
+          "notes": "breathing_orb_data.json + BreathPhase.topUp ('sip in'). Breathing activities can set their own cycle count. From DAYXERO_PROGRAM_HANDOFF.md.",
+          "created": "2026-10-30T09:30:00.000Z",
+          "completed": "2026-10-30T09:30:00.000Z"
+        },
+        {
+          "id": "S26.17",
+          "title": "S2.8 edit: Quit Day at least 7 days after starting.",
+          "status": "done",
+          "notes": "QuitDayPolicy.earliestDaysAhead = 7. From DAYXERO_PROGRAM_HANDOFF.md.",
+          "created": "2026-10-30T09:30:00.000Z",
+          "completed": "2026-10-30T09:30:00.000Z"
+        },
+        {
+          "id": "S26.18",
+          "title": "Demo mode in Settings (TestFlight and debug builds only).",
+          "status": "done",
+          "notes": "Unlocks everything, opens every session at any time, any Quit Day including past ones. From DAYXERO_PROGRAM_HANDOFF.md.",
+          "created": "2026-10-30T09:30:00.000Z",
+          "completed": "2026-10-30T09:30:00.000Z"
+        },
+        {
+          "id": "S26.19",
+          "title": "Day Xero commit fires the Day Xero celebration and Live Activity.",
+          "status": "pending",
+          "notes": "quit_timestamp is set and the counter starts; the celebration and Live Activity hook are still to wire. From DAYXERO_PROGRAM_HANDOFF.md.",
+          "created": "2026-10-30T09:30:00.000Z"
+        },
+        {
+          "id": "S26.20",
+          "title": "Old progress: everyone starts program v2 at Prep 1; counters, logs and Quit Day stay.",
+          "status": "done",
+          "notes": "Milan's choice. Old lesson completions aren't read by v2. From DAYXERO_PROGRAM_HANDOFF.md.",
+          "created": "2026-10-30T09:30:00.000Z",
+          "completed": "2026-10-30T09:30:00.000Z"
         }
       ]
     }
@@ -5538,6 +5699,11 @@
       "time": "2026-10-22T19:48:52.060Z",
       "type": "task_added",
       "message": "Loaded 92 tasks across 16 sections from the handoff plan"
+    },
+    {
+      "time": "2026-10-30T09:30:00.000Z",
+      "type": "task_added",
+      "message": "Added S26 Program v2 from DAYXERO_PROGRAM_HANDOFF.md (20 tasks)"
     }
   ]
 }
