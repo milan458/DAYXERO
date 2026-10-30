@@ -110,10 +110,12 @@ public struct OrbData: Decodable, Sendable {
 private final class OrbBundleToken {}
 
 public enum BreathPhase: String, CaseIterable, Sendable {
-    case inhale = "Inhale", hold = "Hold", exhale = "Exhale", rest = "Rest"
+    /// In order. A pattern skips any phase it gives no seconds, so the sigh runs Inhale, TopUp, Exhale, Rest
+    /// and the others never meet TopUp.
+    case inhale = "Inhale", hold = "Hold", topUp = "TopUp", exhale = "Exhale", rest = "Rest"
 
-    /// Lowercase, for the label: "4 seconds · inhale".
-    public var word: String { rawValue.lowercased() }
+    /// Lowercase, for the label: "4 seconds · inhale", "1 second · sip in".
+    public var word: String { self == .topUp ? "sip in" : rawValue.lowercased() }
 }
 
 /// The one-second session clock: phases, cycles, the SOS countdown and its coaching cues (spec §5).
