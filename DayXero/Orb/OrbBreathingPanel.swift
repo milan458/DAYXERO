@@ -20,10 +20,10 @@ struct OrbBreathingPanel: View {
     @State private var paused = false
     @State private var finished = false
 
-    init(pattern: String, onFinished: @escaping () -> Void) {
+    init(pattern: String, cycles: Int? = nil, onFinished: @escaping () -> Void) {
         self.pattern = pattern
         self.onFinished = onFinished
-        _engine = State(initialValue: OrbEngine(mode: .breathing, pattern: pattern))
+        _engine = State(initialValue: OrbEngine(mode: .breathing, pattern: pattern, cycles: cycles))
     }
 
     var body: some View {

@@ -1,0 +1,576 @@
+{
+  "version": "2.0.0",
+  "contentStatus": "draft",
+  "note": "On-screen content only. Spoken scripts live in the 'DayXero Program Scripts v2' doc and arrive later as audio files. Any user-facing string may be a variant object keyed default / smoking / vaping / pouches (and nrt where noted). See DAYXERO_PROGRAM_HANDOFF.md section 2.",
+
+  "audio": {
+    "folder": "Audio/Program",
+    "fileName": "vo_{sessionId}_{variant}.m4a",
+    "transcriptFileName": "tx_{sessionId}_{variant}.json"
+  },
+
+  "phases": [
+    { "id": "prep",    "title": "Prep",     "subtitle": "Learn your habit. Keep using as normal.", "sessionIds": ["P1","P2","P3","P4","P5","P6","P7"] },
+    { "id": "dayxero", "title": "Day Xero", "subtitle": "Your Quit Day.",                          "sessionIds": ["DX"] },
+    { "id": "w1",      "title": "Week 1",   "subtitle": "Through the hardest stretch.",            "sessionIds": ["W1D1","W1D2","W1D3","W1D4","W1D5","W1D6","W1D7"] },
+    { "id": "w2",      "title": "Week 2",   "subtitle": "Rebuild your days.",                      "sessionIds": ["W2S1","W2S2","W2S3"] },
+    { "id": "w3",      "title": "Week 3",   "subtitle": "Hard moments, handled.",                  "sessionIds": ["W3S1","W3S2","W3S3"] },
+    { "id": "w4",      "title": "Week 4",   "subtitle": "Who you are now.",                        "sessionIds": ["W4S1","W4S2","W4S3"] }
+  ],
+
+  "sessions": [
+
+    {
+      "id": "P1", "phaseId": "prep", "label": "Prep 1",
+      "title": "You don't have to quit today", "subtitle": "How the prep week works", "durationMinutes": 5,
+      "unlock": { "rule": "first" },
+      "audio": { "variants": ["smoking","vaping","pouches"] },
+      "beats": [
+        { "id": "P1.1", "type": "stat_reveal", "lines": [
+          "At your current pace, that's about {yearly_units} {unit_plural} a year.",
+          "Roughly {currency}{yearly_cost}.",
+          "You're about to take that back." ] },
+        { "id": "P1.2", "type": "reflect", "prompt": "Your reasons. Anything to add?", "placeholder": "Why now?", "prefillFrom": "reasons", "saveAs": "reasons", "length": "short", "maxEntries": 5 },
+        { "id": "P1.3", "type": "choice", "prompt": "Which one matters most?", "multi": false, "optionsFrom": "reasons", "saveAs": "primary_reason" },
+        { "id": "P1.4", "type": "quiz", "prompt": "A lot of the relief from nicotine comes from…",
+          "options": [
+            { "id": "a", "text": "It adds something extra that non-users don't have" },
+            { "id": "b", "text": "It settles the restlessness left by the last dose" },
+            { "id": "c", "text": "The flavour or the ritual" } ],
+          "correctId": "b",
+          "feedback": "Right. That's the battery. You'll start spotting it everywhere this week." },
+        { "id": "P1.5", "type": "commit", "text": "Hold to commit to your Quit Day: {quit_date}", "holdSeconds": 2 }
+      ],
+      "mission": { "text": "Log every use today. Before three of them, ask: do I want this, or is my battery just low?", "logType": "use" },
+      "completionText": "First prep day done. You didn't have to change a thing. Just notice."
+    },
+
+    {
+      "id": "P2", "phaseId": "prep", "label": "Prep 2",
+      "title": "The first one of the day", "subtitle": "Loosen the morning routine", "durationMinutes": 5,
+      "unlock": { "rule": "next_day_after_previous" },
+      "audio": { "variants": ["smoking","vaping","pouches"] },
+      "beats": [
+        { "id": "P2.1", "type": "choice", "prompt": "Which moment will you put a gap after?", "multi": false, "allowOther": true,
+          "options": [
+            { "id": "waking", "text": "Waking up" },
+            { "id": "coffee", "text": "First coffee or tea" },
+            { "id": "commute", "text": "The commute" },
+            { "id": "scroll", "text": "First scroll of the day" } ],
+          "saveAs": "morning_anchor",
+          "feedback": "Set. We'll remind you in the morning." },
+        { "id": "P2.2", "type": "slider", "prompt": "How automatic does your first one of the day feel?", "minLabel": "A real choice", "maxLabel": "I don't even notice it", "saveAs": "first_use_automatic" },
+        { "id": "P2.3", "type": "quiz", "prompt": "Why does the first one of the day often feel strongest?",
+          "options": [
+            { "id": "a", "text": "It's just a better one" },
+            { "id": "b", "text": "The level drops overnight, so the first top-up is felt most" },
+            { "id": "c", "text": "Mornings are always the most stressful time" } ],
+          "correctId": "b",
+          "feedback": "Exactly. Which is why a small gap here teaches your brain so much." }
+      ],
+      "mission": { "text": "Put a 15-minute gap (or 5, if that's what feels doable) between your morning moment and your first nicotine. Log how long you managed.", "logType": "morning_buffer" },
+      "completionText": "Tomorrow morning: one small gap. That's all."
+    },
+
+    {
+      "id": "P3", "phaseId": "prep", "label": "Prep 3",
+      "title": "Use with your eyes open", "subtitle": "One session, full attention", "durationMinutes": 6,
+      "listenHint": "Best heard just before you'd use anyway.",
+      "unlock": { "rule": "next_day_after_previous" },
+      "audio": { "variants": ["smoking","vaping","pouches"] },
+      "beats": [
+        { "id": "P3.1", "type": "slider", "prompt": "How good do you expect your next one to feel?", "minLabel": "Not good at all", "maxLabel": "Really good", "saveAs": "mindful_expected" }
+      ],
+      "mission": {
+        "text": "Do one session today with no phone and full attention, then log what you noticed.",
+        "logType": "mindful_use",
+        "followUp": [
+          { "id": "P3.F1", "type": "slider", "prompt": "How good did it actually feel?", "minLabel": "Not good at all", "maxLabel": "Really good", "saveAs": "mindful_actual", "compareWith": "mindful_expected", "compareLabels": ["Expected", "Actual"] },
+          { "id": "P3.F2", "type": "choice", "prompt": "What did you notice most?", "multi": true, "saveAs": "mindful_notice",
+            "options": {
+              "smoking": [
+                { "id": "harsh", "text": "Harsh taste" }, { "id": "heat", "text": "Heat in my throat" }, { "id": "chest", "text": "Tight chest" },
+                { "id": "smell", "text": "Smell on my hands" }, { "id": "rush", "text": "Head rush" }, { "id": "short", "text": "The good part was short" },
+                { "id": "liked", "text": "I liked parts of it" } ],
+              "vaping": [
+                { "id": "sweet", "text": "Mostly sweetener" }, { "id": "throat", "text": "Throat scratch" }, { "id": "rush", "text": "Head rush" },
+                { "id": "heart", "text": "Heart sped up" }, { "id": "faded", "text": "Flavour faded fast" }, { "id": "another", "text": "Wanted another straight away" },
+                { "id": "liked", "text": "I liked parts of it" } ],
+              "pouches": [
+                { "id": "burn", "text": "Burn on my gum" }, { "id": "heart", "text": "Heart sped up" }, { "id": "faded", "text": "Taste faded" },
+                { "id": "next", "text": "Already thinking about the next one" }, { "id": "liked", "text": "I liked parts of it" } ] },
+            "feedback": "Thanks for being honest. Every answer is useful, including the parts you liked." }
+        ]
+      },
+      "completionText": "You looked at it with your eyes open. That's rare."
+    },
+
+    {
+      "id": "P4", "phaseId": "prep", "label": "Prep 4",
+      "title": "The stress loop", "subtitle": "A breath that works in the moment", "durationMinutes": 6,
+      "unlock": { "rule": "next_day_after_previous" },
+      "audio": { "variants": ["smoking","vaping","pouches"] },
+      "beats": [
+        { "id": "P4.1", "type": "slider", "position": "before_audio", "prompt": "How tense do you feel right now?", "minLabel": "Calm", "maxLabel": "Very tense", "saveAs": "tension_before" },
+        { "id": "P4.2", "type": "slider", "prompt": "And now?", "minLabel": "Calm", "maxLabel": "Very tense", "saveAs": "tension_after", "compareWith": "tension_before", "compareLabels": ["Before", "After"] },
+        { "id": "P4.3", "type": "breathe", "pattern": "sigh", "cycles": 3, "label": "Two more sighs, with the ring." },
+        { "id": "P4.4", "type": "tap_reveal", "cards": [
+          { "front": "“It calms me down”", "back": "It settles the restlessness that builds between doses. The stress itself is still there." },
+          { "front": "“I need it when things get hard”", "back": "You need a break when things get hard. You can keep the break." },
+          { "front": "“Quitting will make me more stressed”", "back": "It can feel that way in the first days. Over time, many people who quit feel calmer than before." } ] }
+      ],
+      "mission": { "text": "When stress hits today, do two sighs first. Then use if you still want to. Log whether you did.", "logType": "stress_sigh" },
+      "completionText": "You've got a breath for stress now. Use it first."
+    },
+
+    {
+      "id": "P5", "phaseId": "prep", "label": "Prep 5",
+      "title": "Riding the wave", "subtitle": "The skill that matters most", "durationMinutes": 6,
+      "unlock": { "rule": "next_day_after_previous" },
+      "audio": { "variants": ["default"] },
+      "beats": [
+        { "id": "P5.1", "type": "breathe", "pattern": "wave", "cycles": 2, "label": "Try one now, even without a craving." },
+        { "id": "P5.2", "type": "quiz", "prompt": "If you don't use, a craving…",
+          "options": [
+            { "id": "a", "text": "Keeps growing until you give in" },
+            { "id": "b", "text": "Rises, peaks and fades, usually within a few minutes" },
+            { "id": "c", "text": "Only goes away with willpower" } ],
+          "correctId": "b",
+          "feedback": "That's it. Every wave breaks. Your job is just to stay on the board." },
+        { "id": "P5.3", "type": "choice", "prompt": "Where do you usually feel a craving?", "multi": true, "saveAs": "urge_signals",
+          "options": [
+            { "id": "chest", "text": "Chest" }, { "id": "hands", "text": "Hands" }, { "id": "mouth", "text": "Mouth or throat" },
+            { "id": "stomach", "text": "Stomach" }, { "id": "head", "text": "Head: foggy, can't focus" }, { "id": "mood", "text": "Mood: irritable or restless" } ],
+          "feedback": "Knowing your early signal means you'll catch the wave sooner." }
+      ],
+      "mission": { "text": "Surf one craving for three minutes with Craving SOS before you use. Afterwards, rate its peak from 0 to 10.", "logType": "surf_practice" },
+      "completionText": "You know how to ride the wave. That's the big one."
+    },
+
+    {
+      "id": "P6", "phaseId": "prep", "label": "Prep 6",
+      "title": "Make it easy on yourself", "subtitle": "Set up your space and your support", "durationMinutes": 6,
+      "unlock": { "rule": "next_day_after_previous" },
+      "audio": { "variants": ["smoking","vaping","pouches"] },
+      "beats": [
+        { "id": "P6.1", "type": "checklist", "title": "Make it harder to reach", "saveAs": "friction_checklist",
+          "items": {
+            "smoking": ["Pack and lighter out of my pocket", "Out of the car", "Out of my bag", "In one inconvenient spot"],
+            "vaping":  ["Off my desk", "Off my nightstand", "Out of my pocket", "Charger moved too", "In one inconvenient spot"],
+            "pouches": ["Tins out of my pockets", "Out of the car", "Off my desk", "All in one inconvenient spot"] } },
+        { "id": "P6.2", "type": "checklist", "title": "Your quit kit", "saveAs": "quit_kit_checklist",
+          "items": ["Water bottle (a straw helps)", "Sugar-free gum or mints", "Something for your hands", "All of it where nicotine used to live"] },
+        { "id": "P6.3", "type": "nrt_choice",
+          "options": {
+            "default": [
+              { "id": "setup", "text": "Yes, set it up" },
+              { "id": "have", "text": "I already have it" },
+              { "id": "no", "text": "Not this time" } ],
+            "pouches": [
+              { "id": "setup", "text": "Yes, set it up" },
+              { "id": "have", "text": "I already have it" },
+              { "id": "taper", "text": "Step down my pouch strength first" },
+              { "id": "no", "text": "Not this time" } ] },
+          "safetyText": "Follow the product label. If you're pregnant, have a heart condition or take other medicines, check with a pharmacist or doctor first.",
+          "saveAs": "nrt_plan" },
+        { "id": "P6.4", "type": "share", "cardType": "support_message", "optional": true,
+          "prefill": "Heads up: I'm quitting nicotine in two days. If I'm a bit cranky, that's why. A message from you would really help." }
+      ],
+      "mission": { "text": "Move your nicotine to one inconvenient spot, and put your quit kit where it used to be." },
+      "completionText": "Your space is set up. Willpower gets a day off."
+    },
+
+    {
+      "id": "P7", "phaseId": "prep", "label": "Prep 7",
+      "title": "The night before", "subtitle": "Clear out and get ready", "durationMinutes": 5,
+      "listenHint": "Best heard in the evening.",
+      "unlock": { "rule": "next_day_after_previous" },
+      "audio": { "variants": ["smoking","vaping","pouches"] },
+      "beats": [
+        { "id": "P7.1", "type": "checklist", "title": "Last clear-out", "carryOverFrom": "friction_checklist", "saveAs": "clearout_checklist",
+          "items": {
+            "smoking": ["Leftover cigarettes soaked and binned", "Lighters gone", "Ashtrays gone", "Checked jacket and car"],
+            "vaping":  ["Vapes and pods handed over or set aside for battery recycling", "Charger with them", "Checked bag and car"],
+            "pouches": ["Every tin binned", "Checked bag, car and desk", "Repeat orders cancelled"] },
+          "footer": { "vaping": "Vapes have batteries. Please don't put them in the bin. Take them to a battery or electronics recycling point." } },
+        { "id": "P7.2", "type": "reflect", "prompt": "Write one line to tomorrow-you.", "placeholder": "You've got this.", "saveAs": "note_to_dayxero", "length": "short" },
+        { "id": "P7.3", "type": "commit", "text": "Hold when you're ready for Day Xero.", "holdSeconds": 3, "sets": "dayxero_ready" }
+      ],
+      "mission": { "text": "Make your last use a conscious one, then clear everything out." },
+      "completionText": "Everything's ready. Tomorrow is Day Xero."
+    },
+
+    {
+      "id": "DX", "phaseId": "dayxero", "label": "Day Xero",
+      "title": "Day Xero", "subtitle": "Your first day", "durationMinutes": 5,
+      "listenHint": "Best heard in the morning.",
+      "unlock": { "rule": "day_xero" },
+      "audio": { "variants": ["smoking","vaping","pouches"] },
+      "beats": [
+        { "id": "DX.1", "type": "note", "position": "before_audio", "title": "From you, last night", "textFrom": "note_to_dayxero", "skipIfEmpty": true },
+        { "id": "DX.2", "type": "commit", "text": "Hold to start Day Xero.", "holdSeconds": 3, "sets": "quit_timestamp" },
+        { "id": "DX.3", "type": "tap_reveal", "title": "What today might bring", "cards": [
+          { "front": "Cravings", "back": "They come and go. Each one passes within minutes." },
+          { "front": "Restless or irritable", "back": "Common, and it eases." },
+          { "front": "Harder to focus", "back": "Take the day in small pieces." },
+          { "front": "Sleep changes", "back": "Usually settles within a few weeks." },
+          { "front": "Hungrier", "back": "Keep easy snacks around." } ],
+          "footer": "These are signs your body is adjusting. They're usually strongest in the first days and ease over 2 to 4 weeks." },
+        { "id": "DX.4", "type": "breathe", "pattern": "box", "cycles": 2, "label": "Your first breaths of Day Xero." }
+      ],
+      "mission": { "text": "Every craving you ride out today, tap “It passed”. Every single one counts.", "logType": "craving_outcome" },
+      "completionText": "You're on Day Xero. Your counter has started."
+    },
+
+    {
+      "id": "W1D1", "phaseId": "w1", "label": "Day 1",
+      "title": "Look after the basics", "subtitle": "Food, water, sleep", "durationMinutes": 3,
+      "unlock": { "rule": "days_since_quit", "minDay": 1 },
+      "audio": { "variants": ["default"] },
+      "beats": [
+        { "id": "W1D1.1", "type": "slider_group", "prompt": "Quick check-in",
+          "items": [
+            { "label": "Cravings", "minLabel": "None", "maxLabel": "Constant", "saveAs": "wd_cravings" },
+            { "label": "Irritability", "minLabel": "None", "maxLabel": "A lot", "saveAs": "wd_irritability" },
+            { "label": "Sleep quality", "minLabel": "Poor", "maxLabel": "Great", "saveAs": "wd_sleep" } ],
+          "feedback": "Logged. You'll be able to watch these change over the coming days." },
+        { "id": "W1D1.2", "type": "choice", "prompt": "When you're hungry between meals, what will you reach for?", "multi": true, "saveAs": "snack_plan",
+          "options": [
+            { "id": "fruit", "text": "Fruit" }, { "id": "nuts", "text": "Nuts" }, { "id": "veg", "text": "Crunchy veg" },
+            { "id": "yoghurt", "text": "Yoghurt" }, { "id": "gum", "text": "Sugar-free gum" }, { "id": "water", "text": "A glass of water first" } ] }
+      ],
+      "mission": { "text": "Three proper meals, water close by, and tap “It passed” after every craving you ride.", "logType": "craving_outcome" },
+      "completionText": "Day 1 done. Look after the basics, and the rest gets easier."
+    },
+
+    {
+      "id": "W1D2", "phaseId": "w1", "label": "Day 2",
+      "title": "The noisy passengers", "subtitle": "Let them talk. Keep driving.", "durationMinutes": 3,
+      "unlock": { "rule": "days_since_quit", "minDay": 2 },
+      "audio": { "variants": ["default"] },
+      "beats": [
+        { "id": "W1D2.1", "type": "reflect", "prompt": "What do your loudest passengers say?", "placeholder": "“Just one won't hurt.”", "saveAs": "passengers", "length": "short", "maxEntries": 3 },
+        { "id": "W1D2.2", "type": "reflect", "prompt": "What do you say back, calmly, while you keep driving?", "placeholder": "I hear you. Still not stopping.", "saveAs": "passenger_reply", "length": "short" },
+        { "id": "W1D2.3", "type": "quiz", "prompt": "A loud craving thought shows up. The bus approach is to…",
+          "options": [
+            { "id": "a", "text": "Argue with it until it stops" },
+            { "id": "b", "text": "Let it talk, and keep driving" },
+            { "id": "c", "text": "Pull over and give it what it wants" } ],
+          "correctId": "b",
+          "feedback": "Right. It can shout. It can't steer." }
+      ],
+      "mission": { "text": "Name one passenger today when it shows up." },
+      "completionText": "They can shout. They can't drive."
+    },
+
+    {
+      "id": "W1D3", "phaseId": "w1", "label": "Day 3",
+      "title": "Lower the bar", "subtitle": "Getting through the toughest stretch", "durationMinutes": 3,
+      "unlock": { "rule": "days_since_quit", "minDay": 3 },
+      "audio": { "variants": ["default"] },
+      "beats": [
+        { "id": "W1D3.1", "type": "note", "title": "Your reasons", "textFrom": "reasons", "highlightFrom": "primary_reason" },
+        { "id": "W1D3.2", "type": "plan_builder", "prompt": "If today gets hard, then I will…", "saveAs": "rough_day_plan",
+          "suggestions": ["Walk for 5 minutes", "Text or call someone", "Open Craving SOS", "Have a shower", "Go to bed early", "Eat something proper"] },
+        { "id": "W1D3.3", "type": "slider", "prompt": "How are you doing, honestly?", "minLabel": "Really struggling", "maxLabel": "Surprisingly okay", "saveAs": "mood_d3",
+          "feedback": "Thanks for telling the truth. Wherever you are today is fine." }
+      ],
+      "mission": { "text": "Do one thing that moves your body today, even for five minutes." },
+      "completionText": "You're through the hump. It gets lighter from here."
+    },
+
+    {
+      "id": "W1D4", "phaseId": "w1", "label": "Day 4",
+      "title": "If things feel flat", "subtitle": "Small lifts that add up", "durationMinutes": 3,
+      "unlock": { "rule": "days_since_quit", "minDay": 4 },
+      "audio": { "variants": ["default"] },
+      "beats": [
+        { "id": "W1D4.1", "type": "choice", "prompt": "Pick three lifts for flat days.", "multi": true, "pick": 3, "saveAs": "mood_lifts",
+          "options": [
+            { "id": "walk", "text": "Walk outside" }, { "id": "music", "text": "Music" }, { "id": "call", "text": "Call a friend" },
+            { "id": "cold", "text": "Cold water on my face" }, { "id": "shower", "text": "A shower" }, { "id": "cook", "text": "Cook something" },
+            { "id": "daylight", "text": "Daylight" }, { "id": "exercise", "text": "Exercise" }, { "id": "create", "text": "Something creative" },
+            { "id": "game", "text": "A game" } ],
+          "feedback": "These are your lifts. We'll suggest them on flat days." },
+        { "id": "W1D4.2", "type": "slider", "prompt": "How's your energy today?", "minLabel": "Empty", "maxLabel": "Full", "saveAs": "energy_d4" }
+      ],
+      "mission": { "text": "Do one of your lifts today, on purpose." },
+      "completionText": "Flat days pass. Your lifts are saved."
+    },
+
+    {
+      "id": "W1D5", "phaseId": "w1", "label": "Day 5",
+      "title": "Nights out", "subtitle": "Plan it while you're clear-headed", "durationMinutes": 4,
+      "unlock": { "rule": "days_since_quit", "minDay": 5 },
+      "audio": { "variants": ["smoking","vaping","pouches"] },
+      "beats": [
+        { "id": "W1D5.1", "type": "scenario", "prompt": "Someone offers you one at a party. You say…",
+          "options": [
+            { "id": "no", "text": "“No thanks, I've stopped.”", "feedback": "Clear and done. That's the strongest answer." },
+            { "id": "later", "text": "“Maybe later.”", "feedback": "That leaves later-you to deal with it. A clear no is kinder to yourself." },
+            { "id": "one", "text": "“Go on then, just one.”", "feedback": "If it happens, it's a slip, not a reset. Log it and keep going." } ] },
+        { "id": "W1D5.2", "type": "reflect", "prompt": "Your no-line, in your own words.", "placeholder": "I'm good, I've stopped.", "saveAs": "no_line", "length": "short" },
+        { "id": "W1D5.3", "type": "choice", "prompt": "Pick three for your next night out.", "multi": true, "pick": 3, "saveAs": "social_plan",
+          "options": [
+            { "id": "decide", "text": "Decide before I go" }, { "id": "tell", "text": "Tell a friend I've stopped" },
+            { "id": "drink", "text": "Keep a drink in my hand" }, { "id": "away", "text": "Stay away from where people use" },
+            { "id": "leave", "text": "Leave early if I need to" }, { "id": "checkin", "text": "Check in with DayXero" } ],
+          "footer": "Alcohol makes slips more likely for many people, so plan ahead." }
+      ],
+      "mission": { "text": "Next time you're out, use your no-line at least once." },
+      "completionText": "Your no-line is ready when you need it."
+    },
+
+    {
+      "id": "W1D6", "phaseId": "w1", "label": "Day 6",
+      "title": "“Just one”", "subtitle": "Play the tape forward", "durationMinutes": 4,
+      "unlock": { "rule": "days_since_quit", "minDay": 6 },
+      "audio": { "variants": ["default"] },
+      "beats": [
+        { "id": "W1D6.1", "type": "tap_reveal", "cards": [
+          { "front": "“Just one won't hurt”", "back": "Play the tape forward: one, then this weekend, then whenever I'm stressed." },
+          { "front": "“I've proven I can quit”", "back": "You have. Keep the proof." },
+          { "front": "“I'll stop again tomorrow”", "back": "Tomorrow-you gets a louder craving to deal with. Be kind to them." } ] },
+        { "id": "W1D6.2", "type": "quiz", "prompt": "If you do have one, what happens to your progress in DayXero?",
+          "options": [
+            { "id": "a", "text": "It resets to zero" },
+            { "id": "b", "text": "You have to start the program again" },
+            { "id": "c", "text": "It stays. You log the slip and keep going" } ],
+          "correctId": "c",
+          "feedback": "Right. A slip is one moment, not a verdict." },
+        { "id": "W1D6.3", "type": "reflect", "prompt": "Play the tape forward. Where would “just one” take you?", "placeholder": "Back to…", "saveAs": "tape_forward", "length": "short", "optional": true }
+      ],
+      "mission": { "text": "When “just one” shows up, play the tape forward before deciding anything." },
+      "completionText": "You'll recognise “just one” now. That's half the battle."
+    },
+
+    {
+      "id": "W1D7", "phaseId": "w1", "label": "Day 7",
+      "title": "One week", "subtitle": "Look back, then look ahead", "durationMinutes": 3,
+      "unlock": { "rule": "days_since_quit", "minDay": 7 },
+      "audio": { "variants": ["default"] },
+      "beats": [
+        { "id": "W1D7.1", "type": "stat_reveal", "lines": ["{days_free} days free.", "{money_kept} kept.", "{cravings_ridden} cravings ridden out."] },
+        { "id": "W1D7.2", "type": "reflect", "prompt": "What helped most this week?", "saveAs": "week1_helped", "length": "short", "optional": true,
+          "chips": ["Craving SOS", "Water", "My reasons", "A person", "Breathing", "Moving", "Staying busy"] },
+        { "id": "W1D7.3", "type": "share", "cardType": "milestone_7", "optional": true }
+      ],
+      "mission": { "text": "Tell one person you've done a week. Optional, but it feels good." },
+      "completionText": "One week. Well done."
+    },
+
+    {
+      "id": "W2S1", "phaseId": "w2", "label": "Day 8",
+      "title": "The empty minutes", "subtitle": "Build a break menu", "durationMinutes": 4,
+      "unlock": { "rule": "days_since_quit", "minDay": 8 },
+      "audio": { "variants": ["smoking","vaping","pouches"] },
+      "beats": [
+        { "id": "W2S1.1", "type": "choice", "prompt": "Pick three for your break menu.", "multi": true, "pick": 3, "saveAs": "break_menu",
+          "options": [
+            { "id": "outside", "text": "Step outside" }, { "id": "tea", "text": "Make tea or coffee properly" }, { "id": "stretch", "text": "Stretch" },
+            { "id": "walk", "text": "Walk around the block" }, { "id": "breathe", "text": "2 minutes of breathing" }, { "id": "text", "text": "Text someone" },
+            { "id": "water", "text": "Glass of water" }, { "id": "tidy", "text": "A quick tidy" }, { "id": "window", "text": "Look out of a window" } ],
+          "feedback": "Your break menu is saved. It'll show up on Craving SOS when boredom hits." },
+        { "id": "W2S1.2", "type": "slider", "prompt": "How often does boredom bring on a craving right now?", "minLabel": "Never", "maxLabel": "All the time", "saveAs": "boredom_trigger" }
+      ],
+      "mission": { "text": "Take one proper break today from your menu." },
+      "completionText": "Your break menu is ready for the empty minutes."
+    },
+
+    {
+      "id": "W2S2", "phaseId": "w2", "label": "Day 10",
+      "title": "Sleep and strange dreams", "subtitle": "Set up a wind-down", "durationMinutes": 4,
+      "unlock": { "rule": "days_since_quit", "minDay": 10 },
+      "audio": { "variants": ["smoking","vaping","pouches"] },
+      "beats": [
+        { "id": "W2S2.1", "type": "quiz", "prompt": "You dreamt you used. What does it mean?",
+          "options": [
+            { "id": "a", "text": "You've slipped" },
+            { "id": "b", "text": "Your quit isn't working" },
+            { "id": "c", "text": "Nothing. It's common after quitting" } ],
+          "correctId": "c",
+          "feedback": "Exactly. A dream isn't a slip. Let it go and start your day." },
+        { "id": "W2S2.2", "type": "choice", "prompt": "Build your wind-down.", "multi": true, "saveAs": "wind_down",
+          "options": [
+            { "id": "screens", "text": "Screens off 30 minutes before bed" }, { "id": "caffeine", "text": "No caffeine after lunch" },
+            { "id": "shower", "text": "A shower" }, { "id": "read", "text": "Read" }, { "id": "breathe", "text": "Slow breathing" },
+            { "id": "bedtime", "text": "Same bedtime each night" }, { "id": "water", "text": "Water by the bed" } ] },
+        { "id": "W2S2.3", "type": "slider", "prompt": "How's your sleep this week?", "minLabel": "Poor", "maxLabel": "Great", "saveAs": "sleep_w2" }
+      ],
+      "mission": { "text": "Try your wind-down tonight. The 4-7-8 breath is in the Stress toolkit whenever you want it." },
+      "completionText": "Your wind-down is set for tonight."
+    },
+
+    {
+      "id": "W2S3", "phaseId": "w2", "label": "Day 14",
+      "title": "Two weeks: what's changed", "subtitle": "Notice the quiet changes", "durationMinutes": 4,
+      "unlock": { "rule": "days_since_quit", "minDay": 14 },
+      "audio": { "variants": ["smoking","vaping","pouches"] },
+      "beats": [
+        { "id": "W2S3.1", "type": "stat_reveal", "lines": ["{days_free} days free.", "{money_kept} kept.", "{cravings_ridden} cravings ridden out."] },
+        { "id": "W2S3.2", "type": "choice", "prompt": "What have you noticed?", "multi": true, "saveAs": "changes_w2",
+          "options": {
+            "smoking": [
+              { "id": "taste", "text": "Food tastes better" }, { "id": "smell", "text": "Things smell stronger" }, { "id": "cough", "text": "Less coughing" },
+              { "id": "stairs", "text": "Stairs feel easier" }, { "id": "nosmoke", "text": "No smoke smell on me" }, { "id": "time", "text": "More time" },
+              { "id": "money", "text": "More money" }, { "id": "notyet", "text": "Not much yet", "feedback": "That's okay. A lot of change is quiet. Check again next week." } ],
+            "vaping": [
+              { "id": "pocket", "text": "Not reaching for my pocket" }, { "id": "throat", "text": "Throat feels better" }, { "id": "pods", "text": "Not buying pods" },
+              { "id": "time", "text": "More time" }, { "id": "money", "text": "More money" },
+              { "id": "notyet", "text": "Not much yet", "feedback": "That's okay. A lot of change is quiet. Check again next week." } ],
+            "pouches": [
+              { "id": "mouth", "text": "Mouth feels better" }, { "id": "tin", "text": "Not checking the tin" }, { "id": "time", "text": "More time" },
+              { "id": "money", "text": "More money" },
+              { "id": "notyet", "text": "Not much yet", "feedback": "That's okay. A lot of change is quiet. Check again next week." } ] } },
+        { "id": "W2S3.3", "type": "share", "cardType": "milestone_14", "optional": true }
+      ],
+      "mission": { "text": "Spend a little of the money you've kept on something small, just for you." },
+      "completionText": "Two weeks. Keep going, it's working."
+    },
+
+    {
+      "id": "W3S1", "phaseId": "w3", "label": "Day 16",
+      "title": "When life gets heavy", "subtitle": "Make room for big feelings", "durationMinutes": 5,
+      "unlock": { "rule": "days_since_quit", "minDay": 16 },
+      "audio": { "variants": ["default"] },
+      "beats": [
+        { "id": "W3S1.1", "type": "slider", "position": "before_audio", "prompt": "Think of something on your mind. How heavy does it feel?", "minLabel": "Light", "maxLabel": "Very heavy", "saveAs": "heavy_before" },
+        { "id": "W3S1.2", "type": "slider", "prompt": "And now?", "minLabel": "Light", "maxLabel": "Very heavy", "saveAs": "heavy_after", "compareWith": "heavy_before", "compareLabels": ["Before", "After"] },
+        { "id": "W3S1.3", "type": "reflect", "prompt": "Write a line to read on your hardest days.", "placeholder": "This will pass. I don't need nicotine to get through it.", "saveAs": "bad_day_line", "length": "short" },
+        { "id": "W3S1.4", "type": "plan_builder", "prompt": "If something big goes wrong, then I will…", "saveAs": "heavy_day_plan",
+          "suggestions": ["Make room for the feeling", "Call someone", "Open Craving SOS", "Walk", "Write it down", "Do the 4-7-8 breath"] },
+        { "id": "W3S1.5", "type": "info", "title": "If it stays heavy", "body": "If a heavy feeling stays with you for weeks, talking to a doctor or someone you trust can really help.", "link": "helplines" }
+      ],
+      "mission": { "text": "Next time you feel something heavy, make room for it for 60 seconds before anything else." },
+      "completionText": "Big feelings pass too. You can make room for them."
+    },
+
+    {
+      "id": "W3S2", "phaseId": "w3", "label": "Day 19",
+      "title": "Out of nowhere", "subtitle": "When an old cue fires", "durationMinutes": 4,
+      "unlock": { "rule": "days_since_quit", "minDay": 19 },
+      "audio": { "variants": ["smoking","vaping","pouches"] },
+      "beats": [
+        { "id": "W3S2.1", "type": "quiz", "prompt": "A strong craving hits after you smell smoke. That means…",
+          "options": [
+            { "id": "a", "text": "I'm back at the start" },
+            { "id": "b", "text": "An old cue fired. Ride it and it'll fade" },
+            { "id": "c", "text": "I should have one to get it over with" } ],
+          "correctId": "b",
+          "feedback": "Exactly. Old cue, same skill, and it gets smaller each time." },
+        { "id": "W3S2.2", "type": "choice", "prompt": "Which cues could catch you off guard?", "multi": true, "saveAs": "surprise_cues",
+          "options": [
+            { "id": "smell", "text": "A smell" }, { "id": "someone", "text": "Someone using" }, { "id": "place", "text": "A place" },
+            { "id": "song", "text": "A song" }, { "id": "person", "text": "A person" }, { "id": "routine", "text": "An old routine" },
+            { "id": "shop", "text": "The shop where I used to buy" }, { "id": "work", "text": "Stress at work" } ],
+          "feedback": "Added to your plan. Knowing them is half the defence." }
+      ],
+      "mission": { "text": "If an out-of-nowhere craving hits, call it an old cue, out loud or in your head, and ride it." },
+      "completionText": "Old cue, same skill. It gets smaller every time."
+    },
+
+    {
+      "id": "W3S3", "phaseId": "w3", "label": "Day 21",
+      "title": "Three weeks: you're rewiring", "subtitle": "Your toolkit so far", "durationMinutes": 4,
+      "unlock": { "rule": "days_since_quit", "minDay": 21 },
+      "audio": { "variants": ["default"] },
+      "beats": [
+        { "id": "W3S3.1", "type": "stat_reveal", "lines": ["{days_free} days free.", "{money_kept} kept.", "{cravings_ridden} cravings ridden out."] },
+        { "id": "W3S3.2", "type": "tap_reveal", "title": "Your toolkit", "cards": [
+          { "front": "Your no-line", "backFrom": "no_line" },
+          { "front": "Your break menu", "backFrom": "break_menu" },
+          { "front": "Your hard-day line", "backFrom": "bad_day_line" },
+          { "front": "Your wind-down", "backFrom": "wind_down" },
+          { "front": "Your rough-day plan", "backFrom": "rough_day_plan" } ] },
+        { "id": "W3S3.3", "type": "choice", "prompt": "Which tool has helped most so far?", "multi": false, "saveAs": "top_tool",
+          "options": [
+            { "id": "sos", "text": "Craving SOS" }, { "id": "breathing", "text": "Breathing" }, { "id": "noline", "text": "My no-line" },
+            { "id": "breaks", "text": "Break menu" }, { "id": "room", "text": "Making room" }, { "id": "moving", "text": "Moving" },
+            { "id": "water", "text": "Water" }, { "id": "person", "text": "A person" } ] },
+        { "id": "W3S3.4", "type": "share", "cardType": "milestone_21", "optional": true }
+      ],
+      "mission": { "text": "Tell someone one thing that's changed in three weeks." },
+      "completionText": "Three weeks of rewiring. Your toolkit is all yours."
+    },
+
+    {
+      "id": "W4S1", "phaseId": "w4", "label": "Day 24",
+      "title": "Your body, moving forward", "subtitle": "Movement, appetite and next steps", "durationMinutes": 4,
+      "unlock": { "rule": "days_since_quit", "minDay": 24 },
+      "audio": { "variants": ["default", "nrt"] },
+      "beats": [
+        { "id": "W4S1.1", "type": "choice", "prompt": "Pick a way to move this week.", "multi": false, "saveAs": "move_choice",
+          "options": [
+            { "id": "walk", "text": "Walk" }, { "id": "stairs", "text": "Stairs" }, { "id": "run", "text": "Run" }, { "id": "gym", "text": "Gym" },
+            { "id": "sport", "text": "A sport" }, { "id": "dance", "text": "Dancing" }, { "id": "yoga", "text": "Yoga or stretching" }, { "id": "cycle", "text": "Cycling" } ],
+          "feedback": "Saved. It'll show up on Craving SOS as an option." },
+        { "id": "W4S1.2", "type": "nrt_stepdown", "showIf": "nrt_active",
+          "title": "Plan your step-down",
+          "body": "Follow the step-down plan on your product's label. We'll remind you on each date.",
+          "safetyText": "Follow the product label. If you're pregnant, have a heart condition or take other medicines, check with a pharmacist or doctor first." },
+        { "id": "W4S1.3", "type": "quiz", "prompt": "A craving hits mid-afternoon. A quick way to help it pass is…",
+          "options": [
+            { "id": "a", "text": "Sit still and wait for it to win" },
+            { "id": "b", "text": "A few minutes of movement, like a brisk walk or the stairs" },
+            { "id": "c", "text": "A big sugary snack" } ],
+          "correctId": "b",
+          "feedback": "Right. Moving changes the channel, and the wave passes." }
+      ],
+      "mission": { "text": "Next time a craving hits, try five minutes of movement first." },
+      "completionText": "Moving is one more tool in your kit."
+    },
+
+    {
+      "id": "W4S2", "phaseId": "w4", "label": "Day 27",
+      "title": "If you ever slip", "subtitle": "The one-minute plan", "durationMinutes": 4,
+      "unlock": { "rule": "days_since_quit", "minDay": 27 },
+      "audio": { "variants": ["smoking","vaping","pouches"] },
+      "beats": [
+        { "id": "W4S2.1", "type": "slip_debrief_practice",
+          "intro": "Let's run through it once, so it feels familiar.",
+          "outro": "That's the whole debrief. One minute, then back on track." },
+        { "id": "W4S2.2", "type": "tap_reveal", "cards": [
+          { "front": "“I slipped, so I've failed”", "back": "You haven't. Many people who quit for good slipped along the way." },
+          { "front": "“I might as well keep going”", "back": "That's the thought that turns a slip into a return. Stop here." },
+          { "front": "“I have to start over”", "back": "You don't. Nothing resets." } ] },
+        { "id": "W4S2.3", "type": "quiz", "prompt": "After a slip, the most helpful thing is…",
+          "options": [
+            { "id": "a", "text": "Finish what's left and start fresh on Monday" },
+            { "id": "b", "text": "Stop, log it, and pick one thing to try next time" },
+            { "id": "c", "text": "Start the program again from the beginning" } ],
+          "correctId": "b",
+          "feedback": "Exactly. One minute, then keep going." }
+      ],
+      "mission": { "text": "Nothing to do today. Just know the plan is there." },
+      "completionText": "The slip plan is there if you ever need it. Nothing resets."
+    },
+
+    {
+      "id": "W4S3", "phaseId": "w4", "label": "Day 30",
+      "title": "Graduation", "subtitle": "“I don't use nicotine”", "durationMinutes": 5,
+      "unlock": { "rule": "days_since_quit", "minDay": 30 },
+      "audio": { "variants": ["smoking","vaping","pouches"] },
+      "beats": [
+        { "id": "W4S3.1", "type": "choice", "prompt": "Pick the line that's yours.", "multi": false, "allowOther": true, "saveAs": "identity_statement",
+          "options": {
+            "smoking": [ { "id": "nonic", "text": "I don't use nicotine" }, { "id": "free", "text": "I'm nicotine-free" }, { "id": "product", "text": "I don't smoke" } ],
+            "vaping":  [ { "id": "nonic", "text": "I don't use nicotine" }, { "id": "free", "text": "I'm nicotine-free" }, { "id": "product", "text": "I don't vape" } ],
+            "pouches": [ { "id": "nonic", "text": "I don't use nicotine" }, { "id": "free", "text": "I'm nicotine-free" }, { "id": "product", "text": "I don't use pouches" } ] } },
+        { "id": "W4S3.2", "type": "reflect", "prompt": "A short note to the you of Prep 1.", "saveAs": "letter_day1", "length": "long", "optional": true,
+          "guidePrompts": ["What was hardest?", "What helped?", "What's better now?"] },
+        { "id": "W4S3.3", "type": "plan_card", "title": "Your plan", "editable": true,
+          "fields": ["primary_reason", "rough_day_plan", "heavy_day_plan", "no_line", "bad_day_line", "break_menu", "wind_down", "identity_statement"] },
+        { "id": "W4S3.4", "type": "commit", "text": "Hold to graduate.", "holdSeconds": 3, "sets": "graduated_at" },
+        { "id": "W4S3.5", "type": "share", "cardType": "graduation", "optional": true, "quoteFrom": "letter_day1" }
+      ],
+      "completionText": "The program's done, but DayXero stays with you. Craving SOS, your plan and your milestones are always here."
+    }
+  ],
+
+  "sosTracks": [
+    { "id": "SOS1", "title": "Ride a big wave",  "subtitle": "For a strong craving, right now", "durationSeconds": 90, "audio": { "variants": ["default"] } },
+    { "id": "SOS2", "title": "Out with friends", "subtitle": "When someone's offering",          "durationSeconds": 60, "audio": { "variants": ["default"] } },
+    { "id": "SOS3", "title": "Stress just hit",  "subtitle": "When something's gone wrong",      "durationSeconds": 60, "audio": { "variants": ["default"] } },
+    { "id": "SOS4", "title": "I just slipped",   "subtitle": "One minute, then back on track",   "durationSeconds": 75, "audio": { "variants": ["smoking","vaping","pouches"] }, "endAction": "slip_debrief" }
+  ]
+}

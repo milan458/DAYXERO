@@ -33,10 +33,8 @@ struct HomeView: View {
         }
         .readVerticalBarEdge($barEdge)
         .dxCanvas()
-        // A break of 3+ days pauses the program until the last day is replayed (S5.7).
-        .onChange(of: scenePhase, initial: true) { _, phase in
-            if phase == .active { ProgramUpkeep.checkForBreak(profile, isPro: entitlement.isPro) }
-        }
+        // Program v2 missions ask their quick question after a logged use or an SOS session (handoff 4.4).
+        .modifier(MissionPrompts(profile: profile))
     }
 }
 
@@ -169,7 +167,13 @@ struct TodayView: View {
         }
         .onAppear {
             checkMilestone()
-            openQueuedFirstLesson()
+        }
+        // Holding Day Xero's commit starts the counter; celebrate as soon as the session closes.
+        .onReceive(NotificationCenter.default.publisher(for: .dxSessionClosed)) { _ in
+            Task {
+                try? await Task.sleep(for: .seconds(0.6))
+                checkMilestone()
+            }
         }
         .fullScreenCover(item: $celebrating) { milestone in
             MilestoneMoment(milestone: milestone, stats: MilestoneStats(profile: profile, logs: logs)) {
@@ -256,15 +260,8 @@ struct TodayView: View {
     @ViewBuilder
     private func overview(_ snap: HomeSnapshot, now: Date) -> some View {
         header(snap, now: now)
-        if let lesson = snap.lesson {
-            if lesson.isReplay {
-                ReplayCard(title: lesson.title, minutes: LessonLibrary.lesson(for: lesson.day, product: profile.primaryProduct?.product ?? .cigarettes).minutes) {
-                    openLesson = .init(day: lesson.day, isReplay: true)
-                }
-            } else {
-                lessonCard(lesson, finished: snap.finishedToday, prepTotal: snap.prepTotal, prep: isPrep(snap))
-            }
-        }
+        // Program v2's session, mission or what's next (handoff 4.5).
+        ProgramTodayCard(profile: profile)
         if snap.phase == .quitDay, !sosHintSeen { sosHint }
         // A plan made today, after a slip or in a lesson, stays on Home for the rest of the day (S8.3).
         if let plan = plans.first, DayClock(boundaryHour: profile.dayBoundaryHour).day(containing: plan.createdAt)
@@ -430,6 +427,7 @@ struct TodayView: View {
     private func logUse(_ product: Product) {
         justLogged = UseLog.log(product, in: context)
         loggedFeedback.toggle()
+        if justLogged?.kind == .use { NotificationCenter.default.post(name: .dxUseLogged, object: nil) }
     }
 
     private func loggedToast(_ entry: LogEntry) -> some View {

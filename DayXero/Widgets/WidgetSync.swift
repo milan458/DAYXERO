@@ -41,7 +41,8 @@ enum WidgetSync {
         let waterGoal = (try? context.fetch(FetchDescriptor<WaterProfile>()).first)?.effectiveGoalMl ?? WaterGoal.skippedMl
 
         let phase: WidgetSnapshot.Phase
-        if (profile.progress?.completions ?? []).isEmpty, isPrep {
+        let store = ProgramStore(context: context, profile: profile)
+        if store.records().allSatisfy({ $0.completedAt == nil }), isPrep {
             phase = .beforeDay1
         } else if isPrep {
             phase = .prep
@@ -50,9 +51,10 @@ enum WidgetSync {
         } else {
             phase = .quit
         }
-        let lesson = home.lesson.map { lesson in
-            WidgetSnapshot.Lesson(title: lesson.title,
-                                  minutes: LessonLibrary.lesson(for: lesson.day, product: profile.primaryProduct?.product ?? .cigarettes).minutes)
+        // The program session open now, if any.
+        let lesson: WidgetSnapshot.Lesson? = store.current(now: now).flatMap { current in
+            guard current.state == .available || current.state == .inProgress, let session = store.content?.session(current.id) else { return nil }
+            return WidgetSnapshot.Lesson(title: session.title.resolve(store.variant) ?? "", minutes: session.durationMinutes)
         }
         let defaults = UserDefaults.standard
         return WidgetSnapshot(

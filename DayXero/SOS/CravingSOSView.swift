@@ -26,6 +26,8 @@ struct CravingSOSView: View {
 
     @State private var startedAt: Date
     @State private var stage = Stage.session
+    /// Set when the session ends, so Home can ask a mission's question once SOS has closed.
+    @State private var ended = false
     @State private var began = false
     @State private var engine: OrbEngine
     @State private var clock = OrbClock()
@@ -70,7 +72,10 @@ struct CravingSOSView: View {
         // The orb is specified for a pure black canvas, so the whole SOS stays dark.
         .preferredColorScheme(.dark)
         .onAppear(perform: begin)
-        .onDisappear(perform: tearDown)
+        .onDisappear {
+            tearDown()
+            if ended { NotificationCenter.default.post(name: .dxSOSEnded, object: nil) }
+        }
         .onChange(of: scenePhase) { _, phase in
             // "It passed" on the Lock Screen already saved the craving; show the same screen as in the app.
             if phase == .active, SOSState.consumeFinishedOutside() == .passed, stage == .session || stage == .timeUp {
@@ -149,6 +154,7 @@ struct CravingSOSView: View {
     private var sessionExtras: some View {
         if stage == .session { controls }
         if stage == .session, passedMinute { earlyWin }
+        if stage == .session, let profile { SOSProgramExtras(profile: profile) }
         if stage == .timeUp, let reason = currentReason {
             ReasonCard(reason: reason, canAdvance: reasons.count > 1) { reasonSkip += 1 }
         }
@@ -459,6 +465,7 @@ struct CravingSOSView: View {
         tearDown()
         Task { await SOSLiveActivity.endAll() }
         Analytics.track(.cravingSessionEnded(outcome: outcome.rawValue, seconds: Int(end.timeIntervalSince(startedAt))))
+        ended = true
         switch outcome {
         case .passed:
             stage = .passed

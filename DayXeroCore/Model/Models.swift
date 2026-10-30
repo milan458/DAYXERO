@@ -154,6 +154,10 @@ public final class ProgramProgress {
     public var lastActiveAt: Date?
     /// Set when the program paused after a break (S5.7): this finished day is replayed before moving on.
     public var replayDayRaw: String?
+    /// Program v2: when Day Xero's commit was held. Week sessions unlock by days since this.
+    public var quitTimestamp: Date?
+    /// Program v2: when the Day 30 commit was held.
+    public var graduatedAt: Date?
 
     public init() {}
 

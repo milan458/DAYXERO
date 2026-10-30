@@ -16,6 +16,17 @@ enum AnalyticsEvent {
     // Program
     case programDayStarted(day: String)
     case programDayCompleted(day: String)
+    // Program v2 (handoff 8): IDs and buckets only; never answers, reasons or how someone felt.
+    case programSessionUnlocked(sessionId: String)
+    case programSessionStarted(sessionId: String, variant: String)
+    case programAudioProgress(sessionId: String, bucket: Int)
+    case programBeatCompleted(sessionId: String, beatId: String, type: String, skipped: Bool)
+    case programQuizAnswered(beatId: String, firstTryCorrect: Bool)
+    case programSessionCompleted(sessionId: String, minutesBucket: String)
+    case programMissionFollowupDone(sessionId: String)
+    case programGraduated(daysSinceQuit: Int)
+    case programReplayStarted(sessionId: String)
+    case sosTrackPlayed(trackId: String, completed: Bool)
     // Cravings and slips
     case cravingSessionStarted(source: String)
     case cravingSessionEnded(outcome: String, seconds: Int)
@@ -45,6 +56,16 @@ enum AnalyticsEvent {
         case .purchasesRestored: "purchases_restored"
         case .programDayStarted: "program_day_started"
         case .programDayCompleted: "program_day_completed"
+        case .programSessionUnlocked: "program_session_unlocked"
+        case .programSessionStarted: "program_session_started"
+        case .programAudioProgress: "program_audio_progress"
+        case .programBeatCompleted: "program_beat_completed"
+        case .programQuizAnswered: "program_quiz_answered"
+        case .programSessionCompleted: "program_session_completed"
+        case .programMissionFollowupDone: "program_mission_followup_done"
+        case .programGraduated: "program_graduated"
+        case .programReplayStarted: "program_replay_started"
+        case .sosTrackPlayed: "sos_track_played"
         case .cravingSessionStarted: "craving_session_started"
         case .cravingSessionEnded: "craving_session_ended"
         case .slipLogged: "slip_logged"
@@ -65,6 +86,14 @@ enum AnalyticsEvent {
         case let .paywallPlanSelected(plan), let .paywallPurchased(plan): ["plan": plan]
         case let .purchasesRestored(success): ["success": String(success)]
         case let .programDayStarted(day), let .programDayCompleted(day): ["day": day]
+        case let .programSessionUnlocked(id), let .programMissionFollowupDone(id), let .programReplayStarted(id): ["session_id": id]
+        case let .programSessionStarted(id, variant): ["session_id": id, "variant": variant]
+        case let .programAudioProgress(id, bucket): ["session_id": id, "bucket": String(bucket)]
+        case let .programBeatCompleted(id, beat, type, skipped): ["session_id": id, "beat_id": beat, "type": type, "skipped": String(skipped)]
+        case let .programQuizAnswered(beat, correct): ["beat_id": beat, "first_try_correct": String(correct)]
+        case let .programSessionCompleted(id, minutes): ["session_id": id, "minutes": minutes]
+        case let .programGraduated(days): ["days_since_quit": String(days)]
+        case let .sosTrackPlayed(track, completed): ["track_id": track, "completed": String(completed)]
         case let .cravingSessionStarted(source), let .slipLogged(source): ["source": source]
         case let .cravingSessionEnded(outcome, seconds): ["outcome": outcome, "seconds": String(seconds)]
         case let .shareCardCreated(milestone): ["milestone": milestone]
@@ -99,6 +128,17 @@ enum Analytics {
         // Nothing at all is sent, lifecycle events included, until there's consent (S15.4).
         if !AnalyticsConsent.isOn { PostHogSDK.shared.optOut() }
         isConfigured = true
+    }
+
+    /// Minutes as a coarse bucket, so a session's length never pins down a person.
+    static func minutesBucket(_ minutes: Int) -> String {
+        switch minutes {
+        case ..<3: "0-2"
+        case ..<6: "3-5"
+        case ..<11: "6-10"
+        case ..<31: "11-30"
+        default: "30+"
+        }
     }
 
     static func track(_ event: AnalyticsEvent) {

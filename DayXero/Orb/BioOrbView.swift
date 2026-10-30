@@ -64,7 +64,7 @@ struct BioOrbView: View {
             let left = Duration.seconds(session.sosRemaining).formatted(.units(allowed: [.minutes, .seconds], width: .wide))
             return String(localized: "\(phase), \(left) left")
         }
-        return String(localized: "\(phase), \(session.remaining) seconds left, cycle \(session.cycle) of \(engine.pattern.recommendedCycles)")
+        return String(localized: "\(phase), \(session.remaining) seconds left, cycle \(session.cycle) of \(engine.cycleCount)")
     }
 
     // MARK: Drawing (spec §2–§3)
@@ -159,7 +159,7 @@ private struct OrbReadout: View {
                 }
                 .padding(.vertical, r.gap)
             HStack(spacing: r.cycleToBars) {
-                Text(verbatim: "CYCLE \(session.cycle) OF \(engine.pattern.recommendedCycles)")
+                Text(verbatim: "CYCLE \(session.cycle) OF \(engine.cycleCount)")
                     .font(.custom(DX.Typeface.mono, fixedSize: r.cycleSize))
                     .tracking(r.cycleTracking * r.cycleSize)
                     .foregroundStyle(.white.opacity(data.readout.cycleOpacity))

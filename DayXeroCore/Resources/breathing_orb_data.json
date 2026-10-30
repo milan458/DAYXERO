@@ -290,6 +290,48 @@
           "sharpness": 0.1
         }
       }
+    },
+    {
+      "id": "sigh",
+      "name": "Physiological sigh",
+      "counts": "2·1·6",
+      "subtitle": "Two breaths in, one long breath out",
+      "recommendedCycles": 3,
+      "phases": {
+        "Inhale": 2,
+        "Hold": 0,
+        "TopUp": 1,
+        "Exhale": 6,
+        "Rest": 1
+      },
+      "scaleTargets": {
+        "Inhale": 1.08,
+        "TopUp": 1.15,
+        "Exhale": 0.82,
+        "Rest": 0.82
+      },
+      "haptics": {
+        "Inhale": {
+          "intensityStart": 0.3,
+          "intensityEnd": 0.7,
+          "sharpness": 0.4
+        },
+        "TopUp": {
+          "intensityStart": 0.7,
+          "intensityEnd": 0.9,
+          "sharpness": 0.5
+        },
+        "Exhale": {
+          "intensityStart": 0.8,
+          "intensityEnd": 0.1,
+          "sharpness": 0.1
+        },
+        "Rest": {
+          "intensityStart": 0.0,
+          "intensityEnd": 0.0,
+          "sharpness": 0.1
+        }
+      }
     }
   ],
   "labels": {
@@ -314,6 +356,11 @@
       "Hold gently at the crest... notice the sensation without fighting it.",
       "Pause in stillness... a craving is a wave, and waves pass.",
       "Suspend the breath... your streak and progress are completely safe."
+    ],
+    "TopUp": [
+      "A little extra sip of air at the top...",
+      "Sip in once more... a little more air, right at the top.",
+      "One more small breath in... then let it all go."
     ],
     "Exhale": [
       "Exhale softly... release the tension from your jaw and shoulders.",

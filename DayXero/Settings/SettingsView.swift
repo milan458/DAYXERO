@@ -62,6 +62,22 @@ struct SettingsSheet: View {
                 } footer: {
                     Text("Other haptics follow System Haptics in iPhone Settings.")
                 }
+                if DemoMode.isAvailable {
+                    Section {
+                        Toggle(isOn: Binding(get: { entitlement.demo }, set: { on in
+                            entitlement.setDemo(on)
+                            DailyReminders.isPro = entitlement.isPro
+                            WidgetSync.refresh(in: context, isPro: entitlement.isPro)
+                        })) {
+                            SettingLabel("Demo mode", systemImage: "sparkles.rectangle.stack")
+                        }
+                        .accessibilityIdentifier("settings.demoMode")
+                    } header: {
+                        Text("Testing")
+                    } footer: {
+                        Text("Unlocks everything, opens every program session at any time, and lets you pick any Quit Day, past ones too. Only in test builds.")
+                    }
+                }
                 // Widgets (S17.11): what widgets anyone can see show.
                 Section {
                     Toggle(isOn: $widgetPrivacy) { SettingLabel("Privacy mode on the Lock Screen", systemImage: "eye.slash") }
@@ -443,7 +459,18 @@ struct QuitDaySettingsView: View {
                     }
                 }
             }
-            if stats.isPrep(at: .now) {
+            if DemoMode.isOn {
+                Section {
+                    DatePicker("Quit Day", selection: Binding(get: { profile.quitDay }, set: { setQuitDay($0) }),
+                               in: (Calendar.current.date(byAdding: .year, value: -2, to: today) ?? today)...(Calendar.current.date(byAdding: .year, value: 1, to: today) ?? today),
+                               displayedComponents: .date)
+                        .datePickerStyle(.graphical)
+                } header: {
+                    Text("Demo mode")
+                } footer: {
+                    Text("Any date, past ones too. Counters, money kept and milestones follow it straight away.")
+                }
+            } else if stats.isPrep(at: .now) {
                 Section {
                     DatePicker("Quit Day", selection: Binding(get: { profile.quitDay }, set: { setQuitDay($0) }),
                                in: (Calendar.current.date(byAdding: .day, value: 1, to: today) ?? today)...latest, displayedComponents: .date)
