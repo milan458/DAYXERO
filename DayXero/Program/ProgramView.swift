@@ -46,7 +46,7 @@ struct ProgramView: View {
                 }
             }
         }
-        .fullScreenCover(item: $open) { item in
+        .fullScreenCover(item: $open, onDismiss: { NotificationCenter.default.post(name: .dxSessionClosed, object: nil) }) { item in
             SessionFlowView(sessionId: item.id, profile: profile, isReplay: item.isReplay)
         }
         .sheet(item: Binding(get: { upgradeTitle.map { SessionOpen(id: $0) } }, set: { upgradeTitle = $0?.id })) { item in

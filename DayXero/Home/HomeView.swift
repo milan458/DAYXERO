@@ -169,9 +169,9 @@ struct TodayView: View {
             checkMilestone()
         }
         // Holding Day Xero's commit starts the counter; celebrate as soon as the session closes.
-        .onReceive(NotificationCenter.default.publisher(for: .dxDayXeroStarted)) { _ in
+        .onReceive(NotificationCenter.default.publisher(for: .dxSessionClosed)) { _ in
             Task {
-                try? await Task.sleep(for: .seconds(1))
+                try? await Task.sleep(for: .seconds(0.6))
                 checkMilestone()
             }
         }

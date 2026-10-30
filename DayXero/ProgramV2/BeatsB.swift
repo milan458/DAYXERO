@@ -316,7 +316,6 @@ struct CommitBeat: View {
         pressing = false
         guard !ctx.isReplay else { return }
         if let key = beat.sets { ctx.store.commit(key, at: now) }
-        if beat.sets == "quit_timestamp" { NotificationCenter.default.post(name: .dxDayXeroStarted, object: nil) }
         if beat.sets == "graduated_at", let quit = ctx.store.profile.progress?.quitTimestamp {
             Analytics.track(.programGraduated(daysSinceQuit: ctx.store.clock.calendar.dateComponents([.day], from: quit, to: now).day ?? 0))
         }
