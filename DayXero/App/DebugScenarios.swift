@@ -131,6 +131,39 @@ enum DebugScenario: String {
         }
         // Everyone except "returning" opened the app within the last hour, so no pause is due.
         progress.lastActiveAt = self == .returning ? progress.completions.map(\.completedAt).max() : now.addingTimeInterval(-3600)
+
+        // Program v2: the same place in the new program. Prep sessions a day apart from the start, Day Xero on the
+        // Quit Day, week sessions on their day.
+        let v2Done: Int = switch self {
+        case .prep: 3
+        case .quitday: 7
+        case .day3, .returning: 9
+        case .done: 10
+        case .day12: 17
+        case .free: 1
+        }
+        if let content = ProgramContent.bundled {
+            for (i, session) in content.sessions.prefix(v2Done).enumerated() {
+                let offset: Int = switch session.unlock.rule {
+                case .first, .nextDayAfterPrevious: start + i
+                case .dayXero: quit
+                case .daysSinceQuit: quit + (session.unlock.minDay ?? 0)
+                }
+                var when = day(offset).addingTimeInterval(10 * 3600)
+                if self == .done, i == v2Done - 1 { when = now.addingTimeInterval(-600) }
+                let record = SessionRecord(sessionId: session.id, startedAt: min(when, now).addingTimeInterval(-300), contentVersion: content.version)
+                record.completedAt = min(when, now)
+                context.insert(record)
+                if session.unlock.rule == .dayXero { progress.quitTimestamp = min(when, now) }
+            }
+            if v2Done >= 17 {
+                for (key, value) in [("no_line", ProgramAnswerValue.text("I'm good, I've stopped. Got a lime soda?")),
+                                     ("passenger_reply", .text("I hear you. Still not stopping.")),
+                                     ("break_menu", .list(["Step outside", "Glass of water", "Walk around the block"]))] {
+                    context.insert(ProgramAnswer(key: key, value: value, sessionId: "debug"))
+                }
+            }
+        }
         try? context.save()
     }
 

@@ -144,6 +144,37 @@ jobs:
           shoot dark large prog-tab-dark $D3 -dx.tab program
           shoot light large prog-tab-light $D3 -dx.tab program
           shoot dark large prog-free-dark -dx.homeScenario free -dx.store mock -dx.paywallDone YES -dx.tab program
+          # Program v2: sessions at a step (-dx.openSession <id> -dx.sessionStep <n>), the tab, Home and SOS.
+          PR="-dx.homeScenario prep -dx.store pro"
+          D12="-dx.homeScenario day12 -dx.store pro"
+          shoot dark large v2-intro-dark $PR -dx.openSession P4 -dx.sessionStep 0
+          shoot light large v2-intro-light $PR -dx.openSession P4 -dx.sessionStep 0
+          shoot dark large v2-slider-dark $PR -dx.openSession P4 -dx.sessionStep 1
+          shoot dark large v2-audio-dark $PR -dx.openSession P4 -dx.sessionStep 2
+          shoot light large v2-audio-light $PR -dx.openSession P4 -dx.sessionStep 2
+          shoot dark large v2-breathe-dark $PR -dx.openSession P4 -dx.sessionStep 4
+          shoot dark large v2-tapreveal-dark $PR -dx.openSession P4 -dx.sessionStep 5
+          shoot dark large v2-mission-dark $PR -dx.openSession P4 -dx.sessionStep 6
+          shoot light large v2-complete-light $PR -dx.openSession P4 -dx.sessionStep 7
+          shoot dark large v2-stat-dark $PR -dx.openSession P1 -dx.sessionStep 2
+          shoot dark large v2-reflect-dark $PR -dx.openSession P1 -dx.sessionStep 3
+          shoot dark large v2-quiz-dark $PR -dx.openSession P1 -dx.sessionStep 5
+          shoot light large v2-quiz-light $PR -dx.openSession P1 -dx.sessionStep 5
+          shoot dark large v2-commit-dark $PR -dx.openSession P1 -dx.sessionStep 6
+          shoot dark large v2-choice-dark $PR -dx.openSession P2 -dx.sessionStep 2
+          shoot dark large v2-checklist-dark $PR -dx.openSession P6 -dx.sessionStep 2
+          shoot dark large v2-nrt-dark $PR -dx.openSession P6 -dx.sessionStep 4
+          shoot dark large v2-share-dark $PR -dx.openSession P6 -dx.sessionStep 5
+          shoot dark large v2-planbuilder-dark $D12 -dx.openSession W1D3 -dx.sessionStep 3
+          shoot dark large v2-chips-dark $D12 -dx.openSession W1D4 -dx.sessionStep 2
+          shoot light large v2-scenario-light $D12 -dx.openSession W1D5 -dx.sessionStep 2
+          shoot dark large v2-plancard-dark $D12 -dx.openSession W4S3 -dx.sessionStep 4
+          shoot dark large v2-program-dark $D12 -dx.tab program
+          shoot light large v2-program-light $PR -dx.tab program
+          shoot dark large v2-home-waiting-dark -dx.homeScenario done -dx.store pro
+          shoot light large v2-home-open-light $PR
+          shoot dark large v2-sos-extras-dark $D12 -dx.sos YES
+          shoot dark accessibility-extra-extra-extra-large v2-quiz-dark-ax5 $PR -dx.openSession P1 -dx.sessionStep 5
           shoot dark large lesson-reading-dark $D3 -dx.openLesson quit-3
           shoot light large lesson-reading-light $D3 -dx.openLesson quit-3
           shoot dark large lesson-audio-dark $D3 -dx.openLesson quit-3 -dx.lessonStep.quit-3 1
