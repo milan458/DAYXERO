@@ -31,13 +31,12 @@ struct LessonPlayer: View {
                     LessonComplete(day: day, title: content.title, profile: profile, isReplay: isReplay) { dismiss() }
                 } else {
                     topBar(content)
-                    ScrollView {
-                        step(content.steps[index])
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.top, DX.Space.s)
-                            .id(index)
-                            .transition(reduceMotion ? .opacity : .asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity),
-                                                                               removal: .opacity))
+                    if case .audio = content.steps[index] {
+                        // The audio step splits the screen into wave and captions, so it takes the full height instead of scrolling.
+                        stepBody(content)
+                            .frame(maxHeight: .infinity)
+                    } else {
+                        ScrollView { stepBody(content) }
                     }
                     footer(content)
                 }
@@ -52,6 +51,15 @@ struct LessonPlayer: View {
         .animation(DX.Motion.animation(DX.Motion.glide, reduceMotion: reduceMotion), value: finished)
         .onAppear(perform: start)
         .accessibilityAction(named: Text("Next step")) { advance() }
+    }
+
+    private func stepBody(_ content: LessonContent) -> some View {
+        step(content.steps[index])
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.top, DX.Space.s)
+            .id(index)
+            .transition(reduceMotion ? .opacity : .asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity),
+                                                               removal: .opacity))
     }
 
     // MARK: Chrome
