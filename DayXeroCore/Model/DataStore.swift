@@ -13,6 +13,7 @@ public enum DataStore {
             NRTPlan.self, PouchTaper.self,
             IfThenPlan.self, WeeklyCheckIn.self, ToolUse.self,
             WaterProfile.self, WaterEntry.self,
+            SessionRecord.self, BeatRecord.self, ProgramAnswer.self, MissionRecord.self,
         ])
     }
 
