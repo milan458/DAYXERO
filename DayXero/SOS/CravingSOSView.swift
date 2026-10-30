@@ -154,6 +154,7 @@ struct CravingSOSView: View {
     private var sessionExtras: some View {
         if stage == .session { controls }
         if stage == .session, passedMinute { earlyWin }
+        if stage == .session, let profile { SOSProgramExtras(profile: profile) }
         if stage == .timeUp, let reason = currentReason {
             ReasonCard(reason: reason, canAdvance: reasons.count > 1) { reasonSkip += 1 }
         }
