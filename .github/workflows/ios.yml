@@ -115,6 +115,12 @@ jobs:
           shoot dark large gallery-dark -dx.showGallery YES
           shoot light large gallery-light -dx.showGallery YES
           shoot dark accessibility-extra-extra-extra-large gallery-dark-ax5 -dx.showGallery YES
+          # v4 foundation pages (V4Gallery), light and dark.
+          for page in type scenes xero jelli glim buttons program; do
+            shoot light large "v4-$page-light" -dx.v4Gallery "$page"
+            shoot dark large "v4-$page-dark" -dx.v4Gallery "$page"
+          done
+          shoot light accessibility-extra-extra-extra-large v4-type-light-ax5 -dx.v4Gallery type
           for step in welcome products baseline_cigarettes baseline_vape baseline_summary triggers personal past_attempts nrt quit_day reveal trial; do
             shoot dark large "onb-$step-dark" -dx.onboardingStep "$step"
           done

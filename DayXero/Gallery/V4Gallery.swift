@@ -2,25 +2,44 @@
 import DayXeroCore
 import SwiftUI
 
-/// The v4 foundation on one scrolling page: grounds, type steps and the crew in every
-/// mood and stage, for side-by-side checks against the Design canvas
-/// (`-dx.v4Gallery YES`). Debug builds only.
+/// The v4 foundation, for side-by-side checks against the Design canvas.
+/// `-dx.v4Gallery <page>`: type, scenes, xero, jelli, glim, buttons, program; anything else shows all.
+/// Debug builds only.
 struct V4Gallery: View {
+    var page: String = "all"
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 28) {
-                Text("v4 foundation").dxType(.large)
-                scenes
-                grounds
-                type
-                crew(name: "Xero", ground: .apricot) { mood, stage, size in XeroView(mood: mood, stage: stage, size: size) }
-                crew(name: "Jelli", ground: .ocean) { mood, stage, size in JelliView(mood: mood, stage: stage, size: size) }
-                crew(name: "Glim", ground: .violet) { mood, stage, size in GlimView(mood: mood, stage: stage, size: size) }
-                buttons
-                today
-                program
-                evening
-                chat
+                switch page {
+                case "type":
+                    grounds
+                    type
+                case "scenes": scenes
+                case "xero": crew(name: "Xero", ground: .apricot) { mood, stage, size in XeroView(mood: mood, stage: stage, size: size) }
+                case "jelli": crew(name: "Jelli", ground: .ocean) { mood, stage, size in JelliView(mood: mood, stage: stage, size: size) }
+                case "glim": crew(name: "Glim", ground: .violet) { mood, stage, size in GlimView(mood: mood, stage: stage, size: size) }
+                case "buttons":
+                    buttons
+                    today
+                case "program":
+                    program
+                    evening
+                    chat
+                default:
+                    Text("v4 foundation").dxType(.large)
+                    scenes
+                    grounds
+                    type
+                    crew(name: "Xero", ground: .apricot) { mood, stage, size in XeroView(mood: mood, stage: stage, size: size) }
+                    crew(name: "Jelli", ground: .ocean) { mood, stage, size in JelliView(mood: mood, stage: stage, size: size) }
+                    crew(name: "Glim", ground: .violet) { mood, stage, size in GlimView(mood: mood, stage: stage, size: size) }
+                    buttons
+                    today
+                    program
+                    evening
+                    chat
+                }
             }
             .padding(DX.Layout.gutter)
         }
