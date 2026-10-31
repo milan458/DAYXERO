@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Quit Day offer</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{t.bg}}; color: {{t.ink}}; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif; display: flex; flex-direction: column">
+  <div style="padding: 50px 16px 0 24px; display: flex; align-items: center; gap: 12px; {{a0}}">
+    <span style="width: 40px; height: 40px; border-radius: 99px; background: #FFC38A; overflow: hidden; display: flex; align-items: center; justify-content: center; flex: none"><dc-import name="Xero" mood="calm" stage="1" animate="{{motionStr}}" size="40" hint-size="40px,40px"></dc-import></span>
+    <span style="font-size: 14px; font-weight: 700; color: {{t.muted}}; flex-grow: 1">Quit Day · Fri 6 Nov</span>
+    <a href="F08Today.dc.html" aria-label="Close and continue with the free version" style="width: 44px; height: 44px; border-radius: 99px; background: {{t.surf}}; color: {{t.ink}}; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></a>
+  </div>
+
+  <div style="padding: 12px 24px 0 24px; display: flex; flex-direction: column; gap: 6px">
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 32px; line-height: 1.08; letter-spacing: -1px; {{a1}}">Week 1 starts tomorrow</h1>
+    <p style="margin: 0; font-size: 16px; line-height: 1.5; color: {{t.muted}}; {{a2}}">Day 1, Look after the basics, opens on Sat 7 Nov. Try the full program free for 3 days.</p>
+  </div>
+
+  <div style="margin: 14px 18px 0 18px; background: {{t.raised}}; border-radius: 20px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; box-shadow: {{t.shadow}}; {{a3}}">
+    <sc-for list="{{included}}" as="i" hint-placeholder-count="3">
+      <div style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 1.4"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{t.green}}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M5 12l5 5 9-10"></path></svg><span>{{i}}</span></div>
+    </sc-for>
+    <div style="border-top: 1px solid {{t.hair}}; padding-top: 8px; font-size: 14px; color: {{t.muted}}">Always free: your counter and Craving SOS.</div>
+  </div>
+
+  <div role="radiogroup" aria-label="Choose a plan" style="margin: 16px 18px 0 18px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; {{a4}}">
+    <sc-for list="{{plans}}" as="p" hint-placeholder-count="2">
+      <button role="radio" aria-checked="{{p.checked}}" onClick="{{p.pick}}" style="position: relative; font: inherit; color: {{t.ink}}; text-align: center; background: {{t.raised}}; border: 0; border-radius: 20px; padding: 20px 8px 12px 8px; display: flex; flex-direction: column; gap: 2px; align-items: center; cursor: pointer; {{p.ring}}">
+        <sc-if value="{{p.badge}}" hint-placeholder-val="{{true}}"><span style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); white-space: nowrap; background: {{t.badge}}; color: {{t.badgeInk}}; font-size: 12px; font-weight: 700; letter-spacing: 0.4px; border-radius: 99px; padding: 3px 10px">3 DAYS FREE · SAVE 66%</span></sc-if>
+        <span style="font-size: 14px; font-weight: 600; color: {{t.muted}}">{{p.name}}</span>
+        <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 24px">{{p.price}}</span>
+        <span style="font-size: 12px; color: {{t.muted}}">{{p.detail}}</span>
+      </button>
+    </sc-for>
+  </div>
+
+  <div style="margin: 14px 24px 0 24px; display: flex; flex-direction: column; gap: 0; {{a5}}">
+    <sc-for list="{{steps}}" as="s" hint-placeholder-count="3">
+      <div style="display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 10px; align-items: start; padding: 5px 0">
+        <span aria-hidden="true" style="width: 12px; height: 12px; margin: 4px 0 0 5px; border-radius: 99px; {{s.dot}}"></span>
+        <span style="font-size: 14px; line-height: 1.4"><b>{{s.when}}</b> · {{s.what}}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="margin-top: auto; padding: 0 22px 16px 22px; display: flex; flex-direction: column; gap: 2px; {{a6}}">
+    <a href="F08Today.dc.html" style="height: 58px; border-radius: 99px; background: {{t.btn}}; color: {{t.btnInk}}; font-weight: 700; font-size: 16px; text-decoration: none; display: flex; align-items: center; justify-content: center">{{cta}}</a>
+    <div style="display: flex; justify-content: center; gap: 4px">
+      <a href="F08Today.dc.html" style="height: 44px; display: flex; align-items: center; padding: 0 10px; color: {{t.ink}}; font-weight: 600; font-size: 14px">Not now</a>
+      <a href="#" style="height: 44px; display: flex; align-items: center; padding: 0 10px; color: {{t.ink}}; font-weight: 600; font-size: 14px">Lifetime · $79.99 · Pay once</a>
+    </div>
+    <p style="margin: 0; font-size: 12px; line-height: 1.5; color: {{t.muted}}; text-align: center">Cancel in Settings › Apple ID › Subscriptions. <a href="#" style="color: {{t.ink}}; font-weight: 700">Restore purchases</a> · <a href="#" style="color: {{t.ink}}; font-weight: 700">Terms</a> · <a href="#" style="color: {{t.ink}}; font-weight: 700">Privacy</a></p>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"motion":{"editor":"boolean","default":true},"replay":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  componentDidMount() { this.play(); }
+  componentWillUnmount() { (this.timers || []).forEach(clearTimeout); }
+  play() {
+    (this.timers || []).forEach(clearTimeout);
+    this.timers = [];
+    this.setState({ on: false });
+    this.timers.push(setTimeout(() => this.setState({ on: true }), 300));
+    if (String(this.props.replay ?? false) !== 'false') this.timers.push(setTimeout(() => this.play(), 10000));
+  }
+  renderVals() {
+    const dark = (this.props.theme ?? 'light') === 'dark';
+    const motion = String(this.props.motion ?? true) !== 'false';
+    const s = this.state || {};
+    const on = !motion || Boolean(s.on);
+    const plan = s.plan || 'annual';
+    const ease = 'cubic-bezier(.2,.7,.2,1)';
+    const a = (i) => `opacity: ${on ? 1 : 0}; transform: translateY(${on ? 0 : 18}px); transition: opacity 600ms ${ease} ${i * 90}ms, transform 600ms ${ease} ${i * 90}ms`;
+    const t = dark
+      ? { bg: '#0E0B2B', ink: '#FFF8EE', muted: '#B8B3D9', raised: '#1B1747', surf: '#1B1747', green: '#2FD08A', hair: 'rgba(255,255,255,0.12)', shadow: 'none', sel: '#FFF8EE', badge: '#FFC38A', badgeInk: '#241433', btn: '#FFF8EE', btnInk: '#0E0B2B', dotOn: '#2FD08A', dotOff: '#B8B3D9' }
+      : { bg: '#FBF7F1', ink: '#1E1A3A', muted: '#5E5975', raised: '#FFFFFF', surf: '#F1EBE2', green: '#0F6E43', hair: 'rgba(30,26,58,0.1)', shadow: '0 1px 0 rgba(30,26,58,0.05), 0 8px 22px rgba(30,26,58,0.07)', sel: '#1E1A3A', badge: '#1E1A3A', badgeInk: '#FFF8EE', btn: '#1E1A3A', btnInk: '#FFF8EE', dotOn: '#0F6E43', dotOff: '#5E5975' };
+    const plans = [
+      { id: 'annual', name: 'Yearly', price: '$39.99/yr', detail: '$3.33/mo', badge: true },
+      { id: 'monthly', name: 'Monthly', price: '$9.99/mo', detail: 'Billed today · Cancel anytime', badge: false }
+    ].map((p) => ({ ...p, checked: String(plan === p.id), ring: plan === p.id ? `box-shadow: inset 0 0 0 2px ${t.sel}` : `box-shadow: inset 0 0 0 1px ${t.hair}`, pick: () => this.setState({ plan: p.id }) }));
+    const steps = plan === 'annual'
+      ? [['Today, Fri 6 Nov', 'the full program unlocks. Nothing is charged.', true], ['Sat 7 Nov', 'we’ll remind you, 2 days before.', false], ['Mon 9 Nov', '$39.99 for a year, unless you cancel.', false]]
+      : [['Today, Fri 6 Nov', '$9.99 today, then every month until you cancel.', true]];
+    return {
+      t, plans, motionStr: String(motion),
+      included: ['Quit week and 4 weeks after', 'Insights on your triggers', 'NRT planner, health timeline, share cards'],
+      steps: steps.map(([when, what, now]) => ({ when, what, dot: `background: ${now ? t.dotOn : 'transparent'}; box-shadow: inset 0 0 0 2px ${now ? t.dotOn : t.dotOff}` })),
+      cta: plan === 'annual' ? 'Start my 3-day free trial' : 'Subscribe for $9.99 a month',
+      a0: a(0), a1: a(1), a2: a(2), a3: a(3), a4: a(4), a5: a(5), a6: a(6)
+    };
+  }
+}
+</script>
+</body>
+</html>

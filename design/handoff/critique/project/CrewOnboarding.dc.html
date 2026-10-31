@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Crew onboarding critique</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 2428px; height: 1500px; box-sizing: border-box; background: #F7F6F3; color: #1E1A3A; font-family: 'DM Sans', system-ui, sans-serif; padding: 44px 80px; display: flex; flex-direction: column; gap: 26px">
+  <div style="display: flex; flex-direction: column; gap: 6px">
+    <div style="font-size: 14px; font-weight: 700; letter-spacing: 1.4px; color: #5E5975">PAGE 6 · THE CREW · O1–O7 ONBOARDING</div>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 40px; letter-spacing: -1.2px">The best opening in either set, until the paywall asks too early.</h1>
+  </div>
+  <div style="display: flex; gap: 28px; align-items: flex-start">
+    <div style="width: 300px; display: flex; flex-direction: column; gap: 12px; flex: none">
+      <div style="font-size: 14px; font-weight: 800">O1 · Breathe</div>
+      <div style="width: 273px; height: 591px; border-radius: 30px; overflow: hidden; box-shadow: 0 0 0 1px rgba(30,26,58,0.08)"><div style="width: 390px; height: 844px; transform: scale(0.7); transform-origin: 0 0"><dc-import name="C01Breathe" hint-size="390px,844px"></dc-import></div></div>
+      <sc-for list="{{n0}}" as="n" hint-placeholder-count="4"><div style="background: #FFFFFF; border-radius: 14px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px"><span style="align-self: flex-start; font-size: 11.5px; font-weight: 800; padding: 3px 8px; border-radius: 99px; {{n.tag}}">{{n.label}}</span><span style="font-size: 13.5px; line-height: 1.45">{{n.text}}</span></div></sc-for>
+    </div>
+    <div style="width: 300px; display: flex; flex-direction: column; gap: 12px; flex: none">
+      <div style="font-size: 14px; font-weight: 800">O2 · Welcome</div>
+      <div style="width: 273px; height: 591px; border-radius: 30px; overflow: hidden; box-shadow: 0 0 0 1px rgba(30,26,58,0.08)"><div style="width: 390px; height: 844px; transform: scale(0.7); transform-origin: 0 0"><dc-import name="C02Welcome" hint-size="390px,844px"></dc-import></div></div>
+      <sc-for list="{{n1}}" as="n" hint-placeholder-count="4"><div style="background: #FFFFFF; border-radius: 14px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px"><span style="align-self: flex-start; font-size: 11.5px; font-weight: 800; padding: 3px 8px; border-radius: 99px; {{n.tag}}">{{n.label}}</span><span style="font-size: 13.5px; line-height: 1.45">{{n.text}}</span></div></sc-for>
+    </div>
+    <div style="width: 300px; display: flex; flex-direction: column; gap: 12px; flex: none">
+      <div style="font-size: 14px; font-weight: 800">O3 · Questions</div>
+      <div style="width: 273px; height: 591px; border-radius: 30px; overflow: hidden; box-shadow: 0 0 0 1px rgba(30,26,58,0.08)"><div style="width: 390px; height: 844px; transform: scale(0.7); transform-origin: 0 0"><dc-import name="C03Chat" hint-size="390px,844px"></dc-import></div></div>
+      <sc-for list="{{n2}}" as="n" hint-placeholder-count="4"><div style="background: #FFFFFF; border-radius: 14px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px"><span style="align-self: flex-start; font-size: 11.5px; font-weight: 800; padding: 3px 8px; border-radius: 99px; {{n.tag}}">{{n.label}}</span><span style="font-size: 13.5px; line-height: 1.45">{{n.text}}</span></div></sc-for>
+    </div>
+    <div style="width: 300px; display: flex; flex-direction: column; gap: 12px; flex: none">
+      <div style="font-size: 14px; font-weight: 800">O4 · Quit Day</div>
+      <div style="width: 273px; height: 591px; border-radius: 30px; overflow: hidden; box-shadow: 0 0 0 1px rgba(30,26,58,0.08)"><div style="width: 390px; height: 844px; transform: scale(0.7); transform-origin: 0 0"><dc-import name="C04QuitDay" hint-size="390px,844px"></dc-import></div></div>
+      <sc-for list="{{n3}}" as="n" hint-placeholder-count="4"><div style="background: #FFFFFF; border-radius: 14px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px"><span style="align-self: flex-start; font-size: 11.5px; font-weight: 800; padding: 3px 8px; border-radius: 99px; {{n.tag}}">{{n.label}}</span><span style="font-size: 13.5px; line-height: 1.45">{{n.text}}</span></div></sc-for>
+    </div>
+    <div style="width: 300px; display: flex; flex-direction: column; gap: 12px; flex: none">
+      <div style="font-size: 14px; font-weight: 800">O5 · Meet your crew</div>
+      <div style="width: 273px; height: 591px; border-radius: 30px; overflow: hidden; box-shadow: 0 0 0 1px rgba(30,26,58,0.08)"><div style="width: 390px; height: 844px; transform: scale(0.7); transform-origin: 0 0"><dc-import name="C05Crew" hint-size="390px,844px"></dc-import></div></div>
+      <sc-for list="{{n4}}" as="n" hint-placeholder-count="4"><div style="background: #FFFFFF; border-radius: 14px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px"><span style="align-self: flex-start; font-size: 11.5px; font-weight: 800; padding: 3px 8px; border-radius: 99px; {{n.tag}}">{{n.label}}</span><span style="font-size: 13.5px; line-height: 1.45">{{n.text}}</span></div></sc-for>
+    </div>
+    <div style="width: 300px; display: flex; flex-direction: column; gap: 12px; flex: none">
+      <div style="font-size: 14px; font-weight: 800">O6 · Plan + trial</div>
+      <div style="width: 273px; height: 591px; border-radius: 30px; overflow: hidden; box-shadow: 0 0 0 1px rgba(30,26,58,0.08)"><div style="width: 390px; height: 844px; transform: scale(0.7); transform-origin: 0 0"><dc-import name="C06Plan" hint-size="390px,844px"></dc-import></div></div>
+      <sc-for list="{{n5}}" as="n" hint-placeholder-count="4"><div style="background: #FFFFFF; border-radius: 14px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px"><span style="align-self: flex-start; font-size: 11.5px; font-weight: 800; padding: 3px 8px; border-radius: 99px; {{n.tag}}">{{n.label}}</span><span style="font-size: 13.5px; line-height: 1.45">{{n.text}}</span></div></sc-for>
+    </div>
+    <div style="width: 300px; display: flex; flex-direction: column; gap: 12px; flex: none">
+      <div style="font-size: 14px; font-weight: 800">O7 · Reminders</div>
+      <div style="width: 273px; height: 591px; border-radius: 30px; overflow: hidden; box-shadow: 0 0 0 1px rgba(30,26,58,0.08)"><div style="width: 390px; height: 844px; transform: scale(0.7); transform-origin: 0 0"><dc-import name="C07Remind" hint-size="390px,844px"></dc-import></div></div>
+      <sc-for list="{{n6}}" as="n" hint-placeholder-count="4"><div style="background: #FFFFFF; border-radius: 14px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px"><span style="align-self: flex-start; font-size: 11.5px; font-weight: 800; padding: 3px 8px; border-radius: 99px; {{n.tag}}">{{n.label}}</span><span style="font-size: 13.5px; line-height: 1.45">{{n.text}}</span></div></sc-for>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":2428,"height":1500}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const T = {
+      F: ['FIX NOW', 'background: #FFE4D6; color: #9A3412'],
+      S: ['SHOULD', 'background: #DBEAFE; color: #1E40AF'],
+      P: ['POLISH', 'background: #E7E5E4; color: #44403C'],
+      K: ['KEEP', 'background: #DCFCE7; color: #166534']
+    };
+    const mk = (list) => list.map(([k, text]) => ({ label: T[k][0], tag: T[k][1], text }));
+    return {
+      n0: mk([
+        ['K', 'One breath before any question is the strongest opening in either set. It shows what the app does before it asks for anything.'],
+        ['S', 'Xero at 560px, mostly below the fold, reads as a big sun rather than a character. Check the crop on a real device.'],
+        ['P', 'Add a soft haptic on each inhale so the breath works with eyes closed.'],
+        ['P', 'Skip is live from the first second, on the only screen that shows value. Fade it in after one full cycle (10s).']
+      ]),
+      n1: mk([
+        ['K', '“Don’t quit today. Quit on your Quit Day.” is the clearest promise in the app. It removes the fear of having to start right now.'],
+        ['K', 'Terms, Privacy and the 18+ line sit right under the button. Alive’s version dropped them.'],
+        ['S', 'The body does two jobs: it explains prep and it introduces Xero (“I’m Xero, your sunrise”). Give the intro to a speech bubble and keep the body for the plan.'],
+        ['P', 'Five type sizes (12–33) for three blocks of content.']
+      ]),
+      n2: mk([
+        ['K', 'Chat-style questions with “Edit response” feel like a conversation and can be corrected.'],
+        ['K', '“Using both is common. We’ll plan for each” reacts to the answer. This is the best personalisation moment in onboarding.'],
+        ['S', 'Trigger options are right-aligned like the user’s own replies before anything is picked, so it’s unclear who is speaking. Put options in a tray and move picks into a reply bubble.'],
+        ['P', '“Pick up to three” has no counter. Show 2 of 3 on the Next button.']
+      ]),
+      n3: mk([
+        ['K', 'Recommending a date with a reason (“the full 7-day prep window”) is guidance, not just a form field.'],
+        ['F', '11px weekday letters in the date strip are below the 12px minimum, and the one-letter labels repeat (S, S / T, T).'],
+        ['S', '“Hold to set” needs a visible fill, a haptic at the end, and a VoiceOver action that doesn’t need holding.'],
+        ['P', 'Seven type sizes. The recommendation and the date strip compete for attention.']
+      ]),
+      n4: mk([
+        ['K', '“Building your plan around coffee and stress…” plays the user’s answers back. It’s a small line that does a lot.'],
+        ['F', 'The Xero card’s sky is 60% clear before the user has quit. Every pre-quit scene should be at 20.'],
+        ['S', 'Three characters, three scenes, a loader and a progress bar on one screen. Let each character arrive at its own first moment: Jelli at the first craving, Glim at the first evening.']
+      ]),
+      n5: mk([
+        ['F', 'The trial ends Mon 2 Nov, four days before Quit Day. The user pays before the product has done its main job.'],
+        ['F', 'Xero cheering at 170px on the paywall reads as the character selling. Use a small, calm Xero or none.'],
+        ['S', 'Ten type sizes: price, per-month, badge, plan list and terms all fight. Use three levels: price, what you get, the small print.'],
+        ['K', 'Honest small print: cancellation path, Restore purchases, and “Free forever: your counter, Craving SOS and Day 1”.']
+      ]),
+      n6: mk([
+        ['K', '“No guilt, ever, and quiet hours by default” is the right promise to make just before a permission prompt.'],
+        ['K', 'Real notification previews with real times show exactly what the user is agreeing to.'],
+        ['P', 'Four character drawings (two scenes, two avatars) on a screen about notifications. The previews alone would do it.']
+      ])
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Today</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{t.bg}}; color: {{t.ink}}; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif">
+  <div style="position: absolute; left: 0; top: 0; {{a0}}"><dc-import name="Hero2" scene="{{scene}}" clarity="{{clarity}}" h="250" edge="{{t.bg}}" animate="{{motionStr}}" hint-size="390px,250px"></dc-import></div>
+  <div style="position: absolute; left: 125px; top: 70px; {{showX}}"><dc-import name="Xero" mood="{{mood}}" stage="{{stage}}" animate="{{motionStr}}" size="140" hint-size="140px,140px"></dc-import></div>
+  <div style="position: absolute; left: 125px; top: 70px; {{showG}}"><dc-import name="Glim2" mood="{{mood}}" stage="{{stage}}" animate="{{motionStr}}" size="140" hint-size="140px,140px"></dc-import></div>
+
+  <div style="position: absolute; left: 0; right: 0; top: 238px; padding: 0 20px; display: flex; flex-direction: column; gap: 12px">
+    <div style="{{a1}}">
+      <div style="font-size: 14px; font-weight: 700; color: {{t.muted}}">{{dateLine}}</div>
+      <h1 style="margin: 2px 0 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 32px; line-height: 1.06; letter-spacing: -1px">{{greeting}}</h1>
+    </div>
+
+    <a href="{{top.href}}" style="text-decoration: none; color: #FFF8EE; background: {{top.bg}}; border-radius: 24px; padding: 16px; display: flex; gap: 12px; align-items: center; box-shadow: 0 5px 0 rgba(0,0,0,0.14); {{a2}}">
+      <span style="flex: 1; display: flex; flex-direction: column; gap: 4px">
+        <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px">{{top.kicker}}</span>
+        <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 19px; line-height: 1.2">{{top.title}}</span>
+        <span style="font-size: 14px; line-height: 1.45">{{top.body}}</span>
+      </span>
+      <span style="width: 44px; height: 44px; border-radius: 99px; background: rgba(255,248,238,0.2); display: flex; align-items: center; justify-content: center; flex: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></span>
+    </a>
+
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; {{a3}}">
+      <div style="background: {{t.card}}; border-radius: 18px; padding: 12px"><div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 24px">{{nDays}}</div><div style="font-size: 12px; font-weight: 600; color: {{t.muted}}">days clear</div></div>
+      <div style="background: {{t.card}}; border-radius: 18px; padding: 12px"><div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 24px">{{nCigs}}</div><div style="font-size: 12px; font-weight: 600; color: {{t.muted}}">cigarettes not smoked</div></div>
+      <div style="background: {{t.card}}; border-radius: 18px; padding: 12px"><div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 24px">${{nMoney}}</div><div style="font-size: 12px; font-weight: 600; color: {{t.muted}}">kept</div></div>
+    </div>
+
+    <div style="background: {{t.card}}; border-radius: 18px; padding: 4px 14px; display: flex; flex-direction: column; {{a4}}">
+      <sc-for list="{{rows}}" as="r" hint-placeholder-count="3">
+        <a href="{{r.href}}" style="min-height: 48px; display: flex; align-items: center; gap: 10px; text-decoration: none; color: {{t.ink}}; font-size: 16px; {{r.line}}">
+          <span style="width: 22px; height: 22px; border-radius: 99px; flex: none; display: flex; align-items: center; justify-content: center; {{r.dot}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFF8EE" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></span>
+          <span style="flex: 1">{{r.label}}</span><span style="font-size: 14px; color: {{t.muted}}">{{r.meta}}</span>
+        </a>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 0; bottom: 0; {{a5}}"><dc-import name="Nav2" active="today" theme="{{navTheme}}" hint-size="390px,100px"></dc-import></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"time":{"editor":"enum","options":["morning","afternoon","evening","night"],"default":"morning"},"day":{"editor":"int","min":1,"max":28,"default":3},"motion":{"editor":"boolean","default":true},"replay":{"editor":"boolean","default":true},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  componentDidMount() { this.play(); }
+  componentWillUnmount() { (this.timers || []).forEach(clearTimeout); clearInterval(this.iv); }
+  play() {
+    (this.timers || []).forEach(clearTimeout); clearInterval(this.iv);
+    this.timers = [];
+    this.setState({ on: false, k: 0 });
+    this.timers.push(setTimeout(() => this.setState({ on: true }), 300));
+    this.timers.push(setTimeout(() => {
+      const t0 = Date.now();
+      this.iv = setInterval(() => {
+        const p = Math.min(1, (Date.now() - t0) / 800);
+        this.setState({ k: 1 - Math.pow(1 - p, 3) });
+        if (p >= 1) clearInterval(this.iv);
+      }, 30);
+    }, 900));
+    if (String(this.props.replay ?? true) !== 'false') this.timers.push(setTimeout(() => this.play(), 10000));
+  }
+  renderVals() {
+    const dark = (this.props.theme ?? 'light') === 'dark';
+    const motion = String(this.props.motion ?? true) !== 'false';
+    const s = this.state || {};
+    const on = !motion || Boolean(s.on);
+    const k = motion ? (s.k || 0) : 1;
+    const ease = 'cubic-bezier(.2,.7,.2,1)';
+    const a = (i) => `opacity: ${on ? 1 : 0}; transform: translateY(${on ? 0 : 18}px); transition: opacity 600ms ${ease} ${i * 90}ms, transform 600ms ${ease} ${i * 90}ms`;
+    const time = this.props.time ?? 'morning';
+    const day = Math.max(1, Math.min(28, Number(this.props.day ?? 3)));
+    const glim = time === 'evening' || time === 'night';
+    const t = glim
+      ? (dark ? { bg: '#140E3A', ink: '#FFF8EE', muted: '#B8B3D9', card: 'rgba(255,255,255,0.07)', line: 'rgba(255,255,255,0.1)', off: 'rgba(255,255,255,0.16)' } : { bg: '#4A3596', ink: '#FFF8EE', muted: '#D2C8FF', card: 'rgba(255,255,255,0.12)', line: 'rgba(255,255,255,0.14)', off: 'rgba(255,255,255,0.22)' })
+      : (dark ? { bg: '#241433', ink: '#FFF8EE', muted: '#E0C8E8', card: 'rgba(255,255,255,0.07)', line: 'rgba(255,255,255,0.1)', off: 'rgba(255,255,255,0.16)' } : { bg: '#FFC38A', ink: '#1E1A3A', muted: '#4A2A1A', card: 'rgba(255,248,238,0.66)', line: 'rgba(30,26,58,0.1)', off: 'rgba(30,26,58,0.16)' });
+    const date = new Date(2026, 10, 6 + day - 1);
+    const dows = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const mons = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const week = Math.ceil(day / 7);
+    const titles = ['Look after the basics', 'The noisy passengers', 'Lower the bar', 'If things feel flat', 'Nights out', '“Just one”', 'One week'];
+    const lesson = day <= 7 ? titles[day - 1] : `Week ${week} · Day ${day}`;
+    const cards = {
+      morning: { href: 'F13SOS.dc.html', kicker: 'YOUR COFFEE WAVE', title: 'Usually comes around 9:40', body: 'Try having it somewhere new today. Jelli is ready if the wave comes.', bg: '#2A52DB' },
+      afternoon: { href: 'F11Lesson.dc.html', kicker: `TODAY · DAY ${day} · 3 MIN`, title: lesson, body: 'Xero saved your place.', bg: '#0F6E43' },
+      evening: { href: 'F16CheckIn.dc.html', kicker: 'WITH GLIM · 1 MIN', title: 'How was today, really?', body: 'One question, then rest.', bg: '#2A1C6E' },
+      night: { href: 'F17WindDown.dc.html', kicker: 'WIND DOWN · 6 MIN', title: 'Can’t sleep? Breathe with Glim', body: 'Night cravings pass faster when you lie still.', bg: '#0E0B2B' }
+    };
+    const greet = { morning: 'Morning, Sam.', afternoon: 'Afternoon, Sam.', evening: 'Evening, Sam.', night: 'Still up, Sam?' }[time];
+    const late = time !== 'morning';
+    const rows = [
+      { label: 'Morning pledge', meta: 'done', done: true, href: 'F09Pledge.dc.html' },
+      { label: lesson, meta: '3 min', done: late, href: 'F11Lesson.dc.html' },
+      { label: 'Evening check-in', meta: '21:30', done: time === 'night', href: 'F16CheckIn.dc.html' }
+    ].map((r, i) => Object.assign(r, {
+      dot: `background: ${r.done ? '#0F6E43' : t.off}`,
+      line: i ? `border-top: 1px solid ${t.line}` : ''
+    }));
+    const fade = (show) => `opacity: ${on && show ? 1 : 0}; transform: translateY(${on && show ? 0 : 30}px); transition: opacity 900ms ${ease} 150ms, transform 900ms cubic-bezier(.2,.8,.2,1) 150ms`;
+    return {
+      t, rows, top: cards[time], greeting: greet,
+      dateLine: `${dows[date.getDay()]} ${date.getDate()} ${mons[date.getMonth()]} · Week ${week}, Day ${day}`,
+      scene: { morning: 'dawn', afternoon: 'path', evening: 'dusk', night: 'night' }[time],
+      clarity: String(Math.min(100, Math.round(20 + 2.8 * day))),
+      stage: String(day < 7 ? 1 : day < 14 ? 2 : day < 28 ? 3 : 4),
+      mood: time === 'night' ? 'sleepy' : 'hello',
+      showX: fade(!glim), showG: fade(glim), motionStr: String(motion),
+      navTheme: dark ? 'dark' : 'light',
+      nDays: String(Math.round(day * k)), nCigs: String(Math.round(day * 12 * k)), nMoney: String(Math.round(day * 7 * k)),
+      a0: `opacity: ${on ? 1 : 0}; transition: opacity 600ms ${ease}`,
+      a1: a(3), a2: a(4), a3: a(5), a4: a(6), a5: a(7)
+    };
+  }
+}
+</script>
+</body>
+</html>

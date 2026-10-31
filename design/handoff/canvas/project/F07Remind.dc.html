@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Reminders</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{t.bg}}; color: {{t.ink}}; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif; display: flex; flex-direction: column">
+  <div style="padding: 70px 24px 0 24px; display: flex; flex-direction: column; gap: 10px">
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 32px; line-height: 1.08; letter-spacing: -1px; {{a1}}">Two small nudges a day</h1>
+    <p style="margin: 0; font-size: 16px; line-height: 1.5; color: {{t.muted}}; {{a2}}">Xero says good morning, Glim checks in at night. That's it. No guilt, ever, and quiet hours by default.</p>
+  </div>
+
+  <div style="padding: 28px 16px 0 16px; display: flex; flex-direction: column; gap: 12px">
+    <div style="background: {{t.note}}; border-radius: 22px; padding: 14px; display: flex; gap: 12px; align-items: center; box-shadow: 0 10px 24px rgba(30,26,58,0.12); {{n1}}">
+      <span style="width: 40px; height: 40px; border-radius: 12px; background: #FFC38A; overflow: hidden; display: flex; align-items: center; justify-content: center; flex: none"><dc-import name="Xero" mood="hello" stage="1" animate="false" size="40" hint-size="40px,40px"></dc-import></span>
+      <span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><span style="display: flex; justify-content: space-between; font-size: 14px"><b>DayXero · Xero</b><span style="color: {{t.noteMuted}}">8:00</span></span><span style="font-size: 16px; line-height: 1.35">Good morning. Ten seconds for today's pledge?</span></span>
+    </div>
+    <div style="background: {{t.note}}; border-radius: 22px; padding: 14px; display: flex; gap: 12px; align-items: center; box-shadow: 0 10px 24px rgba(30,26,58,0.12); {{n2}}">
+      <span style="width: 40px; height: 40px; border-radius: 12px; background: #4A3596; overflow: hidden; display: flex; align-items: center; justify-content: center; flex: none"><dc-import name="Glim2" mood="hello" stage="1" animate="false" size="40" hint-size="40px,40px"></dc-import></span>
+      <span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><span style="display: flex; justify-content: space-between; font-size: 14px"><b>DayXero · Glim</b><span style="color: {{t.noteMuted}}">21:30</span></span><span style="font-size: 16px; line-height: 1.35">How did today go? One minute, if you have it.</span></span>
+    </div>
+    <a href="#" style="align-self: flex-start; height: 44px; display: flex; align-items: center; padding: 0 8px; color: {{t.ink}}; font-weight: 600; font-size: 14px; {{a5}}">Change the times</a>
+  </div>
+
+  <div style="margin-top: auto; padding: 0 22px 22px 22px; display: flex; flex-direction: column; gap: 4px; {{a6}}">
+    <a href="F08Today.dc.html" style="height: 58px; border-radius: 99px; background: {{t.btn}}; color: {{t.btnInk}}; font-weight: 700; font-size: 17px; text-decoration: none; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 0 rgba(0,0,0,0.22)">Yes, remind me</a>
+    <a href="F08Today.dc.html" style="align-self: center; height: 44px; display: flex; align-items: center; padding: 0 10px; color: {{t.ink}}; font-weight: 600; font-size: 16px; text-decoration: none">Not right now</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"motion":{"editor":"boolean","default":true},"replay":{"editor":"boolean","default":true},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  componentDidMount() { this.play(); }
+  componentWillUnmount() { (this.timers || []).forEach(clearTimeout); }
+  play() {
+    (this.timers || []).forEach(clearTimeout);
+    this.timers = [];
+    this.setState({ on: false, n: 0 });
+    this.timers.push(setTimeout(() => this.setState({ on: true }), 300));
+    this.timers.push(setTimeout(() => this.setState({ n: 1 }), 1000));
+    this.timers.push(setTimeout(() => this.setState({ n: 2 }), 1800));
+    if (String(this.props.replay ?? true) !== 'false') this.timers.push(setTimeout(() => this.play(), 10000));
+  }
+  renderVals() {
+    const dark = (this.props.theme ?? 'light') === 'dark';
+    const motion = String(this.props.motion ?? true) !== 'false';
+    const s = this.state || {};
+    const on = !motion || Boolean(s.on);
+    const n = motion ? (s.n || 0) : 2;
+    const ease = 'cubic-bezier(.2,.7,.2,1)';
+    const a = (i) => `opacity: ${on ? 1 : 0}; transform: translateY(${on ? 0 : 18}px); transition: opacity 600ms ${ease} ${i * 90}ms, transform 600ms ${ease} ${i * 90}ms`;
+    const drop = (k) => `opacity: ${n >= k ? 1 : 0}; transform: translateY(${n >= k ? 0 : -24}px); transition: opacity 500ms ${ease}, transform 900ms cubic-bezier(.2,.8,.2,1)`;
+    const t = dark
+      ? { bg: '#241433', ink: '#FFF8EE', muted: '#E0C8E8', note: '#33204A', noteMuted: '#E0C8E8', btn: '#FFC38A', btnInk: '#241433' }
+      : { bg: '#FFC38A', ink: '#1E1A3A', muted: '#4A2A1A', note: '#FFF8EE', noteMuted: '#5E5975', btn: '#1E1A3A', btnInk: '#FFF8EE' };
+    return { t, a1: a(1), a2: a(2), a5: a(6), a6: a(7), n1: drop(1), n2: drop(2) };
+  }
+}
+</script>
+</body>
+</html>

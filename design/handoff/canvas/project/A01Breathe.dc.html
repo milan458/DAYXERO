@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Breathe</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{t.bg}}; color: {{t.ink}}; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif">
+  <svg width="390" height="844" viewBox="0 0 390 844" aria-hidden="true" style="position: absolute; left: 0; top: 0">
+    <circle cx="195" cy="700" r="300" fill="{{t.ring1}}"><animate attributeName="r" values="{{ringA}}" keyTimes="0;0.4;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="10s" repeatCount="indefinite"></animate></circle>
+    <circle cx="195" cy="700" r="230" fill="{{t.ring2}}"><animate attributeName="r" values="{{ringB}}" keyTimes="0;0.4;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="10s" repeatCount="indefinite"></animate></circle>
+    <circle cx="60" cy="140" r="3" fill="{{t.ink}}" opacity="0.5"><animate attributeName="cy" values="{{mote1}}" dur="9s" repeatCount="indefinite"></animate></circle>
+    <circle cx="330" cy="240" r="2.5" fill="{{t.ink}}" opacity="0.4"><animate attributeName="cy" values="{{mote2}}" dur="11s" repeatCount="indefinite"></animate></circle>
+    <path d="M320 120 Q320 130 330 130 Q320 130 320 140 Q320 130 310 130 Q320 130 320 120 Z" fill="#FFF8EE"><animate attributeName="opacity" values="{{tw}}" dur="2.2s" repeatCount="indefinite"></animate></path>
+  </svg>
+  <a href="A02Welcome.dc.html" style="position: absolute; right: 22px; top: 58px; color: {{t.ink}}; font-weight: 600; font-size: 15px; text-decoration: none; padding: 10px 4px; {{a0}}">Skip</a>
+  <div style="position: absolute; left: 0; right: 0; top: 150px; {{a1}}">
+    <svg width="390" height="64" viewBox="0 0 390 64" role="img" aria-label="Breathe in, then breathe out" style="display: block">
+      <text x="195" y="48" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="44" fill="{{t.ink}}"><animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;0.36;0.4;0.96;1" dur="10s" repeatCount="indefinite"></animate>Breathe in</text>
+      <text x="195" y="48" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="44" fill="{{t.ink}}" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.36;0.4;0.96;1" dur="10s" repeatCount="indefinite"></animate>Breathe out</text>
+    </svg>
+  </div>
+  <div style="position: absolute; left: 0; right: 0; top: 222px; text-align: center; font-size: 16px; color: {{t.muted}}; {{a2}}">One slow breath before we begin.</div>
+  <div style="position: absolute; left: -85px; top: 380px; {{rise}}"><dc-import name="Xero" mood="breathe" stage="1" size="560" hint-size="560px,560px"></dc-import></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"motion":{"editor":"boolean","default":true},"replay":{"editor":"boolean","default":true},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  componentDidMount() { this.play(); }
+  componentWillUnmount() { clearTimeout(this.t1); clearTimeout(this.t2); }
+  play() {
+    clearTimeout(this.t1); clearTimeout(this.t2);
+    this.setState({ on: false });
+    this.t1 = setTimeout(() => this.setState({ on: true }), 300);
+    if (String(this.props.replay ?? true) !== 'false') this.t2 = setTimeout(() => this.play(), 10000);
+  }
+  renderVals() {
+    const dark = (this.props.theme ?? 'light') === 'dark';
+    const motion = String(this.props.motion ?? true) !== 'false';
+    const on = !motion || Boolean(this.state && this.state.on);
+    const ease = 'cubic-bezier(.2,.7,.2,1)';
+    const a = (i, dy) => `opacity: ${on ? 1 : 0}; transform: translateY(${on ? 0 : (dy ?? 18)}px); transition: opacity 600ms ${ease} ${i * 90}ms, transform 700ms ${ease} ${i * 90}ms`;
+    const t = dark
+      ? { bg: '#2A1020', ink: '#FFF8EE', muted: '#F2B8A8', ring1: 'rgba(255,122,85,0.16)', ring2: 'rgba(255,201,60,0.12)' }
+      : { bg: '#FF7A55', ink: '#1E1A3A', muted: '#3B1A24', ring1: 'rgba(255,248,238,0.18)', ring2: 'rgba(255,201,60,0.35)' };
+    const m = (x, y) => motion ? x : y;
+    return {
+      t,
+      a0: a(4), a1: a(1), a2: a(2),
+      rise: `opacity: ${on ? 1 : 0}; transform: translateY(${on ? 0 : 160}px); transition: opacity 900ms ${ease}, transform 1400ms ${ease}`,
+      ringA: m('290;350;290', '320;320;320'), ringB: m('220;270;220', '240;240;240'),
+      mote1: m('160;120;160', '140;140;140'), mote2: m('250;210;250', '240;240;240'),
+      tw: m('0.2;1;0.2', '1;1;1')
+    };
+  }
+}
+</script>
+</body>
+</html>

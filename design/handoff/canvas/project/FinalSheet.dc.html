@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Final direction rules</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1500px; height: 820px; box-sizing: border-box; background: #FBF7F1; color: #1E1A3A; font-family: 'DM Sans', system-ui, sans-serif; padding: 34px 40px; display: grid; grid-template-columns: 1fr 1.1fr 0.9fr 1fr; gap: 24px">
+  <div style="display: flex; flex-direction: column; gap: 12px">
+    <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 24px; letter-spacing: -0.6px">One user, one calendar</div>
+    <div style="font-size: 14px; line-height: 1.5; color: #5E5975">Every screen reads from this persona, so dates and numbers agree everywhere.</div>
+    <div style="display: flex; flex-direction: column; gap: 6px; font-size: 14px">
+      <sc-for list="{{persona}}" as="p" hint-placeholder-count="10">
+        <div style="display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 10px; padding: 7px 12px; background: #F1EBE2; border-radius: 10px"><span style="color: #5E5975">{{p.k}}</span><b>{{p.v}}</b></div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 12px">
+    <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 24px; letter-spacing: -0.6px">Colour follows the character</div>
+    <div style="font-size: 14px; line-height: 1.5; color: #5E5975">One ground per screen, plus at most one other owned colour. Reading screens stay cream. Warm screens go plum in dark mode and keep their colour in the art and the button.</div>
+    <div style="display: grid; grid-template-columns: 62px 62px minmax(0, 1fr); gap: 7px 10px; align-items: center; font-size: 13.5px">
+      <span style="font-size: 12px; font-weight: 800; color: #5E5975">LIGHT</span><span style="font-size: 12px; font-weight: 800; color: #5E5975">DARK</span><span></span>
+      <sc-for list="{{colours}}" as="c" hint-placeholder-count="9">
+        <span style="height: 32px; border-radius: 10px; {{c.l}}"></span><span style="height: 32px; border-radius: 10px; {{c.d}}"></span><span><b>{{c.name}}</b> · {{c.use}}</span>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 12px">
+    <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 24px; letter-spacing: -0.6px">Seven sizes of type</div>
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 40px; line-height: 1.05; letter-spacing: -1.2px">Display 40</div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 32px; line-height: 1.1; letter-spacing: -1px">Large 32</div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 24px; letter-spacing: -0.6px">Title 24</div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 19px">Headline 19</div>
+      <div style="font-size: 16px">Body 16 · DM Sans</div>
+      <div style="font-size: 14px">Footnote 14</div>
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px">CAPTION 12 · THE FLOOR</div>
+    </div>
+    <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 24px; letter-spacing: -0.6px; margin-top: 8px">Four character sizes</div>
+    <div style="display: flex; align-items: flex-end; gap: 10px; font-size: 12px; color: #5E5975">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 4px"><span style="width: 40px; height: 40px; border-radius: 99px; background: #FFC38A"></span>Avatar 40</div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 4px"><span style="width: 66px; height: 66px; border-radius: 99px; background: #FFC38A"></span>Card 88</div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 4px"><span style="width: 90px; height: 90px; border-radius: 99px; background: #FFC38A"></span>Scene 140</div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 4px"><span style="width: 112px; height: 112px; border-radius: 99px; background: #FFC38A"></span>Hero 200</div>
+    </div>
+    <div style="font-size: 13.5px; line-height: 1.45; color: #5E5975">Two illustrations per screen at most: a scene and one character. The finale is the one exception.</div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 12px">
+    <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 24px; letter-spacing: -0.6px">Three ways to move</div>
+    <div style="display: flex; flex-direction: column; gap: 8px; font-size: 14px; line-height: 1.45">
+      <div style="background: #F1EBE2; border-radius: 14px; padding: 10px 12px"><b>Arrive</b> · 600ms ease-out, 18px rise, 90ms apart. All text and cards.</div>
+      <div style="background: #F1EBE2; border-radius: 14px; padding: 10px 12px"><b>Settle</b> · 900ms, no overshoot. Characters entering, and hand-overs.</div>
+      <div style="background: #F1EBE2; border-radius: 14px; padding: 10px 12px"><b>Celebrate</b> · one spring. Only on Passed, milestones and the finale.</div>
+      <div style="background: #F1EBE2; border-radius: 14px; padding: 10px 12px"><b>Breathe</b> · 4s in, 6s out, shared by SOS and the intro.</div>
+      <div style="background: #1E1A3A; color: #FFF8EE; border-radius: 14px; padding: 10px 12px"><b>Reduce Motion</b> · every screen shows its final state. On canvas, the Motion tweak turns motion off.</div>
+    </div>
+    <div style="margin-top: auto; background: #FFD966; border-radius: 16px; padding: 12px 14px; font-size: 13.5px; line-height: 1.45"><b>Proposal, your call:</b> prep week is free. The 3-day trial starts on Quit Day (Fri 6 Nov), so the first charge lands on Mon 9 Nov, after three days clear. The code today starts it at sign-up.</div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1500,"height":820}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const persona = [
+      ['Name', 'Sam (asked in the chat)'], ['Uses', 'Cigarettes (12 a day) + a vape'], ['Triggers', 'Coffee, Stress'],
+      ['Reason', 'To keep up with Maya at the park'], ['Joined', 'Fri 30 Oct · prep starts'], ['Quit Day', 'Fri 6 Nov = Day 1'],
+      ['Today', 'Sun 8 Nov · Day 3'], ['Coffee wave', 'usually around 9:40'], ['Money', '$7 a day, in USD'],
+      ['Sky clarity', '20 in prep, then 20 + 2.8 × days clear'], ['Week 4', '28 days · 61 waves · 26 check-ins · $196']
+    ].map(([k, v]) => ({ k, v }));
+    const colours = [
+      ['#FF7A55', '#241433', 'Coral', 'first breath'],
+      ['#FFC38A', '#241433', 'Apricot', 'Xero: days, pledge, Quit Day'],
+      ['#D9CCFF', '#1C1640', 'Lilac', 'talking with Xero'],
+      ['#9FE3BC', '#0F2A22', 'Mint', 'your plan, the crew'],
+      ['#2A52DB', '#0B1A4A', 'Ocean', 'Jelli: cravings'],
+      ['#9CCBFF', '#0F2550', 'Sky', 'relief after a wave'],
+      ['#4A3596', '#140E3A', 'Violet', 'Glim: evenings, nights'],
+      ['#FFD966', '#241433', 'Sun', 'celebrations only'],
+      ['#FBF7F1', '#0E0B2B', 'Cream', 'reading: program, lesson, progress, slip']
+    ].map(([l, d, name, use]) => ({ l: `background: ${l}; box-shadow: inset 0 0 0 1px rgba(30,26,58,0.1)`, d: `background: ${d}`, name, use }));
+    return { persona, colours };
+  }
+}
+</script>
+</body>
+</html>

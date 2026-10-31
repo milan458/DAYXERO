@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Wind down</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{t.bg}}; color: #FFF8EE; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif">
+  <div style="position: absolute; left: 0; top: 0; {{a0}}"><dc-import name="Hero2" scene="night" clarity="28" h="230" edge="{{t.bg}}" animate="{{motionStr}}" hint-size="390px,230px"></dc-import></div>
+  <div style="position: absolute; left: 125px; top: 60px; {{gIn}}"><dc-import name="Glim2" mood="sleepy" stage="1" animate="{{motionStr}}" size="140" hint-size="140px,140px"></dc-import></div>
+
+  <div style="position: absolute; left: 0; right: 0; top: 222px; padding: 0 22px; display: flex; flex-direction: column; gap: 8px">
+    <div style="font-size: 14px; font-weight: 700; color: {{t.muted}}; {{a1}}">Check-in saved</div>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 32px; letter-spacing: -1px; {{a2}}">Rest well.</h1>
+    <p style="margin: 0; font-size: 16px; line-height: 1.5; color: {{t.muted}}; {{a3}}">Tomorrow's pledge will be here in the morning. If tonight feels restless, breathe with me.</p>
+
+    <a href="#" style="margin-top: 6px; text-decoration: none; color: {{t.recInk}}; background: #FFF8EE; border-radius: 22px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; {{a4}}">
+      <span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px">FOR TONIGHT · 3 MIN</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 19px">Slow breathing with Glim</span><span style="font-size: 14px">In for 4, out for 6. The same rhythm as SOS.</span></span>
+      <span style="width: 44px; height: 44px; border-radius: 99px; background: {{t.recInk}}; color: #FFF8EE; display: flex; align-items: center; justify-content: center; flex: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg></span>
+    </a>
+
+    <div style="background: {{t.card}}; border-radius: 18px; padding: 2px 14px; display: flex; flex-direction: column; {{a5}}">
+      <sc-for list="{{tools}}" as="x" hint-placeholder-count="4">
+        <a href="#" style="min-height: 56px; display: flex; flex-direction: column; justify-content: center; gap: 2px; text-decoration: none; color: #FFF8EE; {{x.line}}"><span style="font-size: 16px; font-weight: 700">{{x.title}}</span><span style="font-size: 14px; color: {{t.muted}}">{{x.body}}</span></a>
+      </sc-for>
+    </div>
+    <p style="margin: 2px 0 0 0; font-size: 12px; line-height: 1.5; color: {{t.muted}}; {{a6}}">These tools aren't a substitute for professional help. If things feel like too much, <a href="#" style="color: #FFF8EE; font-weight: 700">find a helpline near you</a>.</p>
+  </div>
+
+  <div style="position: absolute; left: 0; bottom: 0"><dc-import name="Nav2" active="evening" theme="dark" hint-size="390px,100px"></dc-import></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"motion":{"editor":"boolean","default":true},"replay":{"editor":"boolean","default":true},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  componentDidMount() { this.play(); }
+  componentWillUnmount() { (this.timers || []).forEach(clearTimeout); }
+  play() {
+    (this.timers || []).forEach(clearTimeout);
+    this.timers = [];
+    this.setState({ on: false });
+    this.timers.push(setTimeout(() => this.setState({ on: true }), 300));
+    if (String(this.props.replay ?? true) !== 'false') this.timers.push(setTimeout(() => this.play(), 10000));
+  }
+  renderVals() {
+    const dark = (this.props.theme ?? 'light') === 'dark';
+    const motion = String(this.props.motion ?? true) !== 'false';
+    const on = !motion || Boolean(this.state && this.state.on);
+    const ease = 'cubic-bezier(.2,.7,.2,1)';
+    const a = (i) => `opacity: ${on ? 1 : 0}; transform: translateY(${on ? 0 : 18}px); transition: opacity 600ms ${ease} ${i * 90}ms, transform 600ms ${ease} ${i * 90}ms`;
+    const t = dark
+      ? { bg: '#140E3A', muted: '#B8B3D9', card: 'rgba(255,255,255,0.07)', line: 'rgba(255,255,255,0.1)', recInk: '#140E3A' }
+      : { bg: '#4A3596', muted: '#D2C8FF', card: 'rgba(255,255,255,0.12)', line: 'rgba(255,255,255,0.14)', recInk: '#4A3596' };
+    const tools = [
+      ['Box breathing', 'In, hold, out, hold. Four counts each.'],
+      ['5-4-3-2-1', 'Name what you can see, feel, hear, smell and taste.'],
+      ['Notice and name', 'Spot the thought, give it a label, let it be.'],
+      ['Longer out-breath', 'In for 4, hold for 7, out for 8.']
+    ].map(([title, body], i) => ({ title, body, line: i ? `border-top: 1px solid ${t.line}` : '' }));
+    return {
+      t, tools, motionStr: String(motion),
+      a0: `opacity: ${on ? 1 : 0}; transition: opacity 600ms ${ease}`,
+      gIn: `opacity: ${on ? 1 : 0}; transform: translateY(${on ? 0 : -30}px); transition: opacity 900ms ${ease}, transform 900ms cubic-bezier(.2,.8,.2,1)`,
+      a1: a(3), a2: a(4), a3: a(5), a4: a(6), a5: a(7), a6: a(8)
+    };
+  }
+}
+</script>
+</body>
+</html>

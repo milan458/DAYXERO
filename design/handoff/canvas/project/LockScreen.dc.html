@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lock screen notifications and widgets</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#24163A}a:hover{color:#000}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{bg}}; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif; color: #24163A">
+  <svg width="390" height="844" viewBox="0 0 390 844" aria-hidden="true" style="position: absolute; left: 0; top: 0">
+    <circle cx="300" cy="300" r="70" fill="#FFD23F"></circle>
+    <circle cx="300" cy="300" r="96" fill="none" stroke="#FFD23F" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round"></circle>
+    <path d="M40 250 C40 236 56 230 64 238 C70 224 92 224 94 240 C104 240 106 252 96 254 L44 254 C36 254 36 250 40 250 Z" fill="#FFF8EE" opacity="0.9"></path>
+    <path d="M-10 844 L-10 520 C70 480 150 500 220 470 C290 440 350 450 400 430 L400 844 Z" fill="#7FD6B2"></path>
+    <path d="M-10 844 L-10 590 C90 560 170 590 250 570 C320 552 360 560 400 548 L400 844 Z" fill="#3FB37F"></path>
+    <path d="M-10 844 L-10 680 C80 660 160 690 240 676 C310 664 360 672 400 664 L400 844 Z" fill="#23735A"></path>
+    <path d="M286 452 C286 430 290 414 298 402" fill="none" stroke="#1E5E4A" stroke-width="3" stroke-linecap="round"></path>
+    <circle cx="298" cy="398" r="8" fill="#FFF8EE"></circle><circle cx="298" cy="398" r="3.5" fill="#FF7155"></circle>
+    <path d="M296 424 C306 418 314 424 310 432 C302 434 296 430 296 424 Z" fill="#3FB37F"></path>
+    <path d="M224 470 C222 452 222 444 224 436" fill="none" stroke="#2B2D6E" stroke-width="8" stroke-linecap="round"></path>
+    <path d="M236 470 C238 452 238 444 236 436" fill="none" stroke="#2B2D6E" stroke-width="8" stroke-linecap="round"></path>
+    <path d="M218 408 C222 402 238 402 242 408 L240 440 C234 443 226 443 220 440 Z" fill="#FF7155"></path>
+    <path d="M220 414 C210 404 206 394 206 384" fill="none" stroke="#FF7155" stroke-width="7" stroke-linecap="round"></path>
+    <path d="M240 414 C250 404 254 394 254 384" fill="none" stroke="#FF7155" stroke-width="7" stroke-linecap="round"></path>
+    <circle cx="206" cy="380" r="4.5" fill="#8D5A3B"></circle><circle cx="254" cy="380" r="4.5" fill="#8D5A3B"></circle>
+    <circle cx="230" cy="394" r="11" fill="#8D5A3B"></circle>
+    <path d="M219 392 C218 380 232 378 240 384 C241 388 241 390 241 392 C234 386 226 386 219 392 Z" fill="#24163A"></path>
+    <path d="M60 400 l7 0 M63.5 396.5 l0 7" stroke="#24163A" stroke-width="2.5" stroke-linecap="round"></path>
+    <path d="M130 330 q5 -5 10 0 q5 -5 10 0" fill="none" stroke="#24163A" stroke-width="2" stroke-linecap="round"></path>
+  </svg>
+
+  <div style="position: relative; height: 100%; display: flex; flex-direction: column; align-items: center">
+    <div style="margin-top: 70px; font-size: 18px; font-weight: 600">Friday 30 October</div>
+    <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 96px; line-height: 1; letter-spacing: -3px">8:01</div>
+
+    <div style="margin-top: 12px; display: flex; gap: 10px; align-items: center">
+      <div role="img" aria-label="3 days smoke-free" style="width: 64px; height: 64px; border-radius: 99px; background: rgba(36,22,58,0.85); color: #FFF8EE; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: inset 0 0 0 4px #A8E6C1">
+        <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px; line-height: 1">3</div>
+        <div style="font-size: 10px; font-weight: 700">DAYS</div>
+      </div>
+      <a href="SOS.dc.html" style="height: 64px; border-radius: 22px; background: rgba(36,22,58,0.85); color: #FFF8EE; display: flex; align-items: center; gap: 10px; padding: 0 16px; text-decoration: none">
+        <span style="width: 36px; height: 36px; border-radius: 99px; background: #FF7155; color: #24163A; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 12px; display: flex; align-items: center; justify-content: center">SOS</span>
+        <span style="display: flex; flex-direction: column"><span style="font-weight: 700; font-size: 14px">Craving?</span><span style="font-size: 12px; color: #D9D2F2">Tap for 3 minutes</span></span>
+      </a>
+    </div>
+
+    <div style="margin-top: auto; width: 100%; box-sizing: border-box; padding: 0 12px 40px 12px; display: flex; flex-direction: column; gap: 8px">
+      <div style="background: #24163A; color: #FFF8EE; border-radius: 28px; padding: 14px 14px 14px 18px; display: flex; align-items: center; gap: 12px">
+        <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true" style="flex: none"><circle cx="24" cy="24" r="20" fill="none" stroke="rgba(255,248,238,0.2)" stroke-width="5"></circle><circle cx="24" cy="24" r="20" fill="none" stroke="#FFC93C" stroke-width="5" stroke-linecap="round" stroke-dasharray="50 126" transform="rotate(-90 24 24)"></circle><path d="M14 26 q5 -6 10 0 q5 6 10 0" fill="none" stroke="#FFF8EE" stroke-width="2.5" stroke-linecap="round"></path></svg>
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 1px"><span style="font-size: 12px; font-weight: 700; color: #FFC93C">CRAVING SOS</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px">1:48 left</span></div>
+        <button style="height: 44px; padding: 0 16px; border-radius: 99px; border: 0; background: #A8E6C1; color: #24163A; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer">It passed</button>
+      </div>
+      <div style="background: rgba(255,248,238,0.94); border-radius: 22px; padding: 12px 14px; display: flex; gap: 12px; align-items: flex-start">
+        <span style="width: 36px; height: 36px; flex: none; border-radius: 10px; background: #24163A; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21C12 14 12 11 12 8" stroke="#FFF8EE" stroke-width="2.4" stroke-linecap="round" fill="none"></path><path d="M12 13C6 13 4 9 4 5c5 0 8 3 8 8Z" fill="#A8E6C1"></path><path d="M12 10c0-4 3-7 8-7 0 4-3 7-8 7Z" fill="#FFC93C"></path></svg></span>
+        <span style="flex: 1; display: flex; flex-direction: column; gap: 1px"><span style="display: flex; justify-content: space-between; font-size: 14px"><b>Good morning</b><span style="font-size: 12px; color: #5A4A60">now</span></span><span style="font-size: 14px; color: #3A2547">Ten seconds for today's pledge?</span></span>
+      </div>
+      <div style="background: rgba(255,248,238,0.94); border-radius: 22px; padding: 12px 14px; display: flex; gap: 12px; align-items: flex-start">
+        <span style="width: 36px; height: 36px; flex: none; border-radius: 10px; background: #24163A; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21C12 14 12 11 12 8" stroke="#FFF8EE" stroke-width="2.4" stroke-linecap="round" fill="none"></path><path d="M12 13C6 13 4 9 4 5c5 0 8 3 8 8Z" fill="#A8E6C1"></path><path d="M12 10c0-4 3-7 8-7 0 4-3 7-8 7Z" fill="#FFC93C"></path></svg></span>
+        <span style="flex: 1; display: flex; flex-direction: column; gap: 1px"><span style="display: flex; justify-content: space-between; font-size: 14px"><b>Lower the bar is ready</b><span style="font-size: 12px; color: #5A4A60">7:30</span></span><span style="font-size: 14px; color: #3A2547">3 minutes, whenever suits you.</span></span>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"bg":{"editor":"color","default":"#FFB547","options":["#FFB547","#BFD7FF","#FF8FA3","#D9CCFF"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { bg: this.props.bg ?? '#FFB547' };
+  }
+}
+</script>
+</body>
+</html>

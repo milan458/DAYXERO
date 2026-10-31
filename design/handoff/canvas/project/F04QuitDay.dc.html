@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pick your Quit Day</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{t.bg}}; color: {{t.ink}}; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif; display: flex; flex-direction: column">
+  <div style="position: relative; height: 270px; flex: none">
+    <div style="position: absolute; left: 0; top: 0; {{a0}}"><dc-import name="Hero2" scene="dawn" clarity="20" h="270" edge="{{t.bg}}" animate="{{motionStr}}" hint-size="390px,270px"></dc-import></div>
+    <div style="position: absolute; left: 125px; top: 96px; {{rise}}"><dc-import name="Xero" mood="hello" stage="1" animate="{{motionStr}}" size="140" hint-size="140px,140px"></dc-import></div>
+    <a href="F03Chat.dc.html" aria-label="Back" style="position: absolute; left: 10px; top: 46px; width: 44px; height: 44px; border-radius: 99px; background: rgba(255,248,238,0.85); color: #1E1A3A; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></a>
+  </div>
+
+  <div style="padding: 8px 24px 0 24px; display: flex; flex-direction: column; gap: 10px">
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 32px; line-height: 1.08; letter-spacing: -1px; {{a1}}">Pick your Quit Day</h1>
+    <p style="margin: 0; font-size: 16px; line-height: 1.5; color: {{t.muted}}; {{a2}}">I recommend <b style="color: {{t.ink}}">Fri 6 Nov</b>. It gives you the full 7-day prep window. Keep using as normal until then.</p>
+  </div>
+
+  <div style="padding: 18px 16px 0 16px; {{a3}}">
+    <div style="display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 5px" role="list" aria-label="Prep week and Quit Day">
+      <sc-for list="{{days}}" as="d" hint-placeholder-count="8">
+        <div role="listitem" aria-label="{{d.aria}}" style="height: 72px; border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; {{d.style}}"><span style="font-size: 12px; font-weight: 700">{{d.dow}}</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px">{{d.n}}</span></div>
+      </sc-for>
+    </div>
+    <div style="display: flex; justify-content: space-between; padding: 8px 2px 0 2px; font-size: 12px; font-weight: 700; color: {{t.muted}}"><span>Prep week · 7 days</span><span style="color: {{t.ink}}">Quit Day</span></div>
+  </div>
+
+  <div style="margin-top: auto; padding: 0 22px 22px 22px; display: flex; flex-direction: column; gap: 6px; {{a4}}">
+    <a href="#" style="align-self: center; height: 44px; display: flex; align-items: center; padding: 0 10px; color: {{t.ink}}; font-weight: 600; font-size: 16px">Pick another date</a>
+    <a href="F05Crew.dc.html" aria-label="Set Quit Day to Friday 6 November. Hold for one and a half seconds, or double-tap with VoiceOver." style="position: relative; overflow: hidden; height: 58px; border-radius: 99px; background: {{t.btn}}; color: {{t.btnInk}}; font-weight: 700; font-size: 17px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 6px 0 rgba(0,0,0,0.22)">
+      <span style="position: absolute; left: 0; top: 0; bottom: 0; background: {{t.fill}}; {{fill}}"></span>
+      <span style="position: relative">{{btnLabel}}</span>
+    </a>
+    <p style="margin: 0; text-align: center; font-size: 14px; color: {{t.muted}}">Hold for 1.5 seconds. You can change the date later.</p>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"motion":{"editor":"boolean","default":true},"replay":{"editor":"boolean","default":true},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  componentDidMount() { this.play(); }
+  componentWillUnmount() { (this.timers || []).forEach(clearTimeout); }
+  play() {
+    (this.timers || []).forEach(clearTimeout);
+    this.timers = [];
+    this.setState({ on: false, hold: 0 });
+    this.timers.push(setTimeout(() => this.setState({ on: true }), 300));
+    this.timers.push(setTimeout(() => this.setState({ hold: 1 }), 2600));
+    this.timers.push(setTimeout(() => this.setState({ hold: 2 }), 4100));
+    if (String(this.props.replay ?? true) !== 'false') this.timers.push(setTimeout(() => this.play(), 10000));
+  }
+  renderVals() {
+    const dark = (this.props.theme ?? 'light') === 'dark';
+    const motion = String(this.props.motion ?? true) !== 'false';
+    const s = this.state || {};
+    const on = !motion || Boolean(s.on);
+    const hold = motion ? (s.hold || 0) : 0;
+    const ease = 'cubic-bezier(.2,.7,.2,1)';
+    const a = (i) => `opacity: ${on ? 1 : 0}; transform: translateY(${on ? 0 : 18}px); transition: opacity 600ms ${ease} ${i * 90}ms, transform 600ms ${ease} ${i * 90}ms`;
+    const t = dark
+      ? { bg: '#241433', ink: '#FFF8EE', muted: '#E0C8E8', prep: 'rgba(255,195,138,0.16)', quit: '#FFC38A', quitInk: '#241433', btn: '#FFC38A', btnInk: '#241433', fill: '#FFD9B0' }
+      : { bg: '#FFC38A', ink: '#1E1A3A', muted: '#4A2A1A', prep: 'rgba(255,248,238,0.6)', quit: '#1E1A3A', quitInk: '#FFF8EE', btn: '#1E1A3A', btnInk: '#FFF8EE', fill: '#3A3460' };
+    const raw = [['Fri', 30, 'Friday 30 October'], ['Sat', 31, 'Saturday 31 October'], ['Sun', 1, 'Sunday 1 November'], ['Mon', 2, 'Monday 2 November'], ['Tue', 3, 'Tuesday 3 November'], ['Wed', 4, 'Wednesday 4 November'], ['Thu', 5, 'Thursday 5 November'], ['Fri', 6, 'Friday 6 November, Quit Day']];
+    const days = raw.map(([dow, n, aria], i) => {
+      const q = i === 7;
+      return { dow, n: String(n), aria: q ? aria : `${aria}, prep day ${i + 1}`, style: q ? `background: ${t.quit}; color: ${t.quitInk}` : `background: ${t.prep}; color: ${t.ink}` };
+    });
+    return {
+      t, days, motionStr: String(motion),
+      a0: `opacity: ${on ? 1 : 0}; transition: opacity 600ms ${ease}`,
+      rise: `opacity: ${on ? 1 : 0}; transform: translateY(${on ? 0 : 40}px); transition: opacity 900ms ${ease}, transform 900ms cubic-bezier(.2,.8,.2,1)`,
+      a1: a(4), a2: a(5), a3: a(6), a4: a(8),
+      fill: `width: ${hold >= 1 ? 100 : 0}%; transition: width ${hold >= 1 ? 1500 : 200}ms linear`,
+      btnLabel: hold >= 2 ? 'Quit Day set · Fri 6 Nov ✓' : 'Hold to set Fri 6 Nov'
+    };
+  }
+}
+</script>
+</body>
+</html>

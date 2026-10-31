@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Progress</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{t.bg}}; color: {{t.ink}}; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif">
+  <div style="position: absolute; left: 0; top: 0"><dc-import name="Hero" scene="dawn" clarity="55" h="190" theme="{{theme}}" hint-size="390px,190px"></dc-import></div>
+  <div style="position: absolute; left: 0; right: 0; top: 110px; display: flex; flex-direction: column; align-items: center">
+    <div style="width: 104px; height: 104px; border-radius: 99px; background: {{t.bg}}; display: flex; align-items: center; justify-content: center"><div style="width: 92px; height: 92px; border-radius: 99px; background: #BFD7FF; overflow: hidden; display: flex; align-items: center; justify-content: center"><dc-import name="Xero" mood="hello" stage="3" size="92" hint-size="92px,92px"></dc-import></div></div>
+    <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 28px; letter-spacing: -0.8px; margin-top: 4px">Sam</div>
+    <div style="font-size: 13.5px; color: {{t.muted}}">Quit Day was Fri 6 Nov</div>
+  </div>
+
+  <div style="position: absolute; left: 20px; right: 20px; top: 296px; display: flex; flex-direction: column; gap: 10px">
+    <div style="background: {{t.raised}}; box-shadow: {{t.shadow}}; border-radius: 26px; padding: 4px 16px">
+      <div style="display: flex; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid {{t.line}}"><span style="width: 44px; height: 44px; border-radius: 14px; background: #FFE3C4; display: flex; align-items: center; justify-content: center; overflow: hidden"><dc-import name="Xero" mood="hello" stage="3" animate="false" size="44" hint-size="44px,44px"></dc-import></span><span style="flex: 1"><b style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 18px">3 days clear</b><br><span style="font-size: 13px; color: {{t.muted}}">The sky is 55% clear</span></span></div>
+      <div style="display: flex; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid {{t.line}}"><span style="width: 44px; height: 44px; border-radius: 14px; background: #CFE3FF; display: flex; align-items: center; justify-content: center; overflow: hidden"><dc-import name="Jelli" mood="hello" stage="3" animate="false" size="44" hint-size="44px,44px"></dc-import></span><span style="flex: 1"><b style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 18px">14 waves ridden out</b><br><span style="font-size: 13px; color: {{t.muted}}">Most were around coffee</span></span></div>
+      <div style="display: flex; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid {{t.line}}"><span style="width: 44px; height: 44px; border-radius: 14px; background: #2A1C6E; display: flex; align-items: center; justify-content: center; overflow: hidden"><dc-import name="Glim2" mood="hello" stage="3" animate="false" size="44" hint-size="44px,44px"></dc-import></span><span style="flex: 1"><b style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 18px">5 evening check-ins</b><br><span style="font-size: 13px; color: {{t.muted}}">This week, with Glim</span></span></div>
+      <div style="display: flex; align-items: center; gap: 12px; padding: 9px 0"><span style="width: 44px; height: 44px; border-radius: 14px; background: #FFC93C; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1E1A3A" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 4v16M8.5 8H14a2.5 2.5 0 0 1 0 5h-4a2.5 2.5 0 0 0 0 5h6"></path></svg></span><span style="flex: 1"><b style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 18px">$21 kept</b><br><span style="font-size: 13px; color: {{t.muted}}">$7 a day, about $2,555 this year</span></span></div>
+    </div>
+
+    <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 19px; padding: 6px 4px 0">What's changing</div>
+    <div style="background: {{t.surf}}; border-radius: 22px; padding: 12px 16px; display: flex; flex-direction: column; gap: 2px">
+      <span style="font-size: 12px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; color: {{t.green}}">Done · a few days</span>
+      <span style="font-weight: 700; font-size: 15px">Carbon monoxide in your blood drops to normal</span>
+      <a href="#" style="font-size: 12px; font-weight: 600; color: {{t.muted}}">Source: American Cancer Society</a>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 0; bottom: 0"><dc-import name="Nav" active="me" theme="{{theme}}" hint-size="390px,100px"></dc-import></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const theme = this.props.theme ?? 'light';
+    const dark = theme === 'dark';
+    return { theme, t: dark
+      ? { bg: '#0E0B2B', surf: '#1B1747', raised: '#1B1747', ink: '#FFF8EE', muted: '#B8B3D9', line: 'rgba(255,255,255,0.08)', green: '#2FD08A', shadow: 'none' }
+      : { bg: '#FBF7F1', surf: '#F1EBE2', raised: '#FFFFFF', ink: '#1E1A3A', muted: '#5E5975', line: 'rgba(30,26,58,0.08)', green: '#14804F', shadow: '0 1px 0 rgba(30,26,58,0.05), 0 8px 22px rgba(30,26,58,0.07)' } };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tab bar</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 100px; font-family: 'DM Sans', system-ui, sans-serif">
+  <nav aria-label="Main" style="position: absolute; left: 12px; right: 12px; bottom: 24px; height: 70px; border-radius: 99px; background: {{t.nav}}; box-shadow: {{t.shadow}}; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center; padding: 0 6px">
+    <sc-for list="{{tabs}}" as="tab" hint-placeholder-count="5">
+      <a href="{{tab.href}}" aria-current="{{tab.current}}" style="height: 58px; border-radius: 99px; background: {{tab.bg}}; color: {{tab.color}}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; text-decoration: none; font-size: 11.5px; font-weight: {{tab.weight}}">
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="{{tab.icon}}" fill="{{tab.fill}}" stroke="{{tab.stroke}}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        {{tab.label}}
+      </a>
+    </sc-for>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"active":{"editor":"enum","options":["today","program","sos","calm","me"],"default":"today"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":100}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const dark = (this.props.theme ?? 'light') === 'dark';
+    const active = this.props.active ?? 'today';
+    const t = dark
+      ? { nav: 'rgba(27,23,71,0.95)', shadow: '0 0 0 1px rgba(255,255,255,0.08), 0 12px 30px rgba(0,0,0,0.5)', on: '#2A255F', ink: '#FFF8EE', muted: '#B8B3D9', sos: '#7FB0FF' }
+      : { nav: 'rgba(255,255,255,0.95)', shadow: '0 0 0 1px rgba(30,26,58,0.06), 0 12px 30px rgba(30,26,58,0.14)', on: '#F1EBE2', ink: '#1E1A3A', muted: '#5E5975', sos: '#1F57D6' };
+    const defs = [
+      { id: 'today', label: 'Today', href: 'C08Today.dc.html', icon: 'M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z', filled: true },
+      { id: 'program', label: 'Program', href: 'C10Program.dc.html', icon: 'M12 21V11 M12 13C6 13 4 9 4 5c5 0 8 3 8 8Z M12 11c0-4 3-7 8-7 0 4-3 7-8 7Z', filled: false },
+      { id: 'sos', label: 'SOS', href: 'C13SOS.dc.html', icon: 'M3 12c3-4 6-4 9 0s6 4 9 0', filled: false },
+      { id: 'calm', label: 'Evening', href: 'C16CheckIn.dc.html', icon: 'M15 3a8.5 8.5 0 1 0 6 13.5A7 7 0 0 1 15 3Z', filled: true },
+      { id: 'me', label: 'Me', href: 'C12Progress.dc.html', icon: 'M12 3.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9Z M3.5 21c1.2-4.6 4.6-7 8.5-7s7.3 2.4 8.5 7z', filled: true }
+    ];
+    const tabs = defs.map((d) => {
+      const on = d.id === active;
+      const color = d.id === 'sos' ? t.sos : (on ? t.ink : t.muted);
+      return {
+        href: d.href, label: d.label, icon: d.icon,
+        current: on ? 'page' : 'false',
+        bg: on ? t.on : 'transparent',
+        color, weight: on ? 700 : 600,
+        fill: d.filled ? color : 'none',
+        stroke: d.filled ? 'none' : color
+      };
+    });
+    return { t, tabs };
+  }
+}
+</script>
+</body>
+</html>

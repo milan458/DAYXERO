@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Craving SOS</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#FFF8EE}a:hover{color:#FFFFFF}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #0E0B2B; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif; color: #FFF8EE; display: flex; flex-direction: column">
+  <div style="position: relative; height: 440px; overflow: hidden; border-radius: 0 0 50% 50% / 0 0 44px 44px">
+    <dc-import name="Art" scene="breath" w="390" h="440" hint-size="390px,440px"></dc-import>
+    <svg width="390" height="440" viewBox="0 0 390 440" aria-hidden="true" style="position: absolute; left: 0; top: 0">
+      <circle cx="195" cy="250" r="150" fill="none" stroke="#FFF8EE" stroke-opacity="0.25" stroke-width="5"></circle>
+      <circle cx="195" cy="250" r="150" fill="none" stroke="#FFF8EE" stroke-width="5" stroke-linecap="round" stroke-dasharray="380 563" transform="rotate(-90 195 250)"><animate attributeName="stroke-dasharray" values="0 943;943 0" dur="180s" repeatCount="indefinite"></animate></circle>
+    </svg>
+    <div style="position: absolute; left: 105px; top: 164px"><dc-import name="Jelli" mood="breathe" stage="3" size="180" hint-size="180px,180px"></dc-import></div>
+    <a href="NightToday.dc.html" aria-label="Close" style="position: absolute; left: 16px; top: 54px; width: 44px; height: 44px; border-radius: 99px; background: rgba(14,11,43,0.35); display: flex; align-items: center; justify-content: center">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFF8EE" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+    </a>
+    <div style="position: absolute; left: 0; right: 0; top: 66px; text-align: center; font-size: 13px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase">Craving SOS</div>
+  </div>
+
+  <div style="padding: 26px 28px 0 28px; text-align: center; display: flex; flex-direction: column; gap: 8px">
+    <div style="font-size: 14px; font-weight: 700; color: #7FB0FF">1:48 left · round 1 of 1</div>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 36px; letter-spacing: -1px">Breathe in · 4</h1>
+    <p style="margin: 0; font-size: 16px; line-height: 1.5; color: #B8B3D9">Open as Jelli opens. Let the craving rise and fall like a wave. It will pass.</p>
+  </div>
+
+  <a href="#" style="margin: 20px 20px 0 20px; border-radius: 22px; background: #1B1747; padding: 14px 16px; display: flex; align-items: center; gap: 12px; text-decoration: none">
+    <span style="width: 40px; height: 40px; flex: none; border-radius: 14px; background: #FF8FB8; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="#0E0B2B" aria-hidden="true"><path d="M12 21c-6-3.6-9-7-9-11a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 4-3 7.4-9 11Z"></path></svg></span>
+    <span style="flex: 1; display: flex; flex-direction: column"><span style="font-size: 12px; font-weight: 700; color: #B8B3D9; text-transform: uppercase; letter-spacing: 0.6px">Your reason</span><span style="font-weight: 700; font-size: 15px">To keep up with Maya at the park.</span></span>
+  </a>
+
+  <div style="margin-top: auto; padding: 0 20px 30px 20px; display: flex; flex-direction: column; gap: 10px">
+    <button style="height: 58px; border-radius: 99px; border: 0; background: #3D8BFF; color: #FFFFFF; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 17px; cursor: pointer; box-shadow: 0 6px 0 #2257C9">It passed (+1)</button>
+    <div style="display: flex; justify-content: center; gap: 28px">
+      <a href="#" style="font-weight: 600; font-size: 15px; padding: 12px 4px">Another three minutes</a>
+      <a href="#" style="font-weight: 600; font-size: 15px; padding: 12px 4px">I slipped</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

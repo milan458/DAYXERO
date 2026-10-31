@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Breathe</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{t.bg}}; color: {{t.ink}}; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif">
+  <svg width="390" height="844" viewBox="0 0 390 844" aria-hidden="true" style="position: absolute; left: 0; top: 0">
+    <circle cx="195" cy="700" r="300" fill="#FF6B4A" opacity="0.08"><animate attributeName="r" values="290;350;290" keyTimes="0;0.4;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="10s" repeatCount="indefinite"></animate></circle>
+    <circle cx="195" cy="700" r="240" fill="#FFC93C" opacity="0.1"><animate attributeName="r" values="230;280;230" keyTimes="0;0.4;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="10s" repeatCount="indefinite"></animate></circle>
+  </svg>
+  <a href="C02Welcome.dc.html" style="position: absolute; right: 22px; top: 58px; color: {{t.muted}}; font-weight: 600; font-size: 15px; text-decoration: none; padding: 10px 4px">Skip</a>
+  <svg width="390" height="70" viewBox="0 0 390 70" role="img" aria-label="Breathe in, then breathe out" style="position: absolute; left: 0; top: 140px">
+    <text x="195" y="48" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="42" fill="{{t.ink}}" opacity="1"><animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;0.36;0.4;0.96;1" dur="10s" repeatCount="indefinite"></animate>Breathe in</text>
+    <text x="195" y="48" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="42" fill="{{t.ink}}" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.36;0.4;0.96;1" dur="10s" repeatCount="indefinite"></animate>Breathe out</text>
+  </svg>
+  <div style="position: absolute; left: 0; right: 0; top: 214px; text-align: center; font-size: 16px; color: {{t.muted}}">One slow breath before we begin.</div>
+  <div style="position: absolute; left: -85px; top: 390px"><dc-import name="Xero" mood="breathe" stage="1" size="560" hint-size="560px,560px"></dc-import></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const dark = (this.props.theme ?? 'light') === 'dark';
+    return { t: dark ? { bg: '#0E0B2B', ink: '#FFF8EE', muted: '#B8B3D9' } : { bg: '#FBF7F1', ink: '#1E1A3A', muted: '#5E5975' } };
+  }
+}
+</script>
+</body>
+</html>

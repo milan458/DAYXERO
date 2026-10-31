@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Meet Glim</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{t.bg}}; color: {{t.ink}}; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif; display: flex; flex-direction: column">
+  <div style="position: relative; height: 470px; flex: none">
+    <dc-import name="Horizon" scene="{{scene}}" clarity="40" w="390" h="470" hint-size="390px,470px"></dc-import>
+    <div style="position: absolute; left: 85px; top: 120px"><dc-import name="GlimX" mood="hello" stage="2" size="220" hint-size="220px,220px"></dc-import></div>
+    <svg width="390" height="470" viewBox="0 0 390 470" aria-hidden="true" style="position: absolute; left: 0; top: 0">
+      <defs><filter id="stLiftW" x="-5%" y="-50%" width="110%" height="200%"><feDropShadow dx="0" dy="-4" stdDeviation="6" flood-color="#1A0B2E" flood-opacity="0.25"></feDropShadow></filter></defs>
+      <path filter="url(#stLiftW)" d="M0 438 C110 414 280 414 390 438 L390 470 L0 470 Z" fill="{{t.bg}}"></path>
+    </svg>
+  </div>
+
+  <div style="padding: 8px 28px 0 28px; text-align: center; display: flex; flex-direction: column; gap: 12px">
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 36px; line-height: 1.06; letter-spacing: -1px">Meet Glim.</h1>
+    <p style="margin: 0; font-size: 16px; line-height: 1.5; color: {{t.muted}}">Every day you stay clear, Glim's light grows. Don't quit today. We'll prep together, then you quit on your Quit Day.</p>
+  </div>
+
+  <div style="margin-top: auto; padding: 0 22px 26px 22px; display: flex; flex-direction: column; gap: 8px; align-items: stretch">
+    <a href="#" style="height: 58px; border-radius: 99px; background: #FF6B4A; color: #1A0E08; font-weight: 700; font-size: 17px; text-decoration: none; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 0 #C9452B">Get started</a>
+    <a href="#" style="align-self: center; color: {{t.ink}}; font-weight: 600; font-size: 15px; padding: 12px 8px">I already have an account</a>
+    <div style="font-size: 12px; color: {{t.muted}}; text-align: center">Takes 2 minutes · Private on this phone · 18+ only</div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const dark = (this.props.theme ?? 'light') === 'dark';
+    return {
+      scene: dark ? 'night' : 'dawn',
+      t: dark ? { bg: '#0E0B2B', ink: '#FFF8EE', muted: '#B8B3D9' } : { bg: '#FBF7F1', ink: '#1E1A3A', muted: '#5E5975' }
+    };
+  }
+}
+</script>
+</body>
+</html>

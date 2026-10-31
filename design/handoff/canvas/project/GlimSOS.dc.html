@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Craving SOS with Glim</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#FFF8EE}a:hover{color:#FFFFFF}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{bg}}; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif; color: #FFF8EE; display: flex; flex-direction: column">
+  <div style="display: flex; justify-content: space-between; align-items: center; padding: 54px 16px 0 16px">
+    <a href="GlimHome.dc.html" aria-label="Close" style="width: 44px; height: 44px; border-radius: 99px; background: rgba(255,255,255,0.14); display: flex; align-items: center; justify-content: center">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFF8EE" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+    </a>
+    <div style="font-size: 14px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase">Craving SOS</div>
+    <div style="width: 44px"></div>
+  </div>
+
+  <div style="padding: 26px 28px 0 28px; text-align: center">
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 36px; line-height: 1.05; letter-spacing: -1.2px">Glow with Glim</h1>
+    <p style="margin: 8px 0 0 0; font-size: 16px; line-height: 1.45; color: #D9D2F2">Brighten as you breathe in. Soften as you breathe out. The dark part passes.</p>
+  </div>
+
+  <div style="position: relative; width: 340px; height: 340px; margin: 26px auto 0 auto">
+    <svg width="340" height="340" viewBox="0 0 340 340" aria-hidden="true" style="position: absolute; left: 0; top: 0">
+      <circle cx="170" cy="170" r="166" fill="#FFFFFF" opacity="0.04"></circle>
+      <circle cx="170" cy="170" r="140" fill="#FFFFFF" opacity="0.06"></circle>
+      <circle cx="170" cy="170" r="112" fill="#2B2D6E"><animate attributeName="r" values="104;122;104" keyTimes="0;0.4;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="10s" repeatCount="indefinite"></animate></circle>
+      <circle cx="120" cy="110" r="2" fill="#FFF8EE"></circle><circle cx="230" cy="250" r="1.5" fill="#FFF8EE"></circle><circle cx="240" cy="100" r="1.5" fill="#FFF8EE"></circle>
+      <circle cx="170" cy="170" r="156" fill="none" stroke="rgba(255,248,238,0.2)" stroke-width="6"></circle>
+      <circle cx="170" cy="170" r="156" fill="none" stroke="#FFE27A" stroke-width="6" stroke-linecap="round" stroke-dasharray="390 590" transform="rotate(-90 170 170)"><animate attributeName="stroke-dasharray" values="0 980;980 0" dur="180s" repeatCount="indefinite"></animate></circle>
+    </svg>
+    <div style="position: absolute; left: 80px; top: 78px"><dc-import name="Glim" mood="breathe" stage="3" size="180" hint-size="180px,180px"></dc-import></div>
+  </div>
+
+  <div style="margin-top: 20px; text-align: center">
+    <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 30px">Breathe in · 4</div>
+    <div style="font-size: 15px; color: #D9D2F2; margin-top: 2px">1:48 left in this round</div>
+  </div>
+
+  <div style="margin-top: auto; padding: 0 20px 30px 20px; display: flex; flex-direction: column; gap: 10px">
+    <button style="height: 58px; border-radius: 99px; border: 0; background: #FFE27A; color: #24163A; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 17px; cursor: pointer">Log as ridden out (+1)</button>
+    <div style="display: flex; justify-content: center; gap: 28px">
+      <a href="#" style="font-weight: 600; font-size: 15px; padding: 12px 4px">Another three minutes</a>
+      <a href="#" style="font-weight: 600; font-size: 15px; padding: 12px 4px">I slipped</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"bg":{"editor":"color","default":"#24163A","options":["#24163A","#2B2D6E","#3B2A6E","#1F3A6B"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { bg: this.props.bg ?? '#24163A' };
+  }
+}
+</script>
+</body>
+</html>

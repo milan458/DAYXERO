@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Wren character</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<svg width="{{size}}" height="{{size}}" viewBox="0 0 200 200" role="img" aria-label="Wren, {{mood}}" style="display: block">
+  <ellipse cx="100" cy="194" rx="46" ry="5" fill="#000000" opacity="0.12"></ellipse>
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="{{hopV}}" keyTimes="{{hopKT}}" keySplines="{{hopKS}}" calcMode="spline" dur="{{hopDur}}" repeatCount="indefinite"></animateTransform>
+    <g transform="translate(100 192)">
+      <g>
+        <animateTransform attributeName="transform" type="scale" values="{{bodyV}}" keyTimes="{{bodyKT}}" keySplines="{{bodyKS}}" calcMode="spline" dur="{{bodyDur}}" repeatCount="indefinite"></animateTransform>
+        <g>
+          <animateTransform attributeName="transform" type="rotate" values="{{swayV}}" keyTimes="{{swayKT}}" keySplines="{{swayKS}}" calcMode="spline" dur="{{swayDur}}" repeatCount="indefinite"></animateTransform>
+          <g transform="translate(-100 -192)">
+            <path d="M88 180 L86 192 M80 192 L92 192 M112 180 L114 192 M108 192 L120 192" fill="none" stroke="#FF7155" stroke-width="4" stroke-linecap="round"></path>
+            <path d="M154 146 L190 156 L176 132 Z" fill="#E8973A"></path>
+            <g transform="translate(100 62)"><g><animateTransform attributeName="transform" type="rotate" values="{{crestV}}" keyTimes="0;0.5;1" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" calcMode="spline" dur="{{crestDur}}" repeatCount="indefinite"></animateTransform><g transform="translate(-100 -62)">
+              <path d="M100 62 C96 50 100 40 108 38 C106 48 104 56 100 62 Z" fill="#E8973A"></path>
+              <path d="M98 62 C88 54 84 44 88 36 C94 46 98 54 98 62 Z" fill="#FF7155" opacity="{{f2}}"></path>
+              <path d="M102 62 C110 52 120 48 128 50 C120 56 110 60 102 62 Z" fill="#FFC93C" opacity="{{f3}}"></path>
+            </g></g></g>
+            <g transform="translate(136 108)"><g><animateTransform attributeName="transform" type="rotate" values="{{flapR}}" dur="0.5s" repeatCount="indefinite"></animateTransform><g transform="translate(-136 -108)">
+              <path d="M148 106 C170 84 168 62 156 54 C144 70 136 90 134 108 Z" fill="#E8973A" opacity="{{wingUp}}"></path>
+            </g></g></g>
+            <circle cx="100" cy="122" r="62" fill="#FFB547"></circle>
+            <path d="M140 74 C156 88 164 106 162 124 C160 156 136 182 104 184 C134 172 150 150 150 124 C150 104 146 88 140 74 Z" fill="#F29E2E"></path>
+            <ellipse cx="104" cy="144" rx="38" ry="32" fill="#FFE0B8"></ellipse>
+            <path d="M90 140 q4 4 8 0 M106 150 q4 4 8 0 M94 160 q4 4 8 0" fill="none" stroke="#F2C58F" stroke-width="2.5" stroke-linecap="round"></path>
+            <g transform="translate(64 110)"><g><animateTransform attributeName="transform" type="rotate" values="{{flapL}}" dur="0.5s" repeatCount="indefinite"></animateTransform><g transform="translate(-64 -110)">
+              <path d="{{wing}}" fill="#E8973A"></path>
+            </g></g></g>
+            <path d="M62 86 C68 74 78 66 90 62" fill="none" stroke="#FFD08A" stroke-width="5" stroke-linecap="round"></path>
+            <circle cx="70" cy="118" r="7" fill="#FF8FA3" opacity="0.6"></circle>
+            <circle cx="130" cy="118" r="7" fill="#FF8FA3" opacity="0.6"></circle>
+            <g transform="{{eyeIn}}"><g><animateTransform attributeName="transform" type="scale" values="{{blink}}" keyTimes="0;0.92;0.96;1" dur="4s" repeatCount="indefinite"></animateTransform><g transform="{{eyeOut}}">
+              <path d="{{eyeL}}" fill="none" stroke="#24163A" stroke-width="{{eyeW}}" stroke-linecap="round"></path>
+              <path d="{{eyeR}}" fill="none" stroke="#24163A" stroke-width="{{eyeW}}" stroke-linecap="round"></path>
+            </g></g></g>
+            <path d="{{beakTop}}" fill="#FF7155" stroke="#C9542F" stroke-width="1.5" stroke-linejoin="round"></path>
+            <path d="M94 124 L106 124 L100 132 Z" fill="#E85A3E" stroke="#C9542F" stroke-width="1.5" stroke-linejoin="round" opacity="{{beakOpen}}"></path>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g opacity="{{song}}" fill="none" stroke="#24163A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><animateTransform attributeName="transform" type="translate" values="{{floatV}}" dur="2.5s" repeatCount="indefinite"></animateTransform><path d="M160 56 L160 36 L174 32 L174 52"></path><circle cx="156" cy="57" r="4" fill="#24163A"></circle><circle cx="170" cy="53" r="4" fill="#24163A"></circle></g>
+  <g opacity="{{sparkle}}" stroke="#24163A" stroke-width="3" stroke-linecap="round"><path d="M26 70 l0 12 M20 76 l12 0"></path><path d="M30 130 l8 -2"></path></g>
+  <g opacity="{{zzz}}" fill="none" stroke="#24163A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><animateTransform attributeName="transform" type="translate" values="{{floatV}}" dur="3s" repeatCount="indefinite"></animateTransform><path d="M150 52 h12 l-12 12 h12"></path><path d="M170 32 h8 l-8 8 h8"></path></g>
+  <g opacity="{{breeze}}" fill="none" stroke="#24163A" stroke-width="3" stroke-linecap="round"><animateTransform attributeName="transform" type="translate" values="{{driftV}}" dur="5s" repeatCount="indefinite"></animateTransform><path d="M30 104 q8 -5 16 0"></path><path d="M24 116 q6 -4 12 0"></path></g>
+</svg>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"mood":{"editor":"enum","options":["hello","calm","breathe","cheer","sleepy"],"default":"hello"},"stage":{"editor":"int","min":1,"max":4,"default":2},"animate":{"editor":"boolean","default":true},"size":{"editor":"int","min":60,"max":400,"default":240},"$preview":{"width":240,"height":240}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const mood = this.props.mood ?? 'hello';
+    const stage = Number(this.props.stage ?? 2);
+    const size = Number(this.props.size ?? 240);
+    const on = String(this.props.animate ?? true) !== 'false';
+    const C = 100, L = 82, R = 118, y = 102;
+    const closed = { eyeL: `M${L-6} ${y} Q${L} ${y+5} ${L+6} ${y}`, eyeR: `M${R-6} ${y} Q${R} ${y+5} ${R+6} ${y}`, eyeW: 3.5 };
+    const faces = {
+      hello: { eyeL: `M${L} ${y-3} L${L} ${y+3}`, eyeR: `M${R} ${y-3} L${R} ${y+3}`, eyeW: 8 },
+      calm: closed,
+      breathe: closed,
+      cheer: { eyeL: `M${L-6} ${y+2} Q${L} ${y-5} ${L+6} ${y+2}`, eyeR: `M${R-6} ${y+2} Q${R} ${y-5} ${R+6} ${y+2}`, eyeW: 3.5 },
+      sleepy: { eyeL: `M${L-6} ${y+1} L${L+6} ${y+1}`, eyeR: `M${R-6} ${y+1} L${R+6} ${y+1}`, eyeW: 3.5 }
+    };
+    const f = faces[mood] ?? faces.hello;
+    const ks = (n) => Array(n).fill('0.45 0 0.55 1').join(';');
+    const A = (vals, kt, dur) => ({ v: (on ? vals : vals.map(() => vals[0])).join(';'), kt: kt.join(';'), ks: ks(kt.length - 1), dur: dur + 's' });
+    const body = ({
+      hello: A(['1 1', '1.03 0.98', '1 1'], [0, 0.5, 1], 4),
+      calm: A(['1 1', '1.02 0.99', '1 1'], [0, 0.5, 1], 6),
+      breathe: A(['1 1', '1.09 1.09', '1 1'], [0, 0.4, 1], 10),
+      cheer: A(['1 1', '1.08 0.9', '0.96 1.06', '1 1', '1 1'], [0, 0.15, 0.35, 0.55, 1], 1.2),
+      sleepy: A(['1 1', '1.015 0.99', '1 1'], [0, 0.5, 1], 7)
+    })[mood] ?? A(['1 1', '1 1'], [0, 1], 1);
+    const hop = mood === 'cheer' ? A(['0 0', '0 0', '0 -20', '0 0', '0 0'], [0, 0.15, 0.35, 0.55, 1], 1.2) : A(['0 0', '0 0'], [0, 1], 1);
+    const sway = mood === 'sleepy' ? A(['-4', '4', '-4'], [0, 0.5, 1], 7) : A(['0', '0'], [0, 1], 1);
+    const up = mood === 'cheer';
+    const open = mood === 'cheer' || mood === 'breathe';
+    return {
+      ...f, mood, size,
+      bodyV: body.v, bodyKT: body.kt, bodyKS: body.ks, bodyDur: body.dur,
+      hopV: hop.v, hopKT: hop.kt, hopKS: hop.ks, hopDur: hop.dur,
+      swayV: sway.v, swayKT: sway.kt, swayKS: sway.ks, swayDur: sway.dur,
+      eyeIn: `translate(${C} ${y})`, eyeOut: `translate(${-C} ${-y})`,
+      blink: on && (mood === 'hello' || up) ? '1 1;1 1;1 0.1;1 1' : '1 1;1 1;1 1;1 1',
+      crestV: on ? (up ? '-10;10;-10' : '-5;5;-5') : '0;0;0',
+      crestDur: up ? '0.7s' : '2.6s',
+      flapL: on && up ? '0;18;0' : '0;0;0',
+      flapR: on && up ? '0;-18;0' : '0;0;0',
+      floatV: on ? '0 0;5 -8;0 0' : '0 0;0 0;0 0',
+      driftV: on ? '0 0;-8 0;0 0' : '0 0;0 0;0 0',
+      wing: up ? 'M52 106 C30 84 32 62 44 54 C56 70 64 90 66 110 Z' : 'M44 118 C40 148 60 166 84 158 C70 148 60 134 58 116 Z',
+      wingUp: up ? 1 : 0,
+      beakTop: open ? 'M91 112 L109 112 L100 120 Z' : 'M91 113 L109 113 L100 126 Z',
+      beakOpen: open ? 1 : 0,
+      f2: stage >= 2 ? 1 : 0,
+      f3: stage >= 3 ? 1 : 0,
+      song: stage >= 4 && mood !== 'sleepy' ? 1 : 0,
+      sparkle: up ? 1 : 0,
+      zzz: mood === 'sleepy' ? 1 : 0,
+      breeze: mood === 'breathe' ? 1 : 0
+    };
+  }
+}
+</script>
+</body>
+</html>

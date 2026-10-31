@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SOS with Jelli</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{t.bg}}; color: #FFF8EE; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif">
+  <svg width="390" height="844" viewBox="0 0 390 844" aria-hidden="true" style="position: absolute; left: 0; top: 0">
+    <circle cx="195" cy="330" r="150" fill="{{t.glow}}"><animate attributeName="r" values="{{glowR}}" keyTimes="0;0.4;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="10s" repeatCount="indefinite"></animate></circle>
+    <path fill="{{t.w1}}"><animate attributeName="d" values="{{waveA}}" dur="7s" repeatCount="indefinite"></animate></path>
+    <path fill="{{t.w2}}"><animate attributeName="d" values="{{waveB}}" dur="5.5s" repeatCount="indefinite"></animate></path>
+    <circle cx="70" cy="700" r="5" fill="none" stroke="#FFF8EE" stroke-opacity="0.5" stroke-width="2"><animate attributeName="cy" values="{{b1}}" dur="6s" repeatCount="indefinite"></animate><animate attributeName="opacity" values="{{bo}}" dur="6s" repeatCount="indefinite"></animate></circle>
+    <circle cx="320" cy="740" r="4" fill="none" stroke="#FFF8EE" stroke-opacity="0.5" stroke-width="2"><animate attributeName="cy" values="{{b2}}" dur="8s" repeatCount="indefinite"></animate><animate attributeName="opacity" values="{{bo}}" dur="8s" repeatCount="indefinite"></animate></circle>
+  </svg>
+
+  <div style="position: absolute; left: 18px; right: 18px; top: 54px; display: flex; align-items: center; justify-content: space-between">
+    <div style="display: flex; align-items: center; gap: 8px; background: rgba(255,248,238,0.14); border-radius: 99px; padding: 4px 12px 4px 4px; font-size: 13px; font-weight: 600; {{hand}}">
+      <span style="width: 30px; height: 30px; border-radius: 99px; background: #FFC38A; overflow: hidden; display: flex; align-items: center; justify-content: center"><dc-import name="Xero" mood="calm" stage="2" animate="false" size="30" hint-size="30px,30px"></dc-import></span>
+      Xero passed you to Jelli
+    </div>
+    <a href="A05Today.dc.html" aria-label="Close" style="width: 44px; height: 44px; border-radius: 99px; color: #FFF8EE; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></a>
+  </div>
+
+  <div style="position: absolute; left: 95px; top: 190px; {{jIn}}"><dc-import name="Jelli" mood="breathe" stage="3" animate="{{motionStr}}" size="200" hint-size="200px,200px"></dc-import></div>
+
+  <div style="position: absolute; left: 0; right: 0; top: 440px; {{a1}}">
+    <svg width="390" height="56" viewBox="0 0 390 56" role="img" aria-label="Breathe in for 4, out for 6" style="display: block">
+      <text x="195" y="42" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="38" fill="#FFF8EE"><animate attributeName="opacity" values="{{inO}}" keyTimes="0;0.36;0.4;0.96;1" dur="10s" repeatCount="indefinite"></animate>Breathe in… 4</text>
+      <text x="195" y="42" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="38" fill="#FFF8EE" opacity="0"><animate attributeName="opacity" values="{{outO}}" keyTimes="0;0.36;0.4;0.96;1" dur="10s" repeatCount="indefinite"></animate>…and out, 6</text>
+    </svg>
+  </div>
+  <div style="position: absolute; left: 30px; right: 30px; top: 500px; text-align: center; font-size: 15.5px; line-height: 1.5; color: {{t.muted}}; {{a2}}">It's {{clock}}, right on time for your {{trig}} wave. It peaks and passes in about 3 minutes. Ride it with me.</div>
+
+  <div style="position: absolute; left: 20px; right: 20px; top: 586px; background: rgba(255,248,238,0.14); border-radius: 22px; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px; {{a3}}">
+    <div style="font-size: 12px; font-weight: 800; letter-spacing: 1px; opacity: 0.8">YOUR REASON</div>
+    <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 18px; line-height: 1.25">“{{reason}}”</div>
+  </div>
+
+  <div style="position: absolute; left: 20px; right: 20px; bottom: 30px; display: flex; gap: 10px; {{a4}}">
+    <a href="A07Passed.dc.html" style="flex: 1; height: 58px; border-radius: 99px; background: #FFF8EE; color: {{t.bg}}; font-weight: 700; font-size: 17px; text-decoration: none; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 0 rgba(0,0,0,0.25)">It passed</a>
+    <a href="#" style="height: 58px; padding: 0 20px; border-radius: 99px; background: rgba(255,248,238,0.16); color: #FFF8EE; font-weight: 600; font-size: 15px; text-decoration: none; display: flex; align-items: center">Still strong</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"trigger":{"editor":"enum","options":["coffee","stress","after meals","drinking"],"default":"coffee"},"reason":{"editor":"text","default":"Running after Mia without stopping"},"motion":{"editor":"boolean","default":true},"replay":{"editor":"boolean","default":true},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  componentDidMount() { this.play(); }
+  componentWillUnmount() { (this.timers || []).forEach(clearTimeout); }
+  play() {
+    (this.timers || []).forEach(clearTimeout);
+    this.timers = [];
+    this.setState({ on: false, handed: false });
+    this.timers.push(setTimeout(() => this.setState({ on: true }), 300));
+    this.timers.push(setTimeout(() => this.setState({ handed: true }), 3200));
+    if (String(this.props.replay ?? true) !== 'false') this.timers.push(setTimeout(() => this.play(), 12000));
+  }
+  renderVals() {
+    const dark = (this.props.theme ?? 'light') === 'dark';
+    const motion = String(this.props.motion ?? true) !== 'false';
+    const s = this.state || {};
+    const on = !motion || Boolean(s.on);
+    const ease = 'cubic-bezier(.2,.7,.2,1)';
+    const a = (i, dy) => `opacity: ${on ? 1 : 0}; transform: translateY(${on ? 0 : (dy ?? 18)}px); transition: opacity 600ms ${ease} ${i * 90}ms, transform 700ms ${ease} ${i * 90}ms`;
+    const t = dark
+      ? { bg: '#0B1A4A', muted: '#B9C9FF', glow: 'rgba(61,107,255,0.22)', w1: '#13286A', w2: '#1A3384' }
+      : { bg: '#3D6BFF', muted: '#E3EAFF', glow: 'rgba(156,203,255,0.35)', w1: '#2F59E6', w2: '#2449CC' };
+    const trig = this.props.trigger ?? 'coffee';
+    const clock = { coffee: '9:41', stress: '15:22', 'after meals': '13:12', drinking: '21:03' }[trig];
+    const m = (x, y) => motion ? x : y;
+    const w = (y, d) => `M0 ${y} C 100 ${y - d} 290 ${y + d} 390 ${y} L390 844 L0 844 Z`;
+    return {
+      t, motionStr: String(motion), reason: this.props.reason ?? 'Running after Mia without stopping',
+      trig: trig === 'after meals' ? 'after-lunch' : trig, clock,
+      hand: `opacity: ${on && !(motion && s.handed) ? 1 : (on ? 0.0 : 0)}; transform: translateX(${on ? 0 : -40}px); transition: opacity 600ms ${ease}, transform 700ms ${ease}`,
+      jIn: `opacity: ${on ? 1 : 0}; transform: translateX(${on ? 0 : 120}px) translateY(${on ? 0 : 30}px); transition: opacity 800ms ${ease} 250ms, transform 1100ms cubic-bezier(.3,1.3,.5,1) 250ms`,
+      a1: a(5), a2: a(6), a3: a(7), a4: a(8),
+      glowR: m('130;175;130', '150;150;150'),
+      waveA: m([w(700, 18), w(700, -18), w(700, 18)].join(';'), [w(700, 0), w(700, 0)].join(';')),
+      waveB: m([w(752, -14), w(752, 14), w(752, -14)].join(';'), [w(752, 0), w(752, 0)].join(';')),
+      b1: m('720;560', '700;700'), b2: m('760;600', '740;740'), bo: m('0;0.8;0', '0.6;0.6'),
+      inO: m('1;1;0;0;1', '1;1;1;1;1'), outO: m('0;0;1;1;0', '0;0;0;0;0')
+    };
+  }
+}
+</script>
+</body>
+</html>

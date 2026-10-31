@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lesson · Lower the bar</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{t.bg}}; color: {{t.ink}}; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif; display: flex; flex-direction: column">
+  <div style="display: flex; align-items: center; gap: 10px; padding: 50px 10px 0 10px">
+    <a href="F10Program.dc.html" aria-label="Back to program" style="width: 44px; height: 44px; border-radius: 99px; color: {{t.ink}}; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></a>
+    <div style="flex: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px" role="progressbar" aria-label="Lesson step" aria-valuenow="2" aria-valuemin="1" aria-valuemax="3">
+      <span style="height: 6px; border-radius: 99px; background: {{t.ink}}"></span><span style="height: 6px; border-radius: 99px; background: {{t.ink}}"></span><span style="height: 6px; border-radius: 99px; background: {{t.surf}}"></span>
+    </div>
+    <span style="width: 44px"></span>
+  </div>
+
+  <div style="padding: 16px 22px 0 22px; display: flex; flex-direction: column; gap: 6px; {{a1}}">
+    <div style="display: flex; align-items: center; gap: 10px">
+      <span style="width: 40px; height: 40px; border-radius: 99px; background: #FFC38A; overflow: hidden; display: flex; align-items: center; justify-content: center; flex: none"><dc-import name="Xero" mood="calm" stage="1" animate="{{motionStr}}" size="40" hint-size="40px,40px"></dc-import></span>
+      <span style="font-size: 14px; font-weight: 700; color: {{t.muted}}">Week 1 · Day 3 · 3 min</span>
+    </div>
+    <h1 style="margin: 4px 0 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 32px; line-height: 1.08; letter-spacing: -1px">Lower the bar</h1>
+    <p style="margin: 0; font-size: 16px; color: {{t.muted}}">Getting through the toughest stretch</p>
+  </div>
+
+  <div style="margin: 14px 20px 0 20px; background: {{t.surf}}; border-radius: 18px; padding: 8px 8px 8px 14px; display: flex; align-items: center; gap: 12px; {{a2}}">
+    <span style="flex: 1; font-size: 14px; font-weight: 600">Your reason · To keep up with Maya at the park</span>
+  </div>
+
+  <div style="margin: 12px 20px 0 20px; background: {{t.raised}}; border-radius: 24px; padding: 18px 16px; display: flex; flex-direction: column; gap: 12px; box-shadow: {{t.shadow}}; {{a3}}">
+    <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 19px; line-height: 1.3">If today gets hard, then I will…</div>
+    <div style="display: flex; flex-wrap: wrap; gap: 8px" role="group" aria-label="Plan options">
+      <sc-for list="{{opts}}" as="o" hint-placeholder-count="6">
+        <button aria-pressed="{{o.pressed}}" style="min-height: 44px; border: 0; border-radius: 14px; padding: 0 14px; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; {{o.style}}">{{o.label}}</button>
+      </sc-for>
+    </div>
+    <div style="font-size: 14px; color: {{t.muted}}">Saved as your rough-day plan. It shows up on hard days.</div>
+  </div>
+
+  <div style="margin-top: auto; padding: 0 22px 22px 22px; display: flex; flex-direction: column; gap: 10px; {{a5}}">
+    <div style="display: flex; align-items: center; gap: 12px; background: {{t.surf}}; border-radius: 18px; padding: 8px 14px 8px 8px">
+      <button aria-label="Play audio, 3 minutes" style="width: 44px; height: 44px; border: 0; border-radius: 99px; background: {{t.ink}}; color: {{t.bg}}; display: flex; align-items: center; justify-content: center; cursor: pointer; flex: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg></button>
+      <span style="flex: 1; font-size: 14px; font-weight: 600">Prefer to listen? 3:00</span>
+    </div>
+    <a href="F08Today.dc.html" style="height: 58px; border-radius: 99px; background: {{t.ink}}; color: {{t.bg}}; font-weight: 700; font-size: 17px; text-decoration: none; display: flex; align-items: center; justify-content: center">Next</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"motion":{"editor":"boolean","default":true},"replay":{"editor":"boolean","default":true},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  componentDidMount() { this.play(); }
+  componentWillUnmount() { (this.timers || []).forEach(clearTimeout); }
+  play() {
+    (this.timers || []).forEach(clearTimeout);
+    this.timers = [];
+    this.setState({ on: false, pick: 0 });
+    this.timers.push(setTimeout(() => this.setState({ on: true }), 300));
+    this.timers.push(setTimeout(() => this.setState({ pick: 1 }), 2000));
+    this.timers.push(setTimeout(() => this.setState({ pick: 2 }), 2700));
+    if (String(this.props.replay ?? true) !== 'false') this.timers.push(setTimeout(() => this.play(), 10000));
+  }
+  renderVals() {
+    const dark = (this.props.theme ?? 'light') === 'dark';
+    const motion = String(this.props.motion ?? true) !== 'false';
+    const s = this.state || {};
+    const on = !motion || Boolean(s.on);
+    const pick = motion ? (s.pick || 0) : 2;
+    const ease = 'cubic-bezier(.2,.7,.2,1)';
+    const a = (i) => `opacity: ${on ? 1 : 0}; transform: translateY(${on ? 0 : 18}px); transition: opacity 600ms ${ease} ${i * 90}ms, transform 600ms ${ease} ${i * 90}ms`;
+    const t = dark
+      ? { bg: '#0E0B2B', ink: '#FFF8EE', muted: '#B8B3D9', surf: '#1B1747', raised: '#2A255F', shadow: 'none', sel: '#FFF8EE', selInk: '#0E0B2B' }
+      : { bg: '#FBF7F1', ink: '#1E1A3A', muted: '#5E5975', surf: '#F1EBE2', raised: '#FFFFFF', shadow: '0 1px 0 rgba(30,26,58,0.05), 0 8px 22px rgba(30,26,58,0.07)', sel: '#1E1A3A', selInk: '#FFF8EE' };
+    const labels = ['Walk for 5 minutes', 'Text or call someone', 'Open Craving SOS', 'Have a shower', 'Go to bed early', 'Eat something proper'];
+    const opts = labels.map((label, i) => {
+      const p = (i === 0 && pick >= 1) || (i === 2 && pick >= 2);
+      return { label, pressed: p ? 'true' : 'false', style: `background: ${p ? t.sel : t.surf}; color: ${p ? t.selInk : t.ink}; transition: background 250ms, color 250ms` };
+    });
+    return { t, opts, motionStr: String(motion), a1: a(1), a2: a(2), a3: a(3), a5: a(5) };
+  }
+}
+</script>
+</body>
+</html>

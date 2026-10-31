@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Your plan builds</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{t.bg}}; color: {{t.ink}}; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif; display: flex; flex-direction: column">
+  <div style="display: flex; align-items: center; gap: 12px; padding: 50px 10px 0 16px">
+    <div style="flex: 1; height: 8px; border-radius: 99px; background: {{t.track}}" role="progressbar" aria-label="Setup progress" aria-valuenow="5" aria-valuemin="1" aria-valuemax="6"><div style="height: 8px; width: 80%; border-radius: 99px; background: {{t.bar}}"></div></div>
+    <button aria-label="Close" style="width: 44px; height: 44px; border: 0; border-radius: 99px; background: transparent; color: {{t.ink}}; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+  </div>
+
+  <div style="display: flex; align-items: flex-end; gap: 6px; padding: 8px 24px 0 18px">
+    <div style="flex: none; {{rise}}"><dc-import name="Xero" mood="{{mood}}" stage="1" animate="{{motionStr}}" size="140" hint-size="140px,140px"></dc-import></div>
+    <h1 style="margin: 0 0 18px 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 32px; line-height: 1.06; letter-spacing: -1px; {{a1}}">Your plan, built around you</h1>
+  </div>
+
+  <div style="padding: 8px 18px 0 18px; display: flex; flex-direction: column; gap: 8px" role="list" aria-label="Plan">
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="4">
+      <div role="listitem" style="min-height: 64px; box-sizing: border-box; border-radius: 18px; background: {{t.card}}; padding: 10px 14px; display: flex; align-items: center; gap: 12px; {{r.style}}">
+        <span style="width: 28px; height: 28px; border-radius: 99px; flex: none; display: flex; align-items: center; justify-content: center; {{r.tickStyle}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFF8EE" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></span>
+        <span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: {{t.muted}}">{{r.k}}</span><span style="font-size: 16px; font-weight: 600; line-height: 1.35">{{r.v}}</span></span>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="margin: 12px 18px 0 18px; border-radius: 18px; padding: 12px 14px; background: {{t.card}}; display: flex; align-items: center; gap: 10px; {{later}}">
+    <span style="display: flex; flex: none">
+      <span style="width: 40px; height: 40px; border-radius: 99px; background: {{t.jelliBg}}; overflow: hidden; display: flex; align-items: center; justify-content: center"><dc-import name="Jelli" mood="calm" stage="1" animate="false" size="40" hint-size="40px,40px"></dc-import></span>
+      <span style="width: 40px; height: 40px; margin-left: -8px; border-radius: 99px; background: {{t.glimBg}}; overflow: hidden; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 3px {{t.cardSolid}}"><dc-import name="Glim2" mood="sleepy" stage="1" animate="false" size="40" hint-size="40px,40px"></dc-import></span>
+    </span>
+    <span style="font-size: 14px; line-height: 1.45">Two friends join later. <b>Jelli</b> at your first craving, <b>Glim</b> on your first evening.</span>
+  </div>
+
+  <div style="margin-top: auto; padding: 0 22px 22px 22px; {{a5}}">
+    <a href="F06Plan.dc.html" style="height: 58px; border-radius: 99px; background: {{t.btn}}; color: {{t.btnInk}}; font-weight: 700; font-size: 17px; text-decoration: none; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 0 rgba(0,0,0,0.2); {{btnOn}}">See my plan</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"motion":{"editor":"boolean","default":true},"replay":{"editor":"boolean","default":true},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  componentDidMount() { this.play(); }
+  componentWillUnmount() { (this.timers || []).forEach(clearTimeout); }
+  play() {
+    (this.timers || []).forEach(clearTimeout);
+    this.timers = [];
+    this.setState({ on: false, step: 0 });
+    this.timers.push(setTimeout(() => this.setState({ on: true }), 300));
+    [1200, 1900, 2600, 3300, 4200].forEach((ms, i) => this.timers.push(setTimeout(() => this.setState({ step: i + 1 }), ms)));
+    if (String(this.props.replay ?? true) !== 'false') this.timers.push(setTimeout(() => this.play(), 10000));
+  }
+  renderVals() {
+    const dark = (this.props.theme ?? 'light') === 'dark';
+    const motion = String(this.props.motion ?? true) !== 'false';
+    const s = this.state || {};
+    const on = !motion || Boolean(s.on);
+    const step = motion ? (s.step || 0) : 9;
+    const ease = 'cubic-bezier(.2,.7,.2,1)';
+    const a = (i) => `opacity: ${on ? 1 : 0}; transform: translateY(${on ? 0 : 18}px); transition: opacity 600ms ${ease} ${i * 90}ms, transform 600ms ${ease} ${i * 90}ms`;
+    const t = dark
+      ? { bg: '#0F2A22', ink: '#FFF8EE', muted: '#A9D9C0', track: 'rgba(255,255,255,0.12)', bar: '#2FD08A', card: 'rgba(255,255,255,0.07)', cardSolid: '#1C362E', tick: '#2FD08A', tickOff: 'rgba(255,255,255,0.12)', jelliBg: '#0B1A4A', glimBg: '#140E3A', btn: '#FFF8EE', btnInk: '#0F2A22' }
+      : { bg: '#9FE3BC', ink: '#1E1A3A', muted: '#24493A', track: 'rgba(30,26,58,0.12)', bar: '#0F6E43', card: 'rgba(255,248,238,0.72)', cardSolid: '#EEF6EE', tick: '#0F6E43', tickOff: 'rgba(30,26,58,0.14)', jelliBg: '#2A52DB', glimBg: '#4A3596', btn: '#1E1A3A', btnInk: '#FFF8EE' };
+    const settle = 'cubic-bezier(.2,.8,.2,1)';
+    const data = [
+      ['PREP WEEK', 'Fri 30 Oct to Thu 5 Nov. Use as normal.'],
+      ['QUIT DAY', 'Fri 6 Nov, cigarettes and the vape together'],
+      ['WAVES TO WATCH', 'Coffee, usually mornings, and stress'],
+      ['WHY', 'To keep up with Maya at the park']
+    ];
+    const rows = data.map(([k, v], i) => {
+      const shown = step >= i + 1;
+      return {
+        k, v,
+        style: `opacity: ${shown ? 1 : 0}; transform: translateY(${shown ? 0 : 24}px); transition: opacity 600ms ${ease}, transform 900ms ${settle}`,
+        tickStyle: `background: ${shown ? t.tick : t.tickOff}; transition: background 300ms 300ms`
+      };
+    });
+    return {
+      t, rows, motionStr: String(motion),
+      mood: step >= 4 ? 'cheer' : 'hello',
+      rise: `opacity: ${on ? 1 : 0}; transform: translateY(${on ? 0 : 40}px); transition: opacity 900ms ${ease}, transform 900ms ${settle}`,
+      a1: a(2), a5: a(4),
+      later: `opacity: ${step >= 5 ? 1 : 0}; transform: translateY(${step >= 5 ? 0 : 18}px); transition: opacity 600ms ${ease}, transform 600ms ${ease}`,
+      btnOn: `opacity: ${step >= 5 ? 1 : 0.45}; transition: opacity 400ms`
+    };
+  }
+}
+</script>
+</body>
+</html>

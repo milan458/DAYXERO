@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Crew days critique</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1772px; height: 1500px; box-sizing: border-box; background: #F7F6F3; color: #1E1A3A; font-family: 'DM Sans', system-ui, sans-serif; padding: 44px 80px; display: flex; flex-direction: column; gap: 26px">
+  <div style="display: flex; flex-direction: column; gap: 6px">
+    <div style="font-size: 14px; font-weight: 700; letter-spacing: 1.4px; color: #5E5975">PAGE 6 · THE CREW · D1–D5 YOUR DAYS</div>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 40px; letter-spacing: -1.2px">Strong content, crowded screens, and the wrong weekday.</h1>
+  </div>
+  <div style="display: flex; gap: 28px; align-items: flex-start">
+    <div style="width: 300px; display: flex; flex-direction: column; gap: 12px; flex: none">
+      <div style="font-size: 14px; font-weight: 800">D1 · Today</div>
+      <div style="width: 273px; height: 591px; border-radius: 30px; overflow: hidden; box-shadow: 0 0 0 1px rgba(30,26,58,0.08)"><div style="width: 390px; height: 844px; transform: scale(0.7); transform-origin: 0 0"><dc-import name="C08Today" hint-size="390px,844px"></dc-import></div></div>
+      <sc-for list="{{n0}}" as="n" hint-placeholder-count="4"><div style="background: #FFFFFF; border-radius: 14px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px"><span style="align-self: flex-start; font-size: 11.5px; font-weight: 800; padding: 3px 8px; border-radius: 99px; {{n.tag}}">{{n.label}}</span><span style="font-size: 13.5px; line-height: 1.45">{{n.text}}</span></div></sc-for>
+    </div>
+    <div style="width: 300px; display: flex; flex-direction: column; gap: 12px; flex: none">
+      <div style="font-size: 14px; font-weight: 800">D2 · Morning pledge</div>
+      <div style="width: 273px; height: 591px; border-radius: 30px; overflow: hidden; box-shadow: 0 0 0 1px rgba(30,26,58,0.08)"><div style="width: 390px; height: 844px; transform: scale(0.7); transform-origin: 0 0"><dc-import name="C09Pledge" hint-size="390px,844px"></dc-import></div></div>
+      <sc-for list="{{n1}}" as="n" hint-placeholder-count="4"><div style="background: #FFFFFF; border-radius: 14px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px"><span style="align-self: flex-start; font-size: 11.5px; font-weight: 800; padding: 3px 8px; border-radius: 99px; {{n.tag}}">{{n.label}}</span><span style="font-size: 13.5px; line-height: 1.45">{{n.text}}</span></div></sc-for>
+    </div>
+    <div style="width: 300px; display: flex; flex-direction: column; gap: 12px; flex: none">
+      <div style="font-size: 14px; font-weight: 800">D3 · Program map</div>
+      <div style="width: 273px; height: 591px; border-radius: 30px; overflow: hidden; box-shadow: 0 0 0 1px rgba(30,26,58,0.08)"><div style="width: 390px; height: 844px; transform: scale(0.7); transform-origin: 0 0"><dc-import name="C10Program" hint-size="390px,844px"></dc-import></div></div>
+      <sc-for list="{{n2}}" as="n" hint-placeholder-count="4"><div style="background: #FFFFFF; border-radius: 14px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px"><span style="align-self: flex-start; font-size: 11.5px; font-weight: 800; padding: 3px 8px; border-radius: 99px; {{n.tag}}">{{n.label}}</span><span style="font-size: 13.5px; line-height: 1.45">{{n.text}}</span></div></sc-for>
+    </div>
+    <div style="width: 300px; display: flex; flex-direction: column; gap: 12px; flex: none">
+      <div style="font-size: 14px; font-weight: 800">D4 · Lesson</div>
+      <div style="width: 273px; height: 591px; border-radius: 30px; overflow: hidden; box-shadow: 0 0 0 1px rgba(30,26,58,0.08)"><div style="width: 390px; height: 844px; transform: scale(0.7); transform-origin: 0 0"><dc-import name="C11Lesson" hint-size="390px,844px"></dc-import></div></div>
+      <sc-for list="{{n3}}" as="n" hint-placeholder-count="4"><div style="background: #FFFFFF; border-radius: 14px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px"><span style="align-self: flex-start; font-size: 11.5px; font-weight: 800; padding: 3px 8px; border-radius: 99px; {{n.tag}}">{{n.label}}</span><span style="font-size: 13.5px; line-height: 1.45">{{n.text}}</span></div></sc-for>
+    </div>
+    <div style="width: 300px; display: flex; flex-direction: column; gap: 12px; flex: none">
+      <div style="font-size: 14px; font-weight: 800">D5 · Progress</div>
+      <div style="width: 273px; height: 591px; border-radius: 30px; overflow: hidden; box-shadow: 0 0 0 1px rgba(30,26,58,0.08)"><div style="width: 390px; height: 844px; transform: scale(0.7); transform-origin: 0 0"><dc-import name="C12Progress" hint-size="390px,844px"></dc-import></div></div>
+      <sc-for list="{{n4}}" as="n" hint-placeholder-count="4"><div style="background: #FFFFFF; border-radius: 14px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px"><span style="align-self: flex-start; font-size: 11.5px; font-weight: 800; padding: 3px 8px; border-radius: 99px; {{n.tag}}">{{n.label}}</span><span style="font-size: 13.5px; line-height: 1.45">{{n.text}}</span></div></sc-for>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1772,"height":1500}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const T = {
+      F: ['FIX NOW', 'background: #FFE4D6; color: #9A3412'],
+      S: ['SHOULD', 'background: #DBEAFE; color: #1E40AF'],
+      P: ['POLISH', 'background: #E7E5E4; color: #44403C'],
+      K: ['KEEP', 'background: #DCFCE7; color: #166534']
+    };
+    const mk = (list) => list.map(([k, text]) => ({ label: T[k][0], tag: T[k][1], text }));
+    return {
+      n0: mk([
+        ['F', '“Fri · Week 1, Day 3”: with Quit Day on Fri 6 Nov, Day 3 is a Sunday.'],
+        ['S', 'Five illustrations: hero Xero, a path thumbnail, a Glim avatar, a sea strip and Jelli. Nothing leads, so the eye has nowhere to land.'],
+        ['S', 'The craving card sits just above the SOS tab, two SOS entries 100px apart. Keep the tab, and turn the card into Alive’s predicted-wave card (“around 9:40”).'],
+        ['K', 'The day has a clear shape: pledge done, today’s lesson, check-in at 21:30.'],
+        ['P', 'Eight type sizes on one screen.']
+      ]),
+      n1: mk([
+        ['K', 'Quoting the reason back (“To keep up with Maya at the park”) is the emotional core of the whole app.'],
+        ['F', '“Day 3 · Friday”: the same weekday bug as Today.'],
+        ['S', '“Press and hold to pledge” is the second hold gesture. It needs the same fill, haptic and VoiceOver action as Quit Day.'],
+        ['P', '“Today, I won’t use nicotine” is strong. Users who are cutting down first will want another wording, so offer two.']
+      ]),
+      n2: mk([
+        ['K', 'Locked days say “No rush”, and the lesson titles match the program content in the repo exactly.'],
+        ['S', '“Prep ✓ · Day Xero ✓” uses a typed ✓ glyph. Use the same check icon as the rest of the set.'],
+        ['P', 'This is a reading screen, and the 180px hero adds little here. A cream reading surface with no hero would give the list room.']
+      ]),
+      n3: mk([
+        ['K', '“Let them talk. Keep driving.” plus one reflective question is a great lesson pattern: short, concrete, with one action.'],
+        ['S', 'The sky shows 50% on a Day 2 lesson replayed on Day 3. The scene should show today’s clarity, not the lesson’s.'],
+        ['P', 'Seven type sizes. The time label, title, subtitle and question each get their own size.']
+      ]),
+      n4: mk([
+        ['K', 'Health facts cite a source (American Cancer Society). This is the strongest trust signal in the set, and Alive’s finale drops it.'],
+        ['K', 'Carbon monoxide “Done · a few days” matches the approved health-timeline.json (12–72 hours, ACS) word for word. Keep it tied to that file.'],
+        ['S', '“5 evening check-ins this week” on day 3 only works if prep evenings count, and the screen doesn’t say so.'],
+        ['K', '“$7 a day, about $2,555 this year” is concrete, and the maths checks out.']
+      ])
+    };
+  }
+}
+</script>
+</body>
+</html>
