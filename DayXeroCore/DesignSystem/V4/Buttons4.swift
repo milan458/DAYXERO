@@ -89,7 +89,7 @@ private struct V4ButtonBody<Label: View>: View {
             .contentShape(Capsule())
             .opacity(enabled ? 1 : 0.5)
             .offset(y: pressed && colors.lip ? 3 : 0)
-            .scaleEffect(pressed && !reduceMotion ? DX.Move.settleedScale : 1)
+            .scaleEffect(pressed && !reduceMotion ? DX.Move.pressedScale : 1)
             .animation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion), value: pressed)
     }
 }
