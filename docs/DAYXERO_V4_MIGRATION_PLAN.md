@@ -235,4 +235,6 @@ The current app also has areas with **no v4 design at all**: Water (a Today card
 - **Phase 4 (branch `claude/v4-phase4`, built on Phase 3):** F16 Check-in and F17 Wind down on violet with Glim; the Evening tab is now Wind down and the old Toolkit tab is gone (decision 27).
   - F16: night hero with Glim 140 (cheers on Good or Proud), the adaptive headline, "From today's SOS: n of n waves ridden out · Edit", the drawn mood faces, the CTA by outcome ("Save and rest" / "Make a plan for tomorrow"), and "Your day ends at … · change". Prep and slip logic unchanged.
   - F17: "Check-in saved / Rest well.", slow breathing with Glim, the calm tools, your reason, Water, and the helpline line.
+- **Phase 5 (branch `claude/v4-phase5`, built on Phase 4):** Q1 Day Xero (apricot dawn, Xero 200, your reason, 3 s hold), Q2 You're on Day Xero (sun, Celebrate, mission and tiles), Q3 Quit Day offer (`DayXero/Paywall/QuitDayOffer.swift`: store prices, the trial timeline, Not now, Restore, Terms). Every commit beat uses the v4 hold button. Decision 28.
+  - F01–F07 were done in PR #4. The first-run `PaywallView` is no longer shown after onboarding; it stays only for "See all plans" and the upgrade sheet until Phase 8.
 
