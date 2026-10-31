@@ -67,7 +67,18 @@ public struct GlimView: View {
 
         var g = ctx
         g.translateBy(x: 0, y: hop)
-        Crew.fill(&g, Crew.circle(100, 150, glowR), yellow, opacity: glowO)
+        // Tail glow (decision 24): a soft radial light that pulses with the glow track and is added
+        // to what's behind it, so it reads as light on violet and plum rather than a flat brown ring.
+        var glow = g
+        glow.blendMode = .plusLighter
+        let reach = glowR * 1.6
+        let light = Gradient(stops: [
+            .init(color: yellow.opacity(min(1, glowO * 2)), location: 0),
+            .init(color: yellow.opacity(min(1, glowO * 1.4)), location: 0.4),
+            .init(color: yellow.opacity(0), location: 1),
+        ])
+        glow.fill(Crew.circle(100, 150, reach),
+                  with: .radialGradient(light, center: CGPoint(x: 100, y: 150), startRadius: 0, endRadius: reach))
 
         var b = g
         Crew.pose(&b, pivot: CGPoint(x: 100, y: 120), scale: body.value(at: t, animate: on), rotate: sway)

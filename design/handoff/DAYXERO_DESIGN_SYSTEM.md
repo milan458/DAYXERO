@@ -118,6 +118,7 @@ In order. "→" marks the final state.
 21. **Tab bar follows v4 Nav2 (31 Oct 2026, Milan): Today · Program · SOS · Evening · Me.** Progress and Settings move under Me. The calm tools move under Evening. Toolkit stops being a tab. Water stays on Today, where it already is, and leaves the Toolkit list.
 22. **Jelli replaces the Bio-Orb on SOS (31 Oct 2026, Milan).** `BioOrbView` and `docs/DAYXERO_BIO_ORB_SPEC.md` are retired when the SOS screen moves to v4 (Phase 2). The orb's breathing patterns stay available to the calm tools until Evening is rebuilt.
 23. **The Day Xero session is free, and the trial offer follows it (31 Oct 2026, Milan).** This confirms the Q1–Q3 flow and the §10.2 assumption. Free sessions: P1–P7 and DX.
+24. **Glim's tail is an animated glow (31 Oct 2026, Milan).** In the first SwiftUI screenshots, the canvas's flat yellow disc at 22–45% opacity read as a muddy brown ring on violet and plum. In the app it is now a soft radial light, 1.6× the canvas radius, added to the colour behind it (plus-lighter) and pulsing on the same track: 2.6 s, or 10 s when breathing. It still grows with the stage (base radius 30, 38, 48, 58). `Glim2.dc.html` still draws the flat disc.
 
 ### Rejected or superseded
 
