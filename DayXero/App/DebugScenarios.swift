@@ -31,7 +31,7 @@ enum DebugScenario: String {
         }
 
         let context = ModelContext(container)
-        let profile = UserProfile(name: "Milan", quitDay: day(quit), currencyCode: "USD", createdAt: day(start).addingTimeInterval(9 * 3600))
+        let profile = UserProfile(name: "Sam", quitDay: day(quit), currencyCode: "USD", createdAt: day(start).addingTimeInterval(9 * 3600))
         context.insert(profile)
         profile.products.append(ProductUse(product: .vape, isPrimary: true, unitsPerDay: 200, pricePerPurchase: 8.5, unitsPerPurchase: 600))
         if self != .free {

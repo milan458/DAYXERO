@@ -217,7 +217,13 @@ struct RootView: View {
             }
             #endif
         } else {
-            OnboardingFlow(onSaving: { finishingOnboarding = true }, onFinished: { finishingOnboarding = false })
+            OnboardingFlow(onSaving: { finishingOnboarding = true }, onFinished: {
+                // Prep week is free and the trial is offered after Day Xero (decisions 15, 23),
+                // so onboarding goes straight to Home, which opens Prep 1 by itself.
+                UserDefaults.standard.set(true, forKey: FirstLesson.key)
+                paywallDone = true
+                finishingOnboarding = false
+            })
         }
     }
 }

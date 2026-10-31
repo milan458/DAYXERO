@@ -2,7 +2,8 @@ import DayXeroCore
 import SwiftData
 import SwiftUI
 
-/// The app after onboarding: Today, Toolkit, Program and Progress in the floating dock, with Craving SOS in the middle.
+/// The app after onboarding: v4 Nav2 (Today, Program, SOS, Evening, Me). On iPhone Duo with vertical bars,
+/// the older dock stands on the side edge.
 struct HomeView: View {
     let profile: UserProfile
     @State private var tab = UserDefaults.standard.string(forKey: "dx.tab") ?? "today"
@@ -22,17 +23,23 @@ struct HomeView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     // Every tab scrolls clear of the dock, on whichever edge it stands (S18.13).
                     .safeAreaInset(edge: .bottom, spacing: 0) {
-                        if edge == nil { Color.clear.frame(height: DXDock.thickness + DX.Space.xs) }
+                        if edge == nil { Color.clear.frame(height: 70 + DX.Space.xs) }
                     }
                     .safeAreaInset(edge: edge ?? .trailing, spacing: 0) {
                         if edge != nil { Color.clear.frame(width: DXDock.thickness + DX.Space.xs) }
                     }
-                dock(axis: edge == nil ? .horizontal : .vertical)
-                    .padding(dockPadding, DX.Space.xxs)
+                if edge == nil {
+                    // v4 Nav2 (decision 21): Today · Program · SOS · Evening · Me.
+                    V4TabBar(selection: v4Selection)
+                        .padding(.bottom, DX.Space.xxs)
+                } else {
+                    dock(axis: .vertical)
+                        .padding(dockPadding, DX.Space.xxs)
+                }
             }
         }
         .readVerticalBarEdge($barEdge)
-        .dxCanvas()
+        .background(DX.Ground.reading.background.ignoresSafeArea())
         // Program v2 missions ask their quick question after a logged use or an SOS session (handoff 4.4).
         .modifier(MissionPrompts(profile: profile))
     }
@@ -44,14 +51,38 @@ extension HomeView {
         switch tab {
         case "program":
             ProgramView(profile: profile)
-        case "progress":
+        case "progress", "me":
+            // Me holds Progress and Settings (decision 21).
             ProgressTab(profile: profile)
-        case "toolkit", "water":
-            // "water" is the old tab id: open the toolkit with the tracker showing.
+        case "toolkit", "water", "evening":
+            // Evening holds the calm tools (decision 21). "water" is an old tab id: open with the tracker showing.
             ToolkitView(profile: profile, openWater: tab == "water")
         default:
             TodayView(profile: profile)
         }
+    }
+
+    /// The v4 tab bar's selection. SOS opens Craving SOS rather than switching tabs.
+    private var v4Selection: Binding<V4Tab> {
+        Binding(
+            get: {
+                switch tab {
+                case "program": .program
+                case "progress", "me": .me
+                case "toolkit", "water", "evening": .evening
+                default: .today
+                }
+            },
+            set: { new in
+                switch new {
+                case .sos: sos.open(source: "dock")
+                case .today: tab = "today"
+                case .program: tab = "program"
+                case .evening: tab = "evening"
+                case .me: tab = "me"
+                }
+            }
+        )
     }
 
     private func dock(axis: Axis) -> some View {
@@ -62,7 +93,13 @@ extension HomeView {
                 DXDockItem(id: "program", title: "Program", systemImage: "book.closed"),
                 DXDockItem(id: "progress", title: "Progress", systemImage: "chart.line.uptrend.xyaxis.circle"),
             ],
-            selection: Binding(get: { tab == "water" ? "toolkit" : tab }, set: { tab = $0 }),
+            selection: Binding(get: {
+                switch tab {
+                case "water", "evening": "toolkit"
+                case "me": "progress"
+                default: tab
+                }
+            }, set: { tab = $0 }),
             // Today, Toolkit, Craving SOS in the middle, Program, Progress.
             sosPosition: 2,
             axis: axis,
@@ -259,7 +296,7 @@ struct TodayView: View {
     /// The top of Home (S24, the Figma mockup): the header, today's lesson, logging, and the streak.
     @ViewBuilder
     private func overview(_ snap: HomeSnapshot, now: Date) -> some View {
-        header(snap, now: now)
+        TodayHeaderV4(snap: snap, name: profile.name, now: now) { settingsPage = nil; showSettings = true }
         // Program v2's session, mission or what's next (handoff 4.5).
         ProgramTodayCard(profile: profile)
         if snap.phase == .quitDay, !sosHintSeen { sosHint }
@@ -479,46 +516,6 @@ struct TodayView: View {
     }
 
     // MARK: Sections
-
-    /// "GOOD EVENING, MILAN" over where they are ("Prep day 1", with "1 of 7"), and their initial for Settings (S24).
-    private func header(_ snap: HomeSnapshot, now: Date) -> some View {
-        let greeting = snap.phase == .quitDay ? String(localized: "Today's the day") : HomeSnapshot.greeting(at: now)
-        let (title, chip): (String, String?) = switch snap.phase {
-        case .prep: (String(localized: "Prep day \(snap.prepDayNumber)"), String(localized: "\(snap.prepDayNumber) of \(snap.prepTotal)"))
-        case .quitDay: (String(localized: "Quit Day"), nil)
-        case let .quitWeek(day): (String(localized: "Day \(day)"), String(localized: "\(day) of \(ProgramSchedule.quitWeekDays)"))
-        case let .after(days): (days == 1 ? String(localized: "1 day clear") : String(localized: "\(days) days clear"), nil)
-        }
-        return HStack(alignment: .center, spacing: DX.Space.s) {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(verbatim: profile.name.isEmpty ? greeting : "\(greeting), \(profile.name)").dxText(.micro)
-                HStack(spacing: DX.Space.xs) {
-                    Text(verbatim: title).font(.custom(DX.Typeface.bold, size: 26, relativeTo: .title)).tracking(-0.5)
-                        .foregroundStyle(DX.Palette.text)
-                    if let chip {
-                        Label(chip, systemImage: "flame")
-                            .font(.custom(DX.Typeface.semibold, size: 12, relativeTo: .caption))
-                            .foregroundStyle(DX.Palette.accentInk)
-                            .padding(.vertical, 4).padding(.horizontal, 10)
-                            .background(DX.Palette.accentSoft, in: Capsule())
-                    }
-                }
-            }
-            .accessibilityElement(children: .combine)
-            .accessibilityAddTraits(.isHeader)
-            Spacer()
-            Button { settingsPage = nil; showSettings = true } label: {
-                Text(verbatim: String(profile.name.prefix(1)).uppercased())
-                    .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
-                    .frame(width: 40, height: 40)
-                    .background(DX.Palette.surface2, in: Circle())
-                    .overlay(Circle().strokeBorder(DX.Palette.hairline))
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel(Text("Profile and settings"))
-        }
-        .padding(.bottom, DX.Space.xxs)
-    }
 
     // MARK: Today's lesson (S19.3)
 

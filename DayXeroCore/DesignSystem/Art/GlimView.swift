@@ -71,10 +71,13 @@ public struct GlimView: View {
         // to what's behind it, so it reads as light on violet and plum rather than a flat brown ring.
         var glow = g
         glow.blendMode = .plusLighter
-        let reach = glowR * 1.6
+        // Capped at the drawing's bottom edge (150 + 50 = 200) so the light never ends in a hard line;
+        // later stages glow brighter instead of wider.
+        let reach = min(glowR * 1.6, 50)
+        let strength = glowO * (1 + 0.15 * Double(stage - 1))
         let light = Gradient(stops: [
-            .init(color: yellow.opacity(min(1, glowO * 2)), location: 0),
-            .init(color: yellow.opacity(min(1, glowO * 1.4)), location: 0.4),
+            .init(color: yellow.opacity(min(1, strength * 2)), location: 0),
+            .init(color: yellow.opacity(min(1, strength * 1.4)), location: 0.4),
             .init(color: yellow.opacity(0), location: 1),
         ])
         glow.fill(Crew.circle(100, 150, reach),

@@ -8,9 +8,12 @@ struct SessionOpen: Identifiable, Hashable {
     var isReplay = false
 }
 
-/// Free tier: the counter, Craving SOS and Prep 1. Everything after Prep 1 needs Pro or the trial.
+/// Free tier: the counter, Craving SOS, the whole prep week and the Day Xero session (decisions 15 and 23).
+/// Week 1 onwards needs Pro or the trial, which is offered after Day Xero.
 enum ProgramV2Access {
-    static let freeSessions: Set<String> = ["P1"]
+    static let freeSessions: Set<String> = ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "DX"]
+    /// The session after which the trial is offered.
+    static let offerAfter = "DX"
 
     static func needsUpgrade(_ sessionId: String, isPro: Bool) -> Bool {
         !isPro && !DemoMode.isOn && !freeSessions.contains(sessionId)
@@ -83,6 +86,9 @@ struct ProgramTodayCard: View {
     @State private var open: SessionOpen?
     @State private var upgradeTitle: String?
     @State private var showPaywall = false
+    /// The last session opened, so closing Day Xero can lead to the offer.
+    @State private var lastOpened: String?
+    @AppStorage("dx.dayXeroOfferShown") private var dayXeroOfferShown = false
 
     var body: some View {
         let store = ProgramStore(context: context, profile: profile)
@@ -91,7 +97,10 @@ struct ProgramTodayCard: View {
                 card(today)
             }
         }
-        .fullScreenCover(item: $open, onDismiss: { NotificationCenter.default.post(name: .dxSessionClosed, object: nil) }) { item in
+        .fullScreenCover(item: $open, onDismiss: {
+            NotificationCenter.default.post(name: .dxSessionClosed, object: nil)
+            offerAfterDayXero(store)
+        }) { item in
             SessionFlowView(sessionId: item.id, profile: profile, isReplay: item.isReplay)
         }
         .sheet(item: Binding(get: { upgradeTitle.map { SessionOpen(id: $0) } }, set: { upgradeTitle = $0?.id })) { item in
@@ -106,6 +115,18 @@ struct ProgramTodayCard: View {
                         onClose: { showPaywall = false })
         }
         .onAppear(perform: openQueuedFirstSession)
+        .onChange(of: open) { _, item in
+            if let item { lastOpened = item.id }
+        }
+    }
+
+    /// Once Day Xero is done, a free user sees the trial offer once (decision 23). Until the v4 offer
+    /// screen (G03) is built, it is the app's paywall.
+    private func offerAfterDayXero(_ store: ProgramStore) {
+        guard lastOpened == ProgramV2Access.offerAfter, !entitlement.isPro, !dayXeroOfferShown,
+              case .completed = store.state(of: ProgramV2Access.offerAfter) else { return }
+        dayXeroOfferShown = true
+        showPaywall = true
     }
 
     /// Prep 1 opens by itself the first time Home shows after the paywall (S22).

@@ -1,6 +1,7 @@
 import XCTest
 
-/// The whole journey on a real build (S16.1): onboarding → paywall → prep → Quit Day → first week → maintenance.
+/// The whole journey on a real build (S16.1): onboarding → prep → Quit Day → first week → maintenance.
+/// The paywall now follows Day Xero (decision 23), so it is no longer part of the onboarding run.
 /// The clock can't move forward in a UI test, so the later stages launch with a seeded scenario.
 /// Each step saves a screenshot: as a test attachment, and to $DX_SHOTS when CI sets it (S16.2).
 @MainActor
@@ -12,9 +13,14 @@ final class JourneyUITests: XCTestCase {
     func testOnboardingPaywallAndPrep() {
         let app = launch(["-dx.store", "mock"])
 
-        // Onboarding (S22): the 18+ confirmation is the welcome screen's footer.
+        // F01: one breath first; Skip appears after one 10 s cycle.
+        snap(app, "00-breathe")
+        let skip = app.buttons["Skip"]
+        XCTAssert(skip.waitForExistence(timeout: 15), "Breathe screen never offered Skip")
+        tapWhenStill(app, skip, name: "Skip")
+        // F02 Welcome: the 18+ confirmation is the footer.
         snap(app, "01-welcome")
-        tap(app.buttons["Build my plan"])
+        tap(app.buttons["Get started"])
         tap(button(app, "Disposables"))
         snap(app, "02-products")
         tapSettled(app, "Continue")
@@ -38,34 +44,24 @@ final class JourneyUITests: XCTestCase {
         tapSettled(app, "Continue")
         tap(button(app, "Not for me"))
         tapSettled(app, "Continue")
+        // F04 Quit Day: hold for 1.5 s.
         snap(app, "04-quit-day")
         let hold = app.buttons["onboarding.hold"]
         XCTAssert(hold.waitForExistence(timeout: 5))
         hold.press(forDuration: 2.2)
-        XCTAssert(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Quit Day is")).firstMatch.waitForExistence(timeout: 15), "Plan reveal didn't appear")
-        snap(app, "05-reveal")
-        tapSettled(app, "Continue")
-        // The trial screen (S22): the reminder is on, so continuing asks for notifications.
-        snap(app, "05b-trial")
-        tapSettled(app, "Remind me & continue")
+        // F05 the plan builds, then F06 the plan is ready: prep week is free, nothing is charged.
+        tapSettled(app, "See my plan")
+        XCTAssert(app.staticTexts["Your plan is ready"].waitForExistence(timeout: 10), "Plan screen didn't appear")
+        snap(app, "05-plan")
+        tapSettled(app, "Start my prep week")
+        // F07 reminders: allowing asks for notifications.
+        snap(app, "05b-reminders")
+        tapSettled(app, "Yes, remind me")
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
         if springboard.alerts.buttons["Allow"].waitForExistence(timeout: 5) { springboard.alerts.buttons["Allow"].tap() }
-
-        // Paywall (S3), against the mock store
-        let cta = app.buttons["paywall.cta"]
-        XCTAssert(cta.waitForExistence(timeout: 10))
-        // The button is disabled until the plans have loaded; a tap before that does nothing.
-        let loaded = XCTNSPredicateExpectation(predicate: NSPredicate(format: "isEnabled == true"), object: cta)
-        XCTAssertEqual(XCTWaiter().wait(for: [loaded], timeout: 10), .completed, "The paywall's plans never loaded")
-        snap(app, "06-paywall")
-        tapWhenStill(app, cta, name: "paywall.cta")
-        // Notifications were already answered on the trial screen; allow again in case it was skipped.
-        let allow = XCUIApplication(bundleIdentifier: "com.apple.springboard").alerts.buttons["Allow"]
-        if allow.waitForExistence(timeout: 3) { allow.tap() }
-        tapSettled(app, "Start prep day 1")
-        // Prep day 1 opens by itself after the paywall (S22); close it to reach Home.
+        // No paywall after onboarding (decision 15): Prep 1 opens by itself; close it to reach Home.
         let closeLesson = button(app, "Your place is saved")
-        XCTAssert(closeLesson.waitForExistence(timeout: 10), "Prep day 1 didn't open after the paywall")
+        XCTAssert(closeLesson.waitForExistence(timeout: 10), "Prep day 1 didn't open after onboarding")
         snap(app, "06b-day1")
         tapWhenStill(app, closeLesson, name: "Close lesson")
 
@@ -180,7 +176,7 @@ final class JourneyUITests: XCTestCase {
     }
 
     private func visitTabs(_ app: XCUIApplication, prefix: String) {
-        for tab in ["Toolkit", "Program", "Progress", "Today"] {
+        for tab in ["Evening", "Program", "Me", "Today"] {
             tap(app.buttons[tab].firstMatch)
             RunLoop.current.run(until: .now.addingTimeInterval(1))   // let the tab cross-fade finish
             snap(app, "\(prefix)-\(tab.lowercased())")
