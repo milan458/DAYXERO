@@ -237,4 +237,5 @@ The current app also has areas with **no v4 design at all**: Water (a Today card
   - F17: "Check-in saved / Rest well.", slow breathing with Glim, the calm tools, your reason, Water, and the helpline line.
 - **Phase 5 (branch `claude/v4-phase5`, built on Phase 4):** Q1 Day Xero (apricot dawn, Xero 200, your reason, 3 s hold), Q2 You're on Day Xero (sun, Celebrate, mission and tiles), Q3 Quit Day offer (`DayXero/Paywall/QuitDayOffer.swift`: store prices, the trial timeline, Not now, Restore, Terms). Every commit beat uses the v4 hold button. Decision 28.
   - F01–F07 were done in PR #4. The first-run `PaywallView` is no longer shown after onboarding; it stays only for "See all plans" and the upgrade sheet until Phase 8.
+- **Phase 6 (branch `claude/v4-phase6`):** F18 Finale after the graduation session (sun, the only confetti, Xero then Jelli then Glim with Celebrate, three counting tiles, money and reason, the health change starting now with its source, Keep going and Share my card); milestone moments on sun with Celebrate; the share card in Dawn and Night; the Progress milestone row in v4. Decision 29.
 

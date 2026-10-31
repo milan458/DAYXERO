@@ -55,7 +55,8 @@ struct SessionFlowView: View {
         case let .beat(id):
             return session.beats.first { $0.id == id }?.sets == "quit_timestamp" ? .apricot : .reading
         case .completion:
-            return session.id == ProgramV2Access.offerAfter ? .sun : .reading
+            let finale = session.beats.contains { $0.sets == "graduated_at" }
+            return session.id == ProgramV2Access.offerAfter || (finale && !isReplay) ? .sun : .reading
         default:
             return .reading
         }
@@ -400,7 +401,14 @@ struct SessionCompletion: View {
     }
 
     var body: some View {
-        if session.id == ProgramV2Access.offerAfter, !isReplay { dayXeroDone } else { lessonDone }
+        if session.id == ProgramV2Access.offerAfter, !isReplay {
+            dayXeroDone
+        } else if session.beats.contains(where: { $0.sets == "graduated_at" }), !isReplay {
+            // F18: the graduation session ends on the finale, the only screen with confetti.
+            FinaleView(profile: ctx.store.profile, label: session.label, onDone: onDone)
+        } else {
+            lessonDone
+        }
     }
 
     /// Q2 You're on Day Xero (sun). Day 1 is a milestone, so Xero enters with Celebrate and cheers; no confetti.
