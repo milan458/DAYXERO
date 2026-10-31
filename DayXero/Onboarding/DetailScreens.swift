@@ -585,11 +585,11 @@ struct PersonalScreen: View {
         let yearly = model.moneyPerDay * 365
         let money = yearly.formatted(.currency(code: model.currencyCode).precision(.fractionLength(0)).notation(.compactName))
         return [
-            ("💰 \(String(localized: "Save \(money) a year"))", String(localized: "Keep the \(money) a year I spend on nicotine.")),
-            ("🫁 \(String(localized: "Breathe easier"))", String(localized: "Breathe easier.")),
-            ("👨‍👩‍👧 \(String(localized: "Be there for family"))", String(localized: "Be there for my family.")),
-            ("⚡ \(String(localized: "More energy"))", String(localized: "Have more energy every day.")),
-            ("🔓 \(String(localized: "Break the chain"))", String(localized: "Stop planning my day around nicotine.")),
+            (String(localized: "Save \(money) a year"), String(localized: "Keep the \(money) a year I spend on nicotine.")),
+            (String(localized: "Breathe easier"), String(localized: "Breathe easier.")),
+            (String(localized: "Be there for family"), String(localized: "Be there for my family.")),
+            (String(localized: "More energy"), String(localized: "Have more energy every day.")),
+            (String(localized: "Break the chain"), String(localized: "Stop planning my day around nicotine.")),
         ]
     }
 

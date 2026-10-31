@@ -266,7 +266,7 @@ struct CravingSOSView: View {
     }
 
     private var pingButton: some View {
-        ShareLink(item: String(localized: "Having a craving right now. Could you talk for five minutes? 🙏")) {
+        ShareLink(item: String(localized: "Having a craving right now. Could you talk for five minutes?")) {
             Text("Ping a friend").frame(maxWidth: .infinity)
         }
         .buttonStyle(.dxSecondary)

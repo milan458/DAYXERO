@@ -119,6 +119,7 @@ In order. "→" marks the final state.
 22. **Jelli replaces the Bio-Orb on SOS (31 Oct 2026, Milan).** `BioOrbView` and `docs/DAYXERO_BIO_ORB_SPEC.md` are retired when the SOS screen moves to v4 (Phase 2). The orb's breathing patterns stay available to the calm tools until Evening is rebuilt.
 23. **The Day Xero session is free, and the trial offer follows it (31 Oct 2026, Milan).** This confirms the Q1–Q3 flow and the §10.2 assumption. Free sessions: P1–P7 and DX.
 24. **Glim's tail is an animated glow (31 Oct 2026, Milan).** In the first SwiftUI screenshots, the canvas's flat yellow disc at 22–45% opacity read as a muddy brown ring on violet and plum. In the app it is now a soft radial light, 1.6× the canvas radius, added to the colour behind it (plus-lighter) and pulsing on the same track: 2.6 s, or 10 s when breathing. It still grows with the stage (base radius 30, 38, 48, 58). `Glim2.dc.html` still draws the flat disc.
+25. **Cards on violet and ocean are a navy tint in light mode (31 Oct 2026, from the Today screenshots).** Violet and ocean keep cream ink in light mode, so the usual cream card on colour (70%) washed the stat tiles out on the evening and night Today header (cream on near-cream). On grounds with cream ink, a card on colour is now navy #1E1A3A at 20% over the ground in light mode: violet tiles measure 10.1:1 for ink and 6.8:1 for muted, ocean 7.4:1 and 6.5:1. Dark mode keeps white at 10%. Other grounds are unchanged. In code: `DX.Fill.onColourCard(for:)`; tested in `V4TokenTests`. The canvas still draws cream cards on violet.
 
 ### Rejected or superseded
 
@@ -265,7 +266,7 @@ A machine-readable copy is in `design/handoff/tokens.json`.
 | muted per ground | coral #3B1A24 · apricot #4A2A1A · lilac #4A3E7A · mint #24493A · sky #24406E · sun #5A4A10 · cream #5E5975 · ocean #E3EAFF · violet #D2C8FF · plum #E0C8E8 · dark-lilac #C9BFF2 · dark-mint #A9D9C0 · dark-ocean #B9C9FF · dark-sky #B9D6FF · navy #B8B3D9 | All ≥ 4.5:1 on their ground |
 | surf (cream page) | #F1EBE2 · dark #1B1747 | Chips, quiet surfaces |
 | raised | #FFFFFF · dark #2A255F (or #1B1747 on reading screens) | Cards |
-| card on colour | rgba(255,248,238,0.66–0.72) light · rgba(255,255,255,0.07–0.12) dark | Translucent cards on colour grounds |
+| card on colour | rgba(255,248,238,0.66–0.72) light · rgba(255,255,255,0.07–0.12) dark · on violet and ocean, rgba(30,26,58,0.20) light (decision 25) | Translucent cards on colour grounds |
 | ocean secondary | **#1D3A9E** solid (dark #1B2C66) | Secondary buttons and cards on ocean. Never translucent white |
 | green | **#0F6E43** (dark #2FD08A) | Ticks, progress bars, "+1", lesson card. Replaces #1FA971 (failed contrast) |
 | tick on dark chips | #2FD08A | Check marks in selected chips |

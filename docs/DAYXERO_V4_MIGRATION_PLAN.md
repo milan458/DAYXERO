@@ -218,3 +218,7 @@ The current app also has areas with **no v4 design at all**: Water (a Today card
     - F01 continues by itself after a second breath;
     - "Change the times" points to Settings.
   - Below the Today header, the cards (program, logging, streak, NRT, milestones, pledge and check-in) keep their current look until Phase 2. Evening and Me show the current Toolkit and Progress screens.
+  - Screenshot review fixes:
+    - Cards on violet and ocean are a navy tint in light mode (decision 25), because the evening and night stat tiles were unreadable.
+    - The reason chips on "Make this personal" and the SOS share text no longer use emoji.
+    - Welcome scrolls at accessibility text sizes, because the headline was cut off.

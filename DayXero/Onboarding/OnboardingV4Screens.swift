@@ -80,12 +80,36 @@ struct WelcomeScreen: View {
     @State private var bubble = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
+    @Environment(\.dynamicTypeSize) private var typeSize
+
     private let ground = DX.Ground.apricot
 
     var body: some View {
+        Group {
+            if typeSize.isAccessibilitySize {
+                // At the largest sizes the page scrolls, with a shorter hero, so nothing is cut off.
+                ScrollView { page(heroHeight: 240) }
+                    .scrollBounceBehavior(.basedOnSize)
+                    .ignoresSafeArea(edges: .top)
+            } else {
+                page(heroHeight: 360)
+            }
+        }
+        .task {
+            // Xero rises, says hello, then cheers once.
+            try? await Task.sleep(for: .seconds(reduceMotion ? 0.2 : 1.3))
+            withAnimation(DX.Move.animation(DX.Move.arrive, reduceMotion: reduceMotion)) { bubble = true }
+            try? await Task.sleep(for: .seconds(1.2))
+            cheer = !reduceMotion
+            try? await Task.sleep(for: .seconds(1.4))
+            cheer = false
+        }
+    }
+
+    private func page(heroHeight: CGFloat) -> some View {
         VStack(spacing: 0) {
             ZStack(alignment: .bottom) {
-                HeroScene(.dawn, clarity: CrewGrowth.prepClarity, height: 360, edge: ground.background)
+                HeroScene(.dawn, clarity: CrewGrowth.prepClarity, height: heroHeight, edge: ground.background)
                 XeroView(mood: cheer ? .cheer : .hello, stage: 1, size: .hero)
                     .offset(y: -18)
                     .dxArrive(0)
@@ -94,6 +118,8 @@ struct WelcomeScreen: View {
                             Text("Hi! I'm Xero.")
                                 .dxType(.headline)
                                 .foregroundStyle(DX.Fill.navy)
+                                // A short callout over the art; it is capped so it stays beside Xero.
+                                .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
                                 .padding(.horizontal, 14).padding(.vertical, 10)
                                 .background(DX.Fill.cream, in: UnevenRoundedRectangle(topLeadingRadius: 18, bottomLeadingRadius: 4,
                                                                                      bottomTrailingRadius: 18, topTrailingRadius: 18))
@@ -110,7 +136,7 @@ struct WelcomeScreen: View {
                 }
                 .dxType(.large)
                 .foregroundStyle(ground.ink)
-                .minimumScaleFactor(0.8)
+                .fixedSize(horizontal: false, vertical: true)
                 .accessibilityElement(children: .combine)
                 .accessibilityAddTraits(.isHeader)
                 .dxArrive(1)
@@ -140,15 +166,6 @@ struct WelcomeScreen: View {
             .padding(.horizontal, DX.Layout.buttonGutter)
             .dxReadableColumn()
             .padding(.bottom, DX.Space.xs)
-        }
-        .task {
-            // Xero rises, says hello, then cheers once.
-            try? await Task.sleep(for: .seconds(reduceMotion ? 0.2 : 1.3))
-            withAnimation(DX.Move.animation(DX.Move.arrive, reduceMotion: reduceMotion)) { bubble = true }
-            try? await Task.sleep(for: .seconds(1.2))
-            cheer = !reduceMotion
-            try? await Task.sleep(for: .seconds(1.4))
-            cheer = false
         }
     }
 
