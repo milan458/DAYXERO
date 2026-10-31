@@ -103,6 +103,16 @@ In order. "→" marks the final state.
 12. **Onboarding crew intro changed:** instead of introducing all three characters at once (too many illustrations, reads young), O5 is now **"Your plan, built around you"** with Xero, and Jelli and Glim are previewed as small avatars that "join later": **Jelli at the first craving, Glim on the first evening**.
 13. **Trial proposal:** prep week free; the 3-day trial **starts on Quit Day** (Fri 6 Nov), so the first charge lands **Mon 9 Nov** after three days clear. **Not decided**: the current code starts the trial at sign-up (§14).
 14. **v4 is the revamp base (31 Oct 2026, Milan, second session).** The new screens for the app revamp are v4 · Final direction (F01–F18 plus the dark rows FDarkA/FDarkB), not the Crew (C01–C18) or Alive (A01–A09) sets. This answers §14 question 2: v4 replaces the "Biophilic OLED Minimalism" direction in `docs/DESIGN_METHODOLOGY.md` and `Colors.swift`. The repo files themselves change only as part of the SwiftUI migration plan, after Milan approves it. Clarification recorded at the same time: the critique canvas's "Source screens (as published)" page holds the critique's **inputs** (C01–C18, A01–A09 and components, byte-identical to the main canvas files, checked 31 Oct). It does not hold the final screens.
+15. **Trial starts on Quit Day (31 Oct 2026, Milan).** This answers §14 question 1. The prep week is free, and the 3-day trial is offered on Quit Day (Fri 6 Nov), runs to Mon 9 Nov, with the reminder on Sat 7 Nov. F06 is no longer a proposal. Next to design: the Quit Day offer screen and the prep-week "free" state. **Build task:** the code frees only Prep 1 (`ProgramV2Access.freeSessions = ["P1"]`) and starts the trial wherever the paywall is shown. Both must change to match.
+16. **Plum dark grounds: keep, unconfirmed (31 Oct 2026, Milan).** Plum #241433 stays the dark ground for the apricot, coral and sun screens, including new ones. It is **not confirmed** until Milan has seen it on an OLED phone (§14 question 4 stays open).
+17. **Where the code and this file disagree, new screens follow the code (31 Oct 2026, Milan).** The §13.1 findings change the persona (§7):
+    - Sun 8 Nov's open lesson is **W1D2 "The noisy passengers"**. "Lower the bar" opens Mon 9 Nov.
+    - The program completes when Graduation opens, on **Sun 6 Dec**.
+    - The day ends at **4:00 am**.
+    - Counters use **elapsed time** since Quit Day began (Fri 6 Nov 04:00).
+
+    The existing v4 screens that show the old facts (F06, F08, F10, F11, F12, F16, F18) are listed in §10.1. They are fixed only when Milan asks.
+18. **Coral as the brand colour: pending a look.** Milan asked to see coral as a palette with app-icon designs and Xero before deciding (§14 question 3). The board is on the canvas as "Brand colour · coral vs apricot".
 
 ### Rejected or superseded
 
@@ -407,8 +417,27 @@ Every mock reads from this persona. Never invent per-screen numbers.
 - **Character stage** = days clear < 7 → 1, < 14 → 2, < 28 → 3, else 4.
 - **Date for day N** = Quit Day + (N − 1). Day 3 = Sun 8 Nov. Never hard-code weekdays.
 - **Week** = ceil(day / 7).
-- **Trial (proposal):** offered on Quit Day Fri 6 Nov, ends Mon 9 Nov, reminder Sat 7 Nov (2 days before end).
-- **Trial (current code):** starts at sign-up, so it would end Mon 2 Nov, four days before Quit Day. This is the problem the proposal fixes.
+- **Trial (decided, decision 15):** offered on Quit Day Fri 6 Nov, ends Mon 9 Nov, reminder Sat 7 Nov (2 days before end, 10:00).
+- **Trial (current code, to change):** starts at sign-up, so it would end Mon 2 Nov, four days before Quit Day.
+
+**Code-true values (decision 17, used by every screen designed from 31 Oct 2026 on):**
+- **Day boundary** is 4:00 am, so Quit Day "begins" Fri 6 Nov 04:00. Elapsed days `e` = (now − that) / 24 h.
+- **Cigarettes not smoked** = floor(12 × e). **Kept** = $7 × e, rounded down to cents (widgets round to whole dollars).
+- **Mock times on Sun 8 Nov (Day 3):**
+
+  | Time | Cigarettes not smoked | Kept |
+  |---|---|---|
+  | 07:30 | 25 | $15.02 |
+  | 09:40 | 26 | $15.65 |
+  | 14:00 | 29 | $16.91 |
+  | 21:30 | 32 | $19.10 |
+  | 23:30 | 33 | $19.68 |
+
+  A screen states its time, or shows its numbers for one of these rows.
+- **Lessons** unlock by days since quit (0 on Quit Day). Sun 8 Nov = W1D2 "The noisy passengers" (label "Day 2"). W1D3 "Lower the bar" opens Mon 9 Nov. Week 2–4 sessions open on days 8, 10, 14, 16, 19, 21, 24, 27 and 30.
+- **Program complete:** Graduation (W4S3) opens Sun 6 Dec, 31 days clear. At 09:00 that day: 362 cigarettes not smoked, $211.45 kept. Waves and check-ins for that date are not yet defined. Define them before the finale is redrawn.
+- **Milestones** (code): days clear 1, 3, 7, 14, 30, 60, 90, 100, 180, 365. Sun 8 Nov is the Day 3 milestone.
+- **Free tier** (code today): counter, Craving SOS, Prep 1. Under decision 15 the whole prep week becomes free (build task).
 
 **One label per metric:** "days clear", "waves ridden out" (all time), "cigarettes not smoked", "kept" (money), "check-ins". Show weekly numbers only in Insights.
 
@@ -601,6 +630,20 @@ All screens are 390×844 with props `theme` (light | dark), `motion` (bool) and 
 - The health card "STARTING NOW · 2 WEEKS TO 3 MONTHS · Circulation and lung function improve · Source: American Cancer Society".
 - "Keep going" / "Share my card".
 
+### 10.1 v4 screens that show pre-decision-17 facts (fix only when asked)
+
+| Screen | Shows | Code says |
+|---|---|---|
+| F06 Plan | "Free now: prep week, counter, SOS, Day 1" | Decision 15 makes the prep week free; Day 1 is not a free item in code (Prep 1 is) |
+| F08 Today | Afternoon card "Day 3 · Lower the bar"; tiles 36 / $21 | "Day 2 · The noisy passengers"; tiles per the §7 time table |
+| F10 Program | Today = Day 3; "Day 4 opens tomorrow" | Today = Day 2; "Day 3 opens tomorrow" |
+| F11 Lesson | "Lower the bar" on Sun 8 Nov | "The noisy passengers" on Sun 8 Nov (or keep "Lower the bar" and date the screen Mon 9 Nov) |
+| F12 Progress | 36 cigarettes, $21 kept | Per the §7 time table |
+| F16 Check-in | "Your day ends at 3:00 am" | 4:00 am |
+| F18 Finale | Thu 3 Dec, 28 days, $196, 336 | Graduation on Sun 6 Dec, 31 days clear, $211.45 and 362 at 09:00 |
+
+**UX issue to raise with Milan:** following the code, Today on Sun 8 Nov shows "Week 1, Day 3" (days clear) next to a lesson card labelled "Day 2". Two day counts on one screen will confuse people. A product fix might relabel sessions by days clear, or shift the unlock by one day.
+
 ### Dark mode
 
 `FDarkA` (F01–F09) and `FDarkB` (F10–F18) show every screen with `theme="dark"`:
@@ -711,10 +754,11 @@ Checked and still matching: Week 1 titles, the Day 2 and Day 3 beats, pricing an
 ## 14. Open questions and what to design next
 
 **Decisions needed (Milan):**
-1. **Trial timing:** start the 3-day trial on Quit Day (proposal) or keep it at sign-up? If on Quit Day, design the **Quit Day offer screen** (the paywall shown on Fri 6 Nov) and the prep-week "free" state.
+1. ~~**Trial timing:** start the 3-day trial on Quit Day (proposal) or keep it at sign-up?~~ **Decided 31 Oct 2026: on Quit Day** (decision 15). If on Quit Day, design the **Quit Day offer screen** (the paywall shown on Fri 6 Nov) and the prep-week "free" state.
 2. ~~**Adopt v4 over the Biophilic OLED direction** in the repo (§13)?~~ **Decided 31 Oct 2026: yes** (decision 14). v4 is the revamp base.
 3. **Brand colour:** coral as the signature (icon, website, marketing) while apricot stays Xero's day colour?
-4. **Dark-mode warm screens:** confirm plum after testing on an OLED phone.
+4. **Dark-mode warm screens:** confirm plum after testing on an OLED phone. (31 Oct 2026: plum stays in use, unconfirmed until the OLED test; decision 16.)
+3a. (31 Oct 2026) Coral: Milan will decide after seeing the "Brand colour · coral vs apricot" board (decision 18).
 5. **Inactivity reset:** an open product decision. Never claim "nothing resets if you miss a day" until it's decided. Slips never reset; that is decided in code.
 6. **Character-led vs character-light:** run the 5-second test and preference test with 8–10 smokers, half aged 40+.
 
