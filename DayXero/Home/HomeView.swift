@@ -354,9 +354,8 @@ struct TodayView: View {
         if pledged {
             rows.append(.init(id: "pledge", label: String(localized: "Morning pledge"), meta: String(localized: "done"), done: true, action: nil))
         } else if force == "pledge" || rhythm.isPledgeTime(now) {
-            rows.append(.init(id: "pledge", label: String(localized: "Morning pledge"), meta: String(localized: "10 sec"), done: false) {
-                showPledge = true
-            })
+            rows.append(YourDayList.Row(id: "pledge", label: String(localized: "Morning pledge"), meta: String(localized: "10 sec"),
+                                        done: false, action: { showPledge = true }))
         }
         if let today = ProgramToday(store: ProgramStore(context: context, profile: profile), isPro: entitlement.isPro) {
             switch today.kind {
@@ -367,9 +366,11 @@ struct TodayView: View {
             }
         }
         let canCheckIn = force == "checkin" || rhythm.isCheckInTime(now)
-        rows.append(.init(id: "checkin", label: String(localized: "Evening check-in"),
-                          meta: checkedIn ? String(localized: "done") : checkInTime, done: checkedIn,
-                          action: !checkedIn && canCheckIn ? { showCheckIn = true } : nil))
+        var openCheckIn: (() -> Void)?
+        if !checkedIn && canCheckIn { openCheckIn = { showCheckIn = true } }
+        rows.append(YourDayList.Row(id: "checkin", label: String(localized: "Evening check-in"),
+                                    meta: checkedIn ? String(localized: "done") : checkInTime, done: checkedIn,
+                                    action: openCheckIn))
         return rows
     }
 
