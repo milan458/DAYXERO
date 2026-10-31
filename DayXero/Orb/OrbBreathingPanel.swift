@@ -30,7 +30,7 @@ struct OrbBreathingPanel: View {
         GeometryReader { geo in
             ScrollView {
                 VStack(spacing: 24) {
-                    Text(verbatim: "\(engine.pattern.name) · \(engine.pattern.counts)").dxText(.micro)
+                    Text(verbatim: "\(engine.pattern.name) · \(engine.pattern.counts)").v4Text(.micro)
                         .padding(.top, DX.Space.s)
                     BioOrbView(engine: engine, side: BioOrbView.side(mini: false, available: geo.size.width, availableHeight: geo.size.height), onTap: coachMe)
                     OrbCaption(engine: engine)
@@ -172,7 +172,7 @@ struct OrbPanelButtonStyle: ButtonStyle {
         let tokens = OrbData.bundled.tokens
         return configuration.label
             .labelStyle(OrbPanelLabel())
-            .font(.custom(DX.Typeface.bold, size: 13, relativeTo: .subheadline))
+            .dxFont(14, weight: 700, style: .subheadline)
             .foregroundStyle(kind == .porcelain ? Color.black : Color(orbHex: tokens.sage))
             .padding(.vertical, 14).padding(.horizontal, 20)
             .background(kind == .porcelain ? Color(orbHex: tokens.porcelain) : Color(orbHex: tokens.moss), in: Capsule())

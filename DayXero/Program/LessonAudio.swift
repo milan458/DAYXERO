@@ -378,14 +378,14 @@ struct LessonAudioStep: View {
                     }
                     // Room above and below, so the first and last lines can sit in the middle too.
                     .padding(.vertical, max(geo.size.height / 2 - 30, 0))
-                    .animation(DX.Motion.animation(DX.Move.settle, reduceMotion: reduceMotion), value: narrator.index)
+                    .animation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion), value: narrator.index)
                 }
                 .mask(LinearGradient(stops: [.init(color: .clear, location: 0), .init(color: .black, location: 0.24),
                                              .init(color: .black, location: 0.76), .init(color: .clear, location: 1)],
                                      startPoint: .top, endPoint: .bottom))
                 .onAppear { proxy.scrollTo(narrator.index, anchor: .center) }
                 .onChange(of: narrator.index) { _, i in
-                    withAnimation(DX.Motion.animation(DX.Move.settle, reduceMotion: reduceMotion)) { proxy.scrollTo(i, anchor: .center) }
+                    withAnimation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion)) { proxy.scrollTo(i, anchor: .center) }
                 }
             }
         }

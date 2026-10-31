@@ -138,10 +138,10 @@ private struct OrbReadout: View {
         let r = mini ? data.readout.mini : data.readout.full
         let session = engine.session
         let heroSize = session.isSOS ? r.heroSizeSOS : r.heroSize
-        let capHeight = UIFont(name: DX.Typeface.extraBold, size: heroSize)?.capHeight ?? heroSize * 0.73
+        let capHeight = DX.Typeface4.font(.display, size: heroSize, weight: 800).capHeight
         VStack(spacing: 0) {
             Text(verbatim: label)
-                .font(.custom(DX.Typeface.medium, fixedSize: r.labelSize))
+                .font(DX.Typeface4.swiftUIFont(.body, size: r.labelSize, weight: 500))
                 .foregroundStyle(Color(orbHex: data.tokens.sage).opacity(data.readout.labelOpacity))
                 .lineLimit(1)
                 .frame(height: r.rowHeight)
@@ -150,7 +150,7 @@ private struct OrbReadout: View {
                 .frame(height: capHeight)
                 .overlay(alignment: .bottom) {
                     Text(verbatim: numeral)
-                        .font(.custom(DX.Typeface.extraBold, fixedSize: heroSize))
+                        .font(DX.Typeface4.swiftUIFont(.display, size: heroSize, weight: 800))
                         .tracking(-0.02 * heroSize)
                         .monospacedDigit()
                         .foregroundStyle(.white)
@@ -160,7 +160,7 @@ private struct OrbReadout: View {
                 .padding(.vertical, r.gap)
             HStack(spacing: r.cycleToBars) {
                 Text(verbatim: "CYCLE \(session.cycle) OF \(engine.cycleCount)")
-                    .font(.custom(DX.Typeface.mono, fixedSize: r.cycleSize))
+                    .font(DX.Typeface4.swiftUIFont(.body, size: r.cycleSize, weight: 600).monospacedDigit())
                     .tracking(r.cycleTracking * r.cycleSize)
                     .foregroundStyle(.white.opacity(data.readout.cycleOpacity))
                     .lineLimit(1)
@@ -222,7 +222,7 @@ struct OrbCaption: View {
     var body: some View {
         ZStack {
             Text(verbatim: engine.caption)
-                .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .callout))
+                .dxFont(16, weight: 600, style: .callout)
                 .foregroundStyle(.white.opacity(0.6))
                 .multilineTextAlignment(.center)
                 .lineSpacing(3)

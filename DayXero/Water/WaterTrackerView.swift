@@ -49,7 +49,7 @@ struct WaterTrackerView: View {
                 .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
                 // The goal starts at 8 glasses for everyone; this is where it gets personal (S18.5).
                 Button(water?.weightKg == nil ? LocalizedStringKey("Personalise goal") : LocalizedStringKey("Edit goal")) { editingGoal = true }
-                    .font(.custom(DX.Typeface.semibold, size: 14, relativeTo: .subheadline))
+                    .dxFont(14, weight: 600, style: .subheadline)
                     .foregroundStyle(.white.opacity(0.6))
                     .frame(minHeight: 36)
                     .padding(.horizontal, 16)
@@ -69,7 +69,7 @@ struct WaterTrackerView: View {
                 logButton(selected, units: units, goal: goal, before: total)
                     .padding(.top, 16)
                 Button("Undo last") { undo(today: today, clock: clock) }
-                    .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body))
+                    .dxFont(16, weight: 600, style: .body)
                     .foregroundStyle(.white.opacity(0.6))
                     .frame(height: 40)
                     .padding(.horizontal, 16)
@@ -127,14 +127,14 @@ struct WaterTrackerView: View {
     private func header(streak: Int) -> some View {
         HStack {
             Text("Water")
-                .font(.custom(DX.Typeface.extraBold, size: 28, relativeTo: .largeTitle))
+                .dxFont(28, weight: 800, style: .largeTitle)
                 .tracking(-0.5)
                 .foregroundStyle(.white)
                 .accessibilityAddTraits(.isHeader)
             Spacer()
             if streak > 0 {
                 Text(verbatim: "\(streak)-DAY STREAK")
-                    .font(.custom(DX.Typeface.mono, size: 11, relativeTo: .caption2))
+                    .dxFont(12, weight: 600, style: .caption2).monospacedDigit()
                     .tracking(0.6)
                     .foregroundStyle(Color(hex: 0xBCC388))
                     .padding(.vertical, 6).padding(.horizontal, 10)
@@ -143,7 +143,7 @@ struct WaterTrackerView: View {
             }
             if let onClose {
                 Button(action: onClose) { Image(systemName: "xmark") }
-                    .buttonStyle(.dxIcon)
+                    .buttonStyle(.v4Icon)
                     .accessibilityLabel(Text("Close"))
                     .padding(.leading, DX.Space.xxs)
             }
@@ -154,18 +154,18 @@ struct WaterTrackerView: View {
         VStack(spacing: 6) {
             HStack(alignment: .firstTextBaseline, spacing: 6) {
                 Text(verbatim: WaterFormat.amount(total, units: units))
-                    .font(.custom(DX.Typeface.extraBold, size: 54, relativeTo: .largeTitle))
+                    .dxFont(54, weight: 800, style: .largeTitle)
                     .tracking(-2)
                     .monospacedDigit()
                     .foregroundStyle(.white)
                     .contentTransition(.numericText())
                 Text(verbatim: "/ \(WaterFormat.amount(goal, units: units)) \(WaterFormat.unit(units))")
-                    .font(.custom(DX.Typeface.semibold, size: 20, relativeTo: .title3))
+                    .dxFont(19, weight: 600, style: .title3)
                     .foregroundStyle(.white.opacity(0.55))
             }
             .overlay(alignment: .topTrailing) { floatLabel.offset(x: 64, y: -10) }
             Text(reached ? "Goal reached. Nice." : "\(WaterFormat.glasses(total)) of \(goal / WaterGoal.glassMl) glasses")
-                .font(.custom(DX.Typeface.semibold, size: 14, relativeTo: .subheadline))
+                .dxFont(14, weight: 600, style: .subheadline)
                 .foregroundStyle(reached ? Color(hex: 0xBCC388) : .white.opacity(0.6))
         }
         .accessibilityElement(children: .combine)
@@ -177,7 +177,7 @@ struct WaterTrackerView: View {
         if let floatText {
             PhaseAnimator([0.0, 0.2, 1.0], trigger: floatID) { p in
                 Text(verbatim: floatText)
-                    .font(.custom(DX.Typeface.extraBold, size: 18, relativeTo: .headline))
+                    .dxFont(18, weight: 800, style: .headline)
                     .foregroundStyle(Color(hex: 0xBCC388))
                     .fixedSize()
                     .offset(y: reduceMotion ? 0 : 10 - 56 * p)
@@ -198,9 +198,9 @@ struct WaterTrackerView: View {
                     VStack(spacing: 2) {
                         DrinkIllustration(drink: drink, size: 30)
                             .padding(.bottom, 2)
-                        Text(drink.name).font(.custom(DX.Typeface.semibold, size: 14, relativeTo: .subheadline))
+                        Text(drink.name).dxFont(14, weight: 600, style: .subheadline)
                         Text(verbatim: WaterFormat.size(drink.ml, units: units))
-                            .font(.custom(DX.Typeface.medium, size: 12, relativeTo: .caption))
+                            .dxFont(12, weight: 500, style: .caption1)
                             .opacity(0.65)
                     }
                     .lineLimit(1)
@@ -227,7 +227,7 @@ struct WaterTrackerView: View {
             HStack(spacing: 8) {
                 Image(systemName: "plus").font(.system(size: 16, weight: .bold))
                 Text("Log \(WaterFormat.size(drink.ml, units: units))")
-                    .font(.custom(DX.Typeface.semibold, size: 17, relativeTo: .body))
+                    .dxFont(16, weight: 600, style: .body)
             }
             .foregroundStyle(.black)
             .frame(maxWidth: .infinity, minHeight: 58)
@@ -240,20 +240,20 @@ struct WaterTrackerView: View {
     private func todayList(_ todays: [WaterEntry], units: WaterUnits) -> some View {
         if !todays.isEmpty {
             VStack(alignment: .leading, spacing: 0) {
-                Text("Today").font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
+                Text("Today").dxFont(14, weight: 600, style: .footnote)
                     .foregroundStyle(.white.opacity(0.55))
                     .padding(.bottom, DX.Space.xs)
                 ForEach(todays.reversed()) { entry in
                     HStack {
                         Text(entry.timestamp, format: .dateTime.hour().minute())
-                            .font(.custom(DX.Typeface.medium, size: 14, relativeTo: .subheadline))
+                            .dxFont(14, weight: 500, style: .subheadline)
                             .foregroundStyle(.white.opacity(0.55))
                             .frame(width: 72, alignment: .leading)
                         DrinkIllustration(drink: entry.drink, size: 24)
-                        Text(entry.drink.name).font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(.white)
+                        Text(entry.drink.name).dxFont(16, weight: 600, style: .body).foregroundStyle(.white)
                         Spacer()
                         Text(verbatim: WaterFormat.size(entry.amountMl, units: units))
-                            .font(.custom(DX.Typeface.medium, size: 14, relativeTo: .subheadline))
+                            .dxFont(14, weight: 500, style: .subheadline)
                             .foregroundStyle(.white.opacity(0.7))
                     }
                     .padding(.vertical, 12)

@@ -84,14 +84,14 @@ struct NRTSetupView: View {
             .padding(.horizontal, DX.Space.m)
             .dxReadableColumn()
             .padding(.bottom, DX.Space.xs)
-            .dxCanvas()
+            .background(Read4.background.ignoresSafeArea())
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button { back() } label: { Image(systemName: stage == .intro ? "xmark" : "chevron.left") }
                         .accessibilityLabel(Text(stage == .intro ? "Close" : "Back"))
                 }
                 if let label = progressLabel {
-                    ToolbarItem(placement: .principal) { Text(label).dxText(.micro) }
+                    ToolbarItem(placement: .principal) { Text(label).v4Text(.micro) }
                 }
             }
         }
@@ -116,13 +116,13 @@ struct NRTSetupView: View {
 
     private var intro: some View {
         page(button: "Set up my NRT", action: { stage = .products }) {
-            Text("Keep your NRT on track").dxText(.title)
-            Text("Tell us what's on your pack. We'll remind you to change patches and when each step down is due.").dxText(.subtitle)
-            DXGlassCard {
+            Text("Keep your NRT on track").v4Text(.title)
+            Text("Tell us what's on your pack. We'll remind you to change patches and when each step down is due.").v4Text(.subtitle)
+            V4Card {
                 VStack(alignment: .leading, spacing: 6) {
-                    Text("Why it's worth it").dxText(.micro)
+                    Text("Why it's worth it").v4Text(.micro)
                     Text("People who use NRT are 50–60% more likely to quit than people who don't.")
-                        .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
+                        .dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.ink)
                     SourceLink(source: HealthSources.nrtCochrane2018)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -130,17 +130,17 @@ struct NRTSetupView: View {
             .padding(.top, DX.Space.s)
             LabelNotice()
         } secondary: {
-            Button("Not using NRT yet? Ask a pharmacist", action: onDone).buttonStyle(.dxQuiet)
+            Button("Not using NRT yet? Ask a pharmacist", action: onDone).buttonStyle(.dx(.quiet, on: .reading))
         }
     }
 
     private var products: some View {
         page(button: "Next", enabled: !chosen.isEmpty, action: startSchedules) {
-            Text("What are you using?").dxText(.title)
-            Text("Pick up to two, as your pharmacist or doctor suggested, or as on your pack.").dxText(.subtitle)
+            Text("What are you using?").v4Text(.title)
+            Text("Pick up to two, as your pharmacist or doctor suggested, or as on your pack.").v4Text(.subtitle)
             VStack(spacing: DX.Space.xs) {
                 ForEach(NRTType.allCases, id: \.self) { type in
-                    DXOptionCard(type.title, detail: detail(type), systemImage: icon(type), isSelected: chosen.contains(type)) {
+                    OnbOptionCard(type.title, detail: detail(type), systemImage: icon(type), isSelected: chosen.contains(type)) {
                         if let i = chosen.firstIndex(of: type) { chosen.remove(at: i) }
                         else if chosen.count < 2 { chosen.append(type) }
                     }
@@ -148,7 +148,7 @@ struct NRTSetupView: View {
             }
             .padding(.top, DX.Space.s)
             if chosen.count == 2 {
-                Text("Using two together? Only if a pharmacist or doctor suggested it.").dxText(.subtitle)
+                Text("Using two together? Only if a pharmacist or doctor suggested it.").v4Text(.subtitle)
             }
         }
     }
@@ -157,20 +157,20 @@ struct NRTSetupView: View {
         let draft = drafts[i]
         let presets = NRTLabels.presets(for: draft.type, country: country)
         return page(button: "Use this schedule", enabled: draft.presetID != nil || !draft.steps.isEmpty, action: { confirmSchedule(i) }) {
-            Text(draft.type == .patch ? "Which schedule is on your pack?" : "What does your pack say?").dxText(.title)
-            Text("Labels differ by brand and country. Pick the one that matches, or enter your own.").dxText(.subtitle)
+            Text(draft.type == .patch ? "Which schedule is on your pack?" : "What does your pack say?").v4Text(.title)
+            Text("Labels differ by brand and country. Pick the one that matches, or enter your own.").v4Text(.subtitle)
             DXFlowLayout {
                 ForEach(LabelCountry.allCases, id: \.self) { c in
-                    DXChip(LocalizedStringKey(String(localized: c.title)), isOn: Binding(get: { country == c }, set: { if $0 { switchCountry(c, for: i) } }))
+                    V4ToggleChip(LocalizedStringKey(String(localized: c.title)), isOn: Binding(get: { country == c }, set: { if $0 { switchCountry(c, for: i) } }))
                 }
-                DXChip("Elsewhere", isOn: Binding(get: { country == nil }, set: { if $0 { switchCountry(nil, for: i) } }))
+                V4ToggleChip("Elsewhere", isOn: Binding(get: { country == nil }, set: { if $0 { switchCountry(nil, for: i) } }))
             }
             .padding(.top, DX.Space.xs)
             if draft.type == .gum || draft.type == .lozenge {
-                Text("Strength on your pack").dxText(.micro).padding(.top, DX.Space.s)
+                Text("Strength on your pack").v4Text(.micro).padding(.top, DX.Space.s)
                 HStack(spacing: DX.Space.xs) {
                     ForEach([2.0, 4.0], id: \.self) { mg in
-                        DXChip(LocalizedStringKey(NRTReminderPlan.strength(mg)),
+                        V4ToggleChip(LocalizedStringKey(NRTReminderPlan.strength(mg)),
                                isOn: Binding(get: { drafts[i].strength == mg }, set: { if $0 { drafts[i].strength = mg } }))
                     }
                 }
@@ -187,7 +187,7 @@ struct NRTSetupView: View {
             .padding(.top, DX.Space.s)
             if let preset = presets.first(where: { $0.id == draft.presetID }) {
                 if let note = preset.labelNote {
-                    Text(note).dxText(.subtitle)
+                    Text(note).v4Text(.subtitle)
                 }
                 SourceLink(source: preset.source)
             }
@@ -201,19 +201,19 @@ struct NRTSetupView: View {
         return page(button: i + 1 < drafts.count ? "Next product" : "Next: reminders", enabled: !draft.steps.isEmpty, action: {
             stage = i + 1 < drafts.count ? .schedule(i + 1) : .reminders
         }) {
-            Text("Your \(String(localized: draft.type.title).lowercased()) plan").dxText(.title)
-            Text("From your pack's label. Tap a step to change it.").dxText(.subtitle)
+            Text("Your \(String(localized: draft.type.title).lowercased()) plan").v4Text(.title)
+            Text("From your pack's label. Tap a step to change it.").v4Text(.subtitle)
             DatePicker("Starting", selection: $startDate, displayedComponents: .date)
-                .font(DX.TextStyle.subtitle.font)
+                .dxFont(14, weight: 400, style: .footnote)
                 .padding(.top, DX.Space.xs)
-            DXCard(padding: 14) {
+            V4Card(padding: 14) {
                 VStack(spacing: 0) {
                     ForEach(schedule.spans, id: \.index) { span in
                         Button { editing = EditingStep(draft: i, index: span.index) } label: {
                             StepRow(span: span, type: draft.type, highlighted: span.index == 0)
                         }
                         .buttonStyle(.plain)
-                        if span.index < schedule.spans.count - 1 { Divider().overlay(DX.Palette.hairline) }
+                        if span.index < schedule.spans.count - 1 { Divider().overlay(Read4.hairline) }
                     }
                 }
             }
@@ -221,57 +221,57 @@ struct NRTSetupView: View {
                 let last = drafts[i].steps.last
                 drafts[i].steps.append(PlanStep(strengthMg: last?.strengthMg ?? 0, weeks: 2))
             } label: { Label("Add a step", systemImage: "plus") }
-                .buttonStyle(.dxQuiet)
+                .buttonStyle(.dx(.quiet, on: .reading))
             LabelNotice()
         }
     }
 
     private var reminders: some View {
         page(button: "Done", action: save) {
-            Text("Reminders").dxText(.title)
-            Text("So you don't have to remember.").dxText(.subtitle)
+            Text("Reminders").v4Text(.title)
+            Text("So you don't have to remember.").v4Text(.subtitle)
             VStack(spacing: DX.Space.xs) {
-                DXCard(padding: 14) {
+                V4Card(padding: 14) {
                     VStack(alignment: .leading, spacing: DX.Space.xs) {
                         Toggle(isOn: $dailyOn) {
                             VStack(alignment: .leading, spacing: 1) {
-                                Text(chosen.contains(.patch) ? "Fresh patch" : "Daily reminder").font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body))
-                                Text("Every day").dxText(.subtitle)
+                                Text(chosen.contains(.patch) ? "Fresh patch" : "Daily reminder").dxFont(16, weight: 600, style: .body)
+                                Text("Every day").v4Text(.subtitle)
                             }
                         }
                         if dailyOn {
                             DatePicker("Time", selection: $dailyTime, displayedComponents: .hourAndMinute)
-                                .font(DX.TextStyle.subtitle.font)
+                                .dxFont(14, weight: 400, style: .footnote)
                         }
                     }
                 }
-                DXCard(padding: 14) {
+                V4Card(padding: 14) {
                     Toggle(isOn: $stepRemindersOn) {
                         VStack(alignment: .leading, spacing: 1) {
-                            Text("Step-down days").font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body))
-                            Text("The evening before each step").dxText(.subtitle)
+                            Text("Step-down days").dxFont(16, weight: 600, style: .body)
+                            Text("The evening before each step").v4Text(.subtitle)
                         }
                     }
                 }
                 if chosen.contains(.gum) || chosen.contains(.lozenge) {
-                    DXCard(padding: 14) {
+                    V4Card(padding: 14) {
                         VStack(alignment: .leading, spacing: DX.Space.xs) {
                             Toggle(isOn: Binding(get: { pieceHours != nil }, set: { pieceHours = $0 ? 2 : nil })) {
                                 VStack(alignment: .leading, spacing: 1) {
-                                    Text("Time for a piece").font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body))
-                                    Text("8am to 10pm, as often as your label says").dxText(.subtitle)
+                                    Text("Time for a piece").dxFont(16, weight: 600, style: .body)
+                                    Text("8am to 10pm, as often as your label says").v4Text(.subtitle)
                                 }
                             }
                             if let hours = pieceHours {
                                 Stepper("Every \(hours) hours", value: Binding(get: { hours }, set: { pieceHours = $0 }), in: 1...8)
-                                    .font(DX.TextStyle.subtitle.font)
+                                    .dxFont(14, weight: 400, style: .footnote)
                             }
                         }
                     }
                 }
             }
             .padding(.top, DX.Space.s)
-            .tint(DX.Palette.sage)
+            .tint(Read4.accent)
             LabelNotice()
         }
     }
@@ -287,7 +287,7 @@ struct NRTSetupView: View {
                     .padding(.top, DX.Space.s)
             }
             .scrollBounceBehavior(.basedOnSize)
-            Button(button, action: action).buttonStyle(.dxPrimary).disabled(!enabled)
+            Button(button, action: action).buttonStyle(.dx(.primary, on: .reading)).disabled(!enabled)
             secondary()
         }
     }
@@ -297,18 +297,18 @@ struct NRTSetupView: View {
             HStack(spacing: DX.Space.s) {
                 VStack(alignment: .leading, spacing: 2) {
                     (preset.map { Text($0.title) } ?? Text("My pack says something else"))
-                        .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
-                    Text(preset.map(summary) ?? String(localized: "Enter each step yourself")).dxText(.subtitle)
+                        .dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.ink)
+                    Text(preset.map(summary) ?? String(localized: "Enter each step yourself")).v4Text(.subtitle)
                 }
                 Spacer(minLength: DX.Space.xs)
                 Image(systemName: selected ? "checkmark.circle.fill" : "circle")
                     .font(.system(size: 22))
-                    .foregroundStyle(selected ? DX.Palette.sage : DX.Palette.faint)
+                    .foregroundStyle(selected ? Read4.accent : Read4.faint)
             }
             .padding(14)
-            .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+            .background(Read4.card, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
             .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .strokeBorder(selected ? DX.Palette.accentInk : DX.Palette.hairline, lineWidth: selected ? 1.5 : 1))
+                .strokeBorder(selected ? Read4.accent : Read4.hairline, lineWidth: selected ? 1.5 : 1))
         }
         .buttonStyle(.plain)
         .accessibilityAddTraits(selected ? .isSelected : [])
@@ -421,16 +421,16 @@ struct StepRow: View {
     var body: some View {
         HStack(spacing: DX.Space.s) {
             Text(verbatim: "\(span.index + 1)")
-                .font(.custom(DX.Typeface.bold, size: 12, relativeTo: .caption))
-                .foregroundStyle(done ? DX.Palette.onAccent : highlighted ? DX.Palette.onPrimary : DX.Palette.text2)
+                .dxFont(12, weight: 700, style: .caption1)
+                .foregroundStyle(done ? DX.Fill.cream : highlighted ? Read4.onInk : Read4.muted)
                 .frame(width: 32, height: 32)
-                .background(done ? DX.Palette.sage : highlighted ? DX.Palette.primary : DX.Palette.track, in: Circle())
+                .background(done ? Read4.accent : highlighted ? Read4.ink : Read4.track, in: Circle())
             VStack(alignment: .leading, spacing: 1) {
-                Text(verbatim: title).font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
-                Text(verbatim: dates).dxText(.subtitle)
+                Text(verbatim: title).dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.ink)
+                Text(verbatim: dates).v4Text(.subtitle)
             }
             Spacer(minLength: DX.Space.xs)
-            Text("^[\(span.step.weeks) week](inflect: true)").dxText(.subtitle)
+            Text("^[\(span.step.weeks) week](inflect: true)").v4Text(.subtitle)
         }
         .padding(.vertical, 10)
         .contentShape(Rectangle())
@@ -468,35 +468,35 @@ struct StepEditor: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DX.Space.s) {
-            Text("Edit step").dxText(.title).padding(.top, DX.Space.l)
-            Text("Strength").dxText(.micro)
+            Text("Edit step").v4Text(.title).padding(.top, DX.Space.l)
+            Text("Strength").v4Text(.micro)
             DXFlowLayout {
                 ForEach(strengths, id: \.self) { mg in
-                    DXChip(LocalizedStringKey(NRTReminderPlan.strength(mg)),
+                    V4ToggleChip(LocalizedStringKey(NRTReminderPlan.strength(mg)),
                            isOn: Binding(get: { step.strengthMg == mg }, set: { if $0 { step.strengthMg = mg } }))
                 }
             }
             Stepper("^[\(step.weeks) week](inflect: true)", value: $step.weeks, in: 1...24)
-                .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body))
+                .dxFont(16, weight: 600, style: .body)
             LabelNotice()
             Spacer()
             Button("Done") {
                 onSave(step)
                 dismiss()
             }
-            .buttonStyle(.dxPrimary)
+            .buttonStyle(.dx(.primary, on: .reading))
             if let onDelete {
                 Button("Remove this step", role: .destructive) {
                     dismiss()
                     onDelete()
                 }
-                .buttonStyle(.dxQuiet)
+                .buttonStyle(.dx(.quiet, on: .reading))
             }
         }
         .padding(.horizontal, DX.Space.m)
         .dxReadableColumn()
         .padding(.bottom, DX.Space.xs)
-        .dxCanvas()
+        .background(Read4.background.ignoresSafeArea())
     }
 
     private var strengths: [Double] {
@@ -511,12 +511,12 @@ struct LabelNotice: View {
         HStack(alignment: .top, spacing: DX.Space.xs) {
             Image(systemName: "info.circle").foregroundStyle(Color(light: 0xB07A14, dark: 0xE5A93C))
             Text("Follow the label on your pack and ask a pharmacist or doctor. DayXero doesn't give dosing advice.")
-                .font(DX.TextStyle.subtitle.font).foregroundStyle(DX.Palette.text)
+                .dxFont(14, weight: 400, style: .footnote).foregroundStyle(Read4.ink)
         }
         .padding(DX.Space.s)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(DX.Palette.amber.opacity(0.12), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(DX.Palette.amber.opacity(0.35)))
+        .background(Read4.amber.opacity(0.12), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(Read4.amber.opacity(0.35)))
         .padding(.top, DX.Space.s)
         .accessibilityElement(children: .combine)
     }
@@ -527,7 +527,7 @@ struct SourceLink: View {
 
     var body: some View {
         Link(destination: source.url) {
-            Text(source.label).font(DX.TextStyle.subtitle.font).underline().foregroundStyle(DX.Palette.accentInk)
+            Text(source.label).dxFont(14, weight: 400, style: .footnote).underline().foregroundStyle(Read4.accent)
         }
     }
 }

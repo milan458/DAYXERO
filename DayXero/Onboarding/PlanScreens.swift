@@ -61,8 +61,8 @@ struct QuitDayCalendar: View {
             }
         }
         .padding(DX.Space.m)
-        .background(Onb.raised, in: RoundedRectangle(cornerRadius: DX.Radius.card, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: DX.Radius.card, style: .continuous).strokeBorder(Onb.hairline))
+        .background(Onb.raised, in: RoundedRectangle(cornerRadius: DX.Layout.smallCardRadius, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: DX.Layout.smallCardRadius, style: .continuous).strokeBorder(Onb.hairline))
     }
 
     private func legend(_ color: Color, _ title: LocalizedStringKey) -> some View {

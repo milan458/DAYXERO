@@ -31,8 +31,8 @@ struct WaterGoalSheet: View {
                         climate
                         goal.padding(.top, DX.Space.m)
                         Text("An estimate, not medical advice. If a doctor has told you to limit fluids, use their number instead.")
-                            .font(.custom(DX.Typeface.medium, size: 12, relativeTo: .caption))
-                            .foregroundStyle(DX.Palette.muted)
+                            .dxFont(12, weight: 500, style: .caption1)
+                            .foregroundStyle(Read4.muted)
                             .lineSpacing(3)
                             .padding(.top, DX.Space.xs)
                     }
@@ -42,12 +42,12 @@ struct WaterGoalSheet: View {
                     .padding(.bottom, DX.Space.xl)
                 }
                 Button("Save goal", action: save)
-                    .buttonStyle(.dxPrimary)
+                    .buttonStyle(.dx(.primary, on: .reading))
                     .padding(.horizontal, DX.Space.m)
                     .dxReadableColumn()
                     .padding(.bottom, DX.Space.xs)
             }
-            .dxCanvas()
+            .background(Read4.background.ignoresSafeArea())
             .navigationTitle(Text("Your water goal"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -63,7 +63,7 @@ struct WaterGoalSheet: View {
     // MARK: Parts
 
     private func heading(_ text: LocalizedStringKey) -> some View {
-        Text(text).font(.custom(DX.Typeface.semibold, size: 14, relativeTo: .subheadline)).foregroundStyle(DX.Palette.text2)
+        Text(text).dxFont(14, weight: 600, style: .subheadline).foregroundStyle(Read4.muted)
             .accessibilityAddTraits(.isHeader)
     }
 
@@ -72,17 +72,17 @@ struct WaterGoalSheet: View {
             ForEach([WaterUnits.metric, .imperial], id: \.self) { units in
                 let on = draft.units == units
                 Button(units == .metric ? "kg · L" : "lb · fl oz") { draft.units = units }
-                    .font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
-                    .foregroundStyle(on ? DX.Palette.onPrimary : DX.Palette.text2)
+                    .dxFont(14, weight: 600, style: .footnote)
+                    .foregroundStyle(on ? Read4.onInk : Read4.muted)
                     .padding(.horizontal, 16)
                     .frame(minHeight: 34)
-                    .background(on ? DX.Palette.primary : .clear, in: Capsule())
+                    .background(on ? Read4.ink : .clear, in: Capsule())
                     .buttonStyle(.plain)
                     .accessibilityAddTraits(on ? .isSelected : [])
             }
         }
         .padding(3)
-        .background(DX.Palette.surface2, in: Capsule())
+        .background(Read4.surface, in: Capsule())
         .sensoryFeedback(.selection, trigger: draft.units)
     }
 
@@ -90,10 +90,10 @@ struct WaterGoalSheet: View {
         VStack(alignment: .leading, spacing: 4) {
             heading("Weight")
             HStack(alignment: .firstTextBaseline, spacing: 6) {
-                Text(verbatim: weightText).font(.custom(DX.Typeface.extraBold, size: 48, relativeTo: .largeTitle))
-                    .tracking(-1.4).monospacedDigit().foregroundStyle(DX.Palette.text)
+                Text(verbatim: weightText).dxFont(48, weight: 800, style: .largeTitle)
+                    .tracking(-1.4).monospacedDigit().foregroundStyle(Read4.ink)
                 Text(verbatim: draft.units == .metric ? "kg" : "lb")
-                    .font(.custom(DX.Typeface.semibold, size: 17, relativeTo: .body)).foregroundStyle(DX.Palette.muted)
+                    .dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.muted)
             }
             .accessibilityHidden(true)
             Group {
@@ -109,12 +109,12 @@ struct WaterGoalSheet: View {
             }
             .padding(.top, 8)
             HStack(alignment: .top, spacing: 10) {
-                Image(systemName: "lock").font(.system(size: 14, weight: .semibold)).foregroundStyle(DX.Palette.accentInk)
+                Image(systemName: "lock").font(.system(size: 14, weight: .semibold)).foregroundStyle(Read4.accent)
                     .padding(.top, 2)
                     .accessibilityHidden(true)
                 Text("Only used for your water goal. Stays on your phone.")
-                    .font(.custom(DX.Typeface.medium, size: 13, relativeTo: .footnote))
-                    .foregroundStyle(DX.Palette.text2)
+                    .dxFont(14, weight: 500, style: .footnote)
+                    .foregroundStyle(Read4.muted)
             }
             .padding(.top, DX.Space.xs)
         }
@@ -134,21 +134,21 @@ struct WaterGoalSheet: View {
         return Button { draft.activity = activity } label: {
             HStack(spacing: 12) {
                 VStack(alignment: .leading, spacing: 3) {
-                    Text(activity.title).font(.custom(DX.Typeface.semibold, size: 17, relativeTo: .body)).foregroundStyle(DX.Palette.text)
-                    Text(subtitle(activity)).font(.custom(DX.Typeface.medium, size: 13, relativeTo: .footnote)).foregroundStyle(DX.Palette.text2)
+                    Text(activity.title).dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.ink)
+                    Text(subtitle(activity)).dxFont(14, weight: 500, style: .footnote).foregroundStyle(Read4.muted)
                 }
                 Spacer(minLength: 0)
                 if on {
                     Image(systemName: "checkmark.circle.fill").font(.system(size: 22))
                         .symbolRenderingMode(.palette)
-                        .foregroundStyle(DX.Palette.onAccent, DX.Palette.sage)
+                        .foregroundStyle(DX.Fill.cream, Read4.accent)
                         .accessibilityHidden(true)
                 }
             }
             .padding(.vertical, 16).padding(.horizontal, 18)
-            .background(on ? DX.Palette.sage.opacity(0.12) : DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .background(on ? Read4.accent.opacity(0.12) : Read4.card, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
             .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .strokeBorder(on ? DX.Palette.sage : DX.Palette.hairline, lineWidth: on ? 2 : 1))
+                .strokeBorder(on ? Read4.accent : Read4.hairline, lineWidth: on ? 2 : 1))
         }
         .buttonStyle(.plain)
         .accessibilityAddTraits(on ? .isSelected : [])
@@ -168,11 +168,11 @@ struct WaterGoalSheet: View {
             ForEach(WaterClimate.allCases, id: \.self) { climate in
                 let on = draft.climate == climate
                 Button { draft.climate = climate } label: {
-                    Text(climate.title).font(.custom(DX.Typeface.semibold, size: 16, relativeTo: .body))
-                        .foregroundStyle(DX.Palette.text)
+                    Text(climate.title).dxFont(16, weight: 600, style: .body)
+                        .foregroundStyle(Read4.ink)
                         .frame(maxWidth: .infinity, minHeight: 52)
-                        .background(on ? DX.Palette.sage.opacity(0.12) : DX.Palette.surface1, in: Capsule())
-                        .overlay(Capsule().strokeBorder(on ? DX.Palette.sage : DX.Palette.hairline, lineWidth: on ? 2 : 1))
+                        .background(on ? Read4.accent.opacity(0.12) : Read4.card, in: Capsule())
+                        .overlay(Capsule().strokeBorder(on ? Read4.accent : Read4.hairline, lineWidth: on ? 2 : 1))
                 }
                 .buttonStyle(.plain)
                 .accessibilityAddTraits(on ? .isSelected : [])
@@ -188,14 +188,14 @@ struct WaterGoalSheet: View {
         return VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .firstTextBaseline, spacing: 6) {
                 Text(verbatim: WaterFormat.amount(goal, units: units))
-                    .font(.custom(DX.Typeface.extraBold, size: 48, relativeTo: .largeTitle)).tracking(-1.4)
-                    .foregroundStyle(DX.Palette.text)
+                    .dxFont(48, weight: 800, style: .largeTitle).tracking(-1.4)
+                    .foregroundStyle(Read4.ink)
                     .contentTransition(.numericText())
-                Text(verbatim: WaterFormat.unit(units)).font(.custom(DX.Typeface.semibold, size: 17, relativeTo: .body))
-                    .foregroundStyle(DX.Palette.muted)
+                Text(verbatim: WaterFormat.unit(units)).dxFont(16, weight: 600, style: .body)
+                    .foregroundStyle(Read4.muted)
                 Spacer(minLength: 0)
-                Text("\(goal / WaterGoal.glassMl) glasses a day").font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body))
-                    .foregroundStyle(DX.Palette.text2)
+                Text("\(goal / WaterGoal.glassMl) glasses a day").dxFont(16, weight: 600, style: .body)
+                    .foregroundStyle(Read4.muted)
             }
             .accessibilityElement(children: .combine)
             VStack(spacing: 0) {
@@ -208,13 +208,13 @@ struct WaterGoalSheet: View {
                 if draft.override != nil { row("Your adjustment", litres(goal, units), divider: false) }
             }
             .padding(.vertical, 4).padding(.horizontal, 16)
-            .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .background(Read4.card, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
             HStack {
-                Text("Adjust").font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text2)
+                Text("Adjust").dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.muted)
                 Spacer()
                 stepButton("minus", label: "One glass less") { draft.adjust(by: -1) }
-                Text("\(goal / WaterGoal.glassMl) glasses").font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body))
-                    .foregroundStyle(DX.Palette.text)
+                Text("\(goal / WaterGoal.glassMl) glasses").dxFont(16, weight: 600, style: .body)
+                    .foregroundStyle(Read4.ink)
                     .frame(minWidth: 64)
                 stepButton("plus", label: "One glass more") { draft.adjust(by: 1) }
             }
@@ -228,21 +228,21 @@ struct WaterGoalSheet: View {
 
     private func row(_ label: LocalizedStringKey, _ value: String, divider: Bool) -> some View {
         HStack {
-            Text(label).foregroundStyle(DX.Palette.text2)
+            Text(label).foregroundStyle(Read4.muted)
             Spacer()
-            Text(verbatim: value).fontWeight(.semibold).foregroundStyle(DX.Palette.text)
+            Text(verbatim: value).fontWeight(.semibold).foregroundStyle(Read4.ink)
         }
-        .font(.custom(DX.Typeface.regular, size: 15, relativeTo: .body))
+        .dxFont(16, weight: 400, style: .body)
         .padding(.vertical, 12)
-        .overlay(alignment: .bottom) { if divider { Rectangle().fill(DX.Palette.hairline).frame(height: 0.5) } }
+        .overlay(alignment: .bottom) { if divider { Rectangle().fill(Read4.hairline).frame(height: 0.5) } }
         .accessibilityElement(children: .combine)
     }
 
     private func stepButton(_ symbol: String, label: LocalizedStringKey, action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            Image(systemName: symbol).font(.system(size: 18, weight: .semibold)).foregroundStyle(DX.Palette.text)
+            Image(systemName: symbol).font(.system(size: 18, weight: .semibold)).foregroundStyle(Read4.ink)
                 .frame(width: 44, height: 44)
-                .background(DX.Palette.surface2, in: Circle())
+                .background(Read4.surface, in: Circle())
         }
         .buttonStyle(.plain)
         .accessibilityLabel(Text(label))
@@ -294,14 +294,14 @@ struct RulerPicker: View {
                 tick.addLine(to: CGPoint(x: x, y: 34))
                 context.stroke(tick, with: .color(.primary.opacity(0.28)), style: StrokeStyle(lineWidth: 1.5, lineCap: .round))
                 if major {
-                    context.draw(Text(verbatim: label(v)).font(.custom(DX.Typeface.mono, fixedSize: 9)).foregroundStyle(.primary.opacity(0.4)),
+                    context.draw(Text(verbatim: label(v)).font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 600)).foregroundStyle(.primary.opacity(0.4)),
                                  at: CGPoint(x: x, y: 48))
                 }
             }
             var centre = Path()
             centre.move(to: CGPoint(x: mid, y: 8))
             centre.addLine(to: CGPoint(x: mid, y: 40))
-            context.stroke(centre, with: .color(DX.Palette.sage), style: StrokeStyle(lineWidth: 3, lineCap: .round))
+            context.stroke(centre, with: .color(Read4.accent), style: StrokeStyle(lineWidth: 3, lineCap: .round))
         }
         .frame(height: 54)
         .contentShape(Rectangle())

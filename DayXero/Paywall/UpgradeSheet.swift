@@ -11,24 +11,24 @@ struct UpgradeSheet: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DX.Space.xs) {
-            Text("Keep going with \(dayTitle)").dxText(.title).font(.custom(DX.Typeface.bold, size: 22, relativeTo: .title2))
+            Text("Keep going with \(dayTitle)").v4Text(.title).dxFont(24, weight: 700, style: .title2)
             Text("You finished Day 1. The full program takes you through Quit Day and the four weeks after.")
-                .dxText(.subtitle)
+                .v4Text(.subtitle)
             if let option = model.plans.first(where: { $0.plan == .annual }) ?? model.plans.first {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(option.plan == .annual ? "Yearly" : "Full program")
-                        .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
+                        .dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.ink)
                     if let end = model.trialEndDate, option.trialDays != nil {
                         Text("Free until \(end, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)), then \(option.priceText) a year")
-                            .dxText(.subtitle)
+                            .v4Text(.subtitle)
                     } else {
-                        Text(verbatim: option.priceText).dxText(.subtitle)
+                        Text(verbatim: option.priceText).v4Text(.subtitle)
                     }
                 }
                 .padding(14)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-                .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(DX.Palette.accentInk, lineWidth: 1.5))
+                .background(Read4.card, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(Read4.accent, lineWidth: 1.5))
                 .padding(.top, DX.Space.s)
                 .onAppear { model.select(option.plan) }
 
@@ -44,18 +44,18 @@ struct UpgradeSheet: View {
                         Text("Unlock for \(option.priceText)")
                     }
                 }
-                .buttonStyle(.dxPrimary)
+                .buttonStyle(.dx(.primary, on: .reading))
                 .disabled(model.phase != .ready)
                 .padding(.top, DX.Space.s)
             } else if model.phase == .failed {
-                Text("Couldn't reach the App Store. Check your connection and try again.").dxText(.subtitle)
+                Text("Couldn't reach the App Store. Check your connection and try again.").v4Text(.subtitle)
             } else {
                 ProgressView().frame(maxWidth: .infinity).padding(.vertical, DX.Space.l)
             }
-            Button("See all plans", action: showAllPlans).buttonStyle(.dxQuiet).frame(maxWidth: .infinity)
+            Button("See all plans", action: showAllPlans).buttonStyle(.dx(.quiet, on: .reading)).frame(maxWidth: .infinity)
         }
         .padding(DX.Space.l)
         .task { await model.load() }
-        .dxCanvas()
+        .background(Read4.background.ignoresSafeArea())
     }
 }

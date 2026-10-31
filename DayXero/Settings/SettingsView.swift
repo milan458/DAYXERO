@@ -85,9 +85,9 @@ struct SettingsSheet: View {
                         Toggle(isOn: $widgetPrivacyHome) { SettingLabel("Apply to Home Screen", systemImage: "apps.iphone") }
                     }
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Add Craving SOS to your Lock Screen").font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body))
+                        Text("Add Craving SOS to your Lock Screen").dxFont(16, weight: 600, style: .body)
                         Text("Long-press the Lock Screen, tap Customize, then swap the torch or camera button for Craving SOS.")
-                            .dxText(.subtitle)
+                            .v4Text(.subtitle)
                     }
                     .padding(.vertical, 2)
                 } header: {
@@ -107,7 +107,7 @@ struct SettingsSheet: View {
                     Button { exportURL = DataTools.export(context: context, profile: profile) } label: {
                         SettingLabel("Export my data", systemImage: "square.and.arrow.up")
                     }
-                    .foregroundStyle(DX.Palette.text)
+                    .foregroundStyle(Read4.ink)
                     Button(role: .destructive) { confirmDelete = true } label: {
                         Label("Delete all data", systemImage: "trash")
                     }
@@ -115,7 +115,7 @@ struct SettingsSheet: View {
                 Section {
                     NavigationLink(value: Page.health) { SettingLabel("Health information", systemImage: "heart") }
                     Link(destination: AppLinks.terms) { SettingLabel("Terms of use", systemImage: "doc.text") }
-                        .foregroundStyle(DX.Palette.text)
+                        .foregroundStyle(Read4.ink)
                 } header: {
                     Text("About")
                 } footer: {
@@ -124,7 +124,7 @@ struct SettingsSheet: View {
                         .padding(.top, DX.Space.s)
                 }
             }
-            .tint(DX.Palette.sage)
+            .tint(Read4.accent)
             .navigationTitle("Settings")
             .toolbar { ToolbarItem(placement: .topBarTrailing) { Button("Done") { dismiss() } } }
             .navigationDestination(for: Page.self) { page in
@@ -190,8 +190,8 @@ struct SettingLabel: View {
         Label {
             Text(title)
         } icon: {
-            Image(systemName: systemImage).font(.system(size: 13)).foregroundStyle(DX.Palette.accentInk)
-                .frame(width: 28, height: 28).background(DX.Palette.accentSoft, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+            Image(systemName: systemImage).font(.system(size: 13)).foregroundStyle(Read4.accent)
+                .frame(width: 28, height: 28).background(Read4.accentSoft, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
         }
     }
 }
@@ -232,9 +232,9 @@ struct ProductsSettingsView: View {
                     Button { editing = use } label: {
                         VStack(alignment: .leading, spacing: 4) {
                             HStack {
-                                Text(use.product.title).font(.custom(DX.Typeface.semibold, size: 16, relativeTo: .body))
+                                Text(use.product.title).dxFont(16, weight: 600, style: .body)
                                 Spacer()
-                                if use.isPrimary { Text("Main").dxText(.micro, color: DX.Palette.accentInk) }
+                                if use.isPrimary { Text("Main").v4Text(.micro, color: Read4.accent) }
                             }
                             Group {
                                 if use.product == .vape {
@@ -243,10 +243,10 @@ struct ProductsSettingsView: View {
                                     Text("\(Int(use.unitsPerDay)) \(Text(use.product.unit)) a day · \(use.pricePerPurchase.formatted(.currency(code: profile.currencyCode))) for \(Int(use.unitsPerPurchase))")
                                 }
                             }
-                            .dxText(.subtitle)
+                            .v4Text(.subtitle)
                         }
                     }
-                    .foregroundStyle(DX.Palette.text)
+                    .foregroundStyle(Read4.ink)
                 }
                 Menu {
                     ForEach(DayXeroCore.Product.allCases.filter { p in !profile.products.contains { $0.product == p } }, id: \.self) { p in
@@ -261,7 +261,7 @@ struct ProductsSettingsView: View {
             }
         }
         .navigationTitle("Products")
-        .tint(DX.Palette.sage)
+        .tint(Read4.accent)
         .sheet(item: $editing) { use in
             ProductEditor(use: use, profile: profile).presentationDetents([.large])
         }
@@ -294,14 +294,14 @@ struct CurrencySettingsView: View {
                     Button { choose(code) } label: {
                         HStack {
                             VStack(alignment: .leading, spacing: 2) {
-                                Text(verbatim: CurrencyChoice.name(code)).foregroundStyle(DX.Palette.text)
+                                Text(verbatim: CurrencyChoice.name(code)).foregroundStyle(Read4.ink)
                                 Text(verbatim: code == regional ? "\(code) · \(CurrencyChoice.symbol(code)) · \(String(localized: "your region"))"
                                                                 : "\(code) · \(CurrencyChoice.symbol(code))")
-                                    .dxText(.subtitle)
+                                    .v4Text(.subtitle)
                             }
                             Spacer()
                             if code == profile.currencyCode {
-                                Image(systemName: "checkmark").foregroundStyle(DX.Palette.accentInk)
+                                Image(systemName: "checkmark").foregroundStyle(Read4.accent)
                             }
                         }
                     }
@@ -313,7 +313,7 @@ struct CurrencySettingsView: View {
         }
         .searchable(text: $search, prompt: Text("Search currencies"))
         .navigationTitle("Currency")
-        .tint(DX.Palette.sage)
+        .tint(Read4.accent)
     }
 
     private func matches(_ code: String) -> Bool {
@@ -365,7 +365,7 @@ struct ProductEditor: View {
                         }
                     } else {
                         Stepper(value: $use.unitsPerDay, in: 1...2000, step: 1) {
-                            LabeledContent { Text(verbatim: "\(Int(use.unitsPerDay))") } label: { Text("\(Text(use.product.unit).foregroundStyle(DX.Palette.text)) a day") }
+                            LabeledContent { Text(verbatim: "\(Int(use.unitsPerDay))") } label: { Text("\(Text(use.product.unit).foregroundStyle(Read4.ink)) a day") }
                         }
                     }
                     if use.product == .cigarettes {
@@ -429,7 +429,7 @@ struct ProductEditor: View {
             }
             .onAppear { price = "\(use.pricePerPurchase)" }
         }
-        .tint(DX.Palette.sage)
+        .tint(Read4.accent)
     }
 }
 
@@ -451,11 +451,11 @@ struct QuitDaySettingsView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(profile.quitDay.formatted(.dateTime.weekday(.wide).day().month(.wide))).font(.custom(DX.Typeface.semibold, size: 17, relativeTo: .headline))
+                    Text(profile.quitDay.formatted(.dateTime.weekday(.wide).day().month(.wide))).dxFont(16, weight: 600, style: .headline)
                     if stats.isPrep(at: .now) {
-                        Text("In \(stats.daysUntilQuitDay(at: .now)) days").dxText(.subtitle)
+                        Text("In \(stats.daysUntilQuitDay(at: .now)) days").v4Text(.subtitle)
                     } else {
-                        Text("\(stats.daysClear(at: .now)) days clear").dxText(.subtitle)
+                        Text("\(stats.daysClear(at: .now)) days clear").v4Text(.subtitle)
                     }
                 }
             }
@@ -481,7 +481,7 @@ struct QuitDaySettingsView: View {
             } else {
                 Section {
                     Text("Your Quit Day has passed. If you'd like to start counting again from a new date, you can set one. Your lessons, logs and plans all stay.")
-                        .dxText(.subtitle)
+                        .v4Text(.subtitle)
                     if choosing {
                         DatePicker("New Quit Day", selection: $newDate, in: today...latest, displayedComponents: .date).datePickerStyle(.graphical)
                         Button("Use this date") { confirm = true }
@@ -492,7 +492,7 @@ struct QuitDaySettingsView: View {
             }
         }
         .navigationTitle("Quit Day")
-        .tint(DX.Palette.sage)
+        .tint(Read4.accent)
         .alert("Start counting from \(newDate.formatted(.dateTime.weekday(.wide).day().month()))?", isPresented: $confirm) {
             Button("Set new Quit Day") {
                 setQuitDay(newDate)
@@ -529,11 +529,11 @@ struct SubscriptionSettingsView: View {
             Section {
                 if let current {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Your plan").dxText(.micro)
-                        Text(verbatim: planLine(current)).font(.custom(DX.Typeface.semibold, size: 17, relativeTo: .headline))
+                        Text("Your plan").v4Text(.micro)
+                        Text(verbatim: planLine(current)).dxFont(16, weight: 600, style: .headline)
                         if let date = current.renews {
                             Text(current.willRenew ? "Renews on \(date.formatted(date: .long, time: .omitted))" : "Ends on \(date.formatted(date: .long, time: .omitted))")
-                                .dxText(.subtitle)
+                                .v4Text(.subtitle)
                         }
                     }
                     if current.plan != .lifetime {
@@ -570,7 +570,7 @@ struct SubscriptionSettingsView: View {
             }
         }
         .navigationTitle("DayXero Pro")
-        .tint(DX.Palette.sage)
+        .tint(Read4.accent)
         .task {
             current = await entitlement.store.currentPlan()
             plans = (try? await entitlement.store.loadPlans()) ?? []
@@ -621,16 +621,16 @@ struct PrivacySettingsView: View {
             }
         }
         .navigationTitle("Privacy")
-        .tint(DX.Palette.sage)
+        .tint(Read4.accent)
     }
 
     private func fact(_ icon: String, _ title: LocalizedStringKey, _ body: LocalizedStringKey) -> some View {
         HStack(alignment: .top, spacing: DX.Space.s) {
-            Image(systemName: icon).font(.system(size: 14)).foregroundStyle(DX.Palette.accentInk)
-                .frame(width: 30, height: 30).background(DX.Palette.accentSoft, in: Circle())
+            Image(systemName: icon).font(.system(size: 14)).foregroundStyle(Read4.accent)
+                .frame(width: 30, height: 30).background(Read4.accentSoft, in: Circle())
             VStack(alignment: .leading, spacing: 2) {
-                Text(title).font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body))
-                Text(body).dxText(.subtitle)
+                Text(title).dxFont(16, weight: 600, style: .body)
+                Text(body).v4Text(.subtitle)
             }
         }
         .padding(.vertical, 4)
@@ -650,11 +650,11 @@ struct HealthInfoView: View {
                 Text("Health facts in the app name their sources, and you can open each one.")
                 Text("If you're struggling with your mood, or in crisis, contact a doctor or your local emergency number.")
             }
-            .font(DX.TextStyle.body.font)
-            .foregroundStyle(DX.Palette.text)
+            .dxFont(16, weight: 400, style: .body)
+            .foregroundStyle(Read4.ink)
             .padding(DX.Space.m)
         }
-        .dxCanvas()
+        .background(Read4.background.ignoresSafeArea())
         .navigationTitle("Health information")
     }
 }

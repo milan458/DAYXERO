@@ -2,7 +2,7 @@ import DayXeroCore
 import SwiftUI
 
 /// The v4 reading tier (cream in light, navy #0E0B2B in dark): lessons, Program and Progress.
-/// Moved screens use these instead of the old `DX.Palette` until Phase 8 removes it.
+/// Every app screen on the reading ground uses these (the old palette was removed in Phase 8).
 enum Read4 {
     static let ground = DX.Ground.reading
     static let background = DX.Ground.reading.background
@@ -97,5 +97,131 @@ struct V4ProgressBar: View {
         .frame(height: 8)
         .accessibilityElement()
         .accessibilityValue(Text("\(Int((min(1, max(0, value)) * 100).rounded())) percent"))
+    }
+}
+
+/// A 44 pt round icon button on the reading ground (replaces the old `.dxIcon`).
+struct V4IconButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.system(size: 16, weight: .bold))
+            .foregroundStyle(Read4.ink)
+            .frame(width: 44, height: 44)
+            .background(Read4.surface, in: Circle())
+            .opacity(configuration.isPressed ? 0.7 : 1)
+    }
+}
+
+extension ButtonStyle where Self == V4IconButtonStyle {
+    static var v4Icon: V4IconButtonStyle { V4IconButtonStyle() }
+}
+
+/// An on/off chip with the old `DXChip` call shape.
+struct V4ToggleChip: View {
+    let title: LocalizedStringKey
+    @Binding var isOn: Bool
+
+    init(_ title: LocalizedStringKey, isOn: Binding<Bool>) {
+        self.title = title
+        _isOn = isOn
+    }
+
+    var body: some View {
+        Button { isOn.toggle() } label: {
+            Text(title)
+                .dxFont(16, weight: isOn ? 700 : 600, style: .body)
+                .foregroundStyle(isOn ? Read4.onInk : Read4.ink)
+                .padding(.horizontal, 14)
+                .frame(minHeight: 44)
+                .background(isOn ? Read4.ink : Read4.surface, in: RoundedRectangle(cornerRadius: DX.Layout.answerChipRadius, style: .continuous))
+        }
+        .buttonStyle(.plain)
+        .sensoryFeedback(DX.Haptic.select, trigger: isOn)
+        .accessibilityAddTraits(isOn ? [.isButton, .isSelected] : .isButton)
+    }
+}
+
+/// A chip in a set, with the old `DXSetChip` call shape.
+struct V4SetChip<Value: Hashable>: View {
+    let title: LocalizedStringResource
+    let value: Value
+    @Binding var selection: Set<Value>
+
+    init(_ title: LocalizedStringResource, value: Value, selection: Binding<Set<Value>>) {
+        self.title = title
+        self.value = value
+        _selection = selection
+    }
+
+    var body: some View {
+        let on = selection.contains(value)
+        return V4ToggleChip(LocalizedStringKey(String(localized: title)), isOn: Binding(
+            get: { on },
+            set: { if $0 { selection.insert(value) } else { selection.remove(value) } }
+        ))
+    }
+}
+
+/// A labelled text field on the reading ground, with the old `DXTextField` call shape.
+struct V4TextField: View {
+    let label: LocalizedStringKey
+    let prompt: LocalizedStringKey
+    @Binding var text: String
+
+    init(_ label: LocalizedStringKey, prompt: LocalizedStringKey, text: Binding<String>) {
+        self.label = label
+        self.prompt = prompt
+        _text = text
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(label).dxType(.caption).textCase(.uppercase).foregroundStyle(Read4.muted)
+            TextField("", text: $text, prompt: Text(prompt).foregroundStyle(Read4.muted))
+                .dxType(.body)
+                .foregroundStyle(Read4.ink)
+                .padding(.horizontal, 14)
+                .frame(minHeight: 48)
+                .background(Read4.surface, in: RoundedRectangle(cornerRadius: DX.Layout.answerChipRadius, style: .continuous))
+                .accessibilityLabel(Text(label))
+        }
+    }
+}
+
+/// An empty or error state on the reading ground, with the old `DXStateView` call shape.
+struct V4StateView: View {
+    enum Kind { case empty, error }
+    let kind: Kind
+    let systemImage: String
+    let title: LocalizedStringKey
+    let message: LocalizedStringKey
+    var actionTitle: LocalizedStringKey?
+    var action: (() -> Void)?
+
+    init(_ kind: Kind, systemImage: String, title: LocalizedStringKey, message: LocalizedStringKey,
+         actionTitle: LocalizedStringKey? = nil, action: (() -> Void)? = nil) {
+        self.kind = kind
+        self.systemImage = systemImage
+        self.title = title
+        self.message = message
+        self.actionTitle = actionTitle
+        self.action = action
+    }
+
+    var body: some View {
+        VStack(spacing: 12) {
+            Image(systemName: systemImage).font(.system(size: 26, weight: .semibold))
+                .foregroundStyle(kind == .error ? Read4.amber : Read4.accent)
+                .frame(width: 64, height: 64)
+                .background(kind == .error ? Read4.amber.opacity(0.12) : Read4.accentSoft, in: Circle())
+                .accessibilityHidden(true)
+            Text(title).dxType(.title).foregroundStyle(Read4.ink).multilineTextAlignment(.center)
+            Text(message).dxType(.body).foregroundStyle(Read4.muted).multilineTextAlignment(.center)
+            if let actionTitle, let action {
+                Button(actionTitle, action: action).buttonStyle(.dx(.primary, on: .reading)).padding(.top, 6)
+            }
+        }
+        .padding(DX.Space.l)
+        .frame(maxWidth: .infinity)
     }
 }
