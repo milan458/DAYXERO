@@ -2,32 +2,17 @@
  "v": 3,
  "createdOnFiles": {
   "v": 1,
-  "at": "2026-10-30T16:40:00Z"
+  "at": "2026-10-31T09:58:29Z"
  },
- "title": "DayXero Illustrated Screens",
+ "title": "DayXero · v4 design system",
  "launch": {
-  "view": "canvas"
+  "view": "canvas",
+  "page": "final"
  },
  "pages": [
   {
-   "id": "screens",
-   "name": "App screens"
-  },
-  {
-   "id": "characters",
-   "name": "Character exploration"
-  },
-  {
-   "id": "night",
-   "name": "DayXero Night (polished)"
-  },
-  {
-   "id": "v3",
-   "name": "v3 · Light + dark (follows phone)"
-  },
-  {
-   "id": "story",
-   "name": "Story · Glim × Xero + Jelli"
+   "id": "final",
+   "name": "v4 · Final direction (Crew content × Alive feel)"
   },
   {
    "id": "trio",
@@ -38,683 +23,261 @@
    "name": "Alive · colour, motion, personal"
   },
   {
-   "id": "final",
-   "name": "v4 · Final direction (Crew content × Alive feel)"
+   "id": "v3",
+   "name": "v3 · Light + dark (follows phone)"
+  },
+  {
+   "id": "night",
+   "name": "DayXero Night (polished)"
+  },
+  {
+   "id": "characters",
+   "name": "Character exploration"
+  },
+  {
+   "id": "screens",
+   "name": "App screens"
+  },
+  {
+   "id": "story",
+   "name": "Story · Glim × Xero + Jelli"
   }
  ],
  "boards": {
-  "Main.dc.html": {
+  "FinalSheet.dc.html": {
    "x": 0,
    "y": 0,
-   "w": 390,
-   "h": 844,
-   "title": "01 · Welcome (onboarding)",
-   "radius": 44
+   "w": 1500,
+   "h": 820,
+   "page": "final",
+   "title": "Final rules · persona, colour, type, size, motion"
   },
-  "Home.dc.html": {
-   "x": 470,
+  "Nav2.dc.html": {
+   "x": 1580,
    "y": 0,
    "w": 390,
-   "h": 844,
-   "title": "02 · Today (home)",
-   "radius": 44
+   "h": 100,
+   "page": "final",
+   "title": "Tab bar v4 (component)"
   },
-  "SOS.dc.html": {
-   "x": 940,
-   "y": 0,
-   "w": 390,
-   "h": 844,
-   "title": "03 · Craving SOS",
-   "radius": 44
-  },
-  "Milestone.dc.html": {
-   "x": 1410,
-   "y": 0,
-   "w": 390,
-   "h": 844,
-   "title": "04 · Milestone + health",
-   "radius": 44
-  },
-  "Products.dc.html": {
+  "F01Breathe.dc.html": {
    "x": 0,
-   "y": 1300,
+   "y": 1200,
    "w": 390,
    "h": 844,
-   "title": "05 · Onboarding: what you use",
-   "radius": 44
+   "page": "final",
+   "title": "O1 · Breathe · coral",
+   "is_interactive": true
   },
-  "Reasons.dc.html": {
+  "F02Welcome.dc.html": {
    "x": 470,
-   "y": 1300,
+   "y": 1200,
    "w": 390,
    "h": 844,
-   "title": "06 · Onboarding: your why",
-   "radius": 44
+   "page": "final",
+   "title": "O2 · Welcome · apricot",
+   "is_interactive": true
   },
-  "QuitDay.dc.html": {
+  "F03Chat.dc.html": {
    "x": 940,
-   "y": 1300,
+   "y": 1200,
    "w": 390,
    "h": 844,
-   "title": "07 · Onboarding: Quit Day",
-   "radius": 44
+   "page": "final",
+   "title": "O3 · Questions · lilac",
+   "is_interactive": true
   },
-  "Plan.dc.html": {
+  "F04QuitDay.dc.html": {
    "x": 1410,
-   "y": 1300,
+   "y": 1200,
    "w": 390,
    "h": 844,
-   "title": "08 · Plan reveal",
-   "radius": 44
+   "page": "final",
+   "title": "O4 · Quit Day · apricot",
+   "is_interactive": true
   },
-  "Paywall.dc.html": {
+  "F05Crew.dc.html": {
    "x": 1880,
-   "y": 1300,
+   "y": 1200,
    "w": 390,
    "h": 844,
-   "title": "09 · Paywall",
-   "radius": 44
+   "page": "final",
+   "title": "O5 · Your plan builds · mint",
+   "is_interactive": true
   },
-  "Program.dc.html": {
-   "x": 0,
-   "y": 2600,
-   "w": 390,
-   "h": 844,
-   "title": "10 · Program map",
-   "radius": 44
-  },
-  "Lesson.dc.html": {
-   "x": 470,
-   "y": 2600,
-   "w": 390,
-   "h": 844,
-   "title": "11 · Lesson player",
-   "radius": 44
-  },
-  "Insights.dc.html": {
-   "x": 940,
-   "y": 2600,
-   "w": 390,
-   "h": 844,
-   "title": "12 · Insights",
-   "radius": 44
-  },
-  "Slip.dc.html": {
-   "x": 1410,
-   "y": 2600,
-   "w": 390,
-   "h": 844,
-   "title": "13 · Slip debrief",
-   "radius": 44
-  },
-  "NRT.dc.html": {
-   "x": 1880,
-   "y": 2600,
-   "w": 390,
-   "h": 844,
-   "title": "14 · NRT co-pilot",
-   "radius": 44
-  },
-  "Timeline.dc.html": {
-   "x": 0,
-   "y": 3900,
-   "w": 390,
-   "h": 844,
-   "title": "15 · Health timeline",
-   "radius": 44
-  },
-  "Pledge.dc.html": {
-   "x": 470,
-   "y": 3900,
-   "w": 390,
-   "h": 844,
-   "title": "16 · Morning pledge",
-   "radius": 44
-  },
-  "CheckIn.dc.html": {
-   "x": 940,
-   "y": 3900,
-   "w": 390,
-   "h": 844,
-   "title": "17 · Evening check-in",
-   "radius": 44
-  },
-  "Calm.dc.html": {
-   "x": 1410,
-   "y": 3900,
-   "w": 390,
-   "h": 844,
-   "title": "18 · Calm toolkit",
-   "radius": 44
-  },
-  "Settings.dc.html": {
-   "x": 1880,
-   "y": 3900,
-   "w": 390,
-   "h": 844,
-   "title": "19 · Settings + privacy",
-   "radius": 44
-  },
-  "LockScreen.dc.html": {
+  "F06Plan.dc.html": {
    "x": 2350,
-   "y": 3900,
+   "y": 1200,
    "w": 390,
    "h": 844,
-   "title": "20 · Notifications + widgets",
-   "radius": 44
+   "page": "final",
+   "title": "O6 · Plan + trial proposal · mint",
+   "is_interactive": true
   },
-  "Sprout.dc.html": {
+  "F07Remind.dc.html": {
+   "x": 2820,
+   "y": 1200,
+   "w": 390,
+   "h": 844,
+   "page": "final",
+   "title": "O7 · Reminders · apricot",
+   "is_interactive": true
+  },
+  "F08Today.dc.html": {
    "x": 0,
-   "y": 0,
-   "w": 240,
-   "h": 240,
-   "title": "A · Sprout (component)",
-   "page": "characters"
-  },
-  "SproutSheet.dc.html": {
-   "x": 320,
-   "y": 0,
-   "w": 900,
-   "h": 560,
-   "title": "A · Sprout sheet",
-   "page": "characters",
-   "radius": 32
-  },
-  "SproutHome.dc.html": {
-   "x": 1300,
-   "y": 0,
+   "y": 2460,
    "w": 390,
    "h": 844,
-   "title": "A · Sprout on Home",
-   "page": "characters",
-   "radius": 44
+   "page": "final",
+   "title": "D1 · Today · adapts (try Tweaks)",
+   "is_interactive": true
   },
-  "SproutSOS.dc.html": {
-   "x": 1770,
-   "y": 0,
+  "F09Pledge.dc.html": {
+   "x": 470,
+   "y": 2460,
    "w": 390,
    "h": 844,
-   "title": "A · Sprout on SOS",
-   "page": "characters",
-   "radius": 44
+   "page": "final",
+   "title": "D2 · Pledge · apricot",
+   "is_interactive": true
+  },
+  "F10Program.dc.html": {
+   "x": 940,
+   "y": 2460,
+   "w": 390,
+   "h": 844,
+   "page": "final",
+   "title": "D3 · Program · reading",
+   "is_interactive": true
+  },
+  "F11Lesson.dc.html": {
+   "x": 1410,
+   "y": 2460,
+   "w": 390,
+   "h": 844,
+   "page": "final",
+   "title": "D4 · Lesson · reading",
+   "is_interactive": true
+  },
+  "F12Progress.dc.html": {
+   "x": 1880,
+   "y": 2460,
+   "w": 390,
+   "h": 844,
+   "page": "final",
+   "title": "D5 · Progress · reading",
+   "is_interactive": true
+  },
+  "F13SOS.dc.html": {
+   "x": 0,
+   "y": 3720,
+   "w": 390,
+   "h": 844,
+   "page": "final",
+   "title": "W1 · SOS · ocean",
+   "is_interactive": true
+  },
+  "F14Passed.dc.html": {
+   "x": 470,
+   "y": 3720,
+   "w": 390,
+   "h": 844,
+   "page": "final",
+   "title": "W2 · Passed · sky",
+   "is_interactive": true
+  },
+  "F15Slip.dc.html": {
+   "x": 940,
+   "y": 3720,
+   "w": 390,
+   "h": 844,
+   "page": "final",
+   "title": "W3 · Slip · quiet tier",
+   "is_interactive": true
+  },
+  "F16CheckIn.dc.html": {
+   "x": 1410,
+   "y": 3720,
+   "w": 390,
+   "h": 844,
+   "page": "final",
+   "title": "N1 · Check-in · violet",
+   "is_interactive": true
+  },
+  "F17WindDown.dc.html": {
+   "x": 1880,
+   "y": 3720,
+   "w": 390,
+   "h": 844,
+   "page": "final",
+   "title": "N2 · Wind down · violet",
+   "is_interactive": true
+  },
+  "F18Finale.dc.html": {
+   "x": 2350,
+   "y": 3720,
+   "w": 390,
+   "h": 844,
+   "page": "final",
+   "title": "T1 · Week 4 · sun",
+   "is_interactive": true
+  },
+  "FDarkA.dc.html": {
+   "x": 0,
+   "y": 4980,
+   "w": 4150,
+   "h": 844,
+   "page": "final",
+   "title": "Dark mode · O1–D2"
+  },
+  "FDarkB.dc.html": {
+   "x": 0,
+   "y": 6240,
+   "w": 4150,
+   "h": 844,
+   "page": "final",
+   "title": "Dark mode · D3–T1"
   },
   "Xero.dc.html": {
-   "x": 0,
-   "y": 1270,
+   "x": 2100,
+   "y": 0,
    "w": 240,
    "h": 240,
    "title": "B · Xero (component)",
-   "page": "characters"
-  },
-  "XeroSheet.dc.html": {
-   "x": 320,
-   "y": 1270,
-   "w": 900,
-   "h": 560,
-   "title": "B · Xero sheet",
-   "page": "characters",
-   "radius": 32
-  },
-  "XeroHome.dc.html": {
-   "x": 1300,
-   "y": 1270,
-   "w": 390,
-   "h": 844,
-   "title": "B · Xero on Home",
-   "page": "characters",
-   "radius": 44
-  },
-  "XeroSOS.dc.html": {
-   "x": 1770,
-   "y": 1270,
-   "w": 390,
-   "h": 844,
-   "title": "B · Xero on SOS",
-   "page": "characters",
-   "radius": 44
-  },
-  "Pebble.dc.html": {
-   "x": 0,
-   "y": 2540,
-   "w": 240,
-   "h": 240,
-   "title": "C · Pebble (component)",
-   "page": "characters"
-  },
-  "PebbleSheet.dc.html": {
-   "x": 320,
-   "y": 2540,
-   "w": 900,
-   "h": 560,
-   "title": "C · Pebble sheet",
-   "page": "characters",
-   "radius": 32
-  },
-  "PebbleHome.dc.html": {
-   "x": 1300,
-   "y": 2540,
-   "w": 390,
-   "h": 844,
-   "title": "C · Pebble on Home",
-   "page": "characters",
-   "radius": 44
-  },
-  "PebbleSOS.dc.html": {
-   "x": 1770,
-   "y": 2540,
-   "w": 390,
-   "h": 844,
-   "title": "C · Pebble on SOS",
-   "page": "characters",
-   "radius": 44
-  },
-  "Wren.dc.html": {
-   "x": 0,
-   "y": 3810,
-   "w": 240,
-   "h": 240,
-   "title": "D · Wren (component)",
-   "page": "characters"
-  },
-  "WrenSheet.dc.html": {
-   "x": 320,
-   "y": 3810,
-   "w": 900,
-   "h": 560,
-   "title": "D · Wren sheet",
-   "page": "characters",
-   "radius": 32
-  },
-  "WrenHome.dc.html": {
-   "x": 1300,
-   "y": 3810,
-   "w": 390,
-   "h": 844,
-   "title": "D · Wren on Home",
-   "page": "characters",
-   "radius": 44
-  },
-  "WrenSOS.dc.html": {
-   "x": 1770,
-   "y": 3810,
-   "w": 390,
-   "h": 844,
-   "title": "D · Wren on SOS",
-   "page": "characters",
-   "radius": 44
+   "page": "final"
   },
   "Jelli.dc.html": {
-   "x": 0,
-   "y": 5080,
+   "x": 2580,
+   "y": 0,
    "w": 240,
    "h": 240,
    "title": "E · Jelli (component)",
-   "page": "characters"
+   "page": "final"
   },
-  "JelliSheet.dc.html": {
-   "x": 320,
-   "y": 5080,
-   "w": 900,
-   "h": 560,
-   "title": "E · Jelli sheet",
-   "page": "characters",
-   "radius": 32
-  },
-  "JelliHome.dc.html": {
-   "x": 1300,
-   "y": 5080,
-   "w": 390,
-   "h": 844,
-   "title": "E · Jelli on Home",
-   "page": "characters",
-   "radius": 44
-  },
-  "JelliSOS.dc.html": {
-   "x": 1770,
-   "y": 5080,
-   "w": 390,
-   "h": 844,
-   "title": "E · Jelli on SOS",
-   "page": "characters",
-   "radius": 44
-  },
-  "Kip.dc.html": {
-   "x": 0,
-   "y": 6350,
+  "Glim2.dc.html": {
+   "x": 3060,
+   "y": 0,
    "w": 240,
    "h": 240,
-   "title": "F · Kip (component)",
-   "page": "characters"
+   "title": "Glim, night tone (component)",
+   "page": "final"
   },
-  "KipSheet.dc.html": {
-   "x": 320,
-   "y": 6350,
-   "w": 900,
-   "h": 560,
-   "title": "F · Kip sheet",
-   "page": "characters",
-   "radius": 32
-  },
-  "KipHome.dc.html": {
-   "x": 1300,
-   "y": 6350,
-   "w": 390,
-   "h": 844,
-   "title": "F · Kip on Home",
-   "page": "characters",
-   "radius": 44
-  },
-  "KipSOS.dc.html": {
-   "x": 1770,
-   "y": 6350,
-   "w": 390,
-   "h": 844,
-   "title": "F · Kip on SOS",
-   "page": "characters",
-   "radius": 44
-  },
-  "Pace.dc.html": {
-   "x": 0,
-   "y": 7620,
-   "w": 240,
-   "h": 240,
-   "title": "G · Pace (component)",
-   "page": "characters"
-  },
-  "PaceSheet.dc.html": {
-   "x": 320,
-   "y": 7620,
-   "w": 900,
-   "h": 560,
-   "title": "G · Pace sheet",
-   "page": "characters",
-   "radius": 32
-  },
-  "PaceHome.dc.html": {
-   "x": 1300,
-   "y": 7620,
-   "w": 390,
-   "h": 844,
-   "title": "G · Pace on Home",
-   "page": "characters",
-   "radius": 44
-  },
-  "PaceSOS.dc.html": {
-   "x": 1770,
-   "y": 7620,
-   "w": 390,
-   "h": 844,
-   "title": "G · Pace on SOS",
-   "page": "characters",
-   "radius": 44
-  },
-  "Glim.dc.html": {
-   "x": 0,
-   "y": 8890,
-   "w": 240,
-   "h": 240,
-   "title": "H · Glim (component)",
-   "page": "characters"
-  },
-  "GlimSheet.dc.html": {
-   "x": 320,
-   "y": 8890,
-   "w": 900,
-   "h": 560,
-   "title": "H · Glim sheet",
-   "page": "characters",
-   "radius": 32
-  },
-  "GlimHome.dc.html": {
-   "x": 1300,
-   "y": 8890,
-   "w": 390,
-   "h": 844,
-   "title": "H · Glim on Home",
-   "page": "characters",
-   "radius": 44
-  },
-  "GlimSOS.dc.html": {
-   "x": 1770,
-   "y": 8890,
-   "w": 390,
-   "h": 844,
-   "title": "H · Glim on SOS",
-   "page": "characters",
-   "radius": 44
-  },
-  "NightSystem.dc.html": {
-   "x": 0,
-   "y": 0,
-   "w": 1100,
-   "h": 760,
-   "title": "N0 · System sheet",
-   "page": "night",
-   "radius": 32
-  },
-  "Art.dc.html": {
-   "x": 1180,
-   "y": 0,
-   "w": 320,
-   "h": 240,
-   "title": "N · Art tile (component)",
-   "page": "night",
-   "radius": 24
-  },
-  "NightWelcome.dc.html": {
-   "x": 0,
-   "y": 1100,
-   "w": 390,
-   "h": 844,
-   "title": "N1 · Welcome",
-   "page": "night",
-   "radius": 44
-  },
-  "NightToday.dc.html": {
-   "x": 470,
-   "y": 1100,
-   "w": 390,
-   "h": 844,
-   "title": "N2 · Today",
-   "page": "night",
-   "radius": 44
-  },
-  "NightExplore.dc.html": {
-   "x": 940,
-   "y": 1100,
-   "w": 390,
-   "h": 844,
-   "title": "N3 · Explore / toolkit",
-   "page": "night",
-   "radius": 44
-  },
-  "NightSOS.dc.html": {
-   "x": 1410,
-   "y": 1100,
-   "w": 390,
-   "h": 844,
-   "title": "N4 · Craving SOS",
-   "page": "night",
-   "radius": 44
-  },
-  "NightProgress.dc.html": {
-   "x": 1880,
-   "y": 1100,
-   "w": 390,
-   "h": 844,
-   "title": "N5 · Progress",
-   "page": "night",
-   "radius": 44
-  },
-  "NightMilestone.dc.html": {
-   "x": 2350,
-   "y": 1100,
-   "w": 390,
-   "h": 844,
-   "title": "N6 · Milestone",
-   "page": "night",
-   "radius": 44
-  },
-  "V3System.dc.html": {
-   "x": 0,
-   "y": 0,
-   "w": 1300,
-   "h": 820,
-   "title": "v3 · System: light + dark",
-   "page": "v3",
-   "radius": 32
-  },
-  "Horizon.dc.html": {
-   "x": 1380,
+  "Horizon2.dc.html": {
+   "x": 3540,
    "y": 0,
    "w": 400,
    "h": 300,
-   "title": "v3 · Horizon art (component)",
-   "page": "v3",
+   "title": "Horizon, alive (component)",
+   "page": "final",
    "radius": 24
   },
-  "OB1Breathe.dc.html": {
-   "x": 0,
-   "y": 1140,
-   "w": 390,
-   "h": 844,
-   "title": "1 · Breathe intro",
-   "page": "v3",
-   "radius": 44
-  },
-  "OB2Welcome.dc.html": {
-   "x": 470,
-   "y": 1140,
-   "w": 390,
-   "h": 844,
-   "title": "2 · Welcome",
-   "page": "v3",
-   "radius": 44
-  },
-  "OB3Chat.dc.html": {
-   "x": 940,
-   "y": 1140,
-   "w": 390,
-   "h": 844,
-   "title": "3 · Chat questions",
-   "page": "v3",
-   "radius": 44
-  },
-  "OB4Building.dc.html": {
-   "x": 1410,
-   "y": 1140,
-   "w": 390,
-   "h": 844,
-   "title": "4 · Building your plan",
-   "page": "v3",
-   "radius": 44
-  },
-  "OB5Plan.dc.html": {
-   "x": 1880,
-   "y": 1140,
-   "w": 390,
-   "h": 844,
-   "title": "5 · Plan + trial",
-   "page": "v3",
-   "radius": 44
-  },
-  "OB6Notify.dc.html": {
-   "x": 2350,
-   "y": 1140,
-   "w": 390,
-   "h": 844,
-   "title": "6 · Reminders",
-   "page": "v3",
-   "radius": 44
-  },
-  "V3Today.dc.html": {
-   "x": 2820,
-   "y": 1140,
-   "w": 390,
-   "h": 844,
-   "title": "7 · Today",
-   "page": "v3",
-   "radius": 44
-  },
-  "V3DarkRow.dc.html": {
-   "x": 0,
-   "y": 2400,
-   "w": 3210,
-   "h": 844,
-   "title": "Same screens, phone in dark mode",
-   "page": "v3",
-   "radius": 44
-  },
-  "StorySheet.dc.html": {
-   "x": 0,
+  "Hero2.dc.html": {
+   "x": 4020,
    "y": 0,
-   "w": 1300,
-   "h": 760,
-   "title": "Story · Glim × Xero, with Jelli",
-   "page": "story",
-   "radius": 32
-  },
-  "GlimX.dc.html": {
-   "x": 1380,
-   "y": 0,
-   "w": 240,
-   "h": 240,
-   "title": "Glim × Xero (component)",
-   "page": "story"
-  },
-  "StBreathe.dc.html": {
-   "x": 0,
-   "y": 1080,
    "w": 390,
-   "h": 844,
-   "title": "1 · Glim breathes with you",
-   "page": "story",
-   "radius": 44
-  },
-  "StWelcome.dc.html": {
-   "x": 470,
-   "y": 1080,
-   "w": 390,
-   "h": 844,
-   "title": "2 · Welcome",
-   "page": "story",
-   "radius": 44
-  },
-  "StSOS.dc.html": {
-   "x": 940,
-   "y": 1080,
-   "w": 390,
-   "h": 844,
-   "title": "3 · SOS hands over to Jelli",
-   "page": "story",
-   "radius": 44
-  },
-  "StNight.dc.html": {
-   "x": 1410,
-   "y": 1080,
-   "w": 390,
-   "h": 844,
-   "title": "4 · Evening check-in",
-   "page": "story",
-   "radius": 44
-  },
-  "StMilestone.dc.html": {
-   "x": 1880,
-   "y": 1080,
-   "w": 390,
-   "h": 844,
-   "title": "5 · Milestone",
-   "page": "story",
-   "radius": 44
-  },
-  "StDarkRow.dc.html": {
-   "x": 0,
-   "y": 2340,
-   "w": 2270,
-   "h": 844,
-   "title": "Story screens, phone in dark mode",
-   "page": "story",
-   "radius": 44
+   "h": 300,
+   "title": "Hero, alive (component)",
+   "page": "final"
   },
   "CrewSheet.dc.html": {
    "x": 0,
@@ -724,14 +287,6 @@
    "title": "The Crew · story + roles",
    "page": "trio",
    "radius": 32
-  },
-  "Glim2.dc.html": {
-   "x": 1580,
-   "y": 0,
-   "w": 240,
-   "h": 240,
-   "title": "Glim, night tone (component)",
-   "page": "trio"
   },
   "Hero.dc.html": {
    "x": 1580,
@@ -938,6 +493,15 @@
    "page": "trio",
    "radius": 44
   },
+  "Horizon.dc.html": {
+   "x": 1380,
+   "y": 0,
+   "w": 400,
+   "h": 300,
+   "title": "v3 · Horizon art (component)",
+   "page": "v3",
+   "radius": 24
+  },
   "AliveSheet.dc.html": {
    "x": 0,
    "y": 0,
@@ -946,23 +510,6 @@
    "title": "Colour, motion + personalisation rules",
    "page": "alive",
    "radius": 32
-  },
-  "Horizon2.dc.html": {
-   "x": 1580,
-   "y": 0,
-   "w": 400,
-   "h": 300,
-   "title": "Horizon, alive (component)",
-   "page": "alive",
-   "radius": 24
-  },
-  "Hero2.dc.html": {
-   "x": 1580,
-   "y": 380,
-   "w": 390,
-   "h": 300,
-   "title": "Hero, alive (component)",
-   "page": "alive"
   },
   "A01Breathe.dc.html": {
    "x": 0,
@@ -1063,282 +610,740 @@
    "page": "alive",
    "radius": 44
   },
-  "FinalSheet.dc.html": {
+  "V3System.dc.html": {
    "x": 0,
    "y": 0,
-   "w": 1500,
+   "w": 1300,
    "h": 820,
-   "page": "final",
-   "title": "Final rules · persona, colour, type, size, motion"
+   "title": "v3 · System: light + dark",
+   "page": "v3",
+   "radius": 32
   },
-  "Nav2.dc.html": {
-   "x": 1580,
+  "OB1Breathe.dc.html": {
+   "x": 0,
+   "y": 1140,
+   "w": 390,
+   "h": 844,
+   "title": "1 · Breathe intro",
+   "page": "v3",
+   "radius": 44
+  },
+  "OB2Welcome.dc.html": {
+   "x": 470,
+   "y": 1140,
+   "w": 390,
+   "h": 844,
+   "title": "2 · Welcome",
+   "page": "v3",
+   "radius": 44
+  },
+  "OB3Chat.dc.html": {
+   "x": 940,
+   "y": 1140,
+   "w": 390,
+   "h": 844,
+   "title": "3 · Chat questions",
+   "page": "v3",
+   "radius": 44
+  },
+  "OB4Building.dc.html": {
+   "x": 1410,
+   "y": 1140,
+   "w": 390,
+   "h": 844,
+   "title": "4 · Building your plan",
+   "page": "v3",
+   "radius": 44
+  },
+  "OB5Plan.dc.html": {
+   "x": 1880,
+   "y": 1140,
+   "w": 390,
+   "h": 844,
+   "title": "5 · Plan + trial",
+   "page": "v3",
+   "radius": 44
+  },
+  "OB6Notify.dc.html": {
+   "x": 2350,
+   "y": 1140,
+   "w": 390,
+   "h": 844,
+   "title": "6 · Reminders",
+   "page": "v3",
+   "radius": 44
+  },
+  "V3Today.dc.html": {
+   "x": 2820,
+   "y": 1140,
+   "w": 390,
+   "h": 844,
+   "title": "7 · Today",
+   "page": "v3",
+   "radius": 44
+  },
+  "V3DarkRow.dc.html": {
+   "x": 0,
+   "y": 2400,
+   "w": 3210,
+   "h": 844,
+   "title": "Same screens, phone in dark mode",
+   "page": "v3",
+   "radius": 44
+  },
+  "NightSystem.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 1100,
+   "h": 760,
+   "title": "N0 · System sheet",
+   "page": "night",
+   "radius": 32
+  },
+  "Art.dc.html": {
+   "x": 1180,
+   "y": 0,
+   "w": 320,
+   "h": 240,
+   "title": "N · Art tile (component)",
+   "page": "night",
+   "radius": 24
+  },
+  "NightWelcome.dc.html": {
+   "x": 0,
+   "y": 1100,
+   "w": 390,
+   "h": 844,
+   "title": "N1 · Welcome",
+   "page": "night",
+   "radius": 44
+  },
+  "NightToday.dc.html": {
+   "x": 470,
+   "y": 1100,
+   "w": 390,
+   "h": 844,
+   "title": "N2 · Today",
+   "page": "night",
+   "radius": 44
+  },
+  "NightExplore.dc.html": {
+   "x": 940,
+   "y": 1100,
+   "w": 390,
+   "h": 844,
+   "title": "N3 · Explore / toolkit",
+   "page": "night",
+   "radius": 44
+  },
+  "NightSOS.dc.html": {
+   "x": 1410,
+   "y": 1100,
+   "w": 390,
+   "h": 844,
+   "title": "N4 · Craving SOS",
+   "page": "night",
+   "radius": 44
+  },
+  "NightProgress.dc.html": {
+   "x": 1880,
+   "y": 1100,
+   "w": 390,
+   "h": 844,
+   "title": "N5 · Progress",
+   "page": "night",
+   "radius": 44
+  },
+  "NightMilestone.dc.html": {
+   "x": 2350,
+   "y": 1100,
+   "w": 390,
+   "h": 844,
+   "title": "N6 · Milestone",
+   "page": "night",
+   "radius": 44
+  },
+  "Sprout.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 240,
+   "h": 240,
+   "title": "A · Sprout (component)",
+   "page": "characters"
+  },
+  "SproutSheet.dc.html": {
+   "x": 320,
+   "y": 0,
+   "w": 900,
+   "h": 560,
+   "title": "A · Sprout sheet",
+   "page": "characters",
+   "radius": 32
+  },
+  "SproutHome.dc.html": {
+   "x": 1300,
    "y": 0,
    "w": 390,
-   "h": 100,
-   "page": "final",
-   "title": "Tab bar v4 (component)"
+   "h": 844,
+   "title": "A · Sprout on Home",
+   "page": "characters",
+   "radius": 44
   },
-  "F01Breathe.dc.html": {
+  "SproutSOS.dc.html": {
+   "x": 1770,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "A · Sprout on SOS",
+   "page": "characters",
+   "radius": 44
+  },
+  "XeroSheet.dc.html": {
+   "x": 320,
+   "y": 1270,
+   "w": 900,
+   "h": 560,
+   "title": "B · Xero sheet",
+   "page": "characters",
+   "radius": 32
+  },
+  "XeroHome.dc.html": {
+   "x": 1300,
+   "y": 1270,
+   "w": 390,
+   "h": 844,
+   "title": "B · Xero on Home",
+   "page": "characters",
+   "radius": 44
+  },
+  "XeroSOS.dc.html": {
+   "x": 1770,
+   "y": 1270,
+   "w": 390,
+   "h": 844,
+   "title": "B · Xero on SOS",
+   "page": "characters",
+   "radius": 44
+  },
+  "Pebble.dc.html": {
    "x": 0,
-   "y": 1200,
+   "y": 2540,
+   "w": 240,
+   "h": 240,
+   "title": "C · Pebble (component)",
+   "page": "characters"
+  },
+  "PebbleSheet.dc.html": {
+   "x": 320,
+   "y": 2540,
+   "w": 900,
+   "h": 560,
+   "title": "C · Pebble sheet",
+   "page": "characters",
+   "radius": 32
+  },
+  "PebbleHome.dc.html": {
+   "x": 1300,
+   "y": 2540,
    "w": 390,
    "h": 844,
-   "page": "final",
-   "title": "O1 · Breathe · coral",
-   "is_interactive": true
+   "title": "C · Pebble on Home",
+   "page": "characters",
+   "radius": 44
   },
-  "F02Welcome.dc.html": {
+  "PebbleSOS.dc.html": {
+   "x": 1770,
+   "y": 2540,
+   "w": 390,
+   "h": 844,
+   "title": "C · Pebble on SOS",
+   "page": "characters",
+   "radius": 44
+  },
+  "Wren.dc.html": {
+   "x": 0,
+   "y": 3810,
+   "w": 240,
+   "h": 240,
+   "title": "D · Wren (component)",
+   "page": "characters"
+  },
+  "WrenSheet.dc.html": {
+   "x": 320,
+   "y": 3810,
+   "w": 900,
+   "h": 560,
+   "title": "D · Wren sheet",
+   "page": "characters",
+   "radius": 32
+  },
+  "WrenHome.dc.html": {
+   "x": 1300,
+   "y": 3810,
+   "w": 390,
+   "h": 844,
+   "title": "D · Wren on Home",
+   "page": "characters",
+   "radius": 44
+  },
+  "WrenSOS.dc.html": {
+   "x": 1770,
+   "y": 3810,
+   "w": 390,
+   "h": 844,
+   "title": "D · Wren on SOS",
+   "page": "characters",
+   "radius": 44
+  },
+  "JelliSheet.dc.html": {
+   "x": 320,
+   "y": 5080,
+   "w": 900,
+   "h": 560,
+   "title": "E · Jelli sheet",
+   "page": "characters",
+   "radius": 32
+  },
+  "JelliHome.dc.html": {
+   "x": 1300,
+   "y": 5080,
+   "w": 390,
+   "h": 844,
+   "title": "E · Jelli on Home",
+   "page": "characters",
+   "radius": 44
+  },
+  "JelliSOS.dc.html": {
+   "x": 1770,
+   "y": 5080,
+   "w": 390,
+   "h": 844,
+   "title": "E · Jelli on SOS",
+   "page": "characters",
+   "radius": 44
+  },
+  "Kip.dc.html": {
+   "x": 0,
+   "y": 6350,
+   "w": 240,
+   "h": 240,
+   "title": "F · Kip (component)",
+   "page": "characters"
+  },
+  "KipSheet.dc.html": {
+   "x": 320,
+   "y": 6350,
+   "w": 900,
+   "h": 560,
+   "title": "F · Kip sheet",
+   "page": "characters",
+   "radius": 32
+  },
+  "KipHome.dc.html": {
+   "x": 1300,
+   "y": 6350,
+   "w": 390,
+   "h": 844,
+   "title": "F · Kip on Home",
+   "page": "characters",
+   "radius": 44
+  },
+  "KipSOS.dc.html": {
+   "x": 1770,
+   "y": 6350,
+   "w": 390,
+   "h": 844,
+   "title": "F · Kip on SOS",
+   "page": "characters",
+   "radius": 44
+  },
+  "Pace.dc.html": {
+   "x": 0,
+   "y": 7620,
+   "w": 240,
+   "h": 240,
+   "title": "G · Pace (component)",
+   "page": "characters"
+  },
+  "PaceSheet.dc.html": {
+   "x": 320,
+   "y": 7620,
+   "w": 900,
+   "h": 560,
+   "title": "G · Pace sheet",
+   "page": "characters",
+   "radius": 32
+  },
+  "PaceHome.dc.html": {
+   "x": 1300,
+   "y": 7620,
+   "w": 390,
+   "h": 844,
+   "title": "G · Pace on Home",
+   "page": "characters",
+   "radius": 44
+  },
+  "PaceSOS.dc.html": {
+   "x": 1770,
+   "y": 7620,
+   "w": 390,
+   "h": 844,
+   "title": "G · Pace on SOS",
+   "page": "characters",
+   "radius": 44
+  },
+  "Glim.dc.html": {
+   "x": 0,
+   "y": 8890,
+   "w": 240,
+   "h": 240,
+   "title": "H · Glim (component)",
+   "page": "characters"
+  },
+  "GlimSheet.dc.html": {
+   "x": 320,
+   "y": 8890,
+   "w": 900,
+   "h": 560,
+   "title": "H · Glim sheet",
+   "page": "characters",
+   "radius": 32
+  },
+  "GlimHome.dc.html": {
+   "x": 1300,
+   "y": 8890,
+   "w": 390,
+   "h": 844,
+   "title": "H · Glim on Home",
+   "page": "characters",
+   "radius": 44
+  },
+  "GlimSOS.dc.html": {
+   "x": 1770,
+   "y": 8890,
+   "w": 390,
+   "h": 844,
+   "title": "H · Glim on SOS",
+   "page": "characters",
+   "radius": 44
+  },
+  "Main.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "01 · Welcome (onboarding)",
+   "radius": 44,
+   "page": "screens"
+  },
+  "Home.dc.html": {
    "x": 470,
-   "y": 1200,
+   "y": 0,
    "w": 390,
    "h": 844,
-   "page": "final",
-   "title": "O2 · Welcome · apricot",
-   "is_interactive": true
+   "title": "02 · Today (home)",
+   "radius": 44,
+   "page": "screens"
   },
-  "F03Chat.dc.html": {
+  "SOS.dc.html": {
    "x": 940,
-   "y": 1200,
+   "y": 0,
    "w": 390,
    "h": 844,
-   "page": "final",
-   "title": "O3 · Questions · lilac",
-   "is_interactive": true
+   "title": "03 · Craving SOS",
+   "radius": 44,
+   "page": "screens"
   },
-  "F04QuitDay.dc.html": {
+  "Milestone.dc.html": {
    "x": 1410,
-   "y": 1200,
+   "y": 0,
    "w": 390,
    "h": 844,
-   "page": "final",
-   "title": "O4 · Quit Day · apricot",
-   "is_interactive": true
+   "title": "04 · Milestone + health",
+   "radius": 44,
+   "page": "screens"
   },
-  "F05Crew.dc.html": {
+  "Products.dc.html": {
+   "x": 0,
+   "y": 1300,
+   "w": 390,
+   "h": 844,
+   "title": "05 · Onboarding: what you use",
+   "radius": 44,
+   "page": "screens"
+  },
+  "Reasons.dc.html": {
+   "x": 470,
+   "y": 1300,
+   "w": 390,
+   "h": 844,
+   "title": "06 · Onboarding: your why",
+   "radius": 44,
+   "page": "screens"
+  },
+  "QuitDay.dc.html": {
+   "x": 940,
+   "y": 1300,
+   "w": 390,
+   "h": 844,
+   "title": "07 · Onboarding: Quit Day",
+   "radius": 44,
+   "page": "screens"
+  },
+  "Plan.dc.html": {
+   "x": 1410,
+   "y": 1300,
+   "w": 390,
+   "h": 844,
+   "title": "08 · Plan reveal",
+   "radius": 44,
+   "page": "screens"
+  },
+  "Paywall.dc.html": {
    "x": 1880,
-   "y": 1200,
+   "y": 1300,
    "w": 390,
    "h": 844,
-   "page": "final",
-   "title": "O5 · Your plan builds · mint",
-   "is_interactive": true
+   "title": "09 · Paywall",
+   "radius": 44,
+   "page": "screens"
   },
-  "F06Plan.dc.html": {
+  "Program.dc.html": {
+   "x": 0,
+   "y": 2600,
+   "w": 390,
+   "h": 844,
+   "title": "10 · Program map",
+   "radius": 44,
+   "page": "screens"
+  },
+  "Lesson.dc.html": {
+   "x": 470,
+   "y": 2600,
+   "w": 390,
+   "h": 844,
+   "title": "11 · Lesson player",
+   "radius": 44,
+   "page": "screens"
+  },
+  "Insights.dc.html": {
+   "x": 940,
+   "y": 2600,
+   "w": 390,
+   "h": 844,
+   "title": "12 · Insights",
+   "radius": 44,
+   "page": "screens"
+  },
+  "Slip.dc.html": {
+   "x": 1410,
+   "y": 2600,
+   "w": 390,
+   "h": 844,
+   "title": "13 · Slip debrief",
+   "radius": 44,
+   "page": "screens"
+  },
+  "NRT.dc.html": {
+   "x": 1880,
+   "y": 2600,
+   "w": 390,
+   "h": 844,
+   "title": "14 · NRT co-pilot",
+   "radius": 44,
+   "page": "screens"
+  },
+  "Timeline.dc.html": {
+   "x": 0,
+   "y": 3900,
+   "w": 390,
+   "h": 844,
+   "title": "15 · Health timeline",
+   "radius": 44,
+   "page": "screens"
+  },
+  "Pledge.dc.html": {
+   "x": 470,
+   "y": 3900,
+   "w": 390,
+   "h": 844,
+   "title": "16 · Morning pledge",
+   "radius": 44,
+   "page": "screens"
+  },
+  "CheckIn.dc.html": {
+   "x": 940,
+   "y": 3900,
+   "w": 390,
+   "h": 844,
+   "title": "17 · Evening check-in",
+   "radius": 44,
+   "page": "screens"
+  },
+  "Calm.dc.html": {
+   "x": 1410,
+   "y": 3900,
+   "w": 390,
+   "h": 844,
+   "title": "18 · Calm toolkit",
+   "radius": 44,
+   "page": "screens"
+  },
+  "Settings.dc.html": {
+   "x": 1880,
+   "y": 3900,
+   "w": 390,
+   "h": 844,
+   "title": "19 · Settings + privacy",
+   "radius": 44,
+   "page": "screens"
+  },
+  "LockScreen.dc.html": {
    "x": 2350,
-   "y": 1200,
+   "y": 3900,
    "w": 390,
    "h": 844,
-   "page": "final",
-   "title": "O6 · Plan + trial proposal · mint",
-   "is_interactive": true
+   "title": "20 · Notifications + widgets",
+   "radius": 44,
+   "page": "screens"
   },
-  "F07Remind.dc.html": {
-   "x": 2820,
-   "y": 1200,
-   "w": 390,
-   "h": 844,
-   "page": "final",
-   "title": "O7 · Reminders · apricot",
-   "is_interactive": true
-  },
-  "F08Today.dc.html": {
+  "StorySheet.dc.html": {
    "x": 0,
-   "y": 2460,
+   "y": 0,
+   "w": 1300,
+   "h": 760,
+   "title": "Story · Glim × Xero, with Jelli",
+   "page": "story",
+   "radius": 32
+  },
+  "GlimX.dc.html": {
+   "x": 1380,
+   "y": 0,
+   "w": 240,
+   "h": 240,
+   "title": "Glim × Xero (component)",
+   "page": "story"
+  },
+  "StBreathe.dc.html": {
+   "x": 0,
+   "y": 1080,
    "w": 390,
    "h": 844,
-   "page": "final",
-   "title": "D1 · Today · adapts (try Tweaks)",
-   "is_interactive": true
+   "title": "1 · Glim breathes with you",
+   "page": "story",
+   "radius": 44
   },
-  "F09Pledge.dc.html": {
+  "StWelcome.dc.html": {
    "x": 470,
-   "y": 2460,
+   "y": 1080,
    "w": 390,
    "h": 844,
-   "page": "final",
-   "title": "D2 · Pledge · apricot",
-   "is_interactive": true
+   "title": "2 · Welcome",
+   "page": "story",
+   "radius": 44
   },
-  "F10Program.dc.html": {
+  "StSOS.dc.html": {
    "x": 940,
-   "y": 2460,
+   "y": 1080,
    "w": 390,
    "h": 844,
-   "page": "final",
-   "title": "D3 · Program · reading",
-   "is_interactive": true
+   "title": "3 · SOS hands over to Jelli",
+   "page": "story",
+   "radius": 44
   },
-  "F11Lesson.dc.html": {
+  "StNight.dc.html": {
    "x": 1410,
-   "y": 2460,
+   "y": 1080,
    "w": 390,
    "h": 844,
-   "page": "final",
-   "title": "D4 · Lesson · reading",
-   "is_interactive": true
+   "title": "4 · Evening check-in",
+   "page": "story",
+   "radius": 44
   },
-  "F12Progress.dc.html": {
+  "StMilestone.dc.html": {
    "x": 1880,
-   "y": 2460,
+   "y": 1080,
    "w": 390,
    "h": 844,
-   "page": "final",
-   "title": "D5 · Progress · reading",
-   "is_interactive": true
+   "title": "5 · Milestone",
+   "page": "story",
+   "radius": 44
   },
-  "F13SOS.dc.html": {
+  "StDarkRow.dc.html": {
    "x": 0,
-   "y": 3720,
+   "y": 2340,
+   "w": 2270,
+   "h": 844,
+   "title": "Story screens, phone in dark mode",
+   "page": "story",
+   "radius": 44
+  },
+  "BrandCoral.dc.html": {
+   "x": 0,
+   "y": 7540,
+   "w": 1500,
+   "h": 1140,
+   "page": "final",
+   "title": "Brand colour · coral vs apricot"
+  },
+  "G01DayXero.dc.html": {
+   "x": 0,
+   "y": 9240,
    "w": 390,
    "h": 844,
    "page": "final",
-   "title": "W1 · SOS · ocean",
+   "title": "Q1 · Day Xero · hold to start · apricot",
    "is_interactive": true
   },
-  "F14Passed.dc.html": {
+  "G02DayXeroDone.dc.html": {
    "x": 470,
-   "y": 3720,
+   "y": 9240,
    "w": 390,
    "h": 844,
    "page": "final",
-   "title": "W2 · Passed · sky",
+   "title": "Q2 · You’re on Day Xero · sun (Day 1 milestone)",
    "is_interactive": true
   },
-  "F15Slip.dc.html": {
+  "G03Offer.dc.html": {
    "x": 940,
-   "y": 3720,
+   "y": 9240,
    "w": 390,
    "h": 844,
    "page": "final",
-   "title": "W3 · Slip · quiet tier",
+   "title": "Q3 · Quit Day offer · serious tier",
    "is_interactive": true
-  },
-  "F16CheckIn.dc.html": {
-   "x": 1410,
-   "y": 3720,
-   "w": 390,
-   "h": 844,
-   "page": "final",
-   "title": "N1 · Check-in · violet",
-   "is_interactive": true
-  },
-  "F17WindDown.dc.html": {
-   "x": 1880,
-   "y": 3720,
-   "w": 390,
-   "h": 844,
-   "page": "final",
-   "title": "N2 · Wind down · violet",
-   "is_interactive": true
-  },
-  "F18Finale.dc.html": {
-   "x": 2350,
-   "y": 3720,
-   "w": 390,
-   "h": 844,
-   "page": "final",
-   "title": "T1 · Week 4 · sun",
-   "is_interactive": true
-  },
-  "FDarkA.dc.html": {
-   "x": 0,
-   "y": 4980,
-   "w": 4150,
-   "h": 844,
-   "page": "final",
-   "title": "Dark mode · O1–D2"
-  },
-  "FDarkB.dc.html": {
-   "x": 0,
-   "y": 6240,
-   "w": 4150,
-   "h": 844,
-   "page": "final",
-   "title": "Dark mode · D3–T1"
   }
  },
  "order": [
-  "Main.dc.html",
-  "Home.dc.html",
-  "SOS.dc.html",
-  "Milestone.dc.html",
-  "Products.dc.html",
-  "Reasons.dc.html",
-  "QuitDay.dc.html",
-  "Plan.dc.html",
-  "Paywall.dc.html",
-  "Program.dc.html",
-  "Lesson.dc.html",
-  "Insights.dc.html",
-  "Slip.dc.html",
-  "NRT.dc.html",
-  "Timeline.dc.html",
-  "Pledge.dc.html",
-  "CheckIn.dc.html",
-  "Calm.dc.html",
-  "Settings.dc.html",
-  "LockScreen.dc.html",
-  "Sprout.dc.html",
-  "SproutSheet.dc.html",
-  "SproutHome.dc.html",
-  "SproutSOS.dc.html",
+  "FinalSheet.dc.html",
+  "Nav2.dc.html",
+  "F01Breathe.dc.html",
+  "F02Welcome.dc.html",
+  "F03Chat.dc.html",
+  "F04QuitDay.dc.html",
+  "F05Crew.dc.html",
+  "F06Plan.dc.html",
+  "F07Remind.dc.html",
+  "F08Today.dc.html",
+  "F09Pledge.dc.html",
+  "F10Program.dc.html",
+  "F11Lesson.dc.html",
+  "F12Progress.dc.html",
+  "F13SOS.dc.html",
+  "F14Passed.dc.html",
+  "F15Slip.dc.html",
+  "F16CheckIn.dc.html",
+  "F17WindDown.dc.html",
+  "F18Finale.dc.html",
+  "FDarkA.dc.html",
+  "FDarkB.dc.html",
   "Xero.dc.html",
-  "XeroSheet.dc.html",
-  "XeroHome.dc.html",
-  "XeroSOS.dc.html",
-  "Pebble.dc.html",
-  "PebbleSheet.dc.html",
-  "PebbleHome.dc.html",
-  "PebbleSOS.dc.html",
-  "Wren.dc.html",
-  "WrenSheet.dc.html",
-  "WrenHome.dc.html",
-  "WrenSOS.dc.html",
   "Jelli.dc.html",
-  "JelliSheet.dc.html",
-  "JelliHome.dc.html",
-  "JelliSOS.dc.html",
-  "Kip.dc.html",
-  "KipSheet.dc.html",
-  "KipHome.dc.html",
-  "KipSOS.dc.html",
-  "Pace.dc.html",
-  "PaceSheet.dc.html",
-  "PaceHome.dc.html",
-  "PaceSOS.dc.html",
-  "Glim.dc.html",
-  "GlimSheet.dc.html",
-  "GlimHome.dc.html",
-  "GlimSOS.dc.html",
-  "NightSystem.dc.html",
-  "Art.dc.html",
-  "NightWelcome.dc.html",
-  "NightToday.dc.html",
-  "NightExplore.dc.html",
-  "NightSOS.dc.html",
-  "NightProgress.dc.html",
-  "NightMilestone.dc.html",
-  "V3System.dc.html",
-  "Horizon.dc.html",
-  "OB1Breathe.dc.html",
-  "OB2Welcome.dc.html",
-  "OB3Chat.dc.html",
-  "OB4Building.dc.html",
-  "OB5Plan.dc.html",
-  "OB6Notify.dc.html",
-  "V3Today.dc.html",
-  "V3DarkRow.dc.html",
-  "StorySheet.dc.html",
-  "GlimX.dc.html",
-  "StBreathe.dc.html",
-  "StWelcome.dc.html",
-  "StSOS.dc.html",
-  "StNight.dc.html",
-  "StMilestone.dc.html",
-  "StDarkRow.dc.html",
-  "CrewSheet.dc.html",
   "Glim2.dc.html",
+  "Horizon2.dc.html",
+  "Hero2.dc.html",
+  "BrandCoral.dc.html",
+  "CrewSheet.dc.html",
   "Hero.dc.html",
   "Nav.dc.html",
   "C01Breathe.dc.html",
@@ -1362,9 +1367,8 @@
   "CDarkA.dc.html",
   "CDarkB.dc.html",
   "CDarkC.dc.html",
+  "Horizon.dc.html",
   "AliveSheet.dc.html",
-  "Horizon2.dc.html",
-  "Hero2.dc.html",
   "A01Breathe.dc.html",
   "A02Welcome.dc.html",
   "A03Chat.dc.html",
@@ -1375,185 +1379,133 @@
   "A08CheckIn.dc.html",
   "A09Finale.dc.html",
   "ADark.dc.html",
-  "FinalSheet.dc.html",
-  "Nav2.dc.html",
-  "F01Breathe.dc.html",
-  "F02Welcome.dc.html",
-  "F03Chat.dc.html",
-  "F04QuitDay.dc.html",
-  "F05Crew.dc.html",
-  "F06Plan.dc.html",
-  "F07Remind.dc.html",
-  "F08Today.dc.html",
-  "F09Pledge.dc.html",
-  "F10Program.dc.html",
-  "F11Lesson.dc.html",
-  "F12Progress.dc.html",
-  "F13SOS.dc.html",
-  "F14Passed.dc.html",
-  "F15Slip.dc.html",
-  "F16CheckIn.dc.html",
-  "F17WindDown.dc.html",
-  "F18Finale.dc.html",
-  "FDarkA.dc.html",
-  "FDarkB.dc.html"
+  "V3System.dc.html",
+  "OB1Breathe.dc.html",
+  "OB2Welcome.dc.html",
+  "OB3Chat.dc.html",
+  "OB4Building.dc.html",
+  "OB5Plan.dc.html",
+  "OB6Notify.dc.html",
+  "V3Today.dc.html",
+  "V3DarkRow.dc.html",
+  "NightSystem.dc.html",
+  "Art.dc.html",
+  "NightWelcome.dc.html",
+  "NightToday.dc.html",
+  "NightExplore.dc.html",
+  "NightSOS.dc.html",
+  "NightProgress.dc.html",
+  "NightMilestone.dc.html",
+  "Sprout.dc.html",
+  "SproutSheet.dc.html",
+  "SproutHome.dc.html",
+  "SproutSOS.dc.html",
+  "XeroSheet.dc.html",
+  "XeroHome.dc.html",
+  "XeroSOS.dc.html",
+  "Pebble.dc.html",
+  "PebbleSheet.dc.html",
+  "PebbleHome.dc.html",
+  "PebbleSOS.dc.html",
+  "Wren.dc.html",
+  "WrenSheet.dc.html",
+  "WrenHome.dc.html",
+  "WrenSOS.dc.html",
+  "JelliSheet.dc.html",
+  "JelliHome.dc.html",
+  "JelliSOS.dc.html",
+  "Kip.dc.html",
+  "KipSheet.dc.html",
+  "KipHome.dc.html",
+  "KipSOS.dc.html",
+  "Pace.dc.html",
+  "PaceSheet.dc.html",
+  "PaceHome.dc.html",
+  "PaceSOS.dc.html",
+  "Glim.dc.html",
+  "GlimSheet.dc.html",
+  "GlimHome.dc.html",
+  "GlimSOS.dc.html",
+  "Main.dc.html",
+  "Home.dc.html",
+  "SOS.dc.html",
+  "Milestone.dc.html",
+  "Products.dc.html",
+  "Reasons.dc.html",
+  "QuitDay.dc.html",
+  "Plan.dc.html",
+  "Paywall.dc.html",
+  "Program.dc.html",
+  "Lesson.dc.html",
+  "Insights.dc.html",
+  "Slip.dc.html",
+  "NRT.dc.html",
+  "Timeline.dc.html",
+  "Pledge.dc.html",
+  "CheckIn.dc.html",
+  "Calm.dc.html",
+  "Settings.dc.html",
+  "LockScreen.dc.html",
+  "StorySheet.dc.html",
+  "GlimX.dc.html",
+  "StBreathe.dc.html",
+  "StWelcome.dc.html",
+  "StSOS.dc.html",
+  "StNight.dc.html",
+  "StMilestone.dc.html",
+  "StDarkRow.dc.html",
+  "G01DayXero.dc.html",
+  "G02DayXeroDone.dc.html",
+  "G03Offer.dc.html"
  ],
  "notes": {
-  "title": {
+  "fnTitle": {
    "x": 0,
    "y": -300,
-   "text": "DayXero · Full-colour illustrated direction",
-   "kind": "title1",
-   "maxW": 1800
-  },
-  "row2": {
-   "x": 0,
-   "y": 1000,
-   "text": "Onboarding + paywall",
-   "kind": "title1",
-   "maxW": 2270
-  },
-  "row3": {
-   "x": 0,
-   "y": 2300,
-   "text": "Program + tracking",
-   "kind": "title1",
-   "maxW": 2270
-  },
-  "row4": {
-   "x": 0,
-   "y": 3600,
-   "text": "Daily care, settings + lock screen",
-   "kind": "title1",
-   "maxW": 2740
-  },
-  "charA": {
-   "x": 0,
-   "y": -300,
-   "text": "A · Sprout, the seedling that grows with you",
-   "kind": "title1",
-   "maxW": 2160,
-   "page": "characters"
-  },
-  "charB": {
-   "x": 0,
-   "y": 970,
-   "text": "B · Xero, the zero with a sunrise inside",
-   "kind": "title1",
-   "maxW": 2160,
-   "page": "characters"
-  },
-  "charC": {
-   "x": 0,
-   "y": 2240,
-   "text": "C · Pebble, the steady stone",
-   "kind": "title1",
-   "maxW": 2160,
-   "page": "characters"
-  },
-  "charD": {
-   "x": 0,
-   "y": 3510,
-   "text": "D · Wren, the small bird that breathes easy",
-   "kind": "title1",
-   "maxW": 2160,
-   "page": "characters"
-  },
-  "charE": {
-   "x": 0,
-   "y": 4780,
-   "text": "E · Jelli, whose every pulse is a breath",
-   "kind": "title1",
-   "maxW": 2160,
-   "page": "characters"
-  },
-  "charF": {
-   "x": 0,
-   "y": 6050,
-   "text": "F · Kip, the kite that rises on the wind",
-   "kind": "title1",
-   "maxW": 2160,
-   "page": "characters"
-  },
-  "charG": {
-   "x": 0,
-   "y": 7320,
-   "text": "G · Pace, the snail who goes one day at a time",
-   "kind": "title1",
-   "maxW": 2160,
-   "page": "characters"
-  },
-  "charH": {
-   "x": 0,
-   "y": 8590,
-   "text": "H · Glim, the firefly whose light grows",
-   "kind": "title1",
-   "maxW": 2160,
-   "page": "characters"
-  },
-  "nightSys": {
-   "x": 0,
-   "y": -300,
-   "text": "DayXero Night · the system",
+   "text": "v4 · The Crew’s content, Alive’s feel, the critique’s fixes",
    "kind": "title1",
    "maxW": 1500,
-   "page": "night"
+   "page": "final"
   },
-  "nightRow": {
+  "fnA": {
    "x": 0,
-   "y": 800,
-   "text": "DayXero Night · key screens",
+   "y": 940,
+   "text": "Onboarding · Xero guides, nothing is charged before Quit Day",
    "kind": "title1",
-   "maxW": 2740,
-   "page": "night"
+   "maxW": 3200,
+   "page": "final"
   },
-  "v3Sys": {
+  "fnB": {
    "x": 0,
-   "y": -300,
-   "text": "v3 · Papercut horizons, light + dark",
+   "y": 2200,
+   "text": "Your days · Sun 8 Nov, Day 3",
    "kind": "title1",
-   "maxW": 1780,
-   "page": "v3"
+   "maxW": 2700,
+   "page": "final"
   },
-  "v3Light": {
+  "fnC": {
    "x": 0,
-   "y": 840,
-   "text": "Onboarding + Today · phone in light mode",
+   "y": 3460,
+   "text": "Waves, nights, finale",
    "kind": "title1",
-   "maxW": 3210,
-   "page": "v3"
+   "maxW": 2700,
+   "page": "final"
   },
-  "v3Dark": {
+  "fnD": {
    "x": 0,
-   "y": 2100,
-   "text": "Same screens · phone in dark mode",
+   "y": 4720,
+   "text": "Phone in dark mode · warm screens on plum",
    "kind": "title1",
-   "maxW": 3210,
-   "page": "v3"
+   "maxW": 2700,
+   "page": "final"
   },
-  "stTitle": {
+  "fnE": {
    "x": 0,
-   "y": -300,
-   "text": "Glim carries the Xero light. Jelli takes the hard moments.",
+   "y": 5980,
+   "text": "Phone in dark mode · continued",
    "kind": "title1",
-   "maxW": 1620,
-   "page": "story"
-  },
-  "stLight": {
-   "x": 0,
-   "y": 780,
-   "text": "The story · phone in light mode",
-   "kind": "title1",
-   "maxW": 2270,
-   "page": "story"
-  },
-  "stDark": {
-   "x": 0,
-   "y": 2040,
-   "text": "The story · phone in dark mode",
-   "kind": "title1",
-   "maxW": 2270,
-   "page": "story"
+   "maxW": 2700,
+   "page": "final"
   },
   "crTitle": {
    "x": 0,
@@ -1635,52 +1587,180 @@
    "maxW": 4150,
    "page": "alive"
   },
-  "fnTitle": {
+  "v3Sys": {
    "x": 0,
    "y": -300,
-   "text": "v4 · The Crew’s content, Alive’s feel, the critique’s fixes",
+   "text": "v3 · Papercut horizons, light + dark",
+   "kind": "title1",
+   "maxW": 1780,
+   "page": "v3"
+  },
+  "v3Light": {
+   "x": 0,
+   "y": 840,
+   "text": "Onboarding + Today · phone in light mode",
+   "kind": "title1",
+   "maxW": 3210,
+   "page": "v3"
+  },
+  "v3Dark": {
+   "x": 0,
+   "y": 2100,
+   "text": "Same screens · phone in dark mode",
+   "kind": "title1",
+   "maxW": 3210,
+   "page": "v3"
+  },
+  "nightSys": {
+   "x": 0,
+   "y": -300,
+   "text": "DayXero Night · the system",
+   "kind": "title1",
+   "maxW": 1500,
+   "page": "night"
+  },
+  "nightRow": {
+   "x": 0,
+   "y": 800,
+   "text": "DayXero Night · key screens",
+   "kind": "title1",
+   "maxW": 2740,
+   "page": "night"
+  },
+  "charA": {
+   "x": 0,
+   "y": -300,
+   "text": "A · Sprout, the seedling that grows with you",
+   "kind": "title1",
+   "maxW": 2160,
+   "page": "characters"
+  },
+  "charB": {
+   "x": 0,
+   "y": 970,
+   "text": "B · Xero, the zero with a sunrise inside",
+   "kind": "title1",
+   "maxW": 2160,
+   "page": "characters"
+  },
+  "charC": {
+   "x": 0,
+   "y": 2240,
+   "text": "C · Pebble, the steady stone",
+   "kind": "title1",
+   "maxW": 2160,
+   "page": "characters"
+  },
+  "charD": {
+   "x": 0,
+   "y": 3510,
+   "text": "D · Wren, the small bird that breathes easy",
+   "kind": "title1",
+   "maxW": 2160,
+   "page": "characters"
+  },
+  "charE": {
+   "x": 0,
+   "y": 4780,
+   "text": "E · Jelli, whose every pulse is a breath",
+   "kind": "title1",
+   "maxW": 2160,
+   "page": "characters"
+  },
+  "charF": {
+   "x": 0,
+   "y": 6050,
+   "text": "F · Kip, the kite that rises on the wind",
+   "kind": "title1",
+   "maxW": 2160,
+   "page": "characters"
+  },
+  "charG": {
+   "x": 0,
+   "y": 7320,
+   "text": "G · Pace, the snail who goes one day at a time",
+   "kind": "title1",
+   "maxW": 2160,
+   "page": "characters"
+  },
+  "charH": {
+   "x": 0,
+   "y": 8590,
+   "text": "H · Glim, the firefly whose light grows",
+   "kind": "title1",
+   "maxW": 2160,
+   "page": "characters"
+  },
+  "title": {
+   "x": 0,
+   "y": -300,
+   "text": "DayXero · Full-colour illustrated direction",
+   "kind": "title1",
+   "maxW": 1800,
+   "page": "screens"
+  },
+  "row2": {
+   "x": 0,
+   "y": 1000,
+   "text": "Onboarding + paywall",
+   "kind": "title1",
+   "maxW": 2270,
+   "page": "screens"
+  },
+  "row3": {
+   "x": 0,
+   "y": 2300,
+   "text": "Program + tracking",
+   "kind": "title1",
+   "maxW": 2270,
+   "page": "screens"
+  },
+  "row4": {
+   "x": 0,
+   "y": 3600,
+   "text": "Daily care, settings + lock screen",
+   "kind": "title1",
+   "maxW": 2740,
+   "page": "screens"
+  },
+  "stTitle": {
+   "x": 0,
+   "y": -300,
+   "text": "Glim carries the Xero light. Jelli takes the hard moments.",
+   "kind": "title1",
+   "maxW": 1620,
+   "page": "story"
+  },
+  "stLight": {
+   "x": 0,
+   "y": 780,
+   "text": "The story · phone in light mode",
+   "kind": "title1",
+   "maxW": 2270,
+   "page": "story"
+  },
+  "stDark": {
+   "x": 0,
+   "y": 2040,
+   "text": "The story · phone in dark mode",
+   "kind": "title1",
+   "maxW": 2270,
+   "page": "story"
+  },
+  "fnBrand": {
+   "x": 0,
+   "y": 7300,
+   "text": "Brand colour · coral or apricot (decision 18, your call)",
    "kind": "title1",
    "maxW": 1500,
    "page": "final"
   },
-  "fnA": {
+  "fnQ": {
    "x": 0,
-   "y": 940,
-   "text": "Onboarding · Xero guides, nothing is charged before Quit Day",
+   "y": 9000,
+   "text": "New v4 screens · Quit Day: Day Xero and the offer (decision 15)",
    "kind": "title1",
    "maxW": 3200,
-   "page": "final"
-  },
-  "fnB": {
-   "x": 0,
-   "y": 2200,
-   "text": "Your days · Sun 8 Nov, Day 3",
-   "kind": "title1",
-   "maxW": 2700,
-   "page": "final"
-  },
-  "fnC": {
-   "x": 0,
-   "y": 3460,
-   "text": "Waves, nights, finale",
-   "kind": "title1",
-   "maxW": 2700,
-   "page": "final"
-  },
-  "fnD": {
-   "x": 0,
-   "y": 4720,
-   "text": "Phone in dark mode · warm screens on plum",
-   "kind": "title1",
-   "maxW": 2700,
-   "page": "final"
-  },
-  "fnE": {
-   "x": 0,
-   "y": 5980,
-   "text": "Phone in dark mode · continued",
-   "kind": "title1",
-   "maxW": 2700,
    "page": "final"
   }
  },

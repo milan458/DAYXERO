@@ -346,7 +346,7 @@ A machine-readable copy is in `design/handoff/tokens.json`.
 | **Breathe** | 4 s in, 6 s out (10 s loop; SVG `keyTimes 0;0.4;1`) | SOS, intro, Jelli's pulse, rings |
 | **Count** | numbers count up over 0.8–0.9 s, ease-out cubic | Days, units, money, waves, sky % |
 | **Ambient** | clouds 20–26 s, waves 5–8 s, stars and fireflies twinkle 1.5–3 s, bubbles rise 5–8 s | Always slow |
-| **Hold** | button fills left→right, linear, 1.5 s (Quit Day) or 1.0 s (pledge), then a check label and a haptic | Quit Day, pledge |
+| **Hold** | button fills left→right, linear, 1.5 s (Quit Day) or 1.0 s (pledge), then a check label and a haptic. **3.0 s for the Day Xero commit** (program.json DX.2 `holdSeconds: 3`) | Quit Day, pledge, Day Xero |
 
 **Reduce Motion:** every screen renders its final state. Breathing switches to a gentle colour fade, and haptics carry the rhythm.
 
@@ -641,6 +641,39 @@ All screens are 390×844 with props `theme` (light | dark), `motion` (bool) and 
 | F12 Progress | 36 cigarettes, $21 kept | Per the §7 time table |
 | F16 Check-in | "Your day ends at 3:00 am" | 4:00 am |
 | F18 Finale | Thu 3 Dec, 28 days, $196, 336 | Graduation on Sun 6 Dec, 31 days clear, $211.45 and 362 at 09:00 |
+
+### 10.2 New v4 screens (second session, 31 Oct 2026)
+
+These are on the v4 page below the dark rows, with sources in `design/handoff/canvas/project/`. They follow decisions 15 and 17. None has been rendered or checked on a device.
+
+**Brand colour · coral vs apricot** (`BrandCoral.dc.html`, 1500×1140): palette, app icons at 180 and 60, and a dayxero.in hero, for each option. Measured findings:
+- Xero's body (#FF7155) on coral is 1.05:1, so Xero disappears on a plain coral icon. A cream sun disc fixes it.
+- Coral fails as text on white (2.41:1) and with cream text (2.44:1). It can only be a fill with ink text (6.46:1).
+- Apricot is 1.47:1 on white.
+- The dark icon (plum) is the same for both options.
+
+**Q1 Day Xero** (`G01DayXero`) · apricot · Fri 6 Nov:
+- Hero2 dawn, clarity 23 (day 1), with Xero 200 (hello) settling in.
+- "FRI 6 NOV · QUIT DAY · 5 MIN" / "Day Xero" / "Your first day. Best heard in the morning." (program.json `subtitle` and `listenHint`).
+- Because card.
+- Hold button "Hold to start Day Xero" with a **3 s** fill (program.json DX.2, `holdSeconds: 3`). It ends on "Day Xero started ✓" (new string).
+- No celebration here.
+
+**Q2 You're on Day Xero** (`G02DayXeroDone`) · sun:
+- Day 1 is a code milestone, so Celebrate motion is allowed. Xero 200 enters with the spring, then cheers. No confetti (finale only).
+- Copy is program.json's `completionText` and mission.
+- Tiles at 07:35: 1 day clear, 1 cigarette not smoked, $1.04 kept (code formula).
+- "Continue" leads to Q3. It is not labelled "Back to my day", so the offer is never a surprise.
+
+**Q3 Quit Day offer** (`G03Offer`) · cream, serious tier:
+- Xero avatar 40 (calm) only, and a close button labelled "Close and continue with the free version" (code a11y label).
+- "Week 1 starts tomorrow" / "Day 1, Look after the basics, opens on Sat 7 Nov. Try the full program free for 3 days." (W1D1 `minDay 1`).
+- Included list from `PaywallView`: "Insights on your triggers", "NRT planner, health timeline, share cards", and "Quit week and 4 weeks after" (shortened from the code's "All of prep, Quit week and 4 weeks after", because prep is free under decision 15). Then "Always free: your counter and Craving SOS."
+- Plan cards from `PaywallView`: Yearly $39.99/yr with "3 DAYS FREE · SAVE 66%" and $3.33/mo, and Monthly $9.99/mo with "Billed today · Cancel anytime". Lifetime is a link ("Pay once").
+- A trial timeline: today, unlocked, nothing charged; Sat 7 Nov, reminder; Mon 9 Nov, $39.99 unless cancelled.
+- CTA from code: "Start my 3-day free trial" / "Subscribe for $9.99 a month". Then "Not now", the cancel path, Restore purchases, Terms and Privacy.
+
+**Open assumption:** the Day Xero session (Q1–Q2) is free and the offer comes after it. Code today gates everything after Prep 1.
 
 **UX issue to raise with Milan:** following the code, Today on Sun 8 Nov shows "Week 1, Day 3" (days clear) next to a lesson card labelled "Day 2". Two day counts on one screen will confuse people. A product fix might relabel sessions by days clear, or shift the unlock by one day.
 
