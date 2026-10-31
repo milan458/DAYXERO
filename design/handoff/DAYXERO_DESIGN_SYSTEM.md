@@ -675,6 +675,51 @@ These are on the v4 page below the dark rows, with sources in `design/handoff/ca
 
 **Open assumption:** the Day Xero session (Q1–Q2) is free and the offer comes after it. Code today gates everything after Prep 1.
 
+### 10.3 Program: one full session, plus the beats kit (second session, 31 Oct 2026)
+
+The session follows the code's order (`SessionFlowView`): intro, beats before audio, audio, beats after audio, mission, completion. Persona: Sun 8 Nov, 14:00, so the lesson is **W1D2 "The noisy passengers"** (decision 17).
+- **Look:** reading tier. Cream (light) or navy #0E0B2B (dark), with a Xero avatar 40 in the lesson bar.
+- **Lesson bar:** close button ("Close. Your place is saved."), a green progress bar over 7 steps, and the avatar.
+- **Illustrations:** only the intro and done screens carry art (Hero2 path, clarity 28, and Xero 140).
+
+| Board | What it shows | Source of the copy |
+|---|---|---|
+| P1 `L01Intro` | "SUN 8 NOV · WEEK 1 · DAY 2", "The noisy passengers", "Let them talk. Keep driving.", "3 min · Audio, activities and today’s mission", Begin | program.json; `SessionIntro` |
+| P2 `L02Audio` | "AUDIO SESSION", Xero 140 in a ring breathing on the 4/6 clock, scrubber 1:12 of 3:00, Speed 1×, Back 15, Play/Pause, Forward 15, tappable captions, and "Nice. On to the exercise." plus Continue only when the audio ends (no skipping). The **Tweak** switches to "Audio coming soon" (the real state today: no recordings yet) | `LessonAudioStep`, `ProgramAudioStep` |
+| P3 `L03Reflect` | "What do your loudest passengers say?", "n of 3", placeholder “Just one won't hurt.”, remove buttons, Continue, Skip. Working input on the canvas | W1D2.1; `ReflectBeat` |
+| P4 `L04Quiz` | "QUICK CHECK", the bus question, one try, then "YOUR PICK · CORRECT ANSWER" / "CORRECT ANSWER" / "YOUR PICK" and the feedback. Tweak: not yet, right, wrong | W1D2.3; `QuizBeat` |
+| P5 `L05Mission` | Apricot mission card (Xero's colour as the one extra owned colour), "Name one passenger today when it shows up.", "It stays on your Today card until the next session.", "Got it" | W1D2 mission; `MissionCard` |
+| P6 `L06Done` | "DAY 2 DONE", "They can shout. They can't drive.", the next card "Next: Day 3 · Lower the bar, tomorrow", Done. Settle only. A lesson is not a milestone, so no Celebrate motion | `SessionCompletion` |
+
+The second reflect beat (W1D2.2) uses the P3 layout and isn't drawn separately.
+
+**`LBeats` kit (1500×2600):** every other beat type, each with real content and its session date:
+- stat reveal (Prep 1: 4,380 cigarettes, $2,555)
+- choice, one answer (Prep 2)
+- choice, pick 3 (Day 4)
+- slider (Day 3)
+- slider group (Day 1)
+- tap to reveal (Day Xero)
+- breathe (Prep 4)
+- checklist (Prep 6)
+- commit (Prep 1, 2 s)
+- note (Day 3, "MATTERS MOST")
+- share a message (Prep 6)
+- scenario (Day 5)
+- info, with the Calm helpline block (Week 3)
+- NRT choice (Prep 6)
+- NRT step-down (Week 4)
+- slip practice (Week 4)
+- plan card (Graduation)
+- share card (Day 7)
+
+`GDarkA` is the dark row for Q1–Q3 and P1–P6.
+
+**Content issues found (program.json, not design):**
+- W1D2.3's feedback starts "Right." and the code shows it for a wrong pick too.
+- The checklist beat has separate smoking and vaping lists. Which one a dual user like Sam sees isn't defined.
+- The Week 1 audio scripts don't exist yet, so P2's captions are bracketed placeholders.
+
 **UX issue to raise with Milan:** following the code, Today on Sun 8 Nov shows "Week 1, Day 3" (days clear) next to a lesson card labelled "Day 2". Two day counts on one screen will confuse people. A product fix might relabel sessions by days clear, or shift the unlock by one day.
 
 ### Dark mode

@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lesson beats kit</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1500px; height: 2600px; box-sizing: border-box; background: {{t.page}}; color: {{t.ink}}; font-family: 'DM Sans', system-ui, sans-serif; padding: 36px 30px; display: flex; flex-direction: column; gap: 24px">
+  <div style="display: flex; flex-direction: column; gap: 6px; padding: 0 6px">
+    <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: {{t.muted}}">PROGRAM · EVERY BEAT TYPE IN PROGRAM.JSON</div>
+    <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 32px; letter-spacing: -1px">Lesson beats kit</div>
+    <div style="font-size: 16px; color: {{t.muted}}">Each card is one beat as it sits inside the lesson frame (P3, P4), drawn at phone width with real content from its session. Reflect, quick check and plan builder are on P3, P4 and F11.</div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; align-items: start">
+
+    <section style="background: {{t.card}}; border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 12px; box-shadow: {{t.shadow}}">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: {{t.green}}">STAT REVEAL · PREP 1 · FRI 30 OCT</div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 24px; letter-spacing: -0.6px; line-height: 1.2">At your current pace, that's about 4,380 cigarettes a year.</div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 24px; letter-spacing: -0.6px">Roughly $2,555.</div>
+      <div style="font-size: 16px; color: {{t.muted}}">You're about to take that back.</div>
+      <div style="font-size: 12px; color: {{t.muted}}">Lines arrive one by one (Arrive), numbers count up (Count).</div>
+    </section>
+
+    <section style="background: {{t.card}}; border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 10px; box-shadow: {{t.shadow}}">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: {{t.green}}">CHOICE, ONE · PREP 2 · SAT 31 OCT</div>
+      <div id="c1" style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px; line-height: 1.25">Which moment will you put a gap after?</div>
+      <div role="radiogroup" aria-labelledby="c1" style="display: flex; flex-direction: column; gap: 6px">
+        <button role="radio" aria-checked="false" style="text-align: left; font: inherit; font-size: 16px; min-height: 48px; border: 0; border-radius: 14px; padding: 0 14px; background: {{t.opt}}; color: {{t.ink}}; box-shadow: inset 0 0 0 1px {{t.hair}}">Waking up</button>
+        <button role="radio" aria-checked="true" style="text-align: left; font: inherit; font-size: 16px; font-weight: 600; min-height: 48px; border: 0; border-radius: 14px; padding: 0 14px; background: {{t.sel}}; color: {{t.selInk}}">First coffee or tea</button>
+        <button role="radio" aria-checked="false" style="text-align: left; font: inherit; font-size: 16px; min-height: 48px; border: 0; border-radius: 14px; padding: 0 14px; background: {{t.opt}}; color: {{t.ink}}; box-shadow: inset 0 0 0 1px {{t.hair}}">The commute</button>
+        <button role="radio" aria-checked="false" style="text-align: left; font: inherit; font-size: 16px; min-height: 48px; border: 0; border-radius: 14px; padding: 0 14px; background: {{t.opt}}; color: {{t.ink}}; box-shadow: inset 0 0 0 1px {{t.hair}}">First scroll of the day</button>
+        <button role="radio" aria-checked="false" style="text-align: left; font: inherit; font-size: 16px; min-height: 48px; border: 0; border-radius: 14px; padding: 0 14px; background: transparent; color: {{t.ink}}; box-shadow: inset 0 0 0 1px {{t.hair}}">Something else</button>
+      </div>
+      <div style="font-size: 14px; font-weight: 600; color: {{t.green}}">Set. We'll remind you in the morning.</div>
+    </section>
+
+    <section style="background: {{t.card}}; border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 10px; box-shadow: {{t.shadow}}">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: {{t.green}}">CHOICE, PICK 3 · DAY 4 · TUE 10 NOV</div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px; line-height: 1.25">Pick three lifts for flat days.</div>
+      <div style="font-size: 14px; font-weight: 700; color: {{t.muted}}">2 of 3 picked</div>
+      <div style="display: flex; flex-wrap: wrap; gap: 6px">
+        <button aria-pressed="true" style="font: inherit; font-size: 14px; font-weight: 600; min-height: 44px; border: 0; border-radius: 14px; padding: 0 12px; background: {{t.sel}}; color: {{t.selInk}}">Walk outside</button>
+        <button aria-pressed="false" style="font: inherit; font-size: 14px; min-height: 44px; border: 0; border-radius: 14px; padding: 0 12px; background: {{t.opt}}; color: {{t.ink}}; box-shadow: inset 0 0 0 1px {{t.hair}}">Music</button>
+        <button aria-pressed="true" style="font: inherit; font-size: 14px; font-weight: 600; min-height: 44px; border: 0; border-radius: 14px; padding: 0 12px; background: {{t.sel}}; color: {{t.selInk}}">Call a friend</button>
+        <button aria-pressed="false" style="font: inherit; font-size: 14px; min-height: 44px; border: 0; border-radius: 14px; padding: 0 12px; background: {{t.opt}}; color: {{t.ink}}; box-shadow: inset 0 0 0 1px {{t.hair}}">Cold water on my face</button>
+        <button aria-pressed="false" style="font: inherit; font-size: 14px; min-height: 44px; border: 0; border-radius: 14px; padding: 0 12px; background: {{t.opt}}; color: {{t.ink}}; box-shadow: inset 0 0 0 1px {{t.hair}}">A shower</button>
+        <button aria-pressed="false" style="font: inherit; font-size: 14px; min-height: 44px; border: 0; border-radius: 14px; padding: 0 12px; background: {{t.opt}}; color: {{t.ink}}; box-shadow: inset 0 0 0 1px {{t.hair}}">Cook something</button>
+        <button aria-pressed="false" style="font: inherit; font-size: 14px; min-height: 44px; border: 0; border-radius: 14px; padding: 0 12px; background: {{t.opt}}; color: {{t.ink}}; box-shadow: inset 0 0 0 1px {{t.hair}}">Daylight</button>
+        <button aria-pressed="false" style="font: inherit; font-size: 14px; min-height: 44px; border: 0; border-radius: 14px; padding: 0 12px; background: {{t.opt}}; color: {{t.ink}}; box-shadow: inset 0 0 0 1px {{t.hair}}">Exercise</button>
+      </div>
+      <div style="font-size: 12px; color: {{t.muted}}">Plus Something creative and A game.</div>
+    </section>
+
+    <section style="background: {{t.card}}; border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 12px; box-shadow: {{t.shadow}}">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: {{t.green}}">SLIDER · DAY 3 · MON 9 NOV</div>
+      <label for="s1" style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px; line-height: 1.25">How are you doing, honestly?</label>
+      <input id="s1" type="range" min="0" max="100" value="62" aria-valuetext="A little above the middle" style="width: 100%; accent-color: {{t.inkSolid}}; height: 44px; margin: 0">
+      <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; color: {{t.muted}}"><span>Really struggling</span><span>Surprisingly okay</span></div>
+      <div style="font-size: 14px; font-weight: 600; color: {{t.green}}">Thanks for telling the truth. Wherever you are today is fine.</div>
+    </section>
+
+    <section style="background: {{t.card}}; border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 10px; box-shadow: {{t.shadow}}">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: {{t.green}}">SLIDER GROUP · DAY 1 · SAT 7 NOV</div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px">Quick check-in</div>
+      <label for="g1" style="font-size: 14px; font-weight: 700">Cravings</label>
+      <input id="g1" type="range" min="0" max="100" value="70" style="width: 100%; accent-color: {{t.inkSolid}}; height: 32px; margin: 0">
+      <div style="display: flex; justify-content: space-between; font-size: 12px; color: {{t.muted}}"><span>None</span><span>Constant</span></div>
+      <label for="g2" style="font-size: 14px; font-weight: 700">Irritability</label>
+      <input id="g2" type="range" min="0" max="100" value="55" style="width: 100%; accent-color: {{t.inkSolid}}; height: 32px; margin: 0">
+      <div style="display: flex; justify-content: space-between; font-size: 12px; color: {{t.muted}}"><span>None</span><span>A lot</span></div>
+      <label for="g3" style="font-size: 14px; font-weight: 700">Sleep quality</label>
+      <input id="g3" type="range" min="0" max="100" value="40" style="width: 100%; accent-color: {{t.inkSolid}}; height: 32px; margin: 0">
+      <div style="display: flex; justify-content: space-between; font-size: 12px; color: {{t.muted}}"><span>Poor</span><span>Great</span></div>
+      <div style="font-size: 14px; font-weight: 600; color: {{t.green}}">Logged. You'll be able to watch these change over the coming days.</div>
+    </section>
+
+    <section style="background: {{t.card}}; border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 10px; box-shadow: {{t.shadow}}">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: {{t.green}}">TAP TO REVEAL · DAY XERO · FRI 6 NOV</div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px">What today might bring</div>
+      <div style="font-size: 14px; font-weight: 700; color: {{t.muted}}">2 of 5 flipped</div>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+        <button aria-expanded="true" style="text-align: left; font: inherit; border: 0; border-radius: 16px; padding: 12px; min-height: 96px; background: {{t.sel}}; color: {{t.selInk}}; display: flex; flex-direction: column; gap: 4px"><b style="font-size: 14px">Cravings</b><span style="font-size: 14px; line-height: 1.35">They come and go. Each one passes within minutes.</span></button>
+        <button aria-expanded="true" style="text-align: left; font: inherit; border: 0; border-radius: 16px; padding: 12px; min-height: 96px; background: {{t.sel}}; color: {{t.selInk}}; display: flex; flex-direction: column; gap: 4px"><b style="font-size: 14px">Hungrier</b><span style="font-size: 14px; line-height: 1.35">Keep easy snacks around.</span></button>
+        <button aria-expanded="false" style="text-align: left; font: inherit; border: 0; border-radius: 16px; padding: 12px; min-height: 64px; background: {{t.opt}}; color: {{t.ink}}; box-shadow: inset 0 0 0 1px {{t.hair}}; display: flex; flex-direction: column; justify-content: space-between"><b style="font-size: 14px">Restless or irritable</b><span style="font-size: 12px; color: {{t.muted}}">Tap to flip</span></button>
+        <button aria-expanded="false" style="text-align: left; font: inherit; border: 0; border-radius: 16px; padding: 12px; min-height: 64px; background: {{t.opt}}; color: {{t.ink}}; box-shadow: inset 0 0 0 1px {{t.hair}}; display: flex; flex-direction: column; justify-content: space-between"><b style="font-size: 14px">Harder to focus</b><span style="font-size: 12px; color: {{t.muted}}">Tap to flip</span></button>
+        <button aria-expanded="false" style="text-align: left; font: inherit; border: 0; border-radius: 16px; padding: 12px; min-height: 64px; background: {{t.opt}}; color: {{t.ink}}; box-shadow: inset 0 0 0 1px {{t.hair}}; display: flex; flex-direction: column; justify-content: space-between"><b style="font-size: 14px">Sleep changes</b><span style="font-size: 12px; color: {{t.muted}}">Tap to flip</span></button>
+      </div>
+      <div style="font-size: 12px; line-height: 1.45; color: {{t.muted}}">These are signs your body is adjusting. They're usually strongest in the first days and ease over 2 to 4 weeks.</div>
+    </section>
+
+    <section style="background: {{t.card}}; border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 10px; align-items: center; box-shadow: {{t.shadow}}">
+      <div style="align-self: flex-start; font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: {{t.green}}">BREATHE · PREP 4 · MON 2 NOV</div>
+      <svg width="180" height="180" viewBox="0 0 180 180" aria-hidden="true">
+        <circle cx="90" cy="90" r="80" fill="{{t.ring1}}"><animate attributeName="r" values="58;80;58" keyTimes="0;0.4;1" dur="10s" repeatCount="indefinite"></animate></circle>
+        <circle cx="90" cy="90" r="50" fill="{{t.ring2}}"></circle>
+      </svg>
+      <div aria-live="polite" style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 19px">Two more sighs, with the ring.</div>
+      <div style="font-size: 12px; color: {{t.muted}}">Pattern: sigh · 3 cycles. Box (Day Xero) and wave (Prep 5) use the same ring.</div>
+    </section>
+
+    <section style="background: {{t.card}}; border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 8px; box-shadow: {{t.shadow}}">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: {{t.green}}">CHECKLIST · PREP 6 · WED 4 NOV</div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px">Make it harder to reach</div>
+      <label style="display: flex; align-items: center; gap: 10px; min-height: 44px; font-size: 16px"><input type="checkbox" checked style="width: 22px; height: 22px; accent-color: {{t.greenSolid}}; margin: 0">Pack and lighter out of my pocket</label>
+      <label style="display: flex; align-items: center; gap: 10px; min-height: 44px; font-size: 16px"><input type="checkbox" checked style="width: 22px; height: 22px; accent-color: {{t.greenSolid}}; margin: 0">Out of the car</label>
+      <label style="display: flex; align-items: center; gap: 10px; min-height: 44px; font-size: 16px"><input type="checkbox" style="width: 22px; height: 22px; accent-color: {{t.greenSolid}}; margin: 0">Out of my bag</label>
+      <label style="display: flex; align-items: center; gap: 10px; min-height: 44px; font-size: 16px"><input type="checkbox" style="width: 22px; height: 22px; accent-color: {{t.greenSolid}}; margin: 0">In one inconvenient spot</label>
+      <div style="font-size: 12px; color: {{t.muted}}">Smoking list shown. Sam also vapes; which list a dual user sees is open.</div>
+    </section>
+
+    <section style="background: {{t.card}}; border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 10px; box-shadow: {{t.shadow}}">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: {{t.green}}">COMMIT · PREP 1 · FRI 30 OCT</div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px; line-height: 1.25">Hold to commit to your Quit Day: Fri 6 Nov</div>
+      <a href="#" aria-label="Commit. Hold for two seconds, or double-tap with VoiceOver." style="position: relative; overflow: hidden; height: 58px; border-radius: 99px; background: {{t.btn}}; color: {{t.btnInk}}; font-weight: 700; font-size: 16px; text-decoration: none; display: flex; align-items: center; justify-content: center"><span style="position: absolute; left: 0; top: 0; bottom: 0; width: 60%; background: {{t.fill}}"></span><span style="position: relative">Commit</span></a>
+      <div style="font-size: 14px; color: {{t.muted}}">Hold for 2 seconds. When it fills: “Committed.”</div>
+      <div style="font-size: 12px; color: {{t.muted}}">Holds in program.json: 2 s (Prep 1), 3 s (Prep 7, Day Xero, Graduation).</div>
+    </section>
+
+    <section style="background: {{t.card}}; border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 10px; box-shadow: {{t.shadow}}">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: {{t.green}}">NOTE · DAY 3 · MON 9 NOV</div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px">Your reasons</div>
+      <div style="background: {{t.apricot}}; color: #1E1A3A; border-radius: 16px; padding: 12px 14px; display: flex; flex-direction: column; gap: 2px">
+        <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: #4A2A1A">MATTERS MOST</span>
+        <span style="font-size: 16px; font-weight: 600">To keep up with Maya at the park.</span>
+      </div>
+      <div style="font-size: 12px; color: {{t.muted}}">Other reasons list below it. Sam has one on file.</div>
+    </section>
+
+    <section style="background: {{t.card}}; border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 10px; box-shadow: {{t.shadow}}">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: {{t.green}}">SHARE A MESSAGE · PREP 6 · WED 4 NOV</div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px">Give someone a heads-up?</div>
+      <div style="font-size: 14px; line-height: 1.45; color: {{t.muted}}">A message from a friend helps more than you'd think. Change it however you like.</div>
+      <label for="msg" style="position: absolute; left: -9999px">Message</label>
+      <textarea id="msg" rows="4" style="box-sizing: border-box; width: 100%; resize: none; border: 0; border-radius: 16px; padding: 12px; font: inherit; font-size: 16px; line-height: 1.4; background: {{t.opt}}; color: {{t.ink}}; box-shadow: inset 0 0 0 1px {{t.hair}}">Heads up: I'm quitting nicotine in two days. If I'm a bit cranky, that's why. A message from you would really help.</textarea>
+      <a href="#" style="height: 48px; border-radius: 99px; background: {{t.btn}}; color: {{t.btnInk}}; font-weight: 700; font-size: 16px; text-decoration: none; display: flex; align-items: center; justify-content: center">Send it</a>
+    </section>
+
+    <section style="background: {{t.card}}; border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 10px; box-shadow: {{t.shadow}}">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: {{t.green}}">SCENARIO · DAY 5 · WED 11 NOV</div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px; line-height: 1.25">Someone offers you one at a party. You say…</div>
+      <button aria-pressed="true" style="text-align: left; font: inherit; font-size: 16px; font-weight: 600; min-height: 48px; border: 0; border-radius: 14px; padding: 0 14px; background: {{t.sel}}; color: {{t.selInk}}">“No thanks, I've stopped.”</button>
+      <div style="font-size: 14px; font-weight: 600; color: {{t.green}}">Clear and done. That's the strongest answer.</div>
+      <button aria-pressed="false" style="text-align: left; font: inherit; font-size: 16px; min-height: 48px; border: 0; border-radius: 14px; padding: 0 14px; background: {{t.opt}}; color: {{t.ink}}; box-shadow: inset 0 0 0 1px {{t.hair}}">“Maybe later.”</button>
+      <button aria-pressed="false" style="text-align: left; font: inherit; font-size: 16px; min-height: 48px; border: 0; border-radius: 14px; padding: 0 14px; background: {{t.opt}}; color: {{t.ink}}; box-shadow: inset 0 0 0 1px {{t.hair}}">“Go on then, just one.”</button>
+      <div style="font-size: 12px; color: {{t.muted}}">Every option has its own feedback. None is marked wrong.</div>
+    </section>
+
+    <section style="background: {{t.card}}; border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 10px; box-shadow: {{t.shadow}}">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: {{t.green}}">INFO · WEEK 3 · SUN 22 NOV</div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px">If it stays heavy</div>
+      <div style="font-size: 16px; line-height: 1.5">If a heavy feeling stays with you for weeks, talking to a doctor or someone you trust can really help.</div>
+      <div style="background: {{t.opt}}; box-shadow: inset 0 0 0 1px {{t.hair}}; border-radius: 16px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px">
+        <span style="font-size: 14px; line-height: 1.45; color: {{t.muted}}">If stress or anxiety is getting in the way of everyday life, talk to a doctor or a mental health professional. In a crisis, call your local emergency number.</span>
+        <a href="#" style="font-size: 14px; font-weight: 700; color: {{t.ink}}; min-height: 44px; display: flex; align-items: center">Find a helpline near you</a>
+      </div>
+      <div style="font-size: 12px; color: {{t.muted}}">Serious tier: no character, no colour ground.</div>
+    </section>
+
+    <section style="background: {{t.card}}; border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 10px; box-shadow: {{t.shadow}}">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: {{t.green}}">NRT CHOICE · PREP 6 · WED 4 NOV</div>
+      <div id="n1" style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px; line-height: 1.25">Want nicotine replacement for the first weeks?</div>
+      <div role="radiogroup" aria-labelledby="n1" style="display: flex; flex-direction: column; gap: 6px">
+        <button role="radio" aria-checked="false" style="text-align: left; font: inherit; font-size: 16px; min-height: 48px; border: 0; border-radius: 14px; padding: 0 14px; background: {{t.opt}}; color: {{t.ink}}; box-shadow: inset 0 0 0 1px {{t.hair}}">Yes, set it up</button>
+        <button role="radio" aria-checked="false" style="text-align: left; font: inherit; font-size: 16px; min-height: 48px; border: 0; border-radius: 14px; padding: 0 14px; background: {{t.opt}}; color: {{t.ink}}; box-shadow: inset 0 0 0 1px {{t.hair}}">I already have it</button>
+        <button role="radio" aria-checked="false" style="text-align: left; font: inherit; font-size: 16px; min-height: 48px; border: 0; border-radius: 14px; padding: 0 14px; background: {{t.opt}}; color: {{t.ink}}; box-shadow: inset 0 0 0 1px {{t.hair}}">Not this time</button>
+      </div>
+      <div style="font-size: 14px; line-height: 1.45; color: {{t.muted}}">Follow the product label. If you're pregnant, have a heart condition or take other medicines, check with a pharmacist or doctor first.</div>
+    </section>
+
+    <section style="background: {{t.card}}; border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 10px; box-shadow: {{t.shadow}}">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: {{t.green}}">NRT STEP-DOWN · WEEK 4 · MON 30 NOV</div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px">Plan your step-down</div>
+      <div style="font-size: 16px; line-height: 1.5">Follow the step-down plan on your product's label. We'll remind you on each date.</div>
+      <a href="#" style="height: 48px; border-radius: 99px; background: {{t.btn}}; color: {{t.btnInk}}; font-weight: 700; font-size: 16px; text-decoration: none; display: flex; align-items: center; justify-content: center">Plan my step-down</a>
+      <div style="font-size: 14px; line-height: 1.45; color: {{t.muted}}">Follow the product label. If you're pregnant, have a heart condition or take other medicines, check with a pharmacist or doctor first.</div>
+      <div style="font-size: 12px; color: {{t.muted}}">Shown only when an NRT plan is active.</div>
+    </section>
+
+    <section style="background: {{t.card}}; border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 10px; box-shadow: {{t.shadow}}">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: {{t.green}}">SLIP PRACTICE · WEEK 4 · THU 3 DEC</div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px; line-height: 1.25">Let's run through it once, so it feels familiar.</div>
+      <a href="F15Slip.dc.html" style="height: 48px; border-radius: 99px; background: {{t.btn}}; color: {{t.btnInk}}; font-weight: 700; font-size: 16px; text-decoration: none; display: flex; align-items: center; justify-content: center">Start the practice</a>
+      <div style="font-size: 14px; color: {{t.muted}}">Nothing here is logged as a slip.</div>
+      <div style="font-size: 14px; color: {{t.muted}}">After: “That's the whole debrief. One minute, then back on track.”</div>
+      <div style="font-size: 12px; color: {{t.muted}}">Runs the F15 slip screens in practice mode.</div>
+    </section>
+
+    <section style="background: {{t.card}}; border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 10px; box-shadow: {{t.shadow}}">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: {{t.green}}">PLAN CARD · GRADUATION · SUN 6 DEC</div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px">My plan</div>
+      <div style="display: flex; flex-direction: column; gap: 0">
+        <div style="display: flex; align-items: flex-start; gap: 8px; padding: 8px 0; border-bottom: 1px solid {{t.hair}}"><div style="flex-grow: 1"><div style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: {{t.muted}}">WHY I'M DOING THIS</div><div style="font-size: 16px">To keep up with Maya at the park.</div></div><button aria-label="Edit Why I'm doing this" style="width: 44px; height: 44px; border: 0; background: transparent; color: {{t.ink}}; flex: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path></svg></button></div>
+        <div style="display: flex; align-items: flex-start; gap: 8px; padding: 8px 0; border-bottom: 1px solid {{t.hair}}"><div style="flex-grow: 1"><div style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: {{t.muted}}">ON A ROUGH DAY</div><div style="font-size: 16px">Walk for 5 minutes · Open Craving SOS</div></div><button aria-label="Edit On a rough day" style="width: 44px; height: 44px; border: 0; background: transparent; color: {{t.ink}}; flex: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path></svg></button></div>
+        <div style="display: flex; align-items: flex-start; gap: 8px; padding: 8px 0"><div style="flex-grow: 1"><div style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: {{t.muted}}">MY BREAKS</div><div style="font-size: 16px; color: {{t.muted}}">[Sam’s three from Week 2]</div></div></div>
+      </div>
+      <a href="#" style="height: 48px; border-radius: 99px; background: {{t.btn}}; color: {{t.btnInk}}; font-weight: 700; font-size: 16px; text-decoration: none; display: flex; align-items: center; justify-content: center">Save to Photos or share</a>
+      <div style="font-size: 12px; color: {{t.muted}}">Eight rows in code; three shown.</div>
+    </section>
+
+    <section style="background: {{t.card}}; border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 10px; box-shadow: {{t.shadow}}">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: {{t.green}}">SHARE A CARD · DAY 7 · FRI 13 NOV</div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px">Share it, if you like</div>
+      <div role="img" aria-label="Share card: 7 days nicotine-free" style="background: #FFD966; color: #1E1A3A; border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 6px">
+        <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 40px; letter-spacing: -1.2px; line-height: 1">7 days</span>
+        <span style="font-size: 16px; font-weight: 600">nicotine-free</span>
+        <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 14px; margin-top: 10px">DayXero</span>
+      </div>
+      <a href="#" style="font-size: 14px; font-weight: 700; color: {{t.ink}}; min-height: 44px; display: flex; align-items: center">Add a line from your note</a>
+      <a href="#" style="height: 48px; border-radius: 99px; background: {{t.btn}}; color: {{t.btnInk}}; font-weight: 700; font-size: 16px; text-decoration: none; display: flex; align-items: center; justify-content: center">Share</a>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":1500,"height":2600}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const dark = (this.props.theme ?? 'light') === 'dark';
+    const t = dark
+      ? { page: '#0E0B2B', card: '#1B1747', shadow: 'none', ink: '#FFF8EE', inkSolid: '#FFF8EE', muted: '#B8B3D9', green: '#2FD08A', greenSolid: '#2FD08A', opt: '#0E0B2B', hair: 'rgba(255,255,255,0.14)', sel: '#FFF8EE', selInk: '#0E0B2B', btn: '#FFF8EE', btnInk: '#0E0B2B', fill: '#D9D3C8', ring1: 'rgba(255,195,138,0.14)', ring2: 'rgba(255,195,138,0.28)', apricot: '#FFC38A' }
+      : { page: '#FBF7F1', card: '#FFFFFF', shadow: '0 1px 0 rgba(30,26,58,0.05), 0 8px 22px rgba(30,26,58,0.07)', ink: '#1E1A3A', inkSolid: '#1E1A3A', muted: '#5E5975', green: '#0F6E43', greenSolid: '#0F6E43', opt: '#FFFFFF', hair: 'rgba(30,26,58,0.14)', sel: '#1E1A3A', selInk: '#FFF8EE', btn: '#1E1A3A', btnInk: '#FFF8EE', fill: '#3A3460', ring1: 'rgba(255,195,138,0.35)', ring2: 'rgba(255,195,138,0.6)', apricot: '#FFC38A' };
+    return { t };
+  }
+}
+</script>
+</body>
+</html>

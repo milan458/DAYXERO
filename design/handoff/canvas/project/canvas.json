@@ -1312,6 +1312,76 @@
    "page": "final",
    "title": "Q3 · Quit Day offer · serious tier",
    "is_interactive": true
+  },
+  "L01Intro.dc.html": {
+   "x": 0,
+   "y": 10564,
+   "w": 390,
+   "h": 844,
+   "page": "final",
+   "title": "P1 · Lesson intro · Day 2 · reading",
+   "is_interactive": true
+  },
+  "L02Audio.dc.html": {
+   "x": 470,
+   "y": 10564,
+   "w": 390,
+   "h": 844,
+   "page": "final",
+   "title": "P2 · Guided audio (try Tweaks: coming soon)",
+   "is_interactive": true
+  },
+  "L03Reflect.dc.html": {
+   "x": 940,
+   "y": 10564,
+   "w": 390,
+   "h": 844,
+   "page": "final",
+   "title": "P3 · Reflect · your passengers",
+   "is_interactive": true
+  },
+  "L04Quiz.dc.html": {
+   "x": 1410,
+   "y": 10564,
+   "w": 390,
+   "h": 844,
+   "page": "final",
+   "title": "P4 · Quick check",
+   "is_interactive": true
+  },
+  "L05Mission.dc.html": {
+   "x": 1880,
+   "y": 10564,
+   "w": 390,
+   "h": 844,
+   "page": "final",
+   "title": "P5 · Today’s mission",
+   "is_interactive": true
+  },
+  "L06Done.dc.html": {
+   "x": 2350,
+   "y": 10564,
+   "w": 390,
+   "h": 844,
+   "page": "final",
+   "title": "P6 · Day 2 done",
+   "is_interactive": true
+  },
+  "GDarkA.dc.html": {
+   "x": 0,
+   "y": 11888,
+   "w": 4150,
+   "h": 844,
+   "page": "final",
+   "title": "Dark mode · Q1–Q3, P1–P6"
+  },
+  "LBeats.dc.html": {
+   "x": 0,
+   "y": 13212,
+   "w": 1500,
+   "h": 2600,
+   "page": "final",
+   "title": "Lesson beats kit · every beat type, real content"
   }
  },
  "order": [
@@ -1456,7 +1526,15 @@
   "StDarkRow.dc.html",
   "G01DayXero.dc.html",
   "G02DayXeroDone.dc.html",
-  "G03Offer.dc.html"
+  "G03Offer.dc.html",
+  "L01Intro.dc.html",
+  "L02Audio.dc.html",
+  "L03Reflect.dc.html",
+  "L04Quiz.dc.html",
+  "L05Mission.dc.html",
+  "L06Done.dc.html",
+  "GDarkA.dc.html",
+  "LBeats.dc.html"
  ],
  "notes": {
   "fnTitle": {
@@ -1761,6 +1839,30 @@
    "text": "New v4 screens · Quit Day: Day Xero and the offer (decision 15)",
    "kind": "title1",
    "maxW": 3200,
+   "page": "final"
+  },
+  "fnP": {
+   "x": 0,
+   "y": 10324,
+   "text": "New v4 screens · Program: a session, Sun 8 Nov (Day 2 · The noisy passengers)",
+   "kind": "title1",
+   "maxW": 2740,
+   "page": "final"
+  },
+  "fnGD": {
+   "x": 0,
+   "y": 11648,
+   "text": "New screens · phone in dark mode",
+   "kind": "title1",
+   "maxW": 2740,
+   "page": "final"
+  },
+  "fnKit": {
+   "x": 0,
+   "y": 12972,
+   "text": "Program · lesson beats kit",
+   "kind": "title1",
+   "maxW": 1500,
    "page": "final"
   }
  },
