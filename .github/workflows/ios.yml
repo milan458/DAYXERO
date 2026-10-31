@@ -330,17 +330,17 @@ jobs:
           shoot light large notif-settings-light $P12 -dx.openSettings reminders
           shoot dark accessibility-extra-extra-extra-large notif-settings-dark-ax5 $P12 -dx.openSettings reminders
           shoot dark large notif-quiet-dark $P12 -dx.openSettings quietHours
-          shoot dark large toolkit-dark $P12 -dx.tab toolkit
-          shoot light large toolkit-light $P12 -dx.tab toolkit -dx.seedWater partial
-          shoot dark accessibility-extra-extra-extra-large toolkit-dark-ax5 $P12 -dx.tab toolkit
-          shoot dark large calm-list-dark $P12 -dx.tab toolkit -dx.openCalmList YES
-          shoot light large calm-list-light $P12 -dx.tab toolkit -dx.openCalmList YES
-          shoot dark accessibility-extra-extra-extra-large calm-list-dark-ax5 $P12 -dx.tab toolkit -dx.openCalmList YES
-          shoot dark large calm-box-dark $P12 -dx.tab toolkit -dx.openCalm boxBreathing -dx.calmElapsed 6
-          shoot dark large calm-grounding-dark $P12 -dx.tab toolkit -dx.openCalm grounding -dx.calmStep 1 -dx.calmTicked 2
-          shoot dark large calm-notice1-dark $P12 -dx.tab toolkit -dx.openCalm noticeAndName
-          shoot dark large calm-notice2-dark $P12 -dx.tab toolkit -dx.openCalm noticeAndName -dx.calmStep 1
-          shoot dark large calm-done-dark $P12 -dx.tab toolkit -dx.openCalm dropAnchor -dx.calmDone YES
+          shoot dark large evening-dark $P12 -dx.tab evening
+          shoot light large evening-light $P12 -dx.tab evening
+          shoot dark accessibility-extra-extra-extra-large evening-dark-ax5 $P12 -dx.tab evening
+          shoot dark large calm-list-dark $P12 -dx.tab evening -dx.openCalmList YES
+          shoot light large calm-list-light $P12 -dx.tab evening -dx.openCalmList YES
+          shoot dark accessibility-extra-extra-extra-large calm-list-dark-ax5 $P12 -dx.tab evening -dx.openCalmList YES
+          shoot dark large calm-box-dark $P12 -dx.tab evening -dx.openCalm boxBreathing -dx.calmElapsed 6
+          shoot dark large calm-grounding-dark $P12 -dx.tab evening -dx.openCalm grounding -dx.calmStep 1 -dx.calmTicked 2
+          shoot dark large calm-notice1-dark $P12 -dx.tab evening -dx.openCalm noticeAndName
+          shoot dark large calm-notice2-dark $P12 -dx.tab evening -dx.openCalm noticeAndName -dx.calmStep 1
+          shoot dark large calm-done-dark $P12 -dx.tab evening -dx.openCalm dropAnchor -dx.calmDone YES
           shoot dark large ms-moment-dark $P12 -dx.milestone 7
           shoot light large ms-moment-light $P12 -dx.milestone 7
           shoot dark accessibility-extra-extra-extra-large ms-moment-dark-ax5 $P12 -dx.milestone 7
@@ -357,8 +357,8 @@ jobs:
           shoot light large water-goal-sheet-light $P12 -dx.tab water -dx.waterGoalSheet YES
           shoot dark accessibility-extra-extra-extra-large water-goal-sheet-dark-ax5 $P12 -dx.tab water -dx.waterGoalSheet YES
           shoot dark large home-water-dark $P12 -dx.seedWater partial
-          shoot dark large calm-box-orb-dark $P12 -dx.tab toolkit -dx.openCalm boxBreathing -dx.calmElapsed 6
-          shoot dark large calm-478-orb-dark $P12 -dx.tab toolkit -dx.openCalm longerOutBreath
+          shoot dark large calm-box-orb-dark $P12 -dx.tab evening -dx.openCalm boxBreathing -dx.calmElapsed 6
+          shoot dark large calm-478-orb-dark $P12 -dx.tab evening -dx.openCalm longerOutBreath
           for page in home clear lock private standby states; do
             shoot dark large "widgets-$page" -dx.widgetGallery "$page"
           done

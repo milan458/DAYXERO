@@ -126,7 +126,7 @@ final class JourneyUITests: XCTestCase {
     /// Every tap on Log raises the water straight away, quick taps or slow (S21.2): Milan saw it sit still and
     /// then jump up by all the taps at once. Reads the amount from VoiceOver and the water's height from the pixels.
     func testWaterRisesOnEveryTap() {
-        // Water lives in the Toolkit tab; "-dx.tab water" opens the toolkit with the tracker showing.
+        // Water is one tap from the Evening tab; "-dx.tab water" opens Evening with the tracker showing.
         let app = launch(["-dx.homeScenario", "day3", "-dx.store", "pro", "-dx.tab", "water"])
         let pill = app.descendants(matching: .any)["Water today"]
         XCTAssert(pill.waitForExistence(timeout: 10), "No water pill")

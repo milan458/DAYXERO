@@ -232,4 +232,7 @@ The current app also has areas with **no v4 design at all**: Water (a Today card
   - F12: the sky strip with its clarity pill, a counting 2×2 grid, the money and check-in line, and WHAT'S CHANGING from `health-timeline.json` with each entry's own source label.
   - The NRT cards and the health timeline sheet also move to the reading tier. Milestone screens wait for Phase 6.
   - Not changed: the UX issue in §10.3 (two day counts on Today) and the program.json content issues stay open for Milan.
+- **Phase 4 (branch `claude/v4-phase4`, built on Phase 3):** F16 Check-in and F17 Wind down on violet with Glim; the Evening tab is now Wind down and the old Toolkit tab is gone (decision 27).
+  - F16: night hero with Glim 140 (cheers on Good or Proud), the adaptive headline, "From today's SOS: n of n waves ridden out · Edit", the drawn mood faces, the CTA by outcome ("Save and rest" / "Make a plan for tomorrow"), and "Your day ends at … · change". Prep and slip logic unchanged.
+  - F17: "Check-in saved / Rest well.", slow breathing with Glim, the calm tools, your reason, Water, and the helpline line.
 
