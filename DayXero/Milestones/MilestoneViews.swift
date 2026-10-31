@@ -43,8 +43,8 @@ enum CelebratedMilestones {
     }
 }
 
-/// The full-screen moment on a milestone day (S13.2): rings and sparks for about a second, a success haptic,
-/// two of your numbers, then Keep going or Share. Reduce Motion keeps everything still and fades the number in.
+/// The full-screen moment on a milestone day (S13.2), on the sun ground. A milestone is one of the three places
+/// Celebrate motion is allowed: Xero springs in and cheers, the number counts up. No confetti (finale only).
 struct MilestoneMoment: View {
     let milestone: Milestone
     let stats: MilestoneStats
@@ -54,107 +54,90 @@ struct MilestoneMoment: View {
     @State private var appeared = false
     @State private var sharing = false
 
+    private let ground = DX.Ground.sun
+
     var body: some View {
-        VStack(spacing: DX.Space.s) {
-            HStack {
-                Spacer()
-                Text("Milestone").dxText(.micro)
-                Spacer()
-            }
-            .overlay(alignment: .trailing) {
-                Button(action: onClose) { Image(systemName: "xmark") }.buttonStyle(.dxIcon).accessibilityLabel(Text("Close"))
-            }
-            .padding(.top, DX.Space.s)
+        VStack(spacing: 0) {
             ScrollView {
-                VStack(spacing: DX.Space.s) {
-                    burst.padding(.top, DX.Space.l)
-                    Text(verbatim: milestone.title).dxText(.title).multilineTextAlignment(.center)
-                    Text(verbatim: milestone.line).dxText(.subtitle).multilineTextAlignment(.center)
+                VStack(spacing: 10) {
+                    ZStack(alignment: .bottom) {
+                        HeroScene(.dawn, clarity: CrewGrowth.clarity(daysClear: stats.daysClear), height: 280, edge: ground.background)
+                        XeroView(mood: appeared ? .cheer : .hello, stage: CrewGrowth.stage(daysClear: stats.daysClear), size: .hero)
+                            .scaleEffect(appeared || reduceMotion ? 1 : DX.Move.celebrateFromScale)
+                            .opacity(appeared ? 1 : 0)
+                            .offset(y: -6)
+                            .accessibilityHidden(true)
+                    }
+                    .overlay(alignment: .topTrailing) {
+                        Button(action: onClose) {
+                            Image(systemName: "xmark").font(.system(size: 18, weight: .bold)).foregroundStyle(DX.Fill.navy)
+                                .frame(width: 44, height: 44)
+                                .background(DX.Fill.cream.opacity(0.85), in: Circle())
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(Text("Close"))
+                        .padding(.trailing, 10).padding(.top, 50)
+                    }
+                    .padding(.horizontal, -DX.Layout.gutter)
+                    .ignoresSafeArea(edges: .top)
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                        CountingText(Double(milestone.number), format: { String(Int($0.rounded())) })
+                            .dxType(.display).monospacedDigit()
+                        Text(verbatim: milestone.caption).dxType(.headline)
+                    }
+                    .foregroundStyle(ground.ink)
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel(Text(verbatim: milestone.title))
+                    .accessibilityAddTraits(.isHeader)
+                    Text(verbatim: milestone.title).dxType(.title).foregroundStyle(ground.ink).multilineTextAlignment(.center)
+                    if !milestone.line.isEmpty {
+                        Text(verbatim: milestone.line).dxType(.body).foregroundStyle(ground.muted)
+                            .multilineTextAlignment(.center).fixedSize(horizontal: false, vertical: true)
+                    }
                     if let id = milestone.sourceID, let source = HealthTimeline.bundled?.source(id) {
                         Link(destination: source.url) {
-                            Text(verbatim: source.label).font(DX.TextStyle.subtitle.font).underline().foregroundStyle(DX.Palette.accentInk)
+                            Text(verbatim: source.label).dxType(.caption).underline().foregroundStyle(ground.muted)
                         }
                     }
                     if milestone != .quitDay {
-                        HStack(spacing: DX.Space.xs) {
-                            stat(stats.counterLabel, stats.counterValue)
-                            stat(String(localized: "Money kept"), stats.money)
+                        HStack(spacing: 8) {
+                            tile(stats.counterValue, stats.counterLabel.lowercased())
+                            tile(stats.money, String(localized: "kept"))
                         }
-                        .padding(.top, DX.Space.s)
+                        .padding(.top, 6)
                     }
                 }
+                .padding(.horizontal, DX.Layout.gutter)
+                .padding(.bottom, DX.Space.m)
             }
             .scrollBounceBehavior(.basedOnSize)
-            Button("Keep going", action: onClose).buttonStyle(.dxPrimary)
-            Button { sharing = true } label: { Label("Share", systemImage: "square.and.arrow.up").frame(maxWidth: .infinity) }
-                .buttonStyle(.dxSecondary)
-        }
-        .padding(.horizontal, DX.Space.m)
-        .dxReadableColumn()
-        .padding(.bottom, DX.Space.xs)
-        .background {
-            ZStack {
-                DX.Palette.canvas
-                RadialGradient(colors: [DX.Palette.sage.opacity(0.3), .clear], center: UnitPoint(x: 0.5, y: 0.32), startRadius: 0, endRadius: 420)
+            VStack(spacing: 4) {
+                Button("Keep going", action: onClose).buttonStyle(.dx(.primary, on: ground))
+                Button { sharing = true } label: { Label("Share my card", systemImage: "square.and.arrow.up") }
+                    .buttonStyle(.dx(.quiet, on: ground))
             }
-            .ignoresSafeArea()
+            .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+            .padding(.horizontal, DX.Layout.buttonGutter)
+            .padding(.bottom, DX.Space.xs)
         }
+        .dxReadableColumn()
+        .background(ground.background.ignoresSafeArea())
         .sensoryFeedback(DX.Haptic.commit, trigger: appeared)
         .onAppear {
-            withAnimation(reduceMotion ? .easeIn(duration: 0.4) : .spring(response: 0.9, dampingFraction: 0.7)) { appeared = true }
+            withAnimation(DX.Move.animation(DX.Move.celebrate, reduceMotion: reduceMotion)) { appeared = true }
         }
         .sheet(isPresented: $sharing) {
             ShareCardMaker(milestone: milestone, stats: stats).presentationDetents([.large])
         }
     }
 
-    private var burst: some View {
-        ZStack {
-            ForEach(0..<3, id: \.self) { i in
-                Circle()
-                    .stroke(DX.Palette.sage.opacity(0.5 - Double(i) * 0.15), lineWidth: 2)
-                    .frame(width: 230 - CGFloat(i) * 44, height: 230 - CGFloat(i) * 44)
-                    .scaleEffect(appeared || reduceMotion ? 1 : 0.6)
-                    .opacity(appeared ? 1 : 0)
-            }
-            ForEach(Array(Self.sparks.enumerated()), id: \.offset) { _, spark in
-                Circle().fill(DX.Palette.sage).frame(width: 8, height: 8)
-                    .offset(x: appeared && !reduceMotion ? spark.x : spark.x * 0.4, y: appeared && !reduceMotion ? spark.y : spark.y * 0.4)
-                    .opacity(appeared ? 0.4 + spark.o : 0)
-            }
-            VStack(spacing: 0) {
-                Text(verbatim: "\(milestone.number)").font(.custom(DX.Typeface.bold, size: 88, relativeTo: .largeTitle))
-                    .foregroundStyle(DX.Palette.text)
-                Text(verbatim: milestone.caption.uppercased()).dxText(.micro, color: DX.Palette.accentInk)
-            }
-            .opacity(appeared ? 1 : 0)
-            .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+    private func tile(_ value: String, _ label: String) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(verbatim: value).dxType(.title).foregroundStyle(ground.ink).lineLimit(1).minimumScaleFactor(0.6)
+            Text(verbatim: label).dxType(.caption).foregroundStyle(ground.muted)
         }
-        .frame(width: 240, height: 240)
-        .overlay(alignment: .bottomTrailing) {
-            // The change in the body this milestone talks about, from the health illustrations (S21.6).
-            if let id = milestone.healthItemID {
-                HealthBadge(id: id, state: .done, size: 64)
-                    .opacity(appeared ? 1 : 0)
-                    .offset(x: -14, y: -14)
-            }
-        }
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text(verbatim: milestone.title))
-    }
-
-    private static let sparks: [(x: CGFloat, y: CGFloat, o: Double)] = [
-        (-80, -70, 0.4), (90, -95, 0.2), (-100, 40, 0.3), (95, 50, 0.5), (0, -118, 0.3), (50, 110, 0.2), (-55, 112, 0.4),
-    ]
-
-    private func stat(_ label: String, _ value: String) -> some View {
-        DXCard(padding: 12) {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(verbatim: value).font(.custom(DX.Typeface.bold, size: 18, relativeTo: .title3)).foregroundStyle(DX.Palette.text)
-                Text(verbatim: label).dxText(.subtitle)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .dxCardOnColour(on: ground)
         .accessibilityElement(children: .combine)
     }
 }
@@ -165,12 +148,12 @@ struct ShareCardMaker: View {
     let stats: MilestoneStats
 
     enum Format: String, CaseIterable { case story, square }
-    enum Look: String, CaseIterable { case dark, sage }
+    enum Look: String, CaseIterable { case dawn, night }
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.displayScale) private var displayScale
     @State private var format = Format.story
-    @State private var look = Look.dark
+    @State private var look = Look.dawn
     @State private var showMoney = false
     @State private var showCravings = false
     @State private var showCounter = false
@@ -178,11 +161,16 @@ struct ShareCardMaker: View {
     var body: some View {
         VStack(spacing: DX.Space.s) {
             HStack {
-                Button { dismiss() } label: { Image(systemName: "xmark") }.buttonStyle(.dxIcon).accessibilityLabel(Text("Close"))
+                Button { dismiss() } label: {
+                    Image(systemName: "xmark").font(.system(size: 16, weight: .bold)).foregroundStyle(Read4.ink)
+                        .frame(width: 44, height: 44).background(Read4.surface, in: Circle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(Text("Close"))
                 Spacer()
-                Text("Share card").dxText(.micro)
+                Text("Share card").v4Text(.micro)
                 Spacer()
-                Color.clear.frame(width: DX.Size.iconButton, height: 1)
+                Color.clear.frame(width: 44, height: 1)
             }
             .padding(.top, DX.Space.s)
             ScrollView {
@@ -192,12 +180,12 @@ struct ShareCardMaker: View {
                         .scaleEffect(previewScale, anchor: .topLeading)
                         .frame(width: 1080 * previewScale, height: (format == .story ? 1920 : 1080) * previewScale, alignment: .topLeading)
                         .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-                        .shadow(color: DX.Palette.shadow, radius: 18, y: 10)
+                        .shadow(color: .black.opacity(0.18), radius: 18, y: 10)
                         .accessibilityElement(children: .ignore)
                         .accessibilityLabel(Text("Card preview: \(days) days nicotine-free"))
                     HStack(spacing: DX.Space.xs) {
                         picker(Format.allCases, selection: $format) { $0 == .story ? "Story" : "Square" }
-                        picker(Look.allCases, selection: $look) { $0 == .dark ? "Dark" : "Sage" }
+                        picker(Look.allCases, selection: $look) { $0 == .dawn ? "Dawn" : "Night" }
                     }
                     VStack(spacing: 6) {
                         toggleRow("Days clear", detail: nil, isOn: .constant(true)).disabled(true)
@@ -205,7 +193,7 @@ struct ShareCardMaker: View {
                         toggleRow("Cravings ridden out", detail: stats.cravingsRiddenOut.formatted(), isOn: $showCravings)
                         toggleRow(LocalizedStringKey(stats.counterLabel), detail: stats.counterValue, isOn: $showCounter)
                     }
-                    .tint(DX.Palette.sage)
+                    .tint(Read4.accent)
                 }
             }
             .scrollBounceBehavior(.basedOnSize)
@@ -213,7 +201,7 @@ struct ShareCardMaker: View {
                 ShareLink(item: image, preview: SharePreview("DayXero · \(days) days", image: image)) {
                     Text("Share").frame(maxWidth: .infinity)
                 }
-                .buttonStyle(.dxPrimary)
+                .buttonStyle(.dx(.primary, on: .reading))
                 .simultaneousGesture(TapGesture().onEnded {
                     Analytics.track(.shareCardShared(destination: format.rawValue))
                 })
@@ -222,7 +210,7 @@ struct ShareCardMaker: View {
         .padding(.horizontal, DX.Space.m)
         .dxReadableColumn()
         .padding(.bottom, DX.Space.xs)
-        .dxCanvas()
+        .background(Read4.background.ignoresSafeArea())
         .onAppear { Analytics.track(.shareCardCreated(milestone: milestone?.id ?? "days-\(stats.daysClear)")) }
     }
 
@@ -252,65 +240,74 @@ struct ShareCardMaker: View {
             ForEach(options, id: \.self) { option in
                 let on = selection.wrappedValue == option
                 Button { selection.wrappedValue = option } label: {
-                    Text(title(option)).font(.custom(DX.Typeface.semibold, size: 12, relativeTo: .caption))
-                        .foregroundStyle(on ? DX.Palette.onPrimary : DX.Palette.text2)
+                    Text(title(option)).dxFont(12, weight: 600, style: .caption1)
+                        .foregroundStyle(on ? Read4.onInk : Read4.muted)
                         .padding(.vertical, 6).padding(.horizontal, 12)
-                        .background(on ? DX.Palette.primary : .clear, in: Capsule())
+                        .background(on ? Read4.ink : .clear, in: Capsule())
                 }
                 .buttonStyle(.plain)
                 .accessibilityAddTraits(on ? .isSelected : [])
             }
         }
         .padding(3)
-        .background(DX.Palette.surface2, in: Capsule())
+        .background(Read4.surface, in: Capsule())
     }
 
     private func toggleRow(_ title: LocalizedStringKey, detail: String?, isOn: Binding<Bool>) -> some View {
         Toggle(isOn: isOn) {
             HStack(spacing: 6) {
-                Text(title).font(.custom(DX.Typeface.semibold, size: 14, relativeTo: .subheadline)).foregroundStyle(DX.Palette.text)
-                if let detail { Text(verbatim: detail).dxText(.subtitle) }
+                Text(title).dxFont(14, weight: 600, style: .subheadline).foregroundStyle(Read4.ink)
+                if let detail { Text(verbatim: detail).v4Text(.subtitle) }
             }
         }
         .padding(.vertical, 8).padding(.horizontal, 12)
-        .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(DX.Palette.hairline))
+        .background(Read4.card, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(Read4.hairline))
     }
 }
 
 /// The share card itself, laid out at 1080 points wide. Wordmark always; no name or photo (S13.4).
+/// Dawn: Xero cheering on the apricot morning. Night: Glim on violet.
 struct ShareCard: View {
     let days: Int
     let extras: [String]
     let look: ShareCardMaker.Look
 
     var body: some View {
-        let ink = look == .dark ? Color.white : Color(hex: 0x11140A)
-        ZStack(alignment: .topLeading) {
-            if look == .dark {
-                RadialGradient(colors: [Color(hex: 0x3A4719), Color(hex: 0x0A0C06)], center: UnitPoint(x: 0.5, y: 0.3), startRadius: 0, endRadius: 1300)
-            } else {
-                LinearGradient(colors: [Color(hex: 0xD6DBB0), Color(hex: 0xBCC388), Color(hex: 0x9AA36A)], startPoint: .top, endPoint: .bottom)
+        let dawn = look == .dawn
+        let background = Color(hex: dawn ? 0xFFC38A : 0x4A3596)
+        let ink = Color(hex: dawn ? 0x1E1A3A : 0xFFF8EE)
+        ZStack(alignment: .top) {
+            background
+            VStack(spacing: 0) {
+                HorizonScene(dawn ? .dawn : .night, clarity: CrewGrowth.clarity(daysClear: days), fit: .bottom, animate: false)
+                    .frame(height: 760)
+                Spacer(minLength: 0)
             }
             VStack(alignment: .leading, spacing: 0) {
-                HStack(spacing: 16) {
-                    Circle().fill(look == .dark ? DX.Palette.sage : ink).frame(width: 34, height: 34)
-                    Text(verbatim: "DayXero").font(.custom(DX.Typeface.bold, size: 56, relativeTo: .title))
-                }
+                Text(verbatim: "DayXero").font(DX.Typeface4.swiftUIFont(.display, size: 64, weight: 800))
                 Spacer()
-                Text(verbatim: "\(days)").font(.custom(DX.Typeface.bold, size: 420, relativeTo: .largeTitle)).tracking(-20)
+                Group {
+                    if dawn {
+                        XeroView(mood: .cheer, stage: CrewGrowth.stage(daysClear: days), points: 420, animate: false)
+                    } else {
+                        GlimView(mood: .calm, stage: CrewGrowth.stage(daysClear: days), points: 420, animate: false)
+                    }
+                }
+                .frame(maxWidth: .infinity)
+                Text(verbatim: "\(days)").font(DX.Typeface4.swiftUIFont(.display, size: 380, weight: 800))
                     .lineLimit(1).minimumScaleFactor(0.4)
                 Text(days == 1 ? "day nicotine-free" : "days nicotine-free")
-                    .font(.custom(DX.Typeface.semibold, size: 72, relativeTo: .title))
+                    .font(DX.Typeface4.swiftUIFont(.display, size: 72, weight: 700))
                 if !extras.isEmpty {
                     Text(verbatim: extras.joined(separator: " · "))
-                        .font(.custom(DX.Typeface.medium, size: 46, relativeTo: .title3))
-                        .opacity(0.8)
-                        .padding(.top, 40)
+                        .font(DX.Typeface4.swiftUIFont(.body, size: 46, weight: 500))
+                        .opacity(0.85)
+                        .padding(.top, 36)
                 }
             }
             .foregroundStyle(ink)
-            .padding(110)
+            .padding(100)
         }
         .environment(\.dynamicTypeSize, .large)
     }
@@ -325,9 +322,9 @@ struct MilestonesRow: View {
         let next = Milestone.next(daysClear: daysClear)
         VStack(alignment: .leading, spacing: DX.Space.xs) {
             HStack(alignment: .firstTextBaseline) {
-                Text("Milestones").dxText(.micro)
+                Text("Milestones").v4Text(.micro)
                 Spacer()
-                Text("\(Milestone.reached(daysClear: daysClear).count) of \(Milestone.all.count)").dxText(.subtitle)
+                Text("\(Milestone.reached(daysClear: daysClear).count) of \(Milestone.all.count)").v4Text(.subtitle)
             }
             .accessibilityAddTraits(.isHeader)
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: DX.Space.xs), count: 4), spacing: DX.Space.xs) {
@@ -361,18 +358,18 @@ struct MilestonesRow: View {
             }
         }
         return VStack(spacing: 0) {
-            Text(verbatim: top).font(.custom(DX.Typeface.bold, size: 18, relativeTo: .headline))
-            Text(verbatim: bottom).font(.custom(DX.Typeface.regular, size: 10, relativeTo: .caption2)).lineLimit(1).minimumScaleFactor(0.7)
+            Text(verbatim: top).dxType(.headline)
+            Text(verbatim: bottom).dxType(.caption).lineLimit(1).minimumScaleFactor(0.7)
         }
-        .foregroundStyle(reached ? DX.Palette.onAccent : isNext ? DX.Palette.text : DX.Palette.muted)
+        .foregroundStyle(reached ? DX.Fill.cream : isNext ? Read4.ink : Read4.muted)
         .frame(maxWidth: .infinity)
         .aspectRatio(1, contentMode: .fit)
-        .background(reached ? DX.Palette.sage : .clear, in: Circle())
+        .background(reached ? DX.Fill.green : .clear, in: Circle())
         .overlay {
             if isNext {
-                Circle().strokeBorder(DX.Palette.accentInk, lineWidth: 2)
+                Circle().strokeBorder(Read4.ink, lineWidth: 2)
             } else if !reached {
-                Circle().strokeBorder(DX.Palette.faint, style: StrokeStyle(lineWidth: 1, dash: [4, 4]))
+                Circle().strokeBorder(Read4.faint, style: StrokeStyle(lineWidth: 1, dash: [4, 4]))
             }
         }
         .dynamicTypeSize(...DynamicTypeSize.xxLarge)
