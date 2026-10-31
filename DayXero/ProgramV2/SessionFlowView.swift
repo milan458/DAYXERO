@@ -70,6 +70,17 @@ struct SessionFlowView: View {
         if UserDefaults.standard.object(forKey: "dx.sessionStep") != nil {
             index = min(max(UserDefaults.standard.integer(forKey: "dx.sessionStep"), 0), built.count - 1)
         }
+        // Screenshots of one step by name: -dx.sessionBeat W1D2.3, or intro, audio, mission, completion.
+        if let name = UserDefaults.standard.string(forKey: "dx.sessionBeat") {
+            let step: FlowStep = switch name {
+            case "intro": .intro
+            case "audio": .audio
+            case "mission": .mission
+            case "completion": .completion
+            default: .beat(name)
+            }
+            if let found = built.firstIndex(of: step) { index = found }
+        }
         #endif
         Analytics.track(isReplay || record.completedAt != nil ? .programReplayStarted(sessionId: session.id)
                         : .programSessionStarted(sessionId: session.id, variant: ctx.variant.rawValue))
