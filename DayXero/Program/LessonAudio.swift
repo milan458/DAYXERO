@@ -311,20 +311,20 @@ struct LessonAudioStep: View {
     var body: some View {
         VStack(spacing: DX.Space.s) {
             VStack(spacing: 4) {
-                Label("Audio session", systemImage: "headphones").dxText(.micro)
-                Text(title).dxText(.title).multilineTextAlignment(.center)
+                Label("Audio session", systemImage: "headphones").v4Text(.micro)
+                Text(title).v4Text(.title).multilineTextAlignment(.center)
             }
             .dynamicTypeSize(...DynamicTypeSize.accessibility1)
-            CloudWave(level: { narrator.level(at: $0) }, playing: narrator.playing)
-                .frame(height: 190)
+            XeroBreathRing(playing: narrator.playing)
+                .frame(height: 200)
             scrubber
             controls
             captions
                 .frame(maxHeight: .infinity)
             if narrator.finished {
                 Label("Nice. On to the exercise.", systemImage: "checkmark")
-                    .font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
-                    .foregroundStyle(DX.Palette.accentInk)
+                    .dxFont(14, weight: 600, style: .footnote)
+                    .foregroundStyle(Read4.accent)
             }
         }
         .onAppear {
@@ -363,10 +363,10 @@ struct LessonAudioStep: View {
                             let distance = abs(i - narrator.index)
                             Button { narrator.jump(toSentence: i) } label: {
                                 Text(verbatim: sentence)
-                                    .font(.custom(distance == 0 ? DX.Typeface.bold : DX.Typeface.medium, size: 22, relativeTo: .title3))
+                                    .dxFont(24, weight: distance == 0 ? 700 : 500, style: .title3)
                                     .tracking(-0.3)
                                     .lineSpacing(3)
-                                    .foregroundStyle(DX.Palette.text)
+                                    .foregroundStyle(Read4.ink)
                                     .opacity(distance == 0 ? 1 : distance == 1 ? 0.45 : distance == 2 ? 0.2 : 0.08)
                                     .multilineTextAlignment(.center)
                                     .frame(maxWidth: .infinity)
@@ -378,14 +378,14 @@ struct LessonAudioStep: View {
                     }
                     // Room above and below, so the first and last lines can sit in the middle too.
                     .padding(.vertical, max(geo.size.height / 2 - 30, 0))
-                    .animation(DX.Motion.animation(DX.Motion.glide, reduceMotion: reduceMotion), value: narrator.index)
+                    .animation(DX.Motion.animation(DX.Move.settle, reduceMotion: reduceMotion), value: narrator.index)
                 }
                 .mask(LinearGradient(stops: [.init(color: .clear, location: 0), .init(color: .black, location: 0.24),
                                              .init(color: .black, location: 0.76), .init(color: .clear, location: 1)],
                                      startPoint: .top, endPoint: .bottom))
                 .onAppear { proxy.scrollTo(narrator.index, anchor: .center) }
                 .onChange(of: narrator.index) { _, i in
-                    withAnimation(DX.Motion.animation(DX.Motion.glide, reduceMotion: reduceMotion)) { proxy.scrollTo(i, anchor: .center) }
+                    withAnimation(DX.Motion.animation(DX.Move.settle, reduceMotion: reduceMotion)) { proxy.scrollTo(i, anchor: .center) }
                 }
             }
         }
@@ -401,9 +401,9 @@ struct LessonAudioStep: View {
             VStack(spacing: 6) {
                 GeometryReader { geo in
                     ZStack(alignment: .leading) {
-                        Capsule().fill(DX.Palette.track).frame(height: 4)
-                        Capsule().fill(DX.Palette.primary).frame(width: geo.size.width * fraction, height: 4)
-                        Circle().fill(DX.Palette.primary).frame(width: 14, height: 14)
+                        Capsule().fill(Read4.track).frame(height: 4)
+                        Capsule().fill(Read4.ink).frame(width: geo.size.width * fraction, height: 4)
+                        Circle().fill(Read4.ink).frame(width: 14, height: 14)
                             .offset(x: geo.size.width * fraction - 7)
                     }
                     .frame(maxHeight: .infinity)
@@ -429,8 +429,8 @@ struct LessonAudioStep: View {
                     Spacer()
                     Text(Duration.seconds(max(narrator.total - elapsed, 0)), format: .time(pattern: .minuteSecond))
                 }
-                .font(.custom(DX.Typeface.mono, size: 12, relativeTo: .caption))
-                .foregroundStyle(DX.Palette.muted)
+                .dxFont(12, weight: 600, style: .caption1).monospacedDigit()
+                .foregroundStyle(Read4.muted)
                 .dynamicTypeSize(...DynamicTypeSize.accessibility1)
             }
         }
@@ -440,10 +440,10 @@ struct LessonAudioStep: View {
         HStack(spacing: 0) {
             Button { narrator.cycleSpeed() } label: {
                 Text(verbatim: narrator.speed.formatted(.number.precision(.fractionLength(1...2))) + "×")
-                    .font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
-                    .foregroundStyle(DX.Palette.text)
+                    .dxFont(14, weight: 600, style: .footnote)
+                    .foregroundStyle(Read4.ink)
                     .frame(minWidth: 52, minHeight: 34)
-                    .background(DX.Palette.surface2, in: Capsule())
+                    .background(Read4.surface, in: Capsule())
             }
             .accessibilityLabel(Text("Speed"))
             .accessibilityValue(Text(verbatim: "\(narrator.speed)×"))
@@ -454,9 +454,9 @@ struct LessonAudioStep: View {
             Button { narrator.toggle() } label: {
                 Image(systemName: narrator.playing ? "pause.fill" : "play.fill")
                     .font(.system(size: 22))
-                    .foregroundStyle(DX.Palette.onPrimary)
+                    .foregroundStyle(Read4.onInk)
                     .frame(width: 60, height: 60)
-                    .background(DX.Palette.primary, in: Circle())
+                    .background(Read4.ink, in: Circle())
             }
             .padding(.horizontal, DX.Space.s)
             .accessibilityLabel(Text(narrator.playing ? "Pause" : "Play"))
@@ -467,7 +467,28 @@ struct LessonAudioStep: View {
             Color.clear.frame(width: 52, height: 34)
         }
         .buttonStyle(.plain)
-        .foregroundStyle(DX.Palette.text)
+        .foregroundStyle(Read4.ink)
         .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+    }
+}
+
+/// P2: Xero 140 in a ring that breathes on the 4 s in, 6 s out clock while the audio plays.
+struct XeroBreathRing: View {
+    let playing: Bool
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        TimelineView(.animation(paused: !playing || reduceMotion)) { timeline in
+            let breath = playing && !reduceMotion ? DX.Move.breath(at: timeline.date.timeIntervalSinceReferenceDate) : 0.4
+            ZStack {
+                Circle().fill(Read4.accentSoft)
+                    .frame(width: 168 + 28 * breath, height: 168 + 28 * breath)
+                Circle().strokeBorder(Read4.accent.opacity(0.35), lineWidth: 3)
+                    .frame(width: 192 + 28 * breath, height: 192 + 28 * breath)
+                XeroView(mood: playing ? .breathe : .calm, stage: 1, size: .scene, animate: playing)
+            }
+            .frame(maxWidth: .infinity)
+        }
+        .accessibilityHidden(true)
     }
 }

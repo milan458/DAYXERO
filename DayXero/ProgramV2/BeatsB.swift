@@ -35,29 +35,29 @@ struct PlanBuilderBeat: View {
                 ForEach(Array(plans.enumerated()), id: \.offset) { i, plan in
                     HStack(alignment: .top) {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("Plan \(i + 1)").dxText(.micro).foregroundStyle(DX.Palette.accentInk)
+                            Text("Plan \(i + 1)").v4Text(.micro).foregroundStyle(Read4.accent)
                             Text(verbatim: ProgramAnswerValue.plans([plan]).lines.first ?? "")
-                                .font(.custom(DX.Typeface.regular, size: 16, relativeTo: .body)).foregroundStyle(DX.Palette.text)
+                                .dxFont(16, weight: 400, style: .body).foregroundStyle(Read4.ink)
                         }
                         Spacer()
                         Button { plans.remove(at: i) } label: {
-                            Image(systemName: "xmark").font(.system(size: 12, weight: .semibold)).foregroundStyle(DX.Palette.muted)
+                            Image(systemName: "xmark").font(.system(size: 12, weight: .semibold)).foregroundStyle(Read4.muted)
                                 .frame(width: 44, height: 44)
                         }
                         .buttonStyle(.plain)
                         .accessibilityLabel(Text("Remove plan \(i + 1)"))
                     }
                     .padding(DX.Space.m)
-                    .background(DX.Palette.accentSoft, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                    .background(Read4.accentSoft, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
                 }
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("Plan \(plans.count + 1)").dxText(.micro)
-                    Text("If").font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote)).foregroundStyle(DX.Palette.text)
+                    Text("Plan \(plans.count + 1)").v4Text(.micro)
+                    Text("If").dxFont(14, weight: 600, style: .footnote).foregroundStyle(Read4.ink)
                     TextField("what happens", text: $situation)
-                        .font(.custom(DX.Typeface.medium, size: 16, relativeTo: .body))
+                        .dxFont(16, weight: 500, style: .body)
                         .padding(12)
-                        .background(DX.Palette.surface2, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-                    Text("Then I will").font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote)).foregroundStyle(DX.Palette.text)
+                        .background(Read4.surface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    Text("Then I will").dxFont(14, weight: 600, style: .footnote).foregroundStyle(Read4.ink)
                     DXFlowLayout(spacing: 8) {
                         ForEach(beat.suggestions ?? [], id: \.self) { suggestion in
                             BeatChip(text: suggestion, on: !typingOwn && action == suggestion) {
@@ -72,17 +72,17 @@ struct PlanBuilderBeat: View {
                     }
                     if typingOwn {
                         TextField("what you'll do", text: $action)
-                            .font(.custom(DX.Typeface.medium, size: 16, relativeTo: .body))
+                            .dxFont(16, weight: 500, style: .body)
                             .padding(12)
-                            .background(DX.Palette.surface2, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                            .background(Read4.surface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                     }
                 }
                 .padding(DX.Space.m)
-                .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-                .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(DX.Palette.hairline))
+                .background(Read4.card, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(Read4.hairline))
                 Button(action: addPlan) {
-                    Label("Add another plan", systemImage: "plus").font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body))
-                        .foregroundStyle(DX.Palette.accentInk).frame(minHeight: 44)
+                    Label("Add another plan", systemImage: "plus").dxFont(16, weight: 600, style: .body)
+                        .foregroundStyle(Read4.accent).frame(minHeight: 44)
                 }
                 .buttonStyle(.plain)
                 .disabled(!canAdd)
@@ -136,21 +136,21 @@ struct ChecklistBeat: View {
             VStack(alignment: .leading, spacing: 10) {
                 BeatPrompt(text: ctx.text(beat.title))
                 if !carried.isEmpty {
-                    Text("Still open from before").dxText(.micro)
+                    Text("Still open from before").v4Text(.micro)
                     ForEach(carried, id: \.self) { row($0) }
-                    Text("Tonight").dxText(.micro).padding(.top, DX.Space.xs)
+                    Text("Tonight").v4Text(.micro).padding(.top, DX.Space.xs)
                 } else {
-                    Text("Tick what you've done. The rest can wait.").dxText(.subtitle)
+                    Text("Tick what you've done. The rest can wait.").v4Text(.subtitle)
                 }
                 ForEach(items, id: \.self) { row($0) }
                 if let footer = beat.footer.map({ ctx.text($0) }), !footer.isEmpty {
                     HStack(alignment: .top, spacing: 10) {
                         Image(systemName: "battery.100.bolt").foregroundStyle(Color(light: 0x8A5E0E, dark: 0xE5A93C)).accessibilityHidden(true)
-                        Text(verbatim: footer).font(.custom(DX.Typeface.regular, size: 14, relativeTo: .footnote)).foregroundStyle(DX.Palette.text)
+                        Text(verbatim: footer).dxFont(14, weight: 400, style: .footnote).foregroundStyle(Read4.ink)
                             .fixedSize(horizontal: false, vertical: true)
                     }
                     .padding(DX.Space.s)
-                    .background(DX.Palette.amber.opacity(0.18), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    .background(Read4.amber.opacity(0.18), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
                 }
             }
         }
@@ -165,22 +165,22 @@ struct ChecklistBeat: View {
         } label: {
             HStack(spacing: 14) {
                 ZStack {
-                    RoundedRectangle(cornerRadius: 8, style: .continuous).strokeBorder(on ? .clear : DX.Palette.faint, lineWidth: 1.5)
+                    RoundedRectangle(cornerRadius: 8, style: .continuous).strokeBorder(on ? .clear : Read4.faint, lineWidth: 1.5)
                     if on {
-                        RoundedRectangle(cornerRadius: 8, style: .continuous).fill(DX.Palette.accentInk)
-                        Image(systemName: "checkmark").font(.system(size: 13, weight: .bold)).foregroundStyle(DX.Palette.canvas)
+                        RoundedRectangle(cornerRadius: 8, style: .continuous).fill(Read4.accent)
+                        Image(systemName: "checkmark").font(.system(size: 13, weight: .bold)).foregroundStyle(Read4.background)
                     }
                 }
                 .frame(width: 26, height: 26)
-                Text(verbatim: item).font(.custom(DX.Typeface.medium, size: 16, relativeTo: .body))
-                    .foregroundStyle(on ? DX.Palette.text2 : DX.Palette.text)
+                Text(verbatim: item).dxFont(16, weight: 500, style: .body)
+                    .foregroundStyle(on ? Read4.muted : Read4.ink)
                     .fixedSize(horizontal: false, vertical: true)
                 Spacer(minLength: 0)
             }
             .padding(.vertical, 12).padding(.horizontal, DX.Space.m)
             .frame(minHeight: 56)
-            .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(DX.Palette.hairline))
+            .background(Read4.card, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(Read4.hairline))
         }
         .buttonStyle(.plain)
         .accessibilityAddTraits(on ? [.isSelected] : [])
@@ -212,8 +212,8 @@ struct BreatheBeat: View {
 
     var body: some View {
         VStack(spacing: DX.Space.s) {
-            Text(verbatim: ctx.text(beat.label)).font(.custom(DX.Typeface.semibold, size: 18, relativeTo: .title3))
-                .foregroundStyle(DX.Palette.text).multilineTextAlignment(.center)
+            Text(verbatim: ctx.text(beat.label)).dxFont(19, weight: 600, style: .title3)
+                .foregroundStyle(Read4.ink).multilineTextAlignment(.center)
             OrbBreathingPanel(pattern: beat.pattern ?? "box", cycles: beat.cycles) {
                 ctx.finish(beat)
                 onDone()
@@ -249,30 +249,30 @@ struct CommitBeat: View {
         VStack(spacing: DX.Space.l) {
             Spacer()
             Text(verbatim: doneAt == nil ? ctx.text(beat.text) : String(localized: "Committed."))
-                .font(.custom(DX.Typeface.bold, size: 24, relativeTo: .title2)).tracking(-0.4)
+                .dxFont(24, weight: 700, style: .title2)
                 .multilineTextAlignment(.center)
-                .foregroundStyle(DX.Palette.text)
+                .foregroundStyle(Read4.ink)
             ZStack {
-                Circle().stroke(DX.Palette.track, lineWidth: 13)
+                Circle().stroke(Read4.track, lineWidth: 13)
                 Circle().trim(from: 0, to: doneAt == nil ? progress : 1)
-                    .stroke(DX.Palette.accentInk, style: StrokeStyle(lineWidth: 13, lineCap: .round))
+                    .stroke(Read4.accent, style: StrokeStyle(lineWidth: 13, lineCap: .round))
                     .rotationEffect(.degrees(-90))
                 if let doneAt {
                     VStack(spacing: 6) {
-                        Image(systemName: "checkmark").font(.system(size: 40, weight: .semibold)).foregroundStyle(DX.Palette.accentInk)
-                        Text("Done on").font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body))
-                        Text(doneAt, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)).dxText(.subtitle)
+                        Image(systemName: "checkmark").font(.system(size: 40, weight: .semibold)).foregroundStyle(Read4.accent)
+                        Text("Done on").dxFont(16, weight: 600, style: .body)
+                        Text(doneAt, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)).v4Text(.subtitle)
                     }
                     .frame(width: 184, height: 184)
-                    .background(DX.Palette.accentSoft, in: Circle())
+                    .background(Read4.accentSoft, in: Circle())
                 } else {
                     VStack(spacing: 8) {
                         Image(systemName: "hand.point.up.left").font(.system(size: 28))
-                        Text(pressing ? "Keep holding" : "Press and hold").font(.custom(DX.Typeface.semibold, size: 17, relativeTo: .body))
+                        Text(pressing ? "Keep holding" : "Press and hold").dxFont(16, weight: 600, style: .body)
                     }
-                    .foregroundStyle(DX.Palette.onPrimary)
+                    .foregroundStyle(Read4.onInk)
                     .frame(width: 184, height: 184)
-                    .background(DX.Palette.primary, in: Circle())
+                    .background(Read4.ink, in: Circle())
                     .scaleEffect(pressing && !reduceMotion ? 0.96 : 1)
                     .onLongPressGesture(minimumDuration: seconds, maximumDistance: 40) {
                         commit()
@@ -287,10 +287,10 @@ struct CommitBeat: View {
             .accessibilityLabel(Text(verbatim: ctx.text(beat.text)))
             .accessibilityValue(Text(doneAt == nil ? "Not done" : "Done"))
             .accessibilityAction(named: Text("Commit")) { commit() }
-            Text(doneAt == nil ? "\(Int(seconds)) seconds" : "").dxText(.subtitle)
+            Text(doneAt == nil ? "\(Int(seconds)) seconds" : "").v4Text(.subtitle)
             Spacer()
             if doneAt != nil {
-                Button("Continue", action: onDone).buttonStyle(.dxPrimary)
+                Button("Continue", action: onDone).buttonStyle(.dx(.primary, on: .reading))
             }
         }
         .sensoryFeedback(.impact(weight: .medium, intensity: 0.4 + 0.15 * Double(pulse)), trigger: pulse)
@@ -343,7 +343,7 @@ struct ScenarioBeat: View {
             VStack(alignment: .leading, spacing: 10) {
                 BeatPrompt(text: ctx.text(beat.prompt), eyebrow: "Picture it")
                 ForEach(options) { option in
-                    Button { withAnimation(DX.Motion.morph) { picked = option.id } } label: {
+                    Button { withAnimation(DX.Move.settle) { picked = option.id } } label: {
                         OptionRow(text: option.text, selected: picked == option.id, dimmed: picked != nil && picked != option.id)
                     }
                     .buttonStyle(.plain)
@@ -377,25 +377,25 @@ struct NoteBeat: View {
         BeatFrame(beat: beat, onContinue: { ctx.finish(beat); onDone() }) {
             VStack(alignment: .leading, spacing: DX.Space.s) {
                 Spacer(minLength: DX.Space.xl)
-                Text(verbatim: ctx.text(beat.title)).dxText(.micro)
+                Text(verbatim: ctx.text(beat.title)).v4Text(.micro)
                 VStack(alignment: .leading, spacing: DX.Space.m) {
                     if let top = lines.highlight {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("Matters most").dxText(.micro).foregroundStyle(DX.Palette.accentInk)
-                            Text(verbatim: top).font(.custom(DX.Typeface.bold, size: 24, relativeTo: .title2)).tracking(-0.4)
-                                .foregroundStyle(DX.Palette.text)
+                            Text("Matters most").v4Text(.micro).foregroundStyle(Read4.accent)
+                            Text(verbatim: top).dxFont(24, weight: 700, style: .title2)
+                                .foregroundStyle(Read4.ink)
                         }
                         if !lines.rest.isEmpty { Divider() }
                     }
                     ForEach(lines.rest, id: \.self) { line in
-                        Text(verbatim: line).font(.custom(DX.Typeface.regular, size: 17, relativeTo: .body)).foregroundStyle(DX.Palette.text)
+                        Text(verbatim: line).dxFont(16, weight: 400, style: .body).foregroundStyle(Read4.ink)
                     }
                 }
                 .padding(DX.Space.l)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(beat.id.hasPrefix("DX") ? DX.Palette.accentSoft : DX.Palette.surface1,
+                .background(beat.id.hasPrefix("DX") ? Read4.accentSoft : Read4.card,
                             in: RoundedRectangle(cornerRadius: 24, style: .continuous))
-                .overlay(RoundedRectangle(cornerRadius: 24, style: .continuous).strokeBorder(DX.Palette.hairline))
+                .overlay(RoundedRectangle(cornerRadius: 24, style: .continuous).strokeBorder(Read4.hairline))
             }
         }
     }
@@ -413,16 +413,16 @@ struct InfoBeat: View {
             VStack(alignment: .leading, spacing: DX.Space.s) {
                 Spacer(minLength: DX.Space.xl)
                 VStack(alignment: .leading, spacing: DX.Space.s) {
-                    Image(systemName: "heart").font(.system(size: 30)).foregroundStyle(DX.Palette.accentInk).accessibilityHidden(true)
-                    Text(verbatim: ctx.text(beat.title)).font(.custom(DX.Typeface.bold, size: 22, relativeTo: .title2))
-                        .foregroundStyle(DX.Palette.text).accessibilityAddTraits(.isHeader)
-                    Text(verbatim: ctx.text(beat.body)).font(.custom(DX.Typeface.regular, size: 17, relativeTo: .body))
-                        .foregroundStyle(DX.Palette.text).fixedSize(horizontal: false, vertical: true)
+                    Image(systemName: "heart").font(.system(size: 30)).foregroundStyle(Read4.accent).accessibilityHidden(true)
+                    Text(verbatim: ctx.text(beat.title)).dxFont(24, weight: 700, style: .title2)
+                        .foregroundStyle(Read4.ink).accessibilityAddTraits(.isHeader)
+                    Text(verbatim: ctx.text(beat.body)).dxFont(16, weight: 400, style: .body)
+                        .foregroundStyle(Read4.ink).fixedSize(horizontal: false, vertical: true)
                     if beat.link == "helplines" { HelpLine() }
                 }
                 .padding(DX.Space.l)
-                .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
-                .overlay(RoundedRectangle(cornerRadius: 24, style: .continuous).strokeBorder(DX.Palette.hairline))
+                .background(Read4.card, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: 24, style: .continuous).strokeBorder(Read4.hairline))
             }
         }
     }
@@ -469,17 +469,17 @@ struct ShareBeat: View {
             VStack(alignment: .leading, spacing: DX.Space.s) {
                 if beat.cardType == "support_message" {
                     BeatPrompt(text: String(localized: "Give someone a heads-up?"))
-                    Text("A message from a friend helps more than you'd think. Change it however you like.").dxText(.subtitle)
+                    Text("A message from a friend helps more than you'd think. Change it however you like.").v4Text(.subtitle)
                     TextField("", text: $message, axis: .vertical)
                         .lineLimit(4...8)
-                        .font(.custom(DX.Typeface.regular, size: 17, relativeTo: .body))
+                        .dxFont(16, weight: 400, style: .body)
                         .padding(DX.Space.m)
-                        .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-                        .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(DX.Palette.accentInk, lineWidth: 1.5))
+                        .background(Read4.card, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+                        .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(Read4.accent, lineWidth: 1.5))
                     ShareLink(item: message) {
                         Label("Send it", systemImage: "square.and.arrow.up").frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(.dxSecondary)
+                    .buttonStyle(.v4Secondary)
                 } else {
                     BeatPrompt(text: String(localized: "Share it, if you like"))
                     if let card {
@@ -488,7 +488,7 @@ struct ShareBeat: View {
                             .frame(maxWidth: .infinity)
                             .accessibilityLabel(Text("Share card: \(days) days nicotine-free"))
                         if !sentences.isEmpty {
-                            Text("Add a line from your note").dxText(.micro).padding(.top, DX.Space.xs)
+                            Text("Add a line from your note").v4Text(.micro).padding(.top, DX.Space.xs)
                             ForEach(sentences.prefix(4), id: \.self) { sentence in
                                 BeatChip(text: sentence, on: quote == sentence) { quote = quote == sentence ? nil : sentence }
                             }
@@ -496,7 +496,7 @@ struct ShareBeat: View {
                         ShareLink(item: card, preview: SharePreview(Text("DayXero"), image: card)) {
                             Label("Share", systemImage: "square.and.arrow.up").frame(maxWidth: .infinity)
                         }
-                        .buttonStyle(.dxSecondary)
+                        .buttonStyle(.v4Secondary)
                     }
                 }
             }
@@ -556,13 +556,13 @@ struct SafetyNote: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: 10) {
-            Image(systemName: "info.circle").foregroundStyle(DX.Palette.text2).accessibilityHidden(true)
-            Text(verbatim: text).font(.custom(DX.Typeface.regular, size: 14, relativeTo: .footnote)).foregroundStyle(DX.Palette.text2)
+            Image(systemName: "info.circle").foregroundStyle(Read4.muted).accessibilityHidden(true)
+            Text(verbatim: text).dxFont(14, weight: 400, style: .footnote).foregroundStyle(Read4.muted)
                 .fixedSize(horizontal: false, vertical: true)
         }
         .padding(DX.Space.m)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(DX.Palette.surface2, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .background(Read4.surface, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
     }
 }
 
@@ -580,11 +580,11 @@ struct NRTStepdownBeat: View {
         BeatFrame(beat: beat, onContinue: { ctx.finish(beat); onDone() }) {
             VStack(alignment: .leading, spacing: DX.Space.s) {
                 BeatPrompt(text: ctx.text(beat.title))
-                Text(verbatim: ctx.text(beat.body)).dxText(.subtitle)
+                Text(verbatim: ctx.text(beat.body)).v4Text(.subtitle)
                 Button { showPlanner = true } label: {
                     Label("Plan my step-down", systemImage: "calendar").frame(maxWidth: .infinity)
                 }
-                .buttonStyle(.dxSecondary)
+                .buttonStyle(.v4Secondary)
                 SafetyNote(text: ctx.text(beat.safetyText))
             }
         }
@@ -612,8 +612,8 @@ struct SlipPracticeBeat: View {
                     Button { practising = true } label: {
                         Label("Start the practice", systemImage: "figure.walk.motion").frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(.dxSecondary)
-                    Text("Nothing here is logged as a slip.").dxText(.subtitle)
+                    .buttonStyle(.v4Secondary)
+                    Text("Nothing here is logged as a slip.").v4Text(.subtitle)
                 }
             }
         }
@@ -678,18 +678,17 @@ struct PlanCardBeat: View {
                         if i > 0 { Divider() }
                         HStack(alignment: .top) {
                             VStack(alignment: .leading, spacing: 3) {
-                                Text(verbatim: Self.heading(row.key)).dxText(.micro).foregroundStyle(DX.Palette.accentInk)
+                                Text(verbatim: Self.heading(row.key)).v4Text(.micro).foregroundStyle(Read4.accent)
                                 ForEach(row.lines, id: \.self) { line in
                                     Text(verbatim: line)
-                                        .font(.custom(row.key == "identity_statement" ? DX.Typeface.bold : DX.Typeface.regular,
-                                                      size: row.key == "identity_statement" ? 18 : 15, relativeTo: .body))
-                                        .foregroundStyle(DX.Palette.text)
+                                        .dxFont(row.key == "identity_statement" ? 19 : 16, weight: row.key == "identity_statement" ? 700 : 400, style: .body)
+                                        .foregroundStyle(Read4.ink)
                                 }
                             }
                             Spacer()
                             if beat.editable, isEditable(row.key) {
                                 Button { startEditing(row.key) } label: {
-                                    Image(systemName: "pencil").foregroundStyle(DX.Palette.muted).frame(width: 44, height: 44)
+                                    Image(systemName: "pencil").foregroundStyle(Read4.muted).frame(width: 44, height: 44)
                                 }
                                 .buttonStyle(.plain)
                                 .accessibilityLabel(Text("Edit \(Self.heading(row.key))"))
@@ -699,13 +698,13 @@ struct PlanCardBeat: View {
                     }
                 }
                 .padding(.horizontal, DX.Space.m)
-                .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
-                .overlay(RoundedRectangle(cornerRadius: 24, style: .continuous).strokeBorder(DX.Palette.hairline))
+                .background(Read4.card, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: 24, style: .continuous).strokeBorder(Read4.hairline))
                 if let image {
                     ShareLink(item: image, preview: SharePreview(Text("My plan"), image: image)) {
                         Label("Save to Photos or share", systemImage: "photo").frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(.dxSecondary)
+                    .buttonStyle(.v4Secondary)
                 }
             }
         }
@@ -713,7 +712,7 @@ struct PlanCardBeat: View {
             NavigationStack {
                 Form {
                     TextField(Self.heading(item.key), text: $draft, axis: .vertical).lineLimit(2...8)
-                    if case .list? = ctx.answer(item.key) { Text("One per line.").dxText(.subtitle) }
+                    if case .list? = ctx.answer(item.key) { Text("One per line.").v4Text(.subtitle) }
                 }
                 .navigationTitle(Self.heading(item.key))
                 .navigationBarTitleDisplayMode(.inline)
@@ -760,19 +759,19 @@ struct PlanCardImage: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 36) {
-            Text(verbatim: "DayXero · My plan").font(.custom(DX.Typeface.bold, size: 44, relativeTo: .title)).foregroundStyle(Color(hex: 0xBCC388))
+            Text(verbatim: "DayXero · My plan").dxFont(44, weight: 800, style: .title1).foregroundStyle(Color(hex: 0xFFC38A))
             ForEach(Array(rows.enumerated()), id: \.offset) { _, row in
                 VStack(alignment: .leading, spacing: 10) {
-                    Text(verbatim: row.0.uppercased()).font(.custom(DX.Typeface.bold, size: 26, relativeTo: .caption)).tracking(2)
-                        .foregroundStyle(Color(hex: 0xBCC388))
+                    Text(verbatim: row.0.uppercased()).dxFont(26, weight: 700, style: .caption1).tracking(2)
+                        .foregroundStyle(Color(hex: 0xFFC38A))
                     ForEach(row.1, id: \.self) { line in
-                        Text(verbatim: line).font(.custom(DX.Typeface.medium, size: 40, relativeTo: .body)).foregroundStyle(.white)
+                        Text(verbatim: line).dxFont(40, weight: 500, style: .body).foregroundStyle(DX.Fill.cream)
                     }
                 }
             }
         }
         .padding(80)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(hex: 0x0A0C06))
+        .background(DX.Fill.navy)
     }
 }

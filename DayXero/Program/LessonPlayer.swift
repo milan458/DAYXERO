@@ -46,9 +46,9 @@ struct LessonPlayer: View {
         .dxReadableColumn()
         .padding(.top, DX.Space.s)
         .padding(.bottom, DX.Space.xs)
-        .dxCanvas()
-        .animation(DX.Motion.animation(DX.Motion.glide, reduceMotion: reduceMotion), value: index)
-        .animation(DX.Motion.animation(DX.Motion.glide, reduceMotion: reduceMotion), value: finished)
+        .background(Read4.background.ignoresSafeArea())
+        .animation(DX.Motion.animation(DX.Move.settle, reduceMotion: reduceMotion), value: index)
+        .animation(DX.Motion.animation(DX.Move.settle, reduceMotion: reduceMotion), value: finished)
         .onAppear(perform: start)
         .accessibilityAction(named: Text("Next step")) { advance() }
     }
@@ -67,7 +67,7 @@ struct LessonPlayer: View {
     private func segments(count: Int) -> some View {
         HStack(spacing: 4) {
             ForEach(0..<count, id: \.self) { i in
-                Capsule().fill(i < (finished ? count : index + 1) ? DX.Palette.text : DX.Palette.track).frame(height: 4)
+                Capsule().fill(i < (finished ? count : index + 1) ? Read4.ink : Read4.track).frame(height: 4)
             }
         }
         .padding(.bottom, DX.Space.s)
@@ -80,15 +80,15 @@ struct LessonPlayer: View {
                 ProgramState.saveStep(index, for: day)
                 dismiss()
             } label: {
-                Image(systemName: "xmark").font(.system(size: 13, weight: .semibold)).foregroundStyle(DX.Palette.text2)
+                Image(systemName: "xmark").font(.system(size: 13, weight: .semibold)).foregroundStyle(Read4.muted)
                     .frame(width: 36, height: 36)
-                    .background(DX.Palette.surface1, in: Circle())
-                    .overlay(Circle().strokeBorder(DX.Palette.hairline))
+                    .background(Read4.card, in: Circle())
+                    .overlay(Circle().strokeBorder(Read4.hairline))
             }
             .buttonStyle(.plain)
             .accessibilityLabel(Text("Close. Your place is saved."))
             Spacer()
-            Text("\(stepLabel) · \(index + 1) of \(content.steps.count)").dxText(.micro)
+            Text("\(stepLabel) · \(index + 1) of \(content.steps.count)").v4Text(.micro)
             Spacer()
             if content.placeholder { PlaceholderTag() } else { Color.clear.frame(width: 36, height: 36) }
         }
@@ -109,7 +109,7 @@ struct LessonPlayer: View {
         let step = content.steps[index]
         VStack(spacing: DX.Space.xs) {
             Button(nextTitle(step, isLast: index == content.steps.count - 1)) { advance() }
-                .buttonStyle(.dxPrimary)
+                .buttonStyle(.dx(.primary, on: .reading))
                 .disabled(!canAdvance(step))
         }
         .padding(.top, DX.Space.xs)
@@ -138,10 +138,10 @@ struct LessonPlayer: View {
         switch step {
         case let .reading(lead, body, notes):
             VStack(alignment: .leading, spacing: DX.Space.m) {
-                Text(lead).font(.custom(DX.Typeface.bold, size: 26, relativeTo: .title)).tracking(-0.5)
-                    .foregroundStyle(DX.Palette.text).accessibilityAddTraits(.isHeader)
-                Text(body).font(.custom(DX.Typeface.regular, size: 18, relativeTo: .body)).lineSpacing(5)
-                    .foregroundStyle(DX.Palette.text)
+                Text(lead).dxFont(24, weight: 700, style: .title1)
+                    .foregroundStyle(Read4.ink).accessibilityAddTraits(.isHeader)
+                Text(body).dxFont(19, weight: 400, style: .body).lineSpacing(5)
+                    .foregroundStyle(Read4.ink)
                 ForEach(otherProducts, id: \.self) { product in
                     if let note = notes[product.rawValue] { NoteCallout(product: product, text: note) }
                 }
@@ -155,23 +155,23 @@ struct LessonPlayer: View {
             IfThenStep(title: title, subtitle: subtitle, situation: situation, actions: actions, selection: $ifThenAction)
         case .weekRating:
             VStack(alignment: .leading, spacing: DX.Space.xs) {
-                Text("How was this week?").dxText(.title)
-                Text("A quick look back, then one thing to try next week.").dxText(.subtitle)
-                DXCard {
+                Text("How was this week?").v4Text(.title)
+                Text("A quick look back, then one thing to try next week.").v4Text(.subtitle)
+                V4Card {
                     VStack(alignment: .leading, spacing: DX.Space.s) {
-                        Text("Cravings this week").dxText(.cardHeading)
-                        Slider(value: $weekRating, in: 0...1).tint(DX.Palette.accentInk)
+                        Text("Cravings this week").v4Text(.cardHeading)
+                        Slider(value: $weekRating, in: 0...1).tint(Read4.accent)
                             .accessibilityValue(Text(weekRating < 0.34 ? "Easy" : weekRating < 0.67 ? "Mixed" : "Tough"))
-                        HStack { Text("Easy"); Spacer(); Text("Tough") }.dxText(.subtitle)
+                        HStack { Text("Easy"); Spacer(); Text("Tough") }.v4Text(.subtitle)
                     }
                 }
                 .padding(.top, DX.Space.m)
             }
         case let .challengeReview(challenge):
             VStack(alignment: .leading, spacing: DX.Space.xs) {
-                Text("Last week's challenge").dxText(.title)
-                Text("\(challenge). Tap the days you did it.").dxText(.subtitle)
-                DXCard {
+                Text("Last week's challenge").v4Text(.title)
+                Text("\(challenge). Tap the days you did it.").v4Text(.subtitle)
+                V4Card {
                     HStack(spacing: 4) {
                         ForEach(0..<7, id: \.self) { i in
                             let on = challengeDays.contains(i)
@@ -180,12 +180,12 @@ struct LessonPlayer: View {
                             } label: {
                                 VStack(spacing: 4) {
                                     Text(Calendar.current.veryShortStandaloneWeekdaySymbols[(Calendar.current.firstWeekday - 1 + i) % 7])
-                                        .dxText(.subtitle)
+                                        .v4Text(.subtitle)
                                     ZStack {
-                                        Circle().strokeBorder(on ? .clear : DX.Palette.faint, lineWidth: 1.5)
+                                        Circle().strokeBorder(on ? .clear : Read4.faint, lineWidth: 1.5)
                                         if on {
-                                            Circle().fill(DX.Palette.sage)
-                                            Image(systemName: "checkmark").font(.system(size: 11, weight: .bold)).foregroundStyle(DX.Palette.onAccent)
+                                            Circle().fill(Read4.accent)
+                                            Image(systemName: "checkmark").font(.system(size: 11, weight: .bold)).foregroundStyle(DX.Fill.cream)
                                         }
                                     }
                                     .frame(width: 32, height: 32)
@@ -201,8 +201,8 @@ struct LessonPlayer: View {
             }
         case let .nextChallenge(options):
             VStack(alignment: .leading, spacing: DX.Space.xs) {
-                Text("One thing for next week").dxText(.title)
-                Text("Pick a small challenge. We'll ask how it went next week.").dxText(.subtitle)
+                Text("One thing for next week").v4Text(.title)
+                Text("Pick a small challenge. We'll ask how it went next week.").v4Text(.subtitle)
                 VStack(spacing: DX.Space.xs) {
                     ForEach(options, id: \.self) { option in
                         DXOptionCard(LocalizedStringResource(stringLiteral: option), isSelected: nextChallenge == option) { nextChallenge = option }
@@ -274,12 +274,12 @@ struct LessonPlayer: View {
 struct PlaceholderTag: View {
     var body: some View {
         Text("Placeholder")
-            .font(.custom(DX.Typeface.bold, size: 10, relativeTo: .caption2))
+            .dxFont(12, weight: 700, style: .caption2)
             .tracking(0.6)
             .textCase(.uppercase)
             .foregroundStyle(Color(light: 0xB07A14, dark: 0xE5A93C))
             .padding(.vertical, 3).padding(.horizontal, 8)
-            .background(DX.Palette.amber.opacity(0.18), in: Capsule())
+            .background(Read4.amber.opacity(0.18), in: Capsule())
             .accessibilityLabel(Text("Placeholder content"))
     }
 }
@@ -290,12 +290,12 @@ private struct NoteCallout: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(heading).dxText(.micro, color: DX.Palette.accentInk)
-            Text(text).font(DX.TextStyle.subtitle.font).foregroundStyle(DX.Palette.text)
+            Text(heading).v4Text(.micro, color: Read4.accent)
+            Text(text).font(DX.TextStyle.subtitle.font).foregroundStyle(Read4.ink)
         }
         .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(DX.Palette.accentSoft, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .background(Read4.accentSoft, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
         .accessibilityElement(children: .combine)
     }
 
@@ -317,19 +317,19 @@ private struct IfThenStep: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DX.Space.xs) {
-            Text(title).dxText(.title)
-            Text(subtitle).dxText(.subtitle)
-            DXCard {
+            Text(title).v4Text(.title)
+            Text(subtitle).v4Text(.subtitle)
+            V4Card {
                 VStack(alignment: .leading, spacing: 6) {
                     DXFlowLayout(spacing: 6) { Text("If it's"); slot(situation, filled: true) }
                     DXFlowLayout(spacing: 6) { Text("then I'll"); slot(selection ?? String(localized: "choose one"), filled: selection != nil) }
                 }
-                .font(.custom(DX.Typeface.regular, size: 16, relativeTo: .body))
-                .foregroundStyle(DX.Palette.text)
+                .dxFont(16, weight: 400, style: .body)
+                .foregroundStyle(Read4.ink)
             }
             .padding(.top, DX.Space.m)
             .accessibilityElement(children: .combine)
-            Text("Then I'll…").dxText(.micro).padding(.top, DX.Space.s)
+            Text("Then I'll…").v4Text(.micro).padding(.top, DX.Space.s)
             DXFlowLayout {
                 ForEach(actions, id: \.self) { action in
                     DXChip(LocalizedStringKey(action), isOn: Binding(get: { selection == action }, set: { if $0 { selection = action } }))
@@ -340,16 +340,16 @@ private struct IfThenStep: View {
 
     private func slot(_ text: String, filled: Bool) -> some View {
         Text(verbatim: text)
-            .font(.custom(filled ? DX.Typeface.semibold : DX.Typeface.regular, size: 14, relativeTo: .subheadline))
-            .foregroundStyle(filled ? DX.Palette.onPrimary : DX.Palette.text2)
+            .dxFont(14, weight: filled ? 600 : 400, style: .subheadline)
+            .foregroundStyle(filled ? Read4.onInk : Read4.muted)
             .padding(.vertical, 3).padding(.horizontal, 10)
             .background {
                 // A rounded rectangle, not a capsule, so wrapped text at large sizes stays readable.
                 if filled {
-                    RoundedRectangle(cornerRadius: 14, style: .continuous).fill(DX.Palette.primary)
+                    RoundedRectangle(cornerRadius: 14, style: .continuous).fill(Read4.ink)
                 } else {
                     RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .strokeBorder(DX.Palette.faint, style: StrokeStyle(lineWidth: 1, dash: [3, 3]))
+                        .strokeBorder(Read4.faint, style: StrokeStyle(lineWidth: 1, dash: [3, 3]))
                 }
             }
     }
@@ -372,26 +372,26 @@ private struct LessonComplete: View {
             Spacer()
             Image(systemName: "checkmark")
                 .font(.system(size: 36, weight: .bold))
-                .foregroundStyle(DX.Palette.onAccent)
+                .foregroundStyle(DX.Fill.cream)
                 .frame(width: 96, height: 96)
-                .background(DX.Palette.sage, in: Circle())
+                .background(Read4.accent, in: Circle())
                 .accessibilityHidden(true)
-            Text(isReplay ? "Welcome back" : "\(title) done").dxText(.title).multilineTextAlignment(.center)
-            Text(summary(state)).dxText(.subtitle).multilineTextAlignment(.center)
+            Text(isReplay ? "Welcome back" : "\(title) done").v4Text(.title).multilineTextAlignment(.center)
+            Text(summary(state)).v4Text(.subtitle).multilineTextAlignment(.center)
             if let next {
                 let content = state.lesson(next)
-                DXCard(padding: 14) {
+                V4Card(padding: 14) {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(content.title).dxText(.cardHeading)
+                        Text(content.title).v4Text(.cardHeading)
                         let when = opens(state.availability(next), upgrade: state.needsUpgrade(next))
                         Text(verbatim: when.isEmpty ? String(localized: "Next · \(state.position(next))")
-                                                    : String(localized: "Next · \(state.position(next)) · \(when)")).dxText(.subtitle)
+                                                    : String(localized: "Next · \(state.position(next)) · \(when)")).v4Text(.subtitle)
                     }
                 }
                 .padding(.top, DX.Space.s)
             }
             Spacer()
-            Button("Back to Today", action: onDone).buttonStyle(.dxPrimary)
+            Button("Back to Today", action: onDone).buttonStyle(.dx(.primary, on: .reading))
         }
         .sensoryFeedback(DX.Haptic.commit, trigger: celebrated)
         .onAppear { celebrated = true }

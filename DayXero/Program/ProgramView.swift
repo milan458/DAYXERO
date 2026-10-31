@@ -24,8 +24,8 @@ struct ProgramView: View {
             ScrollViewReader { proxy in
                 ScrollView {
                     VStack(alignment: .leading, spacing: DX.Space.xs) {
-                        Text("Your program").dxText(.micro)
-                        Text("Program").dxText(.title).accessibilityAddTraits(.isHeader)
+                        Text("Your program").v4Text(.micro)
+                        Text("Program").v4Text(.title).accessibilityAddTraits(.isHeader)
                         variantLine.padding(.vertical, DX.Space.xs)
                         if let graduated = profile.progress?.graduatedAt { completeHeader(graduated) }
                         nrtGroup(now: timeline.date)
@@ -71,10 +71,10 @@ struct ProgramView: View {
         let done = sessions.filter { if case .completed = states[$0.id] { true } else { false } }.count
         let allDone = done == sessions.count && !sessions.isEmpty
         HStack(alignment: .firstTextBaseline) {
-            Text(verbatim: "\(phase.title) · \(phase.subtitle)").dxText(.micro)
+            Text(verbatim: "\(phase.title) · \(phase.subtitle)").v4Text(.micro)
             Spacer()
-            Text(verbatim: "\(done) of \(sessions.count)").font(.custom(DX.Typeface.regular, size: 11, relativeTo: .caption2))
-                .foregroundStyle(DX.Palette.muted)
+            Text(verbatim: "\(done) of \(sessions.count)").dxFont(12, weight: 400, style: .caption2)
+                .foregroundStyle(Read4.muted)
         }
         .padding(.top, DX.Space.m)
         .accessibilityAddTraits(.isHeader)
@@ -82,13 +82,13 @@ struct ProgramView: View {
             // A finished phase folds away until the person asks to see it.
             Button { unfolded.insert(phase.id) } label: {
                 HStack(spacing: DX.Space.xs) {
-                    Image(systemName: "checkmark.circle.fill").foregroundStyle(DX.Palette.accentInk)
-                    Text("\(phase.title) done · show").font(DX.TextStyle.subtitle.font).foregroundStyle(DX.Palette.text2)
+                    Image(systemName: "checkmark.circle.fill").foregroundStyle(Read4.accent)
+                    Text("\(phase.title) done · show").font(DX.TextStyle.subtitle.font).foregroundStyle(Read4.muted)
                     Spacer()
                 }
                 .padding(DX.Space.s)
                 .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .strokeBorder(DX.Palette.faint, style: StrokeStyle(lineWidth: 1, dash: [4, 4])))
+                    .strokeBorder(Read4.faint, style: StrokeStyle(lineWidth: 1, dash: [4, 4])))
             }
             .buttonStyle(.plain)
         } else {
@@ -110,8 +110,8 @@ struct ProgramView: View {
             HStack(spacing: DX.Space.s) {
                 badge(session, state: state)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(verbatim: "\(session.label) · \(session.durationMinutes) min").dxText(.micro)
-                    Text(verbatim: title).font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
+                    Text(verbatim: "\(session.label) · \(session.durationMinutes) min").v4Text(.micro)
+                    Text(verbatim: title).dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.ink)
                         .multilineTextAlignment(.leading)
                 }
                 Spacer(minLength: DX.Space.xs)
@@ -119,16 +119,16 @@ struct ProgramView: View {
             }
             .padding(.vertical, 10)
             .padding(.horizontal, DX.Space.s)
-            .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .background(Read4.card, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
             .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .strokeBorder(open ? DX.Palette.accentInk : DX.Palette.hairline, lineWidth: open ? 1.5 : 1))
+                .strokeBorder(open ? Read4.accent : Read4.hairline, lineWidth: open ? 1.5 : 1))
             .opacity(state == .locked ? 0.55 : 1)
         }
         .buttonStyle(.plain)
         .accessibilityElement(children: .combine)
         .accessibilityValue(Text(accessibilityState(state)))
         .popover(isPresented: Binding(get: { waitingTip == session.id }, set: { if !$0 { waitingTip = nil } })) {
-            Text(verbatim: waitText(state) ?? "").dxText(.subtitle).padding().presentationCompactAdaptation(.popover)
+            Text(verbatim: waitText(state) ?? "").v4Text(.subtitle).padding().presentationCompactAdaptation(.popover)
         }
     }
 
@@ -161,14 +161,14 @@ struct ProgramView: View {
         ZStack {
             switch state {
             case .completed:
-                Circle().fill(DX.Palette.accentSoft)
-                Image(systemName: "checkmark").font(.system(size: 13, weight: .bold)).foregroundStyle(DX.Palette.accentInk)
+                Circle().fill(Read4.accentSoft)
+                Image(systemName: "checkmark").font(.system(size: 13, weight: .bold)).foregroundStyle(Read4.accent)
             case .available, .inProgress:
-                Circle().fill(DX.Palette.primary)
-                Text(verbatim: short).font(.custom(DX.Typeface.semibold, size: 12, relativeTo: .caption)).foregroundStyle(DX.Palette.onPrimary)
+                Circle().fill(Read4.ink)
+                Text(verbatim: short).dxFont(12, weight: 600, style: .caption1).foregroundStyle(Read4.onInk)
             default:
-                Circle().fill(DX.Palette.surface2)
-                Text(verbatim: short).font(.custom(DX.Typeface.semibold, size: 12, relativeTo: .caption)).foregroundStyle(DX.Palette.text2)
+                Circle().fill(Read4.surface)
+                Text(verbatim: short).dxFont(12, weight: 600, style: .caption1).foregroundStyle(Read4.muted)
             }
         }
         .frame(width: 32, height: 32)
@@ -180,15 +180,15 @@ struct ProgramView: View {
         switch state {
         case .available, .inProgress:
             Text(needsUpgrade ? "Unlock" : state == .inProgress ? "Continue" : "Start")
-                .font(.custom(DX.Typeface.semibold, size: 14, relativeTo: .footnote))
-                .foregroundStyle(DX.Palette.onPrimary)
+                .dxFont(14, weight: 600, style: .footnote)
+                .foregroundStyle(Read4.onInk)
                 .padding(.horizontal, 16).frame(height: 34)
-                .background(DX.Palette.primary, in: Capsule())
+                .background(Read4.ink, in: Capsule())
         case .scheduled:
-            Text(verbatim: waitText(state) ?? "").font(.custom(DX.Typeface.regular, size: 12, relativeTo: .caption))
-                .foregroundStyle(DX.Palette.muted).multilineTextAlignment(.trailing).frame(maxWidth: 110, alignment: .trailing)
+            Text(verbatim: waitText(state) ?? "").dxFont(12, weight: 400, style: .caption1)
+                .foregroundStyle(Read4.muted).multilineTextAlignment(.trailing).frame(maxWidth: 110, alignment: .trailing)
         case .completed:
-            Text("Replay").font(.custom(DX.Typeface.regular, size: 12, relativeTo: .caption)).foregroundStyle(DX.Palette.muted)
+            Text("Replay").dxFont(12, weight: 400, style: .caption1).foregroundStyle(Read4.muted)
         case .locked:
             EmptyView()
         }
@@ -216,15 +216,15 @@ struct ProgramView: View {
     private func completeHeader(_ date: Date) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             Text("Program complete · \(date.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)))")
-                .dxText(.micro).foregroundStyle(DX.Palette.accentInk)
+                .v4Text(.micro).foregroundStyle(Read4.accent)
             if case let .text(line)? = ProgramStore(context: context, profile: profile).answer("identity_statement") {
-                Text(verbatim: "“\(line).”").font(.custom(DX.Typeface.bold, size: 20, relativeTo: .title3)).foregroundStyle(DX.Palette.text)
+                Text(verbatim: "“\(line).”").dxFont(19, weight: 700, style: .title3).foregroundStyle(Read4.ink)
             }
-            Text("Replay any session, any time.").dxText(.subtitle)
+            Text("Replay any session, any time.").v4Text(.subtitle)
         }
         .padding(DX.Space.m)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(DX.Palette.accentSoft, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .background(Read4.accentSoft, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
     }
 
     // MARK: NRT
@@ -240,7 +240,7 @@ struct ProgramView: View {
         }
         let taper = ProgressStats(quitDay: profile.quitDay, baselines: [], clock: clock).isPrep(at: now) ? profile.pouchTaper : nil
         if !plans.isEmpty || taper != nil {
-            Text("Your NRT").dxText(.micro).padding(.top, DX.Space.s)
+            Text("Your NRT").v4Text(.micro).padding(.top, DX.Space.s)
             ForEach(plans.sorted { $0.createdAt < $1.createdAt }) { plan in
                 NRTCard(plan: plan, clock: clock, now: now)
             }
@@ -254,13 +254,13 @@ struct ProgramView: View {
         let primary = profile.primaryProduct?.product ?? .cigarettes
         let others = profile.products.map(\.product).filter { $0 != primary }
         return HStack(spacing: DX.Space.xs) {
-            Image(systemName: "book.closed").foregroundStyle(DX.Palette.accentInk)
-            Text(variantText(primary: primary, others: others)).font(DX.TextStyle.subtitle.font).foregroundStyle(DX.Palette.text2)
+            Image(systemName: "book.closed").foregroundStyle(Read4.accent)
+            Text(variantText(primary: primary, others: others)).font(DX.TextStyle.subtitle.font).foregroundStyle(Read4.muted)
             Spacer(minLength: 0)
         }
         .padding(DX.Space.s)
-        .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(DX.Palette.hairline))
+        .background(Read4.card, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(Read4.hairline))
     }
 
     private func variantText(primary: Product, others: [Product]) -> AttributedString {
@@ -270,8 +270,8 @@ struct ProgramView: View {
         case .pouches: String(localized: "Pouches program")
         }
         var text = AttributedString(name)
-        text.font = .custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote)
-        text.foregroundColor = DX.Palette.text
+        text.font = DX.Typeface4.swiftUIFont(.body, size: 14, weight: 600)
+        text.foregroundColor = Read4.ink
         if !others.isEmpty {
             let list = ListFormatter.localizedString(byJoining: others.map { String(localized: $0.title).lowercased() })
             text += AttributedString(String(localized: ", with notes for \(list)"))

@@ -90,7 +90,7 @@ struct FollowUpSheet: View {
         let store = ProgramStore(context: context, profile: profile)
         VStack(alignment: .leading, spacing: DX.Space.s) {
             if let session = store.content?.session(sessionId), let beats = session.mission?.followUp, beats.indices.contains(index) {
-                Text("\(session.label) mission · \(index + 1) of \(beats.count)").dxText(.micro).foregroundStyle(DX.Palette.accentInk)
+                Text("\(session.label) mission · \(index + 1) of \(beats.count)").v4Text(.micro).foregroundStyle(Read4.accent)
                     .padding(.top, DX.Space.l)
                 BeatScreen(beat: beats[index],
                            ctx: BeatContext(store: store, session: session, variant: store.variant, nrtActive: store.nrtActive(),
@@ -102,7 +102,7 @@ struct FollowUpSheet: View {
         }
         .padding(.horizontal, DX.Space.l)
         .padding(.bottom, DX.Space.s)
-        .dxCanvas()
+        .background(Read4.background.ignoresSafeArea())
     }
 
     private func finish(_ store: ProgramStore) {
@@ -150,21 +150,21 @@ struct MissionQuestion: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DX.Space.m) {
-            Text("Today's mission").dxText(.micro).foregroundStyle(DX.Palette.accentInk).padding(.top, DX.Space.l)
-            Text(question).font(.custom(DX.Typeface.bold, size: 24, relativeTo: .title2)).tracking(-0.4).foregroundStyle(DX.Palette.text)
+            Text("Today's mission").v4Text(.micro).foregroundStyle(Read4.accent).padding(.top, DX.Space.l)
+            Text(question).dxFont(24, weight: 700, style: .title2).foregroundStyle(Read4.ink)
             if type == .surfPractice {
                 BeatSlider(value: $peak, minLabel: String(localized: "Barely there"), maxLabel: String(localized: "Overwhelming"), large: true)
-                Button("Save") { save(String(Int(peak))) }.buttonStyle(.dxPrimary)
+                Button("Save") { save(String(Int(peak))) }.buttonStyle(.dx(.primary, on: .reading))
             } else {
                 ForEach(choices, id: \.self) { choice in
                     Button { save(choice) } label: { OptionRow(text: choice) }.buttonStyle(.plain)
                 }
             }
-            Button("Not now", action: onDone).buttonStyle(.dxQuiet)
+            Button("Not now", action: onDone).buttonStyle(.dx(.quiet, on: .reading))
             Spacer()
         }
         .padding(.horizontal, DX.Space.l)
-        .dxCanvas()
+        .background(Read4.background.ignoresSafeArea())
     }
 
     private func save(_ answer: String) {
