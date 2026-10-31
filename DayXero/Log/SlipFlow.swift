@@ -142,12 +142,12 @@ struct SlipFlow: View {
                             .padding(.top, 4)
                         VStack(spacing: 8) {
                             ForEach(suggestions, id: \.self) { idea in
-                                PlanOption(text: idea, isOn: !writingOwn && action == idea) {
+                                ThenOption(text: idea, isOn: !writingOwn && action == idea) {
                                     action = idea
                                     writingOwn = false
                                 }
                             }
-                            PlanOption(text: String(localized: "write my own"), isOn: writingOwn) { writingOwn = true }
+                            ThenOption(text: String(localized: "write my own"), isOn: writingOwn) { writingOwn = true }
                             if writingOwn {
                                 TextField("", text: $ownAction, prompt: Text("go for a run").foregroundStyle(ground.muted))
                                     .dxFont(16, weight: 500, style: .body)
@@ -408,7 +408,7 @@ struct SlipFlow: View {
 }
 
 /// One "then I'll…" choice as a radio row: ink when chosen, with a green dot.
-private struct PlanOption: View {
+private struct ThenOption: View {
     let text: String
     let isOn: Bool
     let action: () -> Void
