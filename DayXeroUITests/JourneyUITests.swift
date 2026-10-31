@@ -91,7 +91,7 @@ final class JourneyUITests: XCTestCase {
         // A use after Quit Day is a slip: talked through, and nothing resets (S8).
         tap(button(app, "Log"))
         tapWhenStill(app, logSheetRow(app, "vape"), name: "Vaped")
-        XCTAssert(app.staticTexts["Thanks for telling us"].waitForExistence(timeout: 5))
+        XCTAssert(app.staticTexts["Thanks for telling me."].waitForExistence(timeout: 5))
         snap(app, "21-slip")
         tapSettled(app, "Not now")
         XCTAssert(app.buttons["Craving SOS"].waitForExistence(timeout: 5))
@@ -103,7 +103,7 @@ final class JourneyUITests: XCTestCase {
         let app = launch(["-dx.homeScenario", "day3", "-dx.store", "pro"])
         XCTAssert(app.buttons["Craving SOS"].waitForExistence(timeout: 10))
         app.open(URL(string: "dayxero://log/slip")!)
-        XCTAssert(app.staticTexts["Thanks for telling us"].waitForExistence(timeout: 5), "The slip screen didn't appear")
+        XCTAssert(app.staticTexts["Thanks for telling me."].waitForExistence(timeout: 5), "The slip screen didn't appear")
         snap(app, "23-widget-slip")
         tapSettled(app, "Not now")
         XCTAssert(app.buttons["Craving SOS"].waitForExistence(timeout: 5))
@@ -164,14 +164,13 @@ final class JourneyUITests: XCTestCase {
 
     private func rideOutCraving(_ app: XCUIApplication) {
         tap(app.buttons["Craving SOS"])
-        // The Bio-Orb session: Pause and Coach me on screen, the outcomes in the session menu until time's up.
-        XCTAssert(app.buttons["Breathing guide"].waitForExistence(timeout: 5))
-        XCTAssert(app.buttons["Coach me"].exists)
+        // F13: Jelli's session, with "It passed" on screen from the start (no countdown).
+        XCTAssert(app.buttons["It passed"].waitForExistence(timeout: 5))
+        XCTAssert(app.buttons["Still strong"].exists)
         snap(app, "sos-session")
-        tap(app.buttons["Session options"])
         tap(app.buttons["It passed"])
-        XCTAssert(app.staticTexts["Wave survived, Sam."].waitForExistence(timeout: 5))
-        tap(app.buttons["Done"])
+        XCTAssert(app.staticTexts["You rode it out."].waitForExistence(timeout: 5))
+        tap(app.buttons["Back to my day"])
         XCTAssert(app.buttons["Craving SOS"].waitForExistence(timeout: 5))
     }
 

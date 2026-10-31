@@ -2,36 +2,39 @@ import DayXeroCore
 import SwiftData
 import SwiftUI
 
-/// After a slip: a supportive note, then an optional one-minute talk-through that ends in an if-then plan (S8).
-/// The slip is already saved when this opens; every step only adds details. Nothing resets.
+/// After a slip (F15, quiet tier on the reading ground): Jelli thanks them, nothing resets, and one
+/// if-then plan for next time. What happened (product, amount, when) is optional, after the plan.
+/// The slip is already saved when this opens; every step only adds details.
 struct SlipFlow: View {
     /// The slip being talked through. nil only if saving failed; the screens still work.
     let entry: LogEntry?
     let profile: UserProfile?
     let onDone: () -> Void
-    /// Start straight at the talk-through, for a slip reopened from Progress.
+    /// Opened again later (Progress, the check-in). The same screens; kept for the call sites.
     var startInTalkThrough = false
     /// Program v2's Day 27 rehearsal: the same screens with a "Practice" tag, and nothing logged.
     var practice = false
 
+    /// Step 1 was telling us (SOS or the log), so the plan is step 2 of 3 and "Plan saved" is step 3.
     enum Stage: Int, CaseIterable {
-        case acknowledge, what, trigger, plan, done
+        case talk = 2, done = 3, what = 4
     }
 
     @Environment(\.modelContext) private var context
     @Query(filter: #Predicate<LogEntry> { $0.kindRaw == "slip" }) private var slips: [LogEntry]
-    @State private var stage = Stage.acknowledge
+    @State private var stage = Stage.talk
     @State private var product: Product?
     @State private var amount: SlipAmount?
     @State private var when = Slips.When.justNow
     @State private var trigger: Trigger?
-    @State private var mood: Mood?
     @State private var action: String?
     @State private var ownAction = ""
     @State private var writingOwn = false
     @State private var showNRT = false
     @State private var savedFeedback = false
     private let loggedAt: Date
+
+    private let ground = DX.Ground.reading
 
     init(entry: LogEntry?, profile: UserProfile?, startInTalkThrough: Bool = false, practice: Bool = false,
          onDone: @escaping () -> Void) {
@@ -41,7 +44,7 @@ struct SlipFlow: View {
         self.practice = practice
         self.onDone = onDone
         loggedAt = entry?.timestamp ?? .now
-        var start = startInTalkThrough ? Stage.what : .acknowledge
+        var start = Stage.talk
         #if DEBUG
         if let raw = UserDefaults.standard.string(forKey: "dx.slipStage"),
            let debug = Stage.allCases.first(where: { "\($0)" == raw }) { start = debug }
@@ -51,28 +54,24 @@ struct SlipFlow: View {
 
     var body: some View {
         VStack(spacing: 0) {
+            topBar
             if practice {
                 Label("Practice · nothing is logged", systemImage: "figure.walk.motion")
-                    .font(.custom(DX.Typeface.bold, size: 11, relativeTo: .caption2)).tracking(0.8).textCase(.uppercase)
-                    .foregroundStyle(DX.Palette.accentInk)
+                    .dxType(.caption).textCase(.uppercase)
+                    .foregroundStyle(ground.muted)
                     .padding(.horizontal, 12).padding(.vertical, 6)
-                    .overlay(Capsule().strokeBorder(DX.Palette.accentInk, style: StrokeStyle(lineWidth: 1.5, dash: [4, 3])))
-                    .padding(.top, DX.Space.s)
+                    .overlay(Capsule().strokeBorder(ground.muted, style: StrokeStyle(lineWidth: 1.5, dash: [4, 3])))
+                    .padding(.top, DX.Space.xs)
             }
-            if stage != .acknowledge { progress }
             switch stage {
-            case .acknowledge: acknowledge
+            case .talk: talk
             case .what: what
-            case .trigger: triggerStep
-            case .plan: plan
             case .done: done
             }
         }
-        .padding(.horizontal, DX.Space.m)
-        .dxReadableColumn()
-        .padding(.bottom, DX.Space.xs)
-        .dxCanvas()
-        .animation(DX.Motion.animation(DX.Motion.glide, reduceMotion: false), value: stage)
+        .foregroundStyle(ground.ink)
+        .background(ground.background.ignoresSafeArea())
+        .animation(DX.Move.animation(DX.Move.settle, reduceMotion: false), value: stage)
         .sensoryFeedback(DX.Haptic.commit, trigger: savedFeedback)
         .onAppear(perform: prefill)
         .fullScreenCover(isPresented: $showNRT) {
@@ -80,271 +79,262 @@ struct SlipFlow: View {
         }
     }
 
-    // MARK: Steps
+    // MARK: Top bar: close, and the three-step bar
 
-    private var acknowledge: some View {
-        VStack(spacing: DX.Space.s) {
-            ScrollView {
-                VStack(spacing: DX.Space.s) {
-                    icon("heart").padding(.top, DX.Space.xxl)
-                    Text("Thanks for telling us").dxText(.title).multilineTextAlignment(.center)
-                    Text(isPrep ? String(localized: "Logged. Prep is for learning your patterns, and this helps.")
-                         : String(localized: "A slip is one moment, not a restart. Your \(daysClear) days clear stay as they are."))
-                        .dxText(.subtitle).multilineTextAlignment(.center)
-                    DXCard(padding: 14) {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("One minute, if you have it").dxText(.cardHeading)
-                            Text("Three quick questions so we can plan for next time.")
-                                .font(DX.TextStyle.subtitle.font).foregroundStyle(DX.Palette.text)
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    .padding(.top, DX.Space.l)
+    private var topBar: some View {
+        HStack(spacing: 10) {
+            Button {
+                if stage == .what { stage = .done } else { onDone() }
+            } label: {
+                Image(systemName: stage == .what ? "chevron.left" : "xmark")
+                    .font(.system(size: 18, weight: .bold))
+                    .frame(width: 44, height: 44)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(stage == .what ? Text("Back") : Text("Close. The slip is saved."))
+            HStack(spacing: 6) {
+                ForEach(1...3, id: \.self) { i in
+                    Capsule().fill(i <= min(stage.rawValue, 3) ? ground.ink : DX.Fill.surface).frame(height: 6)
                 }
             }
+            .accessibilityElement()
+            .accessibilityLabel(Text("Step \(min(stage.rawValue, 3)) of 3"))
+            Color.clear.frame(width: 44, height: 44)
+        }
+        .padding(.horizontal, 10)
+        .padding(.top, DX.Space.xs)
+        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+    }
+
+    // MARK: F15 Thanks, nothing resets, and a plan
+
+    private var talk: some View {
+        let situation = String(localized: (trigger ?? .other).situation)
+        return VStack(spacing: 0) {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 14) {
+                    HStack(spacing: 14) {
+                        JelliView(mood: .calm, stage: 2, size: .card)
+                            .frame(width: 88, height: 88)
+                            .background(DX.Ground.ocean.background, in: RoundedRectangle(cornerRadius: 26, style: .continuous))
+                            .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
+                            .accessibilityHidden(true)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("With Jelli").dxFont(14, weight: 700, style: .footnote).foregroundStyle(ground.muted)
+                            Text("Thanks for telling me.").dxType(.large).accessibilityAddTraits(.isHeader)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                    .dxArrive(0)
+                    Text(isPrep
+                         ? String(localized: "Logged. Prep is for learning your patterns, and this helps. Let's make a plan for next time.")
+                         : String(localized: "Waves come and go. Nothing resets: your days clear and Xero's sky stay just as they are. Let's make a plan for next time."))
+                        .dxType(.body)
+                        .foregroundStyle(ground.muted)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .dxArrive(1)
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("What set it off?").dxFont(16, weight: 700, style: .body)
+                        TriggerPicker(mine: profile?.triggers ?? [], selection: $trigger)
+                        Text("If it's \(situation), then I'll…")
+                            .dxFont(19, weight: 700, style: .headline)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .padding(.top, 4)
+                        VStack(spacing: 8) {
+                            ForEach(suggestions, id: \.self) { idea in
+                                PlanOption(text: idea, isOn: !writingOwn && action == idea) {
+                                    action = idea
+                                    writingOwn = false
+                                }
+                            }
+                            PlanOption(text: String(localized: "write my own"), isOn: writingOwn) { writingOwn = true }
+                            if writingOwn {
+                                TextField("", text: $ownAction, prompt: Text("go for a run").foregroundStyle(ground.muted))
+                                    .dxFont(16, weight: 500, style: .body)
+                                    .padding(.horizontal, 14)
+                                    .frame(minHeight: 48)
+                                    .background(DX.Fill.surface, in: RoundedRectangle(cornerRadius: DX.Layout.answerChipRadius, style: .continuous))
+                                    .accessibilityLabel(Text("Then I'll"))
+                            }
+                        }
+                        .accessibilityElement(children: .contain)
+                        .accessibilityLabel(Text("Then I will"))
+                    }
+                    .padding(16)
+                    .background(DX.Fill.raised, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+                    .shadow(color: Color(light: (0x1E1A3A, 0.07), dark: (0x000000, 0)), radius: 11, y: 8)
+                    .dxArrive(2)
+                }
+                .padding(.horizontal, DX.Layout.gutter)
+                .padding(.top, 14)
+                .padding(.bottom, DX.Space.m)
+            }
             .scrollBounceBehavior(.basedOnSize)
-            // Capped so the buttons leave room for the message at the largest text sizes.
-            VStack(spacing: DX.Space.s) {
-                Button("Talk it through · 1 min") { stage = .what }.buttonStyle(.dxPrimary)
-                Button("Not now", action: onDone).buttonStyle(.dxQuiet)
+            .scrollDismissesKeyboard(.interactively)
+            VStack(spacing: 4) {
+                Button("Save my plan") { savePlan() }
+                    .buttonStyle(.dx(.primary, on: .reading))
+                    .disabled(chosenAction == nil)
+                Button("Not now", action: onDone)
+                    .buttonStyle(.dx(.quiet, on: .reading))
             }
             .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+            .padding(.horizontal, DX.Layout.buttonGutter)
+            .padding(.bottom, DX.Space.xs)
+            .dxArrive(4)
+        }
+        .onChange(of: trigger) { _, _ in
+            // A different trigger has its own ideas; keep a plan they wrote themselves.
+            if !writingOwn, let action, !suggestions.contains(action) { self.action = nil }
         }
     }
 
-    private var what: some View {
-        step(title: "What happened?", subtitle: "No judgement, just the facts so we can plan.", button: "Next", next: .trigger) {
-            if products.count > 1 {
-                label("What did you have?")
-                DXFlowLayout {
-                    ForEach(products, id: \.self) { p in DXSetChip(p.title, value: p, selection: single($product)) }
-                }
-            }
-            label("How much?")
-            HStack(spacing: DX.Space.xs) {
-                amountOption(.aLittle, title: product == .cigarettes ? "A few drags" : product == .pouches ? "Briefly" : "A few puffs", detail: "one moment")
-                amountOption(.one, title: product == .cigarettes ? "One" : product == .pouches ? "One pouch" : "One session", detail: "a sitting")
-                amountOption(.more, title: "More", detail: "a few times")
-            }
-            label("When?")
-            DXFlowLayout {
-                ForEach(Slips.When.allCases, id: \.self) { w in
-                    DXChip(whenTitle(w), isOn: Binding(get: { when == w }, set: { if $0 { when = w } }))
-                }
-            }
-        }
-    }
-
-    private var triggerStep: some View {
-        step(title: "What set it off?", subtitle: "Pick the closest one.", button: "Next", next: .plan) {
-            DXFlowLayout {
-                ForEach(orderedTriggers, id: \.self) { t in DXSetChip(t.title, value: t, selection: single($trigger)) }
-            }
-            label("How were you feeling?", optional: true)
-            DXFlowLayout {
-                ForEach(Mood.allCases, id: \.self) { m in DXSetChip(m.title, value: m, selection: single($mood)) }
-            }
-        }
-    }
-
-    private var plan: some View {
-        let situation = String(localized: (trigger ?? .other).situation)
-        return step(title: "One thing to try next time", subtitle: "Make a plan for the next time it's \(situation).",
-                    button: "Save my plan", next: .done, skippable: false, enabled: chosenAction != nil) {
-            DXCard(padding: 14) {
-                VStack(alignment: .leading, spacing: 6) {
-                    DXFlowLayout(spacing: 6) { Text("If it's"); slot(situation, filled: true) }
-                    DXFlowLayout(spacing: 6) { Text("then I'll"); slot(chosenAction ?? String(localized: "choose one"), filled: chosenAction != nil) }
-                }
-                .font(.custom(DX.Typeface.regular, size: 16, relativeTo: .body))
-                .foregroundStyle(DX.Palette.text)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            .accessibilityElement(children: .combine)
-            label("Then I'll…")
-            DXFlowLayout {
-                ForEach((trigger ?? .other).nextTimeSuggestions.map { String(localized: $0) }, id: \.self) { idea in
-                    DXChip(LocalizedStringKey(idea), isOn: Binding(get: { !writingOwn && action == idea },
-                                                                   set: { if $0 { action = idea; writingOwn = false } }))
-                }
-                DXChip("write my own", isOn: Binding(get: { writingOwn }, set: { writingOwn = $0 }))
-            }
-            if writingOwn {
-                DXTextField("Then I'll…", prompt: "go for a run", text: $ownAction)
-            }
-        }
-    }
+    // MARK: Plan saved
 
     private var done: some View {
-        VStack(spacing: DX.Space.s) {
+        VStack(spacing: 0) {
             ScrollView {
-                VStack(spacing: DX.Space.s) {
-                    icon("checkmark").padding(.top, DX.Space.xl)
-                    Text("Plan saved").dxText(.title)
+                VStack(alignment: .leading, spacing: 14) {
+                    Text("Plan saved").dxType(.large).accessibilityAddTraits(.isHeader).dxArrive(0)
                     Text("Every slip shows you something about your cravings. Now you've got a plan for this one.")
-                        .dxText(.subtitle).multilineTextAlignment(.center)
+                        .dxType(.body).foregroundStyle(ground.muted)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .dxArrive(1)
                     if let action = entry?.nextTime ?? chosenAction {
-                        PlanCard(situation: String(localized: (trigger ?? .other).situation), action: action)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("YOUR PLAN").dxType(.caption).foregroundStyle(ground.muted)
+                            Text("If it's \(String(localized: (trigger ?? .other).situation)), then I'll \(action).")
+                                .dxFont(19, weight: 700, style: .headline)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .dxReadingCard(radius: 22)
+                        .accessibilityElement(children: .combine)
+                        .dxArrive(2)
                     }
-                    HStack(spacing: DX.Space.xs) {
-                        Image(systemName: "checkmark").foregroundStyle(DX.Palette.accentInk)
+                    Label {
                         Text(isPrep ? String(localized: "Prep carries on as planned.")
-                             : String(localized: "Still Day \(daysClear) clear. Nothing has changed on Home."))
-                            .font(DX.TextStyle.subtitle.font).foregroundStyle(DX.Palette.text)
-                        Spacer(minLength: 0)
+                             : String(localized: "Still Day \(daysClear) clear. Nothing has changed on Today."))
+                            .dxType(.footnote)
+                    } icon: {
+                        Image(systemName: "checkmark.circle.fill").foregroundStyle(DX.Fill.green)
                     }
-                    .padding(14)
-                    .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-                    .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(DX.Palette.hairline))
-                    if Slips.isToughDay(slipsToday: slipsToday) { toughDay }
+                    .dxArrive(3)
+                    if Slips.isToughDay(slipsToday: slipsToday) { toughDay.dxArrive(4) }
                 }
+                .padding(.horizontal, DX.Layout.gutter)
+                .padding(.top, DX.Space.l)
+                .padding(.bottom, DX.Space.m)
             }
             .scrollBounceBehavior(.basedOnSize)
-            Button("Back to Today", action: onDone).buttonStyle(.dxPrimary)
+            VStack(spacing: 4) {
+                Button("Back to Today", action: onDone)
+                    .buttonStyle(.dx(.primary, on: .reading))
+                if entry != nil {
+                    Button("Add what happened · optional") { stage = .what }
+                        .buttonStyle(.dx(.quiet, on: .reading))
+                }
+            }
+            .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+            .padding(.horizontal, DX.Layout.buttonGutter)
+            .padding(.bottom, DX.Space.xs)
         }
     }
 
     /// From the third slip in a day: NRT or another look at the plan, never starting over.
     private var toughDay: some View {
-        DXCard(padding: 14) {
-            VStack(alignment: .leading, spacing: DX.Space.xs) {
-                Text("It's been a tough day. That happens, especially early on. Want to look at NRT options, or go over your plan again?")
-                    .font(DX.TextStyle.subtitle.font).foregroundStyle(DX.Palette.text)
-                ViewThatFits {
-                    HStack(spacing: DX.Space.xs) { nrtButton; replanButton }
-                    VStack(spacing: DX.Space.xs) { nrtButton; replanButton }
-                }
+        VStack(alignment: .leading, spacing: 10) {
+            Text("It's been a tough day. That happens, especially early on. Want to look at NRT options, or go over your plan again?")
+                .dxType(.footnote)
+                .fixedSize(horizontal: false, vertical: true)
+            ViewThatFits {
+                HStack(spacing: 8) { nrtButton; replanButton }
+                VStack(spacing: 8) { nrtButton; replanButton }
             }
         }
+        .dxReadingCard(radius: 22)
     }
 
     private var nrtButton: some View {
-        Button { showNRT = true } label: { Text("Look at NRT").frame(maxWidth: .infinity) }.buttonStyle(.dxSecondary)
+        V4Chip(text: String(localized: "Look at NRT"), isOn: false) { showNRT = true }
     }
 
     private var replanButton: some View {
-        Button { stage = .plan } label: { Text("Go over my plan").frame(maxWidth: .infinity) }.buttonStyle(.dxSecondary)
+        V4Chip(text: String(localized: "Go over my plan"), isOn: false) { stage = .talk }
+    }
+
+    // MARK: What happened (optional)
+
+    private var what: some View {
+        VStack(spacing: 0) {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("What happened?").dxType(.large).accessibilityAddTraits(.isHeader)
+                    Text("No judgement, just the facts so we can plan.").dxType(.body).foregroundStyle(ground.muted)
+                    if products.count > 1 {
+                        label("What did you have?")
+                        DXFlowLayout(spacing: 8) {
+                            ForEach(products, id: \.self) { p in
+                                V4Chip(text: String(localized: p.title), isOn: product == p) { product = p }
+                            }
+                        }
+                    }
+                    label("How much?")
+                    DXFlowLayout(spacing: 8) {
+                        V4Chip(text: amountTitle(.aLittle), isOn: amount == .aLittle) { amount = amount == .aLittle ? nil : .aLittle }
+                        V4Chip(text: amountTitle(.one), isOn: amount == .one) { amount = amount == .one ? nil : .one }
+                        V4Chip(text: String(localized: "More"), isOn: amount == .more) { amount = amount == .more ? nil : .more }
+                    }
+                    label("When?")
+                    DXFlowLayout(spacing: 8) {
+                        ForEach(Slips.When.allCases, id: \.self) { w in
+                            V4Chip(text: whenTitle(w), isOn: when == w) { when = w }
+                        }
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, DX.Layout.gutter)
+                .padding(.top, DX.Space.l)
+                .padding(.bottom, DX.Space.m)
+            }
+            .scrollBounceBehavior(.basedOnSize)
+            Button("Save") { saveDetails() }
+                .buttonStyle(.dx(.primary, on: .reading))
+                .padding(.horizontal, DX.Layout.buttonGutter)
+                .padding(.bottom, DX.Space.xs)
+        }
     }
 
     // MARK: Pieces
 
-    private var progress: some View {
-        VStack(spacing: DX.Space.s) {
-            HStack(spacing: 4) {
-                ForEach(1...3, id: \.self) { i in
-                    Capsule().fill(i <= min(stage.rawValue, 3) ? DX.Palette.text : DX.Palette.track).frame(height: 4)
-                }
-            }
-            .accessibilityHidden(true)
-            HStack {
-                Button(action: onDone) {
-                    Image(systemName: "xmark").font(.system(size: 13, weight: .semibold)).foregroundStyle(DX.Palette.text2)
-                        .frame(width: 36, height: 36)
-                        .background(DX.Palette.surface1, in: Circle())
-                        .overlay(Circle().strokeBorder(DX.Palette.hairline))
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel(Text("Close. The slip is saved."))
-                Spacer()
-                if stage != .done { Text("\(stage.rawValue) of 3").dxText(.micro) }
-                Spacer()
-                if stage == .what || stage == .trigger {
-                    Button("Skip") { advance() }.font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
-                        .foregroundStyle(DX.Palette.text2).frame(width: 36)
-                } else {
-                    Color.clear.frame(width: 36, height: 36)
-                }
-            }
-            .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
-        }
-        .padding(.top, DX.Space.l)
-        .padding(.bottom, DX.Space.s)
+    private func label(_ text: LocalizedStringKey) -> some View {
+        Text(text).dxType(.caption).textCase(.uppercase).foregroundStyle(ground.muted).padding(.top, DX.Space.s)
     }
 
-    private func step(title: LocalizedStringKey, subtitle: LocalizedStringKey, button: LocalizedStringKey, next: Stage,
-                      skippable: Bool = true, enabled: Bool = true, @ViewBuilder content: () -> some View) -> some View {
-        VStack(spacing: DX.Space.s) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: DX.Space.xs) {
-                    Text(title).dxText(.title)
-                    Text(subtitle).dxText(.subtitle).padding(.bottom, DX.Space.s)
-                    content()
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            .scrollBounceBehavior(.basedOnSize)
-            Button(button) { advance() }
-                .buttonStyle(.dxPrimary)
-                .disabled(!enabled)
+    private func amountTitle(_ value: SlipAmount) -> String {
+        switch value {
+        case .aLittle: product == .cigarettes ? String(localized: "A few drags") : product == .pouches ? String(localized: "Briefly") : String(localized: "A few puffs")
+        case .one: product == .cigarettes ? String(localized: "One") : product == .pouches ? String(localized: "One pouch") : String(localized: "One session")
+        default: String(localized: "More")
         }
     }
 
-    private func label(_ text: LocalizedStringKey, optional: Bool = false) -> some View {
-        Group {
-            if optional {
-                Text("\(Text(text)) \(Text("· optional").foregroundStyle(DX.Palette.faint))")
-            } else {
-                Text(text)
-            }
-        }
-        .dxText(.micro)
-        .padding(.top, DX.Space.s)
-    }
-
-    private func icon(_ name: String) -> some View {
-        Image(systemName: name)
-            .font(.system(size: 30, weight: name == "checkmark" ? .bold : .regular))
-            .foregroundStyle(DX.Palette.accentInk)
-            .frame(width: 76, height: 76)
-            .background(DX.Palette.accentSoft, in: Circle())
-            .accessibilityHidden(true)
-    }
-
-    private func amountOption(_ value: SlipAmount, title: LocalizedStringKey, detail: LocalizedStringKey) -> some View {
-        let on = amount == value
-        return Button { amount = on ? nil : value } label: {
-            VStack(spacing: 2) {
-                Text(title).font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote)).foregroundStyle(DX.Palette.text)
-                Text(detail).font(.custom(DX.Typeface.regular, size: 11, relativeTo: .caption2)).foregroundStyle(DX.Palette.text2)
-            }
-            .multilineTextAlignment(.center)
-            .frame(maxWidth: .infinity, minHeight: 64)
-            .padding(.horizontal, 6)
-            .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .strokeBorder(on ? DX.Palette.accentInk : DX.Palette.hairline, lineWidth: on ? 1.5 : 1))
-        }
-        .buttonStyle(.plain)
-        .accessibilityAddTraits(on ? .isSelected : [])
-    }
-
-    private func slot(_ text: String, filled: Bool) -> some View {
-        Text(verbatim: text)
-            .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body))
-            .foregroundStyle(filled ? DX.Palette.onPrimary : DX.Palette.text2)
-            .padding(.vertical, 3).padding(.horizontal, 12)
-            .background(filled ? DX.Palette.primary : .clear, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .strokeBorder(filled ? .clear : DX.Palette.faint, style: StrokeStyle(lineWidth: 1, dash: [3, 3])))
-    }
-
-    private func whenTitle(_ w: Slips.When) -> LocalizedStringKey {
+    private func whenTitle(_ w: Slips.When) -> String {
         switch w {
-        case .justNow: "Just now"
-        case .earlierToday: "Earlier today"
-        case .yesterday: "Yesterday"
+        case .justNow: String(localized: "Just now")
+        case .earlierToday: String(localized: "Earlier today")
+        case .yesterday: String(localized: "Yesterday")
         }
     }
 
     // MARK: Data
 
-    private var products: [Product] {
-        (profile?.products ?? []).sorted { ($0.isPrimary ? 0 : 1) < ($1.isPrimary ? 0 : 1) }.map(\.product)
+    private var suggestions: [String] {
+        (trigger ?? .other).nextTimeSuggestions.map { String(localized: $0) }
     }
 
-    private var orderedTriggers: [Trigger] {
-        let mine = profile?.triggers ?? []
-        return mine + Trigger.allCases.filter { !mine.contains($0) }
+    private var products: [Product] {
+        (profile?.products ?? []).sorted { ($0.isPrimary ? 0 : 1) < ($1.isPrimary ? 0 : 1) }.map(\.product)
     }
 
     private var chosenAction: String? {
@@ -368,22 +358,11 @@ struct SlipFlow: View {
         Slips.count(onDayOf: .now, timestamps: slips.map(\.timestamp), clock: clock)
     }
 
-    private func single<T: Hashable>(_ value: Binding<T?>) -> Binding<Set<T>> {
-        Binding(
-            get: { value.wrappedValue.map { [$0] } ?? [] },
-            set: { new in
-                let old = value.wrappedValue
-                value.wrappedValue = new.first { $0 != old } ?? (old.map(new.contains) == true ? old : nil)
-            }
-        )
-    }
-
     private func prefill() {
+        product = entry?.product ?? products.first
         guard let entry else { return }
-        product = entry.product ?? products.first
         amount = entry.amount
         trigger = entry.trigger
-        mood = entry.mood
         if let next = entry.nextTime {
             if (entry.trigger ?? .other).nextTimeSuggestions.map({ String(localized: $0) }).contains(next) {
                 action = next
@@ -393,45 +372,74 @@ struct SlipFlow: View {
             }
         }
         #if DEBUG
-        if UserDefaults.standard.string(forKey: "dx.slipStage") != nil {
-            amount = amount ?? .one
+        if UserDefaults.standard.string(forKey: "dx.slipStage") != nil || UserDefaults.standard.string(forKey: "dx.sosOutcome") != nil {
             trigger = trigger ?? profile?.triggers.first
-            mood = mood ?? .meh
-            if stage == .plan || stage == .done { action = action ?? (trigger ?? .other).nextTimeSuggestions.first.map { String(localized: $0) } }
+            if action == nil, !writingOwn {
+                let ideas = (trigger ?? .other).nextTimeSuggestions.map { String(localized: $0) }
+                action = ideas.count > 2 ? ideas[2] : ideas.first
+            }
+            amount = amount ?? .one
         }
         #endif
     }
 
-    /// Saves what's been answered so far and moves on. Every step is optional except choosing a plan to save it.
-    private func advance() {
-        guard let entry else {
-            stage = Stage(rawValue: stage.rawValue + 1) ?? .done
-            return
+    /// Saves the trigger and the plan. Choosing a plan is the only thing this flow asks for.
+    private func savePlan() {
+        guard let chosen = chosenAction else { return }
+        if let entry {
+            entry.triggerRaw = trigger?.rawValue
+            entry.nextTime = chosen
+            context.insert(IfThenPlan(situation: String(localized: (trigger ?? .other).situation), action: chosen))
+            try? context.save()
         }
-        switch stage {
-        case .what:
+        savedFeedback.toggle()
+        stage = .done
+    }
+
+    private func saveDetails() {
+        if let entry {
             entry.productRaw = (product ?? entry.product)?.rawValue
             entry.amount = amount
             entry.timestamp = Slips.time(when, loggedAt: loggedAt, clock: clock)
-            stage = .trigger
-        case .trigger:
-            entry.triggerRaw = trigger?.rawValue
-            entry.mood = mood
-            stage = .plan
-        case .plan:
-            guard let chosen = chosenAction else { return }
-            entry.nextTime = chosen
-            context.insert(IfThenPlan(situation: String(localized: (trigger ?? .other).situation), action: chosen))
-            savedFeedback.toggle()
-            stage = .done
-        case .acknowledge, .done:
-            break
+            try? context.save()
         }
-        try? context.save()
+        stage = .done
     }
 }
 
-/// "If it's …, then I'll …" as saved. Shown when a plan is made, on Home for the rest of that day, and in Craving SOS.
+/// One "then I'll…" choice as a radio row: ink when chosen, with a green dot.
+private struct PlanOption: View {
+    let text: String
+    let isOn: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack {
+                Text(verbatim: text)
+                    .dxFont(16, weight: 600, style: .body)
+                    .multilineTextAlignment(.leading)
+                    .fixedSize(horizontal: false, vertical: true)
+                Spacer(minLength: 8)
+                Circle()
+                    .strokeBorder(isOn ? DX.Fill.green : DX.Ground.reading.muted, lineWidth: isOn ? 6 : 2)
+                    .background(Circle().fill(isOn ? Color(hex: 0x2FD08A) : .clear))
+                    .frame(width: 22, height: 22)
+                    .accessibilityHidden(true)
+            }
+            .foregroundStyle(isOn ? DX.Ground.reading.background : DX.Ground.reading.ink)
+            .padding(.horizontal, 14).padding(.vertical, 12)
+            .frame(minHeight: 48)
+            .background(isOn ? DX.Ground.reading.ink : DX.Fill.surface,
+                        in: RoundedRectangle(cornerRadius: DX.Layout.answerChipRadius, style: .continuous))
+        }
+        .buttonStyle(.plain)
+        .sensoryFeedback(DX.Haptic.select, trigger: isOn)
+        .accessibilityAddTraits(isOn ? [.isButton, .isSelected] : .isButton)
+    }
+}
+
+/// "If it's …, then I'll …" as saved. Shown on Home for the rest of that day, and after a lesson.
 struct PlanCard: View {
     let situation: String
     let action: String
