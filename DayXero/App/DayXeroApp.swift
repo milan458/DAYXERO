@@ -9,6 +9,7 @@ struct DayXeroApp: App {
 
     init() {
         DX.Typeface.register()
+        DX.Typeface4.register()
         do {
             // Unit tests run inside the app; give them a throwaway store.
             let isTesting = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil

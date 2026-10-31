@@ -8,6 +8,7 @@ import WidgetKit
 struct DayXeroWidgets: WidgetBundle {
     init() {
         DX.Typeface.register()
+        DX.Typeface4.register()
     }
 
     var body: some Widget {

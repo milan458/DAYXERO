@@ -113,6 +113,11 @@ In order. "→" marks the final state.
 
     The existing v4 screens that show the old facts (F06, F08, F10, F11, F12, F16, F18) are listed in §10.1. They are fixed only when Milan asks.
 18. **Coral as the brand colour: pending a look.** Milan asked to see coral as a palette with app-icon designs and Xero before deciding (§14 question 3). The board is on the canvas as "Brand colour · coral vs apricot".
+19. **No v4 switch: v4 is the new identity (31 Oct 2026, Milan).** Each finished v4 screen replaces the old one directly on `main`. There is no TestFlight-only toggle, so TestFlight shows a mixed old and new look until the migration ends.
+20. **One variable Bricolage Grotesque file (31 Oct 2026, Milan).** The app bundles `BricolageGrotesque-Variable.ttf` (opsz 12–96, wght 200–800) and sets weight and optical size on its axes. DM Sans is bundled the same way (`DMSans-Variable.ttf`), because Google Fonts now ships it only as a variable file.
+21. **Tab bar follows v4 Nav2 (31 Oct 2026, Milan): Today · Program · SOS · Evening · Me.** Progress and Settings move under Me. The calm tools move under Evening. Toolkit stops being a tab. Water stays on Today, where it already is, and leaves the Toolkit list.
+22. **Jelli replaces the Bio-Orb on SOS (31 Oct 2026, Milan).** `BioOrbView` and `docs/DAYXERO_BIO_ORB_SPEC.md` are retired when the SOS screen moves to v4 (Phase 2). The orb's breathing patterns stay available to the calm tools until Evening is rebuilt.
+23. **The Day Xero session is free, and the trial offer follows it (31 Oct 2026, Milan).** This confirms the Q1–Q3 flow and the §10.2 assumption. Free sessions: P1–P7 and DX.
 
 ### Rejected or superseded
 

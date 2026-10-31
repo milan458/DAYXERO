@@ -30,11 +30,7 @@ So a find-and-replace would change about 1,600 call sites at once with no way to
 2. **Rebuild one screen at a time** with only v4 tokens, matching its canvas board in light and dark.
 3. **Remove** the old tokens once no screen uses them (Phase 8).
 
-**Recommended: a v4 switch while the work is in progress.** This needs your decision (§9, question 1).
-- A setting, `DesignV4.isOn`, picks the old or new screen at each entry point (Today, SOS, Program, …).
-- It is on by default in TestFlight builds and off in App Store builds until the switch-over.
-- `main` stays shippable the whole time. Each finished screen can merge as soon as CI is green, and you can try it on your phone the same day.
-- The alternative is one long branch merged at the end. TestFlight builds only from `main` (`docs/XCODE_CLOUD.md`), so you would see nothing on your phone until everything is done.
+**Decided: no v4 switch (decision 19).** v4 is the new identity, so each finished screen replaces the old one on `main`. TestFlight shows a mixed look until the last phase.
 
 **Branches and checks:**
 - One branch per phase, then a PR into `main`.
@@ -68,7 +64,7 @@ So a find-and-replace would change about 1,600 call sites at once with no way to
 
 ### 3.2 Fonts → `Resources/Fonts`, `Typography.swift`
 - Add **Bricolage Grotesque** (display) and **DM Sans** (body). Both are Google Fonts under the OFL licence, which goes in next to the files like `Inter-LICENSE.txt`.
-- **Static font files** are recommended: Bricolage 500/700/800 and DM Sans 400/500/600/700. Bricolage is variable (optical size 12–96). Static files are simpler and behave the same in the widget extension. The cost is about 600 KB.
+- **Variable font files** (decision 20): `BricolageGrotesque-Variable.ttf` (opsz 12–96, wght 200–800) and `DMSans-Variable.ttf` (opsz 9–40, wght 100–1000), about 650 KB together. Weight and optical size are set on the axes in `DX.Typeface4.font(_:size:weight:)`.
 - Register them in `DX.Typeface.register()`. It already runs in the app and each extension.
 - Add `DX.TypeStep` with the seven sizes, each tied to an iOS text style so Dynamic Type works:
 
@@ -154,8 +150,8 @@ The current app also has areas with **no v4 design at all**: Water (a Today card
 
 ---
 
-## 5. Phase 8: clean-up and switch-over
-- Turn the v4 switch on for everyone, then delete the old screens and the switch.
+## 5. Phase 8: clean-up
+- Delete the old screens once nothing routes to them.
 - Delete the old palette, the `DX.TextStyle` sizes, the `morph`/`glide`/`press` springs, Inter and JetBrains Mono.
 - Mark `docs/DESIGN_METHODOLOGY.md` superseded by v4 and update the README line that says it "overrides the plan on visual questions" (decision 14).
 - Refresh the App Store screenshots (`store-screens.yml`).
@@ -167,7 +163,7 @@ The current app also has areas with **no v4 design at all**: Water (a Today card
 | Area | Files |
 |---|---|
 | Tokens | `DayXeroCore/DesignSystem/Colors.swift`, `Typography.swift`, `Motion.swift`, `Metrics.swift` |
-| New | `DayXeroCore/DesignSystem/Art/` (characters, scenes), `DesignV4.swift` (switch), `DayXeroTests/ContrastTests.swift` |
+| New | `DayXeroCore/DesignSystem/Art/` (characters, scenes), `DesignSystem/V4/`, `DayXeroTests/V4TokenTests.swift` |
 | Components | `DayXeroCore/DesignSystem/Components/*` (new v4 parts beside the old) |
 | Fonts | `DayXeroCore/Resources/Fonts/` (+ OFL licences), `project.yml` if resources need listing |
 | Screens | `DayXero/SOS`, `Home`, `Program`, `ProgramV2`, `Progress`, `Daily`, `Onboarding`, `Paywall`, `Milestones`, … |
@@ -190,19 +186,21 @@ The current app also has areas with **no v4 design at all**: Water (a Today card
 
 ## 8. Risks
 - **Characters drawn in code** are the biggest unknown. If the SwiftUI drawing of Xero looks wrong next to the canvas, the fallback is exporting each mood and stage as vector PDF assets and animating only the simple parts.
-- **The mixed look in TestFlight** while the switch is on: some screens v4, some old. It is internal only.
+- **The mixed look in TestFlight** until the last phase: some screens v4, some old (decision 19).
 - **Contrast in dark mode** depends on the exact hex values. `ContrastTests` covers text pairs but not art, so art is checked by eye on a device.
 - **Nothing in the canvas has been rendered on a phone yet** (design doc §0.3). The first TestFlight build is also the first real look.
 
 ---
 
-## 9. Questions for Milan before Phase 1
+## 9. Decisions (answered 31 Oct 2026)
 
-1. **v4 switch:** build behind a TestFlight-only switch so `main` stays shippable and you can see each screen early (recommended)? Or one long branch merged at the end?
-2. **Fonts:** static files (recommended) or the variable Bricolage file?
-3. **Tab bar.**
-   - Today the app has **Today · Toolkit · Program · Progress** plus SOS.
-   - v4 has **Today · Program · SOS · Evening · Me**.
-   - Where should Toolkit (Water, calm tools, resources) and Progress live in v4? My suggestion: Progress and Settings under "Me", and calm tools under "Evening". Water needs your call.
-4. **SOS animation:** v4 puts Jelli breathing with the user on SOS. The current SOS screen uses the **Bio-Orb** (`BioOrbView`, with its own tests and a design spec, `docs/DAYXERO_BIO_ORB_SPEC.md`). Should Jelli replace the orb, or sit beside it?
-5. **Day Xero session:** free, with the offer after it, as drawn on Q1–Q3?
+1. **No v4 switch.** v4 is the new identity; screens replace the old ones directly (decision 19).
+2. **Fonts:** one variable Bricolage Grotesque file, and DM Sans variable too (decision 20).
+3. **Tab bar:** v4 Nav2, Today · Program · SOS · Evening · Me. Progress and Settings under Me, calm tools under Evening, Water stays on Today (decision 21).
+4. **SOS:** Jelli replaces the Bio-Orb (decision 22).
+5. **Day Xero session:** free, with the offer after it (decision 23).
+
+## 10. Progress
+
+- **Phase 1a (this PR):** variable fonts and licences, `DX.Ground`, `DX.Fill`, `DX.TypeStep` with `.dxType(_:)`, `DX.Move` with `.dxArrive(_:)`, `DX.Layout`, `DX.CharacterSize`, and `V4TokenTests` (contrast for every ground pair, the 12 pt floor, Dynamic Type scaling, holds, the 4 s in / 6 s out breath). No screen uses them yet.
+- **Phase 1b (next):** Xero, Jelli and Glim in SwiftUI, scenes, the clarity and stage functions, components, and a gallery page.
