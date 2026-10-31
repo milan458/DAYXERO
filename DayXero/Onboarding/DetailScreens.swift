@@ -636,8 +636,8 @@ struct PersonalScreen: View {
                     }
                     VStack(alignment: .leading, spacing: 2) {
                         Text(photo == nil ? "Add a photo of who you're doing this for" as LocalizedStringKey : "Photo added. Tap to change it")
-                            .dxFont(14, weight: 600, style: .subheadline).foregroundStyle(Onb.ink)
-                        Text("Optional · stays on this phone").dxFont(12, weight: 400, style: .caption1)
+                            .font(DX.Typeface4.swiftUIFont(.body, size: 14, weight: 600)).foregroundStyle(Onb.ink)
+                        Text("Optional · stays on this phone").font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 400))
                             .foregroundStyle(Onb.muted)
                     }
                     .multilineTextAlignment(.leading)

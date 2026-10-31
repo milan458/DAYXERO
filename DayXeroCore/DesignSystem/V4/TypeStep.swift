@@ -120,6 +120,12 @@ public extension DX {
             return UIFont(descriptor: descriptor, size: size)
         }
 
+        /// A fixed-size v4 Font, for places that can't use the view modifiers (closures that aren't on the
+        /// main actor, such as PhotosPicker's label). It doesn't follow Dynamic Type.
+        public static func swiftUIFont(_ family: TypeStep.Family, size: CGFloat, weight: CGFloat) -> Font {
+            Font(font(family, size: max(12, size), weight: weight) as CTFont)
+        }
+
         /// True once both faces resolve to themselves rather than a fallback.
         public static var isAvailable: Bool {
             [displayName, bodyName].allSatisfy { UIFont(name: $0, size: 12) != nil }
