@@ -116,13 +116,13 @@ public struct DXDock: View {
                 .font(.system(size: 18, weight: active ? .bold : .semibold))
             if labelled {
                 Text(item.title)
-                    .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .subheadline))
+                    .dxFont(15, weight: 600, style: .subheadline)
                     .lineLimit(1)
                     .fixedSize()
                     .transition(.opacity.combined(with: .scale(scale: 0.7, anchor: .leading)))
             }
         }
-        .foregroundStyle(active ? DX.Palette.accentInk : DX.Palette.text.opacity(0.85))
+        .foregroundStyle(active ? DX.Fill.green : DX.Ground.reading.ink.opacity(0.85))
         .padding(.horizontal, labelled ? DX.Space.m : 0)
         .frame(minWidth: DX.Size.tab, minHeight: DX.Size.tab)
         .frame(maxHeight: DX.Size.tab)
@@ -148,7 +148,7 @@ public struct DXDock: View {
     }
 
     private func select(_ id: String) {
-        withAnimation(reduceMotion ? DX.Motion.reduced : Self.settle) {
+        withAnimation(reduceMotion ? DX.Move.reduced : Self.settle) {
             selection = id
         }
     }
@@ -164,7 +164,7 @@ public struct DXDock: View {
         let size = lensShown ? Self.lensSize : rest.size
         let center = lensX.map { CGPoint(x: $0, y: barSize.height / 2) } ?? CGPoint(x: rest.midX, y: rest.midY)
         return Capsule()
-            .fill(lensShown ? DX.Palette.text.opacity(0.04) : Self.pillFill)
+            .fill(lensShown ? DX.Ground.reading.ink.opacity(0.04) : Self.pillFill)
             .frame(width: size.width, height: size.height)
             .shadow(color: .black.opacity(lensShown ? 0.28 : 0), radius: 14, y: 6)
             .offset(x: center.x - size.width / 2, y: center.y - size.height / 2)
@@ -312,42 +312,13 @@ private struct DockBackground: ViewModifier {
         content
             .background {
                 if reduceTransparency {
-                    Capsule().fill(DX.Palette.surface1)
+                    Capsule().fill(DX.Fill.raised)
                 } else {
                     Capsule().fill(.ultraThinMaterial)
                 }
             }
-            .overlay(Capsule().strokeBorder(DX.Palette.hairline))
-            .shadow(color: DX.Palette.shadow, radius: 12, y: 8)
+            .overlay(Capsule().strokeBorder(Color(light: (0x1E1A3A, 0.12), dark: (0xFFFFFF, 0.14))))
+            .shadow(color: Color.black.opacity(0.15), radius: 12, y: 8)
     }
 }
 
-/// In-app timer pill that mirrors the craving Live Activity. Dark in both themes, like the Dynamic Island.
-public struct DXTimerBanner: View {
-    let title: LocalizedStringKey
-    let endDate: Date
-
-    public init(_ title: LocalizedStringKey, endDate: Date) {
-        self.title = title
-        self.endDate = endDate
-    }
-
-    public var body: some View {
-        HStack(spacing: DX.Space.s) {
-            Circle().fill(DX.Palette.sage).frame(width: 10, height: 10)
-            Text(title)
-            Text(timerInterval: Date.now...max(endDate, .now), countsDown: true)
-                .font(.custom(DX.Typeface.semibold, size: 14, relativeTo: .subheadline))
-                .monospacedDigit()
-            Text("left").foregroundStyle(.white.opacity(0.6))
-        }
-        .font(.custom(DX.Typeface.regular, size: 14, relativeTo: .subheadline))
-        .foregroundStyle(.white)
-        .padding(.vertical, 10)
-        .padding(.leading, 12)
-        .padding(.trailing, DX.Space.m)
-        .background(Color(light: 0x11140A, dark: 0x000000), in: Capsule())
-        .overlay(Capsule().strokeBorder(Color.white.opacity(0.14)))
-        .accessibilityElement(children: .combine)
-    }
-}

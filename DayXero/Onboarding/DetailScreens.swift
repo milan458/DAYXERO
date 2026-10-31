@@ -674,7 +674,7 @@ struct PersonalScreen: View {
 
 private struct FieldStyle: ViewModifier {
     let focused: Bool
-    var minHeight: CGFloat = DX.Size.inputHeight
+    var minHeight: CGFloat = 52
 
     func body(content: Content) -> some View {
         content
@@ -682,8 +682,8 @@ private struct FieldStyle: ViewModifier {
             .foregroundStyle(Onb.ink)
             .padding(.horizontal, 18).padding(.vertical, 14)
             .frame(minHeight: minHeight, alignment: .topLeading)
-            .background(Onb.surface, in: RoundedRectangle(cornerRadius: DX.Radius.input, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: DX.Radius.input, style: .continuous)
+            .background(Onb.surface, in: RoundedRectangle(cornerRadius: DX.Layout.answerChipRadius, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: DX.Layout.answerChipRadius, style: .continuous)
                 .strokeBorder(focused ? Onb.accent : Onb.hairline, lineWidth: focused ? 1.5 : 1))
     }
 }
@@ -743,7 +743,7 @@ struct PastAttemptsScreen: View {
                 .accessibilityElement(children: .combine)
             }
         }
-        .animation(DX.Motion.animation(DX.Motion.glide, reduceMotion: reduceMotion), value: model.pastAttempts)
+        .animation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion), value: model.pastAttempts)
     }
 
     private var feedback: LocalizedStringKey {
@@ -805,6 +805,6 @@ struct NRTScreen: View {
         } footer: {
             ContinueButton(title: "Continue", model: model)
         }
-        .animation(DX.Motion.animation(DX.Motion.glide, reduceMotion: reduceMotion), value: model.nrtInterest)
+        .animation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion), value: model.nrtInterest)
     }
 }

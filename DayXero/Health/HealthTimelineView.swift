@@ -88,7 +88,7 @@ struct HealthTimelineView: View {
             Spacer()
             if let onClose {
                 Button(action: onClose) { Image(systemName: "xmark") }
-                    .buttonStyle(.dxIcon).accessibilityLabel(Text("Close"))
+                    .buttonStyle(.v4Icon).accessibilityLabel(Text("Close"))
             }
         }
         .padding(.bottom, DX.Space.xxs)
@@ -378,7 +378,7 @@ struct HealthItemDetail: View {
                 .background(RadialGradient(colors: [HealthBadge.tint(for: item.id), .clear], center: .center,
                                            startRadius: 40, endRadius: 190))
             Button { dismiss() } label: { Image(systemName: "xmark") }
-                .buttonStyle(.dxIcon).accessibilityLabel(Text("Close"))
+                .buttonStyle(.v4Icon).accessibilityLabel(Text("Close"))
                 .padding(.top, DX.Space.s)
         }
     }

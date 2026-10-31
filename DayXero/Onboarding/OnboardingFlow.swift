@@ -38,7 +38,7 @@ struct OnboardingFlow: View {
         }
         .foregroundStyle(ground.ink)
         .background(ground.background.ignoresSafeArea())
-        .animation(DX.Motion.animation(DX.Move.settle, reduceMotion: reduceMotion), value: model.step)
+        .animation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion), value: model.step)
         .animation(DX.Move.animation(.easeInOut(duration: 0.5), reduceMotion: reduceMotion), value: breathed)
         #if DEBUG
         .onAppear {

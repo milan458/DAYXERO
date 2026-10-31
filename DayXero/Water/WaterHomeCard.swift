@@ -29,15 +29,15 @@ struct WaterHomeCard: View {
                         HStack(spacing: DX.Space.xs) {
                             Image(systemName: "drop").font(.system(size: 13, weight: .light)).foregroundStyle(Color(hex: 0x54A4FF))
                                 .frame(width: 28, height: 28).background(Color(hex: 0x3D8BF2, opacity: 0.18), in: Circle())
-                            Text("Water today").font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
-                                .foregroundStyle(DX.Palette.text2)
+                            Text("Water today").dxFont(14, weight: 600, style: .footnote)
+                                .foregroundStyle(Read4.muted)
                         }
                         // One unit on Home; litres are in the Water tab (S18.10).
                         HStack(alignment: .firstTextBaseline, spacing: 6) {
-                            Text(WaterFormat.glasses(total), format: .number).font(.custom(DX.Typeface.bold, size: 28, relativeTo: .title))
-                                .foregroundStyle(DX.Palette.text).contentTransition(.numericText())
+                            Text(WaterFormat.glasses(total), format: .number).dxFont(32, weight: 700, style: .title1)
+                                .foregroundStyle(Read4.ink).contentTransition(.numericText())
                             Text(reached ? "goal reached" as LocalizedStringKey : "of \(goal / WaterGoal.glassMl) glasses")
-                                .font(.custom(DX.Typeface.regular, size: 12, relativeTo: .caption)).foregroundStyle(DX.Palette.muted)
+                                .dxFont(12, weight: 400, style: .caption1).foregroundStyle(Read4.muted)
                         }
                     }
                     Spacer(minLength: 0)
@@ -55,18 +55,18 @@ struct WaterHomeCard: View {
                 logged += 1
                 Analytics.track(.waterLogged(source: WaterSource.app.rawValue, drink: drink.rawValue))
             } label: {
-                Text("+ Log water").font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote)).foregroundStyle(DX.Palette.text)
+                Text("+ Log water").dxFont(14, weight: 600, style: .footnote).foregroundStyle(Read4.ink)
                     .frame(maxWidth: .infinity, minHeight: 40)
-                    .background(DX.Palette.surface2, in: Capsule())
-                    .overlay(Capsule().strokeBorder(DX.Palette.hairline))
+                    .background(Read4.surface, in: Capsule())
+                    .overlay(Capsule().strokeBorder(Read4.hairline))
             }
             .buttonStyle(.plain)
             .accessibilityLabel(Text("Log \(Text(drink.name))"))
         }
         .padding(14)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 24, style: .continuous).strokeBorder(DX.Palette.hairline))
+        .background(Read4.card, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 24, style: .continuous).strokeBorder(Read4.hairline))
         .sensoryFeedback(.impact(weight: .medium), trigger: logged)
     }
 }

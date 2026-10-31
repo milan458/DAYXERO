@@ -182,11 +182,11 @@ struct TaperSetupView: View {
         VStack(spacing: DX.Space.xs) {
             HStack {
                 Button(action: onDone) { Image(systemName: "xmark") }
-                    .buttonStyle(.dxIcon).accessibilityLabel(Text("Close"))
+                    .buttonStyle(.v4Icon).accessibilityLabel(Text("Close"))
                 Spacer()
                 Text("Optional").v4Text(.micro)
                 Spacer()
-                Color.clear.frame(width: DX.Size.iconButton, height: 1)
+                Color.clear.frame(width: 44, height: 1)
             }
             .padding(.top, DX.Space.s)
             ScrollView {

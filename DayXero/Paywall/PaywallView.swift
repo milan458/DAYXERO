@@ -90,14 +90,14 @@ struct PaywallView: View {
                     .transition(.move(edge: .top).combined(with: .opacity))
             }
         }
-        .animation(DX.Motion.animation(DX.Motion.glide, reduceMotion: reduceMotion), value: model.phase)
-        .animation(DX.Motion.animation(DX.Motion.glide, reduceMotion: reduceMotion), value: model.notice != nil)
-        .dxCanvas()
+        .animation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion), value: model.phase)
+        .animation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion), value: model.notice != nil)
+        .background(Read4.background.ignoresSafeArea())
         .task { await model.load() }
         .task {
             guard context != nil, !UIAccessibility.isVoiceOverRunning else { closeShown = true; return }
             try? await Task.sleep(for: .seconds(3))
-            withAnimation(DX.Motion.animation(DX.Motion.glide, reduceMotion: reduceMotion)) { closeShown = true }
+            withAnimation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion)) { closeShown = true }
         }
         .sheet(isPresented: $showBilling) { BillingSheet().presentationDetents([.medium, .large]) }
     }
@@ -123,9 +123,9 @@ struct PaywallView: View {
             header.padding(.horizontal, DX.Space.m).padding(.top, DX.Space.xs).dxReadableColumn()
             ScrollView {
                 VStack(alignment: .leading, spacing: DX.Space.xs) {
-                    Text("\(name), your plan is ready").dxText(.title).accessibilityAddTraits(.isHeader)
+                    Text("\(name), your plan is ready").v4Text(.title).accessibilityAddTraits(.isHeader)
                     Text("Everything for your \(quitDay, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)) Quit Day.")
-                        .dxText(.subtitle)
+                        .v4Text(.subtitle)
                     VStack(alignment: .leading, spacing: 7) {
                         included("All of prep, Quit week and 4 weeks after")
                         included("Insights on your triggers")
@@ -159,8 +159,8 @@ struct PaywallView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: DX.Space.s) {
                     Text("Custom plan ready · \(quitDay, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated))")
-                        .dxText(.micro, color: DX.Palette.accentInk)
-                    Text(firstRunTitle).dxText(.title).fixedSize(horizontal: false, vertical: true).accessibilityAddTraits(.isHeader)
+                        .v4Text(.micro, color: Read4.accent)
+                    Text(firstRunTitle).v4Text(.title).fixedSize(horizontal: false, vertical: true).accessibilityAddTraits(.isHeader)
                     VStack(alignment: .leading, spacing: DX.Space.xs) {
                         included("Complete prep, Quit week and 4 weeks after")
                         included(context?.products.count ?? 0 > 1 ? "Craving SOS any time, plus your dual-use tracker"
@@ -185,7 +185,7 @@ struct PaywallView: View {
                     .dxReadableColumn()
                     .padding(.bottom, DX.Space.xs)
                     .background(alignment: .bottom) {
-                        Hills(still: reduceMotion).frame(height: 150).opacity(0.55).ignoresSafeArea().allowsHitTesting(false)
+                        HorizonScene(.path, clarity: 60, fit: .bottom, animate: !reduceMotion).frame(height: 150).opacity(0.55).ignoresSafeArea().allowsHitTesting(false)
                     }
             }
         }
@@ -206,16 +206,16 @@ struct PaywallView: View {
         }
         .padding(DX.Space.m)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(DX.Palette.hairline))
+        .background(Read4.card, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(Read4.hairline))
         .accessibilityElement(children: .combine)
     }
 
     private func trust(_ systemImage: String, _ text: LocalizedStringKey) -> some View {
         Label {
-            Text(text).font(.custom(DX.Typeface.regular, size: 13, relativeTo: .footnote)).foregroundStyle(DX.Palette.text2)
+            Text(text).dxFont(14, weight: 400, style: .footnote).foregroundStyle(Read4.muted)
         } icon: {
-            Image(systemName: systemImage).font(.system(size: 13, weight: .light)).foregroundStyle(DX.Palette.accentInk)
+            Image(systemName: systemImage).font(.system(size: 13, weight: .light)).foregroundStyle(Read4.accent)
         }
     }
 
@@ -225,7 +225,7 @@ struct PaywallView: View {
         if recurring.isEmpty {
             HStack(spacing: DX.Space.s) {
                 ForEach(0..<2, id: \.self) { _ in
-                    RoundedRectangle(cornerRadius: 22, style: .continuous).fill(DX.Palette.surface2).frame(height: 132)
+                    RoundedRectangle(cornerRadius: 22, style: .continuous).fill(Read4.surface).frame(height: 132)
                 }
             }
             .accessibilityHidden(true)
@@ -245,27 +245,27 @@ struct PaywallView: View {
         return Button { model.select(option.plan) } label: {
             VStack(spacing: 4) {
                 Text(option.plan == .annual ? "Yearly" : "Monthly")
-                    .font(.custom(DX.Typeface.semibold, size: 14, relativeTo: .subheadline)).foregroundStyle(DX.Palette.text2)
+                    .dxFont(14, weight: 600, style: .subheadline).foregroundStyle(Read4.muted)
                 Text(verbatim: option.priceText + (option.plan == .annual ? String(localized: "/yr") : String(localized: "/mo")))
-                    .font(.custom(DX.Typeface.bold, size: option.plan == .annual ? 24 : 20, relativeTo: .title2))
-                    .foregroundStyle(DX.Palette.text)
+                    .dxFont(option.plan == .annual ? 24 : 19, weight: 700, style: .title2)
+                    .foregroundStyle(Read4.ink)
                     .lineLimit(1).minimumScaleFactor(0.6)
-                Text(planDetail(option)).font(.custom(DX.Typeface.regular, size: 11, relativeTo: .caption2))
-                    .foregroundStyle(DX.Palette.text2).multilineTextAlignment(.center)
+                Text(planDetail(option)).dxFont(12, weight: 400, style: .caption2)
+                    .foregroundStyle(Read4.muted).multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
             }
             .padding(.top, option.plan == .annual ? 22 : 14).padding(.bottom, 14).padding(.horizontal, 10)
             .frame(maxWidth: .infinity)
-            .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+            .background(Read4.card, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
             .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .strokeBorder(selected ? DX.Palette.accentInk : DX.Palette.hairline, lineWidth: selected ? 1.5 : 1))
+                .strokeBorder(selected ? Read4.accent : Read4.hairline, lineWidth: selected ? 1.5 : 1))
             .overlay(alignment: .top) {
                 if option.plan == .annual, let days = option.trialDays {
                     Text(model.annualSavingPercent.map { "\(days) DAYS FREE · SAVE \($0)%" as LocalizedStringKey } ?? "\(days) DAYS FREE")
-                        .font(.custom(DX.Typeface.bold, size: 10, relativeTo: .caption2)).tracking(0.4)
-                        .foregroundStyle(DX.Palette.onAccent)
+                        .dxFont(12, weight: 700, style: .caption2).tracking(0.4)
+                        .foregroundStyle(DX.Fill.cream)
                         .padding(.vertical, 4).padding(.horizontal, 9)
-                        .background(DX.Palette.sage, in: Capsule())
+                        .background(Read4.accent, in: Capsule())
                         .offset(y: -10)
                 }
             }
@@ -303,12 +303,12 @@ struct PaywallView: View {
                 Task { await model.purchase() }
             } label: {
                 if model.phase == .purchasing {
-                    ProgressView().tint(DX.Palette.onPrimary)
+                    ProgressView().tint(Read4.onInk)
                 } else {
                     Text(ctaTitle)
                 }
             }
-            .buttonStyle(.dxPrimary)
+            .buttonStyle(.dx(.primary, on: .reading))
             .disabled(model.phase != .ready)
             .accessibilityIdentifier("paywall.cta")
             if let option = model.selectedOption {
@@ -319,8 +319,8 @@ struct PaywallView: View {
                         chargeLine(option)
                     }
                 }
-                .font(.custom(DX.Typeface.regular, size: 12, relativeTo: .caption))
-                .foregroundStyle(DX.Palette.text2)
+                .dxFont(12, weight: 400, style: .caption1)
+                .foregroundStyle(Read4.muted)
                 .multilineTextAlignment(.center)
             }
             terms
@@ -342,10 +342,10 @@ struct PaywallView: View {
                 onClose()
             } label: {
                 Image(systemName: "xmark").font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(DX.Palette.text2)
+                    .foregroundStyle(Read4.muted)
                     .frame(width: 36, height: 36)
-                    .background(DX.Palette.surface1, in: Circle())
-                    .overlay(Circle().strokeBorder(DX.Palette.hairline))
+                    .background(Read4.card, in: Circle())
+                    .overlay(Circle().strokeBorder(Read4.hairline))
             }
             .buttonStyle(.plain)
             .opacity(context == nil || closeShown ? 1 : 0)
@@ -356,8 +356,8 @@ struct PaywallView: View {
                 onPurchaseStarted()
                 Task { await model.restore() }
             }
-                .font(.custom(DX.Typeface.medium, size: 13, relativeTo: .footnote))
-                .foregroundStyle(DX.Palette.text2)
+                .dxFont(14, weight: 500, style: .footnote)
+                .foregroundStyle(Read4.muted)
                 .buttonStyle(.plain)
         }
         .frame(minHeight: 44)
@@ -365,9 +365,9 @@ struct PaywallView: View {
 
     private func included(_ text: LocalizedStringKey) -> some View {
         Label {
-            Text(text).font(.custom(DX.Typeface.regular, size: 14, relativeTo: .subheadline)).foregroundStyle(DX.Palette.text)
+            Text(text).dxFont(14, weight: 400, style: .subheadline).foregroundStyle(Read4.ink)
         } icon: {
-            Image(systemName: "checkmark").font(.system(size: 12, weight: .bold)).foregroundStyle(DX.Palette.accentInk)
+            Image(systemName: "checkmark").font(.system(size: 12, weight: .bold)).foregroundStyle(Read4.accent)
         }
     }
 
@@ -376,7 +376,7 @@ struct PaywallView: View {
         VStack(spacing: DX.Space.xs) {
             if model.plans.isEmpty {
                 ForEach(0..<3, id: \.self) { _ in
-                    RoundedRectangle(cornerRadius: 20, style: .continuous).fill(DX.Palette.surface2).frame(height: 60)
+                    RoundedRectangle(cornerRadius: 20, style: .continuous).fill(Read4.surface).frame(height: 60)
                 }
                 .accessibilityHidden(true)
             } else {
@@ -402,12 +402,12 @@ struct PaywallView: View {
                 Task { await model.purchase() }
             } label: {
                 if model.phase == .purchasing {
-                    ProgressView().tint(DX.Palette.onPrimary)
+                    ProgressView().tint(Read4.onInk)
                 } else {
                     Text(ctaTitle)
                 }
             }
-            .buttonStyle(.dxPrimary)
+            .buttonStyle(.dx(.primary, on: .reading))
             .disabled(model.phase != .ready)
             .accessibilityIdentifier("paywall.cta")
             terms
@@ -430,8 +430,8 @@ struct PaywallView: View {
                 Text("\(Text("\(option.priceText) once.").bold()) No subscription, nothing to cancel.")
             }
         }
-        .font(DX.TextStyle.subtitle.font)
-        .foregroundStyle(DX.Palette.text2)
+        .dxFont(14, weight: 400, style: .footnote)
+        .foregroundStyle(Read4.muted)
     }
 
     private var ctaTitle: LocalizedStringKey {
@@ -456,9 +456,9 @@ struct PaywallView: View {
                 VStack(spacing: 4) { termsLinks(separators: false) }
             }
         }
-        .font(.custom(DX.Typeface.regular, size: 11, relativeTo: .caption2))
-        .foregroundStyle(DX.Palette.muted)
-        .tint(DX.Palette.text2)
+        .dxFont(12, weight: 400, style: .caption2)
+        .foregroundStyle(Read4.muted)
+        .tint(Read4.muted)
     }
 
     @ViewBuilder
@@ -478,7 +478,7 @@ struct PaywallView: View {
         VStack(spacing: 0) {
             header.padding(.horizontal, DX.Space.m).padding(.top, DX.Space.xs).dxReadableColumn()
             Spacer()
-            DXStateView(.error, systemImage: "exclamationmark.circle", title: "Couldn't reach the App Store",
+            V4StateView(.error, systemImage: "exclamationmark.circle", title: "Couldn't reach the App Store",
                         message: "Check your connection and try again. Day 1, your counter and Craving SOS work without it.",
                         actionTitle: "Try again") { Task { await model.load() } }
             Spacer()
@@ -486,7 +486,7 @@ struct PaywallView: View {
                 model.dismissed()
                 onClose()
             }
-            .buttonStyle(.dxQuiet)
+            .buttonStyle(.dx(.quiet, on: .reading))
             .padding(.bottom, DX.Space.xs)
         }
     }
@@ -502,39 +502,39 @@ private struct PlanRow: View {
         Button(action: action) {
             HStack(spacing: DX.Space.s) {
                 ZStack {
-                    Circle().strokeBorder(isSelected ? .clear : DX.Palette.faint, lineWidth: 1.5)
+                    Circle().strokeBorder(isSelected ? .clear : Read4.faint, lineWidth: 1.5)
                     if isSelected {
-                        Circle().fill(DX.Palette.sage)
+                        Circle().fill(Read4.accent)
                         Circle().fill(Color.black).frame(width: 7, height: 7)
                     }
                 }
                 .frame(width: 20, height: 20)
                 VStack(alignment: .leading, spacing: 1) {
-                    Text(title).font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
-                    Text(detail).dxText(.subtitle)
+                    Text(title).dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.ink)
+                    Text(detail).v4Text(.subtitle)
                 }
                 Spacer(minLength: DX.Space.xs)
                 VStack(alignment: .trailing, spacing: 1) {
-                    Text(verbatim: option.priceText).font(.custom(DX.Typeface.bold, size: 15, relativeTo: .body))
-                        .monospacedDigit().foregroundStyle(DX.Palette.text)
-                    Text(period).font(.custom(DX.Typeface.medium, size: 11, relativeTo: .caption2)).foregroundStyle(DX.Palette.muted)
+                    Text(verbatim: option.priceText).dxFont(16, weight: 700, style: .body)
+                        .monospacedDigit().foregroundStyle(Read4.ink)
+                    Text(period).dxFont(12, weight: 500, style: .caption2).foregroundStyle(Read4.muted)
                 }
             }
             .padding(.vertical, 11)
             .padding(.horizontal, 14)
-            .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .background(Read4.card, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .strokeBorder(isSelected ? DX.Palette.accentInk : DX.Palette.hairline, lineWidth: isSelected ? 1.5 : 1)
+                    .strokeBorder(isSelected ? Read4.accent : Read4.hairline, lineWidth: isSelected ? 1.5 : 1)
             )
             .overlay(alignment: .topTrailing) {
                 if let days = option.trialDays {
                     Text(savingPercent.map { "\(days) DAYS FREE · SAVE \($0)%" as LocalizedStringKey } ?? "\(days) DAYS FREE")
-                        .font(.custom(DX.Typeface.bold, size: 10, relativeTo: .caption2))
+                        .dxFont(12, weight: 700, style: .caption2)
                         .tracking(0.4)
-                        .foregroundStyle(DX.Palette.onAccent)
+                        .foregroundStyle(DX.Fill.cream)
                         .padding(.vertical, 3).padding(.horizontal, 8)
-                        .background(DX.Palette.sage, in: Capsule())
+                        .background(Read4.accent, in: Capsule())
                         .offset(x: -14, y: -9)
                 }
             }
@@ -592,14 +592,14 @@ private struct PaywallMessage: View {
             Spacer()
             Image(systemName: systemImage)
                 .font(.system(size: 28, weight: .semibold))
-                .foregroundStyle(tint == .sage ? DX.Palette.onAccent : DX.Palette.accentInk)
+                .foregroundStyle(tint == .sage ? DX.Fill.cream : Read4.accent)
                 .frame(width: 76, height: 76)
-                .background(tint == .sage ? DX.Palette.sage : DX.Palette.accentSoft, in: Circle())
+                .background(tint == .sage ? Read4.accent : Read4.accentSoft, in: Circle())
                 .accessibilityHidden(true)
-            Text(title).dxText(.title).multilineTextAlignment(.center)
-            Text(message).dxText(.subtitle).multilineTextAlignment(.center)
+            Text(title).v4Text(.title).multilineTextAlignment(.center)
+            Text(message).v4Text(.subtitle).multilineTextAlignment(.center)
             Spacer()
-            Button(button, action: action).buttonStyle(.dxPrimary)
+            Button(button, action: action).buttonStyle(.dx(.primary, on: .reading))
         }
         .padding(.horizontal, DX.Space.l)
         .dxReadableColumn()
@@ -613,19 +613,19 @@ private struct NoticeBanner: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: 10) {
-            Image(systemName: "exclamationmark.circle").foregroundStyle(DX.Palette.amber)
-            Text(text).font(DX.TextStyle.subtitle.font).foregroundStyle(DX.Palette.text)
+            Image(systemName: "exclamationmark.circle").foregroundStyle(Read4.amber)
+            Text(text).dxFont(14, weight: 400, style: .footnote).foregroundStyle(Read4.ink)
                 .frame(maxWidth: .infinity, alignment: .leading)
             Button(action: onDismiss) {
-                Image(systemName: "xmark").font(.system(size: 11, weight: .semibold)).foregroundStyle(DX.Palette.muted)
+                Image(systemName: "xmark").font(.system(size: 11, weight: .semibold)).foregroundStyle(Read4.muted)
             }
             .buttonStyle(.plain)
             .accessibilityLabel(Text("Dismiss"))
         }
         .padding(DX.Space.s)
-        .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(DX.Palette.hairline))
-        .shadow(color: DX.Palette.shadow, radius: 16, y: 8)
+        .background(Read4.card, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(Read4.hairline))
+        .shadow(color: Color.black.opacity(0.15), radius: 16, y: 8)
         .accessibilityElement(children: .combine)
     }
 }
@@ -637,34 +637,34 @@ struct BillingSheet: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DX.Space.xs) {
-                Text("How billing works").dxText(.title).font(.custom(DX.Typeface.bold, size: 22, relativeTo: .title2))
-                Text("Plain and simple. Apple handles every payment.").dxText(.subtitle)
-                Text("Cancel in two taps").dxText(.micro).padding(.top, DX.Space.m)
+                Text("How billing works").v4Text(.title).dxFont(24, weight: 700, style: .title2)
+                Text("Plain and simple. Apple handles every payment.").v4Text(.subtitle)
+                Text("Cancel in two taps").v4Text(.micro).padding(.top, DX.Space.m)
                 step(1, "Tap **Manage subscription** below")
                 step(2, "Tap **Cancel subscription**")
-                Text("Free trial").dxText(.micro).padding(.top, DX.Space.s)
-                Text("Cancel any time before it ends and you pay nothing. We'll remind you 2 days before.").dxText(.subtitle)
-                Text("Refunds").dxText(.micro).padding(.top, DX.Space.s)
-                Text("Refunds go through Apple. You can request one at reportaproblem.apple.com.").dxText(.subtitle)
+                Text("Free trial").v4Text(.micro).padding(.top, DX.Space.s)
+                Text("Cancel any time before it ends and you pay nothing. We'll remind you 2 days before.").v4Text(.subtitle)
+                Text("Refunds").v4Text(.micro).padding(.top, DX.Space.s)
+                Text("Refunds go through Apple. You can request one at reportaproblem.apple.com.").v4Text(.subtitle)
                 Button("Manage subscription") { manage = true }
-                    .buttonStyle(.dxSecondary)
+                    .buttonStyle(.v4Secondary)
                     .frame(maxWidth: .infinity)
                     .padding(.top, DX.Space.m)
             }
             .padding(DX.Space.l)
         }
-        .dxCanvas()
+        .background(Read4.background.ignoresSafeArea())
         .manageSubscriptionsSheet(isPresented: $manage)
     }
 
     private func step(_ number: Int, _ text: LocalizedStringKey) -> some View {
         HStack(spacing: 10) {
             Text(verbatim: "\(number)")
-                .font(.custom(DX.Typeface.bold, size: 11, relativeTo: .caption2))
-                .foregroundStyle(DX.Palette.text)
+                .dxFont(12, weight: 700, style: .caption2)
+                .foregroundStyle(Read4.ink)
                 .frame(width: 24, height: 24)
-                .background(DX.Palette.surface2, in: Circle())
-            Text(text).font(DX.TextStyle.subtitle.font).foregroundStyle(DX.Palette.text)
+                .background(Read4.surface, in: Circle())
+            Text(text).dxFont(14, weight: 400, style: .footnote).foregroundStyle(Read4.ink)
         }
         .accessibilityElement(children: .combine)
     }

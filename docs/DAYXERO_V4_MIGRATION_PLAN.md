@@ -239,4 +239,10 @@ The current app also has areas with **no v4 design at all**: Water (a Today card
   - F01–F07 were done in PR #4. The first-run `PaywallView` is no longer shown after onboarding; it stays only for "See all plans" and the upgrade sheet until Phase 8.
 - **Phase 6 (branch `claude/v4-phase6`):** F18 Finale after the graduation session (sun, the only confetti, Xero then Jelli then Glim with Celebrate, three counting tiles, money and reason, the health change starting now with its source, Keep going and Share my card); milestone moments on sun with Celebrate; the share card in Dawn and Night; the Progress milestone row in v4. Decision 29.
 - **Phase 7 (branch `claude/v4-phase7`):** the widgets in v4 colours and type (night violet and apricot, 12 pt minimum), Jelli on the SOS widget, and the SOS Live Activity on ocean with Jelli and the time ridden counting up (no countdown). Decision 30.
+- **Phase 8 (branch `claude/v4-phase8`):** clean-up.
+  - Every remaining screen (paywall, upgrade sheet, water, calm tools, settings, notifications, NRT set-up, the log sheet, the orb panel) moved to v4 tokens and type; the old components they used have v4 replacements in `DayXero/Shared/V4Reading.swift`.
+  - Deleted: the old palette (`DX.Palette`), the old Inter type scale and `dxText`, the `morph`/`glide`/`press` springs, Inter and JetBrains Mono, the old buttons, cards, chips, fields, states, week strip and banner, the old lesson player and its lesson card on Today, the old design gallery, the cloud wave and the hills art.
+  - Kept and moved to v4 tokens: the side dock for vertical bars, the craving-strength slider, the flow layout, readable column and fold handling, the metrics and the haptics. `DX.TextStyle` stays as role names only.
+  - `docs/DESIGN_METHODOLOGY.md` is marked superseded and the README points to the v4 design system.
+  - Not done: refreshing the App Store screenshots (`store-screens.yml`), because this round takes no screenshots.
 

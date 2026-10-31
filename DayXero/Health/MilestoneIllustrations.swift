@@ -27,7 +27,7 @@ struct HealthBadge: View {
             if showsRing, case .underWay(let progress) = state {
                 Circle()
                     .trim(from: 0, to: CGFloat(max(progress, 0.03)))
-                    .stroke(DX.Palette.accentInk, style: StrokeStyle(lineWidth: max(2, size / 22), lineCap: .round))
+                    .stroke(Read4.accent, style: StrokeStyle(lineWidth: max(2, size / 22), lineCap: .round))
                     .rotationEffect(.degrees(-90))
                     .padding(-size * 0.09)
             }
@@ -37,10 +37,10 @@ struct HealthBadge: View {
                 let d = max(size * 0.36, 14)
                 Image(systemName: "checkmark")
                     .font(.system(size: d * 0.5, weight: .heavy))
-                    .foregroundStyle(DX.Palette.onPrimary)
+                    .foregroundStyle(Read4.onInk)
                     .frame(width: d, height: d)
-                    .background(DX.Palette.accentInk, in: Circle())
-                    .overlay(Circle().strokeBorder(DX.Palette.surface1, lineWidth: 2))
+                    .background(Read4.accent, in: Circle())
+                    .overlay(Circle().strokeBorder(Read4.card, lineWidth: 2))
                     .offset(x: d * 0.15, y: d * 0.15)
             }
         }
@@ -563,17 +563,17 @@ struct MilestoneIllustrationGallery: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DX.Space.m) {
-                Text("Your body · S21").dxText(.micro)
-                Text("Health illustrations").dxText(.title)
+                Text("Your body · S21").v4Text(.micro)
+                Text("Health illustrations").v4Text(.title)
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 96), spacing: DX.Space.s)], spacing: DX.Space.m) {
                     ForEach(MilestoneDrawing.ids + ["sparkle"], id: \.self) { id in
                         VStack(spacing: 6) {
                             HealthBadge(id: id, state: .underWay(0.6), size: 72, showsRing: false)
-                            Text(verbatim: id).dxText(.subtitle).lineLimit(1).minimumScaleFactor(0.7)
+                            Text(verbatim: id).v4Text(.subtitle).lineLimit(1).minimumScaleFactor(0.7)
                         }
                     }
                 }
-                Text("Reached · under way · ahead").dxText(.micro)
+                Text("Reached · under way · ahead").v4Text(.micro)
                 HStack(spacing: DX.Space.l) {
                     HealthBadge(id: "mood", state: .done, size: 56)
                     HealthBadge(id: "mood", state: .underWay(0.8), size: 56)
@@ -585,7 +585,7 @@ struct MilestoneIllustrationGallery: View {
             .padding(.top, DX.Space.xl)
             .padding(.bottom, DX.Space.xxl)
         }
-        .dxCanvas()
+        .background(Read4.background.ignoresSafeArea())
     }
 }
 #endif

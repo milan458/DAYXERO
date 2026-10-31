@@ -446,12 +446,12 @@ struct PlanCard: View {
     var title: LocalizedStringKey = "Your plan"
 
     var body: some View {
-        DXCard(padding: 14) {
+        V4Card(padding: 14) {
             VStack(alignment: .leading, spacing: 6) {
-                Text(title).dxText(.subtitle)
-                Text("If it's \(Text(verbatim: situation).font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body))), then I'll \(Text(verbatim: action).font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)))")
-                    .font(.custom(DX.Typeface.regular, size: 15, relativeTo: .body))
-                    .foregroundStyle(DX.Palette.text)
+                Text(title).v4Text(.subtitle)
+                Text("If it's \(Text(verbatim: situation).dxFont(16, weight: 600, style: .body)), then I'll \(Text(verbatim: action).dxFont(16, weight: 600, style: .body))")
+                    .dxFont(16, weight: 400, style: .body)
+                    .foregroundStyle(Read4.ink)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }

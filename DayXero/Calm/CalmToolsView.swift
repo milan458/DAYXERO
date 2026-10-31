@@ -23,17 +23,17 @@ struct CalmToolsView: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack {
-                Button(action: onClose) { Image(systemName: "xmark") }.buttonStyle(.dxIcon).accessibilityLabel(Text("Close"))
+                Button(action: onClose) { Image(systemName: "xmark") }.buttonStyle(.v4Icon).accessibilityLabel(Text("Close"))
                 Spacer()
-                Text("Calm tools").dxText(.micro)
+                Text("Calm tools").v4Text(.micro)
                 Spacer()
-                Color.clear.frame(width: DX.Size.iconButton, height: 1)
+                Color.clear.frame(width: 44, height: 1)
             }
             .padding(.top, DX.Space.s)
             ScrollView {
                 VStack(alignment: .leading, spacing: DX.Space.xs) {
-                    Text("For stressful moments").dxText(.title)
-                    Text("Short things to do instead of reaching for nicotine.").dxText(.subtitle).padding(.bottom, DX.Space.xs)
+                    Text("For stressful moments").v4Text(.title)
+                    Text("Short things to do instead of reaching for nicotine.").v4Text(.subtitle).padding(.bottom, DX.Space.xs)
                     ForEach(CalmTool.allCases) { tool in
                         Button { open = tool } label: { CalmToolRow(tool: tool) }.buttonStyle(.plain)
                     }
@@ -46,7 +46,7 @@ struct CalmToolsView: View {
         }
         .padding(.horizontal, DX.Space.m)
         .dxReadableColumn()
-        .dxCanvas()
+        .background(Read4.background.ignoresSafeArea())
         .fullScreenCover(item: $open) { tool in
             CalmToolPlayer(tool: tool, fromSOS: fromSOS) { backToSOS in
                 open = nil
@@ -69,25 +69,25 @@ struct CalmToolRow: View {
             : AnyLayout(HStackLayout(spacing: DX.Space.s))
         layout {
             HStack {
-                Image(systemName: tool.systemImage).font(.system(size: 17)).foregroundStyle(DX.Palette.accentInk)
-                    .frame(width: 40, height: 40).background(DX.Palette.accentSoft, in: Circle())
+                Image(systemName: tool.systemImage).font(.system(size: 17)).foregroundStyle(Read4.accent)
+                    .frame(width: 40, height: 40).background(Read4.accentSoft, in: Circle())
                 if typeSize.isAccessibilitySize {
                     Spacer()
-                    Text("\(tool.minutes) min").dxText(.subtitle)
+                    Text("\(tool.minutes) min").v4Text(.subtitle)
                 }
             }
             VStack(alignment: .leading, spacing: 1) {
-                Text(tool.title).font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
-                Text(tool.detail).dxText(.subtitle).multilineTextAlignment(.leading)
+                Text(tool.title).dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.ink)
+                Text(tool.detail).v4Text(.subtitle).multilineTextAlignment(.leading)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             if !typeSize.isAccessibilitySize {
-                Text("\(tool.minutes) min").dxText(.subtitle).fixedSize()
+                Text("\(tool.minutes) min").v4Text(.subtitle).fixedSize()
             }
         }
         .padding(12)
-        .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(DX.Palette.hairline))
+        .background(Read4.card, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(Read4.hairline))
         .accessibilityElement(children: .combine)
     }
 }
@@ -99,15 +99,15 @@ struct HelpLine: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text("If stress or anxiety is getting in the way of everyday life, talk to a doctor or a mental health professional. In a crisis, call your local emergency number.")
-                .dxText(.subtitle)
+                .v4Text(.subtitle)
             Link(destination: Self.directory) {
-                Text("Find a helpline near you").font(DX.TextStyle.subtitle.font).underline().foregroundStyle(DX.Palette.accentInk)
+                Text("Find a helpline near you").dxFont(14, weight: 400, style: .footnote).underline().foregroundStyle(Read4.accent)
             }
         }
         .padding(DX.Space.s)
         .frame(maxWidth: .infinity, alignment: .leading)
         .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous)
-            .strokeBorder(DX.Palette.faint, style: StrokeStyle(lineWidth: 1, dash: [4, 4])))
+            .strokeBorder(Read4.faint, style: StrokeStyle(lineWidth: 1, dash: [4, 4])))
     }
 }
 
@@ -181,18 +181,18 @@ struct CalmToolPlayer: View {
             if let total = steps {
                 HStack(spacing: 4) {
                     ForEach(0..<total, id: \.self) { i in
-                        Capsule().fill(i <= step ? DX.Palette.text : DX.Palette.track).frame(height: 4)
+                        Capsule().fill(i <= step ? Read4.ink : Read4.track).frame(height: 4)
                     }
                 }
                 .accessibilityHidden(true)
             }
             HStack {
                 Button { finish(early: true) } label: { Image(systemName: "xmark") }
-                    .buttonStyle(.dxIcon).accessibilityLabel(Text("Stop"))
+                    .buttonStyle(.v4Icon).accessibilityLabel(Text("Stop"))
                 Spacer()
-                Text(tool.title).dxText(.micro)
+                Text(tool.title).v4Text(.micro)
                 Spacer()
-                Color.clear.frame(width: DX.Size.iconButton, height: 1)
+                Color.clear.frame(width: 44, height: 1)
             }
             .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
         }
@@ -211,18 +211,18 @@ struct CalmToolPlayer: View {
     private var grounding: some View {
         let current = Grounding.steps[min(step, Grounding.steps.count - 1)]
         return VStack(alignment: .leading, spacing: DX.Space.s) {
-            Text(verbatim: "\(current.count)").font(.custom(DX.Typeface.bold, size: 64, relativeTo: .largeTitle))
-                .foregroundStyle(DX.Palette.accentInk).padding(.top, DX.Space.l)
-            Text(current.sense).dxText(.title)
-            Text(current.hint).dxText(.subtitle)
+            Text(verbatim: "\(current.count)").dxFont(40, weight: 700, style: .largeTitle)
+                .foregroundStyle(Read4.accent).padding(.top, DX.Space.l)
+            Text(current.sense).v4Text(.title)
+            Text(current.hint).v4Text(.subtitle)
             DXFlowLayout(spacing: DX.Space.xs) {
                 ForEach(0..<current.count, id: \.self) { i in
                     Button { ticked = max(ticked, i + 1) } label: {
                         Image(systemName: "checkmark").font(.system(size: 15, weight: .bold))
-                            .foregroundStyle(i < ticked ? DX.Palette.onAccent : .clear)
+                            .foregroundStyle(i < ticked ? DX.Fill.cream : .clear)
                             .frame(width: 44, height: 44)
-                            .background(i < ticked ? DX.Palette.sage : .clear, in: Circle())
-                            .overlay(Circle().strokeBorder(i < ticked ? .clear : DX.Palette.faint, lineWidth: 1.5))
+                            .background(i < ticked ? Read4.accent : .clear, in: Circle())
+                            .overlay(Circle().strokeBorder(i < ticked ? .clear : Read4.faint, lineWidth: 1.5))
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel(Text("Found \(i + 1)"))
@@ -234,7 +234,7 @@ struct CalmToolPlayer: View {
                 ticked = 0
                 if step + 1 < Grounding.steps.count { step += 1 } else { finish(early: false) }
             }
-            .buttonStyle(.dxPrimary)
+            .buttonStyle(.dx(.primary, on: .reading))
         }
     }
 
@@ -242,36 +242,36 @@ struct CalmToolPlayer: View {
         VStack(alignment: .leading, spacing: DX.Space.s) {
             switch step {
             case 0:
-                Text("What's your mind telling you?").dxText(.title).padding(.top, DX.Space.l)
-                Text("Pick the closest, or write your own.").dxText(.subtitle)
+                Text("What's your mind telling you?").v4Text(.title).padding(.top, DX.Space.l)
+                Text("Pick the closest, or write your own.").v4Text(.subtitle)
                 DXFlowLayout {
                     ForEach(NoticeAndName.thoughts.map { String(localized: $0) }, id: \.self) { t in
-                        DXChip(LocalizedStringKey(t), isOn: Binding(get: { !writingOwn && thought == t }, set: { if $0 { thought = t; writingOwn = false } }))
+                        V4ToggleChip(LocalizedStringKey(t), isOn: Binding(get: { !writingOwn && thought == t }, set: { if $0 { thought = t; writingOwn = false } }))
                     }
-                    DXChip("write my own", isOn: $writingOwn)
+                    V4ToggleChip("write my own", isOn: $writingOwn)
                 }
-                if writingOwn { DXTextField("The thought", prompt: "I'll never manage", text: $ownThought) }
+                if writingOwn { V4TextField("The thought", prompt: "I'll never manage", text: $ownThought) }
                 Spacer()
-                Button("Next") { step = 1 }.buttonStyle(.dxPrimary).disabled(chosenThought == nil)
+                Button("Next") { step = 1 }.buttonStyle(.dx(.primary, on: .reading)).disabled(chosenThought == nil)
             case 1:
                 VStack(alignment: .leading, spacing: 6) {
-                    Text("Say it this way").dxText(.micro)
-                    Text("I'm noticing I'm having the thought \(Text(verbatim: "“\(chosenThought ?? "")”").foregroundStyle(DX.Palette.accentInk))")
-                        .font(.custom(DX.Typeface.semibold, size: 22, relativeTo: .title2)).foregroundStyle(DX.Palette.text)
+                    Text("Say it this way").v4Text(.micro)
+                    Text("I'm noticing I'm having the thought \(Text(verbatim: "“\(chosenThought ?? "")”").foregroundStyle(Read4.accent))")
+                        .dxFont(24, weight: 600, style: .title2).foregroundStyle(Read4.ink)
                 }
                 .padding(DX.Space.m)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 26, style: .continuous))
-                .overlay(RoundedRectangle(cornerRadius: 26, style: .continuous).strokeBorder(DX.Palette.hairline))
+                .background(Read4.card, in: RoundedRectangle(cornerRadius: 26, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: 26, style: .continuous).strokeBorder(Read4.hairline))
                 .padding(.top, DX.Space.l)
-                Text("It's a thought, not an order. You can let it sit there while you get on with your day.").dxText(.subtitle)
+                Text("It's a thought, not an order. You can let it sit there while you get on with your day.").v4Text(.subtitle)
                 Spacer()
-                Button("Next") { step = 2 }.buttonStyle(.dxPrimary)
+                Button("Next") { step = 2 }.buttonStyle(.dx(.primary, on: .reading))
             default:
                 Spacer()
                 timedBreaths
                 Spacer()
-                Button("Done") { finish(early: false) }.buttonStyle(.dxPrimary)
+                Button("Done") { finish(early: false) }.buttonStyle(.dx(.primary, on: .reading))
             }
         }
     }
@@ -283,13 +283,13 @@ struct CalmToolPlayer: View {
             let breath = CravingWave.breath(at: elapsed)
             VStack(spacing: DX.Space.s) {
                 Circle()
-                    .fill(RadialGradient(colors: [DX.Palette.sage.opacity(0.6), DX.Palette.sage.opacity(0.2), .clear],
+                    .fill(RadialGradient(colors: [Read4.accent.opacity(0.6), Read4.accent.opacity(0.2), .clear],
                                          center: .center, startRadius: 0, endRadius: 90))
                     .scaleEffect(reduceMotion ? 0.86 : 0.7 + 0.3 * breath.scale)
-                    .overlay(Text("\(NoticeAndName.breaths) breaths").font(.custom(DX.Typeface.semibold, size: 20, relativeTo: .title3))
-                        .foregroundStyle(DX.Palette.text))
+                    .overlay(Text("\(NoticeAndName.breaths) breaths").dxFont(19, weight: 600, style: .title3)
+                        .foregroundStyle(Read4.ink))
                     .frame(width: 180, height: 180)
-                Text(breath.phase == .breatheIn ? "Breathe in" : "Breathe out").dxText(.subtitle)
+                Text(breath.phase == .breatheIn ? "Breathe in" : "Breathe out").v4Text(.subtitle)
             }
             .frame(maxWidth: .infinity)
         }
@@ -298,17 +298,17 @@ struct CalmToolPlayer: View {
     private var anchor: some View {
         let current = DropAnchor.steps[min(step, DropAnchor.steps.count - 1)]
         return VStack(alignment: .leading, spacing: DX.Space.s) {
-            Image(systemName: "figure.stand").font(.system(size: 30)).foregroundStyle(DX.Palette.accentInk)
-                .frame(width: 70, height: 70).background(DX.Palette.accentSoft, in: Circle())
+            Image(systemName: "figure.stand").font(.system(size: 30)).foregroundStyle(Read4.accent)
+                .frame(width: 70, height: 70).background(Read4.accentSoft, in: Circle())
                 .padding(.top, DX.Space.l)
                 .accessibilityHidden(true)
-            Text(current.title).dxText(.title)
-            Text(current.body).font(DX.TextStyle.body.font).foregroundStyle(DX.Palette.text2)
+            Text(current.title).v4Text(.title)
+            Text(current.body).dxFont(16, weight: 400, style: .body).foregroundStyle(Read4.muted)
             Spacer()
             Button(step + 1 < DropAnchor.steps.count ? "Next" : "Done") {
                 if step + 1 < DropAnchor.steps.count { step += 1 } else { finish(early: false) }
             }
-            .buttonStyle(.dxPrimary)
+            .buttonStyle(.dx(.primary, on: .reading))
         }
     }
 
@@ -325,24 +325,24 @@ struct CalmToolPlayer: View {
     private var done: some View {
         VStack(spacing: DX.Space.s) {
             Spacer()
-            Image(systemName: "checkmark").font(.system(size: 30, weight: .bold)).foregroundStyle(DX.Palette.accentInk)
-                .frame(width: 76, height: 76).background(DX.Palette.accentSoft, in: Circle())
+            Image(systemName: "checkmark").font(.system(size: 30, weight: .bold)).foregroundStyle(Read4.accent)
+                .frame(width: 76, height: 76).background(Read4.accentSoft, in: Circle())
                 .accessibilityHidden(true)
-            Text("Nicely done").dxText(.title)
-            Text("A bit calmer? \(Text("· optional").foregroundStyle(DX.Palette.faint))").dxText(.subtitle)
+            Text("Nicely done").v4Text(.title)
+            Text("A bit calmer? \(Text("· optional").foregroundStyle(Read4.faint))").v4Text(.subtitle)
             HStack(spacing: DX.Space.xs) {
                 calmerButton(true, "A bit")
                 calmerButton(false, "Not really")
             }
             if answered == false {
-                Text("That's okay. Try another tool, or ride it out with Craving SOS.").dxText(.subtitle).multilineTextAlignment(.center)
+                Text("That's okay. Try another tool, or ride it out with Craving SOS.").v4Text(.subtitle).multilineTextAlignment(.center)
             }
             Spacer()
-            Button("Done") { onDone(false) }.buttonStyle(.dxPrimary)
+            Button("Done") { onDone(false) }.buttonStyle(.dx(.primary, on: .reading))
             Button(fromSOS ? "Back to Craving SOS" : "Still craving? Start Craving SOS") {
                 onDone(true)
             }
-            .buttonStyle(.dxQuiet)
+            .buttonStyle(.dx(.quiet, on: .reading))
         }
     }
 
@@ -353,11 +353,11 @@ struct CalmToolPlayer: View {
             use?.calmer = value
             try? context.save()
         } label: {
-            Text(title).font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
+            Text(title).dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.ink)
                 .frame(maxWidth: .infinity, minHeight: 52)
-                .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+                .background(Read4.card, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
                 .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .strokeBorder(on ? DX.Palette.accentInk : DX.Palette.hairline, lineWidth: on ? 1.5 : 1))
+                    .strokeBorder(on ? Read4.accent : Read4.hairline, lineWidth: on ? 1.5 : 1))
         }
         .buttonStyle(.plain)
         .accessibilityAddTraits(on ? .isSelected : [])
@@ -384,7 +384,7 @@ private struct PlayerCanvas: ViewModifier {
         if orb {
             content.background(Color.black.ignoresSafeArea()).environment(\.colorScheme, .dark)
         } else {
-            content.dxCanvas()
+            content.background(Read4.background.ignoresSafeArea())
         }
     }
 }

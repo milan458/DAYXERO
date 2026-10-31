@@ -8,7 +8,6 @@ struct DayXeroApp: App {
     @State private var entitlement: Entitlement
 
     init() {
-        DX.Typeface.register()
         DX.Typeface4.register()
         do {
             // Unit tests run inside the app; give them a throwaway store.
@@ -164,9 +163,7 @@ struct RootView: View {
     @ViewBuilder
     private var routed: some View {
         #if DEBUG
-        if UserDefaults.standard.bool(forKey: "dx.showGallery") {
-            DesignSystemGallery()
-        } else if let page = UserDefaults.standard.string(forKey: "dx.v4Gallery") {
+        if let page = UserDefaults.standard.string(forKey: "dx.v4Gallery") {
             V4Gallery(page: page)
         } else if UserDefaults.standard.bool(forKey: "dx.illustrationGallery") {
             MilestoneIllustrationGallery()
@@ -188,12 +185,10 @@ struct RootView: View {
     @ViewBuilder
     private var content: some View {
         if underAge {
-            UnderAgeScreen().dxCanvas()
+            UnderAgeScreen().background(Read4.background.ignoresSafeArea())
         } else if let profile = profiles.first, !finishingOnboarding {
             #if DEBUG
-            if let raw = UserDefaults.standard.string(forKey: "dx.openLesson"), let day = ProgramDayID(description: raw) {
-                LessonPlayer(day: day, profile: profile)
-            } else if let session = UserDefaults.standard.string(forKey: "dx.openSession") {
+            if let session = UserDefaults.standard.string(forKey: "dx.openSession") {
                 // Screenshots: a program v2 session, at the step given by -dx.sessionStep.
                 SessionFlowView(sessionId: session, profile: profile)
             } else if paywallDone || (entitlement.isPro && !buyingOnPaywall) {
@@ -246,9 +241,9 @@ struct FirstRunPaywall: View {
         } else {
             // A moment while Superwall decides; its paywall slides up over this, or ours replaces it.
             ProgressView()
-                .tint(DX.Palette.accentInk)
+                .tint(Read4.accent)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .dxCanvas()
+                .background(Read4.background.ignoresSafeArea())
                 .task {
                     Paywalls.setAttributes(for: profile)
                     Paywalls.present(.onboardingComplete) { outcome in

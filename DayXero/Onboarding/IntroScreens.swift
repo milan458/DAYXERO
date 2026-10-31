@@ -83,7 +83,7 @@ struct ProductsScreen: View {
                 .accessibilityElement(children: .combine)
             }
         }
-        .animation(DX.Motion.animation(DX.Motion.glide, reduceMotion: reduceMotion), value: model.products.count > 1)
+        .animation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion), value: model.products.count > 1)
     }
 
     private func product(_ product: Product, title: LocalizedStringResource, detail: LocalizedStringResource, icon: String) -> some View {

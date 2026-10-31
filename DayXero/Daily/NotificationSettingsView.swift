@@ -24,16 +24,16 @@ struct NotificationSettingsView: View {
             if denied {
                 Section {
                     HStack(spacing: DX.Space.s) {
-                        Text("Notifications are off for DayXero in iPhone Settings.").font(DX.TextStyle.subtitle.font)
+                        Text("Notifications are off for DayXero in iPhone Settings.").dxFont(14, weight: 400, style: .footnote)
                         Spacer(minLength: DX.Space.xs)
                         Button("Turn on") {
                             if let url = URL(string: UIApplication.openNotificationSettingsURLString) { UIApplication.shared.open(url) }
                         }
                         .buttonStyle(.borderedProminent)
-                        .tint(DX.Palette.primary)
+                        .tint(Read4.ink)
                     }
                 }
-                .listRowBackground(DX.Palette.amber.opacity(0.14))
+                .listRowBackground(Read4.amber.opacity(0.14))
             }
             Section("Your day") {
                 row("Morning pledge", detail: "Skipped once you've pledged", systemImage: "sun.max", minute: $pledge, fallback: DailyReminderSettings.defaultPledge)
@@ -63,7 +63,7 @@ struct NotificationSettingsView: View {
                 Text("At most three a day from the program. NRT reminders you set always arrive.")
             }
         }
-        .tint(DX.Palette.sage)
+        .tint(Read4.accent)
         .navigationTitle("Notifications")
         .onChange(of: [pledge, lesson, checkIn, milestone, quietStart, quietEnd]) { refresh() }
         .onChange(of: away) { refresh() }
@@ -81,11 +81,11 @@ struct NotificationSettingsView: View {
 
     private func label(_ title: LocalizedStringKey, detail: LocalizedStringKey, systemImage: String) -> some View {
         HStack(spacing: DX.Space.s) {
-            Image(systemName: systemImage).font(.system(size: 14)).foregroundStyle(DX.Palette.accentInk)
-                .frame(width: 30, height: 30).background(DX.Palette.accentSoft, in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+            Image(systemName: systemImage).font(.system(size: 14)).foregroundStyle(Read4.accent)
+                .frame(width: 30, height: 30).background(Read4.accentSoft, in: RoundedRectangle(cornerRadius: 9, style: .continuous))
             VStack(alignment: .leading, spacing: 1) {
-                Text(title).font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body))
-                Text(detail).dxText(.subtitle)
+                Text(title).dxFont(16, weight: 600, style: .body)
+                Text(detail).v4Text(.subtitle)
             }
         }
     }
@@ -97,7 +97,7 @@ struct NotificationSettingsView: View {
             }
             if minute.wrappedValue >= 0 {
                 DatePicker("Time", selection: Self.timeBinding(minute), displayedComponents: .hourAndMinute)
-                    .font(DX.TextStyle.subtitle.font)
+                    .dxFont(14, weight: 400, style: .footnote)
             }
         }
     }
@@ -128,32 +128,32 @@ struct QuietHoursView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DX.Space.s) {
-                Text("Nothing arrives between these times. Anything due waits until they end.").dxText(.subtitle)
+                Text("Nothing arrives between these times. Anything due waits until they end.").v4Text(.subtitle)
                 Toggle("Quiet hours", isOn: Binding(get: { start >= 0 }, set: {
                     start = $0 ? DailyReminderSettings.defaultQuietStart : -1
                     end = $0 ? DailyReminderSettings.defaultQuietEnd : -1
                 }))
-                .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body))
+                .dxFont(16, weight: 600, style: .body)
                 if start >= 0 {
                     HStack(spacing: DX.Space.xs) {
                         timeCard("From", minute: $start)
                         timeCard("Until", minute: $end)
                     }
                     strip
-                    Text("Grey is quiet. Sage marks are your daily notifications.").dxText(.subtitle)
+                    Text("Grey is quiet. Sage marks are your daily notifications.").v4Text(.subtitle)
                 }
                 Toggle(isOn: $nrtThrough) {
                     VStack(alignment: .leading, spacing: 1) {
-                        Text("Let my NRT times through").font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body))
-                        Text("Times you set yourself").dxText(.subtitle)
+                        Text("Let my NRT times through").dxFont(16, weight: 600, style: .body)
+                        Text("Times you set yourself").v4Text(.subtitle)
                     }
                 }
                 .padding(.top, DX.Space.s)
             }
             .padding(DX.Space.m)
         }
-        .tint(DX.Palette.sage)
-        .dxCanvas()
+        .tint(Read4.accent)
+        .background(Read4.background.ignoresSafeArea())
         .navigationTitle("Quiet hours")
         .onChange(of: [start, end]) { refresh() }
         .onChange(of: nrtThrough) { refresh() }
@@ -165,9 +165,9 @@ struct QuietHoursView: View {
     }
 
     private func timeCard(_ title: LocalizedStringKey, minute: Binding<Int>) -> some View {
-        DXCard(padding: 14) {
+        V4Card(padding: 14) {
             VStack(spacing: 4) {
-                Text(title).dxText(.micro)
+                Text(title).v4Text(.micro)
                 DatePicker(title, selection: NotificationSettingsView.timeBinding(minute), displayedComponents: .hourAndMinute)
                     .labelsHidden()
             }
@@ -181,15 +181,15 @@ struct QuietHoursView: View {
             let w = geo.size.width
             let x = { (m: Int) in w * CGFloat(m) / 1440 }
             ZStack(alignment: .leading) {
-                RoundedRectangle(cornerRadius: 12, style: .continuous).fill(DX.Palette.surface1)
+                RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Read4.card)
                 if start > end {
-                    Rectangle().fill(DX.Palette.track).frame(width: x(end))
-                    Rectangle().fill(DX.Palette.track).frame(width: w - x(start)).offset(x: x(start))
+                    Rectangle().fill(Read4.track).frame(width: x(end))
+                    Rectangle().fill(Read4.track).frame(width: w - x(start)).offset(x: x(start))
                 } else {
-                    Rectangle().fill(DX.Palette.track).frame(width: x(end) - x(start)).offset(x: x(start))
+                    Rectangle().fill(Read4.track).frame(width: x(end) - x(start)).offset(x: x(start))
                 }
                 ForEach([pledge, lesson, checkIn].filter { $0 >= 0 }, id: \.self) { m in
-                    RoundedRectangle(cornerRadius: 3).fill(DX.Palette.sage).frame(width: 6, height: 14).offset(x: x(m) - 3)
+                    RoundedRectangle(cornerRadius: 3).fill(Read4.accent).frame(width: 6, height: 14).offset(x: x(m) - 3)
                 }
             }
             .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))

@@ -1,3 +1,5 @@
+> **Superseded (31 Oct 2026).** DayXero now follows the v4 design system: `design/handoff/DAYXERO_DESIGN_SYSTEM.md` and `design/handoff/tokens.json` (decision 14). The Biophilic OLED palette, Inter and JetBrains Mono and the springs below were removed from the app in Phase 8. This file is kept for history only.
+
 # Claude Code Design System Prompt: Biophilic OLED Minimalist UI
 
 > **How to use this file with Claude Code:**

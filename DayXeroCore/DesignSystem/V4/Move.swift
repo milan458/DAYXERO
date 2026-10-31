@@ -17,6 +17,9 @@ public extension DX {
         public static let celebrate = Animation.timingCurve(0.3, 1.4, 0.5, 1, duration: 0.7)
         public static let celebrateFromScale: CGFloat = 0.6
 
+        /// A button under the finger.
+        public static let pressedScale: CGFloat = 0.97
+
         /// Numbers counting up.
         public static let count = Animation.easeOut(duration: 0.85)
 

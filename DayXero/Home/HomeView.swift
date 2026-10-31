@@ -123,14 +123,14 @@ struct ComingSoon: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            Text(title).dxText(.title).padding(.top, DX.Space.xl)
+            Text(title).v4Text(.title).padding(.top, DX.Space.xl)
             Spacer()
-            DXStateView(.empty, systemImage: systemImage, title: "Coming soon", message: message)
+            V4StateView(.empty, systemImage: systemImage, title: "Coming soon", message: message)
             Spacer()
         }
         .padding(.horizontal, DX.Space.m)
         .dxReadableColumn()
-        .dxCanvas()
+        .background(Read4.background.ignoresSafeArea())
     }
 }
 
@@ -150,7 +150,6 @@ struct TodayView: View {
     @Environment(Entitlement.self) private var entitlement
     @Environment(\.modelContext) private var context
     @AppStorage("dx.sosHintSeen") private var sosHintSeen = false
-    @State private var openLesson: ProgramView.LessonOpen?
     @State private var upgradeTitle: String?
     @State private var showUpgrade = false
     @State private var showPaywall = false
@@ -190,7 +189,7 @@ struct TodayView: View {
         .overlay(alignment: .bottom) {
             if let entry = justLogged { loggedToast(entry) }
         }
-        .animation(DX.Motion.animation(DX.Motion.glide, reduceMotion: false), value: justLogged)
+        .animation(DX.Move.animation(DX.Move.settle, reduceMotion: false), value: justLogged)
         .task(id: justLogged) {
             guard justLogged != nil else { return }
             try? await Task.sleep(for: .seconds(4))
@@ -235,9 +234,6 @@ struct TodayView: View {
         .sheet(isPresented: $showSettings) {
             SettingsSheet(profile: profile, start: settingsPage)
         }
-        .fullScreenCover(item: $openLesson) { item in
-            LessonPlayer(day: item.day, profile: profile, isReplay: item.isReplay)
-        }
         .sheet(isPresented: $showUpgrade) {
             UpgradeSheet(dayTitle: upgradeTitle ?? "", model: PaywallModel(store: entitlement.store, entitlement: entitlement),
                          showAllPlans: { showUpgrade = false; showPaywall = true },
@@ -249,14 +245,6 @@ struct TodayView: View {
                         model: PaywallModel(store: entitlement.store, entitlement: entitlement),
                         onClose: { showPaywall = false })
         }
-    }
-
-    private func openQueuedFirstLesson() {
-        guard UserDefaults.standard.bool(forKey: FirstLesson.key) else { return }
-        UserDefaults.standard.set(false, forKey: FirstLesson.key)
-        let snap = HomeSnapshot(profile: profile, isPro: entitlement.isPro)
-        guard celebrating == nil, let lesson = snap.lesson, lesson.availability == .available, !lesson.needsUpgrade else { return }
-        openLesson = .init(day: lesson.day, isReplay: false)
     }
 
     // MARK: Milestones (S13.2)
@@ -527,12 +515,12 @@ struct TodayView: View {
                 justLogged = nil
             }
         }
-        .font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
-        .foregroundStyle(DX.Palette.onPrimary)
+        .dxFont(14, weight: 600, style: .footnote)
+        .foregroundStyle(Read4.onInk)
         .buttonStyle(.plain)
         .padding(.vertical, DX.Space.s).padding(.horizontal, 14)
-        .background(DX.Palette.primary, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
-        .shadow(color: DX.Palette.shadow, radius: 16, y: 8)
+        .background(Read4.ink, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .shadow(color: Color.black.opacity(0.15), radius: 16, y: 8)
         .padding(.horizontal, DX.Space.m)
         .padding(.bottom, DX.Space.s)
         .transition(.move(edge: .bottom).combined(with: .opacity))
@@ -563,168 +551,19 @@ struct TodayView: View {
 
     // MARK: Today's lesson (S19.3)
 
-    /// "PREP PROGRAM · DAY 4", "QUIT WEEK · DAY 2", "WEEKLY · WEEK 3".
-    private func lessonEyebrow(_ day: ProgramDayID) -> String {
-        switch day.phase {
-        case .prep: String(localized: "Prep program · Day \(day.index)")
-        case .quit: String(localized: "Quit week · Day \(day.index)")
-        case .maintenance: String(localized: "Weekly · Week \(day.index)")
-        }
-    }
-
-    /// "1 of 9 · 6 min"; weekly sessions just say how long.
-    private func lessonDetail(_ lesson: HomeSnapshot.Lesson, prepTotal: Int) -> String {
-        let content = LessonLibrary.lesson(for: lesson.day, product: profile.primaryProduct?.product ?? .cigarettes)
-        if let summary = content.summary, !summary.isEmpty { return summary }
-        let place: String? = switch lesson.day.phase {
-        case .prep: String(localized: "\(lesson.day.index) of \(prepTotal)")
-        case .quit: String(localized: "\(lesson.day.index) of \(ProgramSchedule.quitWeekDays)")
-        case .maintenance: nil
-        }
-        return [place, String(localized: "\(content.minutes) min")].compactMap { $0 }.joined(separator: " · ")
-    }
-
-    /// The lesson spotlight (S24): a white card on dark, and the other way round on light, with soft hills along
-    /// its foot. Its eyebrow is the one micro label inside a card (DESIGN_METHODOLOGY.md, S19.3).
-    private func lessonCard(_ lesson: HomeSnapshot.Lesson, finished: ProgramDayID?, prepTotal: Int, prep: Bool) -> some View {
-        let ink = DX.Palette.onPrimary
-        // Sage on the dark card, deep olive on the white one.
-        let accent = Color(light: 0xBCC388, dark: 0x55621F)
-        let content = LessonLibrary.lesson(for: lesson.day, product: profile.primaryProduct?.product ?? .cigarettes)
-        let minutes = content.minutes
-        let hasAudio = content.steps.contains { if case .audio = $0 { true } else { false } }
-        let shape = RoundedRectangle(cornerRadius: DX.Radius.hero, style: .continuous)
-        return VStack(alignment: .leading, spacing: 10) {
-            HStack(spacing: DX.Space.xs) {
-                Text(verbatim: lessonEyebrow(lesson.day)).dxText(.micro, color: accent)
-                Spacer(minLength: DX.Space.xs)
-                if lesson.placeholder { PlaceholderTag() }
-                if let badge = lessonBadge(lesson) {
-                    Text(badge).font(.custom(DX.Typeface.bold, size: 10, relativeTo: .caption2))
-                        .textCase(.uppercase)
-                        .foregroundStyle(DX.Palette.onAccent)
-                        .padding(.vertical, 4).padding(.horizontal, 10)
-                        .background(DX.Palette.sage, in: Capsule())
-                }
-            }
-            Label {
-                Text(hasAudio ? "Audio + exercise · \(minutes) min" as LocalizedStringKey : "\(minutes) min")
-            } icon: {
-                Image(systemName: hasAudio ? "headphones" : "clock").foregroundStyle(accent)
-            }
-            .font(.custom(DX.Typeface.medium, size: 12, relativeTo: .caption))
-            .foregroundStyle(ink.opacity(0.6))
-            if let finished {
-                Label {
-                    Text("\(LessonCatalog.title(for: finished)) done").dxText(.subtitle, color: ink.opacity(0.7))
-                } icon: {
-                    Image(systemName: "checkmark.circle.fill").foregroundStyle(accent)
-                }
-            }
-            Text(lesson.title).font(.custom(DX.Typeface.bold, size: 22, relativeTo: .title2)).tracking(-0.4).foregroundStyle(ink)
-                .fixedSize(horizontal: false, vertical: true)
-            Text(verbatim: lessonLine(lesson, content: content, prepTotal: prepTotal, prep: prep))
-                .font(.custom(DX.Typeface.regular, size: 14, relativeTo: .subheadline)).foregroundStyle(ink.opacity(0.65))
-                .fixedSize(horizontal: false, vertical: true)
-            switch lesson.availability {
-            case let .opensOn(date):
-                Label {
-                    Text(opensText(date)).dxText(.subtitle, color: ink.opacity(0.7))
-                } icon: {
-                    Image(systemName: "clock").foregroundStyle(ink.opacity(0.5))
-                }
-            case .available where lesson.needsUpgrade:
-                lessonButton(String(localized: "Unlock \(lesson.title)"), systemImage: "lock.open") {
-                    upgradeTitle = lesson.title
-                    // Superwall's paywall when a campaign has one here; the upgrade sheet otherwise (S20).
-                    Paywalls.present(.unlockProgramDay, params: ["day": lesson.day.description]) { outcome in
-                        switch outcome {
-                        case .fallback: showUpgrade = true
-                        case .unlocked: entitlement.grant()
-                        case .closed: break
-                        }
-                    }
-                }
-            case .available:
-                let title = lesson.resumeStep > 0 ? String(localized: "Continue · \(minutes) min")
-                    : finished == nil ? String(localized: "Start \(LessonCatalog.title(for: lesson.day).lowercased()) lesson · \(minutes) min")
-                    : String(localized: "Start the next one · \(minutes) min")
-                lessonButton(title, systemImage: "play.fill") { openLesson = .init(day: lesson.day, isReplay: false) }
-            case .completed, .locked:
-                EmptyView()
-            }
-        }
-        .padding(DX.Space.l)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background {
-            ZStack(alignment: .bottom) {
-                shape.fill(DX.Palette.primary)
-                // The welcome screen's hills, in the card's own palette: light hills on the white card.
-                Hills(still: true).frame(height: 64).opacity(0.55)
-                    .environment(\.colorScheme, colorScheme == .dark ? .light : .dark)
-            }
-            .clipShape(shape)
-        }
-        .shadow(color: DX.Palette.sage.opacity(0.15), radius: 20)
-        .shadow(color: DX.Palette.shadow, radius: 24, y: 12)
-    }
-
-    /// Prep: what to do with today's lesson. Otherwise its summary, or where it sits in the program.
-    private func lessonLine(_ lesson: HomeSnapshot.Lesson, content: LessonContent, prepTotal: Int, prep: Bool) -> String {
-        if let summary = content.summary, !summary.isEmpty { return summary }
-        guard prep else { return lessonDetail(lesson, prepTotal: prepTotal) }
-        let things = profile.products.sorted { ($0.isPrimary ? 0 : 1) < ($1.isPrimary ? 0 : 1) }.prefix(2).map { use in
-            switch use.product {
-            case .cigarettes: String(localized: "cigarette")
-            case .vape: String(localized: "vape")
-            case .pouches: String(localized: "pouch")
-            }
-        }
-        let next = things.count > 1 ? String(localized: "\(things[0]) or \(things[1])") : (things.first ?? String(localized: "cigarette"))
-        return String(localized: "Keep using normally today. Do this \(content.minutes)-minute session before your next \(next).")
-    }
-
-    private func lessonBadge(_ lesson: HomeSnapshot.Lesson) -> LocalizedStringKey? {
-        switch lesson.availability {
-        case .available: return lesson.needsUpgrade ? LocalizedStringKey("Pro") : LocalizedStringKey("Unlocked")
-        case .opensOn: return "Up next"
-        case .completed: return "Done"
-        case .locked: return nil
-        }
-    }
-
-    /// The card's button: dark on the white card (light on the dark one), full width.
-    private func lessonButton(_ title: String, systemImage: String, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            Label(title, systemImage: systemImage)
-                .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .subheadline))
-                .foregroundStyle(DX.Palette.primary)
-                .frame(maxWidth: .infinity, minHeight: DX.Size.compactButtonHeight)
-                .background(DX.Palette.onPrimary, in: Capsule())
-        }
-        .buttonStyle(.plain)
-        .padding(.top, DX.Space.xs)
-    }
-
-    private func opensText(_ date: Date) -> String {
-        let calendar = Calendar.current
-        if calendar.isDateInTomorrow(date) { return String(localized: "Opens tomorrow morning") }
-        return String(localized: "Opens \(date.formatted(.dateTime.weekday(.wide)))")
-    }
-
     private var sosHint: some View {
         Button { sosHintSeen = true } label: {
             HStack(spacing: DX.Space.xs) {
-                Image(systemName: "sos.circle").foregroundStyle(DX.Palette.accentInk)
+                Image(systemName: "sos.circle").foregroundStyle(Read4.accent)
                 Text("Craving? Tap SOS any time. It takes 3 minutes.")
-                    .font(DX.TextStyle.subtitle.font).foregroundStyle(DX.Palette.text2)
+                    .dxFont(14, weight: 400, style: .footnote).foregroundStyle(Read4.muted)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                Image(systemName: "xmark").font(.system(size: 11, weight: .semibold)).foregroundStyle(DX.Palette.muted)
+                Image(systemName: "xmark").font(.system(size: 11, weight: .semibold)).foregroundStyle(Read4.muted)
             }
             .padding(DX.Space.s)
-            .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .background(Read4.card, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
             .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .strokeBorder(DX.Palette.faint, style: StrokeStyle(lineWidth: 1, dash: [4, 4])))
+                .strokeBorder(Read4.faint, style: StrokeStyle(lineWidth: 1, dash: [4, 4])))
         }
         .buttonStyle(.plain)
         .accessibilityHint(Text("Dismisses this tip"))
@@ -846,50 +685,3 @@ struct TodayView: View {
     }
 }
 
-/// The pledge or check-in card on Home (S11).
-struct DailyCard: View {
-    let systemImage: String
-    let title: LocalizedStringKey
-    let detail: LocalizedStringKey?
-    let action: LocalizedStringKey?
-    var done = false
-    let onTap: () -> Void
-
-    @Environment(\.dynamicTypeSize) private var typeSize
-
-    var body: some View {
-        Button(action: onTap) {
-            // At accessibility sizes the action moves under the text so neither is squeezed.
-            let layout = typeSize.isAccessibilitySize
-                ? AnyLayout(VStackLayout(alignment: .leading, spacing: DX.Space.s)) : AnyLayout(HStackLayout(spacing: DX.Space.s))
-            layout {
-                HStack(spacing: DX.Space.s) {
-                    Image(systemName: systemImage).font(.system(size: 17, weight: done ? .bold : .regular))
-                        .foregroundStyle(done ? DX.Palette.onAccent : DX.Palette.accentInk)
-                        .frame(width: 40, height: 40)
-                        .background(done ? DX.Palette.sage : DX.Palette.accentSoft, in: Circle())
-                    VStack(alignment: .leading, spacing: 1) {
-                        Text(title).font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
-                        if let detail { Text(detail).dxText(.subtitle) }
-                    }
-                    .fixedSize(horizontal: false, vertical: true)
-                }
-                if !typeSize.isAccessibilitySize { Spacer(minLength: DX.Space.xs) }
-                if let action {
-                    Text(action).font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
-                        .foregroundStyle(DX.Palette.onPrimary)
-                        .padding(.vertical, 8).padding(.horizontal, 14)
-                        .background(DX.Palette.primary, in: Capsule())
-                }
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(14)
-            .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 26, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 26, style: .continuous)
-                .strokeBorder(done ? DX.Palette.sage.opacity(0.45) : DX.Palette.hairline))
-        }
-        .buttonStyle(.plain)
-        .disabled(done)
-        .accessibilityElement(children: .combine)
-    }
-}

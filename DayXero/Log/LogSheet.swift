@@ -71,7 +71,7 @@ struct LogSheet: View {
                 menu
             } else {
                 // For the moment before the slip is saved on appear.
-                Color.clear.dxCanvas()
+                Color.clear.background(Read4.background.ignoresSafeArea())
             }
         }
     }
@@ -94,12 +94,12 @@ struct LogSheet: View {
     private var menu: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DX.Space.xs) {
-                Text("Log").dxText(.title).padding(.bottom, DX.Space.xs)
+                Text("Log").v4Text(.title).padding(.bottom, DX.Space.xs)
                 NavigationLink(value: LogRouter.Page.craving) {
                     LogRow(title: "A craving", detail: "How strong, what set it off", systemImage: "flame", accent: true)
                 }
                 .buttonStyle(.plain)
-                Text("I used").dxText(.micro).padding(.top, DX.Space.s)
+                Text("I used").v4Text(.micro).padding(.top, DX.Space.s)
                 ForEach(products, id: \.self) { product in
                     Button { logUse(product) } label: {
                         // How many today, rather than the product's name a second time (S18.10).
@@ -113,7 +113,7 @@ struct LogSheet: View {
                 }
                 if isSlip {
                     Text("A use after Quit Day is logged as a slip. Nothing resets.")
-                        .dxText(.subtitle)
+                        .v4Text(.subtitle)
                         .frame(maxWidth: .infinity)
                         .multilineTextAlignment(.center)
                         .padding(.top, DX.Space.xs)
@@ -122,7 +122,7 @@ struct LogSheet: View {
             .padding(DX.Space.m)
         }
         .scrollBounceBehavior(.basedOnSize)
-        .dxCanvas()
+        .background(Read4.background.ignoresSafeArea())
         .toolbar(.hidden, for: .navigationBar)
     }
 
@@ -177,24 +177,24 @@ private struct LogRow: View {
         HStack(spacing: DX.Space.s) {
             Image(systemName: systemImage)
                 .font(.system(size: 18))
-                .foregroundStyle(accent ? DX.Palette.accentInk : DX.Palette.text)
+                .foregroundStyle(accent ? Read4.accent : Read4.ink)
                 .frame(width: 42, height: 42)
-                .background(accent ? DX.Palette.accentSoft : DX.Palette.surface2, in: Circle())
+                .background(accent ? Read4.accentSoft : Read4.surface, in: Circle())
             VStack(alignment: .leading, spacing: 1) {
-                Text(title).font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
-                Text(detail).dxText(.subtitle)
+                Text(title).dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.ink)
+                Text(detail).v4Text(.subtitle)
             }
             Spacer(minLength: DX.Space.xs)
             Image(systemName: "plus")
                 .font(.system(size: 16, weight: .bold))
-                .foregroundStyle(DX.Palette.onPrimary)
+                .foregroundStyle(Read4.onInk)
                 .frame(width: 40, height: 40)
-                .background(DX.Palette.primary, in: Circle())
+                .background(Read4.ink, in: Circle())
         }
         .padding(.vertical, DX.Space.s)
         .padding(.horizontal, 14)
-        .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(DX.Palette.hairline))
+        .background(Read4.card, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(Read4.hairline))
         .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
     }
@@ -221,9 +221,9 @@ struct CravingLogForm: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: DX.Space.s) {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(editing == nil ? LocalizedStringKey("A craving") : LocalizedStringKey("Add details")).dxText(.title)
+                        Text(editing == nil ? LocalizedStringKey("A craving") : LocalizedStringKey("Add details")).v4Text(.title)
                         Text(verbatim: openedAt.formatted(.dateTime.weekday(.abbreviated).day().month().hour().minute()))
-                            .dxText(.subtitle)
+                            .v4Text(.subtitle)
                     }
                     if editing == nil || editing?.kind == .craving {
                         DXCravingSlider(value: $strength).frame(height: 110)
@@ -231,7 +231,7 @@ struct CravingLogForm: View {
                     section("What set it off?") {
                         DXFlowLayout {
                             ForEach(orderedTriggers, id: \.self) { t in
-                                DXSetChip(t.title, value: t, selection: single($trigger))
+                                V4SetChip(t.title, value: t, selection: single($trigger))
                             }
                         }
                     }
@@ -243,7 +243,7 @@ struct CravingLogForm: View {
                     section("Where?", optional: true) {
                         DXFlowLayout {
                             ForEach(Place.allCases, id: \.self) { p in
-                                DXSetChip(p.title, value: p, selection: single($place))
+                                V4SetChip(p.title, value: p, selection: single($place))
                             }
                         }
                     }
@@ -252,16 +252,16 @@ struct CravingLogForm: View {
             }
             .scrollBounceBehavior(.basedOnSize)
             VStack(spacing: DX.Space.xxs) {
-                Button("Save", action: save).buttonStyle(.dxPrimary)
+                Button("Save", action: save).buttonStyle(.dx(.primary, on: .reading))
                 if let onSOS {
-                    Button("Ride it out with SOS instead", action: onSOS).buttonStyle(.dxQuiet)
+                    Button("Ride it out with SOS instead", action: onSOS).buttonStyle(.dx(.quiet, on: .reading))
                 }
             }
             .padding(.horizontal, DX.Space.m)
             .dxReadableColumn()
             .padding(.bottom, DX.Space.xs)
         }
-        .dxCanvas()
+        .background(Read4.background.ignoresSafeArea())
         .sensoryFeedback(DX.Haptic.commit, trigger: saved)
         .onAppear {
             guard let editing else { return }
@@ -275,9 +275,9 @@ struct CravingLogForm: View {
     private func section(_ title: LocalizedStringKey, optional: Bool = false, @ViewBuilder content: () -> some View) -> some View {
         VStack(alignment: .leading, spacing: DX.Space.xs) {
             if optional {
-                Text("\(Text(title)) \(Text("· optional").foregroundStyle(DX.Palette.faint))").dxText(.micro)
+                Text("\(Text(title)) \(Text("· optional").foregroundStyle(Read4.faint))").v4Text(.micro)
             } else {
-                Text(title).dxText(.micro)
+                Text(title).v4Text(.micro)
             }
             content()
         }
@@ -288,16 +288,16 @@ struct CravingLogForm: View {
         let on = mood == m
         return Button { mood = on ? nil : m } label: {
             VStack(spacing: 4) {
-                Circle().fill(on ? DX.Palette.sage : DX.Palette.track).frame(width: 22, height: 22)
-                Text(m.title).font(.custom(DX.Typeface.medium, size: 11, relativeTo: .caption2))
-                    .foregroundStyle(on ? DX.Palette.text : DX.Palette.text2)
+                Circle().fill(on ? Read4.accent : Read4.track).frame(width: 22, height: 22)
+                Text(m.title).dxFont(12, weight: 500, style: .caption2)
+                    .foregroundStyle(on ? Read4.ink : Read4.muted)
                     .lineLimit(1).minimumScaleFactor(0.7)
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, DX.Space.xs)
-            .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .background(Read4.card, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
             .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .strokeBorder(on ? DX.Palette.accentInk : DX.Palette.hairline, lineWidth: on ? 1.5 : 1))
+                .strokeBorder(on ? Read4.accent : Read4.hairline, lineWidth: on ? 1.5 : 1))
         }
         .buttonStyle(.plain)
         .accessibilityLabel(Text(m.title))
