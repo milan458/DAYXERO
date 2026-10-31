@@ -56,7 +56,7 @@ extension HomeView {
             ProgressTab(profile: profile)
         case "toolkit", "water", "evening":
             // Evening holds the calm tools (decision 21). "water" is an old tab id: open with the tracker showing.
-            ToolkitView(profile: profile, openWater: tab == "water")
+            EveningView(profile: profile, openWater: tab == "water")
         default:
             TodayView(profile: profile)
         }

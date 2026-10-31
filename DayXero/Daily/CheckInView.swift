@@ -2,37 +2,43 @@ import DayXeroCore
 import SwiftData
 import SwiftUI
 
-/// The evening check-in (S11.2): how today went, cravings and mood. About a minute; never changes days clear.
+/// F16 Evening check-in (violet, with Glim): how today went, the waves from today's SOS, a mood, then rest.
+/// About a minute; it never changes days clear (S11.2). Prep week asks how prep went instead of clear day or slip.
 struct CheckInView: View {
     let profile: UserProfile
     let onDone: () -> Void
 
     enum Stage {
-        case form, slip, done
+        case form, slip, plan, done
     }
 
     @Environment(\.modelContext) private var context
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Query(sort: \LogEntry.timestamp, order: .reverse) private var logs: [LogEntry]
-    @Query private var checkIns: [CheckIn]
     @State private var stage = Stage.form
     @State private var clearDay = true
     @State private var mindful = true
     @State private var cravings: Int?
-    @State private var mood: Mood?
+    @State private var editingCravings = false
+    @State private var mood: CheckInMood?
     @State private var note = ""
+    @State private var addingNote = false
     @State private var slipEntry: LogEntry?
     @State private var showDayEnd = false
     @State private var saved = false
+    @State private var shown = false
+
+    private let ground = DX.Ground.violet
 
     var body: some View {
         Group {
             switch stage {
             case .form: form
             case .slip: SlipFlow(entry: slipEntry, profile: profile, startInTalkThrough: true) { stage = .done }
-            case .done: done
+            case .plan: TomorrowPlan(profile: profile, trigger: commonTrigger) { stage = .done }
+            case .done: WindDownView(profile: profile, savedJustNow: true, onClose: onDone)
             }
         }
-        .dxCanvas()
         .sensoryFeedback(DX.Haptic.commit, trigger: saved)
         .sheet(isPresented: $showDayEnd) {
             DayEndSettings(profile: profile).presentationDetents([.large])
@@ -44,92 +50,234 @@ struct CheckInView: View {
         }
     }
 
-    // MARK: Form
+    // MARK: F16
 
     private var form: some View {
         let today = todaysLogs
         let logged = today.filter { $0.kind == .craving }
         let ridden = logged.filter { $0.outcome == .passed }.count
-        return VStack(spacing: DX.Space.xs) {
-            HStack {
-                Button(action: onDone) { Image(systemName: "xmark") }.buttonStyle(.dxIcon).accessibilityLabel(Text("Close"))
-                Spacer()
-                Text("\(Date.now.formatted(.dateTime.weekday(.wide))) check-in").dxText(.micro)
-                Spacer()
-                Color.clear.frame(width: DX.Size.iconButton, height: 1)
-            }
-            .padding(.top, DX.Space.s)
+        let count = cravings ?? logged.count
+        let rode = min(ridden, count)
+        let hard = !prep && count > 0 && rode < count
+        return VStack(spacing: 0) {
             ScrollView {
-                VStack(alignment: .leading, spacing: DX.Space.xs) {
+                VStack(alignment: .leading, spacing: 12) {
+                    ZStack(alignment: .bottom) {
+                        HeroScene(.night, clarity: clarity, height: 250, edge: ground.background)
+                        GlimView(mood: mood == .good || mood == .proud ? .cheer : .calm,
+                                 stage: CrewGrowth.stage(daysClear: stats.daysClear(at: .now)), size: .scene)
+                            .offset(y: shown || reduceMotion ? -10 : -50)
+                            .opacity(shown ? 1 : 0)
+                            .accessibilityHidden(true)
+                    }
+                    .overlay(alignment: .topTrailing) {
+                        Button(action: onDone) {
+                            Image(systemName: "xmark").font(.system(size: 18, weight: .bold))
+                                .foregroundStyle(DX.Fill.navy)
+                                .frame(width: 44, height: 44)
+                                .background(DX.Fill.cream.opacity(0.85), in: Circle())
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(Text("Close"))
+                        .padding(.trailing, 10).padding(.top, 50)
+                    }
+                    .padding(.horizontal, -DX.Layout.gutter)
+                    .ignoresSafeArea(edges: .top)
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(verbatim: eyebrow).dxFont(14, weight: 700, style: .footnote).foregroundStyle(ground.muted)
+                        Text(verbatim: headline(count: count, rode: rode)).dxType(.large).foregroundStyle(ground.ink)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .accessibilityAddTraits(.isHeader)
+                        Text(verbatim: line(count: count, rode: rode)).dxType(.body).foregroundStyle(ground.muted)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .dxArrive(3)
                     if prep {
-                        prepHeader
+                        prepChoice.dxArrive(4)
+                        usedToday(today).dxArrive(4)
                     } else {
-                        Text("How did today go?").dxText(.title)
-                        HStack(spacing: DX.Space.xs) {
-                            dayOption(true, title: "Clear day", detail: "no nicotine")
-                            dayOption(false, title: "Had a slip", detail: "it happens")
-                        }
-                        .padding(.top, DX.Space.xs)
+                        dayChoice(slipLogged: today.contains { $0.kind == .slip }).dxArrive(4)
                     }
-                    if !prep, !clearDay {
-                        Text(today.contains { $0.kind == .slip }
-                             ? "You've already logged it. Nothing resets."
-                             : "We'll help you log it after this. Nothing resets.")
-                            .dxText(.subtitle)
+                    wavesRow(count: count, logged: logged.count, rode: rode).dxArrive(5)
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("How are you feeling tonight?").dxFont(16, weight: 700, style: .body).foregroundStyle(ground.ink)
+                        MoodPicker(selection: $mood, ground: ground)
                     }
-                    if prep { usedToday(today) }
-                    Text("Cravings today").dxText(.micro).padding(.top, DX.Space.s)
-                    let count = cravings ?? logged.count
-                    HStack {
-                        Button { cravings = max(count - 1, 0) } label: { Image(systemName: "minus") }
-                            .buttonStyle(.dxIcon).accessibilityLabel(Text("Fewer"))
-                        Spacer()
-                        VStack(spacing: 0) {
-                            Text(verbatim: count.formatted()).font(.custom(DX.Typeface.bold, size: 26, relativeTo: .title)).foregroundStyle(DX.Palette.text)
-                            if !logged.isEmpty {
-                                Text("\(logged.count) logged, \(ridden) ridden out").dxText(.subtitle)
-                            }
-                        }
-                        .accessibilityElement(children: .combine)
-                        Spacer()
-                        Button { cravings = count + 1 } label: { Image(systemName: "plus") }
-                            .buttonStyle(.dxIcon).accessibilityLabel(Text("More"))
-                    }
-                    .padding(DX.Space.xs)
-                    .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
-                    .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(DX.Palette.hairline))
-                    Text("Mood").dxText(.micro).padding(.top, DX.Space.s)
-                    HStack(spacing: 6) {
-                        ForEach(Mood.allCases, id: \.self) { m in moodButton(m) }
-                    }
-                    Text("Anything to remember? \(Text("· optional").foregroundStyle(DX.Palette.faint))").dxText(.micro).padding(.top, DX.Space.s)
-                    TextField("", text: $note, prompt: Text(prep ? "My 4 pm one didn't really help the stress" : "Busy day at work, coffee was hard").foregroundStyle(DX.Palette.faint), axis: .vertical)
-                        .lineLimit(2...4)
-                        .font(DX.TextStyle.subtitle.font)
-                        .padding(DX.Space.s)
-                        .background(DX.Palette.surface2, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-                    Button { showDayEnd = true } label: {
-                        Text("Your day ends at \(DayEndSettings.label(profile.dayBoundaryHour)) · change")
-                            .font(DX.TextStyle.subtitle.font).underline().foregroundStyle(DX.Palette.text2)
-                    }
-                    .buttonStyle(.plain)
-                    .padding(.top, DX.Space.xs)
+                    .padding(14)
+                    .background(DX.Fill.onColourCard(for: ground), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+                    .dxArrive(6)
+                    noteField.dxArrive(7)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, DX.Layout.gutter)
+                .padding(.bottom, DX.Space.m)
             }
             .scrollBounceBehavior(.basedOnSize)
-            Button(prep ? "Save prep day \(prepDay) check-in" : "Save") {
-                save(defaultCount: logged.count, slipLogged: today.contains { $0.kind == .slip })
-            }
-                .buttonStyle(.dxPrimary)
+            .scrollDismissesKeyboard(.interactively)
+            VStack(spacing: 6) {
+                Button(hard ? "Make a plan for tomorrow" : prep ? "Save prep day \(prepDay) check-in" : "Save and rest") {
+                    save(defaultCount: logged.count, slipLogged: today.contains { $0.kind == .slip }, plan: hard)
+                }
+                .buttonStyle(.dx(.primary, on: ground))
                 .disabled(mood == nil)
+                Button { showDayEnd = true } label: {
+                    Text("Your day ends at \(DayEndSettings.label(profile.dayBoundaryHour)) · \(Text("change").underline())")
+                        .dxType(.footnote).foregroundStyle(ground.muted)
+                        .frame(minHeight: 44)
+                }
+                .buttonStyle(.plain)
+            }
+            .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+            .padding(.horizontal, DX.Layout.buttonGutter)
+            .padding(.bottom, DX.Space.xs)
         }
-        .padding(.horizontal, DX.Space.m)
         .dxReadableColumn()
-        .padding(.bottom, DX.Space.xs)
+        .background(ground.background.ignoresSafeArea())
+        .onAppear {
+            withAnimation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion)) { shown = true }
+        }
     }
 
-    // MARK: Prep week (before Quit Day using is part of the plan, so there's no "clear day" or "slip")
+    /// "Sunday check-in · Day 3", or the prep day.
+    private var eyebrow: String {
+        let weekday = Date.now.formatted(.dateTime.weekday(.wide))
+        if prep { return String(localized: "Prep day \(prepDay) check-in · \(stats.daysUntilQuitDay(at: .now)) days to Quit Day") }
+        let day = DayClock(boundaryHour: profile.dayBoundaryHour).days(fromDate: profile.quitDay, to: .now) + 1
+        return day > 0 ? String(localized: "\(weekday) check-in · Day \(day)") : String(localized: "\(weekday) check-in")
+    }
+
+    /// The headline follows the day: no waves, every wave ridden out, or a hard one (design doc §10, F16).
+    private func headline(count: Int, rode: Int) -> String {
+        if prep { return String(localized: "How did your prep go today?") }
+        if count == 0 { return String(localized: "A quiet day. Those count too.") }
+        if rode == count { return String(localized: "\(rode) of \(count) waves. All yours.") }
+        return String(localized: "Today was hard. You're still here.")
+    }
+
+    private func line(count: Int, rode: Int) -> String {
+        if prep { return String(localized: "Using normally is part of prep week. No guilt, just noticing.") }
+        if count == 0 { return String(localized: "No waves today. Your brain is learning that nothing is missing.") }
+        if rode == count { return String(localized: "Each one you ride out makes the next a little quieter.") }
+        if let trigger = commonTrigger {
+            return String(localized: "You rode \(rode) of \(count). Want one small plan for \(String(localized: trigger.situation)) tomorrow?")
+        }
+        return String(localized: "You rode \(rode) of \(count). Want one small plan for tomorrow?")
+    }
+
+    /// "From today's SOS: 3 of 3 waves ridden out · Edit". Edit opens a stepper for cravings that weren't logged.
+    private func wavesRow(count: Int, logged: Int, rode: Int) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 8) {
+                Group {
+                    if logged == 0 && cravings == nil {
+                        Text("No cravings logged today")
+                    } else {
+                        Text("From today's SOS: \(Text("\(rode) of \(count) waves ridden out").fontWeight(.bold))")
+                    }
+                }
+                .dxType(.footnote).foregroundStyle(ground.ink)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                Button(editingCravings ? "Done" : logged == 0 && cravings == nil ? "Add" : "Edit") {
+                    withAnimation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion)) { editingCravings.toggle() }
+                }
+                .dxFont(14, weight: 700, style: .footnote)
+                .foregroundStyle(ground.ink)
+                .frame(minWidth: 44, minHeight: 44)
+            }
+            if editingCravings {
+                HStack {
+                    stepButton("minus", label: "Fewer") { cravings = max(count - 1, 0) }
+                    Spacer()
+                    Text(verbatim: "\(count)").dxType(.title).foregroundStyle(ground.ink).monospacedDigit()
+                        .accessibilityLabel(Text("\(count) cravings today"))
+                    Spacer()
+                    stepButton("plus", label: "More") { cravings = count + 1 }
+                }
+            }
+        }
+        .padding(.horizontal, 14).padding(.vertical, 4)
+        .background(DX.Fill.onColourCard(for: ground), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+    }
+
+    private func stepButton(_ icon: String, label: LocalizedStringKey, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Image(systemName: icon).font(.system(size: 16, weight: .bold)).foregroundStyle(ground.ink)
+                .frame(width: 44, height: 44)
+                .background(DX.Fill.onColourCard(for: ground), in: Circle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text(label))
+    }
+
+    /// Clear day or a slip. A slip with nothing logged opens the talk-through after saving; nothing resets.
+    private func dayChoice(slipLogged: Bool) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 8) {
+                choice(String(localized: "Clear day"), on: clearDay) { clearDay = true }
+                choice(String(localized: "Had a slip"), on: !clearDay) { clearDay = false }
+            }
+            if !clearDay {
+                Text(slipLogged ? "You've already logged it. Nothing resets." : "We'll help you log it after this. Nothing resets.")
+                    .dxType(.footnote).foregroundStyle(ground.muted)
+            }
+        }
+    }
+
+    private var prepChoice: some View {
+        HStack(spacing: 8) {
+            choice(String(localized: "Mindful, noticed my triggers"), on: mindful) { mindful = true }
+            choice(String(localized: "Mostly autopilot"), on: !mindful) { mindful = false }
+        }
+    }
+
+    private func choice(_ title: String, on: Bool, action: @escaping () -> Void) -> some View {
+        V4Chip(text: title, isOn: on, fill: DX.Fill.onColourCard(for: ground), ink: ground.ink,
+               selectedFill: DX.Fill.cream, selectedInk: Color(hex: 0x4A3596), action: action)
+            .frame(maxWidth: .infinity)
+    }
+
+    /// Prep week: what was used today, per product, with steppers for anything not logged at the time.
+    private func usedToday(_ today: [LogEntry]) -> some View {
+        VStack(spacing: 6) {
+            ForEach(profile.products.map(\.product), id: \.self) { product in
+                let uses = today.filter { $0.kind != .craving && $0.product == product }
+                HStack {
+                    Text(verbatim: String(localized: product.unit).localizedCapitalized)
+                        .dxFont(16, weight: 600, style: .body).foregroundStyle(ground.ink)
+                    Spacer()
+                    stepButton("minus", label: "One fewer") { if let last = uses.first { UseLog.undo(last, in: context) } }
+                        .disabled(uses.isEmpty)
+                    Text(verbatim: uses.count.formatted()).dxType(.headline).foregroundStyle(ground.ink).frame(minWidth: 36)
+                    stepButton("plus", label: "One more") { UseLog.log(product, in: context) }
+                }
+                .padding(.horizontal, 14).padding(.vertical, 4)
+                .background(DX.Fill.onColourCard(for: ground), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+                .accessibilityElement(children: .contain)
+                .accessibilityLabel(Text("\(uses.count) \(Text(product.unit)) today"))
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var noteField: some View {
+        if addingNote {
+            TextField("", text: $note, prompt: Text(prep ? "My 4 pm one didn't really help the stress" : "Busy day at work, coffee was hard")
+                .foregroundStyle(ground.muted), axis: .vertical)
+                .lineLimit(2...4)
+                .dxType(.body)
+                .foregroundStyle(ground.ink)
+                .padding(14)
+                .background(DX.Fill.onColourCard(for: ground), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                .accessibilityLabel(Text("Anything to remember"))
+        } else {
+            Button { addingNote = true } label: {
+                Label("Anything to remember? · optional", systemImage: "square.and.pencil")
+                    .dxType(.footnote).foregroundStyle(ground.ink).frame(minHeight: 44)
+            }
+            .buttonStyle(.plain)
+        }
+    }
+
+    // MARK: Data
 
     private var stats: ProgressStats {
         ProgressStats(quitDay: profile.quitDay, baselines: [], clock: DayClock(boundaryHour: profile.dayBoundaryHour))
@@ -142,148 +290,7 @@ struct CheckInView: View {
         return max(clock.days(fromDate: profile.createdAt, to: .now) + 1, 1)
     }
 
-    private var prepHeader: some View {
-        let left = stats.daysUntilQuitDay(at: .now)
-        return VStack(alignment: .leading, spacing: DX.Space.xs) {
-            Text("Prep day \(prepDay) check-in · \(left) days to Quit Day").dxText(.micro)
-            Text("How did your prep go today?").dxText(.title)
-            Text("Using normally is part of prep week. No guilt, just noticing.").dxText(.subtitle)
-            HStack(spacing: DX.Space.xs) {
-                prepOption(true, title: "Mindful & observant", detail: "Noticed my triggers")
-                prepOption(false, title: "Mostly autopilot", detail: "Busy day, that's fine")
-            }
-            .padding(.top, DX.Space.xs)
-        }
-    }
-
-    private func prepOption(_ value: Bool, title: LocalizedStringKey, detail: LocalizedStringKey) -> some View {
-        let on = mindful == value
-        return Button { mindful = value } label: {
-            VStack(spacing: 2) {
-                Text(title).font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
-                    .multilineTextAlignment(.center)
-                Text(detail).dxText(.subtitle).multilineTextAlignment(.center)
-            }
-            .padding(.horizontal, DX.Space.xs)
-            .padding(.vertical, DX.Space.xs)
-            .frame(maxWidth: .infinity, minHeight: 72)
-            .background(on ? DX.Palette.accentSoft : DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .strokeBorder(on ? DX.Palette.accentInk : DX.Palette.hairline, lineWidth: on ? 1.5 : 1))
-        }
-        .buttonStyle(.plain)
-        .accessibilityAddTraits(on ? .isSelected : [])
-    }
-
-    /// What was used today, per product, with steppers for anything not logged at the time.
-    private func usedToday(_ today: [LogEntry]) -> some View {
-        VStack(alignment: .leading, spacing: DX.Space.xs) {
-            Text("Logged today").dxText(.micro).padding(.top, DX.Space.s)
-            ForEach(profile.products.map(\.product), id: \.self) { product in
-                let uses = today.filter { $0.kind != .craving && $0.product == product }
-                HStack {
-                    Text(verbatim: String(localized: product.unit).localizedCapitalized)
-                        .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
-                    Spacer()
-                    Button {
-                        if let last = uses.first { UseLog.undo(last, in: context) }
-                    } label: { Image(systemName: "minus") }
-                        .buttonStyle(.dxIcon).disabled(uses.isEmpty).accessibilityLabel(Text("One fewer"))
-                    Text(verbatim: uses.count.formatted())
-                        .font(.custom(DX.Typeface.bold, size: 20, relativeTo: .title3)).foregroundStyle(DX.Palette.text)
-                        .frame(minWidth: 36)
-                    Button { UseLog.log(product, in: context) } label: { Image(systemName: "plus") }
-                        .buttonStyle(.dxIcon).accessibilityLabel(Text("One more"))
-                }
-                .padding(.horizontal, DX.Space.s).padding(.vertical, 6)
-                .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
-                .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(DX.Palette.hairline))
-                .accessibilityElement(children: .contain)
-                .accessibilityLabel(Text("\(uses.count) \(Text(product.unit)) today"))
-            }
-        }
-    }
-
-    private func dayOption(_ value: Bool, title: LocalizedStringKey, detail: LocalizedStringKey) -> some View {
-        let on = clearDay == value
-        return Button { clearDay = value } label: {
-            VStack(spacing: 2) {
-                Text(title).font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
-                Text(detail).dxText(.subtitle)
-            }
-            .frame(maxWidth: .infinity, minHeight: 64)
-            .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .strokeBorder(on ? DX.Palette.accentInk : DX.Palette.hairline, lineWidth: on ? 1.5 : 1))
-        }
-        .buttonStyle(.plain)
-        .accessibilityAddTraits(on ? .isSelected : [])
-    }
-
-    private func moodButton(_ m: Mood) -> some View {
-        let on = mood == m
-        return Button { mood = m } label: {
-            VStack(spacing: 4) {
-                Circle().fill(on ? DX.Palette.sage : DX.Palette.track).frame(width: 22, height: 22)
-                Text(m.title).font(.custom(DX.Typeface.medium, size: 11, relativeTo: .caption2))
-                    .foregroundStyle(on ? DX.Palette.text : DX.Palette.text2)
-                    .lineLimit(1).minimumScaleFactor(0.7)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, DX.Space.xs)
-            .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .strokeBorder(on ? DX.Palette.accentInk : DX.Palette.hairline, lineWidth: on ? 1.5 : 1))
-        }
-        .buttonStyle(.plain)
-        .accessibilityLabel(Text(m.title))
-        .accessibilityAddTraits(on ? .isSelected : [])
-    }
-
-    // MARK: Done
-
-    private var done: some View {
-        let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
-        let rhythm = DailyRhythm(clock: clock)
-        let week = rhythm.weekCheckIns(checkIns.map(\.day), at: .now)
-        let day = clock.days(fromDate: profile.quitDay, to: .now) + 1
-        let letters = HeatMap.weekdayLetters
-        return VStack(spacing: DX.Space.s) {
-            Spacer()
-            Image(systemName: "moon").font(.system(size: 30)).foregroundStyle(DX.Palette.accentInk)
-                .frame(width: 76, height: 76).background(DX.Palette.accentSoft, in: Circle())
-                .accessibilityHidden(true)
-            Text(day > 0 ? "Day \(day), done" : prep ? "Prep day \(prepDay), done" : "Check-in saved").dxText(.title)
-            Text("Rest well. Tomorrow's pledge will be here in the morning.").dxText(.subtitle).multilineTextAlignment(.center)
-            DXCard(padding: 14) {
-                VStack(alignment: .leading, spacing: DX.Space.xs) {
-                    Text("This week's check-ins").dxText(.cardHeading)
-                    HStack(spacing: 4) {
-                        ForEach(0..<7, id: \.self) { i in
-                            VStack(spacing: 4) {
-                                Text(verbatim: letters[i]).dxText(.subtitle)
-                                Image(systemName: "checkmark").font(.system(size: 11, weight: .bold))
-                                    .foregroundStyle(week.indices.contains(i) && week[i] ? DX.Palette.onAccent : .clear)
-                                    .frame(width: 26, height: 26)
-                                    .background(week.indices.contains(i) && week[i] ? DX.Palette.sage : DX.Palette.track, in: Circle())
-                            }
-                            .frame(maxWidth: .infinity)
-                        }
-                    }
-                    .accessibilityElement(children: .ignore)
-                    .accessibilityLabel(Text("\(week.filter { $0 }.count) check-ins this week"))
-                }
-            }
-            .padding(.top, DX.Space.s)
-            Spacer()
-            Button("Done", action: onDone).buttonStyle(.dxPrimary)
-        }
-        .padding(.horizontal, DX.Space.m)
-        .dxReadableColumn()
-        .padding(.bottom, DX.Space.xs)
-    }
-
-    // MARK: Data
+    private var clarity: Int { prep ? CrewGrowth.prepClarity : CrewGrowth.clarity(daysClear: stats.daysClear(at: .now)) }
 
     private var todaysLogs: [LogEntry] {
         let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
@@ -291,10 +298,27 @@ struct CheckInView: View {
         return logs.prefix(200).filter { clock.day(containing: $0.timestamp) == today }
     }
 
-    private func save(defaultCount: Int, slipLogged: Bool) {
+    /// Today's most common trigger, for "a plan for after coffee tomorrow".
+    private var commonTrigger: Trigger? {
+        let triggers = todaysLogs.filter { $0.kind == .craving || $0.kind == .slip }.compactMap(\.trigger)
+        let counts = Dictionary(triggers.map { ($0, 1) }, uniquingKeysWith: +)
+        return counts.max { $0.value < $1.value }?.key ?? profile.triggers.first
+    }
+
+    /// The four drawn faces are stored on the five-point scale: Rough low, Okay okay, Good good, Proud great (decision 27).
+    private var storedMood: Mood {
+        switch mood {
+        case .rough: .low
+        case .good: .good
+        case .proud: .great
+        case .okay, nil: .okay
+        }
+    }
+
+    private func save(defaultCount: Int, slipLogged: Bool, plan: Bool) {
         let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
         let prep = prep
-        context.insert(CheckIn(day: clock.day(containing: .now), mood: mood ?? .okay, cravingCount: cravings ?? defaultCount,
+        context.insert(CheckIn(day: clock.day(containing: .now), mood: storedMood, cravingCount: cravings ?? defaultCount,
                                note: note.isEmpty ? nil : note, clearDay: prep ? true : clearDay,
                                prepMindful: prep ? mindful : nil))
         try? context.save()
@@ -306,8 +330,67 @@ struct CheckInView: View {
             Analytics.track(.slipLogged(source: "checkin"))
             stage = .slip
         } else {
-            stage = .done
+            stage = plan ? .plan : .done
         }
+    }
+}
+
+/// "Make a plan for tomorrow" after a hard day: one if-then plan, saved where Today and SOS show it.
+struct TomorrowPlan: View {
+    let profile: UserProfile
+    let onDone: () -> Void
+    @Environment(\.modelContext) private var context
+    @State private var trigger: Trigger?
+    @State private var action: String?
+
+    init(profile: UserProfile, trigger: Trigger?, onDone: @escaping () -> Void) {
+        self.profile = profile
+        self.onDone = onDone
+        _trigger = State(initialValue: trigger)
+    }
+
+    private let ground = DX.Ground.violet
+
+    var body: some View {
+        let situation = String(localized: (trigger ?? .other).situation)
+        VStack(spacing: 0) {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("One small plan").dxType(.caption).textCase(.uppercase).foregroundStyle(ground.muted)
+                    Text("For tomorrow").dxType(.large).foregroundStyle(ground.ink).accessibilityAddTraits(.isHeader)
+                    Text("What's most likely to set it off?").dxFont(16, weight: 700, style: .body).foregroundStyle(ground.ink)
+                    TriggerPicker(mine: profile.triggers, selection: $trigger, fill: DX.Fill.onColourCard(for: ground), ink: ground.ink,
+                                  selectedFill: DX.Fill.cream, selectedInk: Color(hex: 0x4A3596))
+                    Text("If it's \(situation), then I'll…").dxFont(19, weight: 700, style: .headline).foregroundStyle(ground.ink)
+                        .fixedSize(horizontal: false, vertical: true)
+                    ForEach((trigger ?? .other).nextTimeSuggestions.map { String(localized: $0) }, id: \.self) { idea in
+                        V4Chip(text: idea, isOn: action == idea, fill: DX.Fill.onColourCard(for: ground), ink: ground.ink,
+                               selectedFill: DX.Fill.cream, selectedInk: Color(hex: 0x4A3596)) { action = idea }
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, DX.Layout.gutter)
+                .padding(.top, DX.Space.xl)
+            }
+            .scrollBounceBehavior(.basedOnSize)
+            VStack(spacing: 4) {
+                Button("Save my plan") {
+                    guard let action else { return }
+                    context.insert(IfThenPlan(situation: situation, action: action))
+                    try? context.save()
+                    onDone()
+                }
+                .buttonStyle(.dx(.primary, on: ground))
+                .disabled(action == nil)
+                Button("Not tonight", action: onDone).buttonStyle(.dx(.quiet, on: ground))
+            }
+            .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+            .padding(.horizontal, DX.Layout.buttonGutter)
+            .padding(.bottom, DX.Space.xs)
+        }
+        .dxReadableColumn()
+        .background(ground.background.ignoresSafeArea())
+        .onChange(of: trigger) { _, _ in action = nil }
     }
 }
 
@@ -319,11 +402,11 @@ struct DayEndSettings: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DX.Space.xs) {
-            Text("When does your day end?").dxText(.title).padding(.top, DX.Space.xl)
-            Text("Up late? A check-in before this time still counts for the day you've just had.").dxText(.subtitle)
+            Text("When does your day end?").v4Text(.title).padding(.top, DX.Space.xl)
+            Text("Up late? A check-in before this time still counts for the day you've just had.").v4Text(.subtitle)
                 .padding(.bottom, DX.Space.s)
             ForEach(DailyRhythm.boundaryChoices, id: \.self) { hour in
-                DXOptionCard(LocalizedStringResource(stringLiteral: Self.label(hour)),
+                OnbOptionCard(LocalizedStringResource(stringLiteral: Self.label(hour)),
                              detail: hour == 4 ? "Default" : hour == 6 ? "For night shifts and late finishes" : nil,
                              isSelected: profile.dayBoundaryHour == hour) {
                     profile.dayBoundaryHour = hour
@@ -332,13 +415,13 @@ struct DayEndSettings: View {
                 }
             }
             Spacer()
-            Text("Days clear, lessons and check-ins all follow this.").dxText(.subtitle).frame(maxWidth: .infinity)
-            Button("Done") { dismiss() }.buttonStyle(.dxPrimary)
+            Text("Days clear, lessons and check-ins all follow this.").v4Text(.subtitle).frame(maxWidth: .infinity)
+            Button("Done") { dismiss() }.buttonStyle(.dx(.primary, on: .reading))
         }
         .padding(.horizontal, DX.Space.m)
         .dxReadableColumn()
         .padding(.bottom, DX.Space.xs)
-        .dxCanvas()
+        .background(Read4.background.ignoresSafeArea())
     }
 
     static func label(_ hour: Int) -> String {
