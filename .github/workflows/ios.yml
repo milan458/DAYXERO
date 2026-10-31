@@ -108,7 +108,8 @@ jobs:
             xcrun simctl ui "$UDID" content_size "$size"
             xcrun simctl terminate "$UDID" in.dayxero.app 2>/dev/null || true
             xcrun simctl launch "$UDID" in.dayxero.app "$@"
-            sleep 5
+            # Screens shown over Today (SOS, Pledge) need longer to open: WAIT=9 shoot ….
+            sleep "${WAIT:-5}"
             for try in 1 2 3 4 5; do
               xcrun simctl io "$UDID" screenshot "shots/$name.png" > /dev/null 2>&1
               drawn "shots/$name.png" && return
@@ -140,14 +141,14 @@ jobs:
           shoot light large v4-today-lower-light -dx.homeScenario day3 -dx.store pro -dx.todaySlot morning -dx.homeScroll lower
           SOS4="-dx.homeScenario day3 -dx.store pro -dx.sos YES"
           for mode in light dark; do
-            shoot $mode large "v4-sos-$mode" $SOS4 -dx.sosElapsed 52
-            shoot $mode large "v4-sos-passed-$mode" $SOS4 -dx.sosOutcome passed
-            shoot $mode large "v4-sos-slip-$mode" $SOS4 -dx.sosOutcome slipped
+            WAIT=9 shoot $mode large "v4-sos-$mode" $SOS4 -dx.sosElapsed 52
+            WAIT=9 shoot $mode large "v4-sos-passed-$mode" $SOS4 -dx.sosOutcome passed
+            WAIT=9 shoot $mode large "v4-sos-slip-$mode" $SOS4 -dx.sosOutcome slipped
           done
-          shoot light accessibility-extra-extra-extra-large v4-sos-light-ax5 $SOS4 -dx.sosElapsed 52
+          WAIT=9 shoot light accessibility-extra-extra-extra-large v4-sos-light-ax5 $SOS4 -dx.sosElapsed 52
           shoot light large v4-slip-done-light -dx.homeScenario day12 -dx.store pro -dx.logSheet slip -dx.slipStage done
-          shoot light large v4-pledge-light -dx.homeScenario day3 -dx.store pro -dx.openPledge YES
-          shoot dark large v4-pledge-dark -dx.homeScenario day3 -dx.store pro -dx.openPledge YES
+          WAIT=9 shoot light large v4-pledge-light -dx.homeScenario day3 -dx.store pro -dx.openPledge YES
+          WAIT=9 shoot dark large v4-pledge-dark -dx.homeScenario day3 -dx.store pro -dx.openPledge YES
           shoot light large v4-today-yourday-light -dx.homeScenario day3 -dx.store pro -dx.todaySlot morning -dx.forceDaily pledge -dx.homeScroll lower
           BRANCH=ci-screens
           if [ "${{ inputs.v4_only }}" = "true" ]; then

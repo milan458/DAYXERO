@@ -156,13 +156,10 @@ struct CravingSOSView: View {
 
     private var actions: some View {
         VStack(spacing: 8) {
-            HStack(spacing: 8) {
-                Button("It passed") { finish(.passed) }
-                    .buttonStyle(.dx(.primary, on: .ocean))
-                // More help when the wave is strong: the calm tools (decision 26).
-                Button("Still strong") { showCalmTools = true }
-                    .buttonStyle(SolidPill())
-                    .fixedSize(horizontal: true, vertical: false)
+            // Side by side, or stacked when the text is too large for one row.
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 8) { passedButton; strongButton.fixedSize(horizontal: true, vertical: false) }
+                VStack(spacing: 8) { passedButton; strongButton.frame(maxWidth: .infinity) }
             }
             HStack(spacing: 6) {
                 ShareLink(item: String(localized: "Having a craving right now. Could you talk for five minutes?")) {
@@ -177,6 +174,19 @@ struct CravingSOSView: View {
         .dynamicTypeSize(...DynamicTypeSize.accessibility2)
         .padding(.horizontal, DX.Layout.gutter)
         .padding(.bottom, DX.Space.xs)
+    }
+
+    private var passedButton: some View {
+        Button("It passed") { finish(.passed) }
+            .buttonStyle(.dx(.primary, on: .ocean))
+            .lineLimit(1)
+    }
+
+    /// More help when the wave is strong: the calm tools (decision 26).
+    private var strongButton: some View {
+        Button("Still strong") { showCalmTools = true }
+            .buttonStyle(SolidPill())
+            .lineLimit(1)
     }
 
     // MARK: Your why
