@@ -315,7 +315,7 @@ struct SlipFlow: View {
         switch value {
         case .aLittle: product == .cigarettes ? String(localized: "A few drags") : product == .pouches ? String(localized: "Briefly") : String(localized: "A few puffs")
         case .one: product == .cigarettes ? String(localized: "One") : product == .pouches ? String(localized: "One pouch") : String(localized: "One session")
-        default: String(localized: "More")
+        case .more: String(localized: "More")
         }
     }
 
