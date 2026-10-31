@@ -14,24 +14,24 @@ struct NRTCard: View {
     var body: some View {
         let schedule = StepSchedule(startDate: plan.startDate, steps: plan.steps, clock: clock)
         let current = schedule.current(at: now)
-        DXCard(padding: 14) {
+        V4Card(padding: 14) {
             VStack(alignment: .leading, spacing: DX.Space.xs) {
                 HStack(spacing: DX.Space.s) {
                     Image(systemName: Self.icon(plan.type))
                         .font(.system(size: 17))
-                        .foregroundStyle(DX.Palette.accentInk)
+                        .foregroundStyle(Read4.accent)
                         .frame(width: 38, height: 38)
-                        .background(DX.Palette.accentSoft, in: Circle())
+                        .background(Read4.accentSoft, in: Circle())
                     // The product's icon says it's NRT; the line says what this week is (S18.10).
                     VStack(alignment: .leading, spacing: 1) {
                         Text(verbatim: headline(schedule, current: current))
-                            .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
+                            .dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.ink)
                     }
                 }
                 if let current {
                     let stepDays = max(current.step.weeks * 7, 1)
                     let into = (clock.calendar.dateComponents([.day], from: current.start, to: clock.day(containing: now)).day ?? 0) + 1
-                    DXProgressBar(value: Double(into) / Double(stepDays))
+                    V4ProgressBar(value: Double(into) / Double(stepDays))
                     HStack {
                         Text("Day \(into) of \(stepDays)")
                         Spacer()
@@ -41,13 +41,13 @@ struct NRTCard: View {
                             Text("Last step")
                         }
                     }
-                    .dxText(.subtitle)
-                    if let note = current.step.note { Text(verbatim: note).dxText(.subtitle) }
+                    .v4Text(.subtitle)
+                    if let note = current.step.note { Text(verbatim: note).v4Text(.subtitle) }
                     if plan.type == .patch, !showAllSteps { patchCheck }
                 } else if !schedule.hasStarted(at: now), let start = schedule.start {
-                    Text("Starts \(start.formatted(.dateTime.weekday(.wide).day().month()))").dxText(.subtitle)
+                    Text("Starts \(start.formatted(.dateTime.weekday(.wide).day().month()))").v4Text(.subtitle)
                 } else {
-                    Text("Plan finished. Well done for seeing it through.").dxText(.subtitle)
+                    Text("Plan finished. Well done for seeing it through.").v4Text(.subtitle)
                 }
                 if showAllSteps {
                     VStack(spacing: 0) {
@@ -56,7 +56,7 @@ struct NRTCard: View {
                         }
                     }
                     .padding(.top, DX.Space.xxs)
-                    Text("Follow the label on your pack and ask a pharmacist or doctor.").dxText(.subtitle)
+                    Text("Follow the label on your pack and ask a pharmacist or doctor.").v4Text(.subtitle)
                 }
             }
         }
@@ -79,7 +79,7 @@ struct NRTCard: View {
             Label(done ? "Patch on today" : "Mark patch on", systemImage: done ? "checkmark.circle.fill" : "circle")
                 .frame(maxWidth: .infinity)
         }
-        .buttonStyle(.dxSecondary)
+        .buttonStyle(.v4Secondary)
         .sensoryFeedback(DX.Haptic.select, trigger: done)
         .accessibilityAddTraits(done ? .isSelected : [])
     }
@@ -102,23 +102,23 @@ struct TaperCard: View {
 
     var body: some View {
         let schedule = StepSchedule(startDate: taper.startDate, steps: taper.steps, clock: clock)
-        DXCard(padding: 14) {
+        V4Card(padding: 14) {
             VStack(alignment: .leading, spacing: DX.Space.xs) {
-                Text("Your pouch taper").dxText(.cardHeading)
+                Text("Your pouch taper").v4Text(.cardHeading)
                 if let current = schedule.current(at: now) {
                     Text("\(NRTReminderPlan.strength(current.step.strengthMg)) this week · step \(current.index + 1) of \(schedule.spans.count)")
-                        .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
+                        .dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.ink)
                     if let next = schedule.next(after: current) {
-                        Text("\(NRTReminderPlan.strength(next.step.strengthMg)) from \(next.start.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)))").dxText(.subtitle)
+                        Text("\(NRTReminderPlan.strength(next.step.strengthMg)) from \(next.start.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)))").v4Text(.subtitle)
                     } else {
-                        Text("Then Quit Day").dxText(.subtitle)
+                        Text("Then Quit Day").v4Text(.subtitle)
                     }
                 } else if let start = schedule.start, !schedule.hasStarted(at: now) {
                     Text("Starts \(start.formatted(.dateTime.weekday(.wide).day().month()))")
-                        .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
+                        .dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.ink)
                 } else {
-                    Text("Taper done. Quit Day is next.").font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body))
-                        .foregroundStyle(DX.Palette.text)
+                    Text("Taper done. Quit Day is next.").dxFont(16, weight: 600, style: .body)
+                        .foregroundStyle(Read4.ink)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -184,17 +184,17 @@ struct TaperSetupView: View {
                 Button(action: onDone) { Image(systemName: "xmark") }
                     .buttonStyle(.dxIcon).accessibilityLabel(Text("Close"))
                 Spacer()
-                Text("Optional").dxText(.micro)
+                Text("Optional").v4Text(.micro)
                 Spacer()
                 Color.clear.frame(width: DX.Size.iconButton, height: 1)
             }
             .padding(.top, DX.Space.s)
             ScrollView {
                 VStack(alignment: .leading, spacing: DX.Space.xs) {
-                    Text("Step down your pouches").dxText(.title)
-                    Text("Lower the strength before Quit Day, so stopping feels smaller.").dxText(.subtitle)
+                    Text("Step down your pouches").v4Text(.title)
+                    Text("Lower the strength before Quit Day, so stopping feels smaller.").v4Text(.subtitle)
                     StrengthBars(steps: steps)
-                    DXCard(padding: 14) {
+                    V4Card(padding: 14) {
                         VStack(spacing: 0) {
                             ForEach(schedule.spans, id: \.index) { span in
                                 Button { editing = span.index } label: { StepRow(span: span, type: nil, highlighted: span.index == 0) }
@@ -203,21 +203,21 @@ struct TaperSetupView: View {
                         }
                     }
                     if fits {
-                        Text("Ends the day before Quit Day, \(profile.quitDay.formatted(.dateTime.weekday(.wide).day().month())).").dxText(.subtitle)
+                        Text("Ends the day before Quit Day, \(profile.quitDay.formatted(.dateTime.weekday(.wide).day().month())).").v4Text(.subtitle)
                     } else {
                         fitNotice(clock: clock)
                     }
                     Toggle("Remind me the evening before each step", isOn: $remindersOn)
-                        .font(DX.TextStyle.subtitle.font)
-                        .tint(DX.Palette.sage)
+                        .dxFont(14, weight: 400, style: .footnote)
+                        .tint(Read4.accent)
                         .padding(.top, DX.Space.xs)
                     Text("Pouches aren't NRT, so there's no label for this. It's a plan you set; change any step to suit the strengths you can buy.")
-                        .dxText(.subtitle)
+                        .v4Text(.subtitle)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
             .scrollBounceBehavior(.basedOnSize)
-            Button("Save my taper") { save(start: start) }.buttonStyle(.dxPrimary).disabled(!fits)
+            Button("Save my taper") { save(start: start) }.buttonStyle(.dx(.primary, on: .reading)).disabled(!fits)
             if profile.pouchTaper != nil {
                 Button("Remove the taper", role: .destructive) {
                     profile.pouchTaper = nil
@@ -225,13 +225,13 @@ struct TaperSetupView: View {
                     NRTReminders.refresh(profile: profile)
                     onDone()
                 }
-                .buttonStyle(.dxQuiet)
+                .buttonStyle(.dx(.quiet, on: .reading))
             }
         }
         .padding(.horizontal, DX.Space.m)
         .dxReadableColumn()
         .padding(.bottom, DX.Space.xs)
-        .dxCanvas()
+        .background(Read4.background.ignoresSafeArea())
         .sensoryFeedback(DX.Haptic.commit, trigger: saved)
         .sheet(item: Binding(get: { editing.map { EditIndex(id: $0) } }, set: { editing = $0?.id })) { item in
             if steps.indices.contains(item.id) {
@@ -248,16 +248,16 @@ struct TaperSetupView: View {
     /// When the taper doesn't fit: shorten it, or move Quit Day yourself. Nothing moves on its own.
     private func fitNotice(clock: DayClock) -> some View {
         let newQuit = PouchTaperPlan.quitDayToFit(steps: steps, now: .now, clock: clock)
-        return DXCard(padding: 14) {
+        return V4Card(padding: 14) {
             VStack(alignment: .leading, spacing: DX.Space.xs) {
                 Text("This taper needs \(steps.reduce(0) { $0 + $1.weeks }) weeks, and Quit Day is sooner than that.")
-                    .font(DX.TextStyle.subtitle.font).foregroundStyle(DX.Palette.text)
-                Text("Shorten the steps, or move Quit Day if you'd like the full taper.").dxText(.subtitle)
+                    .dxFont(14, weight: 400, style: .footnote).foregroundStyle(Read4.ink)
+                Text("Shorten the steps, or move Quit Day if you'd like the full taper.").v4Text(.subtitle)
                 Button("Move Quit Day to \(newQuit.formatted(.dateTime.weekday(.abbreviated).day().month()))") {
                     profile.quitDay = newQuit
                     try? context.save()
                 }
-                .buttonStyle(.dxSecondary)
+                .buttonStyle(.v4Secondary)
             }
         }
     }
@@ -285,22 +285,22 @@ private struct StrengthBars: View {
 
     var body: some View {
         let most = max(steps.map(\.strengthMg).max() ?? 1, 1)
-        DXCard(padding: 14) {
+        V4Card(padding: 14) {
             VStack(alignment: .leading, spacing: DX.Space.xs) {
-                Text("Strength by step").dxText(.cardHeading)
+                Text("Strength by step").v4Text(.cardHeading)
                 HStack(alignment: .bottom, spacing: DX.Space.xs) {
                     ForEach(Array(steps.enumerated()), id: \.offset) { i, step in
                         VStack(spacing: 4) {
                             RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                .fill(i == 0 ? DX.Palette.sage : DX.Palette.track)
+                                .fill(i == 0 ? Read4.accent : Read4.track)
                                 .frame(height: max(6, 72 * step.strengthMg / most))
-                            Text(verbatim: NRTReminderPlan.strength(step.strengthMg)).dxText(.subtitle)
+                            Text(verbatim: NRTReminderPlan.strength(step.strengthMg)).v4Text(.subtitle)
                         }
                         .frame(maxWidth: .infinity)
                     }
                     VStack(spacing: 4) {
-                        RoundedRectangle(cornerRadius: 3).fill(DX.Palette.track).frame(height: 3)
-                        Text("Quit Day").dxText(.subtitle).lineLimit(1).minimumScaleFactor(0.8)
+                        RoundedRectangle(cornerRadius: 3).fill(Read4.track).frame(height: 3)
+                        Text("Quit Day").v4Text(.subtitle).lineLimit(1).minimumScaleFactor(0.8)
                     }
                     .frame(maxWidth: .infinity)
                 }

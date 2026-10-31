@@ -291,7 +291,7 @@ private struct NoteCallout: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(heading).v4Text(.micro, color: Read4.accent)
-            Text(text).font(DX.TextStyle.subtitle.font).foregroundStyle(Read4.ink)
+            Text(text).dxFont(14, weight: 400, style: .footnote).foregroundStyle(Read4.ink)
         }
         .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)

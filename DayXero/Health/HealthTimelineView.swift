@@ -59,7 +59,7 @@ struct HealthTimelineView: View {
                 .padding(.bottom, DX.Space.xxl)
             }
         }
-        .dxCanvas()
+        .background(Read4.background.ignoresSafeArea())
         .sheet(item: $open) { item in
             let elapsed = HealthTimeline.elapsedHours(quitDay: profile.quitDay, now: .now,
                                                       clock: DayClock(boundaryHour: profile.dayBoundaryHour))
@@ -78,12 +78,12 @@ struct HealthTimelineView: View {
             VStack(alignment: .leading, spacing: 2) {
                 if elapsed < 0 {
                     let days = clock.days(from: now, toDate: profile.quitDay)
-                    Text("Quit Day in \(days) days").dxText(.micro)
+                    Text("Quit Day in \(days) days").v4Text(.micro)
                 } else {
                     let day = clock.days(fromDate: profile.quitDay, to: now) + 1
-                    Text("Day \(day) · since \(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).day().month()))").dxText(.micro)
+                    Text("Day \(day) · since \(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).day().month()))").v4Text(.micro)
                 }
-                Text("Your body").dxText(.title).accessibilityAddTraits(.isHeader)
+                Text("Your body").v4Text(.title).accessibilityAddTraits(.isHeader)
             }
             Spacer()
             if let onClose {
@@ -111,30 +111,30 @@ struct HealthTimelineView: View {
             HStack(spacing: DX.Space.m) {
                 HealthBadge(id: item.id, state: before ? .underWay(0) : state, size: 80, showsRing: !before)
                     .padding(8)
-                    .background(DX.Palette.surface1, in: Circle())
+                    .background(Read4.card, in: Circle())
                     .padding(before ? 0 : 6)
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(verbatim: eyebrow).dxText(.micro, color: DX.Palette.accentInk)
+                    Text(verbatim: eyebrow).v4Text(.micro, color: Read4.accent)
                     Text(verbatim: item.title)
-                        .font(.custom(DX.Typeface.semibold, size: 18, relativeTo: .headline)).foregroundStyle(DX.Palette.text)
+                        .dxFont(19, weight: 600, style: .headline).foregroundStyle(Read4.ink)
                         .multilineTextAlignment(.leading)
                     if before {
                         Text("Your timeline starts on Quit Day, \(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).day().month())).")
-                            .dxText(.subtitle).multilineTextAlignment(.leading)
+                            .v4Text(.subtitle).multilineTextAlignment(.leading)
                     } else if case let .underWay(fraction) = state {
-                        DXProgressBar(value: fraction).padding(.top, 4)
+                        V4ProgressBar(value: fraction).padding(.top, 4)
                         Text("\(Int((fraction * 100).rounded()))% · done \(TodayView.relative(hours: item.toHours - elapsed))")
-                            .dxText(.subtitle)
+                            .v4Text(.subtitle)
                     } else if !item.line.isEmpty {
-                        Text(verbatim: item.line).dxText(.subtitle).multilineTextAlignment(.leading)
+                        Text(verbatim: item.line).v4Text(.subtitle).multilineTextAlignment(.leading)
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
             .padding(DX.Space.m)
-            .background(LinearGradient(colors: [DX.Palette.accentSoft, DX.Palette.surface1], startPoint: .topLeading, endPoint: .bottomTrailing),
+            .background(LinearGradient(colors: [Read4.accentSoft, Read4.card], startPoint: .topLeading, endPoint: .bottomTrailing),
                         in: RoundedRectangle(cornerRadius: 28, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 28, style: .continuous).strokeBorder(DX.Palette.hairline))
+            .overlay(RoundedRectangle(cornerRadius: 28, style: .continuous).strokeBorder(Read4.hairline))
         }
         .buttonStyle(.plain)
         .accessibilityElement(children: .combine)
@@ -147,17 +147,17 @@ struct HealthTimelineView: View {
                 let on = p == product
                 Button { product = p } label: {
                     Text(label(p))
-                        .font(.custom(DX.Typeface.semibold, size: 12, relativeTo: .caption))
-                        .foregroundStyle(on ? DX.Palette.onPrimary : DX.Palette.text2)
+                        .dxFont(12, weight: 600, style: .caption1)
+                        .foregroundStyle(on ? Read4.onInk : Read4.muted)
                         .padding(.vertical, 6).padding(.horizontal, 14)
-                        .background(on ? DX.Palette.primary : .clear, in: Capsule())
+                        .background(on ? Read4.ink : .clear, in: Capsule())
                 }
                 .buttonStyle(.plain)
                 .accessibilityAddTraits(on ? .isSelected : [])
             }
         }
         .padding(3)
-        .background(DX.Palette.surface2, in: Capsule())
+        .background(Read4.surface, in: Capsule())
         .padding(.bottom, DX.Space.xs)
         .sensoryFeedback(DX.Haptic.select, trigger: product)
     }
@@ -176,19 +176,19 @@ struct HealthTimelineView: View {
         let list = timeline?.sources(for: product) ?? []
         let looks = timeline?.items(for: product).contains(where: \.isLooks) ?? false
         VStack(alignment: .leading, spacing: 6) {
-            Text("Sources").dxText(.micro)
+            Text("Sources").v4Text(.micro)
             ForEach(list, id: \.url) { source in
                 Link(destination: source.url) {
-                    Text(verbatim: source.title).font(.custom(DX.Typeface.regular, size: 12, relativeTo: .caption))
-                        .underline().foregroundStyle(DX.Palette.accentInk).multilineTextAlignment(.leading)
+                    Text(verbatim: source.title).dxFont(12, weight: 400, style: .caption1)
+                        .underline().foregroundStyle(Read4.accent).multilineTextAlignment(.leading)
                 }
             }
             if looks {
                 Text("Looks changes (lips, skin, hair, taste, breath, sleep) are general wellness information about how nicotine and smoke affect blood flow and skin.")
-                    .font(.custom(DX.Typeface.regular, size: 12, relativeTo: .caption)).foregroundStyle(DX.Palette.muted)
+                    .dxFont(12, weight: 400, style: .caption1).foregroundStyle(Read4.muted)
             }
             Text("Everyone's body moves at its own pace, and a slip doesn't undo what's already healed. Not medical advice.")
-                .font(.custom(DX.Typeface.regular, size: 12, relativeTo: .caption)).foregroundStyle(DX.Palette.muted)
+                .dxFont(12, weight: 400, style: .caption1).foregroundStyle(Read4.muted)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.top, DX.Space.m)
@@ -197,11 +197,11 @@ struct HealthTimelineView: View {
 
     private func note(_ text: String) -> some View {
         Text(verbatim: text)
-            .dxText(.subtitle)
+            .v4Text(.subtitle)
             .padding(DX.Space.s)
             .frame(maxWidth: .infinity, alignment: .leading)
             .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .strokeBorder(DX.Palette.faint, style: StrokeStyle(lineWidth: 1, dash: [4, 4])))
+                .strokeBorder(Read4.faint, style: StrokeStyle(lineWidth: 1, dash: [4, 4])))
             .padding(.vertical, DX.Space.xxs)
     }
 }
@@ -243,7 +243,7 @@ struct HealthPathStop: View {
             p.move(to: CGPoint(x: x, y: from))
             p.addLine(to: CGPoint(x: x, y: to))
         }
-        .stroke(solid ? DX.Palette.sage : DX.Palette.faint,
+        .stroke(solid ? Read4.accent : Read4.faint,
                 style: StrokeStyle(lineWidth: solid ? 3 : 2.5, lineCap: .round, dash: solid ? [] : [0.5, 7]))
     }
 }
@@ -256,25 +256,25 @@ struct HealthItemCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack(alignment: .center) {
-                Text(verbatim: item.when).dxText(.micro)
+                Text(verbatim: item.when).v4Text(.micro)
                 Spacer(minLength: DX.Space.xs)
                 badge
             }
-            Text(verbatim: item.title).font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
+            Text(verbatim: item.title).dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.ink)
                 .multilineTextAlignment(.leading)
             if !item.line.isEmpty {
-                Text(verbatim: item.line).dxText(.subtitle).multilineTextAlignment(.leading)
+                Text(verbatim: item.line).v4Text(.subtitle).multilineTextAlignment(.leading)
             }
             if case let .underWay(fraction) = state {
-                DXProgressBar(value: fraction).padding(.top, 4)
+                V4ProgressBar(value: fraction).padding(.top, 4)
             }
         }
         .padding(.vertical, 14)
         .padding(.horizontal, DX.Space.m)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
+        .background(Read4.card, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
         .overlay(RoundedRectangle(cornerRadius: 28, style: .continuous)
-            .strokeBorder(state == .done ? DX.Palette.sage.opacity(0.45) : DX.Palette.hairline))
+            .strokeBorder(state == .done ? Read4.accent.opacity(0.45) : Read4.hairline))
         .opacity(state == .ahead ? 0.62 : 1)
         .accessibilityElement(children: .combine)
         .accessibilityValue(Text(stateText))
@@ -283,13 +283,13 @@ struct HealthItemCard: View {
 
     private var badge: some View {
         Text(stateText)
-            .font(.custom(DX.Typeface.bold, size: 10, relativeTo: .caption2))
+            .dxFont(12, weight: 700, style: .caption2)
             .tracking(0.6)
             .textCase(.uppercase)
             .lineLimit(1)
-            .foregroundStyle(state == .done ? DX.Palette.onAccent : isUnderWay ? DX.Palette.onPrimary : DX.Palette.muted)
+            .foregroundStyle(state == .done ? DX.Fill.cream : isUnderWay ? Read4.onInk : Read4.muted)
             .padding(.vertical, 3).padding(.horizontal, 8)
-            .background(state == .done ? DX.Palette.sage : isUnderWay ? DX.Palette.primary : DX.Palette.track, in: Capsule())
+            .background(state == .done ? Read4.accent : isUnderWay ? Read4.ink : Read4.track, in: Capsule())
             .fixedSize()
     }
 
@@ -321,30 +321,30 @@ struct HealthItemDetail: View {
             VStack(alignment: .leading, spacing: DX.Space.m) {
                 hero(state)
                 VStack(spacing: 6) {
-                    Text(verbatim: eyebrow(state)).dxText(.micro, color: state == .ahead ? DX.Palette.muted : DX.Palette.accentInk)
-                    Text(verbatim: item.title).dxText(.title).multilineTextAlignment(.center)
+                    Text(verbatim: eyebrow(state)).v4Text(.micro, color: state == .ahead ? Read4.muted : Read4.accent)
+                    Text(verbatim: item.title).v4Text(.title).multilineTextAlignment(.center)
                     if let status = status(state) {
-                        Text(verbatim: status).dxText(.subtitle).multilineTextAlignment(.center)
+                        Text(verbatim: status).v4Text(.subtitle).multilineTextAlignment(.center)
                     }
                 }
                 .frame(maxWidth: .infinity)
                 ForEach(item.paragraphs, id: \.self) { paragraph in
                     Text(verbatim: paragraph)
-                        .font(.custom(DX.Typeface.regular, size: 17, relativeTo: .body)).lineSpacing(5)
-                        .foregroundStyle(DX.Palette.text.opacity(0.86))
+                        .dxFont(16, weight: 400, style: .body).lineSpacing(5)
+                        .foregroundStyle(Read4.ink.opacity(0.86))
                 }
                 if let notice = item.notice, !notice.isEmpty {
                     VStack(alignment: .leading, spacing: DX.Space.s) {
-                        Text("What you might notice").dxText(.micro)
+                        Text("What you might notice").v4Text(.micro)
                         ForEach(notice, id: \.self) { line in
                             HStack(spacing: DX.Space.s) {
                                 Image(systemName: "sparkle").font(.system(size: 13, weight: .semibold))
-                                    .foregroundStyle(DX.Palette.accentInk)
+                                    .foregroundStyle(Read4.accent)
                                     .frame(width: 34, height: 34)
                                     .background(HealthBadge.tint(for: item.id), in: Circle())
                                     .accessibilityHidden(true)
-                                Text(verbatim: line).font(.custom(DX.Typeface.regular, size: 15, relativeTo: .body))
-                                    .foregroundStyle(DX.Palette.text)
+                                Text(verbatim: line).dxFont(16, weight: 400, style: .body)
+                                    .foregroundStyle(Read4.ink)
                             }
                         }
                     }
@@ -352,13 +352,13 @@ struct HealthItemDetail: View {
                 }
                 if let helps = item.helps {
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("Help it along").dxText(.micro, color: DX.Palette.accentInk)
-                        Text(verbatim: helps).font(.custom(DX.Typeface.regular, size: 15, relativeTo: .body))
-                            .foregroundStyle(DX.Palette.text)
+                        Text("Help it along").v4Text(.micro, color: Read4.accent)
+                        Text(verbatim: helps).dxFont(16, weight: 400, style: .body)
+                            .foregroundStyle(Read4.ink)
                     }
                     .padding(DX.Space.m)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(DX.Palette.accentSoft, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+                    .background(Read4.accentSoft, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
                     .accessibilityElement(children: .combine)
                 }
                 footer
@@ -367,7 +367,7 @@ struct HealthItemDetail: View {
             .dxReadableColumn()
             .padding(.bottom, DX.Space.l)
         }
-        .dxCanvas()
+        .background(Read4.background.ignoresSafeArea())
     }
 
     private func hero(_ state: HealthTimeline.State) -> some View {
@@ -408,15 +408,15 @@ struct HealthItemDetail: View {
         VStack(alignment: .leading, spacing: 4) {
             if let source {
                 Link(destination: source.url) {
-                    Text(verbatim: source.title).font(.custom(DX.Typeface.regular, size: 12, relativeTo: .caption))
-                        .underline().foregroundStyle(DX.Palette.accentInk).multilineTextAlignment(.leading)
+                    Text(verbatim: source.title).dxFont(12, weight: 400, style: .caption1)
+                        .underline().foregroundStyle(Read4.accent).multilineTextAlignment(.leading)
                 }
             } else if item.isLooks {
-                Text("General wellness information.").font(.custom(DX.Typeface.regular, size: 12, relativeTo: .caption))
-                    .foregroundStyle(DX.Palette.muted)
+                Text("General wellness information.").dxFont(12, weight: 400, style: .caption1)
+                    .foregroundStyle(Read4.muted)
             }
             Text("Everyone's body moves at its own pace, and a slip doesn't undo what's already healed. Not medical advice.")
-                .font(.custom(DX.Typeface.regular, size: 12, relativeTo: .caption)).foregroundStyle(DX.Palette.muted)
+                .dxFont(12, weight: 400, style: .caption1).foregroundStyle(Read4.muted)
         }
         .padding(.top, DX.Space.xs)
     }
@@ -445,23 +445,23 @@ struct HealthSummaryCard: View {
                     .padding(current != nil ? 4 : 0)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(verbatim: featured?.title ?? "")
-                        .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
+                        .dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.ink)
                         .multilineTextAlignment(.leading)
                     if elapsed < 0 {
-                        Text("What changes in your body, from Quit Day").dxText(.subtitle)
+                        Text("What changes in your body, from Quit Day").v4Text(.subtitle)
                     } else if let next {
-                        Text("\(done) done · next: \(next.title.prefix(1).lowercased() + String(next.title.dropFirst()))").dxText(.subtitle)
+                        Text("\(done) done · next: \(next.title.prefix(1).lowercased() + String(next.title.dropFirst()))").v4Text(.subtitle)
                             .multilineTextAlignment(.leading)
                     } else {
-                        Text("\(done) done").dxText(.subtitle)
+                        Text("\(done) done").v4Text(.subtitle)
                     }
                 }
                 Spacer(minLength: DX.Space.xs)
-                Image(systemName: "chevron.right").font(.system(size: 13, weight: .semibold)).foregroundStyle(DX.Palette.muted)
+                Image(systemName: "chevron.right").font(.system(size: 13, weight: .semibold)).foregroundStyle(Read4.muted)
             }
             .padding(14)
-            .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 28, style: .continuous).strokeBorder(DX.Palette.hairline))
+            .background(Read4.card, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 28, style: .continuous).strokeBorder(Read4.hairline))
         }
         .buttonStyle(.plain)
         .accessibilityElement(children: .combine)
