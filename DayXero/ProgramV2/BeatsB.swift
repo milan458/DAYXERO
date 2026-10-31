@@ -238,82 +238,120 @@ struct CommitBeat: View {
     let onDone: () -> Void
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @State private var progress = 0.0
-    @State private var pressing = false
     @State private var doneAt: Date?
-    @State private var pulse = 0
+    @State private var settled = false
 
     private var seconds: Double { Double(beat.holdSeconds ?? 2) }
+    /// DX.2 starts the counter: Q1, Xero at dawn on apricot (design doc §10.2). No celebration here.
+    private var startsDayXero: Bool { beat.sets == "quit_timestamp" }
 
     var body: some View {
+        if startsDayXero { dayXero } else { plain }
+    }
+
+    /// Any other commitment: the words, then the hold (v4 hold button with a linear fill).
+    private var plain: some View {
         VStack(spacing: DX.Space.l) {
             Spacer()
             Text(verbatim: doneAt == nil ? ctx.text(beat.text) : String(localized: "Committed."))
-                .dxFont(24, weight: 700, style: .title2)
+                .dxType(.title)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(Read4.ink)
-            ZStack {
-                Circle().stroke(Read4.track, lineWidth: 13)
-                Circle().trim(from: 0, to: doneAt == nil ? progress : 1)
-                    .stroke(Read4.accent, style: StrokeStyle(lineWidth: 13, lineCap: .round))
-                    .rotationEffect(.degrees(-90))
-                if let doneAt {
-                    VStack(spacing: 6) {
-                        Image(systemName: "checkmark").font(.system(size: 40, weight: .semibold)).foregroundStyle(Read4.accent)
-                        Text("Done on").dxFont(16, weight: 600, style: .body)
-                        Text(doneAt, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)).v4Text(.subtitle)
-                    }
-                    .frame(width: 184, height: 184)
-                    .background(Read4.accentSoft, in: Circle())
-                } else {
-                    VStack(spacing: 8) {
-                        Image(systemName: "hand.point.up.left").font(.system(size: 28))
-                        Text(pressing ? "Keep holding" : "Press and hold").dxFont(16, weight: 600, style: .body)
-                    }
-                    .foregroundStyle(Read4.onInk)
-                    .frame(width: 184, height: 184)
-                    .background(Read4.ink, in: Circle())
-                    .scaleEffect(pressing && !reduceMotion ? 0.96 : 1)
-                    .onLongPressGesture(minimumDuration: seconds, maximumDistance: 40) {
-                        commit()
-                    } onPressingChanged: { down in
-                        pressing = down
-                        withAnimation(down ? .linear(duration: seconds) : .easeOut(duration: 0.3)) { progress = down ? 1 : 0 }
-                    }
+                .fixedSize(horizontal: false, vertical: true)
+            if let doneAt {
+                Label {
+                    Text("Done on \(doneAt.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)))")
+                } icon: {
+                    Image(systemName: "checkmark.circle.fill").foregroundStyle(Read4.accent)
                 }
+                .dxType(.footnote).foregroundStyle(Read4.muted)
             }
-            .frame(width: 210, height: 210)
-            .accessibilityElement(children: .ignore)
-            .accessibilityLabel(Text(verbatim: ctx.text(beat.text)))
-            .accessibilityValue(Text(doneAt == nil ? "Not done" : "Done"))
-            .accessibilityAction(named: Text("Commit")) { commit() }
-            Text(doneAt == nil ? "\(Int(seconds)) seconds" : "").v4Text(.subtitle)
             Spacer()
-            if doneAt != nil {
+            if doneAt == nil {
+                HoldButton(String(localized: "Hold to commit"), done: String(localized: "Committed ✓"),
+                           duration: seconds, on: .reading, action: commit)
+                    .accessibilityLabel(Text(verbatim: ctx.text(beat.text)))
+                Text("Hold for \(Int(seconds)) seconds").v4Text(.subtitle)
+            } else {
                 Button("Continue", action: onDone).buttonStyle(.dx(.primary, on: .reading))
             }
         }
-        .sensoryFeedback(.impact(weight: .medium, intensity: 0.4 + 0.15 * Double(pulse)), trigger: pulse)
         .sensoryFeedback(DX.Haptic.commit, trigger: doneAt)
-        .task(id: pressing) {
-            // Haptics rise while the ring fills.
-            pulse = 0
-            while pressing, !Task.isCancelled, pulse < 4 {
-                try? await Task.sleep(for: .seconds(seconds / 4))
-                if pressing { pulse += 1 }
+        .onAppear(perform: restore)
+    }
+
+    /// Q1 Day Xero: the dawn at Day 1's clarity, Xero 200 settling in, the date and session line, your reason,
+    /// and a three-second hold that ends on "Day Xero started ✓".
+    private var dayXero: some View {
+        let ground = DX.Ground.apricot
+        let session = ctx.session
+        let reasons = ctx.store.profile.reasons.sorted { $0.createdAt < $1.createdAt }
+        let reason = reasons.first { $0.photo == nil } ?? reasons.first
+        return VStack(spacing: 0) {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 10) {
+                    ZStack(alignment: .bottom) {
+                        HorizonScene(.dawn, clarity: CrewGrowth.clarity(daysClear: 1), fit: .bottom)
+                        XeroView(mood: doneAt == nil ? .hello : .cheer, stage: 1, size: .hero)
+                            .offset(y: settled || reduceMotion ? -2 : 40)
+                            .opacity(settled ? 1 : 0)
+                    }
+                    .frame(height: 260)
+                    .clipShape(RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
+                    .accessibilityHidden(true)
+                    Text(verbatim: "\(Date.now.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))) · \(String(localized: "Quit Day")) · \(session.durationMinutes) \(String(localized: "min"))".uppercased())
+                        .dxType(.caption).foregroundStyle(ground.muted)
+                        .padding(.top, DX.Space.xs)
+                    Text(verbatim: session.title.resolve(ctx.variant) ?? "").dxType(.large).foregroundStyle(ground.ink)
+                        .accessibilityAddTraits(.isHeader)
+                    Text(verbatim: [session.subtitle.resolve(ctx.variant), session.listenHint?.resolve(ctx.variant)]
+                        .compactMap { $0 }.map { $0.hasSuffix(".") ? $0 : $0 + "." }.joined(separator: " "))
+                        .dxType(.body).foregroundStyle(ground.muted)
+                        .fixedSize(horizontal: false, vertical: true)
+                    if let reason {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("BECAUSE").dxType(.caption).foregroundStyle(ground.muted)
+                            Text(verbatim: reason.text).dxFont(19, weight: 700, style: .headline).foregroundStyle(ground.ink)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, 16).padding(.vertical, 14)
+                        .background(DX.Fill.onColourCard(for: ground), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+                        .accessibilityElement(children: .combine)
+                    }
+                }
             }
+            .scrollBounceBehavior(.basedOnSize)
+            VStack(spacing: 6) {
+                if doneAt == nil {
+                    HoldButton(String(localized: "Hold to start Day Xero"), done: String(localized: "Day Xero started ✓"),
+                               duration: seconds, on: ground, action: commit)
+                        .accessibilityLabel(Text("Start Day Xero. Hold for \(Int(seconds)) seconds, or double-tap with VoiceOver."))
+                } else {
+                    Label("Day Xero started", systemImage: "checkmark.circle.fill")
+                        .dxFont(16, weight: 700, style: .body).foregroundStyle(ground.ink)
+                        .frame(minHeight: 44)
+                    Button("Continue", action: onDone).buttonStyle(.dx(.primary, on: ground))
+                }
+            }
+            .padding(.top, DX.Space.xs)
         }
+        .sensoryFeedback(DX.Haptic.commit, trigger: doneAt)
         .onAppear {
-            if case let .date(date)? = ctx.recorded(beat) { doneAt = date }
-            else if let key = beat.sets, case let .date(date)? = ctx.answer(key) { doneAt = date }
+            restore()
+            withAnimation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion)) { settled = true }
         }
+    }
+
+    private func restore() {
+        if case let .date(date)? = ctx.recorded(beat) { doneAt = date }
+        else if let key = beat.sets, case let .date(date)? = ctx.answer(key) { doneAt = date }
     }
 
     private func commit() {
         guard doneAt == nil else { return }
         let now = Date.now
         doneAt = now
-        pressing = false
         guard !ctx.isReplay else { return }
         if let key = beat.sets { ctx.store.commit(key, at: now) }
         if beat.sets == "graduated_at", let quit = ctx.store.profile.progress?.quitTimestamp {

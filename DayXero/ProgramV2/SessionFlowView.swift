@@ -42,9 +42,23 @@ struct SessionFlowView: View {
         .padding(.top, DX.Space.s)
         .padding(.bottom, DX.Space.xs)
         .foregroundStyle(Read4.ink)
-        .background(Read4.background.ignoresSafeArea())
+        .background(stepGround.background.ignoresSafeArea())
+        .animation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion), value: stepGround)
         .animation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion), value: index)
         .onAppear(perform: start)
+    }
+
+    /// Most steps are on the reading ground. Day Xero's hold (Q1) is on apricot and its completion (Q2) on sun.
+    private var stepGround: DX.Ground {
+        guard let session, steps.indices.contains(index) else { return .reading }
+        switch steps[index] {
+        case let .beat(id):
+            return session.beats.first { $0.id == id }?.sets == "quit_timestamp" ? .apricot : .reading
+        case .completion:
+            return session.id == ProgramV2Access.offerAfter ? .sun : .reading
+        default:
+            return .reading
+        }
     }
 
     // MARK: Steps
@@ -362,7 +376,10 @@ struct SessionCompletion: View {
     let onDone: () -> Void
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(Entitlement.self) private var entitlement
+    @AppStorage("dx.dayXeroOfferShown") private var dayXeroOfferShown = false
     @State private var shown = false
+    @State private var showOffer = false
 
     private var next: String? {
         guard let next = ctx.store.content?.session(after: session.id) else { return nil }
@@ -383,6 +400,77 @@ struct SessionCompletion: View {
     }
 
     var body: some View {
+        if session.id == ProgramV2Access.offerAfter, !isReplay { dayXeroDone } else { lessonDone }
+    }
+
+    /// Q2 You're on Day Xero (sun). Day 1 is a milestone, so Xero enters with Celebrate and cheers; no confetti.
+    /// Continue leads to the offer (Q3) once, for anyone without the full program (decision 23).
+    private var dayXeroDone: some View {
+        let ground = DX.Ground.sun
+        let snap = HomeSnapshot(profile: ctx.store.profile, isPro: entitlement.isPro, now: .now)
+        let code = snap.currencyCode
+        return VStack(spacing: DX.Space.m) {
+            ScrollView {
+                VStack(spacing: 12) {
+                    XeroView(mood: shown ? .cheer : .hello, stage: 1, size: .hero)
+                        .scaleEffect(shown || reduceMotion ? 1 : DX.Move.celebrateFromScale)
+                        .opacity(shown ? 1 : 0)
+                        .frame(height: 220, alignment: .bottom)
+                        .accessibilityHidden(true)
+                    Text(verbatim: ctx.text(session.completionText))
+                        .dxType(.large).foregroundStyle(ground.ink)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .accessibilityAddTraits(.isHeader)
+                    if let mission = session.mission {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Today's mission").dxType(.caption).textCase(.uppercase).foregroundStyle(ground.muted)
+                            Text(verbatim: ctx.text(mission.text)).dxType(.body).foregroundStyle(ground.ink)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(14)
+                        .background(DX.Fill.onColourCard(for: ground), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+                    }
+                    HStack(spacing: 8) {
+                        StatTile(value: Double(snap.daysClear), label: snap.daysClear == 1 ? String(localized: "day clear") : String(localized: "days clear"),
+                                 ground: ground)
+                        if let counter = snap.counters.first {
+                            let avoided: String = switch counter.product {
+                            case .cigarettes: String(localized: "not smoked")
+                            case .vape: String(localized: "puffs not taken")
+                            case .pouches: String(localized: "pouches not used")
+                            }
+                            StatTile(value: Double(counter.avoided), label: avoided, ground: ground)
+                        }
+                        StatTile(value: NSDecimalNumber(decimal: snap.moneyKept).doubleValue, label: String(localized: "kept"), ground: ground,
+                                 format: { Decimal($0).formatted(.currency(code: code).precision(.fractionLength(2))) })
+                    }
+                }
+                .padding(.top, DX.Space.l)
+            }
+            .scrollBounceBehavior(.basedOnSize)
+            Button("Continue") {
+                if !entitlement.isPro, !dayXeroOfferShown {
+                    dayXeroOfferShown = true
+                    showOffer = true
+                } else {
+                    onDone()
+                }
+            }
+            .buttonStyle(.dx(.primary, on: ground))
+            .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+        }
+        .sensoryFeedback(.success, trigger: shown)
+        .onAppear {
+            withAnimation(DX.Move.animation(DX.Move.celebrate, reduceMotion: reduceMotion)) { shown = true }
+        }
+        .fullScreenCover(isPresented: $showOffer, onDismiss: onDone) {
+            QuitDayOffer(profile: ctx.store.profile) { showOffer = false }
+        }
+    }
+
+    private var lessonDone: some View {
         VStack(spacing: DX.Space.m) {
             ScrollView {
                 VStack(spacing: 10) {
