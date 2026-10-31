@@ -203,4 +203,22 @@ The current app also has areas with **no v4 design at all**: Water (a Today card
 ## 10. Progress
 
 - **Phase 1a (this PR):** variable fonts and licences, `DX.Ground`, `DX.Fill`, `DX.TypeStep` with `.dxType(_:)`, `DX.Move` with `.dxArrive(_:)`, `DX.Layout`, `DX.CharacterSize`, and `V4TokenTests` (contrast for every ground pair, the 12 pt floor, Dynamic Type scaling, holds, the 4 s in / 6 s out breath). No screen uses them yet.
-- **Phase 1b (next):** Xero, Jelli and Glim in SwiftUI, scenes, the clarity and stage functions, components, and a gallery page.
+- **Phase 1b–1d (merged with 1a in PR #3):** the crew, scenes, components, Nav2 and the gallery. Decision 24 (Glim's glow).
+- **Order change (31 Oct 2026, Milan):** screens are built a whole flow at a time, screenshotted once, then merged for TestFlight. Onboarding through Today comes first, ahead of SOS.
+- **Phase 5 + Today (PR #4):** F01 Breathe, F02 Welcome, F03 questions as Xero's bubbles over an answer tray, F04 Quit Day with the hold, F05 the plan builds, F06 the plan is ready (no charge), F07 reminders, the F08 Today header and Nav2.
+  - Logic: prep week and Day Xero are free (`ProgramV2Access`, `FreeTier`); no paywall after onboarding; the app's paywall is offered once after the Day Xero session until the v4 offer screen (G03) is built.
+  - Where the canvas and the code differ, the code wins (decision 17):
+    - prices come from the store;
+    - the check-in reminder default is 21:00, not 21:30;
+    - notification copy is `NotificationCopy`;
+    - "I already have an account" is "Restore purchases", since there are no accounts;
+    - Terms links to Apple's standard EULA, and Privacy is linked only once `AppLinks.privacy` is set;
+    - the date line uses the app's own day count.
+  - Not in the canvas:
+    - F01 continues by itself after a second breath;
+    - "Change the times" points to Settings.
+  - Below the Today header, the cards (program, logging, streak, NRT, milestones, pledge and check-in) keep their current look until Phase 2. Evening and Me show the current Toolkit and Progress screens.
+  - Screenshot review fixes:
+    - Cards on violet and ocean are a navy tint in light mode (decision 25), because the evening and night stat tiles were unreadable.
+    - The reason chips on "Make this personal" and the SOS share text no longer use emoji.
+    - Welcome scrolls at accessibility text sizes, because the headline was cut off.

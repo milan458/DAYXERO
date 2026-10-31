@@ -62,8 +62,9 @@ public struct ProgramEngine: Sendable {
 
 /// What the free tier includes (S3.5): the counter, Craving SOS and the first program day.
 public enum FreeTier {
+    /// The whole prep phase and Quit Day itself are free (decisions 15 and 23); the rest needs Pro or the trial.
     public static func isFree(_ day: ProgramDayID, in outline: [ProgramDayID]) -> Bool {
-        day == outline.first
+        day.phase == .prep || (day.phase == .quit && day.index == 1)
     }
 
     /// Whether a day can be opened: unlocked by progress, and either free or paid for.

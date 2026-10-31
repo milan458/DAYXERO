@@ -11,14 +11,14 @@ struct OnboardingSection<Content: View>: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(title).dxText(.micro)
+            Text(title).onbText(.micro)
             content()
         }
         .padding(.top, DX.Space.s)
     }
 }
 
-/// Equal-width chips in a row: one choice from a few (S22).
+/// Equal-width chips in a row: one choice from a few (S22). v4 answer chips: 48 pt, radius 14.
 struct OnboardingSegments<Value: Hashable>: View {
     let options: [Value]
     let isSelected: (Value) -> Bool
@@ -31,14 +31,13 @@ struct OnboardingSegments<Value: Hashable>: View {
                 let on = isSelected(option)
                 Button { select(option) } label: {
                     Text(verbatim: title(option))
-                        .font(.custom(on ? DX.Typeface.semibold : DX.Typeface.regular, size: 14, relativeTo: .subheadline))
-                        .foregroundStyle(on ? DX.Palette.onPrimary : DX.Palette.text2)
+                        .dxFont(14, weight: on ? 700 : 500, style: .subheadline)
+                        .foregroundStyle(on ? Onb.onInk : Onb.ink)
                         .lineLimit(1)
                         .minimumScaleFactor(0.75)
-                        .padding(.vertical, 10)
-                        .frame(maxWidth: .infinity)
-                        .background(on ? DX.Palette.primary : DX.Palette.surface2, in: Capsule())
-                        .overlay(Capsule().strokeBorder(on ? .clear : DX.Palette.hairline))
+                        .frame(maxWidth: .infinity, minHeight: 48)
+                        .background(on ? Onb.ink : Onb.surface,
+                                    in: RoundedRectangle(cornerRadius: DX.Layout.answerChipRadius, style: .continuous))
                 }
                 .buttonStyle(.plain)
                 .sensoryFeedback(DX.Haptic.select, trigger: on)
@@ -48,7 +47,7 @@ struct OnboardingSegments<Value: Hashable>: View {
     }
 }
 
-/// A chip whose text is already final (emoji and all).
+/// A v4 answer chip (no emoji): 48 pt tall, radius 14, ink when chosen.
 struct OnboardingChip: View {
     let text: String
     let isOn: Bool
@@ -57,12 +56,12 @@ struct OnboardingChip: View {
     var body: some View {
         Button(action: action) {
             Text(verbatim: text)
-                .font(.custom(isOn ? DX.Typeface.semibold : DX.Typeface.regular, size: 14, relativeTo: .subheadline))
-                .foregroundStyle(isOn ? DX.Palette.onPrimary : DX.Palette.text2)
-                .padding(.vertical, 9)
+                .dxFont(14, weight: isOn ? 700 : 500, style: .subheadline)
+                .foregroundStyle(isOn ? Onb.onInk : Onb.ink)
                 .padding(.horizontal, 16)
-                .background(isOn ? DX.Palette.primary : DX.Palette.surface2, in: Capsule())
-                .overlay(Capsule().strokeBorder(isOn ? .clear : DX.Palette.hairline))
+                .frame(minHeight: 48)
+                .background(isOn ? Onb.ink : Onb.surface,
+                            in: RoundedRectangle(cornerRadius: DX.Layout.answerChipRadius, style: .continuous))
         }
         .buttonStyle(.plain)
         .sensoryFeedback(DX.Haptic.select, trigger: isOn)
@@ -70,81 +69,46 @@ struct OnboardingChip: View {
     }
 }
 
-/// A one-line sage summary: money and nicotine as the numbers change.
+/// A one-line summary of money and nicotine as the numbers change.
 struct LiveSummary: View {
     let systemImage: String
     let text: String
 
     var body: some View {
         Label {
-            Text(verbatim: text).font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
+            Text(verbatim: text).dxFont(14, weight: 600, style: .footnote)
         } icon: {
-            Image(systemName: systemImage).font(.system(size: 14, weight: .light))
+            Image(systemName: systemImage).font(.system(size: 14, weight: .semibold))
         }
-        .foregroundStyle(DX.Palette.accentInk)
+        .foregroundStyle(Onb.accent)
         .padding(.vertical, 12).padding(.horizontal, DX.Space.m)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(DX.Palette.accentSoft, in: Capsule())
+        .background(Onb.accentSoft, in: RoundedRectangle(cornerRadius: DX.Layout.answerChipRadius, style: .continuous))
         .contentTransition(.numericText())
         .padding(.top, DX.Space.s)
     }
 }
 
+// v4 has no emoji (design doc §4): chips show the plain titles.
 extension Trigger {
-    /// Emoji for onboarding's chips (S22).
-    var chipTitle: String {
-        let emoji = switch self {
-        case .morning: "🌅"
-        case .coffee: "☕"
-        case .meals: "🍽️"
-        case .stress: "😮‍💨"
-        case .alcohol: "🍻"
-        case .boredom: "🥱"
-        case .social: "👥"
-        case .driving: "🚗"
-        case .work: "💻"
-        case .phone: "📱"
-        case .other: "💭"
-        }
-        return "\(emoji) \(String(localized: title))"
-    }
+    var chipTitle: String { String(localized: title) }
 }
 
 extension Obstacle {
-    var chipTitle: String {
-        let emoji = switch self {
-        case .cravings: "🔥"
-        case .stress: "🧠"
-        case .social: "🍻"
-        case .irritability: "😤"
-        case .weight: "⚖️"
-        case .sleep: "😴"
-        case .motivation: "🔄"
-        case .other: "💭"
-        }
-        return "\(emoji) \(String(localized: title))"
-    }
+    var chipTitle: String { String(localized: title) }
 }
 
 extension FirstUse {
-    var chipTitle: String {
-        let emoji = switch self {
-        case .withinFive: "⚡"
-        case .withinThirty: "🌅"
-        case .withinHour: "☕"
-        case .later: "🌤️"
-        }
-        return "\(emoji) \(String(localized: title))"
-    }
+    var chipTitle: String { String(localized: title) }
 }
 
 extension NRTType {
     var chipTitle: String {
         switch self {
-        case .patch: "🩹 \(String(localized: "Patch"))"
-        case .gum: "🍬 \(String(localized: "Gum"))"
-        case .lozenge: "💊 \(String(localized: "Lozenge"))"
-        case .inhaler: "💨 \(String(localized: "Spray or inhaler"))"
+        case .patch: String(localized: "Patch")
+        case .gum: String(localized: "Gum")
+        case .lozenge: String(localized: "Lozenge")
+        case .inhaler: String(localized: "Spray or inhaler")
         }
     }
 }
@@ -285,14 +249,14 @@ struct BaselineScreen: View {
 
     private var priceField: some View {
         TextField("", value: draft.price, format: .currency(code: model.currencyCode),
-                  prompt: Text(Decimal(0), format: .currency(code: model.currencyCode)).foregroundStyle(DX.Palette.faint))
+                  prompt: Text(Decimal(0), format: .currency(code: model.currencyCode)).foregroundStyle(Onb.muted))
             .keyboardType(.decimalPad)
-            .font(DX.TextStyle.body.font)
-            .foregroundStyle(DX.Palette.text)
+            .dxType(.body)
+            .foregroundStyle(Onb.ink)
             .padding(.horizontal, DX.Space.m)
             .frame(minHeight: 48)
-            .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(DX.Palette.hairline))
+            .background(Onb.surface, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(Onb.hairline))
             .accessibilityLabel(Text(priceLabel))
     }
 
@@ -378,15 +342,15 @@ private struct AmountStepper: View {
             button("minus", primary: false) { value = max(step, value - step) }
             Spacer()
             VStack(spacing: 0) {
-                Text(verbatim: valueText).dxText(.hero).contentTransition(.numericText())
-                Text(verbatim: unitLine).font(.custom(DX.Typeface.regular, size: 13, relativeTo: .caption)).foregroundStyle(DX.Palette.text2)
+                Text(verbatim: valueText).onbText(.hero).contentTransition(.numericText())
+                Text(verbatim: unitLine).dxFont(13, weight: 400, style: .caption1).foregroundStyle(Onb.muted)
             }
             Spacer()
             button("plus", primary: true) { value += step }
         }
         .padding(DX.Space.m)
-        .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(DX.Palette.hairline))
+        .background(Onb.surface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(Onb.hairline))
         .sensoryFeedback(DX.Haptic.select, trigger: value)
         .accessibilityElement()
         .accessibilityLabel(Text("Amount"))
@@ -404,9 +368,9 @@ private struct AmountStepper: View {
         Button(action: action) {
             Image(systemName: symbol).font(.system(size: 17, weight: .semibold))
                 .frame(width: 48, height: 48)
-                .background(primary ? DX.Palette.primary : DX.Palette.surface2, in: Circle())
-                .overlay(Circle().strokeBorder(primary ? .clear : DX.Palette.hairline))
-                .foregroundStyle(primary ? DX.Palette.onPrimary : DX.Palette.text)
+                .background(primary ? Onb.ink : Onb.surface, in: Circle())
+                .overlay(Circle().strokeBorder(primary ? .clear : Onb.hairline))
+                .foregroundStyle(primary ? Onb.onInk : Onb.ink)
         }
         .buttonStyle(.plain)
     }
@@ -423,15 +387,15 @@ private struct PriceStepper: View {
             round("minus", primary: false) { price = max(step, (price ?? step) - step) }
             Spacer()
             Text(price ?? 0, format: .currency(code: currency).precision(.fractionLength(0...2)))
-                .font(.custom(DX.Typeface.bold, size: 24, relativeTo: .title2))
-                .foregroundStyle(DX.Palette.text)
+                .dxFont(24, weight: 700, style: .title2)
+                .foregroundStyle(Onb.ink)
                 .contentTransition(.numericText())
             Spacer()
             round("plus", primary: true) { price = (price ?? 0) + step }
         }
         .padding(DX.Space.s)
-        .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(DX.Palette.hairline))
+        .background(Onb.surface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(Onb.hairline))
         .sensoryFeedback(DX.Haptic.select, trigger: price)
         .accessibilityElement()
         .accessibilityLabel(Text("Price of one"))
@@ -449,8 +413,8 @@ private struct PriceStepper: View {
         Button(action: action) {
             Image(systemName: symbol).font(.system(size: 15, weight: .semibold))
                 .frame(width: 40, height: 40)
-                .background(primary ? DX.Palette.primary : DX.Palette.surface2, in: Circle())
-                .foregroundStyle(primary ? DX.Palette.onPrimary : DX.Palette.text)
+                .background(primary ? Onb.ink : Onb.surface, in: Circle())
+                .foregroundStyle(primary ? Onb.onInk : Onb.ink)
         }
         .buttonStyle(.plain)
     }
@@ -487,42 +451,42 @@ struct BaselineSummaryScreen: View {
                 }
             }
             HStack(alignment: .top, spacing: DX.Space.s) {
-                Image(systemName: "sparkles").font(.system(size: 16, weight: .light)).foregroundStyle(DX.Palette.accentInk)
+                Image(systemName: "sparkles").font(.system(size: 16, weight: .light)).foregroundStyle(Onb.accent)
                 Text("Good news: in your prep week your brain steps down from this dose, without the shock of quitting cold turkey today.")
-                    .dxText(.subtitle).fixedSize(horizontal: false, vertical: true)
+                    .onbText(.subtitle).fixedSize(horizontal: false, vertical: true)
             }
             .padding(14)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(DX.Palette.hairline))
+            .background(Onb.surface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(Onb.hairline))
             Text("Rough estimates for comparison. Real intake varies with your product and how you use it.")
-                .font(.custom(DX.Typeface.regular, size: 11, relativeTo: .caption2)).foregroundStyle(DX.Palette.muted)
+                .dxFont(11, weight: 400, style: .caption2).foregroundStyle(Onb.muted)
         }
     }
 
     private var hero: some View {
         VStack(alignment: .leading, spacing: DX.Space.s) {
-            Text("Total daily nicotine load").dxText(.micro)
+            Text("Total daily nicotine load").onbText(.micro)
             HStack(alignment: .firstTextBaseline, spacing: DX.Space.xs) {
                 Text(verbatim: "≈ \(Int(cigarettes.rounded()))")
-                    .font(.custom(DX.Typeface.extraBold, size: 48, relativeTo: .largeTitle)).tracking(-1.4)
-                    .foregroundStyle(DX.Palette.sage)
+                    .dxFont(48, weight: 800, style: .largeTitle).tracking(-1.4)
+                    .foregroundStyle(Onb.accent)
                 Text(cigarettes.rounded() == 1 ? "cigarette a day" as LocalizedStringKey : "cigarettes a day")
-                    .font(.custom(DX.Typeface.medium, size: 17, relativeTo: .headline)).foregroundStyle(.white)
+                    .dxFont(17, weight: 500, style: .headline).foregroundStyle(.white)
             }
             .accessibilityElement(children: .combine)
             ForEach(model.orderedProducts, id: \.self) { product in
                 let d = model.baseline(for: product)
                 let mg = NicotineEstimate.mgPerDay(product, unitsPerDay: d.unitsPerDay, strength: d.strengthMg)
                 HStack(spacing: DX.Space.s) {
-                    Image(systemName: icon(product)).font(.system(size: 16, weight: .light)).foregroundStyle(DX.Palette.sage)
-                        .frame(width: 36, height: 36).background(Color(hex: 0x43511C, opacity: 0.6), in: Circle())
+                    Image(systemName: icon(product)).font(.system(size: 16, weight: .light)).foregroundStyle(Onb.accent)
+                        .frame(width: 36, height: 36).background(Color.white.opacity(0.1), in: Circle())
                     VStack(alignment: .leading, spacing: 1) {
-                        Text(verbatim: line(product, d)).font(.custom(DX.Typeface.semibold, size: 14, relativeTo: .subheadline)).foregroundStyle(.white)
+                        Text(verbatim: line(product, d)).dxFont(14, weight: 600, style: .subheadline).foregroundStyle(.white)
                         Text(verbatim: product == .cigarettes
                              ? String(localized: "About \(Int(mg.rounded())) mg nicotine absorbed")
                              : String(localized: "About \(Int(NicotineEstimate.cigarettes(mg: mg).rounded())) cigarettes’ worth of nicotine"))
-                            .font(.custom(DX.Typeface.regular, size: 12, relativeTo: .caption)).foregroundStyle(.white.opacity(0.6))
+                            .dxFont(12, weight: 400, style: .caption1).foregroundStyle(.white.opacity(0.6))
                     }
                 }
                 .accessibilityElement(children: .combine)
@@ -530,15 +494,8 @@ struct BaselineSummaryScreen: View {
         }
         .padding(DX.Space.l)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background {
-            ZStack(alignment: .bottom) {
-                LinearGradient(colors: [Color(hex: 0x2C3816), Color(hex: 0x121212)], startPoint: .top, endPoint: .bottom)
-                Hills(still: reduceMotion).frame(height: 150).opacity(0.45)
-            }
-        }
-        .clipShape(RoundedRectangle(cornerRadius: DX.Radius.card, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: DX.Radius.card, style: .continuous).strokeBorder(DX.Palette.sage.opacity(0.6)))
-        // A picture, like Home's header: the same colours in both themes.
+        .background(DX.Fill.navy, in: RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
+        // Navy in both themes, so its colours resolve as dark.
         .environment(\.colorScheme, .dark)
     }
 
@@ -564,17 +521,17 @@ struct BaselineSummaryScreen: View {
 
     private func tile(systemImage: String, label: LocalizedStringKey, value: String, detail: String) -> some View {
         VStack(alignment: .leading, spacing: 6) {
-            Image(systemName: systemImage).font(.system(size: 14, weight: .light)).foregroundStyle(DX.Palette.accentInk)
-                .frame(width: 32, height: 32).background(DX.Palette.accentSoft, in: Circle())
-            Text(label).dxText(.micro)
-            Text(verbatim: value).font(.custom(DX.Typeface.bold, size: 22, relativeTo: .title2)).foregroundStyle(DX.Palette.text)
+            Image(systemName: systemImage).font(.system(size: 14, weight: .light)).foregroundStyle(Onb.accent)
+                .frame(width: 32, height: 32).background(Onb.accentSoft, in: Circle())
+            Text(label).onbText(.micro)
+            Text(verbatim: value).dxFont(22, weight: 700, style: .title2).foregroundStyle(Onb.ink)
                 .lineLimit(1).minimumScaleFactor(0.7)
-            Text(verbatim: detail).font(.custom(DX.Typeface.regular, size: 12, relativeTo: .caption)).foregroundStyle(DX.Palette.text2)
+            Text(verbatim: detail).dxFont(12, weight: 400, style: .caption1).foregroundStyle(Onb.muted)
         }
         .padding(DX.Space.m)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 24, style: .continuous).strokeBorder(DX.Palette.hairline))
+        .background(Onb.surface, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 24, style: .continuous).strokeBorder(Onb.hairline))
         .accessibilityElement(children: .combine)
     }
 }
@@ -607,7 +564,7 @@ struct TriggersScreen: View {
             }
             if model.firstUse?.isEarly == true {
                 Label("Using within 30 minutes of waking is a strong sign of dependence. We plan your mornings first.", systemImage: "clock")
-                    .font(DX.TextStyle.subtitle.font).foregroundStyle(DX.Palette.text2)
+                    .dxType(.footnote).foregroundStyle(Onb.muted)
                     .padding(.top, DX.Space.s)
             }
         }
@@ -628,11 +585,11 @@ struct PersonalScreen: View {
         let yearly = model.moneyPerDay * 365
         let money = yearly.formatted(.currency(code: model.currencyCode).precision(.fractionLength(0)).notation(.compactName))
         return [
-            ("💰 \(String(localized: "Save \(money) a year"))", String(localized: "Keep the \(money) a year I spend on nicotine.")),
-            ("🫁 \(String(localized: "Breathe easier"))", String(localized: "Breathe easier.")),
-            ("👨‍👩‍👧 \(String(localized: "Be there for family"))", String(localized: "Be there for my family.")),
-            ("⚡ \(String(localized: "More energy"))", String(localized: "Have more energy every day.")),
-            ("🔓 \(String(localized: "Break the chain"))", String(localized: "Stop planning my day around nicotine.")),
+            (String(localized: "Save \(money) a year"), String(localized: "Keep the \(money) a year I spend on nicotine.")),
+            (String(localized: "Breathe easier"), String(localized: "Breathe easier.")),
+            (String(localized: "Be there for family"), String(localized: "Be there for my family.")),
+            (String(localized: "More energy"), String(localized: "Have more energy every day.")),
+            (String(localized: "Break the chain"), String(localized: "Stop planning my day around nicotine.")),
         ]
     }
 
@@ -640,7 +597,7 @@ struct PersonalScreen: View {
         OnboardingScaffold(title: "Make this personal", subtitle: "Your name and your reason. Both stay on this phone.",
                            model: model, continueTitle: "Save my reason") {
             OnboardingSection(title: "First name or nickname") {
-                TextField("", text: $model.name, prompt: Text("Your name").foregroundStyle(DX.Palette.faint))
+                TextField("", text: $model.name, prompt: Text("Your name").foregroundStyle(Onb.muted))
                     .textContentType(.givenName)
                     .submitLabel(.next)
                     .focused($focus, equals: .name)
@@ -649,14 +606,14 @@ struct PersonalScreen: View {
                     .accessibilityLabel(Text("Your name"))
             }
             OnboardingSection(title: whyTitle) {
-                TextField("", text: $model.why.text, prompt: Text("Write it in your own words, or tap a reason below").foregroundStyle(DX.Palette.faint),
+                TextField("", text: $model.why.text, prompt: Text("Write it in your own words, or tap a reason below").foregroundStyle(Onb.muted),
                           axis: .vertical)
                     .lineLimit(3...6)
                     .focused($focus, equals: .why)
                     .modifier(FieldStyle(focused: focus == .why, minHeight: 96))
                     .accessibilityLabel(Text("Why you're quitting"))
-                Text("When a craving hits, we'll show you this.").font(.custom(DX.Typeface.regular, size: 12, relativeTo: .caption))
-                    .foregroundStyle(DX.Palette.muted)
+                Text("When a craving hits, we'll show you this.").dxFont(12, weight: 400, style: .caption1)
+                    .foregroundStyle(Onb.muted)
             }
             OnboardingSection(title: "Tap to add to your reason") {
                 DXFlowLayout {
@@ -674,21 +631,21 @@ struct PersonalScreen: View {
                         Image(uiImage: image).resizable().scaledToFill()
                             .frame(width: 40, height: 40).clipShape(Circle())
                     } else {
-                        Image(systemName: "camera").font(.system(size: 16, weight: .light)).foregroundStyle(DX.Palette.accentInk)
-                            .frame(width: 40, height: 40).background(DX.Palette.accentSoft, in: Circle())
+                        Image(systemName: "camera").font(.system(size: 16, weight: .light)).foregroundStyle(Onb.accent)
+                            .frame(width: 40, height: 40).background(Onb.accentSoft, in: Circle())
                     }
                     VStack(alignment: .leading, spacing: 2) {
                         Text(photo == nil ? "Add a photo of who you're doing this for" as LocalizedStringKey : "Photo added. Tap to change it")
-                            .font(.custom(DX.Typeface.semibold, size: 14, relativeTo: .subheadline)).foregroundStyle(DX.Palette.text)
-                        Text("Optional · stays on this phone").font(.custom(DX.Typeface.regular, size: 12, relativeTo: .caption))
-                            .foregroundStyle(DX.Palette.text2)
+                            .font(DX.Typeface4.swiftUIFont(.body, size: 14, weight: 600)).foregroundStyle(Onb.ink)
+                        Text("Optional · stays on this phone").font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 400))
+                            .foregroundStyle(Onb.muted)
                     }
                     .multilineTextAlignment(.leading)
                     Spacer(minLength: 0)
                 }
                 .padding(14)
                 .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .strokeBorder(DX.Palette.faint, style: StrokeStyle(lineWidth: 1, dash: [5, 4])))
+                    .strokeBorder(Onb.muted, style: StrokeStyle(lineWidth: 1, dash: [5, 4])))
             }
             .padding(.top, DX.Space.s)
             .onChange(of: photoItem) { _, item in
@@ -721,13 +678,13 @@ private struct FieldStyle: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .font(DX.TextStyle.body.font)
-            .foregroundStyle(DX.Palette.text)
+            .dxType(.body)
+            .foregroundStyle(Onb.ink)
             .padding(.horizontal, 18).padding(.vertical, 14)
             .frame(minHeight: minHeight, alignment: .topLeading)
-            .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: DX.Radius.input, style: .continuous))
+            .background(Onb.surface, in: RoundedRectangle(cornerRadius: DX.Radius.input, style: .continuous))
             .overlay(RoundedRectangle(cornerRadius: DX.Radius.input, style: .continuous)
-                .strokeBorder(focused ? DX.Palette.accentInk : DX.Palette.hairline, lineWidth: focused ? 1.5 : 1))
+                .strokeBorder(focused ? Onb.accent : Onb.hairline, lineWidth: focused ? 1.5 : 1))
     }
 }
 
@@ -762,7 +719,7 @@ struct PastAttemptsScreen: View {
             }
             OnboardingSection(title: "How confident do you feel right now?") {
                 Slider(value: $model.confidence, in: 0...10, step: 1)
-                    .tint(DX.Palette.sage)
+                    .tint(Onb.accent)
                     .sensoryFeedback(DX.Haptic.select, trigger: model.confidence)
                     .accessibilityLabel(Text("Confidence"))
                     .accessibilityValue(Text("\(Int(model.confidence)) out of 10"))
@@ -771,18 +728,18 @@ struct PastAttemptsScreen: View {
                     Spacer()
                     Text("Ready · 10")
                 }
-                .font(.custom(DX.Typeface.regular, size: 12, relativeTo: .caption)).foregroundStyle(DX.Palette.muted)
+                .dxFont(12, weight: 400, style: .caption1).foregroundStyle(Onb.muted)
                 .accessibilityHidden(true)
                 HStack(spacing: 10) {
                     Text(verbatim: "\(Int(model.confidence))/10")
-                        .font(.custom(DX.Typeface.bold, size: 15, relativeTo: .subheadline)).foregroundStyle(DX.Palette.accentInk)
+                        .dxFont(15, weight: 700, style: .subheadline).foregroundStyle(Onb.accent)
                         .contentTransition(.numericText())
-                    Text(feedback).font(DX.TextStyle.subtitle.font).foregroundStyle(DX.Palette.text)
+                    Text(feedback).dxType(.footnote).foregroundStyle(Onb.ink)
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 .padding(.vertical, 12).padding(.horizontal, 14)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(DX.Palette.accentSoft, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                .background(Onb.accentSoft, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
                 .accessibilityElement(children: .combine)
             }
         }
@@ -813,15 +770,15 @@ struct NRTScreen: View {
                 } icon: {
                     Image(systemName: "doc.text").font(.system(size: 12, weight: .light))
                 }
-                .font(.custom(DX.Typeface.medium, size: 12, relativeTo: .caption))
-                .foregroundStyle(DX.Palette.text2)
+                .dxFont(12, weight: 500, style: .caption1)
+                .foregroundStyle(Onb.muted)
                 .padding(.vertical, 6).padding(.horizontal, 12)
-                .background(DX.Palette.surface2, in: Capsule())
-                .overlay(Capsule().strokeBorder(DX.Palette.hairline))
+                .background(Onb.surface, in: Capsule())
+                .overlay(Capsule().strokeBorder(Onb.hairline))
             }
             .accessibilityHint(Text("Opens the study summary"))
             VStack(alignment: .leading, spacing: 0) {
-                DXOptionCard("Yes, I'm already using it", detail: model.nrtInterest == .using ? "Tell us what you use" : nil,
+                OnbOptionCard("Yes, I'm already using it", detail: model.nrtInterest == .using ? "Tell us what you use" : nil,
                              isSelected: model.nrtInterest == .using) { model.nrtInterest = .using }
                 if model.nrtInterest == .using {
                     DXFlowLayout {
@@ -836,14 +793,14 @@ struct NRTScreen: View {
                     .transition(.opacity)
                 }
             }
-            DXOptionCard("I'd like to try it", detail: "We'll suggest talking to a pharmacist", isSelected: model.nrtInterest == .wantIt) {
+            OnbOptionCard("I'd like to try it", detail: "We'll suggest talking to a pharmacist", isSelected: model.nrtInterest == .wantIt) {
                 model.nrtInterest = .wantIt
             }
-            DXOptionCard("Not for me", detail: "Behavioural prep only", isSelected: model.nrtInterest == .notInterested) {
+            OnbOptionCard("Not for me", detail: "Behavioural prep only", isSelected: model.nrtInterest == .notInterested) {
                 model.nrtInterest = .notInterested
             }
             Text("Always follow the product label, and check with a pharmacist or doctor.")
-                .font(.custom(DX.Typeface.regular, size: 12, relativeTo: .caption)).foregroundStyle(DX.Palette.muted)
+                .dxFont(12, weight: 400, style: .caption1).foregroundStyle(Onb.muted)
                 .padding(.top, DX.Space.xs)
         } footer: {
             ContinueButton(title: "Continue", model: model)

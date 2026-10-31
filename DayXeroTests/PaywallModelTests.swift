@@ -104,12 +104,15 @@ struct PaywallModelTests {
         #expect(!entitlement.isPro)
     }
 
-    @Test func onlyTheFirstProgramDayIsFree() {
-        let outline = [ProgramDayID(phase: .prep, index: 1), ProgramDayID(phase: .prep, index: 2)]
+    /// Prep week and Quit Day are free (decisions 15 and 23); Quit week day 2 onwards needs Pro.
+    @Test func prepWeekAndQuitDayAreFree() {
+        let outline = [ProgramDayID(phase: .prep, index: 1), ProgramDayID(phase: .prep, index: 2),
+                       ProgramDayID(phase: .quit, index: 1), ProgramDayID(phase: .quit, index: 2)]
         let engine = ProgramEngine(outline: outline)
-        let done: Set = [outline[0]]
         #expect(FreeTier.canOpen(outline[0], engine: engine, completed: [], isPro: false))
-        #expect(!FreeTier.canOpen(outline[1], engine: engine, completed: done, isPro: false))
-        #expect(FreeTier.canOpen(outline[1], engine: engine, completed: done, isPro: true))
+        #expect(FreeTier.canOpen(outline[1], engine: engine, completed: [outline[0]], isPro: false))
+        #expect(FreeTier.canOpen(outline[2], engine: engine, completed: Set(outline[0...1]), isPro: false))
+        #expect(!FreeTier.canOpen(outline[3], engine: engine, completed: Set(outline[0...2]), isPro: false))
+        #expect(FreeTier.canOpen(outline[3], engine: engine, completed: Set(outline[0...2]), isPro: true))
     }
 }

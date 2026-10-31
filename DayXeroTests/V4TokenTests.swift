@@ -26,6 +26,22 @@ struct V4TokenTests {
         #expect(abs(Contrast.ratio(0xFF7A55, 0x1E1A3A) - 6.46) < 0.01)
     }
 
+    /// Decision 25: on cream-ink grounds, light-mode tiles are navy at 20% over the ground.
+    @Test func tilesOnCreamInkGroundsClearContrast() {
+        func over(_ ground: UInt32) -> UInt32 {
+            let navy: UInt32 = 0x1E1A3A
+            return [16, 8, 0].reduce(0) { sum, shift in
+                let g = Double((ground >> shift) & 0xFF), n = Double((navy >> shift) & 0xFF)
+                return sum | (UInt32((g * 0.8 + n * 0.2).rounded()) << shift)
+            }
+        }
+        for ground in DX.Ground.allCases where ground.spec.inkLight == 0xFFF8EE {
+            let tile = over(ground.spec.light)
+            #expect(Contrast.ratio(tile, ground.spec.inkLight) >= 4.5, "\(ground) ink")
+            #expect(Contrast.ratio(tile, ground.spec.mutedLight) >= 4.5, "\(ground) muted")
+        }
+    }
+
     @Test func sevenTypeSizesWithA12PointFloor() {
         #expect(DX.TypeStep.allCases.count == 7)
         #expect(Set(DX.TypeStep.allCases.map(\.size)).count == 7)

@@ -125,11 +125,24 @@ jobs:
             shoot dark large "v4-$page-dark" -dx.v4Gallery "$page"
           done
           shoot light accessibility-extra-extra-extra-large v4-type-light-ax5 -dx.v4Gallery type
+          # v4 onboarding (F01–F07) and Today (F08), light and dark.
+          for step in breathe welcome products baseline_cigarettes baseline_summary triggers personal past_attempts nrt quit_day building reveal trial; do
+            shoot light large "v4-onb-$step-light" -dx.onboardingStep "$step"
+            shoot dark large "v4-onb-$step-dark" -dx.onboardingStep "$step"
+          done
+          shoot light accessibility-extra-extra-extra-large v4-onb-welcome-light-ax5 -dx.onboardingStep welcome
+          for slot in morning afternoon evening night; do
+            shoot light large "v4-today-day3-$slot-light" -dx.homeScenario day3 -dx.store pro -dx.todaySlot "$slot"
+            shoot dark large "v4-today-day3-$slot-dark" -dx.homeScenario day3 -dx.store pro -dx.todaySlot "$slot"
+          done
+          shoot light large v4-today-prep-light -dx.homeScenario prep -dx.store pro -dx.todaySlot morning
+          shoot dark large v4-today-prep-dark -dx.homeScenario prep -dx.store pro -dx.todaySlot morning
+          shoot light large v4-today-lower-light -dx.homeScenario day3 -dx.store pro -dx.todaySlot morning -dx.homeScroll lower
           BRANCH=ci-screens
           if [ "${{ inputs.v4_only }}" = "true" ]; then
             BRANCH=ci-screens-v4
           else
-          for step in welcome products baseline_cigarettes baseline_vape baseline_summary triggers personal past_attempts nrt quit_day reveal trial; do
+          for step in breathe welcome products baseline_cigarettes baseline_vape baseline_summary triggers personal past_attempts nrt quit_day building reveal trial; do
             shoot dark large "onb-$step-dark" -dx.onboardingStep "$step"
           done
           for step in welcome products baseline_vape baseline_summary quit_day reveal; do

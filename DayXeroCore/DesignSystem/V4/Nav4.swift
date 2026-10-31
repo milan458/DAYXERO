@@ -76,7 +76,7 @@ public struct V4TabBar: View {
                     .contentShape(Capsule())
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel(tab.label)
+                .accessibilityLabel(tab == .sos ? String(localized: "Craving SOS") : tab.label)
                 .accessibilityAddTraits(on ? [.isSelected] : [])
                 // Labels stay 12 pt like the system tab bar; long-press shows them large at accessibility sizes.
                 .accessibilityShowsLargeContentViewer()

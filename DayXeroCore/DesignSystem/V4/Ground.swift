@@ -63,6 +63,13 @@ public extension DX {
         public static let raised = Color(light: 0xFFFFFF, dark: 0x2A255F)
         /// Cards laid on a coloured ground.
         public static let cardOnColour = Color(light: (0xFFF8EE, 0.70), dark: (0xFFFFFF, 0.10))
+
+        /// Card on colour for a given ground (decision 25). Ocean and violet keep cream ink in light mode,
+        /// so a cream card would wash the text out: in light they get a navy tint at 20% instead, which keeps
+        /// cream ink above 7:1 and muted text above 6:1. Dark mode is unchanged.
+        public static func onColourCard(for ground: DX.Ground) -> Color {
+            ground.spec.inkLight == 0xFFF8EE ? Color(light: (0x1E1A3A, 0.20), dark: (0xFFFFFF, 0.10)) : cardOnColour
+        }
         /// Success fill. Light value replaced #1FA971, which failed contrast with white.
         public static let green = Color(light: 0x0F6E43, dark: 0x2FD08A)
         /// Ocean secondary button. Never translucent white.

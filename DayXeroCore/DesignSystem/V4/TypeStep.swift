@@ -120,6 +120,12 @@ public extension DX {
             return UIFont(descriptor: descriptor, size: size)
         }
 
+        /// A fixed-size v4 Font, for places that can't use the view modifiers (closures that aren't on the
+        /// main actor, such as PhotosPicker's label). It doesn't follow Dynamic Type.
+        public static func swiftUIFont(_ family: TypeStep.Family, size: CGFloat, weight: CGFloat) -> Font {
+            Font(font(family, size: max(12, size), weight: weight) as CTFont)
+        }
+
         /// True once both faces resolve to themselves rather than a fallback.
         public static var isAvailable: Bool {
             [displayName, bodyName].allSatisfy { UIFont(name: $0, size: 12) != nil }
@@ -147,3 +153,26 @@ public extension View {
 }
 
 private final class V4BundleToken {}
+
+/// A v4 face at an explicit size and weight, for places that sit between the seven steps while
+/// screens move over (never below 12 pt). Display face from 19 pt bold up, DM Sans otherwise.
+public struct DXFontModifier: ViewModifier {
+    let size: CGFloat
+    let weight: CGFloat
+    let style: UIFont.TextStyle
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    public func body(content: Content) -> some View {
+        let traits = UITraitCollection(preferredContentSizeCategory: UIContentSizeCategory(dynamicTypeSize))
+        let base = max(12, size)
+        let scaled = UIFontMetrics(forTextStyle: style).scaledValue(for: base, compatibleWith: traits)
+        let family: DX.TypeStep.Family = base >= 19 && weight >= 700 ? .display : .body
+        return content.font(Font(DX.Typeface4.font(family, size: scaled, weight: weight) as CTFont))
+    }
+}
+
+public extension View {
+    func dxFont(_ size: CGFloat, weight: CGFloat = 400, style: UIFont.TextStyle = .body) -> some View {
+        modifier(DXFontModifier(size: size, weight: weight, style: style))
+    }
+}

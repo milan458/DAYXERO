@@ -102,11 +102,12 @@ struct HomeTests {
         #expect(snap.lesson?.availability == .available)
     }
 
-    @Test func freeUsersHitTheUpgradeAtTheSecondDay() throws {
+    /// Prep week is free (decision 15): a free user's second prep day opens without an upgrade.
+    @Test func prepWeekIsFreeForEveryone() throws {
         let context = ModelContext(try DataStore.makeContainer(inMemory: true))
         let p = profile(in: context, completed: [ProgramDayID(phase: .prep, index: 1)])
         let free = HomeSnapshot(profile: p, isPro: false, now: date(23), calendar: calendar)
-        #expect(free.lesson?.needsUpgrade == true)
+        #expect(free.lesson?.needsUpgrade == false)
         let pro = HomeSnapshot(profile: p, isPro: true, now: date(23), calendar: calendar)
         #expect(pro.lesson?.needsUpgrade == false)
     }

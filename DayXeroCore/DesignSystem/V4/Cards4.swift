@@ -17,8 +17,8 @@ public extension View {
     }
 
     /// A translucent card laid on a coloured ground.
-    func dxCardOnColour(radius: CGFloat = DX.Layout.smallCardRadius) -> some View {
-        padding(16).background(DX.Fill.cardOnColour, in: RoundedRectangle(cornerRadius: radius, style: .continuous))
+    func dxCardOnColour(radius: CGFloat = DX.Layout.smallCardRadius, on ground: DX.Ground? = nil) -> some View {
+        padding(16).background(ground.map(DX.Fill.onColourCard(for:)) ?? DX.Fill.cardOnColour, in: RoundedRectangle(cornerRadius: radius, style: .continuous))
     }
 
     /// A card on the reading ground.
@@ -56,7 +56,7 @@ public struct TopCard: View {
                     .font(.system(size: 16, weight: .bold))
                     .foregroundStyle(ground.ink)
                     .frame(width: 44, height: 44)
-                    .background(DX.Fill.cardOnColour, in: Circle())
+                    .background(DX.Fill.onColourCard(for: ground), in: Circle())
                     .accessibilityHidden(true)
             }
             .padding(18)
@@ -132,7 +132,7 @@ public struct StatTile: View {
             Text(label).dxType(.caption).dxInk(ground, muted: true)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .dxCardOnColour()
+        .dxCardOnColour(on: ground)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("\(format(value)) \(label)")
     }
@@ -202,7 +202,7 @@ public struct PlanStepRow: View {
             }
             Spacer(minLength: 0)
         }
-        .dxCardOnColour()
+        .dxCardOnColour(on: ground)
         .accessibilityElement(children: .combine)
         .dxArrive(index)
     }
@@ -448,7 +448,7 @@ public struct MoodPicker: View {
                 Button { selection = mood } label: {
                     VStack(spacing: 6) {
                         ZStack {
-                            Circle().fill(on ? ground.ink : DX.Fill.cardOnColour)
+                            Circle().fill(on ? ground.ink : DX.Fill.onColourCard(for: ground))
                             MoodFace(mood).stroke(on ? ground.background : ground.ink, style: StrokeStyle(lineWidth: 2.2, lineCap: .round))
                         }
                         .frame(width: 32, height: 32)

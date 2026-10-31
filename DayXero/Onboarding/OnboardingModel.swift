@@ -217,7 +217,8 @@ final class OnboardingModel {
     #if DEBUG
     /// Jumps to a step with sample answers, for screenshots (launch with `-dx.onboardingStep <key>`).
     func loadSample(jumpingTo key: String) {
-        name = "Milan"
+        // The design persona (design doc §7): Sam, cigarettes and a vape, coffee and stress.
+        name = "Sam"
         products = [.cigarettes, .vape]
         var vape = BaselineDraft.starting(for: .vape, currency: currencyCode)
         vape.years = .oneToThree
@@ -225,8 +226,8 @@ final class OnboardingModel {
         cigarettes.years = .threeToFive
         baselines = [.vape: vape, .cigarettes: cigarettes]
         firstUse = .withinThirty
-        triggers = [.coffee, .stress, .meals]
-        why = ReasonDraft(text: "More energy for the kids, and the money back.")
+        triggers = [.coffee, .stress]
+        why = ReasonDraft(text: "To keep up with Maya at the park")
         pastAttempts = .onceOrTwice
         obstacles = [.cravings, .stress]
         nrtInterest = .using

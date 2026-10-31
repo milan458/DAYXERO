@@ -5,6 +5,8 @@ import SwiftUI
 /// Hosts the onboarding steps with a shared top bar (back, progress) and step transitions.
 struct OnboardingFlow: View {
     @State private var model = OnboardingModel()
+    /// F01: one slow breath before any question. Shown once, before Welcome.
+    @State private var breathed = false
     @Environment(\.modelContext) private var context
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -12,40 +14,40 @@ struct OnboardingFlow: View {
     var onSaving: () -> Void = {}
     let onFinished: () -> Void
 
+    private var ground: DX.Ground { breathed ? Onb.ground(for: model.step) : .coral }
+
     var body: some View {
         VStack(spacing: 0) {
-            if showsTopBar {
+            if breathed && showsTopBar {
                 topBar
-                    .padding(.horizontal, DX.Space.m)
+                    .padding(.horizontal, DX.Layout.gutter)
                     .dxReadableColumn()
                     .padding(.top, DX.Space.xs)
             }
             ZStack {
-                screen(for: model.step)
-                    .id(model.step)
-                    .transition(transition)
+                if breathed {
+                    screen(for: model.step)
+                        .id(model.step)
+                        .transition(transition)
+                } else {
+                    BreatheScreen { breathed = true }
+                        .transition(.opacity)
+                }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .background(alignment: .bottom) {
-            if model.step == .welcome {
-                // A flexible container is what stretches past the safe area; a fixed-height frame can't.
-                VStack(spacing: 0) {
-                    Spacer(minLength: 0)
-                    // 400 pt, or less on short windows such as iPhone Duo's cover (S18.13).
-                    Hills(quitDay: model.recommendedQuitDay, still: reduceMotion)
-                        .containerRelativeFrame(.vertical) { length, _ in min(400, length * 0.45) }
-                }
-                .ignoresSafeArea()
-                .transition(.opacity)
-                .accessibilityHidden(true)
-            }
-        }
-        .dxCanvas()
-        .animation(DX.Motion.animation(DX.Motion.glide, reduceMotion: reduceMotion), value: model.step)
+        .foregroundStyle(ground.ink)
+        .background(ground.background.ignoresSafeArea())
+        .animation(DX.Motion.animation(DX.Move.settle, reduceMotion: reduceMotion), value: model.step)
+        .animation(DX.Move.animation(.easeInOut(duration: 0.5), reduceMotion: reduceMotion), value: breathed)
         #if DEBUG
         .onAppear {
-            if let key = UserDefaults.standard.string(forKey: "dx.onboardingStep") { model.loadSample(jumpingTo: key) }
+            if let key = UserDefaults.standard.string(forKey: "dx.onboardingStep") {
+                if key != "breathe" {
+                    breathed = true
+                    model.loadSample(jumpingTo: key)
+                }
+            }
         }
         #endif
         .onChange(of: model.step, initial: true) { _, step in
@@ -55,7 +57,7 @@ struct OnboardingFlow: View {
 
     private var showsTopBar: Bool {
         switch model.step {
-        case .welcome, .building, .reveal: false
+        case .welcome, .quitDay, .building, .reveal, .trial: false
         default: true
         }
     }
@@ -65,24 +67,26 @@ struct OnboardingFlow: View {
                                                removal: .move(edge: .leading).combined(with: .opacity))
     }
 
+    /// F03 header: back, Xero's avatar and a green progress bar.
     private var topBar: some View {
-        HStack(spacing: DX.Space.s) {
+        HStack(spacing: 12) {
             if model.canGoBack {
                 Button { model.back() } label: {
-                    Image(systemName: "chevron.left").font(.system(size: 14, weight: .semibold))
-                        .frame(width: 40, height: 40)
-                        .background(DX.Palette.surface2, in: Circle())
-                        .overlay(Circle().strokeBorder(DX.Palette.hairline))
-                        .foregroundStyle(DX.Palette.text)
+                    Image(systemName: "chevron.left").font(.system(size: 16, weight: .bold))
+                        .frame(width: 44, height: 44)
+                        .background(DX.Fill.cardOnColour, in: Circle())
+                        .foregroundStyle(ground.ink)
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(Text("Back"))
             }
-            DXProgressBar(value: model.progress)
-                .frame(height: 6)
-                .accessibilityLabel(Text("Setup progress"))
+            XeroView(mood: .hello, stage: 1, size: .avatar, animate: false)
+                .background(DX.Ground.apricot.background, in: Circle())
+                .clipShape(Circle())
+                .accessibilityHidden(true)
+            OnbProgressBar(value: model.progress, ground: ground)
         }
-        .frame(minHeight: 44)
+        .frame(minHeight: 48)
     }
 
     @ViewBuilder
@@ -115,7 +119,8 @@ struct OnboardingFlow: View {
     }
 }
 
-/// Standard step layout: title, subtitle, scrollable content, and a pinned footer.
+/// Standard question layout (F03): Xero asks in a bubble, the controls sit in the answer tray,
+/// and the footer is pinned. Lilac ground (talking with Xero).
 struct OnboardingScaffold<Content: View, Footer: View>: View {
     let title: LocalizedStringKey
     var subtitle: LocalizedStringKey? = nil
@@ -126,31 +131,32 @@ struct OnboardingScaffold<Content: View, Footer: View>: View {
     var body: some View {
         VStack(spacing: 0) {
             ScrollView {
-                VStack(alignment: .leading, spacing: DX.Space.xs) {
-                    if let eyebrow { Text(eyebrow).dxText(.micro) }
-                    Text(title).dxText(.title).fixedSize(horizontal: false, vertical: true)
+                VStack(alignment: .leading, spacing: 10) {
+                    if let eyebrow {
+                        Text(eyebrow).dxType(.caption).textCase(.uppercase).foregroundStyle(DX.Ground.lilac.muted)
+                            .dxArrive(0)
+                    }
+                    XeroBubble(text: Text(title), large: true)
                         .accessibilityAddTraits(.isHeader)
+                        .dxArrive(0)
                     if let subtitle {
-                        Text(subtitle)
-                            .font(.custom(DX.Typeface.regular, size: 15, relativeTo: .body))
-                            .foregroundStyle(DX.Palette.text2)
-                            .lineSpacing(2)
-                            .fixedSize(horizontal: false, vertical: true)
+                        XeroBubble(text: Text(subtitle)).dxArrive(1)
                     }
-                    VStack(alignment: .leading, spacing: 10) {
-                        content()
+                    AnswerTrayCard {
+                        VStack(alignment: .leading, spacing: 10) { content() }
                     }
-                    .padding(.top, DX.Space.l)
+                    .padding(.top, 8)
+                    .dxArrive(2)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, DX.Space.m)
+                .padding(.horizontal, DX.Layout.gutter)
                 .dxReadableColumn()
                 .padding(.top, DX.Space.m)
                 .padding(.bottom, DX.Space.xl)
             }
             .scrollDismissesKeyboard(.interactively)
             VStack(spacing: DX.Space.xs) { footer() }
-                .padding(.horizontal, DX.Space.m)
+                .padding(.horizontal, DX.Layout.buttonGutter)
                 .dxReadableColumn()
                 .padding(.bottom, DX.Space.xs)
         }
@@ -174,7 +180,7 @@ struct ContinueButton: View {
 
     var body: some View {
         Button(title) { model.next() }
-            .buttonStyle(.dxPrimary)
+            .buttonStyle(.dx(.primary, on: .lilac))
             .disabled(!model.canContinue)
     }
 }
