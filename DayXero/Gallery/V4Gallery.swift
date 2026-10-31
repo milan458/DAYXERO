@@ -10,6 +10,7 @@ struct V4Gallery: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 28) {
                 Text("v4 foundation").dxType(.large)
+                scenes
                 grounds
                 type
                 crew(name: "Xero", ground: .apricot) { mood, stage, size in XeroView(mood: mood, stage: stage, size: size) }
@@ -33,6 +34,26 @@ struct V4Gallery: View {
     @State private var answers: Set<String> = ["Coffee", "Stress"]
 
     // Persona: Sam, Quit Day Fri 6 Nov 2026, mock today Sun 8 Nov at 09:40 (decision 17 values).
+
+    private var scenes: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Scenes").dxType(.headline)
+            // Quit Day hero: dawn at clarity 23 (1 day clear), apricot edge.
+            HeroScene(.dawn, clarity: CrewGrowth.clarity(daysClear: 1), height: 260, edge: DX.Ground.apricot.background)
+                .overlay(alignment: .bottom) { XeroView(mood: .hello, stage: 1, size: .scene).offset(y: -20) }
+                .clipShape(RoundedRectangle(cornerRadius: DX.Layout.cardRadius))
+            ForEach(HorizonKind.allCases, id: \.self) { kind in
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("\(kind.rawValue.capitalized) · clarity 28 and 100").dxType(.caption).dxInk(.reading, muted: true)
+                    HStack(spacing: 8) {
+                        HorizonScene(kind, clarity: 28).frame(height: 120)
+                        HorizonScene(kind, clarity: 100).frame(height: 120)
+                    }
+                    .clipShape(RoundedRectangle(cornerRadius: DX.Layout.smallCardRadius))
+                }
+            }
+        }
+    }
 
     private var buttons: some View {
         VStack(spacing: 14) {

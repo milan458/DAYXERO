@@ -45,17 +45,23 @@ public struct ArtTrack: Sendable {
         value(at: time, animate: animate).first ?? 0
     }
 
-    /// cubic-bezier(0.45, 0, 0.55, 1), solved for x by bisection.
+    /// cubic-bezier(0.45, 0, 0.55, 1), the canvas files' keySpline.
     public static func ease(_ x: Double) -> Double {
+        cubic(x, 0.45, 0, 0.55, 1)
+    }
+
+    /// Any CSS cubic-bezier(x1, y1, x2, y2) at progress `x`, solved for x by bisection.
+    public static func cubic(_ x: Double, _ x1: Double, _ y1: Double, _ x2: Double, _ y2: Double) -> Double {
         func bezier(_ s: Double, _ p1: Double, _ p2: Double) -> Double {
             let u = 1 - s
             return 3 * u * u * s * p1 + 3 * u * s * s * p2 + s * s * s
         }
+        let x = max(0, min(1, x))
         var lo = 0.0, hi = 1.0
         for _ in 0..<24 {
             let mid = (lo + hi) / 2
-            if bezier(mid, 0.45, 0.55) < x { lo = mid } else { hi = mid }
+            if bezier(mid, x1, x2) < x { lo = mid } else { hi = mid }
         }
-        return bezier((lo + hi) / 2, 0, 1)
+        return bezier((lo + hi) / 2, y1, y2)
     }
 }
