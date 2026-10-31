@@ -19,9 +19,9 @@ final class SOSRouter {
     }
 }
 
-/// The countdown on the Lock Screen and in the Dynamic Island (S6.4).
+/// The session on the Lock Screen and in the Dynamic Island (S6.4): time ridden, counting up.
 enum SOSLiveActivity {
-    /// Replaces any countdown left from an earlier session, so there's only ever one.
+    /// Replaces any session left from an earlier one, so there's only ever one.
     static func start(startedAt: Date, endsAt: Date) async {
         await endAll()
         guard ActivityAuthorizationInfo().areActivitiesEnabled else { return }

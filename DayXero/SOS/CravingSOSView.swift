@@ -35,8 +35,8 @@ struct CravingSOSView: View {
     /// Taps on the reason card, to step to the next reason.
     @State private var reasonSkip = 0
 
-    /// The Live Activity keeps its three-minute window until it moves to v4 (Phase 7).
-    private static let liveActivitySeconds = 180.0
+    /// How long the Lock Screen and Dynamic Island stay fresh. The time ridden counts up, so this is no countdown.
+    private static let liveActivitySeconds = 3600.0
 
     init(profile: UserProfile?, source: String, onClose: @escaping () -> Void) {
         self.profile = profile
