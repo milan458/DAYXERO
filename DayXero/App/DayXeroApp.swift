@@ -9,6 +9,7 @@ struct DayXeroApp: App {
 
     init() {
         DX.Typeface.register()
+        DX.Typeface4.register()
         do {
             // Unit tests run inside the app; give them a throwaway store.
             let isTesting = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
@@ -165,6 +166,8 @@ struct RootView: View {
         #if DEBUG
         if UserDefaults.standard.bool(forKey: "dx.showGallery") {
             DesignSystemGallery()
+        } else if let page = UserDefaults.standard.string(forKey: "dx.v4Gallery") {
+            V4Gallery(page: page)
         } else if UserDefaults.standard.bool(forKey: "dx.illustrationGallery") {
             MilestoneIllustrationGallery()
         } else if let page = UserDefaults.standard.string(forKey: "dx.widgetGallery") {
