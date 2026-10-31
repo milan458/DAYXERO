@@ -1,6 +1,6 @@
 # DayXero Design System · v4 "The Crew, alive"
 
-**Status:** final direction agreed in design review, 31 Oct 2026. Not yet built in SwiftUI.
+**Status:** final direction agreed in design review, 31 Oct 2026. **Adopted as the base for the app revamp, 31 Oct 2026 (decision 14).** Not yet built in SwiftUI.
 **Owner:** Milan (repo `milan458/dayxero`).
 **What this file is:** the complete handoff of a long design session: every decision, rule, token, story beat, screen spec, critique finding and open question, plus the **full source of the final screens** (Appendix C). A new Claude session with no other context should be able to read this file, rebuild the canvas and keep going.
 
@@ -102,6 +102,7 @@ In order. "→" marks the final state.
 11. **Correction made during the merge:** the critique wrongly said carbon monoxide should read "about 12 hours". `health-timeline.json` says "A few days" (12–72 h), so the original Crew copy was right. → Always use the JSON.
 12. **Onboarding crew intro changed:** instead of introducing all three characters at once (too many illustrations, reads young), O5 is now **"Your plan, built around you"** with Xero, and Jelli and Glim are previewed as small avatars that "join later": **Jelli at the first craving, Glim on the first evening**.
 13. **Trial proposal:** prep week free; the 3-day trial **starts on Quit Day** (Fri 6 Nov), so the first charge lands **Mon 9 Nov** after three days clear. **Not decided**: the current code starts the trial at sign-up (§14).
+14. **v4 is the revamp base (31 Oct 2026, Milan, second session).** The new screens for the app revamp are v4 · Final direction (F01–F18 plus the dark rows FDarkA/FDarkB), not the Crew (C01–C18) or Alive (A01–A09) sets. This answers §14 question 2: v4 replaces the "Biophilic OLED Minimalism" direction in `docs/DESIGN_METHODOLOGY.md` and `Colors.swift`. The repo files themselves change only as part of the SwiftUI migration plan, after Milan approves it. Clarification recorded at the same time: the critique canvas's "Source screens (as published)" page holds the critique's **inputs** (C01–C18, A01–A09 and components, byte-identical to the main canvas files, checked 31 Oct). It does not hold the final screens.
 
 ### Rejected or superseded
 
@@ -675,7 +676,7 @@ All screens are 390×844 with props `theme` (light | dark), `motion` (bool) and 
 
 **The shipping code follows a different direction.** `docs/DESIGN_METHODOLOGY.md` ("Biophilic OLED Minimalist UI / Dark Luxury Wellness") currently **overrides the plan on visual questions** (per `README.md`). `DayXeroCore/DesignSystem/Colors.swift` uses sage #BCC388, moss #43511C, amber #E5A93C, terracotta #C85A54, canvas #F3F4EE / black #000000, primary #11140A. Fonts are **Inter** and JetBrains Mono.
 
-**v4 replaces that direction.** Before any SwiftUI work, Milan must explicitly decide to:
+**v4 replaces that direction** (decided 31 Oct 2026, decision 14). The steps below make up the SwiftUI migration. Each one waits for Milan's OK on the written migration plan:
 
 1. Update or replace `docs/DESIGN_METHODOLOGY.md` with this file's principles (or mark it superseded).
 2. Replace `Colors.swift` tokens with §5 (adaptive light and dark pairs; Colour assets per ground).
@@ -690,13 +691,28 @@ All screens are 390×844 with props `theme` (light | dark), `motion` (bool) and 
 - `CharacterSize.avatar/card/scene/hero`.
 - `Motion.arrive/settle/celebrate/breathe`.
 
+### 13.1 Repo check, 31 Oct 2026 (second session): where the code contradicts this file
+
+These are findings, not decisions. Each one needs Milan to decide whether the design follows the code or the code changes. Until then, new screens must not hide the conflict.
+
+1. **Lesson day vs days clear.** `ProgramUnlock.daysSinceQuit` is 0 on Quit Day, and W1D3 "Lower the bar" has `minDay 3`, so it opens **Mon 9 Nov** (4 days clear). On Sun 8 Nov (3 days clear), the newest open lesson is W1D2 "The noisy passengers". F08, F10 and F11 show "Lower the bar" on Sun 8 Nov.
+2. **Program end.** W4S3 "Graduation" has `minDay 30`, so it opens **Sun 6 Dec** (31 days clear). Week 4 sessions open on days 24, 27 and 30. F18 says "Week 4 · program complete · Thu 3 Dec" at 28 days clear.
+3. **Free tier.** `ProgramV2Access.freeSessions = ["P1"]`: the counter, Craving SOS and Prep 1 are free, and everything after Prep 1 needs Pro or the trial. §1 says "counter, Craving SOS and Day 1", and F06 says "Prep week is on us". This is tied to §14 question 1.
+4. **Day-end default.** `Profile.dayBoundaryHour` defaults to **4** (4:00 am). F16 and §11 say 3:00 am.
+5. **Counters.** `ProgressStats.unitsAvoided` and `moneyKept` use time elapsed since the start of Quit Day (its date plus the day boundary), rounded down, not units × days clear. At 9:40 on Sun 8 Nov this gives about **26** cigarettes not smoked and **$15.65** kept, not 36 and $21.
+6. **Health sources.** `health-timeline.json` also has a `nicotine` group (sources: smokefree.gov, CDC). Three of its entries (`sleep`, `lips`, `skin-glow`) have no `source`, so they can't be shown with a citation. The fact card must use each entry's own source label rather than always "American Cancer Society".
+7. **Gaps for screens still to design.** The Day Xero commit is "Hold to start Day Xero." with `holdSeconds: 3`, which isn't among §5.7's hold timings. Milestone days in code are 1, 3, 7, 14, 30, 60, 90, 100, 180, 365, with no day 28.
+8. **Design-system Swift files** are still the old direction, as stated above: Inter, `micro` at 11 pt (below the 12 floor), spring-based `Motion`, 56 pt buttons, 28 pt card radius.
+
+Checked and still matching: Week 1 titles, the Day 2 and Day 3 beats, pricing and the trial reminder (2 days before, 10:00), the trigger list and order, the slip suggestions per trigger, and the ACS health entries and their `when` wording.
+
 ---
 
 ## 14. Open questions and what to design next
 
 **Decisions needed (Milan):**
 1. **Trial timing:** start the 3-day trial on Quit Day (proposal) or keep it at sign-up? If on Quit Day, design the **Quit Day offer screen** (the paywall shown on Fri 6 Nov) and the prep-week "free" state.
-2. **Adopt v4 over the Biophilic OLED direction** in the repo (§13)?
+2. ~~**Adopt v4 over the Biophilic OLED direction** in the repo (§13)?~~ **Decided 31 Oct 2026: yes** (decision 14). v4 is the revamp base.
 3. **Brand colour:** coral as the signature (icon, website, marketing) while apricot stays Xero's day colour?
 4. **Dark-mode warm screens:** confirm plum after testing on an OLED phone.
 5. **Inactivity reset:** an open product decision. Never claim "nothing resets if you miss a day" until it's decided. Slips never reset; that is decided in code.
@@ -722,7 +738,8 @@ All screens are 390×844 with props `theme` (light | dark), `motion` (bool) and 
 
 **Artifact links** (owned by the original account):
 - Main design canvas (8 pages): https://claude.ai/artifact/STfRGW2CvRRY7VWDPNwFRy (shared "anyone with the link")
-- Critique canvas: https://claude.ai/artifact/SxCGkACEXpYWBcwKe4574b (private to the original account unless shared)
+- Critique canvas: https://claude.ai/artifact/SxCGkACEXpYWBcwKe4574b (private to the original account unless shared). Its "Source screens (as published)" page holds the critique's inputs (C01–C18, A01–A09), not the final screens.
+- **Recreated canvas, second session (31 Oct 2026):** "DayXero · v4 design system", https://claude.ai/artifact/FjPnNxki5oh4htdWZWVtpL (private until shared). It holds all 138 artboards on 8 pages, with v4 · Final direction as page 1, published byte for byte from `design/handoff/canvas/project/`. Xero, Jelli, Glim2, Horizon2 and Hero2 sit on the v4 page (Appendix B), and the "App screens" boards now name their page explicitly.
 
 **In the repo:**
 - `design/handoff/DAYXERO_DESIGN_SYSTEM.md`: this file
