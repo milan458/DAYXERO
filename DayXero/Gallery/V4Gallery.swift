@@ -15,11 +15,91 @@ struct V4Gallery: View {
                 crew(name: "Xero", ground: .apricot) { mood, stage, size in XeroView(mood: mood, stage: stage, size: size) }
                 crew(name: "Jelli", ground: .ocean) { mood, stage, size in JelliView(mood: mood, stage: stage, size: size) }
                 crew(name: "Glim", ground: .violet) { mood, stage, size in GlimView(mood: mood, stage: stage, size: size) }
+                buttons
+                today
+                program
+                evening
+                chat
             }
             .padding(DX.Layout.gutter)
         }
         .foregroundStyle(DX.Ground.reading.ink)
         .background(DX.Ground.reading.background.ignoresSafeArea())
+        .safeAreaInset(edge: .bottom) { V4TabBar(selection: $tab) }
+    }
+
+    @State private var tab: V4Tab = .today
+    @State private var mood: CheckInMood?
+    @State private var answers: Set<String> = ["Coffee", "Stress"]
+
+    // Persona: Sam, Quit Day Fri 6 Nov 2026, mock today Sun 8 Nov at 09:40 (decision 17 values).
+
+    private var buttons: some View {
+        VStack(spacing: 14) {
+            Text("Buttons").dxType(.headline).frame(maxWidth: .infinity, alignment: .leading)
+            Button("Begin") {}.buttonStyle(.dx(.primary, on: .apricot))
+                .padding(16).background(DX.Ground.apricot.background, in: RoundedRectangle(cornerRadius: DX.Layout.cardRadius))
+            VStack(spacing: 10) {
+                Button("It passed") {}.buttonStyle(.dx(.primary, on: .ocean))
+                Button("I slipped") {}.buttonStyle(.dx(.secondary, on: .ocean))
+                HandOverChip("Xero passed you to Jelli") { JelliView(mood: .hello, stage: 1, size: .avatar, animate: false) }
+                    .dxInk(.ocean)
+            }
+            .padding(16).background(DX.Ground.ocean.background, in: RoundedRectangle(cornerRadius: DX.Layout.cardRadius))
+            HoldButton("Hold to start Day Xero", done: "Day Xero started ✓", duration: DX.Move.Hold.dayXeroCommit, on: .apricot) {}
+                .padding(16).background(DX.Ground.apricot.background, in: RoundedRectangle(cornerRadius: DX.Layout.cardRadius))
+        }
+    }
+
+    private var today: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Today").dxType(.headline)
+            TopCard(kicker: "Week 1 · Day 2", title: "The noisy passengers", detail: "Let them talk. Keep driving.", ground: .apricot) {}
+            HStack(spacing: 8) {
+                StatTile(value: 3, label: "days clear", ground: .apricot)
+                StatTile(value: 26, label: "not smoked", ground: .apricot)
+                StatTile(value: 15.65, label: "kept", ground: .apricot) { String(format: "$%.2f", $0) }
+            }
+            .padding(12)
+            .background(DX.Ground.apricot.background, in: RoundedRectangle(cornerRadius: DX.Layout.cardRadius))
+            HealthFactCard(status: "Happening now", when: "A few days", title: "Carbon monoxide in your blood drops to normal",
+                           line: "More oxygen reaches your body.", sourceLabel: "Source: American Cancer Society")
+            NotificationPreview(sender: "Glim", time: "now", message: "How did today go? A one-minute check-in, if you have it.") {
+                GlimView(mood: .hello, stage: 1, size: .avatar, animate: false).background(DX.Ground.violet.background)
+            }
+        }
+    }
+
+    private var program: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Program").dxType(.headline)
+            ProgramDayCard(kicker: "Week 1 · Day 1", title: "Look after the basics", state: .done)
+            ProgramDayCard(kicker: "Week 1 · Day 2", title: "The noisy passengers", state: .today)
+            ProgramDayCard(kicker: "Week 1 · Day 3", title: "Lower the bar", state: .locked)
+            ProgramDayCard(kicker: "Sun 6 Dec", title: "Graduation", state: .graduation)
+        }
+    }
+
+    private var evening: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Text("Evening").dxType(.headline).dxInk(.violet)
+            MoodPicker(selection: $mood)
+            BreathingWords().dxInk(.violet).frame(maxWidth: .infinity)
+        }
+        .padding(16)
+        .background(DX.Ground.violet.background, in: RoundedRectangle(cornerRadius: DX.Layout.cardRadius))
+    }
+
+    private var chat: some View {
+        VStack(spacing: 12) {
+            TypingDots().frame(maxWidth: .infinity, alignment: .leading)
+            ReplyBubble("Coffee and stress", onEdit: {})
+            PlanStepRow(kicker: "Quit Day", value: "Fri 6 Nov", index: 0, ground: .lilac)
+            AnswerTray(options: ["Waking up", "Coffee", "After meals", "Stress", "Drinking", "Boredom"],
+                       selection: $answers, multiple: true, step: 2, of: 3, onMore: {}) {}
+        }
+        .padding(16)
+        .background(DX.Ground.lilac.background, in: RoundedRectangle(cornerRadius: DX.Layout.cardRadius))
     }
 
     private var grounds: some View {
