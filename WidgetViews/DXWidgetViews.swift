@@ -55,18 +55,18 @@ struct DayCounterWidgetView: View {
             switch s.phase {
             case .beforeDay1:
                 big(String(localized: "Day 1"), size: 44)
-                Text("Starts today").font(.custom(DX.Typeface.semibold, fixedSize: 17)).foregroundStyle(ink.sage)
+                Text("Starts today").font(DX.Typeface4.swiftUIFont(.body, size: 17, weight: 600)).foregroundStyle(ink.sage)
             case .prep:
                 big(String(localized: "Prep · Day \(max(s.prepDay, 1))"), size: 28)
-                Text("Day Xero in \(s.daysUntilQuitDay) days").font(.custom(DX.Typeface.semibold, fixedSize: 17)).foregroundStyle(ink.sage)
+                Text("Day Xero in \(s.daysUntilQuitDay) days").font(DX.Typeface4.swiftUIFont(.body, size: 17, weight: 600)).foregroundStyle(ink.sage)
                     .lineLimit(2).minimumScaleFactor(0.8)
             case .quit, .after:
                 if s.daysFree <= 1 {
                     big(String(localized: "Day Xero"), size: 40)
-                    Text("Starts today").font(.custom(DX.Typeface.semibold, fixedSize: 17)).foregroundStyle(ink.sage)
+                    Text("Starts today").font(DX.Typeface4.swiftUIFont(.body, size: 17, weight: 600)).foregroundStyle(ink.sage)
                 } else {
                     big("\(s.daysFree)", size: 76)
-                    Text("Days free").font(.custom(DX.Typeface.semibold, fixedSize: 17)).foregroundStyle(ink.sage)
+                    Text("Days free").font(DX.Typeface4.swiftUIFont(.body, size: 17, weight: 600)).foregroundStyle(ink.sage)
                         .widgetAccentable()
                 }
             }
@@ -79,7 +79,7 @@ struct DayCounterWidgetView: View {
 
     private func big(_ text: String, size: CGFloat) -> some View {
         Text(verbatim: text)
-            .font(.custom(DX.Typeface.extraBold, fixedSize: size))
+            .font(DX.Typeface4.swiftUIFont(.display, size: size, weight: 800))
             .tracking(size >= 70 ? -3 : -1)
             .foregroundStyle(.white)
             .lineLimit(1)
@@ -93,18 +93,18 @@ struct DayCounterWidgetView: View {
             ZStack {
                 OrbGlyph(ink: ink, ringRadius: 62)
                 Text(verbatim: s.daysFree <= 1 ? "0" : "\(s.daysFree)")
-                    .font(.custom(DX.Typeface.extraBold, fixedSize: 50)).foregroundStyle(.white)
+                    .font(DX.Typeface4.swiftUIFont(.display, size: 50, weight: 800)).foregroundStyle(.white)
             }
             .frame(width: 150, height: 150)
             VStack(alignment: .leading, spacing: 2) {
-                Text("DAYS FREE").font(.custom(DX.Typeface.mono, fixedSize: 12)).tracking(1).foregroundStyle(ink.sage)
+                Text("DAYS FREE").font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 600).monospacedDigit()).tracking(1).foregroundStyle(ink.sage)
                 Text(s.currentDayStart, style: .timer)
-                    .font(.custom(DX.Typeface.extraBold, fixedSize: 40)).tracking(-1).foregroundStyle(.white)
+                    .font(DX.Typeface4.swiftUIFont(.display, size: 40, weight: 800)).tracking(-1).foregroundStyle(.white)
                     .monospacedDigit().lineLimit(1).minimumScaleFactor(0.6)
-                Text("into day \(s.daysFree)").font(.custom(DX.Typeface.medium, fixedSize: 14)).foregroundStyle(ink.secondary)
+                Text("into day \(s.daysFree)").font(DX.Typeface4.swiftUIFont(.body, size: 14, weight: 500)).foregroundStyle(ink.secondary)
                 if !isPrivate(s, .systemSmall) {
-                    (Text(verbatim: s.moneyText).font(.custom(DX.Typeface.extraBold, fixedSize: 22)).foregroundColor(.white)
-                     + Text(" kept").font(.custom(DX.Typeface.medium, fixedSize: 14)).foregroundColor(.white.opacity(0.55)))
+                    (Text(verbatim: s.moneyText).font(DX.Typeface4.swiftUIFont(.display, size: 22, weight: 800)).foregroundColor(.white)
+                     + Text(" kept").font(DX.Typeface4.swiftUIFont(.body, size: 14, weight: 500)).foregroundColor(.white.opacity(0.55)))
                         .privacySensitive()
                         .padding(.top, 14)
                 }
@@ -130,7 +130,7 @@ struct SOSWidgetView: View {
                 VStack(spacing: 1) {
                     Image(systemName: "circle").font(.system(size: isPrivate(snapshot, family) ? 30 : 24, weight: .bold))
                     if !isPrivate(snapshot, family) {
-                        Text("SOS").font(.system(size: 11, weight: .bold)).tracking(0.6)
+                        Text("SOS").font(.system(size: 12, weight: .bold)).tracking(0.6)
                     }
                 }
             }
@@ -140,16 +140,22 @@ struct SOSWidgetView: View {
             GeometryReader { geo in
                 ZStack(alignment: .top) {
                     ZStack {
-                        OrbGlyph(ink: ink)
-                        Text("SOS").font(.custom(DX.Typeface.extraBold, fixedSize: 13)).foregroundStyle(.white)
+                        if ink.isFullColor {
+                            // v4: Jelli owns SOS (decision 22). Tinted and vibrant modes keep the plain ring.
+                            Circle().fill(Color(hex: 0x2A52DB)).frame(width: 96, height: 96)
+                            JelliView(mood: .calm, stage: 1, points: 82, animate: false)
+                        } else {
+                            OrbGlyph(ink: ink)
+                            Text("SOS").font(DX.Typeface4.swiftUIFont(.display, size: 13, weight: 800)).foregroundStyle(.white)
+                        }
                     }
                     .frame(width: 120, height: 120)
                     .position(x: geo.size.width / 2, y: 60)
                     VStack(spacing: 6) {
                         Spacer(minLength: 0)
-                        Text("Craving?").font(.custom(DX.Typeface.semibold, fixedSize: 13)).foregroundStyle(.white.opacity(0.7))
+                        Text("Craving?").font(DX.Typeface4.swiftUIFont(.body, size: 13, weight: 600)).foregroundStyle(.white.opacity(0.7))
                         Button(intent: OpenSOSIntent()) {
-                            Text("Ride it out").font(.custom(DX.Typeface.semibold, fixedSize: 14)).foregroundStyle(ink.onButton)
+                            Text("Ride it out").font(DX.Typeface4.swiftUIFont(.body, size: 14, weight: 600)).foregroundStyle(ink.onButton)
                                 .frame(maxWidth: .infinity, minHeight: 34)
                                 .background(ink.isFullColor ? WidgetTone.sage : .white, in: Capsule())
                         }
@@ -183,11 +189,11 @@ struct TodayWidgetView: View {
                                       : s.daysFree <= 1 ? String(localized: "Day Xero") : String(localized: "Day \(s.daysFree)"),
                                       color: ink.sage)
                         Text(verbatim: hidden ? "—" : s.moneyText)
-                            .font(.custom(DX.Typeface.extraBold, fixedSize: 32)).tracking(-1).foregroundStyle(.white)
+                            .font(DX.Typeface4.swiftUIFont(.display, size: 32, weight: 800)).tracking(-1).foregroundStyle(.white)
                             .lineLimit(1).minimumScaleFactor(0.6)
                             .privacySensitive()
                             .padding(.top, 6)
-                        Text("kept").font(.custom(DX.Typeface.medium, fixedSize: 12)).foregroundStyle(ink.secondary).padding(.top, 3)
+                        Text("kept").font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 500)).foregroundStyle(ink.secondary).padding(.top, 3)
                     }
                     .frame(width: 92)
                     .frame(maxHeight: .infinity)
@@ -205,7 +211,7 @@ struct TodayWidgetView: View {
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
-                    Text("Your program starts with today's lesson.").font(.custom(DX.Typeface.semibold, fixedSize: 15))
+                    Text("Your program starts with today's lesson.").font(DX.Typeface4.swiftUIFont(.body, size: 15, weight: 600))
                         .foregroundStyle(.white).frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                 }
                 VStack(spacing: 8) {
@@ -241,20 +247,20 @@ struct TodayWidgetView: View {
             Spacer(minLength: 6)
             Text(verbatim: value).fontWeight(.semibold).foregroundStyle(.white).lineLimit(1)
         }
-        .font(.custom(DX.Typeface.medium, fixedSize: 13))
+        .font(DX.Typeface4.swiftUIFont(.body, size: 13, weight: 500))
     }
 
     @ViewBuilder
     private func footer(_ ink: WidgetInk) -> some View {
         HStack(spacing: 8) {
-            Text("NEXT").font(.custom(DX.Typeface.mono, fixedSize: 10)).tracking(0.8).foregroundStyle(.white.opacity(0.45))
+            Text("NEXT").font(DX.Typeface4.swiftUIFont(.body, size: 10, weight: 600).monospacedDigit()).tracking(0.8).foregroundStyle(.white.opacity(0.7))
             if let lesson = snapshot.nextLesson {
-                Text(verbatim: lesson.title).font(.custom(DX.Typeface.semibold, fixedSize: 13)).foregroundStyle(.white).lineLimit(1)
-                Text("· \(lesson.minutes) min").font(.custom(DX.Typeface.medium, fixedSize: 13)).foregroundStyle(.white.opacity(0.5))
+                Text(verbatim: lesson.title).font(DX.Typeface4.swiftUIFont(.body, size: 13, weight: 600)).foregroundStyle(.white).lineLimit(1)
+                Text("· \(lesson.minutes) min").font(DX.Typeface4.swiftUIFont(.body, size: 13, weight: 500)).foregroundStyle(.white.opacity(0.5))
             } else if let milestone = snapshot.nextMilestone, snapshot.phase == .after {
-                Text("\(milestone)-day milestone").font(.custom(DX.Typeface.semibold, fixedSize: 13)).foregroundStyle(.white)
+                Text("\(milestone)-day milestone").font(DX.Typeface4.swiftUIFont(.body, size: 13, weight: 600)).foregroundStyle(.white)
             } else {
-                Text("Weekly summary on Sunday").font(.custom(DX.Typeface.semibold, fixedSize: 13)).foregroundStyle(.white)
+                Text("Weekly summary on Sunday").font(DX.Typeface4.swiftUIFont(.body, size: 13, weight: 600)).foregroundStyle(.white)
             }
             Spacer(minLength: 0)
         }
@@ -277,7 +283,7 @@ struct WaterWidgetView: View {
                     Image(systemName: "capsule.portrait.bottomhalf.filled")
                 } currentValueLabel: {
                     VStack(spacing: 0) {
-                        Image(systemName: "capsule.portrait.bottomhalf.filled").font(.system(size: 11, weight: .semibold))
+                        Image(systemName: "capsule.portrait.bottomhalf.filled").font(.system(size: 12, weight: .semibold))
                         Text(verbatim: "\(s.glassesToday)/\(s.glassesGoal)").font(.system(size: 13, weight: .bold)).minimumScaleFactor(0.7)
                     }
                 }
@@ -293,12 +299,12 @@ struct WaterWidgetView: View {
                     WidgetEyebrow(text: String(localized: "Water"))
                     Spacer(minLength: 0)
                     HStack(alignment: .firstTextBaseline, spacing: 4) {
-                        Text(verbatim: "\(s.glassesToday)").font(.custom(DX.Typeface.extraBold, fixedSize: 34))
+                        Text(verbatim: "\(s.glassesToday)").font(DX.Typeface4.swiftUIFont(.display, size: 34, weight: 800))
                             .foregroundStyle(s.glassesToday >= s.glassesGoal ? ink.sage : .white)
                             .widgetAccentable()
-                        Text(verbatim: "/ \(s.glassesGoal)").font(.custom(DX.Typeface.bold, fixedSize: 17)).foregroundStyle(.white.opacity(0.5))
+                        Text(verbatim: "/ \(s.glassesGoal)").font(DX.Typeface4.swiftUIFont(.body, size: 17, weight: 700)).foregroundStyle(.white.opacity(0.5))
                     }
-                    Text("glasses").font(.custom(DX.Typeface.medium, fixedSize: 12)).foregroundStyle(ink.secondary)
+                    Text("glasses").font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 500)).foregroundStyle(ink.secondary)
                     Button(intent: LogWaterIntent(from: .widget)) {
                         Label("1", systemImage: "plus")
                             .labelStyle(PlusOneLabel())
@@ -322,7 +328,7 @@ private struct PlusOneLabel: LabelStyle {
     func makeBody(configuration: Configuration) -> some View {
         HStack(spacing: 4) {
             configuration.icon.font(.system(size: 13, weight: .bold))
-            configuration.title.font(.custom(DX.Typeface.semibold, fixedSize: 15))
+            configuration.title.font(DX.Typeface4.swiftUIFont(.body, size: 15, weight: 600))
         }
     }
 }
@@ -382,10 +388,10 @@ struct ForecastWidgetView: View {
             if let window {
                 HStack(alignment: .firstTextBaseline, spacing: 2) {
                     Text(verbatim: hourText(now ? window.end : window.start, prefix: now))
-                        .font(.custom(DX.Typeface.extraBold, fixedSize: now ? 26 : 34)).tracking(-1).foregroundStyle(.white)
+                        .font(DX.Typeface4.swiftUIFont(.display, size: now ? 26 : 34, weight: 800)).tracking(-1).foregroundStyle(.white)
                         .lineLimit(1).minimumScaleFactor(0.6)
                     Text(verbatim: meridiem(now ? window.end : window.start))
-                        .font(.custom(DX.Typeface.extraBold, fixedSize: 16)).foregroundStyle(.white.opacity(0.5))
+                        .font(DX.Typeface4.swiftUIFont(.display, size: 16, weight: 800)).foregroundStyle(.white.opacity(0.5))
                 }
                 HStack(spacing: 0) {
                     if let trigger = window.trigger { Text(trigger.title) + Text(verbatim: " · ") }
@@ -395,9 +401,9 @@ struct ForecastWidgetView: View {
                         Text("in \(Text(window.start, style: .relative))")
                     }
                 }
-                .font(.custom(DX.Typeface.medium, fixedSize: 12)).foregroundStyle(ink.secondary).lineLimit(1).minimumScaleFactor(0.8)
+                .font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 500)).foregroundStyle(ink.secondary).lineLimit(1).minimumScaleFactor(0.8)
                 Button(intent: GuardWindowIntent()) {
-                    Text(guarding ? "Guarding ✓" : "Guard it").font(.custom(DX.Typeface.semibold, fixedSize: 14)).foregroundStyle(ink.sage)
+                    Text(guarding ? "Guarding ✓" : "Guard it").font(DX.Typeface4.swiftUIFont(.body, size: 14, weight: 600)).foregroundStyle(ink.sage)
                         .frame(maxWidth: .infinity, minHeight: 34)
                         .background(ink.sage.opacity(0.16), in: Capsule())
                         .overlay(Capsule().strokeBorder(ink.sage.opacity(0.5), lineWidth: 1))
@@ -407,9 +413,9 @@ struct ForecastWidgetView: View {
                 .padding(.top, 10)
             } else {
                 Text(snapshot.phase == .beforeDay1 ? "Learning your patterns" : "No risky windows predicted today")
-                    .font(.custom(DX.Typeface.semibold, fixedSize: 15)).foregroundStyle(.white).lineLimit(3)
+                    .font(DX.Typeface4.swiftUIFont(.body, size: 15, weight: 600)).foregroundStyle(.white).lineLimit(3)
                 Text(snapshot.phase == .beforeDay1 ? "Log cravings to unlock" : "Enjoy the quiet.")
-                    .font(.custom(DX.Typeface.medium, fixedSize: 12)).foregroundStyle(ink.secondary).padding(.top, 4)
+                    .font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 500)).foregroundStyle(ink.secondary).padding(.top, 4)
             }
         }
         .padding(16)

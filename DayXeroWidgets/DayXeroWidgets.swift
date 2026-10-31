@@ -83,7 +83,7 @@ struct LogWidget: Widget {
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: "QuickLog", provider: LogProvider()) { entry in
             LogWidgetView(entry: entry)
-                .containerBackground(DX.Palette.canvas, for: .widget)
+                .containerBackground(DX.Ground.reading.background, for: .widget)
         }
         .configurationDisplayName("Quick log")
         .description("Log a use with one tap during prep, or a craving after Quit Day.")
@@ -98,25 +98,25 @@ struct LogWidgetView: View {
     var body: some View {
         if entry.isPrep, !entry.items.isEmpty {
             VStack(alignment: .leading, spacing: DX.Space.xs) {
-                Text("Prep day \(entry.prepDay ?? 1) · today").dxText(.micro)
+                Text("Prep day \(entry.prepDay ?? 1) · today").font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 700)).textCase(.uppercase).foregroundStyle(DX.Ground.reading.muted)
                 let columns = family == .systemMedium ? 2 : 1
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: DX.Space.xs), count: columns), spacing: DX.Space.xs) {
                     ForEach(entry.items.prefix(family == .systemMedium ? 4 : 2), id: \.self) { item in
                         Button(intent: LogUseIntent(product: LoggedProduct(item.product))) {
                             HStack(spacing: DX.Space.xs) {
                                 Image(systemName: "plus").font(.system(size: 13, weight: .bold))
-                                    .foregroundStyle(DX.Palette.onPrimary)
+                                    .foregroundStyle(DX.Ground.reading.background)
                                     .frame(width: 28, height: 28)
-                                    .background(DX.Palette.primary, in: Circle())
+                                    .background(DX.Ground.reading.ink, in: Circle())
                                 VStack(alignment: .leading, spacing: 0) {
-                                    Text(verbatim: item.today.formatted()).font(.system(size: 18, weight: .bold)).monospacedDigit()
-                                        .foregroundStyle(DX.Palette.text)
-                                    Text(label(item.product)).font(.system(size: 10)).foregroundStyle(DX.Palette.text2).lineLimit(1)
+                                    Text(verbatim: item.today.formatted()).font(DX.Typeface4.swiftUIFont(.display, size: 19, weight: 800)).monospacedDigit()
+                                        .foregroundStyle(DX.Ground.reading.ink)
+                                    Text(label(item.product)).font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 500)).foregroundStyle(DX.Ground.reading.muted).lineLimit(1)
                                 }
                                 Spacer(minLength: 0)
                             }
                             .padding(8)
-                            .background(DX.Palette.surface2, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                            .background(DX.Fill.surface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
                         }
                         .buttonStyle(.plain)
                     }
@@ -126,29 +126,29 @@ struct LogWidgetView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         } else {
             VStack(alignment: .leading, spacing: DX.Space.xxs) {
-                if let days = entry.daysClear { Text("Day \(days) clear").dxText(.micro) }
-                Text("Log a craving").font(.system(size: 15, weight: .semibold)).foregroundStyle(DX.Palette.text)
+                if let days = entry.daysClear { Text("Day \(days) clear").font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 700)).textCase(.uppercase).foregroundStyle(DX.Ground.reading.muted) }
+                Text("Log a craving").font(DX.Typeface4.swiftUIFont(.body, size: 16, weight: 600)).foregroundStyle(DX.Ground.reading.ink)
                 Spacer(minLength: 0)
                 HStack(spacing: DX.Space.xs) {
                     Link(destination: URL(string: "dayxero://log/craving")!) {
                         Image(systemName: "plus").font(.system(size: 15, weight: .bold))
-                            .foregroundStyle(DX.Palette.onPrimary)
+                            .foregroundStyle(DX.Ground.reading.background)
                             .frame(width: 40, height: 40)
-                            .background(DX.Palette.primary, in: Circle())
+                            .background(DX.Ground.reading.ink, in: Circle())
                     }
                     .accessibilityLabel(Text("Log a craving"))
                     Link(destination: URL(string: "dayxero://sos?source=widget")!) {
                         Image(systemName: "flame").font(.system(size: 17, weight: .semibold))
-                            .foregroundStyle(DX.Palette.onAccent)
+                            .foregroundStyle(DX.Fill.cream)
                             .frame(width: 40, height: 40)
-                            .background(DX.Palette.sage, in: Circle())
+                            .background(DX.Fill.green, in: Circle())
                     }
                     .accessibilityLabel(Text("Craving SOS"))
                 }
                 if family == .systemMedium {
                     // A quiet way to log a slip; it opens the talk-through (S8.1).
                     Link(destination: URL(string: "dayxero://log/slip")!) {
-                        Text("Slipped? \(Text("Log it").underline())").font(.system(size: 12)).foregroundStyle(DX.Palette.text2)
+                        Text("Slipped? \(Text("Log it").underline())").font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 500)).foregroundStyle(DX.Ground.reading.muted)
                     }
                     .padding(.top, 2)
                 }
@@ -168,80 +168,88 @@ struct LogWidgetView: View {
 
 // MARK: - Craving Live Activity (S6.4)
 
+/// SOS on the Lock Screen and in the Dynamic Island (v4, Phase 7): Jelli's ocean, the time ridden counting up
+/// from the start (no countdown, design doc §10 F13), "It passed" and Open.
 struct CravingLiveActivity: Widget {
+    private static let ocean = Color(hex: 0x2A52DB)
+    private static let solid = Color(hex: 0x1D3A9E)
+    private static let cream = Color(hex: 0xFFF8EE)
+    private static let soft = Color(hex: 0xE3EAFF)
+
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: CravingActivityAttributes.self) { context in
             VStack(spacing: 12) {
                 HStack(spacing: 10) {
-                    appMark
+                    jelli(36)
                     VStack(alignment: .leading, spacing: 1) {
-                        Text("Riding it out").font(.system(size: 15, weight: .semibold))
-                        Text("Breathe out slowly").font(.system(size: 12)).foregroundStyle(.white.opacity(0.6))
+                        Text("Riding it out with Jelli").font(DX.Typeface4.swiftUIFont(.body, size: 16, weight: 700))
+                        Text("Breathe in for 4, out for 6").font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 500))
+                            .foregroundStyle(Self.soft)
                     }
                     Spacer()
-                    countdown(context.state.endsAt).font(.system(size: 28, weight: .bold)).foregroundStyle(DX.Palette.sage)
-                        .frame(maxWidth: 90, alignment: .trailing)
+                    ridden(context.attributes.startedAt).font(DX.Typeface4.swiftUIFont(.display, size: 28, weight: 800))
+                        .frame(maxWidth: 96, alignment: .trailing)
                 }
-                ProgressView(timerInterval: context.state.endsAt.addingTimeInterval(-CravingSession.length)...context.state.endsAt,
-                             countsDown: false) { EmptyView() } currentValueLabel: { EmptyView() }
-                    .tint(DX.Palette.sage)
                 actions
             }
-            .foregroundStyle(.white)
+            .foregroundStyle(Self.cream)
             .padding(16)
-            .activityBackgroundTint(Color(white: 0.11).opacity(0.85))
-            .activitySystemActionForegroundColor(.white)
+            .activityBackgroundTint(Self.ocean)
+            .activitySystemActionForegroundColor(Self.cream)
         } dynamicIsland: { context in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
                     HStack(spacing: 8) {
-                        appMark
-                        VStack(alignment: .leading, spacing: 1) {
-                            Text("Riding it out").font(.system(size: 14, weight: .semibold))
-                            Text("Breathe out slowly").font(.system(size: 11)).foregroundStyle(.white.opacity(0.6))
-                        }
+                        jelli(30)
+                        Text("With Jelli").font(DX.Typeface4.swiftUIFont(.body, size: 14, weight: 700))
                     }
                 }
                 DynamicIslandExpandedRegion(.trailing) {
-                    countdown(context.state.endsAt).font(.system(size: 26, weight: .bold)).foregroundStyle(DX.Palette.sage)
-                        .frame(maxWidth: 80, alignment: .trailing)
+                    ridden(context.attributes.startedAt).font(DX.Typeface4.swiftUIFont(.display, size: 24, weight: 800))
+                        .foregroundStyle(Self.soft)
+                        .frame(maxWidth: 84, alignment: .trailing)
                 }
                 DynamicIslandExpandedRegion(.bottom) {
                     actions.padding(.top, 6)
                 }
             } compactLeading: {
-                Image(systemName: "wind").foregroundStyle(DX.Palette.sage)
+                jelli(22)
             } compactTrailing: {
-                countdown(context.state.endsAt).foregroundStyle(DX.Palette.sage).frame(maxWidth: 44)
+                ridden(context.attributes.startedAt).foregroundStyle(Self.soft).frame(maxWidth: 48)
             } minimal: {
-                Image(systemName: "wind").foregroundStyle(DX.Palette.sage)
+                jelli(22)
             }
             .widgetURL(URL(string: "dayxero://sos?source=live_activity"))
-            .keylineTint(DX.Palette.sage)
+            .keylineTint(Self.ocean)
         }
     }
 
-    private var appMark: some View {
-        Circle().fill(DX.Palette.sage).frame(width: 9, height: 9)
-            .frame(width: 28, height: 28)
-            .background(.black, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+    private func jelli(_ size: CGFloat) -> some View {
+        JelliView(mood: .breathe, stage: 1, points: size * 0.9, animate: false)
+            .frame(width: size, height: size)
+            .background(Self.solid, in: Circle())
+            .clipShape(Circle())
+            .accessibilityHidden(true)
     }
 
-    private func countdown(_ endsAt: Date) -> some View {
-        Text(timerInterval: Date.now...max(endsAt, .now), countsDown: true).monospacedDigit()
+    /// Time ridden so far, counting up.
+    private func ridden(_ startedAt: Date) -> some View {
+        Text(startedAt, style: .timer).monospacedDigit().multilineTextAlignment(.trailing)
     }
 
     private var actions: some View {
         HStack(spacing: 8) {
             Button(intent: CravingPassedIntent()) {
-                Text("It passed").font(.system(size: 14, weight: .semibold)).frame(maxWidth: .infinity, minHeight: 36)
+                Text("It passed").font(DX.Typeface4.swiftUIFont(.body, size: 16, weight: 700))
+                    .frame(maxWidth: .infinity, minHeight: 40)
             }
             .buttonStyle(.plain)
-            .foregroundStyle(.black)
-            .background(DX.Palette.sage, in: Capsule())
+            .foregroundStyle(Self.ocean)
+            .background(Self.cream, in: Capsule())
             Link(destination: URL(string: "dayxero://sos?source=live_activity")!) {
-                Text("Open").font(.system(size: 14, weight: .semibold)).frame(maxWidth: .infinity, minHeight: 36)
-                    .background(.white.opacity(0.14), in: Capsule())
+                Text("Open").font(DX.Typeface4.swiftUIFont(.body, size: 16, weight: 600))
+                    .frame(maxWidth: .infinity, minHeight: 40)
+                    .background(Self.solid, in: Capsule())
             }
         }
     }

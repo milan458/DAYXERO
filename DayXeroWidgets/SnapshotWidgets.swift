@@ -172,7 +172,7 @@ struct BreathingLiveActivity: Widget {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(context.state.done ? "Done ✓" : "Breathe with the pattern").font(.system(size: 15, weight: .semibold))
                     Text(verbatim: "\(context.attributes.patternName.uppercased()) · \(context.attributes.counts)")
-                        .font(.system(size: 11, weight: .semibold, design: .monospaced)).foregroundStyle(.white.opacity(0.6))
+                        .font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 600).monospacedDigit()).foregroundStyle(.white.opacity(0.6))
                     if !context.state.done {
                         ProgressView(timerInterval: context.attributes.startedAt...max(context.state.endsAt, context.attributes.startedAt),
                                      countsDown: false) { EmptyView() } currentValueLabel: { EmptyView() }
@@ -206,7 +206,7 @@ struct BreathingLiveActivity: Widget {
                 }
                 DynamicIslandExpandedRegion(.bottom) {
                     Text(verbatim: "\(context.attributes.patternName.uppercased()) · \(context.attributes.counts)")
-                        .font(.system(size: 11, weight: .semibold, design: .monospaced)).foregroundStyle(.white.opacity(0.7))
+                        .font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 600).monospacedDigit()).foregroundStyle(.white.opacity(0.7))
                 }
             } compactLeading: {
                 ring(18)
