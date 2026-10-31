@@ -37,12 +37,13 @@ struct SessionFlowView: View {
                                                                        removal: .opacity))
             }
         }
-        .padding(.horizontal, DX.Space.l)
+        .padding(.horizontal, DX.Layout.gutter)
         .dxReadableColumn()
         .padding(.top, DX.Space.s)
         .padding(.bottom, DX.Space.xs)
-        .dxCanvas()
-        .animation(DX.Motion.animation(DX.Motion.glide, reduceMotion: reduceMotion), value: index)
+        .foregroundStyle(Read4.ink)
+        .background(Read4.background.ignoresSafeArea())
+        .animation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion), value: index)
         .onAppear(perform: start)
     }
 
@@ -68,6 +69,17 @@ struct SessionFlowView: View {
         #if DEBUG
         if UserDefaults.standard.object(forKey: "dx.sessionStep") != nil {
             index = min(max(UserDefaults.standard.integer(forKey: "dx.sessionStep"), 0), built.count - 1)
+        }
+        // Screenshots of one step by name: -dx.sessionBeat W1D2.3, or intro, audio, mission, completion.
+        if let name = UserDefaults.standard.string(forKey: "dx.sessionBeat") {
+            let step: FlowStep = switch name {
+            case "intro": .intro
+            case "audio": .audio
+            case "mission": .mission
+            case "completion": .completion
+            default: .beat(name)
+            }
+            if let found = built.firstIndex(of: step) { index = found }
         }
         #endif
         Analytics.track(isReplay || record.completedAt != nil ? .programReplayStarted(sessionId: session.id)
@@ -101,37 +113,30 @@ struct SessionFlowView: View {
 
     // MARK: Chrome
 
+    /// The lesson bar: close ("Your place is saved."), a green bar over the steps, and Xero's avatar.
     private func header(_ session: ProgramContent.Session) -> some View {
-        VStack(spacing: DX.Space.s) {
-            HStack(spacing: 4) {
-                ForEach(steps.indices, id: \.self) { i in
-                    Capsule().fill(i <= index ? DX.Palette.text : DX.Palette.track).frame(height: 4)
-                }
+        HStack(spacing: 12) {
+            Button(action: close) {
+                Image(systemName: "xmark").font(.system(size: 16, weight: .bold)).foregroundStyle(Read4.ink)
+                    .frame(width: 44, height: 44)
+                    .background(Read4.surface, in: Circle())
             }
-            .accessibilityHidden(true)
-            HStack {
-                Button(action: close) {
-                    Image(systemName: "xmark").font(.system(size: 13, weight: .semibold)).foregroundStyle(DX.Palette.text2)
-                        .frame(width: 44, height: 44)
-                        .background(DX.Palette.surface1, in: Circle())
-                        .overlay(Circle().strokeBorder(DX.Palette.hairline))
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel(Text(isReplay ? "Close" : "Close. Your place is saved."))
-                Spacer()
-                Text(verbatim: "\(session.label) · \(index + 1) of \(steps.count)").dxText(.micro)
-                Spacer()
-                if isReplay {
-                    Text("Replay").font(.custom(DX.Typeface.bold, size: 11, relativeTo: .caption2)).tracking(1).textCase(.uppercase)
-                        .foregroundStyle(DX.Palette.text2)
-                        .padding(.horizontal, 10).padding(.vertical, 6)
-                        .background(DX.Palette.surface2, in: Capsule())
-                } else {
-                    Color.clear.frame(width: 44, height: 44)
-                }
+            .buttonStyle(.plain)
+            .accessibilityLabel(Text(isReplay ? "Close" : "Close. Your place is saved."))
+            V4ProgressBar(value: Double(index + 1) / Double(max(steps.count, 1)))
+                .accessibilityLabel(Text("\(session.label), step \(index + 1) of \(steps.count)"))
+            if isReplay {
+                Text("Replay").dxType(.caption).textCase(.uppercase)
+                    .foregroundStyle(Read4.muted)
+                    .padding(.horizontal, 10).padding(.vertical, 6)
+                    .background(Read4.surface, in: Capsule())
             }
-            .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+            XeroView(mood: .hello, stage: 1, size: .avatar, animate: false)
+                .background(DX.Ground.apricot.background, in: Circle())
+                .clipShape(Circle())
+                .accessibilityHidden(true)
         }
+        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
         .padding(.bottom, DX.Space.s)
     }
 
@@ -168,40 +173,58 @@ struct SessionIntro: View {
     let isReplay: Bool
     let onBegin: () -> Void
 
+    @Environment(\.modelContext) private var context
+
+    /// P1: the path at the sky's clarity, Xero 140, the session's label, title and subtitle.
     var body: some View {
         VStack(spacing: DX.Space.m) {
             ScrollView {
-                VStack(alignment: .leading, spacing: DX.Space.s) {
-                    Spacer(minLength: DX.Space.xl)
-                    ZStack {
-                        Circle().fill(DX.Palette.accentSoft).frame(width: 132, height: 132)
-                        Image(systemName: "headphones").font(.system(size: 50, weight: .regular)).foregroundStyle(DX.Palette.accentInk)
+                VStack(alignment: .leading, spacing: 10) {
+                    ZStack(alignment: .bottom) {
+                        HorizonScene(.path, clarity: clarity, fit: .bottom)
+                        XeroView(mood: .hello, stage: 1, size: .scene).offset(y: -4)
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding(.bottom, DX.Space.m)
+                    .frame(height: 220)
+                    .clipShape(RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
+                    .padding(.bottom, DX.Space.s)
                     .accessibilityHidden(true)
-                    Text(verbatim: session.label).dxText(.micro).foregroundStyle(DX.Palette.accentInk)
+                    .dxArrive(0)
+                    Text(verbatim: eyebrow).dxType(.caption).foregroundStyle(Read4.muted).dxArrive(1)
                     Text(verbatim: session.title.resolve(variant) ?? "")
-                        .font(.custom(DX.Typeface.bold, size: 30, relativeTo: .largeTitle)).tracking(-0.6)
-                        .foregroundStyle(DX.Palette.text)
+                        .dxType(.large)
+                        .foregroundStyle(Read4.ink)
+                        .fixedSize(horizontal: false, vertical: true)
                         .accessibilityAddTraits(.isHeader)
-                    Text(verbatim: session.subtitle.resolve(variant) ?? "").dxText(.subtitle)
-                    Text("\(session.durationMinutes) min · Audio, activities and today's mission").dxText(.subtitle)
+                        .dxArrive(1)
+                    Text(verbatim: session.subtitle.resolve(variant) ?? "").dxType(.body).foregroundStyle(Read4.muted).dxArrive(2)
+                    Label("\(session.durationMinutes) min · Audio, activities and today's mission", systemImage: "headphones")
+                        .dxType(.footnote).foregroundStyle(Read4.ink)
+                        .dxArrive(2)
                     if let hint = session.listenHint?.resolve(variant) {
-                        HStack(spacing: DX.Space.s) {
-                            Image(systemName: "clock").foregroundStyle(DX.Palette.accentInk)
-                            Text(verbatim: hint).font(.custom(DX.Typeface.regular, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
-                        }
-                        .padding(DX.Space.m)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
-                        .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(DX.Palette.hairline))
-                        .padding(.top, DX.Space.xs)
+                        Label(hint, systemImage: "clock")
+                            .dxType(.footnote).foregroundStyle(Read4.ink)
+                            .v4Card()
+                            .padding(.top, DX.Space.xs)
+                            .dxArrive(3)
                     }
                 }
             }
-            Button(isReplay ? "Replay" : "Begin", action: onBegin).buttonStyle(.dxPrimary).dynamicTypeSize(...DynamicTypeSize.accessibility1)
+            .scrollBounceBehavior(.basedOnSize)
+            Button(isReplay ? "Replay" : "Begin", action: onBegin)
+                .buttonStyle(.dx(.primary, on: .reading))
+                .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         }
+    }
+
+    /// "SUN 8 NOV · DAY 2": today's date and the session's label.
+    private var eyebrow: String {
+        "\(Date.now.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))) · \(session.label)".uppercased()
+    }
+
+    private var clarity: Int {
+        guard let profile = try? context.fetch(FetchDescriptor<UserProfile>()).first else { return CrewGrowth.prepClarity }
+        let stats = ProgressStats(quitDay: profile.quitDay, baselines: [], clock: DayClock(boundaryHour: profile.dayBoundaryHour))
+        return stats.isPrep(at: .now) ? CrewGrowth.prepClarity : CrewGrowth.clarity(daysClear: stats.daysClear(at: .now))
     }
 }
 
@@ -257,7 +280,7 @@ struct ProgramAudioStep: View {
                                 onFinish: { finished = true })
                     .frame(maxHeight: .infinity)
                 if finished || ctx.isReplay {
-                    Button("Continue", action: onDone).buttonStyle(.dxPrimary).dynamicTypeSize(...DynamicTypeSize.accessibility1)
+                    Button("Continue", action: onDone).buttonStyle(.dx(.primary, on: .reading)).dynamicTypeSize(...DynamicTypeSize.accessibility1)
                 }
             } else {
                 comingSoon
@@ -267,19 +290,18 @@ struct ProgramAudioStep: View {
 
     private var comingSoon: some View {
         VStack(spacing: DX.Space.m) {
-            Text(verbatim: session.title.resolve(ctx.variant) ?? "").dxText(.title).multilineTextAlignment(.center)
-            CloudWave(level: { _ in 0.35 }, playing: false)
-                .frame(height: 190)
-                .opacity(0.6)
+            Text(verbatim: session.title.resolve(ctx.variant) ?? "").v4Text(.title).multilineTextAlignment(.center)
+            XeroBreathRing(playing: false)
+                .frame(height: 200)
             Label("Audio coming soon", systemImage: "headphones")
-                .font(.custom(DX.Typeface.bold, size: 13, relativeTo: .footnote))
-                .foregroundStyle(Color(light: 0xB07A14, dark: 0xE5A93C))
+                .dxFont(14, weight: 700, style: .footnote)
+                .foregroundStyle(Read4.amber)
                 .padding(.horizontal, 14).padding(.vertical, 8)
-                .background(DX.Palette.amber.opacity(0.2), in: Capsule())
+                .background(Read4.amber.opacity(0.12), in: Capsule())
             Text("The guided audio for this session is on its way. Everything after it works now, so carry on.")
-                .dxText(.subtitle).multilineTextAlignment(.center)
+                .v4Text(.subtitle).multilineTextAlignment(.center)
             Spacer()
-            Button("Continue", action: onDone).buttonStyle(.dxPrimary).dynamicTypeSize(...DynamicTypeSize.accessibility1)
+            Button("Continue", action: onDone).buttonStyle(.dx(.primary, on: .reading)).dynamicTypeSize(...DynamicTypeSize.accessibility1)
         }
         .onAppear {
             guard !ctx.isReplay, let record else { return }
@@ -291,38 +313,48 @@ struct ProgramAudioStep: View {
 
 // MARK: - Mission
 
+/// P5: the mission on an apricot card (Xero's colour), then "Got it".
 struct MissionCard: View {
     let mission: ProgramContent.Mission
     let ctx: BeatContext
     let onDone: () -> Void
 
     var body: some View {
+        let ground = DX.Ground.apricot
         VStack(spacing: DX.Space.m) {
             Spacer()
-            VStack(alignment: .leading, spacing: DX.Space.m) {
-                Text("Today's mission").dxText(.micro).foregroundStyle(DX.Palette.accentInk)
-                VStack(alignment: .leading, spacing: DX.Space.m) {
-                    Image(systemName: "scope").font(.system(size: 36)).foregroundStyle(DX.Palette.accentInk).accessibilityHidden(true)
-                    Text(verbatim: ctx.text(mission.text))
-                        .font(.custom(DX.Typeface.semibold, size: 22, relativeTo: .title2)).tracking(-0.3)
-                        .foregroundStyle(DX.Palette.text)
-                    Text(mission.followUp == nil ? "It stays on your Today card until the next session."
-                         : "When you log it, we'll ask two quick questions. It stays on your Today card until the next session.")
-                        .dxText(.subtitle)
-                }
-                .padding(DX.Space.l)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
-                .overlay(RoundedRectangle(cornerRadius: 24, style: .continuous).strokeBorder(DX.Palette.hairline))
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Today's mission").dxType(.caption).textCase(.uppercase).foregroundStyle(ground.muted)
+                Text(verbatim: ctx.text(mission.text))
+                    .dxType(.title)
+                    .foregroundStyle(ground.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+                Text(mission.followUp == nil ? "It stays on your Today card until the next session."
+                     : "When you log it, we'll ask two quick questions. It stays on your Today card until the next session.")
+                    .dxType(.footnote)
+                    .foregroundStyle(ground.muted)
+                    .fixedSize(horizontal: false, vertical: true)
             }
+            .padding(20)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background {
+                RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous)
+                    .fill(ground.background)
+                    .shadow(color: .black.opacity(0.12), radius: 0, x: 0, y: 5)
+            }
+            .accessibilityElement(children: .combine)
+            .dxArrive(0)
             Spacer()
-            Button("Got it", action: onDone).buttonStyle(.dxPrimary).dynamicTypeSize(...DynamicTypeSize.accessibility1)
+            Button("Got it", action: onDone)
+                .buttonStyle(.dx(.primary, on: .reading))
+                .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         }
     }
 }
 
 // MARK: - Completion
 
+/// P6: "DAY 2 DONE", the completion line and what comes next. Settle only: a lesson is not a milestone.
 struct SessionCompletion: View {
     let session: ProgramContent.Session
     let ctx: BeatContext
@@ -344,33 +376,50 @@ struct SessionCompletion: View {
         }
     }
 
+    private var clarity: Int {
+        let profile = ctx.store.profile
+        let stats = ProgressStats(quitDay: profile.quitDay, baselines: [], clock: DayClock(boundaryHour: profile.dayBoundaryHour))
+        return stats.isPrep(at: .now) ? CrewGrowth.prepClarity : CrewGrowth.clarity(daysClear: stats.daysClear(at: .now))
+    }
+
     var body: some View {
         VStack(spacing: DX.Space.m) {
-            Spacer()
-            ZStack {
-                Circle().fill(DX.Palette.accentSoft).frame(width: 150, height: 150)
-                    .scaleEffect(shown || reduceMotion ? 1 : 0.7)
-                Image(systemName: "checkmark").font(.system(size: 56, weight: .semibold)).foregroundStyle(DX.Palette.accentInk)
+            ScrollView {
+                VStack(spacing: 10) {
+                    ZStack(alignment: .bottom) {
+                        HorizonScene(.path, clarity: clarity, fit: .bottom)
+                        XeroView(mood: .calm, stage: 1, size: .scene)
+                            .offset(y: shown || reduceMotion ? -4 : 30)
+                            .opacity(shown ? 1 : 0)
+                    }
+                    .frame(height: 220)
+                    .clipShape(RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
+                    .accessibilityHidden(true)
+                    .padding(.top, DX.Space.m)
+                    Text("\(session.label) done").dxType(.caption).textCase(.uppercase).foregroundStyle(Read4.muted)
+                        .padding(.top, DX.Space.s)
+                    Text(verbatim: ctx.text(session.completionText))
+                        .dxType(.large)
+                        .multilineTextAlignment(.center)
+                        .foregroundStyle(Read4.ink)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .accessibilityAddTraits(.isHeader)
+                    if let next, !isReplay {
+                        Label(next, systemImage: "calendar")
+                            .dxType(.footnote).foregroundStyle(Read4.ink)
+                            .v4Card()
+                            .padding(.top, DX.Space.s)
+                    }
+                }
             }
-            .accessibilityHidden(true)
-            Text("\(session.label) done").dxText(.micro).padding(.top, DX.Space.m)
-            Text(verbatim: ctx.text(session.completionText))
-                .font(.custom(DX.Typeface.bold, size: 26, relativeTo: .title)).tracking(-0.5)
-                .multilineTextAlignment(.center)
-                .foregroundStyle(DX.Palette.text)
-            Spacer()
-            if let next, !isReplay {
-                Text(verbatim: next).dxText(.subtitle)
-                    .padding(DX.Space.m)
-                    .frame(maxWidth: .infinity)
-                    .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
-                    .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(DX.Palette.hairline))
-            }
-            Button("Done", action: onDone).buttonStyle(.dxPrimary).dynamicTypeSize(...DynamicTypeSize.accessibility1)
+            .scrollBounceBehavior(.basedOnSize)
+            Button("Done", action: onDone)
+                .buttonStyle(.dx(.primary, on: .reading))
+                .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         }
         .sensoryFeedback(.success, trigger: shown)
         .onAppear {
-            withAnimation(DX.Motion.animation(DX.Motion.glide, reduceMotion: reduceMotion)) { shown = true }
+            withAnimation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion)) { shown = true }
         }
     }
 }

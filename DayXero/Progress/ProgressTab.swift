@@ -10,6 +10,7 @@ struct ProgressTab: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dynamicTypeSize) private var typeSize
     @Query(sort: \LogEntry.timestamp, order: .reverse) private var entries: [LogEntry]
+    @Query private var checkIns: [CheckIn]
     @State private var series = Insights.Series.cravings
     @State private var editing: LogEntry?
     @State private var showHealth = UserDefaults.standard.bool(forKey: "dx.openHealth")
@@ -62,8 +63,8 @@ struct ProgressTab: View {
         let built = content()
         return ScrollViewReader { proxy in
             ScrollView {
-                VStack(alignment: .leading, spacing: DX.Space.xs) { built }
-                    .padding(.horizontal, DX.Space.m)
+                VStack(alignment: .leading, spacing: 10) { built }
+                    .padding(.horizontal, DX.Layout.gutter)
                     .dxReadableColumn()
                     .padding(.top, DX.Space.s)
                     .padding(.bottom, DX.Space.l)
@@ -80,8 +81,9 @@ struct ProgressTab: View {
     @ViewBuilder
     private func gained(_ snap: HomeSnapshot, insights: Insights) -> some View {
         header(snap)
-        hero(snap)
+        skyStrip(snap)
         tiles(snap, insights: insights)
+        moneyLine(snap)
         if !isPrepPhase(snap) {
             MilestonesRow(daysClear: snap.daysClear) { milestoneOpen = $0 }
         }
@@ -90,15 +92,15 @@ struct ProgressTab: View {
     @ViewBuilder
     private func details(_ insights: Insights, now: Date) -> some View {
         // What's changing in the body, from Quit Day (S10).
-        HealthSummaryCard(profile: profile, now: now) { showHealth = true }
+        whatsChanging(now: now)
         // The full step plan for each NRT product (S9.5).
         ForEach(profile.nrtPlans.sorted { $0.createdAt < $1.createdAt }) { plan in
             NRTCard(plan: plan, clock: DayClock(boundaryHour: profile.dayBoundaryHour), now: now, showAllSteps: true)
         }
         HStack(alignment: .firstTextBaseline) {
-            Text("Your patterns").dxText(.micro)
+            Text("Your patterns").v4Text(.micro)
             Spacer()
-            if insights.isReady { Text("Last 4 weeks").font(.custom(DX.Typeface.regular, size: 11, relativeTo: .caption2)).foregroundStyle(DX.Palette.muted) }
+            if insights.isReady { Text("Last 4 weeks").dxFont(12, weight: 400, style: .caption2).foregroundStyle(Read4.muted) }
         }
         .padding(.top, DX.Space.m)
         .accessibilityAddTraits(.isHeader)
@@ -115,71 +117,112 @@ struct ProgressTab: View {
 
     // MARK: What you've gained (S7.4)
 
+    /// F12: "Since Quit Day · Fri 6 Nov" / "Your progress", with Log beside it.
     private func header(_ snap: HomeSnapshot) -> some View {
         HStack(alignment: .center) {
             VStack(alignment: .leading, spacing: 2) {
-                Text(eyebrow(snap)).dxText(.micro)
-                Text("Progress").dxText(.title).accessibilityAddTraits(.isHeader)
+                Text(eyebrow(snap)).dxType(.caption).textCase(.uppercase).foregroundStyle(Read4.muted)
+                Text("Your progress").dxType(.large).foregroundStyle(Read4.ink).accessibilityAddTraits(.isHeader)
             }
             Spacer()
             LogButton { log.open() }
         }
-        .padding(.bottom, DX.Space.xxs)
+        .padding(.top, DX.Space.m)
     }
 
     private func eyebrow(_ snap: HomeSnapshot) -> String {
         if case let .prep(days) = snap.phase {
             return String(localized: "Quit Day in \(days) days")
         }
-        return String(localized: "Day \(snap.daysClear) · since \(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).day().month()))")
+        return String(localized: "Since Quit Day · \(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)))")
     }
 
-    private func hero(_ snap: HomeSnapshot) -> some View {
-        let perDay = snap.moneyPerYear / 365
-        let isPrep: Bool = if case .prep = snap.phase { true } else { false }
-        return DXGlassCard {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(verbatim: (isPrep ? snap.moneyPerYear : snap.moneyKept)
-                    .formatted(.currency(code: snap.currencyCode).precision(.fractionLength(isPrep ? 0 : 2))))
-                    .font(.custom(DX.Typeface.bold, size: 40, relativeTo: .largeTitle))
-                    .foregroundStyle(DX.Palette.text)
-                    .contentTransition(.numericText())
-                if isPrep {
-                    Text("a year, yours to keep from Quit Day").dxText(.subtitle)
-                } else {
-                    Text("kept so far · \(perDay.formatted(.currency(code: snap.currencyCode))) a day, \(snap.moneyPerYear.formatted(.currency(code: snap.currencyCode).precision(.fractionLength(0)))) this year")
-                        .dxText(.subtitle)
-                }
+    /// The path at the sky's clarity, with "Sky 28% clear · clears a little each day".
+    private func skyStrip(_ snap: HomeSnapshot) -> some View {
+        let prep = isPrepPhase(snap)
+        let clarity = prep ? CrewGrowth.prepClarity : CrewGrowth.clarity(daysClear: snap.daysClear)
+        return HorizonScene(.path, clarity: clarity, fit: .bottom)
+            .frame(height: 130)
+            .clipShape(RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
+            .overlay(alignment: .bottomLeading) {
+                Text(prep ? "Sky \(clarity)% clear · clears from Quit Day" : "Sky \(clarity)% clear · clears a little each day")
+                    .dxType(.caption)
+                    .foregroundStyle(DX.Fill.navy)
+                    .padding(.horizontal, 12).padding(.vertical, 6)
+                    .background(DX.Fill.cream.opacity(0.92), in: Capsule())
+                    .padding(12)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .accessibilityElement(children: .combine)
+            .accessibilityElement(children: .combine)
     }
 
+    /// A 2×2 grid that counts up: days clear, waves ridden out, not used, kept. In prep: prep done, waves, yearly, Quit Day.
     @ViewBuilder
     private func tiles(_ snap: HomeSnapshot, insights: Insights) -> some View {
         let columns = typeSize.isAccessibilitySize
             ? [GridItem(.flexible())]
-            : [GridItem(.flexible(), spacing: DX.Space.xs), GridItem(.flexible())]
+            : [GridItem(.flexible(), spacing: 8), GridItem(.flexible())]
         let ridden = entries.filter { $0.kind == .craving && $0.outcome == .passed }.count
-        let isPrep: Bool = if case .prep = snap.phase { true } else { false }
-        LazyVGrid(columns: columns, alignment: .leading, spacing: DX.Space.xs) {
-            // Only the products picked in onboarding get a counter.
-            if !isPrep {
-                ForEach(snap.counters) { counter in
-                    ProgressTile(value: counter.avoided.formatted(),
-                                 caption: "\(Text(avoidedLabel(counter.product))) · \(counter.perDayBefore) a day before")
-                }
-            }
-            ProgressTile(value: ridden.formatted(),
-                         caption: "cravings ridden out · \(CravingStats.passedThisWeek(entries, now: insights.now)) this week")
-            if isPrep {
-                ProgressTile(value: String(localized: "\(snap.prepDone) of \(snap.prepTotal)"), caption: "prep days done")
+        let code = snap.currencyCode
+        let whole: (Double) -> String = { Decimal($0).formatted(.currency(code: code).precision(.fractionLength(0))) }
+        let cents: (Double) -> String = { Decimal($0).formatted(.currency(code: code).precision(.fractionLength(2))) }
+        LazyVGrid(columns: columns, alignment: .leading, spacing: 8) {
+            if isPrepPhase(snap) {
+                ProgressStat(value: Double(snap.prepDone), label: String(localized: "of \(snap.prepTotal) prep days done"))
+                ProgressStat(value: Double(ridden), label: String(localized: "waves ridden out"))
+                ProgressStat(value: NSDecimalNumber(decimal: snap.moneyPerYear).doubleValue, label: String(localized: "to keep a year"), format: whole)
+                ProgressStat(value: Double(max(snap.prepTotal - snap.prepDayNumber + 1, 0)), label: String(localized: "days to Quit Day"))
             } else {
-                ProgressTile(value: snap.daysClear.formatted(),
-                             caption: "days clear since \(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).day().month()))")
+                ProgressStat(value: Double(snap.daysClear), label: snap.daysClear == 1 ? String(localized: "day clear") : String(localized: "days clear"))
+                ProgressStat(value: Double(ridden), label: String(localized: "waves ridden out"))
+                ForEach(snap.counters) { counter in
+                    ProgressStat(value: Double(counter.avoided), label: String(localized: avoidedLabel(counter.product)))
+                }
+                ProgressStat(value: NSDecimalNumber(decimal: snap.moneyKept).doubleValue, label: String(localized: "kept"), format: cents)
             }
         }
+    }
+
+    /// "$7 a day, about $2,555 a year. 2 evening check-ins with Glim."
+    private func moneyLine(_ snap: HomeSnapshot) -> some View {
+        let code = snap.currencyCode
+        let perDay = (snap.moneyPerYear / 365).formatted(.currency(code: code).precision(.fractionLength(0)))
+        let perYear = snap.moneyPerYear.formatted(.currency(code: code).precision(.fractionLength(0)))
+        let checkInLine = checkIns.isEmpty ? "" : " " + (checkIns.count == 1 ? String(localized: "1 evening check-in with Glim.")
+                                                         : String(localized: "\(checkIns.count) evening check-ins with Glim."))
+        return Text(verbatim: String(localized: "\(perDay) a day, about \(perYear) a year.") + checkInLine)
+            .dxType(.footnote)
+            .foregroundStyle(Read4.muted)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+
+    /// WHAT'S CHANGING: the change under way and the next one, each with its source; the whole timeline one tap away.
+    @ViewBuilder
+    private func whatsChanging(now: Date) -> some View {
+        let product = profile.primaryProduct?.product ?? .cigarettes
+        let timeline = HealthTimeline.bundled
+        let items = timeline?.items(for: product) ?? []
+        let elapsed = HealthTimeline.elapsedHours(quitDay: profile.quitDay, now: now, clock: DayClock(boundaryHour: profile.dayBoundaryHour))
+        let (current, next) = HealthTimeline.nowAndNext(items, elapsedHours: elapsed)
+        Text("What's changing").dxType(.caption).textCase(.uppercase).foregroundStyle(Read4.muted)
+            .padding(.top, DX.Space.m)
+            .accessibilityAddTraits(.isHeader)
+        if let current {
+            HealthFactCard(status: String(localized: "Happening now"), when: current.when, title: current.title, line: current.line,
+                           sourceLabel: timeline?.source(current.source)?.label ?? "")
+        }
+        if let next {
+            HealthFactCard(status: elapsed < 0 ? String(localized: "Starting on Quit Day") : String(localized: "Next"),
+                           when: next.when, title: next.title, line: current == nil ? next.line : "",
+                           sourceLabel: timeline?.source(next.source)?.label ?? "")
+        }
+        Button { showHealth = true } label: {
+            Label("See the whole timeline", systemImage: "chevron.right")
+                .labelStyle(TrailingIcon())
+                .dxFont(14, weight: 700, style: .footnote)
+                .foregroundStyle(Read4.ink)
+                .frame(minHeight: 44)
+        }
+        .buttonStyle(.plain)
     }
 
     private func isPrepPhase(_ snap: HomeSnapshot) -> Bool {
@@ -187,7 +230,7 @@ struct ProgressTab: View {
         return false
     }
 
-    private func avoidedLabel(_ product: Product) -> LocalizedStringKey {
+    private func avoidedLabel(_ product: Product) -> String.LocalizationValue {
         switch product {
         case .cigarettes: "cigarettes not smoked"
         case .vape: "puffs not taken"
@@ -200,18 +243,18 @@ struct ProgressTab: View {
     private func heatCard(_ insights: Insights) -> some View {
         let grid = insights.heatMap(series)
         let peaks = insights.peaks(series)
-        return DXCard(padding: 14) {
+        return V4Card(padding: 14) {
             VStack(alignment: .leading, spacing: DX.Space.s) {
                 HStack(alignment: .top) {
-                    Text(series == .cravings ? LocalizedStringKey("When cravings hit") : LocalizedStringKey("When you used")).dxText(.cardHeading)
+                    Text(series == .cravings ? LocalizedStringKey("When cravings hit") : LocalizedStringKey("When you used")).v4Text(.cardHeading)
                     Spacer()
                     SeriesToggle(selection: $series)
                 }
                 if let summary = summary(peaks) {
-                    Text(summary).dxText(.subtitle)
+                    Text(summary).v4Text(.subtitle)
                 }
                 // Uses and slips in amber, so they read differently from cravings (S8.4).
-                HeatMap(grid: grid, tint: series == .cravings ? DX.Palette.sage : DX.Palette.amber)
+                HeatMap(grid: grid, tint: series == .cravings ? Read4.accent : Read4.amber)
             }
         }
     }
@@ -219,18 +262,18 @@ struct ProgressTab: View {
     private func summary(_ peaks: [Insights.Peak]) -> AttributedString? {
         if series == .uses, let first = peaks.first {
             var text = AttributedString(peakName(first))
-            text.font = .custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote)
-            text.foregroundColor = DX.Palette.text
+            text.font = DX.Typeface4.swiftUIFont(.body, size: 14, weight: 600)
+            text.foregroundColor = Read4.ink
             return text + AttributedString(String(localized: " are when you've used most."))
         }
         guard let first = peaks.first else { return nil }
         var text = AttributedString(peakName(first))
-        text.font = .custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote)
-        text.foregroundColor = DX.Palette.text
+        text.font = DX.Typeface4.swiftUIFont(.body, size: 14, weight: 600)
+        text.foregroundColor = Read4.ink
         if peaks.count > 1 {
             var second = AttributedString(peakName(peaks[1]).lowercased())
             second.font = text.font
-            second.foregroundColor = DX.Palette.text
+            second.foregroundColor = Read4.ink
             text += AttributedString(String(localized: " are your toughest time, then ")) + second + AttributedString(".")
         } else {
             text += AttributedString(String(localized: " are your toughest time."))
@@ -256,22 +299,22 @@ struct ProgressTab: View {
     private func triggersCard(_ insights: Insights) -> some View {
         let top = insights.topTriggers
         let most = max(top.first?.count ?? 1, 1)
-        return DXCard(padding: 14) {
+        return V4Card(padding: 14) {
             VStack(alignment: .leading, spacing: DX.Space.xs) {
                 HStack(alignment: .firstTextBaseline) {
-                    Text("Top triggers").dxText(.cardHeading)
+                    Text("Top triggers").v4Text(.cardHeading)
                     Spacer()
-                    Text("\(insights.taggedCount) logged").dxText(.micro)
+                    Text("\(insights.taggedCount) logged").v4Text(.micro)
                 }
                 if top.isEmpty {
-                    Text("Tag what set a craving off, in SOS or a craving log, and your top triggers show here.").dxText(.subtitle)
+                    Text("Tag what set a craving off, in SOS or a craving log, and your top triggers show here.").v4Text(.subtitle)
                 }
                 ForEach(top, id: \.trigger) { item in
                     HStack(spacing: DX.Space.xs) {
-                        Text(item.trigger.title).font(DX.TextStyle.subtitle.font).foregroundStyle(DX.Palette.text)
+                        Text(item.trigger.title).dxFont(14, weight: 400, style: .footnote).foregroundStyle(Read4.ink)
                             .frame(width: typeSize.isAccessibilitySize ? nil : 96, alignment: .leading)
-                        DXProgressBar(value: Double(item.count) / Double(most))
-                        Text(verbatim: item.count.formatted()).font(DX.TextStyle.subtitle.font).foregroundStyle(DX.Palette.muted)
+                        V4ProgressBar(value: Double(item.count) / Double(most))
+                        Text(verbatim: item.count.formatted()).dxFont(14, weight: 400, style: .footnote).foregroundStyle(Read4.muted)
                             .monospacedDigit().frame(minWidth: 22, alignment: .trailing)
                     }
                     .accessibilityElement(children: .combine)
@@ -284,24 +327,24 @@ struct ProgressTab: View {
         let weeks = insights.weeks()
         let most = max(weeks.map(\.cravings).max() ?? 1, 1)
         let current = weeks.last
-        return DXCard(padding: 14) {
+        return V4Card(padding: 14) {
             VStack(alignment: .leading, spacing: DX.Space.s) {
                 HStack(alignment: .firstTextBaseline) {
-                    Text("Cravings by week").dxText(.cardHeading)
+                    Text("Cravings by week").v4Text(.cardHeading)
                     Spacer()
-                    if let change = insights.weekOnWeekChange { Text(changeLabel(change)).dxText(.micro) }
+                    if let change = insights.weekOnWeekChange { Text(changeLabel(change)).v4Text(.micro) }
                 }
                 HStack(alignment: .bottom, spacing: DX.Space.s) {
                     ForEach(Array(weeks.enumerated()), id: \.offset) { index, week in
                         VStack(spacing: 4) {
-                            Text(verbatim: week.cravings.formatted()).font(.custom(DX.Typeface.semibold, size: 12, relativeTo: .caption))
-                                .foregroundStyle(DX.Palette.text)
+                            Text(verbatim: week.cravings.formatted()).dxFont(12, weight: 600, style: .caption1)
+                                .foregroundStyle(Read4.ink)
                             RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                .fill(week.isCurrent ? DX.Palette.sage : DX.Palette.track)
+                                .fill(week.isCurrent ? Read4.accent : Read4.track)
                                 .frame(height: max(4, 72 * CGFloat(week.cravings) / CGFloat(most)))
                             Text(weekLabel(week, back: weeks.count - 1 - index))
-                                .font(.custom(DX.Typeface.regular, size: 10, relativeTo: .caption2))
-                                .foregroundStyle(DX.Palette.muted)
+                                .dxFont(12, weight: 400, style: .caption2)
+                                .foregroundStyle(Read4.muted)
                                 .lineLimit(1).minimumScaleFactor(0.8)
                         }
                         .frame(maxWidth: .infinity)
@@ -310,7 +353,7 @@ struct ProgressTab: View {
                 }
                 .frame(height: 112, alignment: .bottom)
                 if let current, current.cravings > 0 {
-                    Text("You rode out \(current.riddenOut) of \(current.cravings) cravings this week.").dxText(.subtitle)
+                    Text("You rode out \(current.riddenOut) of \(current.cravings) cravings this week.").v4Text(.subtitle)
                 }
             }
         }
@@ -332,7 +375,7 @@ struct ProgressTab: View {
 
     @ViewBuilder
     private var recentLogs: some View {
-        Text("Recent logs").dxText(.micro).padding(.top, DX.Space.s)
+        Text("Recent logs").v4Text(.micro).padding(.top, DX.Space.s)
         ForEach(entries.prefix(8)) { entry in
             Button { editing = entry } label: { LogEntryRow(entry: entry) }
                 .buttonStyle(.plain)
@@ -352,7 +395,7 @@ struct ProgressTab: View {
     /// Before there's a week of logs (S18.7): from the first log, when they happen so far; before any, one line
     /// over the blurred map. Either way, what the person told us in setup.
     private func earlyPatterns(_ insights: Insights) -> some View {
-        DXCard(padding: 14) {
+        V4Card(padding: 14) {
             VStack(alignment: .leading, spacing: DX.Space.s) {
                 if insights.points.isEmpty {
                     ZStack {
@@ -361,29 +404,29 @@ struct ProgressTab: View {
                             .opacity(0.4)
                             .accessibilityHidden(true)
                         Text("Your first log starts the map")
-                            .font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
-                            .foregroundStyle(DX.Palette.text)
+                            .dxFont(14, weight: 600, style: .footnote)
+                            .foregroundStyle(Read4.ink)
                             .padding(.vertical, 8).padding(.horizontal, 14)
-                            .background(DX.Palette.surface2, in: Capsule())
+                            .background(Read4.surface, in: Capsule())
                     }
                 } else {
                     let counts = insights.timeOfDayCounts
                     let most = max(counts.map(\.count).max() ?? 1, 1)
-                    Text("When you've logged so far").dxText(.cardHeading)
+                    Text("When you've logged so far").v4Text(.cardHeading)
                     ForEach(counts, id: \.time) { item in
                         HStack(spacing: DX.Space.xs) {
-                            Text(item.time.title).font(DX.TextStyle.subtitle.font).foregroundStyle(DX.Palette.text)
+                            Text(item.time.title).dxFont(14, weight: 400, style: .footnote).foregroundStyle(Read4.ink)
                                 .frame(width: typeSize.isAccessibilitySize ? nil : 84, alignment: .leading)
-                            DXProgressBar(value: Double(item.count) / Double(most))
-                            Text(verbatim: item.count.formatted()).font(DX.TextStyle.subtitle.font).foregroundStyle(DX.Palette.muted)
+                            V4ProgressBar(value: Double(item.count) / Double(most))
+                            Text(verbatim: item.count.formatted()).dxFont(14, weight: 400, style: .footnote).foregroundStyle(Read4.muted)
                                 .monospacedDigit().frame(minWidth: 22, alignment: .trailing)
                         }
                         .accessibilityElement(children: .combine)
                     }
-                    Text(readyLine(insights)).dxText(.subtitle)
+                    Text(readyLine(insights)).v4Text(.subtitle)
                 }
                 if let setup = fromSetup {
-                    Text(setup).dxText(.subtitle)
+                    Text(setup).v4Text(.subtitle)
                 }
             }
         }
@@ -416,12 +459,12 @@ struct LogButton: View {
     var body: some View {
         Button(action: action) {
             Label("Log", systemImage: "plus")
-                .font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
-                .foregroundStyle(DX.Palette.text)
+                .dxFont(14, weight: 600, style: .footnote)
+                .foregroundStyle(Read4.ink)
                 .padding(.horizontal, 14)
                 .frame(minHeight: 36)
-                .background(DX.Palette.surface1, in: Capsule())
-                .overlay(Capsule().strokeBorder(DX.Palette.hairline))
+                .background(Read4.card, in: Capsule())
+                .overlay(Capsule().strokeBorder(Read4.hairline))
         }
         .buttonStyle(.plain)
         .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
@@ -429,20 +472,32 @@ struct LogButton: View {
 }
 
 /// A value and what it is, in one sentence-case line (S18.10).
-private struct ProgressTile: View {
-    let value: String
-    let caption: LocalizedStringKey
+/// A counting stat on the reading ground (F12): 24 pt number, 12 pt label, raised card.
+private struct ProgressStat: View {
+    let value: Double
+    let label: String
+    var format: (Double) -> String = { String(Int($0.rounded(.down))) }
 
     var body: some View {
-        DXCard(padding: 14) {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(verbatim: value).dxText(.cardHeading).font(.custom(DX.Typeface.bold, size: 20, relativeTo: .title3))
-                    .contentTransition(.numericText())
-                Text(caption).dxText(.subtitle).fixedSize(horizontal: false, vertical: true)
-            }
-            .frame(maxWidth: .infinity, minHeight: 64, alignment: .topLeading)
+        VStack(alignment: .leading, spacing: 2) {
+            CountingText(value, format: format)
+                .dxType(.title)
+                .foregroundStyle(Read4.ink)
+                .lineLimit(1).minimumScaleFactor(0.6)
+            Text(verbatim: label).dxType(.caption).foregroundStyle(Read4.muted)
+                .fixedSize(horizontal: false, vertical: true)
         }
-        .accessibilityElement(children: .combine)
+        .frame(maxWidth: .infinity, minHeight: 64, alignment: .topLeading)
+        .v4Card(padding: 14)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(verbatim: "\(format(value)) \(label)"))
+    }
+}
+
+/// Title first, then the icon.
+private struct TrailingIcon: LabelStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        HStack(spacing: 6) { configuration.title; configuration.icon.font(.system(size: 12, weight: .bold)) }
     }
 }
 
@@ -455,7 +510,7 @@ private struct SeriesToggle: View {
             option(.uses, "Uses")
         }
         .padding(3)
-        .background(DX.Palette.surface2, in: Capsule())
+        .background(Read4.surface, in: Capsule())
         .dynamicTypeSize(...DynamicTypeSize.xxLarge)
     }
 
@@ -463,10 +518,10 @@ private struct SeriesToggle: View {
         let on = selection == value
         return Button { selection = value } label: {
             Text(title)
-                .font(.custom(DX.Typeface.semibold, size: 11, relativeTo: .caption2))
-                .foregroundStyle(on ? DX.Palette.onPrimary : DX.Palette.text2)
+                .dxFont(12, weight: 600, style: .caption2)
+                .foregroundStyle(on ? Read4.onInk : Read4.muted)
                 .padding(.vertical, 5).padding(.horizontal, 10)
-                .background(on ? DX.Palette.primary : .clear, in: Capsule())
+                .background(on ? Read4.ink : .clear, in: Capsule())
         }
         .buttonStyle(.plain)
         .accessibilityAddTraits(on ? .isSelected : [])
@@ -477,7 +532,7 @@ private struct SeriesToggle: View {
 /// Time of day (rows) by weekday (columns, Monday first).
 struct HeatMap: View {
     let grid: [[Int]]
-    var tint: Color = DX.Palette.sage
+    var tint: Color = Read4.accent
 
     var body: some View {
         let most = max(grid.flatMap { $0 }.max() ?? 1, 1)
@@ -486,21 +541,21 @@ struct HeatMap: View {
             HStack(spacing: 4) {
                 Color.clear.frame(width: 64, height: 1)
                 ForEach(0..<7, id: \.self) { i in
-                    Text(verbatim: days[i]).font(.custom(DX.Typeface.regular, size: 10, relativeTo: .caption2))
-                        .foregroundStyle(DX.Palette.muted).frame(maxWidth: .infinity)
+                    Text(verbatim: days[i]).dxFont(12, weight: 400, style: .caption2)
+                        .foregroundStyle(Read4.muted).frame(maxWidth: .infinity)
                 }
             }
             .accessibilityHidden(true)
             ForEach(Array(TimeOfDay.allCases.enumerated()), id: \.offset) { row, time in
                 HStack(spacing: 4) {
-                    Text(time.title).font(.custom(DX.Typeface.regular, size: 10, relativeTo: .caption2))
-                        .foregroundStyle(DX.Palette.muted)
+                    Text(time.title).dxFont(12, weight: 400, style: .caption2)
+                        .foregroundStyle(Read4.muted)
                         .lineLimit(1).minimumScaleFactor(0.8)
                         .frame(width: 64, alignment: .leading)
                     ForEach(0..<7, id: \.self) { col in
                         let value = grid[row][col]
                         RoundedRectangle(cornerRadius: 6, style: .continuous)
-                            .fill(value == 0 ? DX.Palette.track.opacity(0.5) : tint.opacity(0.2 + 0.8 * Double(value) / Double(most)))
+                            .fill(value == 0 ? Read4.track.opacity(0.5) : tint.opacity(0.2 + 0.8 * Double(value) / Double(most)))
                             .frame(height: 22)
                             .frame(maxWidth: .infinity)
                             .accessibilityElement()
@@ -533,19 +588,19 @@ struct LogEntryRow: View {
         HStack(spacing: DX.Space.s) {
             Image(systemName: icon)
                 .font(.system(size: 13, weight: .bold))
-                .foregroundStyle(entry.outcome == .passed ? DX.Palette.onAccent : DX.Palette.text2)
+                .foregroundStyle(entry.outcome == .passed ? DX.Fill.cream : Read4.muted)
                 .frame(width: 30, height: 30)
-                .background(entry.outcome == .passed ? DX.Palette.sage : DX.Palette.track, in: Circle())
+                .background(entry.outcome == .passed ? Read4.accent : Read4.track, in: Circle())
             VStack(alignment: .leading, spacing: 1) {
-                Text(title).font(.custom(DX.Typeface.semibold, size: 14, relativeTo: .subheadline)).foregroundStyle(DX.Palette.text)
-                Text(verbatim: detail).dxText(.subtitle)
+                Text(title).dxFont(14, weight: 600, style: .subheadline).foregroundStyle(Read4.ink)
+                Text(verbatim: detail).v4Text(.subtitle)
             }
             Spacer(minLength: 0)
         }
         .padding(.vertical, 10)
         .padding(.horizontal, DX.Space.s)
-        .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(DX.Palette.hairline))
+        .background(Read4.card, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(Read4.hairline))
         .accessibilityElement(children: .combine)
     }
 

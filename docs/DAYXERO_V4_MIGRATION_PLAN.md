@@ -225,3 +225,11 @@ The current app also has areas with **no v4 design at all**: Water (a Today card
 - **Phase 2 (branch `claude/v4-phase2`):** F13 SOS with Jelli on the ocean, F14 Passed on the sky, F15 Slip on the reading ground, F09 Pledge, and on Today the top card by time of day, the green lesson card and "Your day". Decision 26 records what these screens do where the canvas is silent.
   - Logic: `TodaySlot`, `CravingPattern.usualWave` and `TodayTopCard.pick` in `DayXeroCore/Logic/TodayPlan.swift`, with `TodayPlanTests`.
   - Still to do in Phase 2: the quick-log cards, the streak card, the NRT invitations and the milestone row keep their current look.
+- **Phase 3 (branch `claude/v4-phase3`):** the lesson on the reading tier, all 19 beat types, F10 Program and F12 Progress.
+  - Lessons: the lesson bar (close, green bar, Xero 40), P1 intro (path at the sky's clarity, Xero 140), P2 audio (Xero breathing in a ring on the 4/6 clock, or "Audio coming soon"), P5 mission on apricot, P6 done (Settle only).
+  - Every beat moves to v4 through `DayXero/Shared/V4Reading.swift` (`Read4` colours, `v4Text`, `V4Card`, `.v4Secondary`, `V4ProgressBar`); the beats keep their logic.
+  - F10: header, phase pills, day cards (done, today on apricot, waiting or later with a lock) and "Day 4 opens tomorrow. No rush."
+  - F12: the sky strip with its clarity pill, a counting 2×2 grid, the money and check-in line, and WHAT'S CHANGING from `health-timeline.json` with each entry's own source label.
+  - The NRT cards and the health timeline sheet also move to the reading tier. Milestone screens wait for Phase 6.
+  - Not changed: the UX issue in §10.3 (two day counts on Today) and the program.json content issues stay open for Milan.
+

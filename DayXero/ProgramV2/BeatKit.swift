@@ -66,10 +66,10 @@ struct BeatFrame<Content: View>: View {
             .scrollBounceBehavior(.basedOnSize)
             Group {
                 Button(continueTitle, action: onContinue)
-                    .buttonStyle(.dxPrimary)
+                    .buttonStyle(.dx(.primary, on: .reading))
                     .disabled(!canContinue)
                 if beat.optional, let onSkip {
-                    Button("Skip", action: onSkip).buttonStyle(.dxQuiet)
+                    Button("Skip", action: onSkip).buttonStyle(.dx(.quiet, on: .reading))
                 }
             }
             // The buttons stay a readable size; everything above them grows and scrolls.
@@ -85,11 +85,11 @@ struct BeatPrompt: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DX.Space.xs) {
-            if let eyebrow { Text(eyebrow).dxText(.micro).foregroundStyle(DX.Palette.accentInk) }
+            if let eyebrow { Text(eyebrow).v4Text(.micro).foregroundStyle(Read4.accent) }
             if !text.isEmpty {
                 Text(verbatim: text)
-                    .font(.custom(DX.Typeface.bold, size: 24, relativeTo: .title2)).tracking(-0.4)
-                    .foregroundStyle(DX.Palette.text)
+                    .dxFont(24, weight: 700, style: .title2)
+                    .foregroundStyle(Read4.ink)
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityAddTraits(.isHeader)
             }
@@ -104,13 +104,13 @@ struct BeatFeedback: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: 10) {
-            Image(systemName: "sparkle").foregroundStyle(DX.Palette.accentInk).accessibilityHidden(true)
-            Text(verbatim: text).font(.custom(DX.Typeface.regular, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
+            Image(systemName: "sparkle").foregroundStyle(Read4.accent).accessibilityHidden(true)
+            Text(verbatim: text).dxFont(16, weight: 400, style: .body).foregroundStyle(Read4.ink)
                 .fixedSize(horizontal: false, vertical: true)
         }
         .padding(DX.Space.m)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(DX.Palette.surface2, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .background(Read4.surface, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
         .onAppear { AccessibilityNotification.Announcement(text).post() }
     }
 }
@@ -134,15 +134,15 @@ struct OptionRow<Detail: View>: View {
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
             ZStack {
-                Circle().strokeBorder(selected ? .clear : DX.Palette.faint, lineWidth: outlined ? 6 : 1.5)
+                Circle().strokeBorder(selected ? .clear : Read4.faint, lineWidth: outlined ? 6 : 1.5)
                 if selected {
-                    Circle().fill(DX.Palette.accentInk)
-                    Image(systemName: "checkmark").font(.system(size: 11, weight: .bold)).foregroundStyle(DX.Palette.canvas)
+                    Circle().fill(Read4.accent)
+                    Image(systemName: "checkmark").font(.system(size: 11, weight: .bold)).foregroundStyle(Read4.background)
                 }
             }
             .frame(width: 24, height: 24)
             VStack(alignment: .leading, spacing: 4) {
-                Text(verbatim: text).font(.custom(DX.Typeface.medium, size: 16, relativeTo: .body)).foregroundStyle(DX.Palette.text)
+                Text(verbatim: text).dxFont(16, weight: 500, style: .body).foregroundStyle(Read4.ink)
                     .fixedSize(horizontal: false, vertical: true)
                 detail()
             }
@@ -150,9 +150,9 @@ struct OptionRow<Detail: View>: View {
         }
         .padding(.vertical, 14).padding(.horizontal, DX.Space.m)
         .frame(minHeight: 56)
-        .background(selected ? DX.Palette.accentSoft : DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .background(selected ? Read4.accentSoft : Read4.card, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
         .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous)
-            .strokeBorder(selected ? DX.Palette.accentInk : outlined ? DX.Palette.faint : DX.Palette.hairline, lineWidth: selected || outlined ? 1.5 : 1))
+            .strokeBorder(selected ? Read4.accent : outlined ? Read4.faint : Read4.hairline, lineWidth: selected || outlined ? 1.5 : 1))
         .opacity(dimmed ? 0.5 : 1)
         .contentShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
     }
@@ -174,12 +174,12 @@ struct BeatChip: View {
     var body: some View {
         Button(action: action) {
             Text(verbatim: text)
-                .font(.custom(on ? DX.Typeface.semibold : DX.Typeface.medium, size: 15, relativeTo: .body))
-                .foregroundStyle(DX.Palette.text)
+                .dxFont(16, weight: on ? 600 : 500, style: .body)
+                .foregroundStyle(Read4.ink)
                 .padding(.horizontal, 16)
                 .frame(minHeight: 44)
-                .background(on ? DX.Palette.accentSoft : DX.Palette.surface1, in: Capsule())
-                .overlay(Capsule().strokeBorder(on ? DX.Palette.accentInk : DX.Palette.hairline, lineWidth: on ? 1.5 : 1))
+                .background(on ? Read4.accentSoft : Read4.card, in: Capsule())
+                .overlay(Capsule().strokeBorder(on ? Read4.accent : Read4.hairline, lineWidth: on ? 1.5 : 1))
                 .opacity(muted ? 0.45 : 1)
         }
         .buttonStyle(.plain)
