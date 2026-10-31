@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Crew</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1500px; height: 900px; box-sizing: border-box; background: #FBF7F1; padding: 34px 40px; font-family: 'DM Sans', system-ui, sans-serif; color: #1E1A3A; display: flex; flex-direction: column; gap: 22px">
+  <div style="display: flex; justify-content: space-between; align-items: flex-end">
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 40px; letter-spacing: -1.2px; line-height: 1">Three keepers of a clearing sky</div>
+      <div style="font-size: 16px; color: #5E5975; max-width: 900px">Your world starts hazy. Every day clear, the sky lifts a little. Each keeper looks after one part of it, and they hand you to each other through the day.</div>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px">
+    <div style="background: #FFFFFF; border-radius: 28px; overflow: hidden; box-shadow: 0 1px 0 rgba(30,26,58,0.05), 0 8px 22px rgba(30,26,58,0.07)">
+      <div style="position: relative; height: 200px"><dc-import name="Horizon" scene="dawn" clarity="60" w="460" h="200" fit="xMidYMax slice" hint-size="460px,200px"></dc-import><div style="position: absolute; left: 140px; top: 10px"><dc-import name="Xero" mood="hello" stage="3" size="180" hint-size="180px,180px"></dc-import></div></div>
+      <div style="padding: 18px 22px 22px; display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 30px">Xero</span><span style="font-size: 12px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; color: #B2361C">The land · your days</span></div>
+        <div style="font-size: 15px; line-height: 1.45; color: #5E5975">The sun of Day Zero. Rises a little every day you stay clear, and the haze lifts with it. Also the logo.</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 6px; font-size: 12.5px; font-weight: 700"><span style="background: #F1EBE2; border-radius: 99px; padding: 5px 10px">Onboarding</span><span style="background: #F1EBE2; border-radius: 99px; padding: 5px 10px">Today</span><span style="background: #F1EBE2; border-radius: 99px; padding: 5px 10px">Pledge</span><span style="background: #F1EBE2; border-radius: 99px; padding: 5px 10px">Program + lessons</span><span style="background: #F1EBE2; border-radius: 99px; padding: 5px 10px">Progress</span></div>
+        <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 16px; font-style: italic; color: #1E1A3A">"Morning. One more day, one more notch of sun."</div>
+      </div>
+    </div>
+    <div style="background: #FFFFFF; border-radius: 28px; overflow: hidden; box-shadow: 0 1px 0 rgba(30,26,58,0.05), 0 8px 22px rgba(30,26,58,0.07)">
+      <div style="position: relative; height: 200px"><dc-import name="Horizon" scene="sea" w="460" h="200" fit="xMidYMax slice" hint-size="460px,200px"></dc-import><div style="position: absolute; left: 140px; top: 4px"><dc-import name="Jelli" mood="breathe" stage="3" size="180" hint-size="180px,180px"></dc-import></div></div>
+      <div style="padding: 18px 22px 22px; display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 30px">Jelli</span><span style="font-size: 12px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; color: #1F57D6">The sea · your waves</span></div>
+        <div style="font-size: 15px; line-height: 1.45; color: #5E5975">Cravings come in waves. Jelli lives in the sea and rides each one with you, pulsing in time with your breath. Never judges.</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 6px; font-size: 12.5px; font-weight: 700"><span style="background: #F1EBE2; border-radius: 99px; padding: 5px 10px">Craving SOS</span><span style="background: #F1EBE2; border-radius: 99px; padding: 5px 10px">Breathing</span><span style="background: #F1EBE2; border-radius: 99px; padding: 5px 10px">After a slip</span><span style="background: #F1EBE2; border-radius: 99px; padding: 5px 10px">Live Activity</span></div>
+        <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 16px; font-style: italic; color: #1E1A3A">"Waves rise, waves pass. Breathe with me."</div>
+      </div>
+    </div>
+    <div style="background: #FFFFFF; border-radius: 28px; overflow: hidden; box-shadow: 0 1px 0 rgba(30,26,58,0.05), 0 8px 22px rgba(30,26,58,0.07)">
+      <div style="position: relative; height: 200px"><dc-import name="Horizon" scene="night" w="460" h="200" fit="xMidYMax slice" hint-size="460px,200px"></dc-import><div style="position: absolute; left: 140px; top: 8px"><dc-import name="Glim2" mood="hello" stage="3" size="180" hint-size="180px,180px"></dc-import></div></div>
+      <div style="padding: 18px 22px 22px; display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 30px">Glim</span><span style="font-size: 12px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; color: #5638C4">The night · your evenings</span></div>
+        <div style="font-size: 15px; line-height: 1.45; color: #5E5975">When the sun sets, Glim keeps a small light on. Evenings are when people slip most, so Glim stays close.</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 6px; font-size: 12.5px; font-weight: 700"><span style="background: #F1EBE2; border-radius: 99px; padding: 5px 10px">Evening check-in</span><span style="background: #F1EBE2; border-radius: 99px; padding: 5px 10px">Wind down</span><span style="background: #F1EBE2; border-radius: 99px; padding: 5px 10px">Calm tools</span><span style="background: #F1EBE2; border-radius: 99px; padding: 5px 10px">Night reminders</span></div>
+        <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 16px; font-style: italic; color: #1E1A3A">"Rest well. I'll keep the light on."</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 10px">
+    <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 22px">A day with the crew</div>
+    <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px">
+      <div style="background: #F1EBE2; border-radius: 22px; padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 4px"><dc-import name="Xero" mood="hello" stage="2" size="64" hint-size="64px,64px"></dc-import><b style="font-size: 12px; color: #B2361C">7:30 · MORNING</b><span style="font-size: 14px; line-height: 1.35"><b>Xero</b> takes your pledge and hands you today's lesson.</span></div>
+      <div style="background: #F1EBE2; border-radius: 22px; padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 4px"><dc-import name="Jelli" mood="breathe" stage="2" size="64" hint-size="64px,64px"></dc-import><b style="font-size: 12px; color: #1F57D6">12:40 · A CRAVING</b><span style="font-size: 14px; line-height: 1.35">Tap SOS. Xero hands you to <b>Jelli</b> for three slow minutes.</span></div>
+      <div style="background: #F1EBE2; border-radius: 22px; padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 4px"><dc-import name="Jelli" mood="cheer" stage="2" size="64" hint-size="64px,64px"></dc-import><b style="font-size: 12px; color: #1F57D6">12:43 · IT PASSED</b><span style="font-size: 14px; line-height: 1.35"><b>Jelli</b> sends you back with +1 ridden out. Xero rises a notch.</span></div>
+      <div style="background: #F1EBE2; border-radius: 22px; padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 4px"><dc-import name="Jelli" mood="calm" stage="2" size="64" hint-size="64px,64px"></dc-import><b style="font-size: 12px; color: #1F57D6">IF YOU SLIP</b><span style="font-size: 14px; line-height: 1.35"><b>Jelli</b> stays calm. Nothing resets. One plan for next time.</span></div>
+      <div style="background: #F1EBE2; border-radius: 22px; padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 4px"><dc-import name="Glim2" mood="hello" stage="2" size="64" hint-size="64px,64px"></dc-import><b style="font-size: 12px; color: #5638C4">21:30 · EVENING</b><span style="font-size: 14px; line-height: 1.35">Xero sets. <b>Glim</b> lights up for a one-minute check-in.</span></div>
+      <div style="background: #1E1A3A; color: #FFF8EE; border-radius: 22px; padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 4px"><div style="display: flex"><dc-import name="Xero" mood="cheer" stage="4" size="48" hint-size="48px,48px"></dc-import><dc-import name="Jelli" mood="cheer" stage="4" size="48" hint-size="48px,48px"></dc-import><dc-import name="Glim2" mood="cheer" stage="4" size="48" hint-size="48px,48px"></dc-import></div><b style="font-size: 12px; color: #FFD66B">WEEK 4 · FINALE</b><span style="font-size: 14px; line-height: 1.35">All three show up. The sky is fully clear.</span></div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1500,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

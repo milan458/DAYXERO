@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Your days in dark mode</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 2270px; height: 844px; display: flex; gap: 80px">
+  <div style="width: 390px; height: 844px; border-radius: 44px; overflow: hidden; flex: none"><dc-import name="C08Today" theme="dark" hint-size="390px,844px"></dc-import></div>
+  <div style="width: 390px; height: 844px; border-radius: 44px; overflow: hidden; flex: none"><dc-import name="C09Pledge" theme="dark" hint-size="390px,844px"></dc-import></div>
+  <div style="width: 390px; height: 844px; border-radius: 44px; overflow: hidden; flex: none"><dc-import name="C10Program" theme="dark" hint-size="390px,844px"></dc-import></div>
+  <div style="width: 390px; height: 844px; border-radius: 44px; overflow: hidden; flex: none"><dc-import name="C11Lesson" theme="dark" hint-size="390px,844px"></dc-import></div>
+  <div style="width: 390px; height: 844px; border-radius: 44px; overflow: hidden; flex: none"><dc-import name="C12Progress" theme="dark" hint-size="390px,844px"></dc-import></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":2270,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

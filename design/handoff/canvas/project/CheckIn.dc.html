@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Evening check-in</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#FFF8EE}a:hover{color:#FFFFFF}
+textarea::placeholder{color:#B9B0D6}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{bg}}; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif; color: #FFF8EE">
+  <svg width="390" height="844" viewBox="0 0 390 844" aria-hidden="true" style="position: absolute; left: 0; top: 0">
+    <circle cx="410" cy="480" r="150" fill="#FFFFFF" opacity="0.05"></circle>
+    <circle cx="40" cy="140" r="2" fill="#FFF8EE"></circle><circle cx="80" cy="250" r="1.5" fill="#FFF8EE"></circle><circle cx="350" cy="120" r="2" fill="#FFF8EE"></circle><circle cx="330" cy="290" r="1.5" fill="#FFF8EE"></circle><circle cx="20" cy="420" r="1.5" fill="#FFF8EE"></circle>
+  </svg>
+  <div style="position: relative; height: 100%; display: flex; flex-direction: column">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 54px 16px 0 24px">
+      <div style="font-size: 14px; font-weight: 700">Friday check-in</div>
+      <a href="Home.dc.html" aria-label="Close" style="width: 44px; height: 44px; border-radius: 99px; background: rgba(255,255,255,0.14); display: flex; align-items: center; justify-content: center">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFF8EE" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+      </a>
+    </div>
+
+    <svg width="390" height="190" viewBox="0 0 390 190" aria-hidden="true" style="display: block">
+      <path d="M150 20 C100 30 76 80 90 126 C104 170 156 186 196 170 C160 168 128 140 124 100 C120 64 136 34 150 20 Z" fill="#FFD23F"></path>
+      <circle cx="116" cy="70" r="5" fill="#F2B21E"></circle><circle cx="108" cy="118" r="7" fill="#F2B21E"></circle>
+      <path d="M150 140 C170 150 190 152 210 146" fill="none" stroke="#FF8FA3" stroke-width="12" stroke-linecap="round"></path>
+      <path d="M210 146 C214 160 216 172 214 182" fill="none" stroke="#FF8FA3" stroke-width="12" stroke-linecap="round"></path>
+      <path d="M150 132 C170 140 186 140 200 136" fill="none" stroke="#FF8FA3" stroke-width="12" stroke-linecap="round"></path>
+      <path d="M200 136 C206 150 208 162 206 172" fill="none" stroke="#FF8FA3" stroke-width="12" stroke-linecap="round"></path>
+      <path d="M200 176 C204 170 214 172 216 180 C210 184 202 182 200 176 Z" fill="#FFF8EE"></path>
+      <path d="M134 82 C142 74 162 74 168 82 L166 134 C156 140 142 140 134 134 Z" fill="#8EDFD9"></path>
+      <path d="M156 78 C164 80 168 100 166 134 C162 136 158 137 154 137 C156 114 158 94 156 78 Z" fill="#5FC6BF"></path>
+      <path d="M164 92 C178 100 186 104 194 102" fill="none" stroke="#8EDFD9" stroke-width="9" stroke-linecap="round"></path>
+      <rect x="192" y="90" width="16" height="18" rx="4" fill="#FF7155"></rect>
+      <path d="M208 94 C214 94 214 102 208 102" fill="none" stroke="#FF7155" stroke-width="2.5"></path>
+      <path d="M196 86 C194 80 200 78 198 72 M203 86 C201 80 207 78 205 72" fill="none" stroke="#FFF8EE" stroke-width="1.6" stroke-linecap="round"></path>
+      <circle cx="150" cy="60" r="16" fill="#F1C6A0"></circle>
+      <path d="M134 60 C132 42 148 38 158 42 C168 46 168 56 166 60 C158 52 144 52 134 60 Z" fill="#6B4A2B"></path>
+      <path d="M134 56 C126 62 128 78 136 84 C136 74 136 66 138 60 Z" fill="#6B4A2B"></path>
+      <path d="M144 62 q3 3 6 0 M154 62 q3 3 6 0" fill="none" stroke="#24163A" stroke-width="1.8" stroke-linecap="round"></path>
+      <path d="M148 70 q3 2 6 0" fill="none" stroke="#24163A" stroke-width="1.8" stroke-linecap="round"></path>
+      <path d="M280 40 l0 12 M274 46 l12 0" stroke="#FFD23F" stroke-width="2.5" stroke-linecap="round"></path>
+      <path d="M320 100 l0 8 M316 104 l8 0" stroke="#FFF8EE" stroke-width="2" stroke-linecap="round"></path>
+      <path d="M60 50 l0 8 M56 54 l8 0" stroke="#FFF8EE" stroke-width="2" stroke-linecap="round"></path>
+      <path d="M250 120 C250 110 262 106 268 112 C272 102 288 102 290 114 C298 114 300 124 292 126 L252 126 C246 126 246 120 250 120 Z" fill="#FFFFFF" opacity="0.18"></path>
+      <circle cx="240" cy="60" r="3" fill="#FFF8EE"></circle>
+    </svg>
+
+    <div style="padding: 8px 24px 0 24px">
+      <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 36px; line-height: 1.04; letter-spacing: -1.2px">How did <span style="position: relative; display: inline-block">today<svg viewBox="0 0 200 16" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: -2px; bottom: -8px; width: calc(100% + 4px); height: 12px"><path d="M3 10 C40 4 90 5 122 7 C152 9 178 11 197 4" fill="none" stroke="#FFD23F" stroke-width="5" stroke-linecap="round"></path></svg></span> go?</h1>
+    </div>
+
+    <div style="padding: 18px 20px 0 20px; display: flex; flex-direction: column; gap: 8px">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: #D9D2F2">Mood</div>
+      <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px" role="radiogroup" aria-label="Mood">
+        <button role="radio" aria-checked="false" aria-label="Rough" style="height: 56px; border-radius: 20px; border: 0; background: rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="#9FB4FF"></circle><circle cx="10.5" cy="13" r="1.8" fill="#24163A"></circle><circle cx="19.5" cy="13" r="1.8" fill="#24163A"></circle><path d="M9.5 21 q5.5 -5 11 0" fill="none" stroke="#24163A" stroke-width="2" stroke-linecap="round"></path></svg></button>
+        <button role="radio" aria-checked="false" aria-label="Low" style="height: 56px; border-radius: 20px; border: 0; background: rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="#D9CCFF"></circle><circle cx="10.5" cy="13" r="1.8" fill="#24163A"></circle><circle cx="19.5" cy="13" r="1.8" fill="#24163A"></circle><path d="M10 20.5 q5 -2.5 10 0" fill="none" stroke="#24163A" stroke-width="2" stroke-linecap="round"></path></svg></button>
+        <button role="radio" aria-checked="false" aria-label="Okay" style="height: 56px; border-radius: 20px; border: 0; background: rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="#8EDFD9"></circle><circle cx="10.5" cy="13" r="1.8" fill="#24163A"></circle><circle cx="19.5" cy="13" r="1.8" fill="#24163A"></circle><path d="M10 20 L20 20" stroke="#24163A" stroke-width="2" stroke-linecap="round"></path></svg></button>
+        <button role="radio" aria-checked="true" aria-label="Good" style="height: 56px; border-radius: 20px; border: 0; background: #FFD23F; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 0 0 3px #FFF8EE"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="#FFF8EE"></circle><path d="M8.5 13 q2 -2 4 0 M17.5 13 q2 -2 4 0" fill="none" stroke="#24163A" stroke-width="1.8" stroke-linecap="round"></path><path d="M10 18 q5 5 10 0" fill="none" stroke="#24163A" stroke-width="2" stroke-linecap="round"></path></svg></button>
+        <button role="radio" aria-checked="false" aria-label="Great" style="height: 56px; border-radius: 20px; border: 0; background: rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="#FF8FA3"></circle><path d="M8.5 13 q2 -2 4 0 M17.5 13 q2 -2 4 0" fill="none" stroke="#24163A" stroke-width="1.8" stroke-linecap="round"></path><path d="M9 17 L21 17 Q15 25 9 17 Z" fill="#24163A"></path></svg></button>
+      </div>
+    </div>
+
+    <div style="padding: 16px 20px 0 20px; display: flex; flex-direction: column; gap: 8px">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: #D9D2F2">Cravings today</div>
+      <div style="background: rgba(255,255,255,0.12); border-radius: 99px; padding: 6px; display: flex; align-items: center; justify-content: space-between">
+        <button aria-label="Fewer" style="width: 46px; height: 46px; border-radius: 99px; border: 0; background: #FFF8EE; color: #24163A; font-size: 22px; font-weight: 700; cursor: pointer">−</button>
+        <div style="font-size: 16px"><b style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px">4</b> logged, <b style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px">3</b> ridden out</div>
+        <button aria-label="More" style="width: 46px; height: 46px; border-radius: 99px; border: 0; background: #FFF8EE; color: #24163A; font-size: 22px; font-weight: 700; cursor: pointer">+</button>
+      </div>
+    </div>
+
+    <div style="padding: 16px 20px 0 20px; display: flex; flex-direction: column; gap: 8px">
+      <label for="note" style="font-size: 12px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: #D9D2F2">Anything to remember? · optional</label>
+      <textarea id="note" rows="2" placeholder="The walk after lunch helped." style="resize: none; border: 0; border-radius: 20px; background: rgba(255,255,255,0.12); padding: 14px 16px; font-family: 'DM Sans', sans-serif; font-size: 15px; color: #FFF8EE"></textarea>
+    </div>
+
+    <div style="margin-top: auto; padding: 0 20px 30px 20px; display: flex; flex-direction: column; gap: 6px; align-items: center">
+      <button style="width: 100%; height: 58px; border-radius: 99px; border: 0; background: #FFD23F; color: #24163A; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 17px; cursor: pointer">Save check-in</button>
+      <a href="#" style="font-size: 13px; font-weight: 600; padding: 10px 4px">Your day ends at 3:00 am · change</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"bg":{"editor":"color","default":"#3B2A6E","options":["#3B2A6E","#2B2D6E","#24163A","#1E5E4A"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { bg: this.props.bg ?? '#3B2A6E' };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hero art, alive</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="position: relative; width: 390px; height: {{h}}px; overflow: hidden">
+  <dc-import name="Horizon2" scene="{{scene}}" clarity="{{clarity}}" animate="{{animate}}" w="390" h="{{h}}" fit="{{fit}}" hint-size="390px,300px"></dc-import>
+  <svg width="390" height="{{h}}" viewBox="{{vb}}" aria-hidden="true" style="position: absolute; left: 0; top: 0">
+    <defs><filter id="hero2Lift" x="-5%" y="-50%" width="110%" height="200%"><feDropShadow dx="0" dy="-4" stdDeviation="6" flood-color="#1A0B2E" flood-opacity="0.26"></feDropShadow></filter></defs>
+    <path filter="url(#hero2Lift)" d="{{edgePath}}" fill="{{edge}}"></path>
+  </svg>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"scene":{"editor":"enum","options":["dawn","dusk","path","sea","night"],"default":"dawn"},"clarity":{"editor":"range","min":0,"max":100,"step":5,"default":100},"h":{"editor":"int","min":120,"max":844,"default":300},"edge":{"editor":"color","default":"#FFC38A"},"animate":{"editor":"boolean","default":true},"fit":{"editor":"enum","options":["xMidYMid slice","xMidYMax slice","xMidYMin slice"],"default":"xMidYMax slice"},"$preview":{"width":390,"height":300}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const h = Number(this.props.h ?? 300);
+    return {
+      h,
+      scene: this.props.scene ?? 'dawn',
+      clarity: Number(this.props.clarity ?? 100),
+      animate: String(this.props.animate ?? true),
+      fit: this.props.fit ?? 'xMidYMax slice',
+      vb: `0 0 390 ${h}`,
+      edgePath: `M0 ${h - 30} C110 ${h - 54} 280 ${h - 54} 390 ${h - 30} L390 ${h} L0 ${h} Z`,
+      edge: this.props.edge ?? '#FFC38A'
+    };
+  }
+}
+</script>
+</body>
+</html>

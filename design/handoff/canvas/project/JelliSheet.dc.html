@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Jelli character sheet</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 900px; height: 560px; box-sizing: border-box; background: {{bg}}; padding: 36px 44px; font-family: 'DM Sans', system-ui, sans-serif; color: #24163A; display: flex; flex-direction: column; gap: 18px">
+  <div style="display: flex; justify-content: space-between; align-items: flex-end">
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; letter-spacing: -1.4px; line-height: 1">Jelli</div>
+      <div style="font-size: 16px; color: #1E3B3A">Every pulse is a breath. Glows a little brighter each day.</div>
+    </div>
+    <div style="display: flex; gap: 8px" aria-label="Palette">
+      <span style="width: 34px; height: 34px; border-radius: 99px; background: #FF8FA3"></span>
+      <span style="width: 34px; height: 34px; border-radius: 99px; background: #F07188"></span>
+      <span style="width: 34px; height: 34px; border-radius: 99px; background: #FFC2CD"></span>
+      <span style="width: 34px; height: 34px; border-radius: 99px; background: #FFF1B8"></span>
+      <span style="width: 34px; height: 34px; border-radius: 99px; background: #24163A"></span>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 6px">
+    <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase">Moods</div>
+    <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px">
+      <div style="background: #FFF8EE; border-radius: 24px; padding: 8px 0 10px; display: flex; flex-direction: column; align-items: center; gap: 2px"><dc-import name="Jelli" mood="hello" stage="2" size="120" hint-size="120px,120px"></dc-import><span style="font-size: 13px; font-weight: 700">Hello</span></div>
+      <div style="background: #FFF8EE; border-radius: 24px; padding: 8px 0 10px; display: flex; flex-direction: column; align-items: center; gap: 2px"><dc-import name="Jelli" mood="calm" stage="2" size="120" hint-size="120px,120px"></dc-import><span style="font-size: 13px; font-weight: 700">Calm</span></div>
+      <div style="background: #FFF8EE; border-radius: 24px; padding: 8px 0 10px; display: flex; flex-direction: column; align-items: center; gap: 2px"><dc-import name="Jelli" mood="breathe" stage="2" size="120" hint-size="120px,120px"></dc-import><span style="font-size: 13px; font-weight: 700">Breathe (SOS)</span></div>
+      <div style="background: #FFF8EE; border-radius: 24px; padding: 8px 0 10px; display: flex; flex-direction: column; align-items: center; gap: 2px"><dc-import name="Jelli" mood="cheer" stage="2" size="120" hint-size="120px,120px"></dc-import><span style="font-size: 13px; font-weight: 700">Cheer (milestone)</span></div>
+      <div style="background: #FFF8EE; border-radius: 24px; padding: 8px 0 10px; display: flex; flex-direction: column; align-items: center; gap: 2px"><dc-import name="Jelli" mood="sleepy" stage="2" size="120" hint-size="120px,120px"></dc-import><span style="font-size: 13px; font-weight: 700">Sleepy (check-in)</span></div>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 6px">
+    <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase">Glows brighter through the program</div>
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px">
+      <div style="border: 2px solid #24163A; border-radius: 24px; padding: 6px 0 10px; display: flex; flex-direction: column; align-items: center; gap: 2px"><dc-import name="Jelli" mood="hello" stage="1" size="120" hint-size="120px,120px"></dc-import><span style="font-size: 13px; font-weight: 700">Prep week</span></div>
+      <div style="border: 2px solid #24163A; border-radius: 24px; padding: 6px 0 10px; display: flex; flex-direction: column; align-items: center; gap: 2px"><dc-import name="Jelli" mood="hello" stage="2" size="120" hint-size="120px,120px"></dc-import><span style="font-size: 13px; font-weight: 700">Day Xero</span></div>
+      <div style="border: 2px solid #24163A; border-radius: 24px; padding: 6px 0 10px; display: flex; flex-direction: column; align-items: center; gap: 2px"><dc-import name="Jelli" mood="hello" stage="3" size="120" hint-size="120px,120px"></dc-import><span style="font-size: 13px; font-weight: 700">Week 1</span></div>
+      <div style="border: 2px solid #24163A; border-radius: 24px; padding: 6px 0 10px; display: flex; flex-direction: column; align-items: center; gap: 2px"><dc-import name="Jelli" mood="cheer" stage="4" size="120" hint-size="120px,120px"></dc-import><span style="font-size: 13px; font-weight: 700">Week 4, star of the sea</span></div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"bg":{"editor":"color","default":"#8EDFD9","options":["#8EDFD9","#BFD7FF","#D9CCFF","#A8E6C1"]},"$preview":{"width":900,"height":560}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { bg: this.props.bg ?? '#8EDFD9' };
+  }
+}
+</script>
+</body>
+</html>

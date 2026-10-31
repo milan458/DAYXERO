@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Home with Pebble</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#24163A}a:hover{color:#000}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{bg}}; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif; color: #24163A; display: flex; flex-direction: column">
+  <div style="display: flex; justify-content: space-between; align-items: center; padding: 58px 24px 0 24px">
+    <div style="font-size: 15px; font-weight: 600; color: #3A2F5C">Friday · Week 1, Day 3</div>
+    <button aria-label="Profile and settings" style="width: 44px; height: 44px; border-radius: 99px; border: 0; background: rgba(36,22,58,0.1); display: flex; align-items: center; justify-content: center; cursor: pointer">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#24163A" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"></path></svg>
+    </button>
+  </div>
+
+  <div style="position: relative; height: 380px; margin-top: 8px">
+    <svg width="390" height="380" viewBox="0 0 390 380" aria-hidden="true" style="position: absolute; left: 0; top: 0">
+      <circle cx="195" cy="210" r="150" fill="#EDE5FF"></circle>
+      <circle cx="195" cy="210" r="172" fill="none" stroke="#24163A" stroke-width="2.5" stroke-dasharray="1 10" stroke-linecap="round"></circle>
+      <path d="M60 338 C100 326 150 330 195 334 C250 338 300 326 330 330 L330 346 L60 346 Z" fill="#9FC8F0"></path>
+      <path d="M90 340 q10 -5 20 0 M250 336 q10 -5 20 0" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"></path>
+      <ellipse cx="80" cy="326" rx="14" ry="7" fill="#B7B3E0"></ellipse>
+      <ellipse cx="312" cy="324" rx="10" ry="5" fill="#CFCBEF"></ellipse>
+    </svg>
+    <div style="position: absolute; left: 75px; top: 104px"><dc-import name="Pebble" mood="calm" stage="3" size="240" hint-size="240px,240px"></dc-import></div>
+    <div style="position: absolute; right: 22px; top: 40px; background: #FFF8EE; border-radius: 20px 20px 20px 4px; padding: 10px 14px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 17px">Steady. Three stones.</div>
+  </div>
+
+  <div style="padding: 6px 24px 0 24px; text-align: center">
+    <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 56px; letter-spacing: -2px; line-height: 1">3 days</div>
+    <div style="font-size: 16px; margin-top: 4px; color: #3A2F5C">smoke-free, one stone at a time</div>
+  </div>
+
+  <a href="#" style="margin: 22px 20px 0 20px; background: #FFF8EE; border-radius: 26px; padding: 14px 14px 14px 20px; display: flex; align-items: center; gap: 14px; text-decoration: none">
+    <span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: #5A4FA0">Today · 3 min</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 20px">Lower the bar</span></span>
+    <span style="width: 48px; height: 48px; border-radius: 99px; background: #24163A; color: #FFF8EE; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10.4-6.5a1 1 0 0 0 0-1.8L9.5 4.6A1 1 0 0 0 8 5.5Z"></path></svg></span>
+  </a>
+
+  <div style="margin-top: auto; padding: 0 20px 34px 20px">
+    <a href="PebbleSOS.dc.html" style="display: flex; align-items: center; justify-content: center; height: 60px; border-radius: 99px; background: #24163A; color: #FFF8EE; font-weight: 700; font-size: 17px; text-decoration: none">Craving? Breathe with Pebble</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"bg":{"editor":"color","default":"#D9CCFF","options":["#D9CCFF","#A8E6C1","#BFD7FF","#FFD9C2"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { bg: this.props.bg ?? '#D9CCFF' };
+  }
+}
+</script>
+</body>
+</html>

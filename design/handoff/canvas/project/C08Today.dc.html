@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Today</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{t.bg}}; color: {{t.ink}}; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif">
+  <div style="position: absolute; left: 0; top: 0"><dc-import name="Hero" scene="dawn" clarity="55" h="214" theme="{{theme}}" hint-size="390px,214px"></dc-import></div>
+  <div style="position: absolute; left: 140px; top: 46px"><dc-import name="Xero" mood="hello" stage="3" size="110" hint-size="110px,110px"></dc-import></div>
+  <div style="position: absolute; left: 20px; top: 54px; color: #1E1A3A; display: flex; flex-direction: column; gap: 2px">
+    <div style="font-size: 13px; font-weight: 700">Fri · Week 1, Day 3</div>
+    <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 24px; letter-spacing: -0.6px">Morning,<br>Sam</div>
+  </div>
+  <div style="position: absolute; right: 16px; top: 56px; background: rgba(255,248,238,0.9); color: #1E1A3A; border-radius: 99px; padding: 6px 11px; font-size: 12px; font-weight: 800; display: flex; align-items: center; gap: 6px"><span style="width: 8px; height: 8px; border-radius: 99px; background: #2FD08A"></span>Sky 55% clear</div>
+
+  <div style="position: absolute; left: 0; right: 0; top: 206px; padding: 0 20px; display: flex; flex-direction: column">
+    <div style="display: flex; gap: 8px">
+      <span style="height: 40px; padding: 0 14px; border-radius: 99px; background: {{t.surf}}; display: flex; align-items: center; gap: 7px; font-weight: 700; font-size: 14px"><span style="width: 10px; height: 10px; border-radius: 99px; background: #2FD08A"></span>3 days clear</span>
+      <span style="height: 40px; padding: 0 14px; border-radius: 99px; background: {{t.surf}}; display: flex; align-items: center; gap: 7px; font-weight: 700; font-size: 14px"><span style="width: 10px; height: 10px; border-radius: 99px; background: #FFC93C"></span>$21 kept</span>
+      <span style="height: 40px; padding: 0 14px; border-radius: 99px; background: {{t.surf}}; display: flex; align-items: center; gap: 7px; font-weight: 700; font-size: 14px"><span style="width: 10px; height: 10px; border-radius: 99px; background: #3D8BFF"></span>14 waves</span>
+    </div>
+
+    <div style="padding: 18px 4px 10px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 20px">Your day</div>
+    <div style="display: grid; grid-template-columns: 24px 1fr; column-gap: 10px">
+      <div style="display: flex; flex-direction: column; align-items: center; padding-top: 18px"><span style="width: 14px; height: 14px; border-radius: 99px; background: #2FD08A; flex: none"></span><span style="flex: 1; width: 0; border-left: 3px dotted {{t.dots}}; margin-top: 4px"></span></div>
+      <div style="height: 50px; border-radius: 18px; background: {{t.surf}}; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; margin-bottom: 8px; color: {{t.muted}}; font-size: 14.5px"><span>Morning pledge · done with Xero</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{t.green}}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></div>
+
+      <div style="display: flex; flex-direction: column; align-items: center; padding-top: 14px"><span style="width: 18px; height: 18px; border-radius: 99px; background: #FF6B4A; box-shadow: 0 0 0 5px rgba(255,107,74,0.25); flex: none"></span><span style="flex: 1; width: 0; border-left: 3px dotted {{t.dots}}; margin-top: 6px"></span></div>
+      <a href="C11Lesson.dc.html" style="position: relative; height: 122px; border-radius: 26px; background: {{t.raised}}; box-shadow: {{t.shadow}}; overflow: hidden; margin-bottom: 8px; text-decoration: none; color: {{t.ink}}; display: block">
+        <div style="position: absolute; right: 0; top: 0"><dc-import name="Horizon" scene="path" clarity="55" w="118" h="122" hint-size="118px,122px"></dc-import></div>
+        <div style="position: absolute; left: 16px; top: 14px; right: 128px; display: flex; flex-direction: column; gap: 6px">
+          <span style="align-self: flex-start; background: #FF6B4A; color: #1A0E08; border-radius: 99px; padding: 3px 10px; font-size: 12px; font-weight: 800">Day 3 · today</span>
+          <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 20px; line-height: 1.1">Lower the bar</span>
+          <span style="font-size: 13.5px; color: {{t.muted}}">Getting through the toughest stretch · 3 min</span>
+        </div>
+      </a>
+
+      <div style="display: flex; flex-direction: column; align-items: center; padding-top: 16px"><span style="width: 14px; height: 14px; border-radius: 99px; border: 3px solid {{t.dots}}; box-sizing: border-box; flex: none"></span></div>
+      <a href="C16CheckIn.dc.html" style="height: 50px; border-radius: 18px; background: {{t.surf}}; display: flex; align-items: center; gap: 8px; padding: 0 8px 0 14px; text-decoration: none; color: {{t.ink}}; font-size: 14.5px"><span style="flex: 1">Evening check-in · 21:30</span><span style="font-size: 12px; color: {{t.muted}}">with Glim</span><span style="width: 36px; height: 36px; border-radius: 12px; background: #2A1C6E; overflow: hidden; display: flex; align-items: center; justify-content: center"><dc-import name="Glim2" mood="sleepy" stage="2" size="36" hint-size="36px,36px"></dc-import></span></a>
+    </div>
+
+    <a href="C13SOS.dc.html" style="margin-top: 14px; position: relative; height: 78px; border-radius: 24px; overflow: hidden; text-decoration: none; display: block">
+      <dc-import name="Horizon" scene="sea" w="350" h="78" hint-size="350px,78px"></dc-import>
+      <div style="position: absolute; left: 6px; top: -4px"><dc-import name="Jelli" mood="hello" stage="2" size="80" hint-size="80px,80px"></dc-import></div>
+      <div style="position: absolute; left: 88px; top: 16px; color: #FFFFFF; display: flex; flex-direction: column"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 18px">Craving? Jelli's here.</span><span style="font-size: 13px; font-weight: 600">Ride it out together · 3 min</span></div>
+    </a>
+  </div>
+
+  <div style="position: absolute; left: 0; bottom: 0"><dc-import name="Nav" active="today" theme="{{theme}}" hint-size="390px,100px"></dc-import></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const theme = this.props.theme ?? 'light';
+    const dark = theme === 'dark';
+    return { theme, t: dark
+      ? { bg: '#0E0B2B', surf: '#1B1747', raised: '#1B1747', ink: '#FFF8EE', muted: '#B8B3D9', dots: '#3A3478', green: '#2FD08A', shadow: 'none' }
+      : { bg: '#FBF7F1', surf: '#F1EBE2', raised: '#FFFFFF', ink: '#1E1A3A', muted: '#5E5975', dots: '#D6CDBF', green: '#14804F', shadow: '0 1px 0 rgba(30,26,58,0.05), 0 8px 22px rgba(30,26,58,0.07)' } };
+  }
+}
+</script>
+</body>
+</html>

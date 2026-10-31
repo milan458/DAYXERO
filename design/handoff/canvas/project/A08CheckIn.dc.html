@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Evening check-in</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{t.bg}}; color: #FFF8EE; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif; display: flex; flex-direction: column">
+  <svg width="390" height="844" viewBox="0 0 390 844" aria-hidden="true" style="position: absolute; left: 0; top: 0">
+    <circle cx="60" cy="140" r="3" fill="#FFE27A"><animate attributeName="opacity" values="{{tw1}}" dur="2.1s" repeatCount="indefinite"></animate><animate attributeName="cx" values="{{fx1}}" dur="9s" repeatCount="indefinite"></animate></circle>
+    <circle cx="320" cy="210" r="3.5" fill="#FFE27A"><animate attributeName="opacity" values="{{tw1}}" dur="2.7s" repeatCount="indefinite"></animate><animate attributeName="cy" values="{{fy2}}" dur="11s" repeatCount="indefinite"></animate></circle>
+    <circle cx="110" cy="330" r="2.5" fill="#FFE27A"><animate attributeName="opacity" values="{{tw1}}" dur="1.8s" repeatCount="indefinite"></animate><animate attributeName="cy" values="{{fy3}}" dur="8s" repeatCount="indefinite"></animate></circle>
+    <circle cx="290" cy="380" r="3" fill="#FFE27A"><animate attributeName="opacity" values="{{tw1}}" dur="2.4s" repeatCount="indefinite"></animate><animate attributeName="cx" values="{{fx4}}" dur="10s" repeatCount="indefinite"></animate></circle>
+    <circle cx="200" cy="90" r="2" fill="#FFF8EE"><animate attributeName="opacity" values="{{tw1}}" dur="3s" repeatCount="indefinite"></animate></circle>
+    <path d="M0 520 C 120 490 270 500 390 470 L390 844 L0 844 Z" fill="{{t.hill}}"></path>
+  </svg>
+
+  <div style="position: relative; height: 330px; flex: none; display: flex; align-items: flex-end; justify-content: center">
+    <div style="{{gIn}}"><dc-import name="Glim2" mood="{{gMood}}" stage="2" animate="{{motionStr}}" size="210" hint-size="210px,210px"></dc-import></div>
+  </div>
+
+  <div style="position: relative; padding: 14px 26px 0 26px; display: flex; flex-direction: column; gap: 10px">
+    <div style="font-size: 13px; font-weight: 800; letter-spacing: 1.2px; color: {{t.muted}}; {{a1}}">GLIM · 21:30 · DAY {{day}}</div>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 30px; line-height: 1.08; letter-spacing: -0.9px; {{a2}}">{{headline}}</h1>
+    <p style="margin: 0; font-size: 15.5px; line-height: 1.5; color: {{t.muted}}; {{a3}}">{{line}}</p>
+  </div>
+
+  <div style="position: relative; padding: 18px 20px 0 20px; display: flex; flex-direction: column; gap: 10px; {{a4}}">
+    <div style="font-size: 15px; font-weight: 700">How are you feeling tonight?</div>
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px" role="radiogroup" aria-label="Mood">
+      <button role="radio" aria-checked="{{m0.on}}" style="height: 74px; border: 0; border-radius: 20px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; {{m0.style}}"><span style="font-size: 24px" aria-hidden="true">😮‍💨</span>Rough</button>
+      <button role="radio" aria-checked="{{m1.on}}" style="height: 74px; border: 0; border-radius: 20px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; {{m1.style}}"><span style="font-size: 24px" aria-hidden="true">😐</span>Okay</button>
+      <button role="radio" aria-checked="{{m2.on}}" style="height: 74px; border: 0; border-radius: 20px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; {{m2.style}}"><span style="font-size: 24px" aria-hidden="true">🙂</span>Good</button>
+      <button role="radio" aria-checked="{{m3.on}}" style="height: 74px; border: 0; border-radius: 20px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; {{m3.style}}"><span style="font-size: 24px" aria-hidden="true">✨</span>Proud</button>
+    </div>
+  </div>
+
+  <div style="margin-top: auto; padding: 0 22px 28px 22px; position: relative; {{a5}}">
+    <a href="#" style="height: 58px; border-radius: 99px; background: #FFF8EE; color: {{t.bg}}; font-weight: 700; font-size: 17px; text-decoration: none; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 0 rgba(0,0,0,0.25)">{{cta}}</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"day":{"editor":"int","min":1,"max":60,"default":12},"cravings":{"editor":"int","min":0,"max":12,"default":3},"rode":{"editor":"int","min":0,"max":12,"default":3},"trigger":{"editor":"enum","options":["coffee","stress","after meals","drinking"],"default":"coffee"},"motion":{"editor":"boolean","default":true},"replay":{"editor":"boolean","default":true},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  componentDidMount() { this.play(); }
+  componentWillUnmount() { (this.timers || []).forEach(clearTimeout); }
+  play() {
+    (this.timers || []).forEach(clearTimeout);
+    this.timers = [];
+    this.setState({ on: false, pick: -1 });
+    this.timers.push(setTimeout(() => this.setState({ on: true }), 300));
+    this.timers.push(setTimeout(() => this.setState({ pick: 2 }), 2600));
+    if (String(this.props.replay ?? true) !== 'false') this.timers.push(setTimeout(() => this.play(), 10000));
+  }
+  renderVals() {
+    const dark = (this.props.theme ?? 'light') === 'dark';
+    const motion = String(this.props.motion ?? true) !== 'false';
+    const s = this.state || {};
+    const on = !motion || Boolean(s.on);
+    const pick = motion ? (s.pick ?? -1) : 2;
+    const ease = 'cubic-bezier(.2,.7,.2,1)';
+    const a = (i, dy) => `opacity: ${on ? 1 : 0}; transform: translateY(${on ? 0 : (dy ?? 18)}px); transition: opacity 600ms ${ease} ${i * 90}ms, transform 700ms ${ease} ${i * 90}ms`;
+    const t = dark
+      ? { bg: '#140E3A', muted: '#B8B3D9', hill: '#1B1450', chip: 'rgba(255,255,255,0.08)' }
+      : { bg: '#4A3596', muted: '#D2C8FF', hill: '#3F2C86', chip: 'rgba(255,248,238,0.14)' };
+    const day = Number(this.props.day ?? 12);
+    const cr = Number(this.props.cravings ?? 3);
+    const rode = Math.min(cr, Number(this.props.rode ?? 3));
+    const [trig, when] = { coffee: ['coffee', 'this morning'], stress: ['stress', 'this afternoon'], 'after meals': ['after-lunch', 'at lunch'], drinking: ['evening-drink', 'earlier tonight'] }[this.props.trigger ?? 'coffee'];
+    let headline, line, cta;
+    if (cr === 0) { headline = 'A quiet day. Those count too.'; line = `No waves logged on day ${day}. Your brain is learning that nothing is missing.`; cta = 'Save and rest'; }
+    else if (rode === cr) { headline = `${rode} of ${cr} waves. All yours.`; line = `Including your ${trig} wave ${when}. Jelli says you breathed slower each time.`; cta = 'Save and rest'; }
+    else { headline = 'Today was hard. You’re still here.'; line = `You rode ${rode} of ${cr} waves. Want to make a small plan for tomorrow’s ${trig} wave?`; cta = 'Make a plan for tomorrow'; }
+    const mood = (i) => {
+      const sel = pick === i;
+      return { on: sel ? 'true' : 'false', style: `background: ${sel ? '#FFF8EE' : t.chip}; color: ${sel ? t.bg : '#FFF8EE'}; transform: scale(${sel ? 1.06 : 1}); transition: background 250ms, color 250ms, transform 400ms cubic-bezier(.3,1.6,.5,1)` };
+    };
+    const m = (x, y) => motion ? x : y;
+    return {
+      t, headline, line, cta, day: String(day), motionStr: String(motion),
+      gMood: pick === 2 ? 'cheer' : 'calm',
+      m0: mood(0), m1: mood(1), m2: mood(2), m3: mood(3),
+      gIn: `opacity: ${on ? 1 : 0}; transform: translateY(${on ? 0 : -60}px); transition: opacity 900ms ${ease}, transform 1400ms ${ease}`,
+      a1: a(3), a2: a(4), a3: a(5), a4: a(6), a5: a(7),
+      tw1: m('0.2;1;0.2', '0.8;0.8;0.8'),
+      fx1: m('60;90;60', '60;60;60'), fy2: m('210;180;210', '210;210;210'), fy3: m('330;300;330', '330;330;330'), fx4: m('290;260;290', '290;290;290')
+    };
+  }
+}
+</script>
+</body>
+</html>

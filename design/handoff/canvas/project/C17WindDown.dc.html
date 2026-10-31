@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Wind down</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{t.bg}}; color: {{t.ink}}; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif">
+  <div style="position: absolute; left: 0; top: 0"><dc-import name="Hero" scene="night" clarity="85" h="260" theme="{{theme}}" hint-size="390px,260px"></dc-import></div>
+  <div style="position: absolute; left: 125px; top: 50px"><dc-import name="Glim2" mood="sleepy" stage="3" size="140" hint-size="140px,140px"></dc-import></div>
+  <div style="position: absolute; left: 0; right: 0; top: 196px; text-align: center; color: #FFF8EE; font-size: 13px; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase">Check-in saved</div>
+
+  <div style="position: absolute; left: 0; right: 0; top: 250px; padding: 0 22px; display: flex; flex-direction: column; gap: 6px">
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 30px; letter-spacing: -0.9px; line-height: 1.08">Rest well, Sam.</h1>
+    <p style="margin: 0; font-size: 15px; line-height: 1.5; color: {{t.muted}}">Tomorrow's pledge will be here in the morning. If tonight feels restless, wind down with Glim.</p>
+  </div>
+
+  <div style="position: absolute; left: 20px; right: 20px; top: 372px; display: flex; flex-direction: column; gap: 8px">
+    <a href="#" style="background: {{t.raised}}; box-shadow: {{t.shadow}}; border-radius: 20px; padding: 10px 14px; display: flex; align-items: center; gap: 12px; text-decoration: none; color: {{t.ink}}"><span style="width: 40px; height: 40px; flex: none; border-radius: 13px; background: #8EDFD9; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1E1A3A" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 8h11a3 3 0 1 0-3-3"></path><path d="M3 12h16a3 3 0 1 1-3 3"></path><path d="M3 16h7"></path></svg></span><span style="flex: 1"><b style="font-size: 15px">Longer out-breath</b><br><span style="font-size: 13px; color: {{t.muted}}">In for 4, hold for 7, out for 8.</span></span></a>
+    <a href="#" style="background: {{t.raised}}; box-shadow: {{t.shadow}}; border-radius: 20px; padding: 10px 14px; display: flex; align-items: center; gap: 12px; text-decoration: none; color: {{t.ink}}"><span style="width: 40px; height: 40px; flex: none; border-radius: 13px; background: #FFD66B; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1E1A3A" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="2"></rect></svg></span><span style="flex: 1"><b style="font-size: 15px">Box breathing</b><br><span style="font-size: 13px; color: {{t.muted}}">In, hold, out, hold. Four counts each.</span></span></a>
+    <a href="#" style="background: {{t.raised}}; box-shadow: {{t.shadow}}; border-radius: 20px; padding: 10px 14px; display: flex; align-items: center; gap: 12px; text-decoration: none; color: {{t.ink}}"><span style="width: 40px; height: 40px; flex: none; border-radius: 13px; background: #A8E6C1; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1E1A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle></svg></span><span style="flex: 1"><b style="font-size: 15px">5-4-3-2-1</b><br><span style="font-size: 13px; color: {{t.muted}}">Name what you can see, feel, hear, smell and taste.</span></span></a>
+    <a href="#" style="background: {{t.raised}}; box-shadow: {{t.shadow}}; border-radius: 20px; padding: 10px 14px; display: flex; align-items: center; gap: 12px; text-decoration: none; color: {{t.ink}}"><span style="width: 40px; height: 40px; flex: none; border-radius: 13px; background: #FF8FB8; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1E1A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12V4h8l10 10-8 8L3 12z"></path><circle cx="7.5" cy="8.5" r="1.5"></circle></svg></span><span style="flex: 1"><b style="font-size: 15px">Notice and name</b><br><span style="font-size: 13px; color: {{t.muted}}">Spot the thought, give it a label, let it be.</span></span></a>
+    <div style="font-size: 12.5px; line-height: 1.45; color: {{t.muted}}; padding: 4px 4px 0">These tools aren't a substitute for professional help. If things feel like too much, <a href="#" style="color: {{t.ink}}; font-weight: 700">find a helpline near you</a>.</div>
+  </div>
+
+  <div style="position: absolute; left: 0; bottom: 0"><dc-import name="Nav" active="calm" theme="{{theme}}" hint-size="390px,100px"></dc-import></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const theme = this.props.theme ?? 'light';
+    const dark = theme === 'dark';
+    return { theme, t: dark
+      ? { bg: '#0E0B2B', raised: '#1B1747', ink: '#FFF8EE', muted: '#B8B3D9', shadow: 'none' }
+      : { bg: '#FBF7F1', raised: '#FFFFFF', ink: '#1E1A3A', muted: '#5E5975', shadow: '0 1px 0 rgba(30,26,58,0.05), 0 8px 22px rgba(30,26,58,0.07)' } };
+  }
+}
+</script>
+</body>
+</html>

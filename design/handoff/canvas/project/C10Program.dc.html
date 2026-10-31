@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Your program</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{t.bg}}; color: {{t.ink}}; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif">
+  <div style="position: absolute; left: 0; top: 0"><dc-import name="Hero" scene="path" clarity="55" h="180" theme="{{theme}}" hint-size="390px,180px"></dc-import></div>
+  <div style="position: absolute; left: 22px; top: 56px; color: #1E1A3A; display: flex; flex-direction: column; gap: 2px">
+    <div style="font-size: 13px; font-weight: 700">Prep, Day Xero, then four weeks</div>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 30px; letter-spacing: -0.8px">Your program</h1>
+  </div>
+
+  <div style="position: absolute; left: 0; right: 0; top: 168px; padding: 0 20px">
+    <div role="tablist" aria-label="Program phases" style="background: {{t.surf}}; border-radius: 99px; padding: 4px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px">
+      <button role="tab" aria-selected="false" style="height: 38px; border-radius: 99px; border: 0; background: transparent; color: {{t.muted}}; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 13px; cursor: pointer">Prep ✓</button>
+      <button role="tab" aria-selected="false" style="height: 38px; border-radius: 99px; border: 0; background: transparent; color: {{t.muted}}; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 13px; cursor: pointer">Day Xero ✓</button>
+      <button role="tab" aria-selected="true" style="height: 38px; border-radius: 99px; border: 0; background: {{t.sel}}; color: {{t.selInk}}; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 13px; cursor: pointer">Week 1</button>
+      <button role="tab" aria-selected="false" style="height: 38px; border-radius: 99px; border: 0; background: transparent; color: {{t.muted}}; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 13px; cursor: pointer">Weeks 2–4</button>
+    </div>
+
+    <div style="padding-top: 14px; display: grid; grid-template-columns: 30px 1fr; column-gap: 12px">
+      <div style="display: flex; flex-direction: column; align-items: center"><span style="width: 24px; height: 24px; margin-top: 15px; border-radius: 99px; background: #2FD08A; display: flex; align-items: center; justify-content: center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0E0B2B" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></span><span style="flex: 1; border-left: 3px solid #2FD08A"></span></div>
+      <div style="padding: 10px 0 8px"><div style="font-size: 12px; font-weight: 700; color: {{t.muted}}">DAY 1 · 3 min</div><div style="font-weight: 700; font-size: 16px">Look after the basics</div></div>
+      <div style="display: flex; flex-direction: column; align-items: center"><span style="width: 24px; height: 24px; margin-top: 15px; border-radius: 99px; background: #2FD08A; display: flex; align-items: center; justify-content: center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0E0B2B" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></span><span style="flex: 1; border-left: 3px solid #2FD08A"></span></div>
+      <div style="padding: 10px 0 8px"><div style="font-size: 12px; font-weight: 700; color: {{t.muted}}">DAY 2 · 3 min</div><div style="font-weight: 700; font-size: 16px">The noisy passengers</div></div>
+      <div style="display: flex; flex-direction: column; align-items: center"><span style="width: 28px; height: 28px; margin-top: 30px; border-radius: 99px; background: #FF6B4A; box-shadow: 0 0 0 5px rgba(255,107,74,0.25)"></span><span style="flex: 1; border-left: 3px dotted {{t.dots}}"></span></div>
+      <a href="C11Lesson.dc.html" style="margin: 6px 0; background: {{t.raised}}; box-shadow: {{t.shadow}}; border-radius: 22px; padding: 10px 12px 10px 16px; display: flex; align-items: center; gap: 8px; text-decoration: none; color: {{t.ink}}">
+        <span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; font-weight: 800; color: {{t.coral}}">TODAY · DAY 3 · 3 min</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px">Lower the bar</span><span style="font-size: 13px; color: {{t.muted}}">Getting through the toughest stretch</span></span>
+        <dc-import name="Xero" mood="hello" stage="3" size="64" hint-size="64px,64px"></dc-import>
+      </a>
+      <div style="display: flex; flex-direction: column; align-items: center"><span style="width: 22px; height: 22px; margin-top: 14px; border-radius: 99px; border: 3px solid {{t.dots}}; box-sizing: border-box"></span><span style="flex: 1; border-left: 3px dotted {{t.dots}}"></span></div>
+      <div style="padding: 10px 0 8px; color: {{t.muted}}"><div style="font-size: 12px; font-weight: 700">DAY 4 · locked</div><div style="font-weight: 600; font-size: 16px">If things feel flat</div></div>
+      <div style="display: flex; flex-direction: column; align-items: center"><span style="width: 22px; height: 22px; margin-top: 14px; border-radius: 99px; border: 3px solid {{t.dots}}; box-sizing: border-box"></span><span style="flex: 1; border-left: 3px dotted {{t.dots}}"></span></div>
+      <div style="padding: 10px 0 8px; color: {{t.muted}}"><div style="font-size: 12px; font-weight: 700">DAY 5 · locked</div><div style="font-weight: 600; font-size: 16px">Nights out</div></div>
+      <div style="display: flex; flex-direction: column; align-items: center"><span style="width: 22px; height: 22px; margin-top: 14px; border-radius: 99px; border: 3px solid {{t.dots}}; box-sizing: border-box"></span><span style="flex: 1; border-left: 3px dotted {{t.dots}}"></span></div>
+      <div style="padding: 10px 0 8px; color: {{t.muted}}"><div style="font-size: 12px; font-weight: 700">DAY 6 · locked</div><div style="font-weight: 600; font-size: 16px">“Just one”</div></div>
+      <div style="display: flex; flex-direction: column; align-items: center"><span style="width: 26px; height: 26px; margin-top: 12px; border-radius: 99px; background: #FFC93C; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 Q13 11 22 12 Q13 13 12 22 Q11 13 2 12 Q11 11 12 2 Z" fill="#1E1A3A"></path></svg></span></div>
+      <div style="padding: 10px 0 8px; color: {{t.muted}}"><div style="font-size: 12px; font-weight: 700">DAY 7 · milestone</div><div style="font-weight: 600; font-size: 16px">One week</div></div>
+    </div>
+    <div style="margin-top: 8px; font-size: 13px; color: {{t.muted}}">Day 4 opens once today's session is done. No rush.</div>
+  </div>
+
+  <div style="position: absolute; left: 0; bottom: 0"><dc-import name="Nav" active="program" theme="{{theme}}" hint-size="390px,100px"></dc-import></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const theme = this.props.theme ?? 'light';
+    const dark = theme === 'dark';
+    return { theme, t: dark
+      ? { bg: '#0E0B2B', surf: '#1B1747', raised: '#1B1747', ink: '#FFF8EE', muted: '#B8B3D9', sel: '#FFF8EE', selInk: '#0E0B2B', dots: '#3A3478', coral: '#FF9A7F', shadow: 'none' }
+      : { bg: '#FBF7F1', surf: '#F1EBE2', raised: '#FFFFFF', ink: '#1E1A3A', muted: '#5E5975', sel: '#1E1A3A', selInk: '#FFF8EE', dots: '#D6CDBF', coral: '#B2361C', shadow: '0 1px 0 rgba(30,26,58,0.05), 0 8px 22px rgba(30,26,58,0.07)' } };
+  }
+}
+</script>
+</body>
+</html>

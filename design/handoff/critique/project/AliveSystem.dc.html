@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Alive system issues</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1600px; height: 1180px; box-sizing: border-box; background: #F7F6F3; color: #1E1A3A; font-family: 'DM Sans', system-ui, sans-serif; padding: 44px 56px; display: flex; flex-direction: column; gap: 22px">
+  <div style="display: flex; flex-direction: column; gap: 6px">
+    <div style="font-size: 14px; font-weight: 700; letter-spacing: 1.4px; color: #5E5975">PAGE 7 · ALIVE · SYSTEM</div>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 40px; letter-spacing: -1.2px">The right direction. It added feeling and quietly removed trust.</h1>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; flex: 1; min-height: 0">
+
+    <div style="background: #FFFFFF; border-radius: 22px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; gap: 8px; align-items: center"><span style="background: #FFE4D6; color: #9A3412; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 99px">FIX NOW</span><span style="font-size: 13px; font-weight: 700; color: #5E5975">Regressions from page 6</span></div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px; line-height: 1.15">Six things page 6 had that page 7 lost.</div>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <sc-for list="{{lost}}" as="l" hint-placeholder-count="6">
+          <div style="display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 10px; padding: 8px 12px; background: #F7F6F3; border-radius: 10px; font-size: 13.5px; line-height: 1.4"><b>{{l.where}}</b><span>{{l.what}}</span></div>
+        </sc-for>
+      </div>
+      <div style="margin-top: auto; background: #F7F6F3; border-radius: 14px; padding: 12px 14px; font-size: 13.5px; line-height: 1.45"><b>Fix:</b> treat page 6 as the content spec and page 7 as the skin. Every item on this list goes back in before anything else moves.</div>
+    </div>
+
+    <div style="background: #FFFFFF; border-radius: 22px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; gap: 8px; align-items: center"><span style="background: #DBEAFE; color: #1E40AF; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 99px">SHOULD</span><span style="font-size: 13px; font-weight: 700; color: #5E5975">Colour meaning</span></div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px; line-height: 1.15">Colour is meant to mean something, but three colours have two meanings.</div>
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        <sc-for list="{{clash}}" as="c" hint-placeholder-count="3">
+          <div style="display: flex; gap: 10px; align-items: center; font-size: 13.5px; line-height: 1.4"><span style="width: 40px; height: 40px; border-radius: 12px; flex: none; {{c.sw}}"></span><span><b>{{c.name}}</b> · {{c.text}}</span></div>
+        </sc-for>
+      </div>
+      <div style="font-size: 13.5px; line-height: 1.45; color: #4A4560">Separately, the Crew screen puts four full colours on screen at once (mint ground plus apricot, ocean and violet cards), which breaks the restraint that makes colour feel grown-up.</div>
+      <div style="margin-top: auto; background: #F7F6F3; border-radius: 14px; padding: 12px 14px; font-size: 13.5px; line-height: 1.45"><b>Fix:</b> colour follows the character, not the clock. Xero apricot, Jelli ocean, Glim violet. Sun only for celebrations, lilac only for talking with Xero. One ground colour plus at most one other on any screen.</div>
+    </div>
+
+    <div style="background: #FFFFFF; border-radius: 22px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; gap: 8px; align-items: center"><span style="background: #FFE4D6; color: #9A3412; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 99px">FIX NOW</span><span style="font-size: 13px; font-weight: 700; color: #5E5975">Data continuity</span></div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px; line-height: 1.15">Page 7 is a different user from page 6.</div>
+      <div style="display: grid; grid-template-columns: minmax(0, 1fr) 96px 96px; gap: 6px 10px; font-size: 13.5px; align-items: center">
+        <span style="font-size: 12px; font-weight: 800; color: #5E5975">FACT</span><span style="font-size: 12px; font-weight: 800; color: #5E5975">PAGE 6</span><span style="font-size: 12px; font-weight: 800; color: #5E5975">PAGE 7</span>
+        <sc-for list="{{facts}}" as="f" hint-placeholder-count="5">
+          <span style="padding: 7px 0; border-top: 1px solid #F0EDE7">{{f.k}}</span><span style="padding: 7px 0; border-top: 1px solid #F0EDE7; font-weight: 700">{{f.a}}</span><span style="padding: 7px 0; border-top: 1px solid #F0EDE7; font-weight: 700; color: #9A3412">{{f.b}}</span>
+        </sc-for>
+      </div>
+      <div style="font-size: 13.5px; line-height: 1.45; color: #4A4560">The app is priced in USD in the code ($39.99 a year), so the £ is a straight error. In the chat, Xero calls the user “Sam” before onboarding has asked for a name.</div>
+      <div style="margin-top: auto; background: #F7F6F3; border-radius: 14px; padding: 12px 14px; font-size: 13.5px; line-height: 1.45"><b>Fix:</b> one persona file (name, product, triggers, Quit Day, reason, currency) that every mock reads from. Ask for the nickname in the chat before using it.</div>
+    </div>
+
+    <div style="background: #FFFFFF; border-radius: 22px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; gap: 8px; align-items: center"><span style="background: #DBEAFE; color: #1E40AF; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 99px">SHOULD</span><span style="font-size: 13px; font-weight: 700; color: #5E5975">Motion</span></div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px; line-height: 1.15">The rules sheet says “one timing”. The screens use nine.</div>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <sc-for list="{{curves}}" as="m" hint-placeholder-count="6">
+          <div style="display: grid; grid-template-columns: minmax(0, 1fr) 120px; gap: 10px; padding: 7px 12px; background: #F7F6F3; border-radius: 10px; font-size: 13px"><span>{{m.use}}</span><span style="font-weight: 700; text-align: right">{{m.val}}</span></div>
+        </sc-for>
+      </div>
+      <div style="margin-top: auto; background: #F7F6F3; border-radius: 14px; padding: 12px 14px; font-size: 13.5px; line-height: 1.45"><b>Fix:</b> three tokens. Arrive (600ms ease-out), Settle (900ms, for characters entering) and Celebrate (one spring, only on Passed, milestones and the finale). Onboarding never bounces.</div>
+    </div>
+
+    <div style="background: #FFFFFF; border-radius: 22px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; gap: 8px; align-items: center"><span style="background: #DBEAFE; color: #1E40AF; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 99px">SHOULD</span><span style="font-size: 13px; font-weight: 700; color: #5E5975">Personal, or watching?</span></div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px; line-height: 1.15">Personalisation tips into watching you, or scheduling the craving for you.</div>
+      <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13.5px; line-height: 1.45">
+        <div style="padding: 10px 12px; background: #FFF4EE; border-radius: 10px"><b>Now:</b> “It's 9:41, right on time for your coffee wave.”<br><b>Better:</b> “Coffee waves are common for you. This one will pass too.”</div>
+        <div style="padding: 10px 12px; background: #FFF4EE; border-radius: 10px"><b>Now:</b> “£252 kept for ‘Mia’”<br><b>Better:</b> “$252 kept. For Maya and the park.”</div>
+        <div style="padding: 10px 12px; background: #FFF4EE; border-radius: 10px"><b>Now:</b> the name appears on 4 of 9 screens<br><b>Better:</b> once per session, on Today or a milestone</div>
+      </div>
+      <div style="margin-top: auto; background: #F7F6F3; border-radius: 14px; padding: 12px 14px; font-size: 13.5px; line-height: 1.45"><b>Rule:</b> personal data comes back as help (a tip, a reason), never as proof the app was watching. Predicted waves go on Today, not on the SOS screen.</div>
+    </div>
+
+    <div style="background: #FFFFFF; border-radius: 22px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; gap: 8px; align-items: center"><span style="background: #DCFCE7; color: #166534; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 99px">KEEP</span><span style="font-size: 13px; font-weight: 700; color: #5E5975">What page 7 gets right</span></div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px; line-height: 1.15">Worth building on.</div>
+      <div style="display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; line-height: 1.45">
+        <div style="padding: 8px 12px; background: #F0FAF3; border-radius: 10px"><b>Today adapts</b> to time, product, trigger and day, and changes who greets you. It's the best idea on either page.</div>
+        <div style="padding: 8px 12px; background: #F0FAF3; border-radius: 10px"><b>The hand-over is shown,</b> not just described: Xero's chip fades as Jelli slides in.</div>
+        <div style="padding: 8px 12px; background: #F0FAF3; border-radius: 10px"><b>Count-ups</b> on Passed and the finale make the +1 felt.</div>
+        <div style="padding: 8px 12px; background: #F0FAF3; border-radius: 10px"><b>SOS has two actions,</b> not four. Fewer choices in a crisis.</div>
+        <div style="padding: 8px 12px; background: #F0FAF3; border-radius: 10px"><b>Glim's line</b> changes with the real day: a quiet day, all waves ridden, or a hard day.</div>
+        <div style="padding: 8px 12px; background: #F0FAF3; border-radius: 10px"><b>Reduce Motion</b> shows every screen at its final state.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1600,"height":1180}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      lost: [
+        { where: 'Welcome', what: 'Terms, Privacy and the 18+ line under the button' },
+        { where: 'Chat', what: '“Edit response”, the way to correct an answer' },
+        { where: 'SOS', what: 'Any route to “I slipped” or “Ping a friend”' },
+        { where: 'Passed', what: 'Optional “What set it off?” tagging, the data Insights needs' },
+        { where: 'Check-in', what: 'Cravings logged and ridden out; drawn faces replaced by emoji' },
+        { where: 'Finale', what: 'The cited health fact (American Cancer Society)' }
+      ],
+      clash: [
+        { name: 'Lilac', text: 'chat with Xero and also evening Today, hosted by Glim', sw: 'background: #D9CCFF' },
+        { name: 'Sun', text: 'ordinary afternoons and the Week 4 finale, so Tuesday looks like graduation', sw: 'background: #FFD966' },
+        { name: 'Mint vs green', text: 'mint means the plan, yet the lesson card uses a different green (#1FA971)', sw: 'background: linear-gradient(90deg, #9FE3BC 50%, #1FA971 50%)' }
+      ],
+      facts: [
+        { k: 'Currency', a: '$', b: '£' },
+        { k: 'Reason', a: 'Maya', b: 'Mia' },
+        { k: 'Quit Day', a: 'Fri 6 Nov', b: 'Sat 14 Nov' },
+        { k: 'Coffee wave', a: '—', b: '9:40 / 9:41' },
+        { k: 'Products', a: 'cigs + vape', b: '12 cigs + vape' }
+      ],
+      curves: [
+        { use: 'Arrive: text, cards', val: '600 / 700ms' },
+        { use: 'Rise: Xero, Glim', val: '1400ms' },
+        { use: 'Crew cards, Passed Jelli', val: 'spring 1.4' },
+        { use: 'SOS Jelli entrance', val: 'spring 1.3' },
+        { use: 'Finale characters', val: 'spring 1.5' },
+        { use: '+1 pop, mood pick', val: 'spring 1.6' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

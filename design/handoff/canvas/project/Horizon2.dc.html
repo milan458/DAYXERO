@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Horizon art, alive</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<svg width="{{w}}" height="{{h}}" viewBox="0 0 400 300" preserveAspectRatio="{{fit}}" aria-hidden="true" style="display: block">
+  <defs>
+    <linearGradient id="h2Dawn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF7E5A"></stop><stop offset="0.55" stop-color="#FFB877"></stop><stop offset="1" stop-color="#FFE6BF"></stop></linearGradient>
+    <linearGradient id="h2Day" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5AA9FF"></stop><stop offset="1" stop-color="#D3EEFF"></stop></linearGradient>
+    <linearGradient id="h2Dusk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7A5CE0"></stop><stop offset="0.6" stop-color="#E58BB8"></stop><stop offset="1" stop-color="#FFC59A"></stop></linearGradient>
+    <linearGradient id="h2Night" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#180F52"></stop><stop offset="1" stop-color="#5A3CC4"></stop></linearGradient>
+    <radialGradient id="h2Sun" cx="0.38" cy="0.32" r="0.75"><stop offset="0" stop-color="#FFF6C8"></stop><stop offset="1" stop-color="#FFC23A"></stop></radialGradient>
+    <radialGradient id="h2Glow" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#FFFFFF" stop-opacity="0.75"></stop><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"></stop></radialGradient>
+    <linearGradient id="h2Sheen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF" stop-opacity="0.22"></stop><stop offset="0.35" stop-color="#FFFFFF" stop-opacity="0"></stop></linearGradient>
+    <filter id="h2Lift" x="-5%" y="-20%" width="110%" height="140%"><feDropShadow dx="0" dy="-3" stdDeviation="4" flood-color="#1A0B2E" flood-opacity="0.22"></feDropShadow></filter>
+    <filter id="h2Soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="4"></feGaussianBlur></filter>
+    <filter id="h2Grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"></feTurbulence><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.09 0"></feColorMatrix></filter>
+  </defs>
+
+  <g display="{{d.dawn}}">
+    <rect width="400" height="300" fill="url(#h2Dawn)"></rect>
+    <circle cx="200" cy="168" r="130" fill="url(#h2Glow)" opacity="0.6"><animate attributeName="r" values="{{pulseR}}" dur="6s" repeatCount="indefinite"></animate></circle>
+    <circle cx="200" cy="{{sunY}}" r="70" fill="url(#h2Sun)"><animate attributeName="cy" values="{{sunRise}}" dur="2.6s" fill="freeze" calcMode="spline" keySplines="0.2 0.7 0.2 1" keyTimes="0;1"></animate></circle>
+    <g filter="url(#h2Soft)" opacity="0.85" fill="#FFF4E6"><animateTransform attributeName="transform" type="translate" values="{{drift}}" dur="24s" repeatCount="indefinite"></animateTransform><ellipse cx="70" cy="86" rx="46" ry="14"></ellipse><ellipse cx="98" cy="74" rx="28" ry="14"></ellipse><ellipse cx="330" cy="62" rx="40" ry="12"></ellipse></g>
+    <rect width="400" height="300" fill="{{haze}}" opacity="{{hazeO}}"></rect>
+    <path filter="url(#h2Lift)" d="M0 192 C60 162 120 172 180 187 C250 204 320 172 400 166 L400 300 L0 300 Z" fill="#FF9D6E"></path>
+    <path filter="url(#h2Lift)" d="M0 222 C80 196 150 206 220 224 C290 240 350 216 400 206 L400 300 L0 300 Z" fill="#FF7A55"></path>
+    <path filter="url(#h2Lift)" d="M0 252 C70 233 140 241 210 256 C280 271 340 251 400 243 L400 300 L0 300 Z" fill="#E85A3E"></path>
+    <path filter="url(#h2Lift)" d="M0 282 C90 267 180 273 260 283 C320 291 360 285 400 279 L400 300 L0 300 Z" fill="#C2402A"></path>
+    <path d="M0 222 C80 196 150 206 220 224 C290 240 350 216 400 206 L400 300 L0 300 Z" fill="url(#h2Sheen)"></path>
+    <path d="M330 34 Q330 46 342 46 Q330 46 330 58 Q330 46 318 46 Q330 46 330 34 Z" fill="#FFF8EE"><animate attributeName="opacity" values="{{twinkle}}" dur="2.2s" repeatCount="indefinite"></animate></path>
+  </g>
+
+  <g display="{{d.dusk}}">
+    <rect width="400" height="300" fill="url(#h2Dusk)"></rect>
+    <circle cx="300" cy="190" r="110" fill="url(#h2Glow)" opacity="0.45"></circle>
+    <circle cx="300" cy="196" r="44" fill="#FFB86B"></circle>
+    <g filter="url(#h2Soft)" opacity="0.8" fill="#FFE0EE"><animateTransform attributeName="transform" type="translate" values="{{drift}}" dur="26s" repeatCount="indefinite"></animateTransform><ellipse cx="90" cy="80" rx="52" ry="14"></ellipse><ellipse cx="120" cy="68" rx="30" ry="14"></ellipse></g>
+    <circle cx="70" cy="40" r="1.6" fill="#FFF8EE"><animate attributeName="opacity" values="{{twinkle}}" dur="1.9s" repeatCount="indefinite"></animate></circle><circle cx="200" cy="30" r="1.4" fill="#FFF8EE"><animate attributeName="opacity" values="{{twinkle}}" dur="2.6s" begin="0.7s" repeatCount="indefinite"></animate></circle>
+    <rect width="400" height="300" fill="{{haze}}" opacity="{{hazeO}}"></rect>
+    <path filter="url(#h2Lift)" d="M0 196 C70 170 140 178 200 192 C270 208 330 180 400 172 L400 300 L0 300 Z" fill="#B572C9"></path>
+    <path filter="url(#h2Lift)" d="M0 228 C90 202 160 212 230 230 C300 246 350 222 400 214 L400 300 L0 300 Z" fill="#8E55BF"></path>
+    <path filter="url(#h2Lift)" d="M0 258 C80 238 150 246 220 262 C290 278 350 258 400 250 L400 300 L0 300 Z" fill="#6A3AA8"></path>
+    <path filter="url(#h2Lift)" d="M0 286 C90 272 160 278 240 288 C310 296 360 290 400 284 L400 300 L0 300 Z" fill="#4A2588"></path>
+  </g>
+
+  <g display="{{d.path}}">
+    <rect width="400" height="300" fill="url(#h2Day)"></rect>
+    <circle cx="300" cy="78" r="70" fill="url(#h2Glow)" opacity="0.6"></circle>
+    <circle cx="300" cy="78" r="30" fill="url(#h2Sun)"></circle>
+    <g filter="url(#h2Soft)" opacity="0.9" fill="#FFFFFF"><animateTransform attributeName="transform" type="translate" values="{{drift}}" dur="22s" repeatCount="indefinite"></animateTransform><ellipse cx="80" cy="70" rx="50" ry="15"></ellipse><ellipse cx="110" cy="58" rx="30" ry="15"></ellipse><ellipse cx="370" cy="130" rx="40" ry="12"></ellipse></g>
+    <rect width="400" height="300" fill="{{haze}}" opacity="{{hazeO}}"></rect>
+    <path filter="url(#h2Lift)" d="M0 176 C70 150 140 158 200 172 C270 188 330 160 400 150 L400 300 L0 300 Z" fill="#9FE3AE"></path>
+    <path d="M70 168 L78 146 L86 168 Z M92 166 L98 150 L104 166 Z" fill="#3FA868"></path>
+    <path filter="url(#h2Lift)" d="M0 210 C90 184 160 194 230 212 C300 228 350 204 400 196 L400 300 L0 300 Z" fill="#5CC984"></path>
+    <path filter="url(#h2Lift)" d="M0 246 C80 226 150 234 220 250 C290 266 350 246 400 238 L400 300 L0 300 Z" fill="#2FA262"></path>
+    <path d="M176 300 C188 282 236 272 228 256 C222 244 202 236 206 224 L212 224 C212 236 236 244 242 258 C252 278 216 288 224 300 Z" fill="#FFF1D2"></path>
+    <path filter="url(#h2Lift)" d="M0 284 C90 270 160 276 240 286 C310 294 360 288 400 282 L400 300 L0 300 Z" fill="#1E7A4B"></path>
+    <path d="M0 210 C90 184 160 194 230 212 C300 228 350 204 400 196 L400 300 L0 300 Z" fill="url(#h2Sheen)"></path>
+  </g>
+
+  <g display="{{d.sea}}">
+    <rect width="400" height="300" fill="url(#h2Day)"></rect>
+    <circle cx="110" cy="96" r="80" fill="url(#h2Glow)" opacity="0.6"><animate attributeName="r" values="{{pulseR}}" dur="10s" repeatCount="indefinite"></animate></circle>
+    <circle cx="110" cy="96" r="34" fill="url(#h2Sun)"></circle>
+    <g filter="url(#h2Soft)" opacity="0.9" fill="#FFFFFF"><animateTransform attributeName="transform" type="translate" values="{{drift}}" dur="20s" repeatCount="indefinite"></animateTransform><ellipse cx="300" cy="64" rx="56" ry="15"></ellipse><ellipse cx="330" cy="52" rx="30" ry="14"></ellipse></g>
+    <rect width="400" height="300" fill="{{haze}}" opacity="{{hazeO}}"></rect>
+    <g><animateTransform attributeName="transform" type="translate" values="{{waveA}}" dur="7s" repeatCount="indefinite"></animateTransform><path filter="url(#h2Lift)" d="M-40 176 C10 166 60 172 110 168 C180 162 260 170 440 164 L440 300 L-40 300 Z" fill="#9CCBFF"></path></g>
+    <g><animateTransform attributeName="transform" type="translate" values="{{waveB}}" dur="5s" repeatCount="indefinite"></animateTransform><path filter="url(#h2Lift)" d="M-40 206 C20 190 70 196 120 208 C180 222 240 196 300 194 C350 193 400 198 440 202 L440 300 L-40 300 Z" fill="#5A9DFF"></path></g>
+    <g><animateTransform attributeName="transform" type="translate" values="{{waveC}}" dur="6s" repeatCount="indefinite"></animateTransform><path filter="url(#h2Lift)" d="M-40 240 C10 222 60 226 110 240 C160 254 210 230 260 228 C320 226 380 234 440 240 L440 300 L-40 300 Z" fill="#2F72F2"></path><path d="M90 236 C102 222 122 220 132 232 C120 230 110 234 104 242 Z" fill="#FFF8EE"></path></g>
+    <g><animateTransform attributeName="transform" type="translate" values="{{waveB}}" dur="8s" repeatCount="indefinite"></animateTransform><path filter="url(#h2Lift)" d="M-40 276 C20 262 80 266 140 276 C200 286 260 268 440 272 L440 300 L-40 300 Z" fill="#1C4FCC"></path></g>
+    <circle cx="300" cy="260" r="3" fill="#FFFFFF" opacity="0.7"><animate attributeName="cy" values="{{bubble}}" dur="5s" repeatCount="indefinite"></animate></circle>
+  </g>
+
+  <g display="{{d.night}}">
+    <rect width="400" height="300" fill="url(#h2Night)"></rect>
+    <circle cx="60" cy="40" r="1.8" fill="#FFF8EE"><animate attributeName="opacity" values="{{twinkle}}" dur="2s" repeatCount="indefinite"></animate></circle><circle cx="150" cy="24" r="1.4" fill="#FFF8EE"><animate attributeName="opacity" values="{{twinkle}}" dur="2.7s" begin="0.4s" repeatCount="indefinite"></animate></circle><circle cx="230" cy="60" r="1.6" fill="#FFF8EE"><animate attributeName="opacity" values="{{twinkle}}" dur="1.8s" begin="1s" repeatCount="indefinite"></animate></circle><circle cx="360" cy="110" r="1.4" fill="#FFF8EE"><animate attributeName="opacity" values="{{twinkle}}" dur="2.4s" begin="0.2s" repeatCount="indefinite"></animate></circle><circle cx="30" cy="120" r="1.2" fill="#FFF8EE"><animate attributeName="opacity" values="{{twinkle}}" dur="3s" begin="0.9s" repeatCount="indefinite"></animate></circle>
+    <circle cx="290" cy="80" r="70" fill="url(#h2Glow)" opacity="0.35"></circle>
+    <path d="M290 46 A34 34 0 1 0 322 98 A28 28 0 1 1 290 46 Z" fill="#FFF1C2"></path>
+    <rect width="400" height="300" fill="{{haze}}" opacity="{{hazeO}}"></rect>
+    <path filter="url(#h2Lift)" d="M0 184 C70 158 140 166 200 180 C270 196 330 168 400 160 L400 300 L0 300 Z" fill="#5A3CC4"></path>
+    <path filter="url(#h2Lift)" d="M0 218 C90 192 160 202 230 220 C300 236 350 212 400 204 L400 300 L0 300 Z" fill="#432AA6"></path>
+    <path filter="url(#h2Lift)" d="M0 252 C80 232 150 240 220 256 C290 272 350 252 400 244 L400 300 L0 300 Z" fill="#2F1C84"></path>
+    <path filter="url(#h2Lift)" d="M0 284 C90 270 160 276 240 286 C310 294 360 288 400 282 L400 300 L0 300 Z" fill="#1C1160"></path>
+    <g fill="#FFE27A"><animateTransform attributeName="transform" type="translate" values="{{fly}}" dur="9s" repeatCount="indefinite"></animateTransform><circle cx="96" cy="230" r="3"><animate attributeName="opacity" values="{{twinkle}}" dur="1.6s" repeatCount="indefinite"></animate></circle><circle cx="96" cy="230" r="8" opacity="0.25"></circle><circle cx="300" cy="250" r="2.5"><animate attributeName="opacity" values="{{twinkle}}" dur="2.1s" begin="0.5s" repeatCount="indefinite"></animate></circle><circle cx="300" cy="250" r="7" opacity="0.25"></circle><circle cx="190" cy="214" r="2"><animate attributeName="opacity" values="{{twinkle}}" dur="1.3s" begin="0.2s" repeatCount="indefinite"></animate></circle></g>
+  </g>
+
+  <rect width="400" height="300" fill="{{haze}}" opacity="{{hazeTop}}"></rect>
+  <rect width="400" height="300" filter="url(#h2Grain)"></rect>
+</svg>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"scene":{"editor":"enum","options":["dawn","dusk","path","sea","night"],"default":"dawn"},"clarity":{"editor":"range","min":0,"max":100,"step":5,"default":100},"animate":{"editor":"boolean","default":true},"w":{"editor":"int","min":40,"max":1200,"default":400},"h":{"editor":"int","min":40,"max":1200,"default":300},"fit":{"editor":"enum","options":["xMidYMid slice","xMidYMax slice","xMidYMin slice"],"default":"xMidYMid slice"},"$preview":{"width":400,"height":300}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const scene = this.props.scene ?? 'dawn';
+    const names = ['dawn', 'dusk', 'path', 'sea', 'night'];
+    const d = {};
+    names.forEach((n) => { d[n] = n === scene ? 'inline' : 'none'; });
+    if (!names.includes(scene)) d.dawn = 'inline';
+    const on = String(this.props.animate ?? true) !== 'false';
+    const clarity = Math.min(100, Math.max(0, Number(this.props.clarity ?? 100)));
+    const fog = 1 - clarity / 100;
+    const sunY = 168 + Math.round(fog * 20);
+    const S = (a, b) => on ? a : b;
+    return {
+      d,
+      w: Number(this.props.w ?? 400), h: Number(this.props.h ?? 300),
+      fit: this.props.fit ?? 'xMidYMid slice',
+      haze: scene === 'night' ? '#8E80C9' : (scene === 'dusk' ? '#E9D6F0' : '#F3ECE3'),
+      hazeO: (fog * 0.7).toFixed(2),
+      hazeTop: (fog * 0.35).toFixed(2),
+      sunY,
+      sunRise: S(`${sunY + 60};${sunY}`, `${sunY};${sunY}`),
+      pulseR: S('120;140;120', '130;130;130'),
+      drift: S('0 0;22 0;0 0', '0 0;0 0;0 0'),
+      waveA: S('0 0;-18 2;0 0', '0 0;0 0;0 0'),
+      waveB: S('0 0;20 -3;0 0', '0 0;0 0;0 0'),
+      waveC: S('0 0;-26 3;0 0', '0 0;0 0;0 0'),
+      bubble: S('270;170', '260;260'),
+      fly: S('0 0;14 -10;-8 -4;0 0', '0 0;0 0;0 0;0 0'),
+      twinkle: S('0.25;1;0.25', '1;1;1')
+    };
+  }
+}
+</script>
+</body>
+</html>

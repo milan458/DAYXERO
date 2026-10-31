@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Meet your crew</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{t.bg}}; color: {{t.ink}}; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif; display: flex; flex-direction: column">
+  <div style="padding: 70px 24px 0 24px; display: flex; flex-direction: column; gap: 8px">
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 34px; letter-spacing: -1px; line-height: 1.05">You won't do this alone</h1>
+    <p style="margin: 0; font-size: 15.5px; line-height: 1.5; color: {{t.muted}}">Meet your crew. Each one looks after a different part of your day.</p>
+  </div>
+
+  <div style="padding: 22px 20px 0 20px; display: flex; flex-direction: column; gap: 12px">
+    <div style="background: {{t.raised}}; box-shadow: {{t.shadow}}; border-radius: 26px; padding: 12px; display: flex; gap: 14px; align-items: center">
+      <div style="position: relative; width: 96px; height: 96px; border-radius: 20px; overflow: hidden; flex: none"><dc-import name="Horizon" scene="dawn" clarity="60" w="96" h="96" hint-size="96px,96px"></dc-import><div style="position: absolute; left: 6px; top: 4px"><dc-import name="Xero" mood="hello" stage="2" size="84" hint-size="84px,84px"></dc-import></div></div>
+      <div style="display: flex; flex-direction: column; gap: 3px"><span style="font-size: 12px; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase; color: {{t.coral}}">Your days</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 20px">Xero</span><span style="font-size: 14px; line-height: 1.35; color: {{t.muted}}">Your sunrise. Pledges, lessons and progress.</span></div>
+    </div>
+    <div style="background: {{t.raised}}; box-shadow: {{t.shadow}}; border-radius: 26px; padding: 12px; display: flex; gap: 14px; align-items: center">
+      <div style="position: relative; width: 96px; height: 96px; border-radius: 20px; overflow: hidden; flex: none"><dc-import name="Horizon" scene="sea" w="96" h="96" hint-size="96px,96px"></dc-import><div style="position: absolute; left: 6px; top: 2px"><dc-import name="Jelli" mood="breathe" stage="2" size="84" hint-size="84px,84px"></dc-import></div></div>
+      <div style="display: flex; flex-direction: column; gap: 3px"><span style="font-size: 12px; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase; color: {{t.blue}}">Your cravings</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 20px">Jelli</span><span style="font-size: 14px; line-height: 1.35; color: {{t.muted}}">Rides every wave with you in SOS. Never judges.</span></div>
+    </div>
+    <div style="background: {{t.raised}}; box-shadow: {{t.shadow}}; border-radius: 26px; padding: 12px; display: flex; gap: 14px; align-items: center">
+      <div style="position: relative; width: 96px; height: 96px; border-radius: 20px; overflow: hidden; flex: none"><dc-import name="Horizon" scene="night" w="96" h="96" hint-size="96px,96px"></dc-import><div style="position: absolute; left: 6px; top: 4px"><dc-import name="Glim2" mood="hello" stage="2" size="84" hint-size="84px,84px"></dc-import></div></div>
+      <div style="display: flex; flex-direction: column; gap: 3px"><span style="font-size: 12px; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase; color: {{t.violet}}">Your evenings</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 20px">Glim</span><span style="font-size: 14px; line-height: 1.35; color: {{t.muted}}">Keeps a light on. Check-ins and winding down.</span></div>
+    </div>
+  </div>
+
+  <div style="margin-top: auto; padding: 0 24px 40px 24px; display: flex; flex-direction: column; gap: 10px">
+    <div style="font-size: 15px; font-weight: 600">Building your plan around coffee and stress…</div>
+    <svg width="342" height="10" viewBox="0 0 342 10" role="progressbar" aria-label="Building your plan" style="display: block">
+      <rect width="342" height="10" rx="5" fill="{{t.surf}}"></rect>
+      <rect width="0" height="10" rx="5" fill="#2FD08A"><animate attributeName="width" values="0;342;342" keyTimes="0;0.85;1" dur="4s" repeatCount="indefinite"></animate></rect>
+    </svg>
+    <div style="font-size: 13px; color: {{t.muted}}">Prep week starts today. Day Xero is Fri 6 Nov.</div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const dark = (this.props.theme ?? 'light') === 'dark';
+    return { t: dark
+      ? { bg: '#0E0B2B', surf: '#1B1747', raised: '#1B1747', ink: '#FFF8EE', muted: '#B8B3D9', shadow: 'none', coral: '#FF9A7F', blue: '#7FB0FF', violet: '#B9A6FF' }
+      : { bg: '#FBF7F1', surf: '#F1EBE2', raised: '#FFFFFF', ink: '#1E1A3A', muted: '#5E5975', shadow: '0 1px 0 rgba(30,26,58,0.05), 0 8px 22px rgba(30,26,58,0.07)', coral: '#B2361C', blue: '#1F57D6', violet: '#5638C4' } };
+  }
+}
+</script>
+</body>
+</html>

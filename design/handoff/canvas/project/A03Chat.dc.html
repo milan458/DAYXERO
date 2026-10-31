@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Chat with Xero</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{t.bg}}; color: {{t.ink}}; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif; display: flex; flex-direction: column">
+  <div style="display: flex; align-items: center; gap: 12px; padding: 50px 12px 0 14px">
+    <dc-import name="Xero" mood="{{xMood}}" stage="1" animate="{{motionStr}}" size="46" hint-size="46px,46px"></dc-import>
+    <div style="flex: 1; height: 8px; border-radius: 99px; background: {{t.chip}}" role="progressbar" aria-label="Setup progress" aria-valuenow="2" aria-valuemin="1" aria-valuemax="6"><div style="height: 8px; border-radius: 99px; background: #1FA971; {{bar}}"></div></div>
+    <button aria-label="Close" style="width: 44px; height: 44px; border-radius: 99px; border: 0; background: transparent; color: {{t.ink}}; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+  </div>
+
+  <div style="padding: 14px 22px 0 22px; display: flex; flex-direction: column; gap: 10px">
+    <p style="margin: 0; font-size: 16px; line-height: 1.5; max-width: 300px; {{v1}}">Hi, I'm Xero. Let's build your quit plan together. What do you use?</p>
+    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px">
+      <span style="height: 44px; padding: 0 8px 0 18px; border-radius: 99px; background: {{t.sel}}; color: {{t.selInk}}; font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 10px; {{v2}}">Cigarettes <span style="width: 26px; height: 26px; border-radius: 99px; background: #2FD08A; display: flex; align-items: center; justify-content: center"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0E0B2B" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></span></span>
+      <span style="height: 44px; padding: 0 8px 0 18px; border-radius: 99px; background: {{t.sel}}; color: {{t.selInk}}; font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 10px; {{v2b}}">Vape <span style="width: 26px; height: 26px; border-radius: 99px; background: #2FD08A; display: flex; align-items: center; justify-content: center"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0E0B2B" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></span></span>
+    </div>
+    <p style="margin: 2px 0 0 0; font-size: 16px; line-height: 1.5; max-width: 310px; {{v3}}">Cigarettes and a vape. Using both is common, Sam. I'll plan for each, so neither sneaks back in.</p>
+    <div style="display: flex; gap: 5px; padding: 6px 0; {{dots}}" aria-hidden="true">
+      <span style="width: 8px; height: 8px; border-radius: 99px; background: {{t.ink}}; opacity: 0.6"></span><span style="width: 8px; height: 8px; border-radius: 99px; background: {{t.ink}}; opacity: 0.4"></span><span style="width: 8px; height: 8px; border-radius: 99px; background: {{t.ink}}; opacity: 0.25"></span>
+    </div>
+    <p style="margin: -24px 0 0 0; font-size: 16px; line-height: 1.5; max-width: 310px; font-weight: 700; {{v5}}">When do cravings usually hit? Pick up to three.</p>
+  </div>
+
+  <div style="margin-top: auto; padding: 0 22px 14px 22px; display: flex; flex-direction: column; align-items: flex-end; gap: 8px" role="group" aria-label="Craving triggers">
+    <sc-for list="{{chips}}" as="c" hint-placeholder-count="5">
+      <button aria-pressed="{{c.pressed}}" style="height: 46px; padding: 0 12px 0 18px; border: 0; border-radius: 99px; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 10px; cursor: pointer; {{c.style}}">{{c.label}} <span style="width: 22px; height: 22px; border-radius: 99px; display: flex; align-items: center; justify-content: center; {{c.tick}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0E0B2B" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></span></button>
+    </sc-for>
+  </div>
+
+  <div style="padding: 0 22px 28px 22px">
+    <a href="A04Crew.dc.html" style="height: 58px; border-radius: 99px; background: {{t.btn}}; color: {{t.btnInk}}; font-weight: 700; font-size: 17px; text-decoration: none; display: flex; align-items: center; justify-content: center; {{btn}}">Next</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"motion":{"editor":"boolean","default":true},"replay":{"editor":"boolean","default":true},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  componentDidMount() { this.play(); }
+  componentWillUnmount() { (this.timers || []).forEach(clearTimeout); }
+  play() {
+    (this.timers || []).forEach(clearTimeout);
+    this.timers = [];
+    this.setState({ step: 0 });
+    const at = [300, 1100, 1500, 2300, 3000, 3900, 4300, 5600, 6300];
+    at.forEach((ms, i) => this.timers.push(setTimeout(() => this.setState({ step: i + 1 }), ms)));
+    if (String(this.props.replay ?? true) !== 'false') this.timers.push(setTimeout(() => this.play(), 12000));
+  }
+  renderVals() {
+    const dark = (this.props.theme ?? 'light') === 'dark';
+    const motion = String(this.props.motion ?? true) !== 'false';
+    const step = motion ? ((this.state && this.state.step) || 0) : 99;
+    const ease = 'cubic-bezier(.2,.7,.2,1)';
+    const v = (k, dy) => `opacity: ${step >= k ? 1 : 0}; transform: translateY(${step >= k ? 0 : (dy ?? 12)}px) scale(${step >= k ? 1 : 0.96}); transition: opacity 450ms ${ease}, transform 550ms ${ease}`;
+    const t = dark
+      ? { bg: '#1C1640', ink: '#FFF8EE', chip: 'rgba(255,255,255,0.10)', sel: '#FFF8EE', selInk: '#1C1640', btn: '#FFF8EE', btnInk: '#1C1640' }
+      : { bg: '#D9CCFF', ink: '#1E1A3A', chip: 'rgba(255,248,238,0.75)', sel: '#1E1A3A', selInk: '#FFF8EE', btn: '#1E1A3A', btnInk: '#FFF8EE' };
+    const labels = ['Coffee', 'Stress', 'After meals', 'Drinking', 'Waking up'];
+    const chips = labels.map((label, i) => {
+      const shown = step >= 6;
+      const picked = (i === 0 && step >= 8) || (i === 1 && step >= 9);
+      return {
+        label, pressed: picked ? 'true' : 'false',
+        style: `background: ${picked ? t.sel : t.chip}; color: ${picked ? t.selInk : t.ink}; opacity: ${shown ? 1 : 0}; transform: translateX(${shown ? 0 : 24}px); transition: opacity 400ms ${ease} ${i * 70}ms, transform 500ms ${ease} ${i * 70}ms, background 250ms, color 250ms`,
+        tick: `background: #2FD08A; opacity: ${picked ? 1 : 0}; transform: scale(${picked ? 1 : 0.4}); transition: opacity 250ms, transform 350ms ${ease}`
+      };
+    });
+    return {
+      t, chips, motionStr: String(motion),
+      xMood: step >= 3 && step < 5 ? 'cheer' : 'hello',
+      bar: `width: ${step >= 9 ? 34 : 18}%; transition: width 800ms ${ease}`,
+      v1: v(1), v2: v(2), v2b: v(3), v3: v(4), v5: v(6),
+      dots: `opacity: ${step === 5 ? 1 : 0}; transition: opacity 250ms`,
+      btn: `opacity: ${step >= 9 ? 1 : 0.4}; transition: opacity 400ms`
+    };
+  }
+}
+</script>
+</body>
+</html>

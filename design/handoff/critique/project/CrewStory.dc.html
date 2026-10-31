@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Crew continuity</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1600px; height: 1180px; box-sizing: border-box; background: #F7F6F3; color: #1E1A3A; font-family: 'DM Sans', system-ui, sans-serif; padding: 44px 56px; display: flex; flex-direction: column; gap: 22px">
+  <div style="display: flex; flex-direction: column; gap: 6px">
+    <div style="font-size: 14px; font-weight: 700; letter-spacing: 1.4px; color: #5E5975">PAGE 6 · THE CREW · STORY + DATA</div>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 40px; letter-spacing: -1.2px">Follow Sam's calendar and the set contradicts itself.</h1>
+  </div>
+
+  <div style="background: #FFFFFF; border-radius: 22px; padding: 22px 26px 26px 26px; display: flex; flex-direction: column; gap: 16px">
+    <div style="display: flex; gap: 8px; align-items: center"><span style="background: #FFE4D6; color: #9A3412; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 99px">FIX NOW</span><span style="font-size: 13px; font-weight: 700; color: #5E5975">Sam's real calendar, built from the dates on the screens</span></div>
+    <div style="display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 6px">
+      <sc-for list="{{days}}" as="d" hint-placeholder-count="10">
+        <div style="border-radius: 14px; padding: 10px 10px 12px 10px; display: flex; flex-direction: column; gap: 6px; min-height: 150px; {{d.box}}">
+          <div style="font-size: 12px; font-weight: 800; letter-spacing: 0.6px; {{d.kickerStyle}}">{{d.dow}} {{d.date}}</div>
+          <div style="font-size: 12.5px; font-weight: 700; line-height: 1.3">{{d.phase}}</div>
+          <div style="font-size: 12px; line-height: 1.35; color: #4A4560">{{d.note}}</div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; font-size: 14.5px; line-height: 1.5">
+      <div><b>The trial ends before the quit starts.</b> Plan says “3 days free, then $39.99 a year” and “Free until Mon 2 Nov”. That's 4 days before Day Xero, so Sam pays during prep, before Jelli, the program or a single day clear. The reminder lands on Sat 31 Oct, one day into the app. The price and trial length match the code (PaywallModelTests). The design problem is when the bill lands.</div>
+      <div><b>Day 3 is not a Friday.</b> With Quit Day on Fri 6 Nov as Day 1, Day 3 is Sun 8 Nov. Today says “Fri · Week 1, Day 3”, Pledge says “Day 3 · Friday” and Check-in says “Friday check-in”. One date function should feed every screen. <b>Fix:</b> either start the trial on Quit Day, or let a 7-day trial cover prep plus Day 1–3 (a product call for you). Then make the Plan screen say in plain words when the first charge lands.</div>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; flex: 1; min-height: 0">
+    <div style="background: #FFFFFF; border-radius: 22px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; gap: 8px; align-items: center"><span style="background: #DBEAFE; color: #1E40AF; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 99px">SHOULD</span><span style="font-size: 13px; font-weight: 700; color: #5E5975">Triggers</span></div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 21px; line-height: 1.15">Three screens, three different trigger lists.</div>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; font-size: 12.5px">
+        <sc-for list="{{trig}}" as="col" hint-placeholder-count="3">
+          <div style="display: flex; flex-direction: column; gap: 5px"><b style="font-size: 12px; color: #5E5975">{{col.title}}</b>
+            <sc-for list="{{col.items}}" as="i" hint-placeholder-count="5"><span style="padding: 5px 8px; border-radius: 8px; {{i.style}}">{{i.label}}</span></sc-for>
+          </div>
+        </sc-for>
+      </div>
+      <div style="font-size: 13.5px; line-height: 1.45; color: #4A4560">The code has one 11-item list. Sam picked Coffee and Stress in onboarding, then Passed offers Boredom and On my phone, and Slip leads with Waking up. Highlighted chips appear on only one screen.</div>
+      <div style="margin-top: auto; background: #F7F6F3; border-radius: 14px; padding: 12px 14px; font-size: 13.5px; line-height: 1.45"><b>Fix:</b> always show the user's own triggers first, in onboarding order, then “More” for the rest of the list.</div>
+    </div>
+
+    <div style="background: #FFFFFF; border-radius: 22px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; gap: 8px; align-items: center"><span style="background: #DBEAFE; color: #1E40AF; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 99px">SHOULD</span><span style="font-size: 13px; font-weight: 700; color: #5E5975">Numbers</span></div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 21px; line-height: 1.15">The same count, labelled three ways.</div>
+      <div style="display: flex; flex-direction: column; gap: 6px; font-size: 13.5px">
+        <div style="display: flex; justify-content: space-between; gap: 10px; padding: 8px 12px; background: #F7F6F3; border-radius: 10px"><span>Today</span><b>“14 waves”</b></div>
+        <div style="display: flex; justify-content: space-between; gap: 10px; padding: 8px 12px; background: #F7F6F3; border-radius: 10px"><span>Progress</span><b>“14 waves ridden out”</b></div>
+        <div style="display: flex; justify-content: space-between; gap: 10px; padding: 8px 12px; background: #F7F6F3; border-radius: 10px"><span>Passed</span><b>“15 this week”</b></div>
+        <div style="display: flex; justify-content: space-between; gap: 10px; padding: 8px 12px; background: #F7F6F3; border-radius: 10px"><span>Progress</span><b>“5 evening check-ins” on day 3</b></div>
+      </div>
+      <div style="font-size: 13.5px; line-height: 1.45; color: #4A4560">Total or this week? Five check-ins in three days only works if prep evenings count, and the screen doesn't say so.</div>
+      <div style="margin-top: auto; background: #F7F6F3; border-radius: 14px; padding: 12px 14px; font-size: 13.5px; line-height: 1.45"><b>Fix:</b> one label per metric everywhere (“waves ridden out”, all time). Show weekly numbers only in Insights.</div>
+    </div>
+
+    <div style="background: #FFFFFF; border-radius: 22px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; gap: 8px; align-items: center"><span style="background: #E7E5E4; color: #44403C; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 99px">DECIDE</span><span style="font-size: 13px; font-weight: 700; color: #5E5975">Naming + voice</span></div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 21px; line-height: 1.15">Quit Day or Day Xero? “Me” or “us”?</div>
+      <div style="font-size: 13.5px; line-height: 1.5; color: #4A4560">Welcome says “Quit on your Quit Day”. Quit Day, Crew and Program say “Day Xero”. The code uses both (129 and 29 times), so people meet two names for one day in their first minute.</div>
+      <div style="font-size: 13.5px; line-height: 1.5; color: #4A4560">The characters speak as “I” (“I've got this wave with you”), but Slip says “Thanks for telling <b>us</b>”. The most delicate screen is the one where the voice changes.</div>
+      <div style="margin-top: auto; background: #F7F6F3; border-radius: 14px; padding: 12px 14px; font-size: 13.5px; line-height: 1.45"><b>Suggest:</b> use “Quit Day” for the date you pick and “Day Xero” only as the celebration on the day itself. Slip becomes Jelli: “Thanks for telling me.”</div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1600,"height":1180}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const raw = [
+      ['FRI', '30 Oct', 'Prep 1 · onboarding', 'Trial starts. Plan screen.', 'trial'],
+      ['SAT', '31 Oct', 'Prep 2', '“We’ll remind you 2 days before” fires here.', 'trial'],
+      ['SUN', '1 Nov', 'Prep 3', '', 'trial'],
+      ['MON', '2 Nov', 'Prep 4', 'Trial ends. $39.99 charged.', 'charge'],
+      ['TUE', '3 Nov', 'Prep 5', '', ''],
+      ['WED', '4 Nov', 'Prep 6', '', ''],
+      ['THU', '5 Nov', 'Prep 7', '', ''],
+      ['FRI', '6 Nov', 'Day Xero · Day 1', 'Counter starts.', 'quit'],
+      ['SAT', '7 Nov', 'Day 2', '', ''],
+      ['SUN', '8 Nov', 'Day 3', 'Screens say “Friday”.', 'bad']
+    ];
+    const box = { trial: 'background: #EEF4FF', charge: 'background: #FFE4D6; box-shadow: inset 0 0 0 2px #EA580C', quit: 'background: #FFF1C2; box-shadow: inset 0 0 0 2px #1E1A3A', bad: 'background: #FFE4D6; box-shadow: inset 0 0 0 2px #EA580C', '': 'background: #F7F6F3' };
+    const days = raw.map(([dow, date, phase, note, k]) => ({ dow, date, phase, note, box: box[k], kickerStyle: k === 'charge' || k === 'bad' ? 'color: #9A3412' : 'color: #5E5975' }));
+    const only = { Boredom: 1, 'On my phone': 1, 'Waking up': 0, 'With friends': 1, Drinking: 0 };
+    const col = (title, list) => ({ title, items: list.map((label) => ({ label, style: only[label] ? 'background: #FFE4D6; color: #9A3412; font-weight: 700' : 'background: #F7F6F3' })) });
+    return {
+      days,
+      trig: [
+        col('Onboarding', ['Coffee', 'Stress', 'After meals', 'Drinking', 'Waking up']),
+        col('Passed', ['Coffee', 'Stress', 'After meals', 'Boredom', 'On my phone']),
+        col('Slip', ['Waking up', 'Coffee', 'Stress', 'Drinking', 'With friends'])
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

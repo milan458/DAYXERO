@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The wave passed</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{t.bg}}; color: {{t.ink}}; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif; display: flex; flex-direction: column">
+  <svg width="390" height="844" viewBox="0 0 390 844" aria-hidden="true" style="position: absolute; left: 0; top: 0">
+    <circle cx="44" cy="900" r="5" fill="none" stroke="{{t.bub}}" stroke-width="2.5"><animate attributeName="cy" values="{{b1}}" dur="6s" repeatCount="indefinite"></animate></circle>
+    <circle cx="120" cy="900" r="8" fill="none" stroke="{{t.bub}}" stroke-width="2.5"><animate attributeName="cy" values="{{b2}}" dur="8s" begin="1.2s" repeatCount="indefinite"></animate></circle>
+    <circle cx="262" cy="900" r="6" fill="none" stroke="{{t.bub}}" stroke-width="2.5"><animate attributeName="cy" values="{{b3}}" dur="7s" begin="0.6s" repeatCount="indefinite"></animate></circle>
+    <circle cx="346" cy="900" r="4" fill="none" stroke="{{t.bub}}" stroke-width="2.5"><animate attributeName="cy" values="{{b4}}" dur="5s" begin="2s" repeatCount="indefinite"></animate></circle>
+  </svg>
+
+  <div style="position: relative; height: 320px; flex: none; display: flex; align-items: flex-end; justify-content: center">
+    <div style="{{jIn}}"><dc-import name="Jelli" mood="cheer" stage="2" animate="{{motionStr}}" size="200" hint-size="200px,200px"></dc-import></div>
+  </div>
+
+  <div style="position: relative; padding: 8px 28px 0 28px; text-align: center; display: flex; flex-direction: column; gap: 10px">
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 32px; line-height: 1.08; letter-spacing: -1px; {{a1}}">You rode it out.</h1>
+    <p style="margin: 0; font-size: 16px; line-height: 1.5; color: {{t.muted}}; {{a2}}">That wave lasted 2 minutes 10 seconds. Each one you ride makes the next a little quieter.</p>
+  </div>
+
+  <div style="position: relative; margin: 16px 20px 0 20px; background: {{t.card}}; border-radius: 22px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; {{a3}}">
+    <span style="display: flex; flex-direction: column"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 32px; display: flex; align-items: baseline; gap: 8px">{{waves}} <span style="font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 700; color: {{t.green}}; display: inline-block; {{plus}}">+1</span></span><span style="font-size: 14px; color: {{t.muted}}">waves ridden out</span></span>
+  </div>
+
+  <div style="position: relative; margin: 10px 20px 0 20px; background: {{t.card}}; border-radius: 22px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; {{a4}}">
+    <div style="font-size: 16px; font-weight: 700">What set it off? <span style="font-weight: 500; color: {{t.muted}}">· optional</span></div>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap" role="group" aria-label="Trigger">
+      <sc-for list="{{chips}}" as="c" hint-placeholder-count="3">
+        <button aria-pressed="{{c.pressed}}" style="height: 44px; border: 0; border-radius: 14px; padding: 0 14px; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 600; cursor: pointer; {{c.style}}">{{c.label}}</button>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="position: relative; margin: 10px 20px 0 20px; display: flex; gap: 10px; align-items: center; font-size: 14px; line-height: 1.45; {{a5}}">
+    <span style="width: 40px; height: 40px; border-radius: 99px; background: #FFC38A; overflow: hidden; flex: none; display: flex; align-items: center; justify-content: center"><dc-import name="Xero" mood="cheer" stage="1" animate="false" size="40" hint-size="40px,40px"></dc-import></span>
+    <span>Back to Xero. I rose a little while you were out.</span>
+  </div>
+
+  <div style="margin-top: auto; padding: 0 22px 22px 22px; position: relative; {{a6}}">
+    <a href="F08Today.dc.html" style="height: 58px; border-radius: 99px; background: {{t.btn}}; color: {{t.btnInk}}; font-weight: 700; font-size: 17px; text-decoration: none; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 0 rgba(0,0,0,0.2)">Back to my day</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"motion":{"editor":"boolean","default":true},"replay":{"editor":"boolean","default":true},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  componentDidMount() { this.play(); }
+  componentWillUnmount() { (this.timers || []).forEach(clearTimeout); }
+  play() {
+    (this.timers || []).forEach(clearTimeout);
+    this.timers = [];
+    this.setState({ on: false, bump: false, pick: false });
+    this.timers.push(setTimeout(() => this.setState({ on: true }), 300));
+    this.timers.push(setTimeout(() => this.setState({ bump: true }), 1500));
+    this.timers.push(setTimeout(() => this.setState({ pick: true }), 3200));
+    if (String(this.props.replay ?? true) !== 'false') this.timers.push(setTimeout(() => this.play(), 10000));
+  }
+  renderVals() {
+    const dark = (this.props.theme ?? 'light') === 'dark';
+    const motion = String(this.props.motion ?? true) !== 'false';
+    const s = this.state || {};
+    const on = !motion || Boolean(s.on);
+    const bump = !motion || Boolean(s.bump);
+    const pick = !motion || Boolean(s.pick);
+    const ease = 'cubic-bezier(.2,.7,.2,1)';
+    const spring = 'cubic-bezier(.3,1.4,.5,1)';
+    const a = (i) => `opacity: ${on ? 1 : 0}; transform: translateY(${on ? 0 : 18}px); transition: opacity 600ms ${ease} ${i * 90}ms, transform 600ms ${ease} ${i * 90}ms`;
+    const t = dark
+      ? { bg: '#0F2550', ink: '#FFF8EE', muted: '#B9D6FF', card: 'rgba(255,255,255,0.08)', chip: 'rgba(255,255,255,0.08)', sel: '#FFF8EE', selInk: '#0F2550', green: '#2FD08A', bub: 'rgba(156,203,255,0.45)', btn: '#FFF8EE', btnInk: '#0F2550' }
+      : { bg: '#9CCBFF', ink: '#1E1A3A', muted: '#24406E', card: 'rgba(255,248,238,0.72)', chip: '#FFFFFF', sel: '#1E1A3A', selInk: '#FFF8EE', green: '#0F6E43', bub: 'rgba(255,248,238,0.85)', btn: '#1E1A3A', btnInk: '#FFF8EE' };
+    const chips = ['Coffee', 'Stress', 'More…'].map((label, i) => {
+      const p = i === 0 && pick;
+      return { label, pressed: p ? 'true' : 'false', style: `background: ${p ? t.sel : t.chip}; color: ${p ? t.selInk : t.ink}; transition: background 250ms, color 250ms` };
+    });
+    const m = (x, y) => motion ? x : y;
+    return {
+      t, chips, motionStr: String(motion),
+      waves: bump ? '15' : '14',
+      plus: `opacity: ${bump ? 1 : 0}; transform: translateY(${bump ? 0 : 8}px) scale(${bump ? 1 : 0.5}); transition: opacity 300ms, transform 600ms ${spring}`,
+      jIn: `opacity: ${on ? 1 : 0}; transform: translateY(${on ? 0 : 60}px) scale(${on ? 1 : 0.85}); transition: opacity 600ms ${ease}, transform 700ms ${spring}`,
+      a1: a(3), a2: a(4), a3: a(5), a4: a(7), a5: a(8), a6: a(9),
+      b1: m('900;-20', '300;300'), b2: m('900;-20', '180;180'), b3: m('900;-20', '420;420'), b4: m('900;-20', '250;250')
+    };
+  }
+}
+</script>
+</body>
+</html>

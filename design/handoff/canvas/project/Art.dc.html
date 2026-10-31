@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Art tile</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<svg width="{{w}}" height="{{h}}" viewBox="0 0 160 120" preserveAspectRatio="xMidYMid slice" aria-hidden="true" style="display: block">
+  <defs>
+    <linearGradient id="dxaDawn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF5A3C"></stop><stop offset="1" stop-color="#FF9A4A"></stop></linearGradient>
+    <radialGradient id="dxaSun" cx="0.38" cy="0.32" r="0.75"><stop offset="0" stop-color="#FFF4B8"></stop><stop offset="1" stop-color="#FFC23A"></stop></radialGradient>
+    <linearGradient id="dxaSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2F6BFF"></stop><stop offset="1" stop-color="#8FD0FF"></stop></linearGradient>
+    <linearGradient id="dxaNight" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#24166A"></stop><stop offset="1" stop-color="#6B3FD1"></stop></linearGradient>
+    <linearGradient id="dxaMint" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1FB878"></stop><stop offset="1" stop-color="#8BEABB"></stop></linearGradient>
+    <linearGradient id="dxaPink" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF6FA8"></stop><stop offset="1" stop-color="#FFC2D9"></stop></linearGradient>
+    <linearGradient id="dxaViolet" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4E35D6"></stop><stop offset="1" stop-color="#A68BFF"></stop></linearGradient>
+    <linearGradient id="dxaGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFAE1F"></stop><stop offset="1" stop-color="#FFE38A"></stop></linearGradient>
+    <radialGradient id="dxaGlow" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#FFFFFF" stop-opacity="0.85"></stop><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"></stop></radialGradient>
+  </defs>
+
+  <g display="{{d.sunrise}}">
+    <rect width="160" height="120" fill="url(#dxaDawn)"></rect>
+    <circle cx="80" cy="152" r="140" fill="#FF7445"></circle>
+    <circle cx="80" cy="152" r="112" fill="#FF9147"></circle>
+    <circle cx="80" cy="152" r="86" fill="#FFAE48"></circle>
+    <circle cx="80" cy="152" r="62" fill="#FFCB62"></circle>
+    <circle cx="80" cy="98" r="44" fill="url(#dxaGlow)" opacity="0.55"></circle>
+    <circle cx="80" cy="98" r="26" fill="url(#dxaSun)"></circle>
+    <path d="M12 112 C12 102 25 98 31 104 C35 93 54 93 56 106 C66 106 68 121 58 121 L17 121 C8 121 8 112 12 112 Z" fill="#FFF8EE"></path>
+    <path d="M128 16 Q128 26 138 26 Q128 26 128 36 Q128 26 118 26 Q128 26 128 16 Z" fill="#FFF8EE"></path>
+  </g>
+
+  <g display="{{d.wave}}">
+    <rect width="160" height="120" fill="url(#dxaSky)"></rect>
+    <circle cx="122" cy="30" r="24" fill="url(#dxaGlow)" opacity="0.6"></circle>
+    <circle cx="122" cy="30" r="14" fill="url(#dxaSun)"></circle>
+    <path d="M0 80 C30 64 50 64 80 76 C110 88 130 70 160 62 L160 120 L0 120 Z" fill="#5AA8FF"></path>
+    <path d="M0 94 C24 80 44 82 64 92 C84 102 104 86 124 84 C140 82 150 88 160 92 L160 120 L0 120 Z" fill="#1F57E8"></path>
+    <path d="M38 88 C44 74 60 70 68 80 C60 77 52 80 47 90 Z" fill="#FFF8EE"></path>
+    <circle cx="74" cy="78" r="2.5" fill="#FFF8EE"></circle><circle cx="80" cy="74" r="1.8" fill="#FFF8EE"></circle>
+    <path d="M30 20 Q30 27 37 27 Q30 27 30 34 Q30 27 23 27 Q30 27 30 20 Z" fill="#FFF8EE"></path>
+  </g>
+
+  <g display="{{d.sprout}}">
+    <rect width="160" height="120" fill="url(#dxaMint)"></rect>
+    <circle cx="130" cy="24" r="22" fill="url(#dxaGlow)" opacity="0.6"></circle>
+    <circle cx="130" cy="24" r="13" fill="url(#dxaSun)"></circle>
+    <path d="M-10 120 C20 92 60 86 90 92 C120 98 140 90 170 84 L170 120 Z" fill="#128A5B"></path>
+    <path d="M80 98 C80 80 82 66 80 52" fill="none" stroke="#0D6A46" stroke-width="5" stroke-linecap="round"></path>
+    <path d="M80 72 C64 56 42 58 38 68 C50 84 70 84 80 72 Z" fill="#2FD08A"></path>
+    <path d="M78 72 C66 68 54 66 44 68" fill="none" stroke="#9BF0C6" stroke-width="2" stroke-linecap="round"></path>
+    <path d="M80 60 C94 42 118 42 122 52 C112 68 92 70 80 60 Z" fill="#7BE7B1"></path>
+    <circle cx="80" cy="46" r="7" fill="#FF8FB8"></circle>
+    <path d="M34 22 Q34 29 41 29 Q34 29 34 36 Q34 29 27 29 Q34 29 34 22 Z" fill="#FFF8EE"></path>
+  </g>
+
+  <g display="{{d.moon}}">
+    <rect width="160" height="120" fill="url(#dxaNight)"></rect>
+    <circle cx="24" cy="24" r="1.6" fill="#FFF8EE"></circle><circle cx="64" cy="14" r="1.2" fill="#FFF8EE"></circle><circle cx="80" cy="40" r="1.4" fill="#FFF8EE"></circle><circle cx="146" cy="70" r="1.2" fill="#FFF8EE"></circle>
+    <circle cx="112" cy="38" r="30" fill="url(#dxaGlow)" opacity="0.35"></circle>
+    <path d="M112 18 A20 20 0 1 0 130 48 A16 16 0 1 1 112 18 Z" fill="#FFF1C2"></path>
+    <path d="M-10 120 C30 90 60 92 90 100 C120 108 140 96 170 92 L170 120 Z" fill="#3A2496"></path>
+    <path d="M-10 120 C20 106 50 104 80 110 C110 116 140 108 170 106 L170 120 Z" fill="#1A1050"></path>
+    <path d="M40 32 Q40 38 46 38 Q40 38 40 44 Q40 38 34 38 Q40 38 40 32 Z" fill="#FFE27A"></path>
+  </g>
+
+  <g display="{{d.breath}}">
+    <rect width="160" height="120" fill="#2F6BFF"></rect>
+    <circle cx="80" cy="60" r="74" fill="#3D7BFF"></circle>
+    <circle cx="80" cy="60" r="54" fill="#5A92FF"></circle>
+    <circle cx="80" cy="60" r="37" fill="#80AEFF"></circle>
+    <circle cx="80" cy="60" r="22" fill="#B8D4FF"></circle>
+    <circle cx="80" cy="60" r="11" fill="#FFFFFF"></circle>
+    <path d="M132 18 Q132 25 139 25 Q132 25 132 32 Q132 25 125 25 Q132 25 132 18 Z" fill="#FFE27A"></path>
+  </g>
+
+  <g display="{{d.mountain}}">
+    <rect width="160" height="120" fill="url(#dxaPink)"></rect>
+    <circle cx="40" cy="34" r="22" fill="url(#dxaGlow)" opacity="0.6"></circle>
+    <circle cx="40" cy="34" r="13" fill="url(#dxaSun)"></circle>
+    <path d="M40 120 L96 36 L152 120 Z" fill="#8F6BFF"></path>
+    <path d="M96 36 L152 120 L118 120 C112 96 104 64 96 36 Z" fill="#7552F0"></path>
+    <path d="M96 36 L85 53 L92 49 L98 55 L104 49 L108 54 Z" fill="#FFF8EE"></path>
+    <path d="M-10 120 L44 62 L100 120 Z" fill="#5B3FD9"></path>
+    <path d="M58 118 C70 100 84 90 92 72 C96 62 96 50 96 40" fill="none" stroke="#FFF8EE" stroke-width="2.5" stroke-dasharray="2 5" stroke-linecap="round"></path>
+    <path d="M96 38 L96 20" stroke="#24163A" stroke-width="2" stroke-linecap="round"></path>
+    <path d="M96 20 L111 25 L96 30 Z" fill="#FF5A3C"></path>
+  </g>
+
+  <g display="{{d.spark}}">
+    <rect width="160" height="120" fill="url(#dxaGold)"></rect>
+    <circle cx="80" cy="60" r="70" fill="#FFD04F" opacity="0.6"></circle>
+    <circle cx="80" cy="60" r="48" fill="#FFE07F" opacity="0.7"></circle>
+    <path d="M80 26 Q84 56 114 60 Q84 64 80 94 Q76 64 46 60 Q76 56 80 26 Z" fill="#FFF8EE"></path>
+    <path d="M126 14 Q127 25 138 26 Q127 27 126 38 Q125 27 114 26 Q125 25 126 14 Z" fill="#FF5A3C"></path>
+    <path d="M32 84 Q33 92 41 93 Q33 94 32 102 Q31 94 23 93 Q31 92 32 84 Z" fill="#FF6FA8"></path>
+    <circle cx="134" cy="96" r="4" fill="#FFF8EE"></circle><circle cx="28" cy="26" r="3" fill="#FF5A3C"></circle>
+  </g>
+
+  <g display="{{d.cloud}}">
+    <rect width="160" height="120" fill="url(#dxaViolet)"></rect>
+    <circle cx="40" cy="40" r="24" fill="url(#dxaGlow)" opacity="0.5"></circle>
+    <circle cx="40" cy="40" r="15" fill="url(#dxaSun)"></circle>
+    <path d="M28 122 C18 100 38 80 62 88 C70 62 108 62 116 86 C138 80 158 98 152 122 Z" fill="#8FCBFF"></path>
+    <path d="M70 122 C66 106 80 96 94 102 C100 88 124 88 128 104 C142 102 154 112 150 122 Z" fill="#3D8BFF"></path>
+    <path d="M128 22 Q128 29 135 29 Q128 29 128 36 Q128 29 121 29 Q128 29 128 22 Z" fill="#FFE27A"></path>
+  </g>
+
+  <g display="{{d.flower}}">
+    <rect width="160" height="120" fill="url(#dxaDawn)"></rect>
+    <path d="M36 122 C36 98 50 84 70 80 C66 100 54 114 36 122 Z" fill="#1FA971"></path>
+    <path d="M60 122 C66 106 78 98 92 98 C86 110 76 118 60 122 Z" fill="#2FD08A"></path>
+    <circle cx="100" cy="30" r="22" fill="#FFF8EE"></circle>
+    <circle cx="130" cy="54" r="22" fill="#FFF8EE"></circle>
+    <circle cx="120" cy="90" r="22" fill="#FFF8EE"></circle>
+    <circle cx="80" cy="88" r="22" fill="#FFEFE0"></circle>
+    <circle cx="72" cy="50" r="22" fill="#FFF8EE"></circle>
+    <circle cx="100" cy="62" r="20" fill="url(#dxaGold)"></circle>
+    <circle cx="94" cy="56" r="6" fill="#FFF4B8" opacity="0.8"></circle>
+  </g>
+</svg>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"scene":{"editor":"enum","options":["sunrise","wave","sprout","moon","breath","mountain","spark","cloud","flower"],"default":"sunrise"},"w":{"editor":"int","min":40,"max":800,"default":320},"h":{"editor":"int","min":40,"max":800,"default":240},"$preview":{"width":320,"height":240}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const scene = this.props.scene ?? 'sunrise';
+    const names = ['sunrise', 'wave', 'sprout', 'moon', 'breath', 'mountain', 'spark', 'cloud', 'flower'];
+    const d = {};
+    names.forEach((n) => { d[n] = n === scene ? 'inline' : 'none'; });
+    if (!names.includes(scene)) d.sunrise = 'inline';
+    return { d, w: Number(this.props.w ?? 320), h: Number(this.props.h ?? 240) };
+  }
+}
+</script>
+</body>
+</html>

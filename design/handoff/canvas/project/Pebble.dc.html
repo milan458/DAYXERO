@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pebble character</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<svg width="{{size}}" height="{{size}}" viewBox="0 0 200 200" role="img" aria-label="Pebble, {{mood}}" style="display: block">
+  <ellipse cx="100" cy="190" rx="70" ry="8" fill="none" stroke="#24163A" stroke-width="2" opacity="0"><animate attributeName="rx" values="66;96" dur="{{rippleDur}}" repeatCount="indefinite"></animate><animate attributeName="ry" values="7;12" dur="{{rippleDur}}" repeatCount="indefinite"></animate><animate attributeName="opacity" values="{{rippleO}}" dur="{{rippleDur}}" repeatCount="indefinite"></animate></ellipse>
+  <ellipse cx="100" cy="190" rx="70" ry="8" fill="none" stroke="#24163A" stroke-width="2" opacity="0"><animate attributeName="rx" values="66;96" dur="{{rippleDur}}" begin="{{rippleBegin}}" repeatCount="indefinite"></animate><animate attributeName="ry" values="7;12" dur="{{rippleDur}}" begin="{{rippleBegin}}" repeatCount="indefinite"></animate><animate attributeName="opacity" values="{{rippleO}}" dur="{{rippleDur}}" begin="{{rippleBegin}}" repeatCount="indefinite"></animate></ellipse>
+  <ellipse cx="100" cy="192" rx="62" ry="6" fill="#000000" opacity="0.12"></ellipse>
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="{{hopV}}" keyTimes="{{hopKT}}" keySplines="{{hopKS}}" calcMode="spline" dur="{{hopDur}}" repeatCount="indefinite"></animateTransform>
+    <g transform="translate(100 190)">
+      <g>
+        <animateTransform attributeName="transform" type="scale" values="{{bodyV}}" keyTimes="{{bodyKT}}" keySplines="{{bodyKS}}" calcMode="spline" dur="{{bodyDur}}" repeatCount="indefinite"></animateTransform>
+        <g>
+          <animateTransform attributeName="transform" type="rotate" values="{{swayV}}" keyTimes="{{swayKT}}" keySplines="{{swayKS}}" calcMode="spline" dur="{{swayDur}}" repeatCount="indefinite"></animateTransform>
+          <g transform="translate(-100 -190)">
+            <g opacity="{{flower}}">
+              <path d="M100 52 C100 44 101 38 100 30" fill="none" stroke="#23735A" stroke-width="3" stroke-linecap="round"></path>
+              <path d="M100 44 C108 36 118 38 118 44 C112 50 104 50 100 44 Z" fill="#3FB37F"></path>
+              <circle cx="100" cy="22" r="6" fill="#FF8FA3"></circle><circle cx="108" cy="27" r="6" fill="#FF8FA3"></circle><circle cx="92" cy="27" r="6" fill="#FF8FA3"></circle><circle cx="100" cy="31" r="6" fill="#FF8FA3"></circle>
+              <circle cx="100" cy="26" r="4.5" fill="#FFC93C"></circle>
+            </g>
+            <ellipse cx="100" cy="60" rx="19" ry="9" fill="#E3DFF7" opacity="{{p2}}"></ellipse>
+            <ellipse cx="104" cy="77" rx="28" ry="11" fill="#CFCBEF" opacity="{{p1}}"></ellipse>
+            <ellipse cx="80" cy="190" rx="13" ry="6" fill="#8F8AC8"></ellipse>
+            <ellipse cx="122" cy="190" rx="13" ry="6" fill="#8F8AC8"></ellipse>
+            <path d="{{armL}}" fill="none" stroke="#A9A4DA" stroke-width="12" stroke-linecap="round"></path>
+            <path d="{{armR}}" fill="none" stroke="#A9A4DA" stroke-width="12" stroke-linecap="round"></path>
+            <path d="M30 150 C26 110 60 86 104 86 C150 86 176 112 172 150 C168 182 136 190 100 190 C60 190 34 182 30 150 Z" fill="#B7B3E0"></path>
+            <path d="M150 98 C166 112 174 128 172 150 C168 178 142 188 112 190 C140 180 158 164 160 140 C162 122 158 110 150 98 Z" fill="#9C97D1"></path>
+            <path d="M50 116 C56 104 68 98 80 98 C70 106 62 112 50 116 Z" fill="#59C98F"></path>
+            <path d="M60 104 C64 98 70 96 74 96" fill="none" stroke="#3FB37F" stroke-width="2" stroke-linecap="round"></path>
+            <circle cx="140" cy="170" r="3" fill="#8F8AC8"></circle><circle cx="56" cy="166" r="2.5" fill="#9C97D1"></circle><circle cx="150" cy="120" r="2" fill="#E3DFF7"></circle>
+            <circle cx="70" cy="146" r="7" fill="#FF8FA3" opacity="0.55"></circle>
+            <circle cx="130" cy="146" r="7" fill="#FF8FA3" opacity="0.55"></circle>
+            <g transform="{{eyeIn}}"><g><animateTransform attributeName="transform" type="scale" values="{{blink}}" keyTimes="0;0.92;0.96;1" dur="5.5s" repeatCount="indefinite"></animateTransform><g transform="{{eyeOut}}">
+              <path d="{{eyeL}}" fill="none" stroke="#24163A" stroke-width="{{eyeW}}" stroke-linecap="round"></path>
+              <path d="{{eyeR}}" fill="none" stroke="#24163A" stroke-width="{{eyeW}}" stroke-linecap="round"></path>
+            </g></g></g>
+            <path d="{{mouth}}" fill="{{mouthFill}}" stroke="#24163A" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g opacity="{{sparkle}}" stroke="#24163A" stroke-width="3" stroke-linecap="round"><path d="M26 84 l0 12 M20 90 l12 0"></path><path d="M176 84 l0 10 M171 89 l10 0"></path></g>
+  <g opacity="{{zzz}}" fill="none" stroke="#24163A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><animateTransform attributeName="transform" type="translate" values="{{floatV}}" dur="3s" repeatCount="indefinite"></animateTransform><path d="M150 52 h12 l-12 12 h12"></path><path d="M170 32 h8 l-8 8 h8"></path></g>
+  <g opacity="{{breeze}}" fill="none" stroke="#24163A" stroke-width="3" stroke-linecap="round"><animateTransform attributeName="transform" type="translate" values="{{driftV}}" dur="5s" repeatCount="indefinite"></animateTransform><path d="M176 126 q8 -5 16 0"></path><path d="M178 138 q6 -4 12 0"></path></g>
+</svg>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"mood":{"editor":"enum","options":["hello","calm","breathe","cheer","sleepy"],"default":"hello"},"stage":{"editor":"int","min":1,"max":4,"default":2},"animate":{"editor":"boolean","default":true},"size":{"editor":"int","min":60,"max":400,"default":240},"$preview":{"width":240,"height":240}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const mood = this.props.mood ?? 'hello';
+    const stage = Number(this.props.stage ?? 2);
+    const size = Number(this.props.size ?? 240);
+    const on = String(this.props.animate ?? true) !== 'false';
+    const C = 100, L = 86, R = 114, y = 134, ink = '#24163A';
+    const closed = { eyeL: `M${L-6} ${y} Q${L} ${y+5} ${L+6} ${y}`, eyeR: `M${R-6} ${y} Q${R} ${y+5} ${R+6} ${y}`, eyeW: 3.5 };
+    const faces = {
+      hello: { eyeL: `M${L} ${y-3} L${L} ${y+3}`, eyeR: `M${R} ${y-3} L${R} ${y+3}`, eyeW: 8, mouth: `M${C-8} ${y+14} Q${C} ${y+22} ${C+8} ${y+14}`, mouthFill: 'none' },
+      calm: { ...closed, mouth: `M${C-5} ${y+15} Q${C} ${y+19} ${C+5} ${y+15}`, mouthFill: 'none' },
+      breathe: { ...closed, mouth: `M${C} ${y+12} C${C+6} ${y+12} ${C+6} ${y+23} ${C} ${y+23} C${C-6} ${y+23} ${C-6} ${y+12} ${C} ${y+12} Z`, mouthFill: ink },
+      cheer: { eyeL: `M${L-6} ${y+2} Q${L} ${y-5} ${L+6} ${y+2}`, eyeR: `M${R-6} ${y+2} Q${R} ${y-5} ${R+6} ${y+2}`, eyeW: 3.5, mouth: `M${C-10} ${y+12} L${C+10} ${y+12} Q${C} ${y+28} ${C-10} ${y+12} Z`, mouthFill: ink },
+      sleepy: { eyeL: `M${L-6} ${y+1} L${L+6} ${y+1}`, eyeR: `M${R-6} ${y+1} L${R+6} ${y+1}`, eyeW: 3.5, mouth: `M${C-3} ${y+16} Q${C} ${y+18} ${C+3} ${y+16}`, mouthFill: 'none' }
+    };
+    const f = faces[mood] ?? faces.hello;
+    const ks = (n) => Array(n).fill('0.45 0 0.55 1').join(';');
+    const A = (vals, kt, dur) => ({ v: (on ? vals : vals.map(() => vals[0])).join(';'), kt: kt.join(';'), ks: ks(kt.length - 1), dur: dur + 's' });
+    const body = ({
+      hello: A(['1 1', '1.02 0.99', '1 1'], [0, 0.5, 1], 6),
+      calm: A(['1 1', '1.015 0.99', '1 1'], [0, 0.5, 1], 7),
+      breathe: A(['1 1', '1.06 1.06', '1 1'], [0, 0.4, 1], 10),
+      cheer: A(['1 1', '1.08 0.9', '0.96 1.06', '1 1', '1 1'], [0, 0.15, 0.35, 0.55, 1], 1.6),
+      sleepy: A(['1 1', '1.012 0.99', '1 1'], [0, 0.5, 1], 8)
+    })[mood] ?? A(['1 1', '1 1'], [0, 1], 1);
+    const hop = mood === 'cheer' ? A(['0 0', '0 0', '0 -12', '0 0', '0 0'], [0, 0.15, 0.35, 0.55, 1], 1.6) : A(['0 0', '0 0'], [0, 1], 1);
+    const sway = mood === 'sleepy' ? A(['-2', '2', '-2'], [0, 0.5, 1], 8) : A(['0', '0'], [0, 1], 1);
+    const up = mood === 'cheer';
+    return {
+      ...f, mood, size,
+      bodyV: body.v, bodyKT: body.kt, bodyKS: body.ks, bodyDur: body.dur,
+      hopV: hop.v, hopKT: hop.kt, hopKS: hop.ks, hopDur: hop.dur,
+      swayV: sway.v, swayKT: sway.kt, swayKS: sway.ks, swayDur: sway.dur,
+      eyeIn: `translate(${C} ${y})`, eyeOut: `translate(${-C} ${-y})`,
+      blink: on && (mood === 'hello' || up) ? '1 1;1 1;1 0.1;1 1' : '1 1;1 1;1 1;1 1',
+      rippleO: on ? '0.35;0' : '0;0',
+      rippleDur: mood === 'breathe' ? '5s' : '4s',
+      rippleBegin: mood === 'breathe' ? '2.5s' : '2s',
+      floatV: on ? '0 0;5 -8;0 0' : '0 0;0 0;0 0',
+      driftV: on ? '0 0;8 0;0 0' : '0 0;0 0;0 0',
+      armL: up ? 'M36 134 C24 122 20 110 22 98' : 'M32 156 C22 162 18 170 20 178',
+      armR: up ? 'M166 134 C178 122 182 110 180 98' : 'M170 156 C180 162 184 170 182 178',
+      p1: stage >= 2 ? 1 : 0,
+      p2: stage >= 3 ? 1 : 0,
+      flower: stage >= 4 ? 1 : 0,
+      sparkle: up ? 1 : 0,
+      zzz: mood === 'sleepy' ? 1 : 0,
+      breeze: mood === 'breathe' ? 1 : 0
+    };
+  }
+}
+</script>
+</body>
+</html>

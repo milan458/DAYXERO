@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Crew system issues</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1600px; height: 1180px; box-sizing: border-box; background: #F7F6F3; color: #1E1A3A; font-family: 'DM Sans', system-ui, sans-serif; padding: 44px 56px; display: flex; flex-direction: column; gap: 22px">
+  <div style="display: flex; flex-direction: column; gap: 6px">
+    <div style="font-size: 14px; font-weight: 700; letter-spacing: 1.4px; color: #5E5975">PAGE 6 · THE CREW · SYSTEM</div>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 40px; letter-spacing: -1.2px">The screens are good one by one. As a set, nothing is held to a rule.</h1>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; flex: 1; min-height: 0">
+
+    <div style="background: #FFFFFF; border-radius: 22px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; gap: 8px; align-items: center"><span style="background: #FFE4D6; color: #9A3412; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 99px">FIX NOW</span><span style="font-size: 13px; font-weight: 700; color: #5E5975">Colour</span></div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px; line-height: 1.15">18 screens, one ground. Dark mode: 18 screens, one navy.</div>
+      <div style="display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 4px">
+        <sc-for list="{{grounds}}" as="g" hint-placeholder-count="18"><span style="height: 30px; border-radius: 6px; background: {{g.bg}}; box-shadow: inset 0 0 0 1px rgba(30,26,58,0.1)"></span></sc-for>
+      </div>
+      <div style="font-size: 14px; line-height: 1.5; color: #4A4560">Every Crew screen sits on #FBF7F1, and every dark screen on #0E0B2B. Only the hero art tells SOS from Progress. Once you scroll past the art, Today, Program, Progress and Slip are hard to tell apart. This is the drift you asked about.</div>
+      <div style="margin-top: auto; background: #F7F6F3; border-radius: 14px; padding: 12px 14px; font-size: 13.5px; line-height: 1.45"><b>Fix:</b> carry Alive's rule over. One owned colour per screen family (Xero apricot, Jelli ocean, Glim violet), with cream only for dense reading screens (Program, Lesson, Progress).</div>
+    </div>
+
+    <div style="background: #FFFFFF; border-radius: 22px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; gap: 8px; align-items: center"><span style="background: #FFE4D6; color: #9A3412; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 99px">FIX NOW</span><span style="font-size: 13px; font-weight: 700; color: #5E5975">Typography</span></div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px; line-height: 1.15">22 font sizes across the set, 10 on the Plan screen alone.</div>
+      <div style="display: flex; align-items: flex-end; gap: 5px; height: 110px; border-bottom: 1px solid #E8E5DF" role="img" aria-label="Distinct font sizes per Crew screen, from 2 on Breathe to 10 on Plan">
+        <sc-for list="{{typeBars}}" as="b" hint-placeholder-count="18">
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px"><span style="font-size: 11px; font-weight: 700">{{b.n}}</span><span style="width: 100%; border-radius: 4px 4px 0 0; {{b.style}}"></span></div>
+        </sc-for>
+      </div>
+      <div style="display: flex; justify-content: space-between; font-size: 11px; color: #5E5975"><span>C01</span><span>C06 Plan</span><span>C16 Check-in</span><span>C18</span></div>
+      <div style="font-size: 14px; line-height: 1.5; color: #4A4560">Sizes in use: 11, 12, 12.5, 13, 13.5, 14, 14.5, 15, 15.5, 16, 17, 18, 19, 20, 22, 24, 28, 30, 32, 33, 34 and 38. Half-pixel steps can't be told apart on a phone, so hierarchy comes from luck. 11px text appears on Quit Day and Plan.</div>
+      <div style="margin-top: auto; background: #F7F6F3; border-radius: 14px; padding: 12px 14px; font-size: 13.5px; line-height: 1.45"><b>Fix:</b> seven steps mapped to iOS text styles so Dynamic Type works: 12 caption · 14 footnote · 16 body · 19 headline · 24 title · 32 large · 40 display.</div>
+    </div>
+
+    <div style="background: #FFFFFF; border-radius: 22px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; gap: 8px; align-items: center"><span style="background: #DBEAFE; color: #1E40AF; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 99px">SHOULD</span><span style="font-size: 13px; font-weight: 700; color: #5E5975">Characters</span></div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px; line-height: 1.15">Xero appears at 15 different sizes.</div>
+      <div style="display: flex; align-items: flex-end; gap: 6px; height: 96px; flex-wrap: nowrap" role="img" aria-label="Xero sizes used: 40 to 560 pixels">
+        <sc-for list="{{xeroSizes}}" as="x" hint-placeholder-count="15"><span style="flex: 1; border-radius: 99px 99px 4px 4px; background: #FFC38A; {{x.style}}"></span></sc-for>
+      </div>
+      <div style="font-size: 12px; color: #5E5975">40 · 44 · 46 · 54 · 64 · 84 · 90 · 92 · 110 · 140 · 170 · 180 · 200 · 220 · 560 px</div>
+      <div style="font-size: 14px; line-height: 1.5; color: #4A4560">The same character at 84, 90 and 92px on neighbouring screens reads as a mistake, not a choice. Today packs Xero, Glim, Jelli and two Horizon thumbnails under one hero: five illustrations on one screen.</div>
+      <div style="margin-top: auto; background: #F7F6F3; border-radius: 14px; padding: 12px 14px; font-size: 13.5px; line-height: 1.45"><b>Fix:</b> four sizes. Avatar 40 · Card 88 · Scene 140 · Hero 200, plus one full-bleed intro. Two illustrations per screen at most.</div>
+    </div>
+
+    <div style="background: #FFFFFF; border-radius: 22px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; gap: 8px; align-items: center"><span style="background: #FFE4D6; color: #9A3412; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 99px">FIX NOW</span><span style="font-size: 13px; font-weight: 700; color: #5E5975">Story logic</span></div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px; line-height: 1.15">“The sky clears as you do” is broken by the numbers.</div>
+      <div style="display: flex; align-items: flex-end; gap: 5px; height: 120px; border-bottom: 1px solid #E8E5DF" role="img" aria-label="Sky clarity per screen in story order; onboarding already shows 45 to 60 percent and SOS shows 100 percent on day 3">
+        <sc-for list="{{clarity}}" as="c" hint-placeholder-count="15">
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px"><span style="font-size: 10.5px; font-weight: 700">{{c.v}}</span><span style="width: 100%; border-radius: 4px 4px 0 0; {{c.style}}"></span></div>
+        </sc-for>
+      </div>
+      <div style="display: flex; justify-content: space-between; font-size: 11px; color: #5E5975"><span>Onboarding</span><span>Day 3</span><span>SOS / night</span><span>Wk 4</span></div>
+      <div style="font-size: 14px; line-height: 1.5; color: #4A4560">Crew (60) and Plan (45) show a clearer sky than Today (55) before the user has quit at all. SOS and Passed jump to 100 on day 3, and night screens to 85. Orange bars break the story.</div>
+      <div style="margin-top: auto; background: #F7F6F3; border-radius: 14px; padding: 12px 14px; font-size: 13.5px; line-height: 1.45"><b>Fix:</b> clarity is one value from days clear, passed to every scene: 20 through prep, then 20 + 2.8 × days clear, capped at 100.</div>
+    </div>
+
+    <div style="background: #FFFFFF; border-radius: 22px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; gap: 8px; align-items: center"><span style="background: #DBEAFE; color: #1E40AF; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 99px">SHOULD</span><span style="font-size: 13px; font-weight: 700; color: #5E5975">Illustration</span></div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px; line-height: 1.15">Dawn on 7 of 15 hero screens.</div>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <sc-for list="{{scenes}}" as="s" hint-placeholder-count="4">
+          <div style="display: flex; align-items: center; gap: 10px; font-size: 13px"><span style="width: 52px; font-weight: 700">{{s.name}}</span><span style="height: 18px; border-radius: 6px; {{s.style}}"></span><span style="color: #5E5975">{{s.list}}</span></div>
+        </sc-for>
+      </div>
+      <div style="font-size: 14px; line-height: 1.5; color: #4A4560">Welcome, Quit Day, Plan, Today, Pledge, Progress and Finale all open on the same sunrise, so the finale's payoff (a fully clear dawn) is what users have seen every day. The path scene is the most interesting one and is used least.</div>
+      <div style="margin-top: auto; background: #F7F6F3; border-radius: 14px; padding: 12px 14px; font-size: 13.5px; line-height: 1.45"><b>Fix:</b> scene follows time of day on Today (dawn, path, dusk, night). Save the fully clear dawn for milestones and the finale.</div>
+    </div>
+
+    <div style="background: #FFFFFF; border-radius: 22px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; gap: 8px; align-items: center"><span style="background: #DBEAFE; color: #1E40AF; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 99px">SHOULD</span><span style="font-size: 13px; font-weight: 700; color: #5E5975">Motion</span></div>
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px; line-height: 1.15">Only the breathing moves. Every key moment is a cut.</div>
+      <div style="display: flex; flex-direction: column; gap: 6px; font-size: 13.5px">
+        <div style="display: flex; justify-content: space-between; padding: 8px 12px; background: #F7F6F3; border-radius: 10px"><span>Breathing loops (Breathe, SOS)</span><b style="color: #166534">yes</b></div>
+        <div style="display: flex; justify-content: space-between; padding: 8px 12px; background: #F7F6F3; border-radius: 10px"><span>Screen arrival</span><b style="color: #9A3412">none</b></div>
+        <div style="display: flex; justify-content: space-between; padding: 8px 12px; background: #F7F6F3; border-radius: 10px"><span>+1 wave, sky % change</span><b style="color: #9A3412">static text</b></div>
+        <div style="display: flex; justify-content: space-between; padding: 8px 12px; background: #F7F6F3; border-radius: 10px"><span>Xero → Jelli hand-over</span><b style="color: #9A3412">described, not shown</b></div>
+        <div style="display: flex; justify-content: space-between; padding: 8px 12px; background: #F7F6F3; border-radius: 10px"><span>Hold to set / hold to pledge</span><b style="color: #9A3412">no fill feedback</b></div>
+      </div>
+      <div style="margin-top: auto; background: #F7F6F3; border-radius: 14px; padding: 12px 14px; font-size: 13.5px; line-height: 1.45"><b>Fix:</b> the two hold buttons need a visible fill and a haptic tick, plus a VoiceOver action that doesn't need holding. That matters more than any ambient loop.</div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1600,"height":1180}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const grounds = [];
+    for (let i = 0; i < 9; i++) grounds.push({ bg: '#FBF7F1' });
+    for (let i = 0; i < 9; i++) grounds.push({ bg: '#0E0B2B' });
+    const counts = [2, 5, 4, 7, 7, 10, 6, 8, 5, 5, 7, 7, 6, 6, 7, 9, 4, 6];
+    const typeBars = counts.map((n) => ({ n: String(n), style: `height: ${n * 8}px; background: ${n >= 8 ? '#FF7A55' : '#C9C4E6'}` }));
+    const xs = [40, 44, 46, 54, 64, 84, 90, 92, 110, 140, 170, 180, 200, 220, 560];
+    const xeroSizes = xs.map((v) => ({ style: `height: ${Math.max(8, Math.round(Math.sqrt(v / 560) * 96))}px` }));
+    const cl = [['C02', 20, 0], ['C04', 25, 0], ['C05', 60, 1], ['C06', 45, 1], ['C08', 55, 0], ['C09', 55, 0], ['C10', 55, 0], ['C11', 50, 0], ['C12', 55, 0], ['C13', 100, 1], ['C14', 100, 1], ['C15', 80, 1], ['C16', 85, 1], ['C17', 85, 1], ['C18', 100, 0]];
+    const clarity = cl.map(([, v, bad]) => ({ v: String(v), style: `height: ${v}px; background: ${bad ? '#FF7A55' : '#9CCBFF'}` }));
+    const scenes = [
+      ['Dawn', 7, '#FFC38A', 'C02 C04 C06 C08 C09 C12 C18'],
+      ['Sea', 3, '#3D6BFF', 'C13 C14 C15'],
+      ['Path', 2, '#9FE3BC', 'C10 C11'],
+      ['Night', 2, '#4A3596', 'C16 C17']
+    ].map(([name, n, c, list]) => ({ name, list, style: `width: ${n * 34}px; background: ${c}` }));
+    return { grounds, typeBars, xeroSizes, clarity, scenes };
+  }
+}
+</script>
+</body>
+</html>

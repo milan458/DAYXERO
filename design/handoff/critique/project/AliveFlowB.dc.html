@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Alive 6–9 critique</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1444px; height: 1500px; box-sizing: border-box; background: #F7F6F3; color: #1E1A3A; font-family: 'DM Sans', system-ui, sans-serif; padding: 44px 80px; display: flex; flex-direction: column; gap: 26px">
+  <div style="display: flex; flex-direction: column; gap: 6px">
+    <div style="font-size: 14px; font-weight: 700; letter-spacing: 1.4px; color: #5E5975">PAGE 7 · ALIVE · 6–9 · SHOWN AT FINAL STATE (MOTION OFF)</div>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 40px; letter-spacing: -1.2px">Better moments, thinner substance.</h1>
+  </div>
+  <div style="display: flex; gap: 28px; align-items: flex-start">
+    <div style="width: 300px; display: flex; flex-direction: column; gap: 12px; flex: none">
+      <div style="font-size: 14px; font-weight: 800">6 · SOS · ocean</div>
+      <div style="width: 273px; height: 591px; border-radius: 30px; overflow: hidden; box-shadow: 0 0 0 1px rgba(30,26,58,0.08)"><div style="width: 390px; height: 844px; transform: scale(0.7); transform-origin: 0 0"><dc-import name="A06SOS" motion="false" replay="false" hint-size="390px,844px"></dc-import></div></div>
+      <sc-for list="{{n0}}" as="n" hint-placeholder-count="4"><div style="background: #FFFFFF; border-radius: 14px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px"><span style="align-self: flex-start; font-size: 11.5px; font-weight: 800; padding: 3px 8px; border-radius: 99px; {{n.tag}}">{{n.label}}</span><span style="font-size: 13.5px; line-height: 1.45">{{n.text}}</span></div></sc-for>
+    </div>
+    <div style="width: 300px; display: flex; flex-direction: column; gap: 12px; flex: none">
+      <div style="font-size: 14px; font-weight: 800">7 · Passed · sky</div>
+      <div style="width: 273px; height: 591px; border-radius: 30px; overflow: hidden; box-shadow: 0 0 0 1px rgba(30,26,58,0.08)"><div style="width: 390px; height: 844px; transform: scale(0.7); transform-origin: 0 0"><dc-import name="A07Passed" motion="false" replay="false" hint-size="390px,844px"></dc-import></div></div>
+      <sc-for list="{{n1}}" as="n" hint-placeholder-count="4"><div style="background: #FFFFFF; border-radius: 14px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px"><span style="align-self: flex-start; font-size: 11.5px; font-weight: 800; padding: 3px 8px; border-radius: 99px; {{n.tag}}">{{n.label}}</span><span style="font-size: 13.5px; line-height: 1.45">{{n.text}}</span></div></sc-for>
+    </div>
+    <div style="width: 300px; display: flex; flex-direction: column; gap: 12px; flex: none">
+      <div style="font-size: 14px; font-weight: 800">8 · Check-in · violet</div>
+      <div style="width: 273px; height: 591px; border-radius: 30px; overflow: hidden; box-shadow: 0 0 0 1px rgba(30,26,58,0.08)"><div style="width: 390px; height: 844px; transform: scale(0.7); transform-origin: 0 0"><dc-import name="A08CheckIn" motion="false" replay="false" hint-size="390px,844px"></dc-import></div></div>
+      <sc-for list="{{n2}}" as="n" hint-placeholder-count="4"><div style="background: #FFFFFF; border-radius: 14px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px"><span style="align-self: flex-start; font-size: 11.5px; font-weight: 800; padding: 3px 8px; border-radius: 99px; {{n.tag}}">{{n.label}}</span><span style="font-size: 13.5px; line-height: 1.45">{{n.text}}</span></div></sc-for>
+    </div>
+    <div style="width: 300px; display: flex; flex-direction: column; gap: 12px; flex: none">
+      <div style="font-size: 14px; font-weight: 800">9 · Finale · sun</div>
+      <div style="width: 273px; height: 591px; border-radius: 30px; overflow: hidden; box-shadow: 0 0 0 1px rgba(30,26,58,0.08)"><div style="width: 390px; height: 844px; transform: scale(0.7); transform-origin: 0 0"><dc-import name="A09Finale" motion="false" replay="false" hint-size="390px,844px"></dc-import></div></div>
+      <sc-for list="{{n3}}" as="n" hint-placeholder-count="4"><div style="background: #FFFFFF; border-radius: 14px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px"><span style="align-self: flex-start; font-size: 11.5px; font-weight: 800; padding: 3px 8px; border-radius: 99px; {{n.tag}}">{{n.label}}</span><span style="font-size: 13.5px; line-height: 1.45">{{n.text}}</span></div></sc-for>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1444,"height":1500}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const T = {
+      F: ['FIX NOW', 'background: #FFE4D6; color: #9A3412'],
+      S: ['SHOULD', 'background: #DBEAFE; color: #1E40AF'],
+      P: ['POLISH', 'background: #E7E5E4; color: #44403C'],
+      K: ['KEEP', 'background: #DCFCE7; color: #166534']
+    };
+    const mk = (list) => list.map(([k, text]) => ({ label: T[k][0], tag: T[k][1], text }));
+    return {
+      n0: mk([
+        ['F', 'Contrast fails across the whole screen: headline and button text 4.20:1, body 3.68:1, “Still strong” 3.29:1, reason card 3.39:1. See the contrast board.'],
+        ['F', 'There’s no route to “I slipped” or to a friend. Add a quiet text row under the two buttons.'],
+        ['S', '“It’s 9:41, right on time for your coffee wave” reads as being watched, and makes the craving sound scheduled. Keep predictions on Today; SOS should only comfort.'],
+        ['K', 'Two actions instead of four, the Xero chip fading as Jelli slides in, and the reason card. This is the right SOS.']
+      ]),
+      n1: mk([
+        ['K', 'The +1 pop, the count-ups and “Back to Xero. I rose a little” close the hand-over loop. The best motion on the page.'],
+        ['F', 'The optional “What set it off?” tagging is gone. That’s the data behind Insights and the 9:40 prediction on Today.'],
+        ['S', 'The “+1” green #1FA971 on the card is 2.48:1. Use #0F6E43 (5.18:1).'],
+        ['P', '“That coffee wave lasted 3 minutes” is a fixed number. Use the real time from the SOS session.']
+      ]),
+      n2: mk([
+        ['K', 'The headline changes with the real day: a quiet day, all waves ridden, or a hard day that offers a plan for tomorrow. This is what personal should mean.'],
+        ['F', 'Emoji mood buttons. Go back to Crew N1’s drawn faces, which are calmer, on-brand and read correctly in VoiceOver.'],
+        ['S', 'There’s nowhere to correct the craving count. Show “From today’s SOS: 3 ridden out” with an Edit link, so the headline isn’t built on wrong data.'],
+        ['P', 'Crew N1’s “Your day ends at 3:00 am · change” is missing. It matters for night owls and shift workers.']
+      ]),
+      n3: mk([
+        ['K', 'Xero, then Jelli, then Glim arrive one by one, so the story pays off on screen.'],
+        ['F', 'No health fact. Crew T1’s cited one (circulation and lung function, American Cancer Society) belongs here.'],
+        ['S', '“£252 kept for ‘Mia’”: wrong currency, wrong name, and awkward wording. Try “$252 kept. For Maya and the park.”'],
+        ['S', '41 waves with Jelli here; Crew T1 says 61. Pick one persona and use the same numbers.']
+      ])
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Craving SOS</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{t.bg}}; color: {{t.ink}}; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif; display: flex; flex-direction: column">
+  <div style="position: relative; height: 440px; flex: none">
+    <dc-import name="Hero" scene="sea" clarity="100" h="440" theme="{{theme}}" hint-size="390px,440px"></dc-import>
+    <svg width="390" height="440" viewBox="0 0 390 440" aria-hidden="true" style="position: absolute; left: 0; top: 0">
+      <circle cx="195" cy="250" r="126" fill="#FFFFFF" opacity="0.12"><animate attributeName="r" values="110;134;110" keyTimes="0;0.4;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="10s" repeatCount="indefinite"></animate></circle>
+      <circle cx="195" cy="250" r="146" fill="none" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="5"></circle>
+      <circle cx="195" cy="250" r="146" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-dasharray="0 917" transform="rotate(-90 195 250)"><animate attributeName="stroke-dasharray" values="0 917;917 0" dur="180s" repeatCount="indefinite"></animate></circle>
+    </svg>
+    <div style="position: absolute; left: 100px; top: 150px"><dc-import name="Jelli" mood="breathe" stage="3" size="190" hint-size="190px,190px"></dc-import></div>
+    <a href="C08Today.dc.html" aria-label="Close" style="position: absolute; left: 16px; top: 52px; width: 44px; height: 44px; border-radius: 99px; background: rgba(14,11,43,0.28); display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFF8EE" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></a>
+    <div style="position: absolute; right: 16px; top: 56px; background: #FFF8EE; color: #1E1A3A; border-radius: 99px; padding: 8px 14px; font-size: 13px; font-weight: 700">I've got this wave with you</div>
+  </div>
+
+  <div style="padding: 0 28px; text-align: center; display: flex; flex-direction: column; gap: 6px">
+    <div style="font-size: 14px; font-weight: 700; color: {{t.blue}}">1:48 left in this wave</div>
+    <svg width="334" height="44" viewBox="0 0 334 44" role="img" aria-label="Breathe in for 4, out for 6" style="display: block">
+      <text x="167" y="34" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="34" fill="{{t.ink}}"><animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;0.36;0.4;0.96;1" dur="10s" repeatCount="indefinite"></animate>Breathe in · 4</text>
+      <text x="167" y="34" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="34" fill="{{t.ink}}" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.36;0.4;0.96;1" dur="10s" repeatCount="indefinite"></animate>Breathe out · 6</text>
+    </svg>
+    <p style="margin: 0; font-size: 15.5px; line-height: 1.5; color: {{t.muted}}">Open as Jelli opens. Drift as it drifts. Cravings peak, then pass.</p>
+  </div>
+
+  <div style="margin: 14px 20px 0 20px; border-radius: 22px; background: {{t.surf}}; padding: 12px 16px; display: flex; align-items: center; gap: 12px">
+    <span style="width: 38px; height: 38px; flex: none; border-radius: 13px; background: #FF8FB8; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="#1E1A3A" aria-hidden="true"><path d="M12 21c-6-3.6-9-7-9-11a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 4-3 7.4-9 11Z"></path></svg></span>
+    <span style="display: flex; flex-direction: column"><span style="font-size: 12px; font-weight: 700; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.6px">Your reason</span><span style="font-weight: 700; font-size: 15px">To keep up with Maya at the park.</span></span>
+  </div>
+
+  <div style="margin-top: auto; padding: 0 20px 22px 20px; display: flex; flex-direction: column; gap: 6px">
+    <a href="C14Passed.dc.html" style="height: 58px; border-radius: 99px; background: #FF6B4A; color: #1A0E08; font-weight: 700; font-size: 17px; text-decoration: none; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 0 #C9452B">It passed (+1)</a>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); text-align: center">
+      <a href="#" style="color: {{t.ink}}; font-weight: 600; font-size: 14px; padding: 12px 2px">3 more minutes</a>
+      <a href="#" style="color: {{t.ink}}; font-weight: 600; font-size: 14px; padding: 12px 2px">Ping a friend</a>
+      <a href="C15Slip.dc.html" style="color: {{t.ink}}; font-weight: 600; font-size: 14px; padding: 12px 2px">I slipped</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const theme = this.props.theme ?? 'light';
+    const dark = theme === 'dark';
+    return { theme, t: dark ? { bg: '#0E0B2B', surf: '#1B1747', ink: '#FFF8EE', muted: '#B8B3D9', blue: '#7FB0FF' } : { bg: '#FBF7F1', surf: '#F1EBE2', ink: '#1E1A3A', muted: '#5E5975', blue: '#1F57D6' } };
+  }
+}
+</script>
+</body>
+</html>
