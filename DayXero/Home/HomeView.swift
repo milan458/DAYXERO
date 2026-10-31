@@ -466,16 +466,17 @@ struct TodayView: View {
         }
         return VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: DX.Space.xs) {
-                Image(systemName: LogSheet.icon(product)).font(.system(size: 13, weight: .light)).foregroundStyle(DX.Palette.accentInk)
-                    .frame(width: 28, height: 28).background(DX.Palette.accentSoft, in: Circle())
-                Text(title).font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote)).foregroundStyle(DX.Palette.text2)
+                Image(systemName: LogSheet.icon(product)).font(.system(size: 13, weight: .semibold)).foregroundStyle(DX.Ground.reading.ink)
+                    .frame(width: 30, height: 30).background(DX.Fill.surface, in: Circle())
+                    .accessibilityHidden(true)
+                Text(title).dxFont(14, weight: 600, style: .footnote).foregroundStyle(DX.Ground.reading.muted)
                     .lineLimit(2).minimumScaleFactor(0.85)
             }
             HStack(alignment: .firstTextBaseline, spacing: 6) {
-                Text(count, format: .number).font(.custom(DX.Typeface.bold, size: 28, relativeTo: .title)).foregroundStyle(DX.Palette.text)
+                Text(count, format: .number).dxType(.title).foregroundStyle(DX.Ground.reading.ink)
                     .contentTransition(.numericText())
-                Text(prep ? "logged" as LocalizedStringKey : "since Quit Day").font(.custom(DX.Typeface.regular, size: 12, relativeTo: .caption))
-                    .foregroundStyle(DX.Palette.muted)
+                Text(prep ? "logged" as LocalizedStringKey : "since Quit Day").dxType(.caption)
+                    .foregroundStyle(DX.Ground.reading.muted)
             }
             Spacer(minLength: 0)
             HStack(spacing: 6) {
@@ -493,17 +494,15 @@ struct TodayView: View {
         }
         .padding(14)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 24, style: .continuous).strokeBorder(DX.Palette.hairline))
+        .background(DX.Fill.raised, in: RoundedRectangle(cornerRadius: DX.Layout.smallCardRadius, style: .continuous))
     }
 
     private func pill(_ title: LocalizedStringKey, accent: Bool = false) -> some View {
-        Text(title).font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
-            .foregroundStyle(accent ? DX.Palette.onAccent : DX.Palette.text)
+        Text(title).dxFont(14, weight: 700, style: .footnote)
+            .foregroundStyle(accent ? DX.Ground.reading.background : DX.Ground.reading.ink)
             .lineLimit(1).minimumScaleFactor(0.8)
-            .frame(maxWidth: .infinity, minHeight: 40)
-            .background(accent ? DX.Palette.sage : DX.Palette.surface2, in: Capsule())
-            .overlay(Capsule().strokeBorder(accent ? .clear : DX.Palette.hairline))
+            .frame(maxWidth: .infinity, minHeight: 44)
+            .background(accent ? DX.Ground.reading.ink : DX.Fill.surface, in: Capsule())
     }
 
     private func logUse(_ product: Product) {
@@ -736,21 +735,29 @@ struct TodayView: View {
     /// Prep: lessons done in a row, the Quit Day countdown, and a segment per prep day. From Quit Day: days clear
     /// and the way to the next milestone (S24).
     private func streakCard(_ snap: HomeSnapshot) -> some View {
-        VStack(alignment: .leading, spacing: DX.Space.s) {
+        let ink = DX.Ground.reading.ink
+        let muted = DX.Ground.reading.muted
+        let track = DX.Ground.reading.ink.opacity(0.12)
+        let value: Double
+        if case .prep = snap.phase {
+            value = Double(snap.prepDone) / Double(max(snap.prepTotal, 1))
+        } else {
+            value = snap.nextMilestone == nil ? 1 : snap.milestoneFraction
+        }
+        return VStack(alignment: .leading, spacing: DX.Space.s) {
             HStack(alignment: .firstTextBaseline, spacing: DX.Space.xs) {
                 switch snap.phase {
                 case let .prep(days):
-                    Text("Prep streak · \(snap.lessonStreak) / \(snap.prepTotal)").dxText(.micro, color: DX.Palette.accentInk)
+                    Text("Prep streak · \(snap.lessonStreak) / \(snap.prepTotal)").dxType(.caption).textCase(.uppercase).foregroundStyle(ink)
                     Spacer(minLength: DX.Space.xs)
                     Text(verbatim: "\(String(localized: "Quit Day")) \(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))) · \(days == 1 ? String(localized: "1 day") : String(localized: "\(days) days"))")
-                        .font(.custom(DX.Typeface.medium, size: 12, relativeTo: .caption)).foregroundStyle(DX.Palette.text2)
+                        .dxType(.caption).foregroundStyle(muted)
                 default:
                     Text("Smoke-free · \(snap.daysClear) \(snap.daysClear == 1 ? String(localized: "day") : String(localized: "days"))")
-                        .dxText(.micro, color: DX.Palette.accentInk)
+                        .dxType(.caption).textCase(.uppercase).foregroundStyle(ink)
                     Spacer(minLength: DX.Space.xs)
                     if let next = snap.nextMilestone {
-                        Text("Next milestone · \(next) days").font(.custom(DX.Typeface.medium, size: 12, relativeTo: .caption))
-                            .foregroundStyle(DX.Palette.text2)
+                        Text("Next milestone · \(next) days").dxType(.caption).foregroundStyle(muted)
                     }
                 }
             }
@@ -759,24 +766,28 @@ struct TodayView: View {
                 HStack(spacing: 6) {
                     ForEach(0..<max(snap.prepTotal, 1), id: \.self) { index in
                         Capsule()
-                            .fill(index < snap.prepDone ? DX.Palette.sage : DX.Palette.track)
+                            .fill(index < snap.prepDone ? DX.Fill.green : track)
                             .overlay(alignment: .leading) {
                                 if index == snap.prepDone, index == snap.prepDayNumber - 1 {
-                                    GeometryReader { geo in Capsule().fill(DX.Palette.sage.opacity(0.6)).frame(width: geo.size.width / 2) }
+                                    GeometryReader { geo in Capsule().fill(DX.Fill.green.opacity(0.6)).frame(width: geo.size.width / 2) }
                                 }
                             }
-                            .frame(height: 6)
+                            .frame(height: 8)
                     }
                 }
-            } else if case .prep = snap.phase {
-                DXProgressBar(value: Double(snap.prepDone) / Double(max(snap.prepTotal, 1)))
             } else {
-                DXProgressBar(value: snap.nextMilestone == nil ? 1 : snap.milestoneFraction)
+                GeometryReader { geo in
+                    ZStack(alignment: .leading) {
+                        Capsule().fill(track)
+                        Capsule().fill(DX.Fill.green).frame(width: geo.size.width * min(1, max(0, value)))
+                    }
+                }
+                .frame(height: 8)
             }
         }
-        .padding(.vertical, 14).padding(.horizontal, DX.Space.m)
+        .padding(.vertical, 14).padding(.horizontal, 16)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(DX.Palette.accentSoft, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .background(DX.Fill.raised, in: RoundedRectangle(cornerRadius: DX.Layout.smallCardRadius, style: .continuous))
         .accessibilityElement(children: .combine)
     }
 
@@ -805,19 +816,18 @@ struct TodayView: View {
                     .padding(current != nil ? 4 : 0)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(verbatim: featured?.title ?? String(localized: "Your body is recovering"))
-                        .font(.custom(DX.Typeface.semibold, size: 14, relativeTo: .subheadline)).foregroundStyle(DX.Palette.text)
+                        .dxFont(16, weight: 700, style: .body).foregroundStyle(DX.Ground.reading.ink)
                         .multilineTextAlignment(.leading)
-                    Text(verbatim: line).dxText(.subtitle).multilineTextAlignment(.leading)
+                    Text(verbatim: line).dxType(.footnote).foregroundStyle(DX.Ground.reading.muted).multilineTextAlignment(.leading)
                 }
                 .fixedSize(horizontal: false, vertical: true)
                 Spacer(minLength: DX.Space.xs)
-                Image(systemName: "chevron.right").font(.system(size: 11, weight: .semibold)).foregroundStyle(DX.Palette.text2)
-                    .frame(width: 24, height: 24).background(DX.Palette.track, in: Circle())
+                Image(systemName: "chevron.right").font(.system(size: 12, weight: .bold)).foregroundStyle(DX.Ground.reading.ink)
+                    .frame(width: 32, height: 32).background(DX.Fill.surface, in: Circle())
                     .accessibilityHidden(true)
             }
             .padding(14)
-            .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: DX.Radius.card, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: DX.Radius.card, style: .continuous).strokeBorder(DX.Palette.hairline))
+            .background(DX.Fill.raised, in: RoundedRectangle(cornerRadius: DX.Layout.smallCardRadius, style: .continuous))
         }
         .buttonStyle(.plain)
         .accessibilityElement(children: .combine)

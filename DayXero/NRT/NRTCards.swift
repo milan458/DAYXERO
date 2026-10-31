@@ -136,18 +136,19 @@ struct NRTInviteRow: View {
     var body: some View {
         Button(action: action) {
             HStack(spacing: DX.Space.s) {
-                Image(systemName: systemImage).font(.system(size: 16)).foregroundStyle(DX.Palette.accentInk)
-                    .frame(width: 36, height: 36).background(DX.Palette.accentSoft, in: Circle())
-                VStack(alignment: .leading, spacing: 1) {
-                    Text(title).font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body)).foregroundStyle(DX.Palette.text)
-                    Text(detail).dxText(.subtitle)
+                Image(systemName: systemImage).font(.system(size: 16, weight: .semibold)).foregroundStyle(DX.Ground.reading.ink)
+                    .frame(width: 40, height: 40).background(DX.Fill.surface, in: Circle())
+                    .accessibilityHidden(true)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title).dxFont(16, weight: 700, style: .body).foregroundStyle(DX.Ground.reading.ink)
+                    Text(detail).dxType(.footnote).foregroundStyle(DX.Ground.reading.muted)
                 }
                 Spacer(minLength: DX.Space.xs)
-                Image(systemName: "chevron.right").font(.system(size: 13, weight: .semibold)).foregroundStyle(DX.Palette.muted)
+                Image(systemName: "chevron.right").font(.system(size: 13, weight: .bold)).foregroundStyle(DX.Ground.reading.muted)
+                    .accessibilityHidden(true)
             }
             .padding(14)
-            .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(DX.Palette.hairline))
+            .background(DX.Fill.raised, in: RoundedRectangle(cornerRadius: DX.Layout.smallCardRadius, style: .continuous))
         }
         .buttonStyle(.plain)
         .accessibilityElement(children: .combine)
