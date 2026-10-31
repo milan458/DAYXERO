@@ -162,6 +162,8 @@ struct TodayView: View {
     @Query private var checkIns: [CheckIn]
     @State private var showPledge = UserDefaults.standard.bool(forKey: "dx.openPledge")
     @State private var showCheckIn = UserDefaults.standard.bool(forKey: "dx.openCheckIn")
+    @State private var showCalmTools = false
+    @Environment(SOSRouter.self) private var sos
     @State private var settingsPage: SettingsSheet.Page? = UserDefaults.standard.string(forKey: "dx.openSettings").flatMap(SettingsSheet.Page.init(rawValue:))
     @State private var showSettings = UserDefaults.standard.string(forKey: "dx.openSettings") != nil
     @State private var celebrating: Milestone?
@@ -226,6 +228,9 @@ struct TodayView: View {
         }
         .fullScreenCover(isPresented: $showCheckIn) {
             CheckInView(profile: profile) { showCheckIn = false }
+        }
+        .fullScreenCover(isPresented: $showCalmTools) {
+            CalmToolsView(onClose: { showCalmTools = false }, fromSOS: false)
         }
         .sheet(isPresented: $showSettings) {
             SettingsSheet(profile: profile, start: settingsPage)
@@ -297,8 +302,13 @@ struct TodayView: View {
     @ViewBuilder
     private func overview(_ snap: HomeSnapshot, now: Date) -> some View {
         TodayHeaderV4(snap: snap, name: profile.name, now: now) { settingsPage = nil; showSettings = true }
-        // Program v2's session, mission or what's next (handoff 4.5).
-        ProgramTodayCard(profile: profile)
+        // F08 top card by time of day: the usual wave, Glim's check-in or winding down. The lesson card follows.
+        let top = topCard(now: now)
+        TodayTopCardV4(card: top, plan: wavePlan(top), onSOS: { sos.open(source: "wave card") },
+                       onCheckIn: { showCheckIn = true }, onWindDown: { showCalmTools = true })
+        // Program v2's session, mission or what's next (handoff 4.5), as the green lesson card.
+        ProgramTodayCard(profile: profile).id("lower")
+        YourDayList(rows: yourDay(now: now))
         if snap.phase == .quitDay, !sosHintSeen { sosHint }
         // A plan made today, after a slip or in a lesson, stays on Home for the rest of the day (S8.3).
         if let plan = plans.first, DayClock(boundaryHour: profile.dayBoundaryHour).day(containing: plan.createdAt)
@@ -313,29 +323,63 @@ struct TodayView: View {
     @ViewBuilder
     private func actions(_ snap: HomeSnapshot, now: Date) -> some View {
         nrtSection(snap, now: now)
-        milestoneRow(now: now).id("lower")
-        dailyCard(now: now)
+        milestoneRow(now: now)
     }
 
     // MARK: Pledge and check-in (S11)
 
-    @ViewBuilder
-    private func dailyCard(now: Date) -> some View {
+    /// F08's top card. The wave comes from their own log of cravings and slips (sessions closed straight away don't count).
+    private func topCard(now: Date) -> TodayTopCard {
         let rhythm = DailyRhythm(clock: DayClock(boundaryHour: profile.dayBoundaryHour))
-        let pledgedToday = rhythm.hasPledged(pledges.map(\.day), at: now)
+        let cravings = logs.filter { ($0.kind == .craving && $0.outcome != .closed) || $0.kind == .slip }.map { (time: $0.timestamp, trigger: $0.trigger) }
+        let wave = CravingPattern.usualWave(cravings, now: now)
+        return TodayTopCard.pick(slot: TodayHeaderV4.slot(at: now), wave: wave,
+                                 checkedIn: rhythm.hasCheckedIn(checkIns.map(\.day), at: now))
+    }
+
+    /// A plan they've saved for the wave's trigger, shown on the wave card.
+    private func wavePlan(_ card: TodayTopCard) -> IfThenPlan? {
+        guard case let .wave(wave) = card, let trigger = wave.trigger else { return nil }
+        let situation = String(localized: trigger.situation)
+        return plans.first { $0.situation == situation }
+    }
+
+    /// "Your day" (F08): the pledge, today's session and the evening check-in (S11). Both daily moments stay optional.
+    private func yourDay(now: Date) -> [YourDayList.Row] {
+        let rhythm = DailyRhythm(clock: DayClock(boundaryHour: profile.dayBoundaryHour))
         let force = debugDaily
-        if force == "checkin" || (force == nil && rhythm.isCheckInTime(now) && !rhythm.hasCheckedIn(checkIns.map(\.day), at: now)) {
-            DailyCard(systemImage: "moon", title: "Evening check-in", detail: "A minute on how today went", action: "Check in") {
-                showCheckIn = true
-            }
-        } else if force == "pledge" || (force == nil && rhythm.isPledgeTime(now) && !pledgedToday) {
-            DailyCard(systemImage: "sun.max", title: "Today's pledge", detail: "10 seconds, with one of your reasons", action: "Pledge") {
+        let pledged = force == "pledged" || rhythm.hasPledged(pledges.map(\.day), at: now)
+        let checkedIn = rhythm.hasCheckedIn(checkIns.map(\.day), at: now)
+        var rows: [YourDayList.Row] = []
+        if pledged {
+            rows.append(.init(id: "pledge", label: String(localized: "Morning pledge"), meta: String(localized: "done"), done: true, action: nil))
+        } else if force == "pledge" || rhythm.isPledgeTime(now) {
+            rows.append(.init(id: "pledge", label: String(localized: "Morning pledge"), meta: String(localized: "10 sec"), done: false) {
                 showPledge = true
-            }
-        } else if force == "pledged" || (force == nil && rhythm.isPledgeTime(now) && pledgedToday), let pledge = pledges.first {
-            DailyCard(systemImage: "checkmark", title: "Pledged at \(pledge.madeAt.formatted(date: .omitted, time: .shortened))",
-                      detail: nil, action: nil, done: true) {}
+            })
         }
+        if let today = ProgramToday(store: ProgramStore(context: context, profile: profile), isPro: entitlement.isPro) {
+            switch today.kind {
+            case .open:
+                rows.append(.init(id: "lesson", label: today.title, meta: String(localized: "\(today.minutes) min"), done: false, action: nil))
+            case .waiting, .complete:
+                rows.append(.init(id: "lesson", label: String(localized: "Today's session"), meta: String(localized: "done"), done: true, action: nil))
+            }
+        }
+        let canCheckIn = force == "checkin" || rhythm.isCheckInTime(now)
+        rows.append(.init(id: "checkin", label: String(localized: "Evening check-in"),
+                          meta: checkedIn ? String(localized: "done") : checkInTime, done: checkedIn,
+                          action: !checkedIn && canCheckIn ? { showCheckIn = true } : nil))
+        return rows
+    }
+
+    /// The check-in reminder's time, or "Tonight" when the reminder is off.
+    private var checkInTime: String {
+        guard let minute = DailyReminderSettings.checkInMinute,
+              let time = Calendar.current.date(bySettingHour: minute / 60, minute: minute % 60, second: 0, of: .now) else {
+            return String(localized: "Tonight")
+        }
+        return time.formatted(date: .omitted, time: .shortened)
     }
 
     /// Screenshots can't choose the time of day, so DEBUG builds can force which card shows.

@@ -146,6 +146,9 @@ jobs:
           done
           shoot light accessibility-extra-extra-extra-large v4-sos-light-ax5 $SOS4 -dx.sosElapsed 52
           shoot light large v4-slip-done-light -dx.homeScenario day12 -dx.store pro -dx.logSheet slip -dx.slipStage done
+          shoot light large v4-pledge-light -dx.homeScenario day3 -dx.store pro -dx.openPledge YES
+          shoot dark large v4-pledge-dark -dx.homeScenario day3 -dx.store pro -dx.openPledge YES
+          shoot light large v4-today-yourday-light -dx.homeScenario day3 -dx.store pro -dx.todaySlot morning -dx.forceDaily pledge -dx.homeScroll lower
           BRANCH=ci-screens
           if [ "${{ inputs.v4_only }}" = "true" ]; then
             BRANCH=ci-screens-v4

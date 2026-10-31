@@ -222,3 +222,6 @@ The current app also has areas with **no v4 design at all**: Water (a Today card
     - Cards on violet and ocean are a navy tint in light mode (decision 25), because the evening and night stat tiles were unreadable.
     - The reason chips on "Make this personal" and the SOS share text no longer use emoji.
     - Welcome scrolls at accessibility text sizes, because the headline was cut off.
+- **Phase 2 (branch `claude/v4-phase2`):** F13 SOS with Jelli on the ocean, F14 Passed on the sky, F15 Slip on the reading ground, F09 Pledge, and on Today the top card by time of day, the green lesson card and "Your day". Decision 26 records what these screens do where the canvas is silent.
+  - Logic: `TodaySlot`, `CravingPattern.usualWave` and `TodayTopCard.pick` in `DayXeroCore/Logic/TodayPlan.swift`, with `TodayPlanTests`.
+  - Still to do in Phase 2: the quick-log cards, the streak card, the NRT invitations and the milestone row keep their current look.

@@ -36,16 +36,20 @@ struct TodayHeaderV4: View {
     }
 
     private var slot: Slot {
-        #if DEBUG
-        switch UserDefaults.standard.string(forKey: "dx.todaySlot") {
-        case "morning": return .morning
-        case "afternoon": return .afternoon
-        case "evening": return .evening
-        case "night": return .night
-        default: break
+        switch Self.slot(at: now) {
+        case .morning: .morning
+        case .afternoon: .afternoon
+        case .evening: .evening
+        case .night: .night
         }
+    }
+
+    /// The time of day Today uses; DEBUG builds can force it for screenshots with `-dx.todaySlot`.
+    static func slot(at now: Date) -> TodaySlot {
+        #if DEBUG
+        if let raw = UserDefaults.standard.string(forKey: "dx.todaySlot"), let forced = TodaySlot(rawValue: raw) { return forced }
         #endif
-        return Slot(now)
+        return TodaySlot(now)
     }
 
     private var greeting: String {

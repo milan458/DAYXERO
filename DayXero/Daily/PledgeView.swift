@@ -1,111 +1,149 @@
 import DayXeroCore
 import SwiftData
 import SwiftUI
-import UIKit
 
-/// The morning pledge (S11.1): one of your reasons and its photo, then press and hold to pledge.
+/// F09 Pledge (apricot): Xero at dawn, "Today, I won't use nicotine.", one of your reasons, and a
+/// one-second hold. Optional, and it never changes days clear (S11.1).
 struct PledgeView: View {
     let profile: UserProfile
     let onDone: () -> Void
 
     @Environment(\.modelContext) private var context
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @State private var progress = 0.0
+    /// "Won't use nicotine" or "One wave at a time"; remembered for tomorrow.
+    @AppStorage("dx.pledgeWording") private var wording = Wording.wontUse.rawValue
     @State private var pledged = false
-    @State private var pressing = false
+    @State private var risen = false
+
+    private let ground = DX.Ground.apricot
+
+    enum Wording: String, CaseIterable {
+        case wontUse, oneWave
+
+        var chip: String {
+            switch self {
+            case .wontUse: String(localized: "Won't use nicotine")
+            case .oneWave: String(localized: "One wave at a time")
+            }
+        }
+
+        var headline: String {
+            switch self {
+            case .wontUse: String(localized: "Today, I won't use nicotine.")
+            case .oneWave: String(localized: "Today, I'll take it one wave at a time.")
+            }
+        }
+    }
 
     var body: some View {
         let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
         let day = clock.days(fromDate: profile.quitDay, to: .now) + 1
-        let reason = todaysReason(dayNumber: day)
-        VStack(alignment: .leading, spacing: 0) {
-                HStack {
-                    Text(day > 0 ? "Day \(day) · \(Date.now.formatted(.dateTime.weekday(.wide)))" : "\(Date.now.formatted(.dateTime.weekday(.wide)))")
-                        .dxText(.micro, color: .white.opacity(0.75))
-                    Spacer()
-                    Button(action: onDone) {
-                        Image(systemName: "xmark").font(.system(size: 13, weight: .semibold)).foregroundStyle(.white)
-                            .frame(width: 36, height: 36).background(.white.opacity(0.18), in: Circle())
-                    }
-                    .accessibilityLabel(Text("Close"))
-                }
-                Spacer()
-                Text(pledged ? "Pledged. Have a good day." : "Today, I won't use nicotine.")
-                    .font(.custom(DX.Typeface.bold, size: 30, relativeTo: .largeTitle))
-                    .foregroundStyle(.white)
-                    .contentTransition(.opacity)
-                if let reason {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Because").dxText(.micro, color: .white.opacity(0.7))
-                        Text(verbatim: reason.text).font(.custom(DX.Typeface.regular, size: 16, relativeTo: .body)).foregroundStyle(.white.opacity(0.9))
-                    }
-                    .padding(.top, DX.Space.s)
-                }
-                holdButton
-                    .frame(maxWidth: .infinity)
-                    .padding(.top, DX.Space.xl)
+        let daysClear = max(0, day - 1)
+        let chosen = Wording(rawValue: wording) ?? .wontUse
+        VStack(spacing: 0) {
+            ZStack(alignment: .bottom) {
+                HeroScene(.dawn, clarity: day > 0 ? CrewGrowth.clarity(daysClear: daysClear) : CrewGrowth.prepClarity,
+                          height: 330, edge: ground.background)
+                XeroView(mood: pledged ? .cheer : .hello, stage: CrewGrowth.stage(daysClear: daysClear), size: .hero)
+                    .offset(y: risen || reduceMotion ? -10 : 40)
+                    .opacity(risen ? 1 : 0)
+                    .accessibilityHidden(true)
             }
-        .padding(.horizontal, DX.Space.l)
+            .overlay(alignment: .topTrailing) {
+                Button(action: onDone) {
+                    Image(systemName: "xmark").font(.system(size: 18, weight: .bold))
+                        .foregroundStyle(DX.Fill.navy)
+                        .frame(width: 44, height: 44)
+                        .background(DX.Fill.cream.opacity(0.85), in: Circle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(Text("Close"))
+                .padding(.trailing, 10)
+                .padding(.top, 50)
+            }
+            .ignoresSafeArea(edges: .top)
+            ScrollView {
+                VStack(spacing: 10) {
+                    Text(verbatim: dayLine(day))
+                        .dxFont(14, weight: 700, style: .footnote)
+                        .foregroundStyle(ground.muted)
+                        .dxArrive(4)
+                    Text(verbatim: chosen.headline)
+                        .dxType(.large)
+                        .foregroundStyle(ground.ink)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .contentTransition(.opacity)
+                        .accessibilityAddTraits(.isHeader)
+                        .dxArrive(5)
+                    HStack(spacing: 6) {
+                        ForEach(Wording.allCases, id: \.self) { w in
+                            V4Chip(text: w.chip, isOn: chosen == w, fill: DX.Fill.onColourCard(for: ground), ink: ground.ink,
+                                   selectedFill: ground.ink, selectedInk: ground.background) {
+                                withAnimation(DX.Move.animation(.easeInOut(duration: 0.25), reduceMotion: reduceMotion)) { wording = w.rawValue }
+                            }
+                        }
+                    }
+                    .disabled(pledged)
+                    .accessibilityElement(children: .contain)
+                    .accessibilityLabel(Text("Pledge wording"))
+                    .dxArrive(6)
+                    if let reason = todaysReason(dayNumber: day) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("BECAUSE").dxType(.caption).foregroundStyle(ground.muted)
+                            Text(verbatim: reason.text)
+                                .dxFont(19, weight: 700, style: .headline)
+                                .foregroundStyle(ground.ink)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, 16).padding(.vertical, 14)
+                        .background(DX.Fill.onColourCard(for: ground), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+                        .accessibilityElement(children: .combine)
+                        .padding(.top, 6)
+                        .dxArrive(7)
+                    }
+                }
+                .padding(.horizontal, DX.Layout.gutter)
+                .padding(.top, 6)
+                .padding(.bottom, DX.Space.m)
+            }
+            .scrollBounceBehavior(.basedOnSize)
+            VStack(spacing: 8) {
+                HoldButton(String(localized: "Hold to pledge"), done: String(localized: "Pledged for today ✓"),
+                           duration: DX.Move.Hold.pledge, on: ground, action: pledge)
+                    .accessibilityLabel(Text("Pledge for today. Hold for one second, or double-tap with VoiceOver."))
+                if let line = checkInLine {
+                    Text(verbatim: line)
+                        .dxType(.footnote)
+                        .foregroundStyle(ground.muted)
+                        .multilineTextAlignment(.center)
+                }
+            }
+            .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+            .padding(.horizontal, DX.Layout.buttonGutter)
+            .padding(.bottom, DX.Space.xs)
+            .dxArrive(8)
+        }
         .dxReadableColumn()
-        .padding(.top, DX.Space.s)
-        .padding(.bottom, DX.Space.l)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-        // As a background, the photo fills the screen without widening the layout.
-        .background { background(reason) }
-        .sensoryFeedback(.impact(flexibility: .soft, intensity: 0.4), trigger: pressing)
+        .background(ground.background.ignoresSafeArea())
         .sensoryFeedback(DX.Haptic.commit, trigger: pledged)
-        .preferredColorScheme(.dark)
+        .onAppear {
+            withAnimation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion)) { risen = true }
+        }
     }
 
-    private var holdButton: some View {
-        VStack(spacing: DX.Space.xs) {
-            ZStack {
-                Circle().stroke(.white.opacity(0.2), lineWidth: 4)
-                Circle().trim(from: 0, to: pledged ? 1 : progress)
-                    .stroke(DX.Palette.sage, style: StrokeStyle(lineWidth: 4, lineCap: .round))
-                    .rotationEffect(.degrees(-90))
-                Image(systemName: pledged ? "checkmark" : "hand.raised")
-                    .font(.system(size: 26, weight: .semibold))
-                    .foregroundStyle(DX.Palette.onAccent)
-                    .frame(width: 72, height: 72)
-                    .background(DX.Palette.sage, in: Circle())
-                    .scaleEffect(pressing && !reduceMotion ? 0.94 : 1)
-            }
-            .frame(width: 96, height: 96)
-            .contentShape(Circle())
-            .onLongPressGesture(minimumDuration: 1.0, maximumDistance: 40) {
-                pledge()
-            } onPressingChanged: { isPressing in
-                guard !pledged else { return }
-                pressing = isPressing
-                if isPressing {
-                    withAnimation(reduceMotion ? nil : .linear(duration: 1.0)) { progress = 1 }
-                } else if !pledged {
-                    withAnimation(.easeOut(duration: 0.2)) { progress = 0 }
-                }
-            }
-            .accessibilityElement()
-            .accessibilityLabel(Text(pledged ? "Pledged" : "Pledge"))
-            .accessibilityHint(Text("Double-tap to pledge"))
-            .accessibilityAddTraits(.isButton)
-            .accessibilityAction { pledge() }
-            Text(pledged ? " " : "Press and hold to pledge").dxText(.subtitle, color: .white.opacity(0.75)).multilineTextAlignment(.center).fixedSize(horizontal: false, vertical: true)
-        }
-        .disabled(pledged)
+    /// "Sunday · Day 3", or the weekday alone before Quit Day.
+    private func dayLine(_ day: Int) -> String {
+        let weekday = Date.now.formatted(.dateTime.weekday(.wide))
+        return day > 0 ? String(localized: "\(weekday) · Day \(day)") : weekday
     }
 
-    private func background(_ reason: Reason?) -> some View {
-        ZStack {
-            if let data = reason?.photo, let image = UIImage(data: data) {
-                Color.clear.overlay { Image(uiImage: image).resizable().scaledToFill() }.clipped()
-            } else {
-                LinearGradient(colors: [Color(hex: 0x5F7C52), Color(hex: 0x2F4A30), Color(hex: 0x111A0F)],
-                               startPoint: .top, endPoint: .bottom)
-            }
-            LinearGradient(colors: [.black.opacity(0.35), .black.opacity(0.2), .black.opacity(0.85)],
-                           startPoint: .top, endPoint: .bottom)
-        }
-        .ignoresSafeArea()
+    /// "Glim will check in tonight at 9:00 PM. No pressure." Only when the check-in reminder is on.
+    private var checkInLine: String? {
+        guard let minute = DailyReminderSettings.checkInMinute,
+              let time = Calendar.current.date(bySettingHour: minute / 60, minute: minute % 60, second: 0, of: .now) else { return nil }
+        return String(localized: "Glim will check in tonight at \(time.formatted(date: .omitted, time: .shortened)). No pressure.")
     }
 
     private func todaysReason(dayNumber: Int) -> Reason? {
@@ -118,10 +156,10 @@ struct PledgeView: View {
         let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
         context.insert(Pledge(day: clock.day(containing: .now)))
         try? context.save()
-        withAnimation(DX.Motion.animation(DX.Motion.glide, reduceMotion: reduceMotion)) { pledged = true }
+        pledged = true
         DailyReminders.refresh(in: context)
         Task {
-            try? await Task.sleep(for: .seconds(1.4))
+            try? await Task.sleep(for: .seconds(1.6))
             onDone()
         }
     }
