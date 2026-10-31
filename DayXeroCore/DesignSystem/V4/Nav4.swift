@@ -78,13 +78,17 @@ public struct V4TabBar: View {
                 .buttonStyle(.plain)
                 .accessibilityLabel(tab.label)
                 .accessibilityAddTraits(on ? [.isSelected] : [])
+                // Labels stay 12 pt like the system tab bar; long-press shows them large at accessibility sizes.
+                .accessibilityShowsLargeContentViewer()
             }
         }
         .padding(.horizontal, 6)
         .frame(height: 70)
-        .background(Color(hex: dark ? 0x1B1747 : 0xFFFFFF).opacity(0.96), in: Capsule())
+        .background {
+            Capsule().fill(Color(hex: dark ? 0x1B1747 : 0xFFFFFF).opacity(0.96))
+                .shadow(color: dark ? Color.black.opacity(0.5) : Color(hex: 0x1E1A3A).opacity(0.14), radius: 15, x: 0, y: 12)
+        }
         .overlay(Capsule().strokeBorder(dark ? Color.white.opacity(0.08) : Color(hex: 0x1E1A3A).opacity(0.06), lineWidth: 1))
-        .shadow(color: (dark ? Color.black.opacity(0.5) : Color(hex: 0x1E1A3A).opacity(0.14)), radius: 15, x: 0, y: 12)
         .padding(.horizontal, 12)
         .sensoryFeedback(DX.Haptic.select, trigger: selection)
     }

@@ -60,8 +60,12 @@ public struct TopCard: View {
                     .accessibilityHidden(true)
             }
             .padding(18)
-            .background(ground.background, in: RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
-            .shadow(color: .black.opacity(0.14), radius: 0, x: 0, y: 5)
+            .background {
+                // The lip shadow sits on the card shape only, so text is never doubled.
+                RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous)
+                    .fill(ground.background)
+                    .shadow(color: .black.opacity(0.14), radius: 0, x: 0, y: 5)
+            }
         }
         .buttonStyle(.plain)
         .accessibilityElement(children: .combine)
@@ -124,6 +128,7 @@ public struct StatTile: View {
     public var body: some View {
         VStack(alignment: .leading, spacing: 2) {
             CountingText(value, format: format).dxType(.title).dxInk(ground)
+                .lineLimit(1).minimumScaleFactor(0.6)
             Text(label).dxType(.caption).dxInk(ground, muted: true)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -233,9 +238,11 @@ public struct ProgramDayCard: View {
             Spacer(minLength: 0)
         }
         .padding(14)
-        .background(state == .today ? DX.Ground.apricot.background : DX.Fill.raised,
-                    in: RoundedRectangle(cornerRadius: DX.Layout.smallCardRadius, style: .continuous))
-        .shadow(color: .black.opacity(state == .today ? 0.14 : 0), radius: 0, x: 0, y: 5)
+        .background {
+            RoundedRectangle(cornerRadius: DX.Layout.smallCardRadius, style: .continuous)
+                .fill(state == .today ? DX.Ground.apricot.background : DX.Fill.raised)
+                .shadow(color: .black.opacity(state == .today ? 0.14 : 0), radius: 0, x: 0, y: 5)
+        }
         .accessibilityElement(children: .combine)
         .accessibilityValue(stateLabel)
     }
@@ -252,14 +259,15 @@ public struct ProgramDayCard: View {
     private var iconBox: Color {
         switch state {
         case .done: DX.Fill.green
-        case .today: DX.Fill.navy
+        case .today: Color(light: 0x1E1A3A, dark: 0xFFC38A)
         case .locked, .graduation: DX.Fill.surface
         }
     }
 
     private var iconInk: Color {
         switch state {
-        case .done, .today: DX.Fill.cream
+        case .done: DX.Fill.cream
+        case .today: Color(light: 0xFFF8EE, dark: 0x241433)
         case .locked, .graduation: DX.Ground.reading.muted
         }
     }
@@ -352,7 +360,7 @@ public struct HandOverChip<Avatar: View>: View {
     public var body: some View {
         HStack(spacing: 8) {
             avatar.frame(width: 28, height: 28)
-            Text(text).dxType(.footnote)
+            Text(text).dxType(.footnote).foregroundStyle(Color(light: 0x1E1A3A, dark: 0xFFF8EE))
         }
         .padding(.vertical, 6)
         .padding(.leading, 6)

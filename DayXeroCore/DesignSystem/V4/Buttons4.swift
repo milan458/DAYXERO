@@ -120,6 +120,7 @@ public struct HoldButton: View {
         let colors = DX.ButtonColors.make(.primary, on: ground, dark: scheme == .dark)
         ZStack(alignment: .leading) {
             Capsule().fill(Color(hex: colors.background ?? 0x1E1A3A))
+                .shadow(color: .black.opacity(colors.lip ? 0.2 : 0), radius: 0, x: 0, y: 6)
             GeometryReader { proxy in
                 Rectangle()
                     .fill(Color(hex: colors.fill))
@@ -132,7 +133,6 @@ public struct HoldButton: View {
                 .frame(maxWidth: .infinity)
         }
         .frame(height: DX.Layout.buttonHeight)
-        .shadow(color: .black.opacity(colors.lip ? 0.2 : 0), radius: 0, x: 0, y: 6)
         .contentShape(Capsule())
         .onLongPressGesture(minimumDuration: duration, maximumDistance: 40) {
             complete()
