@@ -176,7 +176,7 @@ struct ProgramView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 Spacer(minLength: 0)
-                if state == .completed {
+                if case .completed = state {
                     Image(systemName: "arrow.counterclockwise").font(.system(size: 14, weight: .bold))
                         .foregroundStyle(Read4.muted).accessibilityHidden(true)
                 }
