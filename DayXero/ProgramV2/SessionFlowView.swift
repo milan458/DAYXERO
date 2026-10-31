@@ -436,11 +436,12 @@ struct SessionCompletion: View {
                         StatTile(value: Double(snap.daysClear), label: snap.daysClear == 1 ? String(localized: "day clear") : String(localized: "days clear"),
                                  ground: ground)
                         if let counter = snap.counters.first {
-                            StatTile(value: Double(counter.avoided), label: switch counter.product {
-                                case .cigarettes: String(localized: "not smoked")
-                                case .vape: String(localized: "puffs not taken")
-                                case .pouches: String(localized: "pouches not used")
-                            }, ground: ground)
+                            let avoided: String = switch counter.product {
+                            case .cigarettes: String(localized: "not smoked")
+                            case .vape: String(localized: "puffs not taken")
+                            case .pouches: String(localized: "pouches not used")
+                            }
+                            StatTile(value: Double(counter.avoided), label: avoided, ground: ground)
                         }
                         StatTile(value: NSDecimalNumber(decimal: snap.moneyKept).doubleValue, label: String(localized: "kept"), ground: ground,
                                  format: { Decimal($0).formatted(.currency(code: code).precision(.fractionLength(2))) })
