@@ -162,6 +162,8 @@ struct TodayView: View {
     @Query private var checkIns: [CheckIn]
     @State private var showPledge = UserDefaults.standard.bool(forKey: "dx.openPledge")
     @State private var showCheckIn = UserDefaults.standard.bool(forKey: "dx.openCheckIn")
+    @State private var showCalmTools = false
+    @Environment(SOSRouter.self) private var sos
     @State private var settingsPage: SettingsSheet.Page? = UserDefaults.standard.string(forKey: "dx.openSettings").flatMap(SettingsSheet.Page.init(rawValue:))
     @State private var showSettings = UserDefaults.standard.string(forKey: "dx.openSettings") != nil
     @State private var celebrating: Milestone?
@@ -226,6 +228,9 @@ struct TodayView: View {
         }
         .fullScreenCover(isPresented: $showCheckIn) {
             CheckInView(profile: profile) { showCheckIn = false }
+        }
+        .fullScreenCover(isPresented: $showCalmTools) {
+            CalmToolsView(onClose: { showCalmTools = false }, fromSOS: false)
         }
         .sheet(isPresented: $showSettings) {
             SettingsSheet(profile: profile, start: settingsPage)
@@ -297,8 +302,13 @@ struct TodayView: View {
     @ViewBuilder
     private func overview(_ snap: HomeSnapshot, now: Date) -> some View {
         TodayHeaderV4(snap: snap, name: profile.name, now: now) { settingsPage = nil; showSettings = true }
-        // Program v2's session, mission or what's next (handoff 4.5).
-        ProgramTodayCard(profile: profile)
+        // F08 top card by time of day: the usual wave, Glim's check-in or winding down. The lesson card follows.
+        let top = topCard(now: now)
+        TodayTopCardV4(card: top, plan: wavePlan(top), onSOS: { sos.open(source: "wave card") },
+                       onCheckIn: { showCheckIn = true }, onWindDown: { showCalmTools = true })
+        // Program v2's session, mission or what's next (handoff 4.5), as the green lesson card.
+        ProgramTodayCard(profile: profile).id("lower")
+        YourDayList(rows: yourDay(now: now))
         if snap.phase == .quitDay, !sosHintSeen { sosHint }
         // A plan made today, after a slip or in a lesson, stays on Home for the rest of the day (S8.3).
         if let plan = plans.first, DayClock(boundaryHour: profile.dayBoundaryHour).day(containing: plan.createdAt)
@@ -313,29 +323,64 @@ struct TodayView: View {
     @ViewBuilder
     private func actions(_ snap: HomeSnapshot, now: Date) -> some View {
         nrtSection(snap, now: now)
-        milestoneRow(now: now).id("lower")
-        dailyCard(now: now)
+        milestoneRow(now: now)
     }
 
     // MARK: Pledge and check-in (S11)
 
-    @ViewBuilder
-    private func dailyCard(now: Date) -> some View {
+    /// F08's top card. The wave comes from their own log of cravings and slips (sessions closed straight away don't count).
+    private func topCard(now: Date) -> TodayTopCard {
         let rhythm = DailyRhythm(clock: DayClock(boundaryHour: profile.dayBoundaryHour))
-        let pledgedToday = rhythm.hasPledged(pledges.map(\.day), at: now)
+        let cravings = logs.filter { ($0.kind == .craving && $0.outcome != .closed) || $0.kind == .slip }.map { (time: $0.timestamp, trigger: $0.trigger) }
+        let wave = CravingPattern.usualWave(cravings, now: now)
+        return TodayTopCard.pick(slot: TodayHeaderV4.slot(at: now), wave: wave,
+                                 checkedIn: rhythm.hasCheckedIn(checkIns.map(\.day), at: now))
+    }
+
+    /// A plan they've saved for the wave's trigger, shown on the wave card.
+    private func wavePlan(_ card: TodayTopCard) -> IfThenPlan? {
+        guard case let .wave(wave) = card, let trigger = wave.trigger else { return nil }
+        let situation = String(localized: trigger.situation)
+        return plans.first { $0.situation == situation }
+    }
+
+    /// "Your day" (F08): the pledge, today's session and the evening check-in (S11). Both daily moments stay optional.
+    private func yourDay(now: Date) -> [YourDayList.Row] {
+        let rhythm = DailyRhythm(clock: DayClock(boundaryHour: profile.dayBoundaryHour))
         let force = debugDaily
-        if force == "checkin" || (force == nil && rhythm.isCheckInTime(now) && !rhythm.hasCheckedIn(checkIns.map(\.day), at: now)) {
-            DailyCard(systemImage: "moon", title: "Evening check-in", detail: "A minute on how today went", action: "Check in") {
-                showCheckIn = true
-            }
-        } else if force == "pledge" || (force == nil && rhythm.isPledgeTime(now) && !pledgedToday) {
-            DailyCard(systemImage: "sun.max", title: "Today's pledge", detail: "10 seconds, with one of your reasons", action: "Pledge") {
-                showPledge = true
-            }
-        } else if force == "pledged" || (force == nil && rhythm.isPledgeTime(now) && pledgedToday), let pledge = pledges.first {
-            DailyCard(systemImage: "checkmark", title: "Pledged at \(pledge.madeAt.formatted(date: .omitted, time: .shortened))",
-                      detail: nil, action: nil, done: true) {}
+        let pledged = force == "pledged" || rhythm.hasPledged(pledges.map(\.day), at: now)
+        let checkedIn = rhythm.hasCheckedIn(checkIns.map(\.day), at: now)
+        var rows: [YourDayList.Row] = []
+        if pledged {
+            rows.append(.init(id: "pledge", label: String(localized: "Morning pledge"), meta: String(localized: "done"), done: true, action: nil))
+        } else if force == "pledge" || rhythm.isPledgeTime(now) {
+            rows.append(YourDayList.Row(id: "pledge", label: String(localized: "Morning pledge"), meta: String(localized: "10 sec"),
+                                        done: false, action: { showPledge = true }))
         }
+        if let today = ProgramToday(store: ProgramStore(context: context, profile: profile), isPro: entitlement.isPro) {
+            switch today.kind {
+            case .open:
+                rows.append(.init(id: "lesson", label: today.title, meta: String(localized: "\(today.minutes) min"), done: false, action: nil))
+            case .waiting, .complete:
+                rows.append(.init(id: "lesson", label: String(localized: "Today's session"), meta: String(localized: "done"), done: true, action: nil))
+            }
+        }
+        let canCheckIn = force == "checkin" || rhythm.isCheckInTime(now)
+        var openCheckIn: (() -> Void)?
+        if !checkedIn && canCheckIn { openCheckIn = { showCheckIn = true } }
+        rows.append(YourDayList.Row(id: "checkin", label: String(localized: "Evening check-in"),
+                                    meta: checkedIn ? String(localized: "done") : checkInTime, done: checkedIn,
+                                    action: openCheckIn))
+        return rows
+    }
+
+    /// The check-in reminder's time, or "Tonight" when the reminder is off.
+    private var checkInTime: String {
+        guard let minute = DailyReminderSettings.checkInMinute,
+              let time = Calendar.current.date(bySettingHour: minute / 60, minute: minute % 60, second: 0, of: .now) else {
+            return String(localized: "Tonight")
+        }
+        return time.formatted(date: .omitted, time: .shortened)
     }
 
     /// Screenshots can't choose the time of day, so DEBUG builds can force which card shows.
@@ -421,16 +466,17 @@ struct TodayView: View {
         }
         return VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: DX.Space.xs) {
-                Image(systemName: LogSheet.icon(product)).font(.system(size: 13, weight: .light)).foregroundStyle(DX.Palette.accentInk)
-                    .frame(width: 28, height: 28).background(DX.Palette.accentSoft, in: Circle())
-                Text(title).font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote)).foregroundStyle(DX.Palette.text2)
+                Image(systemName: LogSheet.icon(product)).font(.system(size: 13, weight: .semibold)).foregroundStyle(DX.Ground.reading.ink)
+                    .frame(width: 30, height: 30).background(DX.Fill.surface, in: Circle())
+                    .accessibilityHidden(true)
+                Text(title).dxFont(14, weight: 600, style: .footnote).foregroundStyle(DX.Ground.reading.muted)
                     .lineLimit(2).minimumScaleFactor(0.85)
             }
             HStack(alignment: .firstTextBaseline, spacing: 6) {
-                Text(count, format: .number).font(.custom(DX.Typeface.bold, size: 28, relativeTo: .title)).foregroundStyle(DX.Palette.text)
+                Text(count, format: .number).dxType(.title).foregroundStyle(DX.Ground.reading.ink)
                     .contentTransition(.numericText())
-                Text(prep ? "logged" as LocalizedStringKey : "since Quit Day").font(.custom(DX.Typeface.regular, size: 12, relativeTo: .caption))
-                    .foregroundStyle(DX.Palette.muted)
+                Text(prep ? "logged" as LocalizedStringKey : "since Quit Day").dxType(.caption)
+                    .foregroundStyle(DX.Ground.reading.muted)
             }
             Spacer(minLength: 0)
             HStack(spacing: 6) {
@@ -448,17 +494,15 @@ struct TodayView: View {
         }
         .padding(14)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 24, style: .continuous).strokeBorder(DX.Palette.hairline))
+        .background(DX.Fill.raised, in: RoundedRectangle(cornerRadius: DX.Layout.smallCardRadius, style: .continuous))
     }
 
     private func pill(_ title: LocalizedStringKey, accent: Bool = false) -> some View {
-        Text(title).font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
-            .foregroundStyle(accent ? DX.Palette.onAccent : DX.Palette.text)
+        Text(title).dxFont(14, weight: 700, style: .footnote)
+            .foregroundStyle(accent ? DX.Ground.reading.background : DX.Ground.reading.ink)
             .lineLimit(1).minimumScaleFactor(0.8)
-            .frame(maxWidth: .infinity, minHeight: 40)
-            .background(accent ? DX.Palette.sage : DX.Palette.surface2, in: Capsule())
-            .overlay(Capsule().strokeBorder(accent ? .clear : DX.Palette.hairline))
+            .frame(maxWidth: .infinity, minHeight: 44)
+            .background(accent ? DX.Ground.reading.ink : DX.Fill.surface, in: Capsule())
     }
 
     private func logUse(_ product: Product) {
@@ -691,21 +735,29 @@ struct TodayView: View {
     /// Prep: lessons done in a row, the Quit Day countdown, and a segment per prep day. From Quit Day: days clear
     /// and the way to the next milestone (S24).
     private func streakCard(_ snap: HomeSnapshot) -> some View {
-        VStack(alignment: .leading, spacing: DX.Space.s) {
+        let ink = DX.Ground.reading.ink
+        let muted = DX.Ground.reading.muted
+        let track = DX.Ground.reading.ink.opacity(0.12)
+        let value: Double
+        if case .prep = snap.phase {
+            value = Double(snap.prepDone) / Double(max(snap.prepTotal, 1))
+        } else {
+            value = snap.nextMilestone == nil ? 1 : snap.milestoneFraction
+        }
+        return VStack(alignment: .leading, spacing: DX.Space.s) {
             HStack(alignment: .firstTextBaseline, spacing: DX.Space.xs) {
                 switch snap.phase {
                 case let .prep(days):
-                    Text("Prep streak · \(snap.lessonStreak) / \(snap.prepTotal)").dxText(.micro, color: DX.Palette.accentInk)
+                    Text("Prep streak · \(snap.lessonStreak) / \(snap.prepTotal)").dxType(.caption).textCase(.uppercase).foregroundStyle(ink)
                     Spacer(minLength: DX.Space.xs)
                     Text(verbatim: "\(String(localized: "Quit Day")) \(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))) · \(days == 1 ? String(localized: "1 day") : String(localized: "\(days) days"))")
-                        .font(.custom(DX.Typeface.medium, size: 12, relativeTo: .caption)).foregroundStyle(DX.Palette.text2)
+                        .dxType(.caption).foregroundStyle(muted)
                 default:
                     Text("Smoke-free · \(snap.daysClear) \(snap.daysClear == 1 ? String(localized: "day") : String(localized: "days"))")
-                        .dxText(.micro, color: DX.Palette.accentInk)
+                        .dxType(.caption).textCase(.uppercase).foregroundStyle(ink)
                     Spacer(minLength: DX.Space.xs)
                     if let next = snap.nextMilestone {
-                        Text("Next milestone · \(next) days").font(.custom(DX.Typeface.medium, size: 12, relativeTo: .caption))
-                            .foregroundStyle(DX.Palette.text2)
+                        Text("Next milestone · \(next) days").dxType(.caption).foregroundStyle(muted)
                     }
                 }
             }
@@ -714,24 +766,28 @@ struct TodayView: View {
                 HStack(spacing: 6) {
                     ForEach(0..<max(snap.prepTotal, 1), id: \.self) { index in
                         Capsule()
-                            .fill(index < snap.prepDone ? DX.Palette.sage : DX.Palette.track)
+                            .fill(index < snap.prepDone ? DX.Fill.green : track)
                             .overlay(alignment: .leading) {
                                 if index == snap.prepDone, index == snap.prepDayNumber - 1 {
-                                    GeometryReader { geo in Capsule().fill(DX.Palette.sage.opacity(0.6)).frame(width: geo.size.width / 2) }
+                                    GeometryReader { geo in Capsule().fill(DX.Fill.green.opacity(0.6)).frame(width: geo.size.width / 2) }
                                 }
                             }
-                            .frame(height: 6)
+                            .frame(height: 8)
                     }
                 }
-            } else if case .prep = snap.phase {
-                DXProgressBar(value: Double(snap.prepDone) / Double(max(snap.prepTotal, 1)))
             } else {
-                DXProgressBar(value: snap.nextMilestone == nil ? 1 : snap.milestoneFraction)
+                GeometryReader { geo in
+                    ZStack(alignment: .leading) {
+                        Capsule().fill(track)
+                        Capsule().fill(DX.Fill.green).frame(width: geo.size.width * min(1, max(0, value)))
+                    }
+                }
+                .frame(height: 8)
             }
         }
-        .padding(.vertical, 14).padding(.horizontal, DX.Space.m)
+        .padding(.vertical, 14).padding(.horizontal, 16)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(DX.Palette.accentSoft, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .background(DX.Fill.raised, in: RoundedRectangle(cornerRadius: DX.Layout.smallCardRadius, style: .continuous))
         .accessibilityElement(children: .combine)
     }
 
@@ -760,19 +816,18 @@ struct TodayView: View {
                     .padding(current != nil ? 4 : 0)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(verbatim: featured?.title ?? String(localized: "Your body is recovering"))
-                        .font(.custom(DX.Typeface.semibold, size: 14, relativeTo: .subheadline)).foregroundStyle(DX.Palette.text)
+                        .dxFont(16, weight: 700, style: .body).foregroundStyle(DX.Ground.reading.ink)
                         .multilineTextAlignment(.leading)
-                    Text(verbatim: line).dxText(.subtitle).multilineTextAlignment(.leading)
+                    Text(verbatim: line).dxType(.footnote).foregroundStyle(DX.Ground.reading.muted).multilineTextAlignment(.leading)
                 }
                 .fixedSize(horizontal: false, vertical: true)
                 Spacer(minLength: DX.Space.xs)
-                Image(systemName: "chevron.right").font(.system(size: 11, weight: .semibold)).foregroundStyle(DX.Palette.text2)
-                    .frame(width: 24, height: 24).background(DX.Palette.track, in: Circle())
+                Image(systemName: "chevron.right").font(.system(size: 12, weight: .bold)).foregroundStyle(DX.Ground.reading.ink)
+                    .frame(width: 32, height: 32).background(DX.Fill.surface, in: Circle())
                     .accessibilityHidden(true)
             }
             .padding(14)
-            .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: DX.Radius.card, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: DX.Radius.card, style: .continuous).strokeBorder(DX.Palette.hairline))
+            .background(DX.Fill.raised, in: RoundedRectangle(cornerRadius: DX.Layout.smallCardRadius, style: .continuous))
         }
         .buttonStyle(.plain)
         .accessibilityElement(children: .combine)

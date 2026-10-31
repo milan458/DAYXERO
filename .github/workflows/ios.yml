@@ -108,7 +108,8 @@ jobs:
             xcrun simctl ui "$UDID" content_size "$size"
             xcrun simctl terminate "$UDID" in.dayxero.app 2>/dev/null || true
             xcrun simctl launch "$UDID" in.dayxero.app "$@"
-            sleep 5
+            # Screens shown over Today (SOS, Pledge) need longer to open: WAIT=9 shoot ….
+            sleep "${WAIT:-5}"
             for try in 1 2 3 4 5; do
               xcrun simctl io "$UDID" screenshot "shots/$name.png" > /dev/null 2>&1
               drawn "shots/$name.png" && return
@@ -138,6 +139,17 @@ jobs:
           shoot light large v4-today-prep-light -dx.homeScenario prep -dx.store pro -dx.todaySlot morning
           shoot dark large v4-today-prep-dark -dx.homeScenario prep -dx.store pro -dx.todaySlot morning
           shoot light large v4-today-lower-light -dx.homeScenario day3 -dx.store pro -dx.todaySlot morning -dx.homeScroll lower
+          SOS4="-dx.homeScenario day3 -dx.store pro -dx.sos YES"
+          for mode in light dark; do
+            WAIT=9 shoot $mode large "v4-sos-$mode" $SOS4 -dx.sosElapsed 52
+            WAIT=9 shoot $mode large "v4-sos-passed-$mode" $SOS4 -dx.sosOutcome passed
+            WAIT=9 shoot $mode large "v4-sos-slip-$mode" $SOS4 -dx.sosOutcome slipped
+          done
+          WAIT=9 shoot light accessibility-extra-extra-extra-large v4-sos-light-ax5 $SOS4 -dx.sosElapsed 52
+          shoot light large v4-slip-done-light -dx.homeScenario day12 -dx.store pro -dx.logSheet slip -dx.slipStage done
+          WAIT=9 shoot light large v4-pledge-light -dx.homeScenario day3 -dx.store pro -dx.openPledge YES
+          WAIT=9 shoot dark large v4-pledge-dark -dx.homeScenario day3 -dx.store pro -dx.openPledge YES
+          shoot light large v4-today-yourday-light -dx.homeScenario day3 -dx.store pro -dx.todaySlot morning -dx.forceDaily pledge -dx.homeScroll lower
           BRANCH=ci-screens
           if [ "${{ inputs.v4_only }}" = "true" ]; then
             BRANCH=ci-screens-v4
@@ -215,19 +227,17 @@ jobs:
           shoot dark accessibility-extra-extra-extra-large lesson-reading-dark-ax5 $D3 -dx.openLesson quit-3
           S="-dx.homeScenario day3 -dx.store pro -dx.sos YES"
           shoot dark large sos-session-dark $S -dx.sosElapsed 19
-          # The orb must move between frames: compare the ring's left edge half a second apart.
+          # The glow ring must move between frames: compare its left edge half a second apart.
           sleep 0.5
           xcrun simctl io "$UDID" screenshot motion-b.png
           sips -c 500 250 --cropOffset 500 150 shots/sos-session-dark.png --out motion-a-crop.png >/dev/null
           sips -c 500 250 --cropOffset 500 150 motion-b.png --out motion-b-crop.png >/dev/null
           if cmp -s motion-a-crop.png motion-b-crop.png; then
-            echo "::error title=Bio-Orb isn't animating::The ring looks the same in two frames half a second apart."
+            echo "::error title=SOS isn't animating::Jelli's glow ring looks the same in two frames half a second apart."
             exit 1
           fi
           shoot light large sos-session-light $S -dx.sosElapsed 19
           shoot dark large sos-photo-dark $S -dx.sosElapsed 92
-          shoot dark large sos-earlywin-dark $S -dx.sosElapsed 75
-          shoot dark large sos-timeup-dark $S -dx.sosElapsed 181
           shoot dark large sos-passed-dark $S -dx.sosOutcome passed
           shoot light large sos-passed-light $S -dx.sosOutcome passed
           shoot dark large sos-slipped-dark $S -dx.sosOutcome slipped
@@ -250,11 +260,10 @@ jobs:
           shoot dark large home-prep-uses-dark -dx.homeScenario prep -dx.store pro
           shoot dark large slip-ack-dark $P12 -dx.logSheet slip
           shoot light large slip-ack-light $P12 -dx.logSheet slip
+          shoot dark large slip-talk-dark $P12 -dx.logSheet slip -dx.slipStage talk
           shoot dark large slip-what-dark $P12 -dx.logSheet slip -dx.slipStage what
-          shoot dark large slip-trigger-dark $P12 -dx.logSheet slip -dx.slipStage trigger
-          shoot dark large slip-plan-dark $P12 -dx.logSheet slip -dx.slipStage plan
           shoot dark large slip-done-dark $P12 -dx.logSheet slip -dx.slipStage done
-          shoot dark accessibility-extra-extra-extra-large slip-plan-dark-ax5 $P12 -dx.logSheet slip -dx.slipStage plan
+          shoot dark accessibility-extra-extra-extra-large slip-talk-dark-ax5 $P12 -dx.logSheet slip -dx.slipStage talk
           shoot dark large slip-home-dark $P12 -dx.seedSlip YES
           shoot dark large slip-progress-dark $P12 -dx.seedSlip YES -dx.tab progress
           shoot dark large nrt-intro-dark $P12 -dx.logSheet nrt

@@ -3,7 +3,8 @@ import SwiftData
 import SwiftUI
 import UIKit
 
-/// Craving SOS (S6.1–S6.3, S6.9): three minutes riding the urge with the Bio-Orb, then how it went.
+/// Craving SOS (F13–F15): Xero hands over to Jelli on the ocean, the person breathes 4 in, 6 out
+/// and the time they've ridden counts up. No countdown and no prediction line (design doc §10).
 /// Opens straight into the session, with nothing to load first.
 struct CravingSOSView: View {
     /// nil before onboarding is finished; the session still works.
@@ -12,81 +13,64 @@ struct CravingSOSView: View {
     let onClose: () -> Void
 
     enum Stage: String {
-        case session, timeUp, passed, slipped
+        case session, passed, slipped
     }
 
     @Environment(\.modelContext) private var context
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.scenePhase) private var scenePhase
     @AppStorage("dx.sosHaptics") private var hapticsOn = true
-    @AppStorage("dx.voiceGuidance") private var voiceOn = true
-    /// The breathing pattern, wave riding unless the person picks another (spec §5).
-    @AppStorage("dx.sosPattern") private var patternID = OrbData.bundled.sos.defaultPattern
     @Query(filter: #Predicate<LogEntry> { $0.kindRaw == "craving" }) private var cravings: [LogEntry]
 
     @State private var startedAt: Date
+    @State private var endedAt: Date?
     @State private var stage = Stage.session
     /// Set when the session ends, so Home can ask a mission's question once SOS has closed.
     @State private var ended = false
     @State private var began = false
-    @State private var engine: OrbEngine
-    @State private var clock = OrbClock()
-    @State private var coach = OrbCoach()
-    @State private var haptics = OrbHaptics()
-    /// Paused by the person, or because the app left the foreground; Resume carries on.
-    @State private var paused = false
+    @State private var jelliIn = false
     @State private var celebrate = false
     @State private var slipFeedback = false
-    @State private var trigger: Trigger?
-    @State private var strength = 5
-    @State private var strengthTouched = false
     @State private var showCalmTools = false
     /// Taps on the reason card, to step to the next reason.
     @State private var reasonSkip = 0
+
+    /// The Live Activity keeps its three-minute window until it moves to v4 (Phase 7).
+    private static let liveActivitySeconds = 180.0
 
     init(profile: UserProfile?, source: String, onClose: @escaping () -> Void) {
         self.profile = profile
         self.source = source
         self.onClose = onClose
-        let pattern = UserDefaults.standard.string(forKey: "dx.sosPattern") ?? OrbData.bundled.sos.defaultPattern
-        let engine = OrbEngine(mode: .sos(seconds: OrbData.bundled.sos.sessionSeconds), pattern: pattern)
         var start = Date.now
         #if DEBUG
-        let elapsed = UserDefaults.standard.integer(forKey: "dx.sosElapsed")
-        start = start.addingTimeInterval(-Double(elapsed))
-        engine.skip(seconds: elapsed)
+        start = start.addingTimeInterval(-Double(UserDefaults.standard.integer(forKey: "dx.sosElapsed")))
         #endif
-        _engine = State(initialValue: engine)
         _startedAt = State(initialValue: start)
     }
 
     var body: some View {
         ZStack {
-            Color.black.ignoresSafeArea()
             switch stage {
-            case .session, .timeUp: sessionView
-            case .passed: passedView
+            case .session: sessionView
+            case .passed: PassedView(profile: profile, startedAt: startedAt, endedAt: endedAt ?? .now,
+                                     ridden: ridden, onDone: close)
             case .slipped: slippedView
             }
         }
-        // The orb is specified for a pure black canvas, so the whole SOS stays dark.
-        .preferredColorScheme(.dark)
         .onAppear(perform: begin)
         .onDisappear {
-            tearDown()
             if ended { NotificationCenter.default.post(name: .dxSOSEnded, object: nil) }
         }
         .onChange(of: scenePhase) { _, phase in
             // "It passed" on the Lock Screen already saved the craving; show the same screen as in the app.
-            if phase == .active, SOSState.consumeFinishedOutside() == .passed, stage == .session || stage == .timeUp {
-                tearDown()
+            if phase == .active, SOSState.consumeFinishedOutside() == .passed, stage == .session {
+                endedAt = .now
+                ended = true
                 stage = .passed
-            } else if phase == .background, stage == .session {
-                // Only a real background pauses: pulling down Control Center or a notification shouldn't.
-                pause()
+                celebrate.toggle()
             }
         }
-        .onChange(of: hapticsOn) { _, on in if !on { haptics.stop() } }
         .fullScreenCover(isPresented: $showCalmTools) {
             CalmToolsView(onClose: { showCalmTools = false }, fromSOS: true)
         }
@@ -94,185 +78,118 @@ struct CravingSOSView: View {
         .sensoryFeedback(DX.Haptic.gentle, trigger: slipFeedback)
     }
 
-    // MARK: Session
+    // MARK: F13 Session
 
     private var sessionView: some View {
-        VStack(spacing: 0) {
-            topBar(stage == .timeUp ? "Three minutes done" : "Riding it out")
-            // Half-open iPhone Duo: the orb on one side of the fold, the controls on the other (S18.14).
-            FoldAware {
-                GeometryReader { geo in
-                    VStack(spacing: 24) {
-                        orb(geo)
-                        OrbCaption(engine: engine)
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                }
-            } secondary: {
-                VStack(spacing: 0) {
-                    ScrollView {
-                        VStack(spacing: 24) { sessionExtras }
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, DX.Space.m)
-                    }
-                    .scrollBounceBehavior(.basedOnSize)
-                    if stage == .timeUp { outcomes }
-                }
-            } flat: {
-                VStack(spacing: 0) {
-                    GeometryReader { geo in
-                        ScrollView {
-                            VStack(spacing: 24) {
-                                orb(geo).padding(.top, stage == .timeUp ? DX.Space.s : DX.Space.l)
-                                OrbCaption(engine: engine)
-                                sessionExtras
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding(.bottom, DX.Space.m)
+        let ground = SOSColors.ocean
+        return ZStack {
+            ground.background.ignoresSafeArea()
+            SOSWater().ignoresSafeArea()
+            VStack(spacing: 0) {
+                topBar
+                ScrollView {
+                    VStack(spacing: 14) {
+                        JelliView(mood: .breathe, stage: CrewGrowth.stage(daysClear: daysClear), size: .hero)
+                            .offset(x: jelliIn || reduceMotion ? 0 : 90)
+                            .opacity(jelliIn ? 1 : 0)
+                            .frame(height: 220)
+                            .accessibilityHidden(true)
+                        SOSBreathWords()
+                            .foregroundStyle(SOSColors.cream)
+                        riddenLine
+                            .dxArrive(5)
+                        if let reason = currentReason {
+                            SOSReasonCard(reason: reason, canAdvance: reasons.count > 1) { reasonSkip += 1 }
+                                .padding(.top, 10)
+                                .dxArrive(6)
                         }
-                        .scrollBounceBehavior(.basedOnSize)
                     }
-                    if stage == .timeUp { outcomes }
+                    .padding(.horizontal, DX.Layout.gutter)
+                    .padding(.top, 8)
+                    .padding(.bottom, 16)
                 }
+                .scrollBounceBehavior(.basedOnSize)
+                actions
+                    .dxArrive(7)
             }
+            .dxReadableColumn(avoidingFold: false)
         }
-        .padding(.horizontal, DX.Space.m)
-        .dxReadableColumn(avoidingFold: false)
-        .padding(.bottom, DX.Space.xs)
+        .sosBreathHaptics(hapticsOn && stage == .session)
     }
 
-    /// After the three minutes the orb steps back so the person's own reason fits above the choices (S18.6).
-    private func orb(_ geo: GeometryProxy) -> some View {
-        let mini = stage == .timeUp
-        return BioOrbView(engine: engine, mini: mini,
-                          side: BioOrbView.side(mini: mini, available: geo.size.width, availableHeight: geo.size.height),
-                          onTap: coachMe)
-    }
-
-    /// Pause and Coach me during the session; the person's reason once it's done.
-    @ViewBuilder
-    private var sessionExtras: some View {
-        if stage == .session { controls }
-        if stage == .session, passedMinute { earlyWin }
-        if stage == .session, let profile { SOSProgramExtras(profile: profile) }
-        if stage == .timeUp, let reason = currentReason {
-            ReasonCard(reason: reason, canAdvance: reasons.count > 1) { reasonSkip += 1 }
-        }
-    }
-
-    private func topBar(_ title: LocalizedStringKey) -> some View {
+    private var topBar: some View {
         HStack {
+            HandOverChip(String(localized: "Xero passed you to Jelli")) {
+                XeroView(mood: .calm, stage: 1, points: 32, animate: false)
+                    .frame(width: 32, height: 32)
+                    .background(DX.Ground.apricot.background, in: Circle())
+                    .clipShape(Circle())
+            }
+            Spacer()
             Button(action: close) {
-                Image(systemName: "xmark").font(.system(size: 13, weight: .semibold)).foregroundStyle(DX.Palette.text2)
-                    .frame(width: 36, height: 36)
-                    .background(DX.Palette.surface1, in: Circle())
-                    .overlay(Circle().strokeBorder(DX.Palette.hairline))
+                Image(systemName: "xmark").font(.system(size: 18, weight: .bold))
+                    .foregroundStyle(SOSColors.cream)
+                    .frame(width: 44, height: 44)
             }
             .buttonStyle(.plain)
             .accessibilityLabel(Text("Close"))
-            Spacer()
-            Text(title).dxText(.micro)
-            Spacer()
-            Menu {
-                if stage == .session {
-                    Button("It passed", systemImage: "checkmark") { finish(.passed) }
-                    Button("I slipped", systemImage: "arrow.uturn.backward") { finish(.slipped) }
-                    Divider()
-                    Picker(selection: Binding(get: { patternID }, set: { choosePattern($0) })) {
-                        ForEach(OrbData.bundled.breathingPatterns) { p in
-                            Text("\(p.name) · \(p.counts)").tag(p.id)
-                        }
-                    } label: {
-                        Label("Breathing pattern", systemImage: "wind")
-                    }
-                    Button("Calm tools", systemImage: "leaf") { pause(); showCalmTools = true }
+        }
+        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+        .padding(.leading, 14).padding(.trailing, 10)
+        .padding(.top, 4)
+        .frame(minHeight: 48)
+    }
+
+    /// "Most cravings pass within a few minutes. Ride it with me. You've ridden 0:52." The time counts up.
+    private var riddenLine: some View {
+        TimelineView(.periodic(from: startedAt, by: 1)) { timeline in
+            let seconds = max(0, Int(timeline.date.timeIntervalSince(startedAt)))
+            let clock = String(format: "%d:%02d", seconds / 60, seconds % 60)
+            Text("Most cravings pass within a few minutes. Ride it with me. \(Text("You've ridden \(clock).").fontWeight(.bold).foregroundStyle(SOSColors.cream))")
+                .dxType(.body)
+                .foregroundStyle(SOSColors.ocean.muted)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.horizontal, 12)
+        }
+    }
+
+    private var actions: some View {
+        VStack(spacing: 8) {
+            // Side by side, or stacked when the text is too large for one row.
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 8) { passedButton; strongButton.fixedSize(horizontal: true, vertical: false) }
+                VStack(spacing: 8) { passedButton; strongButton.frame(maxWidth: .infinity) }
+            }
+            HStack(spacing: 6) {
+                ShareLink(item: String(localized: "Having a craving right now. Could you talk for five minutes?")) {
+                    Text("Text a friend")
                 }
-                Toggle("Voice guidance", isOn: $voiceOn)
-                Toggle("Haptics", isOn: $hapticsOn)
-            } label: {
-                Image(systemName: "ellipsis").font(.system(size: 14, weight: .semibold)).foregroundStyle(DX.Palette.text2)
-                    .frame(width: 36, height: 36)
-                    .background(DX.Palette.surface1, in: Circle())
-                    .overlay(Circle().strokeBorder(DX.Palette.hairline))
-            }
-            .accessibilityLabel(Text("Session options"))
-        }
-        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
-        .padding(.top, DX.Space.xs)
-    }
-
-    /// Pause or Resume, and Coach me (spec §5, labels from the data file).
-    private var controls: some View {
-        let labels = engine.data.labels
-        return ViewThatFits {
-            HStack(spacing: 10) { pauseButton(labels); coachButton(labels) }
-            VStack(spacing: 10) { pauseButton(labels); coachButton(labels) }
-        }
-        .dynamicTypeSize(...DynamicTypeSize.accessibility2)
-    }
-
-    private func pauseButton(_ labels: OrbData.Labels) -> some View {
-        Button {
-            if paused { resume() } else { pause() }
-        } label: {
-            Label(paused ? labels.resume : labels.pause, systemImage: paused ? "play.fill" : "pause.fill")
-        }
-        .buttonStyle(OrbButtonStyle(kind: .porcelain))
-    }
-
-    private func coachButton(_ labels: OrbData.Labels) -> some View {
-        Button(action: coachMe) {
-            Label(labels.coachButton, systemImage: "waveform")
-        }
-        .buttonStyle(OrbButtonStyle(kind: .moss))
-    }
-
-    /// After the first minute the wave is usually past its peak: one tap logs the win without waiting for the end.
-    private var passedMinute: Bool {
-        engine.data.sos.sessionSeconds - engine.session.sosRemaining >= 60
-    }
-
-    private var earlyWin: some View {
-        Button { finish(.passed) } label: {
-            Label("It's passing · log as ridden out", systemImage: "checkmark")
-                .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .body))
-                .foregroundStyle(DX.Palette.onAccent)
-                .padding(.horizontal, 18).frame(minHeight: 46)
-                .background(DX.Palette.sage, in: Capsule())
-        }
-        .buttonStyle(.plain)
-        .dynamicTypeSize(...DynamicTypeSize.accessibility2)
-        .transition(.opacity.combined(with: .scale(scale: 0.96)))
-    }
-
-    private var outcomes: some View {
-        VStack(spacing: DX.Space.xs) {
-            Button { finish(.passed) } label: { Text("Log as ridden out (+1)").frame(maxWidth: .infinity) }
-                .buttonStyle(.dxSage)
-            Button(action: anotherRound) { Text("Another three minutes").frame(maxWidth: .infinity) }
-                .buttonStyle(.dxSecondary)
-            ViewThatFits {
-                HStack(spacing: DX.Space.xs) { slippedButton; pingButton }
-                VStack(spacing: DX.Space.xs) { slippedButton; pingButton }
+                .buttonStyle(QuietLink())
+                Text(verbatim: "·").foregroundStyle(SOSColors.ocean.muted).accessibilityHidden(true)
+                Button("I slipped") { finish(.slipped) }
+                    .buttonStyle(QuietLink())
             }
         }
-        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
-        .padding(.top, DX.Space.xs)
+        .dynamicTypeSize(...DynamicTypeSize.accessibility2)
+        .padding(.horizontal, DX.Layout.gutter)
+        .padding(.bottom, DX.Space.xs)
     }
 
-    private var slippedButton: some View {
-        Button { finish(.slipped) } label: { Text("I slipped").frame(maxWidth: .infinity) }
-            .buttonStyle(.dxSecondary)
+    private var passedButton: some View {
+        Button("It passed") { finish(.passed) }
+            .buttonStyle(.dx(.primary, on: .ocean))
+            .lineLimit(1)
     }
 
-    private var pingButton: some View {
-        ShareLink(item: String(localized: "Having a craving right now. Could you talk for five minutes?")) {
-            Text("Ping a friend").frame(maxWidth: .infinity)
-        }
-        .buttonStyle(.dxSecondary)
+    /// More help when the wave is strong: the calm tools (decision 26).
+    private var strongButton: some View {
+        Button("Still strong") { showCalmTools = true }
+            .buttonStyle(SolidPill())
+            .lineLimit(1)
     }
 
-    // MARK: Your why (S18.6)
+    // MARK: Your why
 
     private var reasons: [Reason] {
         (profile?.reasons ?? []).sorted { $0.createdAt < $1.createdAt }
@@ -284,80 +201,18 @@ struct CravingSOSView: View {
         return DailyRhythm.reasonIndex(hasPhoto: reasons.map { $0.photo != nil }, dayNumber: cravings.count + reasonSkip).map { reasons[$0] }
     }
 
-    // MARK: It passed
-
-    private var wonTitle: String {
-        if let name = profile?.name, !name.isEmpty { return String(localized: "Wave survived, \(name).") }
-        return String(localized: "Wave survived.")
+    private var daysClear: Int {
+        guard let profile else { return 0 }
+        let stats = ProgressStats(quitDay: profile.quitDay, baselines: [], clock: DayClock(boundaryHour: profile.dayBoundaryHour))
+        return stats.isPrep(at: .now) ? 0 : stats.daysClear(at: .now)
     }
 
-    private var passedView: some View {
-        let count = CravingStats.passedThisWeek(cravings, now: .now)
-        return VStack(spacing: 0) {
-            ScrollView {
-                VStack(spacing: DX.Space.s) {
-                    Image(systemName: "checkmark")
-                        .font(.system(size: 34, weight: .bold))
-                        .foregroundStyle(DX.Palette.onAccent)
-                        .frame(width: 92, height: 92)
-                        .background(DX.Palette.sage, in: Circle())
-                        .accessibilityHidden(true)
-                        .padding(.top, DX.Space.xl)
-                    Text(wonTitle).dxText(.title).multilineTextAlignment(.center)
-                    Text("The craving peaked and passed, and you're still here. Each wave you ride out makes the next one a little quieter.")
-                        .dxText(.subtitle).multilineTextAlignment(.center)
-                    Text(count > 1 ? "+1 ridden out · \(count) this week" : "+1 ridden out · your first this week")
-                        .font(.custom(DX.Typeface.semibold, size: 13, relativeTo: .footnote))
-                        .foregroundStyle(DX.Palette.accentInk)
-                        .multilineTextAlignment(.center)
-                    HStack(spacing: 6) {
-                        ForEach(0..<7, id: \.self) { i in
-                            Circle().fill(i < count ? DX.Palette.sage : DX.Palette.track).frame(width: 22, height: 22)
-                        }
-                    }
-                    .accessibilityHidden(true)
-                    VStack(alignment: .leading, spacing: DX.Space.xs) {
-                        Text("What set it off? \(Text("· optional").foregroundStyle(DX.Palette.faint))").dxText(.micro)
-                        DXFlowLayout {
-                            ForEach(orderedTriggers, id: \.self) { t in
-                                DXSetChip(t.title, value: t, selection: singleTrigger)
-                            }
-                        }
-                        DXCravingSlider(value: $strength)
-                            .frame(height: 110)
-                            .padding(.top, DX.Space.s)
-                            .onChange(of: strength) { strengthTouched = true }
-                    }
-                    .padding(.top, DX.Space.l)
-                }
-            }
-            .scrollBounceBehavior(.basedOnSize)
-            Button("Done") {
-                CravingLog.annotate(startedAt: startedAt, trigger: trigger, intensity: strengthTouched ? strength : nil, in: context)
-                onClose()
-            }
-            .buttonStyle(.dxPrimary)
-            .padding(.top, DX.Space.xs)
-        }
-        .padding(.horizontal, DX.Space.m)
-        .dxReadableColumn()
-        .padding(.bottom, DX.Space.xs)
+    /// Waves ridden out so far, not counting this one.
+    private var ridden: Int {
+        cravings.filter { $0.outcome == .passed && $0.timestamp != startedAt }.count
     }
 
-    /// The person's onboarding triggers first, then the rest.
-    private var orderedTriggers: [Trigger] {
-        let mine = profile?.triggers ?? []
-        return mine + Trigger.allCases.filter { !mine.contains($0) }
-    }
-
-    private var singleTrigger: Binding<Set<Trigger>> {
-        Binding(
-            get: { trigger.map { [$0] } ?? [] },
-            set: { new in trigger = new.first { $0 != trigger } ?? (trigger.map(new.contains) == true ? trigger : nil) }
-        )
-    }
-
-    // MARK: I slipped
+    // MARK: F15 I slipped
 
     private var slippedView: some View {
         SlipFlow(entry: CravingLog.entry(startedAt: startedAt, in: context), profile: profile, onDone: onClose)
@@ -370,14 +225,9 @@ struct CravingSOSView: View {
         began = true
         _ = SOSState.consumeFinishedOutside()
         SOSState.startedAt = startedAt
-        wire(engine)
-        Task { await SOSLiveActivity.start(startedAt: startedAt, endsAt: endsAt) }
+        Task { await SOSLiveActivity.start(startedAt: startedAt, endsAt: startedAt.addingTimeInterval(Self.liveActivitySeconds)) }
         Analytics.track(.cravingSessionStarted(source: source))
-        if engine.session.finished {
-            stage = .timeUp
-        } else {
-            engine.start()
-        }
+        withAnimation(DX.Move.animation(DX.Move.settle.delay(0.2), reduceMotion: reduceMotion)) { jelliIn = true }
         #if DEBUG
         switch UserDefaults.standard.string(forKey: "dx.sosOutcome") {
         case "passed": finish(.passed)
@@ -387,85 +237,18 @@ struct CravingSOSView: View {
         #endif
     }
 
-    /// Connects the engine to the display clock, the voice and the haptics.
-    private func wire(_ engine: OrbEngine) {
-        clock.attach(engine, reduceMotion: reduceMotion)
-        coach.attach(engine)
-        engine.onEvent = { event in
-            switch event {
-            case let .phaseChanged(phase):
-                let pattern = engine.pattern
-                if hapticsOn {
-                    let total = Double(engine.data.sos.sessionSeconds)
-                    haptics.play(phase, pattern: pattern, progress: (total - Double(engine.session.sosRemaining)) / total)
-                }
-                AccessibilityNotification.Announcement(
-                    String(localized: "\(String(localized: String.LocalizationValue(phase.rawValue))), \(pattern.seconds(phase)) seconds")).post()
-            case let .coach(trigger):
-                if let line = engine.data.coachingLine(trigger: trigger) { coach.play(line, voice: voiceOn) }
-            case .finished:
-                coach.stop()
-                haptics.stop()
-                stage = .timeUp
-            }
-        }
-    }
-
-    private var endsAt: Date { Date.now.addingTimeInterval(Double(engine.session.sosRemaining)) }
-
-    private func coachMe() {
-        coach.play(engine.nextLine(), voice: voiceOn)
-    }
-
-    private func choosePattern(_ id: String) {
-        patternID = id
-        engine.switchPattern(to: id)
-    }
-
-    private func pause() {
-        guard stage == .session else { return }
-        paused = true
-        engine.pause()
-        coach.stop()
-        haptics.stop()
-    }
-
-    private func resume() {
-        paused = false
-        engine.start()
-        Task { await SOSLiveActivity.update(endsAt: endsAt) }
-    }
-
-    private func anotherRound() {
-        let next = OrbEngine(mode: .sos(seconds: engine.data.sos.sessionSeconds), pattern: patternID)
-        engine.onEvent = nil
-        engine = next
-        wire(next)
-        paused = false
-        stage = .session
-        next.start()
-        Task { await SOSLiveActivity.update(endsAt: endsAt) }
-    }
-
-    private func tearDown() {
-        coach.stop()
-        haptics.stop()
-        clock.stop()
-        engine.pause()
-    }
-
     private func close() {
-        if stage == .session || stage == .timeUp { finish(.closed) } else { onClose() }
+        if stage == .session { finish(.closed) } else { onClose() }
     }
 
     private func finish(_ outcome: CravingOutcome) {
         let end = Date.now
         CravingLog.record(outcome, startedAt: startedAt, endedAt: end, in: context)
         SOSState.startedAt = nil
-        tearDown()
         Task { await SOSLiveActivity.endAll() }
         Analytics.track(.cravingSessionEnded(outcome: outcome.rawValue, seconds: Int(end.timeIntervalSince(startedAt))))
         ended = true
+        endedAt = end
         switch outcome {
         case .passed:
             stage = .passed
@@ -480,70 +263,163 @@ struct CravingSOSView: View {
     }
 }
 
-/// One of the person's reasons, after the three minutes: their photo with the words over it, or the words alone.
-private struct ReasonCard: View {
-    let reason: Reason
-    let canAdvance: Bool
-    let next: () -> Void
+/// F14 Passed, on the sky: Jelli cheers (Celebrate), the waves tile ticks up with a "+1",
+/// an optional trigger, and the hand back to Xero.
+private struct PassedView: View {
+    let profile: UserProfile?
+    let startedAt: Date
+    let endedAt: Date
+    /// Waves ridden out before this one.
+    let ridden: Int
+    let onDone: () -> Void
+
+    @Environment(\.modelContext) private var context
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var trigger: Trigger?
+    @State private var shown = false
+    @State private var bumped = false
+
+    private let ground = SOSColors.sky
 
     var body: some View {
-        Button(action: next) {
-            Group {
-                if let data = reason.photo, let image = UIImage(data: data) {
-                    // As an overlay on a fixed-height frame, the photo fills the card without widening the layout.
-                    Color.clear
-                        .frame(height: 168)
-                        .overlay { Image(uiImage: image).resizable().scaledToFill() }
-                        .overlay {
-                            LinearGradient(colors: [.clear, .black.opacity(0.75)], startPoint: .center, endPoint: .bottom)
-                        }
-                        .overlay(alignment: .bottomLeading) { words.padding(DX.Space.s) }
-                        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
-                } else {
-                    words
-                        .padding(DX.Space.s)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(DX.Palette.surface1, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+        ZStack {
+            ground.background.ignoresSafeArea()
+            RisingBubbles().ignoresSafeArea()
+            VStack(spacing: 0) {
+                ScrollView {
+                    VStack(spacing: 10) {
+                        JelliView(mood: .cheer, stage: 2, size: .hero)
+                            .scaleEffect(shown || reduceMotion ? 1 : DX.Move.celebrateFromScale)
+                            .offset(y: shown || reduceMotion ? 0 : 60)
+                            .opacity(shown ? 1 : 0)
+                            .frame(height: 230, alignment: .bottom)
+                            .accessibilityHidden(true)
+                        Text("You rode it out.")
+                            .dxType(.large)
+                            .foregroundStyle(ground.ink)
+                            .multilineTextAlignment(.center)
+                            .accessibilityAddTraits(.isHeader)
+                            .dxArrive(3)
+                        Text("That wave lasted \(lasted). Each one you ride makes the next a little quieter.")
+                            .dxType(.body)
+                            .foregroundStyle(ground.muted)
+                            .multilineTextAlignment(.center)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .padding(.horizontal, 8)
+                            .dxArrive(4)
+                        wavesTile.padding(.top, 6).dxArrive(5)
+                        triggerCard.dxArrive(7)
+                        handBack.dxArrive(8)
+                    }
+                    .padding(.horizontal, DX.Layout.gutter)
+                    .padding(.top, DX.Space.m)
+                    .padding(.bottom, DX.Space.m)
                 }
+                .scrollBounceBehavior(.basedOnSize)
+                Button("Back to my day") {
+                    CravingLog.annotate(startedAt: startedAt, trigger: trigger, intensity: nil, in: context)
+                    onDone()
+                }
+                .buttonStyle(.dx(.primary, on: .sky))
+                .padding(.horizontal, DX.Layout.buttonGutter)
+                .padding(.bottom, DX.Space.xs)
+                .dxArrive(9)
             }
+            .dxReadableColumn()
         }
-        .buttonStyle(.plain)
-        .disabled(!canAdvance)
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text("Your reason: \(reason.text)"))
-        .accessibilityHint(canAdvance ? Text("Shows your next reason") : Text(verbatim: ""))
+        .task {
+            withAnimation(DX.Move.animation(DX.Move.celebrate, reduceMotion: reduceMotion)) { shown = true }
+            try? await Task.sleep(for: .seconds(reduceMotion ? 0 : 1.2))
+            withAnimation(DX.Move.animation(DX.Move.celebrate, reduceMotion: reduceMotion)) { bumped = true }
+        }
     }
 
-    private var words: some View {
-        Text(verbatim: reason.text)
-            .font(.custom(DX.Typeface.semibold, size: 17, relativeTo: .body))
-            .foregroundStyle(.white)
-            .multilineTextAlignment(.leading)
-            .fixedSize(horizontal: false, vertical: true)
+    /// "2 minutes, 10 seconds".
+    private var lasted: String {
+        let seconds = max(1, Int(endedAt.timeIntervalSince(startedAt).rounded()))
+        let units: Set<Duration.UnitsFormatStyle.Unit> = seconds >= 60 ? [.minutes, .seconds] : [.seconds]
+        return Duration.seconds(seconds).formatted(.units(allowed: units, width: .wide))
+    }
+
+    private var wavesTile: some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 0) {
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                    Text(verbatim: "\(bumped ? ridden + 1 : ridden)")
+                        .dxType(.large)
+                        .monospacedDigit()
+                        .contentTransition(.numericText())
+                    Text(verbatim: "+1")
+                        .dxFont(16, weight: 700, style: .body)
+                        .foregroundStyle(DX.Fill.green)
+                        .opacity(bumped ? 1 : 0)
+                        .scaleEffect(bumped ? 1 : 0.5)
+                        .offset(y: bumped ? 0 : 8)
+                        .accessibilityHidden(true)
+                }
+                Text("waves ridden out").dxType(.footnote).foregroundStyle(ground.muted)
+            }
+            Spacer(minLength: 0)
+        }
+        .foregroundStyle(ground.ink)
+        .padding(.horizontal, 16).padding(.vertical, 14)
+        .background(SOSColors.skyCard, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text("\(ridden + 1) waves ridden out"))
+    }
+
+    private var triggerCard: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("What set it off? \(Text("· optional").fontWeight(.medium).foregroundStyle(ground.muted))")
+                .dxFont(16, weight: 700, style: .body)
+                .foregroundStyle(ground.ink)
+            TriggerPicker(mine: profile?.triggers ?? [], selection: $trigger,
+                          fill: SOSColors.skyChip, ink: ground.ink,
+                          selectedFill: ground.ink, selectedInk: ground.background)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 16).padding(.vertical, 14)
+        .background(SOSColors.skyCard, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+    }
+
+    /// The hand back: Xero's avatar and one line in Xero's voice.
+    private var handBack: some View {
+        HStack(spacing: 10) {
+            XeroView(mood: .cheer, stage: 1, size: .avatar, animate: false)
+                .background(DX.Ground.apricot.background, in: Circle())
+                .clipShape(Circle())
+                .accessibilityHidden(true)
+            Text("Back to Xero. I rose a little while you were out.")
+                .dxType(.footnote)
+                .foregroundStyle(ground.ink)
+                .fixedSize(horizontal: false, vertical: true)
+            Spacer(minLength: 0)
+        }
     }
 }
 
-/// The orb screen's two buttons: porcelain for Pause and Resume, moss for Coach me.
-private struct OrbButtonStyle: ButtonStyle {
-    enum Kind { case porcelain, moss }
-    let kind: Kind
-
+/// "Still strong": the solid ocean fill, cream text, 58 pt.
+private struct SolidPill: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .labelStyle(OrbButtonLabel())
-            .font(.custom(DX.Typeface.bold, size: 13, relativeTo: .subheadline))
-            .foregroundStyle(kind == .porcelain ? Color.black : Color(orbHex: OrbData.bundled.tokens.sage))
-            .padding(.vertical, 14).padding(.horizontal, 20)
-            .background(kind == .porcelain ? Color(orbHex: OrbData.bundled.tokens.porcelain) : Color(orbHex: OrbData.bundled.tokens.moss), in: Capsule())
-            .opacity(configuration.isPressed ? 0.8 : 1)
+            .dxFont(16, weight: 600, style: .body)
+            .foregroundStyle(SOSColors.cream)
+            .padding(.horizontal, 18)
+            .frame(minHeight: DX.Layout.buttonHeight)
+            .background(SOSColors.solid, in: Capsule())
+            .opacity(configuration.isPressed ? 0.85 : 1)
     }
 }
 
-private struct OrbButtonLabel: LabelStyle {
+/// The quiet row under the actions: "Text a friend · I slipped".
+private struct QuietLink: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
-        HStack(spacing: 8) {
-            configuration.icon.font(.system(size: 12, weight: .bold))
-            configuration.title
-        }
+        configuration.label
+            .dxFont(14, weight: 600, style: .footnote)
+            .foregroundStyle(SOSColors.cream)
+            .padding(.horizontal, 10)
+            .frame(minHeight: DX.Layout.touchTarget)
+            .contentShape(Rectangle())
+            .opacity(configuration.isPressed ? 0.7 : 1)
     }
 }

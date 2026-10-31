@@ -82,7 +82,6 @@ struct ProgramTodayCard: View {
 
     @Environment(\.modelContext) private var context
     @Environment(Entitlement.self) private var entitlement
-    @Environment(\.colorScheme) private var colorScheme
     @State private var open: SessionOpen?
     @State private var upgradeTitle: String?
     @State private var showPaywall = false
@@ -138,86 +137,36 @@ struct ProgramTodayCard: View {
         open = SessionOpen(id: id)
     }
 
+    /// The green lesson card (F08 afternoon): "TODAY · DAY 3 · 3 MIN", the title, and a chevron.
     @ViewBuilder
     private func card(_ today: ProgramToday) -> some View {
-        let ink = DX.Palette.onPrimary
-        let accent = Color(light: 0xBCC388, dark: 0x55621F)
-        let shape = RoundedRectangle(cornerRadius: DX.Radius.hero, style: .continuous)
-        VStack(alignment: .leading, spacing: 10) {
-            switch today.kind {
-            case let .open(id, inProgress, needsUpgrade):
-                HStack {
-                    Text(verbatim: "\(today.label) · \(today.minutes) min").dxText(.micro, color: accent)
-                    Spacer()
-                    if needsUpgrade { badge("Pro") }
-                }
-                Text(verbatim: today.title).font(.custom(DX.Typeface.bold, size: 22, relativeTo: .title2)).tracking(-0.4).foregroundStyle(ink)
-                    .fixedSize(horizontal: false, vertical: true)
-                if today.prepRunsOver {
-                    Text("Finish prep when you're ready. Day Xero starts the morning after.")
-                        .font(.custom(DX.Typeface.regular, size: 14, relativeTo: .subheadline)).foregroundStyle(ink.opacity(0.7))
-                }
+        switch today.kind {
+        case let .open(id, inProgress, needsUpgrade):
+            let detail: String? = needsUpgrade ? String(localized: "Unlock \(today.label)")
+                : today.prepRunsOver ? String(localized: "Finish prep when you're ready. Day Xero starts the morning after.")
+                : inProgress ? String(localized: "Xero saved your place.") : nil
+            ColourCard(kicker: String(localized: "Today · \(today.label) · \(today.minutes) min"), title: today.title,
+                       detail: detail, fill: ColourCard.lesson) {
                 if needsUpgrade {
-                    button(String(localized: "Unlock \(today.label)"), systemImage: "lock.open") {
-                        Paywalls.present(.unlockProgramDay, params: ["day": id]) { outcome in
-                            switch outcome {
-                            case .fallback: upgradeTitle = today.title
-                            case .unlocked: entitlement.grant()
-                            case .closed: break
-                            }
+                    Paywalls.present(.unlockProgramDay, params: ["day": id]) { outcome in
+                        switch outcome {
+                        case .fallback: upgradeTitle = today.title
+                        case .unlocked: entitlement.grant()
+                        case .closed: break
                         }
                     }
                 } else {
-                    button(inProgress ? String(localized: "Continue") : String(localized: "Start · \(today.minutes) min"),
-                           systemImage: "play.fill") { open = SessionOpen(id: id) }
+                    open = SessionOpen(id: id)
                 }
-            case let .waiting(next):
-                Text(today.mission == nil ? "Up next" : "Today's mission").dxText(.micro, color: accent)
-                if let mission = today.mission {
-                    Text(verbatim: mission).font(.custom(DX.Typeface.semibold, size: 18, relativeTo: .title3)).foregroundStyle(ink)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                Label {
-                    Text(verbatim: next).dxText(.subtitle, color: ink.opacity(0.7))
-                } icon: {
-                    Image(systemName: "clock").foregroundStyle(ink.opacity(0.5))
-                }
-            case .complete:
-                Text("Program complete").dxText(.micro, color: accent)
-                Text("Program complete. Replay any session.").font(.custom(DX.Typeface.bold, size: 20, relativeTo: .title3))
-                    .foregroundStyle(ink)
             }
+            .accessibilityHint(needsUpgrade ? Text("Shows how to unlock it") : Text(inProgress ? "Continues the session" : "Starts the session"))
+        case let .waiting(next):
+            ColourCard(kicker: today.mission == nil ? String(localized: "Up next") : String(localized: "Today's mission"),
+                       title: today.mission ?? next, detail: today.mission == nil ? nil : next,
+                       fill: ColourCard.lesson, action: nil)
+        case .complete:
+            ColourCard(kicker: String(localized: "Program complete"), title: String(localized: "Replay any session."),
+                       detail: nil, fill: ColourCard.lesson, action: nil)
         }
-        .padding(DX.Space.l)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background {
-            ZStack(alignment: .bottom) {
-                shape.fill(DX.Palette.primary)
-                Hills(still: true).frame(height: 64).opacity(0.55)
-                    .environment(\.colorScheme, colorScheme == .dark ? .light : .dark)
-            }
-            .clipShape(shape)
-        }
-        .shadow(color: DX.Palette.sage.opacity(0.15), radius: 20)
-        .shadow(color: DX.Palette.shadow, radius: 24, y: 12)
-    }
-
-    private func badge(_ text: LocalizedStringKey) -> some View {
-        Text(text).font(.custom(DX.Typeface.bold, size: 10, relativeTo: .caption2)).textCase(.uppercase)
-            .foregroundStyle(DX.Palette.onAccent)
-            .padding(.vertical, 4).padding(.horizontal, 10)
-            .background(DX.Palette.sage, in: Capsule())
-    }
-
-    private func button(_ title: String, systemImage: String, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            Label(title, systemImage: systemImage)
-                .font(.custom(DX.Typeface.semibold, size: 15, relativeTo: .subheadline))
-                .foregroundStyle(DX.Palette.primary)
-                .frame(maxWidth: .infinity, minHeight: DX.Size.compactButtonHeight)
-                .background(DX.Palette.onPrimary, in: Capsule())
-        }
-        .buttonStyle(.plain)
-        .padding(.top, DX.Space.xs)
     }
 }
