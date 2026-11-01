@@ -98,6 +98,7 @@
       gap: { label: 'Gap between items', kind: 'number', options: [0, 4, 8, 12], unit: ' pt', default: 8 },
       padX: { label: 'Side padding', kind: 'number', options: [0, 16, 20, 22, 24], unit: ' pt', default: 16 },
       padTop: { label: 'Top padding', kind: 'number', options: [0, 4, 8, 12], unit: ' pt', default: 0 },
+      padBottom: { label: 'Bottom padding', kind: 'number', options: [0, 4, 8, 12], unit: ' pt', default: 0 },
       horizon: { label: 'Horizon behind', kind: 'select', default: 'none', options: [['none', 'None'], ['path', 'Path (first run)'], ['dawn', 'Dawn'], ['sea', 'Sea']] },
       horizonOpacity: { label: 'Horizon strength', kind: 'number', options: [0.35, 0.45, 0.55, 0.7, 1], default: 0.55 },
       horizonHeight: { label: 'Horizon height', kind: 'number', options: [120, 150, 180, 220], unit: ' pt', default: 150 },
@@ -108,7 +109,7 @@
       const art = p.horizon !== 'none'
         ? `<div style="position:absolute;left:0;right:0;bottom:-${below}px;height:${p.horizonHeight}px;opacity:${p.horizonOpacity};line-height:0;pointer-events:none;overflow:hidden">${Lab.art(p.horizon === 'dawn' ? 'scene:horizon' : 'scene:horizon:' + p.horizon, { width: ctx.width || 402, height: p.horizonHeight, scene: { clarity: 60, fit: 'bottom' } })}</div>`
         : '';
-      return `<div style="position:relative;flex:none;padding:${p.padTop}px ${p.padX}px 0">${art}<div style="position:relative;display:flex;flex-direction:column;align-items:stretch;gap:${p.gap}px">${kids()}</div></div>`;
+      return `<div style="position:relative;flex:none;padding:${p.padTop}px ${p.padX}px ${p.padBottom}px">${art}<div style="position:relative;display:flex;flex-direction:column;align-items:stretch;gap:${p.gap}px">${kids()}</div></div>`;
     },
   });
 
@@ -506,7 +507,7 @@
       const char = (name, size) => `<div style="line-height:0;flex:none">${Lab.art(name + ':' + p.mood, { width: size, height: size, stage: p.stage })}</div>`;
       const crew = p.crew === 'xero' ? char('xero', p.xeroSize) : p.crew === 'crew' ? char('jelli', 88) + char('xero', 140) + char('glim', 88) : '';
       const close = p.close ? `<div role="button" aria-label="Close" style="position:absolute;right:10px;top:50px;width:44px;height:44px;border-radius:50%;background:rgba(255,248,238,0.85);display:flex;align-items:center;justify-content:center">${Lab.icon('xmark', 18, Lab.NAVY)}</div>` : '';
-      return `<div style="position:relative;flex:none;height:${H}px;margin:0 -${p.bleed}px;overflow:hidden">
+      return `<div style="position:relative;flex:none;align-self:stretch;height:${H}px;margin:0 -${p.bleed}px;overflow:hidden">
         <div style="position:absolute;inset:0;line-height:0">${hero}</div>
         <div style="position:absolute;left:0;right:0;bottom:6px;display:flex;justify-content:center;align-items:flex-end;gap:4px">${crew}</div>
         ${p.confetti !== 'none' ? confettiSVG(W, H, +p.confetti) : ''}${close}</div>`;
@@ -779,11 +780,10 @@
             ]),
           loading ? null : h('paywallPlanRow', 'plan-lifetime', { title: 'Lifetime', detail: 'Pay once', price: PRICE.lifetime, period: 'one time', selected: plan === 'lifetime' }),
         ]),
-        h('paywallFooter', 'footer', { gap: 8, padX: 16, horizon: 'path' }, [
+        h('paywallFooter', 'footer', { gap: 8, padX: 16, padBottom: 8, horizon: 'path' }, [
           h('button', 'cta', { label: loading ? 'Loading prices…' : CTA[plan], disabled: loading, alts: { label: CTA_ALTS } }),
           due,
           termsNode(h, plan),
-          h('spacer', 'footer-bottom', { size: 8 }),
         ]),
       ]);
     },
