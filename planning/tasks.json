@@ -2,14 +2,15 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-11-01T19:44:57.548Z"
+    "updated": "2026-11-01T19:50:21.768Z"
   },
   "now": {
     "section": "S27",
-    "task": "S27.10",
+    "task": "S27.16",
     "waiting_on_milan": [
-      "Milan: sign off Wave 3 in the Screen Lab (version 7, What's new tab)",
-      "Milan: App Store Connect: privacy URL, 7-day trial, lifetime $99.99, win-back, grace period"
+      "Milan: sign off Wave 4 in the Screen Lab (version 8, What's new tab; try Text size AX3 and Appearance Dark)",
+      "Milan: App Store Connect: privacy URL, 7-day trial, lifetime $99.99, win-back, grace period",
+      "Milan: Cloudflare dashboard: fix or turn off non-production Worker builds"
     ]
   },
   "sections": [
@@ -2736,24 +2737,24 @@
         {
           "id": "S27.16",
           "title": "Rank 16 · Xero grows: visible stages 1–4, sky clarity by days, distinct art and fact per milestone, stage sheet in the lab.",
-          "status": "in_progress",
-          "notes": "milestone is one template × 11; Xero identical days 1–14 and 30–365. CrewGrowth, XeroView, HorizonScene, MilestoneViews. Wave 4.",
+          "status": "awaiting_signoff",
+          "notes": "milestone is one template × 11; Xero identical days 1–14 and 30–365. CrewGrowth, XeroView, HorizonScene, MilestoneViews. Wave 4.\nLab v8: Xero stages 1–4 at CrewGrowth thresholds (<7, <14, <28, 28+), each milestone with its own sky, token and company; new 'crew-stages' screen (How Xero grows).",
           "created": "2026-11-01T18:37:56.753Z",
           "completed": null
         },
         {
           "id": "S27.17",
           "title": "Rank 17 · Dusk variant of the dawn hero for dark mode; lab renders sheets over their real parent.",
-          "status": "in_progress",
-          "notes": "Hero art at full brightness over plum on 5 screens; 14 sheet screens never reviewed as they will look. Wave 4.",
+          "status": "awaiting_signoff",
+          "notes": "Hero art at full brightness over plum on 5 screens; 14 sheet screens never reviewed as they will look. Wave 4.\nLab v8: dusk-dawn heroes in dark mode (welcome, Quit Day, pledge, milestone, finale, Today); Settings sheets render over Progress (dimmed, pushed back) instead of black.",
           "created": "2026-11-01T18:37:56.801Z",
           "completed": null
         },
         {
           "id": "S27.18",
           "title": "Rank 18 · SOS break menu / lifts / 'use your gum' row; show mission data back; sessions at days 45, 60, 90 and a weekly Glim check-in.",
-          "status": "in_progress",
-          "notes": "Program promises SOS options it does not show; Day 31 cliff. CravingSOSView, MissionPrompts, program.json, NotificationPlan. Wave 4.",
+          "status": "awaiting_signoff",
+          "notes": "Program promises SOS options it does not show; Day 31 cliff. CravingSOSView, MissionPrompts, program.json, NotificationPlan. Wave 4.\nLab v8: SOS 'menu' and 'menu-before' states with the saved break menu and 'Use your gum or a lozenge now'; Passed asks what helped; follow-ups show numbers back (peaks 8 → 6 → 4, morning gaps); program 'After' phase with boosters at days 45/60/90 (new content to write) and a weekly Glim check-in; slip rehearsal still on Day 28 (note recommends days 8–11).",
           "created": "2026-11-01T18:37:56.854Z",
           "completed": null
         },
@@ -2768,8 +2769,8 @@
         {
           "id": "S27.20",
           "title": "Rank 20 · Accessibility and convention debt: Dynamic Type (AX3) states and motion tokens in the lab; 44 pt targets; one hold duration; reasons under disabled CTAs; red destructive buttons; merged day-end picker.",
-          "status": "in_progress",
-          "notes": "Move.swift, Buttons4.swift, ProgramView tabs, MilestoneViews segments, DayEndSettings. Wave 4.",
+          "status": "awaiting_signoff",
+          "notes": "Move.swift, Buttons4.swift, ProgramView tabs, MilestoneViews segments, DayEndSettings. Wave 4.\nLab v8: Text size option (AX3) in the top bar; motion tokens from Move.swift; one 1-second hold; disabled buttons show a reason; red destructive buttons; 44 pt targets; one day-end picker. AX3 shows milestone stat tiles overflowing: fix in Swift (stack the tiles at accessibility sizes).",
           "created": "2026-11-01T18:37:56.997Z",
           "completed": null
         }
@@ -2777,6 +2778,51 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-11-01T19:50:21.768Z",
+      "type": "now",
+      "message": "Now: S27 / S27.16"
+    },
+    {
+      "time": "2026-11-01T19:50:21.717Z",
+      "type": "note",
+      "message": "S27.20: Lab v8: Text size option (AX3) in the top bar; motion tokens from Move.swift; one 1-second hold; disabled buttons show a reason; red destructive buttons; 44 pt targets; one day-end picker. AX3 shows milestone stat tiles overflowing: fix in Swift (stack the tiles at accessibility sizes)."
+    },
+    {
+      "time": "2026-11-01T19:50:21.657Z",
+      "type": "note",
+      "message": "S27.18: Lab v8: SOS 'menu' and 'menu-before' states with the saved break menu and 'Use your gum or a lozenge now'; Passed asks what helped; follow-ups show numbers back (peaks 8 → 6 → 4, morning gaps); program 'After' phase with boosters at days 45/60/90 (new content to write) and a weekly Glim check-in; slip rehearsal still on Day 28 (note recommends days 8–11)."
+    },
+    {
+      "time": "2026-11-01T19:50:21.588Z",
+      "type": "note",
+      "message": "S27.17: Lab v8: dusk-dawn heroes in dark mode (welcome, Quit Day, pledge, milestone, finale, Today); Settings sheets render over Progress (dimmed, pushed back) instead of black."
+    },
+    {
+      "time": "2026-11-01T19:50:21.520Z",
+      "type": "note",
+      "message": "S27.16: Lab v8: Xero stages 1–4 at CrewGrowth thresholds (<7, <14, <28, 28+), each milestone with its own sky, token and company; new 'crew-stages' screen (How Xero grows)."
+    },
+    {
+      "time": "2026-11-01T19:50:21.455Z",
+      "type": "status",
+      "message": "S27.20 in_progress → awaiting_signoff"
+    },
+    {
+      "time": "2026-11-01T19:50:21.387Z",
+      "type": "status",
+      "message": "S27.18 in_progress → awaiting_signoff"
+    },
+    {
+      "time": "2026-11-01T19:50:21.330Z",
+      "type": "status",
+      "message": "S27.17 in_progress → awaiting_signoff"
+    },
+    {
+      "time": "2026-11-01T19:50:21.277Z",
+      "type": "status",
+      "message": "S27.16 in_progress → awaiting_signoff"
+    },
     {
       "time": "2026-11-01T19:44:57.548Z",
       "type": "note",
