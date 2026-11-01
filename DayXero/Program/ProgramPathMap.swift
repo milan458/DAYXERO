@@ -2,7 +2,8 @@ import DayXeroCore
 import SwiftUI
 
 /// One phase of the program as a winding path, bottom to top (decision 31): done stops ticked on a green
-/// road, today's a coral play button with a person walking beside it, later ones locked, and the phase's
+/// road, today's a coral play button with Xero beside it (the crew replaced the person figure, S27.15), later
+/// ones locked, and the phase's
 /// last session as its milestone. Labels are titles only; "Today · 3 min" sits on today's stop.
 struct ProgramPathMap: View {
     struct Stop: Identifiable {
@@ -56,9 +57,10 @@ struct ProgramPathMap: View {
                 if let todayIndex {
                     let p = points[todayIndex]
                     let leftSide = p.x < proxy.size.width / 2
-                    PersonFigure(.walk, height: 92, shirt: 0xFFC38A)
-                        .position(x: leftSide ? max(p.x - 74, 40) : min(p.x + 74, proxy.size.width - 40), y: p.y - 18)
+                    XeroView(mood: .hello, size: .card)
+                        .position(x: leftSide ? max(p.x - 74, 44) : min(p.x + 74, proxy.size.width - 44), y: p.y - 18)
                         .allowsHitTesting(false)
+                        .accessibilityHidden(true)
                 }
             }
         }

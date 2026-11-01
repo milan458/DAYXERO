@@ -28,10 +28,10 @@ struct CalmToolsView: View {
                 CalmHeaderArt()
                     .frame(maxWidth: .infinity)
                     .padding(.top, DX.Space.xs)
-                MarkedTitle(marking: String(localized: "Calm"), trail: String(localized: " tools"), mark: .circle,
-                            color: DX.Mark.color(on: ground))
+                // A plain title: the hand-drawn mark is kept for Today's greeting, milestones, the finale and onboarding (S27.15).
+                Text("Calm tools")
                     .dxType(.large).foregroundStyle(ground.ink)
-                    .padding(.leading, 6)
+                    .accessibilityAddTraits(.isHeader)
                 Text("Short things to do instead of reaching for nicotine.").dxType(.body).foregroundStyle(ground.muted)
                     .padding(.bottom, DX.Space.xs)
                 ForEach(CalmTool.allCases) { tool in
@@ -63,7 +63,8 @@ struct CalmToolsView: View {
     }
 }
 
-/// The calm tools header: a person sitting on a cloud, a dotted halo breathing on the 4 in, 6 out clock.
+/// The calm tools header: Glim breathing on a cloud, a dotted halo breathing on the 4 in, 6 out clock. Glim replaced the
+/// person figure so the app has one illustration language, the crew (S27.15).
 struct CalmHeaderArt: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -80,8 +81,8 @@ struct CalmHeaderArt: View {
                     .fill(DX.Fill.cream)
                     .frame(width: 168, height: 56)
                     .offset(y: 56)
-                PersonFigure(.meditate, height: 112, shirt: 0xFF8FB8)
-                    .offset(y: 4)
+                GlimView(mood: .breathe, stage: 1, points: 104, animate: !reduceMotion)
+                    .offset(y: 0)
             }
             .frame(width: 240, height: 196)
         }
@@ -89,7 +90,7 @@ struct CalmHeaderArt: View {
     }
 }
 
-/// The cloud the person sits on, from the canvas.
+/// The cloud Glim rests on, from the canvas.
 private struct CalmCloud: Shape {
     func path(in rect: CGRect) -> Path {
         SVGPath.path("M16 52 C4 52 0 34 14 30 C14 14 34 8 44 18 C50 2 76 0 84 16 C92 4 118 4 124 20 C136 12 156 18 154 34 C168 34 170 52 156 52 Z")
@@ -209,7 +210,7 @@ struct CalmToolPlayer: View {
         .padding(.horizontal, DX.Space.m)
         .dxReadableColumn()
         .padding(.bottom, DX.Space.xs)
-        .modifier(PlayerCanvas(orb: tool.orbPattern != nil && !finished))
+        .background(Read4.background.ignoresSafeArea())
         .onAppear {
             let record = ToolUse(tool: tool.rawValue, startedAt: startedAt)
             context.insert(record)
@@ -287,12 +288,14 @@ struct CalmToolPlayer: View {
                 }
             }
             .padding(.top, DX.Space.xs)
-            Spacer()
+            // The button sits right under the content, not pinned to the bottom (S27.14).
             Button(step + 1 < Grounding.steps.count ? "Next: \(Grounding.steps[step + 1].count) \(String(localized: Grounding.steps[step + 1].sense))" : "Done") {
                 ticked = 0
                 if step + 1 < Grounding.steps.count { step += 1 } else { finish(early: false) }
             }
             .buttonStyle(.dx(.primary, on: .reading))
+            .padding(.top, DX.Space.s)
+            Spacer(minLength: 0)
         }
     }
 
@@ -309,8 +312,9 @@ struct CalmToolPlayer: View {
                     V4ToggleChip("write my own", isOn: $writingOwn)
                 }
                 if writingOwn { V4TextField("The thought", prompt: "I'll never manage", text: $ownThought) }
-                Spacer()
                 Button("Next") { step = 1 }.buttonStyle(.dx(.primary, on: .reading)).disabled(chosenThought == nil)
+                    .padding(.top, DX.Space.s)
+                Spacer(minLength: 0)
             case 1:
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Say it this way").v4Text(.micro)
@@ -323,13 +327,15 @@ struct CalmToolPlayer: View {
                 .overlay(RoundedRectangle(cornerRadius: 26, style: .continuous).strokeBorder(Read4.hairline))
                 .padding(.top, DX.Space.l)
                 Text("It's a thought, not an order. You can let it sit there while you get on with your day.").v4Text(.subtitle)
-                Spacer()
                 Button("Next") { step = 2 }.buttonStyle(.dx(.primary, on: .reading))
+                    .padding(.top, DX.Space.s)
+                Spacer(minLength: 0)
             default:
-                Spacer()
                 timedBreaths
-                Spacer()
+                    .padding(.top, DX.Space.l)
                 Button("Done") { finish(early: false) }.buttonStyle(.dx(.primary, on: .reading))
+                    .padding(.top, DX.Space.s)
+                Spacer(minLength: 0)
             }
         }
     }
@@ -356,17 +362,19 @@ struct CalmToolPlayer: View {
     private var anchor: some View {
         let current = DropAnchor.steps[min(step, DropAnchor.steps.count - 1)]
         return VStack(alignment: .leading, spacing: DX.Space.s) {
-            Image(systemName: "figure.stand").font(.system(size: 30)).foregroundStyle(Read4.accent)
-                .frame(width: 70, height: 70).background(Read4.accentSoft, in: Circle())
+            Image(systemName: "figure.stand").font(.system(size: 36)).foregroundStyle(Read4.accent)
+                .frame(width: DX.CharacterSize.card.rawValue, height: DX.CharacterSize.card.rawValue)
+                .background(Read4.accentSoft, in: Circle())
                 .padding(.top, DX.Space.l)
                 .accessibilityHidden(true)
             Text(current.title).v4Text(.title)
             Text(current.body).dxFont(16, weight: 400, style: .body).foregroundStyle(Read4.muted)
-            Spacer()
             Button(step + 1 < DropAnchor.steps.count ? "Next" : "Done") {
                 if step + 1 < DropAnchor.steps.count { step += 1 } else { finish(early: false) }
             }
             .buttonStyle(.dx(.primary, on: .reading))
+            .padding(.top, DX.Space.s)
+            Spacer(minLength: 0)
         }
     }
 
@@ -381,10 +389,11 @@ struct CalmToolPlayer: View {
     // MARK: Done
 
     private var done: some View {
+        // Top-anchored, with the buttons right under the choices (S27.14).
         VStack(spacing: DX.Space.s) {
-            Spacer()
             Image(systemName: "checkmark").font(.system(size: 30, weight: .bold)).foregroundStyle(Read4.accent)
                 .frame(width: 76, height: 76).background(Read4.accentSoft, in: Circle())
+                .padding(.top, DX.Space.xl)
                 .accessibilityHidden(true)
             Text("Nicely done").v4Text(.title)
             Text("A bit calmer? \(Text("· optional").foregroundStyle(Read4.faint))").v4Text(.subtitle)
@@ -395,12 +404,13 @@ struct CalmToolPlayer: View {
             if answered == false {
                 Text("That's okay. Try another tool, or ride it out with Craving SOS.").v4Text(.subtitle).multilineTextAlignment(.center)
             }
-            Spacer()
             Button("Done") { onDone(false) }.buttonStyle(.dx(.primary, on: .reading))
+                .padding(.top, DX.Space.s)
             Button(fromSOS ? "Back to Craving SOS" : "Still craving? Start Craving SOS") {
                 onDone(true)
             }
             .buttonStyle(.dx(.quiet, on: .reading))
+            Spacer(minLength: 0)
         }
     }
 
@@ -430,19 +440,6 @@ struct CalmToolPlayer: View {
             onDone(false)
         } else {
             finished = true
-        }
-    }
-}
-
-/// Breathing tools sit on the orb's black canvas; the rest use the app's canvas.
-private struct PlayerCanvas: ViewModifier {
-    let orb: Bool
-
-    func body(content: Content) -> some View {
-        if orb {
-            content.background(Color.black.ignoresSafeArea()).environment(\.colorScheme, .dark)
-        } else {
-            content.background(Read4.background.ignoresSafeArea())
         }
     }
 }

@@ -41,10 +41,12 @@ struct MissionPrompts: ViewModifier {
                 case let .followUp(session):
                     FollowUpSheet(sessionId: session, profile: profile) { self.prompt = nil }
                         .presentationDetents([.large])
+                        .presentationDragIndicator(.visible)
                 case let .question(session, type):
                     MissionQuestion(sessionId: session, type: type, profile: profile) { self.prompt = nil }
                         // The morning gap's four choices and "Not now" don't fit in half a screen.
                         .presentationDetents([type == .morningBuffer ? .large : .medium])
+                        .presentationDragIndicator(.visible)
                 }
             }
     }
@@ -93,6 +95,10 @@ struct FollowUpSheet: View {
             if let session = store.content?.session(sessionId), let beats = session.mission?.followUp, beats.indices.contains(index) {
                 Text("\(session.label) mission · \(index + 1) of \(beats.count)").v4Text(.micro).foregroundStyle(Read4.accent)
                     .padding(.top, DX.Space.l)
+                // The mission in one line, so the sheet makes sense on its own (S27.14).
+                if let mission = session.mission {
+                    Text(verbatim: missionLine(mission, store: store)).v4Text(.subtitle).lineLimit(2)
+                }
                 BeatScreen(beat: beats[index],
                            ctx: BeatContext(store: store, session: session, variant: store.variant, nrtActive: store.nrtActive(),
                                             placeholders: store.placeholders(), isReplay: false)) {
@@ -104,6 +110,10 @@ struct FollowUpSheet: View {
         .padding(.horizontal, DX.Space.l)
         .padding(.bottom, DX.Space.s)
         .background(Read4.background.ignoresSafeArea())
+    }
+
+    private func missionLine(_ mission: ProgramContent.Mission, store: ProgramStore) -> String {
+        store.placeholders().fillDropping(mission.text.resolve(store.variant) ?? "")
     }
 
     private func finish(_ store: ProgramStore) {
@@ -150,8 +160,13 @@ struct MissionQuestion: View {
     }
 
     var body: some View {
+        let store = ProgramStore(context: context, profile: profile)
         VStack(alignment: .leading, spacing: DX.Space.m) {
             Text("Today's mission").v4Text(.micro).foregroundStyle(Read4.accent).padding(.top, DX.Space.l)
+            // The mission in one line, so the question makes sense on its own (S27.14).
+            if let mission = store.content?.session(sessionId)?.mission {
+                Text(verbatim: store.placeholders().fillDropping(mission.text.resolve(store.variant) ?? "")).v4Text(.subtitle).lineLimit(2)
+            }
             Text(question).dxFont(24, weight: 700, style: .title2).foregroundStyle(Read4.ink)
             if type == .surfPractice {
                 BeatSlider(value: $peak, minLabel: String(localized: "Barely there"), maxLabel: String(localized: "Overwhelming"), large: true)

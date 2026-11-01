@@ -127,9 +127,11 @@ struct SlipFlow: View {
                             .accessibilityHidden(true)
                         VStack(alignment: .leading, spacing: 2) {
                             Text("With Jelli").dxFont(14, weight: 700, style: .footnote).foregroundStyle(ground.muted)
-                            MarkedTitle(String(localized: "Thanks for"), marking: String(localized: "telling me"), trail: ".",
-                                        color: DX.Mark.color(on: ground), stacked: true)
+                            // Plain title: the hand-drawn mark is kept for celebrations (S27.15).
+                            Text("Thanks for\ntelling me.")
                                 .dxType(.large)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .accessibilityAddTraits(.isHeader)
                         }
                     }
                     .dxArrive(0)
@@ -333,12 +335,13 @@ struct SlipFlow: View {
                 .padding(.horizontal, DX.Layout.gutter)
                 .padding(.top, DX.Space.l)
                 .padding(.bottom, DX.Space.m)
+                // Save sits right under the last row of chips, not pinned to the bottom (S27.14).
+                Button("Save") { saveDetails() }
+                    .buttonStyle(.dx(.primary, on: .reading))
+                    .padding(.horizontal, DX.Layout.buttonGutter)
+                    .padding(.bottom, DX.Space.xl)
             }
             .scrollBounceBehavior(.basedOnSize)
-            Button("Save") { saveDetails() }
-                .buttonStyle(.dx(.primary, on: .reading))
-                .padding(.horizontal, DX.Layout.buttonGutter)
-                .padding(.bottom, DX.Space.xs)
         }
     }
 
