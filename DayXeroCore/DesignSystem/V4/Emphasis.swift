@@ -86,8 +86,11 @@ public struct MarkedTitle: View {
     let mark: DX.Mark
     let color: Color
     let stacked: Bool
+    /// The whole title as one plain string, for VoiceOver and UI tests.
+    let spoken: String
 
     public init(_ lead: String = "", marking word: String, trail: String = "", mark: DX.Mark = .underline, color: Color, stacked: Bool = false) {
+        self.spoken = stacked && !lead.isEmpty && !lead.hasSuffix(" ") ? lead + " " + word + trail : lead + word + trail
         // A space at the join would hang at the line's edge and collapse; a no-break space keeps the gap.
         self.lead = lead.hasSuffix(" ") ? String(lead.dropLast()) + "\u{00A0}" : lead
         self.word = word
@@ -115,7 +118,8 @@ public struct MarkedTitle: View {
                 }
             }
         }
-        .accessibilityElement(children: .combine)
-        .accessibilityAddTraits(.isHeader)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(verbatim: spoken))
+        .accessibilityAddTraits([.isHeader, .isStaticText])
     }
 }
