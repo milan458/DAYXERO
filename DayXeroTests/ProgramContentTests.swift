@@ -8,10 +8,25 @@ struct ProgramContentTests {
 
     @Test func theBundledProgramLoadsWithEveryPhaseAndSession() throws {
         let program = try content()
-        #expect(program.phases.map(\.id) == ["prep", "dayxero", "w1", "w2", "w3", "w4"])
-        #expect(program.sessions.count == 24)
-        #expect(program.sessions.first?.id == "P1" && program.sessions.last?.id == "W4S3")
+        #expect(program.phases.map(\.id) == ["prep", "dayxero", "w1", "w2", "w3", "w4", "after"])
+        #expect(program.sessions.count == 27)
+        #expect(program.sessions.first?.id == "P1" && program.sessions.last?.id == "B90")
         #expect(program.sosTracks.map(\.id) == ["SOS1", "SOS2", "SOS3", "SOS4"])
+    }
+
+    /// S27.18: no cliff at Day 31. Three boosters follow graduation, on Days 45, 60 and 90, opening by days since
+    /// Day Xero like the weeks before them. Their content is a draft for Milan to review.
+    @Test func boostersFollowGraduation() throws {
+        let program = try content()
+        let after = try #require(program.phases.first { $0.id == "after" })
+        #expect(after.sessionIds == ["B45", "B60", "B90"])
+        let boosters = after.sessionIds.compactMap { program.session($0) }
+        #expect(boosters.map(\.label) == ["Day 45", "Day 60", "Day 90"])
+        #expect(boosters.map(\.unlock.minDay) == [44, 59, 89])
+        #expect(boosters.allSatisfy { $0.unlock.rule == .daysSinceQuit })
+        // The graduation session still ends the four weeks, so the finale plays there and not after a booster.
+        #expect(program.session(after: "W4S3")?.id == "B45")
+        #expect(boosters.allSatisfy { !$0.beats.contains { $0.sets == "graduated_at" } })
     }
 
     @Test func theContentHasNoProblems() throws {

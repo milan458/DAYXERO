@@ -15,6 +15,8 @@ enum DailyReminderSettings {
     static let quietEndKey = "dx.quietEnd"
     static let nrtThroughQuietKey = "dx.nrtThroughQuiet"
     static let nrtOnKey = "dx.nrtNotifications"
+    /// Glim's weekly check-in after graduation (S27.18), Sundays. Off until chosen, like lessons and milestones.
+    static let weeklyKey = "dx.weeklyCheckInMinute"
 
     static let defaultPledge = 8 * 60
     static let defaultCheckIn = 21 * 60
@@ -22,6 +24,7 @@ enum DailyReminderSettings {
     static let defaultMilestone = 9 * 60
     static let defaultQuietStart = 22 * 60 + 30
     static let defaultQuietEnd = 7 * 60 + 30
+    static let defaultWeekly = 19 * 60
     /// Lesson-ready and milestone notes stay off until switched on, so a fresh install sends the two daily notes
     /// onboarding promises (pledge and check-in) and nothing else (S27.4). Their default times above are used when
     /// they're switched on in Settings. NRT notes need an NRT plan and away notes need an absence, so neither runs by itself.
@@ -37,6 +40,7 @@ enum DailyReminderSettings {
         s.lesson = minute(lessonKey, offUntilChosen)
         s.milestone = minute(milestoneKey, offUntilChosen)
         s.awayOn = flag(awayKey)
+        s.weekly = minute(weeklyKey, offUntilChosen)
         s.quietStart = minute(quietStartKey, defaultQuietStart)
         s.quietEnd = minute(quietEndKey, defaultQuietEnd)
         return s
@@ -77,7 +81,8 @@ enum DailyReminders {
             milestones: milestones(profile: profile, clock: clock),
             replayName: nil,
             nextLessonName: ProgramStore(context: context, profile: profile).current(now: now)
-                .flatMap { ProgramStore(context: context, profile: profile).content?.session($0.id)?.label }
+                .flatMap { ProgramStore(context: context, profile: profile).content?.session($0.id)?.label },
+            graduated: profile.progress?.graduatedAt != nil
         )
         let wanted = NotificationPlan.plan(DailyReminderSettings.plan, inputs: inputs, calendar: .current)
         Task { await apply(wanted) }

@@ -4,16 +4,17 @@ import Foundation
 /// Worked out ahead each time the app opens; nothing is scheduled past the two "away" notes.
 public enum NotificationPlan {
     public enum Kind: String, CaseIterable, Sendable {
-        case pledge, lesson, checkIn, milestone, away
+        case pledge, lesson, checkIn, milestone, away, weekly
 
         /// Which one drops first when more than the daily cap are due: the highest number.
         var dropOrder: Int {
             switch self {
             case .milestone: 0
-            case .away: 1
-            case .pledge: 2
-            case .lesson: 3
-            case .checkIn: 4
+            case .weekly: 1
+            case .away: 2
+            case .pledge: 3
+            case .lesson: 4
+            case .checkIn: 5
             }
         }
     }
@@ -25,6 +26,11 @@ public enum NotificationPlan {
         public var checkIn: Int? = 21 * 60
         public var milestone: Int? = 9 * 60
         public var awayOn = true
+        /// Glim's weekly check-in after graduation (S27.18): minutes after midnight, or nil when off. Off unless switched
+        /// on in Settings, so a fresh install still sends only the two daily notes onboarding promises.
+        public var weekly: Int? = nil
+        /// The weekly check-in's day: `Calendar` weekday numbering, 1 is Sunday.
+        public var weeklyWeekday = 1
         /// Quiet hours as minutes after midnight; may wrap past midnight. nil when off.
         public var quietStart: Int? = 22 * 60 + 30
         public var quietEnd: Int? = 7 * 60 + 30
@@ -53,9 +59,12 @@ public enum NotificationPlan {
         public var replayName: String?
         /// The next lesson's name for the first away note, e.g. "Day 4".
         public var nextLessonName: String?
+        /// The four weeks are done (graduation held). Glim's weekly check-in starts then.
+        public var graduated: Bool
 
         public init(now: Date, pledgedToday: Bool, checkedInToday: Bool, lessons: [(day: Date, name: String, minutes: Int)] = [],
-                    milestones: [(day: Date, title: String)] = [], replayName: String? = nil, nextLessonName: String? = nil) {
+                    milestones: [(day: Date, title: String)] = [], replayName: String? = nil, nextLessonName: String? = nil,
+                    graduated: Bool = false) {
             self.now = now
             self.pledgedToday = pledgedToday
             self.checkedInToday = checkedInToday
@@ -63,6 +72,7 @@ public enum NotificationPlan {
             self.milestones = milestones
             self.replayName = replayName
             self.nextLessonName = nextLessonName
+            self.graduated = graduated
         }
     }
 
@@ -106,6 +116,19 @@ public enum NotificationPlan {
                 guard let day = calendar.date(byAdding: .day, value: offset, to: today) else { continue }
                 let copy = i == 0 ? NotificationCopy.awayFirst(next: inputs.nextLessonName) : NotificationCopy.awaySecond(replay: inputs.replayName)
                 all.append(make(.away, Self.stamp(day, calendar), day, awayMinute, copy, calendar))
+            }
+        }
+
+        // Glim's weekly check-in (S27.18): the next one only, on its weekday, once the four weeks are done.
+        if let m = settings.weekly, inputs.graduated {
+            for offset in 0...7 {
+                guard let day = calendar.date(byAdding: .day, value: offset, to: today),
+                      calendar.component(.weekday, from: day) == settings.weeklyWeekday else { continue }
+                let note = make(.weekly, Self.stamp(day, calendar), day, m, NotificationCopy.weekly, calendar)
+                if note.date > inputs.now {
+                    all.append(note)
+                    break
+                }
             }
         }
 
@@ -156,6 +179,8 @@ public enum NotificationPlan {
 public enum NotificationCopy {
     public static let pledge = (String(localized: "Good morning"), String(localized: "Ten seconds for today's pledge?"))
     public static let checkIn = (String(localized: "How did today go?"), String(localized: "A one-minute check-in, if you have it."))
+    /// Glim's weekly check-in after graduation (S27.18).
+    public static let weekly = (String(localized: "How was your week?"), String(localized: "Glim's Sunday check-in. One minute, if you have it."))
 
     public static func lesson(name: String, minutes: Int) -> (String, String) {
         (String(localized: "\(name) is ready"), String(localized: "\(minutes) minutes, whenever suits you."))
