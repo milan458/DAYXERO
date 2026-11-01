@@ -2,7 +2,8 @@ import Foundation
 
 /// Rough daily nicotine, for onboarding's baseline screen (S22). Estimates for comparison, never a dose.
 public enum NicotineEstimate {
-    /// Nicotine absorbed from one cigarette: about 1–1.5 mg (Benowitz & Jacob, 1984). The source link is still to add.
+    /// Nicotine absorbed from one cigarette: about 1–1.5 mg. Benowitz NL, Jacob P. Daily intake of nicotine during
+    /// cigarette smoking. Clin Pharmacol Ther. 1984;35(4):499–504. doi:10.1038/clpt.1984.67, PMID 6705448.
     public static let mgPerCigarette = 1.2
     /// Absorbed per puff of a 50 mg/ml liquid: about ten puffs of a 5% vape match one cigarette. Scales with strength.
     public static let mgPerPuffAt50 = 0.12

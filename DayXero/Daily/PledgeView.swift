@@ -3,7 +3,8 @@ import SwiftData
 import SwiftUI
 
 /// F09 Pledge (apricot): Xero at dawn, "Today, I won't use nicotine.", one of your reasons, and a
-/// one-second hold. Optional, and it never changes days clear (S11.1).
+/// one-second hold. Optional, and it never changes days clear (S11.1). In prep week, when the plan is to use as
+/// normal, it pledges to the prep instead and the wording chips are hidden (S27.5).
 struct PledgeView: View {
     let profile: UserProfile
     let onDone: () -> Void
@@ -35,6 +36,9 @@ struct PledgeView: View {
         }
     }
 
+    /// Prep week: nobody is asked to stop before Quit Day.
+    static let prepHeadline = String(localized: "Today, I'll notice my cravings and get ready.")
+
     var body: some View {
         let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
         let stats = ProgressStats(quitDay: profile.quitDay, baselines: [], clock: clock)
@@ -42,6 +46,7 @@ struct PledgeView: View {
         // The same days clear as Today: Quit Day is 1, prep is 0.
         let daysClear = stats.daysClear(at: .now)
         let chosen = Wording(rawValue: wording) ?? .wontUse
+        let prep = stats.isPrep(at: .now)
         VStack(spacing: 0) {
             ZStack(alignment: .bottom) {
                 HeroScene(.dawn, clarity: stats.isPrep(at: .now) ? CrewGrowth.prepClarity : CrewGrowth.clarity(daysClear: daysClear),
@@ -70,7 +75,7 @@ struct PledgeView: View {
                         .dxFont(14, weight: 700, style: .footnote)
                         .foregroundStyle(ground.muted)
                         .dxArrive(4)
-                    Text(verbatim: chosen.headline)
+                    Text(verbatim: prep ? Self.prepHeadline : chosen.headline)
                         .dxType(.large)
                         .foregroundStyle(ground.ink)
                         .multilineTextAlignment(.center)
@@ -78,18 +83,20 @@ struct PledgeView: View {
                         .contentTransition(.opacity)
                         .accessibilityAddTraits(.isHeader)
                         .dxArrive(5)
-                    HStack(spacing: 6) {
-                        ForEach(Wording.allCases, id: \.self) { w in
-                            V4Chip(text: w.chip, isOn: chosen == w, fill: DX.Fill.onColourCard(for: ground), ink: ground.ink,
-                                   selectedFill: ground.ink, selectedInk: ground.background) {
-                                withAnimation(DX.Move.animation(.easeInOut(duration: 0.25), reduceMotion: reduceMotion)) { wording = w.rawValue }
+                    if !prep {
+                        HStack(spacing: 6) {
+                            ForEach(Wording.allCases, id: \.self) { w in
+                                V4Chip(text: w.chip, isOn: chosen == w, fill: DX.Fill.onColourCard(for: ground), ink: ground.ink,
+                                       selectedFill: ground.ink, selectedInk: ground.background) {
+                                    withAnimation(DX.Move.animation(.easeInOut(duration: 0.25), reduceMotion: reduceMotion)) { wording = w.rawValue }
+                                }
                             }
                         }
+                        .disabled(pledged)
+                        .accessibilityElement(children: .contain)
+                        .accessibilityLabel(Text("Pledge wording"))
+                        .dxArrive(6)
                     }
-                    .disabled(pledged)
-                    .accessibilityElement(children: .contain)
-                    .accessibilityLabel(Text("Pledge wording"))
-                    .dxArrive(6)
                     if let reason = todaysReason(dayNumber: day) {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("BECAUSE").dxType(.caption).foregroundStyle(ground.muted)

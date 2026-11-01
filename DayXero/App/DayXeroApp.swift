@@ -168,7 +168,6 @@ struct RootView: View {
         } else if UserDefaults.standard.bool(forKey: "dx.paywallPreview") {
             PaywallView(name: "Milan", quitDay: Calendar.current.date(byAdding: .day, value: 7, to: .now) ?? .now,
                         model: PaywallModel(store: entitlement.store, entitlement: entitlement),
-                        context: UserDefaults.standard.bool(forKey: "dx.paywallFirstRun") ? PaywallContext(sampleCurrency: "USD") : nil,
                         onClose: {})
         } else {
             content

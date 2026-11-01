@@ -38,6 +38,9 @@ struct ProgramToday {
     let mission: String?
     /// Quit Day has come and prep isn't finished yet: said gently, once.
     let prepRunsOver: Bool
+    /// A quit-week session from an earlier day. Today's header counts "Day 3" by the calendar, so a "Day 2" session
+    /// is labelled a catch-up rather than "Today", and the screen never shows two different days as today (S27.5).
+    let isCatchUp: Bool
 
     @MainActor
     init?(store: ProgramStore, isPro: Bool, now: Date = .now) {
@@ -52,6 +55,7 @@ struct ProgramToday {
             title = ""
             minutes = 0
             prepRunsOver = false
+            isCatchUp = false
             return
         }
         label = session.label
@@ -59,6 +63,12 @@ struct ProgramToday {
         minutes = session.durationMinutes
         prepRunsOver = session.phaseId == "prep" && store.clock.day(containing: now) >= store.clock.startOfDate(store.profile.quitDay)
             && store.profile.progress?.quitTimestamp == nil
+        if session.phaseId == "w1", session.unlock.rule == .daysSinceQuit, let minDay = session.unlock.minDay,
+           let quit = store.profile.progress?.quitTimestamp, let engine = store.unlock() {
+            isCatchUp = engine.daysSinceQuit(quit, now: now) > minDay
+        } else {
+            isCatchUp = false
+        }
         switch current.state {
         case .available, .inProgress:
             kind = .open(sessionId: session.id, inProgress: current.state == .inProgress,
@@ -102,7 +112,7 @@ struct ProgramTodayCard: View {
             UpgradeSheet(dayTitle: item.id, model: PaywallModel(store: entitlement.store, entitlement: entitlement),
                          showAllPlans: { upgradeTitle = nil; showPaywall = true },
                          onUnlocked: { upgradeTitle = nil })
-                .presentationDetents([.medium])
+                .presentationDetents([.medium, .large])
         }
         .fullScreenCover(isPresented: $showPaywall) {
             PaywallView(name: profile.name, quitDay: profile.quitDay,
@@ -121,7 +131,7 @@ struct ProgramTodayCard: View {
         open = SessionOpen(id: id)
     }
 
-    /// The green lesson card (F08 afternoon): "TODAY · DAY 3 · 3 MIN", the title, and a chevron.
+    /// The green lesson card (F08 afternoon): "TODAY · DAY 3 · 3 MIN" (or "CATCH UP · DAY 2" when behind), the title, and a chevron.
     @ViewBuilder
     private func card(_ today: ProgramToday) -> some View {
         switch today.kind {
@@ -129,7 +139,8 @@ struct ProgramTodayCard: View {
             let detail: String? = needsUpgrade ? String(localized: "Unlock \(today.label)")
                 : today.prepRunsOver ? String(localized: "Finish prep when you're ready. Day Xero starts the morning after.")
                 : inProgress ? String(localized: "Xero saved your place.") : nil
-            ColourCard(kicker: String(localized: "Today · \(today.label) · \(today.minutes) min"), title: today.title,
+            ColourCard(kicker: today.isCatchUp ? String(localized: "Catch up · \(today.label) · \(today.minutes) min")
+                                               : String(localized: "Today · \(today.label) · \(today.minutes) min"), title: today.title,
                        detail: detail, fill: ColourCard.lesson) {
                 if needsUpgrade {
                     Paywalls.present(.unlockProgramDay, params: ["day": id]) { outcome in

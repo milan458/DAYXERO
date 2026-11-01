@@ -8,9 +8,9 @@ import UserNotifications
 /// plus quiet hours. Changes reschedule straight away.
 struct NotificationSettingsView: View {
     @AppStorage(DailyReminderSettings.pledgeKey) private var pledge = DailyReminderSettings.defaultPledge
-    @AppStorage(DailyReminderSettings.lessonKey) private var lesson = DailyReminderSettings.defaultLesson
+    @AppStorage(DailyReminderSettings.lessonKey) private var lesson = DailyReminderSettings.offUntilChosen
     @AppStorage(DailyReminderSettings.checkInKey) private var checkIn = DailyReminderSettings.defaultCheckIn
-    @AppStorage(DailyReminderSettings.milestoneKey) private var milestone = DailyReminderSettings.defaultMilestone
+    @AppStorage(DailyReminderSettings.milestoneKey) private var milestone = DailyReminderSettings.offUntilChosen
     @AppStorage(DailyReminderSettings.awayKey) private var away = true
     @AppStorage(DailyReminderSettings.nrtOnKey) private var nrt = true
     @AppStorage(DailyReminderSettings.quietStartKey) private var quietStart = DailyReminderSettings.defaultQuietStart
@@ -121,7 +121,7 @@ struct QuietHoursView: View {
     @AppStorage(DailyReminderSettings.quietEndKey) private var end = DailyReminderSettings.defaultQuietEnd
     @AppStorage(DailyReminderSettings.nrtThroughQuietKey) private var nrtThrough = true
     @AppStorage(DailyReminderSettings.pledgeKey) private var pledge = DailyReminderSettings.defaultPledge
-    @AppStorage(DailyReminderSettings.lessonKey) private var lesson = DailyReminderSettings.defaultLesson
+    @AppStorage(DailyReminderSettings.lessonKey) private var lesson = DailyReminderSettings.offUntilChosen
     @AppStorage(DailyReminderSettings.checkInKey) private var checkIn = DailyReminderSettings.defaultCheckIn
     @Environment(\.modelContext) private var context
 
