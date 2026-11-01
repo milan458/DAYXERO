@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-11-01T19:29:22.073Z"
+    "updated": "2026-11-01T19:32:15.521Z"
   },
   "now": {
     "section": "S27",
@@ -2656,32 +2656,32 @@
         {
           "id": "S27.6",
           "title": "Rank 6 · NRT framing: combination NRT as best-evidenced, 'ask about prescription options', regulator label sources, pregnancy question.",
-          "status": "in_progress",
-          "notes": "Cochrane RR 1.25 for combination NRT; current copy discourages it. NRTSetupView, NRTCards, DetailScreens NRTScreen. Wave 2.\nLab v5 (1 Nov 2026): nrt-setup intro adds 'A patch plus a faster form… works better than either alone' (Cochrane 2019 combination NRT) and a prescription-medicines line (varenicline, cytisine); products step encourages two forms; label sources read DailyMed; onb-nrt subtitle names combination NRT, adds a pregnancy question and the medicines signpost; slip 'tough' card mentions combination NRT. Swift still to do.\nMilan signed off the lab version, 1 Nov 2026.",
+          "status": "awaiting_signoff",
+          "notes": "Cochrane RR 1.25 for combination NRT; current copy discourages it. NRTSetupView, NRTCards, DetailScreens NRTScreen. Wave 2.\nLab v5 (1 Nov 2026): nrt-setup intro adds 'A patch plus a faster form… works better than either alone' (Cochrane 2019 combination NRT) and a prescription-medicines line (varenicline, cytisine); products step encourages two forms; label sources read DailyMed; onb-nrt subtitle names combination NRT, adds a pregnancy question and the medicines signpost; slip 'tough' card mentions combination NRT. Swift still to do.\nMilan signed off the lab version, 1 Nov 2026.\nSwift built on claude/critique-wave2 (stacked on Wave 1); waiting on CI and TestFlight.",
           "created": "2026-11-01T18:37:56.191Z",
           "completed": null
         },
         {
           "id": "S27.7",
           "title": "Rank 7 · Day Xero fires on the chosen date; unfinished prep becomes catch-up; allow a 3–7 day prep.",
-          "status": "in_progress",
-          "notes": "ProgramUnlock.dayXeroDate = max(Quit Day, day after last prep) silently postpones the quit. Update ProgramUnlockTests. Wave 2.\nLab v5: onb-quit-day allows 3–7 days of prep (earliest Mon 2 Nov for Sam), says Quit Day comes on the chosen date even if prep runs short; welcome says 'up to 7 days'. Swift still to do: ProgramUnlock.dayXeroDate and the minimum prep in OnboardingModel.\nMilan signed off the lab version, 1 Nov 2026.",
+          "status": "awaiting_signoff",
+          "notes": "ProgramUnlock.dayXeroDate = max(Quit Day, day after last prep) silently postpones the quit. Update ProgramUnlockTests. Wave 2.\nLab v5: onb-quit-day allows 3–7 days of prep (earliest Mon 2 Nov for Sam), says Quit Day comes on the chosen date even if prep runs short; welcome says 'up to 7 days'. Swift still to do: ProgramUnlock.dayXeroDate and the minimum prep in OnboardingModel.\nMilan signed off the lab version, 1 Nov 2026.\nSwift built on claude/critique-wave2 (stacked on Wave 1); waiting on CI and TestFlight.",
           "created": "2026-11-01T18:37:56.257Z",
           "completed": null
         },
         {
           "id": "S27.8",
           "title": "Rank 8 · 7-day trial ending after 'One week clear'; lifetime to $99.99; win-back offer and grace period in App Store Connect; check-in stays free.",
-          "status": "in_progress",
-          "notes": "Sub-4-day trials convert worst; a day-4 charge lands in peak withdrawal. Needs D3, D4, D5. Milan in App Store Connect. Wave 2.\nLab v5: 7-day trial everywhere (offer, plans, upgrade, reveal card: Fri 6 → Fri 13 Nov, reminder Wed 11 Nov), lifetime $99.99, evening check-ins listed as always free on the plan reveal. Milan: App Store Connect intro offer 7 days, lifetime price, win-back offer, Billing Grace Period.\nMilan signed off the lab version, 1 Nov 2026.",
+          "status": "awaiting_signoff",
+          "notes": "Sub-4-day trials convert worst; a day-4 charge lands in peak withdrawal. Needs D3, D4, D5. Milan in App Store Connect. Wave 2.\nLab v5: 7-day trial everywhere (offer, plans, upgrade, reveal card: Fri 6 → Fri 13 Nov, reminder Wed 11 Nov), lifetime $99.99, evening check-ins listed as always free on the plan reveal. Milan: App Store Connect intro offer 7 days, lifetime price, win-back offer, Billing Grace Period.\nMilan signed off the lab version, 1 Nov 2026.\nSwift built on claude/critique-wave2 (stacked on Wave 1); waiting on CI and TestFlight.",
           "created": "2026-11-01T18:37:56.304Z",
           "completed": null
         },
         {
           "id": "S27.9",
           "title": "Rank 9 · Honest counter: 'days since Quit Day'; 'not smoked' subtracts slips; relapse threshold with a Jelli fresh-Quit-Day offer; remove 'streak' wording and the water streak pill.",
-          "status": "in_progress",
-          "notes": "ProgressStats, Slips, MilestoneMoments, WidgetSnapshot, Water. Keeps 'nothing resets' for slips while the counter stays truthful. Wave 2.\nLab v5: counters read 'days since Quit Day'; milestones 'Three days in', 'One week in'…; share card 'days into my quit'; Today card 'Since Quit Day · 3 days' and 'Prep · 3 of 7 done' (no 'streak'); water streak pill removed; slip line 'Still Day 3 since your Quit Day. Nothing resets.'; new log-slip-saved state 'fresh': Jelli offers a fresh Quit Day after slips on 4 of the last 7 days, keeping all history. Swift still to do.\nMilan signed off the lab version, 1 Nov 2026.",
+          "status": "awaiting_signoff",
+          "notes": "ProgressStats, Slips, MilestoneMoments, WidgetSnapshot, Water. Keeps 'nothing resets' for slips while the counter stays truthful. Wave 2.\nLab v5: counters read 'days since Quit Day'; milestones 'Three days in', 'One week in'…; share card 'days into my quit'; Today card 'Since Quit Day · 3 days' and 'Prep · 3 of 7 done' (no 'streak'); water streak pill removed; slip line 'Still Day 3 since your Quit Day. Nothing resets.'; new log-slip-saved state 'fresh': Jelli offers a fresh Quit Day after slips on 4 of the last 7 days, keeping all history. Swift still to do.\nMilan signed off the lab version, 1 Nov 2026.\nSwift built on claude/critique-wave2 (stacked on Wave 1); waiting on CI and TestFlight.",
           "created": "2026-11-01T18:37:56.355Z",
           "completed": null
         },
@@ -2777,6 +2777,46 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-11-01T19:32:15.521Z",
+      "type": "note",
+      "message": "S27.9: Swift built on claude/critique-wave2 (stacked on Wave 1); waiting on CI and TestFlight."
+    },
+    {
+      "time": "2026-11-01T19:32:15.468Z",
+      "type": "status",
+      "message": "S27.9 in_progress → awaiting_signoff"
+    },
+    {
+      "time": "2026-11-01T19:32:15.416Z",
+      "type": "note",
+      "message": "S27.8: Swift built on claude/critique-wave2 (stacked on Wave 1); waiting on CI and TestFlight."
+    },
+    {
+      "time": "2026-11-01T19:32:15.364Z",
+      "type": "status",
+      "message": "S27.8 in_progress → awaiting_signoff"
+    },
+    {
+      "time": "2026-11-01T19:32:15.301Z",
+      "type": "note",
+      "message": "S27.7: Swift built on claude/critique-wave2 (stacked on Wave 1); waiting on CI and TestFlight."
+    },
+    {
+      "time": "2026-11-01T19:32:15.250Z",
+      "type": "status",
+      "message": "S27.7 in_progress → awaiting_signoff"
+    },
+    {
+      "time": "2026-11-01T19:32:15.200Z",
+      "type": "note",
+      "message": "S27.6: Swift built on claude/critique-wave2 (stacked on Wave 1); waiting on CI and TestFlight."
+    },
+    {
+      "time": "2026-11-01T19:32:15.149Z",
+      "type": "status",
+      "message": "S27.6 in_progress → awaiting_signoff"
+    },
     {
       "time": "2026-11-01T19:29:22.073Z",
       "type": "now",
