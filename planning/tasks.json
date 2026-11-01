@@ -2,14 +2,14 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-10-30T09:30:00.000Z"
+    "updated": "2026-11-01T18:37:57.105Z"
   },
   "now": {
-    "section": "S26",
-    "task": "S26.19",
+    "section": "S27",
+    "task": "S27.1",
     "waiting_on_milan": [
-      "Milan: try program v2 and demo mode in the next TestFlight build",
-      "Milan: approve program copy (S26.12)"
+      "Milan: decisions D1–D5 and D7 in docs/DAYXERO_CRITIQUE_FIX_PLAN.md",
+      "Milan: trademark search on 'Xero' / shortlist a new mascot name"
     ]
   },
   "sections": [
@@ -2602,9 +2602,310 @@
           "completed": "2026-10-30T09:30:00.000Z"
         }
       ]
+    },
+    {
+      "goal": "",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": []
+    },
+    {
+      "id": "S27",
+      "title": "Design critique fixes (reports/DayXero app design critique.md)",
+      "goal": "Fix the 20 ranked items from the 1 Nov 2026 critique: promise breaks and launch blockers first, then program and money, then visual subtraction, then character growth. Plan: docs/DAYXERO_CRITIQUE_FIX_PLAN.md",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S27.1",
+          "title": "Rank 1 · Privacy link: set AppLinks.privacy and link it from onb-welcome, settings-privacy and every paywall (paywall, paywall-plans, offer).",
+          "status": "in_progress",
+          "notes": "Apple subscription-page requirement and 5.1.1(i). Needs D1 (URL). Wave 1.",
+          "created": "2026-11-01T18:37:55.879Z",
+          "completed": null
+        },
+        {
+          "id": "S27.2",
+          "title": "Rank 2 · Reconcile the paywall: drop the post-onboarding paywall (decision 15) or sell the trial there; remove the 3 s hidden Close; fix 'Day 1' copy; 'Always free: your counter and Craving SOS.' on every paywall.",
+          "status": "pending",
+          "notes": "PaywallModel.swift ~L104–108 strips trial plans before Quit Day, so the shipped first-run paywall is monthly + lifetime with no anchor. Needs D2, D5. Wave 1.",
+          "created": "2026-11-01T18:37:55.945Z",
+          "completed": null
+        },
+        {
+          "id": "S27.3",
+          "title": "Rank 3 · onb-baseline-summary: delete the 'Good news… steps down' note, keep-frame the money, relabel 'Time back', hide 'YOUR ANSWER', source or drop the cigarette-equivalence number.",
+          "status": "pending",
+          "notes": "False under 'use as normal', unsourced, loss-framed. onboarding.js ~L320, DetailScreens.swift, OnboardingEstimates.swift. Wave 1.",
+          "created": "2026-11-01T18:37:56.014Z",
+          "completed": null
+        },
+        {
+          "id": "S27.4",
+          "title": "Rank 4 · onb-trial + notifications: make 'That's it' true with two defaults and one global cap; reconcile 21:00 / 21:30 / 9:00 PM.",
+          "status": "pending",
+          "notes": "NotificationPlan.swift defaults; four on by default today plus water, NRT and Live Activities. Wave 1.",
+          "created": "2026-11-01T18:37:56.071Z",
+          "completed": null
+        },
+        {
+          "id": "S27.5",
+          "title": "Rank 5 · One day count on today/program; prep-specific pledge wording; hide '0 waves' in prep; fix the '0 of 7 prep done' counter.",
+          "status": "pending",
+          "notes": "TodayHeaderV4 vs ProgramTodayCard disagree (DAY 3 vs DAY 2). PledgeView .wontUse during prep. ProgramStore prep completions. Wave 1.",
+          "created": "2026-11-01T18:37:56.128Z",
+          "completed": null
+        },
+        {
+          "id": "S27.6",
+          "title": "Rank 6 · NRT framing: combination NRT as best-evidenced, 'ask about prescription options', regulator label sources, pregnancy question.",
+          "status": "pending",
+          "notes": "Cochrane RR 1.25 for combination NRT; current copy discourages it. NRTSetupView, NRTCards, DetailScreens NRTScreen. Wave 2.",
+          "created": "2026-11-01T18:37:56.191Z",
+          "completed": null
+        },
+        {
+          "id": "S27.7",
+          "title": "Rank 7 · Day Xero fires on the chosen date; unfinished prep becomes catch-up; allow a 3–7 day prep.",
+          "status": "pending",
+          "notes": "ProgramUnlock.dayXeroDate = max(Quit Day, day after last prep) silently postpones the quit. Update ProgramUnlockTests. Wave 2.",
+          "created": "2026-11-01T18:37:56.257Z",
+          "completed": null
+        },
+        {
+          "id": "S27.8",
+          "title": "Rank 8 · 7-day trial ending after 'One week clear'; lifetime to $99.99; win-back offer and grace period in App Store Connect; check-in stays free.",
+          "status": "pending",
+          "notes": "Sub-4-day trials convert worst; a day-4 charge lands in peak withdrawal. Needs D3, D4, D5. Milan in App Store Connect. Wave 2.",
+          "created": "2026-11-01T18:37:56.304Z",
+          "completed": null
+        },
+        {
+          "id": "S27.9",
+          "title": "Rank 9 · Honest counter: 'days since Quit Day'; 'not smoked' subtracts slips; relapse threshold with a Jelli fresh-Quit-Day offer; remove 'streak' wording and the water streak pill.",
+          "status": "pending",
+          "notes": "ProgressStats, Slips, MilestoneMoments, WidgetSnapshot, Water. Keeps 'nothing resets' for slips while the counter stays truthful. Wave 2.",
+          "created": "2026-11-01T18:37:56.355Z",
+          "completed": null
+        },
+        {
+          "id": "S27.10",
+          "title": "Rank 10 · Onboarding voice and skips: first-person Xero, replace 'Dual use detected', define 'wave', one progress bar, skippable name and past attempts, Skip on onb-breathe, feed or cut unused answers.",
+          "status": "pending",
+          "notes": "Voice rule (DS §8) and handoff S2.13 both violated. Wave 3.",
+          "created": "2026-11-01T18:37:56.413Z",
+          "completed": null
+        },
+        {
+          "id": "S27.11",
+          "title": "Rank 11 · Native iOS 26 TabView with monochrome icons; Settings reachable from Progress; fold Evening into Today (four tabs).",
+          "status": "pending",
+          "notes": "Nav4.swift, ProgressTab.swift, EveningView → TodaySlot. Needs D6. Wave 3.",
+          "created": "2026-11-01T18:37:56.476Z",
+          "completed": null
+        },
+        {
+          "id": "S27.12",
+          "title": "Rank 12 · Water to one row, delete the goal calculator; rebuild calm-box, calm-478 and the breathe beat on reading tokens.",
+          "status": "pending",
+          "notes": "Last pure-black OLED screens and a third visual language. Needs D8. Wave 3.",
+          "created": "2026-11-01T18:37:56.532Z",
+          "completed": null
+        },
+        {
+          "id": "S27.13",
+          "title": "Rank 13 · Collapse to six grounds; green only for done; coral never as text; card alpha or hairline ≥ 1.3:1.",
+          "status": "pending",
+          "notes": "lab.js Lab.grounds, tokens.json, Ground.swift, V4TokenTests. Coral kicker text is 2.41:1 on program/changing. Needs D9. Wave 3.",
+          "created": "2026-11-01T18:37:56.597Z",
+          "completed": null
+        },
+        {
+          "id": "S27.14",
+          "title": "Rank 14 · Task-screen layout: top-anchored content with an 88 px character, Continue under the last option, grabbers and restated mission on follow-up sheets, hide 'Audio coming soon', fix 'Right.' on wrong answers.",
+          "status": "pending",
+          "notes": "450–550 px voids on session, session-kit, calm-*, log-slip-what, checkin-dayend. Wave 3.",
+          "created": "2026-11-01T18:37:56.651Z",
+          "completed": null
+        },
+        {
+          "id": "S27.15",
+          "title": "Rank 15 · One illustration language: delete PersonFigure, constrain kit tiles to warm/deep families, ration the marked word, no twinkle on forms.",
+          "status": "pending",
+          "notes": "PersonFigure.swift used in CalmToolsView and ProgramPathMap; art.js. Wave 3.",
+          "created": "2026-11-01T18:37:56.704Z",
+          "completed": null
+        },
+        {
+          "id": "S27.16",
+          "title": "Rank 16 · Xero grows: visible stages 1–4, sky clarity by days, distinct art and fact per milestone, stage sheet in the lab.",
+          "status": "pending",
+          "notes": "milestone is one template × 11; Xero identical days 1–14 and 30–365. CrewGrowth, XeroView, HorizonScene, MilestoneViews. Wave 4.",
+          "created": "2026-11-01T18:37:56.753Z",
+          "completed": null
+        },
+        {
+          "id": "S27.17",
+          "title": "Rank 17 · Dusk variant of the dawn hero for dark mode; lab renders sheets over their real parent.",
+          "status": "pending",
+          "notes": "Hero art at full brightness over plum on 5 screens; 14 sheet screens never reviewed as they will look. Wave 4.",
+          "created": "2026-11-01T18:37:56.801Z",
+          "completed": null
+        },
+        {
+          "id": "S27.18",
+          "title": "Rank 18 · SOS break menu / lifts / 'use your gum' row; show mission data back; sessions at days 45, 60, 90 and a weekly Glim check-in.",
+          "status": "pending",
+          "notes": "Program promises SOS options it does not show; Day 31 cliff. CravingSOSView, MissionPrompts, program.json, NotificationPlan. Wave 4.",
+          "created": "2026-11-01T18:37:56.854Z",
+          "completed": null
+        },
+        {
+          "id": "S27.19",
+          "title": "Rank 19 · Rename the sun character, trademark search, plan the move off .in.",
+          "status": "pending",
+          "notes": "'Xero' is a defended software mark (Xero Ltd) with ANZ on the launch list. Decide the name in Wave 1 (D7), rename in Wave 4.",
+          "created": "2026-11-01T18:37:56.927Z",
+          "completed": null
+        },
+        {
+          "id": "S27.20",
+          "title": "Rank 20 · Accessibility and convention debt: Dynamic Type (AX3) states and motion tokens in the lab; 44 pt targets; one hold duration; reasons under disabled CTAs; red destructive buttons; merged day-end picker.",
+          "status": "pending",
+          "notes": "Move.swift, Buttons4.swift, ProgramView tabs, MilestoneViews segments, DayEndSettings. Wave 4.",
+          "created": "2026-11-01T18:37:56.997Z",
+          "completed": null
+        }
+      ]
     }
   ],
   "log": [
+    {
+      "time": "2026-11-01T18:37:57.105Z",
+      "type": "status",
+      "message": "S27.1 pending → in_progress"
+    },
+    {
+      "time": "2026-11-01T18:37:57.056Z",
+      "type": "now",
+      "message": "Now: S27 / S27.1"
+    },
+    {
+      "time": "2026-11-01T18:37:56.997Z",
+      "type": "task_added",
+      "message": "S27.20 added: Rank 20 · Accessibility and convention debt: Dynamic Type (AX3) states and motion tokens in the lab; 44 pt targets; one hold duration; reasons under disabled CTAs; red destructive buttons; merged day-end picker."
+    },
+    {
+      "time": "2026-11-01T18:37:56.927Z",
+      "type": "task_added",
+      "message": "S27.19 added: Rank 19 · Rename the sun character, trademark search, plan the move off .in."
+    },
+    {
+      "time": "2026-11-01T18:37:56.854Z",
+      "type": "task_added",
+      "message": "S27.18 added: Rank 18 · SOS break menu / lifts / 'use your gum' row; show mission data back; sessions at days 45, 60, 90 and a weekly Glim check-in."
+    },
+    {
+      "time": "2026-11-01T18:37:56.801Z",
+      "type": "task_added",
+      "message": "S27.17 added: Rank 17 · Dusk variant of the dawn hero for dark mode; lab renders sheets over their real parent."
+    },
+    {
+      "time": "2026-11-01T18:37:56.753Z",
+      "type": "task_added",
+      "message": "S27.16 added: Rank 16 · Xero grows: visible stages 1–4, sky clarity by days, distinct art and fact per milestone, stage sheet in the lab."
+    },
+    {
+      "time": "2026-11-01T18:37:56.704Z",
+      "type": "task_added",
+      "message": "S27.15 added: Rank 15 · One illustration language: delete PersonFigure, constrain kit tiles to warm/deep families, ration the marked word, no twinkle on forms."
+    },
+    {
+      "time": "2026-11-01T18:37:56.651Z",
+      "type": "task_added",
+      "message": "S27.14 added: Rank 14 · Task-screen layout: top-anchored content with an 88 px character, Continue under the last option, grabbers and restated mission on follow-up sheets, hide 'Audio coming soon', fix 'Right.' on wrong answers."
+    },
+    {
+      "time": "2026-11-01T18:37:56.597Z",
+      "type": "task_added",
+      "message": "S27.13 added: Rank 13 · Collapse to six grounds; green only for done; coral never as text; card alpha or hairline ≥ 1.3:1."
+    },
+    {
+      "time": "2026-11-01T18:37:56.532Z",
+      "type": "task_added",
+      "message": "S27.12 added: Rank 12 · Water to one row, delete the goal calculator; rebuild calm-box, calm-478 and the breathe beat on reading tokens."
+    },
+    {
+      "time": "2026-11-01T18:37:56.476Z",
+      "type": "task_added",
+      "message": "S27.11 added: Rank 11 · Native iOS 26 TabView with monochrome icons; Settings reachable from Progress; fold Evening into Today (four tabs)."
+    },
+    {
+      "time": "2026-11-01T18:37:56.413Z",
+      "type": "task_added",
+      "message": "S27.10 added: Rank 10 · Onboarding voice and skips: first-person Xero, replace 'Dual use detected', define 'wave', one progress bar, skippable name and past attempts, Skip on onb-breathe, feed or cut unused answers."
+    },
+    {
+      "time": "2026-11-01T18:37:56.355Z",
+      "type": "task_added",
+      "message": "S27.9 added: Rank 9 · Honest counter: 'days since Quit Day'; 'not smoked' subtracts slips; relapse threshold with a Jelli fresh-Quit-Day offer; remove 'streak' wording and the water streak pill."
+    },
+    {
+      "time": "2026-11-01T18:37:56.304Z",
+      "type": "task_added",
+      "message": "S27.8 added: Rank 8 · 7-day trial ending after 'One week clear'; lifetime to $99.99; win-back offer and grace period in App Store Connect; check-in stays free."
+    },
+    {
+      "time": "2026-11-01T18:37:56.257Z",
+      "type": "task_added",
+      "message": "S27.7 added: Rank 7 · Day Xero fires on the chosen date; unfinished prep becomes catch-up; allow a 3–7 day prep."
+    },
+    {
+      "time": "2026-11-01T18:37:56.191Z",
+      "type": "task_added",
+      "message": "S27.6 added: Rank 6 · NRT framing: combination NRT as best-evidenced, 'ask about prescription options', regulator label sources, pregnancy question."
+    },
+    {
+      "time": "2026-11-01T18:37:56.128Z",
+      "type": "task_added",
+      "message": "S27.5 added: Rank 5 · One day count on today/program; prep-specific pledge wording; hide '0 waves' in prep; fix the '0 of 7 prep done' counter."
+    },
+    {
+      "time": "2026-11-01T18:37:56.071Z",
+      "type": "task_added",
+      "message": "S27.4 added: Rank 4 · onb-trial + notifications: make 'That's it' true with two defaults and one global cap; reconcile 21:00 / 21:30 / 9:00 PM."
+    },
+    {
+      "time": "2026-11-01T18:37:56.014Z",
+      "type": "task_added",
+      "message": "S27.3 added: Rank 3 · onb-baseline-summary: delete the 'Good news… steps down' note, keep-frame the money, relabel 'Time back', hide 'YOUR ANSWER', source or drop the cigarette-equivalence number."
+    },
+    {
+      "time": "2026-11-01T18:37:55.945Z",
+      "type": "task_added",
+      "message": "S27.2 added: Rank 2 · Reconcile the paywall: drop the post-onboarding paywall (decision 15) or sell the trial there; remove the 3 s hidden Close; fix 'Day 1' copy; 'Always free: your counter and Craving SOS.' on every paywall."
+    },
+    {
+      "time": "2026-11-01T18:37:55.879Z",
+      "type": "task_added",
+      "message": "S27.1 added: Rank 1 · Privacy link: set AppLinks.privacy and link it from onb-welcome, settings-privacy and every paywall (paywall, paywall-plans, offer)."
+    },
+    {
+      "time": "2026-11-01T18:37:55.810Z",
+      "type": "section_added",
+      "message": "S27 added: Design critique fixes (reports/DayXero app design critique.md)"
+    },
+    {
+      "time": "2026-11-01T18:35:10.198Z",
+      "type": "section_added",
+      "message": "undefined added: undefined"
+    },
     {
       "time": "2026-10-29T17:10:00.000Z",
       "type": "status",
