@@ -1,32 +1,29 @@
 import CoreText
 import SwiftUI
 
-/// The five v4 tabs (decision 21): Today · Program · SOS · Evening · Me.
+/// The four tabs (S27.11, 1 Nov 2026): Today · Program · SOS · Progress. Evening folded into Today's evening and
+/// night states; Me became Progress, with Settings behind its gear. Was five (decision 21).
 public enum V4Tab: String, CaseIterable, Sendable {
-    case today, program, sos, evening, me
+    case today, program, sos, progress
 
     public var label: String {
         switch self {
         case .today: "Today"
         case .program: "Program"
         case .sos: "SOS"
-        case .evening: "Evening"
-        case .me: "Me"
+        case .progress: "Progress"
         }
     }
 
-    /// Icon paths from `Nav2.dc.html` (24 × 24).
+    /// Monochrome outline icons (24 × 24), like the system tab bar's SF Symbols.
     var icon: String {
         switch self {
         case .today: "M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"
         case .program: "M12 21V11 M12 13C6 13 4 9 4 5c5 0 8 3 8 8Z M12 11c0-4 3-7 8-7 0 4-3 7-8 7Z"
         case .sos: "M3 12c3-4 6-4 9 0s6 4 9 0"
-        case .evening: "M15 3a8.5 8.5 0 1 0 6 13.5A7 7 0 0 1 15 3Z"
-        case .me: "M12 3.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9Z M3.5 21c1.2-4.6 4.6-7 8.5-7s7.3 2.4 8.5 7z"
+        case .progress: "M5 20V11 M12 20V5 M19 20v-6"
         }
     }
-
-    var filled: Bool { self == .today || self == .evening || self == .me }
 }
 
 /// A 24 × 24 SVG icon path scaled to its frame.
@@ -38,7 +35,10 @@ struct IconShape: Shape {
     }
 }
 
-/// Nav2: the floating pill tab bar. SOS is always ocean so it can be found in a hurry.
+/// The floating tab bar (S27.11): a translucent glass capsule with monochrome outline icons and a soft lozenge
+/// behind the selected tab, in the spirit of iOS 26's tab bar. SOS is always ocean so it can be found in a hurry.
+/// It stays custom rather than `TabView` because SOS opens Craving SOS instead of switching tabs, and iPhone Duo
+/// stands the dock on its side edge.
 public struct V4TabBar: View {
     @Binding var selection: V4Tab
     @Environment(\.colorScheme) private var scheme
@@ -57,14 +57,9 @@ public struct V4TabBar: View {
                     : (on ? Color(hex: dark ? 0xFFF8EE : 0x1E1A3A) : Color(hex: dark ? 0xB8B3D9 : 0x5E5975))
                 Button { selection = tab } label: {
                     VStack(spacing: 3) {
-                        Group {
-                            if tab.filled {
-                                IconShape(d: tab.icon).fill(color)
-                            } else {
-                                IconShape(d: tab.icon).stroke(color, style: StrokeStyle(lineWidth: 2.4, lineCap: .round, lineJoin: .round))
-                            }
-                        }
-                        .frame(width: 22, height: 22)
+                        IconShape(d: tab.icon)
+                            .stroke(color, style: StrokeStyle(lineWidth: on ? 2.4 : 2, lineCap: .round, lineJoin: .round))
+                            .frame(width: 22, height: 22)
                         Text(tab.label)
                             .font(DX.Typeface4.font(.body, size: 12, weight: on ? 700 : 600).swiftUI)
                             .foregroundStyle(color)
@@ -72,7 +67,7 @@ public struct V4TabBar: View {
                             .minimumScaleFactor(0.8)
                     }
                     .frame(maxWidth: .infinity, minHeight: 58)
-                    .background(on ? Color(hex: dark ? 0x2A255F : 0xF1EBE2) : .clear, in: Capsule())
+                    .background(on ? (dark ? Color.white.opacity(0.12) : Color(hex: 0x1E1A3A).opacity(0.07)) : .clear, in: Capsule())
                     .contentShape(Capsule())
                 }
                 .buttonStyle(.plain)
@@ -85,10 +80,11 @@ public struct V4TabBar: View {
         .padding(.horizontal, 6)
         .frame(height: 70)
         .background {
-            Capsule().fill(Color(hex: dark ? 0x1B1747 : 0xFFFFFF).opacity(0.96))
-                .shadow(color: dark ? Color.black.opacity(0.5) : Color(hex: 0x1E1A3A).opacity(0.14), radius: 15, x: 0, y: 12)
+            // Glass: content shows through, softened, instead of an opaque white pill.
+            Capsule().fill(.regularMaterial)
+                .shadow(color: dark ? Color.black.opacity(0.45) : Color(hex: 0x1E1A3A).opacity(0.12), radius: 14, x: 0, y: 10)
         }
-        .overlay(Capsule().strokeBorder(dark ? Color.white.opacity(0.08) : Color(hex: 0x1E1A3A).opacity(0.06), lineWidth: 1))
+        .overlay(Capsule().strokeBorder(dark ? Color.white.opacity(0.14) : Color(hex: 0x1E1A3A).opacity(0.10), lineWidth: 1))
         .padding(.horizontal, 12)
         .sensoryFeedback(DX.Haptic.select, trigger: selection)
     }

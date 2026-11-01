@@ -3,6 +3,12 @@ import SwiftUI
 /// v4 grounds (design/handoff/tokens.json → "grounds"). Colour follows the character:
 /// apricot is Xero, ocean is Jelli, violet is Glim. Every ink and muted pair here
 /// clears 4.5:1 in both modes; `V4TokenTests` checks it.
+///
+/// S27.13 (1 Nov 2026): six grounds plus sun. Twelve read as decoration; six can be learned, each with one job:
+/// apricot = Xero's day, mint = your plan, ocean = Jelli and SOS, sky = relief, Xero's questions, patterns and calm,
+/// violet = Glim's evening, reading = the work, and sun for celebrations only. The retired cases (coral, lilac, lime,
+/// mist, periwinkle) stay so existing call sites compile, but draw their survivor's colours (`resolved`) and are left
+/// out of `allCases`.
 public extension DX {
     enum Ground: String, CaseIterable, Sendable {
         /// First breath, beginnings. Brand use pending decision 18.
@@ -30,6 +36,20 @@ public extension DX {
         /// Calm tools (decision 31).
         case periwinkle
 
+        /// The grounds in use (S27.13). Retired cases resolve to one of these.
+        public static let allCases: [Ground] = [.apricot, .mint, .ocean, .sky, .violet, .reading, .sun]
+
+        /// The ground this one draws as: itself, or for a retired case its survivor
+        /// (coral → apricot; lilac, mist, periwinkle → sky; lime → mint).
+        public var resolved: Ground {
+            switch self {
+            case .coral: .apricot
+            case .lilac, .mist, .periwinkle: .sky
+            case .lime: .mint
+            default: self
+            }
+        }
+
         /// Raw hex values, kept separate from `Color` so tests can check contrast.
         public struct Spec: Sendable {
             public let light: UInt32
@@ -41,6 +61,7 @@ public extension DX {
         }
 
         public var spec: Spec {
+            if resolved != self { return resolved.spec }
             let cream: UInt32 = 0xFFF8EE
             let navy: UInt32 = 0x1E1A3A
             let plum: UInt32 = 0x241433
@@ -70,14 +91,21 @@ public extension DX {
         /// Reading-ground cards.
         public static let surface = Color(light: 0xF1EBE2, dark: 0x1B1747)
         public static let raised = Color(light: 0xFFFFFF, dark: 0x2A255F)
-        /// Cards laid on a coloured ground.
-        public static let cardOnColour = Color(light: (0xFFF8EE, 0.70), dark: (0xFFFFFF, 0.10))
+        /// Cards laid on a coloured ground. S27.13: white at 90% (light) and 13% (dark), so a card separates from
+        /// every light ground by at least 1.3:1. Was cream at 70% and white at 10%, which nearly vanished.
+        public static let cardOnColour = Color(light: (0xFFFFFF, cardLightAlpha), dark: (0xFFFFFF, cardDarkAlpha))
+        public static let cardLightAlpha = 0.90
+        public static let cardDarkAlpha = 0.13
+        /// Navy over the cream-ink grounds (ocean, violet) in light mode. 44% keeps violet's card at 1.31:1 from the
+        /// ground and cream ink above 9:1 (the lab draws 42%, which is 1.296:1 on violet).
+        public static let cardNavyAlpha = 0.44
+        /// A hairline round cards, for the cream reading ground, where no fill can separate a card by 1.3:1.
+        public static let hairline = Color(light: (0x1E1A3A, 0.12), dark: (0xFFFFFF, 0.14))
 
-        /// Card on colour for a given ground (decision 25). Ocean and violet keep cream ink in light mode,
-        /// so a cream card would wash the text out: in light they get a navy tint at 20% instead, which keeps
-        /// cream ink above 7:1 and muted text above 6:1. Dark mode is unchanged.
+        /// Card on colour for a given ground (decision 25, S27.13). Ocean and violet keep cream ink in light mode,
+        /// so a light card would wash the text out: in light they get a navy tint instead.
         public static func onColourCard(for ground: DX.Ground) -> Color {
-            ground.spec.inkLight == 0xFFF8EE ? Color(light: (0x1E1A3A, 0.20), dark: (0xFFFFFF, 0.10)) : cardOnColour
+            ground.spec.inkLight == 0xFFF8EE ? Color(light: (0x1E1A3A, cardNavyAlpha), dark: (0xFFFFFF, cardDarkAlpha)) : cardOnColour
         }
         /// Success fill. Light value replaced #1FA971, which failed contrast with white.
         public static let green = Color(light: 0x0F6E43, dark: 0x2FD08A)

@@ -123,41 +123,30 @@ final class JourneyUITests: XCTestCase {
         XCTAssert(app.buttons["Craving SOS"].waitForExistence(timeout: 5))
     }
 
-    /// Every tap on Log raises the water straight away, quick taps or slow (S21.2): Milan saw it sit still and
-    /// then jump up by all the taps at once. Reads the amount from VoiceOver and the water's height from the pixels.
-    func testWaterRisesOnEveryTap() {
-        // Water is one tap from the Evening tab; "-dx.tab water" opens Evening with the tracker showing.
-        let app = launch(["-dx.homeScenario", "day3", "-dx.store", "pro", "-dx.tab", "water"])
-        let pill = app.descendants(matching: .any)["Water today"]
-        XCTAssert(pill.waitForExistence(timeout: 10), "No water pill")
-        // "Log 250 ml", or "Log 8 fl oz" where the simulator's region uses US units.
-        let log = app.buttons.matching(NSPredicate(format: "label CONTAINS[c] 'Log 250 ml' OR label CONTAINS[c] 'Log 8 fl oz'")).firstMatch
-        XCTAssert(log.waitForExistence(timeout: 5), "No Log button")
-        RunLoop.current.run(until: .now.addingTimeInterval(1))
-        // Very large text can push Log to the bottom edge; scroll it clear.
-        if log.frame.maxY > app.frame.maxY - 40 {
+    /// Every tap on the water row's + logs a glass straight away, quick taps or slow (S21.2). Since S27.12 water is one
+    /// row on Today ("Water · 3 of 8 glasses"), not a tracker, so the count is read from the row's label.
+    func testWaterRowLogsEveryTap() {
+        let app = launch(["-dx.homeScenario", "day3", "-dx.store", "pro"])
+        let row = app.staticTexts["today.water.count"]
+        let add = app.buttons["today.water.add"]
+        // The row sits under Your day; scroll until it's on screen.
+        for _ in 0..<4 where !(add.exists && add.isHittable) {
             app.scrollViews.firstMatch.swipeUp()
-            RunLoop.current.run(until: .now.addingTimeInterval(1))
+            RunLoop.current.run(until: .now.addingTimeInterval(0.6))
         }
-        snap(app, "40-water-start")
-        var glasses = glassCount(pill)
-        var height = liquidHeight(app, pill)
+        XCTAssert(row.waitForExistence(timeout: 10), "No water row")
+        XCTAssert(add.waitForExistence(timeout: 5), "No + on the water row")
+        snap(app, "40-water-row-start")
+        var glasses = glassCount(row)
         for tapNumber in 1...6 {
             let quick = tapNumber <= 3
-            log.tap()
+            add.tap()
             RunLoop.current.run(until: .now.addingTimeInterval(quick ? 0.4 : 1.2))
-            snap(app, "41-water-tap-\(tapNumber)")
-            let nowGlasses = glassCount(pill)
+            let nowGlasses = glassCount(row)
             XCTAssertEqual(nowGlasses, glasses + 1, "Tap \(tapNumber) didn't log a glass")
             glasses = nowGlasses
-            // The pixel check needs the whole pill on screen; small phones scroll it partly away to reach Log.
-            if let before = height, let after = liquidHeight(app, pill) {
-                XCTAssertGreaterThan(after, before + 0.04, "The water didn't rise after tap \(tapNumber) (\(before) → \(after))")
-                height = after
-            } else {
-                height = nil
-            }
         }
+        snap(app, "41-water-row-after")
     }
 
     // MARK: Steps
@@ -175,7 +164,7 @@ final class JourneyUITests: XCTestCase {
     }
 
     private func visitTabs(_ app: XCUIApplication, prefix: String) {
-        for tab in ["Evening", "Program", "Me", "Today"] {
+        for tab in ["Program", "Progress", "Today"] {
             tap(app.buttons[tab].firstMatch)
             RunLoop.current.run(until: .now.addingTimeInterval(1))   // let the tab cross-fade finish
             snap(app, "\(prefix)-\(tab.lowercased())")
@@ -231,34 +220,11 @@ final class JourneyUITests: XCTestCase {
     }
 
     /// "1.25 of 2.0 litres, 5 of 8 glasses" → 5.
-    private func glassCount(_ pill: XCUIElement) -> Int {
-        let value = pill.value as? String ?? ""
+    /// "3" from the water row's "Water · 3 of 8 glasses" (its label, or its value where VoiceOver puts it there).
+    private func glassCount(_ element: XCUIElement) -> Int {
+        let value = element.label + " " + (element.value as? String ?? "")
         guard let range = value.range(of: #"(\d+) of \d+ glasses"#, options: .regularExpression) else { return -1 }
         return Int(value[range].prefix { $0.isNumber }) ?? -1
-    }
-
-    /// How much of the pill is blue water, 0...1, read down one column clear of the glass highlight; nil when the
-    /// pill isn't wholly on screen.
-    private func liquidHeight(_ app: XCUIApplication, _ pill: XCUIElement) -> Double? {
-        guard app.windows.firstMatch.frame.contains(pill.frame), let image = pill.screenshot().image.cgImage else { return nil }
-        let w = image.width, h = image.height
-        var pixels = [UInt8](repeating: 0, count: w * h * 4)
-        let drawn: Bool = pixels.withUnsafeMutableBytes { buffer in
-            guard let context = CGContext(data: buffer.baseAddress, width: w, height: h, bitsPerComponent: 8, bytesPerRow: w * 4,
-                                          space: CGColorSpaceCreateDeviceRGB(),
-                                          bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else { return false }
-            context.draw(image, in: CGRect(x: 0, y: 0, width: w, height: h))
-            return true
-        }
-        guard drawn else { return nil }
-        let x = w * 62 / 100
-        var blue = 0
-        for y in 0..<h {
-            let i = (y * w + x) * 4
-            let r = Int(pixels[i]), b = Int(pixels[i + 2])
-            if b > 90, b > r + 15 { blue += 1 }
-        }
-        return Double(blue) / Double(h)
     }
 
     private func button(_ app: XCUIApplication, _ text: String) -> XCUIElement {
