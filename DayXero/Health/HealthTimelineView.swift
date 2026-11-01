@@ -1,15 +1,20 @@
 import DayXeroCore
 import SwiftUI
 
-/// "Your body" (S10.1, S10.2): what changes after stopping, counted from Quit Day, one timeline per product.
-/// Laid out as the signed-off timeline path (S21.7): the change happening now (or, before Quit Day, the first one)
-/// featured on top, then every change as a stop on a path whose line turns solid as you reach it.
+/// "What's changing" (decision 31): what changes after stopping, counted from Quit Day, one timeline per
+/// product, on lime. A rail runs down the side: done changes are ticked on a solid line, the ones under way
+/// are raised cards with a coral bar, the rest wait on a dotted line. Every change has its own illustration
+/// from the kit; sources are listed once, small, at the bottom.
 struct HealthTimelineView: View {
     let profile: UserProfile
     var onClose: (() -> Void)?
 
     @State private var product: Product
     @State private var open: HealthTimeline.Item?
+
+    private let ground = DX.Ground.lime
+    private let card = Color(light: 0xFFF8EE, dark: 0x16382D)
+    private let coralInk = Color(light: 0xB2361C, dark: 0xFFB59E)
 
     init(profile: UserProfile, onClose: (() -> Void)? = nil) {
         self.profile = profile
@@ -29,27 +34,20 @@ struct HealthTimelineView: View {
             let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
             let elapsed = HealthTimeline.elapsedHours(quitDay: profile.quitDay, now: context.date, clock: clock)
             let timeline = HealthTimeline.bundled
+            let items = timeline?.items(for: product) ?? []
             ScrollView {
-                VStack(alignment: .leading, spacing: DX.Space.xs) {
+                VStack(alignment: .leading, spacing: DX.Space.s) {
                     header(elapsed: elapsed, clock: clock, now: context.date)
                     if products.count > 1 { switcher }
-                    let items = timeline?.items(for: product) ?? []
-                    let (current, next) = HealthTimeline.nowAndNext(items, elapsedHours: elapsed)
-                    if let featured = current ?? next ?? items.last {
-                        featuredCard(featured, elapsed: elapsed)
-                            .padding(.bottom, DX.Space.xs)
-                    }
-                    // Before Quit Day the first change is the featured one, so the path starts at the second.
-                    let path = elapsed < 0 ? Array(items.dropFirst()) : items
                     VStack(spacing: 0) {
-                        ForEach(Array(path.enumerated()), id: \.element.id) { index, item in
-                            Button { open = item } label: {
-                                HealthPathStop(item: item, state: HealthTimeline.state(of: item, elapsedHours: elapsed),
-                                               isLast: index == path.count - 1)
-                            }
-                            .buttonStyle(.plain)
+                        ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
+                            let state = rowState(item, index: index, elapsed: elapsed)
+                            let next = index + 1 < items.count ? rowState(items[index + 1], index: index + 1, elapsed: elapsed) : nil
+                            Button { open = item } label: { row(item, state: state, next: next, isLast: index == items.count - 1) }
+                                .buttonStyle(.plain)
                         }
                     }
+                    .padding(.top, DX.Space.xs)
                     if let text = timeline?.note(for: product) { note(text) }
                     sources(timeline)
                 }
@@ -59,7 +57,7 @@ struct HealthTimelineView: View {
                 .padding(.bottom, DX.Space.xxl)
             }
         }
-        .background(Read4.background.ignoresSafeArea())
+        .background(ground.background.ignoresSafeArea())
         .sheet(item: $open) { item in
             let elapsed = HealthTimeline.elapsedHours(quitDay: profile.quitDay, now: .now,
                                                       clock: DayClock(boundaryHour: profile.dayBoundaryHour))
@@ -74,71 +72,33 @@ struct HealthTimelineView: View {
     }
 
     private func header(elapsed: Double, clock: DayClock, now: Date) -> some View {
-        HStack(alignment: .center) {
-            VStack(alignment: .leading, spacing: 2) {
-                if elapsed < 0 {
-                    let days = clock.days(from: now, toDate: profile.quitDay)
-                    Text("Quit Day in \(days) days").v4Text(.micro)
-                } else {
-                    let day = clock.days(fromDate: profile.quitDay, to: now) + 1
-                    Text("Day \(day) · since \(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).day().month()))").v4Text(.micro)
+        HStack(alignment: .center, spacing: DX.Space.xs) {
+            VStack(alignment: .leading, spacing: 4) {
+                Group {
+                    if elapsed < 0 {
+                        let days = clock.days(from: now, toDate: profile.quitDay)
+                        if days == 1 { Text("Quit Day tomorrow") } else { Text("Quit Day in \(days) days") }
+                    } else {
+                        let day = clock.days(fromDate: profile.quitDay, to: now) + 1
+                        Text("Day \(day) · \(now.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)))")
+                    }
                 }
-                Text("Your body").v4Text(.title).accessibilityAddTraits(.isHeader)
+                .dxType(.footnote).foregroundStyle(ground.muted)
+                MarkedTitle(String(localized: "What's"), marking: String(localized: "changing"),
+                            color: DX.Mark.color(on: ground), stacked: true)
+                    .dxType(.large).foregroundStyle(ground.ink)
             }
-            Spacer()
+            Spacer(minLength: 0)
+            PersonFigure(.cheer, height: 108, shirt: 0xFF7A55)
+                .frame(width: 128, height: 128)
+                .background(Color(light: (0xFFFFFF, 0.45), dark: (0xFFFFFF, 0.08)), in: Circle())
+        }
+        .overlay(alignment: .topTrailing) {
             if let onClose {
                 Button(action: onClose) { Image(systemName: "xmark") }
                     .buttonStyle(.v4Icon).accessibilityLabel(Text("Close"))
             }
         }
-        .padding(.bottom, DX.Space.xxs)
-    }
-
-    /// The change happening now, with how far it's got; before Quit Day, the first change and when it starts.
-    private func featuredCard(_ item: HealthTimeline.Item, elapsed: Double) -> some View {
-        let before = elapsed < 0
-        let state = HealthTimeline.state(of: item, elapsedHours: elapsed)
-        let eyebrow: String = if before {
-            String(localized: "First · \(item.when)")
-        } else {
-            switch state {
-            case .underWay: String(localized: "Happening now · \(item.when)")
-            case .ahead: String(localized: "Next · \(TodayView.relative(hours: item.fromHours - elapsed))")
-            case .done: String(localized: "Reached · \(item.when)")
-            }
-        }
-        return Button { open = item } label: {
-            HStack(spacing: DX.Space.m) {
-                HealthBadge(id: item.id, state: before ? .underWay(0) : state, size: 80, showsRing: !before)
-                    .padding(8)
-                    .background(Read4.card, in: Circle())
-                    .padding(before ? 0 : 6)
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(verbatim: eyebrow).v4Text(.micro, color: Read4.accent)
-                    Text(verbatim: item.title)
-                        .dxFont(19, weight: 600, style: .headline).foregroundStyle(Read4.ink)
-                        .multilineTextAlignment(.leading)
-                    if before {
-                        Text("Your timeline starts on Quit Day, \(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).day().month())).")
-                            .v4Text(.subtitle).multilineTextAlignment(.leading)
-                    } else if case let .underWay(fraction) = state {
-                        V4ProgressBar(value: fraction).padding(.top, 4)
-                        Text("\(Int((fraction * 100).rounded()))% · done \(TodayView.relative(hours: item.toHours - elapsed))")
-                            .v4Text(.subtitle)
-                    } else if !item.line.isEmpty {
-                        Text(verbatim: item.line).v4Text(.subtitle).multilineTextAlignment(.leading)
-                    }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            .padding(DX.Space.m)
-            .background(LinearGradient(colors: [Read4.accentSoft, Read4.card], startPoint: .topLeading, endPoint: .bottomTrailing),
-                        in: RoundedRectangle(cornerRadius: 28, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 28, style: .continuous).strokeBorder(Read4.hairline))
-        }
-        .buttonStyle(.plain)
-        .accessibilityElement(children: .combine)
-        .accessibilityHint(Text("Opens the full story"))
     }
 
     private var switcher: some View {
@@ -147,18 +107,17 @@ struct HealthTimelineView: View {
                 let on = p == product
                 Button { product = p } label: {
                     Text(label(p))
-                        .dxFont(12, weight: 600, style: .caption1)
-                        .foregroundStyle(on ? Read4.onInk : Read4.muted)
-                        .padding(.vertical, 6).padding(.horizontal, 14)
-                        .background(on ? Read4.ink : .clear, in: Capsule())
+                        .dxFont(14, weight: 700, style: .footnote)
+                        .foregroundStyle(on ? DX.Ground.reading.background : ground.ink)
+                        .frame(maxWidth: .infinity, minHeight: 44)
+                        .background(on ? ground.ink : .clear, in: Capsule())
                 }
                 .buttonStyle(.plain)
-                .accessibilityAddTraits(on ? .isSelected : [])
+                .accessibilityAddTraits(on ? [.isButton, .isSelected] : .isButton)
             }
         }
-        .padding(3)
-        .background(Read4.surface, in: Capsule())
-        .padding(.bottom, DX.Space.xs)
+        .padding(4)
+        .background(Color(light: (0x1E1A3A, 0.08), dark: (0xFFFFFF, 0.08)), in: Capsule())
         .sensoryFeedback(DX.Haptic.select, trigger: product)
     }
 
@@ -170,39 +129,179 @@ struct HealthTimelineView: View {
         }
     }
 
-    /// Sources once, under the timeline, instead of on every card.
+    // MARK: Rows
+
+    private enum RowState: Equatable { case done, now(Double), first, ahead }
+
+    /// Before Quit Day the first change is raised as "From Quit Day"; after, the state from the timeline.
+    private func rowState(_ item: HealthTimeline.Item, index: Int, elapsed: Double) -> RowState {
+        if elapsed < 0 { return index == 0 ? .first : .ahead }
+        switch HealthTimeline.state(of: item, elapsedHours: elapsed) {
+        case .done: return .done
+        case let .underWay(fraction): return .now(fraction)
+        case .ahead: return .ahead
+        }
+    }
+
+    private func row(_ item: HealthTimeline.Item, state: RowState, next: RowState?, isLast: Bool) -> some View {
+        let raised: Bool = switch state {
+        case .now, .first: true
+        case .done, .ahead: false
+        }
+        let solid: Bool = {
+            switch (state, next) {
+            case (.done, .done?), (.done, .now?), (.now, .done?), (.now, .now?): return true
+            default: return false
+            }
+        }()
+        let kicker: String = switch state {
+        case .now: String(localized: "Under way · \(item.when)")
+        case .first: String(localized: "From Quit Day")
+        default: item.when
+        }
+        return HStack(alignment: .top, spacing: 12) {
+            ZStack(alignment: .top) {
+                if !isLast {
+                    Rectangle().fill(.clear).frame(width: 3)
+                        .overlay {
+                            if solid {
+                                Rectangle().fill(DX.Fill.green)
+                            } else {
+                                Line().stroke(ground.ink, style: StrokeStyle(lineWidth: 3, lineCap: .round, dash: [1, 6]))
+                            }
+                        }
+                        .padding(.top, 14)
+                        .padding(.bottom, -14)
+                }
+                node(state).padding(.top, raised ? 30 : 10)
+            }
+            .frame(width: 26)
+            .frame(maxHeight: .infinity, alignment: .top)
+            .accessibilityHidden(true)
+
+            HStack(spacing: 12) {
+                KitArt(HealthArt.kind(for: item.id), cornerRadius: raised ? 18 : 14)
+                    .frame(width: raised ? 64 : 48, height: raised ? 64 : 48)
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(verbatim: kicker.uppercased()).dxType(.caption).foregroundStyle(raised ? coralInk : ground.muted)
+                    Text(verbatim: item.title)
+                        .dxFont(raised ? 18 : 16, weight: raised ? 800 : 700, style: raised ? .headline : .body)
+                        .foregroundStyle(raised ? DX.Ground.reading.ink : ground.ink)
+                        .multilineTextAlignment(.leading)
+                        .fixedSize(horizontal: false, vertical: true)
+                    if case let .now(fraction) = state {
+                        GeometryReader { proxy in
+                            ZStack(alignment: .leading) {
+                                Capsule().fill(Color(light: 0xEDE6DA, dark: 0x2A4A3E))
+                                Capsule().fill(Color(hex: 0xFF7A55)).frame(width: proxy.size.width * min(1, max(0, fraction)))
+                            }
+                        }
+                        .frame(height: 8)
+                        .padding(.top, 4)
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .padding(raised ? 12 : 0)
+            .background {
+                if raised {
+                    RoundedRectangle(cornerRadius: 20, style: .continuous).fill(card)
+                        .shadow(color: .black.opacity(0.08), radius: 10, y: 4)
+                }
+            }
+        }
+        .fixedSize(horizontal: false, vertical: true)
+        .padding(.bottom, 12)
+        .contentShape(Rectangle())
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(verbatim: "\(item.when). \(item.title)"))
+        .accessibilityValue(Text(accessibilityValue(state)))
+        .accessibilityHint(Text("Opens the full story"))
+    }
+
+    private func accessibilityValue(_ state: RowState) -> String {
+        switch state {
+        case .done: String(localized: "Done")
+        case let .now(fraction): String(localized: "Under way, \(Int((fraction * 100).rounded())) percent")
+        case .first: String(localized: "Starts on Quit Day")
+        case .ahead: ""
+        }
+    }
+
+    @ViewBuilder
+    private func node(_ state: RowState) -> some View {
+        switch state {
+        case .done:
+            Image(systemName: "checkmark").font(.system(size: 11, weight: .heavy)).foregroundStyle(DX.Ground.reading.background)
+                .frame(width: 26, height: 26).background(DX.Fill.green, in: Circle())
+        case .now, .first:
+            Circle().fill(Color(hex: 0xFF7A55)).frame(width: 26, height: 26)
+                .background(Circle().fill(Color(hex: 0xFF7A55).opacity(0.25)).padding(-6))
+        case .ahead:
+            Circle().strokeBorder(ground.ink, lineWidth: 3).background(Circle().fill(ground.background)).frame(width: 26, height: 26)
+        }
+    }
+
+    /// Sources once, small, under the timeline.
     @ViewBuilder
     private func sources(_ timeline: HealthTimeline?) -> some View {
         let list = timeline?.sources(for: product) ?? []
         let looks = timeline?.items(for: product).contains(where: \.isLooks) ?? false
-        VStack(alignment: .leading, spacing: 6) {
-            Text("Sources").v4Text(.micro)
+        VStack(alignment: .leading, spacing: 4) {
             ForEach(list, id: \.url) { source in
                 Link(destination: source.url) {
-                    Text(verbatim: source.title).dxFont(12, weight: 400, style: .caption1)
-                        .underline().foregroundStyle(Read4.accent).multilineTextAlignment(.leading)
+                    Text(verbatim: looks ? String(localized: "\(source.label) (health changes)") : source.label)
+                        .dxFont(12, weight: 600, style: .caption1).underline().foregroundStyle(ground.ink)
+                        .multilineTextAlignment(.leading)
                 }
             }
-            if looks {
-                Text("Looks changes (lips, skin, hair, taste, breath, sleep) are general wellness information about how nicotine and smoke affect blood flow and skin.")
-                    .dxFont(12, weight: 400, style: .caption1).foregroundStyle(Read4.muted)
-            }
-            Text("Everyone's body moves at its own pace, and a slip doesn't undo what's already healed. Not medical advice.")
-                .dxFont(12, weight: 400, style: .caption1).foregroundStyle(Read4.muted)
+            Text("General information, not medical advice. Everyone's body moves at its own pace.")
+                .dxFont(12, weight: 400, style: .caption1).foregroundStyle(ground.muted)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.top, DX.Space.m)
-        .padding(.horizontal, DX.Space.xxs)
+        .padding(.top, DX.Space.s)
     }
 
     private func note(_ text: String) -> some View {
         Text(verbatim: text)
-            .v4Text(.subtitle)
+            .dxType(.footnote).foregroundStyle(ground.muted)
             .padding(DX.Space.s)
             .frame(maxWidth: .infinity, alignment: .leading)
             .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .strokeBorder(Read4.faint, style: StrokeStyle(lineWidth: 1, dash: [4, 4])))
-            .padding(.vertical, DX.Space.xxs)
+                .strokeBorder(ground.muted, style: StrokeStyle(lineWidth: 1, dash: [4, 4])))
+    }
+}
+
+/// A vertical line for the dotted rail.
+private struct Line: Shape {
+    func path(in rect: CGRect) -> Path {
+        var p = Path()
+        p.move(to: CGPoint(x: rect.midX, y: rect.minY))
+        p.addLine(to: CGPoint(x: rect.midX, y: rect.maxY))
+        return p
+    }
+}
+
+/// Each change's illustration from the kit (decision 31).
+enum HealthArt {
+    static func kind(for id: String) -> KitArt.Kind {
+        switch id {
+        case "heart-rate", "heart-disease": .heart
+        case "carbon-monoxide", "nicotine-gone": .clouds
+        case "taste": .berry
+        case "fresh-breath", "mood": .sparkle
+        case "circulation", "cravings-fade": .breath
+        case "lips": .lips
+        case "skin-glow": .dawn
+        case "coughing", "lung-cancer": .lungs
+        case "hair": .sprout
+        case "even-tone": .flower
+        case "heart-attack", "mouth-cancer": .shield
+        case "withdrawal-start": .sea
+        case "withdrawal-peak": .peak
+        case "sleep": .night
+        default: .dawn
+        }
     }
 }
 

@@ -18,11 +18,11 @@ public enum CalmTool: String, CaseIterable, Sendable, Identifiable {
 
     public var detail: LocalizedStringResource {
         switch self {
-        case .boxBreathing: "In, hold, out, hold. Four counts each."
-        case .longerOutBreath: "In for 4, hold for 7, out for 8."
-        case .grounding: "Name what you can see, feel, hear, smell and taste."
-        case .noticeAndName: "Spot the thought, give it a label, let it be."
-        case .dropAnchor: "Feet on the floor, notice the room, come back."
+        case .boxBreathing: "In, hold, out, hold."
+        case .longerOutBreath: "In 4, hold 7, out 8."
+        case .grounding: "Use your five senses."
+        case .noticeAndName: "Label the thought. Let it be."
+        case .dropAnchor: "Feet down. Come back to the room."
         }
     }
 

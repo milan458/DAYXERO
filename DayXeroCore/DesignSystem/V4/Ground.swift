@@ -23,6 +23,12 @@ public extension DX {
         case sun
         /// Program, lesson, progress, slip.
         case reading
+        /// What's changing: the body timeline (decision 31).
+        case lime
+        /// Your patterns: when cravings hit and top triggers (decision 31).
+        case mist
+        /// Calm tools (decision 31).
+        case periwinkle
 
         /// Raw hex values, kept separate from `Color` so tests can check contrast.
         public struct Spec: Sendable {
@@ -48,6 +54,9 @@ public extension DX {
             case .violet: return Spec(light: 0x4A3596, dark: 0x140E3A, inkLight: cream, inkDark: cream, mutedLight: 0xD2C8FF, mutedDark: 0xB8B3D9)
             case .sun: return Spec(light: 0xFFD966, dark: plum, inkLight: navy, inkDark: cream, mutedLight: 0x5A4A10, mutedDark: 0xE0C8E8)
             case .reading: return Spec(light: 0xFBF7F1, dark: 0x0E0B2B, inkLight: navy, inkDark: cream, mutedLight: 0x5E5975, mutedDark: 0xB8B3D9)
+            case .lime: return Spec(light: 0xC1F07A, dark: 0x0F2A22, inkLight: navy, inkDark: cream, mutedLight: 0x33470F, mutedDark: 0xA9D9C0)
+            case .mist: return Spec(light: 0xC9D6FF, dark: 0x0B1A4A, inkLight: navy, inkDark: cream, mutedLight: 0x24406E, mutedDark: 0xB9C9FF)
+            case .periwinkle: return Spec(light: 0xB4C4FF, dark: 0x140E3A, inkLight: navy, inkDark: cream, mutedLight: 0x24406E, mutedDark: 0xB8B3D9)
             }
         }
 

@@ -20,33 +20,37 @@ struct CalmToolsView: View {
         #endif
     }
 
+    private let ground = DX.Ground.periwinkle
+
     var body: some View {
-        VStack(spacing: 0) {
-            HStack {
-                Button(action: onClose) { Image(systemName: "xmark") }.buttonStyle(.v4Icon).accessibilityLabel(Text("Close"))
-                Spacer()
-                Text("Calm tools").v4Text(.micro)
-                Spacer()
-                Color.clear.frame(width: 44, height: 1)
-            }
-            .padding(.top, DX.Space.s)
-            ScrollView {
-                VStack(alignment: .leading, spacing: DX.Space.xs) {
-                    Text("For stressful moments").v4Text(.title)
-                    Text("Short things to do instead of reaching for nicotine.").v4Text(.subtitle).padding(.bottom, DX.Space.xs)
-                    ForEach(CalmTool.allCases) { tool in
-                        Button { open = tool } label: { CalmToolRow(tool: tool) }.buttonStyle(.plain)
-                    }
-                    HelpLine().padding(.top, DX.Space.s)
+        ScrollView {
+            VStack(alignment: .leading, spacing: DX.Space.xs) {
+                CalmHeaderArt()
+                    .frame(maxWidth: .infinity)
+                    .padding(.top, DX.Space.xs)
+                MarkedTitle(marking: String(localized: "Calm"), trail: String(localized: " tools"), mark: .circle,
+                            color: DX.Mark.color(on: ground))
+                    .dxType(.large).foregroundStyle(ground.ink)
+                    .padding(.leading, 6)
+                Text("Short things to do instead of reaching for nicotine.").dxType(.body).foregroundStyle(ground.muted)
+                    .padding(.bottom, DX.Space.xs)
+                ForEach(CalmTool.allCases) { tool in
+                    Button { open = tool } label: { CalmToolRow(tool: tool) }.buttonStyle(.plain)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.vertical, DX.Space.xs)
+                HelpLine(compact: true, ground: ground).padding(.top, DX.Space.s)
             }
-            .scrollBounceBehavior(.basedOnSize)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, DX.Space.m)
+            .dxReadableColumn()
+            .padding(.bottom, DX.Space.l)
         }
-        .padding(.horizontal, DX.Space.m)
-        .dxReadableColumn()
-        .background(Read4.background.ignoresSafeArea())
+        .scrollBounceBehavior(.basedOnSize)
+        .overlay(alignment: .topLeading) {
+            Button(action: onClose) { Image(systemName: "xmark") }
+                .buttonStyle(.v4Icon).accessibilityLabel(Text("Close"))
+                .padding(.leading, DX.Space.m).padding(.top, DX.Space.s)
+        }
+        .background(ground.background.ignoresSafeArea())
         .fullScreenCover(item: $open) { tool in
             CalmToolPlayer(tool: tool, fromSOS: fromSOS) { backToSOS in
                 open = nil
@@ -59,55 +63,109 @@ struct CalmToolsView: View {
     }
 }
 
+/// The calm tools header: a person sitting on a cloud, a dotted halo breathing on the 4 in, 6 out clock.
+struct CalmHeaderArt: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        TimelineView(.animation(paused: reduceMotion)) { timeline in
+            let t = timeline.date.timeIntervalSinceReferenceDate
+            let breath = reduceMotion ? 0.5 : DX.Move.breath(at: t)
+            ZStack {
+                Circle()
+                    .strokeBorder(DX.Fill.cream, style: StrokeStyle(lineWidth: 2.5, lineCap: .round, dash: [2, 7]))
+                    .frame(width: 104 + 20 * breath, height: 104 + 20 * breath)
+                    .offset(y: -18)
+                CalmCloud()
+                    .fill(DX.Fill.cream)
+                    .frame(width: 168, height: 56)
+                    .offset(y: 56)
+                PersonFigure(.meditate, height: 112, shirt: 0xFF8FB8)
+                    .offset(y: 4)
+            }
+            .frame(width: 240, height: 196)
+        }
+        .accessibilityHidden(true)
+    }
+}
+
+/// The cloud the person sits on, from the canvas.
+private struct CalmCloud: Shape {
+    func path(in rect: CGRect) -> Path {
+        SVGPath.path("M16 52 C4 52 0 34 14 30 C14 14 34 8 44 18 C50 2 76 0 84 16 C92 4 118 4 124 20 C136 12 156 18 154 34 C168 34 170 52 156 52 Z")
+            .applying(CGAffineTransform(translationX: rect.minX, y: rect.minY).scaledBy(x: rect.width / 170, y: rect.height / 56))
+    }
+}
+
 struct CalmToolRow: View {
     let tool: CalmTool
     @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
-        // At the largest text sizes the icon and minutes move above the words, so the words get the full width.
         let layout = typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(alignment: .leading, spacing: DX.Space.xs))
-            : AnyLayout(HStackLayout(spacing: DX.Space.s))
+            : AnyLayout(HStackLayout(spacing: 14))
         layout {
-            HStack {
-                Image(systemName: tool.systemImage).font(.system(size: 17)).foregroundStyle(Read4.accent)
-                    .frame(width: 40, height: 40).background(Read4.accentSoft, in: Circle())
-                if typeSize.isAccessibilitySize {
-                    Spacer()
-                    Text("\(tool.minutes) min").v4Text(.subtitle)
-                }
-            }
-            VStack(alignment: .leading, spacing: 1) {
-                Text(tool.title).dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.ink)
-                Text(tool.detail).v4Text(.subtitle).multilineTextAlignment(.leading)
+            KitArt(CalmToolRow.art(tool), cornerRadius: 18)
+                .frame(width: 64, height: 64)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(tool.title).dxFont(16, weight: 700, style: .body).foregroundStyle(DX.Ground.reading.ink)
+                Text(tool.detail).dxType(.footnote).foregroundStyle(DX.Ground.reading.muted).multilineTextAlignment(.leading)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             if !typeSize.isAccessibilitySize {
-                Text("\(tool.minutes) min").v4Text(.subtitle).fixedSize()
+                Image(systemName: "chevron.right").font(.system(size: 13, weight: .bold)).foregroundStyle(DX.Ground.reading.ink)
+                    .accessibilityHidden(true)
             }
         }
-        .padding(12)
-        .background(Read4.card, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(Read4.hairline))
+        .padding(8)
+        .padding(.trailing, 8)
+        .background(Color(light: 0xFFF8EE, dark: 0x221A52), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
         .accessibilityElement(children: .combine)
+        .accessibilityValue(Text("\(tool.minutes) min"))
+    }
+
+    /// Each tool's moving illustration (decision 31).
+    static func art(_ tool: CalmTool) -> KitArt.Kind {
+        switch tool {
+        case .boxBreathing: .box
+        case .longerOutBreath: .outbreath
+        case .grounding: .grounding
+        case .noticeAndName: .tag
+        case .dropAnchor: .anchor
+        }
     }
 }
 
 /// The plain line pointing to professional help (S12.3). No diagnosis, no clinical claims.
+/// Compact on the calm tools list (decision 31); in full where a lesson or the evening needs it.
 struct HelpLine: View {
     static let directory = URL(string: "https://findahelpline.com")!
+    var compact = false
+    var ground: DX.Ground = .reading
+    @Environment(\.openURL) private var openURL
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text("If stress or anxiety is getting in the way of everyday life, talk to a doctor or a mental health professional. In a crisis, call your local emergency number.")
-                .v4Text(.subtitle)
-            Link(destination: Self.directory) {
-                Text("Find a helpline near you").dxFont(14, weight: 400, style: .footnote).underline().foregroundStyle(Read4.accent)
+        if compact {
+            Text("Feeling like too much? In a crisis, call your local emergency number. \(Text("Find a helpline").bold().underline())")
+                .dxFont(12, weight: 400, style: .caption1).foregroundStyle(ground.muted)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .contentShape(Rectangle())
+                .onTapGesture { openURL(Self.directory) }
+                .accessibilityAddTraits(.isLink)
+                .accessibilityHint(Text("Opens a helpline directory"))
+        } else {
+            VStack(alignment: .leading, spacing: 6) {
+                Text("If stress or anxiety is getting in the way of everyday life, talk to a doctor or a mental health professional. In a crisis, call your local emergency number.")
+                    .v4Text(.subtitle)
+                Link(destination: Self.directory) {
+                    Text("Find a helpline near you").dxFont(14, weight: 400, style: .footnote).underline().foregroundStyle(Read4.accent)
+                }
             }
+            .padding(DX.Space.s)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .strokeBorder(Read4.faint, style: StrokeStyle(lineWidth: 1, dash: [4, 4])))
         }
-        .padding(DX.Space.s)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous)
-            .strokeBorder(Read4.faint, style: StrokeStyle(lineWidth: 1, dash: [4, 4])))
     }
 }
 

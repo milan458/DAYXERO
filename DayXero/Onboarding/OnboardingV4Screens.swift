@@ -451,7 +451,8 @@ struct PlanRevealScreen: View {
                             .accessibilityHidden(true)
                         Text("Step 6 of 6").dxType(.caption).textCase(.uppercase).foregroundStyle(ground.muted)
                     }
-                    Text("Your plan is ready").dxType(.title).foregroundStyle(ground.ink).accessibilityAddTraits(.isHeader)
+                    MarkedTitle(String(localized: "Your plan is "), marking: String(localized: "ready"), color: DX.Mark.color(on: ground))
+                        .dxType(.title).foregroundStyle(ground.ink)
                     Text(entitlement.isPro ? "Everything is unlocked." : "Prep week is on us. Nothing is charged today.")
                         .dxType(.body).foregroundStyle(ground.muted)
                     savings
