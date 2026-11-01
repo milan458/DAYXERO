@@ -97,22 +97,47 @@ struct ProgressTab: View {
         ForEach(profile.nrtPlans.sorted { $0.createdAt < $1.createdAt }) { plan in
             NRTCard(plan: plan, clock: DayClock(boundaryHour: profile.dayBoundaryHour), now: now, showAllSteps: true)
         }
-        HStack(alignment: .firstTextBaseline) {
-            Text("Your patterns").v4Text(.micro)
-            Spacer()
-            if insights.isReady { Text("Last 4 weeks").dxFont(12, weight: 400, style: .caption2).foregroundStyle(Read4.muted) }
+        // Your patterns (decision 31): its own mist panel with the header art, the heat map and the triggers.
+        VStack(alignment: .leading, spacing: 12) {
+            patternsHeader(insights)
+            if insights.isReady {
+                heatCard(insights)
+                triggersCard(insights)
+            } else {
+                earlyPatterns(insights)
+            }
         }
+        .padding(DX.Space.m)
+        .background(DX.Ground.mist.background, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
         .padding(.top, DX.Space.m)
-        .accessibilityAddTraits(.isHeader)
         .id("patterns")
         if insights.isReady {
-            heatCard(insights)
-            triggersCard(insights)
             trendCard(insights)
             recentLogs
-        } else {
-            earlyPatterns(insights)
         }
+    }
+
+    private static let patternCard = Color(light: 0xFFF8EE, dark: 0x14265E)
+
+    private func patternsHeader(_ insights: Insights) -> some View {
+        HStack(alignment: .bottom, spacing: DX.Space.xs) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(insights.isReady ? LocalizedStringKey("Last 4 weeks") : LocalizedStringKey("From your logs")).dxType(.footnote).foregroundStyle(DX.Ground.mist.muted)
+                MarkedTitle(String(localized: "Your "), marking: String(localized: "patterns"), color: DX.Mark.color(on: .mist))
+                    .dxType(.title).foregroundStyle(DX.Ground.mist.ink)
+            }
+            .padding(.bottom, 8)
+            Spacer(minLength: 0)
+            PersonFigure(.magnify, height: 96, shirt: 0xFFC38A)
+        }
+    }
+
+    /// A cream card inside the mist panel.
+    private func patternPanel<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
+        content()
+            .padding(14)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Self.patternCard, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
     }
 
     // MARK: What you've gained (S7.4)
@@ -122,7 +147,8 @@ struct ProgressTab: View {
         HStack(alignment: .center) {
             VStack(alignment: .leading, spacing: 2) {
                 Text(eyebrow(snap)).dxType(.caption).textCase(.uppercase).foregroundStyle(Read4.muted)
-                Text("Your progress").dxType(.large).foregroundStyle(Read4.ink).accessibilityAddTraits(.isHeader)
+                MarkedTitle(String(localized: "Your "), marking: String(localized: "progress"), color: DX.Mark.color(on: .reading))
+                    .dxType(.large).foregroundStyle(Read4.ink)
             }
             Spacer()
             LogButton { log.open() }
@@ -243,10 +269,10 @@ struct ProgressTab: View {
     private func heatCard(_ insights: Insights) -> some View {
         let grid = insights.heatMap(series)
         let peaks = insights.peaks(series)
-        return V4Card(padding: 14) {
+        return patternPanel {
             VStack(alignment: .leading, spacing: DX.Space.s) {
                 HStack(alignment: .top) {
-                    Text(series == .cravings ? LocalizedStringKey("When cravings hit") : LocalizedStringKey("When you used")).v4Text(.cardHeading)
+                    Text(series == .cravings ? LocalizedStringKey("When cravings hit") : LocalizedStringKey("When you used")).dxType(.headline).foregroundStyle(Read4.ink)
                     Spacer()
                     SeriesToggle(selection: $series)
                 }
@@ -254,7 +280,7 @@ struct ProgressTab: View {
                     Text(summary).v4Text(.subtitle)
                 }
                 // Uses and slips in amber, so they read differently from cravings (S8.4).
-                HeatMap(grid: grid, tint: series == .cravings ? Read4.accent : Read4.amber)
+                HeatMap(grid: grid, scale: series == .cravings ? HeatMap.cravingScale : HeatMap.useScale)
             }
         }
     }
@@ -299,10 +325,10 @@ struct ProgressTab: View {
     private func triggersCard(_ insights: Insights) -> some View {
         let top = insights.topTriggers
         let most = max(top.first?.count ?? 1, 1)
-        return V4Card(padding: 14) {
+        return patternPanel {
             VStack(alignment: .leading, spacing: DX.Space.xs) {
                 HStack(alignment: .firstTextBaseline) {
-                    Text("Top triggers").v4Text(.cardHeading)
+                    Text("Top triggers").dxType(.headline).foregroundStyle(Read4.ink)
                     Spacer()
                     Text("\(insights.taggedCount) logged").v4Text(.micro)
                 }
@@ -313,9 +339,9 @@ struct ProgressTab: View {
                     HStack(spacing: DX.Space.xs) {
                         Text(item.trigger.title).dxFont(14, weight: 400, style: .footnote).foregroundStyle(Read4.ink)
                             .frame(width: typeSize.isAccessibilitySize ? nil : 96, alignment: .leading)
-                        V4ProgressBar(value: Double(item.count) / Double(most))
-                        Text(verbatim: item.count.formatted()).dxFont(14, weight: 400, style: .footnote).foregroundStyle(Read4.muted)
-                            .monospacedDigit().frame(minWidth: 22, alignment: .trailing)
+                        CoralBar(value: Double(item.count) / Double(most))
+                        Text(verbatim: item.count.formatted()).dxFont(16, weight: 700, style: .body).foregroundStyle(Read4.ink)
+                            .monospacedDigit().frame(minWidth: 24, alignment: .trailing)
                     }
                     .accessibilityElement(children: .combine)
                 }
@@ -395,7 +421,7 @@ struct ProgressTab: View {
     /// Before there's a week of logs (S18.7): from the first log, when they happen so far; before any, one line
     /// over the blurred map. Either way, what the person told us in setup.
     private func earlyPatterns(_ insights: Insights) -> some View {
-        V4Card(padding: 14) {
+        patternPanel {
             VStack(alignment: .leading, spacing: DX.Space.s) {
                 if insights.points.isEmpty {
                     ZStack {
@@ -423,7 +449,8 @@ struct ProgressTab: View {
                         }
                         .accessibilityElement(children: .combine)
                     }
-                    Text(readyLine(insights)).v4Text(.subtitle)
+                    V4ProgressBar(value: insights.readiness).accessibilityLabel(Text("Patterns ready"))
+                    Text(readyLine(insights)).dxType(.headline).foregroundStyle(Read4.ink)
                 }
                 if let setup = fromSetup {
                     Text(setup).v4Text(.subtitle)
@@ -532,7 +559,13 @@ private struct SeriesToggle: View {
 /// Time of day (rows) by weekday (columns, Monday first).
 struct HeatMap: View {
     let grid: [[Int]]
-    var tint: Color = Read4.accent
+    var scale: [Color] = HeatMap.cravingScale
+
+    /// Five steps, none to most (decision 31): cravings in ocean blues, uses and slips in amber.
+    static let cravingScale: [Color] = [Color(light: 0xECE6F7, dark: 0x1B2C66), Color(hex: 0xB9C6FF), Color(hex: 0x7F9CF5),
+                                        Color(hex: 0x2A52DB), Color(light: 0x1E1A3A, dark: 0xE3EAFF)]
+    static let useScale: [Color] = [Color(light: 0xF6EBD9, dark: 0x3A2A10), Color(hex: 0xF2C98A), Color(hex: 0xE5A93C),
+                                    Color(hex: 0xB07A1C), Color(light: 0x5A3A10, dark: 0xFFE8C2)]
 
     var body: some View {
         let most = max(grid.flatMap { $0 }.max() ?? 1, 1)
@@ -554,9 +587,10 @@ struct HeatMap: View {
                         .frame(width: 64, alignment: .leading)
                     ForEach(0..<7, id: \.self) { col in
                         let value = grid[row][col]
-                        RoundedRectangle(cornerRadius: 6, style: .continuous)
-                            .fill(value == 0 ? Read4.track.opacity(0.5) : tint.opacity(0.2 + 0.8 * Double(value) / Double(most)))
-                            .frame(height: 22)
+                        let level = value == 0 ? 0 : min(4, max(1, Int((4 * Double(value) / Double(most)).rounded(.up))))
+                        RoundedRectangle(cornerRadius: 8, style: .continuous)
+                            .fill(scale[level])
+                            .frame(height: 26)
                             .frame(maxWidth: .infinity)
                             .accessibilityElement()
                             .accessibilityLabel(Text("\(Self.weekdayNames[col]), \(Text(time.title))"))
@@ -640,5 +674,21 @@ struct LogEntryRow: View {
         if Calendar.current.isDateInToday(date) { return String(localized: "Today \(time)") }
         if Calendar.current.isDateInYesterday(date) { return String(localized: "Yesterday \(time)") }
         return "\(date.formatted(.dateTime.weekday(.abbreviated).day().month())) \(time)"
+    }
+}
+
+/// The coral bar for top triggers.
+private struct CoralBar: View {
+    let value: Double
+
+    var body: some View {
+        GeometryReader { proxy in
+            ZStack(alignment: .leading) {
+                Capsule().fill(Color(light: 0xEDE6DA, dark: 0x1B2C66))
+                Capsule().fill(Color(hex: 0xFF7A55)).frame(width: proxy.size.width * min(1, max(0, value)))
+            }
+        }
+        .frame(height: 12)
+        .accessibilityHidden(true)
     }
 }

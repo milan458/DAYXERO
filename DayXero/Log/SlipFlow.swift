@@ -121,8 +121,9 @@ struct SlipFlow: View {
                             .accessibilityHidden(true)
                         VStack(alignment: .leading, spacing: 2) {
                             Text("With Jelli").dxFont(14, weight: 700, style: .footnote).foregroundStyle(ground.muted)
-                            Text("Thanks for telling me.").dxType(.large).accessibilityAddTraits(.isHeader)
-                                .fixedSize(horizontal: false, vertical: true)
+                            MarkedTitle(String(localized: "Thanks for"), marking: String(localized: "telling me"), trail: ".",
+                                        color: DX.Mark.color(on: ground), stacked: true)
+                                .dxType(.large)
                         }
                     }
                     .dxArrive(0)

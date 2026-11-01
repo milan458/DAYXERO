@@ -357,7 +357,8 @@ struct TomorrowPlan: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
                     Text("One small plan").dxType(.caption).textCase(.uppercase).foregroundStyle(ground.muted)
-                    Text("For tomorrow").dxType(.large).foregroundStyle(ground.ink).accessibilityAddTraits(.isHeader)
+                    MarkedTitle(String(localized: "For "), marking: String(localized: "tomorrow"), color: DX.Mark.color(on: ground))
+                        .dxType(.large).foregroundStyle(ground.ink)
                     Text("What's most likely to set it off?").dxFont(16, weight: 700, style: .body).foregroundStyle(ground.ink)
                     TriggerPicker(mine: profile.triggers, selection: $trigger, fill: DX.Fill.onColourCard(for: ground), ink: ground.ink,
                                   selectedFill: DX.Fill.cream, selectedInk: Color(hex: 0x4A3596))

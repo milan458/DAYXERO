@@ -62,6 +62,17 @@ struct TodayHeaderV4: View {
         }
     }
 
+    /// The greeting split around the name, for the loop.
+    private var greetingMark: (lead: String, name: String, trail: String)? {
+        guard !name.isEmpty else { return nil }
+        return switch slot {
+        case .morning: (String(localized: "Morning, "), name, ".")
+        case .afternoon: (String(localized: "Afternoon, "), name, ".")
+        case .evening: (String(localized: "Evening, "), name, ".")
+        case .night: (String(localized: "Still up, "), name, "?")
+        }
+    }
+
     /// "Sun 8 Nov · Day 3", using the app's own day count.
     private var dateLine: String {
         let date = now.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))
@@ -108,8 +119,15 @@ struct TodayHeaderV4: View {
             }
             VStack(alignment: .leading, spacing: 4) {
                 Text(verbatim: dateLine).dxType(.caption).textCase(.uppercase).foregroundStyle(ground.muted)
-                Text(verbatim: greeting).dxType(.large).foregroundStyle(ground.ink)
-                    .accessibilityAddTraits(.isHeader)
+                if let mark = greetingMark {
+                    // The name gets the hand-drawn loop (decision 32).
+                    MarkedTitle(mark.lead, marking: mark.name, trail: mark.trail, mark: .circle, color: DX.Mark.color(on: ground))
+                        .dxType(.large).foregroundStyle(ground.ink)
+                        .padding(.leading, 6)
+                } else {
+                    Text(verbatim: greeting).dxType(.large).foregroundStyle(ground.ink)
+                        .accessibilityAddTraits(.isHeader)
+                }
             }
             .padding(.horizontal, 18)
             .padding(.top, 4)

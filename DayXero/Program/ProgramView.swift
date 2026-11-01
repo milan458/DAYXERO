@@ -2,9 +2,10 @@ import DayXeroCore
 import SwiftData
 import SwiftUI
 
-/// The Program tab (handoff 4.1): a path through prep, Day Xero and the four weeks after, grouped by phase.
-/// Finished sessions can be replayed, the current one is highlighted, the next shows when it opens, and later ones
-/// are dimmed with their titles showing. Nothing is ever shown as missed, overdue or failed.
+/// The Program tab (decision 31): the phase you pick drawn as a winding path on mint, done stops ticked,
+/// today's a big play button, later ones locked, the phase's last session as its milestone; then the same
+/// sessions as tiles, each with its own illustration from the kit. Finished sessions replay. Nothing is
+/// ever shown as missed, overdue or failed.
 struct ProgramView: View {
     let profile: UserProfile
     @Environment(Entitlement.self) private var entitlement
@@ -13,48 +14,63 @@ struct ProgramView: View {
     @State private var open: SessionOpen?
     @State private var upgradeTitle: String?
     @State private var showPaywall = false
-    @State private var unfolded: Set<String> = []
+    @State private var picked: String?
     @State private var waitingTip: String?
+
+    private let ground = DX.Ground.mint
+    /// Tiles and the note card on mint: cream in light, deep green in dark.
+    private let tileFill = Color(light: 0xFFF8EE, dark: 0x16382D)
 
     var body: some View {
         TimelineView(.everyMinute) { timeline in
             let store = ProgramStore(context: context, profile: profile)
             let states = Dictionary(store.states(now: timeline.date).map { ($0.id, $0.state) }, uniquingKeysWith: { a, _ in a })
             let current = store.current(now: timeline.date)?.id
-            ScrollViewReader { proxy in
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("Prep, Quit Day, then four weeks").dxType(.caption).textCase(.uppercase).foregroundStyle(Read4.muted)
-                        Text("Your program").dxType(.large).foregroundStyle(Read4.ink).accessibilityAddTraits(.isHeader)
-                        if let content = store.content {
-                            phasePills(content, states: states, current: current, proxy: proxy)
-                        }
-                        variantLine.padding(.vertical, DX.Space.xxs)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 12) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Prep, Quit Day, then four weeks").dxType(.footnote).foregroundStyle(ground.muted)
+                        MarkedTitle(String(localized: "Your "), marking: String(localized: "program"), color: DX.Mark.color(on: ground))
+                            .dxType(.large).foregroundStyle(ground.ink)
+                    }
+                    if let content = store.content {
+                        let phase = selectedPhase(content, current: current)
+                        phasePicker(content, states: states, current: current, selected: phase.id)
                         if let graduated = profile.progress?.graduatedAt { completeHeader(graduated) }
-                        nrtGroup(now: timeline.date)
-                        if let content = store.content {
-                            ForEach(content.phases) { phase in
-                                phaseSection(phase, content: content, states: states, current: current, store: store)
-                                    .id("phase-\(phase.id)")
+                        ProgramPathMap(stops: stops(phase, content: content, states: states, current: current, store: store),
+                                       ground: ground) { stop in
+                            guard let session = content.session(stop.id) else { return }
+                            tap(session, state: states[stop.id] ?? .locked, title: stop.title,
+                                needsUpgrade: stop.needsUpgrade)
+                        }
+                        if let line = nextLine(content, states: states, current: current, variant: store.variant) {
+                            HStack(alignment: .top, spacing: 10) {
+                                Image(systemName: "lock.open").font(.system(size: 15, weight: .semibold)).foregroundStyle(DX.Fill.green)
+                                    .accessibilityHidden(true)
+                                Text(verbatim: line).dxType(.footnote).foregroundStyle(DX.Ground.reading.ink)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                             }
-                            if let line = nextLine(content, states: states, variant: store.variant) {
-                                Text(verbatim: line).dxType(.footnote).foregroundStyle(Read4.muted)
-                                    .frame(maxWidth: .infinity).multilineTextAlignment(.center)
-                                    .padding(.top, DX.Space.s)
+                            .padding(14)
+                            .background(tileFill, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+                        }
+                        Text(verbatim: phaseHeading(phase, states: states)).dxType(.caption).textCase(.uppercase)
+                            .foregroundStyle(ground.muted).padding(.top, DX.Space.s)
+                            .accessibilityAddTraits(.isHeader)
+                        ForEach(phase.sessionIds, id: \.self) { id in
+                            if let session = content.session(id) {
+                                tile(session, state: states[id] ?? .locked, isCurrent: id == current, store: store)
                             }
                         }
                     }
-                    .padding(.horizontal, DX.Layout.gutter)
-                    .dxReadableColumn()
-                    .padding(.top, DX.Space.l)
-                    .padding(.bottom, DX.Space.l)
+                    variantLine.padding(.top, DX.Space.s)
+                    nrtGroup(now: timeline.date)
                 }
-                .background(Read4.background)
-                .onAppear {
-                    // Land on the current session.
-                    if let current { proxy.scrollTo(current, anchor: .center) }
-                }
+                .padding(.horizontal, DX.Layout.gutter)
+                .dxReadableColumn()
+                .padding(.top, DX.Space.l)
+                .padding(.bottom, DX.Space.l)
             }
+            .background(ground.background.ignoresSafeArea())
         }
         .fullScreenCover(item: $open, onDismiss: { NotificationCenter.default.post(name: .dxSessionClosed, object: nil) }) { item in
             SessionFlowView(sessionId: item.id, profile: profile, isReplay: item.isReplay)
@@ -74,118 +90,146 @@ struct ProgramView: View {
 
     // MARK: Phases
 
-    @ViewBuilder
-    private func phaseSection(_ phase: ProgramContent.Phase, content: ProgramContent, states: [String: ProgramUnlock.State],
-                              current: String?, store: ProgramStore) -> some View {
-        let sessions = phase.sessionIds.compactMap { content.session($0) }
-        let done = sessions.filter { if case .completed = states[$0.id] { true } else { false } }.count
-        let allDone = done == sessions.count && !sessions.isEmpty
-        VStack(alignment: .leading, spacing: 8) {
-        HStack(alignment: .firstTextBaseline) {
-            Text(verbatim: "\(phase.title) · \(phase.subtitle)").v4Text(.micro)
-            Spacer()
-            Text(verbatim: "\(done) of \(sessions.count)").dxFont(12, weight: 400, style: .caption2)
-                .foregroundStyle(Read4.muted)
-        }
-        .padding(.top, DX.Space.m)
-        .accessibilityAddTraits(.isHeader)
-        if allDone, profile.progress?.graduatedAt == nil, !unfolded.contains(phase.id) {
-            // A finished phase folds away until the person asks to see it.
-            Button { unfolded.insert(phase.id) } label: {
-                HStack(spacing: DX.Space.xs) {
-                    Image(systemName: "checkmark.circle.fill").foregroundStyle(Read4.accent)
-                    Text("\(phase.title) done · show").dxType(.footnote).foregroundStyle(Read4.muted)
-                    Spacer()
-                }
-                .padding(DX.Space.s)
-                .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .strokeBorder(Read4.faint, style: StrokeStyle(lineWidth: 1, dash: [4, 4])))
-            }
-            .buttonStyle(.plain)
-        } else {
-            ForEach(sessions) { session in
-                row(session, state: states[session.id] ?? .locked, isCurrent: session.id == current, store: store)
-                    .id(session.id)
-            }
-        }
-        }
+    /// The phase picked, else the one holding today's session, else the last.
+    private func selectedPhase(_ content: ProgramContent, current: String?) -> ProgramContent.Phase {
+        if let picked, let phase = content.phases.first(where: { $0.id == picked }) { return phase }
+        if let current, let phase = content.phases.first(where: { $0.sessionIds.contains(current) }) { return phase }
+        return content.phases.last ?? content.phases[0]
     }
 
-    /// Phase pills: a tick when a phase is done, ink for the one you're in. A tap scrolls to it.
-    private func phasePills(_ content: ProgramContent, states: [String: ProgramUnlock.State], current: String?,
-                            proxy: ScrollViewProxy) -> some View {
+    /// Phase pills in a track: a tick when done, ink for the one shown.
+    private func phasePicker(_ content: ProgramContent, states: [String: ProgramUnlock.State], current: String?, selected: String) -> some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
+            HStack(spacing: 2) {
                 ForEach(content.phases) { phase in
-                    let ids = phase.sessionIds
-                    let done = !ids.isEmpty && ids.allSatisfy { if case .completed = states[$0] { true } else { false } }
-                    let now = current.map(ids.contains) ?? false
+                    let done = !phase.sessionIds.isEmpty && phase.sessionIds.allSatisfy { if case .completed = states[$0] { true } else { false } }
+                    let on = phase.id == selected
                     Button {
-                        withAnimation(DX.Move.settle) { proxy.scrollTo("phase-\(phase.id)", anchor: .top) }
+                        withAnimation(DX.Move.settle) { picked = phase.id }
                     } label: {
-                        HStack(spacing: 6) {
-                            if done { Image(systemName: "checkmark.circle.fill").foregroundStyle(now ? Read4.onInk : Read4.accent) }
-                            Text(verbatim: phase.title).dxFont(14, weight: now ? 700 : 600, style: .footnote)
+                        HStack(spacing: 4) {
+                            Text(verbatim: phase.title).dxFont(14, weight: 700, style: .footnote)
+                            if done { Image(systemName: "checkmark").font(.system(size: 11, weight: .heavy)) }
                         }
-                        .foregroundStyle(now ? Read4.onInk : Read4.ink)
+                        .foregroundStyle(on ? DX.Ground.reading.background : ground.ink)
                         .padding(.horizontal, 14)
-                        .frame(minHeight: 44)
-                        .background(now ? Read4.ink : Read4.surface, in: Capsule())
+                        .frame(minHeight: 40)
+                        .background(on ? ground.ink : Color.clear, in: Capsule())
+                        .contentShape(Capsule())
                     }
                     .buttonStyle(.plain)
-                    .accessibilityValue(Text(done ? "Done" : now ? "Now" : ""))
+                    .accessibilityAddTraits(on ? [.isButton, .isSelected] : .isButton)
+                    .accessibilityValue(Text(done ? "Done" : ""))
                 }
             }
+            .padding(4)
+            .background(Color(light: (0x1E1A3A, 0.08), dark: (0xFFFFFF, 0.08)), in: Capsule())
         }
         .scrollClipDisabled()
     }
 
-    /// "Day 4 opens tomorrow. No rush." for the next session that's waiting.
-    private func nextLine(_ content: ProgramContent, states: [String: ProgramUnlock.State], variant: ProgramVariant) -> String? {
+    private func phaseHeading(_ phase: ProgramContent.Phase, states: [String: ProgramUnlock.State]) -> String {
+        let done = phase.sessionIds.filter { if case .completed = states[$0] { true } else { false } }.count
+        return String(localized: "\(phase.title) · \(done) of \(phase.sessionIds.count) done")
+    }
+
+    // MARK: Path
+
+    private func stops(_ phase: ProgramContent.Phase, content: ProgramContent, states: [String: ProgramUnlock.State],
+                       current: String?, store: ProgramStore) -> [ProgramPathMap.Stop] {
+        let ids = phase.sessionIds
+        return ids.enumerated().compactMap { index, id in
+            guard let session = content.session(id) else { return nil }
+            let state = states[id] ?? .locked
+            let open = state == .available || state == .inProgress
+            let needsUpgrade = open && ProgramV2Access.needsUpgrade(id, isPro: entitlement.isPro)
+            let kind: ProgramPathMap.Stop.Kind
+            if case .completed = state { kind = .done }
+            else if open && !needsUpgrade { kind = .today }
+            else if index == ids.count - 1 { kind = .goal }
+            else { kind = .locked }
+            return ProgramPathMap.Stop(id: id, title: session.title.resolve(store.variant) ?? "", kind: kind,
+                                       minutes: session.durationMinutes, needsUpgrade: needsUpgrade,
+                                       accessibility: accessibilityState(state))
+        }
+    }
+
+    /// "Next up: Lower the bar, tomorrow. No rush." for the next session that's waiting.
+    private func nextLine(_ content: ProgramContent, states: [String: ProgramUnlock.State], current: String?, variant: ProgramVariant) -> String? {
         for phase in content.phases {
             for id in phase.sessionIds {
                 guard case let .scheduled(wait)? = states[id], let session = content.session(id) else { continue }
+                let title = session.title.resolve(variant) ?? session.label
                 return switch wait {
-                case .tomorrow: String(localized: "\(session.label) opens tomorrow. No rush.")
-                case let .quitDay(day): String(localized: "\(session.label) opens on Day \(day). No rush.")
+                case .tomorrow: String(localized: "Next up: \(title), tomorrow. No rush.")
+                case let .quitDay(day): String(localized: "Next up: \(title), on Day \(day). No rush.")
                 case let .dayXero(date): String(localized: "Day Xero is \(date.formatted(.dateTime.weekday(.wide).day().month(.abbreviated))). No rush.")
                 }
             }
         }
+        if let current, let next = content.session(after: current), states[current] != nil {
+            return String(localized: "Next up: \(next.title.resolve(variant) ?? next.label), after today's. No rush.")
+        }
         return nil
     }
 
-    /// A day card (F10): done (green tick), today (apricot, play), waiting or later (lock). Nothing reads as missed.
-    private func row(_ session: ProgramContent.Session, state: ProgramUnlock.State, isCurrent: Bool, store: ProgramStore) -> some View {
-        let variant = store.variant
-        let title = session.title.resolve(variant) ?? ""
+    // MARK: Tiles
+
+    /// A session tile: its illustration with a done or lock badge, then "Today · 3 min", "Done" or when it opens.
+    private func tile(_ session: ProgramContent.Session, state: ProgramUnlock.State, isCurrent: Bool, store: ProgramStore) -> some View {
+        let title = session.title.resolve(store.variant) ?? ""
         let open = state == .available || state == .inProgress
         let needsUpgrade = open && ProgramV2Access.needsUpgrade(session.id, isPro: entitlement.isPro)
         let today = open && !needsUpgrade
-        let ground: DX.Ground = today ? .apricot : .reading
+        let done: Bool = if case .completed = state { true } else { false }
+        let kicker: String = if today {
+            String(localized: "Today · \(session.durationMinutes) min")
+        } else if needsUpgrade {
+            String(localized: "Unlock to start")
+        } else if done {
+            String(localized: "Done")
+        } else {
+            waitText(state) ?? session.label
+        }
         return Button {
             tap(session, state: state, title: title, needsUpgrade: needsUpgrade)
         } label: {
-            HStack(spacing: 14) {
-                badge(session, state: state, needsUpgrade: needsUpgrade)
+            HStack(spacing: 12) {
+                KitArt(ProgramArt.kind(for: session.id), cornerRadius: 18)
+                    .frame(width: 64, height: 64)
+                    .overlay(alignment: .bottomTrailing) {
+                        if done || !open || needsUpgrade {
+                            Image(systemName: done ? "checkmark" : needsUpgrade ? "lock.open.fill" : "lock.fill")
+                                .font(.system(size: 10, weight: .heavy))
+                                .foregroundStyle(done ? DX.Ground.reading.background : DX.Ground.reading.ink)
+                                .frame(width: 24, height: 24)
+                                .background(done ? DX.Fill.green : tileFill, in: Circle())
+                                .overlay(Circle().strokeBorder(tileFill, lineWidth: 2.5))
+                                .offset(x: 4, y: 4)
+                        }
+                    }
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(verbatim: kicker(session, state: state, needsUpgrade: needsUpgrade).uppercased())
-                        .dxType(.caption).foregroundStyle(ground.muted)
-                    Text(verbatim: title).dxType(.headline).foregroundStyle(ground.ink)
-                        .multilineTextAlignment(.leading)
-                        .fixedSize(horizontal: false, vertical: true)
+                    Text(verbatim: kicker.uppercased()).dxType(.caption)
+                        .foregroundStyle(today ? Color(light: 0xB2361C, dark: 0xFFB59E) : DX.Ground.reading.muted)
+                    Text(verbatim: title).dxType(.headline).foregroundStyle(DX.Ground.reading.ink)
+                        .multilineTextAlignment(.leading).fixedSize(horizontal: false, vertical: true)
                 }
                 Spacer(minLength: 0)
-                if case .completed = state {
+                if today {
+                    Image(systemName: "play.fill").font(.system(size: 15, weight: .bold)).foregroundStyle(DX.Fill.navy)
+                        .frame(width: 44, height: 44).background(Color(hex: 0xFF7A55), in: Circle())
+                        .accessibilityHidden(true)
+                } else if done {
                     Image(systemName: "arrow.counterclockwise").font(.system(size: 14, weight: .bold))
-                        .foregroundStyle(Read4.muted).accessibilityHidden(true)
+                        .foregroundStyle(DX.Ground.reading.muted).accessibilityHidden(true)
                 }
             }
-            .padding(14)
-            .background {
-                RoundedRectangle(cornerRadius: DX.Layout.smallCardRadius, style: .continuous)
-                    .fill(today ? DX.Ground.apricot.background : Read4.card)
-                    .shadow(color: .black.opacity(today ? 0.14 : 0), radius: 0, x: 0, y: 5)
+            .padding(8)
+            .padding(.trailing, 6)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(tileFill, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+            .overlay {
+                if today { RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(Color(hex: 0xFF7A55), lineWidth: 2.5) }
             }
         }
         .buttonStyle(.plain)
@@ -193,18 +237,6 @@ struct ProgramView: View {
         .accessibilityValue(Text(accessibilityState(state)))
         .popover(isPresented: Binding(get: { waitingTip == session.id }, set: { if !$0 { waitingTip = nil } })) {
             Text(verbatim: waitText(state) ?? "").v4Text(.subtitle).padding().presentationCompactAdaptation(.popover)
-        }
-    }
-
-    /// "TODAY · DAY 3 · 3 MIN", "DONE · DAY 2", "OPENS TOMORROW", or the label and length.
-    private func kicker(_ session: ProgramContent.Session, state: ProgramUnlock.State, needsUpgrade: Bool) -> String {
-        switch state {
-        case .available, .inProgress:
-            needsUpgrade ? String(localized: "\(session.label) · Unlock to start")
-                : String(localized: "Today · \(session.label) · \(session.durationMinutes) min")
-        case .completed: String(localized: "Done · \(session.label) · Replay")
-        case .scheduled: "\(session.label) · \(waitText(state) ?? "")"
-        case .locked: String(localized: "\(session.label) · \(session.durationMinutes) min")
         }
     }
 
@@ -231,21 +263,6 @@ struct ProgramView: View {
         }
     }
 
-    private func badge(_ session: ProgramContent.Session, state: ProgramUnlock.State, needsUpgrade: Bool) -> some View {
-        let (icon, box, ink): (String, Color, Color) = switch state {
-        case .completed: ("checkmark", DX.Fill.green, DX.Fill.cream)
-        case .available, .inProgress:
-            needsUpgrade ? ("lock.open.fill", Read4.surface, Read4.ink)
-                : ("play.fill", Color(light: 0x1E1A3A, dark: 0xFFC38A), Color(light: 0xFFF8EE, dark: 0x241433))
-        case .scheduled, .locked: ("lock.fill", Read4.surface, Read4.muted)
-        }
-        return Image(systemName: icon)
-            .font(.system(size: 16, weight: .bold))
-            .foregroundStyle(ink)
-            .frame(width: 40, height: 40)
-            .background(box, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-            .accessibilityHidden(true)
-    }
 
     private func waitText(_ state: ProgramUnlock.State) -> String? {
         guard case let .scheduled(wait) = state else { return nil }
@@ -279,6 +296,7 @@ struct ProgramView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Read4.accentSoft, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
     }
+
 
     // MARK: NRT
 

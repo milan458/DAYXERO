@@ -246,3 +246,4 @@ The current app also has areas with **no v4 design at all**: Water (a Today card
   - `docs/DESIGN_METHODOLOGY.md` is marked superseded and the README points to the v4 design system.
   - Not done: refreshing the App Store screenshots (`store-screens.yml`), because this round takes no screenshots.
 
+- **After the migration (1 Nov 2026, decisions 31–32):** illustrated screens from the "Final screens" canvas page. Program as a winding path plus illustrated session tiles; What's changing on lime with an illustration per change and sources once at the bottom; Your patterns as a mist panel in Progress; Calm tools on periwinkle with moving tool illustrations and shorter copy; the `KitArt` illustration kit, `PersonFigure`, the lime, mist and periwinkle grounds, and the hand-drawn title mark (`MarkedTitle`) on nine titles. Verified by CI build and tests only; no screenshots taken.
