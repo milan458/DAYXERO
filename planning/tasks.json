@@ -8,7 +8,7 @@
     "section": "S27",
     "task": "S27.1",
     "waiting_on_milan": [
-      "Milan: decisions D1–D5 and D7 in docs/DAYXERO_CRITIQUE_FIX_PLAN.md",
+      "Milan: decisions D1\u2013D5 and D7 in docs/DAYXERO_CRITIQUE_FIX_PLAN.md",
       "Milan: trademark search on 'Xero' / shortlist a new mascot name"
     ]
   },
@@ -119,9 +119,9 @@
         },
         {
           "id": "S1.9",
-          "title": "Build the localhost task tracker (plan §0.1)",
+          "title": "Build the localhost task tracker (plan \u00a70.1)",
           "status": "done",
-          "notes": "From plan §0.1; done before section 1 work.\nNode server + one page; verified API, sign-off write-back, error paths.",
+          "notes": "From plan \u00a70.1; done before section 1 work.\nNode server + one page; verified API, sign-off write-back, error paths.",
           "created": "2026-10-22T19:49:40.909Z",
           "completed": "2026-10-22T19:50:02.236Z"
         },
@@ -319,7 +319,7 @@
           "id": "S2.9",
           "title": "NRT interest: using it, want it, not interested.",
           "status": "done",
-          "notes": "Needs Milan: sign-off + source for 'NRT can make quitting easier'.\nBuilding without the 'can make quitting easier' line until Milan confirms the claim and source.\nBuilt; waiting on CI build, tests and screenshots.\nMilan approved the NRT claim. Added 'Research shows ... can make quitting easier' with a link to the Cochrane review (Hartmann-Boyce 2018, CD000146.pub5: 133 trials, 64,640 people, quit rates up 50–60%).\nVerified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.",
+          "notes": "Needs Milan: sign-off + source for 'NRT can make quitting easier'.\nBuilding without the 'can make quitting easier' line until Milan confirms the claim and source.\nBuilt; waiting on CI build, tests and screenshots.\nMilan approved the NRT claim. Added 'Research shows ... can make quitting easier' with a link to the Cochrane review (Hartmann-Boyce 2018, CD000146.pub5: 133 trials, 64,640 people, quit rates up 50\u201360%).\nVerified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": "2026-10-22T22:01:09.213Z"
         },
@@ -411,7 +411,7 @@
         },
         {
           "id": "S3.2",
-          "title": "Plans: monthly, annual (highlighted), lifetime. Prices from RevenueCat; placeholder starting point $9.99/mo, $39.99/yr, $79.99 lifetime — confirm with Milan.",
+          "title": "Plans: monthly, annual (highlighted), lifetime. Prices from RevenueCat; placeholder starting point $9.99/mo, $39.99/yr, $79.99 lifetime \u2014 confirm with Milan.",
           "status": "done",
           "notes": "Question for Milan: confirm $9.99/mo, $39.99/yr, $79.99 lifetime.\nMockups use the placeholder prices; Milan to confirm.\nMilan confirmed .99/mo, 9.99/yr, 9.99 lifetime.\nBuilt; waiting on CI build, tests and screenshots.\nCI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending.\nVerified on CI 33dd4dd: all tests pass; screenshots match approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
@@ -421,7 +421,7 @@
           "id": "S3.3",
           "title": "Free trial on annual (3 days unless Milan says otherwise), with the exact charge date stated on screen.",
           "status": "done",
-          "notes": "Question for Milan: 3-day trial on annual — confirm.\nMilan confirmed the 3-day trial on annual.\nBuilt; waiting on CI build, tests and screenshots.\nCI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending.\nVerified on CI 33dd4dd: all tests pass; screenshots match approved mockups in dark, light and largest text.\n27 Oct: trial length vs prep window under review (S18.4, waiting on Milan).",
+          "notes": "Question for Milan: 3-day trial on annual \u2014 confirm.\nMilan confirmed the 3-day trial on annual.\nBuilt; waiting on CI build, tests and screenshots.\nCI 797854b: tests pass; screenshots match mockups in dark/light; AX5 footer fix pending.\nVerified on CI 33dd4dd: all tests pass; screenshots match approved mockups in dark, light and largest text.\n27 Oct: trial length vs prep window under review (S18.4, waiting on Milan).",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": "2026-10-22T22:57:10.707Z"
         },
@@ -485,7 +485,7 @@
           "id": "S3.11",
           "title": "Set up products in App Store Connect + RevenueCat: dayxero.annual (3-day trial), dayxero.monthly, dayxero.lifetimetime, entitlement 'pro'",
           "status": "in_progress",
-          "notes": "From S3 build. Needs Milan's App Store Connect and RevenueCat accounts; then add the RevenueCat key to Config/Secrets.xcconfig.\nStore setup workflow (.github/workflows/store-setup.yml, scripts/ci/store_setup.py) creates the App Store Connect products and the RevenueCat entitlement, offering and packages.\nApp Store Connect done: group DayXero Pro; dayxero.annual ($39.99/yr, 3-day trial) and dayxero.monthly ($9.99) READY_TO_SUBMIT with prices in 175 territories; dayxero.lifetime ($79.99) has price, availability, text and screenshot (state was MISSING_METADATA right after upload, recheck). Next: Milan creates the RevenueCat project and app, uploads the In-App Purchase key, adds RC_SECRET_KEY and RC_PROJECT_ID secrets; then run Store setup → revenuecat and save the public key as REVENUECAT_API_KEY.\nRevenueCat done: products added, entitlement 'pro' (all three products), current offering 'default' with $rc_annual, $rc_monthly, $rc_lifetime. Public SDK key in Config/Base.xcconfig. Milan's earlier entitlement 'dayxero_pro' is unused and can be deleted. Left: Paid Apps Agreement active; lifetime state to recheck; sandbox purchase on TestFlight.",
+          "notes": "From S3 build. Needs Milan's App Store Connect and RevenueCat accounts; then add the RevenueCat key to Config/Secrets.xcconfig.\nStore setup workflow (.github/workflows/store-setup.yml, scripts/ci/store_setup.py) creates the App Store Connect products and the RevenueCat entitlement, offering and packages.\nApp Store Connect done: group DayXero Pro; dayxero.annual ($39.99/yr, 3-day trial) and dayxero.monthly ($9.99) READY_TO_SUBMIT with prices in 175 territories; dayxero.lifetime ($79.99) has price, availability, text and screenshot (state was MISSING_METADATA right after upload, recheck). Next: Milan creates the RevenueCat project and app, uploads the In-App Purchase key, adds RC_SECRET_KEY and RC_PROJECT_ID secrets; then run Store setup \u2192 revenuecat and save the public key as REVENUECAT_API_KEY.\nRevenueCat done: products added, entitlement 'pro' (all three products), current offering 'default' with $rc_annual, $rc_monthly, $rc_lifetime. Public SDK key in Config/Base.xcconfig. Milan's earlier entitlement 'dayxero_pro' is unused and can be deleted. Left: Paid Apps Agreement active; lifetime state to recheck; sandbox purchase on TestFlight.",
           "created": "2026-10-22T22:01:09.531Z",
           "completed": null
         }
@@ -625,7 +625,7 @@
           "id": "S5.2",
           "title": "Product variants: smoking, vaping, pouches; dual users get the variant for their main product plus notes for the others (confirm rule with Milan).",
           "status": "done",
-          "notes": "Question for Milan: dual users — main-product variant plus notes for the others. Confirm the rule.\nMockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nMilan: come back to the dual-user variant rule later; building with main product + notes for now.\nBuilding.\nBuilt and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).",
+          "notes": "Question for Milan: dual users \u2014 main-product variant plus notes for the others. Confirm the rule.\nMockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nMilan: come back to the dual-user variant rule later; building with main product + notes for now.\nBuilding.\nBuilt and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": "2026-10-23T06:33:57.999Z"
         },
@@ -655,7 +655,7 @@
         },
         {
           "id": "S5.6",
-          "title": "Maintenance arc (weeks 2–5) changes format, not just content, to avoid the week 3–4 drop-off.",
+          "title": "Maintenance arc (weeks 2\u20135) changes format, not just content, to avoid the week 3\u20134 drop-off.",
           "status": "done",
           "notes": "Mockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nBuilding.\nBuilt and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).",
           "created": "2026-10-22T19:48:52.060Z",
@@ -665,7 +665,7 @@
           "id": "S5.7",
           "title": "Inactivity behaviour per Milan's answer to the open decision in part 1.",
           "status": "done",
-          "notes": "Open decision from plan §1: keep the 3-idle-day reset to Day 1, or pause and replay the last day?\nMilan decided: no reset to Day 1. After inactivity, pause and replay the last completed day, then continue. Build in Section 5.\nMockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nMockup assumes the pause kicks in after 3 idle days (old spec's number); Milan to confirm.\nMilan: 3 idle days before the program pauses (then replay last finished day).\nBuilding.\nBuilt and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).",
+          "notes": "Open decision from plan \u00a71: keep the 3-idle-day reset to Day 1, or pause and replay the last day?\nMilan decided: no reset to Day 1. After inactivity, pause and replay the last completed day, then continue. Build in Section 5.\nMockups in progress (placeholder content, per Milan).\nMockups ready in tracker.\nMockup assumes the pause kicks in after 3 idle days (old spec's number); Milan to confirm.\nMilan: 3 idle days before the program pauses (then replay last finished day).\nBuilding.\nBuilt and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": "2026-10-23T06:33:58.091Z"
         },
@@ -965,7 +965,7 @@
           "id": "S8.2",
           "title": "Sixty-second slip debrief: what happened, what triggered it, one thing to try next time.",
           "status": "done",
-          "notes": "Mockups ready in tracker.\nPer-trigger 'Then I'll…' suggestions drafted in the S8 mockup.\nMilan approved S8 in chat, with the drafted copy and suggestions.\nBuilt and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.",
+          "notes": "Mockups ready in tracker.\nPer-trigger 'Then I'll\u2026' suggestions drafted in the S8 mockup.\nMilan approved S8 in chat, with the drafted copy and suggestions.\nBuilt and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": "2026-10-23T08:34:21.697Z"
         },
@@ -1229,7 +1229,7 @@
           "id": "S12.4",
           "title": "Reuse the orb for the breathing exercises in the stress toolkit.",
           "status": "in_progress",
-          "notes": "From DAYXERO_BIO_ORB_SPEC.md.\nBox breathing → Box pattern, Longer out-breath → Deep calm (4·7·8), with Start, Pause/Resume, Coach me, then Continue or Again.",
+          "notes": "From DAYXERO_BIO_ORB_SPEC.md.\nBox breathing \u2192 Box pattern, Longer out-breath \u2192 Deep calm (4\u00b77\u00b78), with Start, Pause/Resume, Coach me, then Continue or Again.",
           "created": "2026-10-24T11:47:52.000Z",
           "completed": null
         },
@@ -1337,7 +1337,7 @@
           "id": "S14.01",
           "title": "Notification plan: pledge, check-in, lesson available, milestone, NRT reminders, inactivity nudges per the open decision.",
           "status": "done",
-          "notes": "Inactivity nudges follow the pause-and-replay rule (no reset), per Milan.\nMockups ready in tracker.\nMilan: keep the wording; pledge and check-in reminders pause while someone's away.\nMilan approved S14 in chat.\nSuperseded by the notifications handoff tasks S14.1–S14.12.",
+          "notes": "Inactivity nudges follow the pause-and-replay rule (no reset), per Milan.\nMockups ready in tracker.\nMilan: keep the wording; pledge and check-in reminders pause while someone's away.\nMilan approved S14 in chat.\nSuperseded by the notifications handoff tasks S14.1\u2013S14.12.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": "2026-10-23T11:22:52.000Z"
         },
@@ -1345,7 +1345,7 @@
           "id": "S14.02",
           "title": "Quiet hours and per-type toggles in Settings.",
           "status": "done",
-          "notes": "Mockups ready in tracker.\nMilan approved S14 in chat.\nSuperseded by the notifications handoff tasks S14.1–S14.12.",
+          "notes": "Mockups ready in tracker.\nMilan approved S14 in chat.\nSuperseded by the notifications handoff tasks S14.1\u2013S14.12.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": "2026-10-23T11:22:52.000Z"
         },
@@ -1353,7 +1353,7 @@
           "id": "S14.03",
           "title": "No guilt copy in any notification.",
           "status": "done",
-          "notes": "Mockups ready in tracker.\nMilan approved S14 in chat.\nSuperseded by the notifications handoff tasks S14.1–S14.12.",
+          "notes": "Mockups ready in tracker.\nMilan approved S14 in chat.\nSuperseded by the notifications handoff tasks S14.1\u2013S14.12.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": "2026-10-23T11:22:52.000Z"
         },
@@ -1519,7 +1519,7 @@
           "id": "S15.5",
           "title": "Accessibility pass across the whole app: VoiceOver labels on every control and the hero visual, full Dynamic Type, Reduce Motion, Reduce Transparency, contrast.",
           "status": "done",
-          "notes": "Includes a live VoiceOver run on device for Sections 1–3 (screenshots can't check speech).\nMockups ready in tracker.\nMilan approved S15 in chat.",
+          "notes": "Includes a live VoiceOver run on device for Sections 1\u20133 (screenshots can't check speech).\nMockups ready in tracker.\nMilan approved S15 in chat.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": "2026-10-23T11:22:52.000Z"
         },
@@ -1642,7 +1642,7 @@
           "id": "S17.11",
           "title": "Privacy mode setting and redaction (section 7)",
           "status": "in_progress",
-          "notes": "From DAYXERO_WIDGETS_HANDOFF.md. Settings › Widgets.",
+          "notes": "From DAYXERO_WIDGETS_HANDOFF.md. Settings \u203a Widgets.",
           "created": "2026-10-26T08:25:11.000Z",
           "completed": null
         },
@@ -1694,9 +1694,9 @@
       "tasks": [
         {
           "id": "S16.1",
-          "title": "End-to-end test of the full journey: onboarding → paywall → prep → Quit Day → day 7 → maintenance.",
+          "title": "End-to-end test of the full journey: onboarding \u2192 paywall \u2192 prep \u2192 Quit Day \u2192 day 7 \u2192 maintenance.",
           "status": "in_progress",
-          "notes": "DayXeroUITests/JourneyUITests: onboarding → paywall → prep (log, SOS, tabs); Quit Day; day 3 slip; day 12 maintenance and settings. Later stages use seeded scenarios.",
+          "notes": "DayXeroUITests/JourneyUITests: onboarding \u2192 paywall \u2192 prep (log, SOS, tabs); Quit Day; day 3 slip; day 12 maintenance and settings. Later stages use seeded scenarios.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": null
         },
@@ -1726,7 +1726,7 @@
         },
         {
           "id": "S16.5",
-          "title": "Prepare an App Store featuring nomination (App Store Connect → Featuring → Nominations → App Launch), at least 3 weeks before launch.",
+          "title": "Prepare an App Store featuring nomination (App Store Connect \u2192 Featuring \u2192 Nominations \u2192 App Launch), at least 3 weeks before launch.",
           "status": "pending",
           "notes": "Nomination text drafted on the S16 page; Milan submits in App Store Connect at least 3 weeks before launch.",
           "created": "2026-10-22T19:48:52.060Z",
@@ -1736,7 +1736,7 @@
           "id": "S16.6",
           "title": "Launch checklist in the tracker.",
           "status": "done",
-          "notes": "Checklist on the S16 page and as tasks S16.7–S16.11.",
+          "notes": "Checklist on the S16 page and as tasks S16.7\u2013S16.11.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": "2026-10-23T10:46:21.548Z"
         },
@@ -1804,7 +1804,7 @@
           "id": "S18.2",
           "title": "Plan reveal week list never skips prep days (bug 2)",
           "status": "done",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. With 7+ prep days the list jumped from Prep day 6 to Quit Day. Now: days 1–5, '+N more prep days', then Quit Day with its date.\ndc1de06: PlanTimeline (Core, tested): days 1–5, '+N more prep days', Quit Day with its date. Verifying on CI.\nVerified: PlanTimelineTests green (iOS run 93); onb-reveal shot lists prep days 1-5, '+2 more prep days', then Quit Day with its date.",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. With 7+ prep days the list jumped from Prep day 6 to Quit Day. Now: days 1\u20135, '+N more prep days', then Quit Day with its date.\ndc1de06: PlanTimeline (Core, tested): days 1\u20135, '+N more prep days', Quit Day with its date. Verifying on CI.\nVerified: PlanTimelineTests green (iOS run 93); onb-reveal shot lists prep days 1-5, '+2 more prep days', then Quit Day with its date.",
           "created": "2026-10-27T19:25:39.078Z",
           "completed": "2026-10-28T04:15:42.726Z"
         },
@@ -1812,7 +1812,7 @@
           "id": "S18.3",
           "title": "Name the per-cigarette price in the sum line (bug 3)",
           "status": "done",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Pack buyers see 'That's ₹1.25 a cigarette, about ₹4,563 a year', so a single-stick price typed as a pack price is obvious. USD on the paywall comes from the App Store storefront, not the code.\na3f54e1: 'That's ₹1.25 a cigarette, about ₹4,563 a year' in onboarding and Settings. USD on the paywall is the App Store storefront, not code. Verifying on CI.\nVerified: onb-baseline_cigarettes shot reads 'That's $0.75 a cigarette, about $1,642 a year.'",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Pack buyers see 'That's \u20b91.25 a cigarette, about \u20b94,563 a year', so a single-stick price typed as a pack price is obvious. USD on the paywall comes from the App Store storefront, not the code.\na3f54e1: 'That's \u20b91.25 a cigarette, about \u20b94,563 a year' in onboarding and Settings. USD on the paywall is the App Store storefront, not code. Verifying on CI.\nVerified: onb-baseline_cigarettes shot reads 'That's $0.75 a cigarette, about $1,642 a year.'",
           "created": "2026-10-27T19:25:39.118Z",
           "completed": "2026-10-28T04:15:42.754Z"
         },
@@ -1828,7 +1828,7 @@
           "id": "S18.5",
           "title": "Water goal out of onboarding, into the Water tab (no height)",
           "status": "done",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Everyone starts on 2.0 L. 'Personalise goal' in the Water tab: weight, activity, climate, Adjust. Height is no longer collected.\n0273b11: onboarding water screens removed; 'Personalise goal' sheet in the Water tab (WaterGoalDraft, tested). Verifying on CI.\nVerified: onboarding goes NRT → building → reveal (journey test); water-goal-sheet shots (dark, light, ax5); WaterGoalDraft tests green.",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Everyone starts on 2.0 L. 'Personalise goal' in the Water tab: weight, activity, climate, Adjust. Height is no longer collected.\n0273b11: onboarding water screens removed; 'Personalise goal' sheet in the Water tab (WaterGoalDraft, tested). Verifying on CI.\nVerified: onboarding goes NRT \u2192 building \u2192 reveal (journey test); water-goal-sheet shots (dark, light, ax5); WaterGoalDraft tests green.",
           "created": "2026-10-27T19:25:39.192Z",
           "completed": "2026-10-28T04:15:42.787Z"
         },
@@ -1844,7 +1844,7 @@
           "id": "S18.7",
           "title": "Early patterns on Progress from Day 1",
           "status": "done",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Replaces 'Insights need a week of logs' with real time-of-day bars from the first log and the triggers from setup. Full insights still open at 7 days and 5 logs.\n0a47c9f: time-of-day bars from the first log, setup triggers and times, 'Full patterns in N days'. Verifying on CI.\nVerified: prog-progress-empty (pill + 'You said: Coffee · Stress') and prog-progress-prep (so-far bars + 'Full patterns in 6 days'); Insights tests green.",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Replaces 'Insights need a week of logs' with real time-of-day bars from the first log and the triggers from setup. Full insights still open at 7 days and 5 logs.\n0a47c9f: time-of-day bars from the first log, setup triggers and times, 'Full patterns in N days'. Verifying on CI.\nVerified: prog-progress-empty (pill + 'You said: Coffee \u00b7 Stress') and prog-progress-prep (so-far bars + 'Full patterns in 6 days'); Insights tests green.",
           "created": "2026-10-27T19:25:39.257Z",
           "completed": "2026-10-28T04:15:42.845Z"
         },
@@ -1852,7 +1852,7 @@
           "id": "S18.8",
           "title": "Vape: pods a week, and 'Vaped' for the one-tap log",
           "status": "done",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Onboarding and Settings ask for pods or disposables a week; puffs a day is worked out. 'Puff session' becomes 'Vaped' / 'Times vaped' in the log sheet, Home, widget and Siri.\n5d84ef4: pods a week in onboarding and Settings (VapeUsage, tested); 'Vaped' / 'Times vaped'; Siri reads 'Log a Vape'. Verifying on CI.\nVerified: onb-baseline_vape shot (2.5 pods a week, price of one, puffs in one), reveal tile 'Pods a week 2.5 → 0'; journey test logs 'Vaped'.",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Onboarding and Settings ask for pods or disposables a week; puffs a day is worked out. 'Puff session' becomes 'Vaped' / 'Times vaped' in the log sheet, Home, widget and Siri.\n5d84ef4: pods a week in onboarding and Settings (VapeUsage, tested); 'Vaped' / 'Times vaped'; Siri reads 'Log a Vape'. Verifying on CI.\nVerified: onb-baseline_vape shot (2.5 pods a week, price of one, puffs in one), reveal tile 'Pods a week 2.5 \u2192 0'; journey test logs 'Vaped'.",
           "created": "2026-10-27T19:25:39.292Z",
           "completed": "2026-10-28T04:15:42.873Z"
         },
@@ -1868,7 +1868,7 @@
           "id": "S18.10",
           "title": "Copy de-clutter pass",
           "status": "done",
-          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Home (hero, water, lesson card, prep tiles removed), log sheet, Program rows, Progress tiles and hero, and in-card kickers on other screens.\n6c9a548: Home, log sheet, Program, Progress and other in-card labels. Verifying on CI screenshots.\nVerified across the CI set (Home prep, Progress tiles, lesson row '4 of 7 · 6 min', log rows).",
+          "notes": "From Argon's review and copy audit, 27 Oct 2026; plan approved by Milan. Home (hero, water, lesson card, prep tiles removed), log sheet, Program rows, Progress tiles and hero, and in-card kickers on other screens.\n6c9a548: Home, log sheet, Program, Progress and other in-card labels. Verifying on CI screenshots.\nVerified across the CI set (Home prep, Progress tiles, lesson row '4 of 7 \u00b7 6 min', log rows).",
           "created": "2026-10-27T19:25:39.366Z",
           "completed": "2026-10-28T04:15:42.899Z"
         },
@@ -1924,7 +1924,7 @@
           "id": "S18.17",
           "title": "Currency follows the phone's region, with a Settings option to change it",
           "status": "done",
-          "notes": "Milan, 27 Oct. 877fa4d: CurrencyChoice (Core, tested) gives the region's currency in onboarding; Settings › Your quit › Currency lists every currency with search. Changing it relabels amounts, it doesn't convert them.\nVerifying on CI.\nVerified: set-currency shot (region's currency first with a check mark, search); SettingsTests currency green.",
+          "notes": "Milan, 27 Oct. 877fa4d: CurrencyChoice (Core, tested) gives the region's currency in onboarding; Settings \u203a Your quit \u203a Currency lists every currency with search. Changing it relabels amounts, it doesn't convert them.\nVerifying on CI.\nVerified: set-currency shot (region's currency first with a check mark, search); SettingsTests currency green.",
           "created": "2026-10-27T20:11:34.596Z",
           "completed": "2026-10-28T04:15:43.031Z"
         },
@@ -1940,7 +1940,7 @@
           "id": "S18.19",
           "title": "Reminders screen swapped out by the paywall at the end of onboarding",
           "status": "done",
-          "notes": "Found 28 Oct by the device-matrix journey test: saving the profile on the plan reveal made RootView switch to the paywall at once, so 'A nudge when it helps' only flashed (or never showed). Pre-dates S18.\n6a123cb: RootView keeps onboarding on screen from the save until the reminders screen finishes. Journey test tapSettled now waits for a still, enabled, on-screen button (iOS 27 hittability checks were flaky). Verifying on device matrix run 48.\nDevice matrix run 48: every leg now reaches the paywall after the reminders screen. The next failure was the test tapping the paywall button before its plans loaded (87b204c waits for it); run 49 verifying.\nVerified: the full onboarding journey passes on all four device-matrix legs (run 52): reveal → reminders (Not now) → paywall.",
+          "notes": "Found 28 Oct by the device-matrix journey test: saving the profile on the plan reveal made RootView switch to the paywall at once, so 'A nudge when it helps' only flashed (or never showed). Pre-dates S18.\n6a123cb: RootView keeps onboarding on screen from the save until the reminders screen finishes. Journey test tapSettled now waits for a still, enabled, on-screen button (iOS 27 hittability checks were flaky). Verifying on device matrix run 48.\nDevice matrix run 48: every leg now reaches the paywall after the reminders screen. The next failure was the test tapping the paywall button before its plans loaded (87b204c waits for it); run 49 verifying.\nVerified: the full onboarding journey passes on all four device-matrix legs (run 52): reveal \u2192 reminders (Not now) \u2192 paywall.",
           "created": "2026-10-28T04:15:15.540Z",
           "completed": "2026-10-28T07:30:07.633Z"
         },
@@ -2108,7 +2108,7 @@
           "id": "S21.1",
           "title": "Water turns blue (pill, glow, widget glyph); tea stays amber",
           "status": "done",
-          "notes": "Asked by Milan 28 Oct (screen recording).\ncd7ceed; verifying on CI.\nf3f84d7: exactly the WTracker spec (glass #BFE6FF→#3D8BF2, sparkling #E6F6FF→#7CC4F2, glow 84,164,255 @ 24%); waves are 14 pt bands as in the reference. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.",
+          "notes": "Asked by Milan 28 Oct (screen recording).\ncd7ceed; verifying on CI.\nf3f84d7: exactly the WTracker spec (glass #BFE6FF\u2192#3D8BF2, sparkling #E6F6FF\u2192#7CC4F2, glow 84,164,255 @ 24%); waves are 14 pt bands as in the reference. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.",
           "created": "2026-10-28T13:33:59.724Z",
           "completed": "2026-10-28T15:36:37.692Z"
         },
@@ -2173,7 +2173,7 @@
     {
       "id": "S22",
       "title": "Onboarding v2",
-      "goal": "Screens 1–14 rebuilt from the Figma mockups (https://www.figma.com/design/CJzm1xsQryPsdG5m8KWRx6), with the welcome hills rolling like Home's header (Milan, 28 Oct).",
+      "goal": "Screens 1\u201314 rebuilt from the Figma mockups (https://www.figma.com/design/CJzm1xsQryPsdG5m8KWRx6), with the welcome hills rolling like Home's header (Milan, 28 Oct).",
       "signoff": {
         "state": "signed_off",
         "history": [
@@ -2258,7 +2258,7 @@
         },
         {
           "id": "S22.9",
-          "title": "First-run paywall made a clean hard paywall: one promise, three bullets, a trust card, yearly/monthly side by side, ✕ after 3 s, no basic-tracker link",
+          "title": "First-run paywall made a clean hard paywall: one promise, three bullets, a trust card, yearly/monthly side by side, \u2715 after 3 s, no basic-tracker link",
           "status": "pending",
           "notes": "No made-up rating or review: the app isn't out, so it shows plain facts until there are real reviews. Prices and trial length come from App Store Connect; build the Superwall version and run the price/header tests there (S20.4).",
           "created": "2026-10-28T18:48:06.705Z",
@@ -2379,7 +2379,7 @@
         },
         {
           "id": "S25.2",
-          "title": "Home log cards log in one tap during prep (toast: 'Cigarette #3 logged · Undo · Add trigger'); vape card splits into +1 Puff and + Urge (craving form directly).",
+          "title": "Home log cards log in one tap during prep (toast: 'Cigarette #3 logged \u00b7 Undo \u00b7 Add trigger'); vape card splits into +1 Puff and + Urge (craving form directly).",
           "status": "done",
           "notes": "HomeView productCard/logUse/loggedToast.",
           "created": "2026-10-29T13:00:00.000Z",
@@ -2403,7 +2403,7 @@
         },
         {
           "id": "S25.5",
-          "title": "SOS: after a minute 'It's passing · log as ridden out'; time-up 'Log as ridden out (+1)'; win screen 'Wave survived, <name>.'",
+          "title": "SOS: after a minute 'It's passing \u00b7 log as ridden out'; time-up 'Log as ridden out (+1)'; win screen 'Wave survived, <name>.'",
           "status": "done",
           "notes": "",
           "created": "2026-10-29T13:00:00.000Z",
@@ -2411,7 +2411,7 @@
         },
         {
           "id": "S25.6",
-          "title": "Audio lesson player: synced transcript, on-device voice until recordings exist, waveform scrubber, ±15 s, speed; moves on to the exercise.",
+          "title": "Audio lesson player: synced transcript, on-device voice until recordings exist, waveform scrubber, \u00b115 s, speed; moves on to the exercise.",
           "status": "done",
           "notes": "DayXero/Program/LessonAudio.swift.",
           "created": "2026-10-29T13:00:00.000Z",
@@ -2604,15 +2604,6 @@
       ]
     },
     {
-      "goal": "",
-      "signoff": {
-        "state": "not_started",
-        "history": []
-      },
-      "mockups": [],
-      "tasks": []
-    },
-    {
       "id": "S27",
       "title": "Design critique fixes (reports/DayXero app design critique.md)",
       "goal": "Fix the 20 ranked items from the 1 Nov 2026 critique: promise breaks and launch blockers first, then program and money, then visual subtraction, then character growth. Plan: docs/DAYXERO_CRITIQUE_FIX_PLAN.md",
@@ -2624,7 +2615,7 @@
       "tasks": [
         {
           "id": "S27.1",
-          "title": "Rank 1 · Privacy link: set AppLinks.privacy and link it from onb-welcome, settings-privacy and every paywall (paywall, paywall-plans, offer).",
+          "title": "Rank 1 \u00b7 Privacy link: set AppLinks.privacy and link it from onb-welcome, settings-privacy and every paywall (paywall, paywall-plans, offer).",
           "status": "in_progress",
           "notes": "Apple subscription-page requirement and 5.1.1(i). Needs D1 (URL). Wave 1.",
           "created": "2026-11-01T18:37:55.879Z",
@@ -2632,15 +2623,15 @@
         },
         {
           "id": "S27.2",
-          "title": "Rank 2 · Reconcile the paywall: drop the post-onboarding paywall (decision 15) or sell the trial there; remove the 3 s hidden Close; fix 'Day 1' copy; 'Always free: your counter and Craving SOS.' on every paywall.",
+          "title": "Rank 2 \u00b7 Reconcile the paywall: drop the post-onboarding paywall (decision 15) or sell the trial there; remove the 3 s hidden Close; fix 'Day 1' copy; 'Always free: your counter and Craving SOS.' on every paywall.",
           "status": "pending",
-          "notes": "PaywallModel.swift ~L104–108 strips trial plans before Quit Day, so the shipped first-run paywall is monthly + lifetime with no anchor. Needs D2, D5. Wave 1.",
+          "notes": "PaywallModel.swift ~L104\u2013108 strips trial plans before Quit Day, so the shipped first-run paywall is monthly + lifetime with no anchor. Needs D2, D5. Wave 1.",
           "created": "2026-11-01T18:37:55.945Z",
           "completed": null
         },
         {
           "id": "S27.3",
-          "title": "Rank 3 · onb-baseline-summary: delete the 'Good news… steps down' note, keep-frame the money, relabel 'Time back', hide 'YOUR ANSWER', source or drop the cigarette-equivalence number.",
+          "title": "Rank 3 \u00b7 onb-baseline-summary: delete the 'Good news\u2026 steps down' note, keep-frame the money, relabel 'Time back', hide 'YOUR ANSWER', source or drop the cigarette-equivalence number.",
           "status": "pending",
           "notes": "False under 'use as normal', unsourced, loss-framed. onboarding.js ~L320, DetailScreens.swift, OnboardingEstimates.swift. Wave 1.",
           "created": "2026-11-01T18:37:56.014Z",
@@ -2648,7 +2639,7 @@
         },
         {
           "id": "S27.4",
-          "title": "Rank 4 · onb-trial + notifications: make 'That's it' true with two defaults and one global cap; reconcile 21:00 / 21:30 / 9:00 PM.",
+          "title": "Rank 4 \u00b7 onb-trial + notifications: make 'That's it' true with two defaults and one global cap; reconcile 21:00 / 21:30 / 9:00 PM.",
           "status": "pending",
           "notes": "NotificationPlan.swift defaults; four on by default today plus water, NRT and Live Activities. Wave 1.",
           "created": "2026-11-01T18:37:56.071Z",
@@ -2656,7 +2647,7 @@
         },
         {
           "id": "S27.5",
-          "title": "Rank 5 · One day count on today/program; prep-specific pledge wording; hide '0 waves' in prep; fix the '0 of 7 prep done' counter.",
+          "title": "Rank 5 \u00b7 One day count on today/program; prep-specific pledge wording; hide '0 waves' in prep; fix the '0 of 7 prep done' counter.",
           "status": "pending",
           "notes": "TodayHeaderV4 vs ProgramTodayCard disagree (DAY 3 vs DAY 2). PledgeView .wontUse during prep. ProgramStore prep completions. Wave 1.",
           "created": "2026-11-01T18:37:56.128Z",
@@ -2664,7 +2655,7 @@
         },
         {
           "id": "S27.6",
-          "title": "Rank 6 · NRT framing: combination NRT as best-evidenced, 'ask about prescription options', regulator label sources, pregnancy question.",
+          "title": "Rank 6 \u00b7 NRT framing: combination NRT as best-evidenced, 'ask about prescription options', regulator label sources, pregnancy question.",
           "status": "pending",
           "notes": "Cochrane RR 1.25 for combination NRT; current copy discourages it. NRTSetupView, NRTCards, DetailScreens NRTScreen. Wave 2.",
           "created": "2026-11-01T18:37:56.191Z",
@@ -2672,7 +2663,7 @@
         },
         {
           "id": "S27.7",
-          "title": "Rank 7 · Day Xero fires on the chosen date; unfinished prep becomes catch-up; allow a 3–7 day prep.",
+          "title": "Rank 7 \u00b7 Day Xero fires on the chosen date; unfinished prep becomes catch-up; allow a 3\u20137 day prep.",
           "status": "pending",
           "notes": "ProgramUnlock.dayXeroDate = max(Quit Day, day after last prep) silently postpones the quit. Update ProgramUnlockTests. Wave 2.",
           "created": "2026-11-01T18:37:56.257Z",
@@ -2680,7 +2671,7 @@
         },
         {
           "id": "S27.8",
-          "title": "Rank 8 · 7-day trial ending after 'One week clear'; lifetime to $99.99; win-back offer and grace period in App Store Connect; check-in stays free.",
+          "title": "Rank 8 \u00b7 7-day trial ending after 'One week clear'; lifetime to $99.99; win-back offer and grace period in App Store Connect; check-in stays free.",
           "status": "pending",
           "notes": "Sub-4-day trials convert worst; a day-4 charge lands in peak withdrawal. Needs D3, D4, D5. Milan in App Store Connect. Wave 2.",
           "created": "2026-11-01T18:37:56.304Z",
@@ -2688,7 +2679,7 @@
         },
         {
           "id": "S27.9",
-          "title": "Rank 9 · Honest counter: 'days since Quit Day'; 'not smoked' subtracts slips; relapse threshold with a Jelli fresh-Quit-Day offer; remove 'streak' wording and the water streak pill.",
+          "title": "Rank 9 \u00b7 Honest counter: 'days since Quit Day'; 'not smoked' subtracts slips; relapse threshold with a Jelli fresh-Quit-Day offer; remove 'streak' wording and the water streak pill.",
           "status": "pending",
           "notes": "ProgressStats, Slips, MilestoneMoments, WidgetSnapshot, Water. Keeps 'nothing resets' for slips while the counter stays truthful. Wave 2.",
           "created": "2026-11-01T18:37:56.355Z",
@@ -2696,23 +2687,23 @@
         },
         {
           "id": "S27.10",
-          "title": "Rank 10 · Onboarding voice and skips: first-person Xero, replace 'Dual use detected', define 'wave', one progress bar, skippable name and past attempts, Skip on onb-breathe, feed or cut unused answers.",
+          "title": "Rank 10 \u00b7 Onboarding voice and skips: first-person Xero, replace 'Dual use detected', define 'wave', one progress bar, skippable name and past attempts, Skip on onb-breathe, feed or cut unused answers.",
           "status": "pending",
-          "notes": "Voice rule (DS §8) and handoff S2.13 both violated. Wave 3.",
+          "notes": "Voice rule (DS \u00a78) and handoff S2.13 both violated. Wave 3.",
           "created": "2026-11-01T18:37:56.413Z",
           "completed": null
         },
         {
           "id": "S27.11",
-          "title": "Rank 11 · Native iOS 26 TabView with monochrome icons; Settings reachable from Progress; fold Evening into Today (four tabs).",
+          "title": "Rank 11 \u00b7 Native iOS 26 TabView with monochrome icons; Settings reachable from Progress; fold Evening into Today (four tabs).",
           "status": "pending",
-          "notes": "Nav4.swift, ProgressTab.swift, EveningView → TodaySlot. Needs D6. Wave 3.",
+          "notes": "Nav4.swift, ProgressTab.swift, EveningView \u2192 TodaySlot. Needs D6. Wave 3.",
           "created": "2026-11-01T18:37:56.476Z",
           "completed": null
         },
         {
           "id": "S27.12",
-          "title": "Rank 12 · Water to one row, delete the goal calculator; rebuild calm-box, calm-478 and the breathe beat on reading tokens.",
+          "title": "Rank 12 \u00b7 Water to one row, delete the goal calculator; rebuild calm-box, calm-478 and the breathe beat on reading tokens.",
           "status": "pending",
           "notes": "Last pure-black OLED screens and a third visual language. Needs D8. Wave 3.",
           "created": "2026-11-01T18:37:56.532Z",
@@ -2720,7 +2711,7 @@
         },
         {
           "id": "S27.13",
-          "title": "Rank 13 · Collapse to six grounds; green only for done; coral never as text; card alpha or hairline ≥ 1.3:1.",
+          "title": "Rank 13 \u00b7 Collapse to six grounds; green only for done; coral never as text; card alpha or hairline \u2265 1.3:1.",
           "status": "pending",
           "notes": "lab.js Lab.grounds, tokens.json, Ground.swift, V4TokenTests. Coral kicker text is 2.41:1 on program/changing. Needs D9. Wave 3.",
           "created": "2026-11-01T18:37:56.597Z",
@@ -2728,15 +2719,15 @@
         },
         {
           "id": "S27.14",
-          "title": "Rank 14 · Task-screen layout: top-anchored content with an 88 px character, Continue under the last option, grabbers and restated mission on follow-up sheets, hide 'Audio coming soon', fix 'Right.' on wrong answers.",
+          "title": "Rank 14 \u00b7 Task-screen layout: top-anchored content with an 88 px character, Continue under the last option, grabbers and restated mission on follow-up sheets, hide 'Audio coming soon', fix 'Right.' on wrong answers.",
           "status": "pending",
-          "notes": "450–550 px voids on session, session-kit, calm-*, log-slip-what, checkin-dayend. Wave 3.",
+          "notes": "450\u2013550 px voids on session, session-kit, calm-*, log-slip-what, checkin-dayend. Wave 3.",
           "created": "2026-11-01T18:37:56.651Z",
           "completed": null
         },
         {
           "id": "S27.15",
-          "title": "Rank 15 · One illustration language: delete PersonFigure, constrain kit tiles to warm/deep families, ration the marked word, no twinkle on forms.",
+          "title": "Rank 15 \u00b7 One illustration language: delete PersonFigure, constrain kit tiles to warm/deep families, ration the marked word, no twinkle on forms.",
           "status": "pending",
           "notes": "PersonFigure.swift used in CalmToolsView and ProgramPathMap; art.js. Wave 3.",
           "created": "2026-11-01T18:37:56.704Z",
@@ -2744,15 +2735,15 @@
         },
         {
           "id": "S27.16",
-          "title": "Rank 16 · Xero grows: visible stages 1–4, sky clarity by days, distinct art and fact per milestone, stage sheet in the lab.",
+          "title": "Rank 16 \u00b7 Xero grows: visible stages 1\u20134, sky clarity by days, distinct art and fact per milestone, stage sheet in the lab.",
           "status": "pending",
-          "notes": "milestone is one template × 11; Xero identical days 1–14 and 30–365. CrewGrowth, XeroView, HorizonScene, MilestoneViews. Wave 4.",
+          "notes": "milestone is one template \u00d7 11; Xero identical days 1\u201314 and 30\u2013365. CrewGrowth, XeroView, HorizonScene, MilestoneViews. Wave 4.",
           "created": "2026-11-01T18:37:56.753Z",
           "completed": null
         },
         {
           "id": "S27.17",
-          "title": "Rank 17 · Dusk variant of the dawn hero for dark mode; lab renders sheets over their real parent.",
+          "title": "Rank 17 \u00b7 Dusk variant of the dawn hero for dark mode; lab renders sheets over their real parent.",
           "status": "pending",
           "notes": "Hero art at full brightness over plum on 5 screens; 14 sheet screens never reviewed as they will look. Wave 4.",
           "created": "2026-11-01T18:37:56.801Z",
@@ -2760,7 +2751,7 @@
         },
         {
           "id": "S27.18",
-          "title": "Rank 18 · SOS break menu / lifts / 'use your gum' row; show mission data back; sessions at days 45, 60, 90 and a weekly Glim check-in.",
+          "title": "Rank 18 \u00b7 SOS break menu / lifts / 'use your gum' row; show mission data back; sessions at days 45, 60, 90 and a weekly Glim check-in.",
           "status": "pending",
           "notes": "Program promises SOS options it does not show; Day 31 cliff. CravingSOSView, MissionPrompts, program.json, NotificationPlan. Wave 4.",
           "created": "2026-11-01T18:37:56.854Z",
@@ -2768,7 +2759,7 @@
         },
         {
           "id": "S27.19",
-          "title": "Rank 19 · Rename the sun character, trademark search, plan the move off .in.",
+          "title": "Rank 19 \u00b7 Rename the sun character, trademark search, plan the move off .in.",
           "status": "pending",
           "notes": "'Xero' is a defended software mark (Xero Ltd) with ANZ on the launch list. Decide the name in Wave 1 (D7), rename in Wave 4.",
           "created": "2026-11-01T18:37:56.927Z",
@@ -2776,7 +2767,7 @@
         },
         {
           "id": "S27.20",
-          "title": "Rank 20 · Accessibility and convention debt: Dynamic Type (AX3) states and motion tokens in the lab; 44 pt targets; one hold duration; reasons under disabled CTAs; red destructive buttons; merged day-end picker.",
+          "title": "Rank 20 \u00b7 Accessibility and convention debt: Dynamic Type (AX3) states and motion tokens in the lab; 44 pt targets; one hold duration; reasons under disabled CTAs; red destructive buttons; merged day-end picker.",
           "status": "pending",
           "notes": "Move.swift, Buttons4.swift, ProgramView tabs, MilestoneViews segments, DayEndSettings. Wave 4.",
           "created": "2026-11-01T18:37:56.997Z",
@@ -2789,7 +2780,7 @@
     {
       "time": "2026-11-01T18:37:57.105Z",
       "type": "status",
-      "message": "S27.1 pending → in_progress"
+      "message": "S27.1 pending \u2192 in_progress"
     },
     {
       "time": "2026-11-01T18:37:57.056Z",
@@ -2799,112 +2790,107 @@
     {
       "time": "2026-11-01T18:37:56.997Z",
       "type": "task_added",
-      "message": "S27.20 added: Rank 20 · Accessibility and convention debt: Dynamic Type (AX3) states and motion tokens in the lab; 44 pt targets; one hold duration; reasons under disabled CTAs; red destructive buttons; merged day-end picker."
+      "message": "S27.20 added: Rank 20 \u00b7 Accessibility and convention debt: Dynamic Type (AX3) states and motion tokens in the lab; 44 pt targets; one hold duration; reasons under disabled CTAs; red destructive buttons; merged day-end picker."
     },
     {
       "time": "2026-11-01T18:37:56.927Z",
       "type": "task_added",
-      "message": "S27.19 added: Rank 19 · Rename the sun character, trademark search, plan the move off .in."
+      "message": "S27.19 added: Rank 19 \u00b7 Rename the sun character, trademark search, plan the move off .in."
     },
     {
       "time": "2026-11-01T18:37:56.854Z",
       "type": "task_added",
-      "message": "S27.18 added: Rank 18 · SOS break menu / lifts / 'use your gum' row; show mission data back; sessions at days 45, 60, 90 and a weekly Glim check-in."
+      "message": "S27.18 added: Rank 18 \u00b7 SOS break menu / lifts / 'use your gum' row; show mission data back; sessions at days 45, 60, 90 and a weekly Glim check-in."
     },
     {
       "time": "2026-11-01T18:37:56.801Z",
       "type": "task_added",
-      "message": "S27.17 added: Rank 17 · Dusk variant of the dawn hero for dark mode; lab renders sheets over their real parent."
+      "message": "S27.17 added: Rank 17 \u00b7 Dusk variant of the dawn hero for dark mode; lab renders sheets over their real parent."
     },
     {
       "time": "2026-11-01T18:37:56.753Z",
       "type": "task_added",
-      "message": "S27.16 added: Rank 16 · Xero grows: visible stages 1–4, sky clarity by days, distinct art and fact per milestone, stage sheet in the lab."
+      "message": "S27.16 added: Rank 16 \u00b7 Xero grows: visible stages 1\u20134, sky clarity by days, distinct art and fact per milestone, stage sheet in the lab."
     },
     {
       "time": "2026-11-01T18:37:56.704Z",
       "type": "task_added",
-      "message": "S27.15 added: Rank 15 · One illustration language: delete PersonFigure, constrain kit tiles to warm/deep families, ration the marked word, no twinkle on forms."
+      "message": "S27.15 added: Rank 15 \u00b7 One illustration language: delete PersonFigure, constrain kit tiles to warm/deep families, ration the marked word, no twinkle on forms."
     },
     {
       "time": "2026-11-01T18:37:56.651Z",
       "type": "task_added",
-      "message": "S27.14 added: Rank 14 · Task-screen layout: top-anchored content with an 88 px character, Continue under the last option, grabbers and restated mission on follow-up sheets, hide 'Audio coming soon', fix 'Right.' on wrong answers."
+      "message": "S27.14 added: Rank 14 \u00b7 Task-screen layout: top-anchored content with an 88 px character, Continue under the last option, grabbers and restated mission on follow-up sheets, hide 'Audio coming soon', fix 'Right.' on wrong answers."
     },
     {
       "time": "2026-11-01T18:37:56.597Z",
       "type": "task_added",
-      "message": "S27.13 added: Rank 13 · Collapse to six grounds; green only for done; coral never as text; card alpha or hairline ≥ 1.3:1."
+      "message": "S27.13 added: Rank 13 \u00b7 Collapse to six grounds; green only for done; coral never as text; card alpha or hairline \u2265 1.3:1."
     },
     {
       "time": "2026-11-01T18:37:56.532Z",
       "type": "task_added",
-      "message": "S27.12 added: Rank 12 · Water to one row, delete the goal calculator; rebuild calm-box, calm-478 and the breathe beat on reading tokens."
+      "message": "S27.12 added: Rank 12 \u00b7 Water to one row, delete the goal calculator; rebuild calm-box, calm-478 and the breathe beat on reading tokens."
     },
     {
       "time": "2026-11-01T18:37:56.476Z",
       "type": "task_added",
-      "message": "S27.11 added: Rank 11 · Native iOS 26 TabView with monochrome icons; Settings reachable from Progress; fold Evening into Today (four tabs)."
+      "message": "S27.11 added: Rank 11 \u00b7 Native iOS 26 TabView with monochrome icons; Settings reachable from Progress; fold Evening into Today (four tabs)."
     },
     {
       "time": "2026-11-01T18:37:56.413Z",
       "type": "task_added",
-      "message": "S27.10 added: Rank 10 · Onboarding voice and skips: first-person Xero, replace 'Dual use detected', define 'wave', one progress bar, skippable name and past attempts, Skip on onb-breathe, feed or cut unused answers."
+      "message": "S27.10 added: Rank 10 \u00b7 Onboarding voice and skips: first-person Xero, replace 'Dual use detected', define 'wave', one progress bar, skippable name and past attempts, Skip on onb-breathe, feed or cut unused answers."
     },
     {
       "time": "2026-11-01T18:37:56.355Z",
       "type": "task_added",
-      "message": "S27.9 added: Rank 9 · Honest counter: 'days since Quit Day'; 'not smoked' subtracts slips; relapse threshold with a Jelli fresh-Quit-Day offer; remove 'streak' wording and the water streak pill."
+      "message": "S27.9 added: Rank 9 \u00b7 Honest counter: 'days since Quit Day'; 'not smoked' subtracts slips; relapse threshold with a Jelli fresh-Quit-Day offer; remove 'streak' wording and the water streak pill."
     },
     {
       "time": "2026-11-01T18:37:56.304Z",
       "type": "task_added",
-      "message": "S27.8 added: Rank 8 · 7-day trial ending after 'One week clear'; lifetime to $99.99; win-back offer and grace period in App Store Connect; check-in stays free."
+      "message": "S27.8 added: Rank 8 \u00b7 7-day trial ending after 'One week clear'; lifetime to $99.99; win-back offer and grace period in App Store Connect; check-in stays free."
     },
     {
       "time": "2026-11-01T18:37:56.257Z",
       "type": "task_added",
-      "message": "S27.7 added: Rank 7 · Day Xero fires on the chosen date; unfinished prep becomes catch-up; allow a 3–7 day prep."
+      "message": "S27.7 added: Rank 7 \u00b7 Day Xero fires on the chosen date; unfinished prep becomes catch-up; allow a 3\u20137 day prep."
     },
     {
       "time": "2026-11-01T18:37:56.191Z",
       "type": "task_added",
-      "message": "S27.6 added: Rank 6 · NRT framing: combination NRT as best-evidenced, 'ask about prescription options', regulator label sources, pregnancy question."
+      "message": "S27.6 added: Rank 6 \u00b7 NRT framing: combination NRT as best-evidenced, 'ask about prescription options', regulator label sources, pregnancy question."
     },
     {
       "time": "2026-11-01T18:37:56.128Z",
       "type": "task_added",
-      "message": "S27.5 added: Rank 5 · One day count on today/program; prep-specific pledge wording; hide '0 waves' in prep; fix the '0 of 7 prep done' counter."
+      "message": "S27.5 added: Rank 5 \u00b7 One day count on today/program; prep-specific pledge wording; hide '0 waves' in prep; fix the '0 of 7 prep done' counter."
     },
     {
       "time": "2026-11-01T18:37:56.071Z",
       "type": "task_added",
-      "message": "S27.4 added: Rank 4 · onb-trial + notifications: make 'That's it' true with two defaults and one global cap; reconcile 21:00 / 21:30 / 9:00 PM."
+      "message": "S27.4 added: Rank 4 \u00b7 onb-trial + notifications: make 'That's it' true with two defaults and one global cap; reconcile 21:00 / 21:30 / 9:00 PM."
     },
     {
       "time": "2026-11-01T18:37:56.014Z",
       "type": "task_added",
-      "message": "S27.3 added: Rank 3 · onb-baseline-summary: delete the 'Good news… steps down' note, keep-frame the money, relabel 'Time back', hide 'YOUR ANSWER', source or drop the cigarette-equivalence number."
+      "message": "S27.3 added: Rank 3 \u00b7 onb-baseline-summary: delete the 'Good news\u2026 steps down' note, keep-frame the money, relabel 'Time back', hide 'YOUR ANSWER', source or drop the cigarette-equivalence number."
     },
     {
       "time": "2026-11-01T18:37:55.945Z",
       "type": "task_added",
-      "message": "S27.2 added: Rank 2 · Reconcile the paywall: drop the post-onboarding paywall (decision 15) or sell the trial there; remove the 3 s hidden Close; fix 'Day 1' copy; 'Always free: your counter and Craving SOS.' on every paywall."
+      "message": "S27.2 added: Rank 2 \u00b7 Reconcile the paywall: drop the post-onboarding paywall (decision 15) or sell the trial there; remove the 3 s hidden Close; fix 'Day 1' copy; 'Always free: your counter and Craving SOS.' on every paywall."
     },
     {
       "time": "2026-11-01T18:37:55.879Z",
       "type": "task_added",
-      "message": "S27.1 added: Rank 1 · Privacy link: set AppLinks.privacy and link it from onb-welcome, settings-privacy and every paywall (paywall, paywall-plans, offer)."
+      "message": "S27.1 added: Rank 1 \u00b7 Privacy link: set AppLinks.privacy and link it from onb-welcome, settings-privacy and every paywall (paywall, paywall-plans, offer)."
     },
     {
       "time": "2026-11-01T18:37:55.810Z",
       "type": "section_added",
       "message": "S27 added: Design critique fixes (reports/DayXero app design critique.md)"
-    },
-    {
-      "time": "2026-11-01T18:35:10.198Z",
-      "type": "section_added",
-      "message": "undefined added: undefined"
     },
     {
       "time": "2026-10-29T17:10:00.000Z",
@@ -2929,12 +2915,12 @@
     {
       "time": "2026-10-29T06:11:15.543Z",
       "type": "status",
-      "message": "S24.3 pending → blocked (GitHub Actions jobs not starting: billing. Build from Xcode or Xcode Cloud.)"
+      "message": "S24.3 pending \u2192 blocked (GitHub Actions jobs not starting: billing. Build from Xcode or Xcode Cloud.)"
     },
     {
       "time": "2026-10-29T06:11:15.502Z",
       "type": "status",
-      "message": "S24.4 pending → awaiting_signoff (d05b7df. Not CI-built: GitHub Actions blocked by billing. Milan to build in Xcode and try on device.)"
+      "message": "S24.4 pending \u2192 awaiting_signoff (d05b7df. Not CI-built: GitHub Actions blocked by billing. Milan to build in Xcode and try on device.)"
     },
     {
       "time": "2026-10-29T06:11:15.460Z",
@@ -2964,7 +2950,7 @@
     {
       "time": "2026-10-28T20:15:08.631Z",
       "type": "status",
-      "message": "S23.1 pending → done"
+      "message": "S23.1 pending \u2192 done"
     },
     {
       "time": "2026-10-28T20:15:08.594Z",
@@ -2989,7 +2975,7 @@
     {
       "time": "2026-10-28T18:48:06.705Z",
       "type": "task_added",
-      "message": "S22.9 added: First-run paywall made a clean hard paywall: one promise, three bullets, a trust card, yearly/monthly side by side, ✕ after 3 s, no basic-tracker link"
+      "message": "S22.9 added: First-run paywall made a clean hard paywall: one promise, three bullets, a trust card, yearly/monthly side by side, \u2715 after 3 s, no basic-tracker link"
     },
     {
       "time": "2026-10-28T18:48:06.641Z",
@@ -3044,7 +3030,7 @@
     {
       "time": "2026-10-28T18:00:05.459Z",
       "type": "signoff",
-      "message": "S22 mockups → signed_off"
+      "message": "S22 mockups \u2192 signed_off"
     },
     {
       "time": "2026-10-28T18:00:05.422Z",
@@ -3064,7 +3050,7 @@
     {
       "time": "2026-10-28T15:50:56.491Z",
       "type": "status",
-      "message": "S21.8 in_progress → done (Shipped in TestFlight build 202610281536 (version 1.0.0, f3f84d7), processed VALID by App Store Connect.)"
+      "message": "S21.8 in_progress \u2192 done (Shipped in TestFlight build 202610281536 (version 1.0.0, f3f84d7), processed VALID by App Store Connect.)"
     },
     {
       "time": "2026-10-28T15:36:38.078Z",
@@ -3074,37 +3060,37 @@
     {
       "time": "2026-10-28T15:36:38.026Z",
       "type": "status",
-      "message": "S21.7 in_progress → done (cd7ceed. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.)"
+      "message": "S21.7 in_progress \u2192 done (cd7ceed. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.)"
     },
     {
       "time": "2026-10-28T15:36:37.980Z",
       "type": "status",
-      "message": "S21.6 in_progress → done (cd7ceed; rule in docs/DESIGN_METHODOLOGY.md. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.)"
+      "message": "S21.6 in_progress \u2192 done (cd7ceed; rule in docs/DESIGN_METHODOLOGY.md. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.)"
     },
     {
       "time": "2026-10-28T15:36:37.912Z",
       "type": "status",
-      "message": "S21.5 in_progress → done (cd7ceed. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.)"
+      "message": "S21.5 in_progress \u2192 done (cd7ceed. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.)"
     },
     {
       "time": "2026-10-28T15:36:37.871Z",
       "type": "status",
-      "message": "S21.4 in_progress → done (cd7ceed. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.)"
+      "message": "S21.4 in_progress \u2192 done (cd7ceed. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.)"
     },
     {
       "time": "2026-10-28T15:36:37.834Z",
       "type": "status",
-      "message": "S21.3 in_progress → done (cd7ceed. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.)"
+      "message": "S21.3 in_progress \u2192 done (cd7ceed. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.)"
     },
     {
       "time": "2026-10-28T15:36:37.767Z",
       "type": "status",
-      "message": "S21.2 in_progress → done (Fix in cd7ceed (SwiftUI animates the level). testWaterRisesOnEveryTap: the water rose after each of 6 taps on every leg; dc10543 keeps Log above the dock on 6.1-inch phones. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.)"
+      "message": "S21.2 in_progress \u2192 done (Fix in cd7ceed (SwiftUI animates the level). testWaterRisesOnEveryTap: the water rose after each of 6 taps on every leg; dc10543 keeps Log above the dock on 6.1-inch phones. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.)"
     },
     {
       "time": "2026-10-28T15:36:37.692Z",
       "type": "status",
-      "message": "S21.1 in_progress → done (f3f84d7: exactly the WTracker spec (glass #BFE6FF→#3D8BF2, sparkling #E6F6FF→#7CC4F2, glow 84,164,255 @ 24%); waves are 14 pt bands as in the reference. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.)"
+      "message": "S21.1 in_progress \u2192 done (f3f84d7: exactly the WTracker spec (glass #BFE6FF\u2192#3D8BF2, sparkling #E6F6FF\u2192#7CC4F2, glow 84,164,255 @ 24%); waves are 14 pt bands as in the reference. Verified: iOS run on cd7ceed (build + unit tests) and device matrix run 40710231393 (all four legs) green on f3f84d7.)"
     },
     {
       "time": "2026-10-28T13:45:34.328Z",
@@ -3114,7 +3100,7 @@
     {
       "time": "2026-10-28T13:45:34.296Z",
       "type": "status",
-      "message": "S21.8 pending → in_progress (iOS run on cd7ceed started.)"
+      "message": "S21.8 pending \u2192 in_progress (iOS run on cd7ceed started.)"
     },
     {
       "time": "2026-10-28T13:45:34.259Z",
@@ -3124,72 +3110,72 @@
     {
       "time": "2026-10-28T13:45:34.221Z",
       "type": "status",
-      "message": "S21.7 in_progress → in_progress (cd7ceed; verifying on CI.)"
+      "message": "S21.7 in_progress \u2192 in_progress (cd7ceed; verifying on CI.)"
     },
     {
       "time": "2026-10-28T13:45:34.192Z",
       "type": "status",
-      "message": "S21.6 in_progress → in_progress (cd7ceed; verifying on CI.)"
+      "message": "S21.6 in_progress \u2192 in_progress (cd7ceed; verifying on CI.)"
     },
     {
       "time": "2026-10-28T13:45:34.156Z",
       "type": "status",
-      "message": "S21.5 in_progress → in_progress (cd7ceed; verifying on CI.)"
+      "message": "S21.5 in_progress \u2192 in_progress (cd7ceed; verifying on CI.)"
     },
     {
       "time": "2026-10-28T13:45:34.118Z",
       "type": "status",
-      "message": "S21.4 in_progress → in_progress (cd7ceed; verifying on CI.)"
+      "message": "S21.4 in_progress \u2192 in_progress (cd7ceed; verifying on CI.)"
     },
     {
       "time": "2026-10-28T13:45:34.090Z",
       "type": "status",
-      "message": "S21.3 in_progress → in_progress (cd7ceed; verifying on CI.)"
+      "message": "S21.3 in_progress \u2192 in_progress (cd7ceed; verifying on CI.)"
     },
     {
       "time": "2026-10-28T13:45:34.060Z",
       "type": "status",
-      "message": "S21.2 in_progress → in_progress (cd7ceed; verifying on CI.)"
+      "message": "S21.2 in_progress \u2192 in_progress (cd7ceed; verifying on CI.)"
     },
     {
       "time": "2026-10-28T13:45:34.021Z",
       "type": "status",
-      "message": "S21.1 in_progress → in_progress (cd7ceed; verifying on CI.)"
+      "message": "S21.1 in_progress \u2192 in_progress (cd7ceed; verifying on CI.)"
     },
     {
       "time": "2026-10-28T13:34:04.523Z",
       "type": "status",
-      "message": "S21.7 pending → in_progress"
+      "message": "S21.7 pending \u2192 in_progress"
     },
     {
       "time": "2026-10-28T13:34:04.488Z",
       "type": "status",
-      "message": "S21.6 pending → in_progress"
+      "message": "S21.6 pending \u2192 in_progress"
     },
     {
       "time": "2026-10-28T13:34:04.452Z",
       "type": "status",
-      "message": "S21.5 pending → in_progress"
+      "message": "S21.5 pending \u2192 in_progress"
     },
     {
       "time": "2026-10-28T13:34:04.397Z",
       "type": "status",
-      "message": "S21.4 pending → in_progress"
+      "message": "S21.4 pending \u2192 in_progress"
     },
     {
       "time": "2026-10-28T13:34:04.280Z",
       "type": "status",
-      "message": "S21.3 pending → in_progress"
+      "message": "S21.3 pending \u2192 in_progress"
     },
     {
       "time": "2026-10-28T13:34:04.213Z",
       "type": "status",
-      "message": "S21.2 pending → in_progress"
+      "message": "S21.2 pending \u2192 in_progress"
     },
     {
       "time": "2026-10-28T13:34:04.180Z",
       "type": "status",
-      "message": "S21.1 pending → in_progress"
+      "message": "S21.1 pending \u2192 in_progress"
     },
     {
       "time": "2026-10-28T13:34:04.143Z",
@@ -3199,7 +3185,7 @@
     {
       "time": "2026-10-28T13:34:04.107Z",
       "type": "signoff",
-      "message": "S21 mockups → signed_off"
+      "message": "S21 mockups \u2192 signed_off"
     },
     {
       "time": "2026-10-28T13:34:00.041Z",
@@ -3259,17 +3245,17 @@
     {
       "time": "2026-10-28T10:52:28.338Z",
       "type": "status",
-      "message": "S20.3 in_progress → done (3656053; CI green.)"
+      "message": "S20.3 in_progress \u2192 done (3656053; CI green.)"
     },
     {
       "time": "2026-10-28T10:52:28.290Z",
       "type": "status",
-      "message": "S20.2 in_progress → done (Verified on CI with the fallback path (Superwall is off in tests). Live Superwall paywalls wait on campaigns (S20.4).)"
+      "message": "S20.2 in_progress \u2192 done (Verified on CI with the fallback path (Superwall is off in tests). Live Superwall paywalls wait on campaigns (S20.4).)"
     },
     {
       "time": "2026-10-28T10:52:28.167Z",
       "type": "status",
-      "message": "S20.1 in_progress → done (Verified: iOS run 99 (build with SuperwallKit, unit tests) and device matrix run 54 (all four legs) green on 3656053.)"
+      "message": "S20.1 in_progress \u2192 done (Verified: iOS run 99 (build with SuperwallKit, unit tests) and device matrix run 54 (all four legs) green on 3656053.)"
     },
     {
       "time": "2026-10-28T10:03:44.511Z",
@@ -3279,62 +3265,62 @@
     {
       "time": "2026-10-28T10:03:44.481Z",
       "type": "status",
-      "message": "S20.3 pending → in_progress (3656053.)"
+      "message": "S20.3 pending \u2192 in_progress (3656053.)"
     },
     {
       "time": "2026-10-28T10:03:44.454Z",
       "type": "status",
-      "message": "S20.2 pending → in_progress (3656053.)"
+      "message": "S20.2 pending \u2192 in_progress (3656053.)"
     },
     {
       "time": "2026-10-28T10:03:44.428Z",
       "type": "status",
-      "message": "S20.1 pending → in_progress (3656053; iOS run 99 verifying the build with SuperwallKit.)"
+      "message": "S20.1 pending \u2192 in_progress (3656053; iOS run 99 verifying the build with SuperwallKit.)"
     },
     {
       "time": "2026-10-28T10:03:44.398Z",
       "type": "status",
-      "message": "S19.8 pending → done (iOS run 98 and device matrix run 53 green; TestFlight build 202610280955 (1.0.0), processed VALID 28 Oct 10:01 UTC.)"
+      "message": "S19.8 pending \u2192 done (iOS run 98 and device matrix run 53 green; TestFlight build 202610280955 (1.0.0), processed VALID 28 Oct 10:01 UTC.)"
     },
     {
       "time": "2026-10-28T10:03:44.366Z",
       "type": "status",
-      "message": "S19.7 in_progress → done (Verified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.)"
+      "message": "S19.7 in_progress \u2192 done (Verified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.)"
     },
     {
       "time": "2026-10-28T10:03:44.331Z",
       "type": "status",
-      "message": "S19.6 in_progress → done (Verified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.)"
+      "message": "S19.6 in_progress \u2192 done (Verified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.)"
     },
     {
       "time": "2026-10-28T10:03:44.292Z",
       "type": "status",
-      "message": "S19.5 in_progress → done (Verified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.)"
+      "message": "S19.5 in_progress \u2192 done (Verified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.)"
     },
     {
       "time": "2026-10-28T10:03:44.261Z",
       "type": "status",
-      "message": "S19.4 in_progress → done (Verified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.)"
+      "message": "S19.4 in_progress \u2192 done (Verified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.)"
     },
     {
       "time": "2026-10-28T10:03:44.224Z",
       "type": "status",
-      "message": "S19.3 in_progress → done (Verified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.)"
+      "message": "S19.3 in_progress \u2192 done (Verified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.)"
     },
     {
       "time": "2026-10-28T10:03:44.193Z",
       "type": "status",
-      "message": "S19.2 in_progress → done (Verified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.)"
+      "message": "S19.2 in_progress \u2192 done (Verified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.)"
     },
     {
       "time": "2026-10-28T10:03:44.150Z",
       "type": "status",
-      "message": "S19.1 in_progress → done (Verified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.)"
+      "message": "S19.1 in_progress \u2192 done (Verified: iOS run 98 (unit tests, screenshots) and device matrix run 53 (all four legs) on 49d702c. Shipped in TestFlight build 202610280955.)"
     },
     {
       "time": "2026-10-28T09:57:59.295Z",
       "type": "status",
-      "message": "S20.4 pending → blocked (Needs Milan in the Superwall dashboard (or the superwall CLI with superwall.com allowed): see docs/SUPERWALL.md.)"
+      "message": "S20.4 pending \u2192 blocked (Needs Milan in the Superwall dashboard (or the superwall CLI with superwall.com allowed): see docs/SUPERWALL.md.)"
     },
     {
       "time": "2026-10-28T09:57:59.259Z",
@@ -3364,37 +3350,37 @@
     {
       "time": "2026-10-28T09:04:29.106Z",
       "type": "status",
-      "message": "S19.7 pending → in_progress (49d702c; verifying on CI.)"
+      "message": "S19.7 pending \u2192 in_progress (49d702c; verifying on CI.)"
     },
     {
       "time": "2026-10-28T09:04:29.078Z",
       "type": "status",
-      "message": "S19.6 pending → in_progress (49d702c; verifying on CI.)"
+      "message": "S19.6 pending \u2192 in_progress (49d702c; verifying on CI.)"
     },
     {
       "time": "2026-10-28T09:04:29.047Z",
       "type": "status",
-      "message": "S19.5 pending → in_progress (49d702c; verifying on CI.)"
+      "message": "S19.5 pending \u2192 in_progress (49d702c; verifying on CI.)"
     },
     {
       "time": "2026-10-28T09:04:29.017Z",
       "type": "status",
-      "message": "S19.4 pending → in_progress (49d702c; verifying on CI.)"
+      "message": "S19.4 pending \u2192 in_progress (49d702c; verifying on CI.)"
     },
     {
       "time": "2026-10-28T09:04:28.989Z",
       "type": "status",
-      "message": "S19.3 pending → in_progress (49d702c; verifying on CI.)"
+      "message": "S19.3 pending \u2192 in_progress (49d702c; verifying on CI.)"
     },
     {
       "time": "2026-10-28T09:04:28.958Z",
       "type": "status",
-      "message": "S19.2 pending → in_progress (49d702c; verifying on CI.)"
+      "message": "S19.2 pending \u2192 in_progress (49d702c; verifying on CI.)"
     },
     {
       "time": "2026-10-28T09:04:28.920Z",
       "type": "status",
-      "message": "S19.1 pending → in_progress (49d702c; verifying on CI.)"
+      "message": "S19.1 pending \u2192 in_progress (49d702c; verifying on CI.)"
     },
     {
       "time": "2026-10-28T08:56:07.902Z",
@@ -3459,17 +3445,17 @@
     {
       "time": "2026-10-28T07:30:07.669Z",
       "type": "status",
-      "message": "S18.21 in_progress → done (Verified: device matrix run 52 buys the trial on the mock store, allows notifications for the trial reminder, sees 'You're all set' and taps Start prep day 1 on all four legs.)"
+      "message": "S18.21 in_progress \u2192 done (Verified: device matrix run 52 buys the trial on the mock store, allows notifications for the trial reminder, sees 'You're all set' and taps Start prep day 1 on all four legs.)"
     },
     {
       "time": "2026-10-28T07:30:07.633Z",
       "type": "status",
-      "message": "S18.19 in_progress → done (Verified: the full onboarding journey passes on all four device-matrix legs (run 52): reveal → reminders (Not now) → paywall.)"
+      "message": "S18.19 in_progress \u2192 done (Verified: the full onboarding journey passes on all four device-matrix legs (run 52): reveal \u2192 reminders (Not now) \u2192 paywall.)"
     },
     {
       "time": "2026-10-28T07:30:07.580Z",
       "type": "status",
-      "message": "S18.12 in_progress → done (TestFlight build 202610280722 (1.0.0), archived with Xcode 27.1 from f3b493b on this branch (TestFlight run 60), processed VALID in App Store Connect 28 Oct 07:29 UTC.)"
+      "message": "S18.12 in_progress \u2192 done (TestFlight build 202610280722 (1.0.0), archived with Xcode 27.1 from f3b493b on this branch (TestFlight run 60), processed VALID in App Store Connect 28 Oct 07:29 UTC.)"
     },
     {
       "time": "2026-10-28T05:32:58.566Z",
@@ -3479,7 +3465,7 @@
     {
       "time": "2026-10-28T05:32:58.531Z",
       "type": "status",
-      "message": "S18.21 pending → in_progress (bd5d8b5: the first-run paywall stays up once a purchase or restore starts, until the person taps through; someone already Pro still skips it. Verifying on device matrix run 50 and iOS run 97.)"
+      "message": "S18.21 pending \u2192 in_progress (bd5d8b5: the first-run paywall stays up once a purchase or restore starts, until the person taps through; someone already Pro still skips it. Verifying on device matrix run 50 and iOS run 97.)"
     },
     {
       "time": "2026-10-28T05:32:58.473Z",
@@ -3494,7 +3480,7 @@
     {
       "time": "2026-10-28T04:59:19.133Z",
       "type": "status",
-      "message": "S18.20 in_progress → done (Verified: sos-timeup-dark (iOS run 96, 5573368) shows 'urge surfed / 00:00 / cycle' inside the mini ring.)"
+      "message": "S18.20 in_progress \u2192 done (Verified: sos-timeup-dark (iOS run 96, 5573368) shows 'urge surfed / 00:00 / cycle' inside the mini ring.)"
     },
     {
       "time": "2026-10-28T04:15:43.060Z",
@@ -3504,67 +3490,67 @@
     {
       "time": "2026-10-28T04:15:43.031Z",
       "type": "status",
-      "message": "S18.17 in_progress → done (Verified: set-currency shot (region's currency first with a check mark, search); SettingsTests currency green.)"
+      "message": "S18.17 in_progress \u2192 done (Verified: set-currency shot (region's currency first with a check mark, search); SettingsTests currency green.)"
     },
     {
       "time": "2026-10-28T04:15:43.005Z",
       "type": "status",
-      "message": "S18.15 in_progress → done (ci-screens-duo branch: closed, open-wide, open-tall, half-book and half-laptop for 9 screens.)"
+      "message": "S18.15 in_progress \u2192 done (ci-screens-duo branch: closed, open-wide, open-tall, half-book and half-laptop for 9 screens.)"
     },
     {
       "time": "2026-10-28T04:15:42.978Z",
       "type": "status",
-      "message": "S18.14 in_progress → done (Verified on the Duo half-folded shots (run 89/93): Today, Progress and SOS split at the fold.)"
+      "message": "S18.14 in_progress \u2192 done (Verified on the Duo half-folded shots (run 89/93): Today, Progress and SOS split at the fold.)"
     },
     {
       "time": "2026-10-28T04:15:42.954Z",
       "type": "status",
-      "message": "S18.13 in_progress → done (Verified on the Duo CI shots (run 93): readable column, height-aware orb, dock on the side on the cover and in the wide pose.)"
+      "message": "S18.13 in_progress \u2192 done (Verified on the Duo CI shots (run 93): readable column, height-aware orb, dock on the side on the cover and in the wide pose.)"
     },
     {
       "time": "2026-10-28T04:15:42.926Z",
       "type": "status",
-      "message": "S18.11 in_progress → done (Verified: sos-session shot shows the muted caption with no box; OrbCaption tests green.)"
+      "message": "S18.11 in_progress \u2192 done (Verified: sos-session shot shows the muted caption with no box; OrbCaption tests green.)"
     },
     {
       "time": "2026-10-28T04:15:42.899Z",
       "type": "status",
-      "message": "S18.10 in_progress → done (Verified across the CI set (Home prep, Progress tiles, lesson row '4 of 7 · 6 min', log rows).)"
+      "message": "S18.10 in_progress \u2192 done (Verified across the CI set (Home prep, Progress tiles, lesson row '4 of 7 \u00b7 6 min', log rows).)"
     },
     {
       "time": "2026-10-28T04:15:42.873Z",
       "type": "status",
-      "message": "S18.8 in_progress → done (Verified: onb-baseline_vape shot (2.5 pods a week, price of one, puffs in one), reveal tile 'Pods a week 2.5 → 0'; journey test logs 'Vaped'.)"
+      "message": "S18.8 in_progress \u2192 done (Verified: onb-baseline_vape shot (2.5 pods a week, price of one, puffs in one), reveal tile 'Pods a week 2.5 \u2192 0'; journey test logs 'Vaped'.)"
     },
     {
       "time": "2026-10-28T04:15:42.845Z",
       "type": "status",
-      "message": "S18.7 in_progress → done (Verified: prog-progress-empty (pill + 'You said: Coffee · Stress') and prog-progress-prep (so-far bars + 'Full patterns in 6 days'); Insights tests green.)"
+      "message": "S18.7 in_progress \u2192 done (Verified: prog-progress-empty (pill + 'You said: Coffee \u00b7 Stress') and prog-progress-prep (so-far bars + 'Full patterns in 6 days'); Insights tests green.)"
     },
     {
       "time": "2026-10-28T04:15:42.815Z",
       "type": "status",
-      "message": "S18.6 in_progress → done (Verified: sos-timeup shot shows the photo reason card under the caption. Orb readout fix in S18.20.)"
+      "message": "S18.6 in_progress \u2192 done (Verified: sos-timeup shot shows the photo reason card under the caption. Orb readout fix in S18.20.)"
     },
     {
       "time": "2026-10-28T04:15:42.787Z",
       "type": "status",
-      "message": "S18.5 in_progress → done (Verified: onboarding goes NRT → building → reveal (journey test); water-goal-sheet shots (dark, light, ax5); WaterGoalDraft tests green.)"
+      "message": "S18.5 in_progress \u2192 done (Verified: onboarding goes NRT \u2192 building \u2192 reveal (journey test); water-goal-sheet shots (dark, light, ax5); WaterGoalDraft tests green.)"
     },
     {
       "time": "2026-10-28T04:15:42.754Z",
       "type": "status",
-      "message": "S18.3 in_progress → done (Verified: onb-baseline_cigarettes shot reads 'That's $0.75 a cigarette, about $1,642 a year.')"
+      "message": "S18.3 in_progress \u2192 done (Verified: onb-baseline_cigarettes shot reads 'That's $0.75 a cigarette, about $1,642 a year.')"
     },
     {
       "time": "2026-10-28T04:15:42.726Z",
       "type": "status",
-      "message": "S18.2 in_progress → done (Verified: PlanTimelineTests green (iOS run 93); onb-reveal shot lists prep days 1-5, '+2 more prep days', then Quit Day with its date.)"
+      "message": "S18.2 in_progress \u2192 done (Verified: PlanTimelineTests green (iOS run 93); onb-reveal shot lists prep days 1-5, '+2 more prep days', then Quit Day with its date.)"
     },
     {
       "time": "2026-10-28T04:15:42.697Z",
       "type": "status",
-      "message": "S18.1 in_progress → done (Verified in CI (water-goal-sheet shots show 72 kg on the ruler). The drag itself needs a finger: check it in the next TestFlight build.)"
+      "message": "S18.1 in_progress \u2192 done (Verified in CI (water-goal-sheet shots show 72 kg on the ruler). The drag itself needs a finger: check it in the next TestFlight build.)"
     },
     {
       "time": "2026-10-28T04:15:15.727Z",
@@ -3579,7 +3565,7 @@
     {
       "time": "2026-10-28T04:15:15.657Z",
       "type": "status",
-      "message": "S18.20 pending → in_progress (5573368: the time-up orb passes mini: true, and any orb smaller than the spec's size scales its readout with it. Verifying on iOS run 96.)"
+      "message": "S18.20 pending \u2192 in_progress (5573368: the time-up orb passes mini: true, and any orb smaller than the spec's size scales its readout with it. Verifying on iOS run 96.)"
     },
     {
       "time": "2026-10-28T04:15:15.621Z",
@@ -3589,7 +3575,7 @@
     {
       "time": "2026-10-28T04:15:15.593Z",
       "type": "status",
-      "message": "S18.19 pending → in_progress (6a123cb: RootView keeps onboarding on screen from the save until the reminders screen finishes. Journey test tapSettled now waits for a still, enabled, on-screen button (iOS 27 hittability checks were flaky). Verifying on device matrix run 48.)"
+      "message": "S18.19 pending \u2192 in_progress (6a123cb: RootView keeps onboarding on screen from the save until the reminders screen finishes. Journey test tapSettled now waits for a still, enabled, on-screen button (iOS 27 hittability checks were flaky). Verifying on device matrix run 48.)"
     },
     {
       "time": "2026-10-28T04:15:15.540Z",
@@ -3599,7 +3585,7 @@
     {
       "time": "2026-10-28T04:15:15.500Z",
       "type": "status",
-      "message": "S18.18 in_progress → done (Verified: testWidgetOpensSlipAndCravingLog passed on all four device-matrix legs (run 46), and the slip-ack and log-craving CI shots render (iOS run 93).)"
+      "message": "S18.18 in_progress \u2192 done (Verified: testWidgetOpensSlipAndCravingLog passed on all four device-matrix legs (run 46), and the slip-ack and log-craving CI shots render (iOS run 93).)"
     },
     {
       "time": "2026-10-27T20:32:08.658Z",
@@ -3609,7 +3595,7 @@
     {
       "time": "2026-10-27T20:32:08.627Z",
       "type": "status",
-      "message": "S18.18 pending → in_progress (Verifying on CI (iOS workflow and the device-matrix UI tests).)"
+      "message": "S18.18 pending \u2192 in_progress (Verifying on CI (iOS workflow and the device-matrix UI tests).)"
     },
     {
       "time": "2026-10-27T20:32:08.583Z",
@@ -3629,12 +3615,12 @@
     {
       "time": "2026-10-27T20:11:34.685Z",
       "type": "status",
-      "message": "S18.16 pending → in_progress (Milan, 27 Oct: do it now; Duo screenshots put a 'optimized for iPhone Duo' badge on the product page. 246fb5d: 'App Store screenshots' workflow captures the six approved screens on iPhone 6.9\" and both Duo displays and composes them at 1320x2868, 1206x2622, 1398x2034 and 2007x2853 (scripts/store/compose.py). Results on the store-screens branch.)"
+      "message": "S18.16 pending \u2192 in_progress (Milan, 27 Oct: do it now; Duo screenshots put a 'optimized for iPhone Duo' badge on the product page. 246fb5d: 'App Store screenshots' workflow captures the six approved screens on iPhone 6.9\" and both Duo displays and composes them at 1320x2868, 1206x2622, 1398x2034 and 2007x2853 (scripts/store/compose.py). Results on the store-screens branch.)"
     },
     {
       "time": "2026-10-27T20:11:34.644Z",
       "type": "status",
-      "message": "S18.17 pending → in_progress (Verifying on CI.)"
+      "message": "S18.17 pending \u2192 in_progress (Verifying on CI.)"
     },
     {
       "time": "2026-10-27T20:11:34.596Z",
@@ -3644,7 +3630,7 @@
     {
       "time": "2026-10-27T20:11:34.553Z",
       "type": "status",
-      "message": "S18.4 blocked → done (Milan, 27 Oct: keep the paywall as it is for now (3-day trial on yearly, Prep day 1 free).)"
+      "message": "S18.4 blocked \u2192 done (Milan, 27 Oct: keep the paywall as it is for now (3-day trial on yearly, Prep day 1 free).)"
     },
     {
       "time": "2026-10-27T19:48:53.586Z",
@@ -3654,17 +3640,17 @@
     {
       "time": "2026-10-27T19:48:53.557Z",
       "type": "status",
-      "message": "S18.15 pending → in_progress (2eba4b7: 'duo' CI job with hinge v0.3.0, four poses, shots to ci-screens-duo.)"
+      "message": "S18.15 pending \u2192 in_progress (2eba4b7: 'duo' CI job with hinge v0.3.0, four poses, shots to ci-screens-duo.)"
     },
     {
       "time": "2026-10-27T19:48:53.528Z",
       "type": "status",
-      "message": "S18.14 pending → in_progress (1607829: columns avoid a book-pose fold; Today, Progress and SOS split with ArrangementView when half open.)"
+      "message": "S18.14 pending \u2192 in_progress (1607829: columns avoid a book-pose fold; Today, Progress and SOS split with ArrangementView when half open.)"
     },
     {
       "time": "2026-10-27T19:48:53.501Z",
       "type": "status",
-      "message": "S18.13 pending → in_progress (1607829: 600 pt readable column, height-aware orb, dock on the system's bar edge, one safe-area inset for the dock.)"
+      "message": "S18.13 pending \u2192 in_progress (1607829: 600 pt readable column, height-aware orb, dock on the system's bar edge, one safe-area inset for the dock.)"
     },
     {
       "time": "2026-10-27T19:48:53.472Z",
@@ -3674,57 +3660,57 @@
     {
       "time": "2026-10-27T19:48:53.433Z",
       "type": "status",
-      "message": "S18.11 pending → in_progress (ecf6039: OrbCaption with sentence sync (OrbCaptionText, tested); Bio-Orb spec 3.5 notes the change. Verifying on CI.)"
+      "message": "S18.11 pending \u2192 in_progress (ecf6039: OrbCaption with sentence sync (OrbCaptionText, tested); Bio-Orb spec 3.5 notes the change. Verifying on CI.)"
     },
     {
       "time": "2026-10-27T19:48:53.405Z",
       "type": "status",
-      "message": "S18.10 pending → in_progress (6c9a548: Home, log sheet, Program, Progress and other in-card labels. Verifying on CI screenshots.)"
+      "message": "S18.10 pending \u2192 in_progress (6c9a548: Home, log sheet, Program, Progress and other in-card labels. Verifying on CI screenshots.)"
     },
     {
       "time": "2026-10-27T19:48:53.376Z",
       "type": "status",
-      "message": "S18.9 pending → done (Rule added to DESIGN_METHODOLOGY.md section 3.)"
+      "message": "S18.9 pending \u2192 done (Rule added to DESIGN_METHODOLOGY.md section 3.)"
     },
     {
       "time": "2026-10-27T19:48:53.348Z",
       "type": "status",
-      "message": "S18.8 pending → in_progress (5d84ef4: pods a week in onboarding and Settings (VapeUsage, tested); 'Vaped' / 'Times vaped'; Siri reads 'Log a Vape'. Verifying on CI.)"
+      "message": "S18.8 pending \u2192 in_progress (5d84ef4: pods a week in onboarding and Settings (VapeUsage, tested); 'Vaped' / 'Times vaped'; Siri reads 'Log a Vape'. Verifying on CI.)"
     },
     {
       "time": "2026-10-27T19:48:53.320Z",
       "type": "status",
-      "message": "S18.7 pending → in_progress (0a47c9f: time-of-day bars from the first log, setup triggers and times, 'Full patterns in N days'. Verifying on CI.)"
+      "message": "S18.7 pending \u2192 in_progress (0a47c9f: time-of-day bars from the first log, setup triggers and times, 'Full patterns in N days'. Verifying on CI.)"
     },
     {
       "time": "2026-10-27T19:48:53.293Z",
       "type": "status",
-      "message": "S18.6 pending → in_progress (6b2cc8a: reason and photo on 'Three minutes done', mini orb, next reason on tap. Verifying on CI.)"
+      "message": "S18.6 pending \u2192 in_progress (6b2cc8a: reason and photo on 'Three minutes done', mini orb, next reason on tap. Verifying on CI.)"
     },
     {
       "time": "2026-10-27T19:48:53.265Z",
       "type": "status",
-      "message": "S18.5 pending → in_progress (0273b11: onboarding water screens removed; 'Personalise goal' sheet in the Water tab (WaterGoalDraft, tested). Verifying on CI.)"
+      "message": "S18.5 pending \u2192 in_progress (0273b11: onboarding water screens removed; 'Personalise goal' sheet in the Water tab (WaterGoalDraft, tested). Verifying on CI.)"
     },
     {
       "time": "2026-10-27T19:48:53.236Z",
       "type": "status",
-      "message": "S18.3 pending → in_progress (a3f54e1: 'That's ₹1.25 a cigarette, about ₹4,563 a year' in onboarding and Settings. USD on the paywall is the App Store storefront, not code. Verifying on CI.)"
+      "message": "S18.3 pending \u2192 in_progress (a3f54e1: 'That's \u20b91.25 a cigarette, about \u20b94,563 a year' in onboarding and Settings. USD on the paywall is the App Store storefront, not code. Verifying on CI.)"
     },
     {
       "time": "2026-10-27T19:48:53.200Z",
       "type": "status",
-      "message": "S18.2 pending → in_progress (dc1de06: PlanTimeline (Core, tested): days 1–5, '+N more prep days', Quit Day with its date. Verifying on CI.)"
+      "message": "S18.2 pending \u2192 in_progress (dc1de06: PlanTimeline (Core, tested): days 1\u20135, '+N more prep days', Quit Day with its date. Verifying on CI.)"
     },
     {
       "time": "2026-10-27T19:48:53.165Z",
       "type": "status",
-      "message": "S18.1 pending → in_progress (0a6bf06: ruler waits 8 pt and ignores drags that start vertical. Verifying on CI.)"
+      "message": "S18.1 pending \u2192 in_progress (0a6bf06: ruler waits 8 pt and ignores drags that start vertical. Verifying on CI.)"
     },
     {
       "time": "2026-10-27T19:25:39.855Z",
       "type": "status",
-      "message": "S18.12 pending → in_progress"
+      "message": "S18.12 pending \u2192 in_progress"
     },
     {
       "time": "2026-10-27T19:25:39.821Z",
@@ -3859,12 +3845,12 @@
     {
       "time": "2026-10-23T10:46:21.548Z",
       "type": "status",
-      "message": "S16.6 pending → done (Checklist on the S16 page and as tasks S16.7–S16.11.)"
+      "message": "S16.6 pending \u2192 done (Checklist on the S16 page and as tasks S16.7\u2013S16.11.)"
     },
     {
       "time": "2026-10-23T10:46:21.530Z",
       "type": "signoff",
-      "message": "S16 mockups → mockups_ready"
+      "message": "S16 mockups \u2192 mockups_ready"
     },
     {
       "time": "2026-10-23T10:46:21.511Z",
@@ -3899,37 +3885,37 @@
     {
       "time": "2026-10-23T10:28:52.276Z",
       "type": "status",
-      "message": "S15.7 pending → in_progress (Milan approved S15 in chat.)"
+      "message": "S15.7 pending \u2192 in_progress (Milan approved S15 in chat.)"
     },
     {
       "time": "2026-10-23T10:28:52.256Z",
       "type": "status",
-      "message": "S15.6 pending → in_progress (Milan approved S15 in chat.)"
+      "message": "S15.6 pending \u2192 in_progress (Milan approved S15 in chat.)"
     },
     {
       "time": "2026-10-23T10:28:52.237Z",
       "type": "status",
-      "message": "S15.5 pending → in_progress (Milan approved S15 in chat.)"
+      "message": "S15.5 pending \u2192 in_progress (Milan approved S15 in chat.)"
     },
     {
       "time": "2026-10-23T10:28:52.216Z",
       "type": "status",
-      "message": "S15.4 pending → in_progress (Milan approved S15 in chat.)"
+      "message": "S15.4 pending \u2192 in_progress (Milan approved S15 in chat.)"
     },
     {
       "time": "2026-10-23T10:28:52.195Z",
       "type": "status",
-      "message": "S15.3 pending → in_progress (Milan approved S15 in chat.)"
+      "message": "S15.3 pending \u2192 in_progress (Milan approved S15 in chat.)"
     },
     {
       "time": "2026-10-23T10:28:52.172Z",
       "type": "status",
-      "message": "S15.2 pending → in_progress (Milan approved S15 in chat.)"
+      "message": "S15.2 pending \u2192 in_progress (Milan approved S15 in chat.)"
     },
     {
       "time": "2026-10-23T10:28:52.153Z",
       "type": "status",
-      "message": "S15.1 pending → in_progress (Milan approved S15 in chat.)"
+      "message": "S15.1 pending \u2192 in_progress (Milan approved S15 in chat.)"
     },
     {
       "time": "2026-10-23T10:28:52.130Z",
@@ -3944,7 +3930,7 @@
     {
       "time": "2026-10-23T10:28:52.083Z",
       "type": "signoff",
-      "message": "S15 mockups → signed_off"
+      "message": "S15 mockups \u2192 signed_off"
     },
     {
       "time": "2026-10-23T10:24:01.469Z",
@@ -3984,7 +3970,7 @@
     {
       "time": "2026-10-23T10:24:01.325Z",
       "type": "signoff",
-      "message": "S15 mockups → mockups_ready"
+      "message": "S15 mockups \u2192 mockups_ready"
     },
     {
       "time": "2026-10-23T10:24:01.304Z",
@@ -3994,17 +3980,17 @@
     {
       "time": "2026-10-23T10:19:17.904Z",
       "type": "status",
-      "message": "S14.3 pending → in_progress (Milan approved S14 in chat.)"
+      "message": "S14.3 pending \u2192 in_progress (Milan approved S14 in chat.)"
     },
     {
       "time": "2026-10-23T10:19:17.884Z",
       "type": "status",
-      "message": "S14.2 pending → in_progress (Milan approved S14 in chat.)"
+      "message": "S14.2 pending \u2192 in_progress (Milan approved S14 in chat.)"
     },
     {
       "time": "2026-10-23T10:19:17.866Z",
       "type": "status",
-      "message": "S14.1 pending → in_progress (Milan approved S14 in chat.)"
+      "message": "S14.1 pending \u2192 in_progress (Milan approved S14 in chat.)"
     },
     {
       "time": "2026-10-23T10:19:17.847Z",
@@ -4014,7 +4000,7 @@
     {
       "time": "2026-10-23T10:19:17.826Z",
       "type": "signoff",
-      "message": "S14 mockups → signed_off"
+      "message": "S14 mockups \u2192 signed_off"
     },
     {
       "time": "2026-10-23T10:15:54.333Z",
@@ -4069,7 +4055,7 @@
     {
       "time": "2026-10-23T10:09:42.875Z",
       "type": "signoff",
-      "message": "S14 mockups → mockups_ready"
+      "message": "S14 mockups \u2192 mockups_ready"
     },
     {
       "time": "2026-10-23T10:09:42.854Z",
@@ -4079,22 +4065,22 @@
     {
       "time": "2026-10-23T09:52:11.036Z",
       "type": "status",
-      "message": "S13.4 pending → in_progress (Milan approved S13 in chat.)"
+      "message": "S13.4 pending \u2192 in_progress (Milan approved S13 in chat.)"
     },
     {
       "time": "2026-10-23T09:52:11.019Z",
       "type": "status",
-      "message": "S13.3 pending → in_progress (Milan approved S13 in chat.)"
+      "message": "S13.3 pending \u2192 in_progress (Milan approved S13 in chat.)"
     },
     {
       "time": "2026-10-23T09:52:11.000Z",
       "type": "status",
-      "message": "S13.2 pending → in_progress (Milan approved S13 in chat.)"
+      "message": "S13.2 pending \u2192 in_progress (Milan approved S13 in chat.)"
     },
     {
       "time": "2026-10-23T09:52:10.978Z",
       "type": "status",
-      "message": "S13.1 pending → in_progress (Milan approved S13 in chat.)"
+      "message": "S13.1 pending \u2192 in_progress (Milan approved S13 in chat.)"
     },
     {
       "time": "2026-10-23T09:52:10.959Z",
@@ -4104,7 +4090,7 @@
     {
       "time": "2026-10-23T09:52:10.933Z",
       "type": "signoff",
-      "message": "S13 mockups → signed_off"
+      "message": "S13 mockups \u2192 signed_off"
     },
     {
       "time": "2026-10-23T09:49:56.302Z",
@@ -4129,7 +4115,7 @@
     {
       "time": "2026-10-23T09:49:56.220Z",
       "type": "signoff",
-      "message": "S13 mockups → mockups_ready"
+      "message": "S13 mockups \u2192 mockups_ready"
     },
     {
       "time": "2026-10-23T09:49:56.200Z",
@@ -4139,22 +4125,22 @@
     {
       "time": "2026-10-23T09:30:18.231Z",
       "type": "status",
-      "message": "S12.3 pending → in_progress (Milan approved S12 in chat; findahelpline.com for helplines.)"
+      "message": "S12.3 pending \u2192 in_progress (Milan approved S12 in chat; findahelpline.com for helplines.)"
     },
     {
       "time": "2026-10-23T09:30:18.211Z",
       "type": "status",
-      "message": "S12.2 pending → in_progress (Milan approved S12 in chat; findahelpline.com for helplines.)"
+      "message": "S12.2 pending \u2192 in_progress (Milan approved S12 in chat; findahelpline.com for helplines.)"
     },
     {
       "time": "2026-10-23T09:30:18.189Z",
       "type": "status",
-      "message": "S12.1 pending → in_progress (Milan approved S12 in chat; findahelpline.com for helplines.)"
+      "message": "S12.1 pending \u2192 in_progress (Milan approved S12 in chat; findahelpline.com for helplines.)"
     },
     {
       "time": "2026-10-23T09:30:18.157Z",
       "type": "signoff",
-      "message": "S12 mockups → signed_off"
+      "message": "S12 mockups \u2192 signed_off"
     },
     {
       "time": "2026-10-23T09:27:02.602Z",
@@ -4174,7 +4160,7 @@
     {
       "time": "2026-10-23T09:27:02.544Z",
       "type": "signoff",
-      "message": "S12 mockups → mockups_ready"
+      "message": "S12 mockups \u2192 mockups_ready"
     },
     {
       "time": "2026-10-23T09:27:02.523Z",
@@ -4194,67 +4180,67 @@
     {
       "time": "2026-10-23T09:18:42.254Z",
       "type": "status",
-      "message": "S10.3 in_progress → done (Built and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+      "message": "S10.3 in_progress \u2192 done (Built and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-23T09:18:42.236Z",
       "type": "status",
-      "message": "S10.2 in_progress → done (Built and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+      "message": "S10.2 in_progress \u2192 done (Built and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-23T09:18:42.217Z",
       "type": "status",
-      "message": "S10.1 in_progress → done (Built and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+      "message": "S10.1 in_progress \u2192 done (Built and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-23T09:18:42.199Z",
       "type": "status",
-      "message": "S9.5 in_progress → done (Built and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+      "message": "S9.5 in_progress \u2192 done (Built and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-23T09:18:42.181Z",
       "type": "status",
-      "message": "S9.4 in_progress → done (Built and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+      "message": "S9.4 in_progress \u2192 done (Built and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-23T09:18:42.157Z",
       "type": "status",
-      "message": "S9.3 in_progress → done (Built and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+      "message": "S9.3 in_progress \u2192 done (Built and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-23T09:18:42.133Z",
       "type": "status",
-      "message": "S9.2 in_progress → done (Built and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+      "message": "S9.2 in_progress \u2192 done (Built and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-23T09:18:42.111Z",
       "type": "status",
-      "message": "S9.1 in_progress → done (Built and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+      "message": "S9.1 in_progress \u2192 done (Built and verified: CI aa2bc09 green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-23T09:18:12.287Z",
       "type": "status",
-      "message": "S11.4 pending → in_progress (Milan approved S11 in chat; pledge wording kept.)"
+      "message": "S11.4 pending \u2192 in_progress (Milan approved S11 in chat; pledge wording kept.)"
     },
     {
       "time": "2026-10-23T09:18:12.267Z",
       "type": "status",
-      "message": "S11.3 pending → in_progress (Milan approved S11 in chat; pledge wording kept.)"
+      "message": "S11.3 pending \u2192 in_progress (Milan approved S11 in chat; pledge wording kept.)"
     },
     {
       "time": "2026-10-23T09:18:12.249Z",
       "type": "status",
-      "message": "S11.2 pending → in_progress (Milan approved S11 in chat; pledge wording kept.)"
+      "message": "S11.2 pending \u2192 in_progress (Milan approved S11 in chat; pledge wording kept.)"
     },
     {
       "time": "2026-10-23T09:18:12.228Z",
       "type": "status",
-      "message": "S11.1 pending → in_progress (Milan approved S11 in chat; pledge wording kept.)"
+      "message": "S11.1 pending \u2192 in_progress (Milan approved S11 in chat; pledge wording kept.)"
     },
     {
       "time": "2026-10-23T09:18:12.201Z",
       "type": "signoff",
-      "message": "S11 mockups → signed_off"
+      "message": "S11 mockups \u2192 signed_off"
     },
     {
       "time": "2026-10-23T09:07:29.662Z",
@@ -4279,7 +4265,7 @@
     {
       "time": "2026-10-23T09:07:29.581Z",
       "type": "signoff",
-      "message": "S11 mockups → mockups_ready"
+      "message": "S11 mockups \u2192 mockups_ready"
     },
     {
       "time": "2026-10-23T09:07:29.560Z",
@@ -4289,22 +4275,22 @@
     {
       "time": "2026-10-23T08:50:48.836Z",
       "type": "status",
-      "message": "S10.3 pending → in_progress (Milan approved S10 in chat; slip wording on the timeline approved.)"
+      "message": "S10.3 pending \u2192 in_progress (Milan approved S10 in chat; slip wording on the timeline approved.)"
     },
     {
       "time": "2026-10-23T08:50:48.810Z",
       "type": "status",
-      "message": "S10.2 pending → in_progress (Milan approved S10 in chat; slip wording on the timeline approved.)"
+      "message": "S10.2 pending \u2192 in_progress (Milan approved S10 in chat; slip wording on the timeline approved.)"
     },
     {
       "time": "2026-10-23T08:50:48.786Z",
       "type": "status",
-      "message": "S10.1 pending → in_progress (Milan approved S10 in chat; slip wording on the timeline approved.)"
+      "message": "S10.1 pending \u2192 in_progress (Milan approved S10 in chat; slip wording on the timeline approved.)"
     },
     {
       "time": "2026-10-23T08:50:48.747Z",
       "type": "signoff",
-      "message": "S10 mockups → signed_off"
+      "message": "S10 mockups \u2192 signed_off"
     },
     {
       "time": "2026-10-23T08:46:23.563Z",
@@ -4324,7 +4310,7 @@
     {
       "time": "2026-10-23T08:46:23.509Z",
       "type": "signoff",
-      "message": "S10 mockups → mockups_ready"
+      "message": "S10 mockups \u2192 mockups_ready"
     },
     {
       "time": "2026-10-23T08:46:23.491Z",
@@ -4334,32 +4320,32 @@
     {
       "time": "2026-10-23T08:37:55.797Z",
       "type": "status",
-      "message": "S9.5 pending → in_progress (Milan approved S9 in chat ('go for section 9').)"
+      "message": "S9.5 pending \u2192 in_progress (Milan approved S9 in chat ('go for section 9').)"
     },
     {
       "time": "2026-10-23T08:37:55.780Z",
       "type": "status",
-      "message": "S9.4 pending → in_progress (Milan approved S9 in chat ('go for section 9').)"
+      "message": "S9.4 pending \u2192 in_progress (Milan approved S9 in chat ('go for section 9').)"
     },
     {
       "time": "2026-10-23T08:37:55.763Z",
       "type": "status",
-      "message": "S9.3 pending → in_progress (Milan approved S9 in chat ('go for section 9').)"
+      "message": "S9.3 pending \u2192 in_progress (Milan approved S9 in chat ('go for section 9').)"
     },
     {
       "time": "2026-10-23T08:37:55.745Z",
       "type": "status",
-      "message": "S9.2 pending → in_progress (Milan approved S9 in chat ('go for section 9').)"
+      "message": "S9.2 pending \u2192 in_progress (Milan approved S9 in chat ('go for section 9').)"
     },
     {
       "time": "2026-10-23T08:37:55.727Z",
       "type": "status",
-      "message": "S9.1 pending → in_progress (Milan approved S9 in chat ('go for section 9').)"
+      "message": "S9.1 pending \u2192 in_progress (Milan approved S9 in chat ('go for section 9').)"
     },
     {
       "time": "2026-10-23T08:37:55.710Z",
       "type": "signoff",
-      "message": "S9 mockups → signed_off"
+      "message": "S9 mockups \u2192 signed_off"
     },
     {
       "time": "2026-10-23T08:37:55.691Z",
@@ -4384,77 +4370,77 @@
     {
       "time": "2026-10-23T08:34:21.749Z",
       "type": "status",
-      "message": "S6.5 in_progress → done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text. Widgets, Control Center control and Siri phrases are built and compile; they can't be screenshotted on CI, so check them on a device.)"
+      "message": "S6.5 in_progress \u2192 done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text. Widgets, Control Center control and Siri phrases are built and compile; they can't be screenshotted on CI, so check them on a device.)"
     },
     {
       "time": "2026-10-23T08:34:21.732Z",
       "type": "status",
-      "message": "S8.4 in_progress → done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+      "message": "S8.4 in_progress \u2192 done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-23T08:34:21.714Z",
       "type": "status",
-      "message": "S8.3 in_progress → done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+      "message": "S8.3 in_progress \u2192 done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-23T08:34:21.697Z",
       "type": "status",
-      "message": "S8.2 in_progress → done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+      "message": "S8.2 in_progress \u2192 done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-23T08:34:21.680Z",
       "type": "status",
-      "message": "S8.1 in_progress → done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+      "message": "S8.1 in_progress \u2192 done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-23T08:34:21.662Z",
       "type": "status",
-      "message": "S7.4 in_progress → done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+      "message": "S7.4 in_progress \u2192 done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-23T08:34:21.644Z",
       "type": "status",
-      "message": "S7.3 in_progress → done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+      "message": "S7.3 in_progress \u2192 done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-23T08:34:21.627Z",
       "type": "status",
-      "message": "S7.2 in_progress → done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+      "message": "S7.2 in_progress \u2192 done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-23T08:34:21.609Z",
       "type": "status",
-      "message": "S7.1 in_progress → done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+      "message": "S7.1 in_progress \u2192 done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-23T08:34:21.591Z",
       "type": "status",
-      "message": "S6.7 in_progress → done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+      "message": "S6.7 in_progress \u2192 done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-23T08:34:21.571Z",
       "type": "status",
-      "message": "S6.6 in_progress → done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+      "message": "S6.6 in_progress \u2192 done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-23T08:34:21.551Z",
       "type": "status",
-      "message": "S6.4 in_progress → done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+      "message": "S6.4 in_progress \u2192 done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-23T08:34:21.532Z",
       "type": "status",
-      "message": "S6.3 in_progress → done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+      "message": "S6.3 in_progress \u2192 done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-23T08:34:21.514Z",
       "type": "status",
-      "message": "S6.2 in_progress → done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+      "message": "S6.2 in_progress \u2192 done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-23T08:34:21.495Z",
       "type": "status",
-      "message": "S6.1 in_progress → done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
+      "message": "S6.1 in_progress \u2192 done (Built and verified: CI be213db green (all tests pass); simulator screenshots match the approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-23T08:17:20.134Z",
@@ -4484,7 +4470,7 @@
     {
       "time": "2026-10-23T08:17:20.048Z",
       "type": "signoff",
-      "message": "S9 mockups → mockups_ready"
+      "message": "S9 mockups \u2192 mockups_ready"
     },
     {
       "time": "2026-10-23T08:17:20.030Z",
@@ -4494,32 +4480,32 @@
     {
       "time": "2026-10-23T07:32:34.756Z",
       "type": "status",
-      "message": "S8.4 pending → in_progress (Milan approved S8 in chat, with the drafted copy and suggestions.)"
+      "message": "S8.4 pending \u2192 in_progress (Milan approved S8 in chat, with the drafted copy and suggestions.)"
     },
     {
       "time": "2026-10-23T07:32:34.735Z",
       "type": "status",
-      "message": "S8.3 pending → in_progress (Milan approved S8 in chat, with the drafted copy and suggestions.)"
+      "message": "S8.3 pending \u2192 in_progress (Milan approved S8 in chat, with the drafted copy and suggestions.)"
     },
     {
       "time": "2026-10-23T07:32:34.717Z",
       "type": "status",
-      "message": "S8.2 pending → in_progress (Milan approved S8 in chat, with the drafted copy and suggestions.)"
+      "message": "S8.2 pending \u2192 in_progress (Milan approved S8 in chat, with the drafted copy and suggestions.)"
     },
     {
       "time": "2026-10-23T07:32:34.696Z",
       "type": "status",
-      "message": "S8.1 pending → in_progress (Milan approved S8 in chat, with the drafted copy and suggestions.)"
+      "message": "S8.1 pending \u2192 in_progress (Milan approved S8 in chat, with the drafted copy and suggestions.)"
     },
     {
       "time": "2026-10-23T07:32:34.670Z",
       "type": "signoff",
-      "message": "S8 mockups → signed_off"
+      "message": "S8 mockups \u2192 signed_off"
     },
     {
       "time": "2026-10-23T07:30:04.957Z",
       "type": "note",
-      "message": "S8.2: Per-trigger 'Then I'll…' suggestions drafted in the S8 mockup."
+      "message": "S8.2: Per-trigger 'Then I'll\u2026' suggestions drafted in the S8 mockup."
     },
     {
       "time": "2026-10-23T07:30:04.939Z",
@@ -4549,7 +4535,7 @@
     {
       "time": "2026-10-23T07:10:54.928Z",
       "type": "signoff",
-      "message": "S8 mockups → mockups_ready"
+      "message": "S8 mockups \u2192 mockups_ready"
     },
     {
       "time": "2026-10-23T07:10:54.909Z",
@@ -4559,27 +4545,27 @@
     {
       "time": "2026-10-23T07:02:16.836Z",
       "type": "status",
-      "message": "S7.4 pending → in_progress (Milan approved S7 in chat.)"
+      "message": "S7.4 pending \u2192 in_progress (Milan approved S7 in chat.)"
     },
     {
       "time": "2026-10-23T07:02:16.817Z",
       "type": "status",
-      "message": "S7.3 pending → in_progress (Milan approved S7 in chat.)"
+      "message": "S7.3 pending \u2192 in_progress (Milan approved S7 in chat.)"
     },
     {
       "time": "2026-10-23T07:02:16.795Z",
       "type": "status",
-      "message": "S7.2 pending → in_progress (Milan approved S7 in chat.)"
+      "message": "S7.2 pending \u2192 in_progress (Milan approved S7 in chat.)"
     },
     {
       "time": "2026-10-23T07:02:16.774Z",
       "type": "status",
-      "message": "S7.1 pending → in_progress (Milan approved S7 in chat.)"
+      "message": "S7.1 pending \u2192 in_progress (Milan approved S7 in chat.)"
     },
     {
       "time": "2026-10-23T07:02:16.754Z",
       "type": "signoff",
-      "message": "S7 mockups → signed_off"
+      "message": "S7 mockups \u2192 signed_off"
     },
     {
       "time": "2026-10-23T07:00:39.274Z",
@@ -4624,7 +4610,7 @@
     {
       "time": "2026-10-23T06:53:18.897Z",
       "type": "signoff",
-      "message": "S7 mockups → mockups_ready"
+      "message": "S7 mockups \u2192 mockups_ready"
     },
     {
       "time": "2026-10-23T06:53:18.879Z",
@@ -4634,42 +4620,42 @@
     {
       "time": "2026-10-23T06:43:52.121Z",
       "type": "signoff",
-      "message": "S6 mockups → signed_off"
+      "message": "S6 mockups \u2192 signed_off"
     },
     {
       "time": "2026-10-23T06:43:13.322Z",
       "type": "status",
-      "message": "S6.7 pending → in_progress"
+      "message": "S6.7 pending \u2192 in_progress"
     },
     {
       "time": "2026-10-23T06:43:13.299Z",
       "type": "status",
-      "message": "S6.6 pending → in_progress"
+      "message": "S6.6 pending \u2192 in_progress"
     },
     {
       "time": "2026-10-23T06:43:13.278Z",
       "type": "status",
-      "message": "S6.5 pending → in_progress"
+      "message": "S6.5 pending \u2192 in_progress"
     },
     {
       "time": "2026-10-23T06:43:13.255Z",
       "type": "status",
-      "message": "S6.4 pending → in_progress"
+      "message": "S6.4 pending \u2192 in_progress"
     },
     {
       "time": "2026-10-23T06:43:13.234Z",
       "type": "status",
-      "message": "S6.3 pending → in_progress"
+      "message": "S6.3 pending \u2192 in_progress"
     },
     {
       "time": "2026-10-23T06:43:13.205Z",
       "type": "status",
-      "message": "S6.2 pending → in_progress"
+      "message": "S6.2 pending \u2192 in_progress"
     },
     {
       "time": "2026-10-23T06:43:13.172Z",
       "type": "status",
-      "message": "S6.1 pending → in_progress"
+      "message": "S6.1 pending \u2192 in_progress"
     },
     {
       "time": "2026-10-23T06:40:17.291Z",
@@ -4679,47 +4665,47 @@
     {
       "time": "2026-10-23T06:33:58.147Z",
       "type": "status",
-      "message": "S5.10 in_progress → done (Built and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).)"
+      "message": "S5.10 in_progress \u2192 done (Built and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).)"
     },
     {
       "time": "2026-10-23T06:33:58.130Z",
       "type": "status",
-      "message": "S5.9 in_progress → done (Built and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).)"
+      "message": "S5.9 in_progress \u2192 done (Built and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).)"
     },
     {
       "time": "2026-10-23T06:33:58.113Z",
       "type": "status",
-      "message": "S5.8 in_progress → done (Built and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).)"
+      "message": "S5.8 in_progress \u2192 done (Built and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).)"
     },
     {
       "time": "2026-10-23T06:33:58.091Z",
       "type": "status",
-      "message": "S5.7 in_progress → done (Built and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).)"
+      "message": "S5.7 in_progress \u2192 done (Built and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).)"
     },
     {
       "time": "2026-10-23T06:33:58.073Z",
       "type": "status",
-      "message": "S5.6 in_progress → done (Built and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).)"
+      "message": "S5.6 in_progress \u2192 done (Built and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).)"
     },
     {
       "time": "2026-10-23T06:33:58.055Z",
       "type": "status",
-      "message": "S5.5 in_progress → done (Built and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).)"
+      "message": "S5.5 in_progress \u2192 done (Built and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).)"
     },
     {
       "time": "2026-10-23T06:33:58.038Z",
       "type": "status",
-      "message": "S5.4 in_progress → done (Built and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).)"
+      "message": "S5.4 in_progress \u2192 done (Built and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).)"
     },
     {
       "time": "2026-10-23T06:33:58.020Z",
       "type": "status",
-      "message": "S5.3 in_progress → done (Built and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).)"
+      "message": "S5.3 in_progress \u2192 done (Built and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).)"
     },
     {
       "time": "2026-10-23T06:33:57.999Z",
       "type": "status",
-      "message": "S5.2 in_progress → done (Built and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).)"
+      "message": "S5.2 in_progress \u2192 done (Built and verified: CI b821d40 green, screenshots match S5 mockups (dark, light, AX5).)"
     },
     {
       "time": "2026-10-23T05:56:02.368Z",
@@ -4729,47 +4715,47 @@
     {
       "time": "2026-10-23T05:51:53.342Z",
       "type": "status",
-      "message": "S5.10 pending → in_progress (Building.)"
+      "message": "S5.10 pending \u2192 in_progress (Building.)"
     },
     {
       "time": "2026-10-23T05:51:53.323Z",
       "type": "status",
-      "message": "S5.9 pending → in_progress (Building.)"
+      "message": "S5.9 pending \u2192 in_progress (Building.)"
     },
     {
       "time": "2026-10-23T05:51:53.305Z",
       "type": "status",
-      "message": "S5.8 awaiting_signoff → in_progress (Building.)"
+      "message": "S5.8 awaiting_signoff \u2192 in_progress (Building.)"
     },
     {
       "time": "2026-10-23T05:51:53.286Z",
       "type": "status",
-      "message": "S5.7 awaiting_signoff → in_progress (Building.)"
+      "message": "S5.7 awaiting_signoff \u2192 in_progress (Building.)"
     },
     {
       "time": "2026-10-23T05:51:53.268Z",
       "type": "status",
-      "message": "S5.6 awaiting_signoff → in_progress (Building.)"
+      "message": "S5.6 awaiting_signoff \u2192 in_progress (Building.)"
     },
     {
       "time": "2026-10-23T05:51:53.247Z",
       "type": "status",
-      "message": "S5.5 awaiting_signoff → in_progress (Building.)"
+      "message": "S5.5 awaiting_signoff \u2192 in_progress (Building.)"
     },
     {
       "time": "2026-10-23T05:51:53.225Z",
       "type": "status",
-      "message": "S5.4 awaiting_signoff → in_progress (Building.)"
+      "message": "S5.4 awaiting_signoff \u2192 in_progress (Building.)"
     },
     {
       "time": "2026-10-23T05:51:53.204Z",
       "type": "status",
-      "message": "S5.3 awaiting_signoff → in_progress (Building.)"
+      "message": "S5.3 awaiting_signoff \u2192 in_progress (Building.)"
     },
     {
       "time": "2026-10-23T05:51:53.182Z",
       "type": "status",
-      "message": "S5.2 awaiting_signoff → in_progress (Building.)"
+      "message": "S5.2 awaiting_signoff \u2192 in_progress (Building.)"
     },
     {
       "time": "2026-10-23T05:51:53.164Z",
@@ -4809,42 +4795,42 @@
     {
       "time": "2026-10-23T05:44:45.483Z",
       "type": "status",
-      "message": "S5.8 in_progress → awaiting_signoff (Mockups ready in tracker.)"
+      "message": "S5.8 in_progress \u2192 awaiting_signoff (Mockups ready in tracker.)"
     },
     {
       "time": "2026-10-23T05:44:45.465Z",
       "type": "status",
-      "message": "S5.7 in_progress → awaiting_signoff (Mockups ready in tracker.)"
+      "message": "S5.7 in_progress \u2192 awaiting_signoff (Mockups ready in tracker.)"
     },
     {
       "time": "2026-10-23T05:44:45.444Z",
       "type": "status",
-      "message": "S5.6 in_progress → awaiting_signoff (Mockups ready in tracker.)"
+      "message": "S5.6 in_progress \u2192 awaiting_signoff (Mockups ready in tracker.)"
     },
     {
       "time": "2026-10-23T05:44:45.426Z",
       "type": "status",
-      "message": "S5.5 in_progress → awaiting_signoff (Mockups ready in tracker.)"
+      "message": "S5.5 in_progress \u2192 awaiting_signoff (Mockups ready in tracker.)"
     },
     {
       "time": "2026-10-23T05:44:45.408Z",
       "type": "status",
-      "message": "S5.4 in_progress → awaiting_signoff (Mockups ready in tracker.)"
+      "message": "S5.4 in_progress \u2192 awaiting_signoff (Mockups ready in tracker.)"
     },
     {
       "time": "2026-10-23T05:44:45.390Z",
       "type": "status",
-      "message": "S5.3 in_progress → awaiting_signoff (Mockups ready in tracker.)"
+      "message": "S5.3 in_progress \u2192 awaiting_signoff (Mockups ready in tracker.)"
     },
     {
       "time": "2026-10-23T05:44:45.374Z",
       "type": "status",
-      "message": "S5.2 in_progress → awaiting_signoff (Mockups ready in tracker.)"
+      "message": "S5.2 in_progress \u2192 awaiting_signoff (Mockups ready in tracker.)"
     },
     {
       "time": "2026-10-23T05:44:45.357Z",
       "type": "signoff",
-      "message": "S5 mockups → mockups_ready"
+      "message": "S5 mockups \u2192 mockups_ready"
     },
     {
       "time": "2026-10-23T05:44:45.339Z",
@@ -4864,37 +4850,37 @@
     {
       "time": "2026-10-23T05:42:26.194Z",
       "type": "status",
-      "message": "S5.8 pending → in_progress (Mockups in progress (placeholder content, per Milan).)"
+      "message": "S5.8 pending \u2192 in_progress (Mockups in progress (placeholder content, per Milan).)"
     },
     {
       "time": "2026-10-23T05:42:26.176Z",
       "type": "status",
-      "message": "S5.7 pending → in_progress (Mockups in progress (placeholder content, per Milan).)"
+      "message": "S5.7 pending \u2192 in_progress (Mockups in progress (placeholder content, per Milan).)"
     },
     {
       "time": "2026-10-23T05:42:26.155Z",
       "type": "status",
-      "message": "S5.6 pending → in_progress (Mockups in progress (placeholder content, per Milan).)"
+      "message": "S5.6 pending \u2192 in_progress (Mockups in progress (placeholder content, per Milan).)"
     },
     {
       "time": "2026-10-23T05:42:26.132Z",
       "type": "status",
-      "message": "S5.5 pending → in_progress (Mockups in progress (placeholder content, per Milan).)"
+      "message": "S5.5 pending \u2192 in_progress (Mockups in progress (placeholder content, per Milan).)"
     },
     {
       "time": "2026-10-23T05:42:26.106Z",
       "type": "status",
-      "message": "S5.4 pending → in_progress (Mockups in progress (placeholder content, per Milan).)"
+      "message": "S5.4 pending \u2192 in_progress (Mockups in progress (placeholder content, per Milan).)"
     },
     {
       "time": "2026-10-23T05:42:26.077Z",
       "type": "status",
-      "message": "S5.3 pending → in_progress (Mockups in progress (placeholder content, per Milan).)"
+      "message": "S5.3 pending \u2192 in_progress (Mockups in progress (placeholder content, per Milan).)"
     },
     {
       "time": "2026-10-23T05:42:26.021Z",
       "type": "status",
-      "message": "S5.2 pending → in_progress (Mockups in progress (placeholder content, per Milan).)"
+      "message": "S5.2 pending \u2192 in_progress (Mockups in progress (placeholder content, per Milan).)"
     },
     {
       "time": "2026-10-23T05:18:11.632Z",
@@ -4919,37 +4905,37 @@
     {
       "time": "2026-10-23T05:18:11.547Z",
       "type": "status",
-      "message": "S4.5 in_progress → done (Craving button is in the dock on every tab (thumb zone). It opens a placeholder until Section 6 builds Craving SOS.)"
+      "message": "S4.5 in_progress \u2192 done (Craving button is in the dock on every tab (thumb zone). It opens a placeholder until Section 6 builds Craving SOS.)"
     },
     {
       "time": "2026-10-23T05:18:11.529Z",
       "type": "status",
-      "message": "S4.7 in_progress → done (Verified on CI 35a6842: all tests pass; simulator screenshots of prep, Quit Day, quit week, lesson done, week 2 and free states match the approved mockups in dark, light and largest text.)"
+      "message": "S4.7 in_progress \u2192 done (Verified on CI 35a6842: all tests pass; simulator screenshots of prep, Quit Day, quit week, lesson done, week 2 and free states match the approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-23T05:18:11.509Z",
       "type": "status",
-      "message": "S4.6 in_progress → done (Verified on CI 35a6842: all tests pass; simulator screenshots of prep, Quit Day, quit week, lesson done, week 2 and free states match the approved mockups in dark, light and largest text.)"
+      "message": "S4.6 in_progress \u2192 done (Verified on CI 35a6842: all tests pass; simulator screenshots of prep, Quit Day, quit week, lesson done, week 2 and free states match the approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-23T05:18:11.490Z",
       "type": "status",
-      "message": "S4.4 in_progress → done (Verified on CI 35a6842: all tests pass; simulator screenshots of prep, Quit Day, quit week, lesson done, week 2 and free states match the approved mockups in dark, light and largest text.)"
+      "message": "S4.4 in_progress \u2192 done (Verified on CI 35a6842: all tests pass; simulator screenshots of prep, Quit Day, quit week, lesson done, week 2 and free states match the approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-23T05:18:11.471Z",
       "type": "status",
-      "message": "S4.3 in_progress → done (Verified on CI 35a6842: all tests pass; simulator screenshots of prep, Quit Day, quit week, lesson done, week 2 and free states match the approved mockups in dark, light and largest text.)"
+      "message": "S4.3 in_progress \u2192 done (Verified on CI 35a6842: all tests pass; simulator screenshots of prep, Quit Day, quit week, lesson done, week 2 and free states match the approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-23T05:18:11.452Z",
       "type": "status",
-      "message": "S4.2 in_progress → done (Verified on CI 35a6842: all tests pass; simulator screenshots of prep, Quit Day, quit week, lesson done, week 2 and free states match the approved mockups in dark, light and largest text.)"
+      "message": "S4.2 in_progress \u2192 done (Verified on CI 35a6842: all tests pass; simulator screenshots of prep, Quit Day, quit week, lesson done, week 2 and free states match the approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-23T05:18:11.429Z",
       "type": "status",
-      "message": "S4.1 in_progress → done (Verified on CI 35a6842: all tests pass; simulator screenshots of prep, Quit Day, quit week, lesson done, week 2 and free states match the approved mockups in dark, light and largest text.)"
+      "message": "S4.1 in_progress \u2192 done (Verified on CI 35a6842: all tests pass; simulator screenshots of prep, Quit Day, quit week, lesson done, week 2 and free states match the approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-23T04:40:48.935Z",
@@ -4969,42 +4955,42 @@
     {
       "time": "2026-10-23T04:14:43.992Z",
       "type": "status",
-      "message": "S4.8 blocked → pending (Default taken (Milan said 'Start' without answering): quit-week lessons open on their calendar day after the previous is done; prep lessons open on completion. Easy to change.)"
+      "message": "S4.8 blocked \u2192 pending (Default taken (Milan said 'Start' without answering): quit-week lessons open on their calendar day after the previous is done; prep lessons open on completion. Easy to change.)"
     },
     {
       "time": "2026-10-23T04:14:43.974Z",
       "type": "status",
-      "message": "S4.7 awaiting_signoff → in_progress (Building.)"
+      "message": "S4.7 awaiting_signoff \u2192 in_progress (Building.)"
     },
     {
       "time": "2026-10-23T04:14:43.952Z",
       "type": "status",
-      "message": "S4.6 awaiting_signoff → in_progress (Building.)"
+      "message": "S4.6 awaiting_signoff \u2192 in_progress (Building.)"
     },
     {
       "time": "2026-10-23T04:14:43.933Z",
       "type": "status",
-      "message": "S4.5 awaiting_signoff → in_progress (Building.)"
+      "message": "S4.5 awaiting_signoff \u2192 in_progress (Building.)"
     },
     {
       "time": "2026-10-23T04:14:43.914Z",
       "type": "status",
-      "message": "S4.4 awaiting_signoff → in_progress (Building.)"
+      "message": "S4.4 awaiting_signoff \u2192 in_progress (Building.)"
     },
     {
       "time": "2026-10-23T04:14:43.892Z",
       "type": "status",
-      "message": "S4.3 awaiting_signoff → in_progress (Building.)"
+      "message": "S4.3 awaiting_signoff \u2192 in_progress (Building.)"
     },
     {
       "time": "2026-10-23T04:14:43.867Z",
       "type": "status",
-      "message": "S4.2 awaiting_signoff → in_progress (Building.)"
+      "message": "S4.2 awaiting_signoff \u2192 in_progress (Building.)"
     },
     {
       "time": "2026-10-23T04:14:43.844Z",
       "type": "status",
-      "message": "S4.1 awaiting_signoff → in_progress (Building.)"
+      "message": "S4.1 awaiting_signoff \u2192 in_progress (Building.)"
     },
     {
       "time": "2026-10-23T04:14:43.815Z",
@@ -5029,42 +5015,42 @@
     {
       "time": "2026-10-23T04:10:24.244Z",
       "type": "status",
-      "message": "S4.7 in_progress → awaiting_signoff (Mockups ready in tracker.)"
+      "message": "S4.7 in_progress \u2192 awaiting_signoff (Mockups ready in tracker.)"
     },
     {
       "time": "2026-10-23T04:10:24.227Z",
       "type": "status",
-      "message": "S4.6 in_progress → awaiting_signoff (Mockups ready in tracker.)"
+      "message": "S4.6 in_progress \u2192 awaiting_signoff (Mockups ready in tracker.)"
     },
     {
       "time": "2026-10-23T04:10:24.209Z",
       "type": "status",
-      "message": "S4.5 in_progress → awaiting_signoff (Mockups ready in tracker.)"
+      "message": "S4.5 in_progress \u2192 awaiting_signoff (Mockups ready in tracker.)"
     },
     {
       "time": "2026-10-23T04:10:24.192Z",
       "type": "status",
-      "message": "S4.4 in_progress → awaiting_signoff (Mockups ready in tracker.)"
+      "message": "S4.4 in_progress \u2192 awaiting_signoff (Mockups ready in tracker.)"
     },
     {
       "time": "2026-10-23T04:10:24.174Z",
       "type": "status",
-      "message": "S4.3 in_progress → awaiting_signoff (Mockups ready in tracker.)"
+      "message": "S4.3 in_progress \u2192 awaiting_signoff (Mockups ready in tracker.)"
     },
     {
       "time": "2026-10-23T04:10:24.158Z",
       "type": "status",
-      "message": "S4.2 in_progress → awaiting_signoff (Mockups ready in tracker.)"
+      "message": "S4.2 in_progress \u2192 awaiting_signoff (Mockups ready in tracker.)"
     },
     {
       "time": "2026-10-23T04:10:24.139Z",
       "type": "status",
-      "message": "S4.1 in_progress → awaiting_signoff (Mockups ready in tracker.)"
+      "message": "S4.1 in_progress \u2192 awaiting_signoff (Mockups ready in tracker.)"
     },
     {
       "time": "2026-10-23T04:10:24.121Z",
       "type": "signoff",
-      "message": "S4 mockups → mockups_ready"
+      "message": "S4 mockups \u2192 mockups_ready"
     },
     {
       "time": "2026-10-23T04:10:24.101Z",
@@ -5074,37 +5060,37 @@
     {
       "time": "2026-10-23T04:08:04.092Z",
       "type": "status",
-      "message": "S4.7 pending → in_progress (Mockups in progress.)"
+      "message": "S4.7 pending \u2192 in_progress (Mockups in progress.)"
     },
     {
       "time": "2026-10-23T04:08:04.068Z",
       "type": "status",
-      "message": "S4.6 pending → in_progress (Mockups in progress.)"
+      "message": "S4.6 pending \u2192 in_progress (Mockups in progress.)"
     },
     {
       "time": "2026-10-23T04:08:04.050Z",
       "type": "status",
-      "message": "S4.5 pending → in_progress (Mockups in progress.)"
+      "message": "S4.5 pending \u2192 in_progress (Mockups in progress.)"
     },
     {
       "time": "2026-10-23T04:08:04.025Z",
       "type": "status",
-      "message": "S4.4 pending → in_progress (Mockups in progress.)"
+      "message": "S4.4 pending \u2192 in_progress (Mockups in progress.)"
     },
     {
       "time": "2026-10-23T04:08:03.992Z",
       "type": "status",
-      "message": "S4.3 pending → in_progress (Mockups in progress.)"
+      "message": "S4.3 pending \u2192 in_progress (Mockups in progress.)"
     },
     {
       "time": "2026-10-23T04:08:03.970Z",
       "type": "status",
-      "message": "S4.2 pending → in_progress (Mockups in progress.)"
+      "message": "S4.2 pending \u2192 in_progress (Mockups in progress.)"
     },
     {
       "time": "2026-10-23T04:08:03.940Z",
       "type": "status",
-      "message": "S4.1 pending → in_progress (Mockups in progress.)"
+      "message": "S4.1 pending \u2192 in_progress (Mockups in progress.)"
     },
     {
       "time": "2026-10-23T04:08:03.910Z",
@@ -5114,12 +5100,12 @@
     {
       "time": "2026-10-22T22:57:22.734Z",
       "type": "note",
-      "message": "S15.5: Includes a live VoiceOver run on device for Sections 1–3 (screenshots can't check speech)."
+      "message": "S15.5: Includes a live VoiceOver run on device for Sections 1\u20133 (screenshots can't check speech)."
     },
     {
       "time": "2026-10-22T22:57:22.714Z",
       "type": "status",
-      "message": "S1.4 in_progress → done (Gallery verified in CI screenshots (dark, light, largest text). VoiceOver labels are in code but not yet heard on a device; covered by the app-wide pass in S15.5.)"
+      "message": "S1.4 in_progress \u2192 done (Gallery verified in CI screenshots (dark, light, largest text). VoiceOver labels are in code but not yet heard on a device; covered by the app-wide pass in S15.5.)"
     },
     {
       "time": "2026-10-22T22:57:10.823Z",
@@ -5134,37 +5120,37 @@
     {
       "time": "2026-10-22T22:57:10.783Z",
       "type": "status",
-      "message": "S3.5 in_progress → done (Free tier rule (counter, SOS, Day 1) + upgrade sheet built and tested; it's shown from the Program tab once Section 5 exists.)"
+      "message": "S3.5 in_progress \u2192 done (Free tier rule (counter, SOS, Day 1) + upgrade sheet built and tested; it's shown from the Program tab once Section 5 exists.)"
     },
     {
       "time": "2026-10-22T22:57:10.766Z",
       "type": "status",
-      "message": "S3.9 in_progress → done (Verified on CI 33dd4dd: all tests pass; screenshots match approved mockups in dark, light and largest text.)"
+      "message": "S3.9 in_progress \u2192 done (Verified on CI 33dd4dd: all tests pass; screenshots match approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-22T22:57:10.747Z",
       "type": "status",
-      "message": "S3.6 in_progress → done (Verified on CI 33dd4dd: all tests pass; screenshots match approved mockups in dark, light and largest text.)"
+      "message": "S3.6 in_progress \u2192 done (Verified on CI 33dd4dd: all tests pass; screenshots match approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-22T22:57:10.729Z",
       "type": "status",
-      "message": "S3.4 in_progress → done (Verified on CI 33dd4dd: all tests pass; screenshots match approved mockups in dark, light and largest text.)"
+      "message": "S3.4 in_progress \u2192 done (Verified on CI 33dd4dd: all tests pass; screenshots match approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-22T22:57:10.707Z",
       "type": "status",
-      "message": "S3.3 in_progress → done (Verified on CI 33dd4dd: all tests pass; screenshots match approved mockups in dark, light and largest text.)"
+      "message": "S3.3 in_progress \u2192 done (Verified on CI 33dd4dd: all tests pass; screenshots match approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-22T22:57:10.688Z",
       "type": "status",
-      "message": "S3.2 in_progress → done (Verified on CI 33dd4dd: all tests pass; screenshots match approved mockups in dark, light and largest text.)"
+      "message": "S3.2 in_progress \u2192 done (Verified on CI 33dd4dd: all tests pass; screenshots match approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-22T22:57:10.661Z",
       "type": "status",
-      "message": "S3.1 in_progress → done (Verified on CI 33dd4dd: all tests pass; screenshots match approved mockups in dark, light and largest text.)"
+      "message": "S3.1 in_progress \u2192 done (Verified on CI 33dd4dd: all tests pass; screenshots match approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-22T22:26:58.517Z",
@@ -5199,7 +5185,7 @@
     {
       "time": "2026-10-22T22:26:58.381Z",
       "type": "status",
-      "message": "S2.1 in_progress → done (Welcome hills now reach the bottom edge (verified on CI 797854b screenshots).)"
+      "message": "S2.1 in_progress \u2192 done (Welcome hills now reach the bottom edge (verified on CI 797854b screenshots).)"
     },
     {
       "time": "2026-10-22T22:01:09.552Z",
@@ -5219,47 +5205,47 @@
     {
       "time": "2026-10-22T22:01:09.484Z",
       "type": "status",
-      "message": "S3.8 pending → done (Nothing in the app: prices come from the App Store per region. India pricing gets set in App Store Connect.)"
+      "message": "S3.8 pending \u2192 done (Nothing in the app: prices come from the App Store per region. India pricing gets set in App Store Connect.)"
     },
     {
       "time": "2026-10-22T22:01:09.465Z",
       "type": "status",
-      "message": "S3.7 pending → done (No ad SDKs or ad placements anywhere; dependencies are RevenueCat and PostHog only.)"
+      "message": "S3.7 pending \u2192 done (No ad SDKs or ad placements anywhere; dependencies are RevenueCat and PostHog only.)"
     },
     {
       "time": "2026-10-22T22:01:09.447Z",
       "type": "status",
-      "message": "S3.9 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+      "message": "S3.9 pending \u2192 in_progress (Built; waiting on CI build, tests and screenshots.)"
     },
     {
       "time": "2026-10-22T22:01:09.429Z",
       "type": "status",
-      "message": "S3.6 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+      "message": "S3.6 pending \u2192 in_progress (Built; waiting on CI build, tests and screenshots.)"
     },
     {
       "time": "2026-10-22T22:01:09.411Z",
       "type": "status",
-      "message": "S3.5 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+      "message": "S3.5 pending \u2192 in_progress (Built; waiting on CI build, tests and screenshots.)"
     },
     {
       "time": "2026-10-22T22:01:09.391Z",
       "type": "status",
-      "message": "S3.4 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+      "message": "S3.4 pending \u2192 in_progress (Built; waiting on CI build, tests and screenshots.)"
     },
     {
       "time": "2026-10-22T22:01:09.372Z",
       "type": "status",
-      "message": "S3.3 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+      "message": "S3.3 pending \u2192 in_progress (Built; waiting on CI build, tests and screenshots.)"
     },
     {
       "time": "2026-10-22T22:01:09.355Z",
       "type": "status",
-      "message": "S3.2 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+      "message": "S3.2 pending \u2192 in_progress (Built; waiting on CI build, tests and screenshots.)"
     },
     {
       "time": "2026-10-22T22:01:09.336Z",
       "type": "status",
-      "message": "S3.1 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+      "message": "S3.1 pending \u2192 in_progress (Built; waiting on CI build, tests and screenshots.)"
     },
     {
       "time": "2026-10-22T22:01:09.318Z",
@@ -5269,57 +5255,57 @@
     {
       "time": "2026-10-22T22:01:09.291Z",
       "type": "status",
-      "message": "S2.14 in_progress → done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
+      "message": "S2.14 in_progress \u2192 done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-22T22:01:09.271Z",
       "type": "status",
-      "message": "S2.13 in_progress → done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
+      "message": "S2.13 in_progress \u2192 done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-22T22:01:09.251Z",
       "type": "status",
-      "message": "S2.11 in_progress → done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
+      "message": "S2.11 in_progress \u2192 done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-22T22:01:09.231Z",
       "type": "status",
-      "message": "S2.10 in_progress → done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
+      "message": "S2.10 in_progress \u2192 done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-22T22:01:09.213Z",
       "type": "status",
-      "message": "S2.9 in_progress → done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
+      "message": "S2.9 in_progress \u2192 done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-22T22:01:09.193Z",
       "type": "status",
-      "message": "S2.8 in_progress → done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
+      "message": "S2.8 in_progress \u2192 done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-22T22:01:09.175Z",
       "type": "status",
-      "message": "S2.7 in_progress → done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
+      "message": "S2.7 in_progress \u2192 done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-22T22:01:09.156Z",
       "type": "status",
-      "message": "S2.6 in_progress → done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
+      "message": "S2.6 in_progress \u2192 done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-22T22:01:09.137Z",
       "type": "status",
-      "message": "S2.5 in_progress → done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
+      "message": "S2.5 in_progress \u2192 done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-22T22:01:09.116Z",
       "type": "status",
-      "message": "S2.4 in_progress → done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
+      "message": "S2.4 in_progress \u2192 done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-22T22:01:09.090Z",
       "type": "status",
-      "message": "S2.3 in_progress → done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
+      "message": "S2.3 in_progress \u2192 done (Verified on CI 968a528: 16/16 tests pass; simulator screenshots match approved mockups in dark, light and largest text.)"
     },
     {
       "time": "2026-10-22T21:45:08.758Z",
@@ -5374,7 +5360,7 @@
     {
       "time": "2026-10-22T21:13:19.758Z",
       "type": "signoff",
-      "message": "S3 mockups → mockups_ready"
+      "message": "S3 mockups \u2192 mockups_ready"
     },
     {
       "time": "2026-10-22T21:13:19.738Z",
@@ -5389,67 +5375,67 @@
     {
       "time": "2026-10-22T21:10:10.012Z",
       "type": "note",
-      "message": "S2.9: Milan approved the NRT claim. Added 'Research shows ... can make quitting easier' with a link to the Cochrane review (Hartmann-Boyce 2018, CD000146.pub5: 133 trials, 64,640 people, quit rates up 50–60%)."
+      "message": "S2.9: Milan approved the NRT claim. Added 'Research shows ... can make quitting easier' with a link to the Cochrane review (Hartmann-Boyce 2018, CD000146.pub5: 133 trials, 64,640 people, quit rates up 50\u201360%)."
     },
     {
       "time": "2026-10-22T21:06:49.943Z",
       "type": "status",
-      "message": "S2.14 in_progress → in_progress (Built; waiting on CI.)"
+      "message": "S2.14 in_progress \u2192 in_progress (Built; waiting on CI.)"
     },
     {
       "time": "2026-10-22T21:06:49.924Z",
       "type": "status",
-      "message": "S2.13 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+      "message": "S2.13 pending \u2192 in_progress (Built; waiting on CI build, tests and screenshots.)"
     },
     {
       "time": "2026-10-22T21:06:49.906Z",
       "type": "status",
-      "message": "S2.11 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+      "message": "S2.11 pending \u2192 in_progress (Built; waiting on CI build, tests and screenshots.)"
     },
     {
       "time": "2026-10-22T21:06:49.888Z",
       "type": "status",
-      "message": "S2.10 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+      "message": "S2.10 pending \u2192 in_progress (Built; waiting on CI build, tests and screenshots.)"
     },
     {
       "time": "2026-10-22T21:06:49.868Z",
       "type": "status",
-      "message": "S2.9 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+      "message": "S2.9 pending \u2192 in_progress (Built; waiting on CI build, tests and screenshots.)"
     },
     {
       "time": "2026-10-22T21:06:49.850Z",
       "type": "status",
-      "message": "S2.8 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+      "message": "S2.8 pending \u2192 in_progress (Built; waiting on CI build, tests and screenshots.)"
     },
     {
       "time": "2026-10-22T21:06:49.831Z",
       "type": "status",
-      "message": "S2.7 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+      "message": "S2.7 pending \u2192 in_progress (Built; waiting on CI build, tests and screenshots.)"
     },
     {
       "time": "2026-10-22T21:06:49.812Z",
       "type": "status",
-      "message": "S2.6 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+      "message": "S2.6 pending \u2192 in_progress (Built; waiting on CI build, tests and screenshots.)"
     },
     {
       "time": "2026-10-22T21:06:49.792Z",
       "type": "status",
-      "message": "S2.5 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+      "message": "S2.5 pending \u2192 in_progress (Built; waiting on CI build, tests and screenshots.)"
     },
     {
       "time": "2026-10-22T21:06:49.773Z",
       "type": "status",
-      "message": "S2.4 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+      "message": "S2.4 pending \u2192 in_progress (Built; waiting on CI build, tests and screenshots.)"
     },
     {
       "time": "2026-10-22T21:06:49.754Z",
       "type": "status",
-      "message": "S2.3 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+      "message": "S2.3 pending \u2192 in_progress (Built; waiting on CI build, tests and screenshots.)"
     },
     {
       "time": "2026-10-22T21:06:49.734Z",
       "type": "status",
-      "message": "S2.1 pending → in_progress (Built; waiting on CI build, tests and screenshots.)"
+      "message": "S2.1 pending \u2192 in_progress (Built; waiting on CI build, tests and screenshots.)"
     },
     {
       "time": "2026-10-22T21:02:06.700Z",
@@ -5469,12 +5455,12 @@
     {
       "time": "2026-10-22T21:02:06.642Z",
       "type": "status",
-      "message": "S2.2 pending → blocked (Building the exit screen; youth resource names/URLs per country still needed from Milan.)"
+      "message": "S2.2 pending \u2192 blocked (Building the exit screen; youth resource names/URLs per country still needed from Milan.)"
     },
     {
       "time": "2026-10-22T21:02:06.623Z",
       "type": "status",
-      "message": "S2.14 pending → in_progress (Milan: keep the name screen.)"
+      "message": "S2.14 pending \u2192 in_progress (Milan: keep the name screen.)"
     },
     {
       "time": "2026-10-22T21:02:06.597Z",
@@ -5489,37 +5475,37 @@
     {
       "time": "2026-10-22T20:55:53.328Z",
       "type": "status",
-      "message": "S1.8 in_progress → done (Unit tests (Swift Testing) + GitHub Actions macOS build/test, errors and test results surfaced as annotations. Green on 9ea1291.)"
+      "message": "S1.8 in_progress \u2192 done (Unit tests (Swift Testing) + GitHub Actions macOS build/test, errors and test results surfaced as annotations. Green on 9ea1291.)"
     },
     {
       "time": "2026-10-22T20:55:53.309Z",
       "type": "status",
-      "message": "S1.14 in_progress → done (CI green on 9ea1291: builds on Xcode 26, app launches on iOS 26.2 simulator, 9/9 tests pass.)"
+      "message": "S1.14 in_progress \u2192 done (CI green on 9ea1291: builds on Xcode 26, app launches on iOS 26.2 simulator, 9/9 tests pass.)"
     },
     {
       "time": "2026-10-22T20:55:53.291Z",
       "type": "status",
-      "message": "S1.7 in_progress → done (CI green on 9ea1291: builds on Xcode 26, app launches on iOS 26.2 simulator, 9/9 tests pass.)"
+      "message": "S1.7 in_progress \u2192 done (CI green on 9ea1291: builds on Xcode 26, app launches on iOS 26.2 simulator, 9/9 tests pass.)"
     },
     {
       "time": "2026-10-22T20:55:53.272Z",
       "type": "status",
-      "message": "S1.6 in_progress → done (CI green on 9ea1291: builds on Xcode 26, app launches on iOS 26.2 simulator, 9/9 tests pass.)"
+      "message": "S1.6 in_progress \u2192 done (CI green on 9ea1291: builds on Xcode 26, app launches on iOS 26.2 simulator, 9/9 tests pass.)"
     },
     {
       "time": "2026-10-22T20:55:53.252Z",
       "type": "status",
-      "message": "S1.3 in_progress → done (CI green on 9ea1291: builds on Xcode 26, app launches on iOS 26.2 simulator, 9/9 tests pass.)"
+      "message": "S1.3 in_progress \u2192 done (CI green on 9ea1291: builds on Xcode 26, app launches on iOS 26.2 simulator, 9/9 tests pass.)"
     },
     {
       "time": "2026-10-22T20:55:53.233Z",
       "type": "status",
-      "message": "S1.2 in_progress → done (CI green on 9ea1291: builds on Xcode 26, app launches on iOS 26.2 simulator, 9/9 tests pass.)"
+      "message": "S1.2 in_progress \u2192 done (CI green on 9ea1291: builds on Xcode 26, app launches on iOS 26.2 simulator, 9/9 tests pass.)"
     },
     {
       "time": "2026-10-22T20:55:53.214Z",
       "type": "status",
-      "message": "S1.1 in_progress → done (CI green on 9ea1291: builds on Xcode 26, app launches on iOS 26.2 simulator, 9/9 tests pass.)"
+      "message": "S1.1 in_progress \u2192 done (CI green on 9ea1291: builds on Xcode 26, app launches on iOS 26.2 simulator, 9/9 tests pass.)"
     },
     {
       "time": "2026-10-22T20:49:09.009Z",
@@ -5559,7 +5545,7 @@
     {
       "time": "2026-10-22T20:40:00.843Z",
       "type": "signoff",
-      "message": "S2 mockups → mockups_ready"
+      "message": "S2 mockups \u2192 mockups_ready"
     },
     {
       "time": "2026-10-22T20:40:00.823Z",
@@ -5574,7 +5560,7 @@
     {
       "time": "2026-10-22T20:36:53.482Z",
       "type": "status",
-      "message": "S2.1 pending → pending"
+      "message": "S2.1 pending \u2192 pending"
     },
     {
       "time": "2026-10-22T20:35:53.094Z",
@@ -5589,12 +5575,12 @@
     {
       "time": "2026-10-22T20:35:53.056Z",
       "type": "status",
-      "message": "S5.1 blocked → pending (Milan: port program content later. Section 5 build waits on it; mockups can use placeholder lessons.)"
+      "message": "S5.1 blocked \u2192 pending (Milan: port program content later. Section 5 build waits on it; mockups can use placeholder lessons.)"
     },
     {
       "time": "2026-10-22T20:35:53.036Z",
       "type": "status",
-      "message": "S5.7 blocked → pending (Milan decided: no reset to Day 1. After inactivity, pause and replay the last completed day, then continue. Build in Section 5.)"
+      "message": "S5.7 blocked \u2192 pending (Milan decided: no reset to Day 1. After inactivity, pause and replay the last completed day, then continue. Build in Section 5.)"
     },
     {
       "time": "2026-10-22T20:34:38.093Z",
@@ -5604,7 +5590,7 @@
     {
       "time": "2026-10-22T20:34:38.071Z",
       "type": "status",
-      "message": "S1.19 blocked → done (Team ID ZDAH8F8P24 set with automatic signing. Milan to register App Group group.in.dayxero.app (Xcode does it on first signed build).)"
+      "message": "S1.19 blocked \u2192 done (Team ID ZDAH8F8P24 set with automatic signing. Milan to register App Group group.in.dayxero.app (Xcode does it on first signed build).)"
     },
     {
       "time": "2026-10-22T20:31:13.506Z",
@@ -5639,12 +5625,12 @@
     {
       "time": "2026-10-22T20:27:03.625Z",
       "type": "status",
-      "message": "S1.5 in_progress → done (PostHog wired; key set up locally via Secrets.xcconfig. Verified by build once CI is green.)"
+      "message": "S1.5 in_progress \u2192 done (PostHog wired; key set up locally via Secrets.xcconfig. Verified by build once CI is green.)"
     },
     {
       "time": "2026-10-22T20:27:03.601Z",
       "type": "status",
-      "message": "S1.20 blocked → done"
+      "message": "S1.20 blocked \u2192 done"
     },
     {
       "time": "2026-10-22T20:27:03.580Z",
@@ -5664,7 +5650,7 @@
     {
       "time": "2026-10-22T20:18:08.980Z",
       "type": "status",
-      "message": "S1.5 blocked → in_progress"
+      "message": "S1.5 blocked \u2192 in_progress"
     },
     {
       "time": "2026-10-22T20:18:08.957Z",
@@ -5699,32 +5685,32 @@
     {
       "time": "2026-10-22T20:13:55.331Z",
       "type": "status",
-      "message": "S1.8 pending → in_progress (Code written; waiting on the first CI build (macOS runner) to verify.)"
+      "message": "S1.8 pending \u2192 in_progress (Code written; waiting on the first CI build (macOS runner) to verify.)"
     },
     {
       "time": "2026-10-22T20:13:55.313Z",
       "type": "status",
-      "message": "S1.7 pending → in_progress (Code written; waiting on the first CI build (macOS runner) to verify.)"
+      "message": "S1.7 pending \u2192 in_progress (Code written; waiting on the first CI build (macOS runner) to verify.)"
     },
     {
       "time": "2026-10-22T20:13:55.294Z",
       "type": "status",
-      "message": "S1.6 pending → in_progress (Code written; waiting on the first CI build (macOS runner) to verify.)"
+      "message": "S1.6 pending \u2192 in_progress (Code written; waiting on the first CI build (macOS runner) to verify.)"
     },
     {
       "time": "2026-10-22T20:13:55.276Z",
       "type": "status",
-      "message": "S1.3 pending → in_progress (Code written; waiting on the first CI build (macOS runner) to verify.)"
+      "message": "S1.3 pending \u2192 in_progress (Code written; waiting on the first CI build (macOS runner) to verify.)"
     },
     {
       "time": "2026-10-22T20:13:55.256Z",
       "type": "status",
-      "message": "S1.2 pending → in_progress (Code written; waiting on the first CI build (macOS runner) to verify.)"
+      "message": "S1.2 pending \u2192 in_progress (Code written; waiting on the first CI build (macOS runner) to verify.)"
     },
     {
       "time": "2026-10-22T20:07:35.644Z",
       "type": "status",
-      "message": "S1.1 pending → in_progress"
+      "message": "S1.1 pending \u2192 in_progress"
     },
     {
       "time": "2026-10-22T20:07:35.625Z",
@@ -5734,17 +5720,17 @@
     {
       "time": "2026-10-22T20:07:35.607Z",
       "type": "status",
-      "message": "S1.14 pending → in_progress (Setting up XcodeGen + GitHub Actions macOS build.)"
+      "message": "S1.14 pending \u2192 in_progress (Setting up XcodeGen + GitHub Actions macOS build.)"
     },
     {
       "time": "2026-10-22T20:07:35.588Z",
       "type": "status",
-      "message": "S1.4 awaiting_signoff → in_progress (Sign-off received; building the SwiftUI design system.)"
+      "message": "S1.4 awaiting_signoff \u2192 in_progress (Sign-off received; building the SwiftUI design system.)"
     },
     {
       "time": "2026-10-22T20:07:35.562Z",
       "type": "status",
-      "message": "S1.12 blocked → done"
+      "message": "S1.12 blocked \u2192 done"
     },
     {
       "time": "2026-10-22T20:07:35.537Z",
@@ -5754,7 +5740,7 @@
     {
       "time": "2026-10-22T20:07:35.518Z",
       "type": "status",
-      "message": "S1.13 blocked → done"
+      "message": "S1.13 blocked \u2192 done"
     },
     {
       "time": "2026-10-22T20:07:35.500Z",
@@ -5764,7 +5750,7 @@
     {
       "time": "2026-10-22T20:07:35.474Z",
       "type": "status",
-      "message": "S1.10 blocked → done"
+      "message": "S1.10 blocked \u2192 done"
     },
     {
       "time": "2026-10-22T20:07:35.448Z",
@@ -5774,7 +5760,7 @@
     {
       "time": "2026-10-22T20:07:35.421Z",
       "type": "status",
-      "message": "S1.11 blocked → done (Milan: ship both themes (dark and light). Appearance setting stays in S15.1.)"
+      "message": "S1.11 blocked \u2192 done (Milan: ship both themes (dark and light). Appearance setting stays in S15.1.)"
     },
     {
       "time": "2026-10-22T20:07:35.398Z",
@@ -5789,17 +5775,17 @@
     {
       "time": "2026-10-22T20:05:00.888Z",
       "type": "signoff",
-      "message": "S1 mockups → mockups_ready"
+      "message": "S1 mockups \u2192 mockups_ready"
     },
     {
       "time": "2026-10-22T20:05:00.868Z",
       "type": "status",
-      "message": "S1.18 in_progress → done (Page checks write access up front and explains view-only; raw error replaced.)"
+      "message": "S1.18 in_progress \u2192 done (Page checks write access up front and explains view-only; raw error replaced.)"
     },
     {
       "time": "2026-10-22T20:05:00.844Z",
       "type": "status",
-      "message": "S1.17 in_progress → done (Theme toggle (dark/light) across every component, light palette tokens, and side-by-side Today screen phones.)"
+      "message": "S1.17 in_progress \u2192 done (Theme toggle (dark/light) across every component, light palette tokens, and side-by-side Today screen phones.)"
     },
     {
       "time": "2026-10-22T20:02:32.375Z",
@@ -5809,12 +5795,12 @@
     {
       "time": "2026-10-22T20:02:32.356Z",
       "type": "status",
-      "message": "S1.18 pending → in_progress"
+      "message": "S1.18 pending \u2192 in_progress"
     },
     {
       "time": "2026-10-22T20:02:32.336Z",
       "type": "status",
-      "message": "S1.17 pending → in_progress"
+      "message": "S1.17 pending \u2192 in_progress"
     },
     {
       "time": "2026-10-22T20:02:32.312Z",
@@ -5839,12 +5825,12 @@
     {
       "time": "2026-10-22T19:58:42.076Z",
       "type": "status",
-      "message": "S1.15 blocked → done (Milan created milan458/dayxero; main pushed.)"
+      "message": "S1.15 blocked \u2192 done (Milan created milan458/dayxero; main pushed.)"
     },
     {
       "time": "2026-10-22T19:56:08.022Z",
       "type": "status",
-      "message": "S1.16 pending → done (Published; db sign-off collection verified readable.)"
+      "message": "S1.16 pending \u2192 done (Published; db sign-off collection verified readable.)"
     },
     {
       "time": "2026-10-22T19:56:07.994Z",
@@ -5859,12 +5845,12 @@
     {
       "time": "2026-10-22T19:52:45.180Z",
       "type": "signoff",
-      "message": "S1 mockups → mockups_ready"
+      "message": "S1 mockups \u2192 mockups_ready"
     },
     {
       "time": "2026-10-22T19:52:45.162Z",
       "type": "status",
-      "message": "S1.4 in_progress → awaiting_signoff (Token & component sheet posted (HTML; SwiftUI preview export needs macOS, see S1.14).)"
+      "message": "S1.4 in_progress \u2192 awaiting_signoff (Token & component sheet posted (HTML; SwiftUI preview export needs macOS, see S1.14).)"
     },
     {
       "time": "2026-10-22T19:52:17.307Z",
@@ -5874,7 +5860,7 @@
     {
       "time": "2026-10-22T19:50:07.457Z",
       "type": "status",
-      "message": "S1.4 pending → in_progress (Starting the token & component sheet (Section 1 mockup).)"
+      "message": "S1.4 pending \u2192 in_progress (Starting the token & component sheet (Section 1 mockup).)"
     },
     {
       "time": "2026-10-22T19:50:02.742Z",
@@ -5934,22 +5920,22 @@
     {
       "time": "2026-10-22T19:50:02.504Z",
       "type": "status",
-      "message": "S5.7 pending → blocked"
+      "message": "S5.7 pending \u2192 blocked"
     },
     {
       "time": "2026-10-22T19:50:02.480Z",
       "type": "note",
-      "message": "S5.7: Open decision from plan §1: keep the 3-idle-day reset to Day 1, or pause and replay the last day?"
+      "message": "S5.7: Open decision from plan \u00a71: keep the 3-idle-day reset to Day 1, or pause and replay the last day?"
     },
     {
       "time": "2026-10-22T19:50:02.463Z",
       "type": "note",
-      "message": "S5.2: Question for Milan: dual users — main-product variant plus notes for the others. Confirm the rule."
+      "message": "S5.2: Question for Milan: dual users \u2014 main-product variant plus notes for the others. Confirm the rule."
     },
     {
       "time": "2026-10-22T19:50:02.440Z",
       "type": "status",
-      "message": "S5.1 pending → blocked"
+      "message": "S5.1 pending \u2192 blocked"
     },
     {
       "time": "2026-10-22T19:50:02.412Z",
@@ -5959,7 +5945,7 @@
     {
       "time": "2026-10-22T19:50:02.388Z",
       "type": "note",
-      "message": "S3.3: Question for Milan: 3-day trial on annual — confirm."
+      "message": "S3.3: Question for Milan: 3-day trial on annual \u2014 confirm."
     },
     {
       "time": "2026-10-22T19:50:02.365Z",
@@ -5979,7 +5965,7 @@
     {
       "time": "2026-10-22T19:50:02.278Z",
       "type": "status",
-      "message": "S1.5 pending → blocked"
+      "message": "S1.5 pending \u2192 blocked"
     },
     {
       "time": "2026-10-22T19:50:02.257Z",
@@ -5989,12 +5975,12 @@
     {
       "time": "2026-10-22T19:50:02.236Z",
       "type": "status",
-      "message": "S1.9 pending → done (Node server + one page; verified API, sign-off write-back, error paths.)"
+      "message": "S1.9 pending \u2192 done (Node server + one page; verified API, sign-off write-back, error paths.)"
     },
     {
       "time": "2026-10-22T19:49:40.909Z",
       "type": "task_added",
-      "message": "S1.9 added: Build the localhost task tracker (plan §0.1)"
+      "message": "S1.9 added: Build the localhost task tracker (plan \u00a70.1)"
     },
     {
       "time": "2026-10-22T19:48:52.060Z",
