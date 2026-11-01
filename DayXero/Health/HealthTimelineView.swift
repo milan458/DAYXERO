@@ -180,7 +180,7 @@ struct HealthTimelineView: View {
             .accessibilityHidden(true)
 
             HStack(spacing: 12) {
-                KitArt(HealthArt.kind(for: item.id), cornerRadius: raised ? 18 : 14)
+                KitArt(HealthKitArt.kind(for: item.id), cornerRadius: raised ? 18 : 14)
                     .frame(width: raised ? 64 : 48, height: raised ? 64 : 48)
                 VStack(alignment: .leading, spacing: 3) {
                     Text(verbatim: kicker.uppercased()).dxType(.caption).foregroundStyle(raised ? coralInk : ground.muted)
@@ -283,7 +283,7 @@ private struct Line: Shape {
 }
 
 /// Each change's illustration from the kit (decision 31).
-enum HealthArt {
+enum HealthKitArt {
     static func kind(for id: String) -> KitArt.Kind {
         switch id {
         case "heart-rate", "heart-disease": .heart
