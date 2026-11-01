@@ -133,7 +133,9 @@ struct HomeTests {
         #expect(pro.lesson?.needsUpgrade == false)
     }
 
-    @Test func aLoggedSlipDoesNotChangeHome() throws {
+    /// S27.9: a slip never resets days since Quit Day or money kept, but it does come off "puffs not taken", so the
+    /// counter stays true. A slip with no amount counts as one unit (`Slips.units`).
+    @Test func aLoggedSlipOnlyLowersTheAvoidedCount() throws {
         let context = ModelContext(try DataStore.makeContainer(inMemory: true))
         let p = profile(in: context)
         let before = HomeSnapshot(profile: p, isPro: true, now: date(31, 12), calendar: calendar)
@@ -141,7 +143,8 @@ struct HomeTests {
         try context.save()
         let after = HomeSnapshot(profile: p, isPro: true, now: date(31, 12), calendar: calendar)
         #expect(before.daysClear == after.daysClear)
-        #expect(before.counters == after.counters)
         #expect(before.moneyKept == after.moneyKept)
+        #expect(after.counters.map(\.product) == before.counters.map(\.product))
+        #expect(after.counters.map(\.avoided) == before.counters.map { $0.avoided - Slips.units(nil, product: $0.product) })
     }
 }
