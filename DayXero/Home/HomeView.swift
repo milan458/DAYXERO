@@ -2,8 +2,9 @@ import DayXeroCore
 import SwiftData
 import SwiftUI
 
-/// The app after onboarding: v4 Nav2 (Today, Program, SOS, Evening, Me). On iPhone Duo with vertical bars,
-/// the older dock stands on the side edge.
+/// The app after onboarding: four tabs, Today · Program · SOS · Progress (S27.11, 1 Nov 2026). Evening folded into
+/// Today's evening and night states; Me became Progress, with Settings behind its gear. On iPhone Duo with vertical
+/// bars, the older dock stands on the side edge.
 struct HomeView: View {
     let profile: UserProfile
     @State private var tab = UserDefaults.standard.string(forKey: "dx.tab") ?? "today"
@@ -29,7 +30,7 @@ struct HomeView: View {
                         if edge != nil { Color.clear.frame(width: DXDock.thickness + DX.Space.xs) }
                     }
                 if edge == nil {
-                    // v4 Nav2 (decision 21): Today · Program · SOS · Evening · Me.
+                    // S27.11: Today · Program · SOS · Progress.
                     V4TabBar(selection: v4Selection)
                         .padding(.bottom, DX.Space.xxs)
                 } else {
@@ -52,12 +53,10 @@ extension HomeView {
         case "program":
             ProgramView(profile: profile)
         case "progress", "me":
-            // Me holds Progress and Settings (decision 21).
+            // Progress, with Settings behind its gear (S27.11). "me" is the old tab id.
             ProgressTab(profile: profile)
-        case "toolkit", "water", "evening":
-            // Evening holds the calm tools (decision 21). "water" is an old tab id: open with the tracker showing.
-            EveningView(profile: profile, openWater: tab == "water")
         default:
+            // "evening", "toolkit" and "water" are old tab ids: their content now lives on Today (S27.11, S27.12).
             TodayView(profile: profile)
         }
     }
@@ -68,8 +67,7 @@ extension HomeView {
             get: {
                 switch tab {
                 case "program": .program
-                case "progress", "me": .me
-                case "toolkit", "water", "evening": .evening
+                case "progress", "me": .progress
                 default: .today
                 }
             },
@@ -78,8 +76,7 @@ extension HomeView {
                 case .sos: sos.open(source: "dock")
                 case .today: tab = "today"
                 case .program: tab = "program"
-                case .evening: tab = "evening"
-                case .me: tab = "me"
+                case .progress: tab = "progress"
                 }
             }
         )
@@ -89,18 +86,17 @@ extension HomeView {
         DXDock(
             items: [
                 DXDockItem(id: "today", title: "Today", systemImage: "house"),
-                DXDockItem(id: "toolkit", title: "Toolkit", systemImage: "shield"),
                 DXDockItem(id: "program", title: "Program", systemImage: "book.closed"),
-                DXDockItem(id: "progress", title: "Progress", systemImage: "chart.line.uptrend.xyaxis.circle"),
+                DXDockItem(id: "progress", title: "Progress", systemImage: "chart.bar"),
             ],
             selection: Binding(get: {
                 switch tab {
-                case "water", "evening": "toolkit"
+                case "water", "evening", "toolkit": "today"
                 case "me": "progress"
                 default: tab
                 }
             }, set: { tab = $0 }),
-            // Today, Toolkit, Craving SOS in the middle, Program, Progress.
+            // The same order as the tab bar (S27.11): Today, Program, Craving SOS, Progress.
             sosPosition: 2,
             axis: axis,
             sosAction: { sos.open(source: "dock") }
@@ -142,7 +138,6 @@ enum FirstLesson {
 
 struct TodayView: View {
     let profile: UserProfile
-    @State private var showWater = false
     /// The use just logged with one tap, for the Undo / Add trigger toast.
     @State private var justLogged: LogEntry?
     @State private var detailsFor: LogEntry?
@@ -163,7 +158,9 @@ struct TodayView: View {
     @Query private var sessionRecords: [SessionRecord]
     @State private var showPledge = UserDefaults.standard.bool(forKey: "dx.openPledge")
     @State private var showCheckIn = UserDefaults.standard.bool(forKey: "dx.openCheckIn")
-    @State private var showCalmTools = false
+    /// Screenshots: `-dx.openCalmList` or `-dx.openCalm <tool>` open the calm tools (they lived on the Evening tab).
+    @State private var showCalmTools = UserDefaults.standard.bool(forKey: "dx.openCalmList")
+        || UserDefaults.standard.string(forKey: "dx.openCalm") != nil
     @Environment(SOSRouter.self) private var sos
     @State private var settingsPage: SettingsSheet.Page? = UserDefaults.standard.string(forKey: "dx.openSettings").flatMap(SettingsSheet.Page.init(rawValue:))
     @State private var showSettings = UserDefaults.standard.string(forKey: "dx.openSettings") != nil
@@ -201,9 +198,6 @@ struct TodayView: View {
         .sheet(item: $detailsFor) { entry in
             CravingLogForm(profile: profile, editing: entry, onSaved: { detailsFor = nil })
                 .presentationDetents([.large])
-        }
-        .fullScreenCover(isPresented: $showWater) {
-            WaterTrackerView(profile: profile, onClose: { showWater = false })
         }
         .onAppear {
             checkMilestone()
@@ -299,6 +293,8 @@ struct TodayView: View {
         // Program v2's session, mission or what's next (handoff 4.5), as the green lesson card.
         ProgramTodayCard(profile: profile).id("lower")
         YourDayList(rows: yourDay(now: now))
+        // S27.12: water is one row, not a card and a tracker.
+        WaterRow(profile: profile, now: now)
         if snap.phase == .quitDay, !sosHintSeen { sosHint }
         // A plan made today, after a slip or in a lesson, stays on Home for the rest of the day (S8.3).
         if let plan = plans.first, DayClock(boundaryHour: profile.dayBoundaryHour).day(containing: plan.createdAt)
@@ -403,15 +399,14 @@ struct TodayView: View {
 
     private enum LogCell: Identifiable, Hashable {
         case product(Product)
-        case water
         var id: Self { self }
     }
 
-    /// A card per product, two to a row. With one product or three, water fills the gap so the grid stays even.
+    /// A card per product, two to a row. Water moved to its own row in S27.12, so an odd product sits alone.
     @ViewBuilder
     private func quickLog(_ snap: HomeSnapshot, now: Date) -> some View {
         let products = profile.products.sorted { ($0.isPrimary ? 0 : 1) < ($1.isPrimary ? 0 : 1) }.map(\.product)
-        let cells = products.map(LogCell.product) + (products.count % 2 == 1 ? [LogCell.water] : [])
+        let cells = products.map(LogCell.product)
         if typeSize.isAccessibilitySize {
             VStack(spacing: DX.Space.s) {
                 ForEach(cells) { logCell($0, snap: snap, now: now) }
@@ -431,7 +426,6 @@ struct TodayView: View {
     private func logCell(_ cell: LogCell, snap: HomeSnapshot, now: Date) -> some View {
         switch cell {
         case let .product(product): productCard(product, snap: snap, now: now)
-        case .water: WaterHomeCard(profile: profile, now: now, onOpen: { showWater = true })
         }
     }
 

@@ -2,8 +2,8 @@ import DayXeroCore
 import SwiftUI
 
 /// "What's changing" (decision 31): what changes after stopping, counted from Quit Day, one timeline per
-/// product, on lime. A rail runs down the side: done changes are ticked on a solid line, the ones under way
-/// are raised cards with a coral bar, the rest wait on a dotted line. Every change has its own illustration
+/// product, on mint (S27.13: lime retired). A rail runs down the side: done changes are ticked on a solid line, the
+/// ones under way are raised cards with a coral bar, the rest wait on a dotted line. Coral is a fill here, never text. Every change has its own illustration
 /// from the kit; sources are listed once, small, at the bottom.
 struct HealthTimelineView: View {
     let profile: UserProfile
@@ -12,9 +12,8 @@ struct HealthTimelineView: View {
     @State private var product: Product
     @State private var open: HealthTimeline.Item?
 
-    private let ground = DX.Ground.lime
+    private let ground = DX.Ground.mint
     private let card = Color(light: 0xFFF8EE, dark: 0x16382D)
-    private let coralInk = Color(light: 0xB2361C, dark: 0xFFB59E)
 
     init(profile: UserProfile, onClose: (() -> Void)? = nil) {
         self.profile = profile
@@ -84,13 +83,17 @@ struct HealthTimelineView: View {
                     }
                 }
                 .dxType(.footnote).foregroundStyle(ground.muted)
-                MarkedTitle(String(localized: "What's"), marking: String(localized: "changing"),
-                            color: DX.Mark.color(on: ground), stacked: true)
+                // S27.15: a plain title; the hand-drawn mark is kept for moments (reveal, greeting, milestones, finale).
+                Text("What's\nchanging")
                     .dxType(.large).foregroundStyle(ground.ink)
+                    .accessibilityAddTraits(.isHeader)
             }
             Spacer(minLength: 0)
-            PersonFigure(.cheer, height: 108, shirt: 0xFF7A55)
+            // S27.15: one illustration language, so Xero cheers here instead of the stock-style person.
+            XeroView(mood: .cheer, stage: CrewGrowth.stage(daysClear: max(0, DayClock(boundaryHour: profile.dayBoundaryHour)
+                .days(fromDate: profile.quitDay, to: .now) + 1)), points: 104)
                 .frame(width: 128, height: 128)
+                .accessibilityHidden(true)
                 .background(Color(light: (0xFFFFFF, 0.45), dark: (0xFFFFFF, 0.08)), in: Circle())
         }
         .overlay(alignment: .topTrailing) {
@@ -183,7 +186,7 @@ struct HealthTimelineView: View {
                 KitArt(HealthKitArt.kind(for: item.id), cornerRadius: raised ? 18 : 14)
                     .frame(width: raised ? 64 : 48, height: raised ? 64 : 48)
                 VStack(alignment: .leading, spacing: 3) {
-                    Text(verbatim: kicker.uppercased()).dxType(.caption).foregroundStyle(raised ? coralInk : ground.muted)
+                    Text(verbatim: kicker.uppercased()).dxType(.caption).foregroundStyle(raised ? DX.Ground.reading.muted : ground.muted)
                     Text(verbatim: item.title)
                         .dxFont(raised ? 18 : 16, weight: raised ? 800 : 700, style: raised ? .headline : .body)
                         .foregroundStyle(raised ? DX.Ground.reading.ink : ground.ink)

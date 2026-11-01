@@ -16,6 +16,8 @@ struct ProgressTab: View {
     @State private var showHealth = UserDefaults.standard.bool(forKey: "dx.openHealth")
     @State private var milestoneOpen: Milestone?
     @State private var sharing = UserDefaults.standard.bool(forKey: "dx.shareCard")
+    /// S27.11: Progress is the fourth tab and the way into Settings (Export, Delete, Privacy).
+    @State private var showSettings = false
 
     var body: some View {
         TimelineView(.everyMinute) { timeline in
@@ -43,6 +45,9 @@ struct ProgressTab: View {
         .sheet(isPresented: $showHealth) {
             HealthTimelineView(profile: profile, onClose: { showHealth = false })
                 .presentationDetents([.large])
+        }
+        .sheet(isPresented: $showSettings) {
+            SettingsSheet(profile: profile)
         }
         .sheet(item: $editing) { entry in
             Group {
@@ -97,7 +102,7 @@ struct ProgressTab: View {
         ForEach(profile.nrtPlans.sorted { $0.createdAt < $1.createdAt }) { plan in
             NRTCard(plan: plan, clock: DayClock(boundaryHour: profile.dayBoundaryHour), now: now, showAllSteps: true)
         }
-        // Your patterns (decision 31): its own mist panel with the header art, the heat map and the triggers.
+        // Your patterns (decision 31): its own sky panel (mist retired in S27.13) with Glim, the heat map and the triggers.
         VStack(alignment: .leading, spacing: 12) {
             patternsHeader(insights)
             if insights.isReady {
@@ -108,7 +113,7 @@ struct ProgressTab: View {
             }
         }
         .padding(DX.Space.m)
-        .background(DX.Ground.mist.background, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
+        .background(DX.Ground.sky.background, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
         .padding(.top, DX.Space.m)
         .id("patterns")
         if insights.isReady {
@@ -122,17 +127,20 @@ struct ProgressTab: View {
     private func patternsHeader(_ insights: Insights) -> some View {
         HStack(alignment: .bottom, spacing: DX.Space.xs) {
             VStack(alignment: .leading, spacing: 4) {
-                Text(insights.isReady ? LocalizedStringKey("Last 4 weeks") : LocalizedStringKey("From your logs")).dxType(.footnote).foregroundStyle(DX.Ground.mist.muted)
-                MarkedTitle(String(localized: "Your "), marking: String(localized: "patterns"), color: DX.Mark.color(on: .mist))
-                    .dxType(.title).foregroundStyle(DX.Ground.mist.ink)
+                Text(insights.isReady ? LocalizedStringKey("Last 4 weeks") : LocalizedStringKey("From your logs")).dxType(.footnote).foregroundStyle(DX.Ground.sky.muted)
+                Text("Your patterns")
+                    .dxType(.title).foregroundStyle(DX.Ground.sky.ink)
+                    .accessibilityAddTraits(.isHeader)
             }
             .padding(.bottom, 8)
             Spacer(minLength: 0)
-            PersonFigure(.magnify, height: 96, shirt: 0xFFC38A)
+            // S27.15: Glim instead of the stock-style person.
+            GlimView(mood: .calm, stage: 1, points: 88)
+                .accessibilityHidden(true)
         }
     }
 
-    /// A cream card inside the mist panel.
+    /// A cream card inside the sky panel.
     private func patternPanel<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
         content()
             .padding(14)
@@ -147,11 +155,23 @@ struct ProgressTab: View {
         HStack(alignment: .center) {
             VStack(alignment: .leading, spacing: 2) {
                 Text(eyebrow(snap)).dxType(.caption).textCase(.uppercase).foregroundStyle(Read4.muted)
-                MarkedTitle(String(localized: "Your "), marking: String(localized: "progress"), color: DX.Mark.color(on: .reading))
+                // S27.15: plain title; the hand-drawn mark is kept for moments.
+                Text("Your progress")
                     .dxType(.large).foregroundStyle(Read4.ink)
+                    .accessibilityAddTraits(.isHeader)
             }
             Spacer()
             LogButton { log.open() }
+            Button { showSettings = true } label: {
+                Image(systemName: "gearshape").font(.system(size: 17, weight: .semibold))
+                    .foregroundStyle(Read4.ink)
+                    .frame(width: 44, height: 44)
+                    .background(Read4.card, in: Circle())
+                    .overlay(Circle().strokeBorder(Read4.hairline))
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(Text("Settings"))
+            .accessibilityIdentifier("progress.settings")
         }
         .padding(.top, DX.Space.m)
     }

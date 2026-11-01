@@ -26,20 +26,54 @@ struct V4TokenTests {
         #expect(abs(Contrast.ratio(0xFF7A55, 0x1E1A3A) - 6.46) < 0.01)
     }
 
-    /// Decision 25: on cream-ink grounds, light-mode tiles are navy at 20% over the ground.
-    @Test func tilesOnCreamInkGroundsClearContrast() {
-        func over(_ ground: UInt32) -> UInt32 {
-            let navy: UInt32 = 0x1E1A3A
-            return [16, 8, 0].reduce(0) { sum, shift in
-                let g = Double((ground >> shift) & 0xFF), n = Double((navy >> shift) & 0xFF)
-                return sum | (UInt32((g * 0.8 + n * 0.2).rounded()) << shift)
-            }
+    /// Mixes `top` at `alpha` over `ground`, channel by channel.
+    private func over(_ top: UInt32, _ alpha: Double, _ ground: UInt32) -> UInt32 {
+        [16, 8, 0].reduce(0) { sum, shift in
+            let g = Double((ground >> shift) & 0xFF), t = Double((top >> shift) & 0xFF)
+            return sum | (UInt32((g * (1 - alpha) + t * alpha).rounded()) << shift)
         }
+    }
+
+    /// Decision 25: on cream-ink grounds, light-mode tiles are navy over the ground (44% since S27.13).
+    @Test func tilesOnCreamInkGroundsClearContrast() {
         for ground in DX.Ground.allCases where ground.spec.inkLight == 0xFFF8EE {
-            let tile = over(ground.spec.light)
+            let tile = over(0x1E1A3A, DX.Fill.cardNavyAlpha, ground.spec.light)
             #expect(Contrast.ratio(tile, ground.spec.inkLight) >= 4.5, "\(ground) ink")
             #expect(Contrast.ratio(tile, ground.spec.mutedLight) >= 4.5, "\(ground) muted")
         }
+    }
+
+    /// S27.13: a card on colour separates from its ground by at least 1.3:1 in both modes, and its text stays
+    /// above 4.5:1. The cream reading ground in light is the exception: no fill can reach 1.3:1 there, so its
+    /// cards carry `DX.Fill.hairline`.
+    @Test func cardsSeparateFromTheirGround() {
+        for ground in DX.Ground.allCases {
+            let s = ground.spec
+            let light = s.inkLight == 0xFFF8EE
+                ? over(0x1E1A3A, DX.Fill.cardNavyAlpha, s.light)
+                : over(0xFFFFFF, DX.Fill.cardLightAlpha, s.light)
+            let dark = over(0xFFFFFF, DX.Fill.cardDarkAlpha, s.dark)
+            if ground != .reading {
+                #expect(Contrast.ratio(light, s.light) >= 1.3, "\(ground) light: \(Contrast.ratio(light, s.light))")
+            }
+            #expect(Contrast.ratio(dark, s.dark) >= 1.3, "\(ground) dark: \(Contrast.ratio(dark, s.dark))")
+            #expect(Contrast.ratio(light, s.inkLight) >= 4.5, "\(ground) ink on the light card")
+            #expect(Contrast.ratio(light, s.mutedLight) >= 4.5, "\(ground) muted on the light card")
+            #expect(Contrast.ratio(dark, s.inkDark) >= 4.5, "\(ground) ink on the dark card")
+            #expect(Contrast.ratio(dark, s.mutedDark) >= 4.5, "\(ground) muted on the dark card")
+        }
+    }
+
+    /// S27.13: six grounds plus sun; the retired ones draw their survivor's colours.
+    @Test func sixGroundsPlusSunAndRetiredOnesResolve() {
+        #expect(DX.Ground.allCases == [.apricot, .mint, .ocean, .sky, .violet, .reading, .sun])
+        let retired: [(DX.Ground, DX.Ground)] = [(.coral, .apricot), (.lilac, .sky), (.mist, .sky), (.periwinkle, .sky), (.lime, .mint)]
+        for (old, survivor) in retired {
+            #expect(old.resolved == survivor)
+            #expect(old.spec.light == survivor.spec.light && old.spec.dark == survivor.spec.dark)
+            #expect(old.spec.inkLight == survivor.spec.inkLight && old.spec.mutedDark == survivor.spec.mutedDark)
+        }
+        #expect(DX.Ground.allCases.allSatisfy { $0.resolved == $0 })
     }
 
     /// Button(role: .destructive) with quiet or secondary styles draws red that clears 4.5:1, in light and dark.
