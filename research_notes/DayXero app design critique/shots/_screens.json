@@ -1,0 +1,967 @@
+[
+  {
+    "id": "onb-breathe",
+    "name": "Breathe",
+    "area": "Onboarding",
+    "ground": "coral",
+    "tab": null,
+    "fullBleed": false,
+    "states": [
+      "in",
+      "skip"
+    ]
+  },
+  {
+    "id": "onb-welcome",
+    "name": "Welcome",
+    "area": "Onboarding",
+    "ground": "apricot",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "hello",
+      "restore"
+    ]
+  },
+  {
+    "id": "onb-products",
+    "name": "What you use",
+    "area": "Onboarding",
+    "ground": "lilac",
+    "tab": null,
+    "fullBleed": false,
+    "states": [
+      "empty",
+      "sam"
+    ]
+  },
+  {
+    "id": "onb-baseline-cigarettes",
+    "name": "Baseline · cigarettes",
+    "area": "Onboarding",
+    "ground": "lilac",
+    "tab": null,
+    "fullBleed": false,
+    "states": [
+      "start",
+      "sam"
+    ]
+  },
+  {
+    "id": "onb-baseline-vape",
+    "name": "Baseline · vape",
+    "area": "Onboarding",
+    "ground": "lilac",
+    "tab": null,
+    "fullBleed": false,
+    "states": [
+      "start",
+      "sam"
+    ]
+  },
+  {
+    "id": "onb-baseline-summary",
+    "name": "Your baseline",
+    "area": "Onboarding",
+    "ground": "lilac",
+    "tab": null,
+    "fullBleed": false,
+    "states": [
+      "sam"
+    ]
+  },
+  {
+    "id": "onb-triggers",
+    "name": "When cravings hit",
+    "area": "Onboarding",
+    "ground": "lilac",
+    "tab": null,
+    "fullBleed": false,
+    "states": [
+      "empty",
+      "sam"
+    ]
+  },
+  {
+    "id": "onb-personal",
+    "name": "Make this personal",
+    "area": "Onboarding",
+    "ground": "lilac",
+    "tab": null,
+    "fullBleed": false,
+    "states": [
+      "empty",
+      "sam"
+    ]
+  },
+  {
+    "id": "onb-past-attempts",
+    "name": "Tried before",
+    "area": "Onboarding",
+    "ground": "lilac",
+    "tab": null,
+    "fullBleed": false,
+    "states": [
+      "empty",
+      "sam"
+    ]
+  },
+  {
+    "id": "onb-nrt",
+    "name": "Nicotine replacement",
+    "area": "Onboarding",
+    "ground": "lilac",
+    "tab": null,
+    "fullBleed": false,
+    "states": [
+      "empty",
+      "sam"
+    ]
+  },
+  {
+    "id": "onb-quit-day",
+    "name": "Pick your Quit Day",
+    "area": "Onboarding",
+    "ground": "apricot",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "ready",
+      "holding",
+      "set",
+      "calendar"
+    ]
+  },
+  {
+    "id": "onb-building",
+    "name": "Your plan builds",
+    "area": "Onboarding",
+    "ground": "mint",
+    "tab": null,
+    "fullBleed": false,
+    "states": [
+      "building",
+      "built"
+    ]
+  },
+  {
+    "id": "onb-reveal",
+    "name": "Your plan is ready",
+    "area": "Onboarding",
+    "ground": "mint",
+    "tab": null,
+    "fullBleed": false,
+    "states": [
+      "free",
+      "loading",
+      "pro"
+    ]
+  },
+  {
+    "id": "onb-trial",
+    "name": "Two small nudges",
+    "area": "Onboarding",
+    "ground": "apricot",
+    "tab": null,
+    "fullBleed": false,
+    "states": [
+      "ask"
+    ]
+  },
+  {
+    "id": "onb-under-age",
+    "name": "Under 18",
+    "area": "Onboarding",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": false,
+    "states": [
+      "shown"
+    ]
+  },
+  {
+    "id": "today",
+    "name": "Today",
+    "area": "Today",
+    "ground": "reading",
+    "tab": "today",
+    "fullBleed": false,
+    "states": [
+      "prep",
+      "quitday",
+      "day3"
+    ]
+  },
+  {
+    "id": "program",
+    "name": "Program",
+    "area": "Program",
+    "ground": "mint",
+    "tab": "program",
+    "fullBleed": false,
+    "states": [
+      "prep",
+      "week1",
+      "complete"
+    ]
+  },
+  {
+    "id": "session",
+    "name": "Session · The noisy passengers",
+    "area": "Sessions",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "intro",
+      "audio",
+      "W1D2.1",
+      "W1D2.2",
+      "W1D2.3",
+      "W1D2.3-answered",
+      "mission",
+      "done"
+    ]
+  },
+  {
+    "id": "session-kit",
+    "name": "Session beats kit",
+    "area": "Sessions",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "stat",
+      "quiz",
+      "quiz-answered",
+      "choice",
+      "choice-multi",
+      "slider",
+      "slider-compare",
+      "slider-group",
+      "reflect-list",
+      "reflect-long",
+      "reflect-chips",
+      "flip",
+      "flip-turned",
+      "plan-builder",
+      "checklist",
+      "checklist-carry",
+      "checklist-footer",
+      "breathe",
+      "commit",
+      "commit-done",
+      "commit-dayxero",
+      "scenario",
+      "note",
+      "info",
+      "share-message",
+      "share-card",
+      "nrt-choice",
+      "nrt-stepdown",
+      "slip-practice",
+      "plan-card"
+    ]
+  },
+  {
+    "id": "session-done",
+    "name": "Session done",
+    "area": "Sessions",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "day2",
+      "prep1",
+      "replay",
+      "dayxero"
+    ]
+  },
+  {
+    "id": "session-mission",
+    "name": "Mission and follow-ups",
+    "area": "Sessions",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "card",
+      "follow-1",
+      "follow-1-compare",
+      "follow-2",
+      "q-morning",
+      "q-sigh",
+      "q-surf"
+    ]
+  },
+  {
+    "id": "lesson-audio",
+    "name": "Lesson audio",
+    "area": "Sessions",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "playing",
+      "paused",
+      "finished"
+    ]
+  },
+  {
+    "id": "sos",
+    "name": "Craving SOS",
+    "area": "SOS",
+    "ground": "ocean",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "start",
+      "riding",
+      "no-reason"
+    ]
+  },
+  {
+    "id": "sos-passed",
+    "name": "Craving SOS · Passed",
+    "area": "SOS",
+    "ground": "sky",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "ticked",
+      "opening",
+      "coffee",
+      "more"
+    ]
+  },
+  {
+    "id": "log-menu",
+    "name": "Log sheet",
+    "area": "Log",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": false,
+    "states": [
+      "day3",
+      "prep"
+    ]
+  },
+  {
+    "id": "log-craving",
+    "name": "Log a craving",
+    "area": "Log",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": false,
+    "states": [
+      "fresh",
+      "sam",
+      "details"
+    ]
+  },
+  {
+    "id": "log-slip",
+    "name": "Slip · thanks and a plan",
+    "area": "Log",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "empty",
+      "coffee",
+      "own",
+      "more",
+      "prep",
+      "practice"
+    ]
+  },
+  {
+    "id": "log-slip-saved",
+    "name": "Slip · plan saved",
+    "area": "Log",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "saved",
+      "tough",
+      "prep"
+    ]
+  },
+  {
+    "id": "log-slip-what",
+    "name": "Slip · what happened",
+    "area": "Log",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "opened",
+      "picked",
+      "vape"
+    ]
+  },
+  {
+    "id": "evening",
+    "name": "Evening",
+    "area": "Evening",
+    "ground": "violet",
+    "tab": "evening",
+    "fullBleed": true,
+    "states": [
+      "day3",
+      "day3-done",
+      "prep"
+    ]
+  },
+  {
+    "id": "evening-breathing",
+    "name": "Slow breathing with Glim",
+    "area": "Evening",
+    "ground": "violet",
+    "tab": null,
+    "fullBleed": false,
+    "states": [
+      "start",
+      "running",
+      "three"
+    ]
+  },
+  {
+    "id": "checkin-form",
+    "name": "Evening check-in",
+    "area": "Evening",
+    "ground": "violet",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "day3",
+      "day3-good",
+      "day3-slip",
+      "day3-edit",
+      "day3-note",
+      "prep"
+    ]
+  },
+  {
+    "id": "checkin-plan",
+    "name": "For tomorrow (plan)",
+    "area": "Evening",
+    "ground": "violet",
+    "tab": null,
+    "fullBleed": false,
+    "states": [
+      "coffee",
+      "coffee-picked"
+    ]
+  },
+  {
+    "id": "checkin-saved",
+    "name": "Check-in saved",
+    "area": "Evening",
+    "ground": "violet",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "day3"
+    ]
+  },
+  {
+    "id": "checkin-dayend",
+    "name": "When does your day end?",
+    "area": "Evening",
+    "ground": "violet",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "four"
+    ]
+  },
+  {
+    "id": "pledge",
+    "name": "Morning pledge",
+    "area": "Evening",
+    "ground": "apricot",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "day3",
+      "day3-held",
+      "day3-wave",
+      "prep"
+    ]
+  },
+  {
+    "id": "changing",
+    "name": "What's changing",
+    "area": "Progress",
+    "ground": "lime",
+    "tab": null,
+    "fullBleed": false,
+    "states": [
+      "prep",
+      "day3",
+      "day3-vape"
+    ]
+  },
+  {
+    "id": "changing-detail",
+    "name": "What's changing · full story",
+    "area": "Progress",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": false,
+    "states": [
+      "prep",
+      "day3",
+      "day3-done"
+    ]
+  },
+  {
+    "id": "progress",
+    "name": "Your progress",
+    "area": "Progress",
+    "ground": "reading",
+    "tab": "me",
+    "fullBleed": false,
+    "states": [
+      "early",
+      "day3",
+      "week4"
+    ]
+  },
+  {
+    "id": "calm",
+    "name": "Calm tools",
+    "area": "Calm",
+    "ground": "periwinkle",
+    "tab": null,
+    "fullBleed": false,
+    "states": [
+      "list"
+    ]
+  },
+  {
+    "id": "calm-box",
+    "name": "Box breathing",
+    "area": "Calm",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "ready",
+      "running",
+      "paused",
+      "cycles",
+      "done",
+      "done-not"
+    ]
+  },
+  {
+    "id": "calm-478",
+    "name": "Longer out-breath (4-7-8)",
+    "area": "Calm",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "ready",
+      "running",
+      "paused",
+      "cycles",
+      "done",
+      "done-not"
+    ]
+  },
+  {
+    "id": "calm-grounding",
+    "name": "5-4-3-2-1 grounding",
+    "area": "Calm",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "see",
+      "feel",
+      "hear",
+      "smell",
+      "taste",
+      "done",
+      "done-not"
+    ]
+  },
+  {
+    "id": "calm-notice",
+    "name": "Notice and name",
+    "area": "Calm",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "pick",
+      "picked",
+      "own",
+      "say",
+      "breaths",
+      "done",
+      "done-not"
+    ]
+  },
+  {
+    "id": "calm-anchor",
+    "name": "Drop anchor",
+    "area": "Calm",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "notice",
+      "body",
+      "room",
+      "done",
+      "done-not"
+    ]
+  },
+  {
+    "id": "settings",
+    "name": "Settings",
+    "area": "Me",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "main",
+      "free",
+      "privacy",
+      "test",
+      "delete",
+      "export"
+    ]
+  },
+  {
+    "id": "settings-products",
+    "name": "Products",
+    "area": "Me",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "list",
+      "vape-main"
+    ]
+  },
+  {
+    "id": "settings-product-editor",
+    "name": "Product editor",
+    "area": "Me",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "cigarettes",
+      "vape"
+    ]
+  },
+  {
+    "id": "settings-currency",
+    "name": "Currency",
+    "area": "Me",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "list",
+      "search"
+    ]
+  },
+  {
+    "id": "settings-quit-day",
+    "name": "Quit Day",
+    "area": "Me",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "prep",
+      "after",
+      "choosing",
+      "confirm",
+      "demo"
+    ]
+  },
+  {
+    "id": "settings-day-end",
+    "name": "Day ends at",
+    "area": "Me",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "default"
+    ]
+  },
+  {
+    "id": "settings-subscription",
+    "name": "DayXero Pro",
+    "area": "Me",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "trial",
+      "free",
+      "restoring",
+      "none"
+    ]
+  },
+  {
+    "id": "settings-privacy",
+    "name": "Privacy",
+    "area": "Me",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "us",
+      "eu"
+    ]
+  },
+  {
+    "id": "settings-health",
+    "name": "Health information",
+    "area": "Me",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "default"
+    ]
+  },
+  {
+    "id": "notifications",
+    "name": "Notifications",
+    "area": "Me",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "default",
+      "denied",
+      "quiet-off"
+    ]
+  },
+  {
+    "id": "notifications-quiet-hours",
+    "name": "Quiet hours",
+    "area": "Me",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "on",
+      "off"
+    ]
+  },
+  {
+    "id": "nrt-setup",
+    "name": "NRT setup",
+    "area": "Me",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": false,
+    "states": [
+      "intro",
+      "products-none",
+      "products",
+      "schedule-patch",
+      "schedule-empty",
+      "schedule-elsewhere",
+      "plan-patch",
+      "schedule-gum",
+      "reminders",
+      "reminders-piece"
+    ]
+  },
+  {
+    "id": "nrt-step-editor",
+    "name": "Edit step",
+    "area": "Me",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "patch",
+      "single"
+    ]
+  },
+  {
+    "id": "nrt-taper",
+    "name": "Pouch taper",
+    "area": "Me",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": false,
+    "states": [
+      "no-fit",
+      "fits",
+      "saved"
+    ]
+  },
+  {
+    "id": "water",
+    "name": "Water",
+    "area": "Me",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "partial",
+      "empty",
+      "reached",
+      "metric",
+      "custom"
+    ]
+  },
+  {
+    "id": "water-goal",
+    "name": "Your water goal",
+    "area": "Me",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "imperial",
+      "metric",
+      "active",
+      "adjusted"
+    ]
+  },
+  {
+    "id": "paywall",
+    "name": "Paywall · first run",
+    "area": "Paywall",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": false,
+    "states": [
+      "annual",
+      "monthly",
+      "lifetime",
+      "arriving",
+      "loading",
+      "notice",
+      "unlocked",
+      "pending",
+      "failed"
+    ]
+  },
+  {
+    "id": "paywall-plans",
+    "name": "Paywall · all plans",
+    "area": "Paywall",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": false,
+    "states": [
+      "annual",
+      "monthly",
+      "lifetime",
+      "loading",
+      "notice",
+      "unlocked",
+      "pending",
+      "failed"
+    ]
+  },
+  {
+    "id": "paywall-billing",
+    "name": "How billing works",
+    "area": "Paywall",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": false,
+    "states": [
+      "medium",
+      "large"
+    ]
+  },
+  {
+    "id": "upgrade",
+    "name": "Upgrade sheet",
+    "area": "Paywall",
+    "ground": "mint",
+    "tab": null,
+    "fullBleed": false,
+    "states": [
+      "trial",
+      "loading",
+      "failed"
+    ]
+  },
+  {
+    "id": "offer",
+    "name": "Quit Day offer",
+    "area": "Paywall",
+    "ground": "reading",
+    "tab": null,
+    "fullBleed": false,
+    "states": [
+      "annual",
+      "monthly",
+      "lifetime",
+      "loading",
+      "notice",
+      "unlocked",
+      "pending",
+      "failed"
+    ]
+  },
+  {
+    "id": "milestone",
+    "name": "Milestone moment",
+    "area": "Milestones",
+    "ground": "sun",
+    "tab": null,
+    "fullBleed": true,
+    "states": [
+      "quit-day",
+      "day-1",
+      "day-3",
+      "day-7",
+      "day-14",
+      "day-30",
+      "day-60",
+      "day-90",
+      "day-100",
+      "day-180",
+      "day-365"
+    ]
+  },
+  {
+    "id": "milestone-share",
+    "name": "Share card maker",
+    "area": "Milestones",
+    "ground": "sun",
+    "tab": null,
+    "fullBleed": false,
+    "states": [
+      "story-dawn",
+      "story-night",
+      "square-dawn",
+      "square-night",
+      "all-numbers"
+    ]
+  },
+  {
+    "id": "finale",
+    "name": "Finale",
+    "area": "Milestones",
+    "ground": "sun",
+    "tab": null,
+    "fullBleed": false,
+    "states": [
+      "confetti",
+      "settled"
+    ]
+  }
+]

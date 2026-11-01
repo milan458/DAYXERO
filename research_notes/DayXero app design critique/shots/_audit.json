@@ -1,0 +1,1791 @@
+[
+  {
+    "id": "onb-breathe",
+    "sizes": {
+      "14": 1,
+      "16": 1,
+      "17": 1,
+      "32": 2
+    },
+    "fams": {
+      "DM Sans": 2,
+      "Bricolage Grotesque": 2,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [
+      "bw-in",
+      "bw-out"
+    ],
+    "smil": 3
+  },
+  {
+    "id": "onb-welcome",
+    "sizes": {
+      "12": 2,
+      "14": 1,
+      "16": 1,
+      "17": 1,
+      "19": 2,
+      "32": 2
+    },
+    "fams": {
+      "Bricolage Grotesque": 4,
+      "DM Sans": 4,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 7
+  },
+  {
+    "id": "onb-products",
+    "sizes": {
+      "12": 1,
+      "14": 3,
+      "16": 1,
+      "17": 1,
+      "19": 5
+    },
+    "fams": {
+      "Bricolage Grotesque": 5,
+      "DM Sans": 5,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "onb-baseline-cigarettes",
+    "sizes": {
+      "12": 4,
+      "13": 1,
+      "14": 12,
+      "16": 1,
+      "17": 1,
+      "19": 2,
+      "32": 1
+    },
+    "fams": {
+      "DM Sans": 18,
+      "Bricolage Grotesque": 3,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "onb-baseline-vape",
+    "sizes": {
+      "12": 6,
+      "13": 1,
+      "14": 13,
+      "16": 1,
+      "17": 1,
+      "19": 2,
+      "24": 1,
+      "32": 1,
+      "12.6": 2
+    },
+    "fams": {
+      "DM Sans": 23,
+      "Bricolage Grotesque": 4,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [
+      {
+        "type": "div",
+        "text": "",
+        "w": 40,
+        "h": 40
+      },
+      {
+        "type": "div",
+        "text": "",
+        "w": 40,
+        "h": 40
+      }
+    ],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "onb-baseline-summary",
+    "sizes": {
+      "12": 10,
+      "14": 3,
+      "16": 1,
+      "17": 2,
+      "19": 2,
+      "22": 2,
+      "48": 1
+    },
+    "fams": {
+      "DM Sans": 15,
+      "Bricolage Grotesque": 5,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [
+      {
+        "type": "onbLoadRow",
+        "text": "12 cigarettesAbout 14 mg nicot",
+        "w": 286,
+        "h": 36
+      },
+      {
+        "type": "onbLoadRow",
+        "text": "~86 vape puffs at 5%About 9 ci",
+        "w": 286,
+        "h": 36
+      }
+    ],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "onb-triggers",
+    "sizes": {
+      "12": 3,
+      "14": 15,
+      "16": 1,
+      "17": 1,
+      "19": 2
+    },
+    "fams": {
+      "Bricolage Grotesque": 2,
+      "DM Sans": 19,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "onb-personal",
+    "sizes": {
+      "12": 6,
+      "14": 6,
+      "16": 3,
+      "17": 1,
+      "19": 2
+    },
+    "fams": {
+      "Bricolage Grotesque": 2,
+      "DM Sans": 15,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "onb-past-attempts",
+    "sizes": {
+      "12": 5,
+      "14": 4,
+      "15": 1,
+      "16": 1,
+      "17": 1,
+      "19": 2
+    },
+    "fams": {
+      "Bricolage Grotesque": 2,
+      "DM Sans": 11,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [
+      {
+        "type": "row",
+        "text": "Nervous · 0Ready · 10",
+        "w": 326,
+        "h": 14
+      }
+    ],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "onb-nrt",
+    "sizes": {
+      "12": 3,
+      "14": 2,
+      "16": 1,
+      "17": 1,
+      "19": 5
+    },
+    "fams": {
+      "Bricolage Grotesque": 5,
+      "DM Sans": 6,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [
+      {
+        "type": "onbSourcePill",
+        "text": "Source: Cochrane review of 133",
+        "w": 285,
+        "h": 26
+      }
+    ],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "onb-quit-day",
+    "sizes": {
+      "12": 11,
+      "14": 1,
+      "16": 2,
+      "17": 1,
+      "19": 9,
+      "24": 1
+    },
+    "fams": {
+      "Bricolage Grotesque": 10,
+      "DM Sans": 14,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [
+      {
+        "type": "row",
+        "text": "Prep week · 7 daysQuit Day",
+        "w": 362,
+        "h": 16
+      }
+    ],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 7
+  },
+  {
+    "id": "onb-building",
+    "sizes": {
+      "12": 2,
+      "16": 2,
+      "17": 1,
+      "19": 1,
+      "24": 1
+    },
+    "fams": {
+      "Bricolage Grotesque": 2,
+      "DM Sans": 4,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 3
+  },
+  {
+    "id": "onb-reveal",
+    "sizes": {
+      "12": 5,
+      "14": 6,
+      "16": 1,
+      "17": 1,
+      "19": 2,
+      "24": 2,
+      "40": 1
+    },
+    "fams": {
+      "DM Sans": 12,
+      "Bricolage Grotesque": 5,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [
+      {
+        "type": "row",
+        "text": "Step 6 of 6",
+        "w": 362,
+        "h": 40
+      }
+    ],
+    "hasBar": false,
+    "cssAnims": [
+      "mk-draw"
+    ],
+    "smil": 0
+  },
+  {
+    "id": "onb-trial",
+    "sizes": {
+      "12": 4,
+      "14": 4,
+      "16": 1,
+      "17": 1,
+      "19": 1,
+      "24": 1
+    },
+    "fams": {
+      "Bricolage Grotesque": 2,
+      "DM Sans": 9,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "onb-under-age",
+    "sizes": {
+      "12": 1,
+      "14": 4,
+      "15": 3,
+      "16": 1,
+      "17": 1,
+      "19": 1
+    },
+    "fams": {
+      "Bricolage Grotesque": 1,
+      "DM Sans": 9,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "today",
+    "sizes": {
+      "12": 15,
+      "14": 10,
+      "16": 5,
+      "17": 1,
+      "19": 2,
+      "24": 5,
+      "32": 2
+    },
+    "fams": {
+      "Bricolage Grotesque": 9,
+      "DM Sans": 30,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": true,
+    "cssAnims": [
+      "mk-draw"
+    ],
+    "smil": 9
+  },
+  {
+    "id": "program",
+    "sizes": {
+      "12": 14,
+      "14": 10,
+      "16": 5,
+      "17": 1,
+      "18": 2,
+      "19": 7,
+      "32": 2
+    },
+    "fams": {
+      "DM Sans": 29,
+      "Bricolage Grotesque": 11,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [
+      {
+        "type": "div",
+        "text": "Prep",
+        "w": 60,
+        "h": 40
+      },
+      {
+        "type": "div",
+        "text": "Day Xero",
+        "w": 89,
+        "h": 40
+      },
+      {
+        "type": "div",
+        "text": "Week 1",
+        "w": 75,
+        "h": 40
+      },
+      {
+        "type": "div",
+        "text": "Week 2",
+        "w": 78,
+        "h": 40
+      },
+      {
+        "type": "div",
+        "text": "Week 3",
+        "w": 78,
+        "h": 40
+      },
+      {
+        "type": "div",
+        "text": "Week 4",
+        "w": 79,
+        "h": 40
+      }
+    ],
+    "hasBar": true,
+    "cssAnims": [
+      "mk-draw"
+    ],
+    "smil": 23
+  },
+  {
+    "id": "session",
+    "sizes": {
+      "12": 1,
+      "14": 1,
+      "16": 1,
+      "17": 1,
+      "19": 1,
+      "32": 1
+    },
+    "fams": {
+      "DM Sans": 3,
+      "Bricolage Grotesque": 2,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 4
+  },
+  {
+    "id": "session-kit",
+    "sizes": {
+      "17": 1,
+      "19": 1,
+      "32": 3
+    },
+    "fams": {
+      "DM Sans": 3,
+      "Bricolage Grotesque": 1,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "session-done",
+    "sizes": {
+      "12": 1,
+      "14": 1,
+      "17": 1,
+      "19": 1,
+      "32": 1
+    },
+    "fams": {
+      "DM Sans": 2,
+      "Bricolage Grotesque": 2,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 3
+  },
+  {
+    "id": "session-mission",
+    "sizes": {
+      "12": 1,
+      "14": 1,
+      "17": 1,
+      "19": 1,
+      "24": 1
+    },
+    "fams": {
+      "DM Sans": 2,
+      "Bricolage Grotesque": 2,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "lesson-audio",
+    "sizes": {
+      "12": 3,
+      "14": 1,
+      "17": 1,
+      "24": 2
+    },
+    "fams": {
+      "DM Sans": 4,
+      "Bricolage Grotesque": 2,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [
+      {
+        "type": "div",
+        "text": "1.0×",
+        "w": 52,
+        "h": 34
+      },
+      {
+        "type": "lessonCaption",
+        "text": "The noisy passengers",
+        "w": 362,
+        "h": 31
+      }
+    ],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 3
+  },
+  {
+    "id": "sos",
+    "sizes": {
+      "12": 1,
+      "14": 3,
+      "16": 4,
+      "17": 1,
+      "19": 2,
+      "40": 2
+    },
+    "fams": {
+      "DM Sans": 8,
+      "Bricolage Grotesque": 4,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [
+      "bw-in",
+      "bw-out"
+    ],
+    "smil": 8
+  },
+  {
+    "id": "sos-passed",
+    "sizes": {
+      "14": 2,
+      "16": 7,
+      "17": 1,
+      "19": 1,
+      "32": 2
+    },
+    "fams": {
+      "Bricolage Grotesque": 3,
+      "DM Sans": 9,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 7
+  },
+  {
+    "id": "log-menu",
+    "sizes": {
+      "12": 1,
+      "14": 4,
+      "16": 3,
+      "17": 1,
+      "24": 1
+    },
+    "fams": {
+      "Bricolage Grotesque": 1,
+      "DM Sans": 8,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "log-craving",
+    "sizes": {
+      "12": 11,
+      "14": 3,
+      "16": 15,
+      "17": 1,
+      "19": 2,
+      "24": 1,
+      "32": 1
+    },
+    "fams": {
+      "Bricolage Grotesque": 4,
+      "DM Sans": 29,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "log-slip",
+    "sizes": {
+      "14": 2,
+      "16": 10,
+      "17": 1,
+      "19": 2,
+      "32": 3
+    },
+    "fams": {
+      "DM Sans": 12,
+      "Bricolage Grotesque": 5,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [
+      "mk-draw"
+    ],
+    "smil": 8
+  },
+  {
+    "id": "log-slip-saved",
+    "sizes": {
+      "12": 1,
+      "14": 2,
+      "16": 1,
+      "17": 1,
+      "19": 2,
+      "32": 1
+    },
+    "fams": {
+      "Bricolage Grotesque": 3,
+      "DM Sans": 4,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [
+      {
+        "type": "logCheckLine",
+        "text": "Still Day 3 clear. Nothing has",
+        "w": 362,
+        "h": 18
+      }
+    ],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "log-slip-what",
+    "sizes": {
+      "12": 3,
+      "16": 9,
+      "17": 1,
+      "19": 1,
+      "32": 1
+    },
+    "fams": {
+      "Bricolage Grotesque": 2,
+      "DM Sans": 12,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "evening",
+    "sizes": {
+      "12": 13,
+      "14": 10,
+      "16": 7,
+      "17": 1,
+      "19": 3,
+      "32": 1
+    },
+    "fams": {
+      "DM Sans": 30,
+      "Bricolage Grotesque": 4,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [
+      {
+        "type": "eveningLinkLine",
+        "text": "These tools aren't a substitut",
+        "w": 362,
+        "h": 36
+      }
+    ],
+    "hasBar": true,
+    "cssAnims": [],
+    "smil": 17
+  },
+  {
+    "id": "evening-breathing",
+    "sizes": {
+      "16": 1,
+      "17": 1,
+      "19": 1,
+      "32": 2
+    },
+    "fams": {
+      "Bricolage Grotesque": 3,
+      "DM Sans": 1,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [
+      "bw-in",
+      "bw-out"
+    ],
+    "smil": 8
+  },
+  {
+    "id": "checkin-form",
+    "sizes": {
+      "12": 4,
+      "14": 7,
+      "16": 4,
+      "17": 1,
+      "19": 1,
+      "32": 1
+    },
+    "fams": {
+      "DM Sans": 15,
+      "Bricolage Grotesque": 2,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 17
+  },
+  {
+    "id": "checkin-plan",
+    "sizes": {
+      "12": 1,
+      "14": 1,
+      "16": 8,
+      "17": 1,
+      "19": 2,
+      "32": 2
+    },
+    "fams": {
+      "DM Sans": 10,
+      "Bricolage Grotesque": 4,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [
+      "mk-draw"
+    ],
+    "smil": 0
+  },
+  {
+    "id": "checkin-saved",
+    "sizes": {
+      "12": 6,
+      "14": 9,
+      "16": 6,
+      "17": 1,
+      "19": 2,
+      "32": 1
+    },
+    "fams": {
+      "DM Sans": 21,
+      "Bricolage Grotesque": 3,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [
+      {
+        "type": "eveningLinkLine",
+        "text": "These tools aren't a substitut",
+        "w": 362,
+        "h": 36
+      }
+    ],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 17
+  },
+  {
+    "id": "checkin-dayend",
+    "sizes": {
+      "12": 4,
+      "14": 11,
+      "16": 4,
+      "17": 1,
+      "19": 6,
+      "24": 1,
+      "32": 1
+    },
+    "fams": {
+      "DM Sans": 19,
+      "Bricolage Grotesque": 8,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 17
+  },
+  {
+    "id": "pledge",
+    "sizes": {
+      "12": 1,
+      "14": 2,
+      "16": 2,
+      "17": 1,
+      "19": 2,
+      "32": 1
+    },
+    "fams": {
+      "DM Sans": 5,
+      "Bricolage Grotesque": 3,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 7
+  },
+  {
+    "id": "changing",
+    "sizes": {
+      "12": 16,
+      "14": 3,
+      "16": 13,
+      "17": 1,
+      "18": 1,
+      "32": 2
+    },
+    "fams": {
+      "DM Sans": 33,
+      "Bricolage Grotesque": 2,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [
+      {
+        "type": "changingLink",
+        "text": "Source: American Cancer Societ",
+        "w": 370,
+        "h": 14
+      }
+    ],
+    "hasBar": false,
+    "cssAnims": [
+      "mk-draw"
+    ],
+    "smil": 25
+  },
+  {
+    "id": "changing-detail",
+    "sizes": {
+      "12": 5,
+      "14": 1,
+      "16": 6,
+      "17": 1,
+      "24": 1
+    },
+    "fams": {
+      "DM Sans": 12,
+      "Bricolage Grotesque": 1,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [
+      {
+        "type": "changingNoticeRow",
+        "text": "Warmer hands and feet",
+        "w": 362,
+        "h": 34
+      },
+      {
+        "type": "changingNoticeRow",
+        "text": "A steadier, slower heartbeat a",
+        "w": 362,
+        "h": 34
+      },
+      {
+        "type": "changingNoticeRow",
+        "text": "Feeling a little calmer in you",
+        "w": 362,
+        "h": 34
+      },
+      {
+        "type": "changingLink",
+        "text": "American Cancer Society, \"Heal",
+        "w": 362,
+        "h": 29
+      }
+    ],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "progress",
+    "sizes": {
+      "12": 14,
+      "14": 15,
+      "16": 1,
+      "17": 1,
+      "19": 3,
+      "24": 6,
+      "32": 2
+    },
+    "fams": {
+      "DM Sans": 30,
+      "Bricolage Grotesque": 11,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [
+      {
+        "type": "progressLogButton",
+        "text": "Log",
+        "w": 72,
+        "h": 36
+      },
+      {
+        "type": "patternsTimeRow",
+        "text": "Morning\n        \n        3",
+        "w": 302,
+        "h": 17
+      },
+      {
+        "type": "patternsTimeRow",
+        "text": "Midday\n        \n        0",
+        "w": 302,
+        "h": 17
+      },
+      {
+        "type": "patternsTimeRow",
+        "text": "Afternoon\n        \n        0",
+        "w": 302,
+        "h": 17
+      },
+      {
+        "type": "patternsTimeRow",
+        "text": "Evening\n        \n        0",
+        "w": 302,
+        "h": 17
+      },
+      {
+        "type": "patternsTimeRow",
+        "text": "Late night\n        \n        0",
+        "w": 302,
+        "h": 17
+      }
+    ],
+    "hasBar": true,
+    "cssAnims": [
+      "mk-draw"
+    ],
+    "smil": 2
+  },
+  {
+    "id": "calm",
+    "sizes": {
+      "12": 2,
+      "14": 5,
+      "16": 6,
+      "17": 1,
+      "32": 2
+    },
+    "fams": {
+      "Bricolage Grotesque": 2,
+      "DM Sans": 13,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [
+      "mk-draw"
+    ],
+    "smil": 14
+  },
+  {
+    "id": "calm-box",
+    "sizes": {
+      "12": 4,
+      "14": 2,
+      "16": 1,
+      "17": 1,
+      "48": 1
+    },
+    "fams": {
+      "DM Sans": 7,
+      "Bricolage Grotesque": 1,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "calm-478",
+    "sizes": {
+      "12": 4,
+      "14": 2,
+      "16": 1,
+      "17": 1,
+      "48": 1
+    },
+    "fams": {
+      "DM Sans": 7,
+      "Bricolage Grotesque": 1,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "calm-grounding",
+    "sizes": {
+      "12": 1,
+      "14": 1,
+      "17": 1,
+      "19": 1,
+      "24": 1,
+      "40": 1
+    },
+    "fams": {
+      "DM Sans": 2,
+      "Bricolage Grotesque": 3,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "calm-notice",
+    "sizes": {
+      "12": 1,
+      "14": 1,
+      "16": 6,
+      "17": 1,
+      "19": 1,
+      "24": 1
+    },
+    "fams": {
+      "DM Sans": 8,
+      "Bricolage Grotesque": 2,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "calm-anchor",
+    "sizes": {
+      "12": 1,
+      "16": 1,
+      "17": 1,
+      "19": 1,
+      "24": 1
+    },
+    "fams": {
+      "DM Sans": 2,
+      "Bricolage Grotesque": 2,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "settings",
+    "sizes": {
+      "13": 9,
+      "14": 7,
+      "16": 1,
+      "17": 23,
+      "34": 1
+    },
+    "fams": {
+      "-apple-system": 33,
+      "DM Sans": 8
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "settings-products",
+    "sizes": {
+      "12": 1,
+      "13": 1,
+      "14": 3,
+      "16": 2,
+      "17": 2,
+      "34": 1
+    },
+    "fams": {
+      "-apple-system": 4,
+      "DM Sans": 6
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "settings-product-editor",
+    "sizes": {
+      "13": 1,
+      "14": 2,
+      "17": 12,
+      "34": 1
+    },
+    "fams": {
+      "-apple-system": 14,
+      "DM Sans": 2
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "settings-currency",
+    "sizes": {
+      "13": 1,
+      "14": 12,
+      "17": 13,
+      "34": 1
+    },
+    "fams": {
+      "-apple-system": 15,
+      "DM Sans": 12
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "settings-quit-day",
+    "sizes": {
+      "13": 8,
+      "14": 3,
+      "16": 1,
+      "17": 2,
+      "20": 30,
+      "34": 1
+    },
+    "fams": {
+      "-apple-system": 41,
+      "DM Sans": 4
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "settings-day-end",
+    "sizes": {
+      "14": 4,
+      "17": 1,
+      "19": 5,
+      "24": 1
+    },
+    "fams": {
+      "Bricolage Grotesque": 6,
+      "DM Sans": 4,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "settings-subscription",
+    "sizes": {
+      "12": 1,
+      "13": 1,
+      "14": 2,
+      "16": 1,
+      "17": 3,
+      "34": 1
+    },
+    "fams": {
+      "-apple-system": 5,
+      "DM Sans": 4
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "settings-privacy",
+    "sizes": {
+      "13": 1,
+      "14": 5,
+      "16": 3,
+      "17": 2,
+      "34": 1
+    },
+    "fams": {
+      "-apple-system": 4,
+      "DM Sans": 8
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "settings-health",
+    "sizes": {
+      "16": 4,
+      "17": 1,
+      "34": 1
+    },
+    "fams": {
+      "-apple-system": 2,
+      "DM Sans": 4
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "notifications",
+    "sizes": {
+      "13": 4,
+      "14": 14,
+      "16": 7,
+      "17": 6,
+      "34": 1
+    },
+    "fams": {
+      "-apple-system": 11,
+      "DM Sans": 21
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "notifications-quiet-hours",
+    "sizes": {
+      "12": 2,
+      "14": 3,
+      "16": 2,
+      "17": 3,
+      "34": 1
+    },
+    "fams": {
+      "-apple-system": 4,
+      "DM Sans": 7
+    },
+    "smallText": [],
+    "tappable": [
+      {
+        "type": "settingsRow",
+        "text": "Quiet hours",
+        "w": 370,
+        "h": 28
+      },
+      {
+        "type": "settingsRow",
+        "text": "Let my NRT times throughTimes ",
+        "w": 370,
+        "h": 38
+      }
+    ],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "nrt-setup",
+    "sizes": {
+      "12": 1,
+      "14": 4,
+      "16": 1,
+      "17": 1,
+      "19": 1,
+      "24": 1
+    },
+    "fams": {
+      "Bricolage Grotesque": 2,
+      "DM Sans": 6,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [
+      {
+        "type": "nrtSourceLink",
+        "text": "Source: Cochrane review of 133",
+        "w": 330,
+        "h": 19
+      }
+    ],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "nrt-step-editor",
+    "sizes": {
+      "12": 1,
+      "14": 2,
+      "16": 7,
+      "17": 1,
+      "19": 1,
+      "24": 1
+    },
+    "fams": {
+      "Bricolage Grotesque": 2,
+      "DM Sans": 10,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [
+      {
+        "type": "settingsRow",
+        "text": "6 weeks",
+        "w": 370,
+        "h": 32
+      }
+    ],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "nrt-taper",
+    "sizes": {
+      "12": 4,
+      "14": 15,
+      "16": 4,
+      "17": 1,
+      "19": 2,
+      "24": 1
+    },
+    "fams": {
+      "DM Sans": 23,
+      "Bricolage Grotesque": 3,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [
+      {
+        "type": "settingsRow",
+        "text": "Remind me the evening before e",
+        "w": 370,
+        "h": 28
+      }
+    ],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "water",
+    "sizes": {
+      "12": 4,
+      "14": 13,
+      "16": 5,
+      "17": 1,
+      "19": 1,
+      "28": 1,
+      "54": 1
+    },
+    "fams": {
+      "Bricolage Grotesque": 2,
+      "DM Sans": 23,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [
+      {
+        "type": "waterQuietButton",
+        "text": "Personalise goal",
+        "w": 140,
+        "h": 36
+      },
+      {
+        "type": "waterQuietButton",
+        "text": "Undo last",
+        "w": 104,
+        "h": 40
+      }
+    ],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "water-goal",
+    "sizes": {
+      "12": 7,
+      "14": 10,
+      "16": 15,
+      "17": 2,
+      "19": 1,
+      "48": 2
+    },
+    "fams": {
+      "-apple-system": 2,
+      "DM Sans": 32,
+      "Bricolage Grotesque": 3
+    },
+    "smallText": [],
+    "tappable": [
+      {
+        "type": "waterUnitToggle",
+        "text": "kg · Llb · fl oz",
+        "w": 154,
+        "h": 40
+      },
+      {
+        "type": "div",
+        "text": "kg · L",
+        "w": 66,
+        "h": 34
+      },
+      {
+        "type": "div",
+        "text": "lb · fl oz",
+        "w": 82,
+        "h": 34
+      },
+      {
+        "type": "waterBreakdownRow",
+        "text": "Rounded to full glasses76 fl o",
+        "w": 338,
+        "h": 43
+      }
+    ],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "paywall",
+    "sizes": {
+      "12": 10,
+      "14": 10,
+      "16": 2,
+      "17": 1,
+      "19": 2,
+      "24": 2
+    },
+    "fams": {
+      "DM Sans": 22,
+      "Bricolage Grotesque": 4,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [
+      {
+        "type": "div",
+        "text": "",
+        "w": 36,
+        "h": 36
+      },
+      {
+        "type": "div",
+        "text": "Restore purchases",
+        "w": 123,
+        "h": 17
+      },
+      {
+        "type": "paywallLinks",
+        "text": "Cancel in Settings › Apple ID ",
+        "w": 370,
+        "h": 33
+      }
+    ],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 1
+  },
+  {
+    "id": "paywall-plans",
+    "sizes": {
+      "12": 8,
+      "14": 10,
+      "16": 6,
+      "17": 1,
+      "19": 1,
+      "24": 1
+    },
+    "fams": {
+      "DM Sans": 24,
+      "Bricolage Grotesque": 2,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [
+      {
+        "type": "div",
+        "text": "",
+        "w": 36,
+        "h": 36
+      },
+      {
+        "type": "div",
+        "text": "Restore purchases",
+        "w": 123,
+        "h": 17
+      },
+      {
+        "type": "paywallLinks",
+        "text": "Cancel in Settings › Apple ID ",
+        "w": 370,
+        "h": 33
+      }
+    ],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "paywall-billing",
+    "sizes": {
+      "12": 5,
+      "14": 7,
+      "16": 1,
+      "17": 1,
+      "24": 1
+    },
+    "fams": {
+      "Bricolage Grotesque": 1,
+      "DM Sans": 13,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "upgrade",
+    "sizes": {
+      "14": 3,
+      "16": 1,
+      "17": 1,
+      "19": 1,
+      "24": 1
+    },
+    "fams": {
+      "Bricolage Grotesque": 2,
+      "DM Sans": 4,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "offer",
+    "sizes": {
+      "12": 6,
+      "14": 11,
+      "16": 4,
+      "17": 1,
+      "19": 5,
+      "32": 1
+    },
+    "fams": {
+      "Bricolage Grotesque": 6,
+      "DM Sans": 21,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [
+      {
+        "type": "paywallLinks",
+        "text": "Restore purchases·How billing ",
+        "w": 358,
+        "h": 16
+      }
+    ],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "milestone",
+    "sizes": {
+      "14": 1,
+      "16": 1,
+      "17": 1,
+      "19": 2,
+      "24": 1,
+      "40": 1
+    },
+    "fams": {
+      "Bricolage Grotesque": 4,
+      "DM Sans": 2,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 8
+  },
+  {
+    "id": "milestone-share",
+    "sizes": {
+      "12": 5,
+      "14": 7,
+      "17": 1,
+      "19": 1,
+      "57": 1,
+      "9.6": 1,
+      "10.8": 1
+    },
+    "fams": {
+      "DM Sans": 12,
+      "Bricolage Grotesque": 4,
+      "-apple-system": 1
+    },
+    "smallText": [
+      {
+        "text": "DayXero",
+        "size": 9.6
+      },
+      {
+        "text": "days nicotine-free",
+        "size": 10.8
+      }
+    ],
+    "tappable": [
+      {
+        "type": "row",
+        "text": "StorySquareDawnNight",
+        "w": 252,
+        "h": 32
+      },
+      {
+        "type": "div",
+        "text": "Story",
+        "w": 55,
+        "h": 26
+      },
+      {
+        "type": "div",
+        "text": "Square",
+        "w": 65,
+        "h": 26
+      },
+      {
+        "type": "div",
+        "text": "Dawn",
+        "w": 56,
+        "h": 26
+      },
+      {
+        "type": "div",
+        "text": "Night",
+        "w": 55,
+        "h": 26
+      }
+    ],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 0
+  },
+  {
+    "id": "finale",
+    "sizes": {
+      "12": 6,
+      "14": 1,
+      "16": 1,
+      "17": 1,
+      "19": 2,
+      "24": 3,
+      "40": 1
+    },
+    "fams": {
+      "DM Sans": 8,
+      "Bricolage Grotesque": 6,
+      "-apple-system": 1
+    },
+    "smallText": [],
+    "tappable": [],
+    "hasBar": false,
+    "cssAnims": [],
+    "smil": 27
+  }
+]

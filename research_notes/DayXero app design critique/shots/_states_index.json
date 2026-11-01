@@ -1,0 +1,1829 @@
+[
+  {
+    "screen": "onb-breathe",
+    "state": "skip",
+    "label": "After 10 s · Skip shown",
+    "dark": false,
+    "file": "onb-breathe--skip--light.png"
+  },
+  {
+    "screen": "onb-welcome",
+    "state": "restore",
+    "label": "After Restore purchases",
+    "dark": false,
+    "file": "onb-welcome--restore--light.png"
+  },
+  {
+    "screen": "onb-products",
+    "state": "sam",
+    "label": "Sam's picks · cigarettes and vape",
+    "dark": false,
+    "file": "onb-products--sam--light.png"
+  },
+  {
+    "screen": "onb-baseline-cigarettes",
+    "state": "sam",
+    "label": "Sam · 12 a day, 3–5 yrs",
+    "dark": false,
+    "file": "onb-baseline-cigarettes--sam--light.png"
+  },
+  {
+    "screen": "onb-baseline-vape",
+    "state": "sam",
+    "label": "Sam · 1 pod at $7, 1–3 yrs",
+    "dark": false,
+    "file": "onb-baseline-vape--sam--light.png"
+  },
+  {
+    "screen": "onb-triggers",
+    "state": "sam",
+    "label": "Sam's picks · 6–30 min, Coffee, Stress",
+    "dark": false,
+    "file": "onb-triggers--sam--light.png"
+  },
+  {
+    "screen": "onb-personal",
+    "state": "sam",
+    "label": "Sam · name and reason typed",
+    "dark": false,
+    "file": "onb-personal--sam--light.png"
+  },
+  {
+    "screen": "onb-past-attempts",
+    "state": "sam",
+    "label": "Sam · once or twice",
+    "dark": false,
+    "file": "onb-past-attempts--sam--light.png"
+  },
+  {
+    "screen": "onb-nrt",
+    "state": "sam",
+    "label": "Sam · using patch and gum",
+    "dark": false,
+    "file": "onb-nrt--sam--light.png"
+  },
+  {
+    "screen": "onb-quit-day",
+    "state": "holding",
+    "label": "Holding",
+    "dark": false,
+    "file": "onb-quit-day--holding--light.png"
+  },
+  {
+    "screen": "onb-quit-day",
+    "state": "set",
+    "label": "Quit Day set",
+    "dark": false,
+    "file": "onb-quit-day--set--light.png"
+  },
+  {
+    "screen": "onb-quit-day",
+    "state": "calendar",
+    "label": "Pick another date (sheet)",
+    "dark": false,
+    "file": "onb-quit-day--calendar--light.png"
+  },
+  {
+    "screen": "onb-building",
+    "state": "built",
+    "label": "Built · all rows and friends",
+    "dark": false,
+    "file": "onb-building--built--light.png"
+  },
+  {
+    "screen": "onb-reveal",
+    "state": "loading",
+    "label": "Prices not loaded yet",
+    "dark": false,
+    "file": "onb-reveal--loading--light.png"
+  },
+  {
+    "screen": "onb-reveal",
+    "state": "pro",
+    "label": "Already Pro (restored)",
+    "dark": false,
+    "file": "onb-reveal--pro--light.png"
+  },
+  {
+    "screen": "today",
+    "state": "quitday",
+    "label": "Quit Day · Fri 6 Nov",
+    "dark": false,
+    "file": "today--quitday--light.png"
+  },
+  {
+    "screen": "today",
+    "state": "quitday",
+    "label": "Quit Day · Fri 6 Nov",
+    "dark": true,
+    "file": "today--quitday--dark.png"
+  },
+  {
+    "screen": "today",
+    "state": "day3",
+    "label": "Day 3 · Sun 8 Nov, 09:40",
+    "dark": false,
+    "file": "today--day3--light.png"
+  },
+  {
+    "screen": "today",
+    "state": "day3",
+    "label": "Day 3 · Sun 8 Nov, 09:40",
+    "dark": true,
+    "file": "today--day3--dark.png"
+  },
+  {
+    "screen": "program",
+    "state": "week1",
+    "label": "Day 3 · Sun 8 Nov",
+    "dark": false,
+    "file": "program--week1--light.png"
+  },
+  {
+    "screen": "program",
+    "state": "complete",
+    "label": "Complete · Sun 6 Dec",
+    "dark": false,
+    "file": "program--complete--light.png"
+  },
+  {
+    "screen": "session",
+    "state": "audio",
+    "label": "2 · Audio (coming soon)",
+    "dark": false,
+    "file": "session--audio--light.png"
+  },
+  {
+    "screen": "session",
+    "state": "audio",
+    "label": "2 · Audio (coming soon)",
+    "dark": true,
+    "file": "session--audio--dark.png"
+  },
+  {
+    "screen": "session",
+    "state": "W1D2.1",
+    "label": "3 · W1D2.1 Reflect (list)",
+    "dark": false,
+    "file": "session--W1D2.1--light.png"
+  },
+  {
+    "screen": "session",
+    "state": "W1D2.1",
+    "label": "3 · W1D2.1 Reflect (list)",
+    "dark": true,
+    "file": "session--W1D2.1--dark.png"
+  },
+  {
+    "screen": "session",
+    "state": "W1D2.2",
+    "label": "4 · W1D2.2 Reflect",
+    "dark": false,
+    "file": "session--W1D2.2--light.png"
+  },
+  {
+    "screen": "session",
+    "state": "W1D2.2",
+    "label": "4 · W1D2.2 Reflect",
+    "dark": true,
+    "file": "session--W1D2.2--dark.png"
+  },
+  {
+    "screen": "session",
+    "state": "W1D2.3",
+    "label": "5 · W1D2.3 Quiz",
+    "dark": false,
+    "file": "session--W1D2.3--light.png"
+  },
+  {
+    "screen": "session",
+    "state": "W1D2.3",
+    "label": "5 · W1D2.3 Quiz",
+    "dark": true,
+    "file": "session--W1D2.3--dark.png"
+  },
+  {
+    "screen": "session",
+    "state": "W1D2.3-answered",
+    "label": "5 · W1D2.3 Quiz, answered",
+    "dark": false,
+    "file": "session--W1D2.3-answered--light.png"
+  },
+  {
+    "screen": "session",
+    "state": "W1D2.3-answered",
+    "label": "5 · W1D2.3 Quiz, answered",
+    "dark": true,
+    "file": "session--W1D2.3-answered--dark.png"
+  },
+  {
+    "screen": "session",
+    "state": "mission",
+    "label": "6 · Mission",
+    "dark": false,
+    "file": "session--mission--light.png"
+  },
+  {
+    "screen": "session",
+    "state": "mission",
+    "label": "6 · Mission",
+    "dark": true,
+    "file": "session--mission--dark.png"
+  },
+  {
+    "screen": "session",
+    "state": "done",
+    "label": "7 · Day 2 done",
+    "dark": false,
+    "file": "session--done--light.png"
+  },
+  {
+    "screen": "session",
+    "state": "done",
+    "label": "7 · Day 2 done",
+    "dark": true,
+    "file": "session--done--dark.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "quiz",
+    "label": "quiz · P1.4",
+    "dark": false,
+    "file": "session-kit--quiz--light.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "quiz",
+    "label": "quiz · P1.4",
+    "dark": true,
+    "file": "session-kit--quiz--dark.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "quiz-answered",
+    "label": "quiz · P1.4, answered",
+    "dark": false,
+    "file": "session-kit--quiz-answered--light.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "quiz-answered",
+    "label": "quiz · P1.4, answered",
+    "dark": true,
+    "file": "session-kit--quiz-answered--dark.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "choice",
+    "label": "choice (one) · P2.1",
+    "dark": false,
+    "file": "session-kit--choice--light.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "choice",
+    "label": "choice (one) · P2.1",
+    "dark": true,
+    "file": "session-kit--choice--dark.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "choice-multi",
+    "label": "choice (pick 3) · W1D4.1",
+    "dark": false,
+    "file": "session-kit--choice-multi--light.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "choice-multi",
+    "label": "choice (pick 3) · W1D4.1",
+    "dark": true,
+    "file": "session-kit--choice-multi--dark.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "slider",
+    "label": "slider · P2.2",
+    "dark": false,
+    "file": "session-kit--slider--light.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "slider",
+    "label": "slider · P2.2",
+    "dark": true,
+    "file": "session-kit--slider--dark.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "slider-compare",
+    "label": "slider (compare) · P4.2",
+    "dark": false,
+    "file": "session-kit--slider-compare--light.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "slider-compare",
+    "label": "slider (compare) · P4.2",
+    "dark": true,
+    "file": "session-kit--slider-compare--dark.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "slider-group",
+    "label": "slider_group · W1D1.1",
+    "dark": false,
+    "file": "session-kit--slider-group--light.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "slider-group",
+    "label": "slider_group · W1D1.1",
+    "dark": true,
+    "file": "session-kit--slider-group--dark.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "reflect-list",
+    "label": "reflect (list) · P1.2",
+    "dark": false,
+    "file": "session-kit--reflect-list--light.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "reflect-list",
+    "label": "reflect (list) · P1.2",
+    "dark": true,
+    "file": "session-kit--reflect-list--dark.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "reflect-long",
+    "label": "reflect (long) · W4S3.2",
+    "dark": false,
+    "file": "session-kit--reflect-long--light.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "reflect-long",
+    "label": "reflect (long) · W4S3.2",
+    "dark": true,
+    "file": "session-kit--reflect-long--dark.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "reflect-chips",
+    "label": "reflect (chips) · W1D7.2",
+    "dark": false,
+    "file": "session-kit--reflect-chips--light.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "reflect-chips",
+    "label": "reflect (chips) · W1D7.2",
+    "dark": true,
+    "file": "session-kit--reflect-chips--dark.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "flip",
+    "label": "tap_reveal · P4.4",
+    "dark": false,
+    "file": "session-kit--flip--light.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "flip",
+    "label": "tap_reveal · P4.4",
+    "dark": true,
+    "file": "session-kit--flip--dark.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "flip-turned",
+    "label": "tap_reveal · P4.4, one flipped",
+    "dark": false,
+    "file": "session-kit--flip-turned--light.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "flip-turned",
+    "label": "tap_reveal · P4.4, one flipped",
+    "dark": true,
+    "file": "session-kit--flip-turned--dark.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "plan-builder",
+    "label": "plan_builder · W1D3.2",
+    "dark": false,
+    "file": "session-kit--plan-builder--light.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "plan-builder",
+    "label": "plan_builder · W1D3.2",
+    "dark": true,
+    "file": "session-kit--plan-builder--dark.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "checklist",
+    "label": "checklist · P6.1",
+    "dark": false,
+    "file": "session-kit--checklist--light.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "checklist",
+    "label": "checklist · P6.1",
+    "dark": true,
+    "file": "session-kit--checklist--dark.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "checklist-carry",
+    "label": "checklist (carry-over) · P7.1",
+    "dark": false,
+    "file": "session-kit--checklist-carry--light.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "checklist-carry",
+    "label": "checklist (carry-over) · P7.1",
+    "dark": true,
+    "file": "session-kit--checklist-carry--dark.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "checklist-footer",
+    "label": "checklist (vaping footer) · P7.1",
+    "dark": false,
+    "file": "session-kit--checklist-footer--light.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "checklist-footer",
+    "label": "checklist (vaping footer) · P7.1",
+    "dark": true,
+    "file": "session-kit--checklist-footer--dark.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "breathe",
+    "label": "breathe · P4.3",
+    "dark": false,
+    "file": "session-kit--breathe--light.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "breathe",
+    "label": "breathe · P4.3",
+    "dark": true,
+    "file": "session-kit--breathe--dark.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "commit",
+    "label": "commit · P1.5",
+    "dark": false,
+    "file": "session-kit--commit--light.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "commit",
+    "label": "commit · P1.5",
+    "dark": true,
+    "file": "session-kit--commit--dark.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "commit-done",
+    "label": "commit · P1.5, replay",
+    "dark": false,
+    "file": "session-kit--commit-done--light.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "commit-done",
+    "label": "commit · P1.5, replay",
+    "dark": true,
+    "file": "session-kit--commit-done--dark.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "commit-dayxero",
+    "label": "commit (Day Xero) · DX.2",
+    "dark": false,
+    "file": "session-kit--commit-dayxero--light.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "commit-dayxero",
+    "label": "commit (Day Xero) · DX.2",
+    "dark": true,
+    "file": "session-kit--commit-dayxero--dark.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "scenario",
+    "label": "scenario · W1D5.1",
+    "dark": false,
+    "file": "session-kit--scenario--light.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "scenario",
+    "label": "scenario · W1D5.1",
+    "dark": true,
+    "file": "session-kit--scenario--dark.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "note",
+    "label": "note · W1D3.1",
+    "dark": false,
+    "file": "session-kit--note--light.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "note",
+    "label": "note · W1D3.1",
+    "dark": true,
+    "file": "session-kit--note--dark.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "info",
+    "label": "info · W3S1.5",
+    "dark": false,
+    "file": "session-kit--info--light.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "info",
+    "label": "info · W3S1.5",
+    "dark": true,
+    "file": "session-kit--info--dark.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "share-message",
+    "label": "share (message) · P6.4",
+    "dark": false,
+    "file": "session-kit--share-message--light.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "share-message",
+    "label": "share (message) · P6.4",
+    "dark": true,
+    "file": "session-kit--share-message--dark.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "share-card",
+    "label": "share (card) · W1D7.3",
+    "dark": false,
+    "file": "session-kit--share-card--light.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "share-card",
+    "label": "share (card) · W1D7.3",
+    "dark": true,
+    "file": "session-kit--share-card--dark.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "nrt-choice",
+    "label": "nrt_choice · P6.3",
+    "dark": false,
+    "file": "session-kit--nrt-choice--light.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "nrt-choice",
+    "label": "nrt_choice · P6.3",
+    "dark": true,
+    "file": "session-kit--nrt-choice--dark.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "nrt-stepdown",
+    "label": "nrt_stepdown · W4S1.2",
+    "dark": false,
+    "file": "session-kit--nrt-stepdown--light.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "nrt-stepdown",
+    "label": "nrt_stepdown · W4S1.2",
+    "dark": true,
+    "file": "session-kit--nrt-stepdown--dark.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "slip-practice",
+    "label": "slip_debrief_practice · W4S2.1",
+    "dark": false,
+    "file": "session-kit--slip-practice--light.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "slip-practice",
+    "label": "slip_debrief_practice · W4S2.1",
+    "dark": true,
+    "file": "session-kit--slip-practice--dark.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "plan-card",
+    "label": "plan_card · W4S3.3",
+    "dark": false,
+    "file": "session-kit--plan-card--light.png"
+  },
+  {
+    "screen": "session-kit",
+    "state": "plan-card",
+    "label": "plan_card · W4S3.3",
+    "dark": true,
+    "file": "session-kit--plan-card--dark.png"
+  },
+  {
+    "screen": "session-done",
+    "state": "prep1",
+    "label": "Prep 1 done · Fri 30 Oct",
+    "dark": false,
+    "file": "session-done--prep1--light.png"
+  },
+  {
+    "screen": "session-done",
+    "state": "replay",
+    "label": "Day 2 replay done",
+    "dark": false,
+    "file": "session-done--replay--light.png"
+  },
+  {
+    "screen": "session-done",
+    "state": "dayxero",
+    "label": "You're on Day Xero · Fri 6 Nov",
+    "dark": false,
+    "file": "session-done--dayxero--light.png"
+  },
+  {
+    "screen": "session-mission",
+    "state": "follow-1",
+    "label": "P3 follow-up 1 of 2 · slider",
+    "dark": false,
+    "file": "session-mission--follow-1--light.png"
+  },
+  {
+    "screen": "session-mission",
+    "state": "follow-1-compare",
+    "label": "P3 follow-up 1 of 2 · compared",
+    "dark": false,
+    "file": "session-mission--follow-1-compare--light.png"
+  },
+  {
+    "screen": "session-mission",
+    "state": "follow-2",
+    "label": "P3 follow-up 2 of 2 · choice",
+    "dark": false,
+    "file": "session-mission--follow-2--light.png"
+  },
+  {
+    "screen": "session-mission",
+    "state": "q-morning",
+    "label": "Question · P2 morning gap",
+    "dark": false,
+    "file": "session-mission--q-morning--light.png"
+  },
+  {
+    "screen": "session-mission",
+    "state": "q-sigh",
+    "label": "Question · P4 sighs first",
+    "dark": false,
+    "file": "session-mission--q-sigh--light.png"
+  },
+  {
+    "screen": "session-mission",
+    "state": "q-surf",
+    "label": "Question · P5 craving peak",
+    "dark": false,
+    "file": "session-mission--q-surf--light.png"
+  },
+  {
+    "screen": "lesson-audio",
+    "state": "paused",
+    "label": "Paused",
+    "dark": false,
+    "file": "lesson-audio--paused--light.png"
+  },
+  {
+    "screen": "lesson-audio",
+    "state": "finished",
+    "label": "Finished",
+    "dark": false,
+    "file": "lesson-audio--finished--light.png"
+  },
+  {
+    "screen": "sos",
+    "state": "riding",
+    "label": "Riding it · 0:52",
+    "dark": false,
+    "file": "sos--riding--light.png"
+  },
+  {
+    "screen": "sos",
+    "state": "riding",
+    "label": "Riding it · 0:52",
+    "dark": true,
+    "file": "sos--riding--dark.png"
+  },
+  {
+    "screen": "sos",
+    "state": "no-reason",
+    "label": "Before onboarding · no reason",
+    "dark": false,
+    "file": "sos--no-reason--light.png"
+  },
+  {
+    "screen": "sos",
+    "state": "no-reason",
+    "label": "Before onboarding · no reason",
+    "dark": true,
+    "file": "sos--no-reason--dark.png"
+  },
+  {
+    "screen": "sos-passed",
+    "state": "opening",
+    "label": "Opening · 14 waves",
+    "dark": false,
+    "file": "sos-passed--opening--light.png"
+  },
+  {
+    "screen": "sos-passed",
+    "state": "coffee",
+    "label": "Coffee picked",
+    "dark": false,
+    "file": "sos-passed--coffee--light.png"
+  },
+  {
+    "screen": "sos-passed",
+    "state": "more",
+    "label": "\"More…\" opened",
+    "dark": false,
+    "file": "sos-passed--more--light.png"
+  },
+  {
+    "screen": "log-menu",
+    "state": "prep",
+    "label": "Prep · Mon 2 Nov",
+    "dark": false,
+    "file": "log-menu--prep--light.png"
+  },
+  {
+    "screen": "log-craving",
+    "state": "sam",
+    "label": "Sam · 6, Coffee, Day 3 09:40",
+    "dark": false,
+    "file": "log-craving--sam--light.png"
+  },
+  {
+    "screen": "log-craving",
+    "state": "details",
+    "label": "Add details · a logged use",
+    "dark": false,
+    "file": "log-craving--details--light.png"
+  },
+  {
+    "screen": "log-slip",
+    "state": "coffee",
+    "label": "Day 3 · Coffee, plan picked",
+    "dark": false,
+    "file": "log-slip--coffee--light.png"
+  },
+  {
+    "screen": "log-slip",
+    "state": "own",
+    "label": "Day 3 · write my own",
+    "dark": false,
+    "file": "log-slip--own--light.png"
+  },
+  {
+    "screen": "log-slip",
+    "state": "more",
+    "label": "\"More…\" opened",
+    "dark": false,
+    "file": "log-slip--more--light.png"
+  },
+  {
+    "screen": "log-slip",
+    "state": "prep",
+    "label": "Prep · Mon 2 Nov",
+    "dark": false,
+    "file": "log-slip--prep--light.png"
+  },
+  {
+    "screen": "log-slip",
+    "state": "practice",
+    "label": "Practice · Program Day 27",
+    "dark": false,
+    "file": "log-slip--practice--light.png"
+  },
+  {
+    "screen": "log-slip-saved",
+    "state": "tough",
+    "label": "Day 3 · third slip today",
+    "dark": false,
+    "file": "log-slip-saved--tough--light.png"
+  },
+  {
+    "screen": "log-slip-saved",
+    "state": "prep",
+    "label": "Prep · Mon 2 Nov",
+    "dark": false,
+    "file": "log-slip-saved--prep--light.png"
+  },
+  {
+    "screen": "log-slip-what",
+    "state": "picked",
+    "label": "Cigarettes · One · Just now",
+    "dark": false,
+    "file": "log-slip-what--picked--light.png"
+  },
+  {
+    "screen": "log-slip-what",
+    "state": "vape",
+    "label": "Vape · One session",
+    "dark": false,
+    "file": "log-slip-what--vape--light.png"
+  },
+  {
+    "screen": "evening",
+    "state": "day3-done",
+    "label": "Day 3 · Sun 8 Nov · after check-in",
+    "dark": false,
+    "file": "evening--day3-done--light.png"
+  },
+  {
+    "screen": "evening",
+    "state": "prep",
+    "label": "Prep · Mon 2 Nov evening · before check-in",
+    "dark": false,
+    "file": "evening--prep--light.png"
+  },
+  {
+    "screen": "evening-breathing",
+    "state": "running",
+    "label": "Breathing · 1:30",
+    "dark": false,
+    "file": "evening-breathing--running--light.png"
+  },
+  {
+    "screen": "evening-breathing",
+    "state": "three",
+    "label": "After three minutes",
+    "dark": false,
+    "file": "evening-breathing--three--light.png"
+  },
+  {
+    "screen": "checkin-form",
+    "state": "day3-good",
+    "label": "Day 3 · Sam picked Good",
+    "dark": false,
+    "file": "checkin-form--day3-good--light.png"
+  },
+  {
+    "screen": "checkin-form",
+    "state": "day3-good",
+    "label": "Day 3 · Sam picked Good",
+    "dark": true,
+    "file": "checkin-form--day3-good--dark.png"
+  },
+  {
+    "screen": "checkin-form",
+    "state": "day3-slip",
+    "label": "Day 3 · \"Had a slip\" picked",
+    "dark": false,
+    "file": "checkin-form--day3-slip--light.png"
+  },
+  {
+    "screen": "checkin-form",
+    "state": "day3-slip",
+    "label": "Day 3 · \"Had a slip\" picked",
+    "dark": true,
+    "file": "checkin-form--day3-slip--dark.png"
+  },
+  {
+    "screen": "checkin-form",
+    "state": "day3-edit",
+    "label": "Day 3 · editing the waves",
+    "dark": false,
+    "file": "checkin-form--day3-edit--light.png"
+  },
+  {
+    "screen": "checkin-form",
+    "state": "day3-edit",
+    "label": "Day 3 · editing the waves",
+    "dark": true,
+    "file": "checkin-form--day3-edit--dark.png"
+  },
+  {
+    "screen": "checkin-form",
+    "state": "day3-note",
+    "label": "Day 3 · writing a note",
+    "dark": false,
+    "file": "checkin-form--day3-note--light.png"
+  },
+  {
+    "screen": "checkin-form",
+    "state": "day3-note",
+    "label": "Day 3 · writing a note",
+    "dark": true,
+    "file": "checkin-form--day3-note--dark.png"
+  },
+  {
+    "screen": "checkin-form",
+    "state": "prep",
+    "label": "Prep · Mon 2 Nov",
+    "dark": false,
+    "file": "checkin-form--prep--light.png"
+  },
+  {
+    "screen": "checkin-form",
+    "state": "prep",
+    "label": "Prep · Mon 2 Nov",
+    "dark": true,
+    "file": "checkin-form--prep--dark.png"
+  },
+  {
+    "screen": "checkin-plan",
+    "state": "coffee-picked",
+    "label": "Coffee · \"take a short walk\" picked",
+    "dark": false,
+    "file": "checkin-plan--coffee-picked--light.png"
+  },
+  {
+    "screen": "pledge",
+    "state": "day3-held",
+    "label": "Day 3 · pledged",
+    "dark": false,
+    "file": "pledge--day3-held--light.png"
+  },
+  {
+    "screen": "pledge",
+    "state": "day3-wave",
+    "label": "Day 3 · \"One wave at a time\"",
+    "dark": false,
+    "file": "pledge--day3-wave--light.png"
+  },
+  {
+    "screen": "pledge",
+    "state": "prep",
+    "label": "Prep · Mon 2 Nov · not held",
+    "dark": false,
+    "file": "pledge--prep--light.png"
+  },
+  {
+    "screen": "changing",
+    "state": "day3",
+    "label": "Day 3 · Sun 8 Nov 09:40 · Smoking",
+    "dark": false,
+    "file": "changing--day3--light.png"
+  },
+  {
+    "screen": "changing",
+    "state": "day3-vape",
+    "label": "Day 3 · Sun 8 Nov 09:40 · Vaping",
+    "dark": false,
+    "file": "changing--day3-vape--light.png"
+  },
+  {
+    "screen": "changing-detail",
+    "state": "day3",
+    "label": "Day 3 · Carbon monoxide (under way)",
+    "dark": false,
+    "file": "changing-detail--day3--light.png"
+  },
+  {
+    "screen": "changing-detail",
+    "state": "day3-done",
+    "label": "Day 3 · Heart rate (reached)",
+    "dark": false,
+    "file": "changing-detail--day3-done--light.png"
+  },
+  {
+    "screen": "progress",
+    "state": "day3",
+    "label": "Day 3 · Sun 8 Nov",
+    "dark": false,
+    "file": "progress--day3--light.png"
+  },
+  {
+    "screen": "progress",
+    "state": "week4",
+    "label": "Week 4 · Thu 3 Dec (heat map)",
+    "dark": false,
+    "file": "progress--week4--light.png"
+  },
+  {
+    "screen": "calm-box",
+    "state": "running",
+    "label": "Running · hold, cycle 1",
+    "dark": false,
+    "file": "calm-box--running--light.png"
+  },
+  {
+    "screen": "calm-box",
+    "state": "paused",
+    "label": "Paused",
+    "dark": false,
+    "file": "calm-box--paused--light.png"
+  },
+  {
+    "screen": "calm-box",
+    "state": "cycles",
+    "label": "Cycles done · Continue",
+    "dark": false,
+    "file": "calm-box--cycles--light.png"
+  },
+  {
+    "screen": "calm-box",
+    "state": "done",
+    "label": "Done · Nicely done",
+    "dark": false,
+    "file": "calm-box--done--light.png"
+  },
+  {
+    "screen": "calm-box",
+    "state": "done-not",
+    "label": "Done · \"Not really\" picked",
+    "dark": false,
+    "file": "calm-box--done-not--light.png"
+  },
+  {
+    "screen": "calm-478",
+    "state": "running",
+    "label": "Running · hold, cycle 1",
+    "dark": false,
+    "file": "calm-478--running--light.png"
+  },
+  {
+    "screen": "calm-478",
+    "state": "paused",
+    "label": "Paused",
+    "dark": false,
+    "file": "calm-478--paused--light.png"
+  },
+  {
+    "screen": "calm-478",
+    "state": "cycles",
+    "label": "Cycles done · Continue",
+    "dark": false,
+    "file": "calm-478--cycles--light.png"
+  },
+  {
+    "screen": "calm-478",
+    "state": "done",
+    "label": "Done · Nicely done",
+    "dark": false,
+    "file": "calm-478--done--light.png"
+  },
+  {
+    "screen": "calm-478",
+    "state": "done-not",
+    "label": "Done · \"Not really\" picked",
+    "dark": false,
+    "file": "calm-478--done-not--light.png"
+  },
+  {
+    "screen": "calm-grounding",
+    "state": "feel",
+    "label": "Step 2 · 4 things you can feel",
+    "dark": false,
+    "file": "calm-grounding--feel--light.png"
+  },
+  {
+    "screen": "calm-grounding",
+    "state": "hear",
+    "label": "Step 3 · 3 things you can hear",
+    "dark": false,
+    "file": "calm-grounding--hear--light.png"
+  },
+  {
+    "screen": "calm-grounding",
+    "state": "smell",
+    "label": "Step 4 · 2 things you can smell",
+    "dark": false,
+    "file": "calm-grounding--smell--light.png"
+  },
+  {
+    "screen": "calm-grounding",
+    "state": "taste",
+    "label": "Step 5 · 1 thing you can taste",
+    "dark": false,
+    "file": "calm-grounding--taste--light.png"
+  },
+  {
+    "screen": "calm-grounding",
+    "state": "done",
+    "label": "Done · Nicely done",
+    "dark": false,
+    "file": "calm-grounding--done--light.png"
+  },
+  {
+    "screen": "calm-grounding",
+    "state": "done-not",
+    "label": "Done · \"Not really\" picked",
+    "dark": false,
+    "file": "calm-grounding--done-not--light.png"
+  },
+  {
+    "screen": "calm-notice",
+    "state": "picked",
+    "label": "Step 1 · \"I need one\" picked",
+    "dark": false,
+    "file": "calm-notice--picked--light.png"
+  },
+  {
+    "screen": "calm-notice",
+    "state": "own",
+    "label": "Step 1 · write my own",
+    "dark": false,
+    "file": "calm-notice--own--light.png"
+  },
+  {
+    "screen": "calm-notice",
+    "state": "say",
+    "label": "Step 2 · say it this way",
+    "dark": false,
+    "file": "calm-notice--say--light.png"
+  },
+  {
+    "screen": "calm-notice",
+    "state": "breaths",
+    "label": "Step 3 · three breaths",
+    "dark": false,
+    "file": "calm-notice--breaths--light.png"
+  },
+  {
+    "screen": "calm-notice",
+    "state": "done",
+    "label": "Done · Nicely done",
+    "dark": false,
+    "file": "calm-notice--done--light.png"
+  },
+  {
+    "screen": "calm-notice",
+    "state": "done-not",
+    "label": "Done · \"Not really\" picked",
+    "dark": false,
+    "file": "calm-notice--done-not--light.png"
+  },
+  {
+    "screen": "calm-anchor",
+    "state": "body",
+    "label": "Step 2 · Feel your body",
+    "dark": false,
+    "file": "calm-anchor--body--light.png"
+  },
+  {
+    "screen": "calm-anchor",
+    "state": "room",
+    "label": "Step 3 · Come back to the room",
+    "dark": false,
+    "file": "calm-anchor--room--light.png"
+  },
+  {
+    "screen": "calm-anchor",
+    "state": "done",
+    "label": "Done · Nicely done",
+    "dark": false,
+    "file": "calm-anchor--done--light.png"
+  },
+  {
+    "screen": "calm-anchor",
+    "state": "done-not",
+    "label": "Done · \"Not really\" picked",
+    "dark": false,
+    "file": "calm-anchor--done-not--light.png"
+  },
+  {
+    "screen": "settings",
+    "state": "free",
+    "label": "Free (no Pro)",
+    "dark": false,
+    "file": "settings--free--light.png"
+  },
+  {
+    "screen": "settings",
+    "state": "privacy",
+    "label": "Lock Screen privacy on",
+    "dark": false,
+    "file": "settings--privacy--light.png"
+  },
+  {
+    "screen": "settings",
+    "state": "test",
+    "label": "Test build (Demo mode shown)",
+    "dark": false,
+    "file": "settings--test--light.png"
+  },
+  {
+    "screen": "settings",
+    "state": "delete",
+    "label": "Delete all data · alert",
+    "dark": false,
+    "file": "settings--delete--light.png"
+  },
+  {
+    "screen": "settings",
+    "state": "export",
+    "label": "Export my data · share sheet",
+    "dark": false,
+    "file": "settings--export--light.png"
+  },
+  {
+    "screen": "settings-products",
+    "state": "vape-main",
+    "label": "After \"Make this my main product\" on vape",
+    "dark": false,
+    "file": "settings-products--vape-main--light.png"
+  },
+  {
+    "screen": "settings-product-editor",
+    "state": "vape",
+    "label": "Vape (make main)",
+    "dark": false,
+    "file": "settings-product-editor--vape--light.png"
+  },
+  {
+    "screen": "settings-currency",
+    "state": "search",
+    "label": "Searching \"pound\"",
+    "dark": false,
+    "file": "settings-currency--search--light.png"
+  },
+  {
+    "screen": "settings-quit-day",
+    "state": "after",
+    "label": "Day 3 · Sun 8 Nov",
+    "dark": false,
+    "file": "settings-quit-day--after--light.png"
+  },
+  {
+    "screen": "settings-quit-day",
+    "state": "choosing",
+    "label": "Day 3 · choosing a new date",
+    "dark": false,
+    "file": "settings-quit-day--choosing--light.png"
+  },
+  {
+    "screen": "settings-quit-day",
+    "state": "confirm",
+    "label": "Day 3 · confirm alert",
+    "dark": false,
+    "file": "settings-quit-day--confirm--light.png"
+  },
+  {
+    "screen": "settings-quit-day",
+    "state": "demo",
+    "label": "Demo mode (test builds)",
+    "dark": false,
+    "file": "settings-quit-day--demo--light.png"
+  },
+  {
+    "screen": "settings-subscription",
+    "state": "free",
+    "label": "Free",
+    "dark": false,
+    "file": "settings-subscription--free--light.png"
+  },
+  {
+    "screen": "settings-subscription",
+    "state": "restoring",
+    "label": "Free · restoring",
+    "dark": false,
+    "file": "settings-subscription--restoring--light.png"
+  },
+  {
+    "screen": "settings-subscription",
+    "state": "none",
+    "label": "Free · nothing to restore",
+    "dark": false,
+    "file": "settings-subscription--none--light.png"
+  },
+  {
+    "screen": "settings-privacy",
+    "state": "eu",
+    "label": "EU (opt-in, off)",
+    "dark": false,
+    "file": "settings-privacy--eu--light.png"
+  },
+  {
+    "screen": "notifications",
+    "state": "denied",
+    "label": "Off in iPhone Settings",
+    "dark": false,
+    "file": "notifications--denied--light.png"
+  },
+  {
+    "screen": "notifications",
+    "state": "quiet-off",
+    "label": "Quiet hours off, milestones off",
+    "dark": false,
+    "file": "notifications--quiet-off--light.png"
+  },
+  {
+    "screen": "notifications-quiet-hours",
+    "state": "off",
+    "label": "Off",
+    "dark": false,
+    "file": "notifications-quiet-hours--off--light.png"
+  },
+  {
+    "screen": "nrt-setup",
+    "state": "products-none",
+    "label": "2 · What are you using? (nothing yet)",
+    "dark": false,
+    "file": "nrt-setup--products-none--light.png"
+  },
+  {
+    "screen": "nrt-setup",
+    "state": "products",
+    "label": "2 · Patch and gum picked",
+    "dark": false,
+    "file": "nrt-setup--products--light.png"
+  },
+  {
+    "screen": "nrt-setup",
+    "state": "schedule-patch",
+    "label": "3 · Patch schedule, 10 weeks ticked",
+    "dark": false,
+    "file": "nrt-setup--schedule-patch--light.png"
+  },
+  {
+    "screen": "nrt-setup",
+    "state": "schedule-empty",
+    "label": "3 · Patch schedule, nothing ticked",
+    "dark": false,
+    "file": "nrt-setup--schedule-empty--light.png"
+  },
+  {
+    "screen": "nrt-setup",
+    "state": "schedule-elsewhere",
+    "label": "3 · Patch schedule, Elsewhere",
+    "dark": false,
+    "file": "nrt-setup--schedule-elsewhere--light.png"
+  },
+  {
+    "screen": "nrt-setup",
+    "state": "plan-patch",
+    "label": "4 · Your patch plan",
+    "dark": false,
+    "file": "nrt-setup--plan-patch--light.png"
+  },
+  {
+    "screen": "nrt-setup",
+    "state": "schedule-gum",
+    "label": "5 · Gum: what does your pack say?",
+    "dark": false,
+    "file": "nrt-setup--schedule-gum--light.png"
+  },
+  {
+    "screen": "nrt-setup",
+    "state": "reminders",
+    "label": "6 · Reminders",
+    "dark": false,
+    "file": "nrt-setup--reminders--light.png"
+  },
+  {
+    "screen": "nrt-setup",
+    "state": "reminders-piece",
+    "label": "6 · Reminders, time for a piece on",
+    "dark": false,
+    "file": "nrt-setup--reminders-piece--light.png"
+  },
+  {
+    "screen": "nrt-step-editor",
+    "state": "single",
+    "label": "Only step (no Remove)",
+    "dark": false,
+    "file": "nrt-step-editor--single--light.png"
+  },
+  {
+    "screen": "nrt-taper",
+    "state": "fits",
+    "label": "Fits · one step, Fri 30 Oct",
+    "dark": false,
+    "file": "nrt-taper--fits--light.png"
+  },
+  {
+    "screen": "nrt-taper",
+    "state": "saved",
+    "label": "Fits · already saved",
+    "dark": false,
+    "file": "nrt-taper--saved--light.png"
+  },
+  {
+    "screen": "water",
+    "state": "empty",
+    "label": "Nothing yet today",
+    "dark": false,
+    "file": "water--empty--light.png"
+  },
+  {
+    "screen": "water",
+    "state": "reached",
+    "label": "Goal reached (2,180 ml)",
+    "dark": false,
+    "file": "water--reached--light.png"
+  },
+  {
+    "screen": "water",
+    "state": "metric",
+    "label": "Metric (litres), 3 drinks",
+    "dark": false,
+    "file": "water--metric--light.png"
+  },
+  {
+    "screen": "water",
+    "state": "custom",
+    "label": "Long-press: custom amount",
+    "dark": false,
+    "file": "water--custom--light.png"
+  },
+  {
+    "screen": "water-goal",
+    "state": "metric",
+    "label": "kg · L",
+    "dark": false,
+    "file": "water-goal--metric--light.png"
+  },
+  {
+    "screen": "water-goal",
+    "state": "active",
+    "label": "Works out, hot climate (kg · L)",
+    "dark": false,
+    "file": "water-goal--active--light.png"
+  },
+  {
+    "screen": "water-goal",
+    "state": "adjusted",
+    "label": "Adjusted one glass up (kg · L)",
+    "dark": false,
+    "file": "water-goal--adjusted--light.png"
+  },
+  {
+    "screen": "paywall",
+    "state": "monthly",
+    "label": "Monthly picked",
+    "dark": false,
+    "file": "paywall--monthly--light.png"
+  },
+  {
+    "screen": "paywall",
+    "state": "lifetime",
+    "label": "Lifetime picked",
+    "dark": false,
+    "file": "paywall--lifetime--light.png"
+  },
+  {
+    "screen": "paywall",
+    "state": "arriving",
+    "label": "First 3 seconds · close hidden",
+    "dark": false,
+    "file": "paywall--arriving--light.png"
+  },
+  {
+    "screen": "paywall",
+    "state": "loading",
+    "label": "Loading prices",
+    "dark": false,
+    "file": "paywall--loading--light.png"
+  },
+  {
+    "screen": "paywall",
+    "state": "notice",
+    "label": "Restore found nothing (banner)",
+    "dark": false,
+    "file": "paywall--notice--light.png"
+  },
+  {
+    "screen": "paywall",
+    "state": "unlocked",
+    "label": "Unlocked (trial started)",
+    "dark": false,
+    "file": "paywall--unlocked--light.png"
+  },
+  {
+    "screen": "paywall",
+    "state": "pending",
+    "label": "Waiting for approval",
+    "dark": false,
+    "file": "paywall--pending--light.png"
+  },
+  {
+    "screen": "paywall",
+    "state": "failed",
+    "label": "Couldn't reach the App Store",
+    "dark": false,
+    "file": "paywall--failed--light.png"
+  },
+  {
+    "screen": "paywall-plans",
+    "state": "monthly",
+    "label": "Monthly picked",
+    "dark": false,
+    "file": "paywall-plans--monthly--light.png"
+  },
+  {
+    "screen": "paywall-plans",
+    "state": "lifetime",
+    "label": "Lifetime picked",
+    "dark": false,
+    "file": "paywall-plans--lifetime--light.png"
+  },
+  {
+    "screen": "paywall-plans",
+    "state": "loading",
+    "label": "Loading prices",
+    "dark": false,
+    "file": "paywall-plans--loading--light.png"
+  },
+  {
+    "screen": "paywall-plans",
+    "state": "notice",
+    "label": "Restore found nothing (banner)",
+    "dark": false,
+    "file": "paywall-plans--notice--light.png"
+  },
+  {
+    "screen": "paywall-plans",
+    "state": "unlocked",
+    "label": "Unlocked (trial started)",
+    "dark": false,
+    "file": "paywall-plans--unlocked--light.png"
+  },
+  {
+    "screen": "paywall-plans",
+    "state": "pending",
+    "label": "Waiting for approval",
+    "dark": false,
+    "file": "paywall-plans--pending--light.png"
+  },
+  {
+    "screen": "paywall-plans",
+    "state": "failed",
+    "label": "Couldn't reach the App Store",
+    "dark": false,
+    "file": "paywall-plans--failed--light.png"
+  },
+  {
+    "screen": "paywall-billing",
+    "state": "large",
+    "label": "Large",
+    "dark": false,
+    "file": "paywall-billing--large--light.png"
+  },
+  {
+    "screen": "upgrade",
+    "state": "loading",
+    "label": "Loading prices",
+    "dark": false,
+    "file": "upgrade--loading--light.png"
+  },
+  {
+    "screen": "upgrade",
+    "state": "failed",
+    "label": "Couldn't reach the App Store",
+    "dark": false,
+    "file": "upgrade--failed--light.png"
+  },
+  {
+    "screen": "offer",
+    "state": "monthly",
+    "label": "Monthly picked",
+    "dark": false,
+    "file": "offer--monthly--light.png"
+  },
+  {
+    "screen": "offer",
+    "state": "lifetime",
+    "label": "Lifetime picked",
+    "dark": false,
+    "file": "offer--lifetime--light.png"
+  },
+  {
+    "screen": "offer",
+    "state": "loading",
+    "label": "Loading prices",
+    "dark": false,
+    "file": "offer--loading--light.png"
+  },
+  {
+    "screen": "offer",
+    "state": "notice",
+    "label": "Restore found nothing (banner)",
+    "dark": false,
+    "file": "offer--notice--light.png"
+  },
+  {
+    "screen": "offer",
+    "state": "unlocked",
+    "label": "Unlocked (trial started)",
+    "dark": false,
+    "file": "offer--unlocked--light.png"
+  },
+  {
+    "screen": "offer",
+    "state": "pending",
+    "label": "Waiting for approval",
+    "dark": false,
+    "file": "offer--pending--light.png"
+  },
+  {
+    "screen": "offer",
+    "state": "failed",
+    "label": "Couldn't load the plans",
+    "dark": false,
+    "file": "offer--failed--light.png"
+  },
+  {
+    "screen": "milestone",
+    "state": "day-1",
+    "label": "Your first full day · Sat 7 Nov",
+    "dark": false,
+    "file": "milestone--day-1--light.png"
+  },
+  {
+    "screen": "milestone",
+    "state": "day-1",
+    "label": "Your first full day · Sat 7 Nov",
+    "dark": true,
+    "file": "milestone--day-1--dark.png"
+  },
+  {
+    "screen": "milestone",
+    "state": "day-3",
+    "label": "Three days clear · Sun 8 Nov",
+    "dark": false,
+    "file": "milestone--day-3--light.png"
+  },
+  {
+    "screen": "milestone",
+    "state": "day-3",
+    "label": "Three days clear · Sun 8 Nov",
+    "dark": true,
+    "file": "milestone--day-3--dark.png"
+  },
+  {
+    "screen": "milestone",
+    "state": "day-7",
+    "label": "One week clear · Thu 12 Nov",
+    "dark": false,
+    "file": "milestone--day-7--light.png"
+  },
+  {
+    "screen": "milestone",
+    "state": "day-7",
+    "label": "One week clear · Thu 12 Nov",
+    "dark": true,
+    "file": "milestone--day-7--dark.png"
+  },
+  {
+    "screen": "milestone",
+    "state": "day-14",
+    "label": "Two weeks clear · Thu 19 Nov",
+    "dark": false,
+    "file": "milestone--day-14--light.png"
+  },
+  {
+    "screen": "milestone",
+    "state": "day-14",
+    "label": "Two weeks clear · Thu 19 Nov",
+    "dark": true,
+    "file": "milestone--day-14--dark.png"
+  },
+  {
+    "screen": "milestone",
+    "state": "day-30",
+    "label": "One month clear · Sat 5 Dec",
+    "dark": false,
+    "file": "milestone--day-30--light.png"
+  },
+  {
+    "screen": "milestone",
+    "state": "day-30",
+    "label": "One month clear · Sat 5 Dec",
+    "dark": true,
+    "file": "milestone--day-30--dark.png"
+  },
+  {
+    "screen": "milestone",
+    "state": "day-60",
+    "label": "Two months clear · Mon 4 Jan",
+    "dark": false,
+    "file": "milestone--day-60--light.png"
+  },
+  {
+    "screen": "milestone",
+    "state": "day-60",
+    "label": "Two months clear · Mon 4 Jan",
+    "dark": true,
+    "file": "milestone--day-60--dark.png"
+  },
+  {
+    "screen": "milestone",
+    "state": "day-90",
+    "label": "Three months clear · Wed 3 Feb",
+    "dark": false,
+    "file": "milestone--day-90--light.png"
+  },
+  {
+    "screen": "milestone",
+    "state": "day-90",
+    "label": "Three months clear · Wed 3 Feb",
+    "dark": true,
+    "file": "milestone--day-90--dark.png"
+  },
+  {
+    "screen": "milestone",
+    "state": "day-100",
+    "label": "100 days clear · Sat 13 Feb",
+    "dark": false,
+    "file": "milestone--day-100--light.png"
+  },
+  {
+    "screen": "milestone",
+    "state": "day-100",
+    "label": "100 days clear · Sat 13 Feb",
+    "dark": true,
+    "file": "milestone--day-100--dark.png"
+  },
+  {
+    "screen": "milestone",
+    "state": "day-180",
+    "label": "Six months clear · Tue 4 May",
+    "dark": false,
+    "file": "milestone--day-180--light.png"
+  },
+  {
+    "screen": "milestone",
+    "state": "day-180",
+    "label": "Six months clear · Tue 4 May",
+    "dark": true,
+    "file": "milestone--day-180--dark.png"
+  },
+  {
+    "screen": "milestone",
+    "state": "day-365",
+    "label": "One year clear · Fri 5 Nov",
+    "dark": false,
+    "file": "milestone--day-365--light.png"
+  },
+  {
+    "screen": "milestone",
+    "state": "day-365",
+    "label": "One year clear · Fri 5 Nov",
+    "dark": true,
+    "file": "milestone--day-365--dark.png"
+  },
+  {
+    "screen": "milestone-share",
+    "state": "story-night",
+    "label": "Story · Night",
+    "dark": false,
+    "file": "milestone-share--story-night--light.png"
+  },
+  {
+    "screen": "milestone-share",
+    "state": "square-dawn",
+    "label": "Square · Dawn",
+    "dark": false,
+    "file": "milestone-share--square-dawn--light.png"
+  },
+  {
+    "screen": "milestone-share",
+    "state": "square-night",
+    "label": "Square · Night",
+    "dark": false,
+    "file": "milestone-share--square-night--light.png"
+  },
+  {
+    "screen": "milestone-share",
+    "state": "all-numbers",
+    "label": "Story · Dawn · every number on",
+    "dark": false,
+    "file": "milestone-share--all-numbers--light.png"
+  },
+  {
+    "screen": "finale",
+    "state": "settled",
+    "label": "After the confetti",
+    "dark": false,
+    "file": "finale--settled--light.png"
+  }
+]
