@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-11-01T20:01:38.040Z"
+    "updated": "2026-11-01T20:03:04.593Z"
   },
   "now": {
     "section": "S27",
@@ -2773,11 +2773,29 @@
           "notes": "Move.swift, Buttons4.swift, ProgramView tabs, MilestoneViews segments, DayEndSettings. Wave 4.\nLab v8: Text size option (AX3) in the top bar; motion tokens from Move.swift; one 1-second hold; disabled buttons show a reason; red destructive buttons; 44 pt targets; one day-end picker. AX3 shows milestone stat tiles overflowing: fix in Swift (stack the tiles at accessibility sizes).\nMilan signed off the lab version (v8), 1 Nov 2026. Swift started on claude/critique-wave4 (stacked on Wave 3).\nSwift built on claude/critique-wave4 (stacked on Wave 3); waiting on CI and TestFlight.",
           "created": "2026-11-01T18:37:56.997Z",
           "completed": null
+        },
+        {
+          "id": "S27.21",
+          "title": "App icon and logo: direction 3, the Day Xero page (light, dark, tinted; website favicon, logo and touch icon).",
+          "status": "awaiting_signoff",
+          "notes": "Milan picked direction 3 on 1 Nov 2026 from the icon directions canvas. Rendered from design/app-icon/*.svg. Ships with Wave 4 (PR #18).",
+          "created": "2026-11-01T20:03:04.528Z",
+          "completed": null
         }
       ]
     }
   ],
   "log": [
+    {
+      "time": "2026-11-01T20:03:04.593Z",
+      "type": "status",
+      "message": "S27.21 pending → awaiting_signoff"
+    },
+    {
+      "time": "2026-11-01T20:03:04.528Z",
+      "type": "task_added",
+      "message": "S27.21 added: App icon and logo: direction 3, the Day Xero page (light, dark, tinted; website favicon, logo and touch icon)."
+    },
     {
       "time": "2026-11-01T20:01:38.040Z",
       "type": "note",
