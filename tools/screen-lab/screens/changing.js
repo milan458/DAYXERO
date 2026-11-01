@@ -221,10 +221,14 @@
       ${[[16, 20, 6], [34, 14, 7.5], [50, 22, 5]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${INK.sky}"/><circle cx="${x - r * 0.33}" cy="${y - r * 0.33}" r="${r * 0.3}" fill="rgba(255,255,255,0.85)"/>`).join('')}
       <circle cx="55" cy="45" r="3.6" fill="${INK.grey}" opacity="0.95"/>`,
   };
-  const DRAWING_OPTIONS = [['heart-rate', 'Heart rate (heart and trace)'], ['carbon-monoxide', 'Carbon monoxide (blood cell and bubbles)']];
+  const DRAWING_OPTIONS = ((window.Art && window.Art.healthIds) || ['heart-rate', 'carbon-monoxide']).map((id) => [id, id.replace(/-/g, ' ')]);
 
   /** HealthBadge at a size, for a state. */
   function badgeHTML(id, state, progress, size, ctx) {
+    // The full port of HealthBadge (all 20 drawings, animated) lives in art.js.
+    if (window.Art && window.Art.healthBadge && (window.Art.healthIds || []).includes(id)) {
+      return `<div style="flex:none;line-height:0">${window.Art.healthBadge(id, { size, state: state === 'now' ? 'underWay' : state, progress: +progress, dark: ctx.dark, animate: Lab.view.motion })}</div>`;
+    }
     const ahead = state === 'ahead';
     const fill = ahead ? pick(ctx, '#E7E9DD', 'rgba(255,255,255,0.07)') : tint(hueFor(id), ctx);
     const art = size * 0.68;

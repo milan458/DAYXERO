@@ -278,7 +278,7 @@
     props: { value: { label: 'Number', kind: 'text', default: '36' }, label: { label: 'Label', kind: 'text', default: 'Not smoked' } },
     examples: [{ label: 'On apricot', ground: 'apricot', width: 160, props: { value: '$15.65', label: 'Kept' } }],
     render(p, ctx) {
-      return `<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;padding:16px;border-radius:18px;background:${ctx.g.card}">${T('title', p.value, ctx, { style: 'font-variant-numeric:tabular-nums;white-space:nowrap' })}${T('caption', p.label, ctx, { tone: 'muted' })}</div>`;
+      return `<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;padding:16px;border-radius:18px;background:${ctx.g.card}">${T('title', p.value, ctx, { style: 'font-variant-numeric:tabular-nums;white-space:nowrap' })}${T('caption', p.label, ctx, { tone: 'muted', upper: false })}</div>`;
     },
   });
 
