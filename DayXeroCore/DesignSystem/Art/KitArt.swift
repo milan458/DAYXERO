@@ -54,28 +54,30 @@ enum KitDraw {
 
     static func spec(_ kind: KitArt.Kind) -> Spec {
         switch kind {
+        // S27.15: tile backgrounds keep to two families, warm (apricot, sun) and deep (ocean, violet); the pinks and
+        // greens are retired so the tiles read as one set.
         case .dawn: Spec(top: 0xFF7A55, bottom: 0xFFC38A, layers: [.rings])
         case .sea: Spec(top: 0x2A52DB, bottom: 0x9CCBFF, layers: [.sea])
-        case .sprout: Spec(top: 0x6FCB98, bottom: 0x9FE3BC, layers: [.hill], hills: (0x3E9E6A, 0x2F8A5A))
+        case .sprout: Spec(top: 0x2A52DB, bottom: 0x9CCBFF, layers: [.hill], hills: (0x3E9E6A, 0x2F8A5A))
         case .night: Spec(top: 0x2A1C6E, bottom: 0x4A3596, layers: [.hill], hills: (0x1E1458, 0x2A1C6E))
         case .breath: Spec(top: 0x2A52DB, bottom: 0x5B7FF0, layers: [.pulse])
-        case .peak: Spec(top: 0xFF8FB8, bottom: 0xFFC3D8)
+        case .peak: Spec(top: 0xFFA46B, bottom: 0xFFC38A)
         case .sparkle: Spec(top: 0xFFC94A, bottom: 0xFFD966, layers: [.rings])
         case .clouds: Spec(top: 0x4A3596, bottom: 0x8E73F0)
         case .flower: Spec(top: 0xFF7A55, bottom: 0xFFA46B)
         case .cup: Spec(top: 0xFFA46B, bottom: 0xFFC38A, layers: [.rings])
         case .eye: Spec(top: 0x8E73F0, bottom: 0xB9A6FF, layers: [.rings])
         case .glass: Spec(top: 0x5B7FF0, bottom: 0x9CCBFF, layers: [.rings])
-        case .heart: Spec(top: 0xFF7A55, bottom: 0xFF8FB8, layers: [.rings])
+        case .heart: Spec(top: 0xFFA46B, bottom: 0xFFC38A, layers: [.rings])
         case .box: Spec(top: 0xFFC94A, bottom: 0xFFD966)
-        case .outbreath: Spec(top: 0x6FCB98, bottom: 0x9FE3BC)
-        case .grounding: Spec(top: 0x3E9E6A, bottom: 0x6FCB98)
-        case .tag: Spec(top: 0xFF8FB8, bottom: 0xFFB3CF)
+        case .outbreath: Spec(top: 0x5B7FF0, bottom: 0x9CCBFF)
+        case .grounding: Spec(top: 0x4A3596, bottom: 0x8E73F0)
+        case .tag: Spec(top: 0xFFC94A, bottom: 0xFFD966)
         case .anchor: Spec(top: 0xFFA46B, bottom: 0xFFC38A, layers: [.floor], hills: (0xE8894A, 0xE8894A))
         case .berry: Spec(top: 0xFFD966, bottom: 0xFFE59A, layers: [.rings])
         case .lungs: Spec(top: 0x5B7FF0, bottom: 0x9CCBFF, layers: [.rings])
-        case .lips: Spec(top: 0xFFC3D8, bottom: 0xFFE1EC, layers: [.rings])
-        case .shield: Spec(top: 0x3E9E6A, bottom: 0x6FCB98, layers: [.rings])
+        case .lips: Spec(top: 0xFFC38A, bottom: 0xFFE1C2, layers: [.rings])
+        case .shield: Spec(top: 0x2A52DB, bottom: 0x5B7FF0, layers: [.rings])
         }
     }
 

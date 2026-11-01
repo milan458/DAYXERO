@@ -2,7 +2,8 @@ import DayXeroCore
 import SwiftUI
 
 /// A breathing exercise on the Bio-Orb for the stress toolkit (S12.4): Start, then Pause or Resume and Coach me,
-/// ending after the pattern's recommended cycles with Continue or Again.
+/// ending after the pattern's recommended cycles with Continue or Again. On the reading ground with the reading
+/// buttons, cream in light and navy in dark (S27.12); the orb adapts its colours to the appearance.
 struct OrbBreathingPanel: View {
     let pattern: String
     /// Called when the person taps Continue after the last cycle.
@@ -41,9 +42,7 @@ struct OrbBreathingPanel: View {
             }
             .scrollBounceBehavior(.basedOnSize)
         }
-        .background(Color.black.ignoresSafeArea())
-        // The orb is specified for a black canvas; keep this part dark even in light mode.
-        .environment(\.colorScheme, .dark)
+        .background(Read4.background.ignoresSafeArea())
         .onAppear(perform: appear)
         .onDisappear(perform: tearDown)
         .onChange(of: scenePhase) { _, phase in
@@ -65,17 +64,17 @@ struct OrbBreathingPanel: View {
     private func primaryButton(_ labels: OrbData.Labels) -> some View {
         if finished {
             Button(action: onFinished) { Label("Continue", systemImage: "checkmark") }
-                .buttonStyle(OrbPanelButtonStyle(kind: .porcelain))
+                .buttonStyle(.dx(.primary, on: .reading))
         } else if !started {
             Button(action: start) { Label(labels.start, systemImage: "play.fill") }
-                .buttonStyle(OrbPanelButtonStyle(kind: .porcelain))
+                .buttonStyle(.dx(.primary, on: .reading))
         } else {
             Button {
                 if paused { resume() } else { pause() }
             } label: {
                 Label(paused ? labels.resume : labels.pause, systemImage: paused ? "play.fill" : "pause.fill")
             }
-            .buttonStyle(OrbPanelButtonStyle(kind: .porcelain))
+            .buttonStyle(.dx(.primary, on: .reading))
         }
     }
 
@@ -83,10 +82,10 @@ struct OrbBreathingPanel: View {
     private func secondaryButton(_ labels: OrbData.Labels) -> some View {
         if finished {
             Button(action: again) { Label("Again", systemImage: "arrow.counterclockwise") }
-                .buttonStyle(OrbPanelButtonStyle(kind: .moss))
+                .buttonStyle(.dx(.secondary, on: .reading))
         } else {
             Button(action: coachMe) { Label(labels.coachButton, systemImage: "waveform") }
-                .buttonStyle(OrbPanelButtonStyle(kind: .moss))
+                .buttonStyle(.dx(.secondary, on: .reading))
         }
     }
 
@@ -160,31 +159,5 @@ struct OrbBreathingPanel: View {
         haptics.stop()
         clock.stop()
         engine.pause()
-    }
-}
-
-/// Porcelain for the main action, moss for the second, as on the SOS screen.
-struct OrbPanelButtonStyle: ButtonStyle {
-    enum Kind { case porcelain, moss }
-    let kind: Kind
-
-    func makeBody(configuration: Configuration) -> some View {
-        let tokens = OrbData.bundled.tokens
-        return configuration.label
-            .labelStyle(OrbPanelLabel())
-            .dxFont(14, weight: 700, style: .subheadline)
-            .foregroundStyle(kind == .porcelain ? Color.black : Color(orbHex: tokens.sage))
-            .padding(.vertical, 14).padding(.horizontal, 20)
-            .background(kind == .porcelain ? Color(orbHex: tokens.porcelain) : Color(orbHex: tokens.moss), in: Capsule())
-            .opacity(configuration.isPressed ? 0.8 : 1)
-    }
-}
-
-private struct OrbPanelLabel: LabelStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        HStack(spacing: 8) {
-            configuration.icon.font(.system(size: 12, weight: .bold))
-            configuration.title
-        }
     }
 }

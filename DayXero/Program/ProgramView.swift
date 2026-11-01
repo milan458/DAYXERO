@@ -30,8 +30,10 @@ struct ProgramView: View {
                 VStack(alignment: .leading, spacing: 12) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Prep, Quit Day, then four weeks").dxType(.footnote).foregroundStyle(ground.muted)
-                        MarkedTitle(String(localized: "Your "), marking: String(localized: "program"), color: DX.Mark.color(on: ground))
+                        // Plain title: the hand-drawn mark is kept for celebrations and onboarding (S27.15).
+                        Text("Your program")
                             .dxType(.large).foregroundStyle(ground.ink)
+                            .accessibilityAddTraits(.isHeader)
                     }
                     if let content = store.content {
                         let phase = selectedPhase(content, current: current)
@@ -210,7 +212,7 @@ struct ProgramView: View {
                     }
                 VStack(alignment: .leading, spacing: 2) {
                     Text(verbatim: kicker.uppercased()).dxType(.caption)
-                        .foregroundStyle(today ? Color(light: 0xB2361C, dark: 0xFFB59E) : DX.Ground.reading.muted)
+                        .foregroundStyle(today ? DX.Ground.reading.ink : DX.Ground.reading.muted)  // coral only fills the play button, never text (S27.13)
                     Text(verbatim: title).dxType(.headline).foregroundStyle(DX.Ground.reading.ink)
                         .multilineTextAlignment(.leading).fixedSize(horizontal: false, vertical: true)
                 }
