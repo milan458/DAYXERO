@@ -13,11 +13,10 @@ DayXero.xcodeproj/
 Config/Secrets.xcconfig
 
 # Wrangler local state
-website/.wrangler/
+.wrangler/
 
 # Local Worker testing (see website/worker/README.md)
-website/wrangler.dev.jsonc
-website/.wrangler/
+wrangler.dev.jsonc
 
 # Colour Lab screens (npm run colour-lab:build)
 tools/colour-lab/screens/

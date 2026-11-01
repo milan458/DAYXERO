@@ -1,11 +1,12 @@
 """Generates the DayXero guide pages, the guides hub, the info pages, /beta/ and sitemap.xml.
 
 Run from the repo root: python3 scripts/website/build_guides.py website
-Then rebuild the CSS: npm run website:css
+The pages use assets/v4.css and assets/crew.js, shared with the homepage.
 """
 import html
 import json
 import pathlib
+import re
 import sys
 
 SITE = pathlib.Path(sys.argv[1])
@@ -149,7 +150,7 @@ guide(
   <li><strong>Tell people.</strong> Ask friends and family for support, and ask smokers around you not to offer you one.</li>
   <li><strong>Clear out.</strong> The night before Quit Day, get rid of cigarettes, lighters and ashtrays.</li>
 </ul>
-<p>DayXero is being built around a five-day prep phase like this, so that by Quit Day you've already practised getting through your hardest moments.</p>
+<p>DayXero is built around a seven-day prep week like this, so that by Quit Day you've already practised getting through your hardest moments.</p>
 
 <h2 id="aids">Step 3: Choose your stop-smoking aids</h2>
 <p>Using a stop-smoking aid makes quitting much more likely to succeed than willpower alone. The main options are:</p>
@@ -413,7 +414,7 @@ HEAD = """<!DOCTYPE html>
   <link rel="canonical" href="{url}">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <meta name="theme-color" content="#000000">
+  <meta name="theme-color" content="{theme_color}">
   <meta property="og:type" content="{og_type}">
   <meta property="og:site_name" content="DayXero">
   <meta property="og:url" content="{url}">
@@ -425,114 +426,99 @@ HEAD = """<!DOCTYPE html>
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/site.css">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/v4.css">
   <script type="application/ld+json">
 {ld}
   </script>
 </head>
 """
 
-NAV = """<body class="bg-black text-white antialiased font-sans min-h-screen flex flex-col">
-  <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[1000px] max-w-full h-[300px] bg-gradient-to-b from-[#43511C]/25 via-[#BCC388]/10 to-transparent blur-[140px] pointer-events-none z-0"></div>
-  <header class="sticky top-4 z-50 flex justify-center px-4 pt-4">
-    <nav class="flex items-center justify-between gap-4 px-5 py-3 rounded-full bg-black/85 backdrop-blur-2xl border border-white/15 shadow-2xl shadow-black max-w-5xl w-full" aria-label="Main">
-      <a href="/" class="flex items-center gap-3 group">
-        <span class="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center shadow-md">
-          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3v18"/><circle cx="13" cy="14" r="7"/></svg>
-        </span>
-        <span class="flex flex-col">
-          <span class="font-bold text-sm tracking-tight text-white group-hover:text-[#BCC388]">DayXero</span>
-          <span class="text-[9px] text-white/40 tracking-widest uppercase font-mono -mt-0.5">Nicotine Protocol</span>
-        </span>
-      </a>
-      <div class="hidden md:flex items-center gap-1 text-xs font-medium text-white/70">
+XERO = '<span data-crew="xero" data-mood="{mood}" data-stage="{stage}" data-size="{size}"></span>'
+
+
+def crew(who, mood="hello", stage=2, size=40):
+    return f'<span data-crew="{who}" data-mood="{mood}" data-stage="{stage}" data-size="{size}"></span>'
+
+
+NAV = """<body class="pg">
+  <header class="site-head">
+    <nav class="nav" aria-label="Main">
+      <a class="brand" href="/" aria-label="DayXero home">""" + crew("xero", size=44) + """<span class="d">DayXero</span></a>
+      <div class="nav-links">
 {navlinks}
       </div>
-      <a href="/beta/" class="shrink-0 whitespace-nowrap px-4 py-2 rounded-full bg-[#BCC388] text-black font-semibold text-xs tracking-tight hover:bg-white">Join the beta</a>
+      <a class="btn btn-s" href="/beta/">Join the beta</a>
     </nav>
   </header>
 """
 
-FOOTER = """{sticky}  <footer class="border-t border-white/10 bg-black py-14 px-4 relative z-10 text-white/60 mt-auto">
-    <div class="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8 text-xs">
-      <div class="flex flex-col gap-2">
-        <span class="font-bold text-white tracking-tight text-sm">DayXero</span>
-        <p class="text-white/40 max-w-xs">Quit on your Quit Day. An iPhone app in development to quit vaping, smoking and nicotine pouches.</p>
+FOOTER = """{sticky}  <footer class="foot dk foot-compact">
+    <div class="wrap foot-grid" style="position: relative">
+      <div class="glim-small" aria-hidden="true">""" + crew("glim", "sleepy", 3, 110) + """</div>
+      <div>
+        <a class="brand" href="/" aria-label="DayXero home">""" + crew("xero", "sleepy", 2, 46) + """<span class="d">DayXero</span></a>
+        <p>Quit on your Quit Day. An iPhone app in development for quitting cigarettes, vapes and pouches.</p>
       </div>
-      <div class="flex flex-col gap-2">
-        <span class="font-mono uppercase tracking-widest text-[10px] text-white/40">Guides</span>
+      <nav aria-label="Guides"><div class="kicker">Guides</div>
 {footerlinks}
-      </div>
-      <div class="flex flex-col gap-2">
-        <span class="font-mono uppercase tracking-widest text-[10px] text-white/40">DayXero</span>
-        <a href="/" class="hover:text-white">Home</a>
-        <a href="/#methodology" class="hover:text-white">How it works</a>
-        <a href="/beta/" class="hover:text-white">Join the beta</a>
-        <a href="/#pricing" class="hover:text-white">Founding offer</a>
-        <a href="/#faq" class="hover:text-white">FAQ</a>
-        <a href="/about/" class="hover:text-white">About</a>
-        <a href="/contact/" class="hover:text-white">Contact</a>
-        <a href="/privacy/" class="hover:text-white">Privacy</a>
-        <a href="/terms/" class="hover:text-white">Terms</a>
-      </div>
+      </nav>
+      <nav aria-label="Product"><div class="kicker">Product</div>
+        <a href="/#app">The app</a>
+        <a href="/#how">How it works</a>
+        <a href="/#crew">The crew</a>
+        <a href="/#pricing">Pricing</a>
+        <a href="/beta/">Join the beta</a>
+      </nav>
+      <nav aria-label="Company"><div class="kicker">Company</div>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+        <a href="/privacy/">Privacy</a>
+        <a href="/terms/">Terms</a>
+      </nav>
     </div>
-    <div class="max-w-5xl mx-auto mt-10 pt-6 border-t border-white/5 text-[11px] text-white/30 flex flex-col sm:flex-row justify-between gap-4">
-      <div>Medical Disclaimer: DayXero provides educational habit and wellness support, not diagnostic medical treatment. Always consult a healthcare professional regarding NRT dosing and smoking cessation.</div>
-      <div class="shrink-0">© 2026 DayXero.</div>
+    <div class="wrap foot-legal">
+      <p>DayXero offers education and habit support, not medical treatment. Talk to a doctor or pharmacist about nicotine replacement dosing. These tools aren’t a substitute for professional help. If things feel like too much, <a href="/nicotine-withdrawal-timeline/#help">find a helpline near you</a>.</p>
+      <p>© 2026 DayXero. Your data stays on your phone.</p>
     </div>
   </footer>
+  <script src="/assets/crew.js" defer></script>
   <script src="/assets/waitlist.js" defer></script>
 </body>
 </html>
 """
 
-ARROW = ('<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
-         'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>')
-
 PRIVACY_NOTE = {
-    "dark": '<p class="text-[11px] text-white/40 text-center leading-relaxed mt-3">Free to join. We\'ll email your '
-            'TestFlight invite and the App Store link at launch, nothing else. Unsubscribe anytime. <a href="/privacy/#waitlist" '
-            'class="underline underline-offset-4 decoration-white/30 hover:text-white">Privacy</a></p>',
-    "light": '<p class="text-[11px] text-black/50 text-left leading-relaxed mt-3">No payment now. One confirmation email, '
-             'then your invite and launch link. Unsubscribe anytime. <a href="/privacy/#waitlist" '
-             'class="underline underline-offset-4 decoration-black/30 hover:text-black">Privacy</a></p>',
+    "dark": '<p class="wl-note">Free to join. We\'ll email your TestFlight invite and the App Store link at launch, '
+            'nothing else. Unsubscribe anytime. <a href="/privacy/#waitlist">Privacy</a></p>',
+    "light": '<p class="wl-note">No payment now. One confirmation email, then your invite and launch link. '
+             'Unsubscribe anytime. <a href="/privacy/#waitlist">Privacy</a></p>',
 }
 
 
-def waitlist_form(fid, source, theme="dark", h="h-12"):
+def waitlist_form(fid, source, theme="light", on_colour=False, label="Join the beta"):
     """One-field beta signup form. assets/waitlist.js posts it to the Worker at /api/waitlist."""
-    if theme == "dark":
-        wrap = "p-2 bg-[#121212] border border-white/15 shadow-2xl"
-        inp = "bg-[#161616] border border-white/10 text-white placeholder:text-white/30 focus:border-[#BCC388]/60"
-        btn = "bg-white text-black hover:bg-[#BCC388]"
-    else:
-        wrap = "p-1.5 bg-black/5 border border-black/10"
-        inp = "bg-white border border-black/10 text-black placeholder:text-black/40 focus:border-[#43511C]/60"
-        btn = "bg-black text-white hover:bg-[#202020]"
-    theme_attr = ' data-theme="light"' if theme == "light" else ""
-    return f"""<form id="{fid}" class="waitlist-form w-full" action="/api/waitlist" method="post" novalidate{theme_attr}>
-          <div class="flex flex-col sm:flex-row gap-2 rounded-[28px] sm:rounded-full {wrap}">
-            <label for="{fid}-email" class="sr-only">Email address</label>
-            <input id="{fid}-email" type="email" name="email" required autocomplete="email" inputmode="email" placeholder="you@example.com" class="w-full sm:flex-1 min-w-0 {h} px-5 rounded-full text-sm focus:outline-none {inp} spring-trans">
-            <button type="submit" class="{h} px-6 rounded-full {btn} font-semibold text-sm tracking-tight active:scale-95 spring-trans flex items-center justify-center gap-2 shadow-xl whitespace-nowrap">
-              <span>Join the beta</span>
-              {ARROW}
-            </button>
-          </div>
-          <div class="hidden" aria-hidden="true"><label>Company <input type="text" name="company" tabindex="-1" autocomplete="off"></label></div>
+    cls = "waitlist-form wl" + (" wl-on-colour" if on_colour else "")
+    return f"""<form id="{fid}" class="{cls}" action="/api/waitlist" method="post" novalidate data-theme="v4">
+          <label for="{fid}-email" class="sr-only">Email address</label>
+          <input id="{fid}-email" type="email" name="email" required autocomplete="email" inputmode="email" placeholder="you@example.com">
+          <button type="submit" class="btn">{label}</button>
+          <div class="hp" aria-hidden="true"><label>Company <input type="text" name="company" tabindex="-1" autocomplete="off"></label></div>
           <input type="hidden" name="source" value="{source}">
         </form>"""
 
 
 def inline_cta(slug):
     return f"""
-<aside id="guide-cta-inline" class="glass-card-green rounded-card p-6 md:p-8 my-10" aria-label="Join the DayXero beta" data-hide-sticky>
-  <div class="flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-[#BCC388] mb-2"><span class="w-1.5 h-1.5 rounded-full bg-[#BCC388]"></span>DayXero iOS beta</div>
-  <div class="text-xl md:text-2xl font-extrabold tracking-tight text-white leading-snug mb-2">Want this plan on your iPhone?</div>
-  <div class="text-sm text-white/65 leading-relaxed mb-5">DayXero is being built around exactly this: a Quit Day, five days of prep and a 3-minute craving tool. Join the beta for an early TestFlight invite.</div>
-  <div data-waitlist-block>
-        {waitlist_form("guide-inline-form", f"guide-{slug}-inline", h="h-11")}
+<aside id="guide-cta-inline" class="cta cta-ocean dk" aria-label="Join the DayXero beta" data-hide-sticky>
+  {crew("jelli", "breathe", 2, 88)}
+  <div>
+    <div class="kicker">In DayXero</div>
+    <div class="cta-title">Want this plan on your iPhone?</div>
+    <p>DayXero is built around exactly this: a Quit Day you choose, seven days of prep, and Jelli to breathe with when a craving comes. Join the beta for an early TestFlight invite.</p>
+    <div data-waitlist-block>
+      {waitlist_form("guide-inline-form", f"guide-{slug}-inline", on_colour=True)}
+    </div>
   </div>
 </aside>
 """
@@ -546,41 +532,54 @@ def with_inline_cta(body, slug):
     return "\n<h2 ".join(parts[:4]) + inline_cta(slug) + "\n<h2 " + "\n<h2 ".join(parts[4:])
 
 
-STICKY = """  <div id="sticky-cta" class="fixed bottom-4 inset-x-0 z-50 px-4 md:hidden" style="transform: translateY(160%)" aria-hidden="true">
-    <div class="flex items-center justify-between gap-3 pl-4 pr-1.5 py-1.5 rounded-full bg-black/85 backdrop-blur-2xl border border-white/15 shadow-2xl shadow-black">
-      <div class="flex items-center gap-2.5 min-w-0">
-        <span class="w-2 h-2 shrink-0 rounded-full bg-[#BCC388] animate-ping"></span>
-        <div class="flex flex-col min-w-0">
-          <span class="text-xs font-bold text-white tracking-tight truncate">DayXero iOS beta</span>
-          <span class="text-[9px] text-white/40 tracking-widest uppercase font-mono -mt-0.5 truncate">Free · Founding spots</span>
-        </div>
-      </div>
-      <div class="flex items-center gap-1.5 shrink-0">
-        <a href="#beta-cta" class="px-4 py-2.5 rounded-full bg-[#BCC388] text-black font-semibold text-xs tracking-tight hover:bg-white active:scale-95 spring-trans flex items-center gap-1.5">Join the beta</a>
-        <button type="button" data-action="dismiss" aria-label="Dismiss" class="w-8 h-8 rounded-full bg-[#161616] border border-white/15 text-white/60 hover:text-white flex items-center justify-center spring-trans"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4l16 16"/><path d="M20 4 4 20"/></svg></button>
-      </div>
+def toc(body, extra):
+    """The "On this page" list: every <h2 id> in the body, then the extra anchors."""
+    items = re.findall(r'<h2 id="([^"]+)">(.*?)</h2>', body) + extra
+    if len(items) < 3:
+        return ""
+    lis = "\n".join(f'          <li><a href="#{html.escape(i)}">{html.escape(re.sub("<[^>]+>", "", t))}</a></li>' for i, t in items)
+    return f"""      <aside class="toc">
+        <nav aria-label="On this page">
+          <div class="kicker" style="color: var(--muted)">On this page</div>
+          <ol>
+{lis}
+          </ol>
+        </nav>
+      </aside>
+"""
+
+
+STICKY = """  <div id="sticky-cta" class="sticky-bar" style="transform: translateY(160%)" aria-hidden="true">
+    <div class="sticky-inner">
+      <span class="lbl"><span class="dot-live" aria-hidden="true"></span>DayXero iPhone beta</span>
+      <a href="#beta-cta" class="btn">Join the beta</a>
+      <button type="button" data-action="dismiss" aria-label="Dismiss" class="x"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 4l16 16"/><path d="M20 4 4 20"/></svg></button>
     </div>
   </div>
 """
 
-NAV_ITEMS = [("/quit-vaping/", "Quit Vaping"), ("/quit-smoking/", "Quit Smoking"),
-             ("/quit-nicotine-pouches/", "Quit Pouches"), ("/nicotine-withdrawal-timeline/", "Withdrawal"),
-             ("/guides/", "All Guides")]
+NAV_ITEMS = [("/guides/", "Guides"), ("/#app", "The app"), ("/#how", "How it works"), ("/#pricing", "Pricing")]
 
 
 def navlinks(current):
     out = []
     for href, label in NAV_ITEMS:
-        on = href == current
-        cls = "px-3.5 py-1.5 rounded-full " + ("text-white bg-white/10" if on else "hover:text-white hover:bg-white/10")
-        aria = ' aria-current="page"' if on else ""
-        out.append(f'        <a href="{href}" class="{cls}"{aria}>{label}</a>')
+        on = href == current or (href == "/guides/" and current not in ("/beta/", "/beta/confirmed/", "/about/", "/contact/", "/privacy/", "/terms/"))
+        aria = ' aria-current="page"' if on and href == current else ""
+        out.append(f'        <a href="{href}"{aria}>{label}</a>')
     return "\n".join(out)
 
 
 def footerlinks():
-    return "\n".join(f'        <a href="/{g["slug"]}/" class="hover:text-white">{html.escape(g["h1"].split(":")[0])}</a>'
-                     for g in GUIDES)
+    return "\n".join(f'        <a href="/{g["slug"]}/">{html.escape(g["h1"].split(":")[0])}</a>' for g in GUIDES)
+
+
+def faq_details(faqs, first_open=False):
+    chev = ('<span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1E1A3A" stroke-width="2.6" '
+            'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span>')
+    return "\n".join(
+        f"""        <details{' open' if first_open and i == 0 else ''}><summary>{html.escape(q)}{chev}</summary><p>{html.escape(a)}</p></details>"""
+        for i, (q, a) in enumerate(faqs))
 
 
 def ld_json(obj):
@@ -591,11 +590,11 @@ ORG = {"@type": "Organization", "@id": f"{BASE}/#organization", "name": "DayXero
        "logo": f"{BASE}/logo.png", "email": CONTACT_EMAIL}
 
 
-def page(path, title, meta, og_type, og_title, ld, main, current, sticky=False, noindex=False):
+def page(path, title, meta, og_type, og_title, ld, main, current, sticky=False, noindex=False, theme_color="#FBF7F1"):
     url = f"{BASE}{path}"
     robots = '\n  <meta name="robots" content="noindex">' if noindex else ""
     out = HEAD.format(title=html.escape(title), meta=html.escape(meta), url=url, og_type=og_type,
-                      og_title=html.escape(og_title), base=BASE, ld=ld_json(ld), robots=robots)
+                      og_title=html.escape(og_title), base=BASE, ld=ld_json(ld), robots=robots, theme_color=theme_color)
     out += NAV.format(navlinks=navlinks(current))
     out += main
     out += FOOTER.format(footerlinks=footerlinks(), sticky=STICKY if sticky else "")
@@ -604,71 +603,69 @@ def page(path, title, meta, og_type, og_title, ld, main, current, sticky=False, 
     dest.write_text(out)
 
 
-def card(g):
-    return f"""        <a href="/{g['slug']}/" class="dark-card rounded-card p-6 flex flex-col gap-3 hover:border-[#BCC388]/40 spring-trans group">
-          <span class="text-[10px] font-mono uppercase tracking-widest text-[#BCC388]">{html.escape(g['kicker'])}</span>
-          <span class="text-lg font-extrabold tracking-tight text-white group-hover:text-[#BCC388] spring-trans">{html.escape(g['h1'])}</span>
-          <span class="text-sm text-white/60 leading-relaxed">{html.escape(g['meta'])}</span>
-          <span class="text-xs font-semibold text-white mt-auto pt-2">Read the guide →</span>
+def card(g, with_meta=False):
+    meta = f'\n          <p>{html.escape(g["meta"])}</p>' if with_meta else ""
+    return f"""        <a class="guide lift" href="/{g['slug']}/">
+          <span class="kicker">{html.escape(g['kicker'])}</span>
+          <h3>{html.escape(g['h1'])}</h3>{meta}
+          <span class="more">Read the guide →</span>
         </a>"""
 
 
 for g in GUIDES:
     path = f"/{g['slug']}/"
     url = f"{BASE}{path}"
-    faq_html = "\n".join(
-        f"""      <details class="faq-item">
-        <summary>{html.escape(q)}</summary>
-        <p>{html.escape(a)}</p>
-      </details>""" for q, a in g["faqs"])
     src_html = "\n".join(
         f'        <li><a href="{SOURCES[s][1]}" rel="noopener" target="_blank">{html.escape(SOURCES[s][0])}</a></li>'
         for s in g["sources"])
     related_html = "\n".join(card(BY_SLUG[s]) for s in g["related"])
-    main = f"""  <main class="relative z-10 flex-1 px-4">
-    <article class="max-w-3xl mx-auto pt-16 md:pt-24 pb-16">
-      <nav class="text-xs text-white/40 font-mono mb-6" aria-label="Breadcrumb">
-        <a href="/" class="hover:text-white">Home</a> <span aria-hidden="true">/</span>
-        <a href="/guides/" class="hover:text-white">Guides</a> <span aria-hidden="true">/</span>
-        <span class="text-white/70">{html.escape(g['kicker'])}</span>
-      </nav>
-      <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.05] mb-6">{html.escape(g['h1'])}</h1>
-      <p class="text-lg md:text-xl text-white/70 leading-relaxed mb-6">{html.escape(g['intro'])}</p>
-      <p class="text-xs text-white/40 font-mono mb-12">By <a href="/about/#editorial" class="underline underline-offset-4 decoration-white/30 hover:text-white">the DayXero team</a> · Updated <time datetime="{DATE}">29 October 2026</time></p>
+    body = with_inline_cta(g["body"], g["slug"])
+    main = f"""  <main class="pg-main">
+    <header class="wrap g-hero">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> / <a href="/guides/">Guides</a> / <span aria-current="page">{html.escape(g['kicker'])}</span></nav>
+      <span class="chip">{html.escape(g['kicker'])}</span>
+      <h1 class="d">{html.escape(g['h1'])}</h1>
+      <p class="lead">{html.escape(g['intro'])}</p>
+      <p class="byline">By <a href="/about/#editorial">the DayXero team</a> · Updated <time datetime="{DATE}">29 October 2026</time></p>
+    </header>
+    <div class="wrap g-body">
+{toc(g['body'], [("beta-cta", "Try it in the app"), ("faq-heading", "Frequently asked questions"), ("sources", "Sources")])}
+      <article class="prose">
+{body}
 
-      <div class="prose-dx">
-{with_inline_cta(g['body'], g['slug'])}
-      </div>
-
-      <aside id="beta-cta" class="porcelain-card rounded-card p-8 my-14 text-black scroll-mt-28" data-hide-sticky>
-        <div class="text-[10px] font-mono uppercase tracking-widest text-black/50 mb-2">The DayXero app · iOS beta</div>
-        <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight mb-3">Turn this plan into a daily routine</h2>
-        <p class="text-sm text-black/70 leading-relaxed mb-6">DayXero is an iPhone app in development that walks you through five days of prep before your Quit Day, gets you through cravings in three minutes, and never resets your progress for a slip. Join the beta and we'll send your TestFlight invite, then the App Store link at launch.</p>
-        <div data-waitlist-block>
-        {waitlist_form("guide-end-form", f"guide-{g['slug']}-end", theme="light")}
-        {PRIVACY_NOTE["light"]}
+      <aside id="beta-cta" class="cta cta-apricot" aria-label="Join the DayXero beta" data-hide-sticky>
+        {crew("xero", "hello", 2, 88)}
+        <div>
+          <div class="kicker">The DayXero app · iPhone beta</div>
+          <div class="cta-title">Turn this plan into a daily routine.</div>
+          <p>Seven days of prep before your Quit Day, cravings ridden out with Jelli in a few slow breaths, and nothing resets after a slip. Join the beta and we'll send your TestFlight invite, then the App Store link at launch.</p>
+          <div data-waitlist-block>
+          {waitlist_form("guide-end-form", f"guide-{g['slug']}-end", on_colour=True)}
+          {PRIVACY_NOTE["light"]}
+          </div>
         </div>
       </aside>
 
-      <section class="prose-dx" aria-labelledby="faq-heading">
+      <section aria-labelledby="faq-heading">
         <h2 id="faq-heading">Frequently asked questions</h2>
+        <div class="faq-list" data-faq>
+{faq_details(g["faqs"])}
+        </div>
       </section>
-      <div class="flex flex-col gap-3 mt-6">
-{faq_html}
-      </div>
 
-      <section class="prose-dx mt-14">
-        <h2>Sources</h2>
+      <section>
+        <h2 id="sources">Sources</h2>
         <ul>
 {src_html}
         </ul>
         <p class="disclaimer">{html.escape(DISCLAIMER)}</p>
       </section>
-    </article>
+      </article>
+    </div>
 
-    <section class="max-w-5xl mx-auto pb-24" aria-labelledby="related-heading">
-      <h2 id="related-heading" class="text-2xl font-extrabold tracking-tight mb-6">Keep reading</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <section class="wrap related faq" aria-labelledby="related-heading">
+      <h2 id="related-heading" class="d">Keep reading</h2>
+      <div class="guide-grid">
 {related_html}
       </div>
     </section>
@@ -690,12 +687,16 @@ for g in GUIDES:
     ]}
     page(path, g["title"], g["meta"], "article", g["h1"], ld, main, path, sticky=True)
 
-hub_main = f"""  <main class="relative z-10 flex-1 px-4">
-    <section class="max-w-5xl mx-auto pt-16 md:pt-24 pb-24">
-      <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.05] mb-6 max-w-3xl">Quit Nicotine Guides</h1>
-      <p class="text-lg text-white/70 leading-relaxed mb-12 max-w-2xl">Practical, evidence-based guides to quitting vaping, smoking and nicotine pouches, getting through withdrawal and handling cravings. Written by the DayXero team, based on guidance from the WHO, NHS and CDC.</p>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-{chr(10).join(card(g) for g in GUIDES)}
+hub_main = f"""  <main class="pg-main">
+    <header class="wrap g-hero">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> / <span aria-current="page">Guides</span></nav>
+      <span class="chip">Free guides</span>
+      <h1 class="d">Quit nicotine guides.</h1>
+      <p class="lead">Practical, evidence-based guides to quitting vaping, smoking and nicotine pouches, getting through withdrawal and handling cravings. Written by the DayXero team, based on guidance from the WHO, NHS and CDC.</p>
+    </header>
+    <section class="wrap related">
+      <div class="guide-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))">
+{chr(10).join(card(g, with_meta=True) for g in GUIDES)}
       </div>
     </section>
   </main>
@@ -713,6 +714,7 @@ page("/guides/", "Quit Nicotine Guides: Vaping, Smoking & Pouches | DayXero",
      "Free guides to quitting vaping, smoking and nicotine pouches: step-by-step plans, the nicotine "
      "withdrawal timeline and how to handle cravings.",
      "website", "Quit Nicotine Guides", hub_ld, hub_main, "/guides/")
+
 
 INFO_PAGES = []
 
@@ -735,7 +737,7 @@ info_page(
     body=f"""
 <h2 id="why">Why we built it</h2>
 <p>Most quit apps start counting the moment you install them. That suits people who have already stopped, but most people aren't there yet. They want to quit, and they need a plan for getting to the day they stop.</p>
-<p>DayXero starts earlier. A five-day prep phase helps you learn your triggers, plan what you'll do instead and decide whether to use nicotine replacement. Then it supports you on Quit Day and the weeks after.</p>
+<p>DayXero starts earlier. A seven-day prep week helps you learn your triggers, plan what you'll do instead and decide whether to use nicotine replacement. Then it supports you on Quit Day and the weeks after.</p>
 
 <h2 id="principles">What DayXero stands for</h2>
 <ul>
@@ -884,16 +886,19 @@ info_page(
 for ip in INFO_PAGES:
     path = f"/{ip['slug']}/"
     url = f"{BASE}{path}"
-    main = f"""  <main class="relative z-10 flex-1 px-4">
-    <article class="max-w-3xl mx-auto pt-16 md:pt-24 pb-24">
-      <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.05] mb-6">{html.escape(ip['h1'])}</h1>
-      <p class="text-lg md:text-xl text-white/70 leading-relaxed mb-6">{html.escape(ip['intro'])}</p>
-      <p class="text-xs text-white/40 font-mono mb-12">Updated <time datetime="{DATE}">29 October 2026</time></p>
-
-      <div class="prose-dx">
+    main = f"""  <main class="pg-main">
+    <header class="wrap g-hero">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> / <span aria-current="page">{html.escape(ip['h1'])}</span></nav>
+      <h1 class="d" style="margin-top: 20px">{html.escape(ip['h1'])}</h1>
+      <p class="lead">{html.escape(ip['intro'])}</p>
+      <p class="byline">Updated <time datetime="{DATE}">29 October 2026</time></p>
+    </header>
+    <div class="wrap g-body" style="padding-bottom: 96px">
+{toc(ip['body'], [])}
+      <article class="prose">
 {ip['body']}
-      </div>
-    </article>
+      </article>
+    </div>
   </main>
 """
     ld = {"@context": "https://schema.org", "@graph": [
@@ -906,16 +911,22 @@ for ip in INFO_PAGES:
     ]}
     page(path, ip["title"], ip["meta"], "website", ip["h1"], ld, main, path)
 
-BETA_CARD_ICON = {
+ICONS = {
     "flask": '<path d="M10 2v7.31"/><path d="M14 9.3V1.99"/><path d="M8.5 2h7"/><path d="M14 9.3a6.5 6.5 0 1 1-4 0"/>',
     "gift": '<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/>',
     "chat": '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/><path d="M8 12h.01"/><path d="M12 12h.01"/><path d="M16 12h.01"/>',
+    "share": '<path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" x2="12" y1="2" y2="15"/>',
+    "sms": '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
+    "x": '<path d="M4 4l16 16"/><path d="M20 4 4 20"/>',
+    "email": '<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',
+    "copy": '<rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>',
+    "check": '<path d="M20 6 9 17l-5-5"/>',
 }
 
 
-def svg(name, cls="w-6 h-6"):
-    return (f'<svg class="{cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
-            f'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{BETA_CARD_ICON[name]}</svg>')
+def svg(name, size=22, stroke="currentColor"):
+    return (f'<svg width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{stroke}" stroke-width="2.2" '
+            f'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{ICONS[name]}</svg>')
 
 
 BETA_FAQ = [
@@ -925,73 +936,62 @@ BETA_FAQ = [
     ("Is DayXero medical treatment?", "No. DayXero is a habit and wellness tool, not a medical device or treatment. Talk to a doctor or pharmacist about nicotine replacement or stop-smoking medicines."),
 ]
 
-beta_faq_html = "\n".join(
-    f"""        <details class="faq-item"{' open' if i == 0 else ''}>
-          <summary>{html.escape(q)}</summary>
-          <p>{html.escape(a)}</p>
-        </details>""" for i, (q, a) in enumerate(BETA_FAQ))
-
-beta_main = f"""  <main class="relative z-10 flex-1 px-4">
-    <section id="join" class="max-w-3xl mx-auto pt-16 md:pt-24 pb-16 flex flex-col items-center text-center">
-      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#161616] border border-[#BCC388]/30 text-xs font-medium text-white/80 mb-4" data-ref-only hidden>
-        <span class="w-2 h-2 rounded-full bg-[#BCC388]"></span>
-        <span>A friend invited you. Join and you both move up the queue.</span>
-      </div>
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#161616] border border-white/10 text-xs font-mono text-[#BCC388] mb-6">
-        <span>DAYXERO iOS BETA · NOW ENROLLING</span>
-      </div>
-      <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.05] mb-6">
-        Be First <span class="text-white/40">to Quit on</span> <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-[#BCC388]">Your Quit Day.</span>
-      </h1>
-      <p class="text-base sm:text-lg text-white/60 leading-relaxed max-w-2xl mb-10">DayXero is an iPhone app in development for quitting vaping, smoking and nicotine pouches. Beta members test it on TestFlight before anyone else and get founding-member pricing at launch.</p>
-      <div class="w-full max-w-xl" data-waitlist-block>
-        {waitlist_form("beta-form", "beta-page")}
-        {PRIVACY_NOTE["dark"]}
+beta_main = f"""  <main class="pg-main">
+    <section class="beta-hero" id="join">
+      <div class="wrap">
+        <div class="copy">
+          <span class="chip chip-ref" data-ref-only hidden><span class="dot-live"></span>A friend invited you. Join and you both move up the queue.</span>
+          <span class="chip"><span class="dot-live"></span>iPhone beta · now enrolling</span>
+          <h1 class="d">Be first to quit on your Quit Day.</h1>
+          <p class="lead">DayXero is an iPhone app in development for quitting vaping, smoking and nicotine pouches. Beta members test it on TestFlight before anyone else and get founding-member pricing at launch.</p>
+          <div data-waitlist-block>
+            {waitlist_form("beta-form", "beta-page", on_colour=True)}
+            {PRIVACY_NOTE["dark"]}
+          </div>
+        </div>
+        <div class="fig">{crew("xero", "cheer", 2, 260)}</div>
       </div>
     </section>
 
-    <section class="max-w-5xl mx-auto pb-16" aria-label="What beta members get">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="porcelain-card p-8 rounded-card">
-          <div class="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center mb-6 shadow">{svg("flask")}</div>
-          <div class="text-[11px] font-mono uppercase tracking-widest text-black/50 mb-2">EARLY ACCESS</div>
-          <h2 class="text-2xl font-extrabold text-black mb-3">TestFlight before launch</h2>
-          <p class="text-sm text-black/70 leading-relaxed">Invites go out in waves. Try the five-day prep program, Craving SOS and slip debriefs while they're still being shaped.</p>
-        </div>
-        <div class="glass-card-green p-8 rounded-card">
-          <div class="w-12 h-12 rounded-full bg-[#161616] border border-[#BCC388]/30 flex items-center justify-center text-[#BCC388] mb-6 shadow">{svg("gift")}</div>
-          <div class="text-[11px] font-mono uppercase tracking-widest text-[#BCC388] mb-2">FOUNDING PRICE</div>
-          <h2 class="text-2xl font-extrabold text-white mb-3">Half off your first year</h2>
-          <p class="text-sm text-white/70 leading-relaxed">The first 500 confirmed members get Annual at $19.99 for year one (planned $39.99), via an App Store offer code at launch.</p>
-        </div>
-        <div class="dark-card p-8 rounded-card">
-          <div class="w-12 h-12 rounded-full bg-white text-black flex items-center justify-center mb-6 shadow">{svg("chat")}</div>
-          <div class="text-[11px] font-mono uppercase tracking-widest text-white/50 mb-2">SHAPE IT</div>
-          <h2 class="text-2xl font-extrabold text-white mb-3">Tell us what helps</h2>
-          <p class="text-sm text-white/60 leading-relaxed">Beta feedback goes straight to the people building it. Vapes, cigarettes and pouches are all in scope.</p>
-        </div>
+    <section class="wrap beta-cards" aria-label="What beta members get">
+      <div class="bcard bcard-white">
+        <span class="ic" style="background: var(--apricot)">{svg("flask", stroke="#1E1A3A")}</span>
+        <span class="kicker">Early access</span>
+        <h2>TestFlight before launch</h2>
+        <p>Invites go out in waves. Try the seven-day prep week, Craving SOS with Jelli and the evening check-in while they're still being shaped.</p>
+      </div>
+      <div class="bcard bcard-ink">
+        <span class="ic" style="background: var(--apricot)">{svg("gift", stroke="#1E1A3A")}</span>
+        <span class="kicker">Founding price</span>
+        <h2>Half off your first year</h2>
+        <p>The first 500 confirmed members get Annual at $19.99 for year one (planned $39.99), via an App Store offer code at launch.</p>
+      </div>
+      <div class="bcard bcard-mint">
+        <span class="ic" style="background: var(--reading)">{svg("chat", stroke="#1E1A3A")}</span>
+        <span class="kicker">Shape it</span>
+        <h2>Tell us what helps</h2>
+        <p>Beta feedback goes straight to the people building it. Vapes, cigarettes and pouches are all in scope.</p>
       </div>
     </section>
 
-    <section class="max-w-5xl mx-auto pb-16" aria-labelledby="how-heading">
-      <div class="bg-[#121212] border border-white/10 rounded-card p-6 md:p-8 shadow-2xl">
-        <div class="flex justify-between items-center mb-6">
-          <h2 id="how-heading" class="text-xs font-mono text-white/40 uppercase tracking-wider">HOW THE BETA WORKS</h2>
-          <div class="px-3.5 py-1.5 rounded-full bg-[#BCC388] text-black text-xs font-mono font-bold shadow">4 steps</div>
-        </div>
-        <ol class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          <li class="bg-[#141414] border border-white/5 p-4 rounded-2xl"><div class="w-8 h-8 rounded-full bg-[#BCC388] text-black font-bold text-xs flex items-center justify-center mb-3">1</div><div class="text-sm font-semibold text-white">Join with your email</div><div class="text-xs text-white/50 mt-1">One field. No account, no payment.</div></li>
-          <li class="bg-[#141414] border border-white/5 p-4 rounded-2xl"><div class="w-8 h-8 rounded-full bg-[#BCC388] text-black font-bold text-xs flex items-center justify-center mb-3">2</div><div class="text-sm font-semibold text-white">Confirm the link</div><div class="text-xs text-white/50 mt-1">Saves your spot and founding price.</div></li>
-          <li class="porcelain-card p-4 rounded-2xl"><div class="w-8 h-8 rounded-full bg-black text-white font-bold text-xs flex items-center justify-center mb-3">3</div><div class="text-sm font-extrabold text-black">Get a TestFlight invite</div><div class="text-xs text-black/60 mt-1">Sent in waves as spots open.</div></li>
-          <li class="bg-[#101010] border border-white/5 p-4 rounded-2xl"><div class="w-8 h-8 rounded-full bg-[#1A1A1A] text-white/40 font-bold text-xs flex items-center justify-center mb-3">4</div><div class="text-sm font-semibold text-white/70">App Store link at launch</div><div class="text-xs text-white/40 mt-1">Plus your offer code.</div></li>
+    <section class="wrap">
+      <div class="steps4" aria-labelledby="how-heading">
+        <h2 id="how-heading" class="d">How the beta works</h2>
+        <ol>
+          <li class="now"><b>Join with your email</b><span>One field. No account, no payment.</span></li>
+          <li><b>Confirm the link</b><span>Saves your spot and founding price.</span></li>
+          <li><b>Get a TestFlight invite</b><span>Sent in waves as spots open.</span></li>
+          <li><b>App Store link at launch</b><span>Plus your offer code.</span></li>
         </ol>
       </div>
     </section>
 
-    <section class="max-w-3xl mx-auto pb-24" aria-labelledby="beta-faq">
-      <h2 id="beta-faq" class="text-2xl md:text-3xl font-extrabold tracking-tight mb-6 text-center">Beta questions</h2>
-      <div class="flex flex-col gap-3">
-{beta_faq_html}
+    <section class="wrap faq-wrap" aria-labelledby="beta-faq">
+      <div class="inner faq">
+        <h2 id="beta-faq" class="d">Beta questions.</h2>
+        <div class="faq-list" data-faq>
+{faq_details(BETA_FAQ, first_open=True)}
+        </div>
       </div>
     </section>
   </main>
@@ -1008,65 +1008,46 @@ page("/beta/", "Join the DayXero iOS Beta: Quit Nicotine App for iPhone",
      "founding-member pricing at launch.",
      "website", "Join the DayXero iOS beta", beta_ld, beta_main, "/beta/")
 
-SHARE_ICONS = {
-    "share": '<path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" x2="12" y1="2" y2="15"/>',
-    "sms": '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
-    "x": '<path d="M4 4l16 16"/><path d="M20 4 4 20"/>',
-    "email": '<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',
-}
-
-
-def share_icon(name):
-    return (f'<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
-            f'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{SHARE_ICONS[name]}</svg>')
-
-
-SHARE_BTN = "w-11 h-11 rounded-full bg-black text-white flex items-center justify-center shadow hover:scale-110 spring-trans"
-confirmed_main = f"""  <main class="relative z-10 flex-1 px-4">
-    <section id="beta-confirmed" class="max-w-xl mx-auto pt-16 md:pt-24 pb-24">
-      <p id="confirmed-status" class="text-sm text-white/70 leading-relaxed mb-6 text-center" role="status" hidden></p>
-      <div class="porcelain-card rounded-card p-6 md:p-8">
-        <div class="flex items-center justify-between mb-6">
-          <div class="w-12 h-12 rounded-full bg-[#BCC388] text-black flex items-center justify-center shadow"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></div>
-          <span class="px-3 py-1 rounded-full bg-black text-[#BCC388] text-[10px] font-mono font-bold uppercase tracking-wider">FOUNDING MEMBER</span>
+confirmed_main = f"""  <main class="conf">
+    <section id="beta-confirmed" class="wrap">
+      <p id="confirmed-status" class="status" role="status" hidden></p>
+      <div class="conf-card">
+        <div class="top">
+          <span class="tick">{svg("check", 26, "#FFFFFF")}</span>
+          <span class="fm">Founding member</span>
         </div>
-        <div class="text-[11px] font-mono uppercase tracking-widest text-black/50 mb-2">STEP 2 OF 2 · CONFIRMED</div>
-        <h1 class="text-2xl font-extrabold tracking-tight text-black mb-2">You're on the DayXero beta list.</h1>
-        <div id="queue-row" class="flex items-baseline gap-1 mb-4" hidden>
-          <span id="queue-position" class="text-3xl font-extrabold text-black tracking-tight"></span>
-          <span class="text-sm font-normal text-black/40">in the TestFlight queue</span>
+        <div class="kicker" style="color: var(--muted); margin-top: 20px">Step 2 of 2 · confirmed</div>
+        <h1 class="d">You're on the DayXero beta list.</h1>
+        <div id="queue-row" class="queue" hidden>
+          <span id="queue-position" class="d"></span>
+          <span>in the TestFlight queue</span>
         </div>
         <div data-needs-code hidden>
-          <p class="text-sm text-black/70 leading-relaxed mb-5">Know someone who wants to quit too? Each friend who joins and confirms moves you 10 spots closer to the first TestFlight wave. Sharing is optional, and your link never says why you joined.</p>
-          <label for="ref-link" class="block text-[10px] font-mono uppercase tracking-widest text-black/50 mb-2">YOUR INVITE LINK</label>
-          <div class="flex items-center gap-2 p-1.5 rounded-full bg-black/5 border border-black/10 mb-4">
-            <input id="ref-link" readonly value="" class="flex-1 min-w-0 h-10 px-4 rounded-full bg-white border border-black/10 text-xs sm:text-sm font-mono text-black focus:outline-none">
-            <button id="btn-copy-ref" type="button" class="h-10 px-5 rounded-full bg-black text-white font-semibold text-xs hover:bg-[#202020] active:scale-95 spring-trans flex items-center gap-2 whitespace-nowrap"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span>Copy</span></button>
+          <p>Know someone who wants to quit too? Each friend who joins and confirms moves you 10 spots closer to the first TestFlight wave. Sharing is optional, and your link never says why you joined.</p>
+          <label for="ref-link" class="kicker" style="color: var(--muted)">Your invite link</label>
+          <div class="ref-row">
+            <input id="ref-link" readonly value="">
+            <button id="btn-copy-ref" type="button" class="btn">{svg("copy", 16)}<span>Copy</span></button>
           </div>
-          <div class="flex items-center gap-2.5 mb-6">
-            <button id="btn-share" type="button" title="Share" aria-label="Share" class="{SHARE_BTN}">{share_icon("share")}</button>
-            <a id="btn-share-sms" href="#" title="Send as a message" aria-label="Send as a message" class="{SHARE_BTN}">{share_icon("sms")}</a>
-            <a id="btn-share-x" href="#" target="_blank" rel="noopener" title="Post on X" aria-label="Post on X" class="{SHARE_BTN}">{share_icon("x")}</a>
-            <a id="btn-share-email" href="#" title="Email a friend" aria-label="Email a friend" class="{SHARE_BTN}">{share_icon("email")}</a>
+          <div class="shares">
+            <button id="btn-share" type="button" title="Share" aria-label="Share" class="share-btn">{svg("share", 18)}</button>
+            <a id="btn-share-sms" href="#" title="Send as a message" aria-label="Send as a message" class="share-btn">{svg("sms", 18)}</a>
+            <a id="btn-share-x" href="#" target="_blank" rel="noopener" title="Post on X" aria-label="Post on X" class="share-btn">{svg("x", 18)}</a>
+            <a id="btn-share-email" href="#" title="Email a friend" aria-label="Email a friend" class="share-btn">{svg("email", 18)}</a>
           </div>
-          <div class="pt-5 border-t border-black/10">
-            <div class="flex justify-between items-center text-[11px] font-medium tracking-[0.08em] uppercase text-black/50 mb-2">
-              <span>Friends joined</span>
-              <span id="friends-count" class="font-mono text-black">0 / 3 · first-wave access</span>
-            </div>
-            <div class="h-1.5 w-full bg-black/10 rounded-full overflow-hidden">
-              <div id="friends-bar" class="h-full bg-[#43511C] rounded-full" style="width: 0%"></div>
-            </div>
+          <div class="friends">
+            <div class="row"><span>Friends joined</span><b id="friends-count">0 / 3 · first-wave access</b></div>
+            <div class="bar"><div id="friends-bar" style="width: 0%"></div></div>
           </div>
         </div>
       </div>
 
-      <div class="mt-6 dark-card rounded-card p-6 md:p-8">
-        <div class="text-[11px] font-mono uppercase tracking-widest text-white/50 mb-4">WHAT HAPPENS NEXT</div>
-        <ol class="flex flex-col gap-4 text-sm">
-          <li class="flex items-start gap-3"><span class="w-8 h-8 shrink-0 rounded-full bg-[#BCC388] text-black font-bold text-xs flex items-center justify-center">1</span><span class="text-white/70">TestFlight invites go out in waves, highest in the queue first.</span></li>
-          <li class="flex items-start gap-3"><span class="w-8 h-8 shrink-0 rounded-full bg-white text-black font-bold text-xs flex items-center justify-center">2</span><span class="text-white/70">On launch day you get the App Store link and your founding offer code.</span></li>
-          <li class="flex items-start gap-3"><span class="w-8 h-8 shrink-0 rounded-full bg-[#161616] border border-white/10 text-white/60 font-bold text-xs flex items-center justify-center">3</span><span class="text-white/70">That's it. No newsletter unless you ask. Unsubscribe in one tap.</span></li>
+      <div class="next">
+        <div class="kicker">What happens next</div>
+        <ol>
+          <li>TestFlight invites go out in waves, highest in the queue first.</li>
+          <li>On launch day you get the App Store link and your founding offer code.</li>
+          <li>That's it. No newsletter unless you ask. Unsubscribe in one tap.</li>
         </ol>
       </div>
     </section>
@@ -1075,7 +1056,7 @@ confirmed_main = f"""  <main class="relative z-10 flex-1 px-4">
 page("/beta/confirmed/", "You're on the DayXero Beta List",
      "Your spot on the DayXero iOS beta is confirmed.",
      "website", "You're on the DayXero beta list", {"@context": "https://schema.org", "@graph": [ORG]},
-     confirmed_main, "/beta/confirmed/", noindex=True)
+     confirmed_main, "/beta/confirmed/", noindex=True, theme_color="#FFC38A")
 
 sitemap = ['<?xml version="1.0" encoding="UTF-8"?>',
            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']

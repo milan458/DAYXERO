@@ -8,7 +8,7 @@
   <link rel="canonical" href="https://dayxero.in/terms/">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <meta name="theme-color" content="#000000">
+  <meta name="theme-color" content="#FBF7F1">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="DayXero">
   <meta property="og:url" content="https://dayxero.in/terms/">
@@ -20,8 +20,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/site.css">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/v4.css">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -66,36 +66,43 @@
   }
   </script>
 </head>
-<body class="bg-black text-white antialiased font-sans min-h-screen flex flex-col">
-  <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[1000px] max-w-full h-[300px] bg-gradient-to-b from-[#43511C]/25 via-[#BCC388]/10 to-transparent blur-[140px] pointer-events-none z-0"></div>
-  <header class="sticky top-4 z-50 flex justify-center px-4 pt-4">
-    <nav class="flex items-center justify-between gap-4 px-5 py-3 rounded-full bg-black/85 backdrop-blur-2xl border border-white/15 shadow-2xl shadow-black max-w-5xl w-full" aria-label="Main">
-      <a href="/" class="flex items-center gap-3 group">
-        <span class="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center shadow-md">
-          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3v18"/><circle cx="13" cy="14" r="7"/></svg>
-        </span>
-        <span class="flex flex-col">
-          <span class="font-bold text-sm tracking-tight text-white group-hover:text-[#BCC388]">DayXero</span>
-          <span class="text-[9px] text-white/40 tracking-widest uppercase font-mono -mt-0.5">Nicotine Protocol</span>
-        </span>
-      </a>
-      <div class="hidden md:flex items-center gap-1 text-xs font-medium text-white/70">
-        <a href="/quit-vaping/" class="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-white/10">Quit Vaping</a>
-        <a href="/quit-smoking/" class="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-white/10">Quit Smoking</a>
-        <a href="/quit-nicotine-pouches/" class="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-white/10">Quit Pouches</a>
-        <a href="/nicotine-withdrawal-timeline/" class="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-white/10">Withdrawal</a>
-        <a href="/guides/" class="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-white/10">All Guides</a>
+<body class="pg">
+  <header class="site-head">
+    <nav class="nav" aria-label="Main">
+      <a class="brand" href="/" aria-label="DayXero home"><span data-crew="xero" data-mood="hello" data-stage="2" data-size="44"></span><span class="d">DayXero</span></a>
+      <div class="nav-links">
+        <a href="/guides/">Guides</a>
+        <a href="/#app">The app</a>
+        <a href="/#how">How it works</a>
+        <a href="/#pricing">Pricing</a>
       </div>
-      <a href="/beta/" class="shrink-0 whitespace-nowrap px-4 py-2 rounded-full bg-[#BCC388] text-black font-semibold text-xs tracking-tight hover:bg-white">Join the beta</a>
+      <a class="btn btn-s" href="/beta/">Join the beta</a>
     </nav>
   </header>
-  <main class="relative z-10 flex-1 px-4">
-    <article class="max-w-3xl mx-auto pt-16 md:pt-24 pb-24">
-      <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.05] mb-6">Terms of Use</h1>
-      <p class="text-lg md:text-xl text-white/70 leading-relaxed mb-6">These terms cover your use of the DayXero iPhone app and this website. By using either one, you agree to them.</p>
-      <p class="text-xs text-white/40 font-mono mb-12">Updated <time datetime="2026-10-29">29 October 2026</time></p>
+  <main class="pg-main">
+    <header class="wrap g-hero">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> / <span aria-current="page">Terms of Use</span></nav>
+      <h1 class="d" style="margin-top: 20px">Terms of Use</h1>
+      <p class="lead">These terms cover your use of the DayXero iPhone app and this website. By using either one, you agree to them.</p>
+      <p class="byline">Updated <time datetime="2026-10-29">29 October 2026</time></p>
+    </header>
+    <div class="wrap g-body" style="padding-bottom: 96px">
+      <aside class="toc">
+        <nav aria-label="On this page">
+          <div class="kicker" style="color: var(--muted)">On this page</div>
+          <ol>
+          <li><a href="#medical">Not medical advice</a></li>
+          <li><a href="#subscriptions">Subscriptions and payments</a></li>
+          <li><a href="#use">Using DayXero</a></li>
+          <li><a href="#content">Our content</a></li>
+          <li><a href="#liability">No guarantees</a></li>
+          <li><a href="#changes">Changes</a></li>
+          <li><a href="#contact">Contact</a></li>
+          </ol>
+        </nav>
+      </aside>
 
-      <div class="prose-dx">
+      <article class="prose">
 
 <h2 id="medical">Not medical advice</h2>
 <p>DayXero provides educational habit and wellness support. It doesn't diagnose or treat any condition, and it doesn't replace a doctor, pharmacist or stop-smoking service. Talk to a healthcare professional before using nicotine replacement or stop-smoking medicines, especially if you are pregnant, have a heart condition, take regular medicine or are under 18. In an emergency, call your local emergency number.</p>
@@ -124,41 +131,43 @@
 <h2 id="contact">Contact</h2>
 <p>Questions about these terms: <a href="mailto:hello@dayxero.in">hello@dayxero.in</a></p>
 
-      </div>
-    </article>
-  </main>
-  <footer class="border-t border-white/10 bg-black py-14 px-4 relative z-10 text-white/60 mt-auto">
-    <div class="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8 text-xs">
-      <div class="flex flex-col gap-2">
-        <span class="font-bold text-white tracking-tight text-sm">DayXero</span>
-        <p class="text-white/40 max-w-xs">Quit on your Quit Day. An iPhone app in development to quit vaping, smoking and nicotine pouches.</p>
-      </div>
-      <div class="flex flex-col gap-2">
-        <span class="font-mono uppercase tracking-widest text-[10px] text-white/40">Guides</span>
-        <a href="/quit-vaping/" class="hover:text-white">How to Quit Vaping</a>
-        <a href="/quit-smoking/" class="hover:text-white">How to Quit Smoking</a>
-        <a href="/quit-nicotine-pouches/" class="hover:text-white">How to Quit Nicotine Pouches</a>
-        <a href="/nicotine-withdrawal-timeline/" class="hover:text-white">Nicotine Withdrawal Timeline</a>
-        <a href="/nicotine-cravings/" class="hover:text-white">How to Handle Nicotine Cravings</a>
-      </div>
-      <div class="flex flex-col gap-2">
-        <span class="font-mono uppercase tracking-widest text-[10px] text-white/40">DayXero</span>
-        <a href="/" class="hover:text-white">Home</a>
-        <a href="/#methodology" class="hover:text-white">How it works</a>
-        <a href="/beta/" class="hover:text-white">Join the beta</a>
-        <a href="/#pricing" class="hover:text-white">Founding offer</a>
-        <a href="/#faq" class="hover:text-white">FAQ</a>
-        <a href="/about/" class="hover:text-white">About</a>
-        <a href="/contact/" class="hover:text-white">Contact</a>
-        <a href="/privacy/" class="hover:text-white">Privacy</a>
-        <a href="/terms/" class="hover:text-white">Terms</a>
-      </div>
+      </article>
     </div>
-    <div class="max-w-5xl mx-auto mt-10 pt-6 border-t border-white/5 text-[11px] text-white/30 flex flex-col sm:flex-row justify-between gap-4">
-      <div>Medical Disclaimer: DayXero provides educational habit and wellness support, not diagnostic medical treatment. Always consult a healthcare professional regarding NRT dosing and smoking cessation.</div>
-      <div class="shrink-0">© 2026 DayXero.</div>
+  </main>
+  <footer class="foot dk foot-compact">
+    <div class="wrap foot-grid" style="position: relative">
+      <div class="glim-small" aria-hidden="true"><span data-crew="glim" data-mood="sleepy" data-stage="3" data-size="110"></span></div>
+      <div>
+        <a class="brand" href="/" aria-label="DayXero home"><span data-crew="xero" data-mood="sleepy" data-stage="2" data-size="46"></span><span class="d">DayXero</span></a>
+        <p>Quit on your Quit Day. An iPhone app in development for quitting cigarettes, vapes and pouches.</p>
+      </div>
+      <nav aria-label="Guides"><div class="kicker">Guides</div>
+        <a href="/quit-vaping/">How to Quit Vaping</a>
+        <a href="/quit-smoking/">How to Quit Smoking</a>
+        <a href="/quit-nicotine-pouches/">How to Quit Nicotine Pouches</a>
+        <a href="/nicotine-withdrawal-timeline/">Nicotine Withdrawal Timeline</a>
+        <a href="/nicotine-cravings/">How to Handle Nicotine Cravings</a>
+      </nav>
+      <nav aria-label="Product"><div class="kicker">Product</div>
+        <a href="/#app">The app</a>
+        <a href="/#how">How it works</a>
+        <a href="/#crew">The crew</a>
+        <a href="/#pricing">Pricing</a>
+        <a href="/beta/">Join the beta</a>
+      </nav>
+      <nav aria-label="Company"><div class="kicker">Company</div>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+        <a href="/privacy/">Privacy</a>
+        <a href="/terms/">Terms</a>
+      </nav>
+    </div>
+    <div class="wrap foot-legal">
+      <p>DayXero offers education and habit support, not medical treatment. Talk to a doctor or pharmacist about nicotine replacement dosing. These tools aren’t a substitute for professional help. If things feel like too much, <a href="/nicotine-withdrawal-timeline/#help">find a helpline near you</a>.</p>
+      <p>© 2026 DayXero. Your data stays on your phone.</p>
     </div>
   </footer>
+  <script src="/assets/crew.js" defer></script>
   <script src="/assets/waitlist.js" defer></script>
 </body>
 </html>

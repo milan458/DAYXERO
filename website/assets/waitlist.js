@@ -105,17 +105,36 @@
       el.dataset.waitlistMsg = form.id;
       el.setAttribute('role', 'status');
       el.setAttribute('aria-live', 'polite');
-      el.className = 'text-xs leading-relaxed mt-3 ' + (form.dataset.theme === 'light' ? 'text-black/70' : 'text-white/70');
+      el.className = form.dataset.theme === 'v4'
+        ? 'wl-msg'
+        : 'text-xs leading-relaxed mt-3 ' + (form.dataset.theme === 'light' ? 'text-black/70' : 'text-white/70');
       form.insertAdjacentElement('afterend', el);
     }
     return el;
   }
 
   // State 1 card: replaces the form (and its microcopy) until the person confirms by email.
-  function confirmCard(email, light, sent) {
+  function confirmCard(email, light, sent, theme) {
     const card = document.createElement('div');
     card.setAttribute('role', 'status');
     card.setAttribute('aria-live', 'polite');
+    if (theme === 'v4') {
+      // The v4 homepage: classes live in assets/v4.css.
+      card.className = 'wl-card';
+      card.innerHTML = `
+      <div class="wl-card-icon">${ICON_MAIL}</div>
+      <div class="wl-card-kicker">Step 1 of 2 · ${sent ? 'Check your inbox' : 'You’re on the list'}</div>
+      <div class="wl-card-title">${sent ? 'Confirm your email to save your spot.' : 'We’ll email you a link to confirm.'}</div>
+      <p class="wl-card-p">${sent
+        ? `We sent a link to <span class="wl-card-strong">${escapeHtml(maskEmail(email))}</span>. Tap it within 24 hours. Can't see it? Check Promotions or Spam.`
+        : `We saved <span class="wl-card-strong">${escapeHtml(maskEmail(email))}</span>. A confirmation link is on its way soon. Tap it to keep your spot.`}</p>
+      <div class="wl-card-actions">
+        ${sent ? '<button type="button" data-action="resend" class="btn btn-s">Resend email</button>' : ''}
+        <button type="button" data-action="change" class="btn btn-s btn-outline">Use a different email</button>
+      </div>
+      <p data-card-msg class="wl-card-msg" hidden></p>`;
+      return card;
+    }
     card.className = light
       ? 'rounded-card p-6 bg-black/5 border border-black/10 text-left'
       : 'glass-card-green rounded-card p-6 text-left';
@@ -175,7 +194,7 @@
   function showConfirm(form, email, sent) {
     // The block to swap: the form plus its microcopy sit in [data-waitlist-block] when there is one.
     const block = form.closest('[data-waitlist-block]') || form;
-    const card = confirmCard(email, form.dataset.theme === 'light', sent);
+    const card = confirmCard(email, form.dataset.theme === 'light', sent, form.dataset.theme);
     block.hidden = true;
     block.insertAdjacentElement('afterend', card);
     const cardMsg = card.querySelector('[data-card-msg]');

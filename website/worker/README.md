@@ -16,11 +16,11 @@ Signups are stored in Cloudflare D1. The table is created on first use, so there
 
 Until step 1 is done, the forms tell visitors that signups open soon and give the contact email.
 
-1. **Storage (required).** From `website/`:
+1. **Storage (required).** From the repo root:
    ```
    npx wrangler d1 create dayxero-waitlist
    ```
-   Paste the printed `database_id` into the `d1_databases` block in `wrangler.jsonc` and uncomment it.
+   Paste the printed `database_id` into the `d1_databases` block in `wrangler.jsonc` (repo root) and uncomment it.
 2. **Confirmation email (needed for double opt-in).** Create a Resend account, verify a sending domain
    (for example `mail.dayxero.in`, with SPF, DKIM and DMARC), then:
    ```
@@ -44,9 +44,34 @@ Optional variables: `SITE_URL` (origin used in links sent by the cron, default `
 
 ## Local testing
 
-Copy `wrangler.jsonc` to `wrangler.dev.jsonc` (git and the deploy both ignore that name), uncomment
+From the repo root, copy `wrangler.jsonc` to `wrangler.dev.jsonc` (git ignores that name), uncomment
 `d1_databases` in the copy with any placeholder id, then:
 ```
 npx wrangler dev -c wrangler.dev.jsonc
 ```
 `wrangler dev` uses a local D1 database, so nothing touches production.
+
+## Deploying
+
+The Worker config is `wrangler.jsonc` at the repo root (`main` and `assets.directory` point into `website/`),
+so `npx wrangler deploy` works from the root with no flags. Two things can run it:
+
+- **The `Website` GitHub workflow** (`.github/workflows/website.yml`): on every push to `main` that touches the
+  site, it regenerates the guide pages and deploys with the `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`
+  secrets. This is what ships dayxero.in today.
+- **Cloudflare Workers Builds** (the Git integration on the `dayxero` Worker). It needs these settings in the
+  Cloudflare dashboard, under the Worker's *Settings → Build*:
+
+  | Setting | Value |
+  |---|---|
+  | Git repository | `milan458/DAYXERO` |
+  | Production branch | `main` |
+  | Root directory | `/` (the repo root, where `wrangler.jsonc` is) |
+  | Build command | `npm run website:guides` |
+  | Deploy command | `npx wrangler deploy` |
+  | Non-production branch deploy command | `npx wrangler versions upload` (the default; gives every PR a preview URL) |
+  | Build watch paths (include) | `website/**`, `scripts/website/**`, `wrangler.jsonc`, `package.json` |
+
+  With the production branch set to anything other than `main`, Workers Builds only uploads previews for `main`
+  and the live site never updates. That is why the workflow exists. Once Workers Builds deploys `main` correctly,
+  the workflow can go, so the site isn't deployed twice per push.
