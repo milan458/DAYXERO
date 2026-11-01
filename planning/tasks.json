@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-11-01T19:35:22.844Z"
+    "updated": "2026-11-01T19:37:08.448Z"
   },
   "now": {
     "section": "S27",
@@ -2736,7 +2736,7 @@
         {
           "id": "S27.16",
           "title": "Rank 16 · Xero grows: visible stages 1–4, sky clarity by days, distinct art and fact per milestone, stage sheet in the lab.",
-          "status": "pending",
+          "status": "in_progress",
           "notes": "milestone is one template × 11; Xero identical days 1–14 and 30–365. CrewGrowth, XeroView, HorizonScene, MilestoneViews. Wave 4.",
           "created": "2026-11-01T18:37:56.753Z",
           "completed": null
@@ -2744,7 +2744,7 @@
         {
           "id": "S27.17",
           "title": "Rank 17 · Dusk variant of the dawn hero for dark mode; lab renders sheets over their real parent.",
-          "status": "pending",
+          "status": "in_progress",
           "notes": "Hero art at full brightness over plum on 5 screens; 14 sheet screens never reviewed as they will look. Wave 4.",
           "created": "2026-11-01T18:37:56.801Z",
           "completed": null
@@ -2752,7 +2752,7 @@
         {
           "id": "S27.18",
           "title": "Rank 18 · SOS break menu / lifts / 'use your gum' row; show mission data back; sessions at days 45, 60, 90 and a weekly Glim check-in.",
-          "status": "pending",
+          "status": "in_progress",
           "notes": "Program promises SOS options it does not show; Day 31 cliff. CravingSOSView, MissionPrompts, program.json, NotificationPlan. Wave 4.",
           "created": "2026-11-01T18:37:56.854Z",
           "completed": null
@@ -2761,14 +2761,14 @@
           "id": "S27.19",
           "title": "Rank 19 · Rename the sun character, trademark search, plan the move off .in.",
           "status": "done",
-          "notes": "'Xero' is a defended software mark (Xero Ltd) with ANZ on the launch list. Decide the name in Wave 1 (D7), rename in Wave 4.\nMilan, 1 Nov 2026: keep the name 'Xero' for now. Rename parked; revisit with a trademark search before launching in Australia and New Zealand.",
+          "notes": "'Xero' is a defended software mark (Xero Ltd) with ANZ on the launch list. Decide the name in Wave 1 (D7), rename in Wave 4.\nMilan, 1 Nov 2026: keep the name 'Xero' for now. Rename parked; revisit with a trademark search before launching in Australia and New Zealand.\nWave 4 started 1 Nov 2026; the mascot name stays Xero (parked).",
           "created": "2026-11-01T18:37:56.927Z",
           "completed": "2026-11-01T18:53:56.133Z"
         },
         {
           "id": "S27.20",
           "title": "Rank 20 · Accessibility and convention debt: Dynamic Type (AX3) states and motion tokens in the lab; 44 pt targets; one hold duration; reasons under disabled CTAs; red destructive buttons; merged day-end picker.",
-          "status": "pending",
+          "status": "in_progress",
           "notes": "Move.swift, Buttons4.swift, ProgramView tabs, MilestoneViews segments, DayEndSettings. Wave 4.",
           "created": "2026-11-01T18:37:56.997Z",
           "completed": null
@@ -2777,6 +2777,31 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-11-01T19:37:08.448Z",
+      "type": "note",
+      "message": "S27.19: Wave 4 started 1 Nov 2026; the mascot name stays Xero (parked)."
+    },
+    {
+      "time": "2026-11-01T19:37:08.394Z",
+      "type": "status",
+      "message": "S27.20 pending → in_progress"
+    },
+    {
+      "time": "2026-11-01T19:37:08.343Z",
+      "type": "status",
+      "message": "S27.18 pending → in_progress"
+    },
+    {
+      "time": "2026-11-01T19:37:08.295Z",
+      "type": "status",
+      "message": "S27.17 pending → in_progress"
+    },
+    {
+      "time": "2026-11-01T19:37:08.246Z",
+      "type": "status",
+      "message": "S27.16 pending → in_progress"
+    },
     {
       "time": "2026-11-01T19:35:22.844Z",
       "type": "status",
