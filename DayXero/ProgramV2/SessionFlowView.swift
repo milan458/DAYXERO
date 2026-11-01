@@ -212,9 +212,16 @@ struct SessionIntro: View {
                         .accessibilityAddTraits(.isHeader)
                         .dxArrive(1)
                     Text(verbatim: session.subtitle.resolve(variant) ?? "").dxType(.body).foregroundStyle(Read4.muted).dxArrive(2)
-                    Label("\(session.durationMinutes) min · Audio, activities and today's mission", systemImage: "headphones")
-                        .dxType(.footnote).foregroundStyle(Read4.ink)
-                        .dxArrive(2)
+                    // Only a session with a mission promises one (Graduation has none).
+                    Group {
+                        if session.mission != nil {
+                            Label("\(session.durationMinutes) min · Audio, activities and today's mission", systemImage: "headphones")
+                        } else {
+                            Label("\(session.durationMinutes) min · Audio and activities", systemImage: "headphones")
+                        }
+                    }
+                    .dxType(.footnote).foregroundStyle(Read4.ink)
+                    .dxArrive(2)
                     if let hint = session.listenHint?.resolve(variant) {
                         Label(hint, systemImage: "clock")
                             .dxType(.footnote).foregroundStyle(Read4.ink)
@@ -389,7 +396,7 @@ struct SessionCompletion: View {
         case .available, .inProgress: String(localized: "Next: \(next.label) · \(title), ready now")
         case .scheduled(.tomorrow): String(localized: "Next: \(next.label) · \(title), tomorrow")
         case let .scheduled(.dayXero(date)): String(localized: "Day Xero is \(date.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)))")
-        case let .scheduled(.quitDay(day)): String(localized: "Next session on Day \(day)")
+        case let .scheduled(.quitDay(days)): String(localized: "Next session on Day \(ProgramUnlock.counterDay(daysSinceQuit: days))")
         default: nil
         }
     }

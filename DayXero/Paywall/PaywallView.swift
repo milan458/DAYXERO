@@ -78,10 +78,11 @@ struct PaywallView: View {
             case .pending:
                 PaywallMessage(systemImage: "clock", tint: .accent, title: "Waiting for approval",
                                message: "Your purchase needs approval (for example, Ask to Buy). We'll unlock everything as soon as it goes through.",
-                               button: "Start Day 1 meanwhile", action: onClose)
+                               button: model.isBeforeQuitDay ? "Start Day 1 meanwhile" : "Back to my day", action: onClose)
             case .unlocked:
-                PaywallMessage(systemImage: "checkmark", tint: .sage, title: "You're all set, \(name)",
-                               message: unlockedMessage, button: "Start prep day 1", action: onClose)
+                PaywallMessage(systemImage: "checkmark", tint: .sage, title: allSetTitle,
+                               message: unlockedMessage, button: model.isBeforeQuitDay ? "Start prep day 1" : "Back to my day",
+                               action: onClose)
                     .sensoryFeedback(DX.Haptic.commit, trigger: model.phase)
             }
             if let notice = model.notice {
@@ -93,7 +94,11 @@ struct PaywallView: View {
         .animation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion), value: model.phase)
         .animation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion), value: model.notice != nil)
         .background(Read4.background.ignoresSafeArea())
-        .task { await model.load() }
+        .task {
+            // Before Quit Day the trial waits for the Quit Day offer (decisions 15 and 23).
+            model.trialOpensOn = quitDay
+            await model.load()
+        }
         .task {
             guard context != nil, !UIAccessibility.isVoiceOverRunning else { closeShown = true; return }
             try? await Task.sleep(for: .seconds(3))
@@ -108,7 +113,32 @@ struct PaywallView: View {
                 ? "Your free trial runs until \(end, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)). We'll remind you \(reminderLead) before it ends."
                 : "Your free trial runs until \(end, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated))."
         }
-        return "The full program is unlocked. Let's get you ready for Quit Day."
+        if model.isBeforeQuitDay { return "The full program is unlocked. Let's get you ready for Quit Day." }
+        return "The full program is unlocked."
+    }
+
+    /// "Milan, your plan is ready", or "Your plan is ready" when there's no name to use.
+    static func readyTitle(name: String) -> String {
+        let name = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        return name.isEmpty ? String(localized: "Your plan is ready") : String(localized: "\(name), your plan is ready")
+    }
+
+    private var allSetTitle: LocalizedStringKey {
+        let name = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        if name.isEmpty { return "You're all set" }
+        return "You're all set, \(name)"
+    }
+
+    /// Before Quit Day: when the free trial opens, in place of the plan that carries it.
+    @ViewBuilder
+    private var heldTrialNote: some View {
+        if let days = model.heldTrialDays {
+            Text("Your \(days)-day free trial opens on your Quit Day, \(quitDay, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)).")
+                .dxFont(14, weight: 400, style: .footnote)
+                .foregroundStyle(Read4.muted)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
     }
 
     // MARK: Main
@@ -123,7 +153,7 @@ struct PaywallView: View {
             header.padding(.horizontal, DX.Space.m).padding(.top, DX.Space.xs).dxReadableColumn()
             ScrollView {
                 VStack(alignment: .leading, spacing: DX.Space.xs) {
-                    Text("\(name), your plan is ready").v4Text(.title).accessibilityAddTraits(.isHeader)
+                    Text(verbatim: Self.readyTitle(name: name)).v4Text(.title).accessibilityAddTraits(.isHeader)
                     Text("Everything for your \(quitDay, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)) Quit Day.")
                         .v4Text(.subtitle)
                     VStack(alignment: .leading, spacing: 7) {
@@ -222,7 +252,7 @@ struct PaywallView: View {
     @ViewBuilder
     private var planCards: some View {
         let recurring = model.plans.filter { $0.plan != .lifetime }
-        if recurring.isEmpty {
+        if recurring.isEmpty, model.heldTrialDays == nil {
             HStack(spacing: DX.Space.s) {
                 ForEach(0..<2, id: \.self) { _ in
                     RoundedRectangle(cornerRadius: 22, style: .continuous).fill(Read4.surface).frame(height: 132)
@@ -238,6 +268,7 @@ struct PaywallView: View {
         if let lifetime = model.plans.first(where: { $0.plan == .lifetime }) {
             PlanRow(option: lifetime, isSelected: model.selected == .lifetime, savingPercent: nil) { model.select(.lifetime) }
         }
+        heldTrialNote
     }
 
     private func planCard(_ option: PlanOption) -> some View {
@@ -374,7 +405,7 @@ struct PaywallView: View {
     @ViewBuilder
     private var plans: some View {
         VStack(spacing: DX.Space.xs) {
-            if model.plans.isEmpty {
+            if model.plans.isEmpty, model.heldTrialDays == nil {
                 ForEach(0..<3, id: \.self) { _ in
                     RoundedRectangle(cornerRadius: 20, style: .continuous).fill(Read4.surface).frame(height: 60)
                 }
@@ -386,6 +417,7 @@ struct PaywallView: View {
                     }
                 }
             }
+            heldTrialNote
         }
         .padding(.top, DX.Space.xs)
     }

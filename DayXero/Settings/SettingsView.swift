@@ -135,7 +135,7 @@ struct SettingsSheet: View {
                 case .products: ProductsSettingsView(profile: profile)
                 case .quitDay: QuitDaySettingsView(profile: profile)
                 case .currency: CurrencySettingsView(profile: profile)
-                case .subscription: SubscriptionSettingsView()
+                case .subscription: SubscriptionSettingsView(profile: profile)
                 case .privacy: PrivacySettingsView()
                 case .health: HealthInfoView()
                 }
@@ -516,6 +516,7 @@ struct QuitDaySettingsView: View {
 // MARK: - Subscription
 
 struct SubscriptionSettingsView: View {
+    let profile: UserProfile
     @Environment(Entitlement.self) private var entitlement
     @State private var current: CurrentPlan?
     @State private var plans: [PlanOption] = []
@@ -543,6 +544,12 @@ struct SubscriptionSettingsView: View {
                     Text("DayXero Pro is active.")
                 } else {
                     Button("Unlock the full program") {
+                        // Before Quit Day, DayXero's own paywall, which holds the trial for Quit Day (decision 15):
+                        // a Superwall paywall could sell a trial that starts today.
+                        guard !isPrep else {
+                            showPaywall = true
+                            return
+                        }
                         // Superwall's paywall when a campaign has one here; DayXero's otherwise (S20).
                         Paywalls.present(.upgradeFromSettings) { outcome in
                             switch outcome {
@@ -577,9 +584,14 @@ struct SubscriptionSettingsView: View {
         }
         .manageSubscriptionsSheet(isPresented: $manage)
         .fullScreenCover(isPresented: $showPaywall) {
-            PaywallView(name: "", quitDay: .now, model: PaywallModel(store: entitlement.store, entitlement: entitlement),
+            PaywallView(name: profile.name, quitDay: profile.quitDay,
+                        model: PaywallModel(store: entitlement.store, entitlement: entitlement),
                         onClose: { showPaywall = false })
         }
+    }
+
+    private var isPrep: Bool {
+        ProgressStats(quitDay: profile.quitDay, baselines: [], clock: DayClock(boundaryHour: profile.dayBoundaryHour)).isPrep(at: .now)
     }
 
     private func planLine(_ current: CurrentPlan) -> String {

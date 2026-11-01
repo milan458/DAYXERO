@@ -136,10 +136,10 @@ struct ChoiceBeat: View {
         return count > 0
     }
 
-    /// The chosen option's own feedback wins over the activity's.
+    /// The chosen option's own feedback wins over the activity's, for one pick or several ("Not much yet").
     private var feedback: String? {
         guard ready else { return nil }
-        if let own = options.first(where: { selected.contains($0.id) })?.feedback, !beat.multi { return own }
+        if let own = options.first(where: { selected.contains($0.id) && $0.feedback != nil })?.feedback { return own }
         let general = ctx.text(beat.feedback)
         return general.isEmpty ? nil : general
     }

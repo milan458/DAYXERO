@@ -125,6 +125,9 @@ struct OnboardingScaffold<Content: View, Footer: View>: View {
     let title: LocalizedStringKey
     var subtitle: LocalizedStringKey? = nil
     var eyebrow: LocalizedStringKey? = nil
+    /// Xero's bubbles: card on colour on lilac; a surface fill and hairline on the cream reading ground.
+    var bubbleFill: Color = DX.Fill.cardOnColour
+    var bubbleBorder: Color = .clear
     @ViewBuilder let content: () -> Content
     @ViewBuilder let footer: () -> Footer
 
@@ -136,11 +139,11 @@ struct OnboardingScaffold<Content: View, Footer: View>: View {
                         Text(eyebrow).dxType(.caption).textCase(.uppercase).foregroundStyle(DX.Ground.lilac.muted)
                             .dxArrive(0)
                     }
-                    XeroBubble(text: Text(title), large: true)
+                    XeroBubble(text: Text(title), large: true, fill: bubbleFill, border: bubbleBorder)
                         .accessibilityAddTraits(.isHeader)
                         .dxArrive(0)
                     if let subtitle {
-                        XeroBubble(text: Text(subtitle)).dxArrive(1)
+                        XeroBubble(text: Text(subtitle), fill: bubbleFill, border: bubbleBorder).dxArrive(1)
                     }
                     AnswerTrayCard {
                         VStack(alignment: .leading, spacing: 10) { content() }

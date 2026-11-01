@@ -40,6 +40,35 @@ struct OnboardingModelTests {
                                    .personal, .pastAttempts, .nrt, .quitDay, .building, .reveal, .trial])
     }
 
+    @Test func progressNeverMovesBackWhenASecondProductIsPicked() {
+        let model = makeModel()
+        model.next()
+        #expect(model.step == .products)
+        let before = model.progress
+        model.products = [.cigarettes]
+        #expect(model.progress == before)
+        model.products = [.cigarettes, .vape]
+        #expect(model.progress == before)
+        model.products = [.cigarettes, .vape, .pouches]
+        #expect(model.progress == before)
+    }
+
+    @Test func progressRisesOnEveryStepAndEndsFull() {
+        let choices: [Set<DayXeroCore.Product>] = [[.cigarettes], [.cigarettes, .vape], [.cigarettes, .vape, .pouches]]
+        for products in choices {
+            let model = makeModel()
+            model.products = products
+            var values = [model.progress]
+            while model.step != .trial {
+                model.next()
+                values.append(model.progress)
+            }
+            #expect(values.first == 0)
+            #expect(values.last == 1)
+            #expect(zip(values, values.dropFirst()).allSatisfy { $0 < $1 }, "\(values)")
+        }
+    }
+
     @Test func requiredStepsBlockContinueUntilAnswered() {
         let model = makeModel()
         model.products = [.cigarettes]

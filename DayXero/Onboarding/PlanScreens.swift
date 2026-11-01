@@ -40,7 +40,8 @@ struct QuitDayCalendar: View {
             HStack {
                 Text(verbatim: header).dxFont(15, weight: 600, style: .headline).foregroundStyle(Onb.ink)
                 Spacer()
-                legend(Onb.accent, "Prep")
+                // Each key matches its cell: prep days are the soft green track, Quit Day the solid green circle.
+                legend(Onb.accentSoft, "Prep", outlined: true)
                 legend(Onb.accent, "Quit Day")
             }
             .accessibilityElement(children: .combine)
@@ -65,9 +66,11 @@ struct QuitDayCalendar: View {
         .overlay(RoundedRectangle(cornerRadius: DX.Layout.smallCardRadius, style: .continuous).strokeBorder(Onb.hairline))
     }
 
-    private func legend(_ color: Color, _ title: LocalizedStringKey) -> some View {
+    /// `outlined` gives the soft prep tint an edge, so the small key reads on the tray.
+    private func legend(_ color: Color, _ title: LocalizedStringKey, outlined: Bool = false) -> some View {
         HStack(spacing: 5) {
-            Circle().fill(color).frame(width: 7, height: 7)
+            Circle().fill(color).frame(width: 10, height: 10)
+                .overlay(Circle().strokeBorder(Onb.accent.opacity(outlined ? 0.5 : 0), lineWidth: 1))
             Text(title).dxFont(12, weight: 400, style: .caption1).foregroundStyle(Onb.muted)
         }
         .padding(.leading, DX.Space.s)

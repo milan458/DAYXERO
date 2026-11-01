@@ -52,6 +52,12 @@ final class PaywallModel {
     var notice: LocalizedStringResource?
     /// Whether we can keep the "we'll remind you" promise (notifications allowed or not yet asked).
     private(set) var canRemind = true
+    /// Quit Day, for paywalls that can open before it. The free trial is offered on Quit Day (decisions 15 and 23),
+    /// and StoreKit starts a trial the moment it's bought, so until Quit Day the plans that come with a trial aren't
+    /// sold here. nil (the Quit Day offer) sells every plan.
+    var trialOpensOn: Date?
+    /// The trial length waiting for Quit Day, while plans with a trial are held back.
+    private(set) var heldTrialDays: Int?
 
     private let store: PurchaseStore
     private let entitlement: Entitlement
@@ -66,6 +72,12 @@ final class PaywallModel {
     }
 
     var selectedOption: PlanOption? { plans.first { $0.plan == selected } }
+
+    /// Before Quit Day: true while today is still prep, so the trial isn't sold yet.
+    var isBeforeQuitDay: Bool {
+        guard let trialOpensOn else { return false }
+        return now() < calendar.startOfDay(for: trialOpensOn)
+    }
 
     /// When a trial on the selected plan ends and the first charge happens.
     var trialEndDate: Date? {
@@ -89,7 +101,10 @@ final class PaywallModel {
         phase = .loading
         if trackView { Analytics.track(.paywallViewed) }
         do {
-            plans = try await store.loadPlans()
+            let loaded = try await store.loadPlans()
+            let holdTrial = isBeforeQuitDay
+            heldTrialDays = holdTrial ? loaded.compactMap(\.trialDays).first : nil
+            plans = holdTrial ? loaded.filter { $0.trialDays == nil } : loaded
             if !plans.contains(where: { $0.plan == selected }), let first = plans.first { selected = first.plan }
             phase = .ready
         } catch {

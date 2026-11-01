@@ -104,6 +104,61 @@ struct PaywallModelTests {
         #expect(!entitlement.isPro)
     }
 
+    // MARK: The trial waits for Quit Day (decisions 15 and 23)
+
+    @Test func beforeQuitDayThePlanWithTheTrialIsHeldBack() async {
+        let (model, _) = make(StubStore())
+        model.trialOpensOn = now.addingTimeInterval(7 * 86_400)
+        await model.load()
+        #expect(model.isBeforeQuitDay)
+        #expect(model.heldTrialDays == 3)
+        #expect(model.plans.map(\.plan) == [.monthly, .lifetime])
+        #expect(model.plans.allSatisfy { $0.trialDays == nil })
+        #expect(model.selected == .monthly)
+        #expect(model.trialEndDate == nil)
+    }
+
+    @Test func onQuitDayTheTrialIsOffered() async {
+        let (model, _) = make(StubStore())
+        // Later the same day still counts as Quit Day.
+        model.trialOpensOn = now.addingTimeInterval(3_600)
+        await model.load()
+        #expect(!model.isBeforeQuitDay)
+        #expect(model.heldTrialDays == nil)
+        #expect(model.selected == .annual)
+        #expect(model.trialEndDate == now.addingTimeInterval(3 * 86_400))
+    }
+
+    @Test func withoutAQuitDayEveryPlanIsOffered() async {
+        let (model, _) = make(StubStore())
+        await model.load()
+        #expect(model.plans.count == 3)
+        #expect(model.heldTrialDays == nil)
+    }
+
+    @Test func aYearlyPlanWithoutATrialIsStillSoldBeforeQuitDay() async {
+        let store = StubStore()
+        store.plans[0] = PlanOption(plan: .annual, price: 39.99, currencyCode: "USD", priceText: "$39.99", perMonthText: "$3.33", trialDays: nil)
+        let (model, _) = make(store)
+        model.trialOpensOn = now.addingTimeInterval(7 * 86_400)
+        await model.load()
+        #expect(model.plans.count == 3)
+        #expect(model.heldTrialDays == nil)
+        #expect(model.selected == .annual)
+    }
+
+    @Test func thePlanTitleFallsBackWithoutAName() {
+        #expect(PaywallView.readyTitle(name: "Milan") == "Milan, your plan is ready")
+        #expect(PaywallView.readyTitle(name: "") == "Your plan is ready")
+        #expect(PaywallView.readyTitle(name: "  ") == "Your plan is ready")
+    }
+
+    @Test func freeSessionsAreAllOfPrepAndDayXero() {
+        #expect(ProgramV2Access.freeSessions == ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "DX"])
+        #expect(!ProgramV2Access.needsUpgrade("P7", isPro: false))
+        #expect(!ProgramV2Access.needsUpgrade("DX", isPro: false))
+    }
+
     /// Prep week and Quit Day are free (decisions 15 and 23); Quit week day 2 onwards needs Pro.
     @Test func prepWeekAndQuitDayAreFree() {
         let outline = [ProgramDayID(phase: .prep, index: 1), ProgramDayID(phase: .prep, index: 2),

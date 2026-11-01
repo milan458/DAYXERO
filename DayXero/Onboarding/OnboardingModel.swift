@@ -165,11 +165,20 @@ final class OnboardingModel {
             + [.baselineSummary, .triggers, .personal, .pastAttempts, .nrt, .quitDay, .building, .reveal, .trial]
     }
 
-    /// 0...1 for the progress bar.
+    /// 0...1 for the progress bar. The baseline screens share one slot, split between the products, so the total
+    /// stays fixed: picking a second product never moves the bar back.
     var progress: Double {
-        let steps = sequence
-        guard let index = steps.firstIndex(of: step), steps.count > 1 else { return 0 }
-        return Double(index) / Double(steps.count - 1)
+        let fixed = sequence.filter { if case .baseline = $0 { false } else { true } }
+        guard let summary = fixed.firstIndex(of: .baselineSummary) else { return 0 }
+        // One more slot than `fixed` has, for the baselines, so the last step is fixed.count.
+        let total = Double(fixed.count)
+        if case let .baseline(product) = step {
+            let products = orderedProducts
+            let done = Double(products.firstIndex(of: product) ?? 0)
+            return (Double(summary) + done / Double(max(products.count, 1))) / total
+        }
+        guard let index = fixed.firstIndex(of: step) else { return 0 }
+        return Double(index >= summary ? index + 1 : index) / total
     }
 
     func baseline(for product: Product) -> BaselineDraft {

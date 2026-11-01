@@ -1,5 +1,6 @@
 import DayXeroCore
 import Foundation
+import SwiftData
 
 /// Placeholder lesson titles until the Flutter content is ported (S5.1).
 enum LessonCatalog {
@@ -67,8 +68,9 @@ struct HomeSnapshot {
     /// Days in a row with a lesson done (S19.4).
     let lessonStreak: Int
 
+    /// - Parameter sessions: program v2 session records; fetched from the profile's context when not given.
     @MainActor
-    init(profile: UserProfile, isPro: Bool, now: Date = .now, calendar: Calendar = .current) {
+    init(profile: UserProfile, isPro: Bool, now: Date = .now, calendar: Calendar = .current, sessions: [SessionRecord]? = nil) {
         let clock = DayClock(calendar: calendar, boundaryHour: profile.dayBoundaryHour)
         let stats = ProgressStats(quitDay: profile.quitDay, baselines: profile.products.map(\.baseline), clock: clock)
         let schedule = ProgramSchedule(startedOn: profile.createdAt, quitDay: profile.quitDay, clock: clock)
@@ -138,7 +140,11 @@ struct HomeSnapshot {
         moneyPerYear = stats.moneyPerYear
         currencyCode = profile.currencyCode
         prepTotal = schedule.prepDays
-        prepDone = completed.filter { $0.phase == .prep }.count
+        // Program v2 sessions are what's done now; the old program's lesson completions still count for anyone who has them.
+        let records = sessions ?? (try? profile.modelContext?.fetch(FetchDescriptor<SessionRecord>())) ?? []
+        let sessionsDone = records.filter { $0.completedAt != nil }
+        let prepIds = ProgramContent.bundled?.prepSessionIds ?? []
+        prepDone = max(completed.filter { $0.phase == .prep }.count, sessionsDone.filter { prepIds.contains($0.sessionId) }.count)
         prepDayNumber = (calendar.dateComponents([.day], from: clock.startOfDate(profile.createdAt), to: today).day ?? 0) + 1
         programFraction = schedule.engine.fractionComplete(completed: completed)
         quitWeekDone = completed.filter { $0.phase == .quit }.count
@@ -150,7 +156,8 @@ struct HomeSnapshot {
             milestoneFraction = 1
         }
         adherence = Adherence.fraction(schedule: schedule, startedOn: profile.createdAt, completed: completed, now: now)
-        lessonStreak = Adherence.streak(completedAt: completions.map(\.completedAt), clock: clock, now: now)
+        lessonStreak = Adherence.streak(completedAt: completions.map(\.completedAt) + sessionsDone.compactMap(\.completedAt),
+                                        clock: clock, now: now)
     }
 
     static func greeting(at date: Date, calendar: Calendar = .current) -> String {

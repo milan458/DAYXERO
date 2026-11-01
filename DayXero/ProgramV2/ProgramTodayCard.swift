@@ -67,7 +67,7 @@ struct ProgramToday {
             let next: String = switch wait {
             case .tomorrow: String(localized: "Next session tomorrow")
             case let .dayXero(date): String(localized: "Day Xero is \(date.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)))")
-            case let .quitDay(day): String(localized: "Next session on Day \(day)")
+            case let .quitDay(days): String(localized: "Next session on Day \(ProgramUnlock.counterDay(daysSinceQuit: days))")
             }
             kind = .waiting(next: next)
         case .locked, .completed:

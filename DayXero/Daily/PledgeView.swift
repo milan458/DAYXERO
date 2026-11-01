@@ -37,12 +37,14 @@ struct PledgeView: View {
 
     var body: some View {
         let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
+        let stats = ProgressStats(quitDay: profile.quitDay, baselines: [], clock: clock)
         let day = clock.days(fromDate: profile.quitDay, to: .now) + 1
-        let daysClear = max(0, day - 1)
+        // The same days clear as Today: Quit Day is 1, prep is 0.
+        let daysClear = stats.daysClear(at: .now)
         let chosen = Wording(rawValue: wording) ?? .wontUse
         VStack(spacing: 0) {
             ZStack(alignment: .bottom) {
-                HeroScene(.dawn, clarity: day > 0 ? CrewGrowth.clarity(daysClear: daysClear) : CrewGrowth.prepClarity,
+                HeroScene(.dawn, clarity: stats.isPrep(at: .now) ? CrewGrowth.prepClarity : CrewGrowth.clarity(daysClear: daysClear),
                           height: 330, edge: ground.background)
                 XeroView(mood: pledged ? .cheer : .hello, stage: CrewGrowth.stage(daysClear: daysClear), size: .hero)
                     .offset(y: risen || reduceMotion ? -10 : 40)
@@ -64,7 +66,7 @@ struct PledgeView: View {
             .ignoresSafeArea(edges: .top)
             ScrollView {
                 VStack(spacing: 10) {
-                    Text(verbatim: dayLine(day))
+                    Text(verbatim: dayLine(day, clock: clock))
                         .dxFont(14, weight: 700, style: .footnote)
                         .foregroundStyle(ground.muted)
                         .dxArrive(4)
@@ -133,9 +135,9 @@ struct PledgeView: View {
         }
     }
 
-    /// "Sunday · Day 3", or the weekday alone before Quit Day.
-    private func dayLine(_ day: Int) -> String {
-        let weekday = Date.now.formatted(.dateTime.weekday(.wide))
+    /// "Sunday · Day 3", or the weekday alone before Quit Day. The weekday follows the day boundary: 1am is still last night.
+    private func dayLine(_ day: Int, clock: DayClock) -> String {
+        let weekday = DailyRhythm(clock: clock).day(at: .now).formatted(.dateTime.weekday(.wide))
         return day > 0 ? String(localized: "\(weekday) · Day \(day)") : weekday
     }
 

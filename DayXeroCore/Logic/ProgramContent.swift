@@ -25,6 +25,9 @@ public struct ProgramContent: Decodable, Sendable {
 
     public func phase(of session: Session) -> Phase? { phases.first { $0.id == session.phaseId } }
 
+    /// The prep sessions (Prep 1 to Prep 7).
+    public var prepSessionIds: Set<String> { Set(sessions.filter { $0.phaseId == "prep" }.map(\.id)) }
+
     /// The session after this one in program order.
     public func session(after id: String) -> Session? {
         guard let i = sessions.firstIndex(where: { $0.id == id }), sessions.indices.contains(i + 1) else { return nil }

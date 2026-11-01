@@ -139,7 +139,8 @@ struct CheckInView: View {
 
     /// "Sunday check-in · Day 3", or the prep day.
     private var eyebrow: String {
-        let weekday = Date.now.formatted(.dateTime.weekday(.wide))
+        // The day the check-in counts for: before the day boundary it's still the evening just lived.
+        let weekday = DailyRhythm(clock: DayClock(boundaryHour: profile.dayBoundaryHour)).day(at: .now).formatted(.dateTime.weekday(.wide))
         if prep { return String(localized: "Prep day \(prepDay) check-in · \(stats.daysUntilQuitDay(at: .now)) days to Quit Day") }
         let day = DayClock(boundaryHour: profile.dayBoundaryHour).days(fromDate: profile.quitDay, to: .now) + 1
         return day > 0 ? String(localized: "\(weekday) check-in · Day \(day)") : String(localized: "\(weekday) check-in")
@@ -229,10 +230,22 @@ struct CheckInView: View {
         }
     }
 
+    /// V4Chip's look, with the width inside the background so each chip fills its half of the row.
     private func choice(_ title: String, on: Bool, action: @escaping () -> Void) -> some View {
-        V4Chip(text: title, isOn: on, fill: DX.Fill.onColourCard(for: ground), ink: ground.ink,
-               selectedFill: DX.Fill.cream, selectedInk: Color(hex: 0x4A3596), action: action)
-            .frame(maxWidth: .infinity)
+        Button(action: action) {
+            Text(verbatim: title)
+                .dxFont(16, weight: 600, style: .body)
+                .foregroundStyle(on ? Color(hex: 0x4A3596) : ground.ink)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 6)
+                .frame(maxWidth: .infinity, minHeight: 44)
+                .background(on ? DX.Fill.cream : DX.Fill.onColourCard(for: ground),
+                            in: RoundedRectangle(cornerRadius: DX.Layout.answerChipRadius, style: .continuous))
+        }
+        .buttonStyle(.plain)
+        .sensoryFeedback(DX.Haptic.select, trigger: on)
+        .accessibilityAddTraits(on ? [.isButton, .isSelected] : .isButton)
     }
 
     /// Prep week: what was used today, per product, with steppers for anything not logged at the time.

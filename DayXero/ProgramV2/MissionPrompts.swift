@@ -43,7 +43,8 @@ struct MissionPrompts: ViewModifier {
                         .presentationDetents([.large])
                 case let .question(session, type):
                     MissionQuestion(sessionId: session, type: type, profile: profile) { self.prompt = nil }
-                        .presentationDetents([.medium])
+                        // The morning gap's four choices and "Not now" don't fit in half a screen.
+                        .presentationDetents([type == .morningBuffer ? .large : .medium])
                 }
             }
     }
