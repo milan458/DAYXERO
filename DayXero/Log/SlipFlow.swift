@@ -31,6 +31,8 @@ struct SlipFlow: View {
     @State private var ownAction = ""
     @State private var writingOwn = false
     @State private var showNRT = false
+    @State private var showQuitDay = false
+    @State private var freshStartDismissed = false
     @State private var savedFeedback = false
     private let loggedAt: Date
 
@@ -76,6 +78,10 @@ struct SlipFlow: View {
         .onAppear(perform: prefill)
         .fullScreenCover(isPresented: $showNRT) {
             if let profile { NRTSetupView(profile: profile) { showNRT = false } }
+        }
+        .sheet(isPresented: $showQuitDay) {
+            // Settings › Quit Day sets the new date; logs, plans and history are untouched.
+            if let profile { SettingsSheet(profile: profile, start: .quitDay) }
         }
     }
 
@@ -129,7 +135,7 @@ struct SlipFlow: View {
                     .dxArrive(0)
                     Text(isPrep
                          ? String(localized: "Logged. Prep is for learning your patterns, and this helps. Let's make a plan for next time.")
-                         : String(localized: "Waves come and go. Nothing resets: your days clear and Xero's sky stay just as they are. Let's make a plan for next time."))
+                         : String(localized: "Waves come and go. Nothing resets: your days since Quit Day and Xero's sky stay just as they are. Let's make a plan for next time."))
                         .dxType(.body)
                         .foregroundStyle(ground.muted)
                         .fixedSize(horizontal: false, vertical: true)
@@ -215,13 +221,14 @@ struct SlipFlow: View {
                     }
                     Label {
                         Text(isPrep ? String(localized: "Prep carries on as planned.")
-                             : String(localized: "Still Day \(daysClear) clear. Nothing has changed on Today."))
+                             : String(localized: "Still Day \(daysClear) since your Quit Day. Nothing resets."))
                             .dxType(.footnote)
                     } icon: {
                         Image(systemName: "checkmark.circle.fill").foregroundStyle(DX.Fill.green)
                     }
                     .dxArrive(3)
                     if Slips.isToughDay(slipsToday: slipsToday) { toughDay.dxArrive(4) }
+                    if offersFreshStart, !freshStartDismissed { freshStart.dxArrive(5) }
                 }
                 .padding(.horizontal, DX.Layout.gutter)
                 .padding(.top, DX.Space.l)
@@ -245,7 +252,7 @@ struct SlipFlow: View {
     /// From the third slip in a day: NRT or another look at the plan, never starting over.
     private var toughDay: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("It's been a tough day. That happens, especially early on. Want to look at NRT options, or go over your plan again?")
+            Text("It's been a tough day. That happens, especially early on. A patch plus gum or a lozenge takes the edge off better than one alone. Want to look at NRT, or go over your plan again?")
                 .dxType(.footnote)
                 .fixedSize(horizontal: false, vertical: true)
             ViewThatFits {
@@ -254,6 +261,34 @@ struct SlipFlow: View {
             }
         }
         .dxReadingCard(radius: 22)
+    }
+
+    /// After slips on 4 of the last 7 days (S27.9): Jelli offers a fresh Quit Day. Picking one keeps every log;
+    /// "Keep going as I am" just hides the card.
+    private var freshStart: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("FROM JELLI").dxType(.caption).foregroundStyle(ground.muted)
+            Text("You've slipped on four of the last seven days. That's information, not failure. Want to pick a fresh Quit Day? Everything you've learned and logged stays.")
+                .dxType(.footnote)
+                .fixedSize(horizontal: false, vertical: true)
+            ViewThatFits {
+                HStack(spacing: 8) { freshPickButton; freshKeepButton }
+                VStack(alignment: .leading, spacing: 8) { freshPickButton; freshKeepButton }
+            }
+        }
+        .dxReadingCard(radius: 22)
+    }
+
+    private var freshPickButton: some View {
+        V4Chip(text: String(localized: "Pick a fresh Quit Day"), isOn: false, fill: DX.Fill.raised, ink: DX.Ground.reading.ink) {
+            showQuitDay = true
+        }
+    }
+
+    private var freshKeepButton: some View {
+        V4Chip(text: String(localized: "Keep going as I am"), isOn: false, fill: DX.Fill.raised, ink: DX.Ground.reading.ink) {
+            freshStartDismissed = true
+        }
     }
 
     // The card is DX.Fill.surface, so its chips sit on DX.Fill.raised to stand out (reading ink clears 4.5:1 on it).
@@ -358,6 +393,12 @@ struct SlipFlow: View {
 
     private var slipsToday: Int {
         Slips.count(onDayOf: .now, timestamps: slips.map(\.timestamp), clock: clock)
+    }
+
+    /// Practice runs never offer it, and neither does prep.
+    private var offersFreshStart: Bool {
+        guard !practice, !isPrep, let profile else { return false }
+        return Slips.offersFreshStart(timestamps: slips.map(\.timestamp), quitDay: profile.quitDay, now: .now, clock: clock)
     }
 
     private func prefill() {

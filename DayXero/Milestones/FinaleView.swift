@@ -47,7 +47,7 @@ struct FinaleView: View {
                         .fixedSize(horizontal: false, vertical: true)
                         .accessibilityAddTraits(.isHeader)
                     HStack(spacing: 8) {
-                        tile(Double(snap.daysClear), snap.daysClear == 1 ? String(localized: "day clear · Xero") : String(localized: "days clear · Xero"))
+                        tile(Double(snap.daysClear), snap.daysClear == 1 ? String(localized: "day since Quit Day · Xero") : String(localized: "days since Quit Day · Xero"))
                         tile(Double(ridden), ridden == 1 ? String(localized: "wave ridden · Jelli") : String(localized: "waves ridden · Jelli"))
                         tile(Double(checkIns.count),
                              checkIns.count == 1 ? String(localized: "check-in · Glim") : String(localized: "check-ins · Glim"))

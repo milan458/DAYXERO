@@ -172,6 +172,29 @@ struct OnboardingModelTests {
         #expect(model.currencyCode == "GBP")
     }
 
+    /// S27.6: the pregnancy answer is kept for NRT setup's caution, under a `dx.` key so "Delete all data" clears it.
+    @Test func thePregnancyAnswerIsSavedForNRTSetup() {
+        defer { UserDefaults.standard.removeObject(forKey: PregnancyAnswer.key) }
+        UserDefaults.standard.removeObject(forKey: PregnancyAnswer.key)
+        let model = makeModel()
+        #expect(model.pregnancy == nil)
+        model.setPregnancy(.yes)
+        #expect(PregnancyAnswer.stored == .yes)
+        #expect(makeModel().pregnancy == .yes)
+        #expect(PregnancyAnswer.key.hasPrefix("dx."))
+    }
+
+    /// S27.7: prep can be 3 to 7 days, so the earliest Quit Day is three days out and a shorter prep can continue.
+    @Test func quitDayCanBeThreeDaysOut() {
+        let model = makeModel()
+        let earliest = model.calendar.date(byAdding: .day, value: 3, to: model.today)!
+        #expect(model.quitDayRange.lowerBound == earliest)
+        model.quitDay = earliest
+        #expect(model.prepDays == 3)
+        let tooSoon = model.calendar.date(byAdding: .day, value: 2, to: model.today)!
+        #expect(!model.quitDayRange.contains(tooSoon))
+    }
+
     @Test func savingWritesTheProfile() throws {
         let container = try DataStore.makeContainer(inMemory: true)
         let context = ModelContext(container)

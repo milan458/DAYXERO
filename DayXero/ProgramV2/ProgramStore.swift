@@ -59,8 +59,11 @@ struct ProgramStore {
         states(now: now).first { $0.id == sessionId }?.state ?? .locked
     }
 
+    /// Home's session: once Day Xero is open its chain comes before prep catch-up (ProgramUnlock.current, S27.7).
     func current(now: Date = .now) -> (id: String, state: ProgramUnlock.State)? {
-        states(now: now).first {
+        let all = states(now: now)
+        if let engine = unlock() { return engine.current(of: all) }
+        return all.first {
             if case .completed = $0.state { return false }
             return true
         }

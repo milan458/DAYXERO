@@ -24,7 +24,7 @@
         }
       }
     },
-    "%lld days clear" : {
+    "%lld days in" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -33,13 +33,13 @@
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "%lld day clear"
+                  "value" : "%lld day in"
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "%lld days clear"
+                  "value" : "%lld days in"
                 }
               }
             }

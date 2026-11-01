@@ -140,7 +140,7 @@ struct WelcomeScreen: View {
                 .accessibilityElement(children: .combine)
                 .accessibilityAddTraits(.isHeader)
                 .dxArrive(1)
-                Text("Prep for 7 days while you still use as normal, then quit on the day you choose.")
+                Text("Prep for up to 7 days while you still use as normal, then quit on the day you choose.")
                     .dxType(.body)
                     .foregroundStyle(ground.muted)
                     .fixedSize(horizontal: false, vertical: true)
@@ -243,12 +243,12 @@ struct QuitDayScreen: View {
                     Text(model.name.isEmpty ? "Pick your Quit Day" : "Pick your Quit Day, \(model.name)")
                         .dxType(.title).foregroundStyle(ground.ink)
                         .accessibilityAddTraits(.isHeader)
-                    Text("I recommend \(Text(model.recommendedQuitDay, format: shortDate).bold()). It gives you the full 7-day prep window. Keep using as normal until then.")
+                    Text("I recommend \(Text(model.recommendedQuitDay, format: shortDate).bold()) for a full 7-day prep. Ready sooner? Any day from \(Text(model.quitDayRange.lowerBound, format: shortDate).bold()) works. Keep using as normal until then.")
                         .dxType(.body).foregroundStyle(ground.muted)
                         .fixedSize(horizontal: false, vertical: true)
                     dateStrip
                     HStack {
-                        legend(DX.Fill.cardOnColour, "Prep week · \(max(model.prepDays, 0)) days")
+                        legend(DX.Fill.cardOnColour, "Prep · \(max(model.prepDays, 0)) days")
                         Spacer()
                         legend(ground.ink, "Quit Day")
                     }
@@ -270,7 +270,7 @@ struct QuitDayScreen: View {
                 }
                 .accessibilityIdentifier("onboarding.hold")
                 .disabled(!model.canContinue)
-                Text("Hold for 1.5 seconds. You can change the date later.")
+                Text("Hold for 1.5 seconds. Quit Day comes on this date, even if prep runs short. You can change it later.")
                     .dxType(.caption).foregroundStyle(ground.muted)
             }
             .padding(.horizontal, DX.Layout.buttonGutter)
@@ -428,7 +428,8 @@ private extension String {
 
 // MARK: F06 Your plan is ready · mint
 
-/// Prep week is free; the 3-day trial is offered on Quit Day (decision 15). Nothing is charged here.
+/// Prep week is free; the 7-day trial is offered on Quit Day (decision 15, S27.8), so the first charge comes after the first
+/// week. Nothing is charged here.
 struct PlanRevealScreen: View {
     let model: OnboardingModel
     let onContinue: () -> Void
@@ -521,8 +522,8 @@ struct PlanRevealScreen: View {
 
     private var includes: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("**Free now:** prep week, Day Xero, your counter and Craving SOS")
-            Text("**With the full program:** four weeks of lessons, evening check-ins, an NRT plan, insights")
+            Text("**Always free:** prep week, Day Xero, your counter, Craving SOS and evening check-ins")
+            Text("**With the full program:** four weeks of lessons, an NRT plan, insights")
         }
         .dxType(.footnote)
         .foregroundStyle(ground.ink)

@@ -24,7 +24,7 @@
         }
       }
     },
-    "%lld days clear" : {
+    "%lld days since Quit Day" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -33,36 +33,13 @@
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "%lld day clear"
+                  "value" : "%lld day since Quit Day"
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "%lld days clear"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "%lld days nicotine-free" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld day nicotine-free"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld days nicotine-free"
+                  "value" : "%lld days since Quit Day"
                 }
               }
             }

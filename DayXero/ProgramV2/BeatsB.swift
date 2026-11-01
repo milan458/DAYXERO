@@ -524,7 +524,7 @@ struct ShareBeat: View {
                         card.resizable().scaledToFit().frame(maxWidth: 260)
                             .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
                             .frame(maxWidth: .infinity)
-                            .accessibilityLabel(Text("Share card: \(days) days nicotine-free"))
+                            .accessibilityLabel(Text("Share card: \(days) days into my quit"))
                         if !sentences.isEmpty {
                             Text("Add a line from your note").v4Text(.micro).padding(.top, DX.Space.xs)
                             ForEach(sentences.prefix(4), id: \.self) { sentence in

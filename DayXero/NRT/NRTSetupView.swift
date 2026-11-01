@@ -118,6 +118,20 @@ struct NRTSetupView: View {
         page(button: "Set up my NRT", action: { stage = .products }) {
             Text("Keep your NRT on track").v4Text(.title)
             Text("Tell us what's on your pack. We'll remind you to change patches and when each step down is due.").v4Text(.subtitle)
+            if PregnancyAnswer.stored == .yes {
+                // S27.6: answered "Yes" to pregnant or breastfeeding in onboarding.
+                Label {
+                    Text(verbatim: PregnancyAnswer.caution).dxFont(14, weight: 500, style: .footnote).foregroundStyle(Read4.ink)
+                        .fixedSize(horizontal: false, vertical: true)
+                } icon: {
+                    Image(systemName: "heart.text.square").foregroundStyle(Read4.accent)
+                }
+                .padding(DX.Space.s)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Read4.card, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).strokeBorder(Read4.hairline))
+                .padding(.top, DX.Space.xs)
+            }
             V4Card {
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Why it's worth it").v4Text(.micro)
@@ -128,6 +142,21 @@ struct NRTSetupView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
             .padding(.top, DX.Space.s)
+            // S27.6: combination NRT is the best-evidenced option (Cochrane 2019, RR 1.25, high certainty).
+            V4Card {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("What works best").v4Text(.micro)
+                    Text("A patch plus a faster form, like gum or a lozenge, works better than either alone.")
+                        .dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.ink)
+                        .fixedSize(horizontal: false, vertical: true)
+                    SourceLink(source: HealthSources.nrtCombinationCochrane2019)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .padding(.top, DX.Space.xs)
+            Text("Stop-smoking medicines such as varenicline or cytisine also work. Ask a pharmacist or doctor if they suit you.")
+                .v4Text(.subtitle)
+                .padding(.top, DX.Space.xs)
             LabelNotice()
         } secondary: {
             Button("Not using NRT yet? Ask a pharmacist", action: onDone).buttonStyle(.dx(.quiet, on: .reading))
@@ -137,7 +166,7 @@ struct NRTSetupView: View {
     private var products: some View {
         page(button: "Next", enabled: !chosen.isEmpty, action: startSchedules) {
             Text("What are you using?").v4Text(.title)
-            Text("Pick up to two, as your pharmacist or doctor suggested, or as on your pack.").v4Text(.subtitle)
+            Text("Pick up to two. A patch plus a faster form works best.").v4Text(.subtitle)
             VStack(spacing: DX.Space.xs) {
                 ForEach(NRTType.allCases, id: \.self) { type in
                     OnbOptionCard(type.title, detail: detail(type), systemImage: icon(type), isSelected: chosen.contains(type)) {
@@ -148,7 +177,7 @@ struct NRTSetupView: View {
             }
             .padding(.top, DX.Space.s)
             if chosen.count == 2 {
-                Text("Using two together? Only if a pharmacist or doctor suggested it.").v4Text(.subtitle)
+                Text("Two together, like a patch plus gum, is the strongest NRT plan. Your pharmacist can check the doses.").v4Text(.subtitle)
             }
         }
     }

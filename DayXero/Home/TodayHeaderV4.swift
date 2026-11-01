@@ -81,7 +81,7 @@ struct TodayHeaderV4: View {
         case .prep: String(localized: "Prep week")
         case .quitDay: String(localized: "Quit Day")
         case let .quitWeek(day): String(localized: "Day \(day)")
-        case let .after(days): days == 1 ? String(localized: "1 day clear") : String(localized: "\(days) days clear")
+        case let .after(days): days == 1 ? String(localized: "1 day since Quit Day") : String(localized: "\(days) days since Quit Day")
         }
         return "\(date) · \(day)"
     }
@@ -154,7 +154,7 @@ struct TodayHeaderV4: View {
             StatTile(value: NSDecimalNumber(decimal: snap.moneyPerYear).doubleValue, label: String(localized: "to keep a year"),
                      ground: ground, format: money)
         } else {
-            StatTile(value: Double(snap.daysClear), label: snap.daysClear == 1 ? String(localized: "day clear") : String(localized: "days clear"),
+            StatTile(value: Double(snap.daysClear), label: snap.daysClear == 1 ? String(localized: "day since Quit Day") : String(localized: "days since Quit Day"),
                      ground: ground)
             if let counter = snap.counters.first {
                 StatTile(value: Double(counter.avoided), label: avoidedLabel(counter.product, count: counter.avoided), ground: ground)

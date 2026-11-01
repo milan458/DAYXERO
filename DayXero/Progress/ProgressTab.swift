@@ -203,7 +203,7 @@ struct ProgressTab: View {
                 let daysToQuit = Self.daysToQuit(snap)
                 ProgressStat(value: Double(daysToQuit), label: daysToQuit == 1 ? String(localized: "day to Quit Day") : String(localized: "days to Quit Day"))
             } else {
-                ProgressStat(value: Double(snap.daysClear), label: snap.daysClear == 1 ? String(localized: "day clear") : String(localized: "days clear"))
+                ProgressStat(value: Double(snap.daysClear), label: snap.daysClear == 1 ? String(localized: "day since Quit Day") : String(localized: "days since Quit Day"))
                 ProgressStat(value: Double(ridden), label: ridden == 1 ? String(localized: "wave ridden out") : String(localized: "waves ridden out"))
                 ForEach(snap.counters) { counter in
                     ProgressStat(value: Double(counter.avoided), label: String(localized: avoidedLabel(counter.product, count: counter.avoided)))

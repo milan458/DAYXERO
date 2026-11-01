@@ -34,15 +34,15 @@ struct NotificationPlanTests {
 
     @Test func lessonAndMilestoneOnTheirDays() {
         let inputs = NotificationPlan.Inputs(now: at(5, 7), pledgedToday: true, checkedInToday: true,
-                                             lessons: [(day(6), "Day 4", 7)], milestones: [(day(6), "One week clear"), (day(20), "Two weeks clear")])
+                                             lessons: [(day(6), "Day 4", 7)], milestones: [(day(6), "One week in"), (day(20), "Two weeks in")])
         let plan = NotificationPlan.plan(.init(), inputs: inputs, calendar: calendar)
         #expect(plan.contains { $0.kind == .lesson && $0.date == at(6, 12) && $0.title == "Day 4 is ready" })
-        #expect(plan.filter { $0.kind == .milestone }.map(\.title) == ["One week clear today"])
+        #expect(plan.filter { $0.kind == .milestone }.map(\.title) == ["Today: One week in"])
     }
 
     @Test func atMostThreeADayDroppingTheCheckInFirst() {
         let inputs = NotificationPlan.Inputs(now: at(5, 7), pledgedToday: false, checkedInToday: false,
-                                             lessons: [(day(5), "Day 4", 7)], milestones: [(day(5), "One week clear")])
+                                             lessons: [(day(5), "Day 4", 7)], milestones: [(day(5), "One week in")])
         let today = NotificationPlan.plan(.init(), inputs: inputs, calendar: calendar).filter { $0.date < day(6) }
         #expect(today.count == 3)
         #expect(Set(today.map(\.kind)) == [.milestone, .pledge, .lesson])
@@ -62,7 +62,7 @@ struct NotificationPlanTests {
 
     @Test func noGuiltWordsAnywhere() {
         var copy = [NotificationCopy.pledge, NotificationCopy.checkIn, NotificationCopy.lesson(name: "Day 4", minutes: 7),
-                    NotificationCopy.milestone(title: "One week clear"), NotificationCopy.awayFirst(next: "Day 4"),
+                    NotificationCopy.milestone(title: "One week in"), NotificationCopy.awayFirst(next: "Day 4"),
                     NotificationCopy.awaySecond(replay: "Day 3"), NotificationCopy.awayFirst(next: nil), NotificationCopy.awaySecond(replay: nil)]
             .flatMap { [$0.0, $0.1] }
         copy += Milestone.all.map(\.title)

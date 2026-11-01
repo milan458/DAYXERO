@@ -125,7 +125,7 @@ struct LogWidgetView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         } else {
             VStack(alignment: .leading, spacing: DX.Space.xxs) {
-                if let days = entry.daysClear { Text("Day \(days) clear").font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 700)).textCase(.uppercase).foregroundStyle(DX.Ground.reading.muted) }
+                if let days = entry.daysClear { Text("Day \(days) since Quit Day").font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 700)).textCase(.uppercase).foregroundStyle(DX.Ground.reading.muted) }
                 Text("Log a craving").font(DX.Typeface4.swiftUIFont(.body, size: 16, weight: 600)).foregroundStyle(DX.Ground.reading.ink)
                 Spacer(minLength: 0)
                 HStack(spacing: DX.Space.xs) {

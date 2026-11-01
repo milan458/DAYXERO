@@ -131,7 +131,11 @@ struct HomeSnapshot {
             .filter { clock.day(containing: $0.completedAt) == today }
             .max { $0.completedAt < $1.completedAt }?.dayID
 
-        let avoided = stats.unitsAvoided(at: now)
+        // "Not smoked" and the like subtract what logged slips used, so they stay true (S27.9). Days since Quit Day don't.
+        let slipEntries = (try? profile.modelContext?.fetch(FetchDescriptor<LogEntry>(predicate: #Predicate<LogEntry> { $0.kindRaw == "slip" }))) ?? []
+        let primary = profile.products.first(where: \.isPrimary)?.product ?? profile.products.first?.product
+        let avoided = stats.unitsAvoided(at: now, slips: slipEntries.map { SlipRecord(timestamp: $0.timestamp, product: $0.product, amount: $0.amount) },
+                                         primary: primary)
         // Primary product first, then the others in their usual order.
         counters = profile.products
             .sorted { ($0.isPrimary ? 0 : 1, Product.allCases.firstIndex(of: $0.product)!) < ($1.isPrimary ? 0 : 1, Product.allCases.firstIndex(of: $1.product)!) }
