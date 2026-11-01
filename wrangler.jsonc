@@ -20,5 +20,8 @@
   // ],
   "observability": { "enabled": true },
   "workers_dev": true,
-  "preview_urls": true
+  "preview_urls": true,
+  // Workers Builds runs `wrangler preview` for non-production branches (a preview Worker per PR).
+  // That command needs this block; previews skip the cron trigger, which is fine for a preview.
+  "previews": {}
 }
