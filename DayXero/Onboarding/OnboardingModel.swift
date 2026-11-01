@@ -13,6 +13,30 @@ enum QuitDayPolicy {
     static let latestDaysAhead = 30
 }
 
+/// "Pregnant or breastfeeding?" from onboarding's NRT screen (S27.6). Kept in UserDefaults rather than the profile,
+/// so no SwiftData migration; "Delete all data" clears it with the other `dx.` keys.
+enum PregnancyAnswer: String, CaseIterable, Sendable {
+    case no, yes, preferNotToSay
+
+    static let key = "dx.pregnantOrBreastfeeding"
+
+    var chipTitle: String {
+        switch self {
+        case .no: String(localized: "No")
+        case .yes: String(localized: "Yes")
+        case .preferNotToSay: String(localized: "Prefer not to say")
+        }
+    }
+
+    /// Talk to a midwife or doctor before NRT (USPSTF: behavioural support in pregnancy).
+    static let caution = String(localized: "Talk to your midwife or doctor before using NRT. Your plan focuses on the behavioural support.")
+
+    static var stored: PregnancyAnswer? {
+        get { UserDefaults.standard.string(forKey: key).flatMap(PregnancyAnswer.init(rawValue:)) }
+        set { UserDefaults.standard.set(newValue?.rawValue, forKey: key) }
+    }
+}
+
 struct BaselineDraft: Equatable {
     var unitsPerDay: Double
     var price: Decimal?
@@ -127,6 +151,13 @@ final class OnboardingModel {
     var quitDay: Date
     var nrtInterest: NRTInterest?
     var nrtFormats: Set<NRTType> = []
+    /// Pregnant or breastfeeding (S27.6). `setPregnancy` also saves it to UserDefaults so NRT setup can show its caution.
+    var pregnancy: PregnancyAnswer? = PregnancyAnswer.stored
+
+    func setPregnancy(_ answer: PregnancyAnswer) {
+        pregnancy = answer
+        PregnancyAnswer.stored = answer
+    }
     let currencyCode: String
 
     // Navigation
