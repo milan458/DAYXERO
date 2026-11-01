@@ -47,7 +47,9 @@ struct BeatContext {
     }
 }
 
-/// The frame every activity shares (handoff 5): its content, then Continue, and Skip for optional ones.
+/// The frame every activity shares (handoff 5): its content, then Continue right under it, and Skip for optional ones.
+/// The buttons scroll with the content instead of being pinned to the bottom, so there's no gap between the last
+/// option and Continue (S27.14); spare room sits below the buttons.
 struct BeatFrame<Content: View>: View {
     let beat: Beat
     var canContinue = true
@@ -57,24 +59,25 @@ struct BeatFrame<Content: View>: View {
     @ViewBuilder let content: () -> Content
 
     var body: some View {
-        VStack(spacing: DX.Space.xs) {
-            ScrollView {
+        ScrollView {
+            VStack(spacing: DX.Space.xs) {
                 content()
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.bottom, DX.Space.m)
-            }
-            .scrollBounceBehavior(.basedOnSize)
-            Group {
-                Button(continueTitle, action: onContinue)
-                    .buttonStyle(.dx(.primary, on: .reading))
-                    .disabled(!canContinue)
-                if beat.optional, let onSkip {
-                    Button("Skip", action: onSkip).buttonStyle(.dx(.quiet, on: .reading))
+                    .padding(.bottom, DX.Space.s)
+                Group {
+                    Button(continueTitle, action: onContinue)
+                        .buttonStyle(.dx(.primary, on: .reading))
+                        .disabled(!canContinue)
+                    if beat.optional, let onSkip {
+                        Button("Skip", action: onSkip).buttonStyle(.dx(.quiet, on: .reading))
+                    }
                 }
+                // The buttons stay a readable size; everything above them grows and scrolls.
+                .dynamicTypeSize(...DynamicTypeSize.accessibility1)
             }
-            // The buttons stay a readable size; everything above them grows and scrolls.
-            .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+            .padding(.bottom, DX.Space.xl)
         }
+        .scrollBounceBehavior(.basedOnSize)
     }
 }
 

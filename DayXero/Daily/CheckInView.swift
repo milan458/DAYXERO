@@ -379,8 +379,10 @@ struct TomorrowPlan: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
                     Text("One small plan").dxType(.caption).textCase(.uppercase).foregroundStyle(ground.muted)
-                    MarkedTitle(String(localized: "For "), marking: String(localized: "tomorrow"), color: DX.Mark.color(on: ground))
+                    // Plain title: the hand-drawn mark is kept for celebrations (S27.15).
+                    Text("For tomorrow")
                         .dxType(.large).foregroundStyle(ground.ink)
+                        .accessibilityAddTraits(.isHeader)
                     Text("What's most likely to set it off?").dxFont(16, weight: 700, style: .body).foregroundStyle(ground.ink)
                     TriggerPicker(mine: profile.triggers, selection: $trigger, fill: DX.Fill.onColourCard(for: ground), ink: ground.ink,
                                   selectedFill: DX.Fill.cream, selectedInk: Color(hex: 0x4A3596))
@@ -417,7 +419,8 @@ struct TomorrowPlan: View {
     }
 }
 
-/// When "today" ends (S11.3). Days clear, lessons and check-ins all follow it.
+/// When "today" ends (S11.3). Days since Quit Day, lessons and check-ins all follow it. The check-in's "When does your
+/// day end?" and Settings › Day ends at both open this one view (S27.14).
 struct DayEndSettings: View {
     let profile: UserProfile
     @Environment(\.modelContext) private var context
@@ -437,9 +440,11 @@ struct DayEndSettings: View {
                     DailyReminders.refresh(in: context)
                 }
             }
-            Spacer()
-            Text("Days clear, lessons and check-ins all follow this.").v4Text(.subtitle).frame(maxWidth: .infinity)
+            // The footnote and Done sit right under the four hours (S27.14).
+            Text("Days since Quit Day, lessons and check-ins all follow this.").v4Text(.subtitle)
+                .padding(.top, DX.Space.xs)
             Button("Done") { dismiss() }.buttonStyle(.dx(.primary, on: .reading))
+            Spacer(minLength: 0)
         }
         .padding(.horizontal, DX.Space.m)
         .dxReadableColumn()

@@ -36,6 +36,8 @@ public extension DX {
         }
 
         public static func make(_ kind: ButtonKind, on ground: Ground, dark: Bool) -> ButtonColors {
+            // A retired ground (S27.13) draws its survivor's buttons too.
+            let ground = ground.resolved
             let s = ground.spec
             switch (kind, dark) {
             case (.primary, false):

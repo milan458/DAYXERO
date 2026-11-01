@@ -60,8 +60,8 @@ struct ProductsScreen: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
-        OnboardingScaffold(title: "What are we leaving behind?",
-                           subtitle: "Pick everything you use now. We'll set up your counters and biology for each one.",
+        OnboardingScaffold(title: "What are you leaving behind?",
+                           subtitle: "Pick everything you use now. I'll set up your counters and body timeline for each one.",
                            model: model) {
             product(.cigarettes, title: "Cigarettes", detail: "Manufactured or roll-ups", icon: "smoke")
             product(.vape, title: "Vape or e-cigarette", detail: "Disposables, pods or refillable tanks", icon: "wind")
@@ -70,9 +70,9 @@ struct ProductsScreen: View {
                 HStack(alignment: .top, spacing: DX.Space.s) {
                     Image(systemName: "lightbulb").font(.system(size: 16, weight: .light)).foregroundStyle(Onb.accent)
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Dual use detected").dxFont(14, weight: 600, style: .subheadline)
+                        Text("Using both is common").dxFont(14, weight: 600, style: .subheadline)
                             .foregroundStyle(Onb.accent)
-                        Text("Quitting more than one together needs its own approach. We'll sync them all in your prep plan.")
+                        Text("I'll plan for each one in your prep week.")
                             .onbText(.subtitle).fixedSize(horizontal: false, vertical: true)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)

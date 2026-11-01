@@ -124,6 +124,7 @@ public enum TimeOfDay: String, Codable, CaseIterable, Sendable {
     }
 }
 
+/// No longer asked since 1 Nov 2026 (S27.10); kept so `UserProfile.pastAttemptsRaw` in older stores still decodes.
 public enum PastAttempts: String, Codable, CaseIterable, Sendable {
     case notYet, onceOrTwice, many
 
@@ -151,6 +152,28 @@ public enum Obstacle: String, Codable, CaseIterable, Sendable {
         case .motivation: "Lost motivation"
         case .other: "Other"
         }
+    }
+}
+
+extension Obstacle {
+    /// What the plan does about this obstacle (S27.10, Milan 1 Nov 2026: obstacles feed the plan). Each line names
+    /// something the app really has; nil for "Other", which has nothing specific to point to.
+    public var planLine: LocalizedStringResource? {
+        switch self {
+        case .cravings: "Craving SOS rides each wave with you, and prep teaches you to surf them."
+        case .stress: "Calm tools and the stress-loop session are in your plan from prep week."
+        case .social: "The Nights out session plans what you'll say and do before your first one."
+        case .irritability: "Week 1 can feel short-fused. Slow breathing with Glim takes the edge off."
+        case .weight: "Proper meals, water and walks are part of your first week."
+        case .sleep: "Glim's evening wind-down is there for restless nights."
+        case .motivation: "Your reason shows on every pledge and every Craving SOS."
+        case .other: nil
+        }
+    }
+
+    /// The plan lines for the obstacles picked, in the app's order, at most `limit` of them.
+    public static func planLines(for picked: Set<Obstacle>, limit: Int = 3) -> [LocalizedStringResource] {
+        Array(allCases.filter(picked.contains).compactMap(\.planLine).prefix(limit))
     }
 }
 

@@ -41,7 +41,6 @@ struct BaselineDraft: Equatable {
     var unitsPerDay: Double
     var price: Decimal?
     var unitsPerPurchase: Double
-    var years: YearsOfUse?
     /// Pouches in mg, vapes in mg/ml (S22). nil means "Not sure".
     var strengthMg: Double?
     /// Vapes only: counted in puffs a day rather than pods a week (S22).
@@ -90,19 +89,6 @@ struct BaselineDraft: Equatable {
     }
 }
 
-enum YearsOfUse: Double, CaseIterable, Identifiable {
-    case underOne = 0.5, oneToThree = 2, threeToFive = 4, fivePlus = 6
-    var id: Double { rawValue }
-    var title: LocalizedStringResource {
-        switch self {
-        case .underOne: "< 1 yr"
-        case .oneToThree: "1–3 yrs"
-        case .threeToFive: "3–5 yrs"
-        case .fivePlus: "5+ yrs"
-        }
-    }
-}
-
 struct ReasonDraft: Identifiable, Equatable {
     let id = UUID()
     var text: String
@@ -111,7 +97,7 @@ struct ReasonDraft: Identifiable, Equatable {
 
 /// The onboarding steps (S22). The age check is the welcome screen's footer; the name is asked with the reason.
 enum OnboardingStep: Hashable {
-    case welcome, products, baseline(Product), baselineSummary, triggers, personal, pastAttempts,
+    case welcome, products, baseline(Product), baselineSummary, triggers, personal, obstacles,
          nrt, quitDay, building, reveal, trial
 
     /// Analytics and screenshot name.
@@ -123,7 +109,7 @@ enum OnboardingStep: Hashable {
         case .baselineSummary: "baseline_summary"
         case .triggers: "triggers"
         case .personal: "personal"
-        case .pastAttempts: "past_attempts"
+        case .obstacles: "obstacles"
         case .nrt: "nrt"
         case .quitDay: "quit_day"
         case .building: "building"
@@ -144,10 +130,10 @@ final class OnboardingModel {
     var triggers: Set<Trigger> = []
     /// Their reason, in their words, with an optional photo.
     var why = ReasonDraft(text: "")
-    var pastAttempts: PastAttempts?
+    /// What tends to get in the way. It shapes the plan: the building screen's "Watch out for" row and the reveal's
+    /// "Built around" lines (`Obstacle.planLine`). Milan, 1 Nov 2026: obstacles stay; years of use, past attempts and
+    /// the confidence slider are no longer asked (S27.10).
     var obstacles: Set<Obstacle> = []
-    /// 0–10.
-    var confidence: Double = 5
     var quitDay: Date
     var nrtInterest: NRTInterest?
     var nrtFormats: Set<NRTType> = []
@@ -195,13 +181,18 @@ final class OnboardingModel {
     /// Steps in order for the current answers. Baselines repeat per product.
     var sequence: [OnboardingStep] {
         [.welcome, .products] + orderedProducts.map(OnboardingStep.baseline)
-            + [.baselineSummary, .triggers, .personal, .pastAttempts, .nrt, .quitDay, .building, .reveal, .trial]
+            + [.baselineSummary, .triggers, .personal, .obstacles, .nrt, .quitDay, .building, .reveal, .trial]
+    }
+
+    /// The steps the bar counts: the baseline screens share one slot, so the total is the same whatever is picked.
+    private var fixedSteps: [OnboardingStep] {
+        sequence.filter { if case .baseline = $0 { false } else { true } }
     }
 
     /// 0...1 for the progress bar. The baseline screens share one slot, split between the products, so the total
     /// stays fixed: picking a second product never moves the bar back.
     var progress: Double {
-        let fixed = sequence.filter { if case .baseline = $0 { false } else { true } }
+        let fixed = fixedSteps
         guard let summary = fixed.firstIndex(of: .baselineSummary) else { return 0 }
         // One more slot than `fixed` has, for the baselines, so the last step is fixed.count.
         let total = Double(fixed.count)
@@ -213,6 +204,10 @@ final class OnboardingModel {
         guard let index = fixed.firstIndex(of: step) else { return 0 }
         return Double(index >= summary ? index + 1 : index) / total
     }
+
+    /// "Step n of total" on the plan reveal, counted like the bar so the two always agree (S27.10).
+    var stepTotal: Int { fixedSteps.count }
+    var stepNumber: Int { Int((progress * Double(stepTotal)).rounded()) }
 
     func baseline(for product: Product) -> BaselineDraft {
         baselines[product] ?? .starting(for: product, currency: currencyCode)
@@ -228,7 +223,7 @@ final class OnboardingModel {
         case let .baseline(product): baseline(for: product).isComplete
         case .triggers: firstUse != nil && !triggers.isEmpty
         case .personal: !trimmedName.isEmpty && !why.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-        case .pastAttempts: pastAttempts == .notYet || (pastAttempts != nil && !obstacles.isEmpty)
+        case .obstacles: !obstacles.isEmpty
         case .nrt: nrtInterest != nil
         case .quitDay: quitDayRange.contains(calendar.startOfDay(for: quitDay))
         default: true
@@ -243,6 +238,15 @@ final class OnboardingModel {
         let steps = sequence
         guard let index = steps.firstIndex(of: step), index + 1 < steps.count else { return }
         path.append(steps[index + 1])
+    }
+
+    /// Optional questions (the name and reason, what gets in the way) can be skipped (S27.10). Whatever was typed is
+    /// kept; an empty name saves as none (the app then says "you") and an empty reason adds no reason. Skipping the
+    /// obstacles saves none, so the plan shows no "Watch out for" row.
+    func skip() {
+        guard step == .personal || step == .obstacles else { return }
+        if step == .obstacles { obstacles = [] }
+        next()
     }
 
     func back() {
@@ -263,14 +267,11 @@ final class OnboardingModel {
         name = "Sam"
         products = [.cigarettes, .vape]
         var vape = BaselineDraft.starting(for: .vape, currency: currencyCode)
-        vape.years = .oneToThree
         var cigarettes = BaselineDraft.starting(for: .cigarettes, currency: currencyCode)
-        cigarettes.years = .threeToFive
         baselines = [.vape: vape, .cigarettes: cigarettes]
         firstUse = .withinThirty
         triggers = [.coffee, .stress]
         why = ReasonDraft(text: "To keep up with Maya at the park")
-        pastAttempts = .onceOrTwice
         obstacles = [.cravings, .stress]
         nrtInterest = .using
         nrtFormats = [.patch, .gum]
@@ -297,9 +298,7 @@ final class OnboardingModel {
         profile.triggers = Trigger.allCases.filter(triggers.contains)
         profile.cravingTimesRaw = cravingTimes.map(\.rawValue)
         profile.firstUse = firstUse
-        profile.confidence = Int(confidence.rounded())
         profile.nrtFormats = nrtInterest == .using ? NRTType.allCases.filter(nrtFormats.contains) : []
-        profile.pastAttemptsRaw = pastAttempts?.rawValue
         profile.obstaclesRaw = Obstacle.allCases.filter(obstacles.contains).map(\.rawValue)
         profile.nrtInterest = nrtInterest
         profile.progress = ProgramProgress()
@@ -312,7 +311,6 @@ final class OnboardingModel {
                 unitsPerDay: draft.unitsPerDay,
                 pricePerPurchase: draft.price ?? 0,
                 unitsPerPurchase: draft.unitsPerPurchase,
-                yearsOfUse: draft.years?.rawValue,
                 strengthMg: product == .cigarettes ? nil : draft.strengthMg
             ))
         }

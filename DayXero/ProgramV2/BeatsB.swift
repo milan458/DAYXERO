@@ -219,6 +219,8 @@ struct BreatheBeat: View {
                 onDone()
             }
             .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+            // A reading card with a hairline, no longer a black panel (S27.12).
+            .overlay(RoundedRectangle(cornerRadius: 28, style: .continuous).strokeBorder(Read4.hairline))
         }
         .onAppear {
             savedVoice = voiceOn

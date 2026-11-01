@@ -3,33 +3,8 @@ import SwiftData
 import SwiftUI
 import UIKit
 
-/// The Evening tab (Nav2): Glim's ground. Tonight's check-in until it's done, then F17 Wind down: slow breathing,
-/// the calm tools and the helpline line. Your reasons and water stay one tap away.
-struct EveningView: View {
-    let profile: UserProfile
-    @State private var showWater: Bool
-    /// Screenshots: `-dx.openCalmList` or `-dx.openCalm <tool>` open the calm tools.
-    @State private var showCalmList: Bool
-    @Environment(SOSRouter.self) private var sos
-
-    init(profile: UserProfile, openWater: Bool = false) {
-        self.profile = profile
-        _showWater = State(initialValue: openWater)
-        let defaults = UserDefaults.standard
-        _showCalmList = State(initialValue: defaults.bool(forKey: "dx.openCalmList") || defaults.string(forKey: "dx.openCalm") != nil)
-    }
-
-    var body: some View {
-        WindDownView(profile: profile, savedJustNow: false, onClose: nil, showWater: { showWater = true },
-                     startSOS: { sos.open(source: "calm") })
-            .fullScreenCover(isPresented: $showWater) {
-                WaterTrackerView(profile: profile, onClose: { showWater = false })
-            }
-            .fullScreenCover(isPresented: $showCalmList) {
-                CalmToolsView(onClose: { showCalmList = false }, startSOS: { sos.open(source: "calm") })
-            }
-    }
-}
+// The Evening tab is gone (S27.11, 1 Nov 2026): its check-in card and wind-down now come up on Today in the evening
+// and at night, and the calm tools open from Today and Craving SOS. Wind down stays here: it follows a saved check-in.
 
 /// F17 Wind down (violet, Glim). After a check-in it opens with "Check-in saved / Rest well."; as the Evening tab
 /// it leads with tonight's check-in when there hasn't been one.

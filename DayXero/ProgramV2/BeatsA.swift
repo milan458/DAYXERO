@@ -81,8 +81,8 @@ struct QuizBeat: View {
                     .disabled(picked != nil)
                     .accessibilityAddTraits(isPick ? .isSelected : [])
                 }
-                if picked != nil, !ctx.text(beat.feedback).isEmpty {
-                    BeatFeedback(text: ctx.text(beat.feedback)).padding(.top, DX.Space.xs)
+                if let picked, !ctx.text(beat.feedback).isEmpty {
+                    BeatFeedback(text: Self.feedback(ctx.text(beat.feedback), right: picked == beat.correctId)).padding(.top, DX.Space.xs)
                 }
             }
         }
@@ -90,6 +90,18 @@ struct QuizBeat: View {
         .onAppear {
             if case let .text(id)? = ctx.recorded(beat) { picked = id }
         }
+    }
+
+    /// The feedback is written for the right answer ("Right. That's the battery…"). After a different pick it opens
+    /// with "Not quite." instead, so a wrong answer never hears "Right." (S27.14).
+    static func feedback(_ text: String, right: Bool) -> String {
+        guard !right else { return text }
+        var rest = text
+        for opener in ["Right. ", "Right, ", "Right! ", "Correct. ", "Yes. ", "Exactly. "] where rest.hasPrefix(opener) {
+            rest = String(rest.dropFirst(opener.count))
+            break
+        }
+        return String(localized: "Not quite.") + " " + rest
     }
 
     private func pick(_ option: Beat.Option) {

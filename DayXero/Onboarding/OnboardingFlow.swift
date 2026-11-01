@@ -98,7 +98,7 @@ struct OnboardingFlow: View {
         case .baselineSummary: BaselineSummaryScreen(model: model)
         case .triggers: TriggersScreen(model: model)
         case .personal: PersonalScreen(model: model)
-        case .pastAttempts: PastAttemptsScreen(model: model)
+        case .obstacles: ObstaclesScreen(model: model)
         case .nrt: NRTScreen(model: model)
         case .quitDay: QuitDayScreen(model: model)
         case .building: BuildingScreen(model: model)
@@ -169,25 +169,35 @@ struct OnboardingScaffold<Content: View, Footer: View>: View {
 }
 
 extension OnboardingScaffold where Footer == ContinueButton {
+    /// `skipTitle` adds a quiet skip button under Continue for optional questions (S27.10).
     init(title: LocalizedStringKey, subtitle: LocalizedStringKey? = nil, eyebrow: LocalizedStringKey? = nil,
          trayLabel: LocalizedStringKey? = "YOUR ANSWER",
-         model: OnboardingModel, continueTitle: LocalizedStringKey = "Continue", @ViewBuilder content: @escaping () -> Content) {
+         model: OnboardingModel, continueTitle: LocalizedStringKey = "Continue", skipTitle: LocalizedStringKey? = nil,
+         @ViewBuilder content: @escaping () -> Content) {
         self.title = title
         self.subtitle = subtitle
         self.eyebrow = eyebrow
         self.trayLabel = trayLabel
         self.content = content
-        self.footer = { ContinueButton(title: continueTitle, model: model) }
+        self.footer = { ContinueButton(title: continueTitle, model: model, skipTitle: skipTitle) }
     }
 }
 
 struct ContinueButton: View {
     let title: LocalizedStringKey
     let model: OnboardingModel
+    /// An optional question's quiet skip, under Continue (S27.10). It never waits for an answer.
+    var skipTitle: LocalizedStringKey? = nil
 
     var body: some View {
-        Button(title) { model.next() }
-            .buttonStyle(.dx(.primary, on: .lilac))
-            .disabled(!model.canContinue)
+        VStack(spacing: 4) {
+            Button(title) { model.next() }
+                .buttonStyle(.dx(.primary, on: .lilac))
+                .disabled(!model.canContinue)
+            if let skipTitle {
+                Button(skipTitle) { model.skip() }
+                    .buttonStyle(.dx(.quiet, on: .lilac))
+            }
+        }
     }
 }

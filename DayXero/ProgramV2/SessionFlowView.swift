@@ -68,11 +68,15 @@ struct SessionFlowView: View {
         guard let session, steps.isEmpty else { return }
         let ctx = context(for: session)
         let visible = { (beats: [Beat]) in beats.filter { ctx.shows($0) }.map { FlowStep.beat($0.id) } }
-        var built: [FlowStep] = [.intro] + visible(session.beatsBeforeAudio) + [.audio] + visible(session.beatsAfterAudio)
+        // No recording in the bundle yet, no audio step: the session runs intro, activities, mission, done (S27.14).
+        // With a recording, Continue still waits for the audio to end.
+        let hasAudio = ProgramAudioStep.hasRecording(session, ctx: ctx)
+        let before: [FlowStep] = [.intro] + visible(session.beatsBeforeAudio)
+        var built: [FlowStep] = before + (hasAudio ? [.audio] : []) + visible(session.beatsAfterAudio)
         if session.mission != nil { built.append(.mission) }
         built.append(.completion)
         steps = built
-        let firstAfterAudio = (built.firstIndex(of: .audio) ?? 0) + 1
+        let firstAfterAudio = before.count + (hasAudio ? 1 : 0)
         let record = store.open(session, firstStepAfterAudio: firstAfterAudio)
         self.record = record
         // A replay starts at the beginning; a finished session opened normally is a replay too.
@@ -253,7 +257,8 @@ struct SessionIntro: View {
 // MARK: - Audio
 
 /// The guided audio. With a recording in the bundle it plays with the cloud wave and captions, and Continue appears
-/// only when it ends (no skipping). Until the recordings arrive it shows "Audio coming soon" and lets the session go on.
+/// only when it ends (no skipping). A session without a recording has no audio step at all (S27.14), so the fallback
+/// below only shows if a recording disappears between building the steps and reaching this one.
 struct ProgramAudioStep: View {
     let session: ProgramContent.Session
     let ctx: BeatContext
@@ -271,9 +276,20 @@ struct ProgramAudioStep: View {
     private var variantName: String { session.audio.pick(for: ctx.variant, nrtActive: ctx.nrtActive) }
 
     private func bundled(_ name: String) -> URL? {
+        Self.bundledURL(name, ctx: ctx)
+    }
+
+    private static func bundledURL(_ name: String, ctx: BeatContext) -> URL? {
         let base = (name as NSString).deletingPathExtension, ext = (name as NSString).pathExtension
         return Bundle.main.url(forResource: base, withExtension: ext, subdirectory: ctx.store.content?.audio.folder)
             ?? Bundle.main.url(forResource: base, withExtension: ext)
+    }
+
+    /// Whether the recording for the person's version of this session is in the bundle.
+    static func hasRecording(_ session: ProgramContent.Session, ctx: BeatContext) -> Bool {
+        guard let naming = ctx.store.content?.audio else { return false }
+        let variant = session.audio.pick(for: ctx.variant, nrtActive: ctx.nrtActive)
+        return bundledURL(naming.file(session: session.id, variant: variant), ctx: ctx) != nil
     }
 
     private var narrator: LessonNarrator? {
@@ -305,25 +321,17 @@ struct ProgramAudioStep: View {
                     Button("Continue", action: onDone).buttonStyle(.dx(.primary, on: .reading)).dynamicTypeSize(...DynamicTypeSize.accessibility1)
                 }
             } else {
-                comingSoon
+                noRecording
             }
         }
     }
 
-    private var comingSoon: some View {
-        VStack(spacing: DX.Space.m) {
-            Text(verbatim: session.title.resolve(ctx.variant) ?? "").v4Text(.title).multilineTextAlignment(.center)
-            XeroBreathRing(playing: false)
-                .frame(height: 200)
-            Label("Audio coming soon", systemImage: "headphones")
-                .dxFont(14, weight: 700, style: .footnote)
-                .foregroundStyle(Read4.amber)
-                .padding(.horizontal, 14).padding(.vertical, 8)
-                .background(Read4.amber.opacity(0.12), in: Capsule())
-            Text("The guided audio for this session is on its way. Everything after it works now, so carry on.")
-                .v4Text(.subtitle).multilineTextAlignment(.center)
-            Spacer()
+    /// Only reached if the recording vanished after the steps were built: the title and Continue, no promises.
+    private var noRecording: some View {
+        VStack(alignment: .leading, spacing: DX.Space.m) {
+            Text(verbatim: session.title.resolve(ctx.variant) ?? "").v4Text(.title)
             Button("Continue", action: onDone).buttonStyle(.dx(.primary, on: .reading)).dynamicTypeSize(...DynamicTypeSize.accessibility1)
+            Spacer(minLength: 0)
         }
         .onAppear {
             guard !ctx.isReplay, let record else { return }
@@ -343,8 +351,11 @@ struct MissionCard: View {
 
     var body: some View {
         let ground = DX.Ground.apricot
-        VStack(spacing: DX.Space.m) {
-            Spacer()
+        // Top-anchored, with Xero at card size and "Got it" right under the card (S27.14).
+        VStack(alignment: .leading, spacing: DX.Space.m) {
+            XeroView(mood: .hello, size: .card)
+                .accessibilityHidden(true)
+                .padding(.top, DX.Space.m)
             VStack(alignment: .leading, spacing: 12) {
                 Text("Today's mission").dxType(.caption).textCase(.uppercase).foregroundStyle(ground.muted)
                 Text(verbatim: ctx.text(mission.text))
@@ -366,10 +377,10 @@ struct MissionCard: View {
             }
             .accessibilityElement(children: .combine)
             .dxArrive(0)
-            Spacer()
             Button("Got it", action: onDone)
                 .buttonStyle(.dx(.primary, on: .reading))
                 .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+            Spacer(minLength: 0)
         }
     }
 }

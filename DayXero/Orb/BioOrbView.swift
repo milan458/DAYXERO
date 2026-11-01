@@ -15,6 +15,9 @@ struct BioOrbView: View {
     var onTap: () -> Void = {}
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// On the cream reading ground in light mode the screen-blended rings and dark lens would vanish or read as a hole,
+    /// so light draws green rings over a cream centre; dark keeps the spec's look on navy (S27.12).
+    @Environment(\.colorScheme) private var scheme
 
     /// Full 320 or mini 180, or narrower when the container is: min(target, width − 36).
     /// The orb's size for the space it has: the spec's size, narrower containers less 36 pt, and on short windows
@@ -76,13 +79,19 @@ struct BioOrbView: View {
         let center = CGPoint(x: size.width / 2, y: size.height / 2)
         let ringBaseR = S * g.ringBaseFactor * engine.breathScale
         let reduce = reduceMotion
+        let light = scheme == .light
         let E = engine.drawEnergy
         let T = engine.orbTime
 
-        // 1. Moss halo, breathing with the ring.
+        // 1. Moss halo, breathing with the ring (a soft green wash in light mode).
         let haloOuter = ringBaseR * g.haloOuter
-        context.fill(circle(center, haloOuter), with: .radialGradient(
-            gradient(data.tokens.haloGradient), center: center, startRadius: ringBaseR * g.haloInner, endRadius: haloOuter))
+        if light {
+            context.fill(circle(center, haloOuter), with: .radialGradient(
+                Gradient(colors: [Read4.accentSoft, .clear]), center: center, startRadius: ringBaseR * g.haloInner, endRadius: haloOuter))
+        } else {
+            context.fill(circle(center, haloOuter), with: .radialGradient(
+                gradient(data.tokens.haloGradient), center: center, startRadius: ringBaseR * g.haloInner, endRadius: haloOuter))
+        }
 
         // 2. Plasma rings: crisp strokes with a glow, screen-blended.
         for (idx, layer) in data.plasmaLayers.enumerated() {
@@ -103,17 +112,24 @@ struct BioOrbView: View {
             }
             path.closeSubpath()
             var ring = context
-            ring.blendMode = .screen
+            // Screen blending only shows on a dark canvas; on cream the rings are plain green strokes.
+            ring.blendMode = light ? .normal : .screen
             // Canvas shadowBlur is about 2σ, so half of it is the matching SwiftUI radius.
-            ring.addFilter(.shadow(color: Color(orbHex: layer.glowHex), radius: (mini ? layer.glowMini : layer.glowFull) / 2))
-            ring.stroke(path, with: .color(Color(orbHex: layer.hex).opacity(layer.opacity)),
+            if !light {
+                ring.addFilter(.shadow(color: Color(orbHex: layer.glowHex), radius: (mini ? layer.glowMini : layer.glowFull) / 2))
+            }
+            ring.stroke(path, with: .color(light ? Read4.accent.opacity(layer.opacity) : Color(orbHex: layer.hex).opacity(layer.opacity)),
                         style: StrokeStyle(lineWidth: (mini ? layer.widthMini : layer.widthFull) * (1 + E * 0.22), lineJoin: .round))
         }
 
-        // 3. Dark lens with a feathered edge; no outline.
+        // 3. Dark lens with a feathered edge; no outline. A cream centre in light mode.
         let lensDraw = ringBaseR * g.lensFactor * g.lensFeather
-        context.fill(circle(center, lensDraw), with: .radialGradient(
-            gradient(data.tokens.lensGradient), center: center, startRadius: 0, endRadius: lensDraw))
+        if light {
+            context.fill(circle(center, lensDraw), with: .color(Read4.background))
+        } else {
+            context.fill(circle(center, lensDraw), with: .radialGradient(
+                gradient(data.tokens.lensGradient), center: center, startRadius: 0, endRadius: lensDraw))
+        }
     }
 
     private func circle(_ c: CGPoint, _ r: CGFloat) -> Path {
@@ -132,9 +148,11 @@ private struct OrbReadout: View {
     let mini: Bool
     /// The display frame's time, so the bars redraw every frame.
     let frame: TimeInterval
+    @Environment(\.colorScheme) private var scheme
 
     var body: some View {
         let data = engine.data
+        let light = scheme == .light
         let r = mini ? data.readout.mini : data.readout.full
         let session = engine.session
         let heroSize = session.isSOS ? r.heroSizeSOS : r.heroSize
@@ -142,7 +160,7 @@ private struct OrbReadout: View {
         VStack(spacing: 0) {
             Text(verbatim: label)
                 .font(DX.Typeface4.swiftUIFont(.body, size: r.labelSize, weight: 500))
-                .foregroundStyle(Color(orbHex: data.tokens.sage).opacity(data.readout.labelOpacity))
+                .foregroundStyle(light ? Read4.accent : Color(orbHex: data.tokens.sage).opacity(data.readout.labelOpacity))
                 .lineLimit(1)
                 .frame(height: r.rowHeight)
             // The numeral's baseline sits on the box's bottom edge, so the box is exactly the digits' height.
@@ -153,7 +171,7 @@ private struct OrbReadout: View {
                         .font(DX.Typeface4.swiftUIFont(.display, size: heroSize, weight: 800))
                         .tracking(-0.02 * heroSize)
                         .monospacedDigit()
-                        .foregroundStyle(.white)
+                        .foregroundStyle(light ? Read4.ink : .white)
                         .fixedSize()
                         .alignmentGuide(.bottom) { $0[.lastTextBaseline] }
                 }
@@ -162,7 +180,7 @@ private struct OrbReadout: View {
                 Text(verbatim: "CYCLE \(session.cycle) OF \(engine.cycleCount)")
                     .font(DX.Typeface4.swiftUIFont(.body, size: r.cycleSize, weight: 600).monospacedDigit())
                     .tracking(r.cycleTracking * r.cycleSize)
-                    .foregroundStyle(.white.opacity(data.readout.cycleOpacity))
+                    .foregroundStyle(light ? Read4.muted : .white.opacity(data.readout.cycleOpacity))
                     .lineLimit(1)
                 OrbBars(engine: engine, size: r, frame: frame)
             }
@@ -193,8 +211,10 @@ private struct OrbBars: View {
     let engine: OrbEngine
     let size: OrbData.ReadoutSize
     let frame: TimeInterval
+    @Environment(\.colorScheme) private var scheme
 
     var body: some View {
+        let light = scheme == .light
         Canvas { context, canvas in
             _ = frame
             let E: Double = engine.drawEnergy
@@ -207,7 +227,7 @@ private struct OrbBars: View {
                 let x: Double = Double(b) * (size.barWidth + size.barGap)
                 let rect = CGRect(x: x, y: (canvas.height - h) / 2, width: size.barWidth, height: h)
                 context.fill(Path(roundedRect: rect, cornerRadius: 2),
-                             with: .color(b.isMultiple(of: 2) ? Color(orbHex: engine.data.tokens.sage) : .white))
+                             with: .color(b.isMultiple(of: 2) ? (light ? Read4.accent : Color(orbHex: engine.data.tokens.sage)) : (light ? Read4.ink : .white)))
             }
         }
         .frame(width: size.barWidth * 4 + size.barGap * 3, height: size.barMaxHeight)
@@ -219,12 +239,13 @@ private struct OrbBars: View {
 /// ring stays the brightest thing on screen (S18.11, replacing the white transcript pill of spec §3.5).
 struct OrbCaption: View {
     let engine: OrbEngine
+    @Environment(\.colorScheme) private var scheme
 
     var body: some View {
         ZStack {
             Text(verbatim: engine.caption)
                 .dxFont(16, weight: 600, style: .callout)
-                .foregroundStyle(.white.opacity(0.6))
+                .foregroundStyle(scheme == .light ? Read4.muted : .white.opacity(0.6))
                 .multilineTextAlignment(.center)
                 .lineSpacing(3)
                 .fixedSize(horizontal: false, vertical: true)
