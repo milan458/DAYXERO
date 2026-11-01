@@ -69,6 +69,41 @@ struct OnboardingModelTests {
         }
     }
 
+    /// S27.10: the reveal's "Step n of total" uses the bar's own count, which is the same whatever is picked.
+    @Test func stepCaptionMatchesTheBarAndNeverChangesTotal() {
+        let totals = [Set<DayXeroCore.Product>([.cigarettes]), [.cigarettes, .vape], [.cigarettes, .vape, .pouches]].map { products in
+            let model = makeModel()
+            model.products = products
+            while model.step != .reveal { model.next() }
+            #expect(model.stepNumber == model.stepTotal - 1)
+            #expect(Double(model.stepNumber) / Double(model.stepTotal) == model.progress)
+            return model.stepTotal
+        }
+        #expect(Set(totals).count == 1)
+    }
+
+    /// S27.10: the name and reason, and past attempts, can be skipped; skipping saves no name and no reason.
+    @Test func optionalQuestionsCanBeSkipped() throws {
+        let model = makeModel()
+        model.products = [.cigarettes]
+        while model.step != .personal { model.next() }
+        #expect(!model.canContinue)
+        model.skip()
+        #expect(model.step == .pastAttempts)
+        #expect(!model.canContinue)
+        model.skip()
+        #expect(model.step == .nrt)
+        // Skip does nothing on a required question.
+        model.skip()
+        #expect(model.step == .nrt)
+
+        let container = try DataStore.makeContainer(inMemory: true)
+        let profile = try model.save(into: ModelContext(container), now: now)
+        #expect(profile.name.isEmpty)
+        #expect(profile.reasons.isEmpty)
+        #expect(profile.pastAttemptsRaw == nil)
+    }
+
     @Test func requiredStepsBlockContinueUntilAnswered() {
         let model = makeModel()
         model.products = [.cigarettes]

@@ -41,6 +41,7 @@ struct BaselineDraft: Equatable {
     var unitsPerDay: Double
     var price: Decimal?
     var unitsPerPurchase: Double
+    /// Saved as `ProductUse.yearsOfUse` but read nowhere after onboarding (S27.10).
     var years: YearsOfUse?
     /// Pouches in mg, vapes in mg/ml (S22). nil means "Not sure".
     var strengthMg: Double?
@@ -144,9 +145,11 @@ final class OnboardingModel {
     var triggers: Set<Trigger> = []
     /// Their reason, in their words, with an optional photo.
     var why = ReasonDraft(text: "")
+    /// Collected but not read after onboarding (S27.10): nothing in the plan uses past attempts, obstacles or
+    /// confidence yet. Milan decides whether the program uses them or the questions go.
     var pastAttempts: PastAttempts?
     var obstacles: Set<Obstacle> = []
-    /// 0–10.
+    /// 0–10. Collected but unused after onboarding (S27.10), see `pastAttempts`.
     var confidence: Double = 5
     var quitDay: Date
     var nrtInterest: NRTInterest?
@@ -198,10 +201,15 @@ final class OnboardingModel {
             + [.baselineSummary, .triggers, .personal, .pastAttempts, .nrt, .quitDay, .building, .reveal, .trial]
     }
 
+    /// The steps the bar counts: the baseline screens share one slot, so the total is the same whatever is picked.
+    private var fixedSteps: [OnboardingStep] {
+        sequence.filter { if case .baseline = $0 { false } else { true } }
+    }
+
     /// 0...1 for the progress bar. The baseline screens share one slot, split between the products, so the total
     /// stays fixed: picking a second product never moves the bar back.
     var progress: Double {
-        let fixed = sequence.filter { if case .baseline = $0 { false } else { true } }
+        let fixed = fixedSteps
         guard let summary = fixed.firstIndex(of: .baselineSummary) else { return 0 }
         // One more slot than `fixed` has, for the baselines, so the last step is fixed.count.
         let total = Double(fixed.count)
@@ -213,6 +221,10 @@ final class OnboardingModel {
         guard let index = fixed.firstIndex(of: step) else { return 0 }
         return Double(index >= summary ? index + 1 : index) / total
     }
+
+    /// "Step n of total" on the plan reveal, counted like the bar so the two always agree (S27.10).
+    var stepTotal: Int { fixedSteps.count }
+    var stepNumber: Int { Int((progress * Double(stepTotal)).rounded()) }
 
     func baseline(for product: Product) -> BaselineDraft {
         baselines[product] ?? .starting(for: product, currency: currencyCode)
@@ -243,6 +255,14 @@ final class OnboardingModel {
         let steps = sequence
         guard let index = steps.firstIndex(of: step), index + 1 < steps.count else { return }
         path.append(steps[index + 1])
+    }
+
+    /// Optional questions (the name and reason, past attempts) can be skipped (S27.10). Whatever was typed is kept; an
+    /// empty name saves as none (the app then says "you") and an empty reason adds no reason.
+    func skip() {
+        guard step == .personal || step == .pastAttempts else { return }
+        if step == .pastAttempts, pastAttempts == nil { obstacles = [] }
+        next()
     }
 
     func back() {

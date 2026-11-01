@@ -307,7 +307,7 @@ struct BaselineScreen: View {
     private var title: LocalizedStringKey {
         switch product {
         case .cigarettes: "How much do you smoke?"
-        case .vape: "Tell us about your vape"
+        case .vape: "Tell me about your vape"
         case .pouches: "How many pouches a day?"
         }
     }
@@ -543,7 +543,7 @@ struct TriggersScreen: View {
 
     var body: some View {
         OnboardingScaffold(title: "When do cravings hit hardest?",
-                           subtitle: "We'll time your prep check-ins and defences around your biggest moments.",
+                           subtitle: "I'll time your prep check-ins and defences around your biggest moments.",
                            model: model) {
             OnboardingSection(title: "How soon after waking do you first use?") {
                 VStack(spacing: DX.Space.xs) {
@@ -563,7 +563,7 @@ struct TriggersScreen: View {
                 }
             }
             if model.firstUse?.isEarly == true {
-                Label("Using within 30 minutes of waking is a strong sign of dependence. We plan your mornings first.", systemImage: "clock")
+                Label("Using within 30 minutes of waking is a strong sign of dependence. I plan your mornings first.", systemImage: "clock")
                     .dxType(.footnote).foregroundStyle(Onb.muted)
                     .padding(.top, DX.Space.s)
             }
@@ -594,8 +594,9 @@ struct PersonalScreen: View {
     }
 
     var body: some View {
+        // "Skip for now" goes on without a name or reason (S27.10); saving stores none, and the app says "you".
         OnboardingScaffold(title: "Make this personal", subtitle: "Your name and your reason. Both stay on this phone.",
-                           model: model, continueTitle: "Save my reason") {
+                           model: model, continueTitle: "Save my reason", skipTitle: "Skip for now") {
             OnboardingSection(title: "First name or nickname") {
                 TextField("", text: $model.name, prompt: Text("Your name").foregroundStyle(Onb.muted))
                     .textContentType(.givenName)
@@ -612,7 +613,7 @@ struct PersonalScreen: View {
                     .focused($focus, equals: .why)
                     .modifier(FieldStyle(focused: focus == .why, minHeight: 96))
                     .accessibilityLabel(Text("Why you're quitting"))
-                Text("When a craving hits, we'll show you this.").dxFont(12, weight: 400, style: .caption1)
+                Text("When a craving hits, I'll show you this.").dxFont(12, weight: 400, style: .caption1)
                     .foregroundStyle(Onb.muted)
             }
             OnboardingSection(title: "Tap to add to your reason") {
@@ -696,8 +697,8 @@ struct PastAttemptsScreen: View {
 
     var body: some View {
         OnboardingScaffold(title: "Have you tried to quit before?",
-                           subtitle: "Every attempt is data, not failure. Tell us what tripped you up so we can block it this time.",
-                           model: model) {
+                           subtitle: "Every attempt is data, not failure. Tell me what tripped you up, so I can plan around it this time.",
+                           model: model, skipTitle: "Skip this one") {
             OnboardingSection(title: "Past attempts") {
                 OnboardingSegments(options: PastAttempts.allCases, isSelected: { model.pastAttempts == $0 },
                                    title: { $0 == .notYet ? String(localized: "First time") : String(localized: $0.title) }) {
@@ -749,7 +750,7 @@ struct PastAttemptsScreen: View {
     private var feedback: LocalizedStringKey {
         switch model.confidence {
         case ..<4: "Nervous is normal. Prep is built for exactly this."
-        case ..<7: "Totally normal. That's why we prepare first."
+        case ..<7: "Totally normal. That's why I start with prep."
         default: "Great. Prep turns that into a plan."
         }
     }
@@ -778,7 +779,7 @@ struct NRTScreen: View {
             }
             .accessibilityHint(Text("Opens the study summary"))
             VStack(alignment: .leading, spacing: 0) {
-                OnbOptionCard("Yes, I'm already using it", detail: model.nrtInterest == .using ? "Tell us what you use" : nil,
+                OnbOptionCard("Yes, I'm already using it", detail: model.nrtInterest == .using ? "Tell me what you use" : nil,
                              isSelected: model.nrtInterest == .using) { model.nrtInterest = .using }
                 if model.nrtInterest == .using {
                     DXFlowLayout {

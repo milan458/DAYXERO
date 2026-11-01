@@ -10,11 +10,11 @@ private let shortDate = Date.FormatStyle.dateTime.weekday(.abbreviated).day().mo
 
 // MARK: F01 Breathe · coral
 
-/// One slow breath before any question. Skip appears after one full 10 s cycle.
+/// One slow breath before any question. Skip is there from the start (S27.10); the screen carries on by itself after
+/// two full 10 s breaths.
 struct BreatheScreen: View {
     let onDone: () -> Void
     @State private var start = Date()
-    @State private var canSkip = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
@@ -23,9 +23,6 @@ struct BreatheScreen: View {
                 Spacer()
                 Button("Skip", action: onDone)
                     .buttonStyle(.dx(.quiet, on: .coral))
-                    .opacity(canSkip ? 1 : 0)
-                    .disabled(!canSkip)
-                    .animation(.easeIn(duration: 0.4), value: canSkip)
             }
             .padding(.horizontal, DX.Layout.gutter)
             Spacer(minLength: 12)
@@ -49,7 +46,7 @@ struct BreatheScreen: View {
             BreathingWords(inhale: String(localized: "Breathe in"), exhale: String(localized: "…and out"))
                 .foregroundStyle(DX.Ground.coral.ink)
                 .padding(.top, 8)
-            Text("One slow breath before we begin. In for 4, out for 6.")
+            Text("One slow breath before I ask anything. In for 4, out for 6.")
                 .dxType(.body)
                 .foregroundStyle(DX.Ground.coral.muted)
                 .multilineTextAlignment(.center)
@@ -59,10 +56,8 @@ struct BreatheScreen: View {
         }
         .padding(.vertical, DX.Space.s)
         .task {
-            try? await Task.sleep(for: .seconds(reduceMotion ? 2 : 10))
-            canSkip = true
             // Carry on by itself after a second full breath.
-            try? await Task.sleep(for: .seconds(reduceMotion ? 3 : 10))
+            try? await Task.sleep(for: .seconds(reduceMotion ? 5 : 20))
             onDone()
         }
     }
@@ -339,6 +334,8 @@ struct BuildingScreen: View {
         let id: Int
         let kicker: String
         let value: String
+        /// A plain line under the row, e.g. what a wave is the first time the plan says it (S27.10).
+        var detail: String? = nil
     }
 
     private var rows: [Row] {
@@ -359,7 +356,8 @@ struct BuildingScreen: View {
                 value: String(localized: "\(model.quitDay.formatted(shortDate)) · no more \(usage)")),
         ]
         if !waves.isEmpty {
-            all.append(Row(id: 2, kicker: String(localized: "Waves to watch"), value: ListFormatter.localizedString(byJoining: waves).capitalizedFirst))
+            all.append(Row(id: 2, kicker: String(localized: "Waves to watch"), value: ListFormatter.localizedString(byJoining: waves).capitalizedFirst,
+                           detail: String(localized: "A wave is a craving: it rises, peaks and passes.")))
         }
         let why = model.why.text.trimmingCharacters(in: .whitespacesAndNewlines)
         if !why.isEmpty {
@@ -379,8 +377,15 @@ struct BuildingScreen: View {
                             .accessibilityAddTraits(.isHeader)
                     }
                     ForEach(rows.prefix(shown)) { row in
-                        PlanStepRow(kicker: row.kicker, value: row.value, ground: ground)
-                            .transition(.move(edge: .bottom).combined(with: .opacity))
+                        VStack(alignment: .leading, spacing: 6) {
+                            PlanStepRow(kicker: row.kicker, value: row.value, ground: ground)
+                            if let detail = row.detail {
+                                Text(detail).dxType(.footnote).foregroundStyle(ground.muted)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                    .padding(.horizontal, 4)
+                            }
+                        }
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
                     }
                     if friends {
                         HStack(spacing: 12) {
@@ -450,7 +455,7 @@ struct PlanRevealScreen: View {
                         XeroView(mood: .hello, stage: 1, size: .avatar, animate: false)
                             .background(DX.Ground.apricot.background, in: Circle()).clipShape(Circle())
                             .accessibilityHidden(true)
-                        Text("Step 6 of 6").dxType(.caption).textCase(.uppercase).foregroundStyle(ground.muted)
+                        Text("Step \(model.stepNumber) of \(model.stepTotal)").dxType(.caption).textCase(.uppercase).foregroundStyle(ground.muted)
                     }
                     MarkedTitle(String(localized: "Your plan is "), marking: String(localized: "ready"), color: DX.Mark.color(on: ground))
                         .dxType(.title).foregroundStyle(ground.ink)
@@ -543,13 +548,13 @@ struct PlanRevealScreen: View {
             if let annual {
                 Text("\(days) days free, then \(annual.priceText) a year").dxType(.headline).foregroundStyle(DX.Fill.cream)
                 if let perMonth = annual.perMonthText {
-                    Text("That's \(perMonth) a month. We'll ask you on Quit Day, not before.")
+                    Text("That's \(perMonth) a month. I'll ask you on Quit Day, not before.")
                         .dxType(.footnote).foregroundStyle(DX.Fill.cream.opacity(0.85))
                 }
             } else {
-                Text("We'll ask you about the full program on Quit Day, not before.").dxType(.headline).foregroundStyle(DX.Fill.cream)
+                Text("I'll ask you about the full program on Quit Day, not before.").dxType(.headline).foregroundStyle(DX.Fill.cream)
             }
-            Text("If you start the trial on \(quit.formatted(shortDate)) it runs to \(end.formatted(shortDate)), and we'll remind you on \(remind.formatted(shortDate)). Cancel any time in Settings › Apple ID › Subscriptions.")
+            Text("If you start the trial on \(quit.formatted(shortDate)) it runs to \(end.formatted(shortDate)), and I'll remind you on \(remind.formatted(shortDate)). Cancel any time in Settings › Apple ID › Subscriptions.")
                 .dxType(.caption).foregroundStyle(DX.Fill.cream.opacity(0.85))
                 .fixedSize(horizontal: false, vertical: true)
         }
