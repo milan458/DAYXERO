@@ -428,7 +428,8 @@ private extension String {
 
 // MARK: F06 Your plan is ready · mint
 
-/// Prep week is free; the 3-day trial is offered on Quit Day (decision 15). Nothing is charged here.
+/// Prep week is free; the 7-day trial is offered on Quit Day (decision 15, S27.8), so the first charge comes after the first
+/// week. Nothing is charged here.
 struct PlanRevealScreen: View {
     let model: OnboardingModel
     let onContinue: () -> Void
@@ -521,8 +522,8 @@ struct PlanRevealScreen: View {
 
     private var includes: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("**Free now:** prep week, Day Xero, your counter and Craving SOS")
-            Text("**With the full program:** four weeks of lessons, evening check-ins, an NRT plan, insights")
+            Text("**Always free:** prep week, Day Xero, your counter, Craving SOS and evening check-ins")
+            Text("**With the full program:** four weeks of lessons, an NRT plan, insights")
         }
         .dxType(.footnote)
         .foregroundStyle(ground.ink)

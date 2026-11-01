@@ -168,9 +168,9 @@ final class MockStore: PurchaseStore {
         if mode == .slow { try await Task.sleep(for: .seconds(60)) }
         if mode == .failing { throw StoreError.unavailable }
         return [
-            PlanOption(plan: .annual, price: 39.99, currencyCode: "USD", priceText: "$39.99", perMonthText: "$3.33", trialDays: 3),
+            PlanOption(plan: .annual, price: 39.99, currencyCode: "USD", priceText: "$39.99", perMonthText: "$3.33", trialDays: 7),
             PlanOption(plan: .monthly, price: 9.99, currencyCode: "USD", priceText: "$9.99", perMonthText: nil, trialDays: nil),
-            PlanOption(plan: .lifetime, price: 79.99, currencyCode: "USD", priceText: "$79.99", perMonthText: nil, trialDays: nil),
+            PlanOption(plan: .lifetime, price: 99.99, currencyCode: "USD", priceText: "$99.99", perMonthText: nil, trialDays: nil),
         ]
     }
 
