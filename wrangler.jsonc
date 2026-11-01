@@ -1,10 +1,12 @@
 {
   // Static site for dayxero.in, served by the "dayxero" Cloudflare Worker.
+  // Lives at the repo root so Cloudflare Workers Builds (Settings > Build, root directory "/")
+  // and the Website GitHub workflow both run `wrangler deploy` from here. See website/worker/README.md.
   "name": "dayxero",                  // must match the Worker name exactly
   "compatibility_date": "2026-10-01",
-  "main": "worker/index.js",          // beta waitlist API; see worker/README.md
+  "main": "website/worker/index.js",  // beta waitlist API; see website/worker/README.md
   "assets": {
-    "directory": ".",                 // this folder
+    "directory": "website",           // the static site; website/.assetsignore lists what stays out
     "binding": "ASSETS",
     "not_found_handling": "404-page", // shows 404.html for missing pages
     "run_worker_first": ["/api/*"]    // everything else is served straight from the assets
@@ -12,7 +14,7 @@
   // Sends confirmation emails that were held back (daily send cap, or email not set up yet).
   "triggers": { "crons": ["*/30 * * * *"] },
   // Waitlist storage. Until this is filled in, the forms say signups open soon.
-  // Create it once with: npx wrangler d1 create dayxero-waitlist   (then paste the id below and uncomment)
+  // Create it once from the repo root: npx wrangler d1 create dayxero-waitlist   (then paste the id below and uncomment)
   // "d1_databases": [
   //   { "binding": "DB", "database_name": "dayxero-waitlist", "database_id": "PASTE-DATABASE-ID" }
   // ],

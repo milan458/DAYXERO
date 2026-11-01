@@ -1,11 +1,12 @@
 name: Website
 
-# Deploys website/ to the "dayxero" Cloudflare Worker, which serves dayxero.in.
+# Deploys website/ to the "dayxero" Cloudflare Worker, which serves dayxero.in, using the wrangler.jsonc at the repo root.
 # Needs repo secrets CLOUDFLARE_API_TOKEN (Edit Cloudflare Workers) and CLOUDFLARE_ACCOUNT_ID.
+# Cloudflare Workers Builds can deploy the same config directly from the repo; see website/worker/README.md.
 on:
   push:
     branches: [main]
-    paths: ["website/**", "scripts/website/**", ".github/workflows/website.yml"]
+    paths: ["website/**", "scripts/website/**", "wrangler.jsonc", ".github/workflows/website.yml"]
   workflow_dispatch:
 
 permissions:
@@ -28,5 +29,4 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           wranglerVersion: "4.153.0"
-          workingDirectory: website
           command: deploy
