@@ -5,9 +5,11 @@ import SwiftData
 
 /// Quit Day defaults. Placeholder until the ported program content sets the prep length (S2.8).
 enum QuitDayPolicy {
+    /// A full prep week: one prep session a day.
     static let recommendedDaysAhead = 7
-    /// Program v2 runs seven prep sessions, one a day, so Quit Day is at least a week out (handoff S2.8).
-    static let earliestDaysAhead = 7
+    /// Prep can be 3 to 7 days (S27.7). Day Xero opens on the Quit Day whatever prep is done, and unfinished prep
+    /// sessions stay open as catch-up (ProgramUnlock.states).
+    static let earliestDaysAhead = 3
     static let latestDaysAhead = 30
 }
 

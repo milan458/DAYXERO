@@ -172,6 +172,17 @@ struct OnboardingModelTests {
         #expect(model.currencyCode == "GBP")
     }
 
+    /// S27.7: prep can be 3 to 7 days, so the earliest Quit Day is three days out and a shorter prep can continue.
+    @Test func quitDayCanBeThreeDaysOut() {
+        let model = makeModel()
+        let earliest = model.calendar.date(byAdding: .day, value: 3, to: model.today)!
+        #expect(model.quitDayRange.lowerBound == earliest)
+        model.quitDay = earliest
+        #expect(model.prepDays == 3)
+        let tooSoon = model.calendar.date(byAdding: .day, value: 2, to: model.today)!
+        #expect(!model.quitDayRange.contains(tooSoon))
+    }
+
     @Test func savingWritesTheProfile() throws {
         let container = try DataStore.makeContainer(inMemory: true)
         let context = ModelContext(container)
