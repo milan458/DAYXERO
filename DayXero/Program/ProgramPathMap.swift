@@ -166,6 +166,10 @@ enum ProgramArt {
         case "W4S1": .heart
         case "W4S2": .shield
         case "W4S3": .flower
+        // Boosters after graduation (S27.18).
+        case "B45": .sea
+        case "B60": .anchor
+        case "B90": .peak
         default: .dawn
         }
     }

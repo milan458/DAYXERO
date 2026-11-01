@@ -13,6 +13,7 @@ struct NotificationSettingsView: View {
     @AppStorage(DailyReminderSettings.milestoneKey) private var milestone = DailyReminderSettings.offUntilChosen
     @AppStorage(DailyReminderSettings.awayKey) private var away = true
     @AppStorage(DailyReminderSettings.nrtOnKey) private var nrt = true
+    @AppStorage(DailyReminderSettings.weeklyKey) private var weekly = DailyReminderSettings.offUntilChosen
     @AppStorage(DailyReminderSettings.quietStartKey) private var quietStart = DailyReminderSettings.defaultQuietStart
     @AppStorage(DailyReminderSettings.quietEndKey) private var quietEnd = DailyReminderSettings.defaultQuietEnd
     @Environment(\.modelContext) private var context
@@ -45,6 +46,9 @@ struct NotificationSettingsView: View {
             Section {
                 Toggle(isOn: $nrt) { label("NRT", detail: "Patch changes and step-downs", systemImage: "bandage") }
                 Toggle(isOn: $away) { label("When you've been away", detail: "Two gentle notes, then quiet", systemImage: "water.waves") }
+                // After the four weeks, Glim checks in once a week (S27.18). Off until chosen.
+                row("Weekly check-in", detail: "Sundays, after the four weeks", systemImage: "calendar", minute: $weekly,
+                    fallback: DailyReminderSettings.defaultWeekly)
             } header: {
                 Text("Your plan")
             }
@@ -65,7 +69,7 @@ struct NotificationSettingsView: View {
         }
         .tint(Read4.accent)
         .navigationTitle("Notifications")
-        .onChange(of: [pledge, lesson, checkIn, milestone, quietStart, quietEnd]) { refresh() }
+        .onChange(of: [pledge, lesson, checkIn, milestone, weekly, quietStart, quietEnd]) { refresh() }
         .onChange(of: away) { refresh() }
         .onChange(of: nrt) { refresh() }
         .onChange(of: scenePhase, initial: true) { _, phase in

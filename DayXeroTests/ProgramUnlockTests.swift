@@ -143,7 +143,30 @@ struct ProgramUnlockTests {
         #expect(unlock.steps.first?.rule == .first)
         #expect(unlock.steps.first { $0.id == "DX" }?.rule == .dayXero)
         #expect(unlock.steps.first { $0.id == "W2S2" }?.minDay == 10)
-        #expect(unlock.steps.last?.minDay == 30)
+        // The last step is the Day 90 booster (S27.18); graduation (Day 31) is no longer the end.
+        #expect(unlock.steps.last?.minDay == 89)
+        #expect(unlock.steps.first { $0.id == "W4S3" }?.minDay == 30)
+    }
+
+    /// S27.18: after graduation the boosters open by days since Day Xero, one at a time: Day 45, then 60, then 90.
+    @Test func boostersOpenAfterGraduationByDaysSinceDayXero() throws {
+        let content = try #require(ProgramContent.bundled)
+        let unlock = ProgramUnlock(content: content, clock: DayClock(calendar: calendar, boundaryHour: 4))
+        let quit = at(1, 8)
+        var records: [String: ProgramUnlock.Record] = [:]
+        for session in content.sessions where session.phaseId != "after" {
+            records[session.id] = .init(startedAt: quit, completedAt: quit)
+        }
+        func day(_ n: Int) -> Date { calendar.date(byAdding: .day, value: n, to: quit)! }
+        func state(_ id: String, at now: Date) -> ProgramUnlock.State? {
+            unlock.states(records: records, quitDay: at(1, 0), quitTimestamp: quit, now: now).first { $0.id == id }?.state
+        }
+        #expect(state("B45", at: day(43)) == .scheduled(.quitDay(44)))
+        #expect(state("B45", at: day(44)) == .available)
+        #expect(state("B60", at: day(44)) == .locked)
+        records["B45"] = .init(startedAt: day(44), completedAt: day(44))
+        #expect(state("B60", at: day(50)) == .scheduled(.quitDay(59)))
+        #expect(state("B60", at: day(59)) == .available)
     }
 
     /// A week session's label is the Today counter's day it opens on: Day Xero is Day 1, so `minDay` 3 is "Day 4",

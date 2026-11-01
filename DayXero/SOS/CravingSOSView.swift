@@ -54,7 +54,7 @@ struct CravingSOSView: View {
             switch stage {
             case .session: sessionView
             case .passed: PassedView(profile: profile, startedAt: startedAt, endedAt: endedAt ?? .now,
-                                     ridden: ridden, onDone: close)
+                                     ridden: ridden, menu: menu, onDone: close)
             case .slipped: slippedView
             }
         }
@@ -92,12 +92,17 @@ struct CravingSOSView: View {
                         JelliView(mood: .breathe, stage: CrewGrowth.stage(daysClear: daysClear), size: .hero)
                             .offset(x: jelliIn || reduceMotion ? 0 : 90)
                             .opacity(jelliIn ? 1 : 0)
-                            .frame(height: 220)
+                            // Jelli makes room for the break menu (S27.18).
+                            .frame(height: 170)
                             .accessibilityHidden(true)
                         SOSBreathWords()
                             .foregroundStyle(SOSColors.cream)
                         riddenLine
                             .dxArrive(5)
+                        SOSBreakMenuCard(items: menu.isEmpty ? starterBreaks : menu, isOwn: !menu.isEmpty,
+                                         buildingDay: buildingDayLabel, fastActingNRT: hasFastActingNRT)
+                            .padding(.top, 6)
+                            .dxArrive(6)
                         if let reason = currentReason {
                             SOSReasonCard(reason: reason, canAdvance: reasons.count > 1) { reasonSkip += 1 }
                                 .padding(.top, 10)
@@ -190,6 +195,44 @@ struct CravingSOSView: View {
             .lineLimit(1)
     }
 
+    // MARK: Break menu (S27.18)
+
+    private var store: ProgramStore? { profile.map { ProgramStore(context: context, profile: $0) } }
+
+    /// The person's break menu, most helpful first; empty until the program saves one.
+    private var menu: [String] {
+        guard let store else { return [] }
+        return BreakMenu.ordered(BreakMenu.items(menu: store.answer(BreakMenu.menuKey)?.lines ?? [],
+                                                 move: Self.text(store.answer(BreakMenu.moveKey))),
+                                 helped: cravings.compactMap(\.helped))
+    }
+
+    /// Before a menu exists: three of the program's own suggestions from the session that builds it.
+    private var starterBreaks: [String] { Self.suggestedBreaks(store: store) }
+
+    /// "Day 9", the day the menu-building session opens.
+    private var buildingDayLabel: String? { store?.content?.session(BreakMenu.buildingSessionId)?.label }
+
+    /// Gum, a lozenge or an inhaler, from onboarding or an NRT plan.
+    private var hasFastActingNRT: Bool {
+        guard let profile else { return false }
+        return BreakMenu.hasFastActingNRT(profile.nrtFormats + profile.nrtPlans.compactMap { NRTType(rawValue: $0.typeRaw) })
+    }
+
+    static func text(_ value: ProgramAnswerValue?) -> String? {
+        if case let .text(text)? = value, !text.isEmpty { return text }
+        return nil
+    }
+
+    static func suggestedBreaks(store: ProgramStore?) -> [String] {
+        let fallback = [String(localized: "Step outside"), String(localized: "Glass of water"), String(localized: "2 minutes of breathing")]
+        guard let store, let session = store.content?.session(BreakMenu.buildingSessionId),
+              let beat = session.beats.first(where: { $0.saveAs == BreakMenu.menuKey }),
+              let options = beat.options?.resolve(store.variant) else { return fallback }
+        let picked = ["outside", "water", "breathe"].compactMap { id in options.first { $0.id == id }?.text }
+        return picked.count == 3 ? picked : fallback
+    }
+
     // MARK: Your why
 
     private var reasons: [Reason] {
@@ -280,11 +323,14 @@ private struct PassedView: View {
     let endedAt: Date
     /// Waves ridden out before this one.
     let ridden: Int
+    /// The break menu, most helpful first (S27.18); empty before the program saves one.
+    let menu: [String]
     let onDone: () -> Void
 
     @Environment(\.modelContext) private var context
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var trigger: Trigger?
+    @State private var helped: String?
     @State private var shown = false
     @State private var bumped = false
 
@@ -317,6 +363,7 @@ private struct PassedView: View {
                             .padding(.horizontal, 8)
                             .dxArrive(4)
                         wavesTile.padding(.top, 6).dxArrive(5)
+                        if !menu.isEmpty { helpedCard.dxArrive(6) }
                         triggerCard.dxArrive(7)
                         handBack.dxArrive(8)
                     }
@@ -326,7 +373,7 @@ private struct PassedView: View {
                 }
                 .scrollBounceBehavior(.basedOnSize)
                 Button("Back to my day") {
-                    CravingLog.annotate(startedAt: startedAt, trigger: trigger, intensity: nil, in: context)
+                    CravingLog.annotate(startedAt: startedAt, trigger: trigger, intensity: nil, helped: helped, in: context)
                     onDone()
                 }
                 .buttonStyle(.dx(.primary, on: .sky))
@@ -375,6 +422,35 @@ private struct PassedView: View {
         .background(SOSColors.skyCard, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("\(ridden + 1) waves ridden out"))
+    }
+
+    /// "What helped?": the break menu plus "Just breathing" (S27.18). The pick is saved on this craving and puts that
+    /// break first on the menu next time.
+    private var helpedCard: some View {
+        let options = menu + [String(localized: "Just breathing")]
+        return VStack(alignment: .leading, spacing: 10) {
+            Text("What helped? \(Text("· optional").fontWeight(.medium).foregroundStyle(ground.muted))")
+                .dxFont(16, weight: 700, style: .body)
+                .foregroundStyle(ground.ink)
+            DXFlowLayout(spacing: 8) {
+                ForEach(options, id: \.self) { option in
+                    V4Chip(text: option, isOn: helped == option, fill: SOSColors.skyChip, ink: ground.ink,
+                           selectedFill: ground.ink, selectedInk: ground.background) {
+                        helped = helped == option ? nil : option
+                    }
+                }
+            }
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel(Text("What helped"))
+            if let helped, menu.contains(helped) {
+                Text("\(helped) will show first next time.")
+                    .dxType(.footnote).foregroundStyle(ground.muted)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 16).padding(.vertical, 14)
+        .background(SOSColors.skyCard, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
     }
 
     private var triggerCard: some View {

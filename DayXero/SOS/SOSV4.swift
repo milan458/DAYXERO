@@ -204,6 +204,56 @@ struct SOSReasonCard: View {
     }
 }
 
+/// The break menu on the solid ocean fill while a wave rides (S27.18): the person's own breaks, most helpful first,
+/// or three of the program's suggestions before they've saved a menu. For anyone with gum, a lozenge or an inhaler,
+/// a row reminding them it works in minutes. Read-only: the breaks are things to go and do.
+struct SOSBreakMenuCard: View {
+    let items: [String]
+    /// The person saved these; false shows the program's suggestions and when their own menu comes.
+    let isOwn: Bool
+    /// "Day 9", the day the session that builds the menu opens.
+    let buildingDay: String?
+    let fastActingNRT: Bool
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text(isOwn ? LocalizedStringKey("YOUR BREAK MENU") : LocalizedStringKey("TRY ONE WHILE IT PASSES"))
+                .dxType(.caption).foregroundStyle(SOSColors.ocean.muted)
+                .accessibilityAddTraits(.isHeader)
+            DXFlowLayout(spacing: 8) {
+                ForEach(items, id: \.self) { item in
+                    Text(verbatim: item)
+                        .dxFont(16, weight: 600, style: .body)
+                        .foregroundStyle(SOSColors.cream)
+                        .padding(.horizontal, 14)
+                        .frame(minHeight: 44)
+                        .background(Color(light: (0xFFF8EE, 0.12), dark: (0xFFFFFF, 0.10)),
+                                    in: RoundedRectangle(cornerRadius: DX.Layout.answerChipRadius, style: .continuous))
+                }
+            }
+            if !isOwn, let buildingDay {
+                Text("\(buildingDay) helps you save your own break menu. It will show here.")
+                    .dxType(.footnote).foregroundStyle(SOSColors.ocean.muted)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            if fastActingNRT {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Use your gum or a lozenge now").dxFont(16, weight: 700, style: .body).foregroundStyle(SOSColors.cream)
+                    Text("Fast-acting NRT helps in minutes. Follow the label.").dxType(.footnote).foregroundStyle(SOSColors.ocean.muted)
+                }
+                .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                .padding(.horizontal, 14).padding(.vertical, 10)
+                .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).strokeBorder(SOSColors.ocean.muted.opacity(0.5)))
+                .accessibilityElement(children: .combine)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 16).padding(.vertical, 14)
+        .background(SOSColors.solid, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .accessibilityElement(children: .contain)
+    }
+}
+
 /// F14: small rings rising through the sky.
 struct RisingBubbles: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
