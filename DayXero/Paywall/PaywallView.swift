@@ -131,6 +131,14 @@ struct PaywallView: View {
         }
     }
 
+    /// "2 days" or "the day", matching when the reminder actually comes.
+    private var reminderLead: String {
+        guard let end = model.trialEndDate, TrialReminder.leadDays(trialEndsAt: end, now: .now) == 2 else {
+            return String(localized: "the day")
+        }
+        return String(localized: "2 days")
+    }
+
     private var header: some View {
         HStack {
             Button {
