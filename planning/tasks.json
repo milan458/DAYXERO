@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-11-01T19:50:21.768Z"
+    "updated": "2026-11-01T19:51:02.901Z"
   },
   "now": {
     "section": "S27",
@@ -2737,24 +2737,24 @@
         {
           "id": "S27.16",
           "title": "Rank 16 · Xero grows: visible stages 1–4, sky clarity by days, distinct art and fact per milestone, stage sheet in the lab.",
-          "status": "awaiting_signoff",
-          "notes": "milestone is one template × 11; Xero identical days 1–14 and 30–365. CrewGrowth, XeroView, HorizonScene, MilestoneViews. Wave 4.\nLab v8: Xero stages 1–4 at CrewGrowth thresholds (<7, <14, <28, 28+), each milestone with its own sky, token and company; new 'crew-stages' screen (How Xero grows).",
+          "status": "in_progress",
+          "notes": "milestone is one template × 11; Xero identical days 1–14 and 30–365. CrewGrowth, XeroView, HorizonScene, MilestoneViews. Wave 4.\nLab v8: Xero stages 1–4 at CrewGrowth thresholds (<7, <14, <28, 28+), each milestone with its own sky, token and company; new 'crew-stages' screen (How Xero grows).\nMilan signed off the lab version (v8), 1 Nov 2026. Swift started on claude/critique-wave4 (stacked on Wave 3).",
           "created": "2026-11-01T18:37:56.753Z",
           "completed": null
         },
         {
           "id": "S27.17",
           "title": "Rank 17 · Dusk variant of the dawn hero for dark mode; lab renders sheets over their real parent.",
-          "status": "awaiting_signoff",
-          "notes": "Hero art at full brightness over plum on 5 screens; 14 sheet screens never reviewed as they will look. Wave 4.\nLab v8: dusk-dawn heroes in dark mode (welcome, Quit Day, pledge, milestone, finale, Today); Settings sheets render over Progress (dimmed, pushed back) instead of black.",
+          "status": "in_progress",
+          "notes": "Hero art at full brightness over plum on 5 screens; 14 sheet screens never reviewed as they will look. Wave 4.\nLab v8: dusk-dawn heroes in dark mode (welcome, Quit Day, pledge, milestone, finale, Today); Settings sheets render over Progress (dimmed, pushed back) instead of black.\nMilan signed off the lab version (v8), 1 Nov 2026. Swift started on claude/critique-wave4 (stacked on Wave 3).",
           "created": "2026-11-01T18:37:56.801Z",
           "completed": null
         },
         {
           "id": "S27.18",
           "title": "Rank 18 · SOS break menu / lifts / 'use your gum' row; show mission data back; sessions at days 45, 60, 90 and a weekly Glim check-in.",
-          "status": "awaiting_signoff",
-          "notes": "Program promises SOS options it does not show; Day 31 cliff. CravingSOSView, MissionPrompts, program.json, NotificationPlan. Wave 4.\nLab v8: SOS 'menu' and 'menu-before' states with the saved break menu and 'Use your gum or a lozenge now'; Passed asks what helped; follow-ups show numbers back (peaks 8 → 6 → 4, morning gaps); program 'After' phase with boosters at days 45/60/90 (new content to write) and a weekly Glim check-in; slip rehearsal still on Day 28 (note recommends days 8–11).",
+          "status": "in_progress",
+          "notes": "Program promises SOS options it does not show; Day 31 cliff. CravingSOSView, MissionPrompts, program.json, NotificationPlan. Wave 4.\nLab v8: SOS 'menu' and 'menu-before' states with the saved break menu and 'Use your gum or a lozenge now'; Passed asks what helped; follow-ups show numbers back (peaks 8 → 6 → 4, morning gaps); program 'After' phase with boosters at days 45/60/90 (new content to write) and a weekly Glim check-in; slip rehearsal still on Day 28 (note recommends days 8–11).\nMilan signed off the lab version (v8), 1 Nov 2026. Swift started on claude/critique-wave4 (stacked on Wave 3).",
           "created": "2026-11-01T18:37:56.854Z",
           "completed": null
         },
@@ -2769,8 +2769,8 @@
         {
           "id": "S27.20",
           "title": "Rank 20 · Accessibility and convention debt: Dynamic Type (AX3) states and motion tokens in the lab; 44 pt targets; one hold duration; reasons under disabled CTAs; red destructive buttons; merged day-end picker.",
-          "status": "awaiting_signoff",
-          "notes": "Move.swift, Buttons4.swift, ProgramView tabs, MilestoneViews segments, DayEndSettings. Wave 4.\nLab v8: Text size option (AX3) in the top bar; motion tokens from Move.swift; one 1-second hold; disabled buttons show a reason; red destructive buttons; 44 pt targets; one day-end picker. AX3 shows milestone stat tiles overflowing: fix in Swift (stack the tiles at accessibility sizes).",
+          "status": "in_progress",
+          "notes": "Move.swift, Buttons4.swift, ProgramView tabs, MilestoneViews segments, DayEndSettings. Wave 4.\nLab v8: Text size option (AX3) in the top bar; motion tokens from Move.swift; one 1-second hold; disabled buttons show a reason; red destructive buttons; 44 pt targets; one day-end picker. AX3 shows milestone stat tiles overflowing: fix in Swift (stack the tiles at accessibility sizes).\nMilan signed off the lab version (v8), 1 Nov 2026. Swift started on claude/critique-wave4 (stacked on Wave 3).",
           "created": "2026-11-01T18:37:56.997Z",
           "completed": null
         }
@@ -2778,6 +2778,46 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-11-01T19:51:02.901Z",
+      "type": "status",
+      "message": "S27.20 awaiting_signoff → in_progress"
+    },
+    {
+      "time": "2026-11-01T19:51:02.848Z",
+      "type": "note",
+      "message": "S27.20: Milan signed off the lab version (v8), 1 Nov 2026. Swift started on claude/critique-wave4 (stacked on Wave 3)."
+    },
+    {
+      "time": "2026-11-01T19:51:02.787Z",
+      "type": "status",
+      "message": "S27.18 awaiting_signoff → in_progress"
+    },
+    {
+      "time": "2026-11-01T19:51:02.737Z",
+      "type": "note",
+      "message": "S27.18: Milan signed off the lab version (v8), 1 Nov 2026. Swift started on claude/critique-wave4 (stacked on Wave 3)."
+    },
+    {
+      "time": "2026-11-01T19:51:02.681Z",
+      "type": "status",
+      "message": "S27.17 awaiting_signoff → in_progress"
+    },
+    {
+      "time": "2026-11-01T19:51:02.617Z",
+      "type": "note",
+      "message": "S27.17: Milan signed off the lab version (v8), 1 Nov 2026. Swift started on claude/critique-wave4 (stacked on Wave 3)."
+    },
+    {
+      "time": "2026-11-01T19:51:02.558Z",
+      "type": "status",
+      "message": "S27.16 awaiting_signoff → in_progress"
+    },
+    {
+      "time": "2026-11-01T19:51:02.506Z",
+      "type": "note",
+      "message": "S27.16: Milan signed off the lab version (v8), 1 Nov 2026. Swift started on claude/critique-wave4 (stacked on Wave 3)."
+    },
     {
       "time": "2026-11-01T19:50:21.768Z",
       "type": "now",
