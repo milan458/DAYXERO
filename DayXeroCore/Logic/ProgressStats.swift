@@ -53,7 +53,8 @@ public struct DayClock: Sendable {
     }
 }
 
-/// Home and Progress numbers. Slips never reduce days clear or the progress visual.
+/// Home and Progress numbers. Slips never reduce days since Quit Day or the progress visual; since S27.9 they do
+/// reduce units avoided.
 public struct ProgressStats: Sendable {
     public let quitDay: Date
     public let baselines: [Baseline]
@@ -74,7 +75,8 @@ public struct ProgressStats: Sendable {
         max(clock.days(from: now, toDate: quitDay), 0)
     }
 
-    /// Days clear counts Quit Day itself as day 1. Logged slips are deliberately not an input.
+    /// Days since Quit Day, counting Quit Day itself as day 1 (shown as "days since Quit Day", S27.9). Logged slips
+    /// are deliberately not an input: this number never resets.
     public func daysClear(at now: Date) -> Int {
         isPrep(at: now) ? 0 : clock.days(fromDate: quitDay, to: now) + 1
     }
@@ -92,6 +94,18 @@ public struct ProgressStats: Sendable {
         var result: [Product: Int] = [:]
         for baseline in baselines {
             result[baseline.product, default: 0] += Int((baseline.unitsPerDay * elapsed).rounded(.down))
+        }
+        return result
+    }
+
+    /// Units not used since Quit Day, less what logged slips used (S27.9), never below zero. A slip with no product
+    /// counts against `primary`; slips before Quit Day or after `now` are not counted.
+    public func unitsAvoided(at now: Date, slips: [SlipRecord], primary: Product?) -> [Product: Int] {
+        var result = unitsAvoided(at: now)
+        let quit = clock.startOfDate(quitDay)
+        for slip in slips where clock.day(containing: slip.timestamp) >= quit && slip.timestamp <= now {
+            guard let product = slip.product ?? primary, let current = result[product] else { continue }
+            result[product] = max(current - Slips.units(slip.amount, product: product), 0)
         }
         return result
     }

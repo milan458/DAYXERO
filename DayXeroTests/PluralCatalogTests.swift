@@ -70,7 +70,7 @@ struct PluralCatalogTests {
     @Test func appLookupsUseTheSingular() {
         #expect(String(localized: "In \(1) days", locale: Self.english) == "In 1 day")
         #expect(String(localized: "In \(2) days", locale: Self.english) == "In 2 days")
-        #expect(String(localized: "\(1) days clear", locale: Self.english) == "1 day clear")
+        #expect(String(localized: "\(1) days since Quit Day", locale: Self.english) == "1 day since Quit Day")
         #expect(String(localized: "Every \(1) hours", locale: Self.english) == "Every 1 hour")
         #expect(String(localized: "\(1) of \(1) waves. All yours.", locale: Self.english) == "1 of 1 wave. All yours.")
         #expect(String(localized: "\(2) of \(3) waves. All yours.", locale: Self.english) == "2 of 3 waves. All yours.")

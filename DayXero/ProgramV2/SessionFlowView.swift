@@ -448,7 +448,7 @@ struct SessionCompletion: View {
                         .background(DX.Fill.onColourCard(for: ground), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
                     }
                     HStack(spacing: 8) {
-                        StatTile(value: Double(snap.daysClear), label: snap.daysClear == 1 ? String(localized: "day clear") : String(localized: "days clear"),
+                        StatTile(value: Double(snap.daysClear), label: snap.daysClear == 1 ? String(localized: "day since Quit Day") : String(localized: "days since Quit Day"),
                                  ground: ground)
                         if let counter = snap.counters.first {
                             let avoided: String = switch counter.product {

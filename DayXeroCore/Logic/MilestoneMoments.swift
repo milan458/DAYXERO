@@ -66,16 +66,16 @@ public enum Milestone: Hashable, Sendable, Identifiable {
         switch self {
         case .quitDay: String(localized: "Quit Day")
         case .days(1): String(localized: "Your first full day")
-        case .days(3): String(localized: "Three days clear")
-        case .days(7): String(localized: "One week clear")
-        case .days(14): String(localized: "Two weeks clear")
-        case .days(30): String(localized: "One month clear")
-        case .days(60): String(localized: "Two months clear")
-        case .days(90): String(localized: "Three months clear")
-        case .days(100): String(localized: "100 days clear")
-        case .days(180): String(localized: "Six months clear")
-        case .days(365): String(localized: "One year clear")
-        case let .days(n): String(localized: "\(n) days clear")
+        case .days(3): String(localized: "Three days in")
+        case .days(7): String(localized: "One week in")
+        case .days(14): String(localized: "Two weeks in")
+        case .days(30): String(localized: "One month in")
+        case .days(60): String(localized: "Two months in")
+        case .days(90): String(localized: "Three months in")
+        case .days(100): String(localized: "100 days in")
+        case .days(180): String(localized: "Six months in")
+        case .days(365): String(localized: "One year in")
+        case let .days(n): String(localized: "\(n) days in")
         }
     }
 
@@ -91,7 +91,7 @@ public enum Milestone: Hashable, Sendable, Identifiable {
         case .days(90): String(localized: "Three months. This is becoming your normal.")
         case .days(100): String(localized: "Triple digits.")
         case .days(180): String(localized: "Half a year. Look how far you've come.")
-        case .days(365): String(localized: "A full year nicotine-free.")
+        case .days(365): String(localized: "A full year since your Quit Day.")
         case .days: ""
         }
     }
@@ -117,12 +117,12 @@ public enum Milestone: Hashable, Sendable, Identifiable {
         }
     }
 
-    /// "days clear" / "day clear" under the number.
+    /// "days since Quit Day" under the number; milestones count time since Quit Day so a slip never makes them untrue (S27.9).
     public var caption: String {
         switch self {
         case .quitDay: String(localized: "Quit Day")
-        case .days(1): String(localized: "full day clear")
-        case .days: String(localized: "days clear")
+        case .days(1): String(localized: "full day since Quit Day")
+        case .days: String(localized: "days since Quit Day")
         }
     }
 }

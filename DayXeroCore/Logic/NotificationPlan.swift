@@ -163,7 +163,7 @@ public enum NotificationCopy {
 
     /// The number stays off the Lock Screen; it's shown in the app.
     public static func milestone(title: String) -> (String, String) {
-        (String(localized: "\(title) today"), String(localized: "Open DayXero to see it."))
+        (String(localized: "Today: \(title)"), String(localized: "Open DayXero to see it."))
     }
 
     public static func awayFirst(next: String?) -> (String, String) {
@@ -173,8 +173,8 @@ public enum NotificationCopy {
 
     public static func awaySecond(replay: String?) -> (String, String) {
         (String(localized: "Welcome back, whenever you're ready"),
-         replay.map { String(localized: "We'll start with a quick replay of \($0). Your days clear haven't changed.") }
-            ?? String(localized: "Your days clear haven't changed."))
+         replay.map { String(localized: "We'll start with a quick replay of \($0). Your days since Quit Day haven't changed.") }
+            ?? String(localized: "Your days since Quit Day haven't changed."))
     }
 
     /// Words notifications never use (S14.3). A test checks every string against this list.

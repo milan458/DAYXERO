@@ -3,7 +3,7 @@ import SwiftData
 import SwiftUI
 
 /// The water tracker (S7.7), signed off as drawn in `reference/water/water-pill-preview.html`:
-/// header and streak, today's amount, the pill, the drink picker, Log and Undo, then today's drinks.
+/// header, today's amount, the pill, the drink picker, Log and Undo, then today's drinks.
 /// The water is blue and each drink has its own drawing (S21).
 struct WaterTrackerView: View {
     let profile: UserProfile
@@ -35,14 +35,13 @@ struct WaterTrackerView: View {
         let reached = total >= goal
         let selected = water?.selectedDrink ?? .glass
         let last = todays.last?.drink ?? .glass
-        let streak = WaterDay.streak(entries, goalMl: goal, clock: clock)
 
         ScrollView {
             VStack(spacing: 0) {
                 // The header and big numbers are part of the drawing; they stop growing where they'd wrap.
                 // VoiceOver reads the same information from the pill.
                 Group {
-                    header(streak: streak)
+                    header
                     readout(total: total, goal: goal, units: units, reached: reached)
                         .padding(.top, 18)
                 }
@@ -124,7 +123,8 @@ struct WaterTrackerView: View {
 
     // MARK: Parts
 
-    private func header(streak: Int) -> some View {
+    /// No streak pill (S27.9): it was the app's only count that could break.
+    private var header: some View {
         HStack {
             Text("Water")
                 .dxFont(28, weight: 800, style: .largeTitle)
@@ -132,15 +132,6 @@ struct WaterTrackerView: View {
                 .foregroundStyle(.white)
                 .accessibilityAddTraits(.isHeader)
             Spacer()
-            if streak > 0 {
-                Text(verbatim: "\(streak)-DAY STREAK")
-                    .dxFont(12, weight: 600, style: .caption2).monospacedDigit()
-                    .tracking(0.6)
-                    .foregroundStyle(Color(hex: 0xBCC388))
-                    .padding(.vertical, 6).padding(.horizontal, 10)
-                    .background(Color(hex: 0xBCC388, opacity: 0.12), in: Capsule())
-                    .accessibilityLabel(Text("\(streak) day water streak"))
-            }
             if let onClose {
                 Button(action: onClose) { Image(systemName: "xmark") }
                     .buttonStyle(.v4Icon)
