@@ -162,7 +162,7 @@ struct ProgramView: View {
                 let title = session.title.resolve(variant) ?? session.label
                 return switch wait {
                 case .tomorrow: String(localized: "Next up: \(title), tomorrow. No rush.")
-                case let .quitDay(day): String(localized: "Next up: \(title), on Day \(day). No rush.")
+                case let .quitDay(days): String(localized: "Next up: \(title), on Day \(ProgramUnlock.counterDay(daysSinceQuit: days)). No rush.")
                 case let .dayXero(date): String(localized: "Day Xero is \(date.formatted(.dateTime.weekday(.wide).day().month(.abbreviated))). No rush.")
                 }
             }
@@ -269,7 +269,7 @@ struct ProgramView: View {
         return switch wait {
         case .tomorrow: String(localized: "Unlocks tomorrow")
         case let .dayXero(date): String(localized: "Day Xero is \(date.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)))")
-        case let .quitDay(day): String(localized: "Unlocks on Day \(day)")
+        case let .quitDay(days): String(localized: "Unlocks on Day \(ProgramUnlock.counterDay(daysSinceQuit: days))")
         }
     }
 

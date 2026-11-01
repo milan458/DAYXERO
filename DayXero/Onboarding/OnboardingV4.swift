@@ -45,17 +45,22 @@ struct AnswerTrayCard<Content: View>: View {
 struct XeroBubble: View {
     let text: Text
     var large = false
+    /// Card on colour on the lilac chat ground. On the cream reading ground pass `DX.Fill.surface` and a hairline,
+    /// or the bubble disappears into the page.
+    var fill: Color = DX.Fill.cardOnColour
+    var border: Color = .clear
 
     var body: some View {
+        let shape = UnevenRoundedRectangle(topLeadingRadius: 20, bottomLeadingRadius: 4,
+                                           bottomTrailingRadius: 20, topTrailingRadius: 20, style: .continuous)
         text
             .dxType(large ? .headline : .body)
             .foregroundStyle(DX.Ground.lilac.ink)
             .fixedSize(horizontal: false, vertical: true)
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
-            .background(DX.Fill.cardOnColour, in: UnevenRoundedRectangle(topLeadingRadius: 20, bottomLeadingRadius: 4,
-                                                                         bottomTrailingRadius: 20, topTrailingRadius: 20,
-                                                                         style: .continuous))
+            .background(fill, in: shape)
+            .overlay(shape.stroke(border, lineWidth: 1))
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.trailing, 24)
     }

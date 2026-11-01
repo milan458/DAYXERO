@@ -134,8 +134,8 @@ struct ComingSoon: View {
     }
 }
 
-/// Prep day 1 opens by itself the first time Home shows after the paywall (S22), so the first thing after starting
-/// a trial is the program working, not a dashboard.
+/// Prep day 1 opens by itself the first time Home shows after onboarding (S22), so the first thing after setting up
+/// is the program working, not a dashboard. Prep week is free; the trial is offered after Day Xero.
 enum FirstLesson {
     static let key = "dx.openFirstLesson"
 }
@@ -159,6 +159,8 @@ struct TodayView: View {
     @Query(sort: \IfThenPlan.createdAt, order: .reverse) private var plans: [IfThenPlan]
     @Query(sort: \Pledge.madeAt, order: .reverse) private var pledges: [Pledge]
     @Query private var checkIns: [CheckIn]
+    /// Program v2 sessions, so the prep count and streak update as soon as a session is finished.
+    @Query private var sessionRecords: [SessionRecord]
     @State private var showPledge = UserDefaults.standard.bool(forKey: "dx.openPledge")
     @State private var showCheckIn = UserDefaults.standard.bool(forKey: "dx.openCheckIn")
     @State private var showCalmTools = false
@@ -173,7 +175,7 @@ struct TodayView: View {
     var body: some View {
         // Re-evaluates each minute so counters tick and the day rolls over on its own.
         TimelineView(.everyMinute) { timeline in
-            let snap = HomeSnapshot(profile: profile, isPro: entitlement.isPro, now: timeline.date)
+            let snap = HomeSnapshot(profile: profile, isPro: entitlement.isPro, now: timeline.date, sessions: sessionRecords)
             // Half-open iPhone Duo: today at a glance on one side of the fold, what to do on the other (S18.14).
             FoldAware {
                 column { overview(snap, now: timeline.date) }

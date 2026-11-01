@@ -25,8 +25,14 @@ public struct ProgramUnlock: Sendable {
         case tomorrow
         /// Day Xero waits for the Quit Day: "Day Xero is Thu, 12 Nov".
         case dayXero(Date)
-        /// "Unlocks on Day 10".
+        /// Opens this many days after Day Xero (the session's `minDay`). Shown with `counterDay`: "Unlocks on Day 11".
         case quitDay(Int)
+    }
+
+    /// The Today counter's number for the day that falls `daysSinceQuit` days after Day Xero. The counter calls
+    /// Day Xero itself Day 1 (days clear), so a session with `minDay` 3 opens on Day 4.
+    public static func counterDay(daysSinceQuit: Int) -> Int {
+        daysSinceQuit + 1
     }
 
     public struct Record: Equatable, Sendable {

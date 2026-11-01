@@ -148,24 +148,26 @@ struct TodayHeaderV4: View {
         let money: (Double) -> String = { Decimal($0).formatted(.currency(code: code).precision(.fractionLength(0))) }
         if case .prep = snap.phase {
             StatTile(value: Double(snap.prepDone), label: String(localized: "of \(snap.prepTotal) prep done"), ground: ground)
-            StatTile(value: Double(max(snap.prepTotal - snap.prepDayNumber + 1, 0)), label: String(localized: "days to Quit Day"), ground: ground)
+            let daysToQuit = max(snap.prepTotal - snap.prepDayNumber + 1, 0)
+            StatTile(value: Double(daysToQuit), label: daysToQuit == 1 ? String(localized: "day to Quit Day") : String(localized: "days to Quit Day"),
+                     ground: ground)
             StatTile(value: NSDecimalNumber(decimal: snap.moneyPerYear).doubleValue, label: String(localized: "to keep a year"),
                      ground: ground, format: money)
         } else {
             StatTile(value: Double(snap.daysClear), label: snap.daysClear == 1 ? String(localized: "day clear") : String(localized: "days clear"),
                      ground: ground)
             if let counter = snap.counters.first {
-                StatTile(value: Double(counter.avoided), label: avoidedLabel(counter.product), ground: ground)
+                StatTile(value: Double(counter.avoided), label: avoidedLabel(counter.product, count: counter.avoided), ground: ground)
             }
             StatTile(value: NSDecimalNumber(decimal: snap.moneyKept).doubleValue, label: String(localized: "kept"), ground: ground, format: cents)
         }
     }
 
-    private func avoidedLabel(_ product: Product) -> String {
+    private func avoidedLabel(_ product: Product, count: Int) -> String {
         switch product {
         case .cigarettes: String(localized: "not smoked")
-        case .vape: String(localized: "puffs not taken")
-        case .pouches: String(localized: "pouches not used")
+        case .vape: count == 1 ? String(localized: "puff not taken") : String(localized: "puffs not taken")
+        case .pouches: count == 1 ? String(localized: "pouch not used") : String(localized: "pouches not used")
         }
     }
 }

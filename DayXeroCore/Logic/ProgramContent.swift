@@ -25,6 +25,9 @@ public struct ProgramContent: Decodable, Sendable {
 
     public func phase(of session: Session) -> Phase? { phases.first { $0.id == session.phaseId } }
 
+    /// The prep sessions (Prep 1 to Prep 7).
+    public var prepSessionIds: Set<String> { Set(sessions.filter { $0.phaseId == "prep" }.map(\.id)) }
+
     /// The session after this one in program order.
     public func session(after id: String) -> Session? {
         guard let i = sessions.firstIndex(where: { $0.id == id }), sessions.indices.contains(i + 1) else { return nil }
@@ -397,8 +400,18 @@ public struct ProgramPlaceholders: Sendable {
     ]
 
     public var values: [String: String]
+    /// Spans swapped whole before placeholders fill, so a count agrees with its noun:
+    /// `"{days_free} days"` becomes "1 day" rather than "1 days".
+    public var phrases: [String: String]
 
-    public init(_ values: [String: String] = [:]) { self.values = values }
+    public init(_ values: [String: String] = [:], phrases: [String: String] = [:]) {
+        self.values = values
+        self.phrases = phrases
+    }
+
+    private func replacingPhrases(_ text: String) -> String {
+        phrases.reduce(text) { $0.replacingOccurrences(of: $1.key, with: $1.value) }
+    }
 
     static func names(in text: String) -> [String] {
         var names: [String] = []
@@ -412,8 +425,8 @@ public struct ProgramPlaceholders: Sendable {
 
     /// The text with every placeholder filled, or nil if any can't be (a stat line is then dropped).
     public func fill(_ text: String) -> String? {
-        var out = text
-        for name in Self.names(in: text) {
+        var out = replacingPhrases(text)
+        for name in Self.names(in: out) {
             guard let value = values[name] else { return nil }
             out = out.replacingOccurrences(of: "{\(name)}", with: value)
         }
@@ -422,8 +435,8 @@ public struct ProgramPlaceholders: Sendable {
 
     /// The text with what can be filled filled and the rest taken out, so no raw braces ever show.
     public func fillDropping(_ text: String) -> String {
-        var out = text
-        for name in Self.names(in: text) {
+        var out = replacingPhrases(text)
+        for name in Self.names(in: out) {
             out = out.replacingOccurrences(of: "{\(name)}", with: values[name] ?? "")
         }
         while out.contains("  ") { out = out.replacingOccurrences(of: "  ", with: " ") }

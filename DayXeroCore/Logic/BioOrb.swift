@@ -410,7 +410,10 @@ public final class OrbEngine {
         lineEnded()
         showScript(session.isSOS
             ? data.labels.sosDoneTranscript
-            : data.labels.breathingDoneTranscript.replacingOccurrences(of: "{N}", with: "\(cycleCount)"))
+            : data.labels.breathingDoneTranscript
+                // "{N} cycles" from the JSON reads "1 cycle" for one.
+                .replacingOccurrences(of: "{N} cycles", with: String(localized: "\(cycleCount) cycles"))
+                .replacingOccurrences(of: "{N}", with: "\(cycleCount)"))
     }
 }
 

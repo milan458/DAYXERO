@@ -42,6 +42,34 @@ struct V4TokenTests {
         }
     }
 
+    /// Button(role: .destructive) with quiet or secondary styles draws red that clears 4.5:1, in light and dark.
+    @Test func destructiveQuietAndSecondaryButtonsAreRedAndReadable() {
+        let red = (light: DX.ButtonColors.destructiveLight, dark: DX.ButtonColors.destructiveDark)
+        // The reading ground and the reading surfaces a destructive button sits on.
+        let reading = DX.Ground.reading.spec
+        for (name, bg) in [("reading", reading.light), ("surface", 0xF1EBE2), ("raised", 0xFFFFFF)] as [(String, UInt32)] {
+            #expect(Contrast.ratio(red.light, bg) >= 4.5, "light on \(name): \(Contrast.ratio(red.light, bg))")
+        }
+        for (name, bg) in [("reading", reading.dark), ("surface", 0x1B1747), ("raised", 0x2A255F)] as [(String, UInt32)] {
+            #expect(Contrast.ratio(red.dark, bg) >= 4.5, "dark on \(name): \(Contrast.ratio(red.dark, bg))")
+        }
+        for kind in [DX.ButtonKind.quiet, .secondary] {
+            #expect(DX.ButtonColors.make(kind, on: .reading, dark: false, destructive: true).foreground == red.light)
+            #expect(DX.ButtonColors.make(kind, on: .reading, dark: true, destructive: true).foreground == red.dark)
+            #expect(DX.ButtonColors.make(kind, on: .reading, dark: false, destructive: false).foreground == reading.inkLight)
+        }
+        // Primary keeps its own colours.
+        #expect(DX.ButtonColors.make(.primary, on: .reading, dark: false, destructive: true).foreground == 0xFFF8EE)
+        // On any ground, whatever a destructive quiet button draws still clears 4.5:1.
+        for ground in DX.Ground.allCases {
+            for dark in [false, true] {
+                let fg = DX.ButtonColors.make(.quiet, on: ground, dark: dark, destructive: true).foreground
+                let bg = dark ? ground.spec.dark : ground.spec.light
+                #expect(Contrast.ratio(fg, bg) >= 4.5, "\(ground) dark: \(dark)")
+            }
+        }
+    }
+
     @Test func sevenTypeSizesWithA12PointFloor() {
         #expect(DX.TypeStep.allCases.count == 7)
         #expect(Set(DX.TypeStep.allCases.map(\.size)).count == 7)

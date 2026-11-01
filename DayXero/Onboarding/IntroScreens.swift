@@ -18,8 +18,11 @@ struct YouthResource: Identifiable {
 
 struct UnderAgeScreen: View {
     var body: some View {
+        // This screen sits on the cream reading ground, so Xero's bubbles take a surface fill and a hairline
+        // (navy ink on #F1EBE2 is well over 4.5:1) instead of the cream card on colour, which vanished into it.
         OnboardingScaffold(title: "Wanting to quit is a great call",
-                           subtitle: "DayXero is for adults, but there's free support made for people your age.") {
+                           subtitle: "DayXero is for adults, but there's free support made for people your age.",
+                           bubbleFill: DX.Fill.surface, bubbleBorder: Onb.hairline) {
             ForEach(YouthResource.all) { resource in
                 if let url = resource.url {
                     Link(destination: url) { row(resource, external: true) }.buttonStyle(.plain)

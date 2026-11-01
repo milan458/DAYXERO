@@ -170,7 +170,11 @@ struct BreathingLiveActivity: Widget {
             HStack(spacing: 14) {
                 ring(36)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(context.state.done ? "Done ✓" : "Breathe with the pattern").font(.system(size: 15, weight: .semibold))
+                    HStack(spacing: 4) {
+                        Text(context.state.done ? "Done" : "Breathe with the pattern")
+                        if context.state.done { Image(systemName: "checkmark").accessibilityHidden(true) }
+                    }
+                    .font(.system(size: 15, weight: .semibold))
                     Text(verbatim: "\(context.attributes.patternName.uppercased()) · \(context.attributes.counts)")
                         .font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 600).monospacedDigit()).foregroundStyle(.white.opacity(0.6))
                     if !context.state.done {
@@ -236,8 +240,11 @@ struct GuardLiveActivity: Widget {
                 HStack(spacing: 12) {
                     ShieldGlyph(fill: WidgetTone.moss.opacity(0.5), stroke: WidgetTone.sage).frame(width: 26, height: 30)
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(context.state.passed ? "Window passed ✓" : "Your \(context.attributes.windowStart.formatted(date: .omitted, time: .shortened)) window")
-                            .font(.system(size: 15, weight: .semibold))
+                        HStack(spacing: 4) {
+                            Text(context.state.passed ? "Window passed" : "Your \(context.attributes.windowStart.formatted(date: .omitted, time: .shortened)) window")
+                            if context.state.passed { Image(systemName: "checkmark").accessibilityHidden(true) }
+                        }
+                        .font(.system(size: 15, weight: .semibold))
                         Text(context.attributes.triggerLabel.isEmpty ? String(localized: "You've got this.")
                              : String(localized: "\(context.attributes.triggerLabel). You've got this."))
                             .font(.system(size: 12)).foregroundStyle(.white.opacity(0.6))

@@ -120,8 +120,9 @@ struct CravingSOSView: View {
     private var topBar: some View {
         HStack {
             HandOverChip(String(localized: "Xero passed you to Jelli")) {
-                XeroView(mood: .calm, stage: 1, points: 32, animate: false)
-                    .frame(width: 32, height: 32)
+                // The chip's avatar slot is 28 pt; draw Xero at that size so nothing spills.
+                XeroView(mood: .calm, stage: 1, points: 28, animate: false)
+                    .frame(width: 28, height: 28)
                     .background(DX.Ground.apricot.background, in: Circle())
                     .clipShape(Circle())
             }
@@ -201,10 +202,18 @@ struct CravingSOSView: View {
         return DailyRhythm.reasonIndex(hasPhoto: reasons.map { $0.photo != nil }, dayNumber: cravings.count + reasonSkip).map { reasons[$0] }
     }
 
-    private var daysClear: Int {
+    private var daysClear: Int { Self.clearDays(profile: profile, at: .now) }
+
+    /// Days clear for the crew's stage; 0 during prep or without a profile.
+    static func clearDays(profile: UserProfile?, at now: Date) -> Int {
         guard let profile else { return 0 }
         let stats = ProgressStats(quitDay: profile.quitDay, baselines: [], clock: DayClock(boundaryHour: profile.dayBoundaryHour))
-        return stats.isPrep(at: .now) ? 0 : stats.daysClear(at: .now)
+        return stats.isPrep(at: now) ? 0 : stats.daysClear(at: now)
+    }
+
+    /// Jelli's stage (tokens.json → characters.props.stage) from the person's real days clear.
+    static func crewStage(profile: UserProfile?, at now: Date) -> Int {
+        CrewGrowth.stage(daysClear: clearDays(profile: profile, at: now))
     }
 
     /// Waves ridden out so far, not counting this one.
@@ -288,7 +297,7 @@ private struct PassedView: View {
             VStack(spacing: 0) {
                 ScrollView {
                     VStack(spacing: 10) {
-                        JelliView(mood: .cheer, stage: 2, size: .hero)
+                        JelliView(mood: .cheer, stage: CravingSOSView.crewStage(profile: profile, at: endedAt), size: .hero)
                             .scaleEffect(shown || reduceMotion ? 1 : DX.Move.celebrateFromScale)
                             .offset(y: shown || reduceMotion ? 0 : 60)
                             .opacity(shown ? 1 : 0)
@@ -357,7 +366,7 @@ private struct PassedView: View {
                         .offset(y: bumped ? 0 : 8)
                         .accessibilityHidden(true)
                 }
-                Text("waves ridden out").dxType(.footnote).foregroundStyle(ground.muted)
+                Text((bumped ? ridden + 1 : ridden) == 1 ? "wave ridden out" : "waves ridden out").dxType(.footnote).foregroundStyle(ground.muted)
             }
             Spacer(minLength: 0)
         }

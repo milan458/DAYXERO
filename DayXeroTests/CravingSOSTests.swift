@@ -46,6 +46,28 @@ struct CravingSOSTests {
         #expect(CravingWave.reasonIndex(elapsed: 125, count: 3) == 0)
     }
 
+    // MARK: Passed (F14)
+
+    /// Passed draws Jelli at the stage for the person's real days clear (tokens.json → characters.props.stage).
+    @Test func passedJelliStageFollowsDaysClear() {
+        let now = Date(timeIntervalSince1970: 1_800_000_000)
+        func stage(quitDaysAgo: Int) -> Int {
+            let profile = UserProfile(name: "Milan", quitDay: now.addingTimeInterval(Double(-quitDaysAgo) * 86_400),
+                                      currencyCode: "USD", dayBoundaryHour: 0)
+            return CravingSOSView.crewStage(profile: profile, at: now)
+        }
+        #expect(CravingSOSView.crewStage(profile: nil, at: now) == 1)
+        #expect(stage(quitDaysAgo: -3) == 1)   // prep week
+        #expect(stage(quitDaysAgo: 2) == 1)
+        #expect(stage(quitDaysAgo: 9) == 2)
+        #expect(stage(quitDaysAgo: 20) == 3)
+        #expect(stage(quitDaysAgo: 40) == 4)
+        for days in [0, 6, 7, 13, 14, 27, 28, 90] {
+            let expected = days < 7 ? 1 : days < 14 ? 2 : days < 28 ? 3 : 4
+            #expect(CrewGrowth.stage(daysClear: days) == expected)
+        }
+    }
+
     // MARK: Logging (S6.6)
 
     @Test func eachSessionIsOneEntryWithItsOutcomeAndExtras() throws {

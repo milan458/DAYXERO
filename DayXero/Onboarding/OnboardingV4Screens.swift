@@ -260,7 +260,7 @@ struct QuitDayScreen: View {
             }
             VStack(spacing: 6) {
                 HoldButton("Hold to set \(model.quitDay.formatted(shortDate))",
-                           done: String(localized: "Quit Day set · \(model.quitDay.formatted(shortDate)) ✓"),
+                           done: String(localized: "Quit Day set · \(model.quitDay.formatted(shortDate))"),
                            duration: DX.Move.Hold.quitDay, on: ground) {
                     committed = true
                     Task {
@@ -488,8 +488,10 @@ struct PlanRevealScreen: View {
             paywall = loading
         }
         .fullScreenCover(isPresented: $showPlans) {
-            if let paywall {
-                PaywallView(name: model.name, quitDay: model.quitDay, model: paywall, onClose: { showPlans = false })
+            if paywall != nil {
+                // Its own model: before Quit Day it holds back the plan with the trial, which the card here still describes.
+                PaywallView(name: model.name, quitDay: model.quitDay,
+                            model: PaywallModel(store: entitlement.store, entitlement: entitlement), onClose: { showPlans = false })
             }
         }
     }
@@ -519,7 +521,7 @@ struct PlanRevealScreen: View {
 
     private var includes: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("**Free now:** prep week, your counter, Craving SOS and Day 1")
+            Text("**Free now:** prep week, Day Xero, your counter and Craving SOS")
             Text("**With the full program:** four weeks of lessons, evening check-ins, an NRT plan, insights")
         }
         .dxType(.footnote)

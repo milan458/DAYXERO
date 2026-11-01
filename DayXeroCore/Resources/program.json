@@ -223,7 +223,7 @@
     },
 
     {
-      "id": "W1D1", "phaseId": "w1", "label": "Day 1",
+      "id": "W1D1", "phaseId": "w1", "label": "Day 2",
       "title": "Look after the basics", "subtitle": "Food, water, sleep", "durationMinutes": 3,
       "unlock": { "rule": "days_since_quit", "minDay": 1 },
       "audio": { "variants": ["default"] },
@@ -240,11 +240,11 @@
             { "id": "yoghurt", "text": "Yoghurt" }, { "id": "gum", "text": "Sugar-free gum" }, { "id": "water", "text": "A glass of water first" } ] }
       ],
       "mission": { "text": "Three proper meals, water close by, and tap “It passed” after every craving you ride.", "logType": "craving_outcome" },
-      "completionText": "Day 1 done. Look after the basics, and the rest gets easier."
+      "completionText": "Day 2 done. Look after the basics, and the rest gets easier."
     },
 
     {
-      "id": "W1D2", "phaseId": "w1", "label": "Day 2",
+      "id": "W1D2", "phaseId": "w1", "label": "Day 3",
       "title": "The noisy passengers", "subtitle": "Let them talk. Keep driving.", "durationMinutes": 3,
       "unlock": { "rule": "days_since_quit", "minDay": 2 },
       "audio": { "variants": ["default"] },
@@ -264,7 +264,7 @@
     },
 
     {
-      "id": "W1D3", "phaseId": "w1", "label": "Day 3",
+      "id": "W1D3", "phaseId": "w1", "label": "Day 4",
       "title": "Lower the bar", "subtitle": "Getting through the toughest stretch", "durationMinutes": 3,
       "unlock": { "rule": "days_since_quit", "minDay": 3 },
       "audio": { "variants": ["default"] },
@@ -280,7 +280,7 @@
     },
 
     {
-      "id": "W1D4", "phaseId": "w1", "label": "Day 4",
+      "id": "W1D4", "phaseId": "w1", "label": "Day 5",
       "title": "If things feel flat", "subtitle": "Small lifts that add up", "durationMinutes": 3,
       "unlock": { "rule": "days_since_quit", "minDay": 4 },
       "audio": { "variants": ["default"] },
@@ -299,7 +299,7 @@
     },
 
     {
-      "id": "W1D5", "phaseId": "w1", "label": "Day 5",
+      "id": "W1D5", "phaseId": "w1", "label": "Day 6",
       "title": "Nights out", "subtitle": "Plan it while you're clear-headed", "durationMinutes": 4,
       "unlock": { "rule": "days_since_quit", "minDay": 5 },
       "audio": { "variants": ["smoking","vaping","pouches"] },
@@ -322,7 +322,7 @@
     },
 
     {
-      "id": "W1D6", "phaseId": "w1", "label": "Day 6",
+      "id": "W1D6", "phaseId": "w1", "label": "Day 7",
       "title": "“Just one”", "subtitle": "Play the tape forward", "durationMinutes": 4,
       "unlock": { "rule": "days_since_quit", "minDay": 6 },
       "audio": { "variants": ["default"] },
@@ -345,7 +345,7 @@
     },
 
     {
-      "id": "W1D7", "phaseId": "w1", "label": "Day 7",
+      "id": "W1D7", "phaseId": "w1", "label": "Day 8",
       "title": "One week", "subtitle": "Look back, then look ahead", "durationMinutes": 3,
       "unlock": { "rule": "days_since_quit", "minDay": 7 },
       "audio": { "variants": ["default"] },
@@ -360,7 +360,7 @@
     },
 
     {
-      "id": "W2S1", "phaseId": "w2", "label": "Day 8",
+      "id": "W2S1", "phaseId": "w2", "label": "Day 9",
       "title": "The empty minutes", "subtitle": "Build a break menu", "durationMinutes": 4,
       "unlock": { "rule": "days_since_quit", "minDay": 8 },
       "audio": { "variants": ["smoking","vaping","pouches"] },
@@ -378,7 +378,7 @@
     },
 
     {
-      "id": "W2S2", "phaseId": "w2", "label": "Day 10",
+      "id": "W2S2", "phaseId": "w2", "label": "Day 11",
       "title": "Sleep and strange dreams", "subtitle": "Set up a wind-down", "durationMinutes": 4,
       "unlock": { "rule": "days_since_quit", "minDay": 10 },
       "audio": { "variants": ["smoking","vaping","pouches"] },
@@ -402,7 +402,7 @@
     },
 
     {
-      "id": "W2S3", "phaseId": "w2", "label": "Day 14",
+      "id": "W2S3", "phaseId": "w2", "label": "Day 15",
       "title": "Two weeks: what's changed", "subtitle": "Notice the quiet changes", "durationMinutes": 4,
       "unlock": { "rule": "days_since_quit", "minDay": 14 },
       "audio": { "variants": ["smoking","vaping","pouches"] },
@@ -429,7 +429,7 @@
     },
 
     {
-      "id": "W3S1", "phaseId": "w3", "label": "Day 16",
+      "id": "W3S1", "phaseId": "w3", "label": "Day 17",
       "title": "When life gets heavy", "subtitle": "Make room for big feelings", "durationMinutes": 5,
       "unlock": { "rule": "days_since_quit", "minDay": 16 },
       "audio": { "variants": ["default"] },
@@ -446,7 +446,7 @@
     },
 
     {
-      "id": "W3S2", "phaseId": "w3", "label": "Day 19",
+      "id": "W3S2", "phaseId": "w3", "label": "Day 20",
       "title": "Out of nowhere", "subtitle": "When an old cue fires", "durationMinutes": 4,
       "unlock": { "rule": "days_since_quit", "minDay": 19 },
       "audio": { "variants": ["smoking","vaping","pouches"] },
@@ -470,7 +470,7 @@
     },
 
     {
-      "id": "W3S3", "phaseId": "w3", "label": "Day 21",
+      "id": "W3S3", "phaseId": "w3", "label": "Day 22",
       "title": "Three weeks: you're rewiring", "subtitle": "Your toolkit so far", "durationMinutes": 4,
       "unlock": { "rule": "days_since_quit", "minDay": 21 },
       "audio": { "variants": ["default"] },
@@ -494,7 +494,7 @@
     },
 
     {
-      "id": "W4S1", "phaseId": "w4", "label": "Day 24",
+      "id": "W4S1", "phaseId": "w4", "label": "Day 25",
       "title": "Your body, moving forward", "subtitle": "Movement, appetite and next steps", "durationMinutes": 4,
       "unlock": { "rule": "days_since_quit", "minDay": 24 },
       "audio": { "variants": ["default", "nrt"] },
@@ -521,7 +521,7 @@
     },
 
     {
-      "id": "W4S2", "phaseId": "w4", "label": "Day 27",
+      "id": "W4S2", "phaseId": "w4", "label": "Day 28",
       "title": "If you ever slip", "subtitle": "The one-minute plan", "durationMinutes": 4,
       "unlock": { "rule": "days_since_quit", "minDay": 27 },
       "audio": { "variants": ["smoking","vaping","pouches"] },
@@ -546,7 +546,7 @@
     },
 
     {
-      "id": "W4S3", "phaseId": "w4", "label": "Day 30",
+      "id": "W4S3", "phaseId": "w4", "label": "Day 31",
       "title": "Graduation", "subtitle": "“I don't use nicotine”", "durationMinutes": 5,
       "unlock": { "rule": "days_since_quit", "minDay": 30 },
       "audio": { "variants": ["smoking","vaping","pouches"] },

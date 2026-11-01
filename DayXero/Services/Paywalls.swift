@@ -12,7 +12,8 @@ import SuperwallKit
 enum Paywalls {
     /// Placement names are routing keys shared with dashboard campaigns: never rename one.
     enum Placement: String {
-        /// The end of onboarding, where the full paywall shows once (S3.1).
+        /// The end of onboarding (S3.1). No longer registered: onboarding goes straight to Home and the trial is
+        /// offered on Quit Day (decisions 15 and 23). Kept so the name isn't reused for something else.
         case onboardingComplete = "onboarding_complete"
         /// A program day that's part of the full program (S3.5, S5.9).
         case unlockProgramDay = "unlock_program_day"

@@ -64,12 +64,11 @@ struct DayXeroApp: App {
     }
 }
 
-/// Routes between onboarding, the one-time paywall and Home.
+/// Routes between onboarding and Home. There's no paywall after onboarding: the prep week and Day Xero are free,
+/// and the trial is offered on Quit Day after the Day Xero session (decisions 15 and 23).
 struct RootView: View {
     @Query private var profiles: [UserProfile]
     @AppStorage("dx.underAge") private var underAge = false
-    /// The full paywall shows once, right after onboarding. After that, upgrades happen at locked days.
-    @AppStorage("dx.paywallDone") private var paywallDone = false
     @Environment(Entitlement.self) private var entitlement
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.modelContext) private var modelContext
@@ -78,11 +77,8 @@ struct RootView: View {
     @State private var nrt = NRTRouter()
     @AppStorage(AppearanceSetting.key) private var appearance = AppearanceSetting.automatic.rawValue
     /// Onboarding saves the profile before its last screen (reminders). This keeps that screen up until it's done,
-    /// instead of the new profile swapping the paywall in underneath it.
+    /// instead of the new profile swapping Home in underneath it.
     @State private var finishingOnboarding = false
-    /// Set when a purchase or restore starts on the first-run paywall, so a successful one shows its confirmation
-    /// (when the trial ends, Start prep day 1) instead of Home replacing the paywall the moment the person is Pro.
-    @State private var buyingOnPaywall = false
 
     var body: some View {
         routed
@@ -191,71 +187,19 @@ struct RootView: View {
             if let session = UserDefaults.standard.string(forKey: "dx.openSession") {
                 // Screenshots: a program v2 session, at the step given by -dx.sessionStep.
                 SessionFlowView(sessionId: session, profile: profile)
-            } else if paywallDone || (entitlement.isPro && !buyingOnPaywall) {
-                HomeView(profile: profile)
             } else {
-                FirstRunPaywall(profile: profile, model: PaywallModel(store: entitlement.store, entitlement: entitlement),
-                                onClose: {
-                                    UserDefaults.standard.set(true, forKey: FirstLesson.key)
-                                    paywallDone = true
-                                }, onPurchaseStarted: { buyingOnPaywall = true })
+                HomeView(profile: profile)
             }
             #else
-            if paywallDone || (entitlement.isPro && !buyingOnPaywall) {
-                HomeView(profile: profile)
-            } else {
-                FirstRunPaywall(profile: profile, model: PaywallModel(store: entitlement.store, entitlement: entitlement),
-                                onClose: {
-                                    UserDefaults.standard.set(true, forKey: FirstLesson.key)
-                                    paywallDone = true
-                                }, onPurchaseStarted: { buyingOnPaywall = true })
-            }
+            HomeView(profile: profile)
             #endif
         } else {
             OnboardingFlow(onSaving: { finishingOnboarding = true }, onFinished: {
                 // Prep week is free and the trial is offered after Day Xero (decisions 15, 23),
                 // so onboarding goes straight to Home, which opens Prep 1 by itself.
                 UserDefaults.standard.set(true, forKey: FirstLesson.key)
-                paywallDone = true
                 finishingOnboarding = false
             })
-        }
-    }
-}
-
-/// The one-time paywall after onboarding: Superwall's when a campaign shows one at `onboarding_complete`,
-/// DayXero's own otherwise (S20).
-struct FirstRunPaywall: View {
-    let profile: UserProfile
-    let model: PaywallModel
-    let onClose: () -> Void
-    let onPurchaseStarted: () -> Void
-
-    @Environment(Entitlement.self) private var entitlement
-    @State private var showOwn = !Paywalls.isEnabled
-
-    var body: some View {
-        if showOwn {
-            PaywallView(name: profile.name, quitDay: profile.quitDay, model: model, context: PaywallContext(profile: profile),
-                        onClose: onClose, onPurchaseStarted: onPurchaseStarted)
-        } else {
-            // A moment while Superwall decides; its paywall slides up over this, or ours replaces it.
-            ProgressView()
-                .tint(Read4.accent)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Read4.background.ignoresSafeArea())
-                .task {
-                    Paywalls.setAttributes(for: profile)
-                    Paywalls.present(.onboardingComplete) { outcome in
-                        switch outcome {
-                        case .fallback: showOwn = true
-                        case .unlocked:
-                            entitlement.grant()
-                            onClose()
-                        case .closed: onClose()
-                        }
-                    }
-                }
         }
     }
 }

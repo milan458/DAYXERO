@@ -87,6 +87,27 @@ struct HomeTests {
         #expect(snap.lesson?.day == ProgramDayID(phase: .prep, index: 4))
     }
 
+    /// Program v2 sessions are what Prep 1 to 7 write, so they count toward "x of 7 prep done" and the prep streak.
+    @Test func prepCountsProgramSessions() throws {
+        let context = ModelContext(try DataStore.makeContainer(inMemory: true))
+        let p = profile(in: context)
+        for (offset, id) in ["P1", "P2", "P3"].enumerated() {
+            let record = SessionRecord(sessionId: id, startedAt: date(22 + offset, 19), contentVersion: "test")
+            record.completedAt = date(22 + offset, 20)
+            context.insert(record)
+        }
+        // Started, not finished: doesn't count.
+        context.insert(SessionRecord(sessionId: "P4", startedAt: date(25, 9), contentVersion: "test"))
+        try context.save()
+        let snap = HomeSnapshot(profile: p, isPro: true, now: date(25, 10), calendar: calendar)
+        #expect(snap.prepDone == 3)
+        #expect(snap.lessonStreak == 3)
+        // Home passes its own query's records.
+        let none = HomeSnapshot(profile: p, isPro: true, now: date(25, 10), calendar: calendar, sessions: [])
+        #expect(none.prepDone == 0)
+        #expect(none.lessonStreak == 0)
+    }
+
     @Test func quitWeekSnapshotShowsDayAndCounters() throws {
         let context = ModelContext(try DataStore.makeContainer(inMemory: true))
         let done = (1...7).map { ProgramDayID(phase: .prep, index: $0) } + [ProgramDayID(phase: .quit, index: 1), ProgramDayID(phase: .quit, index: 2)]

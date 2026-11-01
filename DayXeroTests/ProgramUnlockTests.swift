@@ -114,4 +114,22 @@ struct ProgramUnlockTests {
         #expect(unlock.steps.first { $0.id == "W2S2" }?.minDay == 10)
         #expect(unlock.steps.last?.minDay == 30)
     }
+
+    /// A week session's label is the Today counter's day it opens on: Day Xero is Day 1, so `minDay` 3 is "Day 4",
+    /// and "Next session on Day …" uses the same number.
+    @Test func weekSessionLabelsMatchTheDayCounter() throws {
+        let content = try #require(ProgramContent.bundled)
+        let clock = DayClock(calendar: calendar, boundaryHour: 4)
+        let unlock = ProgramUnlock(content: content, clock: clock)
+        let quit = at(6, 8)
+        let stats = ProgressStats(quitDay: at(6, 0), baselines: [], clock: clock)
+        #expect(ProgramUnlock.counterDay(daysSinceQuit: 0) == stats.daysClear(at: quit))
+        for session in content.sessions where session.unlock.rule == .daysSinceQuit {
+            let minDay = try #require(session.unlock.minDay)
+            let opens = try #require(calendar.date(byAdding: .day, value: minDay, to: quit))
+            #expect(unlock.daysSinceQuit(quit, now: opens) == minDay)
+            #expect(stats.daysClear(at: opens) == ProgramUnlock.counterDay(daysSinceQuit: minDay))
+            #expect(session.label == "Day \(ProgramUnlock.counterDay(daysSinceQuit: minDay))")
+        }
+    }
 }

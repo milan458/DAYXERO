@@ -7,7 +7,7 @@ import SwiftUI
 /// body change that's starting now, with its source. Shown inside the session flow, which pads it and sets the sun ground.
 struct FinaleView: View {
     let profile: UserProfile
-    /// "Day 30", the graduation session's label.
+    /// "Day 31", the graduation session's label.
     let label: String
     let onDone: () -> Void
 
@@ -48,8 +48,9 @@ struct FinaleView: View {
                         .accessibilityAddTraits(.isHeader)
                     HStack(spacing: 8) {
                         tile(Double(snap.daysClear), snap.daysClear == 1 ? String(localized: "day clear · Xero") : String(localized: "days clear · Xero"))
-                        tile(Double(ridden), String(localized: "waves ridden · Jelli"))
-                        tile(Double(checkIns.count), String(localized: "check-ins · Glim"))
+                        tile(Double(ridden), ridden == 1 ? String(localized: "wave ridden · Jelli") : String(localized: "waves ridden · Jelli"))
+                        tile(Double(checkIns.count),
+                             checkIns.count == 1 ? String(localized: "check-in · Glim") : String(localized: "check-ins · Glim"))
                     }
                     Text(verbatim: moneyLine(stats))
                         .dxType(.body).foregroundStyle(ground.ink)
@@ -90,12 +91,14 @@ struct FinaleView: View {
         StatTile(value: value, label: label, ground: ground)
     }
 
-    /// "$211.45 kept and 362 cigarettes not smoked. For Maya and the park."
+    /// "$211.45 kept and 362 cigarettes not smoked. Your reason: To keep up with Maya at the park."
+    /// The reason is in their own words, so its capital stays; it just ends like a sentence.
     private func moneyLine(_ stats: MilestoneStats) -> String {
-        let reason = profile.reasons.sorted { $0.createdAt < $1.createdAt }.first?.text
-        let numbers = String(localized: "\(stats.money) kept and \(stats.counterValue) \(stats.counterLabel.lowercased()).")
+        let reason = profile.reasons.sorted { $0.createdAt < $1.createdAt }.first?.text.trimmingCharacters(in: .whitespacesAndNewlines)
+        let numbers = String(localized: "\(stats.money) kept and \(stats.counterPhrase).")
         guard let reason, !reason.isEmpty else { return numbers }
-        return numbers + " " + String(localized: "Because: \(reason)")
+        let sentence = ".!?…".contains(reason.last ?? ".") ? reason : reason + "."
+        return numbers + " " + String(localized: "Your reason: \(sentence)")
     }
 
     /// The change starting now (or the next one), with the entry's own source label.

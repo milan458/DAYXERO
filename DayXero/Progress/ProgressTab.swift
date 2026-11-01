@@ -194,14 +194,15 @@ struct ProgressTab: View {
         LazyVGrid(columns: columns, alignment: .leading, spacing: 8) {
             if isPrepPhase(snap) {
                 ProgressStat(value: Double(snap.prepDone), label: String(localized: "of \(snap.prepTotal) prep days done"))
-                ProgressStat(value: Double(ridden), label: String(localized: "waves ridden out"))
+                ProgressStat(value: Double(ridden), label: ridden == 1 ? String(localized: "wave ridden out") : String(localized: "waves ridden out"))
                 ProgressStat(value: NSDecimalNumber(decimal: snap.moneyPerYear).doubleValue, label: String(localized: "to keep a year"), format: whole)
-                ProgressStat(value: Double(max(snap.prepTotal - snap.prepDayNumber + 1, 0)), label: String(localized: "days to Quit Day"))
+                let daysToQuit = max(snap.prepTotal - snap.prepDayNumber + 1, 0)
+                ProgressStat(value: Double(daysToQuit), label: daysToQuit == 1 ? String(localized: "day to Quit Day") : String(localized: "days to Quit Day"))
             } else {
                 ProgressStat(value: Double(snap.daysClear), label: snap.daysClear == 1 ? String(localized: "day clear") : String(localized: "days clear"))
-                ProgressStat(value: Double(ridden), label: String(localized: "waves ridden out"))
+                ProgressStat(value: Double(ridden), label: ridden == 1 ? String(localized: "wave ridden out") : String(localized: "waves ridden out"))
                 ForEach(snap.counters) { counter in
-                    ProgressStat(value: Double(counter.avoided), label: String(localized: avoidedLabel(counter.product)))
+                    ProgressStat(value: Double(counter.avoided), label: String(localized: avoidedLabel(counter.product, count: counter.avoided)))
                 }
                 ProgressStat(value: NSDecimalNumber(decimal: snap.moneyKept).doubleValue, label: String(localized: "kept"), format: cents)
             }
@@ -256,11 +257,11 @@ struct ProgressTab: View {
         return false
     }
 
-    private func avoidedLabel(_ product: Product) -> String.LocalizationValue {
+    private func avoidedLabel(_ product: Product, count: Int) -> String.LocalizationValue {
         switch product {
-        case .cigarettes: "cigarettes not smoked"
-        case .vape: "puffs not taken"
-        case .pouches: "pouches not used"
+        case .cigarettes: count == 1 ? "cigarette not smoked" : "cigarettes not smoked"
+        case .vape: count == 1 ? "puff not taken" : "puffs not taken"
+        case .pouches: count == 1 ? "pouch not used" : "pouches not used"
         }
     }
 

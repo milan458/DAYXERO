@@ -100,11 +100,11 @@ struct WaterGoalSheet: View {
                 if draft.units == .metric {
                     RulerPicker(value: $draft.weightKg, range: 35...200, step: 1, pointsPerStep: 14, minorEvery: 1,
                                 majorEvery: 10, label: { "\(Int($0))" }, accessibilityLabel: "Weight",
-                                accessibilityValue: { "\(Int($0)) kilograms" })
+                                accessibilityValue: { String(localized: "\(Int($0)) kilograms") })
                 } else {
                     RulerPicker(value: pounds, range: 77...441, step: 1, pointsPerStep: 7, minorEvery: 2, majorEvery: 10,
                                 label: { "\(Int($0))" }, accessibilityLabel: "Weight",
-                                accessibilityValue: { "\(Int($0)) pounds" })
+                                accessibilityValue: { String(localized: "\(Int($0)) pounds") })
                 }
             }
             .padding(.top, 8)
