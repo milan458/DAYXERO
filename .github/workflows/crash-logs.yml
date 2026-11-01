@@ -1,0 +1,63 @@
+name: TestFlight crash logs (temporary)
+
+# Temporary, for the calm tools / vape baseline crashes (1 Nov 2026): prints the newest TestFlight crash
+# submissions and their crash logs. Remove before merging.
+on:
+  push:
+    branches: [claude/fix-calm-breathing-crash]
+    paths: [".github/workflows/crash-logs.yml"]
+
+jobs:
+  crashes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Fetch crash submissions
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+        run: |
+          python3 -m pip install --quiet pyjwt cryptography
+          python3 - <<'PY'
+          import json, os, time, urllib.error, urllib.request, jwt
+          kid = os.environ["ASC_KEY_ID"].strip()
+          iss = os.environ["ASC_ISSUER_ID"].strip()
+          import re, textwrap
+          body = re.sub(r"-----(BEGIN|END) PRIVATE KEY-----", "", os.environ["ASC_KEY_P8"])
+          body = re.sub(r"[^A-Za-z0-9+/=]", "", body)
+          key = "-----BEGIN PRIVATE KEY-----\n" + "\n".join(textwrap.wrap(body, 64)) + "\n-----END PRIVATE KEY-----\n"
+          now = int(time.time())
+          token = jwt.encode({"iss": iss, "iat": now, "exp": now + 900, "aud": "appstoreconnect-v1"}, key,
+                             algorithm="ES256", headers={"kid": kid, "typ": "JWT"})
+
+          def get(path):
+              url = path if path.startswith("http") else "https://api.appstoreconnect.apple.com" + path
+              req = urllib.request.Request(url, headers={"Authorization": f"Bearer {token}"})
+              try:
+                  return json.load(urllib.request.urlopen(req))
+              except urllib.error.HTTPError as e:
+                  print(f"{e.code} on {path}: {e.read().decode()[:800]}")
+                  return None
+
+          app = get("/v1/apps?filter[bundleId]=in.dayxero.app")["data"][0]["id"]
+          print("App", app)
+          subs = get(f"/v1/apps/{app}/betaFeedbackCrashSubmissions?sort=-createdDate&limit=8&include=build")
+          if not subs or not subs.get("data"):
+              print("No crash submissions.")
+              raise SystemExit(0)
+          builds = {b["id"]: b["attributes"].get("version") for b in subs.get("included", []) if b["type"] == "builds"}
+          for s in subs["data"]:
+              a = s["attributes"]
+              build = builds.get(((s.get("relationships") or {}).get("build") or {}).get("data", {}).get("id"), "?")
+              print("=" * 100)
+              print(s["id"], a.get("createdDate"), "build", build, a.get("deviceModel"), a.get("osVersion"),
+                    "|", (a.get("comment") or "")[:200])
+          for s in subs["data"][:4]:
+              log = get(f"/v1/betaFeedbackCrashSubmissions/{s['id']}/crashLog")
+              text = ((log or {}).get("data") or {}).get("attributes", {}).get("logText") or ""
+              print("#" * 100)
+              print("CRASH LOG", s["id"], s["attributes"].get("createdDate"))
+              lines = text.splitlines()
+              print("\n".join(lines[:160]))
+          PY
