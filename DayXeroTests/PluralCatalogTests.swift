@@ -58,13 +58,35 @@ struct PluralCatalogTests {
                 let template = try #require((en["stringUnit"] as? [String: Any])?["value"] as? String)
                 for (name, raw) in substitutions {
                     let sub = try #require(raw as? [String: Any])
-                    #expect(template.contains("%#@\(name)@"), "\(key) doesn't use \(name)")
+                    #expect(template.contains("#@\(name)@"), "\(key) doesn't use \(name)")
+                    #expect(Self.allPositional(template), "\(key): \"\(template)\" mixes a plural placeholder with unnumbered ones")
                     #expect(sub["argNum"] as? Int != nil, "\(key): \(name) has no argNum")
                     #expect(sub["formatSpecifier"] as? String == "lld", "\(key): \(name) isn't an integer")
                     Self.checkPlural(sub["variations"], other: nil, "\(path): \(key) / \(name)")
                 }
             }
         }
+    }
+
+    /// With a plural placeholder (`%#@arg1@`) in the text, every placeholder needs its argument number (`%1$#@arg1@`,
+    /// `%2$@`). Unnumbered ones after a plural placeholder read the wrong argument: "%#@arg1@ · %@" read an integer as
+    /// a string and crashed the breathing orb and the vape baseline summary on device (1 Nov 2026).
+    static func allPositional(_ template: String) -> Bool {
+        let placeholder = /%(\d+\$)?(#@\w+@|[-+ 0#]*\d*(\.\d+)?(ll|l|h|hh|q|z|t|j)?[@dDiuUxXoOfeEgGcCsSp])/
+        let found = template.replacingOccurrences(of: "%%", with: "").matches(of: placeholder)
+        return found.count < 2 || found.allSatisfy { $0.output.1 != nil }
+    }
+
+    /// The strings that put a value after a count: each reads its own argument (S27 crash fix, 1 Nov 2026).
+    @Test func valuesAfterACountReadTheirOwnArgument() {
+        #expect(String(localized: "\(4) seconds · \("inhale")", locale: Self.english) == "4 seconds · inhale")
+        #expect(String(localized: "\(1) seconds · \("hold")", locale: Self.english) == "1 second · hold")
+        #expect(String(localized: "~\(85) vape puffs at \("2%")", locale: Self.english) == "~85 vape puffs at 2%")
+        #expect(String(localized: "\(7) days free, then \("$29.99") a year", locale: Self.english) == "7 days free, then $29.99 a year")
+        #expect(String(localized: "\(8) pouches at \(6) mg", locale: Self.english) == "8 pouches at 6 mg")
+        #expect(String(localized: "\("Inhale"), \(3) seconds left, cycle \(2) of \(4)", locale: Self.english)
+            == "Inhale, 3 seconds left, cycle 2 of 4")
+        #expect(String(localized: "\(7) DAYS FREE · SAVE \(40)%", locale: Self.english) == "7 DAYS FREE · SAVE 40%")
     }
 
     @Test func appLookupsUseTheSingular() {
