@@ -763,7 +763,7 @@ struct NRTScreen: View {
 
     var body: some View {
         OnboardingScaffold(title: "Want to use nicotine replacement?",
-                           subtitle: "Patches, gum and lozenges make quitting more likely by smoothing out physical withdrawal.") {
+                           subtitle: "Patches, gum and lozenges make quitting more likely by smoothing out withdrawal. A patch plus a faster form works best.") {
             Link(destination: HealthSources.nrtCochrane2018.url) {
                 Label {
                     Text(HealthSources.nrtCochrane2018.label)
@@ -793,18 +793,36 @@ struct NRTScreen: View {
                     .transition(.opacity)
                 }
             }
-            OnbOptionCard("I'd like to try it", detail: "We'll suggest talking to a pharmacist", isSelected: model.nrtInterest == .wantIt) {
+            OnbOptionCard("I'd like to try it", detail: "I'll help you plan it with a pharmacist", isSelected: model.nrtInterest == .wantIt) {
                 model.nrtInterest = .wantIt
             }
             OnbOptionCard("Not for me", detail: "Behavioural prep only", isSelected: model.nrtInterest == .notInterested) {
                 model.nrtInterest = .notInterested
             }
-            Text("Always follow the product label, and check with a pharmacist or doctor.")
+            // S27.6: pregnancy changes the advice (behavioural support first; NRT only with a midwife or doctor).
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Pregnant or breastfeeding?").dxType(.caption).foregroundStyle(Onb.muted)
+                DXFlowLayout {
+                    ForEach(PregnancyAnswer.allCases, id: \.self) { answer in
+                        OnboardingChip(text: answer.chipTitle, isOn: model.pregnancy == answer) { model.setPregnancy(answer) }
+                    }
+                }
+                if model.pregnancy == .yes {
+                    Text(verbatim: PregnancyAnswer.caution)
+                        .dxType(.footnote).foregroundStyle(Onb.ink)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .transition(.opacity)
+                }
+            }
+            .padding(.top, 10)
+            Text("Always follow the product label. Stop-smoking medicines such as varenicline or cytisine help too: ask a pharmacist or doctor what suits you.")
                 .dxFont(12, weight: 400, style: .caption1).foregroundStyle(Onb.muted)
+                .fixedSize(horizontal: false, vertical: true)
                 .padding(.top, DX.Space.xs)
         } footer: {
             ContinueButton(title: "Continue", model: model)
         }
         .animation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion), value: model.nrtInterest)
+        .animation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion), value: model.pregnancy)
     }
 }

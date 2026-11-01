@@ -36,10 +36,11 @@ struct ProgramToday {
     let minutes: Int
     /// The latest finished session's mission, shown until the next session opens.
     let mission: String?
-    /// Quit Day has come and prep isn't finished yet: said gently, once.
+    /// Quit Day has come and this is a prep session left over: catch-up that never holds back Day Xero (S27.7).
     let prepRunsOver: Bool
     /// A quit-week session from an earlier day. Today's header counts "Day 3" by the calendar, so a "Day 2" session
     /// is labelled a catch-up rather than "Today", and the screen never shows two different days as today (S27.5).
+    /// Prep left over after the Quit Day is a catch-up too (S27.7).
     let isCatchUp: Bool
 
     @MainActor
@@ -62,8 +63,9 @@ struct ProgramToday {
         title = session.title.resolve(variant) ?? ""
         minutes = session.durationMinutes
         prepRunsOver = session.phaseId == "prep" && store.clock.day(containing: now) >= store.clock.startOfDate(store.profile.quitDay)
-            && store.profile.progress?.quitTimestamp == nil
-        if session.phaseId == "w1", session.unlock.rule == .daysSinceQuit, let minDay = session.unlock.minDay,
+        if prepRunsOver {
+            isCatchUp = true
+        } else if session.phaseId == "w1", session.unlock.rule == .daysSinceQuit, let minDay = session.unlock.minDay,
            let quit = store.profile.progress?.quitTimestamp, let engine = store.unlock() {
             isCatchUp = engine.daysSinceQuit(quit, now: now) > minDay
         } else {
@@ -137,7 +139,7 @@ struct ProgramTodayCard: View {
         switch today.kind {
         case let .open(id, inProgress, needsUpgrade):
             let detail: String? = needsUpgrade ? String(localized: "Unlock \(today.label)")
-                : today.prepRunsOver ? String(localized: "Finish prep when you're ready. Day Xero starts the morning after.")
+                : today.prepRunsOver ? String(localized: "Prep catch-up, whenever you like. It never holds back Day Xero.")
                 : inProgress ? String(localized: "Xero saved your place.") : nil
             ColourCard(kicker: today.isCatchUp ? String(localized: "Catch up · \(today.label) · \(today.minutes) min")
                                                : String(localized: "Today · \(today.label) · \(today.minutes) min"), title: today.title,

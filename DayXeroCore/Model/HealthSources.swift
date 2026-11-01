@@ -14,33 +14,42 @@ public enum HealthSources {
         url: URL(string: "https://www.cochrane.org/evidence/CD000146_can-nicotine-replacement-therapy-nrt-help-people-quit-smoking")!
     )
 
-    // NRT label schedules (S9.2). Each preset shows its source. Check against the current official leaflets
-    // (FDA/DailyMed, MHRA/eMC, TGA, BfArM) before launch.
+    /// Lindson N et al. Different doses, durations and modes of delivery of nicotine replacement therapy for smoking
+    /// cessation. Cochrane Database Syst Rev 2019;4:CD013308. Combination NRT (a patch plus a fast-acting form)
+    /// beat a single form: RR 1.25, high-certainty evidence (S27.6).
+    public static let nrtCombinationCochrane2019 = HealthSource(
+        label: "Source: Cochrane review of combination NRT, 2019",
+        url: URL(string: "https://www.cochranelibrary.com/cdsr/doi/10.1002/14651858.CD013308/full")!
+    )
+
+    // NRT label schedules (S9.2). Each preset shows its source: the regulators' label databases (DailyMed for the
+    // US, the eMC for the UK, S27.6), not retailer pages. The links open a search, since a single label page
+    // changes with each product listing. Check the schedules against the current leaflets before launch.
 
     /// US 24-hour patch, 10-week label: 21 mg × 6 weeks, 14 mg × 2, 7 mg × 2.
     public static let usPatch10 = HealthSource(
-        label: "Source: US Drug Facts label for nicotine patches",
-        url: URL(string: "https://hellopharmacist.com/ndc/11673-0194-01")!
+        label: "Source: DailyMed, US Drug Facts label for nicotine patches",
+        url: URL(string: "https://dailymed.nlm.nih.gov/dailymed/search.cfm?query=nicotine+patch")!
     )
     /// US 24-hour patch, 8-week label: 21 mg × 4 weeks, 14 mg × 2, 7 mg × 2.
     public static let usPatch8 = HealthSource(
-        label: "Source: US Drug Facts label for nicotine patches",
-        url: URL(string: "https://otclabels.com/lib/otc/otc-meds/nicotine-32/")!
+        label: "Source: DailyMed, US Drug Facts label for nicotine patches",
+        url: URL(string: "https://dailymed.nlm.nih.gov/dailymed/search.cfm?query=nicotine+patch")!
     )
     /// US gum and lozenge, 12 weeks: a piece every 1–2 hours, then 2–4, then 4–8.
     public static let usGum = HealthSource(
-        label: "Source: US Drug Facts label for nicotine gum",
-        url: URL(string: "https://otclabels.com/lib/otc/otc-meds/nicotine-gum-1/")!
+        label: "Source: DailyMed, US Drug Facts label for nicotine gum",
+        url: URL(string: "https://dailymed.nlm.nih.gov/dailymed/search.cfm?query=nicotine+gum")!
     )
     /// UK 24-hour patch (NiQuitin): 21 mg × 6 weeks, 14 mg × 2, 7 mg × 2.
     public static let ukPatch24 = HealthSource(
-        label: "Source: UK pack information for 24-hour patches",
-        url: URL(string: "https://shop.rowlandspharmacy.co.uk/products/niquitin-clear-patch-step-1-21mg-14-patches")!
+        label: "Source: eMC, UK product information for NiQuitin patches",
+        url: URL(string: "https://www.medicines.org.uk/emc/search?q=niquitin+patch")!
     )
     /// UK 16-hour patch (Nicorette Invisi): 25 mg × 8 weeks, 15 mg × 2, 10 mg × 2.
     public static let ukPatch16 = HealthSource(
-        label: "Source: UK pack information for 16-hour patches",
-        url: URL(string: "https://www.theindependentpharmacy.co.uk/stop-smoking/nicorette-invisipatch")!
+        label: "Source: eMC, UK product information for Nicorette Invisi patches",
+        url: URL(string: "https://www.medicines.org.uk/emc/search?q=nicorette+invisi")!
     )
     /// Australia (Nicabate): 21 mg × 6 weeks, 14 mg × 2, 7 mg × 2–4.
     public static let auPatch = HealthSource(
