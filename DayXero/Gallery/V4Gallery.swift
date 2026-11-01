@@ -96,7 +96,7 @@ struct V4Gallery: View {
             Text("Today").dxType(.headline)
             TopCard(kicker: "Week 1 · Day 2", title: "The noisy passengers", detail: "Let them talk. Keep driving.", ground: .apricot) {}
             HStack(spacing: 8) {
-                StatTile(value: 3, label: "days clear", ground: .apricot)
+                StatTile(value: 3, label: "days since Quit Day", ground: .apricot)
                 StatTile(value: 26, label: "not smoked", ground: .apricot)
                 StatTile(value: 15.65, label: "kept", ground: .apricot) { String(format: "$%.2f", $0) }
             }

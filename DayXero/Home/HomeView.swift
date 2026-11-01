@@ -589,12 +589,13 @@ struct TodayView: View {
             HStack(alignment: .firstTextBaseline, spacing: DX.Space.xs) {
                 switch snap.phase {
                 case let .prep(days):
-                    Text("Prep streak · \(snap.lessonStreak) / \(snap.prepTotal)").dxType(.caption).textCase(.uppercase).foregroundStyle(ink)
+                    // Never called a streak (S27.9).
+                    Text("Prep · \(snap.prepDone) of \(snap.prepTotal) done").dxType(.caption).textCase(.uppercase).foregroundStyle(ink)
                     Spacer(minLength: DX.Space.xs)
                     Text(verbatim: "\(String(localized: "Quit Day")) \(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))) · \(days == 1 ? String(localized: "1 day") : String(localized: "\(days) days"))")
                         .dxType(.caption).foregroundStyle(muted)
                 default:
-                    Text("Smoke-free · \(snap.daysClear) \(snap.daysClear == 1 ? String(localized: "day") : String(localized: "days"))")
+                    Text("Since Quit Day · \(snap.daysClear) \(snap.daysClear == 1 ? String(localized: "day") : String(localized: "days"))")
                         .dxType(.caption).textCase(.uppercase).foregroundStyle(ink)
                     Spacer(minLength: DX.Space.xs)
                     if let next = snap.nextMilestone {

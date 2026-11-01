@@ -473,7 +473,7 @@ struct QuitDaySettingsView: View {
                     if stats.isPrep(at: .now) {
                         Text("In \(stats.daysUntilQuitDay(at: .now)) days").v4Text(.subtitle)
                     } else {
-                        Text("\(stats.daysClear(at: .now)) days clear").v4Text(.subtitle)
+                        Text("\(stats.daysClear(at: .now)) days since Quit Day").v4Text(.subtitle)
                     }
                 }
             }

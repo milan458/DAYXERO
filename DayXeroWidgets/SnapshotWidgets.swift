@@ -57,8 +57,8 @@ struct DaysFreeWidget: Widget {
                 DayCounterWidgetView(snapshot: entry.snapshot, family: family, mode: mode, standBy: standBy)
             }
         }
-        .configurationDisplayName("Days free")
-        .description("Your days nicotine-free, at a glance.")
+        .configurationDisplayName("Days since Quit Day")
+        .description("Your days since Quit Day, at a glance.")
         .supportedFamilies([.systemSmall, .accessoryInline])
     }
 }

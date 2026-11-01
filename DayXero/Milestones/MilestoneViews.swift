@@ -190,7 +190,7 @@ struct ShareCardMaker: View {
                         .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
                         .shadow(color: .black.opacity(0.18), radius: 18, y: 10)
                         .accessibilityElement(children: .ignore)
-                        .accessibilityLabel(Text("Card preview: \(days) days nicotine-free"))
+                        .accessibilityLabel(Text("Card preview: \(days) days into my quit"))
                     HStack(spacing: DX.Space.xs) {
                         picker(Format.allCases, selection: $format) { $0 == .story ? "Story" : "Square" }
                         picker(Look.allCases, selection: $look) { $0 == .dawn ? "Dawn" : "Night" }
@@ -305,7 +305,7 @@ struct ShareCard: View {
                 .frame(maxWidth: .infinity)
                 Text(verbatim: "\(days)").font(DX.Typeface4.swiftUIFont(.display, size: 380, weight: 800))
                     .lineLimit(1).minimumScaleFactor(0.4)
-                Text(days == 1 ? "day nicotine-free" : "days nicotine-free")
+                Text(days == 1 ? "day into my quit" : "days into my quit")
                     .font(DX.Typeface4.swiftUIFont(.display, size: 72, weight: 700))
                 if !extras.isEmpty {
                     Text(verbatim: extras.joined(separator: " · "))

@@ -48,6 +48,23 @@ struct ProgressStatsTests {
         #expect(stats().moneyKept(at: now) == Decimal(string: "5.33"))
     }
 
+    @Test func slipsComeOffUnitsAvoidedButNotDaysSinceQuitDay() {
+        let now = date(2026, 11, 3, 4)
+        let slips = [
+            SlipRecord(timestamp: date(2026, 11, 2, 12), product: .vape, amount: .one),   // 10 puffs
+            SlipRecord(timestamp: date(2026, 11, 2, 20)),                                 // no product or amount: 1 of the main product
+            SlipRecord(timestamp: date(2026, 10, 30, 12), product: .vape, amount: .more), // before Quit Day: not counted
+        ]
+        #expect(stats().unitsAvoided(at: now, slips: slips, primary: .vape)[.vape] == 389)
+        #expect(stats().daysClear(at: now) == 3)
+    }
+
+    @Test func unitsAvoidedNeverGoBelowZero() {
+        let now = date(2026, 11, 1, 5)
+        let slips = Array(repeating: SlipRecord(timestamp: date(2026, 11, 1, 4, 30), product: .vape, amount: .more), count: 10)
+        #expect(stats().unitsAvoided(at: now, slips: slips, primary: .vape)[.vape] == 0)
+    }
+
     @Test func yearlyProjection() {
         // 200/600 * £8 = £2.666… a day.
         let perYear = NSDecimalNumber(decimal: stats().moneyPerYear).doubleValue

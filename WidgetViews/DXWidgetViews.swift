@@ -66,7 +66,7 @@ struct DayCounterWidgetView: View {
                     Text("Starts today").font(DX.Typeface4.swiftUIFont(.body, size: 17, weight: 600)).foregroundStyle(ink.sage)
                 } else {
                     big("\(s.daysFree)", size: 76)
-                    Text("Days free").font(DX.Typeface4.swiftUIFont(.body, size: 17, weight: 600)).foregroundStyle(ink.sage)
+                    Text("Since Quit Day").font(DX.Typeface4.swiftUIFont(.body, size: 17, weight: 600)).foregroundStyle(ink.sage)
                         .widgetAccentable()
                 }
             }
@@ -74,7 +74,7 @@ struct DayCounterWidgetView: View {
         .padding(.vertical, 16).padding(.horizontal, 18)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text(isPrivate(s, family) ? "\(s.daysFree) days" : "\(s.daysFree) days nicotine-free"))
+        .accessibilityLabel(Text(isPrivate(s, family) ? "\(s.daysFree) days" : "\(s.daysFree) days since Quit Day"))
     }
 
     private func big(_ text: String, size: CGFloat) -> some View {
@@ -97,7 +97,7 @@ struct DayCounterWidgetView: View {
             }
             .frame(width: 150, height: 150)
             VStack(alignment: .leading, spacing: 2) {
-                Text("DAYS FREE").font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 600).monospacedDigit()).tracking(1).foregroundStyle(ink.sage)
+                Text("SINCE QUIT DAY").font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 600).monospacedDigit()).tracking(1).foregroundStyle(ink.sage)
                 Text(s.currentDayStart, style: .timer)
                     .font(DX.Typeface4.swiftUIFont(.display, size: 40, weight: 800)).tracking(-1).foregroundStyle(.white)
                     .monospacedDigit().lineLimit(1).minimumScaleFactor(0.6)
