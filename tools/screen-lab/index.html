@@ -1,0 +1,29 @@
+<title>DayXero Screen Lab</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:opsz,wght@9..40,400..800&display=swap">
+<link rel="stylesheet" href="lab.css">
+<div id="app"><p class="booting">Loading the DayXero screens…</p></div>
+<script src="lab.js"></script>
+<script src="art.js"></script>
+<script src="elements.js"></script>
+<script src="ui.js"></script>
+<script src="screens/manifest.js"></script>
+<script>
+  // Screens load in manifest order; the editor starts once all have loaded (or failed).
+  (function () {
+    var list = (window.LabScreens || []).slice();
+    var left = list.length;
+    function done() { if (--left <= 0) window.Lab.start(); }
+    if (!left) { window.Lab.start(); return; }
+    list.forEach(function (name) {
+      var s = document.createElement('script');
+      s.src = 'screens/' + name + '.js';
+      s.async = false;
+      s.onload = done;
+      s.onerror = function () { console.error('Could not load screens/' + name + '.js'); done(); };
+      document.body.appendChild(s);
+    });
+  })();
+</script>
