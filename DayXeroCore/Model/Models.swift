@@ -21,11 +21,13 @@ public final class UserProfile {
     @Relationship(deleteRule: .cascade) public var pouchTaper: PouchTaper?
     public var triggersRaw: [String] = []
     public var cravingTimesRaw: [String] = []
+    /// No longer asked since 1 Nov 2026 (S27.10); kept so stores saved before then still open. Always nil for new profiles.
     public var pastAttemptsRaw: String?
     public var obstaclesRaw: [String] = []
     /// How soon after waking they first use (S22).
     public var firstUseRaw: String?
     /// How confident they felt about quitting at onboarding, 0–10 (S22).
+    /// No longer asked since 1 Nov 2026 (S27.10); kept so older stores open. Always nil for new profiles.
     public var confidence: Int?
     /// NRT formats they already use (S22).
     public var nrtFormatsRaw: [String] = []
@@ -96,6 +98,7 @@ public final class ProductUse {
     public var pricePerPurchase: Decimal
     /// Units in one purchase (cigarettes per pack, puffs per pod, pouches per can).
     public var unitsPerPurchase: Double
+    /// No longer asked since 1 Nov 2026 (S27.10); kept so older stores open. Always nil for new profiles.
     public var yearsOfUse: Double?
     /// Pouch strength in mg, or a vape's e-liquid strength in mg/ml (S22). nil when not known.
     public var strengthMg: Double?

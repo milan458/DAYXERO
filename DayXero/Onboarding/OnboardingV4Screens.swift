@@ -359,9 +359,16 @@ struct BuildingScreen: View {
             all.append(Row(id: 2, kicker: String(localized: "Waves to watch"), value: ListFormatter.localizedString(byJoining: waves).capitalizedFirst,
                            detail: String(localized: "A wave is a craving: it rises, peaks and passes.")))
         }
+        // What gets in the way shapes the plan (S27.10).
+        let obstacles = Obstacle.allCases.filter { model.obstacles.contains($0) && $0 != .other }.prefix(3)
+            .map { String(localized: $0.title).lowercased() }
+        if !obstacles.isEmpty {
+            all.append(Row(id: 3, kicker: String(localized: "Watch out for"),
+                           value: ListFormatter.localizedString(byJoining: Array(obstacles)).capitalizedFirst))
+        }
         let why = model.why.text.trimmingCharacters(in: .whitespacesAndNewlines)
         if !why.isEmpty {
-            all.append(Row(id: 3, kicker: String(localized: "Your reason"), value: "“\(why)”"))
+            all.append(Row(id: 4, kicker: String(localized: "Your reason"), value: "“\(why)”"))
         }
         return all
     }
@@ -462,6 +469,7 @@ struct PlanRevealScreen: View {
                     Text(entitlement.isPro ? "Everything is unlocked." : "Prep week is on us. Nothing is charged today.")
                         .dxType(.body).foregroundStyle(ground.muted)
                     savings
+                    builtAround
                     includes
                     if !entitlement.isPro { trialCard }
                     Text(HealthInfoView.oneLine).dxType(.caption).foregroundStyle(ground.muted)
@@ -525,6 +533,27 @@ struct PlanRevealScreen: View {
         .accessibilityElement(children: .combine)
     }
 
+    /// One line per obstacle picked, saying what the plan does about it (S27.10). Hidden when none were picked.
+    @ViewBuilder
+    private var builtAround: some View {
+        let lines = Obstacle.planLines(for: model.obstacles)
+        if !lines.isEmpty {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Built around what gets in your way").dxType(.caption).textCase(.uppercase).foregroundStyle(ground.muted)
+                ForEach(Array(lines.enumerated()), id: \.offset) { _, line in
+                    Label {
+                        Text(line).dxType(.footnote).foregroundStyle(ground.ink).fixedSize(horizontal: false, vertical: true)
+                    } icon: {
+                        Image(systemName: "checkmark").font(.system(size: 12, weight: .bold)).foregroundStyle(ground.ink)
+                    }
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .dxCardOnColour()
+            .accessibilityElement(children: .combine)
+        }
+    }
+
     private var includes: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("**Always free:** prep week, Day Xero, your counter, Craving SOS and evening check-ins")
@@ -538,7 +567,7 @@ struct PlanRevealScreen: View {
 
     private var trialCard: some View {
         let quit = model.quitDay
-        let days = annual?.trialDays ?? 3
+        let days = annual?.trialDays ?? 7
         let end = model.calendar.date(byAdding: .day, value: days, to: quit) ?? quit
         let lead = TrialReminder.leadDays(trialEndsAt: end, now: quit)
         let remind = model.calendar.date(byAdding: .day, value: -lead, to: end) ?? end

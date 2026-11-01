@@ -37,7 +37,7 @@ struct OnboardingModelTests {
         let model = makeModel()
         model.products = [.cigarettes, .vape]
         #expect(model.sequence == [.welcome, .products, .baseline(.cigarettes), .baseline(.vape), .baselineSummary, .triggers,
-                                   .personal, .pastAttempts, .nrt, .quitDay, .building, .reveal, .trial])
+                                   .personal, .obstacles, .nrt, .quitDay, .building, .reveal, .trial])
     }
 
     @Test func progressNeverMovesBackWhenASecondProductIsPicked() {
@@ -89,7 +89,7 @@ struct OnboardingModelTests {
         while model.step != .personal { model.next() }
         #expect(!model.canContinue)
         model.skip()
-        #expect(model.step == .pastAttempts)
+        #expect(model.step == .obstacles)
         #expect(!model.canContinue)
         model.skip()
         #expect(model.step == .nrt)
@@ -102,6 +102,7 @@ struct OnboardingModelTests {
         #expect(profile.name.isEmpty)
         #expect(profile.reasons.isEmpty)
         #expect(profile.pastAttemptsRaw == nil)
+        #expect(profile.obstaclesRaw.isEmpty)
     }
 
     @Test func requiredStepsBlockContinueUntilAnswered() {
@@ -128,11 +129,9 @@ struct OnboardingModelTests {
         model.why.text = "Breathe easier."
 
         model.next()
-        model.pastAttempts = .onceOrTwice
-        #expect(!model.canContinue, "Tried before: say what got in the way")
+        #expect(model.step == .obstacles)
+        #expect(!model.canContinue, "Pick at least one, or skip")
         model.obstacles = [.stress]
-        #expect(model.canContinue)
-        model.pastAttempts = .notYet
         #expect(model.canContinue)
 
         model.next()
@@ -191,6 +190,17 @@ struct OnboardingModelTests {
         #expect(abs(yearly - (91_250 + 800 * 2 * 365 / 7.0)) < 1)
     }
 
+    /// S27.10: what gets in the way shapes the plan, in the app's order, with "Other" left out and at most three lines.
+    @Test func obstaclesBecomePlanLines() {
+        #expect(Obstacle.planLines(for: []).isEmpty)
+        #expect(Obstacle.planLines(for: [.other]).isEmpty)
+        #expect(Obstacle.other.planLine == nil)
+        #expect(Obstacle.allCases.filter { $0 != .other }.allSatisfy { $0.planLine != nil })
+        let lines = Obstacle.planLines(for: [.sleep, .cravings, .stress, .social, .other])
+        #expect(lines.count == 3)
+        #expect(lines.map { String(localized: $0) } == [Obstacle.cravings, .stress, .social].compactMap { $0.planLine }.map { String(localized: $0) })
+    }
+
     @Test func baselineNeedsAPrice() {
         var draft = BaselineDraft.starting(for: .vape)
         #expect(!draft.isComplete)
@@ -241,7 +251,7 @@ struct OnboardingModelTests {
         model.why = ReasonDraft(text: " Breathe easier ")
         model.triggers = [.coffee]
         model.firstUse = .withinFive
-        model.confidence = 6.6
+        model.obstacles = [.stress, .cravings]
         model.nrtInterest = .using
         model.nrtFormats = [.gum, .patch]
 
@@ -255,7 +265,10 @@ struct OnboardingModelTests {
         #expect(profile.reasons.map(\.text) == ["Breathe easier"])
         #expect(profile.triggers == [.coffee])
         #expect(profile.firstUse == .withinFive)
-        #expect(profile.confidence == 7)
+        #expect(profile.confidence == nil)
+        #expect(profile.pastAttemptsRaw == nil)
+        #expect(profile.obstaclesRaw == ["cravings", "stress"])
+        #expect(profile.products.allSatisfy { $0.yearsOfUse == nil })
         #expect(profile.nrtFormats == [.patch, .gum])
         #expect(profile.cravingTimesRaw == [TimeOfDay.morning.rawValue])
         #expect(profile.ageConfirmedAt == now)

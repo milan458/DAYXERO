@@ -144,7 +144,6 @@ struct BaselineScreen: View {
             case .vape: vape
             case .pouches: pouches
             }
-            years
             if let summary { LiveSummary(systemImage: "creditcard", text: summary) }
         }
         .onAppear {
@@ -211,13 +210,6 @@ struct BaselineScreen: View {
             priceChips
             OnboardingSegments(options: [15.0, 20, 24], isSelected: { draft.wrappedValue.unitsPerPurchase == $0 },
                                title: { String(localized: "\(Int($0)) a can") }) { draft.wrappedValue.unitsPerPurchase = $0 }
-        }
-    }
-
-    private var years: some View {
-        OnboardingSection(title: yearsLabel) {
-            OnboardingSegments(options: YearsOfUse.allCases, isSelected: { draft.wrappedValue.years == $0 },
-                               title: { String(localized: $0.title) }) { draft.wrappedValue.years = $0 }
         }
     }
 
@@ -316,14 +308,6 @@ struct BaselineScreen: View {
         switch product {
         case .vape: "Vape strength varies up to 5×. This sets your real nicotine load."
         default: "A rough estimate is fine, with zero judgement. You can change it any time."
-        }
-    }
-
-    private var yearsLabel: LocalizedStringKey {
-        switch product {
-        case .cigarettes: "How long have you smoked?"
-        case .vape: "How long have you vaped?"
-        case .pouches: "How long have you used pouches?"
         }
     }
 }
@@ -689,69 +673,26 @@ private struct FieldStyle: ViewModifier {
     }
 }
 
-// MARK: Screen 8: past attempts and confidence
+// MARK: Screen 8: what gets in the way
 
-struct PastAttemptsScreen: View {
+/// What tends to get in the way (S27.10). The answers shape the plan (`Obstacle.planLine`); the past-attempts
+/// question and the confidence slider were cut on 1 Nov 2026 because nothing used them.
+struct ObstaclesScreen: View {
     @Bindable var model: OnboardingModel
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
-        OnboardingScaffold(title: "Have you tried to quit before?",
-                           subtitle: "Every attempt is data, not failure. Tell me what tripped you up, so I can plan around it this time.",
+        OnboardingScaffold(title: "What usually gets in the way?",
+                           subtitle: "Pick any that might trip you up. I'll build your plan around them.",
                            model: model, skipTitle: "Skip this one") {
-            OnboardingSection(title: "Past attempts") {
-                OnboardingSegments(options: PastAttempts.allCases, isSelected: { model.pastAttempts == $0 },
-                                   title: { $0 == .notYet ? String(localized: "First time") : String(localized: $0.title) }) {
-                    model.pastAttempts = $0
-                    if $0 == .notYet { model.obstacles = [] }
-                }
-            }
-            if model.pastAttempts != nil, model.pastAttempts != .notYet {
-                OnboardingSection(title: "What got in the way most?") {
-                    DXFlowLayout {
-                        ForEach(Obstacle.allCases, id: \.self) { obstacle in
-                            OnboardingChip(text: obstacle.chipTitle, isOn: model.obstacles.contains(obstacle)) {
-                                if model.obstacles.contains(obstacle) { model.obstacles.remove(obstacle) } else { model.obstacles.insert(obstacle) }
-                            }
+            OnboardingSection(title: "Pick any that apply") {
+                DXFlowLayout {
+                    ForEach(Obstacle.allCases, id: \.self) { obstacle in
+                        OnboardingChip(text: obstacle.chipTitle, isOn: model.obstacles.contains(obstacle)) {
+                            if model.obstacles.contains(obstacle) { model.obstacles.remove(obstacle) } else { model.obstacles.insert(obstacle) }
                         }
                     }
                 }
-                .transition(.opacity)
             }
-            OnboardingSection(title: "How confident do you feel right now?") {
-                Slider(value: $model.confidence, in: 0...10, step: 1)
-                    .tint(Onb.accent)
-                    .sensoryFeedback(DX.Haptic.select, trigger: model.confidence)
-                    .accessibilityLabel(Text("Confidence"))
-                    .accessibilityValue(Text("\(Int(model.confidence)) out of 10"))
-                HStack {
-                    Text("Nervous · 0")
-                    Spacer()
-                    Text("Ready · 10")
-                }
-                .dxFont(12, weight: 400, style: .caption1).foregroundStyle(Onb.muted)
-                .accessibilityHidden(true)
-                HStack(spacing: 10) {
-                    Text(verbatim: "\(Int(model.confidence))/10")
-                        .dxFont(15, weight: 700, style: .subheadline).foregroundStyle(Onb.accent)
-                        .contentTransition(.numericText())
-                    Text(feedback).dxType(.footnote).foregroundStyle(Onb.ink)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                .padding(.vertical, 12).padding(.horizontal, 14)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Onb.accentSoft, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-                .accessibilityElement(children: .combine)
-            }
-        }
-        .animation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion), value: model.pastAttempts)
-    }
-
-    private var feedback: LocalizedStringKey {
-        switch model.confidence {
-        case ..<4: "Nervous is normal. Prep is built for exactly this."
-        case ..<7: "Totally normal. That's why I start with prep."
-        default: "Great. Prep turns that into a plan."
         }
     }
 }

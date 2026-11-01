@@ -124,7 +124,7 @@ jobs:
           done
           shoot light accessibility-extra-extra-extra-large v4-type-light-ax5 -dx.v4Gallery type
           # v4 onboarding (F01–F07) and Today (F08), light and dark.
-          for step in breathe welcome products baseline_cigarettes baseline_summary triggers personal past_attempts nrt quit_day building reveal trial; do
+          for step in breathe welcome products baseline_cigarettes baseline_summary triggers personal obstacles nrt quit_day building reveal trial; do
             shoot light large "v4-onb-$step-light" -dx.onboardingStep "$step"
             shoot dark large "v4-onb-$step-dark" -dx.onboardingStep "$step"
           done
@@ -167,7 +167,7 @@ jobs:
           if [ "${{ inputs.v4_only }}" = "true" ]; then
             BRANCH=ci-screens-v4
           else
-          for step in breathe welcome products baseline_cigarettes baseline_vape baseline_summary triggers personal past_attempts nrt quit_day building reveal trial; do
+          for step in breathe welcome products baseline_cigarettes baseline_vape baseline_summary triggers personal obstacles nrt quit_day building reveal trial; do
             shoot dark large "onb-$step-dark" -dx.onboardingStep "$step"
           done
           for step in welcome products baseline_vape baseline_summary quit_day reveal; do

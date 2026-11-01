@@ -98,7 +98,7 @@ struct OnboardingFlow: View {
         case .baselineSummary: BaselineSummaryScreen(model: model)
         case .triggers: TriggersScreen(model: model)
         case .personal: PersonalScreen(model: model)
-        case .pastAttempts: PastAttemptsScreen(model: model)
+        case .obstacles: ObstaclesScreen(model: model)
         case .nrt: NRTScreen(model: model)
         case .quitDay: QuitDayScreen(model: model)
         case .building: BuildingScreen(model: model)
