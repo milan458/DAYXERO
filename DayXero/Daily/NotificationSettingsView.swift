@@ -140,7 +140,7 @@ struct QuietHoursView: View {
                         timeCard("Until", minute: $end)
                     }
                     strip
-                    Text("Grey is quiet. Sage marks are your daily notifications.").v4Text(.subtitle)
+                    Text("Grey is quiet. Green marks are your daily notifications.").v4Text(.subtitle)
                 }
                 Toggle(isOn: $nrtThrough) {
                     VStack(alignment: .leading, spacing: 1) {
@@ -175,7 +175,7 @@ struct QuietHoursView: View {
         }
     }
 
-    /// 24 hours, quiet band in grey, today's notifications as sage marks.
+    /// 24 hours, quiet band in grey (Read4.track), today's notifications as green marks (DX.Fill.green).
     private var strip: some View {
         GeometryReader { geo in
             let w = geo.size.width
@@ -189,7 +189,7 @@ struct QuietHoursView: View {
                     Rectangle().fill(Read4.track).frame(width: x(end) - x(start)).offset(x: x(start))
                 }
                 ForEach([pledge, lesson, checkIn].filter { $0 >= 0 }, id: \.self) { m in
-                    RoundedRectangle(cornerRadius: 3).fill(Read4.accent).frame(width: 6, height: 14).offset(x: x(m) - 3)
+                    RoundedRectangle(cornerRadius: 3).fill(DX.Fill.green).frame(width: 6, height: 14).offset(x: x(m) - 3)
                 }
             }
             .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))

@@ -222,11 +222,14 @@ struct CravingLogForm: View {
                 VStack(alignment: .leading, spacing: DX.Space.s) {
                     VStack(alignment: .leading, spacing: 2) {
                         Text(editing == nil ? LocalizedStringKey("A craving") : LocalizedStringKey("Add details")).v4Text(.title)
-                        Text(verbatim: openedAt.formatted(.dateTime.weekday(.abbreviated).day().month().hour().minute()))
+                        // Adding details shows when the use was logged, not when this form opened.
+                        Text(verbatim: (editing?.timestamp ?? openedAt).formatted(.dateTime.weekday(.abbreviated).day().month().hour().minute()))
                             .v4Text(.subtitle)
                     }
                     if editing == nil || editing?.kind == .craving {
-                        DXCravingSlider(value: $strength).frame(height: 110)
+                        // No fixed height: the slider's own content (labels, number, 44 pt track) sets it,
+                        // and grows with Dynamic Type instead of overflowing a 110 pt frame.
+                        DXCravingSlider(value: $strength)
                     }
                     section("What set it off?") {
                         DXFlowLayout {

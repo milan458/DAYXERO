@@ -256,12 +256,13 @@ struct SlipFlow: View {
         .dxReadingCard(radius: 22)
     }
 
+    // The card is DX.Fill.surface, so its chips sit on DX.Fill.raised to stand out (reading ink clears 4.5:1 on it).
     private var nrtButton: some View {
-        V4Chip(text: String(localized: "Look at NRT"), isOn: false) { showNRT = true }
+        V4Chip(text: String(localized: "Look at NRT"), isOn: false, fill: DX.Fill.raised, ink: DX.Ground.reading.ink) { showNRT = true }
     }
 
     private var replanButton: some View {
-        V4Chip(text: String(localized: "Go over my plan"), isOn: false) { stage = .talk }
+        V4Chip(text: String(localized: "Go over my plan"), isOn: false, fill: DX.Fill.raised, ink: DX.Ground.reading.ink) { stage = .talk }
     }
 
     // MARK: What happened (optional)

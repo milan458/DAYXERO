@@ -13,6 +13,28 @@ public extension DX {
         public let fill: UInt32
         public let lip: Bool
 
+        /// Destructive text for quiet and secondary buttons. tokens.json has no red yet, so these are
+        /// proposed values: #B3261E clears 4.5:1 on reading, surface and raised in light; #FF8A80 clears
+        /// it on every dark ground. `V4TokenTests` checks both.
+        public static let destructiveLight: UInt32 = 0xB3261E
+        public static let destructiveDark: UInt32 = 0xFF8A80
+
+        /// The destructive red for a ground, or the ground's ink where the red would fall under 4.5:1
+        /// (light coral, ocean, violet and other saturated grounds).
+        public static func destructiveForeground(on ground: Ground, dark: Bool) -> UInt32 {
+            let s = ground.spec
+            let red = dark ? destructiveDark : destructiveLight
+            let background = dark ? s.dark : s.light
+            return Contrast.ratio(red, background) >= 4.5 ? red : (dark ? s.inkDark : s.inkLight)
+        }
+
+        /// `destructive` applies to quiet and outlined secondary buttons (Button(role: .destructive)).
+        public static func make(_ kind: ButtonKind, on ground: Ground, dark: Bool, destructive: Bool) -> ButtonColors {
+            let base = make(kind, on: ground, dark: dark)
+            guard destructive, kind != .primary, base.background == nil else { return base }
+            return ButtonColors(background: nil, foreground: destructiveForeground(on: ground, dark: dark), fill: 0, lip: false)
+        }
+
         public static func make(_ kind: ButtonKind, on ground: Ground, dark: Bool) -> ButtonColors {
             let s = ground.spec
             switch (kind, dark) {
@@ -51,7 +73,8 @@ public struct V4ButtonStyle: ButtonStyle {
     }
 
     public func makeBody(configuration: Configuration) -> some View {
-        V4ButtonBody(label: configuration.label, pressed: configuration.isPressed, kind: kind, ground: ground)
+        V4ButtonBody(label: configuration.label, pressed: configuration.isPressed, kind: kind, ground: ground,
+                     destructive: configuration.role == .destructive)
     }
 }
 
@@ -66,12 +89,13 @@ private struct V4ButtonBody<Label: View>: View {
     let pressed: Bool
     let kind: DX.ButtonKind
     let ground: DX.Ground
+    let destructive: Bool
     @Environment(\.colorScheme) private var scheme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.isEnabled) private var enabled
 
     var body: some View {
-        let colors = DX.ButtonColors.make(kind, on: ground, dark: scheme == .dark)
+        let colors = DX.ButtonColors.make(kind, on: ground, dark: scheme == .dark, destructive: destructive)
         let height: CGFloat = kind == .quiet ? DX.Layout.touchTarget : DX.Layout.buttonHeight
         label
             .dxType(kind == .quiet ? .footnote : .headline)
