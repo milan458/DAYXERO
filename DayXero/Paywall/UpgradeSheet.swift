@@ -62,6 +62,22 @@ struct UpgradeSheet: View {
                     .padding(.top, DX.Space.xs)
             }
             Button("See all plans", action: showAllPlans).buttonStyle(.dx(.quiet, on: .reading)).frame(maxWidth: .infinity)
+            // Every screen that sells a subscription names what stays free and links Terms and Privacy (S27.2, S27.1).
+            VStack(spacing: 2) {
+                Text("Always free: your counter and Craving SOS.")
+                HStack(spacing: 6) {
+                    Link("Terms", destination: AppLinks.terms).underline()
+                    if let privacy = AppLinks.privacy {
+                        Text(verbatim: "·")
+                        Link("Privacy", destination: privacy).underline()
+                    }
+                }
+            }
+            .dxFont(12, weight: 400, style: .caption2)
+            .foregroundStyle(Read4.muted)
+            .tint(Read4.muted)
+            .multilineTextAlignment(.center)
+            .frame(maxWidth: .infinity)
         }
         .padding(DX.Space.l)
         .task {

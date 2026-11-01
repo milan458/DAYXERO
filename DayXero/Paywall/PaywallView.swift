@@ -2,67 +2,24 @@ import DayXeroCore
 import StoreKit
 import SwiftUI
 
-/// Legal links shown on the paywall. Privacy policy URL still to come from Milan (S15.4).
+/// Legal links shown on Welcome, every paywall and Settings (S15.4, S27.1). Apple requires both on any
+/// screen that sells a subscription. Optional so a build without a policy still compiles; it is always set.
 enum AppLinks {
     static let terms = URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!
-    static let privacy: URL? = nil
+    static let privacy: URL? = URL(string: "https://dayxero.in/privacy/")
 }
 
-/// What onboarding learnt, so the first-run paywall can speak to it (S22).
-struct PaywallContext {
-    let triggers: [Trigger]
-    let obstacles: [Obstacle]
-    /// Nicotine spending a day, in the profile's currency.
-    let moneyPerDay: Decimal
-    let currencyCode: String
-    let products: [DayXeroCore.Product]
-    /// What a pack of their cigarettes costs, when they buy by the pack.
-    let packPrice: Decimal?
-
-    init(profile: UserProfile) {
-        triggers = profile.triggers
-        obstacles = profile.obstaclesRaw.compactMap(Obstacle.init(rawValue:))
-        moneyPerDay = profile.products.reduce(Decimal(0)) { $0 + $1.baseline.costPerDay }
-        currencyCode = profile.currencyCode
-        products = profile.products.map(\.product)
-        packPrice = profile.products.first { $0.product == .cigarettes && $0.unitsPerPurchase >= 10 }?.pricePerPurchase
-    }
-
-    #if DEBUG
-    /// For screenshots of the first-run paywall (`-dx.paywallFirstRun YES`).
-    init(sampleCurrency currency: String) {
-        triggers = [.coffee, .stress]
-        obstacles = [.stress, .cravings]
-        moneyPerDay = currency == "INR" ? 478 : 8
-        currencyCode = currency
-        products = [.cigarettes, .vape]
-        packPrice = currency == "INR" ? 500 : 10
-    }
-    #endif
-
-    /// "stress and cravings", from what got in the way before, or else their triggers.
-    var focus: String? {
-        let words = obstacles.contains(.stress) || obstacles.contains(.cravings)
-            ? [Obstacle.stress, .cravings].filter(obstacles.contains).map { String(localized: $0.title).lowercased() }
-            : Array(triggers.prefix(2)).map { String(localized: $0.title).lowercased() }
-        return words.isEmpty ? nil : ListFormatter.localizedString(byJoining: words)
-    }
-}
-
-/// The full paywall (S3.1–S3.6). After onboarding it's S22's hard paywall: one promise, three bullets, trust,
-/// two plans and one button, with the close button appearing after a few seconds. From Settings it's the plain one.
+/// The full paywall (S3.1–S3.6), opened from "See all plans", Settings, Program and Today. There is no paywall
+/// after onboarding (decision 15, S27.2): the close button is always there and nothing here is a first run.
 struct PaywallView: View {
     let name: String
     let quitDay: Date
     @State var model: PaywallModel
-    var context: PaywallContext? = nil
     let onClose: () -> Void
     /// Called as a purchase or restore starts, before the person can turn Pro.
     var onPurchaseStarted: () -> Void = {}
 
     @State private var showBilling = false
-    /// First run: ✕ fades in after a few seconds (straight away with VoiceOver).
-    @State private var closeShown = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     /// At accessibility text sizes the footer scrolls with the content instead of being pinned,
     /// so the charge line and button are never squeezed or truncated.
@@ -78,10 +35,10 @@ struct PaywallView: View {
             case .pending:
                 PaywallMessage(systemImage: "clock", tint: .accent, title: "Waiting for approval",
                                message: "Your purchase needs approval (for example, Ask to Buy). We'll unlock everything as soon as it goes through.",
-                               button: model.isBeforeQuitDay ? "Start Day 1 meanwhile" : "Back to my day", action: onClose)
+                               button: "Back to my day", action: onClose)
             case .unlocked:
                 PaywallMessage(systemImage: "checkmark", tint: .sage, title: allSetTitle,
-                               message: unlockedMessage, button: model.isBeforeQuitDay ? "Start prep day 1" : "Back to my day",
+                               message: unlockedMessage, button: "Back to my day",
                                action: onClose)
                     .sensoryFeedback(DX.Haptic.commit, trigger: model.phase)
             }
@@ -98,11 +55,6 @@ struct PaywallView: View {
             // Before Quit Day the trial waits for the Quit Day offer (decisions 15 and 23).
             model.trialOpensOn = quitDay
             await model.load()
-        }
-        .task {
-            guard context != nil, !UIAccessibility.isVoiceOverRunning else { closeShown = true; return }
-            try? await Task.sleep(for: .seconds(3))
-            withAnimation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion)) { closeShown = true }
         }
         .sheet(isPresented: $showBilling) { BillingSheet().presentationDetents([.medium, .large]) }
     }
@@ -143,12 +95,7 @@ struct PaywallView: View {
 
     // MARK: Main
 
-    @ViewBuilder
     private var main: some View {
-        if context != nil { firstRun } else { standard }
-    }
-
-    private var standard: some View {
         VStack(spacing: 0) {
             header.padding(.horizontal, DX.Space.m).padding(.top, DX.Space.xs).dxReadableColumn()
             ScrollView {
@@ -161,7 +108,10 @@ struct PaywallView: View {
                         included("Insights on your triggers")
                         included("NRT planner, health timeline, share cards")
                     }
-                    .padding(.vertical, DX.Space.s)
+                    .padding(.top, DX.Space.s)
+                    Text("Always free: your counter and Craving SOS.")
+                        .dxFont(14, weight: 400, style: .footnote).foregroundStyle(Read4.muted)
+                        .padding(.bottom, DX.Space.s)
                     plans
                     if typeSize.isAccessibilitySize {
                         footer.padding(.top, DX.Space.l)
@@ -178,183 +128,6 @@ struct PaywallView: View {
                     .dxReadableColumn()
                     .padding(.bottom, DX.Space.xs)
             }
-        }
-    }
-
-    // MARK: First run (S22)
-
-    private var firstRun: some View {
-        VStack(spacing: 0) {
-            header.padding(.horizontal, DX.Space.m).padding(.top, DX.Space.xs).dxReadableColumn()
-            ScrollView {
-                VStack(alignment: .leading, spacing: DX.Space.s) {
-                    Text("Custom plan ready · \(quitDay, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated))")
-                        .v4Text(.micro, color: Read4.accent)
-                    Text(firstRunTitle).v4Text(.title).fixedSize(horizontal: false, vertical: true).accessibilityAddTraits(.isHeader)
-                    VStack(alignment: .leading, spacing: DX.Space.xs) {
-                        included("Complete prep, Quit week and 4 weeks after")
-                        included(context?.products.count ?? 0 > 1 ? "Craving SOS any time, plus your dual-use tracker"
-                                                                   : "Craving SOS any time, plus your daily tracker")
-                        included("NRT step-down planner for patches and gum")
-                    }
-                    .padding(.vertical, DX.Space.xxs)
-                    trustCard
-                    planCards
-                    if typeSize.isAccessibilitySize {
-                        firstRunFooter.padding(.top, DX.Space.l)
-                    }
-                }
-                .padding(.horizontal, DX.Space.m)
-                .dxReadableColumn()
-                .padding(.top, DX.Space.s)
-                .padding(.bottom, DX.Space.xl)
-            }
-            if !typeSize.isAccessibilitySize {
-                firstRunFooter
-                    .padding(.horizontal, DX.Space.m)
-                    .dxReadableColumn()
-                    .padding(.bottom, DX.Space.xs)
-                    .background(alignment: .bottom) {
-                        HorizonScene(.path, clarity: 60, fit: .bottom, animate: !reduceMotion).frame(height: 150).opacity(0.55).ignoresSafeArea().allowsHitTesting(false)
-                    }
-            }
-        }
-    }
-
-    private var firstRunTitle: LocalizedStringKey {
-        let date = quitDay.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))
-        if let focus = context?.focus { return "Beat \(focus) on \(date)" }
-        return "Quit on \(date) without the cold-turkey shock"
-    }
-
-    /// Plain facts in place of reviews, until there are real ones to show.
-    private var trustCard: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            trust("lock", "Your answers stay on this phone")
-            trust("doc.text", "NRT advice from a Cochrane review of 133 trials")
-            trust("hand.tap", "Cancel in two taps, in Settings")
-        }
-        .padding(DX.Space.m)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Read4.card, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(Read4.hairline))
-        .accessibilityElement(children: .combine)
-    }
-
-    private func trust(_ systemImage: String, _ text: LocalizedStringKey) -> some View {
-        Label {
-            Text(text).dxFont(14, weight: 400, style: .footnote).foregroundStyle(Read4.muted)
-        } icon: {
-            Image(systemName: systemImage).font(.system(size: 13, weight: .light)).foregroundStyle(Read4.accent)
-        }
-    }
-
-    @ViewBuilder
-    private var planCards: some View {
-        let recurring = model.plans.filter { $0.plan != .lifetime }
-        if recurring.isEmpty, model.heldTrialDays == nil {
-            HStack(spacing: DX.Space.s) {
-                ForEach(0..<2, id: \.self) { _ in
-                    RoundedRectangle(cornerRadius: 22, style: .continuous).fill(Read4.surface).frame(height: 132)
-                }
-            }
-            .accessibilityHidden(true)
-        } else {
-            HStack(alignment: .bottom, spacing: DX.Space.s) {
-                ForEach(recurring) { option in planCard(option) }
-            }
-            .padding(.top, DX.Space.s)
-        }
-        if let lifetime = model.plans.first(where: { $0.plan == .lifetime }) {
-            PlanRow(option: lifetime, isSelected: model.selected == .lifetime, savingPercent: nil) { model.select(.lifetime) }
-        }
-        heldTrialNote
-    }
-
-    private func planCard(_ option: PlanOption) -> some View {
-        let selected = model.selected == option.plan
-        return Button { model.select(option.plan) } label: {
-            VStack(spacing: 4) {
-                Text(option.plan == .annual ? "Yearly" : "Monthly")
-                    .dxFont(14, weight: 600, style: .subheadline).foregroundStyle(Read4.muted)
-                Text(verbatim: option.priceText + (option.plan == .annual ? String(localized: "/yr") : String(localized: "/mo")))
-                    .dxFont(option.plan == .annual ? 24 : 19, weight: 700, style: .title2)
-                    .foregroundStyle(Read4.ink)
-                    .lineLimit(1).minimumScaleFactor(0.6)
-                Text(planDetail(option)).dxFont(12, weight: 400, style: .caption2)
-                    .foregroundStyle(Read4.muted).multilineTextAlignment(.center)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .padding(.top, option.plan == .annual ? 22 : 14).padding(.bottom, 14).padding(.horizontal, 10)
-            .frame(maxWidth: .infinity)
-            .background(Read4.card, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .strokeBorder(selected ? Read4.accent : Read4.hairline, lineWidth: selected ? 1.5 : 1))
-            .overlay(alignment: .top) {
-                if option.plan == .annual, let days = option.trialDays {
-                    Text(model.annualSavingPercent.map { "\(days) DAYS FREE · SAVE \($0)%" as LocalizedStringKey } ?? "\(days) DAYS FREE")
-                        .dxFont(12, weight: 700, style: .caption2).tracking(0.4)
-                        .foregroundStyle(DX.Fill.cream)
-                        .padding(.vertical, 4).padding(.horizontal, 9)
-                        .background(Read4.accent, in: Capsule())
-                        .offset(y: -10)
-                }
-            }
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .sensoryFeedback(DX.Haptic.select, trigger: selected)
-        .accessibilityElement(children: .combine)
-        .accessibilityAddTraits(selected ? [.isButton, .isSelected] : .isButton)
-    }
-
-    /// "₹249/mo · Less than half a pack a month", or for monthly, how it bills.
-    private func planDetail(_ option: PlanOption) -> LocalizedStringKey {
-        switch option.plan {
-        case .annual:
-            guard let perMonth = option.perMonthText else { return "Billed yearly" }
-            if let context, let pack = context.packPrice, context.currencyCode == option.currencyCode, pack > 0 {
-                let monthly = option.price / 12
-                if monthly < pack / 2 { return "\(perMonth)/mo · Less than half a pack a month" }
-                if monthly < pack { return "\(perMonth)/mo · Less than a pack a month" }
-            }
-            return "\(perMonth)/mo"
-        case .monthly:
-            if let days = option.trialDays { return "\(days) days free · Cancel anytime" }
-            return "Billed today · Cancel anytime"
-        case .lifetime:
-            return "Pay once"
-        }
-    }
-
-    private var firstRunFooter: some View {
-        VStack(spacing: DX.Space.xs) {
-            Button {
-                onPurchaseStarted()
-                Task { await model.purchase() }
-            } label: {
-                if model.phase == .purchasing {
-                    ProgressView().tint(Read4.onInk)
-                } else {
-                    Text(ctaTitle)
-                }
-            }
-            .buttonStyle(.dx(.primary, on: .reading))
-            .disabled(model.phase != .ready)
-            .accessibilityIdentifier("paywall.cta")
-            if let option = model.selectedOption {
-                Group {
-                    if option.plan == .annual, option.trialDays != nil {
-                        Text("\(Decimal(0).formatted(.currency(code: option.currencyCode).precision(.fractionLength(0)))) due today. Cancel any time in Settings.")
-                    } else {
-                        chargeLine(option)
-                    }
-                }
-                .dxFont(12, weight: 400, style: .caption1)
-                .foregroundStyle(Read4.muted)
-                .multilineTextAlignment(.center)
-            }
-            terms
         }
     }
 
@@ -379,8 +152,6 @@ struct PaywallView: View {
                     .overlay(Circle().strokeBorder(Read4.hairline))
             }
             .buttonStyle(.plain)
-            .opacity(context == nil || closeShown ? 1 : 0)
-            .disabled(!(context == nil || closeShown))
             .accessibilityLabel(Text("Close and continue with the free version"))
             Spacer()
             Button("Restore purchases") {
@@ -511,7 +282,7 @@ struct PaywallView: View {
             header.padding(.horizontal, DX.Space.m).padding(.top, DX.Space.xs).dxReadableColumn()
             Spacer()
             V4StateView(.error, systemImage: "exclamationmark.circle", title: "Couldn't reach the App Store",
-                        message: "Check your connection and try again. Day 1, your counter and Craving SOS work without it.",
+                        message: "Check your connection and try again. Your prep week, your counter and Craving SOS work without it.",
                         actionTitle: "Try again") { Task { await model.load() } }
             Spacer()
             Button("Continue with free") {

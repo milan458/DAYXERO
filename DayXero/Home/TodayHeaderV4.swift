@@ -77,7 +77,8 @@ struct TodayHeaderV4: View {
     private var dateLine: String {
         let date = now.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))
         let day: String = switch snap.phase {
-        case .prep: String(localized: "Prep day \(snap.prepDayNumber) of \(snap.prepTotal)")
+        // No calendar prep-day number, so it never competes with the "Prep 3" session label; the tile counts down (S27.5).
+        case .prep: String(localized: "Prep week")
         case .quitDay: String(localized: "Quit Day")
         case let .quitWeek(day): String(localized: "Day \(day)")
         case let .after(days): days == 1 ? String(localized: "1 day clear") : String(localized: "\(days) days clear")
@@ -146,9 +147,8 @@ struct TodayHeaderV4: View {
         // Kept is shown to the cent, as the counter rounds it down (decision 17); yearly sums to the unit.
         let cents: (Double) -> String = { Decimal($0).formatted(.currency(code: code).precision(.fractionLength(2))) }
         let money: (Double) -> String = { Decimal($0).formatted(.currency(code: code).precision(.fractionLength(0))) }
-        if case .prep = snap.phase {
+        if case let .prep(daysToQuit) = snap.phase {
             StatTile(value: Double(snap.prepDone), label: String(localized: "of \(snap.prepTotal) prep done"), ground: ground)
-            let daysToQuit = max(snap.prepTotal - snap.prepDayNumber + 1, 0)
             StatTile(value: Double(daysToQuit), label: daysToQuit == 1 ? String(localized: "day to Quit Day") : String(localized: "days to Quit Day"),
                      ground: ground)
             StatTile(value: NSDecimalNumber(decimal: snap.moneyPerYear).doubleValue, label: String(localized: "to keep a year"),

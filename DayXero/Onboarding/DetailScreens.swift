@@ -434,14 +434,14 @@ struct BaselineSummaryScreen: View {
                            subtitle: model.products.contains(.vape)
                                ? "Most people underestimate vaping, because a vape never burns out like a cigarette."
                                : "Seeing it in one place is the first step.",
-                           eyebrow: "Your baseline", model: model) {
+                           eyebrow: "Your baseline", trayLabel: nil, model: model) {
             hero
             HStack(spacing: DX.Space.s) {
-                tile(systemImage: "creditcard", label: "Yearly drain",
+                tile(systemImage: "creditcard", label: "Yours to keep",
                      value: money.formatted(.currency(code: model.currencyCode).precision(.fractionLength(0))),
-                     detail: String(localized: "\(model.moneyPerDay.formatted(.currency(code: model.currencyCode).precision(.fractionLength(0)))) gone every day"))
+                     detail: String(localized: "\(model.moneyPerDay.formatted(.currency(code: model.currencyCode).precision(.fractionLength(0)))) a day, every year"))
                 if model.hoursPerYear >= 1 {
-                    tile(systemImage: "hourglass", label: "Time back",
+                    tile(systemImage: "hourglass", label: "Time you'll get back",
                          value: String(localized: "\(Int(model.hoursPerYear.rounded())) hours"),
                          detail: String(localized: "\(Int((model.hoursPerYear / 24).rounded())) full days a year"))
                 } else {
@@ -451,15 +451,15 @@ struct BaselineSummaryScreen: View {
                 }
             }
             HStack(alignment: .top, spacing: DX.Space.s) {
-                Image(systemName: "sparkles").font(.system(size: 16, weight: .light)).foregroundStyle(Onb.accent)
-                Text("Good news: in your prep week your brain steps down from this dose, without the shock of quitting cold turkey today.")
+                Image(systemName: "calendar").font(.system(size: 16, weight: .light)).foregroundStyle(Onb.accent)
+                Text("Nothing changes yet. In prep week you use as normal while you learn the skills, then you stop on your Quit Day.")
                     .onbText(.subtitle).fixedSize(horizontal: false, vertical: true)
             }
             .padding(14)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(Onb.surface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
             .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(Onb.hairline))
-            Text("Rough estimates for comparison. Real intake varies with your product and how you use it.")
+            Text("Rough estimates for comparison, from about 1 mg of nicotine absorbed per cigarette (Benowitz and Jacob, 1984). Real intake varies with your product and how you use it.")
                 .dxFont(11, weight: 400, style: .caption2).foregroundStyle(Onb.muted)
         }
     }

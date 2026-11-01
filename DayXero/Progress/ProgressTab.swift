@@ -194,9 +194,13 @@ struct ProgressTab: View {
         LazyVGrid(columns: columns, alignment: .leading, spacing: 8) {
             if isPrepPhase(snap) {
                 ProgressStat(value: Double(snap.prepDone), label: String(localized: "of \(snap.prepTotal) prep days done"))
-                ProgressStat(value: Double(ridden), label: ridden == 1 ? String(localized: "wave ridden out") : String(localized: "waves ridden out"))
+                // "0 waves ridden out" reads as failure in a week where nobody is meant to resist yet (S27.5).
+                if ridden > 0 {
+                    ProgressStat(value: Double(ridden), label: ridden == 1 ? String(localized: "wave ridden out") : String(localized: "waves ridden out"))
+                }
                 ProgressStat(value: NSDecimalNumber(decimal: snap.moneyPerYear).doubleValue, label: String(localized: "to keep a year"), format: whole)
-                let daysToQuit = max(snap.prepTotal - snap.prepDayNumber + 1, 0)
+                // The same countdown as Today's header, from the chosen Quit Day (S27.5).
+                let daysToQuit = Self.daysToQuit(snap)
                 ProgressStat(value: Double(daysToQuit), label: daysToQuit == 1 ? String(localized: "day to Quit Day") : String(localized: "days to Quit Day"))
             } else {
                 ProgressStat(value: Double(snap.daysClear), label: snap.daysClear == 1 ? String(localized: "day clear") : String(localized: "days clear"))
@@ -250,6 +254,11 @@ struct ProgressTab: View {
                 .frame(minHeight: 44)
         }
         .buttonStyle(.plain)
+    }
+
+    private static func daysToQuit(_ snap: HomeSnapshot) -> Int {
+        if case let .prep(days) = snap.phase { return days }
+        return 0
     }
 
     private func isPrepPhase(_ snap: HomeSnapshot) -> Bool {

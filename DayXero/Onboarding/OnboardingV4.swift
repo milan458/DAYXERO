@@ -26,12 +26,15 @@ enum Onb {
 
 /// The answer tray: the reading surface the controls sit on, under Xero's question.
 struct AnswerTrayCard<Content: View>: View {
+    var label: LocalizedStringKey? = "YOUR ANSWER"
     @ViewBuilder let content: () -> Content
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("YOUR ANSWER").dxType(.caption).foregroundStyle(Onb.muted)
-                .accessibilityHidden(true)
+            if let label {
+                Text(label).dxType(.caption).foregroundStyle(Onb.muted)
+                    .accessibilityHidden(true)
+            }
             content()
         }
         .foregroundStyle(Onb.ink)

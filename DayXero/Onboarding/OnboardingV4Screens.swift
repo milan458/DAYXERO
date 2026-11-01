@@ -169,7 +169,7 @@ struct WelcomeScreen: View {
         }
     }
 
-    /// The 18+ line with the legal links. Privacy links only once AppLinks has its URL (S15.4).
+    /// The 18+ line with the Terms and Privacy Policy links (S15.4, S27.1).
     private var legal: Text {
         let terms = "[\(String(localized: "Terms"))](\(AppLinks.terms.absoluteString))"
         let line: String
@@ -582,7 +582,7 @@ struct TrialScreen: View {
                 VStack(alignment: .leading, spacing: 14) {
                     Text("Two small nudges a day").dxType(.title).foregroundStyle(ground.ink)
                         .accessibilityAddTraits(.isHeader)
-                    Text("Xero says good morning, Glim checks in at night. That's it. No guilt, ever, and quiet hours by default.")
+                    Text("Xero says good morning, Glim checks in at night. Anything more is your choice, in Settings. No guilt, ever, and quiet hours by default.")
                         .dxType(.body).foregroundStyle(ground.muted)
                         .fixedSize(horizontal: false, vertical: true)
                     NotificationPreview(sender: "Xero", time: time(DailyReminderSettings.pledgeMinute ?? DailyReminderSettings.defaultPledge),

@@ -363,8 +363,6 @@ jobs:
           shoot dark large onb-reveal-disclaimer-dark -dx.onboardingStep reveal
           shoot dark large onb-trial-mock-dark -dx.onboardingStep trial -dx.store mock
           shoot light large onb-trial-mock-light -dx.onboardingStep trial -dx.store mock
-          shoot dark large pw-firstrun-dark $P mock -dx.paywallFirstRun YES
-          shoot light large pw-firstrun-light $P mock -dx.paywallFirstRun YES
           fi
           cd shots
           git init -q -b "$BRANCH"

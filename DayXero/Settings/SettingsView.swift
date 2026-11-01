@@ -116,6 +116,10 @@ struct SettingsSheet: View {
                     NavigationLink(value: Page.health) { SettingLabel("Health information", systemImage: "heart") }
                     Link(destination: AppLinks.terms) { SettingLabel("Terms of use", systemImage: "doc.text") }
                         .foregroundStyle(Read4.ink)
+                    if let privacy = AppLinks.privacy {
+                        Link(destination: privacy) { SettingLabel("Privacy policy", systemImage: "hand.raised") }
+                            .foregroundStyle(Read4.ink)
+                    }
                 } header: {
                     Text("About")
                 } footer: {

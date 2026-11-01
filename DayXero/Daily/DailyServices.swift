@@ -22,6 +22,10 @@ enum DailyReminderSettings {
     static let defaultMilestone = 9 * 60
     static let defaultQuietStart = 22 * 60 + 30
     static let defaultQuietEnd = 7 * 60 + 30
+    /// Lesson-ready and milestone notes stay off until switched on, so a fresh install sends the two daily notes
+    /// onboarding promises (pledge and check-in) and nothing else (S27.4). Their default times above are used when
+    /// they're switched on in Settings. NRT notes need an NRT plan and away notes need an absence, so neither runs by itself.
+    static let offUntilChosen = -1
 
     static var pledgeMinute: Int? { minute(pledgeKey, defaultPledge) }
     static var checkInMinute: Int? { minute(checkInKey, defaultCheckIn) }
@@ -30,8 +34,8 @@ enum DailyReminderSettings {
         var s = NotificationPlan.Settings()
         s.pledge = minute(pledgeKey, defaultPledge)
         s.checkIn = minute(checkInKey, defaultCheckIn)
-        s.lesson = minute(lessonKey, defaultLesson)
-        s.milestone = minute(milestoneKey, defaultMilestone)
+        s.lesson = minute(lessonKey, offUntilChosen)
+        s.milestone = minute(milestoneKey, offUntilChosen)
         s.awayOn = flag(awayKey)
         s.quietStart = minute(quietStartKey, defaultQuietStart)
         s.quietEnd = minute(quietEndKey, defaultQuietEnd)

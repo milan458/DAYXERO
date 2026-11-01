@@ -128,6 +128,8 @@ struct OnboardingScaffold<Content: View, Footer: View>: View {
     /// Xero's bubbles: card on colour on lilac; a surface fill and hairline on the cream reading ground.
     var bubbleFill: Color = DX.Fill.cardOnColour
     var bubbleBorder: Color = .clear
+    /// The tray's caption; nil on screens that show results rather than ask (S27.3).
+    var trayLabel: LocalizedStringKey? = "YOUR ANSWER"
     @ViewBuilder let content: () -> Content
     @ViewBuilder let footer: () -> Footer
 
@@ -145,7 +147,7 @@ struct OnboardingScaffold<Content: View, Footer: View>: View {
                     if let subtitle {
                         XeroBubble(text: Text(subtitle), fill: bubbleFill, border: bubbleBorder).dxArrive(1)
                     }
-                    AnswerTrayCard {
+                    AnswerTrayCard(label: trayLabel) {
                         VStack(alignment: .leading, spacing: 10) { content() }
                     }
                     .padding(.top, 8)
@@ -168,10 +170,12 @@ struct OnboardingScaffold<Content: View, Footer: View>: View {
 
 extension OnboardingScaffold where Footer == ContinueButton {
     init(title: LocalizedStringKey, subtitle: LocalizedStringKey? = nil, eyebrow: LocalizedStringKey? = nil,
+         trayLabel: LocalizedStringKey? = "YOUR ANSWER",
          model: OnboardingModel, continueTitle: LocalizedStringKey = "Continue", @ViewBuilder content: @escaping () -> Content) {
         self.title = title
         self.subtitle = subtitle
         self.eyebrow = eyebrow
+        self.trayLabel = trayLabel
         self.content = content
         self.footer = { ContinueButton(title: continueTitle, model: model) }
     }

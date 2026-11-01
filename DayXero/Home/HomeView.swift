@@ -240,7 +240,7 @@ struct TodayView: View {
             UpgradeSheet(dayTitle: upgradeTitle ?? "", model: PaywallModel(store: entitlement.store, entitlement: entitlement),
                          showAllPlans: { showUpgrade = false; showPaywall = true },
                          onUnlocked: { showUpgrade = false })
-                .presentationDetents([.medium])
+                .presentationDetents([.medium, .large])
         }
         .fullScreenCover(isPresented: $showPaywall) {
             PaywallView(name: profile.name, quitDay: profile.quitDay,
