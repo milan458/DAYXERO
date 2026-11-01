@@ -182,8 +182,15 @@ struct V4Gallery: View {
                 }
             }
             Text("Stages 1 to 4").dxType(.caption).foregroundStyle(ground.muted)
-            HStack(spacing: 8) {
-                ForEach(1...4, id: \.self) { stage in make(.hello, stage, .avatar) }
+            // Card size, so the growth differences (S27.16) can be judged in the CI screenshots.
+            HStack(alignment: .bottom, spacing: 4) {
+                ForEach(Array(zip(1...4, ["Day 1–6", "7–13", "14–27", "28+"])), id: \.0) { stage, days in
+                    VStack(spacing: 2) {
+                        make(.hello, stage, .card)
+                        Text(verbatim: days).dxType(.caption).foregroundStyle(ground.muted)
+                    }
+                    .frame(maxWidth: .infinity)
+                }
             }
             Text("Hero").dxType(.caption).foregroundStyle(ground.muted)
             make(.hello, 1, .hero).frame(maxWidth: .infinity)

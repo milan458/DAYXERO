@@ -3,6 +3,8 @@ import SwiftUI
 /// The five v4 skies (dawn, dusk, path, sea, night), drawn from `Horizon2.dc.html` in its
 /// 400 × 300 space. `clarity` 0–100 clears the haze as days clear go up
 /// (`CrewGrowth.clarity(daysClear:)`). The paper-grain overlay is not drawn yet.
+/// In dark mode (S27.17) dawn becomes dusk-dawn (a deep muted sky, a low dim sun, plum hills, a few stars) and the
+/// daylight scenes (path, sea) get a navy dim layer, so no hero glows at full brightness on a dark screen.
 public enum HorizonKind: String, CaseIterable, Sendable {
     case dawn, dusk, path, sea, night
 }
@@ -16,6 +18,7 @@ public struct HorizonScene: View {
     let animate: Bool
     @State private var appeared = Date()
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.colorScheme) private var colorScheme
 
     public init(_ kind: HorizonKind, clarity: Int = 100, fit: Fit = .middle, animate: Bool = true) {
         self.kind = kind
@@ -26,7 +29,7 @@ public struct HorizonScene: View {
 
     public var body: some View {
         let moving = animate && !reduceMotion
-        let kind = kind, clarity = clarity, fit = fit, appeared = appeared
+        let kind = kind, clarity = clarity, fit = fit, appeared = appeared, dark = colorScheme == .dark
         TimelineView(.animation(paused: !moving)) { timeline in
             Canvas { ctx, size in
                 // preserveAspectRatio "xMid… slice": cover, centred horizontally.
@@ -42,7 +45,7 @@ public struct HorizonScene: View {
                 ctx.scaleBy(x: scale, y: scale)
                 let t = timeline.date.timeIntervalSinceReferenceDate
                 let sinceAppear = timeline.date.timeIntervalSince(appeared)
-                Horizon.draw(&ctx, kind: kind, clarity: clarity, time: t, sinceAppear: sinceAppear, animate: moving)
+                Horizon.draw(&ctx, kind: kind, clarity: clarity, time: t, sinceAppear: sinceAppear, animate: moving, dark: dark)
             }
         }
         .clipped()
@@ -104,6 +107,8 @@ enum Horizon {
     static let dawnSky = linear([(0, 0xFF7E5A), (0.55, 0xFFB877), (1, 0xFFE6BF)])
     static let daySky = linear([(0, 0x5AA9FF), (1, 0xD3EEFF)])
     static let duskSky = linear([(0, 0x7A5CE0), (0.6, 0xE58BB8), (1, 0xFFC59A)])
+    /// The dawn hero in dark mode (S27.17): a low sun under a deep, muted sky, so it sits on plum and navy.
+    static let dawnDarkSky = linear([(0, 0x2A1E4E), (0.55, 0x6A3E62), (1, 0xB4685E)])
     static let nightSky = linear([(0, 0x180F52), (1, 0x5A3CC4)])
     static let sun = linear([(0, 0xFFF6C8), (1, 0xFFC23A)])
     static let glow = Gradient(stops: [.init(color: .white.opacity(0.75), location: 0), .init(color: .white.opacity(0), location: 1)])
@@ -147,7 +152,8 @@ enum Horizon {
         animate ? ArtTrack(scalars: [0.25, 1, 0.25], duration: period, begin: begin).scalar(at: time) : 1
     }
 
-    static func draw(_ ctx: inout GraphicsContext, kind: HorizonKind, clarity: Int, time t: Double, sinceAppear: Double, animate on: Bool) {
+    static func draw(_ ctx: inout GraphicsContext, kind: HorizonKind, clarity: Int, time t: Double, sinceAppear: Double, animate on: Bool,
+                     dark: Bool = false) {
         let fog = 1 - Double(clarity) / 100
         let haze: UInt32 = kind == .night ? 0x8E80C9 : (kind == .dusk ? 0xE9D6F0 : 0xF3ECE3)
         func hazeRect(_ opacity: Double) {
@@ -157,6 +163,26 @@ enum Horizon {
         let pulse = on ? ArtTrack(scalars: [120, 140, 120], duration: 6).scalar(at: t) : 130
 
         switch kind {
+        case .dawn where dark:
+            // Dusk-dawn: the sun just above the hills, a dimmer glow, plum hills, a few stars still out.
+            sky(&ctx, dawnDarkSky)
+            for (x, y, r, period, begin) in [(60.0, 40.0, 1.6, 2.2, 0.0), (150, 26, 1.3, 2.8, 0.6), (350, 70, 1.4, 2, 0.3)] {
+                ctx.fill(Crew.circle(x, y, r),
+                         with: .color(Color(hex: 0xFFF8EE).opacity(0.8 * twinkle(t, period: period, begin: begin, animate: on))))
+            }
+            glowDisc(&ctx, 200, 196, 110, opacity: 0.32)
+            let sunY = 200 + (fog * 12).rounded()
+            let rise = on ? ArtTrack.cubic(sinceAppear / 2.6, 0.2, 0.7, 0.2, 1) : 1
+            ctx.fill(Crew.circle(200, sunY + 40 * (1 - rise), 54), with: .color(Color(hex: 0xF2A35E).opacity(0.9)))
+            clouds(&ctx, [(70, 96, 46, 12), (330, 74, 40, 11)], 0xC99AB4, opacity: 0.45, period: 24, time: t, animate: on)
+            if fog > 0 {
+                ctx.fill(Path(CGRect(x: 0, y: 0, width: 400, height: 300)), with: .color(Color(hex: 0x3A2350).opacity(fog * 0.35)))
+            }
+            layer(&ctx, "M0 192 C60 162 120 172 180 187 C250 204 320 172 400 166 L400 300 L0 300 Z", 0x8A4A58)
+            layer(&ctx, "M0 222 C80 196 150 206 220 224 C290 240 350 216 400 206 L400 300 L0 300 Z", 0x6E3650)
+            layer(&ctx, "M0 252 C70 233 140 241 210 256 C280 271 340 251 400 243 L400 300 L0 300 Z", 0x54284A)
+            layer(&ctx, "M0 282 C90 267 180 273 260 283 C320 291 360 285 400 279 L400 300 L0 300 Z", 0x3C1C40)
+
         case .dawn:
             sky(&ctx, dawnSky)
             glowDisc(&ctx, 200, 168, pulse, opacity: 0.6)
@@ -257,6 +283,10 @@ enum Horizon {
                 if halo > 0 { f.fill(Crew.circle(x, y, halo), with: .color(yellow.opacity(0.25))) }
             }
         }
-        hazeRect(fog * 0.35)
+        hazeRect(fog * (dark ? 0.15 : 0.35))
+        // S27.17: daylight scenes are dimmed in dark mode instead of glowing at full brightness.
+        if dark, kind == .path || kind == .sea {
+            ctx.fill(Path(CGRect(x: 0, y: 0, width: 400, height: 300)), with: .color(Color(hex: 0x140E3A).opacity(0.34)))
+        }
     }
 }

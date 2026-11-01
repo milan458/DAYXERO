@@ -59,6 +59,7 @@ struct MilestoneMoment: View {
     let onClose: () -> Void
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var typeSize
     @State private var appeared = false
     @State private var sharing = false
 
@@ -68,12 +69,23 @@ struct MilestoneMoment: View {
         VStack(spacing: 0) {
             ScrollView {
                 VStack(spacing: 10) {
+                    // S27.16: each milestone has its own sky, token and company, and Xero grows with the stage.
                     ZStack(alignment: .bottom) {
-                        HeroScene(.dawn, clarity: CrewGrowth.clarity(daysClear: stats.daysClear), height: 280, edge: ground.background)
-                        XeroView(mood: appeared ? .cheer : .hello, stage: CrewGrowth.stage(daysClear: stats.daysClear), size: .hero)
-                            .scaleEffect(appeared || reduceMotion ? 1 : DX.Move.celebrateFromScale)
+                        HeroScene(milestone.scene, clarity: CrewGrowth.clarity(daysClear: stats.daysClear), height: 280, edge: ground.background)
+                        company
+                            .scaleEffect(appeared || reduceMotion ? 1 : DX.Move.celebrateFromScale, anchor: .bottom)
                             .opacity(appeared ? 1 : 0)
                             .offset(y: -6)
+                            .accessibilityHidden(true)
+                    }
+                    .overlay(alignment: .topLeading) {
+                        // The milestone's token, pinned to the sky like a sticker.
+                        KitArt(milestone.token, cornerRadius: 18, animate: false)
+                            .frame(width: 60, height: 60)
+                            .shadow(color: Color(hex: 0x1A0B2E).opacity(0.18), radius: 8, y: 6)
+                            .rotationEffect(.degrees(-8))
+                            .padding(.leading, 22 + DX.Layout.gutter)
+                            .padding(.top, 70)
                             .accessibilityHidden(true)
                     }
                     .overlay(alignment: .topTrailing) {
@@ -108,7 +120,10 @@ struct MilestoneMoment: View {
                         }
                     }
                     if milestone != .quitDay {
-                        HStack(spacing: 8) {
+                        // Side by side, or stacked at accessibility text sizes so nothing overflows (S27.20).
+                        let tiles = typeSize.isAccessibilitySize
+                            ? AnyLayout(VStackLayout(spacing: 8)) : AnyLayout(HStackLayout(spacing: 8))
+                        tiles {
                             tile(stats.counterValue, stats.counterLabel.lowercased())
                             tile(stats.money, String(localized: "kept"))
                         }
@@ -139,10 +154,31 @@ struct MilestoneMoment: View {
         }
     }
 
+    /// Who comes to celebrate (S27.16): Xero alone, then Jelli from one month, the whole crew from three months.
+    @ViewBuilder
+    private var company: some View {
+        let stage = CrewGrowth.stage(daysClear: stats.daysClear)
+        let mood: CrewMood = appeared ? .cheer : .hello
+        HStack(alignment: .bottom, spacing: 4) {
+            switch milestone.company {
+            case .xero:
+                XeroView(mood: mood, stage: stage, size: .hero)
+            case .xeroAndJelli:
+                JelliView(mood: mood, stage: stage, points: 100)
+                XeroView(mood: mood, stage: stage, points: 170)
+            case .crew:
+                JelliView(mood: mood, stage: stage, points: 88)
+                XeroView(mood: mood, stage: stage, points: 140)
+                GlimView(mood: mood, stage: stage, points: 88)
+            }
+        }
+    }
+
     private func tile(_ value: String, _ label: String) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(verbatim: value).dxType(.title).foregroundStyle(ground.ink).lineLimit(1).minimumScaleFactor(0.6)
             Text(verbatim: label).dxType(.caption).foregroundStyle(ground.muted)
+                .fixedSize(horizontal: false, vertical: true)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .dxCardOnColour(on: ground)
@@ -196,7 +232,7 @@ struct ShareCardMaker: View {
                         picker(Look.allCases, selection: $look) { $0 == .dawn ? "Dawn" : "Night" }
                     }
                     VStack(spacing: 6) {
-                        toggleRow("Days clear", detail: nil, isOn: .constant(true)).disabled(true)
+                        toggleRow("Days since Quit Day", detail: nil, isOn: .constant(true)).disabled(true)
                         toggleRow("Money kept", detail: stats.money, isOn: $showMoney)
                         toggleRow("Cravings ridden out", detail: stats.cravingsRiddenOut.formatted(), isOn: $showCravings)
                         toggleRow(LocalizedStringKey(stats.counterLabel), detail: stats.counterValue, isOn: $showCounter)
@@ -248,10 +284,13 @@ struct ShareCardMaker: View {
             ForEach(options, id: \.self) { option in
                 let on = selection.wrappedValue == option
                 Button { selection.wrappedValue = option } label: {
-                    Text(title(option)).dxFont(12, weight: 600, style: .caption1)
+                    // Each option is at least 44 pt tall (S27.20).
+                    Text(title(option)).dxFont(14, weight: 600, style: .subheadline)
                         .foregroundStyle(on ? Read4.onInk : Read4.muted)
-                        .padding(.vertical, 6).padding(.horizontal, 12)
+                        .padding(.horizontal, 16)
+                        .frame(minHeight: DX.Layout.touchTarget)
                         .background(on ? Read4.ink : .clear, in: Capsule())
+                        .contentShape(Capsule())
                 }
                 .buttonStyle(.plain)
                 .accessibilityAddTraits(on ? .isSelected : [])
