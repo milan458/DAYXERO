@@ -74,6 +74,13 @@ struct PluralCatalogTests {
         #expect(String(localized: "Every \(1) hours", locale: Self.english) == "Every 1 hour")
         #expect(String(localized: "\(1) of \(1) waves. All yours.", locale: Self.english) == "1 of 1 wave. All yours.")
         #expect(String(localized: "\(2) of \(3) waves. All yours.", locale: Self.english) == "2 of 3 waves. All yours.")
+        // Counts filled into JSON text and built in code.
+        #expect(String(localized: "\(1) days", locale: Self.english) == "1 day")
+        #expect(String(localized: "\(1) cravings", locale: Self.english) == "1 craving")
+        #expect(String(localized: "\(3) cravings", locale: Self.english) == "3 cravings")
+        #expect(String(localized: "\(1) cycles", locale: Self.english) == "1 cycle")
+        #expect(String(localized: "\(1) cigarettes not smoked", locale: Self.english) == "1 cigarette not smoked")
+        #expect(String(localized: "\(1) puffs a day", locale: Self.english) == "1 puff a day")
     }
 
     @Test(.enabled(if: PluralCatalogTests.widgetBundle != nil, "Needs the embedded widget extension"))

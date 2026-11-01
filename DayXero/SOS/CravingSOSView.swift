@@ -366,7 +366,7 @@ private struct PassedView: View {
                         .offset(y: bumped ? 0 : 8)
                         .accessibilityHidden(true)
                 }
-                Text("waves ridden out").dxType(.footnote).foregroundStyle(ground.muted)
+                Text((bumped ? ridden + 1 : ridden) == 1 ? "wave ridden out" : "waves ridden out").dxType(.footnote).foregroundStyle(ground.muted)
             }
             Spacer(minLength: 0)
         }

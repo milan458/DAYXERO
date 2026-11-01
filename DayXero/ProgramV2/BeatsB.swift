@@ -268,7 +268,7 @@ struct CommitBeat: View {
             }
             Spacer()
             if doneAt == nil {
-                HoldButton(String(localized: "Hold to commit"), done: String(localized: "Committed ✓"),
+                HoldButton(String(localized: "Hold to commit"), done: String(localized: "Committed"),
                            duration: seconds, on: .reading, action: commit)
                     .accessibilityLabel(Text(verbatim: ctx.text(beat.text)))
                 Text("Hold for \(Int(seconds)) seconds").v4Text(.subtitle)
@@ -281,7 +281,7 @@ struct CommitBeat: View {
     }
 
     /// Q1 Day Xero: the dawn at Day 1's clarity, Xero 200 settling in, the date and session line, your reason,
-    /// and a three-second hold that ends on "Day Xero started ✓".
+    /// and a three-second hold that ends on "Day Xero started" and a checkmark.
     private var dayXero: some View {
         let ground = DX.Ground.apricot
         let session = ctx.session
@@ -324,7 +324,7 @@ struct CommitBeat: View {
             .scrollBounceBehavior(.basedOnSize)
             VStack(spacing: 6) {
                 if doneAt == nil {
-                    HoldButton(String(localized: "Hold to start Day Xero"), done: String(localized: "Day Xero started ✓"),
+                    HoldButton(String(localized: "Hold to start Day Xero"), done: String(localized: "Day Xero started"),
                                duration: seconds, on: ground, action: commit)
                         .accessibilityLabel(Text("Start Day Xero. Hold for \(Int(seconds)) seconds, or double-tap with VoiceOver."))
                 } else {

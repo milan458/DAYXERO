@@ -134,8 +134,8 @@ struct ComingSoon: View {
     }
 }
 
-/// Prep day 1 opens by itself the first time Home shows after the paywall (S22), so the first thing after starting
-/// a trial is the program working, not a dashboard.
+/// Prep day 1 opens by itself the first time Home shows after onboarding (S22), so the first thing after setting up
+/// is the program working, not a dashboard. Prep week is free; the trial is offered after Day Xero.
 enum FirstLesson {
     static let key = "dx.openFirstLesson"
 }

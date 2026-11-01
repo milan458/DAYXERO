@@ -149,7 +149,7 @@ private struct OrbReadout: View {
             Color.clear
                 .frame(height: capHeight)
                 .overlay(alignment: .bottom) {
-                    Text(verbatim: numeral)
+                    numeral
                         .font(DX.Typeface4.swiftUIFont(.display, size: heroSize, weight: 800))
                         .tracking(-0.02 * heroSize)
                         .monospacedDigit()
@@ -178,12 +178,13 @@ private struct OrbReadout: View {
         return String(localized: "\(engine.pattern.seconds(session.phase)) seconds · \(session.phase.word)")
     }
 
-    private var numeral: String {
+    /// The countdown, or a checkmark once the breathing is done.
+    private var numeral: Text {
         let session = engine.session
         if session.isSOS {
-            return String(format: "%02d:%02d", session.sosRemaining / 60, session.sosRemaining % 60)
+            return Text(verbatim: String(format: "%02d:%02d", session.sosRemaining / 60, session.sosRemaining % 60))
         }
-        return session.finished ? "✓" : "\(session.remaining)"
+        return session.finished ? Text(Image(systemName: "checkmark")) : Text(verbatim: "\(session.remaining)")
     }
 }
 

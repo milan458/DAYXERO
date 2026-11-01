@@ -8,9 +8,11 @@ struct MilestoneStats: Equatable {
     var daysClear: Int
     var money: String
     var cravingsRiddenOut: Int
-    /// The main product's counter, e.g. ("Puffs not taken", "1,400").
+    /// The main product's counter, e.g. ("Puffs not taken", "1,400"), singular for one ("Puff not taken", "1").
     var counterLabel: String
     var counterValue: String
+    /// The counter as one phrase: "362 puffs not taken", "1 puff not taken".
+    var counterPhrase: String
 
     @MainActor
     init(profile: UserProfile, logs: [LogEntry], now: Date = .now) {
@@ -19,11 +21,17 @@ struct MilestoneStats: Equatable {
         money = snap.moneyKept.formatted(.currency(code: snap.currencyCode))
         cravingsRiddenOut = logs.filter { $0.kind == .craving && $0.outcome == .passed }.count
         let counter = snap.counters.first
-        counterValue = (counter?.avoided ?? 0).formatted()
+        let avoided = counter?.avoided ?? 0
+        counterValue = avoided.formatted()
         counterLabel = switch counter?.product {
-        case .vape: String(localized: "Puffs not taken")
-        case .pouches: String(localized: "Pouches not used")
-        default: String(localized: "Cigarettes not smoked")
+        case .vape: avoided == 1 ? String(localized: "Puff not taken") : String(localized: "Puffs not taken")
+        case .pouches: avoided == 1 ? String(localized: "Pouch not used") : String(localized: "Pouches not used")
+        default: avoided == 1 ? String(localized: "Cigarette not smoked") : String(localized: "Cigarettes not smoked")
+        }
+        counterPhrase = switch counter?.product {
+        case .vape: String(localized: "\(avoided) puffs not taken")
+        case .pouches: String(localized: "\(avoided) pouches not used")
+        default: String(localized: "\(avoided) cigarettes not smoked")
         }
     }
 }
@@ -223,7 +231,7 @@ struct ShareCardMaker: View {
         var parts: [String] = []
         if showMoney { parts.append(String(localized: "\(stats.money) kept")) }
         if showCravings { parts.append(String(localized: "\(stats.cravingsRiddenOut) cravings ridden out")) }
-        if showCounter { parts.append("\(stats.counterValue) \(stats.counterLabel.lowercased())") }
+        if showCounter { parts.append(stats.counterPhrase) }
         return parts
     }
 

@@ -238,9 +238,9 @@ struct ProductsSettingsView: View {
                             }
                             Group {
                                 if use.product == .vape {
-                                    Text("\(VapeUsage.format(use.podsPerWeek)) pods a week · \(use.pricePerPurchase.formatted(.currency(code: profile.currencyCode))) each")
+                                    Text("\(podsLine(use.podsPerWeek)) · \(use.pricePerPurchase.formatted(.currency(code: profile.currencyCode))) each")
                                 } else {
-                                    Text("\(Int(use.unitsPerDay)) \(Text(use.product.unit)) a day · \(use.pricePerPurchase.formatted(.currency(code: profile.currencyCode))) for \(Int(use.unitsPerPurchase))")
+                                    Text("\(unitsLine(use.product, Int(use.unitsPerDay))) · \(use.pricePerPurchase.formatted(.currency(code: profile.currencyCode))) for \(Int(use.unitsPerPurchase))")
                                 }
                             }
                             .v4Text(.subtitle)
@@ -264,6 +264,20 @@ struct ProductsSettingsView: View {
         .tint(Read4.accent)
         .sheet(item: $editing) { use in
             ProductEditor(use: use, profile: profile).presentationDetents([.large])
+        }
+    }
+
+    /// "1 pod a week", "2.5 pods a week".
+    private func podsLine(_ pods: Double) -> String {
+        pods == 1 ? String(localized: "1 pod a week") : String(localized: "\(VapeUsage.format(pods)) pods a week")
+    }
+
+    /// "1 cigarette a day", "12 cigarettes a day".
+    private func unitsLine(_ product: DayXeroCore.Product, _ count: Int) -> String {
+        switch product {
+        case .cigarettes: String(localized: "\(count) cigarettes a day")
+        case .vape: String(localized: "\(count) puffs a day")
+        case .pouches: String(localized: "\(count) pouches a day")
         }
     }
 

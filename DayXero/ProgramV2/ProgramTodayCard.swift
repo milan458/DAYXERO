@@ -112,7 +112,7 @@ struct ProgramTodayCard: View {
         .onAppear(perform: openQueuedFirstSession)
     }
 
-    /// Prep 1 opens by itself the first time Home shows after the paywall (S22).
+    /// Prep 1 opens by itself the first time Home shows after onboarding (S22).
     private func openQueuedFirstSession() {
         guard UserDefaults.standard.bool(forKey: FirstLesson.key) else { return }
         UserDefaults.standard.set(false, forKey: FirstLesson.key)

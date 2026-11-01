@@ -202,6 +202,98 @@
         }
       }
     },
+    "%lld cigarettes a day" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld cigarette a day"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld cigarettes a day"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld cigarettes not smoked" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld cigarette not smoked"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld cigarettes not smoked"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld cigarettes today" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld cigarette today"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld cigarettes today"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld cravings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld craving"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld cravings"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "%lld cravings ridden out" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -241,6 +333,29 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "%lld cravings today"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld cycles" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld cycle"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld cycles"
                 }
               }
             }
@@ -511,6 +626,29 @@
         }
       }
     },
+    "%lld kilograms" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld kilogram"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld kilograms"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "%lld minutes, whenever suits you." : {
       "extractionState" : "manual",
       "localizations" : {
@@ -656,6 +794,29 @@
         }
       }
     },
+    "%lld pouches a day" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld pouch a day"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld pouches a day"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "%lld pouches at %lld mg" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -682,6 +843,144 @@
                       "value" : "%arg pouches"
                     }
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld pouches not used" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld pouch not used"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld pouches not used"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld pouches today" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld pouch today"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld pouches today"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld pounds" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld pound"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld pounds"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld puffs a day" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld puff a day"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld puffs a day"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld puffs not taken" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld puff not taken"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld puffs not taken"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld puffs today" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld puff today"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld puffs today"
                 }
               }
             }

@@ -304,7 +304,7 @@ struct WaterWidgetView: View {
                             .widgetAccentable()
                         Text(verbatim: "/ \(s.glassesGoal)").font(DX.Typeface4.swiftUIFont(.body, size: 17, weight: 700)).foregroundStyle(.white.opacity(0.5))
                     }
-                    Text("glasses").font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 500)).foregroundStyle(ink.secondary)
+                    Text(s.glassesGoal == 1 ? "glass" : "glasses").font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 500)).foregroundStyle(ink.secondary)
                     Button(intent: LogWaterIntent(from: .widget)) {
                         Label("1", systemImage: "plus")
                             .labelStyle(PlusOneLabel())
@@ -403,10 +403,14 @@ struct ForecastWidgetView: View {
                 }
                 .font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 500)).foregroundStyle(ink.secondary).lineLimit(1).minimumScaleFactor(0.8)
                 Button(intent: GuardWindowIntent()) {
-                    Text(guarding ? "Guarding ✓" : "Guard it").font(DX.Typeface4.swiftUIFont(.body, size: 14, weight: 600)).foregroundStyle(ink.sage)
-                        .frame(maxWidth: .infinity, minHeight: 34)
-                        .background(ink.sage.opacity(0.16), in: Capsule())
-                        .overlay(Capsule().strokeBorder(ink.sage.opacity(0.5), lineWidth: 1))
+                    HStack(spacing: 4) {
+                        Text(guarding ? "Guarding" : "Guard it")
+                        if guarding { Image(systemName: "checkmark").accessibilityHidden(true) }
+                    }
+                    .font(DX.Typeface4.swiftUIFont(.body, size: 14, weight: 600)).foregroundStyle(ink.sage)
+                    .frame(maxWidth: .infinity, minHeight: 34)
+                    .background(ink.sage.opacity(0.16), in: Capsule())
+                    .overlay(Capsule().strokeBorder(ink.sage.opacity(0.5), lineWidth: 1))
                 }
                 .buttonStyle(.plain)
                 .disabled(guarding)

@@ -185,11 +185,18 @@ struct ProgramStore {
         if yearly > 0 { values["yearly_cost"] = Int(yearly.rounded()).formatted() }
         values["quit_date"] = profile.quitDay.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))
         if case let .text(reason)? = answer("primary_reason") { values["primary_reason"] = reason }
-        values["days_free"] = stats.daysClear(at: now).formatted()
+        let daysFree = stats.daysClear(at: now)
+        values["days_free"] = daysFree.formatted()
         values["money_kept"] = NSDecimalNumber(decimal: stats.moneyKept(at: now)).doubleValue
             .formatted(.currency(code: profile.currencyCode).precision(.fractionLength(0)))
         let cravings = (try? context.fetch(FetchDescriptor<LogEntry>())) ?? []
-        values["cravings_ridden"] = cravings.filter { $0.kind == .craving && $0.outcome == .passed }.count.formatted()
-        return ProgramPlaceholders(values)
+        let ridden = cravings.filter { $0.kind == .craving && $0.outcome == .passed }.count
+        values["cravings_ridden"] = ridden.formatted()
+        // The JSON says "{days_free} days free." and "{cravings_ridden} cravings ridden out.", so the noun follows the count.
+        let phrases = [
+            "{days_free} days": String(localized: "\(daysFree) days"),
+            "{cravings_ridden} cravings": String(localized: "\(ridden) cravings"),
+        ]
+        return ProgramPlaceholders(values, phrases: phrases)
     }
 }

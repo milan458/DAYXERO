@@ -151,10 +151,17 @@ public struct HoldButton: View {
                     .frame(width: proxy.size.width * (done ? 1 : progress))
             }
             .clipShape(Capsule())
-            Text(done ? doneLabel : label)
-                .dxType(.headline)
-                .foregroundStyle(Color(hex: colors.foreground))
-                .frame(maxWidth: .infinity)
+            HStack(spacing: 8) {
+                Text(done ? doneLabel : label)
+                    .dxType(.headline)
+                if done {
+                    Image(systemName: "checkmark")
+                        .font(.headline.weight(.bold))
+                        .accessibilityHidden(true)
+                }
+            }
+            .foregroundStyle(Color(hex: colors.foreground))
+            .frame(maxWidth: .infinity)
         }
         .frame(height: DX.Layout.buttonHeight)
         .contentShape(Capsule())

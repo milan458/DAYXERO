@@ -48,8 +48,9 @@ struct FinaleView: View {
                         .accessibilityAddTraits(.isHeader)
                     HStack(spacing: 8) {
                         tile(Double(snap.daysClear), snap.daysClear == 1 ? String(localized: "day clear · Xero") : String(localized: "days clear · Xero"))
-                        tile(Double(ridden), String(localized: "waves ridden · Jelli"))
-                        tile(Double(checkIns.count), String(localized: "check-ins · Glim"))
+                        tile(Double(ridden), ridden == 1 ? String(localized: "wave ridden · Jelli") : String(localized: "waves ridden · Jelli"))
+                        tile(Double(checkIns.count),
+                             checkIns.count == 1 ? String(localized: "check-in · Glim") : String(localized: "check-ins · Glim"))
                     }
                     Text(verbatim: moneyLine(stats))
                         .dxType(.body).foregroundStyle(ground.ink)
@@ -94,7 +95,7 @@ struct FinaleView: View {
     /// The reason is in their own words, so its capital stays; it just ends like a sentence.
     private func moneyLine(_ stats: MilestoneStats) -> String {
         let reason = profile.reasons.sorted { $0.createdAt < $1.createdAt }.first?.text.trimmingCharacters(in: .whitespacesAndNewlines)
-        let numbers = String(localized: "\(stats.money) kept and \(stats.counterValue) \(stats.counterLabel.lowercased()).")
+        let numbers = String(localized: "\(stats.money) kept and \(stats.counterPhrase).")
         guard let reason, !reason.isEmpty else { return numbers }
         let sentence = ".!?…".contains(reason.last ?? ".") ? reason : reason + "."
         return numbers + " " + String(localized: "Your reason: \(sentence)")

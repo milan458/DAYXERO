@@ -265,8 +265,17 @@ struct CheckInView: View {
                 .padding(.horizontal, 14).padding(.vertical, 4)
                 .background(DX.Fill.onColourCard(for: ground), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
                 .accessibilityElement(children: .contain)
-                .accessibilityLabel(Text("\(uses.count) \(Text(product.unit)) today"))
+                .accessibilityLabel(Text(verbatim: usedTodayLabel(product, uses.count)))
             }
+        }
+    }
+
+    /// "1 cigarette today", "3 puffs today".
+    private func usedTodayLabel(_ product: DayXeroCore.Product, _ count: Int) -> String {
+        switch product {
+        case .cigarettes: String(localized: "\(count) cigarettes today")
+        case .vape: String(localized: "\(count) puffs today")
+        case .pouches: String(localized: "\(count) pouches today")
         }
     }
 

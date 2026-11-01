@@ -112,7 +112,7 @@ struct PledgeView: View {
             }
             .scrollBounceBehavior(.basedOnSize)
             VStack(spacing: 8) {
-                HoldButton(String(localized: "Hold to pledge"), done: String(localized: "Pledged for today ✓"),
+                HoldButton(String(localized: "Hold to pledge"), done: String(localized: "Pledged for today"),
                            duration: DX.Move.Hold.pledge, on: ground, action: pledge)
                     .accessibilityLabel(Text("Pledge for today. Hold for one second, or double-tap with VoiceOver."))
                 if let line = checkInLine {

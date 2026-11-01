@@ -117,6 +117,14 @@ struct ProgramContentTests {
         #expect(dropped.contains("14 days"))
     }
 
+    @Test func countPhrasesAgreeWithTheirNoun() {
+        let values = ProgramPlaceholders(["days_free": "1", "cravings_ridden": "1"],
+                                         phrases: ["{days_free} days": "1 day", "{cravings_ridden} cravings": "1 craving"])
+        #expect(values.fill("{days_free} days free.") == "1 day free.")
+        #expect(values.fill("{cravings_ridden} cravings ridden out.") == "1 craving ridden out.")
+        #expect(values.fillDropping("{days_free} days free, {money_kept} kept.") == "1 day free, kept.")
+    }
+
     @Test func theSighBreathRunsInhaleTopUpExhaleRest() {
         let orb = OrbData.bundled
         let sigh = orb.pattern("sigh")
