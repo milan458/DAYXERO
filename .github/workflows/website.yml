@@ -20,11 +20,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # Rebuild generated files so a stale commit can't ship old pages or missing CSS classes.
-      - name: Build guides and CSS
-        run: |
-          npm run website:guides
-          npm run website:css
+      # Rebuild the generated pages so a stale commit can't ship old ones.
+      - name: Build guides
+        run: npm run website:guides
       - uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}

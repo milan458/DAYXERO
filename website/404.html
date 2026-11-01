@@ -3,64 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Page not found — DayXero</title>
+  <title>Page not found | DayXero</title>
   <meta name="robots" content="noindex">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="theme-color" content="#241433">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px 16px;
-      background: #000000;
-      color: #FFFFFF;
-      font-family: 'Inter', sans-serif;
-      text-align: center;
-    }
-    ::selection { background: #BCC388; color: #000000; }
-    .code {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 9999px;
-      background: #161616;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #BCC388;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-    }
-    h1 {
-      margin: 16px 0 8px;
-      font-size: clamp(28px, 6vw, 44px);
-      font-weight: 800;
-      letter-spacing: -0.02em;
-    }
-    p { margin: 0 0 32px; color: rgba(255, 255, 255, 0.6); font-size: 15px; }
-    a {
-      display: inline-block;
-      padding: 12px 28px;
-      border-radius: 9999px;
-      background: #FFFFFF;
-      color: #000000;
-      font-weight: 600;
-      font-size: 14px;
-      text-decoration: none;
-      transition: background 0.38s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    a:hover { background: #BCC388; }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&family=DM+Sans:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/v4.css">
 </head>
-<body>
-  <main>
-    <span class="code">404</span>
-    <h1>This page doesn't exist.</h1>
-    <p>The link may be old, or the address mistyped.</p>
-    <a href="/">Back to DayXero</a>
+<body class="dk">
+  <main class="nf">
+    <div>
+      <div style="display: flex; justify-content: center"><span data-crew="glim" data-mood="sleepy" data-stage="2" data-size="180"></span></div>
+      <span class="chip" style="background: rgba(255,248,238,.12); color: #FFF8EE">404</span>
+      <h1 class="d">This page has gone to bed.</h1>
+      <p>The link may be old, or the address has a typo. Glim will keep the light on while you head back.</p>
+      <a class="btn btn-apricot" href="/">Back to DayXero</a>
+    </div>
   </main>
+  <script src="/assets/crew.js" defer></script>
 </body>
 </html>

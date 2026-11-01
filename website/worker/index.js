@@ -213,10 +213,11 @@ async function status(env, url) {
 function unsubscribePage(url) {
   const token = url.searchParams.get('t') || '';
   return page('Unsubscribe', `
-    <h1 class="text-3xl font-extrabold tracking-tight mb-4">Leave the DayXero beta list?</h1>
-    <p class="text-sm text-white/60 leading-relaxed mb-8">You won't get your TestFlight invite or the launch email.</p>
+    <div style="display: flex; justify-content: center"><span data-crew="xero" data-mood="calm" data-stage="2" data-size="160"></span></div>
+    <h1 class="d">Leave the DayXero beta list?</h1>
+    <p>You won't get your TestFlight invite or the launch email.</p>
     <form method="post" action="/api/waitlist/unsubscribe?t=${encodeURIComponent(token)}">
-      <button type="submit" class="px-6 py-3 rounded-full bg-white text-black font-semibold text-sm hover:bg-[#BCC388] spring-trans">Unsubscribe</button>
+      <button type="submit" class="btn btn-apricot">Unsubscribe</button>
     </form>`);
 }
 
@@ -228,9 +229,10 @@ async function unsubscribe(env, url) {
     ).bind(Date.now(), token).run();
   }
   return page('Unsubscribed', `
-    <h1 class="text-3xl font-extrabold tracking-tight mb-4">You're unsubscribed.</h1>
-    <p class="text-sm text-white/60 leading-relaxed mb-8">We won't email you again. Changed your mind? Join again any time.</p>
-    <a href="/beta/" class="px-6 py-3 rounded-full bg-[#BCC388] text-black font-semibold text-sm hover:bg-white spring-trans">Back to DayXero</a>`);
+    <div style="display: flex; justify-content: center"><span data-crew="glim" data-mood="sleepy" data-stage="2" data-size="160"></span></div>
+    <h1 class="d">You're unsubscribed.</h1>
+    <p>We won't email you again. Changed your mind? Join again any time.</p>
+    <a href="/beta/" class="btn btn-apricot">Back to DayXero</a>`);
 }
 
 // For the launch email: confirmed members as CSV, for import into Kit or Brevo.
@@ -366,11 +368,13 @@ function page(title, inner) {
   <title>${title} | DayXero</title>
   <meta name="robots" content="noindex">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/site.css">
+  <meta name="theme-color" content="#241433">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&family=DM+Sans:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/v4.css">
 </head>
-<body class="bg-black text-white antialiased font-sans min-h-screen flex items-center justify-center px-4">
-  <main class="max-w-md text-center">${inner}</main>
+<body class="dk">
+  <main class="nf"><div style="max-width: 560px">${inner}</div></main>
+  <script src="/assets/crew.js" defer></script>
 </body>
 </html>`, { headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' } });
 }
