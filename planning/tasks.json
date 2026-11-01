@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-11-01T19:37:08.448Z"
+    "updated": "2026-11-01T19:44:57.548Z"
   },
   "now": {
     "section": "S27",
@@ -2688,48 +2688,48 @@
         {
           "id": "S27.10",
           "title": "Rank 10 · Onboarding voice and skips: first-person Xero, replace 'Dual use detected', define 'wave', one progress bar, skippable name and past attempts, Skip on onb-breathe, feed or cut unused answers.",
-          "status": "in_progress",
-          "notes": "Voice rule (DS §8) and handoff S2.13 both violated. Wave 3.\nLab v7: Xero speaks first person across onboarding; 'Using both is common · I'll plan for each one'; 'wave' defined on onb-building; one 12-step bar (reveal 'Step 11 of 12'); Skip on breathe from the start, 'Skip for now' on onb-personal, 'Skip this one' on onb-past-attempts; notes flag unused answers (years, attempts, obstacles, confidence) for the Swift to use or cut.\nMilan signed off the lab version (v7), 1 Nov 2026. Swift started on claude/critique-wave3 (stacked on Wave 2).",
+          "status": "awaiting_signoff",
+          "notes": "Voice rule (DS §8) and handoff S2.13 both violated. Wave 3.\nLab v7: Xero speaks first person across onboarding; 'Using both is common · I'll plan for each one'; 'wave' defined on onb-building; one 12-step bar (reveal 'Step 11 of 12'); Skip on breathe from the start, 'Skip for now' on onb-personal, 'Skip this one' on onb-past-attempts; notes flag unused answers (years, attempts, obstacles, confidence) for the Swift to use or cut.\nMilan signed off the lab version (v7), 1 Nov 2026. Swift started on claude/critique-wave3 (stacked on Wave 2).\nSwift built on claude/critique-wave3 (stacked on Wave 2); waiting on CI and TestFlight.\nMilan, 1 Nov 2026: obstacles stay and shape the plan ('Watch out for' row, 'Built around what gets in your way' on the reveal); years of use, past attempts and confidence are cut (fields kept nil for old stores).",
           "created": "2026-11-01T18:37:56.413Z",
           "completed": null
         },
         {
           "id": "S27.11",
           "title": "Rank 11 · Native iOS 26 TabView with monochrome icons; Settings reachable from Progress; fold Evening into Today (four tabs).",
-          "status": "in_progress",
-          "notes": "Nav4.swift, ProgressTab.swift, EveningView → TodaySlot. Needs D6. Wave 3.\nLab v7: four tabs Today · Program · SOS · Progress on a glass bar with monochrome icons; today gains an 'evening' state (Glim, check-in card on top); Settings gear on Progress. The standalone Evening screen remains for reference, mapped to Today.\nMilan signed off the lab version (v7), 1 Nov 2026. Swift started on claude/critique-wave3 (stacked on Wave 2).",
+          "status": "awaiting_signoff",
+          "notes": "Nav4.swift, ProgressTab.swift, EveningView → TodaySlot. Needs D6. Wave 3.\nLab v7: four tabs Today · Program · SOS · Progress on a glass bar with monochrome icons; today gains an 'evening' state (Glim, check-in card on top); Settings gear on Progress. The standalone Evening screen remains for reference, mapped to Today.\nMilan signed off the lab version (v7), 1 Nov 2026. Swift started on claude/critique-wave3 (stacked on Wave 2).\nSwift built on claude/critique-wave3 (stacked on Wave 2); waiting on CI and TestFlight.",
           "created": "2026-11-01T18:37:56.476Z",
           "completed": null
         },
         {
           "id": "S27.12",
           "title": "Rank 12 · Water to one row, delete the goal calculator; rebuild calm-box, calm-478 and the breathe beat on reading tokens.",
-          "status": "in_progress",
-          "notes": "Last pure-black OLED screens and a third visual language. Needs D8. Wave 3.\nLab v7: water is a row on Today ('Water · 3 of 8 glasses'); water-goal removed; water screen marked retired; calm-box, calm-478 and the breathe beat rebuilt on the reading ground with the reading button system.\nMilan signed off the lab version (v7), 1 Nov 2026. Swift started on claude/critique-wave3 (stacked on Wave 2).",
+          "status": "awaiting_signoff",
+          "notes": "Last pure-black OLED screens and a third visual language. Needs D8. Wave 3.\nLab v7: water is a row on Today ('Water · 3 of 8 glasses'); water-goal removed; water screen marked retired; calm-box, calm-478 and the breathe beat rebuilt on the reading ground with the reading button system.\nMilan signed off the lab version (v7), 1 Nov 2026. Swift started on claude/critique-wave3 (stacked on Wave 2).\nSwift built on claude/critique-wave3 (stacked on Wave 2); waiting on CI and TestFlight.",
           "created": "2026-11-01T18:37:56.532Z",
           "completed": null
         },
         {
           "id": "S27.13",
           "title": "Rank 13 · Collapse to six grounds; green only for done; coral never as text; card alpha or hairline ≥ 1.3:1.",
-          "status": "in_progress",
-          "notes": "lab.js Lab.grounds, tokens.json, Ground.swift, V4TokenTests. Coral kicker text is 2.41:1 on program/changing. Needs D9. Wave 3.\nLab v7: six grounds (apricot, mint, ocean, sky, violet, reading) plus sun for celebrations; coral, lilac, mist, periwinkle and lime alias to survivors; no coral text; stronger card-on-colour fills and a hairline. All ink and muted pairs ≥4.5:1 in both modes; card separation ≥1.3:1 except cream reading cards (1.06, rely on hairline).\nMilan signed off the lab version (v7), 1 Nov 2026. Swift started on claude/critique-wave3 (stacked on Wave 2).",
+          "status": "awaiting_signoff",
+          "notes": "lab.js Lab.grounds, tokens.json, Ground.swift, V4TokenTests. Coral kicker text is 2.41:1 on program/changing. Needs D9. Wave 3.\nLab v7: six grounds (apricot, mint, ocean, sky, violet, reading) plus sun for celebrations; coral, lilac, mist, periwinkle and lime alias to survivors; no coral text; stronger card-on-colour fills and a hairline. All ink and muted pairs ≥4.5:1 in both modes; card separation ≥1.3:1 except cream reading cards (1.06, rely on hairline).\nMilan signed off the lab version (v7), 1 Nov 2026. Swift started on claude/critique-wave3 (stacked on Wave 2).\nSwift built on claude/critique-wave3 (stacked on Wave 2); waiting on CI and TestFlight.",
           "created": "2026-11-01T18:37:56.597Z",
           "completed": null
         },
         {
           "id": "S27.14",
           "title": "Rank 14 · Task-screen layout: top-anchored content with an 88 px character, Continue under the last option, grabbers and restated mission on follow-up sheets, hide 'Audio coming soon', fix 'Right.' on wrong answers.",
-          "status": "in_progress",
-          "notes": "450–550 px voids on session, session-kit, calm-*, log-slip-what, checkin-dayend. Wave 3.\nLab v7: buttons sit under the content on session beats, calm tools, log-slip-what and checkin-dayend; follow-up sheets get a grabber and restate the mission; no 'Audio coming soon' (audio step skipped until recorded); wrong quiz answers say 'Not quite.'; session-done labels follow program.json (W1D2 = Day 3).\nMilan signed off the lab version (v7), 1 Nov 2026. Swift started on claude/critique-wave3 (stacked on Wave 2).",
+          "status": "awaiting_signoff",
+          "notes": "450–550 px voids on session, session-kit, calm-*, log-slip-what, checkin-dayend. Wave 3.\nLab v7: buttons sit under the content on session beats, calm tools, log-slip-what and checkin-dayend; follow-up sheets get a grabber and restate the mission; no 'Audio coming soon' (audio step skipped until recorded); wrong quiz answers say 'Not quite.'; session-done labels follow program.json (W1D2 = Day 3).\nMilan signed off the lab version (v7), 1 Nov 2026. Swift started on claude/critique-wave3 (stacked on Wave 2).\nSwift built on claude/critique-wave3 (stacked on Wave 2); waiting on CI and TestFlight.",
           "created": "2026-11-01T18:37:56.651Z",
           "completed": null
         },
         {
           "id": "S27.15",
           "title": "Rank 15 · One illustration language: delete PersonFigure, constrain kit tiles to warm/deep families, ration the marked word, no twinkle on forms.",
-          "status": "in_progress",
-          "notes": "PersonFigure.swift used in CalmToolsView and ProgramPathMap; art.js. Wave 3.\nLab v7: the human figure is gone (crew stands in) on program, changing and calm; kit tiles keep to warm and deep colours; the hand-drawn mark stays only on the plan reveal, Today's greeting, milestones and the finale.\nMilan signed off the lab version (v7), 1 Nov 2026. Swift started on claude/critique-wave3 (stacked on Wave 2).",
+          "status": "awaiting_signoff",
+          "notes": "PersonFigure.swift used in CalmToolsView and ProgramPathMap; art.js. Wave 3.\nLab v7: the human figure is gone (crew stands in) on program, changing and calm; kit tiles keep to warm and deep colours; the hand-drawn mark stays only on the plan reveal, Today's greeting, milestones and the finale.\nMilan signed off the lab version (v7), 1 Nov 2026. Swift started on claude/critique-wave3 (stacked on Wave 2).\nSwift built on claude/critique-wave3 (stacked on Wave 2); waiting on CI and TestFlight.",
           "created": "2026-11-01T18:37:56.704Z",
           "completed": null
         },
@@ -2777,6 +2777,71 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-11-01T19:44:57.548Z",
+      "type": "note",
+      "message": "S27.10: Milan, 1 Nov 2026: obstacles stay and shape the plan ('Watch out for' row, 'Built around what gets in your way' on the reveal); years of use, past attempts and confidence are cut (fields kept nil for old stores)."
+    },
+    {
+      "time": "2026-11-01T19:44:57.492Z",
+      "type": "note",
+      "message": "S27.15: Swift built on claude/critique-wave3 (stacked on Wave 2); waiting on CI and TestFlight."
+    },
+    {
+      "time": "2026-11-01T19:44:57.426Z",
+      "type": "status",
+      "message": "S27.15 in_progress → awaiting_signoff"
+    },
+    {
+      "time": "2026-11-01T19:44:57.367Z",
+      "type": "note",
+      "message": "S27.14: Swift built on claude/critique-wave3 (stacked on Wave 2); waiting on CI and TestFlight."
+    },
+    {
+      "time": "2026-11-01T19:44:57.309Z",
+      "type": "status",
+      "message": "S27.14 in_progress → awaiting_signoff"
+    },
+    {
+      "time": "2026-11-01T19:44:57.248Z",
+      "type": "note",
+      "message": "S27.13: Swift built on claude/critique-wave3 (stacked on Wave 2); waiting on CI and TestFlight."
+    },
+    {
+      "time": "2026-11-01T19:44:57.198Z",
+      "type": "status",
+      "message": "S27.13 in_progress → awaiting_signoff"
+    },
+    {
+      "time": "2026-11-01T19:44:57.128Z",
+      "type": "note",
+      "message": "S27.12: Swift built on claude/critique-wave3 (stacked on Wave 2); waiting on CI and TestFlight."
+    },
+    {
+      "time": "2026-11-01T19:44:57.068Z",
+      "type": "status",
+      "message": "S27.12 in_progress → awaiting_signoff"
+    },
+    {
+      "time": "2026-11-01T19:44:57.012Z",
+      "type": "note",
+      "message": "S27.11: Swift built on claude/critique-wave3 (stacked on Wave 2); waiting on CI and TestFlight."
+    },
+    {
+      "time": "2026-11-01T19:44:56.946Z",
+      "type": "status",
+      "message": "S27.11 in_progress → awaiting_signoff"
+    },
+    {
+      "time": "2026-11-01T19:44:56.895Z",
+      "type": "note",
+      "message": "S27.10: Swift built on claude/critique-wave3 (stacked on Wave 2); waiting on CI and TestFlight."
+    },
+    {
+      "time": "2026-11-01T19:44:56.842Z",
+      "type": "status",
+      "message": "S27.10 in_progress → awaiting_signoff"
+    },
     {
       "time": "2026-11-01T19:37:08.448Z",
       "type": "note",
