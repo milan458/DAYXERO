@@ -15,7 +15,8 @@
     { "id": "w1",      "title": "Week 1",   "subtitle": "Through the hardest stretch.",            "sessionIds": ["W1D1","W1D2","W1D3","W1D4","W1D5","W1D6","W1D7"] },
     { "id": "w2",      "title": "Week 2",   "subtitle": "Rebuild your days.",                      "sessionIds": ["W2S1","W2S2","W2S3"] },
     { "id": "w3",      "title": "Week 3",   "subtitle": "Hard moments, handled.",                  "sessionIds": ["W3S1","W3S2","W3S3"] },
-    { "id": "w4",      "title": "Week 4",   "subtitle": "Who you are now.",                        "sessionIds": ["W4S1","W4S2","W4S3"] }
+    { "id": "w4",      "title": "Week 4",   "subtitle": "Who you are now.",                        "sessionIds": ["W4S1","W4S2","W4S3"] },
+    { "id": "after",   "title": "After",    "subtitle": "Boosters for the months ahead.",          "sessionIds": ["B45","B60","B90"] }
   ],
 
   "sessions": [
@@ -564,6 +565,79 @@
         { "id": "W4S3.5", "type": "share", "cardType": "graduation", "optional": true, "quoteFrom": "letter_day1" }
       ],
       "completionText": "The program's done, but DayXero stays with you. Craving SOS, your plan and your milestones are always here."
+    },
+
+    {
+      "id": "B45", "phaseId": "after", "label": "Day 45",
+      "title": "Six weeks: the sneaky cravings", "subtitle": "Old cues, same skill", "durationMinutes": 4,
+      "contentStatus": "draft",
+      "note": "DRAFT booster (S27.18, 1 Nov 2026) for Milan to review. Reuses only existing, already-sourced program material: the wave breath (P5), the old-cue quiz and cues list (W3S2). No new health claims. No recording yet, so the audio step is skipped.",
+      "unlock": { "rule": "days_since_quit", "minDay": 44 },
+      "audio": { "variants": ["default"] },
+      "beats": [
+        { "id": "B45.1", "type": "breathe", "pattern": "wave", "cycles": 2, "label": "One wave now, to keep the skill fresh." },
+        { "id": "B45.2", "type": "quiz", "prompt": "A strong craving shows up weeks after your Quit Day. That means…",
+          "options": [
+            { "id": "a", "text": "I'm back at the start" },
+            { "id": "b", "text": "An old cue fired. Ride it and it'll fade" },
+            { "id": "c", "text": "I should have one to get it over with" } ],
+          "correctId": "b",
+          "feedback": "Exactly. Old cue, same skill, and it gets smaller each time." },
+        { "id": "B45.3", "type": "choice", "prompt": "Which cues could still catch you off guard?", "multi": true, "saveAs": "surprise_cues",
+          "options": [
+            { "id": "smell", "text": "A smell" }, { "id": "someone", "text": "Someone using" }, { "id": "place", "text": "A place" },
+            { "id": "song", "text": "A song" }, { "id": "person", "text": "A person" }, { "id": "routine", "text": "An old routine" },
+            { "id": "shop", "text": "The shop where I used to buy" }, { "id": "work", "text": "Stress at work" } ],
+          "feedback": "Updated in your plan. Knowing them is half the defence." }
+      ],
+      "mission": { "text": "If a craving surprises you this week, call it an old cue and ride it with Craving SOS. Afterwards, rate its peak from 0 to 10.", "logType": "surf_practice" },
+      "completionText": "Old cue, same skill. Every wave still breaks."
+    },
+
+    {
+      "id": "B60", "phaseId": "after", "label": "Day 60",
+      "title": "Two months: stress without nicotine", "subtitle": "Keep the break, not the nicotine", "durationMinutes": 4,
+      "contentStatus": "draft",
+      "note": "DRAFT booster (S27.18, 1 Nov 2026) for Milan to review. Reuses only existing, already-sourced program material: the tension sliders and sighs (P4) and two of P4's cards. No new health claims. No recording yet, so the audio step is skipped.",
+      "unlock": { "rule": "days_since_quit", "minDay": 59 },
+      "audio": { "variants": ["default"] },
+      "beats": [
+        { "id": "B60.1", "type": "slider", "prompt": "How tense do you feel right now?", "minLabel": "Calm", "maxLabel": "Very tense", "saveAs": "tension_b60_before" },
+        { "id": "B60.2", "type": "breathe", "pattern": "sigh", "cycles": 3, "label": "Two sighs, then one more, with the ring." },
+        { "id": "B60.3", "type": "slider", "prompt": "And now?", "minLabel": "Calm", "maxLabel": "Very tense", "saveAs": "tension_b60_after",
+          "compareWith": "tension_b60_before", "compareLabels": ["Before", "After"] },
+        { "id": "B60.4", "type": "tap_reveal", "cards": [
+          { "front": "“I need it when things get hard”", "back": "You need a break when things get hard. You can keep the break." },
+          { "front": "“Quitting will make me more stressed”", "back": "It can feel that way in the first days. Over time, many people who quit feel calmer than before." } ] }
+      ],
+      "mission": { "text": "When stress hits this week, do two sighs first. Log whether you did.", "logType": "stress_sigh" },
+      "completionText": "You've still got a breath for stress. Use it first."
+    },
+
+    {
+      "id": "B90", "phaseId": "after", "label": "Day 90",
+      "title": "Three months: staying quit", "subtitle": "Your plan, kept close", "durationMinutes": 4,
+      "contentStatus": "draft",
+      "note": "DRAFT booster (S27.18, 1 Nov 2026) for Milan to review. Reuses only existing, already-sourced program material: the slip quiz and cards (W4S2) and the plan card (W4S3). No new health claims. No recording yet, so the audio step is skipped.",
+      "unlock": { "rule": "days_since_quit", "minDay": 89 },
+      "audio": { "variants": ["default"] },
+      "beats": [
+        { "id": "B90.1", "type": "quiz", "prompt": "After a slip, the most helpful thing is…",
+          "options": [
+            { "id": "a", "text": "Finish what's left and start fresh on Monday" },
+            { "id": "b", "text": "Stop, log it, and pick one thing to try next time" },
+            { "id": "c", "text": "Start the program again from the beginning" } ],
+          "correctId": "b",
+          "feedback": "Exactly. One minute, then keep going." },
+        { "id": "B90.2", "type": "tap_reveal", "cards": [
+          { "front": "“I slipped, so I've failed”", "back": "You haven't. Many people who quit for good slipped along the way." },
+          { "front": "“I might as well keep going”", "back": "That's the thought that turns a slip into a return. Stop here." },
+          { "front": "“I have to start over”", "back": "You don't. Nothing resets." } ] },
+        { "id": "B90.3", "type": "plan_card", "title": "Your plan, three months on", "editable": true,
+          "fields": ["primary_reason", "rough_day_plan", "heavy_day_plan", "no_line", "bad_day_line", "break_menu", "wind_down", "identity_statement"] }
+      ],
+      "mission": { "text": "Nothing to do. Your plan and Craving SOS are always here." },
+      "completionText": "Three months. Your plan is still here, and nothing resets."
     }
   ],
 

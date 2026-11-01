@@ -249,6 +249,9 @@ public final class LogEntry {
     public var nextTime: String?
     /// Slip debrief: roughly how much.
     public var amountRaw: String?
+    /// Craving SOS, after "It passed": the break-menu item (or "Just breathing") that helped, if they said (S27.18).
+    /// Optional, so stores from before it migrate without a step.
+    public var helped: String?
 
     public init(kind: LogKind, product: Product? = nil, timestamp: Date = .now, intensity: Int? = nil,
                 trigger: Trigger? = nil, mood: Mood? = nil, note: String? = nil) {

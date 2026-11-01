@@ -60,10 +60,33 @@ struct NotificationPlanTests {
         #expect(plan.first { $0.kind == .checkIn }?.date == at(6, 7, 30))
     }
 
+    /// S27.18: Glim's weekly check-in is off by default, comes only after graduation, on Sunday, and only the next one.
+    @Test func weeklyCheckInAfterGraduationOnSundays() {
+        // Thu 5 Nov 2026; the next Sunday is the 8th.
+        let graduated = NotificationPlan.Inputs(now: at(5, 7), pledgedToday: true, checkedInToday: true, graduated: true)
+        #expect(!NotificationPlan.plan(.init(), inputs: graduated, calendar: calendar).contains { $0.kind == .weekly })
+
+        var settings = NotificationPlan.Settings()
+        settings.weekly = 19 * 60
+        let weekly = NotificationPlan.plan(settings, inputs: graduated, calendar: calendar).filter { $0.kind == .weekly }
+        #expect(weekly.map(\.date) == [at(8, 19)])
+        #expect(weekly.first?.title == NotificationCopy.weekly.0)
+
+        let notYet = NotificationPlan.Inputs(now: at(5, 7), pledgedToday: true, checkedInToday: true, graduated: false)
+        #expect(!NotificationPlan.plan(settings, inputs: notYet, calendar: calendar).contains { $0.kind == .weekly })
+
+        // On Sunday after its time, the next one is a week later; quiet hours still move it.
+        let sundayNight = NotificationPlan.Inputs(now: at(8, 20), pledgedToday: true, checkedInToday: true, graduated: true)
+        #expect(NotificationPlan.plan(settings, inputs: sundayNight, calendar: calendar).filter { $0.kind == .weekly }.map(\.date) == [at(15, 19)])
+        settings.weekly = 23 * 60
+        #expect(NotificationPlan.plan(settings, inputs: graduated, calendar: calendar).first { $0.kind == .weekly }?.date == at(9, 7, 30))
+    }
+
     @Test func noGuiltWordsAnywhere() {
         var copy = [NotificationCopy.pledge, NotificationCopy.checkIn, NotificationCopy.lesson(name: "Day 4", minutes: 7),
                     NotificationCopy.milestone(title: "One week in"), NotificationCopy.awayFirst(next: "Day 4"),
-                    NotificationCopy.awaySecond(replay: "Day 3"), NotificationCopy.awayFirst(next: nil), NotificationCopy.awaySecond(replay: nil)]
+                    NotificationCopy.awaySecond(replay: "Day 3"), NotificationCopy.awayFirst(next: nil), NotificationCopy.awaySecond(replay: nil),
+                    NotificationCopy.weekly]
             .flatMap { [$0.0, $0.1] }
         copy += Milestone.all.map(\.title)
         for text in copy {

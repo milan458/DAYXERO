@@ -16,6 +16,8 @@ struct ProgramView: View {
     @State private var showPaywall = false
     @State private var picked: String?
     @State private var waitingTip: String?
+    /// Glim's weekly check-in after graduation (S27.18); the same setting as Settings › Notifications.
+    @AppStorage(DailyReminderSettings.weeklyKey) private var weekly = DailyReminderSettings.offUntilChosen
 
     private let ground = DX.Ground.mint
     /// Tiles and the note card on mint: cream in light, deep green in dark.
@@ -63,6 +65,9 @@ struct ProgramView: View {
                                 tile(session, state: states[id] ?? .locked, isCurrent: id == current, store: store)
                             }
                         }
+                        // After graduation the program keeps going: boosters on Days 45, 60 and 90, and Glim
+                        // checking in once a week if they want it (S27.18).
+                        if profile.progress?.graduatedAt != nil { weeklyCheckIn }
                     }
                     variantLine.padding(.top, DX.Space.s)
                     nrtGroup(now: timeline.date)
@@ -115,7 +120,7 @@ struct ProgramView: View {
                         }
                         .foregroundStyle(on ? DX.Ground.reading.background : ground.ink)
                         .padding(.horizontal, 14)
-                        .frame(minHeight: 40)
+                        .frame(minHeight: DX.Layout.touchTarget)
                         .background(on ? ground.ink : Color.clear, in: Capsule())
                         .contentShape(Capsule())
                     }
@@ -299,6 +304,32 @@ struct ProgramView: View {
         .background(Read4.accentSoft, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
     }
 
+
+    /// "Every Sunday · 1 min / Glim checks in: how was your week?" with a switch (S27.18). Off until chosen.
+    private var weeklyCheckIn: some View {
+        Toggle(isOn: Binding(get: { weekly >= 0 }, set: { on in
+            weekly = on ? DailyReminderSettings.defaultWeekly : DailyReminderSettings.offUntilChosen
+            DailyReminders.refresh(in: context)
+        })) {
+            HStack(spacing: 12) {
+                GlimView(mood: .calm, stage: CrewGrowth.stage(daysClear: 31), size: .avatar, animate: false)
+                    .frame(width: 40, height: 40)
+                    .background(DX.Ground.violet.background, in: Circle())
+                    .clipShape(Circle())
+                    .accessibilityHidden(true)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Every Sunday · 1 min").dxType(.caption).foregroundStyle(DX.Ground.reading.muted)
+                    Text("Glim checks in: how was your week?").dxType(.headline).foregroundStyle(DX.Ground.reading.ink)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+        }
+        .tint(DX.Fill.green)
+        .padding(.horizontal, 14).padding(.vertical, 12)
+        .frame(minHeight: 44)
+        .background(tileFill, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .padding(.top, DX.Space.xs)
+    }
 
     // MARK: NRT
 

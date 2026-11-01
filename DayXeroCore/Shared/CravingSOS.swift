@@ -55,10 +55,12 @@ public enum CravingLog {
         try? context.save()
     }
 
-    public static func annotate(startedAt: Date, trigger: Trigger?, intensity: Int?, in context: ModelContext) {
+    /// - Parameter helped: what helped ride it out, from the break menu (S27.18); nil leaves it unset.
+    public static func annotate(startedAt: Date, trigger: Trigger?, intensity: Int?, helped: String? = nil, in context: ModelContext) {
         guard let entry = entry(startedAt: startedAt, in: context) else { return }
         entry.triggerRaw = trigger?.rawValue
         entry.intensity = intensity
+        if let helped { entry.helped = helped }
         try? context.save()
     }
 

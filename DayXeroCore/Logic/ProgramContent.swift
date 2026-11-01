@@ -286,6 +286,7 @@ public struct Beat: Decodable, Sendable, Identifiable {
     public let pick: Int?
     public let maxEntries: Int?
     public let cycles: Int?
+    /// Still decoded so older content loads; every hold now lasts `DX.Move.hold` (S27.20).
     public let holdSeconds: Int?
     public let length: Length?
 

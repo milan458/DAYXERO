@@ -141,6 +141,8 @@ struct MissionQuestion: View {
 
     @Environment(\.modelContext) private var context
     @State private var peak = 5.0
+    /// After saving, the person's own numbers so far (S27.18). nil while asking.
+    @State private var trend: MissionTrend.Summary?
 
     private var question: LocalizedStringKey {
         switch type {
@@ -167,16 +169,20 @@ struct MissionQuestion: View {
             if let mission = store.content?.session(sessionId)?.mission {
                 Text(verbatim: store.placeholders().fillDropping(mission.text.resolve(store.variant) ?? "")).v4Text(.subtitle).lineLimit(2)
             }
-            Text(question).dxFont(24, weight: 700, style: .title2).foregroundStyle(Read4.ink)
-            if type == .surfPractice {
-                BeatSlider(value: $peak, minLabel: String(localized: "Barely there"), maxLabel: String(localized: "Overwhelming"), large: true)
-                Button("Save") { save(String(Int(peak))) }.buttonStyle(.dx(.primary, on: .reading))
+            if let trend {
+                trendView(trend)
             } else {
-                ForEach(choices, id: \.self) { choice in
-                    Button { save(choice) } label: { OptionRow(text: choice) }.buttonStyle(.plain)
+                Text(question).dxFont(24, weight: 700, style: .title2).foregroundStyle(Read4.ink)
+                if type == .surfPractice {
+                    BeatSlider(value: $peak, minLabel: String(localized: "Barely there"), maxLabel: String(localized: "Overwhelming"), large: true)
+                    Button("Save") { save(String(Int(peak))) }.buttonStyle(.dx(.primary, on: .reading))
+                } else {
+                    ForEach(choices, id: \.self) { choice in
+                        Button { save(choice) } label: { OptionRow(text: choice) }.buttonStyle(.plain)
+                    }
                 }
+                Button("Not now", action: onDone).buttonStyle(.dx(.quiet, on: .reading))
             }
-            Button("Not now", action: onDone).buttonStyle(.dx(.quiet, on: .reading))
             Spacer()
         }
         .padding(.horizontal, DX.Space.l)
@@ -188,7 +194,38 @@ struct MissionQuestion: View {
         let key = "mission_\(sessionId)"
         let stamp = Date.now.formatted(.iso8601.year().month().day())
         let previous = store.answer(key)?.lines ?? []
-        store.save(key, .list(previous + ["\(stamp) \(answer)"]), session: sessionId)
-        onDone()
+        let lines = previous + ["\(stamp) \(answer)"]
+        store.save(key, .list(lines), session: sessionId)
+        // Peaks and morning gaps show the person's own numbers back once there are two to compare (S27.18).
+        if type == .surfPractice || type == .morningBuffer, let summary = MissionTrend.summary(of: lines), summary.values.count >= 2 {
+            withAnimation(DX.Move.settle) { trend = summary }
+        } else {
+            onDone()
+        }
+    }
+
+    /// "Your peaks so far: 8 → 6 → 4 out of 10", with a line only when the numbers say so.
+    private func trendView(_ summary: MissionTrend.Summary) -> some View {
+        let peaks = type == .surfPractice
+        let series = summary.values.map { peaks ? "\($0)" : ($0 >= 15 ? "15+" : "\($0)") }.joined(separator: " → ")
+        return VStack(alignment: .leading, spacing: DX.Space.s) {
+            Text("Saved").dxFont(24, weight: 700, style: .title2).foregroundStyle(Read4.ink).accessibilityAddTraits(.isHeader)
+            VStack(alignment: .leading, spacing: 6) {
+                Text(peaks ? LocalizedStringKey("Your peaks so far") : LocalizedStringKey("Your morning gaps so far")).v4Text(.micro)
+                Text(verbatim: peaks ? String(localized: "\(series) out of 10") : String(localized: "\(series) min"))
+                    .dxFont(22, weight: 700, style: .title3).foregroundStyle(Read4.ink)
+                    .accessibilityLabel(Text(verbatim: series.replacingOccurrences(of: "→", with: ",")))
+                if peaks, summary.falling {
+                    Text("Each one lower than the last.").v4Text(.subtitle)
+                } else if !peaks, summary.latestIsBest {
+                    Text("Your longest gap yet: \(summary.best >= 15 ? "15+" : "\(summary.best)") minutes after waking.").v4Text(.subtitle)
+                }
+            }
+            .padding(DX.Space.m)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Read4.card, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(Read4.hairline))
+            Button("Done", action: onDone).buttonStyle(.dx(.primary, on: .reading))
+        }
     }
 }

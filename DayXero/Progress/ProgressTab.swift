@@ -519,7 +519,7 @@ struct LogButton: View {
                 .dxFont(14, weight: 600, style: .footnote)
                 .foregroundStyle(Read4.ink)
                 .padding(.horizontal, 14)
-                .frame(minHeight: 36)
+                .frame(minHeight: DX.Layout.touchTarget)
                 .background(Read4.card, in: Capsule())
                 .overlay(Capsule().strokeBorder(Read4.hairline))
         }
@@ -575,10 +575,12 @@ private struct SeriesToggle: View {
         let on = selection == value
         return Button { selection = value } label: {
             Text(title)
-                .dxFont(12, weight: 600, style: .caption2)
+                .dxFont(14, weight: 600, style: .footnote)
                 .foregroundStyle(on ? Read4.onInk : Read4.muted)
-                .padding(.vertical, 5).padding(.horizontal, 10)
+                .padding(.horizontal, 14)
+                .frame(minHeight: DX.Layout.touchTarget - 6)
                 .background(on ? Read4.ink : .clear, in: Capsule())
+                .contentShape(Capsule())
         }
         .buttonStyle(.plain)
         .accessibilityAddTraits(on ? .isSelected : [])
