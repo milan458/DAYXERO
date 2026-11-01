@@ -115,7 +115,7 @@ struct ProgramView: View {
                         }
                         .foregroundStyle(on ? DX.Ground.reading.background : ground.ink)
                         .padding(.horizontal, 14)
-                        .frame(minHeight: 40)
+                        .frame(minHeight: DX.Layout.touchTarget)
                         .background(on ? ground.ink : Color.clear, in: Capsule())
                         .contentShape(Capsule())
                     }

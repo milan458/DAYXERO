@@ -86,7 +86,7 @@ struct V4Gallery: View {
                     .dxInk(.ocean)
             }
             .padding(16).background(DX.Ground.ocean.background, in: RoundedRectangle(cornerRadius: DX.Layout.cardRadius))
-            HoldButton("Hold to start Day Xero", done: "Day Xero started", duration: DX.Move.Hold.dayXeroCommit, on: .apricot) {}
+            HoldButton("Hold to start Day Xero", done: "Day Xero started", duration: DX.Move.hold, on: .apricot) {}
                 .padding(16).background(DX.Ground.apricot.background, in: RoundedRectangle(cornerRadius: DX.Layout.cardRadius))
         }
     }

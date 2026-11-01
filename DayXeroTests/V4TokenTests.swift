@@ -77,7 +77,7 @@ struct V4TokenTests {
     }
 
     /// Button(role: .destructive) with quiet or secondary styles draws red that clears 4.5:1, in light and dark.
-    @Test func destructiveQuietAndSecondaryButtonsAreRedAndReadable() {
+    @Test func destructiveButtonsAreRedAndReadable() throws {
         let red = (light: DX.ButtonColors.destructiveLight, dark: DX.ButtonColors.destructiveDark)
         // The reading ground and the reading surfaces a destructive button sits on.
         let reading = DX.Ground.reading.spec
@@ -92,8 +92,16 @@ struct V4TokenTests {
             #expect(DX.ButtonColors.make(kind, on: .reading, dark: true, destructive: true).foreground == red.dark)
             #expect(DX.ButtonColors.make(kind, on: .reading, dark: false, destructive: false).foreground == reading.inkLight)
         }
-        // Primary keeps its own colours.
-        #expect(DX.ButtonColors.make(.primary, on: .reading, dark: false, destructive: true).foreground == 0xFFF8EE)
+        // A destructive primary is filled red with readable words, on every ground and in both modes (S27.20).
+        for ground in DX.Ground.allCases {
+            for dark in [false, true] {
+                let c = DX.ButtonColors.make(.primary, on: ground, dark: dark, destructive: true)
+                let bg = try #require(c.background)
+                #expect(bg == (dark ? DX.ButtonColors.destructiveFillDark : DX.ButtonColors.destructiveFillLight))
+                #expect(Contrast.ratio(c.foreground, bg) >= 4.5, "\(ground) dark: \(dark)")
+            }
+        }
+        #expect(DX.ButtonColors.make(.primary, on: .reading, dark: false, destructive: false).foreground == 0xFFF8EE)
         // On any ground, whatever a destructive quiet button draws still clears 4.5:1.
         for ground in DX.Ground.allCases {
             for dark in [false, true] {
@@ -127,8 +135,8 @@ struct V4TokenTests {
     }
 
     @Test func holdsAndCharacterSizes() {
-        #expect(DX.Move.Hold.dayXeroCommit == 3)
-        #expect(DX.Move.Hold.quitDay == 1.5)
+        // One hold duration everywhere (S27.20).
+        #expect(DX.Move.hold == 1)
         #expect(DX.CharacterSize.allCases.map(\.rawValue) == [40, 88, 140, 200])
         #expect(DX.CharacterSize.maxPerScreen == 2)
     }

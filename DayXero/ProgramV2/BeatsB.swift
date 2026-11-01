@@ -243,7 +243,8 @@ struct CommitBeat: View {
     @State private var doneAt: Date?
     @State private var settled = false
 
-    private var seconds: Double { Double(beat.holdSeconds ?? 2) }
+    /// One hold duration everywhere (S27.20); program.json's `holdSeconds` is no longer used for timing.
+    private var seconds: Double { DX.Move.hold }
     /// DX.2 starts the counter: Q1, Xero at dawn on apricot (design doc §10.2). No celebration here.
     private var startsDayXero: Bool { beat.sets == "quit_timestamp" }
 
@@ -273,7 +274,7 @@ struct CommitBeat: View {
                 HoldButton(String(localized: "Hold to commit"), done: String(localized: "Committed"),
                            duration: seconds, on: .reading, action: commit)
                     .accessibilityLabel(Text(verbatim: ctx.text(beat.text)))
-                Text("Hold for \(Int(seconds)) seconds").v4Text(.subtitle)
+                Text("Hold for 1 second").v4Text(.subtitle)
             } else {
                 Button("Continue", action: onDone).buttonStyle(.dx(.primary, on: .reading))
             }
@@ -328,7 +329,7 @@ struct CommitBeat: View {
                 if doneAt == nil {
                     HoldButton(String(localized: "Hold to start Day Xero"), done: String(localized: "Day Xero started"),
                                duration: seconds, on: ground, action: commit)
-                        .accessibilityLabel(Text("Start Day Xero. Hold for \(Int(seconds)) seconds, or double-tap with VoiceOver."))
+                        .accessibilityLabel(Text("Start Day Xero. Hold for one second, or double-tap with VoiceOver."))
                 } else {
                     Label("Day Xero started", systemImage: "checkmark.circle.fill")
                         .dxFont(16, weight: 700, style: .body).foregroundStyle(ground.ink)

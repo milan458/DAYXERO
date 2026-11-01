@@ -218,6 +218,7 @@ struct TaperSetupView: View {
             }
             .scrollBounceBehavior(.basedOnSize)
             Button("Save my taper") { save(start: start) }.buttonStyle(.dx(.primary, on: .reading)).disabled(!fits)
+                .dxDisabledReason("Shorten the steps or move Quit Day first.", shown: !fits)
             if profile.pouchTaper != nil {
                 Button("Remove the taper", role: .destructive) {
                     profile.pouchTaper = nil

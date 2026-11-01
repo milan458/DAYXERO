@@ -27,12 +27,9 @@ public extension DX {
         public static let inhale: Double = 4
         public static let exhale: Double = 6
 
-        /// Press-and-hold commitments, in seconds. The fill runs linear, left to right.
-        public enum Hold {
-            public static let quitDay: Double = 1.5
-            public static let pledge: Double = 1.0
-            public static let dayXeroCommit: Double = 3.0
-        }
+        /// Every press-and-hold commitment, in seconds: one duration across the app (S27.20, 1 Nov 2026), so a hold
+        /// always feels the same. The fill runs linear, left to right.
+        public static let hold: Double = 1.0
 
         public static let reduced = Animation.easeInOut(duration: 0.2)
 
