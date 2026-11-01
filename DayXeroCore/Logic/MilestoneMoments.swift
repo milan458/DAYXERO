@@ -117,6 +117,49 @@ public enum Milestone: Hashable, Sendable, Identifiable {
         }
     }
 
+    /// Who comes to celebrate (S27.16): Xero alone in the first weeks, Jelli joins at one month, the whole crew from
+    /// three months.
+    public enum Company: String, Sendable {
+        case xero, xeroAndJelli, crew
+    }
+
+    /// No two milestones look alike (S27.16): each has its own sky, a token pinned to it and its own company.
+    /// Matches the Screen Lab (screens/paywall.js `LOOKS`). The facts and sources are unchanged.
+    public var scene: HorizonKind {
+        switch self {
+        case .quitDay, .days(3), .days(100), .days(365): .dawn
+        case .days(1), .days(7), .days(30), .days(90): .path
+        case .days(14), .days(60), .days(180): .sea
+        case .days: .dawn
+        }
+    }
+
+    /// The kit tile pinned to the sky like a sticker.
+    public var token: KitArt.Kind {
+        switch self {
+        case .quitDay: .dawn
+        case .days(1): .sprout
+        case .days(3): .breath
+        case .days(7): .peak
+        case .days(14): .clouds
+        case .days(30): .flower
+        case .days(60): .anchor
+        case .days(90): .shield
+        case .days(100): .tag
+        case .days(180): .sea
+        case .days(365): .sparkle
+        case .days: .sparkle
+        }
+    }
+
+    public var company: Company {
+        switch reachedOnDay {
+        case ..<30: .xero
+        case ..<90: .xeroAndJelli
+        default: .crew
+        }
+    }
+
     /// "days since Quit Day" under the number; milestones count time since Quit Day so a slip never makes them untrue (S27.9).
     public var caption: String {
         switch self {

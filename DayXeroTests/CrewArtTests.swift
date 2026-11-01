@@ -58,4 +58,15 @@ struct CrewArtTests {
         #expect(CrewGrowth.clarity(daysClear: 3) == 28)
         #expect(CrewGrowth.clarity(daysClear: 31) == 100)
     }
+
+    /// S27.16: each stage looks different at a glance: Xero grows from the feet and his colour deepens.
+    @Test func xeroGrowsAndDeepensByStage() {
+        let looks = (1...4).map { XeroView.look(stage: $0) }
+        #expect(looks.map(\.grow) == [0.8, 0.88, 0.95, 1])
+        #expect(Set(looks.map(\.body)).count == 4, "Every stage has its own body colour")
+        #expect(looks.map(\.cheek) == looks.map(\.cheek).sorted(), "Cheeks warm up with the stage")
+        // Out-of-range stages clamp to the ends.
+        #expect(XeroView.look(stage: 0) == looks[0])
+        #expect(XeroView.look(stage: 9) == looks[3])
+    }
 }

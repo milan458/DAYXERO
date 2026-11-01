@@ -45,4 +45,22 @@ struct MilestoneTests {
         for milestone in Milestone.all { #expect(Milestone(id: milestone.id) == milestone) }
         #expect(Milestone(id: "5") == nil)
     }
+
+    /// S27.16: no two milestones look alike: each has its own token, and no two share sky, token and company.
+    @Test func everyMilestoneLooksDifferent() {
+        let tokens = Milestone.all.map(\.token)
+        #expect(Set(tokens).count == Milestone.all.count, "One token per milestone")
+        let looks = Milestone.all.map { "\($0.scene.rawValue)/\($0.token.rawValue)/\($0.company.rawValue)" }
+        #expect(Set(looks).count == Milestone.all.count)
+    }
+
+    /// Xero celebrates alone in the first weeks, Jelli joins at one month, the whole crew from three months.
+    @Test func theCrewJoinsAsTheMonthsGoBy() {
+        #expect(Milestone.quitDay.company == .xero)
+        #expect(Milestone.days(14).company == .xero)
+        #expect(Milestone.days(30).company == .xeroAndJelli)
+        #expect(Milestone.days(60).company == .xeroAndJelli)
+        #expect(Milestone.days(90).company == .crew)
+        #expect(Milestone.days(365).company == .crew)
+    }
 }
