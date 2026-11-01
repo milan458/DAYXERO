@@ -257,6 +257,8 @@ struct HealthTimelineView: View {
                         .dxFont(12, weight: 600, style: .caption1).underline().foregroundStyle(ground.ink)
                         .multilineTextAlignment(.leading)
                 }
+                .frame(minHeight: DX.Layout.touchTarget, alignment: .leading)
+                .contentShape(Rectangle())
             }
             Text("General information, not medical advice. Everyone's body moves at its own pace.")
                 .dxFont(12, weight: 400, style: .caption1).foregroundStyle(ground.muted)
@@ -513,6 +515,8 @@ struct HealthItemDetail: View {
                     Text(verbatim: source.title).dxFont(12, weight: 400, style: .caption1)
                         .underline().foregroundStyle(Read4.accent).multilineTextAlignment(.leading)
                 }
+                .frame(minHeight: DX.Layout.touchTarget, alignment: .leading)
+                .contentShape(Rectangle())
             } else if item.isLooks {
                 Text("General wellness information.").dxFont(12, weight: 400, style: .caption1)
                     .foregroundStyle(Read4.muted)

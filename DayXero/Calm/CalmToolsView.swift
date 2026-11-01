@@ -161,6 +161,8 @@ struct HelpLine: View {
                 Link(destination: Self.directory) {
                     Text("Find a helpline near you").dxFont(14, weight: 400, style: .footnote).underline().foregroundStyle(Read4.accent)
                 }
+                .frame(minHeight: DX.Layout.touchTarget, alignment: .leading)
+                .contentShape(Rectangle())
             }
             .padding(DX.Space.s)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -313,6 +315,7 @@ struct CalmToolPlayer: View {
                 }
                 if writingOwn { V4TextField("The thought", prompt: "I'll never manage", text: $ownThought) }
                 Button("Next") { step = 1 }.buttonStyle(.dx(.primary, on: .reading)).disabled(chosenThought == nil)
+                    .dxDisabledReason("Pick a thought, or write your own.", shown: chosenThought == nil)
                     .padding(.top, DX.Space.s)
                 Spacer(minLength: 0)
             case 1:

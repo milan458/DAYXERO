@@ -164,7 +164,7 @@ struct NRTSetupView: View {
     }
 
     private var products: some View {
-        page(button: "Next", enabled: !chosen.isEmpty, action: startSchedules) {
+        page(button: "Next", enabled: !chosen.isEmpty, reason: "Pick what you use to go on.", action: startSchedules) {
             Text("What are you using?").v4Text(.title)
             Text("Pick up to two. A patch plus a faster form works best.").v4Text(.subtitle)
             VStack(spacing: DX.Space.xs) {
@@ -185,7 +185,8 @@ struct NRTSetupView: View {
     private func schedule(_ i: Int) -> some View {
         let draft = drafts[i]
         let presets = NRTLabels.presets(for: draft.type, country: country)
-        return page(button: "Use this schedule", enabled: draft.presetID != nil || !draft.steps.isEmpty, action: { confirmSchedule(i) }) {
+        return page(button: "Use this schedule", enabled: draft.presetID != nil || !draft.steps.isEmpty,
+                    reason: "Tick the schedule that's on your pack.", action: { confirmSchedule(i) }) {
             Text(draft.type == .patch ? "Which schedule is on your pack?" : "What does your pack say?").v4Text(.title)
             Text("Labels differ by brand and country. Pick the one that matches, or enter your own.").v4Text(.subtitle)
             DXFlowLayout {
@@ -307,7 +308,8 @@ struct NRTSetupView: View {
 
     // MARK: Pieces
 
-    private func page(button: LocalizedStringKey, enabled: Bool = true, action: @escaping () -> Void,
+    /// `reason` says why the button is off (S27.20); it shows under the button while `enabled` is false.
+    private func page(button: LocalizedStringKey, enabled: Bool = true, reason: LocalizedStringKey? = nil, action: @escaping () -> Void,
                       @ViewBuilder content: () -> some View, @ViewBuilder secondary: () -> some View = { EmptyView() }) -> some View {
         VStack(spacing: DX.Space.xs) {
             ScrollView {
@@ -316,7 +318,12 @@ struct NRTSetupView: View {
                     .padding(.top, DX.Space.s)
             }
             .scrollBounceBehavior(.basedOnSize)
-            Button(button, action: action).buttonStyle(.dx(.primary, on: .reading)).disabled(!enabled)
+            if let reason {
+                Button(button, action: action).buttonStyle(.dx(.primary, on: .reading)).disabled(!enabled)
+                    .dxDisabledReason(reason, shown: !enabled)
+            } else {
+                Button(button, action: action).buttonStyle(.dx(.primary, on: .reading)).disabled(!enabled)
+            }
             secondary()
         }
     }
@@ -558,5 +565,8 @@ struct SourceLink: View {
         Link(destination: source.url) {
             Text(source.label).dxFont(14, weight: 400, style: .footnote).underline().foregroundStyle(Read4.accent)
         }
+        // A 44 pt target, as every tappable thing has (S27.20).
+        .frame(minHeight: DX.Layout.touchTarget, alignment: .leading)
+        .contentShape(Rectangle())
     }
 }

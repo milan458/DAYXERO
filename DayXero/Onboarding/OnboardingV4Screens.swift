@@ -256,7 +256,7 @@ struct QuitDayScreen: View {
             VStack(spacing: 6) {
                 HoldButton("Hold to set \(model.quitDay.formatted(shortDate))",
                            done: String(localized: "Quit Day set · \(model.quitDay.formatted(shortDate))"),
-                           duration: DX.Move.Hold.quitDay, on: ground) {
+                           duration: DX.Move.hold, on: ground) {
                     committed = true
                     Task {
                         try? await Task.sleep(for: .seconds(0.8))
@@ -265,7 +265,7 @@ struct QuitDayScreen: View {
                 }
                 .accessibilityIdentifier("onboarding.hold")
                 .disabled(!model.canContinue)
-                Text("Hold for 1.5 seconds. Quit Day comes on this date, even if prep runs short. You can change it later.")
+                Text("Hold for 1 second. Quit Day comes on this date, even if prep runs short. You can change it later.")
                     .dxType(.caption).foregroundStyle(ground.muted)
             }
             .padding(.horizontal, DX.Layout.buttonGutter)
