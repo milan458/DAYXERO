@@ -198,11 +198,49 @@
     return fallback;
   };
 
+  /** Colour choices for paint props: every ground colour in both modes, inks, card fills and neutrals. */
+  Lab.paintOptions = function () {
+    const groups = [{ label: 'Keep', options: [['', 'As designed']] }];
+    groups.push({ label: 'Ground colours · light', options: Lab.groundNames.map((g) => [Lab.grounds[g].light, `${cap(g)} · ${Lab.grounds[g].light}`]) });
+    groups.push({ label: 'Ground colours · dark', options: Lab.groundNames.map((g) => [Lab.grounds[g].dark, `${cap(g)} dark · ${Lab.grounds[g].dark}`]).filter((o, i, a) => a.findIndex((x) => x[0] === o[0]) === i) });
+    groups.push({ label: 'Text', options: [[NAVY, 'Navy ink · #1E1A3A'], [CREAM, 'Cream ink · #FFF8EE']].concat(Lab.groundNames.flatMap((g) => [[Lab.grounds[g].mutedLight, `${cap(g)} muted · ${Lab.grounds[g].mutedLight}`], [Lab.grounds[g].mutedDark, `${cap(g)} muted, dark · ${Lab.grounds[g].mutedDark}`]])).filter((o, i, a) => a.findIndex((x) => x[0] === o[0]) === i) });
+    groups.push({ label: 'Cards and fills', options: [
+      ['rgba(255,248,238,0.70)', 'Card on colour · cream 70%'], ['rgba(255,255,255,0.10)', 'Card on colour, dark · white 10%'], ['rgba(30,26,58,0.20)', 'Card on ocean/violet · navy 20%'],
+      ['#F1EBE2', 'Reading surface · #F1EBE2'], ['#1B1747', 'Reading surface, dark · #1B1747'], ['#FFFFFF', 'Raised · white'], ['#2A255F', 'Raised, dark · #2A255F'],
+      ['#16382D', 'Program tile, dark · #16382D'], ['transparent', 'No fill (transparent)'],
+    ] });
+    groups.push({ label: 'Accents', options: [['#FF7A55', 'Coral · #FF7A55'], ['#FFD966', 'Sun · #FFD966'], ['#0F6E43', 'Green · #0F6E43'], ['#2FD08A', 'Green, dark · #2FD08A'], ['#2A52DB', 'Ocean · #2A52DB'], ['#7FB0FF', 'Ocean, dark · #7FB0FF'], ['#6B4FD8', 'Glim violet · #6B4FD8'], ['#000000', 'Black'], ['#FFFFFF', 'White']] });
+    return groups;
+  };
+
   /* ---------- Registries ---------- */
   /** Registers an element type. See FORMAT.md. */
+  /** Colour overrides every element (and the screen) gets, set separately for light and dark mode.
+      They apply to the element and everything inside it; an inner element's own override wins. */
+  Lab.PAINT_PROPS = {
+    bgLight:    { label: 'Background · light mode', kind: 'paint', default: '', order: 900, paint: 'bg', mode: 'light' },
+    bgDark:     { label: 'Background · dark mode', kind: 'paint', default: '', order: 901, paint: 'bg', mode: 'dark' },
+    inkLight:   { label: 'Text · light mode', kind: 'paint', default: '', order: 902, paint: 'ink', mode: 'light' },
+    inkDark:    { label: 'Text · dark mode', kind: 'paint', default: '', order: 903, paint: 'ink', mode: 'dark' },
+    mutedLight: { label: 'Secondary text · light mode', kind: 'paint', default: '', order: 904, paint: 'muted', mode: 'light' },
+    mutedDark:  { label: 'Secondary text · dark mode', kind: 'paint', default: '', order: 905, paint: 'muted', mode: 'dark' },
+    cardLight:  { label: 'Cards inside · light mode', kind: 'paint', default: '', order: 906, paint: 'card', mode: 'light' },
+    cardDark:   { label: 'Cards inside · dark mode', kind: 'paint', default: '', order: 907, paint: 'card', mode: 'dark' },
+  };
+  /** The paint overrides in a set of props for the current appearance: { bg, ink, muted, card } (only those set). */
+  Lab.paintFor = function (p, dark) {
+    const out = {};
+    for (const k in Lab.PAINT_PROPS) {
+      const d = Lab.PAINT_PROPS[k];
+      if ((d.mode === 'dark') === !!dark && p[k]) out[d.paint] = p[k];
+    }
+    return out;
+  };
+
   Lab.element = function (def) {
     def.props = def.props || {};
     if (!def.props.visible) def.props.visible = { label: 'Show', kind: 'bool', default: true, order: 999 };
+    if (!def.noPaint) for (const k in Lab.PAINT_PROPS) if (!def.props[k]) def.props[k] = Object.assign({}, Lab.PAINT_PROPS[k]);
     Lab.elements[def.type] = def;
     return def;
   };
@@ -249,11 +287,27 @@
   /* ---------- Rendering ---------- */
   Lab.view = { device: 'i17pro', dark: false, motion: true, state: {}, screenId: null, selected: null, mode: 'screens', libSelected: null };
 
+  /** A render context. `paint` holds colour overrides ({ bg, ink, muted, card, onlyGround }) that sit on top of the ground;
+      screen-level paint has `onlyGround` so it stops at cards drawn on another ground, element-level paint carries inward. */
   function makeCtx(base) {
     const ctx = Object.assign({}, base);
     ctx.g = Lab.ground(ctx.groundName, ctx.dark);
+    const paint = ctx.paint;
+    if (paint && (!paint.onlyGround || paint.onlyGround === ctx.groundName)) {
+      ctx.g = Object.assign({}, ctx.g);
+      ['bg', 'ink', 'muted', 'card'].forEach((k) => { if (paint[k]) ctx.g[k] = paint[k]; });
+    }
     ctx.with = (patch) => makeCtx(Object.assign({}, ctx, patch));
     return ctx;
+  }
+  function addRootStyle(html, css) {
+    if (!css) return html;
+    const m = html.match(/^<([a-zA-Z][a-zA-Z0-9-]*)([^>]*)>/);
+    if (!m) return html;
+    let attrs = m[2];
+    if (/\sstyle="/.test(attrs)) attrs = attrs.replace(/\sstyle="([^"]*)"/, (all, v) => ` style="${v}${v && !/;\s*$/.test(v) ? ';' : ''}${css}"`);
+    else attrs += ` style="${css}"`;
+    return `<${m[1]}${attrs}>` + html.slice(m[0].length);
   }
   Lab.makeCtx = makeCtx;
 
@@ -266,6 +320,9 @@
     const p = Lab.resolve(node, ctx.screenId);
     if (p.visible === false) return '';
     ctx.index && ctx.index.push({ node, def, depth: ctx.depth || 0 });
+    const own = Lab.paintFor(p, ctx.dark);
+    const painted = Object.keys(own).length > 0;
+    if (painted) ctx = makeCtx(Object.assign({}, ctx, { paint: Object.assign({}, ctx.paint && !ctx.paint.onlyGround ? ctx.paint : {}, own) }));
     const kidCtx = (patch) => makeCtx(Object.assign({}, ctx, { depth: (ctx.depth || 0) + 1 }, patch || {}));
     const kids = (patch) => node.kids.map((k) => Lab.render(k, kidCtx(patch))).join('');
     let html;
@@ -274,6 +331,7 @@
       html = `<div style="padding:8px;border:1px dashed red;color:red;font:12px monospace">${Lab.esc(node.t)} failed: ${Lab.esc(e.message)}</div>`;
     }
     html = String(html).trim();
+    if (painted) html = addRootStyle(html, (own.bg ? `background:${own.bg} !important;` : '') + (own.ink ? `color:${own.ink};` : ''));
     const tag = ctx.inert ? '' : ` data-node="${Lab.esc(node.id)}" data-type="${Lab.esc(node.t)}"`;
     return html.replace(/^<([a-zA-Z][a-zA-Z0-9-]*)/, `<$1${tag}`);
   };
@@ -293,15 +351,21 @@
     ['scene:horizon', 'Horizon scene'], ['kit:dawn', 'Kit · dawn'], ['kit:sea', 'Kit · sea'], ['kit:night', 'Kit · night'],
     ['kit:clouds', 'Kit · clouds'], ['kit:sprout', 'Kit · sprout'], ['kit:peak', 'Kit · peak'],
   ];
-  Lab.SCREEN_PROPS = {
-    ground: { label: 'Background colour', kind: 'ground' },
+  Lab.SCREEN_PROPS = Object.assign({
+    ground: { label: 'Colour set (both modes)', kind: 'ground' },
     wallpaper: { label: 'Wallpaper', kind: 'select', options: Lab.wallpapers, default: 'flat' },
-  };
+  }, Lab.PAINT_PROPS);
   Lab.screenSetting = function (screen, prop) {
     const ch = Lab.changes[Lab.nodeKey(screen.id, '_screen', prop)];
     if (ch) return ch.to;
     if (prop === 'ground') return screen.ground || 'reading';
     return Lab.SCREEN_PROPS[prop].default;
+  };
+  /** Screen-level colour overrides for an appearance. */
+  Lab.screenPaint = function (screen, dark) {
+    const p = {};
+    for (const k in Lab.PAINT_PROPS) p[k] = Lab.screenSetting(screen, k);
+    return Lab.paintFor(p, dark);
   };
 
   function wallpaperHTML(value, d, ctx) {
@@ -324,7 +388,8 @@
     const d = Lab.devices[opts.device || Lab.view.device];
     const dark = opts.dark != null ? opts.dark : Lab.view.dark;
     const groundName = Lab.screenSetting(screen, 'ground');
-    const ctx = makeCtx({ groundName, dark, screenId: screen.id, device: d, index: opts.index || null, depth: 0, width: d.w });
+    const sp = Lab.screenPaint(screen, dark);
+    const ctx = makeCtx({ groundName, dark, screenId: screen.id, device: d, index: opts.index || null, depth: 0, width: d.w, paint: Object.keys(sp).length ? Object.assign({ onlyGround: groundName }, sp) : null });
     const { state, tree } = Lab.build(screen, opts.state || Lab.view.state[screen.id]);
     ctx.state = state;
     const body = Lab.render(tree, ctx);

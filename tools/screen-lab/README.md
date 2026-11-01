@@ -15,9 +15,10 @@ Each element is a web copy of its SwiftUI view. The sizes, colours, type and cop
 1. Pick a screen. On narrow windows the screen dropdown sits at the top.
 2. Pick Sam's day if the screen has more than one state.
 3. Tap anything on the phone, or pick it from "Everything on this screen".
-4. Change it with the dropdowns on the right. A changed setting is outlined. "Undo all changes here" puts the element back.
-5. Use **Element library** to see every building block and the screens that use it. Settings there apply app-wide.
-6. Use **Changes** to see everything you changed, from what to what.
+4. Change it with the dropdowns on the right. Each element and the screen also have a **Colours** section, where background, text, secondary text and the cards inside are set separately for light mode and dark mode. Colours on a box apply to that section and everything in it. Use the dropdown, the colour picker beside it, or "Write your own colour…".
+5. Each colour row says which mode is on screen; "Show dark" flips the phone. A changed setting is outlined. "Undo all changes here" puts the element back.
+6. Use **Element library** to see every building block and the screens that use it. Settings there apply app-wide.
+7. Use **Changes** to see everything you changed, from what to what.
 
 ## How changes reach the app
 
@@ -40,8 +41,8 @@ A change document looks like this:
 
 `scope` is one of three values:
 
-- `node`: one element on one screen.
-- `screen`: the screen's background or wallpaper.
+- `node`: one element on one screen. Colour props are `bgLight`/`bgDark`, `inkLight`/`inkDark`, `mutedLight`/`mutedDark` and `cardLight`/`cardDark`; empty means "as designed".
+- `screen`: the screen's colour set, wallpaper or light/dark colours.
 - `library`: an element's app-wide setting.
 
 ## Running it locally

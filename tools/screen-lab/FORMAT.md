@@ -112,6 +112,7 @@ Each prop kind gets its own dropdown:
 
 - **App-wide props:** `global: true` makes a prop editable from the Element library. A change there applies everywhere the element is used.
 - **Show/Hide:** every element gets a `visible` prop automatically.
+- **Colours:** every element also gets eight paint props (`Lab.PAINT_PROPS`): background, text, secondary text and cards, each for light and dark mode. The renderer applies them for you: text, secondary text and card overrides replace `ctx.g.ink`, `ctx.g.muted` and `ctx.g.card` for the element and everything inside it, and a background override is added to the root's style. So always take colours from `ctx.g` rather than hard-coding them, or the overrides can't reach them. Set `noPaint: true` on an element to opt out.
 
 ### Context and helpers
 

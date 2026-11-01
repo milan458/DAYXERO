@@ -60,6 +60,13 @@
       opts.push(['__custom__', 'Write your own…']);
       return { flat: opts };
     }
+    if (kind === 'paint') {
+      const groups = Lab.paintOptions();
+      const all = groups.flatMap((g) => g.options.map((o) => o[0]));
+      if (current && current !== '__custom__' && !all.includes(current)) groups.splice(1, 0, { label: 'Your colour', options: [[current, 'Your colour · ' + current]] });
+      groups.push({ label: 'More', options: [['__custom__', 'Write your own colour…']] });
+      return { groups };
+    }
     if (kind === 'ground') return { flat: ensure(Lab.groundNames.map((g) => [g, Lab.cap(g) + ' · ' + Lab.grounds[g].use])) };
     if (kind === 'art') {
       const groups = Lab.artOptions();
@@ -222,38 +229,49 @@
 
   function screenPanel(s) {
     const props = Lab.SCREEN_PROPS;
-    const rows = Object.keys(props).map((k) => {
+    const row = (k) => {
       const pd = props[k];
       const value = Lab.screenSetting(s, k);
       const original = k === 'ground' ? s.ground || 'reading' : pd.default;
       const fake = { props: { [k]: pd } };
-      const { flat } = propOptions(fake, k, null, original, value);
+      const { flat, groups } = propOptions(fake, k, null, original, value);
       const changed = !!Lab.changes[Lab.nodeKey(s.id, '_screen', k)];
-      return control({ key: k, label: pd.label, flat, value, changed, data: `data-screen-prop="${k}"` });
-    }).join('');
+      return control({ key: k, label: pd.label, flat, groups, value, changed, data: `data-screen-prop="${k}"`, paint: pd.kind === 'paint', mode: pd.mode });
+    };
+    const main = Object.keys(props).filter((k) => props[k].kind !== 'paint').map(row).join('');
+    const paints = Object.keys(props).filter((k) => props[k].kind === 'paint').map(row).join('');
     return `<section class="panel">
       <div class="eyebrow">Screen</div>
       <h2>${esc(s.name)}</h2>
       ${s.note ? `<p class="hint">${esc(s.note)}</p>` : ''}
-      ${rows}
+      ${main}
+      ${coloursBlock(paints, 'Whole screen. A colour set here changes the screen and everything on its own colour; cards on another colour keep theirs.')}
       <label class="field"><span>Note for Claude</span><textarea id="note" rows="3" placeholder="Anything the dropdowns can't say, e.g. 'make this feel calmer'">${esc(Lab.noteFor(s.id))}</textarea></label>
       <p class="hint">Tap anything on the phone to change it. ${esc(Lab.store.status)}.</p>
     </section>`;
+  }
+
+  function coloursBlock(rows, hint) {
+    if (!rows) return '';
+    return `<details class="colours" open><summary><span>Colours</span><span class="modes-now">Showing ${V.dark ? 'dark' : 'light'} mode <button type="button" class="link" data-toggle-dark>Show ${V.dark ? 'light' : 'dark'}</button></span></summary>
+      <p class="hint">${esc(hint)} Light and dark mode are set separately.</p>${rows}</details>`;
   }
 
   function elementPanel(s, entry) {
     const { node, def } = entry;
     const keys = Object.keys(def.props).sort((a, b) => (def.props[a].order || 0) - (def.props[b].order || 0));
     const p = Lab.resolve(node, s.id);
-    const rows = keys.map((k) => {
+    const row = (k) => {
       const pd = def.props[k];
       if (pd.when && !pd.when(p)) return '';
       const original = originalValue(def, node, k);
       const value = p[k];
       const { flat, groups } = propOptions(def, k, node, original, value);
       const changed = !!Lab.changes[Lab.nodeKey(s.id, node.id, k)];
-      return control({ key: k, label: pd.label, flat, groups, value, changed, data: `data-prop="${k}"`, hint: pd.hint });
-    }).join('');
+      return control({ key: k, label: pd.label, flat, groups, value, changed, data: `data-prop="${k}"`, hint: pd.hint, paint: pd.kind === 'paint', mode: pd.mode });
+    };
+    const rows = keys.filter((k) => def.props[k].kind !== 'paint').map(row).join('')
+      + coloursBlock(keys.filter((k) => def.props[k].kind === 'paint').map(row).join(''), 'This section and everything inside it.');
     const parent = findParent(s, node.id);
     const any = keys.some((k) => Lab.changes[Lab.nodeKey(s.id, node.id, k)]);
     return `<section class="panel">
@@ -270,11 +288,17 @@
     </section>`;
   }
 
-  function control({ label, flat, groups, value, changed, data, hint }) {
-    const isCustom = value === '__custom__';
+  function control({ label, flat, groups, value, changed, data, hint, paint, mode }) {
+    const select = `<select ${data}>${groups ? groupedHTML(groups, value) : optionHTML(flat, value)}</select>`;
+    if (paint) {
+      const now = (mode === 'dark') === !!V.dark;
+      const hex = /^#[0-9a-f]{6}$/i.test(value || '') ? value : '#ffffff';
+      return `<div class="field paint${changed ? ' changed' : ''}${now ? ' now' : ''}"><span>${esc(label)}${changed ? ' <em>changed</em>' : ''}${now ? ' <i>on screen now</i>' : ''}</span>
+        <div class="paintrow"><span class="sw${value ? '' : ' none'}" style="${value ? 'background:' + esc(value) : ''}" aria-hidden="true"></span>${select}
+        <input type="color" value="${hex}" aria-label="Pick ${esc(label)}" ${data.replace('data-', 'data-pick-')}></div></div>`;
+    }
     return `<label class="field${changed ? ' changed' : ''}"><span>${esc(label)}${changed ? ' <em>changed</em>' : ''}</span>
-      <select ${data}>${groups ? groupedHTML(groups, value) : optionHTML(flat, value)}</select>
-      ${hint ? `<small>${esc(hint)}</small>` : ''}${isCustom ? '' : ''}</label>`;
+      ${select}${hint ? `<small>${esc(hint)}</small>` : ''}</label>`;
   }
 
   function treePanel(s) {
@@ -301,14 +325,32 @@
       const k = sel.dataset.prop;
       let to = JSON.parse(sel.value);
       const meta = { scope: 'node', screen: s.id, screenName: s.name, node: node.id, element: node.t, elementName: def.name, prop: k, label: def.props[k].label, from: originalValue(def, node, k) };
-      if (to === '__custom__') return askText(sel, (text) => Lab.setChange(Lab.nodeKey(s.id, node.id, k), meta, text));
+      const isPaint = def.props[k].kind === 'paint';
+      if (to === '__custom__') return askText(sel, (text) => Lab.setChange(Lab.nodeKey(s.id, node.id, k), meta, text), isPaint);
       Lab.setChange(Lab.nodeKey(s.id, node.id, k), meta, to);
     }));
+    root.querySelectorAll('input[data-pick-prop]').forEach((inp) => inp.addEventListener('change', () => {
+      const node = findNode(s, V.selected); if (!node) return;
+      const def = Lab.elements[node.t];
+      const k = inp.dataset.pickProp;
+      Lab.setChange(Lab.nodeKey(s.id, node.id, k), { scope: 'node', screen: s.id, screenName: s.name, node: node.id, element: node.t, elementName: def.name, prop: k, label: def.props[k].label, from: originalValue(def, node, k) }, inp.value.toUpperCase());
+    }));
+    const screenMeta = (k) => ({ scope: 'screen', screen: s.id, screenName: s.name, node: '_screen', element: 'screen', elementName: 'Screen', prop: k, label: Lab.SCREEN_PROPS[k].label, from: k === 'ground' ? s.ground || 'reading' : Lab.SCREEN_PROPS[k].default });
     root.querySelectorAll('select[data-screen-prop]').forEach((sel) => sel.addEventListener('change', () => {
       const k = sel.dataset.screenProp;
       const to = JSON.parse(sel.value);
-      const from = k === 'ground' ? s.ground || 'reading' : Lab.SCREEN_PROPS[k].default;
-      Lab.setChange(Lab.nodeKey(s.id, '_screen', k), { scope: 'screen', screen: s.id, screenName: s.name, node: '_screen', element: 'screen', elementName: 'Screen', prop: k, label: Lab.SCREEN_PROPS[k].label, from }, to);
+      if (to === '__custom__') return askText(sel, (text) => Lab.setChange(Lab.nodeKey(s.id, '_screen', k), screenMeta(k), text), true);
+      Lab.setChange(Lab.nodeKey(s.id, '_screen', k), screenMeta(k), to);
+    }));
+    root.querySelectorAll('input[data-pick-screen-prop]').forEach((inp) => inp.addEventListener('change', () => {
+      const k = inp.dataset.pickScreenProp;
+      Lab.setChange(Lab.nodeKey(s.id, '_screen', k), screenMeta(k), inp.value.toUpperCase());
+    }));
+    root.querySelectorAll('[data-toggle-dark]').forEach((b) => b.addEventListener('click', (e) => {
+      e.preventDefault();
+      V.dark = !V.dark; saveView();
+      const sel = $('#opt-dark'); if (sel) sel.value = V.dark ? '1' : '0';
+      ui.refresh();
     }));
     root.querySelectorAll('[data-select]').forEach((b) => b.addEventListener('click', () => { V.selected = b.dataset.select || null; markSelected(); renderRight(); scrollToSelected(); }));
     root.querySelectorAll('[data-reset-node]').forEach((b) => b.addEventListener('click', () => {
@@ -320,16 +362,21 @@
   }
 
   /** Inline text entry for "Write your own…" (the viewer blocks prompt()). */
-  function askText(sel, done) {
+  function askText(sel, done, colour) {
     const field = sel.closest('.field');
     if (field.querySelector('.own')) return;
     const box = document.createElement('div');
     box.className = 'own';
-    box.innerHTML = `<input type="text" id="own-text" aria-label="Your text"><div class="actions"><button type="button" class="solid">Use this text</button><button type="button" class="ghost">Cancel</button></div>`;
+    box.innerHTML = `<input type="text" id="own-text" aria-label="${colour ? 'Your colour' : 'Your text'}" placeholder="${colour ? '#FF7A55 or rgba(255,122,85,0.5)' : ''}"><small class="err" hidden>That isn't a colour. Try a hex like #FF7A55.</small><div class="actions"><button type="button" class="solid">${colour ? 'Use this colour' : 'Use this text'}</button><button type="button" class="ghost">Cancel</button></div>`;
     field.appendChild(box);
     const input = box.querySelector('input'); input.focus();
+    const err = box.querySelector('.err');
     const [ok, cancel] = box.querySelectorAll('button');
-    ok.addEventListener('click', () => { const v = input.value.trim(); if (v) done(v); });
+    ok.addEventListener('click', () => {
+      const v = input.value.trim(); if (!v) return;
+      if (colour && !(window.CSS && CSS.supports && CSS.supports('color', v))) { err.hidden = false; return; }
+      done(v);
+    });
     input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); ok.click(); } });
     cancel.addEventListener('click', () => renderRight());
   }
@@ -399,7 +446,9 @@
   }
 
   /* ---------- Changes ---------- */
-  function fmt(v) { if (v === true) return 'Show'; if (v === false) return 'Hide'; if (v == null || v === '') return '(none)'; return String(v); }
+  function fmt(v) { if (v === true) return 'Show'; if (v === false) return 'Hide'; if (v == null || v === '') return '(as designed)'; return String(v); }
+  const isColour = (v) => typeof v === 'string' && /^(#[0-9a-f]{3,8}|rgba?\(|transparent$)/i.test(v);
+  const fmtCell = (v) => (isColour(v) ? `<span class="sw sm" style="background:${esc(v)}"></span>` : '') + esc(fmt(v));
   function renderChanges(stage) {
     const list = Object.values(Lab.changes).sort((a, b) => String(a.screenName).localeCompare(String(b.screenName)) || String(a.at).localeCompare(String(b.at)));
     const by = new Map();
@@ -409,7 +458,7 @@
       <header class="ch-head"><div><h2>Your changes</h2><p>${list.length ? `${open} waiting for Claude, ${list.length - open} built into the app.` : 'Nothing changed yet. Pick a screen, tap something on the phone and choose a new option.'}</p></div>
         ${list.length ? '<button type="button" class="solid" id="copy-changes">Copy as text</button>' : ''}</header>
       ${[...by].map(([name, items]) => `<section><h3>${esc(name)}</h3><table><thead><tr><th>Element</th><th>What</th><th>Was</th><th>Now</th><th>Status</th><th></th></tr></thead><tbody>${items.map((c) => `<tr>
-        <td>${esc(c.elementName || c.element)}</td><td>${esc(c.label || c.prop)}</td><td class="was">${esc(fmt(c.from))}</td><td class="now">${esc(fmt(c.to))}</td>
+        <td>${esc(c.elementName || c.element)}</td><td>${esc(c.label || c.prop)}</td><td class="was">${fmtCell(c.from)}</td><td class="now">${fmtCell(c.to)}</td>
         <td><span class="chip ${c.status === 'built' ? 'built' : 'open'}">${c.status === 'built' ? 'Built' : 'Waiting for Claude'}</span></td>
         <td><button type="button" class="ghost" data-undo="${esc(c.id)}">Undo</button> ${c.screen && c.screen !== '_library' ? `<button type="button" class="ghost" data-open="${esc(c.screen)}" data-node-id="${esc(c.node)}">Show</button>` : ''}</td></tr>`).join('')}</tbody></table></section>`).join('')}
       ${Object.keys(Lab.notes).length ? `<section><h3>Notes</h3>${Object.values(Lab.notes).filter((n) => n.text).map((n) => `<p class="note"><b>${esc((Lab.screens.find((s) => s.id === n.screen) || {}).name || n.screen || '')}</b> ${esc(n.text)}</p>`).join('')}</section>` : ''}
