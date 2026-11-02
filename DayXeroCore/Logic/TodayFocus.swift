@@ -55,17 +55,38 @@ public enum TimeFree {
     }
 }
 
-/// Resilience on Today's post-quit hero (UX-09): the share of days since Quit Day with no slip logged. Quit Day counts
-/// as day 1, as in "days since Quit Day". A slip lowers it a little; it never resets, and a day with no slip lifts it.
+/// Resilience on Today's post-quit hero (UX-09, CLIN-07): days since Quit Day with no slip logged, out of all days since
+/// Quit Day, as "45 of 46 days · 98%". Quit Day counts as day 1, as in "days since Quit Day". It never resets to zero:
+/// a slip takes one day off the clear count, and every clear day after it adds one back.
 public enum Resilience {
-    /// 0...100, rounded down, so 100% means no slip at all.
-    public static func percent(quitDay: Date, slips: [Date], now: Date, clock: DayClock) -> Int {
+    public struct Days: Sendable, Equatable {
+        public let clear: Int
+        public let total: Int
+
+        public init(clear: Int, total: Int) {
+            self.clear = clear
+            self.total = total
+        }
+
+        /// 0...100 to the nearest whole number, but never 100 with a slip in it: 199 of 200 shows 99%.
+        public var percent: Int {
+            guard total > 0 else { return 100 }
+            let rounded = Int((Double(clear) / Double(total) * 100).rounded())
+            return clear < total ? min(rounded, 99) : 100
+        }
+    }
+
+    /// Clear days and all days since Quit Day. Before Quit Day: 0 of 0.
+    public static func days(quitDay: Date, slips: [Date], now: Date, clock: DayClock) -> Days {
         let start = clock.startOfDate(quitDay)
         let today = clock.day(containing: now)
-        guard today >= start else { return 100 }
-        let days = clock.days(fromDate: quitDay, to: now) + 1
+        guard today >= start else { return Days(clear: 0, total: 0) }
+        let total = clock.days(fromDate: quitDay, to: now) + 1
         let slipDays = Set(slips.map { clock.day(containing: $0) }.filter { $0 >= start && $0 <= today })
-        let clear = max(days - slipDays.count, 0)
-        return Int((Double(clear) / Double(max(days, 1)) * 100).rounded(.down))
+        return Days(clear: max(total - slipDays.count, 0), total: total)
+    }
+
+    public static func percent(quitDay: Date, slips: [Date], now: Date, clock: DayClock) -> Int {
+        days(quitDay: quitDay, slips: slips, now: now, clock: clock).percent
     }
 }

@@ -9,7 +9,7 @@ struct ProgramContentTests {
     @Test func theBundledProgramLoadsWithEveryPhaseAndSession() throws {
         let program = try content()
         #expect(program.phases.map(\.id) == ["prep", "dayxero", "w1", "w2", "w3", "w4", "after"])
-        #expect(program.sessions.count == 27)
+        #expect(program.sessions.count == 28)
         #expect(program.sessions.first?.id == "P1" && program.sessions.last?.id == "B90")
         #expect(program.sosTracks.map(\.id) == ["SOS1", "SOS2", "SOS3", "SOS4"])
     }
@@ -69,6 +69,18 @@ struct ProgramContentTests {
         #expect(SessionFlowView.lessonStep(hasCards: true, hasAudio: true, format: .listen) == .audio)
         #expect(SessionFlowView.lessonStep(hasCards: false, hasAudio: true, format: .read) == .audio)
         #expect(SessionFlowView.lessonStep(hasCards: false, hasAudio: false, format: .read) == nil)
+    }
+
+    /// CLIN-08: Week 2's "The flat days" (dopamine and brain fog) opens on Day 13, between Sleep and Two weeks. Its id
+    /// is W2S4 because session ids are saved in people's records; the order comes from the list, not the number.
+    @Test func weekTwoHasTheFlatDays() throws {
+        let program = try content()
+        let week2 = try #require(program.phases.first { $0.id == "w2" })
+        #expect(week2.sessionIds == ["W2S1", "W2S2", "W2S4", "W2S3"])
+        let flat = try #require(program.session("W2S4"))
+        #expect(flat.title.resolve(.smoking) == "The flat days")
+        #expect(flat.label == "Day 13")
+        #expect(flat.unlock.minDay == 12)
     }
 
     @Test func theContentHasNoProblems() throws {

@@ -22,7 +22,7 @@ public struct HealthTimeline: Sendable {
         public let detail: String
         /// The source behind a health claim. Looks changes (lips, skin, hair…) are general wellness notes and have none.
         public let source: String?
-        /// "looks" for the appearance changes; nil for health.
+        /// "looks" for the appearance changes, "felt" for what many people notice; nil for health.
         public let kind: String?
         /// The longer, warmer read on the detail sheet, one string per paragraph. Falls back to `detail`.
         public let story: [String]?
@@ -49,6 +49,13 @@ public struct HealthTimeline: Sendable {
         }
 
         public var isLooks: Bool { kind == "looks" }
+
+        /// "felt" (CLIN-01, 2 Nov 2026): what many people notice, such as flat days and brain fog lifting, where the
+        /// evidence on timing is thin. Told as "many people notice…", never as a date, and with no source to cite.
+        public var isFelt: Bool { kind == "felt" }
+
+        /// Looks and felt changes are wellness notes, not health claims, so they carry no source.
+        public var isWellness: Bool { isLooks || isFelt }
 
         /// The paragraphs for the detail sheet.
         public var paragraphs: [String] { story ?? [detail] }

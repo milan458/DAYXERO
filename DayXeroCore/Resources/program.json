@@ -13,7 +13,7 @@
     { "id": "prep",    "title": "Prep",     "subtitle": "Learn your habit. Keep using as normal.", "sessionIds": ["P1","P2","P3","P4","P5","P6","P7"] },
     { "id": "dayxero", "title": "Day Xero", "subtitle": "Your Quit Day.",                          "sessionIds": ["DX"] },
     { "id": "w1",      "title": "Week 1",   "subtitle": "Through the hardest stretch.",            "sessionIds": ["W1D1","W1D2","W1D3","W1D4","W1D5","W1D6","W1D7"] },
-    { "id": "w2",      "title": "Week 2",   "subtitle": "Rebuild your days.",                      "sessionIds": ["W2S1","W2S2","W2S3"] },
+    { "id": "w2",      "title": "Week 2",   "subtitle": "Rebuild your days.",                      "sessionIds": ["W2S1","W2S2","W2S4","W2S3"] },
     { "id": "w3",      "title": "Week 3",   "subtitle": "Hard moments, handled.",                  "sessionIds": ["W3S1","W3S2","W3S3"] },
     { "id": "w4",      "title": "Week 4",   "subtitle": "Who you are now.",                        "sessionIds": ["W4S1","W4S2","W4S3"] },
     { "id": "after",   "title": "After",    "subtitle": "Boosters for the months ahead.",          "sessionIds": ["B45","B60","B90"] }
@@ -502,6 +502,47 @@
       ],
       "mission": { "text": "Try your wind-down tonight. The 4-7-8 breath is in the Stress toolkit whenever you want it." },
       "completionText": "Your wind-down is set for tonight."
+    },
+
+    {
+      "id": "W2S4", "phaseId": "w2", "label": "Day 13",
+      "title": "The flat days", "subtitle": "Brain fog, low spark, and why it lifts", "durationMinutes": 4,
+      "unlock": { "rule": "days_since_quit", "minDay": 12 },
+      "audio": { "variants": ["default"] },
+      "cards": [
+        { "front": "Things feel flat?", "back": "Many people notice ordinary things feel a bit grey for a while, somewhere around weeks 2 to 6. It takes time to find your own level." },
+        { "front": "Brain fog", "back": "Slow, foggy or forgetful days are common too. Many people notice their head clearing bit by bit over the weeks after." },
+        { "front": "“One would fix this”", "back": "It would lift you for a few minutes. Riding out the flat days is how they end." },
+        { "front": "Small and steady", "back": "On foggy days, keep it simple: one task at a time, daylight, a short walk, proper meals." }
+      ],
+      "beats": [
+        { "id": "W2S4.1", "type": "tap_reveal", "title": "What many people notice",
+          "cards": [
+            { "front": "Things feel flat", "back": "Many people notice ordinary things feel a bit grey for a while, somewhere around weeks 2 to 6. Your reward system got a top-up many times a day; it takes time to find its own level." },
+            { "front": "Brain fog", "back": "Slow, foggy or forgetful days are common too. Many people notice their head clearing bit by bit over the weeks that follow." },
+            { "front": "It's not forever", "back": "Timing varies a lot, and the research on it is still thin. What people describe most is that the flat patches get shorter and further apart." } ],
+          "footer": "Flat days are a sign of adjusting, not a sign your quit isn't working." },
+        { "id": "W2S4.2", "type": "quiz", "prompt": "A flat afternoon, and a thought says: one would fix this. What's closer to the truth?",
+          "options": [
+            { "id": "a", "text": "Nicotine was what made me happy" },
+            { "id": "b", "text": "I'll never feel normal without it" },
+            { "id": "c", "text": "My brain is recalibrating. The flat patch passes" } ],
+          "correctId": "c",
+          "feedback": "Right. One would lift you for a few minutes. Riding out the flat days is how they end." },
+        { "id": "W2S4.3", "type": "choice", "prompt": "Pick two fog-friendly habits for this week.", "multi": true, "pick": 2, "saveAs": "fog_habits",
+          "options": [
+            { "id": "list", "text": "A three-line to-do list each morning" }, { "id": "one", "text": "One task at a time" },
+            { "id": "daylight", "text": "Daylight in the first hour" }, { "id": "move", "text": "Ten minutes of movement" },
+            { "id": "bedtime", "text": "A regular bedtime" }, { "id": "meals", "text": "Proper meals and water" },
+            { "id": "lift", "text": "One of my lifts from Day 5" } ],
+          "feedback": "Saved. Small and steady beats big and brave on foggy days." },
+        { "id": "W2S4.4", "type": "slider", "prompt": "How clear does your head feel this week?", "minLabel": "Very foggy", "maxLabel": "Clear", "saveAs": "fog_w2" },
+        { "id": "W2S4.5", "type": "info", "title": "If the low stays",
+          "body": "If you feel low most days for two weeks or more, or it's getting in the way of life, talk to a doctor. Feeling down after quitting is common, and it's very treatable.",
+          "link": "helplines" }
+      ],
+      "mission": { "text": "On a flat moment today, do one of your fog-friendly habits, then notice how you feel ten minutes later." },
+      "completionText": "Flat days are part of healing. They lift."
     },
 
     {

@@ -14,6 +14,7 @@ struct NotificationSettingsView: View {
     @AppStorage(DailyReminderSettings.awayKey) private var away = true
     @AppStorage(DailyReminderSettings.nrtOnKey) private var nrt = true
     @AppStorage(DailyReminderSettings.weeklyKey) private var weekly = DailyReminderSettings.offUntilChosen
+    @AppStorage(DailyReminderSettings.quietGraduationKey) private var quietGraduation = true
     @AppStorage(DailyReminderSettings.quietStartKey) private var quietStart = DailyReminderSettings.defaultQuietStart
     @AppStorage(DailyReminderSettings.quietEndKey) private var quietEnd = DailyReminderSettings.defaultQuietEnd
     @Environment(\.modelContext) private var context
@@ -46,6 +47,10 @@ struct NotificationSettingsView: View {
             Section {
                 Toggle(isOn: $nrt) { label("NRT", detail: "Patch changes and step-downs", systemImage: "bandage") }
                 Toggle(isOn: $away) { label("When you've been away", detail: "Two gentle notes, then quiet", systemImage: "water.waves") }
+                // CLIN-06: as cravings fade, the program steps back.
+                Toggle(isOn: $quietGraduation) {
+                    label("Quiet graduation", detail: "Fewer reminders from Week 3, as cravings fade", systemImage: "leaf")
+                }
                 // After the four weeks, Glim checks in once a week (S27.18). Off until chosen.
                 row("Weekly check-in", detail: "Sundays, after the four weeks", systemImage: "calendar", minute: $weekly,
                     fallback: DailyReminderSettings.defaultWeekly)
@@ -64,13 +69,14 @@ struct NotificationSettingsView: View {
             } header: {
                 Text("Quiet hours")
             } footer: {
-                Text("At most three a day from the program. NRT reminders you set always arrive.")
+                Text("At most three a day from the program, and fewer from Week 3 with quiet graduation. NRT reminders you set always arrive.")
             }
         }
         .tint(Read4.accent)
         .navigationTitle("Notifications")
         .onChange(of: [pledge, lesson, checkIn, milestone, weekly, quietStart, quietEnd]) { refresh() }
         .onChange(of: away) { refresh() }
+        .onChange(of: quietGraduation) { refresh() }
         .onChange(of: nrt) { refresh() }
         .onChange(of: scenePhase, initial: true) { _, phase in
             guard phase == .active else { return }

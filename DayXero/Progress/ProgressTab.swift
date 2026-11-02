@@ -11,6 +11,9 @@ struct ProgressTab: View {
     @Environment(\.dynamicTypeSize) private var typeSize
     @Query(sort: \LogEntry.timestamp, order: .reverse) private var entries: [LogEntry]
     @Query private var checkIns: [CheckIn]
+    /// Program v2 sessions, observed exactly as Today observes them, so "of 7 prep done" and the Quit Day countdown
+    /// read the same snapshot on both tabs and update the moment a session is finished.
+    @Query private var sessionRecords: [SessionRecord]
     @State private var series = Insights.Series.cravings
     @State private var editing: LogEntry?
     @State private var showHealth = UserDefaults.standard.bool(forKey: "dx.openHealth")
@@ -23,7 +26,7 @@ struct ProgressTab: View {
     var body: some View {
         TimelineView(.everyMinute) { timeline in
             let now = timeline.date
-            let snap = HomeSnapshot(profile: profile, isPro: entitlement.isPro, now: now)
+            let snap = HomeSnapshot(profile: profile, isPro: entitlement.isPro, now: now, sessions: sessionRecords)
             let insights = Insights(points: entries.map(Insights.Point.init), now: now)
             // Half-open iPhone Duo: what you've gained on one side of the fold, the details on the other (S18.14).
             FoldAware {
@@ -217,7 +220,7 @@ struct ProgressTab: View {
         let cents: (Double) -> String = { Decimal($0).formatted(.currency(code: code).precision(.fractionLength(2))) }
         LazyVGrid(columns: columns, alignment: .leading, spacing: 8) {
             if isPrepPhase(snap) {
-                ProgressStat(value: Double(snap.prepDone), label: String(localized: "of \(snap.prepTotal) prep days done"))
+                ProgressStat(value: Double(snap.prepDone), label: String(localized: "of \(snap.prepTotal) prep done"))
                 // "0 waves ridden out" reads as failure in a week where nobody is meant to resist yet (S27.5).
                 if ridden > 0 {
                     ProgressStat(value: Double(ridden), label: ridden == 1 ? String(localized: "wave ridden out") : String(localized: "waves ridden out"))
@@ -264,8 +267,8 @@ struct ProgressTab: View {
             .padding(.top, DX.Space.m)
             .accessibilityAddTraits(.isHeader)
         if let current {
-            changeCard(current, status: String(localized: "Happening now"), line: current.line,
-                       state: HealthTimeline.state(of: current, elapsedHours: elapsed))
+            changeCard(current, status: current.isFelt ? String(localized: "Many people notice") : String(localized: "Happening now"),
+                       line: current.line, state: HealthTimeline.state(of: current, elapsedHours: elapsed))
         }
         if let next {
             changeCard(next, status: elapsed < 0 ? String(localized: "Starting on Quit Day") : String(localized: "Next"),

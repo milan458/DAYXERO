@@ -95,7 +95,8 @@ enum MilestoneDrawing {
         switch id {
         case "heart-rate", "circulation", "heart-disease", "lips": .coral
         case "carbon-monoxide", "coughing", "lung-cancer", "fresh-breath": .sky
-        case "withdrawal-start", "cravings-fade", "hair", "sleep": .lilac
+        case "withdrawal-start", "cravings-fade", "hair", "sleep", "flat-days", "clearer-head": .lilac
+        case "rewards-return": .sun
         case "nicotine-gone", "mood", "skin-glow": .sun
         default: .sage
         }

@@ -10,7 +10,7 @@
     "waiting_on_milan": [
       "Milan: sign off Wave 4 in the Screen Lab (version 8, What's new tab; try Text size AX3 and Appearance Dark)",
       "Milan: App Store Connect: privacy URL, 7-day trial, India annual ₹2,999, lifetime $99.99, win-back, grace period",
-      "Milan: review the 108 draft lesson cards (MON-04) and the open questions in docs/MONETISATION_TIERS.md",
+      "Milan: review the 112 draft lesson cards (MON-04) and the open questions in docs/MONETISATION_TIERS.md",
       "Milan: Superwall campaign copy to the new tiers",
       "Milan: Cloudflare dashboard: fix or turn off non-production Worker builds"
     ]
@@ -2997,6 +2997,106 @@
           "completed": null
         }
       ]
+    },
+    {
+      "id": "S31",
+      "title": "Clinical review (CLIN-01 to CLIN-11)",
+      "goal": "Clinical changes from the clinical review: recovery milestones, caffeine, NRT technique, reward defusion, swap trap, quieter notifications, cumulative resilience, the flat days, a new trigger, slip planner, prep challenges.",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S31.1",
+          "title": "CLIN-01 · Your body: dopamine and brain-fog recovery, roughly Days 10–45",
+          "status": "awaiting_signoff",
+          "notes": "Three 'felt' items in health-timeline.json for every product (flat-days, clearer-head, rewards-return), all 'Many people notice…', with rough windows ('Often weeks 2 to 3'), no countdowns, no progress bars and no source; the detail sheet says the research on timing is thin.\nBuilt on claude/elegant-fermat-8bg8iv (2 Nov 2026), PR #26; waiting on CI and TestFlight.",
+          "created": "2026-11-02T19:57:44.974Z",
+          "completed": null
+        },
+        {
+          "id": "S31.2",
+          "title": "CLIN-02 · Quit Day: Xero's coffee note for smokers",
+          "status": "awaiting_signoff",
+          "notes": "Today, Quit Day through Day 7, for people who smoke and named coffee: 'Coffee hits harder this week… I'd halve your coffee this week.' Not for vape, pouches or NRT. Why? links Benowitz et al., BMJ 1989. Dismissed per Quit Day.\nBuilt on claude/elegant-fermat-8bg8iv (2 Nov 2026), PR #26; waiting on CI and TestFlight.",
+          "created": "2026-11-02T19:57:45.025Z",
+          "completed": null
+        },
+        {
+          "id": "S31.3",
+          "title": "CLIN-03 · NRT: chew-and-park gum guide; 16h/24h patch choice",
+          "status": "awaiting_signoff",
+          "notes": "Setup plan step: 'At night' choice for patches (UK 16-hour presets pick off-at-bedtime) and the chew-and-park card for gum. NRT card: Off at bedtime toggle and a How to chew and park sheet. 16h adds 'Patch off for the night' 16 hours after the fresh-patch time (dropped inside quiet hours if NRT doesn't come through them). NRTPlan.patchHours is optional, so no migration.\nBuilt on claude/elegant-fermat-8bg8iv (2 Nov 2026), PR #26; waiting on CI and TestFlight.",
+          "created": "2026-11-02T19:57:45.081Z",
+          "completed": null
+        },
+        {
+          "id": "S31.4",
+          "title": "CLIN-04 · Calm tools: 'Don't I deserve a reward?' defusion card",
+          "status": "awaiting_signoff",
+          "notes": "Top of the calm tools list: notice the thought, 'you do deserve one', pick a real reward. Logged as a ToolUse 'rewardDefusion'.\nBuilt on claude/elegant-fermat-8bg8iv (2 Nov 2026), PR #26; waiting on CI and TestFlight.",
+          "created": "2026-11-02T19:57:45.138Z",
+          "completed": null
+        },
+        {
+          "id": "S31.5",
+          "title": "CLIN-05 · Prep tracker: the swap trap",
+          "status": "awaiting_signoff",
+          "notes": "Today State A: Xero flags cigarettes or puffs down to 75% of baseline or less while pouches are up 25% and at least 2 a day, over the last 2–3 full days. 'Got it' hides it for the day.\nBuilt on claude/elegant-fermat-8bg8iv (2 Nov 2026), PR #26; waiting on CI and TestFlight.",
+          "created": "2026-11-02T19:57:45.202Z",
+          "completed": null
+        },
+        {
+          "id": "S31.6",
+          "title": "CLIN-06 · Notifications: quiet graduation",
+          "status": "awaiting_signoff",
+          "notes": "On by default (Settings › Notifications). Weeks 1–2 as now; Weeks 3–4 drop the pledge note, cap 2; Week 5 on, cap 1 and the check-in every other day. Away notes unchanged.\nBuilt on claude/elegant-fermat-8bg8iv (2 Nov 2026), PR #26; waiting on CI and TestFlight.",
+          "created": "2026-11-02T19:57:45.261Z",
+          "completed": null
+        },
+        {
+          "id": "S31.7",
+          "title": "CLIN-07 · After Day Xero: cumulative resilience, never reset",
+          "status": "awaiting_signoff",
+          "notes": "Today's hero: '45 of 46 days smoke-free · 98%' (vape-free / pouch-free). Rounded to nearest, but never 100% with a slip. Used 'smoke-free' instead of 'clean' to match the hero's wording; one-line change if Milan wants 'clean'. Open: the inactivity rule is already pause-and-replay (S5.7), so nothing resets there; the fresh Quit Day offer after slips on 4 of 7 days does restart the count. Milan to decide.\nBuilt on claude/elegant-fermat-8bg8iv (2 Nov 2026), PR #26; waiting on CI and TestFlight.",
+          "created": "2026-11-02T19:57:45.311Z",
+          "completed": null
+        },
+        {
+          "id": "S31.8",
+          "title": "CLIN-08 · Program: Week 2 'The flat days'",
+          "status": "awaiting_signoff",
+          "notes": "W2S4, Day 13 (between Sleep and Two weeks): what many people notice, a 'one would fix this' quiz, two fog-friendly habits, a head-clarity slider and an 'If the low stays' helpline note. Draft copy; no audio yet.\nBuilt on claude/elegant-fermat-8bg8iv (2 Nov 2026), PR #26; waiting on CI and TestFlight.",
+          "created": "2026-11-02T19:57:45.398Z",
+          "completed": null
+        },
+        {
+          "id": "S31.9",
+          "title": "CLIN-09 · Triggers: 'Finished a task / chore'",
+          "status": "awaiting_signoff",
+          "notes": "New Trigger.finishedTask with four next-time ideas; shows in onboarding, the log, SOS and the slip planner.\nBuilt on claude/elegant-fermat-8bg8iv (2 Nov 2026), PR #26; waiting on CI and TestFlight.",
+          "created": "2026-11-02T19:57:45.461Z",
+          "completed": null
+        },
+        {
+          "id": "S31.10",
+          "title": "CLIN-10 · Slip flow: If-Then planner straight after any logged slip",
+          "status": "awaiting_signoff",
+          "notes": "Already true from the log sheet, SOS and the check-in. New: Today's use buttons from Quit Day on open the planner, and a slip logged from Siri or the widget opens it next time the app does (within 12 hours, only if it has no plan yet).\nBuilt on claude/elegant-fermat-8bg8iv (2 Nov 2026), PR #26; waiting on CI and TestFlight.",
+          "created": "2026-11-02T19:57:45.538Z",
+          "completed": null
+        },
+        {
+          "id": "S31.11",
+          "title": "CLIN-11 · Prep days: daily one-minute challenges",
+          "status": "awaiting_signoff",
+          "notes": "Today State A, under the bento: 8 draft challenges, one per prep day, ticked with one tap (prep_challenge_done analytics). Content needs Milan's review.\nBuilt on claude/elegant-fermat-8bg8iv (2 Nov 2026), PR #26; waiting on CI and TestFlight.",
+          "created": "2026-11-02T19:57:45.596Z",
+          "completed": null
+        }
+      ]
     }
   ],
   "log": [
@@ -3024,6 +3124,11 @@
       "time": "2026-11-02T20:47:30.710Z",
       "type": "note",
       "message": "S30.1: CI run 210 (f7427f4): build and all tests pass."
+    },
+    {
+      "time": "2026-11-02T20:40:00.000Z",
+      "type": "section_added",
+      "message": "S31 added: Clinical review (CLIN-01 to CLIN-11), built on claude/elegant-fermat-8bg8iv, PR #26; awaiting sign-off"
     },
     {
       "time": "2026-11-02T20:24:05.901Z",
@@ -3954,6 +4059,11 @@
       "time": "2026-11-01T18:37:55.810Z",
       "type": "section_added",
       "message": "S27 added: Design critique fixes (reports/DayXero app design critique.md)"
+    },
+    {
+      "time": "2026-10-30T09:30:00.000Z",
+      "type": "task_added",
+      "message": "Added S26 Program v2 from DAYXERO_PROGRAM_HANDOFF.md (20 tasks)"
     },
     {
       "time": "2026-10-29T17:10:00.000Z",
@@ -7049,11 +7159,6 @@
       "time": "2026-10-22T19:48:52.060Z",
       "type": "task_added",
       "message": "Loaded 92 tasks across 16 sections from the handoff plan"
-    },
-    {
-      "time": "2026-10-30T09:30:00.000Z",
-      "type": "task_added",
-      "message": "Added S26 Program v2 from DAYXERO_PROGRAM_HANDOFF.md (20 tasks)"
     }
   ]
 }

@@ -103,7 +103,23 @@ struct TodayPlanTests {
         #expect(Resilience.percent(quitDay: quitDay, slips: [date(6, 13), date(6, 20)], now: date(8, 10), clock: clock) == 75)
         // A slip at 2 AM counts for the day before; prep-week uses don't count at all.
         #expect(Resilience.percent(quitDay: quitDay, slips: [date(7, 2), date(2, 12)], now: date(8, 10), clock: clock) == 75)
-        // One slip in three days rounds down, so only a clean run shows 100%.
-        #expect(Resilience.percent(quitDay: quitDay, slips: [date(5, 12)], now: date(7, 10), clock: clock) == 66)
+        // One slip in three days: 2 of 3, 67%.
+        #expect(Resilience.percent(quitDay: quitDay, slips: [date(5, 12)], now: date(7, 10), clock: clock) == 67)
+    }
+
+    /// CLIN-07: cumulative, never back to zero. "45 of 46 days · 98%"; only a clean run shows 100%.
+    @Test func resilienceCountsClearDaysAndNeverResets() {
+        #expect(Resilience.Days(clear: 45, total: 46).percent == 98)
+        #expect(Resilience.Days(clear: 199, total: 200).percent == 99)
+        #expect(Resilience.Days(clear: 200, total: 200).percent == 100)
+        #expect(Resilience.Days(clear: 0, total: 0).percent == 100)
+        let clock = DayClock(calendar: calendar, boundaryHour: 4)
+        let quitDay = date(1, 0)
+        let slip = [date(2, 15)]
+        let afterSlip = Resilience.days(quitDay: quitDay, slips: slip, now: date(2, 20), clock: clock)
+        #expect(afterSlip == Resilience.Days(clear: 1, total: 2))
+        // Every clear day after it adds one back.
+        #expect(Resilience.days(quitDay: quitDay, slips: slip, now: date(10, 12), clock: clock) == Resilience.Days(clear: 9, total: 10))
+        #expect(Resilience.days(quitDay: quitDay, slips: [], now: date(1, 2) - 86_400, clock: clock).total == 0)
     }
 }

@@ -10,6 +10,7 @@ struct CalmToolsView: View {
     /// Starts Craving SOS from "Still craving?". Passed in, since this can be presented above the app's environment.
     var startSOS: (() -> Void)?
     @State private var open: CalmTool?
+    @State private var rewardCard = false
 
     init(onClose: @escaping () -> Void, fromSOS: Bool = false, startSOS: (() -> Void)? = nil) {
         self.onClose = onClose
@@ -34,6 +35,8 @@ struct CalmToolsView: View {
                     .accessibilityAddTraits(.isHeader)
                 Text("Short things to do instead of reaching for nicotine.").dxType(.body).foregroundStyle(ground.muted)
                     .padding(.bottom, DX.Space.xs)
+                // CLIN-04: for the moment straight after finishing something.
+                Button { rewardCard = true } label: { RewardCardRow() }.buttonStyle(.plain)
                 ForEach(CalmTool.allCases) { tool in
                     Button { open = tool } label: { CalmToolRow(tool: tool) }.buttonStyle(.plain)
                 }
@@ -51,6 +54,9 @@ struct CalmToolsView: View {
                 .padding(.leading, DX.Space.m).padding(.top, DX.Space.s)
         }
         .background(ground.background.ignoresSafeArea())
+        .fullScreenCover(isPresented: $rewardCard) {
+            RewardDefusionView { rewardCard = false }
+        }
         .fullScreenCover(item: $open) { tool in
             CalmToolPlayer(tool: tool, fromSOS: fromSOS) { backToSOS in
                 open = nil
@@ -444,5 +450,111 @@ struct CalmToolPlayer: View {
         } else {
             finished = true
         }
+    }
+}
+
+/// The reward card's row on the calm tools list (CLIN-04).
+struct RewardCardRow: View {
+    var body: some View {
+        HStack(spacing: 14) {
+            KitArt(.sparkle, cornerRadius: 18)
+                .frame(width: 64, height: 64)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Just finished something?").dxFont(16, weight: 700, style: .body).foregroundStyle(DX.Ground.reading.ink)
+                Text("\u{201C}\(Text(RewardDefusion.thought))\u{201D} Unhook from it.")
+                    .dxType(.footnote).foregroundStyle(DX.Ground.reading.muted).multilineTextAlignment(.leading)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            Image(systemName: "chevron.right").font(.system(size: 13, weight: .bold)).foregroundStyle(DX.Ground.reading.ink)
+                .accessibilityHidden(true)
+        }
+        .padding(8)
+        .padding(.trailing, 8)
+        .background(Color(light: 0xFFF8EE, dark: 0x221A52), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .accessibilityElement(children: .combine)
+        .accessibilityValue(Text("1 min"))
+    }
+}
+
+/// "Don't I deserve a reward?" (CLIN-04): notice the thought, see what it's offering, pick a real reward.
+struct RewardDefusionView: View {
+    let onDone: () -> Void
+
+    @Environment(\.modelContext) private var context
+    @State private var step = 0
+    @State private var reward: String?
+    @State private var use: ToolUse?
+    @State private var finished = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: DX.Space.s) {
+            HStack(spacing: 4) {
+                ForEach(0..<RewardDefusion.steps.count, id: \.self) { i in
+                    Capsule().fill(i <= step ? Read4.ink : Read4.track).frame(height: 4)
+                }
+            }
+            .accessibilityHidden(true)
+            .padding(.top, DX.Space.s)
+            HStack {
+                Button { close(finished: false) } label: { Image(systemName: "xmark") }
+                    .buttonStyle(.v4Icon).accessibilityLabel(Text("Close"))
+                Spacer()
+                Text("With Glim").v4Text(.micro)
+                Spacer()
+                Color.clear.frame(width: 44, height: 1)
+            }
+            ScrollView {
+                VStack(alignment: .leading, spacing: DX.Space.s) {
+                    let current = RewardDefusion.steps[min(step, RewardDefusion.steps.count - 1)]
+                    if step == 0 {
+                        Text("\u{201C}\(Text(RewardDefusion.thought))\u{201D}")
+                            .dxFont(24, weight: 600, style: .title2).foregroundStyle(Read4.accent)
+                            .padding(.top, DX.Space.m)
+                    }
+                    Text(current.title).v4Text(.title).padding(.top, step == 0 ? 0 : DX.Space.m)
+                    Text(current.body).dxFont(16, weight: 400, style: .body).foregroundStyle(Read4.muted)
+                        .fixedSize(horizontal: false, vertical: true)
+                    if step == RewardDefusion.steps.count - 1 {
+                        DXFlowLayout {
+                            ForEach(RewardDefusion.rewards.map { String(localized: $0) }, id: \.self) { r in
+                                V4ToggleChip(LocalizedStringKey(r), isOn: Binding(get: { reward == r }, set: { if $0 { reward = r } }))
+                            }
+                        }
+                        .padding(.top, DX.Space.xs)
+                        if let reward {
+                            Text("Enjoy it: \(reward.lowercased()). You earned it.")
+                                .dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.ink)
+                                .padding(.top, DX.Space.xs)
+                        }
+                    }
+                    Button(step + 1 < RewardDefusion.steps.count ? "Next" : "Done") {
+                        if step + 1 < RewardDefusion.steps.count { step += 1 } else { close(finished: true) }
+                    }
+                    .buttonStyle(.dx(.primary, on: .reading))
+                    .padding(.top, DX.Space.s)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .scrollBounceBehavior(.basedOnSize)
+        }
+        .padding(.horizontal, DX.Space.m)
+        .dxReadableColumn()
+        .padding(.bottom, DX.Space.xs)
+        .background(Read4.background.ignoresSafeArea())
+        .onAppear {
+            let record = ToolUse(tool: RewardDefusion.toolID)
+            context.insert(record)
+            try? context.save()
+            use = record
+        }
+        .sensoryFeedback(DX.Haptic.select, trigger: step)
+        .sensoryFeedback(DX.Haptic.commit, trigger: finished)
+    }
+
+    private func close(finished done: Bool) {
+        use?.finished = done
+        try? context.save()
+        finished = done
+        onDone()
     }
 }

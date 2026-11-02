@@ -19,13 +19,30 @@ struct HealthTimelineTests {
             #expect(!items.isEmpty)
             for item in items {
                 #expect(item.toHours >= item.fromHours)
-                // Looks changes are wellness notes; every health claim cites a source.
-                if item.isLooks { continue }
+                // Looks and felt changes are wellness notes; every health claim cites a source.
+                if item.isWellness { continue }
                 let source = try #require(timeline.source(item.source), "\(item.id) has no source")
                 #expect(source.url.scheme == "https")
             }
             #expect(items.contains { $0.isLooks }, "no looks changes for \(product)")
             #expect(!timeline.sources(for: product).isEmpty)
+        }
+    }
+
+    /// CLIN-01: dopamine and brain-fog recovery, roughly Days 10 to 45, told as "many people notice…" with no source,
+    /// for every product.
+    @Test func recoveryMilestonesAreWhatManyPeopleNotice() throws {
+        let timeline = try #require(HealthTimeline.bundled)
+        for product in Product.allCases {
+            let felt = timeline.items(for: product).filter(\.isFelt)
+            #expect(felt.map(\.id) == ["flat-days", "clearer-head", "rewards-return"], "\(product)")
+            for item in felt {
+                #expect(item.title.hasPrefix("Many people notice"))
+                #expect(item.source == nil)
+                #expect(item.fromHours >= 10 * 24 && item.toHours <= 45 * 24)
+                // A rough window, never a date.
+                #expect(item.when.hasPrefix("Often"))
+            }
         }
     }
 

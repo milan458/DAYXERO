@@ -448,6 +448,31 @@ struct BaselineSummaryScreen: View {
         }
     }
 
+    /// "1 pouch (11 mg) ≈ 1.8 cigarettes · 25 puffs ≈ 1 cigarette": what each product counts as in the total.
+    /// Nil when only cigarettes were picked, as there's nothing to convert.
+    private var conversionLine: String? {
+        let parts = model.orderedProducts.compactMap { product -> String? in
+            let d = model.baseline(for: product)
+            let perUnit = NicotineEstimate.cigarettesPerUnit(product, strength: d.strengthMg)
+            guard perUnit > 0 else { return nil }
+            switch product {
+            case .cigarettes:
+                return nil
+            case .pouches:
+                let ratio = perUnit.formatted(.number.precision(.fractionLength(0...1)))
+                if let mg = d.strengthMg {
+                    let strength = mg.formatted(.number.precision(.fractionLength(0...1)))
+                    return String(localized: "1 pouch (\(strength) mg) ≈ \(ratio) cigarettes")
+                }
+                return String(localized: "1 pouch ≈ \(ratio) cigarettes")
+            case .vape:
+                let puffs = max(Int((1 / perUnit).rounded()), 1)
+                return String(localized: "\(puffs) puffs ≈ 1 cigarette")
+            }
+        }
+        return parts.isEmpty ? nil : parts.joined(separator: " · ")
+    }
+
     private var hero: some View {
         VStack(alignment: .leading, spacing: DX.Space.s) {
             Text("Total daily nicotine load").onbText(.micro)
@@ -474,6 +499,12 @@ struct BaselineSummaryScreen: View {
                     }
                 }
                 .accessibilityElement(children: .combine)
+            }
+            if let conversion = conversionLine {
+                // How the total is reached, so 10 cigarettes and 8 pouches reading as ~25 isn't a mystery.
+                Text(verbatim: conversion)
+                    .dxFont(12, weight: 400, style: .caption1).foregroundStyle(.white.opacity(0.75))
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
         .padding(DX.Space.l)

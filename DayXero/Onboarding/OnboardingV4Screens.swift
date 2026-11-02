@@ -216,21 +216,9 @@ struct QuitDayScreen: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            ZStack(alignment: .topLeading) {
-                ZStack(alignment: .bottom) {
-                    HeroScene(.dawn, clarity: CrewGrowth.prepClarity, height: 250, edge: ground.background)
-                    XeroView(mood: .hello, stage: 1, size: .scene).offset(y: -14)
-                }
-                Button { model.back() } label: {
-                    Image(systemName: "chevron.left").font(.system(size: 16, weight: .bold))
-                        .frame(width: 44, height: 44)
-                        .background(DX.Fill.cream.opacity(0.85), in: Circle())
-                        .foregroundStyle(DX.Fill.navy)
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel(Text("Back"))
-                .padding(.leading, DX.Layout.gutter)
-                .padding(.top, 54)
+            ZStack(alignment: .bottom) {
+                HeroScene(.dawn, clarity: CrewGrowth.prepClarity, height: 250, edge: ground.background)
+                XeroView(mood: .hello, stage: 1, size: .scene).offset(y: -14)
             }
             .ignoresSafeArea(edges: .top)
             ScrollView {
@@ -271,6 +259,20 @@ struct QuitDayScreen: View {
             .padding(.horizontal, DX.Layout.buttonGutter)
             .dxReadableColumn()
             .padding(.bottom, DX.Space.xs)
+        }
+        // Back sits just under the status bar on every phone: this VStack keeps to the safe area while the art above
+        // runs under it. It used to be a fixed 54 pt from the top of the screen, which only matched some notches.
+        .overlay(alignment: .topLeading) {
+            Button { model.back() } label: {
+                Image(systemName: "chevron.left").font(.system(size: 16, weight: .bold))
+                    .frame(width: 44, height: 44)
+                    .background(DX.Fill.cream.opacity(0.85), in: Circle())
+                    .foregroundStyle(DX.Fill.navy)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(Text("Back"))
+            .padding(.leading, DX.Layout.gutter)
+            .padding(.top, DX.Space.xs)
         }
         .sheet(isPresented: $picking) {
             NavigationStack {

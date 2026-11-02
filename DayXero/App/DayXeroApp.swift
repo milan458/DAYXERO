@@ -137,6 +137,8 @@ struct RootView: View {
                 SOSBridge.openCravingLog = { [log] in log.open(.craving) }
                 if let source = SOSState.consumeOpenRequest() { sos.open(source: source) }
                 if LogRequest.consumeCravingLog() { log.open(.craving) }
+                // A slip logged from Siri or the widget opens Jelli's if-then planner (CLIN-10).
+                if SlipPlanRequest.consume(), log.page == nil { log.open(.slipPlan) }
                 #if DEBUG
                 if UserDefaults.standard.bool(forKey: "dx.sos") {
                     sos.open(source: "debug")
