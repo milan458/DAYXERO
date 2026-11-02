@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-11-02T20:24:05.901Z"
+    "updated": "2026-11-02T20:47:30.796Z"
   },
   "now": {
     "section": "S30",
@@ -2960,7 +2960,7 @@
           "id": "S30.1",
           "title": "MON-01 · Restructure free vs paid: Prep 1-3 free; trial sold at the Prep 4 paywall whatever the Quit Day; SOS free, Jelli voice paid",
           "status": "awaiting_signoff",
-          "notes": "Milan 2 Nov: 7-day trial whatever the Quit Day; SOS free and voice paid. Replaces decision 15. Gated: Prep 4+ sessions, voice coaching (SOS sighs, breathing coach), if-then slip planner, NRT setup, trigger heatmap. Built on claude/hopeful-galileo-k4zxbx; waiting on CI and TestFlight.",
+          "notes": "Milan 2 Nov: 7-day trial whatever the Quit Day; SOS free and voice paid. Replaces decision 15. Gated: Prep 4+ sessions, voice coaching (SOS sighs, breathing coach), if-then slip planner, NRT setup, trigger heatmap. Built on claude/hopeful-galileo-k4zxbx; waiting on CI and TestFlight.\nCI run 210 (f7427f4): build and all tests pass.",
           "created": "2026-11-02T20:23:58.105Z",
           "completed": null
         },
@@ -2968,7 +2968,7 @@
           "id": "S30.2",
           "title": "MON-03 · Paywall price anchor in habit terms (\"Costs 8 days of smoking\") from the person's own spend",
           "status": "awaiting_signoff",
-          "notes": "Yearly price / (moneyPerYear / 365), rounded up; smoking, vaping, pouches, or nicotine for dual use. Hidden for a currency mismatch, no spend, or over 90 days. Paywall and Prep 4 upgrade sheet. Built on claude/hopeful-galileo-k4zxbx; waiting on CI.",
+          "notes": "Yearly price / (moneyPerYear / 365), rounded up; smoking, vaping, pouches, or nicotine for dual use. Hidden for a currency mismatch, no spend, or over 90 days. Paywall and Prep 4 upgrade sheet. Built on claude/hopeful-galileo-k4zxbx; waiting on CI.\nCI run 210 (f7427f4): build and all tests pass.",
           "created": "2026-11-02T20:23:58.148Z",
           "completed": null
         },
@@ -2976,7 +2976,7 @@
           "id": "S30.3",
           "title": "MON-04 · 90-second interactive card stacks next to the audio lessons",
           "status": "awaiting_signoff",
-          "notes": "Milan 2 Nov: card stacks next to audio. 4 cards per session in program.json (2.1.0), read by default, 'Listen instead' when a recording exists (remembered). Card copy is a draft from each session's own text: needs Milan's review. Built on claude/hopeful-galileo-k4zxbx; waiting on CI.",
+          "notes": "Milan 2 Nov: card stacks next to audio. 4 cards per session in program.json (2.1.0), read by default, 'Listen instead' when a recording exists (remembered). Card copy is a draft from each session's own text: needs Milan's review. Built on claude/hopeful-galileo-k4zxbx; waiting on CI.\nCI run 210 (f7427f4): build and all tests pass.",
           "created": "2026-11-02T20:23:58.195Z",
           "completed": null
         },
@@ -3000,6 +3000,21 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-11-02T20:47:30.796Z",
+      "type": "note",
+      "message": "S30.3: CI run 210 (f7427f4): build and all tests pass."
+    },
+    {
+      "time": "2026-11-02T20:47:30.751Z",
+      "type": "note",
+      "message": "S30.2: CI run 210 (f7427f4): build and all tests pass."
+    },
+    {
+      "time": "2026-11-02T20:47:30.710Z",
+      "type": "note",
+      "message": "S30.1: CI run 210 (f7427f4): build and all tests pass."
+    },
     {
       "time": "2026-11-02T20:24:05.901Z",
       "type": "note",
