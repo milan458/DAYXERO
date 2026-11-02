@@ -54,6 +54,7 @@ struct HomeSnapshot {
     let moneyPerYear: Decimal
     let currencyCode: String
     let prepDone: Int
+    /// Prep sessions in the program (seven), not calendar days to Quit Day.
     let prepTotal: Int
     /// Which prep day today is on the calendar (Day 1 is the day onboarding finished).
     let prepDayNumber: Int
@@ -143,12 +144,15 @@ struct HomeSnapshot {
         moneyKept = stats.moneyKept(at: now)
         moneyPerYear = stats.moneyPerYear
         currencyCode = profile.currencyCode
-        prepTotal = schedule.prepDays
         // Program v2 sessions are what's done now; the old program's lesson completions still count for anyone who has them.
         let records = sessions ?? (try? profile.modelContext?.fetch(FetchDescriptor<SessionRecord>())) ?? []
         let sessionsDone = records.filter { $0.completedAt != nil }
         let prepIds = ProgramContent.bundled?.prepSessionIds ?? []
-        prepDone = max(completed.filter { $0.phase == .prep }.count, sessionsDone.filter { prepIds.contains($0.sessionId) }.count)
+        // The program has seven prep sessions (P1 to P7) however far away Quit Day is. Calendar days to Quit Day can be
+        // anything from 3 to 30, which read as "Prep day 1 of 9" when someone picked a Quit Day nine days out.
+        prepTotal = prepIds.isEmpty ? schedule.prepDays : prepIds.count
+        prepDone = min(max(completed.filter { $0.phase == .prep }.count, sessionsDone.filter { prepIds.contains($0.sessionId) }.count),
+                       max(prepTotal, 0))
         prepDayNumber = (calendar.dateComponents([.day], from: clock.startOfDate(profile.createdAt), to: today).day ?? 0) + 1
         programFraction = schedule.engine.fractionComplete(completed: completed)
         quitWeekDone = completed.filter { $0.phase == .quit }.count

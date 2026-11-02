@@ -160,10 +160,17 @@ struct OnboardingScaffold<Content: View, Footer: View>: View {
                 .padding(.bottom, DX.Space.xl)
             }
             .scrollDismissesKeyboard(.interactively)
-            VStack(spacing: DX.Space.xs) { footer() }
-                .padding(.horizontal, DX.Layout.buttonGutter)
-                .dxReadableColumn()
-                .padding(.bottom, DX.Space.xs)
+            // The footer sits in the scroll view's bottom safe area, which the keyboard is part of: Continue rides
+            // up with the keyboard (the price field's decimal pad has no return key), and the scroll content is
+            // inset by the footer's height so the focused field can always be scrolled clear of it.
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                VStack(spacing: DX.Space.xs) { footer() }
+                    .padding(.horizontal, DX.Layout.buttonGutter)
+                    .dxReadableColumn()
+                    .padding(.top, DX.Space.xs)
+                    .padding(.bottom, DX.Space.xs)
+                    .background(DX.Ground.lilac.background)
+            }
         }
     }
 }

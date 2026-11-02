@@ -436,7 +436,7 @@ struct TodayView: View {
         let count = prep ? useCount(product, now: now) : (snap.counters.first { $0.product == product }?.avoided ?? 0)
         let title: LocalizedStringKey = switch (product, prep) {
         case (.cigarettes, true): "Cigarettes today"
-        case (.vape, true): "Puffs and urges"
+        case (.vape, true): "Vape today"
         case (.pouches, true): "Pouches today"
         case (.cigarettes, false): "Not smoked"
         case (.vape, false): "Puffs not taken"
@@ -456,11 +456,21 @@ struct TodayView: View {
                 Text(title).dxFont(14, weight: 600, style: .footnote).foregroundStyle(DX.Ground.reading.muted)
                     .lineLimit(2).minimumScaleFactor(0.85)
             }
-            HStack(alignment: .firstTextBaseline, spacing: 6) {
-                Text(count, format: .number).dxType(.title).foregroundStyle(DX.Ground.reading.ink)
-                    .contentTransition(.numericText())
-                Text(prep ? "logged" as LocalizedStringKey : "since Quit Day").dxType(.caption)
-                    .foregroundStyle(DX.Ground.reading.muted)
+            if prep, product == .vape {
+                // Two counters, never one: a puff is a use, an urge is a craving that didn't become one.
+                let urges = urgeCount(now: now)
+                HStack(alignment: .firstTextBaseline, spacing: DX.Space.s) {
+                    tally(count, label: count == 1 ? String(localized: "puff") : String(localized: "puffs"))
+                    tally(urges, label: urges == 1 ? String(localized: "urge") : String(localized: "urges"))
+                }
+                .accessibilityElement(children: .combine)
+            } else {
+                HStack(alignment: .firstTextBaseline, spacing: 6) {
+                    Text(count, format: .number).dxType(.title).foregroundStyle(DX.Ground.reading.ink)
+                        .contentTransition(.numericText())
+                    Text(prep ? "logged" as LocalizedStringKey : "since Quit Day").dxType(.caption)
+                        .foregroundStyle(DX.Ground.reading.muted)
+                }
             }
             Spacer(minLength: 0)
             HStack(spacing: 6) {
@@ -479,6 +489,16 @@ struct TodayView: View {
         .padding(14)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(DX.Fill.raised, in: RoundedRectangle(cornerRadius: DX.Layout.smallCardRadius, style: .continuous))
+    }
+
+    /// A number and what it counts, for the vape card's Puffs and Urges.
+    private func tally(_ value: Int, label: String) -> some View {
+        HStack(alignment: .firstTextBaseline, spacing: 4) {
+            Text(value, format: .number).dxType(.title).foregroundStyle(DX.Ground.reading.ink)
+                .contentTransition(.numericText())
+            Text(verbatim: label).dxType(.caption).foregroundStyle(DX.Ground.reading.muted)
+                .lineLimit(1).minimumScaleFactor(0.85)
+        }
     }
 
     private func pill(_ title: LocalizedStringKey, accent: Bool = false) -> some View {
@@ -536,6 +556,16 @@ struct TodayView: View {
         let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
         let today = clock.day(containing: now)
         return logs.filter { $0.product == product && $0.kind != .craving && clock.day(containing: $0.timestamp) == today }.count
+    }
+
+    /// Urges today: cravings logged or ridden out with SOS. One that ended in a slip isn't an urge resisted, and an SOS
+    /// closed straight away isn't counted (as with the wave card).
+    private func urgeCount(now: Date) -> Int {
+        let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
+        let today = clock.day(containing: now)
+        return logs.filter {
+            $0.kind == .craving && $0.outcome != .slipped && $0.outcome != .closed && clock.day(containing: $0.timestamp) == today
+        }.count
     }
 
     private func isPrep(_ snap: HomeSnapshot) -> Bool {
