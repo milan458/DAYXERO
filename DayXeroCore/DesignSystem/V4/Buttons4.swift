@@ -134,7 +134,8 @@ private struct V4ButtonBody<Label: View>: View {
 }
 
 /// Press and hold to commit, always `DX.Move.hold` (1 s, S27.20). The fill runs left
-/// to right while held and resets if released early. VoiceOver users double-tap instead:
+/// to right while held and resets if released early. While held, a Core Haptics crescendo builds from a soft hum to
+/// a firm one (CHAR-04, 2 Nov 2026), then the commit lands with its own tap. VoiceOver users double-tap instead:
 /// the default accessibility action completes it.
 public struct HoldButton: View {
     let label: String
@@ -145,6 +146,7 @@ public struct HoldButton: View {
 
     @State private var progress: CGFloat = 0
     @State private var done = false
+    @State private var haptics = HapticPlayer()
     @Environment(\.colorScheme) private var scheme
 
     public init(_ label: String, done doneLabel: String, duration: Double, on ground: DX.Ground, action: @escaping () -> Void) {
@@ -186,10 +188,13 @@ public struct HoldButton: View {
             guard !done else { return }
             if pressing {
                 withAnimation(.linear(duration: duration)) { progress = 1 }
+                haptics.crescendo(duration: duration)
             } else {
                 withAnimation(.easeOut(duration: 0.2)) { progress = 0 }
+                haptics.stop()
             }
         }
+        .onDisappear { haptics.shutDown() }
         .sensoryFeedback(DX.Haptic.commit, trigger: done) { _, isDone in isDone }
         .accessibilityElement()
         .accessibilityLabel(done ? doneLabel : label)
@@ -201,6 +206,7 @@ public struct HoldButton: View {
 
     private func complete() {
         guard !done else { return }
+        haptics.stop()
         done = true
         action()
     }

@@ -10,6 +10,8 @@ struct ColourCard: View {
     let detail: String?
     let fill: Color
     var chevron = true
+    /// "Start", "Continue": a pill in place of the chevron (UX-12), so the card says what a tap does.
+    var actionTitle: String?
     let action: (() -> Void)?
 
     var body: some View {
@@ -20,7 +22,16 @@ struct ColourCard: View {
                 if let detail { Text(verbatim: detail).dxType(.footnote).fixedSize(horizontal: false, vertical: true) }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            if chevron, action != nil {
+            if let actionTitle, action != nil {
+                Text(verbatim: actionTitle)
+                    .dxFont(15, weight: 700, style: .subheadline)
+                    .foregroundStyle(fill)
+                    .lineLimit(1)
+                    .padding(.horizontal, 16)
+                    .frame(minHeight: 44)
+                    .background(DX.Fill.cream, in: Capsule())
+                    .fixedSize()
+            } else if chevron, action != nil {
                 Image(systemName: "chevron.right")
                     .font(.system(size: 16, weight: .heavy))
                     .frame(width: 44, height: 44)

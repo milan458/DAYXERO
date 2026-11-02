@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-11-02T18:13:34.810Z"
+    "updated": "2026-11-02T18:30:35.403Z"
   },
   "now": {
     "section": "S27",
@@ -2875,9 +2875,147 @@
           "completed": null
         }
       ]
+    },
+    {
+      "id": "S29",
+      "title": "Copy pass, SOS & characters, body & brand (P1)",
+      "goal": "Each screen states a thing once (UX-12); Jelli's SOS becomes an intervention: breathing, then something for the hands, then sensory tricks (CHAR-01 to 03); the Quit Day hold builds (CHAR-04); one citation and illustrated milestones on the body screens (UX-04, CHAR-05).",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S29.1",
+          "title": "UX-12 · Copy pass: water, prep card, program rows, savings, patterns, log sheet, SOS subtitle",
+          "status": "awaiting_signoff",
+          "notes": "Water: 0 / 9 glasses + 2.25 L daily goal. Prep card: Prep 1 / [title] · 5 min / Start. Sheet: Today · 6 min. Savings: you'll keep / year. Patterns: Unlock your trigger map. Log: Cigarette / 0 logged today (vape row reads Puff). SOS: one fading subtitle line, no box or pill.\nBuilt on claude/hopeful-knuth-nyzefj after PR #24 (2 Nov 2026); waiting on CI and TestFlight.",
+          "created": "2026-11-02T18:30:34.833Z",
+          "completed": null
+        },
+        {
+          "id": "S29.2",
+          "title": "CHAR-01 · Jelli SOS: 3-cycle physiological sigh (~30 s), visual + voice + Core Haptics in sync",
+          "status": "awaiting_signoff",
+          "notes": "Pattern 2·1·6·1 from breathing_orb_data.json, three times. On-device voice says each cue (respects Voice guidance); Skip goes straight to riding it out.\nBuilt on claude/hopeful-knuth-nyzefj after PR #24 (2 Nov 2026); waiting on CI and TestFlight.",
+          "created": "2026-11-02T18:30:34.937Z",
+          "completed": null
+        },
+        {
+          "id": "S29.3",
+          "title": "CHAR-02 · Jelli SOS: Hold to feel (haptic pulse + bubble swirl fidget)",
+          "status": "awaiting_signoff",
+          "notes": "Slow heartbeat under the finger, lifts with movement; bubbles spiral out and drift up. Respects SOS haptics setting and Reduce Motion.\nBuilt on claude/hopeful-knuth-nyzefj after PR #24 (2 Nov 2026); waiting on CI and TestFlight.",
+          "created": "2026-11-02T18:30:35.038Z",
+          "completed": null
+        },
+        {
+          "id": "S29.4",
+          "title": "CHAR-03 · Jelli SOS: Sensory tricks drawer",
+          "status": "awaiting_signoff",
+          "notes": "Ice-cold fizzy water through a straw; strong sour or mint sweet; breathing through a narrow straw.\nBuilt on claude/hopeful-knuth-nyzefj after PR #24 (2 Nov 2026); waiting on CI and TestFlight.",
+          "created": "2026-11-02T18:30:35.127Z",
+          "completed": null
+        },
+        {
+          "id": "S29.5",
+          "title": "CHAR-04 · Onboarding: Hold to set Quit Day builds a haptic crescendo",
+          "status": "awaiting_signoff",
+          "notes": "In HoldButton, so the Day Xero commit hold feels the same.\nBuilt on claude/hopeful-knuth-nyzefj after PR #24 (2 Nov 2026); waiting on CI and TestFlight.",
+          "created": "2026-11-02T18:30:35.227Z",
+          "completed": null
+        },
+        {
+          "id": "S29.6",
+          "title": "UX-04 · One footer citation instead of a source line on every card",
+          "status": "awaiting_signoff",
+          "notes": "Progress › What's changing. The full timeline already listed its sources once at the bottom.\nBuilt on claude/hopeful-knuth-nyzefj after PR #24 (2 Nov 2026); waiting on CI and TestFlight.",
+          "created": "2026-11-02T18:30:35.310Z",
+          "completed": null
+        },
+        {
+          "id": "S29.7",
+          "title": "CHAR-05 · Illustrate each milestone in one chosen style",
+          "status": "blocked",
+          "notes": "Progress cards now show each milestone's existing kit illustration (HealthBadge); the timeline already did. A new style waits on the style choice in approvals.",
+          "created": "2026-11-02T18:30:35.403Z",
+          "completed": null
+        }
+      ]
     }
   ],
   "log": [
+    {
+      "time": "2026-11-02T18:30:35.403Z",
+      "type": "task_added",
+      "message": "S29.7 added: CHAR-05 · Illustrate each milestone in one chosen style"
+    },
+    {
+      "time": "2026-11-02T18:30:35.361Z",
+      "type": "status",
+      "message": "S29.6 pending → awaiting_signoff (Built on claude/hopeful-knuth-nyzefj after PR #24 (2 Nov 2026); waiting on CI and TestFlight.)"
+    },
+    {
+      "time": "2026-11-02T18:30:35.310Z",
+      "type": "task_added",
+      "message": "S29.6 added: UX-04 · One footer citation instead of a source line on every card"
+    },
+    {
+      "time": "2026-11-02T18:30:35.269Z",
+      "type": "status",
+      "message": "S29.5 pending → awaiting_signoff (Built on claude/hopeful-knuth-nyzefj after PR #24 (2 Nov 2026); waiting on CI and TestFlight.)"
+    },
+    {
+      "time": "2026-11-02T18:30:35.227Z",
+      "type": "task_added",
+      "message": "S29.5 added: CHAR-04 · Onboarding: Hold to set Quit Day builds a haptic crescendo"
+    },
+    {
+      "time": "2026-11-02T18:30:35.184Z",
+      "type": "status",
+      "message": "S29.4 pending → awaiting_signoff (Built on claude/hopeful-knuth-nyzefj after PR #24 (2 Nov 2026); waiting on CI and TestFlight.)"
+    },
+    {
+      "time": "2026-11-02T18:30:35.127Z",
+      "type": "task_added",
+      "message": "S29.4 added: CHAR-03 · Jelli SOS: Sensory tricks drawer"
+    },
+    {
+      "time": "2026-11-02T18:30:35.093Z",
+      "type": "status",
+      "message": "S29.3 pending → awaiting_signoff (Built on claude/hopeful-knuth-nyzefj after PR #24 (2 Nov 2026); waiting on CI and TestFlight.)"
+    },
+    {
+      "time": "2026-11-02T18:30:35.038Z",
+      "type": "task_added",
+      "message": "S29.3 added: CHAR-02 · Jelli SOS: Hold to feel (haptic pulse + bubble swirl fidget)"
+    },
+    {
+      "time": "2026-11-02T18:30:34.990Z",
+      "type": "status",
+      "message": "S29.2 pending → awaiting_signoff (Built on claude/hopeful-knuth-nyzefj after PR #24 (2 Nov 2026); waiting on CI and TestFlight.)"
+    },
+    {
+      "time": "2026-11-02T18:30:34.937Z",
+      "type": "task_added",
+      "message": "S29.2 added: CHAR-01 · Jelli SOS: 3-cycle physiological sigh (~30 s), visual + voice + Core Haptics in sync"
+    },
+    {
+      "time": "2026-11-02T18:30:34.888Z",
+      "type": "status",
+      "message": "S29.1 pending → awaiting_signoff (Built on claude/hopeful-knuth-nyzefj after PR #24 (2 Nov 2026); waiting on CI and TestFlight.)"
+    },
+    {
+      "time": "2026-11-02T18:30:34.833Z",
+      "type": "task_added",
+      "message": "S29.1 added: UX-12 · Copy pass: water, prep card, program rows, savings, patterns, log sheet, SOS subtitle"
+    },
+    {
+      "time": "2026-11-02T18:30:34.788Z",
+      "type": "section_added",
+      "message": "S29 added: Copy pass, SOS & characters, body & brand (P1)"
+    },
     {
       "time": "2026-11-02T18:13:34.810Z",
       "type": "status",

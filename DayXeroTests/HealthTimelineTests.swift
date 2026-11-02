@@ -4,6 +4,14 @@ import Foundation
 import Testing
 
 struct HealthTimelineTests {
+    /// Progress cites its sources once, under the cards, not on each one (UX-04).
+    @MainActor @Test func sourcesAreCitedOnce() {
+        #expect(ProgressTab.citation(["Source: American Cancer Society", "Source: American Cancer Society"])
+            == "Source: American Cancer Society")
+        #expect(ProgressTab.citation(["Source: American Cancer Society", "Source: CDC"]) == "Sources: American Cancer Society · CDC")
+        #expect(ProgressTab.citation([]) == nil)
+    }
+
     @Test func theBundledTimelineLoadsAndEveryHealthItemHasASource() throws {
         let timeline = try #require(HealthTimeline.bundled)
         for product in Product.allCases {

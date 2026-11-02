@@ -218,7 +218,8 @@ struct ProgressTab: View {
                 if ridden > 0 {
                     ProgressStat(value: Double(ridden), label: ridden == 1 ? String(localized: "wave ridden out") : String(localized: "waves ridden out"))
                 }
-                ProgressStat(value: NSDecimalNumber(decimal: snap.moneyPerYear).doubleValue, label: String(localized: "to keep a year"), format: whole)
+                // UX-12: forward-looking, never "saved" before Quit Day.
+                ProgressStat(value: NSDecimalNumber(decimal: snap.moneyPerYear).doubleValue, label: String(localized: "you'll keep / year"), format: whole)
                 // The same countdown as Today's header, from the chosen Quit Day (S27.5).
                 let daysToQuit = Self.daysToQuit(snap)
                 ProgressStat(value: Double(daysToQuit), label: daysToQuit == 1 ? String(localized: "day to Quit Day") : String(localized: "days to Quit Day"))
@@ -246,7 +247,8 @@ struct ProgressTab: View {
             .fixedSize(horizontal: false, vertical: true)
     }
 
-    /// WHAT'S CHANGING: the change under way and the next one, each with its source; the whole timeline one tap away.
+    /// What's changing: the change under way and the next one, each with its illustration (CHAR-05), and the
+    /// sources cited once underneath rather than on every card (UX-04). The whole timeline is one tap away.
     @ViewBuilder
     private func whatsChanging(now: Date) -> some View {
         let product = profile.primaryProduct?.product ?? .cigarettes
@@ -258,13 +260,17 @@ struct ProgressTab: View {
             .padding(.top, DX.Space.m)
             .accessibilityAddTraits(.isHeader)
         if let current {
-            HealthFactCard(status: String(localized: "Happening now"), when: current.when, title: current.title, line: current.line,
-                           sourceLabel: timeline?.source(current.source)?.label ?? "")
+            changeCard(current, status: String(localized: "Happening now"), line: current.line,
+                       state: HealthTimeline.state(of: current, elapsedHours: elapsed))
         }
         if let next {
-            HealthFactCard(status: elapsed < 0 ? String(localized: "Starting on Quit Day") : String(localized: "Next"),
-                           when: next.when, title: next.title, line: current == nil ? next.line : "",
-                           sourceLabel: timeline?.source(next.source)?.label ?? "")
+            changeCard(next, status: elapsed < 0 ? String(localized: "Starting on Quit Day") : String(localized: "Next"),
+                       line: current == nil ? next.line : "", state: .ahead)
+        }
+        let labels = [current, next].compactMap { item in item.flatMap { timeline?.source($0.source)?.label } }
+        if let citation = Self.citation(labels) {
+            Text(verbatim: citation).dxType(.caption).foregroundStyle(Read4.muted)
+                .fixedSize(horizontal: false, vertical: true)
         }
         Button { showHealth = true } label: {
             Label("See the whole timeline", systemImage: "chevron.right")
@@ -274,6 +280,41 @@ struct ProgressTab: View {
                 .frame(minHeight: 44)
         }
         .buttonStyle(.plain)
+    }
+
+    /// One change in the body: its illustration, "Happening now · 2–12 weeks", the title and its line.
+    private func changeCard(_ item: HealthTimeline.Item, status: String, line: String, state: HealthTimeline.State) -> some View {
+        HStack(alignment: .top, spacing: DX.Space.s) {
+            HealthBadge(id: item.id, state: state, size: 56)
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(verbatim: "\(status) · \(item.when)").dxType(.footnote).foregroundStyle(Read4.muted)
+                Text(verbatim: item.title).dxType(.headline).foregroundStyle(Read4.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+                if !line.isEmpty {
+                    Text(verbatim: line).dxType(.body).foregroundStyle(Read4.ink)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .padding(14)
+        .background(Read4.card, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(Read4.hairline))
+        .accessibilityElement(children: .combine)
+    }
+
+    /// One footer for every source on screen (UX-04): "Source: American Cancer Society", or
+    /// "Sources: American Cancer Society · CDC" when there are two.
+    static func citation(_ labels: [String]) -> String? {
+        var names: [String] = []
+        for label in labels {
+            let name = label.hasPrefix("Source: ") ? String(label.dropFirst("Source: ".count)) : label
+            if !name.isEmpty, !names.contains(name) { names.append(name) }
+        }
+        guard !names.isEmpty else { return nil }
+        let list = names.joined(separator: " · ")
+        return names.count == 1 ? String(localized: "Source: \(list)") : String(localized: "Sources: \(list)")
     }
 
     private static func daysToQuit(_ snap: HomeSnapshot) -> Int {
@@ -454,17 +495,15 @@ struct ProgressTab: View {
         patternPanel {
             VStack(alignment: .leading, spacing: DX.Space.s) {
                 if insights.points.isEmpty {
-                    ZStack {
-                        HeatMap(grid: Self.sampleGrid)
-                            .blur(radius: 4)
-                            .opacity(0.4)
-                            .accessibilityHidden(true)
-                        Text("Your first log starts the map")
-                            .dxFont(14, weight: 600, style: .footnote)
-                            .foregroundStyle(Read4.ink)
-                            .padding(.vertical, 8).padding(.horizontal, 14)
-                            .background(Read4.surface, in: Capsule())
+                    // UX-12: what unlocks it, honestly. Insights need a week of logs, not one.
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Unlock your trigger map").v4Text(.cardHeading)
+                        Text("Log cravings this week to see your patterns.").v4Text(.subtitle)
                     }
+                    HeatMap(grid: Self.sampleGrid)
+                        .blur(radius: 4)
+                        .opacity(0.4)
+                        .accessibilityHidden(true)
                 } else {
                     let counts = insights.timeOfDayCounts
                     let most = max(counts.map(\.count).max() ?? 1, 1)
