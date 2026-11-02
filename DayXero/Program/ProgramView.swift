@@ -3,9 +3,9 @@ import SwiftData
 import SwiftUI
 
 /// The Program tab (decision 31): the phase you pick drawn as a winding path on mint, done stops ticked,
-/// today's a big play button, later ones locked, the phase's last session as its milestone; then the same
-/// sessions as tiles, each with its own illustration from the kit. Finished sessions replay. Nothing is
-/// ever shown as missed, overdue or failed.
+/// today's a big play button, later ones locked, the phase's last session as its milestone. Tapping a stop opens a
+/// bottom sheet with its illustration, when it opens and what to do (UX-02, 2 Nov 2026); the list of session cards
+/// under the path went. Finished sessions replay. Nothing is ever shown as missed, overdue or failed.
 struct ProgramView: View {
     let profile: UserProfile
     @Environment(Entitlement.self) private var entitlement
@@ -15,7 +15,10 @@ struct ProgramView: View {
     @State private var upgradeTitle: String?
     @State private var showPaywall = false
     @State private var picked: String?
-    @State private var waitingTip: String?
+    /// The stop whose sheet is open (UX-02).
+    @State private var sheet: StopSheet?
+    /// What the sheet's button asked for, done once the sheet has closed so a session or paywall can open.
+    @State private var afterSheet: StopSheet?
     /// Glim's weekly check-in after graduation (S27.18); the same setting as Settings › Notifications.
     @AppStorage(DailyReminderSettings.weeklyKey) private var weekly = DailyReminderSettings.offUntilChosen
 
@@ -44,8 +47,8 @@ struct ProgramView: View {
                         ProgramPathMap(stops: stops(phase, content: content, states: states, current: current, store: store),
                                        ground: ground) { stop in
                             guard let session = content.session(stop.id) else { return }
-                            tap(session, state: states[stop.id] ?? .locked, title: stop.title,
-                                needsUpgrade: stop.needsUpgrade)
+                            sheet = StopSheet(session: session, title: stop.title, state: states[stop.id] ?? .locked,
+                                              needsUpgrade: stop.needsUpgrade)
                         }
                         if let line = nextLine(content, states: states, current: current, variant: store.variant) {
                             HStack(alignment: .top, spacing: 10) {
@@ -57,14 +60,8 @@ struct ProgramView: View {
                             .padding(14)
                             .background(tileFill, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
                         }
-                        Text(verbatim: phaseHeading(phase, states: states)).dxType(.caption).textCase(.uppercase)
-                            .foregroundStyle(ground.muted).padding(.top, DX.Space.s)
-                            .accessibilityAddTraits(.isHeader)
-                        ForEach(phase.sessionIds, id: \.self) { id in
-                            if let session = content.session(id) {
-                                tile(session, state: states[id] ?? .locked, isCurrent: id == current, store: store)
-                            }
-                        }
+                        Text(verbatim: phaseHeading(phase, states: states)).dxType(.footnote)
+                            .foregroundStyle(ground.muted)
                         // After graduation the program keeps going: boosters on Days 45, 60 and 90, and Glim
                         // checking in once a week if they want it (S27.18).
                         if profile.progress?.graduatedAt != nil { weeklyCheckIn }
@@ -78,6 +75,13 @@ struct ProgramView: View {
                 .padding(.bottom, DX.Space.l)
             }
             .background(ground.background.ignoresSafeArea())
+        }
+        .sheet(item: $sheet, onDismiss: {
+            guard let item = afterSheet else { return }
+            afterSheet = nil
+            tap(item.session.id, state: item.state, title: item.title, needsUpgrade: item.needsUpgrade)
+        }) { item in
+            stopSheet(item)
         }
         .fullScreenCover(item: $open, onDismiss: { NotificationCenter.default.post(name: .dxSessionClosed, object: nil) }) { item in
             SessionFlowView(sessionId: item.id, profile: profile, isReplay: item.isReplay)
@@ -180,80 +184,94 @@ struct ProgramView: View {
         return nil
     }
 
-    // MARK: Tiles
+    // MARK: Stop sheet (UX-02)
 
-    /// A session tile: its illustration with a done or lock badge, then "Today · 3 min", "Done" or when it opens.
-    private func tile(_ session: ProgramContent.Session, state: ProgramUnlock.State, isCurrent: Bool, store: ProgramStore) -> some View {
-        let title = session.title.resolve(store.variant) ?? ""
-        let open = state == .available || state == .inProgress
-        let needsUpgrade = open && ProgramV2Access.needsUpgrade(session.id, isPro: entitlement.isPro)
-        let today = open && !needsUpgrade
-        let done: Bool = if case .completed = state { true } else { false }
-        let kicker: String = if today {
-            String(localized: "Today · \(session.durationMinutes) min")
-        } else if needsUpgrade {
-            String(localized: "Unlock to start")
-        } else if done {
-            String(localized: "Done")
-        } else {
-            waitText(state) ?? session.label
-        }
-        return Button {
-            tap(session, state: state, title: title, needsUpgrade: needsUpgrade)
-        } label: {
-            HStack(spacing: 12) {
-                KitArt(ProgramArt.kind(for: session.id), cornerRadius: 18)
-                    .frame(width: 64, height: 64)
-                    .overlay(alignment: .bottomTrailing) {
-                        if done || !open || needsUpgrade {
-                            Image(systemName: done ? "checkmark" : needsUpgrade ? "lock.open.fill" : "lock.fill")
-                                .font(.system(size: 10, weight: .heavy))
-                                .foregroundStyle(done ? DX.Ground.reading.background : DX.Ground.reading.ink)
-                                .frame(width: 24, height: 24)
-                                .background(done ? DX.Fill.green : tileFill, in: Circle())
-                                .overlay(Circle().strokeBorder(tileFill, lineWidth: 2.5))
-                                .offset(x: 4, y: 4)
-                        }
-                    }
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(verbatim: kicker.uppercased()).dxType(.caption)
-                        .foregroundStyle(today ? DX.Ground.reading.ink : DX.Ground.reading.muted)  // coral only fills the play button, never text (S27.13)
-                    Text(verbatim: title).dxType(.headline).foregroundStyle(DX.Ground.reading.ink)
-                        .multilineTextAlignment(.leading).fixedSize(horizontal: false, vertical: true)
-                }
-                Spacer(minLength: 0)
-                if today {
-                    Image(systemName: "play.fill").font(.system(size: 15, weight: .bold)).foregroundStyle(DX.Fill.navy)
-                        .frame(width: 44, height: 44).background(Color(hex: 0xFF7A55), in: Circle())
-                        .accessibilityHidden(true)
-                } else if done {
-                    Image(systemName: "arrow.counterclockwise").font(.system(size: 14, weight: .bold))
-                        .foregroundStyle(DX.Ground.reading.muted).accessibilityHidden(true)
-                }
-            }
-            .padding(8)
-            .padding(.trailing, 6)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(tileFill, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
-            .overlay {
-                if today { RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(Color(hex: 0xFF7A55), lineWidth: 2.5) }
-            }
-        }
-        .buttonStyle(.plain)
-        .accessibilityElement(children: .combine)
-        .accessibilityValue(Text(accessibilityState(state)))
-        .popover(isPresented: Binding(get: { waitingTip == session.id }, set: { if !$0 { waitingTip = nil } })) {
-            Text(verbatim: waitText(state) ?? "").v4Text(.subtitle).padding().presentationCompactAdaptation(.popover)
-        }
+    /// A path stop, as its bottom sheet shows it.
+    struct StopSheet: Identifiable {
+        let session: ProgramContent.Session
+        let title: String
+        let state: ProgramUnlock.State
+        let needsUpgrade: Bool
+        var id: String { session.id }
     }
 
-    private func tap(_ session: ProgramContent.Session, state: ProgramUnlock.State, title: String, needsUpgrade: Bool) {
+    /// The stop's illustration, "Prep 3 · 6 min" or when it opens, its title, and one button: Start, Continue,
+    /// Replay or Unlock. A stop that isn't open yet says when it will, with nothing to press.
+    private func stopSheet(_ item: StopSheet) -> some View {
+        let session = item.session
+        let open = item.state == .available || item.state == .inProgress
+        let done: Bool = if case .completed = item.state { true } else { false }
+        let kicker: String = if item.needsUpgrade {
+            String(localized: "\(session.label) · Unlock to start")
+        } else if open || done {
+            String(localized: "\(session.label) · \(session.durationMinutes) min")
+        } else {
+            String(localized: "\(session.label) · \(waitText(item.state) ?? String(localized: "Comes later"))")
+        }
+        let button: String? = if item.needsUpgrade {
+            String(localized: "Unlock \(session.label)")
+        } else if item.state == .inProgress {
+            String(localized: "Continue")
+        } else if open {
+            String(localized: "Start")
+        } else if done {
+            String(localized: "Replay")
+        } else {
+            nil
+        }
+        let note: String? = if done {
+            String(localized: "Done. Play it again any time.")
+        } else if item.state == .inProgress {
+            String(localized: "Xero saved your place.")
+        } else if !open {
+            String(localized: "No rush. It opens by itself.")
+        } else {
+            nil
+        }
+        return VStack(alignment: .leading, spacing: DX.Space.m) {
+            HStack(spacing: 14) {
+                KitArt(ProgramArt.kind(for: session.id), cornerRadius: 22)
+                    .frame(width: 84, height: 84)
+                    .accessibilityHidden(true)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(verbatim: kicker).dxType(.footnote).foregroundStyle(DX.Ground.reading.muted)
+                    Text(verbatim: item.title).dxType(.title).foregroundStyle(DX.Ground.reading.ink)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .accessibilityAddTraits(.isHeader)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            if let note {
+                Text(verbatim: note).dxType(.body).foregroundStyle(DX.Ground.reading.muted)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer(minLength: 0)
+            if let button {
+                Button(button) {
+                    afterSheet = item
+                    sheet = nil
+                }
+                .buttonStyle(.dx(.primary, on: .reading))
+            } else {
+                Button("Close") { sheet = nil }
+                    .buttonStyle(.dx(.secondary, on: .reading))
+            }
+        }
+        .padding(.horizontal, DX.Layout.gutter)
+        .padding(.top, DX.Space.xl)
+        .padding(.bottom, DX.Space.s)
+        .presentationDetents([.height(340), .medium])
+        .presentationDragIndicator(.visible)
+        .presentationBackground(DX.Ground.reading.background)
+    }
+
+    private func tap(_ id: String, state: ProgramUnlock.State, title: String, needsUpgrade: Bool) {
         switch state {
         case .completed:
-            open = SessionOpen(id: session.id, isReplay: true)
+            open = SessionOpen(id: id, isReplay: true)
         case .available, .inProgress:
             if needsUpgrade {
-                Paywalls.present(.unlockProgramDay, params: ["day": session.id]) { outcome in
+                Paywalls.present(.unlockProgramDay, params: ["day": id]) { outcome in
                     switch outcome {
                     case .fallback: upgradeTitle = title
                     case .unlocked: entitlement.grant()
@@ -261,11 +279,9 @@ struct ProgramView: View {
                     }
                 }
             } else {
-                open = SessionOpen(id: session.id)
+                open = SessionOpen(id: id)
             }
-        case .scheduled:
-            waitingTip = session.id
-        case .locked:
+        case .scheduled, .locked:
             break
         }
     }
@@ -342,7 +358,20 @@ struct ProgramView: View {
             guard let end = StepSchedule(startDate: plan.startDate, steps: plan.steps, clock: clock).end else { return false }
             return clock.day(containing: now) < (clock.calendar.date(byAdding: .day, value: 7, to: end) ?? end)
         }
-        let taper = ProgressStats(quitDay: profile.quitDay, baselines: [], clock: clock).isPrep(at: now) ? profile.pouchTaper : nil
+        let prep = ProgressStats(quitDay: profile.quitDay, baselines: [], clock: clock).isPrep(at: now)
+        let taper = prep ? profile.pouchTaper : nil
+        // The invitations moved here from Today, which no longer scrolls (UX-07).
+        if profile.nrtPlans.isEmpty, profile.nrtInterest == .using || profile.nrtInterest == .wantIt {
+            NRTInviteRow(title: "Set up your NRT", detail: "Reminders for patches and step-downs", systemImage: "bandage") {
+                nrt.sheet = .setup
+            }
+            .padding(.top, DX.Space.xs)
+        }
+        if prep, profile.pouchTaper == nil, profile.products.contains(where: { $0.product == .pouches }) {
+            NRTInviteRow(title: "Step down your pouches", detail: "Optional, before Quit Day", systemImage: "chart.line.downtrend.xyaxis") {
+                nrt.sheet = .taper
+            }
+        }
         if !plans.isEmpty || taper != nil {
             Text("Your NRT").v4Text(.micro).padding(.top, DX.Space.s)
             ForEach(plans.sorted { $0.createdAt < $1.createdAt }) { plan in

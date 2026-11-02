@@ -58,4 +58,52 @@ struct TodayPlanTests {
         #expect(TodayTopCard.pick(slot: .evening, wave: nil, checkedIn: true) == .lesson)
         #expect(TodayTopCard.pick(slot: .night, wave: nil, checkedIn: false) == .windDown)
     }
+
+    // MARK: Focus slot (UX-08)
+
+    @Test func theLessonUntilSixThenTheCheckIn() {
+        #expect(TodayFocus.pick(hour: 6, postQuit: false, checkedIn: false) == .lesson)
+        #expect(TodayFocus.pick(hour: 17, postQuit: false, checkedIn: false) == .lesson)
+        #expect(TodayFocus.pick(hour: 18, postQuit: false, checkedIn: false) == .checkIn)
+        #expect(TodayFocus.pick(hour: 23, postQuit: false, checkedIn: false) == .checkIn)
+        #expect(TodayFocus.pick(hour: 2, postQuit: false, checkedIn: false) == .checkIn)
+    }
+
+    @Test func noEveningCardInTheMorning() {
+        for hour in 6..<18 {
+            #expect(TodayFocus.pick(hour: hour, postQuit: false, checkedIn: false) == .lesson)
+            #expect(TodayFocus.pick(hour: hour, postQuit: true, checkedIn: false) == .recovery)
+        }
+    }
+
+    @Test func afterTheCheckInTheLessonComesBackThenWindingDown() {
+        #expect(TodayFocus.pick(hour: 19, postQuit: false, checkedIn: true) == .lesson)
+        #expect(TodayFocus.pick(hour: 19, postQuit: true, checkedIn: true) == .recovery)
+        #expect(TodayFocus.pick(hour: 22, postQuit: true, checkedIn: true) == .windDown)
+        #expect(TodayFocus.pick(hour: 3, postQuit: false, checkedIn: true) == .windDown)
+    }
+
+    // MARK: Hero numbers (UX-05, UX-09)
+
+    @Test func timeFreeIsShort() {
+        let en = Locale(identifier: "en_US")
+        #expect(TimeFree.short(3 * 86_400 + 14 * 3_600 + 20 * 60, locale: en) == "3d 14h")
+        #expect(TimeFree.short(5 * 3_600 + 20 * 60 + 59, locale: en) == "5h 20m")
+        #expect(TimeFree.short(45 * 60 + 30, locale: en) == "45m")
+        #expect(TimeFree.short(20, locale: en) == "0m")
+    }
+
+    @Test func resilienceIsTheShareOfDaysWithoutASlip() {
+        let clock = DayClock(calendar: calendar, boundaryHour: 4)
+        let quitDay = date(5, 0)
+        #expect(Resilience.percent(quitDay: quitDay, slips: [], now: date(8, 10), clock: clock) == 100)
+        // Before Quit Day there's nothing to lose.
+        #expect(Resilience.percent(quitDay: quitDay, slips: [], now: date(3, 10), clock: clock) == 100)
+        // Day 4 of 4, with two slips on one day: 3 of 4 days clear.
+        #expect(Resilience.percent(quitDay: quitDay, slips: [date(6, 13), date(6, 20)], now: date(8, 10), clock: clock) == 75)
+        // A slip at 2 AM counts for the day before; prep-week uses don't count at all.
+        #expect(Resilience.percent(quitDay: quitDay, slips: [date(7, 2), date(2, 12)], now: date(8, 10), clock: clock) == 75)
+        // One slip in three days rounds down, so only a clean run shows 100%.
+        #expect(Resilience.percent(quitDay: quitDay, slips: [date(5, 12)], now: date(7, 10), clock: clock) == 66)
+    }
 }
