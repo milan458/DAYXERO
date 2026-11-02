@@ -21,6 +21,19 @@ public enum UseLog {
         return entry
     }
 
+    /// Logs several uses at once (UX-05): "+5" and "+10" for puffs, so a vape day isn't a hundred single taps.
+    /// Each is its own entry at the same moment, so every count, chart and insight reads them as before.
+    @discardableResult
+    public static func log(_ product: Product, count: Int, at date: Date = .now, in context: ModelContext) -> [LogEntry] {
+        guard count > 0 else { return [] }
+        let profile = try? context.fetch(FetchDescriptor<UserProfile>()).first
+        let kind: LogKind = isSlip(profile: profile, at: date) ? .slip : .use
+        let entries = (0..<count).map { _ in LogEntry(kind: kind, product: product, timestamp: date) }
+        for entry in entries { context.insert(entry) }
+        try? context.save()
+        return entries
+    }
+
     /// Uses of `product` logged on the day containing `date`, and on the day before.
     public static func counts(_ product: Product, at date: Date = .now, in context: ModelContext,
                               clock: DayClock = DayClock(boundaryHour: 4)) -> (today: Int, yesterday: Int) {
@@ -35,6 +48,12 @@ public enum UseLog {
 
     public static func undo(_ entry: LogEntry, in context: ModelContext) {
         context.delete(entry)
+        try? context.save()
+    }
+
+    /// Undoes a batch logged with `log(_:count:at:in:)`.
+    public static func undo(_ entries: [LogEntry], in context: ModelContext) {
+        for entry in entries { context.delete(entry) }
         try? context.save()
     }
 }

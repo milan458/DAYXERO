@@ -99,15 +99,16 @@ struct CravingSOSView: View {
                             .foregroundStyle(SOSColors.cream)
                         riddenLine
                             .dxArrive(5)
-                        SOSBreakMenuCard(items: menu.isEmpty ? starterBreaks : menu, isOwn: !menu.isEmpty,
-                                         buildingDay: buildingDayLabel, fastActingNRT: hasFastActingNRT)
-                            .padding(.top, 6)
-                            .dxArrive(6)
+                        // Their why comes first, above the fold, before the break menu (UX-06).
                         if let reason = currentReason {
                             SOSReasonCard(reason: reason, canAdvance: reasons.count > 1) { reasonSkip += 1 }
-                                .padding(.top, 10)
+                                .padding(.top, 6)
                                 .dxArrive(6)
                         }
+                        SOSBreakMenuCard(items: menu.isEmpty ? starterBreaks : menu, isOwn: !menu.isEmpty,
+                                         buildingDay: buildingDayLabel, fastActingNRT: hasFastActingNRT)
+                            .padding(.top, currentReason == nil ? 6 : 4)
+                            .dxArrive(6)
                     }
                     .padding(.horizontal, DX.Layout.gutter)
                     .padding(.top, 8)
@@ -239,10 +240,13 @@ struct CravingSOSView: View {
         (profile?.reasons ?? []).sorted { $0.createdAt < $1.createdAt }
     }
 
-    /// Reasons with a photo first, a different one each session; a tap moves to the next.
+    /// Their onboarding "Why" opens every session (UX-06); a tap steps through the rest, photos first.
     private var currentReason: Reason? {
         let reasons = reasons
-        return DailyRhythm.reasonIndex(hasPhoto: reasons.map { $0.photo != nil }, dayNumber: cravings.count + reasonSkip).map { reasons[$0] }
+        guard let why = reasons.first else { return nil }
+        let rest = reasons.dropFirst()
+        let order = [why] + rest.filter { $0.photo != nil } + rest.filter { $0.photo == nil }
+        return order[reasonSkip % order.count]
     }
 
     private var daysClear: Int { Self.clearDays(profile: profile, at: .now) }

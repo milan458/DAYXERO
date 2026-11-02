@@ -91,6 +91,9 @@ struct ProgramToday {
 /// Home's program card: the spotlight card in the app's style, with the five states from the handoff.
 struct ProgramTodayCard: View {
     let profile: UserProfile
+    /// False while Today's focus is another card (UX-08). The card stays in place, drawn as nothing, so a session it
+    /// opened stays open and Prep 1 still opens by itself after onboarding.
+    var showsCard = true
 
     @Environment(\.modelContext) private var context
     @Environment(Entitlement.self) private var entitlement
@@ -101,8 +104,11 @@ struct ProgramTodayCard: View {
     var body: some View {
         let store = ProgramStore(context: context, profile: profile)
         Group {
-            if let today = ProgramToday(store: store, isPro: entitlement.isPro) {
+            if showsCard, let today = ProgramToday(store: store, isPro: entitlement.isPro) {
                 card(today)
+            } else {
+                // A real view, so the covers below stay attached while the card is hidden.
+                Color.clear.frame(height: 0).accessibilityHidden(true)
             }
         }
         .fullScreenCover(item: $open, onDismiss: {

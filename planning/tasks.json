@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-11-01T20:03:04.593Z"
+    "updated": "2026-11-02T18:13:34.810Z"
   },
   "now": {
     "section": "S27",
@@ -2783,9 +2783,206 @@
           "completed": null
         }
       ]
+    },
+    {
+      "id": "S28",
+      "title": "UI & Layout (P1): zero-scroll Today, Program sheet, SOS / Breathe",
+      "goal": "Today becomes a zero-scroll screen with two states, one before Day Xero and one after; remove duplication and make SOS faster to reach.",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S28.1",
+          "title": "UX-01 · Today: delete the duplicate lesson row in Your day",
+          "status": "awaiting_signoff",
+          "notes": "The Your day card is gone: the lesson is the focus card, the check-in takes the focus card after 6 PM, and only a slim Morning pledge row remains until noon.\nBuilt on claude/hopeful-knuth-nyzefj (2 Nov 2026); waiting on CI and TestFlight.",
+          "created": "2026-11-02T18:13:33.859Z",
+          "completed": null
+        },
+        {
+          "id": "S28.2",
+          "title": "UX-02 · Program: remove the card list under the path; a node opens a bottom sheet",
+          "status": "awaiting_signoff",
+          "notes": "Sheet: illustration, label and minutes (or when it opens), title, one button (Start, Continue, Replay, Unlock). NRT invitations moved here from Today.\nBuilt on claude/hopeful-knuth-nyzefj (2 Nov 2026); waiting on CI and TestFlight.",
+          "created": "2026-11-02T18:13:34.036Z",
+          "completed": null
+        },
+        {
+          "id": "S28.3",
+          "title": "UX-03 · Bottom nav: SOS opens Jelli's breathing rescue directly",
+          "status": "awaiting_signoff",
+          "notes": "The tab bar already routed SOS to Craving SOS (Jelli); made explicit in code. Calm tools stay one step further, behind Still strong.\nBuilt on claude/hopeful-knuth-nyzefj (2 Nov 2026); waiting on CI and TestFlight.",
+          "created": "2026-11-02T18:13:34.121Z",
+          "completed": null
+        },
+        {
+          "id": "S28.4",
+          "title": "UX-05 · Today: batch logging (+5, +10) and nicotine-free hours",
+          "status": "awaiting_signoff",
+          "notes": "Vape: +5 / +10. Cigarettes and pouches: +1 / +5. The cell shows time since the last use. Undo takes back the whole batch.\nBuilt on claude/hopeful-knuth-nyzefj (2 Nov 2026); waiting on CI and TestFlight.",
+          "created": "2026-11-02T18:13:34.199Z",
+          "completed": null
+        },
+        {
+          "id": "S28.5",
+          "title": "UX-06 · Today and SOS: show the onboarding Why quote",
+          "status": "awaiting_signoff",
+          "notes": "In both Today heroes, and first in every SOS session (above the break menu); a tap steps through the other reasons.\nBuilt on claude/hopeful-knuth-nyzefj (2 Nov 2026); waiting on CI and TestFlight.",
+          "created": "2026-11-02T18:13:34.275Z",
+          "completed": null
+        },
+        {
+          "id": "S28.6",
+          "title": "UX-07 · Today State A (prep): kicker, countdown hero, focus slot, bento",
+          "status": "awaiting_signoff",
+          "notes": "Kicker PREP DAY n OF 7 · HI, NAME is the only caps line. Hero: countdown + date, a dot per prep day, Why. Bento: water / today's uses.\nBuilt on claude/hopeful-knuth-nyzefj (2 Nov 2026); waiting on CI and TestFlight.",
+          "created": "2026-11-02T18:13:34.348Z",
+          "completed": null
+        },
+        {
+          "id": "S28.7",
+          "title": "UX-08 · Today: time-of-day focus slot",
+          "status": "awaiting_signoff",
+          "notes": "Lesson 6 AM to 6 PM, Glim's check-in after 6 PM until done, wind down after 10 PM once checked in. No evening cards in the morning. TodayFocus in DayXeroCore, with tests.\nBuilt on claude/hopeful-knuth-nyzefj (2 Nov 2026); waiting on CI and TestFlight.",
+          "created": "2026-11-02T18:13:34.428Z",
+          "completed": null
+        },
+        {
+          "id": "S28.8",
+          "title": "UX-09 · Today State B (after Day Xero): time free, resilience, money, recovery, urges surfed",
+          "status": "awaiting_signoff",
+          "notes": "Recovery card wording is a placeholder pending approval (reuses the body-change row lines). Resilience = share of days since Quit Day with no slip.\nBuilt on claude/hopeful-knuth-nyzefj (2 Nov 2026); waiting on CI and TestFlight.",
+          "created": "2026-11-02T18:13:34.570Z",
+          "completed": null
+        },
+        {
+          "id": "S28.9",
+          "title": "UX-10 · Bottom nav: SOS / Breathe button raised 6 pt, pulsing at 0.1 Hz, lungs icon",
+          "status": "awaiting_signoff",
+          "notes": "Ocean circle with the lungs symbol; the glow breathes on the 4 in, 6 out cycle (10 s). Still with Reduce Motion.\nBuilt on claude/hopeful-knuth-nyzefj (2 Nov 2026); waiting on CI and TestFlight.",
+          "created": "2026-11-02T18:13:34.669Z",
+          "completed": null
+        },
+        {
+          "id": "S28.10",
+          "title": "UX-11 · Bottom nav: bottom content inset so the dock never covers the last card",
+          "status": "awaiting_signoff",
+          "notes": "V4TabBar.contentInset = bar 70 + SOS rise 6 + gap 4 + 16 pt room.\nBuilt on claude/hopeful-knuth-nyzefj (2 Nov 2026); waiting on CI and TestFlight.",
+          "created": "2026-11-02T18:13:34.762Z",
+          "completed": null
+        }
+      ]
     }
   ],
   "log": [
+    {
+      "time": "2026-11-02T18:13:34.810Z",
+      "type": "status",
+      "message": "S28.10 pending → awaiting_signoff (Built on claude/hopeful-knuth-nyzefj (2 Nov 2026); waiting on CI and TestFlight.)"
+    },
+    {
+      "time": "2026-11-02T18:13:34.762Z",
+      "type": "task_added",
+      "message": "S28.10 added: UX-11 · Bottom nav: bottom content inset so the dock never covers the last card"
+    },
+    {
+      "time": "2026-11-02T18:13:34.723Z",
+      "type": "status",
+      "message": "S28.9 pending → awaiting_signoff (Built on claude/hopeful-knuth-nyzefj (2 Nov 2026); waiting on CI and TestFlight.)"
+    },
+    {
+      "time": "2026-11-02T18:13:34.669Z",
+      "type": "task_added",
+      "message": "S28.9 added: UX-10 · Bottom nav: SOS / Breathe button raised 6 pt, pulsing at 0.1 Hz, lungs icon"
+    },
+    {
+      "time": "2026-11-02T18:13:34.622Z",
+      "type": "status",
+      "message": "S28.8 pending → awaiting_signoff (Built on claude/hopeful-knuth-nyzefj (2 Nov 2026); waiting on CI and TestFlight.)"
+    },
+    {
+      "time": "2026-11-02T18:13:34.570Z",
+      "type": "task_added",
+      "message": "S28.8 added: UX-09 · Today State B (after Day Xero): time free, resilience, money, recovery, urges surfed"
+    },
+    {
+      "time": "2026-11-02T18:13:34.482Z",
+      "type": "status",
+      "message": "S28.7 pending → awaiting_signoff (Built on claude/hopeful-knuth-nyzefj (2 Nov 2026); waiting on CI and TestFlight.)"
+    },
+    {
+      "time": "2026-11-02T18:13:34.428Z",
+      "type": "task_added",
+      "message": "S28.7 added: UX-08 · Today: time-of-day focus slot"
+    },
+    {
+      "time": "2026-11-02T18:13:34.392Z",
+      "type": "status",
+      "message": "S28.6 pending → awaiting_signoff (Built on claude/hopeful-knuth-nyzefj (2 Nov 2026); waiting on CI and TestFlight.)"
+    },
+    {
+      "time": "2026-11-02T18:13:34.348Z",
+      "type": "task_added",
+      "message": "S28.6 added: UX-07 · Today State A (prep): kicker, countdown hero, focus slot, bento"
+    },
+    {
+      "time": "2026-11-02T18:13:34.316Z",
+      "type": "status",
+      "message": "S28.5 pending → awaiting_signoff (Built on claude/hopeful-knuth-nyzefj (2 Nov 2026); waiting on CI and TestFlight.)"
+    },
+    {
+      "time": "2026-11-02T18:13:34.275Z",
+      "type": "task_added",
+      "message": "S28.5 added: UX-06 · Today and SOS: show the onboarding Why quote"
+    },
+    {
+      "time": "2026-11-02T18:13:34.234Z",
+      "type": "status",
+      "message": "S28.4 pending → awaiting_signoff (Built on claude/hopeful-knuth-nyzefj (2 Nov 2026); waiting on CI and TestFlight.)"
+    },
+    {
+      "time": "2026-11-02T18:13:34.199Z",
+      "type": "task_added",
+      "message": "S28.4 added: UX-05 · Today: batch logging (+5, +10) and nicotine-free hours"
+    },
+    {
+      "time": "2026-11-02T18:13:34.161Z",
+      "type": "status",
+      "message": "S28.3 pending → awaiting_signoff (Built on claude/hopeful-knuth-nyzefj (2 Nov 2026); waiting on CI and TestFlight.)"
+    },
+    {
+      "time": "2026-11-02T18:13:34.121Z",
+      "type": "task_added",
+      "message": "S28.3 added: UX-03 · Bottom nav: SOS opens Jelli's breathing rescue directly"
+    },
+    {
+      "time": "2026-11-02T18:13:34.087Z",
+      "type": "status",
+      "message": "S28.2 pending → awaiting_signoff (Built on claude/hopeful-knuth-nyzefj (2 Nov 2026); waiting on CI and TestFlight.)"
+    },
+    {
+      "time": "2026-11-02T18:13:34.036Z",
+      "type": "task_added",
+      "message": "S28.2 added: UX-02 · Program: remove the card list under the path; a node opens a bottom sheet"
+    },
+    {
+      "time": "2026-11-02T18:13:33.936Z",
+      "type": "status",
+      "message": "S28.1 pending → awaiting_signoff (Built on claude/hopeful-knuth-nyzefj (2 Nov 2026); waiting on CI and TestFlight.)"
+    },
+    {
+      "time": "2026-11-02T18:13:33.859Z",
+      "type": "task_added",
+      "message": "S28.1 added: UX-01 · Today: delete the duplicate lesson row in Your day"
+    },
+    {
+      "time": "2026-11-02T18:13:33.784Z",
+      "type": "section_added",
+      "message": "S28 added: UI & Layout (P1): zero-scroll Today, Program sheet, SOS / Breathe"
+    },
     {
       "time": "2026-11-01T20:03:04.593Z",
       "type": "status",

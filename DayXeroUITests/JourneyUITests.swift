@@ -65,7 +65,7 @@ final class JourneyUITests: XCTestCase {
         snap(app, "06b-day1")
         tapWhenStill(app, closeLesson, name: "Close lesson")
 
-        // Prep Home (S4): log a use, ride out a craving, visit each tab.
+        // Prep Home (S4): log a use, ride out a craving, visit each tab. The use cell's label opens the log (UX-05).
         XCTAssert(app.buttons["Craving SOS"].waitForExistence(timeout: 10))
         snap(app, "07-home-prep")
         tap(button(app, "Log"))
@@ -123,13 +123,13 @@ final class JourneyUITests: XCTestCase {
         XCTAssert(app.buttons["Craving SOS"].waitForExistence(timeout: 5))
     }
 
-    /// Every tap on the water row's + logs a glass straight away, quick taps or slow (S21.2). Since S27.12 water is one
-    /// row on Today ("Water · 3 of 8 glasses"), not a tracker, so the count is read from the row's label.
+    /// Every tap on water's +1 logs a glass straight away, quick taps or slow (S21.2). Since UX-07 water is the left
+    /// bento cell on Today ("7 / 9 glasses"); its count's label still reads "Water · 3 of 8 glasses".
     func testWaterRowLogsEveryTap() {
         let app = launch(["-dx.homeScenario", "day3", "-dx.store", "pro"])
         let row = app.staticTexts["today.water.count"]
         let add = app.buttons["today.water.add"]
-        // The row sits under Your day; scroll until it's on screen.
+        // Today fits without scrolling; on a small screen, scroll until the cell is on screen.
         for _ in 0..<4 where !(add.exists && add.isHittable) {
             app.scrollViews.firstMatch.swipeUp()
             RunLoop.current.run(until: .now.addingTimeInterval(0.6))
