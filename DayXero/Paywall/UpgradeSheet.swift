@@ -2,9 +2,9 @@ import DayXeroCore
 import SwiftData
 import SwiftUI
 
-/// The free tier's upgrade point (S3.5): shown when someone taps the next locked program day, which comes after
-/// the free Day Xero session (decision 23). Same honest terms as the paywall, one plan up front, all plans one tap away.
-/// Before Quit Day the trial isn't sold here: it waits for the Quit Day offer (decision 15).
+/// The free tier's upgrade point (S3.5): shown when someone taps a locked session, first Prep 4 after the free taste of
+/// Prep 1 to 3 (MON-01). Same honest terms as the paywall, one plan up front, all plans one tap away. The 7-day trial
+/// is sold here whenever the Quit Day is, with the price in the person's own habit (MON-03).
 struct UpgradeSheet: View {
     let dayTitle: String
     @State var model: PaywallModel
@@ -16,8 +16,11 @@ struct UpgradeSheet: View {
     var body: some View {
         VStack(alignment: .leading, spacing: DX.Space.xs) {
             Text("Keep going with \(dayTitle)").v4Text(.title).dxFont(24, weight: 700, style: .title2)
-            Text("You finished Day Xero. The full program takes you through Quit week and the four weeks after.")
+            Text("Prep 1 to 3 were the free taste. The full program carries on from here: the rest of prep, your Day Xero launch kit and Weeks 1 to 4.")
                 .v4Text(.subtitle)
+            if let option = model.plans.first(where: { $0.plan == .annual }), let anchor = model.anchor(for: option) {
+                PriceAnchorLine(anchor: anchor).padding(.top, DX.Space.s)
+            }
             if let option = model.plans.first(where: { $0.plan == .annual }) ?? model.plans.first {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(option.plan == .annual ? "Yearly" : "Full program")
@@ -56,15 +59,15 @@ struct UpgradeSheet: View {
             } else if model.phase == .loading {
                 ProgressView().frame(maxWidth: .infinity).padding(.vertical, DX.Space.l)
             }
-            if let days = model.heldTrialDays, let quitDay = model.trialOpensOn {
-                Text("Your \(days)-day free trial opens on your Quit Day, \(quitDay, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)).")
+            if let days = model.trialEndsAfterQuitDay, days > 0 {
+                Text(days == 1 ? "That's the day after your Quit Day, so Day Xero is covered." : "That's \(days) days after your Quit Day, so Day Xero is covered.")
                     .v4Text(.subtitle)
                     .padding(.top, DX.Space.xs)
             }
             Button("See all plans", action: showAllPlans).buttonStyle(.dx(.quiet, on: .reading)).frame(maxWidth: .infinity)
             // Every screen that sells a subscription names what stays free and links Terms and Privacy (S27.2, S27.1).
             VStack(spacing: 2) {
-                Text("Always free: your counter and Craving SOS.")
+                Text(FreeLine.text)
                 HStack(spacing: 6) {
                     Link("Terms", destination: AppLinks.terms).underline()
                     if let privacy = AppLinks.privacy {
@@ -81,7 +84,8 @@ struct UpgradeSheet: View {
         }
         .padding(DX.Space.l)
         .task {
-            model.trialOpensOn = profiles.first?.quitDay
+            model.quitDay = profiles.first?.quitDay
+            model.spend = PaywallModel.Spend(profile: profiles.first)
             await model.load()
         }
         .background(Read4.background.ignoresSafeArea())

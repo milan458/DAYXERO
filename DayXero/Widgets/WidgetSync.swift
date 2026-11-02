@@ -54,7 +54,7 @@ enum WidgetSync {
         // The program session open now, if any.
         let lesson: WidgetSnapshot.Lesson? = store.current(now: now).flatMap { current in
             guard current.state == .available || current.state == .inProgress, let session = store.content?.session(current.id) else { return nil }
-            return WidgetSnapshot.Lesson(title: session.title.resolve(store.variant) ?? "", minutes: session.durationMinutes)
+            return WidgetSnapshot.Lesson(title: session.title.resolve(store.variant) ?? "", minutes: store.minutes(of: session))
         }
         let defaults = UserDefaults.standard
         return WidgetSnapshot(

@@ -442,8 +442,8 @@ private extension String {
 
 // MARK: F06 Your plan is ready · mint
 
-/// Prep week is free; the 7-day trial is offered on Quit Day (decision 15, S27.8), so the first charge comes after the first
-/// week. Nothing is charged here.
+/// Prep 1 to 3 are free; the 7-day trial is offered at Prep 4 (MON-01, replacing decision 15), so with the usual week of
+/// prep it runs past the Quit Day. Nothing is charged here.
 struct PlanRevealScreen: View {
     let model: OnboardingModel
     let onContinue: () -> Void
@@ -468,7 +468,7 @@ struct PlanRevealScreen: View {
                     }
                     MarkedTitle(String(localized: "Your plan is "), marking: String(localized: "ready"), color: DX.Mark.color(on: ground))
                         .dxType(.title).foregroundStyle(ground.ink)
-                    Text(entitlement.isPro ? "Everything is unlocked." : "Prep week is on us. Nothing is charged today.")
+                    Text(entitlement.isPro ? "Everything is unlocked." : "Prep 1 to 3 are on us. Nothing is charged today.")
                         .dxType(.body).foregroundStyle(ground.muted)
                     savings
                     builtAround
@@ -505,9 +505,11 @@ struct PlanRevealScreen: View {
         }
         .fullScreenCover(isPresented: $showPlans) {
             if paywall != nil {
-                // Its own model: before Quit Day it holds back the plan with the trial, which the card here still describes.
+                // Its own model, so its load tracks the paywall view.
                 PaywallView(name: model.name, quitDay: model.quitDay,
-                            model: PaywallModel(store: entitlement.store, entitlement: entitlement), onClose: { showPlans = false })
+                            model: PaywallModel(store: entitlement.store, entitlement: entitlement), onClose: { showPlans = false },
+                            spend: PaywallModel.Spend(perYear: model.stats.moneyPerYear, currencyCode: model.currencyCode,
+                                                      products: model.orderedProducts))
             }
         }
     }
@@ -558,8 +560,8 @@ struct PlanRevealScreen: View {
 
     private var includes: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("**Always free:** prep week, Day Xero, your counter, Craving SOS and evening check-ins")
-            Text("**With the full program:** four weeks of lessons, an NRT plan, insights")
+            Text("**Always free:** Prep 1 to 3, your counter, Craving SOS, a 60-second breathing timer and evening check-ins")
+            Text("**With the full program:** Prep 4 to 7, your Day Xero launch kit, Weeks 1 to 4, Jelli's voice coaching, if-then slip plans, a 12-week NRT schedule and trigger heatmaps")
         }
         .dxType(.footnote)
         .foregroundStyle(ground.ink)
@@ -567,25 +569,34 @@ struct PlanRevealScreen: View {
         .dxCardOnColour()
     }
 
+    /// The 7-day trial at Prep 4 (MON-01): Prep 1 is today, so Prep 4 opens three days from now at the earliest.
     private var trialCard: some View {
-        let quit = model.quitDay
-        let days = annual?.trialDays ?? 7
-        let end = model.calendar.date(byAdding: .day, value: days, to: quit) ?? quit
-        let lead = TrialReminder.leadDays(trialEndsAt: end, now: quit)
+        let start = FullProgram.earliestPaywallDay(firstDay: .now, calendar: model.calendar)
+        let days = annual?.trialDays ?? FullProgram.trialDays
+        let end = model.calendar.date(byAdding: .day, value: days, to: start) ?? start
+        let lead = TrialReminder.leadDays(trialEndsAt: end, now: start)
         let remind = model.calendar.date(byAdding: .day, value: -lead, to: end) ?? end
+        let after = FullProgram.trialEndsDaysAfterQuitDay(trialEnd: end, quitDay: model.quitDay, calendar: model.calendar)
+        let (s, e, r) = (start.formatted(shortDate), end.formatted(shortDate), remind.formatted(shortDate))
+        let runs: String = switch after {
+        case 2...: String(localized: "If you start it at Prep 4 on \(s), it runs to \(e), \(after) days after your Quit Day. I'll remind you on \(r).")
+        case 1: String(localized: "If you start it at Prep 4 on \(s), it runs to \(e), the day after your Quit Day. I'll remind you on \(r).")
+        case 0: String(localized: "If you start it at Prep 4 on \(s), it runs to \(e), your Quit Day. I'll remind you on \(r).")
+        default: String(localized: "If you start it at Prep 4 on \(s), it runs to \(e). I'll remind you on \(r).")
+        }
         return VStack(alignment: .leading, spacing: 6) {
-            Text("On your Quit Day · \(quit.formatted(shortDate))").dxType(.caption).textCase(.uppercase)
+            Text("At Prep 4 · \(start.formatted(shortDate))").dxType(.caption).textCase(.uppercase)
                 .foregroundStyle(DX.Fill.cream.opacity(0.85))
             if let annual {
                 Text("\(days) days free, then \(annual.priceText) a year").dxType(.headline).foregroundStyle(DX.Fill.cream)
                 if let perMonth = annual.perMonthText {
-                    Text("That's \(perMonth) a month. I'll ask you on Quit Day, not before.")
+                    Text("That's \(perMonth) a month. I'll ask you at Prep 4, not before.")
                         .dxType(.footnote).foregroundStyle(DX.Fill.cream.opacity(0.85))
                 }
             } else {
-                Text("I'll ask you about the full program on Quit Day, not before.").dxType(.headline).foregroundStyle(DX.Fill.cream)
+                Text("I'll ask you about the full program at Prep 4, not before.").dxType(.headline).foregroundStyle(DX.Fill.cream)
             }
-            Text("If you start the trial on \(quit.formatted(shortDate)) it runs to \(end.formatted(shortDate)), and I'll remind you on \(remind.formatted(shortDate)). Cancel any time in Settings › Apple ID › Subscriptions.")
+            Text("\(runs) Cancel any time in Settings › Apple ID › Subscriptions.")
                 .dxType(.caption).foregroundStyle(DX.Fill.cream.opacity(0.85))
                 .fixedSize(horizontal: false, vertical: true)
         }

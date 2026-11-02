@@ -2,9 +2,9 @@ import DayXeroCore
 import SwiftData
 import SwiftUI
 
-/// One program v2 session, a step at a time (handoff 4.2): intro, before-audio activities, the audio,
-/// the activities, today's mission, then the completion moment. Every change is saved, so closing and
-/// reopening resumes exactly there; closing never asks "are you sure".
+/// One program v2 session, a step at a time (handoff 4.2): intro, before-audio activities, the lesson (the 90-second
+/// card stack, or the audio; MON-04), the activities, today's mission, then the completion moment. Every change is
+/// saved, so closing and reopening resumes exactly there; closing never asks "are you sure".
 struct SessionFlowView: View {
     let sessionId: String
     let profile: UserProfile
@@ -19,9 +19,11 @@ struct SessionFlowView: View {
     @State private var index = 0
     @State private var record: SessionRecord?
     @State private var completed = false
+    /// Read the card stack or listen to the recording (MON-04). Reading is the default.
+    @AppStorage(LessonFormat.key) private var lessonFormat = LessonFormat.read.rawValue
 
     enum FlowStep: Hashable {
-        case intro, beat(String), audio, mission, completion
+        case intro, beat(String), cards, audio, mission, completion
     }
 
     private var store: ProgramStore { ProgramStore(context: context, profile: profile) }
@@ -68,15 +70,18 @@ struct SessionFlowView: View {
         guard let session, steps.isEmpty else { return }
         let ctx = context(for: session)
         let visible = { (beats: [Beat]) in beats.filter { ctx.shows($0) }.map { FlowStep.beat($0.id) } }
-        // No recording in the bundle yet, no audio step: the session runs intro, activities, mission, done (S27.14).
-        // With a recording, Continue still waits for the audio to end.
-        let hasAudio = ProgramAudioStep.hasRecording(session, ctx: ctx)
+        // The lesson sits where the audio always did (MON-04): the 90-second card stack by default, or the recording
+        // for someone who chose "Listen instead". No recording in the bundle, no audio step (S27.14): the cards carry
+        // the lesson. With a recording, Continue still waits for the audio to end.
+        let lesson = Self.lessonStep(hasCards: !(session.cards ?? []).isEmpty,
+                                     hasAudio: ProgramAudioStep.hasRecording(session, ctx: ctx),
+                                     format: LessonFormat(rawValue: lessonFormat) ?? .read)
         let before: [FlowStep] = [.intro] + visible(session.beatsBeforeAudio)
-        var built: [FlowStep] = before + (hasAudio ? [.audio] : []) + visible(session.beatsAfterAudio)
+        var built: [FlowStep] = before + (lesson.map { [$0] } ?? []) + visible(session.beatsAfterAudio)
         if session.mission != nil { built.append(.mission) }
         built.append(.completion)
         steps = built
-        let firstAfterAudio = before.count + (hasAudio ? 1 : 0)
+        let firstAfterAudio = before.count + (lesson == nil ? 0 : 1)
         let record = store.open(session, firstStepAfterAudio: firstAfterAudio)
         self.record = record
         // A replay starts at the beginning; a finished session opened normally is a replay too.
@@ -93,6 +98,7 @@ struct SessionFlowView: View {
         if let name = UserDefaults.standard.string(forKey: "dx.sessionBeat") {
             let step: FlowStep = switch name {
             case "intro": .intro
+            case "cards": .cards
             case "audio": .audio
             case "mission": .mission
             case "completion": .completion
@@ -103,6 +109,23 @@ struct SessionFlowView: View {
         #endif
         Analytics.track(isReplay || record.completedAt != nil ? .programReplayStarted(sessionId: session.id)
                         : .programSessionStarted(sessionId: session.id, variant: ctx.variant.rawValue))
+    }
+
+    /// Which lesson step a session gets (MON-04): cards unless the person chose to listen and there's a recording.
+    static func lessonStep(hasCards: Bool, hasAudio: Bool, format: LessonFormat) -> FlowStep? {
+        switch (hasCards, hasAudio) {
+        case (true, true): format == .listen ? .audio : .cards
+        case (true, false): .cards
+        case (false, true): .audio
+        case (false, false): nil
+        }
+    }
+
+    /// "Listen instead" or "Read it instead": swaps the lesson step in place and remembers the choice for next time.
+    private func switchLesson(to step: FlowStep) {
+        guard steps.indices.contains(index), steps[index] == .cards || steps[index] == .audio else { return }
+        lessonFormat = (step == .audio ? LessonFormat.listen : .read).rawValue
+        steps[index] = step
     }
 
     private func advance() {
@@ -164,13 +187,27 @@ struct SessionFlowView: View {
         let ctx = context(for: session)
         switch step {
         case .intro:
-            SessionIntro(session: session, variant: ctx.variant, isReplay: isReplay, onBegin: advance)
+            SessionIntro(session: session, variant: ctx.variant, isReplay: isReplay, reads: steps.contains(.cards), onBegin: advance)
         case let .beat(id):
             if let beat = (session.beats + (session.mission?.followUp ?? [])).first(where: { $0.id == id }) {
                 BeatScreen(beat: beat, ctx: ctx, onDone: advance)
             }
+        case .cards:
+            CardStackStep(session: session, ctx: ctx, canListen: ProgramAudioStep.hasRecording(session, ctx: ctx),
+                          onListen: { switchLesson(to: .audio) }, onDone: advance)
         case .audio:
-            ProgramAudioStep(session: session, ctx: ctx, record: record, onDone: advance)
+            VStack(spacing: DX.Space.xs) {
+                if !(session.cards ?? []).isEmpty {
+                    Button { switchLesson(to: .cards) } label: {
+                        Label("Read it in \(ProgramContent.cardStackSeconds) seconds instead", systemImage: "rectangle.stack")
+                            .dxFont(14, weight: 600, style: .footnote)
+                    }
+                    .buttonStyle(.plain)
+                    .foregroundStyle(Read4.accent)
+                    .frame(maxWidth: .infinity, minHeight: DX.Layout.touchTarget, alignment: .leading)
+                }
+                ProgramAudioStep(session: session, ctx: ctx, record: record, onDone: advance)
+            }
         case .mission:
             if let mission = session.mission {
                 MissionCard(mission: mission, ctx: ctx) {
@@ -190,6 +227,8 @@ struct SessionIntro: View {
     let session: ProgramContent.Session
     let variant: ProgramVariant
     let isReplay: Bool
+    /// The lesson is the 90-second card stack rather than the audio (MON-04).
+    var reads = false
     let onBegin: () -> Void
 
     @Environment(\.modelContext) private var context
@@ -218,7 +257,16 @@ struct SessionIntro: View {
                     Text(verbatim: session.subtitle.resolve(variant) ?? "").dxType(.body).foregroundStyle(Read4.muted).dxArrive(2)
                     // Only a session with a mission promises one (Graduation has none).
                     Group {
-                        if session.mission != nil {
+                        if reads {
+                            // MON-04: the read version's own length, not the audio's.
+                            if session.mission != nil {
+                                Label("\(session.readMinutes()) min · \(ProgramContent.cardStackSeconds)-second read, activities and today's mission",
+                                      systemImage: "rectangle.stack")
+                            } else {
+                                Label("\(session.readMinutes()) min · \(ProgramContent.cardStackSeconds)-second read and activities",
+                                      systemImage: "rectangle.stack")
+                            }
+                        } else if session.mission != nil {
                             Label("\(session.durationMinutes) min · Audio, activities and today's mission", systemImage: "headphones")
                         } else {
                             Label("\(session.durationMinutes) min · Audio and activities", systemImage: "headphones")
@@ -287,9 +335,7 @@ struct ProgramAudioStep: View {
 
     /// Whether the recording for the person's version of this session is in the bundle.
     static func hasRecording(_ session: ProgramContent.Session, ctx: BeatContext) -> Bool {
-        guard let naming = ctx.store.content?.audio else { return false }
-        let variant = session.audio.pick(for: ctx.variant, nrtActive: ctx.nrtActive)
-        return bundledURL(naming.file(session: session.id, variant: variant), ctx: ctx) != nil
+        ctx.store.hasRecording(session)
     }
 
     private var narrator: LessonNarrator? {
@@ -412,6 +458,13 @@ struct SessionCompletion: View {
         }
     }
 
+    /// After the last free session (Prep 3), for someone without the full program: "Prep 4 starts the full program…".
+    private var opensFullProgram: String? {
+        guard FullProgram.isFree(sessionId: session.id), let next = ctx.store.content?.session(after: session.id),
+              ProgramV2Access.needsUpgrade(next.id, isPro: entitlement.isPro) else { return nil }
+        return String(localized: "\(next.label) starts the full program. You can try it free for \(FullProgram.trialDays) days.")
+    }
+
     private var clarity: Int {
         let profile = ctx.store.profile
         let stats = ProgressStats(quitDay: profile.quitDay, baselines: [], clock: DayClock(boundaryHour: profile.dayBoundaryHour))
@@ -523,6 +576,12 @@ struct SessionCompletion: View {
                             .dxType(.footnote).foregroundStyle(Read4.ink)
                             .v4Card()
                             .padding(.top, DX.Space.s)
+                    }
+                    if let opensFullProgram, !isReplay {
+                        // MON-01: the end of the free taste says what comes next, before the paywall does.
+                        Text(opensFullProgram).dxType(.footnote).foregroundStyle(Read4.muted)
+                            .multilineTextAlignment(.center)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                 }
             }

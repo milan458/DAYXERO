@@ -1,5 +1,6 @@
 import DayXeroCore
 import Foundation
+import SwiftData
 import Observation
 import UserNotifications
 
@@ -15,21 +16,38 @@ final class Entitlement {
 
     var isPro: Bool { purchased || demo }
 
+    /// The latest answer, for code that runs outside the SwiftUI environment, such as a voice cue in Craving SOS
+    /// (which can be presented above the app's environment) or the notification plan.
+    private(set) static var isProNow = DemoMode.isOn
+
     init(store: PurchaseStore) {
         self.store = store
+        Self.isProNow = isPro
     }
 
     func refresh() async {
         purchased = await store.hasPro()
+        Self.isProNow = isPro
     }
 
     func grant() {
         purchased = true
+        Self.isProNow = isPro
     }
 
     func setDemo(_ on: Bool) {
         UserDefaults.standard.set(on, forKey: DemoMode.key)
         demo = DemoMode.isOn
+        Self.isProNow = isPro
+    }
+}
+
+/// Jelli's voice coaching is part of the full program (MON-01). Free, the same sessions run with subtitles and
+/// haptics, silent. Anyone who turned Voice guidance off in Settings stays silent either way.
+@MainActor
+enum VoiceCoaching {
+    static func speaks(_ voiceGuidance: Bool) -> Bool {
+        voiceGuidance && FullProgram.has(.voiceCoaching, isPro: Entitlement.isProNow)
     }
 }
 
@@ -52,12 +70,32 @@ final class PaywallModel {
     var notice: LocalizedStringResource?
     /// Whether we can keep the "we'll remind you" promise (notifications allowed or not yet asked).
     private(set) var canRemind = true
-    /// Quit Day, for paywalls that can open before it. The free trial is offered on Quit Day (decisions 15 and 23),
-    /// and StoreKit starts a trial the moment it's bought, so until Quit Day the plans that come with a trial aren't
-    /// sold here. nil (the Quit Day offer) sells every plan.
-    var trialOpensOn: Date?
-    /// The trial length waiting for Quit Day, while plans with a trial are held back.
-    private(set) var heldTrialDays: Int?
+    /// The Quit Day, so a paywall can say where the trial ends against it. Every plan is sold whenever the Quit Day is:
+    /// the 7-day trial starts at the Prep 4 paywall (MON-01), replacing the hold until Quit Day (decision 15).
+    var quitDay: Date?
+    /// The person's usual nicotine spend, for the price anchor (MON-03). nil hides it.
+    var spend: Spend?
+
+    struct Spend: Equatable {
+        let perYear: Decimal
+        let currencyCode: String
+        let products: [Product]
+
+        @MainActor
+        init(perYear: Decimal, currencyCode: String, products: [Product]) {
+            self.perYear = perYear
+            self.currencyCode = currencyCode
+            self.products = products
+        }
+
+        @MainActor
+        init?(profile: UserProfile?) {
+            guard let profile else { return nil }
+            let stats = ProgressStats(quitDay: profile.quitDay, baselines: profile.products.map(\.baseline),
+                                      clock: DayClock(boundaryHour: profile.dayBoundaryHour))
+            self.init(perYear: stats.moneyPerYear, currencyCode: profile.currencyCode, products: profile.products.map(\.product))
+        }
+    }
 
     private let store: PurchaseStore
     private let entitlement: Entitlement
@@ -73,16 +111,24 @@ final class PaywallModel {
 
     var selectedOption: PlanOption? { plans.first { $0.plan == selected } }
 
-    /// Before Quit Day: true while today is still prep, so the trial isn't sold yet.
-    var isBeforeQuitDay: Bool {
-        guard let trialOpensOn else { return false }
-        return now() < calendar.startOfDay(for: trialOpensOn)
-    }
-
     /// When a trial on the selected plan ends and the first charge happens.
     var trialEndDate: Date? {
         guard let days = selectedOption?.trialDays else { return nil }
         return calendar.date(byAdding: .day, value: days, to: now())
+    }
+
+    /// How many days after the Quit Day the selected plan's trial ends: 0 on the Quit Day, negative before it.
+    /// nil without a trial or a Quit Day.
+    var trialEndsAfterQuitDay: Int? {
+        guard let end = trialEndDate, let quitDay else { return nil }
+        return FullProgram.trialEndsDaysAfterQuitDay(trialEnd: end, quitDay: quitDay, calendar: calendar)
+    }
+
+    /// "Costs 8 days of smoking" for a plan, from the person's own spend (MON-03). nil when there's nothing honest to say.
+    func anchor(for option: PlanOption) -> PriceAnchor? {
+        guard let spend else { return nil }
+        return PriceAnchor.make(price: option.price, priceCurrency: option.currencyCode, spendPerYear: spend.perYear,
+                                spendCurrency: spend.currencyCode, products: spend.products)
     }
 
     /// Yearly's saving against twelve months of monthly, only when it's a real saving in this region.
@@ -101,10 +147,7 @@ final class PaywallModel {
         phase = .loading
         if trackView { Analytics.track(.paywallViewed) }
         do {
-            let loaded = try await store.loadPlans()
-            let holdTrial = isBeforeQuitDay
-            heldTrialDays = holdTrial ? loaded.compactMap(\.trialDays).first : nil
-            plans = holdTrial ? loaded.filter { $0.trialDays == nil } : loaded
+            plans = try await store.loadPlans()
             if !plans.contains(where: { $0.plan == selected }), let first = plans.first { selected = first.plan }
             phase = .ready
         } catch {

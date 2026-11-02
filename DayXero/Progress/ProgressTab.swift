@@ -21,6 +21,7 @@ struct ProgressTab: View {
     @State private var sharing = UserDefaults.standard.bool(forKey: "dx.shareCard")
     /// S27.11: Progress is the fourth tab and the way into Settings (Export, Delete, Privacy).
     @State private var showSettings = false
+    @State private var showPaywall = false
 
     var body: some View {
         TimelineView(.everyMinute) { timeline in
@@ -52,6 +53,7 @@ struct ProgressTab: View {
         .sheet(isPresented: $showSettings) {
             SettingsSheet(profile: profile)
         }
+        .fullProgramPaywall(isPresented: $showPaywall, profile: profile)
         .sheet(item: $editing) { entry in
             Group {
                 if entry.kind == .slip {
@@ -108,9 +110,11 @@ struct ProgressTab: View {
         // Your patterns (decision 31): its own sky panel (mist retired in S27.13) with Glim, the heat map and the triggers.
         VStack(alignment: .leading, spacing: 12) {
             patternsHeader(insights)
-            if insights.isReady {
+            if insights.isReady, FullProgram.has(.triggerHeatmaps, isPro: entitlement.isPro) {
                 heatCard(insights)
                 triggersCard(insights)
+            } else if insights.isReady {
+                lockedHeatmap(insights)
             } else {
                 earlyPatterns(insights)
             }
@@ -355,6 +359,24 @@ struct ProgressTab: View {
                 }
                 // Uses and slips in amber, so they read differently from cravings (S8.4).
                 HeatMap(grid: grid, scale: series == .cravings ? HeatMap.cravingScale : HeatMap.useScale)
+            }
+        }
+    }
+
+    /// MON-01: the heat map and triggers are part of the full program. Free, the person sees their own map blurred,
+    /// what they've logged so far by time of day, and one way to unlock it.
+    private func lockedHeatmap(_ insights: Insights) -> some View {
+        patternPanel {
+            VStack(alignment: .leading, spacing: DX.Space.s) {
+                Text("Your trigger heatmap is ready").v4Text(.cardHeading)
+                HeatMap(grid: insights.heatMap(.cravings))
+                    .blur(radius: 5)
+                    .opacity(0.45)
+                    .accessibilityHidden(true)
+                LockedFeatureCard(title: "Trigger heatmaps",
+                                  line: "See when your cravings hit across the week and what sets them off. Comes with the full program.") {
+                    showPaywall = true
+                }
             }
         }
     }

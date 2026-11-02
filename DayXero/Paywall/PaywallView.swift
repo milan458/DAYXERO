@@ -1,5 +1,6 @@
 import DayXeroCore
 import StoreKit
+import SwiftData
 import SwiftUI
 
 /// Legal links shown on Welcome, every paywall and Settings (S15.4, S27.1). Apple requires both on any
@@ -9,8 +10,9 @@ enum AppLinks {
     static let privacy: URL? = URL(string: "https://dayxero.app/privacy/")
 }
 
-/// The full paywall (S3.1–S3.6), opened from "See all plans", Settings, Program and Today. There is no paywall
-/// after onboarding (decision 15, S27.2): the close button is always there and nothing here is a first run.
+/// The full paywall (S3.1–S3.6), opened from "See all plans", Settings, Program, Today and the locked features.
+/// There is no paywall after onboarding (S27.2): the close button is always there and nothing here is a first run.
+/// Every plan is sold whenever the Quit Day is; the 7-day trial starts the day it's bought (MON-01).
 struct PaywallView: View {
     let name: String
     let quitDay: Date
@@ -18,6 +20,10 @@ struct PaywallView: View {
     let onClose: () -> Void
     /// Called as a purchase or restore starts, before the person can turn Pro.
     var onPurchaseStarted: () -> Void = {}
+    /// The person's spend for the price anchor, where there's no profile yet (onboarding). Otherwise it's the profile's.
+    var spend: PaywallModel.Spend?
+
+    @Query private var profiles: [UserProfile]
 
     @State private var showBilling = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -52,8 +58,8 @@ struct PaywallView: View {
         .animation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion), value: model.notice != nil)
         .background(Read4.background.ignoresSafeArea())
         .task {
-            // Before Quit Day the trial waits for the Quit Day offer (decisions 15 and 23).
-            model.trialOpensOn = quitDay
+            model.quitDay = quitDay
+            model.spend = spend ?? PaywallModel.Spend(profile: profiles.first)
             await model.load()
         }
         .sheet(isPresented: $showBilling) { BillingSheet().presentationDetents([.medium, .large]) }
@@ -65,8 +71,7 @@ struct PaywallView: View {
                 ? "Your free trial runs until \(end, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)). We'll remind you \(reminderLead) before it ends."
                 : "Your free trial runs until \(end, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated))."
         }
-        if model.isBeforeQuitDay { return "The full program is unlocked. Let's get you ready for Quit Day." }
-        return "The full program is unlocked."
+        return "The full program is unlocked. Prep 4 is ready when you are."
     }
 
     /// "Milan, your plan is ready", or "Your plan is ready" when there's no name to use.
@@ -81,15 +86,32 @@ struct PaywallView: View {
         return "You're all set, \(name)"
     }
 
-    /// Before Quit Day: when the free trial opens, in place of the plan that carries it.
+    /// Where the trial ends against the Quit Day, said plainly whichever side it falls (MON-01).
     @ViewBuilder
-    private var heldTrialNote: some View {
-        if let days = model.heldTrialDays {
-            Text("Your \(days)-day free trial opens on your Quit Day, \(quitDay, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)).")
-                .dxFont(14, weight: 400, style: .footnote)
-                .foregroundStyle(Read4.muted)
-                .fixedSize(horizontal: false, vertical: true)
-                .frame(maxWidth: .infinity, alignment: .leading)
+    private var trialNote: some View {
+        if let days = model.trialEndsAfterQuitDay {
+            Group {
+                if days > 0 {
+                    Text(days == 1 ? "Your trial runs past your Quit Day: it ends the day after."
+                         : "Your trial runs past your Quit Day: it ends \(days) days after.")
+                } else if days == 0 {
+                    Text("Your trial ends on your Quit Day.")
+                } else {
+                    Text(days == -1 ? "Your trial ends the day before your Quit Day." : "Your trial ends \(-days) days before your Quit Day.")
+                }
+            }
+            .dxFont(14, weight: 400, style: .footnote)
+            .foregroundStyle(Read4.muted)
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    /// "Costs 8 days of smoking" (MON-03): the yearly price in the person's own habit, from what they told us they spend.
+    @ViewBuilder
+    private var anchor: some View {
+        if let annual = model.plans.first(where: { $0.plan == .annual }), let anchor = model.anchor(for: annual) {
+            PriceAnchorLine(anchor: anchor)
         }
     }
 
@@ -103,15 +125,19 @@ struct PaywallView: View {
                     Text(verbatim: Self.readyTitle(name: name)).v4Text(.title).accessibilityAddTraits(.isHeader)
                     Text("Everything for your \(quitDay, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)) Quit Day.")
                         .v4Text(.subtitle)
+                    // MON-01: what the full program adds, in the order the person meets it.
                     VStack(alignment: .leading, spacing: 7) {
-                        included("All of prep, Quit week and 4 weeks after")
-                        included("Insights on your triggers")
-                        included("NRT planner, health timeline, share cards")
+                        included("Prep 4 to 7 and your Day Xero launch kit")
+                        included("Weeks 1 to 4 of the program path")
+                        included("Jelli's voice coaching")
+                        included("If-then slip planner and a 12-week NRT schedule")
+                        included("Trigger heatmaps")
                     }
                     .padding(.top, DX.Space.s)
-                    Text("Always free: your counter and Craving SOS.")
+                    Text(FreeLine.text)
                         .dxFont(14, weight: 400, style: .footnote).foregroundStyle(Read4.muted)
                         .padding(.bottom, DX.Space.s)
+                    anchor
                     plans
                     if typeSize.isAccessibilitySize {
                         footer.padding(.top, DX.Space.l)
@@ -176,7 +202,7 @@ struct PaywallView: View {
     @ViewBuilder
     private var plans: some View {
         VStack(spacing: DX.Space.xs) {
-            if model.plans.isEmpty, model.heldTrialDays == nil {
+            if model.plans.isEmpty {
                 ForEach(0..<3, id: \.self) { _ in
                     RoundedRectangle(cornerRadius: 20, style: .continuous).fill(Read4.surface).frame(height: 60)
                 }
@@ -188,7 +214,7 @@ struct PaywallView: View {
                     }
                 }
             }
-            heldTrialNote
+            trialNote
         }
         .padding(.top, DX.Space.xs)
     }
@@ -282,7 +308,7 @@ struct PaywallView: View {
             header.padding(.horizontal, DX.Space.m).padding(.top, DX.Space.xs).dxReadableColumn()
             Spacer()
             V4StateView(.error, systemImage: "exclamationmark.circle", title: "Couldn't reach the App Store",
-                        message: "Check your connection and try again. Your prep week, your counter and Craving SOS work without it.",
+                        message: "Check your connection and try again. Prep 1 to 3, your counter and Craving SOS work without it.",
                         actionTitle: "Try again") { Task { await model.load() } }
             Spacer()
             Button("Continue with free") {
@@ -470,5 +496,41 @@ struct BillingSheet: View {
             Text(text).dxFont(14, weight: 400, style: .footnote).foregroundStyle(Read4.ink)
         }
         .accessibilityElement(children: .combine)
+    }
+}
+
+/// The line every screen that sells the full program shows about what stays free (S27.2, MON-01).
+enum FreeLine {
+    static var text: LocalizedStringKey { "Always free: Prep 1 to 3, your counter, Craving SOS and a 60-second breathing timer." }
+}
+
+/// "Costs 8 days of smoking" with where the number comes from (MON-03).
+struct PriceAnchorLine: View {
+    let anchor: PriceAnchor
+    var ground: DX.Ground = .reading
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(verbatim: Self.title(anchor)).dxFont(16, weight: 700, style: .headline).foregroundStyle(ground.ink)
+            Text("A year of the full program, against what you told us you spend.")
+                .dxFont(12, weight: 400, style: .caption1).foregroundStyle(ground.muted)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(.vertical, 10).padding(.horizontal, 14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(ground == .reading ? Read4.accentSoft : DX.Fill.onColourCard(for: ground),
+                    in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .accessibilityElement(children: .combine)
+    }
+
+    /// "Costs 8 days of smoking", "Costs 1 day of vaping", "Costs 12 days of nicotine" for more than one product.
+    static func title(_ anchor: PriceAnchor) -> String {
+        let n = anchor.days
+        switch anchor.habit {
+        case .smoking: return n == 1 ? String(localized: "Costs 1 day of smoking") : String(localized: "Costs \(n) days of smoking")
+        case .vaping: return n == 1 ? String(localized: "Costs 1 day of vaping") : String(localized: "Costs \(n) days of vaping")
+        case .pouches: return n == 1 ? String(localized: "Costs 1 day of pouches") : String(localized: "Costs \(n) days of pouches")
+        case .nicotine: return n == 1 ? String(localized: "Costs 1 day of nicotine") : String(localized: "Costs \(n) days of nicotine")
+        }
     }
 }

@@ -60,6 +60,8 @@ public struct OrbData: Decodable, Sendable {
         let haptics: [String: PhaseHaptic]
 
         public func seconds(_ phase: BreathPhase) -> Int { phases[phase.rawValue] ?? 0 }
+        /// One full breath: every phase added up.
+        public var cycleSeconds: Int { phases.values.reduce(0, +) }
         public func scale(_ phase: BreathPhase) -> Double { scaleTargets[phase.rawValue] ?? 1 }
         public func haptic(_ phase: BreathPhase) -> PhaseHaptic? { haptics[phase.rawValue] }
     }

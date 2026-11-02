@@ -3,8 +3,9 @@ import SwiftData
 import SwiftUI
 
 /// Q3 Quit Day offer (cream, serious tier): shown once after the Day Xero session to anyone without the full
-/// program (decision 23). Prices, trial length and the plan list come from the store; nothing is charged today
-/// when there's a trial. Closing keeps the free version: the counter, Craving SOS and prep.
+/// program (decision 23). Under MON-01 Day Xero is paid, so this only reaches someone whose subscription ended
+/// part-way. Prices, trial length and the plan list come from the store; nothing is charged today when there's a
+/// trial. Closing keeps the free version: Prep 1 to 3, the counter, Craving SOS and the breathing timer.
 struct QuitDayOffer: View {
     let profile: UserProfile
     let onClose: () -> Void
@@ -85,10 +86,11 @@ struct QuitDayOffer: View {
                         .fixedSize(horizontal: false, vertical: true)
                         .dxArrive(1)
                     VStack(alignment: .leading, spacing: 8) {
-                        included("Quit week and 4 weeks after")
-                        included("Insights on your triggers")
-                        included("NRT planner, health timeline, share cards")
-                        Text("Always free: your counter and Craving SOS.").dxType(.footnote).foregroundStyle(Read4.muted)
+                        included("Weeks 1 to 4 of the program path")
+                        included("Jelli's voice coaching")
+                        included("If-then slip planner and a 12-week NRT schedule")
+                        included("Trigger heatmaps")
+                        Text(FreeLine.text).dxType(.footnote).foregroundStyle(Read4.muted)
                             .padding(.top, 2)
                     }
                     .v4Card()

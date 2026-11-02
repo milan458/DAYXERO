@@ -2,14 +2,16 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-11-02T20:40:00.000Z"
+    "updated": "2026-11-02T21:31:27.554Z"
   },
   "now": {
-    "section": "S27",
-    "task": "S27.16",
+    "section": "S30",
+    "task": "S30.1",
     "waiting_on_milan": [
       "Milan: sign off Wave 4 in the Screen Lab (version 8, What's new tab; try Text size AX3 and Appearance Dark)",
-      "Milan: App Store Connect: privacy URL, 7-day trial, lifetime $99.99, win-back, grace period",
+      "Milan: App Store Connect: privacy URL, 7-day trial, India annual ₹2,999, lifetime $99.99, win-back, grace period",
+      "Milan: review the 112 draft lesson cards (MON-04) and the open questions in docs/MONETISATION_TIERS.md",
+      "Milan: Superwall campaign copy to the new tiers",
       "Milan: Cloudflare dashboard: fix or turn off non-production Worker builds"
     ]
   },
@@ -438,7 +440,7 @@
           "id": "S3.5",
           "title": "Free tier that's genuinely useful: counter, craving SOS, Day 1 of the program. Clear upgrade points elsewhere.",
           "status": "done",
-          "notes": "Built; waiting on CI build, tests and screenshots.\nFree tier rule (counter, SOS, Day 1) + upgrade sheet built and tested; it's shown from the Program tab once Section 5 exists.",
+          "notes": "Built; waiting on CI build, tests and screenshots.\nFree tier rule (counter, SOS, Day 1) + upgrade sheet built and tested; it's shown from the Program tab once Section 5 exists.\n2 Nov: superseded by MON-01 (S30.1): free is Prep 1-3, counter, SOS and the breathing timer.",
           "created": "2026-10-22T19:48:52.060Z",
           "completed": "2026-10-22T22:57:10.783Z"
         },
@@ -2945,6 +2947,58 @@
       ]
     },
     {
+      "id": "S30",
+      "title": "Monetisation: free taste of prep, 7-day trial, price anchor, 90-second read (MON)",
+      "goal": "Free forever: Prep 1-3, counter, SOS, 60-second breathing timer. Full program (7-day trial from Prep 4, then ₹2,999 / $39.99 a year): Prep 4-7, Day Xero, Weeks 1-4, Jelli voice, if-then planner, NRT scheduler, heatmaps (MON-01). Price in habit terms (MON-03). 90-second card stacks next to the audio (MON-04). See docs/MONETISATION_TIERS.md.",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S30.1",
+          "title": "MON-01 · Restructure free vs paid: Prep 1-3 free; trial sold at the Prep 4 paywall whatever the Quit Day; SOS free, Jelli voice paid",
+          "status": "awaiting_signoff",
+          "notes": "Milan 2 Nov: 7-day trial whatever the Quit Day; SOS free and voice paid. Replaces decision 15. Gated: Prep 4+ sessions, voice coaching (SOS sighs, breathing coach), if-then slip planner, NRT setup, trigger heatmap. Built on claude/hopeful-galileo-k4zxbx; waiting on CI and TestFlight.\nCI run 210 (f7427f4): build and all tests pass.",
+          "created": "2026-11-02T20:23:58.105Z",
+          "completed": null
+        },
+        {
+          "id": "S30.2",
+          "title": "MON-03 · Paywall price anchor in habit terms (\"Costs 8 days of smoking\") from the person's own spend",
+          "status": "awaiting_signoff",
+          "notes": "Yearly price / (moneyPerYear / 365), rounded up; smoking, vaping, pouches, or nicotine for dual use. Hidden for a currency mismatch, no spend, or over 90 days. Paywall and Prep 4 upgrade sheet. Built on claude/hopeful-galileo-k4zxbx; waiting on CI.\nCI run 210 (f7427f4): build and all tests pass.",
+          "created": "2026-11-02T20:23:58.148Z",
+          "completed": null
+        },
+        {
+          "id": "S30.3",
+          "title": "MON-04 · 90-second interactive card stacks next to the audio lessons",
+          "status": "awaiting_signoff",
+          "notes": "Milan 2 Nov: card stacks next to audio. 4 cards per session in program.json (2.1.0), read by default, 'Listen instead' when a recording exists (remembered). Card copy is a draft from each session's own text: needs Milan's review. Built on claude/hopeful-galileo-k4zxbx; waiting on CI.\nCI run 210 (f7427f4): build and all tests pass.",
+          "created": "2026-11-02T20:23:58.195Z",
+          "completed": null
+        },
+        {
+          "id": "S30.4",
+          "title": "App Store Connect: annual trial to 7 days, India annual price ₹2,999; Superwall campaign copy to the new tiers",
+          "status": "blocked",
+          "notes": "Needs Milan in App Store Connect and the Superwall dashboard. store_setup.py now asks for ONE_WEEK, but only where no trial exists yet.",
+          "created": "2026-11-02T20:23:58.380Z",
+          "completed": null
+        },
+        {
+          "id": "S30.5",
+          "title": "Session lengths on Today and Program assume the audio (5-6 min); recompute for the 90-second read?",
+          "status": "awaiting_signoff",
+          "notes": "Open question in docs/MONETISATION_TIERS.md.\nMilan 2 Nov: shorten them. Lengths now come from the content (cards + activities at a typical pace, nearest minute, 2 to the listening length): prep 5-6 → 2-3 min, Day Xero 4. Shown on Today, Program, intro, widget, notifications. See docs/MONETISATION_TIERS.md.\nCI run 215 (564a861): build and all tests pass.",
+          "created": "2026-11-02T20:23:58.429Z",
+          "completed": null
+        }
+      ]
+    },
+    {
       "id": "S31",
       "title": "Clinical review (CLIN-01 to CLIN-11)",
       "goal": "Clinical changes from the clinical review: recovery milestones, caffeine, NRT technique, reward defusion, swap trap, quieter notifications, cumulative resilience, the flat days, a new trigger, slip planner, prep challenges.",
@@ -3047,9 +3101,89 @@
   ],
   "log": [
     {
+      "time": "2026-11-02T21:31:27.554Z",
+      "type": "note",
+      "message": "S30.5: CI run 215 (564a861): build and all tests pass."
+    },
+    {
+      "time": "2026-11-02T21:12:14.865Z",
+      "type": "status",
+      "message": "S30.5 blocked → awaiting_signoff (Milan 2 Nov: shorten them. Lengths now come from the content (cards + activities at a typical pace, nearest minute, 2 to the listening length): prep 5-6 → 2-3 min, Day Xero 4. Shown on Today, Program, intro, widget, notifications. See docs/MONETISATION_TIERS.md.)"
+    },
+    {
+      "time": "2026-11-02T20:47:30.796Z",
+      "type": "note",
+      "message": "S30.3: CI run 210 (f7427f4): build and all tests pass."
+    },
+    {
+      "time": "2026-11-02T20:47:30.751Z",
+      "type": "note",
+      "message": "S30.2: CI run 210 (f7427f4): build and all tests pass."
+    },
+    {
+      "time": "2026-11-02T20:47:30.710Z",
+      "type": "note",
+      "message": "S30.1: CI run 210 (f7427f4): build and all tests pass."
+    },
+    {
       "time": "2026-11-02T20:40:00.000Z",
       "type": "section_added",
       "message": "S31 added: Clinical review (CLIN-01 to CLIN-11), built on claude/elegant-fermat-8bg8iv, PR #26; awaiting sign-off"
+    },
+    {
+      "time": "2026-11-02T20:24:05.901Z",
+      "type": "note",
+      "message": "S3.5: 2 Nov: superseded by MON-01 (S30.1): free is Prep 1-3, counter, SOS and the breathing timer."
+    },
+    {
+      "time": "2026-11-02T20:24:02.164Z",
+      "type": "now",
+      "message": "Now: S30 / S30.1"
+    },
+    {
+      "time": "2026-11-02T20:23:58.429Z",
+      "type": "task_added",
+      "message": "S30.5 added: Session lengths on Today and Program assume the audio (5-6 min); recompute for the 90-second read?"
+    },
+    {
+      "time": "2026-11-02T20:23:58.380Z",
+      "type": "task_added",
+      "message": "S30.4 added: App Store Connect: annual trial to 7 days, India annual price ₹2,999; Superwall campaign copy to the new tiers"
+    },
+    {
+      "time": "2026-11-02T20:23:58.336Z",
+      "type": "status",
+      "message": "S30.3 pending → awaiting_signoff"
+    },
+    {
+      "time": "2026-11-02T20:23:58.279Z",
+      "type": "status",
+      "message": "S30.2 pending → awaiting_signoff"
+    },
+    {
+      "time": "2026-11-02T20:23:58.239Z",
+      "type": "status",
+      "message": "S30.1 pending → awaiting_signoff"
+    },
+    {
+      "time": "2026-11-02T20:23:58.195Z",
+      "type": "task_added",
+      "message": "S30.3 added: MON-04 · 90-second interactive card stacks next to the audio lessons"
+    },
+    {
+      "time": "2026-11-02T20:23:58.148Z",
+      "type": "task_added",
+      "message": "S30.2 added: MON-03 · Paywall price anchor in habit terms (\"Costs 8 days of smoking\") from the person's own spend"
+    },
+    {
+      "time": "2026-11-02T20:23:58.105Z",
+      "type": "task_added",
+      "message": "S30.1 added: MON-01 · Restructure free vs paid: Prep 1-3 free; trial sold at the Prep 4 paywall whatever the Quit Day; SOS free, Jelli voice paid"
+    },
+    {
+      "time": "2026-11-02T20:23:58.066Z",
+      "type": "section_added",
+      "message": "S30 added: Monetisation: free taste of prep, 7-day trial, price anchor, 90-second read (MON)"
     },
     {
       "time": "2026-11-02T18:30:35.403Z",
@@ -3925,6 +4059,11 @@
       "time": "2026-11-01T18:37:55.810Z",
       "type": "section_added",
       "message": "S27 added: Design critique fixes (reports/DayXero app design critique.md)"
+    },
+    {
+      "time": "2026-10-30T09:30:00.000Z",
+      "type": "task_added",
+      "message": "Added S26 Program v2 from DAYXERO_PROGRAM_HANDOFF.md (20 tasks)"
     },
     {
       "time": "2026-10-29T17:10:00.000Z",
@@ -7020,11 +7159,6 @@
       "time": "2026-10-22T19:48:52.060Z",
       "type": "task_added",
       "message": "Loaded 92 tasks across 16 sections from the handoff plan"
-    },
-    {
-      "time": "2026-10-30T09:30:00.000Z",
-      "type": "task_added",
-      "message": "Added S26 Program v2 from DAYXERO_PROGRAM_HANDOFF.md (20 tasks)"
     }
   ]
 }

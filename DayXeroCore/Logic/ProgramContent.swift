@@ -83,6 +83,9 @@ public struct ProgramContent: Decodable, Sendable {
         public let listenHint: Varied<String>?
         public let unlock: Unlock
         public let audio: AudioVariants
+        /// The 90-second read (MON-04): a few cards that carry the session's ideas, shown where the audio goes.
+        /// "Listen instead" plays the recording when there is one.
+        public let cards: [Card]?
         public let beats: [Beat]
         public let mission: Mission?
         public let completionText: Varied<String>
@@ -90,7 +93,35 @@ public struct ProgramContent: Decodable, Sendable {
         /// Beats played before the audio, then the rest, each in file order.
         public var beatsBeforeAudio: [Beat] { beats.filter { $0.position == .beforeAudio } }
         public var beatsAfterAudio: [Beat] { beats.filter { $0.position == .afterAudio } }
+
+        /// The session's length with the 90-second read in place of the audio (MON-04), in whole minutes:
+        /// the cards, every activity at a typical pace (`Beat.typicalSeconds`), the intro, mission and completion.
+        /// Rounded to the nearest minute, at least 2, and never more than `durationMinutes`, the listening length.
+        public func readMinutes(
+            cycleSeconds: (String) -> Int? = { id in OrbData.bundled.breathingPatterns.first { $0.id == id }?.cycleSeconds }
+        ) -> Int {
+            let activities = beats.reduce(0) { $0 + $1.typicalSeconds(cycleSeconds: cycleSeconds) }
+            let total = (cards?.isEmpty == false ? ProgramContent.cardStackSeconds : 0) + activities
+                + Self.introSeconds + (mission == nil ? 0 : Self.missionSeconds) + Self.completionSeconds
+            let minutes = Int((Double(total) / 60).rounded())
+            return min(max(minutes, 2), durationMinutes)
+        }
+
+        static let introSeconds = 10
+        static let missionSeconds = 10
+        static let completionSeconds = 10
     }
+
+    /// One card of the 90-second read: a short line on the front, the idea behind it on the back.
+    public struct Card: Decodable, Sendable {
+        public let front: Varied<String>
+        public let back: Varied<String>
+    }
+
+    /// How long the card stack takes, as the screens say it (MON-04).
+    public static let cardStackSeconds = 90
+    /// A stack is three to five cards: enough to carry the session's ideas in about 90 seconds.
+    public static let cardStackSize = 3...5
 
     public struct Unlock: Decodable, Sendable, Equatable {
         public enum Rule: String, Decodable, Sendable {
@@ -183,6 +214,20 @@ extension Varied: Equatable where Value: Equatable {}
 
 /// One activity in a session. Fields are shared across types; each type reads the ones it needs.
 public struct Beat: Decodable, Sendable, Identifiable {
+    /// About how long the activity takes at an easy pace, for the read-version session length (MON-04). A breathing
+    /// beat is its cycles of its pattern; flip cards are a few seconds each; the rest are a typical figure per type.
+    public func typicalSeconds(cycleSeconds: (String) -> Int?) -> Int {
+        switch type {
+        case .breathe: (pattern.flatMap(cycleSeconds) ?? 12) * (cycles ?? 3)
+        case .tapReveal: 8 * max(cards?.count ?? 0, 1)
+        case .slider, .statReveal, .commit, .note, .info, .share: 10
+        case .choice, .quiz, .nrtChoice, .planCard: 15
+        case .checklist, .scenario, .sliderGroup, .nrtStepdown: 20
+        case .reflect, .planBuilder: 30
+        case .slipDebriefPractice: 60
+        }
+    }
+
     public enum Kind: String, Decodable, Sendable, CaseIterable {
         case statReveal = "stat_reveal", quiz, choice, slider
         case sliderGroup = "slider_group", reflect
@@ -507,6 +552,15 @@ extension ProgramContent {
             if !session.audio.variants.contains("default"),
                !ProgramVariant.allCases.allSatisfy({ session.audio.variants.contains($0.rawValue) }) {
                 problems.append("\(session.id) has no audio for some products and no default")
+            }
+            // The 90-second read (MON-04): every session has one, of a readable size, for every product.
+            let cards = session.cards ?? []
+            if !Self.cardStackSize.contains(cards.count) {
+                problems.append("\(session.id) has \(cards.count) cards; a stack has \(Self.cardStackSize.lowerBound) to \(Self.cardStackSize.upperBound)")
+            }
+            for (i, card) in cards.enumerated() {
+                checkText(card.front, "\(session.id).cards[\(i)].front")
+                checkText(card.back, "\(session.id).cards[\(i)].back")
             }
             if session.unlock.rule == .daysSinceQuit, session.unlock.minDay == nil {
                 problems.append("\(session.id) unlocks by days since quit but has no minDay")

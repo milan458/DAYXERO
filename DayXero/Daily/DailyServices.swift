@@ -107,7 +107,7 @@ enum DailyReminders {
             .flatMap { clock.calendar.date(byAdding: .day, value: n, to: clock.day(containing: $0)) }
         case .locked, .completed: nil
         }
-        return day.map { [($0, name, session.durationMinutes)] } ?? []
+        return day.map { [($0, name, store.minutes(of: session))] } ?? []
     }
 
     private static func milestones(profile: UserProfile, clock: DayClock) -> [(day: Date, title: String)] {
