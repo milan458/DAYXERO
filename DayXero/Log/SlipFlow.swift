@@ -21,7 +21,9 @@ struct SlipFlow: View {
     }
 
     @Environment(\.modelContext) private var context
+    @Environment(Entitlement.self) private var entitlement: Entitlement?
     @Query(filter: #Predicate<LogEntry> { $0.kindRaw == "slip" }) private var slips: [LogEntry]
+    @State private var showPaywall = false
     @State private var stage = Stage.talk
     @State private var product: Product?
     @State private var amount: SlipAmount?
@@ -90,7 +92,7 @@ struct SlipFlow: View {
     private var topBar: some View {
         HStack(spacing: 10) {
             Button {
-                if stage == .what { stage = .done } else { onDone() }
+                if stage == .what { stage = plansUnlocked ? .done : .talk } else { onDone() }
             } label: {
                 Image(systemName: stage == .what ? "chevron.left" : "xmark")
                     .font(.system(size: 18, weight: .bold))
@@ -135,44 +137,52 @@ struct SlipFlow: View {
                         }
                     }
                     .dxArrive(0)
-                    Text(isPrep
-                         ? String(localized: "Logged. Prep is for learning your patterns, and this helps. Let's make a plan for next time.")
-                         : String(localized: "Waves come and go. Nothing resets: your days since Quit Day and Xero's sky stay just as they are. Let's make a plan for next time."))
+                    Text(talkLine)
                         .dxType(.body)
                         .foregroundStyle(ground.muted)
                         .fixedSize(horizontal: false, vertical: true)
                         .dxArrive(1)
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("What set it off?").dxFont(16, weight: 700, style: .body)
-                        TriggerPicker(mine: profile?.triggers ?? [], selection: $trigger)
-                        Text("If it's \(situation), then I'll…")
-                            .dxFont(19, weight: 700, style: .headline)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .padding(.top, 4)
-                        VStack(spacing: 8) {
-                            ForEach(suggestions, id: \.self) { idea in
-                                ThenOption(text: idea, isOn: !writingOwn && action == idea) {
-                                    action = idea
-                                    writingOwn = false
+                    if !plansUnlocked {
+                        // MON-01: the slip is logged and nothing resets for everyone; the if-then plan is paid.
+                        LockedFeatureCard(title: "Plan for next time",
+                                          line: "If-then slip plans come with the full program: pick what set it off and what you'll do instead, and it's on Craving SOS next time.") {
+                            showPaywall = true
+                        }
+                        .dxArrive(2)
+                        if offersFreshStart, !freshStartDismissed { freshStart.dxArrive(3) }
+                    } else {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("What set it off?").dxFont(16, weight: 700, style: .body)
+                            TriggerPicker(mine: profile?.triggers ?? [], selection: $trigger)
+                            Text("If it's \(situation), then I'll…")
+                                .dxFont(19, weight: 700, style: .headline)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .padding(.top, 4)
+                            VStack(spacing: 8) {
+                                ForEach(suggestions, id: \.self) { idea in
+                                    ThenOption(text: idea, isOn: !writingOwn && action == idea) {
+                                        action = idea
+                                        writingOwn = false
+                                    }
+                                }
+                                ThenOption(text: String(localized: "write my own"), isOn: writingOwn) { writingOwn = true }
+                                if writingOwn {
+                                    TextField("", text: $ownAction, prompt: Text("go for a run").foregroundStyle(ground.muted))
+                                        .dxFont(16, weight: 500, style: .body)
+                                        .padding(.horizontal, 14)
+                                        .frame(minHeight: 48)
+                                        .background(DX.Fill.surface, in: RoundedRectangle(cornerRadius: DX.Layout.answerChipRadius, style: .continuous))
+                                        .accessibilityLabel(Text("Then I'll"))
                                 }
                             }
-                            ThenOption(text: String(localized: "write my own"), isOn: writingOwn) { writingOwn = true }
-                            if writingOwn {
-                                TextField("", text: $ownAction, prompt: Text("go for a run").foregroundStyle(ground.muted))
-                                    .dxFont(16, weight: 500, style: .body)
-                                    .padding(.horizontal, 14)
-                                    .frame(minHeight: 48)
-                                    .background(DX.Fill.surface, in: RoundedRectangle(cornerRadius: DX.Layout.answerChipRadius, style: .continuous))
-                                    .accessibilityLabel(Text("Then I'll"))
-                            }
+                            .accessibilityElement(children: .contain)
+                            .accessibilityLabel(Text("Then I will"))
                         }
-                        .accessibilityElement(children: .contain)
-                        .accessibilityLabel(Text("Then I will"))
+                        .padding(16)
+                        .background(DX.Fill.raised, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+                        .shadow(color: Color(light: (0x1E1A3A, 0.07), dark: (0x000000, 0)), radius: 11, y: 8)
+                        .dxArrive(2)
                     }
-                    .padding(16)
-                    .background(DX.Fill.raised, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
-                    .shadow(color: Color(light: (0x1E1A3A, 0.07), dark: (0x000000, 0)), radius: 11, y: 8)
-                    .dxArrive(2)
                 }
                 .padding(.horizontal, DX.Layout.gutter)
                 .padding(.top, 14)
@@ -181,21 +191,44 @@ struct SlipFlow: View {
             .scrollBounceBehavior(.basedOnSize)
             .scrollDismissesKeyboard(.interactively)
             VStack(spacing: 4) {
-                Button("Save my plan") { savePlan() }
-                    .buttonStyle(.dx(.primary, on: .reading))
-                    .disabled(chosenAction == nil)
-                Button("Not now", action: onDone)
-                    .buttonStyle(.dx(.quiet, on: .reading))
+                if plansUnlocked {
+                    Button("Save my plan") { savePlan() }
+                        .buttonStyle(.dx(.primary, on: .reading))
+                        .disabled(chosenAction == nil)
+                    Button("Not now", action: onDone)
+                        .buttonStyle(.dx(.quiet, on: .reading))
+                } else {
+                    Button("Done", action: onDone)
+                        .buttonStyle(.dx(.primary, on: .reading))
+                    if entry != nil {
+                        Button("Add what happened · optional") { stage = .what }
+                            .buttonStyle(.dx(.quiet, on: .reading))
+                    }
+                }
             }
             .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
             .padding(.horizontal, DX.Layout.buttonGutter)
             .padding(.bottom, DX.Space.xs)
             .dxArrive(4)
         }
+        .fullProgramPaywall(isPresented: $showPaywall, profile: profile)
         .onChange(of: trigger) { _, _ in
             // A different trigger has its own ideas; keep a plan they wrote themselves.
             if !writingOwn, let action, !suggestions.contains(action) { self.action = nil }
         }
+    }
+
+    /// The if-then planner is part of the full program (MON-01). The practice run inside the paid Day 28 session
+    /// always has it.
+    private var plansUnlocked: Bool {
+        practice || FullProgram.has(.ifThenPlanner, isPro: entitlement?.isPro ?? Entitlement.isProNow)
+    }
+
+    private var talkLine: String {
+        let base = isPrep
+            ? String(localized: "Logged. Prep is for learning your patterns, and this helps.")
+            : String(localized: "Waves come and go. Nothing resets: your days since Quit Day and Xero's sky stay just as they are.")
+        return plansUnlocked ? base + " " + String(localized: "Let's make a plan for next time.") : base
     }
 
     // MARK: Plan saved
@@ -449,7 +482,8 @@ struct SlipFlow: View {
             entry.timestamp = Slips.time(when, loggedAt: loggedAt, clock: clock)
             try? context.save()
         }
-        stage = .done
+        // Without the planner there's no "Plan saved" to go back to (MON-01).
+        if plansUnlocked { stage = .done } else { onDone() }
     }
 }
 

@@ -22,6 +22,8 @@ struct NRTSetupView: View {
     }
 
     @Environment(\.modelContext) private var context
+    @Environment(Entitlement.self) private var entitlement: Entitlement?
+    @State private var showPaywall = false
     @State private var stage = Stage.intro
     @State private var chosen: [NRTType] = []
     @State private var drafts: [Draft] = []
@@ -96,6 +98,7 @@ struct NRTSetupView: View {
             }
         }
         .sensoryFeedback(DX.Haptic.commit, trigger: saved)
+        .fullProgramPaywall(isPresented: $showPaywall, profile: profile)
         .sheet(item: $editing) { item in
             // The step may be gone while the sheet closes after "Remove this step".
             if drafts.indices.contains(item.draft), drafts[item.draft].steps.indices.contains(item.index) {
@@ -114,10 +117,22 @@ struct NRTSetupView: View {
 
     // MARK: Stages
 
+    /// The NRT scheduler is part of the full program (MON-01). Every way in lands here, so the intro is the one lock;
+    /// the facts on it stay free, and plans already made keep their reminders.
+    private var schedulerUnlocked: Bool {
+        FullProgram.has(.nrtScheduler, isPro: entitlement?.isPro ?? Entitlement.isProNow)
+    }
+
     private var intro: some View {
-        page(button: "Set up my NRT", action: { stage = .products }) {
+        page(button: schedulerUnlocked ? "Set up my NRT" : "Unlock the full program",
+             action: { if schedulerUnlocked { stage = .products } else { showPaywall = true } }) {
             Text("Keep your NRT on track").v4Text(.title)
             Text("Tell us what's on your pack. We'll remind you to change patches and when each step down is due.").v4Text(.subtitle)
+            if !schedulerUnlocked {
+                Label("The 12-week NRT schedule comes with the full program.", systemImage: "lock.fill")
+                    .dxFont(14, weight: 600, style: .footnote).foregroundStyle(Read4.ink)
+                    .padding(.top, DX.Space.xxs)
+            }
             if PregnancyAnswer.stored == .yes {
                 // S27.6: answered "Yes" to pregnant or breastfeeding in onboarding.
                 Label {

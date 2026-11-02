@@ -83,6 +83,9 @@ public struct ProgramContent: Decodable, Sendable {
         public let listenHint: Varied<String>?
         public let unlock: Unlock
         public let audio: AudioVariants
+        /// The 90-second read (MON-04): a few cards that carry the session's ideas, shown where the audio goes.
+        /// "Listen instead" plays the recording when there is one.
+        public let cards: [Card]?
         public let beats: [Beat]
         public let mission: Mission?
         public let completionText: Varied<String>
@@ -91,6 +94,17 @@ public struct ProgramContent: Decodable, Sendable {
         public var beatsBeforeAudio: [Beat] { beats.filter { $0.position == .beforeAudio } }
         public var beatsAfterAudio: [Beat] { beats.filter { $0.position == .afterAudio } }
     }
+
+    /// One card of the 90-second read: a short line on the front, the idea behind it on the back.
+    public struct Card: Decodable, Sendable {
+        public let front: Varied<String>
+        public let back: Varied<String>
+    }
+
+    /// How long the card stack takes, as the screens say it (MON-04).
+    public static let cardStackSeconds = 90
+    /// A stack is three to five cards: enough to carry the session's ideas in about 90 seconds.
+    public static let cardStackSize = 3...5
 
     public struct Unlock: Decodable, Sendable, Equatable {
         public enum Rule: String, Decodable, Sendable {
@@ -507,6 +521,15 @@ extension ProgramContent {
             if !session.audio.variants.contains("default"),
                !ProgramVariant.allCases.allSatisfy({ session.audio.variants.contains($0.rawValue) }) {
                 problems.append("\(session.id) has no audio for some products and no default")
+            }
+            // The 90-second read (MON-04): every session has one, of a readable size, for every product.
+            let cards = session.cards ?? []
+            if !Self.cardStackSize.contains(cards.count) {
+                problems.append("\(session.id) has \(cards.count) cards; a stack has \(Self.cardStackSize.lowerBound) to \(Self.cardStackSize.upperBound)")
+            }
+            for (i, card) in cards.enumerated() {
+                checkText(card.front, "\(session.id).cards[\(i)].front")
+                checkText(card.back, "\(session.id).cards[\(i)].back")
             }
             if session.unlock.rule == .daysSinceQuit, session.unlock.minDay == nil {
                 problems.append("\(session.id) unlocks by days since quit but has no minDay")

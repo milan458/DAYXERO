@@ -60,7 +60,9 @@ struct SettingsSheet: View {
                 } header: {
                     Text("App")
                 } footer: {
-                    Text("Other haptics follow System Haptics in iPhone Settings.")
+                    // MON-01: the voice is part of the full program; the setting is kept for when it's unlocked.
+                    Text(entitlement.isPro ? "Other haptics follow System Haptics in iPhone Settings."
+                         : "Other haptics follow System Haptics in iPhone Settings. Jelli's voice coaching comes with the full program.")
                 }
                 if DemoMode.isAvailable {
                     Section {
@@ -562,12 +564,7 @@ struct SubscriptionSettingsView: View {
                     Text("DayXero Pro is active.")
                 } else {
                     Button("Unlock the full program") {
-                        // Before Quit Day, DayXero's own paywall, which holds the trial for Quit Day (decision 15):
-                        // a Superwall paywall could sell a trial that starts today.
-                        guard !isPrep else {
-                            showPaywall = true
-                            return
-                        }
+                        // The trial is sold whenever the Quit Day is (MON-01), so Superwall's paywall is fine any day.
                         // Superwall's paywall when a campaign has one here; DayXero's otherwise (S20).
                         Paywalls.present(.upgradeFromSettings) { outcome in
                             switch outcome {
@@ -606,10 +603,6 @@ struct SubscriptionSettingsView: View {
                         model: PaywallModel(store: entitlement.store, entitlement: entitlement),
                         onClose: { showPaywall = false })
         }
-    }
-
-    private var isPrep: Bool {
-        ProgressStats(quitDay: profile.quitDay, baselines: [], clock: DayClock(boundaryHour: profile.dayBoundaryHour)).isPrep(at: .now)
     }
 
     private func planLine(_ current: CurrentPlan) -> String {

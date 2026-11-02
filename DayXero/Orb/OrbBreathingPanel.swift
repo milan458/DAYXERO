@@ -112,7 +112,7 @@ struct OrbBreathingPanel: View {
                 AccessibilityNotification.Announcement(
                     String(localized: "\(String(localized: String.LocalizationValue(phase.rawValue))), \(engine.pattern.seconds(phase)) seconds")).post()
             case let .coach(trigger):
-                if let line = engine.data.coachingLine(trigger: trigger) { coach.play(line, voice: voiceOn) }
+                if let line = engine.data.coachingLine(trigger: trigger) { coach.play(line, voice: VoiceCoaching.speaks(voiceOn)) }
             case .finished:
                 coach.stop()
                 haptics.stop()
@@ -151,7 +151,7 @@ struct OrbBreathingPanel: View {
     }
 
     private func coachMe() {
-        coach.play(engine.nextLine(), voice: voiceOn)
+        coach.play(engine.nextLine(), voice: VoiceCoaching.speaks(voiceOn))
     }
 
     private func tearDown() {

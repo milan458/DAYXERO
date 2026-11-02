@@ -8,15 +8,17 @@ struct SessionOpen: Identifiable, Hashable {
     var isReplay = false
 }
 
-/// Free tier: the counter, Craving SOS, the whole prep week and the Day Xero session (decisions 15 and 23).
-/// Week 1 onwards needs Pro or the trial, which is offered after Day Xero.
+/// Free tier (MON-01): the counter, Craving SOS, the 60-second breathing timer and Prep 1 to 3. Prep 4 onwards needs
+/// Pro or the 7-day trial, which is sold at the Prep 4 paywall whenever the Quit Day is. See `FullProgram`.
 enum ProgramV2Access {
-    static let freeSessions: Set<String> = ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "DX"]
-    /// The session after which the trial is offered.
+    static var freeSessions: Set<String> { FullProgram.freeSessionIds }
+    /// The Day Xero session: its completion is the sun moment, and anyone still without the full program gets the
+    /// Quit Day offer after it once (decision 23). Under MON-01 Day Xero is paid, so that only happens to someone
+    /// whose subscription ended part-way.
     static let offerAfter = "DX"
 
     static func needsUpgrade(_ sessionId: String, isPro: Bool) -> Bool {
-        !isPro && !DemoMode.isOn && !freeSessions.contains(sessionId)
+        !DemoMode.isOn && FullProgram.needsUpgrade(sessionId: sessionId, isPro: isPro)
     }
 }
 

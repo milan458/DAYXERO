@@ -3,7 +3,7 @@
 Safe to run again: anything that already exists is left as it is.
 
   App Store Connect (ASC_KEY_ID, ASC_ISSUER_ID, $RUNNER_TEMP/AuthKey_<id>.p8):
-    subscription group "DayXero Pro" with dayxero.annual (3-day free trial) and dayxero.monthly,
+    subscription group "DayXero Pro" with dayxero.annual (7-day free trial, MON-01) and dayxero.monthly,
     the non-consumable dayxero.lifetime, English names, prices in every territory, and review screenshots.
   RevenueCat (RC_SECRET_KEY, RC_PROJECT_ID; skipped when not set):
     the three products, the "pro" entitlement, and the current "default" offering with
@@ -30,8 +30,9 @@ SUBSCRIPTIONS = [
 ]
 LIFETIME = ("dayxero.lifetime", "Lifetime", "79.99", "DayXero Pro Lifetime",
             "Full quit program, insights and NRT planner, for good.")
-TRIAL = {"dayxero.annual": "THREE_DAYS"}
-REVIEW_NOTE = "Unlocks DayXero Pro. The paywall appears after onboarding and from locked lessons."
+# MON-01: 7 days, sold at the Prep 4 paywall. Only applied where no trial is set yet; change a live one in App Store Connect.
+TRIAL = {"dayxero.annual": "ONE_WEEK"}
+REVIEW_NOTE = "Unlocks DayXero Pro. Prep 1 to 3 are free; the paywall appears at Prep 4 and from locked features."
 SCREENSHOT = os.environ.get("REVIEW_SCREENSHOT", "")
 
 

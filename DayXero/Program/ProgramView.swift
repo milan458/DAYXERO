@@ -90,7 +90,7 @@ struct ProgramView: View {
             UpgradeSheet(dayTitle: item.id, model: PaywallModel(store: entitlement.store, entitlement: entitlement),
                          showAllPlans: { upgradeTitle = nil; showPaywall = true },
                          onUnlocked: { upgradeTitle = nil })
-                .presentationDetents([.medium])
+                .presentationDetents([.medium, .large])
         }
         .fullScreenCover(isPresented: $showPaywall) {
             PaywallView(name: profile.name, quitDay: profile.quitDay,

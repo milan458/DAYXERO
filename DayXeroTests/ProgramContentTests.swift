@@ -29,6 +29,26 @@ struct ProgramContentTests {
         #expect(boosters.allSatisfy { !$0.beats.contains { $0.sets == "graduated_at" } })
     }
 
+    /// MON-04: every session has a 90-second read of three to five cards, worded for each product.
+    @Test func everySessionHasACardStack() throws {
+        let program = try content()
+        for session in program.sessions {
+            #expect(ProgramContent.cardStackSize.contains(session.cards?.count ?? 0), "\(session.id)")
+        }
+        let p7 = try #require(program.session("P7")?.cards)
+        #expect(p7[1].back.resolve(.vaping)?.contains("batteries") == true)
+        #expect(p7[1].back.resolve(.smoking)?.contains("batteries") == false)
+    }
+
+    /// MON-04: the card stack sits where the audio goes; the recording plays only for someone who chose to listen.
+    @MainActor @Test func theLessonIsTheCardStackUnlessTheyChoseToListen() {
+        #expect(SessionFlowView.lessonStep(hasCards: true, hasAudio: false, format: .listen) == .cards)
+        #expect(SessionFlowView.lessonStep(hasCards: true, hasAudio: true, format: .read) == .cards)
+        #expect(SessionFlowView.lessonStep(hasCards: true, hasAudio: true, format: .listen) == .audio)
+        #expect(SessionFlowView.lessonStep(hasCards: false, hasAudio: true, format: .read) == .audio)
+        #expect(SessionFlowView.lessonStep(hasCards: false, hasAudio: false, format: .read) == nil)
+    }
+
     @Test func theContentHasNoProblems() throws {
         let patterns = Set(OrbData.bundled.breathingPatterns.map(\.id))
         let problems = try content().problems(patterns: patterns)

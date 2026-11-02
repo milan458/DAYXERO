@@ -194,7 +194,7 @@ struct RootView: View {
             #endif
         } else {
             OnboardingFlow(onSaving: { finishingOnboarding = true }, onFinished: {
-                // Prep week is free and the trial is offered after Day Xero (decisions 15, 23),
+                // Prep 1 to 3 are free and the trial is offered at Prep 4 (MON-01),
                 // so onboarding goes straight to Home, which opens Prep 1 by itself.
                 UserDefaults.standard.set(true, forKey: FirstLesson.key)
                 finishingOnboarding = false
