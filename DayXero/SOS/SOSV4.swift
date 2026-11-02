@@ -20,13 +20,15 @@ enum SOSColors {
 
 /// F13: the glow ring that breathes behind Jelli, and two slow waves along the bottom.
 struct SOSWater: View {
+    /// The breathing glow ring; off while the opening sighs draw their own (CHAR-01).
+    var ring = true
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         TimelineView(.animation(paused: reduceMotion)) { timeline in
             let t = reduceMotion ? 0 : timeline.date.timeIntervalSinceReferenceDate
             Canvas { context, size in
-                SOSWater.draw(in: &context, size: size, time: t, still: reduceMotion)
+                SOSWater.draw(in: &context, size: size, time: t, still: reduceMotion, ring: ring)
             }
         }
         .accessibilityHidden(true)
@@ -34,14 +36,16 @@ struct SOSWater: View {
     }
 
     /// Drawn in the canvas's 390-wide space, scaled to the screen width.
-    nonisolated static func draw(in context: inout GraphicsContext, size: CGSize, time t: Double, still: Bool) {
+    nonisolated static func draw(in context: inout GraphicsContext, size: CGSize, time t: Double, still: Bool, ring: Bool = true) {
         let k = size.width / 390
         // Glow ring: radius 125 → 165 on the 4 s in, 6 s out breath; 140 when still.
-        let breath = still ? 0.375 : DX.Move.breath(at: t)
-        let r = (125 + 40 * breath) * k
-        let centre = CGPoint(x: size.width / 2, y: 196 * k)
-        context.fill(Path(ellipseIn: CGRect(x: centre.x - r, y: centre.y - r, width: r * 2, height: r * 2)),
-                     with: .color(SOSColors.glow))
+        if ring {
+            let breath = still ? 0.375 : DX.Move.breath(at: t)
+            let r = (125 + 40 * breath) * k
+            let centre = CGPoint(x: size.width / 2, y: 196 * k)
+            context.fill(Path(ellipseIn: CGRect(x: centre.x - r, y: centre.y - r, width: r * 2, height: r * 2)),
+                         with: .color(SOSColors.glow))
+        }
         // Two waves rise and fall out of step: 7 s and 5.5 s.
         func wave(_ baseline: Double, depth: Double, period: Double) -> Path {
             let d = still ? 0 : depth * cos(2 * .pi * t / period)

@@ -407,12 +407,18 @@ struct WaterBentoCell: View {
         let drink = waterProfiles.first?.selectedDrink ?? .glass
         let glasses = WaterFormat.glasses(total)
         let goalGlasses = max(goal / WaterGoal.glassMl, 1)
+        let units = waterProfiles.first?.units ?? WaterUnits.default()
         BentoCell {
+            // UX-12: "0 / 9 glasses" and "2.25 L daily goal", said once each; the cell's drop says it's water.
             BentoLabel(title: String(localized: "Water"), systemImage: "drop.fill")
+                .accessibilityHidden(true)
             BentoNumber(value: "\(glasses)", unit: String(localized: "/ \(goalGlasses) glasses"))
                 // UI tests read "3 of 8 glasses" from here.
                 .accessibilityLabel(Text("Water · \(glasses) of \(goalGlasses) glasses"))
                 .accessibilityIdentifier("today.water.count")
+            Text("\(WaterFormat.amount(goal, units: units)) \(WaterFormat.unit(units)) daily goal")
+                .dxType(.footnote).foregroundStyle(DX.Ground.reading.muted)
+                .lineLimit(1).minimumScaleFactor(0.8)
             Spacer(minLength: 0)
             Button {
                 WaterLog.log(drink, source: .app, in: context)

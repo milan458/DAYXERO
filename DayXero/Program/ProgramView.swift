@@ -108,35 +108,60 @@ struct ProgramView: View {
         return content.phases.last ?? content.phases[0]
     }
 
-    /// Phase pills in a track: a tick when done, ink for the one shown.
+    /// Phase pills in a track: a tick when done, ink for the one shown. The track runs edge to edge and scrolls the
+    /// pill shown to the centre, with the ends fading out, so a pill is never cut off mid-word at the screen edge.
     private func phasePicker(_ content: ProgramContent, states: [String: ProgramUnlock.State], current: String?, selected: String) -> some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 2) {
-                ForEach(content.phases) { phase in
-                    let done = !phase.sessionIds.isEmpty && phase.sessionIds.allSatisfy { if case .completed = states[$0] { true } else { false } }
-                    let on = phase.id == selected
-                    Button {
-                        withAnimation(DX.Move.settle) { picked = phase.id }
-                    } label: {
-                        HStack(spacing: 4) {
-                            Text(verbatim: phase.title).dxFont(14, weight: 700, style: .footnote)
-                            if done { Image(systemName: "checkmark").font(.system(size: 11, weight: .heavy)) }
+        ScrollViewReader { proxy in
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 2) {
+                    ForEach(content.phases) { phase in
+                        let done = !phase.sessionIds.isEmpty && phase.sessionIds.allSatisfy { if case .completed = states[$0] { true } else { false } }
+                        let on = phase.id == selected
+                        Button {
+                            withAnimation(DX.Move.settle) { picked = phase.id }
+                        } label: {
+                            HStack(spacing: 4) {
+                                Text(verbatim: phase.title).dxFont(14, weight: 700, style: .footnote)
+                                    .lineLimit(1)
+                                if done { Image(systemName: "checkmark").font(.system(size: 11, weight: .heavy)) }
+                            }
+                            // A pill is as wide as its title: it scrolls rather than squeezing or wrapping.
+                            .fixedSize()
+                            .foregroundStyle(on ? DX.Ground.reading.background : ground.ink)
+                            .padding(.horizontal, 14)
+                            .frame(minHeight: DX.Layout.touchTarget)
+                            .background(on ? ground.ink : Color.clear, in: Capsule())
+                            .contentShape(Capsule())
                         }
-                        .foregroundStyle(on ? DX.Ground.reading.background : ground.ink)
-                        .padding(.horizontal, 14)
-                        .frame(minHeight: DX.Layout.touchTarget)
-                        .background(on ? ground.ink : Color.clear, in: Capsule())
-                        .contentShape(Capsule())
+                        .buttonStyle(.plain)
+                        .id(phase.id)
+                        .accessibilityAddTraits(on ? [.isButton, .isSelected] : .isButton)
+                        .accessibilityValue(Text(done ? "Done" : ""))
                     }
-                    .buttonStyle(.plain)
-                    .accessibilityAddTraits(on ? [.isButton, .isSelected] : .isButton)
-                    .accessibilityValue(Text(done ? "Done" : ""))
                 }
+                .padding(4)
+                .background(Color(light: (0x1E1A3A, 0.08), dark: (0xFFFFFF, 0.08)), in: Capsule())
             }
-            .padding(4)
-            .background(Color(light: (0x1E1A3A, 0.08), dark: (0xFFFFFF, 0.08)), in: Capsule())
+            // At rest the track lines up with the title; scrolled, it runs to the screen edges under the fades.
+            .contentMargins(.horizontal, DX.Layout.gutter, for: .scrollContent)
+            .padding(.horizontal, -DX.Layout.gutter)
+            .mask { Self.edgeFade }
+            .onAppear { proxy.scrollTo(selected, anchor: .center) }
+            .onChange(of: selected) { _, id in
+                withAnimation(DX.Move.settle) { proxy.scrollTo(id, anchor: .center) }
+            }
         }
-        .scrollClipDisabled()
+    }
+
+    /// Opaque in the middle, fading to clear over the gutter at each end.
+    private static var edgeFade: some View {
+        HStack(spacing: 0) {
+            LinearGradient(colors: [.clear, .black], startPoint: .leading, endPoint: .trailing)
+                .frame(width: DX.Layout.gutter)
+            Rectangle().fill(.black)
+            LinearGradient(colors: [.black, .clear], startPoint: .leading, endPoint: .trailing)
+                .frame(width: DX.Layout.gutter)
+        }
     }
 
     private func phaseHeading(_ phase: ProgramContent.Phase, states: [String: ProgramUnlock.State]) -> String {
@@ -203,7 +228,9 @@ struct ProgramView: View {
         let done: Bool = if case .completed = item.state { true } else { false }
         let kicker: String = if item.needsUpgrade {
             String(localized: "\(session.label) · Unlock to start")
-        } else if open || done {
+        } else if open {
+            String(localized: "Today · \(session.durationMinutes) min")
+        } else if done {
             String(localized: "\(session.label) · \(session.durationMinutes) min")
         } else {
             String(localized: "\(session.label) · \(waitText(item.state) ?? String(localized: "Comes later"))")

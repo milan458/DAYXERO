@@ -108,6 +108,18 @@ struct HomeTests {
         #expect(none.lessonStreak == 0)
     }
 
+    /// A Quit Day nine days out still has seven prep sessions: the total is the program's, not the calendar's.
+    @Test func prepTotalIsTheProgramsSevenSessions() throws {
+        let context = ModelContext(try DataStore.makeContainer(inMemory: true))
+        let p = UserProfile(name: "Milan", quitDay: date(31, 0), currencyCode: "USD", createdAt: date(22, 9))
+        context.insert(p)
+        p.products.append(ProductUse(product: .vape, isPrimary: true, unitsPerDay: 200, pricePerPurchase: 8, unitsPerPurchase: 600))
+        let snap = HomeSnapshot(profile: p, isPro: true, now: date(22, 10), calendar: calendar, sessions: [])
+        #expect(snap.phase == .prep(daysUntilQuitDay: 9))
+        #expect(snap.prepTotal == 7)
+        #expect(snap.prepDone == 0)
+    }
+
     @Test func quitWeekSnapshotShowsDayAndCounters() throws {
         let context = ModelContext(try DataStore.makeContainer(inMemory: true))
         let done = (1...7).map { ProgramDayID(phase: .prep, index: $0) } + [ProgramDayID(phase: .quit, index: 1), ProgramDayID(phase: .quit, index: 2)]

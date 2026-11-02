@@ -24,6 +24,12 @@ public enum NicotineEstimate {
 
     /// The same nicotine counted in cigarettes.
     public static func cigarettes(mg: Double) -> Double { mg / mgPerCigarette }
+
+    /// How many cigarettes one unit (a pouch, a puff) counts as. An 11 mg pouch is 11 × 0.2 / 1.2 ≈ 1.8, which is
+    /// why 10 cigarettes and 8 such pouches show as about 25 a day.
+    public static func cigarettesPerUnit(_ product: Product, strength: Double?) -> Double {
+        cigarettes(mg: mgPerDay(product, unitsPerDay: 1, strength: strength))
+    }
 }
 
 /// Time spent smoking or vaping, for "time back" (S22). Pouches sit in the mouth while life goes on, so they count none.

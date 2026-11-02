@@ -72,14 +72,17 @@ public struct TopCard: View {
     }
 }
 
-/// A number that counts up when it appears or changes (Count motion: 0.85 s, ease-out cubic).
+/// A number that counts up when it appears or changes (Count motion: 0.85 s, ease-out).
 /// Reduce Motion shows the final value at once.
+///
+/// The count is a SwiftUI animation of the number itself, so the model value is always the real one and only the
+/// frames in between are interpolated. The old version drew frames from a `TimelineView` and relied on a timer to
+/// finish; when the timeline stopped ticking part-way (seen on the Progress tab), the tile froze on an early frame:
+/// ₹20,697 for a ₹1,47,304 year, and 0 for 5 prep done or 7 days to Quit Day.
 public struct CountingText: View {
     let value: Double
     let format: (Double) -> String
-    @State private var from: Double = 0
-    @State private var start = Date()
-    @State private var running = true
+    @State private var appeared = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     public init(_ value: Double, format: @escaping (Double) -> String) {
@@ -88,26 +91,27 @@ public struct CountingText: View {
     }
 
     public var body: some View {
-        TimelineView(.animation(paused: !running || reduceMotion)) { timeline in
-            let elapsed = timeline.date.timeIntervalSince(start)
-            let p = running && !reduceMotion ? min(1, max(0, elapsed / 0.85)) : 1
-            let eased = 1 - pow(1 - p, 3)
-            Text(format(from + (value - from) * eased)).monospacedDigit()
-        }
-        .onAppear { stopSoon() }
-        .onChange(of: value) { old, _ in
-            from = old
-            start = Date()
-            running = true
-            stopSoon()
-        }
+        CountingNumber(animatableData: appeared || reduceMotion ? value : 0, format: format)
+            .animation(reduceMotion ? nil : DX.Move.count, value: value)
+            .onAppear {
+                guard !appeared else { return }
+                if reduceMotion {
+                    appeared = true
+                } else {
+                    withAnimation(DX.Move.count) { appeared = true }
+                }
+            }
     }
+}
 
-    private func stopSoon() {
-        Task {
-            try? await Task.sleep(for: .seconds(0.9))
-            running = false
-        }
+/// The number SwiftUI interpolates for `CountingText`.
+private struct CountingNumber: View, Animatable {
+    /// Nonisolated so it can satisfy `Animatable` from a main-actor view under Swift 6.
+    nonisolated var animatableData: Double
+    let format: (Double) -> String
+
+    var body: some View {
+        Text(format(animatableData)).monospacedDigit()
     }
 }
 

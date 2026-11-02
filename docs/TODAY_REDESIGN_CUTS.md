@@ -38,3 +38,36 @@ brought back later.
 4. **Batch sizes** for cigarettes and pouches (+1 / +5) were my call; the spec only named +5 / +10 for puffs.
 5. **UX-03** (SOS opening Calm tools) couldn't be reproduced: the SOS tab already opened Jelli's session in code. If
    it still happens, note the build and the path taken.
+
+---
+
+# Copy pass, SOS and body screens (UX-12, CHAR-01 to CHAR-05, UX-04; 2 Nov 2026)
+
+## Changed or removed
+
+| What | Was | Now |
+| --- | --- | --- |
+| **Water cell** | "7 / 9 glasses" | "7 / 9 glasses" and "2.25 L daily goal" under it (litres or fl oz, from the water settings). |
+| **Prep card** | "Today · Prep 1 · 5 min" / title / chevron | "Prep 1" / "[title] · 5 min" / a **Start** pill (Continue, Unlock). The kicker is the program's own session label ("Prep 1"), not "Prep day 1": a session isn't tied to a calendar day. |
+| **Program sheet** | "Prep 1 · 5 min" for the open session | "Today · 5 min". Done sessions still show their label. |
+| **Savings tile** (Progress, prep) | "to keep a year" | "you'll keep / year". Never "saved" before Quit Day. |
+| **Patterns card** (Progress, no logs yet) | "Your first log starts the map" over the blurred map | "Unlock your trigger map" / "Log cravings this week to see your patterns." over the blurred map. |
+| **Log sheet** | "I used" heading; rows "Cigarette", "Vaped", "Pouch" with "n today" | No heading; rows "Cigarette", "Puff", "Pouch" with "n logged today". "Vaped" became "Puff" so the row reads as a thing, like the others. Recent logs on Progress say "Puff" too. |
+| **"What's changing" sources** (Progress) | A "Source: …" line on each card | One footer: "Source: American Cancer Society" or "Sources: A · B". The full timeline already cited once at the bottom. Milestones' own detail sheets keep their source. |
+| **"What's changing" cards** | Text-only cards | Each shows its milestone illustration (the existing kit badges). |
+
+## Craving SOS, new order
+
+1. **Three physiological sighs** (about 30 s): Jelli swells and settles, one subtitle line, the on-device voice and Core Haptics in step. "Skip to riding it out" is under it; "It passed", "Still strong", "Text a friend" and "I slipped" stay on screen throughout. Leaving the app mid-sigh skips to riding it out.
+2. **Riding it out**: Jelli on 4 in, 6 out, the time ridden, their why.
+3. **Hold to feel**: the fidget pad.
+4. **Break menu**, as before.
+5. **Sensory tricks**: a row that opens the drawer.
+
+The sigh's voice is the on-device speech voice, like the breathing orb's coach. A recorded voice can replace it later. It follows **Settings › Voice guidance**, and the haptics follow the SOS haptics setting.
+
+## Open questions
+
+6. **CHAR-05 style.** The milestones use the existing kit illustrations for now. A new illustration style (and the Headspace-like structure in an earthy palette) waits on the style choice in approvals.
+7. **Recorded audio for the sighs**, or keep the on-device voice?
+8. **"Prep 1" vs "Prep day 1"** on the prep card: the table said "PREP DAY 1"; the card uses the session label so it never disagrees with the kicker's calendar day.

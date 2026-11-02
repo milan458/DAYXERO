@@ -1,6 +1,6 @@
 # Clinical review changes (CLIN-01 to CLIN-11)
 
-Built 2 Nov 2026 on `claude/elegant-fermat-8bg8iv`. Tracked as S29 in `planning/tasks.json`. All copy is a draft for Milan.
+Built 2 Nov 2026 on `claude/elegant-fermat-8bg8iv`. Tracked as S31 in `planning/tasks.json`. All copy is a draft for Milan.
 
 | ID | Where it lives | What changed |
 |---|---|---|

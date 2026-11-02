@@ -139,17 +139,20 @@ struct ProgramTodayCard: View {
         open = SessionOpen(id: id)
     }
 
-    /// The green lesson card (F08 afternoon): "TODAY · DAY 3 · 3 MIN" (or "CATCH UP · DAY 2" when behind), the title, and a chevron.
+    /// The green lesson card: "Prep 3" (or "Catch up · Day 2" when behind), "Use with your eyes open · 6 min", and
+    /// a Start, Continue or Unlock pill (UX-12).
     @ViewBuilder
     private func card(_ today: ProgramToday) -> some View {
         switch today.kind {
         case let .open(id, inProgress, needsUpgrade):
-            let detail: String? = needsUpgrade ? String(localized: "Unlock \(today.label)")
+            // UX-12: "Prep 1" / "The first one of the day · 5 min" / Start. The label once, the title with its length.
+            let detail: String? = needsUpgrade ? nil
                 : today.prepRunsOver ? String(localized: "Prep catch-up, whenever you like. It never holds back Day Xero.")
                 : inProgress ? String(localized: "Xero saved your place.") : nil
-            ColourCard(kicker: today.isCatchUp ? String(localized: "Catch up · \(today.label) · \(today.minutes) min")
-                                               : String(localized: "Today · \(today.label) · \(today.minutes) min"), title: today.title,
-                       detail: detail, fill: ColourCard.lesson) {
+            let button: String = needsUpgrade ? String(localized: "Unlock") : inProgress ? String(localized: "Continue") : String(localized: "Start")
+            ColourCard(kicker: today.isCatchUp ? String(localized: "Catch up · \(today.label)") : today.label,
+                       title: String(localized: "\(today.title) · \(today.minutes) min"),
+                       detail: detail, fill: ColourCard.lesson, actionTitle: button) {
                 if needsUpgrade {
                     Paywalls.present(.unlockProgramDay, params: ["day": id]) { outcome in
                         switch outcome {

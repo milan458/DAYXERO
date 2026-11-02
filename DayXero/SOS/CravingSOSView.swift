@@ -34,6 +34,9 @@ struct CravingSOSView: View {
     @State private var showCalmTools = false
     /// Taps on the reason card, to step to the next reason.
     @State private var reasonSkip = 0
+    /// The opening three physiological sighs (CHAR-01); the rest of the session arrives after them.
+    @State private var sighing: Bool
+    @State private var showTricks = false
 
     /// How long the Lock Screen and Dynamic Island stay fresh. The time ridden counts up, so this is no countdown.
     private static let liveActivitySeconds = 3600.0
@@ -47,6 +50,16 @@ struct CravingSOSView: View {
         start = start.addingTimeInterval(-Double(UserDefaults.standard.integer(forKey: "dx.sosElapsed")))
         #endif
         _startedAt = State(initialValue: start)
+        var sigh = true
+        #if DEBUG
+        // Screenshots of a session already under way, or of its outcome, skip the opening sighs.
+        let defaults = UserDefaults.standard
+        if defaults.integer(forKey: "dx.sosElapsed") >= 30 || defaults.string(forKey: "dx.sosOutcome") != nil
+            || defaults.bool(forKey: "dx.sosSkipSigh") {
+            sigh = false
+        }
+        #endif
+        _sighing = State(initialValue: sigh)
     }
 
     var body: some View {
@@ -74,6 +87,7 @@ struct CravingSOSView: View {
         .fullScreenCover(isPresented: $showCalmTools) {
             CalmToolsView(onClose: { showCalmTools = false }, fromSOS: true)
         }
+        .sheet(isPresented: $showTricks) { SensoryTricksSheet() }
         .sensoryFeedback(DX.Haptic.commit, trigger: celebrate)
         .sensoryFeedback(DX.Haptic.gentle, trigger: slipFeedback)
     }
@@ -84,31 +98,20 @@ struct CravingSOSView: View {
         let ground = SOSColors.ocean
         return ZStack {
             ground.background.ignoresSafeArea()
-            SOSWater().ignoresSafeArea()
+            // During the sighs Jelli carries its own glow, on the sigh's rhythm rather than 4 in, 6 out.
+            SOSWater(ring: !sighing).ignoresSafeArea()
             VStack(spacing: 0) {
                 topBar
                 ScrollView {
                     VStack(spacing: 14) {
-                        JelliView(mood: .breathe, stage: CrewGrowth.stage(daysClear: daysClear), size: .hero)
-                            .offset(x: jelliIn || reduceMotion ? 0 : 90)
-                            .opacity(jelliIn ? 1 : 0)
-                            // Jelli makes room for the break menu (S27.18).
-                            .frame(height: 170)
-                            .accessibilityHidden(true)
-                        SOSBreathWords()
-                            .foregroundStyle(SOSColors.cream)
-                        riddenLine
-                            .dxArrive(5)
-                        // Their why comes first, above the fold, before the break menu (UX-06).
-                        if let reason = currentReason {
-                            SOSReasonCard(reason: reason, canAdvance: reasons.count > 1) { reasonSkip += 1 }
-                                .padding(.top, 6)
-                                .dxArrive(6)
+                        if sighing {
+                            // Breathing first (CHAR-01): three sighs, about 30 seconds, then riding it out.
+                            SOSSighIntro(stage: CrewGrowth.stage(daysClear: daysClear)) {
+                                withAnimation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion)) { sighing = false }
+                            }
+                        } else {
+                            ridingItOut
                         }
-                        SOSBreakMenuCard(items: menu.isEmpty ? starterBreaks : menu, isOwn: !menu.isEmpty,
-                                         buildingDay: buildingDayLabel, fastActingNRT: hasFastActingNRT)
-                            .padding(.top, currentReason == nil ? 6 : 4)
-                            .dxArrive(6)
                     }
                     .padding(.horizontal, DX.Layout.gutter)
                     .padding(.top, 8)
@@ -120,7 +123,37 @@ struct CravingSOSView: View {
             }
             .dxReadableColumn(avoidingFold: false)
         }
-        .sosBreathHaptics(hapticsOn && stage == .session)
+        .sosBreathHaptics(hapticsOn && stage == .session && !sighing)
+    }
+
+    /// After the sighs: Jelli on 4 in, 6 out, the time ridden, their why, then something for the hands (CHAR-02),
+    /// the break menu, and the sensory tricks (CHAR-03).
+    @ViewBuilder
+    private var ridingItOut: some View {
+        JelliView(mood: .breathe, stage: CrewGrowth.stage(daysClear: daysClear), size: .hero)
+            .offset(x: jelliIn || reduceMotion ? 0 : 90)
+            .opacity(jelliIn ? 1 : 0)
+            // Jelli makes room for the break menu (S27.18).
+            .frame(height: 170)
+            .accessibilityHidden(true)
+        SOSBreathWords()
+            .foregroundStyle(SOSColors.cream)
+        riddenLine
+            .dxArrive(5)
+        // Their why comes first, above the fold, before the break menu (UX-06).
+        if let reason = currentReason {
+            SOSReasonCard(reason: reason, canAdvance: reasons.count > 1) { reasonSkip += 1 }
+                .padding(.top, 6)
+                .dxArrive(6)
+        }
+        HoldToFeelPad()
+            .padding(.top, currentReason == nil ? 6 : 4)
+            .dxArrive(6)
+        SOSBreakMenuCard(items: menu.isEmpty ? starterBreaks : menu, isOwn: !menu.isEmpty,
+                         buildingDay: buildingDayLabel, fastActingNRT: hasFastActingNRT)
+            .dxArrive(7)
+        SensoryTricksButton { showTricks = true }
+            .dxArrive(7)
     }
 
     private var topBar: some View {
