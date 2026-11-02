@@ -129,6 +129,20 @@ struct InsightsTests {
         let counts = UseLog.counts(.cigarettes, at: at(23, 20), in: context, clock: clock)
         #expect(counts.today == 3 && counts.yesterday == 1)
     }
+
+    /// "+5" and "+10" on Today log a batch of uses (UX-05); Undo takes the whole batch back.
+    @Test func aBatchLogsEachUseAndUndoesTogether() throws {
+        let context = ModelContext(try DataStore.makeContainer(inMemory: true))
+        let profile = UserProfile(name: "Milan", quitDay: at(26, 0), currencyCode: "USD", createdAt: at(19, 9))
+        context.insert(profile)
+        let clock = DayClock(calendar: calendar, boundaryHour: 4)
+        let batch = UseLog.log(.vape, count: 5, at: at(23, 9), in: context)
+        #expect(batch.count == 5 && batch.allSatisfy { $0.kind == .use })
+        #expect(UseLog.counts(.vape, at: at(23, 12), in: context, clock: clock).today == 5)
+        UseLog.undo(batch, in: context)
+        #expect(UseLog.counts(.vape, at: at(23, 12), in: context, clock: clock).today == 0)
+        #expect(UseLog.log(.vape, count: 0, at: at(23, 9), in: context).isEmpty)
+    }
 }
 
 private extension InsightsTests {

@@ -22,9 +22,10 @@ struct HomeView: View {
             ZStack(alignment: alignment) {
                 tabContent
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    // Every tab scrolls clear of the dock, on whichever edge it stands (S18.13).
+                    // Every tab scrolls clear of the dock, on whichever edge it stands (S18.13). The inset covers the
+                    // raised SOS button too, with room to spare, so the bar never sits over the last card (UX-11).
                     .safeAreaInset(edge: .bottom, spacing: 0) {
-                        if edge == nil { Color.clear.frame(height: 70 + DX.Space.xs) }
+                        if edge == nil { Color.clear.frame(height: V4TabBar.contentInset) }
                     }
                     .safeAreaInset(edge: edge ?? .trailing, spacing: 0) {
                         if edge != nil { Color.clear.frame(width: DXDock.thickness + DX.Space.xs) }
@@ -61,7 +62,8 @@ extension HomeView {
         }
     }
 
-    /// The v4 tab bar's selection. SOS opens Craving SOS rather than switching tabs.
+    /// The v4 tab bar's selection. SOS opens Craving SOS rather than switching tabs: straight into Jelli's breathing
+    /// session, never Glim's calm tools list (UX-03). The calm tools are one step further, behind "Still strong".
     private var v4Selection: Binding<V4Tab> {
         Binding(
             get: {
@@ -136,57 +138,59 @@ enum FirstLesson {
     static let key = "dx.openFirstLesson"
 }
 
+/// Today (UX-07, UX-09; 2 Nov 2026): one screen, no scrolling at the usual text sizes. A kicker line, a hero card,
+/// one focus card that follows the time of day (UX-08), and a two-cell bento row. Before Day Xero the hero counts
+/// down to Quit Day; after it, it counts time free. The Your day list, the streak card, the body-change row and the
+/// NRT invitations went: the hero, the focus card and the Program tab carry them now.
 struct TodayView: View {
     let profile: UserProfile
-    /// The use just logged with one tap, for the Undo / Add trigger toast.
-    @State private var justLogged: LogEntry?
+    /// The uses just logged, one or a batch (UX-05), for the Undo / Add trigger toast.
+    @State private var justLogged: [LogEntry]?
     @State private var detailsFor: LogEntry?
     @State private var loggedFeedback = false
     @Environment(Entitlement.self) private var entitlement
     @Environment(\.modelContext) private var context
-    @AppStorage("dx.sosHintSeen") private var sosHintSeen = false
     @State private var upgradeTitle: String?
     @State private var showUpgrade = false
     @State private var showPaywall = false
     @Environment(LogRouter.self) private var log
-    @Environment(NRTRouter.self) private var nrt
     @Query(sort: \LogEntry.timestamp, order: .reverse) private var logs: [LogEntry]
     @Query(sort: \IfThenPlan.createdAt, order: .reverse) private var plans: [IfThenPlan]
     @Query(sort: \Pledge.madeAt, order: .reverse) private var pledges: [Pledge]
     @Query private var checkIns: [CheckIn]
-    /// Program v2 sessions, so the prep count and streak update as soon as a session is finished.
+    /// Program v2 sessions, so the prep count updates as soon as a session is finished.
     @Query private var sessionRecords: [SessionRecord]
     @State private var showPledge = UserDefaults.standard.bool(forKey: "dx.openPledge")
     @State private var showCheckIn = UserDefaults.standard.bool(forKey: "dx.openCheckIn")
     /// Screenshots: `-dx.openCalmList` or `-dx.openCalm <tool>` open the calm tools (they lived on the Evening tab).
     @State private var showCalmTools = UserDefaults.standard.bool(forKey: "dx.openCalmList")
         || UserDefaults.standard.string(forKey: "dx.openCalm") != nil
-    @Environment(SOSRouter.self) private var sos
     @State private var settingsPage: SettingsSheet.Page? = UserDefaults.standard.string(forKey: "dx.openSettings").flatMap(SettingsSheet.Page.init(rawValue:))
     @State private var showSettings = UserDefaults.standard.string(forKey: "dx.openSettings") != nil
     @State private var celebrating: Milestone?
     @State private var showHealth = false
     @Environment(\.dynamicTypeSize) private var typeSize
-    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         // Re-evaluates each minute so counters tick and the day rolls over on its own.
         TimelineView(.everyMinute) { timeline in
-            let snap = HomeSnapshot(profile: profile, isPro: entitlement.isPro, now: timeline.date, sessions: sessionRecords)
-            // Half-open iPhone Duo: today at a glance on one side of the fold, what to do on the other (S18.14).
+            let now = timeline.date
+            let snap = HomeSnapshot(profile: profile, isPro: entitlement.isPro, now: now, sessions: sessionRecords)
+            let state = TodayState(snap: snap, quitTimestamp: profile.progress?.quitTimestamp)
+            // Half-open iPhone Duo: the hero on one side of the fold, what to do on the other (S18.14).
             FoldAware {
-                column { overview(snap, now: timeline.date) }
+                column { overview(snap, state: state, now: now) }
             } secondary: {
-                column { actions(snap, now: timeline.date) }
+                column { actions(snap, state: state, now: now) }
             } flat: {
                 column {
-                    overview(snap, now: timeline.date)
-                    actions(snap, now: timeline.date)
+                    overview(snap, state: state, now: now)
+                    actions(snap, state: state, now: now)
                 }
             }
         }
         .overlay(alignment: .bottom) {
-            if let entry = justLogged { loggedToast(entry) }
+            if let entries = justLogged { loggedToast(entries) }
         }
         .animation(DX.Move.animation(DX.Move.settle, reduceMotion: false), value: justLogged)
         .task(id: justLogged) {
@@ -267,14 +271,15 @@ struct TodayView: View {
         // Built here: ScrollViewReader's closure escapes, and `content` doesn't.
         let built = content()
         return ScrollViewReader { proxy in
+            // Fits without scrolling at the usual text sizes; it scrolls only when it must (large text, iPhone SE).
             ScrollView {
-                // 16 pt between sections, as on dayxero.in (S19).
                 VStack(alignment: .leading, spacing: DX.Space.m) { built }
                     .padding(.horizontal, DX.Space.m)
                     .dxReadableColumn()
-                    .padding(.top, DX.Space.s)
-                    .padding(.bottom, DX.Space.l)
+                    .padding(.top, DX.Space.xs)
+                    .padding(.bottom, DX.Space.s)
             }
+            .scrollBounceBehavior(.basedOnSize)
             #if DEBUG
             // Screenshots of Home's lower half: `-dx.homeScroll lower`.
             .onAppear { if UserDefaults.standard.string(forKey: "dx.homeScroll") == "lower" { proxy.scrollTo("lower", anchor: .top) } }
@@ -282,91 +287,133 @@ struct TodayView: View {
         }
     }
 
-    /// The top of Home (S24, the Figma mockup): the header, today's lesson, logging, and the streak.
+    /// The kicker and the hero.
     @ViewBuilder
-    private func overview(_ snap: HomeSnapshot, now: Date) -> some View {
-        TodayHeaderV4(snap: snap, name: profile.name, now: now) { settingsPage = nil; showSettings = true }
-        // F08 top card by time of day: the usual wave, Glim's check-in or winding down. The lesson card follows.
-        let top = topCard(now: now)
-        TodayTopCardV4(card: top, plan: wavePlan(top), onSOS: { sos.open(source: "wave card") },
-                       onCheckIn: { showCheckIn = true }, onWindDown: { showCalmTools = true })
-        // Program v2's session, mission or what's next (handoff 4.5), as the green lesson card.
-        ProgramTodayCard(profile: profile).id("lower")
-        YourDayList(rows: yourDay(now: now))
-        // S27.12: water is one row, not a card and a tracker.
-        WaterRow(profile: profile, now: now)
-        if snap.phase == .quitDay, !sosHintSeen { sosHint }
+    private func overview(_ snap: HomeSnapshot, state: TodayState, now: Date) -> some View {
+        let ground = TodayClock.ground(at: now)
+        let stage = CrewGrowth.stage(daysClear: snap.daysClear)
+        TodayKicker(text: kicker(snap, state: state), name: profile.name) { settingsPage = nil; showSettings = true }
+        switch state {
+        case .prep:
+            TodayPrepHero(snap: snap, quitDay: profile.quitDay, why: why, ground: ground, crewStage: stage)
+        case .postQuit:
+            TodayQuitHero(timeFree: TimeFree.short(now.timeIntervalSince(quitMoment)),
+                          resilience: Resilience.percent(quitDay: profile.quitDay, slips: logs.filter { $0.kind == .slip }.map(\.timestamp),
+                                                         now: now, clock: clock),
+                          product: primaryProduct, moneyKept: snap.moneyKept, currencyCode: snap.currencyCode,
+                          why: why, ground: ground, crewStage: stage)
+        }
+    }
+
+    /// The focus card, the bento row, and the two things that only show some of the time: the morning pledge and
+    /// a plan made today.
+    @ViewBuilder
+    private func actions(_ snap: HomeSnapshot, state: TodayState, now: Date) -> some View {
+        focusCard(state: state, now: now).id("lower")
+        bento(state: state, now: now)
+        if showsPledge(now: now) { pledgeRow }
         // A plan made today, after a slip or in a lesson, stays on Home for the rest of the day (S8.3).
-        if let plan = plans.first, DayClock(boundaryHour: profile.dayBoundaryHour).day(containing: plan.createdAt)
-            == DayClock(boundaryHour: profile.dayBoundaryHour).day(containing: now) {
+        if let plan = plans.first, clock.day(containing: plan.createdAt) == clock.day(containing: now) {
             PlanCard(situation: plan.situation, action: plan.action, title: "Your plan for next time")
         }
-        quickLog(snap, now: now)
-        streakCard(snap)
     }
 
-    /// Then: NRT set-up, the next change in the body, and today's pledge or check-in.
-    @ViewBuilder
-    private func actions(_ snap: HomeSnapshot, now: Date) -> some View {
-        nrtSection(snap, now: now)
-        milestoneRow(now: now)
-    }
+    // MARK: Kicker and hero
 
-    // MARK: Pledge and check-in (S11)
-
-    /// F08's top card. The wave comes from their own log of cravings and slips (sessions closed straight away don't count).
-    private func topCard(now: Date) -> TodayTopCard {
-        let rhythm = DailyRhythm(clock: DayClock(boundaryHour: profile.dayBoundaryHour))
-        let cravings = logs.filter { ($0.kind == .craving && $0.outcome != .closed) || $0.kind == .slip }.map { (time: $0.timestamp, trigger: $0.trigger) }
-        let wave = CravingPattern.usualWave(cravings, now: now)
-        return TodayTopCard.pick(slot: TodayHeaderV4.slot(at: now), wave: wave,
-                                 checkedIn: rhythm.hasCheckedIn(checkIns.map(\.day), at: now))
-    }
-
-    /// A plan they've saved for the wave's trigger, shown on the wave card.
-    private func wavePlan(_ card: TodayTopCard) -> IfThenPlan? {
-        guard case let .wave(wave) = card, let trigger = wave.trigger else { return nil }
-        let situation = String(localized: trigger.situation)
-        return plans.first { $0.situation == situation }
-    }
-
-    /// "Your day" (F08): the pledge, today's session and the evening check-in (S11). Both daily moments stay optional.
-    private func yourDay(now: Date) -> [YourDayList.Row] {
-        let rhythm = DailyRhythm(clock: DayClock(boundaryHour: profile.dayBoundaryHour))
-        let force = debugDaily
-        let pledged = force == "pledged" || rhythm.hasPledged(pledges.map(\.day), at: now)
-        let checkedIn = rhythm.hasCheckedIn(checkIns.map(\.day), at: now)
-        var rows: [YourDayList.Row] = []
-        if pledged {
-            rows.append(.init(id: "pledge", label: String(localized: "Morning pledge"), meta: String(localized: "done"), done: true, action: nil))
-        } else if force == "pledge" || rhythm.isPledgeTime(now) {
-            rows.append(YourDayList.Row(id: "pledge", label: String(localized: "Morning pledge"), meta: String(localized: "10 sec"),
-                                        done: false, action: { showPledge = true }))
+    /// "Prep day 1 of 7 · Hi, Milan", "Quit Day · Hi, Milan" or "Day 4 · Hi, Milan". Upper-cased by the kicker.
+    private func kicker(_ snap: HomeSnapshot, state: TodayState) -> String {
+        let hi = profile.name.isEmpty ? String(localized: "Hi") : String(localized: "Hi, \(profile.name)")
+        let day: String
+        switch (state, snap.phase) {
+        case (.prep, .prep):
+            let total = max(snap.prepTotal, 1)
+            day = String(localized: "Prep day \(min(max(snap.prepDayNumber, 1), total)) of \(total)")
+        case (.prep, _):
+            day = String(localized: "Quit Day")
+        case (.postQuit, _):
+            day = String(localized: "Day \(max(snap.daysClear, 1))")
         }
-        if let today = ProgramToday(store: ProgramStore(context: context, profile: profile), isPro: entitlement.isPro) {
-            switch today.kind {
-            case .open:
-                rows.append(.init(id: "lesson", label: today.title, meta: String(localized: "\(today.minutes) min"), done: false, action: nil))
-            case .waiting, .complete:
-                rows.append(.init(id: "lesson", label: String(localized: "Today's session"), meta: String(localized: "done"), done: true, action: nil))
+        return "\(day) · \(hi)"
+    }
+
+    /// The reason they gave in onboarding (UX-06): their first reason, in their own words.
+    private var why: String? {
+        let first = profile.reasons.sorted { $0.createdAt < $1.createdAt }.first?.text
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        return first?.isEmpty == false ? first : nil
+    }
+
+    /// When the time free counts from: Day Xero's commit, or else the start of Quit Day.
+    private var quitMoment: Date {
+        if let held = profile.progress?.quitTimestamp { return held }
+        let start = clock.startOfDate(profile.quitDay)
+        return clock.calendar.date(byAdding: .hour, value: clock.boundaryHour, to: start) ?? start
+    }
+
+    private var clock: DayClock { DayClock(boundaryHour: profile.dayBoundaryHour) }
+
+    private var primaryProduct: Product {
+        profile.primaryProduct?.product ?? profile.products.first?.product ?? .cigarettes
+    }
+
+    // MARK: Focus (UX-08)
+
+    /// One card by the time of day: the lesson (or, after Day Xero, recovery) until 6 PM; then Glim's check-in;
+    /// late at night, once checked in, winding down. The program card always stays in place, hidden when it isn't
+    /// the focus, so a session it opened is never closed under the person when 6 PM comes.
+    private func focusCard(state: TodayState, now: Date) -> some View {
+        let rhythm = DailyRhythm(clock: clock)
+        let checkedIn = debugDaily == "checkedIn" || rhythm.hasCheckedIn(checkIns.map(\.day), at: now)
+        var focus = TodayFocus.pick(hour: TodayClock.hour(at: now), postQuit: state == .postQuit, checkedIn: checkedIn)
+        // Straight after onboarding, Prep 1 opens from the lesson card whatever the hour (S22).
+        if state == .prep, UserDefaults.standard.bool(forKey: FirstLesson.key) { focus = .lesson }
+        return VStack(spacing: 0) {
+            ProgramTodayCard(profile: profile, showsCard: focus == .lesson)
+            switch focus {
+            case .lesson:
+                EmptyView()
+            case .recovery:
+                RecoveryCard(product: primaryProduct, quitDay: profile.quitDay, clock: clock, now: now) { showHealth = true }
+            case .checkIn:
+                ColourCard(kicker: String(localized: "With Glim · 1 min"), title: String(localized: "A minute on how today went"),
+                           detail: nil, fill: ColourCard.glim) { showCheckIn = true }
+                    .accessibilityHint(Text("Opens the evening check-in"))
+            case .windDown:
+                ColourCard(kicker: String(localized: "Wind down"), title: String(localized: "Can't sleep? Breathe with Glim"),
+                           detail: String(localized: "A slow breath, then rest."), fill: ColourCard.night) { showCalmTools = true }
             }
         }
-        let canCheckIn = force == "checkin" || rhythm.isCheckInTime(now)
-        var openCheckIn: (() -> Void)?
-        if !checkedIn && canCheckIn { openCheckIn = { showCheckIn = true } }
-        rows.append(YourDayList.Row(id: "checkin", label: String(localized: "Evening check-in"),
-                                    meta: checkedIn ? String(localized: "done") : checkInTime, done: checkedIn,
-                                    action: openCheckIn))
-        return rows
     }
 
-    /// The check-in reminder's time, or "Tonight" when the reminder is off.
-    private var checkInTime: String {
-        guard let minute = DailyReminderSettings.checkInMinute,
-              let time = Calendar.current.date(bySettingHour: minute / 60, minute: minute % 60, second: 0, of: .now) else {
-            return String(localized: "Tonight")
+    /// "Morning pledge · 10 sec", until noon and until it's made. The only row left of Your day (UX-01): the
+    /// lesson is the focus card, and the check-in takes the focus card in the evening.
+    private func showsPledge(now: Date) -> Bool {
+        let rhythm = DailyRhythm(clock: clock)
+        let force = debugDaily
+        let pledged = force == "pledged" || rhythm.hasPledged(pledges.map(\.day), at: now)
+        return !pledged && (force == "pledge" || rhythm.isPledgeTime(now))
+    }
+
+    private var pledgeRow: some View {
+        Button { showPledge = true } label: {
+            HStack(spacing: 10) {
+                Image(systemName: "sun.max").font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(DX.Ground.reading.ink)
+                    .frame(width: 32, height: 32).background(DX.Fill.surface, in: Circle())
+                    .accessibilityHidden(true)
+                Text("Morning pledge").dxType(.body).foregroundStyle(DX.Ground.reading.ink)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Text("10 sec").dxType(.footnote).foregroundStyle(DX.Ground.reading.muted)
+                Image(systemName: "chevron.right").font(.system(size: 12, weight: .bold))
+                    .foregroundStyle(DX.Ground.reading.muted).accessibilityHidden(true)
+            }
+            .padding(.horizontal, 14)
+            .frame(minHeight: 52)
+            .background(DX.Fill.raised, in: RoundedRectangle(cornerRadius: DX.Layout.smallCardRadius, style: .continuous))
+            .contentShape(Rectangle())
         }
-        return time.formatted(date: .omitted, time: .shortened)
+        .buttonStyle(.plain)
+        .accessibilityHint(Text("Opens the morning pledge"))
     }
 
     /// Screenshots can't choose the time of day, so DEBUG builds can force which card shows.
@@ -378,157 +425,135 @@ struct TodayView: View {
         #endif
     }
 
-    // MARK: NRT and pouch taper (S9.5)
+    // MARK: Bento
 
-    /// Only the invitations: once a plan is set up its card lives in Program (S19.6).
+    /// Water on the left; on the right, today's uses before Day Xero (UX-07) or urges surfed after it (UX-09).
+    /// Side by side, or stacked at accessibility text sizes.
     @ViewBuilder
-    private func nrtSection(_ snap: HomeSnapshot, now: Date) -> some View {
-        if profile.nrtPlans.isEmpty, profile.nrtInterest == .using || profile.nrtInterest == .wantIt {
-            NRTInviteRow(title: "Set up your NRT", detail: "Reminders for patches and step-downs", systemImage: "bandage") {
-                nrt.sheet = .setup
-            }
-        }
-        if isPrep(snap), profile.pouchTaper == nil, profile.products.contains(where: { $0.product == .pouches }) {
-            NRTInviteRow(title: "Step down your pouches", detail: "Optional, before Quit Day", systemImage: "chart.line.downtrend.xyaxis") {
-                nrt.sheet = .taper
-            }
-        }
-    }
-
-    // MARK: Logging (S24)
-
-    private enum LogCell: Identifiable, Hashable {
-        case product(Product)
-        var id: Self { self }
-    }
-
-    /// A card per product, two to a row. Water moved to its own row in S27.12, so an odd product sits alone.
-    @ViewBuilder
-    private func quickLog(_ snap: HomeSnapshot, now: Date) -> some View {
-        let products = profile.products.sorted { ($0.isPrimary ? 0 : 1) < ($1.isPrimary ? 0 : 1) }.map(\.product)
-        let cells = products.map(LogCell.product)
+    private func bento(state: TodayState, now: Date) -> some View {
+        let water = WaterBentoCell(profile: profile, now: now)
         if typeSize.isAccessibilitySize {
             VStack(spacing: DX.Space.s) {
-                ForEach(cells) { logCell($0, snap: snap, now: now) }
+                water
+                rightCell(state: state, now: now)
             }
         } else {
-            Grid(horizontalSpacing: DX.Space.s, verticalSpacing: DX.Space.s) {
-                ForEach(Array(stride(from: 0, to: cells.count, by: 2)), id: \.self) { start in
-                    GridRow {
-                        ForEach(cells[start..<min(start + 2, cells.count)]) { logCell($0, snap: snap, now: now) }
-                    }
-                }
+            HStack(spacing: DX.Space.s) {
+                water
+                rightCell(state: state, now: now)
             }
+            .fixedSize(horizontal: false, vertical: true)
         }
     }
 
     @ViewBuilder
-    private func logCell(_ cell: LogCell, snap: HomeSnapshot, now: Date) -> some View {
-        switch cell {
-        case let .product(product): productCard(product, snap: snap, now: now)
+    private func rightCell(state: TodayState, now: Date) -> some View {
+        switch state {
+        case .prep: useCell(primaryProduct, now: now)
+        case .postQuit: urgesCell(now: now)
         }
     }
 
-    /// In prep: today's uses, logged in one tap (with Undo), and for vapes an Urge button straight to the craving form.
-    /// From Quit Day: what's not been used since; Log opens the sheet, where a craving or a slip is one more tap.
-    private func productCard(_ product: Product, snap: HomeSnapshot, now: Date) -> some View {
-        let prep = isPrep(snap)
-        let count = prep ? useCount(product, now: now) : (snap.counters.first { $0.product == product }?.avoided ?? 0)
-        let title: LocalizedStringKey = switch (product, prep) {
-        case (.cigarettes, true): "Cigarettes today"
-        case (.vape, true): "Vape today"
-        case (.pouches, true): "Pouches today"
-        case (.cigarettes, false): "Not smoked"
-        case (.vape, false): "Puffs not taken"
-        case (.pouches, false): "Pouches skipped"
+    /// Today's uses of the main product: the count, the time since the last use, and batch buttons (UX-05). Puffs come
+    /// five and ten at a time, so a vape day isn't a hundred taps. The label opens the log for anything else.
+    private func useCell(_ product: Product, now: Date) -> some View {
+        let count = useCount(product, now: now)
+        let title: String = switch product {
+        case .cigarettes: String(localized: "Cigarettes today")
+        case .vape: String(localized: "Puffs today")
+        case .pouches: String(localized: "Pouches today")
         }
-        let button: LocalizedStringKey = switch (product, prep) {
-        case (.cigarettes, true): "+ Log cigarette"
-        case (.vape, true): "+1 Puff"
-        case (.pouches, true): "+ Log pouch"
-        case (_, false): "+ Log craving or slip"
-        }
-        return VStack(alignment: .leading, spacing: 10) {
-            HStack(spacing: DX.Space.xs) {
-                Image(systemName: LogSheet.icon(product)).font(.system(size: 13, weight: .semibold)).foregroundStyle(DX.Ground.reading.ink)
-                    .frame(width: 30, height: 30).background(DX.Fill.surface, in: Circle())
-                    .accessibilityHidden(true)
-                Text(title).dxFont(14, weight: 600, style: .footnote).foregroundStyle(DX.Ground.reading.muted)
-                    .lineLimit(2).minimumScaleFactor(0.85)
-            }
-            if prep, product == .vape {
-                // Two counters, never one: a puff is a use, an urge is a craving that didn't become one.
-                let urges = urgeCount(now: now)
-                HStack(alignment: .firstTextBaseline, spacing: DX.Space.s) {
-                    tally(count, label: count == 1 ? String(localized: "puff") : String(localized: "puffs"))
-                    tally(urges, label: urges == 1 ? String(localized: "urge") : String(localized: "urges"))
+        let batches = product == .vape ? [5, 10] : [1, 5]
+        let lastUse = logs.first { $0.kind != .craving }?.timestamp
+        return BentoCell {
+            Button { log.open() } label: {
+                VStack(alignment: .leading, spacing: 8) {
+                    BentoLabel(title: title, systemImage: LogSheet.icon(product))
+                    BentoNumber(value: "\(count)", unit: String(localized: "logged"))
+                    if let lastUse, lastUse <= now {
+                        Text("\(TimeFree.short(now.timeIntervalSince(lastUse))) nicotine-free")
+                            .dxType(.footnote).foregroundStyle(DX.Fill.green)
+                            .lineLimit(1).minimumScaleFactor(0.8)
+                    }
                 }
-                .accessibilityElement(children: .combine)
-            } else {
-                HStack(alignment: .firstTextBaseline, spacing: 6) {
-                    Text(count, format: .number).dxType(.title).foregroundStyle(DX.Ground.reading.ink)
-                        .contentTransition(.numericText())
-                    Text(prep ? "logged" as LocalizedStringKey : "since Quit Day").dxType(.caption)
-                        .foregroundStyle(DX.Ground.reading.muted)
-                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .contentShape(Rectangle())
             }
+            .buttonStyle(.plain)
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(Text("Log, \(title): \(count)"))
+            .accessibilityHint(Text("Opens the log"))
             Spacer(minLength: 0)
             HStack(spacing: 6) {
-                Button { if prep { logUse(product) } else { log.open() } } label: { pill(button) }
+                ForEach(Array(batches.enumerated()), id: \.element) { index, batch in
+                    Button { logUse(product, count: batch) } label: {
+                        BentoPill(title: "+\(batch)", accent: index == 0)
+                    }
                     .buttonStyle(.plain)
-                    .accessibilityIdentifier("home.log.\(product.rawValue)")
-                    .accessibilityHint(prep ? Text("Logs one now") : Text("Opens the log"))
-                // A puff and an urge are opposite things: the urge goes straight to the craving form.
-                if prep, product == .vape {
-                    Button { log.open(.craving) } label: { pill("+ Urge", accent: true) }
-                        .buttonStyle(.plain)
-                        .accessibilityIdentifier("home.log.urge")
+                    .accessibilityLabel(Text(batchLabel(product, count: batch)))
+                    .accessibilityIdentifier(index == 0 ? "home.log.\(product.rawValue)" : "home.log.\(product.rawValue).\(batch)")
                 }
             }
         }
-        .padding(14)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .background(DX.Fill.raised, in: RoundedRectangle(cornerRadius: DX.Layout.smallCardRadius, style: .continuous))
     }
 
-    /// A number and what it counts, for the vape card's Puffs and Urges.
-    private func tally(_ value: Int, label: String) -> some View {
-        HStack(alignment: .firstTextBaseline, spacing: 4) {
-            Text(value, format: .number).dxType(.title).foregroundStyle(DX.Ground.reading.ink)
-                .contentTransition(.numericText())
-            Text(verbatim: label).dxType(.caption).foregroundStyle(DX.Ground.reading.muted)
-                .lineLimit(1).minimumScaleFactor(0.85)
+    private func batchLabel(_ product: Product, count: Int) -> String {
+        switch product {
+        case .cigarettes: count == 1 ? String(localized: "Log a cigarette") : String(localized: "Log \(count) cigarettes")
+        case .vape: String(localized: "Log \(count) puffs")
+        case .pouches: count == 1 ? String(localized: "Log a pouch") : String(localized: "Log \(count) pouches")
         }
     }
 
-    private func pill(_ title: LocalizedStringKey, accent: Bool = false) -> some View {
-        Text(title).dxFont(14, weight: 700, style: .footnote)
-            .foregroundStyle(accent ? DX.Ground.reading.background : DX.Ground.reading.ink)
-            .lineLimit(1).minimumScaleFactor(0.8)
-            .frame(maxWidth: .infinity, minHeight: 44)
-            .background(accent ? DX.Ground.reading.ink : DX.Fill.surface, in: Capsule())
+    /// Urges surfed after Day Xero (UX-09): cravings ridden out, all time and today. Log opens the sheet, where a
+    /// craving or a slip is one more tap.
+    private func urgesCell(now: Date) -> some View {
+        let ridden = logs.filter { $0.kind == .craving && $0.outcome == .passed }
+        let today = clock.day(containing: now)
+        let todayCount = ridden.filter { clock.day(containing: $0.timestamp) == today }.count
+        return BentoCell {
+            BentoLabel(title: String(localized: "Urges surfed"), systemImage: "water.waves")
+            BentoNumber(value: "\(ridden.count)", unit: String(localized: "ridden out"))
+            Text(todayCount > 0 ? "+\(todayCount) today" as LocalizedStringKey : "None yet today")
+                .dxType(.footnote).foregroundStyle(todayCount > 0 ? DX.Fill.green : DX.Ground.reading.muted)
+                .lineLimit(1).minimumScaleFactor(0.8)
+            Spacer(minLength: 0)
+            Button { log.open() } label: { BentoPill(title: String(localized: "Log")) }
+                .buttonStyle(.plain)
+                .accessibilityLabel(Text("Log a craving or slip"))
+                .accessibilityIdentifier("home.log.urge")
+        }
+        .accessibilityElement(children: .contain)
     }
 
-    private func logUse(_ product: Product) {
-        justLogged = UseLog.log(product, in: context)
+    // MARK: Logging (S24, UX-05)
+
+    private func logUse(_ product: Product, count: Int) {
+        let entries = UseLog.log(product, count: count, in: context)
+        guard !entries.isEmpty else { return }
+        justLogged = entries
         loggedFeedback.toggle()
-        if justLogged?.kind == .use { NotificationCenter.default.post(name: .dxUseLogged, object: nil) }
+        if entries.first?.kind == .use { NotificationCenter.default.post(name: .dxUseLogged, object: nil) }
     }
 
-    private func loggedToast(_ entry: LogEntry) -> some View {
-        let count = entry.product.map { useCount($0, now: .now) } ?? 0
+    private func loggedToast(_ entries: [LogEntry]) -> some View {
+        let product = entries.first?.product
+        let count = product.map { useCount($0, now: .now) } ?? 0
         return HStack(spacing: DX.Space.s) {
             Image(systemName: "checkmark").font(.system(size: 13, weight: .bold))
-            Text(toastTitle(entry.product, count: count)).lineLimit(2)
+            Text(toastTitle(product, logged: entries.count, total: count)).lineLimit(2)
             Spacer(minLength: DX.Space.xs)
             Button("Undo") {
-                UseLog.undo(entry, in: context)
+                UseLog.undo(entries, in: context)
                 justLogged = nil
             }
             .opacity(0.75)
-            Button("Add trigger") {
-                detailsFor = entry
-                justLogged = nil
+            // A trigger belongs to one use; a batch is just counted.
+            if entries.count == 1, let entry = entries.first {
+                Button("Add trigger") {
+                    detailsFor = entry
+                    justLogged = nil
+                }
             }
         }
         .dxFont(14, weight: 600, style: .footnote)
@@ -543,161 +568,27 @@ struct TodayView: View {
         .accessibilityElement(children: .contain)
     }
 
-    private func toastTitle(_ product: Product?, count: Int) -> String {
-        switch product {
-        case .cigarettes: String(localized: "Cigarette #\(count) logged")
-        case .vape: String(localized: "Puff #\(count) logged")
-        case .pouches: String(localized: "Pouch #\(count) logged")
+    /// "Cigarette #4 logged" for one; "5 puffs logged · 25 today" for a batch.
+    private func toastTitle(_ product: Product?, logged: Int, total: Int) -> String {
+        if logged > 1 {
+            return switch product {
+            case .cigarettes: String(localized: "\(logged) cigarettes logged · \(total) today")
+            case .vape: String(localized: "\(logged) puffs logged · \(total) today")
+            case .pouches: String(localized: "\(logged) pouches logged · \(total) today")
+            case nil: String(localized: "Logged")
+            }
+        }
+        return switch product {
+        case .cigarettes: String(localized: "Cigarette #\(total) logged")
+        case .vape: String(localized: "Puff #\(total) logged")
+        case .pouches: String(localized: "Pouch #\(total) logged")
         case nil: String(localized: "Logged")
         }
     }
 
     private func useCount(_ product: Product, now: Date) -> Int {
-        let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
         let today = clock.day(containing: now)
         return logs.filter { $0.product == product && $0.kind != .craving && clock.day(containing: $0.timestamp) == today }.count
-    }
-
-    /// Urges today: cravings logged or ridden out with SOS. One that ended in a slip isn't an urge resisted, and an SOS
-    /// closed straight away isn't counted (as with the wave card).
-    private func urgeCount(now: Date) -> Int {
-        let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
-        let today = clock.day(containing: now)
-        return logs.filter {
-            $0.kind == .craving && $0.outcome != .slipped && $0.outcome != .closed && clock.day(containing: $0.timestamp) == today
-        }.count
-    }
-
-    private func isPrep(_ snap: HomeSnapshot) -> Bool {
-        if case .prep = snap.phase { return true }
-        return false
-    }
-
-    // MARK: Sections
-
-    // MARK: Today's lesson (S19.3)
-
-    private var sosHint: some View {
-        Button { sosHintSeen = true } label: {
-            HStack(spacing: DX.Space.xs) {
-                Image(systemName: "sos.circle").foregroundStyle(Read4.accent)
-                Text("Craving? Tap SOS any time. It takes 3 minutes.")
-                    .dxFont(14, weight: 400, style: .footnote).foregroundStyle(Read4.muted)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                Image(systemName: "xmark").font(.system(size: 11, weight: .semibold)).foregroundStyle(Read4.muted)
-            }
-            .padding(DX.Space.s)
-            .background(Read4.card, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .strokeBorder(Read4.faint, style: StrokeStyle(lineWidth: 1, dash: [4, 4])))
-        }
-        .buttonStyle(.plain)
-        .accessibilityHint(Text("Dismisses this tip"))
-    }
-
-    // MARK: Streak (S19.4, S24)
-
-    /// Prep: lessons done in a row, the Quit Day countdown, and a segment per prep day. From Quit Day: days clear
-    /// and the way to the next milestone (S24).
-    private func streakCard(_ snap: HomeSnapshot) -> some View {
-        let ink = DX.Ground.reading.ink
-        let muted = DX.Ground.reading.muted
-        let track = DX.Ground.reading.ink.opacity(0.12)
-        let value: Double
-        if case .prep = snap.phase {
-            value = Double(snap.prepDone) / Double(max(snap.prepTotal, 1))
-        } else {
-            value = snap.nextMilestone == nil ? 1 : snap.milestoneFraction
-        }
-        return VStack(alignment: .leading, spacing: DX.Space.s) {
-            HStack(alignment: .firstTextBaseline, spacing: DX.Space.xs) {
-                switch snap.phase {
-                case let .prep(days):
-                    // Never called a streak (S27.9).
-                    Text("Prep · \(snap.prepDone) of \(snap.prepTotal) done").dxType(.caption).textCase(.uppercase).foregroundStyle(ink)
-                    Spacer(minLength: DX.Space.xs)
-                    Text(verbatim: "\(String(localized: "Quit Day")) \(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))) · \(days == 1 ? String(localized: "1 day") : String(localized: "\(days) days"))")
-                        .dxType(.caption).foregroundStyle(muted)
-                default:
-                    Text("Since Quit Day · \(snap.daysClear) \(snap.daysClear == 1 ? String(localized: "day") : String(localized: "days"))")
-                        .dxType(.caption).textCase(.uppercase).foregroundStyle(ink)
-                    Spacer(minLength: DX.Space.xs)
-                    if let next = snap.nextMilestone {
-                        Text("Next milestone · \(next) days").dxType(.caption).foregroundStyle(muted)
-                    }
-                }
-            }
-            if case .prep = snap.phase, snap.prepTotal <= 14 {
-                // One segment per prep day: done ones full, today's half, the rest waiting.
-                HStack(spacing: 6) {
-                    ForEach(0..<max(snap.prepTotal, 1), id: \.self) { index in
-                        Capsule()
-                            .fill(index < snap.prepDone ? DX.Fill.green : track)
-                            .overlay(alignment: .leading) {
-                                if index == snap.prepDone, index == snap.prepDayNumber - 1 {
-                                    GeometryReader { geo in Capsule().fill(DX.Fill.green.opacity(0.6)).frame(width: geo.size.width / 2) }
-                                }
-                            }
-                            .frame(height: 8)
-                    }
-                }
-            } else {
-                GeometryReader { geo in
-                    ZStack(alignment: .leading) {
-                        Capsule().fill(track)
-                        Capsule().fill(DX.Fill.green).frame(width: geo.size.width * min(1, max(0, value)))
-                    }
-                }
-                .frame(height: 8)
-            }
-        }
-        .padding(.vertical, 14).padding(.horizontal, 16)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(DX.Fill.raised, in: RoundedRectangle(cornerRadius: DX.Layout.smallCardRadius, style: .continuous))
-        .accessibilityElement(children: .combine)
-    }
-
-    // MARK: Next change in the body (S19.5)
-
-    /// What's changing in the body now and what's next, with its illustration (S21.6). Opens the health timeline.
-    private func milestoneRow(now: Date) -> some View {
-        let product = profile.primaryProduct?.product ?? .cigarettes
-        let items = HealthTimeline.bundled?.items(for: product) ?? []
-        let elapsed = HealthTimeline.elapsedHours(quitDay: profile.quitDay, now: now, clock: DayClock(boundaryHour: profile.dayBoundaryHour))
-        let (current, next) = HealthTimeline.nowAndNext(items, elapsedHours: elapsed)
-        let featured = current ?? next
-        let line: String = if elapsed < 0, let first = next {
-            String(localized: "Starts on Quit Day · \(first.when)")
-        } else if let next {
-            String(localized: "Next milestone: \(next.title) (\(Self.relative(hours: next.fromHours - elapsed)))")
-        } else {
-            String(localized: "Every change on the timeline is under way")
-        }
-        return Button { showHealth = true } label: {
-            HStack(spacing: DX.Space.s) {
-                // The change under way gets its progress ring; before Quit Day the first change shows in colour, as a preview.
-                HealthBadge(id: featured?.id ?? "",
-                            state: current.map { HealthTimeline.state(of: $0, elapsedHours: elapsed) } ?? .underWay(0),
-                            size: 44, showsRing: current != nil)
-                    .padding(current != nil ? 4 : 0)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(verbatim: featured?.title ?? String(localized: "Your body is recovering"))
-                        .dxFont(16, weight: 700, style: .body).foregroundStyle(DX.Ground.reading.ink)
-                        .multilineTextAlignment(.leading)
-                    Text(verbatim: line).dxType(.footnote).foregroundStyle(DX.Ground.reading.muted).multilineTextAlignment(.leading)
-                }
-                .fixedSize(horizontal: false, vertical: true)
-                Spacer(minLength: DX.Space.xs)
-                Image(systemName: "chevron.right").font(.system(size: 12, weight: .bold)).foregroundStyle(DX.Ground.reading.ink)
-                    .frame(width: 32, height: 32).background(DX.Fill.surface, in: Circle())
-                    .accessibilityHidden(true)
-            }
-            .padding(14)
-            .background(DX.Fill.raised, in: RoundedRectangle(cornerRadius: DX.Layout.smallCardRadius, style: .continuous))
-        }
-        .buttonStyle(.plain)
-        .accessibilityElement(children: .combine)
-        .accessibilityHint(Text("Opens what changes in your body"))
     }
 
     /// "in 3h", "in 4 days", "in 6 weeks", "in 9 months", "in 2 years".
@@ -711,4 +602,3 @@ struct TodayView: View {
         return String(localized: "in \(Int((Double(days) / 365).rounded())) years")
     }
 }
-

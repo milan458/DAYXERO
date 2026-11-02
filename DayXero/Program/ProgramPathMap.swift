@@ -51,7 +51,7 @@ struct ProgramPathMap: View {
                         .position(p)
                         .accessibilityLabel(Text(verbatim: stop.title))
                         .accessibilityValue(Text(verbatim: stop.accessibility))
-                        .accessibilityHint(stop.kind == .today ? Text("Starts today's session") : Text(""))
+                        .accessibilityHint(Text("Shows this session"))
                 }
 
                 if let todayIndex {
