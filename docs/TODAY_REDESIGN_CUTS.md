@@ -69,5 +69,8 @@ The sigh's voice is the on-device speech voice, like the breathing orb's coach. 
 ## Open questions
 
 6. **CHAR-05 style.** The milestones use the existing kit illustrations for now. A new illustration style (and the Headspace-like structure in an earthy palette) waits on the style choice in approvals.
-7. **Recorded audio for the sighs**, or keep the on-device voice?
-8. **"Prep 1" vs "Prep day 1"** on the prep card: the table said "PREP DAY 1"; the card uses the session label so it never disagrees with the kicker's calendar day.
+
+## Decided
+
+- **Prep card label: "Prep 1"** (Milan, 2 Nov 2026). The card keeps the program's session label, not "Prep day 1", so it never disagrees with the kicker's calendar day.
+- **Sigh voice: the built-in on-device voice for now** (Milan, 2 Nov 2026). A recorded voice can replace it later in `CueVoice` (`DayXero/SOS/SOSTools.swift`).

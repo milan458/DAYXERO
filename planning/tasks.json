@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-11-02T18:30:35.403Z"
+    "updated": "2026-11-02T20:15:31.426Z"
   },
   "now": {
     "section": "S27",
@@ -2890,7 +2890,7 @@
           "id": "S29.1",
           "title": "UX-12 · Copy pass: water, prep card, program rows, savings, patterns, log sheet, SOS subtitle",
           "status": "awaiting_signoff",
-          "notes": "Water: 0 / 9 glasses + 2.25 L daily goal. Prep card: Prep 1 / [title] · 5 min / Start. Sheet: Today · 6 min. Savings: you'll keep / year. Patterns: Unlock your trigger map. Log: Cigarette / 0 logged today (vape row reads Puff). SOS: one fading subtitle line, no box or pill.\nBuilt on claude/hopeful-knuth-nyzefj after PR #24 (2 Nov 2026); waiting on CI and TestFlight.",
+          "notes": "Water: 0 / 9 glasses + 2.25 L daily goal. Prep card: Prep 1 / [title] · 5 min / Start. Sheet: Today · 6 min. Savings: you'll keep / year. Patterns: Unlock your trigger map. Log: Cigarette / 0 logged today (vape row reads Puff). SOS: one fading subtitle line, no box or pill.\nBuilt on claude/hopeful-knuth-nyzefj after PR #24 (2 Nov 2026); waiting on CI and TestFlight.\nMilan, 2 Nov 2026: keep \"Prep 1\" on the prep card (not \"Prep day 1\").",
           "created": "2026-11-02T18:30:34.833Z",
           "completed": null
         },
@@ -2898,7 +2898,7 @@
           "id": "S29.2",
           "title": "CHAR-01 · Jelli SOS: 3-cycle physiological sigh (~30 s), visual + voice + Core Haptics in sync",
           "status": "awaiting_signoff",
-          "notes": "Pattern 2·1·6·1 from breathing_orb_data.json, three times. On-device voice says each cue (respects Voice guidance); Skip goes straight to riding it out.\nBuilt on claude/hopeful-knuth-nyzefj after PR #24 (2 Nov 2026); waiting on CI and TestFlight.",
+          "notes": "Pattern 2·1·6·1 from breathing_orb_data.json, three times. On-device voice says each cue (respects Voice guidance); Skip goes straight to riding it out.\nBuilt on claude/hopeful-knuth-nyzefj after PR #24 (2 Nov 2026); waiting on CI and TestFlight.\nMilan, 2 Nov 2026: use the built-in on-device voice for the sighs for now; a recording can come later.",
           "created": "2026-11-02T18:30:34.937Z",
           "completed": null
         },
@@ -2946,6 +2946,16 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-11-02T20:15:31.426Z",
+      "type": "note",
+      "message": "S29.2: Milan, 2 Nov 2026: use the built-in on-device voice for the sighs for now; a recording can come later."
+    },
+    {
+      "time": "2026-11-02T20:15:31.188Z",
+      "type": "note",
+      "message": "S29.1: Milan, 2 Nov 2026: keep \"Prep 1\" on the prep card (not \"Prep day 1\")."
+    },
     {
       "time": "2026-11-02T18:30:35.403Z",
       "type": "task_added",
