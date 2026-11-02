@@ -8,6 +8,11 @@ public enum SwapTrap {
         /// Cigarettes or vape, whichever fell.
         public let falling: [Product]
         public let rising: Product
+
+        public init(falling: [Product], rising: Product) {
+            self.falling = falling
+            self.rising = rising
+        }
     }
 
     /// Full days looked at, ending yesterday. Today is still going, so it doesn't count.
