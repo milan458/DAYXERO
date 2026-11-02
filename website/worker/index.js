@@ -52,6 +52,13 @@ function ensureSchema(db) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    // Google Search Console ownership file. Served from here so the exact URL returns 200: the assets
+    // layer would redirect /name.html to /name, and Google wants the file where it put it.
+    if (url.pathname === '/google767728d2a5600151.html') {
+      return new Response('google-site-verification: google767728d2a5600151.html', {
+        headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'public, max-age=3600' },
+      });
+    }
     if (!url.pathname.startsWith('/api/')) return env.ASSETS.fetch(request);
     try {
       return await handleApi(request, env, url);
