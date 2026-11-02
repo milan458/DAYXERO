@@ -203,7 +203,9 @@ struct ProgramView: View {
         let done: Bool = if case .completed = item.state { true } else { false }
         let kicker: String = if item.needsUpgrade {
             String(localized: "\(session.label) · Unlock to start")
-        } else if open || done {
+        } else if open {
+            String(localized: "Today · \(session.durationMinutes) min")
+        } else if done {
             String(localized: "\(session.label) · \(session.durationMinutes) min")
         } else {
             String(localized: "\(session.label) · \(waitText(item.state) ?? String(localized: "Comes later"))")

@@ -16,6 +16,20 @@ struct BioOrbTests {
         for phase in BreathPhase.allCases { #expect(!data.scripts(phase).isEmpty) }
     }
 
+    /// Craving SOS opens with three physiological sighs, about 30 seconds (CHAR-01).
+    @Test func sosOpensWithThreeSighs() {
+        let sigh = data.pattern(SOSSigh.patternId)
+        #expect(sigh.id == "sigh")
+        let steps = SOSSigh.steps(sigh)
+        #expect(steps.prefix(4).map(\.phase) == [.inhale, .topUp, .exhale, .rest])
+        #expect(steps.count == 12 && steps.last?.cycle == 3)
+        #expect(SOSSigh.totalSeconds(sigh) == 30)
+        // The breath out is the long one; the second sip is the short one.
+        #expect(sigh.seconds(.exhale) > sigh.seconds(.inhale) && sigh.seconds(.topUp) < sigh.seconds(.inhale))
+        #expect(!SOSSigh.isSpoken(.rest) && SOSSigh.isSpoken(.topUp))
+        #expect(SOSSigh.scale(after: .topUp) > SOSSigh.scale(after: .inhale))
+    }
+
     /// The toolkit's breathing exercises run on the orb with real patterns (S12.4).
     @Test func calmBreathingToolsUseOrbPatterns() {
         let breathing = CalmTool.allCases.compactMap(\.orbPattern)

@@ -99,11 +99,10 @@ struct LogSheet: View {
                     LogRow(title: "A craving", detail: "How strong, what set it off", systemImage: "flame", accent: true)
                 }
                 .buttonStyle(.plain)
-                Text("I used").v4Text(.micro).padding(.top, DX.Space.s)
                 ForEach(products, id: \.self) { product in
                     Button { logUse(product) } label: {
-                        // How many today, rather than the product's name a second time (S18.10).
-                        LogRow(title: LogSheet.useTitle(product), detail: "\(todayCount(product)) today",
+                        // UX-12: "Cigarette / 0 logged today". The row says it once; no "I used" heading over it.
+                        LogRow(title: LogSheet.useTitle(product), detail: "\(todayCount(product)) logged today",
                                systemImage: LogSheet.icon(product), accent: false)
                     }
                     .buttonStyle(.plain)
@@ -153,7 +152,7 @@ struct LogSheet: View {
     static func useTitle(_ product: Product) -> LocalizedStringKey {
         switch product {
         case .cigarettes: "Cigarette"
-        case .vape: "Vaped"
+        case .vape: "Puff"
         case .pouches: "Pouch"
         }
     }
