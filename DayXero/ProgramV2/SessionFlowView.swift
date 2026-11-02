@@ -258,10 +258,13 @@ struct SessionIntro: View {
                     // Only a session with a mission promises one (Graduation has none).
                     Group {
                         if reads {
+                            // MON-04: the read version's own length, not the audio's.
                             if session.mission != nil {
-                                Label("\(ProgramContent.cardStackSeconds)-second read, activities and today's mission", systemImage: "rectangle.stack")
+                                Label("\(session.readMinutes()) min · \(ProgramContent.cardStackSeconds)-second read, activities and today's mission",
+                                      systemImage: "rectangle.stack")
                             } else {
-                                Label("\(ProgramContent.cardStackSeconds)-second read and activities", systemImage: "rectangle.stack")
+                                Label("\(session.readMinutes()) min · \(ProgramContent.cardStackSeconds)-second read and activities",
+                                      systemImage: "rectangle.stack")
                             }
                         } else if session.mission != nil {
                             Label("\(session.durationMinutes) min · Audio, activities and today's mission", systemImage: "headphones")
@@ -332,9 +335,7 @@ struct ProgramAudioStep: View {
 
     /// Whether the recording for the person's version of this session is in the bundle.
     static func hasRecording(_ session: ProgramContent.Session, ctx: BeatContext) -> Bool {
-        guard let naming = ctx.store.content?.audio else { return false }
-        let variant = session.audio.pick(for: ctx.variant, nrtActive: ctx.nrtActive)
-        return bundledURL(naming.file(session: session.id, variant: variant), ctx: ctx) != nil
+        ctx.store.hasRecording(session)
     }
 
     private var narrator: LessonNarrator? {

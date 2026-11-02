@@ -7,6 +7,11 @@ enum LessonFormat: String {
     case read, listen
 
     static let key = "dx.lessonFormat"
+
+    /// The person's choice, reading by default.
+    static var current: LessonFormat {
+        UserDefaults.standard.string(forKey: key).flatMap(LessonFormat.init(rawValue:)) ?? .read
+    }
 }
 
 /// The 90-second read (MON-04): the session's ideas as a short stack of cards, in place of the audio. Tap a card (or

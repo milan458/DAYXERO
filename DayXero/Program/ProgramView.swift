@@ -160,7 +160,7 @@ struct ProgramView: View {
             else if index == ids.count - 1 { kind = .goal }
             else { kind = .locked }
             return ProgramPathMap.Stop(id: id, title: session.title.resolve(store.variant) ?? "", kind: kind,
-                                       minutes: session.durationMinutes, needsUpgrade: needsUpgrade,
+                                       minutes: store.minutes(of: session), needsUpgrade: needsUpgrade,
                                        accessibility: accessibilityState(state))
         }
     }
@@ -201,12 +201,13 @@ struct ProgramView: View {
         let session = item.session
         let open = item.state == .available || item.state == .inProgress
         let done: Bool = if case .completed = item.state { true } else { false }
+        let minutes = ProgramStore(context: context, profile: profile).minutes(of: session)
         let kicker: String = if item.needsUpgrade {
             String(localized: "\(session.label) · Unlock to start")
         } else if open {
-            String(localized: "Today · \(session.durationMinutes) min")
+            String(localized: "Today · \(minutes) min")
         } else if done {
-            String(localized: "\(session.label) · \(session.durationMinutes) min")
+            String(localized: "\(session.label) · \(minutes) min")
         } else {
             String(localized: "\(session.label) · \(waitText(item.state) ?? String(localized: "Comes later"))")
         }

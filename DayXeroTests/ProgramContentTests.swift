@@ -40,6 +40,28 @@ struct ProgramContentTests {
         #expect(p7[1].back.resolve(.smoking)?.contains("batteries") == false)
     }
 
+    /// MON-04: with the 90-second read in place of the audio, sessions say their own, shorter length: never more than
+    /// the listening length, never under 2 minutes.
+    @Test func theReadVersionHasItsOwnShorterLength() throws {
+        let program = try content()
+        for session in program.sessions {
+            let minutes = session.readMinutes()
+            #expect((2...session.durationMinutes).contains(minutes), "\(session.id): \(minutes) min")
+        }
+        let read = Dictionary(uniqueKeysWithValues: program.sessions.map { ($0.id, $0.readMinutes()) })
+        // Prep 3 is one slider around the cards; Day Xero has the most to do.
+        #expect(read["P1"] == 3 && read["P3"] == 2 && read["P4"] == 3 && read["DX"] == 4)
+        #expect(program.sessions.reduce(0) { $0 + $1.readMinutes() } < program.sessions.reduce(0) { $0 + $1.durationMinutes })
+    }
+
+    /// A breathing beat lasts its cycles of its pattern; the content's patterns come from the orb data.
+    @Test func aBreathingBeatLastsItsCycles() throws {
+        let p4 = try #require(try content().session("P4"))
+        let breathe = try #require(p4.beats.first { $0.type == .breathe })
+        #expect(breathe.typicalSeconds(cycleSeconds: { _ in 10 }) == 10 * (breathe.cycles ?? 3))
+        #expect(OrbData.bundled.breathingPatterns.first { $0.id == "box" }?.cycleSeconds == 16)
+    }
+
     /// MON-04: the card stack sits where the audio goes; the recording plays only for someone who chose to listen.
     @MainActor @Test func theLessonIsTheCardStackUnlessTheyChoseToListen() {
         #expect(SessionFlowView.lessonStep(hasCards: true, hasAudio: false, format: .listen) == .cards)

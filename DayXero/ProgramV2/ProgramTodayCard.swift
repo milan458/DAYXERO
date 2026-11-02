@@ -63,7 +63,7 @@ struct ProgramToday {
         }
         label = session.label
         title = session.title.resolve(variant) ?? ""
-        minutes = session.durationMinutes
+        minutes = store.minutes(of: session)
         prepRunsOver = session.phaseId == "prep" && store.clock.day(containing: now) >= store.clock.startOfDate(store.profile.quitDay)
         if prepRunsOver {
             isCatchUp = true

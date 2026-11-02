@@ -22,6 +22,25 @@ struct ProgramStore {
         }
     }
 
+    // MARK: Length
+
+    /// Whether the recording for the person's version of a session is in the bundle.
+    func hasRecording(_ session: ProgramContent.Session, now: Date = .now) -> Bool {
+        guard let naming = content?.audio else { return false }
+        let name = naming.file(session: session.id, variant: session.audio.pick(for: variant, nrtActive: nrtActive(now: now)))
+        let base = (name as NSString).deletingPathExtension, ext = (name as NSString).pathExtension
+        let url = Bundle.main.url(forResource: base, withExtension: ext, subdirectory: naming.folder)
+            ?? Bundle.main.url(forResource: base, withExtension: ext)
+        return url != nil
+    }
+
+    /// The minutes Today, Program, the widget and notifications show for a session (MON-04): the 90-second read's
+    /// length, unless the person chose to listen and there's a recording to play.
+    func minutes(of session: ProgramContent.Session) -> Int {
+        let reads = !(session.cards ?? []).isEmpty && (LessonFormat.current == .read || !hasRecording(session))
+        return reads ? session.readMinutes() : session.durationMinutes
+    }
+
     // MARK: Sessions
 
     func records() -> [SessionRecord] {

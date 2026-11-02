@@ -65,10 +65,23 @@ Motion they cross-fade. Replays can skip through.
   keeping answers.
 - The content checker fails a session with fewer than 3 or more than 5 cards, or a card missing a product's wording.
 
+### Session lengths (Milan, 2 Nov 2026: shorten them for the card version)
+
+Today, the Program path and its sheet, the session intro, the Day Xero commit screen, the widget and the "lesson
+ready" notification show `ProgramStore.minutes(of:)`: the read version's length, or `durationMinutes` for someone who
+chose "Listen instead" and has a recording. The read length (`Session.readMinutes()`) is worked out from the content:
+90 s of cards, each activity at a typical pace (`Beat.typicalSeconds`: a breathing beat is its cycles of its pattern,
+flip cards 8 s each, sliders 10 s, choices and quizzes 15 s, writing 30 s), plus 30 s for the intro, mission and
+completion. Rounded to the nearest minute, at least 2, never more than the listening length.
+
+P1 5→3 · P2 5→3 · P3 6→2 · P4 6→3 · P5 6→3 · P6 6→3 · P7 5→3 · DX 5→4 · W1D1 3→3 · W1D2 3→3 · W1D3 3→3 ·
+W1D4 3→2 · W1D5 4→3 · W1D6 4→3 · W1D7 3→3 · W2S1 4→2 · W2S2 4→3 · W2S3 4→3 · W3S1 5→4 · W3S2 4→3 · W3S3 4→3 ·
+W4S1 4→3 · W4S2 4→4 · W4S3 5→3 · B45 4→3 · B60 4→3 · B90 4→3
+
 ## Open questions
 
-1. **Session lengths.** Today and Program still show `durationMinutes` (5–6 min for prep), which was written for the
-   audio. With the 90-second read most sessions are shorter. Recompute, or keep until the audio lands?
+1. **Per-activity timings** behind the lengths above are estimates; adjust `Beat.typicalSeconds` if testing shows
+   people take longer.
 2. **Card copy**: review all 108 cards (see `program.json`), especially the week sessions.
 3. **India price**: ₹2,999 is set by hand in App Store Connect (the setup script sets a US price and Apple's
    equivalents). The setup script's trial is now one week, but it only applies where no trial exists yet; the live
