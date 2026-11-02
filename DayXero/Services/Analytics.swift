@@ -31,6 +31,8 @@ enum AnalyticsEvent {
     case cravingSessionStarted(source: String)
     case cravingSessionEnded(outcome: String, seconds: Int)
     case slipLogged(source: String)
+    /// CLIN-11: a prep day's one-minute challenge ticked, by prep day number.
+    case prepChallengeDone(day: Int)
     // Sharing
     case shareCardCreated(milestone: String)
     case shareCardShared(destination: String)
@@ -69,6 +71,7 @@ enum AnalyticsEvent {
         case .cravingSessionStarted: "craving_session_started"
         case .cravingSessionEnded: "craving_session_ended"
         case .slipLogged: "slip_logged"
+        case .prepChallengeDone: "prep_challenge_done"
         case .shareCardCreated: "share_card_created"
         case .shareCardShared: "share_card_shared"
         case .waterGoalSet: "water_goal_set"
@@ -96,6 +99,7 @@ enum AnalyticsEvent {
         case let .sosTrackPlayed(track, completed): ["track_id": track, "completed": String(completed)]
         case let .cravingSessionStarted(source), let .slipLogged(source): ["source": source]
         case let .cravingSessionEnded(outcome, seconds): ["outcome": outcome, "seconds": String(seconds)]
+        case let .prepChallengeDone(day): ["prep_day": String(day)]
         case let .shareCardCreated(milestone): ["milestone": milestone]
         case let .shareCardShared(destination): ["destination": destination]
         case let .waterGoalSet(source, goalBucket): ["source": source, "goal_bucket": goalBucket]

@@ -10,6 +10,7 @@ struct NRTCard: View {
     /// Progress shows every step; Home shows only the current one.
     var showAllSteps = false
     @Environment(\.modelContext) private var context
+    @State private var showGumGuide = false
 
     var body: some View {
         let schedule = StepSchedule(startDate: plan.startDate, steps: plan.steps, clock: clock)
@@ -44,6 +45,13 @@ struct NRTCard: View {
                     .v4Text(.subtitle)
                     if let note = current.step.note { Text(verbatim: note).v4Text(.subtitle) }
                     if plan.type == .patch, !showAllSteps { patchCheck }
+                    if plan.type == .patch { bedtimeToggle }
+                    if plan.type == .gum {
+                        Button { showGumGuide = true } label: {
+                            Label("How to chew and park", systemImage: "questionmark.circle").frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.v4Secondary)
+                    }
                 } else if !schedule.hasStarted(at: now), let start = schedule.start {
                     Text("Starts \(start.formatted(.dateTime.weekday(.wide).day().month()))").v4Text(.subtitle)
                 } else {
@@ -60,12 +68,42 @@ struct NRTCard: View {
                 }
             }
         }
+        .sheet(isPresented: $showGumGuide) {
+            ScrollView {
+                VStack(alignment: .leading, spacing: DX.Space.s) {
+                    Text("Chew and park").v4Text(.title).padding(.top, DX.Space.l)
+                    ChewAndParkGuide()
+                    LabelNotice()
+                }
+                .padding(.horizontal, DX.Space.m)
+                .dxReadableColumn()
+            }
+            .background(Read4.background.ignoresSafeArea())
+            .presentationDetents([.large])
+            .presentationDragIndicator(.visible)
+        }
     }
 
     private func headline(_ schedule: StepSchedule, current: StepSchedule.Span?) -> String {
         let type = String(localized: plan.type.title).lowercased()
         guard let current else { return String(localized: "\(NRTReminderPlan.strength(plan.steps.first?.strengthMg ?? 0)) \(type)") }
         return String(localized: "\(NRTReminderPlan.strength(current.step.strengthMg)) \(type) · Step \(current.index + 1) of \(schedule.spans.count)")
+    }
+
+    /// CLIN-03: 16 hours (off at bedtime) or 24 (on overnight). Switching it reschedules the "patch off" reminder.
+    private var bedtimeToggle: some View {
+        Toggle(isOn: Binding(get: { plan.offAtBedtime }, set: { off in
+            plan.offAtBedtime = off
+            try? context.save()
+            NRTReminders.refresh(profile: try? context.fetch(FetchDescriptor<UserProfile>()).first)
+        })) {
+            VStack(alignment: .leading, spacing: 1) {
+                Text("Off at bedtime").dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.ink)
+                Text(plan.offAtBedtime ? "16 hours a day. Helps if dreams or sleep are disturbed." as LocalizedStringKey : "On overnight, 24 hours a day")
+                    .v4Text(.subtitle)
+            }
+        }
+        .tint(Read4.accent)
     }
 
     /// "Patch on today": a one-tap check that also silences today's reminder.

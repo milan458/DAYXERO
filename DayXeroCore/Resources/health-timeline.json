@@ -460,17 +460,84 @@
         ],
         "helps": "Water, sleep and sunscreen are your skin's best friends right now."
       }
+    ],
+    "recovery": [
+      {
+        "id": "flat-days",
+        "fromHours": 240,
+        "toHours": 504,
+        "when": "Often weeks 2 to 3",
+        "kind": "felt",
+        "title": "Many people notice flat, foggy days",
+        "line": "A common, passing stage. Timing varies a lot.",
+        "detail": "Many people notice everyday things feel a bit flat, and their head a bit foggy, somewhere in the first few weeks. It's a sign of adjusting, and it passes.",
+        "source": null,
+        "story": [
+          "Nicotine has been giving your brain's reward system a quick top-up many times a day. When the top-ups stop, many people notice a stretch where ordinary things feel a little grey and thinking feels slower.",
+          "Nobody can tell you the exact day it starts or ends, and the research on it is still thin. What many people describe is that it comes in patches, and that the patches get shorter."
+        ],
+        "notice": [
+          "Things you usually enjoy feel a bit muted",
+          "Slower thinking or a foggy head",
+          "Lower motivation for a few days at a time"
+        ],
+        "helps": "Daylight, movement and proper meals help most people. Keep tasks small, and use your lifts from Day 5."
+      },
+      {
+        "id": "clearer-head",
+        "fromHours": 336,
+        "toHours": 840,
+        "when": "Often weeks 2 to 5",
+        "kind": "felt",
+        "title": "Many people notice their head clearing",
+        "line": "Focus tends to come back bit by bit.",
+        "detail": "Many people notice the fog lifting and their focus coming back over the weeks after quitting. For some it's quick, for others slower.",
+        "source": null,
+        "story": [
+          "As your brain stops expecting nicotine, many people notice they can hold a thought for longer, and the afternoons feel less like wading through mud.",
+          "It rarely happens in a single day. More often you notice, looking back, that you got through a task without that foggy drag."
+        ],
+        "notice": [
+          "Reading or working for longer without drifting",
+          "Remembering small things more easily",
+          "Mornings that feel a little sharper"
+        ],
+        "helps": "One task at a time, and a short list each morning, make foggy days easier while it clears."
+      },
+      {
+        "id": "rewards-return",
+        "fromHours": 504,
+        "toHours": 1080,
+        "when": "Often weeks 3 to 6",
+        "kind": "felt",
+        "title": "Many people notice small pleasures feel good again",
+        "line": "Food, music, a walk: the lift comes back on its own.",
+        "detail": "Many people notice that everyday pleasures start to feel rewarding again, without nicotine, somewhere around a month to six weeks in. Timing varies a lot.",
+        "source": null,
+        "story": [
+          "For years, nicotine has been one of the loudest rewards in your day, so quieter ones had to compete with it. Without it, many people find those quieter rewards slowly turn back up.",
+          "A meal tastes like an event again. A song, a laugh, a walk in the sun gives a proper lift. It's not a switch that flips on a set date, and the evidence on timing is thin, but it's one of the changes people talk about most."
+        ],
+        "notice": [
+          "Enjoying food, music or company more",
+          "Feeling pleased after finishing something, without reaching for nicotine",
+          "Steadier moods across the day"
+        ],
+        "helps": "Notice the good moments when they come. Saying them out loud, or writing one down, helps them land."
+      }
     ]
   },
   "products": {
     "cigarettes": {
       "groups": [
-        "smoking"
+        "smoking",
+        "recovery"
       ]
     },
     "vape": {
       "groups": [
-        "nicotine"
+        "nicotine",
+        "recovery"
       ],
       "sourceOverride": {
         "withdrawal-start": "smokefree-vaping"
@@ -479,7 +546,8 @@
     },
     "pouches": {
       "groups": [
-        "nicotine"
+        "nicotine",
+        "recovery"
       ],
       "note": "Research on the long-term effects of nicotine pouches is still young, so this timeline sticks to what's known."
     }

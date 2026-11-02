@@ -82,6 +82,31 @@ struct NotificationPlanTests {
         #expect(NotificationPlan.plan(settings, inputs: graduated, calendar: calendar).first { $0.kind == .weekly }?.date == at(9, 7, 30))
     }
 
+    /// CLIN-06: quiet graduation. Weeks 1 and 2 as usual; Weeks 3 and 4 drop the pledge note and allow two a day;
+    /// from Week 5 one a day, with the check-in every other day. Off, everything comes back.
+    @Test func quietGraduationStepsBackFromWeekThree() {
+        // Thu 5 Nov. Quit Day on the 1st: Week 1, the full set.
+        let inputs1 = NotificationPlan.Inputs(now: at(5, 7), pledgedToday: false, checkedInToday: false, quitDay: day(1))
+        #expect(NotificationPlan.plan(.init(), inputs: inputs1, calendar: calendar).filter { $0.date < day(6) }.map(\.kind) == [.pledge, .checkIn])
+        // 14 days in (Week 3): no pledge note.
+        #expect(NotificationPlan.GraduationStage(daysSinceQuit: 14) == .lighter)
+        let week3 = calendar.date(byAdding: .day, value: -14, to: day(5))!
+        let inputs3 = NotificationPlan.Inputs(now: at(5, 7), pledgedToday: false, checkedInToday: false, quitDay: week3)
+        #expect(NotificationPlan.plan(.init(), inputs: inputs3, calendar: calendar).filter { $0.date < day(6) }.map(\.kind) == [.checkIn])
+        // 28 days in (Week 5): check-in on even days only, so on day 28 yes and day 29 no.
+        let week5 = calendar.date(byAdding: .day, value: -28, to: day(5))!
+        let inputs5 = NotificationPlan.Inputs(now: at(5, 7), pledgedToday: false, checkedInToday: false, quitDay: week5)
+        let plan5 = NotificationPlan.plan(.init(), inputs: inputs5, calendar: calendar).filter { $0.kind != .away }
+        #expect(plan5.map(\.kind) == [.checkIn])
+        #expect(plan5.first.map { calendar.isDate($0.date, inSameDayAs: day(5)) } == true)
+        // Switched off: the pledge note is back.
+        var off = NotificationPlan.Settings()
+        off.quietGraduation = false
+        #expect(NotificationPlan.plan(off, inputs: inputs5, calendar: calendar).filter { $0.date < day(6) }.map(\.kind) == [.pledge, .checkIn])
+        #expect(NotificationPlan.GraduationStage(daysSinceQuit: nil).cap == NotificationPlan.dailyCap)
+        #expect(NotificationPlan.GraduationStage(daysSinceQuit: 40).cap == 1)
+    }
+
     @Test func noGuiltWordsAnywhere() {
         var copy = [NotificationCopy.pledge, NotificationCopy.checkIn, NotificationCopy.lesson(name: "Day 4", minutes: 7),
                     NotificationCopy.milestone(title: "One week in"), NotificationCopy.awayFirst(next: "Day 4"),

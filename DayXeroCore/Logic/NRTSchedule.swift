@@ -278,6 +278,19 @@ public enum NRTReminderPlan {
             }
         }
 
+        // A 16-hour patch (CLIN-03): off at bedtime, 16 hours after the fresh-patch time. A week ahead, to leave room
+        // under iOS's 64 pending notifications.
+        if plan.offAtBedtime, let minute = plan.dailyReminderMinute {
+            for offset in 0..<(dailyDays / 2) {
+                guard let day = cal.date(byAdding: .day, value: offset, to: today), day < end,
+                      day >= (schedule.start ?? day),
+                      let at = cal.date(byAdding: .minute, value: minute + NRTUseGuide.patchOffMinutes, to: day), at > now else { continue }
+                out.append(Reminder(id: "nrt.\(tag).off.\(stamp(day, cal))", date: at,
+                                    title: String(localized: "Patch off for the night"),
+                                    body: String(localized: "Take today's patch off before bed. A fresh one goes on in the morning.")))
+            }
+        }
+
         if let hours = plan.pieceReminderHours, hours > 0, plan.type == .gum || plan.type == .lozenge {
             for offset in 0..<2 {
                 guard let day = cal.date(byAdding: .day, value: offset, to: today), day < end else { continue }
