@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-11-02T21:12:14.865Z"
+    "updated": "2026-11-02T21:31:27.554Z"
   },
   "now": {
     "section": "S30",
@@ -2992,7 +2992,7 @@
           "id": "S30.5",
           "title": "Session lengths on Today and Program assume the audio (5-6 min); recompute for the 90-second read?",
           "status": "awaiting_signoff",
-          "notes": "Open question in docs/MONETISATION_TIERS.md.\nMilan 2 Nov: shorten them. Lengths now come from the content (cards + activities at a typical pace, nearest minute, 2 to the listening length): prep 5-6 → 2-3 min, Day Xero 4. Shown on Today, Program, intro, widget, notifications. See docs/MONETISATION_TIERS.md.",
+          "notes": "Open question in docs/MONETISATION_TIERS.md.\nMilan 2 Nov: shorten them. Lengths now come from the content (cards + activities at a typical pace, nearest minute, 2 to the listening length): prep 5-6 → 2-3 min, Day Xero 4. Shown on Today, Program, intro, widget, notifications. See docs/MONETISATION_TIERS.md.\nCI run 215 (564a861): build and all tests pass.",
           "created": "2026-11-02T20:23:58.429Z",
           "completed": null
         }
@@ -3000,6 +3000,11 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-11-02T21:31:27.554Z",
+      "type": "note",
+      "message": "S30.5: CI run 215 (564a861): build and all tests pass."
+    },
     {
       "time": "2026-11-02T21:12:14.865Z",
       "type": "status",
