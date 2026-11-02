@@ -36,10 +36,10 @@ Until step 1 is done, the forms tell visitors that signups open soon and give th
    ```
    The honeypot field and the 5-signups-per-IP-per-hour limit work without it.
 4. **Export (optional).** `npx wrangler secret put ADMIN_TOKEN`, then
-   `curl -H "Authorization: Bearer $TOKEN" https://dayxero.in/api/waitlist/export > waitlist.csv`
+   `curl -H "Authorization: Bearer $TOKEN" https://dayxero.app/api/waitlist/export > waitlist.csv`
    to import confirmed members into Kit or Brevo for the launch email.
 
-Optional variables: `SITE_URL` (origin used in links sent by the cron, default `https://dayxero.in`) and
+Optional variables: `SITE_URL` (origin used in links sent by the cron, default `https://dayxero.app`) and
 `IP_SALT` (salt for the hashed IP used for rate limiting).
 
 ## Local testing
@@ -58,7 +58,7 @@ so `npx wrangler deploy` works from the root with no flags. Two things can run i
 
 - **The `Website` GitHub workflow** (`.github/workflows/website.yml`): on every push to `main` that touches the
   site, it regenerates the guide pages and deploys with the `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`
-  secrets. This is what ships dayxero.in today.
+  secrets. This is what ships dayxero.app today.
 - **Cloudflare Workers Builds** (the Git integration on the `dayxero` Worker). It needs these settings in the
   Cloudflare dashboard, under the Worker's *Settings → Build*:
 

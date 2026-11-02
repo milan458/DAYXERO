@@ -1,5 +1,5 @@
 {
-  // Static site for dayxero.in, served by the "dayxero" Cloudflare Worker.
+  // Static site for dayxero.app, served by the "dayxero" Cloudflare Worker.
   // Lives at the repo root so Cloudflare Workers Builds (Settings > Build, root directory "/")
   // and the Website GitHub workflow both run `wrangler deploy` from here. See website/worker/README.md.
   "name": "dayxero",                  // must match the Worker name exactly

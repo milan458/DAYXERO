@@ -236,7 +236,7 @@ async function unsubscribe(env, url) {
 }
 
 // For the launch email: confirmed members as CSV, for import into Kit or Brevo.
-// curl -H "Authorization: Bearer $ADMIN_TOKEN" https://dayxero.in/api/waitlist/export > waitlist.csv
+// curl -H "Authorization: Bearer $ADMIN_TOKEN" https://dayxero.app/api/waitlist/export > waitlist.csv
 async function exportCsv(request, env) {
   const auth = request.headers.get('Authorization') || '';
   if (!env.ADMIN_TOKEN || auth !== `Bearer ${env.ADMIN_TOKEN}`) return json({ ok: false, error: 'unauthorized' }, 401);
@@ -312,7 +312,7 @@ async function verifyTurnstile(secret, token, ip) {
 // --- Helpers ---
 
 function siteOrigin(env) {
-  return env.SITE_URL || 'https://dayxero.in';
+  return env.SITE_URL || 'https://dayxero.app';
 }
 
 function isEmail(s) {

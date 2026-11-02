@@ -6,7 +6,7 @@ import SwiftUI
 /// screen that sells a subscription. Optional so a build without a policy still compiles; it is always set.
 enum AppLinks {
     static let terms = URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!
-    static let privacy: URL? = URL(string: "https://dayxero.in/privacy/")
+    static let privacy: URL? = URL(string: "https://dayxero.app/privacy/")
 }
 
 /// The full paywall (S3.1–S3.6), opened from "See all plans", Settings, Program and Today. There is no paywall
