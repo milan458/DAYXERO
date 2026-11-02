@@ -81,7 +81,9 @@ struct LogUseIntent: AppIntent {
         let entry = UseLog.log(product.product, in: container.mainContext)
         WidgetCenter.shared.reloadAllTimelines()
         if entry.kind == .slip {
-            return .result(dialog: "Logged. A slip is one moment, not a restart. Nothing resets.")
+            // Jelli's if-then planner opens next time the app does (CLIN-10).
+            SlipPlanRequest.request()
+            return .result(dialog: "Logged. A slip is one moment, not a restart. Nothing resets. Open DayXero to plan for next time.")
         }
         let today = UseLog.counts(product.product, in: container.mainContext).today
         return .result(dialog: "Logged. \(today) today.")

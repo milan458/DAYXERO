@@ -197,12 +197,12 @@ struct PrepDots: View {
     }
 }
 
-/// State B's hero: time free and resilience, money kept, and their "Why".
+/// State B's hero: time free, cumulative resilience, money kept, and their "Why". Resilience never resets to zero
+/// (CLIN-07): "45 of 46 days smoke-free · 98%".
 struct TodayQuitHero: View {
     /// "3d 14h".
     let timeFree: String
-    /// 0...100.
-    let resilience: Int
+    let resilience: Resilience.Days
     let product: Product
     let moneyKept: Decimal
     let currencyCode: String
@@ -210,12 +210,13 @@ struct TodayQuitHero: View {
     let ground: DX.Ground
     let crewStage: Int
 
-    /// "smoke-free", "vape-free", "pouch-free".
-    private var free: String {
-        switch product {
-        case .cigarettes: String(localized: "\(resilience)% smoke-free")
-        case .vape: String(localized: "\(resilience)% vape-free")
-        case .pouches: String(localized: "\(resilience)% pouch-free")
+    /// "45 of 46 days smoke-free · 98%", with "vape-free" or "pouch-free" for the other products.
+    private var resilienceLine: String {
+        let clear = resilience.clear, total = resilience.total, pct = resilience.percent
+        return switch product {
+        case .cigarettes: String(localized: "\(clear) of \(total) days smoke-free · \(pct)%")
+        case .vape: String(localized: "\(clear) of \(total) days vape-free · \(pct)%")
+        case .pouches: String(localized: "\(clear) of \(total) days pouch-free · \(pct)%")
         }
     }
 
@@ -225,25 +226,22 @@ struct TodayQuitHero: View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .top, spacing: DX.Space.s) {
                 VStack(alignment: .leading, spacing: 2) {
-                    // "3d 14h · 100% smoke-free"
-                    HStack(alignment: .firstTextBaseline, spacing: 8) {
-                        Text(verbatim: timeFree)
-                            .dxType(.display)
-                            .foregroundStyle(ground.ink)
-                            .contentTransition(.numericText())
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.7)
-                        Text(verbatim: "· \(free)")
-                            .dxFont(16, weight: 700, style: .body)
-                            .foregroundStyle(ground.ink)
-                            .lineLimit(2)
-                    }
+                    Text(verbatim: timeFree)
+                        .dxType(.display)
+                        .foregroundStyle(ground.ink)
+                        .contentTransition(.numericText())
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                    Text(verbatim: resilienceLine)
+                        .dxFont(16, weight: 700, style: .body)
+                        .foregroundStyle(ground.ink)
+                        .fixedSize(horizontal: false, vertical: true)
                     Text("\(money) kept so far")
                         .dxType(.body).foregroundStyle(ground.muted)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .accessibilityElement(children: .ignore)
-                .accessibilityLabel(Text("\(timeFree) free, \(free). \(money) kept so far."))
+                .accessibilityLabel(Text("\(timeFree) free. \(resilienceLine). \(money) kept so far."))
                 .accessibilityAddTraits(.isHeader)
                 CrewAvatar(ground: ground, stage: crewStage)
             }
@@ -289,7 +287,10 @@ struct RecoveryCard: View {
         let elapsed = HealthTimeline.elapsedHours(quitDay: quitDay, now: now, clock: clock)
         let (current, next) = HealthTimeline.nowAndNext(items, elapsedHours: elapsed)
         let featured = current ?? next
-        let line: String = if let next {
+        // What many people notice (CLIN-01) gets its rough window, never a countdown.
+        let line: String = if let next, next.isFelt {
+            String(localized: "Next: \(next.title), \(next.when.lowercased())")
+        } else if let next {
             String(localized: "Next: \(next.title), \(TodayView.relative(hours: next.fromHours - elapsed))")
         } else {
             String(localized: "Every change on the timeline is under way")
@@ -424,5 +425,98 @@ struct WaterBentoCell: View {
                 .accessibilityIdentifier("today.water.add")
         }
         .sensoryFeedback(.impact(weight: .medium), trigger: logged)
+    }
+}
+
+// MARK: Clinical notes (CLIN-02, CLIN-05, CLIN-11)
+
+/// A short note from Xero on Today, on apricot, with "Got it" and an optional source: Xero's coffee note (CLIN-02) and
+/// the swap trap (CLIN-05). Shown only while it applies, and gone once dismissed.
+struct XeroNoteCard: View {
+    let kicker: String
+    let title: String
+    let message: String
+    var source: HealthSource?
+    let onDismiss: () -> Void
+
+    private let ground = DX.Ground.apricot
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(alignment: .top, spacing: DX.Space.s) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(verbatim: kicker).dxFont(14, weight: 600, style: .footnote).foregroundStyle(ground.muted)
+                    Text(verbatim: title).dxType(.headline).foregroundStyle(ground.ink)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .accessibilityAddTraits(.isHeader)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                XeroView(mood: .hello, stage: 1, points: 44, animate: false)
+                    .frame(width: 44, height: 44)
+                    .accessibilityHidden(true)
+            }
+            Text(verbatim: message).dxType(.footnote).foregroundStyle(ground.ink)
+                .fixedSize(horizontal: false, vertical: true)
+            HStack(spacing: DX.Space.s) {
+                if let source {
+                    Link(destination: source.url) {
+                        Text("Why?").dxFont(14, weight: 600, style: .footnote).underline().foregroundStyle(ground.ink)
+                    }
+                    .frame(minHeight: DX.Layout.touchTarget)
+                    .accessibilityHint(Text(source.label))
+                }
+                Spacer(minLength: 0)
+                Button(action: onDismiss) {
+                    Text("Got it").dxFont(15, weight: 700, style: .footnote)
+                        .foregroundStyle(ground.background)
+                        .padding(.horizontal, 18)
+                        .frame(minHeight: 44)
+                        .background(ground.ink, in: Capsule())
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(ground.background, in: RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
+        .accessibilityElement(children: .contain)
+    }
+}
+
+/// Today's prep challenge (CLIN-11): one small thing, ticked with one tap.
+struct PrepChallengeRow: View {
+    let challenge: PrepChallenge
+    let done: Bool
+    let toggle: () -> Void
+
+    var body: some View {
+        Button(action: toggle) {
+            HStack(alignment: .top, spacing: 10) {
+                Image(systemName: done ? "checkmark" : "bolt.fill").font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(done ? DX.Fill.cream : DX.Ground.reading.ink)
+                    .frame(width: 32, height: 32)
+                    .background(done ? DX.Fill.green : DX.Fill.surface, in: Circle())
+                    .accessibilityHidden(true)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Today's challenge · 1 min").dxType(.footnote).foregroundStyle(DX.Ground.reading.muted)
+                    Text(challenge.title).dxType(.body).foregroundStyle(DX.Ground.reading.ink)
+                        .strikethrough(done, color: DX.Ground.reading.muted)
+                        .fixedSize(horizontal: false, vertical: true)
+                    if !done {
+                        Text(challenge.detail).dxType(.footnote).foregroundStyle(DX.Ground.reading.muted)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .multilineTextAlignment(.leading)
+            }
+            .padding(14)
+            .background(DX.Fill.raised, in: RoundedRectangle(cornerRadius: DX.Layout.smallCardRadius, style: .continuous))
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .sensoryFeedback(DX.Haptic.commit, trigger: done)
+        .accessibilityAddTraits(done ? [.isButton, .isSelected] : .isButton)
+        .accessibilityHint(Text(done ? "Marks it not done" : "Marks it done"))
     }
 }

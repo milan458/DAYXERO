@@ -258,7 +258,7 @@ struct ProgressTab: View {
             .padding(.top, DX.Space.m)
             .accessibilityAddTraits(.isHeader)
         if let current {
-            HealthFactCard(status: String(localized: "Happening now"), when: current.when, title: current.title, line: current.line,
+            HealthFactCard(status: current.isFelt ? String(localized: "Many people notice") : String(localized: "Happening now"), when: current.when, title: current.title, line: current.line,
                            sourceLabel: timeline?.source(current.source)?.label ?? "")
         }
         if let next {

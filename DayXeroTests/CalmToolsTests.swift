@@ -24,6 +24,15 @@ struct CalmToolsTests {
         #expect(Grounding.steps.map(\.count) == [5, 4, 3, 2, 1])
     }
 
+    /// CLIN-04: the reward card notices the thought, names what it offers, and ends on a real reward.
+    @Test func theRewardCardEndsOnARealReward() {
+        #expect(RewardDefusion.steps.count == 3)
+        #expect(RewardDefusion.rewards.count >= 4)
+        #expect(String(localized: RewardDefusion.thought) == "Don't I deserve a reward?")
+        // A different id from every calm tool, so Insights never mistakes it for one.
+        #expect(CalmTool(rawValue: RewardDefusion.toolID) == nil)
+    }
+
     @Test func theHelpLinePointsToADirectory() {
         #expect(HelpLine.directory.host() == "findahelpline.com")
     }

@@ -9,6 +9,9 @@ final class LogRouter {
         case menu, craving
         /// "Slipped? Log it" from the widget: logs a slip of the main product and opens the talk-through.
         case slip
+        /// A slip already logged elsewhere (Today's use buttons, Siri, the widget): opens Jelli's if-then planner for the
+        /// latest slip that has no plan yet (CLIN-10).
+        case slipPlan
         var id: Self { self }
     }
 
@@ -64,6 +67,13 @@ struct LogSheet: View {
         switch start {
         case .menu: menu
         case .craving: cravingForm
+        case .slipPlan:
+            if let entry = unplannedSlip {
+                slipFlow(entry)
+            } else {
+                // Already planned, or too long ago: nothing to open.
+                Color.clear.background(Read4.background.ignoresSafeArea()).onAppear(perform: onClose)
+            }
         case .slip:
             if let startSlip {
                 slipFlow(startSlip)
@@ -131,6 +141,12 @@ struct LogSheet: View {
     }
 
     private var isSlip: Bool { UseLog.isSlip(profile: profile) }
+
+    /// The latest slip with no plan for next time, from the last `SlipPlanRequest.window`.
+    private var unplannedSlip: LogEntry? {
+        uses.filter { $0.kind == .slip && $0.nextTime == nil && Date.now.timeIntervalSince($0.timestamp) < SlipPlanRequest.window }
+            .max { $0.timestamp < $1.timestamp }
+    }
 
     private func todayCount(_ product: Product) -> Int {
         let clock = DayClock(boundaryHour: profile?.dayBoundaryHour ?? 4)

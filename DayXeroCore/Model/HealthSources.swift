@@ -62,3 +62,13 @@ public enum HealthSources {
         url: URL(string: "https://assets.hpra.ie/products/Human/19584/Licence_PA25456-001-002_01092025144505.pdf")!
     )
 }
+
+extension HealthSources {
+    /// Benowitz NL, Hall SM, Modin G. Persistent increase in caffeine concentrations in people who stop smoking.
+    /// BMJ 1989;298:1075–6. Smoke (not nicotine) speeds up how fast the liver clears caffeine; after quitting, the
+    /// same intake leaves caffeine levels much higher (CLIN-02, Xero's coffee note).
+    public static let caffeineAfterQuitting = HealthSource(
+        label: "Source: BMJ, caffeine levels in people who stop smoking, 1989",
+        url: URL(string: "https://pmc.ncbi.nlm.nih.gov/articles/PMC1836474")!
+    )
+}

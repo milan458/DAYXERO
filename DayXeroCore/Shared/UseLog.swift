@@ -58,6 +58,25 @@ public enum UseLog {
     }
 }
 
+/// A slip logged outside the app (Siri, the widget) asks for Jelli's if-then planner the next time the app opens
+/// (CLIN-10). Only a recent slip with no plan yet is opened.
+public enum SlipPlanRequest {
+    private static var defaults: UserDefaults { UserDefaults(suiteName: DataStore.appGroup) ?? .standard }
+    private static let key = "log.openSlipPlan"
+    /// A slip older than this doesn't open the planner by itself.
+    public static let window: TimeInterval = 12 * 3600
+
+    public static func request(at date: Date = .now) { defaults.set(date, forKey: key) }
+
+    /// Whether a request from within `window` is waiting. Clears it either way.
+    public static func consume(now: Date = .now) -> Bool {
+        let requested = defaults.object(forKey: key) as? Date
+        defaults.removeObject(forKey: key)
+        guard let requested else { return false }
+        return now.timeIntervalSince(requested) < window
+    }
+}
+
 /// Asks the app to open the craving log, from Siri or a widget (S7.1).
 public enum LogRequest {
     private static var defaults: UserDefaults { UserDefaults(suiteName: DataStore.appGroup) ?? .standard }

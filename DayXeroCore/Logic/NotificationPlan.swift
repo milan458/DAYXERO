@@ -31,6 +31,8 @@ public enum NotificationPlan {
         public var weekly: Int? = nil
         /// The weekly check-in's day: `Calendar` weekday numbering, 1 is Sunday.
         public var weeklyWeekday = 1
+        /// Quiet graduation (CLIN-06): fewer program notes from Week 3, as cravings fade. On unless switched off.
+        public var quietGraduation = true
         /// Quiet hours as minutes after midnight; may wrap past midnight. nil when off.
         public var quietStart: Int? = 22 * 60 + 30
         public var quietEnd: Int? = 7 * 60 + 30
@@ -61,10 +63,12 @@ public enum NotificationPlan {
         public var nextLessonName: String?
         /// The four weeks are done (graduation held). Glim's weekly check-in starts then.
         public var graduated: Bool
+        /// Quit Day, for quiet graduation (CLIN-06). nil leaves every day at the full set.
+        public var quitDay: Date?
 
         public init(now: Date, pledgedToday: Bool, checkedInToday: Bool, lessons: [(day: Date, name: String, minutes: Int)] = [],
                     milestones: [(day: Date, title: String)] = [], replayName: String? = nil, nextLessonName: String? = nil,
-                    graduated: Bool = false) {
+                    graduated: Bool = false, quitDay: Date? = nil) {
             self.now = now
             self.pledgedToday = pledgedToday
             self.checkedInToday = checkedInToday
@@ -73,6 +77,7 @@ public enum NotificationPlan {
             self.replayName = replayName
             self.nextLessonName = nextLessonName
             self.graduated = graduated
+            self.quitDay = quitDay
         }
     }
 
@@ -92,13 +97,15 @@ public enum NotificationPlan {
         for offset in 0..<activeDays {
             guard let day = calendar.date(byAdding: .day, value: offset, to: today) else { continue }
             let stamp = Self.stamp(day, calendar)
-            if let m = settings.pledge, !(offset == 0 && inputs.pledgedToday) {
+            let stage = graduationStage(settings, inputs: inputs, day: day, calendar: calendar)
+            if let m = settings.pledge, stage.pledge, !(offset == 0 && inputs.pledgedToday) {
                 all.append(make(.pledge, "\(stamp)", day, m, NotificationCopy.pledge, calendar))
             }
             if let m = settings.lesson, let lesson = inputs.lessons.first(where: { calendar.isDate($0.day, inSameDayAs: day) }) {
                 all.append(make(.lesson, "\(stamp)", day, m, NotificationCopy.lesson(name: lesson.name, minutes: lesson.minutes), calendar))
             }
-            if let m = settings.checkIn, !(offset == 0 && inputs.checkedInToday) {
+            if let m = settings.checkIn, stage.checkIn(on: day, calendar: calendar, quitDay: inputs.quitDay),
+               !(offset == 0 && inputs.checkedInToday) {
                 all.append(make(.checkIn, "\(stamp)", day, m, NotificationCopy.checkIn, calendar))
             }
         }
@@ -133,7 +140,49 @@ public enum NotificationPlan {
         }
 
         let quiet = all.map { shift($0, settings: settings, calendar: calendar) }.filter { $0.date > inputs.now }
-        return cap(quiet, calendar: calendar).sorted { $0.date < $1.date }
+        return cap(quiet, calendar: calendar) { day in graduationStage(settings, inputs: inputs, day: day, calendar: calendar).cap }
+            .sorted { $0.date < $1.date }
+    }
+
+    // MARK: Quiet graduation (CLIN-06)
+
+    /// Fewer notes as cravings fade, counted in days since Quit Day (Quit Day is 0). Weeks 1 and 2 get the full set.
+    /// Weeks 3 and 4 drop the morning pledge note (the pledge still waits on Today) and allow two a day. From Week 5,
+    /// one a day, with the evening check-in every other day. Away notes are untouched: there are only two.
+    public enum GraduationStage: Sendable, Equatable {
+        case full, lighter, quiet
+
+        public static let lighterFromDay = 14
+        public static let quietFromDay = 28
+
+        public init(daysSinceQuit: Int?) {
+            guard let days = daysSinceQuit else { self = .full; return }
+            self = days >= Self.quietFromDay ? .quiet : days >= Self.lighterFromDay ? .lighter : .full
+        }
+
+        public var cap: Int {
+            switch self {
+            case .full: NotificationPlan.dailyCap
+            case .lighter: 2
+            case .quiet: 1
+            }
+        }
+
+        public var pledge: Bool { self == .full }
+
+        /// From Week 5 the check-in goes out on even days since Quit Day only.
+        func checkIn(on day: Date, calendar: Calendar, quitDay: Date?) -> Bool {
+            guard self == .quiet, let quitDay else { return true }
+            let days = calendar.dateComponents([.day], from: calendar.startOfDay(for: quitDay), to: day).day ?? 0
+            return days % 2 == 0
+        }
+    }
+
+    static func graduationStage(_ settings: Settings, inputs: Inputs, day: Date, calendar: Calendar) -> GraduationStage {
+        guard settings.quietGraduation, let quitDay = inputs.quitDay else { return .full }
+        guard let days = calendar.dateComponents([.day], from: calendar.startOfDay(for: quitDay), to: calendar.startOfDay(for: day)).day,
+              days >= 0 else { return .full }
+        return GraduationStage(daysSinceQuit: days)
     }
 
     /// Moves a time inside quiet hours to the moment they end.
@@ -161,11 +210,12 @@ public enum NotificationPlan {
         return Notification(id: n.id, kind: n.kind, date: moved, title: n.title, body: n.body)
     }
 
-    /// Keeps at most `dailyCap` per calendar day, dropping the lowest priority first.
-    private static func cap(_ items: [Notification], calendar: Calendar) -> [Notification] {
+    /// Keeps at most `limit(day)` per calendar day (`dailyCap`, or fewer with quiet graduation), dropping the lowest
+    /// priority first.
+    private static func cap(_ items: [Notification], calendar: Calendar, limit: (Date) -> Int) -> [Notification] {
         let byDay = Dictionary(grouping: items) { calendar.startOfDay(for: $0.date) }
-        return byDay.values.flatMap { day in
-            day.sorted { $0.kind.dropOrder < $1.kind.dropOrder }.prefix(dailyCap)
+        return byDay.flatMap { day, notes in
+            notes.sorted { $0.kind.dropOrder < $1.kind.dropOrder }.prefix(limit(day))
         }
     }
 
