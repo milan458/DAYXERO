@@ -13,7 +13,7 @@ Source: `reports/DayXero app design critique.md`, §7 "What to do first: a ranke
 
 | # | Decision | Recommended default | Needed by |
 |---|---|---|---|
-| D1 | Privacy policy URL | `https://dayxero.in/privacy/` now; re-point if the domain moves (D7) | S27.1 |
+| D1 | Privacy policy URL | `https://dayxero.app/privacy/` now; re-point if the domain moves (D7) | S27.1 |
 | D2 | Paywall after onboarding | Drop it (decision 15). Keep: Quit Day offer, Upgrade sheet from Me | S27.2 |
 | D3 | Trial length | 7 days starting on Quit Day, so the first charge lands after "One week clear" | S27.8 |
 | D4 | Lifetime price | $99.99 (2.5× annual); annual stays $39.99, monthly $9.99 | S27.8 |

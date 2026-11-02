@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://dayxero.in/sitemap.xml
+Sitemap: https://dayxero.app/sitemap.xml

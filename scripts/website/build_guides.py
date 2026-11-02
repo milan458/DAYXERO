@@ -10,7 +10,7 @@ import re
 import sys
 
 SITE = pathlib.Path(sys.argv[1])
-BASE = "https://dayxero.in"
+BASE = "https://dayxero.app"
 DATE = "2026-10-29"
 CONTACT_EMAIL = "hello@dayxero.in"
 
@@ -807,7 +807,7 @@ info_page(
 
 <h2 id="website">This website</h2>
 <ul>
-  <li><strong>Hosting.</strong> dayxero.in is served by Cloudflare, which processes technical data such as IP addresses to deliver the site and protect it from abuse.</li>
+  <li><strong>Hosting.</strong> dayxero.app is served by Cloudflare, which processes technical data such as IP addresses to deliver the site and protect it from abuse.</li>
   <li><strong>Analytics.</strong> We use Cloudflare Web Analytics, which counts visits without cookies and without tracking you across other sites.</li>
   <li><strong>Fonts.</strong> Pages load fonts from Google Fonts, so your browser connects to Google's servers.</li>
   <li><strong>No cookies, no ads.</strong> The website sets no cookies and shows no advertising. It uses your browser's own storage for two small conveniences: remembering a referral code during your visit, and remembering for 7 days that you closed the beta bar on guide pages.</li>
