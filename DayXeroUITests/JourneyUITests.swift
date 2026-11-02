@@ -149,6 +149,26 @@ final class JourneyUITests: XCTestCase {
         snap(app, "41-water-row-after")
     }
 
+    /// Every calm tool opens and closes without the app going down. Box breathing and the longer out-breath run on the
+    /// Bio-Orb and crashed on open (1 Nov 2026); this keeps all five honest.
+    func testEveryCalmToolOpens() {
+        let app = launch(["-dx.homeScenario", "day3", "-dx.store", "pro", "-dx.openCalmList", "YES"])
+        XCTAssert(app.staticTexts["Calm tools"].waitForExistence(timeout: 10), "The calm tools list didn't open")
+        for title in ["Box breathing", "Longer out-breath", "5-4-3-2-1", "Notice and name", "Drop anchor"] {
+            let row = button(app, title)
+            XCTAssert(row.waitForExistence(timeout: 5), "No \"\(title)\" row")
+            tapWhenStill(app, row, name: title)
+            let stop = app.buttons["Stop"]
+            XCTAssert(stop.waitForExistence(timeout: 10), "\"\(title)\" didn't open")
+            // Let the orb draw and its clock tick for a moment before checking the app is still up.
+            RunLoop.current.run(until: .now.addingTimeInterval(2))
+            XCTAssertEqual(app.state, .runningForeground, "The app went down opening \"\(title)\"")
+            snap(app, "50-calm-\(title.lowercased().filter { $0.isLetter || $0.isNumber })")
+            tapWhenStill(app, stop, name: "Stop")
+            XCTAssert(app.staticTexts["Calm tools"].waitForExistence(timeout: 5), "\"\(title)\" didn't close")
+        }
+    }
+
     // MARK: Steps
 
     private func rideOutCraving(_ app: XCUIApplication) {

@@ -99,7 +99,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Logged. %lld of %#@arg2@ today."
+            "value" : "Logged. %1$lld of %2$#@arg2@ today."
           },
           "substitutions" : {
             "arg2" : {
@@ -132,7 +132,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Water, %lld of %#@arg2@. Log a glass."
+            "value" : "Water, %1$lld of %2$#@arg2@. Log a glass."
           },
           "substitutions" : {
             "arg2" : {

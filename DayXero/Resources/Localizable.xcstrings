@@ -7,7 +7,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ of %@ litres, %lld of %#@arg4@"
+            "value" : "%1$@ of %2$@ litres, %3$lld of %4$#@arg4@"
           },
           "substitutions" : {
             "arg4" : {
@@ -40,7 +40,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@, %#@arg2@"
+            "value" : "%1$@, %2$#@arg2@"
           },
           "substitutions" : {
             "arg2" : {
@@ -73,7 +73,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@, %#@arg2@ left, cycle %lld of %lld"
+            "value" : "%1$@, %2$#@arg2@ left, cycle %3$lld of %4$lld"
           },
           "substitutions" : {
             "arg2" : {
@@ -129,7 +129,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%#@arg1@ FREE · SAVE %lld%%"
+            "value" : "%1$#@arg1@ FREE · SAVE %2$lld%%"
           },
           "substitutions" : {
             "arg1" : {
@@ -415,7 +415,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%#@arg1@ free, then %@ a year"
+            "value" : "%1$#@arg1@ free, then %2$@ a year"
           },
           "substitutions" : {
             "arg1" : {
@@ -655,7 +655,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld of %#@arg2@"
+            "value" : "%1$lld of %2$#@arg2@"
           },
           "substitutions" : {
             "arg2" : {
@@ -688,7 +688,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld of %#@arg2@ ridden out"
+            "value" : "%1$lld of %2$#@arg2@ ridden out"
           },
           "substitutions" : {
             "arg2" : {
@@ -721,7 +721,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld of %#@arg2@. All yours."
+            "value" : "%1$lld of %2$#@arg2@. All yours."
           },
           "substitutions" : {
             "arg2" : {
@@ -800,7 +800,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%#@arg1@ at %lld mg"
+            "value" : "%1$#@arg1@ at %2$lld mg"
           },
           "substitutions" : {
             "arg1" : {
@@ -971,7 +971,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%#@arg1@ · %@"
+            "value" : "%1$#@arg1@ · %2$@"
           },
           "substitutions" : {
             "arg1" : {
@@ -1234,7 +1234,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Logged. %lld of %#@arg2@ today."
+            "value" : "Logged. %1$lld of %2$#@arg2@ today."
           },
           "substitutions" : {
             "arg2" : {
@@ -1313,7 +1313,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Prep day %lld check-in · %#@arg2@ to Quit Day"
+            "value" : "Prep day %1$lld check-in · %2$#@arg2@ to Quit Day"
           },
           "substitutions" : {
             "arg2" : {
@@ -1507,7 +1507,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Water, %lld of %#@arg2@. Log a glass."
+            "value" : "Water, %1$lld of %2$#@arg2@. Log a glass."
           },
           "substitutions" : {
             "arg2" : {
@@ -1540,7 +1540,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "You rode out %lld of %#@arg2@ this week."
+            "value" : "You rode out %1$lld of %2$#@arg2@ this week."
           },
           "substitutions" : {
             "arg2" : {
@@ -1734,7 +1734,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "~%#@arg1@ at %@"
+            "value" : "~%1$#@arg1@ at %2$@"
           },
           "substitutions" : {
             "arg1" : {
