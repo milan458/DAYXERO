@@ -490,12 +490,15 @@ struct PlanCard: View {
     let situation: String
     let action: String
     var title: LocalizedStringKey = "Your plan"
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
+        // The two answers are bold runs inside the sentence, so they need `.font` (a Text), not `.dxFont` (a view).
+        let strong = DX.Typeface4.scaledFont(16, weight: 600, style: .body, dynamicTypeSize: typeSize)
         V4Card(padding: 14) {
             VStack(alignment: .leading, spacing: 6) {
                 Text(title).v4Text(.subtitle)
-                Text("If it's \(Text(verbatim: situation).dxFont(16, weight: 600, style: .body)), then I'll \(Text(verbatim: action).dxFont(16, weight: 600, style: .body))")
+                Text("If it's \(Text(verbatim: situation).font(strong)), then I'll \(Text(verbatim: action).font(strong))")
                     .dxFont(16, weight: 400, style: .body)
                     .foregroundStyle(Read4.ink)
             }

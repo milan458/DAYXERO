@@ -163,11 +163,21 @@ public struct DXFontModifier: ViewModifier {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     public func body(content: Content) -> some View {
+        content.font(DX.Typeface4.scaledFont(size, weight: weight, style: style, dynamicTypeSize: dynamicTypeSize))
+    }
+}
+
+public extension DX.Typeface4 {
+    /// The font `dxFont` applies, as a `Font`. Use it for a styled run inside a sentence:
+    /// `Text("If it's \(Text(situation).font(strong))")` needs a `Text`, and `.dxFont` returns a view, which would be
+    /// written into the sentence as its debug description.
+    static func scaledFont(_ size: CGFloat, weight: CGFloat = 400, style: UIFont.TextStyle = .body,
+                           dynamicTypeSize: DynamicTypeSize) -> Font {
         let traits = UITraitCollection(preferredContentSizeCategory: UIContentSizeCategory(dynamicTypeSize))
         let base = max(12, size)
         let scaled = UIFontMetrics(forTextStyle: style).scaledValue(for: base, compatibleWith: traits)
         let family: DX.TypeStep.Family = base >= 19 && weight >= 700 ? .display : .body
-        return content.font(Font(DX.Typeface4.font(family, size: scaled, weight: weight) as CTFont))
+        return Font(font(family, size: scaled, weight: weight) as CTFont)
     }
 }
 
