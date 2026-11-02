@@ -68,9 +68,9 @@ The sigh's voice is the on-device speech voice, like the breathing orb's coach. 
 
 ## Open questions
 
-6. **CHAR-05 style.** The milestones use the existing kit illustrations for now. A new illustration style (and the Headspace-like structure in an earthy palette) waits on the style choice in approvals.
 
 ## Decided
 
 - **Prep card label: "Prep 1"** (Milan, 2 Nov 2026). The card keeps the program's session label, not "Prep day 1", so it never disagrees with the kicker's calendar day.
 - **Sigh voice: the built-in on-device voice for now** (Milan, 2 Nov 2026). A recorded voice can replace it later in `CueVoice` (`DayXero/SOS/SOSTools.swift`).
+- **Milestone illustrations: the new style** (Milan, 2 Nov 2026). Warm, rounded, flat shapes in an earthy palette (terracotta, clay, ochre, sage, olive, dusty blue, plum), objects only, each on a soft hand-cut blob. All 20 replace the old set in `DayXero/Health/MilestoneIllustrations.swift`; the review canvas is https://claude.ai/artifact/NfDttfeWAT5qM1ijPr5fjw.

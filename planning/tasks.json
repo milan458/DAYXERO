@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-11-02T20:31:08.355Z"
+    "updated": "2026-11-02T21:43:28.307Z"
   },
   "now": {
     "section": "S27",
@@ -2937,8 +2937,8 @@
         {
           "id": "S29.7",
           "title": "CHAR-05 · Illustrate each milestone in one chosen style",
-          "status": "blocked",
-          "notes": "Progress cards now show each milestone's existing kit illustration (HealthBadge); the timeline already did. A new style waits on the style choice in approvals.\nMilan, 2 Nov 2026: move to the new warm, rounded, earthy style, objects only (no faces). Six samples + palette on the review canvas https://claude.ai/artifact/NfDttfeWAT5qM1ijPr5fjw; the other 14 and the Swift port follow sign-off.",
+          "status": "awaiting_signoff",
+          "notes": "Progress cards now show each milestone's existing kit illustration (HealthBadge); the timeline already did. A new style waits on the style choice in approvals.\nMilan, 2 Nov 2026: move to the new warm, rounded, earthy style, objects only (no faces). Six samples + palette on the review canvas https://claude.ai/artifact/NfDttfeWAT5qM1ijPr5fjw; the other 14 and the Swift port follow sign-off.\nAll 20 drawn on the canvas (The full set board) and ported to Swift on claude/hopeful-knuth-nyzefj; HealthBadge now sits on the hand-cut blob. Waiting on Milan's look at the full set, then a PR.",
           "created": "2026-11-02T18:30:35.403Z",
           "completed": null
         }
@@ -2946,6 +2946,11 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-11-02T21:43:28.307Z",
+      "type": "status",
+      "message": "S29.7 blocked → awaiting_signoff (All 20 drawn on the canvas (The full set board) and ported to Swift on claude/hopeful-knuth-nyzefj; HealthBadge now sits on the hand-cut blob. Waiting on Milan's look at the full set, then a PR.)"
+    },
     {
       "time": "2026-11-02T20:31:08.355Z",
       "type": "note",
