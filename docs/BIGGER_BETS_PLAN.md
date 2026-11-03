@@ -168,7 +168,7 @@ where a line would sit naturally next to one.
 **Leave as they are:** Today's cards (the zero-scroll layout has no room), the morning pledge (the words are the
 person's own pledge, not Xero's), Progress, the health timeline, milestones and share cards, and Calm tools.
 
-**Chosen (Milan, 3 Nov):** 1, 3, 4, 6 and 7. The mockups go in the Screen Lab (S32.14), built with the Lab's own
+**Chosen (Milan, 3 Nov):** 1, 3, 4, 6 and 7. The mockups are in the Screen Lab, version 9 (What's new › Bigger bets; S32.14), built with the Lab's own
 grounds and crew art (the S27.13 six-ground system), and listed as a wave under What's new. Lines that are already
 approved are reused word for word, so only the new ones need a yes.
 

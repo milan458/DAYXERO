@@ -2,18 +2,18 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-11-03T18:29:10.020Z"
+    "updated": "2026-11-03T18:34:37.740Z"
   },
   "now": {
     "section": "S32",
     "task": "S32.14",
     "waiting_on_milan": [
-      "Milan: approve the speech-bubble lines in the Screen Lab (new: W2, W3, P1-P4, D1-D4)",
+      "Milan: sign off the Bigger bets wave in the Screen Lab (version 9, What's new): speech bubbles and the prep-day paywall",
       "Milan: confirm the BET-1 defaults (next prep day opens after the 2 free cards; Day Xero onwards paid; new 'Always free' line)",
       "Milan: App Store Connect: privacy URL, 7-day trial, India annual ₹2,999, lifetime $99.99, win-back, grace period; plus dayxero.annual.offer $29.99 with a 7-day trial (₹2,249)",
-      "Milan: sign off Wave 4 in the Screen Lab (version 8, What's new tab; try Text size AX3 and Appearance Dark)",
       "Milan: review the 112 draft lesson cards (MON-04) and the open questions in docs/MONETISATION_TIERS.md",
-      "Milan: Cloudflare dashboard: fix or turn off non-production Worker builds"
+      "Milan: Cloudflare dashboard: fix or turn off non-production Worker builds",
+      "Milan: sign off Wave 4 in the Screen Lab (What's new; try Text size AX3 and Appearance Dark)"
     ]
   },
   "sections": [
@@ -3221,8 +3221,8 @@
         {
           "id": "S32.14",
           "title": "BET-3 · Speech-bubble mockups in the Screen Lab (Welcome, plan building, slip, wave passed, prep-day paywall) for Milan's sign-off",
-          "status": "in_progress",
-          "notes": "Redone in the Screen Lab (Lab first, docs/DAYXERO_CRITIQUE_FIX_PLAN.md) after Milan pointed out the first set used the old design canvas. Replaces the retired S33 section.",
+          "status": "awaiting_signoff",
+          "notes": "Redone in the Screen Lab (Lab first, docs/DAYXERO_CRITIQUE_FIX_PLAN.md) after Milan pointed out the first set used the old design canvas. Replaces the retired S33 section.\nIn the Screen Lab, version 9 (What's new › Bigger bets): new 'Speech bubbles' states on onb-welcome, onb-building, log-slip (full program and free) and sos-passed, and the new prep-paywall screen (regular, day-4 offer, after ✕). File screens/bets.js.",
           "created": "2026-11-03T18:29:10.020Z",
           "completed": null
         },
@@ -3238,6 +3238,11 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-11-03T18:34:37.740Z",
+      "type": "status",
+      "message": "S32.14 in_progress → awaiting_signoff (In the Screen Lab, version 9 (What's new › Bigger bets): new 'Speech bubbles' states on onb-welcome, onb-building, log-slip (full program and free) and sos-passed, and the new prep-paywall screen (regular, day-4 offer, after ✕). File screens/bets.js.)"
+    },
     {
       "time": "2026-11-03T18:29:10.020Z",
       "type": "note",
