@@ -114,18 +114,18 @@ struct HomeTests {
         let context = ModelContext(try DataStore.makeContainer(inMemory: true))
         let p = profile(in: context)
         let store = ProgramStore(context: context, profile: p)
-        #expect(HomeView.firstPrepWaiting(store))
+        #expect(TodayView.firstPrepWaiting(store))
         let record = SessionRecord(sessionId: "P1", startedAt: date(22, 10), contentVersion: "test")
         context.insert(record)
         try context.save()
         let opened = HomeSnapshot(profile: p, isPro: true, now: date(22, 10), calendar: calendar)
         #expect(opened.prepDone == 0)
-        #expect(HomeView.firstPrepWaiting(store))
+        #expect(TodayView.firstPrepWaiting(store))
         record.completedAt = date(22, 11)
         try context.save()
         let played = HomeSnapshot(profile: p, isPro: true, now: date(22, 12), calendar: calendar)
         #expect(played.prepDone == 1)
-        #expect(!HomeView.firstPrepWaiting(store))
+        #expect(!TodayView.firstPrepWaiting(store))
     }
 
     /// A Quit Day nine days out still has seven prep sessions: the total is the program's, not the calendar's.
