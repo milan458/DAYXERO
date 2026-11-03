@@ -125,6 +125,7 @@ struct ChoiceBeat: View {
     let beat: Beat
     let ctx: BeatContext
     let onDone: () -> Void
+    var onBack: (() -> Void)?
 
     @State private var selected: [String] = []
     @State private var other = ""
@@ -143,7 +144,12 @@ struct ChoiceBeat: View {
 
     private var limit: Int? { beat.pick }
 
+    /// Options built from a saved list that's empty (P1.3 when no reason was written): nothing to pick, so the beat
+    /// says so, offers the way back to add one, and lets them carry on instead of leaving Continue disabled.
+    private var nothingToPick: Bool { beat.optionsFrom != nil && options.isEmpty && !beat.allowOther }
+
     private var ready: Bool {
+        if nothingToPick { return true }
         let count = selected.count + (otherOn && !other.trimmingCharacters(in: .whitespaces).isEmpty ? 1 : 0)
         if let limit { return count == limit }
         return count > 0
@@ -161,7 +167,9 @@ struct ChoiceBeat: View {
         BeatFrame(beat: beat, canContinue: ready, onContinue: finish, onSkip: { ctx.finish(beat, skipped: true); onDone() }) {
             VStack(alignment: .leading, spacing: 10) {
                 BeatPrompt(text: ctx.text(beat.prompt))
-                if beat.multi {
+                if nothingToPick {
+                    emptyState
+                } else if beat.multi {
                     if let limit {
                         Text("\(selected.count) of \(limit) picked").dxFont(16, weight: 600, style: .body)
                             .foregroundStyle(Read4.accent)
@@ -203,6 +211,23 @@ struct ChoiceBeat: View {
         .onAppear(perform: restore)
     }
 
+    private var emptyState: some View {
+        VStack(alignment: .leading, spacing: DX.Space.s) {
+            Text(beat.optionsFrom == "reasons"
+                 ? "You haven't written a reason yet. Go back and add one, and it'll show up here to pick." as LocalizedStringKey
+                 : "There's nothing here to pick yet. Go back and add something first.")
+                .dxFont(16, weight: 400, style: .body).foregroundStyle(Read4.muted)
+                .fixedSize(horizontal: false, vertical: true)
+            if let onBack {
+                Button(action: onBack) {
+                    Label(beat.optionsFrom == "reasons" ? "Add a reason" as LocalizedStringKey : "Go back", systemImage: "chevron.left")
+                }
+                .buttonStyle(.dx(.secondary, on: .reading))
+                .accessibilityIdentifier("program.choice.back")
+            }
+        }
+    }
+
     private func toggle(_ id: String) {
         if let i = selected.firstIndex(of: id) {
             selected.remove(at: i)
@@ -236,6 +261,12 @@ struct ChoiceBeat: View {
     }
 
     private func finish() {
+        // Nothing was picked because there was nothing to pick: record it as skipped rather than saving an empty answer.
+        if nothingToPick {
+            ctx.finish(beat, skipped: true)
+            onDone()
+            return
+        }
         var texts = options.filter { selected.contains($0.id) }.map(\.text)
         if otherOn, !other.trimmingCharacters(in: .whitespaces).isEmpty { texts.append(other.trimmingCharacters(in: .whitespaces)) }
         let value: ProgramAnswerValue = beat.multi ? .list(texts) : .text(texts.first ?? "")

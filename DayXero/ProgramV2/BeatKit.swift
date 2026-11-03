@@ -195,13 +195,15 @@ struct BeatScreen: View {
     let beat: Beat
     let ctx: BeatContext
     let onDone: () -> Void
+    /// Back to the previous step, when the flow allows it. Used by a choice with nothing to choose from.
+    var onBack: (() -> Void)?
 
     var body: some View {
         Group {
             switch beat.type {
             case .statReveal: StatRevealBeat(beat: beat, ctx: ctx, onDone: onDone)
             case .quiz: QuizBeat(beat: beat, ctx: ctx, onDone: onDone)
-            case .choice: ChoiceBeat(beat: beat, ctx: ctx, onDone: onDone)
+            case .choice: ChoiceBeat(beat: beat, ctx: ctx, onDone: onDone, onBack: onBack)
             case .slider: SliderBeat(beat: beat, ctx: ctx, onDone: onDone)
             case .sliderGroup: SliderGroupBeat(beat: beat, ctx: ctx, onDone: onDone)
             case .reflect: ReflectBeat(beat: beat, ctx: ctx, onDone: onDone)
