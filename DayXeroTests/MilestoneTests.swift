@@ -48,7 +48,7 @@ struct MilestoneTests {
         for product in Product.allCases {
             for item in timeline.items(for: product) { #expect(drawn.contains(item.id), "\(item.id) has no drawing") }
         }
-        #expect(drawn.count == 20)
+        #expect(drawn.count == 23)
     }
 
     @Test func idsRoundTrip() {

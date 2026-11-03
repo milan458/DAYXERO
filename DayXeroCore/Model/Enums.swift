@@ -46,7 +46,8 @@ public enum CravingOutcome: String, Codable, Sendable {
 
 /// Situations that bring on cravings, in the order onboarding shows them.
 public enum Trigger: String, Codable, CaseIterable, Sendable {
-    case morning, coffee, meals, stress, alcohol, boredom, social, driving, work, phone, other
+    /// `finishedTask` (CLIN-09, 2 Nov 2026): the "I've earned one" moment after a job is done.
+    case morning, coffee, meals, stress, alcohol, boredom, social, driving, work, finishedTask, phone, other
 
     public var title: LocalizedStringResource {
         switch self {
@@ -59,6 +60,7 @@ public enum Trigger: String, Codable, CaseIterable, Sendable {
         case .social: "With friends"
         case .driving: "Driving"
         case .work: "Work breaks"
+        case .finishedTask: "Finished a task / chore"
         case .phone: "On my phone"
         case .other: "Something else"
         }
@@ -76,6 +78,7 @@ public enum Trigger: String, Codable, CaseIterable, Sendable {
         case .social: ["tell a friend I'm quitting", "stand with non-smokers", "have gum ready", "step away and breathe"]
         case .driving: ["keep mints in the car", "put on a podcast", "clear the car of vapes and lighters", "open the window and breathe"]
         case .work: ["take my break somewhere new", "walk around the block", "take a break with a non-smoker", "drink water"]
+        case .finishedTask: ["pick a real reward from my list", "make a proper tea or coffee", "step outside for two minutes", "open the reward card in Calm tools"]
         case .phone: ["put the phone down for five minutes", "move to another room", "chew sugar-free gum", "open Craving SOS"]
         case .other: ["open Craving SOS", "take a short walk", "drink water", "text a friend"]
         }
@@ -93,6 +96,7 @@ public enum Trigger: String, Codable, CaseIterable, Sendable {
         case .social: "time with friends"
         case .driving: "a drive"
         case .work: "a work break"
+        case .finishedTask: "finishing a task"
         case .phone: "scrolling time"
         case .other: "a strong craving"
         }

@@ -159,6 +159,7 @@ enum ProgramArt {
         case "W1D7": .peak
         case "W2S1": .clouds
         case "W2S2": .night
+        case "W2S4": .dawn
         case "W2S3": .peak
         case "W3S1": .anchor
         case "W3S2": .sea

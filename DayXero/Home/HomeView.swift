@@ -133,7 +133,7 @@ struct ComingSoon: View {
 }
 
 /// Prep day 1 opens by itself the first time Home shows after onboarding (S22), so the first thing after setting up
-/// is the program working, not a dashboard. Prep week is free; the trial is offered after Day Xero.
+/// is the program working, not a dashboard. Prep 1 to 3 are free; the trial is offered at Prep 4 (MON-01).
 enum FirstLesson {
     static let key = "dx.openFirstLesson"
 }
@@ -170,6 +170,12 @@ struct TodayView: View {
     @State private var celebrating: Milestone?
     @State private var showHealth = false
     @Environment(\.dynamicTypeSize) private var typeSize
+    /// Xero's coffee note (CLIN-02): the Quit Day it was dismissed for, so a fresh Quit Day brings it back.
+    @AppStorage("dx.caffeineAlertDismissedFor") private var caffeineDismissedFor = 0.0
+    /// The swap trap (CLIN-05): the day it was last dismissed; it can come back another day.
+    @AppStorage("dx.swapTrapDismissedOn") private var swapDismissedOn = 0.0
+    /// Today's prep challenge (CLIN-11): the day it was last done.
+    @AppStorage("dx.prepChallengeDoneOn") private var challengeDoneOn = 0.0
 
     var body: some View {
         // Re-evaluates each minute so counters tick and the day rolls over on its own.
@@ -298,8 +304,8 @@ struct TodayView: View {
             TodayPrepHero(snap: snap, quitDay: profile.quitDay, why: why, ground: ground, crewStage: stage)
         case .postQuit:
             TodayQuitHero(timeFree: TimeFree.short(now.timeIntervalSince(quitMoment)),
-                          resilience: Resilience.percent(quitDay: profile.quitDay, slips: logs.filter { $0.kind == .slip }.map(\.timestamp),
-                                                         now: now, clock: clock),
+                          resilience: Resilience.days(quitDay: profile.quitDay, slips: logs.filter { $0.kind == .slip }.map(\.timestamp),
+                                                      now: now, clock: clock),
                           product: primaryProduct, moneyKept: snap.moneyKept, currencyCode: snap.currencyCode,
                           why: why, ground: ground, crewStage: stage)
         }
@@ -310,11 +316,62 @@ struct TodayView: View {
     @ViewBuilder
     private func actions(_ snap: HomeSnapshot, state: TodayState, now: Date) -> some View {
         focusCard(state: state, now: now).id("lower")
+        if showsCaffeineAlert(now: now) {
+            XeroNoteCard(kicker: String(localized: "From Xero"), title: String(localized: CaffeineAlert.title),
+                         message: String(localized: CaffeineAlert.body), source: HealthSources.caffeineAfterQuitting) {
+                caffeineDismissedFor = clock.startOfDate(profile.quitDay).timeIntervalSince1970
+            }
+        }
         bento(state: state, now: now)
+        if state == .prep, let finding = swapTrap(now: now) {
+            XeroNoteCard(kicker: String(localized: "From Xero"), title: String(localized: "Watch the swap"),
+                         message: swapMessage(finding)) {
+                swapDismissedOn = clock.day(containing: now).timeIntervalSince1970
+            }
+        }
+        if case .prep = snap.phase, state == .prep { challengeRow(snap, now: now) }
         if showsPledge(now: now) { pledgeRow }
         // A plan made today, after a slip or in a lesson, stays on Home for the rest of the day (S8.3).
         if let plan = plans.first, clock.day(containing: plan.createdAt) == clock.day(containing: now) {
             PlanCard(situation: plan.situation, action: plan.action, title: "Your plan for next time")
+        }
+    }
+
+    // MARK: Clinical notes (CLIN-02, CLIN-05, CLIN-11)
+
+    /// Xero's coffee note: people who smoke and named coffee as a trigger, Quit Day through its first week.
+    private func showsCaffeineAlert(now: Date) -> Bool {
+        let quit = clock.startOfDate(profile.quitDay)
+        guard caffeineDismissedFor != quit.timeIntervalSince1970 else { return false }
+        return CaffeineAlert.applies(products: profile.products.map(\.product), triggers: profile.triggers,
+                                     daysSinceQuit: clock.days(fromDate: profile.quitDay, to: now))
+    }
+
+    /// Cigarettes or puffs down while pouches go up, against their own baseline. Hidden for the rest of the day once dismissed.
+    private func swapTrap(now: Date) -> SwapTrap.Finding? {
+        guard swapDismissedOn != clock.day(containing: now).timeIntervalSince1970 else { return nil }
+        let uses: [(product: Product, time: Date)] = logs.filter { $0.kind == .use }.compactMap { entry in
+            entry.product.map { (product: $0, time: entry.timestamp) }
+        }
+        var baselines: [Product: Double] = [:]
+        for use in profile.products { baselines[use.product] = use.unitsPerDay }
+        return SwapTrap.check(uses: uses, baselines: baselines, since: profile.createdAt, now: now, clock: clock)
+    }
+
+    private func swapMessage(_ finding: SwapTrap.Finding) -> String {
+        let fell: String = finding.falling == [.vape] ? String(localized: "Your puffs are down")
+            : finding.falling == [.cigarettes] ? String(localized: "Your cigarettes are down")
+            : String(localized: "Your cigarettes and puffs are down")
+        return String(localized: "\(fell), but pouches are up. The nicotine has moved, not dropped, and pouches would need quitting too. Try to bring all of it down together.")
+    }
+
+    @ViewBuilder
+    private func challengeRow(_ snap: HomeSnapshot, now: Date) -> some View {
+        let today = clock.day(containing: now).timeIntervalSince1970
+        let done = challengeDoneOn == today
+        PrepChallengeRow(challenge: PrepChallenge.forPrepDay(snap.prepDayNumber), done: done) {
+            challengeDoneOn = done ? 0 : today
+            if !done { Analytics.track(.prepChallengeDone(day: snap.prepDayNumber)) }
         }
     }
 
@@ -534,6 +591,11 @@ struct TodayView: View {
         justLogged = entries
         loggedFeedback.toggle()
         if entries.first?.kind == .use { NotificationCenter.default.post(name: .dxUseLogged, object: nil) }
+        // A slip (from Quit Day on) goes straight to Jelli's if-then planner (CLIN-10).
+        if entries.first?.kind == .slip {
+            Analytics.track(.slipLogged(source: "today"))
+            log.open(.slipPlan)
+        }
     }
 
     private func loggedToast(_ entries: [LogEntry]) -> some View {

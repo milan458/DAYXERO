@@ -145,10 +145,12 @@ struct HealthTimelineView: View {
     }
 
     /// A card per change (CHAR-05): what changes and when on the left, its crew collage bleeding off the right edge.
-    /// Done ones say so in green, the one under way has its bar, the ones still ahead wait in softer colour.
+    /// Done ones say so in green, the one under way has its bar, the ones still ahead wait in softer colour. What many
+    /// people notice (CLIN-01) has no exact timing, so it never shows "under way" or a bar.
     private func row(_ item: HealthTimeline.Item, state: RowState) -> some View {
         let label: String = switch state {
         case .done: String(localized: "Done · \(item.when)")
+        case .now where item.isFelt: item.when
         case .now: String(localized: "Under way · \(item.when)")
         case .first: String(localized: "From Quit Day")
         case .ahead: item.when
@@ -166,7 +168,7 @@ struct HealthTimelineView: View {
                 .multilineTextAlignment(.leading)
                 .fixedSize(horizontal: false, vertical: true)
             Text(verbatim: label).dxFont(13, weight: 700, style: .footnote).foregroundStyle(labelColor)
-            if case let .now(fraction) = state {
+            if case let .now(fraction) = state, !item.isFelt {
                 GeometryReader { proxy in
                     ZStack(alignment: .leading) {
                         Capsule().fill(Color(light: 0xEDE6DA, dark: 0x2A4A3E))
@@ -210,9 +212,10 @@ struct HealthTimelineView: View {
         }
     }
 
+    @ViewBuilder
     private func sources(_ timeline: HealthTimeline?) -> some View {
         let list = timeline?.sources(for: product) ?? []
-        let looks = timeline?.items(for: product).contains(where: \.isLooks) ?? false
+        let looks = timeline?.items(for: product).contains(where: \.isWellness) ?? false
         VStack(alignment: .leading, spacing: 4) {
             ForEach(list, id: \.url) { source in
                 Link(destination: source.url) {
@@ -299,7 +302,7 @@ struct HealthItemCard: View {
             if !item.line.isEmpty {
                 Text(verbatim: item.line).v4Text(.subtitle).multilineTextAlignment(.leading)
             }
-            if case let .underWay(fraction) = state {
+            if case let .underWay(fraction) = state, !item.isFelt {
                 V4ProgressBar(value: fraction).padding(.top, 4)
             }
         }
@@ -335,6 +338,7 @@ struct HealthItemCard: View {
     private var stateText: LocalizedStringKey {
         switch state {
         case .done: "Done"
+        case .underWay where item.isFelt: "Around now"
         case .underWay: "Under way"
         case .ahead: "Ahead"
         }
@@ -421,7 +425,8 @@ struct HealthItemDetail: View {
     }
 
     private func eyebrow(_ state: HealthTimeline.State) -> String {
-        switch state {
+        if item.isFelt { return String(localized: "What many people notice · \(item.when)") }
+        return switch state {
         case .done: String(localized: "Reached · \(item.when)")
         case .underWay: String(localized: "Happening now · \(item.when)")
         case .ahead: String(localized: "Ahead · \(item.when)")
@@ -429,7 +434,9 @@ struct HealthItemDetail: View {
     }
 
     private func status(_ state: HealthTimeline.State) -> String? {
-        switch state {
+        // No countdowns or percentages where the evidence on timing is thin (CLIN-01).
+        if item.isFelt { return String(localized: "Timing varies a lot from person to person.") }
+        return switch state {
         case let .underWay(fraction):
             String(localized: "\(Int((fraction * 100).rounded()))% of the way · done \(TodayView.relative(hours: item.toHours - elapsedHours))")
         case .ahead where elapsedHours >= 0:
@@ -450,6 +457,9 @@ struct HealthItemDetail: View {
                 }
                 .frame(minHeight: DX.Layout.touchTarget, alignment: .leading)
                 .contentShape(Rectangle())
+            } else if item.isFelt {
+                Text("What many people report. The research on when it happens is still thin.")
+                    .dxFont(12, weight: 400, style: .caption1).foregroundStyle(Read4.muted)
             } else if item.isLooks {
                 Text("General wellness information.").dxFont(12, weight: 400, style: .caption1)
                     .foregroundStyle(Read4.muted)

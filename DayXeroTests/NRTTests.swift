@@ -91,6 +91,27 @@ struct NRTTests {
         #expect(steps.map(\.date) == [calendar.date(bySettingHour: 19, minute: 0, second: 0, of: at(4, month: 11))])
     }
 
+    /// CLIN-03: a 16-hour patch gets "Patch off for the night" 16 hours after the fresh-patch time; a 24-hour one doesn't.
+    @Test func aSixteenHourPatchComesOffAtBedtime() {
+        let plan = NRTPlan(type: .patch, startDate: at(29), steps: [PlanStep(strengthMg: 25, weeks: 8)], dailyReminderMinute: 7 * 60)
+        #expect(!plan.offAtBedtime)
+        #expect(!NRTReminderPlan.reminders(for: plan, now: at(29, 6), clock: clock).contains { $0.id.contains(".off.") })
+        plan.offAtBedtime = true
+        #expect(plan.patchHours == 16)
+        let off = NRTReminderPlan.reminders(for: plan, now: at(29, 6), clock: clock).filter { $0.id.contains(".off.") }
+        #expect(off.count == NRTReminderPlan.dailyDays / 2)
+        #expect(off.first?.date == calendar.date(bySettingHour: 23, minute: 0, second: 0, of: at(29)))
+        // Gum can't be "off at bedtime".
+        let gum = NRTPlan(type: .gum, startDate: at(29), steps: [PlanStep(strengthMg: 2, weeks: 6)], dailyReminderMinute: 7 * 60)
+        gum.patchHours = 16
+        #expect(!gum.offAtBedtime)
+    }
+
+    @Test func chewAndParkHasFourStepsAndTheDrinksTip() {
+        #expect(NRTUseGuide.chewAndPark.count == 4)
+        #expect(String(localized: NRTUseGuide.chewAndParkTip).contains("coffee"))
+    }
+
     @Test func noRemindersOnceThePlanIsOver() {
         let plan = NRTPlan(type: .patch, startDate: at(1), steps: [PlanStep(strengthMg: 21, weeks: 1)], dailyReminderMinute: 450)
         #expect(NRTReminderPlan.reminders(for: plan, now: at(23), clock: clock).isEmpty)

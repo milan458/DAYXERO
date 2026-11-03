@@ -80,6 +80,9 @@ struct CollageCrew {
         case "cravings-fade": CollageCrew(who: .jelli, mood: .cheer, x: 70, y: 40, scale: 0.4)
         case "mood": CollageCrew(who: .glim, mood: .cheer, x: 80, y: 54, scale: 0.45)
         case "sleep": CollageCrew(who: .glim, mood: .sleepy, x: 93, y: 52, scale: 0.42)
+        case "flat-days": CollageCrew(who: .glim, mood: .calm, x: 78, y: 96, scale: 0.45)
+        case "clearer-head": CollageCrew(who: .xero, mood: .hello, x: 20, y: 96, scale: 0.5)
+        case "rewards-return": CollageCrew(who: .xero, mood: .cheer, x: 14, y: 104, scale: 0.45)
         default: nil
         }
     }
@@ -172,6 +175,9 @@ enum CollageDraw {
         case "mood": moodArt(c, front)
         case "cravings-fade": cravingsFade(c, front)
         case "sleep": deeperSleep(c, front)
+        case "flat-days": flatDays(c, front)
+        case "clearer-head": clearerHead(c, front)
+        case "rewards-return": rewardsReturn(c, front)
         default:
             if !front {
                 fill(c, circle(100, 100, 60), .pink)
@@ -583,6 +589,66 @@ enum CollageDraw {
         } else {
             c.fill(circle(70, 128, 6), with: .color(Color(hex: 0xFFE27A).opacity(0.25)))
             c.fill(circle(70, 128, 2.4), with: .color(Color(hex: 0xFFE27A)))
+        }
+    }
+
+    /// Fog drifting across a dusk window, the sun still there behind it: a passing stage (CLIN-01).
+    private static func flatDays(_ c: GraphicsContext, _ front: Bool) {
+        let window = rrect(40, 22, 180, 200, 40)
+        if !front {
+            fill(c, circle(36, 176, 40), .lilac)
+            fill(c, window, .dusk)
+            var inside = c
+            inside.clip(to: window)
+            var sun = inside
+            sun.opacity = 0.5
+            fill(sun, circle(150, 70, 22), .sun)
+            var fog = soft(inside)
+            for (x, y, rx, ry, hex, o) in [(120.0, 88.0, 92.0, 15.0, 0xE9E2F5, 0.85), (96, 128, 100, 17, 0xDCD3EE, 0.9), (150, 168, 92, 16, 0xF1ECF8, 0.9)]
+                as [(CGFloat, CGFloat, CGFloat, CGFloat, UInt32, Double)] {
+                fog.fill(ellipse(x, y, rx, ry), with: .color(Color(hex: hex).opacity(o)))
+            }
+        } else {
+            star(c, 186, 40, cream)
+        }
+    }
+
+    /// Clouds parting around the sun, a little sparkle by Xero's head (CLIN-01).
+    private static func clearerHead(_ c: GraphicsContext, _ front: Bool) {
+        if !front {
+            fill(c, rrect(66, 16, 150, 200, 40), .sky)
+            var glow = blurred(c)
+            glow.opacity = 0.5
+            glow.fill(circle(150, 70, 34), with: .color(Color(hex: 0xFFF6C8)))
+            fill(c, circle(150, 70, 20), .sun)
+            for (x, y, rx, ry) in [(104.0, 88.0, 30.0, 12.0), (90, 80, 16, 10), (198, 94, 26, 11), (208, 86, 14, 9)] as [(CGFloat, CGFloat, CGFloat, CGFloat)] {
+                c.fill(ellipse(x, y, rx, ry), with: .color(white))
+            }
+            fill(c, p("M-10 214 C40 176 120 168 214 180 V214 Z"), .mint)
+        } else {
+            star(c, 40, 100)
+            star(c, 100, 92, scale: 0.7)
+            plus(c, 180, 180)
+        }
+    }
+
+    /// Small pleasures coming back: a flower, a tune, Xero cheering (CLIN-01).
+    private static func rewardsReturn(_ c: GraphicsContext, _ front: Bool) {
+        if !front {
+            fill(c, circle(124, 112, 80), .apricot)
+            c.stroke(p("M146 98 C146 130 138 160 134 214"), with: .color(leafDeep), style: line(5))
+            leafEllipse(c, 156, 150, angle: -35)
+            for i in 0..<6 {
+                let a = Double(i) * .pi / 3
+                c.fill(circle(146 + 18 * CGFloat(cos(a)), 80 + 18 * CGFloat(sin(a)), 14), with: .color(Color(hex: 0xFF7E5A)))
+            }
+            fill(c, circle(146, 80, 13), .sun)
+            c.stroke(p("M58 66 V38 L76 33 V60"), with: .color(violet), style: line(4))
+            c.fill(ellipse(52, 66, 7, 5), with: .color(violet))
+            c.fill(ellipse(70, 60, 7, 5), with: .color(violet))
+        } else {
+            star(c, 186, 30)
+            plus(c, 186, 182)
         }
     }
 

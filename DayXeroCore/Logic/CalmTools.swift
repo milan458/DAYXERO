@@ -114,3 +114,27 @@ public enum DropAnchor {
         ("Come back to the room", "Look around. Notice where you are and what you're doing. Then carry on with it."),
     ]
 }
+
+/// "Don't I deserve a reward?" (CLIN-04, 2 Nov 2026): a defusion card for the moment after finishing a task or chore,
+/// when nicotine shows up dressed as a reward. Three steps: notice the thought, see what it's offering, pick a real
+/// reward. ACT-style, like Notice and name. Logged as a calm tool use with `toolID`.
+public enum RewardDefusion {
+    public static let toolID = "rewardDefusion"
+
+    public static let thought: LocalizedStringResource = "Don't I deserve a reward?"
+
+    public static let steps: [(title: LocalizedStringResource, body: LocalizedStringResource)] = [
+        ("Notice the thought",
+         "Say it this way: \u{201C}I'm noticing the thought that I deserve a reward.\u{201D} It's a thought, not an order."),
+        ("You do deserve one",
+         "The thought is right about that. It's just offering the old reward. Most of the lift nicotine gave was relief from the craving it caused in the first place."),
+        ("Pick a real one",
+         "Choose something that's a reward on its own, and give it to yourself now."),
+    ]
+
+    /// Rewards to pick from on the last step.
+    public static let rewards: [LocalizedStringResource] = [
+        "A proper tea or coffee", "Five minutes outside", "A song, loud", "A snack I love",
+        "Tell someone what I finished", "A stretch", "Ten minutes of something fun",
+    ]
+}

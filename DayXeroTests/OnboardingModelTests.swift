@@ -179,6 +179,18 @@ struct OnboardingModelTests {
         #expect(TimeSpent.hoursPerYear(.pouches, unitsPerDay: 10) == 0)
     }
 
+    /// The baseline summary's helper line: an 11 mg pouch counts as about 1.8 cigarettes, so 10 cigarettes and 8 pouches
+    /// is about 25 a day.
+    @Test func perUnitConversionExplainsTheTotal() {
+        let pouch = NicotineEstimate.cigarettesPerUnit(.pouches, strength: 11)
+        #expect(abs(pouch - 11.0 * 0.2 / 1.2) < 0.0001)
+        #expect(pouch.formatted(.number.precision(.fractionLength(0...1)).locale(Locale(identifier: "en_US"))) == "1.8")
+        #expect(Int((10 + 8 * pouch).rounded()) == 25)
+        #expect(NicotineEstimate.cigarettesPerUnit(.cigarettes, strength: nil) == 1)
+        #expect(Int((1 / NicotineEstimate.cigarettesPerUnit(.vape, strength: 50)).rounded()) == 10)
+        #expect(Int((1 / NicotineEstimate.cigarettesPerUnit(.vape, strength: 20)).rounded()) == 25)
+    }
+
     @Test func dailyMoneyAddsEveryProduct() {
         let model = makeModel()
         model.products = [.cigarettes, .vape]

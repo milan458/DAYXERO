@@ -1,7 +1,7 @@
 {
-  "version": "2.0.0",
+  "version": "2.1.0",
   "contentStatus": "draft",
-  "note": "On-screen content only. Spoken scripts live in the 'DayXero Program Scripts v2' doc and arrive later as audio files. Any user-facing string may be a variant object keyed default / smoking / vaping / pouches (and nrt where noted). See DAYXERO_PROGRAM_HANDOFF.md section 2.",
+  "note": "On-screen content only. Spoken scripts live in the 'DayXero Program Scripts v2' doc and arrive later as audio files. Any user-facing string may be a variant object keyed default / smoking / vaping / pouches (and nrt where noted). See DAYXERO_PROGRAM_HANDOFF.md section 2. Each session's 'cards' are the 90-second read shown where the audio goes (MON-04, draft): a front line and the idea on the back, written from the session's own copy.",
 
   "audio": {
     "folder": "Audio/Program",
@@ -13,7 +13,7 @@
     { "id": "prep",    "title": "Prep",     "subtitle": "Learn your habit. Keep using as normal.", "sessionIds": ["P1","P2","P3","P4","P5","P6","P7"] },
     { "id": "dayxero", "title": "Day Xero", "subtitle": "Your Quit Day.",                          "sessionIds": ["DX"] },
     { "id": "w1",      "title": "Week 1",   "subtitle": "Through the hardest stretch.",            "sessionIds": ["W1D1","W1D2","W1D3","W1D4","W1D5","W1D6","W1D7"] },
-    { "id": "w2",      "title": "Week 2",   "subtitle": "Rebuild your days.",                      "sessionIds": ["W2S1","W2S2","W2S3"] },
+    { "id": "w2",      "title": "Week 2",   "subtitle": "Rebuild your days.",                      "sessionIds": ["W2S1","W2S2","W2S4","W2S3"] },
     { "id": "w3",      "title": "Week 3",   "subtitle": "Hard moments, handled.",                  "sessionIds": ["W3S1","W3S2","W3S3"] },
     { "id": "w4",      "title": "Week 4",   "subtitle": "Who you are now.",                        "sessionIds": ["W4S1","W4S2","W4S3"] },
     { "id": "after",   "title": "After",    "subtitle": "Boosters for the months ahead.",          "sessionIds": ["B45","B60","B90"] }
@@ -26,6 +26,12 @@
       "title": "You don't have to quit today", "subtitle": "How the prep week works", "durationMinutes": 5,
       "unlock": { "rule": "first" },
       "audio": { "variants": ["smoking","vaping","pouches"] },
+      "cards": [
+        { "front": "Do I have to stop today?", "back": "No. For seven days you keep using as normal. Prep is for learning your habit, not fighting it." },
+        { "front": "Why does it feel like relief?", "back": "A lot of the relief is the restlessness from the last dose settling. Think of a battery running low, then topping up." },
+        { "front": "What's this week for?", "back": "Noticing. What came just before you used, and whether you really wanted it." },
+        { "front": "And then?", "back": "Your Quit Day. By then you'll know your habit, and you'll have a plan for it." }
+      ],
       "beats": [
         { "id": "P1.1", "type": "stat_reveal", "lines": [
           "At your current pace, that's about {yearly_units} {unit_plural} a year.",
@@ -51,6 +57,12 @@
       "title": "The first one of the day", "subtitle": "Loosen the morning routine", "durationMinutes": 5,
       "unlock": { "rule": "next_day_after_previous" },
       "audio": { "variants": ["smoking","vaping","pouches"] },
+      "cards": [
+        { "front": "Why does the first one feel strongest?", "back": "Your level drops overnight, so the first top-up of the day is the one you feel most." },
+        { "front": "Is it even a choice?", "back": "Often it's automatic: wake up, coffee, nicotine. The routine decides before you do." },
+        { "front": "What's a gap?", "back": "A short wait between your morning moment and your first nicotine. 15 minutes, or 5 if that's what feels doable." },
+        { "front": "Why bother before Quit Day?", "back": "A small gap shows your brain the morning still works without it. It's practice, not a test." }
+      ],
       "beats": [
         { "id": "P2.1", "type": "choice", "prompt": "Which moment will you put a gap after?", "multi": false, "allowOther": true,
           "options": [
@@ -79,6 +91,12 @@
       "listenHint": "Best heard just before you'd use anyway.",
       "unlock": { "rule": "next_day_after_previous" },
       "audio": { "variants": ["smoking","vaping","pouches"] },
+      "cards": [
+        { "front": "Where's your attention when you use?", "back": "Usually somewhere else: a phone, a chat, the next thing. Most uses happen on autopilot." },
+        { "front": "This time, nothing else", "back": "One session with no phone and full attention. You're not cutting down, just looking." },
+        { "front": "What to notice", "back": {"default": "The taste, the feeling in your throat or chest, and how long the good part really lasts.", "pouches": "The taste, the feeling on your gum, and how long the good part really lasts."} },
+        { "front": "Expected or actual?", "back": "You'll rate how good you expect it to feel. Afterwards, compare. The gap is worth knowing." }
+      ],
       "beats": [
         { "id": "P3.1", "type": "slider", "prompt": "How good do you expect your next one to feel?", "minLabel": "Not good at all", "maxLabel": "Really good", "saveAs": "mindful_expected" }
       ],
@@ -111,6 +129,12 @@
       "title": "The stress loop", "subtitle": "A breath that works in the moment", "durationMinutes": 6,
       "unlock": { "rule": "next_day_after_previous" },
       "audio": { "variants": ["smoking","vaping","pouches"] },
+      "cards": [
+        { "front": "Does nicotine calm stress?", "back": "It settles the restlessness that builds between doses. The stress itself is still there." },
+        { "front": "The loop", "back": "Stress, then restlessness, then nicotine, then relief that feels like it fixed the stress. Round it goes." },
+        { "front": "A breath for stress", "back": "A deep breath in, a short top-up breath, then a long, slow breath out. Two or three of them." },
+        { "front": "Keep the break", "back": "You need a break when things get hard. You can keep the break and drop the nicotine." }
+      ],
       "beats": [
         { "id": "P4.1", "type": "slider", "position": "before_audio", "prompt": "How tense do you feel right now?", "minLabel": "Calm", "maxLabel": "Very tense", "saveAs": "tension_before" },
         { "id": "P4.2", "type": "slider", "prompt": "And now?", "minLabel": "Calm", "maxLabel": "Very tense", "saveAs": "tension_after", "compareWith": "tension_before", "compareLabels": ["Before", "After"] },
@@ -129,6 +153,12 @@
       "title": "Riding the wave", "subtitle": "The skill that matters most", "durationMinutes": 6,
       "unlock": { "rule": "next_day_after_previous" },
       "audio": { "variants": ["default"] },
+      "cards": [
+        { "front": "If you don't use, what does a craving do?", "back": "It rises, peaks and fades, usually within a few minutes. Every wave breaks." },
+        { "front": "Do I need willpower?", "back": "Not to win a fight. You only need to stay on the board until it passes." },
+        { "front": "Catch it early", "back": "Notice where you feel it first: chest, hands, mouth, mood. Your early signal lets you catch the wave sooner." },
+        { "front": "Your tool", "back": "Craving SOS rides it out with you for a few minutes. Open it before you decide anything." }
+      ],
       "beats": [
         { "id": "P5.1", "type": "breathe", "pattern": "wave", "cycles": 2, "label": "Try one now, even without a craving." },
         { "id": "P5.2", "type": "quiz", "prompt": "If you don't use, a craving…",
@@ -153,6 +183,12 @@
       "title": "Make it easy on yourself", "subtitle": "Set up your space and your support", "durationMinutes": 6,
       "unlock": { "rule": "next_day_after_previous" },
       "audio": { "variants": ["smoking","vaping","pouches"] },
+      "cards": [
+        { "front": "Willpower gets tired", "back": "Don't make every craving a decision. Make the easy choice the obvious one." },
+        { "front": "Harder to reach", "back": "Move your nicotine to one inconvenient spot. A few extra steps give a craving time to pass." },
+        { "front": "Your quit kit", "back": "Water, gum, something for your hands. Put it where your nicotine used to be." },
+        { "front": "Support counts", "back": "NRT, and a person who knows your Quit Day. You don't have to do this alone." }
+      ],
       "beats": [
         { "id": "P6.1", "type": "checklist", "title": "Make it harder to reach", "saveAs": "friction_checklist",
           "items": {
@@ -187,6 +223,12 @@
       "listenHint": "Best heard in the evening.",
       "unlock": { "rule": "next_day_after_previous" },
       "audio": { "variants": ["smoking","vaping","pouches"] },
+      "cards": [
+        { "front": "Tomorrow is Day Xero", "back": "Tonight is about getting ready, not saying goodbye." },
+        { "front": "Clear it out", "back": {"default": "Everything goes: the spares, the backup in a drawer or the car.", "vaping": "Everything goes: spares, pods, the backup in a drawer or the car. Vapes have batteries, so take them to a recycling point, not the bin."} },
+        { "front": "Make the last one conscious", "back": "If you use tonight, do it with your eyes open, like in Prep 3. Then you're done." },
+        { "front": "A line to tomorrow-you", "back": "You'll read it in the morning. Make it something you'll want to hear." }
+      ],
       "beats": [
         { "id": "P7.1", "type": "checklist", "title": "Last clear-out", "carryOverFrom": "friction_checklist", "saveAs": "clearout_checklist",
           "items": {
@@ -207,6 +249,12 @@
       "listenHint": "Best heard in the morning.",
       "unlock": { "rule": "day_xero" },
       "audio": { "variants": ["smoking","vaping","pouches"] },
+      "cards": [
+        { "front": "Today is Day 1", "back": "Your counter starts today. Nothing that came before changes that." },
+        { "front": "What today might bring", "back": "Cravings, restlessness, trouble focusing, feeling hungrier. Signs your body is adjusting, usually strongest in the first days." },
+        { "front": "Every craving passes", "back": "Each one comes and goes within minutes. Tap “It passed” for every one you ride out." },
+        { "front": "Small pieces", "back": "Don't think about forever. Just this morning, then this afternoon. Craving SOS is one tap away." }
+      ],
       "beats": [
         { "id": "DX.1", "type": "note", "position": "before_audio", "title": "From you, last night", "textFrom": "note_to_dayxero", "skipIfEmpty": true },
         { "id": "DX.2", "type": "commit", "text": "Hold to start Day Xero.", "holdSeconds": 3, "sets": "quit_timestamp" },
@@ -228,6 +276,12 @@
       "title": "Look after the basics", "subtitle": "Food, water, sleep", "durationMinutes": 3,
       "unlock": { "rule": "days_since_quit", "minDay": 1 },
       "audio": { "variants": ["default"] },
+      "cards": [
+        { "front": "Why the basics, now?", "back": "Hungry, thirsty and tired can all feel a bit like a craving. Look after them and cravings are easier to spot." },
+        { "front": "Hungrier than usual?", "back": "Common in the first weeks. Keep easy snacks around: fruit, nuts, crunchy veg." },
+        { "front": "Water close by", "back": "A glass of water gives your hands and mouth something to do while a wave passes." },
+        { "front": "Sleep a bit off?", "back": "Sleep can change for a while. It usually settles within a few weeks." }
+      ],
       "beats": [
         { "id": "W1D1.1", "type": "slider_group", "prompt": "Quick check-in",
           "items": [
@@ -249,6 +303,12 @@
       "title": "The noisy passengers", "subtitle": "Let them talk. Keep driving.", "durationMinutes": 3,
       "unlock": { "rule": "days_since_quit", "minDay": 2 },
       "audio": { "variants": ["default"] },
+      "cards": [
+        { "front": "You're the driver", "back": "Craving thoughts are passengers on your bus. Some loud, some sneaky." },
+        { "front": "Arguing doesn't help", "back": "Fight a thought and it gets louder. You don't have to win the argument." },
+        { "front": "Let them talk", "back": "Notice the thought, name it, keep driving. It can shout. It can't steer." },
+        { "front": "Have a reply ready", "back": "A calm line for the loudest one, like “I hear you. Still not stopping.”" }
+      ],
       "beats": [
         { "id": "W1D2.1", "type": "reflect", "prompt": "What do your loudest passengers say?", "placeholder": "“Just one won't hurt.”", "saveAs": "passengers", "length": "short", "maxEntries": 3 },
         { "id": "W1D2.2", "type": "reflect", "prompt": "What do you say back, calmly, while you keep driving?", "placeholder": "I hear you. Still not stopping.", "saveAs": "passenger_reply", "length": "short" },
@@ -269,6 +329,12 @@
       "title": "Lower the bar", "subtitle": "Getting through the toughest stretch", "durationMinutes": 3,
       "unlock": { "rule": "days_since_quit", "minDay": 3 },
       "audio": { "variants": ["default"] },
+      "cards": [
+        { "front": "The toughest stretch", "back": "The first few days are often the hardest. You're in them now, and it gets lighter from here." },
+        { "front": "Lower the bar", "back": "Today, getting through is enough. It doesn't have to be a good day." },
+        { "front": "Decide now", "back": "Pick what you'll do if today gets hard, so you don't have to decide in the moment." },
+        { "front": "Move a little", "back": "Five minutes counts. A walk, the stairs, a stretch." }
+      ],
       "beats": [
         { "id": "W1D3.1", "type": "note", "title": "Your reasons", "textFrom": "reasons", "highlightFrom": "primary_reason" },
         { "id": "W1D3.2", "type": "plan_builder", "prompt": "If today gets hard, then I will…", "saveAs": "rough_day_plan",
@@ -285,6 +351,12 @@
       "title": "If things feel flat", "subtitle": "Small lifts that add up", "durationMinutes": 3,
       "unlock": { "rule": "days_since_quit", "minDay": 4 },
       "audio": { "variants": ["default"] },
+      "cards": [
+        { "front": "Feeling flat?", "back": "Some days just feel grey. It's common early on, and it passes." },
+        { "front": "Why it happens", "back": "Nicotine was a quick lift many times a day. You're finding other lifts now." },
+        { "front": "Small lifts add up", "back": "Daylight, music, a call, cold water on your face. Small things, often." },
+        { "front": "Pick them while you're okay", "back": "Choose your lifts now, so they're ready on a flat day." }
+      ],
       "beats": [
         { "id": "W1D4.1", "type": "choice", "prompt": "Pick three lifts for flat days.", "multi": true, "pick": 3, "saveAs": "mood_lifts",
           "options": [
@@ -304,6 +376,12 @@
       "title": "Nights out", "subtitle": "Plan it while you're clear-headed", "durationMinutes": 4,
       "unlock": { "rule": "days_since_quit", "minDay": 5 },
       "audio": { "variants": ["smoking","vaping","pouches"] },
+      "cards": [
+        { "front": "Why nights out are tricky", "back": "Alcohol makes slips more likely for many people, and others may be using around you." },
+        { "front": "Plan while you're clear-headed", "back": "Decide before you go, not when someone's offering." },
+        { "front": "Your no-line", "back": "“No thanks, I've stopped.” Clear and done. That's the strongest answer." },
+        { "front": "If it happens", "back": "A slip, not a reset. Log it and keep going." }
+      ],
       "beats": [
         { "id": "W1D5.1", "type": "scenario", "prompt": "Someone offers you one at a party. You say…",
           "options": [
@@ -327,6 +405,12 @@
       "title": "“Just one”", "subtitle": "Play the tape forward", "durationMinutes": 4,
       "unlock": { "rule": "days_since_quit", "minDay": 6 },
       "audio": { "variants": ["default"] },
+      "cards": [
+        { "front": "“Just one won't hurt”", "back": "Play the tape forward: one, then this weekend, then whenever you're stressed." },
+        { "front": "“I've proven I can quit”", "back": "You have. Keep the proof." },
+        { "front": "“I'll stop again tomorrow”", "back": "Tomorrow-you gets a louder craving to deal with. Be kind to them." },
+        { "front": "And if you do have one?", "back": "Your progress stays. You log the slip and keep going." }
+      ],
       "beats": [
         { "id": "W1D6.1", "type": "tap_reveal", "cards": [
           { "front": "“Just one won't hurt”", "back": "Play the tape forward: one, then this weekend, then whenever I'm stressed." },
@@ -350,6 +434,12 @@
       "title": "One week", "subtitle": "Look back, then look ahead", "durationMinutes": 3,
       "unlock": { "rule": "days_since_quit", "minDay": 7 },
       "audio": { "variants": ["default"] },
+      "cards": [
+        { "front": "One week", "back": "Seven days ago this was Day Xero. Look how far that is." },
+        { "front": "What helped?", "back": "Name the one thing that helped most. That's the one to keep reaching for." },
+        { "front": "Each wave counts", "back": "Every craving you rode out this week was practice. The skill is yours now." },
+        { "front": "Tell someone", "back": "Saying it out loud makes it real. Optional, but it feels good." }
+      ],
       "beats": [
         { "id": "W1D7.1", "type": "stat_reveal", "lines": ["{days_free} days free.", "{money_kept} kept.", "{cravings_ridden} cravings ridden out."] },
         { "id": "W1D7.2", "type": "reflect", "prompt": "What helped most this week?", "saveAs": "week1_helped", "length": "short", "optional": true,
@@ -365,6 +455,12 @@
       "title": "The empty minutes", "subtitle": "Build a break menu", "durationMinutes": 4,
       "unlock": { "rule": "days_since_quit", "minDay": 8 },
       "audio": { "variants": ["smoking","vaping","pouches"] },
+      "cards": [
+        { "front": "The empty minutes", "back": "Waiting, breaks, scrolling. Nicotine used to fill them. Now they're just empty." },
+        { "front": "Boredom is a trigger", "back": "An empty minute with nothing planned is when a craving finds room." },
+        { "front": "A break menu", "back": "A short list of easy things to do instead: step outside, make a proper tea, stretch, text someone." },
+        { "front": "Ready on Craving SOS", "back": "Your menu shows up on Craving SOS, so when boredom hits, the next step is already there." }
+      ],
       "beats": [
         { "id": "W2S1.1", "type": "choice", "prompt": "Pick three for your break menu.", "multi": true, "pick": 3, "saveAs": "break_menu",
           "options": [
@@ -383,6 +479,12 @@
       "title": "Sleep and strange dreams", "subtitle": "Set up a wind-down", "durationMinutes": 4,
       "unlock": { "rule": "days_since_quit", "minDay": 10 },
       "audio": { "variants": ["smoking","vaping","pouches"] },
+      "cards": [
+        { "front": "Sleep a bit off?", "back": "Sleep can be unsettled for a while after quitting. It usually settles within a few weeks." },
+        { "front": "Dreamt you used?", "back": "It's common after quitting. A dream isn't a slip. Let it go and start your day." },
+        { "front": "A wind-down", "back": "The same few steps each night: screens off, a shower, slow breathing. Your body learns the cue." },
+        { "front": "Small changes", "back": "Same bedtime, no caffeine after lunch, water by the bed. Pick what fits." }
+      ],
       "beats": [
         { "id": "W2S2.1", "type": "quiz", "prompt": "You dreamt you used. What does it mean?",
           "options": [
@@ -403,10 +505,57 @@
     },
 
     {
+      "id": "W2S4", "phaseId": "w2", "label": "Day 13",
+      "title": "The flat days", "subtitle": "Brain fog, low spark, and why it lifts", "durationMinutes": 4,
+      "unlock": { "rule": "days_since_quit", "minDay": 12 },
+      "audio": { "variants": ["default"] },
+      "cards": [
+        { "front": "Things feel flat?", "back": "Many people notice ordinary things feel a bit grey for a while, somewhere around weeks 2 to 6. It takes time to find your own level." },
+        { "front": "Brain fog", "back": "Slow, foggy or forgetful days are common too. Many people notice their head clearing bit by bit over the weeks after." },
+        { "front": "“One would fix this”", "back": "It would lift you for a few minutes. Riding out the flat days is how they end." },
+        { "front": "Small and steady", "back": "On foggy days, keep it simple: one task at a time, daylight, a short walk, proper meals." }
+      ],
+      "beats": [
+        { "id": "W2S4.1", "type": "tap_reveal", "title": "What many people notice",
+          "cards": [
+            { "front": "Things feel flat", "back": "Many people notice ordinary things feel a bit grey for a while, somewhere around weeks 2 to 6. Your reward system got a top-up many times a day; it takes time to find its own level." },
+            { "front": "Brain fog", "back": "Slow, foggy or forgetful days are common too. Many people notice their head clearing bit by bit over the weeks that follow." },
+            { "front": "It's not forever", "back": "Timing varies a lot, and the research on it is still thin. What people describe most is that the flat patches get shorter and further apart." } ],
+          "footer": "Flat days are a sign of adjusting, not a sign your quit isn't working." },
+        { "id": "W2S4.2", "type": "quiz", "prompt": "A flat afternoon, and a thought says: one would fix this. What's closer to the truth?",
+          "options": [
+            { "id": "a", "text": "Nicotine was what made me happy" },
+            { "id": "b", "text": "I'll never feel normal without it" },
+            { "id": "c", "text": "My brain is recalibrating. The flat patch passes" } ],
+          "correctId": "c",
+          "feedback": "Right. One would lift you for a few minutes. Riding out the flat days is how they end." },
+        { "id": "W2S4.3", "type": "choice", "prompt": "Pick two fog-friendly habits for this week.", "multi": true, "pick": 2, "saveAs": "fog_habits",
+          "options": [
+            { "id": "list", "text": "A three-line to-do list each morning" }, { "id": "one", "text": "One task at a time" },
+            { "id": "daylight", "text": "Daylight in the first hour" }, { "id": "move", "text": "Ten minutes of movement" },
+            { "id": "bedtime", "text": "A regular bedtime" }, { "id": "meals", "text": "Proper meals and water" },
+            { "id": "lift", "text": "One of my lifts from Day 5" } ],
+          "feedback": "Saved. Small and steady beats big and brave on foggy days." },
+        { "id": "W2S4.4", "type": "slider", "prompt": "How clear does your head feel this week?", "minLabel": "Very foggy", "maxLabel": "Clear", "saveAs": "fog_w2" },
+        { "id": "W2S4.5", "type": "info", "title": "If the low stays",
+          "body": "If you feel low most days for two weeks or more, or it's getting in the way of life, talk to a doctor. Feeling down after quitting is common, and it's very treatable.",
+          "link": "helplines" }
+      ],
+      "mission": { "text": "On a flat moment today, do one of your fog-friendly habits, then notice how you feel ten minutes later." },
+      "completionText": "Flat days are part of healing. They lift."
+    },
+
+    {
       "id": "W2S3", "phaseId": "w2", "label": "Day 15",
       "title": "Two weeks: what's changed", "subtitle": "Notice the quiet changes", "durationMinutes": 4,
       "unlock": { "rule": "days_since_quit", "minDay": 14 },
       "audio": { "variants": ["smoking","vaping","pouches"] },
+      "cards": [
+        { "front": "Two weeks", "back": "Fourteen days. The first stretch is behind you." },
+        { "front": "Quiet changes", "back": {"default": "Some people notice food tastes better, or stairs feel easier. A lot of change is quiet.", "smoking": "Some people notice food tastes better, things smell stronger, or stairs feel easier. A lot of change is quiet."} },
+        { "front": "Not much yet?", "back": "That's okay. Check again next week." },
+        { "front": "Spend a little", "back": "Some of the money you've kept is for you. Something small counts." }
+      ],
       "beats": [
         { "id": "W2S3.1", "type": "stat_reveal", "lines": ["{days_free} days free.", "{money_kept} kept.", "{cravings_ridden} cravings ridden out."] },
         { "id": "W2S3.2", "type": "choice", "prompt": "What have you noticed?", "multi": true, "saveAs": "changes_w2",
@@ -434,6 +583,12 @@
       "title": "When life gets heavy", "subtitle": "Make room for big feelings", "durationMinutes": 5,
       "unlock": { "rule": "days_since_quit", "minDay": 16 },
       "audio": { "variants": ["default"] },
+      "cards": [
+        { "front": "Life still gets heavy", "back": "Worry, grief, an argument. Heavy things still happen without nicotine." },
+        { "front": "Make room", "back": "Instead of pushing a feeling away, let it be there for 60 seconds. Breathe around it." },
+        { "front": "Feelings pass too", "back": "They rise and fall, a bit like cravings. You can make room for them." },
+        { "front": "If it stays heavy", "back": "If a heavy feeling stays with you for weeks, talking to a doctor or someone you trust can really help." }
+      ],
       "beats": [
         { "id": "W3S1.1", "type": "slider", "position": "before_audio", "prompt": "Think of something on your mind. How heavy does it feel?", "minLabel": "Light", "maxLabel": "Very heavy", "saveAs": "heavy_before" },
         { "id": "W3S1.2", "type": "slider", "prompt": "And now?", "minLabel": "Light", "maxLabel": "Very heavy", "saveAs": "heavy_after", "compareWith": "heavy_before", "compareLabels": ["Before", "After"] },
@@ -451,6 +606,12 @@
       "title": "Out of nowhere", "subtitle": "When an old cue fires", "durationMinutes": 4,
       "unlock": { "rule": "days_since_quit", "minDay": 19 },
       "audio": { "variants": ["smoking","vaping","pouches"] },
+      "cards": [
+        { "front": "Out of nowhere", "back": "Weeks in, a smell, a place or a person can bring back a strong craving. That's an old cue firing." },
+        { "front": "Not back at the start", "back": "An old cue isn't a sign it's not working. Old cue, same skill." },
+        { "front": "Name it, ride it", "back": "Call it an old cue, out loud or in your head, and ride the wave." },
+        { "front": "Smaller each time", "back": "Each time you ride one out, the next tends to be smaller." }
+      ],
       "beats": [
         { "id": "W3S2.1", "type": "quiz", "prompt": "A strong craving hits after you smell smoke. That means…",
           "options": [
@@ -475,6 +636,12 @@
       "title": "Three weeks: you're rewiring", "subtitle": "Your toolkit so far", "durationMinutes": 4,
       "unlock": { "rule": "days_since_quit", "minDay": 21 },
       "audio": { "variants": ["default"] },
+      "cards": [
+        { "front": "Three weeks", "back": "Twenty-one days of doing things differently. You're rewiring." },
+        { "front": "Your toolkit", "back": "Your no-line, your break menu, your hard-day line, your wind-down. All yours now." },
+        { "front": "What works for you", "back": "Notice which tool helps most. Reach for that one first." },
+        { "front": "Share one thing", "back": "Tell someone one thing that's changed. It helps it stick." }
+      ],
       "beats": [
         { "id": "W3S3.1", "type": "stat_reveal", "lines": ["{days_free} days free.", "{money_kept} kept.", "{cravings_ridden} cravings ridden out."] },
         { "id": "W3S3.2", "type": "tap_reveal", "title": "Your toolkit", "cards": [
@@ -499,6 +666,12 @@
       "title": "Your body, moving forward", "subtitle": "Movement, appetite and next steps", "durationMinutes": 4,
       "unlock": { "rule": "days_since_quit", "minDay": 24 },
       "audio": { "variants": ["default", "nrt"] },
+      "cards": [
+        { "front": "Change the channel", "back": "A few minutes of movement, like a brisk walk or the stairs, can help a craving pass." },
+        { "front": "Appetite", "back": "Feeling hungrier is common. Regular meals and easy snacks help." },
+        { "front": "Using NRT?", "back": "Follow the step-down plan on your product's label. We'll remind you on each date." },
+        { "front": "Pick a way to move", "back": "Choose one for this week. It'll show up on Craving SOS." }
+      ],
       "beats": [
         { "id": "W4S1.1", "type": "choice", "prompt": "Pick a way to move this week.", "multi": false, "saveAs": "move_choice",
           "options": [
@@ -526,6 +699,12 @@
       "title": "If you ever slip", "subtitle": "The one-minute plan", "durationMinutes": 4,
       "unlock": { "rule": "days_since_quit", "minDay": 27 },
       "audio": { "variants": ["smoking","vaping","pouches"] },
+      "cards": [
+        { "front": "“I slipped, so I've failed”", "back": "You haven't. Many people who quit for good slipped along the way." },
+        { "front": "“I might as well keep going”", "back": "That's the thought that turns a slip into a return. Stop here." },
+        { "front": "The one-minute plan", "back": "Stop, log it, and pick one thing to try next time." },
+        { "front": "Nothing resets", "back": "Your days, your progress and your program stay as they are." }
+      ],
       "beats": [
         { "id": "W4S2.1", "type": "slip_debrief_practice",
           "intro": "Let's run through it once, so it feels familiar.",
@@ -551,6 +730,12 @@
       "title": "Graduation", "subtitle": "“I don't use nicotine”", "durationMinutes": 5,
       "unlock": { "rule": "days_since_quit", "minDay": 30 },
       "audio": { "variants": ["smoking","vaping","pouches"] },
+      "cards": [
+        { "front": "You did the program", "back": "Prep, Day Xero and four weeks after. All of it." },
+        { "front": "Who you are now", "back": "Not “I'm trying to quit”. Pick a line that's yours, like “I don't use nicotine”." },
+        { "front": "Your plan", "back": "Your cues, your no-line, your tools. It stays with you." },
+        { "front": "Always here", "back": "Craving SOS, your plan and your milestones don't go anywhere." }
+      ],
       "beats": [
         { "id": "W4S3.1", "type": "choice", "prompt": "Pick the line that's yours.", "multi": false, "allowOther": true, "saveAs": "identity_statement",
           "options": {
@@ -574,6 +759,12 @@
       "note": "DRAFT booster (S27.18, 1 Nov 2026) for Milan to review. Reuses only existing, already-sourced program material: the wave breath (P5), the old-cue quiz and cues list (W3S2). No new health claims. No recording yet, so the audio step is skipped.",
       "unlock": { "rule": "days_since_quit", "minDay": 44 },
       "audio": { "variants": ["default"] },
+      "cards": [
+        { "front": "Six weeks in", "back": "A craving can still show up out of nowhere. That's an old cue firing." },
+        { "front": "Same skill", "back": "Ride it like the first ones. Every wave still breaks." },
+        { "front": "Know your cues", "back": "A smell, a person, a place, stress at work. Knowing them is half the defence." },
+        { "front": "Rate the peak", "back": "After a surprise craving, rate how strong it got. Watching the numbers is useful." }
+      ],
       "beats": [
         { "id": "B45.1", "type": "breathe", "pattern": "wave", "cycles": 2, "label": "One wave now, to keep the skill fresh." },
         { "id": "B45.2", "type": "quiz", "prompt": "A strong craving shows up weeks after your Quit Day. That means…",
@@ -601,6 +792,12 @@
       "note": "DRAFT booster (S27.18, 1 Nov 2026) for Milan to review. Reuses only existing, already-sourced program material: the tension sliders and sighs (P4) and two of P4's cards. No new health claims. No recording yet, so the audio step is skipped.",
       "unlock": { "rule": "days_since_quit", "minDay": 59 },
       "audio": { "variants": ["default"] },
+      "cards": [
+        { "front": "Stress still happens", "back": "Life doesn't get stress-free. What changes is what you reach for." },
+        { "front": "Keep the break", "back": "You need a break when things get hard. You can keep the break." },
+        { "front": "Your breath for stress", "back": "Two sighs first: a deep breath in, a short top-up, a long slow breath out." },
+        { "front": "Calmer over time", "back": "It can feel harder in the first days. Over time, many people who quit feel calmer than before." }
+      ],
       "beats": [
         { "id": "B60.1", "type": "slider", "prompt": "How tense do you feel right now?", "minLabel": "Calm", "maxLabel": "Very tense", "saveAs": "tension_b60_before" },
         { "id": "B60.2", "type": "breathe", "pattern": "sigh", "cycles": 3, "label": "Two sighs, then one more, with the ring." },
@@ -621,6 +818,12 @@
       "note": "DRAFT booster (S27.18, 1 Nov 2026) for Milan to review. Reuses only existing, already-sourced program material: the slip quiz and cards (W4S2) and the plan card (W4S3). No new health claims. No recording yet, so the audio step is skipped.",
       "unlock": { "rule": "days_since_quit", "minDay": 89 },
       "audio": { "variants": ["default"] },
+      "cards": [
+        { "front": "Three months", "back": "Ninety days. Staying quit is your everyday now." },
+        { "front": "If a slip happens", "back": "Stop, log it, and pick one thing to try next time." },
+        { "front": "Nothing resets", "back": "A slip is one moment, not a verdict. Your progress stays." },
+        { "front": "Keep your plan close", "back": "It's here, and so is Craving SOS, whenever you need them." }
+      ],
       "beats": [
         { "id": "B90.1", "type": "quiz", "prompt": "After a slip, the most helpful thing is…",
           "options": [

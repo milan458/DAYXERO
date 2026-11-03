@@ -146,7 +146,7 @@ jobs:
           shoot light large v4-slip-done-light -dx.homeScenario day12 -dx.store pro -dx.logSheet slip -dx.slipStage done
           # Phase 3: the lesson (W1D2, light and dark), every other beat type (light), Program and Progress.
           L="-dx.homeScenario day3 -dx.store pro"
-          for step in intro audio W1D2.1 W1D2.3 mission completion; do
+          for step in intro cards audio W1D2.1 W1D2.3 mission completion; do
             WAIT=8 shoot light large "v4-lesson-$step-light" $L -dx.openSession W1D2 -dx.sessionBeat "$step"
             WAIT=8 shoot dark large "v4-lesson-$step-dark" $L -dx.openSession W1D2 -dx.sessionBeat "$step"
           done
@@ -154,6 +154,7 @@ jobs:
             WAIT=8 shoot light large "v4-beat-$beat-light" $L -dx.openSession "${beat%%.*}" -dx.sessionBeat "$beat"
           done
           WAIT=8 shoot light accessibility-extra-extra-extra-large v4-lesson-intro-light-ax5 $L -dx.openSession W1D2 -dx.sessionBeat intro
+          WAIT=8 shoot light accessibility-extra-extra-extra-large v4-lesson-cards-light-ax5 $L -dx.openSession W1D2 -dx.sessionBeat cards
           for mode in light dark; do
             shoot $mode large "v4-program-$mode" $L -dx.tab program
             shoot $mode large "v4-progress-$mode" $L -dx.tab progress

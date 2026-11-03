@@ -14,6 +14,8 @@ struct NRTSetupView: View {
         /// Gum and lozenges: the strength on the pack; label steps change how often, not the strength.
         var strength: Double = 2
         var steps: [PlanStep] = []
+        /// Patches (CLIN-03): off at bedtime (16 hours) instead of on overnight (24).
+        var offAtBedtime = false
         var id: NRTType { type }
     }
 
@@ -22,6 +24,8 @@ struct NRTSetupView: View {
     }
 
     @Environment(\.modelContext) private var context
+    @Environment(Entitlement.self) private var entitlement: Entitlement?
+    @State private var showPaywall = false
     @State private var stage = Stage.intro
     @State private var chosen: [NRTType] = []
     @State private var drafts: [Draft] = []
@@ -96,6 +100,7 @@ struct NRTSetupView: View {
             }
         }
         .sensoryFeedback(DX.Haptic.commit, trigger: saved)
+        .fullProgramPaywall(isPresented: $showPaywall, profile: profile)
         .sheet(item: $editing) { item in
             // The step may be gone while the sheet closes after "Remove this step".
             if drafts.indices.contains(item.draft), drafts[item.draft].steps.indices.contains(item.index) {
@@ -114,10 +119,22 @@ struct NRTSetupView: View {
 
     // MARK: Stages
 
+    /// The NRT scheduler is part of the full program (MON-01). Every way in lands here, so the intro is the one lock;
+    /// the facts on it stay free, and plans already made keep their reminders.
+    private var schedulerUnlocked: Bool {
+        FullProgram.has(.nrtScheduler, isPro: entitlement?.isPro ?? Entitlement.isProNow)
+    }
+
     private var intro: some View {
-        page(button: "Set up my NRT", action: { stage = .products }) {
+        page(button: schedulerUnlocked ? "Set up my NRT" : "Unlock the full program",
+             action: { if schedulerUnlocked { stage = .products } else { showPaywall = true } }) {
             Text("Keep your NRT on track").v4Text(.title)
             Text("Tell us what's on your pack. We'll remind you to change patches and when each step down is due.").v4Text(.subtitle)
+            if !schedulerUnlocked {
+                Label("The 12-week NRT schedule comes with the full program.", systemImage: "lock.fill")
+                    .dxFont(14, weight: 600, style: .footnote).foregroundStyle(Read4.ink)
+                    .padding(.top, DX.Space.xxs)
+            }
             if PregnancyAnswer.stored == .yes {
                 // S27.6: answered "Yes" to pregnant or breastfeeding in onboarding.
                 Label {
@@ -252,6 +269,12 @@ struct NRTSetupView: View {
                 drafts[i].steps.append(PlanStep(strengthMg: last?.strengthMg ?? 0, weeks: 2))
             } label: { Label("Add a step", systemImage: "plus") }
                 .buttonStyle(.dx(.quiet, on: .reading))
+            if draft.type == .patch {
+                PatchNightChoice(offAtBedtime: $drafts[i].offAtBedtime).padding(.top, DX.Space.xs)
+            }
+            if draft.type == .gum {
+                ChewAndParkGuide().padding(.top, DX.Space.xs)
+            }
             LabelNotice()
         }
     }
@@ -391,6 +414,8 @@ struct NRTSetupView: View {
     private func choose(_ preset: NRTPreset, for i: Int) {
         drafts[i].presetID = preset.id
         drafts[i].steps = steps(of: preset, strength: drafts[i].strength)
+        // A 16-hour pack is worn from morning to bedtime.
+        if drafts[i].type == .patch { drafts[i].offAtBedtime = preset.id.contains("patch-16") }
     }
 
     /// A new country clears any label from the old one; steps typed in by hand are kept.
@@ -435,6 +460,7 @@ struct NRTSetupView: View {
                                dailyReminderMinute: dailyOn ? minute : nil,
                                pieceReminderHours: draft.type == .gum || draft.type == .lozenge ? pieceHours : nil,
                                stepReminders: stepRemindersOn)
+            if draft.type == .patch { plan.offAtBedtime = draft.offAtBedtime }
             profile.nrtPlans.append(plan)
         }
         try? context.save()
@@ -568,5 +594,77 @@ struct SourceLink: View {
         // A 44 pt target, as every tappable thing has (S27.20).
         .frame(minHeight: DX.Layout.touchTarget, alignment: .leading)
         .contentShape(Rectangle())
+    }
+}
+
+/// Patches at night (CLIN-03): on overnight (24 hours) or off at bedtime (16). Picking off at bedtime adds a
+/// "Patch off for the night" reminder 16 hours after the fresh-patch time.
+struct PatchNightChoice: View {
+    @Binding var offAtBedtime: Bool
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: DX.Space.xs) {
+            Text("At night").v4Text(.micro)
+            option(false, title: "Keep it on overnight", detail: NRTUseGuide.overnightDetail, hours: 24)
+            option(true, title: "Take it off at bedtime", detail: NRTUseGuide.bedtimeDetail, hours: 16)
+        }
+    }
+
+    private func option(_ value: Bool, title: LocalizedStringKey, detail: LocalizedStringResource, hours: Int) -> some View {
+        let on = offAtBedtime == value
+        return Button { offAtBedtime = value } label: {
+            HStack(alignment: .top, spacing: DX.Space.s) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title).dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.ink)
+                    Text("\(hours) hours").v4Text(.micro)
+                    Text(detail).v4Text(.subtitle).fixedSize(horizontal: false, vertical: true)
+                }
+                .multilineTextAlignment(.leading)
+                Spacer(minLength: DX.Space.xs)
+                Image(systemName: on ? "checkmark.circle.fill" : "circle")
+                    .font(.system(size: 22))
+                    .foregroundStyle(on ? Read4.accent : Read4.faint)
+                    .accessibilityHidden(true)
+            }
+            .padding(14)
+            .background(Read4.card, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous)
+                .strokeBorder(on ? Read4.accent : Read4.hairline, lineWidth: on ? 1.5 : 1))
+        }
+        .buttonStyle(.plain)
+        .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(on ? [.isButton, .isSelected] : .isButton)
+    }
+}
+
+/// "Chew and park" (CLIN-03): how nicotine gum is meant to be used, in four steps and one tip.
+struct ChewAndParkGuide: View {
+    var body: some View {
+        V4Card(padding: 14) {
+            VStack(alignment: .leading, spacing: DX.Space.s) {
+                Text("How to use it: chew and park").v4Text(.micro)
+                ForEach(Array(NRTUseGuide.chewAndPark.enumerated()), id: \.offset) { index, step in
+                    HStack(alignment: .top, spacing: DX.Space.s) {
+                        Text(verbatim: "\(index + 1)")
+                            .dxFont(12, weight: 700, style: .caption1)
+                            .foregroundStyle(Read4.onInk)
+                            .frame(width: 28, height: 28)
+                            .background(Read4.ink, in: Circle())
+                            .accessibilityHidden(true)
+                        VStack(alignment: .leading, spacing: 1) {
+                            Text(step.title).dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.ink)
+                            Text(step.detail).v4Text(.subtitle).fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                    .accessibilityElement(children: .combine)
+                }
+                Label {
+                    Text(NRTUseGuide.chewAndParkTip).v4Text(.subtitle).fixedSize(horizontal: false, vertical: true)
+                } icon: {
+                    Image(systemName: "cup.and.saucer").foregroundStyle(Read4.accent)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
     }
 }

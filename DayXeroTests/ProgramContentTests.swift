@@ -9,7 +9,7 @@ struct ProgramContentTests {
     @Test func theBundledProgramLoadsWithEveryPhaseAndSession() throws {
         let program = try content()
         #expect(program.phases.map(\.id) == ["prep", "dayxero", "w1", "w2", "w3", "w4", "after"])
-        #expect(program.sessions.count == 27)
+        #expect(program.sessions.count == 28)
         #expect(program.sessions.first?.id == "P1" && program.sessions.last?.id == "B90")
         #expect(program.sosTracks.map(\.id) == ["SOS1", "SOS2", "SOS3", "SOS4"])
     }
@@ -27,6 +27,60 @@ struct ProgramContentTests {
         // The graduation session still ends the four weeks, so the finale plays there and not after a booster.
         #expect(program.session(after: "W4S3")?.id == "B45")
         #expect(boosters.allSatisfy { !$0.beats.contains { $0.sets == "graduated_at" } })
+    }
+
+    /// MON-04: every session has a 90-second read of three to five cards, worded for each product.
+    @Test func everySessionHasACardStack() throws {
+        let program = try content()
+        for session in program.sessions {
+            #expect(ProgramContent.cardStackSize.contains(session.cards?.count ?? 0), "\(session.id)")
+        }
+        let p7 = try #require(program.session("P7")?.cards)
+        #expect(p7[1].back.resolve(.vaping)?.contains("batteries") == true)
+        #expect(p7[1].back.resolve(.smoking)?.contains("batteries") == false)
+    }
+
+    /// MON-04: with the 90-second read in place of the audio, sessions say their own, shorter length: never more than
+    /// the listening length, never under 2 minutes.
+    @Test func theReadVersionHasItsOwnShorterLength() throws {
+        let program = try content()
+        for session in program.sessions {
+            let minutes = session.readMinutes()
+            #expect((2...session.durationMinutes).contains(minutes), "\(session.id): \(minutes) min")
+        }
+        let read = Dictionary(uniqueKeysWithValues: program.sessions.map { ($0.id, $0.readMinutes()) })
+        // Prep 3 is one slider around the cards; Day Xero has the most to do.
+        #expect(read["P1"] == 3 && read["P3"] == 2 && read["P4"] == 3 && read["DX"] == 4)
+        #expect(program.sessions.reduce(0) { $0 + $1.readMinutes() } < program.sessions.reduce(0) { $0 + $1.durationMinutes })
+    }
+
+    /// A breathing beat lasts its cycles of its pattern; the content's patterns come from the orb data.
+    @Test func aBreathingBeatLastsItsCycles() throws {
+        let p4 = try #require(try content().session("P4"))
+        let breathe = try #require(p4.beats.first { $0.type == .breathe })
+        #expect(breathe.typicalSeconds(cycleSeconds: { _ in 10 }) == 10 * (breathe.cycles ?? 3))
+        #expect(OrbData.bundled.breathingPatterns.first { $0.id == "box" }?.cycleSeconds == 16)
+    }
+
+    /// MON-04: the card stack sits where the audio goes; the recording plays only for someone who chose to listen.
+    @MainActor @Test func theLessonIsTheCardStackUnlessTheyChoseToListen() {
+        #expect(SessionFlowView.lessonStep(hasCards: true, hasAudio: false, format: .listen) == .cards)
+        #expect(SessionFlowView.lessonStep(hasCards: true, hasAudio: true, format: .read) == .cards)
+        #expect(SessionFlowView.lessonStep(hasCards: true, hasAudio: true, format: .listen) == .audio)
+        #expect(SessionFlowView.lessonStep(hasCards: false, hasAudio: true, format: .read) == .audio)
+        #expect(SessionFlowView.lessonStep(hasCards: false, hasAudio: false, format: .read) == nil)
+    }
+
+    /// CLIN-08: Week 2's "The flat days" (dopamine and brain fog) opens on Day 13, between Sleep and Two weeks. Its id
+    /// is W2S4 because session ids are saved in people's records; the order comes from the list, not the number.
+    @Test func weekTwoHasTheFlatDays() throws {
+        let program = try content()
+        let week2 = try #require(program.phases.first { $0.id == "w2" })
+        #expect(week2.sessionIds == ["W2S1", "W2S2", "W2S4", "W2S3"])
+        let flat = try #require(program.session("W2S4"))
+        #expect(flat.title.resolve(.smoking) == "The flat days")
+        #expect(flat.label == "Day 13")
+        #expect(flat.unlock.minDay == 12)
     }
 
     @Test func theContentHasNoProblems() throws {

@@ -17,6 +17,8 @@ enum DailyReminderSettings {
     static let nrtOnKey = "dx.nrtNotifications"
     /// Glim's weekly check-in after graduation (S27.18), Sundays. Off until chosen, like lessons and milestones.
     static let weeklyKey = "dx.weeklyCheckInMinute"
+    /// Quiet graduation (CLIN-06): fewer program notes from Week 3. On unless switched off.
+    static let quietGraduationKey = "dx.quietGraduation"
 
     static let defaultPledge = 8 * 60
     static let defaultCheckIn = 21 * 60
@@ -41,6 +43,7 @@ enum DailyReminderSettings {
         s.milestone = minute(milestoneKey, offUntilChosen)
         s.awayOn = flag(awayKey)
         s.weekly = minute(weeklyKey, offUntilChosen)
+        s.quietGraduation = flag(quietGraduationKey)
         s.quietStart = minute(quietStartKey, defaultQuietStart)
         s.quietEnd = minute(quietEndKey, defaultQuietEnd)
         return s
@@ -82,7 +85,8 @@ enum DailyReminders {
             replayName: nil,
             nextLessonName: ProgramStore(context: context, profile: profile).current(now: now)
                 .flatMap { ProgramStore(context: context, profile: profile).content?.session($0.id)?.label },
-            graduated: profile.progress?.graduatedAt != nil
+            graduated: profile.progress?.graduatedAt != nil,
+            quitDay: clock.startOfDate(profile.quitDay)
         )
         let wanted = NotificationPlan.plan(DailyReminderSettings.plan, inputs: inputs, calendar: .current)
         Task { await apply(wanted) }
@@ -103,7 +107,7 @@ enum DailyReminders {
             .flatMap { clock.calendar.date(byAdding: .day, value: n, to: clock.day(containing: $0)) }
         case .locked, .completed: nil
         }
-        return day.map { [($0, name, session.durationMinutes)] } ?? []
+        return day.map { [($0, name, store.minutes(of: session))] } ?? []
     }
 
     private static func milestones(profile: UserProfile, clock: DayClock) -> [(day: Date, title: String)] {

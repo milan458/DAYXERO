@@ -29,6 +29,12 @@ enum NRTReminders {
         if !DailyReminderSettings.nrtOn { reminders = [] }
         if !DailyReminderSettings.nrtThroughQuiet {
             let plan = DailyReminderSettings.plan
+            // "Patch off for the night" (CLIN-03) is only useful at bedtime: moved to the morning it would say the
+            // opposite of what's needed, so inside quiet hours it's left out rather than moved.
+            reminders = reminders.filter { reminder in
+                !reminder.id.contains(".off.") || NotificationPlan.outOfQuietHours(reminder.date, start: plan.quietStart,
+                                                                                    end: plan.quietEnd, calendar: .current) == reminder.date
+            }
             reminders = reminders.map {
                 NRTReminderPlan.Reminder(id: $0.id, date: NotificationPlan.outOfQuietHours($0.date, start: plan.quietStart, end: plan.quietEnd, calendar: .current),
                                          title: $0.title, body: $0.body)

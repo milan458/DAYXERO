@@ -11,6 +11,9 @@ struct ProgressTab: View {
     @Environment(\.dynamicTypeSize) private var typeSize
     @Query(sort: \LogEntry.timestamp, order: .reverse) private var entries: [LogEntry]
     @Query private var checkIns: [CheckIn]
+    /// Program v2 sessions, observed exactly as Today observes them, so "of 7 prep done" and the Quit Day countdown
+    /// read the same snapshot on both tabs and update the moment a session is finished.
+    @Query private var sessionRecords: [SessionRecord]
     @State private var series = Insights.Series.cravings
     @State private var editing: LogEntry?
     @State private var showHealth = UserDefaults.standard.bool(forKey: "dx.openHealth")
@@ -18,11 +21,12 @@ struct ProgressTab: View {
     @State private var sharing = UserDefaults.standard.bool(forKey: "dx.shareCard")
     /// S27.11: Progress is the fourth tab and the way into Settings (Export, Delete, Privacy).
     @State private var showSettings = false
+    @State private var showPaywall = false
 
     var body: some View {
         TimelineView(.everyMinute) { timeline in
             let now = timeline.date
-            let snap = HomeSnapshot(profile: profile, isPro: entitlement.isPro, now: now)
+            let snap = HomeSnapshot(profile: profile, isPro: entitlement.isPro, now: now, sessions: sessionRecords)
             let insights = Insights(points: entries.map(Insights.Point.init), now: now)
             // Half-open iPhone Duo: what you've gained on one side of the fold, the details on the other (S18.14).
             FoldAware {
@@ -49,6 +53,7 @@ struct ProgressTab: View {
         .sheet(isPresented: $showSettings) {
             SettingsSheet(profile: profile)
         }
+        .fullProgramPaywall(isPresented: $showPaywall, profile: profile)
         .sheet(item: $editing) { entry in
             Group {
                 if entry.kind == .slip {
@@ -105,9 +110,11 @@ struct ProgressTab: View {
         // Your patterns (decision 31): its own sky panel (mist retired in S27.13) with Glim, the heat map and the triggers.
         VStack(alignment: .leading, spacing: 12) {
             patternsHeader(insights)
-            if insights.isReady {
+            if insights.isReady, FullProgram.has(.triggerHeatmaps, isPro: entitlement.isPro) {
                 heatCard(insights)
                 triggersCard(insights)
+            } else if insights.isReady {
+                lockedHeatmap(insights)
             } else {
                 earlyPatterns(insights)
             }
@@ -213,7 +220,7 @@ struct ProgressTab: View {
         let cents: (Double) -> String = { Decimal($0).formatted(.currency(code: code).precision(.fractionLength(2))) }
         LazyVGrid(columns: columns, alignment: .leading, spacing: 8) {
             if isPrepPhase(snap) {
-                ProgressStat(value: Double(snap.prepDone), label: String(localized: "of \(snap.prepTotal) prep days done"))
+                ProgressStat(value: Double(snap.prepDone), label: String(localized: "of \(snap.prepTotal) prep done"))
                 // "0 waves ridden out" reads as failure in a week where nobody is meant to resist yet (S27.5).
                 if ridden > 0 {
                     ProgressStat(value: Double(ridden), label: ridden == 1 ? String(localized: "wave ridden out") : String(localized: "waves ridden out"))
@@ -260,8 +267,8 @@ struct ProgressTab: View {
             .padding(.top, DX.Space.m)
             .accessibilityAddTraits(.isHeader)
         if let current {
-            changeCard(current, status: String(localized: "Happening now"), line: current.line,
-                       state: HealthTimeline.state(of: current, elapsedHours: elapsed))
+            changeCard(current, status: current.isFelt ? String(localized: "Many people notice") : String(localized: "Happening now"),
+                       line: current.line, state: HealthTimeline.state(of: current, elapsedHours: elapsed))
         }
         if let next {
             changeCard(next, status: elapsed < 0 ? String(localized: "Starting on Quit Day") : String(localized: "Next"),
@@ -352,6 +359,24 @@ struct ProgressTab: View {
                 }
                 // Uses and slips in amber, so they read differently from cravings (S8.4).
                 HeatMap(grid: grid, scale: series == .cravings ? HeatMap.cravingScale : HeatMap.useScale)
+            }
+        }
+    }
+
+    /// MON-01: the heat map and triggers are part of the full program. Free, the person sees their own map blurred,
+    /// what they've logged so far by time of day, and one way to unlock it.
+    private func lockedHeatmap(_ insights: Insights) -> some View {
+        patternPanel {
+            VStack(alignment: .leading, spacing: DX.Space.s) {
+                Text("Your trigger heatmap is ready").v4Text(.cardHeading)
+                HeatMap(grid: insights.heatMap(.cravings))
+                    .blur(radius: 5)
+                    .opacity(0.45)
+                    .accessibilityHidden(true)
+                LockedFeatureCard(title: "Trigger heatmaps",
+                                  line: "See when your cravings hit across the week and what sets them off. Comes with the full program.") {
+                    showPaywall = true
+                }
             }
         }
     }

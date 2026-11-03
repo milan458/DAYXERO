@@ -353,6 +353,9 @@ public final class NRTPlan {
     /// The last day "Patch on today" was ticked.
     public var lastCheckedDay: Date?
     public var createdAt: Date
+    /// Patches only (CLIN-03): 16 takes it off at bedtime, 24 (or nil, for plans made before) keeps it on overnight.
+    /// Optional, so stores from before it migrate without a step.
+    public var patchHours: Int?
 
     public init(type: NRTType, startDate: Date, steps: [PlanStep], presetID: String? = nil,
                 dailyReminderMinute: Int? = nil, pieceReminderHours: Int? = nil, stepReminders: Bool = true, createdAt: Date = .now) {
@@ -367,6 +370,12 @@ public final class NRTPlan {
     }
 
     public var type: NRTType { NRTType(rawValue: typeRaw) ?? .patch }
+
+    /// A patch taken off at bedtime (16 hours) rather than worn round the clock.
+    public var offAtBedtime: Bool {
+        get { type == .patch && patchHours == 16 }
+        set { patchHours = newValue ? 16 : 24 }
+    }
 }
 
 /// An optional pouch-strength taper before Quit Day (S9.3). Pouches aren't NRT; this is a plan the person sets.

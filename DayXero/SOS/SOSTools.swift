@@ -85,7 +85,8 @@ struct SOSSighIntro: View {
             if hapticsOn { haptics.play(step.phase, pattern: pattern) }
             if SOSSigh.isSpoken(step.phase) {
                 let cue = SOSSigh.cue(step.phase)
-                if voiceOn {
+                // Jelli's voice is part of the full program (MON-01); free, the cue is the subtitle and haptics.
+                if VoiceCoaching.speaks(voiceOn) {
                     voice.say(cue)
                 } else {
                     AccessibilityNotification.Announcement(cue).post()

@@ -67,7 +67,9 @@ struct HealthBadge: View {
 enum MilestoneDrawing {
     static let ids = ["heart-rate", "carbon-monoxide", "circulation", "coughing", "heart-attack", "mouth-cancer",
                       "lung-cancer", "heart-disease", "withdrawal-start", "nicotine-gone", "withdrawal-peak", "mood",
-                      "cravings-fade", "taste", "fresh-breath", "lips", "skin-glow", "hair", "even-tone", "sleep"]
+                      "cravings-fade", "taste", "fresh-breath", "lips", "skin-glow", "hair", "even-tone", "sleep",
+                      // What many people notice, weeks 2 to 6 (CLIN-01).
+                      "flat-days", "clearer-head", "rewards-return"]
 
     /// Whose realm a change belongs to: Xero's dawn, Jelli's sea or Glim's night.
     enum Hue { case dawn, sea, night }
@@ -75,7 +77,7 @@ enum MilestoneDrawing {
     static func hue(_ id: String) -> Hue {
         switch id {
         case "withdrawal-start", "nicotine-gone", "withdrawal-peak", "cravings-fade": .sea
-        case "mood", "sleep": .night
+        case "mood", "sleep", "flat-days": .night
         default: .dawn
         }
     }
