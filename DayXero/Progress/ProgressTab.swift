@@ -613,9 +613,9 @@ private struct ProgressStat: View {
                     Text(verbatim: format(value)).monospacedDigit()
                 }
             }
-                .dxType(.title)
-                .foregroundStyle(Read4.ink)
-                .lineLimit(1).minimumScaleFactor(0.6)
+            .dxType(.title)
+            .foregroundStyle(Read4.ink)
+            .lineLimit(1).minimumScaleFactor(0.6)
             Text(verbatim: label).dxType(.caption).foregroundStyle(Read4.muted)
                 .fixedSize(horizontal: false, vertical: true)
         }
