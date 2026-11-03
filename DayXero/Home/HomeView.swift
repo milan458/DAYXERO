@@ -324,6 +324,7 @@ struct TodayView: View {
             }
         }
         bento(state: state, now: now)
+        otherUseCells(state: state, now: now)
         if state == .prep, let finding = swapTrap(now: now) {
             XeroNoteCard(kicker: String(localized: "From Xero"), title: String(localized: "Watch the swap"),
                          message: swapMessage(finding)) {
@@ -521,6 +522,26 @@ struct TodayView: View {
         switch state {
         case .prep: useCell(primaryProduct, now: now)
         case .postQuit: urgesCell(now: now)
+        }
+    }
+
+    /// Dual users count every product before Day Xero, not just the main one (QW4): the plan says "no more cigarettes
+    /// and vape", so Today logs puffs as well as cigarettes. A row of the other products' cells under the bento.
+    @ViewBuilder
+    private func otherUseCells(state: TodayState, now: Date) -> some View {
+        let others = profile.products.map(\.product).filter { $0 != primaryProduct }
+            .sorted { Product.allCases.firstIndex(of: $0)! < Product.allCases.firstIndex(of: $1)! }
+        if state == .prep, !others.isEmpty {
+            if typeSize.isAccessibilitySize {
+                VStack(spacing: DX.Space.s) {
+                    ForEach(others, id: \.self) { useCell($0, now: now) }
+                }
+            } else {
+                HStack(spacing: DX.Space.s) {
+                    ForEach(others, id: \.self) { useCell($0, now: now) }
+                }
+                .fixedSize(horizontal: false, vertical: true)
+            }
         }
     }
 

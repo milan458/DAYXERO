@@ -258,12 +258,13 @@ struct SessionIntro: View {
                     // Only a session with a mission promises one (Graduation has none).
                     Group {
                         if reads {
-                            // MON-04: the read version's own length, not the audio's.
+                            // MON-04: the read version's own length, not the audio's. "3 min · 90-second read" read as two
+                            // different lengths for one session (QW4); the card stack says its own 90 seconds.
                             if session.mission != nil {
-                                Label("\(session.readMinutes()) min · \(ProgramContent.cardStackSeconds)-second read, activities and today's mission",
+                                Label("\(session.readMinutes()) min · A short read, a few activities and today's mission",
                                       systemImage: "rectangle.stack")
                             } else {
-                                Label("\(session.readMinutes()) min · \(ProgramContent.cardStackSeconds)-second read and activities",
+                                Label("\(session.readMinutes()) min · A short read and a few activities",
                                       systemImage: "rectangle.stack")
                             }
                         } else if session.mission != nil {
@@ -284,7 +285,8 @@ struct SessionIntro: View {
                 }
             }
             .scrollBounceBehavior(.basedOnSize)
-            Button(isReplay ? "Replay" : "Begin", action: onBegin)
+            // The header already says Replay; the button just starts it (QW4).
+            Button(isReplay ? "Start" : "Begin", action: onBegin)
                 .buttonStyle(.dx(.primary, on: .reading))
                 .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         }
