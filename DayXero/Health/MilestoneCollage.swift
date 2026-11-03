@@ -14,6 +14,9 @@ struct MilestoneCollage: View {
     var size: CGFloat = 200
     /// The crew's idle motion; off for small badges in long lists and with Reduce Motion (the crew views check that).
     var animate = true
+    /// Drawn for a round badge: anything that would be cut by the circle or read as a letter at 48 pt is pulled in or
+    /// left out (QW9).
+    var compact = false
 
     var body: some View {
         let k = size / 200
@@ -21,7 +24,7 @@ struct MilestoneCollage: View {
         ZStack(alignment: .topLeading) {
             Canvas { context, canvas in
                 context.scaleBy(x: canvas.width / 200, y: canvas.height / 200)
-                CollageDraw.draw(id, front: false, in: &context)
+                CollageDraw.draw(id, front: false, compact: compact, in: &context)
             }
             if let crew {
                 crew.view(points: crew.scale * size, animate: animate)
@@ -30,7 +33,7 @@ struct MilestoneCollage: View {
             }
             Canvas { context, canvas in
                 context.scaleBy(x: canvas.width / 200, y: canvas.height / 200)
-                CollageDraw.draw(id, front: true, in: &context)
+                CollageDraw.draw(id, front: true, compact: compact, in: &context)
             }
         }
         .frame(width: size, height: size, alignment: .topLeading)
@@ -153,10 +156,10 @@ enum CollageDraw {
 
     // MARK: Drawing
 
-    static func draw(_ id: String, front: Bool, in c: inout GraphicsContext) {
+    static func draw(_ id: String, front: Bool, compact: Bool = false, in c: inout GraphicsContext) {
         switch id {
         case "heart-rate": heartRate(c, front)
-        case "carbon-monoxide": carbonMonoxide(c, front)
+        case "carbon-monoxide": carbonMonoxide(c, front, compact: compact)
         case "circulation": circulation(c, front)
         case "coughing": coughing(c, front)
         case "heart-attack": heartAttack(c, front)
@@ -210,7 +213,9 @@ enum CollageDraw {
         }
     }
 
-    private static func carbonMonoxide(_ c: GraphicsContext, _ front: Bool) {
+    /// Compact (badges): the open white rings read as "O"s at 48 pt and the lower blood cell was cut into a "C" by the
+    /// circle, so the rings go and both cells sit inside the crop.
+    private static func carbonMonoxide(_ c: GraphicsContext, _ front: Bool, compact: Bool = false) {
         if !front {
             var puff = soft(c)
             puff.opacity = 0.55
@@ -222,18 +227,21 @@ enum CollageDraw {
             var inside = c
             inside.clip(to: window)
             fill(inside, ellipse(74, 214, 74, 40), .mint)
+            guard !compact else { return }
             for (x, y, r, w) in [(104.0, 66.0, 7.0, 3.0), (84, 50, 4.5, 2.5), (40, 84, 5, 2.5)] as [(CGFloat, CGFloat, CGFloat, CGFloat)] {
                 inside.stroke(circle(x, y, r), with: .color(white), lineWidth: w)
             }
         } else {
-            for (x, y, r, dimple) in [(150.0, 86.0, 34.0, CGSize(width: 17, height: 12)), (172, 150, 26, CGSize(width: 13, height: 9))]
-                as [(CGFloat, CGFloat, CGFloat, CGSize)] {
+            let cells: [(CGFloat, CGFloat, CGFloat, CGSize)] = compact
+                ? [(140, 88, 30, CGSize(width: 15, height: 10)), (146, 146, 22, CGSize(width: 11, height: 8))]
+                : [(150, 86, 34, CGSize(width: 17, height: 12)), (172, 150, 26, CGSize(width: 13, height: 9))]
+            for (x, y, r, dimple) in cells {
                 c.fill(circle(x + 3, y + 5, r), with: .color(wine.opacity(0.3)))
                 fill(c, circle(x, y, r), .coral)
                 c.fill(ellipse(x, y, dimple.width, dimple.height), with: .color(Color(hex: 0xC2203F).opacity(0.35)))
             }
-            c.stroke(p("M126 76 Q130 62 144 58"), with: .color(Color(hex: 0xFFD6DE)), style: line(5))
-            star(c, 186, 30)
+            c.stroke(compact ? p("M118 80 Q122 68 134 64") : p("M126 76 Q130 62 144 58"), with: .color(Color(hex: 0xFFD6DE)), style: line(5))
+            if !compact { star(c, 186, 30) }
         }
     }
 

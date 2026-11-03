@@ -466,11 +466,14 @@ struct PlanRevealScreen: View {
                     builtAround
                     includes
                     if !entitlement.isPro { trialCard }
+                    // Set apart from the cards above and clear of the pinned buttons below (QW9).
                     Text(HealthInfoView.oneLine).dxType(.caption).foregroundStyle(ground.muted)
                         .multilineTextAlignment(.center).frame(maxWidth: .infinity)
+                        .padding(.top, DX.Space.s)
                 }
                 .padding(.horizontal, DX.Layout.gutter)
                 .padding(.top, DX.Space.m)
+                .padding(.bottom, DX.Space.l)
                 .dxReadableColumn()
             }
             VStack(spacing: 4) {
