@@ -415,13 +415,18 @@ struct TodayView: View {
 
     // MARK: Focus (UX-08)
 
-    /// One card by the time of day: the lesson (or, after Day Xero, recovery) until 6 PM; then Glim's check-in;
-    /// late at night, once checked in, winding down. The program card always stays in place, hidden when it isn't
-    /// the focus, so a session it opened is never closed under the person when 6 PM comes.
+    /// One card by the time of day: the lesson until 6 PM (after Day Xero, the day's session while it's open, then
+    /// recovery once it's done); then Glim's check-in; late at night, once checked in, winding down. The program card
+    /// always stays in place, hidden when it isn't the focus, so a session it opened is never closed under the person
+    /// when 6 PM comes.
     private func focusCard(state: TodayState, now: Date) -> some View {
         let rhythm = DailyRhythm(clock: clock)
         let checkedIn = debugDaily == "checkedIn" || rhythm.hasCheckedIn(checkIns.map(\.day), at: now)
-        var focus = TodayFocus.pick(hour: TodayClock.hour(at: now), postQuit: state == .postQuit, checkedIn: checkedIn)
+        // A session that needs Pro isn't pushed on Today; Program offers it.
+        let sessionOpen: Bool = if case .open(_, _, false)? = ProgramToday(store: ProgramStore(context: context, profile: profile),
+                                                                          isPro: entitlement.isPro, now: now)?.kind { true } else { false }
+        var focus = TodayFocus.pick(hour: TodayClock.hour(at: now), postQuit: state == .postQuit, checkedIn: checkedIn,
+                                    sessionOpen: sessionOpen)
         // Straight after onboarding, Prep 1 opens from the lesson card whatever the hour (S22).
         if state == .prep, UserDefaults.standard.bool(forKey: FirstLesson.key) { focus = .lesson }
         return VStack(spacing: 0) {

@@ -20,8 +20,10 @@ public enum TodayFocus: Sendable, Equatable {
     /// From this hour until the morning, a finished check-in hands over to winding down.
     public static let nightHour = 22
 
-    public static func pick(hour: Int, postQuit: Bool, checkedIn: Bool) -> TodayFocus {
-        let usual: TodayFocus = postQuit ? .recovery : .lesson
+    /// - Parameter sessionOpen: after Day Xero, today's session is open and free to start. It takes the focus until
+    ///   it's done; recovery comes back once it is (Milan, 3 Nov 2026).
+    public static func pick(hour: Int, postQuit: Bool, checkedIn: Bool, sessionOpen: Bool = false) -> TodayFocus {
+        let usual: TodayFocus = postQuit && !sessionOpen ? .recovery : .lesson
         if (dayStartHour..<eveningHour).contains(hour) { return usual }
         if !checkedIn { return .checkIn }
         return hour >= nightHour || hour < dayStartHour ? .windDown : usual
