@@ -102,10 +102,12 @@ struct WelcomeScreen: View {
             }
         }
         .task {
-            // Xero rises, says hello, then cheers once.
+            // Xero rises and says hello, then cheers once after his last line: three lines (BET-3), or the one
+            // callout at accessibility sizes, where the shorter hero has no room for three.
+            let lines = typeSize.isAccessibilitySize ? 1.0 : 3.0
             try? await Task.sleep(for: .seconds(motion.reduce ? 0.2 : 1.3))
             withAnimation(motion.animation(DX.Move.arrive)) { bubble = true }
-            try? await Task.sleep(for: .seconds(1.2))
+            try? await Task.sleep(for: .seconds(CrewBubble.gap * lines))
             cheer = !motion.reduce
             try? await Task.sleep(for: .seconds(1.4))
             cheer = false
@@ -116,6 +118,28 @@ struct WelcomeScreen: View {
         VStack(spacing: 0) {
             ZStack(alignment: .bottom) {
                 HeroScene(.dawn, clarity: CrewGrowth.prepClarity, height: heroHeight, edge: ground.background)
+                if !typeSize.isAccessibilitySize {
+                    // BET-3 (Screen Lab, 3 Nov 2026): Xero left of centre, his three lines on his right over the sky.
+                    XeroView(mood: cheer ? .cheer : .hello, stage: 1, size: .hero)
+                        .offset(y: -18)
+                        .dxArrive(0)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading, 24)
+                    if bubble {
+                        VStack(alignment: .leading, spacing: 8) {
+                            CrewBubble(String(localized: "Hi! I'm Xero."), on: ground, size: .callout, fill: .cream, order: 0, start: 0)
+                            CrewBubble(String(localized: "I'll get you ready for your Quit Day."), on: ground, fill: .cream, order: 1, start: 0)
+                            CrewBubble(String(localized: "A few questions, then your plan."), on: ground, fill: .cream, order: 2, start: 0)
+                        }
+                        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+                        .frame(width: 168)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                        .padding(.trailing, 16)
+                        .padding(.top, max(heroHeight - 18 - 200 - 60, 60))
+                        .accessibilityElement(children: .ignore)
+                        .accessibilityLabel(Text("Xero says: Hi! I'm Xero. I'll get you ready for your Quit Day. A few questions, then your plan."))
+                    }
+                } else {
                 XeroView(mood: cheer ? .cheer : .hello, stage: 1, size: .hero)
                     .offset(y: -18)
                     .dxArrive(0)
@@ -133,7 +157,9 @@ struct WelcomeScreen: View {
                                 .transition(.scale(scale: 0.6, anchor: .bottomLeading).combined(with: .opacity))
                         }
                     }
+                }
             }
+            .frame(height: heroHeight)
             .ignoresSafeArea(edges: .top)
             VStack(alignment: .leading, spacing: 10) {
                 VStack(alignment: .leading, spacing: 0) {
@@ -328,6 +354,7 @@ struct BuildingScreen: View {
     let model: OnboardingModel
     @State private var shown = 0
     @State private var friends = false
+    @State private var ready = false
     private let motion = MotionPolicy()
     private let ground = DX.Ground.mint
 
@@ -383,6 +410,14 @@ struct BuildingScreen: View {
                         Text("Your plan, built around you").dxType(.title).foregroundStyle(ground.ink)
                             .accessibilityAddTraits(.isHeader)
                     }
+                    // BET-3 (Screen Lab, 3 Nov 2026): Xero talks while the rows land, then hands over to the friends.
+                    CrewBubble(friends ? String(localized: "That's your plan. Two friends will help too.")
+                                       : String(localized: "Fitting this around your answers…"),
+                               on: ground, tail: .topLeading, order: nil)
+                        .id(friends)
+                        .transition(.opacity)
+                        .padding(.top, -4)
+                        .accessibilityLabel(Text(friends ? "Xero says: That's your plan. Two friends will help too." : "Xero says: Fitting this around your answers…"))
                     ForEach(rows.prefix(shown)) { row in
                         VStack(alignment: .leading, spacing: 6) {
                             PlanStepRow(kicker: row.kicker, value: row.value, ground: ground)
@@ -395,19 +430,19 @@ struct BuildingScreen: View {
                         .transition(.move(edge: .bottom).combined(with: .opacity))
                     }
                     if friends {
-                        HStack(spacing: 12) {
-                            HStack(spacing: -10) {
+                        VStack(alignment: .leading, spacing: 10) {
+                            CrewSpeech(String(localized: "Jelli"), lines: [.init(String(localized: "I'm Jelli. I'll be there at your first craving."))],
+                                       on: ground, firstOrder: 0) {
                                 JelliView(mood: .hello, stage: 1, size: .avatar, animate: false)
                                     .background(DX.Ground.ocean.background, in: Circle()).clipShape(Circle())
+                            }
+                            CrewSpeech(String(localized: "Glim"), lines: [.init(String(localized: "I'm Glim. I'll see you on your first evening."))],
+                                       on: ground, firstOrder: 1) {
                                 GlimView(mood: .hello, stage: 1, size: .avatar, animate: false)
                                     .background(DX.Ground.violet.background, in: Circle()).clipShape(Circle())
                             }
-                            .accessibilityHidden(true)
-                            Text("Two friends join later. **Jelli** at your first craving, **Glim** on your first evening.")
-                                .dxType(.footnote).foregroundStyle(ground.ink)
-                                .fixedSize(horizontal: false, vertical: true)
                         }
-                        .dxCardOnColour()
+                        .padding(.top, 4)
                         .transition(.opacity)
                     }
                 }
@@ -417,7 +452,7 @@ struct BuildingScreen: View {
             }
             Button("See my plan") { model.next() }
                 .buttonStyle(.dx(.primary, on: ground))
-                .disabled(!friends)
+                .disabled(!ready)
                 .padding(.horizontal, DX.Layout.buttonGutter)
                 .dxReadableColumn()
                 .padding(.bottom, DX.Space.xs)
@@ -430,6 +465,9 @@ struct BuildingScreen: View {
             }
             try? await Task.sleep(for: .seconds(step))
             withAnimation(motion.animation(DX.Move.arrive)) { friends = true }
+            // "See my plan" turns on once Glim has spoken (BET-3); at once with motion reduced.
+            try? await Task.sleep(for: .seconds(motion.reduce ? 0 : 0.4 + CrewBubble.gap))
+            ready = true
         }
     }
 }
@@ -460,7 +498,7 @@ struct PlanRevealScreen: View {
                     Text("Step \(model.stepNumber) of \(model.stepTotal)").dxType(.caption).textCase(.uppercase).foregroundStyle(ground.muted)
                     MarkedTitle(String(localized: "Your plan is "), marking: String(localized: "ready"), color: DX.Mark.color(on: ground))
                         .dxType(.title).foregroundStyle(ground.ink)
-                    Text(entitlement.isPro ? "Everything is unlocked." : "Prep 1 to 3 are on us. Nothing is charged today.")
+                    Text(entitlement.isPro ? "Everything is unlocked." : "Two cards from each prep day are on us. Nothing is charged today.")
                         .dxType(.body).foregroundStyle(ground.muted)
                     savings
                     builtAround
@@ -555,8 +593,8 @@ struct PlanRevealScreen: View {
 
     private var includes: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("**Always free:** Prep 1 to 3, your counter, Craving SOS, a 60-second breathing timer and evening check-ins")
-            Text("**With the full program:** Prep 4 to 7, your Day Xero launch kit, Weeks 1 to 4, Jelli's voice coaching, if-then slip plans, a 12-week NRT schedule and trigger heatmaps")
+            Text("**Always free:** your counter, Craving SOS, a 60-second breathing timer, evening check-ins and two cards from each prep day")
+            Text("**With the full program:** every prep session in full, your Day Xero launch kit, Weeks 1 to 4, Jelli's voice coaching, if-then slip plans, a 12-week NRT schedule and trigger heatmaps")
         }
         .dxType(.footnote)
         .foregroundStyle(ground.ink)
@@ -564,32 +602,32 @@ struct PlanRevealScreen: View {
         .dxCardOnColour()
     }
 
-    /// The 7-day trial at Prep 4 (MON-01): Prep 1 is today, so Prep 4 opens three days from now at the earliest.
+    /// The 7-day trial (BET-1): offered after today's two free cards of Prep 1, so it can start today.
     private var trialCard: some View {
-        let start = FullProgram.earliestPaywallDay(firstDay: .now, calendar: model.calendar)
+        let start = model.calendar.startOfDay(for: .now)
         let days = annual?.trialDays ?? FullProgram.trialDays
         let end = model.calendar.date(byAdding: .day, value: days, to: start) ?? start
         let lead = TrialReminder.leadDays(trialEndsAt: end, now: start)
         let remind = model.calendar.date(byAdding: .day, value: -lead, to: end) ?? end
         let after = FullProgram.trialEndsDaysAfterQuitDay(trialEnd: end, quitDay: model.quitDay, calendar: model.calendar)
-        let (s, e, r) = (start.formatted(shortDate), end.formatted(shortDate), remind.formatted(shortDate))
+        let (e, r) = (end.formatted(shortDate), remind.formatted(shortDate))
         let runs: String = switch after {
-        case 2...: String(localized: "If you start it at Prep 4 on \(s), it runs to \(e), \(after) days after your Quit Day. I'll remind you on \(r).")
-        case 1: String(localized: "If you start it at Prep 4 on \(s), it runs to \(e), the day after your Quit Day. I'll remind you on \(r).")
-        case 0: String(localized: "If you start it at Prep 4 on \(s), it runs to \(e), your Quit Day. I'll remind you on \(r).")
-        default: String(localized: "If you start it at Prep 4 on \(s), it runs to \(e). I'll remind you on \(r).")
+        case 2...: String(localized: "If you start it today, it runs to \(e), \(after) days after your Quit Day. I'll remind you on \(r).")
+        case 1: String(localized: "If you start it today, it runs to \(e), the day after your Quit Day. I'll remind you on \(r).")
+        case 0: String(localized: "If you start it today, it runs to \(e), your Quit Day. I'll remind you on \(r).")
+        default: String(localized: "If you start it today, it runs to \(e). I'll remind you on \(r).")
         }
         return VStack(alignment: .leading, spacing: 6) {
-            Text("At Prep 4 · \(start.formatted(shortDate))").dxType(.caption).textCase(.uppercase)
+            Text("7-day free trial").dxType(.caption).textCase(.uppercase)
                 .foregroundStyle(DX.Fill.cream.opacity(0.85))
             if let annual {
                 Text("\(days) days free, then \(annual.priceText) a year").dxType(.headline).foregroundStyle(DX.Fill.cream)
                 if let perMonth = annual.perMonthText {
-                    Text("That's \(perMonth) a month. I'll ask you at Prep 4, not before.")
+                    Text("That's \(perMonth) a month. I'll ask after today's two free cards, not before.")
                         .dxType(.footnote).foregroundStyle(DX.Fill.cream.opacity(0.85))
                 }
             } else {
-                Text("I'll ask you about the full program at Prep 4, not before.").dxType(.headline).foregroundStyle(DX.Fill.cream)
+                Text("I'll ask you about the full program after today's two free cards, not before.").dxType(.headline).foregroundStyle(DX.Fill.cream)
             }
             Text("\(runs) Cancel any time in Settings › Apple ID › Subscriptions.")
                 .dxType(.caption).foregroundStyle(DX.Fill.cream.opacity(0.85))

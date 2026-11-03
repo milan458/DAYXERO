@@ -2,18 +2,17 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-11-03T18:34:37.740Z"
+    "updated": "2026-11-03T19:00:00.431Z"
   },
   "now": {
     "section": "S32",
-    "task": "S32.14",
+    "task": "S32.12",
     "waiting_on_milan": [
-      "Milan: sign off the Bigger bets wave in the Screen Lab (version 9, What's new): speech bubbles and the prep-day paywall",
-      "Milan: confirm the BET-1 defaults (next prep day opens after the 2 free cards; Day Xero onwards paid; new 'Always free' line)",
-      "Milan: App Store Connect: privacy URL, 7-day trial, India annual ₹2,999, lifetime $99.99, win-back, grace period; plus dayxero.annual.offer $29.99 with a 7-day trial (₹2,249)",
+      "Milan: App Store Connect: privacy URL, 7-day trial, India annual ₹2,999, lifetime $99.99, win-back, grace period; plus dayxero.annual.offer $29.99 with a 7-day trial (₹2,249), renewing at $29.99",
       "Milan: review the 112 draft lesson cards (MON-04) and the open questions in docs/MONETISATION_TIERS.md",
       "Milan: Cloudflare dashboard: fix or turn off non-production Worker builds",
-      "Milan: sign off Wave 4 in the Screen Lab (What's new; try Text size AX3 and Appearance Dark)"
+      "Milan: sign off Wave 4 in the Screen Lab (What's new; try Text size AX3 and Appearance Dark)",
+      "Milan: check the copy changed to fit BET-1 that wasn't in the Lab: plan reveal (free line, trial card), upgrade sheet, paywall included list (docs/BIGGER_BETS_PLAN.md, Built)"
     ]
   },
   "sections": [
@@ -3117,16 +3116,16 @@
         {
           "id": "S32.1",
           "title": "Milan: decide the Day-0 trial (A: 7 days, charges on Quit Day; B: 14 days on Day 0, 7 at Prep 4, recommended; C: plans only on Day 0), prices, Prep 4 re-ask, glass dock, experiment tool, bubble copy",
-          "status": "pending",
-          "notes": "Questions list at the end of docs/BIGGER_BETS_PLAN.md. Bet 1 reverses part of MON-01 (trial sold only at Prep 4).\nMilan 3 Nov: hard paywall, 7-day trial from download; prices kept; first 2 of 4 cards free each prep day, then the paywall with a ✕; $29.99 yearly with the 7-day trial on days 4 and 6 after download; keep the custom glass bar; Superwall later; list bubble screens first. Still open: Day-0 paywall close, $29.99 renewal price, India offer price, the bet 1 defaults, bubble screens and copy.",
+          "status": "done",
+          "notes": "Questions list at the end of docs/BIGGER_BETS_PLAN.md. Bet 1 reverses part of MON-01 (trial sold only at Prep 4).\nMilan 3 Nov: hard paywall, 7-day trial from download; prices kept; first 2 of 4 cards free each prep day, then the paywall with a ✕; $29.99 yearly with the 7-day trial on days 4 and 6 after download; keep the custom glass bar; Superwall later; list bubble screens first. Still open: Day-0 paywall close, $29.99 renewal price, India offer price, the bet 1 defaults, bubble screens and copy.\nMilan 3 Nov: the BET-1 defaults are fine (next prep day opens after the 2 free cards; Day Xero onwards paid; new Always free line).",
           "created": "2026-11-03T13:47:34.284Z",
-          "completed": null
+          "completed": "2026-11-03T18:59:54.990Z"
         },
         {
           "id": "S32.2",
           "title": "BET-1 · Soft paywall after the plan reveal: reveal → paywall → reminders, onboarding_complete registered, first-run copy, ✕ visible from the start, one Prep 4 re-ask, docs and journey test",
-          "status": "blocked",
-          "notes": "Blocked on the S32 decisions. Paywall already has: annual highlighted, ✕, the 'Always free' line, charge date, trial reminder, price anchor.\nChanged by Milan 3 Nov: Day-0 paywall after the reveal still wanted, but whether it can be closed is undecided. The daily prep paywall and offer pricing are separate tasks (S32.12, S32.13).",
+          "status": "pending",
+          "notes": "Blocked on the S32 decisions. Paywall already has: annual highlighted, ✕, the 'Always free' line, charge date, trial reminder, price anchor.\nChanged by Milan 3 Nov: Day-0 paywall after the reveal still wanted, but whether it can be closed is undecided. The daily prep paywall and offer pricing are separate tasks (S32.12, S32.13).\nDecided 3 Nov: Day-0 paywall after the reveal with the ✕ after 3 s. Next: Lab mockup, then Swift.",
           "created": "2026-11-03T13:47:34.331Z",
           "completed": null
         },
@@ -3205,32 +3204,32 @@
         {
           "id": "S32.12",
           "title": "BET-1 · Daily prep paywall: free users get the session intro and cards 1-2 of each prep day, then the paywall (✕ top right); the next prep day opens tomorrow; free part stored apart from completion; Day Xero onwards fully paid; new 'Always free' line; replaces MON-01's Prep 1-3 rule",
-          "status": "pending",
-          "notes": "Milan 3 Nov. Defaults (next day opens, Day Xero paid, new free line) to confirm.",
+          "status": "in_progress",
+          "notes": "Milan 3 Nov. Defaults (next day opens, Day Xero paid, new free line) to confirm.\nBuilt: FullProgram.access/previewCards, ProgramUnlock previewedAt, SessionFlowView free path, PrepDayPaywall, new Always free line. Waiting on CI.",
           "created": "2026-11-03T14:20:57.551Z",
           "completed": null
         },
         {
           "id": "S32.13",
           "title": "BET-1 · Price by day since download: $29.99 yearly (7-day trial) on days 4 and 6, 'Today only: 25% off' with the struck-through price; $39.99 other days; first-launch day stored; app day clock; paywall_viewed surface/price/day_since_install",
-          "status": "pending",
-          "notes": "Milan 3 Nov. Needs dayxero.annual.offer (S32.3). Renewal price at $29.99 vs $39.99 still open.",
+          "status": "in_progress",
+          "notes": "Milan 3 Nov. Needs dayxero.annual.offer (S32.3). Renewal price at $29.99 vs $39.99 still open.\nBuilt: InstallDay, FullProgram.offerDays, PaywallModel.isOfferDay, Subscriptions.loadPlans(offer:) with dayxero.annual.offer (falls back to $39.99 until it exists). Waiting on CI.",
           "created": "2026-11-03T14:20:57.630Z",
           "completed": null
         },
         {
           "id": "S32.14",
           "title": "BET-3 · Speech-bubble mockups in the Screen Lab (Welcome, plan building, slip, wave passed, prep-day paywall) for Milan's sign-off",
-          "status": "awaiting_signoff",
-          "notes": "Redone in the Screen Lab (Lab first, docs/DAYXERO_CRITIQUE_FIX_PLAN.md) after Milan pointed out the first set used the old design canvas. Replaces the retired S33 section.\nIn the Screen Lab, version 9 (What's new › Bigger bets): new 'Speech bubbles' states on onb-welcome, onb-building, log-slip (full program and free) and sos-passed, and the new prep-paywall screen (regular, day-4 offer, after ✕). File screens/bets.js.",
+          "status": "done",
+          "notes": "Redone in the Screen Lab (Lab first, docs/DAYXERO_CRITIQUE_FIX_PLAN.md) after Milan pointed out the first set used the old design canvas. Replaces the retired S33 section.\nIn the Screen Lab, version 9 (What's new › Bigger bets): new 'Speech bubbles' states on onb-welcome, onb-building, log-slip (full program and free) and sos-passed, and the new prep-paywall screen (regular, day-4 offer, after ✕). File screens/bets.js.\nSigned off by Milan, 3 Nov 2026.",
           "created": "2026-11-03T18:29:10.020Z",
-          "completed": null
+          "completed": "2026-11-03T18:59:55.030Z"
         },
         {
           "id": "S32.15",
           "title": "BET-3 · Build: one shared bubble view (tail toward the speaker, typing dots, Arrive, MotionPolicy, one VoiceOver passage) on the five screens",
-          "status": "pending",
-          "notes": "After the Lab sign-off.",
+          "status": "in_progress",
+          "notes": "After the Lab sign-off.\nBuilt: CrewBubble/CrewSpeech on Welcome, plan building, slip, wave passed, prep-day paywall. Waiting on CI.",
           "created": "2026-11-03T18:29:10.020Z",
           "completed": null
         }
@@ -3238,6 +3237,46 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-11-03T19:00:00.431Z",
+      "type": "now",
+      "message": "Now: S32 / S32.12"
+    },
+    {
+      "time": "2026-11-03T18:59:55.279Z",
+      "type": "now",
+      "message": "Now: S32 / S32.12"
+    },
+    {
+      "time": "2026-11-03T18:59:55.168Z",
+      "type": "status",
+      "message": "S32.2 blocked → pending (Decided 3 Nov: Day-0 paywall after the reveal with the ✕ after 3 s. Next: Lab mockup, then Swift.)"
+    },
+    {
+      "time": "2026-11-03T18:59:55.135Z",
+      "type": "status",
+      "message": "S32.15 pending → in_progress (Built: CrewBubble/CrewSpeech on Welcome, plan building, slip, wave passed, prep-day paywall. Waiting on CI.)"
+    },
+    {
+      "time": "2026-11-03T18:59:55.103Z",
+      "type": "status",
+      "message": "S32.13 pending → in_progress (Built: InstallDay, FullProgram.offerDays, PaywallModel.isOfferDay, Subscriptions.loadPlans(offer:) with dayxero.annual.offer (falls back to $39.99 until it exists). Waiting on CI.)"
+    },
+    {
+      "time": "2026-11-03T18:59:55.067Z",
+      "type": "status",
+      "message": "S32.12 pending → in_progress (Built: FullProgram.access/previewCards, ProgramUnlock previewedAt, SessionFlowView free path, PrepDayPaywall, new Always free line. Waiting on CI.)"
+    },
+    {
+      "time": "2026-11-03T18:59:55.030Z",
+      "type": "status",
+      "message": "S32.14 awaiting_signoff → done (Signed off by Milan, 3 Nov 2026.)"
+    },
+    {
+      "time": "2026-11-03T18:59:54.990Z",
+      "type": "status",
+      "message": "S32.1 pending → done (Milan 3 Nov: the BET-1 defaults are fine (next prep day opens after the 2 free cards; Day Xero onwards paid; new Always free line).)"
+    },
     {
       "time": "2026-11-03T18:34:37.740Z",
       "type": "status",

@@ -39,10 +39,15 @@ public struct ProgramUnlock: Sendable {
     public struct Record: Equatable, Sendable {
         public var startedAt: Date?
         public var completedAt: Date?
+        /// When a free user reached the prep-day paywall after the session's free cards (BET-1). For prep it moves the
+        /// chain on like finishing would (the next prep session opens the next day) while the session itself stays
+        /// open, so it can be finished in full after subscribing.
+        public var previewedAt: Date?
 
-        public init(startedAt: Date? = nil, completedAt: Date? = nil) {
+        public init(startedAt: Date? = nil, completedAt: Date? = nil, previewedAt: Date? = nil) {
             self.startedAt = startedAt
             self.completedAt = completedAt
+            self.previewedAt = previewedAt
         }
     }
 
@@ -126,6 +131,13 @@ public struct ProgramUnlock: Sendable {
                 previousFinished = done
                 continue
             }
+            // A prep session whose free part was read (BET-1) stays open and lets the next one follow, a day later.
+            let isPrepStep = dayXeroIndex.map { i < $0 } ?? false
+            if isPrepStep, let previewed = record?.previewedAt, !waitingFound, i == 0 || previousFinished != nil {
+                out.append((step.id, open))
+                previousFinished = previewed
+                continue
+            }
             // Within a chain, only the session after the last finished one can be open or waiting.
             guard !waitingFound, i == 0 || previousFinished != nil else {
                 out.append((step.id, .locked))
@@ -159,17 +171,21 @@ public struct ProgramUnlock: Sendable {
 
     /// The session to show on Home: the one open or waiting next, nil once everything is finished.
     public func current(records: [String: Record], quitDay: Date, quitTimestamp: Date?, now: Date) -> (id: String, state: State)? {
-        current(of: states(records: records, quitDay: quitDay, quitTimestamp: quitTimestamp, now: now))
+        let previewed = Set(records.filter { $0.value.previewedAt != nil && $0.value.completedAt == nil }.keys)
+        return current(of: states(records: records, quitDay: quitDay, quitTimestamp: quitTimestamp, now: now), skipping: previewed)
     }
 
     /// The session to show on Home, from `states` (S27.7). Once Day Xero is open, its chain comes first: the chain's
     /// open session, then any open prep catch-up, then what the chain is waiting for. Before that, the first
     /// session not finished. nil once everything is finished.
-    public func current(of states: [(id: String, state: State)]) -> (id: String, state: State)? {
-        let pending = states.enumerated().filter {
+    /// - Parameter skipping: prep sessions whose free part was read (BET-1). Home moves past them to the next session;
+    ///   they stay open on the Program path. If nothing else is pending, the first of them is shown.
+    public func current(of states: [(id: String, state: State)], skipping: Set<String> = []) -> (id: String, state: State)? {
+        let unfinished = states.enumerated().filter {
             if case .completed = $0.element.state { return false }
             return true
         }
+        let pending = unfinished.contains { !skipping.contains($0.element.id) } ? unfinished.filter { !skipping.contains($0.element.id) } : unfinished
         guard let dx = steps.firstIndex(where: { $0.rule == .dayXero }), dx < states.count, states[dx].state.isOpen else {
             return pending.first?.element
         }

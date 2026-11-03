@@ -47,6 +47,28 @@ struct ProgramUnlockTests {
         #expect(states(done, now: at(2, 5))["P3"] == .locked)
     }
 
+    /// BET-1: a free user's prep day counts once they reach the paywall after the free cards. The next prep session
+    /// opens the next day; the previewed one stays open to finish in full later, and Home moves past it.
+    @Test func readingTheFreePartOpensTheNextPrepSessionTomorrow() {
+        let previewed: [String: ProgramUnlock.Record] = ["P1": .init(startedAt: at(1, 9), previewedAt: at(1, 9))]
+        let day1 = states(previewed, now: at(1, 22))
+        #expect(day1["P1"] == .inProgress)
+        #expect(day1["P2"] == .scheduled(.tomorrow))
+        let day2 = states(previewed, now: at(2, 9))
+        #expect(day2["P2"] == .available)
+        #expect(day2["P3"] == .locked)
+        let home = unlock.current(records: previewed, quitDay: at(10, 0), quitTimestamp: nil, now: at(2, 9))
+        #expect(home?.id == "P2")
+        // Previewing P2 too: P3 opens on day 3, and P1 and P2 are still open.
+        var two = previewed
+        two["P2"] = .init(startedAt: at(2, 9), previewedAt: at(2, 10))
+        let day3 = states(two, now: at(3, 9))
+        #expect(day3["P1"] == .inProgress && day3["P2"] == .inProgress && day3["P3"] == .available)
+        // Finishing P1 in full after subscribing changes nothing ahead of it.
+        two["P1"] = .init(startedAt: at(1, 9), completedAt: at(3, 10), previewedAt: at(1, 9))
+        #expect(states(two, now: at(3, 11))["P3"] == .available)
+    }
+
     @Test func aStartedSessionIsInProgress() {
         let s = states(["P1": .init(startedAt: at(1, 9))], now: at(1, 10))
         #expect(s["P1"] == .inProgress)

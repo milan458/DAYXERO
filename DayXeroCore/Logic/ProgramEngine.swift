@@ -60,12 +60,12 @@ public struct ProgramEngine: Sendable {
     }
 }
 
-/// What the free tier includes in the old day-based program: the counter, Craving SOS and the first three prep days,
-/// to match program v2's `FullProgram` (MON-01).
+/// What the free tier opens in the old day-based program, to match program v2's `FullProgram` (BET-1, 3 Nov 2026):
+/// every prep day opens for its free part; Quit Day onwards needs Pro or the trial.
 public enum FreeTier {
-    /// Prep days 1 to 3 are free; the rest needs Pro or the trial.
+    /// Prep days open for their free part; the rest needs Pro or the trial.
     public static func isFree(_ day: ProgramDayID, in outline: [ProgramDayID]) -> Bool {
-        day.phase == .prep && day.index <= FullProgram.freeSessionIds.count
+        day.phase == .prep
     }
 
     /// Whether a day can be opened: unlocked by progress, and either free or paid for.

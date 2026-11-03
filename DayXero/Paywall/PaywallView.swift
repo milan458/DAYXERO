@@ -11,13 +11,22 @@ enum AppLinks {
 }
 
 /// The full paywall (S3.1–S3.6), opened from "See all plans", Settings, Program, Today and the locked features.
-/// There is no paywall after onboarding (S27.2): the close button is always there and nothing here is a first run.
-/// Every plan is sold whenever the Quit Day is; the 7-day trial starts the day it's bought (MON-01).
+/// The close button is always there here. Every plan is sold whenever the Quit Day is; the 7-day trial starts the day
+/// it's bought. On days 4 and 6 after download the yearly plan is today's offer (BET-1).
 struct PaywallView: View {
+    /// Where the paywall opens.
+    enum Context: Equatable {
+        /// From a locked session, Settings or See all plans: the plan is ready, here's what's included.
+        case standard
+        /// After a prep session's two free cards (BET-1): Xero says so, with the session's label and title above.
+        case prepDay(eyebrow: String)
+    }
+
     let name: String
     let quitDay: Date
     @State var model: PaywallModel
     let onClose: () -> Void
+    var context: Context = .standard
     /// Called as a purchase or restore starts, before the person can turn Pro.
     var onPurchaseStarted: () -> Void = {}
     /// The person's spend for the price anchor, where there's no profile yet (onboarding). Otherwise it's the profile's.
@@ -44,7 +53,7 @@ struct PaywallView: View {
                                button: "Back to my day", action: onClose)
             case .unlocked:
                 PaywallMessage(systemImage: "checkmark", tint: .sage, title: allSetTitle,
-                               message: unlockedMessage, button: "Back to my day",
+                               message: unlockedMessage, button: context == .standard ? LocalizedStringKey("Back to my day") : LocalizedStringKey("Continue"),
                                action: onClose)
                     .sensoryFeedback(DX.Haptic.commit, trigger: model.phase)
             }
@@ -71,7 +80,7 @@ struct PaywallView: View {
                 ? "Your free trial runs until \(end, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)). We'll remind you \(reminderLead) before it ends."
                 : "Your free trial runs until \(end, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated))."
         }
-        return "The full program is unlocked. Prep 4 is ready when you are."
+        return "The full program is unlocked. Every prep session is open in full."
     }
 
     /// "Milan, your plan is ready", or "Your plan is ready" when there's no name to use.
@@ -122,18 +131,31 @@ struct PaywallView: View {
             header.padding(.horizontal, DX.Space.m).padding(.top, DX.Space.xs).dxReadableColumn()
             ScrollView {
                 VStack(alignment: .leading, spacing: DX.Space.xs) {
-                    Text(verbatim: Self.readyTitle(name: name)).v4Text(.title).accessibilityAddTraits(.isHeader)
-                    Text("Everything for your \(quitDay, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)) Quit Day.")
-                        .v4Text(.subtitle)
-                    // MON-01: what the full program adds, in the order the person meets it.
-                    VStack(alignment: .leading, spacing: 7) {
-                        included("Prep 4 to 7 and your Day Xero launch kit")
-                        included("Weeks 1 to 4 of the program path")
-                        included("Jelli's voice coaching")
-                        included("If-then slip planner and a 12-week NRT schedule")
-                        included("Trigger heatmaps")
+                    switch context {
+                    case .standard:
+                        Text(verbatim: Self.readyTitle(name: name)).v4Text(.title).accessibilityAddTraits(.isHeader)
+                        Text("Everything for your \(quitDay, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)) Quit Day.")
+                            .v4Text(.subtitle)
+                        // What the full program adds, in the order the person meets it.
+                        VStack(alignment: .leading, spacing: 7) {
+                            included("Every prep session in full, and your Day Xero launch kit")
+                            included("Weeks 1 to 4 of the program path")
+                            included("Jelli's voice coaching")
+                            included("If-then slip planner and a 12-week NRT schedule")
+                            included("Trigger heatmaps")
+                        }
+                        .padding(.top, DX.Space.s)
+                    case let .prepDay(eyebrow):
+                        // BET-1 and BET-3 (Screen Lab, 3 Nov 2026): Xero says what just happened; never the price.
+                        Text(verbatim: eyebrow).v4Text(.micro)
+                        CrewSpeech(String(localized: "Xero"), lines: [
+                            .init(String(localized: "That's today's two free cards."), size: .callout),
+                            .init(String(localized: "The rest of today's session is in the full program: two more cards, the exercises, the audio and your mission.")),
+                        ], on: .reading, tail: .topLeading, alignment: .top) {
+                            XeroView(mood: .hello, stage: 1, size: .card)
+                        }
+                        .padding(.bottom, DX.Space.xs)
                     }
-                    .padding(.top, DX.Space.s)
                     Text(FreeLine.text)
                         .dxFont(14, weight: 400, style: .footnote).foregroundStyle(Read4.muted)
                         .padding(.bottom, DX.Space.s)
@@ -248,7 +270,9 @@ struct PaywallView: View {
             switch option.plan {
             case .annual:
                 if let end = model.trialEndDate {
-                    Text("Free until \(Text(end, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)).bold()), then \(option.priceText) a year.")
+                    (option.isOffer
+                        ? Text("Free until \(Text(end, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)).bold()), then \(option.priceText) a year, every year.")
+                        : Text("Free until \(Text(end, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)).bold()), then \(option.priceText) a year."))
                     + (model.canRemind ? Text("\nWe'll remind you \(reminderLead) before.") : Text(""))
                 } else {
                     Text("\(Text("\(option.priceText) today").bold()), then every year until you cancel.")
@@ -308,7 +332,7 @@ struct PaywallView: View {
             header.padding(.horizontal, DX.Space.m).padding(.top, DX.Space.xs).dxReadableColumn()
             Spacer()
             V4StateView(.error, systemImage: "exclamationmark.circle", title: "Couldn't reach the App Store",
-                        message: "Check your connection and try again. Prep 1 to 3, your counter and Craving SOS work without it.",
+                        message: "Check your connection and try again. Your counter, Craving SOS and each prep day's free cards work without it.",
                         actionTitle: "Try again") { Task { await model.load() } }
             Spacer()
             Button("Continue with free") {
@@ -344,8 +368,15 @@ private struct PlanRow: View {
                 }
                 Spacer(minLength: DX.Space.xs)
                 VStack(alignment: .trailing, spacing: 1) {
-                    Text(verbatim: option.priceText).dxFont(16, weight: 700, style: .body)
-                        .monospacedDigit().foregroundStyle(Read4.ink)
+                    HStack(alignment: .firstTextBaseline, spacing: 6) {
+                        if let regular = option.regularPriceText {
+                            Text(verbatim: regular).dxFont(13, weight: 500, style: .footnote).strikethrough()
+                                .monospacedDigit().foregroundStyle(Read4.muted)
+                                .accessibilityLabel(Text("usually \(regular)"))
+                        }
+                        Text(verbatim: option.priceText).dxFont(16, weight: 700, style: .body)
+                            .monospacedDigit().foregroundStyle(Read4.ink)
+                    }
                     Text(period).dxFont(12, weight: 500, style: .caption2).foregroundStyle(Read4.muted)
                 }
             }
@@ -357,7 +388,16 @@ private struct PlanRow: View {
                     .strokeBorder(isSelected ? Read4.accent : Read4.hairline, lineWidth: isSelected ? 1.5 : 1)
             )
             .overlay(alignment: .topTrailing) {
-                if let days = option.trialDays {
+                if option.isOffer {
+                    // BET-1: days 4 and 6 after download. The badge says the offer; the charge line says the trial.
+                    Text("TODAY ONLY · \(FullProgram.offerPercent)% OFF")
+                        .dxFont(12, weight: 700, style: .caption2)
+                        .tracking(0.4)
+                        .foregroundStyle(DX.Fill.cream)
+                        .padding(.vertical, 3).padding(.horizontal, 8)
+                        .background(Read4.accent, in: Capsule())
+                        .offset(x: -14, y: -9)
+                } else if let days = option.trialDays {
                     Text(savingPercent.map { "\(days) DAYS FREE · SAVE \($0)%" as LocalizedStringKey } ?? "\(days) DAYS FREE")
                         .dxFont(12, weight: 700, style: .caption2)
                         .tracking(0.4)
@@ -386,6 +426,10 @@ private struct PlanRow: View {
     private var detail: LocalizedStringKey {
         switch option.plan {
         case .annual:
+            if let regular = option.regularPriceText {
+                if let perMonth = option.perMonthText { return "Usually \(regular) · \(perMonth) a month" }
+                return "Usually \(regular)"
+            }
             if let perMonth = option.perMonthText {
                 // With a trial, the badge carries the saving.
                 if let savingPercent, option.trialDays == nil { return "\(perMonth) a month · save \(savingPercent)%" }
@@ -499,9 +543,9 @@ struct BillingSheet: View {
     }
 }
 
-/// The line every screen that sells the full program shows about what stays free (S27.2, MON-01).
+/// The line every screen that sells the full program shows about what stays free (BET-1, Screen Lab 3 Nov 2026).
 enum FreeLine {
-    static var text: LocalizedStringKey { "Always free: Prep 1 to 3, your counter, Craving SOS and a 60-second breathing timer." }
+    static var text: LocalizedStringKey { "Always free: your counter, Craving SOS, a 60-second breathing timer and two cards from each prep day." }
 }
 
 /// "Costs 8 days of smoking" with where the number comes from (MON-03).

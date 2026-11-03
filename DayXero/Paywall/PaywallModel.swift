@@ -75,6 +75,15 @@ final class PaywallModel {
     var quitDay: Date?
     /// The person's usual nicotine spend, for the price anchor (MON-03). nil hides it.
     var spend: Spend?
+    /// The first launch, day 1 for the yearly offer on days 4 and 6 (BET-1). Tests set it directly.
+    var installedOn: Date? = InstallDay.date()
+    /// The person's day boundary, so "today only" ends when their day does.
+    var boundaryHour = 0
+
+    /// Today is one of the yearly offer's days.
+    var isOfferDay: Bool {
+        FullProgram.isOfferDay(installedOn: installedOn, now: now(), clock: DayClock(calendar: calendar, boundaryHour: boundaryHour))
+    }
 
     struct Spend: Equatable {
         let perYear: Decimal
@@ -147,7 +156,7 @@ final class PaywallModel {
         phase = .loading
         if trackView { Analytics.track(.paywallViewed) }
         do {
-            plans = try await store.loadPlans()
+            plans = try await store.loadPlans(offer: isOfferDay)
             if !plans.contains(where: { $0.plan == selected }), let first = plans.first { selected = first.plan }
             phase = .ready
         } catch {

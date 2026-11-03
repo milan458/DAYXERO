@@ -16,7 +16,7 @@ struct UpgradeSheet: View {
     var body: some View {
         VStack(alignment: .leading, spacing: DX.Space.xs) {
             Text("Keep going with \(dayTitle)").v4Text(.title).dxFont(24, weight: 700, style: .title2)
-            Text("Prep 1 to 3 were the free taste. The full program carries on from here: the rest of prep, your Day Xero launch kit and Weeks 1 to 4.")
+            Text("The full program carries on from here: your Day Xero launch kit, Weeks 1 to 4, and every prep session in full.")
                 .v4Text(.subtitle)
             if let option = model.plans.first(where: { $0.plan == .annual }), let anchor = model.anchor(for: option) {
                 PriceAnchorLine(anchor: anchor).padding(.top, DX.Space.s)

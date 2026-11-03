@@ -1,5 +1,13 @@
 # Free vs full program, price anchor, 90-second read (MON-01, MON-03, MON-04; 2 Nov 2026)
 
+> **Replaced on 3 Nov 2026 (BET-1, `docs/BIGGER_BETS_PLAN.md`).** Free users now get each prep session's intro and its
+> first two cards, then the prep-day paywall (✕ top right); the next prep session opens the next day, and after
+> subscribing every prep session is open in full. Day Xero onwards is paid. The 7-day trial can start from download.
+> The yearly plan is $29.99 (₹2,249) on days 4 and 6 after download, with the same trial, renewing at $29.99
+> (`dayxero.annual.offer`). "Always free: your counter, Craving SOS, a 60-second breathing timer and two cards from
+> each prep day." The rule lives in `FullProgram` (`access`, `previewCards`, `offerDays`). The tables below are MON-01,
+> kept for history; the price anchor (MON-03) and the 90-second read (MON-04) still apply.
+
 The proposal: v1's paywall came too early (Prep Day 2) and v2 gave too much away. The fix is a free taste of prep,
 then a 7-day trial. This replaces **decision 15** (whole prep week free, trial sold only from Quit Day) and most of
 **decision 23** (Day Xero free, offer after it). S30 in `planning/tasks.json`.

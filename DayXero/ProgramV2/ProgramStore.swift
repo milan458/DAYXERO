@@ -54,7 +54,8 @@ struct ProgramStore {
     }
 
     func unlockRecords() -> [String: ProgramUnlock.Record] {
-        Dictionary(records().map { ($0.sessionId, ProgramUnlock.Record(startedAt: $0.startedAt, completedAt: $0.completedAt)) },
+        Dictionary(records().map { ($0.sessionId, ProgramUnlock.Record(startedAt: $0.startedAt, completedAt: $0.completedAt,
+                                                                       previewedAt: $0.previewedAt)) },
                    uniquingKeysWith: { a, _ in a })
     }
 
@@ -81,7 +82,9 @@ struct ProgramStore {
     /// Home's session: once Day Xero is open its chain comes before prep catch-up (ProgramUnlock.current, S27.7).
     func current(now: Date = .now) -> (id: String, state: ProgramUnlock.State)? {
         let all = states(now: now)
-        if let engine = unlock() { return engine.current(of: all) }
+        // Prep sessions whose free part was read stay open on the path; Home moves on to the next one (BET-1).
+        let previewed = Set(records().filter { $0.previewedAt != nil && $0.completedAt == nil }.map(\.sessionId))
+        if let engine = unlock() { return engine.current(of: all, skipping: previewed) }
         return all.first {
             if case .completed = $0.state { return false }
             return true
@@ -103,6 +106,13 @@ struct ProgramStore {
         context.insert(record)
         try? context.save()
         return record
+    }
+
+    /// A free user reached the prep-day paywall after the free cards (BET-1): the next prep session opens tomorrow.
+    func preview(_ sessionId: String, at date: Date = .now) {
+        guard let record = record(sessionId), record.previewedAt == nil, record.completedAt == nil else { return }
+        record.previewedAt = date
+        try? context.save()
     }
 
     func complete(_ sessionId: String, at date: Date = .now) {

@@ -1,30 +1,46 @@
 import Foundation
 
-/// What's free forever and what comes with the full program (MON-01, 2 Nov 2026). Replaces decisions 15 and 23
-/// (the whole prep week and Day Xero free, the trial sold only from Quit Day): the free taste is Prep 1 to 3, and
-/// the 7-day trial is sold at the Prep 4 paywall, whenever the Quit Day is.
+/// What's free and what comes with the full program (Milan, 3 Nov 2026, BET-1; replaces MON-01's "Prep 1 to 3 free").
 ///
-/// | Free forever | Full program (7-day trial, then yearly) |
+/// | Free | Full program (7-day trial, then yearly; or monthly, or lifetime) |
 /// | --- | --- |
-/// | Prep 1–3, the counter, Craving SOS, the 60-second breathing timer | Prep 4–7, Day Xero, Weeks 1–4, Jelli's voice coaching, the if-then slip planner, the 12-week NRT scheduler, trigger heatmaps |
+/// | Each prep session's intro and its first two cards; the counter, Craving SOS, the 60-second breathing timer, evening check-ins | The rest of each prep session (activities, cards 3 and 4, the audio, the mission), Day Xero, Weeks 1–4, Jelli's voice coaching, the if-then slip planner, the 12-week NRT scheduler, trigger heatmaps |
 ///
+/// A free user who reads a prep session's two free cards meets the prep-day paywall. That counts as their day's prep:
+/// the next prep session opens tomorrow, and after subscribing every prep session is open in full as catch-up.
 /// Craving SOS stays free; only Jelli's voice in it is part of the full program (Milan, 2 Nov 2026).
 public enum FullProgram {
-    /// The free taste of prep.
-    public static let freeSessionIds: Set<String> = ["P1", "P2", "P3"]
-    /// The first session behind the paywall: where the trial is offered.
-    public static let firstPaidSessionId = "P4"
+    /// How a session opens for someone.
+    public enum Access: Equatable, Sendable {
+        /// The whole session.
+        case full
+        /// The intro and the first `previewCards` cards, then the prep-day paywall.
+        case preview
+        /// Nothing until they subscribe: the upgrade sheet instead.
+        case locked
+    }
+
+    /// The prep sessions a free user can open for their free part.
+    public static let previewSessionIds: Set<String> = ["P1", "P2", "P3", "P4", "P5", "P6", "P7"]
+    /// Cards a free user reads in each prep session before the paywall.
+    public static let previewCards = 2
     /// The trial on the yearly plan. The App Store decides who gets one; this is what the screens promise.
     public static let trialDays = 7
 
-    /// Whether a program session is part of the free tier.
-    public static func isFree(sessionId: String) -> Bool {
-        freeSessionIds.contains(sessionId)
+    /// Whether a session has a free part (every prep session).
+    public static func isPreviewable(sessionId: String) -> Bool {
+        previewSessionIds.contains(sessionId)
     }
 
-    /// Whether opening a session needs the full program. A session finished while subscribed stays open for replay.
+    /// How a session opens. A session finished while subscribed stays open in full for replay.
+    public static func access(sessionId: String, isPro: Bool, completed: Bool = false) -> Access {
+        if isPro || completed { return .full }
+        return isPreviewable(sessionId: sessionId) ? .preview : .locked
+    }
+
+    /// Whether a session can't be opened at all without the full program (Day Xero onwards, for a free user).
     public static func needsUpgrade(sessionId: String, isPro: Bool, completed: Bool = false) -> Bool {
-        !isPro && !completed && !isFree(sessionId: sessionId)
+        access(sessionId: sessionId, isPro: isPro, completed: completed) == .locked
     }
 
     /// The paid features outside the program path. Each one has a free counterpart that keeps working.
@@ -41,7 +57,7 @@ public enum FullProgram {
 
     public static func has(_ feature: Feature, isPro: Bool) -> Bool { isPro }
 
-    /// When a trial bought today ends, and how that falls against the Quit Day: the paywall says both (MON-01).
+    /// When a trial bought today ends, and how that falls against the Quit Day: the paywall says both.
     public static func trialEnd(startingOn start: Date, calendar: Calendar = .current) -> Date {
         calendar.date(byAdding: .day, value: trialDays, to: start) ?? start
     }
@@ -51,10 +67,39 @@ public enum FullProgram {
         calendar.dateComponents([.day], from: calendar.startOfDay(for: quitDay), to: calendar.startOfDay(for: trialEnd)).day ?? 0
     }
 
-    /// The first day Prep 4 can open for someone who starts Prep 1 on `firstDay`: three days later, one prep session a
-    /// day. The plan screen in onboarding uses it to say when the trial would start.
-    public static func earliestPaywallDay(firstDay: Date, calendar: Calendar = .current) -> Date {
-        calendar.date(byAdding: .day, value: freeSessionIds.count, to: calendar.startOfDay(for: firstDay)) ?? firstDay
+    // MARK: The yearly offer by day since download
+
+    /// Days since download on which the yearly plan is $29.99 instead of $39.99, with the same 7-day trial and
+    /// renewing at $29.99 (Milan, 3 Nov 2026). The download day is day 1.
+    public static let offerDays: Set<Int> = [4, 6]
+    /// What the offer takes off the yearly price, for the badge.
+    public static let offerPercent = 25
+
+    /// The download day is day 1, counted on the person's own day clock, so "today only" ends when their day ends.
+    public static func dayNumber(installedOn installed: Date, now: Date, clock: DayClock) -> Int {
+        let days = clock.calendar.dateComponents([.day], from: clock.day(containing: installed), to: clock.day(containing: now)).day ?? 0
+        return max(days, 0) + 1
+    }
+
+    /// Whether today is one of the yearly offer's days.
+    public static func isOfferDay(installedOn installed: Date?, now: Date, clock: DayClock) -> Bool {
+        guard let installed else { return false }
+        return offerDays.contains(dayNumber(installedOn: installed, now: now, clock: clock))
+    }
+}
+
+/// The day DayXero was first opened on this phone: day 1 for the yearly offer (`FullProgram.offerDays`).
+public enum InstallDay {
+    public static let key = "dx.firstLaunch"
+
+    public static func date(in defaults: UserDefaults = .standard) -> Date? {
+        defaults.object(forKey: key) as? Date
+    }
+
+    /// Records the first launch once; later launches leave it alone.
+    public static func recordIfNeeded(now: Date = .now, in defaults: UserDefaults = .standard) {
+        guard defaults.object(forKey: key) == nil else { return }
+        defaults.set(now, forKey: key)
     }
 }
 

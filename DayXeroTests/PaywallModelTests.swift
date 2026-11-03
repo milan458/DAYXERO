@@ -8,13 +8,16 @@ final class StubStore: PurchaseStore {
     var plans: [PlanOption] = [
         PlanOption(plan: .annual, price: 39.99, currencyCode: "USD", priceText: "$39.99", perMonthText: "$3.33", trialDays: 3),
         PlanOption(plan: .monthly, price: 9.99, currencyCode: "USD", priceText: "$9.99", perMonthText: nil, trialDays: nil),
-        PlanOption(plan: .lifetime, price: 79.99, currencyCode: "USD", priceText: "$79.99", perMonthText: nil, trialDays: nil),
+        PlanOption(plan: .lifetime, price: 99.99, currencyCode: "USD", priceText: "$99.99", perMonthText: nil, trialDays: nil),
     ]
     var failLoad = false
+    /// What the last load asked for: true on an offer day.
+    var askedForOffer: Bool?
     var outcome: PurchaseOutcome = .purchased
     var restoreFinds = false
 
-    func loadPlans() async throws -> [PlanOption] {
+    func loadPlans(offer: Bool) async throws -> [PlanOption] {
+        askedForOffer = offer
         if failLoad { throw StoreError.unavailable }
         return plans
     }
@@ -32,6 +35,7 @@ struct PaywallModelTests {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = TimeZone(identifier: "UTC")!
         let model = PaywallModel(store: store, entitlement: entitlement, calendar: calendar, now: { [now] in now })
+        model.installedOn = nil
         return (model, entitlement)
     }
 
@@ -133,16 +137,49 @@ struct PaywallModelTests {
         #expect(model.trialEndsAfterQuitDay == nil)
     }
 
-    /// Prep 4 in a 7-day prep: a 7-day trial bought that day ends 3 days after the Quit Day (MON-01).
-    @Test func aSevenDayTrialFromPrepFourEndsJustAfterQuitDay() {
+    /// A 7-day trial bought on a prep day ends 7 days later, whatever the Quit Day; the paywall says how that falls.
+    @Test func aSevenDayTrialEndsAWeekAfterItStarts() {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = TimeZone(identifier: "UTC")!
-        let prep1 = now
-        let quitDay = calendar.date(byAdding: .day, value: 7, to: prep1)!
-        let prep4 = FullProgram.earliestPaywallDay(firstDay: prep1, calendar: calendar)
-        #expect(prep4 == calendar.date(byAdding: .day, value: 3, to: calendar.startOfDay(for: prep1)))
-        let end = FullProgram.trialEnd(startingOn: prep4, calendar: calendar)
-        #expect(FullProgram.trialEndsDaysAfterQuitDay(trialEnd: end, quitDay: quitDay, calendar: calendar) == 3)
+        let quitDay = calendar.date(byAdding: .day, value: 7, to: now)!
+        let end = FullProgram.trialEnd(startingOn: now, calendar: calendar)
+        #expect(FullProgram.trialEndsDaysAfterQuitDay(trialEnd: end, quitDay: quitDay, calendar: calendar) == 0)
+    }
+
+    // MARK: Yearly offer on days 4 and 6 (BET-1)
+
+    @Test func theOfferIsOnDaysFourAndSixAfterDownload() {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(identifier: "UTC")!
+        let clock = DayClock(calendar: calendar, boundaryHour: 4)
+        let installed = now // day 1
+        let offerDays = (0..<9).filter { day in
+            FullProgram.isOfferDay(installedOn: installed, now: calendar.date(byAdding: .day, value: day, to: installed)!, clock: clock)
+        }.map { $0 + 1 }
+        #expect(offerDays == [4, 6])
+        #expect(!FullProgram.isOfferDay(installedOn: nil, now: now, clock: clock))
+        // 2am on day 5 still belongs to day 4 with a 4am boundary, so the offer holds until the person's day ends.
+        let day5At2am = calendar.date(byAdding: .hour, value: 4 * 24 + 2, to: calendar.startOfDay(for: installed))!
+        #expect(FullProgram.dayNumber(installedOn: installed, now: day5At2am, clock: clock) == 4)
+    }
+
+    @Test func theModelAsksForTheOfferOnlyOnOfferDays() async {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(identifier: "UTC")!
+        let store = StubStore()
+        let (model, _) = make(store)
+        model.installedOn = calendar.date(byAdding: .day, value: -3, to: now) // today is day 4
+        await model.load()
+        #expect(store.askedForOffer == true)
+        model.installedOn = calendar.date(byAdding: .day, value: -4, to: now) // day 5
+        await model.load()
+        #expect(store.askedForOffer == false)
+    }
+
+    @Test func anOfferProductCountsAsTheYearlyPlan() {
+        #expect(Plan(productId: Plan.annualOfferProductId) == .annual)
+        #expect(Plan(productId: "dayxero.monthly") == .monthly)
+        #expect(Plan(productId: "something.else") == nil)
     }
 
     // MARK: Price anchor (MON-03)
@@ -177,27 +214,30 @@ struct PaywallModelTests {
         #expect(PaywallView.readyTitle(name: "  ") == "Your plan is ready")
     }
 
-    /// MON-01: Prep 1 to 3 are the free taste; Prep 4 onwards, Day Xero and the weeks need the full program.
-    @Test func freeSessionsArePrepOneToThree() {
-        #expect(ProgramV2Access.freeSessions == ["P1", "P2", "P3"])
-        #expect(!ProgramV2Access.needsUpgrade("P3", isPro: false))
-        #expect(ProgramV2Access.needsUpgrade("P4", isPro: false))
+    /// BET-1: every prep session opens for its free part (intro and two cards); Day Xero and the weeks need the full program.
+    @Test func prepSessionsOpenForTheirFreePart() {
+        #expect(ProgramV2Access.previewSessions == ["P1", "P2", "P3", "P4", "P5", "P6", "P7"])
+        #expect(FullProgram.previewCards == 2)
+        #expect(FullProgram.access(sessionId: "P1", isPro: false) == .preview)
+        #expect(FullProgram.access(sessionId: "P7", isPro: false) == .preview)
+        #expect(FullProgram.access(sessionId: "DX", isPro: false) == .locked)
+        #expect(FullProgram.access(sessionId: "W1D1", isPro: false) == .locked)
+        #expect(FullProgram.access(sessionId: "P4", isPro: true) == .full)
+        #expect(!ProgramV2Access.needsUpgrade("P4", isPro: false))
         #expect(ProgramV2Access.needsUpgrade("DX", isPro: false))
-        #expect(ProgramV2Access.needsUpgrade("W1D1", isPro: false))
-        #expect(!ProgramV2Access.needsUpgrade("P4", isPro: true))
-        // A session finished while subscribed stays open for replay.
-        #expect(!FullProgram.needsUpgrade(sessionId: "P5", isPro: false, completed: true))
+        // A session finished while subscribed stays open in full for replay.
+        #expect(FullProgram.access(sessionId: "W1D2", isPro: false, completed: true) == .full)
         #expect(FullProgram.Feature.allCases.allSatisfy { FullProgram.has($0, isPro: true) && !FullProgram.has($0, isPro: false) })
     }
 
-    /// The old day-based program follows the same line: prep days 1 to 3 free, the rest needs Pro.
-    @Test func prepDaysOneToThreeAreFree() {
+    /// The old day-based program follows the same line: prep days open, Quit Day onwards needs Pro.
+    @Test func prepDaysOpenAndQuitDaysNeedPro() {
         let outline = (1...4).map { ProgramDayID(phase: .prep, index: $0) } + [ProgramDayID(phase: .quit, index: 1)]
         let engine = ProgramEngine(outline: outline)
         #expect(FreeTier.canOpen(outline[0], engine: engine, completed: [], isPro: false))
-        #expect(FreeTier.canOpen(outline[2], engine: engine, completed: Set(outline[0...1]), isPro: false))
-        #expect(!FreeTier.canOpen(outline[3], engine: engine, completed: Set(outline[0...2]), isPro: false))
-        #expect(FreeTier.canOpen(outline[3], engine: engine, completed: Set(outline[0...2]), isPro: true))
+        #expect(FreeTier.canOpen(outline[3], engine: engine, completed: Set(outline[0...2]), isPro: false))
+        #expect(!FreeTier.canOpen(outline[4], engine: engine, completed: Set(outline[0...3]), isPro: false))
+        #expect(FreeTier.canOpen(outline[4], engine: engine, completed: Set(outline[0...3]), isPro: true))
         #expect(!FreeTier.isFree(outline[4], in: outline))
     }
 }

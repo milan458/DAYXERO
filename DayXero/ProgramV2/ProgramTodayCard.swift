@@ -8,10 +8,11 @@ struct SessionOpen: Identifiable, Hashable {
     var isReplay = false
 }
 
-/// Free tier (MON-01): the counter, Craving SOS, the 60-second breathing timer and Prep 1 to 3. Prep 4 onwards needs
-/// Pro or the 7-day trial, which is sold at the Prep 4 paywall whenever the Quit Day is. See `FullProgram`.
+/// Free tier (BET-1, 3 Nov 2026): the counter, Craving SOS, the 60-second breathing timer, and each prep session's
+/// intro and first two cards, then the prep-day paywall. Day Xero onwards needs Pro or the 7-day trial. See `FullProgram`.
 enum ProgramV2Access {
-    static var freeSessions: Set<String> { FullProgram.freeSessionIds }
+    /// Sessions a free user opens for their free part.
+    static var previewSessions: Set<String> { FullProgram.previewSessionIds }
     /// The Day Xero session: its completion is the sun moment, and anyone still without the full program gets the
     /// Quit Day offer after it once (decision 23). Under MON-01 Day Xero is paid, so that only happens to someone
     /// whose subscription ended part-way.
@@ -19,6 +20,11 @@ enum ProgramV2Access {
 
     static func needsUpgrade(_ sessionId: String, isPro: Bool) -> Bool {
         !DemoMode.isOn && FullProgram.needsUpgrade(sessionId: sessionId, isPro: isPro)
+    }
+
+    /// How a session opens; demo mode opens everything in full.
+    static func access(_ sessionId: String, isPro: Bool, completed: Bool = false) -> FullProgram.Access {
+        DemoMode.isOn ? .full : FullProgram.access(sessionId: sessionId, isPro: isPro, completed: completed)
     }
 }
 

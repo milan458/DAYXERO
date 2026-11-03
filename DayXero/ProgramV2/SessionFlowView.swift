@@ -13,17 +13,23 @@ struct SessionFlowView: View {
 
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
+    @Environment(Entitlement.self) private var entitlement
     private let motion = MotionPolicy()
 
     @State private var steps: [FlowStep] = []
     @State private var index = 0
     @State private var record: SessionRecord?
     @State private var completed = false
+    /// A free user's prep session (BET-1): the intro and two cards, then the prep-day paywall.
+    @State private var preview = false
+    /// The card to start the stack at: card 3 straight after buying from the prep-day paywall.
+    @State private var cardsStart = 0
     /// Read the card stack or listen to the recording (MON-04). Reading is the default.
     @AppStorage(LessonFormat.key) private var lessonFormat = LessonFormat.read.rawValue
 
     enum FlowStep: Hashable {
-        case intro, beat(String), cards, audio, mission, completion
+        /// `previewEnd` is the prep-day paywall at the end of a free user's two cards (BET-1).
+        case intro, beat(String), cards, audio, mission, completion, previewEnd
     }
 
     private var store: ProgramStore { ProgramStore(context: context, profile: profile) }
@@ -32,7 +38,7 @@ struct SessionFlowView: View {
     var body: some View {
         VStack(spacing: 0) {
             if let session, steps.indices.contains(index) {
-                if steps[index] != .completion { header(session) }
+                if steps[index] != .completion, steps[index] != .previewEnd { header(session) }
                 stepView(steps[index], session: session)
                     .id(steps[index])
                     .transition(motion.reduce ? .opacity : .asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity),
@@ -68,6 +74,42 @@ struct SessionFlowView: View {
 
     private func start() {
         guard let session, steps.isEmpty else { return }
+        let finished = store.record(session.id)?.completedAt != nil
+        if !isReplay, ProgramV2Access.access(session.id, isPro: entitlement.isPro, completed: finished) == .preview {
+            startPreview(session)
+            return
+        }
+        buildFull(session)
+    }
+
+    /// The free part (BET-1): intro, the first two cards (always the read, the audio is paid), then the paywall. Its
+    /// place isn't saved over the full session's; opening it again after reaching the paywall goes straight there.
+    private func startPreview(_ session: ProgramContent.Session) {
+        preview = true
+        let built: [FlowStep] = (session.cards ?? []).isEmpty ? [.intro, .previewEnd] : [.intro, .cards, .previewEnd]
+        steps = built
+        let record = store.open(session, firstStepAfterAudio: 1)
+        self.record = record
+        index = record.previewedAt != nil ? built.count - 1 : 0
+        Analytics.track(.programSessionStarted(sessionId: session.id, variant: context(for: session).variant.rawValue))
+    }
+
+    /// Bought from the prep-day paywall: the whole session, carrying on at the first activity with the stack at card 3.
+    private func unlockFromPreview() {
+        guard let session else { return }
+        preview = false
+        steps = []
+        buildFull(session, trackStart: false)
+        let firstAfterIntro = min(1, steps.count - 1)
+        index = firstAfterIntro
+        cardsStart = FullProgram.previewCards
+        if let record, record.completedAt == nil {
+            record.currentStep = index
+            try? context.save()
+        }
+    }
+
+    private func buildFull(_ session: ProgramContent.Session, trackStart: Bool = true) {
         let ctx = context(for: session)
         let visible = { (beats: [Beat]) in beats.filter { ctx.shows($0) }.map { FlowStep.beat($0.id) } }
         // The lesson sits where the audio always did (MON-04): the 90-second card stack by default, or the recording
@@ -107,6 +149,7 @@ struct SessionFlowView: View {
             if let found = built.firstIndex(of: step) { index = found }
         }
         #endif
+        guard trackStart else { return }
         Analytics.track(isReplay || record.completedAt != nil ? .programReplayStarted(sessionId: session.id)
                         : .programSessionStarted(sessionId: session.id, variant: ctx.variant.rawValue))
     }
@@ -131,6 +174,11 @@ struct SessionFlowView: View {
     private func advance() {
         guard index + 1 < steps.count else { dismiss(); return }
         index += 1
+        if preview {
+            // Reaching the paywall counts as the day's prep: the next prep session opens tomorrow.
+            if steps[index] == .previewEnd, let session { store.preview(session.id) }
+            return
+        }
         if !isReplay, let record, record.completedAt == nil {
             record.currentStep = index
             try? context.save()
@@ -144,7 +192,7 @@ struct SessionFlowView: View {
     }
 
     private func close() {
-        if !isReplay, let record { record.currentStep = index; try? context.save() }
+        if !isReplay, !preview, let record { record.currentStep = index; try? context.save() }
         dismiss()
     }
 
@@ -193,8 +241,9 @@ struct SessionFlowView: View {
                 BeatScreen(beat: beat, ctx: ctx, onDone: advance)
             }
         case .cards:
-            CardStackStep(session: session, ctx: ctx, canListen: ProgramAudioStep.hasRecording(session, ctx: ctx),
-                          onListen: { switchLesson(to: .audio) }, onDone: advance)
+            CardStackStep(session: session, ctx: ctx, canListen: !preview && ProgramAudioStep.hasRecording(session, ctx: ctx),
+                          onListen: { switchLesson(to: .audio) }, onDone: advance,
+                          limit: preview ? FullProgram.previewCards : nil, startAt: cardsStart)
         case .audio:
             VStack(spacing: DX.Space.xs) {
                 if !(session.cards ?? []).isEmpty {
@@ -217,6 +266,9 @@ struct SessionFlowView: View {
             }
         case .completion:
             SessionCompletion(session: session, ctx: ctx, isReplay: isReplay, onDone: { dismiss() })
+        case .previewEnd:
+            PrepDayPaywall(session: session, ctx: ctx, onUnlocked: unlockFromPreview, onDone: { dismiss() })
+                .padding(.horizontal, -DX.Layout.gutter)
         }
     }
 }
@@ -460,13 +512,6 @@ struct SessionCompletion: View {
         }
     }
 
-    /// After the last free session (Prep 3), for someone without the full program: "Prep 4 starts the full program…".
-    private var opensFullProgram: String? {
-        guard FullProgram.isFree(sessionId: session.id), let next = ctx.store.content?.session(after: session.id),
-              ProgramV2Access.needsUpgrade(next.id, isPro: entitlement.isPro) else { return nil }
-        return String(localized: "\(next.label) starts the full program. You can try it free for \(FullProgram.trialDays) days.")
-    }
-
     private var clarity: Int {
         let profile = ctx.store.profile
         let stats = ProgressStats(quitDay: profile.quitDay, baselines: [], clock: DayClock(boundaryHour: profile.dayBoundaryHour))
@@ -578,12 +623,6 @@ struct SessionCompletion: View {
                             .dxType(.footnote).foregroundStyle(Read4.ink)
                             .v4Card()
                             .padding(.top, DX.Space.s)
-                    }
-                    if let opensFullProgram, !isReplay {
-                        // MON-01: the end of the free taste says what comes next, before the paywall does.
-                        Text(opensFullProgram).dxType(.footnote).foregroundStyle(Read4.muted)
-                            .multilineTextAlignment(.center)
-                            .fixedSize(horizontal: false, vertical: true)
                     }
                 }
             }

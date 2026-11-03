@@ -155,8 +155,8 @@ struct HomeTests {
         #expect(snap.lesson?.availability == .available)
     }
 
-    /// Prep 1 to 3 are free (MON-01): a free user's second prep day opens without an upgrade.
-    @Test func theFreeTasteOfPrepIsFreeForEveryone() throws {
+    /// Every prep day opens for its free part (BET-1): a free user's second prep day opens without an upgrade.
+    @Test func prepDaysOpenForEveryone() throws {
         let context = ModelContext(try DataStore.makeContainer(inMemory: true))
         let p = profile(in: context, completed: [ProgramDayID(phase: .prep, index: 1)])
         let free = HomeSnapshot(profile: p, isPro: false, now: date(23), calendar: calendar)
@@ -165,13 +165,13 @@ struct HomeTests {
         #expect(pro.lesson?.needsUpgrade == false)
     }
 
-    /// Prep 4 is the first paid day (MON-01): free users see it locked, Pro opens it.
-    @Test func prepFourNeedsTheFullProgram() throws {
+    /// Prep 4 opens for its free part too (BET-1, replacing MON-01's paid Prep 4); the paywall comes inside it.
+    @Test func prepFourOpensForItsFreePart() throws {
         let context = ModelContext(try DataStore.makeContainer(inMemory: true))
         let p = profile(in: context, completed: (1...3).map { ProgramDayID(phase: .prep, index: $0) })
         let free = HomeSnapshot(profile: p, isPro: false, now: date(25), calendar: calendar)
         #expect(free.lesson?.day == ProgramDayID(phase: .prep, index: 4))
-        #expect(free.lesson?.needsUpgrade == true)
+        #expect(free.lesson?.needsUpgrade == false)
         let pro = HomeSnapshot(profile: p, isPro: true, now: date(25), calendar: calendar)
         #expect(pro.lesson?.needsUpgrade == false)
     }

@@ -222,8 +222,24 @@ subscriber.
 3. **Then:** bet 7's review, bet 4, bet 3 (idle life first, bubbles once the screens and copy are picked), and bet 5.
 4. **Bubbles:** build once the Screen Lab mockups are approved (S32.15).
 
-## Still open
+## Signed off (Milan, 3 Nov 2026)
 
-1. **The bet 1 defaults:** the next prep day opens after the 2 free cards; Day Xero and the weeks are fully paid;
-   the new "Always free" line.
-2. **The bubble lines** in the Screen Lab.
+- **The bet 1 defaults:** the next prep day opens after the 2 free cards; Day Xero and the weeks are fully paid;
+  the new "Always free" line.
+- **The bubble lines and the prep-day paywall** in the Screen Lab (version 9).
+
+## Built (branch `claude/intelligent-curie-duudxi`, waiting on CI)
+
+- `FullProgram.access` (full / preview / locked), `previewCards`, `offerDays`, `InstallDay`; `ProgramUnlock` counts a
+  previewed prep session for the chain and Home moves past it; `SessionRecord.previewedAt`.
+- The session flow's free path (intro → 2 cards → `PrepDayPaywall`), carrying on at card 3 after buying.
+- The yearly offer on days 4 and 6 (`dayxero.annual.offer`, falls back to $39.99 until it exists in the store).
+- `CrewBubble` / `CrewSpeech` on Welcome, plan building, the slip flow, wave passed and the prep-day paywall.
+- Copy that would have stayed untrue changed with it: the plan reveal ("Two cards from each prep day are on us", the
+  trial card), the upgrade sheet, the paywall's included list, failed and unlocked messages. **Not yet in the Lab:**
+  Milan to check these lines.
+
+## Still to do
+
+- The Day-0 paywall after "Your plan is ready" (✕ after 3 s): Lab mockup first.
+- Bets 2, 4, 5, 6 (events) and 7.

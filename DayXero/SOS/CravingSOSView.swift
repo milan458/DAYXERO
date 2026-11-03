@@ -386,19 +386,14 @@ private struct PassedView: View {
                             .opacity(shown ? 1 : 0)
                             .frame(height: 230, alignment: .bottom)
                             .accessibilityHidden(true)
-                        Text("You rode it out.")
-                            .dxType(.large)
-                            .foregroundStyle(ground.ink)
-                            .multilineTextAlignment(.center)
+                        // BET-3 (Screen Lab, 3 Nov 2026): Jelli's words as bubbles pointing up at Jelli; no new words.
+                        // The +1 still pops at 1.2 s, between the two.
+                        CrewBubble(String(localized: "You rode it out."), on: ground, tail: .up, size: .title, order: 0, start: 0.9)
                             .accessibilityAddTraits(.isHeader)
-                            .dxArrive(3)
-                        Text("That wave lasted \(lasted). Each one you ride makes the next a little quieter.")
-                            .dxType(.body)
-                            .foregroundStyle(ground.muted)
-                            .multilineTextAlignment(.center)
-                            .fixedSize(horizontal: false, vertical: true)
+                            .padding(.top, 4)
+                        CrewBubble(String(localized: "That wave lasted \(lasted). Each one you ride makes the next a little quieter."),
+                                   on: ground, tail: .up, order: 1, start: 0.9)
                             .padding(.horizontal, 8)
-                            .dxArrive(4)
                         wavesTile.padding(.top, 6).dxArrive(5)
                         if !menu.isEmpty { helpedCard.dxArrive(6) }
                         triggerCard.dxArrive(7)
@@ -505,17 +500,13 @@ private struct PassedView: View {
     }
 
     /// The hand back: Xero's avatar and one line in Xero's voice.
+    /// Xero takes you back, in a bubble (BET-3).
     private var handBack: some View {
-        HStack(spacing: 10) {
+        CrewSpeech(String(localized: "Xero"), lines: [.init(String(localized: "Back to Xero. I rose a little while you were out."))],
+                   on: ground, firstOrder: 2) {
             XeroView(mood: .cheer, stage: 1, size: .avatar, animate: false)
                 .background(DX.Ground.apricot.background, in: Circle())
                 .clipShape(Circle())
-                .accessibilityHidden(true)
-            Text("Back to Xero. I rose a little while you were out.")
-                .dxType(.footnote)
-                .foregroundStyle(ground.ink)
-                .fixedSize(horizontal: false, vertical: true)
-            Spacer(minLength: 0)
         }
     }
 }

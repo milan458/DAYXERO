@@ -7,6 +7,9 @@ public final class SessionRecord {
     public var sessionId: String
     public var startedAt: Date
     public var completedAt: Date?
+    /// When a free user reached the prep-day paywall after this session's free cards (BET-1). Optional, so stores
+    /// made before it migrate without a step.
+    public var previewedAt: Date?
     /// The step to resume at: intro, before-audio beats, audio, beats, mission, completion, counted from 0.
     public var currentStep: Int
     /// Seconds into the audio, saved every few seconds and on pause.

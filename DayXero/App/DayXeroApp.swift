@@ -27,6 +27,8 @@ struct DayXeroApp: App {
         }
         SOSBridge.container = container
         SOSBridge.endLiveActivity = { await SOSLiveActivity.endAll() }
+        // Day 1 for the yearly offer on days 4 and 6 (BET-1).
+        InstallDay.recordIfNeeded()
         let store = Self.makeStore()
         // Superwall first, then RevenueCat, then keep Superwall's subscription status in step with RevenueCat's (S20).
         Paywalls.configure(usingStandInStore: Self.usesStandIns || !(store is Subscriptions))
@@ -64,8 +66,8 @@ struct DayXeroApp: App {
     }
 }
 
-/// Routes between onboarding and Home. There's no paywall after onboarding: the prep week and Day Xero are free,
-/// and the trial is offered on Quit Day after the Day Xero session (decisions 15 and 23).
+/// Routes between onboarding and Home. Free users meet the paywall inside each prep session, after its two free
+/// cards (BET-1); the Day-0 paywall after the plan reveal is still to come.
 struct RootView: View {
     @Query private var profiles: [UserProfile]
     @AppStorage("dx.underAge") private var underAge = false

@@ -24,6 +24,10 @@ struct CardStackStep: View {
     let canListen: Bool
     let onListen: () -> Void
     let onDone: () -> Void
+    /// The free part of a prep session shows only this many cards (BET-1); nil shows them all.
+    var limit: Int? = nil
+    /// Where to start: card 3 when the full program was just bought after the free cards.
+    var startAt = 0
 
     private let motion = MotionPolicy()
     @State private var index = 0
@@ -31,7 +35,8 @@ struct CardStackStep: View {
     @State private var turned: Set<Int> = []
 
     private var cards: [(front: String, back: String)] {
-        (session.cards ?? []).map { (ctx.text($0.front), ctx.text($0.back)) }
+        let all = (session.cards ?? []).map { (front: ctx.text($0.front), back: ctx.text($0.back)) }
+        return limit.map { Array(all.prefix($0)) } ?? all
     }
 
     var body: some View {
@@ -66,6 +71,7 @@ struct CardStackStep: View {
         }
         .sensoryFeedback(DX.Haptic.select, trigger: flipped)
         .sensoryFeedback(DX.Haptic.select, trigger: index)
+        .onAppear { if index == 0, startAt > 0 { index = min(startAt, max(cards.count - 1, 0)) } }
     }
 
     // MARK: The stack

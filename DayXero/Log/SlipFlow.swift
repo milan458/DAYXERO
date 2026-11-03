@@ -122,27 +122,28 @@ struct SlipFlow: View {
         return VStack(spacing: 0) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 14) {
-                    HStack(spacing: 14) {
+                    // BET-3 (Screen Lab, 3 Nov 2026): Jelli's words as bubbles; no new words.
+                    HStack(alignment: .bottom, spacing: 14) {
                         JelliView(mood: .calm, stage: 2, size: .card)
                             .frame(width: 88, height: 88)
                             .background(DX.Ground.ocean.background, in: RoundedRectangle(cornerRadius: 26, style: .continuous))
                             .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
                             .accessibilityHidden(true)
-                        VStack(alignment: .leading, spacing: 2) {
+                        VStack(alignment: .leading, spacing: 4) {
                             Text("With Jelli").dxFont(14, weight: 700, style: .footnote).foregroundStyle(ground.muted)
-                            // Plain title: the hand-drawn mark is kept for celebrations (S27.15).
-                            Text("Thanks for\ntelling me.")
-                                .dxType(.large)
-                                .fixedSize(horizontal: false, vertical: true)
+                            CrewBubble(String(localized: "Thanks for telling me."), on: ground, size: .title, order: 0)
                                 .accessibilityAddTraits(.isHeader)
                         }
                     }
                     .dxArrive(0)
-                    Text(talkLine)
-                        .dxType(.body)
-                        .foregroundStyle(ground.muted)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .dxArrive(1)
+                    VStack(alignment: .leading, spacing: 8) {
+                        ForEach(Array(talkLines.enumerated()), id: \.offset) { i, line in
+                            CrewBubble(line, on: ground, tail: .topLeading, order: i + 1)
+                        }
+                    }
+                    .padding(.leading, 102)
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel(Text(verbatim: talkLines.joined(separator: " ")))
                     if !plansUnlocked {
                         // MON-01: the slip is logged and nothing resets for everyone; the if-then plan is paid.
                         LockedFeatureCard(title: "Plan for next time",
@@ -225,11 +226,16 @@ struct SlipFlow: View {
         practice || FullProgram.has(.ifThenPlanner, isPro: entitlement?.isPro ?? Entitlement.isProNow)
     }
 
-    private var talkLine: String {
-        let base = isPrep
-            ? String(localized: "Logged. Prep is for learning your patterns, and this helps.")
-            : String(localized: "Waves come and go. Nothing resets: your days since Quit Day and Xero's sky stay just as they are.")
-        return plansUnlocked ? base + " " + String(localized: "Let's make a plan for next time.") : base
+    /// Jelli's lines after "Thanks for telling me." (BET-3): today's line, split so "Nothing resets." lands on its own.
+    /// With the planner, the second line asks for a plan instead, so Jelli stops at three bubbles.
+    private var talkLines: [String] {
+        let plan = String(localized: "Let's make a plan for next time.")
+        if isPrep {
+            let logged = String(localized: "Logged. Prep is for learning your patterns, and this helps.")
+            return plansUnlocked ? [logged, plan] : [logged]
+        }
+        let resets = String(localized: "Waves come and go. Nothing resets.")
+        return plansUnlocked ? [resets, plan] : [resets, String(localized: "Your days since Quit Day and Xero's sky stay just as they are.")]
     }
 
     // MARK: Plan saved
