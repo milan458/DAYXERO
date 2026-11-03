@@ -503,7 +503,7 @@ private struct ThenOption: View {
                 Spacer(minLength: 8)
                 Circle()
                     .strokeBorder(isOn ? DX.Fill.green : DX.Ground.reading.muted, lineWidth: isOn ? 6 : 2)
-                    .background(Circle().fill(isOn ? Color(hex: 0x2FD08A) : .clear))
+                    .background(Circle().fill(isOn ? DX.Fill.greenOnDark : .clear))
                     .frame(width: 22, height: 22)
                     .accessibilityHidden(true)
             }

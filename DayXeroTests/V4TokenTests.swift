@@ -26,6 +26,28 @@ struct V4TokenTests {
         #expect(abs(Contrast.ratio(0xFF7A55, 0x1E1A3A) - 6.46) < 0.01)
     }
 
+    /// QW7: one green. Text pairs clear 4.5:1; ticks, dots and the road (non-text) clear 3:1.
+    @Test func theOneGreenClearsContrastWhereverItIsUsed() {
+        let light = DX.Fill.greenLight, dark = DX.Fill.greenDark
+        let text: [(String, UInt32, UInt32)] = [
+            ("cream on the lesson card", 0xFFF8EE, light),
+            ("green on the cream reading ground", light, DX.Ground.reading.spec.light),
+            ("green on a white card", light, 0xFFFFFF),
+            ("green on the night reading ground", dark, DX.Ground.reading.spec.dark),
+            ("green on a night card", dark, 0x2A255F),
+        ]
+        for (name, a, b) in text { #expect(Contrast.ratio(a, b) >= 4.5, "\(name): \(Contrast.ratio(a, b))") }
+        let marks: [(String, UInt32, UInt32)] = [
+            ("tick on lilac", light, DX.Ground.lilac.spec.light),
+            ("tick on sky", light, DX.Ground.sky.spec.light),
+            ("road on mint", light, DX.Ground.mint.spec.light),
+            ("road on night mint", dark, DX.Ground.mint.spec.dark),
+            ("tick on an ink chip", dark, 0x1E1A3A),
+        ]
+        for (name, a, b) in marks { #expect(Contrast.ratio(a, b) >= 3, "\(name): \(Contrast.ratio(a, b))") }
+        #expect(abs(Contrast.ratio(0xFFF8EE, light) - 5.98) < 0.01)
+    }
+
     /// Mixes `top` at `alpha` over `ground`, channel by channel.
     private func over(_ top: UInt32, _ alpha: Double, _ ground: UInt32) -> UInt32 {
         [16, 8, 0].reduce(0) { sum, shift in

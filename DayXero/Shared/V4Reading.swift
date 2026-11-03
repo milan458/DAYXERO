@@ -17,7 +17,7 @@ enum Read4 {
     /// Inset fills: chips, fields, quiet rows.
     static let surface = DX.Fill.surface
     static let accent = DX.Fill.green
-    static let accentSoft = Color(light: (0x0F6E43, 0.12), dark: (0x2FD08A, 0.16))
+    static let accentSoft = DX.Fill.greenSoft
     /// Text on an ink fill.
     static let onInk = DX.Ground.reading.background
     /// Warnings and "coming soon": 5.1:1 on cream, 8.6:1 on navy.

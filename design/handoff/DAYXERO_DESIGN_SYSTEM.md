@@ -287,8 +287,12 @@ A machine-readable copy is in `design/handoff/tokens.json`.
 | raised | #FFFFFF · dark #2A255F (or #1B1747 on reading screens) | Cards |
 | card on colour | rgba(255,248,238,0.66–0.72) light · rgba(255,255,255,0.07–0.12) dark · on violet and ocean, rgba(30,26,58,0.20) light (decision 25) | Translucent cards on colour grounds |
 | ocean secondary | **#1D3A9E** solid (dark #1B2C66) | Secondary buttons and cards on ocean. Never translucent white |
-| green | **#0F6E43** (dark #2FD08A) | Ticks, progress bars, "+1", lesson card. Replaces #1FA971 (failed contrast) |
-| tick on dark chips | #2FD08A | Check marks in selected chips |
+| green | **#0F6E43** (dark #2FD08A) | The one "good" green (QW7, 3 Nov 2026). `DX.Fill.green`: ticks, progress bars, "+1", done stretches of the Program road. Replaces #1FA971 (failed contrast) |
+| lesson card | #0F6E43, both modes | `DX.Fill.lessonCard`: cream text at 5.98:1 |
+| tick on dark chips | #2FD08A, both modes | `DX.Fill.greenOnDark`: check marks on ink chips and filled controls |
+| green wash | #0F6E43 at 12% (dark #2FD08A at 16%) | `DX.Fill.greenSoft`: prep days on the calendar, quiet badges |
+
+No other green appears in UI code; the old road green #3E9E6A is gone. Illustration greens (crew art, scenes, collages) are drawn colours, not tokens.
 | Glim card | #2A1C6E | Check-in card on violet |
 | night card | #0E0B2B | Wind-down card |
 | shadow (cream) | 0 1px 0 rgba(30,26,58,0.05), 0 8px 22px rgba(30,26,58,0.07) | Raised cards |

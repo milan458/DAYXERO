@@ -22,7 +22,8 @@ struct ProgramPathMap: View {
 
     private let step: CGFloat = 66
     private let road = Color(light: 0xFFF8EE, dark: 0x1F4A3B)
-    private let roadDone = Color(light: 0x3E9E6A, dark: 0x2FD08A)
+    /// Done stretches of road: the one success green (QW7), not a third shade of its own.
+    private let roadDone = DX.Fill.green
     private let tile = Color(light: 0xFFF8EE, dark: 0x16382D)
 
     var body: some View {

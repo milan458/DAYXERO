@@ -12,7 +12,7 @@ enum Onb {
     static let onInk = DX.Ground.reading.background
     static let hairline = Color(light: (0x1E1A3A, 0.12), dark: (0xFFFFFF, 0.14))
     static let accent = DX.Fill.green
-    static let accentSoft = Color(light: (0x0F6E43, 0.12), dark: (0x2FD08A, 0.16))
+    static let accentSoft = DX.Fill.greenSoft
 
     /// The ground each step sits on (design doc §10, F01–F07).
     static func ground(for step: OnboardingStep) -> DX.Ground {
