@@ -13,7 +13,7 @@ struct SessionFlowView: View {
 
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
 
     @State private var steps: [FlowStep] = []
     @State private var index = 0
@@ -35,7 +35,7 @@ struct SessionFlowView: View {
                 if steps[index] != .completion { header(session) }
                 stepView(steps[index], session: session)
                     .id(steps[index])
-                    .transition(reduceMotion ? .opacity : .asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity),
+                    .transition(motion.reduce ? .opacity : .asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity),
                                                                        removal: .opacity))
             }
         }
@@ -45,8 +45,8 @@ struct SessionFlowView: View {
         .padding(.bottom, DX.Space.xs)
         .foregroundStyle(Read4.ink)
         .background(stepGround.background.ignoresSafeArea())
-        .animation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion), value: stepGround)
-        .animation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion), value: index)
+        .animation(motion.animation(DX.Move.settle), value: stepGround)
+        .animation(motion.animation(DX.Move.settle), value: index)
         .onAppear(perform: start)
     }
 
@@ -442,7 +442,7 @@ struct SessionCompletion: View {
     let isReplay: Bool
     let onDone: () -> Void
 
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
     @Environment(Entitlement.self) private var entitlement
     @AppStorage("dx.dayXeroOfferShown") private var dayXeroOfferShown = false
     @State private var shown = false
@@ -494,7 +494,7 @@ struct SessionCompletion: View {
             ScrollView {
                 VStack(spacing: 12) {
                     XeroView(mood: shown ? .cheer : .hello, stage: 1, size: .hero)
-                        .scaleEffect(shown || reduceMotion ? 1 : DX.Move.celebrateFromScale)
+                        .scaleEffect(shown || motion.reduce ? 1 : DX.Move.celebrateFromScale)
                         .opacity(shown ? 1 : 0)
                         .frame(height: 220, alignment: .bottom)
                         .accessibilityHidden(true)
@@ -544,7 +544,7 @@ struct SessionCompletion: View {
         }
         .sensoryFeedback(.success, trigger: shown)
         .onAppear {
-            withAnimation(DX.Move.animation(DX.Move.celebrate, reduceMotion: reduceMotion)) { shown = true }
+            withAnimation(motion.animation(DX.Move.celebrate)) { shown = true }
         }
         .fullScreenCover(isPresented: $showOffer, onDismiss: onDone) {
             QuitDayOffer(profile: ctx.store.profile) { showOffer = false }
@@ -558,7 +558,7 @@ struct SessionCompletion: View {
                     ZStack(alignment: .bottom) {
                         HorizonScene(.path, clarity: clarity, fit: .bottom)
                         XeroView(mood: .calm, stage: 1, size: .scene)
-                            .offset(y: shown || reduceMotion ? -4 : 30)
+                            .offset(y: shown || motion.reduce ? -4 : 30)
                             .opacity(shown ? 1 : 0)
                     }
                     .frame(height: 220)
@@ -594,7 +594,7 @@ struct SessionCompletion: View {
         }
         .sensoryFeedback(.success, trigger: shown)
         .onAppear {
-            withAnimation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion)) { shown = true }
+            withAnimation(motion.animation(DX.Move.settle)) { shown = true }
         }
     }
 }

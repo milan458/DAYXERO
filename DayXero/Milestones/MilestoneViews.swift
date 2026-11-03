@@ -58,7 +58,7 @@ struct MilestoneMoment: View {
     let stats: MilestoneStats
     let onClose: () -> Void
 
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
     @Environment(\.dynamicTypeSize) private var typeSize
     @State private var appeared = false
     @State private var sharing = false
@@ -73,7 +73,7 @@ struct MilestoneMoment: View {
                     ZStack(alignment: .bottom) {
                         HeroScene(milestone.scene, clarity: CrewGrowth.clarity(daysClear: stats.daysClear), height: 280, edge: ground.background)
                         company
-                            .scaleEffect(appeared || reduceMotion ? 1 : DX.Move.celebrateFromScale, anchor: .bottom)
+                            .scaleEffect(appeared || motion.reduce ? 1 : DX.Move.celebrateFromScale, anchor: .bottom)
                             .opacity(appeared ? 1 : 0)
                             .offset(y: -6)
                             .accessibilityHidden(true)
@@ -147,7 +147,7 @@ struct MilestoneMoment: View {
         .background(ground.background.ignoresSafeArea())
         .sensoryFeedback(DX.Haptic.commit, trigger: appeared)
         .onAppear {
-            withAnimation(DX.Move.animation(DX.Move.celebrate, reduceMotion: reduceMotion)) { appeared = true }
+            withAnimation(motion.animation(DX.Move.celebrate)) { appeared = true }
         }
         .sheet(isPresented: $sharing) {
             ShareCardMaker(milestone: milestone, stats: stats).presentationDetents([.large])

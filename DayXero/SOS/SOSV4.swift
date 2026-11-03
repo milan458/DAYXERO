@@ -22,13 +22,14 @@ enum SOSColors {
 struct SOSWater: View {
     /// The breathing glow ring; off while the opening sighs draw their own (CHAR-01).
     var ring = true
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
 
     var body: some View {
-        TimelineView(.animation(paused: reduceMotion)) { timeline in
-            let t = reduceMotion ? 0 : timeline.date.timeIntervalSinceReferenceDate
+        let still = !motion.breathes
+        TimelineView(.animation(paused: still)) { timeline in
+            let t = still ? 0 : timeline.date.timeIntervalSinceReferenceDate
             Canvas { context, size in
-                SOSWater.draw(in: &context, size: size, time: t, still: reduceMotion, ring: ring)
+                SOSWater.draw(in: &context, size: size, time: t, still: still, ring: ring)
             }
         }
         .accessibilityHidden(true)
@@ -66,14 +67,14 @@ struct SOSWater: View {
 
 /// F13 breathing words on the 4 in, 6 out rhythm, in step with Jelli's breath (both run on the same clock).
 struct SOSBreathWords: View {
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
 
     var body: some View {
         TimelineView(.animation(minimumInterval: 0.1, paused: false)) { timeline in
             let t = timeline.date.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: DX.Move.inhale + DX.Move.exhale)
             let breathingIn = t < DX.Move.inhale
             let into = breathingIn ? t : t - DX.Move.inhale
-            let fade = reduceMotion ? 1 : min(1, into / 0.5)
+            let fade = motion.breathes ? min(1, into / 0.5) : 1
             ZStack {
                 Text("Breathe in… 4").opacity(breathingIn ? fade : 1 - fade)
                 Text("…and out, 6").opacity(breathingIn ? 1 - fade : fade)
@@ -260,13 +261,14 @@ struct SOSBreakMenuCard: View {
 
 /// F14: small rings rising through the sky.
 struct RisingBubbles: View {
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
 
     var body: some View {
-        TimelineView(.animation(paused: reduceMotion)) { timeline in
+        let still = motion.reduce
+        TimelineView(.animation(paused: still)) { timeline in
             let t = timeline.date.timeIntervalSinceReferenceDate
             Canvas { context, size in
-                RisingBubbles.draw(in: &context, size: size, time: t, still: reduceMotion)
+                RisingBubbles.draw(in: &context, size: size, time: t, still: still)
             }
         }
         .accessibilityHidden(true)

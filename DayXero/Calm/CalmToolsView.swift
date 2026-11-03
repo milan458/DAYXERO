@@ -72,12 +72,12 @@ struct CalmToolsView: View {
 /// The calm tools header: Glim breathing on a cloud, a dotted halo breathing on the 4 in, 6 out clock. Glim replaced the
 /// person figure so the app has one illustration language, the crew (S27.15).
 struct CalmHeaderArt: View {
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
 
     var body: some View {
-        TimelineView(.animation(paused: reduceMotion)) { timeline in
+        TimelineView(.animation(paused: !motion.breathes)) { timeline in
             let t = timeline.date.timeIntervalSinceReferenceDate
-            let breath = reduceMotion ? 0.5 : DX.Move.breath(at: t)
+            let breath = motion.breathes ? DX.Move.breath(at: t) : 0.5
             ZStack {
                 Circle()
                     .strokeBorder(DX.Fill.cream, style: StrokeStyle(lineWidth: 2.5, lineCap: .round, dash: [2, 7]))
@@ -87,7 +87,7 @@ struct CalmHeaderArt: View {
                     .fill(DX.Fill.cream)
                     .frame(width: 168, height: 56)
                     .offset(y: 56)
-                GlimView(mood: .breathe, stage: 1, points: 104, animate: !reduceMotion)
+                GlimView(mood: .breathe, stage: 1, points: 104, animate: motion.breathes)
                     .offset(y: 0)
             }
             .frame(width: 240, height: 196)
@@ -186,7 +186,7 @@ struct CalmToolPlayer: View {
     let onDone: (Bool) -> Void
 
     @Environment(\.modelContext) private var context
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
     @State private var startedAt = Date.now
     @State private var finished = false
     @State private var step = 0
@@ -351,14 +351,14 @@ struct CalmToolPlayer: View {
 
     /// Three slow breaths with the thought, then done.
     private var timedBreaths: some View {
-        TimelineView(.animation(minimumInterval: reduceMotion ? 1 : 1.0 / 30)) { timeline in
+        TimelineView(.animation(minimumInterval: motion.reduce ? 1 : 1.0 / 30)) { timeline in
             let elapsed = timeline.date.timeIntervalSince(startedAt)
             let breath = CravingWave.breath(at: elapsed)
             VStack(spacing: DX.Space.s) {
                 Circle()
                     .fill(RadialGradient(colors: [Read4.accent.opacity(0.6), Read4.accent.opacity(0.2), .clear],
                                          center: .center, startRadius: 0, endRadius: 90))
-                    .scaleEffect(reduceMotion ? 0.86 : 0.7 + 0.3 * breath.scale)
+                    .scaleEffect(motion.breathes ? 0.7 + 0.3 * breath.scale : 0.86)
                     .overlay(Text("\(NoticeAndName.breaths) breaths").dxFont(19, weight: 600, style: .title3)
                         .foregroundStyle(Read4.ink))
                     .frame(width: 180, height: 180)

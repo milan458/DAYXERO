@@ -84,7 +84,7 @@ struct WelcomeScreen: View {
     @State private var restoring = false
     @State private var cheer = false
     @State private var bubble = false
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
 
     @Environment(\.dynamicTypeSize) private var typeSize
 
@@ -103,10 +103,10 @@ struct WelcomeScreen: View {
         }
         .task {
             // Xero rises, says hello, then cheers once.
-            try? await Task.sleep(for: .seconds(reduceMotion ? 0.2 : 1.3))
-            withAnimation(DX.Move.animation(DX.Move.arrive, reduceMotion: reduceMotion)) { bubble = true }
+            try? await Task.sleep(for: .seconds(motion.reduce ? 0.2 : 1.3))
+            withAnimation(motion.animation(DX.Move.arrive)) { bubble = true }
             try? await Task.sleep(for: .seconds(1.2))
-            cheer = !reduceMotion
+            cheer = !motion.reduce
             try? await Task.sleep(for: .seconds(1.4))
             cheer = false
         }
@@ -328,7 +328,7 @@ struct BuildingScreen: View {
     let model: OnboardingModel
     @State private var shown = 0
     @State private var friends = false
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
     private let ground = DX.Ground.mint
 
     private struct Row: Identifiable {
@@ -423,13 +423,13 @@ struct BuildingScreen: View {
                 .padding(.bottom, DX.Space.xs)
         }
         .task {
-            let step = reduceMotion ? 0.15 : 0.6
+            let step = motion.reduce ? 0.15 : 0.6
             for i in 1...rows.count {
                 try? await Task.sleep(for: .seconds(step))
-                withAnimation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion)) { shown = i }
+                withAnimation(motion.animation(DX.Move.settle)) { shown = i }
             }
             try? await Task.sleep(for: .seconds(step))
-            withAnimation(DX.Move.animation(DX.Move.arrive, reduceMotion: reduceMotion)) { friends = true }
+            withAnimation(motion.animation(DX.Move.arrive)) { friends = true }
         }
     }
 }

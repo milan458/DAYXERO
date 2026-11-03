@@ -14,7 +14,7 @@ struct BioOrbView: View {
     let side: CGFloat
     var onTap: () -> Void = {}
 
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
     /// On the cream reading ground in light mode the screen-blended rings and dark lens would vanish or read as a hole,
     /// so light draws green rings over a cream centre; dark keeps the spec's look on navy (S27.12).
     @Environment(\.colorScheme) private var scheme
@@ -29,7 +29,7 @@ struct BioOrbView: View {
     }
 
     var body: some View {
-        TimelineView(.animation(minimumInterval: reduceMotion ? 1.0 / 30 : nil)) { timeline in
+        TimelineView(.animation(minimumInterval: motion.reduce ? 1.0 / 30 : nil)) { timeline in
             // The frame's time goes into every drawing closure: SwiftUI only redraws a view whose inputs change,
             // and the engine's per-frame values aren't observed.
             let frame = timeline.date.timeIntervalSinceReferenceDate
@@ -49,8 +49,8 @@ struct BioOrbView: View {
         }
         .contentShape(Circle())
         .onTapGesture(perform: onTap)
-        .onAppear { engine.reduceMotion = reduceMotion }
-        .onChange(of: reduceMotion) { _, on in engine.reduceMotion = on }
+        .onAppear { engine.reduceMotion = motion.reduce }
+        .onChange(of: motion.reduce) { _, on in engine.reduceMotion = on }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("Breathing guide"))
         .accessibilityValue(Text(accessibilityValue))
@@ -78,7 +78,7 @@ struct BioOrbView: View {
         let S = side
         let center = CGPoint(x: size.width / 2, y: size.height / 2)
         let ringBaseR = S * g.ringBaseFactor * engine.breathScale
-        let reduce = reduceMotion
+        let reduce = motion.reduce
         let light = scheme == .light
         let E = engine.drawEnergy
         let T = engine.orbTime

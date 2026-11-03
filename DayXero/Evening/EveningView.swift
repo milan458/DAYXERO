@@ -16,7 +16,7 @@ struct WindDownView: View {
     var showWater: (() -> Void)?
     var startSOS: (() -> Void)?
 
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
     @Query private var checkIns: [CheckIn]
     @State private var openTool: CalmTool?
     @State private var breathing = false
@@ -43,7 +43,7 @@ struct WindDownView: View {
                             HeroScene(.night, clarity: prep ? CrewGrowth.prepClarity : CrewGrowth.clarity(daysClear: stats.daysClear(at: now)),
                                       height: 240, edge: ground.background)
                             GlimView(mood: .sleepy, stage: CrewGrowth.stage(daysClear: prep ? 0 : stats.daysClear(at: now)), size: .scene)
-                                .offset(y: shown || reduceMotion ? -10 : -40)
+                                .offset(y: shown || motion.reduce ? -10 : -40)
                                 .opacity(shown ? 1 : 0)
                                 .accessibilityHidden(true)
                         }
@@ -76,7 +76,7 @@ struct WindDownView: View {
         .foregroundStyle(ground.ink)
         .background(ground.background.ignoresSafeArea())
         .onAppear {
-            withAnimation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion)) { shown = true }
+            withAnimation(motion.animation(DX.Move.settle)) { shown = true }
         }
         .fullScreenCover(item: $openTool) { tool in
             CalmToolPlayer(tool: tool) { backToSOS in

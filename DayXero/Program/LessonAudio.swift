@@ -285,7 +285,7 @@ struct LessonAudioStep: View {
     private var startAt: Double = 0
     /// Called every few seconds and on pause with the position, so a closed session resumes there.
     private var onPosition: ((Double) -> Void)?
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
 
     init(title: String, subtitle: String, file: String?, seconds: Int, transcript: String, onFinish: @escaping () -> Void) {
         self.title = title
@@ -378,14 +378,14 @@ struct LessonAudioStep: View {
                     }
                     // Room above and below, so the first and last lines can sit in the middle too.
                     .padding(.vertical, max(geo.size.height / 2 - 30, 0))
-                    .animation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion), value: narrator.index)
+                    .animation(motion.animation(DX.Move.settle), value: narrator.index)
                 }
                 .mask(LinearGradient(stops: [.init(color: .clear, location: 0), .init(color: .black, location: 0.24),
                                              .init(color: .black, location: 0.76), .init(color: .clear, location: 1)],
                                      startPoint: .top, endPoint: .bottom))
                 .onAppear { proxy.scrollTo(narrator.index, anchor: .center) }
                 .onChange(of: narrator.index) { _, i in
-                    withAnimation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion)) { proxy.scrollTo(i, anchor: .center) }
+                    withAnimation(motion.animation(DX.Move.settle)) { proxy.scrollTo(i, anchor: .center) }
                 }
             }
         }
@@ -475,11 +475,11 @@ struct LessonAudioStep: View {
 /// P2: Xero 140 in a ring that breathes on the 4 s in, 6 s out clock while the audio plays.
 struct XeroBreathRing: View {
     let playing: Bool
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
 
     var body: some View {
-        TimelineView(.animation(paused: !playing || reduceMotion)) { timeline in
-            let breath = playing && !reduceMotion ? DX.Move.breath(at: timeline.date.timeIntervalSinceReferenceDate) : 0.4
+        TimelineView(.animation(paused: !playing || !motion.breathes)) { timeline in
+            let breath = playing && motion.breathes ? DX.Move.breath(at: timeline.date.timeIntervalSinceReferenceDate) : 0.4
             ZStack {
                 Circle().fill(Read4.accentSoft)
                     .frame(width: 168 + 28 * breath, height: 168 + 28 * breath)

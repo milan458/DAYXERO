@@ -8,7 +8,7 @@ struct OnboardingFlow: View {
     /// F01: one slow breath before any question. Shown once, before Welcome.
     @State private var breathed = false
     @Environment(\.modelContext) private var context
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
 
     /// Called just before the profile is saved, so the app keeps showing onboarding until `onFinished`.
     var onSaving: () -> Void = {}
@@ -47,8 +47,8 @@ struct OnboardingFlow: View {
         }
         .foregroundStyle(ground.ink)
         .background(ground.background.ignoresSafeArea())
-        .animation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion), value: model.step)
-        .animation(DX.Move.animation(.easeInOut(duration: 0.5), reduceMotion: reduceMotion), value: breathed)
+        .animation(motion.animation(DX.Move.settle), value: model.step)
+        .animation(motion.animation(.easeInOut(duration: 0.5)), value: breathed)
         #if DEBUG
         .onAppear {
             if let key = UserDefaults.standard.string(forKey: "dx.onboardingStep") {
@@ -76,7 +76,7 @@ struct OnboardingFlow: View {
     }
 
     private var transition: AnyTransition {
-        reduceMotion ? .opacity : .asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity),
+        motion.reduce ? .opacity : .asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity),
                                                removal: .move(edge: .leading).combined(with: .opacity))
     }
 
