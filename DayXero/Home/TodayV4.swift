@@ -76,11 +76,19 @@ struct TodayKicker: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .accessibilityAddTraits(.isHeader)
             Button(action: onSettings) {
-                Text(verbatim: String(name.prefix(1)).uppercased())
-                    .dxType(.headline)
-                    .foregroundStyle(DX.Fill.cream)
-                    .frame(width: 44, height: 44)
-                    .background(DX.Fill.navy, in: Circle())
+                // The reading ground's ink pair, so it flips with the theme: navy with a cream letter in light mode,
+                // cream with a navy letter in dark. A fixed navy circle vanished into the dark-mode background.
+                Group {
+                    // No name (onboarding's "Skip for now"): a person instead of an empty circle.
+                    if let initial = name.trimmingCharacters(in: .whitespacesAndNewlines).first {
+                        Text(verbatim: String(initial).uppercased()).dxType(.headline)
+                    } else {
+                        Image(systemName: "person.fill").font(.system(size: 17, weight: .semibold))
+                    }
+                }
+                .foregroundStyle(Read4.onInk)
+                .frame(width: 44, height: 44)
+                .background(Read4.ink, in: Circle())
             }
             .buttonStyle(.plain)
             .accessibilityLabel(Text("Profile and settings"))
