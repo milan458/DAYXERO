@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-11-03T07:30:19.773Z"
+    "updated": "2026-11-03T13:47:34.789Z"
   },
   "now": {
     "section": "S30",
@@ -3097,9 +3097,169 @@
           "completed": null
         }
       ]
+    },
+    {
+      "id": "S32",
+      "title": "Bigger bets: Day-0 paywall, pledge hold, motion, path, transitions, experiments, after Quit Day",
+      "goal": "Seven bets from the onboarding-recording review, checked against the code. Plan, what's built, decisions and order: docs/BIGGER_BETS_PLAN.md.",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S32.1",
+          "title": "Milan: decide the Day-0 trial (A: 7 days, charges on Quit Day; B: 14 days on Day 0, 7 at Prep 4, recommended; C: plans only on Day 0), prices, Prep 4 re-ask, glass dock, experiment tool, bubble copy",
+          "status": "pending",
+          "notes": "Questions list at the end of docs/BIGGER_BETS_PLAN.md. Bet 1 reverses part of MON-01 (trial sold only at Prep 4).",
+          "created": "2026-11-03T13:47:34.284Z",
+          "completed": null
+        },
+        {
+          "id": "S32.2",
+          "title": "BET-1 · Soft paywall after the plan reveal: reveal → paywall → reminders, onboarding_complete registered, first-run copy, ✕ visible from the start, one Prep 4 re-ask, docs and journey test",
+          "status": "blocked",
+          "notes": "Blocked on the S32 decisions. Paywall already has: annual highlighted, ✕, the 'Always free' line, charge date, trial reminder, price anchor.",
+          "created": "2026-11-03T13:47:34.331Z",
+          "completed": null
+        },
+        {
+          "id": "S32.3",
+          "title": "BET-1 · App Store Connect + RevenueCat: dayxero.annual14 (14-day trial) if option B; India ₹2,999 and 7-day trial (with S30.4)",
+          "status": "blocked",
+          "notes": "Needs Milan's accounts. Only if option B is chosen for the 14-day product.",
+          "created": "2026-11-03T13:47:34.381Z",
+          "completed": null
+        },
+        {
+          "id": "S32.4",
+          "title": "BET-2 · HoldButton as the pledge: radial fill from the thumb, drain-back at 2× with fading haptic, 'Keep holding' after an abort, mint flood into the building screen (onboarding only); Reduce Motion and VoiceOver paths",
+          "status": "pending",
+          "notes": "Crescendo haptic already built (CHAR-04). Needs a real-device check.",
+          "created": "2026-11-03T13:47:34.439Z",
+          "completed": null
+        },
+        {
+          "id": "S32.5",
+          "title": "BET-3 · Mascot idle life: jittered blink on every mood but sleep, ±1.5% breathe on the 0.1 Hz clock, animate on-screen avatars, pause in background and Low Power Mode",
+          "status": "pending",
+          "notes": "",
+          "created": "2026-11-03T13:47:34.528Z",
+          "completed": null
+        },
+        {
+          "id": "S32.6",
+          "title": "BET-3 · Xero → Jelli hand-off (0.7 s) on SOS entry, overlapping the first sigh (never delaying it); sequenced speech bubbles",
+          "status": "pending",
+          "notes": "Bubble copy waits on Milan.",
+          "created": "2026-11-03T13:47:34.581Z",
+          "completed": null
+        },
+        {
+          "id": "S32.7",
+          "title": "BET-4 · Program path progression: segment draw-in, node pop with haptic, Xero steps to the next stop (once per session); 'Tomorrow: <title> · n min' on Today once today's session is done",
+          "status": "pending",
+          "notes": "No XP, points or ranks.",
+          "created": "2026-11-03T13:47:34.622Z",
+          "completed": null
+        },
+        {
+          "id": "S32.8",
+          "title": "BET-5 · Transitions: zoom reveal → paywall (after BET-1), matched countdown hero onboarding → Today, zoom dock SOS → Craving SOS; iOS 26 glass dock QA (Reduce Transparency, Increase Contrast, dark)",
+          "status": "pending",
+          "notes": "Glass dock already on iOS 26 (DockBackground, S27.11). iOS 18 target, so .zoom is available.",
+          "created": "2026-11-03T13:47:34.665Z",
+          "completed": null
+        },
+        {
+          "id": "S32.9",
+          "title": "BET-6 · Analytics: step completion time, hold aborted/completed, plan-building seen, paywall surface and trial_days properties; PostHog funnels to first renewal",
+          "status": "pending",
+          "notes": "PostHog already chosen and wired (S1.5); no vendor decision needed.",
+          "created": "2026-11-03T13:47:34.703Z",
+          "completed": null
+        },
+        {
+          "id": "S32.10",
+          "title": "BET-6 · Superwall experiments: Day-0 position (50% holdout on onboarding_complete) first; 7 vs 14-day trial after launch volume",
+          "status": "blocked",
+          "notes": "Several thousand onboarding completions per arm; TestFlight volume is too low to read it.",
+          "created": "2026-11-03T13:47:34.739Z",
+          "completed": null
+        },
+        {
+          "id": "S32.11",
+          "title": "BET-7 · Record and review the post-Quit-Day states (quitday, day3, day12, returning, seedSlip, seedPouches); check per-product counters for dual users; file what it finds here",
+          "status": "pending",
+          "notes": "State B, recovery card, session on Today, slip flow and if-then planner are built; the recording never reached them.",
+          "created": "2026-11-03T13:47:34.789Z",
+          "completed": null
+        }
+      ]
     }
   ],
   "log": [
+    {
+      "time": "2026-11-03T13:47:34.789Z",
+      "type": "task_added",
+      "message": "S32.11 added: BET-7 · Record and review the post-Quit-Day states (quitday, day3, day12, returning, seedSlip, seedPouches); check per-product counters for dual users; file what it finds here"
+    },
+    {
+      "time": "2026-11-03T13:47:34.739Z",
+      "type": "task_added",
+      "message": "S32.10 added: BET-6 · Superwall experiments: Day-0 position (50% holdout on onboarding_complete) first; 7 vs 14-day trial after launch volume"
+    },
+    {
+      "time": "2026-11-03T13:47:34.703Z",
+      "type": "task_added",
+      "message": "S32.9 added: BET-6 · Analytics: step completion time, hold aborted/completed, plan-building seen, paywall surface and trial_days properties; PostHog funnels to first renewal"
+    },
+    {
+      "time": "2026-11-03T13:47:34.665Z",
+      "type": "task_added",
+      "message": "S32.8 added: BET-5 · Transitions: zoom reveal → paywall (after BET-1), matched countdown hero onboarding → Today, zoom dock SOS → Craving SOS; iOS 26 glass dock QA (Reduce Transparency, Increase Contrast, dark)"
+    },
+    {
+      "time": "2026-11-03T13:47:34.622Z",
+      "type": "task_added",
+      "message": "S32.7 added: BET-4 · Program path progression: segment draw-in, node pop with haptic, Xero steps to the next stop (once per session); 'Tomorrow: <title> · n min' on Today once today's session is done"
+    },
+    {
+      "time": "2026-11-03T13:47:34.581Z",
+      "type": "task_added",
+      "message": "S32.6 added: BET-3 · Xero → Jelli hand-off (0.7 s) on SOS entry, overlapping the first sigh (never delaying it); sequenced speech bubbles"
+    },
+    {
+      "time": "2026-11-03T13:47:34.528Z",
+      "type": "task_added",
+      "message": "S32.5 added: BET-3 · Mascot idle life: jittered blink on every mood but sleep, ±1.5% breathe on the 0.1 Hz clock, animate on-screen avatars, pause in background and Low Power Mode"
+    },
+    {
+      "time": "2026-11-03T13:47:34.439Z",
+      "type": "task_added",
+      "message": "S32.4 added: BET-2 · HoldButton as the pledge: radial fill from the thumb, drain-back at 2× with fading haptic, 'Keep holding' after an abort, mint flood into the building screen (onboarding only); Reduce Motion and VoiceOver paths"
+    },
+    {
+      "time": "2026-11-03T13:47:34.381Z",
+      "type": "task_added",
+      "message": "S32.3 added: BET-1 · App Store Connect + RevenueCat: dayxero.annual14 (14-day trial) if option B; India ₹2,999 and 7-day trial (with S30.4)"
+    },
+    {
+      "time": "2026-11-03T13:47:34.331Z",
+      "type": "task_added",
+      "message": "S32.2 added: BET-1 · Soft paywall after the plan reveal: reveal → paywall → reminders, onboarding_complete registered, first-run copy, ✕ visible from the start, one Prep 4 re-ask, docs and journey test"
+    },
+    {
+      "time": "2026-11-03T13:47:34.284Z",
+      "type": "task_added",
+      "message": "S32.1 added: Milan: decide the Day-0 trial (A: 7 days, charges on Quit Day; B: 14 days on Day 0, 7 at Prep 4, recommended; C: plans only on Day 0), prices, Prep 4 re-ask, glass dock, experiment tool, bubble copy"
+    },
+    {
+      "time": "2026-11-03T13:47:34.247Z",
+      "type": "section_added",
+      "message": "S32 added: Bigger bets: Day-0 paywall, pledge hold, motion, path, transitions, experiments, after Quit Day"
+    },
     {
       "time": "2026-11-02T21:31:27.554Z",
       "type": "note",
