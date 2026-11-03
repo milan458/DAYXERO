@@ -305,9 +305,10 @@ struct QuitDayScreen: View {
                     .background(quit ? ground.ink : (prep ? DX.Fill.cardOnColour : Color.clear),
                                 in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(.dxPress)
                 .disabled(!selectable)
-                .sensoryFeedback(DX.Haptic.select, trigger: quit)
+                // Only the day becoming Quit Day buzzes, not the one it leaves.
+                .sensoryFeedback(DX.Haptic.select, trigger: quit) { _, isQuit in isQuit }
                 .accessibilityLabel(Text(day, format: .dateTime.weekday(.wide).day().month(.wide)))
                 .accessibilityValue(Text(quit ? "Quit Day" : (prep ? "Prep day" : "")))
                 .accessibilityAddTraits(quit ? [.isButton, .isSelected] : .isButton)

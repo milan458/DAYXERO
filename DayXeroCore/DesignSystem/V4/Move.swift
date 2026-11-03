@@ -19,6 +19,8 @@ public extension DX {
 
         /// A button under the finger.
         public static let pressedScale: CGFloat = 0.97
+        /// How fast an option dips under the finger.
+        public static let press = Animation.easeOut(duration: 0.12)
 
         /// Numbers counting up.
         public static let count = Animation.easeOut(duration: 0.85)
@@ -69,15 +71,15 @@ public extension DX {
 public struct ArriveModifier: ViewModifier {
     let index: Int
     @State private var shown = false
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
 
     public func body(content: Content) -> some View {
         content
             .opacity(shown ? 1 : 0)
-            .offset(y: shown || reduceMotion ? 0 : DX.Move.arriveRise)
+            .offset(y: shown || motion.reduce ? 0 : DX.Move.arriveRise)
             .onAppear {
-                let animation = DX.Move.animation(DX.Move.arrive, reduceMotion: reduceMotion)
-                withAnimation(animation.delay(reduceMotion ? 0 : Double(index) * DX.Move.arriveStagger)) {
+                let animation = motion.animation(DX.Move.arrive)
+                withAnimation(animation.delay(motion.reduce ? 0 : Double(index) * DX.Move.arriveStagger)) {
                     shown = true
                 }
             }

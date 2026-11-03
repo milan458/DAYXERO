@@ -24,12 +24,16 @@ struct OnboardingSegments<Value: Hashable>: View {
     let isSelected: (Value) -> Bool
     let title: (Value) -> String
     let select: (Value) -> Void
+    @State private var taps = 0
 
     var body: some View {
         HStack(spacing: DX.Space.xs) {
             ForEach(options, id: \.self) { option in
                 let on = isSelected(option)
-                Button { select(option) } label: {
+                Button {
+                    taps += 1
+                    select(option)
+                } label: {
                     Text(verbatim: title(option))
                         .dxFont(14, weight: on ? 700 : 500, style: .subheadline)
                         .foregroundStyle(on ? Onb.onInk : Onb.ink)
@@ -39,11 +43,12 @@ struct OnboardingSegments<Value: Hashable>: View {
                         .background(on ? Onb.ink : Onb.surface,
                                     in: RoundedRectangle(cornerRadius: DX.Layout.answerChipRadius, style: .continuous))
                 }
-                .buttonStyle(.plain)
-                .sensoryFeedback(DX.Haptic.select, trigger: on)
+                .buttonStyle(.dxPress)
                 .accessibilityAddTraits(on ? [.isButton, .isSelected] : .isButton)
             }
         }
+        // One haptic per tap: a trigger on each chip's `on` fired for the chip leaving and the chip arriving.
+        .sensoryFeedback(DX.Haptic.select, trigger: taps)
     }
 }
 
@@ -52,9 +57,13 @@ struct OnboardingChip: View {
     let text: String
     let isOn: Bool
     let action: () -> Void
+    @State private var taps = 0
 
     var body: some View {
-        Button(action: action) {
+        Button {
+            taps += 1
+            action()
+        } label: {
             Text(verbatim: text)
                 .dxFont(14, weight: isOn ? 700 : 500, style: .subheadline)
                 .foregroundStyle(isOn ? Onb.onInk : Onb.ink)
@@ -63,8 +72,8 @@ struct OnboardingChip: View {
                 .background(isOn ? Onb.ink : Onb.surface,
                             in: RoundedRectangle(cornerRadius: DX.Layout.answerChipRadius, style: .continuous))
         }
-        .buttonStyle(.plain)
-        .sensoryFeedback(DX.Haptic.select, trigger: isOn)
+        .buttonStyle(.dxPress)
+        .sensoryFeedback(DX.Haptic.select, trigger: taps)
         .accessibilityAddTraits(isOn ? [.isButton, .isSelected] : .isButton)
     }
 }

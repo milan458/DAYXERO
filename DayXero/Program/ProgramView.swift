@@ -7,6 +7,7 @@ import SwiftUI
 /// bottom sheet with its illustration, when it opens and what to do (UX-02, 2 Nov 2026); the list of session cards
 /// under the path went. Finished sessions replay. Nothing is ever shown as missed, overdue or failed.
 struct ProgramView: View {
+    private let motion = MotionPolicy()
     let profile: UserProfile
     @Environment(Entitlement.self) private var entitlement
     @Environment(NRTRouter.self) private var nrt
@@ -118,7 +119,7 @@ struct ProgramView: View {
                         let done = !phase.sessionIds.isEmpty && phase.sessionIds.allSatisfy { if case .completed = states[$0] { true } else { false } }
                         let on = phase.id == selected
                         Button {
-                            withAnimation(DX.Move.settle) { picked = phase.id }
+                            withAnimation(motion.animation(DX.Move.settle)) { picked = phase.id }
                         } label: {
                             HStack(spacing: 4) {
                                 Text(verbatim: phase.title).dxFont(14, weight: 700, style: .footnote)
@@ -148,7 +149,7 @@ struct ProgramView: View {
             .mask { Self.edgeFade }
             .onAppear { proxy.scrollTo(selected, anchor: .center) }
             .onChange(of: selected) { _, id in
-                withAnimation(DX.Move.settle) { proxy.scrollTo(id, anchor: .center) }
+                withAnimation(motion.animation(DX.Move.settle)) { proxy.scrollTo(id, anchor: .center) }
             }
         }
     }

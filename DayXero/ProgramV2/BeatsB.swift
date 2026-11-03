@@ -368,6 +368,7 @@ struct CommitBeat: View {
 
 /// Every option is valid: the pick stays highlighted and its own feedback shows. Nothing is marked right.
 struct ScenarioBeat: View {
+    private let motion = MotionPolicy()
     let beat: Beat
     let ctx: BeatContext
     let onDone: () -> Void
@@ -384,7 +385,7 @@ struct ScenarioBeat: View {
             VStack(alignment: .leading, spacing: 10) {
                 BeatPrompt(text: ctx.text(beat.prompt), eyebrow: "Picture it")
                 ForEach(options) { option in
-                    Button { withAnimation(DX.Move.settle) { picked = option.id } } label: {
+                    Button { withAnimation(motion.animation(DX.Move.settle)) { picked = option.id } } label: {
                         OptionRow(text: option.text, selected: picked == option.id, dimmed: picked != nil && picked != option.id)
                     }
                     .buttonStyle(.plain)

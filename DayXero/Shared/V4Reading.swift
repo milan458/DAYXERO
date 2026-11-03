@@ -120,6 +120,7 @@ extension ButtonStyle where Self == V4IconButtonStyle {
 struct V4ToggleChip: View {
     let title: LocalizedStringKey
     @Binding var isOn: Bool
+    @State private var taps = 0
 
     init(_ title: LocalizedStringKey, isOn: Binding<Bool>) {
         self.title = title
@@ -127,7 +128,10 @@ struct V4ToggleChip: View {
     }
 
     var body: some View {
-        Button { isOn.toggle() } label: {
+        Button {
+            taps += 1
+            isOn.toggle()
+        } label: {
             Text(title)
                 .dxFont(16, weight: isOn ? 700 : 600, style: .body)
                 .foregroundStyle(isOn ? Read4.onInk : Read4.ink)
@@ -135,8 +139,8 @@ struct V4ToggleChip: View {
                 .frame(minHeight: 44)
                 .background(isOn ? Read4.ink : Read4.surface, in: RoundedRectangle(cornerRadius: DX.Layout.answerChipRadius, style: .continuous))
         }
-        .buttonStyle(.plain)
-        .sensoryFeedback(DX.Haptic.select, trigger: isOn)
+        .buttonStyle(.dxPress)
+        .sensoryFeedback(DX.Haptic.select, trigger: taps)
         .accessibilityAddTraits(isOn ? [.isButton, .isSelected] : .isButton)
     }
 }

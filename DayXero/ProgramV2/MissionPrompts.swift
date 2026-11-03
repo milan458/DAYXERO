@@ -134,6 +134,7 @@ struct FollowUpSheet: View {
 
 /// One quick question for the mission's log type. The answers stay in the program's history only.
 struct MissionQuestion: View {
+    private let motion = MotionPolicy()
     let sessionId: String
     let type: ProgramContent.Mission.LogType
     let profile: UserProfile
@@ -198,7 +199,7 @@ struct MissionQuestion: View {
         store.save(key, .list(lines), session: sessionId)
         // Peaks and morning gaps show the person's own numbers back once there are two to compare (S27.18).
         if type == .surfPractice || type == .morningBuffer, let summary = MissionTrend.summary(of: lines), summary.values.count >= 2 {
-            withAnimation(DX.Move.settle) { trend = summary }
+            withAnimation(motion.animation(DX.Move.settle)) { trend = summary }
         } else {
             onDone()
         }
