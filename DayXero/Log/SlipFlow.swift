@@ -14,6 +14,7 @@ struct SlipFlow: View {
     var startInTalkThrough = false
     /// Program v2's Day 27 rehearsal: the same screens with a "Practice" tag, and nothing logged.
     var practice = false
+    private let motion = MotionPolicy()
 
     /// Step 1 was telling us (SOS or the log), so the plan is step 2 of 3 and "Plan saved" is step 3.
     enum Stage: Int, CaseIterable {
@@ -75,7 +76,7 @@ struct SlipFlow: View {
         }
         .foregroundStyle(ground.ink)
         .background(ground.background.ignoresSafeArea())
-        .animation(DX.Move.animation(DX.Move.settle, reduceMotion: false), value: stage)
+        .animation(motion.animation(DX.Move.settle), value: stage)
         .sensoryFeedback(DX.Haptic.commit, trigger: savedFeedback)
         .onAppear(perform: prefill)
         .fullScreenCover(isPresented: $showNRT) {
