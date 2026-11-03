@@ -185,7 +185,7 @@ struct ProgressTab: View {
 
     private func eyebrow(_ snap: HomeSnapshot) -> String {
         if case let .prep(days) = snap.phase {
-            return String(localized: "Quit Day in \(days) days")
+            return days == 1 ? String(localized: "Quit Day in 1 day") : String(localized: "Quit Day in \(days) days")
         }
         return String(localized: "Since Quit Day · \(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)))")
     }
@@ -208,7 +208,8 @@ struct ProgressTab: View {
             .accessibilityElement(children: .combine)
     }
 
-    /// A 2×2 grid that counts up: days clear, waves ridden out, not used, kept. In prep: prep done, waves, yearly, Quit Day.
+    /// A 2×2 grid: days clear, waves ridden out, not used, kept. In prep: prep done, waves, yearly, Quit Day. Only the
+    /// money counts up (QW5): every tile used to start from zero, so "0 days to Quit Day" showed for most of a second.
     @ViewBuilder
     private func tiles(_ snap: HomeSnapshot, insights: Insights) -> some View {
         let columns = typeSize.isAccessibilitySize
@@ -226,7 +227,8 @@ struct ProgressTab: View {
                     ProgressStat(value: Double(ridden), label: ridden == 1 ? String(localized: "wave ridden out") : String(localized: "waves ridden out"))
                 }
                 // UX-12: forward-looking, never "saved" before Quit Day.
-                ProgressStat(value: NSDecimalNumber(decimal: snap.moneyPerYear).doubleValue, label: String(localized: "you'll keep / year"), format: whole)
+                ProgressStat(value: NSDecimalNumber(decimal: snap.moneyPerYear).doubleValue, label: String(localized: "you'll keep / year"), format: whole,
+                             counts: true)
                 // The same countdown as Today's header, from the chosen Quit Day (S27.5).
                 let daysToQuit = Self.daysToQuit(snap)
                 ProgressStat(value: Double(daysToQuit), label: daysToQuit == 1 ? String(localized: "day to Quit Day") : String(localized: "days to Quit Day"))
@@ -236,7 +238,8 @@ struct ProgressTab: View {
                 ForEach(snap.counters) { counter in
                     ProgressStat(value: Double(counter.avoided), label: String(localized: avoidedLabel(counter.product, count: counter.avoided)))
                 }
-                ProgressStat(value: NSDecimalNumber(decimal: snap.moneyKept).doubleValue, label: String(localized: "kept"), format: cents)
+                ProgressStat(value: NSDecimalNumber(decimal: snap.moneyKept).doubleValue, label: String(localized: "kept"), format: cents,
+                             counts: true)
             }
         }
     }
@@ -593,15 +596,23 @@ struct LogButton: View {
 }
 
 /// A value and what it is, in one sentence-case line (S18.10).
-/// A counting stat on the reading ground (F12): 24 pt number, 12 pt label, raised card.
+/// A stat on the reading ground (F12): 24 pt number, 12 pt label, raised card. `counts` makes the number count up;
+/// only the money tile does.
 private struct ProgressStat: View {
     let value: Double
     let label: String
     var format: (Double) -> String = { String(Int($0.rounded(.down))) }
+    var counts = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
-            CountingText(value, format: format)
+            Group {
+                if counts {
+                    CountingText(value, format: format)
+                } else {
+                    Text(verbatim: format(value)).monospacedDigit()
+                }
+            }
                 .dxType(.title)
                 .foregroundStyle(Read4.ink)
                 .lineLimit(1).minimumScaleFactor(0.6)
