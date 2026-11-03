@@ -2,30 +2,32 @@
 
 There are seven bets from the review of the onboarding recording. For each one this plan sets out what the code
 already does, what is left to build, and the order to build in. Milan answered the first round of questions on
-3 Nov; one decision is still open (the Day-0 close). Tracker section **S32** in `planning/tasks.json`.
+3 Nov; the second round (Day-0 close, renewal, India offer price) the same evening. Tracker section **S32** in `planning/tasks.json`.
 
 ## Milan's answers (3 Nov 2026)
 
 | Question | Answer |
 | --- | --- |
 | Paywall model | A hard paywall and a **7-day trial from download**. It replaces MON-01's "Prep 1 to 3 free, trial sold at Prep 4". |
-| Prices | Kept: $39.99 a year, $9.99 a month, $79.99 lifetime; ₹2,999 a year in India. |
+| Prices | Kept: $39.99 a year, $9.99 a month, $99.99 lifetime (D4, S27.8); ₹2,999 a year in India. |
 | Prep days for free users | **Each prep day: the first 2 of its 4 cards are free**, then the paywall with a ✕ top right. The activities, cards 3–4, the audio and the mission are paid. |
 | Yearly offer | **$29.99 (25% off) on days 4 and 6 after download**, with the same 7-day trial; $39.99 on every other day. |
-| Day-0 paywall: can it be closed? | **Open.** Milan is still thinking about it. |
+| Day-0 paywall: can it be closed? | **Yes, with a ✕ that appears after a few seconds** (3 s, as S22.9). The daily prep paywall shows its ✕ straight away. |
+| The $29.99 renewal | **Renews at $29.99** every year: a separate product, `dayxero.annual.offer`, with its own 7-day trial. |
+| India offer price | **₹2,249.** |
 | Tab bar | Keep the custom glass bar. |
 | Superwall | Later. DayXero's own paywall everywhere for now. |
-| Speech bubbles | Find the candidate screens first (below). |
+| Speech bubbles | **Screens 1, 3, 4, 6 and 7** (Welcome, plan building, slip flow, wave passed, daily prep paywall). Mockups with the lines go to the tracker for approval (S33). |
 
 ## The short version
 
 | Bet | Status | Estimate |
 | --- | --- | --- |
-| 1 · Paywall model | Decided apart from the Day-0 close. Daily prep paywall, the price by day, and a $29.99 offer product. | 3–4 days of code + store setup |
+| 1 · Paywall model | Decided. Day-0 paywall with a delayed ✕, daily prep paywall, the price by day, and a $29.99 offer product. | 3–4 days of code + store setup |
 | 2 · Hold-to-set as the pledge | Ready to build | 1–2 days |
-| 3 · Mascot motion pass | Idle life ready to build. Bubbles: candidate list below, waiting on Milan's pick. | 2–3 days |
+| 3 · Mascot motion pass | Idle life ready to build. Bubbles on five screens: mockups with lines out for approval (S33). | 2–3 days |
 | 4 · Program path progression | Ready to build | 1.5–2 days |
-| 5 · Hero continuity | Ready, apart from the reveal → paywall zoom (waits on the Day-0 decision). Keep the custom glass bar. | 1 day |
+| 5 · Hero continuity | Ready. Keep the custom glass bar. | 1 day |
 | 6 · Instrument and A/B | Events ready to build. Experiments wait for Superwall. | 0.5 day |
 | 7 · After Quit Day and slips | A review of what's built | 0.5 day + fixes |
 
@@ -74,7 +76,7 @@ already does, what is left to build, and the order to build in. Milan answered t
 - **Download day = the first launch** (`dx.firstLaunchDay`, set once). Days are counted on the app's own day clock
   (`DayClock` with the person's day boundary), so "today only" ends when their day ends. Existing TestFlight installs
   get the date of their first launch after the update.
-- The offer is on the yearly plan only. Monthly ($9.99) and lifetime ($79.99) don't change. The yearly card shows
+- The offer is on the yearly plan only. Monthly ($9.99) and lifetime ($99.99) don't change. The yearly card shows
   $39.99 struck through next to $29.99, and the yearly plan stays selected by default.
 - The price anchor (MON-03), the charge line and the trial reminder all read the selected product's price, so they
   show $29.99 on offer days without changes.
@@ -88,18 +90,16 @@ already does, what is left to build, and the order to build in. Milan answered t
   have only one introductory offer, so a separate product is the straightforward way to keep the trial *and* the
   lower price. Trial eligibility is per subscription group, so someone who already used a trial on the $39.99 plan
   won't get a second one.
-- **The renewal price.** A separate product renews at $29.99 every year. If you want the second year at $39.99, the
-  discount has to be an introductory "pay up front for one year" offer on `dayxero.annual`, and then that product
-  can't also have the free trial. *Question below.*
-- India: ₹2,999 on the main product (S30.4). The offer at 25% off is ₹2,249 (or the nearest App Store price point).
+- **The renewal price:** $29.99 every year (Milan, 3 Nov), which is what a separate product does.
+- India: ₹2,999 on the main product (S30.4) and **₹2,249** on the offer (Milan, 3 Nov).
 - Superwall: since it's later, the daily paywall goes straight to DayXero's own paywall. Make sure no Superwall
   campaign is live on `unlock_program_day`, or it would show the old prices there.
 
-### The Day-0 paywall (open)
+### The Day-0 paywall
 
-It sits after "Your plan is ready" (reveal → paywall → reminders) and offers the 7-day trial from download. Still to
-decide: no ✕ (a true hard paywall), a ✕ that appears after a few seconds, or a ✕ from the start. Everything above
-works with any of the three. The only difference is that with no ✕, the daily prep paywalls never reach anyone.
+It sits after "Your plan is ready" (reveal → paywall → reminders) and offers the 7-day trial from download. The ✕
+fades in after 3 seconds (Milan, 3 Nov); closing it goes on to the reminders screen and then Prep 1's free cards.
+VoiceOver users get the close button straight away, since a delayed control they can't see coming is a trap.
 
 ### Code changes
 
@@ -166,8 +166,9 @@ where a line would sit naturally next to one.
 **Leave as they are:** Today's cards (the zero-scroll layout has no room), the morning pledge (the words are the
 person's own pledge, not Xero's), Progress, the health timeline, milestones and share cards, and Calm tools.
 
-**Recommendation:** start with 1, 3, 4, 6 and 7. They show off the cast, don't slow anyone down in a hurry, and
-need only a few lines of new copy.
+**Chosen (Milan, 3 Nov):** 1, 3, 4, 6 and 7. The mockups with every line are in the tracker under S33
+(`planning/mockups/S33/bubbles.html`). Lines that are already approved are reused word for word, so only the new
+ones need a yes.
 
 ## Bet 4 · Program path as a living progression
 
@@ -217,14 +218,10 @@ subscriber.
 2. **Milan / store:** create `dayxero.annual.offer`, set the ₹ prices and the 7-day trial (S30.4), and check no
    Superwall campaign is live.
 3. **Then:** bet 7's review, bet 4, bet 3 (idle life first, bubbles once the screens and copy are picked), and bet 5.
-4. **When decided:** the Day-0 paywall's close, and its zoom from the reveal.
+4. **Bubbles:** build once the S33 mockups are approved.
 
 ## Still open
 
-1. **Day-0 paywall:** no ✕, a ✕ after a few seconds, or a ✕ from the start?
-2. **The $29.99 renewal:** renew at $29.99 every year (keeps the trial; a separate product), or $29.99 for the first
-   year and then $39.99 (no free trial on the offer)?
-3. **India offer price:** ₹2,249, or another App Store price point?
-4. **The defaults in bet 1:** the next prep day opens after the 2 free cards; Day Xero and the weeks are fully paid;
+1. **The bet 1 defaults:** the next prep day opens after the 2 free cards; Day Xero and the weeks are fully paid;
    the new "Always free" line.
-5. **Bubbles:** which of the candidate screens, and who writes the lines?
+2. **The bubble lines** in S33.

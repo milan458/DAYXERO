@@ -2,16 +2,17 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-11-03T14:20:57.630Z"
+    "updated": "2026-11-03T18:12:54.999Z"
   },
   "now": {
-    "section": "S30",
-    "task": "S30.1",
+    "section": "S33",
+    "task": "S33.1",
     "waiting_on_milan": [
+      "Milan: approve the S33 speech-bubble lines (new: W2, W3, P1-P4, D1-D4)",
+      "Milan: confirm the BET-1 defaults (next prep day opens after the 2 free cards; Day Xero onwards paid; new 'Always free' line)",
+      "Milan: App Store Connect: privacy URL, 7-day trial, India annual ₹2,999, lifetime $99.99, win-back, grace period; plus dayxero.annual.offer $29.99 with a 7-day trial (₹2,249)",
       "Milan: sign off Wave 4 in the Screen Lab (version 8, What's new tab; try Text size AX3 and Appearance Dark)",
-      "Milan: App Store Connect: privacy URL, 7-day trial, India annual ₹2,999, lifetime $99.99, win-back, grace period",
       "Milan: review the 112 draft lesson cards (MON-04) and the open questions in docs/MONETISATION_TIERS.md",
-      "Milan: Superwall campaign copy to the new tiers",
       "Milan: Cloudflare dashboard: fix or turn off non-production Worker builds"
     ]
   },
@@ -3128,7 +3129,7 @@
           "id": "S32.3",
           "title": "BET-1 · App Store Connect + RevenueCat: dayxero.annual14 (14-day trial) if option B; India ₹2,999 and 7-day trial (with S30.4)",
           "status": "blocked",
-          "notes": "Needs Milan's accounts. Only if option B is chosen for the 14-day product.\nChanged 3 Nov: create dayxero.annual.offer ($29.99/yr, 7-day trial, same group, pro entitlement, RevenueCat offering day_offer) instead of a 14-day product. India: ₹2,999 main, offer ~₹2,249 (to confirm).",
+          "notes": "Needs Milan's accounts. Only if option B is chosen for the 14-day product.\nChanged 3 Nov: create dayxero.annual.offer ($29.99/yr, 7-day trial, same group, pro entitlement, RevenueCat offering day_offer) instead of a 14-day product. India: ₹2,999 main, offer ~₹2,249 (to confirm).\nLifetime stays $99.99 (D4); the plan doc said $79.99 by mistake, corrected 3 Nov.",
           "created": "2026-11-03T13:47:34.381Z",
           "completed": null
         },
@@ -3160,7 +3161,7 @@
           "id": "S32.7",
           "title": "BET-4 · Program path progression: segment draw-in, node pop with haptic, Xero steps to the next stop (once per session); 'Tomorrow: <title> · n min' on Today once today's session is done",
           "status": "pending",
-          "notes": "No XP, points or ranks.\nBubble candidates listed in docs/BIGGER_BETS_PLAN.md (bet 3). Recommended first: Welcome, plan building, slip flow, wave passed, daily prep paywall. Waiting on Milan's pick and copy.",
+          "notes": "No XP, points or ranks.\nBubble candidates listed in docs/BIGGER_BETS_PLAN.md (bet 3). Recommended first: Welcome, plan building, slip flow, wave passed, daily prep paywall. Waiting on Milan's pick and copy.\nBubbles moved to S33 (mockups out for sign-off 3 Nov).",
           "created": "2026-11-03T13:47:34.622Z",
           "completed": null
         },
@@ -3213,9 +3214,112 @@
           "completed": null
         }
       ]
+    },
+    {
+      "id": "S33",
+      "title": "Crew speech bubbles (BET-3): Welcome, plan building, slip flow, wave passed, prep-day paywall",
+      "goal": "Xero, Jelli and Glim speak in bubbles that arrive in turn on five screens (Milan, 3 Nov). Approved lines are reused word for word; new lines need sign-off. Mockup: mockups/S33/bubbles.html (built from the design canvas by build.js). Plan: docs/BIGGER_BETS_PLAN.md, bet 3.",
+      "signoff": {
+        "state": "mockups_ready",
+        "history": [
+          {
+            "time": "2026-11-03T18:12:49.310Z",
+            "state": "mockups_ready",
+            "by": "Claude",
+            "comment": ""
+          }
+        ]
+      },
+      "mockups": [
+        {
+          "title": "Crew speech bubbles: 5 screens with their lines",
+          "path": "mockups/S33/bubbles.html"
+        }
+      ],
+      "tasks": [
+        {
+          "id": "S33.1",
+          "title": "Mockups with every line: 5 screens, approved vs new lines, timing, Reduce Motion and VoiceOver rules",
+          "status": "awaiting_signoff",
+          "notes": "planning/mockups/S33/bubbles.src.html → build.js → bubbles.html. New lines: W2, W3, P1-P4, D1-D4 and the prep-paywall extras; S and R lines are reused.\nPosted for Milan's sign-off 3 Nov.",
+          "created": "2026-11-03T18:12:49.088Z",
+          "completed": null
+        },
+        {
+          "id": "S33.2",
+          "title": "Build: a shared CrewBubble view (tail corner toward the speaker, typing dots, Arrive, Reduce Motion all-at-once, one VoiceOver passage) replacing XeroBubble",
+          "status": "pending",
+          "notes": "After sign-off.",
+          "created": "2026-11-03T18:12:49.187Z",
+          "completed": null
+        },
+        {
+          "id": "S33.3",
+          "title": "Build: bubbles on Welcome, plan building, slip flow, wave passed; prep-day paywall bubbles with BET-1 (S32.12)",
+          "status": "pending",
+          "notes": "After sign-off. Localizable.xcstrings for the new lines.",
+          "created": "2026-11-03T18:12:49.227Z",
+          "completed": null
+        }
+      ]
     }
   ],
   "log": [
+    {
+      "time": "2026-11-03T18:12:54.999Z",
+      "type": "now",
+      "message": "Now: S33 / S33.1"
+    },
+    {
+      "time": "2026-11-03T18:12:49.415Z",
+      "type": "note",
+      "message": "S32.3: Lifetime stays $99.99 (D4); the plan doc said $79.99 by mistake, corrected 3 Nov."
+    },
+    {
+      "time": "2026-11-03T18:12:49.382Z",
+      "type": "now",
+      "message": "Now: S33 / S33.1"
+    },
+    {
+      "time": "2026-11-03T18:12:49.347Z",
+      "type": "note",
+      "message": "S32.7: Bubbles moved to S33 (mockups out for sign-off 3 Nov)."
+    },
+    {
+      "time": "2026-11-03T18:12:49.310Z",
+      "type": "signoff",
+      "message": "S33 mockups → mockups_ready"
+    },
+    {
+      "time": "2026-11-03T18:12:49.274Z",
+      "type": "mockup",
+      "message": "S33 mockup posted: Crew speech bubbles: 5 screens with their lines"
+    },
+    {
+      "time": "2026-11-03T18:12:49.227Z",
+      "type": "task_added",
+      "message": "S33.3 added: Build: bubbles on Welcome, plan building, slip flow, wave passed; prep-day paywall bubbles with BET-1 (S32.12)"
+    },
+    {
+      "time": "2026-11-03T18:12:49.187Z",
+      "type": "task_added",
+      "message": "S33.2 added: Build: a shared CrewBubble view (tail corner toward the speaker, typing dots, Arrive, Reduce Motion all-at-once, one VoiceOver passage) replacing XeroBubble"
+    },
+    {
+      "time": "2026-11-03T18:12:49.141Z",
+      "type": "status",
+      "message": "S33.1 pending → awaiting_signoff (Posted for Milan's sign-off 3 Nov.)"
+    },
+    {
+      "time": "2026-11-03T18:12:49.088Z",
+      "type": "task_added",
+      "message": "S33.1 added: Mockups with every line: 5 screens, approved vs new lines, timing, Reduce Motion and VoiceOver rules"
+    },
+    {
+      "time": "2026-11-03T18:12:49.038Z",
+      "type": "section_added",
+      "message": "S33 added: Crew speech bubbles (BET-3): Welcome, plan building, slip flow, wave passed, prep-day paywall"
+    },
     {
       "time": "2026-11-03T14:20:57.630Z",
       "type": "task_added",
