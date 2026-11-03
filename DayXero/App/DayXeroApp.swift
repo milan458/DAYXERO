@@ -79,6 +79,7 @@ struct RootView: View {
     /// Onboarding saves the profile before its last screen (reminders). This keeps that screen up until it's done,
     /// instead of the new profile swapping Home in underneath it.
     @State private var finishingOnboarding = false
+    private let motion = MotionPolicy()
 
     var body: some View {
         routed
@@ -179,8 +180,14 @@ struct RootView: View {
         #endif
     }
 
-    @ViewBuilder
+    /// Onboarding hands over to Home with a 0.3 s cross-fade (QW6): a hard cut read as a glitch, and a flip or zoom
+    /// would be hidden by Prep 1 rising over Home a moment later anyway.
     private var content: some View {
+        ZStack { screen }
+    }
+
+    @ViewBuilder
+    private var screen: some View {
         if underAge {
             UnderAgeScreen().background(Read4.background.ignoresSafeArea())
         } else if let profile = profiles.first, !finishingOnboarding {
@@ -190,15 +197,18 @@ struct RootView: View {
                 SessionFlowView(sessionId: session, profile: profile)
             } else {
                 HomeView(profile: profile)
+                    .transition(.opacity)
             }
             #else
             HomeView(profile: profile)
+                .transition(.opacity)
             #endif
         } else {
             OnboardingFlow(onSaving: { finishingOnboarding = true }, onFinished: {
                 // "Start my prep week" queued Prep 1 (FirstLesson); Home opens it once it has faded in.
-                finishingOnboarding = false
+                withAnimation(motion.animation(.easeInOut(duration: 0.3))) { finishingOnboarding = false }
             })
+            .transition(.opacity)
         }
     }
 }
