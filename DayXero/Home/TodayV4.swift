@@ -273,8 +273,49 @@ private struct CrewAvatar: View {
 
 // MARK: Focus
 
+/// The recovery card's three lines (wording approved by Milan, 3 Nov 2026).
+/// - "Happening now" with the change under way and "Next: … · in 2 days" for the next one;
+/// - "Coming up" with the next change and "Starts in 2 days" when nothing is under way, so nothing repeats;
+/// - "Many people notice" with that change's own line: those changes (CLIN-01) are never counted down, and the
+///   "Next" line skips them;
+/// - at the end, "Your body has come a long way" / "Every change on the timeline has started" / "See them all".
+struct RecoveryCopy: Equatable {
+    let kicker: String
+    let title: String
+    let line: String
+    /// The change the badge shows, if any.
+    let featuredID: String?
+
+    @MainActor
+    static func make(_ items: [HealthTimeline.Item], elapsedHours elapsed: Double) -> RecoveryCopy {
+        let (current, next) = HealthTimeline.nowAndNext(items, elapsedHours: elapsed)
+        let nextCounted = items
+            .filter { !$0.isFelt && HealthTimeline.state(of: $0, elapsedHours: elapsed) == .ahead }
+            .min { $0.fromHours < $1.fromHours }
+        guard let featured = current ?? next else {
+            return RecoveryCopy(kicker: String(localized: "Your body has come a long way"),
+                                title: String(localized: "Every change on the timeline has started"),
+                                line: String(localized: "See them all"), featuredID: nil)
+        }
+        if featured.isFelt {
+            return RecoveryCopy(kicker: String(localized: "Many people notice"), title: featured.title,
+                                line: featured.line.isEmpty ? featured.when : featured.line, featuredID: featured.id)
+        }
+        if current == nil {
+            return RecoveryCopy(kicker: String(localized: "Coming up"), title: featured.title,
+                                line: String(localized: "Starts \(TodayView.relative(hours: featured.fromHours - elapsed))"),
+                                featuredID: featured.id)
+        }
+        let line: String = if let nextCounted {
+            String(localized: "Next: \(nextCounted.title) · \(TodayView.relative(hours: nextCounted.fromHours - elapsed))")
+        } else {
+            String(localized: "See them all")
+        }
+        return RecoveryCopy(kicker: String(localized: "Happening now"), title: featured.title, line: line, featuredID: featured.id)
+    }
+}
+
 /// State B's focus card (UX-09): what's changing in the body now, and what's next. Opens the health timeline.
-/// Wording pending Milan's approval; it reuses the body-change row's lines for now.
 struct RecoveryCard: View {
     let product: Product
     let quitDay: Date
@@ -285,28 +326,19 @@ struct RecoveryCard: View {
     var body: some View {
         let items = HealthTimeline.bundled?.items(for: product) ?? []
         let elapsed = HealthTimeline.elapsedHours(quitDay: quitDay, now: now, clock: clock)
-        let (current, next) = HealthTimeline.nowAndNext(items, elapsedHours: elapsed)
-        let featured = current ?? next
-        // What many people notice (CLIN-01) gets its rough window, never a countdown.
-        let line: String = if let next, next.isFelt {
-            String(localized: "Next: \(next.title), \(next.when.lowercased())")
-        } else if let next {
-            String(localized: "Next: \(next.title), \(TodayView.relative(hours: next.fromHours - elapsed))")
-        } else {
-            String(localized: "Every change on the timeline is under way")
-        }
+        let copy = RecoveryCopy.make(items, elapsedHours: elapsed)
+        let current = HealthTimeline.nowAndNext(items, elapsedHours: elapsed).now
         return Button(action: action) {
             HStack(spacing: 12) {
-                HealthBadge(id: featured?.id ?? "",
+                HealthBadge(id: copy.featuredID ?? "",
                             state: current.map { HealthTimeline.state(of: $0, elapsedHours: elapsed) } ?? .underWay(0),
                             size: 48, showsRing: current != nil)
                     .padding(4)
                     .background(DX.Fill.cream, in: Circle())
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Your body is recovering").dxType(.footnote)
-                    Text(verbatim: featured?.title ?? String(localized: "Your body is recovering"))
-                        .dxType(.headline).fixedSize(horizontal: false, vertical: true)
-                    Text(verbatim: line).dxType(.footnote).fixedSize(horizontal: false, vertical: true)
+                    Text(verbatim: copy.kicker).dxType(.footnote)
+                    Text(verbatim: copy.title).dxType(.headline).fixedSize(horizontal: false, vertical: true)
+                    Text(verbatim: copy.line).dxType(.footnote).fixedSize(horizontal: false, vertical: true)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 Image(systemName: "chevron.right")
