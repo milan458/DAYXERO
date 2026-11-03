@@ -12,7 +12,7 @@ enum Onb {
     static let onInk = DX.Ground.reading.background
     static let hairline = Color(light: (0x1E1A3A, 0.12), dark: (0xFFFFFF, 0.14))
     static let accent = DX.Fill.green
-    static let accentSoft = Color(light: (0x0F6E43, 0.12), dark: (0x2FD08A, 0.16))
+    static let accentSoft = DX.Fill.greenSoft
 
     /// The ground each step sits on (design doc §10, F01–F07).
     static func ground(for step: OnboardingStep) -> DX.Ground {
@@ -95,6 +95,8 @@ struct OnbOptionCard: View {
     let systemImage: String?
     let isSelected: Bool
     let action: () -> Void
+    /// One selection haptic per tap, on the card tapped (a trigger on `isSelected` fired twice in a single-choice group).
+    @State private var taps = 0
 
     init(_ title: LocalizedStringResource, detail: LocalizedStringResource? = nil, systemImage: String? = nil,
          isSelected: Bool, action: @escaping () -> Void) {
@@ -106,7 +108,10 @@ struct OnbOptionCard: View {
     }
 
     var body: some View {
-        Button(action: action) {
+        Button {
+            taps += 1
+            action()
+        } label: {
             HStack(spacing: 12) {
                 if let systemImage {
                     Image(systemName: systemImage)
@@ -133,8 +138,8 @@ struct OnbOptionCard: View {
                 .strokeBorder(isSelected ? Onb.ink : .clear, lineWidth: 2))
             .contentShape(Rectangle())
         }
-        .buttonStyle(.plain)
-        .sensoryFeedback(DX.Haptic.select, trigger: isSelected)
+        .buttonStyle(.dxPress)
+        .sensoryFeedback(DX.Haptic.select, trigger: taps)
         .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
     }
 }

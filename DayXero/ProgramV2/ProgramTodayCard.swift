@@ -129,10 +129,16 @@ struct ProgramTodayCard: View {
                         model: PaywallModel(store: entitlement.store, entitlement: entitlement),
                         onClose: { showPaywall = false })
         }
-        .onAppear(perform: openQueuedFirstSession)
+        .task {
+            // Let Home's cross-fade from onboarding settle before the session rises over it (QW6).
+            guard UserDefaults.standard.bool(forKey: FirstLesson.key) else { return }
+            try? await Task.sleep(for: .milliseconds(350))
+            guard !Task.isCancelled else { return }
+            openQueuedFirstSession()
+        }
     }
 
-    /// Prep 1 opens by itself the first time Home shows after onboarding (S22).
+    /// Prep 1 opens once, after "Start my prep week" queued it (S22, QW1).
     private func openQueuedFirstSession() {
         guard UserDefaults.standard.bool(forKey: FirstLesson.key) else { return }
         UserDefaults.standard.set(false, forKey: FirstLesson.key)
@@ -168,6 +174,7 @@ struct ProgramTodayCard: View {
                 }
             }
             .accessibilityHint(needsUpgrade ? Text("Shows how to unlock it") : Text(inProgress ? "Continues the session" : "Starts the session"))
+            .accessibilityIdentifier("today.lesson")
         case let .waiting(next):
             ColourCard(kicker: today.mission == nil ? String(localized: "Up next") : String(localized: "Today's mission"),
                        title: today.mission ?? next, detail: today.mission == nil ? nil : next,

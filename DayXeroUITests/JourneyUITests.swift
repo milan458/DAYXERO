@@ -64,6 +64,11 @@ final class JourneyUITests: XCTestCase {
         XCTAssert(closeLesson.waitForExistence(timeout: 10), "Prep day 1 didn't open after onboarding")
         snap(app, "06b-day1")
         tapWhenStill(app, closeLesson, name: "Close lesson")
+        // Closing Prep 1 unplayed leaves it undone and on Today's card, whatever the hour (QW1).
+        XCTAssert(app.descendants(matching: .any)["today.lesson"].waitForExistence(timeout: 10),
+                  "Prep 1 left Today's card after it was closed")
+        let undone = app.descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH %@", "Prep: 0 of")).firstMatch
+        XCTAssert(undone.waitForExistence(timeout: 5), "Prep 1 was counted as done without being played")
 
         // Prep Home (S4): log a use, ride out a craving, visit each tab. The use cell's label opens the log (UX-05).
         XCTAssert(app.buttons["Craving SOS"].waitForExistence(timeout: 10))

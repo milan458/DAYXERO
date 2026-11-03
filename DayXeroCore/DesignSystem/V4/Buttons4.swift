@@ -102,8 +102,8 @@ private struct V4ButtonBody<Label: View>: View {
     let ground: DX.Ground
     let destructive: Bool
     @Environment(\.colorScheme) private var scheme
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.isEnabled) private var enabled
+    private let motion = MotionPolicy()
 
     var body: some View {
         let colors = DX.ButtonColors.make(kind, on: ground, dark: scheme == .dark, destructive: destructive)
@@ -128,8 +128,8 @@ private struct V4ButtonBody<Label: View>: View {
             }
             .contentShape(Capsule())
             .offset(y: pressed && colors.lip ? 3 : 0)
-            .scaleEffect(pressed && !reduceMotion ? DX.Move.pressedScale : 1)
-            .animation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion), value: pressed)
+            .scaleEffect(pressed ? motion.pressedScale : 1)
+            .animation(motion.animation(DX.Move.settle), value: pressed)
     }
 }
 

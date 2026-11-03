@@ -14,8 +14,7 @@ private let shortDate = Date.FormatStyle.dateTime.weekday(.abbreviated).day().mo
 /// two full 10 s breaths.
 struct BreatheScreen: View {
     let onDone: () -> Void
-    @State private var start = Date()
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
 
     var body: some View {
         VStack(spacing: 0) {
@@ -27,14 +26,16 @@ struct BreatheScreen: View {
             .padding(.horizontal, DX.Layout.gutter)
             Spacer(minLength: 12)
             ZStack {
-                TimelineView(.animation(paused: reduceMotion)) { timeline in
-                    let p = reduceMotion ? 0.5 : DX.Move.breath(at: timeline.date.timeIntervalSince(start))
+                // The rings, the words and Xero all breathe on the one reference clock (QW2). The rings used to count
+                // from when the screen opened, so they could shrink under "Breathe in" and barely move on the way out.
+                TimelineView(.animation(paused: !motion.breathes)) { timeline in
+                    let p = motion.breathes ? DX.Move.breath(at: timeline.date.timeIntervalSinceReferenceDate) : 0.5
                     ZStack {
                         ForEach(0..<3) { ring in
                             Circle()
                                 .fill(DX.Fill.cream.opacity(0.16 - Double(ring) * 0.04))
                                 .frame(width: 170 + CGFloat(ring) * 60, height: 170 + CGFloat(ring) * 60)
-                                .scaleEffect(0.82 + 0.18 * p)
+                                .scaleEffect(0.72 + 0.28 * p)
                         }
                     }
                 }
@@ -56,10 +57,20 @@ struct BreatheScreen: View {
         }
         .padding(.vertical, DX.Space.s)
         .task {
-            // Carry on by itself after a second full breath.
-            try? await Task.sleep(for: .seconds(reduceMotion ? 5 : 20))
+            try? await Task.sleep(for: .seconds(motion.reduce ? 5 : Self.autoAdvance(at: .now)))
+            guard !Task.isCancelled else { return }
             onDone()
         }
+    }
+}
+
+extension BreatheScreen {
+    /// Seconds until the screen carries on by itself: the end of a second full breath on the shared clock. A breath
+    /// joined with more than half of it left counts as the first.
+    static func autoAdvance(at now: Date) -> Double {
+        let cycle = DX.Move.inhale + DX.Move.exhale
+        let left = cycle - now.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: cycle)
+        return left + (left > cycle / 2 ? cycle : 2 * cycle)
     }
 }
 
@@ -260,20 +271,7 @@ struct QuitDayScreen: View {
             .dxReadableColumn()
             .padding(.bottom, DX.Space.xs)
         }
-        // Back sits just under the status bar on every phone: this VStack keeps to the safe area while the art above
-        // runs under it. It used to be a fixed 54 pt from the top of the screen, which only matched some notches.
-        .overlay(alignment: .topLeading) {
-            Button { model.back() } label: {
-                Image(systemName: "chevron.left").font(.system(size: 16, weight: .bold))
-                    .frame(width: 44, height: 44)
-                    .background(DX.Fill.cream.opacity(0.85), in: Circle())
-                    .foregroundStyle(DX.Fill.navy)
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel(Text("Back"))
-            .padding(.leading, DX.Layout.gutter)
-            .padding(.top, DX.Space.xs)
-        }
+        // Back and progress come from the flow's shared header, which floats over the art inside the safe area (QW3).
         .sheet(isPresented: $picking) {
             NavigationStack {
                 ScrollView {
@@ -305,9 +303,10 @@ struct QuitDayScreen: View {
                     .background(quit ? ground.ink : (prep ? DX.Fill.cardOnColour : Color.clear),
                                 in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(.dxPress)
                 .disabled(!selectable)
-                .sensoryFeedback(DX.Haptic.select, trigger: quit)
+                // Only the day becoming Quit Day buzzes, not the one it leaves.
+                .sensoryFeedback(DX.Haptic.select, trigger: quit) { _, isQuit in isQuit }
                 .accessibilityLabel(Text(day, format: .dateTime.weekday(.wide).day().month(.wide)))
                 .accessibilityValue(Text(quit ? "Quit Day" : (prep ? "Prep day" : "")))
                 .accessibilityAddTraits(quit ? [.isButton, .isSelected] : .isButton)
@@ -379,7 +378,6 @@ struct BuildingScreen: View {
         VStack(spacing: 0) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
-                    OnbProgressBar(value: model.progress, ground: ground).padding(.bottom, 6)
                     HStack(alignment: .center, spacing: 12) {
                         XeroView(mood: .hello, stage: 1, size: .card)
                         Text("Your plan, built around you").dxType(.title).foregroundStyle(ground.ink)
@@ -459,13 +457,7 @@ struct PlanRevealScreen: View {
         VStack(spacing: 0) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
-                    OnbProgressBar(value: model.progress, ground: ground).padding(.bottom, 6)
-                    HStack(spacing: 10) {
-                        XeroView(mood: .hello, stage: 1, size: .avatar, animate: false)
-                            .background(DX.Ground.apricot.background, in: Circle()).clipShape(Circle())
-                            .accessibilityHidden(true)
-                        Text("Step \(model.stepNumber) of \(model.stepTotal)").dxType(.caption).textCase(.uppercase).foregroundStyle(ground.muted)
-                    }
+                    Text("Step \(model.stepNumber) of \(model.stepTotal)").dxType(.caption).textCase(.uppercase).foregroundStyle(ground.muted)
                     MarkedTitle(String(localized: "Your plan is "), marking: String(localized: "ready"), color: DX.Mark.color(on: ground))
                         .dxType(.title).foregroundStyle(ground.ink)
                     Text(entitlement.isPro ? "Everything is unlocked." : "Prep 1 to 3 are on us. Nothing is charged today.")
@@ -474,11 +466,14 @@ struct PlanRevealScreen: View {
                     builtAround
                     includes
                     if !entitlement.isPro { trialCard }
+                    // Set apart from the cards above and clear of the pinned buttons below (QW9).
                     Text(HealthInfoView.oneLine).dxType(.caption).foregroundStyle(ground.muted)
                         .multilineTextAlignment(.center).frame(maxWidth: .infinity)
+                        .padding(.top, DX.Space.s)
                 }
                 .padding(.horizontal, DX.Layout.gutter)
                 .padding(.top, DX.Space.m)
+                .padding(.bottom, DX.Space.l)
                 .dxReadableColumn()
             }
             VStack(spacing: 4) {
@@ -646,7 +641,7 @@ struct TrialScreen: View {
                     Text("You can change the times in Settings.").dxType(.footnote).foregroundStyle(ground.muted)
                 }
                 .padding(.horizontal, DX.Layout.gutter)
-                .padding(.top, DX.Space.xl)
+                .padding(.top, DX.Space.m)
                 .dxReadableColumn()
             }
             VStack(spacing: 4) {

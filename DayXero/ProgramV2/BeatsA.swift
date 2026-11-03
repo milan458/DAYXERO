@@ -48,6 +48,7 @@ struct StatRevealBeat: View {
 /// Teaches, never grades: the right answer is shown in sage with its name in words, their pick in a neutral outline.
 /// No red, no ✗, no "wrong", no retries, no score.
 struct QuizBeat: View {
+    private let motion = MotionPolicy()
     let beat: Beat
     let ctx: BeatContext
     let onDone: () -> Void
@@ -106,7 +107,7 @@ struct QuizBeat: View {
 
     private func pick(_ option: Beat.Option) {
         guard picked == nil else { return }
-        withAnimation(DX.Move.settle) { picked = option.id }
+        withAnimation(motion.animation(DX.Move.settle)) { picked = option.id }
         let right = option.id == beat.correctId
         if right { rightHaptic.toggle() }
         if !ctx.isReplay { Analytics.track(.programQuizAnswered(beatId: beat.id, firstTryCorrect: right)) }
@@ -255,6 +256,7 @@ extension Beat.Option {
 
 /// 0–10 with a haptic per step. With `compareWith`, Continue shows both values side by side, with no comment on the difference.
 struct SliderBeat: View {
+    private let motion = MotionPolicy()
     let beat: Beat
     let ctx: BeatContext
     let onDone: () -> Void
@@ -299,7 +301,7 @@ struct SliderBeat: View {
     private func next() {
         if !comparing, earlier != nil {
             ctx.save(beat.saveAs, .number(Int(value)))
-            withAnimation(DX.Move.settle) { comparing = true }
+            withAnimation(motion.animation(DX.Move.settle)) { comparing = true }
             return
         }
         ctx.save(beat.saveAs, .number(Int(value)))
@@ -368,6 +370,7 @@ struct BeatSlider: View {
 // MARK: - slider_group
 
 struct SliderGroupBeat: View {
+    private let motion = MotionPolicy()
     let beat: Beat
     let ctx: BeatContext
     let onDone: () -> Void
@@ -407,7 +410,7 @@ struct SliderGroupBeat: View {
     private func finish() {
         for item in beat.sliders ?? [] { ctx.save(item.saveAs, .number(Int(values[item.saveAs] ?? 5))) }
         if !done, !ctx.text(beat.feedback).isEmpty {
-            withAnimation(DX.Move.settle) { done = true }
+            withAnimation(motion.animation(DX.Move.settle)) { done = true }
             return
         }
         ctx.finish(beat)

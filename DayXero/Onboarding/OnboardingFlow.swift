@@ -18,8 +18,8 @@ struct OnboardingFlow: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            if breathed && showsTopBar {
-                topBar
+            if breathed && showsTopBar && !overlaysTopBar {
+                topBar(onArt: false)
                     .padding(.horizontal, DX.Layout.gutter)
                     .dxReadableColumn()
                     .padding(.top, DX.Space.xs)
@@ -35,6 +35,15 @@ struct OnboardingFlow: View {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        // Quit Day's dawn art runs up under the status bar, so its header floats over the art, inside the safe area.
+        .overlay(alignment: .top) {
+            if breathed && overlaysTopBar {
+                topBar(onArt: true)
+                    .padding(.horizontal, DX.Layout.gutter)
+                    .dxReadableColumn()
+                    .padding(.top, DX.Space.xs)
+            }
         }
         .foregroundStyle(ground.ink)
         .background(ground.background.ignoresSafeArea())
@@ -55,11 +64,15 @@ struct OnboardingFlow: View {
         }
     }
 
+    /// Every step after Welcome has the same pinned header, Quit Day and the reminders included (QW3). It sits above
+    /// each screen's scroll view, so nothing scrolls up under it or into the Dynamic Island.
     private var showsTopBar: Bool {
-        switch model.step {
-        case .welcome, .quitDay, .building, .reveal, .trial: false
-        default: true
-        }
+        model.step != .welcome
+    }
+
+    /// Steps whose hero art runs under the status bar: the header floats over the art instead of pushing it down.
+    private var overlaysTopBar: Bool {
+        model.step == .quitDay
     }
 
     private var transition: AnyTransition {
@@ -67,8 +80,8 @@ struct OnboardingFlow: View {
                                                removal: .move(edge: .leading).combined(with: .opacity))
     }
 
-    /// F03 header: back, Xero's avatar and a green progress bar.
-    private var topBar: some View {
+    /// F03 header: back, Xero's avatar and a green progress bar. Over art, the bar gets a cream backing to stay legible.
+    private func topBar(onArt: Bool) -> some View {
         HStack(spacing: 12) {
             if model.canGoBack {
                 Button { model.back() } label: {
@@ -85,6 +98,8 @@ struct OnboardingFlow: View {
                 .clipShape(Circle())
                 .accessibilityHidden(true)
             OnbProgressBar(value: model.progress, ground: ground)
+                .padding(onArt ? 6 : 0)
+                .background(onArt ? DX.Fill.cream.opacity(0.85) : .clear, in: Capsule())
         }
         .frame(minHeight: 48)
     }
@@ -107,10 +122,12 @@ struct OnboardingFlow: View {
         }
     }
 
+    /// "Start my prep week": saves the plan and queues Prep 1, which Home opens after the reminders step (QW1).
     private func saveAndContinue() {
         do {
             onSaving()
             try model.save(into: context)
+            UserDefaults.standard.set(true, forKey: FirstLesson.key)
             model.next()
         } catch {
             // Saving locally essentially never fails; if it does, staying on the reveal lets them retry.

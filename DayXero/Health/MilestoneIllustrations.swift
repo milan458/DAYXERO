@@ -17,9 +17,9 @@ struct HealthBadge: View {
         let ahead = state == .ahead
         ZStack {
             Circle().fill(Self.panel)
-            // Composed to the bottom right; nudged so the crop keeps the crew member and the hero object.
-            MilestoneCollage(id: id, size: size * 1.12, animate: !ahead && size >= 72)
-                .offset(x: -size * 0.02, y: size * 0.02)
+            // Drawn at the badge's own size and centred, in its compact form, so the circle doesn't cut objects into
+            // stray shapes (QW9). It used to be 112% and nudged, which clipped the right-hand objects.
+            MilestoneCollage(id: id, size: size, animate: !ahead && size >= 72, compact: true)
                 .grayscale(ahead ? 1 : 0)
                 .opacity(ahead ? 0.55 : 1)
         }
