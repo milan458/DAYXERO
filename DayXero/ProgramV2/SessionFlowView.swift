@@ -160,6 +160,12 @@ struct SessionFlowView: View {
         }
     }
 
+    /// The Back action for a step's own "go back" link, or nil where Back isn't offered.
+    private func backAction(_ session: ProgramContent.Session) -> (() -> Void)? {
+        guard Self.canGoBack(from: index, in: steps, beats: allBeats(session)) else { return nil }
+        return { goBack() }
+    }
+
     private func allBeats(_ session: ProgramContent.Session) -> [Beat] {
         session.beats + (session.mission?.followUp ?? [])
     }
@@ -222,8 +228,7 @@ struct SessionFlowView: View {
             SessionIntro(session: session, variant: ctx.variant, isReplay: isReplay, reads: steps.contains(.cards), onBegin: advance)
         case let .beat(id):
             if let beat = allBeats(session).first(where: { $0.id == id }) {
-                BeatScreen(beat: beat, ctx: ctx, onDone: advance,
-                           onBack: Self.canGoBack(from: index, in: steps, beats: allBeats(session)) ? goBack : nil)
+                BeatScreen(beat: beat, ctx: ctx, onDone: advance, onBack: backAction(session))
             }
         case .cards:
             CardStackStep(session: session, ctx: ctx, canListen: ProgramAudioStep.hasRecording(session, ctx: ctx),

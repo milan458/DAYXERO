@@ -211,16 +211,27 @@ struct ChoiceBeat: View {
         .onAppear(perform: restore)
     }
 
+    private var fromReasons: Bool { beat.optionsFrom == "reasons" }
+
+    private var emptyMessage: LocalizedStringKey {
+        if fromReasons { return "You haven't written a reason yet. Go back and add one, and it'll show up here to pick." }
+        return "There's nothing here to pick yet. Go back and add something first."
+    }
+
+    private var emptyBackTitle: LocalizedStringKey {
+        if fromReasons { return "Add a reason" }
+        return "Go back"
+    }
+
     private var emptyState: some View {
         VStack(alignment: .leading, spacing: DX.Space.s) {
-            Text(beat.optionsFrom == "reasons"
-                 ? "You haven't written a reason yet. Go back and add one, and it'll show up here to pick." as LocalizedStringKey
-                 : "There's nothing here to pick yet. Go back and add something first.")
-                .dxFont(16, weight: 400, style: .body).foregroundStyle(Read4.muted)
+            Text(emptyMessage)
+                .dxFont(16, weight: 400, style: .body)
+                .foregroundStyle(Read4.muted)
                 .fixedSize(horizontal: false, vertical: true)
             if let onBack {
                 Button(action: onBack) {
-                    Label(beat.optionsFrom == "reasons" ? "Add a reason" as LocalizedStringKey : "Go back", systemImage: "chevron.left")
+                    Label(emptyBackTitle, systemImage: "chevron.left")
                 }
                 .buttonStyle(.dx(.secondary, on: .reading))
                 .accessibilityIdentifier("program.choice.back")
