@@ -2,13 +2,13 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-11-03T18:12:54.999Z"
+    "updated": "2026-11-03T18:29:10.020Z"
   },
   "now": {
-    "section": "S33",
-    "task": "S33.1",
+    "section": "S32",
+    "task": "S32.14",
     "waiting_on_milan": [
-      "Milan: approve the S33 speech-bubble lines (new: W2, W3, P1-P4, D1-D4)",
+      "Milan: approve the speech-bubble lines in the Screen Lab (new: W2, W3, P1-P4, D1-D4)",
       "Milan: confirm the BET-1 defaults (next prep day opens after the 2 free cards; Day Xero onwards paid; new 'Always free' line)",
       "Milan: App Store Connect: privacy URL, 7-day trial, India annual ₹2,999, lifetime $99.99, win-back, grace period; plus dayxero.annual.offer $29.99 with a 7-day trial (₹2,249)",
       "Milan: sign off Wave 4 in the Screen Lab (version 8, What's new tab; try Text size AX3 and Appearance Dark)",
@@ -2605,7 +2605,12 @@
           "created": "2026-10-30T09:30:00.000Z",
           "completed": "2026-10-30T09:30:00.000Z"
         }
-      ]
+      ],
+      "mockups": [],
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      }
     },
     {
       "id": "S27",
@@ -3161,7 +3166,7 @@
           "id": "S32.7",
           "title": "BET-4 · Program path progression: segment draw-in, node pop with haptic, Xero steps to the next stop (once per session); 'Tomorrow: <title> · n min' on Today once today's session is done",
           "status": "pending",
-          "notes": "No XP, points or ranks.\nBubble candidates listed in docs/BIGGER_BETS_PLAN.md (bet 3). Recommended first: Welcome, plan building, slip flow, wave passed, daily prep paywall. Waiting on Milan's pick and copy.\nBubbles moved to S33 (mockups out for sign-off 3 Nov).",
+          "notes": "No XP, points or ranks.\nBubble candidates listed in docs/BIGGER_BETS_PLAN.md (bet 3). Recommended first: Welcome, plan building, slip flow, wave passed, daily prep paywall. Waiting on Milan's pick and copy.\nBubbles moved to S33 (mockups out for sign-off 3 Nov).\nBubbles: mockups in the Screen Lab (S32.14), build S32.15.",
           "created": "2026-11-03T13:47:34.622Z",
           "completed": null
         },
@@ -3212,59 +3217,32 @@
           "notes": "Milan 3 Nov. Needs dayxero.annual.offer (S32.3). Renewal price at $29.99 vs $39.99 still open.",
           "created": "2026-11-03T14:20:57.630Z",
           "completed": null
-        }
-      ]
-    },
-    {
-      "id": "S33",
-      "title": "Crew speech bubbles (BET-3): Welcome, plan building, slip flow, wave passed, prep-day paywall",
-      "goal": "Xero, Jelli and Glim speak in bubbles that arrive in turn on five screens (Milan, 3 Nov). Approved lines are reused word for word; new lines need sign-off. Mockup: mockups/S33/bubbles.html (built from the design canvas by build.js). Plan: docs/BIGGER_BETS_PLAN.md, bet 3.",
-      "signoff": {
-        "state": "mockups_ready",
-        "history": [
-          {
-            "time": "2026-11-03T18:12:49.310Z",
-            "state": "mockups_ready",
-            "by": "Claude",
-            "comment": ""
-          }
-        ]
-      },
-      "mockups": [
+        },
         {
-          "title": "Crew speech bubbles: 5 screens with their lines",
-          "path": "mockups/S33/bubbles.html"
-        }
-      ],
-      "tasks": [
-        {
-          "id": "S33.1",
-          "title": "Mockups with every line: 5 screens, approved vs new lines, timing, Reduce Motion and VoiceOver rules",
-          "status": "awaiting_signoff",
-          "notes": "planning/mockups/S33/bubbles.src.html → build.js → bubbles.html. New lines: W2, W3, P1-P4, D1-D4 and the prep-paywall extras; S and R lines are reused.\nPosted for Milan's sign-off 3 Nov.",
-          "created": "2026-11-03T18:12:49.088Z",
+          "id": "S32.14",
+          "title": "BET-3 · Speech-bubble mockups in the Screen Lab (Welcome, plan building, slip, wave passed, prep-day paywall) for Milan's sign-off",
+          "status": "in_progress",
+          "notes": "Redone in the Screen Lab (Lab first, docs/DAYXERO_CRITIQUE_FIX_PLAN.md) after Milan pointed out the first set used the old design canvas. Replaces the retired S33 section.",
+          "created": "2026-11-03T18:29:10.020Z",
           "completed": null
         },
         {
-          "id": "S33.2",
-          "title": "Build: a shared CrewBubble view (tail corner toward the speaker, typing dots, Arrive, Reduce Motion all-at-once, one VoiceOver passage) replacing XeroBubble",
+          "id": "S32.15",
+          "title": "BET-3 · Build: one shared bubble view (tail toward the speaker, typing dots, Arrive, MotionPolicy, one VoiceOver passage) on the five screens",
           "status": "pending",
-          "notes": "After sign-off.",
-          "created": "2026-11-03T18:12:49.187Z",
-          "completed": null
-        },
-        {
-          "id": "S33.3",
-          "title": "Build: bubbles on Welcome, plan building, slip flow, wave passed; prep-day paywall bubbles with BET-1 (S32.12)",
-          "status": "pending",
-          "notes": "After sign-off. Localizable.xcstrings for the new lines.",
-          "created": "2026-11-03T18:12:49.227Z",
+          "notes": "After the Lab sign-off.",
+          "created": "2026-11-03T18:29:10.020Z",
           "completed": null
         }
       ]
     }
   ],
   "log": [
+    {
+      "time": "2026-11-03T18:29:10.020Z",
+      "type": "note",
+      "message": "S33 retired: its speech-bubble mockup used the old design canvas. Bubbles move to S32.14 (Screen Lab) and S32.15. S26 given the missing signoff and mockups fields that broke the hosted tracker."
+    },
     {
       "time": "2026-11-03T18:12:54.999Z",
       "type": "now",

@@ -83,7 +83,7 @@ let signoffs = [];
 function mergeSignoffs(d) {
   for (const so of signoffs) {
     const s = d.sections.find((x) => x.id === so.section);
-    if (!s || s.signoff.history.some((h) => h.time >= so.time)) continue;
+    if (!s || !s.signoff || s.signoff.history.some((h) => h.time >= so.time)) continue;
     const state = so.action === 'approve' ? 'signed_off' : 'changes_requested';
     s.signoff.state = state;
     s.signoff.history.push({ time: so.time, state, by: 'Milan', comment: so.comment || '' });
@@ -160,9 +160,23 @@ function renderSection(s) {
   </details>`;
 }
 
+// A section without mockups or a sign-off record (S26 shipped without them) must not stop the page from drawing.
+function normalise(d) {
+  for (const s of d.sections) { s.mockups = s.mockups || []; s.tasks = s.tasks || []; s.signoff = s.signoff || { state: 'not_started', history: [] }; }
+  d.now = d.now || { waiting_on_milan: [] }; d.now.waiting_on_milan = d.now.waiting_on_milan || []; d.log = d.log || [];
+  return d;
+}
+
 async function load(force) {
+  let d;
   try {
-    const d = mergeSignoffs(await (await fetch('tasks.json?t=' + Date.now(), { cache: 'no-store' })).json());
+    d = normalise(await (await fetch('tasks.json?t=' + Date.now(), { cache: 'no-store' })).json());
+  } catch (e) {
+    document.getElementById('updated').textContent = 'Tracker data not reachable';
+    return;
+  }
+  try {
+    d = mergeSignoffs(d);
     document.getElementById('updated').textContent = `Updated ${fmt(d.meta.updated)} · refreshes every 4s`;
     if (!force && d.meta.updated === lastStamp) return;
     // Don't clobber a comment Milan is typing.
@@ -178,7 +192,7 @@ async function load(force) {
     document.getElementById('log').innerHTML = d.log.map((l) =>
       `<li><time>${fmt(l.time)}</time><span>${esc(l.message)}</span></li>`).join('');
   } catch (e) {
-    document.getElementById('updated').textContent = 'Tracker server not reachable';
+    document.getElementById('updated').textContent = 'Could not draw the tracker: ' + e.message;
   }
 }
 

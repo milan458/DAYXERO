@@ -2,7 +2,9 @@
 
 There are seven bets from the review of the onboarding recording. For each one this plan sets out what the code
 already does, what is left to build, and the order to build in. Milan answered the first round of questions on
-3 Nov; the second round (Day-0 close, renewal, India offer price) the same evening. Tracker section **S32** in `planning/tasks.json`.
+3 Nov; the second round (Day-0 close, renewal, India offer price) the same evening. Tracker section **S32** in `planning/tasks.json`. Every visible change goes through the Screen Lab first
+(`docs/DAYXERO_CRITIQUE_FIX_PLAN.md`, "Lab first"), using the v4 tokens as amended by S27.13; the old design canvas
+(`design/handoff/canvas`) predates those changes and isn't the reference.
 
 ## Milan's answers (3 Nov 2026)
 
@@ -17,7 +19,7 @@ already does, what is left to build, and the order to build in. Milan answered t
 | India offer price | **₹2,249.** |
 | Tab bar | Keep the custom glass bar. |
 | Superwall | Later. DayXero's own paywall everywhere for now. |
-| Speech bubbles | **Screens 1, 3, 4, 6 and 7** (Welcome, plan building, slip flow, wave passed, daily prep paywall). Mockups with the lines go to the tracker for approval (S33). |
+| Speech bubbles | **Screens 1, 3, 4, 6 and 7** (Welcome, plan building, slip flow, wave passed, daily prep paywall). Mockups with the lines go in the **Screen Lab** for sign-off (S32.14). |
 
 ## The short version
 
@@ -25,7 +27,7 @@ already does, what is left to build, and the order to build in. Milan answered t
 | --- | --- | --- |
 | 1 · Paywall model | Decided. Day-0 paywall with a delayed ✕, daily prep paywall, the price by day, and a $29.99 offer product. | 3–4 days of code + store setup |
 | 2 · Hold-to-set as the pledge | Ready to build | 1–2 days |
-| 3 · Mascot motion pass | Idle life ready to build. Bubbles on five screens: mockups with lines out for approval (S33). | 2–3 days |
+| 3 · Mascot motion pass | Idle life ready to build. Bubbles on five screens: mockups with lines in the Screen Lab (S32.14). | 2–3 days |
 | 4 · Program path progression | Ready to build | 1.5–2 days |
 | 5 · Hero continuity | Ready. Keep the custom glass bar. | 1 day |
 | 6 · Instrument and A/B | Events ready to build. Experiments wait for Superwall. | 0.5 day |
@@ -166,9 +168,9 @@ where a line would sit naturally next to one.
 **Leave as they are:** Today's cards (the zero-scroll layout has no room), the morning pledge (the words are the
 person's own pledge, not Xero's), Progress, the health timeline, milestones and share cards, and Calm tools.
 
-**Chosen (Milan, 3 Nov):** 1, 3, 4, 6 and 7. The mockups with every line are in the tracker under S33
-(`planning/mockups/S33/bubbles.html`). Lines that are already approved are reused word for word, so only the new
-ones need a yes.
+**Chosen (Milan, 3 Nov):** 1, 3, 4, 6 and 7. The mockups go in the Screen Lab (S32.14), built with the Lab's own
+grounds and crew art (the S27.13 six-ground system), and listed as a wave under What's new. Lines that are already
+approved are reused word for word, so only the new ones need a yes.
 
 ## Bet 4 · Program path as a living progression
 
@@ -218,10 +220,10 @@ subscriber.
 2. **Milan / store:** create `dayxero.annual.offer`, set the ₹ prices and the 7-day trial (S30.4), and check no
    Superwall campaign is live.
 3. **Then:** bet 7's review, bet 4, bet 3 (idle life first, bubbles once the screens and copy are picked), and bet 5.
-4. **Bubbles:** build once the S33 mockups are approved.
+4. **Bubbles:** build once the Screen Lab mockups are approved (S32.15).
 
 ## Still open
 
 1. **The bet 1 defaults:** the next prep day opens after the 2 free cards; Day Xero and the weeks are fully paid;
    the new "Always free" line.
-2. **The bubble lines** in S33.
+2. **The bubble lines** in the Screen Lab.
