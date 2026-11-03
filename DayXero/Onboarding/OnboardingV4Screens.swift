@@ -14,8 +14,7 @@ private let shortDate = Date.FormatStyle.dateTime.weekday(.abbreviated).day().mo
 /// two full 10 s breaths.
 struct BreatheScreen: View {
     let onDone: () -> Void
-    @State private var start = Date()
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
 
     var body: some View {
         VStack(spacing: 0) {
@@ -27,14 +26,16 @@ struct BreatheScreen: View {
             .padding(.horizontal, DX.Layout.gutter)
             Spacer(minLength: 12)
             ZStack {
-                TimelineView(.animation(paused: reduceMotion)) { timeline in
-                    let p = reduceMotion ? 0.5 : DX.Move.breath(at: timeline.date.timeIntervalSince(start))
+                // The rings, the words and Xero all breathe on the one reference clock (QW2). The rings used to count
+                // from when the screen opened, so they could shrink under "Breathe in" and barely move on the way out.
+                TimelineView(.animation(paused: !motion.breathes)) { timeline in
+                    let p = motion.breathes ? DX.Move.breath(at: timeline.date.timeIntervalSinceReferenceDate) : 0.5
                     ZStack {
                         ForEach(0..<3) { ring in
                             Circle()
                                 .fill(DX.Fill.cream.opacity(0.16 - Double(ring) * 0.04))
                                 .frame(width: 170 + CGFloat(ring) * 60, height: 170 + CGFloat(ring) * 60)
-                                .scaleEffect(0.82 + 0.18 * p)
+                                .scaleEffect(0.72 + 0.28 * p)
                         }
                     }
                 }
@@ -56,10 +57,20 @@ struct BreatheScreen: View {
         }
         .padding(.vertical, DX.Space.s)
         .task {
-            // Carry on by itself after a second full breath.
-            try? await Task.sleep(for: .seconds(reduceMotion ? 5 : 20))
+            try? await Task.sleep(for: .seconds(motion.reduce ? 5 : Self.autoAdvance(at: .now)))
+            guard !Task.isCancelled else { return }
             onDone()
         }
+    }
+}
+
+extension BreatheScreen {
+    /// Seconds until the screen carries on by itself: the end of a second full breath on the shared clock. A breath
+    /// joined with more than half of it left counts as the first.
+    static func autoAdvance(at now: Date) -> Double {
+        let cycle = DX.Move.inhale + DX.Move.exhale
+        let left = cycle - now.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: cycle)
+        return left + (left > cycle / 2 ? cycle : 2 * cycle)
     }
 }
 
