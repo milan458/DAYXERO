@@ -260,20 +260,7 @@ struct QuitDayScreen: View {
             .dxReadableColumn()
             .padding(.bottom, DX.Space.xs)
         }
-        // Back sits just under the status bar on every phone: this VStack keeps to the safe area while the art above
-        // runs under it. It used to be a fixed 54 pt from the top of the screen, which only matched some notches.
-        .overlay(alignment: .topLeading) {
-            Button { model.back() } label: {
-                Image(systemName: "chevron.left").font(.system(size: 16, weight: .bold))
-                    .frame(width: 44, height: 44)
-                    .background(DX.Fill.cream.opacity(0.85), in: Circle())
-                    .foregroundStyle(DX.Fill.navy)
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel(Text("Back"))
-            .padding(.leading, DX.Layout.gutter)
-            .padding(.top, DX.Space.xs)
-        }
+        // Back and progress come from the flow's shared header, which floats over the art inside the safe area (QW3).
         .sheet(isPresented: $picking) {
             NavigationStack {
                 ScrollView {
@@ -380,7 +367,6 @@ struct BuildingScreen: View {
         VStack(spacing: 0) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
-                    OnbProgressBar(value: model.progress, ground: ground).padding(.bottom, 6)
                     HStack(alignment: .center, spacing: 12) {
                         XeroView(mood: .hello, stage: 1, size: .card)
                         Text("Your plan, built around you").dxType(.title).foregroundStyle(ground.ink)
@@ -460,13 +446,7 @@ struct PlanRevealScreen: View {
         VStack(spacing: 0) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
-                    OnbProgressBar(value: model.progress, ground: ground).padding(.bottom, 6)
-                    HStack(spacing: 10) {
-                        XeroView(mood: .hello, stage: 1, size: .avatar, animate: false)
-                            .background(DX.Ground.apricot.background, in: Circle()).clipShape(Circle())
-                            .accessibilityHidden(true)
-                        Text("Step \(model.stepNumber) of \(model.stepTotal)").dxType(.caption).textCase(.uppercase).foregroundStyle(ground.muted)
-                    }
+                    Text("Step \(model.stepNumber) of \(model.stepTotal)").dxType(.caption).textCase(.uppercase).foregroundStyle(ground.muted)
                     MarkedTitle(String(localized: "Your plan is "), marking: String(localized: "ready"), color: DX.Mark.color(on: ground))
                         .dxType(.title).foregroundStyle(ground.ink)
                     Text(entitlement.isPro ? "Everything is unlocked." : "Prep 1 to 3 are on us. Nothing is charged today.")
@@ -647,7 +627,7 @@ struct TrialScreen: View {
                     Text("You can change the times in Settings.").dxType(.footnote).foregroundStyle(ground.muted)
                 }
                 .padding(.horizontal, DX.Layout.gutter)
-                .padding(.top, DX.Space.xl)
+                .padding(.top, DX.Space.m)
                 .dxReadableColumn()
             }
             VStack(spacing: 4) {
