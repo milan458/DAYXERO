@@ -1,212 +1,230 @@
 # Bigger bets: plan (3 Nov 2026)
 
 There are seven bets from the review of the onboarding recording. For each one this plan sets out what the code
-already does, what is left to build, what Milan needs to decide, and the order to build in. Tracker section **S32**
-in `planning/tasks.json`.
+already does, what is left to build, and the order to build in. Milan answered the first round of questions on
+3 Nov; one decision is still open (the Day-0 close). Tracker section **S32** in `planning/tasks.json`.
+
+## Milan's answers (3 Nov 2026)
+
+| Question | Answer |
+| --- | --- |
+| Paywall model | A hard paywall and a **7-day trial from download**. It replaces MON-01's "Prep 1 to 3 free, trial sold at Prep 4". |
+| Prices | Kept: $39.99 a year, $9.99 a month, $79.99 lifetime; ₹2,999 a year in India. |
+| Prep days for free users | **Each prep day: the first 2 of its 4 cards are free**, then the paywall with a ✕ top right. The activities, cards 3–4, the audio and the mission are paid. |
+| Yearly offer | **$29.99 (25% off) on days 4 and 6 after download**, with the same 7-day trial; $39.99 on every other day. |
+| Day-0 paywall: can it be closed? | **Open.** Milan is still thinking about it. |
+| Tab bar | Keep the custom glass bar. |
+| Superwall | Later. DayXero's own paywall everywhere for now. |
+| Speech bubbles | Find the candidate screens first (below). |
 
 ## The short version
 
-| Bet | Already in the code | What's left | Estimate (review said) | Decision |
-| --- | --- | --- | --- | --- |
-| 1 · Soft paywall after "Your plan is ready" | RevenueCat, Superwall, monthly/annual/lifetime with annual highlighted, ✕ always visible, the "Always free" line, charge date, trial reminder, price anchor, the Prep 4 upgrade sheet | Show the paywall between the reveal and the reminders screen. Register `onboarding_complete`. Add a first-run version of the copy. Set up India's ₹2,999 (S30.4) | 1.5–2 days (3–4) | **Yes**, and it reverses part of MON-01 |
-| 2 · Hold-to-set as the pledge | `HoldButton` with the Core Haptics crescendo (CHAR-04) | A radial fill from the thumb, drain-back on release, and a mint flood that turns into the plan-building screen | 1–2 days | No |
-| 3 · Mascot motion pass | `CrewCanvas` timeline, with a blink on `hello`/`cheer` only | The Xero → Jelli hand-off into SOS, idle blink and breathing on every avatar, speech bubbles that arrive in order | 2–3 days | Bubble copy |
-| 4 · Program path as a living progression | A static `ProgramPathMap` | Draw in the segment, pop the node, Xero steps to the next stop, a "Tomorrow" line on Today | 1.5–2 days (2–3) | No |
-| 5 · Hero continuity + glass | Glass tab bar on iOS 26 already (`DockBackground`, S27.11). iOS 18 target, so `.zoom` is available | Zoom from the reveal into the paywall (needs bet 1). A matched transition from onboarding to Home. Zoom from the dock into SOS | 1 day (1–2) | Mostly settled: keep the custom glass dock |
-| 6 · Instrument + A/B | PostHog chosen and wired (S1.5, US cloud). Every onboarding step tracked. Superwall events go to PostHog | Time per step, hold aborts, which surface a paywall came from, trial length. Run the experiments as Superwall campaigns. A 14-day product | 0.5 day of code + dashboard (1 day) | **Vendor already chosen.** The experiment design still needs a yes |
-| 7 · After Quit Day + slips | Today State B (UX-09), the recovery card (wording approved 3 Nov), the session back on Today, the slip flow with "nothing resets" and the if-then planner (S8, CLIN-10) | Record the post-Quit-Day states from the debug scenarios, review them the same way, and check that dual users get a counter per product | 0.5 day review, then whatever it finds | After the review |
-
-Total: about 8–11 days of build, against the review's 11–16. Bets 1, 5 and 6 cost less than estimated because the
-plumbing is already there.
+| Bet | Status | Estimate |
+| --- | --- | --- |
+| 1 · Paywall model | Decided apart from the Day-0 close. Daily prep paywall, the price by day, and a $29.99 offer product. | 3–4 days of code + store setup |
+| 2 · Hold-to-set as the pledge | Ready to build | 1–2 days |
+| 3 · Mascot motion pass | Idle life ready to build. Bubbles: candidate list below, waiting on Milan's pick. | 2–3 days |
+| 4 · Program path progression | Ready to build | 1.5–2 days |
+| 5 · Hero continuity | Ready, apart from the reveal → paywall zoom (waits on the Day-0 decision). Keep the custom glass bar. | 1 day |
+| 6 · Instrument and A/B | Events ready to build. Experiments wait for Superwall. | 0.5 day |
+| 7 · After Quit Day and slips | A review of what's built | 0.5 day + fixes |
 
 ---
 
-## Bet 1 · Soft paywall after "Your plan is ready"
+## Bet 1 · The paywall model
 
-**Today.** `RootView` says "There's no paywall after onboarding" (decisions 15, 23 and S27.2). The flow is
-`… quitDay → building → reveal → trial` (the reminders screen) → Home. `Paywalls.Placement.onboardingComplete` is
-defined but marked "No longer registered". `PaywallView` already has nearly everything the bet asks for:
+### What a free user gets
 
-- **Three plans with annual highlighted.** `selected = .annual` by default.
-- **A ✕ that's always visible**, labelled "Close and continue with the free version".
-- **The "Always free" line**: "Always free: Prep 1 to 3, your counter, Craving SOS and a 60-second breathing timer."
-  This is the line the bet wants verbatim.
-- **A charge line** that shows the trial end date, and where the trial ends against the Quit Day.
-- **The trial reminder** two days before the end, and **the price anchor** (MON-03).
-
-**The conflict.** MON-01 (Milan, 2 Nov) sells the 7-day trial at Prep 4 so it ends 3 days *after* Quit Day.
-App Store trials start when someone buys. So a trial bought on Day 0 with the usual week of prep **ends, and charges,
-on Quit Day itself**: the most fragile day, and the day the trial reminder would land 2 days before. Three ways to
-handle it:
-
-| Option | Trial bought on Day 0 ends | Notes |
+| | Free | Paid (7-day trial, then yearly; or monthly, or lifetime) |
 | --- | --- | --- |
-| A. 7-day trial on Day 0 | Quit Day (usual week) | Simplest. The charge lands on the hardest day. The paywall already says where it ends against the Quit Day. |
-| **B. 14-day trial on Day 0, 7-day at Prep 4 (recommended)** | 7 days after Quit Day | Covers prep and the first quit week. Needs a second annual product (an intro offer belongs to its product). Bet 6's 7-vs-14 test is built in. |
-| C. Day 0 shows the plans with no trial, and the trial stays at Prep 4 | n/a | Keeps MON-01 whole. A weaker offer at the moment that decides most trial starts. |
+| Each prep day | The session intro, then **cards 1 and 2** | The day's activities, cards 3 and 4, "Listen instead" (the audio), the mission |
+| Day Xero, Weeks 1–4, boosters | Nothing (the paywall on tap) | Everything |
+| Always | The counter, Craving SOS (silent, with subtitles and haptics), the 60-second breathing timer, evening check-ins | Jelli's voice, the if-then planner, the NRT scheduler, trigger heatmaps (as MON-01) |
 
-**Build.**
+**Defaults I've assumed (say if any is wrong):**
 
-1. `OnboardingFlow`: after `reveal`, present the paywall (Superwall `onboarding_complete` first, then DayXero's
-   `PaywallView` as the fallback). Order: **reveal → paywall → reminders**. After a purchase, the reminders screen
-   doubles as the permission ask for the trial reminder.
-2. `PaywallView` first-run copy: "Your plan is ready" in the header, with the reveal's Quit Day and plan length.
-   The ✕ is visible from the start (no 3-second delay, unlike S22.9), and closing it goes on to reminders and then
-   Prep 1, free. Update the type's doc comment ("nothing here is a first run").
-3. **One contextual re-ask at Prep 4.** This is the existing `unlock_program_day` upgrade sheet. Add a guard so
-   someone who closed the Day-0 paywall sees exactly one Prep 4 ask (the sheet). It doesn't open on its own again:
-   after that, it only appears when they tap a locked day.
-4. Remove the stale "no paywall after onboarding" comments in `RootView` and `PaywallView`, and the "No longer
-   registered" note on the placement.
-5. **India pricing:** S30.4 is still blocked on App Store Connect (₹2,999 set by hand, annual trial set to 7 days).
-   For option B, also create `dayxero.annual14` (14-day trial) and add it to RevenueCat's `pro` entitlement and an
-   offering.
-6. Tests: model tests for the Day-0 → Prep 4 re-ask rule. The journey UI test goes through the Day-0 paywall
-   (✕ path and purchase path with `MockStore`). Add a screenshot step.
-7. Update `docs/MONETISATION_TIERS.md` (the "When is the trial sold?" row) and `docs/SUPERWALL.md` (placement table).
+- **The next prep day opens tomorrow** once a free user has read cards 1 and 2. Without that, a free user would be
+  stuck on Prep 1, because days open when the previous one is done. Their free part is stored separately from a
+  finished session, so after they subscribe every prep session is open in full as catch-up.
+- **Day Xero and the weeks after are paid in full.** That's what "hard paywall" implies. The counter and SOS stay
+  free.
+- **The "Always free" line changes.** It currently reads "Always free: Prep 1 to 3, your counter, Craving SOS and a
+  60-second breathing timer." Proposed: "Always free: your counter, Craving SOS, a 60-second breathing timer and two
+  cards from each prep day."
 
-**Decisions for Milan:** option A / B / C; the prices (keep $39.99 / $9.99 / $79.99 and ₹2,999?); the trial length;
-and whether the re-ask stays at Prep 4.
+### The daily prep paywall
+
+1. For a free user, the session runs: intro → card 1 → card 2 → **the paywall**, full screen with a ✕ top right.
+2. Closing it ends the session on a short screen: "That's today's free part. Two more cards tomorrow." with Done.
+   Prep 7 says "Day Xero is part of the full program" instead.
+3. Opening the same session again that day goes straight to card 2's end and the paywall. It shows each time
+   they reach that point; it never opens on its own anywhere else.
+4. Today and the Program path show the day as "2 cards free" for free users, and the rest of the session as locked.
+
+### The price by day since download
+
+| Day since download (download day = day 1) | Yearly price on every paywall that day |
+| --- | --- |
+| 1–3 | $39.99 · ₹2,999 |
+| **4** | **$29.99 · "Today only: 25% off"** |
+| 5 | $39.99 |
+| **6** | **$29.99 · "Today only: 25% off"** |
+| 7 onwards | $39.99 |
+
+- **Download day = the first launch** (`dx.firstLaunchDay`, set once). Days are counted on the app's own day clock
+  (`DayClock` with the person's day boundary), so "today only" ends when their day ends. Existing TestFlight installs
+  get the date of their first launch after the update.
+- The offer is on the yearly plan only. Monthly ($9.99) and lifetime ($79.99) don't change. The yearly card shows
+  $39.99 struck through next to $29.99, and the yearly plan stays selected by default.
+- The price anchor (MON-03), the charge line and the trial reminder all read the selected product's price, so they
+  show $29.99 on offer days without changes.
+- Analytics: `paywall_viewed` gains `surface` (`onboarding`, `prep_day`, `program_day`, `settings`, `slip`),
+  `price` (`regular` or `offer`) and `day_since_install`.
+
+### Store setup
+
+- **A second yearly product, `dayxero.annual.offer`**, at $29.99 with its own 7-day free trial, in the same
+  subscription group (DayXero Pro) and on the `pro` entitlement, in a RevenueCat offering `day_offer`. A product can
+  have only one introductory offer, so a separate product is the straightforward way to keep the trial *and* the
+  lower price. Trial eligibility is per subscription group, so someone who already used a trial on the $39.99 plan
+  won't get a second one.
+- **The renewal price.** A separate product renews at $29.99 every year. If you want the second year at $39.99, the
+  discount has to be an introductory "pay up front for one year" offer on `dayxero.annual`, and then that product
+  can't also have the free trial. *Question below.*
+- India: ₹2,999 on the main product (S30.4). The offer at 25% off is ₹2,249 (or the nearest App Store price point).
+- Superwall: since it's later, the daily paywall goes straight to DayXero's own paywall. Make sure no Superwall
+  campaign is live on `unlock_program_day`, or it would show the old prices there.
+
+### The Day-0 paywall (open)
+
+It sits after "Your plan is ready" (reveal → paywall → reminders) and offers the 7-day trial from download. Still to
+decide: no ✕ (a true hard paywall), a ✕ that appears after a few seconds, or a ✕ from the start. Everything above
+works with any of the three. The only difference is that with no ✕, the daily prep paywalls never reach anyone.
+
+### Code changes
+
+- `FullProgram`: replace the Prep 1–3 rule with the per-day free part (cards 1–2) and the "next day opens" rule.
+- `ProgramStore` / `SessionFlowView`: the free flow (intro → 2 cards → paywall), stored separately from a finished
+  session.
+- `PaywallModel`: pick the regular or offer product by day since download, plus "today only" and the struck-through
+  price.
+- `Subscriptions` / `RCPurchaseController`: load `day_offer` on offer days.
+- Today, Program path, upgrade sheet, Settings: "2 cards free" states, and the new "Always free" line.
+- Docs: `MONETISATION_TIERS.md` (MON-01 is replaced), `SUPERWALL.md`.
+- Tests: the free-flow rule, price by day (days 1–8, a day boundary at 4 am, offer days on a short prep), the
+  journey UI test through a prep-day paywall on a stand-in store.
 
 ## Bet 2 · Hold-to-set rebuilt as the pledge
 
-**Today.** `HoldButton` (`DayXeroCore/DesignSystem/V4/Buttons4.swift`) fills a capsule left to right with a linear
-1 s animation. Releasing early snaps it back in 0.2 s. `HapticPlayer.crescendo` already builds a soft-to-firm hum
-(CHAR-04, awaiting sign-off). The recording's dwell and aborted sliver at 39.3–41.9 s is the linear sweep plus the
-snap-back.
+`HoldButton` fills a capsule left to right and snaps back in 0.2 s if released early. The Core Haptics crescendo is
+already built (CHAR-04). To build:
 
-**Build.**
-
-1. Track the press with `DragGesture(minimumDistance: 0)` and a `TimelineView`, so the touch point is known.
-   `onLongPressGesture` doesn't give a location.
-2. **Radial fill** clipped to the capsule, growing from the touch point. Its colour runs from the button's fill to
-   mint.
-3. **Drain-back:** on early release, progress runs back down at about twice the fill rate, from wherever it reached,
-   so a second press picks it up mid-way. The haptic fades with it (reverse the intensity curve, don't cut it).
-   Add a "Keep holding" hint after an abort.
-4. **Green flood (onboarding only):** on commit, the mint circle grows from the thumb to fill the screen, then
-   cross-fades into `BuildingScreen` (already the `.mint` ground). Add a `flood: Bool` parameter. The pledge, Day
-   Xero and session commits keep the fill inside the button.
-5. Reduce Motion: a straight fill and a cross-fade, no flood. VoiceOver: the default action still completes it.
-6. Check on a real device (the simulator has no Core Haptics).
+- **Radial fill from the thumb.** Track the press with `DragGesture(minimumDistance: 0)` and a `TimelineView`.
+- **Drain-back** at 2× the fill rate, with the haptic fading rather than cutting out, and "Keep holding" after an
+  abort.
+- **A mint flood into `BuildingScreen`**, on the onboarding hold only.
+- **Fallbacks:** Reduce Motion and VoiceOver paths, and a check on a real device.
 
 ## Bet 3 · Mascot motion pass
 
-**Today.** `CrewCanvas` runs a `TimelineView` and stops under Reduce Motion. Blinks are on only for the `hello` and
-`cheer` moods. Many avatars pass `animate: false` (the notification previews, for example). SOS opens as a
-`fullScreenCover` from `RootView`, and Jelli is already in it.
+**Idle life.** Today only the `hello` and `cheer` moods blink, and many avatars pass `animate: false`. To build: a
+jittered blink on every mood but sleep, a ±1.5% breathe on the shared 0.1 Hz clock, motion on for avatars that are
+on screen, and a pause in the background and in Low Power Mode.
 
-**Build.**
+**The Xero → Jelli hand-off into SOS.** About 0.7 s, overlapping the first sigh so it never delays it. The
+"Xero passed you to Jelli" chip is already there.
 
-1. **Idle life:** a blink every 4–6 s with jitter, so the crew don't blink together, on every mood except sleep.
-   Add a ±1.5% breathe on the shared 0.1 Hz clock that SOS and the dock use. Switch on `animate` for avatars that
-   are on screen. Pause when the app goes to the background and in Low Power Mode.
-2. **Xero → Jelli hand-off (0.7 s)** on SOS entry: Xero waves off at the dock button and Jelli rises in the cover.
-   **It overlaps the start of the first sigh rather than going before it.** SOS has to stay one step and immediate
-   (S6.5, CHAR-01), so the breathing clock starts at 0 either way. Skipped under Reduce Motion.
-3. **Sequenced speech bubbles:** `XeroBubble` and `ReplyBubble` arrive one after another (typing dots, then the
-   line, using `dxArrive`). VoiceOver reads the whole exchange at once.
-4. Performance check: Instruments on the oldest supported phone with several avatars on screen.
+### Speech-bubble candidates
 
-**Decision:** copy for the bubbles (which screens, and the lines).
+Today only the onboarding question screens (`OnboardingScaffold`) use a real bubble (`XeroBubble`, which already
+arrives in order with `dxArrive`). These are the screens where a character already speaks in the first person, or
+where a line would sit naturally next to one.
+
+**Strong fits (the character is already talking):**
+
+| # | Screen | Who | What it says now | As bubbles |
+| --- | --- | --- | --- | --- |
+| 1 | Welcome (`WelcomeScreen`) | Xero | "Hi! I'm Xero." · "Don't quit today." · "Quit on your Quit Day." | Three bubbles in turn. The best showcase. |
+| 2 | Quit Day picker (`QuitDayScreen`) | Xero | "I recommend Thu 12 Nov for a full 7-day prep…" | One bubble above the calendar |
+| 3 | Plan building (`BuildingScreen`) | Xero, Jelli, Glim | Rows: Prep week, Quit Day, and Jelli and Glim as avatars | Each crew member introduces their job as their row lands ("I'm Jelli. Cravings are my thing.") |
+| 4 | Slip flow (`SlipFlow`) | Jelli | "With Jelli" · "Thanks for telling me." | Jelli's bubble, then "Nothing resets." |
+| 5 | Craving SOS start (`CravingSOSView`) | Xero → Jelli | The hand-off chip | Pairs with the hand-off: one short line from Jelli. No more text than that during SOS. |
+| 6 | Wave passed (`PassedView`) | Jelli | "You rode it out." · "That wave lasted 4 min…" | Two bubbles |
+| 7 | Daily prep paywall (new, bet 1) | Xero | none yet | "That's today's free part." Sets up the paywall without a hard sell. |
+
+**Possible fits:**
+
+| # | Screen | Who | Notes |
+| --- | --- | --- | --- |
+| 8 | Session intro (`SessionIntro`) | Xero | Xero introduces the day's session in one line |
+| 9 | Session completion (`SessionCompletion`) | Xero | A cheer line before the stats |
+| 10 | Mission card (`MissionCard`) | Xero | "Today's mission" as Xero's ask |
+| 11 | Reminders screen (`TrialScreen`) | Xero, Glim | Already notification previews; could arrive one after the other instead |
+| 12 | Evening check-in (`CheckInView`, `WindDownView`) | Glim | "How was today, really?" |
+| 13 | Quit Day offer (`QuitDayOffer`) | Xero | A Xero avatar with an offer: risky to make a sales line chatty |
+
+**Leave as they are:** Today's cards (the zero-scroll layout has no room), the morning pledge (the words are the
+person's own pledge, not Xero's), Progress, the health timeline, milestones and share cards, and Calm tools.
+
+**Recommendation:** start with 1, 3, 4, 6 and 7. They show off the cast, don't slow anyone down in a hurry, and
+need only a few lines of new copy.
 
 ## Bet 4 · Program path as a living progression
 
-**Today.** `ProgramPathMap` draws a done road, today's play button with Xero beside it, and locked stops. It's
-static, so finishing a session changes it with no motion.
+When someone comes back after finishing a session:
 
-**Build.**
+- The new segment draws in and the node pops, with a light haptic.
+- Xero steps to the next stop. This plays once per session (`dx.pathSeen`).
+- Today shows "Tomorrow: \<title> · n min" once today's session is done. For free users it reads "Tomorrow: 2 cards
+  from \<title>".
 
-1. Store the last path state shown (`dx.pathSeen`: the last session ID drawn as done).
-2. Coming back to Program after finishing a session: the new green segment draws in (`trim`, about 0.6 s), the node
-   pops (a spring scale with a light haptic), and Xero steps to the next stop. This plays once per session.
-3. **"Tomorrow" line on Today:** once today's session is done, the focus card's footer reads "Tomorrow: \<title> ·
-   3 min" (`ProgramStore.minutes(of:)`). For a locked Prep 4 the line still names the session, with no paywall
-   wording.
-4. No XP, points or ranks, as the bet says.
-5. Reduce Motion: the final state, no draw-in. Tests: the logic that picks which segment to animate.
+No XP, points or ranks. Under Reduce Motion it shows the final state.
 
-## Bet 5 · Hero continuity and glass
+## Bet 5 · Hero continuity
 
-**Today.** No `navigationTransition` or `matchedGeometryEffect` anywhere. Deployment target is iOS 18, so
-`.navigationTransition(.zoom(sourceID:in:))` works for sheets and full-screen covers. **The tab bar is already
-glass on iOS 26**: `DockBackground` uses `glassEffect(.regular.interactive())` and falls back when Reduce
-Transparency is on. It stays a custom bar on purpose (the raised SOS button, iPhone Duo's side dock).
+- **Onboarding → Today:** a matched countdown hero. `RootView` swaps views rather than pushing one, so
+  `matchedGeometryEffect` rather than `.zoom`.
+- **Dock SOS → Craving SOS:** a zoom from the raised button, paired with bet 3's hand-off.
+- **Reveal → paywall:** a zoom, once the Day-0 paywall is decided.
+- **The glass dock stays custom** (Milan, 3 Nov). iOS 26 QA: each ground, Reduce Transparency, Increase Contrast,
+  dark mode.
 
-**Build.**
+## Bet 6 · Instrument; A/B later
 
-1. **Reveal → paywall:** zoom from the reveal's plan card into the paywall. Depends on bet 1.
-2. **Onboarding → Home:** `RootView` swaps views; nothing is pushed, so `.zoom` doesn't apply. Use a
-   `matchedGeometryEffect` on the Quit Day countdown (the reveal's hero → Today's State A hero) inside a shared
-   namespace in `RootView`.
-3. **Dock SOS → Craving SOS:** zoom from the raised button. It pairs with bet 3's hand-off.
-4. iOS 26 QA pass: the glass dock over each ground, Reduce Transparency, Increase Contrast, dark mode.
+PostHog is already wired. To build:
 
-**Decision:** confirm we keep the custom glass dock rather than moving to the system `TabView`. Recommendation:
-keep it, because the system bar can't raise SOS or stand on Duo's side edge.
+- **New events:** step completion time, hold aborted and completed, plan-building seen.
+- **New paywall properties:** `surface`, `price` and `day_since_install` (from bet 1).
+- **Funnels:** onboarding → prep-day paywall → trial start → Day Xero → first renewal. Add a "price on the day they
+  bought" split, so the day-4/day-6 offer can be judged without an experiment.
 
-## Bet 6 · Instrument and A/B
-
-**Today.** **PostHog was chosen (S1.5, US cloud)**, so no vendor decision is needed. `onboardingStepViewed` fires
-for every step (`OnboardingFlow`), and Superwall's paywall and transaction events reach PostHog as
-`superwall_event`. Superwall is the A/B tool already in the app.
-
-**Build.**
-
-1. Events: `onboarding_step_completed` with a seconds bucket, `hold_aborted` and `hold_completed`
-   (`surface`, `attempt`), and `plan_building_seen` with a seconds bucket. Add a `surface` property to
-   `paywall_viewed` and `paywall_purchased` (`onboarding`, `prep4`, `program_day`, `settings`, `slip`) and a
-   `trial_days` property. IDs and buckets only, as today.
-2. PostHog funnels: onboarding step by step → paywall → trial start → Prep 4 → Day Xero → first renewal.
-3. **Experiments in Superwall** (no app release needed once the placements exist):
-   - **Position:** the `onboarding_complete` campaign with a 50% holdout (no Day-0 paywall), against
-     `unlock_program_day` at Prep 4.
-   - **Trial length:** 7 vs 14 days, two paywall variants on `dayxero.annual` and `dayxero.annual14`.
-4. **Sample size:** before launch, traffic is TestFlight-sized. At about 5% trial start and a 20% relative lift, each
-   arm needs several thousand people who finish onboarding. Run the position test first and keep trial length for
-   after launch volume.
-
-**Decision:** run the experiments in Superwall (recommended) or with PostHog flags, and which experiment goes first.
+Experiments (paywall position, trial length) wait for Superwall.
 
 ## Bet 7 · After Quit Day and slips
 
-**Today.** Much more is built than the recording shows:
-
-- **Today State B** (UX-09): time free, resilience %, money, the recovery card, urges surfed.
-- **The recovery card's wording**, approved 3 Nov.
-- **The day's session back on Today** while it's open (`TodayFocus.pick(sessionOpen:)`).
-- **The slip flow** (S8): thanks, "nothing resets", the if-then planner (paid), the fresh-Quit-Day offer.
-- **A slip logged from Siri or a widget** opens the planner (CLIN-10).
-
-**Build.**
-
-1. Record the simulator walking through each debug scenario: `-dx.homeScenario quitday | day3 | day12 | returning`,
-   plus `-dx.seedSlip` and `-dx.seedPouches` for dual use. Review it the same way the onboarding recording was
-   reviewed, with timestamps.
-2. Check **counters for each product** for dual users. State B's resilience line names one product
-   ("smoke-free", "vape-free" or "pouch-free"). Confirm what someone who uses two products sees.
-3. Turn what the review finds into tasks in S32.
+Most of it is built: Today State B, the recovery card, the session back on Today, the slip flow and the planner.
+Record each post-Quit-Day debug scenario (`quitday`, `day3`, `day12`, `returning`, `-dx.seedSlip`,
+`-dx.seedPouches`), review it with timestamps, and check that people who use two products get a counter for each.
+Bet 1 changes what a free user sees after Quit Day (it's all paid now), so the review covers both a free user and a
+subscriber.
 
 ---
 
 ## Order
 
-Bets 1 and 5 depend on decisions, so the code with no open questions goes first.
+1. **Now:** bet 1's daily prep paywall, price by day and free-tier changes; bet 6's events alongside, so they're
+   measured from day one; bet 2.
+2. **Milan / store:** create `dayxero.annual.offer`, set the ₹ prices and the 7-day trial (S30.4), and check no
+   Superwall campaign is live.
+3. **Then:** bet 7's review, bet 4, bet 3 (idle life first, bubbles once the screens and copy are picked), and bet 5.
+4. **When decided:** the Day-0 paywall's close, and its zoom from the reveal.
 
-1. **Now, no decisions needed:** bet 6 events (so bets 1 and 2 are measured from their first build), bet 2 (hold),
-   and bet 7's recording and review.
-2. **Once Milan answers the bet 1 questions:** bet 1 (paywall), then bet 5's reveal → paywall zoom and onboarding →
-   Home transition.
-3. **Polish:** bet 4 (path) and bet 3 (mascots), once the bubble copy is in.
-4. **Once the build is on TestFlight:** turn on the Superwall position experiment.
+## Still open
 
-## Questions for Milan
-
-1. **Day-0 trial:** option A (7 days, charges on Quit Day), **B (14 days on Day 0, 7 at Prep 4; recommended)**, or
-   C (plans only on Day 0, trial stays at Prep 4)?
-2. **Prices:** keep $39.99/yr, $9.99/mo and $79.99 lifetime, with ₹2,999/yr in India? (S30.4 still needs the ₹ price
-   and the 7-day trial set in App Store Connect.)
-3. **Re-ask at Prep 4:** once, as the upgrade sheet, only for people who closed the Day-0 paywall: OK?
-4. **Glass dock:** keep the custom glass bar on iOS 26 (recommended) rather than the system tab bar?
-5. **Experiments:** run them in Superwall (recommended), with the position test first and trial length after launch?
-6. **Bubble copy:** which screens get Xero's sequenced bubbles, and who writes the lines?
+1. **Day-0 paywall:** no ✕, a ✕ after a few seconds, or a ✕ from the start?
+2. **The $29.99 renewal:** renew at $29.99 every year (keeps the trial; a separate product), or $29.99 for the first
+   year and then $39.99 (no free trial on the offer)?
+3. **India offer price:** ₹2,249, or another App Store price point?
+4. **The defaults in bet 1:** the next prep day opens after the 2 free cards; Day Xero and the weeks are fully paid;
+   the new "Always free" line.
+5. **Bubbles:** which of the candidate screens, and who writes the lines?

@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-11-03T13:47:34.789Z"
+    "updated": "2026-11-03T14:20:57.630Z"
   },
   "now": {
     "section": "S30",
@@ -3112,7 +3112,7 @@
           "id": "S32.1",
           "title": "Milan: decide the Day-0 trial (A: 7 days, charges on Quit Day; B: 14 days on Day 0, 7 at Prep 4, recommended; C: plans only on Day 0), prices, Prep 4 re-ask, glass dock, experiment tool, bubble copy",
           "status": "pending",
-          "notes": "Questions list at the end of docs/BIGGER_BETS_PLAN.md. Bet 1 reverses part of MON-01 (trial sold only at Prep 4).",
+          "notes": "Questions list at the end of docs/BIGGER_BETS_PLAN.md. Bet 1 reverses part of MON-01 (trial sold only at Prep 4).\nMilan 3 Nov: hard paywall, 7-day trial from download; prices kept; first 2 of 4 cards free each prep day, then the paywall with a ✕; $29.99 yearly with the 7-day trial on days 4 and 6 after download; keep the custom glass bar; Superwall later; list bubble screens first. Still open: Day-0 paywall close, $29.99 renewal price, India offer price, the bet 1 defaults, bubble screens and copy.",
           "created": "2026-11-03T13:47:34.284Z",
           "completed": null
         },
@@ -3120,7 +3120,7 @@
           "id": "S32.2",
           "title": "BET-1 · Soft paywall after the plan reveal: reveal → paywall → reminders, onboarding_complete registered, first-run copy, ✕ visible from the start, one Prep 4 re-ask, docs and journey test",
           "status": "blocked",
-          "notes": "Blocked on the S32 decisions. Paywall already has: annual highlighted, ✕, the 'Always free' line, charge date, trial reminder, price anchor.",
+          "notes": "Blocked on the S32 decisions. Paywall already has: annual highlighted, ✕, the 'Always free' line, charge date, trial reminder, price anchor.\nChanged by Milan 3 Nov: Day-0 paywall after the reveal still wanted, but whether it can be closed is undecided. The daily prep paywall and offer pricing are separate tasks (S32.12, S32.13).",
           "created": "2026-11-03T13:47:34.331Z",
           "completed": null
         },
@@ -3128,7 +3128,7 @@
           "id": "S32.3",
           "title": "BET-1 · App Store Connect + RevenueCat: dayxero.annual14 (14-day trial) if option B; India ₹2,999 and 7-day trial (with S30.4)",
           "status": "blocked",
-          "notes": "Needs Milan's accounts. Only if option B is chosen for the 14-day product.",
+          "notes": "Needs Milan's accounts. Only if option B is chosen for the 14-day product.\nChanged 3 Nov: create dayxero.annual.offer ($29.99/yr, 7-day trial, same group, pro entitlement, RevenueCat offering day_offer) instead of a 14-day product. India: ₹2,999 main, offer ~₹2,249 (to confirm).",
           "created": "2026-11-03T13:47:34.381Z",
           "completed": null
         },
@@ -3160,7 +3160,7 @@
           "id": "S32.7",
           "title": "BET-4 · Program path progression: segment draw-in, node pop with haptic, Xero steps to the next stop (once per session); 'Tomorrow: <title> · n min' on Today once today's session is done",
           "status": "pending",
-          "notes": "No XP, points or ranks.",
+          "notes": "No XP, points or ranks.\nBubble candidates listed in docs/BIGGER_BETS_PLAN.md (bet 3). Recommended first: Welcome, plan building, slip flow, wave passed, daily prep paywall. Waiting on Milan's pick and copy.",
           "created": "2026-11-03T13:47:34.622Z",
           "completed": null
         },
@@ -3176,7 +3176,7 @@
           "id": "S32.9",
           "title": "BET-6 · Analytics: step completion time, hold aborted/completed, plan-building seen, paywall surface and trial_days properties; PostHog funnels to first renewal",
           "status": "pending",
-          "notes": "PostHog already chosen and wired (S1.5); no vendor decision needed.",
+          "notes": "PostHog already chosen and wired (S1.5); no vendor decision needed.\nMilan 3 Nov: keep the custom glass bar.",
           "created": "2026-11-03T13:47:34.703Z",
           "completed": null
         },
@@ -3192,14 +3192,70 @@
           "id": "S32.11",
           "title": "BET-7 · Record and review the post-Quit-Day states (quitday, day3, day12, returning, seedSlip, seedPouches); check per-product counters for dual users; file what it finds here",
           "status": "pending",
-          "notes": "State B, recovery card, session on Today, slip flow and if-then planner are built; the recording never reached them.",
+          "notes": "State B, recovery card, session on Today, slip flow and if-then planner are built; the recording never reached them.\nMilan 3 Nov: Superwall later.",
           "created": "2026-11-03T13:47:34.789Z",
+          "completed": null
+        },
+        {
+          "id": "S32.12",
+          "title": "BET-1 · Daily prep paywall: free users get the session intro and cards 1-2 of each prep day, then the paywall (✕ top right); the next prep day opens tomorrow; free part stored apart from completion; Day Xero onwards fully paid; new 'Always free' line; replaces MON-01's Prep 1-3 rule",
+          "status": "pending",
+          "notes": "Milan 3 Nov. Defaults (next day opens, Day Xero paid, new free line) to confirm.",
+          "created": "2026-11-03T14:20:57.551Z",
+          "completed": null
+        },
+        {
+          "id": "S32.13",
+          "title": "BET-1 · Price by day since download: $29.99 yearly (7-day trial) on days 4 and 6, 'Today only: 25% off' with the struck-through price; $39.99 other days; first-launch day stored; app day clock; paywall_viewed surface/price/day_since_install",
+          "status": "pending",
+          "notes": "Milan 3 Nov. Needs dayxero.annual.offer (S32.3). Renewal price at $29.99 vs $39.99 still open.",
+          "created": "2026-11-03T14:20:57.630Z",
           "completed": null
         }
       ]
     }
   ],
   "log": [
+    {
+      "time": "2026-11-03T14:20:57.630Z",
+      "type": "task_added",
+      "message": "S32.13 added: BET-1 · Price by day since download: $29.99 yearly (7-day trial) on days 4 and 6, 'Today only: 25% off' with the struck-through price; $39.99 other days; first-launch day stored; app day clock; paywall_viewed surface/price/day_since_install"
+    },
+    {
+      "time": "2026-11-03T14:20:57.551Z",
+      "type": "task_added",
+      "message": "S32.12 added: BET-1 · Daily prep paywall: free users get the session intro and cards 1-2 of each prep day, then the paywall (✕ top right); the next prep day opens tomorrow; free part stored apart from completion; Day Xero onwards fully paid; new 'Always free' line; replaces MON-01's Prep 1-3 rule"
+    },
+    {
+      "time": "2026-11-03T14:20:57.497Z",
+      "type": "note",
+      "message": "S32.11: Milan 3 Nov: Superwall later."
+    },
+    {
+      "time": "2026-11-03T14:20:57.441Z",
+      "type": "note",
+      "message": "S32.9: Milan 3 Nov: keep the custom glass bar."
+    },
+    {
+      "time": "2026-11-03T14:20:57.369Z",
+      "type": "note",
+      "message": "S32.7: Bubble candidates listed in docs/BIGGER_BETS_PLAN.md (bet 3). Recommended first: Welcome, plan building, slip flow, wave passed, daily prep paywall. Waiting on Milan's pick and copy."
+    },
+    {
+      "time": "2026-11-03T14:20:57.321Z",
+      "type": "note",
+      "message": "S32.3: Changed 3 Nov: create dayxero.annual.offer ($29.99/yr, 7-day trial, same group, pro entitlement, RevenueCat offering day_offer) instead of a 14-day product. India: ₹2,999 main, offer ~₹2,249 (to confirm)."
+    },
+    {
+      "time": "2026-11-03T14:20:57.225Z",
+      "type": "status",
+      "message": "S32.2 blocked → blocked (Changed by Milan 3 Nov: Day-0 paywall after the reveal still wanted, but whether it can be closed is undecided. The daily prep paywall and offer pricing are separate tasks (S32.12, S32.13).)"
+    },
+    {
+      "time": "2026-11-03T14:20:57.141Z",
+      "type": "note",
+      "message": "S32.1: Milan 3 Nov: hard paywall, 7-day trial from download; prices kept; first 2 of 4 cards free each prep day, then the paywall with a ✕; $29.99 yearly with the 7-day trial on days 4 and 6 after download; keep the custom glass bar; Superwall later; list bubble screens first. Still open: Day-0 paywall close, $29.99 renewal price, India offer price, the bet 1 defaults, bubble screens and copy."
+    },
     {
       "time": "2026-11-03T13:47:34.789Z",
       "type": "task_added",
