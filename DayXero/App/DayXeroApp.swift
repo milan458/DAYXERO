@@ -196,9 +196,7 @@ struct RootView: View {
             #endif
         } else {
             OnboardingFlow(onSaving: { finishingOnboarding = true }, onFinished: {
-                // Prep 1 to 3 are free and the trial is offered at Prep 4 (MON-01),
-                // so onboarding goes straight to Home, which opens Prep 1 by itself.
-                UserDefaults.standard.set(true, forKey: FirstLesson.key)
+                // "Start my prep week" queued Prep 1 (FirstLesson); Home opens it once it has faded in.
                 finishingOnboarding = false
             })
         }

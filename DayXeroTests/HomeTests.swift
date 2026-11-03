@@ -108,6 +108,26 @@ struct HomeTests {
         #expect(none.lessonStreak == 0)
     }
 
+    /// QW1: opening Prep 1 (as Home does after onboarding) and closing it unplayed never counts it as done, and it keeps
+    /// Today's focus card until it's played to the end.
+    @Test func prepOneOpenedButNotPlayedIsNotDone() throws {
+        let context = ModelContext(try DataStore.makeContainer(inMemory: true))
+        let p = profile(in: context)
+        let store = ProgramStore(context: context, profile: p)
+        #expect(HomeView.firstPrepWaiting(store))
+        let record = SessionRecord(sessionId: "P1", startedAt: date(22, 10), contentVersion: "test")
+        context.insert(record)
+        try context.save()
+        let opened = HomeSnapshot(profile: p, isPro: true, now: date(22, 10), calendar: calendar)
+        #expect(opened.prepDone == 0)
+        #expect(HomeView.firstPrepWaiting(store))
+        record.completedAt = date(22, 11)
+        try context.save()
+        let played = HomeSnapshot(profile: p, isPro: true, now: date(22, 12), calendar: calendar)
+        #expect(played.prepDone == 1)
+        #expect(!HomeView.firstPrepWaiting(store))
+    }
+
     /// A Quit Day nine days out still has seven prep sessions: the total is the program's, not the calendar's.
     @Test func prepTotalIsTheProgramsSevenSessions() throws {
         let context = ModelContext(try DataStore.makeContainer(inMemory: true))

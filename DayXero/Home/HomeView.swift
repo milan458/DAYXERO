@@ -132,8 +132,9 @@ struct ComingSoon: View {
     }
 }
 
-/// Prep day 1 opens by itself the first time Home shows after onboarding (S22), so the first thing after setting up
-/// is the program working, not a dashboard. Prep 1 to 3 are free; the trial is offered at Prep 4 (MON-01).
+/// "Start my prep week" queues Prep 1, which opens once Home has faded in after onboarding (S22, QW1): the person
+/// chose to start, so the first thing after setting up is the program working, not a dashboard. Prep 1 to 3 are free;
+/// the trial is offered at Prep 4 (MON-01).
 enum FirstLesson {
     static let key = "dx.openFirstLesson"
 }
@@ -423,12 +424,13 @@ struct TodayView: View {
         let rhythm = DailyRhythm(clock: clock)
         let checkedIn = debugDaily == "checkedIn" || rhythm.hasCheckedIn(checkIns.map(\.day), at: now)
         // A session that needs Pro isn't pushed on Today; Program offers it.
-        let sessionOpen: Bool = if case .open(_, _, false)? = ProgramToday(store: ProgramStore(context: context, profile: profile),
-                                                                          isPro: entitlement.isPro, now: now)?.kind { true } else { false }
+        let store = ProgramStore(context: context, profile: profile)
+        let sessionOpen: Bool = if case .open(_, _, false)? = ProgramToday(store: store, isPro: entitlement.isPro, now: now)?.kind { true } else { false }
         var focus = TodayFocus.pick(hour: TodayClock.hour(at: now), postQuit: state == .postQuit, checkedIn: checkedIn,
                                     sessionOpen: sessionOpen)
-        // Straight after onboarding, Prep 1 opens from the lesson card whatever the hour (S22).
-        if state == .prep, UserDefaults.standard.bool(forKey: FirstLesson.key) { focus = .lesson }
+        // Until Prep 1 is done, "Prep 1 · N min · Start" holds the focus slot whatever the hour (S22, QW1): it's where
+        // the program starts, and closing it once mustn't hide it behind the evening check-in.
+        if state == .prep, sessionOpen, Self.firstPrepWaiting(store) { focus = .lesson }
         return VStack(spacing: 0) {
             ProgramTodayCard(profile: profile, showsCard: focus == .lesson)
             switch focus {
@@ -445,6 +447,12 @@ struct TodayView: View {
                            detail: String(localized: "A slow breath, then rest."), fill: ColourCard.night) { showCalmTools = true }
             }
         }
+    }
+
+    /// True until the first prep session has been played to its end.
+    static func firstPrepWaiting(_ store: ProgramStore) -> Bool {
+        guard let first = store.content?.sessions.first(where: { $0.phaseId == "prep" })?.id else { return false }
+        return store.record(first)?.completedAt == nil
     }
 
     /// "Morning pledge · 10 sec", until noon and until it's made. The only row left of Your day (UX-01): the

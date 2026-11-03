@@ -107,10 +107,12 @@ struct OnboardingFlow: View {
         }
     }
 
+    /// "Start my prep week": saves the plan and queues Prep 1, which Home opens after the reminders step (QW1).
     private func saveAndContinue() {
         do {
             onSaving()
             try model.save(into: context)
+            UserDefaults.standard.set(true, forKey: FirstLesson.key)
             model.next()
         } catch {
             // Saving locally essentially never fails; if it does, staying on the reveal lets them retry.
