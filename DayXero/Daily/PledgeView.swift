@@ -10,7 +10,7 @@ struct PledgeView: View {
     let onDone: () -> Void
 
     @Environment(\.modelContext) private var context
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
     /// "Won't use nicotine" or "One wave at a time"; remembered for tomorrow.
     @AppStorage("dx.pledgeWording") private var wording = Wording.wontUse.rawValue
     @State private var pledged = false
@@ -52,7 +52,7 @@ struct PledgeView: View {
                 HeroScene(.dawn, clarity: stats.isPrep(at: .now) ? CrewGrowth.prepClarity : CrewGrowth.clarity(daysClear: daysClear),
                           height: 330, edge: ground.background)
                 XeroView(mood: pledged ? .cheer : .hello, stage: CrewGrowth.stage(daysClear: daysClear), size: .hero)
-                    .offset(y: risen || reduceMotion ? -10 : 40)
+                    .offset(y: risen || motion.reduce ? -10 : 40)
                     .opacity(risen ? 1 : 0)
                     .accessibilityHidden(true)
             }
@@ -88,7 +88,7 @@ struct PledgeView: View {
                             ForEach(Wording.allCases, id: \.self) { w in
                                 V4Chip(text: w.chip, isOn: chosen == w, fill: DX.Fill.onColourCard(for: ground), ink: ground.ink,
                                        selectedFill: ground.ink, selectedInk: ground.background) {
-                                    withAnimation(DX.Move.animation(.easeInOut(duration: 0.25), reduceMotion: reduceMotion)) { wording = w.rawValue }
+                                    withAnimation(motion.animation(.easeInOut(duration: 0.25))) { wording = w.rawValue }
                                 }
                             }
                         }
@@ -138,7 +138,7 @@ struct PledgeView: View {
         .background(ground.background.ignoresSafeArea())
         .sensoryFeedback(DX.Haptic.commit, trigger: pledged)
         .onAppear {
-            withAnimation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion)) { risen = true }
+            withAnimation(motion.animation(DX.Move.settle)) { risen = true }
         }
     }
 

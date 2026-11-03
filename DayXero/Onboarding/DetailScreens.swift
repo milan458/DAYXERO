@@ -777,7 +777,7 @@ struct ObstaclesScreen: View {
 
 struct NRTScreen: View {
     @Bindable var model: OnboardingModel
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
 
     var body: some View {
         OnboardingScaffold(title: "Want to use nicotine replacement?",
@@ -840,7 +840,7 @@ struct NRTScreen: View {
         } footer: {
             ContinueButton(title: "Continue", model: model)
         }
-        .animation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion), value: model.nrtInterest)
-        .animation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion), value: model.pregnancy)
+        .animation(motion.animation(DX.Move.settle), value: model.nrtInterest)
+        .animation(motion.animation(DX.Move.settle), value: model.pregnancy)
     }
 }

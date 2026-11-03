@@ -151,6 +151,7 @@ struct TodayView: View {
     @State private var loggedFeedback = false
     @Environment(Entitlement.self) private var entitlement
     @Environment(\.modelContext) private var context
+    private let motion = MotionPolicy()
     @State private var upgradeTitle: String?
     @State private var showUpgrade = false
     @State private var showPaywall = false
@@ -199,7 +200,7 @@ struct TodayView: View {
         .overlay(alignment: .bottom) {
             if let entries = justLogged { loggedToast(entries) }
         }
-        .animation(DX.Move.animation(DX.Move.settle, reduceMotion: false), value: justLogged)
+        .animation(motion.animation(DX.Move.settle), value: justLogged)
         .task(id: justLogged) {
             guard justLogged != nil else { return }
             try? await Task.sleep(for: .seconds(4))

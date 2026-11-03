@@ -11,7 +11,7 @@ struct FinaleView: View {
     let label: String
     let onDone: () -> Void
 
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
     @Query(sort: \LogEntry.timestamp, order: .reverse) private var logs: [LogEntry]
     @Query private var checkIns: [CheckIn]
     @State private var entered = 0
@@ -72,8 +72,8 @@ struct FinaleView: View {
         .task {
             // Xero, then Jelli, then Glim, each with the Celebrate spring.
             for step in 1...3 {
-                withAnimation(DX.Move.animation(DX.Move.celebrate, reduceMotion: reduceMotion)) { entered = step }
-                try? await Task.sleep(for: .seconds(reduceMotion ? 0 : 0.45))
+                withAnimation(motion.animation(DX.Move.celebrate)) { entered = step }
+                try? await Task.sleep(for: .seconds(motion.reduce ? 0 : 0.45))
             }
         }
         .sheet(isPresented: $sharing) {
@@ -83,7 +83,7 @@ struct FinaleView: View {
 
     private func character<V: View>(_ order: Int, @ViewBuilder _ view: () -> V) -> some View {
         view()
-            .scaleEffect(entered > order || reduceMotion ? 1 : DX.Move.celebrateFromScale)
+            .scaleEffect(entered > order || motion.reduce ? 1 : DX.Move.celebrateFromScale)
             .opacity(entered > order ? 1 : 0)
     }
 
@@ -117,12 +117,12 @@ struct FinaleView: View {
 
 /// Confetti for the finale only: the six confetti colours falling and turning. Still with Reduce Motion.
 struct Confetti: View {
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
     @State private var start = Date.now
 
     var body: some View {
-        TimelineView(.animation(paused: reduceMotion)) { timeline in
-            let t = reduceMotion ? 1.2 : timeline.date.timeIntervalSince(start)
+        TimelineView(.animation(paused: motion.reduce)) { timeline in
+            let t = motion.reduce ? 1.2 : timeline.date.timeIntervalSince(start)
             Canvas { context, size in
                 Confetti.draw(in: &context, size: size, time: t)
             }

@@ -17,7 +17,7 @@ struct CravingSOSView: View {
     }
 
     @Environment(\.modelContext) private var context
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
     @Environment(\.scenePhase) private var scenePhase
     @AppStorage("dx.sosHaptics") private var hapticsOn = true
     @Query(filter: #Predicate<LogEntry> { $0.kindRaw == "craving" }) private var cravings: [LogEntry]
@@ -107,7 +107,7 @@ struct CravingSOSView: View {
                         if sighing {
                             // Breathing first (CHAR-01): three sighs, about 30 seconds, then riding it out.
                             SOSSighIntro(stage: CrewGrowth.stage(daysClear: daysClear)) {
-                                withAnimation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion)) { sighing = false }
+                                withAnimation(motion.animation(DX.Move.settle)) { sighing = false }
                             }
                         } else {
                             ridingItOut
@@ -131,7 +131,7 @@ struct CravingSOSView: View {
     @ViewBuilder
     private var ridingItOut: some View {
         JelliView(mood: .breathe, stage: CrewGrowth.stage(daysClear: daysClear), size: .hero)
-            .offset(x: jelliIn || reduceMotion ? 0 : 90)
+            .offset(x: jelliIn || motion.reduce ? 0 : 90)
             .opacity(jelliIn ? 1 : 0)
             // Jelli makes room for the break menu (S27.18).
             .frame(height: 170)
@@ -316,7 +316,7 @@ struct CravingSOSView: View {
         SOSState.startedAt = startedAt
         Task { await SOSLiveActivity.start(startedAt: startedAt, endsAt: startedAt.addingTimeInterval(Self.liveActivitySeconds)) }
         Analytics.track(.cravingSessionStarted(source: source))
-        withAnimation(DX.Move.animation(DX.Move.settle.delay(0.2), reduceMotion: reduceMotion)) { jelliIn = true }
+        withAnimation(motion.animation(DX.Move.settle.delay(0.2))) { jelliIn = true }
         #if DEBUG
         switch UserDefaults.standard.string(forKey: "dx.sosOutcome") {
         case "passed": finish(.passed)
@@ -365,7 +365,7 @@ private struct PassedView: View {
     let onDone: () -> Void
 
     @Environment(\.modelContext) private var context
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
     @State private var trigger: Trigger?
     @State private var helped: String?
     @State private var shown = false
@@ -381,8 +381,8 @@ private struct PassedView: View {
                 ScrollView {
                     VStack(spacing: 10) {
                         JelliView(mood: .cheer, stage: CravingSOSView.crewStage(profile: profile, at: endedAt), size: .hero)
-                            .scaleEffect(shown || reduceMotion ? 1 : DX.Move.celebrateFromScale)
-                            .offset(y: shown || reduceMotion ? 0 : 60)
+                            .scaleEffect(shown || motion.reduce ? 1 : DX.Move.celebrateFromScale)
+                            .offset(y: shown || motion.reduce ? 0 : 60)
                             .opacity(shown ? 1 : 0)
                             .frame(height: 230, alignment: .bottom)
                             .accessibilityHidden(true)
@@ -421,9 +421,9 @@ private struct PassedView: View {
             .dxReadableColumn()
         }
         .task {
-            withAnimation(DX.Move.animation(DX.Move.celebrate, reduceMotion: reduceMotion)) { shown = true }
-            try? await Task.sleep(for: .seconds(reduceMotion ? 0 : 1.2))
-            withAnimation(DX.Move.animation(DX.Move.celebrate, reduceMotion: reduceMotion)) { bumped = true }
+            withAnimation(motion.animation(DX.Move.celebrate)) { shown = true }
+            try? await Task.sleep(for: .seconds(motion.reduce ? 0 : 1.2))
+            withAnimation(motion.animation(DX.Move.celebrate)) { bumped = true }
         }
     }
 

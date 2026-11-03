@@ -57,7 +57,7 @@ struct UnderAgeScreen: View {
 /// Screen 2 (S22): what they use, with a note when it's more than one.
 struct ProductsScreen: View {
     @Bindable var model: OnboardingModel
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
 
     var body: some View {
         OnboardingScaffold(title: "What are you leaving behind?",
@@ -86,7 +86,7 @@ struct ProductsScreen: View {
                 .accessibilityElement(children: .combine)
             }
         }
-        .animation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion), value: model.products.count > 1)
+        .animation(motion.animation(DX.Move.settle), value: model.products.count > 1)
     }
 
     private func product(_ product: Product, title: LocalizedStringResource, detail: LocalizedStringResource, icon: String) -> some View {

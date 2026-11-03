@@ -13,7 +13,7 @@ struct CheckInView: View {
     }
 
     @Environment(\.modelContext) private var context
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
     @Query(sort: \LogEntry.timestamp, order: .reverse) private var logs: [LogEntry]
     @State private var stage = Stage.form
     @State private var clearDay = true
@@ -66,7 +66,7 @@ struct CheckInView: View {
                         HeroScene(.night, clarity: clarity, height: 250, edge: ground.background)
                         GlimView(mood: mood == .good || mood == .proud ? .cheer : .calm,
                                  stage: CrewGrowth.stage(daysClear: stats.daysClear(at: .now)), size: .scene)
-                            .offset(y: shown || reduceMotion ? -10 : -50)
+                            .offset(y: shown || motion.reduce ? -10 : -50)
                             .opacity(shown ? 1 : 0)
                             .accessibilityHidden(true)
                     }
@@ -133,7 +133,7 @@ struct CheckInView: View {
         .dxReadableColumn()
         .background(ground.background.ignoresSafeArea())
         .onAppear {
-            withAnimation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion)) { shown = true }
+            withAnimation(motion.animation(DX.Move.settle)) { shown = true }
         }
     }
 
@@ -178,7 +178,7 @@ struct CheckInView: View {
                 .dxType(.footnote).foregroundStyle(ground.ink)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 Button(editingCravings ? "Done" : logged == 0 && cravings == nil ? "Add" : "Edit") {
-                    withAnimation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion)) { editingCravings.toggle() }
+                    withAnimation(motion.animation(DX.Move.settle)) { editingCravings.toggle() }
                 }
                 .dxFont(14, weight: 700, style: .footnote)
                 .foregroundStyle(ground.ink)

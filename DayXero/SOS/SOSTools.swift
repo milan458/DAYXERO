@@ -136,17 +136,18 @@ final class CueVoice {
 /// from the touch and drift up. Moving the finger lifts the pulse and stirs more bubbles. Nothing to win, nothing to
 /// finish: a fidget.
 struct HoldToFeelPad: View {
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
     @AppStorage("dx.sosHaptics") private var hapticsOn = true
     @State private var field = BubbleField()
     @State private var haptics = HapticPlayer()
     @State private var touching = false
 
     var body: some View {
+        let still = motion.reduce
         TimelineView(.animation(minimumInterval: 1 / 60)) { timeline in
             Canvas { context, size in
-                field.step(now: timeline.date, still: reduceMotion)
-                field.draw(in: &context, now: timeline.date, still: reduceMotion)
+                field.step(now: timeline.date, still: still)
+                field.draw(in: &context, now: timeline.date, still: still)
             }
         }
         .frame(height: 150)

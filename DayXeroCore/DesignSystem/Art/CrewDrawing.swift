@@ -110,10 +110,10 @@ struct CrewCanvas: View {
     let size: CGFloat
     let animate: Bool
     let draw: @Sendable (inout GraphicsContext, Double, Bool) -> Void
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
 
     var body: some View {
-        let moving = animate && !reduceMotion
+        let moving = animate && !motion.reduce
         TimelineView(.animation(paused: !moving)) { timeline in
             Canvas { ctx, canvasSize in
                 ctx.scaleBy(x: canvasSize.width / 200, y: canvasSize.height / 200)

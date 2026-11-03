@@ -10,7 +10,7 @@ struct StatRevealBeat: View {
     let ctx: BeatContext
     let onDone: () -> Void
 
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
     @State private var shown = 0
 
     /// Lines whose numbers can't all be filled are dropped, never shown with braces.
@@ -27,14 +27,14 @@ struct StatRevealBeat: View {
                         .foregroundStyle(i == lines.count - 1 ? Read4.accent : Read4.ink)
                         .fixedSize(horizontal: false, vertical: true)
                         .opacity(i < shown ? 1 : 0)
-                        .offset(y: i < shown || reduceMotion ? 0 : 10)
+                        .offset(y: i < shown || motion.reduce ? 0 : 10)
                 }
             }
             .padding(.top, DX.Space.xxl)
             .accessibilityElement(children: .combine)
         }
         .task {
-            if reduceMotion || ctx.isReplay { shown = lines.count; return }
+            if motion.reduce || ctx.isReplay { shown = lines.count; return }
             for i in lines.indices {
                 try? await Task.sleep(for: .seconds(i == 0 ? 0.3 : 0.6))
                 withAnimation(DX.Move.settle) { shown = i + 1 }
@@ -543,7 +543,7 @@ struct TapRevealBeat: View {
     let ctx: BeatContext
     let onDone: () -> Void
 
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
     @State private var flipped: Set<Int> = []
     @State private var seen: Set<Int> = []
 
@@ -565,8 +565,8 @@ struct TapRevealBeat: View {
                 Text("\(seen.count) of \(cards.count) flipped").dxFont(14, weight: 600, style: .footnote)
                     .foregroundStyle(Read4.muted)
                 ForEach(Array(cards.enumerated()), id: \.offset) { i, card in
-                    FlipCard(front: card.front, back: card.back, flipped: flipped.contains(i), reduceMotion: reduceMotion) {
-                        withAnimation(reduceMotion ? DX.Move.reduced : .spring(response: 0.5, dampingFraction: 0.8)) {
+                    FlipCard(front: card.front, back: card.back, flipped: flipped.contains(i), reduceMotion: motion.reduce) {
+                        withAnimation(motion.animation(.spring(response: 0.5, dampingFraction: 0.8))) {
                             if flipped.contains(i) { flipped.remove(i) } else { flipped.insert(i) }
                         }
                         seen.insert(i)

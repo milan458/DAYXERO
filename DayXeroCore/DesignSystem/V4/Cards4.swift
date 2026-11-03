@@ -354,7 +354,7 @@ public struct HandOverChip<Avatar: View>: View {
     let text: String
     let avatar: Avatar
     @State private var visible = true
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
 
     public init(_ text: String, @ViewBuilder avatar: () -> Avatar) {
         self.text = text
@@ -373,7 +373,7 @@ public struct HandOverChip<Avatar: View>: View {
         .opacity(visible ? 1 : 0)
         .task {
             try? await Task.sleep(for: .seconds(3))
-            withAnimation(DX.Move.animation(.easeOut(duration: 0.6), reduceMotion: reduceMotion)) { visible = false }
+            withAnimation(motion.animation(.easeOut(duration: 0.6))) { visible = false }
         }
     }
 }

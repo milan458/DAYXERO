@@ -9,7 +9,7 @@ struct OrbBreathingPanel: View {
     /// Called when the person taps Continue after the last cycle.
     let onFinished: () -> Void
 
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
     @Environment(\.scenePhase) private var scenePhase
     @AppStorage("dx.sosHaptics") private var hapticsOn = true
     @AppStorage("dx.voiceGuidance") private var voiceOn = true
@@ -103,7 +103,7 @@ struct OrbBreathingPanel: View {
     }
 
     private func wire(_ engine: OrbEngine) {
-        clock.attach(engine, reduceMotion: reduceMotion)
+        clock.attach(engine, reduceMotion: motion.reduce)
         coach.attach(engine)
         engine.onEvent = { event in
             switch event {

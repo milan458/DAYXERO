@@ -25,7 +25,7 @@ struct CardStackStep: View {
     let onListen: () -> Void
     let onDone: () -> Void
 
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
     @State private var index = 0
     @State private var flipped = false
     @State private var turned: Set<Int> = []
@@ -83,11 +83,11 @@ struct CardStackStep: View {
                     .offset(y: CGFloat(depth + 1) * 10)
                     .accessibilityHidden(true)
             }
-            StackCard(number: index + 1, front: card.front, back: card.back, flipped: flipped, reduceMotion: reduceMotion) {
+            StackCard(number: index + 1, front: card.front, back: card.back, flipped: flipped, reduceMotion: motion.reduce) {
                 turn()
             }
             .id(index)
-            .transition(reduceMotion ? .opacity : .asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity),
+            .transition(motion.reduce ? .opacity : .asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity),
                                                                removal: .move(edge: .leading).combined(with: .opacity)))
             .gesture(
                 DragGesture(minimumDistance: 24).onEnded { drag in
@@ -130,12 +130,12 @@ struct CardStackStep: View {
     }
 
     private func turn() {
-        withAnimation(reduceMotion ? DX.Move.reduced : .spring(response: 0.5, dampingFraction: 0.8)) { flipped.toggle() }
+        withAnimation(motion.animation(.spring(response: 0.5, dampingFraction: 0.8))) { flipped.toggle() }
         turned.insert(index)
     }
 
     private func go(to next: Int) {
-        withAnimation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion)) {
+        withAnimation(motion.animation(DX.Move.settle)) {
             index = next
             flipped = false
         }
