@@ -26,18 +26,17 @@ brought back later.
 | **Session list** (a card per session under the winding path) | Program tab | Removed (UX-02). Tapping a path stop opens a bottom sheet with its art, timing and one button. The phase summary ("Prep · 3 of 7 done") stays as one line under the path. |
 | **Your reason in SOS** | Below the break menu, rotating each session | First, above the break menu; always the onboarding Why first, a tap steps through the rest (UX-06). |
 
-## Open questions for Milan
+## Open questions for Milan (answered 3 Nov 2026)
 
-1. **Daily sessions after Quit Day.** In State B the recovery card takes the lesson's slot, as specced, so quit-week
-   sessions are reachable only from the Program tab. Do we want a session prompt back on Today (for example as the
-   focus card while a session is open, recovery once it's done)?
-2. **Recovery card wording** is a placeholder ("Your body is recovering" / the change's title / "Next: …, in 2 days").
-   Pending approval.
-3. **Resilience %** is defined as the share of days since Quit Day with no slip logged, rounded down, so 100% means no
-   slips at all (`Resilience.percent` in `DayXeroCore/Logic/TodayFocus.swift`). Confirm or redefine.
-4. **Batch sizes** for cigarettes and pouches (+1 / +5) were my call; the spec only named +5 / +10 for puffs.
-5. **UX-03** (SOS opening Calm tools) couldn't be reproduced: the SOS tab already opened Jelli's session in code. If
-   it still happens, note the build and the path taken.
+1. **Daily sessions after Quit Day:** yes, for now. After Day Xero the focus card shows the day's session while it is
+   open and free to start, then the recovery card once it is done (`TodayFocus.pick(sessionOpen:)`). A session that
+   needs Pro stays on the Program tab.
+2. **Recovery card wording:** the full lines were printed for Milan with the problems found in them (the next change
+   repeated as both title and "Next", countdowns on "what many people notice" changes, an empty end state). A revised
+   set is waiting on his approval.
+3. **Resilience %** (share of days since Quit Day with no slip logged, rounded down): confirmed.
+4. **Batch sizes** (+1 / +5 for cigarettes and pouches, +5 / +10 for puffs): confirmed.
+5. **UX-03:** closed; the SOS tab opens Jelli's session.
 
 ---
 
