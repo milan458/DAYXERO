@@ -41,6 +41,16 @@ struct MilestoneTests {
         #expect(Milestone.days(3).healthItemID == "nicotine-gone")
     }
 
+    /// Every change on every product's timeline has its own drawing in the new set (CHAR-05), not the fallback sparkle.
+    @Test func everyTimelineChangeHasADrawing() throws {
+        let timeline = try #require(HealthTimeline.bundled)
+        let drawn = Set(MilestoneDrawing.ids)
+        for product in Product.allCases {
+            for item in timeline.items(for: product) { #expect(drawn.contains(item.id), "\(item.id) has no drawing") }
+        }
+        #expect(drawn.count == 23)
+    }
+
     @Test func idsRoundTrip() {
         for milestone in Milestone.all { #expect(Milestone(id: milestone.id) == milestone) }
         #expect(Milestone(id: "5") == nil)

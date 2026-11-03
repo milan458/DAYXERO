@@ -2,9 +2,9 @@ import DayXeroCore
 import SwiftUI
 
 /// "What's changing" (decision 31): what changes after stopping, counted from Quit Day, one timeline per
-/// product, on mint (S27.13: lime retired). A rail runs down the side: done changes are ticked on a solid line, the
-/// ones under way are raised cards with a coral bar, the rest wait on a dotted line. Coral is a fill here, never text. Every change has its own illustration
-/// from the kit; sources are listed once, small, at the bottom.
+/// product, on mint (S27.13: lime retired). Since CHAR-05 (3 Nov 2026) each change is a card with its crew collage
+/// bleeding off the right edge: done ones say so in green, the one under way has a coral bar, the rest wait in softer
+/// colour. Coral is a fill here, never text. Sources are listed once, small, at the bottom.
 struct HealthTimelineView: View {
     let profile: UserProfile
     var onClose: (() -> Void)?
@@ -38,11 +38,9 @@ struct HealthTimelineView: View {
                 VStack(alignment: .leading, spacing: DX.Space.s) {
                     header(elapsed: elapsed, clock: clock, now: context.date)
                     if products.count > 1 { switcher }
-                    VStack(spacing: 0) {
+                    VStack(spacing: DX.Space.s) {
                         ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
-                            let state = rowState(item, index: index, elapsed: elapsed)
-                            let next = index + 1 < items.count ? rowState(items[index + 1], index: index + 1, elapsed: elapsed) : nil
-                            Button { open = item } label: { row(item, state: state, next: next, isLast: index == items.count - 1) }
+                            Button { open = item } label: { row(item, state: rowState(item, index: index, elapsed: elapsed)) }
                                 .buttonStyle(.plain)
                         }
                     }
@@ -146,83 +144,64 @@ struct HealthTimelineView: View {
         }
     }
 
-    private func row(_ item: HealthTimeline.Item, state: RowState, next: RowState?, isLast: Bool) -> some View {
-        let raised: Bool = switch state {
-        case .now, .first: true
-        case .done, .ahead: false
-        }
-        let solid: Bool = {
-            switch (state, next) {
-            case (.done, .done?), (.done, .now?), (.now, .done?), (.now, .now?): return true
-            default: return false
-            }
-        }()
-        // What many people notice (CLIN-01) has no exact timing, so it never shows "under way" or a bar.
-        let kicker: String = switch state {
+    /// A card per change (CHAR-05): what changes and when on the left, its crew collage bleeding off the right edge.
+    /// Done ones say so in green, the one under way has its bar, the ones still ahead wait in softer colour. What many
+    /// people notice (CLIN-01) has no exact timing, so it never shows "under way" or a bar.
+    private func row(_ item: HealthTimeline.Item, state: RowState) -> some View {
+        let label: String = switch state {
+        case .done: String(localized: "Done · \(item.when)")
         case .now where item.isFelt: item.when
         case .now: String(localized: "Under way · \(item.when)")
         case .first: String(localized: "From Quit Day")
-        default: item.when
+        case .ahead: item.when
         }
-        return HStack(alignment: .top, spacing: 12) {
-            ZStack(alignment: .top) {
-                if !isLast {
-                    Rectangle().fill(.clear).frame(width: 3)
-                        .overlay {
-                            if solid {
-                                Rectangle().fill(DX.Fill.green)
-                            } else {
-                                Line().stroke(ground.ink, style: StrokeStyle(lineWidth: 3, lineCap: .round, dash: [1, 6]))
-                            }
-                        }
-                        .padding(.top, 14)
-                        .padding(.bottom, -14)
-                }
-                node(state).padding(.top, raised ? 30 : 10)
-            }
-            .frame(width: 26)
-            .frame(maxHeight: .infinity, alignment: .top)
-            .accessibilityHidden(true)
-
-            HStack(spacing: 12) {
-                KitArt(HealthKitArt.kind(for: item.id), cornerRadius: raised ? 18 : 14)
-                    .frame(width: raised ? 64 : 48, height: raised ? 64 : 48)
-                VStack(alignment: .leading, spacing: 3) {
-                    Text(verbatim: kicker.uppercased()).dxType(.caption).foregroundStyle(raised ? DX.Ground.reading.muted : ground.muted)
-                    Text(verbatim: item.title)
-                        .dxFont(raised ? 18 : 16, weight: raised ? 800 : 700, style: raised ? .headline : .body)
-                        .foregroundStyle(raised ? DX.Ground.reading.ink : ground.ink)
-                        .multilineTextAlignment(.leading)
-                        .fixedSize(horizontal: false, vertical: true)
-                    if case let .now(fraction) = state, !item.isFelt {
-                        GeometryReader { proxy in
-                            ZStack(alignment: .leading) {
-                                Capsule().fill(Color(light: 0xEDE6DA, dark: 0x2A4A3E))
-                                Capsule().fill(Color(hex: 0xFF7A55)).frame(width: proxy.size.width * min(1, max(0, fraction)))
-                            }
-                        }
-                        .frame(height: 8)
-                        .padding(.top, 4)
+        let labelColor: Color = switch state {
+        case .done: DX.Fill.green
+        case .now, .first: DX.Ground.reading.ink
+        case .ahead: DX.Ground.reading.muted
+        }
+        let ahead = state == .ahead
+        return VStack(alignment: .leading, spacing: 6) {
+            Text(verbatim: item.title)
+                .dxFont(17, weight: 800, style: .headline)
+                .foregroundStyle(DX.Ground.reading.ink)
+                .multilineTextAlignment(.leading)
+                .fixedSize(horizontal: false, vertical: true)
+            Text(verbatim: label).dxFont(13, weight: 700, style: .footnote).foregroundStyle(labelColor)
+            if case let .now(fraction) = state, !item.isFelt {
+                GeometryReader { proxy in
+                    ZStack(alignment: .leading) {
+                        Capsule().fill(Color(light: 0xEDE6DA, dark: 0x2A4A3E))
+                        Capsule().fill(Color(hex: 0xFF7A55)).frame(width: proxy.size.width * min(1, max(0, fraction)))
                     }
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            .padding(raised ? 12 : 0)
-            .background {
-                if raised {
-                    RoundedRectangle(cornerRadius: 20, style: .continuous).fill(card)
-                        .shadow(color: .black.opacity(0.08), radius: 10, y: 4)
-                }
+                .frame(height: 8)
+                .padding(.top, 2)
             }
         }
-        .fixedSize(horizontal: false, vertical: true)
-        .padding(.bottom, 12)
+        .frame(maxWidth: .infinity, minHeight: Self.cardHeight - 36, alignment: .topLeading)
+        .padding(.leading, 18)
+        .padding(.vertical, 18)
+        .padding(.trailing, Self.artVisible + 4)
+        .background(alignment: .bottomTrailing) {
+            MilestoneCollage(id: item.id, size: Self.art, animate: !ahead)
+                .saturation(ahead ? 0.35 : 1)
+                .opacity(ahead ? 0.75 : 1)
+                .offset(x: Self.art - Self.artVisible, y: 26)
+        }
+        .background(card)
+        .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
         .contentShape(Rectangle())
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(verbatim: "\(item.when). \(item.title)"))
         .accessibilityValue(Text(accessibilityValue(state)))
         .accessibilityHint(Text("Opens the full story"))
     }
+
+    /// The art is drawn this big and shows this much of itself; the rest bleeds off the card's right edge.
+    private static let art: CGFloat = 176
+    private static let artVisible: CGFloat = 146
+    private static let cardHeight: CGFloat = 150
 
     private func accessibilityValue(_ state: RowState) -> String {
         switch state {
@@ -233,21 +212,6 @@ struct HealthTimelineView: View {
         }
     }
 
-    @ViewBuilder
-    private func node(_ state: RowState) -> some View {
-        switch state {
-        case .done:
-            Image(systemName: "checkmark").font(.system(size: 11, weight: .heavy)).foregroundStyle(DX.Ground.reading.background)
-                .frame(width: 26, height: 26).background(DX.Fill.green, in: Circle())
-        case .now, .first:
-            Circle().fill(Color(hex: 0xFF7A55)).frame(width: 26, height: 26)
-                .background(Circle().fill(Color(hex: 0xFF7A55).opacity(0.25)).padding(-6))
-        case .ahead:
-            Circle().strokeBorder(ground.ink, lineWidth: 3).background(Circle().fill(ground.background)).frame(width: 26, height: 26)
-        }
-    }
-
-    /// Sources once, small, under the timeline.
     @ViewBuilder
     private func sources(_ timeline: HealthTimeline?) -> some View {
         let list = timeline?.sources(for: product) ?? []
@@ -276,43 +240,6 @@ struct HealthTimelineView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .strokeBorder(ground.muted, style: StrokeStyle(lineWidth: 1, dash: [4, 4])))
-    }
-}
-
-/// A vertical line for the dotted rail.
-private struct Line: Shape {
-    func path(in rect: CGRect) -> Path {
-        var p = Path()
-        p.move(to: CGPoint(x: rect.midX, y: rect.minY))
-        p.addLine(to: CGPoint(x: rect.midX, y: rect.maxY))
-        return p
-    }
-}
-
-/// Each change's illustration from the kit (decision 31).
-enum HealthKitArt {
-    static func kind(for id: String) -> KitArt.Kind {
-        switch id {
-        case "heart-rate", "heart-disease": .heart
-        case "carbon-monoxide", "nicotine-gone": .clouds
-        case "taste": .berry
-        case "fresh-breath", "mood": .sparkle
-        case "circulation", "cravings-fade": .breath
-        case "lips": .lips
-        case "skin-glow": .dawn
-        case "coughing", "lung-cancer": .lungs
-        case "hair": .sprout
-        case "even-tone": .flower
-        case "heart-attack", "mouth-cancer": .shield
-        case "withdrawal-start": .sea
-        case "withdrawal-peak": .peak
-        case "sleep": .night
-        // What many people notice, weeks 2 to 6 (CLIN-01).
-        case "flat-days": .clouds
-        case "clearer-head": .sparkle
-        case "rewards-return": .flower
-        default: .dawn
-        }
     }
 }
 
@@ -483,11 +410,14 @@ struct HealthItemDetail: View {
 
     private func hero(_ state: HealthTimeline.State) -> some View {
         ZStack(alignment: .topTrailing) {
-            HealthBadge(id: item.id, state: state, size: 150)
-                .padding(.vertical, DX.Space.l)
+            // The change's crew collage, whole, on its panel (CHAR-05).
+            MilestoneCollage(id: item.id, size: 232)
+                .background(HealthBadge.panel)
+                .clipShape(RoundedRectangle(cornerRadius: 40, style: .continuous))
+                .padding(.vertical, DX.Space.m)
                 .frame(maxWidth: .infinity)
                 .background(RadialGradient(colors: [HealthBadge.tint(for: item.id), .clear], center: .center,
-                                           startRadius: 40, endRadius: 190))
+                                           startRadius: 60, endRadius: 220))
             Button { dismiss() } label: { Image(systemName: "xmark") }
                 .buttonStyle(.v4Icon).accessibilityLabel(Text("Close"))
                 .padding(.top, DX.Space.s)

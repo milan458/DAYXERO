@@ -68,6 +68,9 @@ The sigh's voice is the on-device speech voice, like the breathing orb's coach. 
 
 ## Open questions
 
-6. **CHAR-05 style.** The milestones use the existing kit illustrations for now. A new illustration style (and the Headspace-like structure in an earthy palette) waits on the style choice in approvals.
-7. **Recorded audio for the sighs**, or keep the on-device voice?
-8. **"Prep 1" vs "Prep day 1"** on the prep card: the table said "PREP DAY 1"; the card uses the session label so it never disagrees with the kicker's calendar day.
+
+## Decided
+
+- **Prep card label: "Prep 1"** (Milan, 2 Nov 2026). The card keeps the program's session label, not "Prep day 1", so it never disagrees with the kicker's calendar day.
+- **Sigh voice: the built-in on-device voice for now** (Milan, 2 Nov 2026). A recorded voice can replace it later in `CueVoice` (`DayXero/SOS/SOSTools.swift`).
+- **Milestone illustrations: the crew collage** (Milan, 3 Nov 2026, round 4 on https://claude.ai/artifact/NfDttfeWAT5qM1ijPr5fjw). Earlier rounds (an earthy recolour of the old icons, scenes without the crew, the crew on one repeated backdrop) were rejected. Each of the 20 changes now has its own composition: two or three gradient windows from the crew's worlds (arch, disc, rounded window), one hero object, one crew member (Xero for the body, Jelli for withdrawal and cravings, Glim for the night), composed to the bottom right. In the app: `MilestoneCollage` (`DayXero/Health/MilestoneCollage.swift`); "Your body" rows are cards with the art bleeding off the right edge; badges crop it to a circle.
