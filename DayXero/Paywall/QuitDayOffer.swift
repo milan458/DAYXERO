@@ -12,7 +12,6 @@ struct QuitDayOffer: View {
 
     @Environment(Entitlement.self) private var entitlement
     @Environment(\.modelContext) private var context
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var model: PaywallModel?
     @State private var showBilling = false
 

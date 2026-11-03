@@ -83,7 +83,7 @@ public struct CountingText: View {
     let value: Double
     let format: (Double) -> String
     @State private var appeared = false
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
 
     public init(_ value: Double, format: @escaping (Double) -> String) {
         self.value = value
@@ -91,11 +91,11 @@ public struct CountingText: View {
     }
 
     public var body: some View {
-        CountingNumber(animatableData: appeared || reduceMotion ? value : 0, format: format)
-            .animation(reduceMotion ? nil : DX.Move.count, value: value)
+        CountingNumber(animatableData: appeared || !motion.counts ? value : 0, format: format)
+            .animation(motion.counts ? DX.Move.count : nil, value: value)
             .onAppear {
                 guard !appeared else { return }
-                if reduceMotion {
+                if !motion.counts {
                     appeared = true
                 } else {
                     withAnimation(DX.Move.count) { appeared = true }
@@ -354,7 +354,7 @@ public struct HandOverChip<Avatar: View>: View {
     let text: String
     let avatar: Avatar
     @State private var visible = true
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
 
     public init(_ text: String, @ViewBuilder avatar: () -> Avatar) {
         self.text = text
@@ -373,7 +373,7 @@ public struct HandOverChip<Avatar: View>: View {
         .opacity(visible ? 1 : 0)
         .task {
             try? await Task.sleep(for: .seconds(3))
-            withAnimation(DX.Move.animation(.easeOut(duration: 0.6), reduceMotion: reduceMotion)) { visible = false }
+            withAnimation(motion.animation(.easeOut(duration: 0.6))) { visible = false }
         }
     }
 }

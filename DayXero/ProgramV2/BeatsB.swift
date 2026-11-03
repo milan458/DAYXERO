@@ -239,7 +239,7 @@ struct CommitBeat: View {
     let ctx: BeatContext
     let onDone: () -> Void
 
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
     @State private var doneAt: Date?
     @State private var settled = false
 
@@ -296,7 +296,7 @@ struct CommitBeat: View {
                     ZStack(alignment: .bottom) {
                         HorizonScene(.dawn, clarity: CrewGrowth.clarity(daysClear: 1), fit: .bottom)
                         XeroView(mood: doneAt == nil ? .hello : .cheer, stage: 1, size: .hero)
-                            .offset(y: settled || reduceMotion ? -2 : 40)
+                            .offset(y: settled || motion.reduce ? -2 : 40)
                             .opacity(settled ? 1 : 0)
                     }
                     .frame(height: 260)
@@ -342,7 +342,7 @@ struct CommitBeat: View {
         .sensoryFeedback(DX.Haptic.commit, trigger: doneAt)
         .onAppear {
             restore()
-            withAnimation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion)) { settled = true }
+            withAnimation(motion.animation(DX.Move.settle)) { settled = true }
         }
     }
 
@@ -368,6 +368,7 @@ struct CommitBeat: View {
 
 /// Every option is valid: the pick stays highlighted and its own feedback shows. Nothing is marked right.
 struct ScenarioBeat: View {
+    private let motion = MotionPolicy()
     let beat: Beat
     let ctx: BeatContext
     let onDone: () -> Void
@@ -384,7 +385,7 @@ struct ScenarioBeat: View {
             VStack(alignment: .leading, spacing: 10) {
                 BeatPrompt(text: ctx.text(beat.prompt), eyebrow: "Picture it")
                 ForEach(options) { option in
-                    Button { withAnimation(DX.Move.settle) { picked = option.id } } label: {
+                    Button { withAnimation(motion.animation(DX.Move.settle)) { picked = option.id } } label: {
                         OptionRow(text: option.text, selected: picked == option.id, dimmed: picked != nil && picked != option.id)
                     }
                     .buttonStyle(.plain)

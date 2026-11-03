@@ -153,7 +153,9 @@ struct TodayPrepHero: View {
     }
 }
 
-/// A dot per prep day: done ones filled, today's ringed, the rest waiting. A bar for a prep longer than two weeks.
+/// A dot per prep day: done ones filled green, today's a thin ink ring, the rest waiting. A bar for a prep longer
+/// than two weeks. Only a finished session is ever green: today's ring was a thick green stroke on a 12 pt dot, which
+/// read as done before Prep 1 had been played (QW1).
 struct PrepDots: View {
     let done: Int
     let total: Int
@@ -167,11 +169,12 @@ struct PrepDots: View {
             if total <= 14 {
                 HStack(spacing: 8) {
                     ForEach(0..<max(total, 1), id: \.self) { index in
+                        let isToday = index >= done && index == today
                         Circle()
-                            .fill(index < done ? DX.Fill.green : track)
+                            .fill(index < done ? DX.Fill.green : (isToday ? Color.clear : track))
                             .overlay {
-                                if index >= done, index == today {
-                                    Circle().strokeBorder(DX.Fill.green, lineWidth: 2.5)
+                                if isToday {
+                                    Circle().strokeBorder(ground.ink, lineWidth: 1.5)
                                 }
                             }
                             .frame(width: 12, height: 12)

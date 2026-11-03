@@ -26,7 +26,7 @@ struct PaywallView: View {
     @Query private var profiles: [UserProfile]
 
     @State private var showBilling = false
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
     /// At accessibility text sizes the footer scrolls with the content instead of being pinned,
     /// so the charge line and button are never squeezed or truncated.
     @Environment(\.dynamicTypeSize) private var typeSize
@@ -54,8 +54,8 @@ struct PaywallView: View {
                     .transition(.move(edge: .top).combined(with: .opacity))
             }
         }
-        .animation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion), value: model.phase)
-        .animation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion), value: model.notice != nil)
+        .animation(motion.animation(DX.Move.settle), value: model.phase)
+        .animation(motion.animation(DX.Move.settle), value: model.notice != nil)
         .background(Read4.background.ignoresSafeArea())
         .task {
             model.quitDay = quitDay

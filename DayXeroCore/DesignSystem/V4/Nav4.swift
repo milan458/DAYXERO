@@ -148,11 +148,11 @@ public struct V4TabBar: View {
 struct SOSBreathGlow: View {
     let color: Color
     let diameter: CGFloat
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
 
     var body: some View {
-        TimelineView(.animation(minimumInterval: 1 / 30, paused: reduceMotion)) { timeline in
-            let breath = reduceMotion ? 0.3 : DX.Move.breath(at: timeline.date.timeIntervalSinceReferenceDate)
+        TimelineView(.animation(minimumInterval: 1 / 30, paused: !motion.breathes)) { timeline in
+            let breath = motion.breathes ? DX.Move.breath(at: timeline.date.timeIntervalSinceReferenceDate) : 0.3
             Circle()
                 .fill(color.opacity(0.28 - 0.14 * breath))
                 .frame(width: diameter, height: diameter)

@@ -38,7 +38,7 @@ struct MarkShape: Shape {
 struct EmphasisModifier: ViewModifier {
     let mark: DX.Mark
     let color: Color
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
     @State private var drawn = false
 
     func body(content: Content) -> some View {
@@ -65,7 +65,7 @@ struct EmphasisModifier: ViewModifier {
                 .accessibilityHidden(true)
             }
             .onAppear {
-                if reduceMotion { drawn = true; return }
+                if motion.reduce { drawn = true; return }
                 withAnimation(.easeOut(duration: 0.6).delay(0.35)) { drawn = true }
             }
     }

@@ -30,7 +30,7 @@ public struct DXDock: View {
     let sosPosition: Int?
     let axis: Axis
 
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
     /// Tab and SOS frames, and the bar's size, in the bar's own space.
     @State private var frames: [String: CGRect] = [:]
     @State private var barSize: CGSize = .zero
@@ -71,7 +71,7 @@ public struct DXDock: View {
             .coordinateSpace(.named(Self.space))
             .onGeometryChange(for: CGSize.self) { $0.size } action: { barSize = $0 }
             .modifier(DockBackground())
-            .simultaneousGesture(touch, including: axis == .horizontal && !reduceMotion ? .all : .none)
+            .simultaneousGesture(touch, including: axis == .horizontal && !motion.reduce ? .all : .none)
             .dynamicTypeSize(...DynamicTypeSize.xLarge)
             .sensoryFeedback(DX.Haptic.select, trigger: hovered) { old, new in old != nil && new != nil }
             .sensoryFeedback(DX.Haptic.select, trigger: selection)
@@ -148,7 +148,7 @@ public struct DXDock: View {
     }
 
     private func select(_ id: String) {
-        withAnimation(reduceMotion ? DX.Move.reduced : Self.settle) {
+        withAnimation(motion.animation(Self.settle)) {
             selection = id
         }
     }
@@ -267,14 +267,14 @@ private struct LensRim: View {
 /// Deeper colours in light mode so the word stays readable on the light dock.
 private struct RainbowSOS: View {
     @Environment(\.colorScheme) private var scheme
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
 
     private static let bright: [UInt32] = [0xFF6B6B, 0xFFB86B, 0xFFE36B, 0x7BE495, 0x6BC8FF, 0x9B8CFF, 0xFF7BD0]
     private static let deep: [UInt32] = [0xD7263D, 0xE4572E, 0xB88500, 0x16897C, 0x2667C9, 0x6C45CF, 0xB8236E]
 
     var body: some View {
-        TimelineView(.animation(minimumInterval: 1.0 / 30, paused: reduceMotion)) { timeline in
-            let phase = reduceMotion ? 0 : timeline.date.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: 3) / 3
+        TimelineView(.animation(minimumInterval: 1.0 / 30, paused: motion.reduce)) { timeline in
+            let phase = motion.reduce ? 0 : timeline.date.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: 3) / 3
             Text(verbatim: "SOS")
                 .font(.system(size: 15, weight: .heavy, design: .rounded))
                 .tracking(0.5)

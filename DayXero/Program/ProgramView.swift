@@ -7,6 +7,7 @@ import SwiftUI
 /// bottom sheet with its illustration, when it opens and what to do (UX-02, 2 Nov 2026); the list of session cards
 /// under the path went. Finished sessions replay. Nothing is ever shown as missed, overdue or failed.
 struct ProgramView: View {
+    private let motion = MotionPolicy()
     let profile: UserProfile
     @Environment(Entitlement.self) private var entitlement
     @Environment(NRTRouter.self) private var nrt
@@ -15,6 +16,8 @@ struct ProgramView: View {
     @State private var upgradeTitle: String?
     @State private var showPaywall = false
     @State private var picked: String?
+    /// Which ends of the phase track have more pills past them (QW9).
+    @State private var trackFades = TrackFades()
     /// The stop whose sheet is open (UX-02).
     @State private var sheet: StopSheet?
     /// What the sheet's button asked for, done once the sheet has closed so a session or paywall can open.
@@ -118,7 +121,7 @@ struct ProgramView: View {
                         let done = !phase.sessionIds.isEmpty && phase.sessionIds.allSatisfy { if case .completed = states[$0] { true } else { false } }
                         let on = phase.id == selected
                         Button {
-                            withAnimation(DX.Move.settle) { picked = phase.id }
+                            withAnimation(motion.animation(DX.Move.settle)) { picked = phase.id }
                         } label: {
                             HStack(spacing: 4) {
                                 Text(verbatim: phase.title).dxFont(14, weight: 700, style: .footnote)
@@ -145,22 +148,29 @@ struct ProgramView: View {
             // At rest the track lines up with the title; scrolled, it runs to the screen edges under the fades.
             .contentMargins(.horizontal, DX.Layout.gutter, for: .scrollContent)
             .padding(.horizontal, -DX.Layout.gutter)
-            .mask { Self.edgeFade }
+            .onScrollGeometryChange(for: TrackFades.self) { geo in
+                TrackFades(leading: geo.contentOffset.x > -geo.contentInsets.leading + 1,
+                           trailing: geo.contentOffset.x + geo.containerSize.width < geo.contentSize.width + geo.contentInsets.trailing - 1)
+            } action: { _, fades in
+                withAnimation(motion.animation(.easeOut(duration: 0.2))) { trackFades = fades }
+            }
+            .mask { Self.edgeFade(trackFades) }
             .onAppear { proxy.scrollTo(selected, anchor: .center) }
             .onChange(of: selected) { _, id in
-                withAnimation(DX.Move.settle) { proxy.scrollTo(id, anchor: .center) }
+                withAnimation(motion.animation(DX.Move.settle)) { proxy.scrollTo(id, anchor: .center) }
             }
         }
     }
 
-    /// Opaque in the middle, fading to clear over the gutter at each end.
-    private static var edgeFade: some View {
+    /// Opaque in the middle, fading to clear at each end: over the gutter alone where the track ends, and 28 pt further
+    /// in where more pills lie past the edge, so a cut-off pill visibly fades rather than stopping dead (QW9).
+    private static func edgeFade(_ fades: TrackFades) -> some View {
         HStack(spacing: 0) {
             LinearGradient(colors: [.clear, .black], startPoint: .leading, endPoint: .trailing)
-                .frame(width: DX.Layout.gutter)
+                .frame(width: DX.Layout.gutter + (fades.leading ? 28 : 0))
             Rectangle().fill(.black)
             LinearGradient(colors: [.black, .clear], startPoint: .leading, endPoint: .trailing)
-                .frame(width: DX.Layout.gutter)
+                .frame(width: DX.Layout.gutter + (fades.trailing ? 28 : 0))
         }
     }
 
@@ -438,4 +448,10 @@ struct ProgramView: View {
         }
         return text
     }
+}
+
+/// Whether the phase track has more pills past its leading and trailing edges.
+private struct TrackFades: Equatable {
+    var leading = false
+    var trailing = false
 }

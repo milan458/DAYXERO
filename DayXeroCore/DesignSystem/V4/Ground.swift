@@ -107,13 +107,23 @@ public extension DX {
         public static func onColourCard(for ground: DX.Ground) -> Color {
             ground.spec.inkLight == 0xFFF8EE ? Color(light: (0x1E1A3A, cardNavyAlpha), dark: (0xFFFFFF, cardDarkAlpha)) : cardOnColour
         }
-        /// Success fill. Light value replaced #1FA971, which failed contrast with white.
-        public static let green = Color(light: 0x0F6E43, dark: 0x2FD08A)
+        /// The one "good" green (QW7, option A, 3 Nov 2026): every green in the UI comes from these tokens. Light
+        /// replaced #1FA971, which failed contrast with white; dark is the bright green that reads on night grounds.
+        public static let greenLight: UInt32 = 0x0F6E43
+        public static let greenDark: UInt32 = 0x2FD08A
+        /// Success: ticks, progress, "+1", done stops on the Program road.
+        public static let green = Color(light: greenLight, dark: greenDark)
+        /// Ticks on an ink chip or a filled control, in either mode: the deep green vanishes on ink.
+        public static let greenOnDark = Color(hex: greenDark)
+        /// The lesson card's fill. Deep green in both modes, so its cream text holds 5.98:1.
+        public static let lessonCard = Color(hex: greenLight)
+        /// A soft green wash: prep days on the calendar, quiet success badges.
+        public static let greenSoft = Color(light: (greenLight, 0.12), dark: (greenDark, 0.16))
         /// Ocean secondary button. Never translucent white.
         public static let oceanSecondary = Color(light: 0x1D3A9E, dark: 0x1B2C66)
         public static let navy = Color(hex: 0x1E1A3A)
         public static let cream = Color(hex: 0xFFF8EE)
-        public static let confetti: [Color] = [0xFF7A55, 0x2A52DB, 0x4A3596, 0x0F6E43, 0xFF8FB8, 0xFFF8EE].map { Color(hex: $0) }
+        public static let confetti: [Color] = [0xFF7A55, 0x2A52DB, 0x4A3596, greenLight, 0xFF8FB8, 0xFFF8EE].map { Color(hex: $0) }
     }
 }
 

@@ -17,7 +17,7 @@ public struct HorizonScene: View {
     let fit: Fit
     let animate: Bool
     @State private var appeared = Date()
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
     @Environment(\.colorScheme) private var colorScheme
 
     public init(_ kind: HorizonKind, clarity: Int = 100, fit: Fit = .middle, animate: Bool = true) {
@@ -28,7 +28,7 @@ public struct HorizonScene: View {
     }
 
     public var body: some View {
-        let moving = animate && !reduceMotion
+        let moving = animate && !motion.reduce
         let kind = kind, clarity = clarity, fit = fit, appeared = appeared, dark = colorScheme == .dark
         TimelineView(.animation(paused: !moving)) { timeline in
             Canvas { ctx, size in

@@ -15,7 +15,7 @@ public struct KitArt: View {
     let kind: Kind
     let cornerRadius: CGFloat
     let animate: Bool
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
 
     public init(_ kind: Kind, cornerRadius: CGFloat = 28, animate: Bool = true) {
         self.kind = kind
@@ -24,7 +24,7 @@ public struct KitArt: View {
     }
 
     public var body: some View {
-        let moving = animate && !reduceMotion
+        let moving = animate && !motion.reduce
         let kind = kind, radius = cornerRadius
         TimelineView(.animation(paused: !moving)) { timeline in
             Canvas { ctx, size in

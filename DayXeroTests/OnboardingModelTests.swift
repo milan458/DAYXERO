@@ -320,4 +320,16 @@ struct OnboardingModelTests {
         #expect(use.podsPerWeek == 2)
         #expect(abs(use.unitsPerDay - 2000.0 / 7) < 0.001)
     }
+
+    /// QW2: the opening breath carries on at the end of a second full breath on the shared clock, never mid-breath.
+    @Test func breatheScreenAdvancesOnABreathBoundary() {
+        let cycle = DX.Move.inhale + DX.Move.exhale
+        for offset in stride(from: 0.0, to: cycle, by: 0.5) {
+            let start = Date(timeIntervalSinceReferenceDate: 1_000 * cycle + offset)
+            let wait = BreatheScreen.autoAdvance(at: start)
+            #expect(wait >= cycle * 1.5 - 0.001 && wait <= cycle * 2.5 + 0.001)
+            let end = (start.timeIntervalSinceReferenceDate + wait).truncatingRemainder(dividingBy: cycle)
+            #expect(end < 0.001 || cycle - end < 0.001)
+        }
+    }
 }

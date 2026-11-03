@@ -24,12 +24,16 @@ struct OnboardingSegments<Value: Hashable>: View {
     let isSelected: (Value) -> Bool
     let title: (Value) -> String
     let select: (Value) -> Void
+    @State private var taps = 0
 
     var body: some View {
         HStack(spacing: DX.Space.xs) {
             ForEach(options, id: \.self) { option in
                 let on = isSelected(option)
-                Button { select(option) } label: {
+                Button {
+                    taps += 1
+                    select(option)
+                } label: {
                     Text(verbatim: title(option))
                         .dxFont(14, weight: on ? 700 : 500, style: .subheadline)
                         .foregroundStyle(on ? Onb.onInk : Onb.ink)
@@ -39,11 +43,12 @@ struct OnboardingSegments<Value: Hashable>: View {
                         .background(on ? Onb.ink : Onb.surface,
                                     in: RoundedRectangle(cornerRadius: DX.Layout.answerChipRadius, style: .continuous))
                 }
-                .buttonStyle(.plain)
-                .sensoryFeedback(DX.Haptic.select, trigger: on)
+                .buttonStyle(.dxPress)
                 .accessibilityAddTraits(on ? [.isButton, .isSelected] : .isButton)
             }
         }
+        // One haptic per tap: a trigger on each chip's `on` fired for the chip leaving and the chip arriving.
+        .sensoryFeedback(DX.Haptic.select, trigger: taps)
     }
 }
 
@@ -52,9 +57,13 @@ struct OnboardingChip: View {
     let text: String
     let isOn: Bool
     let action: () -> Void
+    @State private var taps = 0
 
     var body: some View {
-        Button(action: action) {
+        Button {
+            taps += 1
+            action()
+        } label: {
             Text(verbatim: text)
                 .dxFont(14, weight: isOn ? 700 : 500, style: .subheadline)
                 .foregroundStyle(isOn ? Onb.onInk : Onb.ink)
@@ -63,8 +72,8 @@ struct OnboardingChip: View {
                 .background(isOn ? Onb.ink : Onb.surface,
                             in: RoundedRectangle(cornerRadius: DX.Layout.answerChipRadius, style: .continuous))
         }
-        .buttonStyle(.plain)
-        .sensoryFeedback(DX.Haptic.select, trigger: isOn)
+        .buttonStyle(.dxPress)
+        .sensoryFeedback(DX.Haptic.select, trigger: taps)
         .accessibilityAddTraits(isOn ? [.isButton, .isSelected] : .isButton)
     }
 }
@@ -408,7 +417,11 @@ private struct PriceStepper: View {
 
 struct BaselineSummaryScreen: View {
     let model: OnboardingModel
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
+    /// The total as it counts up; nil before the count starts.
+    @State private var counted: Int?
+    @State private var ticks = 0
+    @State private var landed = false
 
     private var money: Decimal { model.moneyPerDay * 365 }
     private var cigarettes: Double { NicotineEstimate.cigarettes(mg: model.nicotinePerDay) }
@@ -448,6 +461,32 @@ struct BaselineSummaryScreen: View {
         }
     }
 
+    private var total: Int { Int(cigarettes.rounded()) }
+
+    /// Where the count starts: the first product on its own (10 cigarettes), so the other products visibly add to it.
+    private var countFrom: Int {
+        guard let first = model.orderedProducts.first else { return total }
+        let d = model.baseline(for: first)
+        let mg = NicotineEstimate.mgPerDay(first, unitsPerDay: d.unitsPerDay, strength: d.strengthMg)
+        return min(Int(NicotineEstimate.cigarettes(mg: mg).rounded()), total)
+    }
+
+    /// The reveal (QW5): the total counts up from the first product over about 0.8 s, with a light tick every few
+    /// steps and a firmer one as it lands. With Reduce Motion it's simply there.
+    private func countUp() async {
+        let from = countFrom, to = total
+        guard motion.counts, to > from else { counted = to; return }
+        try? await Task.sleep(for: .milliseconds(350))
+        let frames = min(to - from, 16)
+        for frame in 1...frames {
+            guard !Task.isCancelled else { return }
+            withAnimation(.snappy(duration: 0.12)) { counted = from + (to - from) * frame / frames }
+            if frame % 3 == 0 { ticks += 1 }
+            try? await Task.sleep(for: .milliseconds(800 / frames))
+        }
+        landed = true
+    }
+
     /// "1 pouch (11 mg) ≈ 1.8 cigarettes · 25 puffs ≈ 1 cigarette": what each product counts as in the total.
     /// Nil when only cigarettes were picked, as there's nothing to convert.
     private var conversionLine: String? {
@@ -477,9 +516,14 @@ struct BaselineSummaryScreen: View {
         VStack(alignment: .leading, spacing: DX.Space.s) {
             Text("Total daily nicotine load").onbText(.micro)
             HStack(alignment: .firstTextBaseline, spacing: DX.Space.xs) {
-                Text(verbatim: "≈ \(Int(cigarettes.rounded()))")
+                let shown = counted ?? (motion.counts ? countFrom : total)
+                Text(verbatim: "≈ \(shown)")
                     .dxFont(48, weight: 800, style: .largeTitle).tracking(-1.4)
                     .foregroundStyle(Onb.accent)
+                    .contentTransition(.numericText(value: Double(shown)))
+                    .sensoryFeedback(.impact(weight: .light, intensity: 0.5), trigger: ticks)
+                    .sensoryFeedback(.impact(weight: .medium), trigger: landed) { _, done in done }
+                    .accessibilityLabel(Text(verbatim: "≈ \(total)"))
                 Text(cigarettes.rounded() == 1 ? "cigarette a day" as LocalizedStringKey : "cigarettes a day")
                     .dxFont(17, weight: 500, style: .headline).foregroundStyle(.white)
             }
@@ -512,6 +556,7 @@ struct BaselineSummaryScreen: View {
         .background(DX.Fill.navy, in: RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
         // Navy in both themes, so its colours resolve as dark.
         .environment(\.colorScheme, .dark)
+        .task { await countUp() }
     }
 
     private func line(_ product: Product, _ d: BaselineDraft) -> String {
@@ -732,7 +777,7 @@ struct ObstaclesScreen: View {
 
 struct NRTScreen: View {
     @Bindable var model: OnboardingModel
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
 
     var body: some View {
         OnboardingScaffold(title: "Want to use nicotine replacement?",
@@ -795,7 +840,7 @@ struct NRTScreen: View {
         } footer: {
             ContinueButton(title: "Continue", model: model)
         }
-        .animation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion), value: model.nrtInterest)
-        .animation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion), value: model.pregnancy)
+        .animation(motion.animation(DX.Move.settle), value: model.nrtInterest)
+        .animation(motion.animation(DX.Move.settle), value: model.pregnancy)
     }
 }

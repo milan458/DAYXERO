@@ -57,7 +57,7 @@ struct ColourCard: View {
     }
 
     static let ocean = Color(hex: 0x2A52DB)
-    static let lesson = Color(hex: 0x0F6E43)
+    static let lesson = DX.Fill.lessonCard
     static let glim = Color(hex: 0x2A1C6E)
     static let night = Color(hex: 0x0E0B2B)
 }

@@ -14,7 +14,7 @@ struct SOSSighIntro: View {
     let stage: Int
     let onFinished: () -> Void
 
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
     @Environment(\.scenePhase) private var scenePhase
     @AppStorage("dx.sosHaptics") private var hapticsOn = true
     @AppStorage("dx.voiceGuidance") private var voiceOn = true
@@ -33,39 +33,37 @@ struct SOSSighIntro: View {
                 Circle()
                     .fill(SOSColors.glow)
                     .frame(width: 230, height: 230)
-                    .scaleEffect(reduceMotion ? 1 : scale)
+                    .scaleEffect(motion.breathes ? scale : 1)
                 JelliView(mood: .breathe, stage: stage, size: .hero)
-                    .scaleEffect(reduceMotion ? 1 : scale)
+                    .scaleEffect(motion.breathes ? scale : 1)
                     .opacity(shown ? 1 : 0)
             }
             .frame(height: 250)
             .accessibilityHidden(true)
-            // One fading subtitle line, synced to the voice: no box, no pill.
-            Text(verbatim: phase.map(SOSSigh.cue) ?? String(localized: "Let's breathe together first"))
-                .dxType(.title)
-                .foregroundStyle(SOSColors.cream)
-                .multilineTextAlignment(.center)
-                .lineLimit(2)
-                .minimumScaleFactor(0.8)
-                .id(phase.map(SOSSigh.cue) ?? "")
-                .transition(.opacity)
-                .frame(maxWidth: .infinity, minHeight: 64)
-                .accessibilityAddTraits(.updatesFrequently)
-            HStack(spacing: 8) {
-                ForEach(1...SOSSigh.cycles, id: \.self) { index in
-                    Circle()
-                        .fill(index <= cycle && phase != nil ? SOSColors.cream : SOSColors.cream.opacity(0.25))
-                        .frame(width: 8, height: 8)
-                }
+            // One fading subtitle line, synced to the voice: no box, no pill. Only the words cross-fade on a phase
+            // change; on the whole stack, that 0.5 s animation overrode each phase's own length, so Jelli and the glow
+            // snapped to size and then sat still (QW2). The three cycle dots read as pager dots, so they went; the
+            // count lives in the subtitle's value for VoiceOver.
+            ZStack {
+                Text(verbatim: phase.map(SOSSigh.cue) ?? String(localized: "Let's breathe together first"))
+                    .dxType(.title)
+                    .foregroundStyle(SOSColors.cream)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.8)
+                    .id(phase.map(SOSSigh.cue) ?? "")
+                    .transition(.opacity)
             }
-            .accessibilityElement(children: .ignore)
-            .accessibilityLabel(Text("Sigh \(cycle) of \(SOSSigh.cycles)"))
+            .frame(maxWidth: .infinity, minHeight: 64)
+            .animation(motion.animation(.easeInOut(duration: 0.5)), value: phase)
+            .accessibilityElement(children: .combine)
+            .accessibilityValue(phase == nil ? Text(verbatim: "") : Text("Sigh \(cycle) of \(SOSSigh.cycles)"))
+            .accessibilityAddTraits(.updatesFrequently)
             Button("Skip to riding it out") { finish() }
                 .dxFont(14, weight: 600, style: .footnote)
                 .foregroundStyle(SOSColors.ocean.muted)
                 .frame(minHeight: DX.Layout.touchTarget)
         }
-        .animation(.easeInOut(duration: 0.5), value: phase)
         .task { await run() }
         .onDisappear(perform: tearDown)
         .onChange(of: scenePhase) { _, now in
@@ -75,7 +73,7 @@ struct SOSSighIntro: View {
     }
 
     private func run() async {
-        withAnimation(DX.Move.animation(DX.Move.settle, reduceMotion: reduceMotion)) { shown = true }
+        withAnimation(motion.animation(DX.Move.settle)) { shown = true }
         try? await Task.sleep(for: .seconds(0.8))
         for step in SOSSigh.steps(pattern) {
             guard !Task.isCancelled else { return }
@@ -138,17 +136,18 @@ final class CueVoice {
 /// from the touch and drift up. Moving the finger lifts the pulse and stirs more bubbles. Nothing to win, nothing to
 /// finish: a fidget.
 struct HoldToFeelPad: View {
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let motion = MotionPolicy()
     @AppStorage("dx.sosHaptics") private var hapticsOn = true
     @State private var field = BubbleField()
     @State private var haptics = HapticPlayer()
     @State private var touching = false
 
     var body: some View {
+        let still = motion.reduce
         TimelineView(.animation(minimumInterval: 1 / 60)) { timeline in
             Canvas { context, size in
-                field.step(now: timeline.date, still: reduceMotion)
-                field.draw(in: &context, now: timeline.date, still: reduceMotion)
+                field.step(now: timeline.date, still: still)
+                field.draw(in: &context, now: timeline.date, still: still)
             }
         }
         .frame(height: 150)
