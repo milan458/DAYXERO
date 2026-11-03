@@ -143,6 +143,33 @@ struct SessionFlowView: View {
         }
     }
 
+    /// Back is offered on every step after the first, except straight after a commit: going back over a hold would
+    /// let someone redo it, and holds such as Day Xero's set a timestamp. The completion screen has no header.
+    static func canGoBack(from index: Int, in steps: [FlowStep], beats: [Beat]) -> Bool {
+        guard index > 0, steps.indices.contains(index), steps[index] != .completion else { return false }
+        if case let .beat(id) = steps[index - 1], beats.first(where: { $0.id == id })?.type == .commit { return false }
+        return true
+    }
+
+    private func goBack() {
+        guard let session, Self.canGoBack(from: index, in: steps, beats: allBeats(session)) else { return }
+        index -= 1
+        if !isReplay, let record, record.completedAt == nil {
+            record.currentStep = index
+            try? context.save()
+        }
+    }
+
+    /// The Back action for a step's own "go back" link, or nil where Back isn't offered.
+    private func backAction(_ session: ProgramContent.Session) -> (() -> Void)? {
+        guard Self.canGoBack(from: index, in: steps, beats: allBeats(session)) else { return nil }
+        return { goBack() }
+    }
+
+    private func allBeats(_ session: ProgramContent.Session) -> [Beat] {
+        session.beats + (session.mission?.followUp ?? [])
+    }
+
     private func close() {
         if !isReplay, let record { record.currentStep = index; try? context.save() }
         dismiss()
@@ -165,6 +192,17 @@ struct SessionFlowView: View {
             }
             .buttonStyle(.plain)
             .accessibilityLabel(Text(isReplay ? "Close" : "Close. Your place is saved."))
+            if Self.canGoBack(from: index, in: steps, beats: allBeats(session)) {
+                Button(action: goBack) {
+                    Image(systemName: "chevron.left").font(.system(size: 16, weight: .bold)).foregroundStyle(Read4.ink)
+                        .frame(width: 44, height: 44)
+                        .background(Read4.surface, in: Circle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(Text("Back"))
+                .accessibilityIdentifier("program.session.back")
+                .transition(.opacity)
+            }
             V4ProgressBar(value: Double(index + 1) / Double(max(steps.count, 1)))
                 .accessibilityLabel(Text("\(session.label), step \(index + 1) of \(steps.count)"))
             if isReplay {
@@ -189,8 +227,8 @@ struct SessionFlowView: View {
         case .intro:
             SessionIntro(session: session, variant: ctx.variant, isReplay: isReplay, reads: steps.contains(.cards), onBegin: advance)
         case let .beat(id):
-            if let beat = (session.beats + (session.mission?.followUp ?? [])).first(where: { $0.id == id }) {
-                BeatScreen(beat: beat, ctx: ctx, onDone: advance)
+            if let beat = allBeats(session).first(where: { $0.id == id }) {
+                BeatScreen(beat: beat, ctx: ctx, onDone: advance, onBack: backAction(session))
             }
         case .cards:
             CardStackStep(session: session, ctx: ctx, canListen: ProgramAudioStep.hasRecording(session, ctx: ctx),

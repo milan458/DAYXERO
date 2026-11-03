@@ -71,6 +71,24 @@ struct ProgramContentTests {
         #expect(SessionFlowView.lessonStep(hasCards: false, hasAudio: false, format: .read) == nil)
     }
 
+    /// Back works on every step after the first, so P1's "Which one matters most?" can go back to "Your reasons" when
+    /// nothing was written; never on the first step, the completion, or straight after a hold (it could be redone).
+    @MainActor @Test func backIsOfferedExceptAfterAHold() throws {
+        let p1 = try #require(try content().session("P1"))
+        let steps: [SessionFlowView.FlowStep] = [.intro] + p1.beats.map { .beat($0.id) } + [.completion]
+        let reasons = try #require(steps.firstIndex(of: .beat("P1.2")))
+        let pick = try #require(steps.firstIndex(of: .beat("P1.3")))
+        #expect(p1.beats.first { $0.id == "P1.3" }?.optionsFrom == "reasons")
+        #expect(pick == reasons + 1)
+        #expect(SessionFlowView.canGoBack(from: pick, in: steps, beats: p1.beats))
+        #expect(!SessionFlowView.canGoBack(from: 0, in: steps, beats: p1.beats))
+        #expect(!SessionFlowView.canGoBack(from: steps.count - 1, in: steps, beats: p1.beats))
+        // P1's hold is its last activity, so put a step after it to check the rule.
+        let hold = try #require(p1.beats.first { $0.type == .commit })
+        let withMission: [SessionFlowView.FlowStep] = [.intro, .beat(hold.id), .mission, .completion]
+        #expect(!SessionFlowView.canGoBack(from: 2, in: withMission, beats: p1.beats))
+    }
+
     /// CLIN-08: Week 2's "The flat days" (dopamine and brain fog) opens on Day 13, between Sleep and Two weeks. Its id
     /// is W2S4 because session ids are saved in people's records; the order comes from the list, not the number.
     @Test func weekTwoHasTheFlatDays() throws {
