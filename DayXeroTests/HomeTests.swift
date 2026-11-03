@@ -170,4 +170,26 @@ struct HomeTests {
         #expect(after.counters.map(\.product) == before.counters.map(\.product))
         #expect(after.counters.map(\.avoided) == before.counters.map { $0.avoided - Slips.units(nil, product: $0.product) })
     }
+
+    // MARK: Recovery card wording (approved 3 Nov 2026)
+
+    @Test func recoveryCardNeverRepeatsOrCountsDownWhatPeopleNotice() throws {
+        let items = try #require(HealthTimeline.bundled).items(for: .cigarettes)
+        // Between heart rate and carbon monoxide nothing is under way: "Coming up", and no "Next" repeating the title.
+        let gap = RecoveryCopy.make(items, elapsedHours: 1.5)
+        #expect(gap.kicker == "Coming up")
+        #expect(gap.title == "Carbon monoxide in your blood drops to normal")
+        #expect(gap.line.hasPrefix("Starts in "))
+        // Fresher breath under way, flat days due at day 10: "Next" skips the "many people notice" changes.
+        let breath = RecoveryCopy.make(items, elapsedHours: 7.5 * 24)
+        #expect(breath.kicker == "Happening now")
+        #expect(breath.line.hasPrefix("Next: ") && !breath.line.contains("Many people notice"))
+        // A "many people notice" change shows its own line, never a countdown.
+        let flat = RecoveryCopy.make(items, elapsedHours: 11 * 24)
+        #expect(flat.kicker == "Many people notice")
+        #expect(flat.line == "A common, passing stage. Timing varies a lot.")
+        // After the last change has started.
+        let end = RecoveryCopy.make(items, elapsedHours: 16 * 365 * 24)
+        #expect(end.kicker == "Your body has come a long way" && end.featuredID == nil)
+    }
 }

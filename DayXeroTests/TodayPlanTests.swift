@@ -76,6 +76,14 @@ struct TodayPlanTests {
         }
     }
 
+    /// After Day Xero, an open session takes the focus by day; recovery comes back once it's done.
+    @Test func anOpenSessionComesBeforeRecovery() {
+        #expect(TodayFocus.pick(hour: 10, postQuit: true, checkedIn: false, sessionOpen: true) == .lesson)
+        #expect(TodayFocus.pick(hour: 10, postQuit: true, checkedIn: false, sessionOpen: false) == .recovery)
+        #expect(TodayFocus.pick(hour: 19, postQuit: true, checkedIn: false, sessionOpen: true) == .checkIn)
+        #expect(TodayFocus.pick(hour: 19, postQuit: true, checkedIn: true, sessionOpen: true) == .lesson)
+    }
+
     @Test func afterTheCheckInTheLessonComesBackThenWindingDown() {
         #expect(TodayFocus.pick(hour: 19, postQuit: false, checkedIn: true) == .lesson)
         #expect(TodayFocus.pick(hour: 19, postQuit: true, checkedIn: true) == .recovery)
