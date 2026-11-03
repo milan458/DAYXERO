@@ -31,9 +31,10 @@ brought back later.
 1. **Daily sessions after Quit Day:** yes, for now. After Day Xero the focus card shows the day's session while it is
    open and free to start, then the recovery card once it is done (`TodayFocus.pick(sessionOpen:)`). A session that
    needs Pro stays on the Program tab.
-2. **Recovery card wording:** the full lines were printed for Milan with the problems found in them (the next change
-   repeated as both title and "Next", countdowns on "what many people notice" changes, an empty end state). A revised
-   set is waiting on his approval.
+2. **Recovery card wording:** approved (Milan, 3 Nov 2026). "Happening now" / the change / "Next: … · in 2 days";
+   "Coming up" / the change / "Starts in 2 days" when nothing is under way; "Many people notice" / the change / its own
+   line, never counted down and skipped by "Next"; at the end "Your body has come a long way" / "Every change on the
+   timeline has started" / "See them all" (`RecoveryCopy` in `DayXero/Home/TodayV4.swift`).
 3. **Resilience %** (share of days since Quit Day with no slip logged, rounded down): confirmed.
 4. **Batch sizes** (+1 / +5 for cigarettes and pouches, +5 / +10 for puffs): confirmed.
 5. **UX-03:** closed; the SOS tab opens Jelli's session.
@@ -73,3 +74,6 @@ The sigh's voice is the on-device speech voice, like the breathing orb's coach. 
 - **Prep card label: "Prep 1"** (Milan, 2 Nov 2026). The card keeps the program's session label, not "Prep day 1", so it never disagrees with the kicker's calendar day.
 - **Sigh voice: the built-in on-device voice for now** (Milan, 2 Nov 2026). A recorded voice can replace it later in `CueVoice` (`DayXero/SOS/SOSTools.swift`).
 - **Milestone illustrations: the crew collage** (Milan, 3 Nov 2026, round 4 on https://claude.ai/artifact/NfDttfeWAT5qM1ijPr5fjw). Earlier rounds (an earthy recolour of the old icons, scenes without the crew, the crew on one repeated backdrop) were rejected. Each of the 20 changes now has its own composition: two or three gradient windows from the crew's worlds (arch, disc, rounded window), one hero object, one crew member (Xero for the body, Jelli for withdrawal and cravings, Glim for the night), composed to the bottom right. In the app: `MilestoneCollage` (`DayXero/Health/MilestoneCollage.swift`); "Your body" rows are cards with the art bleeding off the right edge; badges crop it to a circle.
+- **Earthy restyle of the app chrome: not for now** (Milan, 3 Nov 2026). Mockups are kept for later at
+  https://claude.ai/artifact/MHhcjmDzBdfuu7vKP1z5Qe (oat and linen surfaces, terracotta action, one colour per realm,
+  the crew and collages unchanged).
