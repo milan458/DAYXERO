@@ -45,7 +45,8 @@ struct TodayWeekTests {
         let week = TodayWeek.make(now: date(4, 9), quitDay: date(24, 0), programStart: date(1, 8),
                                   sessionsDone: [], slips: [], clock: clock)
         #expect(days(week) == [3, 4, 5, 6, 7, 8, 9])
-        #expect(!week.days.contains(where: \.isQuitDay))
+        let showsQuitDay = week.days.contains { $0.isQuitDay }
+        #expect(!showsQuitDay)
     }
 
     @Test func quitDayItselfEndsTheWeek() {
@@ -82,7 +83,8 @@ struct TodayWeekTests {
         // 2 am on Thursday still counts as Wednesday with a 4 am boundary.
         let week = TodayWeek.make(now: date(5, 2), quitDay: date(8, 0), programStart: date(2, 8),
                                   sessionsDone: [], slips: [], clock: clock)
-        #expect(week.days.first(where: \.isToday).map { clock.calendar.component(.day, from: $0.date) } == 4)
+        let today = week.days.first { $0.isToday }.map { clock.calendar.component(.day, from: $0.date) }
+        #expect(today == 4)
     }
 
     @Test func theRingFillsToTheNextCountedChange() {
