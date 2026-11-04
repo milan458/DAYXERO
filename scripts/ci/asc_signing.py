@@ -7,6 +7,10 @@ xcodebuild's automatic signing rejects our API key, so CI signs by hand:
            because revoking it invalidates builds still waiting for review (ITMS-90035).
   builds   lists the builds App Store Connect has for the app.
   wait N   waits for build N to show up after an upload, since altool can report success when nothing arrived.
+  expire T [--confirm]
+           expires every unexpired build uploaded at or before T (ISO 8601 with a UTC offset, e.g.
+           2026-11-02T14:30:00+05:30). Without --confirm it only lists them. Apple has no way to delete a build;
+           expiring removes it from TestFlight for good.
 
 Needs ASC_KEY_ID, ASC_ISSUER_ID and $RUNNER_TEMP/AuthKey_<id>.p8, plus pyjwt and cryptography.
 """
@@ -211,9 +215,58 @@ def wait(version):
     raise SystemExit(1)
 
 
+def all_builds(query):
+    path, found = f"builds?filter[app]={app_id()}&limit=200&{query}", []
+    while path:
+        res = call("GET", path)
+        found += res["data"]
+        path = res.get("links", {}).get("next", "").replace(API + "/", "")
+    return found
+
+
+def expire(through, confirm):
+    from datetime import datetime
+    try:
+        cutoff = datetime.fromisoformat(through.strip())
+    except ValueError:
+        cutoff = None
+    if cutoff is None or cutoff.tzinfo is None:
+        print(f"::error title=Bad time::{through!r} needs a date, time and UTC offset, e.g. 2026-11-02T14:30:00+05:30")
+        raise SystemExit(1)
+    found = all_builds("filter[expired]=false&fields[builds]=version,uploadedDate,processingState")
+    old = sorted((b for b in found if datetime.fromisoformat(b["attributes"]["uploadedDate"]) <= cutoff),
+                 key=lambda b: b["attributes"]["uploadedDate"])
+    kept = len(found) - len(old)
+    print(f"{len(old)} of {len(found)} unexpired builds were uploaded at or before {cutoff.isoformat()}; {kept} stay.")
+    for b in old:
+        a = b["attributes"]
+        print(f"  build {a['version']}  uploaded {a['uploadedDate']}  {a['processingState']}")
+    if not confirm:
+        print("::notice title=Dry run::Nothing expired. Run again with confirm to expire the builds listed.")
+        return
+    failed = []
+    for b in old:
+        a = b["attributes"]
+        req = urllib.request.Request(f"{API}/builds/{b['id']}", method="PATCH",
+                                     data=json.dumps({"data": {"type": "builds", "id": b["id"], "attributes": {"expired": True}}}).encode(),
+                                     headers={"Authorization": f"Bearer {token()}", "Content-Type": "application/json"})
+        try:
+            urllib.request.urlopen(req).read()
+            print(f"Expired build {a['version']}")
+        except urllib.error.HTTPError as e:
+            detail = "; ".join(x.get("detail", "") for x in json.loads(e.read() or b"{}").get("errors", [{}]))
+            print(f"::warning title=Build {a['version']} not expired ({e.code})::{detail}")
+            failed.append(a["version"])
+    print(f"::notice title=Expired {len(old) - len(failed)} builds::{len(failed)} failed: {failed or 'none'}")
+    if failed:
+        raise SystemExit(1)
+
+
 if __name__ == "__main__":
     commands = {"setup": setup, "cleanup": cleanup, "builds": builds, "next": next_build}
     if sys.argv[1] == "wait":
         wait(sys.argv[2])
+    elif sys.argv[1] == "expire":
+        expire(sys.argv[2], "--confirm" in sys.argv[3:])
     else:
         commands[sys.argv[1]]()
