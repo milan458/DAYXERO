@@ -93,16 +93,19 @@ struct OnbOptionCard: View {
     let title: LocalizedStringResource
     let detail: LocalizedStringResource?
     let systemImage: String?
+    /// A product's log icon (4 Nov 2026), in place of a symbol: the same icon the product has everywhere else.
+    let glyph: LogGlyph?
     let isSelected: Bool
     let action: () -> Void
     /// One selection haptic per tap, on the card tapped (a trigger on `isSelected` fired twice in a single-choice group).
     @State private var taps = 0
 
     init(_ title: LocalizedStringResource, detail: LocalizedStringResource? = nil, systemImage: String? = nil,
-         isSelected: Bool, action: @escaping () -> Void) {
+         glyph: LogGlyph? = nil, isSelected: Bool, action: @escaping () -> Void) {
         self.title = title
         self.detail = detail
         self.systemImage = systemImage
+        self.glyph = glyph
         self.isSelected = isSelected
         self.action = action
     }
@@ -113,7 +116,9 @@ struct OnbOptionCard: View {
             action()
         } label: {
             HStack(spacing: 12) {
-                if let systemImage {
+                if let glyph {
+                    LogIcon(glyph: glyph, size: 40)
+                } else if let systemImage {
                     Image(systemName: systemImage)
                         .font(.system(size: 17, weight: .semibold))
                         .foregroundStyle(isSelected ? Onb.onInk : Onb.ink)

@@ -106,14 +106,14 @@ struct LogSheet: View {
             VStack(alignment: .leading, spacing: DX.Space.xs) {
                 Text("Log").v4Text(.title).padding(.bottom, DX.Space.xs)
                 NavigationLink(value: LogRouter.Page.craving) {
-                    LogRow(title: "A craving", detail: "How strong, what set it off", systemImage: "flame", accent: true)
+                    LogRow(title: "A craving", detail: "How strong, what set it off", glyph: .craving)
                 }
                 .buttonStyle(.plain)
                 ForEach(products, id: \.self) { product in
                     Button { logUse(product) } label: {
                         // UX-12: "Cigarette / 0 logged today". The row says it once; no "I used" heading over it.
                         LogRow(title: LogSheet.useTitle(product), detail: "\(todayCount(product)) logged today",
-                               systemImage: LogSheet.icon(product), accent: false)
+                               glyph: .product(product))
                     }
                     .buttonStyle(.plain)
                     .accessibilityHint(Text(isSlip ? "Logs a slip. Nothing resets." : "Logs one now"))
@@ -172,29 +172,17 @@ struct LogSheet: View {
         case .pouches: "Pouch"
         }
     }
-
-    static func icon(_ product: Product) -> String {
-        switch product {
-        case .cigarettes: "smoke"
-        case .vape: "wind"
-        case .pouches: "circle.grid.2x1"
-        }
-    }
 }
 
 private struct LogRow: View {
     let title: LocalizedStringKey
     let detail: LocalizedStringKey
-    let systemImage: String
-    let accent: Bool
+    /// The log icon family (4 Nov 2026), the same icons Today, Recent logs and onboarding use.
+    let glyph: LogGlyph
 
     var body: some View {
         HStack(spacing: DX.Space.s) {
-            Image(systemName: systemImage)
-                .font(.system(size: 18))
-                .foregroundStyle(accent ? Read4.accent : Read4.ink)
-                .frame(width: 42, height: 42)
-                .background(accent ? Read4.accentSoft : Read4.surface, in: Circle())
+            LogIcon(glyph: glyph, size: 42)
             VStack(alignment: .leading, spacing: 1) {
                 Text(title).dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.ink)
                 Text(detail).v4Text(.subtitle)

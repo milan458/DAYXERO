@@ -532,8 +532,9 @@ struct BaselineSummaryScreen: View {
                 let d = model.baseline(for: product)
                 let mg = NicotineEstimate.mgPerDay(product, unitsPerDay: d.unitsPerDay, strength: d.strengthMg)
                 HStack(spacing: DX.Space.s) {
-                    Image(systemName: icon(product)).font(.system(size: 16, weight: .light)).foregroundStyle(Onb.accent)
-                        .frame(width: 36, height: 36).background(Color.white.opacity(0.1), in: Circle())
+                    // The product's log icon, in its night colours on this dark panel (4 Nov 2026).
+                    LogIcon(glyph: .product(product), size: 36)
+                        .environment(\.colorScheme, .dark)
                     VStack(alignment: .leading, spacing: 1) {
                         Text(verbatim: line(product, d)).dxFont(14, weight: 600, style: .subheadline).foregroundStyle(.white)
                         Text(verbatim: product == .cigarettes
@@ -568,14 +569,6 @@ struct BaselineSummaryScreen: View {
             return String(localized: "~\(puffs) vape puffs at \(BaselineScreen.vapeStrengthTitle(mg).components(separatedBy: " · ").first ?? "")")
         case .pouches:
             return d.strengthMg.map { String(localized: "\(Int(d.unitsPerDay)) pouches at \(Int($0)) mg") } ?? String(localized: "\(Int(d.unitsPerDay)) pouches")
-        }
-    }
-
-    private func icon(_ product: Product) -> String {
-        switch product {
-        case .cigarettes: "smoke"
-        case .vape: "wind"
-        case .pouches: "capsule"
         }
     }
 
