@@ -63,9 +63,9 @@ struct ProductsScreen: View {
         OnboardingScaffold(title: "What are you leaving behind?",
                            subtitle: "Pick everything you use now. I'll set up your counters and body timeline for each one.",
                            model: model) {
-            product(.cigarettes, title: "Cigarettes", detail: "Manufactured or roll-ups", icon: "smoke")
-            product(.vape, title: "Vape or e-cigarette", detail: "Disposables, pods or refillable tanks", icon: "wind")
-            product(.pouches, title: "Nicotine pouches or snus", detail: "Zyn, Velo or other oral pouches", icon: "capsule")
+            product(.cigarettes, title: "Cigarettes", detail: "Manufactured or roll-ups")
+            product(.vape, title: "Vape or e-cigarette", detail: "Disposables, pods or refillable tanks")
+            product(.pouches, title: "Nicotine pouches or snus", detail: "Zyn, Velo or other oral pouches")
             if model.products.count > 1 {
                 HStack(alignment: .top, spacing: DX.Space.s) {
                     Image(systemName: "lightbulb").font(.system(size: 16, weight: .light)).foregroundStyle(Onb.accent)
@@ -89,8 +89,8 @@ struct ProductsScreen: View {
         .animation(motion.animation(DX.Move.settle), value: model.products.count > 1)
     }
 
-    private func product(_ product: Product, title: LocalizedStringResource, detail: LocalizedStringResource, icon: String) -> some View {
-        OnbOptionCard(title, detail: detail, systemImage: icon, isSelected: model.products.contains(product)) {
+    private func product(_ product: Product, title: LocalizedStringResource, detail: LocalizedStringResource) -> some View {
+        OnbOptionCard(title, detail: detail, glyph: .product(product), isSelected: model.products.contains(product)) {
             if model.products.contains(product) { model.products.remove(product) } else { model.products.insert(product) }
         }
     }

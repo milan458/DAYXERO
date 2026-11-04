@@ -1,3 +1,38 @@
+# Today, take two: the sky, the ring and the day path (S32, 4 Nov 2026)
+
+Built from Milan's sketch and the Final page of https://claude.ai/artifact/LCcigLTDyDK99cR6ECxbJE. Code:
+`DayXero/Home/TodayView.swift`, `TodayHero.swift`, `TodayTimeline.swift`; `DayXeroCore/Logic/TodayWeek.swift`;
+the icons in `DayXero/Shared/LogIcon.swift`.
+
+## What changed on Today
+
+| What | Was (UX-01 to UX-11) | Now |
+| --- | --- | --- |
+| **Top of the screen** | Kicker line ("PREP DAY 3 OF 7 · HI, MILAN") and an apricot hero card | A sunrise sky (a violet night after 6 PM) with the week, "Good morning, Milan", the countdown or "Day 4 · 4 of 4 days smoke-free", the why, and a ring with Xero (Glim at night). |
+| **Prep progress** | A dot per prep session in the hero | The ring: one segment per prep session, today's highlighted. "Prep: 2 of 7 sessions done" is still its VoiceOver label. |
+| **Time free and money** | In the hero after Quit Day | Inside the ring ("3d 14h free"); the ring fills to the next counted body change, and a pill under it says which one and the money kept. |
+| **The week** | Not shown | Seven days: ticks for a finished session during prep, and for a day with no slip from Quit Day on (the same rule as the resilience count, so the two always agree). |
+| **Water and use cells (bento)** | Two cells side by side | Rows in "Through the day", each with its log icon. Same batch buttons, same identifiers. |
+| **Morning pledge** | A slim row | The first row of "Morning"; a ticked line once made. |
+| **Prep challenge** | A row under the bento | A row in "Through the day"; a ticked line once done. |
+| **Zero scroll** | Everything on one screen | The day scrolls under a pinned slim card. The focus card sits right under the sky, so the one thing to do now is still on the first screen. |
+| **Night** | Violet hero only | The whole screen goes dark from 6 PM to 6 AM, even in light mode (Milan, 4 Nov 2026), tab bar included. Other tabs keep the phone's setting. |
+
+## Different from the mockups
+
+- **The focus card isn't repeated in the timeline.** On the scrolled mockups the session card sat inside "Morning". In the
+  build the focus card stays right under the sky (as on the opening mockups) and the timeline lists the rest of the
+  day, so the same card never shows twice and the evening check-in is on the first screen at night.
+
+## Left out for now
+
+- **Xero's notes** (the coffee note, CLIN-02, and the swap trap, CLIN-05) and **today's plan** after a slip (S8.3):
+  not on the new Today yet (Milan, 4 Nov 2026: "leave it out, let's work on other parts first"). `XeroNoteCard`,
+  `CaffeineAlert`, `SwapTrap` and their tests are kept, ready to slot in between the sky and the timeline.
+- **Settings › Products and the water widget** still use SF Symbols. Siri Shortcuts must (system symbols only).
+
+---
+
 # Today redesign: what was cut or moved (UX-01 to UX-11, 2 Nov 2026)
 
 Today became a zero-scroll screen with two states (S28 in `planning/tasks.json`). To make it fit, several things

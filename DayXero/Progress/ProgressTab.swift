@@ -727,11 +727,7 @@ struct LogEntryRow: View {
 
     var body: some View {
         HStack(spacing: DX.Space.s) {
-            Image(systemName: icon)
-                .font(.system(size: 13, weight: .bold))
-                .foregroundStyle(entry.outcome == .passed ? DX.Fill.cream : Read4.muted)
-                .frame(width: 30, height: 30)
-                .background(entry.outcome == .passed ? Read4.accent : Read4.track, in: Circle())
+            LogIcon(glyph: glyph)
             VStack(alignment: .leading, spacing: 1) {
                 Text(title).dxFont(14, weight: 600, style: .subheadline).foregroundStyle(Read4.ink)
                 Text(verbatim: detail).v4Text(.subtitle)
@@ -745,11 +741,12 @@ struct LogEntryRow: View {
         .accessibilityElement(children: .combine)
     }
 
-    private var icon: String {
+    /// The log icon family (4 Nov 2026): what was logged, so a cigarette, a puff and a pouch no longer share one "+".
+    private var glyph: LogGlyph {
         switch entry.kind {
-        case .craving: entry.outcome == .passed ? "checkmark" : "flame"
-        case .slip: "heart"
-        case .use: "plus"
+        case .craving: entry.outcome == .passed ? .urge : .craving
+        case .slip: .slip
+        case .use: .product(entry.product ?? .cigarettes)
         }
     }
 

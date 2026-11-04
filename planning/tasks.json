@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-11-03T07:30:19.773Z"
+    "updated": "2026-11-04T18:53:13.073Z"
   },
   "now": {
     "section": "S30",
@@ -3097,9 +3097,174 @@
           "completed": null
         }
       ]
+    },
+    {
+      "id": "S32",
+      "title": "Today redesign: the sky, the ring and the day path (Milan's sketch)",
+      "goal": "Today as Milan sketched it (4 Nov 2026): a sunrise or night sky with the week, the greeting and a ring with the crew; the one card that matters now; the day as a timeline; fully dark at night; one log icon family across the app. Mockups: https://claude.ai/artifact/LCcigLTDyDK99cR6ECxbJE (Final page).",
+      "signoff": {
+        "state": "signed_off",
+        "history": [
+          {
+            "time": "2026-11-04T18:53:12.481Z",
+            "state": "signed_off",
+            "by": "Claude",
+            "comment": ""
+          }
+        ]
+      },
+      "mockups": [
+        {
+          "title": "Today redesign canvas, Final page",
+          "path": "https://claude.ai/artifact/LCcigLTDyDK99cR6ECxbJE"
+        }
+      ],
+      "tasks": [
+        {
+          "id": "S32.1",
+          "title": "Sky hero: week strip, greeting, why, ring with Xero by day and Glim at night",
+          "status": "awaiting_signoff",
+          "notes": "TodayHero.swift; TodayWeek in DayXeroCore with tests. Ticks: a session finished (prep), no slip that day (after Quit Day), the same rule as Resilience.",
+          "created": "2026-11-04T18:53:12.517Z",
+          "completed": null
+        },
+        {
+          "id": "S32.2",
+          "title": "Ring: prep sessions before Quit Day; after it, fills to the next counted body change",
+          "status": "awaiting_signoff",
+          "notes": "TodayRing.fraction; the pill under it reads the same next change and money kept as the rest of Today.",
+          "created": "2026-11-04T18:53:12.591Z",
+          "completed": null
+        },
+        {
+          "id": "S32.3",
+          "title": "Slim header pinned once the sky scrolls away",
+          "status": "awaiting_signoff",
+          "notes": "TodaySlimHeader; same model as the hero, so the two never disagree.",
+          "created": "2026-11-04T18:53:12.665Z",
+          "completed": null
+        },
+        {
+          "id": "S32.4",
+          "title": "Focus card under the sky, then the day as a timeline (Morning, Through the day, Evening, what's ahead)",
+          "status": "awaiting_signoff",
+          "notes": "The focus card isn't repeated in the timeline. Session opening moved from the card to Today so a session survives the card moving at 6 PM.",
+          "created": "2026-11-04T18:53:12.739Z",
+          "completed": null
+        },
+        {
+          "id": "S32.5",
+          "title": "Fully dark at night, even in light mode",
+          "status": "awaiting_signoff",
+          "notes": "Milan, 4 Nov 2026. TodayClock.isNight (6 PM to 6 AM, the same hours the focus hands to Glim); HomeView sets the colour scheme while Today shows.",
+          "created": "2026-11-04T18:53:12.845Z",
+          "completed": null
+        },
+        {
+          "id": "S32.6",
+          "title": "Log icon family: cigarette, puff, pouch, water, urge, craving, pledge, slip, money kept",
+          "status": "awaiting_signoff",
+          "notes": "LogIcon/LogGlyph. Used on Today, the log sheet, Recent logs, onboarding's product cards and the nicotine summary. Replaces three disagreeing SF Symbol helpers.",
+          "created": "2026-11-04T18:53:12.919Z",
+          "completed": null
+        },
+        {
+          "id": "S32.7",
+          "title": "Not yet: Xero's notes (coffee, swap) and today's plan on the new Today",
+          "status": "blocked",
+          "notes": "Milan, 4 Nov 2026: leave them out for now. Code and tests kept (XeroNoteCard, CaffeineAlert, SwapTrap).",
+          "created": "2026-11-04T18:53:12.997Z",
+          "completed": null
+        }
+      ]
     }
   ],
   "log": [
+    {
+      "time": "2026-11-04T18:53:13.038Z",
+      "type": "status",
+      "message": "S32.7 pending → blocked"
+    },
+    {
+      "time": "2026-11-04T18:53:12.997Z",
+      "type": "task_added",
+      "message": "S32.7 added: Not yet: Xero's notes (coffee, swap) and today's plan on the new Today"
+    },
+    {
+      "time": "2026-11-04T18:53:12.960Z",
+      "type": "status",
+      "message": "S32.6 pending → awaiting_signoff"
+    },
+    {
+      "time": "2026-11-04T18:53:12.919Z",
+      "type": "task_added",
+      "message": "S32.6 added: Log icon family: cigarette, puff, pouch, water, urge, craving, pledge, slip, money kept"
+    },
+    {
+      "time": "2026-11-04T18:53:12.887Z",
+      "type": "status",
+      "message": "S32.5 pending → awaiting_signoff"
+    },
+    {
+      "time": "2026-11-04T18:53:12.845Z",
+      "type": "task_added",
+      "message": "S32.5 added: Fully dark at night, even in light mode"
+    },
+    {
+      "time": "2026-11-04T18:53:12.800Z",
+      "type": "status",
+      "message": "S32.4 pending → awaiting_signoff"
+    },
+    {
+      "time": "2026-11-04T18:53:12.739Z",
+      "type": "task_added",
+      "message": "S32.4 added: Focus card under the sky, then the day as a timeline (Morning, Through the day, Evening, what's ahead)"
+    },
+    {
+      "time": "2026-11-04T18:53:12.706Z",
+      "type": "status",
+      "message": "S32.3 pending → awaiting_signoff"
+    },
+    {
+      "time": "2026-11-04T18:53:12.665Z",
+      "type": "task_added",
+      "message": "S32.3 added: Slim header pinned once the sky scrolls away"
+    },
+    {
+      "time": "2026-11-04T18:53:12.632Z",
+      "type": "status",
+      "message": "S32.2 pending → awaiting_signoff"
+    },
+    {
+      "time": "2026-11-04T18:53:12.591Z",
+      "type": "task_added",
+      "message": "S32.2 added: Ring: prep sessions before Quit Day; after it, fills to the next counted body change"
+    },
+    {
+      "time": "2026-11-04T18:53:12.556Z",
+      "type": "status",
+      "message": "S32.1 pending → awaiting_signoff"
+    },
+    {
+      "time": "2026-11-04T18:53:12.517Z",
+      "type": "task_added",
+      "message": "S32.1 added: Sky hero: week strip, greeting, why, ring with Xero by day and Glim at night"
+    },
+    {
+      "time": "2026-11-04T18:53:12.481Z",
+      "type": "signoff",
+      "message": "S32 mockups → signed_off"
+    },
+    {
+      "time": "2026-11-04T18:53:12.444Z",
+      "type": "mockup",
+      "message": "S32 mockup posted: Today redesign canvas, Final page"
+    },
+    {
+      "time": "2026-11-04T18:53:12.405Z",
+      "type": "section_added",
+      "message": "S32 added: Today redesign: the sky, the ring and the day path (Milan's sketch)"
+    },
     {
       "time": "2026-11-02T21:31:27.554Z",
       "type": "note",
