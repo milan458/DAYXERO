@@ -11,6 +11,9 @@ xcodebuild's automatic signing rejects our API key, so CI signs by hand:
            expires every unexpired build uploaded at or before T (ISO 8601 with a UTC offset, e.g.
            2026-11-02T14:30:00+05:30). Without --confirm it only lists them. Apple has no way to delete a build;
            expiring removes it from TestFlight for good.
+  version [N]
+           shows each App Store version and the build attached to it (App Store Connect's app icon comes from
+           that build). With N, attaches build N to the version that's still being prepared.
 
 Needs ASC_KEY_ID, ASC_ISSUER_ID and $RUNNER_TEMP/AuthKey_<id>.p8, plus pyjwt and cryptography.
 """
@@ -262,10 +265,42 @@ def expire(through, confirm):
         raise SystemExit(1)
 
 
+def version(number=None):
+    app = app_id()
+    res = call("GET", f"apps/{app}/appStoreVersions?include=build&limit=50"
+                      "&fields[appStoreVersions]=versionString,appStoreState,platform,build"
+                      "&fields[builds]=version,expired,uploadedDate")
+    builds_by_id = {b["id"]: b["attributes"] for b in res.get("included", [])}
+    editable = None
+    for v in res["data"]:
+        a = v["attributes"]
+        link = (v["relationships"]["build"].get("data") or {}).get("id")
+        b = builds_by_id.get(link)
+        shown = f"build {b['version']} (uploaded {b['uploadedDate']}, expired {b['expired']})" if b else "no build attached"
+        print(f"::notice title=App Store version {a['versionString']} ({a['platform']}, {a['appStoreState']})::{shown}")
+        if a["appStoreState"] in ("PREPARE_FOR_SUBMISSION", "DEVELOPER_REJECTED", "REJECTED", "METADATA_REJECTED") and editable is None:
+            editable = v
+    if not res["data"]:
+        print("::notice title=No App Store version::The app has no App Store version yet")
+    if not number:
+        return
+    if editable is None:
+        print("::error title=No editable version::No App Store version is being prepared, so no build can be attached")
+        raise SystemExit(1)
+    found = call("GET", f"builds?filter[app]={app}&filter[version]={number}&limit=1")["data"]
+    if not found:
+        print(f"::error title=No build {number}::App Store Connect has no build {number}")
+        raise SystemExit(1)
+    call("PATCH", f"appStoreVersions/{editable['id']}/relationships/build", {"data": {"type": "builds", "id": found[0]["id"]}})
+    print(f"::notice title=Attached build {number}::to App Store version {editable['attributes']['versionString']}")
+
+
 if __name__ == "__main__":
     commands = {"setup": setup, "cleanup": cleanup, "builds": builds, "next": next_build}
     if sys.argv[1] == "wait":
         wait(sys.argv[2])
+    elif sys.argv[1] == "version":
+        version(sys.argv[2] if len(sys.argv) > 2 else None)
     elif sys.argv[1] == "expire":
         expire(sys.argv[2], "--confirm" in sys.argv[3:])
     else:

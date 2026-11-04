@@ -24,6 +24,10 @@ on:
         description: "Really expire them. Off: only list the builds that would expire."
         type: boolean
         default: false
+      attach_build:
+        description: "Attach this build number to the App Store version being prepared, then stop (sets App Store Connect's app icon)."
+        type: string
+        default: ""
 
 permissions:
   contents: read
@@ -140,6 +144,15 @@ jobs:
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
         run: python3 scripts/ci/asc_signing.py builds
 
+      - name: App Store version
+        if: steps.keys.outputs.ready == 'true'
+        continue-on-error: ${{ inputs.attach_build == '' }}
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          BUILD: ${{ inputs.attach_build }}
+        run: python3 scripts/ci/asc_signing.py version $BUILD
+
       - name: Expire old builds
         if: steps.keys.outputs.ready == 'true' && inputs.expire_through != ''
         env:
@@ -149,11 +162,11 @@ jobs:
         run: python3 scripts/ci/asc_signing.py expire "$THROUGH" ${{ inputs.expire_confirm && '--confirm' || '' }}
 
       - name: Stop after the check
-        if: inputs.check_only || inputs.expire_through != ''
+        if: inputs.check_only || inputs.expire_through != '' || inputs.attach_build != ''
         run: exit 0
 
       - name: Build Release (unsigned)
-        if: steps.keys.outputs.ready != 'true' && inputs.expire_through == ''
+        if: steps.keys.outputs.ready != 'true' && inputs.expire_through == '' && inputs.attach_build == ''
         run: |
           set -o pipefail
           xcodebuild build -project DayXero.xcodeproj -scheme DayXero -configuration Release \
@@ -164,7 +177,7 @@ jobs:
       # The distribution certificate's .p12 lives in the Actions cache, encrypted with a password derived from the
       # App Store Connect key (fork pull requests can read caches but never get that secret).
       - name: Restore signing certificate
-        if: steps.keys.outputs.ready == 'true' && !inputs.check_only && inputs.expire_through == ''
+        if: steps.keys.outputs.ready == 'true' && !inputs.check_only && inputs.expire_through == '' && inputs.attach_build == ''
         uses: actions/cache/restore@v4
         with:
           path: ${{ runner.temp }}/dist-cache
@@ -172,7 +185,7 @@ jobs:
           restore-keys: dist-cert-v1-
 
       - name: Signing
-        if: steps.keys.outputs.ready == 'true' && !inputs.check_only && inputs.expire_through == ''
+        if: steps.keys.outputs.ready == 'true' && !inputs.check_only && inputs.expire_through == '' && inputs.attach_build == ''
         env:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
@@ -215,7 +228,7 @@ jobs:
           key: dist-cert-v1-${{ env.DX_NEW_CERT }}
 
       - name: Archive
-        if: steps.keys.outputs.ready == 'true' && !inputs.check_only && inputs.expire_through == ''
+        if: steps.keys.outputs.ready == 'true' && !inputs.check_only && inputs.expire_through == '' && inputs.attach_build == ''
         env:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
@@ -235,7 +248,7 @@ jobs:
             CURRENT_PROJECT_VERSION=$BUILD -quiet 2>&1 | tee release.log
 
       - name: Upload to TestFlight
-        if: steps.keys.outputs.ready == 'true' && !inputs.check_only && inputs.expire_through == ''
+        if: steps.keys.outputs.ready == 'true' && !inputs.check_only && inputs.expire_through == '' && inputs.attach_build == ''
         env:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
