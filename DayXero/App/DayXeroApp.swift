@@ -79,10 +79,17 @@ struct RootView: View {
     /// Onboarding saves the profile before its last screen (reminders). This keeps that screen up until it's done,
     /// instead of the new profile swapping Home in underneath it.
     @State private var finishingOnboarding = false
+    /// The forest wordmark grows over whatever opens first, on a cold start only.
+    @State private var launching = LaunchGrowOverlay.shouldPlay
     private let motion = MotionPolicy()
 
     var body: some View {
         routed
+            .overlay {
+                if launching {
+                    LaunchGrowOverlay { launching = false }
+                }
+            }
             .preferredColorScheme(AppearanceSetting(rawValue: appearance)?.colorScheme)
             .environment(sos)
             .environment(log)
