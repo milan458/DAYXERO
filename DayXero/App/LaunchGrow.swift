@@ -193,12 +193,13 @@ struct ForestLeaf {
     ]
 
     /// Nearest the split in the trunk (50, 56) pops first. Dark leaves, then the lighter layer, then highlights.
+    /// Each layer spreads over its own reach, so the farthest highlight still lands by 1.58 s.
     static let all: [ForestLeaf] = {
         func distance(_ x: CGFloat, _ y: CGFloat) -> Double { Double(hypot(x - 50, y - 56)) }
-        let far = dark.map { distance($0.0, $0.1) }.max() ?? 1
         func make(_ list: [(CGFloat, CGFloat, CGFloat)], _ layer: Layer, base: Double, spread: Double,
                   duration: Double, overshoot: CGFloat) -> [ForestLeaf] {
-            list.map { x, y, r in
+            let far = list.map { distance($0.0, $0.1) }.max() ?? 1
+            return list.map { x, y, r in
                 ForestLeaf(layer: layer, x: x, y: y, r: r, start: base + spread * distance(x, y) / far,
                            duration: duration, overshoot: overshoot)
             }
