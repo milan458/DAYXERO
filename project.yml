@@ -74,7 +74,9 @@ targets:
         # XcodeGen writes a literal 1 otherwise; CI sets CURRENT_PROJECT_VERSION per upload.
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         CFBundleShortVersionString: $(MARKETING_VERSION)
-        UILaunchScreen: {}
+        # Paper, the same colour the opening animation starts on (LaunchGrow.swift).
+        UILaunchScreen:
+          UIColorName: LaunchPaper
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         NSSupportsLiveActivities: true
         CFBundleURLTypes:
