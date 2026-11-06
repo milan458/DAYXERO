@@ -81,12 +81,13 @@ jobs:
         run: |
           xcrun simctl list runtimes
           UDID=$(xcrun simctl list devices available -j | python3 -c '
-          import json, os, sys
+          import json, os, re, sys
           d = json.load(sys.stdin)["devices"]
           want = os.environ["DEVICES"].split(",")
           major = os.environ["RUNTIME"]
-          key = lambda k: [int(x) for x in k.split("iOS-")[1].split("-")]
-          rts = sorted([k for k in d if "iOS-" in k], key=key, reverse=True)
+          # Newer images add suffixes to runtime keys (iOS-27-1-iPhone19); read only the version numbers.
+          key = lambda k: [int(x) for x in re.match(r"[0-9]+(?:-[0-9]+)*", k.split("iOS-")[1]).group().split("-")]
+          rts = sorted([k for k in d if re.search(r"iOS-[0-9]", k)], key=key, reverse=True)
           if major != "newest":
               rts = [k for k in rts if key(k)[0] == int(major)]
           for name in want:

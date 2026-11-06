@@ -59,9 +59,11 @@ jobs:
           # iPhone 17 keeps the screenshots comparable between runs. The newest runtime only has
           # iPhone Duo, which gets its own job below.
           UDID=$(xcrun simctl list devices available -j | python3 -c '
-          import json, sys
+          import json, re, sys
           d = json.load(sys.stdin)["devices"]
-          rt = sorted([k for k in d if "iOS" in k], key=lambda k: [int(x) for x in k.split("iOS-")[1].split("-")])
+          # Runtime keys end in a version (iOS-27-1); newer images add suffixes (iOS-27-1-iPhone19), so read only the numbers.
+          ver = lambda k: [int(x) for x in re.match(r"[0-9]+(?:-[0-9]+)*", k.split("iOS-")[1]).group().split("-")]
+          rt = sorted([k for k in d if re.search(r"iOS-[0-9]", k)], key=ver)
           phones = [dev for k in reversed(rt) for dev in d[k] if dev["name"].startswith("iPhone") and "Duo" not in dev["name"]]
           pick = next((p for p in phones if p["name"] == "iPhone 17"), phones[0] if phones else None)
           if pick: print(pick["udid"])
