@@ -46,6 +46,9 @@ All the old session keys stay, with these values:
 - `intro`: optional one line shown under the title before the card starts.
 - `before` / `beats`: lists of ordinary beats (see below), shown before / after the card's main view. A `try` or `breathe` card has its content only in `beats` (at least one). Listen, reveal and myth may add beats after (Day Xero's hold, Prep 7's hold).
 - `canSaveForLater` + `laterTakes`: only P3.3 (`"canSaveForLater": true, "laterTakes": ["P3.4"]`).
+- `opensAt`: an evening card's opening hour, local time (`18`). It stays open after midnight until the day ends.
+- `showCount` (reveal): show this many cards, the ones whose `trigger` is one of the person's onboarding triggers first.
+- A mission's `followUpTimes`: the follow-up comes back after each logged use, up to this many times; every run's answers are kept as `<saveAs>_<run>`.
 
 ### Listen
 
@@ -57,7 +60,7 @@ All the old session keys stay, with these values:
 "cards": [ { "front": "Why does the first one feel so good?", "answer": "…", "deeper": "…", "keep": "…", "source": "Benowitz, NEJM 2010" } ]
 ```
 
-4 to 6 cards, each `front`, `answer`, `deeper` (the "Go deeper" text), optional `keep` ("Keep in mind" line) and optional `source` (short form, no "Source:" prefix).
+4 to 6 cards, each `front`, `answer`, `deeper` (the "Go deeper" text), optional `keep` ("Keep in mind" line), optional `source` (short form, no "Source:" prefix) and optional `trigger` (an onboarding trigger id, for `showCount`).
 
 ### Myth or fact
 
@@ -83,12 +86,17 @@ Only `beats`, built from the app's existing beat kinds. Read `DayXeroCore/Resour
 | `checklist` | tick items | `title`, `items` (list, or object by product), `saveAs`, `carryOverFrom` |
 | `plan_builder` | if-then plan | see P1–W1 examples (`prompt`, `fields`, `suggestions`, `saveAs`) |
 | `plan_card` | show a saved plan | see examples |
-| `breathe` | guided breathing | `pattern` (`box`, `478`, `wave` or `sigh` only), `cycles`, `label` |
+| `breathe` | guided breathing | `pattern` (`box`, `478`, `wave`, `sigh` or `slow`, which is 4 in, 6 out), `cycles`, `label` |
 | `commit` | press-and-hold | `text`, `holdSeconds`, `sets` (only `quit_timestamp`, `dayxero_ready`, `graduated_at`) |
 | `nrt_choice` | the NRT set-up choice | copy the existing P6.3 beat exactly |
 | `share` | the support message | copy the existing P6.4 beat |
 | `tap_reveal` | flip cards | `cards` [{front, back}] |
 | `stat_reveal` | lines with numbers | `lines` |
+| `body_map` | where a feeling sits, on a figure | `prompt`, `options` (ids `head`, `mouth`, `throat`, `chest`, `stomach`, `hands`, `legs` sit on the figure; others show as chips), `saveAs` (a list) |
+| `scale` | a 0–10 dial | `prompt`, `minLabel`, `maxLabel`, `saveAs` (a number), `compareWith`, `feedback` |
+| `timed_hold` | hold a picture in mind | `title`, `body`, `holdSeconds`, `feedback` |
+| `sos_practice` | a practice run of Craving SOS (saves nothing) | `title`, `body`, `label`, `optional` |
+| `per_item` | the same questions for each item of a saved list | `optionsFrom` (the list), `questions` [{id, prompt (may say `{item}`), options, multi}], `saveAs` (one line per item) |
 
 Rules: keep existing `saveAs` keys where the day file says so (reasons, primary_reason, morning_anchor, first_use_automatic, mindful_expected, tension_before/after, urge_signals, friction_checklist, quit_kit_checklist, nrt_plan via nrt_choice, note_to_dayxero, clearout_checklist…). A beat may only read (`optionsFrom`, `prefillFrom`, `textFrom`, `compareWith`, `carryOverFrom`…) a key that an earlier beat (in this or an earlier session, in order) saves, or `reasons` / `primary_reason`. When the day file asks for a UI piece that doesn't exist (body map, 0–10 stepper, timed hold, repeating sheet), use the closest kind (a multi `choice`, a `slider`, an `info` screen) and list the substitution in the session's notes file.
 

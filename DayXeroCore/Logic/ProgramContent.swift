@@ -146,6 +146,8 @@ public struct ProgramContent: Decodable, Sendable {
         public let logType: LogType?
         /// Shown as a short sheet the first time the person logs `logType` after the session (P3).
         public let followUp: [Beat]?
+        /// Program v3: how many times the follow-up comes back, one per logged use (Prep 1's three check-ins).
+        public let followUpTimes: Int?
 
         public enum LogType: String, Decodable, Sendable {
             case use
@@ -231,6 +233,10 @@ public struct Beat: Decodable, Sendable, Identifiable {
         case .checklist, .scenario, .sliderGroup, .nrtStepdown: 20
         case .reflect, .planBuilder: 30
         case .slipDebriefPractice: 60
+        case .scale, .bodyMap: 15
+        case .timedHold: (holdSeconds ?? 15) + 5
+        case .sosPractice: 90
+        case .perItem: 25 * max(questions?.count ?? 1, 1)
         }
     }
 
@@ -243,6 +249,17 @@ public struct Beat: Decodable, Sendable, Identifiable {
         case nrtStepdown = "nrt_stepdown"
         case slipDebriefPractice = "slip_debrief_practice"
         case planCard = "plan_card"
+        // Program v3 (second build).
+        /// Tap where a feeling sits on a simple body; saves the places as a list.
+        case bodyMap = "body_map"
+        /// A 0–10 dial with a big number; saves a number like a slider, and can compare with an earlier one.
+        case scale
+        /// Hold a picture in mind for `holdSeconds`, with a ring counting down, before going on.
+        case timedHold = "timed_hold"
+        /// A practice run of Craving SOS that saves nothing (Day Xero).
+        case sosPractice = "sos_practice"
+        /// The same questions for each item of a saved list (`optionsFrom`), one screen per item.
+        case perItem = "per_item"
     }
 
     public enum Position: String, Decodable, Sendable {
@@ -273,6 +290,15 @@ public struct Beat: Decodable, Sendable, Identifiable {
         public let back: String?
         /// Shows a saved answer instead of fixed text. The card is hidden while that answer is empty.
         public let backFrom: String?
+    }
+
+    /// One question of a `per_item` beat, asked about each item in turn.
+    public struct Question: Decodable, Sendable {
+        public let id: String
+        /// May say `{item}`: "When does {item} usually happen?"
+        public let prompt: Varied<String>
+        public let options: Varied<[Option]>
+        public let multi: Bool?
     }
 
     public struct SliderItem: Decodable, Sendable, Equatable {
@@ -310,6 +336,8 @@ public struct Beat: Decodable, Sendable, Identifiable {
     /// checklist's items (`items` in the file).
     public let checklist: Varied<[String]>?
     public let cards: [Card]?
+    /// For `per_item`: the questions asked about each item.
+    public let questions: [Question]?
 
     public let saveAs: String?
     public let correctId: String?
@@ -352,7 +380,7 @@ public struct Beat: Decodable, Sendable, Identifiable {
 
     enum CodingKeys: String, CodingKey {
         case id, type, position, optional, showIf, prompt, title, text, body, label, feedback, footer, placeholder
-        case minLabel, maxLabel, safetyText, intro, outro, prefill, lines, options, items, cards
+        case minLabel, maxLabel, safetyText, intro, outro, prefill, lines, options, items, cards, questions
         case saveAs, correctId, optionsFrom, prefillFrom, textFrom, highlightFrom, compareWith, compareLabels
         case carryOverFrom, quoteFrom, cardType, link, pattern, sets, fields, chips, guidePrompts, suggestions
         case multi, allowOther, skipIfEmpty, editable, pick, maxEntries, cycles, holdSeconds, length
@@ -390,6 +418,7 @@ public struct Beat: Decodable, Sendable, Identifiable {
             checklist = try c.decodeIfPresent(Varied<[String]>.self, forKey: .items)
         }
         cards = try c.decodeIfPresent([Card].self, forKey: .cards)
+        questions = try c.decodeIfPresent([Question].self, forKey: .questions)
         saveAs = try c.decodeIfPresent(String.self, forKey: .saveAs)
         correctId = try c.decodeIfPresent(String.self, forKey: .correctId)
         optionsFrom = try c.decodeIfPresent(String.self, forKey: .optionsFrom)
@@ -449,6 +478,8 @@ public struct ProgramPlaceholders: Sendable {
     public static let known: Set<String> = [
         "unit_singular", "unit_plural", "daily_units", "yearly_units", "currency", "yearly_cost", "quit_date",
         "primary_reason", "days_free", "money_kept", "cravings_ridden", "product", "product_plural",
+        // Only inside a `per_item` beat, which fills it with the item it's asking about.
+        "item",
     ]
 
     public var values: [String: String]
@@ -595,6 +626,21 @@ extension ProgramContent {
                             problems.append("\(place) quiz answer isn't one of its options")
                         }
                     }
+                }
+                switch beat.type {
+                case .perItem:
+                    if beat.optionsFrom == nil { problems.append("\(place) asks about each item but names no list") }
+                    if beat.questions?.isEmpty ?? true { problems.append("\(place) asks about each item but has no questions") }
+                    for (i, question) in (beat.questions ?? []).enumerated() {
+                        checkText(question.prompt, "\(place).questions[\(i)]")
+                        check(question.options, "\(place).questions[\(i)].options")
+                    }
+                case .scale, .bodyMap:
+                    if beat.saveAs == nil { problems.append("\(place) saves nothing") }
+                case .timedHold:
+                    if (beat.holdSeconds ?? 0) <= 0 { problems.append("\(place) holds for no time") }
+                default:
+                    break
                 }
                 if beat.type == .breathe, beat.pattern.map({ !patterns.contains($0) }) ?? true {
                     problems.append("\(place) breathes a pattern the orb doesn't have")

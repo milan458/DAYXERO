@@ -60,12 +60,15 @@ struct MissionPrompts: ViewModifier {
         // Dropped quietly once the next session has been opened.
         if let next = content.session(after: session.id), store.record(next.id) != nil { return }
         switch (type, afterSOS) {
-        case (.mindfulUse, false):
+        case (.mindfulUse, false), (.use, false):
+            // P3's follow-up once; Prep 1's check-in up to three times, one per logged use (program v3).
+            guard mission.followUp?.isEmpty == false else { break }
             let sessionId = latest.sessionId
             var descriptor = FetchDescriptor<MissionRecord>(predicate: #Predicate { $0.sessionId == sessionId })
             descriptor.fetchLimit = 1
             let record = try? context.fetch(descriptor).first
-            if record?.followUpCompletedAt == nil, mission.followUp?.isEmpty == false { prompt = .followUp(session.id) }
+            let done = FollowUpSheet.runsDone(store: store, sessionId: sessionId, completed: record?.followUpCompletedAt != nil)
+            if done < max(mission.followUpTimes ?? 1, 1) { prompt = .followUp(session.id) }
         case (.morningBuffer, false):
             // About the first one of the day only.
             let clock = store.clock
@@ -93,7 +96,7 @@ struct FollowUpSheet: View {
         let store = ProgramStore(context: context, profile: profile)
         VStack(alignment: .leading, spacing: DX.Space.s) {
             if let session = store.content?.session(sessionId), let beats = session.mission?.followUp, beats.indices.contains(index) {
-                Text("\(session.label) mission · \(index + 1) of \(beats.count)").v4Text(.micro).foregroundStyle(Read4.accent)
+                Text(verbatim: header(session, store: store, step: index, of: beats.count)).v4Text(.micro).foregroundStyle(Read4.accent)
                     .padding(.top, DX.Space.l)
                 // The mission in one line, so the sheet makes sense on its own (S27.14).
                 if let mission = session.mission {
@@ -112,12 +115,47 @@ struct FollowUpSheet: View {
         .background(Read4.background.ignoresSafeArea())
     }
 
+    /// "Prep 1 mission · Check-in 2 of 3 · 1 of 3" for a follow-up that comes back; "Prep 3 mission · 1 of 2" otherwise.
+    private func header(_ session: ProgramContent.Session, store: ProgramStore, step: Int, of steps: Int) -> String {
+        let times = session.mission?.followUpTimes ?? 1
+        let base = String(localized: "\(session.label) mission")
+        guard times > 1 else { return "\(base) · \(step + 1) of \(steps)".uppercased() }
+        let run = min(Self.runsDone(store: store, sessionId: session.id, completed: false) + 1, times)
+        return String(localized: "\(base) · Check-in \(run) of \(times) · \(step + 1) of \(steps)").uppercased()
+    }
+
+    /// The answer that counts finished runs of a follow-up that comes back.
+    static func runsKey(_ sessionId: String) -> String { "\(sessionId).followups" }
+
+    /// Runs finished so far: the saved count, or one for a follow-up finished before counts were kept.
+    static func runsDone(store: ProgramStore, sessionId: String, completed: Bool) -> Int {
+        if case let .number(n)? = store.answer(runsKey(sessionId)) { return n }
+        return completed ? 1 : 0
+    }
+
     private func missionLine(_ mission: ProgramContent.Mission, store: ProgramStore) -> String {
         store.placeholders().fillDropping(mission.text.resolve(store.variant) ?? "")
     }
 
     private func finish(_ store: ProgramStore) {
         let sessionId = sessionId
+        // A follow-up that comes back keeps every run: each answer is copied to `<key>_<run>` before the next run
+        // overwrites it (Prep 1's check-ins: gap_checkin_rating_1, _2, _3).
+        let session = store.content?.session(sessionId)
+        let times = session?.mission?.followUpTimes ?? 1
+        let run = Self.runsDone(store: store, sessionId: sessionId, completed: false) + 1
+        if times > 1 {
+            for beat in session?.mission?.followUp ?? [] {
+                guard let key = beat.saveAs, let value = store.answer(key) else { continue }
+                store.save("\(key)_\(run)", value, session: sessionId)
+            }
+        }
+        store.save(Self.runsKey(sessionId), .number(run), session: sessionId)
+        guard run >= times else {
+            Analytics.track(.programMissionFollowupDone(sessionId: sessionId))
+            onDone()
+            return
+        }
         var descriptor = FetchDescriptor<MissionRecord>(predicate: #Predicate { $0.sessionId == sessionId })
         descriptor.fetchLimit = 1
         let record = (try? context.fetch(descriptor).first) ?? {

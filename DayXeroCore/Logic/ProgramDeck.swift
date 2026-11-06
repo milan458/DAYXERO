@@ -33,6 +33,10 @@ public struct DeckCard: Decodable, Sendable, Identifiable {
     /// P3's guided use: the person may save it for later, and `laterTakes` wait with it.
     public let canSaveForLater: Bool
     public let laterTakes: [String]
+    /// A reveal shows this many of its cards, the person's own triggers first (Prep 2); nil shows them all.
+    public let showCount: Int?
+    /// An evening card opens at this hour, local time (18 for 6 pm); nil is open all day.
+    public let opensAt: Int?
 
     public struct Script: Decodable, Sendable {
         public let voice: String?
@@ -52,6 +56,8 @@ public struct DeckCard: Decodable, Sendable, Identifiable {
         public let deeper: Varied<String>
         public let keep: Varied<String>?
         public let source: Varied<String>?
+        /// The onboarding trigger this card is about (`coffee`, `meals`…), so the person's own come first.
+        public let trigger: String?
     }
 
     public struct Statement: Decodable, Sendable {
@@ -66,7 +72,7 @@ public struct DeckCard: Decodable, Sendable, Identifiable {
 
     enum CodingKeys: String, CodingKey {
         case id, format, title, minutes, ground, commit, intro, after, script, cards, statements, before, beats
-        case canSaveForLater, laterTakes
+        case canSaveForLater, laterTakes, showCount, opensAt
     }
 
     public init(from decoder: Decoder) throws {
@@ -86,6 +92,29 @@ public struct DeckCard: Decodable, Sendable, Identifiable {
         beats = try c.decodeIfPresent([Beat].self, forKey: .beats) ?? []
         canSaveForLater = try c.decodeIfPresent(Bool.self, forKey: .canSaveForLater) ?? false
         laterTakes = try c.decodeIfPresent([String].self, forKey: .laterTakes) ?? []
+        showCount = try c.decodeIfPresent(Int.self, forKey: .showCount)
+        opensAt = try c.decodeIfPresent(Int.self, forKey: .opensAt)
+    }
+
+    /// The reveal cards to show: the ones about the person's own triggers first, in the file's order, then the rest,
+    /// cut to `showCount`.
+    public func reveals(forTriggers triggers: [String]) -> [Reveal] {
+        let all = cards ?? []
+        let isMine = { (card: Reveal) -> Bool in
+            guard let trigger = card.trigger else { return false }
+            return triggers.contains(trigger)
+        }
+        let mine = all.filter(isMine)
+        let rest = all.filter { !isMine($0) }
+        let ordered = mine + rest
+        return showCount.map { Array(ordered.prefix($0)) } ?? ordered
+    }
+
+    /// Whether an evening card is open at `hour` (0–23, local). After midnight it stays open until the day ends at
+    /// `boundaryHour`, so a night owl's evening isn't cut off.
+    public func isOpen(hour: Int, boundaryHour: Int) -> Bool {
+        guard let opensAt else { return true }
+        return hour >= opensAt || hour < boundaryHour
     }
 
     /// Whether the card has a screen of its own before its beats. Activities open on a short card intro too.
@@ -218,6 +247,9 @@ extension ProgramContent {
                 }
             case .reveal:
                 if !(4...6).contains(card.cards?.count ?? 0) { problems.append("\(place) needs 4 to 6 cards to reveal") }
+                if let show = card.showCount, !(1...(card.cards?.count ?? 0)).contains(show) {
+                    problems.append("\(place) shows more cards than it has")
+                }
             case .myth:
                 if (card.statements?.count ?? 0) != 5 { problems.append("\(place) needs 5 statements") }
                 for (i, statement) in (card.statements ?? []).enumerated() {
@@ -228,6 +260,7 @@ extension ProgramContent {
             case .activity, .breathe:
                 if card.beats.isEmpty { problems.append("\(place) is an activity with no beats") }
             }
+            if let hour = card.opensAt, !(0...23).contains(hour) { problems.append("\(place) opens at an hour that doesn't exist") }
             for later in card.laterTakes where !deck.contains(where: { $0.id == later }) {
                 problems.append("\(place) holds back \(later), which isn't a card of this day")
             }

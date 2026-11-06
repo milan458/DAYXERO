@@ -292,6 +292,47 @@
       }
     },
     {
+      "id": "slow",
+      "name": "Slow breathing",
+      "counts": "4·6",
+      "subtitle": "In for 4, out for 6, like Craving SOS",
+      "recommendedCycles": 6,
+      "phases": {
+        "Inhale": 4,
+        "Hold": 0,
+        "Exhale": 6,
+        "Rest": 0
+      },
+      "scaleTargets": {
+        "Inhale": 1.14,
+        "Hold": 1.14,
+        "Exhale": 0.84,
+        "Rest": 0.84
+      },
+      "haptics": {
+        "Inhale": {
+          "intensityStart": 0.25,
+          "intensityEnd": 0.75,
+          "sharpness": 0.3
+        },
+        "Hold": {
+          "intensityStart": 0.4,
+          "intensityEnd": 0.4,
+          "sharpness": 0.25
+        },
+        "Exhale": {
+          "intensityStart": 0.75,
+          "intensityEnd": 0.2,
+          "sharpness": 0.15
+        },
+        "Rest": {
+          "intensityStart": 0.1,
+          "intensityEnd": 0.1,
+          "sharpness": 0.1
+        }
+      }
+    },
+    {
       "id": "sigh",
       "name": "Physiological sigh",
       "counts": "2·1·6",

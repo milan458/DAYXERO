@@ -142,4 +142,96 @@ struct ProgramDeckTests {
         #expect(SessionFlowView.canGoBack(from: 4, in: steps, beats: dx.everyBeat))
         #expect(SessionFlowView.canGoBack(from: 1, in: steps, beats: dx.everyBeat))
     }
+
+    // MARK: Second build
+
+    /// Prep 2 shows four of its six trigger cards, the person's own (from onboarding) first.
+    @Test func prepTwoShowsYourOwnTriggersFirst() throws {
+        let p2 = try #require(try content().session("P2"))
+        let reveal = try #require(p2.deck?.first { $0.format == .reveal })
+        #expect(reveal.showCount == 4)
+        let mine = reveal.reveals(forTriggers: ["stress", "driving"])
+        #expect(mine.count == 4)
+        #expect(mine.prefix(2).compactMap(\.trigger) == ["driving", "stress"])
+        #expect(reveal.reveals(forTriggers: []).compactMap(\.trigger) == ["coffee", "meals", "phone", "driving"])
+    }
+
+    /// Evening cards open at 6 pm and stay open after midnight until the day ends.
+    @Test func eveningCardsOpenAtSix() throws {
+        let program = try content()
+        for id in ["P1.5", "P2.5", "P5.5", "P7.5", "DX.5"] {
+            let session = try #require(program.session(String(id.prefix(while: { $0 != "." }))))
+            #expect(session.deck?.first { $0.id == id }?.opensAt == 18, "\(id)")
+        }
+        let evening = try #require(program.session("P1")?.deck?.last)
+        #expect(!evening.isOpen(hour: 17, boundaryHour: 4))
+        #expect(evening.isOpen(hour: 18, boundaryHour: 4))
+        #expect(evening.isOpen(hour: 2, boundaryHour: 4))
+        #expect(!evening.isOpen(hour: 4, boundaryHour: 4))
+        let morning = try #require(program.session("P1")?.deck?.first)
+        #expect(morning.isOpen(hour: 7, boundaryHour: 4))
+    }
+
+    /// Prep 1's check-in comes back after three uses.
+    @Test func prepOnesCheckInComesBackThreeTimes() throws {
+        let p1 = try #require(try content().session("P1"))
+        #expect(p1.mission?.followUpTimes == 3)
+        #expect(p1.mission?.logType == .use)
+        #expect(p1.mission?.followUp?.contains { $0.saveAs == "gap_checkin_rating" } == true)
+    }
+
+    /// The control test uses the hold, the body map and the dials; Prep 2 maps each trigger; Day Xero breathes 4 in,
+    /// 6 out and practises Craving SOS.
+    @Test func theNewActivitiesAreInTheContent() throws {
+        let program = try content()
+        let control = try #require(program.session("P5")?.deck?.first { $0.id == "P5.3" })
+        let kinds = control.beats.map(\.type)
+        #expect(kinds.contains(.timedHold) && kinds.contains(.bodyMap))
+        #expect(kinds.filter { $0 == .scale }.count == 2)
+        #expect(control.beats.first { $0.type == .bodyMap }?.saveAs == "urge_signals")
+        #expect(control.beats.last { $0.type == .scale }?.compareWith == "control_before")
+
+        let map = try #require(program.session("P2")?.everyBeat.first { $0.type == .perItem })
+        #expect(map.optionsFrom == "autopilot_triggers")
+        #expect(map.questions?.map(\.id) == ["when", "where", "feeling"])
+        #expect(map.questions?.first?.prompt.resolve(.smoking)?.contains("{item}") == true)
+
+        let dx = try #require(program.session("DX"))
+        #expect(dx.everyBeat.contains { $0.type == .breathe && $0.pattern == "slow" })
+        #expect(dx.everyBeat.contains { $0.type == .sosPractice })
+    }
+
+    @Test func theCheckerKnowsTheNewActivities() throws {
+        let broken = """
+        {"version": "x", "contentStatus": "draft",
+         "audio": {"folder": "a", "fileName": "vo_{sessionId}_{variant}.m4a", "transcriptFileName": "tx.json"},
+         "phases": [{"id": "w1", "title": "W", "subtitle": "", "sessionIds": ["W1"]}],
+         "sessions": [
+          {"id": "W1", "phaseId": "w1", "label": "Day 1", "title": "T", "subtitle": "", "durationMinutes": 5,
+           "unlock": {"rule": "first"}, "audio": {"variants": ["default"]},
+           "cards": [{"front": "a", "back": "b"}, {"front": "a", "back": "b"}, {"front": "a", "back": "b"}],
+           "beats": [
+            {"id": "X1", "type": "per_item", "questions": []},
+            {"id": "X2", "type": "scale", "prompt": "How strong?"},
+            {"id": "X3", "type": "timed_hold", "title": "Hold"},
+            {"id": "X4", "type": "body_map", "prompt": "Where?"}
+           ],
+           "completionText": "Done"}
+         ],
+         "sosTracks": []}
+        """
+        let problems = try ProgramContent(data: Data(broken.utf8)).problems(patterns: ["box"]).joined(separator: "\n")
+        #expect(problems.contains("X1 asks about each item but names no list"))
+        #expect(problems.contains("X1 asks about each item but has no questions"))
+        #expect(problems.contains("X2 saves nothing"))
+        #expect(problems.contains("X3 holds for no time"))
+        #expect(problems.contains("X4 saves nothing"))
+    }
+
+    /// A practice run never shows as a real session's outcome screens; its own end screen exists for both answers.
+    @MainActor @Test func sosPracticeHasItsOwnEnds() {
+        #expect(CravingSOSView.Stage(rawValue: "practicePassed") == .practicePassed)
+        #expect(CravingSOSView.Stage(rawValue: "practiceSlipped") == .practiceSlipped)
+    }
 }
+

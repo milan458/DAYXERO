@@ -11,11 +11,11 @@ ORDER = ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "DX"]
 PRODUCTS = ["smoking", "vaping", "pouches"]
 VARIED_KEYS = {"default", "smoking", "vaping", "pouches", "nrt"}
 KNOWN = {"unit_singular", "unit_plural", "daily_units", "yearly_units", "currency", "yearly_cost", "quit_date",
-         "primary_reason", "days_free", "money_kept", "cravings_ridden", "product", "product_plural"}
+         "primary_reason", "days_free", "money_kept", "cravings_ridden", "product", "product_plural", "item"}
 KINDS = {"stat_reveal", "quiz", "choice", "slider", "slider_group", "reflect", "tap_reveal", "plan_builder", "checklist",
          "breathe", "commit", "scenario", "note", "info", "share", "nrt_choice", "nrt_stepdown", "slip_debrief_practice",
-         "plan_card"}
-PATTERNS = {"box", "478", "wave", "sigh"}
+         "plan_card", "body_map", "scale", "timed_hold", "sos_practice", "per_item"}
+PATTERNS = {"box", "478", "wave", "sigh", "slow"}
 SETS = {"quit_timestamp", "dayxero_ready", "graduated_at"}
 LOGTYPES = {"use", "morning_buffer", "mindful_use", "stress_sigh", "surf_practice", "craving_outcome"}
 FORMATS = {"listen", "reveal", "myth", "try", "breathe"}
@@ -123,6 +123,19 @@ def check_beat(b, place, saved, ids):
     if kind == "commit":
         if not b.get("text"): problems.append(f"{p}: commit has no text")
         if b.get("sets") and b["sets"] not in SETS: problems.append(f"{p}: commit sets unknown key {b['sets']}")
+    if kind == "per_item":
+        if not b.get("optionsFrom"): problems.append(f"{p}: per_item names no list (optionsFrom)")
+        qs = b.get("questions") or []
+        if not qs: problems.append(f"{p}: per_item has no questions")
+        for qi, q in enumerate(qs):
+            check_text(q.get("prompt"), f"{p}.questions[{qi}].prompt")
+            for product in PRODUCTS:
+                o = resolve(q.get("options"), product)
+                if not isinstance(o, list) or not o: problems.append(f"{p}.questions[{qi}]: no options for {product}")
+    if kind in ("scale", "body_map") and not b.get("saveAs"):
+        problems.append(f"{p}: {kind} saves nothing")
+    if kind == "timed_hold" and not (b.get("holdSeconds") or 0) > 0:
+        problems.append(f"{p}: timed_hold holds for no time")
     if kind == "slider" and not b.get("saveAs"):
         problems.append(f"{p}: slider saves nothing")
     if kind == "checklist":
@@ -216,8 +229,10 @@ def check_session(s, saved, ids):
             problems.append(f"{place}: {fmt} card without beats")
         for b in card.get("beats", []) or []:
             check_beat(b, place, saved, ids)
-        if card.get("canSaveForLater") and not card.get("laterTakes"):
-            pass
+        if card.get("opensAt") is not None and not (isinstance(card["opensAt"], int) and 0 <= card["opensAt"] <= 23):
+            problems.append(f"{place}: opensAt must be an hour, 0 to 23")
+        if card.get("showCount") is not None and not (1 <= card["showCount"] <= len(card.get("cards") or [])):
+            problems.append(f"{place}: showCount is more than the cards it has")
     rec = s.get("recap") or {}
     learned = rec.get("learned") or []
     if len(learned) != 3:

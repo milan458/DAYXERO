@@ -177,15 +177,15 @@
         {
           "id": "DX.3d",
           "type": "breathe",
-          "pattern": "wave",
-          "cycles": 4,
-          "label": "Wave riding · slow in, slow out, like riding a wave"
+          "pattern": "slow",
+          "cycles": 6,
+          "label": "Slow breathing · in for 4, out for 6, like Craving SOS"
         },
         {
           "id": "DX.3e",
           "type": "info",
           "title": "Slow and steady.",
-          "body": "That's the one for when a wave is already here. Craving SOS breathes the same slow way, a little longer out than in: in for 4, out for 6."
+          "body": "That's the one for when a wave is already here. It's the same rhythm Craving SOS uses: a little longer out than in."
         },
         {
           "id": "DX.3f",
@@ -195,6 +195,14 @@
         },
         {
           "id": "DX.3g",
+          "type": "sos_practice",
+          "optional": true,
+          "title": "Try it once now",
+          "body": "A practice run of Craving SOS. Nothing is saved, nothing counts, and there doesn't need to be a craving. Breathe with it for as long as you like, then tap It passed or I slipped to see what each one does.",
+          "label": "Start a practice run"
+        },
+        {
+          "id": "DX.3h",
           "type": "info",
           "title": "Where to find it",
           "body": "Craving SOS is always in the bar at the bottom of the app. You can also add the Craving SOS widget to your Home Screen, so it's one tap away."
@@ -507,7 +515,8 @@
             "text": "[softly] Before you go, let's breathe together, just three times. [pause] In through your nose. [pause] And slowly out. [long pause] Again. In. [pause] And out. [long pause] One more. In. [pause] And all the way out. [long pause]\n\nOne day. Last night it was something you were getting ready for. Tonight it's something you've done. [pause] You didn't need to be perfect. You needed to keep coming back to the next choice. And you're still here, coming back.\n\nAnd if a thought shows up tonight, something like \"just one wouldn't hurt,\" you know what it is now. A thought, not an order. You can let it sit there and go to sleep anyway. [pause]\n\nThank yourself for today. Really. [pause] Sleep well. I'll see you tomorrow."
           }
         ]
-      }
+      },
+      "opensAt": 18
     }
   ],
   "recap": {

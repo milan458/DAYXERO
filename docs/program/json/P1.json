@@ -321,7 +321,8 @@
             "text": "For the rest of this evening, carry on as normal. If you use before bed, you might notice the gap one more time: the restless edge, and then the settling. Just notice it. There's nothing to fix.\n\nThen sleep. Tomorrow morning, you'll wake up after a long stretch without nicotine, which means you'll wake up in the gap. [pause] Don't change anything. Just notice the first one of the day, and what comes right before it. Tomorrow we'll look at why that one feels so strong, and how so many of them happen without you deciding at all.\n\nBefore you go, one more slow breath. In through your nose. [pause] And a long, easy breath out. [long pause]\n\nIf you'd like, play this morning's track again tomorrow, or any time. Hearing an idea twice helps it settle.\n\n[warmly] You've done your first day. You looked. That's the beginning of seeing it clearly. Sleep well."
           }
         ]
-      }
+      },
+      "opensAt": 18
     }
   ],
   "recap": {
@@ -393,7 +394,8 @@
         "saveAs": "gap_checkin_places",
         "feedback": "Go ahead as normal. Notice the settling."
       }
-    ]
+    ],
+    "followUpTimes": 3
   },
   "completionText": "First prep day done. You didn't have to change a thing. Just notice."
 }

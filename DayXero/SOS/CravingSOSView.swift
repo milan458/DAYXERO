@@ -10,10 +10,15 @@ struct CravingSOSView: View {
     /// nil before onboarding is finished; the session still works.
     let profile: UserProfile?
     let source: String
+    /// Program v3, Day Xero: a practice run before the first real craving. It logs nothing, starts no Live Activity,
+    /// never opens the slip talk-through and doesn't count as a wave ridden.
+    var practice = false
     let onClose: () -> Void
 
     enum Stage: String {
         case session, passed, slipped
+        /// Practice runs end here instead: nothing was saved.
+        case practicePassed, practiceSlipped
     }
 
     @Environment(\.modelContext) private var context
@@ -41,9 +46,10 @@ struct CravingSOSView: View {
     /// How long the Lock Screen and Dynamic Island stay fresh. The time ridden counts up, so this is no countdown.
     private static let liveActivitySeconds = 3600.0
 
-    init(profile: UserProfile?, source: String, onClose: @escaping () -> Void) {
+    init(profile: UserProfile?, source: String, practice: Bool = false, onClose: @escaping () -> Void) {
         self.profile = profile
         self.source = source
+        self.practice = practice
         self.onClose = onClose
         var start = Date.now
         #if DEBUG
@@ -69,15 +75,17 @@ struct CravingSOSView: View {
             case .passed: PassedView(profile: profile, startedAt: startedAt, endedAt: endedAt ?? .now,
                                      ridden: ridden, menu: menu, onDone: close)
             case .slipped: slippedView
+            case .practicePassed: SOSPracticeEnd(passed: true, onDone: onClose)
+            case .practiceSlipped: SOSPracticeEnd(passed: false, onDone: onClose)
             }
         }
         .onAppear(perform: begin)
         .onDisappear {
-            if ended { NotificationCenter.default.post(name: .dxSOSEnded, object: nil) }
+            if ended, !practice { NotificationCenter.default.post(name: .dxSOSEnded, object: nil) }
         }
         .onChange(of: scenePhase) { _, phase in
             // "It passed" on the Lock Screen already saved the craving; show the same screen as in the app.
-            if phase == .active, SOSState.consumeFinishedOutside() == .passed, stage == .session {
+            if !practice, phase == .active, SOSState.consumeFinishedOutside() == .passed, stage == .session {
                 endedAt = .now
                 ended = true
                 stage = .passed
@@ -158,6 +166,14 @@ struct CravingSOSView: View {
 
     private var topBar: some View {
         HStack {
+            if practice {
+                Text("Practice run · nothing is saved")
+                    .dxFont(13, weight: 700, style: .footnote)
+                    .foregroundStyle(SOSColors.ocean.background)
+                    .padding(.horizontal, 12).padding(.vertical, 7)
+                    .background(SOSColors.cream, in: Capsule())
+                    .accessibilityIdentifier("sos.practice")
+            }
             HandOverChip(String(localized: "Xero passed you to Jelli")) {
                 // The chip's avatar slot is 28 pt; draw Xero at that size so nothing spills.
                 XeroView(mood: .calm, stage: 1, points: 28, animate: false)
@@ -312,6 +328,10 @@ struct CravingSOSView: View {
     private func begin() {
         guard !began else { return }
         began = true
+        if practice {
+            withAnimation(motion.animation(DX.Move.settle.delay(0.2))) { jelliIn = true }
+            return
+        }
         _ = SOSState.consumeFinishedOutside()
         SOSState.startedAt = startedAt
         Task { await SOSLiveActivity.start(startedAt: startedAt, endsAt: startedAt.addingTimeInterval(Self.liveActivitySeconds)) }
@@ -331,6 +351,15 @@ struct CravingSOSView: View {
     }
 
     private func finish(_ outcome: CravingOutcome) {
+        if practice {
+            // A practice run saves nothing and opens nothing; it only shows what would happen.
+            switch outcome {
+            case .passed: stage = .practicePassed; celebrate.toggle()
+            case .slipped: stage = .practiceSlipped
+            case .closed, .pingedFriend: onClose()
+            }
+            return
+        }
         let end = Date.now
         CravingLog.record(outcome, startedAt: startedAt, endedAt: end, in: context)
         SOSState.startedAt = nil
@@ -543,5 +572,42 @@ private struct QuietLink: ButtonStyle {
             .frame(minHeight: DX.Layout.touchTarget)
             .contentShape(Rectangle())
             .opacity(configuration.isPressed ? 0.7 : 1)
+    }
+}
+
+
+/// The end of a practice run (program v3, Day Xero): what the real thing would do, and that nothing was saved.
+struct SOSPracticeEnd: View {
+    let passed: Bool
+    let onDone: () -> Void
+
+    private let ground = SOSColors.sky
+
+    var body: some View {
+        ZStack {
+            ground.background.ignoresSafeArea()
+            VStack(spacing: DX.Space.m) {
+                Spacer(minLength: 0)
+                JelliView(mood: passed ? .cheer : .calm, stage: 1, size: .scene)
+                    .accessibilityHidden(true)
+                Text(passed ? "That's the whole move." : "Nothing resets. Ever.")
+                    .dxType(.large).foregroundStyle(ground.ink)
+                    .multilineTextAlignment(.center)
+                    .accessibilityAddTraits(.isHeader)
+                Text(passed
+                     ? "In a real wave, \"It passed\" counts it as ridden out and asks what helped. This was practice, so nothing was saved."
+                     : "In a real wave, \"I slipped\" opens a short, kind talk-through and a plan for next time. Your days and milestones never change. This was practice, so nothing was saved.")
+                    .dxType(.body).foregroundStyle(ground.muted)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+                Spacer(minLength: 0)
+                Button("Back to Day Xero", action: onDone)
+                    .buttonStyle(.dx(.primary, on: .sky))
+                    .accessibilityIdentifier("sos.practice.done")
+            }
+            .padding(.horizontal, DX.Layout.gutter)
+            .padding(.bottom, DX.Space.xs)
+            .dxReadableColumn(avoidingFold: false)
+        }
     }
 }
