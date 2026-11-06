@@ -221,6 +221,11 @@ struct BeatScreen: View {
             case .nrtStepdown: NRTStepdownBeat(beat: beat, ctx: ctx, onDone: onDone)
             case .slipDebriefPractice: SlipPracticeBeat(beat: beat, ctx: ctx, onDone: onDone)
             case .planCard: PlanCardBeat(beat: beat, ctx: ctx, onDone: onDone)
+            case .bodyMap: BodyMapBeat(beat: beat, ctx: ctx, onDone: onDone)
+            case .scale: ScaleBeat(beat: beat, ctx: ctx, onDone: onDone)
+            case .timedHold: TimedHoldBeat(beat: beat, ctx: ctx, onDone: onDone)
+            case .sosPractice: SOSPracticeBeat(beat: beat, ctx: ctx, onDone: onDone)
+            case .perItem: PerItemBeat(beat: beat, ctx: ctx, onDone: onDone)
             }
         }
     }

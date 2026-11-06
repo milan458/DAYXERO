@@ -9,11 +9,20 @@ struct BioOrbTests {
     @Test func dataFileLoadsWithEverythingTheOrbDraws() {
         #expect(data.plasmaLayers.count == 4)
         #expect(data.geometry.vertices == 120)
-        #expect(Set(data.breathingPatterns.map(\.id)) == ["box", "478", "wave", "sigh"])
+        #expect(Set(data.breathingPatterns.map(\.id)) == ["box", "478", "wave", "sigh", "slow"])
         #expect(data.sos.sessionSeconds == 180)
         #expect(data.sos.defaultPattern == "wave")
         #expect(data.coachingLines.count == 3)
         for phase in BreathPhase.allCases { #expect(!data.scripts(phase).isEmpty) }
+    }
+
+    /// Program v3: Day Xero breathes 4 in, 6 out, the same rhythm as Craving SOS, from the data file.
+    @Test func slowBreathingIsFourInSixOut() {
+        let slow = data.pattern("slow")
+        #expect(slow.id == "slow")
+        #expect(slow.seconds(.inhale) == 4 && slow.seconds(.exhale) == 6)
+        #expect(slow.seconds(.hold) == 0 && slow.seconds(.rest) == 0)
+        #expect(slow.cycleSeconds == 10)
     }
 
     /// Craving SOS opens with three physiological sighs, about 30 seconds (CHAR-01).

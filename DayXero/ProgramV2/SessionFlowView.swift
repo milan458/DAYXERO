@@ -378,6 +378,7 @@ struct SessionFlowView: View {
             let order = session.playOrder(savedForLater: heldCards(session))
             DeckHandView(session: session, ctx: ctx, cards: order, played: playedCards(),
                          next: owners.indices.contains(resume) ? owners[resume] : nil,
+                         waitingUntil: owners.indices.contains(resume) ? opensLater(owners[resume], in: session) : nil,
                          onPlay: playFromHand, onClose: close)
         case let .card(id):
             if let place = deckPosition(id, in: session) {
@@ -387,8 +388,10 @@ struct SessionFlowView: View {
             }
         case let .played(id):
             if let place = deckPosition(id, in: session) {
+                let next = nextCard(after: id, in: session)
                 DeckCardPlayedView(card: place.card, position: place.position, total: place.total,
-                                   next: nextCard(after: id, in: session), ctx: ctx, onNext: advance, onLater: later)
+                                   next: next, nextOpensAt: opensLater(next?.id, in: session),
+                                   ctx: ctx, onNext: advance, onLater: later)
             }
         }
     }
@@ -398,6 +401,19 @@ struct SessionFlowView: View {
         let order = session.playOrder(savedForLater: heldCards(session))
         guard let i = order.firstIndex(where: { $0.id == id }) else { return nil }
         return (order[i], i + 1, order.count)
+    }
+
+    /// "6:00 PM" when this card is an evening card that hasn't opened yet; nil when it can be played now.
+    /// Replays never wait.
+    private func opensLater(_ id: String?, in session: ProgramContent.Session, now: Date = .now) -> String? {
+        guard !isReplay, let id, let card = session.deck?.first(where: { $0.id == id }), let hour = card.opensAt else { return nil }
+        #if DEBUG
+        if UserDefaults.standard.bool(forKey: "dx.deckOpenAll") { return nil }
+        #endif
+        let calendar = Calendar.current
+        guard !card.isOpen(hour: calendar.component(.hour, from: now), boundaryHour: profile.dayBoundaryHour) else { return nil }
+        let opens = calendar.date(bySettingHour: hour, minute: 0, second: 0, of: now) ?? now
+        return opens.formatted(date: .omitted, time: .shortened)
     }
 
     /// The card played after this one, nil after the last.

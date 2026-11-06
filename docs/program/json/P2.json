@@ -60,35 +60,42 @@
           "front": "Why does coffee feel unfinished without it?",
           "answer": "Because they've been paired thousands of times, often first thing, when the gap is widest. Your brain now treats the cup itself as the signal that nicotine is coming.",
           "deeper": "Coffee is usually one of the most repeated pairings there is: same time, same cup, same spot, every day. Each time, nicotine closed the gap while the coffee was in your hand, so the two got wired together. That's why coffee on its own can feel oddly incomplete. The good news is that pairings can be rewired. You don't have to give up coffee. Changing the setting helps: a different mug, a different chair, a short walk with it. So does a plan written as \"When I pour my coffee, I'll…\". If-then plans like that make follow-through more likely.",
-          "source": "Gollwitzer & Sheeran, 2006"
+          "source": "Gollwitzer & Sheeran, 2006",
+          "trigger": "coffee"
         },
         {
           "front": "Why does the one after a meal feel so necessary?",
           "answer": "A meal ends, you pause, and it's been a while since the last one. That full, settled feeling and the gap closing arrive together, so they've merged into one.",
-          "deeper": "The end of a meal is a natural full stop, and nicotine has filled that full stop for a long time. Because you've usually gone a while without while you ate, the gap is open too. So the relief of closing it lands right on top of the pleasant, full feeling of having eaten, and the two get credited to the {s: cigarette | v: vape | p: pouch}. People who don't use finish meals and feel full and done in exactly the same way. What helps is giving the meal a new full stop of your own: stand up, brush your teeth, make a tea, take a short walk."
+          "deeper": "The end of a meal is a natural full stop, and nicotine has filled that full stop for a long time. Because you've usually gone a while without while you ate, the gap is open too. So the relief of closing it lands right on top of the pleasant, full feeling of having eaten, and the two get credited to the {s: cigarette | v: vape | p: pouch}. People who don't use finish meals and feel full and done in exactly the same way. What helps is giving the meal a new full stop of your own: stand up, brush your teeth, make a tea, take a short walk.",
+          "trigger": "meals"
         },
         {
           "front": "Why do your phone and {product} go together?",
           "answer": "Both fill small, empty moments. Idle hands, idle mind, a scroll and a {s: smoke | v: hit | p: pouch}. They've shown up in the same moments so often that one now cues the other.",
-          "deeper": "Phones and nicotine both slot into the in-between bits of the day: waiting, winding down, a minute with nothing to do. {s: A smoke break often comes with a scroll. | v: A vape can be used while scrolling, almost without noticing. | p: A pouch can sit in while you scroll, almost without noticing.} Because both happen so often, the link builds quickly. Watch for the moment you pick up the phone and see if the urge arrives with it. Small changes help a lot: keep the {product} in a different room from where you scroll, or set the phone down for the first minute of a break."
+          "deeper": "Phones and nicotine both slot into the in-between bits of the day: waiting, winding down, a minute with nothing to do. {s: A smoke break often comes with a scroll. | v: A vape can be used while scrolling, almost without noticing. | p: A pouch can sit in while you scroll, almost without noticing.} Because both happen so often, the link builds quickly. Watch for the moment you pick up the phone and see if the urge arrives with it. Small changes help a lot: keep the {product} in a different room from where you scroll, or set the phone down for the first minute of a break.",
+          "trigger": "phone"
         },
         {
           "front": "Why does getting in the car make you reach for it?",
           "answer": "Hands busy, mind free, the same route at the same time. The car is a private, repeated space, so it's become one of the strongest places for the habit.",
-          "deeper": "Driving is the same few routes, the same times of day and the same seat, over and over. That makes it a perfect place for a cue to form. The car can also feel like your own space, where nobody minds what you do. When you notice the pull as you start the engine, name it: \"That's the car.\" To help on and after Day Xero, give your hands and mouth something else: water, gum, a podcast you save only for driving. And take {product_plural} and anything that goes with them out of the car before your Quit Day."
+          "deeper": "Driving is the same few routes, the same times of day and the same seat, over and over. That makes it a perfect place for a cue to form. The car can also feel like your own space, where nobody minds what you do. When you notice the pull as you start the engine, name it: \"That's the car.\" To help on and after Day Xero, give your hands and mouth something else: water, gum, a podcast you save only for driving. And take {product_plural} and anything that goes with them out of the car before your Quit Day.",
+          "trigger": "driving"
         },
         {
           "front": "Why does a drink make it so much harder to say no?",
           "answer": "Drinks and nicotine are often paired in social, relaxed moments, and after a drink or two, plans can feel easier to bend. So two pulls arrive at once.",
-          "deeper": "For many people, a drink and a {s: cigarette | v: vape | p: pouch} go together in the same settings: friends, evenings, celebrations. That's a strong, well-practiced pairing. On top of that, alcohol can loosen the part of you that plans ahead, so \"just one\" can sound more reasonable after a couple of drinks. None of this means you can never drink again. It means the first few weeks after Day Xero are worth planning: fewer drinks, a different setting, a friend who knows, an exit time. Tonight, just notice how often the two show up together."
+          "deeper": "For many people, a drink and a {s: cigarette | v: vape | p: pouch} go together in the same settings: friends, evenings, celebrations. That's a strong, well-practiced pairing. On top of that, alcohol can loosen the part of you that plans ahead, so \"just one\" can sound more reasonable after a couple of drinks. None of this means you can never drink again. It means the first few weeks after Day Xero are worth planning: fewer drinks, a different setting, a friend who knows, an exit time. Tonight, just notice how often the two show up together.",
+          "trigger": "alcohol"
         },
         {
           "front": "Why does stress feel like the time you need it most?",
           "answer": "Because the gap and stress feel alike: restless, tense, on edge. Using closes the gap, and that can feel like calm, so stress and nicotine get wired together.",
           "deeper": "When the gap opens during a stressful moment, you feel both at once and can't tell them apart. Using closes the gap, the edge drops, and it feels as if the stress eased. Research on people who smoke found that stress tends to rise between cigarettes and fall after one, which fits the idea that smoking relieves withdrawal rather than stress itself. So the cue isn't really \"stress\". It's \"stress plus the gap\". Two days from now we'll look at this loop properly, and at what actually helps in a hard moment.",
-          "source": "Parrott, 1999"
+          "source": "Parrott, 1999",
+          "trigger": "stress"
         }
-      ]
+      ],
+      "showCount": 4
     },
     {
       "id": "P2.3",
@@ -221,122 +228,119 @@
         },
         {
           "id": "P2.4b",
-          "type": "choice",
-          "prompt": "When do these cues usually happen?",
-          "multi": true,
-          "options": [
+          "type": "per_item",
+          "optionsFrom": "autopilot_triggers",
+          "saveAs": "autopilot_map",
+          "questions": [
             {
-              "id": "early_morning",
-              "text": "Early morning"
+              "id": "when",
+              "prompt": "When does {item} usually happen?",
+              "options": [
+                {
+                  "id": "early_morning",
+                  "text": "Early morning"
+                },
+                {
+                  "id": "mid_morning",
+                  "text": "Mid-morning"
+                },
+                {
+                  "id": "midday",
+                  "text": "Midday"
+                },
+                {
+                  "id": "afternoon",
+                  "text": "Afternoon"
+                },
+                {
+                  "id": "evening",
+                  "text": "Evening"
+                },
+                {
+                  "id": "late_night",
+                  "text": "Late night"
+                }
+              ],
+              "multi": true
             },
             {
-              "id": "mid_morning",
-              "text": "Mid-morning"
+              "id": "where",
+              "prompt": "Where are you, usually?",
+              "options": [
+                {
+                  "id": "home",
+                  "text": "At home"
+                },
+                {
+                  "id": "outside",
+                  "text": "Just outside"
+                },
+                {
+                  "id": "car",
+                  "text": "In the car"
+                },
+                {
+                  "id": "work",
+                  "text": "At work"
+                },
+                {
+                  "id": "people",
+                  "text": "Out with people"
+                }
+              ],
+              "multi": true
             },
             {
-              "id": "midday",
-              "text": "Midday"
-            },
-            {
-              "id": "afternoon",
-              "text": "Afternoon"
-            },
-            {
-              "id": "evening",
-              "text": "Evening"
-            },
-            {
-              "id": "late_night",
-              "text": "Late night"
+              "id": "feeling",
+              "prompt": "What do you feel just before?",
+              "options": [
+                {
+                  "id": "restless",
+                  "text": "Restless"
+                },
+                {
+                  "id": "bored",
+                  "text": "Bored"
+                },
+                {
+                  "id": "stressed",
+                  "text": "Stressed"
+                },
+                {
+                  "id": "tired",
+                  "text": "Tired"
+                },
+                {
+                  "id": "rushed",
+                  "text": "Rushed"
+                },
+                {
+                  "id": "relaxed",
+                  "text": "Relaxed"
+                },
+                {
+                  "id": "pleased",
+                  "text": "Pleased with myself"
+                },
+                {
+                  "id": "low",
+                  "text": "Low"
+                },
+                {
+                  "id": "none",
+                  "text": "Nothing I can name"
+                }
+              ],
+              "multi": true
             }
-          ],
-          "saveAs": "autopilot_when",
-          "footer": "Think of the cues you just picked."
-        },
-        {
-          "id": "P2.4c",
-          "type": "choice",
-          "prompt": "Where are you, usually?",
-          "multi": true,
-          "allowOther": true,
-          "options": [
-            {
-              "id": "home",
-              "text": "At home"
-            },
-            {
-              "id": "outside",
-              "text": "Just outside"
-            },
-            {
-              "id": "car",
-              "text": "In the car"
-            },
-            {
-              "id": "work",
-              "text": "At work"
-            },
-            {
-              "id": "people",
-              "text": "Out with people"
-            }
-          ],
-          "saveAs": "autopilot_where"
-        },
-        {
-          "id": "P2.4d",
-          "type": "choice",
-          "prompt": "What do you feel just before?",
-          "multi": true,
-          "options": [
-            {
-              "id": "restless",
-              "text": "Restless"
-            },
-            {
-              "id": "bored",
-              "text": "Bored"
-            },
-            {
-              "id": "stressed",
-              "text": "Stressed"
-            },
-            {
-              "id": "tired",
-              "text": "Tired"
-            },
-            {
-              "id": "rushed",
-              "text": "Rushed"
-            },
-            {
-              "id": "relaxed",
-              "text": "Relaxed"
-            },
-            {
-              "id": "pleased",
-              "text": "Pleased with myself"
-            },
-            {
-              "id": "low",
-              "text": "Low"
-            },
-            {
-              "id": "none",
-              "text": "Nothing I can name"
-            }
-          ],
-          "saveAs": "autopilot_feeling"
+          ]
         },
         {
           "id": "P2.4e",
           "type": "plan_card",
           "title": "Your autopilot",
           "fields": [
-            "autopilot_triggers",
-            "autopilot_when",
-            "autopilot_where",
-            "autopilot_feeling"
+            "autopilot_map"
           ],
           "editable": true
         },
@@ -500,7 +504,8 @@
             "text": "That's the plan. One moment, one short wait, and some curiosity. [pause]\n\nWhen you're done, log how long you managed in the app, even if it was less than you hoped. It all helps you see the pattern. Tomorrow we'll go one step further, and look closely at what using actually feels like, moment by moment, with fresh eyes.\n\nFor now, let today go. You mapped your autopilot and named your cues. You know more about your habit tonight than you did this morning. [pause]\n\nIf your mind starts running ahead to the morning, that's okay. Take one slow breath, a little longer on the way out, and let the plan rest. It'll be there when you wake up.\n\n[warmly] Sleep well. I'll see you in the morning."
           }
         ]
-      }
+      },
+      "opensAt": 18
     }
   ],
   "recap": {

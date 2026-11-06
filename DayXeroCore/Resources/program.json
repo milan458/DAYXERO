@@ -344,7 +344,8 @@
                 "text": "For the rest of this evening, carry on as normal. If you use before bed, you might notice the gap one more time: the restless edge, and then the settling. Just notice it. There's nothing to fix.\n\nThen sleep. Tomorrow morning, you'll wake up after a long stretch without nicotine, which means you'll wake up in the gap. [pause] Don't change anything. Just notice the first one of the day, and what comes right before it. Tomorrow we'll look at why that one feels so strong, and how so many of them happen without you deciding at all.\n\nBefore you go, one more slow breath. In through your nose. [pause] And a long, easy breath out. [long pause]\n\nIf you'd like, play this morning's track again tomorrow, or any time. Hearing an idea twice helps it settle.\n\n[warmly] You've done your first day. You looked. That's the beginning of seeing it clearly. Sleep well."
               }
             ]
-          }
+          },
+          "opensAt": 18
         }
       ],
       "recap": {
@@ -416,7 +417,8 @@
             "saveAs": "gap_checkin_places",
             "feedback": "Go ahead as normal. Notice the settling."
           }
-        ]
+        ],
+        "followUpTimes": 3
       },
       "completionText": "First prep day done. You didn't have to change a thing. Just notice."
     },
@@ -483,35 +485,42 @@
               "front": "Why does coffee feel unfinished without it?",
               "answer": "Because they've been paired thousands of times, often first thing, when the gap is widest. Your brain now treats the cup itself as the signal that nicotine is coming.",
               "deeper": "Coffee is usually one of the most repeated pairings there is: same time, same cup, same spot, every day. Each time, nicotine closed the gap while the coffee was in your hand, so the two got wired together. That's why coffee on its own can feel oddly incomplete. The good news is that pairings can be rewired. You don't have to give up coffee. Changing the setting helps: a different mug, a different chair, a short walk with it. So does a plan written as \"When I pour my coffee, I'll…\". If-then plans like that make follow-through more likely.",
-              "source": "Gollwitzer & Sheeran, 2006"
+              "source": "Gollwitzer & Sheeran, 2006",
+              "trigger": "coffee"
             },
             {
               "front": "Why does the one after a meal feel so necessary?",
               "answer": "A meal ends, you pause, and it's been a while since the last one. That full, settled feeling and the gap closing arrive together, so they've merged into one.",
-              "deeper": "The end of a meal is a natural full stop, and nicotine has filled that full stop for a long time. Because you've usually gone a while without while you ate, the gap is open too. So the relief of closing it lands right on top of the pleasant, full feeling of having eaten, and the two get credited to the {s: cigarette | v: vape | p: pouch}. People who don't use finish meals and feel full and done in exactly the same way. What helps is giving the meal a new full stop of your own: stand up, brush your teeth, make a tea, take a short walk."
+              "deeper": "The end of a meal is a natural full stop, and nicotine has filled that full stop for a long time. Because you've usually gone a while without while you ate, the gap is open too. So the relief of closing it lands right on top of the pleasant, full feeling of having eaten, and the two get credited to the {s: cigarette | v: vape | p: pouch}. People who don't use finish meals and feel full and done in exactly the same way. What helps is giving the meal a new full stop of your own: stand up, brush your teeth, make a tea, take a short walk.",
+              "trigger": "meals"
             },
             {
               "front": "Why do your phone and {product} go together?",
               "answer": "Both fill small, empty moments. Idle hands, idle mind, a scroll and a {s: smoke | v: hit | p: pouch}. They've shown up in the same moments so often that one now cues the other.",
-              "deeper": "Phones and nicotine both slot into the in-between bits of the day: waiting, winding down, a minute with nothing to do. {s: A smoke break often comes with a scroll. | v: A vape can be used while scrolling, almost without noticing. | p: A pouch can sit in while you scroll, almost without noticing.} Because both happen so often, the link builds quickly. Watch for the moment you pick up the phone and see if the urge arrives with it. Small changes help a lot: keep the {product} in a different room from where you scroll, or set the phone down for the first minute of a break."
+              "deeper": "Phones and nicotine both slot into the in-between bits of the day: waiting, winding down, a minute with nothing to do. {s: A smoke break often comes with a scroll. | v: A vape can be used while scrolling, almost without noticing. | p: A pouch can sit in while you scroll, almost without noticing.} Because both happen so often, the link builds quickly. Watch for the moment you pick up the phone and see if the urge arrives with it. Small changes help a lot: keep the {product} in a different room from where you scroll, or set the phone down for the first minute of a break.",
+              "trigger": "phone"
             },
             {
               "front": "Why does getting in the car make you reach for it?",
               "answer": "Hands busy, mind free, the same route at the same time. The car is a private, repeated space, so it's become one of the strongest places for the habit.",
-              "deeper": "Driving is the same few routes, the same times of day and the same seat, over and over. That makes it a perfect place for a cue to form. The car can also feel like your own space, where nobody minds what you do. When you notice the pull as you start the engine, name it: \"That's the car.\" To help on and after Day Xero, give your hands and mouth something else: water, gum, a podcast you save only for driving. And take {product_plural} and anything that goes with them out of the car before your Quit Day."
+              "deeper": "Driving is the same few routes, the same times of day and the same seat, over and over. That makes it a perfect place for a cue to form. The car can also feel like your own space, where nobody minds what you do. When you notice the pull as you start the engine, name it: \"That's the car.\" To help on and after Day Xero, give your hands and mouth something else: water, gum, a podcast you save only for driving. And take {product_plural} and anything that goes with them out of the car before your Quit Day.",
+              "trigger": "driving"
             },
             {
               "front": "Why does a drink make it so much harder to say no?",
               "answer": "Drinks and nicotine are often paired in social, relaxed moments, and after a drink or two, plans can feel easier to bend. So two pulls arrive at once.",
-              "deeper": "For many people, a drink and a {s: cigarette | v: vape | p: pouch} go together in the same settings: friends, evenings, celebrations. That's a strong, well-practiced pairing. On top of that, alcohol can loosen the part of you that plans ahead, so \"just one\" can sound more reasonable after a couple of drinks. None of this means you can never drink again. It means the first few weeks after Day Xero are worth planning: fewer drinks, a different setting, a friend who knows, an exit time. Tonight, just notice how often the two show up together."
+              "deeper": "For many people, a drink and a {s: cigarette | v: vape | p: pouch} go together in the same settings: friends, evenings, celebrations. That's a strong, well-practiced pairing. On top of that, alcohol can loosen the part of you that plans ahead, so \"just one\" can sound more reasonable after a couple of drinks. None of this means you can never drink again. It means the first few weeks after Day Xero are worth planning: fewer drinks, a different setting, a friend who knows, an exit time. Tonight, just notice how often the two show up together.",
+              "trigger": "alcohol"
             },
             {
               "front": "Why does stress feel like the time you need it most?",
               "answer": "Because the gap and stress feel alike: restless, tense, on edge. Using closes the gap, and that can feel like calm, so stress and nicotine get wired together.",
               "deeper": "When the gap opens during a stressful moment, you feel both at once and can't tell them apart. Using closes the gap, the edge drops, and it feels as if the stress eased. Research on people who smoke found that stress tends to rise between cigarettes and fall after one, which fits the idea that smoking relieves withdrawal rather than stress itself. So the cue isn't really \"stress\". It's \"stress plus the gap\". Two days from now we'll look at this loop properly, and at what actually helps in a hard moment.",
-              "source": "Parrott, 1999"
+              "source": "Parrott, 1999",
+              "trigger": "stress"
             }
-          ]
+          ],
+          "showCount": 4
         },
         {
           "id": "P2.3",
@@ -644,122 +653,119 @@
             },
             {
               "id": "P2.4b",
-              "type": "choice",
-              "prompt": "When do these cues usually happen?",
-              "multi": true,
-              "options": [
+              "type": "per_item",
+              "optionsFrom": "autopilot_triggers",
+              "saveAs": "autopilot_map",
+              "questions": [
                 {
-                  "id": "early_morning",
-                  "text": "Early morning"
+                  "id": "when",
+                  "prompt": "When does {item} usually happen?",
+                  "options": [
+                    {
+                      "id": "early_morning",
+                      "text": "Early morning"
+                    },
+                    {
+                      "id": "mid_morning",
+                      "text": "Mid-morning"
+                    },
+                    {
+                      "id": "midday",
+                      "text": "Midday"
+                    },
+                    {
+                      "id": "afternoon",
+                      "text": "Afternoon"
+                    },
+                    {
+                      "id": "evening",
+                      "text": "Evening"
+                    },
+                    {
+                      "id": "late_night",
+                      "text": "Late night"
+                    }
+                  ],
+                  "multi": true
                 },
                 {
-                  "id": "mid_morning",
-                  "text": "Mid-morning"
+                  "id": "where",
+                  "prompt": "Where are you, usually?",
+                  "options": [
+                    {
+                      "id": "home",
+                      "text": "At home"
+                    },
+                    {
+                      "id": "outside",
+                      "text": "Just outside"
+                    },
+                    {
+                      "id": "car",
+                      "text": "In the car"
+                    },
+                    {
+                      "id": "work",
+                      "text": "At work"
+                    },
+                    {
+                      "id": "people",
+                      "text": "Out with people"
+                    }
+                  ],
+                  "multi": true
                 },
                 {
-                  "id": "midday",
-                  "text": "Midday"
-                },
-                {
-                  "id": "afternoon",
-                  "text": "Afternoon"
-                },
-                {
-                  "id": "evening",
-                  "text": "Evening"
-                },
-                {
-                  "id": "late_night",
-                  "text": "Late night"
+                  "id": "feeling",
+                  "prompt": "What do you feel just before?",
+                  "options": [
+                    {
+                      "id": "restless",
+                      "text": "Restless"
+                    },
+                    {
+                      "id": "bored",
+                      "text": "Bored"
+                    },
+                    {
+                      "id": "stressed",
+                      "text": "Stressed"
+                    },
+                    {
+                      "id": "tired",
+                      "text": "Tired"
+                    },
+                    {
+                      "id": "rushed",
+                      "text": "Rushed"
+                    },
+                    {
+                      "id": "relaxed",
+                      "text": "Relaxed"
+                    },
+                    {
+                      "id": "pleased",
+                      "text": "Pleased with myself"
+                    },
+                    {
+                      "id": "low",
+                      "text": "Low"
+                    },
+                    {
+                      "id": "none",
+                      "text": "Nothing I can name"
+                    }
+                  ],
+                  "multi": true
                 }
-              ],
-              "saveAs": "autopilot_when",
-              "footer": "Think of the cues you just picked."
-            },
-            {
-              "id": "P2.4c",
-              "type": "choice",
-              "prompt": "Where are you, usually?",
-              "multi": true,
-              "allowOther": true,
-              "options": [
-                {
-                  "id": "home",
-                  "text": "At home"
-                },
-                {
-                  "id": "outside",
-                  "text": "Just outside"
-                },
-                {
-                  "id": "car",
-                  "text": "In the car"
-                },
-                {
-                  "id": "work",
-                  "text": "At work"
-                },
-                {
-                  "id": "people",
-                  "text": "Out with people"
-                }
-              ],
-              "saveAs": "autopilot_where"
-            },
-            {
-              "id": "P2.4d",
-              "type": "choice",
-              "prompt": "What do you feel just before?",
-              "multi": true,
-              "options": [
-                {
-                  "id": "restless",
-                  "text": "Restless"
-                },
-                {
-                  "id": "bored",
-                  "text": "Bored"
-                },
-                {
-                  "id": "stressed",
-                  "text": "Stressed"
-                },
-                {
-                  "id": "tired",
-                  "text": "Tired"
-                },
-                {
-                  "id": "rushed",
-                  "text": "Rushed"
-                },
-                {
-                  "id": "relaxed",
-                  "text": "Relaxed"
-                },
-                {
-                  "id": "pleased",
-                  "text": "Pleased with myself"
-                },
-                {
-                  "id": "low",
-                  "text": "Low"
-                },
-                {
-                  "id": "none",
-                  "text": "Nothing I can name"
-                }
-              ],
-              "saveAs": "autopilot_feeling"
+              ]
             },
             {
               "id": "P2.4e",
               "type": "plan_card",
               "title": "Your autopilot",
               "fields": [
-                "autopilot_triggers",
-                "autopilot_when",
-                "autopilot_where",
-                "autopilot_feeling"
+                "autopilot_map"
               ],
               "editable": true
             },
@@ -923,7 +929,8 @@
                 "text": "That's the plan. One moment, one short wait, and some curiosity. [pause]\n\nWhen you're done, log how long you managed in the app, even if it was less than you hoped. It all helps you see the pattern. Tomorrow we'll go one step further, and look closely at what using actually feels like, moment by moment, with fresh eyes.\n\nFor now, let today go. You mapped your autopilot and named your cues. You know more about your habit tonight than you did this morning. [pause]\n\nIf your mind starts running ahead to the morning, that's okay. Take one slow breath, a little longer on the way out, and let the plan rest. It'll be there when you wake up.\n\n[warmly] Sleep well. I'll see you in the morning."
               }
             ]
-          }
+          },
+          "opensAt": 18
         }
       ],
       "recap": {
@@ -2004,15 +2011,15 @@
           "beats": [
             {
               "id": "P5.3a",
-              "type": "info",
+              "type": "timed_hold",
               "title": "Picture it now",
-              "body": "{s: You take the pack, every spare and the lighter | v: You take your vape, every pod and the charger | p: You take every tin, including the spare in the car} and get rid of them. For good. Starting now. No backup. Hold the picture.\n\nStay with it for a few breaths. Notice what happens in you."
+              "body": "{s: You take the pack, every spare and the lighter | v: You take your vape, every pod and the charger | p: You take every tin, including the spare in the car} and get rid of them. For good. Starting now. No backup. Hold the picture.\n\nStay with it for a few breaths. Notice what happens in you.",
+              "holdSeconds": 15
             },
             {
               "id": "P5.3b",
-              "type": "choice",
+              "type": "body_map",
               "prompt": "Where do you notice it?",
-              "multi": true,
               "options": [
                 {
                   "id": "mouth",
@@ -2050,10 +2057,10 @@
             },
             {
               "id": "P5.3c",
-              "type": "slider",
+              "type": "scale",
               "prompt": "How strong is it right now?",
-              "minLabel": "0 · Nothing",
-              "maxLabel": "10 · The strongest ever",
+              "minLabel": "Nothing",
+              "maxLabel": "The strongest ever",
               "saveAs": "control_before"
             },
             {
@@ -2107,16 +2114,12 @@
             },
             {
               "id": "P5.3g",
-              "type": "slider",
+              "type": "scale",
               "prompt": "And now?",
-              "minLabel": "0 · Nothing",
-              "maxLabel": "10 · The strongest ever",
+              "minLabel": "Nothing",
+              "maxLabel": "The strongest ever",
               "saveAs": "control_after",
-              "compareWith": "control_before",
-              "compareLabels": [
-                "Before",
-                "After"
-              ]
+              "compareWith": "control_before"
             },
             {
               "id": "P5.3h",
@@ -2199,7 +2202,8 @@
                 "text": "[warmly] There's one more piece, and it's the one that matters most. While that thought is on the screen, what do you do? You keep doing what matters to you. [pause]\n\nThink about the reason that brought you here, the one you chose on the first day. Bring it to mind now. [long pause]\n\nThat's your direction. Thoughts will come and go along the way, and some will be loud. You can hear every one of them and still keep walking that way. They don't need to be quiet first. [pause]\n\nThink of how many things you've already done while part of you didn't want to. Getting up on a cold morning. A hard conversation. You didn't wait until you felt ready. You did it because it mattered. [pause]\n\nHere's something to try before you sleep, or tomorrow. The next time a nicotine thought shows up, put those words in front of it: I'm having the thought that. Then take one slow breath, and choose what you'll do next. You can still use, if that's what you decide. It's your prep week. The practice is in the choosing. [pause]\n\nTomorrow we'll set up the world around you, so that choosing gets easier. [pause]\n\nSleep well."
               }
             ]
-          }
+          },
+          "opensAt": 18
         }
       ],
       "recap": {
@@ -2974,7 +2978,8 @@
                 "vaping": "Vapes have batteries. Please don't put them in the bin. Take them to a battery or electronics recycling point."
               }
             }
-          ]
+          ],
+          "opensAt": 18
         }
       ],
       "recap": {
@@ -3171,15 +3176,15 @@
             {
               "id": "DX.3d",
               "type": "breathe",
-              "pattern": "wave",
-              "cycles": 4,
-              "label": "Wave riding · slow in, slow out, like riding a wave"
+              "pattern": "slow",
+              "cycles": 6,
+              "label": "Slow breathing · in for 4, out for 6, like Craving SOS"
             },
             {
               "id": "DX.3e",
               "type": "info",
               "title": "Slow and steady.",
-              "body": "That's the one for when a wave is already here. Craving SOS breathes the same slow way, a little longer out than in: in for 4, out for 6."
+              "body": "That's the one for when a wave is already here. It's the same rhythm Craving SOS uses: a little longer out than in."
             },
             {
               "id": "DX.3f",
@@ -3189,6 +3194,14 @@
             },
             {
               "id": "DX.3g",
+              "type": "sos_practice",
+              "optional": true,
+              "title": "Try it once now",
+              "body": "A practice run of Craving SOS. Nothing is saved, nothing counts, and there doesn't need to be a craving. Breathe with it for as long as you like, then tap It passed or I slipped to see what each one does.",
+              "label": "Start a practice run"
+            },
+            {
+              "id": "DX.3h",
               "type": "info",
               "title": "Where to find it",
               "body": "Craving SOS is always in the bar at the bottom of the app. You can also add the Craving SOS widget to your Home Screen, so it's one tap away."
@@ -3501,7 +3514,8 @@
                 "text": "[softly] Before you go, let's breathe together, just three times. [pause] In through your nose. [pause] And slowly out. [long pause] Again. In. [pause] And out. [long pause] One more. In. [pause] And all the way out. [long pause]\n\nOne day. Last night it was something you were getting ready for. Tonight it's something you've done. [pause] You didn't need to be perfect. You needed to keep coming back to the next choice. And you're still here, coming back.\n\nAnd if a thought shows up tonight, something like \"just one wouldn't hurt,\" you know what it is now. A thought, not an order. You can let it sit there and go to sleep anyway. [pause]\n\nThank yourself for today. Really. [pause] Sleep well. I'll see you tomorrow."
               }
             ]
-          }
+          },
+          "opensAt": 18
         }
       ],
       "recap": {

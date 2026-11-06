@@ -102,6 +102,8 @@ struct DeckHandView: View {
     let played: Set<String>
     /// The card the next tap plays, nil when every card is played.
     let next: String?
+    /// "6:00 PM" while the next card is an evening card that hasn't opened yet.
+    var waitingUntil: String?
     let onPlay: () -> Void
     let onClose: () -> Void
 
@@ -132,10 +134,20 @@ struct DeckHandView: View {
                 info(focus)
             }
             Spacer(minLength: DX.Space.s)
-            Button(action: onPlay) { Text(verbatim: ctaTitle) }
-                .buttonStyle(.dx(.primary, on: ground))
-                .dynamicTypeSize(...DynamicTypeSize.accessibility1)
-                .accessibilityIdentifier("program.deck.play")
+            if let waitingUntil, let next, let index = cards.firstIndex(where: { $0.id == next }) {
+                // Evening cards open at 6 pm; the day keeps its place until then.
+                Label(String(localized: "Card \(index + 1) opens at \(waitingUntil). Your place is saved."), systemImage: "moon.stars")
+                    .dxType(.footnote).foregroundStyle(ground.ink)
+                    .frame(maxWidth: .infinity, minHeight: DX.Layout.touchTarget)
+                    .padding(.horizontal, 12)
+                    .background(Color(hex: 0x2A1C6E), in: Capsule())
+                    .accessibilityIdentifier("program.deck.waiting")
+            } else {
+                Button(action: onPlay) { Text(verbatim: ctaTitle) }
+                    .buttonStyle(.dx(.primary, on: ground))
+                    .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+                    .accessibilityIdentifier("program.deck.play")
+            }
         }
         .foregroundStyle(ground.ink)
     }
@@ -386,7 +398,8 @@ struct DeckRevealView: View {
     private let ground = DX.Ground.violet
     private let motion = MotionPolicy()
 
-    private var reveals: [DeckCard.Reveal] { card.cards ?? [] }
+    /// The person's own triggers first (Prep 2 shows four of six), from onboarding.
+    private var reveals: [DeckCard.Reveal] { card.reveals(forTriggers: ctx.store.profile.triggersRaw) }
     private var allOpen: Bool { open.count >= reveals.count || ctx.isReplay }
 
     var body: some View {
@@ -676,6 +689,8 @@ struct DeckCardPlayedView: View {
     let position: Int
     let total: Int
     let next: DeckCard?
+    /// "6:00 PM" when the next card is an evening card that hasn't opened yet.
+    var nextOpensAt: String?
     let ctx: BeatContext
     let onNext: () -> Void
     let onLater: () -> Void
@@ -728,12 +743,23 @@ struct DeckCardPlayedView: View {
             }
             .scrollBounceBehavior(.basedOnSize)
             VStack(spacing: 8) {
-                Button(action: onNext) { Text(verbatim: primaryTitle) }
-                    .buttonStyle(.dx(.primary, on: ground))
-                    .accessibilityIdentifier("program.deck.next")
-                if next != nil {
-                    Button(String(localized: "Later. Back to my hand"), action: onLater)
-                        .buttonStyle(.dx(.quiet, on: ground))
+                if let nextOpensAt {
+                    // The evening card waits for the evening: the place is saved and the hand says when.
+                    Text(verbatim: String(localized: "The next card opens at \(nextOpensAt). It's meant for the evening."))
+                        .dxType(.footnote).foregroundStyle(ground.muted)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Button(String(localized: "Back to my day"), action: onLater)
+                        .buttonStyle(.dx(.primary, on: ground))
+                        .accessibilityIdentifier("program.deck.later")
+                } else {
+                    Button(action: onNext) { Text(verbatim: primaryTitle) }
+                        .buttonStyle(.dx(.primary, on: ground))
+                        .accessibilityIdentifier("program.deck.next")
+                    if next != nil {
+                        Button(String(localized: "Later. Back to my hand"), action: onLater)
+                            .buttonStyle(.dx(.quiet, on: ground))
+                    }
                 }
             }
             .dynamicTypeSize(...DynamicTypeSize.accessibility1)

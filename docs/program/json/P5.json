@@ -92,15 +92,15 @@
       "beats": [
         {
           "id": "P5.3a",
-          "type": "info",
+          "type": "timed_hold",
           "title": "Picture it now",
-          "body": "{s: You take the pack, every spare and the lighter | v: You take your vape, every pod and the charger | p: You take every tin, including the spare in the car} and get rid of them. For good. Starting now. No backup. Hold the picture.\n\nStay with it for a few breaths. Notice what happens in you."
+          "body": "{s: You take the pack, every spare and the lighter | v: You take your vape, every pod and the charger | p: You take every tin, including the spare in the car} and get rid of them. For good. Starting now. No backup. Hold the picture.\n\nStay with it for a few breaths. Notice what happens in you.",
+          "holdSeconds": 15
         },
         {
           "id": "P5.3b",
-          "type": "choice",
+          "type": "body_map",
           "prompt": "Where do you notice it?",
-          "multi": true,
           "options": [
             {
               "id": "mouth",
@@ -138,10 +138,10 @@
         },
         {
           "id": "P5.3c",
-          "type": "slider",
+          "type": "scale",
           "prompt": "How strong is it right now?",
-          "minLabel": "0 · Nothing",
-          "maxLabel": "10 · The strongest ever",
+          "minLabel": "Nothing",
+          "maxLabel": "The strongest ever",
           "saveAs": "control_before"
         },
         {
@@ -195,16 +195,12 @@
         },
         {
           "id": "P5.3g",
-          "type": "slider",
+          "type": "scale",
           "prompt": "And now?",
-          "minLabel": "0 · Nothing",
-          "maxLabel": "10 · The strongest ever",
+          "minLabel": "Nothing",
+          "maxLabel": "The strongest ever",
           "saveAs": "control_after",
-          "compareWith": "control_before",
-          "compareLabels": [
-            "Before",
-            "After"
-          ]
+          "compareWith": "control_before"
         },
         {
           "id": "P5.3h",
@@ -287,7 +283,8 @@
             "text": "[warmly] There's one more piece, and it's the one that matters most. While that thought is on the screen, what do you do? You keep doing what matters to you. [pause]\n\nThink about the reason that brought you here, the one you chose on the first day. Bring it to mind now. [long pause]\n\nThat's your direction. Thoughts will come and go along the way, and some will be loud. You can hear every one of them and still keep walking that way. They don't need to be quiet first. [pause]\n\nThink of how many things you've already done while part of you didn't want to. Getting up on a cold morning. A hard conversation. You didn't wait until you felt ready. You did it because it mattered. [pause]\n\nHere's something to try before you sleep, or tomorrow. The next time a nicotine thought shows up, put those words in front of it: I'm having the thought that. Then take one slow breath, and choose what you'll do next. You can still use, if that's what you decide. It's your prep week. The practice is in the choosing. [pause]\n\nTomorrow we'll set up the world around you, so that choosing gets easier. [pause]\n\nSleep well."
           }
         ]
-      }
+      },
+      "opensAt": 18
     }
   ],
   "recap": {
