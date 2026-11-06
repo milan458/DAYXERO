@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>F8 · Listen (evening)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#FFF8EE}a:hover{color:#D2C8FF}
+@keyframes fGlow{0%{transform:scale(.85);opacity:.6}40%{transform:scale(1.08);opacity:1}100%{transform:scale(.85);opacity:.6}}
+.f-glow{animation:fGlow 10s cubic-bezier(.4,0,.4,1) infinite}
+@keyframes fTw{0%,100%{opacity:.25}50%{opacity:1}}
+.f-tw{animation:fTw 2.6s ease-in-out infinite}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #4A3596; color: #FFF8EE; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif; display: flex; flex-direction: column">
+  <svg width="390" height="844" viewBox="0 0 390 844" aria-hidden="true" style="position: absolute; inset: 0">
+    <circle class="f-tw" cx="40" cy="190" r="2" fill="#FFF8EE"></circle>
+    <circle class="f-tw" cx="350" cy="160" r="2.4" fill="#FFF8EE" style="animation-delay:.7s"></circle>
+    <circle class="f-tw" cx="320" cy="520" r="1.8" fill="#FFF8EE" style="animation-delay:1.3s"></circle>
+    <circle class="f-tw" cx="70" cy="600" r="1.6" fill="#FFF8EE" style="animation-delay:.3s"></circle>
+  </svg>
+  <span class="{{glowCls}}" aria-hidden="true" style="position: absolute; right: -70px; bottom: 40px; width: 300px; height: 300px; border-radius: 99px; background: radial-gradient(circle, rgba(255,226,122,0.55) 0%, rgba(255,226,122,0.16) 45%, rgba(255,226,122,0) 70%)"></span>
+  <span aria-hidden="true" style="position: absolute; right: 60px; bottom: 170px; width: 46px; height: 46px; border-radius: 99px; background: #FFE27A; box-shadow: inset -14px -6px 0 0 #4A3596"></span>
+
+  <div style="padding: 54px 18px 0 18px; display: flex; flex-direction: column; gap: 12px; position: relative">
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px" role="img" aria-label="Chapter 2 of 4">
+      <span style="height: 4px; border-radius: 99px; background: #FFF8EE"></span>
+      <span style="height: 4px; border-radius: 99px; background: rgba(255,248,238,0.25); overflow: hidden"><span style="display: block; height: 100%; width: {{chapPct}}; background: #FFF8EE"></span></span>
+      <span style="height: 4px; border-radius: 99px; background: rgba(255,248,238,0.25)"></span>
+      <span style="height: 4px; border-radius: 99px; background: rgba(255,248,238,0.25)"></span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 10px">
+      <span style="flex-grow: 1; display: flex; flex-direction: column">
+        <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: #D2C8FF">CARD 5 OF 5 · TONIGHT · CHAPTER 2 OF 4</span>
+        <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 16px">What you noticed</span>
+      </span>
+      <a href="F1Day.dc.html" aria-label="Close. Your place is saved." style="width: 44px; height: 44px; border-radius: 99px; background: rgba(255,255,255,0.14); display: flex; align-items: center; justify-content: center; flex: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></a>
+    </div>
+  </div>
+
+  <div style="padding: 64px 24px 0 24px; position: relative" aria-live="polite">
+    <p style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 36px; line-height: 1.12; letter-spacing: -1px">
+      <sc-for list="{{words}}" as="w" hint-placeholder-count="22"><span style="{{w.style}}">{{w.t}} </span></sc-for>
+    </p>
+  </div>
+
+  <div style="margin-top: auto; padding: 0 22px 30px 22px; display: flex; align-items: center; gap: 12px; position: relative">
+    <button aria-label="Back 15 seconds" style="width: 52px; height: 52px; border: 0; border-radius: 99px; background: rgba(255,255,255,0.14); color: #FFF8EE; cursor: pointer; display: grid; place-items: center; flex: none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.3-5.7"></path><path d="M4 4v4h4"></path></svg></button>
+    <button aria-label="{{playLabel}}" onClick="{{toggle}}" style="width: 72px; height: 72px; border: 0; border-radius: 99px; background: #FFF8EE; color: #4A3596; cursor: pointer; display: grid; place-items: center; flex: none; box-shadow: 0 6px 0 rgba(0,0,0,0.25)">
+      <sc-if value="{{playing}}" hint-placeholder-val="{{true}}"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg></sc-if>
+      <sc-if value="{{paused}}" hint-placeholder-val="{{false}}"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5l11 7-11 7z"></path></svg></sc-if>
+    </button>
+    <button style="height: 52px; padding: 0 14px; border: 0; border-radius: 99px; background: rgba(255,255,255,0.14); color: #FFF8EE; font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 6px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"></path></svg>Dim screen</button>
+    <span style="margin-left: auto; font-size: 14px; font-weight: 700; color: #D2C8FF">1:48 / 7:00</span>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  componentDidMount() {
+    this.timer = setInterval(() => {
+      const s = this.state || {};
+      if (s.paused) return;
+      this.setState({ k: ((s.k || 0) + 1) % 28 });
+    }, 420);
+  }
+  componentWillUnmount() { clearInterval(this.timer); }
+  renderVals() {
+    const s = this.state || {};
+    const paused = Boolean(s.paused);
+    const text = 'Think back over today. Was there a moment you caught the gap, just before you closed it?';
+    const parts = text.split(' ');
+    const k = Math.min(s.k || 0, parts.length);
+    return {
+      words: parts.map((t, i) => ({ t, style: i < k ? 'color: #FFF8EE' : 'color: rgba(255,248,238,0.5)' })),
+      chapPct: Math.round(20 + (k / parts.length) * 70) + '%',
+      glowCls: paused ? '' : 'f-glow',
+      playing: !paused, paused, playLabel: paused ? 'Play' : 'Pause',
+      toggle: () => this.setState({ paused: !paused })
+    };
+  }
+}
+</script>
+</body>
+</html>

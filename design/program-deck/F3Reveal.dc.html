@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>F3 · Reveal</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#FFF8EE}a:hover{color:#D2C8FF}
+@keyframes fTurn{0%{transform:rotateY(90deg)}100%{transform:rotateY(0)}}
+.f-turn{animation:fTurn .45s cubic-bezier(.2,.7,.2,1) both}
+@keyframes fSheet{from{transform:translateY(100%)}to{transform:none}}
+.f-sheet{animation:fSheet .45s cubic-bezier(.2,.8,.2,1) both}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #4A3596; color: #FFF8EE; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif; display: flex; flex-direction: column">
+  <div style="padding: 54px 16px 0 14px; display: flex; align-items: center; gap: 10px">
+    <a href="F1Day.dc.html" aria-label="Close. Your place is saved." style="width: 44px; height: 44px; border-radius: 99px; background: rgba(255,255,255,0.14); display: flex; align-items: center; justify-content: center; flex: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></a>
+    <span style="flex-grow: 1; font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: #D2C8FF">CARD 2 OF 5 · REVEAL · 5 MIN</span>
+    <span style="font-size: 14px; font-weight: 700; color: #FFD966">{{count}} of 4</span>
+  </div>
+
+  <div style="padding: 14px 24px 0 24px">
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 26px; line-height: 1.1; letter-spacing: -0.6px">Why the first one feels so good</h1>
+    <p style="margin: 6px 0 0 0; font-size: 15px; color: #D2C8FF">Guess the answer first. Then turn the card over.</p>
+  </div>
+
+  <div style="padding: 18px 18px 0 18px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; perspective: 900px">
+    <sc-for list="{{cards}}" as="c" hint-placeholder-count="4">
+      <div class="{{c.cls}}" style="height: 248px; box-sizing: border-box; border-radius: 20px; padding: 14px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 8px 0 rgba(0,0,0,0.18); {{c.face}}">
+        <sc-if value="{{c.down}}" hint-placeholder-val="{{true}}">
+          <button onClick="{{c.tap}}" aria-label="{{c.label}}" style="all: unset; cursor: pointer; display: flex; flex-direction: column; gap: 8px; height: 100%">
+            <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: #FFD966">QUESTION {{c.n}}</span>
+            <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px; line-height: 1.15">{{c.q}}</span>
+            <span style="margin-top: auto; display: flex; align-items: center; justify-content: center; gap: 6px; height: 48px; border-radius: 14px; border: 2px dashed rgba(255,248,238,0.35); font-size: 14px; font-weight: 700">Turn over</span>
+          </button>
+        </sc-if>
+        <sc-if value="{{c.up}}" hint-placeholder-val="{{false}}">
+          <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: #24406E">{{c.q}}</span>
+          <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 16px; line-height: 1.3">{{c.a}}</span>
+          <button onClick="{{c.deeper}}" style="margin-top: auto; min-height: 44px; border: 0; border-radius: 14px; background: #1E1A3A; color: #FFF8EE; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer">Go deeper</button>
+        </sc-if>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="margin-top: auto; padding: 0 22px 26px 22px; display: flex; flex-direction: column; gap: 10px; align-items: center">
+    <sc-if value="{{all}}" hint-placeholder-val="{{false}}">
+      <a href="F6Done.dc.html" style="align-self: stretch; height: 58px; border-radius: 99px; background: #FFF8EE; color: #4A3596; font-weight: 700; font-size: 16px; text-decoration: none; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 0 rgba(0,0,0,0.25)">I've felt that gap</a>
+    </sc-if>
+    <sc-if value="{{some}}" hint-placeholder-val="{{true}}"><span style="font-size: 14px; font-weight: 600; color: #D2C8FF">Turn over all four to go on</span></sc-if>
+  </div>
+
+  <sc-if value="{{sheetOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(20,14,58,0.55)"></div>
+    <div class="f-sheet" role="dialog" aria-label="Go deeper" style="position: absolute; left: 0; right: 0; bottom: 0; background: #FBF7F1; color: #1E1A3A; border-radius: 28px 28px 0 0; padding: 12px 24px 28px 24px; display: flex; flex-direction: column; gap: 14px">
+      <span aria-hidden="true" style="align-self: center; width: 40px; height: 5px; border-radius: 99px; background: rgba(30,26,58,0.2)"></span>
+      <div style="display: flex; align-items: flex-start; gap: 12px">
+        <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 4px">
+          <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: #5E5975">GO DEEPER · QUESTION {{deep.n}}</span>
+          <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 24px; line-height: 1.12; letter-spacing: -0.5px">{{deep.q}}</h2>
+        </div>
+        <button onClick="{{close}}" aria-label="Close" style="width: 44px; height: 44px; border: 0; border-radius: 99px; background: #F1EBE2; color: #1E1A3A; cursor: pointer; display: grid; place-items: center; flex: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+      </div>
+      <p style="margin: 0; font-size: 17px; line-height: 1.6">{{deep.body}}</p>
+      <div style="border-radius: 16px; background: #E9F2FF; padding: 12px 14px; display: flex; flex-direction: column; gap: 2px">
+        <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: #24406E">KEEP IN MIND</span>
+        <span style="font-size: 16px; font-weight: 700">{{deep.keep}}</span>
+      </div>
+      <span style="font-size: 13px; font-weight: 600; color: #5E5975">{{deep.src}}</span>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"sheet":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const s = this.state || {};
+    const open = s.open || { 0: true };
+    const sheetAt = s.sheetAt !== undefined ? s.sheetAt : (String(this.props.sheet ?? false) === 'true' ? 0 : null);
+    const data = [
+      { q: 'Why does the first one feel so good?', a: 'Overnight the nicotine wears off. You wake with a small, restless gap. The first one closes it.',
+        body: 'Nicotine leaves the body quickly: its level halves about every two hours. By morning it is low, and a brain that has adapted to it sends a quiet signal that something is missing. Restless, flat, a little on edge. The first one of the day ends that signal fast, so it feels like the best one. It isn’t adding anything a non-user lacks. It’s taking away a discomfort a non-user never has.',
+        keep: 'Tomorrow morning, notice the gap before you close it.', src: 'Source: Benowitz, NEJM 2010' },
+      { q: 'How does a non-user wake up?', a: 'Without the gap. The settled feeling you reach after your first one is where they start.',
+        body: 'Picture two people waking up. One reaches for nicotine to feel normal. The other already feels normal, so there is nothing to reach for. The calm you get after your first one is real, but it’s a return to the baseline the other person never left. That’s why people who have been free for a while rarely say they miss the feeling. They have it all day.',
+        keep: 'You’re not giving up calm. You’re getting your baseline back.', src: '' },
+      { q: 'Why does it feel like it helps all day?', a: 'Every hour or two the gap opens again. Each use closes it, and starts the clock on the next.',
+        body: 'Through the day the level rises and falls. Each dip brings the same restless signal, and each use ends it. Because that relief arrives so often, in so many places (with coffee, after meals, in stressful moments), it starts to feel like nicotine helps with everything. Really, it’s fixing the same small problem again and again, a problem the last dose made.',
+        keep: 'Relief is real. What it relieves is the catch.', src: 'Source: Benowitz, NEJM 2010' },
+      { q: 'Do I have to stop believing it today?', a: 'No. This week you just watch. Seeing the gap clearly is how it starts to lose its pull.',
+        body: 'Beliefs built over years don’t switch off because someone explains them once. They loosen when you see them for yourself, again and again. So keep using as normal this week, with your eyes open. Each time you notice the gap opening and closing, the story that nicotine gives you something gets a little thinner.',
+        keep: 'Use as normal. Watch closely.', src: '' }
+    ];
+    const cards = data.map((d, i) => {
+      const up = Boolean(open[i]);
+      return {
+        ...d, n: i + 1, up, down: !up,
+        cls: up ? 'f-turn' : '',
+        label: 'Question ' + (i + 1) + ': ' + d.q + '. Turn over',
+        face: up ? 'background: #9CCBFF; color: #1E1A3A;' : 'background: #2A1C6E; color: #FFF8EE;',
+        tap: () => this.setState({ open: { ...open, [i]: true } }),
+        deeper: () => this.setState({ sheetAt: i })
+      };
+    });
+    const count = data.filter((_, i) => open[i]).length;
+    const deep = sheetAt !== null && sheetAt !== undefined ? { ...data[sheetAt], n: sheetAt + 1 } : { ...data[0], n: 1 };
+    return {
+      cards, count, all: count === 4, some: count < 4,
+      sheetOpen: sheetAt !== null && sheetAt !== undefined, deep,
+      close: () => this.setState({ sheetAt: null })
+    };
+  }
+}
+</script>
+</body>
+</html>
