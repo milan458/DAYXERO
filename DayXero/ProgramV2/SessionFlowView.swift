@@ -16,6 +16,10 @@ struct SessionFlowView: View {
     private let motion = MotionPolicy()
 
     @State private var steps: [FlowStep] = []
+    /// Program v3: which card each step belongs to (nil for the hand, mission and completion).
+    @State private var owners: [String?] = []
+    /// Program v3: where "Play" on the hand picks up.
+    @State private var resume = 1
     @State private var index = 0
     @State private var record: SessionRecord?
     @State private var completed = false
@@ -24,6 +28,8 @@ struct SessionFlowView: View {
 
     enum FlowStep: Hashable {
         case intro, beat(String), cards, audio, mission, completion
+        /// Program v3: the day's hand, a card's own screen, and the "card played" screen after it.
+        case hand, card(String), played(String)
     }
 
     private var store: ProgramStore { ProgramStore(context: context, profile: profile) }
@@ -32,7 +38,7 @@ struct SessionFlowView: View {
     var body: some View {
         VStack(spacing: 0) {
             if let session, steps.indices.contains(index) {
-                if steps[index] != .completion { header(session) }
+                if showsHeader(steps[index]) { header(session) }
                 stepView(steps[index], session: session)
                     .id(steps[index])
                     .transition(motion.reduce ? .opacity : .asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity),
@@ -50,12 +56,28 @@ struct SessionFlowView: View {
         .onAppear(perform: start)
     }
 
+    /// The deck's own screens carry their close button; beats keep the lesson bar.
+    private func showsHeader(_ step: FlowStep) -> Bool {
+        switch step {
+        case .completion, .hand, .card, .played: false
+        default: true
+        }
+    }
+
     /// Most steps are on the reading ground. Day Xero's hold (Q1) is on apricot and its completion (Q2) on sun.
+    /// The deck: the hand, reveal, myth and played screens on violet, a listen or activity on its card's ground,
+    /// a day's recap on sun.
     private var stepGround: DX.Ground {
         guard let session, steps.indices.contains(index) else { return .reading }
         switch steps[index] {
+        case .hand, .played:
+            return .violet
+        case let .card(id):
+            return session.deck?.first { $0.id == id }?.screenGround ?? .violet
+        case .completion where session.isDeck && session.id != ProgramV2Access.offerAfter:
+            return .sun
         case let .beat(id):
-            return session.beats.first { $0.id == id }?.sets == "quit_timestamp" ? .apricot : .reading
+            return session.everyBeat.first { $0.id == id }?.sets == "quit_timestamp" ? .apricot : .reading
         case .completion:
             let finale = session.beats.contains { $0.sets == "graduated_at" }
             return session.id == ProgramV2Access.offerAfter || (finale && !isReplay) ? .sun : .reading
@@ -68,6 +90,7 @@ struct SessionFlowView: View {
 
     private func start() {
         guard let session, steps.isEmpty else { return }
+        if session.isDeck { startDeck(session); return }
         let ctx = context(for: session)
         let visible = { (beats: [Beat]) in beats.filter { ctx.shows($0) }.map { FlowStep.beat($0.id) } }
         // The lesson sits where the audio always did (MON-04): the 90-second card stack by default, or the recording
@@ -111,6 +134,112 @@ struct SessionFlowView: View {
                         : .programSessionStarted(sessionId: session.id, variant: ctx.variant.rawValue))
     }
 
+    // MARK: The deck (program v3)
+
+    /// The cards held for later (P3's guided use), from saved answers.
+    private func heldCards(_ session: ProgramContent.Session) -> Set<String> {
+        Set((session.deck ?? []).filter { $0.canSaveForLater && store.answer(Self.laterKey($0.id)) != nil }.map(\.id))
+    }
+
+    static func laterKey(_ cardId: String) -> String { "\(cardId).later" }
+
+    /// The hand, then each card: its before-beats, its own screen, its beats and the played screen; then the mission
+    /// and the recap.
+    private func deckSteps(_ session: ProgramContent.Session) -> (steps: [FlowStep], owners: [String?]) {
+        let ctx = context(for: session)
+        var built: [FlowStep] = [.hand]
+        var owned: [String?] = [nil]
+        for card in session.playOrder(savedForLater: heldCards(session)) {
+            let cardSteps: [FlowStep] = card.before.filter { ctx.shows($0) }.map { .beat($0.id) } + [.card(card.id)]
+                + card.beats.filter { ctx.shows($0) }.map { .beat($0.id) } + [.played(card.id)]
+            built += cardSteps
+            owned += cardSteps.map { _ in card.id }
+        }
+        if session.mission != nil { built.append(.mission); owned.append(nil) }
+        built.append(.completion); owned.append(nil)
+        return (built, owned)
+    }
+
+    private func startDeck(_ session: ProgramContent.Session) {
+        let deck = deckSteps(session)
+        steps = deck.steps
+        owners = deck.owners
+        let record = store.open(session, firstStepAfterAudio: 1)
+        self.record = record
+        index = 0
+        if isReplay || record.completedAt != nil {
+            resume = 1
+        } else {
+            resume = min(max(record.currentStep, 1), steps.count - 1)
+        }
+        #if DEBUG
+        if UserDefaults.standard.object(forKey: "dx.sessionStep") != nil {
+            index = min(max(UserDefaults.standard.integer(forKey: "dx.sessionStep"), 0), steps.count - 1)
+        }
+        #endif
+        Analytics.track(isReplay || record.completedAt != nil ? .programReplayStarted(sessionId: session.id)
+                        : .programSessionStarted(sessionId: session.id, variant: context(for: session).variant.rawValue))
+    }
+
+    /// "Play" on the hand: picks up where the person left off.
+    private func playFromHand() {
+        index = min(max(resume, 1), steps.count - 1)
+        saveStep()
+        finishIfCompletion()
+    }
+
+    /// "Later" on a played card: closes, and the next open starts at the next card.
+    private func later() {
+        if !isReplay, let record, record.completedAt == nil {
+            record.currentStep = min(index + 1, steps.count - 1)
+            try? context.save()
+        }
+        dismiss()
+    }
+
+    /// P3's guided use, saved for later: it and the cards that wait for it move after the rest, and the next card opens.
+    private func saveForLater(_ cardId: String, session: ProgramContent.Session) {
+        store.save(Self.laterKey(cardId), .text("later"), session: session.id)
+        let playedBefore = Set(owners.prefix(index).compactMap { $0 })
+        let deck = deckSteps(session)
+        steps = deck.steps
+        owners = deck.owners
+        let next = deck.owners.indices.first { i in
+            guard let owner = deck.owners[i] else { return i > 0 }
+            return !playedBefore.contains(owner) && !heldCards(session).contains(owner)
+                && !(session.deck?.first { $0.id == cardId }?.laterTakes.contains(owner) ?? false)
+        } ?? steps.count - 1
+        index = next
+        resume = next
+        saveStep()
+    }
+
+    /// Cards whose played screen comes before where the person is.
+    private func playedCards() -> Set<String> {
+        if record?.completedAt != nil, !isReplay { return Set(owners.compactMap { $0 }) }
+        var done = Set<String>()
+        for (i, step) in steps.enumerated() where i < resume {
+            if case let .played(id) = step { done.insert(id) }
+        }
+        return done
+    }
+
+    private func saveStep() {
+        if !isReplay, let record, record.completedAt == nil, index > 0 {
+            record.currentStep = index
+            try? context.save()
+        }
+    }
+
+    private func finishIfCompletion() {
+        if steps.indices.contains(index), steps[index] == .completion, !isReplay, record?.completedAt == nil, let session {
+            store.complete(session.id)
+            completed = true
+            let minutes = Int(Date.now.timeIntervalSince(record?.startedAt ?? .now) / 60)
+            Analytics.track(.programSessionCompleted(sessionId: session.id, minutesBucket: Analytics.minutesBucket(minutes)))
+        }
+    }
+
     /// Which lesson step a session gets (MON-04): cards unless the person chose to listen and there's a recording.
     static func lessonStep(hasCards: Bool, hasAudio: Bool, format: LessonFormat) -> FlowStep? {
         switch (hasCards, hasAudio) {
@@ -131,16 +260,8 @@ struct SessionFlowView: View {
     private func advance() {
         guard index + 1 < steps.count else { dismiss(); return }
         index += 1
-        if !isReplay, let record, record.completedAt == nil {
-            record.currentStep = index
-            try? context.save()
-        }
-        if steps[index] == .completion, !isReplay, record?.completedAt == nil, let session {
-            store.complete(session.id)
-            completed = true
-            let minutes = Int(Date.now.timeIntervalSince(record?.startedAt ?? .now) / 60)
-            Analytics.track(.programSessionCompleted(sessionId: session.id, minutesBucket: Analytics.minutesBucket(minutes)))
-        }
+        saveStep()
+        finishIfCompletion()
     }
 
     /// Back is offered on every step after the first, except straight after a commit: going back over a hold would
@@ -154,10 +275,7 @@ struct SessionFlowView: View {
     private func goBack() {
         guard let session, Self.canGoBack(from: index, in: steps, beats: allBeats(session)) else { return }
         index -= 1
-        if !isReplay, let record, record.completedAt == nil {
-            record.currentStep = index
-            try? context.save()
-        }
+        saveStep()
     }
 
     /// The Back action for a step's own "go back" link, or nil where Back isn't offered.
@@ -167,11 +285,12 @@ struct SessionFlowView: View {
     }
 
     private func allBeats(_ session: ProgramContent.Session) -> [Beat] {
-        session.beats + (session.mission?.followUp ?? [])
+        session.everyBeat
     }
 
     private func close() {
-        if !isReplay, let record { record.currentStep = index; try? context.save() }
+        // The hand is step 0: closing there keeps the place saved further in.
+        if !isReplay, let record, index > 0 || !(session?.isDeck ?? false) { record.currentStep = index; try? context.save() }
         dismiss()
     }
 
@@ -255,7 +374,37 @@ struct SessionFlowView: View {
             }
         case .completion:
             SessionCompletion(session: session, ctx: ctx, isReplay: isReplay, onDone: { dismiss() })
+        case .hand:
+            let order = session.playOrder(savedForLater: heldCards(session))
+            DeckHandView(session: session, ctx: ctx, cards: order, played: playedCards(),
+                         next: owners.indices.contains(resume) ? owners[resume] : nil,
+                         onPlay: playFromHand, onClose: close)
+        case let .card(id):
+            if let place = deckPosition(id, in: session) {
+                DeckCardScreen(card: place.card, position: place.position, total: place.total, session: session, ctx: ctx,
+                               onDone: advance, onClose: close,
+                               onSaveForLater: place.card.canSaveForLater && !isReplay ? { saveForLater(id, session: session) } : nil)
+            }
+        case let .played(id):
+            if let place = deckPosition(id, in: session) {
+                DeckCardPlayedView(card: place.card, position: place.position, total: place.total,
+                                   next: nextCard(after: id, in: session), ctx: ctx, onNext: advance, onLater: later)
+            }
         }
+    }
+
+    /// A card, its place in the day's play order (1-based) and the number of cards.
+    private func deckPosition(_ id: String, in session: ProgramContent.Session) -> (card: DeckCard, position: Int, total: Int)? {
+        let order = session.playOrder(savedForLater: heldCards(session))
+        guard let i = order.firstIndex(where: { $0.id == id }) else { return nil }
+        return (order[i], i + 1, order.count)
+    }
+
+    /// The card played after this one, nil after the last.
+    private func nextCard(after id: String, in session: ProgramContent.Session) -> DeckCard? {
+        let order = session.playOrder(savedForLater: heldCards(session))
+        guard let i = order.firstIndex(where: { $0.id == id }), order.indices.contains(i + 1) else { return nil }
+        return order[i + 1]
     }
 }
 
@@ -514,6 +663,8 @@ struct SessionCompletion: View {
     var body: some View {
         if session.id == ProgramV2Access.offerAfter, !isReplay {
             dayXeroDone
+        } else if session.isDeck {
+            DeckRecapView(session: session, ctx: ctx, isReplay: isReplay, next: next, opensFullProgram: opensFullProgram, onDone: onDone)
         } else if session.beats.contains(where: { $0.sets == "graduated_at" }), !isReplay {
             // F18: the graduation session ends on the finale, the only screen with confetti.
             FinaleView(profile: ctx.store.profile, label: session.label, onDone: onDone)

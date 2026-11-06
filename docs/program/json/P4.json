@@ -1,0 +1,419 @@
+{
+  "id": "P4",
+  "phaseId": "prep",
+  "label": "Prep 4",
+  "title": "The stress loop",
+  "subtitle": "A breath that works in the moment",
+  "durationMinutes": 28,
+  "unlock": {
+    "rule": "next_day_after_previous"
+  },
+  "audio": {
+    "variants": [
+      "smoking",
+      "vaping",
+      "pouches"
+    ]
+  },
+  "beats": [],
+  "deck": [
+    {
+      "id": "P4.1",
+      "format": "listen",
+      "title": "Why it feels like it calms you",
+      "minutes": 6,
+      "ground": "apricot",
+      "commit": "I've felt that loop",
+      "script": {
+        "voice": "Calm, steady and kind, a touch slower than usual; plain-spoken and confident when explaining the loop, softer and more reassuring in chapter 4.",
+        "chapters": [
+          {
+            "title": "The moment it seems to work",
+            "text": "[warmly] Welcome to day four.\n\nI'd like you to think of the last time stress really hit. Maybe a tense message at work. An argument. Running late, with everything going wrong at once.\n\n[pause]\n\nGot one?\n\nWhat did you reach for?\n\nFor a lot of people, the answer is nicotine. And it seemed to work. {s: You stepped outside, lit up, and a minute later the edge had come off. | v: You took a few hits, and a minute later the edge had come off. | p: You put a pouch in, and a few minutes later the edge had come off.}\n\nI'm not going to tell you that didn't happen. The relief was real. Today we're going to look at what, exactly, it relieved. Because once you've seen it, it's very hard to unsee."
+          },
+          {
+            "title": "The loop",
+            "text": "A researcher who studies stress looked closely at this question: does smoking really calm people down? What the evidence showed was a pattern. People who smoke tend to feel a little more stressed, overall, than people who don't. Their tension rises between cigarettes, as the nicotine wears off. Smoking brings it back down, to about where a non-smoker is most of the time. And then it starts to rise again.\n\n[pause]\n\nSo the calm that follows is real. But it's mostly a return to normal. It's the gap closing.\n\nNicotine doesn't stay with you for long. About half of it is gone from your body in around two hours. So through the day, you ride a small up and down that a non-user doesn't have. Down a little, top up. Down a little, top up.\n\nNow add real stress on top. The email, the bill, the argument. Stress plus the gap feels like a lot. You use, the gap closes, and the total drops. It feels as if nicotine dealt with the stress.\n\nBut look at what's still there. The email. The bill. The argument. Nothing about the actual problem has changed. Only the gap has."
+          },
+          {
+            "title": "Why they feel the same",
+            "text": "[calmly] Here's why it's so convincing. The gap and stress feel very alike in the body.\n\nBoth can make your chest feel tight. Both make it hard to settle. Both shorten your fuse, and both set your thoughts racing a little. So when they show up together, it's almost impossible to tell which is which.\n\nAnd your brain learns a simple rule. Stress, then nicotine, then relief. Every time it seems to work, the rule gets a little stronger. That's the loop.\n\nThere's one more twist. On a hard day, you might find yourself reaching for it more often. And more uses means more gaps through the day. So the days you most want calm can end up with the most ups and downs built in.\n\n[pause]\n\nNone of this is a flaw in you. It's simply how nicotine works for anyone who uses it regularly. And it means something hopeful. If part of your everyday stress is the gap, then that part can go."
+          },
+          {
+            "title": "What happens after people stop",
+            "text": "That isn't just a theory. A large review of studies, published in the BMJ, looked at people's mental health after they stopped smoking. On average, the people who quit ended up with lower anxiety, lower stress and less depression than the people who kept smoking. Their mood and their quality of life tended to go up, not down.\n\n[pause]\n\n[reassuring] I want to be honest about the first part, though. In the first days and weeks after stopping, many people feel restless, irritable or on edge. That's withdrawal, and it's real. It usually peaks in the first week and eases over two to four weeks. You'll have tools for it, and a plan, and you won't be doing it on your own.\n\nBut the longer picture runs the other way from what most people fear. Stopping tends to lower stress, not raise it.\n\n{s: Most of this research was with people who smoked, so it speaks directly to you. | v: Most of this research was with people who smoked. The up and down between doses comes from the nicotine itself, so it's worth watching for in your own day. | p: Most of this research was with people who smoked. The up and down between doses comes from the nicotine itself, so it's worth watching for in your own day.}"
+          },
+          {
+            "title": "Keep the break",
+            "text": "[gently] So what was helping, all those times?\n\nSome of it was the gap closing. But some of it was everything that came along with it. {s: Stepping away. A change of air. And, if you think about it, the breathing: a long, deep breath in, and a slow breath out, again and again. | v: Stepping away. And, if you think about it, the breathing: a deep breath in, and a long, slow breath out, again and again. | p: Taking a second for yourself. A small pause in the middle of everything.}\n\nYou can keep all of that. You need breaks when things get hard. Everyone does. You can keep the break, and leave the nicotine out of it.\n\nNext, I'll show you a breath you can use in the moment, anywhere, in about thirty seconds. Then a few cards about stress, and a plan for the two moments that get to you most.\n\nFor today, keep using as you normally do. Just one thing. When stress hits, notice it, and ask: is this the situation, the gap, or both?\n\n[pause]\n\nYou don't need to fix it. Just see which is which."
+          }
+        ]
+      }
+    },
+    {
+      "id": "P4.2",
+      "format": "breathe",
+      "title": "A breath that works in the moment",
+      "minutes": 5,
+      "ground": "sky",
+      "commit": "I'll sigh first today",
+      "beats": [
+        {
+          "id": "P4.2a",
+          "type": "info",
+          "title": "Two in, one long out",
+          "body": "Breathe in through your nose. At the top, take one more short sip of air. Then breathe out slowly through your mouth, for as long as is comfortable. That's one sigh.\n\nIn a study of daily breathing practice, this pattern improved mood and calmed the body. Source: Balban et al., 2023\n\nFeeling light-headed? Breathe normally for a moment, then rejoin when you're ready."
+        },
+        {
+          "id": "P4.2b",
+          "type": "slider",
+          "prompt": "First, a quick check. How tense do you feel right now?",
+          "minLabel": "Calm",
+          "maxLabel": "Very tense",
+          "saveAs": "tension_before"
+        },
+        {
+          "id": "P4.2c",
+          "type": "breathe",
+          "pattern": "sigh",
+          "cycles": 18,
+          "label": "Two in through your nose, one long breath out. Three minutes."
+        },
+        {
+          "id": "P4.2d",
+          "type": "slider",
+          "prompt": "How tense do you feel now?",
+          "minLabel": "Calm",
+          "maxLabel": "Very tense",
+          "saveAs": "tension_after",
+          "compareWith": "tension_before",
+          "compareLabels": [
+            "Before",
+            "After"
+          ],
+          "feedback": "Lower? That was nothing but your breath. About the same, or a little higher? That's fine, especially the first time; it may show more when you're actually tense. In a tense moment, two or three sighs take about thirty seconds. Do them first, then decide what you need."
+        }
+      ]
+    },
+    {
+      "id": "P4.3",
+      "format": "reveal",
+      "title": "What stress actually is",
+      "minutes": 6,
+      "commit": "I can tell them apart",
+      "intro": "Four questions about stress, and what's really going on. Tap each card.",
+      "cards": [
+        {
+          "front": "Is it stress, or is it the gap?",
+          "answer": "Often both at once. Stress comes from what's happening around you. The gap comes from nicotine wearing off. They feel alike, so each gets blamed on the other.",
+          "deeper": "Stress is your body gearing up for something: a deadline, a hard conversation, a problem to fix. The gap is the restless, slightly empty feeling as nicotine wears off between doses. Both can tighten your chest and shorten your fuse. Here's a quick way to tell them apart. Ask yourself: would this feeling be here if nothing had gone wrong today? If it shows up on a calm afternoon, around when your last one would be wearing off, that's mostly the gap. If it's tied to something real, it's stress, and the gap may be adding to it. Today, just try naming which is which.",
+          "source": "Benowitz, 2010"
+        },
+        {
+          "front": "Why do hard days feel harder when you use?",
+          "answer": "On a hard day you may reach for it more often, and every use brings another gap. So the worst days can carry the most extra ups and downs.",
+          "deeper": "Picture an ordinary day: a few gaps, each one closed. Now picture a bad day. There's more stress, so you reach for it more, and the gaps come around faster. Each one adds a little restlessness on top of the real problem. When researchers looked at this, they found that people who smoke tend to feel slightly more stressed overall than people who don't, and that tension rises between cigarettes. That doesn't mean your hard days aren't hard. They are. It means part of what makes them so heavy is extra weight you won't have to carry once you've stopped.",
+          "source": "Parrott, 1999"
+        },
+        {
+          "front": "What actually helps in two minutes?",
+          "answer": "Something for your body and something for your mind: a few long breaths out, a change of place, a word with someone. Small, quick and there whenever you need it.",
+          "deeper": "For your body, the sigh you just practiced. In a study at Stanford, people who did five minutes of cyclic sighing a day saw their mood improve and their body calm down. In a tense moment, two or three sighs take about thirty seconds. For your surroundings, step outside, walk to another room, or get a glass of water. A change of scene gives you a minute before you decide anything. For your mind, name it: \"this is stress\", \"this is the gap\". Then ask what would actually help with the problem. And for your people, a two-line message to someone who gets it. Pick whichever fits the moment.",
+          "source": "Balban, 2023"
+        },
+        {
+          "front": "When is stress more than stress?",
+          "answer": "When it doesn't lift, keeps you from sleeping or getting through the day, or comes with feeling low or hopeless most days. That's worth talking to someone about.",
+          "deeper": "Everyday stress rises and falls with what's going on. Sometimes it doesn't fall. Worry runs all day. Panic arrives out of nowhere. You feel low for weeks, or you have thoughts that you'd be better off not here. That isn't a nicotine problem, and it isn't something to push through on your own. It's common, it's nobody's fault, and there's help for it. You can get help with this and still work on quitting. A doctor can help with both. If stress or low mood is getting in the way of everyday life, talk to a doctor or a mental health professional. If you ever feel unsafe, contact a helpline or your local emergency number now."
+        }
+      ],
+      "beats": [
+        {
+          "id": "P4.3a",
+          "type": "info",
+          "title": "When stress is more than stress",
+          "body": "If stress or low mood is getting in the way of everyday life, talk to a doctor or a mental health professional. If you ever feel unsafe, contact a helpline or your local emergency number now.",
+          "link": "helplines"
+        }
+      ]
+    },
+    {
+      "id": "P4.4",
+      "format": "myth",
+      "title": "Stress and mood",
+      "minutes": 5,
+      "commit": "I see the loop now",
+      "intro": "Five things people believe about stress and nicotine. Myth or fact?",
+      "statements": [
+        {
+          "text": "{s: Smoking | v: Vaping | p: A pouch} relaxes me.",
+          "answer": "myth",
+          "verdict": "Myth. It relaxes the restlessness it causes.",
+          "explanation": {
+            "smoking": "It feels relaxing because it closes the gap: the tension that builds as nicotine wears off. Research on smoking and stress found that people who smoke tend to be a little more stressed overall than people who don't, and that smoking only brings them back to about where non-smokers already are. The stress you came in with is still there afterward. What eased was the gap.",
+            "vaping": "It feels relaxing because it closes the gap: the tension that builds as nicotine wears off. Research on smoking and stress found that people who smoke tend to be a little more stressed overall than people who don't, and that smoking only brings them back to about where non-smokers already are. The stress you came in with is still there afterward. What eased was the gap. This research was in people who smoked; the up-and-down between doses comes from nicotine itself.",
+            "pouches": "It feels relaxing because it closes the gap: the tension that builds as nicotine wears off. Research on smoking and stress found that people who smoke tend to be a little more stressed overall than people who don't, and that smoking only brings them back to about where non-smokers already are. The stress you came in with is still there afterward. What eased was the gap. This research was in people who smoked; the up-and-down between doses comes from nicotine itself."
+          },
+          "source": {
+            "smoking": "Parrott, 1999",
+            "vaping": "Parrott, 1999; Benowitz, 2010",
+            "pouches": "Parrott, 1999; Benowitz, 2010"
+          }
+        },
+        {
+          "text": "If I quit, I'll be more anxious forever.",
+          "answer": "myth",
+          "verdict": "Myth. A short restless stretch, then usually calmer.",
+          "explanation": "In the first days and weeks, many people feel more restless, irritable or anxious. That's withdrawal, and it usually peaks in the first week and eases within two to four weeks. After that, the picture tends to improve. A large review of studies found that, on average, anxiety was lower in people who had quit than in people who kept smoking. The restless stretch is temporary.",
+          "source": "Hughes, 2007; Taylor, 2014"
+        },
+        {
+          "text": "I need it when things go wrong.",
+          "answer": "myth",
+          "verdict": "Myth. You need a break. Nicotine came with it.",
+          "explanation": "When things go wrong, you do need something: a minute to step back, a breath, someone to talk to. Nicotine has been standing in that spot for so long that it feels like the thing itself. But what it actually relieves is the gap, which rises between doses and adds to the stress you already have. Keep the minute, the breath and the person. They help with the problem.",
+          "source": "Parrott, 1999"
+        },
+        {
+          "text": "People who quit end up happier, on average.",
+          "answer": "fact",
+          "verdict": "Fact, on average, once the first weeks pass.",
+          "explanation": "A large review in the BMJ brought together studies that followed people who quit smoking and people who kept going. On average, those who quit had lower anxiety, depression and stress afterward, and better mood and quality of life. These studies show a link, not a guarantee for any one person, and the first weeks can be bumpy. But the common fear, that quitting means a duller, more stressed life, isn't what the evidence shows.",
+          "source": "Taylor, 2014"
+        },
+        {
+          "text": "The irritability from withdrawal is temporary.",
+          "answer": "fact",
+          "verdict": "Fact. It peaks early, then eases.",
+          "explanation": "Irritability, restlessness and trouble concentrating are real withdrawal symptoms. They're usually strongest in the first week and mostly ease within two to four weeks. Knowing that helps. A short fuse on day three isn't who you are now. It's your body adjusting, and it passes. Warning the people around you, and having a plan for the hard moments, makes that stretch easier for everyone.",
+          "source": "Hughes, 2007"
+        }
+      ]
+    },
+    {
+      "id": "P4.5",
+      "format": "try",
+      "title": "Your stress plan",
+      "minutes": 6,
+      "ground": "mint",
+      "commit": "This is my plan",
+      "beats": [
+        {
+          "id": "P4.5a",
+          "type": "info",
+          "title": "A plan for when it hits",
+          "body": "When stress hits, there's no time to think up a plan. So we'll make two now. Plans written as 'when this happens, I'll do that' are easier to follow through on.\n\nSource: Gollwitzer & Sheeran, 2006"
+        },
+        {
+          "id": "P4.5b",
+          "type": "choice",
+          "prompt": "What gets to you most? Pick the two that come up most often.",
+          "multi": true,
+          "pick": 2,
+          "allowOther": true,
+          "saveAs": "stress_triggers",
+          "options": [
+            {
+              "id": "work",
+              "text": "Work piling up"
+            },
+            {
+              "id": "deadline",
+              "text": "A deadline"
+            },
+            {
+              "id": "conflict",
+              "text": "Tension with someone"
+            },
+            {
+              "id": "money",
+              "text": "Money worries"
+            },
+            {
+              "id": "late",
+              "text": "Traffic or running late"
+            },
+            {
+              "id": "family",
+              "text": "Kids or family chaos"
+            },
+            {
+              "id": "news",
+              "text": "Bad news"
+            },
+            {
+              "id": "overload",
+              "text": "Too much at once"
+            }
+          ]
+        },
+        {
+          "id": "P4.5c",
+          "type": "note",
+          "title": "Your two stressors",
+          "textFrom": "stress_triggers",
+          "skipIfEmpty": true
+        },
+        {
+          "id": "P4.5d",
+          "type": "choice",
+          "prompt": "When the first one hits, what will you do first, before anything else? Two sighs is the one we recommend.",
+          "allowOther": true,
+          "saveAs": "stress_plan_1",
+          "options": [
+            {
+              "id": "sigh",
+              "text": "Two sighs"
+            },
+            {
+              "id": "outside",
+              "text": "Step outside for two minutes"
+            },
+            {
+              "id": "text",
+              "text": "Text someone"
+            },
+            {
+              "id": "water",
+              "text": "Get a glass of water"
+            },
+            {
+              "id": "walk",
+              "text": "Walk around the block"
+            },
+            {
+              "id": "shake",
+              "text": "Shake out my hands and shoulders"
+            },
+            {
+              "id": "write",
+              "text": "Write down what's bugging me"
+            },
+            {
+              "id": "name",
+              "text": "Name it: stress, the gap, or both"
+            }
+          ]
+        },
+        {
+          "id": "P4.5e",
+          "type": "choice",
+          "prompt": "And when the second one hits, what will you do first? The same plan both times is fine. Simple works.",
+          "allowOther": true,
+          "saveAs": "stress_plan_2",
+          "options": [
+            {
+              "id": "sigh",
+              "text": "Two sighs"
+            },
+            {
+              "id": "outside",
+              "text": "Step outside for two minutes"
+            },
+            {
+              "id": "text",
+              "text": "Text someone"
+            },
+            {
+              "id": "water",
+              "text": "Get a glass of water"
+            },
+            {
+              "id": "walk",
+              "text": "Walk around the block"
+            },
+            {
+              "id": "shake",
+              "text": "Shake out my hands and shoulders"
+            },
+            {
+              "id": "write",
+              "text": "Write down what's bugging me"
+            },
+            {
+              "id": "name",
+              "text": "Name it: stress, the gap, or both"
+            }
+          ]
+        },
+        {
+          "id": "P4.5f",
+          "type": "choice",
+          "prompt": "How do you know stress is starting? The earlier you spot it, the easier the plan is to use. Pick any that fit.",
+          "multi": true,
+          "saveAs": "stress_signals",
+          "options": [
+            {
+              "id": "chest",
+              "text": "Tight chest"
+            },
+            {
+              "id": "jaw",
+              "text": "Clenched jaw"
+            },
+            {
+              "id": "fuse",
+              "text": "Short fuse"
+            },
+            {
+              "id": "racing",
+              "text": "Racing thoughts"
+            },
+            {
+              "id": "hands",
+              "text": "Restless hands"
+            },
+            {
+              "id": "breath",
+              "text": "Quick, shallow breathing"
+            },
+            {
+              "id": "reach",
+              "text": "Reaching for my {product}"
+            },
+            {
+              "id": "stomach",
+              "text": "Knot in my stomach"
+            }
+          ]
+        },
+        {
+          "id": "P4.5g",
+          "type": "info",
+          "title": "Run it once in your head",
+          "body": "Close your eyes for twenty seconds. Picture the moment your first stressor starts. Notice the first sign. Then see yourself doing your plan."
+        },
+        {
+          "id": "P4.5h",
+          "type": "plan_card",
+          "title": "Your stress plan",
+          "fields": [
+            "stress_triggers",
+            "stress_plan_1",
+            "stress_plan_2",
+            "stress_signals"
+          ]
+        },
+        {
+          "id": "P4.5i",
+          "type": "info",
+          "title": "Saved",
+          "body": "Two stressors, two plans, ready before you need them.\n\nThis week, you can still use afterward if you want to. The plan just comes first. From Day Xero, the plan is what you'll reach for instead."
+        }
+      ]
+    }
+  ],
+  "recap": {
+    "learned": [
+      "Nicotine eases the gap it causes. The stress itself is still there afterward.",
+      "Stress and the gap feel alike, which is why the loop is so convincing.",
+      "After a short restless stretch, people who quit tend to feel less stressed, not more."
+    ],
+    "tomorrow": "Riding the wave: what a craving actually does if you let it be."
+  },
+  "mission": {
+    "text": "When stress hits today, do two sighs first. Then use if you still want to. Log whether you did.",
+    "logType": "stress_sigh"
+  },
+  "completionText": "You've got a breath for stress now. Use it first."
+}

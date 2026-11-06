@@ -197,6 +197,15 @@ struct ProgramStore {
         case .vape: String(localized: "puff")
         case .pouches: String(localized: "pouch")
         }
+        // Program v3 copy names the product itself: "your {product}", "throw your {product_plural} away".
+        switch product {
+        case .cigarettes:
+            values["product"] = String(localized: "cigarette"); values["product_plural"] = String(localized: "cigarettes")
+        case .vape:
+            values["product"] = String(localized: "vape"); values["product_plural"] = String(localized: "vapes")
+        case .pouches:
+            values["product"] = String(localized: "pouch"); values["product_plural"] = String(localized: "pouches")
+        }
         if let primary {
             values["daily_units"] = Int(primary.unitsPerDay.rounded()).formatted()
             values["yearly_units"] = Int((primary.unitsPerDay * 365).rounded()).formatted()

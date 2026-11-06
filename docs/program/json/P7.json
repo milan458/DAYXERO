@@ -1,0 +1,403 @@
+{
+  "id": "P7",
+  "phaseId": "prep",
+  "label": "Prep 7",
+  "title": "The night before",
+  "subtitle": "Clear out and get ready",
+  "durationMinutes": 31,
+  "unlock": {
+    "rule": "next_day_after_previous"
+  },
+  "audio": {
+    "variants": [
+      "smoking",
+      "vaping",
+      "pouches"
+    ]
+  },
+  "beats": [],
+  "deck": [
+    {
+      "id": "P7.1",
+      "format": "listen",
+      "title": "What you're actually giving up",
+      "minutes": 7,
+      "ground": "apricot",
+      "commit": "I'm not giving anything up",
+      "intro": "About 7 minutes. Keep using as normal today.",
+      "after": "The fear is part of the trap. Tomorrow, you're not losing anything.",
+      "script": {
+        "voice": "Warm, steady and unhurried, like a counselor who's on your side; gentle on the fears, plain and confident on the facts, never cheerleading. About 130 words a minute, with real space in the pauses.",
+        "chapters": [
+          {
+            "title": "The fear, out loud",
+            "text": "[warmly] Tomorrow is Day Xero. And if part of you feels uneasy about that this morning, I'd like to start right there. [pause]\n\nMaybe there's a tightness when you think about tomorrow. A quiet voice saying \"not yet.\" Or a list of reasons this might be a bad week to stop. [pause] That's normal. Almost everyone feels some version of it the day before.\n\nHere's what I'd like you to see. That fear isn't a sign you're not ready. It's one of the ways nicotine keeps people using. Think about it. If stopping felt like nothing, nobody would stay stuck for years. The dread of going without is part of how the addiction protects itself. [pause] So of course it's loud today. Tomorrow is the day it stops being fed.\n\nYou don't have to argue with the fear, and you don't have to wait for it to leave. You can just notice it. \"There's the fear.\" [pause] And then look at what it's actually saying.\n\nSo let's do that. We'll take the big fears one at a time, with our eyes open."
+          },
+          {
+            "title": "\"I'll miss it\"",
+            "text": "The first one usually sounds like this: I'll miss it.\n\nSo what, exactly, would you miss? [pause] All week you've been watching closely. You've seen the gap: that restless, slightly empty feeling that builds between doses. And you've seen that most of what feels good about {s: a cigarette | v: the vape | p: a pouch} is that gap closing.\n\nPeople who don't use nicotine don't have the gap. They don't spend the day topping up a feeling the last dose left behind. So what you'd miss isn't a pleasure they're going without. It's relief from something they never feel. [pause]\n\nThat's why tomorrow isn't a sacrifice. You're not giving anything up. You're putting down something that's been quietly taking from you, many times a day. [pause] Free, not deprived.\n\nThen there's the fear underneath it: I'll be miserable. Here I want to be straight with you. The first few days can be uncomfortable. Cravings come. You might feel snappy, restless, foggy or hungrier than usual. Sleep might be off for a bit. That's withdrawal, and it's real.\n\nBut it has an end. For most people it's strongest in the first week, and most of it eases within two to four weeks. [pause] Discomfort that has an end is very different from misery. And every craving you ride out is one fewer ahead of you."
+          },
+          {
+            "title": "Your break, and your weight",
+            "text": "Next: I'll lose my break.\n\nHere's a question. Is it the nicotine you'd miss, or the five minutes? [pause] Stepping outside. Leaving the desk. A breath of air. A moment that belongs to you.\n\nYou keep all of that. The break was never the problem. You can still step out, stand in the sun, take five minutes with a drink or a friend. The only part that's leaving is the part that brought the gap back an hour later. [pause] So tomorrow, take your breaks. Just take them as someone who doesn't need anything from them.\n\nAnd then, for a lot of people, the quiet one: I'll gain weight.\n\nIt's a fair worry, so here are the honest facts. Some weight gain after quitting is common. A large review of studies in the BMJ, looking at people who quit smoking, found the average was about nine to eleven pounds over the first year. But the range was wide. Some people gained very little, and about one in six lost weight. [pause] It isn't a given. Regular meals, water close by and something crunchy for when your hands want something all go a long way. We'll come back to them."
+          },
+          {
+            "title": "Who am I without it?",
+            "text": "The last fear is the deepest one. Who am I without it?\n\nMaybe it's been part of your day for years. The first thing in the morning. Something to do with your hands. How you pause, how you celebrate, how you get through the hard bits. It can feel like part of who you are. [pause]\n\nBut think back. There was a version of you before you ever {s: lit one | v: took a puff | p: put one in}. That person laughed, worked, got bored, got through hard days. Nothing essential about you came from nicotine. [pause]\n\nWhat you care about is still yours. Think of the reason you chose at the start of the week, the one that matters most. Hold it for a moment now. [long pause] That reason says far more about who you are than a habit ever did.\n\nTomorrow you don't become someone else. You become someone who doesn't need it."
+          },
+          {
+            "title": "Today and tonight",
+            "text": "So here's where we are. [pause] The fears are real feelings. But look closely, and most of them are the addiction talking. You'd miss the relief, not a pleasure. Your breaks stay. Weight is manageable. You stay you. [pause]\n\nWhen one of those thoughts comes back today, and it might, try saying it this way: \"I'm having the thought that I'll miss it.\" Then let it sit there. A thought isn't an order. [pause]\n\nFor now, use as normal. Later, you'll clear things out and write a line to tomorrow-you. And this evening I'll be with you for the last one, with your eyes fully open. [pause]\n\n[softly] One more day of seeing clearly. Then you get to stop."
+          }
+        ]
+      }
+    },
+    {
+      "id": "P7.2",
+      "format": "reveal",
+      "title": "What the first week can feel like",
+      "minutes": 5,
+      "commit": "I know what's coming",
+      "intro": "Withdrawal is real, and it has an end. Here's what to expect, honestly, and what helps.",
+      "cards": [
+        {
+          "front": "When does it start, and when is it worst?",
+          "answer": "It can start within a few hours of your last {product}. For most people it's strongest in the first days to a week, then it weakens the longer you go without.\n\nA few hours · Withdrawal can start\nFirst week · Withdrawal is usually at its strongest",
+          "deeper": "Nicotine doesn't last long in the body. Its half-life is about two hours, so the level falls steadily between doses. That falling level is the gap you've watched all week, and it's why the first one of the morning feels so strong. From tomorrow nothing refills it. Within a few hours your brain notices, and that's when the first cravings, restlessness or a short fuse tend to show up. It's uncomfortable, and it's also the sign your body has started adjusting. The first days are the steepest part for most people, which is why your support is front-loaded: Craving SOS, your plans, and a short session every day.",
+          "source": "smokefree.gov (Nicotine withdrawal); Benowitz, NEJM 2010"
+        },
+        {
+          "front": "What might I actually feel?",
+          "answer": "Cravings that come in waves. Irritable or restless. Low or anxious. Harder to focus. Hungrier. Sleep a bit off. Not everyone gets all of these. They're signs of adjusting.",
+          "deeper": "These are the symptoms that research has confirmed as genuine nicotine withdrawal. Cravings rise, peak and fall, usually within minutes. Irritability is one of the most common, so it's worth warning the people around you. Low mood or anxiety can show up early; for most people, 1 to 2 weeks · Mood changes from withdrawal usually ease. If low mood hangs around longer than that, talk to a doctor. You don't have to push through it alone. Focus can feel foggy for a few days, so take the day in small pieces. Hunger is common: keep easy snacks around. Sleep can be restless at first and usually settles.",
+          "source": "Hughes, Nicotine Tob Res 2007; smokefree.gov (Managing nicotine withdrawal)"
+        },
+        {
+          "front": "How long does it last?",
+          "answer": "Most symptoms ease within two to four weeks. Cravings can last a little longer, but they come less often and feel weaker as the weeks go by.\n\n1 to 2 weeks · Mood changes from withdrawal usually ease\nA few weeks · Cravings come less often",
+          "deeper": "Think of it as a slope, not a wall. The first week is the climb. After that, most of the physical side settles, usually within two to four weeks. Cravings are the part that can stay a little longer: “Cravings can last longer than the physical symptoms, but they come less often and feel weaker as the weeks go by.” That's why the program keeps going after Day Xero, with skills for the moments that still turn up. Every wave you ride is practice your brain keeps. Tonight it can feel as if the hard part will last forever. It won't. It has a shape, and you'll be watching it get smaller.",
+          "source": "Hughes, Nicotine Tob Res 2007; smokefree.gov (Nicotine withdrawal)"
+        },
+        {
+          "front": "What actually helps?",
+          "answer": "Riding each wave instead of fighting it. Food, water and sleep. Moving a little. Telling people. NRT, if you've chosen it. And Craving SOS, one tap away.",
+          "deeper": "Match the help to the feeling. A craving: notice it, name it, breathe slowly and ride it, or open Craving SOS. Irritable: tell people ahead of time, and try two slow sighs (two breaths in through the nose, one long breath out) before you answer. Foggy: short lists, one task at a time, a walk outside. Hungry: regular meals, water first, crunchy snacks. Sleep: coffee before noon, screens down earlier. {s: And halve your coffee for now: after you stop smoking, the same cup hits harder. | v: Keep an eye on how much coffee you drink if sleep is off. | p: Keep an eye on how much coffee you drink if sleep is off.} If you're using NRT, a patch plus a fast-acting form works better than one alone. Follow the pack.",
+          "source": "Balban, Cell Rep Med 2023; Cochrane review of combination NRT, 2019{s: ; Benowitz, Hall & Modin, BMJ 1989 | v: | p: }"
+        }
+      ]
+    },
+    {
+      "id": "P7.3",
+      "format": "myth",
+      "title": "Fears",
+      "minutes": 5,
+      "commit": "I can handle that",
+      "intro": "Five things people fear the night before. Tap Myth or Fact.",
+      "statements": [
+        {
+          "text": "If I quit, I'll definitely gain a lot of weight.",
+          "answer": "myth",
+          "verdict": "Some gain is common. A lot isn't a given.",
+          "explanation": "It's a fair worry, and the honest answer is in between. A large review found people who quit smoking gained about 4 to 5 kg (9 to 11 lb) on average over the first year, with a wide range: some gained little, and about 16 in 100 lost weight. Hunger is a normal part of withdrawal, so plan for it: regular meals, water close by, something crunchy for your hands. {s: | v: That research looked at people who smoked. There's less on vaping. | p: That research looked at people who smoked. There's less on pouches.}",
+          "source": "Aubin et al., BMJ 2012; Hughes, Nicotine Tob Res 2007"
+        },
+        {
+          "text": "Withdrawal lasts for months.",
+          "answer": "myth",
+          "verdict": "For most people, the worst is over in weeks.",
+          "explanation": "Withdrawal is usually strongest in the first week. Most symptoms, like irritability, restlessness and trouble focusing, ease within two to four weeks. Cravings can hang around a little longer, but they come less often and feel weaker as the weeks go by. So the hard part has an end, and it's nearer than it feels tonight. Each wave you ride brings it closer.",
+          "source": "Hughes, Nicotine Tob Res 2007; smokefree.gov (health timeline: “A few weeks · Cravings come less often”)"
+        },
+        {
+          "text": "I'll never enjoy a coffee or a drink again.",
+          "answer": "myth",
+          "verdict": "The link is learned, and it can loosen.",
+          "explanation": "Coffee and nicotine feel joined because they've happened together thousands of times. The first few coffees without it may feel strange, and that's the old pairing showing itself, not something missing from the coffee. {s: One real change: after you stop smoking, caffeine hits harder, so try half your usual for a while. | v: Give it some time. | p: Give it some time.} In studies of people who quit smoking, mood and quality of life went up on average, not down.",
+          "source": "Taylor et al., BMJ 2014{s: ; Benowitz, Hall & Modin, BMJ 1989 | v: | p: }"
+        },
+        {
+          "text": "I'll always miss it.",
+          "answer": "myth",
+          "verdict": "Missing it fades as the gap does.",
+          "explanation": "What people miss at first is mostly relief: the gap closing. Once nicotine stops arriving, the gap stops being refilled, and cravings come less often and feel weaker as the weeks go by. Wanting it was never proof that it gave you something. It was proof that it took something first. You don't have to feel nothing to be free. You just have to keep letting the waves pass.",
+          "source": "smokefree.gov (health timeline: “A few weeks · Cravings come less often”); Benowitz, NEJM 2010"
+        },
+        {
+          "text": {
+            "smoking": "Quitting adds years to your life, even later in life.",
+            "vaping": "Within a few days of stopping, most of the nicotine has left my body.",
+            "pouches": "Within a few days of stopping, most of the nicotine has left my body."
+          },
+          "answer": "fact",
+          "verdict": {
+            "smoking": "It's never too late to gain something.",
+            "vaping": "Most of it is gone within days.",
+            "pouches": "Most of it is gone within days."
+          },
+          "explanation": {
+            "smoking": "A 50-year study of male British doctors found that those who stopped smoking at about 30, 40, 50 or 60 gained roughly 10, 9, 6 or 3 years of life expectancy, compared with those who kept smoking. Earlier gains more, but every age gained something. You don't need a perfect past for tomorrow to count. It counts from the day you stop.",
+            "vaping": "Nicotine itself clears from your blood within hours. Your body turns it into cotinine, which halves about every 15 to 20 hours, so within a few days most of it is gone. The physical side is shorter than the fear says. After that, cravings are driven more and more by cues and habit, which is exactly what you've spent this week learning to handle.",
+            "pouches": "Nicotine itself clears from your blood within hours. Your body turns it into cotinine, which halves about every 15 to 20 hours, so within a few days most of it is gone. The physical side is shorter than the fear says. After that, cravings are driven more and more by cues and habit, which is exactly what you've spent this week learning to handle."
+          },
+          "source": {
+            "smoking": "Doll et al., BMJ 2004",
+            "vaping": "CDC (health timeline: “A few days · Most nicotine has left your body”)",
+            "pouches": "CDC (health timeline: “A few days · Most nicotine has left your body”)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "P7.4",
+      "format": "try",
+      "title": "Clear out and get ready",
+      "minutes": 7,
+      "ground": "mint",
+      "commit": "Ready for the morning",
+      "intro": "Make tomorrow easy before it starts.",
+      "beats": [
+        {
+          "id": "P7.4a",
+          "type": "info",
+          "title": "Get ready for tomorrow",
+          "body": "Three short things: a last clear-out, a line to tomorrow-you, and a plan for your first hour. Keep back just {s: one cigarette | v: your vape | p: one pouch} for tonight's last one."
+        },
+        {
+          "id": "P7.4b",
+          "type": "checklist",
+          "title": "Last clear-out",
+          "body": "Everything goes except tonight's last one. Tick each one as it's done. You can finish the rest after your last one this evening.",
+          "carryOverFrom": "friction_checklist",
+          "saveAs": "clearout_checklist",
+          "items": {
+            "smoking": [
+              "Leftover cigarettes soaked and binned",
+              "Lighters gone",
+              "Ashtrays gone",
+              "Checked jacket and car"
+            ],
+            "vaping": [
+              "Vapes and pods handed over or set aside for battery recycling",
+              "Charger with them",
+              "Checked bag and car"
+            ],
+            "pouches": [
+              "Every tin binned",
+              "Checked bag, car and desk",
+              "Repeat orders cancelled"
+            ]
+          },
+          "footer": {
+            "vaping": "Vapes have batteries. Please don't put them in the bin. Take them to a battery or electronics recycling point."
+          }
+        },
+        {
+          "id": "P7.4c",
+          "type": "reflect",
+          "prompt": "Write one line to tomorrow-you.",
+          "body": "You'll read it first thing tomorrow, before Day Xero starts. Write what you'll want to hear.",
+          "placeholder": "Remember why you're doing this.",
+          "saveAs": "note_to_dayxero",
+          "length": "short",
+          "optional": true,
+          "chips": [
+            "Remember…",
+            "You're doing this for…",
+            "When it's hard…"
+          ]
+        },
+        {
+          "id": "P7.4d",
+          "type": "choice",
+          "prompt": "What comes first tomorrow morning?",
+          "footer": "The first trigger of the day is usually the strongest. Let's plan for it tonight.",
+          "multi": false,
+          "allowOther": true,
+          "prefillFrom": "morning_anchor",
+          "options": [
+            {
+              "id": "waking",
+              "text": "Waking up"
+            },
+            {
+              "id": "coffee",
+              "text": "First coffee or tea"
+            },
+            {
+              "id": "commute",
+              "text": "The commute"
+            },
+            {
+              "id": "scroll",
+              "text": "First scroll of the day"
+            }
+          ],
+          "saveAs": "dx_first_trigger"
+        },
+        {
+          "id": "P7.4e",
+          "type": "choice",
+          "prompt": "When it comes, what will you do instead?",
+          "footer": "Pick one, or write your own. Simple beats clever.",
+          "multi": false,
+          "allowOther": true,
+          "options": [
+            {
+              "id": "water",
+              "text": "Drink water before anything else"
+            },
+            {
+              "id": "shower",
+              "text": "Shower first"
+            },
+            {
+              "id": "outside",
+              "text": "Step outside for fresh air"
+            },
+            {
+              "id": "walk",
+              "text": "Take a short walk"
+            },
+            {
+              "id": "somewhere_new",
+              "text": "Have it somewhere new"
+            },
+            {
+              "id": "phone_down",
+              "text": "Put the phone down for five minutes"
+            },
+            {
+              "id": "gum",
+              "text": "Chew sugar-free gum"
+            },
+            {
+              "id": "text",
+              "text": "Text a friend"
+            },
+            {
+              "id": "sos",
+              "text": "Open Craving SOS"
+            }
+          ],
+          "saveAs": "dx_first_hour_plan"
+        },
+        {
+          "id": "P7.4f",
+          "type": "plan_card",
+          "title": "Tomorrow morning",
+          "fields": [
+            "dx_first_trigger",
+            "dx_first_hour_plan",
+            "note_to_dayxero"
+          ]
+        },
+        {
+          "id": "P7.4g",
+          "type": "plan_card",
+          "title": "Your plan for Day Xero",
+          "editable": true,
+          "fields": [
+            "trigger_plans",
+            "support_person",
+            "urge_signals"
+          ]
+        },
+        {
+          "id": "P7.4h",
+          "type": "info",
+          "title": "Your morning, ready",
+          "body": "Plans written as 'if this, then that' make follow-through more likely. You'll see this one again tomorrow, with the plans you made on Prep 6.\n\nYour space is clearer and your morning has a plan. All that's left today is the last one, this evening.\n\nSource: Gollwitzer & Sheeran, 2006"
+        }
+      ]
+    },
+    {
+      "id": "P7.5",
+      "format": "listen",
+      "title": "The last one",
+      "minutes": 7,
+      "ground": "violet",
+      "commit": "I'm ready for tomorrow",
+      "intro": "About 7 minutes. Have your last one ready, or just listen if you've already had it.",
+      "script": {
+        "voice": "Quiet, slow and present, like sitting beside someone in the evening; curious rather than solemn, no drama about \"the last one.\" Around 120 words a minute, leaving the long pauses fully open.",
+        "chapters": [
+          {
+            "title": "Before you begin",
+            "text": "[calmly] This is the last one. [pause] Not a goodbye. Just one last look, with the lights on.\n\nGet it ready now, and find somewhere you can be for a few minutes. {s: Take one cigarette and your lighter, and go where you'd usually smoke. | v: Have your vape with you, and sit where you'd usually use it. | p: Have one pouch ready, and sit somewhere comfortable.} Leave everything else where it is for now. [long pause]\n\nAnd if you've already had your last one today, or you'd rather not have one at all, that's completely fine. You don't need one more to be ready. Just listen, and picture it as we go.\n\nBefore you start, notice how you feel right now. [pause] Is there a pull? Where is it? Chest, hands, mouth? [pause] A little excitement, maybe, or nerves, or not much at all. Whatever's there, let it be. You're not here to judge anything tonight. Just to see it clearly.\n\nTake one slow breath before you start. In through your nose. [pause] And out. [long pause]"
+          },
+          {
+            "title": "With your eyes open",
+            "text": "{s: Hold the cigarette for a moment before you light it. Look at it. Paper, a filter, dried leaf. | v: Hold the vape for a moment. Look at it. A battery, a coil, a little liquid. | p: Hold the pouch for a moment. Look at it. A small white packet with some filler and flavoring.} [pause] This small thing has had first call on your attention, many times a day, for a long time.\n\nNow {s: light it, and take the first drag slowly. | v: take the first puff, slowly. | p: put it in, the way you usually do.} [pause]\n\nWhat do you notice first? [pause] {s: The heat. The taste. The smoke in your throat and chest. | v: The vapor. The sweetness. The catch at the back of your throat. | p: The tingle. Maybe a burn on your gum. The taste.} [long pause]\n\nNow notice the relief. That small settling, a few seconds later. [pause] That's the gap closing. The restlessness the last one left behind, being topped up. [pause] The relief is real. And it's the whole trick. It soothes a feeling it created.\n\n{s: Keep going at your own pace. With each drag, notice the heat and the taste. | v: Take a few more puffs, at your own pace. Notice each one. | p: Let it sit. Every so often, notice the taste and the tingle, and whether they're changing.} [long pause]\n\nAsk yourself, honestly: is it as good as the story says? [pause] Better? Worse? About the same as all the others? There's no right answer. Only your answer. [long pause]\n\nAnd notice your mind, too. Is it already somewhere else? Planning, scrolling, thinking about tomorrow? [pause] That's how most of them have gone. Half-noticed, on autopilot. Tonight, this one gets your full attention. [long pause]"
+          },
+          {
+            "title": "What's left",
+            "text": "{s: When you're done, put it out properly. | v: When you've had your last puff, put the vape down. | p: Take the pouch out whenever you're done, and put it in the bin. You can keep listening while it sits.} [pause] Take a slow breath. [long pause]\n\nNow notice what's left. [pause] {s: The taste in your mouth. The smell on your fingers. | v: The sweetness fading. Maybe a dry mouth. | p: The taste fading. The tingle wearing off.} [pause] And notice how quickly the good part went. A few seconds of relief, and then back to ordinary. [pause] Give it an hour or so, and the gap would start to open again. Then another one to close it. That's the loop you've been in, many times a day, for years. Not because you're weak. Because that's how nicotine works.\n\nRight now, all over the world, people who don't use nicotine are having an ordinary evening without any of this. They're not missing it. [pause] They don't have a gap to close.\n\nFrom tomorrow, nothing refills yours. There'll be waves, especially at first. But each one you ride shows your body and your brain that they can do without. [pause]\n\nThat was the last one."
+          },
+          {
+            "title": "Clearing the way",
+            "text": "Now the rest goes. {s: Any cigarettes left, run them under the tap and put them in the bin. Lighters and ashtrays too. | v: Your vape, the pods and the charger go together, set aside for battery recycling. Please don't put them in the bin. | p: Any tins left go in the bin. Check your bag, your car and your desk.} If you ticked these off earlier, check one more time. [long pause]\n\nNotice what shows up as you do it. A flicker of panic? A voice saying \"keep one, just in case\"? [pause] That's the addiction having its say. You can hear it, and still not do what it says. A thought isn't an order. [pause] You've practiced this all week. Notice it, name it, let it be there, and keep going.\n\nAnd notice the other feeling too, if it's there. A little lighter. A little more room. [pause] That's what's coming."
+          },
+          {
+            "title": "Ready",
+            "text": "[softly] Some nerves tonight are normal. They don't mean anything is wrong. Go easy on yourself. Have some water. Get to bed at a sensible time. If a craving shows up before you sleep, Craving SOS is there, and the wave will pass.\n\nTomorrow morning, read your note first. Then I'll walk you into the day. Your plan for the first hour is already made. And if you're using a patch, put it somewhere you'll see it when you wake.\n\nYou've spent seven days looking at this with your eyes open. You've seen the gap, the autopilot, the stories, and the wave. That was the hard part. Tomorrow is mostly just not refilling it.\n\nWhen you're ready, press and hold the button on your screen for three seconds. [pause] That's you saying it. Not \"I'll try.\" Just: I'm ready. [long pause]"
+          }
+        ]
+      },
+      "beats": [
+        {
+          "id": "P7.5a",
+          "type": "commit",
+          "text": "Hold when you're ready for Day Xero.",
+          "holdSeconds": 3,
+          "sets": "dayxero_ready"
+        },
+        {
+          "id": "P7.5b",
+          "type": "info",
+          "title": "Ready.",
+          "body": "Your note will be waiting in the morning."
+        },
+        {
+          "id": "P7.5c",
+          "type": "checklist",
+          "title": "Still to clear tonight",
+          "saveAs": "clearout_checklist",
+          "items": {
+            "smoking": [
+              "Leftover cigarettes soaked and binned",
+              "Lighters gone",
+              "Ashtrays gone",
+              "Checked jacket and car"
+            ],
+            "vaping": [
+              "Vapes and pods handed over or set aside for battery recycling",
+              "Charger with them",
+              "Checked bag and car"
+            ],
+            "pouches": [
+              "Every tin binned",
+              "Checked bag, car and desk",
+              "Repeat orders cancelled"
+            ]
+          },
+          "footer": {
+            "vaping": "Vapes have batteries. Please don't put them in the bin. Take them to a battery or electronics recycling point."
+          }
+        }
+      ]
+    }
+  ],
+  "recap": {
+    "learned": [
+      "The fear of quitting is part of the trap. Most of it is the addiction talking.",
+      "Withdrawal is real, strongest in the first week, and mostly eases within two to four weeks.",
+      "You keep your breaks, your coffee and yourself. Only the gap goes."
+    ],
+    "tomorrow": "Day Xero. Your note will be waiting when you wake up."
+  },
+  "mission": {
+    "text": "Finish the clear-out before bed. If a craving shows up after your last one, ride it with Craving SOS and tap “It passed”.",
+    "logType": "craving_outcome"
+  },
+  "completionText": "Everything's ready. Tomorrow is Day Xero."
+}

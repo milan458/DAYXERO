@@ -1,0 +1,526 @@
+{
+  "id": "DX",
+  "phaseId": "dayxero",
+  "label": "Day Xero",
+  "title": "Day Xero",
+  "subtitle": "Your first day",
+  "durationMinutes": 30,
+  "unlock": {
+    "rule": "day_xero"
+  },
+  "audio": {
+    "variants": [
+      "smoking",
+      "vaping",
+      "pouches"
+    ]
+  },
+  "beats": [],
+  "deck": [
+    {
+      "id": "DX.1",
+      "format": "listen",
+      "title": "Day Xero",
+      "minutes": 6,
+      "ground": "apricot",
+      "commit": "I've started",
+      "script": {
+        "voice": "Warm, grounded and quietly confident, a calm morning voice with a little lift in it; no hype, no solemnity. About 130 words a minute, slowing for the breaths at the end.",
+        "chapters": [
+          {
+            "title": "Good morning",
+            "text": "[warmly] Good morning. If you wrote a note last night, you've just read it. [pause] Take a second with it. That was you, looking out for you.\n\nToday is Day Xero. [pause] And before anything else, I'd like you to hear this. The hardest part is already behind you. For seven days you've looked at nicotine with your eyes open. You've seen the gap, the autopilot, the stories. You've seen that the relief was mostly the gap closing, and that the gap was made by the last dose. [pause]\n\nSo today you're not losing anything. You're simply not refilling it. You're not someone who can't {s: smoke | v: vape | p: use pouches} today. You're someone who doesn't need to. [pause]\n\nMaybe you woke up feeling calm, even a little excited. Maybe you woke up nervous, already bracing for the first craving. Both are completely normal. How you feel this morning doesn't decide how today goes. [pause]"
+          },
+          {
+            "title": "What today might hold",
+            "text": "Let's be honest about today, so nothing catches you off guard.\n\nAt some point in the next few hours, your body will notice the nicotine isn't coming. That's usually when the first cravings show up. You might feel restless, a bit irritable, or find it harder to focus. You might be hungrier than usual. [pause] Those are normal signs of your body adjusting. They're usually strongest in the first days, and they ease. None of it means something's going wrong. It means something has started. [pause]\n\nHere's a way to see it. The gap you've watched all week is going to open today, and this time nothing will fill it. That's most of the discomfort: the same gap you already know, just left open. And the longer it's left open, the more your body gets used to living without it. [pause]\n\nAnd quietly, in the background, other things are starting too. {s: Within minutes of stopping, your heart rate and blood pressure start to come down. And over the next few days, the carbon monoxide in your blood drops back to normal. | v: Nicotine itself clears from your blood within hours, and within a few days most of what's left is gone. | p: Nicotine itself clears from your blood within hours, and within a few days most of what's left is gone.} You'll see more of that in the next step.\n\nSo take today in small pieces. Not forever. Just this morning. Then lunch. Then the afternoon."
+          },
+          {
+            "title": "Your first craving",
+            "text": "Now, the first craving. Let's plan for it, so it doesn't surprise you. [pause]\n\nIt might come with your first coffee, after breakfast, in the car, or the first time you sit down to work. Last night you made a plan for the first one. When it comes, use it.\n\nAnd then, this. Notice it. [pause] Name it: \"There's a craving.\" [pause] Find where it sits in your body. Chest, hands, mouth, stomach. [pause] Let it be there. You don't have to fight it, and you don't have to do what it says. [pause] Breathe slowly, a little longer out than in. And watch it like a wave. It rises, it peaks, and it falls, usually within a few minutes. [pause]\n\nIf you'd like company while it passes, open Craving SOS. It's always in the bar at the bottom of the app, and you'll try a practice run in a few minutes, so you know exactly what to expect. When the wave has passed, tap \"It passed.\" [pause] Every one you ride teaches your brain that it can."
+          },
+          {
+            "title": "If it gets hard",
+            "text": "Some moments today might be tough. That's not a sign you're doing it wrong. It's what a first day can feel like. [pause] So, a few things to keep close.\n\nIf you're using nicotine replacement, use it the way your pack says. It takes the edge off the physical side, and it isn't cheating. Not using it is fine too.\n\nTell someone that today's the day. A message back from a friend can carry you through a wave.\n\nEat proper meals, keep water close, and if you drink coffee, {s: have about half your usual. Now that you've stopped smoking, the same cup hits harder. | v: notice whether it leaves you jittery. That can feel a lot like a craving. | p: notice whether it leaves you jittery. That can feel a lot like a craving.}\n\nAnd if you slip, [pause] it doesn't wipe anything out. Your count isn't reset. Tap \"I slipped,\" be kind to yourself, notice what set it off, and carry on from right there. A slip is information, not the end of anything. The very next choice is the one that matters."
+          },
+          {
+            "title": "Starting",
+            "text": "[calmly] So, here you are. [pause] Take a slow breath in. [pause] And a long breath out. [long pause]\n\nThink of your reason. The one that matters most. [long pause]\n\nNow picture today going the way you'd like it to. Not perfectly. Just one wave at a time, each one passing. [long pause]\n\nWhen you're ready, press and hold the button on your screen for three seconds. When you let go, your counter starts, and Day Xero begins. [pause]\n\nYou're not losing anything today. You're getting through one day, one wave at a time. [pause] I'll be with you this evening."
+          }
+        ]
+      },
+      "before": [
+        {
+          "id": "DX.1a",
+          "type": "note",
+          "title": "From you, last night",
+          "textFrom": "note_to_dayxero",
+          "skipIfEmpty": true
+        },
+        {
+          "id": "DX.1b",
+          "type": "info",
+          "showIf": "nrt_active",
+          "title": "Using a patch?",
+          "body": "Put it on now, the way your pack says."
+        }
+      ],
+      "beats": [
+        {
+          "id": "DX.1c",
+          "type": "commit",
+          "text": "Hold to start Day Xero.",
+          "holdSeconds": 3,
+          "sets": "quit_timestamp"
+        },
+        {
+          "id": "DX.1d",
+          "type": "info",
+          "title": "Day Xero has started.",
+          "body": "Your counter is running."
+        }
+      ]
+    },
+    {
+      "id": "DX.2",
+      "format": "reveal",
+      "title": "Your body today",
+      "minutes": 5,
+      "commit": "I know what's happening",
+      "intro": "Here's what's starting in your body today, and what you might feel while it does.",
+      "cards": [
+        {
+          "front": "What starts the moment you stop?",
+          "answer": {
+            "smoking": "Within minutes · Heart rate and blood pressure start to come down. From your first smoke-free hours. You may not feel it, but it has already begun.",
+            "vaping": "A few hours · Withdrawal can start. Cravings, restlessness or irritability are common. Uncomfortable, yes. It's also the first sign your body is adjusting.",
+            "pouches": "A few hours · Withdrawal can start. Cravings, restlessness or irritability are common. Uncomfortable, yes. It's also the first sign your body is adjusting."
+          },
+          "deeper": {
+            "smoking": "Nicotine keeps your heart working a little harder all day: a little faster, with a little more pressure in every beat. The timeline puts it simply: “Soon after your last cigarette, your heart rate and blood pressure begin to settle.” You won't feel fireworks. Some people notice a calmer chest or warmer hands; plenty notice nothing at all, and it's happening either way. Slow breathing goes well with it, which is one reason the next step is a breathing practice. More changes follow over the coming weeks, and you can watch them arrive in Progress.",
+            "vaping": "A few hours after your last nicotine, your brain notices it's missing. That's when the first cravings, restlessness or a short fuse can show up. It feels uncomfortable, but it's a good sign: your body has started adjusting to life without nicotine. Each wave rises, peaks and passes, usually within a few minutes. You don't have to make it stop. You only have to let it pass without doing what it says, and Craving SOS is there to ride it with you. You'll practice that in the next step.",
+            "pouches": "A few hours after your last nicotine, your brain notices it's missing. That's when the first cravings, restlessness or a short fuse can show up. It feels uncomfortable, but it's a good sign: your body has started adjusting to life without nicotine. Each wave rises, peaks and passes, usually within a few minutes. You don't have to make it stop. You only have to let it pass without doing what it says, and Craving SOS is there to ride it with you. You'll practice that in the next step."
+          },
+          "source": {
+            "smoking": "American Cancer Society",
+            "vaping": "smokefree.gov",
+            "pouches": "smokefree.gov"
+          }
+        },
+        {
+          "front": "What clears out over the next few days?",
+          "answer": {
+            "smoking": "A few days · Carbon monoxide in your blood drops to normal. More oxygen reaches your body. It starts clearing today, with every hour you don't smoke.",
+            "vaping": "A few days · Most nicotine has left your body. Its by-product, cotinine, halves about every 15 to 20 hours. The clear-out starts today.",
+            "pouches": "A few days · Most nicotine has left your body. Its by-product, cotinine, halves about every 15 to 20 hours. The clear-out starts today."
+          },
+          "deeper": {
+            "smoking": "Smoke carries carbon monoxide, the same gas that comes out of a car's exhaust. It gets into your blood and sits where oxygen should be. In the timeline's words: “Carbon monoxide from smoke takes the place of oxygen in your blood. Within a few days it falls back to normal.” Many people notice a little more energy and clearer thinking in this first stretch, even while cravings are loud. A short walk outside is a good way to make the most of it, and it doubles as something to do when a wave comes.",
+            "vaping": "In the timeline's words: “Nicotine itself clears within hours. Cotinine, what your body turns it into, halves about every 15 to 20 hours, so within a few days most of it is gone.” That's worth holding on to on a hard afternoon: the physical part of this has a short runway. After the first few days, cravings are set off more and more by cues and habits, like the coffee, the car or the phone. Those are exactly what you've spent the last week learning to see, and every one you meet without nicotine is practice.",
+            "pouches": "In the timeline's words: “Nicotine itself clears within hours. Cotinine, what your body turns it into, halves about every 15 to 20 hours, so within a few days most of it is gone.” That's worth holding on to on a hard afternoon: the physical part of this has a short runway. After the first few days, cravings are set off more and more by cues and habits, like the coffee, the car or the phone. Those are exactly what you've spent the last week learning to see, and every one you meet without nicotine is practice."
+          },
+          "source": {
+            "smoking": "American Cancer Society",
+            "vaping": "CDC",
+            "pouches": "CDC"
+          }
+        },
+        {
+          "front": "What might I feel today?",
+          "answer": {
+            "smoking": "Cravings that come in waves. Restless or snappy. Harder to focus. Hungrier. Maybe a bit low, or sleep a bit off tonight. Signs your body is adjusting, not signs of harm.\n\nA few hours · Withdrawal can start · Cravings, restlessness or irritability are common.",
+            "vaping": "Cravings that come in waves. Restless or snappy. Harder to focus. Hungrier. Maybe a bit low, or sleep a bit off tonight. Signs your body is adjusting, not signs of harm.",
+            "pouches": "Cravings that come in waves. Restless or snappy. Harder to focus. Hungrier. Maybe a bit low, or sleep a bit off tonight. Signs your body is adjusting, not signs of harm."
+          },
+          "deeper": "Not everyone gets all of these, and they come and go. Here's what helps today. Cravings: notice, name, breathe, ride, or open Craving SOS. Restless: move. A walk around the block counts. Snappy: tell the people around you it's Day Xero, and take two slow sighs before you answer. Foggy: one task at a time, a short list, and no big decisions you can put off. Hungry: proper meals and easy snacks, like fruit, nuts or crunchy veg. And keep water close: a glass gives your hands and mouth something to do while a wave passes.",
+          "source": {
+            "smoking": "Hughes, Nicotine Tob Res 2007; smokefree.gov",
+            "vaping": "Hughes, Nicotine Tob Res 2007",
+            "pouches": "Hughes, Nicotine Tob Res 2007"
+          }
+        },
+        {
+          "front": "How long will it feel like this?",
+          "answer": "First week · Withdrawal is usually at its strongest. The hardest stretch for most people. After that it weakens, and most symptoms ease within two to four weeks.",
+          "deeper": "Today is the first day of the steepest part, so it's normal if it feels like a lot. It won't stay like this. The timeline puts it this way: “For most people, withdrawal is strongest in the first days to week, then weakens the longer you stay nicotine-free.” Most symptoms ease within two to four weeks. Cravings can last a little longer, but they come less often and feel weaker as the weeks go by. That's why every day of Week 1 has a short session, built for exactly where you are.",
+          "source": "smokefree.gov; Hughes, Nicotine Tob Res 2007"
+        }
+      ]
+    },
+    {
+      "id": "DX.3",
+      "format": "breathe",
+      "title": "Your first breaths of Day Xero",
+      "minutes": 5,
+      "ground": "sky",
+      "commit": "I know where SOS is",
+      "beats": [
+        {
+          "id": "DX.3a",
+          "type": "info",
+          "title": "Your first breaths of Day Xero",
+          "body": "Two short rounds with the ring, then a quick look at Craving SOS, so you know exactly where it is and what it does. About four minutes."
+        },
+        {
+          "id": "DX.3b",
+          "type": "breathe",
+          "pattern": "box",
+          "cycles": 4,
+          "label": "Box breathing · 4 in, 4 hold, 4 out, 4 rest"
+        },
+        {
+          "id": "DX.3c",
+          "type": "info",
+          "title": "That's the steady one.",
+          "body": "Good before a trigger you can see coming: the coffee, the car, the meeting."
+        },
+        {
+          "id": "DX.3d",
+          "type": "breathe",
+          "pattern": "wave",
+          "cycles": 4,
+          "label": "Wave riding · slow in, slow out, like riding a wave"
+        },
+        {
+          "id": "DX.3e",
+          "type": "info",
+          "title": "Slow and steady.",
+          "body": "That's the one for when a wave is already here. Craving SOS breathes the same slow way, a little longer out than in: in for 4, out for 6."
+        },
+        {
+          "id": "DX.3f",
+          "type": "info",
+          "title": "How Craving SOS works",
+          "body": "It starts with three long sighs: two breaths in through the nose, one long breath out. Then it breathes with you, in for 4 and out for 6. The clock counts up, not down. There's no deadline to beat. Your reason shows there too, with something for your hands and ideas for the next few minutes.\n\nWhen the wave drops, tap It passed. That's one wave ridden, and every one counts. Still strong opens more calm tools. If you slip, I slipped opens a short, kind talk-through. Your count is never reset."
+        },
+        {
+          "id": "DX.3g",
+          "type": "info",
+          "title": "Where to find it",
+          "body": "Craving SOS is always in the bar at the bottom of the app. You can also add the Craving SOS widget to your Home Screen, so it's one tap away."
+        }
+      ]
+    },
+    {
+      "id": "DX.4",
+      "format": "try",
+      "title": "Your first hours",
+      "minutes": 7,
+      "ground": "mint",
+      "commit": "My first hours are set",
+      "beats": [
+        {
+          "id": "DX.4a",
+          "type": "info",
+          "title": "Your first hours",
+          "body": "Four quick things to set up the rest of today: your NRT, your biggest trigger, your people and the basics."
+        },
+        {
+          "id": "DX.4b",
+          "type": "info",
+          "showIf": "nrt_active",
+          "title": "First dose check",
+          "body": "Use it the way your pack says. NRT takes the place of {product_plural}. It doesn't go alongside them.\n\nFollow the label on your pack and ask a pharmacist or doctor. DayXero doesn't give dosing advice."
+        },
+        {
+          "id": "DX.4c",
+          "type": "checklist",
+          "showIf": "nrt_active",
+          "title": "First dose check",
+          "items": [
+            "Patch on today",
+            "Gum, lozenge or inhaler with me",
+            "I've read how much and how often on the label"
+          ],
+          "saveAs": "dx_nrt_check"
+        },
+        {
+          "id": "DX.4d",
+          "type": "choice",
+          "showIf": "nrt_not_active",
+          "prompt": "Your NRT",
+          "footer": "Follow the label on your pack and ask a pharmacist or doctor. DayXero doesn't give dosing advice.",
+          "multi": false,
+          "options": {
+            "smoking": [
+              {
+                "id": "here",
+                "text": "Yes, it's here",
+                "feedback": "Use it the way your pack says. NRT takes the place of cigarettes. It doesn't go alongside them. Follow the label on your pack and ask a pharmacist or doctor. DayXero doesn't give dosing advice."
+              },
+              {
+                "id": "not_yet",
+                "text": "Not yet",
+                "feedback": "Get it today if you can. A pharmacist can help you choose a patch, a fast-acting form or both, and check they suit you. Until then, Craving SOS is your first tool for each wave."
+              },
+              {
+                "id": "no",
+                "text": "Not this time",
+                "feedback": "That's a fine choice. Your toolkit today is Craving SOS, your plans and your people. If the first days feel harder than you expected, you can change your mind. A pharmacist can talk you through the options."
+              }
+            ],
+            "vaping": [
+              {
+                "id": "here",
+                "text": "Yes, it's here",
+                "feedback": "Use it the way your pack says. NRT takes the place of vapes. It doesn't go alongside them. Follow the label on your pack and ask a pharmacist or doctor. DayXero doesn't give dosing advice."
+              },
+              {
+                "id": "not_yet",
+                "text": "Not yet",
+                "feedback": "Get it today if you can. A pharmacist can help you choose a patch, a fast-acting form or both, and check they suit you. Until then, Craving SOS is your first tool for each wave."
+              },
+              {
+                "id": "no",
+                "text": "Not this time",
+                "feedback": "That's a fine choice. Your toolkit today is Craving SOS, your plans and your people. If the first days feel harder than you expected, you can change your mind. A pharmacist can talk you through the options."
+              }
+            ],
+            "pouches": [
+              {
+                "id": "here",
+                "text": "Yes, it's here",
+                "feedback": "Use it the way your pack says. NRT takes the place of pouches. It doesn't go alongside them. Follow the label on your pack and ask a pharmacist or doctor. DayXero doesn't give dosing advice."
+              },
+              {
+                "id": "not_yet",
+                "text": "Not yet",
+                "feedback": "Get it today if you can. A pharmacist can help you choose a patch, a fast-acting form or both, and check they suit you. Until then, Craving SOS is your first tool for each wave."
+              },
+              {
+                "id": "taper",
+                "text": "I stepped down my pouch strength instead",
+                "feedback": "You lowered the strength before today, so this step is smaller. From today, no more pouches. Your toolkit is Craving SOS, your plans and your people."
+              },
+              {
+                "id": "no",
+                "text": "Not this time",
+                "feedback": "That's a fine choice. Your toolkit today is Craving SOS, your plans and your people. If the first days feel harder than you expected, you can change your mind. A pharmacist can talk you through the options."
+              }
+            ]
+          },
+          "saveAs": "dx_nrt_ready"
+        },
+        {
+          "id": "DX.4e",
+          "type": "note",
+          "title": "This morning's plan",
+          "textFrom": "dx_first_hour_plan",
+          "skipIfEmpty": true
+        },
+        {
+          "id": "DX.4f",
+          "type": "choice",
+          "prompt": "You made this last night. Did it get used?",
+          "optional": true,
+          "multi": false,
+          "options": [
+            {
+              "id": "helped",
+              "text": "Yes, it helped",
+              "feedback": "That's the first one done."
+            },
+            {
+              "id": "hard",
+              "text": "Yes, it was hard",
+              "feedback": "Hard and done is still done."
+            },
+            {
+              "id": "not_yet",
+              "text": "Not yet",
+              "feedback": "It's ready when the moment comes."
+            }
+          ],
+          "saveAs": "dx_first_hour_used"
+        },
+        {
+          "id": "DX.4g",
+          "type": "choice",
+          "prompt": "Which trigger will you meet next?",
+          "footer": "Pick the one most likely to catch you today.",
+          "multi": false,
+          "allowOther": true,
+          "optionsFrom": "autopilot_triggers",
+          "saveAs": "dx_today_trigger"
+        },
+        {
+          "id": "DX.4h",
+          "type": "plan_card",
+          "title": "Your plans from Prep 6",
+          "fields": [
+            "trigger_plans"
+          ]
+        },
+        {
+          "id": "DX.4i",
+          "type": "choice",
+          "prompt": "When it comes, I'll…",
+          "footer": "Keep your plan from Prep 6, or pick something for today.",
+          "multi": false,
+          "allowOther": true,
+          "options": [
+            {
+              "id": "walk",
+              "text": "Take a short walk"
+            },
+            {
+              "id": "water",
+              "text": "Drink a glass of water"
+            },
+            {
+              "id": "somewhere_new",
+              "text": "Have it somewhere new"
+            },
+            {
+              "id": "breathe",
+              "text": "Breathe slowly for one minute"
+            },
+            {
+              "id": "gum",
+              "text": "Chew sugar-free gum"
+            },
+            {
+              "id": "text",
+              "text": "Text a friend"
+            },
+            {
+              "id": "sos",
+              "text": "Open Craving SOS"
+            }
+          ],
+          "saveAs": "dx_today_plan"
+        },
+        {
+          "id": "DX.4j",
+          "type": "choice",
+          "prompt": "Who will know today?",
+          "footer": "One message now means someone's in your corner when a wave hits.",
+          "multi": false,
+          "options": [
+            {
+              "id": "send",
+              "text": "Send a message now",
+              "feedback": "Good. Someone knows."
+            },
+            {
+              "id": "done",
+              "text": "I've already told someone",
+              "feedback": "Good. Someone knows."
+            },
+            {
+              "id": "not_today",
+              "text": "Not today",
+              "feedback": "That's okay. Text a friend is in Craving SOS if you change your mind."
+            }
+          ],
+          "saveAs": "dx_told_someone"
+        },
+        {
+          "id": "DX.4k",
+          "type": "share",
+          "cardType": "support_message",
+          "optional": true,
+          "prefill": "It's my Quit Day today. If I go quiet or get a bit short, that's why. A message from you later would really help."
+        },
+        {
+          "id": "DX.4l",
+          "type": "checklist",
+          "title": "The basics",
+          "body": "Hungry, thirsty and tired can all feel a bit like a craving. Look after them, and the real ones are easier to spot.",
+          "items": {
+            "smoking": [
+              "Water bottle filled and within reach",
+              "Breakfast eaten, or something to eat soon",
+              "Snacks for later: fruit, nuts or crunchy veg",
+              "Lunch and dinner roughly planned",
+              "Coffee at half strength today"
+            ],
+            "vaping": [
+              "Water bottle filled and within reach",
+              "Breakfast eaten, or something to eat soon",
+              "Snacks for later: fruit, nuts or crunchy veg",
+              "Lunch and dinner roughly planned"
+            ],
+            "pouches": [
+              "Water bottle filled and within reach",
+              "Breakfast eaten, or something to eat soon",
+              "Snacks for later: fruit, nuts or crunchy veg",
+              "Lunch and dinner roughly planned"
+            ]
+          },
+          "footer": {
+            "smoking": "Why half strength? Smoke made your body clear caffeine faster. Without it, the same cup hits harder: jittery, wired, worse sleep, and easy to mistake for a craving. (Benowitz, Hall & Modin, BMJ 1989)"
+          },
+          "saveAs": "dx_basics"
+        },
+        {
+          "id": "DX.4m",
+          "type": "plan_card",
+          "title": "Your first hours",
+          "fields": [
+            "dx_nrt_check",
+            "dx_nrt_ready",
+            "dx_today_trigger",
+            "dx_today_plan",
+            "dx_told_someone",
+            "dx_basics"
+          ]
+        },
+        {
+          "id": "DX.4n",
+          "type": "info",
+          "title": "That's your first hours set.",
+          "body": "Take them one at a time."
+        }
+      ]
+    },
+    {
+      "id": "DX.5",
+      "format": "listen",
+      "title": "One day",
+      "minutes": 7,
+      "ground": "violet",
+      "commit": "One day done",
+      "intro": "About 7 minutes. A good one to hear somewhere quiet, close to bed.",
+      "after": "One day. Your counter is still running.",
+      "script": {
+        "voice": "Soft, slow and close, an end-of-day voice; proud of them without fuss, unshaken by however the day went. About 120 words a minute, with the three breaths at the end given plenty of room.",
+        "chapters": [
+          {
+            "title": "You're here",
+            "text": "[warmly] It's the evening of Day Xero. [pause] However today went, you're here, and you're listening. That counts for a lot.\n\nMaybe it was easier than you expected. Maybe parts of it were hard. Maybe there was a moment when you slipped. [pause] All of those are real first days. If you did slip, nothing has been reset. Your days still count, and tomorrow still begins from here. [pause]\n\nWherever you are, get comfortable. If you're already in bed, that's perfect. Let your shoulders drop. [pause] Unclench your jaw. [pause]\n\nLet's take a few minutes together. We'll look back, look after tonight, and look ahead."
+          },
+          {
+            "title": "What today was",
+            "text": "Think back over the day. [pause] When did the first craving come? [pause] What set it off? Coffee, a meal, the phone, a stressful moment? [pause] And what did you do? [long pause]\n\nEvery time a craving rose today and you didn't follow it, your brain learned something new. This passes. I'm okay. [pause] That's not a small thing. It's how the next one gets a little quieter.\n\nAnd notice what helped. Was it the breathing? Water? A walk? Texting someone? Just keeping busy? [pause] Whatever worked today is worth keeping. Tomorrow, reach for it first.\n\nAnd you might have noticed something else. Between the waves, there were stretches where you weren't thinking about it at all. Maybe only a few minutes at a time. [pause] That's what free feels like at first. Small pieces. They get bigger.\n\nIf today felt like one long craving, that happens too, especially on a first day. It doesn't mean it'll always feel like this. The first week is the steepest part, and you've just done the first day of it.\n\nAnd think about the gap. Today, nothing refilled it. That's part of why it was loud at times. It's also why, from here, it starts to fade.\n\nBefore we move on, think of one moment today you're quietly proud of. It doesn't have to be big. [long pause] Hold on to that one."
+          },
+          {
+            "title": "Tonight",
+            "text": "Now, tonight. [pause]\n\nSleep can be a bit different for a while. Some people find it harder to drop off, or wake more in the night, in the first days. It's common, and it usually settles. A few things help. Keep coffee to the morning. {s: It hits harder now that you've stopped smoking. | v: Late caffeine and a restless night don't mix. | p: Late caffeine and a restless night don't mix.} Dim the screens a little earlier. And if you're lying awake, slow your breathing: in for four, out for six.\n\nEvenings can feel a bit strange at first. If you'd usually wind down with {s: a cigarette | v: the vape | p: a pouch}, the evening might feel oddly empty. That's the gap again, and the autopilot looking for its old cue. Give the evening something new to hold instead. A shower. Something warm to drink, without caffeine. A few pages of a book. A walk around the block.\n\nIf you're using a patch, your pack will say whether it stays on overnight or comes off at bedtime. If you get vivid dreams or broken sleep, taking it off at bedtime often helps, as long as your pack says you can.\n\nIf you used to {s: smoke | v: vape | p: have a pouch} before bed, expect that cue to show up tonight. If a craving comes, it's the same as today. Notice it, name it, breathe, and let it pass. Craving SOS works in the dark too."
+          },
+          {
+            "title": "Tomorrow",
+            "text": "Tomorrow, Week 1 begins. [pause] The first few days are usually the toughest stretch, so tomorrow is about looking after the basics. Food. Water. Sleep. [pause] Being hungry, thirsty or tired can feel a lot like a craving. When those are looked after, the real cravings are easier to spot, and easier to ride.\n\nSo tonight, one small thing. Put a glass of water by your bed. And think about what you'll have for breakfast. [long pause]\n\nLast night, your note was waiting for you this morning. Tomorrow you'll wake up with something better than a note. You'll have a whole day behind you.\n\nOver the coming weeks, the waves will keep coming for a while, but less often, and with less force. Some days will be easier than others, and a hard day doesn't undo the good ones. Each morning there'll be a short session waiting for you, built for exactly where you are."
+          },
+          {
+            "title": "One day",
+            "text": "[softly] Before you go, let's breathe together, just three times. [pause] In through your nose. [pause] And slowly out. [long pause] Again. In. [pause] And out. [long pause] One more. In. [pause] And all the way out. [long pause]\n\nOne day. Last night it was something you were getting ready for. Tonight it's something you've done. [pause] You didn't need to be perfect. You needed to keep coming back to the next choice. And you're still here, coming back.\n\nAnd if a thought shows up tonight, something like \"just one wouldn't hurt,\" you know what it is now. A thought, not an order. You can let it sit there and go to sleep anyway. [pause]\n\nThank yourself for today. Really. [pause] Sleep well. I'll see you tomorrow."
+          }
+        ]
+      }
+    }
+  ],
+  "recap": {
+    "learned": [
+      "The hard part was seeing it. Today you just didn't refill the gap.",
+      "Your body started changing within {s: minutes | v: hours | p: hours}, and withdrawal is a sign of adjusting, strongest this first week.",
+      "A craving is a wave: notice, name, breathe, ride. Craving SOS is one tap away, and a slip never resets your count."
+    ],
+    "tomorrow": "Week 1 begins: Look after the basics. Food, water and sleep make cravings easier to spot."
+  },
+  "mission": {
+    "text": "Every craving you ride out today, tap “It passed”. Every single one counts.",
+    "logType": "craving_outcome"
+  },
+  "completionText": "You're on Day Xero. Your counter has started."
+}

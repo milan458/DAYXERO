@@ -1,0 +1,370 @@
+{
+  "id": "P6",
+  "phaseId": "prep",
+  "label": "Prep 6",
+  "title": "Make it easy on yourself",
+  "subtitle": "Set up your space and your support",
+  "durationMinutes": 29,
+  "unlock": {
+    "rule": "next_day_after_previous"
+  },
+  "audio": {
+    "variants": [
+      "smoking",
+      "vaping",
+      "pouches"
+    ]
+  },
+  "beats": [],
+  "deck": [
+    {
+      "id": "P6.1",
+      "format": "listen",
+      "title": "You don't have to white-knuckle it",
+      "minutes": 6,
+      "ground": "apricot",
+      "commit": "I'll make it easy",
+      "script": {
+        "voice": "Warm, practical and steady, a touch brisker than yesterday; matter-of-fact and reassuring on the NRT section, never salesy; slow down on the safety list and the two medicine names.",
+        "chapters": [
+          {
+            "title": "Holding on isn't a plan",
+            "text": "[warmly] Hello again. Two days to go until Day Xero, and today is a practical one. [pause]\n\nWhen most people try to quit, they rely on one thing: holding on. Gritting their teeth through every craving. White-knuckling it. You may know how that goes. On a good morning, holding on can feel easy. But at the end of a long day, when you're tired, or hungry, or stressed, or someone offers you one, holding on gets much harder. [pause]\n\nScientists still argue about whether willpower really runs out, like a muscle that tires. But you know the feeling. And you don't need to settle the argument to act on it. The plan is simple: make fewer moments depend on willpower in the first place. [pause]\n\nThat isn't a shortcut, and it isn't a sign of weakness. It's what you'd do with any hard job. You'd set things up so that the right move is also the easy one."
+          },
+          {
+            "title": "Your space",
+            "text": "So let's change the setup. Three parts: your space, your people and, if you want it, medicine. [pause]\n\nStart with your space. A lot of nicotine use happens simply because it's right there. {s: The pack in your pocket. The lighter in the car. | v: The vape on the desk. The charger by the bed. | p: The tin in your pocket. The spare in the car.} Each one is a cue, and each one makes using the easiest thing within reach. [pause]\n\nToday you'll move your nicotine to one inconvenient spot. Not hidden away for good. Just out of easy reach. A drawer in another room. A box on a high shelf. Those extra steps won't stop you. They buy a craving time to do what you practiced yesterday: rise, peak and pass. [pause]\n\nAnd in the places where your nicotine used to live, you'll put your quit kit. Water. Sugar-free gum or mints. Something for your hands. So when your hand reaches for the old spot, it finds something else. [pause]\n\nThen your people. One message today means that on Day Xero, somebody knows, and somebody has your back. You may be surprised how glad people are to be asked. [long pause]"
+          },
+          {
+            "title": "NRT, honestly",
+            "text": "[calmly] Now, nicotine replacement. Some people feel uneasy about it, so let's be clear about what it is. [pause]\n\nNicotine replacement, or NRT, means patches, gum, lozenges, sprays and inhalers. They give you nicotine as a tested medicine, in measured doses. A patch releases it slowly and steadily through the day, without the ups and downs of {s: cigarette after cigarette | v: hit after hit | p: pouch after pouch}. And the whole plan is built to step down to zero. [pause]\n\nWhat we've worked on all week takes away the wanting: the belief that nicotine gives you something. NRT works on a different part: the physical edge in the first weeks, while your body adjusts. Different jobs. They work well together. [pause]\n\nAnd it isn't cheating. A Cochrane review of more than a hundred trials found that people who use NRT are around fifty to sixty percent more likely to quit than people who don't. Another Cochrane review found that a patch plus a faster form, like gum or a lozenge, works better than either one alone. [pause]\n\nIf you choose it, a few things matter. You start NRT on Day Xero, the morning you stop {s: smoking | v: vaping | p: using pouches}, not while you're still using. You follow the pack, and the app's NRT plan reminds you of each step. And some people should check with a doctor or pharmacist before starting. [slowly] If you're pregnant or breastfeeding. If you've recently had a heart attack or a stroke, or you have a heart condition. If you take other medicines. Or if you're under eighteen. [pause]\n\n{s: | v: | p: You have one more option, too. If there's time before Day Xero, you can step down your pouch strength first, and the app can plan that with you. [pause]}\n\nNot using NRT is fine too. Plenty of people quit without it. Either choice is a good one, as long as you make it with your eyes open."
+          },
+          {
+            "title": "Other options",
+            "text": "There are also prescription medicines that help people quit. Two you might hear about are varenicline /vəˈrɛnɪkliːn/ and cytisine /ˈsɪtɪsiːn/. Neither one is nicotine. They act on the same parts of the brain that nicotine does, which can take the edge off cravings and make nicotine feel less rewarding. What's available depends on where you live, and they aren't right for everyone. If you're curious, ask your doctor. [pause]\n\nToday's job is setting up. Next, you'll get a clear picture of NRT, check a few common worries about it, set up your space and choose your people. None of it needs to be perfect. [pause]\n\n[warmly] Here's the thing to hold on to. Making it easy on yourself isn't a sign that you can't do it. It's how hard things get done. You're not relying on a clenched fist. You're arranging your days so the next good choice is the obvious one. [pause]\n\nLet's get you set up."
+          }
+        ]
+      }
+    },
+    {
+      "id": "P6.2",
+      "format": "reveal",
+      "title": "Nicotine replacement, explained",
+      "minutes": 5,
+      "commit": "That makes sense",
+      "intro": "Four things worth knowing about nicotine replacement. Tap each card to turn it over.",
+      "cards": [
+        {
+          "front": "What is NRT, exactly?",
+          "answer": "Nicotine as a tested medicine: patches, gum, lozenges, sprays and inhalers. A measured dose, {s: no smoke | v: no vape | p: no pouches}, and a plan that steps down to zero.",
+          "deeper": "NRT has one job: to take the edge off the physical side of stopping while your body adjusts, over a planned number of weeks. It doesn't take away the wanting. That's what this week has been for. Think of them as a team. The understanding you're building means you no longer believe nicotine gives you something. NRT means the restless, on-edge feeling of the first weeks is softer while that understanding settles in. In a review of 133 trials, people using NRT were 50–60% more likely to quit than people who didn't. That's a real boost, not a guarantee, and it works best alongside a plan like this one.",
+          "source": "Cochrane, 2018"
+        },
+        {
+          "front": "Patch or fast-acting: what's the difference?",
+          "answer": "A patch gives a steady background level all day. Gum, lozenges, sprays and inhalers act faster, and you use them when a craving hits. They do different jobs.",
+          "deeper": "The patch is the floor. You put a fresh one on each morning and it releases nicotine slowly through your skin, so the gap never opens too wide. Some people keep it on for 24 hours, which helps with cravings first thing. Others take it off at bedtime, which can help with vivid dreams; check your pack says you can. The fast-acting forms handle the waves on top. Gum isn't chewed like ordinary gum: chew slowly until it tingles, park it against your cheek, then chew again. A lozenge dissolves slowly in your mouth. Sprays and inhalers are other fast options. The app's NRT plan covers the patch, gum, lozenge and inhaler."
+        },
+        {
+          "front": "Can I use two kinds together?",
+          "answer": "Yes. A patch plus a fast-acting form works better than either one alone. Follow both packs, and ask a pharmacist to check the strengths if you're unsure.",
+          "deeper": "This is called combination NRT. The patch covers the background, and the gum, lozenge, spray or inhaler covers the sudden waves: the first coffee, the drive home, the difficult conversation. A Cochrane review of NRT doses and combinations found that a patch together with a fast-acting form helps more people quit than one form on its own. Follow each pack's instructions. If a label seems to say something different, or you're not sure which strengths to pick, a pharmacist can check it with you in a few minutes. The app's NRT plan then reminds you when to change patches and when each step down is due.",
+          "source": "Cochrane, 2019"
+        },
+        {
+          "front": "Is it safe, and who should check first?",
+          "answer": "For most adults, NRT used as the pack says is a safe way through withdrawal. A few people should check with a doctor or pharmacist before they start.",
+          "deeper": "Check with a doctor or pharmacist first if you're pregnant or breastfeeding, have recently had a heart attack or stroke, have a heart condition, are under 18, or take other regular medicines. That isn't because NRT is off limits; the right choice just depends on your situation. Whatever you use, follow the pack. Side effects are usually mild: a sore mouth or hiccups from gum (often from chewing too fast), or itchy skin under a patch, so put each new patch in a different spot. Some people have vivid dreams with a patch worn overnight. If anything feels wrong, stop and ask a pharmacist.",
+          "source": "Royal College of Physicians, 2016"
+        }
+      ]
+    },
+    {
+      "id": "P6.3",
+      "format": "myth",
+      "title": "NRT",
+      "minutes": 5,
+      "commit": "I've got the facts",
+      "intro": "Five things people say about nicotine replacement. Myth or fact?",
+      "statements": [
+        {
+          "text": "NRT just swaps one addiction for another.",
+          "answer": "myth",
+          "verdict": "It's a short bridge, not a new habit.",
+          "explanation": "What keeps nicotine use going is fast, repeated doses tied to cues and rituals: the {s: lighter and the break outside | v: hit at your desk | p: tin in your pocket}. NRT is built differently. A patch releases nicotine slowly and steadily, with no ritual attached, and the plan steps down to zero over a set number of weeks. Meanwhile, the work you're doing this week takes away the reasons you wanted nicotine at all. That's a way out, not a swap.",
+          "source": "Benowitz, 2010"
+        },
+        {
+          "text": "Patches don't really work.",
+          "answer": "myth",
+          "verdict": "The evidence says they do.",
+          "explanation": "A Cochrane review of 133 trials found that people using NRT, patches included, were 50–60% more likely to quit than people using a placebo or nothing. That's a boost, not a guarantee: NRT eases the physical side, it doesn't make the decision for you. If a patch didn't help you before, look at how it was used: the strength, how long, whether it was paired with a fast-acting form. Each of those makes a difference.",
+          "source": "Cochrane, 2018; Cochrane, 2019"
+        },
+        {
+          "text": "Nicotine is the part that causes cancer.",
+          "answer": "myth",
+          "verdict": "Most of the harm comes from smoke.",
+          "explanation": "Nicotine isn't harmless. It's what makes these products so hard to stop, and it raises your heart rate for a while. But a major report from the Royal College of Physicians concluded that most of the serious harm from smoking, cancer included, comes from the smoke made by burning tobacco, not from the nicotine. That's why medicinal nicotine, used as the pack directs for a planned few weeks, is recommended as a way through withdrawal.",
+          "source": "Royal College of Physicians, 2016; Benowitz, 2010"
+        },
+        {
+          "text": "Using a patch and gum together is safe and works better.",
+          "answer": "fact",
+          "verdict": "Fact, when you follow both packs.",
+          "explanation": "A Cochrane review found that combining a patch with a fast-acting form, such as gum or a lozenge, helps more people quit than using one form alone. The patch keeps a steady background level, and the fast-acting form handles sudden cravings. Use each one as its pack directs. If you're unsure about strengths, or a label gives you pause, a pharmacist can check it with you in a few minutes.",
+          "source": "Cochrane, 2019"
+        },
+        {
+          "text": "I should keep {s: smoking | v: vaping | p: using pouches} while I start the patch.",
+          "answer": "myth",
+          "verdict": "In this plan, NRT starts when you stop.",
+          "explanation": "In this program you start NRT on Day Xero, the morning you stop, and that's the usual instruction on the pack too. Using both keeps your nicotine level high and keeps the old cues paired with a dose, which is exactly the link Day Xero breaks. Some doctors do use NRT for a short time before a quit date. If that interests you, plan it with your doctor or pharmacist rather than improvising.",
+          "source": "Cochrane, 2019"
+        }
+      ]
+    },
+    {
+      "id": "P6.4",
+      "format": "try",
+      "title": "Set up your space",
+      "minutes": 7,
+      "ground": "mint",
+      "commit": "My space is ready",
+      "intro": "Three short jobs: make your nicotine harder to reach, put your quit kit where it used to be, and decide about NRT. If you're not at home, tick what you'll do later today.",
+      "after": "Your space is set. Willpower has a smaller job now.",
+      "beats": [
+        {
+          "id": "P6.4a",
+          "type": "checklist",
+          "title": "Make it harder to reach",
+          "saveAs": "friction_checklist",
+          "items": {
+            "smoking": [
+              "Pack and lighter out of my pocket",
+              "Out of the car",
+              "Out of my bag",
+              "In one inconvenient spot"
+            ],
+            "vaping": [
+              "Off my desk",
+              "Off my nightstand",
+              "Out of my pocket",
+              "Charger moved too",
+              "In one inconvenient spot"
+            ],
+            "pouches": [
+              "Tins out of my pockets",
+              "Out of the car",
+              "Off my desk",
+              "All in one inconvenient spot"
+            ]
+          }
+        },
+        {
+          "id": "P6.4b",
+          "type": "checklist",
+          "title": "Your quit kit",
+          "saveAs": "quit_kit_checklist",
+          "items": [
+            "Water bottle (a straw helps)",
+            "Sugar-free gum or mints",
+            "Something for your hands",
+            "All of it where nicotine used to live"
+          ]
+        },
+        {
+          "id": "P6.4c",
+          "type": "info",
+          "title": "Nicotine replacement: yes or no?",
+          "body": "NRT takes the edge off the physical side for the first weeks. It isn't cheating, and not using it is fine too. If you choose it, you start on Day Xero, the morning you stop.\n\nWhy it's worth it: people who use NRT are 50–60% more likely to quit than people who don't. (Cochrane, 2018)\n\nWhat works best: a patch plus a faster form, like gum or a lozenge, works better than either alone. (Cochrane, 2019)\n\nStop-smoking medicines such as varenicline or cytisine also work. Ask a pharmacist or doctor if they suit you."
+        },
+        {
+          "id": "P6.4d",
+          "type": "nrt_choice",
+          "options": {
+            "default": [
+              {
+                "id": "setup",
+                "text": "Yes, set it up"
+              },
+              {
+                "id": "have",
+                "text": "I already have it"
+              },
+              {
+                "id": "no",
+                "text": "Not this time"
+              }
+            ],
+            "pouches": [
+              {
+                "id": "setup",
+                "text": "Yes, set it up"
+              },
+              {
+                "id": "have",
+                "text": "I already have it"
+              },
+              {
+                "id": "taper",
+                "text": "Step down my pouch strength first"
+              },
+              {
+                "id": "no",
+                "text": "Not this time"
+              }
+            ]
+          },
+          "safetyText": "Follow the product label. If you're pregnant, have a heart condition or take other medicines, check with a pharmacist or doctor first.",
+          "saveAs": "nrt_plan"
+        },
+        {
+          "id": "P6.4e",
+          "type": "info",
+          "title": "Your space is set.",
+          "body": "{s: Your pack takes | v: Your vape takes | p: Your tins take} a few extra steps to reach now, and your quit kit is where {s: it | v: it | p: they} used to be. Willpower has a smaller job.\n\nAnything still unticked? Do it later today. It'll be on tomorrow's clear-out list too."
+        }
+      ]
+    },
+    {
+      "id": "P6.5",
+      "format": "try",
+      "title": "Your people",
+      "minutes": 6,
+      "ground": "mint",
+      "commit": "I know my plan",
+      "intro": "Two things today. Tell one person your Quit Day. Then decide, ahead of time, what you'll do at your three biggest moments. Both make Day Xero lighter.",
+      "after": "You've got people and a plan. On Day Xero you won't be making it up as you go.",
+      "beats": [
+        {
+          "id": "P6.5a",
+          "type": "choice",
+          "prompt": "Who's one person you could tell?",
+          "multi": false,
+          "allowOther": true,
+          "optional": true,
+          "placeholder": "Someone else…",
+          "options": [
+            {
+              "id": "partner",
+              "text": "My partner"
+            },
+            {
+              "id": "friend",
+              "text": "A friend"
+            },
+            {
+              "id": "family",
+              "text": "Someone in my family"
+            },
+            {
+              "id": "coworker",
+              "text": "Someone at work"
+            },
+            {
+              "id": "quit_before",
+              "text": "Someone who's quit before",
+              "feedback": "Good pick. They know what the first days are like."
+            },
+            {
+              "id": "private",
+              "text": "I'd rather keep it to myself for now",
+              "feedback": "That's okay. The plans on the next screens still help, and Craving SOS is there any time."
+            }
+          ],
+          "saveAs": "support_person"
+        },
+        {
+          "id": "P6.5b",
+          "type": "choice",
+          "prompt": "What would help most from them?",
+          "multi": true,
+          "optional": true,
+          "options": [
+            {
+              "id": "checkin",
+              "text": "Check in on Day Xero"
+            },
+            {
+              "id": "patience",
+              "text": "Be patient if I'm short with them"
+            },
+            {
+              "id": "dont_offer",
+              "text": "Don't offer me one"
+            },
+            {
+              "id": "walk",
+              "text": "Come for a walk with me"
+            },
+            {
+              "id": "notice",
+              "text": "Notice and say well done"
+            }
+          ],
+          "saveAs": "support_asks",
+          "footer": "People help best when they know how. Skip this if you're keeping it to yourself for now."
+        },
+        {
+          "id": "P6.5c",
+          "type": "share",
+          "cardType": "support_message",
+          "optional": true,
+          "prefill": "Heads up: I'm quitting nicotine in two days. If I'm a bit cranky, that's why. A message from you would really help."
+        },
+        {
+          "id": "P6.5d",
+          "type": "info",
+          "title": "Plan your three biggest moments",
+          "body": "Deciding in advance what you'll do in a tricky moment makes it more likely you'll do it. Take your top three triggers from Prep 2 and make one plan for each.\n\nSource: Gollwitzer & Sheeran, 2006"
+        },
+        {
+          "id": "P6.5e",
+          "type": "note",
+          "title": "Your top triggers from Prep 2",
+          "textFrom": "autopilot_triggers",
+          "skipIfEmpty": true
+        },
+        {
+          "id": "P6.5f",
+          "type": "plan_builder",
+          "prompt": "For each big moment: when it comes, what will you do?",
+          "saveAs": "trigger_plans",
+          "suggestions": [
+            "open Craving SOS",
+            "take a short walk",
+            "drink water",
+            "breathe slowly for one minute",
+            "text a friend",
+            "chew sugar-free gum"
+          ]
+        },
+        {
+          "id": "P6.5g",
+          "type": "plan_card",
+          "title": "Your plan for Day Xero",
+          "editable": true,
+          "fields": [
+            "trigger_plans",
+            "support_person",
+            "urge_signals"
+          ]
+        }
+      ]
+    }
+  ],
+  "recap": {
+    "learned": [
+      "Willpower works best with less to do: friction and a quit kit take the load.",
+      "NRT eases the physical side, and a patch plus a fast-acting form works best.",
+      "One person who knows and an if-then plan make Day Xero lighter."
+    ],
+    "tomorrow": "The night before: what you're really giving up, and what the first week can feel like."
+  },
+  "mission": {
+    "text": "Move your nicotine to one inconvenient spot, and put your quit kit where it used to be. Log each use today, and notice whether the extra steps gave you a pause.",
+    "logType": "use"
+  },
+  "completionText": "Your space is set up. Willpower gets a day off."
+}

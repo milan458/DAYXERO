@@ -125,7 +125,7 @@ struct ChecklistBeat: View {
     /// Items left unticked on the earlier list this one carries over from.
     private var carried: [String] {
         guard let key = beat.carryOverFrom,
-              let source = ctx.store.content?.sessions.flatMap(\.beats).first(where: { $0.saveAs == key }),
+              let source = ctx.store.content?.sessions.flatMap(\.everyBeat).first(where: { $0.saveAs == key }),
               let all = source.checklist?.resolve(ctx.variant) else { return [] }
         let done = Set(ctx.answer(key)?.lines ?? [])
         return all.filter { !done.contains($0) }
@@ -690,6 +690,30 @@ struct PlanCardBeat: View {
         case "bad_day_line": String(localized: "My hard-day line")
         case "break_menu": String(localized: "My breaks")
         case "wind_down": String(localized: "My wind-down")
+        // Program v3 plan cards (P4, P6).
+        case "stress_triggers": String(localized: "What stresses me")
+        case "stress_plan_1": String(localized: "When the first one hits")
+        case "stress_plan_2": String(localized: "When the second one hits")
+        case "stress_signals": String(localized: "My early signs")
+        case "trigger_plans": String(localized: "My if-then plans")
+        case "support_person": String(localized: "Who's in my corner")
+        case "urge_signals": String(localized: "Where I feel a craving")
+        case "autopilot_triggers": String(localized: "My autopilot moments")
+        case "autopilot_when": String(localized: "When it happens")
+        case "autopilot_where": String(localized: "Where I am")
+        case "autopilot_feeling": String(localized: "What I feel just before")
+        case "morning_anchor": String(localized: "My morning moment")
+        case "morning_wait_minutes": String(localized: "How long I'll wait")
+        case "morning_wait_plan": String(localized: "What I'll do while I wait")
+        case "note_to_dayxero": String(localized: "My note for Day Xero")
+        case "dx_first_trigger": String(localized: "My first trigger tomorrow")
+        case "dx_first_hour_plan": String(localized: "My first hour")
+        case "dx_today_trigger": String(localized: "Today's biggest trigger")
+        case "dx_today_plan": String(localized: "When it comes, I'll")
+        case "dx_told_someone": String(localized: "Who I told")
+        case "dx_basics": String(localized: "The basics")
+        case "dx_nrt_check": String(localized: "My NRT today")
+        case "dx_nrt_ready": String(localized: "NRT ready")
         default: key.replacingOccurrences(of: "_", with: " ").capitalized
         }
     }
