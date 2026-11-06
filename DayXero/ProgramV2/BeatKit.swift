@@ -12,8 +12,9 @@ struct BeatContext {
     let isReplay: Bool
 
     /// The person's version of a string, with numbers filled in and anything unknown left out.
+    /// Program v3 text may carry inline product wording (`{s: … | v: … | p: …}`), resolved before the numbers fill.
     func text(_ value: Varied<String>?) -> String {
-        value?.resolve(variant).map { placeholders.fillDropping($0) } ?? ""
+        value?.resolve(variant).map { placeholders.fillDropping(ProgramInline.resolve($0, variant)) } ?? ""
     }
 
     func answer(_ key: String?) -> ProgramAnswerValue? { key.flatMap { store.answer($0) } }

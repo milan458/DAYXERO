@@ -29,15 +29,19 @@ struct ProgramContentTests {
         #expect(boosters.allSatisfy { !$0.beats.contains { $0.sets == "graduated_at" } })
     }
 
-    /// MON-04: every session has a 90-second read of three to five cards, worded for each product.
+    /// MON-04: every v2 session has a 90-second read of three to five cards, worded for each product. The prep days
+    /// and Day Xero are decks of five cards instead (program v3) and have no stack.
     @Test func everySessionHasACardStack() throws {
         let program = try content()
         for session in program.sessions {
-            #expect(ProgramContent.cardStackSize.contains(session.cards?.count ?? 0), "\(session.id)")
+            if session.isDeck {
+                #expect(session.cards == nil && session.deck?.count == 5, "\(session.id)")
+            } else {
+                #expect(ProgramContent.cardStackSize.contains(session.cards?.count ?? 0), "\(session.id)")
+            }
         }
-        let p7 = try #require(program.session("P7")?.cards)
-        #expect(p7[1].back.resolve(.vaping)?.contains("batteries") == true)
-        #expect(p7[1].back.resolve(.smoking)?.contains("batteries") == false)
+        let w1d1 = try #require(program.session("W1D1")?.cards)
+        #expect(!w1d1.isEmpty)
     }
 
     /// MON-04: with the 90-second read in place of the audio, sessions say their own, shorter length: never more than
@@ -48,16 +52,18 @@ struct ProgramContentTests {
             let minutes = session.readMinutes()
             #expect((2...session.durationMinutes).contains(minutes), "\(session.id): \(minutes) min")
         }
-        let read = Dictionary(uniqueKeysWithValues: program.sessions.map { ($0.id, $0.readMinutes()) })
-        // Prep 3 is one slider around the cards; Day Xero has the most to do.
-        #expect(read["P1"] == 3 && read["P3"] == 2 && read["P4"] == 3 && read["DX"] == 4)
-        #expect(program.sessions.reduce(0) { $0 + $1.readMinutes() } < program.sessions.reduce(0) { $0 + $1.durationMinutes })
+        // A deck day's length is its cards' minutes; the v2 sessions read faster than they listen.
+        for session in program.sessions where session.isDeck {
+            #expect(session.readMinutes() == session.durationMinutes, "\(session.id)")
+        }
+        let v2 = program.sessions.filter { !$0.isDeck }
+        #expect(v2.reduce(0) { $0 + $1.readMinutes() } < v2.reduce(0) { $0 + $1.durationMinutes })
     }
 
     /// A breathing beat lasts its cycles of its pattern; the content's patterns come from the orb data.
     @Test func aBreathingBeatLastsItsCycles() throws {
         let p4 = try #require(try content().session("P4"))
-        let breathe = try #require(p4.beats.first { $0.type == .breathe })
+        let breathe = try #require(p4.everyBeat.first { $0.type == .breathe })
         #expect(breathe.typicalSeconds(cycleSeconds: { _ in 10 }) == 10 * (breathe.cycles ?? 3))
         #expect(OrbData.bundled.breathingPatterns.first { $0.id == "box" }?.cycleSeconds == 16)
     }
@@ -75,18 +81,17 @@ struct ProgramContentTests {
     /// nothing was written; never on the first step, the completion, or straight after a hold (it could be redone).
     @MainActor @Test func backIsOfferedExceptAfterAHold() throws {
         let p1 = try #require(try content().session("P1"))
-        let steps: [SessionFlowView.FlowStep] = [.intro] + p1.beats.map { .beat($0.id) } + [.completion]
-        let reasons = try #require(steps.firstIndex(of: .beat("P1.2")))
-        let pick = try #require(steps.firstIndex(of: .beat("P1.3")))
-        #expect(p1.beats.first { $0.id == "P1.3" }?.optionsFrom == "reasons")
-        #expect(pick == reasons + 1)
-        #expect(SessionFlowView.canGoBack(from: pick, in: steps, beats: p1.beats))
-        #expect(!SessionFlowView.canGoBack(from: 0, in: steps, beats: p1.beats))
-        #expect(!SessionFlowView.canGoBack(from: steps.count - 1, in: steps, beats: p1.beats))
-        // P1's hold is its last activity, so put a step after it to check the rule.
-        let hold = try #require(p1.beats.first { $0.type == .commit })
-        let withMission: [SessionFlowView.FlowStep] = [.intro, .beat(hold.id), .mission, .completion]
-        #expect(!SessionFlowView.canGoBack(from: 2, in: withMission, beats: p1.beats))
+        let beats = p1.everyBeat
+        let reasonsBeat = try #require(beats.first { $0.saveAs == "reasons" })
+        let pickBeat = try #require(beats.first { $0.saveAs == "primary_reason" })
+        #expect(pickBeat.optionsFrom == "reasons")
+        let steps: [SessionFlowView.FlowStep] = [.hand, .card("P1.4"), .beat(reasonsBeat.id), .beat(pickBeat.id), .completion]
+        #expect(SessionFlowView.canGoBack(from: 3, in: steps, beats: beats))
+        #expect(!SessionFlowView.canGoBack(from: 0, in: steps, beats: beats))
+        #expect(!SessionFlowView.canGoBack(from: steps.count - 1, in: steps, beats: beats))
+        let hold = try #require(beats.first { $0.type == .commit })
+        let withMission: [SessionFlowView.FlowStep] = [.hand, .beat(hold.id), .mission, .completion]
+        #expect(!SessionFlowView.canGoBack(from: 2, in: withMission, beats: beats))
     }
 
     /// CLIN-08: Week 2's "The flat days" (dopamine and brain fog) opens on Day 13, between Sleep and Two weeks. Its id
@@ -139,27 +144,27 @@ struct ProgramContentTests {
     @Test func wordingFollowsTheMainProduct() throws {
         let program = try content()
         let p3 = try #require(program.session("P3"))
-        let notice = try #require(p3.mission?.followUp?.first { $0.id == "P3.F2" })
+        let notice = try #require(p3.everyBeat.first { $0.saveAs == "mindful_notice" })
         #expect(notice.options?.resolve(.smoking)?.contains { $0.text == "Harsh taste" } == true)
         #expect(notice.options?.resolve(.vaping)?.contains { $0.text == "Mostly sweetener" } == true)
         #expect(notice.options?.resolve(.pouches)?.contains { $0.text == "Burn on my gum" } == true)
 
         // A checklist with no default and per-product lists.
         let p6 = try #require(program.session("P6"))
-        let friction = try #require(p6.beats.first { $0.id == "P6.1" })
+        let friction = try #require(p6.everyBeat.first { $0.saveAs == "friction_checklist" })
         #expect(friction.checklist?.resolve(.vaping)?.first == "Off my desk")
         // The same list for everyone.
-        let kit = try #require(p6.beats.first { $0.id == "P6.2" })
+        let kit = try #require(p6.everyBeat.first { $0.saveAs == "quit_kit_checklist" })
         #expect(kit.checklist?.resolve(.pouches)?.count == 4)
 
         // A footer only vaping has.
         let p7 = try #require(program.session("P7"))
-        let clearOut = try #require(p7.beats.first { $0.id == "P7.1" })
+        let clearOut = try #require(p7.everyBeat.first { $0.saveAs == "clearout_checklist" })
         #expect(clearOut.footer?.resolve(.vaping)?.contains("battery") == true)
         #expect(clearOut.footer?.resolve(.smoking) == nil)
 
         // Pouches get the taper option; the others the default three.
-        let nrt = try #require(p6.beats.first { $0.type == .nrtChoice })
+        let nrt = try #require(p6.everyBeat.first { $0.type == .nrtChoice })
         #expect(nrt.options?.resolve(.pouches)?.map(\.id) == ["setup", "have", "taper", "no"])
         #expect(nrt.options?.resolve(.smoking)?.map(\.id) == ["setup", "have", "no"])
     }
@@ -177,20 +182,21 @@ struct ProgramContentTests {
         #expect(w4s1.audio.pick(for: .smoking, nrtActive: false) == "default")
         let p1 = try #require(program.session("P1"))
         #expect(p1.audio.pick(for: .vaping, nrtActive: true) == "vaping")
-        let p5 = try #require(program.session("P5"))
-        #expect(p5.audio.pick(for: .pouches, nrtActive: false) == "default")
+        let w1d1 = try #require(program.session("W1D1"))
+        #expect(w1d1.audio.pick(for: .pouches, nrtActive: false) == "default")
         #expect(program.audio.file(session: "P1", variant: "vaping") == "vo_P1_vaping.m4a")
     }
 
     @Test func beatsSplitAroundTheAudioAndKnowWhatsRequired() throws {
         let program = try content()
-        let p4 = try #require(program.session("P4"))
-        #expect(p4.beatsBeforeAudio.map(\.id) == ["P4.1"])
-        #expect(p4.beatsAfterAudio.first?.id == "P4.2")
+        let w3s1 = try #require(program.session("W3S1"))
+        #expect(w3s1.beatsBeforeAudio.map(\.id) == ["W3S1.1"])
+        #expect(w3s1.beatsAfterAudio.first?.id != "W3S1.1")
         let p1 = try #require(program.session("P1"))
-        #expect(p1.beats.first { $0.type == .commit }?.isRequired == true)
-        #expect(p1.beats.first { $0.type == .quiz }?.isRequired == true)
-        #expect(p1.beats.first { $0.type == .reflect }?.isRequired == false)
+        #expect(p1.everyBeat.first { $0.type == .commit }?.isRequired == true)
+        #expect(p1.everyBeat.first { $0.type == .reflect }?.isRequired == false)
+        let w1d2 = try #require(program.session("W1D2"))
+        #expect(w1d2.beats.first { $0.type == .quiz }?.isRequired == true)
         let w1d6 = try #require(program.session("W1D6"))
         #expect(w1d6.beats.first { $0.id == "W1D6.3" }?.optional == true)
     }

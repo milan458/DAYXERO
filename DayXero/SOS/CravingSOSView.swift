@@ -261,7 +261,7 @@ struct CravingSOSView: View {
     static func suggestedBreaks(store: ProgramStore?) -> [String] {
         let fallback = [String(localized: "Step outside"), String(localized: "Glass of water"), String(localized: "2 minutes of breathing")]
         guard let store, let session = store.content?.session(BreakMenu.buildingSessionId),
-              let beat = session.beats.first(where: { $0.saveAs == BreakMenu.menuKey }),
+              let beat = session.everyBeat.first(where: { $0.saveAs == BreakMenu.menuKey }),
               let options = beat.options?.resolve(store.variant) else { return fallback }
         let picked = ["outside", "water", "breathe"].compactMap { id in options.first { $0.id == id }?.text }
         return picked.count == 3 ? picked : fallback

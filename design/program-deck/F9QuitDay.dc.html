@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>F9 · Day Xero</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#1E1A3A}a:hover{color:#4A2A1A}
+@keyframes fRays{to{transform:rotate(360deg)}}
+.f-rays{animation:fRays 60s linear infinite;transform-origin:50% 50%}
+@keyframes fPop{0%{transform:scale(.7);opacity:0}70%{transform:scale(1.06);opacity:1}100%{transform:scale(1)}}
+.f-pop{animation:fPop .7s cubic-bezier(.3,1.4,.5,1) both}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #FFC38A; color: #1E1A3A; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif; display: flex; flex-direction: column">
+  <svg class="f-rays" width="420" height="420" viewBox="0 0 420 420" aria-hidden="true" style="position: absolute; left: 120px; top: -150px">
+    <g stroke="#FF7A55" stroke-width="10" stroke-linecap="round" opacity="0.35"><path d="M210 20v50M210 350v50M20 210h50M350 210h50M76 76l35 35M309 309l35 35M76 344l35-35M309 111l35-35"></path></g>
+    <circle cx="210" cy="210" r="96" fill="#FFD966"></circle>
+  </svg>
+
+  <div style="padding: 54px 16px 0 14px; display: flex; align-items: center; gap: 10px; position: relative">
+    <a href="F9QuitDay.dc.html" aria-label="Back to Program" style="width: 44px; height: 44px; border-radius: 99px; background: rgba(255,255,255,0.55); display: flex; align-items: center; justify-content: center; flex: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></a>
+    <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: #4A2A1A">DAY XERO · FRI 6 NOV</span>
+  </div>
+
+  <div style="padding: 70px 24px 0 24px; display: flex; flex-direction: column; gap: 6px; position: relative">
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 52px; line-height: 0.98; letter-spacing: -1.6px">Day Xero</h1>
+    <sc-if value="{{before}}" hint-placeholder-val="{{true}}"><p style="margin: 0; font-size: 17px; line-height: 1.45; color: #4A2A1A">You've already done the hard part: you've seen the trap. Today you just walk out of it.</p></sc-if>
+    <sc-if value="{{after}}" hint-placeholder-val="{{false}}"><p class="f-pop" style="margin: 0; font-size: 17px; line-height: 1.45; font-weight: 700">Your counter has started. 0 days, 0 hours, 1 minute free.</p></sc-if>
+  </div>
+
+  <div style="margin: 20px 20px 0 20px; border-radius: 22px; background: #FFFFFF; padding: 16px; display: flex; flex-direction: column; gap: 6px; box-shadow: 0 6px 0 rgba(30,26,58,0.08); position: relative">
+    <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: #5E5975">FROM YOU, LAST NIGHT</span>
+    <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 19px; line-height: 1.3">“Maya's waiting at the park. You already know what the gap is. Let it talk.”</span>
+  </div>
+
+  <div style="margin: 20px 20px 0 20px; display: flex; flex-direction: column; gap: 10px; position: relative">
+    <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; color: #4A2A1A">TODAY'S HAND · 5 CARDS · FREE</span>
+    <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px">
+      <sc-for list="{{minis}}" as="m" hint-placeholder-count="5">
+        <div style="height: 92px; border-radius: 12px; padding: 8px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 0 rgba(0,0,0,0.12); {{m.style}}">
+          <span style="font-size: 12px; font-weight: 800; letter-spacing: 0">{{m.k}}</span>
+          <span style="font-size: 12px; font-weight: 700; line-height: 1.15">{{m.t}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="margin-top: auto; padding: 0 22px 28px 22px; display: flex; flex-direction: column; gap: 10px; align-items: center; position: relative">
+    <sc-if value="{{before}}" hint-placeholder-val="{{true}}">
+      <button onPointerDown="{{down}}" onPointerUp="{{up}}" onPointerLeave="{{up}}" aria-label="Hold for three seconds to start Day Xero" style="position: relative; overflow: hidden; width: 100%; height: 64px; border: 0; border-radius: 99px; background: #1E1A3A; color: #FFF8EE; font: inherit; font-weight: 700; font-size: 17px; cursor: pointer; box-shadow: 0 6px 0 rgba(0,0,0,0.2); touch-action: none">
+        <span aria-hidden="true" style="position: absolute; left: 0; top: 0; bottom: 0; width: {{fill}}; background: #FF7A55"></span>
+        <span style="position: relative">{{holdLabel}}</span>
+      </button>
+      <span style="font-size: 14px; font-weight: 500; color: #4A2A1A">Hold for 3 seconds. Press, and keep pressing.</span>
+    </sc-if>
+    <sc-if value="{{after}}" hint-placeholder-val="{{false}}">
+      <a href="F3Reveal.dc.html" class="f-pop" style="width: 100%; height: 58px; border-radius: 99px; background: #1E1A3A; color: #FFF8EE; font-weight: 700; font-size: 16px; text-decoration: none; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 0 rgba(0,0,0,0.2)">Next card: Your body today</a>
+      <span style="font-size: 14px; font-weight: 600; color: #4A2A1A">A craving? Jelli is one tap away on SOS.</span>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  componentWillUnmount() { clearInterval(this.timer); }
+  renderVals() {
+    const s = this.state || {};
+    const p = s.p || 0;
+    const started = Boolean(s.started);
+    const down = () => {
+      clearInterval(this.timer);
+      const t0 = Date.now();
+      this.timer = setInterval(() => {
+        const v = Math.min(1, (Date.now() - t0) / 3000);
+        if (v >= 1) { clearInterval(this.timer); this.setState({ p: 1, started: true }); } else this.setState({ p: v });
+      }, 40);
+    };
+    const up = () => { if (!((this.state || {}).started)) { clearInterval(this.timer); this.setState({ p: 0 }); } };
+    const cards = [
+      { k: 'LISTEN', t: 'Day Xero', bg: '#1E1A3A', ink: '#FFF8EE' },
+      { k: 'REVEAL', t: 'Your body today', bg: '#9CCBFF', ink: '#1E1A3A' },
+      { k: 'BREATHE', t: 'First breaths', bg: '#FFFFFF', ink: '#1E1A3A' },
+      { k: 'TRY', t: 'Your first hours', bg: '#9FE3BC', ink: '#1E1A3A' },
+      { k: 'LISTEN', t: 'One day', bg: '#4A3596', ink: '#FFF8EE' }
+    ];
+    return {
+      before: !started, after: started,
+      fill: Math.round(p * 100) + '%',
+      holdLabel: p > 0 && p < 1 ? 'Keep holding…' : 'Hold to start Day Xero',
+      minis: cards.map((c, i) => ({ ...c, style: 'background: ' + c.bg + '; color: ' + c.ink + ';' + (i === 0 ? ' outline: 3px solid #1E1A3A; outline-offset: 2px;' : '') + (started && i === 1 ? ' outline: 3px solid #FF7A55; outline-offset: 2px;' : '') })),
+      down, up
+    };
+  }
+}
+</script>
+</body>
+</html>

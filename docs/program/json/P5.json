@@ -1,0 +1,306 @@
+{
+  "id": "P5",
+  "phaseId": "prep",
+  "label": "Prep 5",
+  "title": "Riding the wave",
+  "subtitle": "The skill that matters most",
+  "durationMinutes": 28,
+  "unlock": {
+    "rule": "next_day_after_previous"
+  },
+  "audio": {
+    "variants": [
+      "smoking",
+      "vaping",
+      "pouches"
+    ]
+  },
+  "beats": [],
+  "deck": [
+    {
+      "id": "P5.1",
+      "format": "listen",
+      "title": "Surfing the urge",
+      "minutes": 7,
+      "ground": "apricot",
+      "commit": "I can ride it",
+      "intro": "A guided practice, about seven minutes. Find somewhere to sit. If you can, have your {product} where you can see it. You won't use it during the track. Still in prep: you can use as normal afterwards if you want to.",
+      "script": {
+        "voice": "Slow and grounded, warm, a little lower in energy than the other morning tracks; leave real room in every [long pause]; it's a practice, not a talk.",
+        "chapters": [
+          {
+            "title": "Why this skill",
+            "text": "[warmly] Welcome to day five. Today is about one skill. If I could only give you one thing to take into Day Xero, it would be this.\n\nHere's what a craving does if you don't act on it. It rises. It peaks. And then it falls. Usually within a few minutes. From the inside, it can feel as if it will keep building until something gives. It won't. It's a wave, and waves break. [pause]\n\nMost of us have never seen that happen. The urge starts to rise, and within seconds we {s: light up | v: take a hit | p: put one in}. So the wave never gets the chance to fall by itself, and we come away believing that only nicotine could have ended it. [pause]\n\nToday you're going to watch one fall. The practice is called urge surfing. In a study with people who smoked, one short session of it led to fewer cigarettes in the week that followed. Not because they fought harder. Because they stopped fighting, and started watching."
+          },
+          {
+            "title": "Find a wave",
+            "text": "You're still in your prep week, so nothing is being taken away. If you want to use after this, you can. Right now, we're only learning that you don't have to do it straight away. [pause]\n\nFind a place to sit. Feet on the floor. If it's safe to, let your eyes close, or rest them on one spot in front of you. [pause]\n\nNow we need a wave. If you have {s: your cigarettes | v: your vape | p: your tin} nearby, hold {s: the pack | v: it | p: it} in your hand, or put it where you can see it. If it isn't nearby, picture your next one. Where you'll be. The {s: lighter in your hand | v: weight of it in your hand | p: lid coming off}. That first {s: drag | v: pull | p: tingle}. [long pause]\n\nMaybe there's a pull already. Maybe it's faint. Any size is fine. If nothing shows up at all, that's fine too. Practice with whatever restlessness is here, and come back to this track the next time a craving arrives on its own. [pause]\n\nGive it a number from zero to ten. Zero is nothing. Ten is the strongest you've ever felt. Just notice the number. [long pause]"
+          },
+          {
+            "title": "Ride it",
+            "text": "[slowly] Now, instead of doing something about it, let's look at it. [pause]\n\nWhere is it in your body? Start at your mouth and throat. Is there a dryness, a tightness, a kind of reaching? [pause] Move down to your chest. Pressure, a flutter, a hollow feeling? [pause] Your stomach. [pause] Your hands. Do they want something to hold? [long pause]\n\nPick the place where it's strongest. Rest your attention there, the way you'd watch a wave come in from the beach. You don't have to like it. You only have to look. [pause]\n\nIs it sharp or dull? Still, or moving? Does it have edges? Is it growing, shrinking, or staying the same? [long pause]\n\nNow bring your breath to it. In slowly through your nose. And out, a little longer than the in-breath. Imagine the breath going to that spot and making a bit more room around the feeling. You're not pushing it out. You're giving it space. [long pause]\n\nYour mind will probably start talking. Just have one. This is pointless. I can't do this. That's normal. When a thought arrives, name it, quietly. Thinking. Or: there's the thought that I need one. Then come back to the body. [long pause]\n\nNotice what's happening. The craving is asking you to do something, and you're not doing it. And you're still here. Nothing has broken. [pause]\n\nKeep breathing. In through the nose. Long and slow on the way out. [long pause]\n\nCheck on the wave. Is it where it was? Has it moved, changed shape, softened at the edges? Sometimes it surges once more before it drops. If it does, ride that too. You're on the board. You don't have to steer the ocean. [long pause]\n\nOne more breath, a little slower than the last. [long pause]\n\nNow give it a number again. Zero to ten. [long pause]"
+          },
+          {
+            "title": "What just happened",
+            "text": "[gently] Whatever your number is, something useful happened. [pause]\n\nIf it dropped, you've just watched a craving fall without nicotine. That might be the most important thing you learn this week, because part of your brain has believed the opposite for a long time.\n\nIf it stayed the same, or even went up, that's useful too. You sat with it for a few minutes and didn't have to obey it. That's the skill. The wave doesn't have to vanish for you to be all right. [pause]\n\nHere's one more thing worth noticing. Part of what made the craving feel big was a quieter feeling underneath it: a worry about life without nicotine. That worry can feel like your own good sense. It isn't. It's part of the trap. The addiction keeps you close by making the way out look frightening. Once you can see that, the fear loosens its grip, and you start to notice that you aren't giving anything up. You're getting out. [pause]\n\nEvery wave you ride teaches your brain that a craving is a feeling, not an emergency, and the next one tends to be a little easier.\n\nToday's mission is to do this once more, with a real craving. Open Craving SOS for three minutes before you decide anything. Then rate how high it peaked. That's all."
+          }
+        ]
+      }
+    },
+    {
+      "id": "P5.2",
+      "format": "reveal",
+      "title": "Anatomy of a craving",
+      "minutes": 5,
+      "commit": "That's how mine work",
+      "intro": "Four questions about cravings. Tap each card to turn it over.",
+      "cards": [
+        {
+          "front": "What sets a craving off?",
+          "answer": "Usually two things at once: the gap, as your nicotine level drops, and a cue, like coffee, a break or a feeling. Together they switch on the urge before you've decided anything.",
+          "deeper": "Nicotine doesn't stay in your blood for long, and as the level falls, the gap opens: that restless, slightly-on-edge feeling. On its own it's fairly mild. But your brain has also learned to expect nicotine at certain moments: the first coffee, the end of a meal, getting in the car, a tense email. Each of those is a cue, and a cue can switch on a strong urge even when the gap is small. That's why you can want one right after you've had one, if the moment fits. After Day Xero, most of the nicotine leaves your body within a few days. The cues take longer to unlearn, and every wave you ride teaches them faster.",
+          "source": "Benowitz, 2010; smokefree.gov (health timeline)"
+        },
+        {
+          "front": "How long does a craving last?",
+          "answer": "Usually a few minutes. It rises, peaks and passes. From the inside it can feel endless, which is exactly why it helps to know that it has an end.",
+          "deeper": "Inside a craving, time stretches. A few minutes can feel like an hour, and the mind fills in the rest: this will keep getting worse until I give in. It won't. Each wave rises, peaks and passes, usually within a few minutes. Another may come along later, often when a new cue shows up, but each one is its own wave, and each one ends. That's why Craving SOS counts the time you've ridden: so you can watch the peak go by. Try this today: glance at the clock when a craving starts, and again when you notice it's gone. You may be surprised how short it was.",
+          "source": "smokefree.gov (health timeline)"
+        },
+        {
+          "front": "Why does it shrink each time I ride it?",
+          "answer": "When a craving passes without nicotine, your brain learns that the cue doesn't always bring a dose. The link loosens, so the next wave tends to be smaller.",
+          "deeper": "Your brain is always predicting. For years, a cue like coffee, the car or stress has been followed by nicotine, so your brain learned to fire up the urge ahead of time, to get you ready. When you ride a craving out, the cue arrives and the dose doesn't. The prediction was wrong, and the brain updates. One ride doesn't erase the link, but it loosens it. Ride enough of them and the waves tend to come less often and break sooner. It's also why one {s: cigarette | v: hit | p: pouch} in the early days after Day Xero matters more than it seems: it teaches the old lesson again.",
+          "source": "smokefree.gov (health timeline); Kenford, 1994"
+        },
+        {
+          "front": "What does the craving voice say?",
+          "answer": "\"Just one.\" \"You deserve it.\" \"Start tomorrow.\" It sounds like your own reasoning. It's the craving talking, and you don't have to argue with it or obey it.",
+          "deeper": "The craving voice is convincing because it uses your voice. It rarely says \"give me nicotine\". It says: you've had a hard day. One won't matter. Start properly on Monday. You'll never manage this anyway, so why suffer? It can even sound kind: you've earned a break. Notice the pattern. However it starts, every line ends in the same place, and that's how you can recognize it. You don't need to win the argument; arguing keeps you in the conversation. Just name it: \"There's the craving voice.\" Or: \"I'm having the thought that one won't matter.\" Then let it talk while you get on with something else."
+        }
+      ]
+    },
+    {
+      "id": "P5.3",
+      "format": "try",
+      "title": "The control test",
+      "minutes": 6,
+      "ground": "ocean",
+      "commit": "I can sit with it",
+      "intro": "A short experiment. You'll picture getting rid of your {product_plural} for good, notice what shows up, and practice letting it be there. Nothing actually gets thrown away. You can stop at any point.",
+      "after": "Control test done. You've seen the panic up close, and it's a feeling, not a fact.",
+      "beats": [
+        {
+          "id": "P5.3a",
+          "type": "info",
+          "title": "Picture it now",
+          "body": "{s: You take the pack, every spare and the lighter | v: You take your vape, every pod and the charger | p: You take every tin, including the spare in the car} and get rid of them. For good. Starting now. No backup. Hold the picture.\n\nStay with it for a few breaths. Notice what happens in you."
+        },
+        {
+          "id": "P5.3b",
+          "type": "choice",
+          "prompt": "Where do you notice it?",
+          "multi": true,
+          "options": [
+            {
+              "id": "mouth",
+              "text": "Mouth or throat"
+            },
+            {
+              "id": "chest",
+              "text": "Chest"
+            },
+            {
+              "id": "stomach",
+              "text": "Stomach"
+            },
+            {
+              "id": "hands",
+              "text": "Hands"
+            },
+            {
+              "id": "head",
+              "text": "Head: foggy, can't focus"
+            },
+            {
+              "id": "mood",
+              "text": "Mood: irritable or restless"
+            },
+            {
+              "id": "none",
+              "text": "Nothing much",
+              "feedback": "That's fine. Rate it anyway, even if it's a 1."
+            }
+          ],
+          "saveAs": "urge_signals",
+          "feedback": "That's your early signal. When you feel it there, a wave is starting.",
+          "footer": "Tap anywhere you feel something: tightness, buzzing, heat, a pull. A small something counts."
+        },
+        {
+          "id": "P5.3c",
+          "type": "slider",
+          "prompt": "How strong is it right now?",
+          "minLabel": "0 · Nothing",
+          "maxLabel": "10 · The strongest ever",
+          "saveAs": "control_before"
+        },
+        {
+          "id": "P5.3d",
+          "type": "choice",
+          "prompt": "What's your mind saying?",
+          "multi": false,
+          "allowOther": true,
+          "placeholder": "Write it the way it sounds…",
+          "options": [
+            {
+              "id": "cant",
+              "text": "I can't do this"
+            },
+            {
+              "id": "not_ready",
+              "text": "I'm not ready yet"
+            },
+            {
+              "id": "miserable",
+              "text": "I'll be miserable without it"
+            },
+            {
+              "id": "stress",
+              "text": "I won't cope when I'm stressed"
+            },
+            {
+              "id": "keep_one",
+              "text": "I should keep one, just in case"
+            },
+            {
+              "id": "lose",
+              "text": "I'm losing something I like"
+            }
+          ],
+          "saveAs": "control_thought",
+          "footer": "Pick the one that sounds most like it, or write your own."
+        },
+        {
+          "id": "P5.3e",
+          "type": "info",
+          "title": "Now say it like this",
+          "body": "Put these words in front of the thought you just picked: “I'm having the thought that…”\n\nRead it slowly in your head. Then once more. The words haven't changed, but now you're the one noticing them. A thought is not an order."
+        },
+        {
+          "id": "P5.3f",
+          "type": "breathe",
+          "pattern": "wave",
+          "cycles": 4,
+          "label": "Breathe with the ring for a minute. Let the feeling stay. You're not getting rid of it, just making room around it."
+        },
+        {
+          "id": "P5.3g",
+          "type": "slider",
+          "prompt": "And now?",
+          "minLabel": "0 · Nothing",
+          "maxLabel": "10 · The strongest ever",
+          "saveAs": "control_after",
+          "compareWith": "control_before",
+          "compareLabels": [
+            "Before",
+            "After"
+          ]
+        },
+        {
+          "id": "P5.3h",
+          "type": "info",
+          "title": "It came. You stayed.",
+          "body": "Whatever your numbers did, you held that feeling for a couple of minutes without doing what it said. That's the skill.\n\nIf it eased, you just watched it pass without nicotine. If it stayed the same, it doesn't have to shrink for you to be all right. If it got louder, that's common: paying attention can turn the volume up at first, and it isn't failing. If not much showed up, try it again later, just before your next {product}, when the pull is stronger.\n\nThat jolt of panic when you pictured life without it? That's the addiction talking. It isn't your judgment and it isn't a warning. It's part of the trap.\n\nWhere you felt it is your early signal. When you feel it there, you'll know a wave is starting. If it's still loud, open Craving SOS for three minutes. It's still your prep week, so after that, the choice is yours."
+        }
+      ]
+    },
+    {
+      "id": "P5.4",
+      "format": "myth",
+      "title": "Cravings",
+      "minutes": 5,
+      "commit": "I'll let them pass",
+      "intro": "Five things people believe about cravings. Myth or fact?",
+      "statements": [
+        {
+          "text": "If I don't give in, a craving just keeps getting stronger.",
+          "answer": "myth",
+          "verdict": "Cravings peak and pass on their own.",
+          "explanation": "It can feel that way, because most of us answer a craving long before it peaks. Left alone, a craving rises, peaks and passes, usually within a few minutes. In a study of urge surfing, people who learned to watch their urges, rather than fight or obey them, went on to smoke fewer cigarettes. You don't have to make a craving go away. You only have to let it finish.",
+          "source": "smokefree.gov (health timeline); Bowen & Marlatt, 2009"
+        },
+        {
+          "text": "Cravings last for hours.",
+          "answer": "myth",
+          "verdict": "One craving lasts minutes, not hours.",
+          "explanation": "A long, uncomfortable afternoon can feel like one endless craving. Usually it's several shorter waves, each set off by a cue or by the gap, with calmer stretches in between that are easy to miss. Each wave rises, peaks and passes, usually within a few minutes. Spotting the calm stretches matters: it shows you the craving isn't constant, and it gives you room to do something else before the next one.",
+          "source": "smokefree.gov (health timeline)"
+        },
+        {
+          "text": "After I quit, one won't hurt.",
+          "answer": "myth",
+          "verdict": "Early on, one tends to lead to more.",
+          "explanation": "This is one of the craving voice's favorite lines. In a study of people quitting with the patch, using at all in the first two weeks strongly predicted going back to regular use. The problem isn't that one {s: cigarette | v: hit | p: pouch} is a disaster. It's that it reopens the gap and reteaches the cue. If a slip does happen, treat it as something to learn from, not a reason to stop trying. The app has a slip plan for exactly that.",
+          "source": "Kenford, 1994"
+        },
+        {
+          "text": "If I'm still thinking about {s: smoking | v: vaping | p: pouches}, I'm failing.",
+          "answer": "myth",
+          "verdict": "Thoughts will come. What you do counts.",
+          "explanation": "Minds bring up old habits, especially in the places where they used to happen. Thoughts about nicotine will show up after Day Xero, sometimes out of nowhere. Having them isn't failing. The skill is noticing the thought, naming it (\"I'm having the thought that I want one\") and carrying on with what matters to you. In a large trial, an app built on this approach helped more people quit than a standard quit app.",
+          "source": "Bricker, 2020"
+        },
+        {
+          "text": "Cravings get less frequent over the first weeks.",
+          "answer": "fact",
+          "verdict": "For most people, they ease with time.",
+          "explanation": "Withdrawal symptoms, cravings included, are usually strongest in the first week, then ease over the following weeks for most people. Cravings tend to come less often and with less force, though a strong cue can still bring one up now and then, even months later. When that happens, it's one wave, not a sign you're back at the start. You ride it the same way.",
+          "source": "Hughes, 2007"
+        }
+      ]
+    },
+    {
+      "id": "P5.5",
+      "format": "listen",
+      "title": "Thoughts are not orders",
+      "minutes": 5,
+      "ground": "violet",
+      "commit": "Noticed, not obeyed",
+      "intro": "A short, quiet practice for the evening. About five minutes. Somewhere comfortable is best.",
+      "script": {
+        "voice": "Quiet, intimate evening delivery, slower than the morning track, gentle and unhurried; a hint of warmth on the notification image; no lift in energy at the end.",
+        "chapters": [
+          {
+            "title": "The voice",
+            "text": "[calmly] Good evening. Let's end today with something short and quiet. [pause]\n\nEarlier, while you were surfing, your mind probably had plenty to say. Just one. You deserve it. This is silly. I'll start properly on Monday. That voice doesn't stop because you've decided to quit. In the first days, it may even get louder. So tonight we'll practice a different way of hearing it. [pause]\n\nHere's the idea. A thought is something your mind makes, the way your heart makes a beat. Some thoughts are true and some aren't. Either way, a thought isn't an order. You can hear it without arguing with it, and without doing what it says."
+          },
+          {
+            "title": "Name it",
+            "text": "Settle in. Let your shoulders drop. [pause]\n\nBring to mind one thought that tends to show up around nicotine. Maybe, I need one. Maybe, I can't relax without it. Maybe, I'll never manage this. Pick the one that feels most familiar, and say it to yourself the way you usually hear it. [long pause]\n\nNotice how it lands. Does it feel true? Does it tug at you? [pause]\n\nNow say it again, with a few words in front. I'm having the thought that... I need one. [long pause]\n\nAnd once more, one step further back. I notice I'm having the thought that... I need one. [long pause]\n\nWhat changed? The words are the same. But now there's a little space between you and them. You're the one hearing the thought. You're not the thought. [pause]\n\nYou can use other labels too. There's the craving voice. There's the just-one story. Or simply: thinking. Short and plain is best. The label isn't there to shut the thought up. It's there to remind you which of you is the thought, and which of you is listening. [pause]"
+          },
+          {
+            "title": "Let it be",
+            "text": "Here's another way to picture it. Think of your thoughts as notifications on your phone. They light up the screen. Some are loud. Some keep coming back. You can see them without opening them, and you don't have to reply. [pause]\n\nSo the next time just one lights up, you can see it. There it is. The craving notification. And you can carry on with what you were doing. [long pause]\n\nYou don't need to make the thought go away. You don't need to win the argument. Arguing with a craving thought is like replying to a notification you don't want: it only brings more of them. Let it sit on the screen. It will scroll away when the next thing comes in. [pause]\n\nAnd if the same notification keeps coming back, that's fine too. Each time, you see it, you name it, and you carry on. That isn't failing at the practice. That is the practice. [long pause]"
+          },
+          {
+            "title": "Keep going",
+            "text": "[warmly] There's one more piece, and it's the one that matters most. While that thought is on the screen, what do you do? You keep doing what matters to you. [pause]\n\nThink about the reason that brought you here, the one you chose on the first day. Bring it to mind now. [long pause]\n\nThat's your direction. Thoughts will come and go along the way, and some will be loud. You can hear every one of them and still keep walking that way. They don't need to be quiet first. [pause]\n\nThink of how many things you've already done while part of you didn't want to. Getting up on a cold morning. A hard conversation. You didn't wait until you felt ready. You did it because it mattered. [pause]\n\nHere's something to try before you sleep, or tomorrow. The next time a nicotine thought shows up, put those words in front of it: I'm having the thought that. Then take one slow breath, and choose what you'll do next. You can still use, if that's what you decide. It's your prep week. The practice is in the choosing. [pause]\n\nTomorrow we'll set up the world around you, so that choosing gets easier. [pause]\n\nSleep well."
+          }
+        ]
+      }
+    }
+  ],
+  "recap": {
+    "learned": [
+      "A craving rises, peaks and passes, usually within a few minutes.",
+      "You can feel an urge fully without doing what it says.",
+      "“I'm having the thought that…” turns an order back into a thought."
+    ],
+    "tomorrow": "Make it easy on yourself: your space, your people and, if you want it, NRT."
+  },
+  "mission": {
+    "text": "Surf one craving for three minutes with Craving SOS before you use. Afterwards, rate its peak from 0 to 10.",
+    "logType": "surf_practice"
+  },
+  "completionText": "You know how to ride the wave. That's the big one."
+}

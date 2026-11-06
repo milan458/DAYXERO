@@ -1,0 +1,519 @@
+{
+  "id": "P2",
+  "phaseId": "prep",
+  "label": "Prep 2",
+  "title": "The first one of the day",
+  "subtitle": "Loosen the morning routine",
+  "durationMinutes": 30,
+  "unlock": {
+    "rule": "next_day_after_previous"
+  },
+  "audio": {
+    "variants": [
+      "smoking",
+      "vaping",
+      "pouches"
+    ]
+  },
+  "beats": [],
+  "deck": [
+    {
+      "id": "P2.1",
+      "format": "listen",
+      "title": "The autopilot",
+      "minutes": 6,
+      "ground": "apricot",
+      "commit": "I'll catch the cue",
+      "intro": "Yesterday you watched the gap. Today, what sets it off.",
+      "after": "Catch the cue first.",
+      "script": {
+        "voice": "warm and clear, a touch brighter than yesterday's morning track; curious rather than instructive, steady pace, slowing for the questions in chapter 1 and the naming practice in chapter 4.",
+        "chapters": [
+          {
+            "title": "Who decided?",
+            "text": "[warmly] Good morning. Before anything else, a quick question. [pause]\n\nYesterday, how many times did you really decide to {s: smoke | v: vape | p: have a pouch}? Not just do it. Decide. A clear moment where you thought, \"Yes, I want one now,\" and then reached for it. [long pause]\n\nIf you're like most people, the honest answer is: not many. Most of the time, the {s: cigarette was already lit | v: vape was already in your hand | p: pouch was already in} before any thought arrived. The coffee was poured, you stepped outside, the meal ended, the car started, and there it was. Sometimes you only noticed halfway through. Sometimes you reached for {s: the pack | v: your vape | p: the can} and realized you'd had one just a few minutes before.\n\nThat's the autopilot. And it isn't a sign that you're careless or that you don't care. It's a sign that your brain has learned something very well. Today we're going to look at how it got built, and why simply seeing it is the first step to switching it off."
+          },
+          {
+            "title": "How a cue gets wired",
+            "text": "Your brain is a brilliant learner. It notices what happens together, and it links them. [pause]\n\nSay you {s: smoke | v: vape | p: have a pouch} with your morning coffee. The coffee comes, the gap closes, you feel settled. The next day, same again. And the day after. Over months and years, that happens hundreds, then thousands, of times. Each time, the link between coffee and nicotine gets a little stronger.\n\nAfter a while, the coffee doesn't just go with it. The coffee starts asking for it. The smell, the warm cup in your hand, that first sip: they become a signal. Your brain says, \"This is the moment the gap closes,\" and the wanting switches on before you've had a single thought about it.\n\nIt's a bit like a song you know well. Someone plays the first line, and the next line arrives in your head on its own. You didn't choose to think of it. It was just there. Or think of the light switch in a home you've moved out of. Years later, walking into a dark room somewhere else, your hand can still reach for the wall where it used to be.\n\nThat's what a cue is. Coffee. Finishing a meal. Your phone. The car. A drink. A stressful email. Each one got paired with nicotine so many times that it now pulls on the habit by itself. [pause] It isn't a choice you keep making. It's a groove that's been worn in, one repetition at a time."
+          },
+          {
+            "title": "Why mornings are so strong",
+            "text": "[calmly] The first one of the day often feels like the strongest of all. There are two reasons, and they stack on top of each other. [pause]\n\nFirst, the gap. You've just been asleep for hours without nicotine, so the level is low. You wake up with the gap at its widest, and the first one has the most to close.\n\nSecond, the routine. The morning is usually the most repeated stretch of your day. Wake up, phone, coffee, first one. Same order, same place, every single day. It's the most practiced chain of cues you have. Your hands know the moves before you're properly awake.\n\nSo the first one of the day isn't proof that you need it most. It's the biggest gap meeting the best-rehearsed routine. Nothing more mysterious than that. [pause] And that makes the morning a very good place to learn."
+          },
+          {
+            "title": "Seeing it loosens it",
+            "text": "Here's the hopeful part. The autopilot works best when nobody's watching. [pause]\n\nThe moment you notice a cue, something shifts. Instead of coffee leading straight to nicotine, there's a small moment in between. A little space where you can see what's happening. \"Ah. There's the coffee cue.\" [pause]\n\nYou don't have to do anything with that space yet. Today, you can still use, exactly as normal. I'm only asking you to see it. When a cue shows up, name it in your head. \"That's the after-dinner one.\" \"That's the car.\" \"That's the phone.\" [pause] Naming it, rather than fighting it, is how you start to step out of the groove. Notice what you feel just before, too. Restless? Bored? Tired? A bit pleased with yourself? You'll map that in a few minutes, and it'll tell you a lot. It's also why you keep using this week. The cues are much easier to see while they're still running.\n\nAnd here's the part worth holding on to. What was learned can be unlearned. Every link your brain made, it made through repetition. After Day Xero, each time a cue shows up and passes without nicotine, that link gets a little weaker. The cues will still knock for a while. Over the first few weeks, they tend to knock less often, and more quietly.\n\nIn a moment, you'll look at which cues run your day, and map your three biggest ones. Then this evening, we'll plan one small experiment for tomorrow morning.\n\n[warmly] For now, keep using as normal. Just catch the cue first."
+          }
+        ]
+      }
+    },
+    {
+      "id": "P2.2",
+      "format": "reveal",
+      "title": "Your triggers, decoded",
+      "minutes": 6,
+      "commit": "I can see my cues",
+      "intro": "Your biggest cues, one card each. Tap to see what's really going on.",
+      "cards": [
+        {
+          "front": "Why does coffee feel unfinished without it?",
+          "answer": "Because they've been paired thousands of times, often first thing, when the gap is widest. Your brain now treats the cup itself as the signal that nicotine is coming.",
+          "deeper": "Coffee is usually one of the most repeated pairings there is: same time, same cup, same spot, every day. Each time, nicotine closed the gap while the coffee was in your hand, so the two got wired together. That's why coffee on its own can feel oddly incomplete. The good news is that pairings can be rewired. You don't have to give up coffee. Changing the setting helps: a different mug, a different chair, a short walk with it. So does a plan written as \"When I pour my coffee, I'll…\". If-then plans like that make follow-through more likely.",
+          "source": "Gollwitzer & Sheeran, 2006"
+        },
+        {
+          "front": "Why does the one after a meal feel so necessary?",
+          "answer": "A meal ends, you pause, and it's been a while since the last one. That full, settled feeling and the gap closing arrive together, so they've merged into one.",
+          "deeper": "The end of a meal is a natural full stop, and nicotine has filled that full stop for a long time. Because you've usually gone a while without while you ate, the gap is open too. So the relief of closing it lands right on top of the pleasant, full feeling of having eaten, and the two get credited to the {s: cigarette | v: vape | p: pouch}. People who don't use finish meals and feel full and done in exactly the same way. What helps is giving the meal a new full stop of your own: stand up, brush your teeth, make a tea, take a short walk."
+        },
+        {
+          "front": "Why do your phone and {product} go together?",
+          "answer": "Both fill small, empty moments. Idle hands, idle mind, a scroll and a {s: smoke | v: hit | p: pouch}. They've shown up in the same moments so often that one now cues the other.",
+          "deeper": "Phones and nicotine both slot into the in-between bits of the day: waiting, winding down, a minute with nothing to do. {s: A smoke break often comes with a scroll. | v: A vape can be used while scrolling, almost without noticing. | p: A pouch can sit in while you scroll, almost without noticing.} Because both happen so often, the link builds quickly. Watch for the moment you pick up the phone and see if the urge arrives with it. Small changes help a lot: keep the {product} in a different room from where you scroll, or set the phone down for the first minute of a break."
+        },
+        {
+          "front": "Why does getting in the car make you reach for it?",
+          "answer": "Hands busy, mind free, the same route at the same time. The car is a private, repeated space, so it's become one of the strongest places for the habit.",
+          "deeper": "Driving is the same few routes, the same times of day and the same seat, over and over. That makes it a perfect place for a cue to form. The car can also feel like your own space, where nobody minds what you do. When you notice the pull as you start the engine, name it: \"That's the car.\" To help on and after Day Xero, give your hands and mouth something else: water, gum, a podcast you save only for driving. And take {product_plural} and anything that goes with them out of the car before your Quit Day."
+        },
+        {
+          "front": "Why does a drink make it so much harder to say no?",
+          "answer": "Drinks and nicotine are often paired in social, relaxed moments, and after a drink or two, plans can feel easier to bend. So two pulls arrive at once.",
+          "deeper": "For many people, a drink and a {s: cigarette | v: vape | p: pouch} go together in the same settings: friends, evenings, celebrations. That's a strong, well-practiced pairing. On top of that, alcohol can loosen the part of you that plans ahead, so \"just one\" can sound more reasonable after a couple of drinks. None of this means you can never drink again. It means the first few weeks after Day Xero are worth planning: fewer drinks, a different setting, a friend who knows, an exit time. Tonight, just notice how often the two show up together."
+        },
+        {
+          "front": "Why does stress feel like the time you need it most?",
+          "answer": "Because the gap and stress feel alike: restless, tense, on edge. Using closes the gap, and that can feel like calm, so stress and nicotine get wired together.",
+          "deeper": "When the gap opens during a stressful moment, you feel both at once and can't tell them apart. Using closes the gap, the edge drops, and it feels as if the stress eased. Research on people who smoke found that stress tends to rise between cigarettes and fall after one, which fits the idea that smoking relieves withdrawal rather than stress itself. So the cue isn't really \"stress\". It's \"stress plus the gap\". Two days from now we'll look at this loop properly, and at what actually helps in a hard moment.",
+          "source": "Parrott, 1999"
+        }
+      ]
+    },
+    {
+      "id": "P2.3",
+      "format": "myth",
+      "title": "Habits and helpers",
+      "minutes": 6,
+      "commit": "Good to know",
+      "intro": "Five beliefs about the moments that come with nicotine. Tap Myth or Fact.",
+      "statements": [
+        {
+          "text": "Coffee and {product_plural} just go together.",
+          "answer": "myth",
+          "verdict": "They go together because you've paired them.",
+          "explanation": "It can feel like a natural match, but nothing in coffee needs nicotine. You've had them together so often that your brain now links them, and the cup itself sets off the wanting. People who don't use drink coffee and enjoy it fully. A pairing that was learned can be relearned: a different mug, a different spot, or a short if-then plan for the first cup all help loosen it.",
+          "source": "Gollwitzer & Sheeran, 2006"
+        },
+        {
+          "text": "{s: Smoking | v: Vaping | p: A pouch} helps me concentrate.",
+          "answer": "myth",
+          "verdict": "It fixes the poor focus the gap causes.",
+          "explanation": "It feels true because focus often sharpens right after you use. But as nicotine wears off, the gap makes it harder to settle and concentrate. Using brings you back to your normal level, so it feels like a boost. Difficulty concentrating is a known withdrawal symptom, and it tends to ease within two to four weeks of stopping. After that, the dips that come between doses are gone.",
+          "source": "Benowitz, 2010; Hughes, 2007"
+        },
+        {
+          "text": "{s: A cigarette | v: Vaping | p: A pouch} after a meal helps my digestion.",
+          "answer": "myth",
+          "verdict": "The meal is done either way. The gap isn't.",
+          "explanation": "The after-meal one feels like it settles things, but most of that feeling is the gap closing right as you sit back, full and relaxed. People who don't use digest their meals perfectly well, and feel just as done. If meals feel unfinished for a while after Day Xero, that's the old pairing, not your stomach. Give the meal a new ending of your own: stand up, make a tea, take a short walk.",
+          "source": "Benowitz, 2010"
+        },
+        {
+          "text": {
+            "smoking": "Coffee will hit harder after I quit.",
+            "vaping": "Coffee will hit harder after I quit vaping.",
+            "pouches": "Coffee will hit harder after I quit pouches."
+          },
+          "answer": {
+            "smoking": "fact",
+            "vaping": "myth",
+            "pouches": "myth"
+          },
+          "verdict": {
+            "smoking": "True. Plan to cut your coffee back a bit.",
+            "vaping": "Unlikely. That finding was about smoke.",
+            "pouches": "Unlikely. That finding was about smoke."
+          },
+          "explanation": {
+            "smoking": "This one is real. Tobacco smoke makes your body clear caffeine faster. When you stop smoking, the same number of cups can leave a lot more caffeine in your blood. That can feel like jitters, poor sleep or restlessness, which is easy to mistake for cravings. Try cutting back or switching some cups to decaf in your first weeks.",
+            "vaping": "The study behind this was about people who stopped smoking. It's the smoke that speeds up how fast the body clears caffeine, so stopping vaping isn't expected to change your coffee much. What may change is the habit: coffee might feel strange without a vape for a while. That's the pairing, and it fades as you practice.",
+            "pouches": "The study behind this was about people who stopped smoking. It's the smoke that speeds up how fast the body clears caffeine, so stopping pouches isn't expected to change your coffee much. What may change is the habit: coffee might feel strange without a pouch for a while. That's the pairing, and it fades as you practice."
+          },
+          "source": {
+            "smoking": "Benowitz, Hall & Modin, 1989",
+            "vaping": "Benowitz, Hall & Modin, 1989 (smokers only)",
+            "pouches": "Benowitz, Hall & Modin, 1989 (smokers only)"
+          }
+        },
+        {
+          "text": "You can't break a habit you've had for years.",
+          "answer": "myth",
+          "verdict": "Long habits can change. Millions have done it.",
+          "explanation": "A long habit can feel like part of who you are, but the links behind it were learned one repetition at a time, and they can weaken the same way. In the US, more than half of adults who have ever smoked have now quit, many after decades. What helps most is seeing the cues, having a plan for each one, and riding out the urges until they fade.",
+          "source": "Babb et al., 2017; Gollwitzer & Sheeran, 2006"
+        }
+      ]
+    },
+    {
+      "id": "P2.4",
+      "format": "try",
+      "title": "Map your autopilot",
+      "minutes": 7,
+      "ground": "mint",
+      "commit": "I'll try the wait",
+      "beats": [
+        {
+          "id": "P2.4a",
+          "type": "choice",
+          "prompt": "Which cues run your day?",
+          "multi": true,
+          "pick": 3,
+          "allowOther": true,
+          "options": [
+            {
+              "id": "morning",
+              "text": "Waking up"
+            },
+            {
+              "id": "coffee",
+              "text": "Coffee"
+            },
+            {
+              "id": "meals",
+              "text": "After meals"
+            },
+            {
+              "id": "stress",
+              "text": "Stress"
+            },
+            {
+              "id": "alcohol",
+              "text": "Drinking"
+            },
+            {
+              "id": "boredom",
+              "text": "Boredom"
+            },
+            {
+              "id": "social",
+              "text": "With friends"
+            },
+            {
+              "id": "driving",
+              "text": "Driving"
+            },
+            {
+              "id": "work",
+              "text": "Work breaks"
+            },
+            {
+              "id": "finishedTask",
+              "text": "Finished a task / chore"
+            },
+            {
+              "id": "phone",
+              "text": "On my phone"
+            }
+          ],
+          "saveAs": "autopilot_triggers",
+          "footer": "Pick up to three."
+        },
+        {
+          "id": "P2.4b",
+          "type": "choice",
+          "prompt": "When do these cues usually happen?",
+          "multi": true,
+          "options": [
+            {
+              "id": "early_morning",
+              "text": "Early morning"
+            },
+            {
+              "id": "mid_morning",
+              "text": "Mid-morning"
+            },
+            {
+              "id": "midday",
+              "text": "Midday"
+            },
+            {
+              "id": "afternoon",
+              "text": "Afternoon"
+            },
+            {
+              "id": "evening",
+              "text": "Evening"
+            },
+            {
+              "id": "late_night",
+              "text": "Late night"
+            }
+          ],
+          "saveAs": "autopilot_when",
+          "footer": "Think of the cues you just picked."
+        },
+        {
+          "id": "P2.4c",
+          "type": "choice",
+          "prompt": "Where are you, usually?",
+          "multi": true,
+          "allowOther": true,
+          "options": [
+            {
+              "id": "home",
+              "text": "At home"
+            },
+            {
+              "id": "outside",
+              "text": "Just outside"
+            },
+            {
+              "id": "car",
+              "text": "In the car"
+            },
+            {
+              "id": "work",
+              "text": "At work"
+            },
+            {
+              "id": "people",
+              "text": "Out with people"
+            }
+          ],
+          "saveAs": "autopilot_where"
+        },
+        {
+          "id": "P2.4d",
+          "type": "choice",
+          "prompt": "What do you feel just before?",
+          "multi": true,
+          "options": [
+            {
+              "id": "restless",
+              "text": "Restless"
+            },
+            {
+              "id": "bored",
+              "text": "Bored"
+            },
+            {
+              "id": "stressed",
+              "text": "Stressed"
+            },
+            {
+              "id": "tired",
+              "text": "Tired"
+            },
+            {
+              "id": "rushed",
+              "text": "Rushed"
+            },
+            {
+              "id": "relaxed",
+              "text": "Relaxed"
+            },
+            {
+              "id": "pleased",
+              "text": "Pleased with myself"
+            },
+            {
+              "id": "low",
+              "text": "Low"
+            },
+            {
+              "id": "none",
+              "text": "Nothing I can name"
+            }
+          ],
+          "saveAs": "autopilot_feeling"
+        },
+        {
+          "id": "P2.4e",
+          "type": "plan_card",
+          "title": "Your autopilot",
+          "fields": [
+            "autopilot_triggers",
+            "autopilot_when",
+            "autopilot_where",
+            "autopilot_feeling"
+          ],
+          "editable": true
+        },
+        {
+          "id": "P2.4f",
+          "type": "info",
+          "title": "Name it when it shows up",
+          "body": "These are the moments that switch it on. Today, when one shows up, name it in your head: \"That's the coffee cue.\""
+        },
+        {
+          "id": "P2.4g",
+          "type": "slider",
+          "prompt": "How automatic does your first one of the day feel?",
+          "minLabel": "A real choice",
+          "maxLabel": "I don't even notice it",
+          "saveAs": "first_use_automatic",
+          "feedback": "Near the top? That's the autopilot at its strongest, which makes the morning the best place to start. Lower down? Good. You're already watching it."
+        },
+        {
+          "id": "P2.4h",
+          "type": "info",
+          "title": "One short wait",
+          "body": "Tomorrow morning, try one experiment: a short wait between your morning moment and your first {product}. You can still use afterward. It's practice, not a test."
+        },
+        {
+          "id": "P2.4i",
+          "type": "choice",
+          "prompt": "Which moment will you wait after?",
+          "multi": false,
+          "allowOther": true,
+          "options": [
+            {
+              "id": "waking",
+              "text": "Waking up"
+            },
+            {
+              "id": "coffee",
+              "text": "First coffee or tea"
+            },
+            {
+              "id": "commute",
+              "text": "The commute"
+            },
+            {
+              "id": "scroll",
+              "text": "First scroll of the day"
+            }
+          ],
+          "saveAs": "morning_anchor"
+        },
+        {
+          "id": "P2.4j",
+          "type": "choice",
+          "prompt": "How long?",
+          "multi": false,
+          "options": [
+            {
+              "id": "5",
+              "text": "5 minutes"
+            },
+            {
+              "id": "15",
+              "text": "15 minutes"
+            }
+          ],
+          "saveAs": "morning_wait_minutes",
+          "footer": "Pick the one that feels doable. Either one teaches the same thing."
+        },
+        {
+          "id": "P2.4k",
+          "type": "choice",
+          "prompt": "What will you do while you wait?",
+          "multi": false,
+          "allowOther": true,
+          "options": [
+            {
+              "id": "water",
+              "text": "Drink a glass of water"
+            },
+            {
+              "id": "shower",
+              "text": "Shower first"
+            },
+            {
+              "id": "outside",
+              "text": "Step outside"
+            },
+            {
+              "id": "breakfast",
+              "text": "Make breakfast"
+            },
+            {
+              "id": "sos",
+              "text": "Open Craving SOS"
+            },
+            {
+              "id": "let_be",
+              "text": "Just let the feeling be there"
+            }
+          ],
+          "saveAs": "morning_wait_plan",
+          "feedback": "Set. We'll remind you in the morning."
+        },
+        {
+          "id": "P2.4l",
+          "type": "plan_card",
+          "title": "Tomorrow morning",
+          "fields": [
+            "morning_anchor",
+            "morning_wait_minutes",
+            "morning_wait_plan"
+          ],
+          "editable": true
+        },
+        {
+          "id": "P2.4m",
+          "type": "info",
+          "title": "All set",
+          "body": "After the wait, you can use if you want to, and notice what it's like. Your autopilot is mapped and tomorrow's wait is planned. For the rest of today, just catch the cues as they show up."
+        }
+      ]
+    },
+    {
+      "id": "P2.5",
+      "format": "listen",
+      "title": "Tonight: one small wait",
+      "minutes": 5,
+      "ground": "violet",
+      "commit": "I'm set for the morning",
+      "after": "One moment, one short wait.",
+      "before": [
+        {
+          "id": "P2.5a",
+          "type": "plan_card",
+          "title": "Your short wait",
+          "fields": [
+            "morning_anchor",
+            "morning_wait_minutes",
+            "morning_wait_plan"
+          ],
+          "editable": true
+        }
+      ],
+      "script": {
+        "voice": "soft and steady, evening energy; reassuring and practical, slower in chapter 3 so the rehearsal has room to breathe.",
+        "chapters": [
+          {
+            "title": "Why one small wait",
+            "text": "[softly] Hi. Let's take a few minutes to get ready for tomorrow morning. [pause]\n\nYou've chosen a moment, and a short wait after it. Five minutes, or fifteen, before your first {s: cigarette | v: vape | p: pouch} of the day. I want to explain why something this small matters so much.\n\nIf you're like a lot of people who use nicotine, you've rarely, if ever, watched an urge pass. Think about it. The urge shows up, and within moments it's dealt with. You close the gap every time, so you never get to see what the urge does on its own. [pause] Tomorrow, you will. And that one sight matters more than it sounds. Once you've seen an urge come and go on its own, even once, it's hard to fully believe again that you have to answer every single one.\n\nThis isn't a test of strength, and it isn't the start of quitting. You can still use as normal tomorrow. It's an experiment with one question: what happens to the urge if I don't answer it straight away?"
+          },
+          {
+            "title": "What it might feel like",
+            "text": "Let me be honest about what you might notice. [pause]\n\nThe pull will probably show up right on cue. A restlessness. Maybe a thought like, \"Just have it, what's the point?\" Maybe your hands will want something to do. It may feel stronger than you expect, or much weaker. Both are useful to know. You might also feel a little silly, standing in the kitchen watching the clock. That's fine too. Curiosity often feels a bit odd at first.\n\nIf it rises, notice that it rises. And keep watching. Urges tend to build, peak, and then ease off, a bit like a wave. [pause] You might find it eases sooner than you thought. You might not. Either way, you've learned something about how it moves.\n\nAnd if you don't make the full time, that's fine. Whatever you manage counts. Two minutes of watching teaches you more than a day of not looking. And if you forget completely, and only notice once the {s: cigarette's lit | v: vape's in your hand | p: pouch is in}, that's the autopilot showing you just how fast it runs. Make a note of it, and try again the next morning."
+          },
+          {
+            "title": "Rehearse the morning",
+            "text": "[slowly] Let's walk through it now, so your brain has seen it once already. Close your eyes if you'd like. [pause]\n\nPicture waking up tomorrow. The room. The light. How you feel. [pause]\n\nNow picture your moment arriving. Maybe it's your feet touching the floor. Maybe it's the first coffee in your hand. Maybe it's the commute, or picking up your phone. [long pause]\n\nNotice the pull. And name it, quietly: \"There's the morning cue.\" [pause]\n\nFeel where it shows up in your body. The chest. The hands. The mouth. Just notice it, the way you did yesterday with the gap. [pause]\n\nNow see yourself doing the thing you picked for those minutes. A glass of water. A shower. Stepping outside. Or just letting the feeling be there, without doing anything about it. [long pause]\n\nAnd then, when the time's up, you can use if you want to. If you do, notice that first one. [pause] What was it like, after waiting?"
+          },
+          {
+            "title": "Tonight",
+            "text": "That's the plan. One moment, one short wait, and some curiosity. [pause]\n\nWhen you're done, log how long you managed in the app, even if it was less than you hoped. It all helps you see the pattern. Tomorrow we'll go one step further, and look closely at what using actually feels like, moment by moment, with fresh eyes.\n\nFor now, let today go. You mapped your autopilot and named your cues. You know more about your habit tonight than you did this morning. [pause]\n\nIf your mind starts running ahead to the morning, that's okay. Take one slow breath, a little longer on the way out, and let the plan rest. It'll be there when you wake up.\n\n[warmly] Sleep well. I'll see you in the morning."
+          }
+        ]
+      }
+    }
+  ],
+  "recap": {
+    "learned": [
+      "Most uses start with a cue, not a decision.",
+      "Cues get wired by pairing and repetition, and can be rewired.",
+      "The morning stacks the widest gap on your most practiced routine."
+    ],
+    "tomorrow": "Use with your eyes open: what it actually feels like, with curiosity instead of the story."
+  },
+  "mission": {
+    "text": "When a cue shows up today, name it in your head: \"That's the coffee cue.\" Tomorrow morning, take your short wait and log how long you managed.",
+    "logType": "morning_buffer"
+  },
+  "completionText": "Tomorrow morning: one small wait. That's all."
+}

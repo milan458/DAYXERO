@@ -1,0 +1,229 @@
+<title>DayXero Audio Scripts</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a script library. Sticky controls, a track index on the left, every script on one long reading column. */
+:root {
+  --bg: #FBF7F1; --surface: #FFFFFF; --surf: #F1EBE2; --ink: #1E1A3A; --muted: #5E5975;
+  --line: rgba(30,26,58,0.12); --morning: #FFC38A; --morning-ink: #1E1A3A; --evening: #4A3596; --evening-ink: #FFF8EE;
+  --during: #9FE3BC; --during-ink: #1E1A3A; --mark: #FF7A55; --tag-bg: #EDE7FF; --tag-ink: #3B2A86;
+  --pause: #8A8499; --btn: #1E1A3A; --btn-ink: #FFF8EE; --focus: #2A52DB;
+  --display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --body: "DM Sans", "Helvetica Neue", system-ui, sans-serif;
+  --mono: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0E0B2B; --surface: #1B1747; --surf: #2A255F; --ink: #FFF8EE; --muted: #B8B3D9;
+  --line: rgba(255,255,255,0.14); --morning: #FFC38A; --morning-ink: #241433; --evening: #6B4FD8; --evening-ink: #FFF8EE;
+  --during: #9FE3BC; --during-ink: #0F2A22; --mark: #FF8F6E; --tag-bg: #2E2770; --tag-ink: #D8CCFF;
+  --pause: #8F89B3; --btn: #FFF8EE; --btn-ink: #1E1A3A; --focus: #9CCBFF; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0E0B2B; --surface: #1B1747; --surf: #2A255F; --ink: #FFF8EE; --muted: #B8B3D9;
+  --line: rgba(255,255,255,0.14); --morning: #FFC38A; --morning-ink: #241433; --evening: #6B4FD8; --evening-ink: #FFF8EE;
+  --during: #9FE3BC; --during-ink: #0F2A22; --mark: #FF8F6E; --tag-bg: #2E2770; --tag-ink: #D8CCFF;
+  --pause: #8F89B3; --btn: #FFF8EE; --btn-ink: #1E1A3A; --focus: #9CCBFF; color-scheme: dark }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.5; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0; }
+
+header.top { padding-block: 40px 20px; display: grid; gap: 10px; }
+.eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+h1 { margin: 0; font-family: var(--display); font-weight: 800; font-size: clamp(32px, 5vw, 48px); line-height: 1.02; letter-spacing: -0.03em; text-wrap: balance; }
+h1 .u { position: relative; white-space: nowrap; }
+h1 .u svg { position: absolute; left: 0; right: 0; bottom: -0.18em; width: 100%; height: 0.32em; }
+.lede { margin: 0; max-width: 62ch; color: var(--muted); font-size: 17px; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 14px; color: var(--muted); }
+.facts b { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
+.bar .wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; padding-block: 10px; }
+.seg { display: inline-flex; background: var(--surf); border-radius: 999px; padding: 4px; gap: 2px; }
+.seg button { border: 0; background: transparent; color: var(--ink); font: inherit; font-size: 14px; font-weight: 700; padding: 0 14px; min-height: 36px; border-radius: 999px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--btn); color: var(--btn-ink); }
+.bar label.lbl { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.ctl { display: flex; align-items: center; gap: 8px; }
+.jump { margin-left: auto; }
+.jump select { font: inherit; font-size: 14px; font-weight: 600; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; min-height: 40px; padding: 0 10px; max-width: 70vw; }
+
+.layout { display: flex; flex-wrap: wrap; gap: 32px; padding-block: 28px 80px; align-items: flex-start; }
+nav.toc { flex: 1 1 220px; max-width: 260px; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 72px); display: grid; gap: 14px; }
+nav.toc .day { display: grid; gap: 2px; }
+nav.toc .dayname { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 0 8px; }
+nav.toc a { display: flex; gap: 8px; align-items: baseline; text-decoration: none; font-size: 14px; padding: 5px 8px; border-radius: 8px; }
+nav.toc a:hover { background: var(--surf); }
+nav.toc a .dot { width: 8px; height: 8px; border-radius: 99px; flex: none; transform: translateY(-1px); }
+main { flex: 999 1 560px; min-width: 0; display: grid; gap: 28px; }
+
+article.track { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; overflow: hidden; scroll-margin-top: calc(env(safe-area-inset-top, 0px) + 72px); }
+.thead { padding: 20px 22px 16px; display: grid; gap: 8px; border-bottom: 1px solid var(--line); }
+.trow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.pill { font-size: 12px; font-weight: 700; letter-spacing: 0.04em; padding: 4px 10px; border-radius: 999px; }
+.pill.morning { background: var(--morning); color: var(--morning-ink); }
+.pill.evening { background: var(--evening); color: var(--evening-ink); }
+.pill.during { background: var(--during); color: var(--during-ink); }
+.pill.plain { background: var(--surf); color: var(--ink); }
+.thead h2 { margin: 0; font-family: var(--display); font-weight: 800; font-size: 28px; line-height: 1.1; letter-spacing: -0.02em; text-wrap: balance; }
+.meta { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.voice { font-size: 15px; color: var(--muted); max-width: 70ch; }
+.voice b { color: var(--ink); font-weight: 600; }
+.tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.copy { border: 0; background: var(--btn); color: var(--btn-ink); font: inherit; font-weight: 700; font-size: 14px; min-height: 40px; padding: 0 16px; border-radius: 999px; cursor: pointer; }
+.copied { font-size: 13px; font-weight: 600; color: var(--muted); }
+
+.read { padding: 6px 22px 22px; display: grid; gap: 4px; }
+.chap { display: grid; gap: 12px; padding-top: 18px; }
+.chap h3 { margin: 0; display: flex; gap: 10px; align-items: baseline; font-family: var(--display); font-weight: 700; font-size: 18px; }
+.chap h3 .n { font-size: 12px; font-family: var(--body); font-weight: 700; letter-spacing: 0.08em; color: var(--muted); text-transform: uppercase; }
+.chap h3 .t { font-size: 13px; font-family: var(--body); font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }
+.chap p { margin: 0; font-size: 18px; line-height: 1.65; max-width: 66ch; }
+.tag { display: inline-block; font-family: var(--mono); font-size: 12.5px; font-weight: 500; background: var(--tag-bg); color: var(--tag-ink); border-radius: 6px; padding: 1px 6px; vertical-align: 2px; }
+.tag.pause { background: transparent; color: var(--pause); padding: 0 2px; }
+.end { margin: 14px 22px 22px; padding: 12px 14px; border-radius: 14px; background: var(--surf); font-size: 15px; display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+.end b { font-weight: 700; }
+pre.eleven { margin: 0; padding: 18px 22px 24px; font-family: var(--mono); font-size: 14px; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink); background: var(--surface); }
+.how { background: var(--surf); border-radius: 18px; padding: 16px 18px; font-size: 15px; display: grid; gap: 6px; max-width: 80ch; }
+.how b { font-weight: 700; }
+@media (max-width: 760px) { nav.toc { display: none; } .thead h2 { font-size: 24px; } .chap p { font-size: 17px; } }
+@media (min-width: 761px) { .jump { display: none; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+html { scroll-behavior: smooth; }
+</style>
+
+<header class="top wrap">
+  <span class="eyebrow">DayXero · Program v3 · Prep week and Day Xero</span>
+  <h1>Every audio script, <span class="u">ready to render<svg viewBox="0 0 200 16" preserveAspectRatio="none" aria-hidden="true"><path d="M3 10 C40 4 90 5 122 7 C152 9 178 11 197 4" fill="none" stroke="var(--mark)" stroke-width="5" stroke-linecap="round"/></svg></span></h1>
+  <p class="lede">The 14 tracks for Prep 1 to Prep 7 and Day Xero, written for Eleven v4 and one warm female narrator. Pick the product to hear each person's own wording, read the script, or switch to the ElevenLabs view to copy exactly what goes into the generator.</p>
+  <div class="facts" id="facts"></div>
+</header>
+
+<div class="bar">
+  <div class="wrap">
+    <div class="ctl"><span class="lbl" id="lbl-variant">Product</span>
+      <div class="seg" role="group" aria-labelledby="lbl-variant" id="variant">
+        <button type="button" data-v="0" aria-pressed="true">Cigarettes</button>
+        <button type="button" data-v="1" aria-pressed="false">Vapes</button>
+        <button type="button" data-v="2" aria-pressed="false">Pouches</button>
+      </div>
+    </div>
+    <div class="ctl"><span class="lbl" id="lbl-view">View</span>
+      <div class="seg" role="group" aria-labelledby="lbl-view" id="view">
+        <button type="button" data-m="read" aria-pressed="true">Read</button>
+        <button type="button" data-m="eleven" aria-pressed="false">ElevenLabs text</button>
+      </div>
+    </div>
+    <div class="ctl jump"><label class="lbl" for="jump">Track</label><select id="jump"></select></div>
+  </div>
+</div>
+
+<div class="wrap layout">
+  <nav class="toc" id="toc" aria-label="Tracks"></nav>
+  <main id="main">
+    <div class="how">
+      <span><b>Rendering.</b> Each track is rendered three times, once per product: 42 files named <code>vo_{session}_{step}_{product}.m4a</code>.</span>
+      <span><b>Tags.</b> <span class="tag pause">[pause]</span> and <span class="tag pause">[long pause]</span> are Eleven v4's own pause tags; the others (<span class="tag">[warmly]</span>, <span class="tag">[calmly]</span>…) steer delivery. Chapter headings are not read aloud and are left out of the ElevenLabs text.</span>
+      <span><b>Takes.</b> Generate each track at least twice and keep the best take.</span>
+    </div>
+  </main>
+</div>
+
+<script type="application/json" id="data">__DATA__</script>
+<script>
+(function () {
+  var tracks = JSON.parse(document.getElementById('data').textContent);
+  var variant = 0, mode = 'read';
+  try { variant = Number(localStorage.getItem('dx-variant') || 0) || 0; mode = localStorage.getItem('dx-mode') || 'read'; } catch (e) {}
+  if (mode !== 'read' && mode !== 'eleven') mode = 'read';
+  var VAR = /\{s:\s*([^{}|]*)\|\s*v:\s*([^{}|]*)\|\s*p:\s*([^{}]*)\}/g;
+  var names = ['smoking', 'vaping', 'pouches'];
+
+  function resolve(text, v) { return text.replace(VAR, function (m, a, b, c) { return [a, b, c][v].trim(); }).replace(/ +([,.?!;:])/g, '$1').replace(/  +/g, ' '); }
+  function kind(t) {
+    if (t.sid === 'P3' && t.step === 3) return ['during', 'During a use'];
+    if (t.step === 5) return ['evening', 'Evening'];
+    return ['morning', 'Morning'];
+  }
+  function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function withTags(s) {
+    return esc(s).replace(/\[(long pause|pause)\]/g, '<span class="tag pause">[$1]</span>')
+      .replace(/\[([a-z ]+)\]/g, function (m, t) { return /pause/.test(t) ? m : '<span class="tag">[' + t + ']</span>'; });
+  }
+  function words(s) { return (s.replace(/\[[^\]]*\]/g, ' ').match(/[A-Za-z0-9\u2019']+/g) || []).length; }
+  function elevenText(t, v) { return t.chapters.map(function (c) { return resolve(c.text, v); }).join('\n\n'); }
+  function chapParts(h) {
+    var m = h.match(/^Chapter\s+(\d+)\s*·\s*(.*?)\s*\(([^)]*)\)\s*$/);
+    return m ? { n: m[1], title: m[2], time: m[3] } : { n: '', title: h, time: '' };
+  }
+  function id(t) { return t.sid.toLowerCase() + '-' + t.step; }
+
+  // Facts
+  var total = tracks.length;
+  var days = Array.from(new Set(tracks.map(function (t) { return t.sid; }))).length;
+  document.getElementById('facts').innerHTML = '<span><b>' + total + '</b> tracks</span><span><b>' + days + '</b> days</span><span><b>' + total * 3 + '</b> renders</span><span>Narrator: <b>warm female</b></span><span>Model: <b>Eleven v4</b></span>';
+
+  // TOC + jump
+  var toc = document.getElementById('toc'), jump = document.getElementById('jump');
+  var byDay = {};
+  tracks.forEach(function (t) { (byDay[t.sid] = byDay[t.sid] || { day: t.day, list: [] }).list.push(t); });
+  Object.keys(byDay).forEach(function (sid) {
+    var d = byDay[sid], g = document.createElement('div'); g.className = 'day';
+    g.innerHTML = '<span class="dayname">' + (sid === 'DX' ? 'Day Xero' : 'Prep ' + sid.slice(1)) + '</span>';
+    var og = document.createElement('optgroup'); og.label = (sid === 'DX' ? 'Day Xero' : 'Prep ' + sid.slice(1)) + ' · ' + d.day;
+    d.list.forEach(function (t) {
+      var k = kind(t), a = document.createElement('a');
+      a.href = '#' + id(t);
+      a.innerHTML = '<span class="dot" style="background: var(--' + k[0] + ')"></span><span>' + esc(t.title) + '</span>';
+      g.appendChild(a);
+      var o = document.createElement('option'); o.value = id(t); o.textContent = 'Step ' + t.step + ' · ' + t.title; og.appendChild(o);
+    });
+    toc.appendChild(g); jump.appendChild(og);
+  });
+  jump.addEventListener('change', function () { var el = document.getElementById(jump.value); if (el) el.scrollIntoView(); });
+
+  // Track articles
+  var main = document.getElementById('main');
+  tracks.forEach(function (t) {
+    var k = kind(t), art = document.createElement('article');
+    art.className = 'track'; art.id = id(t);
+    art.innerHTML =
+      '<div class="thead">' +
+        '<div class="trow"><span class="pill plain">' + (t.sid === 'DX' ? 'Day Xero' : 'Prep ' + t.sid.slice(1)) + ' · Step ' + t.step + '</span><span class="pill ' + k[0] + '">' + k[1] + '</span><span class="meta">' + esc(t.day) + '</span></div>' +
+        '<h2>' + esc(t.title) + '</h2>' +
+        '<div class="meta" data-meta></div>' +
+        (t.voice ? '<div class="voice"><b>Voice:</b> ' + esc(t.voice) + '</div>' : '') +
+        '<div class="tools"><button type="button" class="copy" data-copy>Copy for ElevenLabs</button><span class="copied" data-copied aria-live="polite"></span></div>' +
+      '</div>' +
+      '<div data-body></div>' +
+      (t.commit ? '<div class="end">After the track, the button reads <b>\u201c' + esc(t.commit) + '\u201d</b></div>' : '');
+    main.appendChild(art);
+    art.querySelector('[data-copy]').addEventListener('click', function () {
+      var text = elevenText(t, variant), msg = art.querySelector('[data-copied]');
+      var done = function (ok) { msg.textContent = ok ? 'Copied the ' + names[variant] + ' version' : 'Copy blocked here. Switch to ElevenLabs text and select it.'; setTimeout(function () { msg.textContent = ''; }, 3500); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(false); });
+      else done(false);
+    });
+  });
+
+  function render() {
+    Array.prototype.forEach.call(document.querySelectorAll('#variant button'), function (b) { b.setAttribute('aria-pressed', String(Number(b.dataset.v) === variant)); });
+    Array.prototype.forEach.call(document.querySelectorAll('#view button'), function (b) { b.setAttribute('aria-pressed', String(b.dataset.m === mode)); });
+    tracks.forEach(function (t) {
+      var art = document.getElementById(id(t)), body = art.querySelector('[data-body]');
+      var text = elevenText(t, variant), w = words(text);
+      art.querySelector('[data-meta]').textContent = t.mins + ' · ' + w + ' spoken words in the ' + names[variant] + ' version · about ' + Math.round(w / 130 * 10) / 10 + ' min at 130 wpm before pauses';
+      if (mode === 'eleven') { body.innerHTML = '<pre class="eleven"></pre>'; body.firstChild.textContent = text; return; }
+      body.innerHTML = '<div class="read">' + t.chapters.map(function (c) {
+        var h = chapParts(c.h);
+        var paras = resolve(c.text, variant).split(/\n\s*\n/).map(function (p) { return '<p>' + withTags(p.trim()) + '</p>'; }).join('');
+        return '<section class="chap">' + (c.h ? '<h3><span class="n">Chapter ' + h.n + '</span>' + esc(h.title) + (h.time ? ' <span class="t">' + esc(h.time) + '</span>' : '') + '</h3>' : '') + paras + '</section>';
+      }).join('') + '</div>';
+    });
+  }
+  document.getElementById('variant').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; variant = Number(b.dataset.v); try { localStorage.setItem('dx-variant', String(variant)); } catch (x) {} render(); });
+  document.getElementById('view').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; mode = b.dataset.m; try { localStorage.setItem('dx-mode', mode); } catch (x) {} render(); });
+  render();
+})();
+</script>

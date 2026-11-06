@@ -89,6 +89,10 @@ public struct ProgramContent: Decodable, Sendable {
         public let beats: [Beat]
         public let mission: Mission?
         public let completionText: Varied<String>
+        /// Program v3: the day's hand of cards (prep days and Day Xero). Nil for the sessions still in the v2 shape.
+        public let deck: [DeckCard]?
+        /// Program v3: the day's end (what you learned, tomorrow).
+        public let recap: DayRecap?
 
         /// Beats played before the audio, then the rest, each in file order.
         public var beatsBeforeAudio: [Beat] { beats.filter { $0.position == .beforeAudio } }
@@ -100,6 +104,8 @@ public struct ProgramContent: Decodable, Sendable {
         public func readMinutes(
             cycleSeconds: (String) -> Int? = { id in OrbData.bundled.breathingPatterns.first { $0.id == id }?.cycleSeconds }
         ) -> Int {
+            // A deck day (program v3) has no 90-second read: its length is its cards'.
+            if isDeck { return durationMinutes }
             let activities = beats.reduce(0) { $0 + $1.typicalSeconds(cycleSeconds: cycleSeconds) }
             let total = (cards?.isEmpty == false ? ProgramContent.cardStackSeconds : 0) + activities
                 + Self.introSeconds + (mission == nil ? 0 : Self.missionSeconds) + Self.completionSeconds
@@ -442,7 +448,7 @@ public struct Beat: Decodable, Sendable, Identifiable {
 public struct ProgramPlaceholders: Sendable {
     public static let known: Set<String> = [
         "unit_singular", "unit_plural", "daily_units", "yearly_units", "currency", "yearly_cost", "quit_date",
-        "primary_reason", "days_free", "money_kept", "cravings_ridden",
+        "primary_reason", "days_free", "money_kept", "cravings_ridden", "product", "product_plural",
     ]
 
     public var values: [String: String]
@@ -513,7 +519,7 @@ extension ProgramContent {
         }
 
         // Beat IDs are unique.
-        let allBeats = sessions.flatMap { $0.beats + ($0.mission?.followUp ?? []) }
+        let allBeats = sessions.flatMap(\.everyBeat)
         var seen = Set<String>()
         for beat in allBeats where !seen.insert(beat.id).inserted { problems.append("beat \(beat.id) appears twice") }
 
@@ -523,20 +529,21 @@ extension ProgramContent {
                 problems.append("\(place) has nothing for \(variant.rawValue)")
             }
         }
+        // Inline product wording (`{s: … | v: … | p: …}`) is resolved first, for every product, so it never reads as a placeholder.
         func checkPlaceholders(_ value: Varied<String>?, _ place: String) {
             for text in value?.all ?? [] {
-                for name in ProgramPlaceholders.names(in: text) where !ProgramPlaceholders.known.contains(name) {
-                    problems.append("\(place) uses unknown placeholder {\(name)}")
+                for variant in ProgramVariant.allCases {
+                    let resolved = ProgramInline.resolve(text, variant)
+                    if resolved.contains("{s:") { problems.append("\(place) has product wording that doesn't resolve") }
+                    for name in ProgramPlaceholders.names(in: resolved) where !ProgramPlaceholders.known.contains(name) {
+                        problems.append("\(place) uses unknown placeholder {\(name)}")
+                    }
                 }
             }
         }
         func checkText(_ value: Varied<String>?, _ place: String) {
             check(value, place)
-            for text in value?.all ?? [] {
-                for name in ProgramPlaceholders.names(in: text) where !ProgramPlaceholders.known.contains(name) {
-                    problems.append("\(place) uses unknown placeholder {\(name)}")
-                }
-            }
+            checkPlaceholders(value, place)
         }
 
         var saved = Self.onboardingKeys
@@ -553,9 +560,9 @@ extension ProgramContent {
                !ProgramVariant.allCases.allSatisfy({ session.audio.variants.contains($0.rawValue) }) {
                 problems.append("\(session.id) has no audio for some products and no default")
             }
-            // The 90-second read (MON-04): every session has one, of a readable size, for every product.
+            // The 90-second read (MON-04): every v2 session has one, of a readable size, for every product.
             let cards = session.cards ?? []
-            if !Self.cardStackSize.contains(cards.count) {
+            if !session.isDeck, !Self.cardStackSize.contains(cards.count) {
                 problems.append("\(session.id) has \(cards.count) cards; a stack has \(Self.cardStackSize.lowerBound) to \(Self.cardStackSize.upperBound)")
             }
             for (i, card) in cards.enumerated() {
@@ -566,7 +573,10 @@ extension ProgramContent {
                 problems.append("\(session.id) unlocks by days since quit but has no minDay")
             }
 
-            for beat in session.beats + (session.mission?.followUp ?? []) {
+            let deckIssues = deckProblems(session, checkText: checkText)
+            problems += deckIssues
+
+            for beat in session.everyBeat {
                 let place = "\(session.id)/\(beat.id)"
                 for field in beat.textFields {
                     // A footer may be for some products only (P7's battery note is for vaping); missing means none.
