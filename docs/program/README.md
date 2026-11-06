@@ -33,7 +33,18 @@ Each track is rendered three times (smoking, vaping, pouches) from the `{s: … 
 | DX · 1 | Day Xero (morning, ends on the hold) | ≈ 6:30 | 760 / 748 / 749 |
 | DX · 5 | One day (evening) | ≈ 7:15 | 797 / 797 / 799 |
 
-## Decisions for Milan
+## Decided (Milan, 6 Nov 2026)
+
+- **Free or paid:** leave the current setup as it is (Day Xero stays listed as paid in `FullProgram.swift`). Milan decides what is free or paid once the program is built into the app.
+- **Wording:** "the gap" only. Retire "battery"; the P2 morning delay is "a short wait".
+- **P1 money reveal:** moves to the Prep 1 day recap.
+- **P3 "Save for later":** card 4 waits for the saved guided use; card 5 opens anyway (this one day breaks strict order).
+- **SOS practice mode:** build it (logs nothing, no Live Activity, no slip flow, clearly marked "Practice").
+- **Narrator:** one warm female voice for all 14 tracks.
+- **Audio:** 3 renders per track (smoking, vaping, pouches), 42 files.
+- **Next build:** content into the app first: P1–P7 and Day Xero into `program.json`, plus the new deck screens in SwiftUI.
+
+## Open items (from the drafts)
 
 1. **Day Xero free or paid.** The bible and decision 23 say free; `FullProgram.swift` lists it as paid. The copy sells nothing either way.
 2. **"Gap" means one thing only.** P2 calls the morning delay "a short wait" (step 5 is "Tonight: one small wait"). The old P2 prompt, cards and `completionText` ("one small gap") should change to match.
