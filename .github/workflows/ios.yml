@@ -19,6 +19,10 @@ on:
         description: "With screenshots: only the v4 gallery pages, pushed to ci-screens-v4 (quick)"
         type: boolean
         default: false
+      program_screens:
+        description: "Every step of every program session, plus Today, Program and Progress, light and dark (ci-screens-program)"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -540,3 +544,167 @@ jobs:
   store:
     if: github.event_name == 'workflow_dispatch' && inputs.store_screens
     uses: ./.github/workflows/store-screens.yml
+
+  # Every step of every program session from P1 to B90, plus Today, the Program tab and Progress, in light and dark
+  # (Milan's designer, 7 Nov). Light and dark shoot in parallel; program-screens-publish puts both on
+  # ci-screens-program. Sessions are opened with -dx.openSession; the app lists each session's steps in
+  # Documents/dx-session-steps.txt (DEBUG only), so every step is shot however many this person's session has.
+  program-screens:
+    if: github.event_name == 'workflow_dispatch' && inputs.program_screens
+    runs-on: xcode-27
+    timeout-minutes: 150
+    strategy:
+      fail-fast: false
+      matrix:
+        appearance: [light, dark]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode 27.1
+        run: sudo xcode-select -s /Applications/Xcode_27.1.app && xcodebuild -version
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate project
+        run: xcodegen generate
+
+      - name: Pick a simulator
+        id: sim
+        run: |
+          UDID=$(xcrun simctl list devices available -j | python3 -c '
+          import json, re, sys
+          d = json.load(sys.stdin)["devices"]
+          ver = lambda k: [int(x) for x in re.match(r"[0-9]+(?:-[0-9]+)*", k.split("iOS-")[1]).group().split("-")]
+          rt = sorted([k for k in d if re.search(r"iOS-[0-9]", k)], key=ver)
+          phones = [dev for k in reversed(rt) for dev in d[k] if dev["name"].startswith("iPhone") and "Duo" not in dev["name"]]
+          pick = next((p for p in phones if p["name"] == "iPhone 17"), phones[0] if phones else None)
+          if pick: print(pick["udid"])
+          ')
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+
+      - name: Build
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -project DayXero.xcodeproj \
+            -scheme DayXero \
+            -destination "id=${{ steps.sim.outputs.udid }}" \
+            CODE_SIGNING_ALLOWED=NO \
+            -derivedDataPath DerivedData \
+            -quiet 2>&1 | tee build.log
+
+      - name: Screenshots
+        env:
+          MODE: ${{ matrix.appearance }}
+        run: |
+          UDID=${{ steps.sim.outputs.udid }}
+          APP=$(find DerivedData/Build/Products -name "DayXero.app" -path "*iphonesimulator*" | head -1)
+          xcrun simctl boot "$UDID" 2>/dev/null || true
+          xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl install "$UDID" "$APP"
+          xcrun simctl ui "$UDID" appearance "$MODE"
+          xcrun simctl ui "$UDID" content_size large
+          xcrun simctl status_bar "$UDID" override --time 9:41 --batteryState charged --batteryLevel 100 --cellularBars 4 || true
+          mkdir -p shots
+          drawn() {
+            local w h size
+            w=$(sips -g pixelWidth "$1" | awk '/pixelWidth/ {print $2}')
+            h=$(sips -g pixelHeight "$1" | awk '/pixelHeight/ {print $2}')
+            size=$(stat -f%z "$1")
+            [ $((size * 1000)) -gt $((w * h * 32)) ]
+          }
+          # shoot <path without .png> [launch args...]
+          shoot() {
+            local name=$1; shift
+            mkdir -p "shots/$(dirname "$name")"
+            xcrun simctl terminate "$UDID" in.dayxero.app 2>/dev/null || true
+            xcrun simctl launch "$UDID" in.dayxero.app "$@" > /dev/null < /dev/null
+            sleep "${WAIT:-6}"
+            for try in 1 2 3 4 5; do
+              xcrun simctl io "$UDID" screenshot "shots/$name.png" > /dev/null 2>&1
+              drawn "shots/$name.png" && return
+              sleep 2
+            done
+            echo "::warning title=Blank screenshot::$name was still blank after 16 seconds"
+          }
+
+          # Today, the Program tab and Progress, at the points of the program the designer reviews.
+          for sc in prep quitday day3 day12 done; do
+            shoot "today/today-$sc-morning-$MODE" -dx.homeScenario "$sc" -dx.store pro -dx.todaySlot morning
+            shoot "program-tab/program-$sc-$MODE" -dx.homeScenario "$sc" -dx.store pro -dx.tab program
+          done
+          shoot "today/today-day3-evening-$MODE" -dx.homeScenario day3 -dx.store pro -dx.todaySlot evening
+          # Today goes dark at night whatever the phone's setting.
+          shoot "today/today-day3-night-$MODE" -dx.homeScenario day3 -dx.store pro -dx.todaySlot night
+          shoot "today/today-day3-lower-$MODE" -dx.homeScenario day3 -dx.store pro -dx.todaySlot morning -dx.homeScroll lower
+          for sc in prep day3 day12; do
+            shoot "progress/progress-$sc-$MODE" -dx.homeScenario "$sc" -dx.store pro -dx.tab progress
+          done
+          shoot "progress/health-day12-$MODE" -dx.homeScenario day12 -dx.store pro -dx.tab progress -dx.openHealth YES
+
+          # Every session, every step. Prep days on the prep scenario, Day Xero on Quit Day, the rest on day 12.
+          DATA=$(xcrun simctl get_app_container "$UDID" in.dayxero.app data)
+          LIST="$DATA/Documents/dx-session-steps.txt"
+          n=0
+          for id in $(python3 -c 'import json; print(" ".join(s["id"] for s in json.load(open("DayXeroCore/Resources/program.json"))["sessions"]))'); do
+            n=$((n + 1))
+            case "$id" in
+              P*) sc=prep ;;
+              DX) sc=quitday ;;
+              *) sc=day12 ;;
+            esac
+            dir=$(printf "program/%02d-%s" "$n" "$id")
+            args="-dx.homeScenario $sc -dx.store pro -dx.deckOpenAll YES -dx.openSession $id"
+            rm -f "$LIST"
+            WAIT=7 shoot "$dir/$id-00-first-$MODE" $args -dx.sessionStep 0
+            if [ ! -f "$LIST" ]; then
+              echo "::warning title=No step list::$id opened without listing its steps; only its first screen was shot"
+              continue
+            fi
+            cp "$LIST" "shots/$dir/steps.txt"
+            i=0
+            while IFS= read -r step <&3 || [ -n "$step" ]; do
+              name=$(printf "%s-%02d-%s-%s" "$id" "$i" "$(echo "$step" | tr -c 'A-Za-z0-9.\n-' '_')" "$MODE")
+              if [ "$i" -eq 0 ]; then
+                mv "shots/$dir/$id-00-first-$MODE.png" "shots/$dir/$name.png"
+              else
+                WAIT=7 shoot "$dir/$name" $args -dx.sessionStep "$i"
+              fi
+              i=$((i + 1))
+            done 3< "shots/$dir/steps.txt"
+          done
+          echo "Shot $(find shots -name '*.png' | wc -l | tr -d ' ') screens in $MODE."
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: program-screens-${{ matrix.appearance }}
+          path: shots
+
+      - name: Upload log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: program-screens-build-log-${{ matrix.appearance }}
+          path: build.log
+
+  program-screens-publish:
+    needs: program-screens
+    if: always() && github.event_name == 'workflow_dispatch' && inputs.program_screens
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: program-screens-*
+          path: in
+      - name: Push to ci-screens-program
+        run: |
+          mkdir shots
+          for mode in light dark; do
+            [ -d "in/program-screens-$mode" ] && cp -R "in/program-screens-$mode/." shots/
+          done
+          cd shots
+          git init -q -b ci-screens-program
+          git config user.name "ci" && git config user.email "ci@users.noreply.github.com"
+          git add . && git commit -qm "Program screenshots for ${GITHUB_SHA::7}"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" ci-screens-program

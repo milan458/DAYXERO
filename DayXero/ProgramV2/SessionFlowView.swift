@@ -114,6 +114,7 @@ struct SessionFlowView: View {
             index = min(record.currentStep, built.count - 1)
         }
         #if DEBUG
+        Self.writeStepList(built)
         if UserDefaults.standard.object(forKey: "dx.sessionStep") != nil {
             index = min(max(UserDefaults.standard.integer(forKey: "dx.sessionStep"), 0), built.count - 1)
         }
@@ -173,6 +174,7 @@ struct SessionFlowView: View {
             resume = min(max(record.currentStep, 1), steps.count - 1)
         }
         #if DEBUG
+        Self.writeStepList(steps)
         if UserDefaults.standard.object(forKey: "dx.sessionStep") != nil {
             index = min(max(UserDefaults.standard.integer(forKey: "dx.sessionStep"), 0), steps.count - 1)
         }
@@ -180,6 +182,30 @@ struct SessionFlowView: View {
         Analytics.track(isReplay || record.completedAt != nil ? .programReplayStarted(sessionId: session.id)
                         : .programSessionStarted(sessionId: session.id, variant: context(for: session).variant.rawValue))
     }
+
+    #if DEBUG
+    /// Screenshot runs (-dx.sessionStep) list the session's steps, one name a line, in Documents/dx-session-steps.txt,
+    /// so CI can shoot every step without knowing how many this person's session has.
+    static func writeStepList(_ steps: [FlowStep]) {
+        guard UserDefaults.standard.object(forKey: "dx.sessionStep") != nil,
+              let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+        let names = steps.map { step in
+            switch step {
+            case .intro: "intro"
+            case .beat(let id): "beat-\(id)"
+            case .cards: "cards"
+            case .audio: "audio"
+            case .mission: "mission"
+            case .completion: "completion"
+            case .hand: "hand"
+            case .card(let id): "card-\(id)"
+            case .played(let id): "played-\(id)"
+            }
+        }
+        try? names.joined(separator: "\n").write(to: documents.appending(path: "dx-session-steps.txt"),
+                                                 atomically: true, encoding: .utf8)
+    }
+    #endif
 
     /// "Play" on the hand: picks up where the person left off.
     private func playFromHand() {
