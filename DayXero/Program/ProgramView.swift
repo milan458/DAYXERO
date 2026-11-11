@@ -34,12 +34,8 @@ struct ProgramView: View {
             let store = ProgramStore(context: context, profile: profile)
             let states = Dictionary(store.states(now: timeline.date).map { ($0.id, $0.state) }, uniquingKeysWith: { a, _ in a })
             let current = store.current(now: timeline.date)?.id
-            let stats = ProgressStats(quitDay: profile.quitDay, baselines: [], clock: DayClock(boundaryHour: profile.dayBoundaryHour))
-            let stage = stats.isPrep(at: timeline.date) ? 1 : CrewGrowth.stage(daysClear: stats.daysClear(at: timeline.date))
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
-                    // Canvas board 01: the title and the phases sit on the map's sky, which it draws up behind them (so
-                    // they're lifted above it); the water starts in the map.
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Prep, Quit Day, then four weeks").dxType(.footnote).foregroundStyle(ground.muted)
                         // Plain title: the hand-drawn mark is kept for celebrations and onboarding (S27.15).
@@ -47,20 +43,15 @@ struct ProgramView: View {
                             .dxType(.large).foregroundStyle(ground.ink)
                             .accessibilityAddTraits(.isHeader)
                     }
-                    .zIndex(1)
                     if let content = store.content {
                         let phase = selectedPhase(content, current: current)
-                        phasePicker(content, states: states, current: current, selected: phase.id).zIndex(1)
-                        if let graduated = profile.progress?.graduatedAt { completeHeader(graduated).zIndex(1) }
-                        let mapStops = stops(phase, content: content, states: states, current: current, store: store)
-                        ProgramPathMap(stops: mapStops, ground: ground, stage: stage, chip: phase.id == "prep" ? quitDayChip : nil) { stop in
+                        phasePicker(content, states: states, current: current, selected: phase.id)
+                        if let graduated = profile.progress?.graduatedAt { completeHeader(graduated) }
+                        ProgramPathMap(stops: stops(phase, content: content, states: states, current: current, store: store),
+                                       ground: ground) { stop in
                             guard let session = content.session(stop.id) else { return }
                             sheet = StopSheet(session: session, title: stop.title, state: states[stop.id] ?? .locked,
                                               needsUpgrade: stop.needsUpgrade)
-                        }
-                        .padding(.horizontal, -DX.Layout.gutter)
-                        if let today = mapStops.first(where: { $0.kind == .today }) {
-                            todayCard(today, state: states[today.id] ?? .available)
                         }
                         if let line = nextLine(content, states: states, current: current, variant: store.variant) {
                             HStack(alignment: .top, spacing: 10) {
@@ -109,34 +100,6 @@ struct ProgramView: View {
                         model: PaywallModel(store: entitlement.store, entitlement: entitlement),
                         onClose: { showPaywall = false })
         }
-    }
-
-    // MARK: Today (canvas board 01)
-
-    private var quitDayChip: String {
-        String(localized: "Quit Day · \(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)))")
-    }
-
-    /// Today's session under the map: when it is, its title and one button with a soft glow, so starting is one tap
-    /// from the tab. The stone still opens the sheet.
-    private func todayCard(_ stop: ProgramPathMap.Stop, state: ProgramUnlock.State) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
-            VStack(alignment: .leading, spacing: 2) {
-                Text("Today · \(stop.minutes) min").dxType(.caption).textCase(.uppercase).foregroundStyle(DX.Ground.reading.muted)
-                Text(verbatim: stop.title).dxType(.headline).foregroundStyle(DX.Ground.reading.ink)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            Button(state == .inProgress ? String(localized: "Continue") : String(localized: "Start")) {
-                tap(stop.id, state: state, title: stop.title, needsUpgrade: stop.needsUpgrade)
-            }
-            .buttonStyle(.dx(.primary, on: .reading))
-            .modifier(GlowPulse())
-        }
-        .padding(14)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(tileFill, in: RoundedRectangle(cornerRadius: 26, style: .continuous))
-        .shadow(color: Color(hex: 0x0F6E43).opacity(0.16), radius: 15, y: 10)
-        .dxArrive(2)
     }
 
     // MARK: Phases

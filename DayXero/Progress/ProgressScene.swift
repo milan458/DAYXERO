@@ -19,7 +19,7 @@ struct ProgressScene: View {
     private let motion = MotionPolicy()
 
     static let sky = Color(light: 0xE4F7EC, dark: 0x10233F)
-    nonisolated static let grid = CGSize(width: 390, height: 193)
+    static let grid = CGSize(width: 390, height: 193)
 
     var body: some View {
         let moving = !motion.reduce
@@ -73,21 +73,46 @@ struct ProgressScene: View {
     private nonisolated static let island = CGPoint(x: 318, y: 89)
 
     /// 0 → 1 → 0 over `period`, eased at both ends (CSS ease-in-out, there and back).
-    nonisolated static func swing(_ time: Double, _ period: Double, delay: Double = 0) -> Double {
+    private nonisolated static func swing(_ time: Double, _ period: Double, delay: Double = 0) -> Double {
         0.5 - 0.5 * cos(2 * .pi * (time - delay) / period)
     }
 
     private nonisolated static func draw(_ ctx: inout GraphicsContext, time t: Double, stones: [CGPoint], done: Int, allDone: Bool, sunX: Double) {
         let cream = Color(hex: 0xFFF8EE), green = Color(hex: 0x0F6E43), coral = Color(hex: 0xFF7A55)
+        let sunYellow = Color(hex: 0xFFD966)
 
-        sun(&ctx, x: sunX, y: 32, radius: 19.5, time: t)
+        // Sun: bobs 5 pt over 4 s, inside a dashed ring.
+        let sunY = 32 - 5 * swing(t, 4)
+        ctx.fill(circle(sunX, sunY, 19.5), with: .color(sunYellow))
+        ctx.stroke(circle(sunX, sunY, 24.4), with: .color(sunYellow), style: StrokeStyle(lineWidth: 1.6, lineCap: .butt, dash: [2.4, 4.9]))
+
         // Clouds: 24 pt either way, 7 s and 9 s a pass, in opposite directions.
-        cloud(&ctx, x: 30 + 24 * (2 * swing(t, 14) - 1), y: 22, scale: 74.0 / 70, color: cloudWhite)
-        cloud(&ctx, x: 176 - 24 * (2 * swing(t, 18) - 1), y: 8, scale: 50.0 / 70, color: cloudWhite)
-        islandAndFlag(&ctx, at: island, halfWidth: 60, time: t)
+        let white = Color(light: (0xFFFFFF, 1), dark: (0xFFFFFF, 0.35))
+        cloud(&ctx, x: 30 + 24 * (2 * swing(t, 14) - 1), y: 22, scale: 74.0 / 70, color: white)
+        cloud(&ctx, x: 176 - 24 * (2 * swing(t, 18) - 1), y: 8, scale: 50.0 / 70, color: white)
+
+        // The island, its flag and two twinkles.
+        ctx.fill(ellipse(island.x, island.y, 60, 10), with: .color(Color(light: 0xFFE3B8, dark: 0xB89766)))
+        var pole = Path()
+        pole.move(to: CGPoint(x: 312, y: 47))
+        pole.addLine(to: CGPoint(x: 312, y: 87))
+        ctx.stroke(pole, with: .color(Color(light: 0x1E1A3A, dark: 0xFFF8EE)), style: StrokeStyle(lineWidth: 3, lineCap: .round))
+        // The flag flutters: skew -9° and squeeze to 85% from the pole, every 1.6 s.
+        let flutter = swing(t, 1.6)
+        var flag = ctx
+        flag.translateBy(x: 313, y: 48)
+        flag.concatenate(CGAffineTransform(a: 1 - 0.15 * flutter, b: tan(-9 * .pi / 180) * flutter, c: 0, d: 1, tx: 0, ty: 0))
+        var pennant = Path()
+        pennant.move(to: .zero)
+        pennant.addLine(to: CGPoint(x: 25, y: 7))
+        pennant.addLine(to: CGPoint(x: 0, y: 15))
+        pennant.closeSubpath()
+        flag.fill(pennant, with: .color(coral))
+        twinkle(&ctx, x: 278, y: 74, size: 7, phase: swing(t, 1.8), color: sunYellow)
+        twinkle(&ctx, x: 361, y: 71, size: 5.5, phase: swing(t, 2.2, delay: 0.6), color: .white)
 
         // Water: two bands drifting left, 390 pt every 18 s and every 10 s.
-        ctx.fill(water(top: 97, amplitude: 6, wavelength: 130, shift: t / 18 * 390), with: .color(backWater))
+        ctx.fill(water(top: 97, amplitude: 6, wavelength: 130, shift: t / 18 * 390), with: .color(Color(light: 0xB5EBCB, dark: 0x1C4B3C)))
         ctx.fill(water(top: 164, amplitude: 7, wavelength: 195, shift: t / 10 * 390), with: .color(Color(light: 0x9FE3BC, dark: 0x165C40)))
 
         // The path: solid where it's been walked, dotted ahead.
@@ -101,9 +126,8 @@ struct ProgressScene: View {
         }
 
         // Stones: each floats 2 pt on a 3 s cycle, 0.35 s behind the one before.
-        for (i, stone) in stones.enumerated() {
+        for (i, p) in stones.enumerated() {
             let isDone = i < done, isCurrent = i == done && !allDone
-            let p = (x: Double(stone.x), y: Double(stone.y))
             let y = p.y + 2 * swing(t, 3, delay: Double(i) * 0.35)
             if isCurrent {
                 // A coral ring that grows from 0.85 to 1.8 and fades, every 1.8 s.
@@ -128,72 +152,36 @@ struct ProgressScene: View {
         }
     }
 
-    nonisolated static let cloudWhite = Color(light: (0xFFFFFF, 1), dark: (0xFFFFFF, 0.35))
-    nonisolated static let backWater = Color(light: 0xB5EBCB, dark: 0x1C4B3C)
-
-    /// The sun: bobs 5 pt over 4 s, inside a dashed ring.
-    nonisolated static func sun(_ ctx: inout GraphicsContext, x: Double, y: Double, radius: Double, time t: Double) {
-        let yellow = Color(hex: 0xFFD966)
-        let cy = y - 5 * swing(t, 4)
-        ctx.fill(circle(x, cy, radius), with: .color(yellow))
-        ctx.stroke(circle(x, cy, radius * 1.25), with: .color(yellow), style: StrokeStyle(lineWidth: 1.6, lineCap: .butt, dash: [2.4, 4.9]))
-    }
-
-    /// The Quit Day island: sand, a pole, a coral flag that flutters (skew -9° and squeeze to 85% from the pole, every
-    /// 1.6 s) and two twinkles. `at` is the centre of the sand.
-    nonisolated static func islandAndFlag(_ ctx: inout GraphicsContext, at c: CGPoint, halfWidth: Double, time t: Double) {
-        let k = halfWidth / 60
-        let cx = Double(c.x), cy = Double(c.y)
-        ctx.fill(ellipse(cx, cy, halfWidth, 10 * k), with: .color(Color(light: 0xFFE3B8, dark: 0xB89766)))
-        let poleX = cx - 6 * k
-        var pole = Path()
-        pole.move(to: CGPoint(x: poleX, y: cy - 42 * k))
-        pole.addLine(to: CGPoint(x: poleX, y: cy - 2 * k))
-        ctx.stroke(pole, with: .color(Color(light: 0x1E1A3A, dark: 0xFFF8EE)), style: StrokeStyle(lineWidth: 3, lineCap: .round))
-        let flutter = swing(t, 1.6)
-        var flag = ctx
-        flag.translateBy(x: poleX + 1, y: cy - 41 * k)
-        flag.concatenate(CGAffineTransform(a: 1 - 0.15 * flutter, b: tan(-9 * .pi / 180) * flutter, c: 0, d: 1, tx: 0, ty: 0))
-        var pennant = Path()
-        pennant.move(to: .zero)
-        pennant.addLine(to: CGPoint(x: 25 * k, y: 7 * k))
-        pennant.addLine(to: CGPoint(x: 0, y: 15 * k))
-        pennant.closeSubpath()
-        flag.fill(pennant, with: .color(Color(hex: 0xFF7A55)))
-        twinkle(&ctx, x: cx - 40 * k, y: cy - 15 * k, size: 7 * k, phase: swing(t, 1.8), color: Color(hex: 0xFFD966))
-        twinkle(&ctx, x: cx + 43 * k, y: cy - 18 * k, size: 5.5 * k, phase: swing(t, 2.2, delay: 0.6), color: .white)
-    }
-
-    nonisolated static func circle(_ x: Double, _ y: Double, _ r: Double) -> Path {
+    private nonisolated static func circle(_ x: Double, _ y: Double, _ r: Double) -> Path {
         ellipse(x, y, r, r)
     }
 
-    nonisolated static func ellipse(_ x: Double, _ y: Double, _ rx: Double, _ ry: Double) -> Path {
+    private nonisolated static func ellipse(_ x: Double, _ y: Double, _ rx: Double, _ ry: Double) -> Path {
         Path(ellipseIn: CGRect(x: x - rx, y: y - ry, width: 2 * rx, height: 2 * ry))
     }
 
-    nonisolated static func polyline(_ points: [CGPoint]) -> Path {
+    private nonisolated static func polyline(_ points: [CGPoint]) -> Path {
         var path = Path()
         path.addLines(points)
         return path
     }
 
     /// A band of water from a sine-waved top edge down past the bottom of the scene.
-    nonisolated static func water(top: Double, amplitude: Double, wavelength: Double, shift: Double, bottom: Double = 193) -> Path {
+    private nonisolated static func water(top: Double, amplitude: Double, wavelength: Double, shift: Double) -> Path {
         var path = Path()
-        path.move(to: CGPoint(x: 0, y: bottom + 20))
+        path.move(to: CGPoint(x: 0, y: grid.height + 20))
         var x = 0.0
         while x <= grid.width + 4 {
             path.addLine(to: CGPoint(x: x, y: top - amplitude * sin(2 * .pi * (x + shift) / wavelength)))
             x += 4
         }
-        path.addLine(to: CGPoint(x: grid.width + 4, y: bottom + 20))
+        path.addLine(to: CGPoint(x: grid.width + 4, y: grid.height + 20))
         path.closeSubpath()
         return path
     }
 
     /// The mockup's cloud, drawn on its own 70 × 24 grid.
-    nonisolated static func cloud(_ ctx: inout GraphicsContext, x: Double, y: Double, scale: Double, color: Color) {
+    private nonisolated static func cloud(_ ctx: inout GraphicsContext, x: Double, y: Double, scale: Double, color: Color) {
         var g = ctx
         g.translateBy(x: x, y: y)
         g.scaleBy(x: scale, y: scale)
@@ -205,7 +193,7 @@ struct ProgressScene: View {
     }
 
     /// A four-point star that swells from half size and brightens.
-    nonisolated static func twinkle(_ ctx: inout GraphicsContext, x: Double, y: Double, size: Double, phase: Double, color: Color) {
+    private nonisolated static func twinkle(_ ctx: inout GraphicsContext, x: Double, y: Double, size: Double, phase: Double, color: Color) {
         var g = ctx
         g.translateBy(x: x, y: y)
         let s = size * (0.5 + 0.5 * phase)
@@ -255,26 +243,6 @@ extension View {
     }
 }
 
-/// The soft coral glow that breathes round the day's main button (the mockup's `glow`): out to 9 pt and gone, then
-/// back, every 2 s. Off with Reduce Motion.
-struct GlowPulse: ViewModifier {
-    @State private var out = false
-    private let motion = MotionPolicy()
-
-    func body(content: Content) -> some View {
-        content
-            .background {
-                Capsule()
-                    .stroke(Color(hex: 0xFF7A55).opacity(motion.reduce ? 0 : out ? 0 : 0.45), lineWidth: out ? 18 : 0)
-                    .accessibilityHidden(true)
-            }
-            .onAppear {
-                guard !motion.reduce, !out else { return }
-                withAnimation(.easeInOut(duration: 1).repeatForever(autoreverses: true)) { out = true }
-            }
-    }
-}
-
 /// The ring that pulses round "next": grows from 0.85 to 1.8 and fades, every 1.8 s. Still with Reduce Motion.
 struct PulseRing: View {
     var color = Color(hex: 0xFF7A55)
@@ -282,7 +250,7 @@ struct PulseRing: View {
     private let motion = MotionPolicy()
 
     var body: some View {
-        Ellipse()
+        Circle()
             .strokeBorder(color, lineWidth: 2)
             .scaleEffect(out ? 1.8 : 0.85)
             .opacity(motion.reduce ? 0 : out ? 0 : 0.9)
