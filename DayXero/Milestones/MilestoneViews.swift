@@ -404,21 +404,33 @@ struct MilestonesRow: View {
             case .days: String(localized: "days")
             }
         }
-        return VStack(spacing: 0) {
-            Text(verbatim: top).dxType(.headline)
-            Text(verbatim: bottom).dxType(.caption).lineLimit(1).minimumScaleFactor(0.7)
-        }
-        .foregroundStyle(reached ? DX.Fill.cream : isNext ? Read4.ink : Read4.muted)
-        .frame(maxWidth: .infinity)
-        .aspectRatio(1, contentMode: .fit)
-        .background(reached ? DX.Fill.green : .clear, in: Circle())
-        .overlay {
-            if isNext {
-                Circle().strokeBorder(Read4.ink, lineWidth: 2)
-            } else if !reached {
-                Circle().strokeBorder(Read4.faint, style: StrokeStyle(lineWidth: 1, dash: [4, 4]))
+        // The circle is sized by the column, never by its text: a clear square takes the cell's full width, and the
+        // fill and the two lines are laid over it. Sizing the text stack with `aspectRatio` shrank the circle to the
+        // text's height, so "Quit Day" and "in 1 day" spilled out of it.
+        return Color.clear
+            .aspectRatio(1, contentMode: .fit)
+            .background {
+                if reached {
+                    Circle().fill(DX.Fill.green)
+                } else if isNext {
+                    Circle().strokeBorder(Read4.ink, lineWidth: 2)
+                } else {
+                    Circle().strokeBorder(Read4.faint, style: StrokeStyle(lineWidth: 1, dash: [4, 4]))
+                }
             }
-        }
+            .overlay {
+                VStack(spacing: 0) {
+                    Text(verbatim: top).dxType(.headline)
+                    Text(verbatim: bottom).dxType(.caption)
+                }
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
+                .padding(.horizontal, 8)
+                .foregroundStyle(reached ? DX.Fill.cream : isNext ? Read4.ink : Read4.muted)
+            }
+            .background { if isNext { PulseRing() } }
+            // Canvas board 05: the reached ones pop in, one after another.
+            .dxPopIn(delay: reached ? 0.3 + 0.08 * Double(Milestone.all.firstIndex(of: m) ?? 0) : 0, from: reached ? 0.4 : 1)
         .dynamicTypeSize(...DynamicTypeSize.xxLarge)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(verbatim: m.title))

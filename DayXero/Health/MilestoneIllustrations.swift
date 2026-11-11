@@ -12,6 +12,9 @@ struct HealthBadge: View {
     var size: CGFloat = 48
     /// The ring round an under-way change; off where the card shows its own progress.
     var showsRing = true
+    /// The ring draws itself once, when the badge first shows (canvas board 05).
+    @State private var ringDrawn = false
+    private let motion = MotionPolicy()
 
     var body: some View {
         let ahead = state == .ahead
@@ -28,10 +31,14 @@ struct HealthBadge: View {
         .overlay {
             if showsRing, case .underWay(let progress) = state {
                 Circle()
-                    .trim(from: 0, to: CGFloat(max(progress, 0.03)))
+                    .trim(from: 0, to: ringDrawn || motion.reduce ? CGFloat(max(progress, 0.03)) : 0)
                     .stroke(Read4.accent, style: StrokeStyle(lineWidth: max(2, size / 22), lineCap: .round))
                     .rotationEffect(.degrees(-90))
                     .padding(-size * 0.09)
+                    .onAppear {
+                        guard !ringDrawn else { return }
+                        withAnimation(motion.animation(.timingCurve(0.2, 0.8, 0.2, 1, duration: 1.2)).delay(0.5)) { ringDrawn = true }
+                    }
             }
         }
         .overlay(alignment: .bottomTrailing) {

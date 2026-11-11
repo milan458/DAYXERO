@@ -90,8 +90,17 @@ struct ProgressTab: View {
 
     @ViewBuilder
     private func gained(_ snap: HomeSnapshot, insights: Insights) -> some View {
-        header(snap)
-        skyStrip(snap)
+        // Canvas boards 04 and 05: the header sits on the scene's sky, which runs edge to edge and up under the status bar.
+        VStack(alignment: .leading, spacing: DX.Space.s) {
+            header(snap)
+            scene(snap).padding(.horizontal, -DX.Layout.gutter)
+        }
+        .background(alignment: .top) {
+            UnevenRoundedRectangle(topLeadingRadius: 0, bottomLeadingRadius: 36, bottomTrailingRadius: 36, topTrailingRadius: 0, style: .continuous)
+                .fill(ProgressScene.sky)
+                .padding(.horizontal, -DX.Layout.gutter)
+                .padding(.top, -1000)
+        }
         tiles(snap, insights: insights)
         moneyLine(snap)
         if !isPrepPhase(snap) {
@@ -190,22 +199,15 @@ struct ProgressTab: View {
         return String(localized: "Since Quit Day · \(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)))")
     }
 
-    /// The path at the sky's clarity, with "Sky 28% clear · clears a little each day".
-    private func skyStrip(_ snap: HomeSnapshot) -> some View {
+    /// The water scene (canvas boards 04 and 05): the prep days as stones to the Quit Day island, with Xero on today's
+    /// stone; from Quit Day on he stands on the island and the chip carries the sky's clarity.
+    private func scene(_ snap: HomeSnapshot) -> some View {
         let prep = isPrepPhase(snap)
-        let clarity = prep ? CrewGrowth.prepClarity : CrewGrowth.clarity(daysClear: snap.daysClear)
-        return HorizonScene(.path, clarity: clarity, fit: .bottom)
-            .frame(height: 130)
-            .clipShape(RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
-            .overlay(alignment: .bottomLeading) {
-                Text(prep ? "Sky \(clarity)% clear · clears from Quit Day" : "Sky \(clarity)% clear · clears a little each day")
-                    .dxType(.caption)
-                    .foregroundStyle(DX.Fill.navy)
-                    .padding(.horizontal, 12).padding(.vertical, 6)
-                    .background(DX.Fill.cream.opacity(0.92), in: Capsule())
-                    .padding(12)
-            }
-            .accessibilityElement(children: .combine)
+        let clarity = CrewGrowth.clarity(daysClear: snap.daysClear)
+        let quitDay = profile.quitDay.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))
+        let chip = prep ? String(localized: "Quit Day · \(quitDay)") : String(localized: "Sky \(clarity)% clear · clears a little each day")
+        return ProgressScene(prepDone: prep ? snap.prepDone : nil, prepTotal: min(max(snap.prepTotal, 1), 10),
+                             stage: prep ? 1 : CrewGrowth.stage(daysClear: snap.daysClear), chip: chip)
     }
 
     /// A 2×2 grid: days clear, waves ridden out, not used, kept. In prep: prep done, waves, yearly, Quit Day. Only the
@@ -221,25 +223,27 @@ struct ProgressTab: View {
         let cents: (Double) -> String = { Decimal($0).formatted(.currency(code: code).precision(.fractionLength(2))) }
         LazyVGrid(columns: columns, alignment: .leading, spacing: 8) {
             if isPrepPhase(snap) {
-                ProgressStat(value: Double(snap.prepDone), label: String(localized: "of \(snap.prepTotal) prep done"))
+                ProgressStat(value: Double(snap.prepDone), label: String(localized: "of \(snap.prepTotal) prep done"),
+                             ring: Double(snap.prepDone) / Double(max(snap.prepTotal, 1)))
                 // "0 waves ridden out" reads as failure in a week where nobody is meant to resist yet (S27.5).
                 if ridden > 0 {
-                    ProgressStat(value: Double(ridden), label: ridden == 1 ? String(localized: "wave ridden out") : String(localized: "waves ridden out"))
+                    ProgressStat(value: Double(ridden), label: ridden == 1 ? String(localized: "wave ridden out") : String(localized: "waves ridden out"), index: 1)
                 }
                 // UX-12: forward-looking, never "saved" before Quit Day.
                 ProgressStat(value: NSDecimalNumber(decimal: snap.moneyPerYear).doubleValue, label: String(localized: "you'll keep / year"), format: whole,
-                             counts: true)
+                             counts: true, index: 2)
                 // The same countdown as Today's header, from the chosen Quit Day (S27.5).
                 let daysToQuit = Self.daysToQuit(snap)
-                ProgressStat(value: Double(daysToQuit), label: daysToQuit == 1 ? String(localized: "day to Quit Day") : String(localized: "days to Quit Day"))
+                ProgressStat(value: Double(daysToQuit), label: daysToQuit == 1 ? String(localized: "day to Quit Day") : String(localized: "days to Quit Day"), index: 3)
             } else {
                 ProgressStat(value: Double(snap.daysClear), label: snap.daysClear == 1 ? String(localized: "day since Quit Day") : String(localized: "days since Quit Day"))
-                ProgressStat(value: Double(ridden), label: ridden == 1 ? String(localized: "wave ridden out") : String(localized: "waves ridden out"))
+                ProgressStat(value: Double(ridden), label: ridden == 1 ? String(localized: "wave ridden out") : String(localized: "waves ridden out"),
+                             index: 1)
                 ForEach(snap.counters) { counter in
-                    ProgressStat(value: Double(counter.avoided), label: String(localized: avoidedLabel(counter.product, count: counter.avoided)))
+                    ProgressStat(value: Double(counter.avoided), label: String(localized: avoidedLabel(counter.product, count: counter.avoided)), index: 2)
                 }
                 ProgressStat(value: NSDecimalNumber(decimal: snap.moneyKept).doubleValue, label: String(localized: "kept"), format: cents,
-                             counts: true)
+                             counts: true, index: 3)
             }
         }
     }
@@ -362,6 +366,7 @@ struct ProgressTab: View {
                 }
                 // Uses and slips in amber, so they read differently from cravings (S8.4).
                 HeatMap(grid: grid, scale: series == .cravings ? HeatMap.cravingScale : HeatMap.useScale)
+                    .animation(.easeInOut(duration: 0.3), value: series)
             }
         }
     }
@@ -467,6 +472,7 @@ struct ProgressTab: View {
                             RoundedRectangle(cornerRadius: 8, style: .continuous)
                                 .fill(week.isCurrent ? Read4.accent : Read4.track)
                                 .frame(height: max(4, 72 * CGFloat(week.cravings) / CGFloat(most)))
+                                .dxGrowIn(from: .bottom, delay: 0.1 * Double(index))
                             Text(weekLabel(week, back: weeks.count - 1 - index))
                                 .dxFont(12, weight: 400, style: .caption2)
                                 .foregroundStyle(Read4.muted)
@@ -597,32 +603,69 @@ struct LogButton: View {
 
 /// A value and what it is, in one sentence-case line (S18.10).
 /// A stat on the reading ground (F12): 24 pt number, 12 pt label, raised card. `counts` makes the number count up;
-/// only the money tile does.
+/// only the money tile does. `ring` draws the number inside a progress ring (prep done); `index` staggers the rise.
 private struct ProgressStat: View {
     let value: Double
     let label: String
     var format: (Double) -> String = { String(Int($0.rounded(.down))) }
     var counts = false
+    var ring: Double?
+    var index = 0
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Group {
-                if counts {
-                    CountingText(value, format: format)
-                } else {
-                    Text(verbatim: format(value)).monospacedDigit()
+        HStack(alignment: .center, spacing: 12) {
+            if let ring {
+                ProgressRing(value: ring) {
+                    number.dxType(.headline).foregroundStyle(Read4.ink).lineLimit(1).minimumScaleFactor(0.6)
                 }
             }
-            .dxType(.title)
-            .foregroundStyle(Read4.ink)
-            .lineLimit(1).minimumScaleFactor(0.6)
-            Text(verbatim: label).dxType(.caption).foregroundStyle(Read4.muted)
-                .fixedSize(horizontal: false, vertical: true)
+            VStack(alignment: .leading, spacing: 2) {
+                if ring == nil {
+                    number.dxType(.title).foregroundStyle(Read4.ink).lineLimit(1).minimumScaleFactor(0.6)
+                }
+                Text(verbatim: label).dxType(.caption).foregroundStyle(Read4.muted)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
         }
-        .frame(maxWidth: .infinity, minHeight: 64, alignment: .topLeading)
-        .v4Card(padding: 14)
+        .frame(maxWidth: .infinity, minHeight: 64, alignment: ring == nil ? .topLeading : .leading)
+        .v4Card(padding: 14, radius: 22)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(verbatim: "\(format(value)) \(label)"))
+        .dxArrive(index)
+    }
+
+    @ViewBuilder
+    private var number: some View {
+        if counts {
+            CountingText(value, format: format)
+        } else {
+            Text(verbatim: format(value)).monospacedDigit()
+        }
+    }
+}
+
+/// A 48 pt ring that draws itself to `value` (0 to 1) in 1.2 s, with a label in the middle.
+private struct ProgressRing<Label: View>: View {
+    let value: Double
+    @ViewBuilder let label: () -> Label
+    @State private var drawn = false
+    private let motion = MotionPolicy()
+
+    var body: some View {
+        ZStack {
+            Circle().stroke(Read4.accentSoft, lineWidth: 7)
+            Circle()
+                .trim(from: 0, to: drawn || motion.reduce ? CGFloat(min(1, max(0, value))) : 0)
+                .stroke(Read4.accent, style: StrokeStyle(lineWidth: 7, lineCap: .round))
+                .rotationEffect(.degrees(-90))
+            label().padding(.horizontal, 8)
+        }
+        .frame(width: 48, height: 48)
+        .padding(3.5)
+        .onAppear {
+            guard !drawn else { return }
+            withAnimation(motion.animation(.timingCurve(0.2, 0.8, 0.2, 1, duration: 1.2)).delay(0.2)) { drawn = true }
+        }
     }
 }
 
@@ -699,6 +742,8 @@ struct HeatMap: View {
                             .fill(scale[level])
                             .frame(height: 26)
                             .frame(maxWidth: .infinity)
+                            // Canvas board 05: the cells pop in along the diagonal.
+                            .dxPopIn(delay: 0.2 + Double(row + col) * 0.04)
                             .accessibilityElement()
                             .accessibilityLabel(Text("\(Self.weekdayNames[col]), \(Text(time.title))"))
                             .accessibilityValue(Text("\(value)"))
@@ -790,6 +835,7 @@ private struct CoralBar: View {
             ZStack(alignment: .leading) {
                 Capsule().fill(Color(light: 0xEDE6DA, dark: 0x1B2C66))
                 Capsule().fill(Color(hex: 0xFF7A55)).frame(width: proxy.size.width * min(1, max(0, value)))
+                    .dxGrowIn(from: .leading, delay: 0.2)
             }
         }
         .frame(height: 12)
