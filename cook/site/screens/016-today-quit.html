@@ -31,6 +31,9 @@
   .sess .t-foot { color: var(--muted); }
   .sess .btn.small { width: auto; padding: 0 18px 0 14px; flex: none; }
   .sess .btn svg { width: 16px; height: 16px; }
+  .peek { margin-top: 26px; }
+  .peekcard { margin-top: 12px; height: 70px; }
+  .peekcard .t-foot { color: var(--muted); }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot" data-status="on-art">
@@ -66,6 +69,8 @@
       </div>
       <button class="btn small" id="start"></button>
     </div>
+    <h2 class="t-title peek" data-a style="--i:7">Through the day</h2>
+    <div class="card peekcard" data-a style="--i:8"><p class="t-foot">Happening now</p><p class="t-head">Most nicotine has left your body</p></div>
   </div>
 </div>
 <script>
