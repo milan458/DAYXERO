@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>017 Today, through the day</title>
-<meta name="motion" content="Today, scrolled. The compact header (Xero full figure at 32px, 7 days free, $49 kept) is already pinned. 'Now' and its one illustrated cream card arrive (600ms): inside it the paper-cut hills rise 16px back to front (100ms apart, 900ms settle), Xero settles onto the front knoll (900ms) and breathes, his breeze marks drifting; the title and the grouped actions fade up after (90ms stagger). At 1.2s '+1 glass' presses: a '+1' floats up from the count, the count bumps from 3 to 4 (spring bump, 520ms) and the water in the drawn glass rises from 3/8 to 4/8 (600ms settle). 'Later' and its one quiet list arrive last (90ms stagger, no lift). Light haptic on the tap, soft success tick on the bump.">
+<meta name="motion" content="Today, scrolled. The compact header (Xero full figure at 32px, 7 days free, $49 kept) is already pinned. 'Now' and its one illustrated cream card arrive (600ms): inside it the paper-cut hills rise 16px back to front (100ms apart, 900ms settle), Xero settles onto the front knoll (900ms) and breathes, his breeze marks drifting; the title and the two actions under the card's hairline fade up after (90ms stagger). At 1.2s '+1 glass' presses: a '+1' floats up from the count, the count bumps from 3 to 4 (spring bump, 520ms) and the water in the drawn glass rises from 3/8 to 4/8 (600ms settle). 'Later' and its one quiet list arrive last (90ms stagger, no lift). Light haptic on the tap, soft success tick on the bump.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -26,25 +26,28 @@
 
   /* the one Now card: illustrated, cream, the day's two small actions grouped inside */
   .now { position: relative; background: var(--cream-card); border-radius: 26px; box-shadow: inset 0 0 0 1px var(--line), var(--lift); overflow: hidden; }
-  .art { position: relative; height: 172px; }
+  .art { position: relative; height: 184px; }
   .art svg.scene { position: absolute; inset: 0; display: block; }
   .art .h { transform-box: fill-box; }
   .play .art .h { animation: hrise 900ms var(--settle) both; }
   .play .art .h2 { animation-delay: 100ms; } .play .art .h3 { animation-delay: 200ms; }
   @keyframes hrise { from { transform: translateY(16px); opacity: 0; } }
-  .art .fig { position: absolute; left: 244px; top: 62px; }
+  .art .fig { position: absolute; left: 228px; top: 64px; }
   .art .txt { position: absolute; left: 18px; top: 18px; width: 208px; }
   .art .txt .t-foot { color: var(--muted); font-size: 14px; }
   .art .txt .t-title { margin-top: 4px; font-size: 23px; }
-  .well { margin: 0 12px 12px; border-radius: 18px; background: var(--well); }
-  .act { display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 8px 10px 8px 10px; }
+  /* the actions sit in the Now card itself, under a hairline (no card inside the card) */
+  .acts { border-top: 1px solid var(--line); padding: 4px 16px 6px; }
+  .act { display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 8px 0; }
   .act + .act { border-top: 1px solid var(--line); }
   .act .grow { flex: 1; min-width: 0; }
   .act .t-head { font-size: 17px; line-height: 1.2; }
   .act .t-cap { color: var(--muted); margin-top: 2px; }
-  .glyph { width: 42px; height: 42px; flex: none; border-radius: 13px; display: grid; place-items: center; background: var(--cream-card); box-shadow: inset 0 0 0 1px var(--line); color: var(--fg); }
-  .glyph.sea { background: #1F3C8C; color: #FFF8EE; box-shadow: none; }
-  .glyph.sea svg { width: 22px; height: 22px; }
+  /* one icon-tile style for both actions */
+  .glyph { width: 42px; height: 42px; flex: none; border-radius: 13px; display: grid; place-items: center; background: var(--well); color: var(--fg); }
+  .glyph svg { width: 22px; height: 22px; }
+  .glyph.sea { color: #2A50AA; }
+  [data-theme="dark"] .glyph.sea { color: #9DB4F2; }
   .act .btn.small { width: auto; flex: none; height: 44px; padding: 0 16px; font-size: 15px; background: var(--cream-card); }
   .act .btn.small svg { width: 16px; height: 16px; }
   .glass .wtr { transition: transform 600ms var(--settle); }
@@ -74,18 +77,18 @@
     <h2 class="grp" data-a style="--i:0">Now</h2>
     <div class="now" data-a style="--i:1">
       <div class="art" aria-hidden="true">
-        <svg class="scene" id="scene" width="346" height="172" viewBox="0 0 346 172"></svg>
+        <svg class="scene" id="scene" width="346" height="184" viewBox="0 0 346 184"></svg>
         <div class="fig" data-settle style="--d:300ms"><div id="xero"></div></div>
         <div class="txt" data-a style="--i:2;--d:200ms">
           <p class="t-foot">Happening now &middot; Day 7</p>
           <p class="t-title">Most nicotine has left your body</p>
         </div>
       </div>
-      <div class="well" data-a style="--i:3;--d:200ms">
+      <div class="acts" data-a style="--i:3;--d:200ms">
         <div class="act">
           <span class="glyph sea" id="ic-wave"></span>
           <div class="grow"><p class="t-head"><span data-count="3">3</span> waves today</p><p class="t-cap">Ridden out with SOS</p></div>
-          <button class="btn small ghost">Log</button>
+          <button class="btn small ghost">Log a wave</button>
         </div>
         <div class="act">
           <span class="glyph glass" id="glass"></span>
@@ -106,7 +109,7 @@
 <script>
   const $ = s => document.querySelector(s);
   const dark = DX.theme === 'dark';
-  /* paper-cut morning: warm sky, a low sun, three layered hills; Xero stands on the front knoll */
+  /* paper-cut morning: warm sky, a low sun, three taller layered hills; Xero stands on the front knoll */
   const c = dark
     ? { s0: '#1A2442', s1: '#2B3052', s2: '#5A4558', sun: '#FFB877', glow: '#FFB877', h1: '#2C3A60', h2: '#22304F', h3: '#182034', rim: 'rgba(246,231,193,.18)', sh: '#000000' }
     : { s0: '#FFF6EA', s1: '#FFE9D2', s2: '#FFD3A8', sun: '#FFC93C', glow: '#FFD27A', h1: '#FFC796', h2: '#FFAE73', h3: '#FFFCF7', rim: 'rgba(255,255,255,.55)', sh: '#8A3A12' };
@@ -114,11 +117,11 @@
       <linearGradient id="nk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c.s0}"/><stop offset=".6" stop-color="${c.s1}"/><stop offset="1" stop-color="${c.s2}"/></linearGradient>
       <radialGradient id="ng"><stop offset="0" stop-color="${c.glow}" stop-opacity=".55"/><stop offset="1" stop-color="${c.glow}" stop-opacity="0"/></radialGradient>
       <filter id="nl" x="-5%" y="-30%" width="110%" height="160%"><feDropShadow dx="0" dy="-2" stdDeviation="3" flood-color="${c.sh}" flood-opacity="${dark ? .45 : .16}"/></filter></defs>
-    <rect width="346" height="172" fill="url(#nk)"/>
-    <circle cx="196" cy="118" r="54" fill="url(#ng)"/><circle cx="196" cy="118" r="20" fill="${c.sun}"/>
-    <g class="h h1" filter="url(#nl)"><path d="M0 128 C50 114 100 112 150 120 C200 128 250 116 300 108 C320 105 334 106 346 108 V172 H0Z" fill="${c.h1}"/></g>
-    <g class="h h2" filter="url(#nl)"><path d="M0 146 C40 136 90 134 140 140 C180 145 210 146 240 140 C270 134 300 126 346 128 V172 H0Z" fill="${c.h2}"/><path d="M0 146 C40 136 90 134 140 140 C180 145 210 146 240 140 C270 134 300 126 346 128" fill="none" stroke="${c.rim}" stroke-width="1.5"/></g>
-    <g class="h h3" filter="url(#nl)"><path d="M0 158 C60 152 120 154 176 156 C214 157 236 148 260 142 C290 135 320 138 346 144 V172 H0Z" fill="${c.h3}"/></g>`;
+    <rect width="346" height="184" fill="url(#nk)"/>
+    <circle cx="186" cy="114" r="54" fill="url(#ng)"/><circle cx="186" cy="114" r="20" fill="${c.sun}"/>
+    <g class="h h1" filter="url(#nl)"><path d="M0 124 C40 104 90 98 140 108 C180 116 214 120 250 104 C282 90 318 88 346 96 V184 H0Z" fill="${c.h1}"/><path d="M0 124 C40 104 90 98 140 108 C180 116 214 120 250 104 C282 90 318 88 346 96" fill="none" stroke="${c.rim}" stroke-width="1.5"/></g>
+    <g class="h h2" filter="url(#nl)"><path d="M0 146 C36 130 86 126 132 134 C172 141 204 144 236 134 C268 124 304 116 346 120 V184 H0Z" fill="${c.h2}"/><path d="M0 146 C36 130 86 126 132 134 C172 141 204 144 236 134 C268 124 304 116 346 120" fill="none" stroke="${c.rim}" stroke-width="1.5"/></g>
+    <g class="h h3" filter="url(#nl)"><path d="M0 168 C56 160 116 162 168 162 C206 162 226 152 252 146 C282 139 316 142 346 150 V184 H0Z" fill="${c.h3}"/></g>`;
   $('#xero').innerHTML = DX.char('xero', { mood: 'breathe', size: 88, stage: 2 });
   $('#xmini').innerHTML = DX.char('xero', { mood: 'hello', size: 32, stage: 2, animate: false });
   $('#ic-wave').innerHTML = DX.icon('wave', { w: 2.4 });

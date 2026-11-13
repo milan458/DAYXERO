@@ -252,4 +252,4 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
 [data-theme="dark"] .screen[data-ground="ocean"] { --g: #0A1638; background: radial-gradient(120% 55% at 50% -8%, rgba(160,190,255,.10), transparent 62%), linear-gradient(180deg, #13295F 0%, #0E1F4C 50%, #0A1638 100%); }
 
 /* Warm selection in dark mode on the neutral dark ground (critics: slate + white outline read as disabled). Ocean and night keep cream. */
-[data-theme="dark"] .screen:not([data-ground="ocean"]):not([data-ground="violet"]):not([data-ground="night"]) { --sel-tint: color-mix(in srgb, #FF9A5C 22%, var(--card)); --sel-edge: #FFB27A; }
+[data-theme="dark"] .screen:not([data-ground="ocean"]):not([data-ground="violet"]):not([data-ground="night"]) { --sel-tint: color-mix(in srgb, #FFB27A 13%, var(--card)); --sel-edge: #FFB27A; }
