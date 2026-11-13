@@ -1,14 +1,15 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>017 Today, through the day</title>
-<meta name="motion" content="Scrolled Today. The compact header arrives, then the spine draws top to bottom (900ms) while each row arrives on its node (90ms stagger); the Happening now card lifts onto its soft shadow (600ms) and its node breathes (2.4s loop). At 1.2s the +1 glass button presses: a '+1' floats up from the counter, the count bumps from 3 to 4 (spring bump, 520ms) and the water in the tile rises from 3/8 to 4/8 (600ms settle). The list keeps running under the tab bar. Light haptic on the tap, soft success tick on the bump.">
+<meta name="motion" content="Scrolled Today. The compact header arrives, then 'Now' and its three cream cards rise with a 90ms stagger; the Happening now card lifts onto its soft shadow (600ms). 'Later today' and its quieter grouped list arrive last (90ms stagger, no lift). At 1.2s the '1 glass' button presses: a '+1' floats up from the count, the count bumps from 3 to 4 (spring bump, 520ms) and the water in the tile rises from 3/8 to 4/8 (600ms settle). Light haptic on the tap, soft success tick on the bump.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .top { position: absolute; z-index: 5; left: 0; right: 0; top: 54px; padding: 6px var(--gutter) 0; }
-  .mini { display: flex; align-items: center; gap: 12px; padding: 10px 16px 10px 10px; }
-  .mini .av { position: relative; width: 48px; height: 48px; flex: none; }
-  .mini .av .r { position: absolute; inset: 0; }
-  .mini .av .x { position: absolute; inset: 4px; border-radius: 99px; background: var(--card-2); display: grid; place-items: center; overflow: hidden; }
+  /* cream cards with real separation on apricot: solid cream plus a hairline and a soft warm shadow */
+  .screen { --cream-card: #FFFBF5; --lift: 0 1px 0 rgba(74,40,16,.04), 0 6px 16px rgba(74,40,16,.10); }
+  [data-theme="dark"] .screen { --cream-card: var(--card); --lift: 0 8px 20px rgba(0,0,0,.28); }
+  .top { position: absolute; z-index: 5; left: 0; right: 0; top: 56px; padding: 0 var(--gutter); }
+  .mini { display: flex; align-items: center; gap: 12px; padding: 10px 16px 10px 10px; background: var(--cream-card); box-shadow: inset 0 0 0 1px var(--line), var(--lift); }
+  .mini .av { width: 46px; height: 46px; flex: none; border-radius: 99px; background: var(--card-2); display: grid; place-items: center; overflow: hidden; }
   .mini .grow { flex: 1; min-width: 0; }
   .mini .t-foot { color: var(--muted); }
   .mini .money { text-align: right; display: grid; gap: 2px; }
@@ -16,54 +17,41 @@
   .mini .money .t-cap { color: var(--muted); }
 
   .body { position: absolute; left: 0; right: 0; top: 150px; padding: 0 var(--gutter); }
-  .tl { position: relative; margin-top: 16px; padding-left: 30px; display: grid; gap: 10px; }
-  .spine { position: absolute; left: 9px; top: 42px; bottom: 42px; width: 3px; border-radius: 3px;
-    background: repeating-linear-gradient(to bottom, color-mix(in srgb, var(--fg) 72%, transparent) 0 6px, transparent 6px 11px); }
-  .spine .done { position: absolute; display: block; left: 0; top: 0; width: 3px; height: var(--done, 54%); border-radius: 3px; background: var(--fg); transform-origin: top; }
-  .play .spine .done { animation: spine 900ms var(--ease) 200ms backwards; }
-  @keyframes spine { from { transform: scaleY(0); } }
-  .still .spine .done { animation: none; }
-  .item { position: relative; }
-  .node { position: absolute; left: -30px; top: 50%; margin-top: -10px; width: 21px; height: 21px; border-radius: 99px; background: var(--g); box-shadow: inset 0 0 0 3px var(--fg); }
-  .node.now { background: var(--fg); box-shadow: 0 0 0 5px color-mix(in srgb, var(--fg) 16%, transparent); }
-  .play .node.now { animation: nodeb 2.4s ease-in-out infinite; }
-  @keyframes nodeb { 50% { box-shadow: 0 0 0 9px color-mix(in srgb, var(--fg) 6%, transparent); } }
-  .node.later { box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--fg) 70%, transparent); }
-  .rowc { display: flex; align-items: center; gap: 12px; min-height: 68px; padding: 10px 14px 10px 12px; }
+  .grp { font: 700 17px/1.2 var(--display); letter-spacing: -.2px; margin: 0 0 10px 2px; }
+  .grp.later { margin-top: 22px; color: var(--muted); }
+  .now-list { display: grid; gap: 10px; }
+  .rowc { display: flex; align-items: center; gap: 12px; min-height: 66px; padding: 11px 14px 11px 12px; background: var(--cream-card); border-radius: 20px; box-shadow: inset 0 0 0 1px var(--line), var(--lift); }
   .rowc .grow { flex: 1; min-width: 0; }
-  .rowc .lbl { color: var(--muted); }
-  .rowc .t-head { font-size: 16px; line-height: 1.25; font-weight: 600; white-space: normal; }
-  .rowc .t-head b { font-weight: 800; }
-  .btn.small { width: auto; padding: 0 14px; flex: none; }
-  .nw { white-space: nowrap; }
+  .rowc .t-head { font-size: 16px; line-height: 1.25; }
+  .rowc .t-foot { color: var(--muted); font-size: 14px; margin-top: 2px; }
+  .rowc.hero { min-height: 92px; padding: 16px 14px 16px 14px; }
+  .rowc.hero .t-head { font-size: 19px; line-height: 1.2; }
+  .rowc.hero .tile { width: 52px; height: 52px; border-radius: 14px; }
+  .rowc.hero .tile svg { width: 30px; height: 30px; }
+  .btn.small { width: auto; padding: 0 14px; flex: none; height: 40px; }
   .btn.small svg { width: 16px; height: 16px; }
   .tile { width: 40px; height: 40px; border-radius: 12px; background: var(--card-2); flex: none; position: relative; overflow: hidden; display: grid; place-items: center; color: var(--fg); }
   .tile svg { position: relative; width: 22px; height: 22px; }
   .tile .water { position: absolute; left: 0; right: 0; bottom: 0; height: var(--lvl, 37.5%); background: color-mix(in srgb, #5A9DFF 45%, transparent); transition: height 600ms var(--settle); }
-  .tile.badge-t { background: none; overflow: visible; }
-  .tile.badge-t svg { width: 40px; height: 40px; position: absolute; inset: 0; }
-  .tile.badge-t .n { position: relative; font: 800 15px/1 var(--display); color: var(--fg); }
   .val { position: relative; display: inline-block; }
   .plus { position: absolute; right: -22px; top: -8px; font: 800 16px/1 var(--display); color: var(--tick); opacity: 0; }
-  .trail { flex: none; display: grid; place-items: center; color: var(--muted); }
-  .trail svg { width: 20px; height: 20px; }
-  .trail.time { font: 600 14px/1 var(--body); color: var(--fg); padding-right: 2px; }
-  /* the rest recede: translucent rows on a hairline */
-  .item:not(.now) .rowc { background: color-mix(in srgb, var(--card) 55%, transparent); box-shadow: inset 0 0 0 1px var(--line); }
-  /* happening now leads with soft elevation, no outline */
-  .item.now .rowc { min-height: 108px; padding: 18px 16px; background: var(--card); box-shadow: 0 14px 30px rgba(74,40,16,.16), 0 2px 6px rgba(74,40,16,.08); }
-  [data-theme="dark"] .item.now .rowc { background: var(--card-2); box-shadow: inset 0 0 0 1px rgba(255,255,255,.08), 0 16px 32px rgba(0,0,0,.45); }
-  .play .item.now .rowc { animation: lift 600ms var(--ease) 500ms both; }
-  @keyframes lift { from { box-shadow: 0 0 0 rgba(0,0,0,0); } }
-  .item.now .rowc .t-head { font-size: 20px; line-height: 1.2; font-weight: 700; }
-  .item.now .tile { width: 52px; height: 52px; border-radius: 14px; }
-  .item.now .tile svg { width: 30px; height: 30px; }
+  .chev { width: 20px; height: 20px; }
+  /* later: one quieter grouped list, translucent, no shadow, lighter titles */
+  .later-list { border-radius: 20px; background: color-mix(in srgb, var(--cream-card) 52%, transparent); box-shadow: inset 0 0 0 1px var(--line); overflow: hidden; }
+  [data-theme="dark"] .later-list { background: color-mix(in srgb, var(--card) 55%, transparent); }
+  .later-list .rowc { background: none; box-shadow: none; border-radius: 0; min-height: 60px; padding: 9px 14px 9px 12px; }
+  .later-list .rowc + .rowc { border-top: 1px solid var(--line); }
+  .later-list .t-head { font-size: 16px; font-weight: 600; }
+  .later-list .tile { width: 36px; height: 36px; border-radius: 11px; background: transparent; color: var(--muted); }
+  .later-list .tile svg { width: 21px; height: 21px; }
+  .play .rowc.hero { animation: lift 600ms var(--ease) 500ms both; }
+  @keyframes lift { from { box-shadow: inset 0 0 0 1px var(--line), 0 0 0 rgba(0,0,0,0); } }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
   <div class="top" data-a style="--i:0">
     <div class="card mini">
-      <div class="av"><div class="r" id="mring"></div><div class="x" id="xero"></div></div>
+      <div class="av" id="xero"></div>
       <div class="grow">
         <p class="t-head" style="font-size:17px">7 days free</p>
         <p class="t-foot">Fri, Nov 13</p>
@@ -73,92 +61,59 @@
   </div>
 
   <div class="body">
-    <h2 class="t-title" data-a style="--i:1">Through the day</h2>
-    <div class="tl">
-      <div class="spine" aria-hidden="true"><b class="done"></b></div>
-
-      <div class="item now" data-a style="--i:2">
-        <span class="node now"></span>
-        <div class="card rowc">
-          <span class="tile" id="ic-now"></span>
-          <div class="grow">
-            <p class="t-foot lbl">Happening now</p>
-            <p class="t-head">Most nicotine has left your body</p>
-          </div>
-          <span class="trail" id="chev1"></span>
+    <h2 class="grp" data-a style="--i:1">Now</h2>
+    <div class="now-list">
+      <div class="rowc hero" data-a style="--i:2">
+        <span class="tile" id="ic-now"></span>
+        <div class="grow">
+          <p class="t-head">Most nicotine has left your body</p>
+          <p class="t-foot">Happening now &middot; Day 7</p>
         </div>
+        <span class="chev" id="chev1"></span>
       </div>
-
-      <div class="item" data-a style="--i:3">
-        <span class="node"></span>
-        <div class="card rowc">
-          <span class="tile" id="ic-wave"></span>
-          <div class="grow">
-            <p class="t-foot lbl">Waves</p>
-            <p class="t-head"><b data-count="3">3</b> ridden today</p>
-          </div>
-          <button class="btn small ghost">Log</button>
+      <div class="rowc" data-a style="--i:3">
+        <span class="tile" id="ic-wave"></span>
+        <div class="grow">
+          <p class="t-head"><span data-count="3">3</span> waves ridden</p>
+          <p class="t-foot">Today</p>
         </div>
+        <button class="btn small ghost">Log</button>
       </div>
-
-      <div class="item" data-a style="--i:4">
-        <span class="node"></span>
-        <div class="card rowc">
-          <span class="tile" id="tile"><span class="water"></span></span>
-          <div class="grow">
-            <p class="t-foot lbl">Water</p>
-            <p class="t-head nw"><span class="val"><b id="gl">3</b><span class="plus" id="plus">+1</span></span> of 8 glasses</p>
-          </div>
-          <button class="btn small ghost" id="addw"></button>
+      <div class="rowc" data-a style="--i:4">
+        <span class="tile" id="tile"><span class="water"></span></span>
+        <div class="grow">
+          <p class="t-head"><span class="val"><span id="gl">3</span><span class="plus" id="plus">+1</span></span> of 8 glasses</p>
+          <p class="t-foot">Water</p>
         </div>
+        <button class="btn small ghost" id="addw"></button>
       </div>
+    </div>
 
-      <div class="item" data-a style="--i:5">
-        <span class="node later"></span>
-        <div class="card rowc">
-          <span class="tile" id="ic-read"></span>
-          <div class="grow">
-            <p class="t-foot lbl">Today's read &middot; 3 min</p>
-            <p class="t-head">The noisy passengers</p>
-          </div>
-          <span class="trail" id="chev3"></span>
+    <h2 class="grp later" data-a style="--i:5">Later today</h2>
+    <div class="later-list" data-a style="--i:6">
+      <div class="rowc">
+        <span class="tile" id="ic-read"></span>
+        <div class="grow">
+          <p class="t-head">The noisy passengers</p>
+          <p class="t-foot">Today's read &middot; 3 min</p>
         </div>
+        <span class="chev" id="chev2"></span>
       </div>
-
-      <div class="item" data-a style="--i:6">
-        <span class="node later"></span>
-        <div class="card rowc">
-          <span class="tile" id="ic-eve"></span>
-          <div class="grow">
-            <p class="t-foot lbl">Evening</p>
-            <p class="t-head">Check in with Glim</p>
-          </div>
-          <span class="trail time">6 PM</span>
+      <div class="rowc">
+        <span class="tile" id="ic-eve"></span>
+        <div class="grow">
+          <p class="t-head">Check in with Glim</p>
+          <p class="t-foot">Evening &middot; 6 PM</p>
         </div>
+        <span class="chev" id="chev3"></span>
       </div>
-
-      <div class="item" data-a style="--i:7">
-        <span class="node later"></span>
-        <div class="card rowc">
-          <span class="tile" id="ic-bed"></span>
-          <div class="grow">
-            <p class="t-foot lbl">Before bed &middot; 3 min</p>
-            <p class="t-head">Slow wind-down breath</p>
-          </div>
-          <span class="trail time">10 PM</span>
+      <div class="rowc">
+        <span class="tile" id="ic-bed"></span>
+        <div class="grow">
+          <p class="t-head">Slow wind-down breath</p>
+          <p class="t-foot">Before bed &middot; 10 PM &middot; 3 min</p>
         </div>
-      </div>
-
-      <div class="item" data-a style="--i:8">
-        <span class="node later"></span>
-        <div class="card rowc">
-          <span class="tile badge-t" id="b14"></span>
-          <div class="grow">
-            <p class="t-foot lbl">Next badge &middot; Fri, Nov 20</p>
-            <p class="t-head">14 days, <b>7 to go</b></p>
-          </div>
-          <span class="trail" id="chev2"></span>
-        </div>
+        <span class="chev" id="chev4"></span>
       </div>
     </div>
   </div>
@@ -167,23 +122,16 @@
   const $ = s => document.querySelector(s);
   /* a clearer lung glyph in the kit's line style: windpipe, two bronchi, two lobes */
   const lungs = (s = 30) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5v7.5M12 11c-.6 1.3-1.6 2-2.6 2.4M12 11c.6 1.3 1.6 2 2.6 2.4"/><path d="M9.4 7C6.8 7.4 4 10.6 4 15.4 4 18.3 5.2 20 7.3 20c1.9 0 3.1-1 3.1-3.2V8.3C10.4 7.5 10 6.9 9.4 7z"/><path d="M14.6 7c2.6.4 5.4 3.6 5.4 8.4 0 2.9-1.2 4.6-3.3 4.6-1.9 0-3.1-1-3.1-3.2V8.3c0-.8.4-1.4 1-1.3z"/></svg>`;
-  $('#mring').innerHTML = DX.ring({ size: 48, stroke: 4, p: .5, color: 'var(--fg)', track: 'var(--track)' });
-  $('#xero').innerHTML = DX.char('xero', { mood: 'hello', size: 38, stage: 2, animate: false });
+  $('#xero').innerHTML = DX.char('xero', { mood: 'hello', size: 40, stage: 2, animate: false });
   $('#ic-now').innerHTML = lungs();
-  $('#chev1').innerHTML = DX.icon('chev');
-  $('#chev2').innerHTML = DX.icon('chev');
-  $('#chev3').innerHTML = DX.icon('chev');
+  ['#chev1', '#chev2', '#chev3', '#chev4'].forEach(s => { $(s).innerHTML = DX.icon('chev', { size: 20 }); });
   $('#ic-wave').innerHTML = DX.icon('wave');
   $('#ic-read').innerHTML = DX.icon('note');
   $('#ic-eve').innerHTML = DX.icon('moon');
   $('#ic-bed').innerHTML = DX.icon('leaf');
   $('#tile').insertAdjacentHTML('beforeend', DX.icon('drop'));
   $('#addw').innerHTML = DX.icon('plus', { w: 2.8 }) + '1 glass';
-  $('#b14').innerHTML = DX.badge({ kind: 'day', n: '', state: 'next', p: .5, size: 40, bare: true }) + '<span class="n">14</span>';
   $('.screen').insertAdjacentHTML('beforeend', DX.tabbar('today'));
-  // spine: solid through the rows already done today (now, waves, water), dashed after
-  DX.beat(0, () => { const tl = $('.tl'), sp = $('.spine'), its = tl.querySelectorAll('.item'), last = its[its.length - 1]; const top = its[0].offsetTop + its[0].offsetHeight / 2, mid = its[2].offsetTop + its[2].offsetHeight / 2, end = last.offsetTop + last.offsetHeight / 2;
-    sp.style.top = top + 'px'; sp.style.bottom = 'auto'; sp.style.height = (end - top) + 'px'; sp.style.setProperty('--done', (mid - top) + 'px'); });
 
   function addGlass(anim) {
     $('#gl').textContent = '4';
@@ -196,8 +144,5 @@
   DX.after(0, reset);
   DX.after(1200, () => { const b = $('#addw'); b.classList.add('press'); setTimeout(() => b.classList.remove('press'), 160); addGlass(true); });
   DX.onStill(() => addGlass(false));
-  const fillBadge = (sel, from, to, delay) => DX.after(0, () => { const c = document.querySelector(sel + ' circle[transform]'); if (!c) return; const C = 2 * Math.PI * 48;
-    c.animate([{ strokeDashoffset: C * (1 - from) }, { strokeDashoffset: C * (1 - to) }], { duration: 1000, delay, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' }); });
-  fillBadge('#b14', 0, .5, 900);
 </script>
 </body></html>

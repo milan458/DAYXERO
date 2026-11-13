@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>016 Today, after Quit Day</title>
-<meta name="motion" content="The dawn sun rises (2.6s) while the cream disc fades up (700ms). At 600ms the 7-day badge stamps onto the disc (spring, 620ms) and a shine crosses it (1.4s, from 1.2s); Xero settles in beside it (900ms) and does one cheer hop at 1.3s, then bobs. The pill, greeting and the line under it arrive with a 90ms stagger while 7 days, $49 and 84 count up (1.1s). The quiet '7 to go to 14 days' chip arrives next and its tiny ring fills to half (1s); the reading row arrives last. Success haptic on the stamp.">
+<meta name="motion" content="The dawn sun rises (2.6s) while the cream disc fades up (700ms). At 600ms the 7-day badge stamps onto the disc (spring, 620ms) and a shine crosses it (1.4s, from 1.2s); Xero settles in beside it (900ms) and does one cheer hop at 1.3s, then bobs. The pill, greeting and the line under it arrive with a 90ms stagger while 7 days, $49 and 84 count up (1.1s). The quiet '7 to go to 14 days' chip arrives next and its tiny coral ring sweeps to half (1.4s); the reading row arrives last. Success haptic on the stamp.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -13,18 +13,17 @@
   .stage .medal { position: absolute; left: 25px; top: 25px; width: 156px; height: 156px; }
   .stage .medal .shine { border-radius: 99px; filter: drop-shadow(0 8px 14px rgba(150,50,20,.28)); }
   [data-theme="dark"] .stage .medal .shine { filter: drop-shadow(0 8px 16px rgba(0,0,0,.45)); }
-  .xero { position: absolute; left: 248px; top: 172px; }
+  .xero { position: absolute; left: 266px; top: 176px; }
   .pill { position: absolute; left: 0; right: 0; top: 280px; display: flex; justify-content: center; }
   .pill span { background: var(--card); color: var(--fg); border-radius: 99px; padding: 10px 16px; font: 700 14px/1 var(--body); box-shadow: 0 6px 16px rgba(30,26,58,.12); }
 
   .content { position: absolute; left: 0; right: 0; top: 354px; padding: 0 var(--gutter); }
-  .content .sub { margin-top: 6px; color: var(--muted); }
+  .content .sub { margin-top: 6px; color: var(--muted); text-wrap: balance; }
   .content .sub b { color: var(--fg); font-weight: 700; }
-  .togo { margin-top: 16px; display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px 0 6px; border-radius: 99px; background: color-mix(in srgb, var(--card) 55%, transparent); box-shadow: inset 0 0 0 1px var(--line); }
+  .togo { margin-top: 18px; display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px 0 10px; border-radius: 99px; background: color-mix(in srgb, var(--card) 55%, transparent); box-shadow: inset 0 0 0 1px var(--line); }
   .togo .t-cap { color: var(--fg); font-weight: 600; }
-  .togo .mini { position: relative; width: 26px; height: 26px; display: grid; place-items: center; }
-  .togo .mini svg { position: absolute; inset: 0; }
-  .read { margin-top: 22px; }
+  .togo .mini { width: 18px; height: 18px; flex: none; }
+  .read { margin-top: 28px; }
   .read .row { padding: 12px 16px 12px 14px; }
   .read .t-foot { color: var(--muted); }
   .read .t-head { font-size: 17px; }
@@ -64,14 +63,11 @@
   const xero = mood => DX.char('xero', { mood, size: 104, stage: 2 });
   $('#xero').innerHTML = xero('hello');
   $('#b7').innerHTML = DX.badge({ kind: 'day', n: 7, size: 156, bare: true, label: '7 days' });
-  $('#b14').innerHTML = DX.badge({ kind: 'day', n: '', state: 'next', p: .5, size: 26, bare: true, label: '14 days' });
+  $('#b14').innerHTML = DX.ring({ size: 18, stroke: 3.5, p: .5, color: '#FF7A55', track: 'var(--track)' });
   $('#ic-read').innerHTML = DX.icon('note');
   $('#chev').innerHTML = DX.icon('chev', { size: 18 });
   $('.screen').insertAdjacentHTML('beforeend', DX.tabbar('today'));
   DX.after(1300, () => { $('#xero').innerHTML = xero('cheer'); });
   DX.after(2800, () => { $('#xero').innerHTML = xero('hello'); });
-  const fillBadge = (sel, from, to, delay) => DX.after(0, () => { const c = document.querySelector(sel + ' circle[transform]'); if (!c) return; const C = 2 * Math.PI * 48;
-    c.animate([{ strokeDashoffset: C * (1 - from) }, { strokeDashoffset: C * (1 - to) }], { duration: 1000, delay, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' }); });
-  fillBadge('#b14', 0, .5, 1400);
 </script>
 </body></html>
