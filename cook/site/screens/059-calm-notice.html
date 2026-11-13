@@ -31,8 +31,8 @@
 .lab { position: absolute; transform: translate(0, -50%); font: 700 14px/1 var(--body); color: #1E1A3A; background: #FFF8EE; padding: 8px 10px; border-radius: 99px; box-shadow: 0 2px 8px rgba(20,30,70,.12); white-space: nowrap; }
 .lab.r { transform: translate(-100%, -50%); }
 .lab.c { transform: translate(-50%, -100%); }
-/* "It peaks" sits 18px above the crest dot; It rises and It passes sit just above their dots, 25px in from the card edges. */
-/* (was:) "It peaks" sits 18px above the crest dot; it steps aside (fades) while Jelli crosses the crest, then comes back. */
+/* "It peaks" sits 18px above the crest dot; it steps aside (fades) while Jelli crosses the crest, then comes back.
+   It rises and It passes sit just above their dots, at least 20px in from the card edges. */
 .play #peak { animation: peakdip 12s linear both; }
 @keyframes peakdip { 0%, 30% { opacity: 1; } 36%, 66% { opacity: 0; } 72%, 100% { opacity: 1; } }
 .still #peak { animation: none !important; opacity: 1; }

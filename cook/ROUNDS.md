@@ -170,3 +170,4 @@ session 023-032, lesson-log 033-042, slips-checkin 043-055.
 - Calm-settings round 8: Opus 8.6 / Sonnet 8.7 (r7 8.7 / 8.4): mixed, kept. 059 at 9.1 and 057 at 9.0 (Sonnet).
 - Kit: toggles and the light selection edge use one apricot-coral (#F26A45), less red than before.
 - Session round 10 (on r8): Opus 8.6 / Sonnet 8.8 (r8 8.7 / 8.7): mixed, kept (carries the 027/030 content fix). 032 at 9.1, 028 and 031 at 9.0 (Sonnet).
+- Today-SOS-Program round 10 (022 only): Opus 8.5 / Sonnet 8.7 (r8 8.8 / 8.8): lower on both, 022 reverted to round 8 (r10 file kept in scratchpad).

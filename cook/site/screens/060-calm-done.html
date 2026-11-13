@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>060 Calm done</title>
-<meta name="motion" content="The paper sea disc fades in (in dark mode the night sea, its low sun off to the left of Jelli), Jelli settles into it cheering (hop loop, 250ms), then the small apricot check (18px) pops in front of the done line under the disc and its tick draws (900ms, success haptic); the headline with its drawn underline and the line arrive, Jelli's two 4-point stars twinkle in; the compact minutes row counts 7 to 8 at 1.2s with a +1 floating up and the +1 just now tag fading in beside it (one minute, from Notice the urge); the three equal feeling chips arrive last with none selected (tapping one fills it with the warm selection and a selection haptic). No other springs.">
+<meta name="motion" content="The sea disc fades in (flat sun, no grain in light; in dark mode the night sea, its low sun off to the left of Jelli), Jelli settles into it cheering (hop loop, 250ms), then the small apricot check (18px) pops in front of the done line under the disc and its tick draws (900ms, success haptic); the headline with its drawn underline and the line arrive, Jelli's two 4-point stars twinkle in; the compact minutes row (apricot wave tile) counts 7 to 8 at 1.2s with a +1 floating up and the +1 just now tag fading in beside it (one minute, from Notice the urge); the three feeling chips, each hugging its label, arrive last with none selected (tapping one fills it with the warm selection and a selection haptic). No other springs.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -21,7 +21,7 @@
 .hero { position: relative; width: 240px; height: 206px; }
 .hero .halo { position: absolute; left: 20px; top: 6px; width: 200px; height: 200px; border-radius: 99px; overflow: hidden; }
 .hero .jel { position: absolute; left: 30px; top: 2px; }
-.done { display: inline-flex; align-items: center; gap: 7px; color: var(--muted); margin-top: 6px; }
+.done { display: inline-flex; align-items: center; gap: 7px; color: var(--muted); margin-top: 6px; margin-bottom: 8px; }
 .done .ck { width: 18px; height: 18px; flex: none; }
 .calm { display: flex; align-items: center; gap: 12px; padding: 10px 12px 10px 10px; margin-top: 20px; position: relative; border-radius: 20px; }
 .calm .ico-tile { width: 40px; height: 40px; border-radius: 13px; }
@@ -30,12 +30,13 @@
 .calm .grow .t-foot { white-space: nowrap; text-wrap: nowrap; }
 .calm .num { font-size: 26px; line-height: 1; }
 .gain { flex: none; height: 30px; padding: 0 11px; border-radius: 99px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 13px/1 var(--body); color: var(--fg); white-space: nowrap; }
+.calm .ico-tile.apr { background: #FFC38A; color: #1E1A3A; }
 .plus { position: absolute; left: 40px; top: -6px; color: var(--tick); font: 800 18px/1 var(--display); }
 .feel { margin-top: 20px; display: grid; gap: 10px; }
 .feel .fq { font-weight: 600; }
-/* Three equal chips, centred labels, a firmer outline so they read as buttons. */
-.feel .chips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-.feel .chip { justify-content: center; min-height: 48px; padding: 0 6px; white-space: nowrap; box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--fg) 20%, transparent); }
+/* Chips hug their labels (16px each side), with a firmer outline so they read as buttons. */
+.feel .chips { display: flex; gap: 8px; }
+.feel .chip { justify-content: center; min-height: 48px; padding: 0 16px; white-space: nowrap; box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--fg) 20%, transparent); }
 .screen { --tertiary: #8A8598; }
 [data-theme="dark"] .screen { --tertiary: #79819A; }
 .opt3 { color: var(--muted); font-weight: 500; }
@@ -57,7 +58,7 @@
     <p class="t-body muted" data-a style="--i:3">One minute, and the urge got smaller.<br>That is a skill you just practised.</p>
   </div>
   <div class="card calm" data-a style="--i:4">
-    <span class="ico-tile" data-ic="wave" data-s="22" style="background:linear-gradient(160deg,#3A63E0,#1F3C8C);color:#FFF8EE"></span>
+    <span class="ico-tile apr" data-ic="wave" data-s="22"></span>
     <div class="grow"><span class="num" data-count="8" data-from="7" data-delay="1200">8</span> <span class="t-foot">min of calm today</span></div>
     <span class="gain" data-fade style="--d:1300ms">+1 just now</span>
     <span class="plus float-up" style="--d:1300ms">+1</span>
@@ -87,7 +88,12 @@ const nightSea = (w, h, k) => `<svg width="${w}" height="${h}" viewBox="0 0 260 
   <path d="M0 184 C60 174 130 188 190 178 S 245 174 260 178" fill="none" stroke="#9DB8FF" stroke-opacity=".18" stroke-width="2"/>
   <path d="M0 228 C50 216 100 224 150 218 S 228 212 260 220 V260 H0Z" fill="url(#nf${k})"/>
   <ellipse cx="206" cy="236" rx="11" ry="4.5" fill="#566CA6"/><ellipse cx="44" cy="240" rx="7" ry="3" fill="#566CA6"/></svg>`;
-document.getElementById('halo').innerHTML = DX.theme === 'dark' ? nightSea(200, 200, 'h') : DX.char('horizon', { scene: 'sea', w: 200, h: 200, clarity: 100 });
+/* Light: the kit sea with a flat sun and no grain, and without the white crescent in the water. */
+const cleanSea = (w, h) => DX.char('horizon', { scene: 'sea', w, h, clarity: 100 })
+  .replace(/<path d="M90 236 C102 222[^>]*><\/path>/, '')
+  .replace(/(<circle cx="110" cy="96" r="34" fill=")url\(#h2Sun[^)]*\)/, '$1#FFCB4A')
+  .replace(/<rect width="400" height="300" filter="url\(#h2Grain[^)]*\)"><\/rect>/, '');
+document.getElementById('halo').innerHTML = DX.theme === 'dark' ? nightSea(200, 200, 'h') : cleanSea(200, 200);
 /* Jelli's cheer stars (the kit's 4-point stars) sit lower, beside the bell, so they never land on the sun. */
 document.getElementById('jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 180 })
   .replace(/<g opacity="1" (stroke="#[0-9A-Fa-f]{6}" stroke-width="3" stroke-linecap="round">)(?=<path d="M24 )/, '<g opacity="1" transform="translate(0 56)" $1');

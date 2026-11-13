@@ -1,80 +1,78 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>022 Program, prep week</title>
-<meta name="motion" content="The 'Prep week' header and its count line arrive (600ms, 90ms stagger). The sand road fades in (600ms), its dashed centre line fades in after it, and its walked stretch warms from the top to today's stamp (1100ms, ease); Prep 1 to 3 stamps and their rows arrive as the warm stretch reaches each one (about 360ms apart). Today's Prep 4 stamp and its up-next card arrive (600ms, no spring), small Xero settles onto the stamp's shoulder (900ms settle, 1450ms in) and then bobs gently, and the today ring sends a soft pulse every 2.4s. Prep 5 to 7 dashed stamps fade in, the two paper hills rise 24px into place back to front (100ms apart, 900ms), and the Day Xero coin rises half out from behind the front ridge like a sunrise (1100ms settle) while its two flat halo discs fade up (1.2s) and its label fades in. Last, the locked 'Weeks 1 to 4' row arrives on the ridge (600ms). Light haptic when the warm stretch reaches today.">
+<meta name="motion" content="The 'Prep week' header and its progress line arrive (600ms, 90ms stagger). The road, one continuous paper-cut ribbon from Prep 1 to the Day Xero coin, fades in (600ms), then its finished stretch fills prep-orange from the top to today's stamp (1100ms, ease); Prep 1 to 3 stamps and their rows arrive as the fill reaches each one (about 360ms apart). Today's Prep 4 play stamp lands as the fill arrives (600ms arrive, no spring) with the up-next card beside it, then the stamp breathes a soft pulse ring every 2.4s. Prep 5 to 7 (dashed rings on cream) fade in, the dotted guide fades in along the road to the horizon, the two hills rise 24px into place back to front (100ms apart, 900ms), and the Day Xero coin rises onto the horizon like a sunrise (1100ms settle) while the warm glow behind it brightens (1.2s) and its label fades in. Last, the locked 'Weeks 1 to 4' row arrives on the hill (600ms). Light haptic when the fill reaches today.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  /* light: cream ground, warm sand road, sage-cream paper hills (flat layers, no gradients) */
-  .screen[data-ground="mint"] { --g: #FBF6EC; --muted: #5E5975; --done-ink: #67627D; --card-2: #EEF5EC;
-    --road: #EEDDBE; --road-edge: rgba(120,84,30,.14); --walked: #F2C998; --dash: #FFFDF7;
-    --hb: #E6EAD4; --hf: #D6DFC4; --hrim: rgba(255,255,255,.8); --halo1: rgba(255,196,120,.30); --halo2: rgba(255,196,120,.16); --wait-edge: #E5864A; }
-  /* dark: dim warm sand road, navy-meadow hills */
-  [data-theme="dark"] .screen[data-ground="mint"] { --muted: #B3BACC; --done-ink: #9EA6BA; --card-2: #212A41;
-    --road: #574C3B; --road-edge: rgba(0,0,0,.45); --walked: #7C6140; --dash: rgba(243,226,196,.55);
-    --hb: #18284A; --hf: #12203D; --hrim: rgba(190,210,255,.14); --halo1: rgba(255,200,130,.13); --halo2: rgba(255,200,130,.06); --wait-edge: #F0A070; }
+  /* light: neutral text (no green), sage-cream hills at the bottom */
+  .screen[data-ground="mint"] { --g: #FBF6EC; --muted: #5E5975; --road: #CBEBD8; --road-edge: rgba(36,73,58,.16); --done-road: #FFAE73; --card-2: #EEF5EC;
+    --hb: #E4E6D2; --hf: #D2D9BE; --hrim: rgba(255,255,255,.7); --hsh: rgba(70,72,40,.18); --glow: 255,172,80; --glow-a: .66; }
+  /* dark: a road you can see (a lifted slate ribbon) */
+  [data-theme="dark"] .screen[data-ground="mint"] { --muted: #B3BACC; --road: #34526B; --road-edge: rgba(0,0,0,.5); --done-road: #C27A4E; --card-2: #212A41;
+    --hb: #1E3646; --hf: #172B3A; --hrim: rgba(200,225,235,.14); --hsh: rgba(0,0,0,.5); --glow: 255,176,104; --glow-a: .3; }
 
   .hdr { position: absolute; left: 0; right: 0; top: 56px; padding: 0 var(--gutter); }
   .hdr .t-foot { color: var(--muted); margin-top: 4px; }
   .hdr .t-foot b { color: var(--fg); font-weight: 700; }
 
-  svg.layer { position: absolute; left: 0; top: 0; pointer-events: none; }
-  #walked { stroke-dasharray: var(--l4) 4000; stroke-dashoffset: 0; }
-  .play #walked { animation: fill 1100ms var(--ease) 300ms both; }
+  svg.road { position: absolute; left: 0; top: 0; pointer-events: none; }
+  #done { stroke-dasharray: var(--l4) 4000; stroke-dashoffset: 0; }
+  .play #done { animation: fill 1100ms var(--ease) 300ms both; }
   @keyframes fill { from { stroke-dashoffset: var(--l4); } to { stroke-dashoffset: 0; } }
 
   .node { position: absolute; transform: translate(-50%, -50%); }
-  .stamp { position: relative; width: 44px; height: 44px; border-radius: 99px; }
-  .stamp > svg { position: absolute; inset: 0; }
-  /* upcoming: the kit's 'next' badge on a solid paper disc so it reads clearly on the sand */
-  .stamp.wait { background: var(--card); box-shadow: 0 1px 2px rgba(60,40,10,.12); }
-  [data-theme="dark"] .stamp.wait { background: var(--card-2); box-shadow: none; }
-  .stamp.wait svg circle[stroke-dasharray] { stroke: var(--wait-edge); }
+  .stamp { position: relative; width: 42px; height: 42px; display: grid; place-items: center; border-radius: 99px; box-shadow: 0 0 0 3px var(--g); }
+  .stamp svg { position: absolute; inset: 0; }
+  .stamp .n { position: relative; font: 800 17px/1 var(--display); color: #1E1A3A; letter-spacing: -.3px; }
+  .stamp.wait { background: var(--card); }
+  [data-theme="dark"] .stamp.wait { background: var(--card-2); }
+  .stamp.wait .n { color: var(--fg); }
+  .lab { position: absolute; left: 98px; right: var(--gutter); transform: translateY(-50%); }
+  .lab .k { font: 600 13px/1.3 var(--body); color: var(--muted); display: block; }
+  .lab .t-foot { font-weight: 600; font-size: 15px; line-height: 1.3; }
+  .lab.done .t-foot { color: var(--muted); font-weight: 500; }
 
-  .lab { position: absolute; left: 104px; right: var(--gutter); transform: translateY(-50%); }
-  .lab .k { font: 600 14px/1.3 var(--body); color: var(--muted); display: block; }
-  .lab .t-foot { font: 600 16px/1.3 var(--body); margin-top: 2px; }
-  .lab.done .k, .lab.done .t-foot { color: var(--done-ink); }
-  .lab.done .t-foot { font-weight: 500; }
-
-  /* today: the kit prep badge, bigger, on paper, with a coral today ring */
-  .today { position: relative; width: 60px; height: 60px; border-radius: 99px; background: var(--card); box-shadow: 0 0 0 3px var(--card), 0 0 0 6px var(--sel-edge), 0 6px 14px rgba(60,40,10,.16); }
-  [data-theme="dark"] .today { box-shadow: 0 0 0 3px var(--card), 0 0 0 6px var(--sel-edge); }
-  .today > svg { position: absolute; inset: 0; }
-  .today::before { content: ""; position: absolute; inset: -6px; border-radius: 99px; box-shadow: 0 0 0 3px var(--sel-edge); opacity: 0; }
-  .play .today::before { animation: pulse 2.4s var(--ease) 1.8s infinite; }
-  @keyframes pulse { 0% { opacity: .5; transform: scale(1); } 100% { opacity: 0; transform: scale(1.32); } }
-  .xero { position: absolute; width: 40px; height: 40px; }
-  .xero > div { width: 40px; height: 40px; }
-
-  .upw { position: absolute; left: 112px; right: var(--gutter); transform: translateY(-50%); }
-  .upnext { position: relative; display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 14px 14px 15px 16px; overflow: visible; box-shadow: 0 8px 22px rgba(80,60,20,.10); }
+  /* today: a big stamp you press to play */
+  .cur { position: relative; width: 68px; height: 68px; display: grid; place-items: center; color: var(--btn-fg); filter: drop-shadow(0 6px 12px rgba(30,26,58,.24)); }
+  [data-theme="dark"] .cur { filter: drop-shadow(0 6px 14px rgba(0,0,0,.45)); }
+  .cur svg.sc { position: absolute; inset: 0; }
+  .cur .pl { position: relative; width: 26px; height: 26px; margin-left: 4px; }
+  .cur::before { content: ""; position: absolute; inset: -6px; border-radius: 99px; box-shadow: 0 0 0 3px var(--fg); opacity: 0; }
+  .play .cur::before { animation: pulse 2.4s var(--ease) 1.8s infinite; }
+  @keyframes pulse { 0% { opacity: .4; transform: scale(1); } 100% { opacity: 0; transform: scale(1.3); } }
+  .upw { position: absolute; left: 108px; right: var(--gutter); transform: translateY(-50%); }
+  .upnext { position: relative; padding: 14px 16px 15px; overflow: visible; box-shadow: 0 8px 22px rgba(36,73,58,.12); }
   [data-theme="dark"] .upnext { box-shadow: inset 0 0 0 1px var(--line); }
-  .upnext::before { content: ""; position: absolute; left: -6px; top: 50%; width: 14px; height: 14px; margin-top: -7px; background: var(--card); border-radius: 3px; transform: rotate(45deg); }
+  .upnext::before { content: ""; position: absolute; left: -6px; top: 50%; width: 14px; height: 14px; margin-top: -7px; background: inherit; border-radius: 3px; transform: rotate(45deg); }
   [data-theme="dark"] .upnext::before { box-shadow: -1px 1px 0 0 var(--line); }
-  .upnext .grow { flex: 1; min-width: 0; }
-  .upnext .k { font: 600 14px/1.3 var(--body); color: var(--muted); display: block; }
+  .upnext .k { font: 600 13px/1.3 var(--body); color: var(--muted); display: block; }
   .upnext .t-head { margin-top: 3px; }
-  .upnext .go { width: 40px; height: 40px; border-radius: 99px; display: grid; place-items: center; background: var(--card-2); color: var(--fg); flex: none; }
-  .upnext .go svg { width: 18px; height: 18px; margin-left: 2px; }
 
-  /* the horizon: flat halo discs, the coin, two flat paper hills */
-  .halo { position: absolute; border-radius: 99px; transform: translate(-50%, -50%); pointer-events: none; }
-  .play .halo { animation: glowin 1200ms var(--ease) 1800ms both; }
+  /* the horizon: a warm glow where Day Xero rises, two paper-cut hills */
+  .glow { position: absolute; left: 0; right: 0; top: 400px; height: 280px; pointer-events: none;
+    background: radial-gradient(200px 150px at 150px 162px, rgba(var(--glow), var(--glow-a)), rgba(var(--glow), calc(var(--glow-a) * .35)) 55%, rgba(var(--glow), 0) 100%),
+                linear-gradient(180deg, rgba(var(--glow), 0) 34%, rgba(var(--glow), calc(var(--glow-a) * .45)) 56%, rgba(var(--glow), 0) 66%); }
+  .play .glow { animation: glowin 1200ms var(--ease) 1800ms both; }
   @keyframes glowin { from { opacity: 0; } }
+  .hill { position: absolute; left: 0; top: 0; pointer-events: none; }
+  .hill path.sh { filter: drop-shadow(0 -3px 5px var(--hsh)); }
   .play .hill { animation: hill 900ms var(--settle) both; }
   .play .hill.b { animation-delay: 1500ms; } .play .hill.f { animation-delay: 1600ms; }
   @keyframes hill { from { transform: translateY(24px); opacity: 0; } }
-  .goal { position: absolute; transform: translate(-50%, -50%); width: 84px; height: 84px; }
+  .goal { position: absolute; transform: translate(-50%, -50%); width: 76px; height: 76px; }
+  .goal .coin { filter: drop-shadow(0 6px 12px rgba(150,90,20,.24)); }
   .play .goal .coin { animation: rise 1100ms var(--settle) 1750ms both; }
   @keyframes rise { from { transform: translateY(40px); opacity: 0; } }
-  .goal-lab { position: absolute; transform: translateY(-50%); }
+  .goal-lab { position: absolute; left: 202px; right: var(--gutter); transform: translateY(-50%); }
   .goal-lab .t-head { font-size: 20px; }
-  .goal-lab .k { font: 600 14px/1.3 var(--body); color: var(--muted); margin: 2px 0 0; }
+  .goal-lab .t-cap { color: var(--muted); margin-top: 3px; font-size: 14px; }
 
-  /* on the ridge, clear above the tab fade (which starts at 694; this row ends at 682) */
-  .tease { position: absolute; left: var(--gutter); right: var(--gutter); top: 632px; height: 50px; padding: 0 16px 0 10px; display: flex; align-items: center; gap: 12px; border-radius: 18px;
-    background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
-  .tease .lk { width: 34px; height: 34px; border-radius: 12px; display: grid; place-items: center; background: var(--card-2); color: var(--fg); flex: none; }
+  /* after the horizon: what opens next, locked */
+  /* clear above the tab fade (which starts at 654) */
+  .tease { position: absolute; left: var(--gutter); right: var(--gutter); top: 604px; height: 48px; padding: 0 16px 0 10px; display: flex; align-items: center; gap: 12px; border-radius: 18px;
+    background: color-mix(in srgb, var(--card) 72%, transparent); box-shadow: inset 0 0 0 1px var(--line); }
+  [data-theme="dark"] .tease { background: color-mix(in srgb, var(--card) 80%, transparent); }
+  .tease .lk { width: 34px; height: 34px; border-radius: 12px; display: grid; place-items: center; background: color-mix(in srgb, var(--fg) 8%, transparent); color: var(--fg); flex: none; }
   .tease .lk svg { width: 18px; height: 18px; }
   .tease .t-foot { font-weight: 600; color: var(--fg); }
 </style>
@@ -85,16 +83,16 @@
     <p class="t-foot" data-a style="--i:1"><b>3 of 7</b> done &middot; 4 days to Day Xero</p>
   </div>
 
-  <div id="halos"></div>
-  <svg class="layer hill b" width="390" height="844" viewBox="0 0 390 844" aria-hidden="true"><path id="hb" fill="var(--hb)"/><path id="hbr" fill="none" stroke="var(--hrim)" stroke-width="1.5"/></svg>
-  <svg class="layer road" width="390" height="844" viewBox="0 0 390 844" aria-hidden="true">
-    <path id="edge" fill="none" stroke="var(--road-edge)" stroke-width="56" stroke-linecap="round" stroke-linejoin="round" transform="translate(0 2)" data-fade style="--d:150ms"/>
+  <div class="glow" aria-hidden="true"></div>
+  <svg class="hill b" width="390" height="844" viewBox="0 0 390 844" aria-hidden="true"><path class="sh" d="M0 576 C50 562 110 556 170 562 C230 568 290 564 340 554 C362 550 378 548 390 548 V844 H0Z" fill="var(--hb)"/><path d="M0 576 C50 562 110 556 170 562 C230 568 290 564 340 554 C362 550 378 548 390 548" fill="none" stroke="var(--hrim)" stroke-width="1.5"/></svg>
+  <svg class="road" width="390" height="844" viewBox="0 0 390 844" aria-hidden="true">
+    <path id="edge" fill="none" stroke="var(--road-edge)" stroke-width="56" stroke-linecap="round" stroke-linejoin="round" transform="translate(0 3)" data-fade style="--d:150ms"/>
     <path id="road" fill="none" stroke="var(--road)" stroke-width="52" stroke-linecap="round" stroke-linejoin="round" data-fade style="--d:150ms"/>
-    <path id="walked" fill="none" stroke="var(--walked)" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/>
-    <path id="centre" fill="none" stroke="var(--dash)" stroke-width="3" stroke-dasharray="9 9" stroke-linecap="round" data-fade style="--d:600ms"/>
+    <path id="done" fill="none" stroke="var(--done-road)" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/>
+    <path id="future" fill="none" stroke="var(--fg)" stroke-opacity=".4" stroke-width="3" stroke-dasharray="1 10" stroke-linecap="round" data-fade style="--d:1300ms"/>
   </svg>
   <div id="goal"></div>
-  <svg class="layer hill f" width="390" height="844" viewBox="0 0 390 844" aria-hidden="true"><path id="hf" fill="var(--hf)"/><path id="hfr" fill="none" stroke="var(--hrim)" stroke-width="1.5"/></svg>
+  <svg class="hill f" width="390" height="844" viewBox="0 0 390 844" aria-hidden="true"><path class="sh" d="M0 600 C60 588 120 582 180 586 C240 590 300 596 390 580 V844 H0Z" fill="var(--hf)"/><path d="M0 600 C60 588 120 582 180 586 C240 590 300 596 390 580" fill="none" stroke="var(--hrim)" stroke-width="1.5"/></svg>
   <div id="nodes"></div>
 
   <div class="tease" data-a style="--d:2100ms" aria-label="Weeks 1 to 4, locked until Friday, November 6">
@@ -104,25 +102,24 @@
 </div>
 <script>
   const $ = s => document.querySelector(s);
-  /* road centre 60px in (its outer edge 34px from the screen edge); rows 56px apart, today 80px from its neighbours */
-  const X = 60, Y = [146, 202, 258, 338, 418, 474, 530], G = [156, 602];
-  /* paper hills: the back hill rises on the right, the front ridge crosses the coin at its middle */
-  const RB = 'M0 608 C60 600 110 596 156 598 C206 600 250 582 300 574 C340 568 370 566 390 564';
-  const RF = 'M0 620 C40 610 100 602 156 602 C210 602 240 608 290 608 C330 608 362 600 390 592';
-  $('#hb').setAttribute('d', RB + ' V844 H0Z'); $('#hbr').setAttribute('d', RB);
-  $('#hf').setAttribute('d', RF + ' V844 H0Z'); $('#hfr').setAttribute('d', RF);
-
-  /* one smooth road: a Catmull-Rom spline down the stamp column, then a sweep over the ridge into the sunrise */
+  /* stamps about 54px apart (today's stamp 64px from its neighbours), so the ribbon reads as a road */
+  const X = 58, Y = [156, 210, 264, 328, 392, 446, 500], G = [150, 562];
+  /* one smooth ribbon: a Catmull-Rom spline straight down the node column, then one sweep onto the horizon into the coin */
   const pts = Y.map(y => [X, y]);
-  pts.push([X + 4, 568], [98, 600], [G[0] - 10, G[1] + 16]);
+  pts.push([X + 2, 530], [86, 557], [G[0] - 24, G[1]]);
   const seg = (p, i) => { const p0 = p[i - 1] || p[i], p1 = p[i], p2 = p[i + 1], p3 = p[i + 2] || p2;
     const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6], c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
     return ` C${c1[0].toFixed(1)} ${c1[1].toFixed(1)} ${c2[0].toFixed(1)} ${c2[1].toFixed(1)} ${p2[0]} ${p2[1]}`; };
   const span = (a, b) => `M${pts[a][0]} ${pts[a][1]}` + Array.from({ length: b - a }, (_, k) => seg(pts, a + k)).join('');
   const last = pts.length - 1, i4 = 3;
-  ['#edge', '#road', '#walked', '#centre'].forEach(s => $(s).setAttribute('d', span(0, last)));
+  ['#edge', '#road', '#done'].forEach(s => $(s).setAttribute('d', span(0, last)));
+  /* the finished stretch is the same path, dashed so it ends at today's stamp; the dotted guide runs from today to the coin */
   const tmp = document.createElementNS('http://www.w3.org/2000/svg', 'path'); tmp.setAttribute('d', span(0, i4));
-  $('svg.road').appendChild(tmp); $('#walked').style.setProperty('--l4', tmp.getTotalLength().toFixed(1)); tmp.remove();
+  $('svg.road').appendChild(tmp); $('#done').style.setProperty('--l4', tmp.getTotalLength().toFixed(1)); tmp.remove();
+  $('#future').setAttribute('d', span(i4 + 1, last));
+
+  /* a soft seal edge: a disc ringed with small round scallops (a big postage-stamp seal, friendlier than a zigzag) */
+  const seal = (cx, cy, R, n, r) => `<circle cx="${cx}" cy="${cy}" r="${R}"/>` + Array.from({ length: n }, (_, i) => { const a = 2 * Math.PI * i / n - Math.PI / 2; return `<circle cx="${(cx + R * Math.cos(a)).toFixed(2)}" cy="${(cy + R * Math.sin(a)).toFixed(2)}" r="${r}"/>`; }).join('');
 
   const titles = ["You don't have to quit today", 'The first one of the day', 'Use with your eyes open', 'The stress loop', 'Riding the wave', 'Make it easy on yourself', 'The night before'];
   const days = ['Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu'];
@@ -131,21 +128,19 @@
     const n = i + 1;
     if (n <= 3) {
       const d = 300 + i * 360;
-      h += `<div class="node" style="left:${X}px;top:${y}px"><div data-a style="--d:${d}ms"><div class="stamp">${DX.badge({ kind: 'prep', n, size: 44, bare: true, label: 'Prep ' + n })}</div></div></div>`;
+      h += `<div class="node" style="left:${X}px;top:${y}px"><div data-a style="--d:${d}ms"><div class="stamp">${DX.badge({ kind: 'prep', n: '', size: 42, bare: true })}<span class="n">${n}</span></div></div></div>`;
       h += `<div class="lab done" style="top:${y}px"><div data-a style="--d:${d + 60}ms"><span class="k">Prep ${n} &middot; ${days[i]} &middot; done</span><p class="t-foot">${titles[i]}</p></div></div>`;
     } else if (n === 4) {
-      h += `<div class="node" style="left:${X}px;top:${y}px"><div data-a style="--d:1250ms"><div class="today">${DX.badge({ kind: 'prep', n, state: 'next', size: 60, bare: true, label: 'Prep 4, today' })}</div></div></div>`;
-      h += `<div class="xero" style="left:${X - 42}px;top:${y - 64}px"><div data-settle style="--d:1450ms"><div class="bob">${DX.char('xero', { mood: 'hello', size: 40 })}</div></div></div>`;
-      h += `<div class="upw" style="top:${y}px"><button class="card upnext" data-a style="--d:1250ms" aria-label="Play Prep 4, The stress loop"><span class="grow"><span class="k">Today &middot; 5 cards &middot; 28 min</span><span class="t-head" style="display:block">The stress loop</span></span><span class="go">${DX.icon('play', { size: 18, fill: 'currentColor', w: 1.5 })}</span></button></div>`;
+      h += `<div class="node" style="left:${X}px;top:${y}px"><div data-a style="--d:1250ms"><button class="cur" aria-label="Play Prep 4, The stress loop"><svg class="sc" viewBox="0 0 100 100" width="68" height="68"><g fill="var(--btn)">${seal(50, 50, 41, 18, 8.4)}</g><circle cx="50" cy="50" r="38" fill="none" stroke="var(--btn-fg)" stroke-opacity=".28" stroke-width="2" stroke-dasharray="3 5"/></svg><span class="pl">${DX.icon('play', { size: 26, fill: 'currentColor', w: 1.5 })}</span></button></div></div>`;
+      h += `<div class="upw" style="top:${y}px"><div class="card upnext" data-a style="--d:1250ms"><span class="k">Today &middot; Prep 4 &middot; 5 cards &middot; 28 min</span><p class="t-head">The stress loop</p></div></div>`;
     } else {
-      h += `<div class="node" style="left:${X}px;top:${y}px"><div data-fade style="--d:1400ms"><div class="stamp wait">${DX.badge({ kind: 'prep', n, state: 'next', size: 44, bare: true, label: 'Prep ' + n })}</div></div></div>`;
+      h += `<div class="node" style="left:${X}px;top:${y}px"><div data-fade style="--d:1400ms"><div class="stamp wait">${DX.badge({ kind: 'prep', n: '', state: 'next', size: 42, bare: true })}<span class="n">${n}</span></div></div></div>`;
       h += `<div class="lab" style="top:${y}px"><div data-fade style="--d:1450ms"><span class="k">Prep ${n} &middot; opens ${days[i]}</span><p class="t-foot">${titles[i]}</p></div></div>`;
     }
   });
-  h += `<div class="goal-lab" style="left:${G[0] + 52}px;top:${G[1] - 26}px"><div data-fade style="--d:1900ms"><p class="t-head">Day Xero</p><p class="k">Fri, Nov 6</p></div></div>`;
+  h += `<div class="goal-lab" style="top:${G[1] - 4}px"><div data-fade style="--d:1900ms"><p class="t-head">Day Xero</p><p class="t-cap">Fri, Nov 6</p></div></div>`;
   $('#nodes').innerHTML = h;
-  $('#halos').innerHTML = [[150, 'var(--halo2)'], [110, 'var(--halo1)']].map(([s, c]) => `<div class="halo" style="left:${G[0]}px;top:${G[1]}px;width:${s}px;height:${s}px;background:${c}"></div>`).join('');
-  $('#goal').innerHTML = `<div class="goal" style="left:${G[0]}px;top:${G[1]}px"><div class="coin">${DX.badge({ kind: 'xero', size: 84, bare: true, state: 'next', label: 'Day Xero, waiting' })}</div></div>`;
+  $('#goal').innerHTML = `<div class="goal" style="left:${G[0]}px;top:${G[1]}px"><div class="coin">${DX.badge({ kind: 'xero', size: 76, bare: true, state: 'next', label: 'Day Xero, waiting' })}</div></div>`;
   $('#lock').innerHTML = DX.icon('lock', { w: 2.4 });
   $('.screen').insertAdjacentHTML('beforeend', DX.tabbar('program'));
 </script>
