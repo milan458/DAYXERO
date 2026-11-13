@@ -21,7 +21,8 @@ public extension DX {
     }
 
     enum Size {
-        public static let buttonHeight: CGFloat = 56
+        /// v5: one button height, `DX.Layout.buttonHeight` (58).
+        public static var buttonHeight: CGFloat { DX.Layout.buttonHeight }
         public static let compactButtonHeight: CGFloat = 48
         public static let iconButton: CGFloat = 48
         public static let fab: CGFloat = 52

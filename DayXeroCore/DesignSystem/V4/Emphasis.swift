@@ -8,13 +8,9 @@ public extension DX {
         case underline
         case circle
 
-        /// Coral on light grounds, cream on saturated ones, sun on ocean and violet (the canvas's choices).
+        /// v5: the ground's `--mark` token. Coral on day grounds (#FF8A65 in dark), gold on ocean, night and table.
         public static func color(on ground: DX.Ground) -> Color {
-            switch ground {
-            case .ocean, .violet: Color(light: 0xFFD966, dark: 0xFFD966)
-            case .apricot, .coral, .sun, .periwinkle: Color(light: 0xFFF8EE, dark: 0xFF7A55)
-            default: Color(hex: 0xFF7A55)
-            }
+            ground.resolved.mark
         }
     }
 }

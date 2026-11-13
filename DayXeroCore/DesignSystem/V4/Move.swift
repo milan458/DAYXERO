@@ -17,13 +17,39 @@ public extension DX {
         public static let celebrate = Animation.timingCurve(0.3, 1.4, 0.5, 1, duration: 0.7)
         public static let celebrateFromScale: CGFloat = 0.6
 
-        /// A button under the finger.
-        public static let pressedScale: CGFloat = 0.97
+        // v5 (kit.css "motion"): every move below has a modifier in V4/Motion5.swift.
+        /// Settle rises 48 pt; stagger 120 ms.
+        public static let settleRise: CGFloat = 48
+        public static let settleStagger: Double = 0.12
+        /// Pop: scale from 0.4 and -8°, spring (cubic-bezier .3,1.4,.5,1), 700 ms, 110 ms stagger. Celebrations only.
+        public static let pop = Animation.timingCurve(0.3, 1.4, 0.5, 1, duration: 0.7)
+        public static let popStagger: Double = 0.11
+        /// Stamp: lands from 1.8× and -14°, 620 ms spring, 140 ms stagger. Badges and stamps.
+        public static let stamp: Double = 0.62
+        public static let stampStagger: Double = 0.14
+        /// Ring sweep from empty: 1.4 s settle curve after 250 ms.
+        public static let ring = Animation.timingCurve(0.2, 0.8, 0.2, 1, duration: 1.4).delay(0.25)
+        /// Ambient bob: 6 pt over 5 s.
+        public static let bob: Double = 5
+        public static let bobRise: CGFloat = 6
+        /// "+1" floats up 34 pt and fades over 1.4 s.
+        public static let floatUp: Double = 1.4
+        /// A light sweep across a newly earned item, 1.4 s.
+        public static let shine: Double = 1.4
+        /// A quick 1.18× bump, 520 ms spring.
+        public static let bump: Double = 0.52
+        /// A plain fade, 700 ms.
+        public static let fade = Animation.timingCurve(0.2, 0.7, 0.2, 1, duration: 0.7)
+        /// Draw (lines and ticks), 520 ms.
+        public static let draw = Animation.timingCurve(0.2, 0.7, 0.2, 1, duration: 0.52)
+
+        /// A button under the finger (v5: .98, kit `.btn:active`).
+        public static let pressedScale: CGFloat = 0.98
         /// How fast an option dips under the finger.
         public static let press = Animation.easeOut(duration: 0.12)
 
-        /// Numbers counting up.
-        public static let count = Animation.easeOut(duration: 0.85)
+        /// Numbers counting up: 850 ms, ease-out cubic.
+        public static let count = Animation.timingCurve(0.33, 1, 0.68, 1, duration: 0.85)
 
         /// Breathing: 4 s in, 6 s out.
         public static let inhale: Double = 4
@@ -49,15 +75,25 @@ public extension DX {
         }
     }
 
-    /// v4 layout values (tokens.json → "layout", "characterSizes").
+    /// v5 layout values (kit.css `--gutter --r-card --r-chip`, `.opt .field .tabbar .sheet`).
     enum Layout {
-        public static let gutter: CGFloat = 20
+        public static let gutter: CGFloat = 22
         public static let buttonGutter: CGFloat = 22
         public static let touchTarget: CGFloat = 44
+        /// The one button height (58; Metrics' 56 is gone).
         public static let buttonHeight: CGFloat = 58
-        public static let cardRadius: CGFloat = 24
+        public static let smallButtonHeight: CGFloat = 44
+        public static let cardRadius: CGFloat = 22
+        /// Option rows.
         public static let smallCardRadius: CGFloat = 18
+        public static let optionRadius: CGFloat = 18
+        public static let fieldRadius: CGFloat = 16
         public static let answerChipRadius: CGFloat = 14
+        public static let chipRadius: CGFloat = 14
+        public static let tabBarRadius: CGFloat = 28
+        public static let sheetRadius: CGFloat = 30
+        /// The bottom fade over tab content: 150 pt, ground at 0, 85% at 30%, solid from 40%.
+        public static let tabFadeHeight: CGFloat = 150
     }
 
     /// The four character sizes; at most two illustrations on a screen.

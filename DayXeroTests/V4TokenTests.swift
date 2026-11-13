@@ -34,7 +34,7 @@ struct V4TokenTests {
             ("green on the cream reading ground", light, DX.Ground.reading.spec.light),
             ("green on a white card", light, 0xFFFFFF),
             ("green on the night reading ground", dark, DX.Ground.reading.spec.dark),
-            ("green on a night card", dark, 0x2A255F),
+            ("green on a night card", dark, 0x182034),
         ]
         for (name, a, b) in text { #expect(Contrast.ratio(a, b) >= 4.5, "\(name): \(Contrast.ratio(a, b))") }
         let marks: [(String, UInt32, UInt32)] = [
@@ -48,48 +48,64 @@ struct V4TokenTests {
         #expect(abs(Contrast.ratio(0xFFF8EE, light) - 5.98) < 0.01)
     }
 
-    /// Mixes `top` at `alpha` over `ground`, channel by channel.
-    private func over(_ top: UInt32, _ alpha: Double, _ ground: UInt32) -> UInt32 {
-        [16, 8, 0].reduce(0) { sum, shift in
-            let g = Double((ground >> shift) & 0xFF), t = Double((top >> shift) & 0xFF)
-            return sum | (UInt32((g * (1 - alpha) + t * alpha).rounded()) << shift)
+    /// v5: the done green (#1F9D63) is for discs and ticks only: a white tick on it, and the disc on every ground,
+    /// clear 3:1.
+    @Test func theDoneGreenClearsNonTextContrast() {
+        let done = DX.Fill.doneHex
+        #expect(done == 0x1F9D63)
+        #expect(Contrast.ratio(0xFFFFFF, done) >= 3)
+        // Ocean light (#1F3C8C) is 2.9:1: the kit sets the tick there on its card, not the ground.
+        for ground in [DX.Ground.reading, .violet] {
+            #expect(Contrast.ratio(done, ground.spec.light) >= 3, "\(ground) light")
+        }
+        for ground in DX.Ground.allCases {
+            #expect(Contrast.ratio(done, ground.spec.dark) >= 3, "\(ground) dark")
         }
     }
 
-    /// Decision 25: on cream-ink grounds, light-mode tiles are navy over the ground (44% since S27.13).
-    @Test func tilesOnCreamInkGroundsClearContrast() {
-        for ground in DX.Ground.allCases where ground.spec.inkLight == 0xFFF8EE {
-            let tile = over(0x1E1A3A, DX.Fill.cardNavyAlpha, ground.spec.light)
-            #expect(Contrast.ratio(tile, ground.spec.inkLight) >= 4.5, "\(ground) ink")
-            #expect(Contrast.ratio(tile, ground.spec.mutedLight) >= 4.5, "\(ground) muted")
-        }
+    /// Composites an RGBA token over a solid ground.
+    private func over(_ token: DX.Ground.Tokens.RGBA, _ ground: UInt32) -> UInt32 {
+        DX.Ground.mix(token.hex, token.alpha, over: ground)
     }
 
-    /// S27.13: a card on colour separates from its ground by at least 1.3:1 in both modes, and its text stays
-    /// above 4.5:1. The cream reading ground in light is the exception: no fill can reach 1.3:1 there, so its
-    /// cards carry `DX.Fill.hairline`.
+    /// v5: words on every ground's card clear 4.5:1, in both modes, and the card separates from its ground: by
+    /// 1.15:1 (the kit's tonal cards) or, where no fill can, with the hairline.
     @Test func cardsSeparateFromTheirGround() {
         for ground in DX.Ground.allCases {
             let s = ground.spec
-            let light = s.inkLight == 0xFFF8EE
-                ? over(0x1E1A3A, DX.Fill.cardNavyAlpha, s.light)
-                : over(0xFFFFFF, DX.Fill.cardLightAlpha, s.light)
-            let dark = over(0xFFFFFF, DX.Fill.cardDarkAlpha, s.dark)
-            if ground != .reading {
-                #expect(Contrast.ratio(light, s.light) >= 1.3, "\(ground) light: \(Contrast.ratio(light, s.light))")
+            for dark in [false, true] {
+                let t = ground.tokens(dark: dark)
+                let bg = dark ? s.dark : s.light
+                let card = over(t.card, bg)
+                let ink = dark ? s.inkDark : s.inkLight, muted = dark ? s.mutedDark : s.mutedLight
+                #expect(t.hairline || Contrast.ratio(card, bg) >= 1.15, "\(ground) dark \(dark): \(Contrast.ratio(card, bg))")
+                #expect(Contrast.ratio(card, ink) >= 4.5, "\(ground) dark \(dark) ink on card")
+                #expect(Contrast.ratio(card, muted) >= 4.5, "\(ground) dark \(dark) muted on card")
+                #expect(Contrast.ratio(t.btn, t.btnFg) >= 4.5, "\(ground) dark \(dark) button")
+                #expect(Contrast.ratio(over(t.selTint, card), ink) >= 4.5, "\(ground) dark \(dark) ink on selection")
             }
-            #expect(Contrast.ratio(dark, s.dark) >= 1.3, "\(ground) dark: \(Contrast.ratio(dark, s.dark))")
-            #expect(Contrast.ratio(light, s.inkLight) >= 4.5, "\(ground) ink on the light card")
-            #expect(Contrast.ratio(light, s.mutedLight) >= 4.5, "\(ground) muted on the light card")
-            #expect(Contrast.ratio(dark, s.inkDark) >= 4.5, "\(ground) ink on the dark card")
-            #expect(Contrast.ratio(dark, s.mutedDark) >= 4.5, "\(ground) muted on the dark card")
         }
     }
 
-    /// S27.13: six grounds plus sun; the retired ones draw their survivor's colours.
-    @Test func sixGroundsPlusSunAndRetiredOnesResolve() {
-        #expect(DX.Ground.allCases == [.apricot, .mint, .ocean, .sky, .violet, .reading, .sun])
-        let retired: [(DX.Ground, DX.Ground)] = [(.coral, .apricot), (.lilac, .sky), (.mist, .sky), (.periwinkle, .sky), (.lime, .mint)]
+    /// v5 selection: a warm tint and a coral edge in light, an apricot edge on the dark navy, cream on ocean and night.
+    @Test func selectionTokensFollowTheKit() {
+        #expect(DX.Ground.reading.tokens(dark: false).selEdge == 0xF26A45)
+        #expect(DX.Ground.reading.tokens(dark: false).selTint.hex == DX.Ground.mix(0xFFB27A, 0.2, over: 0xFFFFFF))
+        #expect(DX.Ground.apricot.tokens(dark: true).selEdge == 0xFFB27A)
+        #expect(DX.Ground.apricot.tokens(dark: true).selTint.hex == DX.Ground.mix(0xFFC89A, 0.15, over: 0x182034))
+        for dark in [false, true] {
+            #expect(DX.Ground.ocean.tokens(dark: dark).selEdge == 0xFFF8EE)
+            #expect(DX.Ground.violet.tokens(dark: dark).selEdge == DX.Ground.violet.tokens(dark: dark).sel)
+        }
+    }
+
+    /// v5: seven grounds in use; dark mode is one navy except ocean and night; the retired ones draw their survivor.
+    @Test func groundsInUseAndRetiredOnesResolve() {
+        #expect(DX.Ground.allCases == [.apricot, .mint, .ocean, .violet, .reading, .table, .sun])
+        for ground in [DX.Ground.apricot, .mint, .reading, .table, .sun] { #expect(ground.spec.dark == 0x0E1322) }
+        #expect(DX.Ground.violet.spec.light == 0x0F1B33 && DX.Ground.ocean.spec.light == 0x1F3C8C)
+        let retired: [(DX.Ground, DX.Ground)] = [(.coral, .apricot), (.sky, .reading), (.lilac, .reading), (.mist, .reading),
+                                                 (.periwinkle, .reading), (.lime, .mint)]
         for (old, survivor) in retired {
             #expect(old.resolved == survivor)
             #expect(old.spec.light == survivor.spec.light && old.spec.dark == survivor.spec.dark)
@@ -106,7 +122,7 @@ struct V4TokenTests {
         for (name, bg) in [("reading", reading.light), ("surface", 0xF1EBE2), ("raised", 0xFFFFFF)] as [(String, UInt32)] {
             #expect(Contrast.ratio(red.light, bg) >= 4.5, "light on \(name): \(Contrast.ratio(red.light, bg))")
         }
-        for (name, bg) in [("reading", reading.dark), ("surface", 0x1B1747), ("raised", 0x2A255F)] as [(String, UInt32)] {
+        for (name, bg) in [("reading", reading.dark), ("surface", 0x212A41), ("raised", 0x182034)] as [(String, UInt32)] {
             #expect(Contrast.ratio(red.dark, bg) >= 4.5, "dark on \(name): \(Contrast.ratio(red.dark, bg))")
         }
         for kind in [DX.ButtonKind.quiet, .secondary] {
@@ -134,10 +150,17 @@ struct V4TokenTests {
         }
     }
 
-    @Test func sevenTypeSizesWithA12PointFloor() {
+    @Test func sevenTypeSizesWithA13PointFloor() {
         #expect(DX.TypeStep.allCases.count == 7)
-        #expect(Set(DX.TypeStep.allCases.map(\.size)).count == 7)
-        #expect(DX.TypeStep.allCases.allSatisfy { $0.size >= 12 })
+        #expect(DX.TypeStep.allCases.map(\.size) == [40, 32, 24, 19, 16, 15, 13])
+        #expect(DX.TypeStep.allCases.allSatisfy { $0.size >= 13 })
+    }
+
+    @Test func v5LayoutAndMotion() {
+        #expect(DX.Layout.gutter == 22 && DX.Layout.cardRadius == 22 && DX.Layout.optionRadius == 18)
+        #expect(DX.Layout.fieldRadius == 16 && DX.Layout.chipRadius == 14 && DX.Layout.tabBarRadius == 28 && DX.Layout.sheetRadius == 30)
+        #expect(DX.Size.buttonHeight == 58 && DX.Layout.buttonHeight == 58)
+        #expect(DX.Move.stamp == 0.62 && DX.Move.floatUp == 1.4 && DX.Move.shine == 1.4 && DX.Move.bob == 5)
     }
 
     @MainActor @Test func variableFacesRegisterAndResolve() {

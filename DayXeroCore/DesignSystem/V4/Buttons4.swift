@@ -49,22 +49,12 @@ public extension DX {
             let ground = ground.resolved
             let s = ground.spec
             switch (kind, dark) {
-            case (.primary, false):
-                switch ground {
-                case .ocean, .violet: return ButtonColors(background: 0xFFF8EE, foreground: s.light, fill: 0xE3EAFF, lip: true)
-                case .reading: return ButtonColors(background: 0x1E1A3A, foreground: 0xFFF8EE, fill: 0x3A3460, lip: false)
-                default: return ButtonColors(background: 0x1E1A3A, foreground: 0xFFF8EE, fill: 0x3A3460, lip: true)
-                }
-            case (.primary, true):
-                switch ground {
-                // Warm grounds go plum in dark; the button keeps the ground's own hue.
-                case .apricot, .coral, .sun: return ButtonColors(background: s.light, foreground: s.dark, fill: 0xFFD9B0, lip: false)
-                default: return ButtonColors(background: 0xFFF8EE, foreground: s.dark, fill: 0xE3DCF5, lip: false)
-                }
+            case (.primary, _):
+                // v5: one button. `--btn` on `--btn-fg` from the ground's tokens (ink on light grounds, cream on dark,
+                // cream on ocean, parchment on night); the fill is the label colour at 22% (kit `.btn .fill`).
+                let t = ground.tokens(dark: dark)
+                return ButtonColors(background: t.btn, foreground: t.btnFg, fill: DX.Ground.mix(t.btnFg, 0.22, over: t.btn), lip: false)
             case (.secondary, _):
-                if ground == .ocean {
-                    return ButtonColors(background: dark ? 0x1B2C66 : 0x1D3A9E, foreground: 0xFFF8EE, fill: 0x2A52DB, lip: false)
-                }
                 return ButtonColors(background: nil, foreground: dark ? s.inkDark : s.inkLight, fill: 0, lip: false)
             case (.quiet, _):
                 return ButtonColors(background: nil, foreground: dark ? s.inkDark : s.inkLight, fill: 0, lip: false)

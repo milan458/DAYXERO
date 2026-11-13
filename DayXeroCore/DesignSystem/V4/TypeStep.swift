@@ -2,7 +2,8 @@ import CoreText
 import SwiftUI
 import UIKit
 
-/// v4 type: seven sizes, 12 pt minimum (tokens.json → "type").
+/// v5 type: seven steps (40/32/24/19/16/15/13), 13 pt minimum (kit.css "type: seven steps").
+/// Was v4 type: seven sizes, 12 pt minimum (tokens.json → "type").
 /// Bricolage Grotesque (one variable file) for display, DM Sans (variable) for body.
 public extension DX {
     enum TypeStep: String, CaseIterable, Sendable {
@@ -25,15 +26,16 @@ public extension DX {
             case .title: 24
             case .headline: 19
             case .body: 16
-            case .footnote: 14
-            case .caption: 12
+            case .footnote: 15
+            case .caption: 13
             }
         }
 
         public var weight: CGFloat {
             switch self {
             case .display, .large, .title: 800
-            case .headline, .caption: 700
+            case .headline: 700
+            case .caption: 600
             case .footnote: 500
             case .body: 400
             }
@@ -45,7 +47,8 @@ public extension DX {
             case .display: -1.2
             case .large: -1.0
             case .title: -0.6
-            case .caption: 0.8
+            case .headline: -0.2
+            case .caption: 0.1
             default: 0
             }
         }
@@ -53,10 +56,15 @@ public extension DX {
         /// Extra line spacing in points (line height minus font size).
         public var lineSpacing: CGFloat {
             switch self {
-            case .display: size * 0.02
-            case .large: size * 0.08
-            case .body: size * 0.5
-            default: 0
+            // kit line heights: 1.02, 1.06, 1.12, 1.22, 1.5, 1.42, 1.3, less the face's own ~1.2 leading for
+            // display steps (Bricolage) and ~1.3 for body steps (DM Sans).
+            case .display: 0
+            case .large: 0
+            case .title: 0
+            case .headline: size * 0.02
+            case .body: size * 0.2
+            case .footnote: size * 0.12
+            case .caption: 0
             }
         }
 
