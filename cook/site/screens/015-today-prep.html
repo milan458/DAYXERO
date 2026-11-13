@@ -5,27 +5,27 @@
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   .tabbar a { color: color-mix(in srgb, var(--fg) 72%, transparent); }
-  .tabfade { height: 124px; }
-  .hero { position: absolute; left: 0; right: 0; top: 0; height: 318px; border-radius: 0 0 36px 36px; overflow: hidden; }
+  .tabfade { height: 118px; }
+  .hero { position: absolute; left: 0; right: 0; top: 0; height: 306px; border-radius: 0 0 36px 36px; overflow: hidden; }
   .hero .scene { position: absolute; inset: 0; }
   /* one soft cream disc behind Xero: no outer ring, so it never reads as a target */
-  .ringwrap { position: absolute; left: 50%; top: 64px; width: 196px; height: 196px; margin-left: -98px; }
+  .ringwrap { position: absolute; left: 50%; top: 58px; width: 190px; height: 190px; margin-left: -95px; }
   .ringwrap .disc { position: absolute; inset: 0; border-radius: 50%; background: rgba(255,248,238,.72); box-shadow: 0 0 34px rgba(255,248,238,.4); }
   [data-theme="dark"] .ringwrap .disc { background: rgba(255,248,238,.1); box-shadow: 0 0 40px rgba(255,195,138,.10); }
-  .ringwrap .ch { position: absolute; left: 0; right: 0; top: 26px; display: grid; place-items: center; }
-  .pill { position: absolute; left: 0; right: 0; top: 268px; display: flex; justify-content: center; }
+  .ringwrap .ch { position: absolute; left: 0; right: 0; top: 22px; display: grid; place-items: center; }
+  .pill { position: absolute; left: 0; right: 0; top: 256px; display: flex; justify-content: center; }
   .pill span { background: var(--card); color: var(--fg); border-radius: 99px; padding: 10px 16px; font: 600 14px/1 var(--body); box-shadow: 0 6px 16px rgba(30,26,58,.12); }
 
-  .content { position: absolute; left: 0; right: 0; top: 340px; padding: 0 var(--gutter); }
+  .content { position: absolute; left: 0; right: 0; top: 328px; padding: 0 var(--gutter); }
   .content .sub { margin-top: 6px; color: var(--muted); }
-  .sess { margin-top: 22px; display: flex; align-items: center; gap: 14px; }
+  .sess { margin-top: 18px; display: flex; align-items: center; gap: 14px; padding: 16px 16px 16px 20px; }
   .sess .grow { flex: 1; min-width: 0; }
   .sess .t-foot { color: var(--muted); }
   .sess .btn.small { width: auto; padding: 0 18px 0 14px; flex: none; }
   .sess .btn svg { width: 16px; height: 16px; }
 
   /* the one meter: the prep week as stamps, one colour code (apricot and coral) in both modes */
-  .stamps { margin-top: 12px; padding: 16px 14px 14px; }
+  .stamps { margin-top: 10px; padding: 16px 14px 14px; }
   .stamps .head { display: flex; justify-content: space-between; align-items: baseline; padding: 0 2px; }
   .stamps .head .t-foot { color: var(--muted); }
   .stamps .row8 { display: flex; justify-content: space-between; align-items: flex-start; margin-top: 14px; }
@@ -48,7 +48,7 @@
   .slot.goal .t-cap { font-weight: 700; }
 
   /* the next section peeks above the tab bar: one quiet list, like Today after Quit Day */
-  .grp { font: 700 19px/1.2 var(--display); letter-spacing: -.2px; margin: 26px 0 10px 2px; }
+  .grp { font: 700 19px/1.2 var(--display); letter-spacing: -.2px; margin: 22px 0 10px 2px; }
   .later-list { border-radius: 22px; background: color-mix(in srgb, var(--card) 60%, transparent); box-shadow: inset 0 0 0 1px var(--line); overflow: hidden; }
   .lrow { display: flex; align-items: center; gap: 14px; min-height: 62px; padding: 10px 14px 10px 16px; }
   .lrow .grow { flex: 1; min-width: 0; }
@@ -73,7 +73,6 @@
     <p class="t-body sub" data-a style="--i:3">Today is about stress, and a breath that works.</p>
 
     <div class="card sess" data-a style="--i:4">
-      <span class="ico-tile" id="ic-sess"></span>
       <div class="grow">
         <p class="t-foot">Prep 4 &middot; 5 cards &middot; 28 min</p>
         <p class="t-head">The stress loop</p>
@@ -97,7 +96,6 @@
   const $ = s => document.querySelector(s);
   $('#scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 390, h: 330, clarity: 85 });
   $('#xero').innerHTML = DX.char('xero', { mood: 'hello', size: 140, stage: 1 });
-  $('#ic-sess').innerHTML = DX.icon('headphones');
   $('#start').innerHTML = DX.icon('play', { fill: 'currentColor', w: 1.5 }) + 'Start';
   let h = '';
   const face = (svg, n) => `<div class="face">${svg}<span class="num">${n}</span></div>`;
