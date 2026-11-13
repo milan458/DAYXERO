@@ -12,7 +12,7 @@
 [data-theme="dark"] .ico-tile.apr { background: rgba(255,195,138,.16); color: #FFC38A; }
 
 .dial { position: relative; width: 228px; height: 228px; margin: 40px auto 0; }
-.dial .rot { position: absolute; inset: 0; transform: rotate(300deg); }
+.dial .rot { position: absolute; inset: 0; transform: rotate(330deg); }
 .dial .ctr { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; gap: 2px; justify-items: center; }
 .dial .ctr .num { font-size: 48px; line-height: 1; }
 .hr { position: absolute; color: var(--fg); opacity: .78; transform: translate(-50%, -50%); white-space: nowrap; font: 700 14px/1 var(--body); }
@@ -63,7 +63,7 @@
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
 const dark = DX.theme === 'dark';
-/* 10 PM to 8 AM: the arc starts at 10 PM (300deg round from 12 AM at the top) and runs 10 of 24 hours. */
+/* 10 PM to 8 AM: the arc starts at 10 PM (330deg round from 12 AM at the top, 15deg an hour) and runs 10 of 24 hours. */
 document.getElementById('ring').innerHTML = DX.ring({ size: 228, stroke: 16, p: 10 / 24, color: 'var(--fg)', track: 'var(--track)', dot: false });
 document.getElementById('ticks').innerHTML = Array.from({ length: 24 }, (_, i) => { const a = i * Math.PI / 12, big = i % 6 === 0, r = 80; return `<circle cx="${(114 + r * Math.sin(a)).toFixed(1)}" cy="${(114 - r * Math.cos(a)).toFixed(1)}" r="${big ? 2.4 : 1.4}" fill="currentColor" opacity="${big ? .7 : .45}"/>`; }).join('');
 document.getElementById('mound').innerHTML = `<svg width="76" height="20" viewBox="0 0 76 20" aria-hidden="true"><path d="M2 20 C10 6 26 2 38 2 C50 2 66 6 74 20Z" fill="${dark ? '#2C3A5E' : '#E4D9C8'}"/></svg>`;
