@@ -23,24 +23,28 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 .sub .t-body { flex: 1; color: var(--muted); }
 .fc { transition: background .4s var(--ease); }
 
+.list > .row { min-height: 66px; padding-top: 12px; padding-bottom: 12px; }
+.sec { padding: 24px 4px 10px; font-size: 14px; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
 <div class="nav"><button class="icon-btn" aria-label="Back" data-ic="back"></button></div>
 <div class="scroll"><div class="pad">
   <div class="hd"><h1 class="t-large" data-a style="--i:0">Reminders</h1><p class="t-foot muted" data-a style="--i:1">Gentle nudges, never more than three a day.</p></div>
-  <p class="t-foot sec" data-a style="--i:2">Your day</p>
+  <p class="t-foot muted sec" data-a style="--i:2">Every day</p>
   <div class="list" data-a style="--i:3">
-    <div class="row " ><span class="ico-tile s" data-ic="sun"></span><div class="grow"><div class="t-body rt">Morning pledge</div><div class="t-foot muted">Skipped once you pledge</div></div><span class="toggle on"></span></div>
-    <div class="row sub"><span class="t-body">Pledge at</span><span class="pill">8:00 AM</span></div>
-    <div class="row " ><span class="ico-tile s" data-ic="moon"></span><div class="grow"><div class="t-body rt">Evening check-in</div><div class="t-foot muted">Skipped once you check in</div></div><span class="toggle on"></span></div>
-    <div class="row sub"><span class="t-body">Check in at</span><span class="pill">9:00 PM</span></div>
-    <div class="row " ><span class="ico-tile s" data-ic="note"></span><div class="grow"><div class="t-body rt">Daily lesson</div><div class="t-foot muted">Off. Find it on Today</div></div><span class="toggle"></span></div>
-    <div class="row fc" ><span class="ico-tile s" data-ic="wave"></span><div class="grow"><div class="t-body rt">Craving forecast</div><div class="t-foot muted">Before coffee and stress</div></div><span class="toggle" id="fc"></span></div>
+    <div class="row"><span class="ico-tile s" data-ic="sun"></span><div class="grow"><div class="t-body rt">Morning pledge</div><div class="t-foot muted">Daily at 8:00 AM</div></div><span class="toggle on"></span></div>
+    <div class="row"><span class="ico-tile s" data-ic="moon"></span><div class="grow"><div class="t-body rt">Evening check-in</div><div class="t-foot muted">Daily at 9:00 PM</div></div><span class="toggle on"></span></div>
+    <div class="row"><span class="ico-tile s" data-ic="note"></span><div class="grow"><div class="t-body rt">Daily lesson</div><div class="t-foot muted">Off. Find it on Today</div></div><span class="toggle"></span></div>
   </div>
-  <p class="t-foot muted" data-a style="--i:4;padding:10px 4px 0">3 of 3 on. Turn one off to add another.</p>
-  <div class="list" data-a style="--i:5;margin-top:16px">
-    <div class="row " ><span class="ico-tile s" data-ic="moon"></span><div class="grow"><div class="t-body rt">Quiet hours</div><div class="t-foot muted">10:00 PM to 7:00 AM</div></div><span class="chev" data-ic="chev" data-s="18"></span></div>
+  <p class="t-foot muted sec" data-a style="--i:4">Before a craving</p>
+  <div class="list" data-a style="--i:5">
+    <div class="row fc"><span class="ico-tile s" data-ic="wave"></span><div class="grow"><div class="t-body rt">Craving forecast</div><div class="t-foot muted">Before coffee and stress</div></div><span class="toggle" id="fc"></span></div>
+  </div>
+  <p class="t-foot muted" data-a style="--i:6;padding:12px 4px 0">3 of 3 on. Turn one off to add another.</p>
+  <p class="t-foot muted sec" data-a style="--i:7">Do not disturb</p>
+  <div class="list" data-a style="--i:8">
+    <div class="row"><span class="ico-tile s" data-ic="clock"></span><div class="grow"><div class="t-body rt">Quiet hours</div><div class="t-foot muted">10:00 PM to 7:00 AM</div></div><span class="chev" data-ic="chev" data-s="18"></span></div>
   </div>
 </div></div>
 </div>

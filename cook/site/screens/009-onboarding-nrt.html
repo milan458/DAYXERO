@@ -10,15 +10,16 @@
   .what { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows 420ms var(--settle), opacity 300ms var(--ease); }
   .what > div { overflow: hidden; }
   .what.open { grid-template-rows: 1fr; opacity: 1; }
-  .q .source { font: 600 13px/1.3 var(--body); color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+  .q .source { font: 600 14px/1.3 var(--body); color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
   .og { border-radius: 18px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); transition: box-shadow .25s var(--ease); }
   .og .opt { background: transparent; box-shadow: none !important; }
   .og:has(.opt.on) { box-shadow: inset 0 0 0 2px var(--sel); }
   .opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
   .what .inner { padding: 0 16px 16px; }
+  .q .source svg { width: 16px; height: 16px; }
   .what .inner .rule { height: 1px; background: var(--line); margin: 0 0 12px; }
   .what .lbl { font: 700 14px/1.3 var(--body); color: var(--fg); margin: 0 0 10px; }
-  .og .chip:not(.on) { background: var(--card-2); box-shadow: none; }
+  .og .chip:not(.on) { background: transparent; box-shadow: inset 0 0 0 1px var(--line); }
   .answers { gap: 12px !important; }
   .opt { min-height: 72px; }
   .nrt2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -39,10 +40,8 @@
   </div>
   <div class="answers">
     <div class="og" data-a style="--i:3">
-    <button class="opt" id="o1"><div class="grow"><p class="t-head">Yes, I'm already using it</p><p class="t-foot">Tell me what you use</p></div><span class="radio"></span></button>
+    <button class="opt" id="o1"><div class="grow"><p class="t-head">Yes, I'm already using it</p><p class="t-foot">Pick all you use</p></div><span class="radio"></span></button>
     <div class="what" id="what"><div><div class="inner">
-      <div class="rule"></div>
-      <p class="lbl">Pick all you use</p>
       <div class="chips nrt2"><button class="chip" id="c1">Patch</button><button class="chip" id="c2">Gum</button><button class="chip">Lozenge</button><button class="chip">Spray or inhaler</button></div>
     </div></div></div>
     </div>

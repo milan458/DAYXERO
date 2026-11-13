@@ -28,6 +28,16 @@
   .item.ahead .ill { filter: saturate(.7); }
   .chev { margin-left: 2px; display: grid; }
   .chev svg { width: 18px; height: 18px; }
+  .item.past { background: transparent; padding-block: 10px; }
+  .item.past .ill { width: 48px; height: 48px; border-radius: 14px; }
+  .item.past .ill svg { width: 48px; height: 48px; }
+  .item.past .t-head { font-size: 15.5px; font-weight: 600; }
+  .item.now { padding: 18px 16px 18px 14px; box-shadow: inset 0 0 0 2px var(--fg), 0 10px 24px rgba(30,26,58,.08); }
+  .item.now .ill { width: 76px; height: 76px; border-radius: 20px; }
+  .item.now .ill svg { width: 76px; height: 76px; }
+  .item.now .t-head { font-size: 19px; }
+  .item.now .progress { height: 10px; margin-top: 4px; border-radius: 99px; }
+  .item.now .progress > i { border-radius: 99px; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -41,22 +51,22 @@
       <div class="tl">
         <div class="rail"><svg viewBox="0 0 2 100" preserveAspectRatio="none"><path class="draw" d="M1 0V100" stroke="var(--line)" stroke-width="2" vector-effect="non-scaling-stroke" style="--len:100;--dur:900ms;--d:300ms"/></svg></div>
 
-        <div class="card item" data-a style="--i:3">
+        <div class="card item past" data-a style="--i:3">
           <span class="node done" data-ic="check"></span>
           <span class="ill" data-spot="rise"></span>
           <div class="grow"><p class="t-head">Withdrawal can start</p><span class="st done"><span data-ic="check"></span>Done · a few hours in</span></div>
         </div>
-        <div class="card item" data-a style="--i:4">
+        <div class="card item past" data-a style="--i:4">
           <span class="node done" data-ic="check"></span>
           <span class="ill" data-spot="cloud"></span>
           <div class="grow"><p class="t-head">Most nicotine has left your body</p><span class="st done"><span data-ic="check"></span>Done · a few days in</span></div>
         </div>
-        <div class="card item" data-a style="--i:5">
+        <div class="card item past" data-a style="--i:5">
           <span class="node done" data-ic="check"></span>
           <span class="ill" data-spot="peak"></span>
           <div class="grow"><p class="t-head">Withdrawal is at its strongest</p><span class="st done"><span data-ic="check"></span>Done · the first week</span></div>
         </div>
-        <div class="card item" data-a style="--i:6">
+        <div class="card item now" data-a style="--i:6">
           <span class="node now"></span>
           <span class="ill" data-spot="sunny"></span>
           <div class="grow"><p class="t-head">Mood swings from withdrawal ease</p><span class="st">Under way · 1 to 2 weeks</span><div class="progress"><i style="--p:50%" id="bar"></i></div></div>

@@ -30,29 +30,37 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 .sum .num { font-size: 30px; line-height: 1.05; }
 .kept065 { margin-top: 10px; display: flex; align-items: center; gap: 12px; padding: 4px 16px 4px 8px; }
 
+.grp { background: var(--card); border-radius: var(--r-card); box-shadow: inset 0 0 0 1px var(--line); overflow: hidden; }
+.grp .opt { border-radius: 0; background: transparent; box-shadow: none; min-height: 68px; }
+.grp .opt + .opt { border-top: 1px solid var(--line); }
+html .screen .grp .opt.on { box-shadow: none; }
+.sec { padding: 24px 4px 10px; font-size: 14px; }
+.list > .row { min-height: 62px; }
+.tot { display: grid; gap: 4px; padding: 22px 4px 0; }
+.tot .t-head { font-variant-numeric: tabular-nums; }
+.hd + .sec { padding-top: 18px; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
 <div class="nav"><button class="icon-btn" aria-label="Back" data-ic="back"></button></div>
 <div class="scroll"><div class="pad">
-  <div class="hd"><h1 class="t-large" data-a style="--i:0">What you use</h1><p class="t-foot muted" data-a style="--i:1">Pick everything you use. Your usual day sets money kept and your counters.</p></div>
-  <div class="opts">
-    <div data-a style="--i:2"><button class="opt on"><span class="ico-tile" data-ic="cig"></span><div class="grow"><div class="t-head">Cigarettes</div><div class="t-foot">12 a day</div></div><span class="radio"></span></button></div>
-    <div data-a style="--i:3"><button class="opt on"><span class="ico-tile" data-ic="vape"></span><div class="grow"><div class="t-head">Vape</div><div class="t-foot">200 puffs a day</div></div><span class="radio"></span></button></div>
-    <div data-a style="--i:4"><button class="opt"><span class="ico-tile" data-ic="pouch"></span><div class="grow"><div class="t-head">Nicotine pouches</div><div class="t-foot">Not used</div></div><span class="radio"></span></button></div>
+  <div class="hd"><h1 class="t-large" data-a style="--i:0">What you use</h1><p class="t-foot muted" data-a style="--i:1">This sets money kept and your counters.</p></div>
+  <p class="t-foot muted sec" data-a style="--i:2">You use</p>
+  <div class="grp" data-a style="--i:2">
+    <button class="opt on"><span class="ico-tile" data-ic="cig"></span><div class="grow"><div class="t-head">Cigarettes</div><div class="t-foot">12 a day</div></div><span class="radio"></span></button>
+    <button class="opt on"><span class="ico-tile" data-ic="vape"></span><div class="grow"><div class="t-head">Vape</div><div class="t-foot">200 puffs a day</div></div><span class="radio"></span></button>
+    <button class="opt"><span class="ico-tile" data-ic="pouch"></span><div class="grow"><div class="t-head">Nicotine pouches</div><div class="t-foot">Not used</div></div><span class="radio"></span></button>
   </div>
-  <p class="t-foot sec" data-a style="--i:5">Your usual day</p>
+  <p class="t-foot muted sec" data-a style="--i:5">Your usual day</p>
   <div class="list" data-a style="--i:6">
     <div class="row " ><div class="grow"><div class="t-body rt">Cigarettes a day</div></div><div class="step"><button aria-label="Less" data-ic="minus" data-s="16" data-w="2.6"></button><span class="num">12</span><button aria-label="More" data-ic="plus" data-s="16" data-w="2.6"></button></div></div>
     <div class="row " ><div class="grow"><div class="t-body rt">Pack of 20</div></div><div class="step"><button aria-label="Less" data-ic="minus" data-s="16" data-w="2.6"></button><span class="num">$8.00</span><button aria-label="More" data-ic="plus" data-s="16" data-w="2.6"></button></div></div>
     <div class="row " ><div class="grow"><div class="t-body rt">Vape spend a day</div></div><div class="step"><button aria-label="Less" data-ic="minus" data-s="16" data-w="2.6"></button><span class="num">$2.20</span><button aria-label="More" data-ic="plus" data-s="16" data-w="2.6"></button></div></div>
   </div>
-  <div class="sum" data-a style="--i:7"><div class="card flat"><span class="num" data-count="7" data-prefix="$">$7</span><span class="t-foot muted">a day</span></div><div class="card flat"><span class="num" data-count="2555" data-prefix="$">$2,555</span><span class="t-foot muted">a year</span></div></div>
-  <div class="card kept065" data-a style="--i:8"><span id="xr065"></span><p class="t-body" style="flex:1"><b>$49.00</b> kept since your Quit Day.</p></div>
+  <div class="tot" data-a style="--i:7"><span class="t-foot muted">That comes to</span><span class="t-head"><span data-count="7" data-prefix="$">$7</span> a day, <span data-count="2555" data-prefix="$">$2,555</span> a year</span></div>
 </div></div>
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
-document.getElementById('xr065').innerHTML = DX.char('xero', { mood: 'cheer', size: 64 });
 </script>
 </body></html>

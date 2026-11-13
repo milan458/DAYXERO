@@ -22,9 +22,12 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 .lead { display: flex; gap: 12px; align-items: center; padding: 10px 16px 10px 8px; margin-top: 18px; }
 .lead .grow { flex: 1; }
 .list .row.tall { align-items: flex-start; padding-top: 14px; padding-bottom: 14px; }
-.del { margin-top: 12px; padding: 18px; display: grid; gap: 10px; background: color-mix(in srgb, var(--coral) 13%, var(--card)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--coral) 35%, transparent); }
+.card.flat.del { margin-top: 16px; padding: 20px; display: grid; gap: 10px; background: #FFE9E1; box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--coral) 55%, transparent); }
+[data-theme="dark"] .card.flat.del { background: color-mix(in srgb, var(--coral) 16%, var(--card)); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--coral) 45%, transparent); }
+.del .t-foot { color: var(--fg); opacity: .78; }
 .del .t-head { color: var(--danger-fg); }
-.btn.danger { background: transparent; color: var(--danger-fg); box-shadow: inset 0 0 0 2px var(--danger-fg); }
+.btn.danger { background: var(--danger-fg); color: #FFF8EE; box-shadow: none; }
+[data-theme="dark"] .btn.danger { color: #2A1410; }
 .btn.danger svg { width: 18px; height: 18px; }
 .screen { --danger-fg: #B53A22; }
 [data-theme="dark"] .screen { --danger-fg: #FF9A7A; }
@@ -43,7 +46,7 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
   </div>
   <div class="card flat del" data-a style="--i:4">
     <div class="t-head">Delete all my data</div>
-    <p class="t-foot muted">This erases your plan, days, badges and notes from this phone. It cannot be undone, and we cannot recover it.</p>
+    <p class="t-foot">Erases your plan, days, badges and notes from this phone. This cannot be undone.</p>
     <button class="btn small danger" style="margin-top:4px">Delete everything</button>
   </div>
 </div></div>

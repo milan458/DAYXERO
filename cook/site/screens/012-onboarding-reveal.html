@@ -5,9 +5,9 @@
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   .q { padding-top: 112px; gap: 8px; }
-  .wrap { padding: 8px var(--gutter) 0; display: grid; gap: 12px; }
-  .hero { position: relative; height: 146px; margin-top: 4px; display: grid; place-items: center; }
-  .hero .disc { position: absolute; width: 146px; height: 146px; border-radius: 99px; background: color-mix(in srgb, #fff 34%, transparent); }
+  .wrap { padding: 22px var(--gutter) 0; display: grid; gap: 12px; }
+  .hero { position: relative; height: 210px; margin-top: 18px; display: grid; place-items: center; }
+  .hero .disc { position: absolute; width: 196px; height: 196px; border-radius: 99px; background: color-mix(in srgb, #fff 34%, transparent); }
   [data-theme="dark"] .hero .disc { background: var(--card-2); box-shadow: inset 0 0 0 1px rgba(255,195,138,.2); }
   .hero .hx { position: relative; }
   .sh { display: flex; justify-content: space-between; align-items: baseline; }
@@ -41,7 +41,7 @@
 
   <div class="q">
     <h1 class="t-large" data-a>Your plan is <span class="mark">ready</span></h1>
-    <p class="t-body muted" data-a style="--i:1">Prep 1 to 3 are on us. Nothing is charged today.</p>
+    <p class="t-body muted" data-a style="--i:1">Seven prep days, then your Quit Day.</p>
   </div>
 
   <div class="hero" aria-hidden="true">
@@ -56,10 +56,6 @@
       <div class="then"><span id="xb" data-fade style="--d:1450ms"></span><div><p class="t-foot" style="font-weight:700">Then Day Xero, Fri, Nov 6</p><span class="t-foot muted">Earned on the day you quit</span></div></div>
     </div>
 
-    <div class="card tiers" data-a style="--i:4">
-      <div class="tier"><span class="tk" data-icon="check"></span><p class="t-foot"><b>Free:</b> Prep 1 to 3, your counter, Craving SOS and check-ins</p></div>
-      <div class="tier"><span class="lk" data-icon="lock"></span><p class="t-foot"><b>Full program:</b> Prep 4 to 7, Weeks 1 to 4 and voice coaching</p></div>
-    </div>
   </div>
 
   <div class="dock">
@@ -70,7 +66,7 @@
 <script>
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon, { w: 2.6 }));
   document.querySelector('.icon-btn').innerHTML = DX.icon('back');
-  document.getElementById('hx').innerHTML = DX.char('xero', { mood: 'cheer', size: 128 });
+  document.getElementById('hx').innerHTML = DX.char('xero', { mood: 'cheer', size: 168 });
   document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 40 });
   let h = '';
   for (let i = 1; i <= 7; i++) h += `<span class="pb ${i === 1 ? 'next' : ''}" data-pop style="--i:0;--d:${700 + i * 90}ms">${DX.badge({ kind: 'prep', n: i, size: 42, state: i === 1 ? 'next' : 'locked', bare: true })}</span>`;

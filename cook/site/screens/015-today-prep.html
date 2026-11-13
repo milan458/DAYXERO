@@ -13,10 +13,12 @@
   .ringwrap { position: absolute; left: 50%; top: 72px; width: 210px; height: 210px; margin-left: -105px; }
   .ringwrap .disc { position: absolute; inset: 21px; border-radius: 50%; background: rgba(255,248,238,.74); }
   .ringwrap .ring { position: absolute; inset: 0; --ringc: #1E1A3A; --ringt: rgba(255,248,238,.72); }
-  [data-theme="dark"] .ringwrap .ring { --ringc: #FFC38A; --ringt: rgba(255,248,238,.22); }
+  [data-theme="dark"] .ringwrap .ring { --ringc: #FFC38A; --ringt: rgba(255,248,238,.3); }
+  .ringwrap .ring circle[fill="#fff"] { filter: drop-shadow(0 1px 3px rgba(30,26,58,.35)); }
+  [data-theme="dark"] .ringwrap .ring circle[fill="#fff"] { fill: #FFF6E8; stroke: #0E1322; filter: drop-shadow(0 0 0 #FFC38A) drop-shadow(0 0 6px rgba(255,195,138,.55)); }
   .ringwrap .ch { position: absolute; left: 0; right: 0; top: 36px; display: grid; place-items: center; }
   .pill { position: absolute; left: 0; right: 0; top: 292px; display: flex; justify-content: center; }
-  .pill span { background: var(--card); color: var(--fg); border-radius: 99px; padding: 8px 14px; font: 600 14px/1 var(--body); display: inline-flex; gap: 8px; align-items: center; box-shadow: 0 6px 16px rgba(30,26,58,.12); }
+  .pill span { background: var(--card); color: var(--fg); border-radius: 99px; padding: 10px 16px; font: 600 14px/1 var(--body); display: inline-flex; gap: 8px; align-items: center; box-shadow: 0 6px 16px rgba(30,26,58,.12); }
   .pill i { width: 6px; height: 6px; border-radius: 99px; background: var(--fg); opacity: .4; }
 
   .content { position: absolute; left: 0; right: 0; top: 366px; padding: 0 var(--gutter); }
@@ -36,7 +38,7 @@
   .slot .face { position: relative; width: 36px; height: 36px; display: grid; place-items: center; }
   .slot .face svg { position: absolute; inset: 0; }
   .slot .num { position: relative; font: 800 15px/1 var(--display); color: #1E1A3A; letter-spacing: -.3px; }
-  .slot .t-cap { font-size: 12px; white-space: nowrap; color: var(--fg); }
+  .slot .t-cap { font-size: 13px; white-space: nowrap; color: var(--fg); }
   .slot.later .num, .slot.goal .num { color: var(--fg); }
   .slot.goal .num { top: -3px; font-size: 14px; }
   .slot.now .face { border-radius: 99px; background: var(--card-2); box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--fg) 30%, transparent); }
@@ -81,7 +83,7 @@
 <script>
   const $ = s => document.querySelector(s);
   $('#scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 390, h: 346, clarity: 85, noDusk: true });
-  $('#ring').innerHTML = DX.ring({ size: 210, stroke: 7, p: 3 / 7, color: 'var(--ringc)', track: 'var(--ringt)', dot: true });
+  $('#ring').innerHTML = DX.ring({ size: 210, stroke: 11, p: 3 / 7, color: 'var(--ringc)', track: 'var(--ringt)', dot: true });
   $('#xero').innerHTML = DX.char('xero', { mood: 'hello', size: 138, stage: 1 });
   $('#ic-sess').innerHTML = DX.icon('headphones');
   $('#start').innerHTML = DX.icon('play', { fill: 'currentColor', w: 1.5 }) + 'Start';

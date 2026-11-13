@@ -38,7 +38,7 @@
 
   <div class="q">
     <h1 class="t-large" data-a>Your baseline</h1>
-    <p class="t-body muted" data-a style="--i:1">A vape never burns out, so most people underestimate it. Here's yours.</p>
+    <p class="t-body muted" data-a style="--i:1">A vape never burns out, so most people underestimate it. That's normal. We'll bring both down together.</p>
   </div>
   <div class="answers">
     <div class="card load" data-a style="--i:2">
@@ -54,14 +54,11 @@
       <div class="stat" data-a style="--i:3"><span class="ico-tile" data-icon="card"></span><span class="num" data-count="2555" data-prefix="$">$2,555</span><p class="t-foot">a year, at $7 a day</p></div>
       <div class="stat" data-a style="--i:4"><span class="ico-tile" data-icon="clock"></span><span class="num"><span data-count="365">365</span> hrs</span><p class="t-foot">a year, 1 hr a day</p></div>
     </div>
-    <div class="card xcard" data-a style="--i:5"><div class="xc" data-settle><div class="bob" id="xc"></div></div>
-      <p class="t-body">That's normal. We'll bring both down together, one prep day at a time.</p></div>
   </div>
   <div class="dock"><button class="btn" data-a style="--i:6">Continue</button></div>
 </div>
 <script>
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
-  document.getElementById('xc').innerHTML = DX.char('xero', { mood: 'calm', size: 88 });
   document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 40 });
   const bar = document.getElementById('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '18.2%'); void bar.offsetWidth; bar.style.transition = ''; });

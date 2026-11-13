@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>036 Progress</title>
-<meta name="motion" content="The sky card fades up with its sun rising (clarity 40), the 7 counts up (850ms) while 'Sky 40% clear' arrives. Xero settles into the corner of the sky card and bobs. The stat strip arrives and each number counts up from 0. The badge shelf (earned plus the next three in each family) arrives as one card: earned badges stamp in (140ms stagger), the 7-day badge gets a shine at 1.2s, next badges sweep their progress ring. No haptic on load.">
+<meta name="motion" content="The sky card fades up with its sun rising (clarity 40), the 7 counts up (850ms) while 'Sky 40% clear' arrives. Xero settles into the corner of the sky card and bobs. The stat strip arrives and each number counts up from 0. The badge shelf arrives as one card with the three latest badges and the next one: earned badges stamp in (140ms stagger), the 7-day badge gets a shine at 1.2s, then the 14-day badge fades in with its ring at half. See all opens the full shelf. No haptic on load.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -9,36 +9,28 @@
   .pill-btn { height: 40px; padding: 0 14px 0 10px; border-radius: 99px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); display: inline-flex; align-items: center; gap: 4px; font: 700 15px/1 var(--body); }
   .pill-btn svg { width: 18px; height: 18px; }
   .top .icon-btn { width: 40px; height: 40px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
-  .sky { position: relative; margin-top: 14px; height: 152px; border-radius: 26px; overflow: hidden; color: var(--ink); }
+  .sky { position: relative; margin-top: 14px; height: 172px; border-radius: 26px; overflow: hidden; color: var(--ink); }
   .sky .scene { position: absolute; inset: 0; }
   .sky .big { position: absolute; left: 20px; top: 16px; display: flex; align-items: baseline; gap: 8px; }
   .sky .big .num { font-size: 64px; line-height: 1; letter-spacing: -2.5px; }
   .sky .big .t-head { color: var(--ink); }
-  .sky .kept { position: absolute; left: 21px; top: 84px; font: 600 15px/1.2 var(--body); color: var(--ink); }
+  .sky .kept { position: absolute; left: 21px; top: 88px; font: 600 15px/1.2 var(--body); color: var(--ink); }
   .sky .clear { position: absolute; left: 14px; bottom: 14px; height: 30px; padding: 0 12px 0 8px; border-radius: 99px; background: rgba(255,248,238,.92);
     display: inline-flex; align-items: center; gap: 6px; font: 600 13px/1 var(--body); color: var(--ink); }
   .sky .clear svg { width: 16px; height: 16px; }
   .sky .xero { position: absolute; right: 8px; bottom: 4px; }
-  .strip { margin-top: 10px; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); padding: 11px 6px; }
-  .strip > div { display: grid; gap: 3px; padding: 0 10px; }
+  .strip { margin-top: 12px; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); padding: 16px 4px; }
+  .strip > div { display: grid; gap: 6px; padding: 0 14px; align-content: start; }
   .strip > div + div { border-left: 1px solid var(--line); }
-  .strip .num { font: 800 22px/1 var(--display); letter-spacing: -.5px; }
-  .strip .t-cap { color: var(--muted); font-weight: 500; line-height: 1.25; }
-  .shelf-h { margin-top: 18px; display: flex; align-items: baseline; justify-content: space-between; }
-  .shelf-h .link { min-height: 0; padding: 0; font: 700 15px/1 var(--body); color: var(--fg); text-decoration: underline; text-underline-offset: 3px; width: auto; }
-  .bshelf { margin-top: 10px; padding: 2px 14px; }
-  .fam { display: grid; grid-template-columns: 108px 1fr; align-items: center; gap: 4px; padding: 10px 0; }
-  .fam + .fam { border-top: 1px solid var(--line); }
-  .fam .lbl { display: grid; gap: 2px; }
-  .fam .lbl .t-foot { font-weight: 700; line-height: 1.2; }
-  .fam .lbl .t-cap { color: var(--muted); font-weight: 500; }
-  .brow { display: flex; gap: 5px; justify-content: flex-start; }
-  .brow .badge { gap: 0; }
-  .stamps { display: flex; justify-content: space-between; }
-  .stamps .badge { gap: 0; }
-  /* locked medallions: lift the dashed ring and numeral to 3:1 */
-  .badge.locked svg [stroke-opacity] { stroke-opacity: .62; }
-  .badge.locked svg text { fill-opacity: .74; }
+  .strip .num { font: 800 26px/1 var(--display); letter-spacing: -.6px; }
+  .strip .lbl { font: 500 13px/1.3 var(--body); color: var(--muted); }
+  .shelf-h { margin-top: 28px; display: flex; align-items: baseline; justify-content: space-between; }
+  .shelf-h .link { height: auto; min-height: 0; padding: 0; font: 700 15px/1 var(--body); color: var(--fg); text-decoration: underline; text-underline-offset: 3px; width: auto; opacity: 1; }
+  .bshelf { margin-top: 12px; padding: 22px 6px 20px; display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); }
+  .bshelf .badge { gap: 10px; }
+  .bshelf .b-l { display: grid; gap: 2px; }
+  .bshelf .b-l b { font: 700 14px/1.2 var(--body); color: var(--fg); }
+  .bshelf .b-l span { font: 500 13px/1.2 var(--body); color: var(--muted); }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -60,58 +52,34 @@
       </div>
 
       <div class="card strip" data-a style="--i:3">
-        <div><span class="num" data-count="84">84</span><span class="t-cap">cigarettes not smoked</span></div>
-        <div><span class="num" data-count="1400">1,400</span><span class="t-cap">puffs not taken</span></div>
-        <div><span class="num" data-count="23">23</span><span class="t-cap">waves ridden</span></div>
+        <div><span class="num" data-count="84">84</span><span class="lbl">cigarettes not smoked</span></div>
+        <div><span class="num" data-count="1400">1,400</span><span class="lbl">puffs not taken</span></div>
+        <div><span class="num" data-count="23">23</span><span class="lbl">waves ridden</span></div>
       </div>
 
       <div class="shelf-h" data-a style="--i:4"><h2 class="t-head">Badges <span class="t-foot muted" style="font-weight:500;margin-left:6px">14 earned</span></h2><button class="link">See all</button></div>
 
-      <div class="card bshelf" data-a style="--i:5">
-        <div class="fam">
-          <div class="lbl"><span class="t-foot">Days free</span><span class="t-cap">14 in 7 days</span></div>
-          <div class="brow" id="days"></div>
-        </div>
-        <div class="fam">
-          <div class="lbl"><span class="t-foot">Waves ridden</span><span class="t-cap">25 in 2 more</span></div>
-          <div class="brow" id="waves"></div>
-        </div>
-        <div class="fam">
-          <div class="lbl"><span class="t-foot">Evenings</span><span class="t-cap">7 in 1 more</span></div>
-          <div class="brow" id="nights"></div>
-        </div>
-        <div class="fam prep">
-          <div class="lbl"><span class="t-foot">Prep week</span><span class="t-cap">and Day Xero</span></div>
-          <div class="stamps" id="prep"></div>
-        </div>
-      </div>
+      <div class="card bshelf" data-a style="--i:5" id="shelf"></div>
     </div>
   </div>
   <div id="tabs"></div>
 </div>
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20 })));
-  document.getElementById('sky').innerHTML = DX.char('horizon', { scene: 'dawn', w: 346, h: 152, clarity: 40 });
-  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'cheer', size: 96 });
-  let k = 0;
-  const S = 36;
-  const b = (kind, n, state, label, extra = {}) => {
-    const anim = state === 'earned' ? `data-stamp style="--i:${k++};--d:500ms"` : `data-fade style="--d:${700 + k * 60}ms"`;
-    const svg = DX.badge({ kind, n, state, size: S, p: extra.p, label, bare: true });
-    return `<div class="badge ${state}" ${anim}>${extra.shine ? `<span class="shine" style="display:block;border-radius:99px;--d:1200ms">${svg}</span>` : svg}</div>`;
+  document.getElementById('sky').innerHTML = DX.char('horizon', { scene: 'dawn', w: 346, h: 172, clarity: 40 });
+  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'cheer', size: 108 });
+  const S = 72;
+  const b = (kind, n, state, name, sub, i, extra = {}) => {
+    const anim = state === 'earned' ? `data-stamp style="--i:${i};--d:500ms"` : `data-fade style="--d:${900 + i * 80}ms"`;
+    const svg = DX.badge({ kind, n, state, size: S, p: extra.p, label: name, bare: true });
+    const art = extra.shine ? `<span class="shine" style="display:block;border-radius:99px;--d:1200ms">${svg}</span>` : svg;
+    return `<div class="badge ${state}" ${anim}>${art}<div class="b-l"><b>${name}</b><span>${sub}</span></div></div>`;
   };
-  const day = n => n === 1 ? '1 day' : n + ' days';
-  document.getElementById('days').innerHTML =
-    [1, 3, 7].map(n => b('day', n, 'earned', day(n), n === 7 ? { shine: true } : {})).join('') +
-    b('day', 14, 'next', '14 days', { p: .5 }) + b('day', 30, 'locked', '30 days');
-  k = 0;
-  document.getElementById('prep').innerHTML =
-    [1, 2, 3, 4, 5, 6, 7].map(n => `<div class="badge" data-stamp style="--i:${k++};--d:700ms">${DX.badge({ kind: 'prep', n, size: 24, bare: true })}</div>`).join('') +
-    `<div class="badge" data-stamp style="--i:${k++};--d:700ms">${DX.badge({ kind: 'xero', n: '0', size: 24, bare: true })}</div>`;
-  k = 0;
-  document.getElementById('waves').innerHTML = b('wave', 1, 'earned', '1 wave') + b('wave', 10, 'earned', '10 waves') + b('wave', 25, 'next', '25 waves', { p: .92 }) + b('wave', 50, 'locked', '50 waves') + b('wave', 100, 'locked', '100 waves');
-  k = 0;
-  document.getElementById('nights').innerHTML = b('night', 3, 'earned', '3 nights') + b('night', 7, 'next', '7 nights', { p: 6 / 7 }) + b('night', 14, 'locked', '14 nights') + b('night', 30, 'locked', '30 nights');
+  document.getElementById('shelf').innerHTML =
+    b('day', 7, 'earned', '7 days', 'Today', 0, { shine: true }) +
+    b('wave', 10, 'earned', '10 waves', 'Nov 10', 1) +
+    b('night', 3, 'earned', '3 evenings', 'Nov 8', 2) +
+    b('day', 14, 'next', '14 days', '7 to go', 3, { p: .5 });
   document.getElementById('tabs').outerHTML = DX.tabbar('progress');
 </script>
 </body></html>

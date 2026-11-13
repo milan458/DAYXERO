@@ -19,9 +19,9 @@
 html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--sel) 72%, transparent); }
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
-.opts { display: grid; gap: 8px; margin-top: 18px; }
-.opts .opt { min-height: 58px; padding-top: 9px; padding-bottom: 9px; }
-.tl { margin-top: 14px; padding: 12px 16px 12px; }
+.opts { display: grid; gap: 10px; margin-top: 22px; }
+.opts .opt { min-height: 64px; }
+.tl { margin-top: 24px; padding: 16px 18px 16px; }
 .tl .head { display: flex; align-items: center; gap: 12px; }
 .bar { position: relative; height: 34px; margin-top: 12px; }
 .bar .ln { position: absolute; left: 0; right: 0; top: 16px; height: 2px; background: var(--line); }
@@ -43,14 +43,9 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
     <div data-a style="--i:5"><button class="opt" ><div class="grow"><div class="t-head">6 AM</div><div class="t-foot">For night shifts and late finishes</div></div><span class="radio"></span></button></div>
   </div>
   <div class="card flat tl" data-a style="--i:6">
-    <div class="head"><span id="glim063"></span><p class="t-body" style="flex:1">A check-in at 1:30 AM still counts for Thursday.</p></div>
+    <div class="head"><span id="glim063"></span><p class="t-body" style="flex:1">A check-in at 1:30 AM still counts for Thursday. The new day starts at 4 AM.</p></div>
     <div class="bar"><div class="ln"></div><div class="seg"></div><div class="ci" style="left:41%"></div><div class="tick" style="left:70%"></div></div>
     <div class="tlab"><span class="t-foot">Thu 6 PM</span><span class="t-foot" style="margin-left:22%">Ends 4 AM</span><span class="t-foot">Fri</span></div>
-  </div>
-  <p class="t-foot muted" data-a style="--i:7;padding:16px 4px 7px">At 4 AM</p>
-  <div class="list" data-a style="--i:8">
-    <div class="row"><span class="ico-tile" data-ic="moon" style="width:34px;height:34px;border-radius:11px"></span><div class="grow"><div class="t-body" style="font-weight:600">Last call for check-ins</div><div class="t-foot muted">Glim closes the night</div></div></div>
-    <div class="row"><span class="ico-tile" data-ic="sun" style="width:34px;height:34px;border-radius:11px"></span><div class="grow"><div class="t-body" style="font-weight:600">A new day starts</div><div class="t-foot muted">Your day count and pledge roll over</div></div></div>
   </div>
 </div></div>
 </div>

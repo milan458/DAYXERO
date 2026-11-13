@@ -13,20 +13,20 @@
   .today .ringwrap { position: absolute; left: 50%; top: 60px; width: 200px; height: 200px; margin-left: -100px; }
   .today .disc { position: absolute; inset: 20px; border-radius: 50%; background: rgba(255,248,238,.74); }
   .today .ring { position: absolute; inset: 0; }
-  .today .ch { position: absolute; left: 0; right: 0; top: 33px; display: grid; place-items: center; }
+  .today .ch { position: absolute; left: 0; right: 0; top: 120px; display: grid; place-items: center; }
   .today .pill { position: absolute; left: 0; right: 0; top: 272px; display: flex; justify-content: center; }
   .today .pill span { background: rgba(255,255,255,.92); color: var(--ink); border-radius: 99px; padding: 8px 14px; font: 600 14px/1 var(--body); }
   .today .content { position: absolute; left: 0; right: 0; top: 340px; padding: 0 var(--gutter); }
   .today .content .t-foot { color: var(--muted); }
   .screen > .sbar { z-index: 45; color: #FFF8EE; }
-  .scrim { animation: none; background: rgba(14,19,34,.55); backdrop-filter: blur(8px) saturate(.45); -webkit-backdrop-filter: blur(8px) saturate(.45); }
+  .scrim { animation: none; background: rgba(14,19,34,.42); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
   [data-theme="dark"] .scrim { background: rgba(8,11,22,.6); }
   .play .scrim { animation: dx-fade 250ms var(--ease) both; }
   .play .sheet { animation: sheet-up 450ms var(--settle) both; }
   @keyframes sheet-up { from { transform: translateY(100%); } to { transform: none; } }
   .sheet { padding-bottom: 40px; }
   .sheet-h { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px; }
-  .sheet .row { min-height: 68px; }
+  .sheet .row { min-height: 78px; }
   .sheet .row .t-foot { color: var(--muted); }
   .add { width: 44px; height: 44px; border-radius: 99px; background: var(--card-2); display: grid; place-items: center; color: var(--fg); flex: none; }
   .add svg { width: 20px; height: 20px; }
@@ -40,7 +40,7 @@
   .sofar .cols > div + div { border-left: 1px solid var(--line); }
   .sofar .num { font: 800 22px/1 var(--display); letter-spacing: -.5px; }
   .sofar .cols .t-cap { color: var(--muted); line-height: 1.25; }
-  .note { margin-top: 14px; display: flex; gap: 10px; align-items: flex-start; color: var(--muted); }
+  .note { margin-top: 18px; display: flex; gap: 10px; align-items: flex-start; color: var(--muted); }
   .note svg { width: 18px; height: 18px; flex: none; margin-top: 1px; }
 </style>
 </head><body>
@@ -48,8 +48,7 @@
   <div class="today" aria-hidden="true">
     <div class="hero">
       <div class="scene" id="scene"></div>
-      <div class="ringwrap"><div class="disc"></div><div class="ring" id="ring"></div><div class="ch" id="tx"></div></div>
-      <div class="pill"><span>Week 1 complete · Fri, Nov 13</span></div>
+      <div class="ch" id="tx"></div>
     </div>
     <div class="content">
       <p class="t-foot">Good morning, Sam</p>
@@ -62,17 +61,9 @@
     <div class="grab"></div>
     <div class="sheet-h"><h1 class="t-title">Log</h1><span class="t-foot muted">Today, Fri, Nov 13</span></div>
     <div class="list">
-      <div class="row" data-a style="--i:3"><span class="ico-tile" data-ic="flame"></span><div class="grow"><p class="t-head" style="font-size:17px">A craving</p><p class="t-foot">How strong, what set it off</p></div><button class="add" aria-label="Log a craving" data-ic="plus" data-go="042-log-craving"></button></div>
+      <div class="row" data-a style="--i:3"><span class="ico-tile" data-ic="flame"></span><div class="grow"><p class="t-head" style="font-size:17px">A craving</p><p class="t-foot">3 today, all ridden out</p></div><button class="add" aria-label="Log a craving" data-ic="plus" data-go="042-log-craving"></button></div>
       <div class="row" data-a style="--i:4"><span class="ico-tile" data-ic="vape"></span><div class="grow"><p class="t-head" style="font-size:17px">Puff</p><p class="t-foot">None logged today</p></div><button class="add" aria-label="Log a puff" data-ic="plus"></button></div>
       <div class="row" data-a style="--i:5"><span class="ico-tile" data-ic="cig"></span><div class="grow"><p class="t-head" style="font-size:17px">Cigarette</p><p class="t-foot">None logged today</p></div><button class="add" aria-label="Log a cigarette" data-ic="plus"></button></div>
-    </div>
-    <div class="card flat sofar" data-a style="--i:6">
-      <div class="h"><span class="t-foot">Today so far</span><span class="t-cap">since 6:00 AM</span></div>
-      <div class="cols">
-        <div><span class="num" data-count="3">3</span><span class="t-cap">cravings, all ridden out</span></div>
-        <div><span class="num">0</span><span class="t-cap">puffs</span></div>
-        <div><span class="num">0</span><span class="t-cap">cigarettes</span></div>
-      </div>
     </div>
     <p class="t-foot note" data-a style="--i:7"><span data-ic="shield"></span>A use after Quit Day is logged as a slip. Nothing resets.</p>
   </div>
@@ -81,6 +72,5 @@
   document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20 })));
   document.getElementById('tx').innerHTML = DX.char('xero', { mood: 'hello', size: 134, stage: 2, animate: false });
   document.getElementById('scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 390, h: 322, clarity: 90, animate: false });
-  document.getElementById('ring').innerHTML = DX.ring({ size: 200, stroke: 12, p: 1, color: '#1E1A3A', track: 'rgba(255,248,238,.55)' });
 </script>
 </body></html>

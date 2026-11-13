@@ -4,10 +4,10 @@
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .sec { margin-top: 13px; }
-  .sec-h { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+  .sec { margin-top: 26px; }
+  .sec-h { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
   .sec-h .t-foot { color: var(--muted); }
-  .strength { padding: 14px 16px 16px; }
+  .strength { padding: 18px 18px 18px; }
   .strength .big { display: flex; align-items: baseline; gap: 4px; }
   .strength .big .num { font-size: 34px; line-height: 1; }
   .slider { position: relative; height: 32px; margin-top: 8px; }
@@ -15,7 +15,7 @@
   .slider .fi { position: absolute; left: 0; top: 13px; height: 6px; border-radius: 99px; background: var(--fg); width: calc(44% + 2px); transition: width 700ms var(--settle); }
   .slider .kn { position: absolute; top: 2px; left: 44%; width: 28px; height: 28px; margin-left: -14px; border-radius: 99px; background: #fff; box-shadow: 0 2px 8px rgba(14,11,43,.25), inset 0 0 0 1px rgba(14,11,43,.08); transition: left 700ms var(--settle); }
   .scale { display: flex; justify-content: space-between; color: var(--muted); }
-  .chips .chip { min-height: 38px; padding: 0 14px; font-size: 15px; }
+  .chips .chip { min-height: 42px; padding: 0 15px; font-size: 15px; }
   .sosl { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); color: var(--muted); display: flex; align-items: center; gap: 6px; }
   .sosl a { color: var(--fg); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
   /* the same moon-faces as the evening check-in (054) */
@@ -46,8 +46,8 @@
       <div class="sec" data-a style="--i:2">
         <div class="sec-h"><h2 class="t-head">What set it off?</h2></div>
         <div class="chips">
-          <button class="chip on">Coffee</button><button class="chip">Stress</button><button class="chip">Waking up</button><button class="chip">After meals</button>
-          <button class="chip">Boredom</button><button class="chip">Driving</button><button class="chip">Friends</button><button class="chip">Something else</button>
+          <button class="chip on">Coffee</button><button class="chip">Stress</button><button class="chip">Waking up</button>
+          <button class="chip">After meals</button><button class="chip">Driving</button><button class="chip">Something else</button>
         </div>
       </div>
 
@@ -56,10 +56,6 @@
         <div class="faces" id="faces"></div>
       </div>
 
-      <div class="sec" data-a style="--i:4">
-        <div class="sec-h"><h2 class="t-head">Where?</h2><span class="t-foot">Optional</span></div>
-        <div class="chips"><button class="chip on">Home</button><button class="chip">Work</button><button class="chip">Out</button><button class="chip">In the car</button></div>
-      </div>
     </div>
   </div>
   <div class="dock">

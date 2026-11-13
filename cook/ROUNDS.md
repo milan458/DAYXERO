@@ -62,3 +62,16 @@ two success greens, grey waiting badge, density on choice screens, toasts near b
 Own score (not decisive): 8.4.
 Next focus (round 3, cook/critic/r03-fixes.md): one dark neutral, one success green, waiting badge redesign, per-screen layout bugs.
 - 17:38 Kit: dark mode uses one neutral #0E1322 for every ground except ocean and night; success green #1F9D63 in both modes; done buttons keep the primary colour plus a green check; waiting badges are a dashed family-colour ring with a readable numeral.
+
+---
+
+## Round 03
+
+Time: 17:38 to 17:52 | total elapsed 1.0h
+Focus: one dark neutral, one success green, waiting badge, per-screen layout bugs, dates and copy contradictions.
+Scores, eyeballed (anchored, 3 critics, 300px tiles): 8.3 / 8.2 / 8.3, median 8.3 (round 2: 8.2).
+Screens at 9.0 by at least one critic: 000-launch, 039, 055. Weakest: 036 (7.8-8.0), 022 (8.0-8.1), 023 (7.9-8.3), 041 (7.9-8.3).
+Own score (not decisive): 8.5.
+Kit after round 3: dark horizon art repainted as the midnight-meadow night (no brown overlays); toggles use the brand ink/cream;
+dark selection is cream everywhere; SOS tab button raised with a label on the shared baseline.
+Next focus (round 4, cook/critic/r04-fixes.md): one idea per screen, badge sizes, session pips, list hierarchy, dead bands.
