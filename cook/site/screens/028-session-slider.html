@@ -1,32 +1,31 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>028 Session slider</title>
-<meta name="motion" content="The bar shows card 2 a third filled, with Card 2 of 5 · step 1 of 3 in small type under it; the apricot tag (a breath glyph), question and helper arrive (600ms, 90ms stagger). The reading arrives as one unit: the big number, the calm-blue to coral track right under it with its 11 short ticks, and Xero standing below (fade 500ms). The thumb glides from Calm to the middle (1100ms settle, from 400ms) while the number counts 0 to 5 in step, with a soft tick haptic on each stop, and Xero's face follows the thumb as it passes (calm at 0 to 3, plain at 4, a little tense at 5 and 6, tense from 7: a 150ms cross-fade per change). His line arrives last in a bubble beside him, its tail pointing to him (600ms); dragging rewrites the line at each whole number.">
+<meta name="motion" content="The bar shows card 2 a third done with Card 2 · Step 1 of 3 beside it; the mint tag, question and helper arrive (600ms, 90ms stagger). The reading arrives as one unit: the big number, the calm-blue to coral track right under it with its 11 short ticks, and Xero standing below (fade 500ms). The thumb glides from Calm to the middle (1100ms settle, from 400ms) while the number counts 0 to 5 in step, with a soft tick haptic on each stop, and Xero's face follows the thumb as it passes (calm at 0 to 3, plain at 4, a little tense at 5 and 6, tense from 7: a 150ms cross-fade per change). His line arrives last in a bubble beside him, its tail pointing to him (600ms); dragging rewrites the line at each whole number.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-/* the tag: a quiet apricot tint with a breath glyph (this is a breathing card, not a plan or a stop sign) */
-.k-try{--face:#FFE0C2}
-.steps > i.now::after{width:var(--sub,45%);border-radius:99px}
-/* the bar keeps the full width; its label sits small under it, left-aligned with the bar */
-.nav .grow{position:relative}
-.nav .side{position:absolute;left:0;top:13px;color:var(--muted);font-size:12px;white-space:nowrap}
-.wrap{position:absolute;top:118px;left:0;right:0;display:grid;align-content:start;gap:10px}
+/* A breath that works in the moment is a Try card: mint + hand */
+.k-try{--face:#9FE3BC}
+[data-theme="dark"] .k-try{--face:#8FD3AD}
+.steps > i.now::after{width:var(--sub,45%)}
+.nav .side{flex:none;color:var(--muted)}
+.wrap{position:absolute;top:112px;left:0;right:0;display:grid;align-content:start;gap:10px}
 .tag{justify-self:start;display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px 0 9px;border-radius:99px;background:var(--face);color:#1E1A3A;font:600 13px/1 var(--body)}
-.tag svg{width:17px;height:17px}
-/* dark: a deep apricot pill with an apricot label, never a pale glare on navy */
-[data-theme="dark"] .tag.k-try{background:#3A2A26;color:#FFC38A;box-shadow:inset 0 0 0 1px rgba(255,195,138,.22)}
+.tag svg{width:16px;height:16px}
+/* dark: a deep mint pill with a mint label, never pale mint glaring on navy */
+[data-theme="dark"] .tag.k-try{background:#1A4434;color:#9FE3BC;box-shadow:inset 0 0 0 1px rgba(159,227,188,.22)}
 /* the reading: the number sits over the track; Xero stands under it and says his line beside him */
-.unit{position:absolute;top:304px;left:var(--gutter);right:var(--gutter)}
+.unit{position:absolute;top:276px;left:var(--gutter);right:var(--gutter)}
 .read{display:flex;align-items:flex-end;justify-content:center;height:112px}
 .read .n{display:flex;align-items:baseline;gap:4px}
 .read .num{font-size:128px;line-height:.86;letter-spacing:-2.6px;display:block}
-.read .of{font:700 26px/1 var(--display);color:color-mix(in srgb,var(--muted) 62%,var(--fg));letter-spacing:-.3px}
+.read .of{font:700 26px/1 var(--display);color:var(--muted);letter-spacing:-.3px}
 .sl{margin-top:30px}
 .track{position:relative;height:12px;border-radius:99px;margin:0 6px;background:linear-gradient(90deg,#8EC1FF,#C9A9C8 50%,#FF7A55)}
 [data-theme="dark"] .track{background:linear-gradient(90deg,#6FA6EE,#B48FA9 50%,#F0704E)}
 .track .thumb{position:absolute;z-index:1;top:50%;left:var(--v);width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:99px;background:#fff;
-  box-shadow:0 0 0 5px #A97FA8 inset,0 0 0 2px #fff,0 0 0 3px rgba(30,26,58,.10),0 6px 16px rgba(30,26,58,.34)}
-[data-theme="dark"] .track .thumb{background:#FFF8EE;box-shadow:0 0 0 5px #B48FA9 inset,0 0 0 3px #0E1322,0 6px 18px rgba(0,0,0,.6)}
+  box-shadow:0 0 0 4px #C9A9C8 inset,0 4px 12px rgba(30,26,58,.28)}
+[data-theme="dark"] .track .thumb{background:#FFF8EE;box-shadow:0 0 0 4px #B48FA9 inset,0 4px 14px rgba(0,0,0,.5)}
 .play .track .thumb{animation:glide 1100ms var(--settle) both 400ms}
 @keyframes glide{from{left:0}to{left:var(--v)}}
 /* 11 short ticks, 0 to 10, under the track */
@@ -41,9 +40,8 @@
 [data-theme="dark"] .ends span:first-child{color:#9CCBFF}
 [data-theme="dark"] .ends span:last-child{color:#FF9A7A}
 /* Xero and his line: he stands left, the bubble sits beside him with its tail pointing at him */
-.talk{display:flex;align-items:center;margin-top:30px}
-/* inset 8pt from the margin: his arm starts at x 30 */
-.talk .xf{width:148px;height:148px;flex:none;margin:0 -12px 0 -5px}
+.talk{display:flex;align-items:center;margin-top:26px}
+.talk .xf{width:150px;height:150px;flex:none;margin:0 -20px 0 -14px}
 .say{position:relative;flex:1;min-width:0;margin:0 0 18px;background:var(--card);border-radius:20px;padding:14px 16px;font:500 16px/1.42 var(--body);box-shadow:0 2px 10px rgba(30,26,58,.07)}
 [data-theme="dark"] .say{box-shadow:inset 0 0 0 1px var(--line)}
 .say::before{content:"";position:absolute;left:-6px;top:50%;width:14px;height:14px;margin-top:-7px;background:var(--card);border-radius:0 0 0 3px;transform:rotate(45deg)}
@@ -53,8 +51,9 @@
 <div class="screen" data-ground="table">
   <div class="nav">
     <button class="icon-btn" aria-label="Close" id="close"></button>
-    <div class="grow"><div class="steps" aria-label="Card 2, step 1 of 3" style="--sub:33%"><i class="on"></i><i class="now"></i><i></i><i></i><i></i></div><span class="side t-cap">Card 2 of 5 · step 1 of 3</span></div>
-    </div>
+    <div class="grow"><div class="steps" aria-label="Card 2, step 1 of 3" style="--sub:33%"><i class="on"></i><i class="now"></i><i></i><i></i><i></i></div></div>
+    <span class="side t-cap">Card 2 · Step 1 of 3</span>
+  </div>
   <div class="wrap pad">
     <span class="tag k-try" data-a style="--i:0"><span id="t-ic"></span>A breath that works · 5 min</span>
     <h1 class="t-title" data-a style="--i:1">How tense do you feel right now?</h1>
@@ -75,14 +74,13 @@
 </div>
 <script>
 document.getElementById('close').innerHTML = DX.icon('close');
-/* a breath glyph: three soft air lines, two of them curling back */
-document.getElementById('t-ic').innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M3 9h10.5a3 3 0 1 0-3-3"/><path d="M3 13.5h15a3 3 0 1 1-3 3"/><path d="M3 18h6"/></svg>';
+document.getElementById('t-ic').innerHTML = DX.icon('hand', {size:16});
 document.getElementById('ticks').innerHTML = Array.from({length:11}, (_, i) => `<i class="${i % 5 ? '' : 'mj'}" style="left:${i * 10}%"></i>`).join('');
 /* Xero's face follows the slider: calm 0-3, plain 4, a little tense 5-6 (open eyes, flat wavering mouth, raised inner brows), tense 7+ */
 const BROWS = (k) => `<g fill="none" stroke="#24163A" stroke-width="${k ? 3.5 : 3}" stroke-linecap="round">${k ? `<path d="M77 ${66 + k} L90 ${62 - k}"/><path d="M110 ${62 - k} L123 ${66 + k}"/>` : `<path d="M77 64.5 Q83.5 62.4 90 63"/><path d="M110 63 Q116.5 62.4 123 64.5"/>`}</g>`;
 function xeroAt(v) {
-  if (v <= 3) return DX.char('xero', {mood:'calm', size:148});
-  let s = DX.char('xero', {mood:'hello', size:148});
+  if (v <= 3) return DX.char('xero', {mood:'calm', size:136});
+  let s = DX.char('xero', {mood:'hello', size:136});
   if (v === 4) return s;
   const mouth = v >= 7 ? 'M90 96 Q93.5 92 97 96 Q100.5 100 104 96 Q107.5 92 111 96' : 'M92 95 Q96 93 100 95 Q104 97 108 95';
   s = s.replace(/<path d="M92 92 Q100 100 108 92"/, `<path d="${mouth}"`);

@@ -1,15 +1,13 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>018 Today, evening</title>
-<meta name="motion" content="Evening Today, all slow. The sky fades in (700ms): a bright lavender-to-peach dusk over dusk-indigo hills in light mode, the midnight meadow in dark, with the moon's long soft halo, stars twinkling (kept clear of the status bar and the words) and fireflies drifting; the paper-cut knoll rises 24px into place (900ms) and runs on under the check-in card, fading into the ground, and Glim settles onto it (900ms), then keeps a slow bob while his raised right arm waves hello (a 14 degree rock from the shoulder, 1.2s, three times, then rests up); the warm pool his belly casts on the knoll fades up with him and breathes with his glow (2.6s loop). Greeting, waves line and the check-in card arrive with a 90ms stagger; inside it the six done nights fade in left to right (90ms apart, no springs) and Friday's waiting 7-night badge (44px: one gold ring, a deep navy face with a warm gold centre, a gold 7) breathes its ring glow (4s in, 6s out). Soft haptic on appear only.">
+<meta name="motion" content="Evening Today, all slow. The sky fades in (700ms): a dim lavender-peach dusk in light mode, the midnight meadow in dark, with stars twinkling (kept clear of the status bar and the words) and fireflies drifting; the paper-cut knoll rises 24px into place (900ms) and Glim, awake and waving hello, settles onto it (900ms) then keeps a slow bob; the warm pool his belly casts on the knoll fades up with him and breathes with his glow (2.6s loop). Greeting, waves line and the check-in card arrive with a 90ms stagger; inside it the six done nights fade in left to right (90ms apart, no springs) and Friday's waiting 7-night badge (44px) sits in a solid gold ring that breathes (4s in, 6s out). Soft haptic on appear only.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  /* Light mode keeps evening dark on purpose but lifts it to a dusk indigo, so it has its own identity next to dark mode. */
-  :root[data-theme="light"] .screen[data-ground="night"] { --g: #29315E; --card: #364070; --card-2: #414C7E; --line: rgba(255,255,255,.14); --muted: #CDD2E8; --track: rgba(255,255,255,.2); }
-  .sky { position: absolute; left: 0; right: 0; top: 0; height: 470px; }
-  .knoll { position: absolute; left: 0; top: 318px; width: 390px; height: 300px; --k1: #444E86; --k2: #3A4479; }
-  [data-theme="dark"] .knoll { --k1: #18264A; --k2: #1F2F57; }
-  .knoll svg { display: block; }
+  .sky { position: absolute; left: 0; right: 0; top: 0; height: 430px; }
+  .knoll { position: absolute; left: 0; top: 294px; width: 390px; height: 110px; --k1: #22345C; --k2: #2A3E6B; --rim: rgba(246,231,193,.28); }
+  [data-theme="dark"] .knoll { --k1: #18264A; --k2: #1F2F57; --rim: rgba(246,231,193,.2); }
+  .knoll svg { display: block; filter: drop-shadow(0 -3px 6px rgba(4,8,20,.35)); }
   .play .knoll { animation: knoll 900ms var(--settle) 100ms both; }
   @keyframes knoll { from { transform: translateY(24px); opacity: 0; } }
   /* Glim's belly light pools warm on the knoll under him */
@@ -17,15 +15,14 @@
   .play .knoll .pool { animation: pool 2.6s ease-in-out infinite; }
   @keyframes pool { 50% { opacity: .72; transform: scale(.94); } }
   .greet { position: absolute; z-index: 2; left: 0; right: 0; top: 80px; padding: 0 var(--gutter); }
-  .greet h1 { text-shadow: 0 1px 14px rgba(20,22,60,.28); }
-  .greet .sub { margin-top: 8px; color: #EEEFF7; text-shadow: 0 1px 10px rgba(20,22,60,.35); }
-  [data-theme="dark"] .greet .sub { color: var(--muted); text-shadow: none; }
+  .greet .sub { margin-top: 8px; color: #E4E6F0; }
+  [data-theme="dark"] .greet .sub { color: var(--muted); }
   .greet .sub b { color: var(--fg); font-weight: 700; }
-  .glim { position: absolute; left: 58px; top: 188px; }
-  .content { position: absolute; z-index: 25; left: 0; right: 0; top: 404px; padding: 0 var(--gutter); }
-  .ci { padding: 18px 18px 18px; display: grid; gap: 12px; box-shadow: inset 0 0 0 1px var(--line), 0 14px 34px rgba(8,12,34,.28); }
+  .glim { position: absolute; left: 58px; top: 164px; }
+  .content { position: absolute; left: 0; right: 0; top: 376px; padding: 0 var(--gutter); }
+  .ci { padding: 18px 18px 20px; display: grid; gap: 14px; }
   .ci .t-foot { color: var(--muted); }
-  .ci .who { color: #D9DDEE; font-weight: 600; }
+  .ci .who { color: #D3D9EA; font-weight: 600; }
   .ci .divider { margin: 0; }
   /* the one progress encoding: seven nights, tonight is the waiting 7-night badge */
   .pips { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; align-items: end; }
@@ -33,32 +30,29 @@
   .pip b { width: 30px; height: 30px; margin: 5px 0; border-radius: 99px; background: var(--fg); color: var(--g); display: grid; place-items: center; }
   .pip b svg { width: 16px; height: 16px; }
   .pip .t-cap { color: var(--muted); font-size: 13px; font-weight: 600; white-space: nowrap; }
-  /* tonight: one gold ring, a deep navy face warmed by a dim gold centre, a gold 7 */
-  .pip.tonight .face { position: relative; width: 40px; height: 40px; margin: 0 0 0; border-radius: 99px; display: grid; place-items: center;
-    background: radial-gradient(circle at 50% 42%, #4A4130 0%, #2A2A3A 58%, #161E36 100%);
-    box-shadow: inset 0 0 0 2.5px #FFD37A, 0 0 14px rgba(255,211,122,.32);
-    font: 800 19px/1 var(--display); letter-spacing: -.5px; color: #FFD37A; font-variant-numeric: tabular-nums; }
-  .play .pip.tonight .face { animation: glow 10s cubic-bezier(.45,0,.55,1) infinite; }
-  @keyframes glow { 0%, 100% { box-shadow: inset 0 0 0 2.5px #FFD37A, 0 0 8px rgba(255,211,122,.18); } 40% { box-shadow: inset 0 0 0 2.5px #FFD37A, 0 0 18px rgba(255,211,122,.45); } }
+  .pip.tonight .face { position: relative; width: 44px; height: 44px; border-radius: 99px; margin-bottom: -2px; }
+  .pip.tonight .face::before { content: ""; position: absolute; inset: 2px; border-radius: 99px; background: rgba(255,211,122,.12); }
+  .pip.tonight .face svg { position: relative; }
+  .pip.tonight .face::after { content: ""; position: absolute; inset: -4px; border-radius: 99px; box-shadow: inset 0 0 0 2.5px #FFD37A, 0 0 12px rgba(255,211,122,.35); }
+  .play .pip.tonight .face::after { animation: breathe2 10s cubic-bezier(.45,0,.55,1) infinite; }
+  @keyframes breathe2 { 0% { transform: scale(.96); opacity: .7; } 40% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(.96); opacity: .7; } }
   .pip.tonight .t-cap { color: #FFD37A; font-weight: 800; }
   .ci .note b { color: var(--fg); font-weight: 700; }
   .ci .btn { margin-top: 2px; }
   .ci .btn svg { width: 18px; height: 18px; }
+  /* dark: a softer, dimmer cream so the one button does not glare at night */
   /* dark: a clear cream button with ink text, crisp against the night card */
   [data-theme="dark"] .ci .btn { background: #F3E7CC; color: #0A1326; box-shadow: 0 4px 14px rgba(0,0,0,.4); }
 </style>
 </head><body>
 <div class="screen" data-ground="night" data-status="on-art">
   <div class="sky" id="sky" data-fade></div>
-  <div class="knoll" aria-hidden="true"><svg width="390" height="300" viewBox="0 0 390 300">
-    <defs>
-      <linearGradient id="kf18" gradientUnits="userSpaceOnUse" x1="0" y1="30" x2="0" y2="250"><stop offset="0" style="stop-color:var(--k1)"/><stop offset=".45" style="stop-color:var(--k1);stop-opacity:.55"/><stop offset="1" style="stop-color:var(--k1);stop-opacity:0"/></linearGradient>
-      <linearGradient id="kb18" gradientUnits="userSpaceOnUse" x1="0" y1="76" x2="0" y2="240"><stop offset="0" style="stop-color:var(--k2);stop-opacity:.55"/><stop offset="1" style="stop-color:var(--k2);stop-opacity:0"/></linearGradient>
-      <radialGradient id="pool18"><stop offset="0" stop-color="#FFD37A" stop-opacity=".7"/><stop offset=".5" stop-color="#FFC36B" stop-opacity=".24"/><stop offset="1" stop-color="#FFC36B" stop-opacity="0"/></radialGradient>
-    </defs>
-    <path d="M-10 64 C40 40 90 30 140 30 C196 30 250 44 300 70 C330 86 360 96 400 98 V300 H-10Z" fill="url(#kf18)"/>
+  <div class="knoll" aria-hidden="true"><svg width="390" height="110" viewBox="0 0 390 110">
+    <path d="M-10 64 C40 40 90 30 140 30 C196 30 250 44 300 70 C330 86 360 96 400 98 V110 H-10Z" fill="var(--k1)"/>
+    <path d="M-10 64 C40 40 90 30 140 30 C196 30 250 44 300 70 C330 86 360 96 400 98" fill="none" stroke="var(--rim)" stroke-width="1.5"/>
+    <defs><radialGradient id="pool18"><stop offset="0" stop-color="#FFD37A" stop-opacity=".7"/><stop offset=".5" stop-color="#FFC36B" stop-opacity=".24"/><stop offset="1" stop-color="#FFC36B" stop-opacity="0"/></radialGradient></defs>
     <ellipse class="pool" cx="148" cy="40" rx="96" ry="26" fill="url(#pool18)"/>
-    <path d="M-10 92 C60 78 130 76 200 84 C260 90 330 88 400 76 V300 H-10Z" fill="url(#kb18)"/>
+    <path d="M-10 92 C60 78 130 76 200 84 C260 90 330 88 400 76 V110 H-10Z" fill="var(--k2)" opacity=".55"/>
   </svg></div>
   <div class="glim" data-settle style="--d:200ms"><div class="bob" id="glim"></div></div>
 
@@ -82,41 +76,33 @@
 </div>
 <script>
   const $ = s => document.querySelector(s);
-  const dark = DX.theme === 'dark';
-  /* One evening sky, two moods: light = a bright lavender-to-peach dusk over dusk-indigo hills; dark = the midnight meadow.
-     Both: the moon's halo falls off long and soft, stars only in open sky, fireflies low, the bottom melts into the ground. */
-  function eveningSky(w = 390, h = 470) {
-    const P = dark
-      ? { sky: [['0', '#08101F'], ['.55', '#111D38'], ['1', '#22315A']], warm: 0, hills: ['#16233F', '#0F1A31', '#0A1326'], ground: '#0A1326', moon: '#F6E7C1', halo: .34, star: 1 }
-      : { sky: [['0', '#4C5590'], ['.26', '#7476AE'], ['.46', '#AE98C6'], ['.62', '#DDAFBA'], ['.76', '#F3C3A8'], ['1', '#F7D0AE']], warm: .5, hills: ['#5A5F97', '#454D85', '#353E72'], ground: '#29315E', moon: '#FFF4DE', halo: .5, star: .7 };
-    const mx = 318, my = 190;
-    const st = [[352, 118, 1.6], [292, 166, 1.1], [22, 206, 1.4], [372, 248, 1.1], [34, 262, 1], [262, 226, 1.1]];
-    const fly = [[70, 344], [117, 378], [300, 372], [343, 336]];
+  /* Light mode: a dim dusk (soft lavender to peach) over the same midnight hills; dark mode keeps the kit's midnight meadow. */
+  function duskSky(w = 390, h = 430) {
+    /* stars only in the open sky: below the status bar, clear of the greeting */
+    const st = [[.08, .43], [.9, .3], [.67, .37], [.95, .52], [.05, .58], [.86, .19]];
     return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="display:block" aria-hidden="true"><defs>
-      <linearGradient id="es" x1="0" y1="0" x2="0" y2="1">${P.sky.map(([o, c]) => `<stop offset="${o}" stop-color="${c}"/>`).join('')}</linearGradient>
-      <radialGradient id="eh"><stop offset="0" stop-color="${P.moon}" stop-opacity="${P.halo}"/><stop offset=".1" stop-color="${P.moon}" stop-opacity="${(P.halo * .72).toFixed(2)}"/><stop offset=".24" stop-color="${P.moon}" stop-opacity="${(P.halo * .38).toFixed(2)}"/><stop offset=".45" stop-color="${P.moon}" stop-opacity="${(P.halo * .15).toFixed(2)}"/><stop offset=".7" stop-color="${P.moon}" stop-opacity="${(P.halo * .05).toFixed(2)}"/><stop offset="1" stop-color="${P.moon}" stop-opacity="0"/></radialGradient>
-      <radialGradient id="ew" cx=".5" cy="1" r=".7"><stop offset="0" stop-color="#FFD2AE" stop-opacity=".6"/><stop offset="1" stop-color="#FFD2AE" stop-opacity="0"/></radialGradient>
-      <radialGradient id="ef"><stop offset="0" stop-color="#FFD37A" stop-opacity=".9"/><stop offset="1" stop-color="#FFD37A" stop-opacity="0"/></radialGradient>
-      <linearGradient id="eg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${P.ground}" stop-opacity="0"/><stop offset="1" stop-color="${P.ground}"/></linearGradient></defs>
-      <rect width="${w}" height="${h}" fill="url(#es)"/>
-      ${P.warm ? `<ellipse cx="${w * .44}" cy="330" rx="280" ry="100" fill="url(#ew)" opacity="${P.warm}"/>` : ''}
-      <circle cx="${mx}" cy="${my}" r="150" fill="url(#eh)"/>
-      ${st.map(([x, y, r], i) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#fff" opacity="${((i % 2 ? .5 : .85) * P.star).toFixed(2)}">${DX.still ? '' : `<animate attributeName="opacity" values="${i % 2 ? '.5;.15;.5' : '.85;.35;.85'}" dur="${(1.6 + (i % 5) * .35).toFixed(2)}s" repeatCount="indefinite"/>`}</circle>`).join('')}
-      <circle cx="${mx}" cy="${my}" r="19" fill="${P.moon}"/>
-      <path d="M0 324 C70 294 140 306 210 320 S330 324 ${w} 294 V${h} H0z" fill="${P.hills[0]}"/>
-      <path d="M0 364 C90 340 170 364 250 356 S350 342 ${w} 350 V${h} H0z" fill="${P.hills[1]}"/>
-      <path d="M0 404 C80 392 160 410 240 402 S350 390 ${w} 396 V${h} H0z" fill="${P.hills[2]}"/>
-      ${fly.map(([x, y], i) => `<g>${DX.still ? '' : `<animateTransform attributeName="transform" type="translate" values="0 0;${i % 2 ? 6 : -6} -8;0 0" dur="${5 + i}s" repeatCount="indefinite"/>`}<circle cx="${x}" cy="${y}" r="9" fill="url(#ef)"/><circle cx="${x}" cy="${y}" r="1.8" fill="#FFD37A"/></g>`).join('')}
-      <rect y="${h - 90}" width="${w}" height="90" fill="url(#eg)"/></svg>`;
+      <linearGradient id="dk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3D4772"/><stop offset=".34" stop-color="#6A6F95"/><stop offset=".56" stop-color="#AE95A8"/><stop offset=".68" stop-color="#E4B39C"/><stop offset="1" stop-color="#EDBE9F"/></linearGradient>
+      <radialGradient id="dm"><stop offset="0" stop-color="#FFF1D8" stop-opacity=".45"/><stop offset="1" stop-color="#FFF1D8" stop-opacity="0"/></radialGradient>
+      <radialGradient id="dh" cx=".5" cy="1" r=".7"><stop offset="0" stop-color="#F6C7A4" stop-opacity=".55"/><stop offset="1" stop-color="#F6C7A4" stop-opacity="0"/></radialGradient>
+      <radialGradient id="df"><stop offset="0" stop-color="#FFD37A" stop-opacity=".9"/><stop offset="1" stop-color="#FFD37A" stop-opacity="0"/></radialGradient>
+      <linearGradient id="dg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0F1B33" stop-opacity="0"/><stop offset="1" stop-color="#0F1B33"/></linearGradient></defs>
+      <rect width="${w}" height="${h}" fill="url(#dk)"/>
+      <ellipse cx="${w * .42}" cy="300" rx="260" ry="90" fill="url(#dh)"/>
+      ${st.map(([x, y], i) => `<circle cx="${(x * w).toFixed(1)}" cy="${(y * h).toFixed(1)}" r="${i % 3 ? 1.1 : 1.5}" fill="#fff" opacity="${i % 2 ? .35 : .6}">${DX.still ? '' : `<animate attributeName="opacity" values="${i % 2 ? '.35;.1;.35' : '.6;.25;.6'}" dur="${(1.8 + (i % 4) * .4).toFixed(2)}s" repeatCount="indefinite"/>`}</circle>`).join('')}
+      <circle cx="316" cy="186" r="58" fill="url(#dm)"/><circle cx="316" cy="186" r="17" fill="#FBF0DA"/>
+      <path d="M0 300 C70 270 140 282 210 296 S330 300 ${w} 270 V${h} H0z" fill="#1C2C4E"/>
+      <path d="M0 340 C90 316 170 340 250 332 S350 318 ${w} 326 V${h} H0z" fill="#132240"/>
+      <path d="M0 380 C80 368 160 386 240 378 S350 366 ${w} 372 V${h} H0z" fill="#0F1B33"/>
+      ${[[.18, 320], [.3, 352], [.77, 346], [.88, 312]].map(([x, y], i) => `<g>${DX.still ? '' : `<animateTransform attributeName="transform" type="translate" values="0 0;${i % 2 ? 6 : -6} -8;0 0" dur="${5 + i}s" repeatCount="indefinite"/>`}<circle cx="${(x * w).toFixed(1)}" cy="${y}" r="9" fill="url(#df)"/><circle cx="${(x * w).toFixed(1)}" cy="${y}" r="1.8" fill="#FFD37A"/></g>`).join('')}
+      <rect y="${h - 70}" width="${w}" height="70" fill="url(#dg)"/></svg>`;
   }
-  $('#sky').innerHTML = eveningSky();
-  /* Glim waves: the right arm is raised (the cheer arm) and rocks from the shoulder a few times, then rests up. */
-  const wave = DX.still ? '' : `<animateTransform attributeName="transform" type="rotate" values="0 134 108;-16 134 108;6 134 108;-16 134 108;6 134 108;-16 134 108;0 134 108" keyTimes="0;.12;.24;.36;.48;.6;.72" dur="5s" begin="1.2s" fill="freeze"/>`;
-  $('#glim').innerHTML = DX.char('glim', { mood: 'hello', size: 180 })
-    .replace(/<path d="M136 114 C146 120 150 128 148 136"([^>]*)><\/path>/, `<g>${wave}<path d="M134 110 C147 100 152 88 150 74"$1></path></g>`);
+  /* dark: mask the kit's stars out of the status bar and the greeting */
+  const clearStars = svg => svg.replace(/<circle cx="([\d.]+)" cy="([\d.]+)" r="(?:1\.2|1\.8)" fill="#fff"[^>]*>(?:<animate[^>]*\/>)?<\/circle>/g, (m, x, y) => (+y < 70 || (+y < 158 && +x < 330)) ? '' : m);
+  $('#sky').innerHTML = DX.theme === 'dark' ? clearStars(DX.nightSky({ w: 390, h: 430, moonX: 316, moonY: 186 })) : duskSky();
+  $('#glim').innerHTML = DX.char('glim', { mood: 'hello', size: 180 });
   const dn = ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu'];
   $('#pips').innerHTML = dn.map((d, i) => `<div class="pip" data-fade style="--d:${500 + i * 90}ms"><b>${DX.icon('check', { size: 16, w: 3 })}</b><span class="t-cap">${d}</span></div>`).join('')
-    + `<div class="pip tonight" data-fade style="--d:1100ms"><div class="face" role="img" aria-label="7-night badge, waiting">7</div><span class="t-cap">Fri</span></div>`;
+    + `<div class="pip tonight" data-fade style="--d:1100ms"><div class="face">${DX.badge({ kind: 'night', n: 7, state: 'next', size: 44, bare: true, label: '7 nights' })}</div><span class="t-cap">Fri</span></div>`;
   $('#go').innerHTML = DX.icon('moon', { w: 2.4 }) + 'Check in';
   $('.screen').insertAdjacentHTML('beforeend', DX.tabbar('today'));
 </script>

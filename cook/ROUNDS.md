@@ -187,3 +187,10 @@ App median about 8.7. Screens at >= 9.0 by a critic: 039 (9.2), 032, 059 (9.1), 
 - Hero baseline h0 (Opus / Sonnet / Fable -> median): 000 8.8/8.7/8.7=8.7; 012 8.6/8.5/8.5=8.5; 018 8.6/8.7/8.6=8.6;
   019 8.9/8.8/8.9=8.9; 028 8.6/8.7/8.8=8.7; 031 8.8/8.9/8.5=8.8; 032 8.6/9.0/8.7=8.7; 039 8.9/8.8/8.8=8.8; 046 8.6/8.6/8.5=8.6;
   053 8.7/8.9/8.7=8.7; 057 8.7/8.8/8.7=8.7; 059 8.8/8.9/8.6=8.8; 064 8.5/8.9/8.5=8.5.
+- Hero pass h1 (O / S / F -> median, h0 median): 000 8.7/8.6/8.8=8.7 (8.7) kept; 012 8.4/8.5/8.6=8.5 (8.5) kept;
+  018 8.5/8.4/8.7=8.5 (8.6) reverted; 019 8.6/8.6/8.9=8.6 (8.9) reverted; 028 8.6/8.3/8.5=8.5 (8.7) reverted;
+  031 8.6/8.5/8.6=8.6 (8.8) reverted; 032 8.4/8.7/8.5=8.5 (8.7) reverted; 039 8.6/8.4/8.7=8.6 (8.8) reverted;
+  046 8.6/8.3/8.7=8.6 (8.6) kept; 053 8.8/8.7/8.9=8.8 (8.7) kept; 057 8.7/8.5/8.6=8.6 (8.7) reverted;
+  059 8.6/8.6/8.6=8.6 (8.8) reverted; 064 8.7/8.6/8.8=8.7 (8.5) kept. Reverted files restored from 7b22813 (h1 files in scratchpad).
+  Read: even with three critics and one screen per fixer, 8 of 13 hero screens went down. The critics' ceiling for these
+  mockups sits around 8.6-8.9; each pass trades one set of named flaws for a new set.
