@@ -162,3 +162,5 @@ session 023-032, lesson-log 033-042, slips-checkin 043-055.
 - Kit: dark selection tint between the two extremes (15% pale peach over card): orange read brown, neutral read cool grey.
 - Read: sections now move +/-0.1-0.2 per round around 8.6-8.8; three of six reverts or flats in round 9. The remaining gap is
   mostly composition (dead bands above the CTA on form screens, small secondary art) and critic noise.
+- Lesson-log round 8: Opus 8.7 / Sonnet 8.8 (r7 8.4 / 8.8): kept. 038 timing now reads "Starts in about a week / Around Day 14",
+  the same words as the 037 row.
