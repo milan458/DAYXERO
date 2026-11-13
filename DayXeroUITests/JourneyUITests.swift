@@ -162,6 +162,8 @@ final class JourneyUITests: XCTestCase {
         for title in ["Box breathing", "Longer out-breath", "5-4-3-2-1", "Notice and name", "Drop anchor"] {
             let row = button(app, title)
             XCTAssert(row.waitForExistence(timeout: 5), "No \"\(title)\" row")
+            // v5: the tools are a grid of tall cards, so the last ones sit below the fold.
+            scrollIntoView(app, row)
             tapWhenStill(app, row, name: title)
             let stop = app.buttons["Stop"]
             XCTAssert(stop.waitForExistence(timeout: 10), "\"\(title)\" didn't open")
@@ -217,6 +219,14 @@ final class JourneyUITests: XCTestCase {
     /// Taps an element once it's enabled and has stopped moving, so a step's slide-in or a sheet growing to full
     /// height has finished: a tap mid-slide can miss. It taps the element's centre rather than asking XCUITest
     /// whether it's hittable, which on iOS 27 can fail outright while a sheet resizes.
+    /// Swipes the page up until the element's centre is on screen (at most five swipes).
+    private func scrollIntoView(_ app: XCUIApplication, _ element: XCUIElement) {
+        let screen = app.windows.firstMatch.frame.insetBy(dx: 0, dy: 120)
+        for _ in 0..<5 where !screen.contains(CGPoint(x: element.frame.midX, y: element.frame.midY)) {
+            app.swipeUp(velocity: .slow)
+        }
+    }
+
     private func tapWhenStill(_ app: XCUIApplication, _ element: XCUIElement, name: String,
                               file: StaticString = #filePath, line: UInt = #line) {
         let screen = app.windows.firstMatch.frame

@@ -45,11 +45,19 @@ struct CalmToolsView: View {
                 // CLIN-04: for the moment straight after finishing something.
                 Button { rewardCard = true } label: { RewardCardRow() }.buttonStyle(.plain)
                 // v5 (056): the tools as a grid of tall art cards.
-                LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
-                    ForEach(Array(CalmTool.allCases.enumerated()), id: \.element) { index, tool in
-                        Button { open = tool } label: { CalmToolCard(tool: tool) }
-                            .buttonStyle(.dxPress)
-                            .dxArrive(index, delay: 0.15)
+                // A plain Grid, not a lazy one: every tool is built, so each one is there for VoiceOver and UI tests
+                // even below the fold.
+                let tools = Array(CalmTool.allCases)
+                Grid(horizontalSpacing: 12, verticalSpacing: 12) {
+                    ForEach(Array(stride(from: 0, to: tools.count, by: 2)), id: \.self) { start in
+                        GridRow(alignment: .top) {
+                            ForEach(start..<min(start + 2, tools.count), id: \.self) { index in
+                                Button { open = tools[index] } label: { CalmToolCard(tool: tools[index]) }
+                                    .buttonStyle(.dxPress)
+                                    .dxArrive(index, delay: 0.15)
+                            }
+                            if start + 1 >= tools.count { Color.clear.gridCellUnsizedAxes([.horizontal, .vertical]) }
+                        }
                     }
                 }
                 HelpLine(compact: true, ground: ground).padding(.top, DX.Space.s)
