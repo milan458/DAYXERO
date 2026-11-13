@@ -13,11 +13,11 @@
   .rings i:nth-child(3) { width: 188px; height: 188px; --a: 100%; }
   /* Dark: the rings become a soft warm glow (apricot light on the night ground), each with a faint rim, so the pacer reads. */
   /* Round 8: a clean warm amber at low opacity (no peach-on-navy brown); the rims carry the shape. */
-  [data-theme="dark"] .rings i { background: radial-gradient(circle, color-mix(in srgb, #FFB347 var(--g1), transparent) 0%, color-mix(in srgb, #FFB347 var(--g2), transparent) 100%);
+  [data-theme="dark"] .rings i { background: radial-gradient(circle, color-mix(in srgb, #FFC24D var(--g1), transparent) 0%, color-mix(in srgb, #FFC24D var(--g2), transparent) 100%);
     box-shadow: inset 0 0 0 1px rgba(255,200,120,var(--rim)); }
-  [data-theme="dark"] .rings i:nth-child(1) { --g1: 1%; --g2: 4%; --rim: .14; }
-  [data-theme="dark"] .rings i:nth-child(2) { --g1: 2%; --g2: 6%; --rim: .18; }
-  [data-theme="dark"] .rings i:nth-child(3) { --g1: 4%; --g2: 9%; --rim: .24; }
+  [data-theme="dark"] .rings i:nth-child(1) { --g1: 0%; --g2: 2.5%; --rim: .16; }
+  [data-theme="dark"] .rings i:nth-child(2) { --g1: 1%; --g2: 3.5%; --rim: .2; }
+  [data-theme="dark"] .rings i:nth-child(3) { --g1: 2%; --g2: 5%; --rim: .28; }
   .play .rings i:nth-child(1) { animation-delay: -.25s; }
   .play .rings i:nth-child(2) { animation-delay: -.12s; }
   .hero { position: relative; margin-top: 6px; }

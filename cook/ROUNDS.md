@@ -147,3 +147,4 @@ session 023-032, lesson-log 033-042, slips-checkin 043-055.
   pending. Session round 8 done, critics next. Pledge (053) stays on Day 7 (it is the daily after-quit pledge).
 - Kit: dark dawn sun is a soft radial glow (critics saw flat grey discs); progress badges in the next state use a solid faint
   track (the dashed half-ring read as a spinner); tab fade 150px with a short 30-40% ramp so peeking rows keep full opacity.
+- Kit: dark selection fill is a neutral-warm lift (11% pale peach over card) with the apricot edge; the orange tint read brown.
