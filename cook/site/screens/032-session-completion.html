@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>032 Session complete</title>
-<meta name="motion" content="A ring of crisp paper rays (rounded strips in a warm sun tint, clear of the rim, the same sun as 025) fans out behind (each ray grows from the centre, 500ms settle, 25ms apart, from 300ms) and then turns very slowly (26s loop); the Prep 4 medal stamps in (spring, 300ms) and shines; Xero settles beside it on one ground shadow, cheering, and bumps at 1500ms. Title (underline under done) and line arrive; the shelf arrives, stamps 1 to 3 pop in left to right (110ms apart), then stamp 4 lands with a stamp and a shine (medium haptic) while the count ticks 3 to 4; the waiting stamps 5 to 7 and the Day Xero medal at the end of the shelf fade in last.">
+<meta name="motion" content="A ring of crisp paper rays (rounded strips in one warm sun tint, alternating long and short, clear of the rim, the same sun as 025, open where Xero stands) fans out behind (each ray grows from the centre, 500ms settle, 25ms apart, from 300ms) and then turns very slowly (26s loop); the Prep 4 medal stamps in (spring, 300ms) and shines; Xero settles beside it, clear of its little sun, on one ground shadow, cheering, and bumps at 1500ms. Title (underline under done) and the line (4 days to Day Xero · 3 preps to go) arrive; the shelf arrives, stamps 1 to 3 pop in left to right (110ms apart), then stamp 4 lands with a stamp and a shine (medium haptic) while the count ticks 3 to 4; the waiting stamps 5 to 7 and the Day Xero medal at the end of the shelf fade in last.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -8,17 +8,16 @@
 /* crisp paper rays: rounded cut-paper strips standing clear of the medal (the same sun as the card back on 025),
    a warm sun tint in light, one clean gold in dark: solid fills, no fade, no smear */
 .burst{position:absolute;left:35px;top:0;width:320px;height:320px;overflow:visible}
-.burst .ra{stroke:#FFD771}
-.burst .rb{stroke:#FFE6A8}
+/* one tint, one width, one opacity; only the length alternates (long, short), the same sun language as 025 */
+.burst .ra, .burst .rb{stroke:#FFD771}
 [data-theme="dark"] .burst .ra, [data-theme="dark"] .burst .rb{stroke:#E8B24A}
-[data-theme="dark"] .burst .rb{stroke-width:8px}
 .ray{transform-box:view-box;transform-origin:160px 160px}
 .play .ray{animation:grow 500ms var(--settle) both;animation-delay:calc(300ms + var(--r) * 25ms)}
 @keyframes grow{from{opacity:0;transform:scale(.55)}to{opacity:1;transform:none}}
 .medal{position:absolute;left:105px;top:70px;width:180px;height:180px;border-radius:50%}
-.gshadow{position:absolute;left:96px;top:250px;width:250px;height:28px;border-radius:50%;background:radial-gradient(closest-side,rgba(30,26,58,.18),rgba(30,26,58,0))}
+.gshadow{position:absolute;left:100px;top:250px;width:262px;height:28px;border-radius:50%;background:radial-gradient(closest-side,rgba(30,26,58,.18),rgba(30,26,58,0))}
 [data-theme="dark"] .gshadow{background:radial-gradient(closest-side,rgba(0,0,0,.5),rgba(0,0,0,0))}
-.xero{position:absolute;left:246px;top:156px}
+.xero{position:absolute;left:262px;top:156px}
 /* no stray sparkle marks around Xero on this screen */
 .xero svg > g[stroke]{display:none}
 .mid{position:absolute;top:446px;left:0;right:0;text-align:center;display:grid;gap:8px}
@@ -27,7 +26,8 @@
 .srow{display:flex;align-items:center;gap:5px;padding-bottom:12px;border-bottom:1.5px solid var(--line)}
 .srow > span{display:block;flex:none}
 .srow .cap{margin-left:auto}
-.slab{margin-top:14px;text-align:center}
+/* the shelf caption: 14px, muted (5.9:1 light, 9:1 dark) */
+.slab{margin-top:14px;text-align:center;font-size:14px}
 .st4{border-radius:50%}
 </style>
 </head><body>
@@ -41,7 +41,7 @@
   </div>
   <div class="mid pad">
     <h1 class="t-large" data-a style="--i:6">Prep 4 <span class="mark">done</span>.</h1>
-    <p class="t-body muted" data-a style="--i:7">3 to go before Day Xero.</p>
+    <p class="t-body muted" data-a style="--i:7">4 days to Day Xero · 3 preps to go</p>
   </div>
   <div class="shelf" data-a style="--i:8">
     <div class="srow" id="srow"></div>
@@ -53,12 +53,12 @@
 const dark = DX.theme === 'dark';
 document.getElementById('close').innerHTML = DX.icon('close');
 /* rounded paper rays on a 16-step ring, alternating long and short, standing clear of the rim, with a faint paper lift;
-   the five that would sit behind Xero or run into the ground are left out */
+   the six that would sit behind Xero or run into the ground are left out, so the set opens around him */
 const cx = 160, cy = 160;
 const ray = (i) => { const a = (i * 22.5 - 90) * Math.PI / 180, c = Math.cos(a), s = Math.sin(a), r0 = 108, r1 = i % 2 ? 128 : 146;
   return `<path class="ray ${i % 2 ? 'rb' : 'ra'}" style="--r:${i}" d="M${(cx + r0 * c).toFixed(1)} ${(cy + r0 * s).toFixed(1)} L${(cx + r1 * c).toFixed(1)} ${(cy + r1 * s).toFixed(1)}"/>`; };
 document.getElementById('burst').innerHTML = `<defs><filter id="lift" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy="1" stdDeviation=".8" flood-color="#1A0B2E" flood-opacity="${dark ? .3 : .08}"/></filter></defs>
-  <g class="rays" style="transform-box:view-box;transform-origin:160px 160px" filter="url(#lift)" fill="none" stroke-width="10" stroke-linecap="round">${Array.from({length:16}, (_, i) => i >= 5 && i <= 9 ? '' : ray(i)).join('')}</g>`;
+  <g class="rays" style="transform-box:view-box;transform-origin:160px 160px" filter="url(#lift)" fill="none" stroke-width="10" stroke-linecap="round">${Array.from({length:16}, (_, i) => i >= 4 && i <= 9 ? '' : ray(i)).join('')}</g>`;
 /* the kit Prep 4 medal, as it is (scalloped rim, the little sunrise behind the numeral) */
 document.getElementById('medal').innerHTML = DX.badge({kind:'prep', n:4, size:180, bare:true, label:'Prep 4'});
 document.getElementById('xero').innerHTML = DX.char('xero', {mood:'cheer', size:104});
