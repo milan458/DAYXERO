@@ -7,16 +7,16 @@
   /* Onboarding header: back button and progress only (no avatar); the bar ends at the gutter so the sun knob never collides. */
   .nav { padding-right: 26px; }
   /* Round 8: the title is left-aligned like every other step, with Xero (proud) beside it; three pieces below. No pinned note. */
-  .head { padding: 104px var(--gutter) 0; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+  .head { padding: 112px var(--gutter) 0; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
   .head .t-large { font-size: 30px; }
-  .head .xw { margin: 0 -6px 0 0; position: relative; width: 104px; height: 104px; flex: none; }
-  .status { padding: 0 var(--gutter); position: relative; height: 28px; }
+  .head .xw { margin: 0 -6px 0 0; position: relative; width: 120px; height: 120px; flex: none; }
+  .status { padding: 0 var(--gutter); position: relative; height: 32px; }
   .status p { position: absolute; left: var(--gutter); right: var(--gutter); top: 4px; justify-content: flex-start; text-align: left; transition: opacity .4s var(--ease), transform .4s var(--ease); }
   .status .b { opacity: 0; transform: translateY(6px); }
   .status.done .a { opacity: 0; transform: translateY(-6px); }
   .status.done .b { opacity: 1; transform: none; }
-  .plan { margin: 22px var(--gutter) 0; display: grid; gap: 12px; }
-  .pr { display: flex; align-items: center; gap: 14px; background: var(--card); border-radius: 20px; padding: 16px 16px; min-height: 84px; }
+  .plan { margin: 28px var(--gutter) 0; display: grid; gap: 14px; }
+  .pr { display: flex; align-items: center; gap: 14px; background: var(--card); border-radius: 20px; padding: 16px 16px; min-height: 94px; }
   [data-theme="dark"] .pr { box-shadow: inset 0 0 0 1px var(--line); }
   .pr .grow { flex: 1; min-width: 0; }
   .pr .t-cap { color: var(--muted); display: block; margin-bottom: 3px; font-size: 13px; }
@@ -55,7 +55,7 @@
 </div>
 <script>
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
-  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'cheer', size: 104 });
+  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'cheer', size: 120 });
   const bw = document.getElementById('bw'), dark = DX.theme === 'dark';
   /* Paper-cut icons (round 8): flat cut pieces, each with a soft paper shadow, as on 003 and 008. */
   const sh = dark ? 'rgba(0,0,0,.55)' : 'rgba(120,52,24,.24)';
