@@ -148,3 +148,5 @@ session 023-032, lesson-log 033-042, slips-checkin 043-055.
 - Kit: dark dawn sun is a soft radial glow (critics saw flat grey discs); progress badges in the next state use a solid faint
   track (the dashed half-ring read as a spinner); tab fade 150px with a short 30-40% ramp so peeking rows keep full opacity.
 - Kit: dark selection fill is a neutral-warm lift (11% pale peach over card) with the apricot edge; the orange tint read brown.
+- Slips-checkin round 8: Opus 8.6 / Sonnet 8.7 (r7 8.7 / 8.5): mixed, kept. 053 motion spec corrected to the after-quit daily
+  pledge (Day 7). Onboarding round 8 done, critics running.
