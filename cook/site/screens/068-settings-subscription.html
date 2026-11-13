@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>068 Subscription</title>
-<meta name="motion" content="The plan card arrives and the price counts up to $39.99; the What you get card follows: its dawn (pre-dawn in dark) lifts the sun and drifts its clouds while Xero settles onto the near hill (450ms), then the four perks fade in one under another, 90ms apart. Manage in the App Store (secondary) opens the App Store subscription sheet; Restore purchases shows a small spinner, then a check.">
+<meta name="motion" content="The plan card arrives: Active, the plan name, then the price counts up to $39.99 and its two plain detail rows (renews, member since) fade in under the divider, with the change-or-cancel line last; the What you get card follows and its four perks fade in one under another, 90ms apart. Manage in the App Store (secondary) opens the App Store subscription sheet; Restore purchases shows a small spinner, then a check.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -17,20 +17,24 @@
 .toast.b .ck { flex: none; }
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
-.plan { margin-top: 16px; padding: 16px 20px 18px; display: grid; gap: 4px; }
-.plan .price { display: flex; align-items: baseline; gap: 6px; margin-top: 6px; }
-.plan .price .num { font-size: 36px; line-height: 1; }
-.status { display: inline-flex; align-items: center; gap: 6px; color: #17804F; }
-[data-theme="dark"] .status { color: var(--tick); }
-.status i { width: 8px; height: 8px; border-radius: 99px; background: currentColor; }
-.get { margin-top: 12px; padding: 0; overflow: hidden; }
-.get .art { position: relative; height: 96px; overflow: hidden; }
-.get .art > svg, .get .art .hill { position: absolute; inset: 0; }
-.get .art .xs { position: absolute; left: 236px; top: 16px; }
-.get .body { padding: 14px 18px 16px; display: grid; gap: 8px; }
-.get .it { display: flex; align-items: center; gap: 12px; min-height: 30px; }
-.get .it .ico-tile { width: 30px; height: 30px; border-radius: 10px; }
-.get .it .ico-tile svg { width: 17px; height: 17px; }
+/* Plan card hierarchy: status, plan name (the title), price, then quiet detail rows and the how-to-cancel line. */
+.plan { margin-top: 16px; padding: 16px 18px 6px; display: grid; gap: 0; }
+.status { justify-self: start; display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; border-radius: 99px; color: #17804F; background: color-mix(in srgb, #1F9D63 12%, transparent); }
+[data-theme="dark"] .status { color: #5FD39B; background: color-mix(in srgb, #1F9D63 22%, transparent); }
+.status i { width: 7px; height: 7px; border-radius: 99px; background: currentColor; }
+.plan .t-title { margin-top: 10px; }
+.plan .price { display: flex; align-items: baseline; gap: 6px; margin-top: 8px; }
+.plan .price .num { font-size: 30px; line-height: 1; }
+.plan .per { margin-top: 4px; }
+.plan .kv { display: flex; justify-content: space-between; align-items: center; min-height: 44px; border-top: 1px solid var(--line); }
+.plan .kv:first-of-type { margin-top: 14px; }
+.plan .kv .v { font-weight: 600; }
+.note { display: flex; gap: 8px; align-items: flex-start; padding: 12px 4px 0; color: var(--muted); }
+.note svg { width: 18px; height: 18px; flex: none; margin-top: 2px; }
+.get { margin-top: 18px; padding: 16px 18px 16px; display: grid; gap: 8px; }
+.get .it { display: flex; align-items: center; gap: 12px; min-height: 34px; }
+.get .it .ico-tile { width: 32px; height: 32px; border-radius: 10px; }
+.get .it .ico-tile svg { width: 18px; height: 18px; }
 .get .it .t-foot { color: var(--fg); }
 </style>
 </head><body>
@@ -40,30 +44,24 @@
   <div class="hd"><h1 class="t-large" data-a style="--i:0">Subscription</h1><p class="t-foot muted" data-a style="--i:1">Billed and renewed through your Apple ID.</p></div>
   <div class="card plan" data-a style="--i:2">
     <span class="status t-cap"><i></i>Active</span>
-    <div class="t-title" style="margin-top:4px">DayXero Yearly</div>
+    <div class="t-title">DayXero Yearly</div>
     <div class="price"><span class="num" data-count="39.99" data-dec="2" data-prefix="$">$39.99</span><span class="t-head">a year</span></div>
-    <p class="t-foot muted">About $3.33 a month. Renews Nov 6, 2027.</p>
+    <p class="t-foot muted per">About $3.33 a month</p>
+    <div class="kv" data-fade style="--d:450ms"><span class="t-foot muted">Renews</span><span class="t-foot v">Nov 6, 2027</span></div>
+    <div class="kv" data-fade style="--d:540ms"><span class="t-foot muted">Member since</span><span class="t-foot v">Oct 30, 2026</span></div>
   </div>
-  <div class="card get" data-a style="--i:3">
-    <div class="art" id="get"><div class="hill" id="hill"></div><div class="xs" id="xr" data-settle style="--d:450ms"></div></div>
-    <div class="body">
-      <div class="t-head" style="margin-bottom:2px">What you get</div>
-      <div class="it" data-fade style="--d:500ms"><span class="ico-tile" data-ic="sun"></span><span class="t-foot">Your prep week and your plan</span></div>
-      <div class="it" data-fade style="--d:590ms"><span class="ico-tile" data-ic="wave"></span><span class="t-foot">Craving SOS, any time</span></div>
-      <div class="it" data-fade style="--d:680ms"><span class="ico-tile" data-ic="note"></span><span class="t-foot">Daily lessons and evening check-ins</span></div>
-      <div class="it" data-fade style="--d:770ms"><span class="ico-tile" data-ic="medal"></span><span class="t-foot">Badges and money kept</span></div>
-    </div>
+  <p class="t-foot note" data-a style="--i:3"><span data-ic="card" data-s="18"></span><span>Change or cancel any time in Settings &gt; Apple ID.</span></p>
+  <div class="card get" data-a style="--i:4">
+    <div class="t-head" style="margin-bottom:2px">What you get</div>
+    <div class="it" data-fade style="--d:500ms"><span class="ico-tile" data-ic="sun"></span><span class="t-foot">Your prep week and your plan</span></div>
+    <div class="it" data-fade style="--d:590ms"><span class="ico-tile" data-ic="wave"></span><span class="t-foot">Craving SOS, any time</span></div>
+    <div class="it" data-fade style="--d:680ms"><span class="ico-tile" data-ic="note"></span><span class="t-foot">Daily lessons and evening check-ins</span></div>
+    <div class="it" data-fade style="--d:770ms"><span class="ico-tile" data-ic="medal"></span><span class="t-foot">Badges and money kept</span></div>
   </div>
 </div></div>
-<div class="dock"><button class="btn ghost" data-a style="--i:4">Manage in the App Store</button><button class="link" data-a style="--i:5">Restore purchases</button></div>
+<div class="dock"><button class="btn ghost" data-a style="--i:5">Manage in the App Store</button><button class="link" data-a style="--i:6">Restore purchases</button></div>
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
-const dark = DX.theme === 'dark';
-/* Same scene in both modes: dawn in light, the kit's pre-dawn in dark; Xero stands on the near hill beside the sun. */
-document.getElementById('get').insertAdjacentHTML('afterbegin', DX.char('horizon', { scene: 'dawn', w: 346, h: 96, clarity: 90, fit: 'xMidYMid slice' }));
-document.getElementById('hill').innerHTML = `<svg width="346" height="96" viewBox="0 0 346 96" aria-hidden="true"><defs><linearGradient id="sh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${dark ? '#1A2846' : '#FFA27A'}"/><stop offset="1" stop-color="${dark ? '#0F1A31' : '#F0794F'}"/></linearGradient></defs>
-  <path d="M0 96 V88 C80 86 170 82 230 76 C262 73 300 76 346 82 V96Z" fill="url(#sh)"/></svg>`;
-document.getElementById('xr').innerHTML = DX.char('xero', { mood: 'hello', size: 62 });
 </script>
 </body></html>
