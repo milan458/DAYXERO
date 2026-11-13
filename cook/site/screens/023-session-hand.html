@@ -1,13 +1,20 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>023 Session hand</title>
-<meta name="motion" content="Title, line and the prep stamps arrive (600ms, 90ms stagger). The four back cards deal in from below one by one and stand level behind, outer two a step lower (760ms settle each, 120ms apart, from 300ms), each showing only its icon: Try mint, Reveal sky, Myth or fact rose, Try mint. Then card 1, the apricot Listen card, rises level in front of them (900ms settle at 820ms) and Xero, in his headphones, settles in front of its sun (700ms at 1200ms) and sways gently to the music (5s bob loop). The button arrives last. Light haptic on each card landing, a medium one when card 1 lands.">
+<meta name="motion" content="Title, line and the prep stamps arrive (600ms, 90ms stagger). The four back cards deal in from below one by one and stand level behind, outer two a step lower (760ms settle each, 120ms apart, from 300ms), each showing only its icon: Try mint, Reveal sky, Myth or fact rose, and Your stress plan in the plan's honey (dark mode: the back cards sit at dusk tints of their colours, only their round icon spots stay bright). Then card 1, the apricot Listen card, rises level in front of them (900ms settle at 820ms) and Xero, in his headphones, settles in front of its sun (700ms at 1200ms) and sways gently to the music (5s bob loop). The button arrives last. Light haptic on each card landing, a medium one when card 1 lands.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
 /* one colour per card type, shared by every session screen: Listen apricot, Try mint, Reveal sky, Myth or fact rose.
    Dark mode deepens the pastels a step so they sit on navy without glaring. */
 .k-listen{--face:#FFC38A;--face-2:#FFD6AC;--sunc:radial-gradient(circle,#FFE48A 0,#FFD35E 66%,#FFC94F 100%)}.k-try{--face:#9FE3BC}.k-reveal{--face:#9CCBFF}.k-myth{--face:#FFB9A6}
-[data-theme="dark"] .k-listen{--face:#F3B47E;--face-2:#F7C595;--sunc:#FDDDAE}[data-theme="dark"] .k-try{--face:#8FD3AD}[data-theme="dark"] .bc.k-try{--face:color-mix(in srgb,#8FD3AD 85%,#0E1322)}[data-theme="dark"] .k-reveal{--face:#8EBBEC}[data-theme="dark"] .k-myth{--face:#EFA894}
+/* card 5, Your stress plan, takes the plan's honey (the gold of the 029 medal and the 031 mission card), so the two Try cards never read as twins */
+.k-plan{--face:#FFDB85}
+[data-theme="dark"] .k-listen{--face:#F3B47E;--face-2:#F7C595;--sunc:#FDDDAE}[data-theme="dark"] .k-try{--face:#8FD3AD}[data-theme="dark"] .k-reveal{--face:#8EBBEC}[data-theme="dark"] .k-myth{--face:#EFA894}
+/* dark: the back cards drop to dusk tints of their colour (about 60% value) so only the front card glows;
+   each card's paper-cut spot keeps the bright pastel, so the icons still read as the card's colour */
+[data-theme="dark"] .bc{--spot:var(--face);background:color-mix(in srgb,var(--face) 58%,#0E1322)}
+[data-theme="dark"] .bc.k-plan{--face:#F5CF78;background:color-mix(in srgb,#F2B95A 58%,#1C1420)}
+[data-theme="dark"] .bc .ic{background:var(--spot);box-shadow:0 1px 0 rgba(255,248,238,.25) inset,0 2px 6px rgba(0,0,0,.25)}
 .head{position:absolute;top:112px;left:0;right:0;display:grid;gap:6px}
 .stamps{position:absolute;top:184px;left:var(--gutter);right:var(--gutter);display:flex;align-items:center;gap:8px}
 .stamps .t-foot{margin-left:8px}
@@ -57,8 +64,8 @@ document.getElementById('close').innerHTML = DX.icon('close');
 /* the kit stamp family, as on the Program path: Prep 1 to 3 earned, Prep 4 waiting */
 document.getElementById('stamps').innerHTML = [1,2,3].map(n => DX.badge({kind:'prep', n, size:46, bare:true})).join('') +
   DX.badge({kind:'prep', n:4, state:'next', size:46, bare:true}) + '<span class="t-foot muted">Today</span>';
-/* cards 2 to 5: Try (breath), Reveal, Myth or fact, Try (your stress plan); level, icons only, outer two a step lower */
-const back = [['try','hand','Try'], ['reveal','eye','Reveal'], ['myth','question','Myth or fact'], ['try','spark','Try']];
+/* cards 2 to 5: Try (breath), Reveal, Myth or fact, Your stress plan (honey); level, icons only, outer two a step lower */
+const back = [['try','hand','Try'], ['reveal','eye','Reveal'], ['myth','question','Myth or fact'], ['plan','spark','Your stress plan']];
 const X = [-113, -38, 38, 113], Y = [16, 0, 0, 16];
 /* Xero in headphones (same drawing as 024): band and cups go into his body group so they sway with him */
 const PHONES = `<g aria-hidden="true">

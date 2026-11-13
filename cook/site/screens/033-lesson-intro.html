@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>033 Lesson intro</title>
-<meta name="motion" content="The paper-cut road card fades up (600ms) and the little open-top car rolls in from the left (900ms settle curve) with Xero at the wheel, then idles with a 2px bounce (1.2s loop). The three back-seat passengers (grey, yellow, blue; Xero is the only coral figure) chatter: their two speech bubbles pop in turn (spring 420ms, 700ms apart) and keep pulsing on a 2.4s loop while Xero keeps his eyes on the road. The meta line, title, subtitle and the three 'inside' rows (each with its small paper-cut spot: cards on a hill, a kite, a summit flag) arrive with a 90ms stagger, then Begin and the listen link. Light haptic on Begin.">
+<meta name="motion" content="The paper-cut road card fades up (600ms) and the short open-top car (Xero behind the windshield, hands on the wheel) rolls in from the left (900ms settle curve) with Xero at the wheel, then idles with a 2px bounce (1.2s loop). The three back-seat passengers (grey, yellow, blue; Xero is the only coral figure) sit together on the back bench behind his seat and chatter: their two speech bubbles pop in turn (spring 420ms, 700ms apart) and keep pulsing on a 2.4s loop while Xero keeps his eyes on the road. The meta line, title, subtitle and the three 'inside' rows (each with its small paper-cut spot: cards on a hill, a kite, a summit flag) arrive with a 90ms stagger, then Begin and the listen link. Light haptic on Begin.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -11,8 +11,8 @@
   .inside { margin-top: 18px; }
   .list.inside > .row { min-height: 60px; padding-block: 9px; gap: 14px; }
   .inside .t-foot { color: var(--muted); }
-  .spot { width: 42px; height: 42px; border-radius: 13px; overflow: hidden; flex: none; display: block; }
-  .spot svg { display: block; width: 42px; height: 42px; }
+  .spot { width: 40px; height: 40px; border-radius: 13px; overflow: hidden; flex: none; display: block; }
+  .spot svg { display: block; width: 40px; height: 40px; }
   [data-theme="dark"] .spot { box-shadow: 0 0 0 1px rgba(255,255,255,.12); }
   .dock .link { height: 32px; font: 600 15px/1 var(--body); color: var(--fg); opacity: 1; }
   .dock .link svg { width: 17px; height: 17px; }
@@ -63,7 +63,7 @@
      and one motif each (cards on a hill, a kite, a summit flag). Dark mode is a lit pre-dawn (navy to rose sky, gold sun) so the
      tiles stand off the navy card instead of sinking into it. */
   const S = dark
-    ? { sky: ['#40558F', '#A27F9A'], h1: '#4E6198', h2: '#34477C', sun: '#FFD27A', glow: '#FFB25E', paper: '#EFE6D6', paper2: '#C9BFAE', ink: '#1E1A3A', pole: '#EFE6D6', coral: '#F08A6C', cloud: '#8E9AC4', lift: .5 }
+    ? { sky: ['#2E3F70', '#8A6C8C'], h1: '#46598F', h2: '#2E3F6E', sun: '#FFD27A', glow: '#FFB25E', paper: '#EFE6D6', paper2: '#C9BFAE', ink: '#1E1A3A', pole: '#EFE6D6', coral: '#F08A6C', cloud: '#8E9AC4', lift: .5 }
     : { sky: ['#FFC9A0', '#FFEAD2'], h1: '#FFAE73', h2: '#FF8A5E', sun: '#FFD25E', glow: '#FFF6C8', paper: '#FFF8EE', paper2: '#F1DFC8', ink: '#1E1A3A', pole: '#1E1A3A', coral: '#FF7A55', cloud: '#FFFFFF', lift: .22 };
   const L = 'filter="url(#spLift)"';
   const SPOTS = {
@@ -92,9 +92,9 @@
      (the cravings: small grey, yellow and blue blobs). Dark mode is the kit's pre-dawn: navy sky, a low warm sun, stars. */
   const C = dark
     ? { sky: ['#0D1630', '#24335C', '#5B5578'], hills: ['#1E2B4A', '#16233F', '#0F1A31'], road: '#232E4D', dash: '#8E97B5', dashO: .55,
-        body: '#E6DCCB', shade: '#C2B6A2', stripe: '#E9886C', seat: '#2B3658', frame: '#2A2440', tyre: '#070B16', hub: '#C2B6A2', lamp: '#FFD27A', glass: .3, bub: '#EDE3D2', marks: '#1E1A3A', speed: '#FFF8EE', speedO: .28, shadow: .5, cloud: '#34436F', cloudSh: '#050A18', cloudShO: .4 }
+        body: '#E6DCCB', shade: '#C2B6A2', stripe: '#E9886C', seat: '#323E64', frame: '#4A4368', tyre: '#070B16', hub: '#C2B6A2', lamp: '#FFD27A', glass: .28, glassFill: '#BFD7FF', bub: '#EDE3D2', marks: '#1E1A3A', speed: '#FFF8EE', speedO: .28, shadow: .5, cloud: '#34436F', cloudSh: '#050A18', cloudShO: .4 }
     : { sky: ['#FF7E5A', '#FFB877', '#FFE6BF'], hills: ['#FF9D6E', '#FF7A55', '#E85A3E'], road: '#4A3352', dash: '#FFE6C8', dashO: .9,
-        body: '#FFF4E4', shade: '#F1D7BC', stripe: '#FF7A55', seat: '#2E2A4F', frame: '#2A2440', tyre: '#2A2440', hub: '#F1D7BC', lamp: '#FFD966', glass: .4, bub: '#FFF8EE', marks: '#1E1A3A', speed: '#FFF8EE', speedO: .8, shadow: .22, cloud: '#FFF4E6', cloudSh: '#B4502E', cloudShO: .2 };
+        body: '#FFF4E4', shade: '#F1D7BC', stripe: '#FF7A55', seat: '#2E2A4F', frame: '#2A2440', tyre: '#2A2440', hub: '#F1D7BC', lamp: '#FFD966', glass: .45, glassFill: '#FFFFFF', bub: '#FFF8EE', marks: '#1E1A3A', speed: '#FFF8EE', speedO: .8, shadow: .22, cloud: '#FFF4E6', cloudSh: '#B4502E', cloudShO: .2 };
   const sun = dark
     ? `<ellipse cx="250" cy="156" rx="230" ry="84" fill="url(#hband)"/><circle cx="292" cy="150" r="104" fill="url(#dhalo)"/><circle cx="292" cy="150" r="22" fill="#FFD27A"/>`
     : `<circle cx="292" cy="70" r="58" fill="url(#halo)"/><circle cx="292" cy="70" r="28" fill="#FFD25E"/>`;
@@ -102,10 +102,10 @@
   /* flat paper-cut cloud: three bumps on a flat base */
   const cloud = (x, y, k) => `<path transform="translate(${x} ${y}) scale(${k})" d="M-31 9 C-34 1 -26 -5 -18 -2 C-16 -12 -3 -16 4 -8 C8 -15 21 -14 22 -4 C30 -6 35 4 29 9 Z"/>`;
   /* the driver: Xero sits low in the front seat, eyes on the road, the wheel in front of him */
-  const xero = DX.char('xero', { mood: 'hello', size: 74 }).replace('<svg ', '<svg x="156" y="133" ');
+  const xero = DX.char('xero', { mood: 'hello', size: 72 }).replace('<svg ', '<svg x="160" y="136" ');
   /* a small passenger blob in a cast colour: round head, darker side, raised brows, open talking mouth */
   const pal = { grey: ['#D3CCDD', '#B4ABC4'], yellow: ['#FFD25E', '#F2B640'], blue: ['#7C97F2', '#5C7AE0'] };
-  const pass = (x, y, c, tilt, mouth) => `<g transform="translate(${x} ${y}) rotate(${tilt})">
+  const pass = (x, y, c, tilt, mouth) => `<g transform="translate(${x} ${y}) rotate(${tilt}) scale(.9)">
       <path d="M-15 30 V7 C-15 -3 -8 -9 0 -9 C8 -9 15 -3 15 7 V30Z" fill="${pal[c][0]}"/>
       <path d="M8 -7 C12.5 -4 15 1 15 7 V30 H9.5 V7 C9.5 2 9.5 -3 8 -7Z" fill="${pal[c][1]}"/>
       <path d="M-8 -1.5 l4 -1.4 M3.5 -2.9 l4 1.4" stroke="${C.marks}" stroke-width="1.6" stroke-linecap="round"/>
@@ -131,32 +131,36 @@
     <path filter="url(#lift)" d="M0 192 C70 174 140 180 206 190 C266 199 312 182 346 176 V272 H0z" fill="${C.hills[1]}"/>
     <path filter="url(#lift)" d="M0 214 C80 202 170 208 250 212 C300 214 330 208 346 206 V272 H0z" fill="${C.hills[2]}"/>
     <path filter="url(#lift)" d="M0 226 H346 V272 H0z" fill="${C.road}"/>
-    <path d="M6 256 H346" stroke="${C.dash}" stroke-opacity="${C.dashO}" stroke-width="2.4" stroke-dasharray="14 12" stroke-linecap="round"/>
+    <path d="M0 231 H346" stroke="${C.dash}" stroke-opacity="${C.dashO * .6}" stroke-width="2" stroke-dasharray="12 12" stroke-linecap="round"/>
     <g stroke="${C.speed}" stroke-opacity="${C.speedO}" stroke-width="3" stroke-linecap="round"><path d="M8 134 H30"/><path d="M2 147 H20"/><path d="M10 160 H30"/></g>
-    <g class="car"><g transform="translate(174 248) scale(1.25) translate(-172.5 -250)"><g class="idle">
-      <ellipse cx="174" cy="250" rx="126" ry="5" fill="#000" opacity="${C.shadow}"/>
-      <path d="M64 186 C64 172 70 166 82 166 H146 C154 166 158 172 158 180 V188 H64Z" fill="${C.seat}"/>
-      <path d="M170 188 V166 C170 158 175 153 183 153 H192 C198 153 201 158 201 164 V188Z" fill="${C.seat}"/>
-      ${pass(83, 165, 'grey', -7, 'o')}${pass(112, 161, 'yellow', 1, 'grin')}${pass(141, 165, 'blue', 8, 'o')}
+    <g class="car"><g transform="translate(174 248) scale(1.22) translate(-176 -250)"><g class="idle">
+      <ellipse cx="177" cy="250" rx="104" ry="5" fill="#000" opacity="${C.shadow}"/>
+      <!-- back bench (rear) and the driver's seat back: the seat back sits between the passengers and Xero -->
+      <path d="M76 188 C76 175 81 170 91 170 H139 C145 170 148 174 148 180 V188 H76Z" fill="${C.seat}"/>
+      <path d="M153 188 V169 C153 164 156 162 161 162 C166 162 169 165 169 170 V188Z" fill="${C.seat}"/>
+      ${pass(90, 168, 'grey', -6, 'o')}${pass(113, 165, 'yellow', 1, 'grin')}${pass(136, 168, 'blue', 6, 'o')}
       ${xero}
+      <!-- dashboard cowl, steering column and wheel in front of Xero -->
+      <path d="M214 189 C215 182 221 178 229 178 H242 C249 178 254 183 256 189Z" fill="${C.frame}"/>
+      <path d="M236 184 L226 175" stroke="${C.frame}" stroke-width="3.2" stroke-linecap="round"/>
+      <ellipse cx="223" cy="169" rx="4.4" ry="12.5" transform="rotate(-22 223 169)" fill="none" stroke="${C.frame}" stroke-width="3.6"/>
       <g filter="url(#drop)">
-        <path d="M50 236 C44 236 42 230 43 223 L47 202 C49 192 56 186 68 186 H230 C238 186 242 188 250 191 L282 198 C294 201 300 208 301 218 L302 228 C302 234 299 237 293 237 Z" fill="${C.body}"/>
+        <path d="M80 237 C74 237 72 231 73 224 L76 200 C78 190 84 184 96 184 H232 C240 184 244 186 250 188 L267 194 C277 197 281 204 281 214 L281 229 C281 235 278 237 272 237 Z" fill="${C.body}"/>
       </g>
-      <path d="M46 210 H300" stroke="${C.stripe}" stroke-width="3.4" stroke-linecap="round" opacity=".9"/>
-      <path d="M162 189 V234" stroke="${C.shade}" stroke-width="2" stroke-linecap="round"/>
-      <path d="M172 198 h12" stroke="${C.shade}" stroke-width="3" stroke-linecap="round"/>
-      <path d="M264 192 L250 158 L259 156.5 L275 195Z" fill="#FFFFFF" fill-opacity="${C.glass}" stroke="${C.frame}" stroke-width="2.6" stroke-linejoin="round"/>
-      <path d="M219 190 C220 182 226 178 234 178 H252 C259 178 264 183 266 192Z" fill="${C.frame}"/>
-      <path d="M233 181 L222 172" stroke="${C.frame}" stroke-width="3" stroke-linecap="round"/>
-      <ellipse cx="218" cy="167" rx="3.8" ry="11" transform="rotate(-24 218 167)" fill="none" stroke="${C.frame}" stroke-width="3.4"/>
-      <rect x="291" y="204" width="9" height="10" rx="3" fill="${C.lamp}"/>
-      <rect x="43" y="206" width="6" height="9" rx="2.5" fill="${C.stripe}"/>
-      <circle cx="94" cy="237" r="21" fill="${C.shade}"/><circle cx="250" cy="237" r="21" fill="${C.shade}"/>
-      <circle cx="94" cy="239" r="17" fill="${C.tyre}"/><circle cx="94" cy="239" r="6.5" fill="${C.hub}"/>
-      <circle cx="250" cy="239" r="17" fill="${C.tyre}"/><circle cx="250" cy="239" r="6.5" fill="${C.hub}"/>
+      <path d="M75 210 H280" stroke="${C.stripe}" stroke-width="3.4" stroke-linecap="round" opacity=".9"/>
+      <path d="M176 189 V234" stroke="${C.shade}" stroke-width="2" stroke-linecap="round"/>
+      <path d="M186 198 h12" stroke="${C.shade}" stroke-width="3" stroke-linecap="round"/>
+      <!-- windshield: a framed pane leaning back from the hood, Xero behind it -->
+      <path d="M248 190 L240.5 161 C240 159 241 158 243 158 H248.5 C250.5 158 251.6 159 252.2 161 L261 190Z" fill="${C.glassFill}" fill-opacity="${C.glass}" stroke="${C.frame}" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M245.5 163 L253 185" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="1.6" stroke-linecap="round"/>
+      <rect x="272" y="203" width="9" height="10" rx="3" fill="${C.lamp}"/>
+      <rect x="72" y="205" width="6" height="9" rx="2.5" fill="${C.stripe}"/>
+      <circle cx="114" cy="237" r="21" fill="${C.shade}"/><circle cx="240" cy="237" r="21" fill="${C.shade}"/>
+      <circle cx="114" cy="239" r="17" fill="${C.tyre}"/><circle cx="114" cy="239" r="6.5" fill="${C.hub}"/>
+      <circle cx="240" cy="239" r="17" fill="${C.tyre}"/><circle cx="240" cy="239" r="6.5" fill="${C.hub}"/>
     </g></g>
-    ${bubble(16, 70, 58, 30, 48, [56, 122], '<path d="M14 17.5 l5 -5 l5 5 l5 -5 l5 5 l5 -5"/>', 900)}
-    ${bubble(98, 58, 54, 30, 120, [128, 118], '<path d="M17 9 v7"/><path d="M27 9 v7"/><path d="M37 9 v7"/><path d="M17 21.5 h.01"/><path d="M27 21.5 h.01"/><path d="M37 21.5 h.01"/>', 1600)}
+    ${bubble(16, 70, 58, 30, 48, [66, 130], '<path d="M14 17.5 l5 -5 l5 5 l5 -5 l5 5 l5 -5"/>', 900)}
+    ${bubble(98, 58, 54, 30, 122, [124, 128], '<path d="M17 9 v7"/><path d="M27 9 v7"/><path d="M37 9 v7"/><path d="M17 21.5 h.01"/><path d="M27 21.5 h.01"/><path d="M37 21.5 h.01"/>', 1600)}
     </g>
   </svg>`;
 </script>

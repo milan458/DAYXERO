@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>026 Session reflect</title>
-<meta name="motion" content="The bar shows card 5 a third done with Card 5 · Step 1 of 3 beside it; the mint tag, title and line arrive (600ms, 90ms stagger), then the chips arrive row by row (600ms, 90ms apart), every option at full contrast. At 1.1s Work piling up takes the kit selection (warm tint and outline, 250ms) with a 520ms spring bump and a selection haptic, and at 1.5s Too much at once does the same. Each pick writes itself into Your plan so far (the phrase cross-fades into its line, 300ms), leaving the I'll blank for step 2. Picks are capped at two: tapping a third option selects it and releases the oldest pick in the same beat (250ms cross-fade, its plan line rewrites), so the screen never dims or blocks. Continue arrives last.">
+<meta name="motion" content="The bar shows card 5 a third done with Card 5 · Step 1 of 3 beside it; the mint tag (Your stress plan; the bar label carries the step), title and line arrive (600ms, 90ms stagger), then the chips, each hugging its words in left-aligned rows, arrive one by one in reading order (600ms, 45ms apart), every option at full contrast. At 1.1s Work piling up takes the kit selection (warm tint and outline, 250ms) with a 520ms spring bump and a selection haptic, and at 1.5s Too much at once does the same. Each pick writes itself into Your plan so far (the phrase cross-fades into its line, 300ms), leaving the I'll blank for step 2. Picks are capped at two: tapping a third option selects it and releases the oldest pick in the same beat (250ms cross-fade, its plan line rewrites), so the screen never dims or blocks. Continue arrives last.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -15,20 +15,19 @@
 /* dark: a deep mint pill with a mint label, never pale mint glaring on navy */
 [data-theme="dark"] .tag.k-try{background:#1A4434;color:#9FE3BC;box-shadow:inset 0 0 0 1px rgba(159,227,188,.22)}
 /* the options: 006's chip pattern, natural widths in hand-balanced rows, all at full contrast */
-/* rows are packed edge to edge: each chip grows to share its row, so no row ends short */
-.flow{display:grid;gap:12px;margin-top:24px}
-.flow .r{display:flex;gap:8px}
-.flow .chip{flex:1 1 auto;justify-content:center;min-height:52px;padding:0 14px;white-space:nowrap}
+/* chips hug their words, left-aligned with a ragged right edge, like 006: never stretched to fill a row */
+.flow{display:flex;flex-wrap:wrap;justify-content:flex-start;gap:10px 8px;margin-top:22px}
+.flow .chip{flex:none;justify-content:center;min-height:50px;padding:0 14px;white-space:nowrap}
 .flow .chip.add{background:transparent;box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--fg) 40%,transparent);gap:6px;padding-left:12px}
 .flow .chip.add svg{width:16px;height:16px}
 /* the plan forming: your two picks become the "when" of two plan lines; the "I'll" stays blank until step 2 */
 .plan{margin-top:38px;display:grid;gap:18px;padding:20px 20px 24px}
 .plan .t-cap{color:var(--muted)}
-.plan .pl{margin:0;display:flex;align-items:flex-end;flex-wrap:nowrap;gap:4px 8px;font:500 16px/1.35 var(--body)}
+.plan .pl{margin:0;display:flex;align-items:flex-end;flex-wrap:nowrap;gap:4px 8px;font:500 15px/1.35 var(--body)}
 .plan .pl b{font-weight:700}
 .plan .pl > span{flex:none}
 /* the blank is a clear write-in slot: an underline waiting for step 2 */
-.plan .blank{flex:1;min-width:56px;max-width:120px;height:21px;border-bottom:2px solid color-mix(in srgb,var(--fg) 45%,transparent)}
+.plan .blank{flex:none;width:72px;height:20px;border-bottom:2px solid color-mix(in srgb,var(--fg) 45%,transparent)}
 .plan .pl b{transition:opacity .3s var(--ease)}
 .plan .pl b.wait{opacity:0}
 .chip.land{animation:land 520ms var(--spring) both}
@@ -42,16 +41,16 @@
     <span class="side t-cap">Card 5 · Step 1 of 3</span>
   </div>
   <div class="wrap pad">
-    <span class="tag k-try" data-a style="--i:0"><span id="t-ic"></span>Your stress plan · 6 min</span>
+    <span class="tag k-try" data-a style="--i:0"><span id="t-ic"></span>Your stress plan</span>
     <h1 class="t-title" data-a style="--i:1">What gets to you most?</h1>
     <p class="t-foot muted" data-a style="--i:2">Pick the two that come up most often.</p>
     <div class="flow">
-      <div class="r" data-a style="--i:3"><button class="chip on" id="c1">Work piling up</button><button class="chip">Money worries</button></div>
-      <div class="r" data-a style="--i:4"><button class="chip">A deadline</button><button class="chip">Bad news</button><button class="chip">Running late</button></div>
-      <div class="r" data-a style="--i:5"><button class="chip">Family chaos</button><button class="chip on" id="c2">Too much at once</button></div>
-      <div class="r" data-a style="--i:6"><button class="chip">Tension with someone</button><button class="chip add" id="add"></button></div>
+      <button class="chip on" id="c1" data-a style="--i:3">Work piling up</button><button class="chip" data-a style="--i:3.5">Money worries</button>
+      <button class="chip" data-a style="--i:4">A deadline</button><button class="chip" data-a style="--i:4.5">Bad news</button><button class="chip" data-a style="--i:5">Running late</button>
+      <button class="chip" data-a style="--i:5.5">Family chaos</button><button class="chip on" id="c2" data-a style="--i:6">Too much at once</button>
+      <button class="chip" data-a style="--i:6.5">Tension with someone</button><button class="chip add" id="add" data-a style="--i:7"></button>
     </div>
-    <div class="plan card" data-a style="--i:7">
+    <div class="plan card" data-a style="--i:8">
       <p class="t-cap">Your plan so far</p>
       <p class="pl"><span>When <b id="w1">work piles up</b>, I'll</span><i class="blank" aria-label="to be chosen"></i></p>
       <p class="pl"><span>When it's <b id="w2">too much at once</b>, I'll</span><i class="blank" aria-label="to be chosen"></i></p>

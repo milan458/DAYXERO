@@ -167,3 +167,5 @@ session 023-032, lesson-log 033-042, slips-checkin 043-055.
 - Today-SOS-Program round 9: Opus 8.6 / Sonnet 8.3 (r8 8.8 / 8.8): lower on both, reverted to round 8 (backup in scratchpad).
   Kit: SOS disc 4px higher so its label clears it.
 - Slips-checkin round 9: Opus 8.6 / Sonnet 8.6 (r8 8.6 / 8.7): kept (equal on Opus). Calm-settings round 8 done, critics next.
+- Calm-settings round 8: Opus 8.6 / Sonnet 8.7 (r7 8.7 / 8.4): mixed, kept. 059 at 9.1 and 057 at 9.0 (Sonnet).
+- Kit: toggles and the light selection edge use one apricot-coral (#F26A45), less red than before.
