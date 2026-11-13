@@ -1,76 +1,100 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>029 Session commit</title>
-<meta name="motion" content="Tag, title, helper, the ring with the Day Xero medallion resting faded inside it, and the date arrive (600ms, 90ms stagger). Holding the button (3s, auto at 1.2s) fills the button and sweeps the one ring around in lockstep (linear, a soft haptic tick every 0.5s); letting go drains it (300ms). On held: the ring turns sun yellow, the medallion stamps to full colour (620ms spring) with a shine, the date bumps (520ms spring), the helper cross-fades to Done. See you on Fri, Nov 6. and the button turns into Committed (success haptic).">
+<meta name="motion" content="The step bar fills to the last third of card 5 and the tag's step dots reach 3 of 3; tag, title, helper, the ringed Day Xero medal (resting faded inside its empty rim) and the date arrive (600ms, 90ms stagger). Holding the button (3s, auto at 1.2s) fills the button and sweeps the medal's rim around in lockstep (linear, a soft haptic tick every 0.5s); letting go drains both (300ms). On held: the rim turns sun gold, the medal face stamps to full colour (620ms spring) with a shine, the date bumps (520ms spring), the title cross-fades to You're committed and the helper to its done line (400ms), and the button shows Committed (success haptic). 1200ms later the done button cross-fades (350ms) into Continue.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-.f-mint{--face:#9FE3BC}
+.k-try{--face:#9FE3BC}
+[data-theme="dark"] .k-try{--face:#8FD3AD}
 .nav .side{width:44px;text-align:right;flex:none}
-.tag{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px 0 9px;border-radius:99px;background:var(--face);color:#1E1A3A;font:600 13px/1 var(--body);justify-self:start}
-.tag svg{width:16px;height:16px}
+.steps > i.now::after{width:var(--sub,45%)}
 .wrap{position:absolute;top:110px;left:0;right:0;display:grid;align-content:start;gap:10px}
-.helper{transition:opacity .3s var(--ease)}
-.ringbox{position:absolute;top:268px;left:50%;width:292px;height:292px;margin-left:-146px}
-.ringbox svg.r{display:block;transform:rotate(-90deg)}
+.tagrow{display:flex;align-items:center;justify-content:space-between}
+.tag{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px 0 9px;border-radius:99px;background:var(--face);color:#1E1A3A;font:600 13px/1 var(--body)}
+.tag svg{width:16px;height:16px}
+.sub{display:flex;gap:6px;align-items:center}
+.sub i{width:8px;height:8px;border-radius:99px;background:var(--track)}
+.sub i.on{background:var(--fg)}
+/* title and helper swap in place after the hold */
+.swap{display:grid}
+.swap > *{grid-area:1/1;transition:opacity .4s var(--ease),transform .4s var(--ease)}
+.swap .b{opacity:0;transform:translateY(6px)}
+.done .swap .a{opacity:0;transform:translateY(-6px)}
+.done .swap .b{opacity:1;transform:none}
+/* one ringed medal: the hold ring is the medal's rim and the Day Xero coin fills it edge to edge */
+.ringbox{position:absolute;top:266px;left:50%;width:264px;height:264px;margin-left:-132px}
+.ringbox svg.r{position:absolute;inset:0;display:block;transform:rotate(-90deg)}
 .arc{transition:stroke .4s var(--ease)}
-.ringbox.done .arc{stroke:#F5B83D}
-[data-theme="dark"] .ringbox.done .arc{stroke:#FFD966}
-.medal{position:absolute;inset:0;display:grid;place-items:center}
-.medal .rays{display:none}
-/* the ring is the medallion's rim: drop the badge's own gold edge so there is only one ring */
-.medal svg > circle[r="47"], .medal svg > circle[stroke="#fff"]{display:none}
-.medal .m{border-radius:50%;opacity:.38;filter:saturate(.25);transition:opacity .4s var(--ease),filter .4s var(--ease)}
-.ringbox.done .medal .m{opacity:1;filter:none}
-.when{position:absolute;top:588px;left:0;right:0;text-align:center;display:grid;gap:6px;justify-items:center}
+.done .arc{stroke:#F5B83D}
+[data-theme="dark"] .done .arc{stroke:#FFD966}
+.coin{position:absolute;left:-23px;top:-23px;width:310px;height:310px}
+.coin .rays{display:none}
+.coin svg > circle[r="47"], .coin svg > circle[stroke="#fff"]{display:none}
+.coin .m{border-radius:50%;opacity:.38;filter:saturate(.25);transition:opacity .4s var(--ease),filter .4s var(--ease)}
+.done .coin .m{opacity:1;filter:none}
+.when{position:absolute;top:566px;left:0;right:0;text-align:center;display:grid;gap:6px;justify-items:center}
 .when .t-large{font-size:36px}
+/* after the hold the button hands over to Continue (same as Quit Day in onboarding) */
+.btns{position:relative;height:58px}
+.btns .btn{position:absolute;inset:0;transition:opacity .35s var(--ease),transform .35s var(--ease)}
+.btns #go{opacity:0;pointer-events:none;transform:translateY(6px)}
+.btns.next #hold{opacity:0;pointer-events:none}
+.btns.next #go{opacity:1;pointer-events:auto;transform:none}
 </style>
 </head><body>
-<div class="screen" data-ground="table">
+<div class="screen" data-ground="table" id="scr">
   <div class="nav">
     <button class="icon-btn" aria-label="Close" id="close"></button>
-    <div class="grow"><div class="steps" aria-label="Card 5 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="now"></i></div></div>
+    <div class="grow"><div class="steps" aria-label="Card 5 of 5, step 3 of 3" style="--sub:100%"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="now"></i></div></div>
     <span class="side t-foot muted">5 of 5</span>
   </div>
   <div class="wrap pad">
-    <span class="tag f-mint" data-a style="--i:0"><span id="t-ic"></span>Your stress plan · 6 min</span>
-    <h1 class="t-title" data-a style="--i:1">Commit to your Quit Day</h1>
-    <p class="t-foot muted helper" id="helper" data-a style="--i:2">Hold for three seconds to make it official. This one is a promise to yourself.</p>
+    <div class="tagrow" data-a style="--i:0"><span class="tag k-try"><span id="t-ic"></span>Your stress plan · 6 min</span><span class="sub" aria-label="Step 3 of 3"><i class="on"></i><i class="on"></i><i class="on"></i></span></div>
+    <h1 class="t-title swap" data-a style="--i:1"><span class="a">Commit to your Quit Day</span><span class="b">You're committed</span></h1>
+    <p class="t-foot muted swap" data-a style="--i:2"><span class="a">Hold for three seconds to make it official.</span><span class="b">Done. This one is a promise to yourself.</span></p>
   </div>
-  <div class="ringbox" id="rb" data-a style="--i:3">
-    <svg class="r" width="292" height="292" viewBox="0 0 292 292" aria-hidden="true">
-      <circle cx="146" cy="146" r="138" fill="none" stroke="var(--track)" stroke-width="12"/>
-      <circle class="arc" id="arc" cx="146" cy="146" r="138" fill="none" stroke="var(--fg)" stroke-width="12" stroke-linecap="round" stroke-dasharray="867.1" stroke-dashoffset="867.1"/>
+  <div class="ringbox" data-a style="--i:3">
+    <div class="coin"><div id="stampwrap"><div class="m" id="medal"></div></div></div>
+    <svg class="r" width="264" height="264" viewBox="0 0 264 264" aria-hidden="true">
+      <circle cx="132" cy="132" r="126" fill="none" stroke="var(--track)" stroke-width="12"/>
+      <circle class="arc" id="arc" cx="132" cy="132" r="126" fill="none" stroke="var(--fg)" stroke-width="12" stroke-linecap="round" stroke-dasharray="791.7" stroke-dashoffset="791.7"/>
     </svg>
-    <div class="medal"><div id="stampwrap"><div class="m" id="medal"></div></div></div>
   </div>
   <div class="when" data-a style="--i:4">
     <div id="date"><p class="t-large">Fri, Nov 6</p></div>
     <p class="t-foot muted">Day Xero · 4 days to go</p>
   </div>
-  <div class="dock"><button class="btn" id="hold" data-hold="3000" data-autohold="1200" data-done="Committed" data-a style="--i:5">Hold to commit</button></div>
+  <div class="dock">
+    <div class="btns" id="btns" data-a style="--i:5">
+      <button class="btn" id="hold" data-hold="3000" data-autohold="1200" data-done="Committed">Hold to commit</button>
+      <button class="btn" id="go">Continue</button>
+    </div>
+  </div>
 </div>
 <script>
 const SPARK = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.8c.7 4.9 2.3 6.6 7.4 7.4-5.1.8-6.7 2.5-7.4 7.4-.7-4.9-2.3-6.6-7.4-7.4 5.1-.8 6.7-2.5 7.4-7.4z"/><circle cx="18.6" cy="18.4" r="1.8"/></svg>';
 document.getElementById('close').innerHTML = DX.icon('close');
 document.getElementById('t-ic').innerHTML = SPARK;
-const arc = document.getElementById('arc'), rb = document.getElementById('rb'), btn = document.getElementById('hold'), helper = document.getElementById('helper');
-const sw = document.getElementById('stampwrap'), medal = document.getElementById('medal'), date = document.getElementById('date');
-medal.innerHTML = DX.badge({kind:'xero', size:262, bare:true, label:'Day Xero'});
-const C = 867.1, ASK = 'Hold for three seconds to make it official. This one is a promise to yourself.';
-const reset = () => { rb.classList.remove('done'); sw.removeAttribute('data-stamp'); medal.classList.remove('shine'); date.className = '';
-  arc.style.transition = 'none'; arc.style.strokeDashoffset = C; helper.textContent = ASK; };
-const fillRing = () => { if (rb.classList.contains('done')) return; arc.style.transition = 'stroke-dashoffset 3000ms linear, stroke .4s'; arc.style.strokeDashoffset = 0; };
-const drain = () => { if (rb.classList.contains('done')) return; arc.style.transition = 'stroke-dashoffset 300ms ease-out'; arc.style.strokeDashoffset = C; };
+const $ = id => document.getElementById(id);
+const arc = $('arc'), scr = $('scr'), btn = $('hold'), sw = $('stampwrap'), medal = $('medal'), date = $('date');
+medal.innerHTML = DX.badge({kind:'xero', size:310, bare:true, label:'Day Xero'});
+const C = 791.7;
+const reset = () => { scr.classList.remove('done'); $('btns').classList.remove('next'); sw.removeAttribute('data-stamp'); medal.classList.remove('shine'); date.className = '';
+  arc.style.transition = 'none'; arc.style.strokeDashoffset = C; };
+const fillRing = () => { if (scr.classList.contains('done')) return; arc.style.transition = 'stroke-dashoffset 3000ms linear, stroke .4s'; arc.style.strokeDashoffset = 0; };
+const drain = () => { if (scr.classList.contains('done')) return; arc.style.transition = 'stroke-dashoffset 300ms ease-out'; arc.style.strokeDashoffset = C; };
 btn.addEventListener('pointerdown', fillRing); btn.addEventListener('pointerup', drain); btn.addEventListener('pointerleave', drain);
 const complete = () => {
-  arc.style.transition = 'stroke .4s'; arc.style.strokeDashoffset = 0; rb.classList.add('done');
+  arc.style.transition = 'stroke .4s'; arc.style.strokeDashoffset = 0; scr.classList.add('done');
   sw.setAttribute('data-stamp', ''); sw.style.setProperty('--d', '120ms'); medal.classList.add('shine'); medal.style.setProperty('--d', '600ms');
   date.className = 'bump'; date.style.setProperty('--d', '300ms');
-  helper.textContent = 'Done. See you on Fri, Nov 6.';
 };
 reset();
 document.addEventListener('held', complete);
 DX.after(0, reset);
 DX.after(1200, fillRing);
+/* 1200ms after the hold lands, the button hands over to Continue */
+DX.after(1200 + 3000 + 1200, () => $('btns').classList.add('next'));
+DX.onStill(() => $('btns').classList.add('next'));
 </script>
 </body></html>

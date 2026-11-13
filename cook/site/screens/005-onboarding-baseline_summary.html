@@ -1,9 +1,11 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>005 Your baseline</title>
-<meta name="motion" content="Progress eases from 2/11 to 3/11 (900ms). Question arrives, then the hero card: 32 counts up (850ms, from 300ms) while the split bar grows left to right, cigarettes then vape (700ms each, 120ms apart), and the two legend lines fade in under their segments. The quiet cost list arrives (600ms) and counts up $2,555 and 365 (850ms). No haptic; one soft tick when the counts land.">
+<meta name="motion" content="Progress eases from 2/11 to 3/11 (900ms). Question arrives, then the hero card: 32 counts up (850ms, from 300ms) while the split bar grows left to right, cigarettes then vape (700ms each, 120ms apart), and the two legend lines fade in under their segments. The cost card (same card style) arrives (600ms) and counts up $2,555 and 365 (850ms). No haptic; one soft tick when the counts land.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
+  /* Onboarding header: back button and progress only (no avatar); the bar ends at the gutter so the sun knob never collides. */
+  .nav { padding-right: 26px; }
   .q .t-body { text-wrap: pretty; }
   /* One hero: 32 a day. Everything else is a quiet list that shows its working. */
   .load { padding: 24px 20px 24px; }
@@ -22,19 +24,18 @@
   .legend .dot.c { background: var(--fg); } .legend .dot.v { background: var(--coral); }
   .legend b { font-weight: 700; }
   .answers { gap: 18px !important; padding-top: 30px !important; }
-  .quiet { background: transparent; box-shadow: inset 0 0 0 1.5px var(--line) !important; }
-  .quiet .row { align-items: flex-start; padding: 18px 18px; min-height: 0; }
-  .quiet .row + .row { border-top: 1px solid var(--line); }
-  .quiet .num { font-size: 22px; line-height: 1.1; white-space: nowrap; }
-  .quiet .t-foot { color: var(--muted); margin-top: 3px; }
-  .quiet .t-foot b { color: var(--fg); font-weight: 600; }
+  /* The cost list: the same white card as the hero (one card style), two rows that show their working. */
+  .cost .row { align-items: flex-start; padding: 16px 20px; min-height: 0; }
+  .cost .t-head { display: block; text-wrap: balance; }
+  .cost .t-head .num { font-size: 24px; letter-spacing: -.6px; }
+  .cost .t-foot { color: var(--muted); margin-top: 4px; }
+  .cost .t-foot b { color: var(--fg); font-weight: 600; }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
   <div class="nav">
     <button class="icon-btn" aria-label="Back" data-icon="back"></button>
     <div class="grow"><div class="progress sun"><i id="bar" style="--p:27.3%"></i></div></div>
-    <div class="avatar" id="av"></div>
   </div>
 
   <div class="q">
@@ -51,18 +52,17 @@
         <p class="t-foot"><span class="dot v"></span><span><b>20</b> more from about 200 vape puffs</span></p>
       </div>
     </div>
-    <div class="list quiet" data-a style="--i:3">
-      <div class="row"><div class="grow"><span class="num"><span data-count="2555" data-prefix="$">$2,555</span> a year</span>
+    <div class="list cost" data-a style="--i:3">
+      <div class="row"><div class="grow"><p class="t-head"><span class="num"><span data-count="2555" data-prefix="$">$2,555</span></span> a year on nicotine</p>
         <p class="t-foot"><b>$7 a day:</b> $4.80 cigarettes + $2.20 vape</p></div></div>
-      <div class="row"><div class="grow"><span class="num"><span data-count="365">365</span> hours a year</span>
-        <p class="t-foot"><b>1 hour a day:</b> 12 breaks of about 5 minutes</p></div></div>
+      <div class="row"><div class="grow"><p class="t-head"><span class="num"><span data-count="365">365</span> hours</span> a year on smoke breaks</p>
+        <p class="t-foot"><b>Cigarettes and vape:</b> about 1 hour a day</p></div></div>
     </div>
   </div>
   <div class="dock"><button class="btn" data-a style="--i:6">Continue</button></div>
 </div>
 <script>
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
-  document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 40 });
   const bar = document.getElementById('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '18.2%'); void bar.offsetWidth; bar.style.transition = ''; });
   DX.after(250, () => bar.style.setProperty('--p', '27.3%'));

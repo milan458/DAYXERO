@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>025 Session card played</title>
-<meta name="motion" content="The apricot Listen card lifts from below and flips over (rotateY, 1100ms settle) to its back: a sun with soft rays, a small Xero spark and a cream band reading Listen · 6 min, landing with a slight tilt; the ink check pops and draws in the sun at 1.1s (success haptic) while the spark twinkles once (scale 0 to 1, spring). The first step segment fills from the playhead to full and the counter turns from 1 of 5 to 1 of 5 done at 1.3s. Title, line and the Up next row arrive (600ms, 90ms stagger); the rating and the button arrive last in the dock. Tapping a rating chip selects it (selection haptic).">
+<meta name="motion" content="The apricot Listen card lifts from below and flips over (rotateY, 1100ms settle) to its back: a paper sun with short rounded rays, a small Xero spark and a cream band reading Listen · 6 min, landing with a slight tilt; the ink check pops and draws in the sun at 1.1s (success haptic) while the spark twinkles once (scale 0 to 1, spring). The first step segment fills from the playhead to full and the counter turns from 1 of 5 to 1 of 5 done at 1.3s. Title, line and the Up next row arrive (600ms, 90ms stagger); the rating and the button arrive last in the dock. Tapping a rating chip selects it (selection haptic).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -18,7 +18,7 @@
 .side-f .ic{width:36px;height:36px;border-radius:99px;background:rgba(30,26,58,.1);display:grid;place-items:center}
 .side-f .ic svg{width:20px;height:20px}
 .side-f b{display:block;margin-top:10px;font:700 17px/1.1 var(--display)}
-/* the back: this card's own apricot, a sun with soft rays, a small Xero spark, and a cream band that names the card */
+/* the back: this card's own apricot, a paper sun with short rounded rays, a small Xero spark, and a cream band that names the card */
 .side-f.back{transform:rotateY(180deg);padding:0}
 .side-f.back svg.sunart{position:absolute;left:0;top:0}
 .side-f.back .chk{position:absolute;left:50%;top:76px;margin-left:-38px}
@@ -33,7 +33,7 @@
 .next .tile{width:44px;height:44px;border-radius:14px;background:var(--face);color:#1E1A3A;display:grid;place-items:center;flex:none}
 .next .tile svg{width:22px;height:22px}
 .next .t-cap{color:var(--muted);display:block}
-.next .t-head{font-size:17px;margin-top:3px}
+.next .t-head{font-size:17px;margin-top:3px;text-wrap:balance}
 /* the rating sits just above the button, inside the dock */
 .rate{display:grid;gap:10px;justify-items:center;margin-bottom:6px}
 .rate .chips{gap:8px;justify-content:center}
@@ -80,16 +80,18 @@ document.getElementById('f-ic').innerHTML = DX.icon('headphones');
 document.getElementById('b-ic').innerHTML = DX.icon('headphones', {size:17, w:2.4});
 document.getElementById('n-ic').innerHTML = DX.icon('hand', {size:22});
 document.getElementById('chk').innerHTML = DX.check({size:76, color:'#1E1A3A', fg:'#FFD966', d:1100});
-/* sun with soft, rounded rays (paper, not spikes) and one small Xero spark */
+/* a paper sun: short tapered rays with rounded tips (cut paper, no spikes), and one small Xero spark */
 const cx = 98, cy = 114;
-const rays = Array.from({length:12}, (_, i) => { const a = i * Math.PI / 6 + Math.PI / 12, r1 = 62, r2 = 80;
-  return `<path d="M${(cx + r1 * Math.cos(a)).toFixed(1)} ${(cy + r1 * Math.sin(a)).toFixed(1)} L${(cx + r2 * Math.cos(a)).toFixed(1)} ${(cy + r2 * Math.sin(a)).toFixed(1)}"/>`; }).join('');
+const rays = Array.from({length:12}, (_, i) => { const a = i * Math.PI / 6 + Math.PI / 12, c = Math.cos(a), s = Math.sin(a), px = -s, py = c;
+  const P = (r, w) => `${(cx + r * c + w * px).toFixed(1)} ${(cy + r * s + w * py).toFixed(1)}`;
+  return `<path d="M${P(56, -9)} L${P(80, -3.6)} Q${P(85, 0)} ${P(80, 3.6)} L${P(56, 9)}Z"/>`; }).join('');
 const star = (x, y, r) => `<path class="spark" d="M${x} ${y - r} Q${x} ${y} ${x + r} ${y} Q${x} ${y} ${x} ${y + r} Q${x} ${y} ${x - r} ${y} Q${x} ${y} ${x} ${y - r}Z"/>`;
 document.getElementById('sunart').innerHTML = `
-  <circle cx="${cx}" cy="${cy}" r="96" fill="#FFF8EE" fill-opacity=".16"/>
-  <g stroke="#FFF1D6" stroke-width="9" stroke-linecap="round" fill="none">${rays}</g>
-  <circle cx="${cx}" cy="${cy}" r="52" fill="#FFE6B8"/>
-  <g fill="#FFF8EE">${star(162, 34, 11)}</g><circle cx="146" cy="26" r="2.6" fill="#FFF8EE"/>`;
+  <circle cx="${cx}" cy="${cy}" r="98" fill="#FFF8EE" fill-opacity=".16"/>
+  <g fill="#FFF1D6" stroke="#FFF1D6" stroke-width="2" stroke-linejoin="round">${rays}</g>
+  <circle cx="${cx}" cy="${cy}" r="58" fill="#FFF1D6"/>
+  <circle cx="${cx}" cy="${cy}" r="50" fill="#FFE2AE"/>
+  <g fill="#FFF8EE">${star(162, 32, 11)}</g><circle cx="146" cy="24" r="2.6" fill="#FFF8EE"/>`;
 if (!DX.still) {
   const p1 = document.getElementById('p1'), lbl = document.getElementById('lbl');
   p1.className = 'now'; p1.parentElement.style.setProperty('--sub', '100%'); lbl.textContent = '1 of 5';

@@ -1,26 +1,37 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>028 Session slider</title>
-<meta name="motion" content="Tag, question and helper arrive (600ms, 90ms stagger). The calm-blue to coral track fades in, then the thumb glides from Calm to the middle (1100ms settle, from 400ms) while the big number counts 0 to 5 in step; a soft tick haptic on each whole number. Xero settles in beside the number (900ms) and his bubble arrives under him last (600ms), its tail pointing up to him.">
+<meta name="motion" content="The step bar shows card 2 a third done; the mint tag with its step dots (1 of 3), question and helper arrive (600ms, 90ms stagger). The calm-blue to coral track and its 11 stops fade in, then the thumb glides from Calm to the middle (1100ms settle, from 400ms) while the big number counts 0 to 5 in step, with a soft tick haptic on each stop. Xero's face follows the thumb as it passes (calm at 0 to 3, plain at 4, a little tense at 5 and 6, tense from 7: a 150ms cross-fade per change) and his line arrives beside him last (600ms).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-.f-sky{--face:#9CCBFF}
+/* A breath that works in the moment is a Try card: mint + hand */
+.k-try{--face:#9FE3BC}
+[data-theme="dark"] .k-try{--face:#8FD3AD}
 .nav .side{width:44px;text-align:right;flex:none}
-.tag{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px 0 9px;border-radius:99px;background:var(--face);color:#1E1A3A;font:600 13px/1 var(--body);justify-self:start}
-.tag svg{width:16px;height:16px}
+.steps > i.now::after{width:var(--sub,45%)}
 .wrap{position:absolute;top:110px;left:0;right:0;display:grid;align-content:start;gap:10px}
-.stage{position:absolute;top:274px;left:var(--gutter);right:var(--gutter);height:170px;display:flex;align-items:flex-end;justify-content:center;gap:34px}
-.big{text-align:center;padding-bottom:6px}
-.big .num{font-size:132px;line-height:.9;letter-spacing:-3px;display:block}
-.big .t-foot{margin-top:8px}
-.stage .who{width:150px;flex:none}
-.say{position:absolute;top:470px;text-wrap:balance;left:var(--gutter);right:var(--gutter);margin:0;background:var(--card);border-radius:20px;padding:13px 16px;font:500 15px/1.4 var(--body);
-  box-shadow:0 2px 10px rgba(30,26,58,.06);}
-.say::before{content:"";position:absolute;top:-11px;left:calc(50% + 44px);width:18px;height:12px;background:var(--card);clip-path:polygon(0 100%,62% 0,100% 100%)}
-[data-theme="dark"] .say{box-shadow:none}
-.sl{position:absolute;top:588px;left:var(--gutter);right:var(--gutter)}
+.tagrow{display:flex;align-items:center;justify-content:space-between}
+.tag{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px 0 9px;border-radius:99px;background:var(--face);color:#1E1A3A;font:600 13px/1 var(--body)}
+.tag svg{width:16px;height:16px}
+.sub{display:flex;gap:6px;align-items:center}
+.sub i{width:8px;height:8px;border-radius:99px;background:var(--track)}
+.sub i.on{background:var(--fg)}
+/* the number and Xero's reaction, centred as one group */
+.group{position:absolute;top:300px;left:var(--gutter);right:var(--gutter);display:grid;justify-items:center;gap:16px}
+.big{text-align:center}
+.big .num{font-size:128px;line-height:.9;letter-spacing:-3px;display:block}
+.big .t-foot{margin-top:6px}
+/* Xero says: Xero at 64 and a bubble that hugs its text, tail to Xero (one component on 026, 027, 028, 031) */
+.xsay{display:flex;align-items:flex-end;gap:10px}
+.xsay .xs-x{width:64px;flex:none}
+.xsay .xs-b{position:relative;width:max-content;max-width:calc(100% - 74px);background:var(--card);border-radius:18px 18px 18px 6px;padding:11px 15px;margin:0 0 12px;font:500 15px/1.4 var(--body);color:var(--fg);box-shadow:0 2px 10px rgba(30,26,58,.07)}
+[data-theme="dark"] .xsay .xs-b{box-shadow:none}
+.xsay .xs-b::before{content:"";position:absolute;left:-7px;bottom:0;width:12px;height:14px;background:var(--card);clip-path:polygon(100% 0,100% 100%,0 100%)}
+.sl{position:absolute;top:612px;left:var(--gutter);right:var(--gutter)}
 .track{position:relative;height:10px;border-radius:99px;margin:0 6px;background:linear-gradient(90deg,#8EC1FF,#C9A9C8 50%,#FF7A55)}
 [data-theme="dark"] .track{background:linear-gradient(90deg,#6FA6EE,#B48FA9 50%,#F0704E)}
+/* 11 stops, 0 to 10 */
+.track .stop{position:absolute;top:50%;width:4px;height:4px;margin:-2px 0 0 -2px;border-radius:99px;background:#FFF8EE;opacity:.85}
 .track .thumb{position:absolute;top:50%;left:var(--v);width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:99px;background:#fff;
   box-shadow:0 0 0 4px #C9A9C8 inset,0 4px 12px rgba(30,26,58,.28)}
 [data-theme="dark"] .track .thumb{background:#FFF8EE;box-shadow:0 0 0 4px #B48FA9 inset,0 4px 14px rgba(0,0,0,.5)}
@@ -28,8 +39,9 @@
 @keyframes glide{from{left:0}to{left:var(--v)}}
 .ends{display:flex;justify-content:space-between;margin-top:26px}
 .ends span{font:600 15px/1 var(--body)}
-.ends span:first-child{color:color-mix(in srgb,#2F6FD0 70%,var(--fg))}
-.ends span:last-child{color:color-mix(in srgb,#E2552F 75%,var(--fg))}
+/* both labels hold at least 4.5:1 on the ground */
+.ends span:first-child{color:#2A5DB0}
+.ends span:last-child{color:#C2441F}
 [data-theme="dark"] .ends span:first-child{color:#9CCBFF}
 [data-theme="dark"] .ends span:last-child{color:#FF9A7A}
 </style>
@@ -37,24 +49,26 @@
 <div class="screen" data-ground="table">
   <div class="nav">
     <button class="icon-btn" aria-label="Close" id="close"></button>
-    <div class="grow"><div class="steps" aria-label="Card 2 of 5"><i class="on"></i><i class="now"></i><i></i><i></i><i></i></div></div>
+    <div class="grow"><div class="steps" aria-label="Card 2 of 5, step 1 of 3" style="--sub:33%"><i class="on"></i><i class="now"></i><i></i><i></i><i></i></div></div>
     <span class="side t-foot muted">2 of 5</span>
   </div>
   <div class="wrap pad">
-    <span class="tag f-sky" data-a style="--i:0"><span id="t-ic"></span>A breath that works · 5 min</span>
+    <div class="tagrow" data-a style="--i:0"><span class="tag k-try"><span id="t-ic"></span>A breath that works · 5 min</span><span class="sub" aria-label="Step 1 of 3"><i class="on"></i><i></i><i></i></span></div>
     <h1 class="t-title" data-a style="--i:1">How tense do you feel right now?</h1>
     <p class="t-foot muted" data-a style="--i:2">A quick check before you breathe. You'll check again after.</p>
   </div>
-  <div class="stage">
+  <div class="group">
     <div class="big" data-a style="--i:3">
-      <span class="num" data-count="5" data-delay="400" data-dur="1100">5</span>
+      <span class="num" data-count="5" data-delay="400" data-dur="1100" id="num">5</span>
       <p class="t-foot muted">out of 10</p>
     </div>
-    <div class="who" data-settle style="--i:6"><div id="xero"></div></div>
+    <div class="xsay" data-a style="--i:6">
+      <div class="xs-x"><div id="xero"></div></div>
+      <p class="xs-b">An honest 5. Let's see what<br>three minutes of breathing does.</p>
+    </div>
   </div>
-  <p class="say" data-a style="--i:8">An honest 5. Let's see what three minutes of breathing does.</p>
   <div class="sl" data-fade style="--d:300ms">
-    <div class="track" style="--v:50%"><i class="thumb" role="slider" aria-valuemin="0" aria-valuemax="10" aria-valuenow="5"></i></div>
+    <div class="track" id="track" style="--v:50%"><i class="thumb" role="slider" aria-valuemin="0" aria-valuemax="10" aria-valuenow="5"></i></div>
     <div class="ends"><span>Calm</span><span>Very tense</span></div>
   </div>
   <div class="dock"><button class="btn" data-a style="--i:9">That's about right</button></div>
@@ -62,6 +76,24 @@
 <script>
 document.getElementById('close').innerHTML = DX.icon('close');
 document.getElementById('t-ic').innerHTML = DX.icon('hand', {size:16});
-document.getElementById('xero').innerHTML = DX.char('xero', {mood:'calm', size:150});
+const track = document.getElementById('track');
+track.insertAdjacentHTML('afterbegin', Array.from({length:11}, (_, i) => `<i class="stop" style="left:${i * 10}%"></i>`).join(''));
+/* Xero's face follows the slider: calm 0-3, plain 4, a little tense 5-6 (open eyes, flat wavering mouth, raised inner brows), tense 7+ */
+const BROWS = (k) => `<g fill="none" stroke="#24163A" stroke-width="3.5" stroke-linecap="round"><path d="M77 ${66 + k} L90 ${62 - k}"/><path d="M110 ${62 - k} L123 ${66 + k}"/></g>`;
+function xeroAt(v) {
+  if (v <= 3) return DX.char('xero', {mood:'calm', size:64});
+  let s = DX.char('xero', {mood:'hello', size:64});
+  if (v === 4) return s;
+  const mouth = v >= 7 ? 'M90 96 Q93.5 92 97 96 Q100.5 100 104 96 Q107.5 92 111 96' : 'M92 95 Q96 93 100 95 Q104 97 108 95';
+  s = s.replace(/<path d="M92 92 Q100 100 108 92"/, `<path d="${mouth}"`);
+  const at = s.lastIndexOf('</g></g></g>');
+  return s.slice(0, at + 12) + BROWS(v >= 7 ? 2 : 0) + s.slice(at + 12);
+}
+const xe = document.getElementById('xero');
+xe.innerHTML = xeroAt(5);
+if (!DX.still) {
+  let last = -1; const num = document.getElementById('num');
+  new MutationObserver(() => { const v = parseInt(num.textContent); if (!isNaN(v) && v !== last) { last = v; xe.innerHTML = xeroAt(v); } }).observe(num, {childList:true});
+}
 </script>
 </body></html>

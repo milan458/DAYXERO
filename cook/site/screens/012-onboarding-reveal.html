@@ -4,6 +4,8 @@
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
+  /* Onboarding header: back button and progress only (no avatar); the bar ends at the gutter so the sun knob never collides. */
+  .nav { padding-right: 26px; }
   .q { padding-top: 112px; gap: 8px; }
   .wrap { padding: 22px var(--gutter) 0; display: grid; gap: 12px; }
   .hero { position: relative; height: 210px; margin-top: 18px; display: grid; place-items: center; }
@@ -36,7 +38,6 @@
   <div class="nav">
     <button class="icon-btn" aria-label="Back" data-icon="back"></button>
     <div class="grow"><div class="progress sun"><i id="bar" style="--p:90.9%"></i></div></div>
-    <div class="avatar" id="av"></div>
   </div>
 
   <div class="q">
@@ -67,7 +68,6 @@
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon, { w: 2.6 }));
   document.querySelector('.icon-btn').innerHTML = DX.icon('back');
   document.getElementById('hx').innerHTML = DX.char('xero', { mood: 'cheer', size: 168 });
-  document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 40 });
   let h = '';
   for (let i = 1; i <= 7; i++) h += `<span class="pb ${i === 1 ? 'next' : ''}" data-pop style="--i:0;--d:${700 + i * 90}ms">${DX.badge({ kind: 'prep', n: i, state: 'next', size: 44, bare: true })}</span>`;
   document.getElementById('stamps').innerHTML = h;

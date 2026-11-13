@@ -1,57 +1,69 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>026 Session reflect</title>
-<meta name="motion" content="The mint tag and title arrive (600ms, 90ms stagger). Your two picks settle in as rows one after another (900ms settle, 120ms apart) while the picked count runs 0 to 2, then the other options arrive as chips (600ms, 40ms apart) and Xero settles in beside his line. Tapping a chip swaps it into Your two (the row it replaces slides back down into the chips, 360ms) with a selection haptic; tapping a row's tick returns it to the chips.">
+<meta name="motion" content="The step bar shows card 5 a third done and the mint tag arrives with its step dots (1 of 3), then the title and line (600ms, 90ms stagger). Your two picks settle in as rows one after another (900ms settle, 120ms apart) while the picked count runs 0 to 2; as the second slot fills, the other options arrive dimmed (600ms, to 55% opacity) because both slots are taken. Xero settles in with his line last. Tapping a row's x frees a slot: the row slides back into the options (360ms) and the options brighten (250ms) with a selection haptic; tapping an option then fills the free slot.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-.f-mint{--face:#9FE3BC}
+/* Your stress plan is a Try card: mint + spark */
+.k-try{--face:#9FE3BC}
+[data-theme="dark"] .k-try{--face:#8FD3AD}
 .nav .side{width:44px;text-align:right;flex:none}
-.tag{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px 0 9px;border-radius:99px;background:var(--face);color:#1E1A3A;font:600 13px/1 var(--body);justify-self:start}
-.tag svg{width:16px;height:16px}
+.steps > i.now::after{width:var(--sub,45%)}
 .wrap{position:absolute;top:110px;left:0;right:0;display:grid;align-content:start;gap:10px}
-.lh{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px}
+.tagrow{display:flex;align-items:center;justify-content:space-between}
+.tag{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px 0 9px;border-radius:99px;background:var(--face);color:#1E1A3A;font:600 13px/1 var(--body)}
+.tag svg{width:16px;height:16px}
+/* sub-steps inside this card */
+.sub{display:flex;gap:6px;align-items:center}
+.sub i{width:8px;height:8px;border-radius:99px;background:var(--track)}
+.sub i.on{background:var(--fg)}
+.lh{display:flex;justify-content:space-between;align-items:baseline;margin-top:12px}
 .lh b{font:600 15px/1.4 var(--body)}
-.list .row{gap:12px;min-height:54px}
+.list .row{gap:12px;min-height:58px;padding-right:12px}
 .list .row .t-foot{color:var(--fg);font-weight:600}
-.tick{width:26px;height:26px;border-radius:99px;background:var(--tick);display:grid;place-items:center;flex:none;color:#fff}
-.tick svg{width:15px;height:15px}
-.more{display:flex;flex-wrap:wrap;gap:8px}
-.more .chip{min-height:38px;padding:0 14px;border-radius:99px;font:600 14px/1 var(--body);box-shadow:inset 0 0 0 1px var(--line)}
-.more .chip.add{background:transparent;box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--fg) 45%,transparent);gap:6px;padding-left:11px}
+.rm{width:34px;height:34px;border-radius:99px;background:var(--card-2);color:var(--fg);display:grid;place-items:center;flex:none}
+.rm svg{width:15px;height:15px}
+.swap{margin-top:12px}
+/* the other options: an even 2 x 3 grid, dimmed while both slots are taken */
+.more{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.more .chip{justify-content:center;min-height:44px;padding:0 12px;border-radius:99px;font:600 14px/1 var(--body);box-shadow:inset 0 0 0 1px var(--line);transition:opacity .25s var(--ease)}
+.more .chip.add{background:transparent;box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--fg) 40%,transparent);gap:6px}
 .more .chip.add svg{width:16px;height:16px}
-.xr{position:absolute;left:var(--gutter);right:var(--gutter);top:622px;display:flex;gap:14px;align-items:flex-end}
-.xr .who{flex:none;width:76px}
-.say{position:relative;flex:1;background:var(--card);border-radius:20px 20px 20px 6px;padding:12px 16px;font:500 15px/1.4 var(--body);margin:0 0 6px;
-  box-shadow:0 2px 10px rgba(30,26,58,.06)}
-[data-theme="dark"] .say{box-shadow:none}
-.say::before{content:"";position:absolute;left:-9px;bottom:0;width:14px;height:14px;background:var(--card);clip-path:polygon(100% 0,100% 100%,0 100%)}
+.more.full .chip{opacity:.55}
+/* Xero says: Xero at 64 and a bubble that hugs its text, tail to Xero (one component on 026, 027, 028, 031) */
+.xsay{display:flex;align-items:flex-end;gap:10px}
+.xsay .xs-x{width:64px;flex:none}
+.xsay .xs-b{position:relative;width:max-content;max-width:calc(100% - 74px);background:var(--card);border-radius:18px 18px 18px 6px;padding:11px 15px;margin:0 0 12px;font:500 15px/1.4 var(--body);color:var(--fg);box-shadow:0 2px 10px rgba(30,26,58,.07)}
+[data-theme="dark"] .xsay .xs-b{box-shadow:none}
+.xsay .xs-b::before{content:"";position:absolute;left:-7px;bottom:0;width:12px;height:14px;background:var(--card);clip-path:polygon(100% 0,100% 100%,0 100%)}
+.say-at{position:absolute;left:var(--gutter);right:var(--gutter);top:642px}
 </style>
 </head><body>
 <div class="screen" data-ground="table">
   <div class="nav">
     <button class="icon-btn" aria-label="Close" id="close"></button>
-    <div class="grow"><div class="steps" aria-label="Card 5 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="now"></i></div></div>
+    <div class="grow"><div class="steps" aria-label="Card 5 of 5, step 1 of 3" style="--sub:33%"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="now"></i></div></div>
     <span class="side t-foot muted">5 of 5</span>
   </div>
   <div class="wrap pad">
-    <span class="tag f-mint" data-a style="--i:0"><span id="t-ic"></span>Your stress plan · 6 min</span>
+    <div class="tagrow" data-a style="--i:0"><span class="tag k-try"><span id="t-ic"></span>Your stress plan · 6 min</span><span class="sub" aria-label="Step 1 of 3"><i class="on"></i><i></i><i></i></span></div>
     <h1 class="t-title" data-a style="--i:1">What gets to you most?</h1>
     <p class="t-foot muted" data-a style="--i:2">Pick the two that come up most.</p>
     <div class="lh" data-a style="--i:3"><b>Your two</b><span class="t-foot muted"><span data-count="2" data-from="0">2</span> of 2 picked</span></div>
     <div class="list">
-      <button class="row" data-settle style="width:100%;text-align:left;--i:2"><span class="grow t-foot">Work piling up</span><span class="tick"></span></button>
-      <button class="row" data-settle style="width:100%;text-align:left;--i:3"><span class="grow t-foot">Too much at once</span><span class="tick"></span></button>
+      <div class="row" data-settle style="--i:2"><span class="grow t-foot">Work piling up</span><button class="rm" aria-label="Remove Work piling up"></button></div>
+      <div class="row" data-settle style="--i:3"><span class="grow t-foot">Too much at once</span><button class="rm" aria-label="Remove Too much at once"></button></div>
     </div>
-    <p class="t-foot muted" data-a style="--i:5;margin-top:10px">Or swap one in</p>
-    <div class="more" data-a style="--i:6">
-      <button class="chip">A deadline</button><button class="chip">Tension with someone</button><button class="chip">Money worries</button>
-      <button class="chip">Traffic or running late</button><button class="chip">Kids or family chaos</button><button class="chip">Bad news</button>
-      <button class="chip add" id="add"></button>
+    <p class="t-foot muted swap" data-a style="--i:5">Remove one to swap in another</p>
+    <div class="more full" data-a style="--i:6">
+      <button class="chip">A deadline</button><button class="chip">Money worries</button>
+      <button class="chip">Running late</button><button class="chip">Family chaos</button>
+      <button class="chip">An argument</button><button class="chip add" id="add"></button>
     </div>
   </div>
-  <div class="xr" data-a style="--i:8">
-    <div class="who" data-settle style="--i:8"><div id="xr"></div></div>
-    <p class="say">Most people pick work. Naming it starts your plan.</p>
+  <div class="xsay say-at" data-a style="--i:8">
+    <div class="xs-x" data-settle style="--i:8"><div id="xr"></div></div>
+    <p class="xs-b">Most people pick work.<br>Naming it starts your plan.</p>
   </div>
   <div class="dock"><button class="btn" data-a style="--i:10">Continue</button></div>
 </div>
@@ -59,8 +71,8 @@
 const SPARK = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.8c.7 4.9 2.3 6.6 7.4 7.4-5.1.8-6.7 2.5-7.4 7.4-.7-4.9-2.3-6.6-7.4-7.4 5.1-.8 6.7-2.5 7.4-7.4z"/><circle cx="18.6" cy="18.4" r="1.8"/></svg>';
 document.getElementById('close').innerHTML = DX.icon('close');
 document.getElementById('t-ic').innerHTML = SPARK;
-document.getElementById('xr').innerHTML = DX.char('xero', {mood:'hello', size:76});
+document.getElementById('xr').innerHTML = DX.char('xero', {mood:'hello', size:64});
 document.getElementById('add').innerHTML = DX.icon('plus', {size:16, w:2.6}) + 'Add your own';
-document.querySelectorAll('.tick').forEach(t => t.innerHTML = DX.icon('check', {size:15, w:3.2}));
+document.querySelectorAll('.rm').forEach(t => t.innerHTML = DX.icon('close', {size:15, w:2.6}));
 </script>
 </body></html>

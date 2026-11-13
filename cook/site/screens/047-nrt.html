@@ -1,39 +1,36 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>047 Why NRT helps</title>
-<meta name="motion" content="Reading pace, no springs. Title and lead arrive, then the evidence card: '60%' counts up from 50 (850ms) while the 'Without' and 'With NRT' bars grow from the left (900ms, the apricot bar 150ms later, its deeper tail showing the extra), then the combination card with Xero settling in (900ms, then a slow bob) and the caution note (600ms each, 90ms stagger); the button arrives last. No haptic until the button tap.">
+<meta name="motion" content="Reading pace, no springs. Title and lead arrive, then the one hero card: '60%' counts up from 50 (850ms) while the 'Without NRT' and 'With NRT' bars grow from the left (900ms, the apricot bar 150ms later), and the deeper apricot tail with its '+50 to 60%' label fades in last (400ms) to show the extra. Then the quiet note with small Xero (fade, then a slow bob) and the button arrive (600ms each, 90ms stagger); the pharmacist link arrives last. No haptic until the button tap.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   .wrap { padding: 66px var(--gutter) 0; }
   .wrap .lead { margin-top: 10px; color: var(--muted); }
-  .ev { margin-top: 18px; }
-  .ev .card { display: grid; gap: 6px; }
-  .ev .t-foot.lbl { color: var(--muted); }
-  .big { display: flex; align-items: baseline; gap: 10px; }
-  .big .num { font-size: 46px; line-height: .95; letter-spacing: -1.6px; }
-  .hero { padding: 18px 18px 14px; gap: 8px !important; }
+  .hero { margin-top: 20px; padding: 20px 18px 16px; display: grid; gap: 4px; }
+  .big .num { font-size: 52px; line-height: .95; letter-spacing: -1.8px; }
   .hero .t-body { font-size: 17px; font-weight: 500; }
-  .cmp { display: grid; gap: 10px; margin: 8px 0 4px; }
-  .cmp .r { display: grid; grid-template-columns: 76px 1fr; align-items: center; gap: 10px; }
-  .cmp .bar { position: relative; }
-  .cmp .r.yes .bar.yes i { background: linear-gradient(90deg, #FFC9A3 0 62.5%, #FF8A4C 62.5% 100%); opacity: 1; }
-  .cmp .t-foot { color: var(--fg); font-size: 14px; }
-  .cmp .bar { height: 14px; border-radius: 99px; background: var(--track); overflow: hidden; }
-  .cmp .bar i { display: block; height: 100%; width: var(--w); border-radius: inherit; background: var(--muted); opacity: .45; transform-origin: left; }
-  .cmp .bar.yes i { background: #FF9A5C; opacity: .85; }
+  .cmp { display: grid; gap: 14px; margin: 18px 0 10px; }
+  .cmp .r { display: grid; gap: 6px; }
+  .cmp .lb { display: flex; justify-content: space-between; align-items: baseline; }
+  .cmp .lb .t-foot { font-size: 14px; color: var(--muted); }
+  .cmp .lb .t-foot.v { color: var(--fg); font-weight: 700; }
+  .cmp .lb .t-foot.v.up { color: var(--fg); }
+  .cmp .bar { position: relative; height: 16px; border-radius: 99px; background: var(--track); overflow: hidden; }
+  .cmp .bar i { position: absolute; left: 0; top: 0; bottom: 0; width: var(--w); border-radius: inherit; background: color-mix(in srgb, var(--fg) 34%, transparent); transform-origin: left; }
+  .cmp .bar.yes i { background: #FFC59C; }
+  .cmp .bar.yes b { position: absolute; top: 0; bottom: 0; left: 62.5%; right: 0; border-radius: 0 99px 99px 0; background: #F0803F; }
+  [data-theme="dark"] .cmp .bar.yes i { background: #FFD3B0; }
+  [data-theme="dark"] .cmp .bar.yes b { background: #FF9A5C; }
   .play .cmp .bar i { animation: grow 900ms var(--settle) both; animation-delay: var(--d, 400ms); }
+  .play .cmp .bar.yes b { animation: dx-fade 400ms var(--ease) 1500ms both; }
   @keyframes grow { from { transform: scaleX(0); } }
-  .combo { margin: 4px 0 2px; }
-  .ev .source { margin-top: 4px; justify-self: start; }
-  .combo { display: flex; gap: 8px; margin: 2px 0 2px; }
-  .combo span { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px; border-radius: 10px; background: var(--card-2); font: 600 13px/1 var(--body); }
-  .combo span svg { width: 16px; height: 16px; }
-  .combo b { align-self: center; font: 700 15px/1 var(--display); color: var(--muted); }
-  .ev .card.best { display: flex; gap: 12px; align-items: center; padding: 12px 16px 14px 8px; }
-  .best .x { width: 78px; flex: none; display: grid; place-items: center; }
-  .best .grow { display: grid; gap: 6px; }
-  .ev .caution { margin-top: 2px; padding: 2px 4px; color: var(--muted); display: flex; gap: 12px; align-items: flex-start; }
-  .caution svg { width: 20px; height: 20px; flex: none; margin-top: 1px; }
+  .hero .source { justify-self: start; }
+  .note { margin-top: 14px; display: flex; gap: 12px; align-items: center; padding: 12px 16px 12px 10px; border-radius: 18px; background: var(--card-2); }
+  .note .xr { width: 44px; height: 44px; flex: none; }
+  .note .t-foot { color: var(--muted); font-size: 14px; }
+  .note .t-foot b { color: var(--fg); font-weight: 600; }
+  .ask { color: var(--muted); gap: 4px; font-size: 14px; }
+  .ask svg { width: 16px; height: 16px; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -42,38 +39,29 @@
     <div class="wrap">
       <h1 class="t-large" data-a style="--i:0">Why nicotine replacement helps</h1>
       <p class="t-body lead" data-a style="--i:1">Nicotine replacement therapy (NRT) eases cravings while you unlearn the habit.</p>
-      <div class="stack ev">
-        <div class="card hero" data-a style="--i:2">
-          <div class="big"><span class="num">50 to <span data-count="60" data-from="50" data-suffix="%">60%</span></span></div>
-          <p class="t-body">more likely to quit than going without.</p>
-          <div class="cmp" aria-hidden="true">
-            <div class="r"><span class="t-foot">Without</span><span class="bar"><i style="--w:62.5%;--d:500ms"></i></span></div>
-            <div class="r yes"><span class="t-foot">With NRT</span><span class="bar yes"><i style="--w:100%;--d:650ms"></i></span></div>
-          </div>
-          <a class="source">Source: Cochrane review of 133 trials, 2018</a>
+      <div class="card hero" data-a style="--i:2">
+        <div class="big"><span class="num">50 to <span data-count="60" data-from="50" data-suffix="%">60%</span></span></div>
+        <p class="t-body">more likely to quit than going without.</p>
+        <div class="cmp">
+          <div class="r"><div class="lb"><span class="t-foot">Without NRT</span><span class="t-foot">Baseline</span></div><span class="bar"><i style="--w:62.5%;--d:500ms"></i></span></div>
+          <div class="r"><div class="lb"><span class="t-foot">With NRT</span><span class="t-foot v up">+50 to 60%</span></div><span class="bar yes"><i style="--w:100%;--d:650ms"></i><b></b></span></div>
         </div>
-        <div class="card best" data-a style="--i:3">
-          <div class="x" data-settle style="--d:600ms"><div class="bob" id="xero"></div></div>
-          <div class="grow">
-            <p class="t-foot lbl">What works best</p>
-            <p class="t-head" style="font-size:17px">A patch plus a faster form beats either alone.</p>
-          </div>
-        </div>
-        <div class="caution t-foot" data-a style="--i:4">
-          <span data-ic="shield"></span>
-          <span>Follow your pack's label. DayXero doesn't give dosing advice.</span>
-        </div>
+        <a class="source">Source: Cochrane review of 133 trials, 2018</a>
+      </div>
+      <div class="note" data-a style="--i:3">
+        <div class="xr" data-fade style="--d:600ms"><div class="bob" id="xero"></div></div>
+        <p class="t-foot"><b>A patch plus a faster form works best.</b> Follow your pack's label: DayXero doesn't give dosing advice.</p>
       </div>
     </div>
   </div>
   <div class="dock">
     <button class="btn" data-a style="--i:5" data-go="048-nrt-products">Set up my NRT</button>
-    <button class="link" data-a style="--i:6">Not using NRT yet? Ask a pharmacist</button>
+    <button class="link ask" data-a style="--i:6">Not using NRT yet? Ask a pharmacist<span data-ic="chev"></span></button>
   </div>
 </div>
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic));
   document.querySelectorAll('[data-ic2]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic2, { w: 2.4 })));
-  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'hello', size: 88 });
+  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'hello', size: 44 });
 </script>
 </body></html>

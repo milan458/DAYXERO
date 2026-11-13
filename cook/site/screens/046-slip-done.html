@@ -1,12 +1,12 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>046 Slip: plan saved</title>
-<meta name="motion" content="Done beat: Jelli (cheer) settles in (900ms), then the small soft-green check pops beside its bell and its tick draws (320ms later, 420ms) with a success haptic. Title arrives and the hand-drawn underline sits under 'saved', then the plan card settles up from 48px like a card being put down (900ms), then the Day 7 card arrives with the badge fading in intact (no stamp: nothing was lost or earned). Button and link arrive last.">
+<meta name="motion" content="Done beat: Jelli (cheer) settles in (900ms), then the small soft-green check pops on the top-right of its bell like a sticker (data-pop 700ms) and its tick draws (320ms later, 420ms) with a success haptic. Title arrives and the hand-drawn underline sits under 'saved', then the plan card settles up from 48px like a card being put down (900ms), then the quiet Quit Day line arrives with its Day 7 medallion fading in intact (no stamp: nothing was lost or earned). Button and the optional 'Add what happened' link arrive last.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   .hero { position: absolute; left: 0; right: 0; top: 106px; height: 184px; display: grid; place-items: center; }
   .hero .jl { width: 176px; height: 176px; }
-  .hero .ck { position: absolute; left: calc(50% + 68px); top: 60px; width: 44px; height: 44px; border-radius: 99px; box-shadow: 0 0 0 4px var(--g); }
+  .hero .ck { position: absolute; left: calc(50% + 22px); top: 30px; width: 44px; height: 44px; border-radius: 99px; box-shadow: 0 0 0 4px var(--g); }
   .wrap { position: absolute; left: 0; right: 0; top: 306px; padding: 0 var(--gutter); }
   .wrap .head { text-align: center; }
   .wrap .lead { margin-top: 8px; color: var(--muted); }
@@ -14,8 +14,10 @@
   .plan .say { font: 500 21px/1.3 var(--display); letter-spacing: -.3px; margin: 0; text-wrap: balance; }
   .plan .when { color: var(--muted); display: flex; align-items: center; gap: 6px; }
   .plan .when svg { width: 16px; height: 16px; }
-  .kept { margin-top: 12px; padding: 16px 18px; display: flex; gap: 14px; align-items: center; }
+  .kept { margin-top: 18px; padding: 0 4px; display: flex; gap: 12px; align-items: center; }
+  .kept .md { width: 40px; height: 40px; flex: none; }
   .kept .t-foot { color: var(--muted); }
+  .kept .t-foot b { color: var(--fg); font-weight: 600; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -35,11 +37,11 @@
       <p class="t-foot when"><span data-ic="clock"></span>Your plan for coffee</p>
       <p class="say">If it's after coffee, then I'll have it somewhere new.</p>
     </div>
-    <div class="card kept" data-a style="--i:7">
-      <div id="badge"></div>
+    <div class="kept" data-a style="--i:7">
+      <div class="md" id="badge"></div>
       <div class="grow">
-        <p class="t-head">Still Day 7</p>
-        <p class="t-foot">Free since Fri, Nov 6. Xero's sky stays 40% clear.</p>
+        <p class="t-foot"><b>Quit Day: Fri, Nov 6 · still Day 7</b></p>
+        <p class="t-foot">Your sky stays 40% clear.</p>
       </div>
     </div>
   </div>
@@ -53,6 +55,6 @@
   /* cheer Jelli without its ink sparkle marks (they read as a stray tick beside the check) */
   document.getElementById('jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 176 }).replace(/<g opacity="1" stroke="#(?:24163A|F3E9DE)"[^>]*>.*?<\/g>/s, '');
   document.getElementById('check').innerHTML = DX.check({ size: 44, d: 500, color: '#4E9E7E' });
-  document.getElementById('badge').innerHTML = DX.badge({ kind: 'day', n: 7, size: 72, bare: true });
+  document.getElementById('badge').innerHTML = DX.badge({ kind: 'day', n: 7, size: 40, bare: true, label: 'Day 7' });
 </script>
 </body></html>

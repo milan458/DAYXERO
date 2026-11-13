@@ -4,6 +4,8 @@
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
+  /* Onboarding header: back button and progress only (no avatar); the bar ends at the gutter so the sun knob never collides. */
+  .nav { padding-right: 26px; }
   .day { position: relative; margin: 36px var(--gutter) 0; display: grid; gap: 26px; }
   .day svg.line { position: absolute; left: 17px; top: 30px; overflow: visible; }
   .it { display: grid; grid-template-columns: 36px 1fr; gap: 14px; align-items: start; }
@@ -45,7 +47,6 @@
   <div class="nav">
     <button class="icon-btn" aria-label="Back" data-icon="back"></button>
     <div class="grow"><div class="progress sun"><i id="bar" style="--p:100%"></i></div></div>
-    <div class="avatar" id="av"></div>
   </div>
 
   <div class="q">
@@ -82,7 +83,6 @@
 </div>
 <script>
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
-  document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 40 });
   document.getElementById('ix').innerHTML = DX.char('xero', { mood: 'hello', size: 40, animate: false });
   document.getElementById('ig').innerHTML = DX.char('glim', { mood: 'calm', size: 40, animate: false });
   document.getElementById('pam').innerHTML = DX.icon('sun', { w: 2.6 });

@@ -1,91 +1,92 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>002 Welcome</title>
-<meta name="motion" content="Continues the launch scene: the paper hills settle up in three layers (0, 120, 240ms; 900ms settle), the sun climbs 60px behind Xero (1200ms ease-out) and Xero settles up from behind the front hill (900ms, starts 300ms). At 1100ms the speech bubble (tail toward Xero) arrives with a 600ms rise. Headline, body and dock arrive in reading order from 500ms (600ms, 90ms stagger). Light haptic on Get started.">
+<meta name="motion" content="Continues the launch scene: the paper hills settle up in three layers (0, 120, 240ms; 900ms settle) and the sun climbs 60px (1200ms ease-out). Xero settles onto the hill crest (900ms, from 300ms), then waves: his right arm swings 16 degrees twice (2 x 800ms, from 1200ms) with two small motion marks. At 1100ms the cream speech bubble (tail toward his hand) rises in (600ms). Headline, body and dock arrive in reading order from 500ms (600ms, 90ms stagger). Light haptic on Get started.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .screen { --h-back: #FFD9AE; --h-mid: #FFA56C; --h-edge: rgba(255,255,255,.55); --sun-a: #FFF4C9; --sun-b: #FFC93C;
-    --ring-1: rgba(255,240,205,.55); --ring-2: rgba(255,236,200,.32); --lift: rgba(120,44,20,.2); }
-  .screen { --h-back-2: var(--h-back); --h-mid-2: var(--h-mid); }
-  /* Dark: the same pre-dawn as the launch screen. Cool indigo air around the sun, paper hills lit at the ridge. */
-  [data-theme="dark"] .screen { --h-back: #36426E; --h-back-2: #232C4C; --h-mid: #263058; --h-mid-2: #19213C; --h-edge: rgba(190,205,255,.30); --sun-a: #FFF3CF; --sun-b: #FFBE5C;
-    --ring-1: rgba(150,170,255,.16); --ring-2: rgba(130,150,250,.08); --lift: rgba(0,0,0,.5); }
+  /* Paper hills. Light: pale far hill, warm crest hill under Xero. Dark: the launch screen's night, flat shades, dim amber sun. */
+  .screen { --h-back: #FFDDB8; --h-mid: #FFAE7A; --h-edge: rgba(255,255,255,.6); --sun-a: #FFF4C9; --sun-b: #FFC93C;
+    --ring-1: rgba(255,240,205,.55); --ring-2: rgba(255,236,200,.32); --lift: rgba(120,44,20,.18); }
+  [data-theme="dark"] .screen { --h-back: #36416C; --h-mid: #252F55; --h-edge: rgba(190,205,255,.26); --sun-a: #F2C98C; --sun-b: #D9964E;
+    --ring-1: rgba(232,170,100,.13); --ring-2: rgba(232,170,100,.06); --lift: rgba(0,0,0,.45); }
   .art { position: absolute; z-index: 0; left: 0; right: 0; top: 0; height: 450px; overflow: hidden; }
-  .text .mark { white-space: nowrap; }
-  .hl > span { display: block; white-space: nowrap; }
   .sky { position: absolute; inset: 0; background: linear-gradient(to bottom, color-mix(in srgb, var(--sun-b) 22%, var(--g)), var(--g) 70%); }
   [data-theme="dark"] .sky { background: linear-gradient(to bottom, #0B1020 0%, #141C36 45%, #222C55 80%); }
-  .layer { position: absolute; left: 0; width: 390px; pointer-events: none; }
+  .layer { position: absolute; left: 0; top: 0; width: 390px; height: 450px; pointer-events: none; }
   .layer svg { display: block; }
-  .sunw { top: 126px; z-index: 1; }
   .play .sunw { animation: sunup 1200ms cubic-bezier(.25,.75,.25,1) both; }
   @keyframes sunup { from { transform: translateY(60px); } to { transform: none; } }
-  .back { top: 156px; z-index: 2; filter: drop-shadow(0 -4px 10px var(--lift)); }
-  .mid  { top: 156px; z-index: 3; filter: drop-shadow(0 -5px 12px var(--lift)); }
-  .xw   { left: 113px; top: 216px; z-index: 4; }
-  .front { top: 156px; z-index: 5; filter: drop-shadow(0 -6px 14px var(--lift)); }
-  .play .back, .play .mid, .play .front { animation: hillup 900ms cubic-bezier(.2,.8,.2,1) both; }
-  .play .mid { animation-delay: 120ms; } .play .front { animation-delay: 240ms; }
+  .back { z-index: 2; filter: drop-shadow(0 -4px 10px var(--lift)); }
+  .crest { z-index: 3; filter: drop-shadow(0 -5px 12px var(--lift)); }
+  .front { z-index: 5; }
+  .play .back, .play .crest, .play .front { animation: hillup 900ms cubic-bezier(.2,.8,.2,1) both; }
+  .play .crest { animation-delay: 120ms; } .play .front { animation-delay: 240ms; }
   @keyframes hillup { from { transform: translateY(80px); } to { transform: none; } }
-  .xw[data-settle] { --d: 300ms; }
-  /* Speech bubble beside Xero's face, its tail pointing at him. */
-  .hi { position: absolute; z-index: 6; left: 266px; top: 216px; --d: 1100ms; }
-  .hi .bubble { position: relative; font: 700 15px/1.2 var(--display); padding: 11px 14px; border-radius: 18px; white-space: nowrap; box-shadow: 0 6px 18px rgba(90,40,20,.12); }
-  .hi .bubble::before { content: ""; position: absolute; left: -9px; bottom: 9px; width: 16px; height: 14px; background: var(--card);
-    clip-path: path('M16 0 C11 5 6 9 0 12 C6 13 12 13 16 11 Z'); }
+  /* Xero stands on the crest (feet on the ridge line at y 360), waving. */
+  .xw { position: absolute; z-index: 4; left: 82px; top: 216px; width: 152px; height: 152px; --d: 300ms; }
+  /* Speech bubble: cream in both modes, tail pointing at his waving hand. */
+  .hi { position: absolute; z-index: 6; left: 238px; top: 196px; --d: 1100ms; }
+  .hi .bubble { position: relative; background: #FFF8EE; color: #1E1A3A; font: 700 15px/1.2 var(--display); padding: 11px 14px; border-radius: 18px 18px 18px 6px; white-space: nowrap; box-shadow: 0 6px 18px rgba(90,40,20,.12); }
+  .hi .bubble::before { content: ""; position: absolute; left: 4px; bottom: -9px; width: 16px; height: 12px; background: #FFF8EE;
+    clip-path: path('M2 0 L14 0 C10 4 5 8 0 12 C1 8 2 4 2 0 Z'); }
   [data-theme="dark"] .hi .bubble { box-shadow: 0 6px 18px rgba(0,0,0,.35); }
-  .text { position: absolute; z-index: 1; left: 0; right: 0; top: 464px; padding: 0 var(--gutter); display: grid; gap: 12px; }
-  .terms { text-align: center; color: var(--muted); padding: 0 8px; }
+  .text { position: absolute; z-index: 1; left: 0; right: 0; top: 462px; padding: 0 var(--gutter); display: grid; gap: 12px; }
+  .text .mark { white-space: nowrap; }
+  .hl > span { display: block; white-space: nowrap; }
+  .dock { gap: 0; padding-top: 24px; }
+  .dock .btn { margin-bottom: 4px; }
+  /* Restore purchases: a quiet link, not a second action. */
+  .dock .quiet { height: 34px; font: 500 14px/1 var(--body); color: var(--muted); opacity: 1; }
+  .terms { text-align: center; color: var(--muted); padding: 0 8px; margin-top: 2px; text-wrap: balance; }
   .terms u { text-underline-offset: 2px; }
-  .dock { gap: 2px; padding-top: 24px; }
-  .terms { margin-top: 6px; text-wrap: balance; }
-  .dock .btn { margin-bottom: 6px; }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot" data-status="on-art">
   <div class="art" aria-hidden="true">
     <div class="sky"></div>
-    <div class="layer sunw">
-      <svg width="390" height="260" viewBox="0 0 390 260">
+    <div class="layer sunw" style="z-index:1">
+      <svg width="390" height="450" viewBox="0 0 390 450">
         <defs><radialGradient id="sg" cx=".4" cy=".34" r=".72"><stop offset="0" stop-color="var(--sun-a)"/><stop offset="1" stop-color="var(--sun-b)"/></radialGradient></defs>
-        <circle cx="195" cy="150" r="118" fill="var(--ring-2)"/><circle cx="195" cy="150" r="92" fill="var(--ring-1)"/><circle cx="195" cy="150" r="64" fill="url(#sg)"/>
+        <circle cx="112" cy="232" r="104" fill="var(--ring-2)"/><circle cx="112" cy="232" r="80" fill="var(--ring-1)"/><circle cx="112" cy="232" r="54" fill="url(#sg)"/>
       </svg>
     </div>
     <div class="layer back">
-      <svg width="390" height="330" viewBox="0 0 390 330">
-        <defs><linearGradient id="hb" x1="0" y1="0" x2="0" y2="1"><stop offset=".05" stop-color="var(--h-back)"/><stop offset=".5" stop-color="var(--h-back-2)"/></linearGradient></defs>
-        <path d="M0 70 C56 40 118 50 150 118 C170 166 222 172 242 132 C276 62 334 38 390 58 L390 330 L0 330 Z" fill="url(#hb)"/>
-        <path d="M0 70 C56 40 118 50 150 118 C170 166 222 172 242 132 C276 62 334 38 390 58" fill="none" stroke="var(--h-edge)" stroke-width="2"/>
+      <svg width="390" height="450" viewBox="0 0 390 450">
+        <path d="M0 262 C48 236 104 236 150 258 C200 282 250 250 300 220 C334 200 366 196 390 202 L390 450 L0 450 Z" fill="var(--h-back)"/>
+        <path d="M0 262 C48 236 104 236 150 258 C200 282 250 250 300 220 C334 200 366 196 390 202" fill="none" stroke="var(--h-edge)" stroke-width="2"/>
       </svg>
     </div>
-    <div class="layer mid">
-      <svg width="390" height="330" viewBox="0 0 390 330">
-        <defs><linearGradient id="hm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--h-mid)"/><stop offset=".55" stop-color="var(--h-mid-2)"/></linearGradient></defs>
-        <path d="M0 168 C56 136 116 142 158 180 C182 202 214 206 238 190 C282 156 336 140 390 158 L390 330 L0 330 Z" fill="url(#hm)"/>
-        <path d="M0 168 C56 136 116 142 158 180 C182 202 214 206 238 190 C282 156 336 140 390 158" fill="none" stroke="var(--h-edge)" stroke-width="2"/>
+    <div class="layer crest">
+      <svg width="390" height="450" viewBox="0 0 390 450">
+        <path d="M0 416 C36 390 92 362 158 360 C226 358 300 382 390 404 L390 450 L0 450 Z" fill="var(--h-mid)"/>
+        <path d="M0 416 C36 390 92 362 158 360 C226 358 300 382 390 404" fill="none" stroke="var(--h-edge)" stroke-width="2"/>
       </svg>
     </div>
-    <div class="layer xw" id="xero" data-settle></div>
+    <div class="xw" id="xero" data-settle></div>
     <div class="layer front">
-      <svg width="390" height="330" viewBox="0 0 390 330">
-        <path d="M0 252 C70 232 124 226 196 226 C268 226 324 236 390 250 L390 330 L0 330 Z" fill="var(--g)"/>
-      </svg>
+      <svg width="390" height="450" viewBox="0 0 390 450"><path d="M0 440 C100 426 290 426 390 440 L390 450 L0 450 Z" fill="var(--g)"/></svg>
     </div>
   </div>
   <div class="hi" data-a><div class="bubble">Hi, I&rsquo;m Xero.</div></div>
 
   <div class="text">
-    <h1 class="t-large hl" data-a style="--i:6"><span>Don&rsquo;t quit today.</span><span>Quit on your <span class="mark">Quit Day.</span></span></h1>
-    <p class="t-body muted" data-a style="--i:7">Prep for up to 7 days while you still smoke or vape. Then quit on the day you choose.</p>
+    <h1 class="t-large hl" data-a style="--i:6"><span>Quit on your <span class="mark">own day.</span></span><span>We&rsquo;ll get you ready.</span></h1>
+    <p class="t-body muted" data-a style="--i:7">Short prep sessions for up to 7 days, while you still smoke or vape.</p>
   </div>
 
   <div class="dock">
     <button class="btn" data-a style="--i:8">Get started</button>
-    <a class="link" data-a style="--i:9">Restore purchases</a>
+    <a class="link quiet" data-a style="--i:9">Restore purchases</a>
     <p class="t-cap terms" data-a style="--i:10">18+ only. By continuing you agree to our <u>Terms</u> and <u>Privacy</u>.</p>
   </div>
 </div>
 <script>
-  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'hello', size: 164 });
+  /* Xero waving: the kit's hello pose with the right arm raised; it swings twice from 1200ms, two small motion marks by the hand. */
+  const ink = DX.theme === 'dark' ? '#F3E9DE' : '#24163A';
+  const swing = DX.still ? '' : '<animateTransform attributeName="transform" type="rotate" values="0 162 112;-16 162 112;0 162 112;-16 162 112;0 162 112" keyTimes="0;.25;.5;.75;1" dur="1.6s" begin="1.2s" fill="freeze"/>';
+  const wave = `<path d="M162 112 C172 98 178 86 176 74" fill="none" stroke="#FF7155" stroke-width="12" stroke-linecap="round">${swing}</path>`
+    + `<g fill="none" stroke="${ink}" stroke-width="3" stroke-linecap="round" opacity=".55"><path d="M186 62 q7 6 6 14"/><path d="M193 52 q9 9 6 22"/></g>`;
+  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'hello', size: 152 })
+    .replace(/<path d="M164 124 C174 132 178 142 176 152"[^>]*><\/path>/, wave);
 </script>
 </body></html>

@@ -1,9 +1,11 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>003 What you are leaving behind</title>
-<meta name="motion" content="Progress eases from 0 to 1/11 (900ms settle). Question and helper arrive (600ms, 90ms stagger), then the three option rows and the note in order. At 900ms Vape gets picked: the ring fills and ticks, the row dips to .97 and springs back (520ms), the caption count switches from 1 to 2 while Xero (88px, bobbing) cheers beside it. Selection haptic on each pick.">
+<meta name="motion" content="Progress eases from 0 to 1/11 (900ms settle). Question and helper arrive (600ms, 90ms stagger), then the three checkbox rows and the note in order. At 900ms Vape gets picked: the checkbox fills and ticks, the row takes the warm selection tint and dips to .97 and springs back (520ms), and the note's count switches from 1 to 2 while Xero (88px) bobs beside it. Selection haptic on each pick.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
+  /* Onboarding header: back button and progress only (no avatar); the bar ends at the gutter so the sun knob never collides. */
+  .nav { padding-right: 26px; }
   .q .t-body { text-wrap: pretty; }
   .land { animation: dx-land 520ms cubic-bezier(.3,1.4,.5,1) both; }
   @keyframes dx-land { 0% { transform: scale(1); } 40% { transform: scale(.97); } 100% { transform: scale(1); } }
@@ -17,6 +19,8 @@
   .opt .t-head { display: block; }
   .opt .t-foot { display: block; margin-top: 2px; }
   .opt .ico-tile { transition: background .25s var(--ease), color .25s var(--ease); }
+  /* Paper-cut product objects: flat cut pieces, each with a short paper shadow. */
+  .opt .ico-tile svg { overflow: visible; width: 40px; height: 40px; }
   .answers { gap: 12px !important; }
   .note { display: flex; gap: 12px; align-items: center; margin-top: 16px; padding: 18px 20px 18px 14px; background: var(--card-2); border-radius: var(--r-card); }
   [data-theme="dark"] .note { background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
@@ -29,7 +33,6 @@
   <div class="nav">
     <button class="icon-btn" aria-label="Back" data-icon="back"></button>
     <div class="grow"><div class="progress sun"><i id="bar" style="--p:9.1%"></i></div></div>
-    <div class="avatar" id="av"></div>
   </div>
 
   <div class="q">
@@ -37,9 +40,9 @@
     <p class="t-body muted" data-a style="--i:1">Pick everything you use now. I&rsquo;ll set up a counter for each one.</p>
   </div>
   <div class="answers">
-    <button class="opt on" data-a style="--i:2"><span class="ico-tile" data-art="cig"></span><span class="grow"><span class="t-head">Cigarettes</span><span class="t-foot">Manufactured or roll-ups</span></span><span class="radio"></span></button>
-    <button class="opt on" id="vape" data-a style="--i:3"><span class="ico-tile" data-art="vape"></span><span class="grow"><span class="t-head">Vape</span><span class="t-foot">Disposables, pods or tanks</span></span><span class="radio"></span></button>
-    <button class="opt" data-a style="--i:4"><span class="ico-tile" data-art="pouch"></span><span class="grow"><span class="t-head">Nicotine pouches</span><span class="t-foot">Zyn, Velo, snus</span></span><span class="radio"></span></button>
+    <button class="opt multi on" data-a style="--i:2"><span class="ico-tile" data-art="cig"></span><span class="grow"><span class="t-head">Cigarettes</span><span class="t-foot">Manufactured or roll-ups</span></span><span class="radio"></span></button>
+    <button class="opt multi on" id="vape" data-a style="--i:3"><span class="ico-tile" data-art="vape"></span><span class="grow"><span class="t-head">Vape</span><span class="t-foot">Disposables, pods or tanks</span></span><span class="radio"></span></button>
+    <button class="opt multi" data-a style="--i:4"><span class="ico-tile" data-art="pouch"></span><span class="grow"><span class="t-head">Nicotine pouches</span><span class="t-foot">Zyn, Velo, snus</span></span><span class="radio"></span></button>
     <div class="note" data-a style="--i:5"><div class="xc"><div id="xn" class="bob"></div></div>
       <p class="t-body"><b id="cnt">2 picked.</b> Lots of people use both. I&rsquo;ll plan for each.</p></div>
   </div>
@@ -47,23 +50,28 @@
 </div>
 <script>
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
-  /* Mini illustrations, drawn in the icon's palette (paper, apricot, coral, sky, sun, meadow green). */
+  /* Paper-cut product objects: flat pieces in the icon palette, each casting a short paper shadow onto the piece below. */
+  const sh = DX.theme === 'dark' ? 'rgba(0,0,0,.5)' : 'rgba(110,50,20,.26)';
+  const pf = id => `<defs><filter id="${id}" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="1.3" stdDeviation=".45" flood-color="${sh}" flood-opacity="1"/></filter></defs>`;
   const ART = {
-    cig: `<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M26.6 8.2 C24.6 6.2 28.2 4.4 26.3 1.8" fill="none" stroke="#B8B2C8" stroke-width="1.7" stroke-linecap="round"/>
-      <g transform="rotate(-38 16 17)"><rect x="1.5" y="13.8" width="25" height="6.4" rx="1.6" fill="#FFFDF8"/><rect x="1.5" y="13.8" width="8.6" height="6.4" rx="1.6" fill="#F5A85C"/>
-      <path d="M3.8 15.4 h.01 M6.6 18.4 h.01 M8.2 15.8 h.01 M4.6 18.6 h.01" stroke="#D9873D" stroke-width="1.2" stroke-linecap="round"/><rect x="10.1" y="13.8" width="1" height="6.4" fill="#E9C9A0"/>
-      <rect x="25.6" y="13.8" width="2.8" height="6.4" rx="1" fill="#A9A6B4"/><circle cx="28.9" cy="17" r="1.9" fill="#FF7155"/></g></svg>`,
-    vape: `<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5.6 9.6 C4 9.6 3.9 7.4 5.4 7.2 C5.6 5.6 8 5.2 8.8 6.6 C10.2 6.2 11.3 7.6 10.5 8.8 C11.1 9.5 10.6 10.2 9.8 10.2 Z" fill="#CCD6EA"/>
-      <g transform="rotate(14 17 17)"><rect x="13.6" y="3" width="6.8" height="6" rx="2.2" fill="#3E4470"/><rect x="11" y="7.6" width="12" height="21" rx="4.4" fill="#5B78C9"/>
-      <rect x="11" y="7.6" width="4.2" height="21" rx="2.1" fill="#7893DA"/><rect x="13.8" y="10.4" width="6.4" height="7.4" rx="1.8" fill="#BFD7FF"/><rect x="13.8" y="14.6" width="6.4" height="3.2" rx="1" fill="#8FB4F5"/>
-      <circle cx="17" cy="23.6" r="1.5" fill="#FFC93C"/></g></svg>`,
-    pouch: `<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3.5 13.5 v6 a10 4 0 0 0 20 0 v-6 z" fill="#2E9A69"/><ellipse cx="13.5" cy="13.5" rx="10" ry="4" fill="#3FB37F"/>
-      <ellipse cx="13.5" cy="13.5" rx="6" ry="2.2" fill="none" stroke="#E6F5EC" stroke-width="1.2"/><path d="M5.2 16.6 a10 4 0 0 0 7 2.6" fill="none" stroke="#5CC796" stroke-width="1" stroke-linecap="round"/>
-      <g transform="rotate(-14 24 22.5)"><rect x="18.5" y="19" width="11" height="7.4" rx="3.4" fill="#FFFDF8"/><path d="M20.6 22.7 h6.8" stroke="#E2D9CB" stroke-width="1" stroke-dasharray="1.4 1.2"/></g></svg>`
+    cig: `<svg viewBox="0 0 40 40" aria-hidden="true">${pf('pcA')}
+      <path d="M30.5 11.5 C27.5 9.5 31 7.5 28.6 4.6 C33 6 33.8 9.4 30.5 11.5 Z" fill="#E4DEEC" filter="url(#pcA)"/>
+      <g transform="rotate(-36 20 22)"><rect x="3" y="18" width="31" height="8" rx="2.2" fill="#FFFDF8" filter="url(#pcA)"/>
+      <rect x="3" y="18" width="10" height="8" rx="2.2" fill="#F5A85C" filter="url(#pcA)"/>
+      <rect x="32" y="18" width="5" height="8" rx="2" fill="#FF7155" filter="url(#pcA)"/></g></svg>`,
+    vape: `<svg viewBox="0 0 40 40" aria-hidden="true">${pf('pcB')}
+      <g transform="rotate(12 20 20)"><rect x="16" y="3" width="8" height="7" rx="2.4" fill="#3E4470" filter="url(#pcB)"/>
+      <rect x="12" y="8.5" width="16" height="28" rx="5.5" fill="#5B78C9" filter="url(#pcB)"/>
+      <rect x="15.5" y="12.5" width="9" height="10" rx="2.4" fill="#BFD7FF" filter="url(#pcB)"/>
+      <circle cx="20" cy="29.5" r="2.4" fill="#FFC93C" filter="url(#pcB)"/></g></svg>`,
+    pouch: `<svg viewBox="0 0 40 40" aria-hidden="true">${pf('pcD')}
+      <circle cx="17" cy="17" r="13" fill="#2E9A69" filter="url(#pcD)"/>
+      <circle cx="17" cy="17" r="9.5" fill="#3FB37F" filter="url(#pcD)"/>
+      <circle cx="17" cy="17" r="4" fill="#E6F5EC" filter="url(#pcD)"/>
+      <rect x="21" y="24" width="15" height="10" rx="4.5" fill="#FFFDF8" transform="rotate(-14 28.5 29)" filter="url(#pcD)"/></svg>`
   };
   document.querySelectorAll('[data-art]').forEach(e => e.innerHTML = ART[e.dataset.art]);
-  document.getElementById('xn').innerHTML = DX.char('xero', { mood: 'cheer', size: 88 });
-  document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 40 });
+  document.getElementById('xn').innerHTML = DX.char('xero', { mood: 'hello', size: 88 });
   const bar = document.getElementById('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '0%'); void bar.offsetWidth; bar.style.transition = ''; });
   DX.after(250, () => bar.style.setProperty('--p', '9.1%'));
