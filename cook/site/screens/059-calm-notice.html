@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>059 Notice the urge</title>
-<meta name="motion" content="Inside an inset card, the wave line draws left to right over 2.4s from its start dot to its end dot, the soft tint and the paper sea layers fade in under it and the three labels (It rises, It peaks, It passes) arrive beside their points on the curve; Jelli then rides the wave for 12s (slow ease), rising to the crest and gliding down, while the single 28px prompt cross-fades every 3s (600ms): notice, it rises, the peak, watch it fall. No springs, no haptic until It is passing is tapped (soft success haptic, goes to 060).">
+<meta name="motion" content="One painted scene: the sky and the layered sea fade in (600ms), the urge line draws left to right over 2.4s as the swell fills in under it, then the three points and their labels fade in beside them (It rises, It peaks, It passes). Jelli, seated on the line, rides it for 12s (slow ease) up to the crest and down towards the sea, while the single 28px prompt cross-fades every 3s (600ms): notice, it rises, the peak, watch it fall. Dark mode is the same scene at night. No springs, no haptic until It's passing is tapped (soft success haptic, goes to 060).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -20,19 +20,20 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
 .nav .title { flex: 1; text-align: center; margin-right: 56px; }
-.prompt { position: absolute; left: 28px; right: 28px; top: 128px; text-align: center; display: grid; gap: 12px; justify-items: center; }
-.prompt .say { font: 800 28px/1.18 var(--display); letter-spacing: -.6px; min-height: 100px; text-wrap: balance; transition: opacity .6s var(--ease), transform .6s var(--ease); }
+.prompt { position: absolute; left: 28px; right: 28px; top: 124px; text-align: center; display: grid; gap: 10px; justify-items: center; }
+.prompt .say { font: 800 28px/1.18 var(--display); letter-spacing: -.6px; min-height: 72px; text-wrap: balance; transition: opacity .6s var(--ease), transform .6s var(--ease); }
 .prompt .say.out { opacity: 0; transform: translateY(-8px); }
-.chart { position: absolute; left: var(--gutter); right: var(--gutter); top: 262px; height: 400px; padding: 0; overflow: hidden; border-radius: 28px; }
+.chart { position: absolute; left: var(--gutter); right: var(--gutter); top: 246px; height: 410px; padding: 0; overflow: hidden; border-radius: 28px; box-shadow: none !important; }
 .chart svg { position: absolute; left: 0; top: 0; }
-.rider { position: absolute; left: -44px; top: -44px; width: 88px; height: 88px;
-  offset-path: path("M40 260 C 100 260 116 80 173 80 S 246 260 306 260"); offset-rotate: 0deg; offset-distance: 4%; offset-anchor: 50% 78%; }
+.rider { position: absolute; left: 0; top: 0; width: 80px; height: 80px;
+  offset-path: path("M40 300 C 100 300 116 96 173 96 S 246 300 306 300"); offset-rotate: 0deg; offset-distance: 4%; offset-anchor: 50% 95%; }
 .play .rider { animation: ride 12s cubic-bezier(.4,0,.6,1) forwards; }
-@keyframes ride { from { offset-distance: 4%; } to { offset-distance: 83%; } }
-.still .rider { animation: none !important; offset-distance: 83%; }
-.lab { position: absolute; transform: translate(-50%, -50%); font: 700 14px/1 var(--body); color: var(--fg); background: var(--card); padding: 8px 12px; border-radius: 99px; box-shadow: inset 0 0 0 1.5px var(--line), 0 2px 8px rgba(0,0,0,.06); white-space: nowrap; }
+@keyframes ride { from { offset-distance: 4%; } to { offset-distance: 95%; } }
+.still .rider { animation: none !important; offset-distance: 95%; }
+.lab { position: absolute; transform: translate(0, -50%); font: 700 14px/1 var(--body); color: #1E1A3A; background: #FFF8EE; padding: 8px 12px; border-radius: 99px; box-shadow: 0 2px 8px rgba(20,30,70,.12); white-space: nowrap; }
+.lab.r { transform: translate(-100%, -50%); }
+.lab.c { transform: translate(-50%, -100%); }
 .time { color: var(--muted); }
-
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -41,22 +42,8 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
   <p class="t-foot time" data-a style="--i:1">About a minute. Just watch.</p>
   <p class="say" id="say" data-a style="--i:2">Notice where you feel it.</p>
 </div>
-<div class="card chart" data-a style="--i:3">
-  <svg width="346" height="400" viewBox="0 0 346 400">
-    <path d="M40 260 C 100 260 116 80 173 80 S 246 260 306 260 Z" fill="#5A9DFF" fill-opacity=".16" data-fade style="--d:900ms"/>
-    <path d="M40 260 H306" stroke="var(--line)" stroke-width="2" stroke-dasharray="2 8" stroke-linecap="round"/>
-    <path d="M40 260 C 100 260 116 80 173 80 S 246 260 306 260" fill="none" stroke="var(--fg)" stroke-width="3.5" stroke-linecap="round" class="draw" style="--len:460;--dur:2400ms;--d:300ms"/>
-    <circle cx="40" cy="260" r="5" fill="var(--fg)"/><circle cx="306" cy="260" r="5" fill="var(--fg)"/>
-    <g data-fade style="--d:600ms">
-      <path d="M-10 318 C 50 304 110 308 170 318 C 240 330 300 310 356 306 V400 H-10Z" fill="#9CCBFF"/>
-      <path d="M-10 346 C 60 334 120 336 190 348 C 260 360 310 340 356 336 V400 H-10Z" fill="#5A9DFF"/>
-      <path d="M-10 374 C 70 362 140 366 210 376 C 280 386 330 370 356 366 V400 H-10Z" fill="#2F72F2"/>
-      <path d="M78 342 C 90 330 108 328 118 338 C 106 336 96 340 90 348 Z" fill="#FFF8EE"/>
-    </g>
-  </svg>
-  <span class="lab" style="left:80px;top:292px">It rises</span>
-  <span class="lab" style="left:173px;top:292px">It peaks</span>
-  <span class="lab" style="left:268px;top:292px">It passes</span>
+<div class="card chart" data-a style="--i:3" id="chart">
+  <div data-fade style="--d:1300ms;position:absolute;inset:0"><span class="lab r" style="left:93px;top:198px">It rises</span><span class="lab c" style="left:173px;top:80px">It peaks</span><span class="lab" style="left:253px;top:198px">It passes</span></div>
   <div data-fade style="--d:1200ms;position:absolute;inset:0"><span class="rider" id="rider"></span></div>
 </div>
 <div class="dock"><button class="btn" data-a style="--i:4">It's passing</button><button class="link" data-a style="--i:5">I need more help</button></div>
@@ -64,11 +51,28 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
 
-document.getElementById('rider').innerHTML = DX.char('jelli', { mood: 'calm', size: 88 });
+const dark = DX.theme === 'dark';
+const C = dark
+  ? { sky: ['#0C1734', '#1A2D58'], swell: ['#2E4C88', '#1E3566'], sea: ['#1C2C4E', '#16233F', '#0F1A31'], line: '#FFF8EE', star: 1 }
+  : { sky: ['#BFDDFF', '#EAF4FF'], swell: ['#A9D2FF', '#7DB6FF'], sea: ['#5A9DFF', '#2F72F2', '#1F55D0'], line: '#1E1A3A', star: 0 };
+const pt = (x, y) => `<circle cx="${x}" cy="${y}" r="6.5" fill="${C.line}" stroke="${dark ? '#1E3566' : '#FFF8EE'}" stroke-width="3"/>`;
+document.getElementById('chart').insertAdjacentHTML('afterbegin', `<svg width="346" height="410" viewBox="0 0 346 410" aria-hidden="true"><defs>
+  <linearGradient id="ksky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${C.sky[0]}"/><stop offset="1" stop-color="${C.sky[1]}"/></linearGradient>
+  <linearGradient id="kswl" x1="0" y1="0" x2="0" y2="1"><stop offset=".2" stop-color="${C.swell[0]}"/><stop offset="1" stop-color="${C.swell[1]}"/></linearGradient></defs>
+  <rect width="346" height="410" fill="url(#ksky)"/>
+  ${C.star ? [[40, 40], [92, 76], [290, 52], [318, 120], [24, 150], [226, 30]].map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="${i % 2 ? 1.2 : 1.7}" fill="#fff" opacity="${i % 2 ? .5 : .8}"/>`).join('') : '<g fill="#fff" opacity=".9"><ellipse cx="282" cy="56" rx="30" ry="10"/><ellipse cx="268" cy="49" rx="15" ry="11"/></g>'}
+  <path d="M-10 300 H40 C 100 300 116 96 173 96 S 246 300 306 300 H356 V410 H-10Z" fill="url(#kswl)" data-fade style="--d:900ms"/>
+  <path d="M40 300 C 100 300 116 96 173 96 S 246 300 306 300" fill="none" stroke="${C.line}" stroke-width="4" stroke-linecap="round" pathLength="100" class="draw" style="--len:100;--dur:2400ms;--d:300ms"/>
+  <g data-fade style="--d:1300ms">${pt(107.6, 198)}${pt(173, 96)}${pt(238.4, 198)}</g>
+  <g data-fade style="--d:600ms">
+    <path d="M-10 322 C 50 308 110 312 170 322 C 240 334 300 314 356 310 V410 H-10Z" fill="${C.sea[0]}"/>
+    <path d="M-10 352 C 60 340 120 342 190 354 C 260 366 310 346 356 342 V410 H-10Z" fill="${C.sea[1]}"/>
+    <path d="M-10 382 C 70 370 140 374 210 384 C 280 394 330 378 356 374 V410 H-10Z" fill="${C.sea[2]}"/>
+  </g></svg>`);
+document.getElementById('rider').innerHTML = DX.char('jelli', { mood: 'calm', size: 80 });
 const say = document.getElementById('say');
 const lines = [[3000, 'It rises. You do not have to act.'], [6000, 'This is the peak. Breathe out slowly.'], [9000, 'Watch it fall away.']];
 lines.forEach(([t, s]) => DX.after(t, () => { say.classList.add('out'); setTimeout(() => { say.textContent = s; say.classList.remove('out'); }, 600); }));
 DX.onStill(() => { say.textContent = 'Watch it fall away.'; });
-
 </script>
 </body></html>

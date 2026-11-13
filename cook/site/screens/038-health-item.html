@@ -1,27 +1,27 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>038 Health change</title>
-<meta name="motion" content="The paper-cut blush card fades up, its hills lift, the lips settle in (900ms) and two sun-yellow sparkles pop, then title, the timing card (the countdown ring sweeps to 5 of 7 days), paragraphs and the 'What you might notice' rows arrive with a 90ms stagger. No haptic.">
+<meta name="motion" content="The paper-cut blush card fades up, its hills lift, the soft smiling face settles in front of them (900ms) and two sun-yellow sparkles pop, then title, the timing card (the ring sweeps to half: 7 of the 14 days to two weeks, while the 7 counts up), paragraphs and the 'What you might notice' rows arrive with a 90ms stagger. No haptic.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .art { position: relative; height: 164px; border-radius: 26px; overflow: hidden; }
+  .art { position: relative; height: 156px; border-radius: 26px; overflow: hidden; }
   .art .scene { position: absolute; inset: 0; }
   .art .hero { position: absolute; left: 50%; bottom: 6px; margin-left: -54px; }
+  [data-theme="dark"] .art svg { filter: brightness(.74) saturate(.85); }
+  [data-theme="dark"] .art .tag { background: rgba(14,19,34,.62); color: var(--cream); box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); }
   .art .tag { position: absolute; left: 14px; top: 14px; height: 30px; padding: 0 12px; border-radius: 99px; background: rgba(255,248,238,.92); color: var(--ink);
     display: inline-flex; align-items: center; font: 600 13px/1 var(--body); }
   .head { margin-top: 18px; display: grid; gap: 6px; }
   .when { margin-top: 16px; display: flex; align-items: center; gap: 14px; }
-  .when .ringwrap { position: relative; width: 60px; height: 60px; flex: none; color: var(--fg); }
-  .when .ringwrap b { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 1px; font: 800 19px/1 var(--display); }
-  .when .ringwrap b small { font: 600 13px/1 var(--body); color: var(--muted); }
+  .when .ringwrap { position: relative; width: 68px; height: 68px; flex: none; color: var(--fg); }
+  .when .ringwrap b { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 2px; font: 800 21px/1 var(--display); padding-top: 2px; }
+  .when .ringwrap b small { font: 600 12px/1 var(--body); color: var(--muted); }
   .when .grow { flex: 1; display: grid; gap: 2px; }
   .when .side { text-align: right; display: grid; gap: 2px; }
   .copy { margin-top: 16px; display: grid; gap: 10px; }
   .notice { margin-top: 18px; }
   .notice .list { margin-top: 10px; }
-  .notice .row { min-height: 46px; gap: 12px; }
-  .dot { width: 26px; height: 26px; display: grid; place-items: center; flex: none; }
-  .dot::after { content: ""; width: 8px; height: 8px; border-radius: 99px; background: var(--fg); opacity: .55; }
+  .notice .row { min-height: 46px; gap: 12px; padding-inline: 16px; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -37,8 +37,8 @@
       </div>
 
       <div class="card when" data-a style="--i:2">
-        <div class="ringwrap"><span id="ring"></span><b>2<small>days</small></b></div>
-        <div class="grow"><p class="t-head" style="font-size:17px">Starts in 2 days</p><p class="t-foot muted">Usually 2 to 6 weeks after Quit Day</p></div>
+        <div class="ringwrap"><span id="ring"></span><b><span data-count="7">7</span><small>days</small></b></div>
+        <div class="grow"><p class="t-head" style="font-size:17px">Starts in about a week</p><p class="t-foot muted">Usually 2 to 6 weeks after Quit Day</p></div>
       </div>
 
       <div class="copy">
@@ -49,9 +49,9 @@
       <div class="notice">
         <h2 class="t-head" data-a style="--i:5">What you might notice</h2>
         <div class="list" data-a style="--i:6">
-          <div class="row"><span class="dot"></span><p class="t-foot grow" style="font-size:15px">Pinker, firmer gums</p></div>
-          <div class="row"><span class="dot"></span><p class="t-foot grow" style="font-size:15px">Fresher breath and a sharper sense of taste</p></div>
-          <div class="row"><span class="dot"></span><p class="t-foot grow" style="font-size:15px">A little bleeding when you brush at first. That's healing, not harm.</p></div>
+          <div class="row"><p class="t-foot grow" style="font-size:15px">Pinker, firmer gums</p></div>
+          <div class="row"><p class="t-foot grow" style="font-size:15px">Fresher breath and a sharper sense of taste</p></div>
+          <div class="row"><p class="t-foot grow" style="font-size:15px">A little bleeding when you brush at first. That's healing, not harm.</p></div>
         </div>
       </div>
       <p class="t-cap muted" data-a style="--i:7;margin-top:14px">Source: <span class="source">NHS Better Health</span></p>
@@ -60,25 +60,33 @@
 </div>
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20 })));
-  /* paper-cut lips and gums: blush sky, layered pink hills, lips settle in, sparkles pop */
-  document.getElementById('scene').innerHTML = `<svg viewBox="0 0 346 164" width="346" height="164" aria-hidden="true" style="display:block">
-    <defs><linearGradient id="lsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFD9C6"/><stop offset="1" stop-color="#FFEDE2"/></linearGradient>
+  /* paper-cut healthy smile: a soft round face rising like a sun over blush hills, closed happy eyes, a smile showing
+     pink gums and white teeth, two sun-yellow sparkles. Dimmed in dark mode (filter on .art svg). */
+  document.getElementById('scene').innerHTML = `<svg viewBox="0 0 346 156" width="346" height="156" aria-hidden="true" style="display:block">
+    <defs><linearGradient id="lsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFD3BE"/><stop offset="1" stop-color="#FFEDE2"/></linearGradient>
       <filter id="llift" x="-10%" y="-30%" width="120%" height="160%"><feDropShadow dx="0" dy="-2" stdDeviation="2.4" flood-color="#5A1E1A" flood-opacity=".2"/></filter>
-      <filter id="lshadow" x="-20%" y="-20%" width="140%" height="160%"><feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#5A1E1A" flood-opacity=".22"/></filter></defs>
-    <rect width="346" height="164" fill="url(#lsky)"/>
-    <path filter="url(#llift)" d="M0 112 C60 96 120 106 180 110 S300 96 346 102 V164 H0z" fill="#FFC1AC"/>
-    <path filter="url(#llift)" d="M0 132 C80 118 170 138 346 122 V164 H0z" fill="#FFA58C"/>
-    <path filter="url(#llift)" d="M0 150 C100 142 220 156 346 146 V164 H0z" fill="#F48B72"/>
-    <g data-settle style="--d:200ms"><g filter="url(#lshadow)" transform="translate(180 92) scale(.86)">
-      <path d="M-74 0 C-50 -30 -24 -34 0 -16 C24 -34 50 -30 74 0 C50 40 -50 40 -74 0Z" fill="#F0705A"/>
-      <path d="M-74 0 C-50 -30 -24 -34 0 -16 C24 -34 50 -30 74 0 C40 8 -40 8 -74 0Z" fill="#E25A48"/>
-      <path d="M-56 2 C-30 12 30 12 56 2 C40 10 -40 10 -56 2Z" fill="#FFF8EE"/>
-      <path d="M-74 0 C-40 10 40 10 74 0" fill="none" stroke="#1E1A3A" stroke-opacity=".5" stroke-width="2.4" stroke-linecap="round"/>
-      <path d="M-38 18 C-20 24 -6 25 6 24" fill="none" stroke="#FFF8EE" stroke-opacity=".55" stroke-width="4" stroke-linecap="round"/>
+      <filter id="lshadow" x="-20%" y="-20%" width="140%" height="160%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#5A1E1A" flood-opacity=".18"/></filter>
+      <clipPath id="lmouth"><path d="M-32 0 C-17 5 17 5 32 0 C29 25 -29 25 -32 0Z"/></clipPath></defs>
+    <rect width="346" height="156" fill="url(#lsky)"/>
+    <circle cx="173" cy="98" r="86" fill="#FFF6EE" opacity=".6"/>
+    <path filter="url(#llift)" d="M0 112 C60 96 120 106 180 110 S300 96 346 102 V156 H0z" fill="#FFC1AC"/>
+    <g data-settle style="--d:200ms"><g filter="url(#lshadow)">
+      <circle cx="173" cy="98" r="58" fill="#FFBF8E"/>
+      <path d="M205 50 C226 62 236 84 231 108 C227 130 212 146 192 152 C214 136 222 112 218 90 C215 72 210 60 205 50Z" fill="#F4A877"/>
+      <path d="M127 80 C133 64 146 52 162 48" fill="none" stroke="#FFDDBE" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="139" cy="104" r="9.5" fill="#FF8F7A" opacity=".45"/><circle cx="207" cy="104" r="9.5" fill="#FF8F7A" opacity=".45"/>
+      <path d="M144 88 q8 -9 16 0 M186 88 q8 -9 16 0" fill="none" stroke="#3A2230" stroke-width="3.6" stroke-linecap="round"/>
+      <g transform="translate(173 106)">
+        <path d="M-32 0 C-17 5 17 5 32 0 C29 25 -29 25 -32 0Z" fill="#A8384E"/>
+        <g clip-path="url(#lmouth)"><path d="M-34 -2 C-17 4 17 4 34 -2 V6 C17 11 -17 11 -34 6Z" fill="#FF8C9A"/><path d="M-26 7 C-13 11 13 11 26 7 V13 C13 16 -13 16 -26 13Z" fill="#FFF8EE"/><ellipse cx="0" cy="21" rx="13" ry="5.5" fill="#E8667A"/></g>
+        <path d="M-32 0 C-17 5 17 5 32 0 C29 25 -29 25 -32 0Z" fill="none" stroke="#E0707A" stroke-width="3.4" stroke-linejoin="round"/>
+      </g>
     </g></g>
-    <g data-pop style="--d:700ms;transform-origin:290px 50px"><path d="M290 36l3.4 8 8 3.4-8 3.4-3.4 8-3.4-8-8-3.4 8-3.4z" fill="#F5B83D"/></g>
-    <g data-pop style="--d:820ms;transform-origin:70px 84px"><path d="M70 76l2.2 5 5 2.2-5 2.2-2.2 5-2.2-5-5-2.2 5-2.2z" fill="#FFD966"/></g>
+    <path filter="url(#llift)" d="M0 138 C80 128 170 146 346 132 V156 H0z" fill="#FFA58C"/>
+    <path filter="url(#llift)" d="M0 150 C100 144 220 154 346 146 V156 H0z" fill="#F48B72"/>
+    <g data-pop style="--d:700ms;transform-origin:262px 52px"><path d="M262 38l3.4 8 8 3.4-8 3.4-3.4 8-3.4-8-8-3.4 8-3.4z" fill="#F5B83D"/></g>
+    <g data-pop style="--d:820ms;transform-origin:88px 70px"><path d="M88 62l2.2 5 5 2.2-5 2.2-2.2 5-2.2-5-5-2.2 5-2.2z" fill="#FFD966"/></g>
   </svg>`;
-  document.getElementById('ring').innerHTML = DX.ring({ size: 56, stroke: 6, p: 5 / 7, color: 'var(--fg)', track: 'var(--track)' });
+  document.getElementById('ring').innerHTML = DX.ring({ size: 68, stroke: 6, p: 7 / 14, color: 'var(--fg)', track: 'var(--track)' });
 </script>
 </body></html>

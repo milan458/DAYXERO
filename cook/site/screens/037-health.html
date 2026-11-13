@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>037 Health timeline</title>
-<meta name="motion" content="Title and the Vaping / Smoking chips arrive; each card's paper-cut spot (its own motif: sunrise, clearing wind, summit flag, calm lake, lips) lifts in with the card, then the rail draws top to bottom (900ms) while timeline cards arrive with a 90ms stagger. Done ticks draw as each card lands; the Under way bar fills to 50% (900ms settle). Switching chips cross-fades the list (250ms) with a selection haptic.">
+<meta name="motion" content="Title and the Vaping / Smoking chips arrive; each card's paper-cut spot (its own motif: sunrise, clearing wind, summit flag, calm lake, lips) lifts in with the card, then the rail draws top to bottom (900ms) while timeline cards arrive with a 90ms stagger. The rail node of each done change pops its single tick as the card lands (the first change, withdrawal starting, gets a plain node and a neutral Started); the Under way bar fills to 50% (900ms settle). Switching chips cross-fades the list (250ms) with a selection haptic.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -13,20 +13,22 @@
   .node.now { box-shadow: inset 0 0 0 2.5px var(--fg); }
   .node.now::after { content: ""; width: 8px; height: 8px; border-radius: 99px; background: var(--fg); }
   .node.ahead { box-shadow: inset 0 0 0 2px var(--line); }
+  .node.past::after { content: ""; width: 12px; height: 12px; border-radius: 99px; background: var(--muted); opacity: .7; }
   .item { position: relative; display: flex; gap: 14px; align-items: center; padding: 14px 14px 14px 12px; }
   .item .grow { flex: 1; min-width: 0; display: grid; gap: 5px; }
-  .item .t-head { font-size: 16.5px; line-height: 1.22; }
+  .item .t-head { font-size: 16.5px; line-height: 1.22; text-wrap: balance; }
   .ill { width: 62px; height: 62px; border-radius: 18px; overflow: hidden; flex: none; display: block; box-shadow: inset 0 0 0 1px var(--line);
     --sp-sky: #FFE6C8; --sp-h1: #FFAE73; --sp-h2: #FF8A5E; --sp-h3: #E8674A; --sp-cloud: #FFF8EE; }
   .ill svg { width: 62px; height: 62px; display: block; }
   .st { display: flex; align-items: center; gap: 6px; font: 600 14px/1.25 var(--body); color: var(--fg); opacity: .82; }
   .st.done { color: var(--tick); opacity: 1; }
-  .st svg { width: 14px; height: 14px; }
   .item .progress { height: 6px; margin-top: 2px; }
   .item .progress > i { background: var(--fg); }
   .item.ahead .t-head { color: var(--fg); }
   .item.ahead .ill { filter: saturate(.7); }
-  .chev { margin-left: 2px; display: grid; }
+  [data-theme="dark"] .ill { filter: brightness(.74) saturate(.85); box-shadow: none; }
+  [data-theme="dark"] .item.ahead .ill { filter: brightness(.66) saturate(.6); }
+  .chev { margin-left: 2px; display: grid; color: var(--muted); }
   .chev svg { width: 18px; height: 18px; }
   .item.past { background: transparent; padding-block: 10px; }
   .item.past .ill { width: 48px; height: 48px; border-radius: 14px; }
@@ -52,29 +54,33 @@
         <div class="rail"><svg viewBox="0 0 2 100" preserveAspectRatio="none"><path class="draw" d="M1 0V100" stroke="var(--line)" stroke-width="2" vector-effect="non-scaling-stroke" style="--len:100;--dur:900ms;--d:300ms"/></svg></div>
 
         <div class="card item past" data-a style="--i:3">
-          <span class="node done" data-ic="check"></span>
+          <span class="node past"></span>
           <span class="ill" data-spot="rise"></span>
-          <div class="grow"><p class="t-head">Withdrawal can start</p><span class="st done"><span data-ic="check"></span>Done · a few hours in</span></div>
+          <div class="grow"><p class="t-head">Withdrawal can start</p><span class="st">Started · a few hours in</span></div>
+          <span data-ic="chev" class="chev"></span>
         </div>
         <div class="card item past" data-a style="--i:4">
           <span class="node done" data-ic="check"></span>
           <span class="ill" data-spot="cloud"></span>
-          <div class="grow"><p class="t-head">Most nicotine has left your body</p><span class="st done"><span data-ic="check"></span>Done · a few days in</span></div>
+          <div class="grow"><p class="t-head">Most nicotine has left your body</p><span class="st done">Done · a few days in</span></div>
+          <span data-ic="chev" class="chev"></span>
         </div>
         <div class="card item past" data-a style="--i:5">
           <span class="node done" data-ic="check"></span>
           <span class="ill" data-spot="peak"></span>
-          <div class="grow"><p class="t-head">Withdrawal is at its strongest</p><span class="st done"><span data-ic="check"></span>Done · the first week</span></div>
+          <div class="grow"><p class="t-head">Withdrawal is at its strongest</p><span class="st done">Done · the first week</span></div>
+          <span data-ic="chev" class="chev"></span>
         </div>
         <div class="card item now" data-a style="--i:6">
           <span class="node now"></span>
           <span class="ill" data-spot="sunny"></span>
           <div class="grow"><p class="t-head">Mood swings from withdrawal ease</p><span class="st">Under way · 1 to 2 weeks</span><div class="progress"><i style="--p:50%" id="bar"></i></div></div>
+          <span data-ic="chev" class="chev"></span>
         </div>
         <div class="card item ahead" data-a style="--i:7" data-go="038-health-item">
           <span class="node ahead"></span>
           <span class="ill" data-spot="lips"></span>
-          <div class="grow"><p class="t-head">Healthier lips and gums</p><span class="st">Ahead · starts in 2 days</span></div>
+          <div class="grow"><p class="t-head">Healthier lips and gums</p><span class="st">Ahead · in about a week</span></div>
           <span data-ic="chev" class="chev"></span>
         </div>
       </div>

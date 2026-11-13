@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>054 Evening check-in</title>
-<meta name="motion" content="Dim and slow, no springs. The night sky fades in (700ms) with stars twinkling and fireflies drifting; Glim settles in (900ms) then bobs. The date line, title, day choice, SOS row and the four faces arrive in order (600ms, 90ms stagger); the '3' in the SOS row counts up. The four mood faces are little moons (slate, pale, warm, apricot) with their own expressions; at 1.6s 'Good' fills in and its face tilts up a touch (400ms settle) with a soft selection haptic. Edit is a readable outlined pill. Save arrives last.">
+<meta name="motion" content="Dim and slow, no springs. The night sky fades in (700ms) with stars twinkling and fireflies drifting; Glim settles in (900ms) then bobs. The date line, title (its '3' counts up), day choice, the waves row and the four faces arrive in order (600ms, 90ms stagger). The four mood faces are little moons (a tired slate moon with heavy lids, pale, warm, apricot) with their own expressions; at 1.6s 'Good' fills in and its face tilts up a touch (400ms settle) with a soft selection haptic. Edit is a readable outlined pill. Save arrives last, a solid cream button, unlike the tinted, outlined selections.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -31,11 +31,11 @@
   <div class="nav"><button class="icon-btn" aria-label="Close" data-ic="close"></button></div>
   <div class="body">
     <p class="t-foot day" data-a style="--i:2">Friday check-in, Day 7</p>
-    <h1 class="t-title" data-a style="--i:3">3 of 3 waves. All yours.</h1>
+    <h1 class="t-title" data-a style="--i:3"><span data-count="3">3</span> waves today. All ridden out.</h1>
     <p class="t-foot lead" data-a style="--i:4">Each one you ride out makes the next a little quieter.</p>
     <div class="grid2 daypick" data-a style="--i:5"><button class="chip on">Clear day</button><button class="chip">Had a slip</button></div>
     <div class="list sos" data-a style="--i:6">
-      <div class="row"><span class="ico-tile" data-ic="wave"></span><div class="grow"><p class="t-head" style="font-size:16px">Today's SOS</p><p class="t-foot"><span data-count="3">3</span> waves ridden out</p></div><button class="edit">Edit</button></div>
+      <div class="row"><span class="ico-tile" data-ic="wave"></span><div class="grow"><p class="t-head" style="font-size:16px">Today's waves</p><p class="t-foot">8:10 AM, 1:40 PM and 6:25 PM</p></div><button class="edit">Edit</button></div>
     </div>
     <div class="feel" data-a style="--i:7">
       <p class="t-head">How are you feeling tonight?</p>
@@ -58,7 +58,8 @@
   /* Four characterful moon-faces: a cool slate cloud for Rough, a pale moon for Okay, warm moonlight for Good, apricot glow for Proud. */
   const INK = '#0F1B33', CH = '<circle cx="12.5" cy="29" r="3.2" fill="#FF8C6B" opacity=".55"/><circle cx="35.5" cy="29" r="3.2" fill="#FF8C6B" opacity=".55"/>';
   const F = {
-    rough: { c: '#A9B8D6', d: `<path d="M13 17.5l6 2.2M35 17.5l-6 2.2" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"/><circle cx="18" cy="24" r="2.3" fill="${INK}"/><circle cx="30" cy="24" r="2.3" fill="${INK}"/><path d="M16 35c2.6-2.4 5.4-2.4 8 0s5.4 2.4 8 0" fill="none" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"/>` },
+    /* tired, not angry: heavy flat lids over half-moon eyes, soft shadows under them, a small low mouth */
+    rough: { c: '#A9B8D6', d: `<path d="M14.5 22.5a3 3 0 0 0 6 0zM27.5 22.5a3 3 0 0 0 6 0z" fill="${INK}"/><path d="M13.5 22.5h8M26.5 22.5h8" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"/><path d="M15 28.5q2.5 1.4 5 0M28 28.5q2.5 1.4 5 0" fill="none" stroke="${INK}" stroke-opacity=".3" stroke-width="1.6" stroke-linecap="round"/><path d="M20.5 34.5q3.5-1.6 7 0" fill="none" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"/>` },
     okay: { c: '#E8DCBC', d: `<circle cx="18" cy="22.5" r="2.3" fill="${INK}"/><circle cx="30" cy="22.5" r="2.3" fill="${INK}"/><path d="M18 32h12" stroke="${INK}" stroke-width="2.6" stroke-linecap="round"/>` },
     good: { c: '#FFD37A', d: `${CH}<circle cx="18" cy="22" r="2.4" fill="${INK}"/><circle cx="30" cy="22" r="2.4" fill="${INK}"/><path d="M16.5 29c3 5 12 5 15 0" fill="none" stroke="${INK}" stroke-width="2.6" stroke-linecap="round"/>` },
     proud: { c: '#FFB98A', d: `${CH}<path d="M14 23c1.8-3 5.2-3 7 0M27 23c1.8-3 5.2-3 7 0" fill="none" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"/><path d="M15.5 28.5h17c0 5.5-3.8 8.5-8.5 8.5s-8.5-3-8.5-8.5z" fill="${INK}"/><path d="M19.5 33.5c2.6 1.6 6.4 1.6 9 0" fill="none" stroke="#FF8C6B" stroke-width="2.2" stroke-linecap="round"/><path d="M40 6l1.2 2.6 2.6 1.2-2.6 1.2L40 13.6l-1.2-2.6-2.6-1.2 2.6-1.2z" fill="#FFD37A"/>` }

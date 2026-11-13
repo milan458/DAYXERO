@@ -1,39 +1,45 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>010 Onboarding Quit Day</title>
-<meta name="motion" content="Progress eases 7/11 to 8/11; title, week strip (tiles rise 90ms apart, the seven prep dots pop in left to right), Xero and the hold button arrive in order. Holding fills the button left to right over 1500ms with a soft ticking haptic; on release-complete the button turns to its done state (success haptic), the Day Xero badge stamps in inside the Fri 6 tile, under the date, replacing the sun dot, in its waiting form (620ms stamp spring, faded until it is earned on Quit Day itself), Xero swaps to cheer with a 520ms bump, and the line under him fades to the confirmation.">
+<meta name="motion" content="Progress eases 7/11 to 8/11; title, the prep-week card (seven tiles rise 45ms apart, their prep dots pop left to right), the Quit Day tile, Xero and the hold button arrive in order. Holding fills the button left to right over 1500ms with a soft ticking haptic; on complete the button shows its done state, Quit Day set (success haptic), the Day Xero badge stamps into the Quit Day tile in its waiting form (620ms stamp spring; it is earned on Quit Day itself), Xero swaps to cheer with a 520ms bump and the line under him swaps to a popping check and the confirmation. 1200ms later the done button crossfades (350ms) into Continue.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .wk { margin: 24px var(--gutter) 0; padding: 14px 12px 14px; overflow: visible; }
-  .wk-h { display: flex; justify-content: space-between; align-items: baseline; padding: 0 4px 12px; }
-  .days { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)) 1.5fr; gap: 5px; }
-  .day { position: relative; border-radius: 14px; background: color-mix(in srgb, var(--g) 34%, transparent); display: grid; justify-items: center; align-content: center; gap: 3px; height: 74px; }
+  .wk { margin: 22px var(--gutter) 0; padding: 14px 12px 12px; }
+  .wk-h { display: flex; justify-content: space-between; align-items: center; padding: 0 4px 10px; }
+  .wk-h .link { height: 28px; font-size: 14px; }
+  /* Prep tiles sit lighter than the card in both modes (card-2), so the week always reads. */
+  .days { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: 6px; }
+  .day { border-radius: 14px; background: var(--card-2); display: grid; justify-items: center; align-content: center; gap: 4px; height: 86px; }
   .day .t-cap { color: var(--muted); font-size: 13px; font-weight: 600; }
-  .day .num { font-size: 19px; line-height: 1; }
-  .day .pd { width: 7px; height: 7px; border-radius: 99px; background: #FF9A5C; margin-top: 3px; }
-  .day.qd { background: var(--sel); color: var(--sel-fg); }
-  .day.qd .t-cap { color: inherit; opacity: .8; }
-  .day.qd .num { font-size: 23px; }
-  .day.qd .sundot { width: 9px; height: 9px; border-radius: 99px; background: var(--sun); margin-top: 3px; }
-  .day { height: 100px; }
-  .day.qd { gap: 4px; padding-top: 2px; }
-  .stamp { display: none; width: 40px; height: 40px; margin-top: 2px; }
-  .stamp.show { display: block; }
-  .day.qd.got .sundot { display: none; }
-  .legend .t-cap { font-size: 14px; font-weight: 600; color: var(--fg); }
-  .legend { display: flex; align-items: center; gap: 14px; margin: 12px calc(var(--gutter) + 4px) 0; }
-  .legend span { display: inline-flex; align-items: center; gap: 6px; }
-  .legend i { width: 10px; height: 10px; border-radius: 99px; background: #FF9A5C; display: block; }
-  .legend i.qd2 { background: var(--sel); width: 10px; height: 10px; border-radius: 3px; }
-  .legend .link { margin-left: auto; height: 32px; font-size: 14px; text-decoration: underline; text-underline-offset: 3px; }
-  .hero { position: absolute; left: 0; right: 0; top: 456px; display: grid; justify-items: center; gap: 6px; }
-  .hero .say .t-foot { font-size: 15px; }
-  .hero .say { position: relative; height: 22px; width: 100%; text-align: center; }
-  .hero .say p { position: absolute; inset: 0; transition: opacity .4s var(--ease), transform .4s var(--ease); }
+  .day .num { font-size: 22px; line-height: 1; }
+  .day .pd { width: 8px; height: 8px; border-radius: 99px; background: #FF9A5C; margin-top: 2px; }
+  /* Quit Day: its own wide tile under the week. */
+  .qd { margin-top: 8px; border-radius: 16px; background: var(--sel); color: var(--sel-fg); display: flex; align-items: center; gap: 14px; padding: 12px 16px 12px 12px; min-height: 68px; }
+  .qd .slot { width: 46px; height: 46px; flex: none; position: relative; display: grid; place-items: center; }
+  .qd .slot .ph { width: 40px; height: 40px; border-radius: 99px; box-shadow: inset 0 0 0 2.5px color-mix(in srgb, currentColor 40%, transparent); }
+  .qd .slot .ph::after { content: ""; position: absolute; left: 50%; top: 50%; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 99px; background: var(--sun); }
+  .qd.got .slot .ph { display: none; }
+  .qd .stamp { display: none; }
+  .qd.got .stamp { display: block; }
+  /* The waiting badge sits on a cream coin so it reads on the ink tile. */
+  .qd .stamp { width: 46px; height: 46px; border-radius: 99px; background: #FFF8EE; color: #1E1A3A; }
+  .qd .grow { flex: 1; min-width: 0; }
+  .qd .t-head { font-size: 20px; }
+  .qd .t-cap { opacity: .78; margin-top: 2px; }
+  .qd .tag { font: 700 13px/1 var(--body); padding: 7px 10px; border-radius: 99px; background: color-mix(in srgb, currentColor 14%, transparent); }
+  .hero { position: absolute; left: 0; right: 0; top: 470px; display: grid; justify-items: center; gap: 4px; }
+  .hero .say { position: relative; height: 26px; width: 100%; text-align: center; }
+  .hero .say p { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; gap: 8px; transition: opacity .4s var(--ease), transform .4s var(--ease); }
   .hero .say .b { opacity: 0; transform: translateY(8px); }
   .hero.done .say .a { opacity: 0; transform: translateY(-8px); }
   .hero.done .say .b { opacity: 1; transform: none; }
   .dock .t-cap { text-align: center; color: var(--muted); }
+  /* After the hold: the done state shows, then the button hands over to Continue. */
+  .btns { position: relative; height: 58px; }
+  .btns .btn { position: absolute; inset: 0; transition: opacity .35s var(--ease), transform .35s var(--ease); }
+  .btns #go { opacity: 0; pointer-events: none; transform: translateY(6px); }
+  .btns.next #hold { opacity: 0; pointer-events: none; }
+  .btns.next #go { opacity: 1; pointer-events: auto; transform: none; }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
@@ -49,26 +55,29 @@
   </div>
 
   <div class="card wk" data-a style="--i:2">
-    <div class="wk-h"><p class="t-foot"><b>Prep week</b> <span class="muted">Oct 30 to Nov 5</span></p></div>
+    <div class="wk-h"><p class="t-foot"><b>Prep week</b> <span class="muted">Oct 30 to Nov 5</span></p><a class="link">Change date</a></div>
     <div class="days" id="days"></div>
-  </div>
-  <div class="legend" data-a style="--i:3">
-    <span class="t-cap"><i></i>Prep</span>
-    <span class="t-cap"><i class="qd2"></i>Quit Day</span>
-    <a class="link">Pick another date</a>
+    <div class="qd" id="qd" data-a style="--i:6">
+      <div class="slot"><span class="ph"></span><div class="stamp" id="stamp" data-stamp style="--i:0"></div></div>
+      <div class="grow"><p class="t-head">Fri, Nov 6</p><p class="t-cap">Quit Day</p></div>
+      <span class="tag">Recommended</span>
+    </div>
   </div>
 
   <div class="hero" id="hero">
     <div data-settle style="--d:450ms"><div id="bw"><div id="xero" class="bob"></div></div></div>
-    <div class="say" data-a style="--i:5">
-      <p class="t-foot muted a">Recommended. Hold the button to lock it in.</p>
-      <p class="t-foot b"><b>Fri, Nov 6 is your Day Xero.</b></p>
+    <div class="say" data-a style="--i:7">
+      <p class="t-foot muted a">A full 7-day prep. Hold the button to lock it in.</p>
+      <p class="t-foot b"><span id="ok"></span><b>Fri, Nov 6 is your Day Xero.</b></p>
     </div>
   </div>
 
   <div class="dock">
-    <button class="btn" id="hold" data-hold="1500" data-done="Quit Day set" data-autohold="1600" data-a style="--i:6">Hold to set Fri, Nov 6</button>
-    <p class="t-cap" data-a style="--i:7">Quit Day comes on this date, even if prep runs short. You can change it later.</p>
+    <div class="btns" id="btns" data-a style="--i:8">
+      <button class="btn" id="hold" data-hold="1500" data-done="Quit Day set" data-autohold="1600">Hold to set Fri, Nov 6</button>
+      <button class="btn" id="go">Continue</button>
+    </div>
+    <p class="t-cap" data-a style="--i:9">Quit Day comes on this date, even if prep runs short. You can change it later.</p>
   </div>
 </div>
 <script>
@@ -76,16 +85,19 @@
   document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 40 });
   const $ = id => document.getElementById(id), bar = $('bar');
   const days = [['Fri', 30], ['Sat', 31], ['Sun', 1], ['Mon', 2], ['Tue', 3], ['Wed', 4], ['Thu', 5]];
-  $('days').innerHTML = days.map(([d, n], i) => `<div class="day" data-a style="--i:${i * .5 + 2.5}"><span class="t-cap">${d}</span><span class="num">${n}</span><span class="pd" data-pop style="--i:0;--d:${700 + i * 90}ms"></span></div>`).join('')
-    + `<div class="day qd" data-a style="--i:6.5"><span class="t-cap">Fri</span><span class="num">6</span><span class="sundot"></span><div class="stamp" id="stamp" data-stamp style="--i:0"></div></div>`;
-  $('stamp').innerHTML = DX.badge({ kind: 'xero', n: '0', size: 40, bare: true });
-  const setX = m => $('xero').innerHTML = DX.char('xero', { mood: m, size: 200 });
+  $('days').innerHTML = days.map(([d, n], i) => `<div class="day" data-a style="--i:${i * .5 + 2.5}"><span class="t-cap">${d}</span><span class="num">${n}</span><span class="pd" data-pop style="--i:0;--d:${700 + i * 90}ms"></span></div>`).join('');
+  $('stamp').innerHTML = DX.badge({ kind: 'xero', state: 'next', size: 46, bare: true });
+  const setX = m => $('xero').innerHTML = DX.char('xero', { mood: m, size: 160 });
   setX('hello');
   const reset = () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '63.6%'); void bar.offsetWidth; bar.style.transition = '';
-    $('stamp').classList.remove('show'); $('stamp').parentNode.classList.remove('got'); $('hero').classList.remove('done'); $('bw').classList.remove('bump'); setX('hello'); };
+    $('qd').classList.remove('got'); $('hero').classList.remove('done'); $('bw').classList.remove('bump'); $('btns').classList.remove('next'); $('ok').innerHTML = ''; setX('hello'); };
   DX.after(0, reset);
   DX.after(250, () => bar.style.setProperty('--p', '72.7%'));
-  const held = () => { $('stamp').classList.add('show'); $('stamp').parentNode.classList.add('got'); setX('cheer'); const x = $('bw'); x.classList.remove('bump'); void x.offsetWidth; x.style.setProperty('--d', '120ms'); x.classList.add('bump'); $('hero').classList.add('done'); };
+  const held = () => { $('qd').classList.add('got'); setX('cheer'); const x = $('bw'); x.classList.remove('bump'); void x.offsetWidth; x.style.setProperty('--d', '120ms'); x.classList.add('bump');
+    $('ok').innerHTML = DX.check({ size: 20 }); $('hero').classList.add('done'); };
   document.addEventListener('held', held);
+  /* 1200ms after the hold lands, the button hands over to Continue. */
+  DX.after(1600 + 1500 + 1200, () => $('btns').classList.add('next'));
+  DX.onStill(() => $('btns').classList.add('next'));
 </script>
 </body></html>

@@ -11,8 +11,12 @@
   [data-theme="dark"] .scene .wash, [data-theme="dark"] .scene .stars { display: block; }
   [data-theme="dark"] .scene svg rect.hazemove { opacity: .1 !important; }
   [data-theme="dark"] .scene .fade { height: 130px; background: linear-gradient(to bottom, color-mix(in srgb, var(--g) 0%, transparent), var(--g) 82%); }
-  .nav .icon-btn.on-art { background: rgba(255,255,255,.55); color: var(--ink); }
-  [data-theme="dark"] .nav .icon-btn.on-art { background: rgba(14,19,34,.55); color: var(--cream); }
+  .nav .icon-btn.on-art { background: rgba(255,248,238,.78); color: var(--ink); box-shadow: 0 1px 2px rgba(30,26,58,.12); }
+  [data-theme="dark"] .nav .icon-btn.on-art { background: rgba(255,248,238,.16); color: var(--cream); box-shadow: inset 0 0 0 1px rgba(255,248,238,.28); backdrop-filter: blur(6px); }
+  /* dark: the dawn band reads pre-dawn, not sunset */
+  [data-theme="dark"] .scene svg { filter: saturate(.75); }
+  /* light: the coral underline needs more weight on the apricot ground */
+  :root:not([data-theme="dark"]) .body .mark { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 16' preserveAspectRatio='none'%3E%3Cpath d='M3 10 C40 4 90 5 122 7 C152 9 178 11 197 4' fill='none' stroke='%23D9461F' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E"); }
   .scene svg circle.sunmove { transition: transform 1.6s var(--settle); }
   .scene svg rect.hazemove { transition: opacity 1.6s var(--ease); }
   .up .scene svg circle.sunmove { transform: translate(92px, -44px) scale(.62); }
@@ -29,7 +33,7 @@
   .after { height: 18px; display: flex; align-items: center; justify-content: center; gap: 6px; color: var(--muted); opacity: 0; transform: translateY(6px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
   .after svg { width: 16px; height: 16px; }
   .up .after { opacity: 1; transform: none; }
-  .dock { gap: 12px; padding-bottom: 30px; }
+  .dock { gap: 12px; padding-bottom: 42px; }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot" data-status="on-art" id="sc">
@@ -55,6 +59,8 @@
   const scene = document.getElementById('scene'), xero = document.getElementById('xero'), sc = document.getElementById('sc');
   scene.insertAdjacentHTML('afterbegin', DX.char('horizon', { scene: 'dawn', w: 390, h: 420, clarity: 40, noDusk: true }));
   const svg = scene.querySelector('svg');
+  /* the scene's sparkle sits under the status bar: move it down beside the sun */
+  svg.querySelectorAll('path').forEach(p => { if ((p.getAttribute('d') || '').startsWith('M330 34')) p.setAttribute('transform', 'translate(-91 40)'); });
   svg.querySelectorAll('circle').forEach(c => { const r = c.getAttribute('r'); if (r === '70' || r === '130') { c.classList.add('sunmove', 'r' + r); c.style.transformBox = 'fill-box'; c.style.transformOrigin = 'center'; } });
   svg.querySelectorAll('rect').forEach(r => { if (r.getAttribute('fill') && r.getAttribute('fill').startsWith('#') && +r.getAttribute('opacity') > 0) { r.classList.add('hazemove'); r.dataset.o = r.getAttribute('opacity'); } });
   xero.innerHTML = DX.char('xero', { mood: 'hello', size: 200 });

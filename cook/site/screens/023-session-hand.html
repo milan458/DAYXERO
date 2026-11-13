@@ -9,7 +9,7 @@
 .stamps{position:absolute;top:192px;left:var(--gutter);right:var(--gutter);display:flex;align-items:center;gap:10px}
 .stamps .t-foot{margin-left:6px}
 /* the hand: four cards fanned behind, card 1 drawn out in front, all centred on the screen */
-.fan{position:absolute;top:306px;left:0;right:0;height:370px}
+.fan{position:absolute;top:304px;left:0;right:0;height:350px}
 .bc{position:absolute;left:50%;top:0;width:106px;height:160px;margin-left:-53px;border-radius:16px;background:var(--face);color:#1E1A3A;
   display:grid;justify-items:center;align-content:start;gap:7px;padding-top:14px;transform-origin:50% 100%;
   transform:translate(var(--x),var(--y)) rotate(var(--r));box-shadow:0 8px 18px rgba(60,40,20,.13)}
@@ -19,7 +19,7 @@
 .bc b{font:700 14px/1 var(--display);letter-spacing:-.1px}
 .play .bc{animation:deal 760ms var(--settle) both;animation-delay:calc(300ms + var(--k) * 120ms)}
 @keyframes deal{from{opacity:0;transform:translate(0,420px) rotate(0deg)}35%{opacity:1}to{opacity:1;transform:translate(var(--x),var(--y)) rotate(var(--r))}}
-.front{position:absolute;left:50%;top:96px;width:240px;height:250px;margin-left:-120px;border-radius:24px;background:var(--face);color:#1E1A3A;
+.front{position:absolute;left:50%;top:96px;width:240px;height:228px;margin-left:-120px;border-radius:24px;background:var(--face);color:#1E1A3A;
   padding:18px 18px 16px;display:flex;flex-direction:column;transform:rotate(-2deg);
   box-shadow:0 0 0 3px var(--g),0 0 0 5px var(--fg),0 16px 28px rgba(60,40,20,.18)}
 [data-theme="dark"] .front{box-shadow:0 0 0 3px var(--g),0 0 0 5px var(--fg),0 18px 32px rgba(0,0,0,.5)}

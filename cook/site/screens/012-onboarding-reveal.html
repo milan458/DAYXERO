@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>012 Plan reveal</title>
-<meta name="motion" content="Progress eases 9/11 to 10/11; title arrives and the underline draws under 'ready'. Xero settles up into his soft disc (900ms) and cheers, bobbing. The stamp card arrives: the Prep 1 to 7 medallions pop left to right 90ms apart (Prep 1 bright in its 'next' ring, the rest dimmed), then the Day Xero medallion fades in last in its waiting form (700ms, no spring). The button arrives after. Light haptic on the button.">
+<meta name="motion" content="Progress eases 9/11 to 10/11; title arrives and the underline draws under 'ready'. Xero settles up into his soft disc (900ms) and cheers, bobbing. The stamp card arrives: the Prep 1 to 7 medallions pop left to right 90ms apart, all in their waiting form (dashed outline and numeral; Prep 1 at full strength in its up-next ring, the rest at half), then the Day Xero medallion fades in last in its waiting form (700ms, no spring). The button arrives after. Light haptic on the button.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -13,8 +13,11 @@
   .sh { display: flex; justify-content: space-between; align-items: baseline; }
   .stamps { display: flex; justify-content: space-between; margin-top: 16px; }
   .stamps .pb { flex: none; border-radius: 99px; }
+  /* Waiting stamps: the kit's dashed outline + numeral. Prep 1 is up next: full strength with a ring; the rest wait quieter. */
+  .stamps .pb { color: var(--fg); }
   .stamps .pb.next { box-shadow: 0 0 0 2.5px var(--card), 0 0 0 4.5px var(--fg); }
-  .stamps .pb:not(.next) { opacity: .42; filter: saturate(.5); }
+  .stamps .pb:not(.next) { opacity: .5; }
+  .then .coin { width: 52px; height: 52px; border-radius: 99px; background: #FFF8EE; color: #1E1A3A; flex: none; }
   .stamps { margin-left: -4px; margin-right: -4px; }
   .stamps .badge { gap: 0; }
   .then { display: flex; align-items: center; gap: 14px; margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--line); }
@@ -50,7 +53,7 @@
     <div class="card" data-a style="--i:3">
       <div class="sh"><p class="t-head">Seven prep stamps</p><span class="t-foot muted">One a day</span></div>
       <div class="stamps" id="stamps"></div>
-      <div class="then"><span id="xb" data-fade style="--d:1450ms"></span><div><p class="t-foot" style="font-weight:700">Then Day Xero, Fri, Nov 6</p><span class="t-foot muted">Earned on the day you quit</span></div></div>
+      <div class="then"><span id="xb" class="coin" data-fade style="--d:1450ms"></span><div><p class="t-foot" style="font-weight:700">Then Day Xero, Fri, Nov 6</p><span class="t-foot muted">Earned on the day you quit</span></div></div>
     </div>
 
   </div>
@@ -66,7 +69,7 @@
   document.getElementById('hx').innerHTML = DX.char('xero', { mood: 'cheer', size: 168 });
   document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 40 });
   let h = '';
-  for (let i = 1; i <= 7; i++) h += `<span class="pb ${i === 1 ? 'next' : ''}" data-pop style="--i:0;--d:${700 + i * 90}ms">${DX.badge({ kind: 'prep', n: i, size: 44, bare: true })}</span>`;
+  for (let i = 1; i <= 7; i++) h += `<span class="pb ${i === 1 ? 'next' : ''}" data-pop style="--i:0;--d:${700 + i * 90}ms">${DX.badge({ kind: 'prep', n: i, state: 'next', size: 44, bare: true })}</span>`;
   document.getElementById('stamps').innerHTML = h;
   document.getElementById('xb').innerHTML = DX.badge({ kind: 'xero', n: '0', state: 'next', p: 0, size: 52, bare: true });
   const bar = document.getElementById('bar');

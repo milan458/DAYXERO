@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>036 Progress</title>
-<meta name="motion" content="The sky card fades up with its sun rising (clarity 40), the 7 counts up (850ms) while 'Sky 40% clear' arrives. Xero settles into the corner of the sky card and bobs. The stat strip arrives and each number counts up from 0. The badge shelf arrives as one card with the three latest badges and the next one: earned badges stamp in (140ms stagger), the 7-day badge gets a shine at 1.2s, then the 14-day badge fades in with its ring at half. See all opens the full shelf. No haptic on load.">
+<meta name="motion" content="The sky card fades up with its sun rising behind Xero (clarity 40), the 7 counts up (850ms) while 'Sky 40% clear' and its caption arrive. Xero settles into the corner of the sky card and bobs. The stat strip arrives and each number counts up from 0. The badge shelf arrives as one card with the three latest badges and the next one: earned badges stamp in (140ms stagger), the 7-day badge gets a shine at 1.2s, then the 14-day badge fades in with its ring at half. The This week row fades in its seven day ticks left to right (70ms apart from 700ms), today's ringed. See all opens the full shelf. No haptic on load.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -10,7 +10,8 @@
   .pill-btn svg { width: 18px; height: 18px; }
   .top .icon-btn { width: 40px; height: 40px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
   .sky { position: relative; margin-top: 14px; height: 172px; border-radius: 26px; overflow: hidden; color: var(--ink); }
-  .sky .scene { position: absolute; inset: 0; }
+  .sky .scene { position: absolute; left: 0; top: var(--st, -148px); }
+  .sky .scene svg { display: block; }
   .sky .big { position: absolute; left: 20px; top: 16px; display: flex; align-items: baseline; gap: 8px; }
   .sky .big .num { font-size: 64px; line-height: 1; letter-spacing: -2.5px; }
   .sky .big .t-head { color: var(--ink); }
@@ -20,18 +21,28 @@
   .sky .clear svg { width: 16px; height: 16px; }
   .sky .xero { position: absolute; right: 8px; bottom: 4px; }
   [data-theme="dark"] .sky, [data-theme="dark"] .sky .big .t-head, [data-theme="dark"] .sky .kept { color: var(--cream); }
+  .cap { margin: 8px 0 0 4px; }
   .strip { margin-top: 12px; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); padding: 16px 4px; }
   .strip > div { display: grid; gap: 6px; padding: 0 14px; align-content: start; }
   .strip > div + div { border-left: 1px solid var(--line); }
   .strip .num { font: 800 26px/1 var(--display); letter-spacing: -.6px; }
   .strip .lbl { font: 500 13px/1.3 var(--body); color: var(--muted); }
-  .shelf-h { margin-top: 28px; display: flex; align-items: baseline; justify-content: space-between; }
+  .shelf-h { margin-top: 22px; display: flex; align-items: baseline; justify-content: space-between; }
   .shelf-h .link { height: auto; min-height: 0; padding: 0; font: 700 15px/1 var(--body); color: var(--fg); text-decoration: underline; text-underline-offset: 3px; width: auto; opacity: 1; }
-  .bshelf { margin-top: 12px; padding: 22px 6px 20px; display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); }
+  .bshelf { margin-top: 12px; padding: 18px 6px 16px; display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); }
   .bshelf .badge { gap: 10px; }
   .bshelf .b-l { display: grid; gap: 2px; }
   .bshelf .b-l b { font: 700 14px/1.2 var(--body); color: var(--fg); }
   .bshelf .b-l span { font: 500 13px/1.2 var(--body); color: var(--muted); }
+  .week { margin-top: 12px; display: flex; align-items: center; gap: 12px; padding: 14px 16px; }
+  .week .grow { flex: 1; min-width: 0; display: grid; gap: 3px; }
+  .week .grow .t-cap { color: var(--muted); font-weight: 500; }
+  .days { display: grid; grid-template-columns: repeat(7, 24px); gap: 5px; }
+  .days > span { display: grid; justify-items: center; gap: 5px; font: 600 12px/1 var(--body); color: var(--muted); }
+  .days i { width: 22px; height: 22px; border-radius: 99px; background: var(--fg); color: var(--g); display: grid; place-items: center; }
+  .days i svg { width: 13px; height: 13px; }
+  .days .today i { box-shadow: 0 0 0 2px var(--card), 0 0 0 3.5px var(--fg); }
+  .days .today { color: var(--fg); }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -52,6 +63,8 @@
         <div class="xero" data-settle style="--d:500ms"><div class="bob" id="xero"></div></div>
       </div>
 
+      <p class="t-cap muted cap" data-a style="--i:3">Your sky clears a little each day you stay free.</p>
+
       <div class="card strip" data-a style="--i:3">
         <div><span class="num" data-count="84">84</span><span class="lbl">cigarettes not smoked</span></div>
         <div><span class="num" data-count="1400">1,400</span><span class="lbl">puffs not taken</span></div>
@@ -61,13 +74,24 @@
       <div class="shelf-h" data-a style="--i:4"><h2 class="t-head">Badges <span class="t-foot muted" style="font-weight:500;margin-left:6px">14 earned</span></h2><button class="link">See all</button></div>
 
       <div class="card bshelf" data-a style="--i:5" id="shelf"></div>
+
+      <div class="card week" data-a style="--i:6">
+        <div class="grow"><p class="t-head" style="font-size:16px">This week</p><p class="t-cap">7 of 7 days free</p></div>
+        <div class="days" id="days"></div>
+      </div>
     </div>
   </div>
   <div id="tabs"></div>
 </div>
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20 })));
-  document.getElementById('sky').innerHTML = DX.char('horizon', { scene: 'dawn', w: 346, h: 172, clarity: 40 });
+  /* The sky sits behind Xero on the right so no text crosses the sun; dark mode is the kit's pre-dawn sky, framed the same way. */
+  const sky = document.getElementById('sky');
+  if (DX.theme === 'dark') { sky.style.setProperty('--st', '-50px'); /* soften the pre-dawn halo at this scale into a glow */
+    sky.innerHTML = DX.char('horizon', { scene: 'dawn', w: 560, h: 250, clarity: 40 }).replace('<defs>', '<defs><radialGradient id="pgHalo"><stop offset=".25" stop-color="#F2A65A" stop-opacity=".34"/><stop offset="1" stop-color="#F2A65A" stop-opacity="0"/></radialGradient>').replace('fill="#F2A65A" opacity=".22"', 'fill="url(#pgHalo)"'); }
+  else sky.innerHTML = DX.char('horizon', { scene: 'dawn', w: 560, h: 420, clarity: 40 });
+  document.getElementById('days').innerHTML = ['S', 'S', 'M', 'T', 'W', 'T', 'F'].map((d, i) =>
+    `<span class="${i === 6 ? 'today' : ''}" data-fade style="--d:${700 + i * 70}ms"><i>${DX.icon('check', { size: 13, w: 3.4 })}</i>${d}</span>`).join('');
   document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'cheer', size: 108 });
   const S = 72;
   const b = (kind, n, state, name, sub, i, extra = {}) => {

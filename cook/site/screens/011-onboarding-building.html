@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>011 Plan building</title>
-<meta name="motion" content="Progress eases 8/11 to 9/11 while the title arrives and Xero settles in beside it. The five plan rows then settle up one by one, 380ms apart (900ms settle each); 450ms after each row lands its tick disc pops and the check draws (420ms) with a light haptic. After the last tick the status line swaps to 'Built from your answers', Xero switches to cheer with a 520ms bump (success haptic) and the button arrives.">
+<meta name="motion" content="Progress eases 8/11 to 9/11 while the title arrives and Xero settles in beside it. The five plan rows then settle up one by one, 380ms apart (900ms settle each); 450ms after each row lands its ink tick disc pops and the check draws (420ms) with a light haptic. After the last tick the status line swaps to 'Built from your answers' with the screen's one green check popping in, Xero switches to cheer with a 520ms bump (success haptic) and the button arrives.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -17,17 +17,19 @@
   [data-theme="dark"] .pr { box-shadow: inset 0 0 0 1px var(--line); }
   .pr .grow { flex: 1; min-width: 0; }
   .pr .t-cap { color: var(--muted); display: block; margin-bottom: 3px; font-size: 13px; }
-  .pr.qd { min-height: 92px; padding: 16px 16px; background: #FFC38A; color: #1E1A3A; box-shadow: 0 10px 24px rgba(120,44,20,.14); }
-  .pr.qd .t-cap { color: #5A3A2A; }
+  /* Quit Day: the ink hero tile (same as the Quit Day tile on 010), distinct from the apricot ground. */
+  .pr.qd { min-height: 88px; padding: 16px 16px; background: var(--sel); color: var(--sel-fg); box-shadow: 0 10px 24px rgba(30,26,58,.16); }
+  .pr.qd .t-cap { color: inherit; opacity: .75; }
   .pr.qd .t-head { font-size: 24px; font-family: var(--display); font-weight: 800; letter-spacing: -.4px; }
-  .pr.qd .ico-tile { width: 48px; height: 48px; background: #FFF8EE; color: #1E1A3A; }
-  [data-theme="light"] .pr.qd, .screen[data-ground="apricot"] .pr.qd { background: color-mix(in srgb, #FF9A5C 55%, #FFF8EE); }
-  [data-theme="dark"] .pr.qd { background: #FFC38A; }
+  .pr.qd .ico-tile { width: 48px; height: 48px; background: color-mix(in srgb, var(--sel-fg) 14%, transparent); color: inherit; }
+  [data-theme="dark"] .pr.qd { box-shadow: none; }
+  .pr .sub { display: block; color: var(--muted); margin-top: 3px; }
+  .status .b { display: flex; align-items: center; gap: 8px; }
   .pr .t-head { font-size: 17px; }
   .pr .ico-tile { width: 38px; height: 38px; }
   .pr .ico-tile svg { width: 20px; height: 20px; }
   .pr .tk { flex: none; width: 28px; height: 28px; }
-  .pr.reason .t-head { font: italic 500 16px/1.35 var(--body); letter-spacing: 0; }
+  .pr.reason .t-head { font: italic 500 16px/1.35 var(--body); letter-spacing: 0; text-wrap: pretty; }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
@@ -43,7 +45,7 @@
   </div>
   <div class="status" id="status" data-a style="--i:1">
     <p class="t-foot muted a">Putting the pieces together</p>
-    <p class="t-foot b"><b>Built from your answers.</b> Five pieces, all yours.</p>
+    <p class="t-foot b"><span id="ok"></span><span><b>Built from your answers.</b> All yours.</span></p>
   </div>
 
   <div class="plan" id="plan"></div>
@@ -60,22 +62,23 @@
   const rows = [
     ['flag', 'Quit Day', 'Fri, Nov 6'],
     ['calendar', 'Prep week', 'Fri, Oct 30 to Thu, Nov 5'],
-    ['wave', 'Waves to watch', 'Coffee and Stress'],
-    ['shield', 'Watch out for', 'Cravings and Stress'],
-    ['heart', 'Your reason', '"Run with Aria without stopping to catch my breath"']
+    ['wave', 'Waves to watch', 'Coffee and Stress', 'When your cravings tend to rise'],
+    ['shield', 'Tools for', 'Irritability and social situations'],
+    ['heart', 'Your reason', '&ldquo;Run with Aria without stopping to catch my breath&rdquo;']
   ];
   const flag = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 21V4M6 4h11l-2.5 4L17 12H6"/></svg>';
-  document.getElementById('plan').innerHTML = rows.map(([ic, k, v], i) => {
+  document.getElementById('plan').innerHTML = rows.map(([ic, k, v, sub], i) => {
     const t = 450 + i * 380;
     return `<div class="pr ${i === 4 ? 'reason' : ''} ${i === 0 ? 'qd' : ''}" data-settle style="--i:0;--d:${t}ms">
       <span class="ico-tile">${ic === 'flag' ? flag : DX.icon(ic)}</span>
-      <div class="grow"><span class="t-cap">${k}</span><p class="t-head">${v}</p></div>
-      <span class="tk">${DX.check({ size: 28, d: t + 450 })}</span></div>`;
+      <div class="grow"><span class="t-cap">${k}</span><p class="t-head">${v}</p>${sub ? `<span class="t-cap sub">${sub}</span>` : ''}</div>
+      <span class="tk">${i === 0 ? DX.check({ size: 28, d: t + 450, color: 'var(--sel-fg)', fg: 'var(--sel)' }) : DX.check({ size: 28, d: t + 450, color: 'var(--sel)', fg: 'var(--sel-fg)' })}</span></div>`;
   }).join('');
   const bar = document.getElementById('bar'), st = document.getElementById('status');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '72.7%'); void bar.offsetWidth; bar.style.transition = ''; st.classList.remove('done'); bw.classList.remove('bump'); setX('hello'); });
   DX.after(250, () => bar.style.setProperty('--p', '81.8%'));
-  const done = () => { st.classList.add('done'); setX('cheer'); bw.classList.add('bump'); };
+  /* The one green check on the screen: the plan is built. Row ticks are ink. */
+  const done = () => { st.classList.add('done'); document.getElementById('ok').innerHTML = DX.check({ size: 20 }); setX('cheer'); bw.classList.add('bump'); };
   DX.after(2500, done); DX.onStill(done);
 </script>
 </body></html>
