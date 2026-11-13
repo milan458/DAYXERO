@@ -19,6 +19,10 @@ on:
         description: "With screenshots: only the v4 gallery pages, pushed to ci-screens-v4 (quick)"
         type: boolean
         default: false
+      duo:
+        description: "With screenshots: also take the iPhone Duo ones; off for iPhone only"
+        type: boolean
+        default: true
 
 permissions:
   contents: write
@@ -414,7 +418,7 @@ jobs:
   # Apple has no command to fold the simulator, so this uses hinge (MIT, pinned). It runs apart from build-test so a
   # change in that tooling can't block builds; a fold that doesn't happen fails this job rather than passing quietly.
   duo:
-    if: github.event_name == 'workflow_dispatch' && inputs.screenshots && !inputs.v4_only
+    if: github.event_name == 'workflow_dispatch' && inputs.screenshots && !inputs.v4_only && inputs.duo
     runs-on: xcode-27
     timeout-minutes: 60
     env:
