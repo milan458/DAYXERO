@@ -52,13 +52,15 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
   <div class="list" data-a style="--i:6">
     <div class="row " ><span class="ico-tile s" data-ic="heart"></span><div class="grow"><div class="t-body rt">Resting heart rate</div><div class="t-foot muted">To chart your recovery</div></div><span class="toggle on"></span></div>
     <div class="row " ><span class="ico-tile s" data-ic="moon"></span><div class="grow"><div class="t-body rt">Sleep</div><div class="t-foot muted">Sleep shifts in week one</div></div><span class="toggle on"></span></div>
-    <div class="row " ><span class="ico-tile s" data-ic="people"></span><div class="grow"><div class="t-body rt">Steps</div><div class="t-foot muted">Walks that ride out a craving</div></div><span class="toggle"></span></div>
+    <div class="row " ><span class="ico-tile s" id="steps"></span><div class="grow"><div class="t-body rt">Steps</div><div class="t-foot muted">Walks during a craving</div></div><span class="toggle"></span></div>
   </div>
   <p class="t-foot muted" data-a style="--i:7;padding:14px 4px 0">Health asks you first, and DayXero never sees what you turn off.</p>
 </div></div>
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
+/* Steps: a screen-local footprints glyph in the kit's line style (the kit has no steps icon). */
+document.getElementById('steps').innerHTML = '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 3.5c1.8 0 2.8 2 2.8 4.4S9.3 12 7.5 12 4.7 10.3 4.7 7.9 5.7 3.5 7.5 3.5zM5.6 15h3.8M16.5 8.5c1.8 0 2.8 2 2.8 4.4S18.3 17 16.5 17s-2.8-1.7-2.8-4.1 1-4.4 2.8-4.4zM14.6 20h3.8"/></svg>';
 document.getElementById('dx070').innerHTML = DX.char('xero', { mood: 'hello', size: 64 });
 </script>
 </body></html>
