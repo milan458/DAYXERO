@@ -1,12 +1,12 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>010 Onboarding Quit Day</title>
-<meta name="motion" content="Progress eases 7/11 to 8/11; title, the prep-week card (seven tiles rise 45ms apart, today's Fri 30 in its coral disc, their prep dots pop left to right), the Quit Day row (a cream card with an apricot Nov 6 date page and a Change label with a right chevron: the tappable date picker), the hold button arrive in order, while the horizon strip above the dock settles up in three paper layers (0, 120, 240ms; 40px, 900ms settle) and Xero (80px, holding the coral Day Xero flag with its pennant lowered) settles onto its crest last (from 420ms). Holding fills the button left to right over 1500ms with a soft ticking haptic; on complete the button shows its done state, Quit Day set (success haptic), the coral Day Xero flag Xero holds runs up its pole (34px, 700ms settle) while he bumps (520ms), and the row's caption swaps Quit Day, recommended for Quit Day set with a green tick (300ms crossfade). 1200ms later the done button crossfades (350ms) into Continue. Tapping the Quit Day row opens the date wheel.">
+<meta name="motion" content="Progress eases 7/11 to 8/11; title, the prep-week card (seven tiles rise 45ms apart, today's Fri 30 in its coral disc, their prep dots pop left to right), the Quit Day row (a cream card with an apricot Nov 6 date page and a Change label with a right chevron: the tappable date picker), the hold button arrive in order, while the horizon strip above the dock settles up in three paper layers (0, 120, 240ms; 40px, 900ms settle) and Xero (80px, holding the coral Day Xero flag with its pennant lowered) settles onto its crest last (from 420ms). Holding fills the button left to right over 1500ms with a soft ticking haptic; on complete the button shows its done state, Quit Day set (success haptic), the coral Day Xero flag Xero holds runs up its pole (44px, 700ms settle) while he bumps (520ms), and the row's caption swaps Quit Day, recommended for Quit Day set with a green tick (300ms crossfade). 1200ms later the done button crossfades (350ms) into Continue. Tapping the Quit Day row opens the date wheel.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   /* Onboarding header: back button and progress only (no avatar); the bar ends at the gutter so the sun knob never collides. */
   .nav { padding-right: 26px; }
-  .wk { margin: 28px var(--gutter) 0; padding: 14px 12px 12px; }
+  .wk { margin: 30px var(--gutter) 0; padding: 14px 12px 12px; }
   .wk-h { display: flex; justify-content: space-between; align-items: baseline; padding: 0 4px 10px; }
   /* Prep tiles sit lighter than the card in both modes (card-2), so the week always reads. */
   .days { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: 6px; }
@@ -41,8 +41,8 @@
   .qd .chev { color: var(--muted); width: 18px; height: 18px; }
   .qd .chev svg { width: 18px; height: 18px; }
   /* Round 10: Xero stands on the horizon strip holding the coral Day Xero flag; it runs up the pole when Quit Day is set. */
-  .q { padding-top: 128px; }
-  .hz .pen { transform: translateY(34px); transition: transform 700ms var(--settle); }
+  .q { padding-top: 136px; }
+  .hz .pen { transform: translateY(44px); transition: transform 700ms var(--settle); }
   .hz.set .pen { transform: none; }
   .dock .t-cap { text-align: center; color: var(--muted); }
   /* After the hold: the done state shows, then the button hands over to Continue. */
@@ -118,8 +118,8 @@
   $('days').innerHTML = days.map(([d, n], i) => `<div class="day ${i === 0 ? 'today' : ''}" data-a style="--i:${i * .5 + 2.5}"><span class="t-cap">${i === 0 ? 'Today' : d}</span><span class="num">${n}</span><span class="pd" data-pop style="--i:0;--d:${700 + i * 90}ms"></span></div>`).join('');
   /* Xero, hello, holding the coral Day Xero flag in his right hand (pole behind the hand; the pennant rides up on set).
      Flat paper-cut: a coral pennant with its lower fold one shade deeper, no outline, no gloss. */
-  const flag = `<path d="M188 154 L188 30" stroke="#8A5A3C" stroke-width="4.5" stroke-linecap="round"/><circle cx="188" cy="27" r="4.5" fill="#FFC93C"/>
-    <g class="pen"><path d="M190 32 L222 43 L190 54 Z" fill="#FF7155"/><path d="M190 43 L222 43 L190 54 Z" fill="#E85A3E"/></g>`;
+  const flag = `<path d="M188 154 L188 2" stroke="#8A5A3C" stroke-width="5" stroke-linecap="round"/><circle cx="188" cy="0" r="5.5" fill="#FFC93C"/>
+    <g class="pen"><path d="M190 6 L236 22 L190 38 Z" fill="#FF7155"/><path d="M190 22 L236 22 L190 38 Z" fill="#E85A3E"/></g>`;
   const arm = '<path d="M164 122 C176 118 183 110 186 100" fill="none" stroke="#FF7155" stroke-width="12" stroke-linecap="round"></path>';
   $('hz').innerHTML = horizon({ x: 300, size: 80, art: '<div id="bw">' + DX.char('xero', { mood: 'hello', size: 80 })
     .replace('style="display: block"', 'style="display: block; overflow: visible"')
