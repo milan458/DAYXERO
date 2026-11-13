@@ -1,35 +1,39 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>021 After a slip, plan</title>
-<meta name="motion" content="Quiet tier, no springs. Jelli (calm) settles in from below (900ms); the title, the 'nothing resets' line and the 7-days note arrive with a 90ms stagger. The trigger chips arrive, then the if-then line and its three option rows settle in one by one (120ms apart). Choosing a chip rewrites the if-line with a 250ms crossfade. On Save the button turns to its done state and a soft success haptic plays.">
+<meta name="motion" content="Quiet tier, no springs. The sea scene fades in (700ms) and Jelli (calm) settles into it from below (900ms) then keeps a slow bob; the title, the 'nothing resets' line and the 7-days note arrive with a 90ms stagger. The trigger chips arrive, then the if-then line and its three option rows settle in one by one (120ms apart). Choosing a chip rewrites the if-line with a 250ms crossfade. On Save the button turns to its done state and a soft success haptic plays.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .head { position: absolute; left: 0; right: 0; top: 104px; padding: 0 var(--gutter); display: flex; gap: 14px; align-items: center; }
-  .head .jel { width: 88px; height: 88px; border-radius: 26px; background: var(--card-2); display: grid; place-items: center; flex: none; overflow: hidden; }
-  .head .t-title { font-size: 24px; }
-  .note { position: absolute; left: 0; right: 0; top: 206px; padding: 0 var(--gutter); color: var(--muted); }
+  .hero { position: absolute; left: 0; right: 0; top: 0; height: 212px; border-radius: 0 0 36px 36px; overflow: hidden; }
+  .hero .scene { position: absolute; inset: 0; }
+  [data-theme="dark"] .hero .scene { filter: brightness(.82) saturate(.92); }
+  .hero .jel { position: absolute; left: 50%; top: 52px; margin-left: -66px; }
+  .nav .tag { color: var(--cream); font: 600 14px/1 var(--body); background: rgba(11,20,48,.28); padding: 8px 12px; border-radius: 99px; }
+  .head { position: absolute; left: 0; right: 0; top: 230px; padding: 0 var(--gutter); }
+  .head .t-title { font-size: 26px; }
+  .note { margin-top: 8px; color: var(--muted); }
   .note b { color: var(--fg); font-weight: 600; }
-  .plan { position: absolute; left: 0; right: 0; top: 272px; padding: 0 var(--gutter); }
+  .plan { position: absolute; left: 0; right: 0; top: 356px; padding: 0 var(--gutter); }
   .plan .ask { color: var(--muted); }
-  .plan .chips { margin-top: 10px; }
-  .plan .ifthen { margin-top: 22px; }
+  .plan .chips { margin-top: 8px; }
+  .plan .ifthen { margin-top: 18px; }
   .plan .ifthen b { font-weight: 800; }
-  .plan .opts { margin-top: 12px; display: grid; gap: 8px; }
-  .plan .opt { min-height: 58px; padding: 10px 16px; }
+  .plan .opts { margin-top: 10px; display: grid; gap: 8px; }
+  .plan .opt { min-height: 54px; padding: 8px 16px; }
 </style>
 </head><body>
-<div class="screen" data-ground="reading">
+<div class="screen" data-ground="reading" data-status="on-art">
+  <div class="hero"><div class="scene" id="scene" data-fade></div><div class="jel" data-settle style="--d:200ms"><div class="bob" id="jelli"></div></div></div>
   <div class="nav">
     <button class="icon-btn" aria-label="Close" id="close"></button>
     <div class="grow"></div>
-    <span class="t-foot muted">With Jelli</span>
+    <span class="tag">With Jelli</span>
   </div>
 
   <div class="head">
-    <div class="jel" id="jelli" data-settle></div>
     <h1 class="t-title" data-a style="--i:1">Thanks for telling me. Nothing resets.</h1>
+    <p class="t-body note" data-a style="--i:2">Your <b>7 days</b> and Xero's sky stay as they are. One small plan makes the next wave easier.</p>
   </div>
-  <p class="t-body note" data-a style="--i:2">Your <b>7 days</b> and Xero's sky stay as they are. One small plan makes the next wave easier.</p>
 
   <div class="plan">
     <p class="t-foot ask" data-a style="--i:3">What set it off?</p>
@@ -52,6 +56,7 @@
 <script>
   const $ = s => document.querySelector(s);
   $('#close').innerHTML = DX.icon('close');
-  $('#jelli').innerHTML = DX.char('jelli', { mood: 'calm', size: 88 });
+  $('#scene').innerHTML = DX.char('horizon', { scene: 'sea', w: 390, h: 212, clarity: 80 });
+  $('#jelli').innerHTML = DX.char('jelli', { mood: 'calm', size: 132 });
 </script>
 </body></html>
