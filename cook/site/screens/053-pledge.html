@@ -1,0 +1,66 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>053 Daily pledge</title>
+<meta name="motion" content="Dawn scene fades in, Xero settles onto the hill (900ms) then bobs; date, pledge, chips, reason card and the hold button arrive in order (90ms stagger). At 1.5s the button is held for 1s (fill sweeps left to right, light ticking haptic), turns green 'Pledged' with a success haptic; the sun rises 40px and the haze thins over 1.6s, Xero swaps to cheer and re-settles, and the line 'Glim will check in tonight at 9:00 PM. No pressure.' fades in under the button.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+  .scene { position: absolute; left: 0; right: 0; top: 0; height: 380px; overflow: hidden; }
+  .scene .fade { position: absolute; left: 0; right: 0; bottom: 0; height: 70px; background: linear-gradient(to bottom, color-mix(in srgb, var(--g) 0%, transparent), var(--g)); }
+  .scene svg circle.sunmove { transition: transform 1.6s var(--settle); }
+  .scene svg rect.hazemove { transition: opacity 1.6s var(--ease); }
+  .up .scene svg circle.sunmove { transform: translateY(-30px); }
+  .xero { position: absolute; left: 50%; top: 186px; width: 180px; height: 180px; margin-left: -90px; }
+  .nav { top: 50px; }
+  .body { position: absolute; left: 0; right: 0; top: 372px; padding: 0 var(--gutter); text-align: center; }
+  .body .day { color: var(--muted); }
+  .body h1 { margin-top: 6px; }
+  .body .chips { justify-content: center; margin-top: 16px; flex-wrap: nowrap; }
+  .body .chips .chip { padding: 0 13px; font-size: 14.5px; }
+  .why { margin-top: 14px; text-align: left; display: flex; gap: 14px; align-items: center; }
+  .why .t-foot { color: var(--muted); }
+  .after { height: 18px; display: flex; align-items: center; justify-content: center; gap: 6px; color: var(--muted); opacity: 0; transform: translateY(6px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
+  .after svg { width: 16px; height: 16px; }
+  .up .after { opacity: 1; transform: none; }
+  .dock { gap: 12px; padding-bottom: 30px; }
+</style>
+</head><body>
+<div class="screen" data-ground="apricot" data-status="on-art" id="sc">
+  <div class="scene" id="scene" data-fade><div class="fade"></div></div>
+  <div class="xero" data-settle style="--i:1"><div class="bob" id="xero"></div></div>
+  <div class="nav"><button class="icon-btn" aria-label="Close" data-ic="close" style="background:rgba(255,255,255,.55);color:var(--ink)"></button></div>
+  <div class="body">
+    <p class="t-foot day" data-a style="--i:2">Friday, Day 7</p>
+    <h1 class="t-large" data-a style="--i:3">Today, I <span class="mark">won't</span> use nicotine.</h1>
+    <div class="chips" data-a style="--i:4"><button class="chip on">Won't use nicotine</button><button class="chip">One wave at a time</button></div>
+    <div class="card why" data-a style="--i:5">
+      <span class="ico-tile" data-ic="heart"></span>
+      <div class="grow"><p class="t-foot">Because</p><p class="t-head" style="font-size:17px">Run with Aria without stopping to catch my breath</p></div>
+    </div>
+  </div>
+  <div class="dock">
+    <button class="btn" id="hold" data-a style="--i:6" data-hold="1000" data-done="Pledged" data-autohold="1500">Hold to pledge</button>
+    <p class="t-cap after"><span data-ic="moon"></span>Glim will check in tonight at 9:00 PM. No pressure.</p>
+  </div>
+</div>
+<script>
+  document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic));
+  const scene = document.getElementById('scene'), xero = document.getElementById('xero'), sc = document.getElementById('sc');
+  scene.insertAdjacentHTML('afterbegin', DX.char('horizon', { scene: 'dawn', w: 390, h: 380, clarity: 40 }));
+  const svg = scene.querySelector('svg');
+  svg.querySelectorAll('circle').forEach(c => { const r = c.getAttribute('r'); if (r === '70' || r === '130') { c.classList.add('sunmove'); c.style.transformBox = 'view-box'; } });
+  svg.querySelectorAll('rect').forEach(r => { if (r.getAttribute('fill') && r.getAttribute('fill').startsWith('#') && +r.getAttribute('opacity') > 0) { r.classList.add('hazemove'); r.dataset.o = r.getAttribute('opacity'); } });
+  xero.innerHTML = DX.char('xero', { mood: 'hello', size: 180 });
+  function pledged() {
+    sc.classList.add('up');
+    svg.querySelectorAll('rect.hazemove').forEach(r => r.style.opacity = (+r.dataset.o * .45));
+    const nx = document.createElement('div'); nx.setAttribute('data-settle', ''); nx.style.setProperty('--d', '0ms');
+    nx.innerHTML = DX.char('xero', { mood: 'cheer', size: 180 }); xero.replaceWith(nx);
+  }
+  document.addEventListener('held', pledged);
+  DX.onStill(() => {
+    const b = document.getElementById('hold'); b.classList.add('done-state');
+    b.querySelector('.lbl').innerHTML = DX.icon('check', { size: 20, w: 3 }) + 'Pledged';
+    pledged();
+  });
+</script>
+</body></html>

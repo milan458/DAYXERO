@@ -8,7 +8,7 @@
   .screen { --h-back: #FFD9AE; --h-mid: #FFA56C; --h-front: #E9643F; --h-base: #C94B33; --h-edge: rgba(255,255,255,.55);
     --sun-a: #FFF4C9; --sun-b: #FFC93C; --ring-1: rgba(255,240,205,.55); --ring-2: rgba(255,236,200,.32); --lift: rgba(120,44,20,.22); --cloud: rgba(255,247,236,.7); }
   [data-theme="dark"] .screen { --h-back: #4A2C66; --h-mid: #39204F; --h-front: #1F1030; --h-base: #160A24; --h-edge: rgba(255,195,138,.35);
-    --sun-a: #FFF1C2; --sun-b: #FFB255; --ring-1: rgba(255,195,138,.16); --ring-2: rgba(255,195,138,.08); --lift: rgba(0,0,0,.45); --cloud: rgba(255,195,138,.14); }
+    --sun-a: #FFF1C2; --sun-b: #FFB255; --ring-1: rgba(255,195,138,.16); --ring-2: rgba(255,195,138,.08); --lift: rgba(0,0,0,.45); --cloud: rgba(150,110,200,.32); }
 
   .mark-wrap { position: absolute; left: 0; right: 0; top: 214px; text-align: center; z-index: 6; }
   .word { font: 800 70px/1 var(--display); letter-spacing: -2.6px; color: var(--fg); display: inline-flex; position: relative; }
@@ -24,7 +24,7 @@
   .hill.mid   { top: 440px; height: 404px; z-index: 3; filter: drop-shadow(0 -5px 12px var(--lift)); }
   .xwrap { left: 120px; width: 150px; top: 568px; height: 150px; z-index: 4; }
   .hill.front { top: 440px; height: 404px; z-index: 5; filter: drop-shadow(0 -6px 14px var(--lift)); }
-  .grain { position: absolute; inset: 440px 0 0 0; z-index: 6; opacity: .5; mix-blend-mode: soft-light; pointer-events: none; }
+  .grain { position: absolute; inset: 0; z-index: 6; opacity: .4; mix-blend-mode: soft-light; pointer-events: none; }
 
   .cloud { position: absolute; z-index: 1; pointer-events: none; }
   .cloud path { fill: var(--cloud); }
@@ -105,7 +105,7 @@
     </svg>
   </div>
 
-  <svg class="grain" width="390" height="404" aria-hidden="true"><filter id="gr"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .35 0"/></filter><rect width="390" height="404" filter="url(#gr)"/></svg>
+  <svg class="grain" width="390" height="844" aria-hidden="true"><filter id="gr"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .35 0"/></filter><rect width="390" height="844" filter="url(#gr)"/></svg>
 </div>
 <script>
   document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'hello', size: 150 });

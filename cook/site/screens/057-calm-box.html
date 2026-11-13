@@ -34,11 +34,11 @@
 @keyframes go { to { offset-distance: 100%; } }
 .still .dot { animation: none !important; offset-distance: 37.5%; }
 .side { position: absolute; color: var(--muted); opacity: .55; transition: opacity .5s var(--ease), color .5s var(--ease); white-space: nowrap; }
-.side.on { opacity: 1; color: var(--fg); }
-.s0 { left: 22px; top: 150px; transform: translate(-50%, -50%) rotate(-90deg); }
-.s1 { left: 150px; top: 22px; transform: translate(-50%, -50%); }
-.s2 { left: 278px; top: 150px; transform: translate(-50%, -50%) rotate(90deg); }
-.s3 { left: 150px; top: 278px; transform: translate(-50%, -50%); }
+.side.on { opacity: 1; color: var(--fg); font-weight: 700; }
+.s0 { left: 20px; top: 150px; transform: translate(-50%, -50%) rotate(-90deg); }
+.s1 { left: 150px; top: 20px; transform: translate(-50%, -50%); }
+.s2 { left: 280px; top: 150px; transform: translate(-50%, -50%) rotate(90deg); }
+.s3 { left: 150px; top: 280px; transform: translate(-50%, -50%); }
 .mid { position: absolute; inset: 50px; display: grid; place-content: center; text-align: center; gap: 2px; }
 .mid .num { font-size: 64px; line-height: 1; }
 .lab { transition: opacity .35s var(--ease); }
@@ -55,9 +55,9 @@
     <div class="fillsq"></div>
     <svg width="300" height="300" viewBox="0 0 300 300"><rect x="50" y="50" width="200" height="200" rx="6" fill="none" stroke="var(--track)" stroke-width="5"/>
       <path id="act" d="M50 250 V50" fill="none" stroke="var(--fg)" stroke-width="5" stroke-linecap="round"/></svg>
-    <span class="side s0 t-cap on">Breathe in</span><span class="side s1 t-cap">Hold</span><span class="side s2 t-cap">Breathe out</span><span class="side s3 t-cap">Hold</span>
+    <span class="side s0 t-foot on">Breathe in</span><span class="side s1 t-foot">Hold</span><span class="side s2 t-foot">Breathe out</span><span class="side s3 t-foot">Hold</span>
     <div class="mid"><div class="t-title lab" id="phase">Breathe in</div><div class="num" id="count">4</div></div>
-    <span class="dot" style="margin:-11px 0 0 -11px"></span>
+    <span class="dot"></span>
   </div>
   <p class="t-body muted cue" id="cue" data-a style="--i:3">In through your nose. Let your belly fill.</p>
 </div>

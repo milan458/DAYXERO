@@ -11,7 +11,7 @@
   .chart .hd .t-foot { color: var(--muted); }
   .bars { margin-top: 14px; height: 132px; display: flex; align-items: flex-end; gap: 6px; border-bottom: 2px solid var(--line); }
   .bar { position: relative; height: var(--h); border-radius: 12px 12px 4px 4px; background: var(--fg); transform-origin: bottom; display: flex; justify-content: center; }
-  .bar:nth-child(2) { opacity: .72; } .bar:nth-child(3) { opacity: .48; }
+  .bar:nth-child(2) { background: color-mix(in srgb, var(--fg) 72%, var(--card)); } .bar:nth-child(3) { background: color-mix(in srgb, var(--fg) 46%, var(--card)); }
   .bar span { position: absolute; top: 10px; color: var(--g); font: 800 15px/1 var(--display); letter-spacing: -.3px; white-space: nowrap; }
   .bar:nth-child(3) span { top: auto; bottom: calc(100% + 6px); color: var(--fg); }
   .play .bar { animation: grow 900ms var(--settle) both; animation-delay: calc(var(--i) * 150ms + 250ms); }

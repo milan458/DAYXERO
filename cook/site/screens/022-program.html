@@ -1,0 +1,96 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>022 Program, prep week</title>
+<meta name="motion" content="Title and the segmented control arrive (90ms stagger). The road fades in, then the ink line draws along it from Prep 1 to today's node (1100ms, ease); each earned stamp arrives as the line reaches it (about 200ms apart). Today's play node and its up-next card arrive as the line lands, then the node breathes a soft pulse ring every 2.4s. Prep 6 and 7, the Day Xero medallion (rays turning slowly) and the week hint fade in last. Light haptic when the line reaches today.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+  .hdr { position: absolute; left: 0; right: 0; top: 60px; padding: 0 var(--gutter); }
+  .hdr .t-foot { color: var(--muted); margin-top: 4px; }
+  .seg { position: absolute; left: var(--gutter); right: var(--gutter); top: 140px; height: 46px; border-radius: 16px; background: var(--card-2); padding: 4px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
+  .seg button { border-radius: 12px; font: 600 15px/1 var(--body); color: var(--fg); opacity: .8; }
+  .seg button.on { background: var(--sel); color: var(--sel-fg); opacity: 1; box-shadow: 0 2px 6px rgba(30,26,58,.14); }
+  svg.road { position: absolute; left: 0; top: 0; pointer-events: none; }
+  .node { position: absolute; transform: translate(-50%, -50%); }
+  .node .bg { border-radius: 99px; background: var(--g); }
+  .lab { position: absolute; transform: translateY(-50%); display: grid; gap: 1px; }
+  .lab .t-cap { color: var(--muted); }
+  .lab .t-foot { font-weight: 600; }
+  .lab.lock .t-foot { color: var(--muted); font-weight: 500; }
+  .cur { width: 64px; height: 64px; border-radius: 99px; background: var(--btn); color: var(--btn-fg); display: grid; place-items: center; position: relative; box-shadow: 0 6px 0 rgba(0,0,0,.16), 0 0 0 6px var(--g); }
+  .cur svg { width: 26px; height: 26px; margin-left: 3px; }
+  .cur::before { content: ""; position: absolute; inset: -6px; border-radius: 99px; box-shadow: 0 0 0 3px var(--fg); opacity: 0; }
+  .play .cur::before { animation: pulse 2.4s var(--ease) 1.8s infinite; }
+  @keyframes pulse { 0% { opacity: .45; transform: scale(1); } 100% { opacity: 0; transform: scale(1.35); } }
+  .upnext { position: absolute; left: 116px; right: var(--gutter); top: 398px; padding: 12px 14px; display: grid; gap: 2px; }
+  .upnext .t-foot { color: var(--muted); }
+  .upnext .t-cap { color: var(--muted); }
+  .goal { position: absolute; left: 152px; top: 634px; transform: translateY(-50%); }
+  .goal .t-foot { color: var(--muted); }
+  .weeks { position: absolute; right: var(--gutter); top: 700px; display: flex; gap: 6px; }
+  .weeks span { font: 600 12px/1 var(--body); color: var(--muted); padding: 7px 10px; border-radius: 99px; box-shadow: inset 0 0 0 1.5px var(--line); }
+</style>
+</head><body>
+<div class="screen" data-ground="mint">
+  <div class="hdr">
+    <h1 class="t-large" data-a style="--i:0">Your program</h1>
+    <p class="t-foot" data-a style="--i:1">Prep week, Day Xero, then four weeks</p>
+  </div>
+  <div class="seg" data-a style="--i:2"><button class="on">Prep</button><button>Day Xero</button><button>Week 1</button><button>Week 2</button></div>
+
+  <svg class="road" width="390" height="844" viewBox="0 0 390 844" aria-hidden="true">
+    <path id="road" fill="none" stroke="var(--card-2)" stroke-width="18" stroke-linecap="round" data-fade style="--d:150ms"/>
+    <path id="future" fill="none" stroke="var(--fg)" stroke-opacity=".3" stroke-width="3" stroke-dasharray="1 9" stroke-linecap="round" data-fade style="--d:1300ms"/>
+    <path id="done" class="draw" fill="none" stroke="var(--fg)" stroke-width="4" stroke-linecap="round" style="--d:300ms;--dur:1100ms"/>
+  </svg>
+  <div id="nodes"></div>
+
+  <div class="card upnext" data-a style="--d:1250ms">
+    <span class="t-cap">Up next &middot; today &middot; 28 min</span>
+    <p class="t-head">The stress loop</p>
+    <p class="t-foot">Calm without it. Prep 5 of 7</p>
+  </div>
+
+  <div class="goal" data-fade style="--d:1500ms">
+    <p class="t-head" style="font-size:17px">Day Xero</p>
+    <p class="t-foot">Fri, Nov 6 &middot; your Quit Day</p>
+  </div>
+  <div class="weeks" data-fade style="--d:1650ms"><span>Week 1</span><span>Week 2</span><span>Week 3</span><span>Week 4</span></div>
+</div>
+<script>
+  const $ = s => document.querySelector(s);
+  const P = [[62, 228], [126, 276], [62, 324], [126, 372], [70, 440], [126, 512], [62, 560], [108, 634], [64, 704], [64, 770]];
+  function spline(pts) {
+    let d = `M${pts[0][0]} ${pts[0][1]}`;
+    for (let i = 0; i < pts.length - 1; i++) {
+      const [x1, y1] = pts[i], [x2, y2] = pts[i + 1], k = (y2 - y1) * .55;
+      d += ` C${x1} ${y1 + k} ${x2} ${y2 - k} ${x2} ${y2}`;
+    }
+    return d;
+  }
+  $('#road').setAttribute('d', spline(P.slice(0, 9)));
+  $('#future').setAttribute('d', spline(P.slice(4)));
+  const done = $('#done'); done.setAttribute('d', spline(P.slice(0, 5)));
+  done.style.setProperty('--len', Math.ceil(done.getTotalLength()));
+
+  const titles = ["You don't have to quit today", 'The first one of the day', 'Use with your eyes open', 'Make it easy on yourself', 'The stress loop', 'Riding the wave', 'The night before'];
+  const days = ['Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu'];
+  let h = '';
+  P.slice(0, 7).forEach(([x, y], i) => {
+    const n = i + 1;
+    if (n <= 4) {
+      const d = 300 + i * 240;
+      h += `<div class="node" style="left:${x}px;top:${y}px"><div data-a style="--d:${d}ms"><div class="bg">${DX.badge({ kind: 'prep', n, size: 40, bare: true })}</div></div></div>`;
+      h += `<div class="lab" style="left:${x + 32}px;top:${y}px"><div data-a style="--d:${d + 60}ms"><span class="t-cap">Prep ${n} &middot; ${days[i]}, done</span><p class="t-foot">${titles[i]}</p></div></div>`;
+    } else if (n === 5) {
+      h += `<div class="node" style="left:${x}px;top:${y}px"><div data-a style="--d:1250ms"><button class="cur" aria-label="Play Prep 5">${DX.icon('play', { fill: 'currentColor', w: 1.5 })}</button></div></div>`;
+    } else {
+      h += `<div class="node" style="left:${x}px;top:${y}px"><div data-fade style="--d:1400ms"><div class="bg" style="color:var(--fg)">${DX.badge({ kind: 'prep', n, state: 'locked', size: 38, bare: true })}</div></div></div>`;
+      h += `<div class="lab lock" style="left:${x + 32}px;top:${y}px"><div data-fade style="--d:1450ms"><span class="t-cap">Prep ${n} &middot; ${days[i]}</span><p class="t-foot">${titles[i]}</p></div></div>`;
+    }
+  });
+  const [gx, gy] = P[7];
+  h += `<div class="node" style="left:${gx}px;top:${gy}px"><div data-fade style="--d:1500ms"><div class="bg" style="padding:4px">${DX.badge({ kind: 'xero', n: '0', size: 54, bare: true })}</div></div></div>`;
+  $('#nodes').innerHTML = h;
+  $('.screen').insertAdjacentHTML('beforeend', DX.tabbar('program'));
+</script>
+</body></html>

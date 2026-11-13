@@ -6,17 +6,16 @@
 <style>
   .label { display: flex; align-items: center; gap: 8px; color: var(--muted); }
   .label svg { width: 18px; height: 18px; }
-  .stack-wrap { position: relative; margin-top: 14px; height: 492px; perspective: 1400px; }
-  .edge { position: absolute; left: 0; right: 0; top: 0; height: 466px; border-radius: 26px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
+  .stack-wrap { position: relative; margin-top: 14px; height: 520px; perspective: 1400px; }
+  .edge { position: absolute; left: 0; right: 0; top: 0; height: 494px; border-radius: 26px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
   .edge.e1 { transform: translateY(13px) scale(.95); opacity: .85; }
   .edge.e2 { transform: translateY(25px) scale(.9); opacity: .6; }
-  .flip { position: absolute; left: 0; right: 0; top: 0; height: 466px; transform-style: preserve-3d; transition: transform 800ms var(--settle); }
+  .flip { position: absolute; left: 0; right: 0; top: 0; height: 494px; transform-style: preserve-3d; transition: transform 800ms var(--settle); }
   .flip.back { transform: rotateY(180deg); transition: none; }
   .face { position: absolute; inset: 0; border-radius: 26px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line), 0 14px 30px rgba(30,26,58,.08);
     backface-visibility: hidden; -webkit-backface-visibility: hidden; padding: 22px 24px; display: flex; flex-direction: column; }
   .face.rear { transform: rotateY(180deg); background: var(--card-2); align-items: center; justify-content: center; text-align: center; gap: 10px; }
-  .road { height: 92px; margin: -4px -6px 6px; color: var(--fg); }
-  .road .ground { fill: var(--card-2); }
+  .road { display: block; width: 100%; height: auto; margin-bottom: 16px; }
   .copy { display: grid; gap: 12px; margin-top: 8px; }
   .copy .t-body { color: var(--fg); }
   .copy .t-body.soft { color: var(--muted); }
@@ -41,11 +40,15 @@
         <div class="edge e1" data-fade style="--d:80ms"></div>
         <div class="flip" id="flip">
           <article class="face front">
-            <svg class="road" viewBox="0 0 300 92" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-              <circle cx="232" cy="34" r="15" fill="var(--sun)" data-pop style="transform-origin:232px 34px;--d:700ms"/>
-              <path class="ground" d="M0 62 C60 50 120 56 170 60 S260 52 300 56 V92 H0z"/>
-              <path d="M0 62 C60 50 120 56 170 60 S260 52 300 56" fill="none" stroke="currentColor" stroke-opacity=".25" stroke-width="2" stroke-linecap="round"/>
-              <path class="draw" d="M150 92 C150 80 120 76 128 68 C134 62 160 62 168 59" fill="none" stroke="var(--mark)" stroke-width="5" stroke-linecap="round" style="--len:110;--d:600ms;--dur:900ms"/>
+            <svg class="road" viewBox="0 0 300 116" aria-hidden="true">
+              <clipPath id="rc"><rect width="300" height="116" rx="18"/></clipPath>
+              <g clip-path="url(#rc)">
+                <rect width="300" height="116" fill="var(--card-2)"/>
+                <circle cx="228" cy="42" r="16" fill="var(--sun)" data-pop style="transform-origin:228px 42px;--d:700ms"/>
+                <path d="M0 74 C60 58 120 66 170 70 S260 60 300 64 V116 H0z" fill="#FFAE73" opacity=".45"/>
+                <path d="M0 94 C80 82 180 100 300 86 V116 H0z" fill="#FF9A6B" opacity=".5"/>
+                <path class="draw" d="M118 116 C128 100 172 98 162 86 C156 78 170 72 182 69" fill="none" stroke="var(--mark)" stroke-width="5" stroke-linecap="round" style="--len:120;--d:600ms;--dur:900ms"/>
+              </g>
             </svg>
             <h1 class="t-title" data-a style="--i:3">You're the driver</h1>
             <div class="copy">

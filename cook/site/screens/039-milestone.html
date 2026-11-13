@@ -44,9 +44,9 @@
 </div>
 <script>
   const rays = [];
-  for (let i = 0; i < 16; i++) {
-    const a = i * 22.5, long = i % 2 === 0;
-    rays.push(`<path d="M-${long ? 7 : 5} -${long ? 58 : 60} L0 -${long ? 100 : 86} L${long ? 7 : 5} -${long ? 58 : 60}Z" fill="${long ? '#FFD966' : '#F5B83D'}" opacity="${long ? 1 : .8}" transform="rotate(${a})" stroke-linejoin="round"/>`);
+  for (let i = 0; i < 24; i++) {
+    const a = i * 15, long = i % 2 === 0;
+    rays.push(`<path d="M-${long ? 4.5 : 3} -60 L0 -${long ? 98 : 80} L${long ? 4.5 : 3} -60Z" fill="${long ? '#FFD966' : '#F5B83D'}" opacity="${long ? .95 : .75}" transform="rotate(${a})"/>`);
   }
   document.getElementById('rays').innerHTML = rays.join('');
   document.getElementById('medal').innerHTML = DX.badge({ kind: 'day', n: 7, size: 160, bare: true });

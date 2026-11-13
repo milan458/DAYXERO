@@ -25,8 +25,8 @@
   .toast .tk { width: 30px; height: 30px; border-radius: 99px; background: var(--done-on-dark); color: #0B2A1C; display: grid; place-items: center; flex: none; }
   .toast .tk svg { width: 18px; height: 18px; }
   .toast .grow { flex: 1; }
-  .toast .n { display: inline-block; }
-  .toast .plus { opacity: 0; position: absolute; right: 22px; top: 10px; font: 800 15px/1 var(--display); color: var(--done-on-dark); }
+  .toast .n { display: inline-block; position: relative; }
+  .toast .plus { opacity: 0; position: absolute; left: 2px; top: -16px; font: 800 15px/1 var(--display); color: var(--done-on-dark); }
   [data-theme="dark"] .toast .tk { background: var(--done); color: #fff; }
   [data-theme="dark"] .toast .plus { color: var(--done); }
 </style>
@@ -34,13 +34,12 @@
 <div class="screen" data-ground="reading">
   <div class="nav">
     <button class="icon-btn" aria-label="Close" data-ic="close" data-go="041-log-menu"></button>
-    <div class="grow title">A craving</div>
+    <div class="grow" style="text-align:center;display:grid;gap:3px"><div class="title">A craving</div><div class="t-cap muted">Today, 9:41 AM</div></div>
     <span style="width:44px"></span>
   </div>
   <div class="scroll" style="padding-top:104px">
     <div class="pad">
-      <p class="t-foot muted" data-a style="--i:0">Today at 9:41 AM</p>
-      <div class="card strength" data-a style="--i:1;margin-top:8px">
+      <div class="card strength" data-a style="--i:1;margin-top:4px">
         <div class="sec-h" style="margin-bottom:4px"><h2 class="t-head">How strong is it?</h2><span class="t-foot">Moderate</span></div>
         <div class="big"><span class="num" data-count="5">5</span><span class="t-foot muted">/ 10</span></div>
         <div class="slider" aria-label="Strength 5 of 10"><span class="tr"></span><span class="fi" id="fi"></span><span class="kn" id="kn"></span></div>
@@ -72,8 +71,7 @@
   </div>
   <div class="toast" id="toast" role="status">
     <span class="tk" id="tk"></span>
-    <span class="grow">Craving logged. <span class="n" id="n">4</span> waves today.</span>
-    <span class="plus" id="plus">+1</span>
+    <span class="grow">Craving logged. <span class="n" id="n">4<span class="plus" id="plus">+1</span></span> waves today.</span>
   </div>
 </div>
 <script>
