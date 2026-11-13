@@ -11,23 +11,25 @@
   .screen { --far: #FFD3A6; --near: #FFAF7A; --lift: rgba(120,44,20,.15); }
   [data-theme="dark"] .screen { --far: #1F2950; --near: #161F38; --lift: rgba(0,0,0,.5); }
   /* The pair (Xero + medallion) is one centred group: Xero 100 box (about 80pt of character), 14pt off the coin rim. */
-  .hero { position: relative; height: 196px; margin: 48px 0 0; }
+  .hero { position: relative; height: 196px; margin: 58px 0 0; }
   .hero .gr { position: absolute; left: 0; width: 390px; height: 640px; pointer-events: none; }
   .hero .gr.far { top: 104px; z-index: 0; filter: drop-shadow(0 -2px 4px var(--lift)); }
   .hero .gr.near { top: 140px; z-index: 2; filter: drop-shadow(0 -3px 6px var(--lift)); }
   .hero .coin { position: absolute; z-index: 1; left: 152px; top: 0; width: 180px; height: 180px; border-radius: 99px; background: #FFF8EE; display: grid; place-items: center;
     box-shadow: 0 0 0 9px rgba(255,248,238,.55), 0 0 0 20px rgba(255,248,238,.2), 0 0 46px 20px rgba(255,206,110,.55); }
   /* Light: the waiting ring is dark gold on the cream coin. */
+  .hero .coin .med { color: #B9800F; }
   .hero .coin svg circle[stroke-dasharray] { stroke: #B9800F; }
   /* Dark: the halo is warm amber too (never grey), and the ring keeps the kit's gold. */
   [data-theme="dark"] .hero .coin { box-shadow: 0 0 0 3px rgba(255,214,140,.6), 0 0 26px 8px rgba(255,190,90,.5), 0 0 80px 22px rgba(255,160,60,.24); }
+  [data-theme="dark"] .hero .coin .med { color: #F5B83D; }
   [data-theme="dark"] .hero .coin svg circle[stroke-dasharray] { stroke: #F5B83D; }
   .hero .xc { position: absolute; z-index: 3; left: 47px; top: 77px; }
   .cap, .wrap { position: relative; z-index: 3; }
-  .cap { padding: 18px var(--gutter) 0; text-align: center; display: grid; gap: 4px; }
+  .cap { padding: 24px var(--gutter) 0; text-align: center; display: grid; gap: 4px; }
   .cap .t-foot { color: var(--muted); }
-  .wrap { padding: 24px var(--gutter) 0; }
-  .wrap .card { padding: 20px 18px 22px; }
+  .wrap { padding: 28px var(--gutter) 0; }
+  .wrap .card { padding: 22px 18px 24px; }
   [data-theme="dark"] .wrap .card { background: var(--card-2); }
   .sh { display: flex; justify-content: space-between; align-items: baseline; }
   .stamps { display: flex; justify-content: space-between; margin: 16px -2px 0; color: var(--fg); }
