@@ -150,3 +150,5 @@ session 023-032, lesson-log 033-042, slips-checkin 043-055.
 - Kit: dark selection fill is a neutral-warm lift (11% pale peach over card) with the apricot edge; the orange tint read brown.
 - Slips-checkin round 8: Opus 8.6 / Sonnet 8.7 (r7 8.7 / 8.5): mixed, kept. 053 motion spec corrected to the after-quit daily
   pledge (Day 7). Onboarding round 8 done, critics running.
+- Session round 8: Opus 8.7 / Sonnet 8.7 (r7 8.7 / 8.7): equal, kept. Onboarding round 8: Sonnet 8.7 (r7 8.7); Opus pending.
+- Kit: day/prep badges under 44px drop the little sun (critics read it as a smudge at stamp size).

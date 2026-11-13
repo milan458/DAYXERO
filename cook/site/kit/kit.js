@@ -87,7 +87,7 @@
     if (kind === 'wave') art = `<path d="M8 66c8-7 16-7 24 0s16 7 24 0 16-7 24 0 12 5 16 2v40H8z" fill="${pal.hill}"/><path d="M8 78c8-6 16-6 24 0s16 6 24 0 16-6 24 0 12 5 16 2v30H8z" fill="${pal.edge}" opacity=".7"/>`;
     else if (kind === 'night') art = `<circle cx="70" cy="31" r="11" fill="${pal.sun}"/><circle cx="64" cy="27" r="10" fill="${pal.face}"/><circle cx="30" cy="30" r="1.6" fill="#fff"/><circle cx="42" cy="20" r="1.2" fill="#fff" opacity=".8"/><path d="M0 72 C30 60 60 80 100 66 V100 H0z" fill="${pal.hill}"/>`;
     else if (kind === 'xero') art = `<circle cx="50" cy="50" r="39" fill="#FFE9A8"/>`;
-    else art = `<circle cx="75" cy="68.5" r="9" fill="${pal.sun}"/><path d="M0 74 C24 62 48 66 70 72 S96 70 100 68 V100 H0z" fill="${pal.hill}"/><path d="M0 84 C30 76 60 90 100 80 V100 H0z" fill="${pal.edge}" opacity=".55"/>`;
+    else art = `${s >= 44 ? `<circle cx="75" cy="68.5" r="9" fill="${pal.sun}"/>` : ''}<path d="M0 74 C24 62 48 66 70 72 S96 70 100 68 V100 H0z" fill="${pal.hill}"/><path d="M0 84 C30 76 60 90 100 80 V100 H0z" fill="${pal.edge}" opacity=".55"/>`;
     const rays = kind === 'xero' ? `<g class="rays" style="transform-origin:50px 50px" opacity=".9">${Array.from({ length: 12 }, (_, i) => `<path d="M50 -4 L53 8 L47 8Z" fill="#F5B83D" transform="rotate(${i * 30} 50 50)"/>`).join('')}</g>` : '';
     const face = locked
       ? `<circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" stroke-opacity=".35" stroke-width="3" stroke-dasharray="6 6"/>
