@@ -59,8 +59,8 @@
   document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic));
   document.getElementById('sky').innerHTML = DX.nightSky({ w: 390, h: 320, moonX: 318, moonY: 104 });
   /* Glim's lantern glow: a warm yellow radial, not a flat ring */
-  document.getElementById('glim').innerHTML = DX.char('glim', { mood: 'calm', size: 224 }).replace(/<circle cx="100" cy="150" r="38" fill="#FFE27A" opacity="[^"]*"/,
-    '<radialGradient id="lg54"><stop offset="0" stop-color="#FFD966" stop-opacity=".8"/><stop offset=".5" stop-color="#FFC94A" stop-opacity=".3"/><stop offset="1" stop-color="#FFC94A" stop-opacity="0"/></radialGradient><circle cx="100" cy="150" r="62" fill="url(#lg54)"');
+  document.getElementById('glim').innerHTML = DX.char('glim', { mood: 'calm', size: 224 }).replace(/<circle cx="100" cy="150" r="38" fill="#FFE27A" opacity="[^"]*">[\s\S]*?<\/circle>/,
+    '<radialGradient id="lg54"><stop offset="0" stop-color="#FFD966" stop-opacity=".85"/><stop offset=".55" stop-color="#FFC94A" stop-opacity=".32"/><stop offset="1" stop-color="#FFC94A" stop-opacity="0"/></radialGradient><circle cx="100" cy="150" r="60" fill="url(#lg54)"></circle>');
   /* The same four little moons as the craving log (042), drawn by the same code: navy Rough with cream features, tired lids and a cream rim,
      cream Okay, pale apricot Good, apricot Proud; stronger craters and crescent shading. */
   const INK = '#0F1B33', CR = '#F6EFE2', CH = '<circle cx="12.5" cy="29" r="3.2" fill="#FF8C6B" opacity=".55"/><circle cx="35.5" cy="29" r="3.2" fill="#FF8C6B" opacity=".55"/>';
