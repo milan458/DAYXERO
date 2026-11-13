@@ -1,65 +1,59 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>015 Today, prep week</title>
-<meta name="motion" content="The dawn sun rises behind the hills (2.6s) while Xero settles onto the cream disc (900ms). The week ring is the one meter: seven segments, Prep 1 to 3 sweep in solid from 0 (1.4s, 250ms delay) and today's Prep 4 segment fades in at half strength and breathes (2.4s loop). The date pill, greeting, today line, your reason and the session card with its single Start button arrive with a 90ms stagger. In the countdown card the 4 counts down from 7, Prep 1 to 3 stamps rise in one by one (90ms apart, no spring: earned earlier), today's open Prep 4 slot breathes its outline (2.4s loop), and Prep 5 to 7 and the Day Xero medallion (the brand mark, faint until Quit Day) wait in dashed rings. Light haptic when the ring lands.">
+<meta name="motion" content="The dawn sun rises behind the hills (2.6s) while the cream disc and its soft halo ring fade up (700ms) and Xero settles onto the disc (900ms), then bobs gently; the halo is decoration only and never fills. The date pill, greeting, today line and the session card with its single Start button arrive with a 90ms stagger. The countdown card is the one meter: its 4 counts down from 7 (850ms), Prep 1 to 3 stamps rise in one by one (90ms apart, no spring: earned earlier), today's open Prep 4 slot breathes its coral outline (2.4s loop), and Prep 5 to 7 and the Day Xero coin wait in dashed rings. Light haptic when the countdown lands.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .hero { position: absolute; left: 0; right: 0; top: 0; height: 338px; border-radius: 0 0 36px 36px; overflow: hidden; }
+  .hero { position: absolute; left: 0; right: 0; top: 0; height: 330px; border-radius: 0 0 36px 36px; overflow: hidden; }
   .hero .scene { position: absolute; inset: 0; }
-  .ringwrap { position: absolute; left: 50%; top: 68px; width: 210px; height: 210px; margin-left: -105px; }
-  .ringwrap .disc { position: absolute; inset: 21px; border-radius: 50%; background: rgba(255,248,238,.74); }
+  .ringwrap { position: absolute; left: 50%; top: 66px; width: 206px; height: 206px; margin-left: -103px; }
+  /* decorative only: a soft halo ring around the disc, never a meter */
+  .ringwrap .halo { position: absolute; inset: 0; border-radius: 50%; box-shadow: inset 0 0 0 2px rgba(255,248,238,.55), 0 0 28px rgba(255,248,238,.35); }
+  [data-theme="dark"] .ringwrap .halo { box-shadow: inset 0 0 0 2px rgba(255,195,138,.28), 0 0 30px rgba(255,195,138,.12); }
+  .ringwrap .disc { position: absolute; inset: 14px; border-radius: 50%; background: rgba(255,248,238,.74); }
   [data-theme="dark"] .ringwrap .disc { background: rgba(255,248,238,.1); }
-  /* one meter: the ring in seven segments (gaps cut by a conic mask), 3 done, today's 4th at half strength */
-  .ringwrap .ring { position: absolute; inset: 0; --ringc: #1E1A3A; --ringt: rgba(255,248,238,.72);
-    -webkit-mask: repeating-conic-gradient(from -3.6deg, transparent 0 7.2deg, #000 7.2deg 51.4286deg); mask: repeating-conic-gradient(from -3.6deg, transparent 0 7.2deg, #000 7.2deg 51.4286deg); }
-  [data-theme="dark"] .ringwrap .ring { --ringc: #FFC38A; --ringt: rgba(255,248,238,.22); }
-  .ringwrap .ring > div { position: absolute; inset: 0; }
-  .ringwrap .ring .today { opacity: .4; }
-  .play .ringwrap .ring .today { animation: todayb 2.4s ease-in-out 1.6s infinite; }
-  @keyframes todayb { 50% { opacity: .22; } }
-  .ringwrap .ch { position: absolute; left: 0; right: 0; top: 36px; display: grid; place-items: center; }
-  .pill { position: absolute; left: 0; right: 0; top: 286px; display: flex; justify-content: center; }
+  .ringwrap .ch { position: absolute; left: 0; right: 0; top: 34px; display: grid; place-items: center; }
+  .pill { position: absolute; left: 0; right: 0; top: 280px; display: flex; justify-content: center; }
   .pill span { background: var(--card); color: var(--fg); border-radius: 99px; padding: 10px 16px; font: 600 14px/1 var(--body); box-shadow: 0 6px 16px rgba(30,26,58,.12); }
 
-  .content { position: absolute; left: 0; right: 0; top: 358px; padding: 0 var(--gutter); }
+  .content { position: absolute; left: 0; right: 0; top: 354px; padding: 0 var(--gutter); }
   .content .sub { margin-top: 6px; color: var(--muted); }
-  .reason { margin-top: 14px; display: grid; gap: 3px; }
-  .reason .lb { display: flex; align-items: center; gap: 6px; color: var(--muted); }
-  .reason .lb svg { width: 15px; height: 15px; color: var(--coral); }
-  [data-theme="dark"] .reason .lb svg { color: #FF9A7A; }
-  .reason .rq { font-weight: 600; }
-  .sess { margin-top: 16px; display: flex; align-items: center; gap: 14px; }
+  .sess { margin-top: 22px; display: flex; align-items: center; gap: 14px; }
   .sess .grow { flex: 1; min-width: 0; }
   .sess .t-foot { color: var(--muted); }
   .sess .btn.small { width: auto; padding: 0 18px 0 14px; flex: none; }
   .sess .btn svg { width: 16px; height: 16px; }
-  .stamps { margin-top: 12px; padding: 14px 14px 12px; }
-  .stamps .head { display: flex; justify-content: space-between; align-items: baseline; }
+
+  /* the one meter: the prep week as stamps, one colour code (apricot and coral) in both modes */
+  .stamps { margin-top: 12px; padding: 16px 14px 14px; }
+  .stamps .head { display: flex; justify-content: space-between; align-items: baseline; padding: 0 2px; }
   .stamps .head .t-foot { color: var(--muted); }
-  .stamps .row8 { display: flex; justify-content: space-between; align-items: flex-start; margin-top: 10px; padding-right: 6px; }
-  .slot { position: relative; width: 36px; display: grid; justify-items: center; gap: 6px; }
-  .slot .face { position: relative; width: 36px; height: 36px; display: grid; place-items: center; }
+  .stamps .row8 { display: flex; justify-content: space-between; align-items: flex-start; margin-top: 14px; }
+  .slot { position: relative; width: 34px; display: grid; justify-items: center; gap: 7px; }
+  .slot .face { position: relative; width: 34px; height: 34px; display: grid; place-items: center; margin-top: 7px; }
   .slot .face svg { position: absolute; inset: 0; }
   .slot .num { position: relative; font: 800 15px/1 var(--display); color: #1E1A3A; letter-spacing: -.3px; }
-  .slot .t-cap { font-size: 13px; white-space: nowrap; color: var(--fg); }
-  .slot.later .num { color: var(--fg); }
-  .slot.now .face { border-radius: 99px; background: var(--card-2); box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--fg) 30%, transparent); }
+  .slot .t-cap { font-size: 12px; white-space: nowrap; color: var(--fg); }
+  .slot.later .num { color: var(--fg); opacity: .8; }
+  .slot.now .face { border-radius: 99px; background: var(--card); box-shadow: inset 0 0 0 2.5px #FF7A55; }
   .slot.now .num { color: var(--fg); }
-  .slot.now .face::after { content: ""; position: absolute; inset: -4px; border-radius: 99px; box-shadow: inset 0 0 0 2px var(--fg); opacity: .55; }
+  .slot.now .face::after { content: ""; position: absolute; inset: -5px; border-radius: 99px; box-shadow: inset 0 0 0 2px #FF7A55; opacity: .4; }
   .play .slot.now .face::after { animation: nowpulse 2.4s ease-in-out infinite; }
-  @keyframes nowpulse { 50% { opacity: .18; transform: scale(1.08); } }
-  .slot.goal { width: 44px; margin-top: -4px; }
-  .slot.goal .face { width: 44px; height: 44px; }
-  .slot.goal .t-cap { margin-top: -2px; }
+  @keyframes nowpulse { 50% { opacity: .1; transform: scale(1.08); } }
+  .slot.now .t-cap { color: #C2402A; font-weight: 700; }
+  [data-theme="dark"] .slot.now .face { background: var(--card-2); }
+  [data-theme="dark"] .slot.now .t-cap { color: #FF9A7A; }
+  .slot.goal { width: 50px; margin-left: 2px; }
+  .slot.goal .face { width: 48px; height: 48px; margin-top: 0; }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot" data-status="on-art">
   <div class="hero">
     <div class="scene" id="scene"></div>
-    <div class="ringwrap">
+    <div class="ringwrap" data-fade style="--d:150ms">
+      <div class="halo"></div>
       <div class="disc"></div>
-      <div class="ring" aria-label="3 of 7 prep sessions done, Prep 4 today"><div class="today" id="ring4"></div><div id="ring3"></div></div>
-      <div class="ch" id="xero" data-settle></div>
+      <div class="ch" data-settle><div class="bob" id="xero"></div></div>
     </div>
     <div class="pill" data-a style="--i:1;--d:500ms"><span>Mon, Nov 2</span></div>
   </div>
@@ -67,12 +61,8 @@
   <div class="content">
     <h1 class="t-large" data-a style="--i:2">Good morning, Sam</h1>
     <p class="t-body sub" data-a style="--i:3">Today is about stress, and a breath that works.</p>
-    <div class="reason" data-a style="--i:4">
-      <p class="t-cap lb" id="lb">Your reason</p>
-      <p class="t-foot rq">&ldquo;Run with Aria without stopping to catch my breath&rdquo;</p>
-    </div>
 
-    <div class="card sess" data-a style="--i:5">
+    <div class="card sess" data-a style="--i:4">
       <span class="ico-tile" id="ic-sess"></span>
       <div class="grow">
         <p class="t-foot">Prep 4 &middot; 28 min</p>
@@ -81,7 +71,7 @@
       <button class="btn small" id="start"></button>
     </div>
 
-    <div class="card stamps" data-a style="--i:6">
+    <div class="card stamps" data-a style="--i:5" aria-label="Prep 1 to 3 done, Prep 4 today, Prep 5 to 7 and Day Xero ahead">
       <div class="head"><span class="t-head" style="font-size:17px"><span data-count="4" data-from="7" data-delay="600">4</span> days to Quit Day</span><span class="t-foot">Fri, Nov 6</span></div>
       <div class="row8" id="row8"></div>
     </div>
@@ -89,19 +79,16 @@
 </div>
 <script>
   const $ = s => document.querySelector(s);
-  $('#scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 390, h: 338, clarity: 85 });
-  $('#ring4').innerHTML = DX.ring({ size: 210, stroke: 11, p: 4 / 7, color: 'var(--ringc)', track: 'var(--ringt)' });
-  $('#ring3').innerHTML = DX.ring({ size: 210, stroke: 11, p: 3 / 7, color: 'var(--ringc)', track: 'transparent' });
-  $('#xero').innerHTML = DX.char('xero', { mood: 'hello', size: 138, stage: 1 });
+  $('#scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 390, h: 330, clarity: 85 });
+  $('#xero').innerHTML = DX.char('xero', { mood: 'hello', size: 140, stage: 1 });
   $('#ic-sess').innerHTML = DX.icon('headphones');
-  $('#lb').insertAdjacentHTML('afterbegin', DX.icon('heart', { fill: 'currentColor', w: 1.6 }));
   $('#start').innerHTML = DX.icon('play', { fill: 'currentColor', w: 1.5 }) + 'Start';
   let h = '';
   const face = (svg, n) => `<div class="face">${svg}<span class="num">${n}</span></div>`;
-  for (let n = 1; n <= 3; n++) h += `<div class="slot" data-a style="--i:${n};--d:640ms">${face(DX.badge({ kind: 'prep', n: '', size: 36, bare: true }), n)}</div>`;
+  for (let n = 1; n <= 3; n++) h += `<div class="slot" data-a style="--i:${n};--d:640ms">${face(DX.badge({ kind: 'prep', n: '', size: 34, bare: true }), n)}</div>`;
   h += `<div class="slot now">${face('', 4)}<span class="t-cap">Today</span></div>`;
-  for (let n = 5; n <= 7; n++) h += `<div class="slot later">${face(DX.badge({ kind: 'prep', n: '', state: 'next', size: 36, bare: true }), n)}</div>`;
-  h += `<div class="slot goal"><div class="face">${DX.badge({ kind: 'xero', state: 'next', size: 44, bare: true, label: 'Day Xero' })}</div><span class="t-cap">Day Xero</span></div>`;
+  for (let n = 5; n <= 7; n++) h += `<div class="slot later">${face(DX.badge({ kind: 'prep', n: '', state: 'next', size: 34, bare: true }), n)}</div>`;
+  h += `<div class="slot goal"><div class="face">${DX.badge({ kind: 'xero', state: 'next', size: 48, bare: true, label: 'Day Xero' })}</div><span class="t-cap">Day Xero</span></div>`;
   $('#row8').innerHTML = h;
   $('.screen').insertAdjacentHTML('beforeend', DX.tabbar('today'));
 </script>

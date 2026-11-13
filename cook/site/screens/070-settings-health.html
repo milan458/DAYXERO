@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>070 Apple Health</title>
-<meta name="motion" content="The connected card arrives with the DayXero tile and the neutral Works with Apple Health badge; the dotted link draws between them and its check pops (900ms, light success haptic); the write and read groups follow on the stagger. Flipping a toggle opens the system Health permission sheet.">
+<meta name="motion" content="The connected card arrives with the DayXero tile and the neutral Works with Apple Health badge; the dotted link fades in between them (500ms) and its check pops (900ms, light success haptic); the write and read groups follow on the stagger. Flipping a toggle opens the system Health permission sheet.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -40,7 +40,7 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 <div class="scroll"><div class="pad">
   <div class="hd"><h1 class="t-large" data-a style="--i:0">Apple Health</h1><p class="t-foot muted" data-a style="--i:1">You choose what DayXero shares with Health.</p></div>
   <div class="card link-card" data-a style="--i:2">
-    <div class="apps"><span class="app" id="dx070"></span><span class="wire"><span class="ok" data-ic="check" data-s="13" data-w="3.2"></span></span><span class="wh" role="img" aria-label="Works with Apple Health"><span class="hi" data-ic="heart" data-s="18" data-w="2.2"></span><span class="w"><small>Works with</small><b>Apple Health</b></span></span></div>
+    <div class="apps"><span class="app" id="dx070"></span><span class="wire" data-fade style="--d:500ms"><span class="ok" data-ic="check" data-s="13" data-w="3.2" data-pop style="--d:900ms"></span></span><span class="wh" role="img" aria-label="Works with Apple Health"><span class="hi" data-ic="heart" data-s="18" data-w="2.2"></span><span class="w"><small>Works with</small><b>Apple Health</b></span></span></div>
     <div class="t-head">Connected to Health</div>
     <div class="t-foot muted">Since Fri, Oct 30</div>
   </div>
