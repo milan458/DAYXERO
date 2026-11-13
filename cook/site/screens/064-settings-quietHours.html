@@ -21,7 +21,7 @@
 .dial .rot { position: absolute; inset: 0; transform: rotate(330deg); }
 .dial .ctr { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; gap: 2px; justify-items: center; }
 .dial .ctr .num { font-size: 40px; line-height: 1; }
-.dial .glim { width: 70px; height: 70px; margin: -6px 0 2px; }
+.dial .glim { width: 76px; height: 76px; margin: -6px 0 2px; }
 /* Hour labels sit on an even ring: each one 22px clear of the dial's outer edge, so they clear the handles by 8px or more. */
 .hr { position: absolute; color: var(--fg); opacity: .78; white-space: nowrap; font: 700 14px/1 var(--body); }
 .hr.t { transform: translate(-50%, -100%); } .hr.b { transform: translate(-50%, 0); } .hr.l { transform: translate(-100%, -50%); } .hr.r { transform: translate(0, -50%); }
@@ -61,7 +61,7 @@
     <div class="card"><span class="t-foot muted"><span data-ic="moon" data-s="15"></span>From<span class="ed" aria-label="Edit start time" data-ic="down" data-s="14"></span></span><span class="num">10:00 PM</span></div>
     <div class="card"><span class="t-foot muted"><span data-ic="sun" data-s="15"></span>Until<span class="ed" aria-label="Edit end time" data-ic="down" data-s="14"></span></span><span class="num">7:00 AM</span></div>
   </div>
-  <p class="t-foot note" data-a style="--i:4"><span data-ic="bell" data-s="20"></span>Nudges and craving forecasts wait until 7 AM.</p>
+  <p class="t-foot note" data-a style="--i:4"><span data-ic="bell" data-s="20"></span>Nudges and forecasts wait until 7 AM.</p>
   <div class="list ctl" data-a style="--i:5">
     <div class="row"><span class="ico-tile s" id="patch"></span><div class="grow"><div class="t-body rt">Patch reminders</div><div class="t-foot muted">Patch times still arrive</div></div><span class="toggle on"></span></div>
   </div>
@@ -74,9 +74,9 @@ document.getElementById('ring').innerHTML = DX.ring({ size: 244, stroke: 24, p: 
 /* Only the four cardinal tick dots. */
 document.getElementById('ticks').innerHTML = [0, 1, 2, 3].map(i => { const a = i * Math.PI / 2, r = 84; return `<circle cx="${(122 + r * Math.sin(a)).toFixed(1)}" cy="${(122 - r * Math.cos(a)).toFixed(1)}" r="2.4" fill="currentColor" opacity=".7"/>`; }).join('');
 /* The bespoke motif: a small sleeping Glim in the dial centre. */
-document.getElementById('glim').innerHTML = DX.char('glim', { mood: 'sleepy', size: 70 });
-/* Patch glyph: a rounded square patch with its round pad. */
-document.getElementById('patch').innerHTML = '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" transform="rotate(-12 12 12)"/><circle cx="12" cy="12" r="3.6"/></svg>';
+document.getElementById('glim').innerHTML = DX.char('glim', { mood: 'sleepy', size: 76 });
+/* Patch glyph: a square patch with its corner peeling up, and its round pad. */
+document.getElementById('patch').innerHTML = '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8a4 4 0 014 4v6l-6 6H8a4 4 0 01-4-4V8a4 4 0 014-4z"/><path d="M20 14h-3.5a2.5 2.5 0 00-2.5 2.5V20"/><circle cx="10.5" cy="10.5" r="2.4"/></svg>';
 
 </script>
 </body></html>
