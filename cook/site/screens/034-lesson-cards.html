@@ -6,20 +6,20 @@
 <style>
   .label { display: flex; align-items: center; gap: 8px; color: var(--muted); }
   .label svg { width: 18px; height: 18px; }
-  .stack-wrap { position: relative; margin-top: 0; height: 565px; perspective: 1400px; }
-  .edge { position: absolute; left: 0; right: 0; top: 0; height: 541px; border-radius: 26px; background: var(--card); box-shadow: inset 0 0 0 1.5px var(--line), 0 8px 18px rgba(30,26,58,.07); transform-origin: 50% 100%; }
+  .stack-wrap { position: relative; margin-top: 0; height: 567px; perspective: 1400px; }
+  .edge { position: absolute; left: 0; right: 0; top: 0; height: 543px; border-radius: 26px; background: var(--card); box-shadow: inset 0 0 0 1.5px var(--line), 0 8px 18px rgba(30,26,58,.07); transform-origin: 50% 100%; }
   [data-theme="dark"] .edge { background: #2C3756; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.32), 0 10px 20px rgba(0,0,0,.3); }
   [data-theme="dark"] .edge.e2 { opacity: 1; background: #263050; }
   [data-theme="dark"] .face { box-shadow: inset 0 0 0 1px rgba(255,255,255,.22), 0 14px 30px rgba(0,0,0,.3); }
   .edge.e1 { transform: translateY(12px) scale(.95); }
   .edge.e2 { transform: translateY(24px) scale(.9); opacity: .8; }
-  .flip { position: absolute; left: 0; right: 0; top: 0; height: 541px; transform-style: preserve-3d; transition: transform 800ms var(--settle); }
+  .flip { position: absolute; left: 0; right: 0; top: 0; height: 543px; transform-style: preserve-3d; transition: transform 800ms var(--settle); }
   .flip.back { transform: rotateY(180deg); transition: none; }
   .face { position: absolute; inset: 0; border-radius: 26px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line), 0 14px 30px rgba(30,26,58,.08);
     backface-visibility: hidden; -webkit-backface-visibility: hidden; padding: 22px 24px; display: flex; flex-direction: column; }
   .face.rear { transform: rotateY(180deg); background: var(--card-2); align-items: center; justify-content: center; text-align: center; gap: 10px; }
   /* the art runs full-bleed across the top of the card, clipped to the card radius */
-  .road { display: block; margin: -22px -24px 20px; border-radius: 26px 26px 0 0; overflow: hidden; }
+  .road { display: block; flex: none; margin: -22px -24px 20px; border-radius: 26px 26px 0 0; overflow: hidden; }
   .copy { display: grid; gap: 12px; margin-top: 8px; }
   .copy .t-body { color: var(--fg); }
   .copy .t-body.soft { color: var(--muted); }
@@ -43,7 +43,7 @@
     <button class="icon-btn" aria-label="Close" data-ic="close"></button>
     <div class="grow" style="padding-right:8px"><div class="steps" aria-label="Card 1 of 4"><i class="on"></i><i></i><i></i><i></i></div></div>
   </div>
-  <div class="scroll" style="padding-top:130px">
+  <div class="scroll" style="padding-top:136px">
     <div class="pad">
       <div class="stack-wrap">
         <div class="edge e2" data-fade style="--d:0ms"></div>
@@ -95,7 +95,7 @@
       <rect x="${x}" y="${y}" width="${w}" height="24" rx="12"/><path d="M${tx - 6} ${y + 20} L${tx + 6} ${y + 20} L${tip[0]} ${tip[1]}Z"/>
       <g transform="translate(${x} ${y})" fill="none" stroke="${C.marks}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity=".72">${marks}</g></g>`;
   const xero = DX.char('xero', { mood: 'hello', size: 72 }).replace('<svg ', '<svg x="80" y="84" ');
-  document.getElementById('road').innerHTML = `<svg viewBox="10 -40 280 280" aria-hidden="true">
+  document.getElementById('road').innerHTML = `<svg viewBox="10 -30 280 268" aria-hidden="true">
     <defs><linearGradient id="rsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${C.sky[0]}"/><stop offset=".6" stop-color="${C.sky[1]}"/><stop offset="1" stop-color="${C.sky[2]}"/></linearGradient>
       <radialGradient id="rhalo"><stop offset=".25" stop-color="${dark ? '#FFB25E' : '#FFF6C8'}" stop-opacity="${dark ? .4 : .6}"/><stop offset="1" stop-color="${dark ? '#FFB25E' : '#FFF6C8'}" stop-opacity="0"/></radialGradient>
       <filter id="rlift" x="-5%" y="-20%" width="110%" height="140%"><feDropShadow dx="0" dy="-2" stdDeviation="2.5" flood-color="#1A0B2E" flood-opacity="${dark ? .45 : .2}"/></filter>

@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>003 What you are leaving behind</title>
-<meta name="motion" content="Progress eases from 0 to 1/11 (900ms settle). Question and helper arrive (600ms, 90ms stagger), then the three checkbox rows and the note in order. Product tiles are flat paper-cut pieces with soft paper shadows. At 900ms Vape gets picked: the checkbox fills and ticks, the row takes the warm selection tint and dips to .97 and springs back (520ms), and the note's count switches from 1 to 2 while Xero (88px) bobs beside it. Selection haptic on each pick.">
+<meta name="motion" content="Progress eases from 0 to 1/11 (900ms settle). Question and helper arrive (600ms, 90ms stagger), then the three checkbox rows and the one-line note in order. Product tiles are flat paper-cut pieces with soft paper shadows (the cigarette is unlit). The horizon strip above the dock settles up in three paper layers (0, 120, 240ms; 40px, 900ms settle) and Xero (72px, hello) settles onto its crest last (from 420ms, 900ms). At 900ms Vape gets picked: the checkbox fills and ticks, the row takes the warm selection tint and dips to .97 and springs back (520ms), and the note's count switches from 1 to 2. Selection haptic on each pick.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -22,12 +22,26 @@
   /* Paper-cut product objects: flat cut pieces, each with a short paper shadow. */
   .opt .ico-tile svg { overflow: visible; width: 42px; height: 42px; }
   .answers { gap: 12px !important; }
-  /* The note is a cream card with a hairline edge (distinct from the white answer rows). */
-  .note { display: flex; gap: 12px; align-items: center; margin-top: 16px; padding: 18px 20px 18px 14px; background: #FFF8EE; border-radius: var(--r-card); box-shadow: inset 0 0 0 1px var(--line); }
-  [data-theme="dark"] .note { background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
-  .note .xc { width: 88px; height: 88px; flex: none; display: grid; place-items: center; }
-  .note p { color: var(--fg); flex: 1; max-width: none; text-wrap: wrap; }
-  .note b { font-weight: 700; }
+  /* Round 10: the note is one quiet line (Xero now stands on the horizon strip below). */
+  .note { margin-top: 6px; padding: 0 4px; color: var(--muted); }
+  .note b { font-weight: 700; color: var(--fg); }
+  /* Round 10: the onboarding horizon strip (003 to 011, one element). Three flat paper hills in the launch style, soft paper
+     shadows and no crest lines, sitting just above the dock and running full-bleed behind it; the screen's character stands on the
+     crest. Light: cream and peach paper. Dark: the kit's night-meadow hills, kept quiet. */
+  .screen { --hz-1: #FFD3A6; --hz-2: #FFE6CA; --hz-3: #F9B386; --hz-lift: rgba(120,44,20,.16); }
+  [data-theme="dark"] .screen { --hz-1: #16233F; --hz-2: #0F1A31; --hz-3: #0A1326; --hz-lift: rgba(0,0,0,.55); }
+  .hz { position: absolute; z-index: 1; left: 0; top: calc(var(--hz-b, 752px) - 140px); width: 390px; height: 300px; pointer-events: none; }
+  .hz .l { position: absolute; left: 0; top: 0; display: block; }
+  .hz .l1 { filter: drop-shadow(0 -3px 8px var(--hz-lift)); }
+  .hz .l2 { filter: drop-shadow(0 -4px 10px var(--hz-lift)); }
+  .hz .l3 { filter: drop-shadow(0 -5px 12px var(--hz-lift)); }
+  .hz .who { position: absolute; }
+  .play .hz .l { animation: hz-up 900ms var(--settle) both; }
+  .play .hz .l2 { animation-delay: 120ms; }
+  .play .hz .l3 { animation-delay: 240ms; }
+  @keyframes hz-up { from { transform: translateY(40px); } to { transform: none; } }
+  .dock { background: none; }
+  .screen { --hz-b: 752px; }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
@@ -44,48 +58,53 @@
     <button class="opt multi on" data-a style="--i:2"><span class="ico-tile" data-art="cig"></span><span class="grow"><span class="t-head">Cigarettes</span><span class="t-foot">Manufactured or roll-ups</span></span><span class="radio"></span></button>
     <button class="opt multi on" id="vape" data-a style="--i:3"><span class="ico-tile" data-art="vape"></span><span class="grow"><span class="t-head">Vape</span><span class="t-foot">Disposables, pods or tanks</span></span><span class="radio"></span></button>
     <button class="opt multi" data-a style="--i:4"><span class="ico-tile" data-art="pouch"></span><span class="grow"><span class="t-head">Nicotine pouches</span><span class="t-foot">Zyn, Velo, snus</span></span><span class="radio"></span></button>
-    <div class="note" data-a style="--i:5"><div class="xc"><div id="xn" class="bob"></div></div>
-      <p class="t-body"><b id="cnt">2 picked.</b> Lots of people use both. I&rsquo;ll plan for each.</p></div>
+    <p class="t-foot note" data-a style="--i:5"><b id="cnt">2 picked.</b> Lots of people use both. I&rsquo;ll plan for each.</p>
   </div>
+  <div class="hz" id="hz" aria-hidden="true"></div>
+
   <div class="dock"><button class="btn" data-a style="--i:6">Continue</button></div>
 </div>
 <script>
+  /* Round 10: the horizon strip. Strip y 140 is the top of the button; the character's feet sit on the middle hill's crest. */
+  function horizon(o) {
+    const back = 'M0 74 C44 60 92 54 140 64 C186 74 222 84 262 78 C306 71 350 58 390 62 L390 300 L0 300 Z',
+      mid = 'M0 108 C46 100 96 106 140 114 C180 121 214 114 250 104 C282 95 312 91 342 94 C362 96 378 100 390 104 L390 300 L0 300 Z',
+      front = 'M0 128 C58 120 118 124 178 134 C236 143 300 136 350 124 C368 120 380 119 390 120 L390 300 L0 300 Z';
+    const l = (i, d, extra = '') => `<svg class="l l${i}" width="390" height="300" viewBox="0 0 390 300"><path d="${d}" fill="var(--hz-${i})"/>${extra}</svg>`;
+    const s = o.size || 72, x = o.x ?? 312, y = o.y ?? 92;
+    return l(1, back) + l(2, mid, o.pond || '') + `<div class="who" data-settle style="--d:420ms;left:${x - s / 2}px;top:${(y - .965 * s).toFixed(1)}px;width:${s}px;height:${s}px${o.clip ? `;overflow:hidden;height:${o.clip}px` : ''}"><div id="${o.id || 'hzc'}">${o.art}</div></div>` + (o.over || '') + l(3, front);
+  }
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
-  /* Paper-cut product objects (round 8): Xero's own materials. Flat cut pieces, a crescent side shade, one highlight stroke,
+  /* Paper-cut product objects (round 10: flat, no highlight strokes): Xero's own materials. Flat cut pieces, a crescent side shade,
      and a soft paper shadow under each piece. No speckles, no 3D, no emoji tilt. */
   const dk = DX.theme === 'dark';
   const sh = dk ? 'rgba(0,0,0,.55)' : 'rgba(120,52,24,.24)';
   const pf = id => `<defs><filter id="${id}" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="1.6" stdDeviation="1" flood-color="${sh}" flood-opacity="1"/></filter></defs>`;
   const ART = {
-    /* Cigarette: a chunky cut-paper stick. Cream paper with a shaded lower edge, an apricot filter, a coral ember with a sun core,
-       and one soft ribbon of smoke cut from paper. */
+    /* Cigarette (round 10): unlit. A chunky cut-paper stick: cream paper with a shaded lower edge, an apricot filter and a plain
+       paper end. No ember, no smoke. */
     cig: `<svg viewBox="0 0 44 44" aria-hidden="true">${pf('pcA')}
-      <path d="M36.6 12 C32.2 9.8 40.2 7.4 35.6 3.2" fill="none" stroke="${dk ? '#7E89AA' : '#D0B6A6'}" stroke-width="2.8" stroke-linecap="round" filter="url(#pcA)"/>
       <g transform="rotate(-34 22 25)" filter="url(#pcA)">
         <clipPath id="pcAc"><rect x="3" y="20" width="38" height="10" rx="3"/></clipPath>
         <g clip-path="url(#pcAc)"><rect x="3" y="20" width="38" height="10" fill="#FFFDF8"/><rect x="3" y="26.4" width="38" height="4" fill="#EFE1CF"/>
           <rect x="3" y="20" width="12" height="10" fill="#FFAE73"/><rect x="3" y="26.4" width="12" height="4" fill="#F29055"/>
-          <rect x="35" y="20" width="6" height="10" fill="#FF7155"/><rect x="35" y="26.4" width="6" height="4" fill="#E85A3E"/></g>
-        <circle cx="38.6" cy="24.4" r="1.9" fill="#FFC93C"/>
-        <path d="M17.5 22.6 H29" stroke="#FFFFFF" stroke-width="1.4" stroke-linecap="round" opacity=".9"/></g></svg>`,
+          <rect x="39.4" y="20" width="1.6" height="10" fill="#EFE1CF"/></g></g></svg>`,
     /* Disposable vape: a coral body with Xero's side shade and highlight, an ink mouthpiece, a sky window of liquid and a sun LED. */
     vape: `<svg viewBox="0 0 44 44" aria-hidden="true">${pf('pcB')}
       <g transform="rotate(10 22 22)"><path d="M17.5 3.5 h9 a1.6 1.6 0 0 1 1.6 1.8 l-.9 6.2 h-10.4 l-.9 -6.2 a1.6 1.6 0 0 1 1.6 -1.8 z" fill="#1E1A3A" filter="url(#pcB)"/>
       <g filter="url(#pcB)"><rect x="12.5" y="10" width="19" height="31" rx="7" fill="#FF7155"/>
         <path d="M25.5 10.4 a7 7 0 0 1 6 6.9 v16.6 a7 7 0 0 1 -7 7 h-2 c3.6 -1.4 5 -4.4 5 -7.6 v-16.2 c0 -3 -.7 -5.2 -2 -6.7 z" fill="#E85A3E"/>
-        <path d="M15.6 19 c0 -3 1 -5 2.8 -6" fill="none" stroke="#FFB09C" stroke-width="1.8" stroke-linecap="round"/>
         <rect x="16.5" y="16" width="8" height="13.5" rx="4" fill="#FFF8EE"/><path d="M16.5 23 c2.2 -1.1 5 .9 8 -.2 v2.7 a4 4 0 0 1 -4 4 a4 4 0 0 1 -4 -4 z" fill="#BFD7FF"/>
         <circle cx="20.5" cy="35" r="2.2" fill="#FFC93C"/></g></g></svg>`,
     /* Pouch tin, seen from above: a green lid cut over a darker rim (the crescent shade), one ring, and a cream pouch laid on top. */
     pouch: `<svg viewBox="0 0 44 44" aria-hidden="true">${pf('pcD')}
       <g filter="url(#pcD)"><circle cx="19.5" cy="20" r="15" fill="#2E9A69"/><circle cx="18.2" cy="18.8" r="13.6" fill="#3FB37F"/>
-        <circle cx="18.2" cy="18.8" r="8.6" fill="none" stroke="#9FE3BC" stroke-width="2.2"/>
-        <path d="M8.4 15 c1.2 -3.6 4 -6.2 7.6 -7" fill="none" stroke="#C9F0D8" stroke-width="1.8" stroke-linecap="round"/></g>
+        <circle cx="18.2" cy="18.8" r="8.6" fill="none" stroke="#9FE3BC" stroke-width="2.2"/></g>
       <g transform="rotate(-16 31 33)" filter="url(#pcD)"><clipPath id="pcDc"><rect x="22.5" y="27" width="17" height="11" rx="5.5"/></clipPath>
         <g clip-path="url(#pcDc)"><rect x="22.5" y="27" width="17" height="11" fill="#FFFDF8"/><rect x="22.5" y="34.2" width="17" height="4" fill="#EFE1CF"/></g></g></svg>`
   };
   document.querySelectorAll('[data-art]').forEach(e => e.innerHTML = ART[e.dataset.art]);
-  document.getElementById('xn').innerHTML = DX.char('xero', { mood: 'hello', size: 88 });
+  document.getElementById('hz').innerHTML = horizon({ art: DX.char('xero', { mood: 'hello', size: 72 }) });
   const bar = document.getElementById('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '0%'); void bar.offsetWidth; bar.style.transition = ''; });
   DX.after(250, () => bar.style.setProperty('--p', '9.1%'));

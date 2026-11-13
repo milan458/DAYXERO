@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>028 Session slider</title>
-<meta name="motion" content="The bar shows card 2 a third done with Card 2 · Step 1 of 3 beside it; the mint tag, question and helper arrive (600ms, 90ms stagger). The reading arrives as one unit: the big number with Xero beside it, the calm-blue to coral track right under it and its 11 short ticks (fade 500ms). The thumb glides from Calm to the middle (1100ms settle, from 400ms) while the number counts 0 to 5 in step, with a soft tick haptic on each stop, and Xero's face follows the thumb as it passes (calm at 0 to 3, plain at 4, a little tense at 5 and 6, tense from 7: a 150ms cross-fade per change). His line arrives under the slider last (600ms), its pointer under the thumb; dragging moves the pointer with the thumb and rewrites the line at each whole number.">
+<meta name="motion" content="The bar shows card 2 a third done with Card 2 · Step 1 of 3 beside it; the mint tag, question and helper arrive (600ms, 90ms stagger). The reading arrives as one unit: the big number, the calm-blue to coral track right under it with its 11 short ticks, and Xero standing below (fade 500ms). The thumb glides from Calm to the middle (1100ms settle, from 400ms) while the number counts 0 to 5 in step, with a soft tick haptic on each stop, and Xero's face follows the thumb as it passes (calm at 0 to 3, plain at 4, a little tense at 5 and 6, tense from 7: a 150ms cross-fade per change). His line arrives last in a bubble beside him, its tail pointing to him (600ms); dragging rewrites the line at each whole number.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -14,14 +14,13 @@
 .tag svg{width:16px;height:16px}
 /* dark: a deep mint pill with a mint label, never pale mint glaring on navy */
 [data-theme="dark"] .tag.k-try{background:#1A4434;color:#9FE3BC;box-shadow:inset 0 0 0 1px rgba(159,227,188,.22)}
-/* the reading: number and Xero's face side by side, the track straight under them */
-.unit{position:absolute;top:290px;left:var(--gutter);right:var(--gutter)}
-.read{display:flex;align-items:flex-end;justify-content:center;gap:16px;height:158px}
+/* the reading: the number sits over the track; Xero stands under it and says his line beside him */
+.unit{position:absolute;top:276px;left:var(--gutter);right:var(--gutter)}
+.read{display:flex;align-items:flex-end;justify-content:center;height:112px}
 .read .n{display:flex;align-items:baseline;gap:4px}
-.read .num{font-size:160px;line-height:.86;letter-spacing:-3px;display:block}
-.read .of{font:700 28px/1 var(--display);color:var(--muted);letter-spacing:-.3px}
-.read .xf{width:136px;height:136px;flex:none;margin-bottom:-8px}
-.sl{margin-top:46px}
+.read .num{font-size:128px;line-height:.86;letter-spacing:-2.6px;display:block}
+.read .of{font:700 26px/1 var(--display);color:var(--muted);letter-spacing:-.3px}
+.sl{margin-top:30px}
 .track{position:relative;height:12px;border-radius:99px;margin:0 6px;background:linear-gradient(90deg,#8EC1FF,#C9A9C8 50%,#FF7A55)}
 [data-theme="dark"] .track{background:linear-gradient(90deg,#6FA6EE,#B48FA9 50%,#F0704E)}
 .track .thumb{position:absolute;z-index:1;top:50%;left:var(--v);width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:99px;background:#fff;
@@ -40,11 +39,13 @@
 .ends span:last-child{color:#C2441F}
 [data-theme="dark"] .ends span:first-child{color:#9CCBFF}
 [data-theme="dark"] .ends span:last-child{color:#FF9A7A}
-/* Xero's line sits under the slider, its pointer under the thumb */
-.say{position:relative;margin:36px auto 0;width:max-content;max-width:320px;background:var(--card);border-radius:20px;padding:14px 20px;text-align:center;font:500 16px/1.42 var(--body);box-shadow:0 2px 10px rgba(30,26,58,.07)}
+/* Xero and his line: he stands left, the bubble sits beside him with its tail pointing at him */
+.talk{display:flex;align-items:center;margin-top:26px}
+.talk .xf{width:150px;height:150px;flex:none;margin:0 -20px 0 -14px}
+.say{position:relative;flex:1;min-width:0;margin:0 0 18px;background:var(--card);border-radius:20px;padding:14px 16px;font:500 16px/1.42 var(--body);box-shadow:0 2px 10px rgba(30,26,58,.07)}
 [data-theme="dark"] .say{box-shadow:inset 0 0 0 1px var(--line)}
-.say::before{content:"";position:absolute;left:50%;top:-7px;width:14px;height:14px;margin-left:-7px;background:var(--card);border-radius:3px 0 0 0;transform:rotate(45deg)}
-[data-theme="dark"] .say::before{box-shadow:inset 1px 1px 0 var(--line)}
+.say::before{content:"";position:absolute;left:-6px;top:50%;width:14px;height:14px;margin-top:-7px;background:var(--card);border-radius:0 0 0 3px;transform:rotate(45deg)}
+[data-theme="dark"] .say::before{box-shadow:inset 1px -1px 0 var(--line)}
 </style>
 </head><body>
 <div class="screen" data-ground="table">
@@ -61,14 +62,13 @@
   <div class="unit" data-a style="--i:3">
     <div class="read">
       <div class="n"><span class="num" data-count="5" data-delay="400" data-dur="1100" id="num">5</span><span class="of">/10</span></div>
-      <div class="xf" id="xero"></div>
     </div>
     <div class="sl">
       <div class="track" id="track" style="--v:50%"><i class="thumb" role="slider" aria-valuemin="0" aria-valuemax="10" aria-valuenow="5" aria-label="Tension"></i></div>
       <div class="ticks" id="ticks"></div>
       <div class="ends"><span>Calm</span><span>Very tense</span></div>
     </div>
-    <p class="say" data-a style="--i:6">An honest 5. Let's see what<br>five minutes of breathing does.</p>
+    <div class="talk"><div class="xf" id="xero"></div><p class="say" data-a style="--i:6">An honest 5. Let's see what five minutes of breathing does.</p></div>
   </div>
   <div class="dock"><button class="btn" data-a style="--i:9">That's about right</button></div>
 </div>
