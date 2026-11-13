@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>070 Apple Health</title>
-<meta name="motion" content="The connected card arrives with the DayXero and Health tiles, the dotted link and its check; the Health heart gives one soft bump at 900ms; the write and read groups follow on the stagger. Flipping a toggle opens the system Health permission sheet.">
+<meta name="motion" content="The connected card arrives with the DayXero tile and the neutral Works with Apple Health badge; the dotted link draws between them and its check pops (900ms, light success haptic); the write and read groups follow on the stagger. Flipping a toggle opens the system Health permission sheet.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -20,26 +20,27 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
 .link-card { margin-top: 16px; padding: 18px 18px 16px; display: grid; justify-items: center; gap: 4px; text-align: center; }
-.apps { display: flex; align-items: center; gap: 0; margin-bottom: 10px; }
-.app { width: 76px; height: 76px; border-radius: 22px; display: grid; place-items: center; overflow: hidden; box-shadow: 0 6px 16px rgba(20,20,40,.14), inset 0 0 0 1px rgba(0,0,0,.06); flex: none; }
-.app.dx { background: #FFD9B8; }
-.app.hk { background: #FFFFFF; }
-.wire { width: 64px; position: relative; height: 24px; display: grid; place-items: center; }
+.apps { display: flex; align-items: center; gap: 0; margin-bottom: 12px; }
+.app { width: 64px; height: 64px; border-radius: 18px; display: grid; place-items: center; overflow: hidden; box-shadow: 0 6px 16px rgba(20,20,40,.14), inset 0 0 0 1px rgba(0,0,0,.06); flex: none; background: #FFD9B8; }
+.wire { width: 48px; position: relative; height: 24px; display: grid; place-items: center; }
 .wire::before { content: ""; position: absolute; left: 6px; right: 6px; top: 50%; border-top: 2.5px dotted var(--muted); }
 .wire .ok { position: relative; width: 24px; height: 24px; border-radius: 99px; background: var(--tick); color: #fff; display: grid; place-items: center; }
 .wire .ok svg { width: 13px; height: 13px; }
-.beat { transform-origin: center; }
-.play .beat { animation: dx-bump 520ms var(--spring) both; animation-delay: 900ms; }
-.status { display: inline-flex; align-items: center; gap: 6px; color: var(--tick); font-weight: 700; }
-
+.wh { display: inline-flex; align-items: center; gap: 10px; height: 52px; padding: 0 16px 0 12px; border-radius: 12px; background: var(--fg); color: var(--g); text-align: left; flex: none; }
+.wh .hi { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--g) 55%, transparent); }
+.wh .hi svg { width: 18px; height: 18px; }
+.wh .w { display: grid; gap: 2px; }
+.wh .w small { font: 600 12px/1 var(--body); opacity: .8; }
+.wh .w b { font: 700 16px/1 var(--body); letter-spacing: -.2px; }
+.list > .row { min-height: 64px; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
 <div class="nav"><button class="icon-btn" aria-label="Back" data-ic="back"></button></div>
 <div class="scroll"><div class="pad">
-  <div class="hd"><h1 class="t-large" data-a style="--i:0">Apple Health</h1><p class="t-foot muted" data-a style="--i:1">Keep your quit next to the rest of your health. You choose what is shared.</p></div>
+  <div class="hd"><h1 class="t-large" data-a style="--i:0">Apple Health</h1><p class="t-foot muted" data-a style="--i:1">You choose what DayXero shares with Health.</p></div>
   <div class="card link-card" data-a style="--i:2">
-    <div class="apps"><span class="app dx" id="dx070"></span><span class="wire"><span class="ok" data-ic="check" data-s="13" data-w="3.2"></span></span><span class="app hk"><svg width="54" height="54" viewBox="0 0 24 24" class="beat"><defs><linearGradient id="hk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF5E7E"/><stop offset="1" stop-color="#FF2D55"/></linearGradient></defs><path d="M12 20.6C6.4 16.4 2.8 13.1 2.8 8.9 2.8 6.1 5 4 7.6 4c1.8 0 3.4 1 4.4 2.5C13 5 14.6 4 16.4 4 19 4 21.2 6.1 21.2 8.9c0 4.2-3.6 7.5-9.2 11.7z" fill="url(#hk)"/></svg></span></div>
+    <div class="apps"><span class="app" id="dx070"></span><span class="wire"><span class="ok" data-ic="check" data-s="13" data-w="3.2"></span></span><span class="wh" role="img" aria-label="Works with Apple Health"><span class="hi" data-ic="heart" data-s="18" data-w="2.2"></span><span class="w"><small>Works with</small><b>Apple Health</b></span></span></div>
     <div class="t-head">Connected to Health</div>
     <div class="t-foot muted">Since Fri, Oct 30</div>
   </div>
@@ -49,15 +50,15 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
   </div>
   <p class="t-foot sec" data-a style="--i:5">DayXero reads</p>
   <div class="list" data-a style="--i:6">
-    <div class="row " ><span class="ico-tile s" data-ic="heart"></span><div class="grow"><div class="t-body rt">Resting heart rate</div><div class="t-foot muted">To show your body recovering</div></div><span class="toggle on"></span></div>
+    <div class="row " ><span class="ico-tile s" data-ic="heart"></span><div class="grow"><div class="t-body rt">Resting heart rate</div><div class="t-foot muted">To chart your recovery</div></div><span class="toggle on"></span></div>
     <div class="row " ><span class="ico-tile s" data-ic="moon"></span><div class="grow"><div class="t-body rt">Sleep</div><div class="t-foot muted">Sleep shifts in week one</div></div><span class="toggle on"></span></div>
-    <div class="row " ><span class="ico-tile s" data-ic="people"></span><div class="grow"><div class="t-body rt">Steps</div><div class="t-foot muted">Not shared</div></div><span class="toggle"></span></div>
+    <div class="row " ><span class="ico-tile s" data-ic="people"></span><div class="grow"><div class="t-body rt">Steps</div><div class="t-foot muted">Walks that ride out a craving</div></div><span class="toggle"></span></div>
   </div>
   <p class="t-foot muted" data-a style="--i:7;padding:14px 4px 0">Health asks you first, and DayXero never sees what you turn off.</p>
 </div></div>
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
-document.getElementById('dx070').innerHTML = DX.char('xero', { mood: 'hello', size: 76 });
+document.getElementById('dx070').innerHTML = DX.char('xero', { mood: 'hello', size: 64 });
 </script>
 </body></html>

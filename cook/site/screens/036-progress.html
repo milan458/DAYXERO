@@ -10,7 +10,7 @@
   .pill-btn svg { width: 18px; height: 18px; }
   .top .icon-btn { width: 40px; height: 40px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
   .sky { position: relative; margin-top: 14px; height: 172px; border-radius: 26px; overflow: hidden; color: var(--ink); }
-  .sky .scene { position: absolute; left: 0; top: var(--st, -148px); }
+  .sky .scene { position: absolute; left: var(--sl, 0px); top: var(--st, -148px); }
   .sky .scene svg { display: block; }
   .sky .big { position: absolute; left: 20px; top: 16px; display: flex; align-items: baseline; gap: 8px; }
   .sky .big .num { font-size: 64px; line-height: 1; letter-spacing: -2.5px; }
@@ -87,7 +87,7 @@
   document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20 })));
   /* The sky sits behind Xero on the right so no text crosses the sun; dark mode is the kit's pre-dawn sky, framed the same way. */
   const sky = document.getElementById('sky');
-  if (DX.theme === 'dark') { sky.style.setProperty('--st', '-50px'); /* soften the pre-dawn halo at this scale into a glow */
+  if (DX.theme === 'dark') { sky.style.setProperty('--st', '-50px'); sky.style.setProperty('--sl', '-28px'); /* soften the pre-dawn halo at this scale into a glow */
     sky.innerHTML = DX.char('horizon', { scene: 'dawn', w: 560, h: 250, clarity: 40 }).replace('<defs>', '<defs><radialGradient id="pgHalo"><stop offset=".25" stop-color="#F2A65A" stop-opacity=".34"/><stop offset="1" stop-color="#F2A65A" stop-opacity="0"/></radialGradient>').replace('fill="#F2A65A" opacity=".22"', 'fill="url(#pgHalo)"'); }
   else sky.innerHTML = DX.char('horizon', { scene: 'dawn', w: 560, h: 420, clarity: 40 });
   document.getElementById('days').innerHTML = ['S', 'S', 'M', 'T', 'W', 'T', 'F'].map((d, i) =>
