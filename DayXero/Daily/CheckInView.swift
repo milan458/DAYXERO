@@ -446,7 +446,7 @@ struct DayEndSettings: View {
             Button("Done") { dismiss() }.buttonStyle(.dx(.primary, on: .reading))
             Spacer(minLength: 0)
         }
-        .padding(.horizontal, DX.Space.m)
+        .padding(.horizontal, DX.Layout.gutter)
         .dxReadableColumn()
         .padding(.bottom, DX.Space.xs)
         .background(Read4.background.ignoresSafeArea())

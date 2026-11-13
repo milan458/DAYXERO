@@ -47,7 +47,7 @@ struct CalmToolsView: View {
                 HelpLine(compact: true, ground: ground).padding(.top, DX.Space.s)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal, DX.Space.m)
+            .padding(.horizontal, DX.Layout.gutter)
             .dxReadableColumn()
             .padding(.bottom, DX.Space.l)
         }
@@ -221,7 +221,7 @@ struct CalmToolPlayer: View {
         VStack(spacing: 0) {
             if finished { done } else { running }
         }
-        .padding(.horizontal, DX.Space.m)
+        .padding(.horizontal, DX.Layout.gutter)
         .dxReadableColumn()
         .padding(.bottom, DX.Space.xs)
         .background(Read4.background.ignoresSafeArea())
@@ -543,7 +543,7 @@ struct RewardDefusionView: View {
             }
             .scrollBounceBehavior(.basedOnSize)
         }
-        .padding(.horizontal, DX.Space.m)
+        .padding(.horizontal, DX.Layout.gutter)
         .dxReadableColumn()
         .padding(.bottom, DX.Space.xs)
         .background(Read4.background.ignoresSafeArea())

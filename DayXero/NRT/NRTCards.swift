@@ -75,7 +75,7 @@ struct NRTCard: View {
                     ChewAndParkGuide()
                     LabelNotice()
                 }
-                .padding(.horizontal, DX.Space.m)
+                .padding(.horizontal, DX.Layout.gutter)
                 .dxReadableColumn()
             }
             .background(Read4.background.ignoresSafeArea())
@@ -267,7 +267,7 @@ struct TaperSetupView: View {
                 .buttonStyle(.dx(.quiet, on: .reading))
             }
         }
-        .padding(.horizontal, DX.Space.m)
+        .padding(.horizontal, DX.Layout.gutter)
         .dxReadableColumn()
         .padding(.bottom, DX.Space.xs)
         .background(Read4.background.ignoresSafeArea())

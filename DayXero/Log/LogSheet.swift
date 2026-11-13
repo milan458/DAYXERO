@@ -128,7 +128,7 @@ struct LogSheet: View {
                         .padding(.top, DX.Space.xs)
                 }
             }
-            .padding(DX.Space.m)
+            .padding(.vertical, DX.Space.m).padding(.horizontal, DX.Layout.gutter)
         }
         .scrollBounceBehavior(.basedOnSize)
         .background(Read4.background.ignoresSafeArea())
@@ -188,11 +188,12 @@ private struct LogRow: View {
                 Text(detail).v4Text(.subtitle)
             }
             Spacer(minLength: DX.Space.xs)
-            Image(systemName: "plus")
-                .font(.system(size: 16, weight: .bold))
-                .foregroundStyle(Read4.onInk)
-                .frame(width: 40, height: 40)
-                .background(Read4.ink, in: Circle())
+            // v5 (041): a quiet card-2 disc with the ink plus.
+            DXIcon(.plus, size: 18, weight: 2.4)
+                .foregroundStyle(Read4.ink)
+                .frame(width: 44, height: 44)
+                .background(Read4.surface, in: Circle())
+                .overlay(Circle().strokeBorder(Read4.hairline))
         }
         .padding(.vertical, DX.Space.s)
         .padding(.horizontal, 14)
@@ -224,7 +225,7 @@ struct CravingLogForm: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: DX.Space.s) {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(editing == nil ? LocalizedStringKey("A craving") : LocalizedStringKey("Add details")).v4Text(.title)
+                        Text(editing == nil ? LocalizedStringKey("A craving") : LocalizedStringKey("Add details")).dxType(.title).foregroundStyle(Read4.ink)
                         // Adding details shows when the use was logged, not when this form opened.
                         Text(verbatim: (editing?.timestamp ?? openedAt).formatted(.dateTime.weekday(.abbreviated).day().month().hour().minute()))
                             .v4Text(.subtitle)
@@ -254,7 +255,7 @@ struct CravingLogForm: View {
                         }
                     }
                 }
-                .padding(DX.Space.m)
+                .padding(.vertical, DX.Space.m).padding(.horizontal, DX.Layout.gutter)
             }
             .scrollBounceBehavior(.basedOnSize)
             VStack(spacing: DX.Space.xxs) {
@@ -263,7 +264,7 @@ struct CravingLogForm: View {
                     Button("Ride it out with SOS instead", action: onSOS).buttonStyle(.dx(.quiet, on: .reading))
                 }
             }
-            .padding(.horizontal, DX.Space.m)
+            .padding(.horizontal, DX.Layout.gutter)
             .dxReadableColumn()
             .padding(.bottom, DX.Space.xs)
         }
@@ -280,10 +281,11 @@ struct CravingLogForm: View {
 
     private func section(_ title: LocalizedStringKey, optional: Bool = false, @ViewBuilder content: () -> some View) -> some View {
         VStack(alignment: .leading, spacing: DX.Space.xs) {
+            // v5 (042): section labels are 19 pt headlines.
             if optional {
-                Text("\(Text(title)) \(Text("· optional").foregroundStyle(Read4.faint))").v4Text(.micro)
+                Text("\(Text(title)) \(Text("· optional").foregroundStyle(Read4.muted).font(DX.TypeStep.footnote.font()))").dxType(.headline).foregroundStyle(Read4.ink)
             } else {
-                Text(title).v4Text(.micro)
+                Text(title).dxType(.headline).foregroundStyle(Read4.ink)
             }
             content()
         }

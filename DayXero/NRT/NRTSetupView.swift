@@ -85,7 +85,7 @@ struct NRTSetupView: View {
                 case .reminders: reminders
                 }
             }
-            .padding(.horizontal, DX.Space.m)
+            .padding(.horizontal, DX.Layout.gutter)
             .dxReadableColumn()
             .padding(.bottom, DX.Space.xs)
             .background(Read4.background.ignoresSafeArea())
@@ -555,7 +555,7 @@ struct StepEditor: View {
                 .buttonStyle(.dx(.quiet, on: .reading))
             }
         }
-        .padding(.horizontal, DX.Space.m)
+        .padding(.horizontal, DX.Layout.gutter)
         .dxReadableColumn()
         .padding(.bottom, DX.Space.xs)
         .background(Read4.background.ignoresSafeArea())

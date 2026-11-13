@@ -56,17 +56,18 @@ struct PledgeView: View {
                     .opacity(risen ? 1 : 0)
                     .accessibilityHidden(true)
             }
-            .overlay(alignment: .topTrailing) {
+            .overlay(alignment: .topLeading) {
+                // v5: the leading control, top-left.
                 Button(action: onDone) {
-                    Image(systemName: "xmark").font(.system(size: 18, weight: .bold))
+                    DXIcon(.close, size: 20, weight: 2.4)
                         .foregroundStyle(DX.Fill.navy)
                         .frame(width: 44, height: 44)
                         .background(DX.Fill.cream.opacity(0.85), in: Circle())
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(.dxPress)
                 .accessibilityLabel(Text("Close"))
-                .padding(.trailing, 10)
-                .padding(.top, 50)
+                .padding(.leading, 16)
+                .padding(.top, 54)
             }
             .ignoresSafeArea(edges: .top)
             ScrollView {
@@ -98,16 +99,24 @@ struct PledgeView: View {
                         .dxArrive(6)
                     }
                     if let reason = todaysReason(dayNumber: day) {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("BECAUSE").dxType(.caption).foregroundStyle(ground.muted)
-                            Text(verbatim: reason.text)
-                                .dxFont(19, weight: 700, style: .headline)
-                                .foregroundStyle(ground.ink)
-                                .fixedSize(horizontal: false, vertical: true)
+                        // v5 (053): a heart tile, "Because" and the reason, on the cream card.
+                        HStack(spacing: 14) {
+                            DXIcon(.heart, size: 22)
+                                .foregroundStyle(Color(hex: 0xFF7A55))
+                                .frame(width: 48, height: 48)
+                                .background(ground.card2, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Because").dxType(.footnote).foregroundStyle(ground.muted)
+                                Text(verbatim: reason.text)
+                                    .dxType(.headline)
+                                    .foregroundStyle(ground.ink)
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal, 16).padding(.vertical, 14)
-                        .background(DX.Fill.onColourCard(for: ground), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+                        .background(Color(light: 0xFFFCF7, dark: 0x182034), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+                        .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(ground.line, lineWidth: 1))
                         .accessibilityElement(children: .combine)
                         .padding(.top, 6)
                         .dxArrive(7)
