@@ -36,10 +36,10 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
 /* ---------- grounds (dark) ---------- */
 /* Dark mode, "midnight": low-saturation blue-black instead of indigo/plum (user: the dark navy purple felt too bright). */
 [data-theme="dark"] .screen { --g: #0E1322; --fg: var(--cream); --muted: #B3BACC; --card: #182034; --card-2: #212A41; --line: rgba(255,255,255,.12);
-  --btn: var(--cream); --btn-fg: var(--ink); --sel: var(--cream); --sel-fg: var(--ink); --tick: var(--done-on-dark); --mark: #FF9A7A; --track: rgba(255,255,255,.14); --dark: 1; }
-[data-theme="dark"] .screen[data-ground="apricot"] { --g: #0E1322; --muted: #B3BACC; --card: #182034; --card-2: #212A41; --btn: var(--cream); --btn-fg: #0E1322; --sel: var(--cream); --sel-fg: #0E1322; --mark: #FFC38A; }
+  --btn: var(--cream); --btn-fg: var(--ink); --sel: var(--cream); --sel-fg: var(--ink); --tick: var(--done-on-dark); --mark: #FF8A65; --track: rgba(255,255,255,.14); --dark: 1; }
+[data-theme="dark"] .screen[data-ground="apricot"] { --g: #0E1322; --muted: #B3BACC; --card: #182034; --card-2: #212A41; --btn: var(--cream); --btn-fg: #0E1322; --sel: var(--cream); --sel-fg: #0E1322; --mark: #FF8A65; }
 [data-theme="dark"] .screen[data-ground="mint"]    { --g: #0E1322; --muted: #B3BACC; --card: #182034; --card-2: #212A41; --btn: var(--cream); --btn-fg: #0E1322; --sel: var(--cream); --sel-fg: #0E1322; --mark: #9FE3BC; }
-[data-theme="dark"] .screen[data-ground="sun"]     { --g: #0E1322; --muted: #B3BACC; --card: #182034; --card-2: #212A41; --btn: var(--cream); --btn-fg: #0E1322; --sel: var(--cream); --sel-fg: #0E1322; --mark: var(--sun); }
+[data-theme="dark"] .screen[data-ground="sun"]     { --g: #0E1322; --muted: #B3BACC; --card: #182034; --card-2: #212A41; --btn: var(--cream); --btn-fg: #0E1322; --sel: var(--cream); --sel-fg: #0E1322; --mark: #FF8A65; }
 [data-theme="dark"] .screen[data-ground="ocean"]   { --g: #0B1A4A; --muted: #B9C9FF; --card: #152A6A; --card-2: #1B3378; --btn: var(--cream); --btn-fg: #0B1A4A; --sel: var(--cream); --sel-fg: #0B1A4A; }
 [data-theme="dark"] .screen[data-ground="violet"], [data-theme="dark"] .screen[data-ground="night"] { --g: #0A1326; --muted: #A3ADC8; --card: #121D35; --card-2: #182540; --btn: #EADDC0; --btn-fg: #0A1326; --sel: #EADDC0; --sel-fg: #0A1326; }
 [data-theme="dark"] .screen[data-ground="table"]   { --g: #0E1322; --card: #182034; --card-2: #212A41; }
