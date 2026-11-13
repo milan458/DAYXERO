@@ -5,7 +5,7 @@
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   .sky { position: absolute; left: 0; right: 0; top: 0; height: 430px; }
-  .knoll { position: absolute; left: 0; top: 280px; width: 390px; height: 110px; --k1: #22345C; --k2: #2A3E6B; --rim: rgba(246,231,193,.28); }
+  .knoll { position: absolute; left: 0; top: 294px; width: 390px; height: 110px; --k1: #22345C; --k2: #2A3E6B; --rim: rgba(246,231,193,.28); }
   [data-theme="dark"] .knoll { --k1: #18264A; --k2: #1F2F57; --rim: rgba(246,231,193,.2); }
   .knoll svg { display: block; filter: drop-shadow(0 -3px 6px rgba(4,8,20,.35)); }
   .play .knoll { animation: knoll 900ms var(--settle) 100ms both; }
@@ -15,12 +15,12 @@
   .knoll .pool { transform-box: fill-box; transform-origin: center; }
   .play .knoll .pool { animation: pool 2.6s ease-in-out infinite; }
   @keyframes pool { 50% { opacity: .72; transform: scale(.94); } }
-  .greet { position: absolute; z-index: 2; left: 0; right: 0; top: 74px; padding: 0 var(--gutter); }
+  .greet { position: absolute; z-index: 2; left: 0; right: 0; top: 80px; padding: 0 var(--gutter); }
   .greet .sub { margin-top: 8px; color: #E4E6F0; }
   [data-theme="dark"] .greet .sub { color: var(--muted); }
   .greet .sub b { color: var(--fg); font-weight: 700; }
-  .glim { position: absolute; left: 58px; top: 150px; }
-  .content { position: absolute; left: 0; right: 0; top: 358px; padding: 0 var(--gutter); }
+  .glim { position: absolute; left: 58px; top: 164px; }
+  .content { position: absolute; left: 0; right: 0; top: 376px; padding: 0 var(--gutter); }
   .ci { padding: 18px 18px 20px; display: grid; gap: 14px; }
   .ci .t-foot { color: var(--muted); }
   .ci .who { color: #D3D9EA; font-weight: 600; }

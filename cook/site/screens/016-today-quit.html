@@ -19,6 +19,8 @@
   .stage .medal .shine { border-radius: 99px; filter: drop-shadow(0 8px 14px rgba(150,50,20,.28)); }
   [data-theme="dark"] .stage .medal .shine { filter: drop-shadow(0 8px 16px rgba(0,0,0,.45)); }
   /* Xero's own ground: a paper-cut knoll in the page colour, standing clear of the badge */
+  .knoll { --kn: var(--g); --kn-rim: rgba(255,248,238,.55); }
+  [data-theme="dark"] .knoll { --kn: #1C2744; --kn-rim: rgba(246,231,193,.22); }
   .knoll { position: absolute; left: 226px; top: 336px; width: 144px; height: 68px; }
   .knoll svg { display: block; filter: drop-shadow(0 -3px 6px rgba(120,40,10,.22)); }
   [data-theme="dark"] .knoll svg { filter: drop-shadow(0 -3px 8px rgba(0,0,0,.5)); }
@@ -61,8 +63,8 @@
       <div class="medal" data-stamp style="--d:600ms"><div class="shine" id="b7" style="--d:1200ms"></div></div>
     </div>
     <div class="knoll" aria-hidden="true"><svg width="144" height="68" viewBox="0 0 144 68">
-      <path d="M0 68 C6 34 36 12 72 12 C108 12 138 34 144 68Z" fill="var(--g)"/>
-      <path d="M4 52 C14 28 40 14 72 14 C104 14 130 28 140 52" fill="none" stroke="#FFF8EE" stroke-opacity=".55" stroke-width="2" stroke-linecap="round"/>
+      <path d="M0 68 C6 34 36 12 72 12 C108 12 138 34 144 68Z" fill="var(--kn)"/>
+      <path d="M4 52 C14 28 40 14 72 14 C104 14 130 28 140 52" fill="none" stroke="var(--kn-rim)" stroke-width="2" stroke-linecap="round"/>
     </svg></div>
     <div class="xero" data-settle style="--d:400ms"><div class="bob" id="xero"></div></div>
     <div class="pill" data-a style="--i:1;--d:500ms"><span>Fri, Nov 13</span></div>

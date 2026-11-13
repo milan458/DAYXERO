@@ -5,7 +5,7 @@
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   .screen[data-ground="mint"] { --g: #FBF6EC; --road: #CBEBD8; --road-edge: rgba(36,73,58,.16); --done-road: #FFAE73; --card-2: #EEF5EC;
-    --hb: #B3DFC6; --hf: #8FCDAA; --hrim: rgba(255,255,255,.6); --hsh: rgba(30,70,50,.22); --glow: 255,186,96; --glow-a: .62; }
+    --hb: #B3DFC6; --hf: #8FCDAA; --hrim: rgba(255,255,255,.6); --hsh: rgba(30,70,50,.22); --glow: 255,172,80; --glow-a: .66; }
   [data-theme="dark"] .screen[data-ground="mint"] { --road: #233D4C; --road-edge: rgba(0,0,0,.45); --done-road: #C27A4E; --card-2: #212A41;
     --hb: #1E3646; --hf: #172B3A; --hrim: rgba(200,225,235,.14); --hsh: rgba(0,0,0,.5); --glow: 255,176,104; --glow-a: .3; }
   .tabbar a { color: color-mix(in srgb, var(--fg) 72%, transparent); }
@@ -49,7 +49,7 @@
 
   /* the horizon: a warm glow where Day Xero rises, two paper-cut hills */
   .glow { position: absolute; left: 0; right: 0; top: 430px; height: 300px; pointer-events: none;
-    background: radial-gradient(190px 150px at 196px 174px, rgba(var(--glow), var(--glow-a)), rgba(var(--glow), calc(var(--glow-a) * .35)) 55%, rgba(var(--glow), 0) 100%),
+    background: radial-gradient(210px 160px at 196px 174px, rgba(var(--glow), var(--glow-a)), rgba(var(--glow), calc(var(--glow-a) * .35)) 55%, rgba(var(--glow), 0) 100%),
                 linear-gradient(180deg, rgba(var(--glow), 0) 34%, rgba(var(--glow), calc(var(--glow-a) * .45)) 58%, rgba(var(--glow), 0) 60%); }
   .play .glow { animation: dx-fade 1200ms var(--ease) 1800ms both; }
   .hill { position: absolute; left: 0; top: 0; pointer-events: none; }

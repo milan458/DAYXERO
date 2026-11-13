@@ -1,16 +1,15 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>025 Session card played</title>
-<meta name="motion" content="The apricot Listen card lifts from below and flips over (rotateY, 1100ms settle) to its back: a paper sun with short rounded rays, a small Xero spark and a cream band reading Listen · 6 min, landing with a slight tilt; the ink check pops and draws in the sun at 1.1s (success haptic) while the spark twinkles once (scale 0 to 1, spring). The first step segment fills from the playhead to full and the counter turns from 1 of 5 to 1 of 5 done at 1.3s. Title, line and the Up next row arrive (600ms, 90ms stagger); the rating and the button arrive last in the dock. Tapping a rating chip selects it (selection haptic).">
+<meta name="motion" content="The apricot Listen card lifts from below and flips over (rotateY, 1100ms settle) to its back: a crisp paper sun with twelve short rays and a cream band reading Listen · 6 min, landing with a slight tilt; at 1.1s the rays fan out from the disc (500ms settle, 30ms apart) and an ink check draws across the sun (420ms, success haptic). The first card's segment fills from the playhead to full at 1.3s. Title and line arrive (600ms, 90ms stagger), then How was it? and its three chips; Up next (with its small paper-cut spot) and the button arrive last in the dock. Tapping a rating chip selects it with the kit tint and outline (selection haptic).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
 /* one colour per card type (shared across the session); dark deepens the pastels a step */
 .k-listen{--face:#FFC38A}.k-try{--face:#9FE3BC}
 [data-theme="dark"] .k-listen{--face:#F3B47E}[data-theme="dark"] .k-try{--face:#8FD3AD}
-.nav .side{flex:none;text-align:right}
 .steps > i.now::after{width:var(--sub,45%);transition:width .5s var(--settle)}
-.stage{position:absolute;top:122px;left:0;right:0;height:300px;perspective:900px}
-.flip{position:absolute;left:50%;top:10px;width:196px;height:268px;margin-left:-98px;transform-style:preserve-3d;transform:rotate(4deg) rotateY(180deg)}
+.stage{position:absolute;top:112px;left:0;right:0;height:290px;perspective:900px}
+.flip{position:absolute;left:50%;top:10px;width:196px;height:262px;margin-left:-98px;transform-style:preserve-3d;transform:rotate(4deg) rotateY(180deg)}
 .play .flip{animation:fly 1100ms var(--settle) both 150ms}
 @keyframes fly{0%{transform:translateY(320px) scale(1.2) rotate(0deg) rotateY(0deg)}55%{transform:translateY(40px) scale(1.08) rotate(2deg) rotateY(110deg)}100%{transform:rotate(4deg) rotateY(180deg)}}
 .side-f{position:absolute;inset:0;border-radius:24px;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--face);color:#1E1A3A;padding:18px;box-shadow:0 18px 34px rgba(60,40,20,.18)}
@@ -18,40 +17,37 @@
 .side-f .ic{width:36px;height:36px;border-radius:99px;background:rgba(30,26,58,.1);display:grid;place-items:center}
 .side-f .ic svg{width:20px;height:20px}
 .side-f b{display:block;margin-top:10px;font:700 17px/1.1 var(--display)}
-/* the back: this card's own apricot, a paper sun with short rounded rays, a small Xero spark, and a cream band that names the card */
+/* the back: this card's own apricot, a crisp paper sun with rays, an ink check drawn on the sun, a cream band that names the card */
 .side-f.back{transform:rotateY(180deg);padding:0}
 .side-f.back svg.sunart{position:absolute;left:0;top:0}
-.side-f.back .chk{position:absolute;left:50%;top:76px;margin-left:-38px}
 .side-f.back .band{position:absolute;left:0;right:0;bottom:0;height:50px;background:#FFF8EE;display:flex;align-items:center;justify-content:center;gap:8px;font:600 14px/1 var(--body);color:#1E1A3A}
 .side-f.back .band svg{width:17px;height:17px}
-.spark{transform-box:fill-box;transform-origin:50% 50%}
-.play .spark{animation:tw 700ms var(--spring) both 1350ms}
-@keyframes tw{from{transform:scale(0) rotate(-30deg)}to{transform:none}}
-.mid{position:absolute;top:436px;left:0;right:0;text-align:center;display:grid;gap:8px}
-.next{position:absolute;top:530px;left:var(--gutter);right:var(--gutter)}
-.next .row{gap:14px;min-height:72px}
-.next .tile{width:44px;height:44px;border-radius:14px;background:var(--face);color:#1E1A3A;display:grid;place-items:center;flex:none}
-.next .tile svg{width:22px;height:22px}
-.next .t-cap{color:var(--muted);display:block}
-.next .t-head{font-size:17px;margin-top:3px;text-wrap:balance}
-/* the rating sits just above the button, inside the dock */
-.rate{display:grid;gap:10px;justify-items:center;margin-bottom:6px}
+.ray{transform-box:fill-box;transform-origin:50% 50%}
+.play .ray{animation:fan 500ms var(--settle) both;animation-delay:calc(1100ms + var(--r) * 30ms)}
+@keyframes fan{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:none}}
+.mid{position:absolute;top:418px;left:0;right:0;text-align:center;display:grid;gap:8px}
+/* How was it?: right under the line it rates */
+.rate{position:absolute;top:524px;left:0;right:0;display:grid;gap:10px;justify-items:center}
 .rate .chips{gap:8px;justify-content:center}
 .rate .chip{min-height:40px;padding:0 15px;border-radius:99px;font:600 14px/1 var(--body);box-shadow:inset 0 0 0 1px var(--line)}
+/* Up next: a caption row just above the button, with the next card's small paper-cut spot */
+.upnext{display:flex;align-items:center;gap:12px;padding:0 4px 4px}
+.spot{width:40px;height:40px;border-radius:12px;overflow:hidden;flex:none;display:block}
+.spot svg{display:block;width:40px;height:40px}
+.upnext .t-cap{color:var(--muted);display:block}
+.upnext b{display:block;font:600 15px/1.3 var(--body);margin-top:2px}
 </style>
 </head><body>
 <div class="screen" data-ground="table">
   <div class="nav">
     <button class="icon-btn" aria-label="Close" id="close"></button>
-    <div class="grow"><div class="steps" aria-label="1 of 5 cards done"><i class="on" id="p1"></i><i></i><i></i><i></i><i></i></div></div>
-    <span class="side t-foot muted" id="lbl">1 of 5 done</span>
+    <div class="grow"><div class="steps" aria-label="Card 1 of 5 done"><i class="on" id="p1"></i><i></i><i></i><i></i><i></i></div></div>
   </div>
   <div class="stage">
     <div class="flip">
       <div class="side-f k-listen"><span class="ic" id="f-ic"></span><b>Listen</b><span class="t-cap" style="opacity:.7">6 min</span></div>
       <div class="side-f back k-listen">
-        <svg class="sunart" width="196" height="268" viewBox="0 0 196 268" aria-hidden="true" id="sunart"></svg>
-        <div class="chk" id="chk"></div>
+        <svg class="sunart" width="196" height="262" viewBox="0 0 196 262" aria-hidden="true" id="sunart"></svg>
         <div class="band"><span id="b-ic"></span>Listen · 6 min</div>
       </div>
     </div>
@@ -60,42 +56,41 @@
     <h1 class="t-large" data-a style="--i:0;--d:900ms">First card, done</h1>
     <p class="t-foot muted" data-a style="--i:1;--d:900ms">Why it feels like it calms you</p>
   </div>
-  <div class="next list" data-a style="--i:2;--d:900ms">
-    <div class="row">
-      <span class="tile k-try" id="n-ic"></span>
-      <span class="grow"><span class="t-cap">Up next · Try · 5 min</span><span class="t-head" style="display:block">A breath that works in the moment</span></span>
-    </div>
+  <div class="rate" data-a style="--i:2;--d:900ms">
+    <p class="t-foot muted">How was it?</p>
+    <div class="chips"><button class="chip">Helpful</button><button class="chip">Just okay</button><button class="chip">Not for me</button></div>
   </div>
   <div class="dock">
-    <div class="rate" data-a style="--i:3;--d:900ms">
-      <p class="t-foot muted">How was it?</p>
-      <div class="chips"><button class="chip">Helpful</button><button class="chip">Just okay</button><button class="chip">Not for me</button></div>
+    <div class="upnext" data-a style="--i:3;--d:900ms">
+      <span class="spot" id="spot"></span>
+      <span class="grow"><span class="t-cap">Up next · Try · 5 min</span><b>A breath that works in the moment</b></span>
     </div>
     <button class="btn" data-a style="--i:4;--d:900ms">Play card 2</button>
   </div>
 </div>
 <script>
+const dark = DX.theme === 'dark';
 document.getElementById('close').innerHTML = DX.icon('close');
 document.getElementById('f-ic').innerHTML = DX.icon('headphones');
 document.getElementById('b-ic').innerHTML = DX.icon('headphones', {size:17, w:2.4});
-document.getElementById('n-ic').innerHTML = DX.icon('hand', {size:22});
-document.getElementById('chk').innerHTML = DX.check({size:76, color:'#1E1A3A', fg:'#FFD966', d:1100});
-/* a paper sun: short tapered rays with rounded tips (cut paper, no spikes), and one small Xero spark */
-const cx = 98, cy = 114;
-const rays = Array.from({length:12}, (_, i) => { const a = i * Math.PI / 6 + Math.PI / 12, c = Math.cos(a), s = Math.sin(a), px = -s, py = c;
-  const P = (r, w) => `${(cx + r * c + w * px).toFixed(1)} ${(cy + r * s + w * py).toFixed(1)}`;
-  return `<path d="M${P(56, -9)} L${P(80, -3.6)} Q${P(85, 0)} ${P(80, 3.6)} L${P(56, 9)}Z"/>`; }).join('');
-const star = (x, y, r) => `<path class="spark" d="M${x} ${y - r} Q${x} ${y} ${x + r} ${y} Q${x} ${y} ${x} ${y + r} Q${x} ${y} ${x - r} ${y} Q${x} ${y} ${x} ${y - r}Z"/>`;
+/* a crisp paper sun: a cream disc and twelve short rounded rays standing clear of it; the check is drawn in ink on the sun */
+const cx = 98, cy = 106;
+const rays = Array.from({length:12}, (_, i) => { const a = i * Math.PI / 6, c = Math.cos(a), s = Math.sin(a);
+  return `<path class="ray" style="--r:${i}" d="M${(cx + 58 * c).toFixed(1)} ${(cy + 58 * s).toFixed(1)} L${(cx + 76 * c).toFixed(1)} ${(cy + 76 * s).toFixed(1)}"/>`; }).join('');
 document.getElementById('sunart').innerHTML = `
-  <circle cx="${cx}" cy="${cy}" r="98" fill="#FFF8EE" fill-opacity=".16"/>
-  <g fill="#FFF1D6" stroke="#FFF1D6" stroke-width="2" stroke-linejoin="round">${rays}</g>
-  <circle cx="${cx}" cy="${cy}" r="58" fill="#FFF1D6"/>
-  <circle cx="${cx}" cy="${cy}" r="50" fill="#FFE2AE"/>
-  <g fill="#FFF8EE">${star(162, 32, 11)}</g><circle cx="146" cy="24" r="2.6" fill="#FFF8EE"/>`;
+  <g fill="none" stroke="#FFF1D6" stroke-width="8" stroke-linecap="round">${rays}</g>
+  <circle cx="${cx}" cy="${cy}" r="46" fill="#FFF1D6"/>
+  <path d="M77 107 l14 14 l27 -29" fill="none" stroke="#1E1A3A" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" class="draw" style="--len:64;--d:1100ms;--dur:420ms"/>`;
+/* the next card's paper-cut spot: two breaths over a mint hill (Try) */
+const S = dark ? { bg:'#1E2C52', h1:'#2C4A55', h2:'#22394A', p:'#E6DCCB' } : { bg:'#D3F0DF', h1:'#9FE3BC', h2:'#7FD3A6', p:'#FFFFFF' };
+document.getElementById('spot').innerHTML = `<svg viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" fill="${S.bg}"/>
+  <path d="M0 35 C12 30 30 34 48 30 V48 H0z" fill="${S.h1}"/><path d="M0 42 C16 38 32 43 48 39 V48 H0z" fill="${S.h2}"/>
+  <g fill="none" stroke="${S.p}" stroke-width="2.8" stroke-linecap="round"><path d="M7 13h18c4.5 0 6-6 1.5-6.4-3-.3-3.6 3.4-1.2 4"/><path d="M12 22h22c4.5 0 6 6 1.5 6.4-3 .3-3.6-3.4-1.2-4"/></g></svg>`;
 if (!DX.still) {
-  const p1 = document.getElementById('p1'), lbl = document.getElementById('lbl');
-  p1.className = 'now'; p1.parentElement.style.setProperty('--sub', '100%'); lbl.textContent = '1 of 5';
-  DX.after(1300, () => { p1.className = 'on'; lbl.textContent = '1 of 5 done'; });
+  const p1 = document.getElementById('p1');
+  p1.className = 'now'; p1.parentElement.style.setProperty('--sub', '14%');
+  DX.after(1300, () => { p1.parentElement.style.setProperty('--sub', '100%'); });
+  DX.after(1800, () => { p1.className = 'on'; });
 }
 </script>
 </body></html>
