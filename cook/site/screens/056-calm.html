@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>056 Calm tools</title>
-<meta name="motion" content="The title arrives, then the four tool tiles on the 90ms stagger (left to right, top to bottom); each cast member settles into its own little scene 120ms after its tile (Jelli in the box window, Xero on the hill, Jelli on the wave, Glim on the night hill). Ambient: in the box tile the dot walks the track at the breathing pace (16s a round) and the lit side steps along with it at each corner; the cast keep their own idle loops (Jelli breathes in the window, Jelli bobs on the swell, Glim dozes with drifting zzz). Light tap haptic on tile press. Craving SOS stays one tap away in the tab bar.">
+<meta name="motion" content="The title arrives, then the four tool tiles on the 90ms stagger (left to right, top to bottom); each cast member settles into its own little scene 120ms after its tile (Jelli in the box window, Jelli on the dawn hill, Jelli seated on the crest of the swell, Glim on the night hill). In dark mode each tile keeps its own tint (ocean blue, warm pre-dawn, night sea, midnight). The quiet This week row fades in last and its 24 counts up from 0 (850ms). Ambient: in the box tile the dot walks the track at the breathing pace (16s a round) and the lit side steps along with it at each corner; the cast keep their own idle loops (Jelli breathes in the window, Jelli floats on the hill and on the swell, Glim dozes with drifting zzz). Light tap haptic on tile press. Craving SOS stays one tap away in the tab bar.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -16,6 +16,9 @@
 .win { position: absolute; left: 47.5px; top: 46px; width: 72px; height: 72px; border-radius: 13px; overflow: hidden; }
 .win > svg { display: block; }
 .win .who { left: 4px; top: 6px; }
+.week { display: flex; align-items: center; gap: 10px; margin-top: 18px; padding: 0 4px; color: var(--muted); }
+.week svg { width: 18px; height: 18px; flex: none; }
+.week b { color: var(--fg); font-weight: 700; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -39,6 +42,7 @@
       <div class="txt"><div class="t-head">Wind down</div><span class="t-cap">5 min &middot; Before sleep</span></div>
     </div>
   </div>
+  <p class="week t-foot" data-a style="--i:6"><span data-ic="leaf" data-s="18"></span><span>This week: <b><span data-count="24" data-delay="700">24</span> min</b> of calm</span></p>
 </div></div>
 </div>
 <script>
@@ -51,6 +55,22 @@ const svg = (inner, oy) => `<svg width="${W}" height="${H}" viewBox="0 ${-oy} ${
 const bg = (oy, fill) => `<rect y="${-oy}" width="${W}" height="${H}" fill="${fill}"/>`;
 const who = (html, x, y, d) => `<div class="who" style="left:${x}px;top:${y}px;--d:${d}ms" data-settle>${html}</div>`;
 
+/* Dark mode window: the 057 night sea (sun off to the side, layered water, soft sea floor). */
+const nightSea = (w, h, k) => `<svg width="${w}" height="${h}" viewBox="0 0 260 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>
+  <linearGradient id="ns${k}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0C1838"/><stop offset=".6" stop-color="#1A2C5C"/><stop offset="1" stop-color="#2E4680"/></linearGradient>
+  <radialGradient id="ng${k}"><stop offset="0" stop-color="#FFD27A" stop-opacity=".42"/><stop offset=".5" stop-color="#FFB25E" stop-opacity=".12"/><stop offset="1" stop-color="#FFB25E" stop-opacity="0"/></radialGradient>
+  <linearGradient id="nw${k}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2A52A6"/><stop offset="1" stop-color="#173372"/></linearGradient>
+  <linearGradient id="nf${k}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3E5590"/><stop offset="1" stop-color="#2C3F74"/></linearGradient></defs>
+  <rect width="260" height="260" fill="url(#ns${k})"/>
+  ${[[150, 30, 1.6], [214, 58, 1.2], [112, 70, 1.1], [236, 22, 1.4], [184, 100, 1], [24, 24, 1.2]].map(([x, y, r], i) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#fff" opacity="${i % 2 ? .5 : .8}"/>`).join('')}
+  <circle cx="52" cy="84" r="64" fill="url(#ng${k})"/><circle cx="52" cy="84" r="21" fill="#FFD27A"/>
+  <path d="M0 150 C60 144 120 153 180 147 S 240 144 260 148 V260 H0Z" fill="url(#nw${k})"/>
+  <path d="M30 160 h40 M38 170 h24 M44 179 h12" stroke="#FFD27A" stroke-opacity=".38" stroke-width="3" stroke-linecap="round"/>
+  <path d="M0 184 C60 174 130 188 190 178 S 245 174 260 178 V260 H0Z" fill="#1A3A80" opacity=".75"/>
+  <path d="M0 184 C60 174 130 188 190 178 S 245 174 260 178" fill="none" stroke="#9DB8FF" stroke-opacity=".18" stroke-width="2"/>
+  <path d="M0 228 C50 216 100 224 150 218 S 228 212 260 220 V260 H0Z" fill="url(#nf${k})"/>
+  <ellipse cx="206" cy="236" rx="11" ry="4.5" fill="#566CA6"/><ellipse cx="44" cy="240" rx="7" ry="3" fill="#566CA6"/></svg>`;
+
 /* Box breathing: ocean blue, Jelli in the sea window, one track with the lit side and the walking dot (as on 057). */
 const T = 'M38 99 V33 Q38 21 50 21 H117 Q129 21 129 33 V99 Q129 111 117 111 H50 Q38 111 38 99Z';
 $('#a-box').innerHTML = svg(`<defs>${dark ? grad('ob', '#22409A', '#0F2366') : grad('ob', '#3A63E0', '#1F3C8C')}</defs>${bg(16, 'url(#ob)')}
@@ -58,29 +78,29 @@ $('#a-box').innerHTML = svg(`<defs>${dark ? grad('ob', '#22409A', '#0F2366') : g
   <path d="${T}" fill="none" stroke="#FFF8EE" stroke-opacity=".38" stroke-width="3.5"/>
   <path d="${T}" pathLength="400" fill="none" stroke="#FFF8EE" stroke-width="4" stroke-linecap="round" stroke-dasharray="100 300" stroke-dashoffset="0">${DX.still ? '' : '<animate attributeName="stroke-dashoffset" values="0;-100;-200;-300" keyTimes="0;.25;.5;.75" calcMode="discrete" dur="16s" begin="-2s" repeatCount="indefinite"/>'}</path>
   <circle r="5.5" fill="#FFF8EE"><animateMotion dur="16s" repeatCount="indefinite" begin="-2s" path="${T}"/></circle>`, 16)
-  + `<div class="win">${DX.char('horizon', { scene: 'sea', w: 72, h: 72, clarity: 100 })}${who(DX.char('jelli', { mood: 'breathe', size: 64 }), 4, 6, 420)}</div>`;
+  + `<div class="win">${dark ? nightSea(72, 72, 'b') : DX.char('horizon', { scene: 'sea', w: 72, h: 72, clarity: 100 })}${who(DX.char('jelli', { mood: 'breathe', size: 64 }), 4, 6, 420)}</div>`;
 if (DX.still) $('#a-box circle[r="5.5"]').outerHTML = '<circle cx="38" cy="66" r="5.5" fill="#FFF8EE"/>';
 
-/* Grounding: apricot dawn (pre-dawn in dark), Xero standing with both feet on the hill. */
+/* Grounding: apricot dawn in light, a warm pre-dawn in dark; Jelli (as on 058) rests on the near hill. */
 $('#a-ground').innerHTML = svg(dark
-  ? `<defs>${grad('gd', '#0D1630', '#24335C', '#5B5578')}</defs>${bg(32, 'url(#gd)')}${stars([[22, 20], [60, 12], [140, 26, 1.4], [104, 16]], .7)}
-     <radialGradient id="gh"><stop offset="0" stop-color="#F7B871" stop-opacity=".5"/><stop offset="1" stop-color="#F7B871" stop-opacity="0"/></radialGradient><circle cx="126" cy="94" r="36" fill="url(#gh)"/><circle cx="126" cy="94" r="13" fill="#F7B871" opacity=".92"/>
-     <path d="M0 100 C40 88 80 92 167 104 V132 H0Z" fill="#1C2C4E"/><path d="M0 116 C50 106 110 110 167 118 V132 H0Z" fill="#132240"/>`
+  ? `<defs>${grad('gd', '#1C1A2A', '#4A2E2A', '#8A4A30')}<radialGradient id="gh"><stop offset="0" stop-color="#FFB86E" stop-opacity=".55"/><stop offset=".45" stop-color="#FF9A5C" stop-opacity=".18"/><stop offset="1" stop-color="#FF9A5C" stop-opacity="0"/></radialGradient></defs>${bg(32, 'url(#gd)')}${stars([[22, 20], [60, 6], [146, 14, 1.4], [104, 26]], .6)}
+     <circle cx="124" cy="88" r="46" fill="url(#gh)"/><circle cx="124" cy="88" r="14" fill="#FFC27A"/>
+     <path d="M0 98 C40 86 80 90 167 102 V132 H0Z" fill="#4A2C24"/><path d="M0 114 C50 104 110 108 167 116 V132 H0Z" fill="#33201C"/>`
   : `<defs>${grad('ga', '#FFE6BF', '#FFCB95')}</defs>${bg(32, 'url(#ga)')}
      <circle cx="124" cy="44" r="38" fill="#FFF1C9" opacity=".7"/><circle cx="124" cy="44" r="24" fill="#FFD966"/>
      <path d="M0 98 C40 86 80 90 167 102 V132 H0Z" fill="#FFAE73"/><path d="M0 114 C50 104 110 108 167 116 V132 H0Z" fill="#FF9A6B"/>`, 32)
-  + who(DX.char('xero', { mood: 'calm', size: 84 }), 20, 58, 520);
+  + who(DX.char('jelli', { mood: 'calm', size: 84 }), 16, 49, 520);
 
-/* Notice the urge: sky blue, Jelli riding the swell; dark uses the 059 night sea (same sky, swell and sea blues). */
+/* Notice the urge: sky blue, Jelli seated on the crest of the swell; dark uses the 059 night sea (same sky, swell and sea blues). */
 $('#a-urge').innerHTML = svg(dark
-  ? `<defs>${grad('sd', '#0C1734', '#1A2D58')}</defs>${bg(32, 'url(#sd)')}${stars([[20, 18], [56, 30], [150, 16, 1.4], [120, 40]], .6)}
-     <path d="M0 108 C34 108 46 62 82 62 S 128 108 167 108 V132 H0Z" fill="#2E4C88"/><path d="M0 108 C34 108 46 62 82 62 S 128 108 167 108" fill="none" stroke="#FFF8EE" stroke-width="3" stroke-linecap="round"/>
-     <path d="M0 118 C40 112 90 116 167 112 V132 H0Z" fill="#1C2C4E"/>`
+  ? `<defs>${grad('sd', '#0E1E46', '#1E3A72')}${grad('sw', '#3A62A8', '#26457F')}</defs>${bg(32, 'url(#sd)')}${stars([[20, 18], [44, 40], [150, 16, 1.4], [128, 44]], .6)}
+     <path d="M0 108 C34 108 46 62 82 62 S 128 108 167 108 V132 H0Z" fill="url(#sw)"/><path d="M0 108 C34 108 46 62 82 62 S 128 108 167 108" fill="none" stroke="#FFF8EE" stroke-width="3" stroke-linecap="round"/>
+     <path d="M0 118 C40 112 90 116 167 112 V132 H0Z" fill="#1A3266"/>`
   : `<defs>${grad('sl', '#8EC2FF', '#D9EEFF')}</defs>${bg(32, 'url(#sl)')}
-     <g fill="#FFFFFF" opacity=".9"><ellipse cx="132" cy="26" rx="20" ry="7"/><ellipse cx="122" cy="22" rx="10" ry="7"/></g>
+     <g fill="#FFFFFF" opacity=".9"><ellipse cx="140" cy="22" rx="18" ry="6.5"/><ellipse cx="131" cy="18" rx="9" ry="6.5"/></g>
      <path d="M0 108 C34 108 46 62 82 62 S 128 108 167 108 V132 H0Z" fill="#5A9DFF"/><path d="M0 108 C34 108 46 62 82 62 S 128 108 167 108" fill="none" stroke="#1E1A3A" stroke-width="3" stroke-linecap="round"/>
      <path d="M0 118 C40 112 90 116 167 112 V132 H0Z" fill="#2F72F2"/>`, 32)
-  + who(DX.char('jelli', { mood: 'calm', size: 60 }), 66, 42, 620);
+  + who(DX.char('jelli', { mood: 'calm', size: 76 }), 44, 22, 620);
 
 /* Wind down: night blue with the moon, Glim settling on the hill. */
 $('#a-wind').innerHTML = svg(`<defs>${dark ? grad('nd', '#08101F', '#16244A', '#22315A') : grad('nl', '#0B1430', '#1B2B55', '#2C3D6A')}</defs>${bg(32, `url(#${dark ? 'nd' : 'nl'})`)}

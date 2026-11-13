@@ -6,13 +6,14 @@
 <style>
   .label { display: flex; align-items: center; gap: 8px; color: var(--muted); }
   .label svg { width: 18px; height: 18px; }
-  .stack-wrap { position: relative; margin-top: 0; height: 572px; perspective: 1400px; }
-  .edge { position: absolute; left: 0; right: 0; top: 0; height: 548px; border-radius: 26px; background: var(--card); box-shadow: inset 0 0 0 1.5px var(--line), 0 8px 18px rgba(30,26,58,.07); transform-origin: 50% 100%; }
-  [data-theme="dark"] .edge { background: #2A3450; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.2), 0 10px 20px rgba(0,0,0,.3); }
+  .stack-wrap { position: relative; margin-top: 0; height: 612px; perspective: 1400px; }
+  .edge { position: absolute; left: 0; right: 0; top: 0; height: 588px; border-radius: 26px; background: var(--card); box-shadow: inset 0 0 0 1.5px var(--line), 0 8px 18px rgba(30,26,58,.07); transform-origin: 50% 100%; }
+  [data-theme="dark"] .edge { background: #2C3756; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.32), 0 10px 20px rgba(0,0,0,.3); }
+  [data-theme="dark"] .edge.e2 { opacity: 1; background: #263050; }
   [data-theme="dark"] .face { box-shadow: inset 0 0 0 1px rgba(255,255,255,.22), 0 14px 30px rgba(0,0,0,.3); }
   .edge.e1 { transform: translateY(12px) scale(.95) rotate(-1.2deg); }
   .edge.e2 { transform: translateY(24px) scale(.9) rotate(1.6deg); opacity: .8; }
-  .flip { position: absolute; left: 0; right: 0; top: 0; height: 548px; transform-style: preserve-3d; transition: transform 800ms var(--settle); }
+  .flip { position: absolute; left: 0; right: 0; top: 0; height: 588px; transform-style: preserve-3d; transition: transform 800ms var(--settle); }
   .flip.back { transform: rotateY(180deg); transition: none; }
   .face { position: absolute; inset: 0; border-radius: 26px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line), 0 14px 30px rgba(30,26,58,.08);
     backface-visibility: hidden; -webkit-backface-visibility: hidden; padding: 22px 24px; display: flex; flex-direction: column; }
@@ -76,9 +77,9 @@
   const dark = DX.theme === 'dark';
   const C = dark
     ? { sky: ['#0D1630', '#24335C', '#5B5578'], hills: ['#1E2B4A', '#16233F', '#0F1A31', '#0A1326'], road: '#232E4D', dash: '#8E97B5', dashO: .55,
-        body: '#E6DCCB', shade: '#C2B6A2', stripe: '#E9886C', frame: '#C2B6A2', tyre: '#070B16', lamp: '#FFD27A', glass: .12, bub: '#EDE3D2', marks: '#1E1A3A', seat: '#2B3658', shadow: .5 }
+        body: '#E6DCCB', shade: '#C2B6A2', stripe: '#E9886C', frame: '#CFC3B1', tyre: '#070B16', lamp: '#FFD27A', glass: .1, bub: '#EDE3D2', marks: '#1E1A3A', seat: '#5A3E38', rim: '#E6DCCB', shadow: .5 }
     : { sky: ['#FF7E5A', '#FFB877', '#FFE6BF'], hills: ['#FF9D6E', '#FF7A55', '#E85A3E', '#C2402A'], road: '#4A3352', dash: '#FFE6C8', dashO: .9,
-        body: '#FFF4E4', shade: '#F1D7BC', stripe: '#FF7A55', frame: '#2A2440', tyre: '#2A2440', lamp: '#FFD966', glass: .3, bub: '#FFF8EE', marks: '#1E1A3A', seat: '#2E2A4F', shadow: .25 };
+        body: '#FFF4E4', shade: '#F1D7BC', stripe: '#FF7A55', frame: '#CFC3B1', tyre: '#2A2440', lamp: '#FFD966', glass: .16, bub: '#FFF8EE', marks: '#1E1A3A', seat: '#2E2A4F', rim: 'none', shadow: .25 };
   const sun = dark
     ? `<circle cx="58" cy="108" r="70" fill="url(#rhalo)"/><circle cx="58" cy="108" r="20" fill="#FFD27A"/>`
     : `<circle cx="58" cy="54" r="54" fill="url(#rhalo)"/><circle cx="58" cy="54" r="24" fill="#FFD25E"/>`;
@@ -94,26 +95,26 @@
       <rect x="${x}" y="${y}" width="${w}" height="24" rx="12"/><path d="M${tx - 6} ${y + 20} L${tx + 6} ${y + 20} L${tip[0]} ${tip[1]}Z"/>
       <g transform="translate(${x} ${y})" fill="none" stroke="${C.marks}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity=".72">${marks}</g></g>`;
   const xero = DX.char('xero', { mood: 'hello', size: 78 }).replace('<svg ', '<svg x="78" y="76" ');
-  document.getElementById('road').innerHTML = `<svg viewBox="0 -46 300 280" aria-hidden="true">
+  document.getElementById('road').innerHTML = `<svg viewBox="10 -52 280 292" aria-hidden="true">
     <defs><linearGradient id="rsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${C.sky[0]}"/><stop offset=".6" stop-color="${C.sky[1]}"/><stop offset="1" stop-color="${C.sky[2]}"/></linearGradient>
       <radialGradient id="rhalo"><stop offset=".25" stop-color="${dark ? '#FFB25E' : '#FFF6C8'}" stop-opacity="${dark ? .4 : .6}"/><stop offset="1" stop-color="${dark ? '#FFB25E' : '#FFF6C8'}" stop-opacity="0"/></radialGradient>
       <filter id="rlift" x="-5%" y="-20%" width="110%" height="140%"><feDropShadow dx="0" dy="-2" stdDeviation="2.5" flood-color="#1A0B2E" flood-opacity="${dark ? .45 : .2}"/></filter>
       <filter id="rdrop" x="-20%" y="-20%" width="140%" height="160%"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#1A0B2E" flood-opacity="${dark ? .5 : .25}"/></filter></defs>
-    <rect y="-46" width="300" height="280" fill="url(#rsky)"/>
+    <rect y="-60" width="300" height="310" fill="url(#rsky)"/>
     ${stars}${sun}
-    <path filter="url(#rlift)" d="M0 112 C60 92 120 102 170 108 S260 96 300 100 V236 H0z" fill="${C.hills[0]}"/>
-    <path filter="url(#rlift)" d="M0 140 C80 124 180 146 300 130 V236 H0z" fill="${C.hills[1]}"/>
-    <path filter="url(#rlift)" d="M10 236 C70 200 128 170 140 136 C142 128 148 122 154 120 L160 120 C158 126 160 132 164 140 C180 172 236 204 296 236 Z" fill="${C.road}"/>
+    <path filter="url(#rlift)" d="M0 112 C60 92 120 102 170 108 S260 96 300 100 V250 H0z" fill="${C.hills[0]}"/>
+    <path filter="url(#rlift)" d="M0 140 C80 124 180 146 300 130 V250 H0z" fill="${C.hills[1]}"/>
+    <path filter="url(#rlift)" d="M-2 244 C70 200 128 170 140 136 C142 128 148 122 154 120 L160 120 C158 126 160 132 164 140 C180 172 236 204 306 244 V250 H-2Z" fill="${C.road}"/>
     <path d="M157 126 L157 138 M156.5 150 L156 166" stroke="${C.dash}" stroke-opacity="${C.dashO}" stroke-width="2.2" stroke-linecap="round"/>
-    <path filter="url(#rlift)" d="M0 168 C24 160 44 168 54 186 C58 194 58 204 56 236 H0z" fill="${C.hills[2]}"/>
-    <path filter="url(#rlift)" d="M300 160 C270 156 248 170 240 190 C236 202 238 220 240 236 H300z" fill="${C.hills[2]}"/>
+    <path filter="url(#rlift)" d="M0 168 C24 160 44 168 54 186 C58 194 58 204 56 250 H0z" fill="${C.hills[2]}"/>
+    <path filter="url(#rlift)" d="M300 160 C270 156 248 170 240 190 C236 202 238 220 240 250 H300z" fill="${C.hills[2]}"/>
     <g transform="translate(150 222)"><g class="car"><g transform="scale(1.28) translate(-150 -230)">
       <ellipse cx="150" cy="226" rx="104" ry="7" fill="#000" opacity="${C.shadow}"/>
-      <path d="M70 158 V128 C70 120 76 116 84 116 H216 C224 116 230 120 230 128 V158Z" fill="${C.seat}"/>
+      <path d="M70 158 V128 C70 120 76 116 84 116 H216 C224 116 230 120 230 128 V158Z" fill="${C.seat}" stroke="${C.rim}" stroke-width="2" stroke-opacity=".55"/>
+      <path d="M74 158 L88 112 H212 L226 158" fill="#FFFFFF" fill-opacity="${C.glass}" stroke="${C.frame}" stroke-width="2.6" stroke-linejoin="round"/>
       ${pass(150, 98, 'yellow', .92, -3, 'grin')}${pass(214, 104, 'grey', .88, 8, 'o')}
       ${pass(186, 116, 'blue', 1, 4, 'o')}
       ${xero}
-      <path d="M74 158 L88 112 H212 L226 158" fill="#FFFFFF" fill-opacity="${C.glass}" stroke="${C.frame}" stroke-width="2.6" stroke-linejoin="round"/>
       <path d="M96 150 C102 140 132 140 138 150" fill="none" stroke="${C.tyre}" stroke-width="5" stroke-linecap="round"/>
       <path d="M117 145 V158" stroke="${C.tyre}" stroke-width="4" stroke-linecap="round"/>
       <rect x="64" y="196" width="26" height="30" rx="7" fill="${C.tyre}"/><rect x="210" y="196" width="26" height="30" rx="7" fill="${C.tyre}"/>
@@ -122,8 +123,8 @@
       <rect x="126" y="170" width="48" height="22" rx="6" fill="${C.shade}"/><path d="M138 175 v12 M150 175 v12 M162 175 v12" stroke="${C.body}" stroke-width="2.4" stroke-linecap="round"/>
       <circle cx="88" cy="174" r="11" fill="${C.lamp}" stroke="${C.shade}" stroke-width="3"/><circle cx="212" cy="174" r="11" fill="${C.lamp}" stroke="${C.shade}" stroke-width="3"/>
       <rect x="56" y="198" width="188" height="8" rx="4" fill="${C.shade}"/>
-      ${bubble(112, 50, 50, 140, [146, 84], '<path d="M10 12 l5 -5 l5 5 l5 -5 l5 5 l5 -5"/>', 1100)}
-      ${bubble(196, 58, 44, 222, [216, 92], '<path d="M13 7 v6"/><path d="M22 7 v6"/><path d="M31 7 v6"/><path d="M13 17.5 h.01"/><path d="M22 17.5 h.01"/><path d="M31 17.5 h.01"/>', 1700)}
+      ${bubble(112, 54, 50, 140, [146, 87], '<path d="M10 12 l5 -5 l5 5 l5 -5 l5 5 l5 -5"/>', 1100)}
+      ${bubble(196, 54, 44, 222, [216, 91], '<path d="M13 7 v6"/><path d="M22 7 v6"/><path d="M31 7 v6"/><path d="M13 17.5 h.01"/><path d="M22 17.5 h.01"/><path d="M31 17.5 h.01"/>', 1700)}
     </g></g></g>
   </svg>`;
   const flip = document.getElementById('flip');

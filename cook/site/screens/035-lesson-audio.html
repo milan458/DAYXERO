@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>035 Lesson audio</title>
-<meta name="motion" content="Art fades up (light: a warm paper-cut dawn, the sun low behind Xero, rising between two lifted hill layers) and Xero settles onto his hill in his headphones (900ms), then bobs gently while audio plays; three thin sound arcs each side pulse outward (2.4s loop, 220ms apart) for as long as he is reading. The scrubber draws from 0:00 to 1:12 over 1.2s with the elapsed time ticking in step, the knob pops on arrival, and the play button bumps into its pause state. The Show transcript text disclosure arrives with the controls; tapping it rotates its chevron (250ms) and opens the transcript below (500ms) with the spoken line in full ink. 1x (left) and the sleep Timer with its moon (right) mirror each other as text buttons; 1x cycles 1x, 1.25x, 1.5x with a selection haptic, Timer opens the sleep timer options. Done listening arrives last (600ms) as an outlined button and stays outlined until 80% has played (2:24 of 3:00), when it cross-fades into the solid primary button (300ms, light haptic), as on the session players.">
+<meta name="motion" content="Art fades up (light: a warm paper-cut dawn with flat paper clouds, the sun low behind Xero, rising between two lifted hill layers) and Xero settles onto his hill in his headphones (900ms), then bobs gently while audio plays; three thin cream sound arcs each side pulse outward (2.4s loop, 220ms apart) for as long as he is reading. The centred title and line arrive, then the scrubber draws from 0:00 to 1:12 over 1.2s with the elapsed time ticking in step, the knob pops on arrival, and the play button bumps into its pause state. The 1x, Transcript and Timer pills arrive together as one row (same icon+label pill): 1x cycles 1x, 1.25x, 1.5x with a selection haptic, Transcript rotates its chevron (250ms) and opens the transcript below (500ms), Timer opens the sleep timer options. The live caption under them shows the line Xero is reading now: three small coral level bars pulse (900ms alternate) and each new spoken line cross-fades in (300ms out, 300ms in). Done listening arrives last (600ms) as an outlined button and stays outlined until 80% has played (2:24 of 3:00), when it cross-fades into the solid primary button (300ms, light haptic), as on the session players.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -8,31 +8,36 @@
   .art .scene { position: absolute; inset: 0; }
   .art .fore { position: absolute; inset: 0; width: 100%; height: 100%; }
   .art .hero { position: absolute; left: 50%; top: 116px; margin-left: -60px; }
-  .info { margin-top: 18px; display: grid; gap: 4px; }
+  .info { margin-top: 18px; display: grid; gap: 4px; justify-items: center; text-align: center; }
   .scrub { margin-top: 14px; }
   .scrub svg { display: block; width: 100%; height: 24px; overflow: visible; }
   .times { display: flex; justify-content: space-between; margin-top: 6px; color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; }
-  .controls { margin-top: 12px; display: grid; grid-template-columns: 76px 1fr auto 1fr 76px; align-items: center; justify-items: center; }
+  .controls { margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 30px; }
   .skip { width: 52px; height: 52px; border-radius: 99px; display: grid; place-items: center; color: var(--fg); position: relative; }
   .skip svg { width: 36px; height: 36px; }
   .skip b { position: absolute; font: 800 13px/1 var(--body); top: 19.5px; left: 0; right: 0; text-align: center; }
   .play-btn { width: 76px; height: 76px; border-radius: 99px; background: var(--btn); color: var(--btn-fg); display: grid; place-items: center; box-shadow: 0 5px 0 rgba(0,0,0,.18); }
   .play-btn svg { width: 30px; height: 30px; }
-  /* 1x and the sleep timer mirror each other: same size, same weight, one at each edge */
-  .rate, .timer { height: 44px; padding: 0 6px; display: inline-flex; align-items: center; gap: 6px; font: 700 16px/1 var(--body); color: var(--fg); }
-  .rate, .timer { justify-self: center; }
-  .timer svg { width: 18px; height: 18px; }
-  .fore .arcs path { fill: none; stroke: #7A2A3E; stroke-width: 2; stroke-linecap: round; }
-  [data-theme="dark"] .fore .arcs path { stroke: #F3E7CC; }
+  /* 1x, transcript and the sleep timer share one icon+label pill */
+  .pills { margin-top: 16px; display: flex; justify-content: center; gap: 8px; }
+  .pill { height: 44px; padding: 0 15px; border-radius: 999px; display: inline-flex; align-items: center; gap: 7px; background: var(--card-2); color: var(--fg); font: 600 15px/1 var(--body); }
+  .pill > span { display: inline-flex; }
+  .pill svg { width: 18px; height: 18px; }
+  .pill .chev { width: auto; height: auto; color: var(--muted); margin-left: -1px; transition: transform 250ms var(--ease); }
+  .pill .chev svg { width: 16px; height: 16px; }
+  /* live caption: the line Xero is reading now */
+  .live { margin-top: 22px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+  .live .eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 14px; flex: none; }
+  .live .eq i { width: 3px; border-radius: 2px; background: var(--mark); height: var(--h); transform-origin: bottom; }
+  .play .live .eq i { animation: eq 900ms ease-in-out infinite alternate; animation-delay: var(--ed); }
+  @keyframes eq { to { transform: scaleY(.35); } }
+  .still .live .eq i { animation: none !important; }
+  .live p { white-space: nowrap; color: var(--fg); }
+  .dock .btn.ghost { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--fg) 52%, transparent); }
+  .fore .arcs path { fill: none; stroke: #FFF8EE; stroke-width: 2; stroke-linecap: round; }
   .play .fore .arcs path { animation: arc 2.4s ease-in-out infinite; animation-delay: var(--ad); }
   @keyframes arc { 0%, 100% { opacity: var(--o); } 30% { opacity: calc(var(--o) * .35); } }
   .still .fore .arcs path { animation: none !important; }
-  /* transcript: a plain text disclosure, like Read instead on the session player */
-  .tx { margin-top: 14px; display: flex; justify-content: center; }
-  .tx button { height: 44px; display: inline-flex; align-items: center; gap: 8px; font: 600 15px/1 var(--body); color: var(--fg); }
-  .tx button > span { display: inline-flex; }
-  .tx button svg { width: 18px; height: 18px; }
-  .tx .chev { width: auto; height: auto; color: var(--muted); transition: transform 250ms var(--ease); }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -61,18 +66,22 @@
         <div class="times t-cap"><span id="el">1:12</span><span>3:00</span></div>
       </div>
       <div class="controls" data-a style="--i:4">
-        <button class="rate" aria-label="Playback speed 1x">1x</button>
         <button class="skip" aria-label="Back 15 seconds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12a7 7 0 107-7H8"/><path d="M10.5 2.5L8 5l2.5 2.5"/></svg><b>15</b></button>
         <button class="play-btn bump" style="--d:1500ms" aria-label="Pause" data-ic="pause"></button>
         <button class="skip" aria-label="Forward 15 seconds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12a7 7 0 11-7-7h4"/><path d="M13.5 2.5L16 5l-2.5 2.5"/></svg><b>15</b></button>
-        <button class="timer" aria-label="Sleep timer"><span data-ic="moon" style="display:inline-flex"></span>Timer</button>
       </div>
-      <div class="tx" data-a style="--i:5">
-        <button aria-expanded="false"><span data-ic="text"></span>Show transcript<span class="chev" data-ic="down"></span></button>
+      <div class="pills" data-a style="--i:5">
+        <button class="pill" aria-label="Playback speed 1x"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16.5a8 8 0 1116 0"/><path d="M12 16.5l4-4.5"/></svg></span>1x</button>
+        <button class="pill" aria-expanded="false"><span data-ic="text"></span>Transcript<span class="chev" data-ic="down"></span></button>
+        <button class="pill" aria-label="Sleep timer"><span data-ic="moon"></span>Timer</button>
+      </div>
+      <div class="live" data-a style="--i:6" aria-live="polite">
+        <span class="eq" aria-hidden="true"><i style="--h:8px;--ed:0ms"></i><i style="--h:14px;--ed:180ms"></i><i style="--h:10px;--ed:360ms"></i></span>
+        <p class="t-foot" id="cap">&ldquo;You decide where the car goes.&rdquo;</p>
       </div>
     </div>
   </div>
-  <div class="dock"><button class="btn ghost" data-a style="--i:6">Done listening</button></div>
+  <div class="dock"><button class="btn ghost" data-a style="--i:7">Done listening</button></div>
 </div>
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20, w: e.dataset.ic === 'pause' ? 3.2 : 2.2 })));
@@ -82,10 +91,10 @@
   document.getElementById('scene').innerHTML = dark ? DX.char('horizon', { scene: 'dawn', w: 346, h: 288 }) : `<svg width="346" height="288" viewBox="0 0 346 288" aria-hidden="true">
     <defs><linearGradient id="asky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF7E5A"/><stop offset=".6" stop-color="#FFB27A"/><stop offset="1" stop-color="#FFDDB0"/></linearGradient>
       <radialGradient id="ahalo"><stop offset=".35" stop-color="#FFF3C4" stop-opacity=".75"/><stop offset="1" stop-color="#FFF3C4" stop-opacity="0"/></radialGradient>
-      <filter id="asoft" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="4"/></filter>
+      <filter id="acsh" x="-20%" y="-30%" width="150%" height="190%"><feDropShadow dx="2" dy="3" stdDeviation="1.4" flood-color="#B4502E" flood-opacity=".2"/></filter>
       <filter id="alift" x="-5%" y="-30%" width="110%" height="160%"><feDropShadow dx="0" dy="-2" stdDeviation="2.6" flood-color="#1A0B2E" flood-opacity=".2"/></filter></defs>
     <rect width="346" height="288" fill="url(#asky)"/>
-    <g filter="url(#asoft)" fill="#FFF4E6" opacity=".8"><ellipse cx="62" cy="52" rx="36" ry="10"/><ellipse cx="84" cy="43" rx="20" ry="9"/><ellipse cx="282" cy="40" rx="30" ry="9"/></g>
+    <g filter="url(#acsh)" fill="#FFF4E6">${['translate(70 50) scale(1.05)', 'translate(284 40) scale(.72)'].map(t => `<path transform="${t}" d="M-31 9 C-34 1 -26 -5 -18 -2 C-16 -12 -3 -16 4 -8 C8 -15 21 -14 22 -4 C30 -6 35 4 29 9 Z"/>`).join('')}</g>
     <circle cx="173" cy="176" r="130" fill="url(#ahalo)"/>
     <circle cx="173" cy="176" r="72" fill="#FFD86E"/>
     <path filter="url(#alift)" d="M0 190 C50 172 104 176 150 188 C204 202 286 170 346 176 V288 H0z" fill="#FFA06C"/>
@@ -105,9 +114,11 @@
     ${dark ? '<circle cx="173" cy="196" r="110" fill="url(#fglow)"/>' : ''}
     <path filter="url(#flift)" d="M0 258 C60 242 120 234 173 234 C228 234 290 244 346 254 V288 H0z" fill="${hill[0]}"/>
     <path filter="url(#flift)" d="M0 276 C80 266 170 272 250 276 C300 278 330 274 346 272 V288 H0z" fill="${hill[1]}"/>
-    <g class="arcs">${[[80, 28, .6], [98, 24, .42], [116, 20, .26]].map(([r, a, o], i) =>
+    <g class="arcs">${[[80, 28, .7], [98, 24, .7], [116, 20, .7]].map(([r, a, o], i) =>
     [-1, 1].map(sd => `<path d="${arc(r, a, sd)}" style="--o:${o};opacity:${o};--ad:${i * 220}ms"/>`).join('')).join('')}</g>`;
-  const el = document.getElementById('el');
+  const el = document.getElementById('el'), cap = document.getElementById('cap');
+  ['&ldquo;Cravings shout and bargain.&rdquo;', '&ldquo;You don\'t have to argue.&rdquo;', '&ldquo;You decide where the car goes.&rdquo;'].forEach((l, i) =>
+    DX.after(600 + i * 1400, () => { cap.style.transition = 'opacity 300ms'; cap.style.opacity = 0; setTimeout(() => { cap.innerHTML = l; cap.style.opacity = 1; }, 300); }));
   DX.after(0, () => { el.textContent = '0:00'; });
   DX.after(300, () => { const t0 = performance.now(); const tick = t => { const k = Math.min(1, (t - t0) / 1200), e = 1 - Math.pow(1 - k, 3), s = Math.round(72 * e);
     el.textContent = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); if (k < 1) requestAnimationFrame(tick); }; requestAnimationFrame(tick); });

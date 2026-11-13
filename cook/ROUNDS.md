@@ -152,3 +152,7 @@ session 023-032, lesson-log 033-042, slips-checkin 043-055.
   pledge (Day 7). Onboarding round 8 done, critics running.
 - Session round 8: Opus 8.7 / Sonnet 8.7 (r7 8.7 / 8.7): equal, kept. Onboarding round 8: Sonnet 8.7 (r7 8.7); Opus pending.
 - Kit: day/prep badges under 44px drop the little sun (critics read it as a smudge at stamp size).
+- Onboarding round 8: Opus 8.6 / Sonnet 8.7 (r7 8.6 / 8.7): equal, kept.
+- Kit: light selection is a pale apricot tint with a coral 2px edge (critics: the salmon fill looked dimmer than unselected
+  cream rows, and the navy edge read as a form); now one selection language in both modes (warm edge). Progress sun has an
+  amber rim so it shows on peach.

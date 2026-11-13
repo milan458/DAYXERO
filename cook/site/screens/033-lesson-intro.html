@@ -126,14 +126,14 @@
     </defs>
     <rect width="346" height="272" fill="url(#sky)"/>
     ${stars}${sun}
-    <g filter="url(#csh)" fill="${C.cloud}">${cloud(196, 50, 1)}${cloud(58, 40, .66)}</g>
+    <g filter="url(#csh)" fill="${C.cloud}">${cloud(208, 54, 1)}${cloud(326, 110, .6)}</g>
     <path filter="url(#lift)" d="M0 158 C60 134 120 144 176 156 C236 168 290 140 346 138 V272 H0z" fill="${C.hills[0]}"/>
     <path filter="url(#lift)" d="M0 192 C70 174 140 180 206 190 C266 199 312 182 346 176 V272 H0z" fill="${C.hills[1]}"/>
     <path filter="url(#lift)" d="M0 214 C80 202 170 208 250 212 C300 214 330 208 346 206 V272 H0z" fill="${C.hills[2]}"/>
     <path filter="url(#lift)" d="M0 226 H346 V272 H0z" fill="${C.road}"/>
     <path d="M6 256 H346" stroke="${C.dash}" stroke-opacity="${C.dashO}" stroke-width="2.4" stroke-dasharray="14 12" stroke-linecap="round"/>
     <g stroke="${C.speed}" stroke-opacity="${C.speedO}" stroke-width="3" stroke-linecap="round"><path d="M8 134 H30"/><path d="M2 147 H20"/><path d="M10 160 H30"/></g>
-    <g class="car"><g transform="translate(172 248) scale(1.265) translate(-174 -250)"><g class="idle">
+    <g class="car"><g transform="translate(174 248) scale(1.25) translate(-172.5 -250)"><g class="idle">
       <ellipse cx="174" cy="250" rx="126" ry="5" fill="#000" opacity="${C.shadow}"/>
       <path d="M64 186 C64 172 70 166 82 166 H146 C154 166 158 172 158 180 V188 H64Z" fill="${C.seat}"/>
       <path d="M170 188 V166 C170 158 175 153 183 153 H192 C198 153 201 158 201 164 V188Z" fill="${C.seat}"/>
@@ -147,15 +147,15 @@
       <path d="M172 198 h12" stroke="${C.shade}" stroke-width="3" stroke-linecap="round"/>
       <path d="M264 192 L250 158 L259 156.5 L275 195Z" fill="#FFFFFF" fill-opacity="${C.glass}" stroke="${C.frame}" stroke-width="2.6" stroke-linejoin="round"/>
       <path d="M219 190 C220 182 226 178 234 178 H252 C259 178 264 183 266 192Z" fill="${C.frame}"/>
-      <path d="M238 181 L231 170" stroke="${C.frame}" stroke-width="3" stroke-linecap="round"/>
-      <ellipse cx="228" cy="164" rx="3.8" ry="11.5" transform="rotate(-20 228 164)" fill="none" stroke="${C.frame}" stroke-width="3.4"/>
+      <path d="M233 181 L222 172" stroke="${C.frame}" stroke-width="3" stroke-linecap="round"/>
+      <ellipse cx="218" cy="167" rx="3.8" ry="11" transform="rotate(-24 218 167)" fill="none" stroke="${C.frame}" stroke-width="3.4"/>
       <rect x="291" y="204" width="9" height="10" rx="3" fill="${C.lamp}"/>
       <rect x="43" y="206" width="6" height="9" rx="2.5" fill="${C.stripe}"/>
       <circle cx="94" cy="237" r="21" fill="${C.shade}"/><circle cx="250" cy="237" r="21" fill="${C.shade}"/>
       <circle cx="94" cy="239" r="17" fill="${C.tyre}"/><circle cx="94" cy="239" r="6.5" fill="${C.hub}"/>
       <circle cx="250" cy="239" r="17" fill="${C.tyre}"/><circle cx="250" cy="239" r="6.5" fill="${C.hub}"/>
     </g></g>
-    ${bubble(16, 70, 58, 30, 48, [56, 122], '<path d="M14 15 l5 -5 l5 5 l5 -5 l5 5 l5 -5"/>', 900)}
+    ${bubble(16, 70, 58, 30, 48, [56, 122], '<path d="M14 17.5 l5 -5 l5 5 l5 -5 l5 5 l5 -5"/>', 900)}
     ${bubble(98, 58, 54, 30, 120, [128, 118], '<path d="M17 9 v7"/><path d="M27 9 v7"/><path d="M37 9 v7"/><path d="M17 21.5 h.01"/><path d="M27 21.5 h.01"/><path d="M37 21.5 h.01"/>', 1600)}
     </g>
   </svg>`;
