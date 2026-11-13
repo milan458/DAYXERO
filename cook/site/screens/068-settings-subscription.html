@@ -18,7 +18,7 @@
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
 /* Plan card hierarchy: plan name (the title) with its Active status, the price, then one quiet renews row and the how-to-cancel line. */
-.plan { margin-top: 16px; padding: 16px 18px 0; display: grid; gap: 0; }
+.plan { margin-top: 16px; padding: 16px 18px 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; }
 .plan .ph { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .status { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; border-radius: 99px; color: #17804F; background: color-mix(in srgb, #1F9D63 12%, transparent); }
 [data-theme="dark"] .status { color: #5FD39B; background: color-mix(in srgb, #1F9D63 22%, transparent); }
@@ -28,9 +28,8 @@
 .plan .per { margin-top: 4px; }
 .plan .kv { display: flex; justify-content: space-between; align-items: center; min-height: 46px; margin-top: 14px; border-top: 1px solid var(--line); }
 .plan .kv .v { font-weight: 600; }
-.plan .howto { display: flex; gap: 8px; align-items: center; min-height: 44px; border-top: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
-.plan .howto svg { width: 16px; height: 16px; flex: none; }
-.get { margin-top: 14px; padding: 16px 18px 16px; display: grid; gap: 6px; }
+.plan .howto { display: flex; align-items: center; min-height: 44px; border-top: 1px solid var(--line); color: var(--muted); font-weight: 500; }
+.get { margin-top: 16px; padding: 16px 18px 16px; display: grid; gap: 6px; }
 .get .it { display: flex; align-items: center; gap: 12px; min-height: 32px; }
 .get .it .ico-tile { width: 32px; height: 32px; border-radius: 10px; }
 .get .it .ico-tile svg { width: 18px; height: 18px; }
@@ -46,7 +45,7 @@
     <div class="price"><span class="num" data-count="39.99" data-dec="2" data-prefix="$">$39.99</span><span class="t-head">a year</span></div>
     <p class="t-foot muted per">About $3.33 a month</p>
     <div class="kv" data-fade style="--d:450ms"><span class="t-foot muted">Renews</span><span class="t-foot v">Nov 6, 2027</span></div>
-    <p class="t-cap howto" data-fade style="--d:540ms"><span data-ic="card" data-s="16"></span>Change or cancel any time in Settings &gt; Apple ID</p>
+    <p class="t-cap howto" data-fade style="--d:540ms">Change or cancel any time in Settings &gt; Apple ID.</p>
   </div>
   <div class="card get" data-a style="--i:3">
     <div class="t-head" style="margin-bottom:2px">What you get</div>

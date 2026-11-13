@@ -110,7 +110,7 @@
   const sc = $('#scene');
   sc.innerHTML = dark
     /* dark: the kit's soft dawn glow moves up behind the badge as its halo (its sun disc stays hidden behind the medal) */
-    ? sc.innerHTML.replace(/<circle cx="195" cy="281\.9" r="96" fill="url\(#dg/, '<circle cx="195" cy="200" r="132" fill="url(#dg').replace(/<circle cx="195" cy="281\.9" r="22" fill="#FFD27A"[^>]*>(?:<\/circle>)?/, '')
+    ? sc.innerHTML.replace(/<circle cx="195" cy="281\.9" r="96" fill="url\(#dg/, '<circle cx="195" cy="200" r="96" fill="url(#dg').replace(/<circle cx="195" cy="281\.9" r="22" fill="#FFD27A"[^>]*>(?:<\/circle>)?/, '')
         .replace(/(<rect y="334" width="390" height="70" fill="url\(#g)/, knoll + '$1')
     : sc.innerHTML.replace(/(<path filter="url\(#h2Lift_\d+\)" d="M0 282 C90 267)/, `<g transform="translate(55.198 0) scale(0.742574)">${knoll}</g>$1`);
   const xero = mood => DX.char('xero', { mood, size: 100, stage: 2 });
