@@ -1,13 +1,11 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>053 Daily pledge</title>
-<meta name="motion" content="Dawn scene fades in (in dark mode the same scene is pre-dawn: a deep night wash with a few still stars over a low, dimmed sun, ending in clean ground under the title), Xero settles onto the hill (900ms) then bobs; date, pledge (underline under 'won't'), one quiet line, reason card and the hold button arrive in order (90ms stagger). At 1.5s the button is held for 1s (fill sweeps left to right, light ticking haptic), turns green 'Pledged' with a success haptic; the sun rises 40px and the haze thins over 1.6s, Xero swaps to cheer and re-settles, and the line 'Glim will check in tonight at 9:00 PM. No pressure.' fades in under the button.">
+<meta name="motion" content="Light: the dawn scene (deeper hill silhouettes) fades in with a soft cream glow behind Xero; dark: a true navy pre-dawn sky (the kit's night sky, dawn variant: still stars, navy hills) with the sun waiting on the horizon at the right. Xero settles onto the hill (900ms) then bobs; date, pledge (underline under 'won't'), one quiet line, reason card and the hold button arrive in order (90ms stagger). At 1.5s the button is held for 1s (fill sweeps left to right, light ticking haptic), turns to 'Pledged' with a green check and a success haptic; the sun rises over 1.6s (light: up and to the right, ending 24px in from the edge with a crisp cream rim, the haze thinning; dark: 40px up off the horizon), Xero swaps to cheer and re-settles, and the line 'Glim will check in tonight at 9:00 PM. No pressure.' fades in under the button.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   .scene { position: absolute; left: 0; right: 0; top: 0; height: 420px; overflow: hidden; }
   .scene .fade { position: absolute; left: 0; right: 0; bottom: 0; height: 70px; background: linear-gradient(to bottom, color-mix(in srgb, var(--g) 0%, transparent), var(--g)); }
-  .scene .wash { position: absolute; inset: 0; display: none; background: linear-gradient(to bottom, rgba(14,19,34,.94) 0%, rgba(14,19,34,.7) 14%, rgba(14,19,34,.25) 24%, rgba(14,19,34,0) 30%, rgba(14,19,34,0) 64%, rgba(14,19,34,.3) 76%, rgba(14,19,34,.7) 88%); }
-  .scene .stars { position: absolute; left: 0; right: 0; top: 0; height: 120px; display: none; background-image: radial-gradient(1.6px 1.6px at 62px 96px, #FFF8EE 60%, transparent), radial-gradient(1.3px 1.3px at 148px 70px, #FFF8EE 60%, transparent), radial-gradient(1.5px 1.5px at 262px 92px, #FFF8EE 60%, transparent), radial-gradient(1.2px 1.2px at 318px 64px, #FFF8EE 60%, transparent), radial-gradient(1.4px 1.4px at 30px 104px, #FFF8EE 60%, transparent); opacity: .8; }
   [data-theme="dark"] .scene .fade { height: 130px; background: linear-gradient(to bottom, color-mix(in srgb, var(--g) 0%, transparent), var(--g) 82%); }
   /* light: a soft cream glow behind Xero lifts him off the deeper hills */
   .glow { position: absolute; left: 50%; top: 184px; width: 330px; height: 250px; margin-left: -165px; border-radius: 50%; background: radial-gradient(closest-side, rgba(255,247,230,.95), rgba(255,247,230,.62) 52%, rgba(255,247,230,0)); pointer-events: none; }
@@ -40,7 +38,7 @@
 </style>
 </head><body>
 <div class="screen" data-ground="apricot" data-status="on-art" id="sc">
-  <div class="scene" id="scene" data-fade><div class="wash"></div><div class="stars"></div><div class="fade"></div></div>
+  <div class="scene" id="scene" data-fade><div class="fade"></div></div>
   <div class="glow" data-fade style="--d:200ms"></div>
   <div class="xero" data-settle style="--i:1"><div class="bob" id="xero"></div></div>
   <div class="nav"><button class="icon-btn on-art" aria-label="Close" data-ic="close"></button></div>
