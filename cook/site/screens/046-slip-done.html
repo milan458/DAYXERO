@@ -1,12 +1,14 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>046 Slip: plan saved</title>
-<meta name="motion" content="Done beat: Jelli (cheer) settles in (900ms), then the small soft-green check pops beside its bell and its tick draws (320ms later, 420ms) with a success haptic. Title arrives and the hand-drawn underline sits under 'saved', then the plan card settles up from 48px like a card being put down (900ms), then the Day 7 card arrives with the badge fading in intact (no stamp: nothing was lost or earned). Button and link arrive last.">
+<meta name="motion" content="Done beat: Jelli (cheer) settles in (900ms), then the small apricot check pops on the shoulder of its bell (pinned there, it bobs with Jelli) and its ink tick draws (320ms later, 420ms) with a success haptic. Title arrives and the hand-drawn underline sits under 'saved', then the plan card settles up from 48px like a card being put down (900ms), then the Day 7 card arrives with the badge fading in intact (no stamp: nothing was lost or earned). Button and link arrive last.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   .hero { position: absolute; left: 0; right: 0; top: 106px; height: 184px; display: grid; place-items: center; }
   .hero .jl { width: 176px; height: 176px; }
-  .hero .ck { position: absolute; left: calc(50% + 68px); top: 60px; width: 44px; height: 44px; border-radius: 99px; box-shadow: 0 0 0 4px var(--g); }
+  /* the check is pinned to Jelli's bell (inside the bob, so it moves with Jelli) */
+  .hero .bob { position: relative; width: 176px; height: 176px; }
+  .hero .ck { position: absolute; left: 118px; top: 30px; width: 40px; height: 40px; border-radius: 99px; box-shadow: 0 0 0 4px var(--g); }
   .wrap { position: absolute; left: 0; right: 0; top: 306px; padding: 0 var(--gutter); }
   .wrap .head { text-align: center; }
   .wrap .lead { margin-top: 8px; color: var(--muted); }
@@ -23,8 +25,7 @@
     <button class="icon-btn" aria-label="Close" data-ic="close"></button>
   </div>
   <div class="hero">
-    <div class="jl" data-settle><div class="bob" id="jelli"></div></div>
-    <div class="ck" id="check"></div>
+    <div class="jl" data-settle><div class="bob"><div id="jelli"></div><div class="ck" id="check"></div></div></div>
   </div>
   <div class="wrap">
     <div class="head">
@@ -39,7 +40,7 @@
       <div id="badge"></div>
       <div class="grow">
         <p class="t-head">Still Day 7</p>
-        <p class="t-foot">Free since Fri, Nov 6. Xero's sky stays 40% clear.</p>
+        <p class="t-foot">Quit Day: Fri, Nov 6. Your sky stays 40% clear.</p>
       </div>
     </div>
   </div>
@@ -52,7 +53,7 @@
   document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic, { w: 2.4 }));
   /* cheer Jelli without its ink sparkle marks (they read as a stray tick beside the check) */
   document.getElementById('jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 176 }).replace(/<g opacity="1" stroke="#(?:24163A|F3E9DE)"[^>]*>.*?<\/g>/s, '');
-  document.getElementById('check').innerHTML = DX.check({ size: 44, d: 500, color: '#4E9E7E' });
+  document.getElementById('check').innerHTML = DX.check({ size: 40, d: 500, color: '#FFB070', fg: '#1E1A3A' });
   document.getElementById('badge').innerHTML = DX.badge({ kind: 'day', n: 7, size: 72, bare: true });
 </script>
 </body></html>
