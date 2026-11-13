@@ -1,22 +1,20 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>008 Onboarding obstacles</title>
-<meta name="motion" content="Progress eases from 5/11 to 6/11 (900ms settle). Question, the two-column chip grid (3 rows of 2) and the tools card arrive (600ms, 90ms stagger). At 900ms Social situations fills to selected with a 520ms spring bump and a light selection haptic; the count changes from 1 picked to 2 picked with a bump and its tool line fades in (400ms).">
+<meta name="motion" content="Progress eases from 5/11 to 6/11 (900ms settle). Question, the chips (006's pattern: natural widths, three balanced rows of two) and the count line arrive (600ms, 90ms stagger). At 900ms Social situations takes the kit selection with a 520ms spring bump and a light selection haptic; the count line changes from 1 picked to 2 picked with a bump and names the second tool (400ms fade).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   /* Onboarding header: back button and progress only (no avatar); the bar ends at the gutter so the sun knob never collides. */
   .nav { padding-right: 26px; }
-  /* Obstacles only (what gets in the way). Cravings and stress were asked on 006, so they are not here. 3 rows of 2: no orphans. */
-  .answers { gap: 16px !important; padding-top: 26px !important; }
-  .answers .chips.two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .answers .chip { min-height: 62px; justify-content: flex-start; padding: 0 16px; }
-  .tools { display: grid; grid-template-columns: 64px 1fr; align-items: center; gap: 12px; margin-top: 8px; padding: 16px 16px 16px 10px; }
-  .tools .xc { width: 64px; height: 64px; align-self: start; }
-  .tools b { font-weight: 700; }
-  .tools ul { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 4px; }
-  .tools li { display: flex; gap: 8px; align-items: baseline; color: var(--muted); }
-  .tools li::before { content: ""; width: 6px; height: 6px; border-radius: 99px; background: var(--coral); flex: none; transform: translateY(-2px); }
-  .tools li b { color: var(--fg); font-weight: 600; }
+  /* Obstacles only (what gets in the way). Cravings and stress were asked on 006, so they are not here.
+     Same chip pattern as 006: natural widths (12px side padding), hand-balanced rows of two. */
+  .answers { gap: 16px !important; padding-top: 24px !important; }
+  .flow { display: grid; gap: 8px; }
+  .flow .r { display: flex; gap: 8px; }
+  .flow .chip { flex: none; padding: 0 12px; white-space: nowrap; }
+  /* A plain count line, no card and no character. */
+  .count { color: var(--muted); padding-top: 4px; }
+  .count b { color: var(--fg); font-weight: 700; }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
@@ -30,14 +28,12 @@
     <p class="t-body muted" data-a style="--i:1">Pick any that might trip you up after Quit Day. I&rsquo;ll plan for each.</p>
   </div>
   <div class="answers">
-    <div class="chips two" data-a style="--i:2">
-      <button class="chip">Weight gain</button><button class="chip on">Irritability</button>
-      <button class="chip">Low motivation</button><button class="chip" id="social">Social situations</button>
-      <button class="chip">Poor sleep</button><button class="chip">Trouble focusing</button>
+    <div class="flow" data-a style="--i:2">
+      <div class="r"><button class="chip on">Irritability</button><button class="chip" id="social">Social situations</button></div>
+      <div class="r"><button class="chip">Weight gain</button><button class="chip">Trouble focusing</button></div>
+      <div class="r"><button class="chip">Poor sleep</button><button class="chip">Low motivation</button></div>
     </div>
-    <div class="card tools" data-a style="--i:3"><div class="xc" id="xc"></div>
-      <div><p class="t-foot"><b id="n">2 picked.</b> I&rsquo;ll add a tool for each.</p>
-        <ul class="t-foot" id="list"><li><span><b>Irritability:</b> a 2-minute reset</span></li><li id="li2"><span><b>Social situations:</b> what to say</span></li></ul></div></div>
+    <p class="t-foot count" data-a style="--i:3"><b id="n">2 picked.</b> <span id="tl">You&rsquo;ll get a 2-minute reset for irritability and what to say in social situations.</span></p>
   </div>
 
   <div class="dock">
@@ -47,12 +43,12 @@
 </div>
 <script>
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
-  document.getElementById('xc').innerHTML = DX.char('xero', { mood: 'hello', size: 64 });
-  const bar = document.getElementById('bar'), social = document.getElementById('social'), n = document.getElementById('n'), li2 = document.getElementById('li2');
+  const bar = document.getElementById('bar'), social = document.getElementById('social'), n = document.getElementById('n'), tl = document.getElementById('tl');
+  const one = 'You&rsquo;ll get a 2-minute reset for irritability.', two = 'You&rsquo;ll get a 2-minute reset for irritability and what to say in social situations.';
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '45.5%'); void bar.offsetWidth; bar.style.transition = '';
-    social.classList.remove('on', 'bump'); n.textContent = '1 picked.'; n.classList.remove('bump'); li2.style.opacity = 0; });
+    social.classList.remove('on', 'bump'); n.textContent = '1 picked.'; n.classList.remove('bump'); tl.innerHTML = one; });
   DX.after(250, () => bar.style.setProperty('--p', '54.5%'));
-  const land = () => { social.classList.add('on', 'bump'); n.textContent = '2 picked.'; n.style.display = 'inline-block'; n.classList.add('bump'); li2.style.transition = 'opacity .4s'; li2.style.opacity = 1; };
+  const land = () => { social.classList.add('on', 'bump'); n.textContent = '2 picked.'; n.style.display = 'inline-block'; n.classList.add('bump'); tl.innerHTML = two; };
   DX.after(900, land); DX.onStill(land);
 </script>
 </body></html>
