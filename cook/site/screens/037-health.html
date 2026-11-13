@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>037 Health timeline</title>
-<meta name="motion" content="Title and the Vaping / Smoking chips arrive; each card's paper-cut spot (its own motif: sunrise, clearing wind, summit flag, calm lake, lips) lifts in with the card, then the rail draws top to bottom (900ms) while timeline cards arrive with a 90ms stagger. The rail node of each done change pops its single tick as the card lands (the first change, withdrawal starting, gets a plain node and a neutral Started); the Under way bar fills to 50% (900ms settle). Switching chips cross-fades the list (250ms) with a selection haptic.">
+<meta name="motion" content="Title and the Vaping / Smoking chips arrive; each card's paper-cut spot (its own motif: sunrise, clearing wind, summit flag, calm lake, a healthy smile) lifts in with the card, then the rail draws top to bottom (900ms) while timeline cards arrive with a 90ms stagger. The rail node of each done change pops its single tick as the card lands (the first change, withdrawal starting, gets a plain node and a neutral Started); the Under way bar fills to 50% (900ms settle). Switching chips cross-fades the list (250ms) with a selection haptic.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -35,9 +35,9 @@
   .item.past .ill svg { width: 48px; height: 48px; }
   .item.past .t-head { font-size: 15.5px; font-weight: 600; }
   .item.now { padding: 18px 16px 18px 14px; box-shadow: inset 0 0 0 2px var(--fg), 0 10px 24px rgba(30,26,58,.08); }
-  .item.now .ill { width: 76px; height: 76px; border-radius: 20px; }
-  .item.now .ill svg { width: 76px; height: 76px; }
-  .item.now .t-head { font-size: 19px; }
+  .item.now .ill { width: 68px; height: 68px; border-radius: 20px; }
+  .item.now .ill svg { width: 68px; height: 68px; }
+  .item.now .t-head { font-size: 18px; }
   .item.now .progress { height: 10px; margin-top: 4px; border-radius: 99px; }
   .item.now .progress > i { border-radius: 99px; }
 </style>
@@ -100,7 +100,7 @@
     cloud: ['#DCE8FF', `<g stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" fill="none"><path d="M6 16h18"/><path d="M10 23h12"/></g>` + cloud(26, 10, 1.05, '#FFFFFF') + cloud(44, 24, .55, '#FFFFFF', .7) + hills(['#A9C2F2', '#7FA0EA', '#5C7FE0'])],
     peak: ['#FFD9C2', sun(12, 14, 6) + hills(['#E8674A', '#FF8A5E', '#FFAE73'], true) + `<path d="M36 14V4" stroke="#1E1A3A" stroke-width="1.8" stroke-linecap="round"/><path d="M36 4.5l9 3-9 3z" fill="#1E1A3A"/>`],
     sunny: ['#D3F1E0', sun(31, 24, 10) + `<path filter="url(#pcLift)" d="M0 34 C12 28 24 32 34 31 S50 26 62 30 V62 H0z" fill="#7FD3A6"/><rect y="40" width="62" height="22" fill="#8ECDE6"/><g stroke="#FFF8EE" stroke-width="2" stroke-linecap="round"><path d="M22 46h18"/><path d="M26 52h10"/><path d="M8 57h8"/><path d="M46 57h8"/></g><ellipse cx="31" cy="44" rx="7" ry="1.6" fill="var(--sun)" opacity=".9"/>`],
-    lips: ['#FFF0E6', `<path d="M13 26c6-7 12-8 18-4 6-4 12-3 18 4-6 10-30 10-36 0z" fill="#F0705A"/><path d="M13 26c11 3 25 3 36 0" stroke="#1E1A3A" stroke-opacity=".55" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M49 8l1.6 3.6 3.6 1.2-3.6 1.2L49 18l-1.2-4-3.6-1.2 3.6-1.2z" fill="var(--sun)"/><path filter="url(#pcLift)" d="M0 48 C16 43 34 50 62 45 V62 H0z" fill="#FFC9B8"/><path filter="url(#pcLift)" d="M0 55 C20 51 40 57 62 52 V62 H0z" fill="#FFAE96"/>`]
+    lips: ['#FFE9DE', `<path filter="url(#pcLift)" d="M0 40 C16 35 34 40 62 36 V62 H0z" fill="#FFCFBD"/><circle cx="31" cy="33" r="19" fill="#FFB683"/><circle cx="20" cy="37" r="3.2" fill="#FF8F7A" opacity=".45"/><circle cx="42" cy="37" r="3.2" fill="#FF8F7A" opacity=".45"/><path d="M22 30 q3 -3.4 6 0 M34 30 q3 -3.4 6 0" fill="none" stroke="#3A2230" stroke-width="1.7" stroke-linecap="round"/><path d="M22.5 36.5 C27 38 35 38 39.5 36.5 C38.6 44 23.4 44 22.5 36.5Z" fill="#A8384E" stroke="#E0707A" stroke-width="1.3" stroke-linejoin="round"/><path d="M24.5 38.6 C28 39.6 34 39.6 37.5 38.6 V40 C34 41 28 41 24.5 40Z" fill="#FFF8EE"/><path d="M50 8l1.6 3.6 3.6 1.2-3.6 1.2L50 18l-1.2-4-3.6-1.2 3.6-1.2z" fill="var(--sun)"/><path filter="url(#pcLift)" d="M0 50 C20 46 40 52 62 47 V62 H0z" fill="#FFA58C"/>`]
   };
   document.body.insertAdjacentHTML('beforeend', '<svg width="0" height="0" style="position:absolute"><filter id="pcLift" x="-5%" y="-20%" width="110%" height="140%"><feDropShadow dx="0" dy="-1.2" stdDeviation="1.2" flood-color="#1A0B2E" flood-opacity=".22"/></filter></svg>');
   document.querySelectorAll('[data-spot]').forEach(e => e.innerHTML = `<svg viewBox="0 0 62 62" aria-hidden="true"><rect width="62" height="62" fill="${SP[e.dataset.spot][0]}"/>${SP[e.dataset.spot][1]}</svg>`);

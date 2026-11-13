@@ -4,10 +4,13 @@
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .stage { position: absolute; left: 0; right: 0; top: 52px; height: 318px; }
+  .stage { position: absolute; left: 0; right: 0; top: 84px; height: 318px; }
   .rays-wrap { position: absolute; left: 165px; top: 150px; width: 0; height: 0; --ray-a: #E9892E; --ray-b: #FFE7A3; }
-  [data-theme="dark"] .rays-wrap { --ray-a: #FFC38A; --ray-b: #FFE2C2; }
-  [data-theme="dark"] .rays-wrap svg { opacity: .48; }
+  /* dark: gold rays at low opacity, laid as paper (a soft shadow under each layer) so they never go taupe on navy */
+  [data-theme="dark"] .rays-wrap { --ray-a: #F5B83D; --ray-b: #FFD966; }
+  [data-theme="dark"] .rays-wrap path { fill-opacity: .5; }
+  [data-theme="dark"] .rays-wrap path.short { fill-opacity: .3; }
+  [data-theme="dark"] .rays-wrap svg { filter: drop-shadow(0 2px 1.5px rgba(0,0,0,.45)); }
   .rays-wrap svg { position: absolute; left: -150px; top: -150px; width: 300px; height: 300px; overflow: visible; }
   .medal { position: absolute; left: 85px; top: 70px; z-index: 1; }
   .ground { position: absolute; left: 92px; top: 222px; width: 236px; height: 22px; border-radius: 50%; background: radial-gradient(closest-side, rgba(30,26,58,.22), rgba(30,26,58,0)); }
@@ -17,10 +20,12 @@
   .sway { transform-origin: 0 0; }
   .play .sway { animation: sway 8s ease-in-out infinite alternate; }
   @keyframes sway { from { transform: rotate(-3deg); } to { transform: rotate(3deg); } }
-  .copy { position: absolute; left: 0; right: 0; top: 380px; text-align: center; display: grid; gap: 10px; justify-items: center; padding: 0 var(--gutter); }
+  .copy { position: absolute; left: 0; right: 0; top: 368px; text-align: center; display: grid; gap: 10px; justify-items: center; padding: 0 var(--gutter); }
   .copy .t-body { max-width: 300px; }
-  .stats { position: absolute; left: var(--gutter); right: var(--gutter); top: 556px; }
+  .stats { position: absolute; left: var(--gutter); right: var(--gutter); top: 548px; }
   .stat { text-align: center; }
+  .stat .t-cap { text-wrap: balance; }
+  .copy .source { text-decoration: none; color: var(--muted); font-weight: 600; }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
@@ -42,7 +47,7 @@
 
   <div class="stats grid2" data-a style="--i:8">
     <div class="stat"><span class="num" data-count="49" data-prefix="$" data-dec="2" data-delay="1100" data-dur="900">$49.00</span><span class="t-cap">kept</span></div>
-    <div class="stat"><span class="num" data-count="84" data-delay="1100" data-dur="900">84</span><span class="t-cap">cigarettes not smoked</span></div>
+    <div class="stat"><span class="num" data-count="84" data-delay="1100" data-dur="900">84</span><span class="t-cap">cigarettes not&nbsp;smoked</span></div>
   </div>
 
   <div class="dock">
@@ -54,7 +59,7 @@
   const rays = [];
   for (let i = -6; i <= 6; i++) {
     const a = i * 15, long = i % 2 === 0;
-    rays.push(`<path d="M-${long ? 5 : 3.5} -58 L0 -${long ? 96 : 80} L${long ? 5 : 3.5} -58Z" fill="var(${long ? '--ray-a' : '--ray-b'})" opacity="${long ? 1 : .95}" transform="rotate(${a})"/>`);
+    rays.push(`<path class="${long ? 'long' : 'short'}" d="M-${long ? 5 : 3.5} -58 L0 -${long ? 96 : 80} L${long ? 5 : 3.5} -58Z" fill="var(${long ? '--ray-a' : '--ray-b'})" opacity="${long ? 1 : .95}" transform="rotate(${a})"/>`);
   }
   document.getElementById('rays').innerHTML = rays.join('');
   document.getElementById('medal').innerHTML = DX.badge({ kind: 'day', n: 7, size: 160, bare: true });
