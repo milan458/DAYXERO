@@ -60,6 +60,13 @@
           </div>
           <a class="source">Source: Cochrane review of 133 trials, 2018</a>
         </div>
+        <div class="card best" data-a style="--i:3">
+          <div class="x" data-settle style="--d:600ms"><div class="bob" id="xero"></div></div>
+          <div class="grow">
+            <p class="t-foot lbl">What works best</p>
+            <p class="t-head" style="font-size:17px">A patch plus a faster form beats either alone.</p>
+          </div>
+        </div>
         <div class="caution t-foot" data-a style="--i:4">
           <span data-ic="shield"></span>
           <span>Follow your pack's label. DayXero doesn't give dosing advice.</span>
@@ -75,5 +82,6 @@
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic));
   document.querySelectorAll('[data-ic2]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic2, { w: 2.4 })));
+  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'hello', size: 88 });
 </script>
 </body></html>
