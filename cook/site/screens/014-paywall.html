@@ -4,10 +4,11 @@
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .head { padding: 108px var(--gutter) 0; display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
+  .head { padding: 108px var(--gutter) 0; display: grid; grid-template-columns: 1fr 100px; gap: 8px; align-items: center; }
+  .head .xs { width: 100px; height: 100px; display: grid; place-items: center; }
   .head .t-large { font-size: 30px; }
   .head .t-foot { margin-top: 6px; }
-  .incl { padding: 14px var(--gutter) 0; display: grid; gap: 7px; }
+  .incl { padding: 16px var(--gutter) 0; display: grid; gap: 10px; }
   .incl .it { display: flex; align-items: center; gap: 10px; }
   .incl svg { width: 18px; height: 18px; flex: none; }
   .plans { padding: 16px var(--gutter) 0; display: grid; gap: 8px; }
@@ -16,14 +17,21 @@
   .opt .price .num { font-size: 18px; letter-spacing: -.3px; display: block; }
   .opt .price .t-cap { color: var(--muted); }
   .opt .t-head { font-size: 17px; display: flex; align-items: center; gap: 8px; }
+  .opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
+  .opt.quiet { min-height: 50px; background: transparent; box-shadow: inset 0 0 0 1px var(--line); }
+  .opt.quiet .t-head { font: 600 15px/1.2 var(--body); }
+  .opt.quiet .price .num { font: 600 15px/1.2 var(--body); display: inline; }
+  .opt.quiet .price .t-cap { display: inline; margin-left: 4px; }
+  .opt.quiet .radio { width: 20px; height: 20px; }
   .pill { font: 700 12px/1 var(--body); padding: 5px 8px; border-radius: 99px; background: var(--sel); color: var(--sel-fg); letter-spacing: .1px; }
   .tlh { margin: 20px var(--gutter) 0; font-weight: 700; }
-  .tl { margin: 12px var(--gutter) 0; position: relative; height: 62px; }
+  .tl { margin: 14px var(--gutter) 0; position: relative; height: 66px; }
   .tl svg.ln { position: absolute; left: 7px; right: 7px; top: 6px; width: calc(100% - 14px); height: 4px; overflow: visible; }
   .tl .n { position: absolute; top: 0; display: grid; gap: 6px; }
   .tl .n i { width: 16px; height: 16px; border-radius: 99px; background: var(--g); box-shadow: inset 0 0 0 3px var(--fg); display: block; }
   .tl .n.now i { background: var(--fg); }
-  .tl .n .t-cap { color: var(--muted); white-space: nowrap; }
+  .tl .n .t-cap { color: var(--muted); white-space: nowrap; font-size: 13px; line-height: 1.35; }
+  .tl .n .t-cap b { font-size: 14px; }
   .tl .n .t-cap b { color: var(--fg); font-weight: 700; display: block; }
   .tl .n.mid { left: 50%; transform: translateX(-50%); justify-items: center; text-align: center; }
   .tl .n.end { right: 0; justify-items: end; text-align: right; }
@@ -43,7 +51,7 @@
       <h1 class="t-large" data-a>Sam, your plan is ready</h1>
       <p class="t-foot muted" data-a style="--i:1">For your Quit Day, Fri, Nov 6.</p>
     </div>
-    <div data-settle style="--d:150ms"><div class="bob" id="xero"></div></div>
+    <div class="xs" data-settle style="--d:150ms"><div class="bob" id="xero"></div></div>
   </div>
 
   <div class="incl" id="incl"></div>
@@ -51,7 +59,7 @@
   <div class="plans">
     <button class="opt" id="yr" data-a style="--i:7"><span class="radio"></span><div class="grow"><p class="t-head">Yearly <span class="pill">7 days free</span></p><p class="t-foot">$3.33 a month</p></div><div class="price"><span class="num">$39.99</span><span class="t-cap">a year</span></div></button>
     <button class="opt" data-a style="--i:8"><span class="radio"></span><div class="grow"><p class="t-head">Monthly</p><p class="t-foot">Cancel anytime</p></div><div class="price"><span class="num">$9.99</span><span class="t-cap">a month</span></div></button>
-    <button class="opt" data-a style="--i:9"><span class="radio"></span><div class="grow"><p class="t-head">Lifetime</p><p class="t-foot">Pay once, keep it</p></div><div class="price"><span class="num">$99.99</span><span class="t-cap">one time</span></div></button>
+    <button class="opt quiet" data-a style="--i:9"><span class="radio"></span><div class="grow"><p class="t-head">Lifetime, pay once</p></div><div class="price"><span class="num">$99.99</span></div></button>
   </div>
 
   <p class="t-foot tlh" data-a style="--i:10">How your free week works</p>
@@ -71,7 +79,7 @@
 <script>
   document.querySelector('.icon-btn').innerHTML = DX.icon('back');
   document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'hello', size: 88 });
-  const items = ['Prep 4 to 7 and your Day Xero kit', 'Weeks 1 to 4 of the program path', "Jelli's voice coaching", 'Slip plans, NRT schedule and trigger maps'];
+  const items = ['Prep 4 to 7 and your Day Xero kit', 'Weeks 1 to 4 with voice coaching', 'Slip plans and your NRT schedule'];
   document.getElementById('incl').innerHTML = items.map((t, i) => `<div class="it" data-a style="--i:${i + 2}">
     <svg viewBox="0 0 24 24" fill="none" stroke="var(--tick)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path class="draw" d="M5 12.5l4.5 4.5L19 7.5" style="--len:24;--d:${300 + i * 90}ms"/></svg>
     <p class="t-foot">${t}</p></div>`).join('');

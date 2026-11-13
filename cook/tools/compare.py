@@ -4,7 +4,7 @@ import sys, os, glob
 from PIL import Image, ImageDraw
 st, bf, outp = sys.argv[1], sys.argv[2], sys.argv[3]
 ids = sorted({os.path.basename(f)[:-10] for f in glob.glob(os.path.join(st, '*-light.png'))})
-TW = 230; TH = int(TW * 844 / 390); GAP = 8; LAB = 22
+TW = int(os.environ.get("TW", 230)); TH = int(TW * 844 / 390); GAP = 8; LAB = 22
 def tile(path):
     if path and os.path.exists(path):
         im = Image.open(path).convert('RGB'); im = im.resize((TW, int(TW * im.height / im.width))); return im.crop((0, 0, TW, TH))

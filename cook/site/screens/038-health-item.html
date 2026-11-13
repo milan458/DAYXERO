@@ -1,35 +1,40 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>038 Health change</title>
-<meta name="motion" content="The illustration tile settles in (900ms) and its sparkle pops, then title, the timing card (the countdown ring sweeps to 5 of 7 days), paragraphs and the 'What you might notice' rows arrive with a 90ms stagger; each tick draws as its row lands. No haptic.">
+<meta name="motion" content="The paper-cut dawn card fades up with its sun rising, Xero settles onto the hills (900ms) and bobs, then title, the timing card (the countdown ring sweeps to 5 of 7 days), paragraphs and the 'What you might notice' rows arrive with a 90ms stagger. No haptic.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .hero { display: flex; align-items: center; gap: 16px; margin-top: 4px; }
-  .ill { width: 88px; height: 88px; border-radius: 26px; background: var(--card-2); display: grid; place-items: center; color: var(--fg); flex: none; }
-  .ill svg { width: 66px; height: 66px; overflow: visible; }
-  .when { margin-top: 18px; display: flex; align-items: center; gap: 14px; }
+  .art { position: relative; height: 176px; border-radius: 26px; overflow: hidden; }
+  .art .scene { position: absolute; inset: 0; }
+  [data-theme="dark"] .art .scene { filter: brightness(.85) saturate(.92); }
+  .art .hero { position: absolute; left: 50%; bottom: 6px; margin-left: -58px; }
+  .art .tag { position: absolute; left: 14px; top: 14px; height: 30px; padding: 0 12px; border-radius: 99px; background: rgba(255,248,238,.92); color: var(--ink);
+    display: inline-flex; align-items: center; font: 600 13px/1 var(--body); }
+  .head { margin-top: 18px; display: grid; gap: 6px; }
+  .when { margin-top: 16px; display: flex; align-items: center; gap: 14px; }
   .when .ringwrap { position: relative; width: 56px; height: 56px; flex: none; color: var(--fg); }
   .when .ringwrap b { position: absolute; inset: 0; display: grid; place-items: center; font: 800 18px/1 var(--display); }
   .when .grow { flex: 1; display: grid; gap: 2px; }
   .when .side { text-align: right; display: grid; gap: 2px; }
-  .copy { margin-top: 18px; display: grid; gap: 12px; }
-  .notice { margin-top: 20px; }
+  .copy { margin-top: 16px; display: grid; gap: 10px; }
+  .notice { margin-top: 18px; }
   .notice .list { margin-top: 10px; }
   .notice .row { min-height: 50px; gap: 12px; }
-  .tk { width: 26px; height: 26px; border-radius: 99px; background: var(--tick); display: grid; place-items: center; flex: none; }
-  .tk svg { width: 26px; height: 26px; }
+  .dot { width: 26px; height: 26px; display: grid; place-items: center; flex: none; }
+  .dot::after { content: ""; width: 8px; height: 8px; border-radius: 99px; background: var(--fg); opacity: .55; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
   <div class="nav"><button class="icon-btn" aria-label="Close" data-ic="close" data-go="037-health"></button></div>
-  <div class="scroll" style="padding-top:108px">
+  <div class="scroll" style="padding-top:100px">
     <div class="pad">
-      <div class="hero">
-        <span class="ill" data-settle><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 25c5-7 11-8 18-4 7-4 13-3 18 4-6 10-30 10-36 0z" fill="var(--mark)" fill-opacity=".85"/><path d="M6 25c10 3 26 3 36 0"/><path d="M40 6l2 4.5 4.5 1.5-4.5 1.5-2 4.5-1.5-4.5-4.5-1.5 4.5-1.5z" fill="var(--sun)" stroke="none" data-pop style="transform-origin:40px 12px;--d:700ms"/></svg></span>
-        <div style="display:grid;gap:6px">
-          <p class="t-foot muted" data-a style="--i:0">What's changing · Vaping</p>
-          <h1 class="t-title" data-a style="--i:1">Healthier lips and <span class="mark">gums</span></h1>
-        </div>
+      <div class="art" data-a style="--i:0">
+        <div class="scene" id="scene"></div>
+        <div class="hero" data-settle style="--d:200ms"><div class="bob" id="hero"></div></div>
+        <span class="tag">What's changing · Vaping</span>
+      </div>
+      <div class="head">
+        <h1 class="t-title" data-a style="--i:1">Healthier lips and gums</h1>
       </div>
 
       <div class="card when" data-a style="--i:2">
@@ -45,9 +50,9 @@
       <div class="notice">
         <h2 class="t-head" data-a style="--i:5">What you might notice</h2>
         <div class="list" data-a style="--i:6">
-          <div class="row"><span class="tk"><svg viewBox="0 0 24 24"><path class="draw" d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="var(--g)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="--len:16;--d:900ms"/></svg></span><p class="t-foot grow" style="font-size:15px">Pinker, firmer gums</p></div>
-          <div class="row"><span class="tk"><svg viewBox="0 0 24 24"><path class="draw" d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="var(--g)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="--len:16;--d:1000ms"/></svg></span><p class="t-foot grow" style="font-size:15px">Fresher breath and a sharper sense of taste</p></div>
-          <div class="row"><span class="tk"><svg viewBox="0 0 24 24"><path class="draw" d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="var(--g)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="--len:16;--d:1100ms"/></svg></span><p class="t-foot grow" style="font-size:15px">A little bleeding when you brush at first. That's healing, not harm.</p></div>
+          <div class="row"><span class="dot"></span><p class="t-foot grow" style="font-size:15px">Pinker, firmer gums</p></div>
+          <div class="row"><span class="dot"></span><p class="t-foot grow" style="font-size:15px">Fresher breath and a sharper sense of taste</p></div>
+          <div class="row"><span class="dot"></span><p class="t-foot grow" style="font-size:15px">A little bleeding when you brush at first. That's healing, not harm.</p></div>
         </div>
       </div>
       <p class="t-cap muted" data-a style="--i:7;margin-top:14px">Source: <span class="source">NHS Better Health</span></p>
@@ -56,6 +61,8 @@
 </div>
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20 })));
+  document.getElementById('scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 346, h: 176, clarity: 70 });
+  document.getElementById('hero').innerHTML = DX.char('xero', { mood: 'hello', size: 116, stage: 2 });
   document.getElementById('ring').innerHTML = DX.ring({ size: 56, stroke: 6, p: 5 / 7, color: 'var(--fg)', track: 'var(--track)' });
 </script>
 </body></html>
