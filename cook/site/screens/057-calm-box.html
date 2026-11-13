@@ -62,13 +62,14 @@ const P = [
   { w: 'Breathe out', c: 'Out slowly through your mouth.' },
   { w: 'Hold', c: 'Rest here. Nothing to do.' }];
 const phase = document.getElementById('phase'), count = document.getElementById('count'), cue = document.getElementById('cue'), lit = document.getElementById('lit'), round = document.getElementById('round'), pips = document.querySelectorAll('.rnd i');
-function set(k, n) {
+/* g counts sides walked so far: the dash offset only ever decreases, so the lit stroke always slides forward (never back round the square at a new round). */
+function set(k, n, g) {
   const p = P[k];
   if (n === 4) { phase.style.opacity = 0; cue.style.opacity = 0; setTimeout(() => { phase.textContent = p.w; cue.textContent = p.c; phase.style.opacity = 1; cue.style.opacity = 1; }, 220);
-    lit.style.strokeDashoffset = -100 * k; }
+    lit.style.strokeDashoffset = -100 * g; }
   count.textContent = n;
 }
-for (let s = 0; s < 48; s++) { const k = Math.floor(s / 4) % 4, n = 4 - (s % 4); DX.after(s * 1000, () => set(k, n)); }
+for (let s = 0; s < 48; s++) { const g = Math.floor(s / 4), k = g % 4, n = 4 - (s % 4); DX.after(s * 1000, () => set(k, n, g)); }
 DX.after(16000, () => { round.textContent = 'Round 3 of 4'; pips[2].classList.add('on'); });
 DX.after(32000, () => { round.textContent = 'Round 4 of 4'; pips[3].classList.add('on'); });
 DX.onStill(() => { lit.style.strokeDashoffset = -100; phase.textContent = P[1].w; cue.textContent = P[1].c; count.textContent = 2; });

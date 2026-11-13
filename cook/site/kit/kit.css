@@ -240,3 +240,5 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
 /* Selection tint: warm apricot on light grounds, a cream lift on dark and colour grounds. */
 .screen { --sel-tint: color-mix(in srgb, #FF9A5C 15%, #FFFFFF); }
 .screen[data-ground="ocean"], .screen[data-ground="violet"], .screen[data-ground="night"], [data-theme="dark"] .screen { --sel-tint: color-mix(in srgb, #FFF8EE 14%, var(--card)); }
+/* Multi-select rows use rounded-square checkboxes: <button class="opt multi"> */
+.opt.multi .radio { border-radius: 7px; }

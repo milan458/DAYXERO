@@ -63,12 +63,12 @@ const svg = (inner) => `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" 
 const who = (html, x, y, d) => `<div class="who" style="left:${x}px;top:${y}px;--d:${d}ms" data-settle>${html}</div>`;
 
 /* Box breathing: ocean blue, Jelli in the sea window, one track with the lit side and the walking dot (as on 057). */
-const T = 'M44.5 101 V40 Q44.5 27 57.5 27 H109.5 Q122.5 27 122.5 40 V92 Q122.5 105 109.5 105 H57.5 Q44.5 105 44.5 92 Z';
+const T = 'M38 99 V33 Q38 21 50 21 H117 Q129 21 129 33 V99 Q129 111 117 111 H50 Q38 111 38 99Z';
 $('#a-box').innerHTML = svg(`<defs>${dark ? grad('ob', '#22409A', '#0F2366') : grad('ob', '#3A63E0', '#1F3C8C')}</defs><rect width="${W}" height="${H}" fill="url(#ob)"/>
   ${stars([[18, 22], [148, 18, 1.4], [150, 112], [16, 104, 1.5]], .55)}
-  <path d="M38 33 V99 Q38 111 50 111 H117 Q129 111 129 99 V33 Q129 21 117 21 H50 Q38 21 38 33Z" fill="none" stroke="#FFF8EE" stroke-opacity=".38" stroke-width="3.5"/>
-  <path d="M38 99 V33 Q38 21 50 21" fill="none" stroke="#FFF8EE" stroke-width="4" stroke-linecap="round"/>
-  <circle r="5.5" fill="#FFF8EE"><animateMotion dur="16s" repeatCount="indefinite" begin="-2s" path="M38 99 V33 Q38 21 50 21 H117 Q129 21 129 33 V99 Q129 111 117 111 H50 Q38 111 38 99Z"/></circle>`)
+  <path d="${T}" fill="none" stroke="#FFF8EE" stroke-opacity=".38" stroke-width="3.5"/>
+  <path d="${T}" pathLength="400" fill="none" stroke="#FFF8EE" stroke-width="4" stroke-linecap="round" stroke-dasharray="100 300" stroke-dashoffset="0">${DX.still ? '' : '<animate attributeName="stroke-dashoffset" values="0;-100;-200;-300" keyTimes="0;.25;.5;.75" calcMode="discrete" dur="16s" begin="-2s" repeatCount="indefinite"/>'}</path>
+  <circle r="5.5" fill="#FFF8EE"><animateMotion dur="16s" repeatCount="indefinite" begin="-2s" path="${T}"/></circle>`)
   + `<div class="win">${DX.char('horizon', { scene: 'sea', w: 72, h: 72, clarity: 100 })}${who(DX.char('jelli', { mood: 'breathe', size: 64 }), 4, 6, 420)}</div>`;
 if (DX.still) $('#a-box circle[r="5.5"]').outerHTML = '<circle cx="38" cy="66" r="5.5" fill="#FFF8EE"/>';
 
