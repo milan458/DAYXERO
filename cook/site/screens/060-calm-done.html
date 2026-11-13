@@ -1,42 +1,32 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>060 Calm done</title>
-<meta name="motion" content="The paper sea disc fades in, Jelli settles into it cheering (hop loop, 250ms), then the small check pops beside Jelli and its tick draws (900ms, success haptic); the headline with its drawn underline and the line arrive, Jelli's two 4-point stars twinkle in; the compact minutes row counts 6 to 8 at 1.2s with a +2 floating up and the +2 just now tag fading in beside it; the optional feeling chips arrive last. No other springs.">
+<meta name="motion" content="The sea disc fades in, Jelli settles into it cheering (hop loop, 250ms), then the small apricot check pops beside Jelli and its ink tick draws (900ms, success haptic); the headline with its drawn underline and the line arrive, Jelli's two 4-point stars twinkle in; the compact minutes row counts 6 to 8 at 1.2s with a +2 floating up and the +2 just now tag fading in beside it; the optional feeling chips arrive last, centred. No other springs.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-/* screen-local helpers: icon fill, section labels, small icon tiles, bottom toast */
-.hd { display: grid; gap: 6px; padding-top: 58px; }
-.sec { padding: 22px 4px 8px; color: var(--muted); }
-.rt { font-weight: 600; }
-.ico-tile.s { width: 34px; height: 34px; border-radius: 11px; }
-.ico-tile.s svg { width: 19px; height: 19px; }
-.val { color: var(--muted); font: 500 15px/1.2 var(--body); white-space: nowrap; }
-.list > .row.tap { min-height: 56px; }
-.toast.b { top: auto; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
-.toast.b.in { opacity: 1; transform: none; }
-.toast.b .ck { flex: none; }
-.opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
-html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--sel) 72%, transparent); }
-.pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
-
-.top { padding-top: 70px; display: grid; justify-items: center; text-align: center; gap: 10px; }
-.hero { position: relative; width: 240px; height: 210px; margin-bottom: 6px; }
-.hero .halo { position: absolute; left: 20px; top: 10px; width: 200px; height: 200px; border-radius: 99px; overflow: hidden; }
-.hero .jel { position: absolute; left: 30px; top: 6px; }
-.hero .ck { position: absolute; right: 6px; top: 6px; }
-.calm { display: flex; align-items: center; gap: 12px; padding: 10px 12px 10px 10px; margin-top: 22px; position: relative; border-radius: 20px; }
-.calm .ico-tile { width: 40px; height: 40px; border-radius: 13px; }
+.top { padding-top: 76px; display: grid; justify-items: center; text-align: center; gap: 10px; }
+.hero { position: relative; width: 250px; height: 224px; margin-bottom: 6px; }
+.hero .halo { position: absolute; left: 15px; top: 4px; width: 220px; height: 220px; border-radius: 50%; overflow: hidden; }
+.hero .halo svg { display: block; }
+[data-theme="dark"] .hero .halo { box-shadow: 0 0 0 2px rgba(246,239,226,.22), 0 0 0 10px rgba(246,239,226,.05); }
+.hero .jel { position: absolute; left: 30px; top: 10px; }
+.hero .ck { position: absolute; right: 8px; top: 4px; }
+.calm { display: flex; align-items: center; gap: 12px; padding: 10px 12px 10px 10px; margin-top: 20px; position: relative; border-radius: 20px; }
+.calm .ico-tile { width: 40px; height: 40px; border-radius: 13px; background: #FFE2C6; color: #1E1A3A; }
+[data-theme="dark"] .calm .ico-tile { background: #FFC38A; }
 .calm .ico-tile svg { width: 22px; height: 22px; }
 .calm .grow { flex: 1; min-width: 0; white-space: nowrap; }
 .calm .grow .t-foot { white-space: nowrap; text-wrap: nowrap; }
 .calm .num { font-size: 26px; line-height: 1; }
 .gain { flex: none; height: 30px; padding: 0 11px; border-radius: 99px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 13px/1 var(--body); color: var(--fg); white-space: nowrap; }
-.plus { position: absolute; left: 40px; top: -6px; color: var(--tick); font: 800 18px/1 var(--display); }
-.feel { margin-top: 24px; display: grid; gap: 10px; }
-.screen { --tertiary: #8A8598; }
-[data-theme="dark"] .screen { --tertiary: #79819A; }
+.plus { position: absolute; left: 40px; top: -6px; color: var(--fg); font: 800 18px/1 var(--display); }
+.feel { margin-top: 22px; display: grid; gap: 10px; justify-items: center; text-align: center; }
+.feel .chips { justify-content: center; }
+.screen { --tertiary: #807B90; }
+[data-theme="dark"] .screen { --tertiary: #8A92AA; }
 .opt3 { color: var(--tertiary); font-weight: 500; }
-
+/* One selected chip in both modes: the same solid apricot chip with ink text (no mode-specific tint). */
+.screen .feel .chip.on, [data-theme="dark"] .screen .feel .chip.on { background: #FFC38A; color: #1E1A3A; box-shadow: inset 0 0 0 2px #FFC38A; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -52,7 +42,7 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
     <p class="t-body muted" data-a style="--i:3">Two minutes, and the urge got smaller.<br>That is a skill you just practised.</p>
   </div>
   <div class="card calm" data-a style="--i:4">
-    <span class="ico-tile" data-ic="wave" data-s="22" style="background:linear-gradient(160deg,#3A63E0,#1F3C8C);color:#FFF8EE"></span>
+    <span class="ico-tile" data-ic="wave" data-s="22"></span>
     <div class="grow"><span class="num" data-count="8" data-from="6" data-delay="1200">8</span> <span class="t-foot">min of calm today</span></div>
     <span class="gain" data-fade style="--d:1300ms">+2 just now</span>
     <span class="plus float-up" style="--d:1300ms">+2</span>
@@ -66,12 +56,25 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
-
-document.getElementById('halo').innerHTML = DX.char('horizon', { scene: 'sea', w: 200, h: 200, clarity: 100 });
+const dark = DX.theme === 'dark';
+/* Dark: the same night sea as 057 and 059, its low pre-dawn sun off to the right so it never sits behind Jelli. */
+function nightSea(w, h) {
+  const wave = (y, a, ph) => { const s = w / 3; let d = `M0 ${y}`; for (let i = 0; i < 3; i++) { const x0 = i * s, up = (i + ph) % 2 ? -a : a; d += ` C${x0 + s * .35} ${y + up} ${x0 + s * .65} ${y + up} ${x0 + s} ${y}`; } return d; };
+  const L = [[h * .62, 8, 0, '#22407A'], [h * .73, 9, 1, '#1A3468'], [h * .86, 8, 0, '#112552']];
+  const foam = (y, a, ph) => { const s = w / 3; return [0, 1, 2].filter(i => (i + ph) % 2).map(i => { const x = i * s + s * .5, yy = y - a * .75; return `<path d="M${x - s * .3} ${yy + 4} Q${x} ${yy - 4} ${x + s * .3} ${yy + 4}" fill="none" stroke="#C9D8F7" stroke-opacity=".55" stroke-width="2.4" stroke-linecap="round"/>`; }).join(''); };
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true"><defs>
+    <linearGradient id="nsk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0E1C42"/><stop offset=".62" stop-color="#263E72"/><stop offset="1" stop-color="#3E5084"/></linearGradient>
+    <radialGradient id="nsg"><stop offset="0" stop-color="#FFC27A" stop-opacity=".6"/><stop offset="1" stop-color="#FFC27A" stop-opacity="0"/></radialGradient></defs>
+    <rect width="${w}" height="${h}" fill="url(#nsk)"/>
+    ${[[.24, .16], [.4, .1], [.62, .08], [.74, .2], [.16, .34]].map(([x, y], i) => `<circle cx="${x * w}" cy="${y * h}" r="${i % 3 ? 1.1 : 1.6}" fill="#fff" opacity="${i % 2 ? .5 : .85}"/>`).join('')}
+    <circle cx="${w * .86}" cy="${h * .61}" r="${h * .2}" fill="url(#nsg)"/><circle cx="${w * .86}" cy="${h * .61}" r="${h * .06}" fill="#FFD08A"/>
+    ${L.map(([y, a, ph, c]) => `<path d="${wave(y, a, ph)} V${h} H0Z" fill="${c}"/>${foam(y, a, ph)}`).join('')}</svg>`;
+}
+document.getElementById('halo').innerHTML = dark ? nightSea(220, 220) : DX.char('horizon', { scene: 'sea', w: 220, h: 220, clarity: 100 });
 /* Jelli's cheer stars (the kit's 4-point stars) sit lower, beside the bell, so they never land on the sun. */
-document.getElementById('jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 180 })
+document.getElementById('jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 190 })
   .replace(/<g opacity="1" (stroke="#[0-9A-Fa-f]{6}" stroke-width="3" stroke-linecap="round">)(?=<path d="M24 )/, '<g opacity="1" transform="translate(0 56)" $1');
-document.getElementById('ck').innerHTML = DX.check({ size: 56, d: 900 });
-
+/* The done check in the app's own colours: an apricot disc with an ink tick. */
+document.getElementById('ck').innerHTML = DX.check({ size: 58, d: 900, color: '#FFB27A', fg: '#1E1A3A' });
 </script>
 </body></html>

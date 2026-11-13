@@ -35,7 +35,7 @@ const dark = DX.theme === 'dark';
 const C = dark
   ? { sky: ['#0A1532', '#1A2E5C', '#2A4274'], crest: '#2F5596', foam: '#DCE8FF', sea: ['#22407A', '#1A3468', '#132A58', '#0D1F46'], seaFoam: '#9DB4E8', lab: '#2F5596', pt: '#0F1F44' }
   : { sky: ['#B4D7FF', '#CBE4FF', '#D8ECFF'], crest: '#4E8FF0', foam: '#FFFFFF', sea: ['#6AA6FF', '#4A88F2', '#2F6CE0', '#2256C8'], seaFoam: '#FFFFFF', lab: '#4E8FF0', pt: '#1E1A3A' };
-const CR = 'M-10 320 H40 C 100 320 116 116 173 116 S 246 320 306 320 H356';
+const CR = 'M-14 350 C 10 350 22 320 40 320 C 100 320 116 116 173 116 S 246 320 306 320 C 324 320 336 350 360 350';
 const wave = (y, a, ph) => { const s = 346 / 3; let d = `M-10 ${y}`; for (let i = 0; i < 3; i++) { const x0 = i * s, up = (i + ph) % 2 ? -a : a; d += ` C${x0 + s * .35} ${y + up} ${x0 + s * .65} ${y + up} ${x0 + s + (i === 2 ? 10 : 0)} ${y}`; } return d; };
 const foam = (y, a, ph) => [0, 1, 2].filter(i => (i + ph) % 2).map(i => { const s = 346 / 3, x = i * s + s * .5, yy = y - a * .75; return `<path d="M${x - s * .3} ${yy + 4} Q${x} ${yy - 4} ${x + s * .3} ${yy + 4}" fill="none" stroke="${C.seaFoam}" stroke-opacity=".6" stroke-width="2.4" stroke-linecap="round"/><circle cx="${x + s * .36}" cy="${yy + 7}" r="1.8" fill="${C.seaFoam}" opacity=".55"/>`; }).join('');
 const layers = [[338, 8, 0], [366, 10, 1], [398, 9, 0], [428, 8, 1]];
@@ -47,15 +47,15 @@ document.getElementById('chart').insertAdjacentHTML('afterbegin', `<svg width="3
   <rect width="346" height="456" fill="url(#ksky)"/>
   ${dark
     ? [[40, 40], [92, 76], [250, 30], [318, 120], [24, 150], [206, 54], [140, 26]].map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="${i % 2 ? 1.2 : 1.7}" fill="#fff" opacity="${i % 2 ? .5 : .85}"/>`).join('')
-      + '<circle cx="296" cy="62" r="40" fill="url(#kmoon)"/><circle cx="296" cy="62" r="15" fill="#F6E7C1"/><circle cx="290" cy="57" r="13.5" fill="#132550"/>'
+      + '<circle cx="296" cy="62" r="40" fill="url(#kmoon)"/><circle cx="296" cy="62" r="15" fill="#F6E7C1"/><circle cx="290" cy="57" r="13.5" fill="#0D1A3B"/>'
     : '<g fill="#fff" opacity=".95"><ellipse cx="282" cy="56" rx="30" ry="10"/><ellipse cx="268" cy="49" rx="15" ry="11"/><ellipse cx="54" cy="96" rx="22" ry="7"/></g>'}
+  <path d="${CR}" fill="none" stroke="${C.foam}" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" transform="translate(0 -4)" pathLength="100" class="draw" style="--len:100;--dur:2400ms;--d:300ms"/>
+  <path d="${CR}" fill="none" stroke="${C.crest}" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" pathLength="100" class="draw" style="--len:100;--dur:2400ms;--d:300ms"/>
+  <g fill="${C.foam}" data-fade style="--d:2400ms"><circle cx="150" cy="104" r="2.2"/><circle cx="196" cy="103" r="1.8"/><circle cx="141" cy="112" r="1.4"/><circle cx="206" cy="110" r="1.4"/></g>
   <g data-fade style="--d:600ms">
     ${layers.map(([y, a, ph], i) => `<path d="${wave(y, a, ph)} V456 H-10Z" fill="${C.sea[i]}"/>${foam(y, a, ph)}`).join('')}
     ${dark ? '<g stroke="#F6E7C1" stroke-linecap="round" stroke-width="2.2"><path d="M284 352 h20" opacity=".5"/><path d="M290 378 h9" opacity=".35"/></g>' : ''}
   </g>
-  <path d="${CR}" fill="none" stroke="${C.foam}" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" transform="translate(0 -4)" pathLength="100" class="draw" style="--len:100;--dur:2400ms;--d:300ms"/>
-  <path d="${CR}" fill="none" stroke="${C.crest}" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" pathLength="100" class="draw" style="--len:100;--dur:2400ms;--d:300ms"/>
-  <g fill="${C.foam}" data-fade style="--d:2400ms"><circle cx="150" cy="104" r="2.2"/><circle cx="196" cy="103" r="1.8"/><circle cx="141" cy="112" r="1.4"/><circle cx="206" cy="110" r="1.4"/></g>
   <g data-fade style="--d:1300ms">${pt(107.6, 218, 92, 218)}${pt(173, 116, 154, 116)}${pt(238.4, 218, 254, 218)}</g>
   </svg>`);
 document.getElementById('rider').innerHTML = DX.char('jelli', { mood: 'calm', size: 84 }).replace(/<g opacity="1"( fill="none" stroke="#FFFFFF")/, '<g opacity="0"$1');
