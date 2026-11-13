@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>066 Quit Day</title>
-<meta name="motion" content="The date card arrives and the day count rises 0 to 7; in the first-week strip the Day Xero sun (Fri, Nov 6) stamps in first (600ms), then days 1 to 7 (Nov 7 to 13) fill in as apricot discs left to right (110ms apart), ending on the Today ring, 13; the change card follows. Choose a new date opens a calm confirm sheet first, never a direct date wheel.">
+<meta name="motion" content="The date card arrives and the day count rises 0 to 7 as the slim bar toward 14 days fills to half (900ms); in the first-week strip the Day Xero sun (Fri, Nov 6) stamps in first (600ms), then days 1 to 7 (Nov 7 to 13) fill in as apricot discs left to right (110ms apart), ending on the Today ring, 13; the change card follows. Choose a new date opens a calm confirm sheet first, never a direct date wheel.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -23,6 +23,11 @@
 .cal .d { font: 800 40px/1 var(--display); padding: 8px 0 4px; letter-spacing: -1px; }
 .cal .w { padding-bottom: 8px; color: var(--muted); }
 .since .num { font-size: 40px; line-height: 1; }
+/* With the duplicate medal gone, the hero carries a quiet line toward the next milestone (14 days, 7 to go). */
+.nxt { margin-top: 12px; display: grid; gap: 6px; }
+.nxt .progress { height: 6px; }
+.nxt .progress > i { background: #FF9A5C; }
+.nxt .t-cap { color: var(--muted); }
 .kept { margin-top: 12px; display: flex; align-items: center; gap: 14px; padding: 14px 16px; }
 .btn.ghost.small { box-shadow: inset 0 0 0 2px var(--line); }
 .wk { margin-top: 10px; padding: 14px 16px 14px; }
@@ -48,7 +53,7 @@
   <div class="hd"><h1 class="t-large" data-a style="--i:0">Your Quit Day</h1><p class="t-foot muted" data-a style="--i:1">The day you stopped. It all counts from here.</p></div>
   <div class="card hero" data-a style="--i:2">
     <div class="cal"><div class="m t-cap">November</div><div class="d">6</div><div class="w t-cap">Friday</div></div>
-    <div class="since" style="flex:1"><div><span class="num" data-count="7">7</span> <span class="t-head">days</span></div><div class="t-foot muted">free since Nov 6</div></div>
+    <div class="since" style="flex:1"><div><span class="num" data-count="7">7</span> <span class="t-head">days</span></div><div class="t-foot muted">free since Nov 6</div><div class="nxt"><div class="progress" role="progressbar" aria-label="7 of 14 days"><i id="nb" style="--p:0%"></i></div><span class="t-cap">7 to go to 14 days</span></div></div>
   </div>
 
   <div class="card wk" data-a style="--i:3"><div class="hdr"><span class="t-foot muted">Your first week</span><span class="t-cap muted">Day Xero, then days 1 to 7</span></div><div class="days" id="days"></div></div>
@@ -61,6 +66,7 @@
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
+DX.beat(300, () => document.getElementById('nb').style.setProperty('--p', '50%'));
 /* Nov 6 is Day Xero: a small sun with short rays. Nov 7 to 13 are days 1 to 7 (Sat to Fri); 13 is today, Day 7. */
 const rays = `<svg viewBox="0 0 48 48" aria-hidden="true">${Array.from({ length: 12 }, (_, i) => `<path d="M24 1.5 L26 7 L22 7Z" fill="#F5B83D" transform="rotate(${i * 30} 24 24)"/>`).join('')}</svg>`;
 const wd = ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu'];
