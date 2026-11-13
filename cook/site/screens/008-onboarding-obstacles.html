@@ -61,15 +61,24 @@
 </div>
 <script>
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
-  /* Paper-cut tool spots in the kit palette: a sun-timer for the reset, a speech bubble for what to say. */
-  const sh = DX.theme === 'dark' ? 'rgba(0,0,0,.5)' : 'rgba(110,50,20,.26)';
-  const pf = id => `<defs><filter id="${id}" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="1.2" stdDeviation=".4" flood-color="${sh}"/></filter></defs>`;
+  /* Paper-cut tool spots (round 8), the characters' idiom: flat cut pieces, a crescent side shade, one highlight, a soft paper shadow.
+     A sun-timer for the reset, two overlapping speech bubbles for what to say. */
+  const sh = DX.theme === 'dark' ? 'rgba(0,0,0,.55)' : 'rgba(120,52,24,.24)';
+  const pf = id => `<defs><filter id="${id}" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="1.5" stdDeviation="1" flood-color="${sh}"/></filter></defs>`;
   const ART = {
-    reset: `<svg viewBox="0 0 32 32" aria-hidden="true">${pf('t1')}<rect x="13" y="2.5" width="6" height="3.4" rx="1.4" fill="#FF7155" filter="url(#t1)"/><circle cx="16" cy="18" r="11.5" fill="#FFF8EE" filter="url(#t1)"/>
-      <path d="M16 18 V8.5 A9.5 9.5 0 0 1 25.4 16.6 Z" fill="#FF9A5C"/><circle cx="16" cy="18" r="9.5" fill="none" stroke="#FFC38A" stroke-width="1.4"/><circle cx="16" cy="18" r="2" fill="#1E1A3A"/></svg>`,
-    talk: `<svg viewBox="0 0 32 32" aria-hidden="true">${pf('t2')}<path d="M5 6.5 h17 a4 4 0 0 1 4 4 v7 a4 4 0 0 1 -4 4 h-9 l-5.5 4.5 v-4.5 h-2.5 a4 4 0 0 1 -4 -4 v-7 a4 4 0 0 1 4 -4 z" fill="#FF7155" filter="url(#t2)"/>
-      <path d="M17 13 h9 a3.4 3.4 0 0 1 3.4 3.4 v5.4 a3.4 3.4 0 0 1 -3.4 3.4 h-1 v3.6 l-4.4 -3.6 h-3.6 a3.4 3.4 0 0 1 -3.4 -3.4 v-5.4 a3.4 3.4 0 0 1 3.4 -3.4 z" fill="#FFF8EE" filter="url(#t2)"/>
-      <g fill="#FF9A5C"><circle cx="18.6" cy="19.2" r="1.3"/><circle cx="21.8" cy="19.2" r="1.3"/><circle cx="25" cy="19.2" r="1.3"/></g></svg>`
+    reset: `<svg viewBox="0 0 32 32" aria-hidden="true">${pf('t1')}
+      <g filter="url(#t1)"><rect x="12.5" y="2" width="7" height="4.4" rx="1.8" fill="#FF7155"/><rect x="16.4" y="2" width="3.1" height="4.4" rx="1.4" fill="#E85A3E"/></g>
+      <g filter="url(#t1)"><circle cx="16" cy="18.5" r="11.8" fill="#FFF8EE"/><path d="M22.5 8.6 A11.8 11.8 0 0 1 16 30.3 A13 13 0 0 0 22.5 8.6 Z" fill="#EFE1CF"/></g>
+      <path d="M16 18.5 V9.4 A9.1 9.1 0 0 1 24.9 16.6 Z" fill="#FFC93C" filter="url(#t1)"/>
+      <path d="M7.6 15 C8.4 12.6 10 10.8 12.2 9.8" fill="none" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round"/>
+      <circle cx="16" cy="18.5" r="2.1" fill="#1E1A3A"/></svg>`,
+    talk: `<svg viewBox="0 0 32 32" aria-hidden="true">${pf('t2')}
+      <g filter="url(#t2)"><path d="M6 5 h14 a4.5 4.5 0 0 1 4.5 4.5 v6 a4.5 4.5 0 0 1 -4.5 4.5 h-8 l-5 4 v-4 h-1 a4.5 4.5 0 0 1 -4.5 -4.5 v-6 a4.5 4.5 0 0 1 4.5 -4.5 z" fill="#FF7155"/>
+        <path d="M20.5 5.2 a4.5 4.5 0 0 1 4 4.3 v6 a4.5 4.5 0 0 1 -4.5 4.5 h-2 c2.4 -.6 3.6 -2.4 3.6 -4.6 v-6 c0 -1.8 -.4 -3.2 -1.1 -4.2 z" fill="#E85A3E"/>
+        <path d="M4.6 12 C4.8 9.6 5.8 8.2 7.6 7.6" fill="none" stroke="#FFB09C" stroke-width="1.6" stroke-linecap="round"/></g>
+      <g filter="url(#t2)"><path d="M16.5 13 h10 a3.6 3.6 0 0 1 3.6 3.6 v5 a3.6 3.6 0 0 1 -3.6 3.6 h-.8 v3.8 l-4.6 -3.8 h-4.6 a3.6 3.6 0 0 1 -3.6 -3.6 v-5 a3.6 3.6 0 0 1 3.6 -3.6 z" fill="#FFF8EE"/>
+        <path d="M13 21.6 c.4 2 1.8 3.4 3.8 3.6 h4.4 l1.2 1 h-5.9 a3.6 3.6 0 0 1 -3.5 -3.6 z" fill="#EFE1CF"/></g>
+      <g fill="#FF7155"><circle cx="18.4" cy="19.2" r="1.35"/><circle cx="21.6" cy="19.2" r="1.35"/><circle cx="24.8" cy="19.2" r="1.35"/></g></svg>`
   };
   document.querySelectorAll('[data-art]').forEach(e => e.innerHTML = ART[e.dataset.art]);
   document.querySelectorAll('[data-arrow]').forEach(e => e.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13.5 6.5L19 12l-5.5 5.5"/></svg>');

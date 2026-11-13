@@ -8,20 +8,20 @@
   .qg { font-family: var(--body); font-weight: 700; }
   .wrap { padding: 66px var(--gutter) 0; }
   .wrap .lead { margin-top: 8px; color: var(--muted); }
-  .chart { margin-top: 16px; padding: 14px 18px 12px; }
+  .chart { margin-top: 20px; padding: 16px 18px 14px; }
   /* key: the coral dot is Quit Day on the axis; stripes are the part of the taper that runs past it */
   .key { display: flex; gap: 16px; align-items: center; color: var(--muted); font-weight: 500; }
   .key span { display: inline-flex; align-items: center; gap: 6px; }
   .key .kq { width: 9px; height: 9px; border-radius: 99px; background: var(--mark); flex: none; }
   .key .kh { width: 14px; height: 10px; border-radius: 3px; flex: none; --c: var(--c1); }
-  .bars { position: relative; margin-top: 16px; height: 72px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; align-items: end; border-bottom: 2px solid var(--line); }
+  .bars { position: relative; margin-top: 18px; height: 88px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; align-items: end; border-bottom: 2px solid var(--line); }
   .chart { --c1: color-mix(in srgb, #FFA766 62%, transparent); --c2: color-mix(in srgb, #FFA766 50%, transparent); --c3: color-mix(in srgb, #FFA766 42%, transparent); --edge: #F08A45; }
   [data-theme="dark"] .chart { --c1: #FFB27A; --c2: #FFCB9E; --c3: #FFE0C4; --edge: #FFB27A; }
   .bar { height: var(--h); border-radius: 10px 10px 3px 3px; background: var(--c); transform-origin: bottom; display: flex; }
   /* runs past Quit Day: the bar's own colour in stripes, inside a fine outline */
   .hatch, .key .kh { background: repeating-linear-gradient(135deg, var(--c) 0 3px, transparent 3px 6.5px), color-mix(in srgb, var(--c) 22%, transparent); box-shadow: inset 0 0 0 1.5px var(--c); }
-  /* dark: lighter stripes (the gaps carry half the bar colour, so no heavy navy bands) */
-  [data-theme="dark"] .hatch, [data-theme="dark"] .key .kh { background: repeating-linear-gradient(135deg, var(--c) 0 3px, transparent 3px 6.5px), color-mix(in srgb, var(--c) 55%, var(--card)); }
+  /* dark: lighter stripes (pale peach gaps, so no heavy navy bands) */
+  [data-theme="dark"] .hatch, [data-theme="dark"] .key .kh { background: repeating-linear-gradient(135deg, var(--c) 0 3px, transparent 3px 6.5px), color-mix(in srgb, var(--c) 30%, #FFF3E6); }
   /* the new Quit Day target on the 0 mg column (Mon, Nov 23): a coral ring the dot slides into */
   .qbar { position: relative; }
   .qtarget { position: absolute; left: 50%; bottom: -1px; width: 0; height: 0; }
@@ -38,13 +38,13 @@
   .qbar { align-self: end; width: 100%; height: 4px; border-radius: 3px 3px 0 0; background: var(--track); }
   .lbls { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 8px; text-align: center; color: var(--muted); }
   .lbls b { display: block; color: var(--fg); font: 800 15px/1.1 var(--display); }
-  .steps-list { margin-top: 10px; }
+  .steps-list { margin-top: 14px; }
   .steps-list .row { min-height: 52px; }
   .list > .row { padding: 8px 16px; }
   .row .t-head { font-size: 16px; }
   .row .t-foot { color: var(--muted); }
   .row .wk { font: 600 14px/1 var(--body); color: var(--muted); }
-  .warn { margin-top: 18px; display: grid; gap: 10px; padding: 0 4px; }
+  .warn { margin-top: 22px; display: grid; gap: 10px; padding: 0 4px; }
   .steps-list .chev { margin-left: -4px; }
   .steps-list .row { gap: 12px; }
   .warn .top { display: flex; gap: 12px; align-items: flex-start; }
