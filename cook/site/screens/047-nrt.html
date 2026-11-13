@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>047 Why NRT helps</title>
-<meta name="motion" content="Reading pace, no springs. Title and lead arrive, then the evidence card: '60%' counts up from 50 (850ms) while the 'Without' and 'With NRT' bars grow from the left (900ms, the apricot bar 150ms later, its deeper tail showing the extra), then the combination card with Xero settling in (900ms, then a slow bob) and the caution note (600ms each, 90ms stagger); the button arrives last. No haptic until the button tap.">
+<meta name="motion" content="Reading pace, no springs. Title and lead arrive, then the evidence card: '60%' counts up from 50 (850ms) while the 'Without' and 'With NRT' bars grow from the left (900ms, the apricot bar 150ms later, its deeper tail showing the extra), and at 1.3s the '+50 to 60%' label fades in under the deeper tail; then the combination card with Xero settling in (900ms, then a slow bob). The button and the 'Find a pharmacist' action link arrive last (the dosing note lives once in the flow, on the reminders screen). No haptic until the button tap.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -32,8 +32,12 @@
   .ev .card.best { display: flex; gap: 12px; align-items: center; padding: 12px 16px 14px 8px; }
   .best .x { width: 78px; flex: none; display: grid; place-items: center; }
   .best .grow { display: grid; gap: 6px; }
-  .ev .caution { margin-top: 2px; padding: 2px 4px; color: var(--muted); display: flex; gap: 12px; align-items: flex-start; }
-  .caution svg { width: 20px; height: 20px; flex: none; margin-top: 1px; }
+  /* the deeper tail of the NRT bar is the extra: labelled under it */
+  .cmp .tail { display: grid; grid-template-columns: 76px 1fr; gap: 10px; margin-top: -4px; }
+  .cmp .tail span { margin-left: 62.5%; text-align: center; font: 700 13px/1 var(--body); color: #C8561F; }
+  [data-theme="dark"] .cmp .tail span { color: #FFB27A; }
+  .pharm { display: flex; align-items: center; justify-content: center; gap: 6px; height: 40px; font: 500 15px/1 var(--body); color: var(--muted); }
+  .pharm a { color: var(--fg); font-weight: 700; text-decoration: underline; text-decoration-color: var(--mark); text-decoration-thickness: 2px; text-underline-offset: 4px; cursor: pointer; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -49,6 +53,7 @@
           <div class="cmp" aria-hidden="true">
             <div class="r"><span class="t-foot">Without</span><span class="bar"><i style="--w:62.5%;--d:500ms"></i></span></div>
             <div class="r yes"><span class="t-foot">With NRT</span><span class="bar yes"><i style="--w:100%;--d:650ms"></i></span></div>
+            <div class="tail" data-fade style="--d:1300ms"><i></i><span>+50 to 60%</span></div>
           </div>
           <a class="source">Source: Cochrane review of 133 trials, 2018</a>
         </div>
@@ -59,16 +64,12 @@
             <p class="t-head" style="font-size:17px">A patch plus a faster form beats either alone.</p>
           </div>
         </div>
-        <div class="caution t-foot" data-a style="--i:4">
-          <span data-ic="shield"></span>
-          <span>Follow your pack's label. DayXero doesn't give dosing advice.</span>
-        </div>
       </div>
     </div>
   </div>
   <div class="dock">
     <button class="btn" data-a style="--i:5" data-go="048-nrt-products">Set up my NRT</button>
-    <button class="link" data-a style="--i:6">Not using NRT yet? Ask a pharmacist</button>
+    <p class="pharm" data-a style="--i:6">Not using NRT yet? <a>Find a pharmacist</a></p>
   </div>
 </div>
 <script>

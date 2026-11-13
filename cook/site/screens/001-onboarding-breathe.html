@@ -34,6 +34,7 @@
   /* Breath marks: three soft wisps leaving Xero's mouth on the out-breath. */
   .wisp { opacity: 1; }
   .play .wisp { animation: wisp 6000ms cubic-bezier(.3,.6,.3,1) 4000ms both; }
+  .still .wisp { animation: none !important; }
   @keyframes wisp { 0% { opacity: 0; transform: translate(-6px, -2px); } 20% { opacity: 1; } 80% { opacity: .9; } 100% { opacity: 0; transform: translate(10px, 3px); } }
 </style>
 </head><body>
