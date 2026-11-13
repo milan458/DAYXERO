@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>015 Today, prep week</title>
-<meta name="motion" content="The dawn sun rises behind the hills (2.6s) while Xero settles onto the cream disc (900ms); the prep ring sweeps from 0 to 3 of 7 (1.4s, 250ms delay) and its dot fades in at the end. Greeting, countdown (the 4 counts down from 7), reason, the session card with its single Start button and the stamps strip arrive with a 90ms stagger; Prep 1 to 3 rise in one by one (90ms apart, no spring: they were earned earlier) and today's ghost Prep 4 stamp breathes its outline (2.4s loop). Light haptic when the ring lands.">
+<meta name="motion" content="The dawn sun rises behind the hills (2.6s) while Xero settles onto the cream disc (900ms); the prep ring sweeps from 0 to 3 of 7 (1.4s, 250ms delay) and its dot fades in at the end. Greeting, countdown (the 4 counts down from 7), reason, the session card with its single Start button and the stamps strip arrive with a 90ms stagger; Prep 1 to 3 rise in one by one (90ms apart, no spring: they were earned earlier) and today's open Prep 4 slot breathes its outline (2.4s loop) and the Day Xero slot waits in a gold ring. Light haptic when the ring lands.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -35,7 +35,10 @@
   .slot .t-cap { font-size: 12px; white-space: nowrap; color: var(--fg); }
   .slot.later .face { border-radius: 99px; box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--fg) 26%, transparent); }
   .slot.later .num { color: var(--muted); font-weight: 700; }
+  .slot.now .face { border-radius: 99px; background: var(--card-2); box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--fg) 30%, transparent); }
   .slot.now .num { color: var(--fg); }
+  .slot.goal .face { border-radius: 99px; background: color-mix(in srgb, #FFD966 22%, var(--card)); box-shadow: inset 0 0 0 2px #F5B83D; }
+  [data-theme="dark"] .slot.goal .face { background: var(--card-2); }
   .slot.now .face::after { content: ""; position: absolute; inset: -4px; border-radius: 99px; box-shadow: inset 0 0 0 2px var(--fg); opacity: .55; }
   .play .slot.now .face::after { animation: nowpulse 2.4s ease-in-out infinite; }
   @keyframes nowpulse { 50% { opacity: .18; transform: scale(1.08); } }
@@ -83,9 +86,9 @@
   let h = '';
   const face = (svg, n) => `<div class="face">${svg}<span class="num">${n}</span></div>`;
   for (let n = 1; n <= 3; n++) h += `<div class="slot" data-a style="--i:${n};--d:640ms">${face(DX.badge({ kind: 'prep', n: '', size: 36, bare: true }), n)}</div>`;
-  h += `<div class="slot now">${face(DX.badge({ kind: 'prep', n: '', state: 'next', size: 36, bare: true }), 4)}<span class="t-cap">Today</span></div>`;
+  h += `<div class="slot now">${face('', 4)}<span class="t-cap">Today</span></div>`;
   for (let n = 5; n <= 7; n++) h += `<div class="slot later">${face('', n)}</div>`;
-  h += `<div class="slot goal">${face(DX.badge({ kind: 'xero', n: '', state: 'next', size: 36, bare: true }), '0')}</div>`;
+  h += `<div class="slot goal">${face('', '0')}</div>`;
   $('#row8').innerHTML = h;
   $('.screen').insertAdjacentHTML('beforeend', DX.tabbar('today'));
 </script>
