@@ -1,16 +1,16 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>050 NRT plan</title>
-<meta name="motion" content="Title arrives, then the step-down chart: the soft apricot 21, 14 and 7 mg bars (64%, 52%, 42% tint; widths in the 6:2:2 ratio of their weeks) grow up from the baseline one after another (900ms settle, 150ms apart), their labels sit just above each bar, and the week ranges arrive under them. The three step rows (each with a chevron: tap to edit) then settle in like a plan being laid out (120ms stagger). No completion here; the plan is confirmed on the reminders screen.">
+<meta name="motion" content="Title arrives, then the step-down chart: the soft apricot 21, 14 and 7 mg bars (64%, 52%, 42% tint; widths in the 6:2:2 ratio of their weeks) grow up from the baseline one after another (900ms settle, 150ms apart), their labels sit just above each bar, and the week ranges arrive under them. The three step rows (each with a chevron: tap to edit) then settle in like a plan being laid out (120ms stagger), then the 'At night' section (bold label, a one-line helper about vivid dreams, two chips) arrives. No completion here; the plan is confirmed on the reminders screen.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   .wrap { padding: 66px var(--gutter) 0; }
   .wrap .lead { margin-top: 8px; color: var(--muted); }
-  .chart { margin-top: 18px; padding: 18px 18px 14px; }
+  .chart { margin-top: 16px; padding: 18px 18px 14px; }
   .chart .hd { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
   .chart .hd .t-foot { color: var(--muted); }
   .chart { --apr: #FF9A5C; }
-  .bars { margin-top: 32px; height: 112px; display: flex; align-items: flex-end; gap: 8px; border-bottom: 1.5px solid var(--line); }
+  .bars { margin-top: 32px; height: 98px; display: flex; align-items: flex-end; gap: 8px; border-bottom: 1.5px solid var(--line); }
   .bar { position: relative; height: var(--h); border-radius: 12px 12px 4px 4px; background: color-mix(in srgb, var(--apr) 64%, transparent); transform-origin: bottom; display: flex; justify-content: center; }
   .bar:nth-child(2) { background: color-mix(in srgb, var(--apr) 52%, transparent); } .bar:nth-child(3) { background: color-mix(in srgb, var(--apr) 42%, transparent); }
   .bar span { position: absolute; bottom: calc(100% + 6px); color: var(--fg); font: 700 15px/1 var(--display); letter-spacing: -.3px; white-space: nowrap; }
@@ -19,7 +19,7 @@
   .wks { display: flex; gap: 8px; margin-top: 8px; color: var(--muted); }
   .wks span { text-align: center; }
   .steps-list { margin-top: 12px; }
-  .steps-list .row { min-height: 58px; }
+  .steps-list .row { min-height: 54px; }
   .sw { width: 12px; height: 32px; border-radius: 4px; background: color-mix(in srgb, #FF9A5C 64%, transparent); flex: none; }
   .steps-list .row { gap: 12px; }
   .steps-list .chev { margin-left: -4px; }
@@ -28,8 +28,10 @@
   .row .t-head { font-size: 17px; }
   .row .t-foot { color: var(--muted); }
   .row .wk { font: 600 14px/1 var(--body); color: var(--muted); }
-  .night { margin-top: 18px; display: grid; gap: 10px; }
-  .night > .t-foot { color: var(--muted); }
+  .night { margin-top: 16px; display: grid; gap: 10px; }
+  .night .lbl { display: grid; gap: 2px; }
+  .night .lbl .t-head { font-size: 17px; }
+  .night .lbl .t-foot { color: var(--muted); font-size: 13.5px; letter-spacing: -.05px; }
   .edit { margin-top: 8px; color: var(--muted); justify-content: flex-start; height: 36px; }
   /* dark: solid apricot tints (no brown from mixing with the navy ground) */
   [data-theme="dark"] .bars .bar:nth-child(1) { background: #FFAD70 !important; }
@@ -65,7 +67,7 @@
         <div class="row" data-settle style="--i:5"><i class="sw" style="background:color-mix(in srgb, #FF9A5C 42%, transparent)"></i><div class="grow"><p class="t-head">7 mg</p><p class="t-foot">Fri, Jan 8 to Thu, Jan 21</p></div><span class="wk">2 weeks</span><span class="chev" data-ic="chev"></span></div>
       </div>
       <div class="night" data-a style="--i:6">
-        <p class="t-foot">At night</p>
+        <div class="lbl"><p class="t-head">At night</p><p class="t-foot">Some people get vivid dreams with a patch overnight.</p></div>
         <div class="chips"><button class="chip on">Keep it on</button><button class="chip">Take it off at bedtime</button></div>
       </div>
     </div>

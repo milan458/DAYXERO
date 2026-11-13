@@ -1,44 +1,56 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>030 Session breathe card</title>
-<meta name="motion" content="The step bar shows card 2 two thirds done. The mint Try card (deep dusk with a warm glow in dark mode) settles in (900ms); its breath shape draws in (1600ms): the first breath rises and levels into a short plateau, the top-up sip rises again, then the long slow out falls away, and each point lights with its label as the line reaches it (In at 0.8s, A little more pops at the top at 1.2s, Long, slow out at 1.6s). The guided-breath line draws from 0 to the playhead (1400ms, 0:43 of the 3:00 guided breath) and then follows playback. The three steps arrive as one list, row by row (600ms, 90ms stagger). The button stays outlined while the breath plays and fills to solid at 80% (2:24, 300ms crossfade, light haptic).">
+<meta name="motion" content="The bar shows card 2 two thirds done with Card 2 · Step 2 of 3 beside it. The mint Try card (deep dusk with a warm glow in dark mode) settles in (900ms) with the breath shape drawn faint across it. At 0.4s the guided breath plays and the shape is its pacer: the ink lights along the curve in time with the voice (the first breath rises and levels, the top-up sip rises again, then the long slow out falls away) and each point lights with its label as the ink reaches it (In at 0.8s, A little more pops coral at 1.2s, Long, slow out at 1.6s, where the playhead pulses); every breath the lit ink starts over and the elapsed time under the title counts on. Small Xero beside the time breathes with the guide (10s in and out). The three notes arrive as one list, row by row (600ms, 90ms stagger). While the breath plays, the dock holds only a quiet Skip to next card link; at 80% (2:24) it cross-fades into the solid Next card button (300ms, light haptic).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-.nav .side{width:44px;text-align:right;flex:none}
 .steps > i.now::after{width:var(--sub,45%)}
+.nav .side{flex:none;color:var(--muted)}
 /* Try = mint. Dark mode: the same card at deep dusk with a warm glow, cream ink and mint accents (same treatment as the Listen player). */
-.face{--ink:#1E1A3A;--soft:#24493A;--acc:#1E1A3A;--pb:#1E1A3A;--pb-fg:#FFF8EE;color:var(--ink);border-radius:26px;overflow:hidden;
+.face{--ink:#1E1A3A;--soft:#24493A;--pb:#1E1A3A;--pb-fg:#FFF8EE;color:var(--ink);border-radius:26px;overflow:hidden;
   background:linear-gradient(180deg,#DAF5E5 0%,#AEE8C8 42%,#9FE3BC 100%);box-shadow:0 14px 28px rgba(30,70,50,.14)}
-[data-theme="dark"] .face{--ink:#FFF8EE;--soft:#D6E6DC;--acc:#9FE3BC;--pb:#9FE3BC;--pb-fg:#1E1A3A;
+[data-theme="dark"] .face{--ink:#FFF8EE;--soft:#D6E6DC;--pb:#9FE3BC;--pb-fg:#1E1A3A;
   background:radial-gradient(80% 40% at 50% 22%,rgba(247,170,108,.26),rgba(247,170,108,0) 100%),linear-gradient(180deg,#27325C 0%,#1C2547 58%,#19223F 100%);
-  box-shadow:0 18px 34px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.07)}
-.face .art{height:142px}
-.face .in{padding:10px 20px 18px}
+  box-shadow:0 18px 34px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,248,238,.08)}
+.face .art{height:136px}
+.face .art svg{display:block}
+.face .in{padding:6px 20px 18px}
 .kind{display:flex;align-items:center;gap:8px;font:600 14px/1 var(--body);color:var(--soft)}
 .kind svg{width:18px;height:18px}
 .player{display:flex;align-items:center;gap:14px;margin-top:14px}
 .pbtn{width:52px;height:52px;border-radius:99px;background:var(--pb);color:var(--pb-fg);display:grid;place-items:center;flex:none;box-shadow:0 4px 12px rgba(30,26,58,.2)}
 .pbtn svg{width:22px;height:22px}
-.line{flex:1;display:grid;gap:6px}
-.line svg{display:block;overflow:visible}
-.times{display:flex;justify-content:space-between}
-.times .t-cap{color:var(--soft)}
-/* the three steps: one list, one row style */
-.steps-l{margin-top:16px}
-.steps-l .row{align-items:flex-start;gap:14px;padding:14px 16px}
-.steps-l .ico-tile{width:36px;height:36px;border-radius:11px}
-.steps-l .ico-tile svg{width:20px;height:20px}
-.steps-l h3{font:700 16px/1.3 var(--display);letter-spacing:-.1px;margin:0}
-.steps-l .t-foot{color:var(--muted);margin-top:2px}
-/* the button waits outlined while the breath plays */
-.dock .btn.ghost{box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--fg) 34%,transparent)}
+.player .tm{flex:1;min-width:0}
+.player .tm b{display:block;font:700 17px/1.2 var(--display);font-variant-numeric:tabular-nums}
+.player .tm span{display:block;font:500 13px/1.3 var(--body);color:var(--soft);margin-top:2px}
+.player .xs{width:64px;height:64px;flex:none;margin:-8px -4px -8px 0}
+/* no loose breeze marks around the small Xero */
+.player .xs svg > g[stroke]{display:none}
+.pulse{transform-box:fill-box;transform-origin:50% 50%}
+.play .pulse{animation:pulse 2.4s var(--ease) infinite 1.8s}
+@keyframes pulse{0%{transform:scale(.6);opacity:.5}100%{transform:scale(1.6);opacity:0}}
+/* the three notes: one list; a small paper-cut spot by each heading, the body runs full width */
+.notes{margin-top:14px}
+.notes .row{display:block;min-height:0;padding:13px 16px 14px}
+.notes .hd{display:flex;align-items:center;gap:11px}
+.notes h3{font:700 16px/1.3 var(--display);letter-spacing:-.1px;margin:0}
+.notes .t-foot{color:var(--muted);margin-top:7px}
+.spot{width:30px;height:30px;border-radius:9px;overflow:hidden;flex:none;display:block}
+.spot svg{display:block;width:30px;height:30px}
+/* the gate: a quiet skip link while the breath plays; the solid Next card button takes its place at 80% */
+.gate{position:relative;height:58px}
+.gate > *{position:absolute;inset:0;transition:opacity .3s var(--ease)}
+.gate .skip-l{height:58px;color:var(--muted);opacity:1}
+.gate .btn{opacity:0;pointer-events:none}
+.gate.open .skip-l{opacity:0;pointer-events:none}
+.gate.open .btn{opacity:1;pointer-events:auto}
 </style>
 </head><body>
 <div class="screen" data-ground="table">
   <div class="nav">
     <button class="icon-btn" aria-label="Close" id="close"></button>
     <div class="grow"><div class="steps" aria-label="Card 2 of 5, step 2 of 3" style="--sub:66%"><i class="on"></i><i class="now"></i><i></i><i></i><i></i></div></div>
-    <span class="side t-foot muted">2 of 5</span>
+    <span class="side t-cap">Card 2 · Step 2 of 3</span>
   </div>
   <div class="scroll" style="padding-top:110px">
     <div class="pad">
@@ -49,39 +61,51 @@
           <h1 class="t-title" style="margin-top:10px">A breath that works in the moment</h1>
           <div class="player">
             <button class="pbtn" id="pbtn" aria-label="Pause"></button>
-            <div class="line">
-              <svg width="100%" height="12" viewBox="0 0 230 12" preserveAspectRatio="none">
-                <path d="M2 6H228" stroke="var(--ink)" stroke-opacity=".25" stroke-width="4" stroke-linecap="round"/>
-                <path d="M2 6H56" stroke="var(--ink)" stroke-width="4" stroke-linecap="round" class="draw" style="--len:54;--d:500ms;--dur:1400ms"/>
-              </svg>
-              <div class="times"><span class="t-cap">0:43</span><span class="t-cap">3:00 guided breath</span></div>
-            </div>
+            <div class="tm"><b>0:43 <span style="display:inline;font:inherit;color:var(--soft);margin:0">/ 3:00</span></b><span>Guided breath</span></div>
+            <div class="xs" id="xs"></div>
           </div>
         </div>
       </div>
-      <div class="list steps-l">
-        <div class="row" data-a style="--i:3"><span class="ico-tile" data-ic="wave"></span><div class="grow"><h3>Two in, one long out</h3><p class="t-foot">Breathe in, sip in a little more, then a long slow out.</p></div></div>
-        <div class="row" data-a style="--i:4"><span class="ico-tile" data-ic="clock"></span><div class="grow"><h3>In a tense moment</h3><p class="t-foot">Two or three sighs take thirty seconds.</p></div></div>
-        <div class="row" data-a style="--i:5"><span class="ico-tile" data-ic="leaf"></span><div class="grow"><h3>Feeling light-headed?</h3><p class="t-foot">Breathe normally, then rejoin.</p></div></div>
+      <div class="list notes">
+        <div class="row" data-a style="--i:3"><div class="hd"><span class="spot" data-spot="sigh"></span><h3>Two sighs</h3></div><p class="t-foot">Breathe in, sip in a little more, then a long slow out.</p></div>
+        <div class="row" data-a style="--i:4"><div class="hd"><span class="spot" data-spot="timer"></span><h3>In a tense moment</h3></div><p class="t-foot">Two or three sighs take thirty seconds.</p></div>
+        <div class="row" data-a style="--i:5"><div class="hd"><span class="spot" data-spot="cloud"></span><h3>Feeling light-headed?</h3></div><p class="t-foot">Breathe normally for a moment, then rejoin.</p></div>
       </div>
     </div>
   </div>
-  <div class="dock"><button class="btn ghost" data-a style="--i:7">I'll sigh first today</button></div>
+  <div class="dock">
+    <div class="gate" id="gate" data-a style="--i:7"><button class="link skip-l">Skip to next card</button><button class="btn">Next card</button></div>
+  </div>
 </div>
 <script>
+const dark = DX.theme === 'dark';
 document.getElementById('close').innerHTML = DX.icon('close');
 document.getElementById('k-ic').innerHTML = DX.icon('hand', {size:18});
 document.getElementById('pbtn').innerHTML = DX.icon('pause', {size:22, w:3});
-document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic, {size:20}));
-/* the breath shape on the card's own ground (no band): in, a short plateau, the top-up sip, then the long slow out */
-const knob = `<circle cx="${2 + 226 * 43 / 180}" cy="6" r="6" fill="var(--ink)" data-fade style="--d:1800ms"/>`;
-document.querySelector('.line svg').insertAdjacentHTML('beforeend', knob);
-document.getElementById('art').innerHTML = `<svg width="100%" height="142" viewBox="0 0 346 142" aria-hidden="true">
-  <path d="M22 124 C48 124 58 64 86 64 L118 64 C130 64 136 40 152 40 C204 40 258 124 324 124" fill="none" stroke="var(--ink)" stroke-opacity=".85" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" class="draw" style="--len:400;--d:400ms;--dur:1600ms"/>
-  <g fill="var(--ink)" font-family="DM Sans, sans-serif" font-weight="700" font-size="14">
-    <circle cx="86" cy="64" r="4.5" data-fade style="--d:800ms"/><text x="72" y="54" text-anchor="end" data-fade style="--d:800ms">In</text>
-    <circle cx="152" cy="40" r="7" fill="var(--acc)" data-pop style="transform-origin:152px 40px;--d:1200ms"/><text x="152" y="22" text-anchor="middle" data-fade style="--d:1200ms">A little more</text>
-    <circle cx="233" cy="82" r="4.5" data-fade style="--d:1600ms"/><text x="332" y="70" text-anchor="end" data-fade style="--d:1600ms">Long, slow out</text>
+/* small Xero breathes along with the guide */
+document.getElementById('xs').innerHTML = DX.char('xero', {mood:'breathe', size:64});
+/* the breath shape is the pacer: drawn faint, lit in ink up to the playhead. Each point carries its own label right beside it. */
+const BREATH = 'M22 118 C48 118 58 62 86 62 L118 62 C130 62 136 40 152 40 C204 40 258 118 324 118';
+const LIT = 'M22 118 C48 118 58 62 86 62 L118 62 C130 62 136 40 152 40 C178 40 204.5 59.5 232.75 79';
+document.getElementById('art').innerHTML = `<svg width="346" height="136" viewBox="0 0 346 136" aria-hidden="true">
+  <path d="${BREATH}" fill="none" stroke="var(--ink)" stroke-opacity=".22" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" data-fade style="--d:200ms"/>
+  <path d="${LIT}" fill="none" stroke="var(--ink)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" class="draw" style="--len:290;--d:400ms;--dur:1250ms"/>
+  <g font-family="DM Sans, sans-serif" font-weight="700" font-size="14" fill="var(--ink)">
+    <circle cx="86" cy="62" r="4.5" fill="var(--ink)" data-fade style="--d:800ms"/><text x="86" y="48" text-anchor="middle" data-fade style="--d:800ms">In</text>
+    <circle cx="152" cy="40" r="7" fill="#FF7A55" data-pop style="transform-origin:152px 40px;--d:1200ms"/><text x="152" y="24" text-anchor="middle" data-fade style="--d:1200ms">A little more</text>
+    <circle class="pulse" cx="232.75" cy="79" r="9" fill="var(--ink)" fill-opacity=".25"/>
+    <circle cx="232.75" cy="79" r="6.5" fill="var(--ink)" data-fade style="--d:1600ms"/><text x="244" y="70" font-size="13.5" data-fade style="--d:1600ms">Long, slow out</text>
   </g></svg>`;
+/* small paper-cut spots (same family as 027): tinted sky, a cut-paper hill, one motif; navy pre-dawn in dark */
+const S = dark
+  ? { mint:'#1E2C52', apri:'#1E2C52', sky:'#1E2C52', g1:'#2C4A55', g2:'#22394A', p:'#E6DCCB', coral:'#E9886C', ink:'#0F1B33' }
+  : { mint:'#D3F0DF', apri:'#FFE6C8', sky:'#DCE8FF', g1:'#9FE3BC', g2:'#7FD3A6', p:'#FFFFFF', coral:'#FF8A5E', ink:'#1E1A3A' };
+const hills = `<path d="M0 35 C12 30 30 34 48 30 V48 H0z" fill="${S.g1}"/><path d="M0 42 C16 38 32 43 48 39 V48 H0z" fill="${S.g2}"/>`;
+const SPOTS = {
+  sigh: [S.mint, hills + `<g fill="none" stroke="${S.p}" stroke-width="3.2" stroke-linecap="round"><path d="M7 13h18c4.5 0 6-6 1.5-6.4-3-.3-3.6 3.4-1.2 4"/><path d="M12 22h22c4.5 0 6 6 1.5 6.4-3 .3-3.6-3.4-1.2-4"/></g>`],
+  timer: [S.apri, `<rect x="20.5" y="5" width="7" height="5" rx="2" fill="${S.coral}"/><circle cx="24" cy="26" r="15" fill="${S.p}"/><path d="M24 26 V14 A12 12 0 0 1 24 38 Z" fill="${S.coral}"/><circle cx="24" cy="26" r="2.4" fill="${S.ink}"/>`],
+  cloud: [S.sky, `<circle cx="35" cy="13" r="5.5" fill="#FFD25E"/>` + hills + `<path d="M9 30h26a6.5 6.5 0 000-13 9 9 0 00-16.5-1.5A6.5 6.5 0 009 21a4.5 4.5 0 000 9z" fill="${S.p}"/>`]
+};
+document.querySelectorAll('[data-spot]').forEach(e => { const [bg, art] = SPOTS[e.dataset.spot]; e.innerHTML = `<svg viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" fill="${bg}"/>${art}</svg>`; });
 </script>
 </body></html>

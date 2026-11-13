@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>051 NRT reminders</title>
-<meta name="motion" content="Title, the two reminder cards (each with its time row) and the preview arrive (600ms, 90ms stagger); both toggles slide on as they land. At 1.4s Done is pressed: the button keeps its ink colour and gains a green check (done state, no colour switch, no toast: the button is the confirmation), the bell in the preview bumps once. Success haptic on the check.">
+<meta name="motion" content="Title, the two reminder cards (each with a peach duotone glyph tile, as on the products list, and its time row) and the preview arrive (600ms, 90ms stagger); both coral toggles slide on as they land. The flow's one dosing note sits under the preview. At 1.4s Done is pressed: the button keeps its ink colour and gains a green check (done state, no colour switch, no toast: the button is the confirmation), the bell in the preview bumps once. Success haptic on the check.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -22,6 +22,10 @@
   .caution { margin-top: 16px; font-size: 13px; display: flex; gap: 8px; align-items: center; color: var(--muted); white-space: nowrap; }
   .caution svg { width: 16px; height: 16px; flex: none; }
   .rem { margin-top: 24px !important; gap: 14px; }
+  /* peach duotone glyph tiles, as on the NRT products list (048) */
+  .rem .ico-tile svg { width: 28px; height: 28px; }
+  .gl { --acc: #FFB27F; --acc2: #FFDCC4; }
+  [data-theme="dark"] .gl { --acc: #F39A62; --acc2: #FFD3B4; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -36,11 +40,11 @@
       <p class="t-foot lead" data-a style="--i:1">For your 10-week patch plan, Nov 13 to Jan 21.</p>
       <div class="stack rem">
         <div class="card" data-a style="--i:3">
-          <div class="row"><span class="ico-tile" data-ic="patch"></span><div class="grow"><p class="t-head">Fresh patch</p><p class="t-foot">Every day</p></div><span class="toggle on"></span></div>
+          <div class="row"><span class="ico-tile gl" data-p="patch"></span><div class="grow"><p class="t-head">Fresh patch</p><p class="t-foot">Every day</p></div><span class="toggle on"></span></div>
           <div class="row sub"><p class="t-foot grow" style="color:var(--muted)">Time</p><span class="time">7:30 AM</span></div>
         </div>
         <div class="card" data-a style="--i:4">
-          <div class="row"><span class="ico-tile" data-ic="calendar"></span><div class="grow"><p class="t-head">Step-down days</p><p class="t-foot">Evening before each step</p></div><span class="toggle on"></span></div>
+          <div class="row"><span class="ico-tile gl" data-p="steps"></span><div class="grow"><p class="t-head">Step-down days</p><p class="t-foot">Evening before each step</p></div><span class="toggle on"></span></div>
           <div class="row sub"><p class="t-foot grow" style="color:var(--muted)">Time</p><span class="time">8:00 PM</span></div>
         </div>
       </div>
@@ -57,6 +61,12 @@
 </div>
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic));
+  const PP = {
+    patch: '<rect x="3.5" y="3.5" width="17" height="17" rx="5" fill="var(--acc2)"/><rect x="7.5" y="7.5" width="9" height="9" rx="2.5" fill="var(--acc)"/><path d="M6 6h.01M18 6h.01M6 18h.01M18 18h.01" stroke-width="2.2"/>',
+    /* a calendar page with a small step-down inside */
+    steps: '<rect x="3.5" y="5" width="17" height="15.5" rx="3.5" fill="var(--acc2)"/><path d="M3.5 9.8V8.5A3.5 3.5 0 017 5h10a3.5 3.5 0 013.5 3.5v1.3z" fill="var(--acc)"/><path d="M8 3v3.6M16 3v3.6"/><path d="M6.6 18v-5.4h3.7V18zM10.3 18v-3.5h3.6V18zM13.9 18v-1.8h3.5V18z" fill="var(--acc)" stroke-width="1.3"/>'
+  };
+  document.querySelectorAll('[data-p]').forEach(e => e.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${PP[e.dataset.p]}</svg>`);
   document.getElementById('app').innerHTML = DX.char('xero', { mood: 'hello', size: 40 });
   const btn = document.getElementById('done');
   function finish() {

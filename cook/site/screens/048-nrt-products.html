@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>048 NRT products</title>
-<meta name="motion" content="Title and the subtitle (with its count) arrive, then the five product rows arrive top to bottom (600ms, 90ms stagger), then Xero's tip settles in (900ms, then a slow bob). At 1.2s the Patch row lands selected: the kit's tint, 2px outline and tick settle in over 520ms with a light selection haptic, and the count in the subtitle rolls from 0 to 1. Tapping a third row gently shakes the count instead of selecting.">
+<meta name="motion" content="Title and the subtitle (with its count) arrive, then the five product rows arrive top to bottom (600ms, 90ms stagger), then Xero settles in beside a short how-to for 'Chew, then park it' (900ms, then a slow bob). At 1.2s the Patch row lands selected: the kit's tint, 2px outline and tick settle in over 520ms with a light selection haptic, and the count in the subtitle rolls from 0 to 1. Tapping a third row gently shakes the count instead of selecting.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -21,6 +21,7 @@
   .tip { margin-top: 18px; display: flex; gap: 10px; align-items: center; padding: 0 4px 0 0; }
   .tip .xr { width: 64px; height: 64px; flex: none; margin: -6px 0 -6px -8px; }
   .tip .t-foot { color: var(--muted); }
+  .tip .t-foot b { color: var(--fg); font-weight: 700; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -42,7 +43,7 @@
       </div>
       <div class="tip" data-a style="--i:7">
         <div class="xr" data-settle style="--d:500ms"><div class="bob" id="xero"></div></div>
-        <p class="t-foot">Most people pair the patch with one faster form for sudden cravings.</p>
+        <p class="t-foot"><b>Chew, then park it:</b> chew the gum slowly until it tingles, then park it between your cheek and gum.</p>
       </div>
     </div>
   </div>
@@ -57,7 +58,7 @@
     gum: '<rect x="3" y="5" width="13" height="8" rx="4" fill="var(--acc2)" transform="rotate(-12 9.5 9)"/><rect x="8" y="11" width="13" height="8" rx="4" fill="var(--acc)" transform="rotate(-12 14.5 15)"/><path d="M12 13.6l5.4-1.1" stroke-opacity=".5"/>',
     lozenge: '<ellipse cx="12" cy="13" rx="8.5" ry="6.5" fill="var(--acc2)"/><ellipse cx="12" cy="11.5" rx="8.5" ry="6.5" fill="var(--acc)"/><path d="M7.5 11.5h9" stroke-opacity=".5"/>',
     spray: '<rect x="7" y="9.5" width="10" height="11.5" rx="3" fill="var(--acc)"/><path d="M9.5 9.5V7h5v2.5" fill="var(--acc2)"/><path d="M11 7V4.5h4.5" /><path d="M18.5 3.5h.01M20.5 5.5h.01M18.5 6.5h.01" stroke-width="2"/><path d="M7 14.5h10" stroke-opacity=".5"/>',
-    inhaler: '<g transform="rotate(-35 12 12)"><rect x="2.5" y="8.8" width="13.5" height="6.4" rx="3.2" fill="var(--acc)"/><path d="M16 9.8h3.6a1.6 1.6 0 011.6 1.6v1.2a1.6 1.6 0 01-1.6 1.6H16" fill="var(--acc2)"/><path d="M7 12h5" stroke-opacity=".5"/></g>'
+    inhaler: '<g transform="rotate(-30 12 13)"><path d="M14.8 9.4h4l2.6 1.2v4.8l-2.6 1.2h-4z" fill="var(--acc2)"/><rect x="1.4" y="8.4" width="13.6" height="9.2" rx="2.4" fill="var(--acc)"/><rect x="4.2" y="11.1" width="7.6" height="3.8" rx="1.9" fill="var(--acc2)" stroke-width="1.4"/></g><path d="M21 3.4h.01M22.6 6.2h.01M18.8 2.2h.01" stroke-width="2"/>'
   };
   document.querySelectorAll('[data-p]').forEach(e => e.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${PP[e.dataset.p]}</svg>`);
   document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'hello', size: 64 });

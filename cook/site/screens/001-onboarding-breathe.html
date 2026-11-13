@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>001 One breath</title>
-<meta name="motion" content="Xero settles up 48px (900ms) inside three soft rings, then the rings and Xero breathe together for one 10 s cycle: 4 s in (scale .82 to 1.06), 6 s out. The rings are the only pacer. The headline arrives (600ms, 90ms stagger) with Breathe in; at 4000ms it swaps for And out (500ms fade and 6px rise; only one phrase is ever on screen, full contrast). On the out-breath three cream breath marks leave his mouth and drift 16px outward as they fade (6 s). A hairline under the copy fills left to right over the 10 s (linear) to show the screen moves on by itself, above a quiet Skip. Gentle haptic at 0 and 4000ms marking the turn; auto-advances at 10.4 s.">
+<meta name="motion" content="Xero settles up 48px (900ms) inside three soft rings, then the rings and Xero breathe together for one 10 s cycle: 4 s in (scale .82 to 1.06), 6 s out. The rings are the only pacer. The headline arrives (600ms, 90ms stagger) with Breathe in; at 4000ms it swaps for And out (500ms fade and 6px rise; only one phrase is ever on screen, full contrast). On the out-breath two small cream breath puffs leave his mouth and drift 16px outward as they fade (6 s). A hairline under the copy fills left to right over the 10 s (linear) to show the screen moves on by itself, above a quiet Skip. Gentle haptic at 0 and 4000ms marking the turn; auto-advances at 10.4 s.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -31,7 +31,7 @@
   .play .timer i { animation: tick 10000ms linear both; }
   @keyframes tick { from { transform: scaleX(0); } to { transform: scaleX(1); } }
   .still .timer i { animation: none !important; transform: scaleX(.6); }
-  /* Breath marks: three soft wisps leaving Xero's mouth on the out-breath. */
+  /* Breath marks: two small puffs leaving Xero's mouth on the out-breath. */
   .wisp { opacity: 1; }
   .play .wisp { animation: wisp 6000ms cubic-bezier(.3,.6,.3,1) 4000ms both; }
   .still .wisp { animation: none !important; }
@@ -54,8 +54,10 @@
 </div>
 <script>
   /* The kit's breathe marks sit beside his arm; here they leave his mouth instead (cream on his coral face, then out past his cheek). */
-  const wisps = `<g class="wisp" fill="none" stroke="#FFF8EE" stroke-width="3.2" stroke-linecap="round" opacity=".95">
-    <path d="M108 96 C114 94 118 97 124 96"/><path d="M107 101 C115 103 121 101 128 104"/><path d="M109 106 C114 109 118 110 122 112" opacity=".7"/></g>`;
+  const wisps = `<g class="wisp" fill="#FFF8EE">
+    <g opacity=".95"><circle cx="111" cy="101.5" r="4"/><circle cx="116.5" cy="98.5" r="5"/><circle cx="122" cy="101.5" r="3.8"/><rect x="111" y="100" width="11" height="5.5" rx="2.7"/></g>
+    <g opacity=".75"><circle cx="129" cy="109" r="2.6"/><circle cx="132.5" cy="107" r="3.2"/><circle cx="136" cy="109" r="2.4"/><rect x="129" y="108" width="7" height="3.6" rx="1.8"/></g>
+    <circle cx="141" cy="114" r="1.7" opacity=".55"/></g>`;
   document.getElementById('hero').innerHTML = DX.char('xero', { mood: 'breathe', size: 176 })
     .replace(/<g opacity="1" fill="none" stroke="#(?:24163A|F3E9DE)" stroke-width="3" stroke-linecap="round"><animateTransform[^>]*><\/animateTransform><path d="M172 100[^"]*"><\/path><path d="M176 112[^"]*"><\/path><\/g>/, '')
     .replace(/(<path d="M100 90 C106 90 106 101 100 101[^>]*><\/path>)/, '$1' + wisps);

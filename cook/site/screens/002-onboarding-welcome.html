@@ -1,14 +1,17 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>002 Welcome</title>
-<meta name="motion" content="Continues the launch scene: the paper hills settle up in three layers (0, 120, 240ms; 900ms settle) and the sun climbs 60px (1200ms ease-out). Xero settles onto the hill crest (900ms, from 300ms), then waves: his right arm swings 16 degrees twice (2 x 800ms, from 1200ms) with two small motion marks. At 1100ms the cream speech bubble (tail toward his hand) rises in (600ms). Headline, body and dock arrive in reading order from 500ms (600ms, 90ms stagger). Light haptic on Get started.">
+<meta name="motion" content="Continues the launch scene: the two paper hills settle up (0, 120ms; 900ms settle; the crest under Xero fades into the page, no seam) and the sun climbs 60px (1200ms ease-out; dark mode: a warm amber core in a soft amber glow). Xero settles onto the hill crest (900ms, from 300ms), then waves: his right arm swings 16 degrees twice (2 x 800ms, from 1200ms) with two small motion marks. At 1100ms the cream speech bubble (tail toward his hand) rises in (600ms). Headline, body and dock arrive in reading order from 500ms (600ms, 90ms stagger). Light haptic on Get started.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   /* Paper hills. Light: pale far hill, warm crest hill under Xero. Dark: the launch screen's night, flat shades, dim amber sun. */
   .screen { --h-back: #FFDDB8; --h-mid: #FFAE7A; --h-edge: rgba(255,255,255,.6); --sun-a: #FFF4C9; --sun-b: #FFC93C;
     --ring-1: rgba(255,240,205,.55); --ring-2: rgba(255,236,200,.32); --lift: rgba(120,44,20,.18); }
-  [data-theme="dark"] .screen { --h-back: #36416C; --h-mid: #252F55; --h-edge: rgba(190,205,255,.26); --sun-a: #F2C98C; --sun-b: #D9964E;
-    --ring-1: rgba(232,170,100,.13); --ring-2: rgba(232,170,100,.06); --lift: rgba(0,0,0,.45); }
+  [data-theme="dark"] .screen { --h-back: #36416C; --h-mid: #252F55; --h-edge: rgba(190,205,255,.26); --sun-a: #FFE2A0; --sun-b: #F3A14A;
+    --ring-1: transparent; --ring-2: transparent; --lift: rgba(0,0,0,.45); }
+  /* Dark: the launch screen's sun, a warm amber core inside a soft radial glow (no flat disc, no grey rings). */
+  .glow { display: none; }
+  [data-theme="dark"] .glow { display: inline; }
   .art { position: absolute; z-index: 0; left: 0; right: 0; top: 0; height: 450px; overflow: hidden; }
   .sky { position: absolute; inset: 0; background: linear-gradient(to bottom, color-mix(in srgb, var(--sun-b) 22%, var(--g)), var(--g) 70%); }
   [data-theme="dark"] .sky { background: linear-gradient(to bottom, #0B1020 0%, #141C36 45%, #222C55 80%); }
@@ -26,7 +29,7 @@
   .xw { position: absolute; z-index: 4; left: 82px; top: 216px; width: 152px; height: 152px; --d: 300ms; }
   /* Speech bubble: cream in both modes, tail pointing at his waving hand. */
   .hi { position: absolute; z-index: 6; left: 238px; top: 196px; --d: 1100ms; }
-  .hi .bubble { position: relative; background: #FFF8EE; color: #1E1A3A; font: 700 15px/1.2 var(--display); padding: 11px 14px; border-radius: 18px 18px 18px 6px; white-space: nowrap; box-shadow: 0 6px 18px rgba(90,40,20,.12); }
+  .hi .bubble { position: relative; max-width: none; background: #FFF8EE; color: #1E1A3A; font: 700 15px/1.2 var(--display); padding: 11px 12px; border-radius: 18px 18px 18px 6px; white-space: nowrap; box-shadow: 0 6px 18px rgba(90,40,20,.12); }
   .hi .bubble::before { content: ""; position: absolute; left: 4px; bottom: -9px; width: 16px; height: 12px; background: #FFF8EE;
     clip-path: path('M2 0 L14 0 C10 4 5 8 0 12 C1 8 2 4 2 0 Z'); }
   [data-theme="dark"] .hi .bubble { box-shadow: 0 6px 18px rgba(0,0,0,.35); }
@@ -46,8 +49,12 @@
     <div class="sky"></div>
     <div class="layer sunw" style="z-index:1">
       <svg width="390" height="450" viewBox="0 0 390 450">
-        <defs><radialGradient id="sg" cx=".4" cy=".34" r=".72"><stop offset="0" stop-color="var(--sun-a)"/><stop offset="1" stop-color="var(--sun-b)"/></radialGradient></defs>
+        <defs><radialGradient id="sg" cx=".4" cy=".34" r=".72"><stop offset="0" stop-color="var(--sun-a)"/><stop offset="1" stop-color="var(--sun-b)"/></radialGradient>
+          <radialGradient id="glowG"><stop offset="0" stop-color="#FFB862" stop-opacity=".7"/><stop offset=".42" stop-color="#F7A04E" stop-opacity=".32"/><stop offset=".72" stop-color="#E88A45" stop-opacity=".09"/><stop offset="1" stop-color="#E07F40" stop-opacity="0"/></radialGradient>
+          <radialGradient id="coreG" cx=".5" cy=".45" r=".55"><stop offset="0" stop-color="#FFE7A8"/><stop offset=".6" stop-color="#FFC266"/><stop offset="1" stop-color="#F49A45"/></radialGradient></defs>
+        <circle class="glow" cx="112" cy="232" r="136" fill="url(#glowG)"/>
         <circle cx="112" cy="232" r="104" fill="var(--ring-2)"/><circle cx="112" cy="232" r="80" fill="var(--ring-1)"/><circle cx="112" cy="232" r="54" fill="url(#sg)"/>
+        <circle class="glow" cx="112" cy="232" r="54" fill="url(#coreG)"/>
       </svg>
     </div>
     <div class="layer back">
@@ -58,14 +65,12 @@
     </div>
     <div class="layer crest">
       <svg width="390" height="450" viewBox="0 0 390 450">
-        <path d="M0 416 C36 390 92 362 158 360 C226 358 300 382 390 404 L390 450 L0 450 Z" fill="var(--h-mid)"/>
+        <defs><linearGradient id="crestF" gradientUnits="userSpaceOnUse" x1="0" y1="356" x2="0" y2="450"><stop offset="0" style="stop-color: var(--h-mid)"/><stop offset=".45" style="stop-color: var(--h-mid)"/><stop offset="1" style="stop-color: var(--g)"/></linearGradient></defs>
+        <path d="M0 416 C36 390 92 362 158 360 C226 358 300 382 390 404 L390 450 L0 450 Z" fill="url(#crestF)"/>
         <path d="M0 416 C36 390 92 362 158 360 C226 358 300 382 390 404" fill="none" stroke="var(--h-edge)" stroke-width="2"/>
       </svg>
     </div>
     <div class="xw" id="xero" data-settle></div>
-    <div class="layer front">
-      <svg width="390" height="450" viewBox="0 0 390 450"><path d="M0 440 C100 426 290 426 390 440 L390 450 L0 450 Z" fill="var(--g)"/></svg>
-    </div>
   </div>
   <div class="hi" data-a><div class="bubble">Hi, I&rsquo;m Xero.</div></div>
 

@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>033 Lesson intro</title>
-<meta name="motion" content="The paper-cut road card fades up (600ms) and the little open-top car rolls in from the left (900ms settle curve) with Xero at the wheel, then idles with a 2px bounce (1.2s loop). The three back-seat passengers (coral, yellow, blue) chatter: their two speech bubbles pop in turn (spring 420ms, 700ms apart) and keep pulsing on a 2.4s loop while Xero keeps his eyes on the road. The meta line, title, subtitle and the three 'inside' rows (each with its small paper-cut spot) arrive with a 90ms stagger, then Begin and the listen link. Light haptic on Begin.">
+<meta name="motion" content="The paper-cut road card fades up (600ms) and the little open-top car rolls in from the left (900ms settle curve) with Xero at the wheel, then idles with a 2px bounce (1.2s loop). The three back-seat passengers (grey, yellow, blue; Xero is the only coral figure) chatter: their two speech bubbles pop in turn (spring 420ms, 700ms apart) and keep pulsing on a 2.4s loop while Xero keeps his eyes on the road. The meta line, title, subtitle and the three 'inside' rows (each with its small paper-cut spot: cards on a hill, a kite, a summit flag) arrive with a 90ms stagger, then Begin and the listen link. Light haptic on Begin.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -13,6 +13,7 @@
   .inside .t-foot { color: var(--muted); }
   .spot { width: 42px; height: 42px; border-radius: 13px; overflow: hidden; flex: none; display: block; }
   .spot svg { display: block; width: 42px; height: 42px; }
+  [data-theme="dark"] .spot { box-shadow: 0 0 0 1px rgba(255,255,255,.12); }
   .dock .link { height: 32px; font: 600 15px/1 var(--body); color: var(--fg); opacity: 1; }
   .dock .link svg { width: 17px; height: 17px; }
   /* car motion: rolls in, idles; passengers chatter */
@@ -44,7 +45,7 @@
       </div>
       <div class="list inside" data-a style="--i:4">
         <div class="row"><span class="spot" data-spot="read"></span><div class="grow"><p class="t-head" style="font-size:17px">A short read</p><p class="t-foot">Four cards, about 90 seconds</p></div></div>
-        <div class="row"><span class="spot" data-spot="tap"></span><div class="grow"><p class="t-head" style="font-size:17px">A few activities</p><p class="t-foot">Quick taps, no wrong answers</p></div></div>
+        <div class="row"><span class="spot" data-spot="kite"></span><div class="grow"><p class="t-head" style="font-size:17px">A few activities</p><p class="t-foot">Quick taps, no wrong answers</p></div></div>
         <div class="row"><span class="spot" data-spot="flag"></span><div class="grow"><p class="t-head" style="font-size:17px">Today's mission</p><p class="t-foot">One small thing to try today</p></div></div>
       </div>
     </div>
@@ -58,26 +59,37 @@
   document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20 })));
   const dark = DX.theme === 'dark';
 
-  /* Small paper-cut spots for the three rows (same palette as the road card; navy pre-dawn in dark). */
+  /* Small paper-cut spots for the three rows, in the style of the health timeline (037): a little sky tile, lifted paper hills
+     and one motif each (cards on a hill, a kite, a summit flag). Dark mode is a lit pre-dawn (navy to rose sky, gold sun) so the
+     tiles stand off the navy card instead of sinking into it. */
   const S = dark
-    ? { bg: '#1E2C52', h1: '#2C3D6A', h2: '#16233F', sun: '#FFD27A', paper: '#E6DCCB', paper2: '#C9BFAE', ink: '#0F1B33', coral: '#E9886C' }
-    : { bg: '#FFE6C8', h1: '#FFAE73', h2: '#FF8A5E', sun: '#FFD25E', paper: '#FFF8EE', paper2: '#F1DFC8', ink: '#1E1A3A', coral: '#FF7A55' };
+    ? { sky: ['#40558F', '#A27F9A'], h1: '#4E6198', h2: '#34477C', sun: '#FFD27A', glow: '#FFB25E', paper: '#EFE6D6', paper2: '#C9BFAE', ink: '#1E1A3A', pole: '#EFE6D6', coral: '#F08A6C', cloud: '#8E9AC4', lift: .5 }
+    : { sky: ['#FFC9A0', '#FFEAD2'], h1: '#FFAE73', h2: '#FF8A5E', sun: '#FFD25E', glow: '#FFF6C8', paper: '#FFF8EE', paper2: '#F1DFC8', ink: '#1E1A3A', pole: '#1E1A3A', coral: '#FF7A55', cloud: '#FFFFFF', lift: .22 };
+  const L = 'filter="url(#spLift)"';
   const SPOTS = {
-    read: `<path d="M0 32 C10 28 22 31 42 27 V42 H0z" fill="${S.h1}"/>
-      <g transform="rotate(-12 18 22)"><rect x="9" y="9" width="18" height="24" rx="3" fill="${S.paper2}"/></g>
-      <g transform="rotate(8 24 22)"><rect x="14" y="8" width="18" height="25" rx="3" fill="${S.paper}"/><rect x="14" y="8" width="18" height="5" rx="2" fill="${S.coral}"/><path d="M18 18h10M18 22.5h10M18 27h6" stroke="${S.ink}" stroke-opacity=".55" stroke-width="1.7" stroke-linecap="round"/></g>`,
-    tap: `<path d="M0 34 C12 30 26 33 42 30 V42 H0z" fill="${S.h1}"/>
-      <rect x="7" y="8" width="28" height="11" rx="5.5" fill="${S.paper}" opacity=".75"/>
-      <rect x="7" y="22" width="28" height="11" rx="5.5" fill="${S.paper}"/><circle cx="13" cy="27.5" r="3.4" fill="${S.coral}"/><path d="M19 27.5h11" stroke="${S.ink}" stroke-opacity=".5" stroke-width="1.8" stroke-linecap="round"/>
-      <circle cx="13" cy="13.5" r="3" fill="none" stroke="${S.ink}" stroke-opacity=".35" stroke-width="1.4"/>`,
-    flag: `<circle cx="30" cy="15" r="6.5" fill="${S.sun}"/>
-      <path d="M0 30 C8 24 14 18 22 17 C30 18 36 24 42 28 V42 H0z" fill="${S.h1}"/><path d="M0 36 C14 32 28 37 42 34 V42 H0z" fill="${S.h2}"/>
-      <path d="M21 18V6" stroke="${S.ink}" stroke-width="1.8" stroke-linecap="round"/><path d="M21.6 6.4l8.4 2.8-8.4 2.8z" fill="${S.coral}"/>`
+    read: `<circle cx="33" cy="11" r="9" fill="url(#spGlow)"/><circle cx="33" cy="11" r="4.6" fill="${S.sun}"/>
+      <path ${L} d="M0 31 C10 27 22 30 42 26 V42 H0z" fill="${S.h1}"/>
+      <g ${L}><g transform="rotate(-13 15 22)"><rect x="7" y="11" width="15" height="20" rx="2.6" fill="${S.paper2}"/></g>
+      <g transform="rotate(7 23 21)"><rect x="15" y="10" width="16" height="21" rx="2.6" fill="${S.paper}"/><rect x="15" y="10" width="16" height="4.5" rx="2" fill="${S.coral}"/><path d="M18.5 19h9M18.5 23h9M18.5 27h5.5" stroke="${S.ink}" stroke-opacity=".5" stroke-width="1.5" stroke-linecap="round"/></g></g>
+      <path ${L} d="M0 37 C14 34 28 38 42 35 V42 H0z" fill="${S.h2}"/>`,
+    kite: `<path d="M4 14 a3.2 3.2 0 0 1 5.6 -2.2 a3.6 3.6 0 0 1 6.6 1.4 a2.4 2.4 0 0 1 0 4.8 H5.4 a2.3 2.3 0 0 1 -1.4 -4z" fill="${S.cloud}" opacity=".85"/>
+      <path ${L} d="M0 33 C12 29 26 32 42 28 V42 H0z" fill="${S.h1}"/><path ${L} d="M0 38 C14 35 28 39 42 36 V42 H0z" fill="${S.h2}"/>
+      <path d="M27 22 C25 28 18 28 13 33" fill="none" stroke="${S.pole}" stroke-opacity=".55" stroke-width="1.2" stroke-linecap="round"/>
+      <path d="M22.4 27.4l-2 -1.4 0.4 2.6zM17.6 29.8l-2 -1 0.6 2.4z" fill="${S.coral}"/>
+      <g ${L}><path d="M27 4 L34.5 12.5 L27 22 L19.5 12.5Z" fill="${S.coral}"/><path d="M27 4 L34.5 12.5 L27 22Z" fill="#000" opacity=".12"/>
+      <path d="M27 4.6V21.4M20.2 12.5H33.8" stroke="${S.paper}" stroke-opacity=".85" stroke-width="1.3"/></g>`,
+    flag: `<circle cx="11" cy="12" r="11" fill="url(#spGlow)"/><circle cx="11" cy="12" r="5.6" fill="${S.sun}"/>
+      <path ${L} d="M0 31 C8 25 14 19 21 18 C29 19 35 25 42 28 V42 H0z" fill="${S.h1}"/><path ${L} d="M0 37 C14 33 28 38 42 34 V42 H0z" fill="${S.h2}"/>
+      <path d="M21 18.4V6" stroke="${S.pole}" stroke-width="1.8" stroke-linecap="round"/><path d="M21.6 6.4l8.4 2.8 -8.4 2.8z" fill="${S.coral}"/>`
   };
-  document.querySelectorAll('[data-spot]').forEach(e => e.innerHTML = `<svg viewBox="0 0 42 42" aria-hidden="true"><rect width="42" height="42" fill="${S.bg}"/>${SPOTS[e.dataset.spot]}</svg>`);
+  document.body.insertAdjacentHTML('beforeend', `<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+    <linearGradient id="spSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${S.sky[0]}"/><stop offset="1" stop-color="${S.sky[1]}"/></linearGradient>
+    <radialGradient id="spGlow"><stop offset=".3" stop-color="${S.glow}" stop-opacity="${dark ? .5 : .7}"/><stop offset="1" stop-color="${S.glow}" stop-opacity="0"/></radialGradient>
+    <filter id="spLift" x="-10%" y="-25%" width="120%" height="150%"><feDropShadow dx="0" dy="-1" stdDeviation="1.1" flood-color="#1A0B2E" flood-opacity="${S.lift}"/></filter></defs></svg>`);
+  document.querySelectorAll('[data-spot]').forEach(e => e.innerHTML = `<svg viewBox="0 0 42 42" aria-hidden="true"><rect width="42" height="42" fill="url(#spSky)"/>${SPOTS[e.dataset.spot]}</svg>`);
 
   /* Lesson art: paper-cut dawn road, Xero at the wheel of a little open-top car, three chattering passengers in the back
-     (the cravings: small coral, yellow and blue blobs). Dark mode is the kit's pre-dawn: navy sky, a low warm sun, stars. */
+     (the cravings: small grey, yellow and blue blobs). Dark mode is the kit's pre-dawn: navy sky, a low warm sun, stars. */
   const C = dark
     ? { sky: ['#0D1630', '#24335C', '#5B5578'], hills: ['#1E2B4A', '#16233F', '#0F1A31'], road: '#232E4D', dash: '#8E97B5', dashO: .55,
         body: '#E6DCCB', shade: '#C2B6A2', stripe: '#E9886C', seat: '#2B3658', frame: '#C2B6A2', tyre: '#070B16', hub: '#C2B6A2', lamp: '#FFD27A', glass: .16, bub: '#EDE3D2', marks: '#1E1A3A', speed: '#FFF8EE', speedO: .28, shadow: .5 }
@@ -90,7 +102,7 @@
   /* the driver: Xero sits low in the front seat, eyes on the road, the wheel in front of him */
   const xero = DX.char('xero', { mood: 'hello', size: 74 }).replace('<svg ', '<svg x="156" y="133" ');
   /* a small passenger blob in a cast colour: round head, darker side, raised brows, open talking mouth */
-  const pal = { coral: ['#FF9A82', '#F07A62'], yellow: ['#FFD25E', '#F2B640'], blue: ['#7C97F2', '#5C7AE0'] };
+  const pal = { grey: ['#D3CCDD', '#B4ABC4'], yellow: ['#FFD25E', '#F2B640'], blue: ['#7C97F2', '#5C7AE0'] };
   const pass = (x, y, c, tilt, mouth) => `<g transform="translate(${x} ${y}) rotate(${tilt})">
       <path d="M-15 30 V7 C-15 -3 -8 -9 0 -9 C8 -9 15 -3 15 7 V30Z" fill="${pal[c][0]}"/>
       <path d="M8 -7 C12.5 -4 15 1 15 7 V30 H9.5 V7 C9.5 2 9.5 -3 8 -7Z" fill="${pal[c][1]}"/>
@@ -122,18 +134,18 @@
       <ellipse cx="174" cy="250" rx="126" ry="5" fill="#000" opacity="${C.shadow}"/>
       <path d="M64 186 C64 172 70 166 82 166 H146 C154 166 158 172 158 180 V188 H64Z" fill="${C.seat}"/>
       <path d="M170 188 V166 C170 158 175 153 183 153 H192 C198 153 201 158 201 164 V188Z" fill="${C.seat}"/>
-      ${pass(83, 165, 'coral', -7, 'o')}${pass(112, 161, 'yellow', 1, 'grin')}${pass(141, 165, 'blue', 8, 'o')}
+      ${pass(83, 165, 'grey', -7, 'o')}${pass(112, 161, 'yellow', 1, 'grin')}${pass(141, 165, 'blue', 8, 'o')}
       ${xero}
-      <path d="M236 187 L229 172" stroke="${C.tyre}" stroke-width="3" stroke-linecap="round"/>
-      <ellipse cx="227" cy="167" rx="3.6" ry="11" transform="rotate(-18 227 167)" fill="none" stroke="${C.tyre}" stroke-width="3.4"/>
+      <path d="M242 187 L235 172" stroke="${C.tyre}" stroke-width="3" stroke-linecap="round"/>
+      <ellipse cx="233" cy="167" rx="3.6" ry="11" transform="rotate(-18 233 167)" fill="none" stroke="${C.tyre}" stroke-width="3.4"/>
       <g filter="url(#drop)">
         <path d="M50 236 C44 236 42 230 43 223 L47 202 C49 192 56 186 68 186 H230 C238 186 242 188 250 191 L282 198 C294 201 300 208 301 218 L302 228 C302 234 299 237 293 237 Z" fill="${C.body}"/>
       </g>
       <path d="M46 210 H300" stroke="${C.stripe}" stroke-width="3.4" stroke-linecap="round" opacity=".9"/>
       <path d="M162 189 V234" stroke="${C.shade}" stroke-width="2" stroke-linecap="round"/>
       <path d="M172 198 h12" stroke="${C.shade}" stroke-width="3" stroke-linecap="round"/>
-      <path d="M240 188 L250 154" stroke="${C.frame}" stroke-width="3" stroke-linecap="round"/>
-      <path d="M240 188 L250 154 L260 156 L254 190Z" fill="#FFFFFF" opacity="${C.glass}"/>
+      <path d="M260 193 L270 160" stroke="${C.frame}" stroke-width="3" stroke-linecap="round"/>
+      <path d="M260 193 L270 160 L280 162 L274 195Z" fill="#FFFFFF" opacity="${C.glass}"/>
       <rect x="291" y="204" width="9" height="10" rx="3" fill="${C.lamp}"/>
       <rect x="43" y="206" width="6" height="9" rx="2.5" fill="${C.stripe}"/>
       <circle cx="94" cy="237" r="21" fill="${C.shade}"/><circle cx="250" cy="237" r="21" fill="${C.shade}"/>

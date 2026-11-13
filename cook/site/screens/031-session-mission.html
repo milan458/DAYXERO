@@ -1,29 +1,23 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>031 Session mission</title>
-<meta name="motion" content="The heading arrives (600ms). The sun-gold mission card, the one hero, rises in (settle 900ms) and Xero rises behind it, centred, until he stands peeking over its top edge with his window showing (settle 900ms at 360ms, then a gentle 5s bob) with a light haptic; his line arrives beside him (600ms). The card's label, line and note arrive inside it (600ms, 90ms stagger), then what you learned arrives row by row (600ms, 90ms apart), and the log link and button arrive last in the dock.">
+<meta name="motion" content="The full bar and the heading arrive (600ms). The honey mission card, the one hero, rises in (settle 900ms); Xero climbs up behind it, his head rising over the top edge (settle 900ms at 360ms), then his two hands land on the edge in front of the card (spring 420ms at 1150ms, light haptic) and he blinks. The card's label, line and note arrive inside it (600ms, 90ms stagger), then what you learned arrives row by row (600ms, 90ms apart), and the log link and button arrive last in the dock.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-.nav .side{width:44px;text-align:right;flex:none}
 .top{position:absolute;top:114px;left:var(--gutter);right:var(--gutter)}
-/* the mission: bright sun gold in both modes (it is today's one celebration of intent), ink type */
-.mission{position:absolute;z-index:2;top:244px;left:var(--gutter);right:var(--gutter);border-radius:28px;padding:22px 22px 24px;
+/* the mission: honey in both modes (today's one celebration of intent), ink type; dark mode is a deeper honey, never a glare */
+.mission{position:absolute;z-index:2;top:236px;left:var(--gutter);right:var(--gutter);border-radius:28px;padding:22px 22px 24px;
   --ink:#1E1A3A;--soft:#4F400C;background:linear-gradient(165deg,#FFEDB0 0%,#FFE08A 55%,#FFD966 100%);color:var(--ink);box-shadow:0 16px 32px rgba(120,90,10,.16)}
-[data-theme="dark"] .mission{box-shadow:0 18px 40px rgba(0,0,0,.5),0 0 0 1px rgba(255,217,102,.25)}
-.mission .lab{display:flex;align-items:center;gap:8px;font:600 15px/1 var(--body);color:var(--soft)}
-.mission .lab svg{width:18px;height:18px}
-.mission h2{margin-top:16px;font-size:31px}
-.mission .t-body{margin-top:10px;color:var(--soft)}
-/* Xero says: Xero at 64 and a bubble that hugs its text, tail to Xero (one component on 026, 027, 028, 031).
-   Here Xero stands centred behind the card, peeking over its edge with his window showing. */
-.xsay{display:flex;align-items:flex-end;gap:10px}
-.xsay .xs-x{width:64px;flex:none}
-.xsay .xs-b{position:relative;width:max-content;max-width:calc(100% - 74px);background:var(--card);border-radius:18px 18px 18px 6px;padding:11px 15px;margin:0 0 12px;font:500 15px/1.4 var(--body);color:var(--fg);box-shadow:0 2px 10px rgba(30,26,58,.07)}
-[data-theme="dark"] .xsay .xs-b{box-shadow:none}
-.xsay .xs-b::before{content:"";position:absolute;left:-7px;bottom:0;width:12px;height:14px;background:var(--card);clip-path:polygon(100% 0,100% 100%,0 100%)}
-.peek{position:absolute;z-index:1;top:179px;left:163px}
-.peek .xs-b{margin-bottom:30px}
-.learn{position:absolute;top:478px;left:var(--gutter);right:var(--gutter)}
+[data-theme="dark"] .mission{--soft:#3A2A06;background:linear-gradient(165deg,#EDBF63 0%,#E0A847 55%,#D69A38 100%);box-shadow:0 18px 40px rgba(0,0,0,.45)}
+.mission .lab{font:600 15px/1 var(--body);color:var(--soft)}
+.mission h2{margin-top:12px;font-size:34px}
+.mission .t-body{margin-top:8px;color:var(--soft)}
+/* Xero climbs up behind the card: head over the edge, hands in front of it (same 136px drawing, two layers; the edge crosses him at y=112 of 200) */
+.peek,.hands{position:absolute;left:206px;top:160px;width:136px;height:136px;pointer-events:none}
+.peek{z-index:1}
+.hands{z-index:3}
+.peek svg > g[stroke]{display:none}
+.learn{position:absolute;top:426px;left:var(--gutter);right:var(--gutter)}
 .learn ul{margin:6px 0 0;padding:0;list-style:none}
 .learn li{padding:12px 0;border-top:1px solid var(--line)}
 .learn li:first-child{border-top:0}
@@ -36,20 +30,17 @@
   <div class="nav">
     <button class="icon-btn" aria-label="Close" id="close"></button>
     <div class="grow"><div class="steps" aria-label="All 5 cards played"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
-    <span class="side t-foot muted">5 of 5</span>
   </div>
   <div class="top">
     <h1 class="t-title" data-a style="--i:0">Your mission for today</h1>
   </div>
-  <div class="xsay peek">
-    <div class="xs-x" data-settle style="--i:3"><div class="bob" id="mx"></div></div>
-    <p class="xs-b" data-a style="--i:5">All five, done!</p>
-  </div>
+  <div class="peek" data-settle style="--i:3" id="mx"></div>
   <div class="mission" data-settle style="--i:0">
-    <div class="lab" data-a style="--i:2"><span id="m-ic"></span>For the rest of today</div>
-    <h2 class="t-large" data-a style="--i:3">When stress hits, do two sighs first.</h2>
-    <p class="t-body" data-a style="--i:4">Then use if you still want to.</p>
+    <p class="lab" data-a style="--i:2">Whenever stress hits</p>
+    <h2 class="t-large" data-a style="--i:3">Two sighs first.</h2>
+    <p class="t-body" data-a style="--i:4">Then, if you still want one, that's okay.</p>
   </div>
+  <div class="hands" data-pop style="--d:1150ms;transform-origin:68px 76px" id="hands"></div>
   <div class="learn">
     <h2 class="t-head" data-a style="--i:6">What you learned today</h2>
     <ul>
@@ -65,8 +56,14 @@
 </div>
 <script>
 document.getElementById('close').innerHTML = DX.icon('close');
-document.getElementById('m-ic').innerHTML = DX.icon('sun', {size:18});
 document.getElementById('l-chev').innerHTML = DX.icon('chev', {size:16, w:2.6});
-document.getElementById('mx').innerHTML = DX.char('xero', {mood:'cheer', size:64});
+/* the card's top edge crosses Xero at y=112 of his 200 drawing: eyes, cheeks and smile stay above it, his arms stay behind it */
+document.getElementById('mx').innerHTML = DX.char('xero', {mood:'hello', size:136});
+/* his two hands, gripping the edge in front of the card */
+const hand = (x, flip) => `<g transform="translate(${x} 112) scale(${flip ? -1 : 1} 1)"><path d="M-17 0 C-17 -10 -9 -14 0 -14 C9 -14 17 -10 17 0 C17 8 11 12 0 12 C-11 12 -17 8 -17 0Z" fill="#FF7155"/>
+  <path d="M-17 0 C-17 8 -11 12 0 12 C11 12 17 8 17 0 C14 5 8 7 0 7 C-8 7 -14 5 -17 0Z" fill="#E85A3E"/>
+  <path d="M-6 -2 V5 M3 -2 V5" stroke="#C9542F" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M-10 -8 C-7 -11 -3 -12 1 -12" fill="none" stroke="#FFB09C" stroke-width="3" stroke-linecap="round"/></g>`;
+document.getElementById('hands').innerHTML = `<svg width="136" height="136" viewBox="0 0 200 200" aria-hidden="true">${hand(52, false)}${hand(148, true)}</svg>`;
 </script>
 </body></html>

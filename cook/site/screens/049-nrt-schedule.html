@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>049 NRT schedule</title>
-<meta name="motion" content="Title and the subtitle with its 'US' country pill arrive (tapping the pill opens a country sheet), then the four schedule rows arrive top to bottom (600ms, 90ms stagger); each row's step-down glyph (80x44, widths by weeks, heights by mg) arrives with it in apricot outline. At 1.3s the 10 week row lands selected (520ms settle, light haptic) and its glyph fills apricot over 300ms. The pack hint arrives last.">
+<meta name="motion" content="Title and the subtitle with its 'US' country pill arrive (tapping the pill opens a country sheet), then the four schedule rows arrive top to bottom (600ms, 90ms stagger), each subtitle listing its mg steps and their weeks; each row's step-down glyph (80x44, widths by weeks, heights by mg) arrives with it in apricot outline. At 1.3s the 10 week row lands selected (520ms settle, light haptic) and its glyph fills apricot over 300ms. The pack hint arrives last.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -12,7 +12,7 @@
   .opt { min-height: 90px; padding: 12px 14px 12px 16px; }
   .opt .nm { font: 700 17px/1.25 var(--display); display: block; margin-bottom: 3px; }
   .opt .t-foot { font-size: 14px; }
-  .stair { width: 80px; height: 44px; flex: none; --apr: #F08A4B; --apr-fill: #FFB98A; }
+  .stair { width: 80px; height: 44px; flex: none; margin-right: 8px; --apr: #F08A4B; --apr-fill: #FFB98A; }
   [data-theme="dark"] .stair { --apr: #FFB27A; --apr-fill: #FFB27A; }
   .stair svg { display: block; overflow: visible; }
   .stair rect { fill: color-mix(in srgb, var(--apr-fill) 14%, transparent); stroke: var(--apr); stroke-width: 1.8; transition: fill .3s var(--ease); }
@@ -35,10 +35,10 @@
       <h1 class="t-title" data-a style="--i:0">Which schedule is on your pack?</h1>
       <p class="t-foot lead" data-a style="--i:1">Labels differ by country. Yours: <button class="pill" aria-label="Country: US. Change">US<span data-ic="down"></span></button></p>
       <div class="opts">
-        <button class="opt on" id="pick" data-a style="--i:3"><span class="grow"><span class="nm">10 weeks from 21 mg</span><span class="t-foot">Three steps: 21, 14, 7 mg</span></span><span class="stair" data-s="6,2,2|21,14,7"></span><span class="radio"></span></button>
-        <button class="opt" data-a style="--i:4"><span class="grow"><span class="nm">8 weeks from 21 mg</span><span class="t-foot">Three steps, shorter start</span></span><span class="stair" data-s="4,2,2|21,14,7"></span><span class="radio"></span></button>
-        <button class="opt" data-a style="--i:5"><span class="grow"><span class="nm">8 weeks from 14 mg</span><span class="t-foot">Two steps: 14, 7 mg</span></span><span class="stair" data-s="6,2|14,7"></span><span class="radio"></span></button>
-        <button class="opt" data-a style="--i:6"><span class="grow"><span class="nm">My pack says something else</span><span class="t-foot">Enter each step yourself</span></span><span class="radio"></span></button>
+        <button class="opt on" id="pick" data-a style="--i:3"><span class="grow"><span class="nm">10 weeks from 21 mg</span><span class="t-foot">21, 14 and 7 mg<br>6, 2 and 2 weeks</span></span><span class="stair" data-s="6,2,2|21,14,7"></span><span class="radio"></span></button>
+        <button class="opt" data-a style="--i:4"><span class="grow"><span class="nm">8 weeks from 21 mg</span><span class="t-foot">21, 14 and 7 mg<br>4, 2 and 2 weeks</span></span><span class="stair" data-s="4,2,2|21,14,7"></span><span class="radio"></span></button>
+        <button class="opt" data-a style="--i:5"><span class="grow"><span class="nm">8 weeks from 14 mg</span><span class="t-foot">14 and 7 mg<br>6 and 2 weeks</span></span><span class="stair" data-s="6,2|14,7"></span><span class="radio"></span></button>
+        <button class="opt" data-a style="--i:6"><span class="grow"><span class="nm">My pack says something else</span><span class="t-foot">Enter each mg step and its weeks</span></span><span class="radio"></span></button>
       </div>
       <p class="t-foot hint" data-a style="--i:7"><span data-ic="note"></span>The steps are listed on the side of the box.</p>
     </div>

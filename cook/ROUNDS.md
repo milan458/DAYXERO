@@ -123,3 +123,8 @@ after a regression on both critics (re-scored 8.6 / 8.7). Calm-settings round 6 
 Rule: fixers change only the items critics listed and compare each screen with the previous best still; a section that drops
 on both critics reverts. Fixers running: onboarding 000-014, Today-SOS-Program 015-022 (concept redesign of 016/017/022),
 session 023-032, lesson-log 033-042, slips-checkin 043-055.
+- Calm-settings round 6 scored 8.6 / 8.4 (r5 8.7 / 8.8): reverted to round 5 (8c832b2), backup of the r6 files in scratchpad.
+  Critics' main r6 faults: character stickers on card corners and flat-cut half-domes, heavy banner art, many pastel icon tints,
+  factual slips (box duration, weekday). Careful round 7 started on the r5 base.
+- Today-SOS-Program round 7 (016, 017, 022 redesigned): Sonnet 8.6 (r6 8.6); Opus pending. Main fault: cards sliced by the tab
+  bar (015-017). Kit: inactive tab labels 72% ink.
