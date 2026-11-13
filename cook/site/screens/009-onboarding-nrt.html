@@ -1,0 +1,56 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>009 Onboarding NRT</title>
+<meta name="motion" content="Progress eases from 6/11 to 7/11 (900ms) as the question, source line and three option rows arrive (600ms, 90ms stagger). At 900ms the first row selects (ring and tick, 250ms, selection haptic) and its product chips unfold beneath it (height 0 to auto, 420ms settle), then Patch and Gum fill one after the other 160ms apart.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+  .q .source { justify-self: start; display: inline-flex; align-items: center; gap: 6px; margin-top: 2px; }
+  .q .source svg { width: 14px; height: 14px; }
+  .opt .t-head { font-size: 17px; }
+  .what { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows 420ms var(--settle), opacity 300ms var(--ease); }
+  .what > div { overflow: hidden; }
+  .what.open { grid-template-rows: 1fr; opacity: 1; }
+  .what .inner { padding: 2px 0 6px 16px; }
+  .what .t-cap { color: var(--muted); margin: 2px 0 8px 2px; }
+</style>
+</head><body>
+<div class="screen" data-ground="apricot">
+  <div class="nav">
+    <button class="icon-btn" aria-label="Back" data-icon="back"></button>
+    <div class="grow"><div class="progress sun"><i id="bar" style="--p:63.6%"></i></div></div>
+    <div class="avatar" id="av"></div>
+  </div>
+
+  <div class="q">
+    <h1 class="t-large" data-a>Want to use nicotine replacement?</h1>
+    <p class="t-body muted" data-a style="--i:1">Patches, gum and lozenges smooth out withdrawal. A patch plus a faster form works best.</p>
+    <a class="source" data-a style="--i:2"><span data-icon="note"></span>Cochrane review of 133 trials, 2018</a>
+  </div>
+  <div class="answers">
+    <button class="opt" id="o1" data-a style="--i:3"><div class="grow"><p class="t-head">Yes, I'm already using it</p><p class="t-foot">Tell me what you use</p></div><span class="radio"></span></button>
+    <div class="what" id="what"><div><div class="inner">
+      <p class="t-cap">Pick all you use</p>
+      <div class="chips"><button class="chip" id="c1">Patch</button><button class="chip" id="c2">Gum</button><button class="chip">Lozenge</button><button class="chip">Spray or inhaler</button></div>
+    </div></div></div>
+    <button class="opt" data-a style="--i:4"><div class="grow"><p class="t-head">I'd like to try it</p><p class="t-foot">I'll help you plan it with a pharmacist</p></div><span class="radio"></span></button>
+    <button class="opt" data-a style="--i:5"><div class="grow"><p class="t-head">Not for me</p><p class="t-foot">Behavioural prep only</p></div><span class="radio"></span></button>
+  </div>
+
+  <div class="dock">
+    <button class="btn" data-a style="--i:6">Continue</button>
+  </div>
+</div>
+<script>
+  document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon, { size: 14 }));
+  document.querySelector('.icon-btn').innerHTML = DX.icon('back');
+  document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 40 });
+  const $ = id => document.getElementById(id), bar = $('bar');
+  DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '54.5%'); void bar.offsetWidth; bar.style.transition = '';
+    $('o1').classList.remove('on'); $('what').classList.remove('open'); $('c1').classList.remove('on', 'bump'); $('c2').classList.remove('on', 'bump'); });
+  DX.after(250, () => bar.style.setProperty('--p', '63.6%'));
+  DX.after(900, () => { $('o1').classList.add('on'); $('what').classList.add('open'); });
+  DX.after(1500, () => $('c1').classList.add('on', 'bump'));
+  DX.after(1660, () => $('c2').classList.add('on', 'bump'));
+  DX.onStill(() => { $('o1').classList.add('on'); $('what').classList.add('open'); $('c1').classList.add('on'); $('c2').classList.add('on'); });
+</script>
+</body></html>

@@ -1,0 +1,61 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>008 Onboarding obstacles</title>
+<meta name="motion" content="Progress bar eases from 5/11 to 6/11 (900ms settle) while the question and chips arrive (600ms, 90ms stagger). At 900ms the Stress chip fills to its selected state with a 520ms spring bump and a light selection haptic; the summary card below cross-fades its count from 1 to 2.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+  .answers .chips { gap: 10px; }
+  .answers .chip { min-height: 48px; }
+  .sum { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
+  .sum .ico-tile { background: var(--sel); color: var(--sel-fg); width: 36px; height: 36px; border-radius: 11px; }
+  .sum .ico-tile svg { width: 18px; height: 18px; }
+  .sum .num { font-size: 16px; letter-spacing: 0; }
+</style>
+</head><body>
+<div class="screen" data-ground="apricot">
+  <div class="nav">
+    <button class="icon-btn" aria-label="Back" data-icon="back"></button>
+    <div class="grow"><div class="progress sun"><i id="bar" style="--p:54.5%"></i></div></div>
+    <div class="avatar" id="av"></div>
+  </div>
+
+  <div class="q">
+    <h1 class="t-large" data-a>What usually gets in the way?</h1>
+    <p class="t-body muted" data-a style="--i:1">Pick any that might trip you up. I'll build your plan around them.</p>
+  </div>
+  <div class="answers">
+    <div class="chips" data-a style="--i:2">
+      <button class="chip on">Cravings</button>
+      <button class="chip" id="stress">Stress</button>
+      <button class="chip">Social situations</button>
+      <button class="chip">Irritability</button>
+      <button class="chip">Weight gain</button>
+      <button class="chip">Sleep</button>
+      <button class="chip">Low motivation</button>
+      <button class="chip">Something else</button>
+    </div>
+    <div class="card sum" data-a style="--i:3">
+      <span class="ico-tile" data-icon="shield"></span>
+      <div class="grow">
+        <p class="t-foot"><span class="num" id="n">1</span> <span id="nw">picked</span>. Each one gets its own plan.</p>
+        <p class="t-cap muted" style="margin-top:3px">You can change these any time.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="dock">
+    <button class="btn" data-a style="--i:4">Continue</button>
+    <a class="link" data-a style="--i:5">Skip this one</a>
+  </div>
+</div>
+<script>
+  document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
+  document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 40 });
+  const bar = document.getElementById('bar'), stress = document.getElementById('stress'), n = document.getElementById('n');
+  DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '45.5%'); void bar.offsetWidth; bar.style.transition = '';
+    stress.classList.remove('on', 'bump'); n.textContent = '1'; n.classList.remove('bump'); });
+  DX.after(250, () => bar.style.setProperty('--p', '54.5%'));
+  const land = () => { stress.classList.add('on', 'bump'); n.textContent = '2'; n.style.display = 'inline-block'; n.classList.add('bump'); };
+  DX.after(900, land); DX.onStill(land);
+</script>
+</body></html>

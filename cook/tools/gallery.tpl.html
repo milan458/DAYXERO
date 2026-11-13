@@ -1,0 +1,145 @@
+<title>DayXero Redesign</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap">
+<style>
+/* Layout: a contact sheet of live phones. Sticky bar (view + sections), then each section as a grid of screens: light and dark side by side, or before and after. */
+:root {
+  --bg: #FBF7F1; --surface: #FFFFFF; --ink: #1E1A3A; --muted: #5E5975; --line: rgba(30,26,58,.12);
+  --accent: #FFC38A; --accent-ink: #1E1A3A; --phone: #E9E1D6; --coral: #FF7A55;
+  --display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --body: "DM Sans", system-ui, -apple-system, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0E0B2B; --surface: #1B1747; --ink: #FFF8EE; --muted: #B8B3D9; --line: rgba(255,255,255,.12);
+  --accent: #FFC38A; --accent-ink: #241433; --phone: #2A255F; --coral: #FF9A7A; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0E0B2B; --surface: #1B1747; --ink: #FFF8EE; --muted: #B8B3D9; --line: rgba(255,255,255,.12);
+  --accent: #FFC38A; --accent-ink: #241433; --phone: #2A255F; --coral: #FF9A7A; color-scheme: dark }
+body { background: var(--bg); color: var(--ink); font: 15px/1.5 var(--body); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: 1360px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.top { padding-block: 40px 22px; display: grid; gap: 14px; }
+h1 { font: 800 clamp(36px, 6vw, 60px)/1 var(--display); letter-spacing: -.03em; margin: 0; text-wrap: balance; }
+h1 .u { background: no-repeat left 100% / 100% 14px; padding-bottom: 6px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 16' preserveAspectRatio='none'%3E%3Cpath d='M3 10 C40 4 90 5 122 7 C152 9 178 11 197 4' fill='none' stroke='%23FF7A55' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E"); }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 18px; color: var(--muted); font-size: 14px; }
+.meta b { color: var(--ink); font-weight: 700; font-variant-numeric: tabular-nums; }
+.lede { margin: 0; max-width: 70ch; color: var(--muted); }
+.rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 10px; margin-top: 6px; }
+.rule { background: var(--surface); border-radius: 18px; padding: 14px 16px; box-shadow: inset 0 0 0 1px var(--line); min-width: 0; }
+.rule b { display: block; font: 700 16px/1.25 var(--display); margin-bottom: 4px; }
+.rule span { color: var(--muted); font-size: 14px; }
+.sw { display: flex; gap: 6px; margin-top: 8px; }
+.sw i { width: 22px; height: 22px; border-radius: 99px; box-shadow: inset 0 0 0 1px var(--line); }
+
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
+.bar .wrap { display: flex; gap: 12px; align-items: center; padding-block: 10px; }
+.modes { display: inline-flex; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 3px; flex: none; }
+.modes button, .replayall { font: 600 13px var(--body); color: var(--muted); background: none; border: 0; border-radius: 999px; padding: 7px 14px; cursor: pointer; }
+.modes button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.replayall { color: var(--ink); background: var(--surface); border: 1px solid var(--line); flex: none; }
+.nav { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; min-width: 0; }
+.nav::-webkit-scrollbar { display: none; }
+.nav a { white-space: nowrap; text-decoration: none; color: var(--ink); font-size: 13px; font-weight: 500; padding: 6px 10px; border-radius: 999px; }
+.nav a:hover { background: var(--surface); }
+button:focus-visible, .nav a:focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; }
+
+section { padding-block: 36px 6px; scroll-margin-top: 64px; }
+.sechead { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; margin-bottom: 16px; }
+h2 { font: 800 28px/1.1 var(--display); letter-spacing: -.02em; margin: 0; }
+.sechead p { margin: 0; color: var(--muted); max-width: 65ch; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 30px 22px; }
+.scr { display: grid; gap: 10px; align-content: start; min-width: 0; }
+.scr header { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.n { font: 700 12px var(--body); color: var(--accent-ink); background: var(--accent); border-radius: 7px; padding: 2px 7px; font-variant-numeric: tabular-nums; flex: none; }
+h3 { font: 700 15px/1.2 var(--body); margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; flex: 1; }
+.rp { font: 600 12px var(--body); color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 99px; padding: 4px 10px; cursor: pointer; flex: none; }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.ph { position: relative; aspect-ratio: 390 / 844; max-width: 100%; border-radius: 22px; overflow: hidden; background: var(--phone); box-shadow: 0 0 0 1px var(--line); }
+.ph iframe { position: absolute; left: 0; top: 0; width: 390px; height: 844px; border: 0; transform-origin: 0 0; transform: scale(var(--s, .4)); pointer-events: none; }
+.ph img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ph .open { position: absolute; inset: 0; background: none; border: 0; cursor: zoom-in; }
+.ph::after { content: attr(data-mode); position: absolute; left: 8px; bottom: 8px; font: 700 10px var(--body); letter-spacing: .06em; text-transform: uppercase; padding: 2px 8px; border-radius: 99px; background: rgba(30,26,58,.72); color: #FFF8EE; pointer-events: none; }
+body:not(.cmp) .ph[data-mode="before"] { display: none; }
+body.cmp .ph[data-mode="dark"] { display: none; }
+body.cmp .ph[data-mode="before"] { order: -1; }
+.mo { margin: 0; font-size: 13px; line-height: 1.45; color: var(--muted); }
+.mo b { color: var(--ink); font-weight: 700; margin-right: 4px; }
+footer { color: var(--muted); font-size: 13px; padding-block: 40px 56px; }
+
+.lb { position: fixed; inset: 0; z-index: 20; background: rgba(12,8,22,.9); display: grid; place-items: center;
+  padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+.lb .frame { position: relative; width: calc(390px * var(--ls, 1)); height: calc(844px * var(--ls, 1)); border-radius: calc(46px * var(--ls, 1)); overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.5); max-width: 100%; }
+.lb iframe { width: 390px; height: 844px; border: 0; transform-origin: 0 0; transform: scale(var(--ls, 1)); }
+.lb .tools { position: absolute; top: max(14px, env(safe-area-inset-top, 0px)); right: max(14px, env(safe-area-inset-right, 0px)); display: flex; gap: 8px; }
+.lb .tools button { background: rgba(255,248,238,.14); color: #FFF8EE; border: 0; height: 40px; padding: 0 16px; border-radius: 999px; font: 600 14px var(--body); cursor: pointer; }
+.lb .hint { position: absolute; bottom: max(14px, env(safe-area-inset-bottom, 0px)); left: 0; right: 0; text-align: center; color: rgba(255,248,238,.7); font-size: 13px; }
+@media (max-width: 560px) { .pair { gap: 8px; } .ph { border-radius: 16px; } }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto; } }
+</style>
+
+<div class="wrap top">
+  <h1>DayXero, <span class="u">redesigned</span></h1>
+  <div class="meta"><span><b>{{COUNT}}</b> screens, light and dark</span><span>Round <b>{{ROUND}}</b></span><span>{{SCORE}}</span></div>
+  <p class="lede">Each screen shows its resting state. Play motion runs it live; tap a phone to open it full size, where the buttons lead through the flows. Before / after puts the current app next to the redesign.</p>
+  <div class="rules">
+    <div class="rule"><b>Five grounds, one meaning each</b><span>Apricot for your days, ocean for cravings, violet for evenings, mint for the plan, cream or navy for reading.</span>
+      <div class="sw"><i style="background:#FFC38A"></i><i style="background:#2A52DB"></i><i style="background:#4A3596"></i><i style="background:#9FE3BC"></i><i style="background:#FBF7F1"></i><i style="background:#0E0B2B"></i></div></div>
+    <div class="rule"><b>One primary button</b><span>Ink on light grounds, cream on dark. No more green, purple or yellow buttons.</span></div>
+    <div class="rule"><b>Every finish gets a moment</b><span>A check draws, the character reacts, the number counts up, a badge stamps in when one is earned.</span></div>
+    <div class="rule"><b>Badges, not points</b><span>Prep stamps 1 to 7, Day Xero, days free, waves ridden and evenings, shown wherever progress shows.</span></div>
+  </div>
+</div>
+
+<div class="bar"><div class="wrap">
+  <div class="modes" role="group" aria-label="View">
+    <button type="button" id="v-modes" aria-pressed="true">Light + dark</button>
+    <button type="button" id="v-cmp" aria-pressed="false">Before / after</button>
+  </div>
+  <button type="button" class="replayall" id="replay-all">Play what’s on screen</button>
+  <nav class="nav" aria-label="Sections">{{NAV}}</nav>
+</div></div>
+
+<main class="wrap">{{BODY}}</main>
+<footer class="wrap">DayXero redesign. Characters and scenes come from the v4 design system; every screen is built from one shared kit of tokens, components and motion.</footer>
+
+<div class="lb" id="lb" hidden>
+  <div class="frame" id="lbf"><iframe id="lbi" title="Screen, full size"></iframe></div>
+  <div class="tools"><button type="button" id="lb-replay">Replay</button><button type="button" id="lb-close">Close</button></div>
+  <div class="hint">Buttons inside the phone lead to the next screen.</div>
+</div>
+
+<script>
+(function () {
+  const scale = ph => { const w = ph.clientWidth; ph.style.setProperty('--s', (w / 390).toFixed(4)); };
+  const phones = [...document.querySelectorAll('.ph')];
+  const ro = new ResizeObserver(es => es.forEach(e => scale(e.target)));
+  phones.forEach(p => { scale(p); ro.observe(p); });
+  const load = el => { const f = el.querySelector('iframe[data-src], img[data-src]'); if (f && !f.getAttribute('src')) f.setAttribute('src', f.dataset.src); };
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { load(e.target); io.unobserve(e.target); } }), { rootMargin: '600px 0px' });
+  phones.forEach(p => io.observe(p));
+  /* Stills by default; "Play motion" swaps in the live screen (and replays it on later clicks). */
+  const live = scr => scr.querySelectorAll('.ph[data-live]').forEach(ph => {
+    const f = ph.querySelector('iframe');
+    if (f) { try { f.contentWindow.postMessage('replay', '*'); } catch (e) {} return; }
+    const fr = document.createElement('iframe'); fr.title = ph.querySelector('img').alt + ', live'; fr.src = ph.dataset.live; ph.insertBefore(fr, ph.querySelector('.open')); scale(ph);
+  });
+  document.querySelectorAll('.scr .rp').forEach(b => b.addEventListener('click', () => { live(b.closest('.scr')); b.textContent = 'Replay'; }));
+  document.getElementById('replay-all').addEventListener('click', () => document.querySelectorAll('.scr').forEach(scr => {
+    const r = scr.getBoundingClientRect(); if (r.bottom > -200 && r.top < innerHeight + 200) { live(scr); scr.querySelector('.rp').textContent = 'Replay'; } }));
+  const setView = cmp => { document.body.classList.toggle('cmp', cmp); document.getElementById('v-cmp').setAttribute('aria-pressed', cmp); document.getElementById('v-modes').setAttribute('aria-pressed', !cmp);
+    phones.forEach(p => { scale(p); }); try { localStorage.setItem('dx-view', cmp ? 'cmp' : 'modes'); } catch (e) {} };
+  document.getElementById('v-cmp').addEventListener('click', () => setView(true));
+  document.getElementById('v-modes').addEventListener('click', () => setView(false));
+  try { if (localStorage.getItem('dx-view') === 'cmp') setView(true); } catch (e) {}
+  const lb = document.getElementById('lb'), lbi = document.getElementById('lbi'), lbf = document.getElementById('lbf');
+  const fit = () => { const s = Math.min(1, (innerHeight - 110) / 844, (innerWidth - 32) / 390); lbf.style.setProperty('--ls', s.toFixed(4)); lbi.parentElement.style.setProperty('--ls', s.toFixed(4)); lbi.style.setProperty('--ls', s.toFixed(4)); };
+  document.querySelectorAll('.ph .open').forEach(b => b.addEventListener('click', () => { lbi.src = b.dataset.src; fit(); lb.hidden = false; document.getElementById('lb-close').focus(); }));
+  const close = () => { lb.hidden = true; lbi.removeAttribute('src'); };
+  document.getElementById('lb-close').addEventListener('click', close);
+  document.getElementById('lb-replay').addEventListener('click', () => { try { lbi.contentWindow.postMessage('replay', '*'); } catch (e) {} });
+  lb.addEventListener('click', e => { if (e.target === lb) close(); });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && !lb.hidden) close(); });
+  addEventListener('resize', () => { if (!lb.hidden) fit(); });
+})();
+</script>
