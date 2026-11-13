@@ -8,7 +8,10 @@
   .hero .scene { position: absolute; inset: 0; }
   /* below the hero the page is a lighter cream (as on 017); the hero keeps the apricot dawn */
   .screen[data-ground="apricot"] { --g: #FBF4EA; --card: #FFFCF7; }
-  .content .card { box-shadow: inset 0 0 0 1px var(--line), 0 1px 0 rgba(74,40,16,.04), 0 10px 26px rgba(74,40,16,.08); }
+  .content .card { box-shadow: inset 0 0 0 1px var(--line); }
+  /* the session card leads: a stronger lift than the countdown card */
+  .content .card.sess { box-shadow: inset 0 0 0 1px var(--line), 0 2px 0 rgba(74,40,16,.05), 0 14px 32px rgba(74,40,16,.14); }
+  [data-theme="dark"] .content .card.sess { box-shadow: inset 0 0 0 1px rgba(255,248,238,.16), 0 14px 30px rgba(0,0,0,.4); }
   /* Xero stands on his own paper-cut knoll inside the hero (same story as 016), no floating disc */
   .knoll { position: absolute; left: 45px; top: 204px; width: 300px; height: 102px; --kn: #FFC796; --kn-rim: rgba(255,248,238,.8); }
   [data-theme="dark"] .knoll { --kn: #1C2744; --kn-rim: rgba(246,231,193,.26); }
@@ -22,21 +25,22 @@
   .pill span { background: var(--card); color: var(--fg); border-radius: 99px; padding: 10px 16px; font: 600 14px/1 var(--body); box-shadow: 0 6px 16px rgba(30,26,58,.12); }
   [data-theme="dark"] .pill span { box-shadow: inset 0 0 0 1px var(--line), 0 6px 16px rgba(0,0,0,.3); }
 
-  .content { position: absolute; left: 0; right: 0; top: 328px; padding: 0 var(--gutter); }
+  .content { position: absolute; left: 0; right: 0; top: 324px; padding: 0 var(--gutter); }
   .content .sub { margin-top: 6px; color: var(--muted); }
-  .sess { margin-top: 18px; display: flex; align-items: center; gap: 14px; padding: 16px 16px 16px 20px; }
+  .sess { margin-top: 14px; display: flex; align-items: center; gap: 14px; padding: 18px 16px 18px 20px; }
   .sess .grow { flex: 1; min-width: 0; }
   .sess .t-foot { color: var(--muted); }
+  .sess .t-title { font-size: 22px; margin-top: 3px; }
   .sess .btn.small { width: auto; padding: 0 18px 0 14px; flex: none; }
   .sess .btn svg { width: 16px; height: 16px; }
 
   /* the one meter: the prep week as stamps, one colour code (apricot and coral) in both modes */
-  .stamps { margin-top: 10px; padding: 16px 14px 14px; }
+  .stamps { margin-top: 10px; padding: 14px 16px 12px; }
   .stamps .head { display: flex; justify-content: space-between; align-items: baseline; padding: 0 2px; }
   .stamps .head .t-foot { color: var(--muted); }
-  .stamps .row8 { display: flex; justify-content: space-between; align-items: flex-start; margin-top: 14px; }
-  .slot { position: relative; width: 34px; display: grid; justify-items: center; gap: 7px; }
-  .slot .face { position: relative; width: 34px; height: 34px; display: grid; place-items: center; margin: 7px 0; }
+  .stamps .row8 { display: flex; justify-content: space-between; align-items: flex-start; margin-top: 12px; }
+  .slot { position: relative; width: 32px; display: grid; justify-items: center; gap: 7px; }
+  .slot .face { position: relative; width: 32px; height: 32px; display: grid; place-items: center; margin: 6px 0; }
   .slot .face svg { position: absolute; inset: 0; }
   .slot .num { position: relative; font: 800 15px/1 var(--display); color: #1E1A3A; letter-spacing: -.3px; }
   .slot .t-cap { font-size: 13px; white-space: nowrap; color: var(--fg); }
@@ -49,13 +53,13 @@
   .slot.now .t-cap { color: #C2402A; font-weight: 700; }
   [data-theme="dark"] .slot.now .face { background: var(--card-2); }
   [data-theme="dark"] .slot.now .t-cap { color: #FF9A7A; }
-  .slot.goal { width: 50px; margin-left: 2px; }
-  .slot.goal .face { width: 50px; height: 50px; margin: -1px 0; }
-  .slot.goal .t-cap { font-weight: 700; }
+  .slot.goal { width: 58px; }
+  .slot.goal .face { width: 48px; height: 48px; margin: -2px 0; }
+  .slot.goal .t-cap { font-weight: 700; text-align: center; }
 
   /* the next section peeks above the tab bar: one quiet list, like Today after Quit Day */
-  .grp { font: 700 19px/1.2 var(--display); letter-spacing: -.2px; margin: 22px 0 10px 2px; }
-  .later-list { border-radius: 22px; background: color-mix(in srgb, var(--card) 60%, transparent); box-shadow: inset 0 0 0 1px var(--line); overflow: hidden; }
+  .grp { font: 700 19px/1.2 var(--display); letter-spacing: -.2px; margin: 18px 0 8px 2px; }
+  .later-list { border-radius: 22px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); overflow: hidden; }
   .lrow { display: flex; align-items: center; gap: 14px; min-height: 62px; padding: 10px 14px 10px 16px; }
   .lrow .grow { flex: 1; min-width: 0; }
   .lrow .t-head { font-size: 16px; font-weight: 700; }
@@ -85,7 +89,7 @@
     <div class="card sess" data-a style="--i:4">
       <div class="grow">
         <p class="t-foot">Prep 4 &middot; 5 cards &middot; 28 min</p>
-        <p class="t-head">The stress loop</p>
+        <p class="t-title">The stress loop</p>
       </div>
       <button class="btn small" id="start"></button>
     </div>
@@ -109,10 +113,10 @@
   $('#start').innerHTML = DX.icon('play', { fill: 'currentColor', w: 1.5 }) + 'Start';
   let h = '';
   const face = (svg, n) => `<div class="face">${svg}<span class="num">${n}</span></div>`;
-  for (let n = 1; n <= 3; n++) h += `<div class="slot" data-a style="--i:${n};--d:640ms">${face(DX.badge({ kind: 'prep', n: '', size: 34, bare: true }), n)}</div>`;
+  for (let n = 1; n <= 3; n++) h += `<div class="slot" data-a style="--i:${n};--d:640ms">${face(DX.badge({ kind: 'prep', n: '', size: 32, bare: true }), n)}</div>`;
   h += `<div class="slot now">${face('', 4)}<span class="t-cap">Today</span></div>`;
-  for (let n = 5; n <= 7; n++) h += `<div class="slot later">${face(DX.badge({ kind: 'prep', n: '', state: 'next', size: 34, bare: true }), n)}</div>`;
-  h += `<div class="slot goal"><div class="face">${DX.badge({ kind: 'xero', state: 'next', size: 50, bare: true, label: 'Day Xero' })}</div><span class="t-cap">Day Xero</span></div>`;
+  for (let n = 5; n <= 7; n++) h += `<div class="slot later">${face(DX.badge({ kind: 'prep', n: '', state: 'next', size: 32, bare: true }), n)}</div>`;
+  h += `<div class="slot goal"><div class="face">${DX.badge({ kind: 'xero', state: 'next', size: 48, bare: true, label: 'Day Xero' })}</div><span class="t-cap">Day Xero</span></div>`;
   $('#row8').innerHTML = h;
   document.querySelectorAll('[data-ic]').forEach(el => { el.innerHTML = DX.icon(el.dataset.ic, { size: el.classList.contains('chev') ? 18 : 22 }); });
   $('.screen').insertAdjacentHTML('beforeend', DX.tabbar('today'));

@@ -26,19 +26,23 @@
   .sky .xero { position: absolute; left: 246px; top: 52px; }
   [data-theme="dark"] .sky { color: var(--cream); }
   [data-theme="dark"] .sky .clear { background: rgba(14,19,34,.7); color: var(--cream); box-shadow: inset 0 0 0 1px rgba(255,255,255,.16); }
-  .cap { margin: 8px 0 0 4px; }
-  .quiet { margin-top: 14px; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); column-gap: 18px; padding: 0 4px; }
+  .note { padding: 10px 16px 13px; border-top: 1px solid var(--line); }
+  .quiet { margin-top: 18px; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); column-gap: 18px; padding: 0 4px; }
   .quiet > div { display: grid; gap: 3px; }
-  .quiet .num { font: 800 20px/1 var(--display); letter-spacing: -.4px; }
-  .quiet .lbl { font: 500 13px/1.25 var(--body); color: var(--muted); }
+  .quiet > div { gap: 5px; }
+  .quiet .num { font: 800 30px/1 var(--display); letter-spacing: -.8px; }
+  .quiet .lbl { font: 500 14px/1.25 var(--body); color: var(--muted); }
   .shelf-h { margin-top: 20px; display: flex; align-items: baseline; justify-content: space-between; }
   .shelf-h .link { height: auto; min-height: 0; padding: 0; font: 700 15px/1 var(--body); color: var(--fg); text-decoration: underline; text-underline-offset: 3px; width: auto; opacity: 1; }
-  .bshelf { margin-top: 10px; padding: 14px 6px 13px; display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); }
+  .bshelf { margin-top: 10px; padding: 16px 6px 14px; display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); }
   .bshelf .badge { gap: 8px; }
   .bshelf .b-l { display: grid; gap: 2px; }
   .bshelf .b-l b { font: 700 14px/1.2 var(--body); color: var(--fg); }
   .bshelf .b-l span { font: 500 13px/1.2 var(--body); color: var(--muted); }
-  .days { padding: 12px 10px 12px; display: grid; grid-template-columns: repeat(8, 1fr); justify-items: center; }
+  .bshelf .b-l span.now { color: var(--fg); font-weight: 700; }
+  .days { padding: 12px 10px 12px; display: grid; grid-template-columns: 60px repeat(7, 1fr); justify-items: center; }
+  .days .xd { color: var(--fg); font-weight: 700; white-space: nowrap; position: relative; }
+  .days .xd::after { content: ""; position: absolute; right: -8px; top: 3px; height: 20px; width: 1px; background: var(--line); }
   .days > span { display: grid; justify-items: center; gap: 5px; font: 600 12px/1 var(--body); color: var(--muted); }
   /* done days: apricot discs with an ink tick, clear in both modes */
   .days i { width: 26px; height: 26px; border-radius: 99px; background: #FFC38A; color: #1E1A3A; display: grid; place-items: center; }
@@ -55,7 +59,6 @@
     <div class="pad">
       <div class="top" data-a style="--i:0">
         <h1 class="t-large">Your progress</h1>
-        <button class="icon-btn" aria-label="Log" data-ic="plus" data-go="041-log-menu"></button>
         <button class="icon-btn" aria-label="Settings" data-ic="gear"></button>
       </div>
       <p class="t-foot muted" data-a style="--i:1;margin-top:4px">Quit Day was Fri, Nov 6</p>
@@ -68,9 +71,9 @@
         <span class="clear" data-fade style="--d:1000ms"><span data-ic="sun"></span>Sky 40% clear</span>
         <div class="xero" data-settle style="--d:500ms"><div class="bob" id="xero"></div></div>
       </div>
-      <div class="days" id="days" aria-label="Every day since Quit Day, Fri, Nov 6, to today"></div>
+      <div class="days" id="days" aria-label="Quit Day, Fri, Nov 6, then every day free to today"></div>
+      <p class="t-cap muted note" data-fade style="--d:1300ms">Each day free clears a little more of your sky.</p>
       </div>
-      <p class="t-cap muted cap" data-a style="--i:3">Your sky clears a little each day you stay free.</p>
 
       <div class="quiet" data-a style="--i:3">
         <div><span class="num" data-count="84">84</span><span class="lbl">cigarettes<br>not smoked</span></div>
@@ -113,13 +116,13 @@
   document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'cheer', size: 100 });
   /* Since Quit Day, inside the hero card: Fri (Day Xero, the sun), six apricot ticks, today's ringed tick */
   document.getElementById('days').innerHTML = ['F', 'S', 'S', 'M', 'T', 'W', 'T', 'F'].map((d, i) =>
-    `<span class="${i === 0 ? 'xd' : i === 7 ? 'today' : ''}" data-fade style="--d:${700 + i * 70}ms"><i>${i === 0 ? DX.icon('sun', { size: 14, w: 2.4 }) : DX.icon('check', { size: 14, w: i === 7 ? 3 : 2.6 })}</i>${d}</span>`).join('');
-  const S = 66;
+    `<span class="${i === 0 ? 'xd' : i === 7 ? 'today' : ''}" data-fade style="--d:${700 + i * 70}ms"><i>${i === 0 ? DX.icon('sun', { size: 14, w: 2.4 }) : DX.icon('check', { size: 14, w: i === 7 ? 3 : 2.6 })}</i>${i === 0 ? 'Quit Day' : d}</span>`).join('');
+  const S = 70;
   const b = (n, state, name, sub, i, extra = {}) => {
     const anim = state === 'earned' ? `data-stamp style="--i:${i};--d:500ms"` : `data-fade style="--d:${900 + i * 80}ms"`;
     const svg = DX.badge({ kind: 'day', n, state, size: S, p: extra.p, label: name, bare: true });
     const art = extra.shine ? `<span class="shine" style="display:block;border-radius:99px;--d:1200ms">${svg}</span>` : svg;
-    return `<div class="badge ${state}" ${anim}>${art}<div class="b-l"><b>${name}</b><span>${sub}</span></div></div>`;
+    return `<div class="badge ${state}" ${anim} aria-label="${name}, ${sub}">${art}<div class="b-l"><span class="${sub === 'Today' ? 'now' : ''}">${sub}</span></div></div>`;
   };
   document.getElementById('shelf').innerHTML =
     b(1, 'earned', '1 day', 'Nov 7', 0) +
