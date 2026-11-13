@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>000 App icon</title>
-<meta name="motion" content="The hero icon settles onto the cream board (900 ms), then the sun rises 70 units inside Xero's window over 1.2 s (ease-out, from 700 ms). The variants arrive with a 90 ms stagger, then the home-screen row fades up last. On device: the static icon; the sunrise can play in the launch screen's first 400 ms so icon and launch feel continuous.">
+<meta name="motion" content="The hero icon (Light on the light board, Dark on the dark board) settles onto its board (900 ms), then the sun rises 70 units inside Xero's window over 1.2 s (ease-out, from 700 ms). The variants arrive with a 90 ms stagger, then the home-screen row fades up last. On device: the static icon; the sunrise can play in the launch screen's first 400 ms so icon and launch feel continuous.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -15,12 +15,16 @@
 [data-theme="dark"] .stage::after { background: rgba(0,0,0,.5); }
 .stage .tile { position:relative; z-index:1; margin-top:-14px; }
 .tile { border-radius:40px; overflow:hidden; box-shadow:0 18px 36px rgba(120,60,30,.18), 0 2px 0 rgba(30,26,58,.05); }
-[data-theme="dark"] .tile { box-shadow:0 18px 36px rgba(0,0,0,.45); }
+[data-theme="dark"] .tile { box-shadow:0 18px 36px rgba(0,0,0,.55); }
+/* Dark board: the Dark icon is the hero, with the same hairline rim iOS draws on dark wallpapers. */
+[data-theme="dark"] .tile::after { content:""; position:absolute; inset:0; border-radius:inherit; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.16); pointer-events:none; }
+[data-theme="dark"] .stage { background: radial-gradient(90% 80% at 50% 36%, #2E3A5E 0%, #1D2541 62%, #151B31 100%); }
 .sunrise { transform: translateY(0); }
 .play .sunrise { animation: rise 1.2s cubic-bezier(.2,.8,.2,1) .7s both; }
 @keyframes rise { from { transform: translateY(70px); } to { transform: none; } }
-.vars { display:flex; gap:12px; margin-top:10px; }
+.vars { display:grid; grid-template-columns:repeat(4,1fr); width:100%; margin-top:10px; }
 .v { display:grid; gap:8px; justify-items:center; }
+.v .t-cap { white-space:nowrap; }
 .ic { position:relative; overflow:hidden; }
 .v .ic { width:72px; height:72px; border-radius:18px; box-shadow:0 6px 16px rgba(30,26,58,.14); }
 /* A hairline rim keeps dark tiles visible on dark boards (iOS draws the same on dark wallpapers). */
@@ -39,12 +43,12 @@
   <p class="board" data-a style="--i:0"><i></i>App icon, iOS</p>
   <div class="stage" data-a style="--i:1"><div class="tile" data-settle id="hero"></div></div>
   <h1 class="t-large" data-a style="--i:2;margin-top:4px">DayXero</h1>
-  <p class="t-body muted" data-a style="--i:3;max-width:300px">The zero is Xero, with your sunrise inside. Quit Day, Day Xero and the character in one mark.</p>
+  <p class="t-body muted" data-a style="--i:3;max-width:300px">The zero is Xero, with your sunrise inside: the character and your Quit Day in one mark.</p>
   <div class="vars">
     <div class="v" data-a style="--i:4"><div class="ic" id="v-light"></div><span class="t-cap muted">Light</span></div>
     <div class="v" data-a style="--i:5"><div class="ic rim" id="v-dark"></div><span class="t-cap muted">Dark</span></div>
     <div class="v" data-a style="--i:6"><div class="ic rim" id="v-tint"></div><span class="t-cap muted">Tinted</span></div>
-    <div class="v" data-a style="--i:7"><div class="ic" id="v-face"></div><span class="t-cap muted">With face</span></div>
+    <div class="v" data-a style="--i:7"><div class="ic" id="v-face"></div><span class="t-cap muted">Alternate icon</span></div>
   </div>
   <div class="home" data-a style="--i:8">
     <svg class="wall" id="wall" width="346" height="118" viewBox="0 0 346 118" preserveAspectRatio="none" aria-hidden="true"></svg>
@@ -59,6 +63,7 @@
 <script>
 /* The icon, drawn once and recoloured per variant (light, dark, tinted, with face). */
 let n = 0;
+const dark = DX.theme === 'dark';
 function appIcon(v, size, o = {}) {
   const id = 'ai' + (++n);
   const P = {
@@ -68,6 +73,8 @@ function appIcon(v, size, o = {}) {
     tint:  { bg: ['#2E2E2E', '#151515'], body: '#E2E2E2', shade: '#C4C4C4', hl: '#F7F7F7', sky: '#3A3A3A', sun: '#FFFFFF', h1: '#A6A6A6', h2: '#858585', floor: .25, sunY: -26 }
   }[v];
   const face = !!o.face, dy = face ? 52 : 0;
+  /* Small sizes (home screen, settings): the window keeps only sky and a bigger sun, so it still reads at 60 px. */
+  const simple = size < 100;
   return `<svg viewBox="0 0 1024 1024" width="${size}" height="${size}" style="display:block" aria-hidden="true">
   <defs><linearGradient id="${id}b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${P.bg[0]}"/><stop offset="1" stop-color="${P.bg[1]}"/></linearGradient>
   <clipPath id="${id}h"><ellipse cx="512" cy="${560 + dy}" rx="132" ry="178"/></clipPath></defs>
@@ -78,14 +85,14 @@ function appIcon(v, size, o = {}) {
   <path fill="${P.shade}" d="M716 250 C800 330 836 440 836 548 C836 770 704 900 512 900 C650 860 760 740 760 548 C760 430 744 320 716 250 Z"/>
   <path d="M290 360 C312 290 360 236 430 210" fill="none" stroke="${P.hl}" stroke-width="26" stroke-linecap="round"/>
   <g clip-path="url(#${id}h)"><rect x="370" y="380" width="290" height="460" fill="${P.sky}"/>
-  <circle class="${o.rise ? 'sunrise' : ''}" cx="512" cy="${598 + dy + (P.sunY || 0)}" r="62" fill="${P.sun}"/>
+  ${simple ? `<circle cx="512" cy="${664 + dy}" r="98" fill="${P.sun}"/></g>` : `<circle class="${o.rise ? 'sunrise' : ''}" cx="512" cy="${598 + dy + (P.sunY || 0)}" r="62" fill="${P.sun}"/>
   <path d="M370 ${648 + dy} C430 ${618 + dy} 500 ${638 + dy} 560 ${620 + dy} S640 ${610 + dy} 660 ${618 + dy} V840 H370Z" fill="${P.h1}"/>
-  <path d="M370 ${690 + dy} C440 ${670 + dy} 520 ${700 + dy} 660 ${674 + dy} V840 H370Z" fill="${P.h2}"/></g>
+  <path d="M370 ${690 + dy} C440 ${670 + dy} 520 ${700 + dy} 660 ${674 + dy} V840 H370Z" fill="${P.h2}"/></g>`}
   ${face ? `<path d="M452 330 L452 352 M572 330 L572 352" stroke="#24163A" stroke-width="22" stroke-linecap="round"/><path d="M488 382 Q512 402 536 382" fill="none" stroke="#24163A" stroke-width="12" stroke-linecap="round"/>` : ''}
   </svg>`;
 }
-const dark = DX.theme === 'dark';
-document.getElementById('hero').innerHTML = appIcon('light', 176, { rise: true });
+/* Each board leads with its own variant: Light on the light board, Dark on the dark board. */
+document.getElementById('hero').innerHTML = appIcon(dark ? 'dark' : 'light', 176, { rise: true });
 document.getElementById('v-light').innerHTML = appIcon('light', 72);
 document.getElementById('v-dark').innerHTML = appIcon('dark', 72);
 document.getElementById('v-tint').innerHTML = appIcon('tint', 72);

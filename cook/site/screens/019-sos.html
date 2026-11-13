@@ -1,24 +1,26 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>019 Craving SOS</title>
-<meta name="motion" content="Calm, no springs. Jelli and the pacer rings fade up together and breathe as one: 4s in (scale up), 6s out (scale down), looping; the outer pacer ring brightens on the in-breath. The breath word under Jelli crossfades in 600ms between 'Breathe in' and 'and out' in time with the breath, and Jelli's mouth follows it: closed on the in-breath, a soft open 'o' on the out-breath. The ride timer ticks each second. Reason card, the button, 'Still riding it' and the one quiet row arrive with a slow 90ms stagger. Touching and holding Jelli gives a soft rhythmic haptic at the breath pace.">
+<meta name="motion" content="Calm, no springs. Jelli and the single pacer ring (with its soft glow) fade up together and breathe as one: 4s in (scale up), 6s out (scale down), looping; the ring brightens on the in-breath. The breath word under Jelli crossfades in 600ms between 'Breathe in' and 'and out' in time with the breath, and Jelli's mouth follows it: closed on the in-breath, a soft open 'o' on the out-breath. The ride timer ticks each second. Reason card, the button, 'Still riding it' and the one quiet row arrive with a slow 90ms stagger. Touching and holding Jelli gives a soft rhythmic haptic at the breath pace.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   .screen { --muted: #F3EEE6; }
   .nav .timer { color: var(--fg); background: var(--card); border-radius: 99px; padding: 9px 14px; font: 600 14px/1 var(--body); font-variant-numeric: tabular-nums; }
-  .hero { position: absolute; left: 0; right: 0; top: 112px; height: 292px; display: grid; place-items: center; }
-  .hero .breathe { position: relative; width: 292px; height: 292px; display: grid; place-items: center; }
+  .hero { position: absolute; left: 0; right: 0; top: 130px; height: 280px; display: grid; place-items: center; }
+  .hero .breathe { position: relative; width: 280px; height: 280px; display: grid; place-items: center; }
   .hero .pacer { position: absolute; inset: 0; overflow: visible; }
-  .hero .pacer .glow { fill: color-mix(in srgb, var(--fg) 8%, transparent); }
-  .hero .pacer .outer { stroke-opacity: .9; }
+  .hero .pacer .glow { fill: url(#pg); }
+  /* one pacer ring with a soft glow; it brightens on the in-breath */
+  .hero .pacer .outer { stroke-opacity: .9; filter: drop-shadow(0 0 10px rgba(255,248,238,.45)); }
   .play .hero .pacer .outer { animation: brighten 10s cubic-bezier(.45,0,.55,1) infinite; }
   @keyframes brighten { 0% { stroke-opacity: .7; } 40% { stroke-opacity: 1; } 100% { stroke-opacity: .7; } }
-  .word { position: absolute; left: 0; right: 0; top: 412px; height: 36px; text-align: center; }
+  .word { position: absolute; left: 0; right: 0; top: 426px; height: 36px; text-align: center; }
   .word span { position: absolute; left: 0; right: 0; top: 0; transition: opacity 600ms var(--ease); }
   .word span.off { opacity: 0; }
-  .lead { position: absolute; left: 0; right: 0; top: 456px; padding: 0 44px; text-align: center; color: var(--muted); }
-  .cards { position: absolute; left: 0; right: 0; top: 518px; padding: 0 var(--gutter); }
-  .reason { display: flex; gap: 14px; align-items: center; }
+  .lead { position: absolute; left: 0; right: 0; top: 470px; padding: 0 40px; text-align: center; color: var(--muted); }
+  .lead span { display: block; }
+  .cards { position: absolute; left: 0; right: 0; top: 534px; padding: 0 var(--gutter); }
+  .reason { display: flex; gap: 14px; align-items: center; padding: 16px 18px; }
   .reason .grow { flex: 1; min-width: 0; }
   .reason .t-foot { color: var(--muted); }
   .reason .t-head { margin-top: 4px; font-size: 17px; }
@@ -26,8 +28,8 @@
   .dock .btn { margin-bottom: 6px; }
   .dock .strong { color: var(--fg); opacity: 1; font-size: 16px; font-weight: 700; }
   .dock .quiet { display: flex; justify-content: center; align-items: center; gap: 2px; height: 36px; }
-  .dock .quiet .link { height: 36px; padding: 0 8px; font: 500 14px/1 var(--body); color: var(--muted); opacity: .8; }
-  .dock .quiet i { width: 3px; height: 3px; border-radius: 99px; background: var(--muted); opacity: .55; }
+  .dock .quiet .link { height: 36px; padding: 0 8px; font: 500 14px/1 var(--body); color: rgba(255,255,255,.8); opacity: 1; }
+  .dock .quiet i { width: 3px; height: 3px; border-radius: 99px; background: rgba(255,255,255,.55); }
 </style>
 </head><body>
 <div class="screen" data-ground="ocean">
@@ -39,17 +41,17 @@
 
   <div class="hero" data-fade style="--d:100ms">
     <div class="breathe">
-      <svg class="pacer" viewBox="0 0 292 292" aria-hidden="true">
-        <circle class="glow" cx="146" cy="146" r="122"/>
-        <circle class="outer" cx="146" cy="146" r="143" fill="none" stroke="currentColor" stroke-width="3.5"/>
-        <circle cx="146" cy="146" r="122" fill="none" stroke="currentColor" stroke-opacity=".4" stroke-width="2" stroke-dasharray="3 9" stroke-linecap="round"/>
+      <svg class="pacer" viewBox="0 0 280 280" aria-hidden="true">
+        <defs><radialGradient id="pg"><stop offset="0" stop-color="#FFF8EE" stop-opacity=".07"/><stop offset=".78" stop-color="#FFF8EE" stop-opacity=".07"/><stop offset=".97" stop-color="#FFF8EE" stop-opacity=".16"/><stop offset="1" stop-color="#FFF8EE" stop-opacity="0"/></radialGradient></defs>
+        <circle class="glow" cx="140" cy="140" r="137"/>
+        <circle class="outer" cx="140" cy="140" r="137" fill="none" stroke="currentColor" stroke-width="3.5"/>
       </svg>
       <div id="jelli"></div>
     </div>
   </div>
 
   <div class="word t-large" data-a style="--i:2;--d:200ms"><span id="w-in">Breathe in</span><span id="w-out" class="off">and out</span></div>
-  <p class="t-foot lead" data-a style="--i:3;--d:200ms">Most cravings pass in a few minutes. Hold Jelli to feel the pace.</p>
+  <p class="t-foot lead" data-a style="--i:3;--d:200ms"><span>Most cravings pass in a few minutes.</span><span>Hold Jelli to feel the pace.</span></p>
 
   <div class="cards">
     <div class="card reason" data-a style="--i:4;--d:200ms">
@@ -70,7 +72,7 @@
 <script>
   const $ = s => document.querySelector(s);
   $('#close').innerHTML = DX.icon('close');
-  $('#jelli').innerHTML = DX.char('jelli', { mood: 'breathe', size: 228 });
+  $('#jelli').innerHTML = DX.char('jelli', { mood: 'breathe', size: 220 });
   $('#heart').innerHTML = DX.icon('heart');
   /* Jelli's mouth follows the breath: closed (in through the nose), a soft 'o' on the way out. */
   const mouth = $('#jelli path[fill="#24163A"]'), openD = mouth ? mouth.getAttribute('d') : '';

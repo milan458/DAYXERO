@@ -1,45 +1,61 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>024 Session listen card</title>
-<meta name="motion" content="The apricot player rises into place (settle 900ms) while the five-step bar arrives; Xero, in his headphones, settles onto the sun behind him and then sways gently to the audio (5s bob loop). The waveform bars grow from the centre line left to right (48 bars, 16ms apart, 420ms each); at 1.2s play starts: the icon swaps to pause, the played ink sweeps across the bars (linear, follows playback) and the elapsed time counts. The collapsed Read instead row and the button arrive last. Light haptic on play; tapping Read instead expands the transcript under the row (320ms ease).">
+<meta name="motion" content="The apricot player (deep dusk with a warm sun glow in dark mode) rises into place (settle 900ms) while the five-step bar arrives; Xero, in his headphones, settles in front of the sun and then sways gently to the audio (5s bob loop). The waveform bars grow from the centre line left to right (48 bars, 16ms apart, 420ms each); at 1.2s play starts: the icon swaps to pause, the played ink and the playhead knob sweep across the bars (linear, follows playback), the elapsed time under the left end counts, and the first segment of the step bar fills in step with playback. Next card stays outlined until 80% played (4:48), then fills to the solid button (300ms crossfade, light haptic). Read instead expands the transcript under the player (320ms ease).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
 .nav .side{width:44px;text-align:right;flex:none}
-.face{--face:#FFC38A;--face-2:#FFD3A6;--sunc:#FFE2B0;background:var(--face);color:#1E1A3A;border-radius:28px;overflow:hidden;box-shadow:0 16px 30px rgba(60,40,20,.14)}
-/* dark mode: the same apricot, toned down so it glows softly on navy instead of glaring */
-[data-theme="dark"] .face{--face:#D99863;--face-2:#E0A574;--sunc:#EBBC8C;box-shadow:0 18px 34px rgba(0,0,0,.45)}
-.art{position:relative;height:196px;background:linear-gradient(to bottom,var(--face-2),var(--face))}
-.art .sun{position:absolute;left:50%;top:26px;width:176px;height:176px;margin-left:-88px;border-radius:50%;background:var(--sunc)}
-.art .ring{position:absolute;left:50%;top:50%;border-radius:50%;border:2px solid rgba(30,26,58,.12)}
-.art .xw{position:absolute;left:50%;bottom:-10px;width:164px;margin-left:-82px}
-.in{padding:20px 20px 20px}
-.kind{display:flex;align-items:center;gap:8px;font:600 14px/1 var(--body);color:#3A2410}
-[data-theme="dark"] .kind{color:#2A1A0C}
+/* the current segment fills with this card's progress (here: playback) */
+.steps > i.now::after{width:var(--sub,45%)}
+/* Listen = apricot. Dark mode: the same player at deep dusk, cream ink and a warm sun glow, never a muddy caramel. */
+.face{--ink:#1E1A3A;--soft:#3A2410;--face:#FFC38A;--face-2:#FFD6AC;--sunc:#FFE6BC;--pb:#1E1A3A;--pb-fg:#FFF8EE;
+  background:var(--face);color:var(--ink);border-radius:28px;overflow:hidden;box-shadow:0 16px 30px rgba(60,40,20,.14)}
+[data-theme="dark"] .face{--ink:#FFF8EE;--soft:#E9DCCB;--pb:#FFC38A;--pb-fg:#1E1A3A;
+  background:radial-gradient(80% 36% at 50% 32%,rgba(247,170,108,.30),rgba(247,170,108,0) 100%),linear-gradient(180deg,#27325C 0%,#1C2547 58%,#19223F 100%);
+  box-shadow:0 18px 34px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.07)}
+.art{position:relative;height:266px;background:linear-gradient(to bottom,var(--face-2),var(--face))}
+[data-theme="dark"] .art{background:none}
+.art .sun{position:absolute;left:50%;top:34px;width:208px;height:208px;margin-left:-104px;border-radius:50%;background:var(--sunc)}
+[data-theme="dark"] .art .sun{background:radial-gradient(circle,#F9C083 0,#F2A766 70%,#EC9A5E 100%);box-shadow:0 0 90px 24px rgba(247,168,106,.30)}
+.art .xw{position:absolute;left:50%;bottom:-8px;width:196px;margin-left:-98px}
+.in{padding:18px 20px 18px}
+.kind{display:flex;align-items:center;gap:8px;font:600 14px/1 var(--body);color:var(--soft)}
 .kind svg{width:18px;height:18px}
-.wave{position:relative;height:56px;margin-top:18px}
+.wave{position:relative;height:52px;margin-top:16px}
 .wave .layer{position:absolute;inset:0;overflow:hidden}
 .wave .layer.on{width:var(--pp,14%)}
-.wave svg{display:block;height:56px}
+.wave svg{display:block;height:52px}
 .wave rect{transform-box:fill-box;transform-origin:50% 50%}
 .play .wave .base rect{animation:bar 420ms var(--settle) both;animation-delay:calc(200ms + var(--b) * 16ms)}
 @keyframes bar{from{transform:scaleY(.08)}to{transform:none}}
 .play .wave .layer.on{animation:sweep 6000ms linear both 1200ms}
 @keyframes sweep{from{width:0}to{width:var(--pp,14%)}}
-.ctl{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;margin-top:10px}
-.ctl .t-cap{color:#3A2410}
-[data-theme="dark"] .ctl .t-cap{color:#2A1A0C}
-.ctl .t-cap:last-child{text-align:right}
-.pbtn{width:64px;height:64px;border-radius:99px;background:#1E1A3A;color:#FFF8EE;display:grid;place-items:center;box-shadow:0 4px 0 rgba(30,26,58,.22)}
+/* the playhead: a thin line through the bars with a knob, riding the end of the played ink */
+.head{position:absolute;top:-4px;bottom:-4px;left:var(--pp,14%);width:2px;margin-left:-1px;border-radius:2px;background:var(--ink)}
+.head::after{content:"";position:absolute;left:50%;top:50%;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:99px;background:var(--ink);box-shadow:0 0 0 3px var(--face),0 2px 6px rgba(30,26,58,.25)}
+[data-theme="dark"] .head::after{box-shadow:0 0 0 3px #222D54,0 2px 6px rgba(0,0,0,.4)}
+.play .head{animation:ride 6000ms linear both 1200ms}
+@keyframes ride{from{left:0}to{left:var(--pp,14%)}}
+.times{display:flex;justify-content:space-between;margin-top:8px}
+.times .t-cap{color:var(--soft)}
+.ctl{display:flex;align-items:center;justify-content:center;gap:34px;margin-top:8px}
+.skip{position:relative;width:44px;height:44px;display:grid;place-items:center;color:var(--ink)}
+.skip svg{width:30px;height:30px}
+.skip b{position:absolute;inset:0;display:grid;place-items:center;font:700 12px/1 var(--body);padding-top:2px}
+.pbtn{width:64px;height:64px;border-radius:99px;background:var(--pb);color:var(--pb-fg);display:grid;place-items:center;box-shadow:0 6px 16px rgba(30,26,58,.22)}
+[data-theme="dark"] .pbtn{box-shadow:0 6px 18px rgba(0,0,0,.35)}
 .pbtn svg{width:26px;height:26px}
-.disc{margin-top:16px}
-.disc .row{min-height:60px}
-.disc .ico-tile{background:var(--card-2)}
+/* Next card waits outlined until 80% played */
+.dock .btn.ghost{box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--fg) 34%,transparent)}
+.rd{gap:8px;color:var(--fg);opacity:1}
+.rd svg{width:18px;height:18px}
+.rd .t-foot{color:var(--muted);font-weight:500}
 </style>
 </head><body>
 <div class="screen" data-ground="table">
   <div class="nav">
     <button class="icon-btn" aria-label="Close" id="close"></button>
-    <div class="grow"><div class="steps" aria-label="Card 1 of 5" data-a style="--i:0"><i class="now"></i><i></i><i></i><i></i><i></i></div></div>
+    <div class="grow"><div class="steps" aria-label="Card 1 of 5" data-a style="--sub:14%;--i:0"><i class="now"></i><i></i><i></i><i></i><i></i></div></div>
     <span class="side t-foot muted">1 of 5</span>
   </div>
   <div class="scroll" style="padding-top:110px">
@@ -53,47 +69,47 @@
           <div class="kind"><span id="k-ic"></span>Listen · 6 min</div>
           <h1 class="t-title" style="margin-top:10px">Why it feels like it calms you</h1>
           <div class="wave" id="wave" style="--pp:14%"></div>
+          <div class="times"><span class="t-cap" data-count="50" data-delay="1200" data-dur="6000" id="el">0:50</span><span class="t-cap">6:00</span></div>
           <div class="ctl">
-            <span class="t-cap" data-count="50" data-delay="1200" data-dur="6000" id="el">0:50</span>
+            <button class="skip" aria-label="Back 15 seconds" id="sb"></button>
             <button class="pbtn" id="pbtn" aria-label="Pause"></button>
-            <span class="t-cap">6:00</span>
+            <button class="skip" aria-label="Forward 15 seconds" id="sf"></button>
           </div>
         </div>
       </div>
-      <div class="list disc" data-a style="--i:4">
-        <button class="row" style="width:100%;text-align:left" aria-expanded="false">
-          <span class="ico-tile" id="r-ic"></span>
-          <span class="grow"><span class="t-head" style="font-size:17px">Read instead</span></span>
-          <span class="t-foot muted">1 min</span>
-          <span class="chev" id="r-chev"></span>
-        </button>
-      </div>
     </div>
   </div>
-  <div class="dock"><button class="btn" data-a style="--i:6">Next card</button></div>
+  <div class="dock">
+    <button class="link rd" aria-expanded="false" data-a style="--i:5"><span id="r-ic"></span>Read instead<span class="t-foot">· 1 min</span><span id="r-chev"></span></button>
+    <button class="btn ghost" data-a style="--i:6">Next card</button>
+  </div>
 </div>
 <script>
 document.getElementById('close').innerHTML = DX.icon('close');
 document.getElementById('k-ic').innerHTML = DX.icon('headphones', {size:18});
-document.getElementById('r-ic').innerHTML = DX.icon('text');
+document.getElementById('r-ic').innerHTML = DX.icon('text', {size:18});
 document.getElementById('r-chev').innerHTML = DX.icon('down', {size:18});
+/* 15-second skips: a circular arrow with the number inside */
+const skip = fwd => `<svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="${fwd ? 'transform:scaleX(-1)' : ''}"><path d="M8.2 9.2A9.5 9.5 0 1 1 5.6 16.5"/><path d="M7.6 3.8v5.8h5.8"/></svg><b>15</b>`;
+document.getElementById('sb').innerHTML = skip(false);
+document.getElementById('sf').innerHTML = skip(true);
 /* Xero in headphones: the band and cups are drawn into his own body group so they sway with him */
 const PHONES = `<g aria-hidden="true">
   <path d="M38 108 C30 -4 170 -4 162 108" fill="none" stroke="#1E1A3A" stroke-width="10" stroke-linecap="round"/>
   <path d="M52 62 C66 30 100 22 122 26" fill="none" stroke="#FFF8EE" stroke-opacity=".35" stroke-width="3" stroke-linecap="round"/>
   <rect x="18" y="88" width="30" height="48" rx="14" fill="#1E1A3A"/><rect x="24" y="96" width="9" height="32" rx="4.5" fill="#FF9A6B"/>
   <rect x="152" y="88" width="30" height="48" rx="14" fill="#1E1A3A"/><rect x="167" y="96" width="9" height="32" rx="4.5" fill="#FF9A6B"/></g>`;
-let xs = DX.char('xero', {mood:'calm', size:164});
+let xs = DX.char('xero', {mood:'calm', size:196});
 const mi = xs.indexOf('stroke-width="3.5"'); const end = xs.indexOf('</path>', mi) + 7;
 xs = xs.slice(0, end) + PHONES + xs.slice(end);
 document.getElementById('xero').innerHTML = xs;
 const pb = document.getElementById('pbtn');
 pb.innerHTML = DX.icon('pause', {size:26, w:3});
-/* 48 bars, deterministic heights, full card width */
+/* 48 bars, deterministic heights, full card width, drawn in the card's ink */
 const W = 306, n = 48, bw = 3.4, gap = (W - n * bw) / (n - 1);
-const hs = Array.from({length:n}, (_, i) => 8 + Math.round(42 * Math.abs(Math.sin(i * 1.7) * .6 + Math.sin(i * .45) * .4)));
-const bars = (op, cls) => `<svg width="${W}" viewBox="0 0 ${W} 56" class="${cls}">${hs.map((h, i) => `<rect x="${(i * (bw + gap)).toFixed(1)}" y="${28 - h / 2}" width="${bw}" height="${h}" rx="1.7" fill="#1E1A3A" fill-opacity="${op}" style="--b:${i}"/>`).join('')}</svg>`;
-document.getElementById('wave').innerHTML = `<div class="layer">${bars(.24, 'base')}</div><div class="layer on">${bars(1, '')}</div>`;
+const hs = Array.from({length:n}, (_, i) => 8 + Math.round(38 * Math.abs(Math.sin(i * 1.7) * .6 + Math.sin(i * .45) * .4)));
+const bars = (op, cls) => `<svg width="${W}" viewBox="0 0 ${W} 52" class="${cls}">${hs.map((h, i) => `<rect x="${(i * (bw + gap)).toFixed(1)}" y="${26 - h / 2}" width="${bw}" height="${h}" rx="1.7" fill="var(--ink)" fill-opacity="${op}" style="--b:${i}"/>`).join('')}</svg>`;
+document.getElementById('wave').innerHTML = `<div class="layer">${bars(.26, 'base')}</div><div class="layer on">${bars(1, '')}</div><i class="head" aria-hidden="true"></i>`;
 /* elapsed time as m:ss */
 const el = document.getElementById('el');
 new MutationObserver(() => { const v = parseInt(el.textContent); if (!isNaN(v) && !el.textContent.includes(':')) el.textContent = '0:' + String(v).padStart(2, '0'); }).observe(el, {childList:true});

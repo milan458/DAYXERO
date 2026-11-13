@@ -1,28 +1,36 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>023 Session hand</title>
-<meta name="motion" content="Title and stamps arrive (600ms, 90ms stagger). The four back cards deal in from below one by one into a fan behind (760ms settle each, 120ms apart, from 300ms), then card 1 rises in front of them (900ms settle at 820ms) with its outline and title; its mini waveform bars grow left to right (18ms apart). The button arrives last. Light haptic on each card landing, a medium one when card 1 lands.">
+<meta name="motion" content="Title, line and the prep stamps arrive (600ms, 90ms stagger). The four back cards deal in from below one by one into a fan behind (760ms settle each, 120ms apart, from 300ms): Try mint, Reveal sky, Myth or fact rose, Try mint. Then card 1, the apricot Listen card, rises in front of them (900ms settle at 820ms) with its single outline and title, and its mini waveform bars grow left to right (18ms apart). The button arrives last. Light haptic on each card landing, a medium one when card 1 lands.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-.f-apricot{--face:#FFC38A}.f-sky{--face:#9CCBFF}.f-mint{--face:#9FE3BC}.f-sun{--face:#FFD966}
+/* one colour per card type, shared by every session screen: Listen apricot, Try mint, Reveal sky, Myth or fact rose.
+   Dark mode deepens the pastels a step so they sit on navy without glaring. */
+.k-listen{--face:#FFC38A}.k-try{--face:#9FE3BC}.k-reveal{--face:#9CCBFF}.k-myth{--face:#FFB9A6}
+[data-theme="dark"] .k-listen{--face:#F3B47E}[data-theme="dark"] .k-try{--face:#8FD3AD}[data-theme="dark"] .k-reveal{--face:#8EBBEC}[data-theme="dark"] .k-myth{--face:#EFA894}
 .head{position:absolute;top:112px;left:0;right:0;display:grid;gap:6px}
-.stamps{position:absolute;top:192px;left:var(--gutter);right:var(--gutter);display:flex;align-items:center;gap:10px}
-.stamps .t-foot{margin-left:6px}
-/* the hand: four cards fanned behind, card 1 drawn out in front, all centred on the screen */
-.fan{position:absolute;top:304px;left:0;right:0;height:350px}
-.bc{position:absolute;left:50%;top:0;width:106px;height:160px;margin-left:-53px;border-radius:16px;background:var(--face);color:#1E1A3A;
-  display:grid;justify-items:center;align-content:start;gap:7px;padding-top:14px;transform-origin:50% 100%;
+.stamps{position:absolute;top:190px;left:var(--gutter);right:var(--gutter);display:flex;align-items:center;gap:8px}
+.stamps .t-foot{margin-left:8px}
+/* small stamps read as plain coins: no inner sun scene, a bigger numeral */
+.stamps svg g[clip-path]{display:none}
+.stamps svg text{font-size:46px}
+/* the hand: four cards fanned behind, card 1 drawn out in front, centred between the stamps and the button */
+.fan{position:absolute;top:322px;left:0;right:0;height:350px}
+.bc{position:absolute;left:50%;top:0;width:108px;height:160px;margin-left:-54px;border-radius:16px;background:var(--face);color:#1E1A3A;
+  display:grid;justify-items:start;align-content:start;gap:8px;padding:12px 12px 0;transform-origin:50% 100%;
   transform:translate(var(--x),var(--y)) rotate(var(--r));box-shadow:0 8px 18px rgba(60,40,20,.13)}
 [data-theme="dark"] .bc{box-shadow:0 10px 22px rgba(0,0,0,.42)}
 .bc .ic{width:32px;height:32px;border-radius:99px;background:rgba(30,26,58,.1);display:grid;place-items:center}
 .bc .ic svg{width:18px;height:18px}
-.bc b{font:700 14px/1 var(--display);letter-spacing:-.1px}
+/* index corner, like a playing card: the left edge of every back card stays visible in the fan */
+.bc b{font:700 14px/1.1 var(--display);letter-spacing:-.1px;max-width:62px}
 .play .bc{animation:deal 760ms var(--settle) both;animation-delay:calc(300ms + var(--k) * 120ms)}
 @keyframes deal{from{opacity:0;transform:translate(0,420px) rotate(0deg)}35%{opacity:1}to{opacity:1;transform:translate(var(--x),var(--y)) rotate(var(--r))}}
+/* card 1: one 1.5px outline marks it as the card in hand */
 .front{position:absolute;left:50%;top:96px;width:240px;height:228px;margin-left:-120px;border-radius:24px;background:var(--face);color:#1E1A3A;
   padding:18px 18px 16px;display:flex;flex-direction:column;transform:rotate(-2deg);
-  box-shadow:0 0 0 3px var(--g),0 0 0 5px var(--fg),0 16px 28px rgba(60,40,20,.18)}
-[data-theme="dark"] .front{box-shadow:0 0 0 3px var(--g),0 0 0 5px var(--fg),0 18px 32px rgba(0,0,0,.5)}
+  box-shadow:0 0 0 1.5px var(--fg),0 16px 28px rgba(60,40,20,.18)}
+[data-theme="dark"] .front{box-shadow:0 0 0 1.5px var(--fg),0 18px 32px rgba(0,0,0,.5)}
 .play .front{animation:lift 900ms var(--settle) both 820ms}
 @keyframes lift{from{opacity:0;transform:translateY(300px) rotate(0deg)}40%{opacity:1}to{opacity:1;transform:rotate(-2deg)}}
 .front .kind{display:flex;align-items:center;gap:8px;font:600 14px/1 var(--body);color:#3A2410}
@@ -46,22 +54,23 @@
   <div class="dock"><button class="btn" data-a style="--i:10;--d:700ms">Play card 1</button></div>
 </div>
 <script>
-/* one glyph per card type: Listen headphones, Try hand, Reveal eye, Myth question mark, Try (plan) spark */
+/* one glyph per card type: Listen headphones, Try hand, Reveal eye, Myth or fact question mark, Your stress plan spark */
 const G = {
   question: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8.6 8.6a3.5 3.5 0 116.2 2.2c-.9 1-2.8 1.7-2.8 3.6v.4"/><path d="M12 18.6h.01" stroke-width="3"/></svg>',
   spark: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.8c.7 4.9 2.3 6.6 7.4 7.4-5.1.8-6.7 2.5-7.4 7.4-.7-4.9-2.3-6.6-7.4-7.4 5.1-.8 6.7-2.5 7.4-7.4z"/><circle cx="18.6" cy="18.4" r="1.8"/></svg>'
 };
 const ic = n => G[n] || DX.icon(n);
 document.getElementById('close').innerHTML = DX.icon('close');
-document.getElementById('stamps').innerHTML = [1,2,3].map(n => DX.badge({kind:'prep', n, size:44, bare:true})).join('') +
-  DX.badge({kind:'prep', n:4, state:'next', size:44, bare:true}) + '<span class="t-foot muted">Today</span>';
-const back = [['sky','hand','Try'], ['apricot','eye','Reveal'], ['sky','question','Myth'], ['mint','spark','Try']];
+document.getElementById('stamps').innerHTML = [1,2,3].map(n => DX.badge({kind:'prep', n, size:46, bare:true})).join('') +
+  DX.badge({kind:'prep', n:4, state:'next', size:46, bare:true}) + '<span class="t-foot muted">Today</span>';
+/* cards 2 to 5: Try (breath), Reveal, Myth or fact, Try (your stress plan) */
+const back = [['try','hand','Try'], ['reveal','eye','Reveal'], ['myth','question','Myth or fact'], ['try','spark','Try']];
 const X = [-96, -33, 33, 96], Y = [22, 4, 4, 22], R = [-11, -4, 4, 11];
 /* mini waveform for the Listen card */
 const n = 28, W = 204, bw = 3.4, gap = (W - n * bw) / (n - 1);
 const hs = Array.from({length:n}, (_, i) => 6 + Math.round(22 * Math.abs(Math.sin(i * 1.7) * .6 + Math.sin(i * .45) * .4)));
 const wave = `<svg class="wv" width="${W}" height="30" viewBox="0 0 ${W} 30" aria-hidden="true">${hs.map((h, i) => `<rect x="${(i * (bw + gap)).toFixed(1)}" y="${15 - h / 2}" width="${bw}" height="${h}" rx="1.7" fill="#1E1A3A" fill-opacity="${i < 9 ? .7 : .26}" style="--b:${i}"/>`).join('')}</svg>`;
-document.getElementById('fan').innerHTML = back.map((c, k) => `<div class="bc f-${c[0]}" style="--x:${X[k]}px;--y:${Y[k]}px;--r:${R[k]}deg;--k:${k}"><span class="ic">${ic(c[1])}</span><b>${c[2]}</b></div>`).join('') +
-  `<div class="front f-apricot"><div class="kind"><span class="ic">${DX.icon('headphones')}</span>Listen · 6 min</div><h2>Why it feels like it calms you</h2>${wave}</div>`;
+document.getElementById('fan').innerHTML = back.map((c, k) => `<div class="bc k-${c[0]}" style="--x:${X[k]}px;--y:${Y[k]}px;--r:${R[k]}deg;--k:${k}"><span class="ic">${ic(c[1])}</span><b>${c[2]}</b></div>`).join('') +
+  `<div class="front k-listen"><div class="kind"><span class="ic">${DX.icon('headphones')}</span>Listen · 6 min</div><h2>Why it feels like it calms you</h2>${wave}</div>`;
 </script>
 </body></html>
