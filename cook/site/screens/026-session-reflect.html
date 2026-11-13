@@ -19,12 +19,13 @@
 .flow .chip.add{background:transparent;box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--fg) 40%,transparent);gap:6px;padding-left:12px}
 .flow .chip.add svg{width:16px;height:16px}
 /* the plan forming: your two picks become the "when" of two plan lines; the "I'll" stays blank until step 2 */
-.plan{margin-top:30px;display:grid;gap:12px;padding:16px 18px 16px}
+.plan{margin-top:30px;display:grid;gap:14px;padding:16px 18px 18px}
 .plan .t-cap{color:var(--muted)}
 .plan .pl{margin:0;display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;font:500 16px/1.35 var(--body)}
 .plan .pl b{font-weight:700}
 .plan .blank{width:58px;height:24px;border-radius:8px;border:1.5px dashed color-mix(in srgb,var(--fg) 34%,transparent)}
-.plan .pl + .pl{padding-top:12px;border-top:1px solid var(--line)}
+.plan .pl b{transition:opacity .3s var(--ease)}
+.plan .pl b.wait{opacity:0}
 .chip.land{animation:land 520ms var(--spring) both}
 @keyframes land{0%{transform:scale(1)}40%{transform:scale(1.08)}100%{transform:none}}
 </style>
@@ -47,8 +48,8 @@
     </div>
     <div class="plan card" data-a style="--i:7">
       <p class="t-cap">Your plan so far</p>
-      <p class="pl"><span>When <b>work piles up</b>, I'll</span><i class="blank" aria-label="to be chosen"></i></p>
-      <p class="pl"><span>When it's <b>too much at once</b>, I'll</span><i class="blank" aria-label="to be chosen"></i></p>
+      <p class="pl"><span>When <b id="w1">work piles up</b>, I'll</span><i class="blank" aria-label="to be chosen"></i></p>
+      <p class="pl"><span>When it's <b id="w2">too much at once</b>, I'll</span><i class="blank" aria-label="to be chosen"></i></p>
     </div>
   </div>
   <div class="dock"><button class="btn" data-a style="--i:8">Continue</button></div>
@@ -60,9 +61,10 @@ document.getElementById('t-ic').innerHTML = SPARK;
 document.getElementById('add').innerHTML = DX.icon('plus', {size:16, w:2.6}) + 'Add your own';
 if (!DX.still) {
   const c1 = document.getElementById('c1'), c2 = document.getElementById('c2');
-  c1.classList.remove('on'); c2.classList.remove('on');
-  DX.after(1100, () => c1.classList.add('on', 'land'));
-  DX.after(1500, () => c2.classList.add('on', 'land'));
+  const w1 = document.getElementById('w1'), w2 = document.getElementById('w2');
+  c1.classList.remove('on'); c2.classList.remove('on'); w1.classList.add('wait'); w2.classList.add('wait');
+  DX.after(1100, () => { c1.classList.add('on', 'land'); w1.classList.remove('wait'); });
+  DX.after(1500, () => { c2.classList.add('on', 'land'); w2.classList.remove('wait'); });
 }
 </script>
 </body></html>

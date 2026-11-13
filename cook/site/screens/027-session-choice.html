@@ -23,6 +23,8 @@
 /* recommended: a small mint pill */
 .rec{display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:99px;background:var(--face);color:#1E1A3A;font:600 12px/1 var(--body)}
 .opt.land{animation:land 560ms var(--spring) both}
+.opt.land .breaths{animation:puff 900ms var(--ease) both}
+@keyframes puff{50%{transform:translateX(3px)}}
 @keyframes land{0%{opacity:1;transform:translateY(2px) scale(.98)}45%{opacity:1;transform:scale(1.03)}100%{opacity:1;transform:none}}
 </style>
 </head><body>
