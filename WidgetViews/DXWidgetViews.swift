@@ -97,7 +97,7 @@ struct DayCounterWidgetView: View {
             }
             .frame(width: 150, height: 150)
             VStack(alignment: .leading, spacing: 2) {
-                Text("SINCE QUIT DAY").font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 600).monospacedDigit()).tracking(1).foregroundStyle(ink.sage)
+                Text("Since Quit Day").font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 600).monospacedDigit()).foregroundStyle(ink.sage)
                 Text(s.currentDayStart, style: .timer)
                     .font(DX.Typeface4.swiftUIFont(.display, size: 40, weight: 800)).tracking(-1).foregroundStyle(.white)
                     .monospacedDigit().lineLimit(1).minimumScaleFactor(0.6)
@@ -142,7 +142,7 @@ struct SOSWidgetView: View {
                     ZStack {
                         if ink.isFullColor {
                             // v4: Jelli owns SOS (decision 22). Tinted and vibrant modes keep the plain ring.
-                            Circle().fill(Color(hex: 0x2A52DB)).frame(width: 96, height: 96)
+                            Circle().fill(Color(hex: 0x1F3C8C)).frame(width: 96, height: 96)
                             JelliView(mood: .calm, stage: 1, points: 82, animate: false)
                         } else {
                             OrbGlyph(ink: ink)
@@ -253,7 +253,7 @@ struct TodayWidgetView: View {
     @ViewBuilder
     private func footer(_ ink: WidgetInk) -> some View {
         HStack(spacing: 8) {
-            Text("NEXT").font(DX.Typeface4.swiftUIFont(.body, size: 10, weight: 600).monospacedDigit()).tracking(0.8).foregroundStyle(.white.opacity(0.7))
+            Text("Next").font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 600).monospacedDigit()).foregroundStyle(.white.opacity(0.7))
             if let lesson = snapshot.nextLesson {
                 Text(verbatim: lesson.title).font(DX.Typeface4.swiftUIFont(.body, size: 13, weight: 600)).foregroundStyle(.white).lineLimit(1)
                 Text("· \(lesson.minutes) min").font(DX.Typeface4.swiftUIFont(.body, size: 13, weight: 500)).foregroundStyle(.white.opacity(0.5))

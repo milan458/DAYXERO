@@ -112,14 +112,14 @@ struct WindDownView: View {
         Button { breathing = true } label: {
             HStack(spacing: 12) {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("For tonight · 3 min").dxType(.caption).foregroundStyle(Color(hex: 0x4A3596))
+                    Text("For tonight · 3 min").dxType(.caption).foregroundStyle(DX.Ground.violet.muted)
                     Text("Slow breathing with Glim").dxType(.headline).foregroundStyle(DX.Fill.navy)
                     Text("In for 4, out for 6. The same rhythm as SOS.").dxType(.footnote).foregroundStyle(Color(hex: 0x3A2A7A))
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 Image(systemName: "play.fill").font(.system(size: 16, weight: .bold)).foregroundStyle(DX.Fill.cream)
                     .frame(width: 44, height: 44)
-                    .background(Color(hex: 0x4A3596), in: Circle())
+                    .background(DX.Ground.violet.card2, in: Circle())
                     .accessibilityHidden(true)
             }
             .padding(16)

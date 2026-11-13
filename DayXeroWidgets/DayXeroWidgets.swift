@@ -170,7 +170,7 @@ struct LogWidgetView: View {
 /// SOS on the Lock Screen and in the Dynamic Island (v4, Phase 7): Jelli's ocean, the time ridden counting up
 /// from the start (no countdown, design doc §10 F13), "It passed" and Open.
 struct CravingLiveActivity: Widget {
-    private static let ocean = Color(hex: 0x2A52DB)
+    private static let ocean = Color(hex: 0x1F3C8C)
     private static let solid = Color(hex: 0x1D3A9E)
     private static let cream = Color(hex: 0xFFF8EE)
     private static let soft = Color(hex: 0xE3EAFF)

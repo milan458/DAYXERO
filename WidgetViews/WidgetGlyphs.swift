@@ -5,12 +5,13 @@ import WidgetKit
 /// Shared look for the widgets (DAYXERO_WIDGETS_HANDOFF.md §1), compiled into the app (for the debug gallery)
 /// and the widget extension.
 enum WidgetTone {
-    /// v4 (Phase 7): Glim's night violet behind, Xero's apricot as the accent. Apricot on #140E3A is 11.9:1.
-    static let background = Color(hex: 0x140E3A)
+    /// v5: the one navy (#0E1322) behind, Xero's apricot as the accent, the navy card for wells. Apricot on
+    /// #0E1322 is 11.3:1. Was v4's night violet.
+    static let background = Color(hex: 0x0E1322)
     static let sage = Color(hex: 0xFFC38A)
-    static let moss = Color(hex: 0x2A255F)
-    static let lens = Color(hex: 0x0E0B2B)
-    static let empty = Color(hex: 0x1B1747)
+    static let moss = Color(hex: 0x212A41)
+    static let lens = Color(hex: 0x0A0F1C)
+    static let empty = Color(hex: 0x182034)
 }
 
 /// Colours per rendering mode: full colour as drawn; accented (tinted and clear) and vibrant turn sage and moss white.
@@ -26,15 +27,14 @@ struct WidgetInk {
     var secondary: Color { .white.opacity(0.55) }
 }
 
-/// Eyebrow labels: DM Sans SemiBold 12 (the v4 minimum), tracking 0.8, uppercase.
+/// Labels: DM Sans SemiBold 12 in sentence case (v5: no uppercase eyebrows).
 struct WidgetEyebrow: View {
     let text: String
     var color: Color = .white.opacity(0.7)
 
     var body: some View {
-        Text(verbatim: text.uppercased())
-            .font(DX.Typeface4.swiftUIFont(.body, size: 10, weight: 600).monospacedDigit())
-            .tracking(0.8)
+        Text(verbatim: text)
+            .font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 600).monospacedDigit())
             .foregroundStyle(color)
             .lineLimit(1)
     }

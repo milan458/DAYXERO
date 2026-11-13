@@ -280,7 +280,7 @@ public struct AnswerTray: View {
         .padding(.horizontal, DX.Layout.gutter)
         .padding(.top, 18)
         .padding(.bottom, 8)
-        .background(Color(hex: scheme == .dark ? 0x2A255F : 0xFFFFFF),
+        .background(Color(hex: scheme == .dark ? 0x182034 : 0xFFFFFF),
                     in: UnevenRoundedRectangle(topLeadingRadius: 28, bottomLeadingRadius: 0, bottomTrailingRadius: 0, topTrailingRadius: 28, style: .continuous))
         .sensoryFeedback(DX.Haptic.select, trigger: selection)
     }

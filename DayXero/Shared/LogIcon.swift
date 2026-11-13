@@ -26,7 +26,7 @@ enum LogGlyph: String, CaseIterable, Sendable {
         case .craving: Color(light: 0xFFE0D6, dark: 0x3B1A14)
         case .pledge: Color(light: 0xFFE9B0, dark: 0x3A3110)
         // A slip is neutral, never red: nothing resets.
-        case .slip: Color(light: 0xF1EBE2, dark: 0x2A255F)
+        case .slip: Color(light: 0xF1EBE2, dark: 0x212A41)
         case .kept: Color(light: 0xDFF3E4, dark: 0x0F2A22)
         }
     }
@@ -38,7 +38,7 @@ enum LogGlyph: String, CaseIterable, Sendable {
         case .puff: Color(light: 0x4A3E7A, dark: 0xC9BFF2)
         case .pouch: Color(light: 0x7A2E45, dark: 0xFFB3C1)
         case .water: Color(light: 0x24406E, dark: 0xB9D6FF)
-        case .urge: Color(light: 0x2A52DB, dark: 0x9DB4FF)
+        case .urge: Color(light: 0x1F3C8C, dark: 0x9DB4FF)
         case .craving: Color(light: 0xB23A1E, dark: 0xFF9F85)
         case .pledge: Color(light: 0x5A4A10, dark: 0xFFD966)
         case .slip: Color(light: 0x5E5975, dark: 0xE0C8E8)

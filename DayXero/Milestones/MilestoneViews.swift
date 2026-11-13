@@ -324,7 +324,7 @@ struct ShareCard: View {
 
     var body: some View {
         let dawn = look == .dawn
-        let background = Color(hex: dawn ? 0xFFC38A : 0x4A3596)
+        let background = Color(hex: dawn ? 0xFFC38A : 0x0F1B33)
         let ink = Color(hex: dawn ? 0x1E1A3A : 0xFFF8EE)
         ZStack(alignment: .top) {
             background
