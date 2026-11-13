@@ -19,7 +19,7 @@
   .today .content .t-foot { color: var(--muted); }
   .screen > .sbar { z-index: 45; color: #FFF8EE; }
   /* warm dim: a terracotta multiply keeps Today's apricot warm and saturated instead of going muddy brown under a navy veil */
-  .scrim { animation: none; background: #E9A98A; mix-blend-mode: multiply; backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .scrim { animation: none; background: #DDB3A2; mix-blend-mode: multiply; backdrop-filter: none; -webkit-backdrop-filter: none; }
   [data-theme="dark"] .scrim { background: rgba(6,9,18,.5); mix-blend-mode: normal; }
   /* dark: the sheet is a lifted surface with a hairline top edge so it separates from the night behind it */
   [data-theme="dark"] .sheet { background: #172036; box-shadow: inset 0 1px 0 rgba(255,255,255,.16), 0 -12px 32px rgba(0,0,0,.45); }
@@ -30,14 +30,14 @@
   @keyframes sheet-up { from { transform: translateY(100%); } to { transform: none; } }
   .sheet { padding-bottom: 34px; top: auto; height: auto; }
   .sheet-h { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px; }
-  .sheet .row { min-height: 78px; }
+  .sheet .list.main .row { min-height: 74px; }
   .sheet .row .t-foot { color: var(--muted); }
-  .sec-l { margin: 18px 0 8px 2px; color: var(--muted); }
+  .sec-l { margin: 14px 0 8px 2px; color: var(--muted); }
   .list.minor { background: transparent; box-shadow: inset 0 0 0 1px var(--line); }
-  .list.minor > .row { min-height: 58px; padding-block: 6px; gap: 12px; }
+  .list.minor > .row { min-height: 56px; padding-block: 6px; gap: 12px; }
   .list.minor .ico-tile { width: 34px; height: 34px; border-radius: 10px; background: transparent; box-shadow: inset 0 0 0 1px var(--line); color: var(--muted); }
   .list.minor .ico-tile svg { width: 18px; height: 18px; }
-  .list.minor .nm { font: 600 16px/1.2 var(--body); }
+  .list.minor .nm { font: 600 16px/1.2 var(--body); margin: 0 0 2px; }
   .list.minor .t-cap { color: var(--muted); font-weight: 500; }
   .add.ghost { width: 38px; height: 38px; background: transparent; color: var(--fg); box-shadow: inset 0 0 0 1.5px var(--line); }
   .add.ghost svg { width: 18px; height: 18px; }

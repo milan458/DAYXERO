@@ -34,6 +34,7 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 .days .td b { background: transparent; box-shadow: inset 0 0 0 2.5px var(--fg); color: var(--fg); }
 .days .t-cap { color: var(--muted); display: block; margin-top: 5px; }
 .days .td .t-cap { color: var(--fg); }
+#xb .badge { gap: 4px; }
 .warn { margin-top: 10px; padding: 16px 18px 18px; display: grid; gap: 8px; }
 .warn .top { display: flex; align-items: center; gap: 12px; }
 .warn .top .t-head { flex: 1; }
@@ -60,7 +61,7 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
-document.getElementById('xb').innerHTML = DX.badge({ kind: 'day', n: 7, state: 'earned', size: 64, bare: true, label: 'Day 7' });
+document.getElementById('xb').innerHTML = DX.badge({ kind: 'day', n: 7, state: 'earned', size: 60, label: 'Day 7' });
 document.getElementById('xr066').innerHTML = DX.char('xero', { mood: 'calm', size: 60 });
 const wd = ['Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu'];
 document.getElementById('days').innerHTML = wd.map((d, i) => `<span data-pop style="--i:${i};--d:600ms"><b>${6 + i}</b><span class="t-cap">${d}</span></span>`).join('')
