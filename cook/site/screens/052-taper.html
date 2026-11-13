@@ -13,7 +13,9 @@
   [data-theme="dark"] .bar { background: color-mix(in srgb, #FFC38A var(--a), transparent); box-shadow: inset 0 2px 0 rgba(255,214,170,.55); }
   .play .bar { animation: grow 900ms var(--settle) both; animation-delay: calc(var(--i) * 150ms + 250ms); }
   @keyframes grow { from { transform: scaleY(0); } to { transform: none; } }
-  .qd { justify-self: center; align-self: end; margin-bottom: 6px; width: 22px; height: 22px; border-radius: 99px; background: var(--tick); display: grid; place-items: center; color: #fff; }
+  .qdc { align-self: end; display: grid; justify-items: center; gap: 8px; }
+  .qbar { width: 100%; height: 6px; border-radius: 4px 4px 0 0; background: var(--tick); opacity: .9; }
+  .qd { justify-self: center; width: 22px; height: 22px; border-radius: 99px; background: var(--tick); display: grid; place-items: center; color: #fff; }
   [data-theme="dark"] .qd { color: #0B2A1C; }
   .qd svg { width: 14px; height: 14px; }
   .lbls { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 8px; text-align: center; color: var(--muted); }
@@ -24,7 +26,7 @@
   .row .t-head { font-size: 16px; }
   .row .t-foot { color: var(--muted); }
   .row .wk { font: 600 14px/1 var(--body); color: var(--muted); }
-  .warn { margin-top: 10px; display: grid; gap: 10px; }
+  .warn { margin-top: 18px; display: grid; gap: 10px; padding: 0 4px; }
   .warn .top { display: flex; gap: 12px; align-items: flex-start; }
   .warn .top svg { width: 22px; height: 22px; flex: none; color: var(--mark); margin-top: 1px; }
   .warn .t-foot { color: var(--muted); }
@@ -56,7 +58,7 @@
           <div class="bar" style="--h:100%;--i:0;--a:62%"></div>
           <div class="bar" style="--h:50%;--i:1;--a:46%"></div>
           <div class="bar" style="--h:25%;--i:2;--a:38%"></div>
-          <div class="qd" data-fade style="--d:800ms" data-ic="check"></div>
+          <div class="qdc" data-fade style="--d:800ms"><div class="qd" data-ic="check"></div><i class="qbar"></i></div>
         </div>
         <div class="lbls t-cap"><span><b>6 mg</b>Week 1</span><span><b>3 mg</b>Week 2</span><span><b>1.5 mg</b>Week 3</span><span><b>Quit Day</b>0 mg</span></div>
       </div>
@@ -65,7 +67,7 @@
         <div class="row" data-settle style="--i:4"><i class="sw" style="--a:46%;height:22px"></i><div class="grow"><p class="t-head">3 mg</p><p class="t-foot">Mon, Nov 9 to Sun, Nov 15</p></div><span class="wk">1 week</span></div>
         <div class="row" data-settle style="--i:5"><i class="sw" style="--a:40%;height:14px"></i><div class="grow"><p class="t-head">1.5 mg</p><p class="t-foot">Mon, Nov 16 to Sun, Nov 22</p></div><span class="wk">1 week</span></div>
       </div>
-      <div class="card warn" data-a style="--i:7">
+      <div class="warn" data-a style="--i:7">
         <div class="top"><span data-ic="clock"></span><div><p class="t-head" style="font-size:17px">3 weeks is longer than the 4 days to Quit Day</p><p class="t-foot">Move Quit Day to Mon, Nov 23 so every step fits, or shorten the steps.</p></div></div>
       </div>
     </div>

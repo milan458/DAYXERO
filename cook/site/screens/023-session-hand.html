@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>023 Session hand</title>
-<meta name="motion" content="Title and stamps arrive (600ms, 90ms stagger). The five cards deal in from below one by one (760ms settle each, 130ms apart, starting at 300ms) into the fan; card 1 lands last, lifted 26pt and tilted, the only card that shows its name. The up-next panel and button arrive after the deal. Light haptic on each card landing.">
+<meta name="motion" content="Title and stamps arrive (600ms, 90ms stagger). The five cards deal in from below one by one (760ms settle each, 130ms apart, starting at 300ms) into the fan; card 1 lands last, lifted 26pt and tilted, the only card that shows its name; the others show their type icon only. The up-next panel and button arrive after the deal. Light haptic on each card landing.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -10,7 +10,7 @@
 .stamps .nx{width:34px;height:34px;border-radius:99px;display:grid;place-items:center;box-shadow:inset 0 0 0 2px var(--fg);font:800 15px/1 var(--display);color:var(--fg)}
 .stamps .t-foot{margin-left:6px}
 .fan{position:absolute;top:262px;left:0;right:0;height:290px}
-.pc{position:absolute;left:50%;top:44px;width:104px;height:170px;margin-left:-52px;border-radius:16px;background:var(--face);color:#1E1A3A;padding:10px 8px;
+.pc{position:absolute;left:50%;top:44px;width:98px;height:162px;margin-left:-49px;border-radius:16px;background:var(--face);color:#1E1A3A;padding:10px 8px;
   transform-origin:50% 50%;transform:translate(var(--x),var(--y)) rotate(var(--r));box-shadow:0 10px 22px rgba(60,40,20,.16),inset 0 0 0 1px rgba(255,255,255,.45);overflow:hidden}
 [data-theme="dark"] .pc{box-shadow:0 14px 26px rgba(0,0,0,.4),inset 0 0 0 1px rgba(255,255,255,.4)}
 .pc::after{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:rgba(30,26,58,.14)}
@@ -29,7 +29,7 @@
 .pc.up .m{font-size:13px}
 .play .pc{animation:deal 760ms var(--settle) both;animation-delay:calc(300ms + var(--k) * 130ms)}
 @keyframes deal{from{opacity:0;transform:translate(0px,460px) rotate(0deg)}35%{opacity:1}to{opacity:1;transform:translate(var(--x),var(--y)) rotate(var(--r))}}
-.next{position:absolute;top:572px;left:var(--gutter);right:var(--gutter);display:flex;gap:14px;align-items:center}
+.next{position:absolute;top:526px;left:var(--gutter);right:var(--gutter);display:flex;gap:14px;align-items:center}
 .mini{width:40px;height:54px;border-radius:9px;background:var(--face);color:#1E1A3A;display:grid;place-items:center;flex:none}
 .mini svg{width:20px;height:20px}
 </style>
@@ -61,8 +61,8 @@ document.getElementById('stamps').innerHTML = [1,2,3].map(n => DX.badge({kind:'p
 const cards = [
   ['apricot','headphones','Listen','6 min'], ['sky','hand','Try','5 min'], ['apricot','eye','Reveal','6 min'],
   ['sky','myth','Myth or fact','5 min'], ['mint','hand','Try','6 min']];
-const XS = [-120, -20, 30, 80, 128];
+const XS = [-119, -17, 29, 75, 121];
 document.getElementById('fan').innerHTML = cards.map((c, k) => `<div class="pc f-${c[0]} ${k === 0 ? 'up' : ''}" style="--x:${XS[k]}px;--r:${k === 0 ? -3 : (k - 2.5) * 2}deg;--y:${k === 0 ? -22 : [0,8,4,4,8][k]}px;--k:${k};z-index:${k === 0 ? 9 : k + 1}">
-  <span class="ic">${ic(c[1])}</span>${k === 0 ? `<b>${c[2]}</b><span class="m">${c[3]}</span>` : `<span class="ty">${c[2]}</span>`}${k === 0 || k === 4 ? `<span class="big">${ic(c[1])}</span>` : ''}</div>`).join('');
+  <span class="ic">${ic(c[1])}</span>${k === 0 ? `<b>${c[2]}</b><span class="m">${c[3]}</span>` : ''}${k === 0 || k === 4 ? `<span class="big">${ic(c[1])}</span>` : ''}</div>`).join('');
 </script>
 </body></html>

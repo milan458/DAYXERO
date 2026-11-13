@@ -15,15 +15,15 @@
   .hero .t-body { font-size: 17px; font-weight: 500; }
   .cmp { display: grid; gap: 8px; margin: 4px 0 2px; }
   .cmp .r { display: grid; grid-template-columns: 82px 1fr 38px; align-items: center; gap: 8px; }
-  .cmp .v { font: 700 13px/1 var(--body); color: var(--muted); text-align: right; }
+  .cmp .v { font: 700 15px/1 var(--body); color: var(--fg); text-align: right; }
   .cmp .r.yes .v { color: var(--fg); }
   .cmp .bar { position: relative; }
   .cmp .r.yes .bar.yes i { background: linear-gradient(90deg, #FFC9A3 0 62.5%, #FF8A4C 62.5% 100%); opacity: 1; }
   .cmp .gapline { position: absolute; top: -4px; bottom: -4px; left: 62.5%; border-left: 2px dashed var(--fg); opacity: .5; }
   .cmp .gap { display: grid; grid-template-columns: 82px 1fr 38px; gap: 8px; }
-  .cmp .gap span:nth-child(2) { padding-left: calc(62.5% + 6px); font: 700 13px/1.1 var(--body); color: #B84A12; white-space: nowrap; }
+  .cmp .gap span:nth-child(2) { padding-left: calc(62.5% + 6px); font: 700 14px/1.1 var(--body); color: #A8400C; white-space: nowrap; }
   [data-theme="dark"] .cmp .gap span:nth-child(2) { color: #FFB27F; }
-  .cmp .t-foot { color: var(--muted); font-size: 13px; }
+  .cmp .t-foot { color: var(--fg); font-size: 14px; }
   .cmp .bar { height: 14px; border-radius: 99px; background: var(--track); overflow: hidden; }
   .cmp .bar i { display: block; height: 100%; width: var(--w); border-radius: inherit; background: var(--muted); opacity: .45; transform-origin: left; }
   .cmp .bar.yes i { background: #FF9A5C; opacity: .85; }
@@ -54,19 +54,11 @@
           <div class="big"><span class="num">50 to <span data-count="60" data-from="50" data-suffix="%">60%</span></span></div>
           <p class="t-body">more likely to quit than without NRT.</p>
           <div class="cmp" aria-hidden="true">
-            <div class="r"><span class="t-foot">Without NRT</span><span class="bar"><i style="--w:62.5%;--d:500ms"></i><b class="gapline"></b></span><span class="v">1x</span></div>
+            <div class="r"><span class="t-foot">No NRT</span><span class="bar"><i style="--w:62.5%;--d:500ms"></i><b class="gapline"></b></span><span class="v">1x</span></div>
             <div class="r yes"><span class="t-foot" style="color:var(--fg)">With NRT</span><span class="bar yes"><i style="--w:100%;--d:650ms"></i><b class="gapline"></b></span><span class="v">1.6x</span></div>
             <div class="gap"><span></span><span>+50 to 60%</span><span></span></div>
           </div>
           <a class="source">Source: Cochrane review of 133 trials, 2018</a>
-        </div>
-        <div class="card best" data-a style="--i:3">
-          <div class="x" data-settle style="--d:600ms"><div class="bob" id="xero"></div></div>
-          <div class="grow">
-            <p class="t-foot lbl">What works best</p>
-            <p class="t-head" style="font-size:17px">A patch plus a faster form beats either alone.</p>
-            <a class="source">Source: Cochrane review, 2019</a>
-          </div>
         </div>
         <div class="caution t-foot" data-a style="--i:4">
           <span data-ic="shield"></span>
@@ -82,7 +74,6 @@
 </div>
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic));
-  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'hello', size: 74 });
   document.querySelectorAll('[data-ic2]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic2, { w: 2.4 })));
 </script>
 </body></html>

@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .art { position: relative; height: 214px; border-radius: 26px; overflow: hidden; margin-top: 6px; }
+  .art { position: relative; height: 232px; border-radius: 26px; overflow: hidden; margin-top: 6px; }
   .art .scene { position: absolute; inset: 0; }
   .art .hero { position: absolute; left: 50%; bottom: 8px; margin-left: -58px; }
   .info { margin-top: 16px; display: grid; gap: 4px; }
@@ -71,7 +71,7 @@
 </div>
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20, w: e.dataset.ic === 'pause' ? 3.2 : 2.2 })));
-  document.getElementById('scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 346, h: 214 });
+  document.getElementById('scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 346, h: 232 });
   document.getElementById('hero').innerHTML = DX.char('xero', { mood: 'calm', size: 116 });
   const tx = document.getElementById('tx'), tg = document.getElementById('tg'), el = document.getElementById('el');
   DX.after(0, () => { tx.classList.remove('open'); tg.classList.remove('on'); el.textContent = '0:00'; });
