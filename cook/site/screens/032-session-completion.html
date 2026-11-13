@@ -7,10 +7,10 @@
 .hero{position:absolute;top:110px;left:0;right:0;height:300px}
 /* soft paper sunburst: broad alternating wedges that fade out at the edge (no spiky triangles) */
 .burst{position:absolute;left:45px;top:0;width:300px;height:300px}
-.burst .wa{fill:#FFD966;fill-opacity:.5}
-.burst .wb{fill:#FFE9A8;fill-opacity:.55}
-[data-theme="dark"] .burst .wa{fill-opacity:.2}
-[data-theme="dark"] .burst .wb{fill:#FFD966;fill-opacity:.08}
+.burst .wa{fill:#FFD35C;fill-opacity:.62}
+.burst .wb{fill:#FFE7A0;fill-opacity:.42}
+[data-theme="dark"] .burst .wa{fill:#FFD966;fill-opacity:.24}
+[data-theme="dark"] .burst .wb{fill:#F5B83D;fill-opacity:.09}
 .medal{position:absolute;left:105px;top:60px;width:180px;height:180px;border-radius:50%}
 /* a plain medal face: no inner sun scene behind the numeral */
 .medal svg g[clip-path], .srow svg g[clip-path]{display:none}
@@ -58,7 +58,7 @@ document.getElementById('close').innerHTML = DX.icon('close');
 /* 16 broad wedges, alternating two pale golds, masked by a radial fade so the edge dissolves like light on paper */
 const wedge = (i) => { const a0 = (i * 22.5 - 90) * Math.PI / 180, a1 = ((i + 1) * 22.5 - 90) * Math.PI / 180, R = 150;
   return `<path class="${i % 2 ? 'wb' : 'wa'}" d="M150 150 L${(150 + R * Math.cos(a0)).toFixed(1)} ${(150 + R * Math.sin(a0)).toFixed(1)} A${R} ${R} 0 0 1 ${(150 + R * Math.cos(a1)).toFixed(1)} ${(150 + R * Math.sin(a1)).toFixed(1)}Z"/>`; };
-document.getElementById('burst').innerHTML = `<defs><radialGradient id="bf"><stop offset=".38" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+document.getElementById('burst').innerHTML = `<defs><radialGradient id="bf"><stop offset=".56" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
   <mask id="bm"><circle cx="150" cy="150" r="150" fill="url(#bf)"/></mask></defs>
   <g mask="url(#bm)"><g class="rays" style="transform-box:fill-box;transform-origin:center">${Array.from({length:16}, (_, i) => wedge(i)).join('')}</g></g>`;
 document.getElementById('medal').innerHTML = DX.badge({kind:'prep', n:4, size:180, bare:true});
