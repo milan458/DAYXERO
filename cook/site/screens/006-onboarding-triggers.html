@@ -10,13 +10,15 @@
   .chip.land { animation-name: dx-chipland; }
   @keyframes dx-chipland { 0% { transform: scale(1); } 40% { transform: scale(1.1); } 100% { transform: scale(1); } }
 
-  .answers { gap: 10px !important; padding-top: 18px !important; }
+  .answers { gap: 8px !important; padding-top: 14px !important; }
+  .answers .chip { min-height: 40px; }
+  .answers .chips:not(.wake) { gap: 7px; }
   .lbl { font: 700 14px/1.3 var(--body); color: var(--fg); margin: 6px 0 0; }
-  .wake { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-  .wake .chip { justify-content: center; padding: 0 4px; white-space: nowrap; gap: 4px; }
-  .wake .chip.on::before { display: none; }
-  .xcard { display: flex; align-items: center; gap: 12px; padding: 6px 16px 6px 6px; margin-top: 10px; }
-  .xcard .xc { width: 88px; height: 88px; flex: none; }
+  .wake { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .wake .chip { justify-content: center; padding: 0 12px; white-space: nowrap; gap: 6px; min-height: 40px; }
+  
+  .xcard { display: flex; align-items: center; gap: 10px; padding: 8px 16px 8px 8px; margin-top: 8px; }
+  .xcard .xc { width: 64px; height: 64px; flex: none; display: grid; place-items: center; }
   .xcard b { font-weight: 700; }
 </style>
 </head><body>
@@ -51,7 +53,7 @@
 </div>
 <script>
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
-  document.getElementById('xc').innerHTML = DX.char('xero', { mood: 'hello', size: 88 });
+  document.getElementById('xc').innerHTML = DX.char('xero', { mood: 'hello', size: 64 });
   document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 40 });
   const bar = document.getElementById('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '27.3%'); void bar.offsetWidth; bar.style.transition = ''; });

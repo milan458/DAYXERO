@@ -7,19 +7,19 @@
   .wrap { padding: 66px var(--gutter) 0; }
   .wrap .lead { margin-top: 8px; color: var(--muted); }
   .chart { margin-top: 18px; padding: 18px 18px 14px; }
-  .chart .hd { display: flex; justify-content: space-between; align-items: baseline; }
+  .chart .hd { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
   .chart .hd .t-foot { color: var(--muted); }
   .chart { --apr: #FF9A5C; }
-  .bars { margin-top: 30px; height: 120px; display: flex; align-items: flex-end; gap: 6px; border-bottom: 1.5px solid var(--line); }
+  .bars { margin-top: 32px; height: 112px; display: flex; align-items: flex-end; gap: 12px; border-bottom: 1.5px solid var(--line); }
   .bar { position: relative; height: var(--h); border-radius: 12px 12px 4px 4px; background: color-mix(in srgb, var(--apr) 60%, transparent); transform-origin: bottom; display: flex; justify-content: center; }
   .bar:nth-child(2) { background: color-mix(in srgb, var(--apr) 42%, transparent); } .bar:nth-child(3) { background: color-mix(in srgb, var(--apr) 28%, transparent); }
   .bar span { position: absolute; bottom: calc(100% + 6px); color: var(--fg); font: 700 15px/1 var(--display); letter-spacing: -.3px; white-space: nowrap; }
   .play .bar { animation: grow 900ms var(--settle) both; animation-delay: calc(var(--i) * 150ms + 250ms); }
   @keyframes grow { from { transform: scaleY(0); } to { transform: none; } }
-  .wks { display: flex; gap: 6px; margin-top: 8px; color: var(--muted); }
+  .wks { display: flex; gap: 12px; margin-top: 8px; color: var(--muted); }
   .wks span { text-align: center; }
   .steps-list { margin-top: 12px; }
-  .steps-list .row { min-height: 60px; }
+  .steps-list .row { min-height: 58px; }
   .sw { width: 12px; height: 32px; border-radius: 4px; background: color-mix(in srgb, #FF9A5C 60%, transparent); flex: none; }
   .row .t-head { font-size: 17px; }
   .row .t-foot { color: var(--muted); }
@@ -40,13 +40,13 @@
       <h1 class="t-title" data-a style="--i:0">Your patch plan</h1>
       <p class="t-foot lead" data-a style="--i:1">From your pack's label. Tap a step to change it.</p>
       <div class="card chart" data-a style="--i:2">
-        <div class="hd"><p class="t-head">10 weeks, three steps</p><p class="t-foot">From Fri, Nov 13</p></div>
+        <div class="hd"><p class="t-head">10 weeks, three steps</p><p class="t-foot">From Nov 13</p></div>
         <div class="bars">
-          <div class="bar" style="flex:6;--h:100%;--i:0"><span>21 mg</span></div>
-          <div class="bar" style="flex:2;--h:66%;--i:1"><span>14 mg</span></div>
-          <div class="bar" style="flex:2;--h:33%;--i:2"><span>7 mg</span></div>
+          <div class="bar" style="flex:5;--h:100%;--i:0"><span>21 mg</span></div>
+          <div class="bar" style="flex:2.6;--h:64%;--i:1"><span>14 mg</span></div>
+          <div class="bar" style="flex:2.6;--h:38%;--i:2"><span>7 mg</span></div>
         </div>
-        <div class="wks t-cap"><span style="flex:6">Weeks 1 to 6</span><span style="flex:2">7 to 8</span><span style="flex:2">9 to 10</span></div>
+        <div class="wks t-cap"><span style="flex:5">Weeks 1 to 6</span><span style="flex:2.6">7 to 8</span><span style="flex:2.6">9 to 10</span></div>
       </div>
       <div class="list steps-list">
         <div class="row" data-settle style="--i:3"><i class="sw"></i><div class="grow"><p class="t-head">21 mg</p><p class="t-foot">Fri, Nov 13 to Thu, Dec 24</p></div><span class="wk">6 weeks</span></div>

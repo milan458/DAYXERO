@@ -4,8 +4,9 @@
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .head { padding: 130px var(--gutter) 0; display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 6px; }
-  .head .xw { margin: 0 -6px -6px 0; }
+  .head { padding: 116px var(--gutter) 0; display: grid; grid-template-columns: 1fr 92px; align-items: center; gap: 18px; }
+  .head .xw { margin: 0; justify-self: end; }
+  .head .t-large { font-size: 28px; }
   .status { padding: 8px var(--gutter) 0; position: relative; height: 30px; }
   .status p { position: absolute; left: var(--gutter); top: 8px; transition: opacity .4s var(--ease), transform .4s var(--ease); }
   .status .b { opacity: 0; transform: translateY(6px); }
@@ -31,7 +32,7 @@
   </div>
 
   <div class="head">
-    <h1 class="t-large" data-a>Your plan, built around you</h1>
+    <h1 class="t-large" data-a>Your plan,<br>built around you</h1>
     <div class="xw" data-settle style="--d:200ms"><div id="bw"><div class="bob" id="xero"></div></div></div>
   </div>
   <div class="status" id="status" data-a style="--i:1">

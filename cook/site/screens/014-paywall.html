@@ -4,27 +4,32 @@
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .head { padding: 108px var(--gutter) 0; display: grid; grid-template-columns: 1fr 100px; gap: 8px; align-items: center; }
+  .head { padding: 112px var(--gutter) 0; display: grid; grid-template-columns: 1fr 100px; gap: 8px; align-items: center; }
   .head .xs { width: 100px; height: 100px; display: grid; place-items: center; }
   .head .t-large { font-size: 30px; }
   .head .t-foot { margin-top: 6px; }
   .incl { padding: 16px var(--gutter) 0; display: grid; gap: 10px; }
   .incl .it { display: flex; align-items: center; gap: 10px; }
   .incl svg { width: 18px; height: 18px; flex: none; }
-  .plans { padding: 16px var(--gutter) 0; display: grid; gap: 8px; }
+  .plans { padding: 18px var(--gutter) 0; display: grid; gap: 10px; }
   .opt { min-height: 60px; padding: 10px 16px; }
   .opt .price { text-align: right; }
   .opt .price .num { font-size: 18px; letter-spacing: -.3px; display: block; }
   .opt .price .t-cap { color: var(--muted); }
   .opt .t-head { font-size: 17px; display: flex; align-items: center; gap: 8px; }
-  .opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
-  .opt.quiet { min-height: 50px; background: transparent; box-shadow: inset 0 0 0 1px var(--line); }
-  .opt.quiet .t-head { font: 600 15px/1.2 var(--body); }
-  .opt.quiet .price .num { font: 600 15px/1.2 var(--body); display: inline; }
-  .opt.quiet .price .t-cap { display: inline; margin-left: 4px; }
-  .opt.quiet .radio { width: 20px; height: 20px; }
+  .opt.hero { min-height: 92px; padding: 16px 18px; background: var(--card); }
+  .opt.hero .t-head { font-size: 20px; }
+  .opt.hero .price .num { font-size: 24px; }
+  .opt.on { box-shadow: inset 0 0 0 2.5px var(--sel), 0 10px 24px rgba(90,40,20,.12); }
+  [data-theme="dark"] .opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
+  .other { display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 0 16px; border-radius: 16px; background: transparent; box-shadow: inset 0 0 0 1px var(--line); text-align: left; width: 100%; color: var(--fg); }
+  [data-theme="dark"] .other { box-shadow: inset 0 0 0 1px rgba(255,255,255,.16); }
+  .other .grow { flex: 1; }
+  .other .t-foot { font-weight: 600; }
+  .other .t-cap { color: var(--muted); }
+  .other .chev { transform: rotate(90deg); }
   .pill { font: 700 12px/1 var(--body); padding: 5px 8px; border-radius: 99px; background: var(--sel); color: var(--sel-fg); letter-spacing: .1px; }
-  .tlh { margin: 20px var(--gutter) 0; font-weight: 700; }
+  .tlh { margin: 26px var(--gutter) 0; font-weight: 700; }
   .tl { margin: 14px var(--gutter) 0; position: relative; height: 66px; }
   .tl svg.ln { position: absolute; left: 7px; right: 7px; top: 6px; width: calc(100% - 14px); height: 4px; overflow: visible; }
   .tl .n { position: absolute; top: 0; display: grid; gap: 6px; }
@@ -41,7 +46,7 @@
   .dock .t-cap a { text-decoration: underline; text-underline-offset: 2px; }
 </style>
 </head><body>
-<div class="screen" data-ground="reading">
+<div class="screen" data-ground="apricot">
   <div class="nav">
     <button class="icon-btn" aria-label="Back" data-icon="back"></button>
   </div>
@@ -57,9 +62,8 @@
   <div class="incl" id="incl"></div>
 
   <div class="plans">
-    <button class="opt" id="yr" data-a style="--i:7"><span class="radio"></span><div class="grow"><p class="t-head">Yearly <span class="pill">7 days free</span></p><p class="t-foot">$3.33 a month</p></div><div class="price"><span class="num">$39.99</span><span class="t-cap">a year</span></div></button>
-    <button class="opt" data-a style="--i:8"><span class="radio"></span><div class="grow"><p class="t-head">Monthly</p><p class="t-foot">Cancel anytime</p></div><div class="price"><span class="num">$9.99</span><span class="t-cap">a month</span></div></button>
-    <button class="opt quiet" data-a style="--i:9"><span class="radio"></span><div class="grow"><p class="t-head">Lifetime, pay once</p></div><div class="price"><span class="num">$99.99</span></div></button>
+    <button class="opt hero" id="yr" data-a style="--i:7"><span class="radio"></span><div class="grow"><p class="t-head">Yearly <span class="pill">7 days free</span></p><p class="t-foot">$3.33 a month, billed after your free week</p></div><div class="price"><span class="num">$39.99</span><span class="t-cap">a year</span></div></button>
+    <button class="other" data-a style="--i:8"><div class="grow"><p class="t-foot">Other plans</p><p class="t-cap">Monthly $9.99 or Lifetime $99.99</p></div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
   </div>
 
   <p class="t-foot tlh" data-a style="--i:10">How your free week works</p>

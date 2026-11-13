@@ -9,33 +9,31 @@
   .pill-btn { height: 40px; padding: 0 14px 0 10px; border-radius: 99px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); display: inline-flex; align-items: center; gap: 4px; font: 700 15px/1 var(--body); }
   .pill-btn svg { width: 18px; height: 18px; }
   .top .icon-btn { width: 40px; height: 40px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
-  .sky { position: relative; margin-top: 14px; height: 172px; border-radius: 26px; overflow: hidden; color: var(--ink); }
+  .sky { position: relative; margin-top: 14px; height: 152px; border-radius: 26px; overflow: hidden; color: var(--ink); }
   .sky .scene { position: absolute; inset: 0; }
   .sky .big { position: absolute; left: 20px; top: 16px; display: flex; align-items: baseline; gap: 8px; }
   .sky .big .num { font-size: 64px; line-height: 1; letter-spacing: -2.5px; }
   .sky .big .t-head { color: var(--ink); }
-  .sky .kept { position: absolute; left: 21px; top: 86px; font: 600 15px/1.2 var(--body); color: var(--ink); }
+  .sky .kept { position: absolute; left: 21px; top: 84px; font: 600 15px/1.2 var(--body); color: var(--ink); }
   .sky .clear { position: absolute; left: 14px; bottom: 14px; height: 30px; padding: 0 12px 0 8px; border-radius: 99px; background: rgba(255,248,238,.92);
     display: inline-flex; align-items: center; gap: 6px; font: 600 13px/1 var(--body); color: var(--ink); }
   .sky .clear svg { width: 16px; height: 16px; }
   .sky .xero { position: absolute; right: 8px; bottom: 4px; }
-  .strip { margin-top: 12px; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); padding: 12px 6px; }
+  .strip { margin-top: 10px; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); padding: 11px 6px; }
   .strip > div { display: grid; gap: 3px; padding: 0 10px; }
   .strip > div + div { border-left: 1px solid var(--line); }
   .strip .num { font: 800 22px/1 var(--display); letter-spacing: -.5px; }
   .strip .t-cap { color: var(--muted); font-weight: 500; line-height: 1.25; }
-  .shelf-h { margin-top: 22px; display: flex; align-items: baseline; justify-content: space-between; }
+  .shelf-h { margin-top: 18px; display: flex; align-items: baseline; justify-content: space-between; }
   .shelf-h .link { min-height: 0; padding: 0; font: 700 15px/1 var(--body); color: var(--fg); text-decoration: underline; text-underline-offset: 3px; width: auto; }
   .bshelf { margin-top: 10px; padding: 2px 14px; }
-  .fam { display: grid; grid-template-columns: 98px 1fr; align-items: center; gap: 6px; padding: 11px 0; }
+  .fam { display: grid; grid-template-columns: 108px 1fr; align-items: center; gap: 4px; padding: 10px 0; }
   .fam + .fam { border-top: 1px solid var(--line); }
   .fam .lbl { display: grid; gap: 2px; }
   .fam .lbl .t-foot { font-weight: 700; line-height: 1.2; }
   .fam .lbl .t-cap { color: var(--muted); font-weight: 500; }
-  .brow { display: flex; gap: 6px; justify-content: flex-start; }
+  .brow { display: flex; gap: 5px; justify-content: flex-start; }
   .brow .badge { gap: 0; }
-  .fam.prep { grid-template-columns: 1fr; gap: 8px; }
-  .fam.prep .lbl { grid-auto-flow: column; justify-content: space-between; align-items: baseline; }
   .stamps { display: flex; justify-content: space-between; }
   .stamps .badge { gap: 0; }
   /* locked medallions: lift the dashed ring and numeral to 3:1 */
@@ -83,7 +81,7 @@
           <div class="brow" id="nights"></div>
         </div>
         <div class="fam prep">
-          <div class="lbl"><span class="t-foot">Prep week and Day Xero</span><span class="t-cap">8 of 8</span></div>
+          <div class="lbl"><span class="t-foot">Prep week</span><span class="t-cap">and Day Xero</span></div>
           <div class="stamps" id="prep"></div>
         </div>
       </div>
@@ -93,10 +91,10 @@
 </div>
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20 })));
-  document.getElementById('sky').innerHTML = DX.char('horizon', { scene: 'dawn', w: 346, h: 172, clarity: 40 });
+  document.getElementById('sky').innerHTML = DX.char('horizon', { scene: 'dawn', w: 346, h: 152, clarity: 40 });
   document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'cheer', size: 96 });
   let k = 0;
-  const S = 38;
+  const S = 36;
   const b = (kind, n, state, label, extra = {}) => {
     const anim = state === 'earned' ? `data-stamp style="--i:${k++};--d:500ms"` : `data-fade style="--d:${700 + k * 60}ms"`;
     const svg = DX.badge({ kind, n, state, size: S, p: extra.p, label, bare: true });
@@ -108,8 +106,8 @@
     b('day', 14, 'next', '14 days', { p: .5 }) + b('day', 30, 'locked', '30 days');
   k = 0;
   document.getElementById('prep').innerHTML =
-    [1, 2, 3, 4, 5, 6, 7].map(n => `<div class="badge" data-stamp style="--i:${k++};--d:700ms">${DX.badge({ kind: 'prep', n, size: 34, bare: true })}</div>`).join('') +
-    `<div class="badge" data-stamp style="--i:${k++};--d:700ms">${DX.badge({ kind: 'xero', n: '0', size: 34, bare: true })}</div>`;
+    [1, 2, 3, 4, 5, 6, 7].map(n => `<div class="badge" data-stamp style="--i:${k++};--d:700ms">${DX.badge({ kind: 'prep', n, size: 24, bare: true })}</div>`).join('') +
+    `<div class="badge" data-stamp style="--i:${k++};--d:700ms">${DX.badge({ kind: 'xero', n: '0', size: 24, bare: true })}</div>`;
   k = 0;
   document.getElementById('waves').innerHTML = b('wave', 1, 'earned', '1 wave') + b('wave', 10, 'earned', '10 waves') + b('wave', 25, 'next', '25 waves', { p: .92 }) + b('wave', 50, 'locked', '50 waves') + b('wave', 100, 'locked', '100 waves');
   k = 0;

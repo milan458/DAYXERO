@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>037 Health timeline</title>
-<meta name="motion" content="Title and the Vaping / Smoking chips arrive; each card's paper-cut spot (layered hills with its sun, cloud or peak) lifts in with the card, then the rail draws top to bottom (900ms) while timeline cards arrive with a 90ms stagger. Done ticks draw as each card lands; the Under way bar fills to 50% (900ms settle). Switching chips cross-fades the list (250ms) with a selection haptic.">
+<meta name="motion" content="Title and the Vaping / Smoking chips arrive; each card's paper-cut spot (its own motif: sunrise, clearing wind, summit flag, calm lake, lips) lifts in with the card, then the rail draws top to bottom (900ms) while timeline cards arrive with a 90ms stagger. Done ticks draw as each card lands; the Under way bar fills to 50% (900ms settle). Switching chips cross-fades the list (250ms) with a selection haptic.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -9,7 +9,6 @@
   .rail svg { display: block; width: 2px; height: 100%; overflow: visible; }
   .node { position: absolute; left: -30px; top: 50%; margin-top: -10px; width: 20px; height: 20px; border-radius: 99px; display: grid; place-items: center; background: var(--g); }
   .node.done { background: var(--tick); color: #fff; }
-  [data-theme="dark"] .node.done { color: #0B2A1C; }
   .node.done svg { width: 12px; height: 12px; }
   .node.now { box-shadow: inset 0 0 0 2.5px var(--fg); }
   .node.now::after { content: ""; width: 8px; height: 8px; border-radius: 99px; background: var(--fg); }
@@ -19,7 +18,6 @@
   .item .t-head { font-size: 16.5px; line-height: 1.22; }
   .ill { width: 62px; height: 62px; border-radius: 18px; overflow: hidden; flex: none; display: block; box-shadow: inset 0 0 0 1px var(--line);
     --sp-sky: #FFE6C8; --sp-h1: #FFAE73; --sp-h2: #FF8A5E; --sp-h3: #E8674A; --sp-cloud: #FFF8EE; }
-  [data-theme="dark"] .ill { --sp-sky: #3A2A2E; --sp-h1: #8A4A3A; --sp-h2: #6E3A30; --sp-h3: #552C27; --sp-cloud: #E9DCCB; }
   .ill svg { width: 62px; height: 62px; display: block; }
   .st { display: flex; align-items: center; gap: 6px; font: 600 14px/1.25 var(--body); color: var(--fg); opacity: .82; }
   .st.done { color: var(--tick); opacity: 1; }
@@ -76,19 +74,20 @@
 </div>
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20, w: e.dataset.ic === 'check' ? 3.2 : 2.2 })));
-  const hills = (peak) => `<path filter="url(#pcLift)" d="${peak ? 'M0 40 L18 26 L27 33 L40 16 L56 34 V62 H0z' : 'M0 40 C14 32 28 36 40 34 S52 30 62 32 V62 H0z'}" fill="var(--sp-h1)"/>
-    <path filter="url(#pcLift)" d="M0 47 C16 41 34 49 62 43 V62 H0z" fill="var(--sp-h2)"/><path filter="url(#pcLift)" d="M0 55 C20 51 40 57 62 52 V62 H0z" fill="var(--sp-h3)"/>`;
-  const sun = (cx, cy, r) => `<circle cx="${cx}" cy="${cy}" r="${r}" fill="var(--sun)"/>`;
-  const cloud = (x, y, k = 1) => `<path transform="translate(${x} ${y}) scale(${k})" d="M2 12h20a5 5 0 000-10 7 7 0 00-13-1 5 5 0 00-7 4 3.5 3.5 0 000 7z" fill="var(--sp-cloud)"/>`;
+  /* one distinct paper-cut motif and palette per change: sunrise (hours), clearing wind (nicotine leaves), summit flag (peak passed), calm lake (mood eases), lips */
+  const hills = (c, peak) => `<path filter="url(#pcLift)" d="${peak ? 'M0 44 L14 34 L22 38 L36 14 L50 32 L62 28 V62 H0z' : 'M0 40 C14 32 28 36 40 34 S52 30 62 32 V62 H0z'}" fill="${c[0]}"/>
+    <path filter="url(#pcLift)" d="M0 47 C16 41 34 49 62 43 V62 H0z" fill="${c[1]}"/><path filter="url(#pcLift)" d="M0 55 C20 51 40 57 62 52 V62 H0z" fill="${c[2]}"/>`;
+  const sun = (cx, cy, r, f = 'var(--sun)') => `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${f}"/>`;
+  const cloud = (x, y, k = 1, f = '#FFF8EE', o = 1) => `<path transform="translate(${x} ${y}) scale(${k})" d="M2 12h20a5 5 0 000-10 7 7 0 00-13-1 5 5 0 00-7 4 3.5 3.5 0 000 7z" fill="${f}" opacity="${o}"/>`;
   const SP = {
-    rise: sun(31, 38, 11) + hills(),
-    cloud: sun(40, 18, 8) + cloud(8, 14, .9) + hills(),
-    peak: sun(46, 16, 6) + hills(true),
-    sunny: sun(34, 22, 10) + cloud(10, 22, 1.05) + hills(),
-    lips: `<path d="M13 26c6-7 12-8 18-4 6-4 12-3 18 4-6 10-30 10-36 0z" fill="var(--mark)"/><path d="M13 26c11 3 25 3 36 0" stroke="var(--ink)" stroke-opacity=".55" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M49 8l1.6 3.6 3.6 1.2-3.6 1.2L49 18l-1.2-4-3.6-1.2 3.6-1.2z" fill="var(--sun)"/>` + hills().replace(/M0 40 C14 32 28 36 40 34 S52 30 62 32/, 'M0 44 C14 38 28 42 40 40 S52 36 62 38')
+    rise: ['#FFE6C8', sun(31, 40, 13) + hills(['#FFAE73', '#FF8A5E', '#E8674A'])],
+    cloud: ['#DCE8FF', `<g stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" fill="none"><path d="M6 16h18"/><path d="M10 23h12"/></g>` + cloud(26, 10, 1.05, '#FFFFFF') + cloud(44, 24, .55, '#FFFFFF', .7) + hills(['#A9C2F2', '#7FA0EA', '#5C7FE0'])],
+    peak: ['#FFD9C2', sun(12, 14, 6) + hills(['#E8674A', '#FF8A5E', '#FFAE73'], true) + `<path d="M36 14V4" stroke="#1E1A3A" stroke-width="1.8" stroke-linecap="round"/><path d="M36 4.5l9 3-9 3z" fill="#1E1A3A"/>`],
+    sunny: ['#D3F1E0', sun(31, 24, 10) + `<path filter="url(#pcLift)" d="M0 34 C12 28 24 32 34 31 S50 26 62 30 V62 H0z" fill="#7FD3A6"/><rect y="40" width="62" height="22" fill="#8ECDE6"/><g stroke="#FFF8EE" stroke-width="2" stroke-linecap="round"><path d="M22 46h18"/><path d="M26 52h10"/><path d="M8 57h8"/><path d="M46 57h8"/></g><ellipse cx="31" cy="44" rx="7" ry="1.6" fill="var(--sun)" opacity=".9"/>`],
+    lips: ['#FFF0E6', `<path d="M13 26c6-7 12-8 18-4 6-4 12-3 18 4-6 10-30 10-36 0z" fill="#F0705A"/><path d="M13 26c11 3 25 3 36 0" stroke="#1E1A3A" stroke-opacity=".55" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M49 8l1.6 3.6 3.6 1.2-3.6 1.2L49 18l-1.2-4-3.6-1.2 3.6-1.2z" fill="var(--sun)"/><path filter="url(#pcLift)" d="M0 48 C16 43 34 50 62 45 V62 H0z" fill="#FFC9B8"/><path filter="url(#pcLift)" d="M0 55 C20 51 40 57 62 52 V62 H0z" fill="#FFAE96"/>`]
   };
   document.body.insertAdjacentHTML('beforeend', '<svg width="0" height="0" style="position:absolute"><filter id="pcLift" x="-5%" y="-20%" width="110%" height="140%"><feDropShadow dx="0" dy="-1.2" stdDeviation="1.2" flood-color="#1A0B2E" flood-opacity=".22"/></filter></svg>');
-  document.querySelectorAll('[data-spot]').forEach(e => e.innerHTML = `<svg viewBox="0 0 62 62" aria-hidden="true"><rect width="62" height="62" fill="var(--sp-sky)"/>${SP[e.dataset.spot]}</svg>`);
+  document.querySelectorAll('[data-spot]').forEach(e => e.innerHTML = `<svg viewBox="0 0 62 62" aria-hidden="true"><rect width="62" height="62" fill="${SP[e.dataset.spot][0]}"/>${SP[e.dataset.spot][1]}</svg>`);
   const bar = document.getElementById('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.width = '0%'; });
   DX.after(700, () => { bar.style.transition = ''; bar.style.width = ''; });

@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>067 Currency</title>
-<meta name="motion" content="The search field and rows arrive on the stagger; at 0.9s US Dollar is picked (ring and tick 250ms, selection haptic) and at 1.3s the Saved toast rises from the bottom with a drawn check. Typing in search filters rows with a 200ms fade.">
+<meta name="motion" content="The search field and rows arrive on the stagger; at 0.9s US Dollar is picked (ring and tick 250ms, selection haptic) and saves at once with a success haptic: the filled radio is the done state, no toast. Typing in search filters rows with a 200ms fade.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -45,16 +45,11 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
   </div>
 </div></div>
 <div class="tabfade" style="height:120px"></div>
-<div class="toast b" role="status"><span class="ck"></span>Saved. Money shows in US dollars.</div>
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
 
 const usd = document.getElementById('usd');
 DX.after(900, () => usd.classList.add('on')); DX.onStill(() => usd.classList.add('on'));
-const toast = document.querySelector('.toast.b');
-DX.after(1300, () => toast.classList.add('in'));
-DX.onStill(() => toast.classList.add('in'));
-document.querySelectorAll('.ck').forEach(e => e.innerHTML = DX.check({ size: 26, d: 1350 }));
 </script>
 </body></html>

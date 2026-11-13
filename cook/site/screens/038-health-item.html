@@ -12,8 +12,9 @@
     display: inline-flex; align-items: center; font: 600 13px/1 var(--body); }
   .head { margin-top: 18px; display: grid; gap: 6px; }
   .when { margin-top: 16px; display: flex; align-items: center; gap: 14px; }
-  .when .ringwrap { position: relative; width: 56px; height: 56px; flex: none; color: var(--fg); }
-  .when .ringwrap b { position: absolute; inset: 0; display: grid; place-items: center; font: 800 18px/1 var(--display); }
+  .when .ringwrap { position: relative; width: 60px; height: 60px; flex: none; color: var(--fg); }
+  .when .ringwrap b { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 1px; font: 800 19px/1 var(--display); }
+  .when .ringwrap b small { font: 600 12px/1 var(--body); color: var(--muted); }
   .when .grow { flex: 1; display: grid; gap: 2px; }
   .when .side { text-align: right; display: grid; gap: 2px; }
   .copy { margin-top: 16px; display: grid; gap: 10px; }
@@ -38,7 +39,7 @@
       </div>
 
       <div class="card when" data-a style="--i:2">
-        <div class="ringwrap"><span id="ring"></span><b>2</b></div>
+        <div class="ringwrap"><span id="ring"></span><b>2<small>days</small></b></div>
         <div class="grow"><p class="t-head" style="font-size:17px">Starts in 2 days</p><p class="t-foot muted">Usually 2 to 6 weeks after Quit Day</p></div>
       </div>
 

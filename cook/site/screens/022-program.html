@@ -1,9 +1,19 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>022 Program, prep week</title>
-<meta name="motion" content="Title and the segmented week control arrive (90ms stagger). The road fades in, then the ink line draws along it from Prep 1 to today's node (1100ms, ease); Prep 1 to 3 stamps and their labels arrive as the line reaches each one (about 360ms apart). Today's Prep 4 play node and the up-next card beside it arrive as the line lands, then the node breathes a soft pulse ring every 2.4s. Prep 5 to 7 (locked) and the Day Xero medallion (rays turning slowly) fade in last. Light haptic when the line reaches today.">
+<meta name="motion" content="Title and the segmented week control arrive (90ms stagger). The road fades in, then the ink line draws along it from Prep 1 to today's node (1100ms, ease); Prep 1 to 3 stamps and their labels arrive as the line reaches each one (about 360ms apart). Today's Prep 4 play node and the up-next card beside it arrive as the line lands, then the node breathes a soft pulse ring every 2.4s. Prep 5 to 7 (waiting: dashed prep-orange rings on cream with readable numerals) and the waiting Day Xero medallion (dashed gold ring, faint sun) fade in last. Light haptic when the line reaches today.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
+  .screen[data-ground="mint"] { --g: #D3F0DF; --road: #A3DFBF; --card-2: #E6F6EC; }
+  [data-theme="dark"] .screen[data-ground="mint"] { --road: #212A41; --card-2: #212A41; }
+  .wait { position: relative; width: 44px; height: 44px; border-radius: 99px; background: var(--card); display: grid; place-items: center; color: var(--fg); }
+  .wait svg { position: absolute; inset: 0; }
+  .wait svg circle { stroke-width: 5; }
+  .wait .n { position: relative; font: 800 17px/1 var(--display); color: var(--fg); letter-spacing: -.3px; }
+  .wait.goalw { width: 60px; height: 60px; }
+  .wait.goalw .n { font-size: 22px; top: -6px; }
+  .lab.lock .k { color: var(--muted); }
+  .lab.lock .t-foot { color: var(--fg); }
   .hdr { position: absolute; left: 0; right: 0; top: 60px; padding: 0 var(--gutter); }
   .hdr .t-foot { color: var(--muted); margin-top: 4px; }
   .seg { position: absolute; left: var(--gutter); right: var(--gutter); top: 140px; height: 46px; border-radius: 16px; background: var(--card-2); padding: 4px; display: grid; grid-template-columns: 1.1fr 1fr 1fr 1fr 1fr; gap: 2px; }
@@ -17,12 +27,12 @@
   .lab .k { font: 600 13px/1.3 var(--body); color: var(--muted); display: block; }
   .lab .t-foot { font-weight: 600; font-size: 15px; line-height: 1.3; }
   .lab.lock .t-foot { font-weight: 500; }
-  .cur { width: 64px; height: 64px; border-radius: 99px; background: var(--btn); color: var(--btn-fg); display: grid; place-items: center; position: relative; box-shadow: 0 6px 0 rgba(0,0,0,.16), 0 0 0 6px var(--g); }
-  .cur svg { width: 26px; height: 26px; margin-left: 3px; }
+  .cur { width: 78px; height: 78px; border-radius: 99px; background: var(--btn); color: var(--btn-fg); display: grid; place-items: center; position: relative; box-shadow: 0 6px 0 rgba(0,0,0,.16), 0 0 0 6px var(--g); }
+  .cur svg { width: 30px; height: 30px; margin-left: 4px; }
   .cur::before { content: ""; position: absolute; inset: -6px; border-radius: 99px; box-shadow: 0 0 0 3px var(--fg); opacity: 0; }
   .play .cur::before { animation: pulse 2.4s var(--ease) 1.8s infinite; }
   @keyframes pulse { 0% { opacity: .45; transform: scale(1); } 100% { opacity: 0; transform: scale(1.35); } }
-  .upnext { position: absolute; left: 122px; right: var(--gutter); padding: 14px 16px; display: grid; gap: 3px; overflow: visible; }
+  .upnext { position: absolute; left: 128px; right: var(--gutter); padding: 14px 16px; display: grid; gap: 3px; overflow: visible; }
   .upnext::before { content: ""; position: absolute; left: -6px; top: 50%; width: 14px; height: 14px; margin-top: -7px; background: inherit; border-radius: 3px; transform: rotate(45deg); }
   [data-theme="dark"] .upnext::before { box-shadow: -1px 1px 0 0 var(--line); }
   .upnext .k { font: 600 13px/1.3 var(--body); color: var(--muted); }
@@ -38,8 +48,8 @@
   <div class="seg" data-a style="--i:2" role="tablist"><button class="on">Prep</button><button>Week 1</button><button>Week 2</button><button>Week 3</button><button>Week 4</button></div>
 
   <svg class="road" width="390" height="844" viewBox="0 0 390 844" aria-hidden="true">
-    <path id="road" fill="none" stroke="var(--card-2)" stroke-width="18" stroke-linecap="round" data-fade style="--d:150ms"/>
-    <path id="future" fill="none" stroke="var(--fg)" stroke-opacity=".3" stroke-width="3" stroke-dasharray="1 9" stroke-linecap="round" data-fade style="--d:1300ms"/>
+    <path id="road" fill="none" stroke="var(--road)" stroke-width="18" stroke-linecap="round" data-fade style="--d:150ms"/>
+    <path id="future" fill="none" stroke="var(--fg)" stroke-opacity=".55" stroke-width="3" stroke-dasharray="1 9" stroke-linecap="round" data-fade style="--d:1300ms"/>
     <path id="done" class="draw" fill="none" stroke="var(--fg)" stroke-width="4" stroke-linecap="round" style="--d:300ms;--dur:1100ms"/>
   </svg>
   <div id="nodes"></div>
@@ -79,12 +89,12 @@
     } else if (n === 4) {
       h += `<div class="node" style="left:${x}px;top:${y}px"><div data-a style="--d:1250ms"><button class="cur" aria-label="Play Prep 4">${DX.icon('play', { fill: 'currentColor', w: 1.5 })}</button></div></div>`;
     } else {
-      h += `<div class="node" style="left:${x}px;top:${y}px"><div data-fade style="--d:1400ms"><div class="bg" style="color:var(--fg)">${DX.badge({ kind: 'prep', n, state: 'locked', size: 40, bare: true })}</div></div></div>`;
+      h += `<div class="node" style="left:${x}px;top:${y}px"><div data-fade style="--d:1400ms"><div class="wait">${DX.badge({ kind: 'prep', n: '', state: 'next', size: 44, bare: true })}<span class="n">${n}</span></div></div></div>`;
       h += `<div class="lab lock" style="top:${y}px"><div data-fade style="--d:1450ms"><span class="k">Prep ${n} &middot; ${days[i]}</span><p class="t-foot">${titles[i]}</p></div></div>`;
     }
   });
   const [gx, gy] = P[7];
-  h += `<div class="node" style="left:${gx}px;top:${gy}px"><div data-fade style="--d:1500ms"><div class="bg" style="padding:4px">${DX.badge({ kind: 'xero', n: '0', size: 58, bare: true })}</div></div></div>`;
+  h += `<div class="node" style="left:${gx}px;top:${gy}px"><div data-fade style="--d:1500ms"><div class="wait goalw">${DX.badge({ kind: 'xero', n: '', state: 'next', size: 60, bare: true })}<span class="n">0</span></div></div></div>`;
   h += `<div class="lab goal" style="top:${gy}px"><div data-fade style="--d:1550ms"><span class="k">Fri, Nov 6 &middot; your Quit Day</span><p class="t-head">Day Xero</p></div></div>`;
   $('#nodes').innerHTML = h;
   $('.screen').insertAdjacentHTML('beforeend', DX.tabbar('program'));

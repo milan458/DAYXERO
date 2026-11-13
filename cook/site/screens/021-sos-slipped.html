@@ -1,28 +1,31 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>021 After a slip, plan</title>
-<meta name="motion" content="Quiet tier, no springs. The sea scene fades in (700ms) and Jelli (calm) settles into it from below (900ms) then keeps a slow bob; the title, the 'nothing resets' line and the 7-days note arrive with a 90ms stagger. The trigger chips arrive, then the if-then line and its three option rows settle in one by one (120ms apart). Choosing a chip rewrites the if-line with a 250ms crossfade. On Save the button turns to its done state and a soft success haptic plays.">
+<meta name="motion" content="Quiet tier, no springs. The inset sea card fades in (700ms, the same card as the slip screen) and Jelli (calm) settles into it from below (900ms) then keeps a slow bob; the title, the 'nothing resets' line and the 7-days note arrive with a 90ms stagger. The trigger chips arrive, then the if-then line and its three option rows settle in one by one (120ms apart). Choosing a chip rewrites the if-line with a 250ms crossfade. On Save the button turns to its done state and a soft success haptic plays.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .hero { position: absolute; left: 0; right: 0; top: 0; height: 212px; border-radius: 0 0 36px 36px; overflow: hidden; }
-  .hero .scene { position: absolute; inset: 0; }
-  [data-theme="dark"] .hero .scene { filter: brightness(.82) saturate(.92); }
-  .hero .jel { position: absolute; left: 50%; top: 52px; margin-left: -66px; }
-  .nav .tag { color: var(--cream); font: 600 14px/1 var(--body); background: rgba(11,20,48,.28); padding: 8px 12px; border-radius: 99px; }
-  .head { position: absolute; left: 0; right: 0; top: 230px; padding: 0 var(--gutter); }
+  .hero { position: absolute; left: var(--gutter); right: var(--gutter); top: 110px; height: 132px; border-radius: 26px; overflow: hidden; }
+  .hero .scene { position: absolute; left: 0; right: 0; top: -6px; height: 172px; }
+  [data-theme="dark"] .hero .scene svg { filter: brightness(.78) saturate(1.1); }
+  [data-theme="dark"] .hero .scene::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,26,74,.78) 0%, rgba(11,26,74,.5) 60%, rgba(11,26,74,.3) 100%);
+    -webkit-mask: radial-gradient(circle at 95px 39px, transparent 30px, #000 33px); mask: radial-gradient(circle at 95px 39px, transparent 30px, #000 33px); }
+  [data-theme="dark"] .hero { box-shadow: inset 0 0 0 1px var(--line); }
+  .hero .jel { position: absolute; left: 50%; bottom: 0; margin-left: -52px; width: 104px; height: 104px; }
+  .nav .tag { color: var(--fg); font: 600 14px/1 var(--body); background: var(--card); padding: 9px 14px; border-radius: 99px; }
+  .head { position: absolute; left: 0; right: 0; top: 260px; padding: 0 var(--gutter); }
   .head .t-title { font-size: 26px; }
   .note { margin-top: 8px; color: var(--muted); }
   .note b { color: var(--fg); font-weight: 600; }
-  .plan { position: absolute; left: 0; right: 0; top: 356px; padding: 0 var(--gutter); }
+  .plan { position: absolute; left: 0; right: 0; top: 396px; padding: 0 var(--gutter); }
   .plan .ask { color: var(--muted); }
   .plan .chips { margin-top: 8px; }
-  .plan .ifthen { margin-top: 18px; }
+  .plan .ifthen { margin-top: 16px; }
   .plan .ifthen b { font-weight: 800; }
   .plan .opts { margin-top: 10px; display: grid; gap: 8px; }
-  .plan .opt { min-height: 54px; padding: 8px 16px; }
+  .plan .opt { min-height: 48px; padding: 6px 16px; }
 </style>
 </head><body>
-<div class="screen" data-ground="reading" data-status="on-art">
+<div class="screen" data-ground="reading">
   <div class="hero"><div class="scene" id="scene" data-fade></div><div class="jel" data-settle style="--d:200ms"><div class="bob" id="jelli"></div></div></div>
   <div class="nav">
     <button class="icon-btn" aria-label="Close" id="close"></button>
@@ -56,7 +59,7 @@
 <script>
   const $ = s => document.querySelector(s);
   $('#close').innerHTML = DX.icon('close');
-  $('#scene').innerHTML = DX.char('horizon', { scene: 'sea', w: 390, h: 212, clarity: 80 });
-  $('#jelli').innerHTML = DX.char('jelli', { mood: 'calm', size: 132 });
+  $('#scene').innerHTML = DX.char('horizon', { scene: 'sea', w: 346, h: 172, clarity: 80, noDusk: true });
+  $('#jelli').innerHTML = DX.char('jelli', { mood: 'calm', size: 104 });
 </script>
 </body></html>

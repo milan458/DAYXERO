@@ -30,9 +30,9 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 .pips i { width: 44px; height: 44px; border-radius: 99px; box-shadow: inset 0 0 0 2px var(--line); display: grid; place-items: center; transition: background .3s var(--ease); }
 .pips i.on { background: var(--sel); box-shadow: none; }
 .pips i.on::after { content: ""; width: 18px; height: 18px; background: var(--sel-fg); -webkit-mask: var(--tick-svg) center/contain no-repeat; mask: var(--tick-svg) center/contain no-repeat; }
-.ex { display: flex; flex-wrap: wrap; gap: 6px; }
-.ex span { padding: 6px 10px; border-radius: 10px; background: var(--card-2); }
-.later { display: flex; align-items: center; gap: 14px; padding: 6px 6px; color: var(--muted); min-height: 44px; }
+.ex { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2px; }
+.ex .chip { font-size: 15px; }
+.later { display: flex; align-items: center; gap: 14px; padding: 4px 6px; color: var(--muted); min-height: 42px; }
 .later b { font: 800 19px/1 var(--display); width: 36px; height: 36px; border-radius: 99px; display: grid; place-items: center; box-shadow: inset 0 0 0 2px var(--line); color: var(--fg); }
 
 </style>
@@ -46,7 +46,7 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
     <div class="xr" id="xr058" data-settle style="--d:500ms"></div>
     <div style="display:flex;align-items:flex-end;gap:12px"><span class="big">4</span><span class="t-title" style="padding-bottom:6px">things you<br>can feel</span></div>
     <p class="t-body muted">Touch them, or just notice them.</p>
-    <div class="ex"><span class="t-foot">Your feet on the floor</span><span class="t-foot">The chair</span><span class="t-foot">Your clothes</span><span class="t-foot">The air</span></div>
+    <div class="ex"><button class="chip">Your feet on the floor</button><button class="chip">The chair</button><button class="chip">Your clothes</button><button class="chip">The air</button></div>
     <div class="pips" id="pips"><i></i><i></i><i></i><i></i></div>
     <p class="t-cap muted">Tap one for each thing you notice</p>
   </div>

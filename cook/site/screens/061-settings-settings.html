@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>061 Settings</title>
-<meta name="motion" content="The large title, then the profile card (with the plan) and each group arrive top to bottom on the 90ms stagger; the 7-day badge on the profile card stamps in at 500ms. Rows highlight on press with a light tap haptic and push their page from the right.">
+<meta name="motion" content="The profile card arrives first: its dawn sky (clearing as the days add up) lifts its sun as Xero settles onto the hill at 450ms, then each group arrives top to bottom on the 90ms stagger; the 7-day badge on the profile card stamps in at 700ms. Rows highlight on press with a light tap haptic and push their page from the right.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -19,29 +19,35 @@
 html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--sel) 72%, transparent); }
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
-.prof { padding: 0; overflow: hidden; margin-top: 16px; }
-.prof .top { display: flex; align-items: center; gap: 14px; padding: 14px 16px; }
+.prof { padding: 0; overflow: hidden; margin-top: 4px; }
+.prof .sky { position: relative; height: 120px; overflow: hidden; }
+.prof .sky .art { position: absolute; inset: 0; }
+[data-theme="dark"] .prof .sky .art svg { filter: brightness(.82) saturate(1.08); }
+.prof .sky .xs { position: absolute; left: 50%; bottom: -4px; transform: translateX(-50%); }
+.prof .sky .gs { position: absolute; left: 50%; bottom: 6px; width: 70px; height: 10px; margin-left: -35px; border-radius: 50%; background: rgba(90,20,10,.28); filter: blur(3px); }
+.prof .sky .cap { position: absolute; left: 12px; bottom: 12px; padding: 5px 10px; border-radius: 99px; background: rgba(255,248,238,.9); color: #1E1A3A; font: 600 13px/1 var(--body); }
+.prof .top { display: flex; align-items: center; gap: 14px; padding: 10px 16px; }
 .prof .av { width: 60px; height: 60px; border-radius: 99px; background: var(--card-2); display: grid; place-items: center; overflow: hidden; flex: none; }
 .prof .grow { flex: 1; min-width: 0; }
-.prof .subs { display: flex; align-items: center; gap: 12px; padding: 0 16px; min-height: 50px; border-top: 1px solid var(--line); }
-.sec { padding: 14px 4px 7px; }
-.list > .row { min-height: 48px; padding-top: 6px; padding-bottom: 6px; }
+.prof .subs { display: flex; align-items: center; gap: 12px; padding: 0 16px; min-height: 48px; border-top: 1px solid var(--line); }
+.sec { padding: 11px 4px 6px; }
+.list > .row { min-height: 44px; padding-top: 4px; padding-bottom: 4px; }
 .ico-tile.s { width: 32px; height: 32px; }
-.foot { display: flex; justify-content: center; gap: 6px; padding-top: 14px; color: var(--muted); }
+.foot { display: flex; justify-content: center; gap: 6px; padding: 40px 0 30px; color: var(--muted); }
+.hd { padding-top: 0; }
 
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
-<div class="nav"><button class="icon-btn" aria-label="Close" data-ic="close"></button></div>
-<div class="scroll"><div class="pad">
-  <div class="hd"><h1 class="t-large" data-a style="--i:0">Settings</h1></div>
+<div class="nav"><button class="icon-btn" aria-label="Close" data-ic="close"></button><div class="grow title" data-a style="--i:0">Settings</div><span style="width:44px;flex:none"></span></div>
+<div class="scroll" style="padding-top:104px"><div class="pad">
   <div class="card prof" data-a style="--i:1">
+    <div class="sky"><div class="art" id="sky"></div><div class="gs"></div><div class="xs" id="av" data-settle style="--d:450ms"></div><span class="cap">Your sky, day 7</span></div>
     <div class="top">
-      <div class="av" id="av"></div>
-      <div class="grow"><div class="t-title">Sam</div><div class="t-foot muted">Day 7 &middot; 7 days free</div></div>
-      <div id="bdg" data-stamp style="--d:500ms"></div>
+      <div class="grow"><div class="t-title">Sam</div><div class="t-foot muted">7 days free since Fri, Nov 6</div></div>
+      <div id="bdg" data-stamp style="--d:700ms"></div>
     </div>
-    <div class="subs"><span class="ico-tile s" data-ic="star"></span><span class="t-body rt" style="flex:1">DayXero Yearly</span><span class="val">Renews Nov 5</span><span class="chev" data-ic="chev" data-s="18"></span></div>
+    <div class="subs"><span class="ico-tile s" data-ic="star"></span><span class="t-body rt" style="flex:1">DayXero Yearly</span><span class="val">Renews Nov 6</span><span class="chev" data-ic="chev" data-s="18"></span></div>
   </div>
   <p class="t-foot sec" data-a style="--i:2">Your plan</p>
   <div class="list" data-a style="--i:3">
@@ -66,7 +72,8 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
 
-document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 60 });
+document.getElementById('sky').innerHTML = DX.char('horizon', { scene: 'dawn', w: 346, h: 120, clarity: 88, noDusk: true });
+document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 96 });
 document.getElementById('bdg').innerHTML = DX.badge({ kind: 'day', n: 7, state: 'earned', size: 46 });
 
 </script>

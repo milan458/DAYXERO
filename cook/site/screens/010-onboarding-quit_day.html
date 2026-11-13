@@ -8,7 +8,7 @@
   .wk-h { display: flex; justify-content: space-between; align-items: baseline; padding: 0 4px 12px; }
   .days { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)) 1.5fr; gap: 5px; }
   .day { position: relative; border-radius: 14px; background: color-mix(in srgb, var(--g) 34%, transparent); display: grid; justify-items: center; align-content: center; gap: 3px; height: 74px; }
-  .day .t-cap { color: var(--muted); font-size: 12px; }
+  .day .t-cap { color: var(--muted); font-size: 13px; font-weight: 600; }
   .day .num { font-size: 19px; line-height: 1; }
   .day .pd { width: 7px; height: 7px; border-radius: 99px; background: #FF9A5C; margin-top: 3px; }
   .day.qd { background: var(--sel); color: var(--sel-fg); }
@@ -26,7 +26,7 @@
   .legend i { width: 8px; height: 8px; border-radius: 99px; background: #FF9A5C; display: block; }
   .legend i.qd2 { background: var(--sel); width: 10px; height: 10px; border-radius: 3px; }
   .legend .link { margin-left: auto; height: 32px; font-size: 14px; text-decoration: underline; text-underline-offset: 3px; }
-  .hero { position: absolute; left: 0; right: 0; top: 452px; display: grid; justify-items: center; gap: 4px; }
+  .hero { position: absolute; left: 0; right: 0; top: 424px; display: grid; justify-items: center; gap: 4px; }
   .hero .say { position: relative; height: 22px; width: 100%; text-align: center; }
   .hero .say p { position: absolute; inset: 0; transition: opacity .4s var(--ease), transform .4s var(--ease); }
   .hero .say .b { opacity: 0; transform: translateY(8px); }

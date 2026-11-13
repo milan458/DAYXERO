@@ -1,14 +1,17 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>032 Session complete</title>
-<meta name="motion" content="Sun rays fade in behind (200ms), the Prep 4 medal stamps in (spring, 300ms) and shines; Xero settles in beside it, clear of the rays, and bumps at 1500ms. Title and line arrive; the shelf arrives, stamps 1 to 3 pop, then stamp 4 lands with a medium haptic and the count ticks 3 to 4.">
+<meta name="motion" content="Sun rays fade in behind (200ms), the Prep 4 medal stamps in (spring, 300ms) and shines; Xero settles onto the medal lower-right, sharing one ground shadow, and bumps at 1500ms. Title and line arrive; the shelf arrives, stamps 1 to 3 pop, then stamp 4 lands with a medium haptic and the count ticks 3 to 4.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
 .hero{position:absolute;top:112px;left:0;right:0;height:250px}
-/* burst centred at x=164; rays reach r=114, Xero starts at x=296: 18px clearance */
-.burst{position:absolute;left:44px;top:0;width:240px;height:240px}
-.medal{position:absolute;left:84px;top:40px;width:160px;height:160px;border-radius:50%}
-.xero{position:absolute;left:296px;top:132px}
+/* medal centred; Xero overlaps its lower-right and both stand on one ground shadow */
+.burst{position:absolute;left:75px;top:0;width:240px;height:240px}
+.medal{position:absolute;left:115px;top:40px;width:160px;height:160px;border-radius:50%}
+.gshadow{position:absolute;left:108px;top:206px;width:232px;height:26px;border-radius:50%;background:radial-gradient(closest-side,rgba(30,26,58,.20),rgba(30,26,58,0))}
+[data-theme="dark"] .gshadow{background:radial-gradient(closest-side,rgba(0,0,0,.55),rgba(0,0,0,0))}
+.lk svg circle{stroke-opacity:.62}.lk svg text{fill-opacity:.78}.lk svg path{stroke-opacity:.72}
+.xero{position:absolute;left:236px;top:118px}
 .mid{position:absolute;top:378px;left:0;right:0;text-align:center;display:grid;gap:8px}
 .shelf2{position:absolute;top:478px;left:var(--gutter);right:var(--gutter);padding:20px 16px 18px}
 .srow{display:grid;grid-template-columns:repeat(4,1fr);justify-items:center;row-gap:14px}
@@ -22,6 +25,7 @@
 <div class="screen" data-ground="table">
   <div class="nav"><button class="icon-btn" aria-label="Close" id="close"></button></div>
   <div class="hero">
+    <div class="gshadow" data-fade style="--d:300ms"></div>
     <svg class="burst" viewBox="0 0 260 260" data-fade style="--d:200ms"><g class="rays" id="rays"></g></svg>
     <div class="medal" data-stamp style="--d:300ms"><div class="shine" style="--d:1100ms;border-radius:50%" id="medal"></div></div>
     <div class="xero" data-settle style="--i:4"><div class="bump" style="--d:1500ms" id="xero"></div></div>
@@ -41,14 +45,14 @@ document.getElementById('close').innerHTML = DX.icon('close');
 document.getElementById('rays').innerHTML = Array.from({length:24}, (_, i) =>
   `<path d="${i % 2 ? 'M130 26 L132.5 54 L127.5 54Z' : 'M130 16 L134 58 L126 58Z'}" fill="#F5B83D" fill-opacity="${i % 2 ? .55 : .9}" transform="rotate(${i * 15} 130 130)"/>`).join('');
 document.getElementById('medal').innerHTML = DX.badge({kind:'prep', n:4, size:160, bare:true});
-document.getElementById('xero').innerHTML = DX.char('xero', {mood:'cheer', size:84});
+document.getElementById('xero').innerHTML = DX.char('xero', {mood:'cheer', size:100});
 let h = '';
 for (let n = 1; n <= 7; n++) {
   if (n <= 3) h += `<span data-pop style="--d:1500ms;--i:${n}">${DX.badge({kind:'prep', n, size:54, bare:true})}</span>`;
   else if (n === 4) h += `<span data-stamp style="--d:2150ms;--i:0"><span class="st5 shine" style="--d:2650ms;display:block">${DX.badge({kind:'prep', n, size:54, bare:true})}</span></span>`;
-  else h += `<span>${DX.badge({kind:'prep', n, size:54, state:'locked', bare:true})}</span>`;
+  else h += `<span class="lk">${DX.badge({kind:'prep', n, size:54, state:'locked', bare:true})}</span>`;
 }
-h += `<span>${DX.badge({kind:'xero', n:'0', size:54, state:'next', p:1, bare:true})}</span>`;
+h += `<span>${DX.badge({kind:'xero', n:'0', size:54, state:'next', bare:true})}</span>`;
 document.getElementById('srow').innerHTML = h;
 </script>
 </body></html>

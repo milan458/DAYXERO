@@ -1,12 +1,12 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>041 Log sheet</title>
-<meta name="motion" content="Today (the dawn hero ring with Xero) softens under the navy blur scrim (250ms fade) while the sheet slides up from the bottom (450ms settle curve, light haptic as it lands). The three rows arrive with a 90ms stagger, then the slip note. Tapping a + bumps the button and pushes the matching form.">
+<meta name="motion" content="Today (the dawn hero ring with Xero) softens under the navy blur scrim (250ms fade) while the sheet slides up from the bottom (450ms settle curve, light haptic as it lands). The three rows arrive with a 90ms stagger, then the Today so far card (cravings count up to 3) and the slip note. Tapping a + bumps the button and pushes the matching form.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   /* the current Today (016) behind the sheet: apricot ground, dawn hero with the week ring and Xero */
   .today { position: absolute; inset: 0; background: #FFC38A; --fg: var(--ink); --muted: #5A3420; color: var(--fg); }
-  [data-theme="dark"] .today { background: #1C1618; --fg: var(--cream); --muted: #DCC6BD; }
+  [data-theme="dark"] .today { background: #0E1322; --fg: var(--cream); --muted: #B3BACC; }
   .today .hero { position: absolute; left: 0; right: 0; top: 0; height: 322px; border-radius: 0 0 36px 36px; overflow: hidden; }
   .today .scene { position: absolute; inset: 0; }
   [data-theme="dark"] .today .scene { filter: brightness(.8) saturate(.92); }
@@ -19,7 +19,8 @@
   .today .content { position: absolute; left: 0; right: 0; top: 340px; padding: 0 var(--gutter); }
   .today .content .t-foot { color: var(--muted); }
   .screen > .sbar { z-index: 45; color: #FFF8EE; }
-  .scrim { animation: none; }
+  .scrim { animation: none; background: rgba(14,19,34,.55); backdrop-filter: blur(8px) saturate(.9); -webkit-backdrop-filter: blur(8px) saturate(.9); }
+  [data-theme="dark"] .scrim { background: rgba(8,11,22,.6); }
   .play .scrim { animation: dx-fade 250ms var(--ease) both; }
   .play .sheet { animation: sheet-up 450ms var(--settle) both; }
   @keyframes sheet-up { from { transform: translateY(100%); } to { transform: none; } }
@@ -29,7 +30,17 @@
   .sheet .row .t-foot { color: var(--muted); }
   .add { width: 44px; height: 44px; border-radius: 99px; background: var(--card-2); display: grid; place-items: center; color: var(--fg); flex: none; }
   .add svg { width: 20px; height: 20px; }
-  .note { margin-top: 16px; display: flex; gap: 10px; align-items: flex-start; color: var(--muted); }
+  .sofar { margin-top: 14px; padding: 14px 16px; }
+  .sofar .h { display: flex; justify-content: space-between; align-items: baseline; }
+  .sofar .h .t-foot { font-weight: 700; color: var(--fg); }
+  .sofar .h .t-cap { color: var(--muted); }
+  .sofar .cols { margin-top: 10px; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); }
+  .sofar .cols > div { display: grid; gap: 3px; padding: 0 10px; }
+  .sofar .cols > div:first-child { padding-left: 0; }
+  .sofar .cols > div + div { border-left: 1px solid var(--line); }
+  .sofar .num { font: 800 22px/1 var(--display); letter-spacing: -.5px; }
+  .sofar .cols .t-cap { color: var(--muted); line-height: 1.25; }
+  .note { margin-top: 14px; display: flex; gap: 10px; align-items: flex-start; color: var(--muted); }
   .note svg { width: 18px; height: 18px; flex: none; margin-top: 1px; }
 </style>
 </head><body>
@@ -55,7 +66,15 @@
       <div class="row" data-a style="--i:4"><span class="ico-tile" data-ic="vape"></span><div class="grow"><p class="t-head" style="font-size:17px">Puff</p><p class="t-foot">None logged today</p></div><button class="add" aria-label="Log a puff" data-ic="plus"></button></div>
       <div class="row" data-a style="--i:5"><span class="ico-tile" data-ic="cig"></span><div class="grow"><p class="t-head" style="font-size:17px">Cigarette</p><p class="t-foot">None logged today</p></div><button class="add" aria-label="Log a cigarette" data-ic="plus"></button></div>
     </div>
-    <p class="t-foot note" data-a style="--i:6"><span data-ic="shield"></span>A use after Quit Day is logged as a slip. Nothing resets.</p>
+    <div class="card flat sofar" data-a style="--i:6">
+      <div class="h"><span class="t-foot">Today so far</span><span class="t-cap">since 6:00 AM</span></div>
+      <div class="cols">
+        <div><span class="num" data-count="3">3</span><span class="t-cap">cravings, all ridden out</span></div>
+        <div><span class="num">0</span><span class="t-cap">puffs</span></div>
+        <div><span class="num">0</span><span class="t-cap">cigarettes</span></div>
+      </div>
+    </div>
+    <p class="t-foot note" data-a style="--i:7"><span data-ic="shield"></span>A use after Quit Day is logged as a slip. Nothing resets.</p>
   </div>
 </div>
 <script>

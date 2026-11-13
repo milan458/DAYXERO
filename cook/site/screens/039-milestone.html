@@ -1,16 +1,19 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>039 Milestone Day 7</title>
-<meta name="motion" content="A sunrise of rays fans out above the badge (fade 700ms) and sways gently (3 degrees, 8s loop); Xero stands clear of them at the lower right. At 250ms the Day 7 badge stamps in (620ms spring, success haptic on landing) and a shine crosses it at 900ms. Xero settles in at 500ms and cheers (hop loop). Headline, line and source arrive with a 90ms stagger; the two stats count up from 0 at 1.1s (900ms). Keep going and Share my card arrive last.">
+<meta name="motion" content="A sunrise of rays fans out above the badge (fade 700ms) and sways gently (3 degrees, 8s loop); Xero stands on the same ground as the medal, overlapping its lower right, one soft shared shadow under both. At 250ms the Day 7 badge stamps in (620ms spring, success haptic on landing) and a shine crosses it at 900ms. Xero settles in at 500ms and cheers (hop loop). Headline, line and source arrive with a 90ms stagger; the two stats count up from 0 at 1.1s (900ms). Keep going and Share my card arrive last.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   .stage { position: absolute; left: 0; right: 0; top: 52px; height: 318px; }
-  .rays-wrap { position: absolute; left: 50%; top: 150px; width: 0; height: 0; --ray-a: #E9892E; --ray-b: #FFE7A3; }
-  [data-theme="dark"] .rays-wrap { --ray-a: #FFD966; --ray-b: #F5B83D; }
+  .rays-wrap { position: absolute; left: 165px; top: 150px; width: 0; height: 0; --ray-a: #E9892E; --ray-b: #FFE7A3; }
+  [data-theme="dark"] .rays-wrap { --ray-a: #FFC38A; --ray-b: #FFE2C2; }
+  [data-theme="dark"] .rays-wrap svg { opacity: .48; }
   .rays-wrap svg { position: absolute; left: -150px; top: -150px; width: 300px; height: 300px; overflow: visible; }
-  .medal { position: absolute; left: 50%; top: 70px; margin-left: -80px; }
+  .medal { position: absolute; left: 85px; top: 70px; z-index: 1; }
+  .ground { position: absolute; left: 92px; top: 222px; width: 236px; height: 22px; border-radius: 50%; background: radial-gradient(closest-side, rgba(30,26,58,.22), rgba(30,26,58,0)); }
+  [data-theme="dark"] .ground { background: radial-gradient(closest-side, rgba(0,0,0,.55), rgba(0,0,0,0)); }
   .medal .shine { display: block; border-radius: 999px; }
-  .cheer { position: absolute; left: 280px; top: 182px; }
+  .cheer { position: absolute; left: 222px; top: 136px; z-index: 2; }
   .sway { transform-origin: 0 0; }
   .play .sway { animation: sway 8s ease-in-out infinite alternate; }
   @keyframes sway { from { transform: rotate(-3deg); } to { transform: rotate(3deg); } }
@@ -25,8 +28,9 @@
     <div class="rays-wrap" data-fade style="--d:100ms">
       <svg viewBox="-100 -100 200 200" aria-hidden="true"><g class="sway" id="rays"></g></svg>
     </div>
+    <div class="ground" data-fade style="--d:200ms"></div>
     <div class="medal" data-stamp style="--d:250ms"><span class="shine" style="--d:900ms" id="medal"></span></div>
-    <div class="cheer" data-settle style="--d:500ms" id="xero"></div>
+    <div class="cheer" data-settle style="--d:500ms"><div class="bob" id="xero"></div></div>
   </div>
 
   <div class="copy">
@@ -54,7 +58,7 @@
   }
   document.getElementById('rays').innerHTML = rays.join('');
   document.getElementById('medal').innerHTML = DX.badge({ kind: 'day', n: 7, size: 160, bare: true });
-  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'cheer', size: 96, stage: 3 });
+  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'cheer', size: 100 });
   document.getElementById('sh').innerHTML = DX.icon('share', { size: 20 });
 </script>
 </body></html>

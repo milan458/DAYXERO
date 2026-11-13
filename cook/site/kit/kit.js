@@ -95,7 +95,7 @@
          <circle cx="50" cy="50" r="39" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="2"/>
          <text x="50" y="${kind === 'xero' ? 42 : 50}" text-anchor="middle" dominant-baseline="middle" font-family="Bricolage Grotesque" font-weight="800" font-size="${label}" fill="${pal.ink}" letter-spacing="-1">${n}</text>`;
     const ringNext = next ? `<circle cx="50" cy="50" r="48" fill="none" stroke="currentColor" stroke-opacity=".22" stroke-width="3"/>` + (o.p != null ? `<circle cx="50" cy="50" r="48" fill="none" stroke="var(--fg)" stroke-width="3" stroke-linecap="round" stroke-dasharray="${2 * Math.PI * 48}" stroke-dashoffset="${2 * Math.PI * 48 * (1 - o.p)}" transform="rotate(-90 50 50)"/>` : '') : '';
-    const svg = `<svg width="${s}" height="${s}" viewBox="0 0 100 100" style="display:block;overflow:visible" role="img" aria-label="${o.label || ''} ${state}">${next ? `<circle cx="50" cy="50" r="45" fill="${pal.face}" fill-opacity=".16"/><circle cx="50" cy="50" r="45" fill="none" stroke="${pal.edge}" stroke-width="3.5" stroke-dasharray="6 5"/>${kind === 'xero' ? `<circle cx="50" cy="66" r="13" fill="${pal.sun}" fill-opacity=".55"/>` : ''}<text x="50" y="${kind === 'xero' ? 44 : 50}" text-anchor="middle" dominant-baseline="middle" font-family="Bricolage Grotesque" font-weight="800" font-size="${label}" fill="currentColor" letter-spacing="-1">${n}</text>` : face}${ringNext}</svg>`;
+    const svg = `<svg width="${s}" height="${s}" viewBox="0 0 100 100" style="display:block;overflow:visible" role="img" aria-label="${o.label || ''} ${state}">${next ? `<circle cx="50" cy="50" r="45" fill="${pal.face}" fill-opacity=".16"/><circle cx="50" cy="50" r="45" fill="none" stroke="${pal.edge}" stroke-width="3.5" stroke-dasharray="6 5"/>${kind === 'xero' ? `<circle cx="50" cy="66" r="13" fill="#F5B83D" fill-opacity=".6"/>` : ''}<text x="50" y="${kind === 'xero' ? 44 : 50}" text-anchor="middle" dominant-baseline="middle" font-family="Bricolage Grotesque" font-weight="800" font-size="${label}" fill="currentColor" letter-spacing="-1">${n}</text>` : face}${ringNext}</svg>`;
     if (o.bare) return svg;
     return `<div class="badge ${o.cls || ''}" ${o.attr || ''}>${svg}${o.label ? `<span class="t-cap">${o.label}</span>` : ''}</div>`;
   }
@@ -130,7 +130,10 @@
     const f = window.DXC && window.DXC[name]; if (!f) return '';
     let svg = f(Object.assign({ animate: !still }, o));
     /* Dark mode: horizon scenes become dusk (dimmer, warmer) so heroes never glare at night. */
-    if (name === 'horizon' && theme === 'dark' && !o.noDusk) svg = svg.replace('style="display: block', 'style="filter: brightness(.6) saturate(.85) sepia(.12); display: block');
+    if (name === 'horizon' && theme === 'dark' && !o.noDusk) {
+      const id = 'dusk' + Math.random().toString(36).slice(2, 7);
+      svg = svg.replace(/<\/svg>\s*$/, `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0E1322" stop-opacity=".62"/><stop offset=".6" stop-color="#0E1322" stop-opacity=".38"/><stop offset="1" stop-color="#0E1322" stop-opacity=".5"/></linearGradient></defs><rect x="-50%" y="-50%" width="200%" height="200%" fill="url(#${id})"/></svg>`);
+    }
     return svg;
   }
 

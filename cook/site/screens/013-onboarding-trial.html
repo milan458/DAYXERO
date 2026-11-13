@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .day { position: relative; margin: 34px var(--gutter) 0; display: grid; gap: 26px; }
+  .day { position: relative; margin: 24px var(--gutter) 0; display: grid; gap: 18px; }
   .day svg.line { position: absolute; left: 17px; top: 30px; overflow: visible; }
   .it { display: grid; grid-template-columns: 36px 1fr; gap: 14px; align-items: start; }
   .node { position: relative; margin-top: 12px; width: 36px; height: 36px; border-radius: 99px; display: grid; place-items: center; background: var(--card); color: var(--fg); }
@@ -23,6 +23,18 @@
   .quiet { padding: 14px 4px 0; }
   .quiet .t-cap { color: var(--muted); display: block; margin-top: 2px; }
   .note { margin: 18px var(--gutter) 0 calc(var(--gutter) + 52px); }
+  .clock { margin: 18px var(--gutter) 0; padding: 14px 18px 12px; }
+  .clock .hd { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
+  .clock .hd .t-cap { color: var(--muted); }
+  .bar24 { position: relative; height: 12px; border-radius: 99px; background: color-mix(in srgb, var(--fg) 10%, transparent); }
+  .bar24 .qz { position: absolute; top: 0; bottom: 0; border-radius: 99px; background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--fg) 26%, transparent) 0 3px, transparent 3px 7px); }
+  .bar24 .pin { position: absolute; top: 50%; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 99px; background: var(--card); box-shadow: 0 0 0 3px var(--fg); display: grid; place-items: center; }
+  .bar24 .pin.am { background: var(--sun); }
+  .bar24 .pin.pm { background: #4A3596; }
+  [data-theme="dark"] .bar24 .pin { box-shadow: 0 0 0 3px var(--g), 0 0 0 4px var(--line); }
+  .ticks { position: relative; height: 16px; margin-top: 9px; }
+  .ticks span { position: absolute; transform: translateX(-50%); font: 600 13px/1 var(--body); color: var(--muted); white-space: nowrap; }
+  .ticks span.l { transform: none; } .ticks span.r { transform: translateX(-100%); }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
@@ -53,6 +65,11 @@
     </div>
   </div>
 
+  <div class="card clock" data-a style="--i:4;--d:1600ms">
+    <div class="hd"><p class="t-foot" style="font-weight:700">Your day, two taps</p><span class="t-cap">Quiet 9 PM to 8 AM</span></div>
+    <div class="bar24"><i class="qz" style="left:0;width:33.3%"></i><i class="qz" style="left:87.5%;right:0"></i><span class="pin am" style="left:33.3%"></span><span class="pin pm" style="left:87.5%"></span></div>
+    <div class="ticks"><span class="l" style="left:0">12 AM</span><span style="left:33.3%">8 AM</span><span style="left:62%">Noon</span><span style="left:87.5%">9 PM</span></div>
+  </div>
   <div class="dock">
     <button class="btn" data-a style="--i:5">Yes, remind me</button>
     <a class="link" data-a style="--i:6">Not right now</a>

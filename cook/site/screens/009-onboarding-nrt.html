@@ -21,6 +21,8 @@
   .og .chip:not(.on) { background: var(--card-2); box-shadow: none; }
   .answers { gap: 12px !important; }
   .opt { min-height: 72px; }
+  .nrt2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .nrt2 .chip { justify-content: center; white-space: nowrap; padding: 0 10px; }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
@@ -41,7 +43,7 @@
     <div class="what" id="what"><div><div class="inner">
       <div class="rule"></div>
       <p class="lbl">Pick all you use</p>
-      <div class="chips"><button class="chip" id="c1">Patch</button><button class="chip" id="c2">Gum</button><button class="chip">Lozenge</button><button class="chip">Spray or inhaler</button></div>
+      <div class="chips nrt2"><button class="chip" id="c1">Patch</button><button class="chip" id="c2">Gum</button><button class="chip">Lozenge</button><button class="chip">Spray or inhaler</button></div>
     </div></div></div>
     </div>
     <button class="opt" data-a style="--i:4"><div class="grow"><p class="t-head">I'd like to try it</p><p class="t-foot">I'll help you plan it with a pharmacist</p></div><span class="radio"></span></button>

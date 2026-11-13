@@ -21,7 +21,7 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
   --btn: var(--ink); --btn-fg: var(--cream); --sel: var(--ink); --sel-fg: var(--cream); --tick: var(--done); --mark: var(--coral);
   --track: rgba(30,26,58,.12); --dark: 0; }
 .screen[data-ground="apricot"] { --g: #FFC38A; --muted: #4A2810; --card: rgba(255,255,255,.92); --card-2: color-mix(in srgb, var(--g) 38%, #fff); --line: rgba(30,26,58,.12); --track: rgba(30,26,58,.14); }
-.screen[data-ground="mint"]    { --g: #9FE3BC; --muted: #24493A; --card: rgba(255,255,255,.92); --card-2: color-mix(in srgb, var(--g) 38%, #fff); --track: rgba(30,26,58,.14); }
+.screen[data-ground="mint"]    { --g: #D3F0DF; --muted: #24493A; --card: rgba(255,255,255,.92); --card-2: color-mix(in srgb, var(--g) 38%, #fff); --track: rgba(30,26,58,.14); }
 .screen[data-ground="sun"]     { --g: #FFD966; --muted: #5A4A10; --card: rgba(255,255,255,.92); --card-2: color-mix(in srgb, var(--g) 38%, #fff); --track: rgba(30,26,58,.14); }
 /* Ocean: a deep, calm blue (round 1 critics: the electric blue was the loudest surface at the most stressed moment). */
 .screen[data-ground="ocean"]   { --g: #1F3C8C; --fg: var(--cream); --muted: #D3DDF7; --card: #2A4A9E; --card-2: #2F52AA; --line: rgba(255,255,255,.18);

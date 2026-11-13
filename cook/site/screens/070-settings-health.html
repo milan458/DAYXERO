@@ -19,15 +19,14 @@
 html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--sel) 72%, transparent); }
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
-.link-card { margin-top: 18px; padding: 22px 18px 18px; display: grid; justify-items: center; gap: 4px; text-align: center; }
-.apps { display: flex; align-items: center; gap: 0; margin-bottom: 12px; }
-.app { width: 84px; height: 84px; border-radius: 22px; display: grid; place-items: center; overflow: hidden; box-shadow: 0 6px 16px rgba(20,20,40,.14), inset 0 0 0 1px rgba(0,0,0,.06); flex: none; }
+.link-card { margin-top: 16px; padding: 18px 18px 16px; display: grid; justify-items: center; gap: 4px; text-align: center; }
+.apps { display: flex; align-items: center; gap: 0; margin-bottom: 10px; }
+.app { width: 76px; height: 76px; border-radius: 22px; display: grid; place-items: center; overflow: hidden; box-shadow: 0 6px 16px rgba(20,20,40,.14), inset 0 0 0 1px rgba(0,0,0,.06); flex: none; }
 .app.dx { background: #FFD9B8; }
 .app.hk { background: #FFFFFF; }
 .wire { width: 64px; position: relative; height: 24px; display: grid; place-items: center; }
 .wire::before { content: ""; position: absolute; left: 6px; right: 6px; top: 50%; border-top: 2.5px dotted var(--muted); }
 .wire .ok { position: relative; width: 24px; height: 24px; border-radius: 99px; background: var(--tick); color: #fff; display: grid; place-items: center; }
-[data-theme="dark"] .wire .ok { color: #0B2A1C; }
 .wire .ok svg { width: 13px; height: 13px; }
 .beat { transform-origin: center; }
 .play .beat { animation: dx-bump 520ms var(--spring) both; animation-delay: 900ms; }

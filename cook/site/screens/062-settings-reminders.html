@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>062 Reminders</title>
-<meta name="motion" content="Groups arrive on the stagger; at 1.0s the Craving forecast toggle slides on (300ms settle, light haptic), then at 1.3s a Saved toast rises from the bottom with a check that pops and draws, and fades out after 2.5s in the app. Times open a wheel picker sheet.">
+<meta name="motion" content="Groups arrive on the stagger; at 1.0s the Craving forecast toggle slides on (300ms settle, light haptic), the toggle is its own done state (no toast) and the "3 of 3 on" line counts up from 2. Turning on a fourth gently shakes the line (selection haptic). Times open a wheel picker sheet.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -28,21 +28,21 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 <div class="screen" data-ground="reading">
 <div class="nav"><button class="icon-btn" aria-label="Back" data-ic="back"></button></div>
 <div class="scroll"><div class="pad">
-  <div class="hd"><h1 class="t-large" data-a style="--i:0">Reminders</h1><p class="t-foot muted" data-a style="--i:1">A few gentle nudges. Never more than three a day.</p></div>
+  <div class="hd"><h1 class="t-large" data-a style="--i:0">Reminders</h1><p class="t-foot muted" data-a style="--i:1">Gentle nudges, never more than three a day.</p></div>
   <p class="t-foot sec" data-a style="--i:2">Your day</p>
   <div class="list" data-a style="--i:3">
     <div class="row " ><span class="ico-tile s" data-ic="sun"></span><div class="grow"><div class="t-body rt">Morning pledge</div><div class="t-foot muted">Skipped once you pledge</div></div><span class="toggle on"></span></div>
     <div class="row sub"><span class="t-body">Pledge at</span><span class="pill">8:00 AM</span></div>
     <div class="row " ><span class="ico-tile s" data-ic="moon"></span><div class="grow"><div class="t-body rt">Evening check-in</div><div class="t-foot muted">Skipped once you check in</div></div><span class="toggle on"></span></div>
     <div class="row sub"><span class="t-body">Check in at</span><span class="pill">9:00 PM</span></div>
-    <div class="row " ><span class="ico-tile s" data-ic="note"></span><div class="grow"><div class="t-body rt">Daily lesson</div><div class="t-foot muted">When a new day opens</div></div><span class="toggle on"></span></div>
+    <div class="row " ><span class="ico-tile s" data-ic="note"></span><div class="grow"><div class="t-body rt">Daily lesson</div><div class="t-foot muted">Off. Find it on Today</div></div><span class="toggle"></span></div>
     <div class="row fc" ><span class="ico-tile s" data-ic="wave"></span><div class="grow"><div class="t-body rt">Craving forecast</div><div class="t-foot muted">Before coffee and stress</div></div><span class="toggle" id="fc"></span></div>
   </div>
-  <div class="list" data-a style="--i:4;margin-top:12px">
+  <p class="t-foot muted" data-a style="--i:4;padding:10px 4px 0">3 of 3 on. Turn one off to add another.</p>
+  <div class="list" data-a style="--i:5;margin-top:16px">
     <div class="row " ><span class="ico-tile s" data-ic="moon"></span><div class="grow"><div class="t-body rt">Quiet hours</div><div class="t-foot muted">10:00 PM to 7:00 AM</div></div><span class="chev" data-ic="chev" data-s="18"></span></div>
   </div>
 </div></div>
-<div class="toast b" role="status"><span class="ck"></span>Saved. Craving forecast is on.</div>
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
@@ -50,9 +50,5 @@ document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.da
 const fc = document.getElementById('fc');
 DX.after(1000, () => fc.classList.add('on'));
 DX.onStill(() => fc.classList.add('on'));
-const toast = document.querySelector('.toast.b');
-DX.after(1300, () => toast.classList.add('in'));
-DX.onStill(() => toast.classList.add('in'));
-document.querySelectorAll('.ck').forEach(e => e.innerHTML = DX.check({ size: 26, d: 1350 }));
 </script>
 </body></html>

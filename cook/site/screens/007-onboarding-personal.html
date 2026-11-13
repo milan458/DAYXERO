@@ -8,14 +8,22 @@
   .lbl { color: var(--muted); margin: 4px 0 -2px; }
   .field { background: #fff; box-shadow: inset 0 0 0 1px rgba(30,26,58,.16); }
   [data-theme="dark"] .field { background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
-  .field.reason { min-height: 84px; line-height: 1.45; }
+  .field.reason { min-height: 72px; line-height: 1.4; }
   .lbl { font: 700 14px/1.3 var(--body) !important; color: var(--fg) !important; margin: 8px 0 0 !important; }
-  .answers { gap: 10px !important; }
+  .answers { gap: 8px !important; }
+  .answers .chip { min-height: 40px; }
   .caret { display: inline-block; width: 2px; height: 1.1em; vertical-align: -3px; margin-left: 1px; background: var(--fg); opacity: 0; }
   .typing .caret { opacity: 1; animation: blink 900ms steps(1) infinite; }
   @keyframes blink { 50% { opacity: 0; } }
   .hint { display: flex; gap: 8px; align-items: center; color: var(--muted); margin-top: -2px; }
   .hint svg { width: 16px; height: 16px; flex: none; }
+  .adds { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .adds .chip { justify-content: center; padding: 0 10px; white-space: nowrap; }
+  .preview { display: flex; align-items: center; gap: 10px; padding: 8px 14px 8px 6px; margin-top: 8px; background: var(--card-2); }
+  [data-theme="dark"] .preview { background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
+  .preview .xc { width: 60px; height: 60px; flex: none; display: grid; place-items: center; }
+  .preview .t-cap { margin-bottom: 4px; }
+  .preview .q2 { font-size: 15px; line-height: 1.35; font-style: italic; text-wrap: pretty; }
   .chip.add::before { content: "+"; font: 600 17px/1 var(--body); margin-right: -2px; opacity: .7; }
 </style>
 </head><body>
@@ -35,9 +43,9 @@
     <div class="field" data-a style="--i:2">Sam</div>
     <p class="t-foot lbl" data-a style="--i:3">Why are you quitting, Sam?</p>
     <div class="field reason" id="reason" data-a style="--i:3"><span id="rt">Run with Aria without stopping to catch my breath</span><i class="caret"></i></div>
-    <p class="t-foot hint" data-a style="--i:4"><span data-icon="wave"></span>When a craving hits, I'll show you this.</p>
     <p class="t-foot lbl" data-a style="--i:5">Or add one of these</p>
-    <div class="chips" data-a style="--i:6"><button class="chip add">Save $2,555 a year</button><button class="chip add">Breathe easier</button><button class="chip add">More energy</button><button class="chip add">Be there for family</button></div>
+    <div class="chips adds" data-a style="--i:6"><button class="chip add">Save $2,555 a year</button><button class="chip add">Breathe easier</button><button class="chip add">More energy</button><button class="chip add">Be there for family</button></div>
+    <div class="card preview" data-a style="--i:7"><div class="xc" id="xp" data-settle style="--d:500ms"></div><div class="grow"><p class="t-cap muted">When a craving hits, I'll show you</p><p class="t-head q2">"Run with Aria without stopping<br>to catch my breath"</p></div></div>
   </div>
   <div class="dock">
     <button class="btn" data-a style="--i:7">Save my reason</button>
@@ -46,12 +54,12 @@
 </div>
 <script>
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
+  document.getElementById('xp').innerHTML = DX.char('xero', { mood: 'calm', size: 60 });
   document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 40 });
   const bar = document.getElementById('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '36.4%'); void bar.offsetWidth; bar.style.transition = ''; });
   DX.after(250, () => bar.style.setProperty('--p', '45.5%'));
   const full = 'Run with Aria without stopping to catch my breath', rt = document.getElementById('rt'), box = document.getElementById('reason');
-  document.querySelector('.hint [data-icon]').innerHTML = DX.icon('heart', { size: 16 });
   DX.after(0, () => { rt.textContent = ''; box.classList.add('typing'); });
   for (let k = 1; k <= full.length; k++) DX.after(800 + k * 26, () => { rt.textContent = full.slice(0, k); });
   DX.after(800 + full.length * 26 + 500, () => box.classList.remove('typing'));

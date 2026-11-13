@@ -5,10 +5,10 @@
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
 .f-apricot{--face:#FFC38A}.f-sky{--face:#9CCBFF}.f-mint{--face:#9FE3BC}.f-sun{--face:#FFD966}
-.pips{display:flex;gap:6px;justify-content:center;align-items:center}
-.pips i{width:13px;height:18px;border-radius:4px;background:var(--track)}
-.pips i.done{background:#FFD966}
-.pips i.now{background:transparent;box-shadow:inset 0 0 0 2px var(--fg)}
+.pips{display:flex;gap:8px;justify-content:center;align-items:center}
+.pips i{width:20px;height:26px;border-radius:6px;background:var(--track);box-shadow:inset 0 0 0 1.5px var(--line)}
+.pips i.done{background:#FFD966 url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 20 26%27%3E%3Cpath d=%27M6 13.5l3 3 5.5-6%27 fill=%27none%27 stroke=%27%231E1A3A%27 stroke-width=%272.2%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E") center/100% 100% no-repeat;box-shadow:none}
+.pips i.now{background:var(--card);box-shadow:inset 0 0 0 2.5px var(--fg)}
 .nav .side{width:44px;text-align:right;flex:none}
 .tag{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px 0 9px;border-radius:99px;background:var(--face);color:#1E1A3A;font:600 13px/1 var(--body);justify-self:start}
 .tag svg{width:16px;height:16px}
@@ -16,7 +16,8 @@
 .ringbox{position:absolute;top:262px;left:50%;width:256px;height:256px;margin-left:-128px}
 .ringbox svg.r{display:block;transform:rotate(-90deg)}
 .arc{transition:stroke .4s var(--ease)}
-.ringbox.done .arc{stroke:#FFD966}
+.ringbox.done .arc{stroke:#FF9A5C}
+[data-theme="dark"] .ringbox.done .arc{stroke:#FFD966}
 .centre{position:absolute;inset:0;display:grid;place-items:center;align-content:center;text-align:center;gap:2px;transition:opacity .35s var(--ease),transform .35s var(--ease)}
 .ringbox.done .centre{opacity:0;transform:scale(.9)}
 .centre .t-large{font-size:40px}
@@ -35,7 +36,7 @@
     <span class="side t-foot muted">5 of 5</span>
   </div>
   <div class="wrap pad">
-    <span class="tag f-mint" data-a style="--i:0"><span id="t-ic"></span>Try · 6 min</span>
+    <span class="tag f-mint" data-a style="--i:0"><span id="t-ic"></span>Your stress plan · 6 min</span>
     <h1 class="t-title" data-a style="--i:1">Commit to your Quit Day</h1>
     <p class="t-foot muted" data-a style="--i:2">Hold for three seconds to make it official. This one is a promise to yourself.</p>
   </div>
@@ -67,7 +68,7 @@ const drain = () => { if (rb.classList.contains('done')) return; arc.style.trans
 btn.addEventListener('pointerdown', fillRing); btn.addEventListener('pointerup', drain); btn.addEventListener('pointerleave', drain);
 const complete = () => {
   arc.style.transition = 'stroke .4s'; arc.style.strokeDashoffset = 0; rb.classList.add('done');
-  document.getElementById('medal').innerHTML = `<div class="stack"><div data-stamp style="--d:350ms">${DX.badge({kind:'xero', n:'0', state:'next', p:1, size:104, bare:true})}</div>
+  document.getElementById('medal').innerHTML = `<div class="stack"><div data-stamp style="--d:350ms">${DX.badge({kind:'xero', n:'0', state:'next', size:104, bare:true})}</div>
     <div data-fade style="--d:700ms"><p class="t-head">Fri, Nov 6</p><p class="t-cap muted" style="margin-top:2px">Day Xero</p></div></div>`;
   const cl = document.getElementById('clasp'); cl.style.visibility = 'visible'; cl.innerHTML = DX.check({size:44, fg:'#0B2A1C', d:100});
   X.innerHTML = DX.char('xero', {mood:'cheer', size:88}); X.className = 'bump';

@@ -23,15 +23,14 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 .prompt { position: absolute; left: 28px; right: 28px; top: 128px; text-align: center; display: grid; gap: 12px; justify-items: center; }
 .prompt .say { font: 800 28px/1.18 var(--display); letter-spacing: -.6px; min-height: 100px; text-wrap: balance; transition: opacity .6s var(--ease), transform .6s var(--ease); }
 .prompt .say.out { opacity: 0; transform: translateY(-8px); }
-.sea { position: absolute; left: 0; right: 0; top: 296px; height: 548px; }
-.sea svg { position: absolute; left: 0; top: 0; }
+.chart { position: absolute; left: var(--gutter); right: var(--gutter); top: 262px; height: 400px; padding: 0; overflow: hidden; border-radius: 28px; }
+.chart svg { position: absolute; left: 0; top: 0; }
 .rider { position: absolute; left: -44px; top: -44px; width: 88px; height: 88px;
-  offset-path: path("M-10 220 C 70 220 110 56 195 56 S 320 220 400 220"); offset-rotate: 0deg; offset-distance: 8%; offset-anchor: 50% 78%; }
+  offset-path: path("M40 260 C 100 260 116 80 173 80 S 246 260 306 260"); offset-rotate: 0deg; offset-distance: 4%; offset-anchor: 50% 78%; }
 .play .rider { animation: ride 12s cubic-bezier(.4,0,.6,1) forwards; }
-@keyframes ride { from { offset-distance: 8%; } to { offset-distance: 86%; } }
-.still .rider { animation: none !important; offset-distance: 86%; }
-.marks { position: absolute; left: 0; right: 0; top: 534px; display: flex; justify-content: space-between; padding: 0 30px; }
-.marks span { font: 700 14px/1 var(--body); color: var(--fg); background: var(--card); padding: 8px 12px; border-radius: 99px; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+@keyframes ride { from { offset-distance: 4%; } to { offset-distance: 83%; } }
+.still .rider { animation: none !important; offset-distance: 83%; }
+.lab { position: absolute; transform: translate(-50%, -50%); font: 700 14px/1 var(--body); color: var(--fg); background: var(--card); padding: 8px 12px; border-radius: 99px; box-shadow: inset 0 0 0 1.5px var(--line), 0 2px 8px rgba(0,0,0,.06); white-space: nowrap; }
 .time { color: var(--muted); }
 
 </style>
@@ -42,22 +41,24 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
   <p class="t-foot time" data-a style="--i:1">About a minute. Just watch.</p>
   <p class="say" id="say" data-a style="--i:2">Notice where you feel it.</p>
 </div>
-<div class="sea">
-  <svg width="390" height="548" viewBox="0 0 390 548" preserveAspectRatio="none">
-    <path d="M-10 220 C 70 220 110 56 195 56 S 320 220 400 220 V548 H-10Z" fill="#5A9DFF" fill-opacity=".16" data-fade style="--d:900ms"/>
-    <path d="M-10 220 H400" stroke="var(--line)" stroke-width="2" stroke-dasharray="2 8" stroke-linecap="round"/>
-    <path d="M-10 220 C 70 220 110 56 195 56 S 320 220 400 220" fill="none" stroke="var(--fg)" stroke-width="3" stroke-linecap="round" class="draw" style="--len:520;--dur:2400ms;--d:300ms"/>
+<div class="card chart" data-a style="--i:3">
+  <svg width="346" height="400" viewBox="0 0 346 400">
+    <path d="M40 260 C 100 260 116 80 173 80 S 246 260 306 260 Z" fill="#5A9DFF" fill-opacity=".16" data-fade style="--d:900ms"/>
+    <path d="M40 260 H306" stroke="var(--line)" stroke-width="2" stroke-dasharray="2 8" stroke-linecap="round"/>
+    <path d="M40 260 C 100 260 116 80 173 80 S 246 260 306 260" fill="none" stroke="var(--fg)" stroke-width="3.5" stroke-linecap="round" class="draw" style="--len:460;--dur:2400ms;--d:300ms"/>
+    <circle cx="40" cy="260" r="5" fill="var(--fg)"/><circle cx="306" cy="260" r="5" fill="var(--fg)"/>
     <g data-fade style="--d:600ms">
-      <path d="M-10 290 C 50 272 110 278 170 290 C 240 304 310 280 400 276 V548 H-10Z" fill="#9CCBFF"/>
-      <path d="M-10 330 C 60 314 120 318 190 332 C 260 346 320 324 400 318 V548 H-10Z" fill="#5A9DFF"/>
-      <path d="M-10 372 C 70 356 140 362 210 374 C 280 386 340 366 400 362 V548 H-10Z" fill="#2F72F2"/>
-      <path d="M-10 414 C 80 400 160 404 240 416 C 300 424 350 412 400 408 V548 H-10Z" fill="#1C4FCC"/>
-      <path d="M96 326 C 108 312 128 310 138 322 C 126 320 116 324 110 332 Z" fill="#FFF8EE"/>
+      <path d="M-10 318 C 50 304 110 308 170 318 C 240 330 300 310 356 306 V400 H-10Z" fill="#9CCBFF"/>
+      <path d="M-10 346 C 60 334 120 336 190 348 C 260 360 310 340 356 336 V400 H-10Z" fill="#5A9DFF"/>
+      <path d="M-10 374 C 70 362 140 366 210 376 C 280 386 330 370 356 366 V400 H-10Z" fill="#2F72F2"/>
+      <path d="M78 342 C 90 330 108 328 118 338 C 106 336 96 340 90 348 Z" fill="#FFF8EE"/>
     </g>
   </svg>
+  <span class="lab" style="left:62px;top:168px">It rises</span>
+  <span class="lab" style="left:173px;top:46px">It peaks</span>
+  <span class="lab" style="left:290px;top:290px">It passes</span>
   <div data-fade style="--d:1200ms;position:absolute;inset:0"><span class="rider" id="rider"></span></div>
 </div>
-<div class="marks" data-a style="--i:3"><span>It rises</span><span>It peaks</span><span>It passes</span></div>
 <div class="dock"><button class="btn" data-a style="--i:4">It's passing</button><button class="link" data-a style="--i:5">I need more help</button></div>
 </div>
 <script>

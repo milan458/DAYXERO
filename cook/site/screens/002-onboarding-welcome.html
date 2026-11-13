@@ -6,11 +6,12 @@
 <style>
   .screen { --h-back: #FFD9AE; --h-mid: #FFA56C; --h-edge: rgba(255,255,255,.55); --sun-a: #FFF4C9; --sun-b: #FFC93C;
     --ring-1: rgba(255,240,205,.55); --ring-2: rgba(255,236,200,.32); --lift: rgba(120,44,20,.2); }
-  [data-theme="dark"] .screen { --h-back: #5A3326; --h-mid: #40241D; --h-edge: rgba(255,195,138,.35); --sun-a: #FFF1C2; --sun-b: #FFB255;
+  [data-theme="dark"] .screen { --h-back: #2C3556; --h-mid: #1C2440; --h-edge: rgba(255,195,138,.35); --sun-a: #FFF1C2; --sun-b: #FFB255;
     --ring-1: rgba(255,195,138,.16); --ring-2: rgba(255,195,138,.08); --lift: rgba(0,0,0,.45); }
   .art { position: absolute; z-index: 0; left: 0; right: 0; top: 0; height: 420px; overflow: hidden; }
   .text .mark { white-space: nowrap; }
   .sky { position: absolute; inset: 0; background: linear-gradient(to bottom, color-mix(in srgb, var(--sun-b) 22%, var(--g)), var(--g) 70%); }
+  [data-theme="dark"] .sky { background: linear-gradient(to bottom, #1A2242, var(--g) 70%); }
   .layer { position: absolute; left: 0; width: 390px; pointer-events: none; }
   .layer svg { display: block; }
   .sunw { top: 100px; z-index: 1; }
@@ -24,14 +25,14 @@
   .play .mid { animation-delay: 120ms; } .play .front { animation-delay: 240ms; }
   @keyframes hillup { from { transform: translateY(80px); } to { transform: none; } }
   .xw[data-settle] { --d: 300ms; }
-  .hi { position: absolute; z-index: 6; left: 232px; top: 240px; --d: 1100ms; }
-  .hi .bubble { font: 700 16px/1.2 var(--display); padding: 12px 15px; white-space: nowrap; box-shadow: 0 6px 18px rgba(90,40,20,.12); }
+  .hi { position: absolute; z-index: 6; left: 252px; top: 166px; --d: 1100ms; }
+  .hi .bubble { font: 700 15px/1.2 var(--display); padding: 11px 14px; border-radius: 18px 18px 18px 4px; white-space: nowrap; box-shadow: 0 6px 18px rgba(90,40,20,.12); }
   [data-theme="dark"] .hi .bubble { box-shadow: inset 0 0 0 1px var(--line); }
   .text { position: absolute; z-index: 1; left: 0; right: 0; top: 412px; padding: 0 var(--gutter); display: grid; gap: 14px; }
   .terms { text-align: center; color: var(--muted); padding: 0 8px; }
   .terms u { text-underline-offset: 2px; }
   .dock { gap: 2px; padding-top: 24px; }
-  .terms { white-space: nowrap; margin-top: 6px; }
+  .terms { margin-top: 6px; text-wrap: balance; }
   .dock .btn { margin-bottom: 6px; }
 </style>
 </head><body>
@@ -73,7 +74,7 @@
   <div class="dock">
     <button class="btn" data-a style="--i:8">Get started</button>
     <a class="link" data-a style="--i:9">Restore purchases</a>
-    <p class="t-cap terms" data-a style="--i:10">18+ only. By continuing you agree to the <u>Terms</u> and <u>Privacy</u>.</p>
+    <p class="t-cap terms" data-a style="--i:10">18+ only. By continuing you agree to our <u>Terms</u> and <u>Privacy</u>.</p>
   </div>
 </div>
 <script>

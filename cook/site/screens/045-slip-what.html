@@ -7,14 +7,14 @@
   .wrap { padding: 66px var(--gutter) 0; }
   .wrap .lead { margin-top: 8px; color: var(--muted); }
   .qs { margin-top: 18px; }
-  .q6 { display: grid; gap: 12px; padding: 20px 0; }
+  .q6 { display: grid; gap: 12px; padding: 22px 0; }
   .q6 + .q6 { border-top: 1px solid var(--line); }
   .q6 .t-head { font-size: 17px; }
-  .chips.three { display: flex; flex-wrap: nowrap; gap: 6px; }
-  .chips.three .chip { flex: 1 1 auto; white-space: nowrap; font-size: 14px; padding: 0 11px !important; }
+  .chips.three { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+  .chips.three .chip { min-width: 0; white-space: nowrap; font-size: 14px; padding: 0 4px !important; gap: 5px; }
   .chips.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .chips.three .chip, .chips.two .chip { justify-content: center; padding: 0 10px; }
-  .why { margin-top: 14px; display: flex; gap: 14px; align-items: center; padding: 14px 18px 14px 8px; }
+  .why { margin-top: 20px; display: flex; gap: 14px; align-items: center; padding: 14px 18px 14px 8px; }
   .why .jl { width: 96px; height: 96px; flex: none; display: grid; place-items: center; }
   .why .t-foot { color: var(--muted); margin-top: 4px; }
   .why .lk { display: inline-flex; align-items: center; gap: 6px; }

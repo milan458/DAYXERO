@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>066 Quit Day</title>
-<meta name="motion" content="The date card arrives, the day count rises 0 to 7 and the Day Xero badge stamps in at 700ms; the seven day ticks of the first week pop in left to right (110ms apart) ending on the Today ring; the change card follows. Choose a new date opens a calm confirm sheet first, never a direct date wheel.">
+<meta name="motion" content="The date card arrives, the day count rises 0 to 7 and the earned 7-day badge stamps in at 700ms; the seven day ticks of the first week pop in left to right (110ms apart) ending on the Today ring; the change card follows. Choose a new date opens a calm confirm sheet first, never a direct date wheel.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -19,7 +19,7 @@
 html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--sel) 72%, transparent); }
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
-.hero { display: flex; align-items: center; gap: 16px; padding: 18px; margin-top: 20px; }
+.hero { display: flex; align-items: center; gap: 16px; padding: 16px 18px; margin-top: 16px; }
 .cal { width: 84px; border-radius: 18px; overflow: hidden; background: var(--card-2); text-align: center; flex: none; }
 .cal .m { background: var(--fg); color: var(--g); padding: 6px 0; }
 .cal .d { font: 800 40px/1 var(--display); padding: 8px 0 4px; letter-spacing: -1px; }
@@ -27,16 +27,15 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 .since .num { font-size: 40px; line-height: 1; }
 .kept { margin-top: 12px; display: flex; align-items: center; gap: 14px; padding: 14px 16px; }
 .btn.ghost.small { box-shadow: inset 0 0 0 2px var(--line); }
-.wk { margin-top: 12px; padding: 14px 16px; }
-.days { display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px; margin-top: 12px; text-align: center; }
+.wk { margin-top: 10px; padding: 12px 16px 14px; }
+.days { display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px; margin-top: 10px; text-align: center; }
 .days b { display: grid; place-items: center; width: 36px; height: 36px; margin: 0 auto; border-radius: 99px; background: var(--tick); color: #fff; }
-[data-theme="dark"] .days b { color: #0B2A1C; }
 .days b svg { width: 16px; height: 16px; }
 .days .td b { background: transparent; box-shadow: inset 0 0 0 2.5px var(--fg); color: var(--fg); font: 800 13px/1 var(--display); }
 .days .t-cap { color: var(--muted); display: block; margin-top: 5px; }
-.warn { margin-top: 12px; padding: 18px; display: grid; gap: 10px; position: relative; }
+.warn { margin-top: 10px; padding: 16px 18px; display: grid; gap: 8px; position: relative; }
 .warn .xr { position: absolute; right: 8px; top: -10px; }
-.keep { display: grid; gap: 8px; margin: 2px 0 4px; }
+.keep { display: grid; gap: 6px; margin: 0 0 2px; }
 .keep div { display: flex; align-items: center; gap: 10px; }
 .keep .ico-tile { width: 32px; height: 32px; border-radius: 10px; background: var(--card); }
 .keep .ico-tile svg { width: 17px; height: 17px; }
@@ -46,10 +45,10 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 <div class="screen" data-ground="reading">
 <div class="nav"><button class="icon-btn" aria-label="Back" data-ic="back"></button></div>
 <div class="scroll"><div class="pad">
-  <div class="hd"><h1 class="t-large" data-a style="--i:0">Your Quit Day</h1><p class="t-foot muted" data-a style="--i:1">The day you stopped. Everything counts from here.</p></div>
+  <div class="hd"><h1 class="t-large" data-a style="--i:0">Your Quit Day</h1><p class="t-foot muted" data-a style="--i:1">The day you stopped. It all counts from here.</p></div>
   <div class="card hero" data-a style="--i:2">
     <div class="cal"><div class="m t-cap">November</div><div class="d">6</div><div class="w t-cap">Friday</div></div>
-    <div class="since" style="flex:1"><div><span class="num" data-count="7">7</span> <span class="t-head">days</span></div><div class="t-foot muted">free since Fri, Nov 6</div></div>
+    <div class="since" style="flex:1"><div><span class="num" data-count="7">7</span> <span class="t-head">days</span></div><div class="t-foot muted">free since Nov 6</div></div>
     <div id="xb" data-stamp style="--d:700ms"></div>
   </div>
 
@@ -68,6 +67,6 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
-document.getElementById('xb').innerHTML = DX.badge({ kind: 'xero', n: '0', state: 'earned', size: 54, bare: true }); document.getElementById('xr066').innerHTML = DX.char('xero', { mood: 'calm', size: 88 });
+document.getElementById('xb').innerHTML = DX.badge({ kind: 'day', n: 7, state: 'earned', size: 56, bare: true }); document.getElementById('xr066').innerHTML = DX.char('xero', { mood: 'calm', size: 88 });
 </script>
 </body></html>

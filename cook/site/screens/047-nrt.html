@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>047 NRT on track</title>
-<meta name="motion" content="Reading pace, no springs. Title and lead arrive, then the hero evidence card: '60%' counts up from 50 (850ms) while the 'Without' and 'With NRT' bars grow from the left (900ms, apricot bar 150ms later), then the combination card and the caution note (600ms each, 90ms stagger); the button arrives last. No haptic until the button tap.">
+<meta name="motion" content="Reading pace, no springs. Title and lead arrive, then the hero evidence card: '60%' counts up from 50 (850ms) while the 'Without' (1x) and 'With NRT' (1.6x) bars grow from the left (900ms, apricot bar 150ms later) and the dashed gap line with '+50 to 60%' fades in, then the combination card with Xero settling in (900ms, then a slow bob) and the caution note (600ms each, 90ms stagger); the button arrives last. No haptic until the button tap.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -10,11 +10,19 @@
   .ev .card { display: grid; gap: 6px; }
   .ev .t-foot.lbl { color: var(--muted); }
   .big { display: flex; align-items: baseline; gap: 10px; }
-  .big .num { font-size: 54px; line-height: .95; letter-spacing: -1.8px; }
-  .hero { padding: 18px 20px 16px; gap: 8px !important; }
+  .big .num { font-size: 46px; line-height: .95; letter-spacing: -1.6px; }
+  .hero { padding: 16px 18px 14px; gap: 7px !important; }
   .hero .t-body { font-size: 17px; font-weight: 500; }
   .cmp { display: grid; gap: 8px; margin: 4px 0 2px; }
-  .cmp .r { display: grid; grid-template-columns: 96px 1fr; align-items: center; gap: 10px; }
+  .cmp .r { display: grid; grid-template-columns: 82px 1fr 38px; align-items: center; gap: 8px; }
+  .cmp .v { font: 700 13px/1 var(--body); color: var(--muted); text-align: right; }
+  .cmp .r.yes .v { color: var(--fg); }
+  .cmp .bar { position: relative; }
+  .cmp .r.yes .bar.yes i { background: linear-gradient(90deg, #FFC9A3 0 62.5%, #FF8A4C 62.5% 100%); opacity: 1; }
+  .cmp .gapline { position: absolute; top: -4px; bottom: -4px; left: 62.5%; border-left: 2px dashed var(--fg); opacity: .5; }
+  .cmp .gap { display: grid; grid-template-columns: 82px 1fr 38px; gap: 8px; }
+  .cmp .gap span:nth-child(2) { padding-left: calc(62.5% + 6px); font: 700 13px/1.1 var(--body); color: #B84A12; white-space: nowrap; }
+  [data-theme="dark"] .cmp .gap span:nth-child(2) { color: #FFB27F; }
   .cmp .t-foot { color: var(--muted); font-size: 13px; }
   .cmp .bar { height: 14px; border-radius: 99px; background: var(--track); overflow: hidden; }
   .cmp .bar i { display: block; height: 100%; width: var(--w); border-radius: inherit; background: var(--muted); opacity: .45; transform-origin: left; }
@@ -27,6 +35,9 @@
   .combo span { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px; border-radius: 10px; background: var(--card-2); font: 600 13px/1 var(--body); }
   .combo span svg { width: 16px; height: 16px; }
   .combo b { align-self: center; font: 700 15px/1 var(--display); color: var(--muted); }
+  .ev .card.best { display: flex; gap: 12px; align-items: center; padding: 12px 16px 14px 8px; }
+  .best .x { width: 78px; flex: none; display: grid; place-items: center; }
+  .best .grow { display: grid; gap: 6px; }
   .ev .caution { margin-top: 2px; padding: 2px 4px; color: var(--muted); display: flex; gap: 12px; align-items: flex-start; }
   .caution svg { width: 20px; height: 20px; flex: none; margin-top: 1px; }
 </style>
@@ -36,26 +47,30 @@
   <div class="scroll">
     <div class="wrap">
       <h1 class="t-large" data-a style="--i:0">Keep your NRT on track</h1>
-      <p class="t-body lead" data-a style="--i:1">We'll remind you to change patches and when each step down is due.</p>
+      <p class="t-body lead" data-a style="--i:1">We'll remind you about patch changes and each step down.</p>
       <div class="stack ev">
         <div class="card hero" data-a style="--i:2">
           <p class="t-foot lbl">Why it's worth it</p>
           <div class="big"><span class="num">50 to <span data-count="60" data-from="50" data-suffix="%">60%</span></span></div>
           <p class="t-body">more likely to quit than without NRT.</p>
           <div class="cmp" aria-hidden="true">
-            <div class="r"><span class="t-foot">Without NRT</span><span class="bar"><i style="--w:62%;--d:500ms"></i></span></div>
-            <div class="r"><span class="t-foot" style="color:var(--fg)">With NRT</span><span class="bar yes"><i style="--w:100%;--d:650ms"></i></span></div>
+            <div class="r"><span class="t-foot">Without NRT</span><span class="bar"><i style="--w:62.5%;--d:500ms"></i><b class="gapline"></b></span><span class="v">1x</span></div>
+            <div class="r yes"><span class="t-foot" style="color:var(--fg)">With NRT</span><span class="bar yes"><i style="--w:100%;--d:650ms"></i><b class="gapline"></b></span><span class="v">1.6x</span></div>
+            <div class="gap"><span></span><span>+50 to 60%</span><span></span></div>
           </div>
           <a class="source">Source: Cochrane review of 133 trials, 2018</a>
         </div>
-        <div class="card" data-a style="--i:3">
-          <p class="t-foot lbl">What works best</p>
-          <p class="t-head" style="font-size:17px">A patch plus a faster form works better than either alone.</p>
-          <a class="source">Source: Cochrane review of combination NRT, 2019</a>
+        <div class="card best" data-a style="--i:3">
+          <div class="x" data-settle style="--d:600ms"><div class="bob" id="xero"></div></div>
+          <div class="grow">
+            <p class="t-foot lbl">What works best</p>
+            <p class="t-head" style="font-size:17px">A patch plus a faster form beats either alone.</p>
+            <a class="source">Source: Cochrane review, 2019</a>
+          </div>
         </div>
         <div class="caution t-foot" data-a style="--i:4">
           <span data-ic="shield"></span>
-          <span>Follow your pack's label and ask a pharmacist or doctor. DayXero doesn't give dosing advice.</span>
+          <span>Follow your pack's label. DayXero doesn't give dosing advice.</span>
         </div>
       </div>
     </div>
@@ -67,6 +82,7 @@
 </div>
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic));
+  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'hello', size: 74 });
   document.querySelectorAll('[data-ic2]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic2, { w: 2.4 })));
 </script>
 </body></html>

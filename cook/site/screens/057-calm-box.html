@@ -20,11 +20,11 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
 .nav .title { flex: 1; text-align: center; margin-right: 56px; }
-.wrap { position: absolute; left: 0; right: 0; top: 118px; display: grid; justify-items: center; gap: 0; }
+.wrap { position: absolute; left: 0; right: 0; top: 128px; display: grid; justify-items: center; gap: 0; }
 .rnd { display: flex; gap: 8px; align-items: center; }
 .rnd i { width: 8px; height: 8px; border-radius: 99px; background: var(--track); }
 .rnd i.on { background: var(--fg); }
-.box { position: relative; width: 320px; height: 320px; margin-top: 22px; transform: scale(1.08); transform-origin: top center; margin-bottom: 26px; }
+.box { position: relative; width: 320px; height: 320px; margin-top: 22px; transform: scale(1.1); transform-origin: top center; margin-bottom: 36px; }
 .box svg { position: absolute; inset: 0; }
 .fillsq { position: absolute; left: 60px; top: 60px; width: 200px; height: 200px; border-radius: 18px; overflow: hidden; transform: scale(.7); }
 .fillsq .sea { position: absolute; inset: 0; }
@@ -40,13 +40,13 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 .play .dot { animation: go 16s linear infinite; }
 @keyframes go { to { offset-distance: 100%; } }
 .still .dot { animation: none !important; offset-distance: 37.5%; }
-.side { position: absolute; color: var(--muted); font: 600 13px/1 var(--body); transition: color .5s var(--ease); white-space: nowrap; }
-.side.on { color: var(--fg); font-weight: 700; }
+.side { position: absolute; color: var(--fg); font: 700 14px/1 var(--body); white-space: nowrap; padding: 7px 12px; border-radius: 99px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); transition: background .5s var(--ease), color .5s var(--ease); }
+.side.on { background: var(--btn); color: var(--btn-fg); box-shadow: none; }
 .s0 { left: 22px; top: 160px; transform: translate(-50%, -50%) rotate(-90deg); }
 .s1 { left: 160px; top: 22px; transform: translate(-50%, -50%); }
 .s2 { left: 298px; top: 160px; transform: translate(-50%, -50%) rotate(90deg); }
 .s3 { left: 160px; top: 298px; transform: translate(-50%, -50%); }
-.say { margin-top: 44px; display: flex; align-items: baseline; gap: 14px; }
+.say { margin-top: 54px; display: flex; align-items: baseline; gap: 14px; }
 .say .num { font-size: 60px; line-height: 1; min-width: 34px; }
 .lab { transition: opacity .35s var(--ease); }
 .cue { margin-top: 14px; text-align: center; max-width: 300px; transition: opacity .4s var(--ease); }
@@ -61,8 +61,8 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
   <div class="box" data-fade style="--d:200ms">
     <div class="fillsq"><span class="sea" id="sea"></span></div>
     <div class="jel" id="jel"></div>
-    <svg width="320" height="320" viewBox="0 0 320 320"><rect x="50" y="50" width="220" height="220" rx="8" fill="none" stroke="var(--track)" stroke-width="5"/>
-      <path id="act" d="M50 270 V50" fill="none" stroke="var(--fg)" stroke-width="5" stroke-linecap="round"/></svg>
+    <svg width="320" height="320" viewBox="0 0 320 320"><rect x="50" y="50" width="220" height="220" rx="8" fill="none" stroke="color-mix(in srgb, var(--fg) 15%, transparent)" stroke-width="9"/>
+      <path id="act" d="M50 270 V50" fill="none" stroke="var(--fg)" stroke-width="9" stroke-linecap="round"/></svg>
     <span class="side s0 on">Breathe in</span><span class="side s1">Hold</span><span class="side s2">Breathe out</span><span class="side s3">Hold</span>
     <span class="dot"></span>
   </div>

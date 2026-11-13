@@ -4,16 +4,24 @@
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-.wrap { position:absolute; inset:0; padding:96px 24px 0; display:grid; justify-items:center; align-content:start; gap:14px; text-align:center; }
+.wrap { position:absolute; inset:0; padding:66px 22px 0; display:grid; justify-items:center; align-content:start; gap:14px; text-align:center; }
+.board { font: 600 13px/1 var(--body); color: var(--muted); justify-self: start; display:flex; gap:8px; align-items:center; }
+.board i { width:8px; height:8px; border-radius:99px; background: var(--coral); display:block; }
+.stage { width:100%; height:236px; border-radius:28px; position:relative; display:grid; place-items:center; overflow:hidden;
+  background: radial-gradient(120% 90% at 50% 30%, #FFE3C4 0%, #FFD2A6 55%, #FFC38A 100%); }
+[data-theme="dark"] .stage { background: radial-gradient(120% 90% at 50% 30%, #2A3458 0%, #1B2340 60%, #151B31 100%); }
+.stage::after { content:""; position:absolute; left:50%; bottom:30px; width:150px; height:18px; margin-left:-75px; border-radius:50%; background: rgba(120,44,20,.18); filter: blur(6px); }
+[data-theme="dark"] .stage::after { background: rgba(0,0,0,.45); }
+.stage .tile { position:relative; z-index:1; margin-top:-14px; }
 .tile { border-radius:40px; overflow:hidden; box-shadow:0 18px 40px rgba(30,26,58,.18), 0 2px 0 rgba(30,26,58,.06); }
 .sunrise { transform: translateY(0); }
 .play .sunrise { animation: rise 1.2s cubic-bezier(.2,.8,.2,1) .7s both; }
 @keyframes rise { from { transform: translateY(70px); } to { transform: none; } }
-.vars { display:flex; gap:10px; margin-top:18px; }
+.vars { display:flex; gap:12px; margin-top:10px; }
 .v { display:grid; gap:8px; justify-items:center; }
 .v .ic { width:72px; height:72px; border-radius:18px; overflow:hidden; box-shadow:0 6px 16px rgba(30,26,58,.16); }
-.home { margin-top:22px; width:100%; border-radius:26px; padding:18px 16px; background: linear-gradient(160deg,#FFD7B0,#F6B98C); display:grid; grid-template-columns:repeat(4,1fr); gap:14px 10px; }
-[data-theme="dark"] .home { background: linear-gradient(160deg,#2B2226,#141012); }
+.home { margin-top:16px; width:100%; border-radius:26px; padding:18px 16px; background: linear-gradient(160deg,#FFD7B0,#F6B98C); display:grid; grid-template-columns:repeat(4,1fr); gap:14px 10px; }
+[data-theme="dark"] .home { background: linear-gradient(160deg,#1F2846,#141A2E); }
 .home .a { display:grid; justify-items:center; gap:6px; font:500 12px/1 var(--body); color:#1E1A3A; }
 [data-theme="dark"] .home .a { color:#F3E9DE; }
 .home .g { width:60px; height:60px; border-radius:14px; background:rgba(255,255,255,.45); }
@@ -21,7 +29,8 @@
 .home .ic { width:60px; height:60px; border-radius:14px; overflow:hidden; }
 </style></head><body>
 <div class="screen" data-ground="reading"><div class="wrap">
-  <div class="tile" data-settle><svg viewBox="0 0 1024 1024" width="176" height="176" class="hero" style="display:block">
+  <p class="board" data-a style="--i:0"><i></i>App icon, iOS</p>
+  <div class="stage" data-a style="--i:1"><div class="tile" data-settle><svg viewBox="0 0 1024 1024" width="176" height="176" class="hero" style="display:block">
 <defs><linearGradient id="bglight0" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFCF9C"/><stop offset="1" stop-color="#FFB27A"/></linearGradient>
 <clipPath id="holelight0"><ellipse cx="512" cy="560" rx="132" ry="178"/></clipPath></defs>
 <rect width="1024" height="1024" fill="url(#bglight0)"/>
@@ -35,8 +44,8 @@
 <path d="M370 648 C430 618 500 638 560 620 S640 610 660 618 V820 H370Z" fill="#3FB37F"/>
 <path d="M370 690 C440 670 520 700 660 674 V820 H370Z" fill="#2E9A69"/></g>
 
-</svg></div>
-  <h1 class="t-large" data-a style="--i:2;margin-top:10px">DayXero</h1>
+</svg></div></div>
+  <h1 class="t-large" data-a style="--i:2;margin-top:4px">DayXero</h1>
   <p class="t-body muted" data-a style="--i:3;max-width:300px">The zero is Xero, with your sunrise inside. Quit Day, Day Xero and the character in one mark.</p>
   <div class="vars">
     <div class="v" data-a style="--i:4"><div class="ic"><svg viewBox="0 0 1024 1024" width="72" height="72" class="" style="display:block">
@@ -55,7 +64,7 @@
 
 </svg></div><span class="t-cap muted">Light</span></div>
     <div class="v" data-a style="--i:5"><div class="ic"><svg viewBox="0 0 1024 1024" width="72" height="72" class="" style="display:block">
-<defs><linearGradient id="bgdark0" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2A2023"/><stop offset="1" stop-color="#151113"/></linearGradient>
+<defs><linearGradient id="bgdark0" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1D2338"/><stop offset="1" stop-color="#0E1322"/></linearGradient>
 <clipPath id="holedark0"><ellipse cx="512" cy="560" rx="132" ry="178"/></clipPath></defs>
 <rect width="1024" height="1024" fill="url(#bgdark0)"/>
 <ellipse cx="512" cy="905" rx="250" ry="34" fill="#000" opacity=".10"/>
@@ -78,10 +87,10 @@
  M512 382 C585 382 644 462 644 560 C644 658 585 738 512 738 C439 738 380 658 380 560 C380 462 439 382 512 382 Z"/>
 <path fill="#BDBDBD" d="M716 250 C800 330 836 440 836 548 C836 770 704 900 512 900 C650 860 760 740 760 548 C760 430 744 320 716 250 Z"/>
 <path d="M290 360 C312 290 360 236 430 210" fill="none" stroke="#F2F2F2" stroke-width="26" stroke-linecap="round"/>
-<g clip-path="url(#holetinted0)"><rect x="370" y="380" width="290" height="420" fill="#8C8C8C"/>
+<g clip-path="url(#holetinted0)"><rect x="370" y="380" width="290" height="420" fill="#ADADAD"/>
 <circle cx="512" cy="598" r="62" fill="#FFFFFF"/>
-<path d="M370 648 C430 618 500 638 560 620 S640 610 660 618 V820 H370Z" fill="#BDBDBD"/>
-<path d="M370 690 C440 670 520 700 660 674 V820 H370Z" fill="#A6A6A6"/></g>
+<path d="M370 648 C430 618 500 638 560 620 S640 610 660 618 V820 H370Z" fill="#6E6E6E"/>
+<path d="M370 690 C440 670 520 700 660 674 V820 H370Z" fill="#595959"/></g>
 
 </svg></div><span class="t-cap muted">Tinted</span></div>
     <div class="v" data-a style="--i:7"><div class="ic"><svg viewBox="0 0 1024 1024" width="72" height="72" class="" style="display:block">
@@ -118,5 +127,5 @@
 </svg></div>DayXero</div><div class="a"><div class="g"></div>Music</div>
   </div>
 </div></div>
-<script>if (DX.theme === 'dark') document.querySelectorAll('.home .ic').forEach(e => e.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">\n<defs><linearGradient id="bgdark0" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2A2023"/><stop offset="1" stop-color="#151113"/></linearGradient>\n<clipPath id="holedark0"><ellipse cx="512" cy="560" rx="132" ry="178"/></clipPath></defs>\n<rect width="1024" height="1024" fill="url(#bgdark0)"/>\n<ellipse cx="512" cy="905" rx="250" ry="34" fill="#000" opacity=".10"/>\n<path fill-rule="evenodd" fill="#FF7155" d="M512 170 C722 170 836 350 836 548 C836 770 704 900 512 900 C320 900 188 770 188 548 C188 350 302 170 512 170 Z\n M512 382 C585 382 644 462 644 560 C644 658 585 738 512 738 C439 738 380 658 380 560 C380 462 439 382 512 382 Z"/>\n<path fill="#E85A3E" d="M716 250 C800 330 836 440 836 548 C836 770 704 900 512 900 C650 860 760 740 760 548 C760 430 744 320 716 250 Z"/>\n<path d="M290 360 C312 290 360 236 430 210" fill="none" stroke="#FFB09C" stroke-width="26" stroke-linecap="round"/>\n<g clip-path="url(#holedark0)"><rect x="370" y="380" width="290" height="420" fill="#24315C"/>\n<circle cx="512" cy="598" r="62" fill="#FFC93C"/>\n<path d="M370 648 C430 618 500 638 560 620 S640 610 660 618 V820 H370Z" fill="#3FB37F"/>\n<path d="M370 690 C440 670 520 700 660 674 V820 H370Z" fill="#2E9A69"/></g>\n\n</svg>'.replace(/<svg [^>]*>/, '<svg viewBox="0 0 1024 1024" width="60" height="60" style="display:block">'));</script>
+<script>if (DX.theme === 'dark') document.querySelectorAll('.home .ic').forEach(e => e.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">\n<defs><linearGradient id="bgdark0" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1D2338"/><stop offset="1" stop-color="#0E1322"/></linearGradient>\n<clipPath id="holedark0"><ellipse cx="512" cy="560" rx="132" ry="178"/></clipPath></defs>\n<rect width="1024" height="1024" fill="url(#bgdark0)"/>\n<ellipse cx="512" cy="905" rx="250" ry="34" fill="#000" opacity=".10"/>\n<path fill-rule="evenodd" fill="#FF7155" d="M512 170 C722 170 836 350 836 548 C836 770 704 900 512 900 C320 900 188 770 188 548 C188 350 302 170 512 170 Z\n M512 382 C585 382 644 462 644 560 C644 658 585 738 512 738 C439 738 380 658 380 560 C380 462 439 382 512 382 Z"/>\n<path fill="#E85A3E" d="M716 250 C800 330 836 440 836 548 C836 770 704 900 512 900 C650 860 760 740 760 548 C760 430 744 320 716 250 Z"/>\n<path d="M290 360 C312 290 360 236 430 210" fill="none" stroke="#FFB09C" stroke-width="26" stroke-linecap="round"/>\n<g clip-path="url(#holedark0)"><rect x="370" y="380" width="290" height="420" fill="#24315C"/>\n<circle cx="512" cy="598" r="62" fill="#FFC93C"/>\n<path d="M370 648 C430 618 500 638 560 620 S640 610 660 618 V820 H370Z" fill="#3FB37F"/>\n<path d="M370 690 C440 670 520 700 660 674 V820 H370Z" fill="#2E9A69"/></g>\n\n</svg>'.replace(/<svg [^>]*>/, '<svg viewBox="0 0 1024 1024" width="60" height="60" style="display:block">'));</script>
 </body></html>

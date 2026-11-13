@@ -1,11 +1,18 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>053 Daily pledge</title>
-<meta name="motion" content="Dawn scene fades in, Xero settles onto the hill (900ms) then bobs; date, pledge (underline under 'won't'), one quiet line, reason card and the hold button arrive in order (90ms stagger). At 1.5s the button is held for 1s (fill sweeps left to right, light ticking haptic), turns green 'Pledged' with a success haptic; the sun rises 40px and the haze thins over 1.6s, Xero swaps to cheer and re-settles, and the line 'Glim will check in tonight at 9:00 PM. No pressure.' fades in under the button.">
+<meta name="motion" content="Dawn scene fades in (in dark mode the same scene is pre-dawn: a deep night wash with a few still stars over a low, dimmed sun, ending in clean ground under the title), Xero settles onto the hill (900ms) then bobs; date, pledge (underline under 'won't'), one quiet line, reason card and the hold button arrive in order (90ms stagger). At 1.5s the button is held for 1s (fill sweeps left to right, light ticking haptic), turns green 'Pledged' with a success haptic; the sun rises 40px and the haze thins over 1.6s, Xero swaps to cheer and re-settles, and the line 'Glim will check in tonight at 9:00 PM. No pressure.' fades in under the button.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   .scene { position: absolute; left: 0; right: 0; top: 0; height: 420px; overflow: hidden; }
   .scene .fade { position: absolute; left: 0; right: 0; bottom: 0; height: 70px; background: linear-gradient(to bottom, color-mix(in srgb, var(--g) 0%, transparent), var(--g)); }
+  .scene .wash { position: absolute; inset: 0; display: none; background: linear-gradient(to bottom, rgba(14,19,34,.94) 0%, rgba(14,19,34,.7) 14%, rgba(14,19,34,.25) 24%, rgba(14,19,34,0) 30%, rgba(14,19,34,0) 64%, rgba(14,19,34,.3) 76%, rgba(14,19,34,.7) 88%); }
+  .scene .stars { position: absolute; left: 0; right: 0; top: 0; height: 120px; display: none; background-image: radial-gradient(1.6px 1.6px at 62px 96px, #FFF8EE 60%, transparent), radial-gradient(1.3px 1.3px at 148px 70px, #FFF8EE 60%, transparent), radial-gradient(1.5px 1.5px at 262px 92px, #FFF8EE 60%, transparent), radial-gradient(1.2px 1.2px at 318px 64px, #FFF8EE 60%, transparent), radial-gradient(1.4px 1.4px at 30px 104px, #FFF8EE 60%, transparent); opacity: .8; }
+  [data-theme="dark"] .scene .wash, [data-theme="dark"] .scene .stars { display: block; }
+  [data-theme="dark"] .scene svg rect.hazemove { opacity: .1 !important; }
+  [data-theme="dark"] .scene .fade { height: 130px; background: linear-gradient(to bottom, color-mix(in srgb, var(--g) 0%, transparent), var(--g) 82%); }
+  .nav .icon-btn.on-art { background: rgba(255,255,255,.55); color: var(--ink); }
+  [data-theme="dark"] .nav .icon-btn.on-art { background: rgba(14,19,34,.55); color: var(--cream); }
   .scene svg circle.sunmove { transition: transform 1.6s var(--settle); }
   .scene svg rect.hazemove { transition: opacity 1.6s var(--ease); }
   .up .scene svg circle.sunmove { transform: translateY(-30px); }
@@ -24,9 +31,9 @@
 </style>
 </head><body>
 <div class="screen" data-ground="apricot" data-status="on-art" id="sc">
-  <div class="scene" id="scene" data-fade><div class="fade"></div></div>
+  <div class="scene" id="scene" data-fade><div class="wash"></div><div class="stars"></div><div class="fade"></div></div>
   <div class="xero" data-settle style="--i:1"><div class="bob" id="xero"></div></div>
-  <div class="nav"><button class="icon-btn" aria-label="Close" data-ic="close" style="background:rgba(255,255,255,.55);color:var(--ink)"></button></div>
+  <div class="nav"><button class="icon-btn on-art" aria-label="Close" data-ic="close"></button></div>
   <div class="body">
     <p class="t-foot day" data-a style="--i:2">Friday, Day 7</p>
     <h1 class="t-large" data-a style="--i:3">Today, I <span class="mark">won't</span> use nicotine.</h1>
@@ -44,7 +51,7 @@
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic));
   const scene = document.getElementById('scene'), xero = document.getElementById('xero'), sc = document.getElementById('sc');
-  scene.insertAdjacentHTML('afterbegin', DX.char('horizon', { scene: 'dawn', w: 390, h: 420, clarity: 40 }));
+  scene.insertAdjacentHTML('afterbegin', DX.char('horizon', { scene: 'dawn', w: 390, h: 420, clarity: 40, noDusk: true }));
   const svg = scene.querySelector('svg');
   svg.querySelectorAll('circle').forEach(c => { const r = c.getAttribute('r'); if (r === '70' || r === '130') { c.classList.add('sunmove'); c.style.transformBox = 'view-box'; } });
   svg.querySelectorAll('rect').forEach(r => { if (r.getAttribute('fill') && r.getAttribute('fill').startsWith('#') && +r.getAttribute('opacity') > 0) { r.classList.add('hazemove'); r.dataset.o = r.getAttribute('opacity'); } });
