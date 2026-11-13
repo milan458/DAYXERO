@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>064 Quiet hours</title>
-<meta name="motion" content="The moon start handle pops at 10 PM, then the dial arc sweeps from it, over its light track, round to 7 AM (1.4s settle) where the sun end handle fades in, as the 9 counts up in the centre (no icon there: the handles carry the moon and sun); the From and Until tiles (24px under the 12 PM label), the plain while-it-is-quiet notes and the NRT toggle row arrive below on the stagger. Changing a time drags either handle with a selection haptic per 15 minutes.">
+<meta name="motion" content="The moon start handle pops at 10 PM, then the dial arc sweeps from it, over its warm-grey track, round to 7 AM (1.4s settle) where the sun end handle fades in. In the dial centre a small sleeping Glim fades in (600ms) and sways slowly on her 7s sleepy loop with a drifting zzz, above the 9 that counts up and its quiet hours label; only the four cardinal tick dots mark the face, and the hour labels sit 22px out from the dial, clear of the handles. The From and Until tiles (each with a small chevron that opens the time picker), the one-line note and the Patch reminders toggle row arrive below on the stagger. Changing a time drags either handle (or taps a tile) with a selection haptic per 15 minutes.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -17,28 +17,31 @@
 .toast.b .ck { flex: none; }
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
-.dial { position: relative; width: 244px; height: 244px; margin: 46px auto 0; }
+.dial { position: relative; width: 244px; height: 244px; margin: 54px auto 0; }
 .dial .rot { position: absolute; inset: 0; transform: rotate(330deg); }
 .dial .ctr { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; gap: 2px; justify-items: center; }
-.dial .ctr .num { font-size: 46px; line-height: 1; }
-/* Hour labels sit on an even ring: each one 14px clear of the dial's outer edge. */
+.dial .ctr .num { font-size: 40px; line-height: 1; }
+.dial .glim { width: 70px; height: 70px; margin: -6px 0 2px; }
+/* Hour labels sit on an even ring: each one 22px clear of the dial's outer edge, so they clear the handles by 8px or more. */
 .hr { position: absolute; color: var(--fg); opacity: .78; white-space: nowrap; font: 700 14px/1 var(--body); }
 .hr.t { transform: translate(-50%, -100%); } .hr.b { transform: translate(-50%, 0); } .hr.l { transform: translate(-100%, -50%); } .hr.r { transform: translate(0, -50%); }
 .hand { position: absolute; width: 42px; height: 42px; margin: -21px 0 0 -21px; border-radius: 99px; background: var(--card); box-shadow: 0 0 0 3px var(--fg), 0 4px 10px rgba(20,20,40,.18); display: grid; place-items: center; color: var(--fg); z-index: 2; }
 .hand svg { width: 23px; height: 23px; }
-.screen { --dtrack: rgba(30,26,58,.065); }
+.screen { --dtrack: #E3D9CB; } /* light: a clear warm grey for the unused track */
 [data-theme="dark"] .screen { --dtrack: var(--track); }
 .ticks { position: absolute; inset: 0; color: var(--muted); }
 .times .t-foot { display: flex; align-items: center; gap: 6px; }
+.times .ed { margin-left: auto; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 99px; background: var(--card-2); color: var(--fg); }
+.times .ed svg { width: 14px; height: 14px; }
 .times .t-foot svg { width: 15px; height: 15px; }
-.times { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 52px; }
+.times { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 60px; }
 .times .card { padding: 14px 16px; display: grid; gap: 4px; }
 .times .num { font-size: 26px; line-height: 1.05; }
 
 .sec { padding: 20px 4px 8px; color: var(--muted); font-size: 14px; }
-.plain { list-style: none; margin: 0; padding: 2px 4px 0; display: grid; gap: 10px; }
-.plain li { display: flex; align-items: center; gap: 12px; }
-.plain li svg { width: 20px; height: 20px; color: var(--muted); flex: none; }
+/* One note line, aligned to the card edges. */
+.note { display: flex; align-items: center; gap: 10px; margin: 18px 0 0; padding: 0; color: var(--muted); white-space: nowrap; }
+.note svg { width: 20px; height: 20px; flex: none; }
 .ctl { margin-top: 14px; }
 </style>
 </head><body>
@@ -51,20 +54,16 @@
     <div class="rot" id="ring"></div>
     <span class="hand" style="left:67.0px;top:26.7px;--d:150ms" data-pop aria-label="Starts 10 PM"><span data-ic="moon" data-s="23"></span></span>
     <span class="hand" style="left:228.3px;top:150.5px" data-fade aria-label="Ends 7 AM"><span data-ic="sun" data-s="23"></span></span>
-    <div class="ctr"><span class="num" data-count="9">9</span><span class="t-foot muted">quiet hours</span></div>
-    <span class="hr t" style="left:122px;top:-14px">12 AM</span><span class="hr r" style="left:258px;top:122px">6 AM</span><span class="hr b" style="left:122px;top:258px">12 PM</span><span class="hr l" style="left:-14px;top:122px">6 PM</span>
+    <div class="ctr"><span class="glim" id="glim" data-fade style="--d:500ms"></span><span class="num" data-count="9">9</span><span class="t-foot muted">quiet hours</span></div>
+    <span class="hr t" style="left:122px;top:-22px">12 AM</span><span class="hr r" style="left:266px;top:122px">6 AM</span><span class="hr b" style="left:122px;top:266px">12 PM</span><span class="hr l" style="left:-22px;top:122px">6 PM</span>
   </div>
   <div class="times" data-a style="--i:3">
-    <div class="card"><span class="t-foot muted"><span data-ic="moon" data-s="15"></span>From</span><span class="num">10:00 PM</span></div>
-    <div class="card"><span class="t-foot muted"><span data-ic="sun" data-s="15"></span>Until</span><span class="num">7:00 AM</span></div>
+    <div class="card"><span class="t-foot muted"><span data-ic="moon" data-s="15"></span>From<span class="ed" aria-label="Edit start time" data-ic="down" data-s="14"></span></span><span class="num">10:00 PM</span></div>
+    <div class="card"><span class="t-foot muted"><span data-ic="sun" data-s="15"></span>Until<span class="ed" aria-label="Edit end time" data-ic="down" data-s="14"></span></span><span class="num">7:00 AM</span></div>
   </div>
-  <p class="t-foot sec" data-a style="--i:4">While it is quiet</p>
-  <ul class="plain" data-a style="--i:5">
-    <li><span data-ic="bell" data-s="20"></span><span class="t-foot">Nudges due in these hours wait until 7 AM</span></li>
-    <li><span data-ic="wave" data-s="20"></span><span class="t-foot">Craving forecasts pause overnight</span></li>
-  </ul>
-  <div class="list ctl" data-a style="--i:6">
-    <div class="row"><span class="ico-tile s" data-ic="patch"></span><div class="grow"><div class="t-body rt">NRT reminders</div><div class="t-foot muted">Patch times still arrive</div></div><span class="toggle on"></span></div>
+  <p class="t-foot note" data-a style="--i:4"><span data-ic="bell" data-s="20"></span>Nudges and craving forecasts wait until 7 AM.</p>
+  <div class="list ctl" data-a style="--i:5">
+    <div class="row"><span class="ico-tile s" id="patch"></span><div class="grow"><div class="t-body rt">Patch reminders</div><div class="t-foot muted">Patch times still arrive</div></div><span class="toggle on"></span></div>
   </div>
 </div></div>
 </div>
@@ -72,7 +71,12 @@
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
 
 document.getElementById('ring').innerHTML = DX.ring({ size: 244, stroke: 24, p: 9 / 24, color: 'var(--fg)', track: 'var(--dtrack)', dot: false });
-document.getElementById('ticks').innerHTML = Array.from({ length: 24 }, (_, i) => { const a = i * Math.PI / 12, big = i % 6 === 0, r = 84; return `<circle cx="${(122 + r * Math.sin(a)).toFixed(1)}" cy="${(122 - r * Math.cos(a)).toFixed(1)}" r="${big ? 2.4 : 1.4}" fill="currentColor" opacity="${big ? .7 : .45}"/>`; }).join('');
+/* Only the four cardinal tick dots. */
+document.getElementById('ticks').innerHTML = [0, 1, 2, 3].map(i => { const a = i * Math.PI / 2, r = 84; return `<circle cx="${(122 + r * Math.sin(a)).toFixed(1)}" cy="${(122 - r * Math.cos(a)).toFixed(1)}" r="2.4" fill="currentColor" opacity=".7"/>`; }).join('');
+/* The bespoke motif: a small sleeping Glim in the dial centre. */
+document.getElementById('glim').innerHTML = DX.char('glim', { mood: 'sleepy', size: 70 });
+/* Patch glyph: a rounded square patch with its round pad. */
+document.getElementById('patch').innerHTML = '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" transform="rotate(-12 12 12)"/><circle cx="12" cy="12" r="3.6"/></svg>';
 
 </script>
 </body></html>

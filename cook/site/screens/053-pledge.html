@@ -1,41 +1,41 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>053 Daily pledge</title>
-<meta name="motion" content="After quit: the daily pledge on Fri, Nov 13 (Day 7). Light: the dawn scene (crisp vector hills and clouds: deeper hill silhouettes, no blur, no film grain, the left cloud clear of the X) fades in, and two soft hills continue the ground under the reason card and the button (fading up from the bottom) with a soft cream glow behind Xero; dark: a true navy pre-dawn sky (the kit's night sky, dawn variant: a few twinkling stars, none under the status bar or the X, navy hills) with the sun and its soft radial glow resting half behind the right-hand hill. Xero settles onto the hill (900ms) then bobs; date, pledge (underline under 'won't'), one quiet line, reason card and the hold button arrive in order (90ms stagger). At 1.5s the button is held for 1s (fill sweeps left to right, light ticking haptic), turns to 'Pledged' with a green check and a success haptic; the sun rises over 1.6s (light: up and to the right, shrinking to well under Xero's size and ending high on the right, clear of the ridge, with a crisp cream rim, the haze thinning; dark: 50px up, clear of the ridge), Xero swaps to cheer and re-settles, and the line 'Glim will check in tonight at 9:00 PM. No pressure.' fades in under the button.">
+<meta name="motion" content="After quit: the daily pledge on Fri, Nov 13 (Day 7). The paper-cut dawn scene fades in (crisp vector layers, no blur, no grain): a far pair of hills frames a valley, a pale middle hill sits directly behind Xero, and the ridge under his feet is the page colour with a soft paper shadow, so the scene runs straight into the page. Light: a cream glow in the sky only (the hills cover it) and one paper cloud with a 2px shadow; dark: a navy pre-dawn sky with seven faint stars, navy hill silhouettes, and a rimmed amber sun with a radial glow resting behind the right-hand hill, well clear of Xero. Xero settles onto the ridge (900ms) then bobs; date, pledge (underline under 'won't'), one quiet line, reason card and the hold button arrive in order (90ms stagger). At 1.5s the button is held for 1s (fill sweeps left to right, light ticking haptic), turns to 'Pledged' with a green check and a success haptic; the sun rises over 1.6s (light: from large and low behind Xero, up and to the right, shrinking to well under Xero's size and ending high on the right with a crisp cream rim; dark: 40px up, still overlapping the hill), Xero swaps to cheer and re-settles, and the two-line note 'Glim will check in tonight at 9:00 PM. No pressure.' fades in under the button.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
+  /* Scene: crisp paper-cut dawn, drawn here (no blur, no grain). Valley hills frame Xero; the ridge he stands on is the ground colour,
+     so the scene runs straight into the page with no fade band. */
   .scene { position: absolute; left: 0; right: 0; top: 0; height: 420px; overflow: hidden; }
-  .scene .fade { position: absolute; left: 0; right: 0; bottom: 0; height: 70px; background: linear-gradient(to bottom, color-mix(in srgb, var(--g) 0%, transparent), var(--g)); }
-  [data-theme="dark"] .scene .fade { height: 130px; background: linear-gradient(to bottom, color-mix(in srgb, var(--g) 0%, transparent), var(--g) 82%); }
-  /* light: a soft cream glow behind Xero lifts him off the deeper hills */
-  .glow { position: absolute; left: 50%; top: 200px; width: 270px; height: 220px; margin-left: -135px; border-radius: 50%; background: radial-gradient(closest-side, rgba(255,247,230,.9), rgba(255,247,230,.5) 48%, rgba(255,247,230,0) 92%); pointer-events: none; }
-  [data-theme="dark"] .glow { display: none; }
+  .scene svg { display: block; }
+  .scene .hill-far { filter: drop-shadow(0 -2px 2px rgba(150,60,30,.14)); }
+  .scene .hill-mid { filter: drop-shadow(0 -2px 3px rgba(150,60,30,.16)); }
+  .scene .ridge { filter: drop-shadow(0 -3px 5px rgba(150,60,30,.2)); }
+  [data-theme="dark"] .scene .hill-far, [data-theme="dark"] .scene .hill-mid { filter: drop-shadow(0 -2px 4px rgba(0,0,0,.35)); }
+  [data-theme="dark"] .scene .ridge { filter: drop-shadow(0 -3px 6px rgba(0,0,0,.5)); }
+  .scene .sun { transform-box: fill-box; transform-origin: center; transition: transform 1.6s var(--settle); }
+  /* light: before the pledge the sun is large and low behind Xero; it rises up and right, ending small and high with a crisp cream rim */
+  .scene .sun.lt { transform: translate(-87px, 95px) scale(2.3); }
+  /* dark: the sun waits low behind the right-hand hill and lifts 40px when you pledge, still overlapping the ridge */
+  .scene .sun.dk { transform: translateY(40px); }
+  .up .scene .sun.lt, .up .scene .sun.dk { transform: none; }
   .nav .icon-btn.on-art { background: rgba(255,248,238,.78); color: var(--ink); box-shadow: 0 1px 2px rgba(30,26,58,.12); }
   [data-theme="dark"] .nav .icon-btn.on-art { background: rgba(255,248,238,.18); color: var(--cream); box-shadow: inset 0 0 0 1px rgba(255,248,238,.32); backdrop-filter: blur(6px); }
-  /* light: the coral underline needs more weight on the apricot ground */
-  :root:not([data-theme="dark"]) .body .mark { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 16' preserveAspectRatio='none'%3E%3Cpath d='M3 10 C40 4 90 5 122 7 C152 9 178 11 197 4' fill='none' stroke='%23D9461F' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E"); }
-  .scene svg circle.sunmove { transition: transform 1.6s var(--settle); }
-  .scene svg rect.hazemove { transition: opacity 1.6s var(--ease); }
-  /* light: the risen sun ends small (smaller than Xero), high on the right and well clear of the ridge, with a crisp rim */
-  .up .scene svg circle.sunmove.r70 { transform: translate(62px, -68px) scale(.4); }
-  .up .scene svg circle.sunmove.r130 { transform: translate(62px, -56px) scale(.42); }
-  .scene svg circle.sunmove.r70 { stroke: #FFF6DE; stroke-width: 9; }
-  /* dark: the pre-dawn sun waits on the horizon and lifts 40px when you pledge */
-  .scene svg circle.dawnsun { transition: transform 1.6s var(--settle); }
-  /* dark: the sun rests half behind the right-hand hill with a soft radial glow, and lifts clear of the ridge when you pledge */
-  .up .scene svg circle.dawnsun { transform: translateY(-50px); }
-  .xero { position: absolute; left: 50%; top: 206px; width: 200px; height: 200px; margin-left: -100px; }
+  .xero { position: absolute; left: 50%; top: 196px; width: 200px; height: 200px; margin-left: -100px; }
   .nav { top: 50px; }
-  .body { position: absolute; left: 0; right: 0; top: 414px; padding: 0 var(--gutter); text-align: center; }
+  /* "Friday, Day 7" sits 22pt below Xero's shadow, on the plain ground (muted ink: well over 4.5:1 in both modes). */
+  .body { position: absolute; left: 0; right: 0; top: 418px; padding: 0 var(--gutter); text-align: center; }
   .body .day { color: var(--muted); }
   .body h1 { margin-top: 6px; }
   .body .sub { margin-top: 10px; color: var(--muted); }
   .why { margin-top: 22px; text-align: left; display: flex; gap: 14px; align-items: center; }
   .why .t-foot { color: var(--muted); }
-  .after { height: 18px; display: flex; align-items: center; justify-content: center; gap: 6px; color: var(--muted); opacity: 0; transform: translateY(6px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
-  .after svg { width: 16px; height: 16px; }
+  .why .ico-tile { width: 52px; height: 52px; border-radius: 16px; color: var(--mark); }
+  .why .ico-tile svg { width: 30px; height: 30px; }
+  .after { margin: 0 auto; max-width: 300px; text-align: center; font: 400 13px/1.45 var(--body); color: var(--muted); opacity: 0; transform: translateY(6px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
+  .after svg { width: 14px; height: 14px; vertical-align: -2px; margin-right: 5px; }
   .up .after { opacity: 1; transform: none; }
-  .dock { gap: 12px; padding-bottom: 42px; background: none; }
+  .dock { gap: 12px; padding-bottom: 30px; background: none; }
   /* the hills continue softly under the reason card, so the bottom is not a flat peach band */
   .ground { position: absolute; left: 0; right: 0; bottom: 0; height: 250px; pointer-events: none; }
   .ground svg { display: block; width: 100%; height: 100%; }
@@ -44,9 +44,8 @@
 </style>
 </head><body>
 <div class="screen" data-ground="apricot" data-status="on-art" id="sc">
-  <div class="scene" id="scene" data-fade><div class="fade"></div></div>
+  <div class="scene" id="scene" data-fade></div>
   <div class="ground" data-fade style="--d:300ms"><svg viewBox="0 0 390 250" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="gf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".34" stop-color="#fff" stop-opacity="1"/></linearGradient><mask id="gm"><rect width="390" height="250" fill="url(#gf)"/></mask></defs><g mask="url(#gm)"><path class="h1" d="M0 70 C90 40 170 52 250 70 S350 86 390 60 V250 H0Z"/><path class="h2" d="M0 150 C80 128 160 136 230 152 S340 166 390 140 V250 H0Z"/></g></svg></div>
-  <div class="glow" data-fade style="--d:200ms"></div>
   <div class="xero" data-settle style="--i:1"><div class="bob" id="xero"></div></div>
   <div class="nav"><button class="icon-btn on-art" aria-label="Close" data-ic="close"></button></div>
   <div class="body">
@@ -60,40 +59,46 @@
   </div>
   <div class="dock">
     <button class="btn" id="hold" data-a style="--i:6" data-hold="1000" data-done="Pledged" data-autohold="1500">Hold to pledge</button>
-    <p class="t-cap after"><span data-ic="moon"></span>Glim will check in tonight at 9:00 PM. No pressure.</p>
+    <p class="after"><span data-ic="moon"></span>Glim will check in tonight at 9:00 PM.<br>No pressure.</p>
   </div>
 </div>
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic));
   const scene = document.getElementById('scene'), xero = document.getElementById('xero'), sc = document.getElementById('sc');
   const dark = document.documentElement.dataset.theme === 'dark';
-  scene.insertAdjacentHTML('afterbegin', dark ? DX.nightSky({ w: 390, h: 420, dawn: true }) : DX.char('horizon', { scene: 'dawn', w: 390, h: 420, clarity: 40, noDusk: true }));
-  const svg = scene.querySelector('svg');
-  /* light: deeper hill silhouettes */
-  const HILL = { '#FF9D6E': '#FA8A5B', '#FF7A55': '#EC6440', '#E85A3E': '#D04A2F', '#C2402A': '#A8361F' };
-  if (!dark) svg.querySelectorAll('path').forEach(p => { const f = (p.getAttribute('fill') || '').toUpperCase(); if (HILL[f]) p.setAttribute('fill', HILL[f]); });
-  /* dark: move the pre-dawn sun (the kit's glow and disc) off Xero's shoulder to the right, resting on the hills */
-  if (dark) svg.querySelectorAll('circle').forEach(c => { const r = c.getAttribute('r'); if (r === '96' || r === '22') { c.setAttribute('cx', '306'); c.setAttribute('cy', '296'); if (r === '96') c.setAttribute('r', '88'); c.classList.add('dawnsun'); } });
-  /* dark: no stars under the status bar or behind the X */
-  if (dark) svg.querySelectorAll('circle[fill="#fff"]').forEach(c => { const x = +c.getAttribute('cx'), y = +c.getAttribute('cy'); if (y < 54 || (x < 96 && y < 132)) c.remove(); });
-  /* light: no film grain over the scene, so the sun's cream rim stays crisp */
-  if (!dark) svg.querySelectorAll('rect[filter]').forEach(r => r.remove());
-  /* light: crisp vector hills and clouds: no blur or drop-shadow filters; the clouds are redrawn with rounded bases, clear of the X */
-  if (!dark) {
-    svg.querySelectorAll('path[filter]').forEach(p => p.removeAttribute('filter'));
-    const cl = [...svg.querySelectorAll('g[filter]')].find(g => g.querySelector('ellipse'));
-    if (cl) { cl.removeAttribute('filter'); cl.setAttribute('opacity', '.92');
-      cl.querySelectorAll('ellipse').forEach(e => e.remove());
-      cl.insertAdjacentHTML('beforeend', '<rect x="120" y="76" width="74" height="16" rx="8"/><circle cx="142" cy="76" r="11"/><circle cx="162" cy="72" r="14"/><circle cx="180" cy="79" r="8"/><rect x="298" y="58" width="64" height="14" rx="7"/><circle cx="317" cy="58" r="9"/><circle cx="335" cy="54" r="12"/><circle cx="351" cy="60" r="7"/>'); }
-  }
-  /* the scene's sparkle sits under the status bar: move it down beside the sun */
-  svg.querySelectorAll('path').forEach(p => { if ((p.getAttribute('d') || '').startsWith('M330 34')) p.setAttribute('transform', 'translate(-104 28)'); });
-  svg.querySelectorAll('circle').forEach(c => { const r = c.getAttribute('r'); if (r === '70' || r === '130') { c.classList.add('sunmove', 'r' + r); c.style.transformBox = 'fill-box'; c.style.transformOrigin = 'center'; } });
-  svg.querySelectorAll('rect').forEach(r => { if (r.getAttribute('fill') && r.getAttribute('fill').startsWith('#') && +r.getAttribute('opacity') > 0) { r.classList.add('hazemove'); r.dataset.o = r.getAttribute('opacity'); } });
+  /* The scene (390x420). Valley hills: the far pair frames Xero, the pale middle hill sits directly behind him (figure/ground),
+     and the ridge under his feet is the page colour with a soft paper shadow. Light: cream glow in the sky only (hills cover it). */
+  const FAR = 'M0 258 C46 242 98 248 134 278 C158 298 176 326 195 330 C214 326 232 298 256 278 C292 248 344 240 390 254 V420 H0Z';
+  const MID = 'M0 346 C64 330 128 314 195 314 C262 314 326 330 390 346 V420 H0Z';
+  const RIDGE = 'M0 410 C64 402 128 392 195 391 C262 392 326 402 390 410 V420 H0Z';
+  const CLOUD = 'M10 40 C2 40 0 30 9 27 C8 17 20 11 30 16 C35 4 56 1 64 14 C72 8 86 11 88 23 C99 22 106 31 100 40 Z';
+  const art = dark ? `
+    <defs><linearGradient id="psk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0A1020"/><stop offset=".4" stop-color="#141D40"/><stop offset=".75" stop-color="#2A3668"/><stop offset="1" stop-color="#33407A"/></linearGradient>
+      <radialGradient id="pgl" cx="330" cy="244" r="150" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFB862" stop-opacity=".55"/><stop offset=".35" stop-color="#F7A04E" stop-opacity=".22"/><stop offset="1" stop-color="#E07F40" stop-opacity="0"/></radialGradient>
+      <radialGradient id="psn" cx=".42" cy=".38" r=".62"><stop offset="0" stop-color="#FFE7A8"/><stop offset=".65" stop-color="#FFC266"/><stop offset="1" stop-color="#F49A45"/></radialGradient></defs>
+    <rect width="390" height="420" fill="url(#psk)"/>
+    <g class="stars" fill="#F3E9D6"><circle cx="150" cy="70" r="1.4" opacity=".6"/><circle cx="246" cy="96" r="1.1" opacity=".45"/><circle cx="318" cy="66" r="1.6" opacity=".7"/>
+      <circle cx="36" cy="168" r="1.2" opacity=".45"/><circle cx="96" cy="210" r="1" opacity=".35"/><circle cx="356" cy="140" r="1.1" opacity=".5"/><circle cx="196" cy="150" r="1" opacity=".35"/></g>
+    <circle cx="330" cy="244" r="150" fill="url(#pgl)"/>
+    <g class="sun dk"><circle cx="330" cy="244" r="25" fill="url(#psn)"/><circle cx="330" cy="244" r="25" fill="none" stroke="#FFEFC4" stroke-opacity=".85" stroke-width="2.5"/></g>
+    <path class="hill-far" d="${FAR}" fill="#1B2552"/>
+    <path class="hill-mid" d="${MID}" fill="#141C3D"/>
+    <path class="ridge" d="${RIDGE}" fill="var(--g)"/>` : `
+    <defs><linearGradient id="psk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF9F78"/><stop offset=".55" stop-color="#FFBD8E"/><stop offset="1" stop-color="#FFD3AA"/></linearGradient>
+      <radialGradient id="pgl" cx="195" cy="318" r="200" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFF5E4" stop-opacity=".95"/><stop offset=".45" stop-color="#FFEDD6" stop-opacity=".55"/><stop offset="1" stop-color="#FFEDD6" stop-opacity="0"/></radialGradient>
+      <radialGradient id="psh" cx="282" cy="157" r="80" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFF1D0" stop-opacity=".7"/><stop offset="1" stop-color="#FFF1D0" stop-opacity="0"/></radialGradient>
+      <radialGradient id="psn" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#FFF6C8"/><stop offset="1" stop-color="#FFC23A"/></radialGradient></defs>
+    <rect width="390" height="420" fill="url(#psk)"/>
+    <circle cx="195" cy="318" r="200" fill="url(#pgl)"/>
+    <g class="sun lt"><circle cx="282" cy="157" r="80" fill="url(#psh)"/><circle cx="282" cy="157" r="34" fill="url(#psn)" stroke="#FFF6DE" stroke-width="6"/></g>
+    <svg x="80" y="84" width="112" height="44" viewBox="0 0 108 42" overflow="visible"><path d="${CLOUD}" fill="#B9603A" opacity=".16" transform="translate(0 2)"/><path d="${CLOUD}" fill="#FFF3E6"/></svg>
+    <path class="hill-far" d="${FAR}" fill="#F59C72"/>
+    <path class="hill-mid" d="${MID}" fill="#FFDDBC"/>
+    <path class="ridge" d="${RIDGE}" fill="var(--g)"/>`;
+  scene.innerHTML = `<svg width="390" height="420" viewBox="0 0 390 420" aria-hidden="true">${art}</svg>`;
   xero.innerHTML = DX.char('xero', { mood: 'hello', size: 200 });
   function pledged() {
     sc.classList.add('up');
-    svg.querySelectorAll('rect.hazemove').forEach(r => r.style.opacity = (+r.dataset.o * .45));
     const nx = document.createElement('div'); nx.setAttribute('data-settle', ''); nx.style.setProperty('--d', '0ms');
     nx.innerHTML = DX.char('xero', { mood: 'cheer', size: 200 }); xero.replaceWith(nx);
   }

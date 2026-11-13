@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>059 Notice the urge</title>
-<meta name="motion" content="One painted scene: the sky and the layered sea fade in (600ms), the urge line draws edge to edge over 2.4s (a long, low swell, three times wider than it is tall, filled in the sea's own blue: a long rise from the left edge, a low crest, a shorter fall onto calm water that runs out to the right edge) as the swell fills in under it, then the three points and their labels fade in beside them (It rises, It peaks, It passes; It peaks sits 18px above the crest dot, the side labels sit at least 20px in from the card edges). Jelli, seated on the line (the line passes behind her tentacle tips), rides it for 12s (slow ease) up to the crest and down, settling on the calm water where the swell ends, 46px in from the right edge; the It peaks tag fades out (700ms) as Jelli nears the crest and back in once Jelli has passed, so they never overlap, while the single 28px prompt (the only line above the scene) cross-fades every 3s (600ms): notice, it rises, the peak, watch it fall. Dark mode is the same scene at night. No springs, no haptic until It's passing is tapped (soft success haptic, goes to 060).">
+<meta name="motion" content="One paper-cut scene: the sky, a far sea layer and the layered sea fade in (600ms), the urge line draws edge to edge over 2.4s (a thin cream line that fades out at both card edges; a long, low swell filled in the sea's own blue, raised high in the card: a long rise from the left edge, a crest, a shorter fall onto calm water that runs out to the right edge) as the swell fills in under it, then the three points and their labels fade in beside them (It rises left of its dot, It peaks 18px above the crest dot, It passes right of its dot; the side labels sit at least 20px in from the card edges). Jelli (100pt, seated on the line, the line behind her tentacle tips) rides it for 12s (slow ease) up to the crest and down, settling on the calm water 36px in from the right edge, at least 16px clear of the It passes tag; the It peaks tag fades out (700ms) as Jelli nears the crest and back in once Jelli has passed, so they never overlap, while the single 28px prompt (the only line above the scene) cross-fades every 3s (600ms): notice, it rises, the peak, watch it fall. Dark mode is the same scene at night. No springs, no haptic until It's passing is tapped (soft success haptic, goes to 060).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -23,8 +23,8 @@
 .prompt .say.out { opacity: 0; transform: translateY(-8px); }
 .chart { position: absolute; left: var(--gutter); right: var(--gutter); top: 232px; height: 410px; padding: 0; overflow: hidden; border-radius: 28px; box-shadow: none !important; }
 .chart svg { position: absolute; left: 0; top: 0; }
-.rider { position: absolute; left: 0; top: 0; width: 80px; height: 80px;
-  offset-path: path("M-6 300 C 54 300 100 200 164 200 C 226 200 256 300 300 300"); offset-rotate: 0deg; offset-distance: var(--s, 0px); offset-anchor: 50% 93%; }
+.rider { position: absolute; left: 0; top: 0; width: 100px; height: 100px;
+  offset-path: path("M-6 266 C 46 266 90 146 150 146 C 206 146 226 266 262 266 L 352 266"); offset-rotate: 0deg; offset-distance: var(--s, 0px); offset-anchor: 50% 95%; }
 .play .rider { animation: ride 12s cubic-bezier(.4,0,.6,1) forwards; }
 @keyframes ride { from { offset-distance: var(--s, 0px); } to { offset-distance: var(--e, 100%); } }
 .still .rider { animation: none !important; offset-distance: var(--e, 100%); }
@@ -45,7 +45,7 @@
   <p class="say" id="say" data-a style="--i:2">Notice where you feel it.</p>
 </div>
 <div class="card chart" data-a style="--i:3" id="chart">
-  <div data-fade style="--d:1300ms;position:absolute;inset:0"><span class="lab r" style="left:96px;top:211px">It rises</span><span class="lab c" id="peak" style="left:164px;top:182px">It peaks</span><span class="lab" style="left:238px;top:223px">It passes</span></div>
+  <div data-fade style="--d:1300ms;position:absolute;inset:0"><span class="lab r" id="l0">It rises</span><span class="lab c" id="peak">It peaks</span><span class="lab" id="l2">It passes</span></div>
   <div data-fade style="--d:1200ms;position:absolute;inset:0"><span class="rider" id="rider"></span></div>
 </div>
 <div class="dock"><button class="btn" data-a style="--i:4">It's passing</button><button class="link" data-a style="--i:5">I need more help</button></div>
@@ -54,37 +54,45 @@
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
 
 const dark = DX.theme === 'dark';
-/* Light: a pale sky over a clearly bluer swell. Dark: the night sea, each band a shade deeper with a faint lit crest, for depth. */
+/* Paper-cut layers, flat fills, crisp edges (no blur). Light: a pale sky over a clearly bluer swell. Dark: the night sea, the swell a step lighter than the far layer so it reads. */
 const C = dark
-  ? { sky: ['#0E1E46', '#1E3A72'], swell: ['#2A4C92', '#203E7C'], sea: [['#2A4C92', '#203E7C'], ['#1D3870', '#16305F'], ['#132A58', '#0E2149']], crest: '#A8C2FF', line: '#FFF8EE', star: 1 }
-  : { sky: ['#BFDDFF', '#EAF4FF'], swell: ['#4F93FA', '#3F84F2'], sea: [['#4F93FA', '#3F84F2'], ['#2F72F2', '#2766E0'], ['#1F55D0', '#1A4BC0']], crest: '#FFFFFF', line: '#1E1A3A', star: 0 };
-const pt = (x, y) => `<circle cx="${x}" cy="${y}" r="6.5" fill="${C.line}" stroke="${dark ? '#26457F' : '#FFF8EE'}" stroke-width="3"/>`;
-/* The urge line: a long, low swell in the sea's own blue (a long rise from the left edge, a low crest, a shorter fall onto calm water), so it reads as water, not a chart. */
-const R = 'M-6 300 C 54 300 100 200 164 200 C 226 200 256 300 300 300';
-const U = R + ' C 320 300 336 301 352 301';
-const band = (d, i) => `<path d="${d} V410 H-10Z" fill="url(#ksea${i})"/><path d="${d}" fill="none" stroke="${C.crest}" stroke-opacity="${dark ? .16 : .28}" stroke-width="2"/>`;
+  ? { sky: ['#0E1E46', '#1E3A72'], far: '#1B356E', swell: ['#3A64B4', '#2E559F'], sea: ['#25478C', '#1B3A76', '#132C5E', '#0E2149'], crest: '#A8C2FF', line: '#FFF8EE', ring: '#2E559F', star: 1 }
+  : { sky: ['#BFDDFF', '#EAF4FF'], far: '#93C2FF', swell: ['#4F93FA', '#3F84F2'], sea: ['#3479F0', '#2766E0', '#1F58D0', '#1A4BC0'], crest: '#FFFFFF', line: '#FFFFFF', ring: '#3F84F2', star: 0 };
+const pt = ([x, y]) => `<circle cx="${x}" cy="${y.toFixed(1)}" r="6.5" fill="${C.line}" stroke="${C.ring}" stroke-width="3"/>`;
+/* The urge line: a long, low swell in the sea's own blue (a long rise from the left edge, a crest, a shorter fall onto calm water), raised high in the card. */
+const R = 'M-6 266 C 46 266 90 146 150 146 C 206 146 226 266 262 266';
+const U = R + ' C 290 266 320 266 352 266';
+const band = (d, i) => `<path d="${d} V410 H-10Z" fill="${C.sea[i]}"/><path d="${d}" fill="none" stroke="${C.crest}" stroke-opacity="${dark ? .16 : .3}" stroke-width="1.5"/>`;
+const cloud = (x, y, k) => `<g fill="#FFFFFF" transform="translate(${x} ${y}) scale(${k})"><rect x="-30" y="-6" width="60" height="14" rx="7"/><circle cx="-12" cy="-6" r="11"/><circle cx="6" cy="-10" r="14"/><circle cx="20" cy="-2" r="9"/></g>`;
+/* Points on the line, measured from the path itself so the dots sit exactly on it. */
+const pe = document.createElementNS('http://www.w3.org/2000/svg', 'path'); pe.setAttribute('d', R + ' L 352 266'); const L = pe.getTotalLength();
+const at = x => { let lo = 0, hi = L; for (let k = 0; k < 30; k++) { const m = (lo + hi) / 2; if (pe.getPointAtLength(m).x < x) lo = m; else hi = m; } return lo; };
+const yAt = x => pe.getPointAtLength(at(x)).y;
+const D = [[110, yAt(110)], [150, 146], [180, yAt(180)]];
 document.getElementById('chart').insertAdjacentHTML('afterbegin', `<svg width="346" height="410" viewBox="0 0 346 410" aria-hidden="true"><defs>
   <linearGradient id="ksky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${C.sky[0]}"/><stop offset="1" stop-color="${C.sky[1]}"/></linearGradient>
   <linearGradient id="kswl" x1="0" y1="0" x2="0" y2="1"><stop offset=".25" stop-color="${C.swell[0]}"/><stop offset="1" stop-color="${C.swell[1]}"/></linearGradient>
-  ${C.sea.map((g, i) => `<linearGradient id="ksea${i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${g[0]}"/><stop offset="1" stop-color="${g[1]}"/></linearGradient>`).join('')}
-  <filter id="kblur" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="1.6"/></filter></defs>
+  <linearGradient id="kln" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="346" y2="0"><stop offset="0" stop-color="${C.line}" stop-opacity="0"/><stop offset=".1" stop-color="${C.line}"/><stop offset=".9" stop-color="${C.line}"/><stop offset="1" stop-color="${C.line}" stop-opacity="0"/></linearGradient></defs>
   <rect width="346" height="410" fill="url(#ksky)"/>
-  ${C.star ? [[40, 40], [92, 76], [290, 52], [318, 120], [24, 150], [226, 30]].map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="${i % 2 ? 1.2 : 1.7}" fill="#fff" opacity="${i % 2 ? .5 : .8}"/>`).join('')
-    : '<g fill="#fff" opacity=".9"><ellipse cx="282" cy="56" rx="30" ry="10"/><ellipse cx="268" cy="49" rx="15" ry="11"/></g><g fill="#fff" opacity=".7" filter="url(#kblur)"><ellipse cx="62" cy="112" rx="28" ry="8"/><ellipse cx="74" cy="105" rx="14" ry="9"/><ellipse cx="52" cy="108" rx="10" ry="7"/></g>'}
+  ${C.star ? [[40, 40], [92, 76], [290, 52], [318, 120], [24, 112], [226, 30]].map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="${i % 2 ? 1.2 : 1.7}" fill="#fff" opacity="${i % 2 ? .5 : .8}"/>`).join('')
+    : `${cloud(280, 54, 1)}${cloud(58, 100, .62)}`}
+  <g data-fade style="--d:600ms"><path d="M-10 232 C 60 226 130 236 200 230 S 310 224 356 228 V410 H-10Z" fill="${C.far}"/><path d="M-10 232 C 60 226 130 236 200 230 S 310 224 356 228" fill="none" stroke="${C.crest}" stroke-opacity="${dark ? .14 : .35}" stroke-width="1.5"/></g>
   <path d="${U} V410 H-10Z" fill="url(#kswl)" data-fade style="--d:900ms"/>
-  <path d="${U}" fill="none" stroke="${C.line}" stroke-width="4" stroke-linecap="round" pathLength="100" class="draw" style="--len:100;--dur:2400ms;--d:300ms"/>
-  <g data-fade style="--d:1300ms">${pt(108, 223.4)}${pt(164, 200)}${pt(226, 235.2)}</g>
+  <path d="${U}" fill="none" stroke="url(#kln)" stroke-width="3" stroke-linecap="round" pathLength="100" class="draw" style="--len:100;--dur:2400ms;--d:300ms"/>
+  <g data-fade style="--d:1300ms">${D.map(pt).join('')}</g>
   <g data-fade style="--d:600ms">
-    ${band('M-10 322 C 50 308 110 312 170 322 C 240 334 300 314 356 310', 0)}
-    ${band('M-10 352 C 60 340 120 342 190 354 C 260 366 310 346 356 342', 1)}
-    ${band('M-10 382 C 70 370 140 374 210 384 C 280 394 330 378 356 374', 2)}
+    ${band('M-10 290 C 50 280 110 284 170 292 C 240 302 300 286 356 282', 0)}
+    ${band('M-10 320 C 60 310 120 312 190 322 C 260 332 310 316 356 312', 1)}
+    ${band('M-10 350 C 70 340 140 344 210 352 C 280 362 330 348 356 344', 2)}
+    ${band('M-10 382 C 60 374 130 378 200 384 C 270 392 320 380 356 376', 3)}
   </g></svg>`);
+/* Labels: It rises left of its dot, It peaks 18px above the crest dot, It passes right of its dot (well clear of Jelli's resting place). */
+const pos = (id, x, y) => { const e = document.getElementById(id); e.style.left = x + 'px'; e.style.top = y.toFixed(1) + 'px'; };
+pos('l0', D[0][0] - 12, D[0][1]); pos('peak', D[1][0], D[1][1] - 18); pos('l2', D[2][0] + 12, D[2][1]);
 const rider = document.getElementById('rider');
-rider.innerHTML = DX.char('jelli', { mood: 'calm', size: 80 });
-/* Jelli rides the swell from x 44 to x 300, where it meets the calm water: find those lengths on the path. */
-{ const pe = document.createElementNS('http://www.w3.org/2000/svg', 'path'); pe.setAttribute('d', R); const L = pe.getTotalLength();
-  const at = x => { let lo = 0, hi = L; for (let k = 0; k < 30; k++) { const m = (lo + hi) / 2; if (pe.getPointAtLength(m).x < x) lo = m; else hi = m; } return lo; };
-  rider.style.setProperty('--s', at(44).toFixed(1) + 'px'); rider.style.setProperty('--e', at(300).toFixed(1) + 'px'); }
+rider.innerHTML = DX.char('jelli', { mood: 'calm', size: 100 });
+/* Jelli rides the swell from x 44 to x 274 on the calm water, 36px in from the card's right edge. */
+rider.style.setProperty('--s', at(44).toFixed(1) + 'px'); rider.style.setProperty('--e', at(274).toFixed(1) + 'px');
 const say = document.getElementById('say');
 const lines = [[3000, 'It rises. You do not have to act.'], [6000, 'This is the peak. Breathe out slowly.'], [9000, 'Watch it fall away.']];
 lines.forEach(([t, s]) => DX.after(t, () => { say.classList.add('out'); setTimeout(() => { say.textContent = s; say.classList.remove('out'); }, 600); }));
