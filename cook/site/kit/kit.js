@@ -130,6 +130,8 @@
     const f = window.DXC && window.DXC[name]; if (!f) return '';
     let svg = f(Object.assign({ animate: !still }, o));
     /* Dark mode: horizon scenes become dusk (dimmer, warmer) so heroes never glare at night. */
+    /* Dark mode: the sparkles, zzz and breeze marks around characters turn cream so they show on navy. */
+    if (name !== 'horizon' && theme === 'dark') svg = svg.replace(/(<g opacity="[^"]*" (?:fill="none" )?stroke=")#24163A/g, '$1#F3E9DE');
     if (name === 'horizon' && theme === 'dark' && !o.noDusk) {
       const id = 'dusk' + Math.random().toString(36).slice(2, 7);
       svg = svg.replace(/<\/svg>\s*$/, `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0E1322" stop-opacity=".62"/><stop offset=".6" stop-color="#0E1322" stop-opacity=".38"/><stop offset="1" stop-color="#0E1322" stop-opacity=".5"/></linearGradient></defs><rect x="-50%" y="-50%" width="200%" height="200%" fill="url(#${id})"/></svg>`);
