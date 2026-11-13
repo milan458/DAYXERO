@@ -1,23 +1,28 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>020 Craving passed</title>
-<meta name="motion" content="The completion beat, gentle. A check draws on the pacer ring (420ms), then Jelli settles in cheering (900ms, one soft hop). Title and line fade up; at 900ms the wave count rolls from 22 to 23 while a '+1' floats up beside it (spring, the only one besides the badge). At 1.3s the 25-wave badge pops in with its ring at 23 of 25. Trigger chips and the button arrive last. Success haptic with the +1.">
+<meta name="motion" content="The completion beat, gentle. A check draws on the pacer ring (420ms), then Jelli settles in cheering (900ms, one soft hop). Title and line fade up; at 900ms the wave count rolls from 22 to 23 while a '+1' floats up beside it (spring, the only one on the screen). At 1.3s the 25-wave badge fades in (700ms, no spring) and its ring creeps from 22 to 23 of 25 while "2 to go" settles under it. Trigger chips and the button arrive last. Success haptic with the +1.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .hero { position: absolute; left: 0; right: 0; top: 70px; display: grid; place-items: center; }
-  .hero .disc { position: relative; width: 210px; height: 210px; display: grid; place-items: center; }
+  .hero { position: absolute; left: 0; right: 0; top: 68px; display: grid; place-items: center; }
+  .hero .disc { position: relative; width: 244px; height: 244px; display: grid; place-items: center; }
   .hero .disc svg.pacer { position: absolute; inset: 0; }
-  .hero .ck { position: absolute; right: 8px; top: 14px; }
-  .txt { position: absolute; left: 0; right: 0; top: 296px; padding: 0 36px; text-align: center; }
+  .hero .ck { position: absolute; right: 12px; top: 16px; }
+  .txt { position: absolute; left: 0; right: 0; top: 326px; padding: 0 36px; text-align: center; }
   .txt .t-body { margin-top: 8px; color: var(--muted); }
-  .stack2 { position: absolute; left: 0; right: 0; top: 410px; padding: 0 var(--gutter); display: grid; gap: 10px; }
+  .stack2 { position: absolute; left: 0; right: 0; top: 446px; padding: 0 var(--gutter); display: grid; gap: 10px; }
   .waves { display: flex; align-items: center; gap: 12px; padding: 16px 16px 16px 18px; }
   .waves .grow { flex: 1; min-width: 0; }
   .waves .big { display: flex; align-items: flex-start; gap: 6px; position: relative; }
   .waves .big .num { font-size: 48px; line-height: 1; }
   .waves .plus { font: 800 18px/1 var(--display); color: var(--tick); margin-top: 2px; }
   .waves .t-foot { color: var(--muted); margin-top: 4px; }
-  .waves .bd { flex: none; padding-left: 14px; border-left: 1px solid var(--line); }
+  .waves .bd { flex: none; padding-left: 16px; border-left: 1px solid var(--line); display: grid; justify-items: center; gap: 6px; }
+  .waves .bd .face { position: relative; width: 80px; height: 80px; display: grid; place-items: center; }
+  .waves .bd .face svg { position: absolute; inset: 0; }
+  .waves .bd .n { position: relative; font: 800 26px/1 var(--display); color: var(--fg); letter-spacing: -.6px; }
+  .waves .bd .go { font: 700 14px/1.2 var(--body); color: var(--fg); text-align: center; }
+  .waves .bd .go span { display: block; font: 600 12px/1.3 var(--body); color: var(--muted); }
   #ck [data-pop] { transform: none; }
   .play #ck [data-pop] { animation: dx-fade 500ms var(--ease) both; animation-delay: 0ms; }
   .trig .t-foot { color: var(--muted); margin-bottom: 10px; }
@@ -27,8 +32,9 @@
 <div class="screen" data-ground="ocean">
   <div class="hero">
     <div class="disc">
-      <svg class="pacer" viewBox="0 0 210 210" aria-hidden="true">
-        <circle cx="105" cy="105" r="101" fill="none" stroke="currentColor" stroke-opacity=".22" stroke-width="2"/>
+      <svg class="pacer" viewBox="0 0 244 244" aria-hidden="true">
+        <circle cx="122" cy="122" r="104" fill="currentColor" fill-opacity=".06"/>
+        <circle cx="122" cy="122" r="119" fill="none" stroke="currentColor" stroke-opacity=".4" stroke-width="2.5"/>
       </svg>
       <div id="jelli" data-settle style="--d:250ms"></div>
       <div class="ck" id="ck"></div>
@@ -46,7 +52,7 @@
         <div class="big"><span class="num" data-count="23" data-from="22" data-delay="900" data-dur="500">23</span><span class="plus float-up" style="--d:900ms">+1</span></div>
         <p class="t-foot">waves ridden out &middot; 3 today</p>
       </div>
-      <div class="bd" id="bd" data-pop style="--d:1300ms"></div>
+      <div class="bd" data-fade style="--d:1300ms"><div class="face" id="bd"></div><p class="go">2 to go<span>25 waves badge</span></p></div>
     </div>
     <div class="card trig" data-a style="--i:5">
       <p class="t-foot">What set it off? Optional</p>
@@ -60,10 +66,10 @@
 </div>
 <script>
   const $ = s => document.querySelector(s);
-  $('#jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 168 });
-  $('#ck').innerHTML = DX.check({ size: 44, color: 'var(--tick)', fg: '#0B2A1C' });
-  $('#bd').innerHTML = DX.badge({ kind: 'wave', n: 25, state: 'next', p: .92, size: 64, label: '25 waves, 2 to go' });
-  DX.after(2700, () => { $('#jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 168, animate: false }); });
+  $('#jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 200 });
+  $('#ck').innerHTML = DX.check({ size: 48, color: 'var(--tick)', fg: '#0B2A1C' });
+  $('#bd').innerHTML = DX.badge({ kind: 'wave', n: '', state: 'next', p: .92, size: 80, bare: true }) + '<span class="n">25</span>';
+  DX.after(2700, () => { $('#jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 200, animate: false }); });
   const fillBadge = (sel, from, to, delay) => DX.after(0, () => { const c = document.querySelector(sel + ' circle[transform]'); if (!c) return; const C = 2 * Math.PI * 48;
     c.animate([{ strokeDashoffset: C * (1 - from) }, { strokeDashoffset: C * (1 - to) }], { duration: 1000, delay, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' }); });
   fillBadge('#bd', .88, .92, 1500);

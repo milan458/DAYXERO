@@ -4,8 +4,8 @@
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .sec { margin-top: 18px; }
-  .sec-h { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+  .sec { margin-top: 13px; }
+  .sec-h { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
   .sec-h .t-foot { color: var(--muted); }
   .strength { padding: 14px 16px 16px; }
   .strength .big { display: flex; align-items: baseline; gap: 4px; }
@@ -15,9 +15,11 @@
   .slider .fi { position: absolute; left: 0; top: 13px; height: 6px; border-radius: 99px; background: var(--fg); width: calc(44% + 2px); transition: width 700ms var(--settle); }
   .slider .kn { position: absolute; top: 2px; left: 44%; width: 28px; height: 28px; margin-left: -14px; border-radius: 99px; background: #fff; box-shadow: 0 2px 8px rgba(14,11,43,.25), inset 0 0 0 1px rgba(14,11,43,.08); transition: left 700ms var(--settle); }
   .scale { display: flex; justify-content: space-between; color: var(--muted); }
-  .chips .chip { min-height: 40px; padding: 0 14px; font-size: 14.5px; }
+  .chips .chip { min-height: 38px; padding: 0 14px; font-size: 15px; }
+  .sosl { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); color: var(--muted); display: flex; align-items: center; gap: 6px; }
+  .sosl a { color: var(--fg); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
   .faces { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 8px; }
-  .chip.face { flex-direction: column; justify-content: center; gap: 4px; min-height: 66px; padding: 0; font: 600 12.5px/1 var(--body); }
+  .chip.face { flex-direction: column; justify-content: center; gap: 4px; min-height: 60px; padding: 0; font: 600 13px/1 var(--body); }
   .chip.face.on::before { display: none; }
   .chip.face svg { width: 26px; height: 26px; }
   .toast { opacity: 0; transform: translateY(24px); }
@@ -44,6 +46,7 @@
         <div class="big"><span class="num" data-count="5">5</span><span class="t-foot muted">/ 10</span></div>
         <div class="slider" aria-label="Strength 5 of 10"><span class="tr"></span><span class="fi" id="fi"></span><span class="kn" id="kn"></span></div>
         <div class="scale t-cap"><span>Mild</span><span>Intense</span></div>
+        <p class="t-foot sosl">Too strong to sit with? <a data-go="019-sos">Ride it out with SOS</a></p>
       </div>
 
       <div class="sec" data-a style="--i:2">
@@ -67,7 +70,6 @@
   </div>
   <div class="dock">
     <button class="btn" id="save" data-a style="--i:6"><span class="lbl" id="lbl">Save</span></button>
-    <button class="link" data-a style="--i:7" data-go="019-sos">Ride it out with SOS instead</button>
   </div>
   <div class="toast" id="toast" role="status">
     <span class="tk" id="tk"></span>

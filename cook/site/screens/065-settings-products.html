@@ -28,6 +28,7 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 .sum { margin-top: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .sum .card { padding: 14px 16px; display: grid; gap: 2px; }
 .sum .num { font-size: 30px; line-height: 1.05; }
+.kept065 { margin-top: 10px; display: flex; align-items: center; gap: 12px; padding: 4px 16px 4px 8px; }
 
 </style>
 </head><body>
@@ -47,10 +48,11 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
     <div class="row " ><div class="grow"><div class="t-body rt">Vape spend a day</div></div><div class="step"><button aria-label="Less" data-ic="minus" data-s="16" data-w="2.6"></button><span class="num">$2.20</span><button aria-label="More" data-ic="plus" data-s="16" data-w="2.6"></button></div></div>
   </div>
   <div class="sum" data-a style="--i:7"><div class="card flat"><span class="num" data-count="7" data-prefix="$">$7</span><span class="t-foot muted">a day</span></div><div class="card flat"><span class="num" data-count="2555" data-prefix="$">$2,555</span><span class="t-foot muted">a year</span></div></div>
+  <div class="card kept065" data-a style="--i:8"><span id="xr065"></span><p class="t-body" style="flex:1"><b>$49.00</b> kept since your Quit Day.</p></div>
 </div></div>
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
-
+document.getElementById('xr065').innerHTML = DX.char('xero', { mood: 'cheer', size: 64 });
 </script>
 </body></html>
