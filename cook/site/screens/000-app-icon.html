@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>000 App icon</title>
-<meta name="motion" content="The hero icon (Light in light mode, Dark in dark mode) settles onto the page with its floor shadow, no card behind it (900 ms), then the sun rises 70 units inside Xero's window over 1.2 s (ease-out, from 700 ms). The variants arrive with a 90 ms stagger, then the home-screen row fades up last. On device: the static icon; the sunrise can play in the launch screen's first 400 ms so icon and launch feel continuous.">
+<meta name="motion" content="The hero icon (Light on the light board, Dark on the dark board) settles onto its board (900 ms), then the sun rises 70 units inside Xero's window over 1.2 s (ease-out, from 700 ms). The variants arrive with a 90 ms stagger, then the home-screen row fades up last. On device: the static icon; the sunrise can play in the launch screen's first 400 ms so icon and launch feel continuous.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -8,7 +8,9 @@
 .board { font: 600 13px/1 var(--body); color: var(--muted); justify-self: start; display:flex; gap:8px; align-items:center; }
 .board i { width:8px; height:8px; border-radius:99px; background: var(--coral); display:block; }
 /* Hero stage: a plain cream sheet, so the apricot tile reads as an object, not apricot on apricot. */
-.stage { width:100%; height:236px; position:relative; display:grid; place-items:center; }
+.stage { width:100%; height:236px; border-radius:28px; position:relative; display:grid; place-items:center; overflow:hidden;
+  background: radial-gradient(90% 80% at 50% 38%, #FFFFFF 0%, #FFFCF7 60%, #F7F1E8 100%); box-shadow: inset 0 0 0 1px var(--line); }
+[data-theme="dark"] .stage { background: radial-gradient(90% 80% at 50% 36%, #232C47 0%, #19203A 60%, #141A2F 100%); }
 .stage::after { content:""; position:absolute; left:50%; bottom:28px; width:150px; height:16px; margin-left:-75px; border-radius:50%; background: rgba(60,40,30,.16); filter: blur(7px); }
 [data-theme="dark"] .stage::after { background: rgba(0,0,0,.5); }
 .stage .tile { position:relative; z-index:1; margin-top:-14px; }
@@ -16,7 +18,9 @@
 [data-theme="dark"] .tile { box-shadow:0 18px 36px rgba(0,0,0,.55); }
 /* Dark board: the Dark icon is the hero, with the same hairline rim iOS draws on dark wallpapers. */
 [data-theme="dark"] .tile::after { content:""; position:absolute; inset:0; border-radius:inherit; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.16); pointer-events:none; }
-/* No card behind the hero (round 9: a bordered card on a board was double framing); the icon sits on the page with its floor shadow. */
+/* Dark board: the card sits one step lighter than the icon, so the Dark icon's edge reads all the way round. */
+/* Dark board: the page navy itself with a hairline, so the board never competes with the Dark icon. */
+[data-theme="dark"] .stage { background: var(--g); box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); }
 [data-theme="dark"] .tile::after { box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.22); }
 .sunrise { transform: translateY(0); }
 .play .sunrise { animation: rise 1.2s cubic-bezier(.2,.8,.2,1) .7s both; }
@@ -67,8 +71,7 @@ function appIcon(v, size, o = {}) {
   const id = 'ai' + (++n);
   const P = {
     light: { bg: ['#FFCF9C', '#FFB27A'], body: '#FF7155', shade: '#E85A3E', hl: '#FFB09C', sky: '#BFD7FF', sun: '#FFC93C', h1: '#3FB37F', h2: '#2E9A69', floor: .10 },
-    /* Dark tile lifted one step (round 9) so it holds its edge on a dark dock. */
-    dark:  { bg: ['#323C5E', '#1E263F'], body: '#FF7155', shade: '#E85A3E', hl: '#FFB09C', sky: '#2B3A6B', sun: '#FFC93C', h1: '#3FB37F', h2: '#2E9A69', floor: .25 },
+    dark:  { bg: ['#262E49', '#121829'], body: '#FF7155', shade: '#E85A3E', hl: '#FFB09C', sky: '#2B3A6B', sun: '#FFC93C', h1: '#3FB37F', h2: '#2E9A69', floor: .25 },
     /* Tinted: iOS tints a greyscale icon. The window is kept dark so the white sun and pale hills still read as a sunrise. */
     /* Tinted: the window is a true cut-out (the icon's own black shows through, with a pale rim), so it reads as a hole in the zero. */
     tint:  { bg: ['#2A2A2A', '#141414'], body: '#E6E6E6', shade: '#C4C4C4', hl: '#F7F7F7', sky: '#161616', sun: '#FFFFFF', h1: '#8C8C8C', h2: '#6E6E6E', floor: .25, sunY: -26, rim: '#9A9A9A' }
@@ -78,19 +81,17 @@ function appIcon(v, size, o = {}) {
   const simple = size < 100;
   /* Home-screen size (60 px): one large sun rising out of the window floor, no hill stripe. */
   const tiny = size <= 64;
-  /* Window half-sizes: enlarged at home-screen size (round 9) so the sunrise still reads at 60 px. */
-  const hx = tiny ? 170 : 132, hy = tiny ? 222 : 178;
   return `<svg viewBox="0 0 1024 1024" width="${size}" height="${size}" style="display:block" aria-hidden="true">
   <defs><linearGradient id="${id}b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${P.bg[0]}"/><stop offset="1" stop-color="${P.bg[1]}"/></linearGradient>
-  <clipPath id="${id}h"><ellipse cx="512" cy="${560 + dy}" rx="${hx}" ry="${hy}"/></clipPath></defs>
+  <clipPath id="${id}h"><ellipse cx="512" cy="${560 + dy}" rx="132" ry="178"/></clipPath></defs>
   <rect width="1024" height="1024" fill="url(#${id}b)"/>
   <ellipse cx="512" cy="905" rx="250" ry="34" fill="#000" opacity="${P.floor}"/>
   <path fill-rule="evenodd" fill="${P.body}" d="M512 ${170 - (face ? 20 : 0)} C722 ${170 - (face ? 20 : 0)} 836 ${350 + (face ? 10 : 0)} 836 ${548 + (face ? 12 : 0)} C836 770 704 900 512 900 C320 900 188 770 188 ${548 + (face ? 12 : 0)} C188 ${350 + (face ? 10 : 0)} 302 ${170 - (face ? 20 : 0)} 512 ${170 - (face ? 20 : 0)} Z
-   M512 ${560 - hy + dy} C${512 + hx * .553} ${560 - hy + dy} ${512 + hx} ${560 - hy * .55 + dy} ${512 + hx} ${560 + dy} C${512 + hx} ${560 + hy * .55 + dy} ${512 + hx * .553} ${560 + hy + dy} 512 ${560 + hy + dy} C${512 - hx * .553} ${560 + hy + dy} ${512 - hx} ${560 + hy * .55 + dy} ${512 - hx} ${560 + dy} C${512 - hx} ${560 - hy * .55 + dy} ${512 - hx * .553} ${560 - hy + dy} 512 ${560 - hy + dy} Z"/>
+   M512 ${382 + dy} C585 ${382 + dy} 644 ${462 + dy} 644 ${560 + dy} C644 ${658 + dy} 585 ${738 + dy} 512 ${738 + dy} C439 ${738 + dy} 380 ${658 + dy} 380 ${560 + dy} C380 ${462 + dy} 439 ${382 + dy} 512 ${382 + dy} Z"/>
   <path fill="${P.shade}" d="M716 250 C800 330 836 440 836 548 C836 770 704 900 512 900 C650 860 760 740 760 548 C760 430 744 320 716 250 Z"/>
   <path d="M290 360 C312 290 360 236 430 210" fill="none" stroke="${P.hl}" stroke-width="26" stroke-linecap="round"/>
-  <g clip-path="url(#${id}h)"><rect x="300" y="300" width="430" height="560" fill="${P.sky}"/>
-  ${tiny ? `<circle cx="512" cy="${688 + dy}" r="138" fill="${P.sun}"/></g>` : simple ? `<circle cx="512" cy="${604 + dy}" r="86" fill="${P.sun}"/><path d="M370 ${668 + dy} C430 ${640 + dy} 540 ${636 + dy} 660 ${662 + dy} V840 H370Z" fill="${P.h1}"/></g>` : `<circle class="${o.rise ? 'sunrise' : ''}" cx="512" cy="${598 + dy + (P.sunY || 0)}" r="62" fill="${P.sun}"/>
+  <g clip-path="url(#${id}h)"><rect x="370" y="380" width="290" height="460" fill="${P.sky}"/>
+  ${tiny ? `<circle cx="512" cy="${652 + dy}" r="112" fill="${P.sun}"/></g>` : simple ? `<circle cx="512" cy="${604 + dy}" r="86" fill="${P.sun}"/><path d="M370 ${668 + dy} C430 ${640 + dy} 540 ${636 + dy} 660 ${662 + dy} V840 H370Z" fill="${P.h1}"/></g>` : `<circle class="${o.rise ? 'sunrise' : ''}" cx="512" cy="${598 + dy + (P.sunY || 0)}" r="62" fill="${P.sun}"/>
   <path d="M370 ${648 + dy} C430 ${618 + dy} 500 ${638 + dy} 560 ${620 + dy} S640 ${610 + dy} 660 ${618 + dy} V840 H370Z" fill="${P.h1}"/>
   <path d="M370 ${690 + dy} C440 ${670 + dy} 520 ${700 + dy} 660 ${674 + dy} V840 H370Z" fill="${P.h2}"/></g>`}
   ${P.rim ? `<ellipse cx="512" cy="${560 + dy}" rx="132" ry="178" fill="none" stroke="${P.rim}" stroke-width="16"/>` : ''}

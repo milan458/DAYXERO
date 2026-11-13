@@ -1,13 +1,12 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>010 Onboarding Quit Day</title>
-<meta name="motion" content="Progress eases 7/11 to 8/11; title, the prep week (seven tiles on the page, no outer card, rise 45ms apart, today's Fri 30 in its coral disc, their prep dots pop left to right), the Quit Day row (a cream card with an apricot Nov 6 date page and a Change label with a right chevron: the tappable date picker), Xero on his hill (it fades into the ground above the dock) and the hold button arrive in order. Holding fills the button left to right over 1500ms with a soft ticking haptic; on complete the button shows its done state, Quit Day set (success haptic), the yellow flag Xero holds runs up its pole (34px, 700ms settle) while he bumps (520ms), and the row's caption swaps Quit Day, recommended for Quit Day set with a green tick (300ms crossfade). 1200ms later the done button crossfades (350ms) into Continue. Tapping the Quit Day row opens the date wheel.">
+<meta name="motion" content="Progress eases 7/11 to 8/11; title, the prep-week card (seven tiles rise 45ms apart, today's Fri 30 in its coral disc, their prep dots pop left to right), the Quit Day row (a cream card with an apricot Nov 6 date page and a Change label with a right chevron: the tappable date picker), Xero on his hill (it fades into the ground above the dock) and the hold button arrive in order. Holding fills the button left to right over 1500ms with a soft ticking haptic; on complete the button shows its done state, Quit Day set (success haptic), the yellow flag Xero holds runs up its pole (34px, 700ms settle) while he bumps (520ms), and the row's caption swaps Quit Day, recommended for Quit Day set with a green tick (300ms crossfade). 1200ms later the done button crossfades (350ms) into Continue. Tapping the Quit Day row opens the date wheel.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   /* Onboarding header: back button and progress only (no avatar); the bar ends at the gutter so the sun knob never collides. */
   .nav { padding-right: 26px; }
-  /* Round 9: no card inside a card. The week and the Quit Day row sit straight on the page; the Quit Day row is the one card. */
-  .wk { margin: 24px var(--gutter) 0; padding: 0; }
+  .wk { margin: 22px var(--gutter) 0; padding: 14px 12px 12px; }
   .wk-h { display: flex; justify-content: space-between; align-items: baseline; padding: 0 4px 10px; }
   /* Prep tiles sit lighter than the card in both modes (card-2), so the week always reads. */
   .days { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: 6px; }
@@ -17,10 +16,10 @@
   .day .pd { width: 8px; height: 8px; border-radius: 99px; background: #FF9A5C; margin-top: 2px; }
   /* Today (Fri 30): the date sits in a coral disc, iOS-calendar style, and the label reads Today. */
   .day.today .num { width: 30px; height: 30px; border-radius: 99px; background: var(--coral); color: #fff; display: grid; place-items: center; font-size: 18px; letter-spacing: -.4px; margin: -4px 0 -4px; }
-  .day.today .t-cap { color: var(--fg); font-weight: 700; font-size: 12px; letter-spacing: -.1px; }
+  .day.today .t-cap { color: var(--fg); font-weight: 700; }
   /* Quit Day: the tappable date picker row (ink tile, chevron), under the week. */
   /* Quit Day: a cream card with a hairline and an apricot date page (not an ink pill like the button). */
-  .qd { margin-top: 12px; width: 100%; text-align: left; border-radius: 16px; background: #FFF8EE; color: var(--fg); box-shadow: inset 0 0 0 1px var(--line); display: flex; align-items: center; gap: 14px; padding: 10px 14px 10px 10px; min-height: 70px; }
+  .qd { margin-top: 8px; width: 100%; text-align: left; border-radius: 16px; background: #FFF8EE; color: var(--fg); box-shadow: inset 0 0 0 1px var(--line); display: flex; align-items: center; gap: 14px; padding: 10px 14px 10px 10px; min-height: 70px; }
   [data-theme="dark"] .qd { background: var(--card-2); box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); }
   .qd .cal { width: 48px; height: 52px; flex: none; border-radius: 12px; overflow: hidden; display: grid; grid-template-rows: 16px 1fr; background: #FFC38A; color: #1E1A3A; box-shadow: 0 2px 0 rgba(110,50,20,.16); }
   .qd .cal .mo { background: #FF7155; color: #fff; font: 700 11px/16px var(--body); text-align: center; letter-spacing: .2px; }
@@ -46,8 +45,7 @@
   /* Round 8: Xero sits 14px closer to the week card, and his dome fades out well before the dock (no hard base above the CTA). */
   .hero { position: absolute; left: 0; right: 0; top: 452px; height: 230px; }
   .hero .hill { position: absolute; left: 0; top: 118px; }
-  /* Round 9: Xero 20% larger (154px), feet on the same crest. */
-  .hero .xw { position: absolute; left: 114px; top: 4px; width: 154px; height: 154px; }
+  .hero .xw { position: absolute; left: 127px; top: 30px; width: 128px; height: 128px; }
   .hero .pen { transform: translateY(34px); transition: transform 700ms var(--settle); }
   .hero.set .pen { transform: none; }
   .dock .t-cap { text-align: center; color: var(--muted); }
@@ -70,7 +68,7 @@
     <p class="t-body muted" data-a style="--i:1">I recommend a full week of prep first. Keep using as normal until then.</p>
   </div>
 
-  <div class="wk" data-a style="--i:2">
+  <div class="card wk" data-a style="--i:2">
     <div class="wk-h"><p class="t-foot"><b>Your prep week</b></p><span class="t-foot muted">7 short sessions</span></div>
     <div class="days" id="days"></div>
     <button class="qd" id="qd" data-a style="--i:6" aria-label="Quit Day, change date">
@@ -109,7 +107,7 @@
   const flag = `<path d="M188 154 L188 30" stroke="#8A5A3C" stroke-width="4" stroke-linecap="round"/><circle cx="188" cy="28" r="4" fill="#F5B83D"/>
     <path class="pen" d="M190 33 L216 42 L190 52 Z" fill="#FFD966" stroke="#F5B83D" stroke-width="2" stroke-linejoin="round"/>`;
   const arm = '<path d="M164 122 C176 118 183 110 186 100" fill="none" stroke="#FF7155" stroke-width="12" stroke-linecap="round"></path>';
-  $('xero').innerHTML = DX.char('xero', { mood: 'hello', size: 154 })
+  $('xero').innerHTML = DX.char('xero', { mood: 'hello', size: 128 })
     .replace('style="display: block"', 'style="display: block; overflow: visible"')
     .replace(/<path d="M164 124 C174 132 178 142 176 152"[^>]*><\/path>/, flag + arm);
   const reset = () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '63.6%'); void bar.offsetWidth; bar.style.transition = '';

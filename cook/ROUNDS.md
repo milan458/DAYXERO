@@ -156,3 +156,9 @@ session 023-032, lesson-log 033-042, slips-checkin 043-055.
 - Kit: light selection is a pale apricot tint with a coral 2px edge (critics: the salmon fill looked dimmer than unselected
   cream rows, and the navy edge read as a form); now one selection language in both modes (warm edge). Progress sun has an
   amber rim so it shows on peach.
+- Session round 9: Opus 8.6 / Sonnet 8.6 (r8 8.7 / 8.7): lower on both, reverted to round 8 (43ec593). Onboarding round 9:
+  Opus 8.5 / Sonnet 8.6 (r8 8.6 / 8.7): lower on both, reverted to round 8 (001562b). Backups of the r9 files in scratchpad.
+- Lesson-log round 8: Sonnet 8.8 (039 at 9.2, the first screen at the bar); Opus pending.
+- Kit: dark selection tint between the two extremes (15% pale peach over card): orange read brown, neutral read cool grey.
+- Read: sections now move +/-0.1-0.2 per round around 8.6-8.8; three of six reverts or flats in round 9. The remaining gap is
+  mostly composition (dead bands above the CTA on form screens, small secondary art) and critic noise.

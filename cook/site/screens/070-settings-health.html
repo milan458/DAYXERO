@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>070 Apple Health</title>
-<meta name="motion" content="The connected card arrives with the DayXero tile and a plain Apple Health tile (the app's own line heart on the warm card tint, no Apple artwork); the dotted link fades in between them (500ms) and its check pops (900ms, light success haptic); the write and read groups follow on the stagger. Flipping a toggle opens the system Health permission sheet.">
+<meta name="motion" content="The connected card arrives with the DayXero app icon (the zero with its sunrise, whole) and a plain Apple Health tile (the app's own line heart on a lifted tile, no Apple artwork); the 40px dotted link draws out between them (500ms) and its check pops (900ms, light success haptic); the write and read groups follow on the stagger, then the Open Health row. Flipping a toggle opens the system Health permission sheet; Open Health switches to the Health app.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -17,16 +17,25 @@
 .toast.b .ck { flex: none; }
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
-.link-card { margin-top: 16px; padding: 18px 18px 16px; display: grid; justify-items: center; gap: 4px; text-align: center; }
-.apps { display: flex; align-items: center; gap: 0; margin-bottom: 12px; }
-.app { width: 64px; height: 64px; border-radius: 18px; display: grid; place-items: center; overflow: hidden; box-shadow: 0 6px 16px rgba(20,20,40,.14), inset 0 0 0 1px rgba(0,0,0,.06); flex: none; background: #FFD9B8; }
-.wire { width: 48px; position: relative; height: 24px; display: grid; place-items: center; }
-.wire::before { content: ""; position: absolute; left: 6px; right: 6px; top: 50%; border-top: 2.5px dotted var(--muted); }
-.wire .ok { position: relative; width: 24px; height: 24px; border-radius: 99px; background: var(--tick); color: #fff; display: grid; place-items: center; }
-.wire .ok svg { width: 13px; height: 13px; }
+.link-card { margin-top: 16px; padding: 14px 18px 12px; display: grid; justify-items: center; gap: 4px; text-align: center; }
+.apps { display: flex; align-items: center; gap: 0; margin-bottom: 8px; }
+.app { width: 56px; height: 56px; border-radius: 15px; display: grid; place-items: center; overflow: hidden; box-shadow: 0 6px 16px rgba(20,20,40,.14), inset 0 0 0 1px rgba(0,0,0,.06); flex: none; }
+.app > svg { display: block; }
+/* The link: about 40px of visible dots (20 each side), with the check sitting on its middle. */
+.wire { width: 76px; position: relative; height: 24px; display: grid; place-items: center; }
+.wire::before { content: ""; position: absolute; left: 4px; right: 4px; top: 50%; margin-top: -1.5px; height: 3px; background: radial-gradient(circle, var(--muted) 1.4px, transparent 1.7px) 0 50% / 7px 3px repeat-x; }
+.wire .ok { position: relative; width: 22px; height: 22px; border-radius: 99px; background: var(--tick); color: #fff; display: grid; place-items: center; box-shadow: 0 0 0 3px var(--card); }
+.wire .ok svg { width: 12px; height: 12px; }
+/* Health tile: lifted off the card in both modes (dark: a clearly lighter navy tile). */
 .app.hk { background: var(--card-2); color: var(--fg); }
-.app.hk svg { width: 30px; height: 30px; }
-.list > .row { min-height: 64px; }
+[data-theme="dark"] .app.hk { background: #34405F; box-shadow: 0 6px 16px rgba(0,0,0,.3), inset 0 0 0 1px rgba(255,255,255,.12); }
+.app.hk svg { width: 28px; height: 28px; }
+.since { color: color-mix(in srgb, var(--fg) 78%, var(--card)); }
+.sec { padding: 14px 4px 7px; }
+.list > .row { min-height: 0; padding-top: 7px; padding-bottom: 7px; }
+.open { margin-top: 12px; }
+.open .row { min-height: 52px; }
+.open .rt { color: var(--fg); }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -34,9 +43,9 @@
 <div class="scroll"><div class="pad">
   <div class="hd"><h1 class="t-large" data-a style="--i:0">Apple Health</h1><p class="t-foot muted" data-a style="--i:1">You choose what DayXero shares with Health.</p></div>
   <div class="card link-card" data-a style="--i:2">
-    <div class="apps"><span class="app" id="dx070"></span><span class="wire" data-fade style="--d:500ms"><span class="ok" data-ic="check" data-s="13" data-w="3.2" data-pop style="--d:900ms"></span></span><span class="app hk" role="img" aria-label="Apple Health"><span data-ic="heart" data-s="30" data-w="2.2"></span></span></div>
+    <div class="apps"><span class="app" id="dx070" role="img" aria-label="DayXero"></span><span class="wire" data-fade style="--d:500ms"><span class="ok" data-ic="check" data-s="12" data-w="3.2" data-pop style="--d:900ms"></span></span><span class="app hk" role="img" aria-label="Apple Health"><span data-ic="heart" data-s="28" data-w="2.4"></span></span></div>
     <div class="t-head">Connected to Apple Health</div>
-    <div class="t-foot muted">Since Fri, Oct 30</div>
+    <div class="t-foot since">Since Fri, Oct 30</div>
   </div>
   <p class="t-foot sec" data-a style="--i:3">DayXero writes</p>
   <div class="list" data-a style="--i:4">
@@ -48,13 +57,22 @@
     <div class="row " ><span class="ico-tile s" data-ic="moon"></span><div class="grow"><div class="t-body rt">Sleep</div><div class="t-foot muted">Sleep shifts in week one</div></div><span class="toggle on"></span></div>
     <div class="row " ><span class="ico-tile s" id="steps"></span><div class="grow"><div class="t-body rt">Steps</div><div class="t-foot muted">Walks during a craving</div></div><span class="toggle"></span></div>
   </div>
-  <p class="t-foot muted" data-a style="--i:7;padding:14px 4px 0">Health asks you first, and DayXero never sees what you turn off.</p>
+  <p class="t-foot muted" data-a style="--i:7;padding:10px 4px 0">Health asks you first, and DayXero never sees what you turn off.</p>
+  <div class="list open" data-a style="--i:8">
+    <div class="row"><span class="ico-tile s" data-ic="heart"></span><div class="grow"><div class="t-body rt">Open Health</div></div><span class="chev" data-ic="chev" data-s="18"></span></div>
+  </div>
 </div></div>
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
 /* Steps: a screen-local footprints glyph in the kit's line style (the kit has no steps icon). */
 document.getElementById('steps').innerHTML = '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 3.5c1.8 0 2.8 2 2.8 4.4S9.3 12 7.5 12 4.7 10.3 4.7 7.9 5.7 3.5 7.5 3.5zM5.6 15h3.8M16.5 8.5c1.8 0 2.8 2 2.8 4.4S18.3 17 16.5 17s-2.8-1.7-2.8-4.1 1-4.4 2.8-4.4zM14.6 20h3.8"/></svg>';
-document.getElementById('dx070').innerHTML = DX.char('xero', { mood: 'hello', size: 64 });
+/* The DayXero app icon at settings size (as on 000): the zero with its sunrise window, drawn whole. */
+document.getElementById('dx070').innerHTML = `<svg viewBox="0 0 1024 1024" width="56" height="56" aria-hidden="true"><defs><linearGradient id="aib" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFCF9C"/><stop offset="1" stop-color="#FFB27A"/></linearGradient><clipPath id="aih"><ellipse cx="512" cy="560" rx="170" ry="222"/></clipPath></defs>
+  <rect width="1024" height="1024" fill="url(#aib)"/><ellipse cx="512" cy="905" rx="250" ry="34" fill="#000" opacity=".1"/>
+  <path fill-rule="evenodd" fill="#FF7155" d="M512 170 C722 170 836 350 836 548 C836 770 704 900 512 900 C320 900 188 770 188 548 C188 350 302 170 512 170 Z M512 338 C606 338 682 438 682 560 C682 682 606 782 512 782 C418 782 342 682 342 560 C342 438 418 338 512 338 Z"/>
+  <path fill="#E85A3E" d="M716 250 C800 330 836 440 836 548 C836 770 704 900 512 900 C650 860 760 740 760 548 C760 430 744 320 716 250 Z"/>
+  <path d="M290 360 C312 290 360 236 430 210" fill="none" stroke="#FFB09C" stroke-width="26" stroke-linecap="round"/>
+  <g clip-path="url(#aih)"><rect x="300" y="300" width="430" height="560" fill="#BFD7FF"/><circle cx="512" cy="688" r="138" fill="#FFC93C"/></g></svg>`;
 </script>
 </body></html>

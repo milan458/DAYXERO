@@ -1,14 +1,12 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>013 Two nudges</title>
-<meta name="motion" content="Progress fills to 11/11 (900ms) and the sun lands at the end of the bar. Title and helper arrive, then the two nudges settle in 380ms apart, each with a soft notification haptic: first a rounded night-scene panel introducing Glim (72px, hello, on the hill under the moon; stars twinkle away from the words and fireflies drift, ambient), then Xero's 8:00 AM card and Glim's 9:00 PM card, two identical notification cards. The quiet-hours line (moon 10 PM to sun 7 AM, matching Settings) arrives last (600ms, from 1400ms).">
+<meta name="motion" content="Progress fills to 11/11 (900ms) and the sun lands at the end of the bar. Title and helper arrive, then the two nudges settle in 380ms apart, each with a soft notification haptic: Xero's 8:00 AM card, then Glim's 9:00 PM card (the same notification card), which carries a night scene as inset header art (its own rounded corners inside the card) introducing Glim (72px, hello, on the hill under the moon; stars twinkle and fireflies drift, ambient). The quiet-hours line (moon 10 PM to sun 7 AM, matching Settings) arrives last (600ms, from 1400ms).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   /* Onboarding header: back button and progress only (no avatar); the bar ends at the gutter so the sun knob never collides. */
   .nav { padding-right: 26px; }
-  /* Round 9: the title is 30px so it stays inside the gutter on one line. */
-  .q .t-large { font-size: 30px; }
-  .day { margin: 26px var(--gutter) 0; display: grid; gap: 12px; }
+  .day { margin: 30px var(--gutter) 0; display: grid; gap: 14px; }
   .ntf { position: relative; background: var(--card); border-radius: 22px; padding: 14px 16px 16px; display: grid; grid-template-columns: 40px 1fr; gap: 12px; box-shadow: 0 10px 24px rgba(30,26,58,.10); }
   [data-theme="dark"] .ntf { box-shadow: inset 0 0 0 1px var(--line); }
   .ntf .ic { width: 40px; height: 40px; border-radius: 11px; overflow: hidden; display: grid; place-items: center; }
@@ -19,15 +17,14 @@
   .ntf .t-foot { font-size: 15px; font-weight: 500; line-height: 1.4; }
   /* Both nudges sit in the same notification card. Glim's card carries a small night strip on top (the art is night in both modes),
      but the notification itself is the same container, type and colours as Xero's. */
-  /* Round 9: both nudges are the same notification card; the night scene that introduces Glim is its own rounded art panel above them. */
-  .night { display: block; }
-  .night .sky { position: relative; height: 128px; color: #F6EFE2; border-radius: 22px; overflow: hidden; }
+  /* Round 8: the night scene is header art inset in the card (6px in, its own 16px radius nested in the card's 22px), not a fused banner. */
+  .night { padding: 6px 6px 0; display: block; overflow: hidden; }
+  .night .sky { position: relative; height: 128px; color: #F6EFE2; border-radius: 16px; overflow: hidden; }
   .night .sky > svg { display: block; }
-  /* Dark: a hairline keeps the panel's foot from melting into the page. */
-  [data-theme="dark"] .night .sky::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--line); pointer-events: none; }
   .night .gl { position: absolute; left: 18px; top: 30px; }
   .night .meet { position: absolute; left: 100px; top: 32px; }
   .night .meet .t-cap { color: #AEB8D3; display: block; margin-top: 2px; }
+  .night .row-n { display: grid; grid-template-columns: 40px 1fr; gap: 12px; padding: 14px 10px 16px; }
   /* Quiet hours: one line, moon to sun. */
   .quiet { margin: 26px var(--gutter) 0; display: flex; align-items: center; justify-content: center; gap: 6px; color: var(--muted); }
   .quiet b { color: var(--fg); font-weight: 700; }
@@ -47,12 +44,12 @@
   </div>
 
   <div class="day">
-    <div class="night" data-settle style="--i:0;--d:500ms">
+    <div class="ntf" data-settle style="--i:0;--d:650ms"><span class="ic x" id="ix"></span><div><div class="top"><span class="t-cap">DayXero &middot; Xero</span><span class="t-cap">8:00 AM</span></div><p class="t-foot">Good morning. Ten seconds for today&rsquo;s pledge?</p></div></div>
+    <div class="ntf night" data-settle style="--i:0;--d:1030ms">
       <div class="sky"><div id="sky"></div><div class="gl" id="gl"></div>
         <div class="meet"><p class="t-head">Meet Glim</p><span class="t-cap">Your evening friend</span></div></div>
+      <div class="row-n"><span class="ic g" id="ig"></span><div><div class="top"><span class="t-cap">DayXero &middot; Glim</span><span class="t-cap">9:00 PM</span></div><p class="t-foot">How did today go? Take a minute to check in.</p></div></div>
     </div>
-    <div class="ntf" data-settle style="--i:0;--d:650ms"><span class="ic x" id="ix"></span><div><div class="top"><span class="t-cap">DayXero &middot; Xero</span><span class="t-cap">8:00 AM</span></div><p class="t-foot">Good morning. Ten seconds for today&rsquo;s pledge?</p></div></div>
-    <div class="ntf" data-settle style="--i:0;--d:1030ms"><span class="ic g" id="ig"></span><div><div class="top"><span class="t-cap">DayXero &middot; Glim</span><span class="t-cap">9:00 PM</span></div><p class="t-foot">How did today go? Take a minute to check in.</p></div></div>
   </div>
 
   <p class="t-foot quiet" data-a style="--d:1400ms"><b>Quiet hours</b><span class="g" data-icon="moon"></span>10 PM to<span class="g" data-icon="sun"></span>7 AM</p>
@@ -66,9 +63,7 @@
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon, { w: 2.4 }));
   document.getElementById('ix').innerHTML = DX.char('xero', { mood: 'hello', size: 40, animate: false });
   document.getElementById('ig').innerHTML = DX.char('glim', { mood: 'calm', size: 40, animate: false });
-  /* No stars near the words (round 9): drop any star inside the Meet Glim text zone. */
-  document.getElementById('sky').innerHTML = DX.nightSky({ w: 346, h: 128, moonX: 304, moonY: 40 })
-    .replace(/<circle cx="([\d.]+)" cy="([\d.]+)" r="1\.[28]" fill="#fff"[^>]*>(?:<animate[^>]*\/>)?<\/circle>/g, (m, x, y) => (+x > 80 && +x < 275 && +y < 84) ? '' : m);
+  document.getElementById('sky').innerHTML = DX.nightSky({ w: 334, h: 128, moonX: 296, moonY: 40 });
   document.getElementById('gl').innerHTML = DX.char('glim', { mood: 'hello', size: 72 });
   const bar = document.getElementById('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '90.9%'); void bar.offsetWidth; bar.style.transition = ''; });

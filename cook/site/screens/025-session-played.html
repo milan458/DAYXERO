@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>025 Session card played</title>
-<meta name="motion" content="The apricot Listen card lifts from below and flips over (rotateY, 1100ms settle) to its back: a crisp paper sun with twelve short rays and a cream band reading Listen · 6 min, landing with a slight tilt; at 1.1s the rays fan out from the disc (500ms settle, 30ms apart) and an ink check draws across the sun (420ms, success haptic). The first card's segment fills from the playhead to full at 1.3s (the label beside the bar stays Card 1 of 5). Title and line arrive (600ms, 90ms stagger), then How was it? and its three chips right under them as one group; the centred Up next row (with its small paper-cut spot) and the button arrive last in the dock. Tapping a rating chip selects it with the kit tint and outline (selection haptic).">
+<meta name="motion" content="The apricot Listen card lifts from below and flips over (rotateY, 1100ms settle) to its back: a crisp paper sun with twelve short rays and a cream band reading Listen · 6 min, landing with a slight tilt; at 1.1s the rays fan out from the disc (500ms settle, 30ms apart) and an ink check draws across the sun (420ms, success haptic). The first card's segment fills from the playhead to full at 1.3s. Title and line arrive (600ms, 90ms stagger), then How was it? and its three chips; Up next (with its small paper-cut spot) and the button arrive last in the dock. Tapping a rating chip selects it with the kit tint and outline (selection haptic).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -8,8 +8,6 @@
 .k-listen{--face:#FFC38A}.k-try{--face:#9FE3BC}
 [data-theme="dark"] .k-listen{--face:#F3B47E}[data-theme="dark"] .k-try{--face:#8FD3AD}
 .steps > i.now::after{width:var(--sub,45%);transition:width .5s var(--settle)}
-/* session chrome, identical on 024-031: the bar keeps one length because the label sits in a fixed slot */
-.nav .side{flex:none;width:122px;text-align:right;white-space:nowrap;color:var(--muted)}
 .stage{position:absolute;top:112px;left:0;right:0;height:336px;perspective:900px}
 .flip{position:absolute;left:50%;top:12px;width:226px;height:302px;margin-left:-113px;transform-style:preserve-3d;transform:rotate(4deg) rotateY(180deg)}
 .play .flip{animation:fly 1100ms var(--settle) both 150ms}
@@ -24,20 +22,19 @@
 .side-f.back svg.sunart{position:absolute;left:0;top:0;width:100%;height:auto}
 .side-f.back .band{position:absolute;left:0;right:0;bottom:0;height:56px;background:#FFF8EE;display:flex;align-items:center;justify-content:center;gap:8px;font:600 14px/1 var(--body);color:#1E1A3A}
 .side-f.back .band svg{width:17px;height:17px}
-/* dark mode: cream at 90%, never a muddy tan */
-[data-theme="dark"] .side-f.back .band{background:rgba(255,248,238,.9)}
+/* dark mode: the band is a dimmer cream so it never glares on navy */
+[data-theme="dark"] .side-f.back .band{background:#E9DCC6}
 .ray{transform-box:fill-box;transform-origin:50% 50%}
 .play .ray{animation:fan 500ms var(--settle) both;animation-delay:calc(1100ms + var(--r) * 30ms)}
 @keyframes fan{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:none}}
-/* title, line and How was it? are one group (8, then 24, then 12) */
-.mid{position:absolute;top:466px;left:0;right:0;text-align:center;display:grid;gap:8px}
-.rate{margin-top:16px;display:grid;gap:12px;justify-items:center}
+.mid{position:absolute;top:470px;left:0;right:0;text-align:center;display:grid;gap:8px}
+/* How was it?: right under the line it rates */
+.rate{position:absolute;top:578px;left:0;right:0;display:grid;gap:10px;justify-items:center}
 .rate .chips{gap:8px;justify-content:center}
 .rate .chip{min-height:40px;padding:0 15px;border-radius:99px;font:600 14px/1 var(--body);box-shadow:inset 0 0 0 1px rgba(30,26,58,.2)}
 [data-theme="dark"] .rate .chip{box-shadow:inset 0 0 0 1px var(--line)}
-/* Up next: a centred caption row with the next card's small paper-cut spot, 24px clear of the button */
-.upnext{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:14px}
-.upnext .grow{flex:none}
+/* Up next: a caption row just above the button, with the next card's small paper-cut spot */
+.upnext{display:flex;align-items:center;gap:12px;padding:0 4px 4px}
 .spot{width:40px;height:40px;border-radius:12px;overflow:hidden;flex:none;display:block}
 .spot svg{display:block;width:40px;height:40px}
 .upnext .t-cap{color:var(--muted);display:block}
@@ -48,7 +45,6 @@
   <div class="nav">
     <button class="icon-btn" aria-label="Close" id="close"></button>
     <div class="grow"><div class="steps" aria-label="Card 1 of 5 done"><i class="on" id="p1"></i><i></i><i></i><i></i><i></i></div></div>
-    <span class="side t-cap">Card 1 of 5</span>
   </div>
   <div class="stage">
     <div class="flip">
@@ -62,10 +58,10 @@
   <div class="mid pad">
     <h1 class="t-large" data-a style="--i:0;--d:900ms">First card, done</h1>
     <p class="t-foot muted" data-a style="--i:1;--d:900ms">Why it feels like it calms you</p>
-    <div class="rate" data-a style="--i:2;--d:900ms">
-      <p class="t-foot muted">How was it?</p>
-      <div class="chips"><button class="chip">Helpful</button><button class="chip">Just okay</button><button class="chip">Not for me</button></div>
-    </div>
+  </div>
+  <div class="rate" data-a style="--i:2;--d:900ms">
+    <p class="t-foot muted">How was it?</p>
+    <div class="chips"><button class="chip">Helpful</button><button class="chip">Just okay</button><button class="chip">Not for me</button></div>
   </div>
   <div class="dock">
     <div class="upnext" data-a style="--i:3;--d:900ms">

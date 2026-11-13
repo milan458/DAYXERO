@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>004 How much you smoke</title>
-<meta name="motion" content="Progress eases from 1/11 to 2/11 (900ms). Question, stepper card, chips and the money card arrive in order (600ms, 90ms stagger). At 900ms the plus button (outlined, the same weight as minus) presses: a quick tint fill and a spring bump (520ms), the count rolls from 11 to 12 (rises 10px, 300ms) and the yearly figure counts up from $1,606 to $1,752 (700ms ease-out); at 1100ms one more flat paper-cut coin (no gloss) drops onto the small coin pile, clear of a pleased, open-eyed Xero (calm, 18px drop, 420ms settle). Selection haptic on each step.">
+<meta name="motion" content="Progress eases from 1/11 to 2/11 (900ms). Question, stepper card, chips and the money card arrive in order (600ms, 90ms stagger). At 900ms the plus button (outlined, the same weight as minus) presses: a quick tint fill and a spring bump (520ms), the count rolls from 11 to 12 (rises 10px, 300ms) and the yearly figure counts up from $1,606 to $1,752 (700ms ease-out); at 1100ms one more flat paper-cut coin drops onto the small coin pile beside a pleased, open-eyed Xero (calm, 18px drop, 420ms settle). Selection haptic on each step.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -37,9 +37,8 @@
   .money .t-display { display: block; margin: 4px 0 2px; }
   /* Xero, pleased and open-eyed, beside a small paper coin pile (the money, not a cheer): their own column, nothing touching the edge. */
   .money .xm { position: relative; width: 112px; height: 100px; justify-self: end; }
-  /* Round 9: coins and Xero sit side by side with a clear gap (no overlap). */
-  .money .xm .xc { position: absolute; right: 0; top: 12px; }
-  .money .xm .coins { position: absolute; left: 0; bottom: 12px; }
+  .money .xm .xc { position: absolute; right: 0; top: 6px; }
+  .money .xm .coins { position: absolute; left: 0; bottom: 6px; }
   .coin-top { opacity: 1; }
   .play .coin-top { animation: coin-drop 420ms var(--settle) 1100ms both; }
   @keyframes coin-drop { from { opacity: 0; transform: translateY(-18px); } to { opacity: 1; transform: none; } }
@@ -69,7 +68,7 @@
       <div><p class="t-foot muted">At $8 a pack, that&rsquo;s</p>
         <span class="t-display num"><span data-count="1752" data-from="1606" data-prefix="$" data-delay="900" data-dur="700">$1,752</span></span>
         <p class="t-foot">a year on cigarettes alone</p></div>
-      <div class="xm"><div class="xc" id="xm"></div><svg class="coins" id="coins" width="34" height="44" viewBox="0 0 34 44" aria-hidden="true"></svg></div>
+      <div class="xm"><div class="xc" id="xm"></div><svg class="coins" id="coins" width="40" height="46" viewBox="0 0 40 46" aria-hidden="true"></svg></div>
       <p class="t-foot foot"><b>$4.80 a day.</b> Yours again from Quit Day.</p>
     </div>
   </div>
@@ -77,15 +76,14 @@
 </div>
 <script>
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
-  const xm = document.getElementById('xm'); xm.innerHTML = DX.char('xero', { mood: 'hello', size: 74 });   /* pleased, eyes open */
-  /* Paper-cut coins (round 9): flat cut discs, no gloss, no blur shadow. Each is a sun-yellow disc with a flat amber crescent
-     on its right (Xero's own side shade) and one cut ring; a flat amber sliver under the pile grounds it. The top coin drops in. */
-  const dkc = DX.theme === 'dark';
-  const coin = (cx, cy, top) => `<g ${top ? 'class="coin-top"' : ''}><circle cx="${cx}" cy="${cy}" r="9" fill="#FFD966"/>
-    <path d="M${cx + 2} ${cy - 8.8} a9 9 0 0 1 0 17.6 a12 12 0 0 0 0 -17.6 z" fill="#F5B83D"/>
-    <circle cx="${cx}" cy="${cy}" r="5.2" fill="none" stroke="#F5B83D" stroke-width="1.6"/></g>`;
-  document.getElementById('coins').innerHTML = `<ellipse cx="17" cy="41.5" rx="15" ry="2.2" fill="${dkc ? 'rgba(0,0,0,.4)' : 'rgba(150,70,30,.16)'}"/>`
-    + coin(9, 31) + coin(25, 31) + coin(17, 16, true);
+  const xm = document.getElementById('xm'); xm.innerHTML = DX.char('xero', { mood: 'hello', size: 80 });   /* pleased, eyes open */
+  /* Paper-cut coins (round 8): three flat cut discs in a small pile, each with a crescent shade, one ring and a soft paper shadow;
+     the top coin drops in. */
+  const sh = DX.theme === 'dark' ? 'rgba(0,0,0,.55)' : 'rgba(120,52,24,.26)';
+  const coin = (cx, cy, top) => `<g ${top ? 'class="coin-top"' : ''} filter="url(#cs)"><circle cx="${cx + 1.3}" cy="${cy + 1}" r="10.5" fill="#F5B83D"/><circle cx="${cx}" cy="${cy}" r="10.5" fill="#FFD966"/>
+    <circle cx="${cx}" cy="${cy}" r="6.4" fill="none" stroke="#F5B83D" stroke-width="1.6"/><path d="M${cx - 7.4} ${cy - 2.6} a8 8 0 0 1 4.6 -4.8" fill="none" stroke="#FFF3C4" stroke-width="1.6" stroke-linecap="round"/></g>`;
+  document.getElementById('coins').innerHTML = `<defs><filter id="cs" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="1.6" stdDeviation="1" flood-color="${sh}"/></filter></defs>`
+    + coin(12, 33) + coin(27, 33) + coin(19.5, 17.5, true);
   const bar = document.getElementById('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '9.1%'); void bar.offsetWidth; bar.style.transition = ''; });
   DX.after(250, () => bar.style.setProperty('--p', '18.2%'));
