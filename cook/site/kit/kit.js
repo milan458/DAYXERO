@@ -37,11 +37,11 @@
   }
 
   function tabbar(active) {
-    const t = (k, label, ic) => `<a class="${active === k ? 'on' : ''}" data-go="${{ today: '016-today-quit', program: '022-program', progress: '036-progress' }[k]}">${icon(ic)}<span>${label}</span></a>`;
-    return `<div class="tabfade"></div><nav class="tabbar" style="grid-template-columns:repeat(4,1fr)">
-      ${t('today', 'Today', 'home')}${t('program', 'Program', 'path')}
+    const t = (k, label, ic, go) => `<a class="${active === k ? 'on' : ''}" data-go="${go}">${icon(ic, { w: active === k ? 2.6 : 2.1 })}<span>${label}</span></a>`;
+    return `<div class="tabfade"></div><nav class="tabbar">
+      ${t('today', 'Today', 'home', '016-today-quit')}${t('program', 'Program', 'path', '022-program')}
       <a class="sos" data-go="019-sos" aria-label="Craving SOS">${icon('wave', { size: 26, w: 2.4 })}<span>SOS</span></a>
-      ${t('progress', 'Progress', 'chart')}</nav>`;
+      ${t('calm', 'Calm', 'leaf', '056-calm')}${t('progress', 'Progress', 'chart', '036-progress')}</nav>`;
   }
 
   /* Progress ring. p 0..1. Animates from 0 unless still. */
@@ -80,10 +80,13 @@
     const locked = state === 'locked', next = state === 'next';
     const edgePath = kind === 'prep' ? scallop(50, 50, 48, 14, 4) : '';
     const label = String(n).length > 2 ? 22 : 30;
+    const xeroMark = (op) => `<g opacity="${op}"><path fill-rule="evenodd" fill="#FF7155" d="M50 22 C68 22 78 36 78 53 C78 70 67 82 50 82 C33 82 22 70 22 53 C22 36 32 22 50 22 Z M50 37 C57 37 62 44 62 54 C62 64 57 70 50 70 C43 70 38 64 38 54 C38 44 43 37 50 37 Z"/><path fill="#E85A3E" d="M69 30 C75 37 78 45 78 53 C78 70 67 82 50 82 C62 77 71 66 71 53 C71 44 70 37 69 30 Z"/><clipPath id="${id}w"><ellipse cx="50" cy="54" rx="12" ry="16.5"/></clipPath><g clip-path="url(#${id}w)"><rect x="36" y="36" width="28" height="36" fill="#BFD7FF"/><circle cx="50" cy="58" r="6" fill="#FFC93C"/><path d="M36 60 C42 57 48 59 54 57 S62 57 64 58 V72 H36Z" fill="#3FB37F"/></g><path d="M30 38 C32 32 36 28 42 26" fill="none" stroke="#FFB09C" stroke-width="3" stroke-linecap="round"/></g>`;
+
     let art = '';
     if (kind === 'wave') art = `<path d="M8 66c8-7 16-7 24 0s16 7 24 0 16-7 24 0 12 5 16 2v40H8z" fill="${pal.hill}"/><path d="M8 78c8-6 16-6 24 0s16 6 24 0 16-6 24 0 12 5 16 2v30H8z" fill="${pal.edge}" opacity=".7"/>`;
-    else if (kind === 'night') art = `<circle cx="70" cy="30" r="9" fill="${pal.sun}"/><path d="M0 72 C30 60 60 80 100 66 V100 H0z" fill="${pal.hill}"/>`;
-    else art = `<circle cx="${kind === 'xero' ? 50 : 66}" cy="${kind === 'xero' ? 74 : 64}" r="${kind === 'xero' ? 18 : 12}" fill="${pal.sun}"/><path d="M0 74 C24 62 48 66 70 72 S96 70 100 68 V100 H0z" fill="${pal.hill}"/><path d="M0 84 C30 76 60 90 100 80 V100 H0z" fill="${pal.edge}" opacity=".55"/>`;
+    else if (kind === 'night') art = `<circle cx="70" cy="31" r="11" fill="${pal.sun}"/><circle cx="64" cy="27" r="10" fill="${pal.face}"/><circle cx="30" cy="30" r="1.6" fill="#fff"/><circle cx="42" cy="20" r="1.2" fill="#fff" opacity=".8"/><path d="M0 72 C30 60 60 80 100 66 V100 H0z" fill="${pal.hill}"/>`;
+    else if (kind === 'xero') art = `<circle cx="50" cy="50" r="39" fill="#FFE9A8"/>`;
+    else art = `<circle cx="66" cy="64" r="12" fill="${pal.sun}"/><path d="M0 74 C24 62 48 66 70 72 S96 70 100 68 V100 H0z" fill="${pal.hill}"/><path d="M0 84 C30 76 60 90 100 80 V100 H0z" fill="${pal.edge}" opacity=".55"/>`;
     const rays = kind === 'xero' ? `<g class="rays" style="transform-origin:50px 50px" opacity=".9">${Array.from({ length: 12 }, (_, i) => `<path d="M50 -4 L53 8 L47 8Z" fill="#F5B83D" transform="rotate(${i * 30} 50 50)"/>`).join('')}</g>` : '';
     const face = locked
       ? `<circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" stroke-opacity=".35" stroke-width="3" stroke-dasharray="6 6"/>
@@ -93,9 +96,9 @@
          <clipPath id="${id}"><circle cx="50" cy="50" r="39"/></clipPath>
          <circle cx="50" cy="50" r="39" fill="${pal.face}"/><g clip-path="url(#${id})">${art}</g>
          <circle cx="50" cy="50" r="39" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="2"/>
-         <text x="50" y="${kind === 'xero' ? 42 : 50}" text-anchor="middle" dominant-baseline="middle" font-family="Bricolage Grotesque" font-weight="800" font-size="${label}" fill="${pal.ink}" letter-spacing="-1">${n}</text>`;
+         ${kind === 'xero' ? xeroMark(1) : `<text x="50" y="50" text-anchor="middle" dominant-baseline="middle" font-family="Bricolage Grotesque" font-weight="800" font-size="${label}" fill="${pal.ink}" letter-spacing="-1">${n}</text>`}`;
     const ringNext = next ? `<circle cx="50" cy="50" r="48" fill="none" stroke="currentColor" stroke-opacity=".22" stroke-width="3"/>` + (o.p != null ? `<circle cx="50" cy="50" r="48" fill="none" stroke="var(--fg)" stroke-width="3" stroke-linecap="round" stroke-dasharray="${2 * Math.PI * 48}" stroke-dashoffset="${2 * Math.PI * 48 * (1 - o.p)}" transform="rotate(-90 50 50)"/>` : '') : '';
-    const svg = `<svg width="${s}" height="${s}" viewBox="0 0 100 100" style="display:block;overflow:visible" role="img" aria-label="${o.label || ''} ${state}">${next ? `<circle cx="50" cy="50" r="45" fill="currentColor" fill-opacity=".06"/><circle cx="50" cy="50" r="45" fill="none" stroke="${pal.edge}" stroke-width="3.5" stroke-dasharray="6 5"/>${kind === 'xero' ? `<circle cx="50" cy="66" r="13" fill="#F5B83D" fill-opacity=".6"/>` : ''}<text x="50" y="${kind === 'xero' ? 44 : 50}" text-anchor="middle" dominant-baseline="middle" font-family="Bricolage Grotesque" font-weight="800" font-size="${label}" fill="currentColor" letter-spacing="-1">${n}</text>` : face}${ringNext}</svg>`;
+    const svg = `<svg width="${s}" height="${s}" viewBox="0 0 100 100" style="display:block;overflow:visible" role="img" aria-label="${o.label || ''} ${state}">${next ? `<circle cx="50" cy="50" r="45" fill="currentColor" fill-opacity=".06"/><circle cx="50" cy="50" r="45" fill="none" stroke="${pal.edge}" stroke-width="3.5" stroke-dasharray="6 5"/>${kind === 'xero' ? xeroMark(.45) : `<text x="50" y="50" text-anchor="middle" dominant-baseline="middle" font-family="Bricolage Grotesque" font-weight="800" font-size="${label}" fill="currentColor" letter-spacing="-1">${n}</text>`}` : face}${ringNext}</svg>`;
     if (o.bare) return svg;
     return `<div class="badge ${o.cls || ''}" ${o.attr || ''}>${svg}${o.label ? `<span class="t-cap">${o.label}</span>` : ''}</div>`;
   }
@@ -107,7 +110,8 @@
   function nightSky(o = {}) {
     const w = o.w || 390, h = o.h || 430, id = 'n' + (++nid), mx = o.moonX ?? w - 54, my = o.moonY ?? h * .55;
     const dark = theme === 'dark';
-    const sky = dark ? ['#08101F', '#111D38', '#22315A'] : ['#0B1430', '#16244A', '#2C3D6A'], hills = dark ? ['#16233F', '#0F1A31', '#0A1326'] : ['#1C2C4E', '#132240', '#0F1B33'];
+    const dawn = !!o.dawn;
+    const sky = dawn ? ['#0D1630', '#24335C', '#5B5578'] : dark ? ['#08101F', '#111D38', '#22315A'] : ['#0B1430', '#16244A', '#2C3D6A'], hills = dark ? ['#16233F', '#0F1A31', '#0A1326'] : ['#1C2C4E', '#132240', '#0F1B33'];
     const ground = dark ? '#0A1326' : '#0F1B33', moon = '#F6E7C1', glow = '#FFD37A';
     const st = [[.15, .09], [.38, .07], [.64, .15], [.82, .05], [.1, .26], [.51, .22], [.9, .28], [.28, .35], [.74, .4], [.05, .47], [.46, .14], [.95, .16]];
     const sx = w / 390, hy = y => (y / 430 * h).toFixed(1);
@@ -117,12 +121,12 @@
       <radialGradient id="f${id}"><stop offset="0" stop-color="${glow}" stop-opacity=".9"/><stop offset="1" stop-color="${glow}" stop-opacity="0"/></radialGradient>
       <linearGradient id="g${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${ground}" stop-opacity="0"/><stop offset="1" stop-color="${ground}"/></linearGradient></defs>
       <rect width="${w}" height="${h}" fill="url(#s${id})"/>
-      <circle cx="${mx}" cy="${my}" r="70" fill="url(#m${id})"/><circle cx="${mx}" cy="${my}" r="20" fill="${moon}"/>
-      ${st.map(([x, y], i) => `<circle cx="${(x * w).toFixed(1)}" cy="${(y * h).toFixed(1)}" r="${i % 3 ? 1.2 : 1.8}" fill="#fff" opacity="${i % 2 ? .5 : .85}">${still ? '' : `<animate attributeName="opacity" values="${i % 2 ? '.5;.15;.5' : '.85;.35;.85'}" dur="${(1.6 + (i % 5) * .35).toFixed(2)}s" repeatCount="indefinite"/>`}</circle>`).join('')}
+      ${dawn ? `<circle cx="${w * .5}" cy="${hy(300)}" r="${70 * sx}" fill="#F2A65A" opacity=".22"/><circle cx="${w * .5}" cy="${hy(300)}" r="${26 * sx}" fill="#F7B871" opacity=".85"/>` : `<circle cx="${mx}" cy="${my}" r="70" fill="url(#m${id})"/><circle cx="${mx}" cy="${my}" r="20" fill="${moon}"/>`}
+      ${st.filter((_, i) => !dawn || i % 2 === 0).map(([x, y], i) => `<circle cx="${(x * w).toFixed(1)}" cy="${(y * h).toFixed(1)}" r="${i % 3 ? 1.2 : 1.8}" fill="#fff" opacity="${i % 2 ? .5 : .85}">${still ? '' : `<animate attributeName="opacity" values="${i % 2 ? '.5;.15;.5' : '.85;.35;.85'}" dur="${(1.6 + (i % 5) * .35).toFixed(2)}s" repeatCount="indefinite"/>`}</circle>`).join('')}
       <path d="M0 ${hy(300)} C${70 * sx} ${hy(270)} ${140 * sx} ${hy(282)} ${210 * sx} ${hy(296)} S${330 * sx} ${hy(300)} ${w} ${hy(270)} V${h} H0z" fill="${hills[0]}"/>
       <path d="M0 ${hy(340)} C${90 * sx} ${hy(316)} ${170 * sx} ${hy(340)} ${250 * sx} ${hy(332)} S${350 * sx} ${hy(318)} ${w} ${hy(326)} V${h} H0z" fill="${hills[1]}"/>
       <path d="M0 ${hy(380)} C${80 * sx} ${hy(368)} ${160 * sx} ${hy(386)} ${240 * sx} ${hy(378)} S${350 * sx} ${hy(366)} ${w} ${hy(372)} V${h} H0z" fill="${hills[2]}"/>
-      ${[[.18, 320], [.3, 352], [.77, 346], [.88, 312]].map(([x, y], i) => `<g>${still ? '' : `<animateTransform attributeName="transform" type="translate" values="0 0;${i % 2 ? 6 : -6} -8;0 0" dur="${5 + i}s" repeatCount="indefinite"/>`}<circle cx="${(x * w).toFixed(1)}" cy="${hy(y)}" r="9" fill="url(#f${id})"/><circle cx="${(x * w).toFixed(1)}" cy="${hy(y)}" r="1.8" fill="${glow}"/></g>`).join('')}
+      ${(dawn ? [] : [[.18, 320], [.3, 352], [.77, 346], [.88, 312]]).map(([x, y], i) => `<g>${still ? '' : `<animateTransform attributeName="transform" type="translate" values="0 0;${i % 2 ? 6 : -6} -8;0 0" dur="${5 + i}s" repeatCount="indefinite"/>`}<circle cx="${(x * w).toFixed(1)}" cy="${hy(y)}" r="9" fill="url(#f${id})"/><circle cx="${(x * w).toFixed(1)}" cy="${hy(y)}" r="1.8" fill="${glow}"/></g>`).join('')}
       <rect y="${h - 70}" width="${w}" height="70" fill="url(#g${id})"/></svg>`;
   }
 
@@ -133,7 +137,7 @@
     /* Dark mode: the sparkles, zzz and breeze marks around characters turn cream so they show on navy. */
     if (name !== 'horizon' && theme === 'dark') svg = svg.replace(/(<g opacity="[^"]*" (?:fill="none" )?stroke=")#24163A/g, '$1#F3E9DE');
     /* Dark mode: horizon scenes are repainted as the midnight-meadow night (navy hills, moon, stars), never a brown overlay. */
-    if (name === 'horizon' && theme === 'dark' && !o.noDusk) svg = nightSky({ w: o.w || 400, h: o.h || 300, moonX: (o.w || 400) * .78, moonY: (o.h || 300) * .3 });
+    if (name === 'horizon' && theme === 'dark' && !o.noDusk) svg = nightSky({ w: o.w || 400, h: o.h || 300, dawn: o.scene !== 'night' });
     return svg;
   }
 

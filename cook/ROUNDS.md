@@ -77,3 +77,17 @@ Own score (not decisive): 8.5.
 Kit after round 3: dark horizon art repainted as the midnight-meadow night (no brown overlays); toggles use the brand ink/cream;
 dark selection is cream everywhere; SOS tab button raised with a label on the shared baseline.
 Next focus (round 4, cook/critic/r04-fixes.md): one idea per screen, badge sizes, session pips, list hierarchy, dead bands.
+
+---
+
+## Round 04
+
+Time: 17:52 to 18:08 | total elapsed 1.3h
+Focus: one idea per screen, badge sizes, session pips, list hierarchy, dead bands; then a switch to section critics at real size.
+Critic method change: per-section critics (2 per section: Opus + Sonnet) on full-size 390px [light | dark] tiles, rubric RUBRIC-S
+(9.2 = Apple Design Award submission). Scores are not directly comparable with rounds 1-3 (smaller tiles, whole app).
+Section scores (Opus / Sonnet): onboarding 8.3 / 8.5; Today-SOS-Program 8.5 / 8.7; session 8.4 / 8.5; lesson-log 8.2 / 8.8;
+slips-checkin (Sonnet) 8.5; calm-settings (Sonnet) 8.6. Median of section medians: 8.5.
+Screens at or above 9.0 by a critic: 039 (9.2), 018, 019, 034, 038, 046, 032 (9.0).
+Kit after round 4: Day Xero badge is the brand mark; 5-slot tab bar with SOS centred and a Calm tab; night badge moon motif;
+dark mornings use a pre-dawn sky; chips fill-only; toggles brand ink.
