@@ -4,18 +4,20 @@
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .hero { position: absolute; left: 0; right: 0; top: 0; height: 322px; border-radius: 0 0 36px 36px; overflow: hidden; }
+  .hero { position: absolute; left: 0; right: 0; top: 0; height: 344px; border-radius: 0 0 36px 36px; overflow: hidden; }
   .hero .scene { position: absolute; inset: 0; }
   [data-theme="dark"] .hero .scene { filter: brightness(.8) saturate(.92); }
-  .ringwrap { position: absolute; left: 50%; top: 60px; width: 200px; height: 200px; margin-left: -100px; }
+  .ringwrap { position: absolute; left: 50%; top: 76px; width: 204px; height: 204px; margin-left: -102px; }
+  .ringwrap .ring { --ringc: #FFF8EE; }
+  [data-theme="dark"] .ringwrap .ring { --ringc: #FFC38A; }
   .ringwrap .disc { position: absolute; inset: 20px; border-radius: 50%; background: rgba(255,248,238,.74); }
   .ringwrap .ring { position: absolute; inset: 0; }
-  .ringwrap .ch { position: absolute; left: 0; right: 0; top: 33px; display: grid; place-items: center; }
-  .pill { position: absolute; left: 0; right: 0; top: 272px; display: flex; justify-content: center; }
+  .ringwrap .ch { position: absolute; left: 0; right: 0; top: 35px; display: grid; place-items: center; }
+  .pill { position: absolute; left: 0; right: 0; top: 294px; display: flex; justify-content: center; }
   .pill span { background: var(--card); color: var(--fg); border-radius: 99px; padding: 8px 14px; font: 600 14px/1 var(--body); display: inline-flex; gap: 8px; align-items: center; box-shadow: 0 6px 16px rgba(30,26,58,.12); }
   .pill i { width: 6px; height: 6px; border-radius: 99px; background: var(--fg); opacity: .4; }
 
-  .content { position: absolute; left: 0; right: 0; top: 340px; padding: 0 var(--gutter); }
+  .content { position: absolute; left: 0; right: 0; top: 368px; padding: 0 var(--gutter); }
   .hello { color: var(--muted); }
   .content h1 { margin-top: 4px; }
   .kept { margin-top: 8px; color: var(--muted); }
@@ -24,16 +26,17 @@
   .newb .grow { flex: 1; min-width: 0; }
   .newb .t-foot { color: var(--muted); }
   .newb .medal { width: 64px; height: 64px; border-radius: 99px; flex: none; }
-  .newb .nextb { flex: none; display: grid; justify-items: center; gap: 4px; padding-left: 14px; border-left: 1px solid var(--line); }
-  .newb .nextb .t-cap { color: var(--muted); }
+  .newb .nextb { flex: none; display: grid; justify-items: center; gap: 4px; padding-left: 16px; border-left: 1px solid var(--line); }
+  .newb .nextb .face { position: relative; width: 52px; height: 52px; display: grid; place-items: center; }
+  .newb .nextb .face svg { position: absolute; inset: 0; }
+  .newb .nextb .n { position: relative; font: 800 17px/1 var(--display); color: var(--fg); letter-spacing: -.4px; }
+  .newb .nextb .t-cap { color: var(--fg); font-size: 13px; }
   .sess { margin-top: 10px; display: flex; align-items: center; gap: 14px; }
   .sess .grow { flex: 1; min-width: 0; }
   .sess .t-foot { color: var(--muted); }
   .sess .btn.small { width: auto; padding: 0 18px 0 14px; flex: none; }
   .sess .btn svg { width: 16px; height: 16px; }
-  .peek { margin-top: 26px; }
-  .peekcard { margin-top: 12px; height: 70px; }
-  .peekcard .t-foot { color: var(--muted); }
+  .sess .t-head { white-space: nowrap; }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot" data-status="on-art">
@@ -49,7 +52,7 @@
 
   <div class="content">
     <p class="t-foot hello" data-a style="--i:2">Good morning, Sam</p>
-    <h1 class="t-display" data-a style="--i:3"><span data-count="7" data-dur="1100">7</span> days <span class="mark">free</span></h1>
+    <h1 class="t-display" data-a style="--i:3"><span data-count="7" data-dur="1100">7</span> days free</h1>
     <p class="t-foot kept" data-a style="--i:4"><b><span data-count="49" data-prefix="$" data-dec="2" data-dur="1100">$49.00</span></b> kept &middot; <b><span data-count="84" data-dur="1100">84</span></b> cigarettes not smoked</p>
 
     <div class="card newb" data-a style="--i:5">
@@ -62,26 +65,22 @@
     </div>
 
     <div class="card sess" data-a style="--i:6">
-      <span class="ico-tile" id="ic-sess"></span>
       <div class="grow">
-        <p class="t-foot">Day 7 &middot; 3 min</p>
+        <p class="t-foot">Day 7 &middot; 3 min read</p>
         <p class="t-head">The noisy passengers</p>
       </div>
       <button class="btn small" id="start"></button>
     </div>
-    <h2 class="t-title peek" data-a style="--i:7">Through the day</h2>
-    <div class="card peekcard" data-a style="--i:8"><p class="t-foot">Happening now</p><p class="t-head">Most nicotine has left your body</p></div>
   </div>
 </div>
 <script>
   const $ = s => document.querySelector(s);
-  $('#scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 390, h: 322, clarity: 90 });
-  $('#ring').innerHTML = DX.ring({ size: 200, stroke: 12, p: 1, color: '#1E1A3A', track: 'rgba(255,248,238,.55)' });
-  const xero = mood => DX.char('xero', { mood, size: 134, stage: 2 });
+  $('#scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 390, h: 344, clarity: 90 });
+  $('#ring').innerHTML = DX.ring({ size: 204, stroke: 8, p: 1, color: 'var(--ringc)', track: 'rgba(255,248,238,.3)' });
+  const xero = mood => DX.char('xero', { mood, size: 136, stage: 2 });
   $('#xero').innerHTML = xero('hello');
   $('#b7').innerHTML = DX.badge({ kind: 'day', n: 7, size: 64, bare: true });
-  $('#b14').innerHTML = DX.badge({ kind: 'day', n: 14, state: 'next', p: .5, size: 40, bare: true }) + '<span class="t-cap">7 to go</span>';
-  $('#ic-sess').innerHTML = DX.icon('note');
+  $('#b14').innerHTML = `<div class="face">${DX.badge({ kind: 'day', n: '', state: 'next', p: .5, size: 52, bare: true })}<span class="n">14</span></div><span class="t-cap">7 to go</span>`;
   $('#start').innerHTML = DX.icon('play', { fill: 'currentColor', w: 1.5 }) + 'Start';
   $('.screen').insertAdjacentHTML('beforeend', DX.tabbar('today'));
   DX.after(1650, () => { $('#xero').innerHTML = xero('cheer'); });

@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>042 Log a craving</title>
-<meta name="motion" content="Sections arrive with a 90ms stagger; the strength fill slides to 5 (700ms settle) and the knob lands with a light haptic. At 1.6s Save presses, turns into its done state 'Saved' with a tick (success haptic), and a toast slides down from the top (450ms settle) reading 'Craving logged. 4 cravings noted today.' with the 4 bumping and a +1 floating up. The toast leaves after 2.4s and the form closes.">
+<meta name="motion" content="Sections arrive with a 90ms stagger; the strength fill slides to 5 (700ms settle) and the knob lands with a light haptic. At 1.6s Save presses, turns into its done state 'Saved' with a tick (success haptic), and a toast rises just above the dock (450ms settle) reading 'Craving logged. 4 noted today.' with the 4 bumping and a +1 floating up. The toast leaves after 2.4s and the form closes.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -20,8 +20,8 @@
   .chip.face { flex-direction: column; justify-content: center; gap: 4px; min-height: 66px; padding: 0; font: 600 12.5px/1 var(--body); }
   .chip.face.on::before { display: none; }
   .chip.face svg { width: 26px; height: 26px; }
-  .toast { transform: translateY(-160%); }
-  .toast.show { transform: none; transition: transform 450ms var(--settle); }
+  .toast { opacity: 0; transform: translateY(24px); }
+  .toast.show { opacity: 1; transform: none; transition: transform 450ms var(--settle), opacity 250ms var(--ease); }
   .toast .tk { width: 30px; height: 30px; border-radius: 99px; background: var(--done-on-dark); color: #0B2A1C; display: grid; place-items: center; flex: none; }
   .toast .tk svg { width: 18px; height: 18px; }
   .toast .grow { flex: 1; }
@@ -71,7 +71,7 @@
   </div>
   <div class="toast" id="toast" role="status">
     <span class="tk" id="tk"></span>
-    <span class="grow">Craving logged. <span class="n" id="n">4<span class="plus" id="plus">+1</span></span> waves today.</span>
+    <span class="grow">Craving logged. <span class="n" id="n">4<span class="plus" id="plus">+1</span></span> noted today.</span>
   </div>
 </div>
 <script>

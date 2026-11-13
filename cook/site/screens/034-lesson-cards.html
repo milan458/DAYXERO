@@ -1,21 +1,21 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>034 Lesson cards</title>
-<meta name="motion" content="The stack edges arrive first, then the top card is dealt face down and turns over at 450ms (rotateY 180 to 0, 800ms settle curve, light haptic as it lands). The road on the card draws (900ms) and the sun pops, paragraphs arrive with a 90ms stagger, pips and the Turn it over button last. Tapping Turn it over flips the card to its back (reflection prompt) the same way.">
+<meta name="motion" content="The stack edges arrive first, then the top card is dealt face down and turns over at 450ms (rotateY 180 to 0, 800ms settle curve, light haptic as it lands). The paper-cut hills on the card lift in and the sun pops, paragraphs arrive with a 90ms stagger, pips and the Turn it over button last. Tapping Turn it over flips the card to its back (reflection prompt) the same way.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   .label { display: flex; align-items: center; gap: 8px; color: var(--muted); }
   .label svg { width: 18px; height: 18px; }
-  .stack-wrap { position: relative; margin-top: 14px; height: 520px; perspective: 1400px; }
-  .edge { position: absolute; left: 0; right: 0; top: 0; height: 494px; border-radius: 26px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
+  .stack-wrap { position: relative; margin-top: 14px; height: 548px; perspective: 1400px; }
+  .edge { position: absolute; left: 0; right: 0; top: 0; height: 522px; border-radius: 26px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
   .edge.e1 { transform: translateY(13px) scale(.95); opacity: .85; }
   .edge.e2 { transform: translateY(25px) scale(.9); opacity: .6; }
-  .flip { position: absolute; left: 0; right: 0; top: 0; height: 494px; transform-style: preserve-3d; transition: transform 800ms var(--settle); }
+  .flip { position: absolute; left: 0; right: 0; top: 0; height: 522px; transform-style: preserve-3d; transition: transform 800ms var(--settle); }
   .flip.back { transform: rotateY(180deg); transition: none; }
   .face { position: absolute; inset: 0; border-radius: 26px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line), 0 14px 30px rgba(30,26,58,.08);
     backface-visibility: hidden; -webkit-backface-visibility: hidden; padding: 22px 24px; display: flex; flex-direction: column; }
   .face.rear { transform: rotateY(180deg); background: var(--card-2); align-items: center; justify-content: center; text-align: center; gap: 10px; }
-  .road { display: block; width: 100%; height: auto; margin-bottom: 16px; }
+  .road { display: block; width: 100%; height: auto; margin-bottom: 18px; }
   .copy { display: grid; gap: 12px; margin-top: 8px; }
   .copy .t-body { color: var(--fg); }
   .copy .t-body.soft { color: var(--muted); }
@@ -40,14 +40,17 @@
         <div class="edge e1" data-fade style="--d:80ms"></div>
         <div class="flip" id="flip">
           <article class="face front">
-            <svg class="road" viewBox="0 0 300 116" aria-hidden="true">
-              <clipPath id="rc"><rect width="300" height="116" rx="18"/></clipPath>
+            <svg class="road" viewBox="0 0 300 156" aria-hidden="true">
+              <defs><clipPath id="rc"><rect width="300" height="156" rx="18"/></clipPath>
+                <linearGradient id="rsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFB98A"/><stop offset="1" stop-color="#FFE6C8"/></linearGradient>
+                <filter id="rlift" x="-5%" y="-20%" width="110%" height="140%"><feDropShadow dx="0" dy="-2" stdDeviation="2.5" flood-color="#1A0B2E" flood-opacity=".2"/></filter></defs>
               <g clip-path="url(#rc)">
-                <rect width="300" height="116" fill="var(--card-2)"/>
-                <circle cx="228" cy="42" r="16" fill="var(--sun)" data-pop style="transform-origin:228px 42px;--d:700ms"/>
-                <path d="M0 74 C60 58 120 66 170 70 S260 60 300 64 V116 H0z" fill="#FFAE73" opacity=".45"/>
-                <path d="M0 94 C80 82 180 100 300 86 V116 H0z" fill="#FF9A6B" opacity=".5"/>
-                <path class="draw" d="M118 116 C128 100 172 98 162 86 C156 78 170 72 182 69" fill="none" stroke="var(--mark)" stroke-width="5" stroke-linecap="round" style="--len:120;--d:600ms;--dur:900ms"/>
+                <rect width="300" height="156" fill="url(#rsky)"/>
+                <circle cx="214" cy="62" r="24" fill="var(--sun)" data-pop style="transform-origin:214px 62px;--d:700ms"/>
+                <path filter="url(#rlift)" d="M0 90 C60 70 120 80 170 86 S260 74 300 78 V156 H0z" fill="#FF9D6E"/>
+                <path filter="url(#rlift)" d="M0 114 C80 98 180 120 300 104 V156 H0z" fill="#FF7A55"/>
+                <path d="M104 156 C116 136 168 130 158 116 C152 106 166 98 180 94 L184 97 C172 102 162 108 168 117 C180 134 132 140 128 156 Z" fill="#FFF1D2"/>
+                <path filter="url(#rlift)" d="M0 140 C90 130 180 144 300 134 V156 H0z" fill="#E85A3E"/>
               </g>
             </svg>
             <h1 class="t-title" data-a style="--i:3">You're the driver</h1>

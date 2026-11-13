@@ -12,9 +12,11 @@
 .ico-tile.s svg { width: 19px; height: 19px; }
 .val { color: var(--muted); font: 500 15px/1.2 var(--body); white-space: nowrap; }
 .list > .row.tap { min-height: 56px; }
-.toast.b { top: auto; bottom: 40px; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
+.toast.b { top: auto; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
 .toast.b.in { opacity: 1; transform: none; }
 .toast.b .ck { flex: none; }
+.opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
+html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--sel) 72%, transparent); }
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
 .hero { display: flex; align-items: center; gap: 16px; padding: 18px; margin-top: 20px; }
@@ -26,13 +28,18 @@
 .kept { margin-top: 12px; display: flex; align-items: center; gap: 14px; padding: 14px 16px; }
 .btn.ghost.small { box-shadow: inset 0 0 0 2px var(--line); }
 .wk { margin-top: 12px; padding: 14px 16px; }
-.days { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; margin-top: 10px; text-align: center; }
-.days b { display: grid; place-items: center; width: 30px; height: 30px; margin: 0 auto; border-radius: 99px; background: var(--tick); color: #fff; }
+.days { display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px; margin-top: 12px; text-align: center; }
+.days b { display: grid; place-items: center; width: 36px; height: 36px; margin: 0 auto; border-radius: 99px; background: var(--tick); color: #fff; }
 [data-theme="dark"] .days b { color: #0B2A1C; }
-.days b svg { width: 14px; height: 14px; }
+.days b svg { width: 16px; height: 16px; }
 .days .td b { background: transparent; box-shadow: inset 0 0 0 2.5px var(--fg); color: var(--fg); font: 800 13px/1 var(--display); }
 .days .t-cap { color: var(--muted); display: block; margin-top: 5px; }
-.warn { margin-top: 12px; padding: 18px; display: grid; gap: 10px; }
+.warn { margin-top: 12px; padding: 18px; display: grid; gap: 10px; position: relative; }
+.warn .xr { position: absolute; right: 8px; top: -10px; }
+.keep { display: grid; gap: 8px; margin: 2px 0 4px; }
+.keep div { display: flex; align-items: center; gap: 10px; }
+.keep .ico-tile { width: 32px; height: 32px; border-radius: 10px; background: var(--card); }
+.keep .ico-tile svg { width: 17px; height: 17px; }
 
 </style>
 </head><body>
@@ -48,14 +55,19 @@
 
   <div class="card wk" data-a style="--i:3"><div class="t-foot muted">Your first week</div><div class="days"><span data-pop style="--i:0;--d:600ms"><b data-ic="check" data-s="14" data-w="3"></b><span class="t-cap">Fri</span></span><span data-pop style="--i:1;--d:600ms"><b data-ic="check" data-s="14" data-w="3"></b><span class="t-cap">Sat</span></span><span data-pop style="--i:2;--d:600ms"><b data-ic="check" data-s="14" data-w="3"></b><span class="t-cap">Sun</span></span><span data-pop style="--i:3;--d:600ms"><b data-ic="check" data-s="14" data-w="3"></b><span class="t-cap">Mon</span></span><span data-pop style="--i:4;--d:600ms"><b data-ic="check" data-s="14" data-w="3"></b><span class="t-cap">Tue</span></span><span data-pop style="--i:5;--d:600ms"><b data-ic="check" data-s="14" data-w="3"></b><span class="t-cap">Wed</span></span><span data-pop style="--i:6;--d:600ms"><b data-ic="check" data-s="14" data-w="3"></b><span class="t-cap">Thu</span></span><span class="td" data-pop style="--i:7;--d:600ms"><b>13</b><span class="t-cap">Today</span></span></div></div>
   <div class="card flat warn" data-a style="--i:4">
-    <div class="t-head">Need to change it?</div>
-    <p class="t-foot muted">If you slipped, you do not have to start over. A new date restarts the day count. Your badges, lessons and logs all stay.</p>
+    <div class="xr" id="xr066"></div>
+    <div class="t-head" style="padding-right:90px">Need to change it?</div>
+    <p class="t-foot muted" style="padding-right:84px">If you slipped, you do not start over. A new date only restarts the day count.</p>
+    <div class="keep"><p class="t-foot muted">What stays with you</p>
+      <div><span class="ico-tile" data-ic="medal"></span><span class="t-body">Your badges, Day Xero included</span></div>
+      <div><span class="ico-tile" data-ic="note"></span><span class="t-body">Every lesson and card you finished</span></div>
+      <div><span class="ico-tile" data-ic="chart"></span><span class="t-body">Your logs, waves and check-ins</span></div></div>
     <button class="btn ghost small" style="margin-top:4px">Choose a new date</button>
   </div>
 </div></div>
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
-document.getElementById('xb').innerHTML = DX.badge({ kind: 'xero', n: '0', state: 'earned', size: 54, bare: true });
+document.getElementById('xb').innerHTML = DX.badge({ kind: 'xero', n: '0', state: 'earned', size: 54, bare: true }); document.getElementById('xr066').innerHTML = DX.char('xero', { mood: 'calm', size: 88 });
 </script>
 </body></html>

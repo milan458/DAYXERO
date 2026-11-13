@@ -4,9 +4,9 @@
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .art { position: relative; height: 244px; border-radius: 26px; overflow: hidden; margin-top: 6px; }
+  .art { position: relative; height: 282px; border-radius: 26px; overflow: hidden; margin-top: 6px; }
   .art .scene { position: absolute; inset: 0; }
-  .art .hero { position: absolute; left: 50%; bottom: 6px; margin-left: -62px; }
+  .art .hero { position: absolute; left: 50%; bottom: 10px; margin-left: -68px; }
   .info { margin-top: 18px; display: grid; gap: 4px; }
   .scrub { margin-top: 18px; }
   .scrub svg { display: block; width: 100%; height: 24px; overflow: visible; }
@@ -69,8 +69,8 @@
 </div>
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20, w: e.dataset.ic === 'pause' ? 3.2 : 2.2 })));
-  document.getElementById('scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 346, h: 244 });
-  document.getElementById('hero').innerHTML = DX.char('xero', { mood: 'calm', size: 124 });
+  document.getElementById('scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 346, h: 282 });
+  document.getElementById('hero').innerHTML = DX.char('xero', { mood: 'calm', size: 136 });
   const tx = document.getElementById('tx'), tg = document.getElementById('tg'), el = document.getElementById('el');
   DX.after(0, () => { tx.classList.remove('open'); tg.classList.remove('on'); el.textContent = '0:00'; });
   DX.after(300, () => { const t0 = performance.now(); const tick = t => { const k = Math.min(1, (t - t0) / 1200), e = 1 - Math.pow(1 - k, 3), s = Math.round(72 * e);

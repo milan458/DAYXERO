@@ -1,16 +1,16 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>008 Onboarding obstacles</title>
-<meta name="motion" content="Progress bar eases from 5/11 to 6/11 (900ms settle) while the question and chips arrive (600ms, 90ms stagger). At 900ms the Stress chip fills to its selected state with a 520ms spring bump and a light selection haptic; the summary card below cross-fades its count from 1 to 2.">
+<meta name="motion" content="Progress eases from 5/11 to 6/11 (900ms settle). Question, the two labelled two-column groups (In the moment, Around you) and the Your plan so far card arrive in reading order (600ms, 90ms stagger); Xero settles into the card and bobs. At 900ms Stress fills to selected with a 520ms spring bump and a light selection haptic, and the Watch for line in the card grows from Cravings to Cravings, Stress with a bump.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .answers { gap: 10px !important; padding-top: 18px !important; }
-  .lbl { font: 700 14px/1.3 var(--body); color: var(--fg); margin: 6px 0 0; }
+  .answers { gap: 8px !important; padding-top: 14px !important; }
+  .lbl { font: 700 14px/1.3 var(--body); color: var(--fg); margin: 4px 0 0; }
   .answers .chips.two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .answers .chip { min-height: 48px; justify-content: flex-start; padding: 0 14px; }
-  .plan { display: flex; gap: 10px; align-items: center; margin-top: 10px; padding: 14px 8px 14px 18px; }
+  .answers .chip { min-height: 44px; justify-content: flex-start; padding: 0 14px; }
+  .plan { display: flex; gap: 10px; align-items: center; margin-top: 6px; padding: 10px 6px 10px 16px; }
   .plan .xc { width: 88px; height: 88px; flex: none; }
-  .plan .rows { display: grid; gap: 6px; margin-top: 8px; }
+  .plan .rows { display: grid; gap: 2px; margin-top: 6px; }
   .plan .r { display: flex; gap: 8px; align-items: baseline; }
   .plan .r .t-foot.k { color: var(--muted); width: 74px; flex: none; }
   .plan .r .t-foot.v { font-weight: 600; }

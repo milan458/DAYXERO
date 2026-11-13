@@ -12,9 +12,11 @@
 .ico-tile.s svg { width: 19px; height: 19px; }
 .val { color: var(--muted); font: 500 15px/1.2 var(--body); white-space: nowrap; }
 .list > .row.tap { min-height: 56px; }
-.toast.b { top: auto; bottom: 40px; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
+.toast.b { top: auto; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
 .toast.b.in { opacity: 1; transform: none; }
 .toast.b .ck { flex: none; }
+.opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
+html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--sel) 72%, transparent); }
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
 .opts { display: grid; gap: 10px; margin-top: 20px; }
@@ -23,8 +25,9 @@
 .step button { width: 34px; height: 34px; border-radius: 99px; background: var(--card-2); display: grid; place-items: center; color: var(--fg); }
 .step button svg { width: 16px; height: 16px; }
 .step .num { font-size: 19px; min-width: 40px; text-align: center; }
-.sum { margin-top: 14px; display: flex; align-items: baseline; justify-content: space-between; padding: 0 4px; }
-.sum .num { font-size: 22px; }
+.sum { margin-top: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.sum .card { padding: 14px 16px; display: grid; gap: 2px; }
+.sum .num { font-size: 30px; line-height: 1.05; }
 
 </style>
 </head><body>
@@ -43,7 +46,7 @@
     <div class="row " ><div class="grow"><div class="t-body rt">Pack of 20</div></div><div class="step"><button aria-label="Less" data-ic="minus" data-s="16" data-w="2.6"></button><span class="num">$8.00</span><button aria-label="More" data-ic="plus" data-s="16" data-w="2.6"></button></div></div>
     <div class="row " ><div class="grow"><div class="t-body rt">Vape spend a day</div></div><div class="step"><button aria-label="Less" data-ic="minus" data-s="16" data-w="2.6"></button><span class="num">$2.20</span><button aria-label="More" data-ic="plus" data-s="16" data-w="2.6"></button></div></div>
   </div>
-  <div class="sum" data-a style="--i:7"><span class="t-foot muted">That comes to</span><span><span class="num" data-count="7" data-prefix="$">$7</span> <span class="t-foot muted">a day,</span> <span class="num" data-count="2555" data-prefix="$">$2,555</span> <span class="t-foot muted">a year</span></span></div>
+  <div class="sum" data-a style="--i:7"><div class="card flat"><span class="num" data-count="7" data-prefix="$">$7</span><span class="t-foot muted">a day</span></div><div class="card flat"><span class="num" data-count="2555" data-prefix="$">$2,555</span><span class="t-foot muted">a year</span></div></div>
 </div></div>
 </div>
 <script>

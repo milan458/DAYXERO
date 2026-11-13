@@ -10,7 +10,8 @@
 .pips i.done{background:#FFD966}
 .pips i.now{background:transparent;box-shadow:inset 0 0 0 2px var(--fg)}
 .nav .side{width:44px;text-align:right;flex:none}
-.face{background:var(--face);color:#1E1A3A;border-radius:26px;overflow:hidden;box-shadow:0 18px 34px rgba(0,0,0,.3)}
+.face{background:var(--face);color:#1E1A3A;border-radius:26px;overflow:hidden;box-shadow:0 14px 28px rgba(60,40,20,.14)}
+[data-theme="dark"] .face{box-shadow:0 18px 34px rgba(0,0,0,.4)}
 .face .art{height:96px;overflow:hidden}
 .face .in{padding:16px 20px 18px}
 .kind{display:flex;align-items:center;gap:8px;font:600 14px/1 var(--body);opacity:.78}
@@ -22,9 +23,10 @@
 .line svg{display:block;overflow:visible}
 .times{display:flex;justify-content:space-between}
 .times .t-cap{opacity:.72}
-.beats{display:grid;gap:18px;margin-top:26px}
-.beat{display:grid;gap:6px;padding-left:16px;border-left:2px solid var(--line)}
-.beat .t-body{font-size:17px;line-height:1.55}
+.beats{display:grid;gap:22px;margin-top:28px}
+.beat{display:grid;gap:4px;padding-left:16px;border-left:3px solid #9CCBFF}
+.beat h3{font:800 19px/1.25 var(--display);letter-spacing:-.2px;margin:0}
+.beat .t-body{font-size:16px;line-height:1.5;color:var(--muted)}
 </style>
 </head><body>
 <div class="screen" data-ground="table">
@@ -53,9 +55,9 @@
         </div>
       </div>
       <div class="beats">
-        <div class="beat" data-a style="--i:3"><h3 class="t-head">Two in, one long out</h3><p class="t-body">In through your nose, one more sip, then slowly out.</p></div>
-        <div class="beat" data-a style="--i:4"><h3 class="t-head">In a tense moment</h3><p class="t-body">Two or three sighs take thirty seconds. Then decide what you need.</p></div>
-        <div class="beat" data-a style="--i:5"><h3 class="t-head">Feeling light-headed?</h3><p class="t-body">Breathe normally for a moment, then rejoin.</p></div>
+        <div class="beat" data-a style="--i:3"><h3>Two in, one long out</h3><p class="t-body">Breathe in, sip in a little more, then a long slow out.</p></div>
+        <div class="beat" data-a style="--i:4"><h3>In a tense moment</h3><p class="t-body">Two or three sighs take thirty seconds.</p></div>
+        <div class="beat" data-a style="--i:5"><h3>Feeling light-headed?</h3><p class="t-body">Breathe normally, then rejoin.</p></div>
       </div>
     </div>
   </div>

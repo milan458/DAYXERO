@@ -20,6 +20,10 @@
 .lh{display:flex;justify-content:space-between;align-items:baseline;margin-top:8px}
 .field{display:flex;align-items:center;gap:10px}
 .field svg{width:18px;height:18px;flex:none}
+.list .row .dot{width:10px;height:10px;border-radius:99px;background:#9FE3BC;box-shadow:0 0 0 4px color-mix(in srgb,#9FE3BC 35%,transparent);flex:none;margin-left:2px}
+.xr{display:flex;gap:6px;align-items:flex-end;margin-top:10px}
+.xr #xr{flex:none;margin:-6px 0 -10px -6px}
+.xr .bubble{max-width:none;flex:1;box-shadow:inset 0 0 0 1px var(--line);margin-bottom:18px;font-size:15px}
 </style>
 </head><body>
 <div class="screen" data-ground="table">
@@ -31,11 +35,11 @@
   <div class="wrap pad">
     <span class="tag f-mint" data-a style="--i:0"><span id="t-ic"></span>Try · 6 min</span>
     <h1 class="t-title" data-a style="--i:1">What gets to you most?</h1>
-    <p class="t-foot muted" data-a style="--i:2">Pick the two that come up most often. Add your own if it's missing.</p>
+    <p class="t-foot muted" data-a style="--i:2">Pick the two that come up most. Add your own if it's missing.</p>
     <div class="lh" data-a style="--i:3"><span class="t-foot" style="font-weight:600">Your two</span><span class="t-foot muted"><span data-count="2" data-from="0">2</span> of 2 picked</span></div>
     <div class="list">
-      <div class="row" data-settle style="--i:2"><span class="grow t-foot">Work piling up</span><button class="x" aria-label="Remove"></button></div>
-      <div class="row" data-settle style="--i:3"><span class="grow t-foot">Too much at once</span><button class="x" aria-label="Remove"></button></div>
+      <div class="row" data-settle style="--i:2"><span class="dot"></span><span class="grow t-foot">Work piling up</span><button class="x" aria-label="Remove"></button></div>
+      <div class="row" data-settle style="--i:3"><span class="dot"></span><span class="grow t-foot">Too much at once</span><button class="x" aria-label="Remove"></button></div>
     </div>
     <div class="field ph" data-a style="--i:7"><span id="plus"></span>Something else? Add your own</div>
     <p class="t-foot muted" data-a style="--i:8;margin-top:6px">Or swap one in</p>
@@ -43,12 +47,14 @@
       <button class="chip">A deadline</button><button class="chip">Money worries</button>
       <button class="chip">Tension with someone</button><button class="chip">Running late</button>
     </div>
+    <div class="xr" data-a style="--i:10"><div id="xr" data-settle style="--i:10"></div><p class="bubble">Work is the big one for most people. Naming it is how your stress plan starts.</p></div>
   </div>
-  <div class="dock"><button class="btn" data-a style="--i:10">Continue</button></div>
+  <div class="dock"><button class="btn" data-a style="--i:11">Continue</button></div>
 </div>
 <script>
 document.getElementById('close').innerHTML = DX.icon('close');
 document.getElementById('t-ic').innerHTML = DX.icon('hand', {size:16});
+document.getElementById('xr').innerHTML = DX.char('xero', {mood:'hello', size:88});
 document.getElementById('plus').innerHTML = DX.icon('plus', {size:18});
 document.querySelectorAll('.x').forEach(b => b.innerHTML = DX.icon('close', {size:14, w:2.6}));
 </script>

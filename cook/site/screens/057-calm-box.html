@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>057 Box breathing</title>
-<meta name="motion" content="The dot travels the square at an even pace, 4s per side (16s a round), while the inner square swells over the in side, holds, shrinks over the out side and holds; on each corner the centre word and the lit side label cross-fade (220ms) via DX.after and the count ticks 4 to 1 each second. A soft haptic tick at every corner, nothing else.">
+<meta name="motion" content="The dot travels the square at an even pace, 4s per side (16s a round) while the sea window and Jelli inside it swell over the in side, hold, shrink over the out side and hold (Jelli breathes with it); on each corner the phase word, the lit side label and the cue cross-fade (220ms) and the count ticks 4 to 1 each second. A soft haptic tick at every corner, nothing else.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -12,65 +12,75 @@
 .ico-tile.s svg { width: 19px; height: 19px; }
 .val { color: var(--muted); font: 500 15px/1.2 var(--body); white-space: nowrap; }
 .list > .row.tap { min-height: 56px; }
-.toast.b { top: auto; bottom: 40px; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
+.toast.b { top: auto; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
 .toast.b.in { opacity: 1; transform: none; }
 .toast.b .ck { flex: none; }
+.opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
+html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--sel) 72%, transparent); }
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
 .nav .title { flex: 1; text-align: center; margin-right: 56px; }
-.wrap { position: absolute; left: 0; right: 0; top: 196px; display: grid; justify-items: center; gap: 0; }
+.wrap { position: absolute; left: 0; right: 0; top: 118px; display: grid; justify-items: center; gap: 0; }
 .rnd { display: flex; gap: 8px; align-items: center; }
 .rnd i { width: 8px; height: 8px; border-radius: 99px; background: var(--track); }
 .rnd i.on { background: var(--fg); }
-.box { position: relative; width: 300px; height: 300px; margin-top: 22px; }
+.box { position: relative; width: 320px; height: 320px; margin-top: 22px; transform: scale(1.08); transform-origin: top center; margin-bottom: 26px; }
 .box svg { position: absolute; inset: 0; }
-.fillsq { position: absolute; left: 62px; top: 62px; width: 176px; height: 176px; border-radius: 16px; background: var(--card-2); transform: scale(.62); }
+.fillsq { position: absolute; left: 60px; top: 60px; width: 200px; height: 200px; border-radius: 18px; overflow: hidden; transform: scale(.7); }
+.fillsq .sea { position: absolute; inset: 0; }
+.jel { position: absolute; left: 60px; top: 60px; width: 200px; height: 200px; display: grid; place-items: center; transform: scale(.82); }
 .play .fillsq { animation: sq 16s cubic-bezier(.45,0,.55,1) infinite; }
-@keyframes sq { 0% { transform: scale(.62); } 25%, 50% { transform: scale(1); } 75%, 100% { transform: scale(.62); } }
+.play .jel { animation: jl 16s cubic-bezier(.45,0,.55,1) infinite; }
+@keyframes sq { 0% { transform: scale(.7); } 25%, 50% { transform: scale(1); } 75%, 100% { transform: scale(.7); } }
+@keyframes jl { 0% { transform: scale(.82); } 25%, 50% { transform: scale(1.04); } 75%, 100% { transform: scale(.82); } }
 .still .fillsq { animation: none !important; transform: scale(1); }
+.still .jel { animation: none !important; transform: scale(1.04); }
 .dot { position: absolute; left: 0; top: 0; width: 22px; height: 22px; border-radius: 99px; background: var(--fg); box-shadow: 0 0 0 6px color-mix(in srgb, var(--fg) 14%, transparent);
-  offset-path: path("M50 250 V50 H250 V250 Z"); offset-rotate: 0deg; offset-distance: 0%; }
+  offset-path: path("M50 270 V50 H270 V270 Z"); offset-rotate: 0deg; offset-distance: 0%; }
 .play .dot { animation: go 16s linear infinite; }
 @keyframes go { to { offset-distance: 100%; } }
 .still .dot { animation: none !important; offset-distance: 37.5%; }
-.side { position: absolute; color: var(--muted); opacity: .55; transition: opacity .5s var(--ease), color .5s var(--ease); white-space: nowrap; }
-.side.on { opacity: 1; color: var(--fg); font-weight: 700; }
-.s0 { left: 20px; top: 150px; transform: translate(-50%, -50%) rotate(-90deg); }
-.s1 { left: 150px; top: 20px; transform: translate(-50%, -50%); }
-.s2 { left: 280px; top: 150px; transform: translate(-50%, -50%) rotate(90deg); }
-.s3 { left: 150px; top: 280px; transform: translate(-50%, -50%); }
-.mid { position: absolute; inset: 50px; display: grid; place-content: center; text-align: center; gap: 2px; }
-.mid .num { font-size: 64px; line-height: 1; }
+.side { position: absolute; color: var(--muted); font: 600 13px/1 var(--body); transition: color .5s var(--ease); white-space: nowrap; }
+.side.on { color: var(--fg); font-weight: 700; }
+.s0 { left: 22px; top: 160px; transform: translate(-50%, -50%) rotate(-90deg); }
+.s1 { left: 160px; top: 22px; transform: translate(-50%, -50%); }
+.s2 { left: 298px; top: 160px; transform: translate(-50%, -50%) rotate(90deg); }
+.s3 { left: 160px; top: 298px; transform: translate(-50%, -50%); }
+.say { margin-top: 20px; display: flex; align-items: baseline; gap: 14px; }
+.say .num { font-size: 60px; line-height: 1; min-width: 34px; }
 .lab { transition: opacity .35s var(--ease); }
-.cue { margin-top: 26px; text-align: center; max-width: 290px; transition: opacity .4s var(--ease); }
+.cue { margin-top: 14px; text-align: center; max-width: 300px; transition: opacity .4s var(--ease); }
 
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
-<div class="nav"><button class="icon-btn" aria-label="Close" data-ic="close"></button><div class="title" data-a style="--i:0">Box breathing</div></div>
+<div class="nav"><button class="icon-btn" aria-label="Close" data-ic="close"></button><div class="title t-head" data-a style="--i:0">Box breathing</div></div>
 <div class="wrap">
   <div class="rnd" data-a style="--i:1" aria-label="Round 2 of 4"><i class="on"></i><i class="on"></i><i></i><i></i></div>
   <p class="t-foot muted" data-a style="--i:1;margin-top:8px" id="round">Round 2 of 4</p>
   <div class="box" data-fade style="--d:200ms">
-    <div class="fillsq"></div>
-    <svg width="300" height="300" viewBox="0 0 300 300"><rect x="50" y="50" width="200" height="200" rx="6" fill="none" stroke="var(--track)" stroke-width="5"/>
-      <path id="act" d="M50 250 V50" fill="none" stroke="var(--fg)" stroke-width="5" stroke-linecap="round"/></svg>
-    <span class="side s0 t-foot on">Breathe in</span><span class="side s1 t-foot">Hold</span><span class="side s2 t-foot">Breathe out</span><span class="side s3 t-foot">Hold</span>
-    <div class="mid"><div class="t-title lab" id="phase">Breathe in</div><div class="num" id="count">4</div></div>
+    <div class="fillsq"><span class="sea" id="sea"></span></div>
+    <div class="jel" id="jel"></div>
+    <svg width="320" height="320" viewBox="0 0 320 320"><rect x="50" y="50" width="220" height="220" rx="8" fill="none" stroke="var(--track)" stroke-width="5"/>
+      <path id="act" d="M50 270 V50" fill="none" stroke="var(--fg)" stroke-width="5" stroke-linecap="round"/></svg>
+    <span class="side s0 on">Breathe in</span><span class="side s1">Hold</span><span class="side s2">Breathe out</span><span class="side s3">Hold</span>
     <span class="dot"></span>
   </div>
+  <div class="say" data-a style="--i:2"><span class="t-title lab" id="phase">Breathe in</span><span class="num" id="count">4</span></div>
   <p class="t-body muted cue" id="cue" data-a style="--i:3">In through your nose. Let your belly fill.</p>
 </div>
-<div class="dock"><button class="link" data-a style="--i:4">End</button></div>
+<div class="dock"><button class="btn ghost" data-a style="--i:4">End session</button></div>
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
 
+document.getElementById('sea').innerHTML = DX.char('horizon', { scene: 'sea', w: 200, h: 200, clarity: 100 });
+document.getElementById('jel').innerHTML = DX.char('jelli', { mood: 'breathe', size: 150 });
 const P = [
-  { w: 'Breathe in', c: 'In through your nose. Let your belly fill.', d: 'M50 250 V50' },
-  { w: 'Hold', c: 'Hold it softly. Shoulders down.', d: 'M50 50 H250' },
-  { w: 'Breathe out', c: 'Out slowly through your mouth.', d: 'M250 50 V250' },
-  { w: 'Hold', c: 'Rest here. Nothing to do.', d: 'M250 250 H50' }];
+  { w: 'Breathe in', c: 'In through your nose. Let your belly fill.', d: 'M50 270 V50' },
+  { w: 'Hold', c: 'Hold it softly. Shoulders down.', d: 'M50 50 H270' },
+  { w: 'Breathe out', c: 'Out slowly through your mouth.', d: 'M270 50 V270' },
+  { w: 'Hold', c: 'Rest here. Nothing to do.', d: 'M270 270 H50' }];
 const sides = document.querySelectorAll('.side'), phase = document.getElementById('phase'), count = document.getElementById('count'), cue = document.getElementById('cue'), act = document.getElementById('act'), round = document.getElementById('round'), pips = document.querySelectorAll('.rnd i');
 function set(k, n) {
   const p = P[k];
@@ -81,7 +91,7 @@ function set(k, n) {
 for (let s = 0; s < 48; s++) { const k = Math.floor(s / 4) % 4, n = 4 - (s % 4); DX.after(s * 1000, () => set(k, n)); }
 DX.after(16000, () => { round.textContent = 'Round 3 of 4'; pips[2].classList.add('on'); });
 DX.after(32000, () => { round.textContent = 'Round 4 of 4'; pips[3].classList.add('on'); });
-DX.onStill(() => { set(1, 4); phase.textContent = P[1].w; cue.textContent = P[1].c; count.textContent = 2; });
+DX.onStill(() => { sides.forEach((s, i) => s.classList.toggle('on', i === 1)); act.setAttribute('d', P[1].d); phase.textContent = P[1].w; cue.textContent = P[1].c; count.textContent = 2; });
 
 </script>
 </body></html>

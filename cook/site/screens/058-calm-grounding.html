@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>058 Grounding</title>
-<meta name="motion" content="The done step slides in compact, then the current step card arrives large; the pips fill one by one at 0.9s, 1.7s and 2.5s with a small bump and a light haptic each, as if tapped; the last pip waits for the user. Tapping Next collapses this card into a done row and lifts the next step up (500ms settle).">
+<meta name="motion" content="The done step slides in compact, then the current step card arrives large and Xero settles into its corner (500ms); the pips fill one by one at 0.9s, 1.7s and 2.5s with a small bump and a light haptic each, as if tapped; the last pip waits for the user. Tapping Next collapses this card into a done row and lifts the next step up (500ms settle).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -12,16 +12,19 @@
 .ico-tile.s svg { width: 19px; height: 19px; }
 .val { color: var(--muted); font: 500 15px/1.2 var(--body); white-space: nowrap; }
 .list > .row.tap { min-height: 56px; }
-.toast.b { top: auto; bottom: 40px; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
+.toast.b { top: auto; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
 .toast.b.in { opacity: 1; transform: none; }
 .toast.b .ck { flex: none; }
+.opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
+html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--sel) 72%, transparent); }
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
 .nav .steps { flex: 1; margin-right: 56px; }
 .done-step { display: flex; align-items: center; gap: 12px; padding: 12px 16px; }
 .done-step .tk { width: 26px; height: 26px; border-radius: 99px; background: var(--tick); color: #fff; display: grid; place-items: center; flex: none; }
 [data-theme="dark"] .done-step .tk { color: #0B2A1C; }
-.cur { padding: 22px 20px 20px; display: grid; gap: 10px; }
+.cur { padding: 22px 20px 20px; display: grid; gap: 10px; position: relative; }
+.cur .xr { position: absolute; right: 10px; top: 8px; }
 .cur .big { font: 800 88px/0.9 var(--display); letter-spacing: -3px; }
 .pips { display: flex; gap: 10px; margin-top: 8px; }
 .pips i { width: 44px; height: 44px; border-radius: 99px; box-shadow: inset 0 0 0 2px var(--line); display: grid; place-items: center; transition: background .3s var(--ease); }
@@ -29,8 +32,8 @@
 .pips i.on::after { content: ""; width: 18px; height: 18px; background: var(--sel-fg); -webkit-mask: var(--tick-svg) center/contain no-repeat; mask: var(--tick-svg) center/contain no-repeat; }
 .ex { display: flex; flex-wrap: wrap; gap: 6px; }
 .ex span { padding: 6px 10px; border-radius: 10px; background: var(--card-2); }
-.later { display: flex; align-items: center; gap: 12px; padding: 4px 6px; color: var(--muted); min-height: 36px; }
-.later b { font: 800 19px/1 var(--display); width: 26px; text-align: center; color: var(--fg); opacity: .5; }
+.later { display: flex; align-items: center; gap: 14px; padding: 6px 6px; color: var(--muted); min-height: 44px; }
+.later b { font: 800 19px/1 var(--display); width: 36px; height: 36px; border-radius: 99px; display: grid; place-items: center; box-shadow: inset 0 0 0 2px var(--line); color: var(--fg); }
 
 </style>
 </head><body>
@@ -40,6 +43,7 @@
   <p class="t-foot muted" data-a style="--i:0">5-4-3-2-1 grounding</p>
   <div class="card flat done-step" data-a style="--i:1;margin-top:12px"><span class="tk" data-ic="check" data-s="16" data-w="3"></span><span class="t-body rt" style="flex:1">5 things you can see</span><span class="t-cap muted">Done</span></div>
   <div class="card cur" data-a style="--i:2;margin-top:10px">
+    <div class="xr" id="xr058" data-settle style="--d:500ms"></div>
     <div style="display:flex;align-items:flex-end;gap:12px"><span class="big">4</span><span class="t-title" style="padding-bottom:6px">things you<br>can feel</span></div>
     <p class="t-body muted">Touch them, or just notice them.</p>
     <div class="ex"><span class="t-foot">Your feet on the floor</span><span class="t-foot">The chair</span><span class="t-foot">Your clothes</span><span class="t-foot">The air</span></div>
@@ -47,9 +51,10 @@
     <p class="t-cap muted">Tap one for each thing you notice</p>
   </div>
   <div style="margin-top:14px;display:grid;gap:2px">
-    <div class="later" data-a style="--i:4"><b>3</b><span class="t-foot">things you can hear</span></div>
-    <div class="later" data-a style="--i:5"><b>2</b><span class="t-foot">things you can smell</span></div>
-    <div class="later" data-a style="--i:6"><b>1</b><span class="t-foot">thing you can taste</span></div>
+    <p class="t-foot muted" data-a style="--i:4;padding:4px 6px 2px">Still to come</p>
+    <div class="later" data-a style="--i:4"><b>3</b><span class="t-body">things you can hear</span></div>
+    <div class="later" data-a style="--i:5"><b>2</b><span class="t-body">things you can smell</span></div>
+    <div class="later" data-a style="--i:6"><b>1</b><span class="t-body">thing you can taste</span></div>
   </div>
 </div></div>
 <div class="dock"><button class="btn" data-a style="--i:7">Next: 3 things you can hear</button></div>
@@ -57,6 +62,7 @@
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
 
+document.getElementById('xr058').innerHTML = DX.char('xero', { mood: 'hello', size: 96 });
 const pips = document.querySelectorAll('#pips i'), seg = document.querySelector('.steps .now');
 [900, 1700, 2500].forEach((t, i) => DX.after(t, () => { pips[i].classList.add('on'); pips[i].classList.add('bump'); }));
 DX.onStill(() => { [0, 1, 2].forEach(i => pips[i].classList.add('on')); });

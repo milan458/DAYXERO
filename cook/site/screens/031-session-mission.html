@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>031 Session mission</title>
-<meta name="motion" content="Title arrives, then the three learnings arrive with their ticks drawing one after another (420ms each, 160ms apart). The money card arrives and $2,555 counts up from $0 (1200ms ease-out). The mint mission card deals in from below last (900ms settle) with a light haptic as it lands.">
+<meta name="motion" content="Title arrives, then the learnings card arrives and its three ticks draw one after another (420ms each, 160ms apart). The week card arrives and $28 counts up from $0 (900ms ease-out). The mission card arrives last and Xero settles into its corner (760ms) with a light haptic.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -9,18 +9,20 @@
 .pips i{width:13px;height:18px;border-radius:4px;background:var(--track)}
 .pips i.done{background:#FFD966}
 .nav .side{width:44px;text-align:right;flex:none}
-.wrap{position:absolute;top:110px;left:0;right:0;display:grid;align-content:start;gap:10px}
-.learn{display:grid;gap:12px;margin:6px 0 4px;padding:0}
+.wrap{position:absolute;top:110px;left:0;right:0;display:grid;align-content:start;gap:12px}
+.learn{display:grid;gap:14px;margin:0;padding:18px}
 .learn li{display:flex;gap:12px;align-items:flex-start;list-style:none}
 .learn ul{margin:0;padding:0}
 .learn .tk{width:24px;height:24px;border-radius:99px;background:color-mix(in srgb,var(--tick) 22%,transparent);display:grid;place-items:center;flex:none;margin-top:1px}
 .money{display:flex;align-items:center;gap:14px}
-.money .num{font-size:34px;line-height:1}
-.mission{background:var(--face);color:#1E1A3A;border-radius:22px;padding:18px 18px 18px;box-shadow:0 16px 30px rgba(0,0,0,.3);display:grid;gap:8px}
-.mission .row1{display:flex;align-items:center;gap:8px;font:600 14px/1 var(--body);opacity:.78}
-.mission .row1 svg{width:18px;height:18px}
-.mission .t-head{font-size:20px}
-.mission .t-foot{opacity:.8}
+.money .num{font:800 28px/1 var(--display);letter-spacing:-.5px}
+.money .pill{flex:none;text-align:right}
+.mission{display:flex;gap:12px;align-items:center}
+.mission .txt{flex:1;min-width:0;display:grid;gap:6px}
+.tag{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 12px 0 9px;border-radius:99px;background:var(--face);color:#1E1A3A;font:600 13px/1 var(--body);justify-self:start}
+.tag svg{width:16px;height:16px}
+.mission .t-head{font-size:19px}
+.mission #mx{flex:none;width:84px;align-self:flex-end;margin:0 -6px -8px 0}
 </style>
 </head><body>
 <div class="screen" data-ground="table">
@@ -32,25 +34,30 @@
   <div class="wrap pad">
     <p class="t-foot muted" data-a style="--i:0">All five cards played</p>
     <h1 class="t-title" data-a style="--i:1">What you learned today</h1>
-    <ul class="learn">
-      <li data-a style="--i:2"><span class="tk" id="tk1"></span><p class="t-body">Stress and the gap feel the same in your body.</p></li>
-      <li data-a style="--i:3"><span class="tk" id="tk2"></span><p class="t-body">A cigarette eases the gap it made, not the day.</p></li>
-      <li data-a style="--i:4"><span class="tk" id="tk3"></span><p class="t-body">People who quit tend to feel less stressed, not more.</p></li>
+    <ul class="learn card" data-a style="--i:2">
+      <li><span class="tk" id="tk1"></span><p class="t-body">Stress and the gap feel the same in your body.</p></li>
+      <li><span class="tk" id="tk2"></span><p class="t-body">A cigarette eases the gap it made, not the day.</p></li>
+      <li><span class="tk" id="tk3"></span><p class="t-body">People who quit tend to feel less stressed, not more.</p></li>
     </ul>
-    <div class="card money" data-a style="--i:5">
-      <div style="flex:1;min-width:0"><p class="t-foot muted">At your current pace, that's about</p><p style="margin-top:6px"><span class="num" data-count="2555" data-prefix="$" data-delay="900" data-dur="1200">$2,555</span> <span class="t-foot muted">a year</span></p></div>
+    <div class="card money" data-a style="--i:3">
+      <div style="flex:1;min-width:0"><p class="t-foot muted">This week so far</p><p class="t-foot" style="margin-top:4px">4 days at $7. From Fri, it stays with you.</p></div>
+      <div class="pill"><span class="num" data-count="28" data-prefix="$" data-delay="900" data-dur="900">$28</span><p class="t-cap muted" style="margin-top:4px">still spent</p></div>
     </div>
-    <div class="mission f-mint" data-settle style="--i:6;margin-top:6px">
-      <div class="row1"><span id="m-ic"></span>For the rest of today</div>
-      <p class="t-head">When stress hits today, do two sighs first.</p>
-      <p class="t-foot">Then use if you still want to. Log whether you did.</p>
+    <div class="card mission" data-a style="--i:4">
+      <div class="txt">
+        <span class="tag f-mint"><span id="m-ic"></span>For the rest of today</span>
+        <p class="t-head">When stress hits, do two sighs first.</p>
+        <p class="t-foot muted">Then use if you still want to. Log whether you did.</p>
+      </div>
+      <div id="mx" data-settle style="--i:6"></div>
     </div>
   </div>
   <div class="dock"><button class="btn" data-a style="--i:8">Got it</button></div>
 </div>
 <script>
 document.getElementById('close').innerHTML = DX.icon('close');
-document.getElementById('m-ic').innerHTML = DX.icon('sun', {size:18});
+document.getElementById('m-ic').innerHTML = DX.icon('sun', {size:16});
+document.getElementById('mx').innerHTML = DX.char('xero', {mood:'calm', size:84});
 [1,2,3].forEach(i => document.getElementById('tk' + i).innerHTML =
   `<svg width="14" height="14" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="var(--tick)" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" class="draw" style="--len:24;--d:${300 + i * 160}ms;--dur:420ms"/></svg>`);
 </script>

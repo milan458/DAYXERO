@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>059 Notice the urge</title>
-<meta name="motion" content="The wave line draws left to right over 2.4s and the soft fill fades under it; the dot then rides the wave for 12s (slow ease) while the single prompt cross-fades every 3s: notice, it rises, the peak, watch it fall. No springs, no haptic until It is passing is tapped (soft success haptic, goes to 060).">
+<meta name="motion" content="The wave line draws left to right over 2.4s, the soft tint and the paper sea layers fade in under it; Jelli then rides the wave for 12s (slow ease), rising to the crest and gliding down, while the single 28px prompt cross-fades every 3s (600ms): notice, it rises, the peak, watch it fall. No springs, no haptic until It is passing is tapped (soft success haptic, goes to 060).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -12,49 +12,61 @@
 .ico-tile.s svg { width: 19px; height: 19px; }
 .val { color: var(--muted); font: 500 15px/1.2 var(--body); white-space: nowrap; }
 .list > .row.tap { min-height: 56px; }
-.toast.b { top: auto; bottom: 40px; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
+.toast.b { top: auto; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
 .toast.b.in { opacity: 1; transform: none; }
 .toast.b .ck { flex: none; }
+.opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
+html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--sel) 72%, transparent); }
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
 .nav .title { flex: 1; text-align: center; margin-right: 56px; }
-.prompt { position: absolute; left: var(--gutter); right: var(--gutter); top: 150px; text-align: center; display: grid; gap: 10px; justify-items: center; }
-.prompt .t-title { min-height: 60px; transition: opacity .5s var(--ease), transform .5s var(--ease); }
-.prompt .t-title.out { opacity: 0; transform: translateY(-8px); }
-.sea { position: absolute; left: 0; right: 0; top: 330px; height: 250px; }
-.sea svg { position: absolute; inset: 0; }
-.rider { position: absolute; left: 0; top: 0; width: 20px; height: 20px; border-radius: 99px; background: var(--fg); box-shadow: 0 0 0 6px color-mix(in srgb, var(--fg) 14%, transparent);
-  offset-path: path("M-10 200 C 70 200 110 40 195 40 S 320 200 400 200"); offset-rotate: 0deg; offset-distance: 8%; }
+.prompt { position: absolute; left: 28px; right: 28px; top: 128px; text-align: center; display: grid; gap: 12px; justify-items: center; }
+.prompt .say { font: 800 28px/1.18 var(--display); letter-spacing: -.6px; min-height: 100px; text-wrap: balance; transition: opacity .6s var(--ease), transform .6s var(--ease); }
+.prompt .say.out { opacity: 0; transform: translateY(-8px); }
+.sea { position: absolute; left: 0; right: 0; top: 296px; height: 548px; }
+.sea svg { position: absolute; left: 0; top: 0; }
+.rider { position: absolute; left: -44px; top: -44px; width: 88px; height: 88px;
+  offset-path: path("M-10 220 C 70 220 110 56 195 56 S 320 220 400 220"); offset-rotate: 0deg; offset-distance: 8%; offset-anchor: 50% 78%; }
 .play .rider { animation: ride 12s cubic-bezier(.4,0,.6,1) forwards; }
 @keyframes ride { from { offset-distance: 8%; } to { offset-distance: 80%; } }
-.still .rider { animation: none !important; offset-distance: 72%; }
-.marks { position: absolute; left: 0; right: 0; top: 590px; display: flex; justify-content: space-between; padding: 0 34px; color: var(--muted); }
+.still .rider { animation: none !important; offset-distance: 77%; }
+.marks { position: absolute; left: 0; right: 0; top: 534px; display: flex; justify-content: space-between; padding: 0 30px; }
+.marks span { font: 700 14px/1 var(--body); color: var(--fg); background: var(--card); padding: 8px 12px; border-radius: 99px; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
 .time { color: var(--muted); }
 
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
-<div class="nav"><button class="icon-btn" aria-label="Close" data-ic="close"></button><div class="title" data-a style="--i:0">Notice the urge</div></div>
+<div class="nav"><button class="icon-btn" aria-label="Close" data-ic="close"></button><div class="title t-head" data-a style="--i:0">Notice the urge</div></div>
 <div class="prompt">
-  <p class="t-foot time" data-a style="--i:1">About a minute</p>
-  <p class="t-title" id="say" data-a style="--i:2">Notice where you feel it.</p>
+  <p class="t-foot time" data-a style="--i:1">About a minute. Just watch.</p>
+  <p class="say" id="say" data-a style="--i:2">Notice where you feel it.</p>
 </div>
 <div class="sea">
-  <svg width="390" height="250" viewBox="0 0 390 250" preserveAspectRatio="none">
-    <defs><linearGradient id="wf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--card-2)"/><stop offset="1" style="stop-color:var(--g)"/></linearGradient></defs><path d="M-10 200 C 70 200 110 40 195 40 S 320 200 400 200 V250 H-10Z" fill="url(#wf)" data-fade style="--d:900ms"/><path d="M-10 200 H400" stroke="var(--line)" stroke-width="2" stroke-dasharray="2 8" stroke-linecap="round"/>
-    <path d="M-10 200 C 70 200 110 40 195 40 S 320 200 400 200" fill="none" stroke="var(--fg)" stroke-width="3" stroke-linecap="round" class="draw" style="--len:520;--dur:2400ms;--d:300ms"/>
+  <svg width="390" height="548" viewBox="0 0 390 548" preserveAspectRatio="none">
+    <path d="M-10 220 C 70 220 110 56 195 56 S 320 220 400 220 V548 H-10Z" fill="#5A9DFF" fill-opacity=".16" data-fade style="--d:900ms"/>
+    <path d="M-10 220 H400" stroke="var(--line)" stroke-width="2" stroke-dasharray="2 8" stroke-linecap="round"/>
+    <path d="M-10 220 C 70 220 110 56 195 56 S 320 220 400 220" fill="none" stroke="var(--fg)" stroke-width="3" stroke-linecap="round" class="draw" style="--len:520;--dur:2400ms;--d:300ms"/>
+    <g data-fade style="--d:600ms">
+      <path d="M-10 290 C 50 272 110 278 170 290 C 240 304 310 280 400 276 V548 H-10Z" fill="#9CCBFF"/>
+      <path d="M-10 330 C 60 314 120 318 190 332 C 260 346 320 324 400 318 V548 H-10Z" fill="#5A9DFF"/>
+      <path d="M-10 372 C 70 356 140 362 210 374 C 280 386 340 366 400 362 V548 H-10Z" fill="#2F72F2"/>
+      <path d="M-10 414 C 80 400 160 404 240 416 C 300 424 350 412 400 408 V548 H-10Z" fill="#1C4FCC"/>
+      <path d="M96 326 C 108 312 128 310 138 322 C 126 320 116 324 110 332 Z" fill="#FFF8EE"/>
+    </g>
   </svg>
-  <div data-fade style="--d:1200ms;position:absolute;inset:0"><span class="rider"></span></div>
+  <div data-fade style="--d:1200ms;position:absolute;inset:0"><span class="rider" id="rider"></span></div>
 </div>
-<div class="marks" data-a style="--i:3"><span class="t-cap">Rises</span><span class="t-cap">Peaks</span><span class="t-cap">Passes</span></div>
+<div class="marks" data-a style="--i:3"><span>It rises</span><span>It peaks</span><span>It passes</span></div>
 <div class="dock"><button class="btn" data-a style="--i:4">It's passing</button><button class="link" data-a style="--i:5">I need more help</button></div>
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
 
+document.getElementById('rider').innerHTML = DX.char('jelli', { mood: 'calm', size: 88 });
 const say = document.getElementById('say');
 const lines = [[3000, 'It rises. You do not have to act.'], [6000, 'This is the peak. Breathe out slowly.'], [9000, 'Watch it fall away.']];
-lines.forEach(([t, s]) => DX.after(t, () => { say.classList.add('out'); setTimeout(() => { say.textContent = s; say.classList.remove('out'); }, 500); }));
+lines.forEach(([t, s]) => DX.after(t, () => { say.classList.add('out'); setTimeout(() => { say.textContent = s; say.classList.remove('out'); }, 600); }));
 DX.onStill(() => { say.textContent = 'Watch it fall away.'; });
 
 </script>

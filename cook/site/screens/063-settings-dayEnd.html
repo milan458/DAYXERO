@@ -12,13 +12,17 @@
 .ico-tile.s svg { width: 19px; height: 19px; }
 .val { color: var(--muted); font: 500 15px/1.2 var(--body); white-space: nowrap; }
 .list > .row.tap { min-height: 56px; }
-.toast.b { top: auto; bottom: 40px; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
+.toast.b { top: auto; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
 .toast.b.in { opacity: 1; transform: none; }
 .toast.b .ck { flex: none; }
+.opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
+html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--sel) 72%, transparent); }
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
-.opts { display: grid; gap: 10px; margin-top: 20px; }
-.tl { margin-top: 18px; padding: 16px 16px 14px; }
+.opts { display: grid; gap: 8px; margin-top: 18px; }
+.opts .opt { min-height: 58px; padding-top: 9px; padding-bottom: 9px; }
+.tl { margin-top: 14px; padding: 12px 16px 12px; }
+.tl .head { display: flex; align-items: center; gap: 12px; }
 .bar { position: relative; height: 34px; margin-top: 12px; }
 .bar .ln { position: absolute; left: 0; right: 0; top: 16px; height: 2px; background: var(--line); }
 .bar .seg { position: absolute; left: 0; top: 14px; height: 6px; border-radius: 99px; background: var(--fg); width: 70%; }
@@ -39,9 +43,9 @@
     <div data-a style="--i:5"><button class="opt" ><div class="grow"><div class="t-head">6 AM</div><div class="t-foot">For night shifts and late finishes</div></div><span class="radio"></span></button></div>
   </div>
   <div class="card flat tl" data-a style="--i:6">
-    <p class="t-foot">A check-in at 1:30 AM counts for Thursday.</p>
+    <div class="head"><span id="glim063"></span><p class="t-body" style="flex:1">A check-in at 1:30 AM still counts for Thursday.</p></div>
     <div class="bar"><div class="ln"></div><div class="seg"></div><div class="ci" style="left:41%"></div><div class="tick" style="left:70%"></div></div>
-    <div class="tlab"><span class="t-cap">Thu 6 PM</span><span class="t-cap" style="margin-left:24%">Day ends 4 AM</span><span class="t-cap">Fri</span></div>
+    <div class="tlab"><span class="t-foot">Thu 6 PM</span><span class="t-foot" style="margin-left:22%">Ends 4 AM</span><span class="t-foot">Fri</span></div>
   </div>
 </div></div>
 <div class="toast b" role="status"><span class="ck"></span>Saved. Your day now ends at 4 AM.</div>
@@ -50,6 +54,7 @@
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
 
 const o0 = document.getElementById('o0'), o4 = document.getElementById('o4');
+document.getElementById('glim063').innerHTML = DX.char('glim', { mood: 'calm', size: 64 });
 function pick() { o0.classList.remove('on'); o4.classList.add('on'); }
 DX.after(1000, pick); DX.onStill(pick);
 const toast = document.querySelector('.toast.b');

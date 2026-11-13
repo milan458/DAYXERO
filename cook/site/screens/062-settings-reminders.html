@@ -12,13 +12,15 @@
 .ico-tile.s svg { width: 19px; height: 19px; }
 .val { color: var(--muted); font: 500 15px/1.2 var(--body); white-space: nowrap; }
 .list > .row.tap { min-height: 56px; }
-.toast.b { top: auto; bottom: 40px; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
+.toast.b { top: auto; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
 .toast.b.in { opacity: 1; transform: none; }
 .toast.b .ck { flex: none; }
+.opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
+html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--sel) 72%, transparent); }
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
-.list > .row.sub { min-height: 48px; padding-top: 0; margin-top: -6px; border-top: 0 !important; }
-.sub .t-foot { padding-left: 48px; flex: 1; }
+.list > .row.sub { min-height: 52px; padding-left: 64px; }
+.sub .t-body { flex: 1; color: var(--muted); }
 .fc { transition: background .4s var(--ease); }
 
 </style>
@@ -30,15 +32,14 @@
   <p class="t-foot sec" data-a style="--i:2">Your day</p>
   <div class="list" data-a style="--i:3">
     <div class="row " ><span class="ico-tile s" data-ic="sun"></span><div class="grow"><div class="t-body rt">Morning pledge</div><div class="t-foot muted">Skipped once you pledge</div></div><span class="toggle on"></span></div>
-    <div class="row sub"><span class="t-foot muted">Time</span><span class="pill">8:00 AM</span></div>
+    <div class="row sub"><span class="t-body">Pledge at</span><span class="pill">8:00 AM</span></div>
     <div class="row " ><span class="ico-tile s" data-ic="moon"></span><div class="grow"><div class="t-body rt">Evening check-in</div><div class="t-foot muted">Skipped once you check in</div></div><span class="toggle on"></span></div>
-    <div class="row sub"><span class="t-foot muted">Time</span><span class="pill">9:00 PM</span></div>
+    <div class="row sub"><span class="t-body">Check in at</span><span class="pill">9:00 PM</span></div>
     <div class="row " ><span class="ico-tile s" data-ic="note"></span><div class="grow"><div class="t-body rt">Daily lesson</div><div class="t-foot muted">When a new day opens</div></div><span class="toggle on"></span></div>
     <div class="row fc" ><span class="ico-tile s" data-ic="wave"></span><div class="grow"><div class="t-body rt">Craving forecast</div><div class="t-foot muted">Before coffee and stress</div></div><span class="toggle" id="fc"></span></div>
   </div>
-  <p class="t-foot sec" data-a style="--i:4">When they stay quiet</p>
-  <div class="list" data-a style="--i:5">
-    <div class="row " ><span class="ico-tile s" data-ic="moon"></span><div class="grow"><div class="t-body rt">Quiet hours</div><div class="t-foot muted">10:00 PM to 7:00 AM</div></div><span class="chev" data-ic="chev" data-s="18"></span></div>
+  <div class="list" data-a style="--i:4;margin-top:12px">
+    <div class="row " ><span class="ico-tile s" data-ic="moon"></span><div class="grow"><div class="t-body rt">Quiet hours</div><div class="t-foot muted">Nothing arrives 10:00 PM to 7:00 AM</div></div><span class="chev" data-ic="chev" data-s="18"></span></div>
   </div>
 </div></div>
 <div class="toast b" role="status"><span class="ck"></span>Saved. Craving forecast is on.</div>

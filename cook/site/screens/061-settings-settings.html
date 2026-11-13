@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>061 Settings</title>
-<meta name="motion" content="The profile card (with the plan) and each group arrive top to bottom on the 90ms stagger; the 7-day badge on the profile card stamps in at 500ms. Rows highlight on press with a light tap haptic and push their page from the right.">
+<meta name="motion" content="The large title, then the profile card (with the plan) and each group arrive top to bottom on the 90ms stagger; the 7-day badge on the profile card stamps in at 500ms. Rows highlight on press with a light tap haptic and push their page from the right.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -12,27 +12,29 @@
 .ico-tile.s svg { width: 19px; height: 19px; }
 .val { color: var(--muted); font: 500 15px/1.2 var(--body); white-space: nowrap; }
 .list > .row.tap { min-height: 56px; }
-.toast.b { top: auto; bottom: 40px; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
+.toast.b { top: auto; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
 .toast.b.in { opacity: 1; transform: none; }
 .toast.b .ck { flex: none; }
+.opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
+html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--sel) 72%, transparent); }
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
-.nav .title { flex: 1; text-align: center; margin-right: 56px; }
-.prof { padding: 0; overflow: hidden; margin-top: 58px; }
+.prof { padding: 0; overflow: hidden; margin-top: 16px; }
 .prof .top { display: flex; align-items: center; gap: 14px; padding: 14px 16px; }
-.prof .av { width: 52px; height: 52px; border-radius: 99px; background: var(--card-2); display: grid; place-items: center; overflow: hidden; flex: none; }
+.prof .av { width: 60px; height: 60px; border-radius: 99px; background: var(--card-2); display: grid; place-items: center; overflow: hidden; flex: none; }
 .prof .grow { flex: 1; min-width: 0; }
 .prof .subs { display: flex; align-items: center; gap: 12px; padding: 0 16px; min-height: 50px; border-top: 1px solid var(--line); }
-.sec { padding: 16px 4px 7px; }
-.list > .row { min-height: 50px; padding-top: 7px; padding-bottom: 7px; }
+.sec { padding: 14px 4px 7px; }
+.list > .row { min-height: 48px; padding-top: 6px; padding-bottom: 6px; }
 .ico-tile.s { width: 32px; height: 32px; }
 .foot { display: flex; justify-content: center; gap: 6px; padding-top: 14px; color: var(--muted); }
 
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
-<div class="nav"><button class="icon-btn" aria-label="Close" data-ic="close"></button><div class="title" data-a style="--i:0">Settings</div></div>
+<div class="nav"><button class="icon-btn" aria-label="Close" data-ic="close"></button></div>
 <div class="scroll"><div class="pad">
+  <div class="hd"><h1 class="t-large" data-a style="--i:0">Settings</h1></div>
   <div class="card prof" data-a style="--i:1">
     <div class="top">
       <div class="av" id="av"></div>
@@ -64,7 +66,7 @@
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
 
-document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 52 });
+document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 60 });
 document.getElementById('bdg').innerHTML = DX.badge({ kind: 'day', n: 7, state: 'earned', size: 46 });
 
 </script>

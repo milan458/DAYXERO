@@ -1,16 +1,16 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>043 Slip: thanks for telling me</title>
-<meta name="motion" content="Calm, no springs. The sea scene card fades up, its waves rolling slowly; Jelli (calm, 128px) settles onto the water from below (900ms) and then bobs, then title, body and the two 'still intact' tiles arrive with a 90ms stagger; the 7 and the 40% count up from 0 over 850ms; the next-step card and the button arrive last. Soft haptic on appear only.">
+<meta name="motion" content="Calm, no springs. The sea scene card fades up, its waves rolling slowly; Jelli (calm, 120px) settles onto the water from below (900ms) and then bobs, then title, body and the two 'still intact' tiles arrive with a 90ms stagger; the 7 and the 40% count up from 0 over 850ms; the next-step card and the button arrive last. Soft haptic on appear only.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .wrap { padding: 112px var(--gutter) 0; display: grid; gap: 0; }
-  .hero { position: relative; height: 200px; border-radius: 26px; overflow: hidden; }
+  .wrap { padding: 108px var(--gutter) 0; display: grid; gap: 0; }
+  .hero { position: relative; height: 164px; border-radius: 26px; overflow: hidden; }
   .hero .scene { position: absolute; inset: 0; }
-  .hero .jelli { position: absolute; left: 50%; bottom: 6px; margin-left: -64px; width: 128px; height: 128px; }
-  .wrap h1 { margin-top: 24px; }
+  .hero .jelli { position: absolute; left: 50%; bottom: 4px; margin-left: -60px; width: 120px; height: 120px; }
+  .wrap h1 { margin-top: 20px; }
   .wrap .lead { margin-top: 10px; color: var(--muted); }
-  .kept { margin-top: 22px; }
+  .kept { margin-top: 18px; }
   .kept .stat { display: grid; gap: 4px; }
   .kept .stat .num { font-size: 34px; }
   .kept .ic { color: var(--muted); display: flex; align-items: center; gap: 6px; }
@@ -65,7 +65,7 @@
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic));
   document.querySelectorAll('[data-ic2]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic2, { w: 2.4 })));
-  document.getElementById('jelli').innerHTML = DX.char('jelli', { mood: 'calm', size: 128 });
-  document.getElementById('scene').innerHTML = DX.char('horizon', { scene: 'sea', w: 346, h: 200, clarity: 40 });
+  document.getElementById('jelli').innerHTML = DX.char('jelli', { mood: 'calm', size: 120 });
+  document.getElementById('scene').innerHTML = DX.char('horizon', { scene: 'sea', w: 346, h: 164, clarity: 40 });
 </script>
 </body></html>

@@ -12,9 +12,11 @@
 .ico-tile.s svg { width: 19px; height: 19px; }
 .val { color: var(--muted); font: 500 15px/1.2 var(--body); white-space: nowrap; }
 .list > .row.tap { min-height: 56px; }
-.toast.b { top: auto; bottom: 40px; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
+.toast.b { top: auto; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
 .toast.b.in { opacity: 1; transform: none; }
 .toast.b .ck { flex: none; }
+.opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
+html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--sel) 72%, transparent); }
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
 .search { display: flex; align-items: center; gap: 10px; margin-top: 18px; }
@@ -37,6 +39,9 @@
     <div data-a style="--i:6"><button class="opt"><span class="sym">&#8377;</span><div class="grow"><div class="t-body rt">Indian Rupee</div><div class="t-foot">INR</div></div><span class="radio"></span></button></div>
     <div data-a style="--i:7"><button class="opt"><span class="sym">A$</span><div class="grow"><div class="t-body rt">Australian Dollar</div><div class="t-foot">AUD</div></div><span class="radio"></span></button></div>
     <div data-a style="--i:8"><button class="opt"><span class="sym">C$</span><div class="grow"><div class="t-body rt">Canadian Dollar</div><div class="t-foot">CAD</div></div><span class="radio"></span></button></div>
+    <div data-a style="--i:9"><button class="opt"><span class="sym">&yen;</span><div class="grow"><div class="t-body rt">Japanese Yen</div><div class="t-foot">JPY</div></div><span class="radio"></span></button></div>
+    <div data-a style="--i:10"><button class="opt"><span class="sym">Fr</span><div class="grow"><div class="t-body rt">Swiss Franc</div><div class="t-foot">CHF</div></div><span class="radio"></span></button></div>
+    <div data-a style="--i:10"><button class="opt"><span class="sym">kr</span><div class="grow"><div class="t-body rt">Swedish Krona</div><div class="t-foot">SEK</div></div><span class="radio"></span></button></div>
   </div>
 </div></div>
 <div class="tabfade" style="height:120px"></div>

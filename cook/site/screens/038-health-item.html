@@ -4,10 +4,10 @@
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .art { position: relative; height: 176px; border-radius: 26px; overflow: hidden; }
+  .art { position: relative; height: 164px; border-radius: 26px; overflow: hidden; }
   .art .scene { position: absolute; inset: 0; }
   [data-theme="dark"] .art .scene { filter: brightness(.85) saturate(.92); }
-  .art .hero { position: absolute; left: 50%; bottom: 6px; margin-left: -58px; }
+  .art .hero { position: absolute; left: 50%; bottom: 6px; margin-left: -54px; }
   .art .tag { position: absolute; left: 14px; top: 14px; height: 30px; padding: 0 12px; border-radius: 99px; background: rgba(255,248,238,.92); color: var(--ink);
     display: inline-flex; align-items: center; font: 600 13px/1 var(--body); }
   .head { margin-top: 18px; display: grid; gap: 6px; }
@@ -19,14 +19,14 @@
   .copy { margin-top: 16px; display: grid; gap: 10px; }
   .notice { margin-top: 18px; }
   .notice .list { margin-top: 10px; }
-  .notice .row { min-height: 50px; gap: 12px; }
+  .notice .row { min-height: 46px; gap: 12px; }
   .dot { width: 26px; height: 26px; display: grid; place-items: center; flex: none; }
   .dot::after { content: ""; width: 8px; height: 8px; border-radius: 99px; background: var(--fg); opacity: .55; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
   <div class="nav"><button class="icon-btn" aria-label="Close" data-ic="close" data-go="037-health"></button></div>
-  <div class="scroll" style="padding-top:100px">
+  <div class="scroll" style="padding-top:110px">
     <div class="pad">
       <div class="art" data-a style="--i:0">
         <div class="scene" id="scene"></div>
@@ -61,8 +61,8 @@
 </div>
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20 })));
-  document.getElementById('scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 346, h: 176, clarity: 70 });
-  document.getElementById('hero').innerHTML = DX.char('xero', { mood: 'hello', size: 116, stage: 2 });
+  document.getElementById('scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 346, h: 164, clarity: 70 });
+  document.getElementById('hero').innerHTML = DX.char('xero', { mood: 'hello', size: 108, stage: 2 });
   document.getElementById('ring').innerHTML = DX.ring({ size: 56, stroke: 6, p: 5 / 7, color: 'var(--fg)', track: 'var(--track)' });
 </script>
 </body></html>

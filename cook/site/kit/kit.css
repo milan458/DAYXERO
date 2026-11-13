@@ -119,7 +119,7 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
 .opt .grow { flex: 1; min-width: 0; }
 .opt .t-foot { color: var(--muted); }
 .opt .radio { width: 24px; height: 24px; border-radius: 99px; box-shadow: inset 0 0 0 2px var(--line); flex: none; display: grid; place-items: center; }
-.opt.on { box-shadow: inset 0 0 0 2.5px var(--sel); }
+.opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
 .opt.on .radio { background: var(--sel); box-shadow: none; }
 .opt.on .radio::after { content: ""; width: 14px; height: 14px; background: var(--sel-fg); -webkit-mask: var(--tick-svg) center/contain no-repeat; mask: var(--tick-svg) center/contain no-repeat; }
 .toggle { width: 52px; height: 32px; border-radius: 99px; background: var(--track); position: relative; flex: none; transition: background .25s var(--ease); }

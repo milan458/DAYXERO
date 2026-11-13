@@ -1,26 +1,32 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>040 Share card</title>
-<meta name="motion" content="The card rises in with a slight tilt that settles to 0 (900ms), its badge stamps at 400ms. Toggle rows arrive with a 90ms stagger. At 1.3s the Cigarettes toggle slides on (selection haptic) and its line fades into the card while the card bumps. Share sits in the dock; tapping it opens the system share sheet with the rendered card.">
+<meta name="motion" content="The Story / Square chips arrive, then the card rises in and settles (900ms): its paper hills lift, Xero cheers on the front hill and the Day 7 badge stamps at 400ms. The Show on your card chips arrive; at 1.3s the Cigarettes chip turns on (selection haptic) and its line fades into the card while the card bumps. Square crops the same card to 1:1. Share sits in the dock; tapping it opens the system share sheet with the rendered card.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .preview { display: grid; place-items: center; margin-top: 4px; }
-  .sc { position: relative; width: 212px; height: 318px; border-radius: 24px; overflow: hidden; background: #FFC38A; color: #1E1A3A;
+  .fmt { display: flex; justify-content: center; }
+  .fmt .chips { justify-content: center; }
+  .preview { display: grid; place-items: center; margin-top: 14px; }
+  .sc { position: relative; width: 212px; height: 376px; border-radius: 26px; overflow: hidden; color: #1E1A3A;
+    background: linear-gradient(180deg, #FFB98A 0%, #FFD7AE 46%, #FFE9CF 70%);
     box-shadow: 0 18px 40px rgba(14,11,43,.22), 0 2px 0 rgba(14,11,43,.06); padding: 16px; display: flex; flex-direction: column; align-items: center; }
-  .sc .hills { position: absolute; left: 0; right: 0; bottom: 0; height: 96px; }
+  .sc .sun { position: absolute; left: 50%; top: 52px; width: 128px; height: 128px; margin-left: -64px; border-radius: 99px; background: radial-gradient(circle at 40% 35%, #FFF6C8, #FFD25E 70%); opacity: .9; }
+  .sc .hills { position: absolute; left: 0; right: 0; bottom: 0; width: 212px; height: 150px; display: block; }
   .sc .top { align-self: stretch; display: flex; justify-content: space-between; align-items: center; position: relative; }
   .sc .ini { width: 30px; height: 30px; border-radius: 99px; background: #1E1A3A; color: #FFF8EE; display: grid; place-items: center; font: 800 15px/1 var(--display); }
   .sc .date { font: 600 12px/1 var(--body); color: #5A3420; }
-  .sc .medal { margin-top: 10px; position: relative; }
+  .sc .medal { margin-top: 12px; position: relative; }
   .sc .big { position: relative; margin-top: 8px; font: 800 30px/1 var(--display); letter-spacing: -1px; }
-  .sc .lines { position: relative; margin-top: 8px; display: grid; gap: 3px; text-align: center; font: 600 12.5px/1.3 var(--body); color: #5A3420; }
+  .sc .lines { position: relative; margin-top: 6px; display: grid; gap: 2px; text-align: center; font: 600 13px/1.3 var(--body); color: #5A3420; }
   .sc .lines span { transition: opacity .4s var(--ease), max-height .4s var(--ease); max-height: 20px; overflow: hidden; }
   .sc .lines span.off { opacity: 0; max-height: 0; }
-  .sc .mark-w { position: relative; margin-top: auto; display: flex; align-items: center; gap: 6px; font: 800 15px/1 var(--display); color: #FFF8EE; letter-spacing: -.3px; }
-  .sc .mark-w i { width: 12px; height: 12px; border-radius: 99px; background: #FFD966; }
-  .opts { margin-top: 20px; }
-  .opts .row { min-height: 54px; }
-  .opts .val { color: var(--muted); font: 500 15px/1 var(--body); }
+  .sc .xero { position: absolute; left: 50%; bottom: 30px; margin-left: -44px; }
+  .sc .mark-w { position: absolute; left: 14px; bottom: 11px; display: flex; align-items: center; gap: 6px; font: 800 14px/1 var(--display); color: #FFF8EE; letter-spacing: -.3px; }
+  .sc .mark-w i { width: 10px; height: 10px; border-radius: 99px; background: #FFD966; }
+  .sc .url { position: absolute; right: 14px; bottom: 12px; font: 600 12px/1 var(--body); color: #FFE6D6; }
+  .show { margin-top: 20px; }
+  .show .t-foot { color: var(--muted); margin-bottom: 10px; }
+  .show .chips .chip { min-height: 40px; padding: 0 14px; font-size: 15px; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -29,27 +35,30 @@
     <div class="grow title">Share your week</div>
     <span style="width:44px"></span>
   </div>
-  <div class="scroll" style="padding-top:110px">
+  <div class="scroll" style="padding-top:104px">
     <div class="pad">
-      <div class="preview" data-settle>
+      <div class="fmt" data-a style="--i:0"><div class="chips"><button class="chip on">Story</button><button class="chip">Square</button></div></div>
+      <div class="preview" data-settle style="--d:100ms">
         <div class="sc" id="card">
-          <svg class="hills" viewBox="0 0 212 96" preserveAspectRatio="none" aria-hidden="true">
-            <path d="M0 40 C50 18 100 30 140 36 S200 30 212 26 V96 H0z" fill="#FFAE73"/>
-            <path d="M0 62 C60 48 120 70 212 52 V96 H0z" fill="#FF9A6B"/>
-            <path d="M0 80 C70 70 140 88 212 76 V96 H0z" fill="#FF7155" opacity=".7"/>
+          <span class="sun"></span>
+          <svg class="hills" viewBox="0 0 212 150" preserveAspectRatio="none" aria-hidden="true">
+            <defs><filter id="scLift" x="-5%" y="-20%" width="110%" height="140%"><feDropShadow dx="0" dy="-2" stdDeviation="2.5" flood-color="#1A0B2E" flood-opacity=".22"/></filter></defs>
+            <path filter="url(#scLift)" d="M0 44 C40 22 80 30 112 40 C150 52 180 30 212 26 V150 H0z" fill="#FF9D6E"/>
+            <path filter="url(#scLift)" d="M0 76 C44 58 90 64 130 78 C166 90 190 72 212 66 V150 H0z" fill="#FF7A55"/>
+            <path filter="url(#scLift)" d="M0 106 C40 94 90 100 130 110 C170 118 196 106 212 102 V150 H0z" fill="#E85A3E"/>
+            <path filter="url(#scLift)" d="M0 128 C60 120 120 126 212 122 V150 H0z" fill="#C2402A"/>
           </svg>
           <div class="top"><span class="ini">S</span><span class="date">Nov 6 to Nov 13</span></div>
           <div class="medal" data-stamp style="--d:400ms" id="medal"></div>
           <div class="big">7 days free</div>
           <div class="lines"><span>$49.00 kept</span><span id="l-cig">84 cigarettes not smoked</span><span id="l-wave" class="off">23 cravings ridden out</span></div>
+          <div class="xero" id="xero"></div>
           <div class="mark-w"><i></i>DayXero</div>
         </div>
       </div>
-      <div class="list opts" data-a style="--i:2">
-        <div class="row"><div class="grow t-foot" style="font-size:16px">Days free <span class="val">7</span></div><span class="toggle on"></span></div>
-        <div class="row"><div class="grow t-foot" style="font-size:16px">Money kept <span class="val">$49.00</span></div><span class="toggle on"></span></div>
-        <div class="row"><div class="grow t-foot" style="font-size:16px">Cigarettes not smoked <span class="val">84</span></div><span class="toggle on" id="t-cig"></span></div>
-        <div class="row"><div class="grow t-foot" style="font-size:16px">Waves ridden <span class="val">23</span></div><span class="toggle"></span></div>
+      <div class="show" data-a style="--i:3">
+        <p class="t-foot">Show on your card</p>
+        <div class="chips"><button class="chip on">Days free</button><button class="chip on">Money kept</button><button class="chip on" id="t-cig">Cigarettes not smoked</button><button class="chip">Waves ridden</button></div>
       </div>
     </div>
   </div>
@@ -60,7 +69,8 @@
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20 })));
   document.getElementById('sh').innerHTML = DX.icon('share', { size: 20 });
-  document.getElementById('medal').innerHTML = DX.badge({ kind: 'day', n: 7, size: 96, bare: true });
+  document.getElementById('medal').innerHTML = DX.badge({ kind: 'day', n: 7, size: 84, bare: true });
+  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'cheer', size: 88, stage: 3 });
   const t = document.getElementById('t-cig'), l = document.getElementById('l-cig'), card = document.getElementById('card');
   DX.after(0, () => { t.classList.remove('on'); l.classList.add('off'); });
   DX.after(1300, () => { t.classList.add('on'); l.classList.remove('off'); card.classList.remove('bump'); void card.offsetWidth; card.classList.add('bump'); });

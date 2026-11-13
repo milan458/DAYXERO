@@ -1,19 +1,33 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>018 Today, evening</title>
-<meta name="motion" content="Evening Today, all slow. The night sky fades in (700ms) with stars twinkling and fireflies drifting; Glim settles onto the hill (900ms) and keeps a sleepy bob. Greeting, day line and the check-in card arrive with a 90ms stagger; the 6 check-ins count up and the 7-nights badge ring shows 6 of 7. No springs. Soft haptic on appear only.">
+<meta name="motion" content="Evening Today, all slow. The night sky fades in (700ms) with stars twinkling and fireflies drifting; Glim settles onto the hill beside the moon (900ms) and keeps a sleepy bob. Greeting, day line and the check-in card arrive with a 90ms stagger; inside it the six done nights fade in left to right (90ms apart, no springs), tonight's dashed slot breathes (4s in, 6s out) and the 6 counts up. Soft haptic on appear only.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   .sky { position: absolute; left: 0; right: 0; top: 0; height: 430px; }
-  .greet { position: absolute; left: 0; right: 0; top: 78px; padding: 0 var(--gutter); }
+  .greet { position: absolute; z-index: 2; left: 0; right: 0; top: 74px; padding: 0 var(--gutter); }
   .greet .sub { margin-top: 8px; color: var(--muted); }
   .greet .sub b { color: var(--fg); font-weight: 700; }
-  .glim { position: absolute; left: 70px; top: 168px; }
-  .content { position: absolute; left: 0; right: 0; top: 408px; padding: 0 var(--gutter); }
-  .ci { padding: 18px; display: grid; gap: 14px; }
+  .glim { position: absolute; left: 34px; top: 138px; }
+  .content { position: absolute; left: 0; right: 0; top: 384px; padding: 0 var(--gutter); }
+  .ci { padding: 18px; display: grid; gap: 16px; }
   .ci .t-foot { color: var(--muted); }
-  .ci .nights { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 16px; background: var(--card-2); }
-  .ci .nights .grow { flex: 1; min-width: 0; }
+  .nights { padding: 14px 14px 12px; border-radius: 18px; background: var(--card-2); display: grid; gap: 12px; }
+  .nights .hd { display: flex; align-items: center; gap: 12px; }
+  .nights .hd .grow { flex: 1; min-width: 0; }
+  .nights .hd .t-head { font-size: 17px; }
+  .nights .face { position: relative; width: 44px; height: 44px; display: grid; place-items: center; flex: none; }
+  .nights .face svg { position: absolute; inset: 0; }
+  .nights .face .n { position: relative; font: 800 16px/1 var(--display); color: var(--fg); }
+  .pips { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+  .pip { display: grid; justify-items: center; gap: 6px; }
+  .pip b { width: 30px; height: 30px; border-radius: 99px; background: var(--fg); color: var(--g); display: grid; place-items: center; }
+  .pip b svg { width: 16px; height: 16px; }
+  .pip .t-cap { color: var(--muted); font-size: 12px; white-space: nowrap; }
+  .pip.tonight b { background: none; box-shadow: inset 0 0 0 2px var(--fg); border: 0; outline: 2px dashed color-mix(in srgb, var(--fg) 45%, transparent); outline-offset: 3px; color: var(--fg); }
+  .play .pip.tonight b { animation: breathe2 10s ease-in-out infinite; }
+  @keyframes breathe2 { 40% { outline-offset: 6px; } }
+  .pip.tonight .t-cap { color: var(--fg); }
   .ci .btn svg { width: 18px; height: 18px; }
 </style>
 </head><body>
@@ -30,14 +44,17 @@
     <div class="card ci" data-a style="--i:4">
       <div>
         <p class="t-foot">With Glim &middot; 1 min</p>
-        <p class="t-title" style="margin-top:4px">A minute on how today went</p>
+        <p class="t-title" style="margin-top:4px">A minute on how<br>today went</p>
       </div>
       <div class="nights">
-        <span id="b7"></span>
-        <div class="grow">
-          <p class="t-head" style="font-size:16px"><span data-count="6">6</span> evening check-ins</p>
-          <p class="t-foot">One more tonight earns 7 nights</p>
+        <div class="hd">
+          <div class="grow">
+            <p class="t-head"><span data-count="6">6</span> of 7 nights</p>
+            <p class="t-foot">Tonight earns the 7 nights badge</p>
+          </div>
+          <span class="face" id="b7"></span>
         </div>
+        <div class="pips" id="pips"></div>
       </div>
       <button class="btn" id="go"></button>
     </div>
@@ -45,9 +62,11 @@
 </div>
 <script>
   const $ = s => document.querySelector(s);
-  $('#sky').innerHTML = DX.nightSky({ w: 390, h: 430, moonX: 322, moonY: 212 });
-  $('#glim').innerHTML = DX.char('glim', { mood: 'sleepy', size: 150 });
-  $('#b7').innerHTML = DX.badge({ kind: 'night', n: 7, state: 'next', p: 6 / 7, size: 46, bare: true });
+  $('#sky').innerHTML = DX.nightSky({ w: 390, h: 430, moonX: 316, moonY: 200 });
+  $('#glim').innerHTML = DX.char('glim', { mood: 'sleepy', size: 220 });
+  $('#b7').innerHTML = DX.badge({ kind: 'night', n: '', state: 'next', p: 6 / 7, size: 44, bare: true }) + '<span class="n">7</span>';
+  const dn = ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu'];
+  $('#pips').innerHTML = dn.map((d, i) => `<div class="pip" data-fade style="--d:${500 + i * 90}ms"><b>${DX.icon('check', { size: 16, w: 3 })}</b><span class="t-cap">${d}</span></div>`).join('') + `<div class="pip tonight"><b>${DX.icon('moon', { size: 16, w: 2.4 })}</b><span class="t-cap">Tonight</span></div>`;
   $('#go').innerHTML = DX.icon('moon', { w: 2.4 }) + 'Check in';
   $('.screen').insertAdjacentHTML('beforeend', DX.tabbar('today'));
   const fillBadge = (sel, from, to, delay) => DX.after(0, () => { const c = document.querySelector(sel + ' circle[transform]'); if (!c) return; const C = 2 * Math.PI * 48;

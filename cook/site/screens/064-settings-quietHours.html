@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>064 Quiet hours</title>
-<meta name="motion" content="The dial arc sweeps from 10 PM round to 7 AM (1.4s settle) as the 9 counts up in the centre; the toggles and time rows arrive below on the stagger. Changing a time drags the arc end with a selection haptic per 15 minutes.">
+<meta name="motion" content="The dial arc sweeps from 10 PM round to 7 AM (1.4s settle) as the 9 counts up in the centre; the From and Until tiles and the while-it-is-quiet list arrive below on the stagger. Changing a time drags the arc end with a selection haptic per 15 minutes.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -12,16 +12,21 @@
 .ico-tile.s svg { width: 19px; height: 19px; }
 .val { color: var(--muted); font: 500 15px/1.2 var(--body); white-space: nowrap; }
 .list > .row.tap { min-height: 56px; }
-.toast.b { top: auto; bottom: 40px; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
+.toast.b { top: auto; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
 .toast.b.in { opacity: 1; transform: none; }
 .toast.b .ck { flex: none; }
+.opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
+html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--sel) 72%, transparent); }
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
-.dial { position: relative; width: 220px; height: 220px; margin: 40px auto 4px; }
+.dial { position: relative; width: 228px; height: 228px; margin: 34px auto 0; }
 .dial .rot { position: absolute; inset: 0; transform: rotate(330deg); }
 .dial .ctr { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; gap: 2px; justify-items: center; }
-.dial .ctr .num { font-size: 40px; line-height: 1; }
-.hr { position: absolute; color: var(--muted); transform: translate(-50%, -50%); white-space: nowrap; }
+.dial .ctr .num { font-size: 44px; line-height: 1; }
+.hr { position: absolute; color: var(--muted); transform: translate(-50%, -50%); white-space: nowrap; font: 600 13px/1 var(--body); }
+.times { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 30px; }
+.times .card { padding: 14px 16px; display: grid; gap: 4px; }
+.times .num { font-size: 26px; line-height: 1.05; }
 
 </style>
 </head><body>
@@ -31,23 +36,25 @@
   <div class="hd"><h1 class="t-large" data-a style="--i:0">Quiet hours</h1><p class="t-foot muted" data-a style="--i:1">Nothing arrives between these times. Anything due waits until they end.</p></div>
   <div class="dial" data-a style="--i:2">
     <div class="rot" id="ring"></div>
-    <div class="ctr"><span data-ic="moon" data-s="22"></span><span class="num" data-count="9">9</span><span class="t-cap muted">quiet hours</span></div>
-    <span class="hr t-cap" style="left:110px;top:-12px">12 AM</span><span class="hr t-cap" style="left:244px;top:110px">6 AM</span><span class="hr t-cap" style="left:110px;top:232px">12 PM</span><span class="hr t-cap" style="left:-26px;top:110px">6 PM</span>
+    <div class="ctr"><span data-ic="moon" data-s="22"></span><span class="num" data-count="9">9</span><span class="t-foot muted">quiet hours</span></div>
+    <span class="hr" style="left:114px;top:-14px">12 AM</span><span class="hr" style="left:258px;top:114px">6 AM</span><span class="hr" style="left:114px;top:242px">12 PM</span><span class="hr" style="left:-30px;top:114px">6 PM</span>
   </div>
-  <div class="list" data-a style="--i:3;margin-top:24px">
-    <div class="row " ><span class="ico-tile s" data-ic="moon"></span><div class="grow"><div class="t-body rt">Quiet hours</div></div><span class="toggle on"></span></div>
-    <div class="row " ><div class="grow"><div class="t-body rt">From</div></div><span class="pill">10:00 PM</span></div>
-    <div class="row " ><div class="grow"><div class="t-body rt">Until</div></div><span class="pill">7:00 AM</span></div>
+  <div class="times" data-a style="--i:3">
+    <div class="card"><span class="t-foot muted">From</span><span class="num">10:00 PM</span></div>
+    <div class="card"><span class="t-foot muted">Until</span><span class="num">7:00 AM</span></div>
   </div>
-  <div class="list" data-a style="--i:4;margin-top:12px">
-    <div class="row " ><span class="ico-tile s" data-ic="patch"></span><div class="grow"><div class="t-body rt">NRT reminders</div><div class="t-foot muted">Patch times get through</div></div><span class="toggle on"></span></div>
+  <p class="t-foot sec" data-a style="--i:4">While it is quiet</p>
+  <div class="list" data-a style="--i:5">
+    <div class="row " ><span class="ico-tile s" data-ic="bell"></span><div class="grow"><div class="t-body rt">Pledge and check-in nudges</div><div class="t-foot muted">Wait until 7:00 AM</div></div></div>
+    <div class="row " ><span class="ico-tile s" data-ic="wave"></span><div class="grow"><div class="t-body rt">Craving forecast</div><div class="t-foot muted">Paused overnight</div></div></div>
+    <div class="row " ><span class="ico-tile s" data-ic="patch"></span><div class="grow"><div class="t-body rt">NRT reminders</div><div class="t-foot muted">Patch times still get through</div></div><span class="toggle on"></span></div>
   </div>
 </div></div>
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
 
-document.getElementById('ring').innerHTML = DX.ring({ size: 220, stroke: 16, p: 9 / 24, color: 'var(--fg)', track: 'var(--track)', dot: true });
+document.getElementById('ring').innerHTML = DX.ring({ size: 228, stroke: 24, p: 9 / 24, color: 'var(--fg)', track: 'var(--track)', dot: true });
 
 </script>
 </body></html>

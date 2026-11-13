@@ -1,19 +1,26 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>012 Plan reveal</title>
-<meta name="motion" content="Progress eases 9/11 to 10/11; title arrives and the underline draws under 'ready'. The money card arrives and $2,555 counts up from $0 over 1200ms. The stamp row fades in left to right (Prep 1 to 7 pop 90ms apart, Prep 1 in its 'next' state), then the Day Xero medallion fades in last in its waiting form (700ms, no spring: it is earned on Quit Day itself). The free and full lists and the button arrive after.">
+<meta name="motion" content="Progress eases 9/11 to 10/11; title arrives and the underline draws under 'ready'. Xero settles up into his soft disc (900ms) and cheers, bobbing. The stamp card arrives: Prep 1 to 7 pop left to right 90ms apart (Prep 1 in its 'next' ring), then the Day Xero medallion fades in last in its waiting form (700ms, no spring: it is earned on Quit Day itself). The free and full lines and the button arrive after. Light haptic on the button.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   .q { padding-top: 112px; gap: 8px; }
-  .wrap { padding: 18px var(--gutter) 0; display: grid; gap: 10px; }
-  .money { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
-  .money .num { font-size: 44px; line-height: .95; letter-spacing: -1.4px; display: block; margin-top: 6px; }
-  .money .t-cap { color: var(--muted); text-align: right; }
-  .stamps { display: flex; justify-content: space-between; margin-top: 14px; }
+  .wrap { padding: 8px var(--gutter) 0; display: grid; gap: 12px; }
+  .hero { position: relative; height: 146px; margin-top: 4px; display: grid; place-items: center; }
+  .hero .disc { position: absolute; width: 146px; height: 146px; border-radius: 99px; background: color-mix(in srgb, #fff 34%, transparent); }
+  [data-theme="dark"] .hero .disc { background: color-mix(in srgb, var(--g) 70%, #FFC38A 14%); }
+  .hero .hx { position: relative; }
+  .sh { display: flex; justify-content: space-between; align-items: baseline; }
+  .stamps { display: flex; justify-content: space-between; margin-top: 16px; }
   .stamps .pb { flex: none; border-radius: 99px; }
   .stamps .pb.next { box-shadow: 0 0 0 2.5px var(--card), 0 0 0 4.5px var(--fg); }
   .stamps .badge { gap: 0; }
-  .then { display: flex; align-items: center; gap: 12px; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line); }
+  .stamps .pb svg text { fill-opacity: .82; font-size: 40px; transform: translateY(13px); }
+  .stamps .pb svg path { display: none; }
+  .stamps .pb svg circle { stroke-opacity: .5; }
+  .stamps .pb.next svg > g { opacity: .6 !important; }
+  .stamps .pb.next svg text { transform: none; fill-opacity: 1; }
+  .then { display: flex; align-items: center; gap: 14px; margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--line); }
   .then .t-cap { color: var(--muted); display: block; margin-top: 2px; }
   .lab { display: flex; justify-content: space-between; margin-top: 8px; }
   .lab .t-cap { color: var(--muted); }
@@ -25,7 +32,7 @@
   .tier .lk { color: var(--muted); }
 </style>
 </head><body>
-<div class="screen" data-ground="mint">
+<div class="screen" data-ground="apricot">
   <div class="nav">
     <button class="icon-btn" aria-label="Back" data-icon="back"></button>
     <div class="grow"><div class="progress sun"><i id="bar" style="--p:90.9%"></i></div></div>
@@ -37,22 +44,21 @@
     <p class="t-body muted" data-a style="--i:1">Prep 1 to 3 are on us. Nothing is charged today.</p>
   </div>
 
-  <div class="wrap">
-    <div class="card money" data-a style="--i:2">
-      <div><p class="t-foot muted">Money you'll keep in year 1</p><span class="num" data-count="2555" data-prefix="$" data-dur="1200" data-delay="450">$2,555</span></div>
-      <p class="t-cap">$7 a day,<br>every day free</p>
-    </div>
+  <div class="hero" aria-hidden="true">
+    <div class="disc" data-fade style="--d:200ms"></div>
+    <div class="hx" data-settle style="--d:300ms"><div class="bob" id="hx"></div></div>
+  </div>
 
+  <div class="wrap">
     <div class="card" data-a style="--i:3">
-      <p class="t-foot" style="font-weight:700">Seven prep stamps to collect</p>
+      <div class="sh"><p class="t-head">Seven prep stamps</p><span class="t-foot muted">One a day</span></div>
       <div class="stamps" id="stamps"></div>
-      <div class="lab"><span class="t-cap">Prep 1 starts today</span><span class="t-cap">One a day</span></div>
-      <div class="then"><span id="xb" data-fade style="--d:1450ms"></span><div><p class="t-foot" style="font-weight:700">Day Xero, Fri, Nov 6</p><span class="t-cap">Earned on the day you quit</span></div></div>
+      <div class="then"><span id="xb" data-fade style="--d:1450ms"></span><div><p class="t-foot" style="font-weight:700">Then Day Xero, Fri, Nov 6</p><span class="t-foot muted">Earned on the day you quit</span></div></div>
     </div>
 
     <div class="card tiers" data-a style="--i:4">
-      <div class="tier"><span class="tk" data-icon="check"></span><p class="t-foot"><b>Free:</b> Prep 1 to 3, your counter, Craving SOS and evening check-ins</p></div>
-      <div class="tier"><span class="lk" data-icon="lock"></span><p class="t-foot"><b>Full program:</b> Prep 4 to 7, the Day Xero kit, Weeks 1 to 4 and voice coaching</p></div>
+      <div class="tier"><span class="tk" data-icon="check"></span><p class="t-foot"><b>Free:</b> Prep 1 to 3, your counter, Craving SOS and check-ins</p></div>
+      <div class="tier"><span class="lk" data-icon="lock"></span><p class="t-foot"><b>Full program:</b> Prep 4 to 7, Weeks 1 to 4 and voice coaching</p></div>
     </div>
   </div>
 
@@ -64,9 +70,10 @@
 <script>
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon, { w: 2.6 }));
   document.querySelector('.icon-btn').innerHTML = DX.icon('back');
+  document.getElementById('hx').innerHTML = DX.char('xero', { mood: 'cheer', size: 128 });
   document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 40 });
   let h = '';
-  for (let i = 1; i <= 7; i++) h += `<span class="pb ${i === 1 ? 'next' : ''}" data-pop style="--i:0;--d:${700 + i * 90}ms">${DX.badge({ kind: 'prep', n: i, size: 38, state: i === 1 ? 'next' : 'locked', bare: true })}</span>`;
+  for (let i = 1; i <= 7; i++) h += `<span class="pb ${i === 1 ? 'next' : ''}" data-pop style="--i:0;--d:${700 + i * 90}ms">${DX.badge({ kind: 'prep', n: i, size: 42, state: i === 1 ? 'next' : 'locked', bare: true })}</span>`;
   document.getElementById('stamps').innerHTML = h;
   document.getElementById('xb').innerHTML = DX.badge({ kind: 'xero', n: '0', state: 'next', p: 0, size: 52, bare: true });
   const bar = document.getElementById('bar');
