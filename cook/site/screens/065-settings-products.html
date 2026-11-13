@@ -19,7 +19,8 @@
 .hero .scene .mound { position: absolute; right: 0; bottom: 0; }
 .hero .scene .who { position: absolute; right: 20px; bottom: 6px; }
 /* multi-select: the kit's .opt multi checkboxes inside one grouped list; a checked row takes the warm tint */
-.grp { background: var(--card); border-radius: var(--r-card); box-shadow: inset 0 0 0 1px var(--line); overflow: hidden; }
+.grp { position: relative; background: var(--card); border-radius: var(--r-card); overflow: hidden; }
+.grp::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--line); pointer-events: none; }
 .grp .opt { border-radius: 0; background: transparent; box-shadow: none; min-height: 56px; padding: 8px 16px 8px 12px; }
 .grp .opt + .opt { border-top: 1px solid var(--line); }
 .screen .grp .opt.on, html .screen .grp .opt.on { box-shadow: none; background: var(--sel-tint); }
