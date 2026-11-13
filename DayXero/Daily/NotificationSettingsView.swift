@@ -43,6 +43,7 @@ struct NotificationSettingsView: View {
                 row("Evening check-in", detail: "Skipped once you've checked in", systemImage: "moon", minute: $checkIn, fallback: DailyReminderSettings.defaultCheckIn)
                 row("Milestones", detail: "On the day", systemImage: "flag", minute: $milestone, fallback: DailyReminderSettings.defaultMilestone)
             }
+.listRowBackground(Read4.card)
             .disabled(denied)
             Section {
                 Toggle(isOn: $nrt) { label("NRT", detail: "Patch changes and step-downs", systemImage: "bandage") }
@@ -57,6 +58,7 @@ struct NotificationSettingsView: View {
             } header: {
                 Text("Your plan")
             }
+.listRowBackground(Read4.card)
             .disabled(denied)
             Section {
                 NavigationLink(value: SettingsSheet.Page.quietHours) {
@@ -71,8 +73,9 @@ struct NotificationSettingsView: View {
             } footer: {
                 Text("At most three a day from the program, and fewer from Week 3 with quiet graduation. NRT reminders you set always arrive.")
             }
+.listRowBackground(Read4.card)
         }
-        .tint(Read4.accent)
+        .dxSettingsList()
         .navigationTitle("Notifications")
         .onChange(of: [pledge, lesson, checkIn, milestone, weekly, quietStart, quietEnd]) { refresh() }
         .onChange(of: away) { refresh() }
@@ -91,8 +94,8 @@ struct NotificationSettingsView: View {
 
     private func label(_ title: LocalizedStringKey, detail: LocalizedStringKey, systemImage: String) -> some View {
         HStack(spacing: DX.Space.s) {
-            Image(systemName: systemImage).font(.system(size: 14)).foregroundStyle(Read4.accent)
-                .frame(width: 30, height: 30).background(Read4.accentSoft, in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+            Image(systemName: systemImage).font(.system(size: 14)).foregroundStyle(Read4.ink)
+                .frame(width: 30, height: 30).background(Read4.surface, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
             VStack(alignment: .leading, spacing: 1) {
                 Text(title).dxFont(16, weight: 600, style: .body)
                 Text(detail).v4Text(.subtitle)
@@ -162,7 +165,7 @@ struct QuietHoursView: View {
             }
             .padding(DX.Space.m)
         }
-        .tint(Read4.accent)
+        .dxSettingsList()
         .background(Read4.background.ignoresSafeArea())
         .navigationTitle("Quiet hours")
         .onChange(of: [start, end]) { refresh() }

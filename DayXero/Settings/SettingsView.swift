@@ -48,6 +48,7 @@ struct SettingsSheet: View {
                         }
                     }
                 }
+.listRowBackground(Read4.card)
                 Section {
                     NavigationLink(value: Page.reminders) { SettingLabel("Notifications", systemImage: "bell") }
                     Toggle(isOn: $haptics) { SettingLabel("Breathing haptics", systemImage: "water.waves") }
@@ -64,6 +65,7 @@ struct SettingsSheet: View {
                     Text(entitlement.isPro ? "Other haptics follow System Haptics in iPhone Settings."
                          : "Other haptics follow System Haptics in iPhone Settings. Jelli's voice coaching comes with the full program.")
                 }
+.listRowBackground(Read4.card)
                 if DemoMode.isAvailable {
                     Section {
                         Toggle(isOn: Binding(get: { entitlement.demo }, set: { on in
@@ -79,6 +81,7 @@ struct SettingsSheet: View {
                     } footer: {
                         Text("Unlocks everything, opens every program session at any time, and lets you pick any Quit Day, past ones too. Only in test builds.")
                     }
+.listRowBackground(Read4.card)
                 }
                 // Widgets (S17.11): what widgets anyone can see show.
                 Section {
@@ -97,6 +100,7 @@ struct SettingsSheet: View {
                 } footer: {
                     Text("Hides money and the word nicotine from widgets anyone can see.")
                 }
+.listRowBackground(Read4.card)
                 .onChange(of: widgetPrivacy) { WidgetSync.refresh(in: context, isPro: entitlement.isPro) }
                 .onChange(of: widgetPrivacyHome) { WidgetSync.refresh(in: context, isPro: entitlement.isPro) }
                 Section("Subscription") {
@@ -104,6 +108,7 @@ struct SettingsSheet: View {
                         LabeledContent { Text(entitlement.isPro ? "Pro" : "Free") } label: { SettingLabel("DayXero Pro", systemImage: "star") }
                     }
                 }
+.listRowBackground(Read4.card)
                 Section("Your data") {
                     NavigationLink(value: Page.privacy) { SettingLabel("Privacy", systemImage: "lock") }
                     Button { exportURL = DataTools.export(context: context, profile: profile) } label: {
@@ -114,6 +119,7 @@ struct SettingsSheet: View {
                         Label("Delete all data", systemImage: "trash")
                     }
                 }
+.listRowBackground(Read4.card)
                 Section {
                     NavigationLink(value: Page.health) { SettingLabel("Health information", systemImage: "heart") }
                     Link(destination: AppLinks.terms) { SettingLabel("Terms of use", systemImage: "doc.text") }
@@ -129,10 +135,18 @@ struct SettingsSheet: View {
                         .frame(maxWidth: .infinity)
                         .padding(.top, DX.Space.s)
                 }
+.listRowBackground(Read4.card)
             }
-            .tint(Read4.accent)
+            .dxSettingsList()
             .navigationTitle("Settings")
-            .toolbar { ToolbarItem(placement: .topBarTrailing) { Button("Done") { dismiss() } } }
+            .navigationBarTitleDisplayMode(.inline)
+            // v5: the leading close button, top-left.
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button { dismiss() } label: { DXIcon(.close, size: 18, weight: 2.4).foregroundStyle(Read4.ink) }
+                        .accessibilityLabel(Text("Done"))
+                }
+            }
             .navigationDestination(for: Page.self) { page in
                 switch page {
                 case .reminders: NotificationSettingsView()
@@ -193,11 +207,12 @@ struct SettingLabel: View {
     }
 
     var body: some View {
+        // v5 (061): a 36 pt card-2 tile with the ink icon, then the title in the display face.
         Label {
-            Text(title)
+            Text(title).dxFace(.display, 16, weight: 700).foregroundStyle(Read4.ink)
         } icon: {
-            Image(systemName: systemImage).font(.system(size: 13)).foregroundStyle(Read4.accent)
-                .frame(width: 28, height: 28).background(Read4.accentSoft, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+            Image(systemName: systemImage).font(.system(size: 15, weight: .medium)).foregroundStyle(Read4.ink)
+                .frame(width: 36, height: 36).background(Read4.surface, in: RoundedRectangle(cornerRadius: 11, style: .continuous))
         }
     }
 }
@@ -265,9 +280,10 @@ struct ProductsSettingsView: View {
             } footer: {
                 Text("Changing a baseline updates money kept and counters from Quit Day. Days clear don't change.")
             }
+.listRowBackground(Read4.card)
         }
         .navigationTitle("Products")
-        .tint(Read4.accent)
+        .dxSettingsList()
         .sheet(item: $editing) { use in
             ProductEditor(use: use, profile: profile).presentationDetents([.large])
         }
@@ -330,10 +346,11 @@ struct CurrencySettingsView: View {
             } footer: {
                 Text("Changes the currency your money is shown in. Prices you've entered keep their numbers, so if they were in another currency, update them in Products.")
             }
+.listRowBackground(Read4.card)
         }
         .searchable(text: $search, prompt: Text("Search currencies"))
         .navigationTitle("Currency")
-        .tint(Read4.accent)
+        .dxSettingsList()
     }
 
     private func matches(_ code: String) -> Bool {
@@ -415,6 +432,7 @@ struct ProductEditor: View {
                         }
                     }
                 }
+.listRowBackground(Read4.card)
                 if !use.isPrimary {
                     Section {
                         Button("Make this my main product") {
@@ -422,6 +440,7 @@ struct ProductEditor: View {
                             use.isPrimary = true
                         }
                     }
+.listRowBackground(Read4.card)
                 }
                 if profile.products.count > 1 {
                     Section {
@@ -434,6 +453,7 @@ struct ProductEditor: View {
                             dismiss()
                         }
                     }
+.listRowBackground(Read4.card)
                 }
             }
             .navigationTitle(Text(use.product.title))
@@ -449,7 +469,7 @@ struct ProductEditor: View {
             }
             .onAppear { price = "\(use.pricePerPurchase)" }
         }
-        .tint(Read4.accent)
+        .dxSettingsList()
     }
 }
 
@@ -479,6 +499,7 @@ struct QuitDaySettingsView: View {
                     }
                 }
             }
+.listRowBackground(Read4.card)
             if DemoMode.isOn {
                 Section {
                     DatePicker("Quit Day", selection: Binding(get: { profile.quitDay }, set: { setQuitDay($0) }),
@@ -490,6 +511,7 @@ struct QuitDaySettingsView: View {
                 } footer: {
                     Text("Any date, past ones too. Counters, money kept and milestones follow it straight away.")
                 }
+.listRowBackground(Read4.card)
             } else if stats.isPrep(at: .now) {
                 Section {
                     DatePicker("Quit Day", selection: Binding(get: { profile.quitDay }, set: { setQuitDay($0) }),
@@ -498,6 +520,7 @@ struct QuitDaySettingsView: View {
                 } footer: {
                     Text("Your prep days adjust to fit.")
                 }
+.listRowBackground(Read4.card)
             } else {
                 Section {
                     Text("Your Quit Day has passed. If you'd like to start counting again from a new date, you can set one. Your lessons, logs and plans all stay.")
@@ -509,10 +532,11 @@ struct QuitDaySettingsView: View {
                         Button("Set a new Quit Day") { choosing = true; newDate = today }
                     }
                 }
+.listRowBackground(Read4.card)
             }
         }
         .navigationTitle("Quit Day")
-        .tint(Read4.accent)
+        .dxSettingsList()
         .alert("Start counting from \(newDate.formatted(.dateTime.weekday(.wide).day().month()))?", isPresented: $confirm) {
             Button("Set new Quit Day") {
                 setQuitDay(newDate)
@@ -590,9 +614,10 @@ struct SubscriptionSettingsView: View {
             } footer: {
                 Text(restoreNote ?? String(localized: "Payment, renewal and cancellation are handled by your Apple ID."))
             }
+.listRowBackground(Read4.card)
         }
         .navigationTitle("DayXero Pro")
-        .tint(Read4.accent)
+        .dxSettingsList()
         .task {
             current = await entitlement.store.currentPlan()
             plans = (try? await entitlement.store.loadPlans()) ?? []
@@ -635,6 +660,7 @@ struct PrivacySettingsView: View {
             } header: {
                 Text("Your data stays on this iPhone")
             }
+.listRowBackground(Read4.card)
             Section {
                 Toggle("Share anonymous usage data", isOn: $shareUsage)
                     .onChange(of: shareUsage) { _, on in AnalyticsConsent.set(on) }
@@ -642,9 +668,10 @@ struct PrivacySettingsView: View {
                     Link("Privacy policy", destination: privacy)
                 }
             }
+.listRowBackground(Read4.card)
         }
         .navigationTitle("Privacy")
-        .tint(Read4.accent)
+        .dxSettingsList()
     }
 
     private func fact(_ icon: String, _ title: LocalizedStringKey, _ body: LocalizedStringKey) -> some View {
@@ -755,5 +782,19 @@ enum DataTools {
         UNUserNotificationCenter.current().removeAllDeliveredNotifications()
         Task { await SOSLiveActivity.endAll() }
         WidgetCenter.shared.reloadAllTimelines()
+    }
+}
+
+extension View {
+    /// v5 settings (061-070): lists on the reading ground with white grouped rows and the kit's coral switches, the
+    /// title inline.
+    func dxSettingsList() -> some View {
+        self
+            .scrollContentBackground(.hidden)
+            .background(Read4.background.ignoresSafeArea())
+            .toggleStyle(.dx)
+            .tint(Color(hex: 0xF26A45))
+            .environment(\.dxGround, .reading)
+            .navigationBarTitleDisplayMode(.inline)
     }
 }

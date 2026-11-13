@@ -477,6 +477,16 @@ public struct MoodFace: Shape {
 }
 
 public struct MoodPicker: View {
+    /// Each mood's face colour: a moonlit grey, pale, warm and bright (kit 054).
+    static func faceColor(_ mood: CheckInMood) -> Color {
+        switch mood {
+        case .rough: Color(hex: 0x8C93B8)
+        case .okay: Color(hex: 0xEDE6D6)
+        case .good: Color(hex: 0xFFD9A8)
+        case .proud: Color(hex: 0xFF9A6B)
+        }
+    }
+
     @Binding var selection: CheckInMood?
     let ground: DX.Ground
 
@@ -489,16 +499,21 @@ public struct MoodPicker: View {
         HStack(spacing: 8) {
             ForEach(CheckInMood.allCases, id: \.self) { mood in
                 let on = selection == mood
+                // v5 (054): each mood a tile on the ground's card; the chosen tile lifts with a cream edge.
                 Button { selection = mood } label: {
-                    VStack(spacing: 6) {
+                    VStack(spacing: 8) {
                         ZStack {
-                            Circle().fill(on ? ground.ink : DX.Fill.onColourCard(for: ground))
-                            MoodFace(mood).stroke(on ? ground.background : ground.ink, style: StrokeStyle(lineWidth: 2.2, lineCap: .round))
+                            Circle().fill(Self.faceColor(mood))
+                            MoodFace(mood).stroke(Color(hex: 0x1E1A3A), style: StrokeStyle(lineWidth: 2.4, lineCap: .round))
+                                .padding(4)
                         }
-                        .frame(width: 32, height: 32)
-                        Text(mood.label).dxType(.caption).dxInk(ground)
+                        .frame(width: 44, height: 44)
+                        Text(mood.label).dxFace(.body, 15, weight: on ? 700 : 600).dxInk(ground)
                     }
-                    .frame(maxWidth: .infinity, minHeight: 64)
+                    .frame(maxWidth: .infinity, minHeight: 96)
+                    .background(on ? ground.card2 : ground.card, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .strokeBorder(on ? ground.selEdge : ground.line, lineWidth: on ? 2 : 1))
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(mood.label)

@@ -30,9 +30,12 @@ struct CalmToolsView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DX.Space.xs) {
-                CalmHeaderArt()
-                    .frame(maxWidth: .infinity)
-                    .padding(.top, DX.Space.xs)
+                // v5 (056): the tab opens on its title; the header art stays for the sheet opened from SOS and Today.
+                if showsClose {
+                    CalmHeaderArt()
+                        .frame(maxWidth: .infinity)
+                        .padding(.top, DX.Space.xs)
+                }
                 // A plain title: the hand-drawn mark is kept for Today's greeting, milestones, the finale and onboarding (S27.15).
                 Text("Calm tools")
                     .dxType(.large).foregroundStyle(ground.ink)
@@ -41,8 +44,13 @@ struct CalmToolsView: View {
                     .padding(.bottom, DX.Space.xs)
                 // CLIN-04: for the moment straight after finishing something.
                 Button { rewardCard = true } label: { RewardCardRow() }.buttonStyle(.plain)
-                ForEach(CalmTool.allCases) { tool in
-                    Button { open = tool } label: { CalmToolRow(tool: tool) }.buttonStyle(.plain)
+                // v5 (056): the tools as a grid of tall art cards.
+                LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
+                    ForEach(Array(CalmTool.allCases.enumerated()), id: \.element) { index, tool in
+                        Button { open = tool } label: { CalmToolCard(tool: tool) }
+                            .buttonStyle(.dxPress)
+                            .dxArrive(index, delay: 0.15)
+                    }
                 }
                 HelpLine(compact: true, ground: ground).padding(.top, DX.Space.s)
             }
@@ -110,6 +118,34 @@ private struct CalmCloud: Shape {
     }
 }
 
+/// A calm tool as a tall card (v5, 056): its moving art on top, the title and "N min" under it on the card.
+struct CalmToolCard: View {
+    let tool: CalmTool
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            KitArt(CalmToolRow.art(tool), cornerRadius: 0)
+                .frame(maxWidth: .infinity)
+                .frame(height: 150)
+                .clipped()
+            VStack(alignment: .leading, spacing: 2) {
+                Text(tool.title).dxType(.headline).foregroundStyle(DX.Ground.reading.ink)
+                    .lineLimit(2).minimumScaleFactor(0.85)
+                Text("\(tool.minutes) min").dxType(.caption).foregroundStyle(DX.Ground.reading.muted)
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 12)
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .background(DX.Ground.reading.card)
+        .clipShape(RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous).strokeBorder(DX.Ground.reading.line, lineWidth: 1))
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(Text(tool.title))
+        .accessibilityValue(Text("\(tool.minutes) min. \(Text(tool.detail))"))
+    }
+}
+
 struct CalmToolRow: View {
     let tool: CalmTool
     @Environment(\.dynamicTypeSize) private var typeSize
@@ -132,7 +168,8 @@ struct CalmToolRow: View {
         }
         .padding(8)
         .padding(.trailing, 8)
-        .background(Color(light: 0xFFF8EE, dark: 0x221A52), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .background(DX.Ground.reading.card, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(DX.Ground.reading.line, lineWidth: 1))
         .accessibilityElement(children: .combine)
         .accessibilityValue(Text("\(tool.minutes) min"))
     }
@@ -476,7 +513,8 @@ struct RewardCardRow: View {
         }
         .padding(8)
         .padding(.trailing, 8)
-        .background(Color(light: 0xFFF8EE, dark: 0x221A52), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .background(DX.Ground.reading.card, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(DX.Ground.reading.line, lineWidth: 1))
         .accessibilityElement(children: .combine)
         .accessibilityValue(Text("1 min"))
     }

@@ -62,24 +62,27 @@ struct CheckInView: View {
         return VStack(spacing: 0) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
+                    // v5 (054): Glim floats in the midnight meadow; the close button sits top-left.
                     ZStack(alignment: .bottom) {
-                        HeroScene(.night, clarity: clarity, height: 250, edge: ground.background)
+                        NightSky(moon: CGPoint(x: 330, y: 110))
+                            .frame(height: 290)
                         GlimView(mood: mood == .good || mood == .proud ? .cheer : .calm,
-                                 stage: CrewGrowth.stage(daysClear: stats.daysClear(at: .now)), size: .scene)
-                            .offset(y: shown || motion.reduce ? -10 : -50)
+                                 stage: CrewGrowth.stage(daysClear: stats.daysClear(at: .now)), size: .hero)
+                            .dxBob()
+                            .offset(y: shown || motion.reduce ? -24 : -64)
                             .opacity(shown ? 1 : 0)
                             .accessibilityHidden(true)
                     }
-                    .overlay(alignment: .topTrailing) {
+                    .overlay(alignment: .topLeading) {
                         Button(action: onDone) {
-                            Image(systemName: "xmark").font(.system(size: 18, weight: .bold))
-                                .foregroundStyle(DX.Fill.navy)
+                            DXIcon(.close, size: 20, weight: 2.4)
+                                .foregroundStyle(ground.ink)
                                 .frame(width: 44, height: 44)
-                                .background(DX.Fill.cream.opacity(0.85), in: Circle())
+                                .background(ground.card2, in: Circle())
                         }
-                        .buttonStyle(.plain)
+                        .buttonStyle(.dxPress)
                         .accessibilityLabel(Text("Close"))
-                        .padding(.trailing, 10).padding(.top, 50)
+                        .padding(.leading, 16).padding(.top, 54)
                     }
                     .padding(.horizontal, -DX.Layout.gutter)
                     .ignoresSafeArea(edges: .top)
@@ -212,10 +215,13 @@ struct CheckInView: View {
     /// Clear day or a slip. A slip with nothing logged opens the talk-through after saving; nothing resets.
     private func dayChoice(slipLogged: Bool) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            HStack(spacing: 8) {
+            HStack(spacing: 4) {
                 choice(String(localized: "Clear day"), on: clearDay) { clearDay = true }
                 choice(String(localized: "Had a slip"), on: !clearDay) { clearDay = false }
             }
+            .padding(4)
+            .background(ground.card, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(ground.line, lineWidth: 1))
             if !clearDay {
                 Text(slipLogged ? "You've already logged it. Nothing resets." : "We'll help you log it after this. Nothing resets.")
                     .dxType(.footnote).foregroundStyle(ground.muted)
@@ -230,18 +236,20 @@ struct CheckInView: View {
         }
     }
 
-    /// V4Chip's look, with the width inside the background so each chip fills its half of the row.
+    /// v5 (054): a segment in the night card's track; the chosen one is the lifted card-2 tile.
     private func choice(_ title: String, on: Bool, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Text(verbatim: title)
-                .dxFont(16, weight: 600, style: .body)
-                .foregroundStyle(on ? Color(hex: 0x4A3596) : ground.ink)
+                .dxFace(.body, 15, weight: on ? 700 : 600)
+                .foregroundStyle(on ? ground.ink : ground.muted)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 14)
                 .padding(.vertical, 6)
                 .frame(maxWidth: .infinity, minHeight: 44)
-                .background(on ? DX.Fill.cream : DX.Fill.onColourCard(for: ground),
-                            in: RoundedRectangle(cornerRadius: DX.Layout.answerChipRadius, style: .continuous))
+                .background(on ? ground.card2.opacity(1) : Color.clear,
+                            in: RoundedRectangle(cornerRadius: DX.Layout.chipRadius, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: DX.Layout.chipRadius, style: .continuous)
+                    .strokeBorder(on ? ground.ink.opacity(0.12) : .clear, lineWidth: 1))
         }
         .buttonStyle(.plain)
         .sensoryFeedback(DX.Haptic.select, trigger: on)
