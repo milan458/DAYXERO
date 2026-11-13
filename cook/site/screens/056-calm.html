@@ -1,18 +1,10 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>056 Calm tools</title>
-<meta name="motion" content="The title arrives, then the SOS card, then the four tool tiles on the 90ms stagger (left to right, top to bottom); each cast member settles into its own little scene 120ms after its tile (Jelli in the box window, Xero on the hill, Jelli on the wave, Glim on the night hill). Ambient: in the box tile the dot walks the track at the breathing pace (16s a round) and the lit side steps along with it at each corner; the cast keep their own idle loops (Jelli breathes in the window, Jelli bobs on the swell, Glim dozes with drifting zzz). Light tap haptic on tile press; the SOS card press gives a firmer tap and opens Craving SOS.">
+<meta name="motion" content="The title arrives, then the four tool tiles on the 90ms stagger (left to right, top to bottom); each cast member settles into its own little scene 120ms after its tile (Jelli in the box window, Xero on the hill, Jelli on the wave, Glim on the night hill). Ambient: in the box tile the dot walks the track at the breathing pace (16s a round) and the lit side steps along with it at each corner; the cast keep their own idle loops (Jelli breathes in the window, Jelli bobs on the swell, Glim dozes with drifting zzz). Light tap haptic on tile press. Craving SOS stays one tap away in the tab bar.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
 .hd { display: grid; gap: 6px; padding-top: 14px; }
-.sos { display: flex; align-items: center; gap: 14px; padding: 14px 16px 14px 14px; margin-top: 18px; border-radius: 22px;
-  background: #1F3C8C; color: #FFF8EE; box-shadow: 0 10px 24px rgba(31,60,140,.28); position: relative; overflow: hidden; text-decoration: none; }
-[data-theme="dark"] .sos { background: #1B3378; box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); }
-.sos .disc { width: 50px; height: 50px; border-radius: 99px; background: #FFF8EE; color: #1F3C8C; display: grid; place-items: center; flex: none; }
-.sos .disc svg { width: 26px; height: 26px; }
-.sos .grow { flex: 1; min-width: 0; display: grid; gap: 2px; }
-.sos .t-foot { color: #D3DDF7; }
-.sos .chev { color: #FFF8EE; opacity: .9; }
 .tools { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
 .tool { background: var(--card); border-radius: 22px; overflow: hidden; box-shadow: inset 0 0 0 1px var(--line); display: grid; }
 .tool .art { position: relative; height: 132px; overflow: hidden; border-radius: 22px 22px 0 0; }
@@ -29,25 +21,20 @@
 <div class="screen" data-ground="reading">
 <div class="scroll with-tabs"><div class="pad">
   <div class="hd"><h1 class="t-large" data-a style="--i:0">Calm tools</h1><p class="t-foot muted" data-a style="--i:1">A few minutes instead of reaching for nicotine.</p></div>
-  <a class="sos" data-go="019-sos" data-a style="--i:2">
-    <span class="disc" data-ic="wave" data-s="26" data-w="2.4"></span>
-    <div class="grow"><div class="t-head">Craving right now?</div><div class="t-foot">Let&rsquo;s ride it out together. Most pass in a few minutes.</div></div>
-    <span class="chev" data-ic="chev" data-s="18"></span>
-  </a>
   <div class="tools">
-    <div class="tool" data-a style="--i:3" data-go="057-calm-box">
+    <div class="tool" data-a style="--i:2" data-go="057-calm-box">
       <div class="art" id="a-box"></div>
-      <div class="txt"><div class="t-head">Box breathing</div><span class="t-cap">2 min &middot; In, hold, out</span></div>
+      <div class="txt"><div class="t-head">Box breathing</div><span class="t-cap">1 min &middot; In, hold, out</span></div>
     </div>
-    <div class="tool" data-a style="--i:4" data-go="058-calm-grounding">
+    <div class="tool" data-a style="--i:3" data-go="058-calm-grounding">
       <div class="art" id="a-ground"></div>
       <div class="txt"><div class="t-head">Grounding</div><span class="t-cap">3 min &middot; Five senses</span></div>
     </div>
-    <div class="tool" data-a style="--i:5" data-go="059-calm-notice">
+    <div class="tool" data-a style="--i:4" data-go="059-calm-notice">
       <div class="art" id="a-urge"></div>
       <div class="txt"><div class="t-head">Notice the urge</div><span class="t-cap">1 min &middot; Just watch</span></div>
     </div>
-    <div class="tool" data-a style="--i:6">
+    <div class="tool" data-a style="--i:5">
       <div class="art" id="a-wind"></div>
       <div class="txt"><div class="t-head">Wind down</div><span class="t-cap">5 min &middot; Before sleep</span></div>
     </div>
