@@ -1,18 +1,17 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>024 Session listen card</title>
-<meta name="motion" content="The apricot player (deep dusk with a warm sun glow in dark mode) rises into place (settle 900ms) while the five-step bar arrives; Xero, in his headphones, settles in front of the sun and then sways gently to the audio (5s bob loop). The waveform bars grow from the centre line left to right (48 bars, 16ms apart, 420ms each); at 1.2s play starts: the icon swaps to pause, the played ink and the playhead knob sweep across the bars (linear, follows playback), the elapsed time under the left end counts, and the first segment of the step bar fills in step with playback. Next card stays outlined until 80% played (4:48), then fills to the solid button (300ms crossfade, light haptic). Read instead expands the transcript under the player (320ms ease).">
+<meta name="motion" content="The apricot player (deep dusk with a warm sun glow in dark mode) rises into place (settle 900ms) while the five-card bar arrives; Xero, in his headphones, settles in front of the sun and then sways gently to the audio (5s bob loop). The waveform bars grow from the centre line left to right (48 bars, 16ms apart, 420ms each); at 1.2s play starts: the icon swaps to pause, the played ink and the playhead knob sweep across the bars (linear, follows playback), the elapsed time under the left end counts, and the first card&#39;s segment fills as a sliver in step with playback. While it plays, the dock holds only a quiet Skip to next card link; at 80% played (4:48) the link cross-fades into the solid Next card button (300ms, light haptic). Read, top right of the player, expands the transcript under the controls (320ms ease).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-.nav .side{width:44px;text-align:right;flex:none}
-/* the current segment fills with this card's progress (here: playback) */
-.steps > i.now::after{width:var(--sub,45%)}
+/* the current segment fills with this card's progress (here: playback) as a sliver, never a dot */
+.steps > i.now::after{width:max(12px,var(--sub,45%));border-radius:99px 2px 2px 99px}
 /* Listen = apricot. Dark mode: the same player at deep dusk, cream ink and a warm sun glow, never a muddy caramel. */
 .face{--ink:#1E1A3A;--soft:#3A2410;--face:#FFC38A;--face-2:#FFD6AC;--sunc:#FFE6BC;--pb:#1E1A3A;--pb-fg:#FFF8EE;
   background:var(--face);color:var(--ink);border-radius:28px;overflow:hidden;box-shadow:0 16px 30px rgba(60,40,20,.14)}
 [data-theme="dark"] .face{--ink:#FFF8EE;--soft:#E9DCCB;--pb:#FFC38A;--pb-fg:#1E1A3A;
   background:radial-gradient(80% 36% at 50% 32%,rgba(247,170,108,.30),rgba(247,170,108,0) 100%),linear-gradient(180deg,#27325C 0%,#1C2547 58%,#19223F 100%);
-  box-shadow:0 18px 34px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.07)}
+  box-shadow:0 18px 34px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,248,238,.08)}
 .art{position:relative;height:266px;background:linear-gradient(to bottom,var(--face-2),var(--face))}
 [data-theme="dark"] .art{background:none}
 .art .sun{position:absolute;left:50%;top:34px;width:208px;height:208px;margin-left:-104px;border-radius:50%;background:var(--sunc)}
@@ -21,6 +20,8 @@
 .in{padding:18px 20px 18px}
 .kind{display:flex;align-items:center;gap:8px;font:600 14px/1 var(--body);color:var(--soft)}
 .kind svg{width:18px;height:18px}
+.kind .rd{margin-left:auto;display:flex;align-items:center;gap:6px;height:32px;margin-block:-9px;padding:0 2px;font:600 14px/1 var(--body);color:var(--ink)}
+.kind .rd svg{width:17px;height:17px}
 .wave{position:relative;height:52px;margin-top:16px}
 .wave .layer{position:absolute;inset:0;overflow:hidden}
 .wave .layer.on{width:var(--pp,14%)}
@@ -45,18 +46,19 @@
 .pbtn{width:64px;height:64px;border-radius:99px;background:var(--pb);color:var(--pb-fg);display:grid;place-items:center;box-shadow:0 6px 16px rgba(30,26,58,.22)}
 [data-theme="dark"] .pbtn{box-shadow:0 6px 18px rgba(0,0,0,.35)}
 .pbtn svg{width:26px;height:26px}
-/* Next card waits outlined until 80% played */
-.dock .btn.ghost{box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--fg) 34%,transparent)}
-.rd{gap:8px;color:var(--fg);opacity:1}
-.rd svg{width:18px;height:18px}
-.rd .t-foot{color:var(--muted);font-weight:500}
+/* the gate: a quiet skip link while the card plays; the solid Next card button takes its place at 80% */
+.gate{position:relative;height:58px}
+.gate > *{position:absolute;inset:0;transition:opacity .3s var(--ease)}
+.gate .skip-l{height:58px;color:var(--muted);opacity:1}
+.gate .btn{opacity:0;pointer-events:none}
+.gate.open .skip-l{opacity:0;pointer-events:none}
+.gate.open .btn{opacity:1;pointer-events:auto}
 </style>
 </head><body>
 <div class="screen" data-ground="table">
   <div class="nav">
     <button class="icon-btn" aria-label="Close" id="close"></button>
     <div class="grow"><div class="steps" aria-label="Card 1 of 5" data-a style="--sub:14%;--i:0"><i class="now"></i><i></i><i></i><i></i><i></i></div></div>
-    <span class="side t-foot muted">1 of 5</span>
   </div>
   <div class="scroll" style="padding-top:110px">
     <div class="pad">
@@ -66,7 +68,7 @@
           <div class="xw" data-settle style="--i:2"><div class="bob" id="xero"></div></div>
         </div>
         <div class="in">
-          <div class="kind"><span id="k-ic"></span>Listen · 6 min</div>
+          <div class="kind"><span id="k-ic"></span>Listen · 6 min<button class="rd" aria-expanded="false"><span id="r-ic"></span>Read</button></div>
           <h1 class="t-title" style="margin-top:10px">Why it feels like it calms you</h1>
           <div class="wave" id="wave" style="--pp:14%"></div>
           <div class="times"><span class="t-cap" data-count="50" data-delay="1200" data-dur="6000" id="el">0:50</span><span class="t-cap">6:00</span></div>
@@ -80,15 +82,13 @@
     </div>
   </div>
   <div class="dock">
-    <button class="link rd" aria-expanded="false" data-a style="--i:5"><span id="r-ic"></span>Read instead<span class="t-foot">· 1 min</span><span id="r-chev"></span></button>
-    <button class="btn ghost" data-a style="--i:6">Next card</button>
+    <div class="gate" id="gate" data-a style="--i:6"><button class="link skip-l">Skip to next card</button><button class="btn">Next card</button></div>
   </div>
 </div>
 <script>
 document.getElementById('close').innerHTML = DX.icon('close');
 document.getElementById('k-ic').innerHTML = DX.icon('headphones', {size:18});
-document.getElementById('r-ic').innerHTML = DX.icon('text', {size:18});
-document.getElementById('r-chev').innerHTML = DX.icon('down', {size:18});
+document.getElementById('r-ic').innerHTML = DX.icon('text', {size:17});
 /* 15-second skips: a circular arrow with the number inside */
 const skip = fwd => `<svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="${fwd ? 'transform:scaleX(-1)' : ''}"><path d="M8.2 9.2A9.5 9.5 0 1 1 5.6 16.5"/><path d="M7.6 3.8v5.8h5.8"/></svg><b>15</b>`;
 document.getElementById('sb').innerHTML = skip(false);
@@ -109,7 +109,7 @@ pb.innerHTML = DX.icon('pause', {size:26, w:3});
 const W = 306, n = 48, bw = 3.4, gap = (W - n * bw) / (n - 1);
 const hs = Array.from({length:n}, (_, i) => 8 + Math.round(38 * Math.abs(Math.sin(i * 1.7) * .6 + Math.sin(i * .45) * .4)));
 const bars = (op, cls) => `<svg width="${W}" viewBox="0 0 ${W} 52" class="${cls}">${hs.map((h, i) => `<rect x="${(i * (bw + gap)).toFixed(1)}" y="${26 - h / 2}" width="${bw}" height="${h}" rx="1.7" fill="var(--ink)" fill-opacity="${op}" style="--b:${i}"/>`).join('')}</svg>`;
-document.getElementById('wave').innerHTML = `<div class="layer">${bars(.26, 'base')}</div><div class="layer on">${bars(1, '')}</div><i class="head" aria-hidden="true"></i>`;
+document.getElementById('wave').innerHTML = `<div class="layer">${bars(.3, 'base')}</div><div class="layer on">${bars(1, '')}</div><i class="head" aria-hidden="true"></i>`;
 /* elapsed time as m:ss */
 const el = document.getElementById('el');
 new MutationObserver(() => { const v = parseInt(el.textContent); if (!isNaN(v) && !el.textContent.includes(':')) el.textContent = '0:' + String(v).padStart(2, '0'); }).observe(el, {childList:true});
