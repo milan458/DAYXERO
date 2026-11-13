@@ -68,11 +68,9 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
 
 document.getElementById('halo').innerHTML = DX.char('horizon', { scene: 'sea', w: 200, h: 200, clarity: 100 });
-/* Jelli's cheer marks become two 4-point stars (no "+" sparkles). */
-const star = (x, y, r) => `<path d="M${x} ${y - r} C${x + r * .14} ${y - r * .14} ${x + r * .14} ${y - r * .14} ${x + r} ${y} C${x + r * .14} ${y + r * .14} ${x + r * .14} ${y + r * .14} ${x} ${y + r} C${x - r * .14} ${y + r * .14} ${x - r * .14} ${y + r * .14} ${x - r} ${y} C${x - r * .14} ${y - r * .14} ${x - r * .14} ${y - r * .14} ${x} ${y - r}Z"/>`;
+/* Jelli's cheer stars (the kit's 4-point stars) sit lower, beside the bell, so they never land on the sun. */
 document.getElementById('jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 180 })
-  .replace(/<g opacity="1" stroke="#[0-9A-Fa-f]{6}" stroke-width="3" stroke-linecap="round"><path d="M24 60 l0 12 M18 66 l12 0"><\/path><path d="M176 56 l0 10 M171 61 l10 0"><\/path><\/g>/,
-    `<g fill="#FFE27A" stroke="#F5B83D" stroke-width="1.2" stroke-linejoin="round">${star(20, 128, 11)}${star(186, 112, 8)}</g>`);
+  .replace(/<g opacity="1" (stroke="#[0-9A-Fa-f]{6}" stroke-width="3" stroke-linecap="round">)(?=<path d="M24 )/, '<g opacity="1" transform="translate(0 56)" $1');
 document.getElementById('ck').innerHTML = DX.check({ size: 56, d: 900 });
 
 </script>
