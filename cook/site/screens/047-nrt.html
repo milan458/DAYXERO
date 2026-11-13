@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
-<title>047 NRT on track</title>
-<meta name="motion" content="Reading pace, no springs. Title and lead arrive, then the hero evidence card: '60%' counts up from 50 (850ms) while the 'Without' (1x) and 'With NRT' (1.6x) bars grow from the left (900ms, apricot bar 150ms later) and the dashed gap line with '+50 to 60%' fades in, then the combination card with Xero settling in (900ms, then a slow bob) and the caution note (600ms each, 90ms stagger); the button arrives last. No haptic until the button tap.">
+<title>047 Why NRT helps</title>
+<meta name="motion" content="Reading pace, no springs. Title and lead arrive, then the evidence card: '60%' counts up from 50 (850ms) while the 'Without' and 'With NRT' bars grow from the left (900ms, the apricot bar 150ms later, its deeper tail showing the extra), then the combination card with Xero settling in (900ms, then a slow bob) and the caution note (600ms each, 90ms stagger); the button arrives last. No haptic until the button tap.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -11,18 +11,12 @@
   .ev .t-foot.lbl { color: var(--muted); }
   .big { display: flex; align-items: baseline; gap: 10px; }
   .big .num { font-size: 46px; line-height: .95; letter-spacing: -1.6px; }
-  .hero { padding: 16px 18px 14px; gap: 7px !important; }
+  .hero { padding: 18px 18px 14px; gap: 8px !important; }
   .hero .t-body { font-size: 17px; font-weight: 500; }
-  .cmp { display: grid; gap: 8px; margin: 4px 0 2px; }
-  .cmp .r { display: grid; grid-template-columns: 82px 1fr 38px; align-items: center; gap: 8px; }
-  .cmp .v { font: 700 15px/1 var(--body); color: var(--fg); text-align: right; }
-  .cmp .r.yes .v { color: var(--fg); }
+  .cmp { display: grid; gap: 10px; margin: 8px 0 4px; }
+  .cmp .r { display: grid; grid-template-columns: 76px 1fr; align-items: center; gap: 10px; }
   .cmp .bar { position: relative; }
   .cmp .r.yes .bar.yes i { background: linear-gradient(90deg, #FFC9A3 0 62.5%, #FF8A4C 62.5% 100%); opacity: 1; }
-  .cmp .gapline { position: absolute; top: -4px; bottom: -4px; left: 62.5%; border-left: 2px dashed var(--fg); opacity: .5; }
-  .cmp .gap { display: grid; grid-template-columns: 82px 1fr 38px; gap: 8px; }
-  .cmp .gap span:nth-child(2) { padding-left: calc(62.5% + 6px); font: 700 14px/1.1 var(--body); color: #A8400C; white-space: nowrap; }
-  [data-theme="dark"] .cmp .gap span:nth-child(2) { color: #FFB27F; }
   .cmp .t-foot { color: var(--fg); font-size: 14px; }
   .cmp .bar { height: 14px; border-radius: 99px; background: var(--track); overflow: hidden; }
   .cmp .bar i { display: block; height: 100%; width: var(--w); border-radius: inherit; background: var(--muted); opacity: .45; transform-origin: left; }
@@ -46,17 +40,15 @@
   <div class="nav"><button class="icon-btn" aria-label="Close" data-ic="close"></button></div>
   <div class="scroll">
     <div class="wrap">
-      <h1 class="t-large" data-a style="--i:0">Keep your NRT on track</h1>
-      <p class="t-body lead" data-a style="--i:1">We'll remind you about patch changes and each step down.</p>
+      <h1 class="t-large" data-a style="--i:0">Why nicotine replacement helps</h1>
+      <p class="t-body lead" data-a style="--i:1">Nicotine replacement therapy (NRT) eases cravings while you unlearn the habit.</p>
       <div class="stack ev">
         <div class="card hero" data-a style="--i:2">
-          <p class="t-foot lbl">Why it's worth it</p>
           <div class="big"><span class="num">50 to <span data-count="60" data-from="50" data-suffix="%">60%</span></span></div>
-          <p class="t-body">more likely to quit than without NRT.</p>
+          <p class="t-body">more likely to quit than going without.</p>
           <div class="cmp" aria-hidden="true">
-            <div class="r"><span class="t-foot">No NRT</span><span class="bar"><i style="--w:62.5%;--d:500ms"></i><b class="gapline"></b></span><span class="v">1x</span></div>
-            <div class="r yes"><span class="t-foot" style="color:var(--fg)">With NRT</span><span class="bar yes"><i style="--w:100%;--d:650ms"></i><b class="gapline"></b></span><span class="v">1.6x</span></div>
-            <div class="gap"><span></span><span>+50 to 60%</span><span></span></div>
+            <div class="r"><span class="t-foot">Without</span><span class="bar"><i style="--w:62.5%;--d:500ms"></i></span></div>
+            <div class="r yes"><span class="t-foot">With NRT</span><span class="bar yes"><i style="--w:100%;--d:650ms"></i></span></div>
           </div>
           <a class="source">Source: Cochrane review of 133 trials, 2018</a>
         </div>

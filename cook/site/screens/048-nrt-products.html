@@ -1,26 +1,26 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>048 NRT products</title>
-<meta name="motion" content="Title arrives, then the four product rows arrive top to bottom (600ms, 90ms stagger). At 1.2s the Patch row lands selected: outline and tick settle in over 520ms with a light selection haptic, and the '1 of 2 picked' line updates. Tapping a third row gently shakes the counter instead of selecting.">
+<meta name="motion" content="Title and the subtitle (with its count) arrive, then the five product rows arrive top to bottom (600ms, 90ms stagger), then Xero's tip settles in (900ms, then a slow bob). At 1.2s the Patch row lands selected: the kit's tint, 2px outline and tick settle in over 520ms with a light selection haptic, and the count in the subtitle rolls from 0 to 1. Tapping a third row gently shakes the count instead of selecting.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   .wrap { padding: 66px var(--gutter) 0; }
   .wrap .lead { margin-top: 8px; color: var(--muted); }
-  .opts { margin-top: 24px; display: grid; gap: 12px; }
-  .opts .opt { min-height: 76px; }
-  .opt .ico-tile { transition: background .3s var(--ease), color .3s var(--ease); }
-  .opt.on .ico-tile { background: var(--sel); color: var(--sel-fg); }
+  .wrap .lead b { color: var(--fg); font-weight: 600; }
+  .opts { margin-top: 22px; display: grid; gap: 10px; }
+  .opts .opt { min-height: 72px; padding: 10px 16px 10px 12px; }
   .opt .nm { font: 700 17px/1.2 var(--display); display: block; margin-bottom: 2px; }
+  .opt .t-foot { font-size: 14px; }
   .play .opt.land { animation: land 520ms var(--settle) both; }
   @keyframes land { 0% { opacity: 1; transform: scale(.97); } 100% { opacity: 1; transform: none; } }
-  .count { margin-top: 14px; display: flex; justify-content: space-between; align-items: center; color: var(--muted); }
-  .opt { min-height: 72px; }
-  .opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
   .opt .ico-tile { width: 46px; height: 46px; border-radius: 14px; }
-  .opt .ico-tile svg { width: 24px; height: 24px; }
-  .tip { margin-top: 14px; display: flex; gap: 12px; align-items: center; padding: 12px 18px 12px 8px; }
-  .tip .xr { width: 92px; height: 92px; flex: none; display: grid; place-items: center; }
-  .tip .t-foot { color: var(--muted); margin-top: 4px; }
+  .opt .ico-tile svg { width: 32px; height: 32px; }
+  /* bespoke duotone product glyphs: apricot fill under an ink line */
+  .gl { --acc: #FFB27F; --acc2: #FFDCC4; }
+  [data-theme="dark"] .gl { --acc: #F39A62; --acc2: #FFD3B4; }
+  .tip { margin-top: 18px; display: flex; gap: 10px; align-items: center; padding: 0 4px 0 0; }
+  .tip .xr { width: 64px; height: 64px; flex: none; margin: -6px 0 -6px -8px; }
+  .tip .t-foot { color: var(--muted); }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -32,29 +32,35 @@
   <div class="scroll">
     <div class="wrap">
       <h1 class="t-title" data-a style="--i:0">What are you using?</h1>
-      <p class="t-foot lead" data-a style="--i:1">Pick up to two. A patch plus gum or a lozenge works best.</p>
+      <p class="t-foot lead" data-a style="--i:1">Pick up to two. <b id="picked">1 of 2 picked</b></p>
       <div class="opts">
-        <button class="opt on" id="patch" data-a style="--i:2"><span class="ico-tile" data-p="patch"></span><span class="grow"><span class="nm">Patch</span><span class="t-foot">Worn all day, changed daily</span></span><span class="radio"></span></button>
-        <button class="opt" data-a style="--i:3"><span class="ico-tile" data-p="gum"></span><span class="grow"><span class="nm">Gum</span><span class="t-foot">Chew, then park it</span></span><span class="radio"></span></button>
-        <button class="opt" data-a style="--i:4"><span class="ico-tile" data-p="lozenge"></span><span class="grow"><span class="nm">Lozenge</span><span class="t-foot">Dissolves slowly in your mouth</span></span><span class="radio"></span></button>
-        <button class="opt" data-a style="--i:5"><span class="ico-tile" data-p="inhaler"></span><span class="grow"><span class="nm">Inhaler</span><span class="t-foot">Puff on a cartridge</span></span><span class="radio"></span></button>
+        <button class="opt on" id="patch" data-a style="--i:2"><span class="ico-tile gl" data-p="patch"></span><span class="grow"><span class="nm">Patch</span><span class="t-foot">Worn all day, changed daily</span></span><span class="radio"></span></button>
+        <button class="opt" data-a style="--i:3"><span class="ico-tile gl" data-p="gum"></span><span class="grow"><span class="nm">Gum</span><span class="t-foot">Chew, then park it</span></span><span class="radio"></span></button>
+        <button class="opt" data-a style="--i:4"><span class="ico-tile gl" data-p="lozenge"></span><span class="grow"><span class="nm">Lozenge</span><span class="t-foot">Dissolves slowly in your mouth</span></span><span class="radio"></span></button>
+        <button class="opt" data-a style="--i:5"><span class="ico-tile gl" data-p="spray"></span><span class="grow"><span class="nm">Mouth spray</span><span class="t-foot">The fastest for a sudden craving</span></span><span class="radio"></span></button>
+        <button class="opt" data-a style="--i:6"><span class="ico-tile gl" data-p="inhaler"></span><span class="grow"><span class="nm">Inhaler</span><span class="t-foot">Puff on a cartridge</span></span><span class="radio"></span></button>
       </div>
-      <p class="t-foot count" data-a style="--i:6"><span id="picked">1 of 2 picked</span></p>
+      <div class="tip" data-a style="--i:7">
+        <div class="xr" data-settle style="--d:500ms"><div class="bob" id="xero"></div></div>
+        <p class="t-foot">Most people pair the patch with one faster form for sudden cravings.</p>
+      </div>
     </div>
   </div>
   <div class="dock">
-    <button class="btn" data-a style="--i:8" data-go="049-nrt-schedule">Next</button>
+    <button class="btn" data-a style="--i:8" data-go="049-nrt-schedule">Next: your schedule</button>
   </div>
 </div>
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic));
   const PP = {
-    patch: '<rect x="4" y="4" width="16" height="16" rx="4"/><rect x="8.5" y="8.5" width="7" height="7" rx="1.5"/>',
-    gum: '<rect x="3.5" y="5" width="17" height="6" rx="3"/><rect x="3.5" y="13" width="17" height="6" rx="3"/>',
-    lozenge: '<rect x="3" y="7.5" width="18" height="9" rx="4.5" transform="rotate(-30 12 12)"/>',
-    inhaler: '<rect x="8" y="2.5" width="8" height="5" rx="1.5"/><rect x="6.5" y="7.5" width="11" height="14" rx="3"/><path d="M10 12h4"/>'
+    patch: '<rect x="3.5" y="3.5" width="17" height="17" rx="5" fill="var(--acc2)"/><rect x="7.5" y="7.5" width="9" height="9" rx="2.5" fill="var(--acc)"/><path d="M6 6h.01M18 6h.01M6 18h.01M18 18h.01" stroke-width="2.2"/>',
+    gum: '<rect x="3" y="5" width="13" height="8" rx="4" fill="var(--acc2)" transform="rotate(-12 9.5 9)"/><rect x="8" y="11" width="13" height="8" rx="4" fill="var(--acc)" transform="rotate(-12 14.5 15)"/><path d="M12 13.6l5.4-1.1" stroke-opacity=".5"/>',
+    lozenge: '<ellipse cx="12" cy="13" rx="8.5" ry="6.5" fill="var(--acc2)"/><ellipse cx="12" cy="11.5" rx="8.5" ry="6.5" fill="var(--acc)"/><path d="M7.5 11.5h9" stroke-opacity=".5"/>',
+    spray: '<rect x="7" y="9.5" width="10" height="11.5" rx="3" fill="var(--acc)"/><path d="M9.5 9.5V7h5v2.5" fill="var(--acc2)"/><path d="M11 7V4.5h4.5" /><path d="M18.5 3.5h.01M20.5 5.5h.01M18.5 6.5h.01" stroke-width="2"/><path d="M7 14.5h10" stroke-opacity=".5"/>',
+    inhaler: '<g transform="rotate(-35 12 12)"><rect x="2.5" y="8.8" width="13.5" height="6.4" rx="3.2" fill="var(--acc)"/><path d="M16 9.8h3.6a1.6 1.6 0 011.6 1.6v1.2a1.6 1.6 0 01-1.6 1.6H16" fill="var(--acc2)"/><path d="M7 12h5" stroke-opacity=".5"/></g>'
   };
-  document.querySelectorAll('[data-p]').forEach(e => e.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${PP[e.dataset.p]}</svg>`);
+  document.querySelectorAll('[data-p]').forEach(e => e.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${PP[e.dataset.p]}</svg>`);
+  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'hello', size: 64 });
   const patch = document.getElementById('patch'), picked = document.getElementById('picked');
   DX.after(0, () => { patch.classList.remove('on', 'land'); picked.textContent = '0 of 2 picked'; });
   DX.after(1200, () => { patch.classList.add('on', 'land'); picked.textContent = '1 of 2 picked'; });

@@ -10,13 +10,14 @@
   .chip.land { animation-name: dx-chipland; }
   @keyframes dx-chipland { 0% { transform: scale(1); } 40% { transform: scale(1.1); } 100% { transform: scale(1); } }
 
-  .opt { min-height: 76px; gap: 16px; }
-  .opt .ico-tile { width: 46px; height: 46px; border-radius: 14px; }
+  .opt { min-height: 84px; gap: 16px; }
+  /* Bespoke 28px product drawings in a soft tile (no generic glyphs). */
+  .opt .ico-tile { width: 52px; height: 52px; border-radius: 16px; }
+  .opt .ico-tile svg { width: 36px; height: 36px; }
   .opt .t-head { display: block; }
   .opt .t-foot { display: block; margin-top: 2px; }
   .opt .ico-tile { transition: background .25s var(--ease), color .25s var(--ease); }
   .answers { gap: 12px !important; }
-  .opt { min-height: 76px; }
   .note { display: flex; gap: 12px; align-items: center; margin-top: 16px; padding: 18px 20px 18px 14px; background: var(--card-2); border-radius: var(--r-card); }
   [data-theme="dark"] .note { background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
   .note .xc { width: 88px; height: 88px; flex: none; display: grid; place-items: center; }
@@ -33,19 +34,34 @@
 
   <div class="q">
     <h1 class="t-large" data-a>What are you leaving behind?</h1>
-    <p class="t-body muted" data-a style="--i:1">Pick everything you use now. I'll set up a counter for each one.</p>
+    <p class="t-body muted" data-a style="--i:1">Pick everything you use now. I&rsquo;ll set up a counter for each one.</p>
   </div>
   <div class="answers">
-    <button class="opt on" data-a style="--i:2"><span class="ico-tile" data-icon="cig"></span><span class="grow"><span class="t-head">Cigarettes</span><span class="t-foot">Manufactured or roll-ups</span></span><span class="radio"></span></button>
-    <button class="opt on" id="vape" data-a style="--i:3"><span class="ico-tile" data-icon="vape"></span><span class="grow"><span class="t-head">Vape</span><span class="t-foot">Disposables, pods or tanks</span></span><span class="radio"></span></button>
-    <button class="opt" data-a style="--i:4"><span class="ico-tile" data-icon="pouch"></span><span class="grow"><span class="t-head">Nicotine pouches</span><span class="t-foot">Zyn, Velo, snus</span></span><span class="radio"></span></button>
+    <button class="opt on" data-a style="--i:2"><span class="ico-tile" data-art="cig"></span><span class="grow"><span class="t-head">Cigarettes</span><span class="t-foot">Manufactured or roll-ups</span></span><span class="radio"></span></button>
+    <button class="opt on" id="vape" data-a style="--i:3"><span class="ico-tile" data-art="vape"></span><span class="grow"><span class="t-head">Vape</span><span class="t-foot">Disposables, pods or tanks</span></span><span class="radio"></span></button>
+    <button class="opt" data-a style="--i:4"><span class="ico-tile" data-art="pouch"></span><span class="grow"><span class="t-head">Nicotine pouches</span><span class="t-foot">Zyn, Velo, snus</span></span><span class="radio"></span></button>
     <div class="note" data-a style="--i:5"><div class="xc"><div id="xn" class="bob"></div></div>
-      <p class="t-body"><b id="cnt">2 picked.</b> Lots of people use both. I'll plan for each.</p></div>
+      <p class="t-body"><b id="cnt">2 picked.</b> Lots of people use both. I&rsquo;ll plan for each.</p></div>
   </div>
   <div class="dock"><button class="btn" data-a style="--i:6">Continue</button></div>
 </div>
 <script>
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
+  /* Mini illustrations, drawn in the icon's palette (paper, apricot, coral, sky, sun, meadow green). */
+  const ART = {
+    cig: `<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M26.6 8.2 C24.6 6.2 28.2 4.4 26.3 1.8" fill="none" stroke="#B8B2C8" stroke-width="1.7" stroke-linecap="round"/>
+      <g transform="rotate(-38 16 17)"><rect x="1.5" y="13.8" width="25" height="6.4" rx="1.6" fill="#FFFDF8"/><rect x="1.5" y="13.8" width="8.6" height="6.4" rx="1.6" fill="#F5A85C"/>
+      <path d="M3.8 15.4 h.01 M6.6 18.4 h.01 M8.2 15.8 h.01 M4.6 18.6 h.01" stroke="#D9873D" stroke-width="1.2" stroke-linecap="round"/><rect x="10.1" y="13.8" width="1" height="6.4" fill="#E9C9A0"/>
+      <rect x="25.6" y="13.8" width="2.8" height="6.4" rx="1" fill="#A9A6B4"/><circle cx="28.9" cy="17" r="1.9" fill="#FF7155"/></g></svg>`,
+    vape: `<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5.6 9.6 C4 9.6 3.9 7.4 5.4 7.2 C5.6 5.6 8 5.2 8.8 6.6 C10.2 6.2 11.3 7.6 10.5 8.8 C11.1 9.5 10.6 10.2 9.8 10.2 Z" fill="#CCD6EA"/>
+      <g transform="rotate(14 17 17)"><rect x="13.6" y="3" width="6.8" height="6" rx="2.2" fill="#3E4470"/><rect x="11" y="7.6" width="12" height="21" rx="4.4" fill="#5B78C9"/>
+      <rect x="11" y="7.6" width="4.2" height="21" rx="2.1" fill="#7893DA"/><rect x="13.8" y="10.4" width="6.4" height="7.4" rx="1.8" fill="#BFD7FF"/><rect x="13.8" y="14.6" width="6.4" height="3.2" rx="1" fill="#8FB4F5"/>
+      <circle cx="17" cy="23.6" r="1.5" fill="#FFC93C"/></g></svg>`,
+    pouch: `<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3.5 13.5 v6 a10 4 0 0 0 20 0 v-6 z" fill="#2E9A69"/><ellipse cx="13.5" cy="13.5" rx="10" ry="4" fill="#3FB37F"/>
+      <ellipse cx="13.5" cy="13.5" rx="6" ry="2.2" fill="none" stroke="#E6F5EC" stroke-width="1.2"/><path d="M5.2 16.6 a10 4 0 0 0 7 2.6" fill="none" stroke="#5CC796" stroke-width="1" stroke-linecap="round"/>
+      <g transform="rotate(-14 24 22.5)"><rect x="18.5" y="19" width="11" height="7.4" rx="3.4" fill="#FFFDF8"/><path d="M20.6 22.7 h6.8" stroke="#E2D9CB" stroke-width="1" stroke-dasharray="1.4 1.2"/></g></svg>`
+  };
+  document.querySelectorAll('[data-art]').forEach(e => e.innerHTML = ART[e.dataset.art]);
   document.getElementById('xn').innerHTML = DX.char('xero', { mood: 'cheer', size: 88 });
   document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 40 });
   const bar = document.getElementById('bar');

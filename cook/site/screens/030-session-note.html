@@ -1,19 +1,20 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>030 Session breathe card</title>
-<meta name="motion" content="The sky card settles in (900ms); its breath shape draws in (two in, one long out, 1600ms) and the dot pops at the top; the guided-breath progress line draws from 0 to the playhead (1400ms, 0:43 of 3:00). The three short steps arrive one by one (600ms, 90ms stagger) so reading paces itself. No haptic until the button.">
+<meta name="motion" content="The sky card (dusk blue in dark mode) settles in (900ms); its breath shape draws in (two in, one long out, 1600ms) and each point lights with its label as the line reaches it (In at 0.9s, A little more pops at the top at 1.3s, Long, slow out at 1.7s); the guided-breath progress line draws from 0 to the playhead (1400ms, 0:43 of 3:00). The three short steps arrive one by one (600ms, 90ms stagger) so reading paces itself. No haptic until the button.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
 .f-apricot{--face:#FFC38A}.f-sky{--face:#9CCBFF}.f-mint{--face:#9FE3BC}.f-sun{--face:#FFD966}
 .nav .side{width:44px;text-align:right;flex:none}
-.face{background:var(--face);color:#1E1A3A;border-radius:26px;overflow:hidden;box-shadow:0 14px 28px rgba(60,40,20,.14)}
-[data-theme="dark"] .face{box-shadow:0 18px 34px rgba(0,0,0,.4)}
-.face .art{height:136px;overflow:hidden}
+.face{--ink:#1E1A3A;--sky-a:#C9E3FF;--sky-b:#9CCBFF;--hill:#86BDF8;--dot:#1E1A3A;background:var(--sky-b);color:var(--ink);border-radius:26px;overflow:hidden;box-shadow:0 14px 28px rgba(60,40,20,.14)}
+/* dark mode: the same card at dusk, deep blue with cream ink, so it never glows light blue on navy */
+[data-theme="dark"] .face{--ink:#F3ECE0;--sky-a:#34598F;--sky-b:#22406F;--hill:#1C3762;--dot:#FFD966;box-shadow:0 18px 34px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.08)}
+.face .art{height:150px;overflow:hidden}
 .face .in{padding:16px 20px 18px}
 .kind{display:flex;align-items:center;gap:8px;font:600 14px/1 var(--body);opacity:.78}
 .kind svg{width:18px;height:18px}
 .player{display:flex;align-items:center;gap:14px;margin-top:16px}
-.pbtn{width:52px;height:52px;border-radius:99px;background:#1E1A3A;color:#FFF8EE;display:grid;place-items:center;flex:none;box-shadow:0 4px 0 rgba(30,26,58,.2)}
+.pbtn{width:52px;height:52px;border-radius:99px;background:var(--ink);color:var(--sky-b);display:grid;place-items:center;flex:none;box-shadow:0 4px 0 rgba(30,26,58,.2)}
 .pbtn svg{width:22px;height:22px}
 .line{flex:1;display:grid;gap:6px}
 .line svg{display:block;overflow:visible}
@@ -36,14 +37,15 @@
       <div class="face f-sky" data-settle style="--i:0">
         <div class="art" id="art"></div>
         <div class="in">
-          <div class="kind"><span id="k-ic"></span>Try · 5 min</div>
+          <div class="kind"><span id="k-ic"></span>Try · 3 min</div>
           <h1 class="t-title" style="margin-top:10px">A breath that works in the moment</h1>
           <div class="player">
             <button class="pbtn" id="pbtn" aria-label="Play"></button>
             <div class="line">
               <svg width="100%" height="12" viewBox="0 0 230 12" preserveAspectRatio="none">
-                <path d="M2 6H228" stroke="#1E1A3A" stroke-opacity=".2" stroke-width="4" stroke-linecap="round"/>
-                <path d="M2 6H60" stroke="#1E1A3A" stroke-width="4" stroke-linecap="round" class="draw" style="--len:60;--d:500ms;--dur:1400ms"/>
+                <path d="M2 6H228" stroke="var(--ink)" stroke-opacity=".25" stroke-width="4" stroke-linecap="round"/>
+                <path d="M2 6H55" stroke="var(--ink)" stroke-width="4" stroke-linecap="round" class="draw" style="--len:55;--d:500ms;--dur:1400ms"/>
+                <circle cx="55" cy="6" r="6" fill="var(--ink)" data-fade style="--d:1800ms"/>
               </svg>
               <div class="times"><span class="t-cap">0:43</span><span class="t-cap">3:00</span></div>
             </div>
@@ -64,14 +66,15 @@ document.getElementById('close').innerHTML = DX.icon('close');
 document.getElementById('k-ic').innerHTML = DX.icon('hand', {size:18});
 document.getElementById('pbtn').innerHTML = DX.icon('pause', {size:22, w:3});
 /* one colour field: the breath shape drawn in the card's own sky blue (two in, one long out) */
-document.getElementById('art').innerHTML = `<svg width="100%" height="136" viewBox="0 0 346 136" preserveAspectRatio="none" aria-hidden="true">
-  <defs><linearGradient id="bsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C9E3FF"/><stop offset="1" stop-color="#9CCBFF"/></linearGradient></defs>
-  <rect width="346" height="136" fill="url(#bsky)"/>
-  <path d="M0 112 C60 104 120 118 190 110 S300 102 346 108 V136 H0z" fill="#86BDF8" opacity=".55"/>
-  <path d="M26 104 C54 104 70 56 98 56 C112 56 120 50 128 42 C134 36 140 32 150 32 C206 32 262 104 322 104" fill="none" stroke="#1E1A3A" stroke-opacity=".75" stroke-width="3.5" stroke-linecap="round" class="draw" style="--len:380;--d:400ms;--dur:1600ms"/>
-  <circle cx="150" cy="32" r="7" fill="#1E1A3A" data-pop style="transform-origin:150px 32px;--d:1900ms"/>
-  <text x="62" y="46" font-family="DM Sans, sans-serif" font-weight="700" font-size="14.5" fill="#1E1A3A" fill-opacity=".92" text-anchor="middle">In</text>
-  <text x="150" y="22" font-family="DM Sans, sans-serif" font-weight="700" font-size="14.5" fill="#1E1A3A" fill-opacity=".92" text-anchor="middle">A little more</text>
-  <text x="282" y="52" font-family="DM Sans, sans-serif" font-weight="700" font-size="14.5" fill="#1E1A3A" fill-opacity=".92" text-anchor="middle">Long, slow out</text></svg>`;
+document.getElementById('art').innerHTML = `<svg width="100%" height="150" viewBox="0 0 346 150" preserveAspectRatio="none" aria-hidden="true">
+  <defs><linearGradient id="bsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--sky-a)"/><stop offset="1" stop-color="var(--sky-b)"/></linearGradient></defs>
+  <rect width="346" height="150" fill="url(#bsky)"/>
+  <path d="M0 128 C60 120 120 134 190 126 S300 118 346 124 V150 H0z" fill="var(--hill)" opacity=".6"/>
+  <path d="M26 120 C54 120 70 72 98 72 C112 72 120 66 128 58 C134 52 140 48 150 48 C206 48 262 120 322 120" fill="none" stroke="var(--ink)" stroke-opacity=".8" stroke-width="3.5" stroke-linecap="round" class="draw" style="--len:380;--d:400ms;--dur:1600ms"/>
+  <g fill="var(--ink)" font-family="DM Sans, sans-serif" font-weight="700" font-size="14">
+    <circle cx="98" cy="72" r="4.5" data-fade style="--d:900ms"/><text x="88" y="58" text-anchor="end" data-fade style="--d:900ms">In</text>
+    <circle cx="150" cy="48" r="7" fill="var(--dot)" data-pop style="transform-origin:150px 48px;--d:1300ms"/><text x="150" y="28" text-anchor="middle" data-fade style="--d:1300ms">A little more</text>
+    <circle cx="217.5" cy="73.3" r="4.5" data-fade style="--d:1700ms"/><text x="229" y="62" data-fade style="--d:1700ms">Long, slow out</text>
+  </g></svg>`;
 </script>
 </body></html>

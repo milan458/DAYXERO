@@ -1,131 +1,112 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>000 App icon</title>
-<meta name="motion" content="The icon settles in (900 ms), then the sun rises 40 units inside Xero's window over 1.2 s (ease-out) and the variants arrive with a 90 ms stagger. On device: the static icon; the sunrise can play in the launch screen's first 400 ms so icon and launch feel continuous.">
+<meta name="motion" content="The hero icon settles onto the cream board (900 ms), then the sun rises 70 units inside Xero's window over 1.2 s (ease-out, from 700 ms). The variants arrive with a 90 ms stagger, then the home-screen row fades up last. On device: the static icon; the sunrise can play in the launch screen's first 400 ms so icon and launch feel continuous.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
 .wrap { position:absolute; inset:0; padding:66px 22px 0; display:grid; justify-items:center; align-content:start; gap:14px; text-align:center; }
 .board { font: 600 13px/1 var(--body); color: var(--muted); justify-self: start; display:flex; gap:8px; align-items:center; }
 .board i { width:8px; height:8px; border-radius:99px; background: var(--coral); display:block; }
+/* Hero stage: a plain cream sheet, so the apricot tile reads as an object, not apricot on apricot. */
 .stage { width:100%; height:236px; border-radius:28px; position:relative; display:grid; place-items:center; overflow:hidden;
-  background: radial-gradient(120% 90% at 50% 30%, #FFE3C4 0%, #FFD2A6 55%, #FFC38A 100%); }
-[data-theme="dark"] .stage { background: radial-gradient(120% 90% at 50% 30%, #2A3458 0%, #1B2340 60%, #151B31 100%); }
-.stage::after { content:""; position:absolute; left:50%; bottom:30px; width:150px; height:18px; margin-left:-75px; border-radius:50%; background: rgba(120,44,20,.18); filter: blur(6px); }
-[data-theme="dark"] .stage::after { background: rgba(0,0,0,.45); }
+  background: radial-gradient(90% 80% at 50% 38%, #FFFFFF 0%, #FFFCF7 60%, #F7F1E8 100%); box-shadow: inset 0 0 0 1px var(--line); }
+[data-theme="dark"] .stage { background: radial-gradient(90% 80% at 50% 36%, #232C47 0%, #19203A 60%, #141A2F 100%); }
+.stage::after { content:""; position:absolute; left:50%; bottom:28px; width:150px; height:16px; margin-left:-75px; border-radius:50%; background: rgba(60,40,30,.16); filter: blur(7px); }
+[data-theme="dark"] .stage::after { background: rgba(0,0,0,.5); }
 .stage .tile { position:relative; z-index:1; margin-top:-14px; }
-.tile { border-radius:40px; overflow:hidden; box-shadow:0 18px 40px rgba(30,26,58,.18), 0 2px 0 rgba(30,26,58,.06); }
+.tile { border-radius:40px; overflow:hidden; box-shadow:0 18px 36px rgba(120,60,30,.18), 0 2px 0 rgba(30,26,58,.05); }
+[data-theme="dark"] .tile { box-shadow:0 18px 36px rgba(0,0,0,.45); }
 .sunrise { transform: translateY(0); }
 .play .sunrise { animation: rise 1.2s cubic-bezier(.2,.8,.2,1) .7s both; }
 @keyframes rise { from { transform: translateY(70px); } to { transform: none; } }
 .vars { display:flex; gap:12px; margin-top:10px; }
 .v { display:grid; gap:8px; justify-items:center; }
-.v .ic { width:72px; height:72px; border-radius:18px; overflow:hidden; box-shadow:0 6px 16px rgba(30,26,58,.16); }
-.home { margin-top:16px; width:100%; border-radius:26px; padding:18px 16px; background: linear-gradient(160deg,#FFD7B0,#F6B98C); display:grid; grid-template-columns:repeat(4,1fr); gap:14px 10px; }
-[data-theme="dark"] .home { background: linear-gradient(160deg,#1F2846,#141A2E); }
-.home .a { display:grid; justify-items:center; gap:6px; font:500 12px/1 var(--body); color:#1E1A3A; }
-[data-theme="dark"] .home .a { color:#F3E9DE; }
-.home .g { width:60px; height:60px; border-radius:14px; background:rgba(255,255,255,.45); }
-[data-theme="dark"] .home .g { background:rgba(255,255,255,.08); }
-.home .ic { width:60px; height:60px; border-radius:14px; overflow:hidden; }
+.ic { position:relative; overflow:hidden; }
+.v .ic { width:72px; height:72px; border-radius:18px; box-shadow:0 6px 16px rgba(30,26,58,.14); }
+/* A hairline rim keeps dark tiles visible on dark boards (iOS draws the same on dark wallpapers). */
+.ic.rim::after, [data-theme="dark"] .ic::after { content:""; position:absolute; inset:0; border-radius:inherit; box-shadow: inset 0 0 0 1px rgba(255,255,255,.16); pointer-events:none; }
+[data-theme="dark"] .v .ic { box-shadow:0 6px 16px rgba(0,0,0,.45); }
+
+/* Home screen: a real-feeling wallpaper (soft shapes) with calm neighbour apps. */
+.home { margin-top:16px; width:100%; height:118px; border-radius:26px; position:relative; overflow:hidden; }
+.home .wall { position:absolute; inset:0; }
+.home .apps { position:relative; height:100%; padding:16px 16px 0; display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+.home .a { display:grid; justify-items:center; align-content:start; gap:7px; font:500 12px/1 var(--body); color:#fff; text-shadow:0 1px 2px rgba(0,0,0,.28); }
+.home .ic { width:60px; height:60px; border-radius:14px; box-shadow:0 4px 10px rgba(20,30,50,.18); }
+.home .ic svg { display:block; }
 </style></head><body>
 <div class="screen" data-ground="reading"><div class="wrap">
   <p class="board" data-a style="--i:0"><i></i>App icon, iOS</p>
-  <div class="stage" data-a style="--i:1"><div class="tile" data-settle><svg viewBox="0 0 1024 1024" width="176" height="176" class="hero" style="display:block">
-<defs><linearGradient id="bglight0" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFCF9C"/><stop offset="1" stop-color="#FFB27A"/></linearGradient>
-<clipPath id="holelight0"><ellipse cx="512" cy="560" rx="132" ry="178"/></clipPath></defs>
-<rect width="1024" height="1024" fill="url(#bglight0)"/>
-<ellipse cx="512" cy="905" rx="250" ry="34" fill="#000" opacity=".10"/>
-<path fill-rule="evenodd" fill="#FF7155" d="M512 170 C722 170 836 350 836 548 C836 770 704 900 512 900 C320 900 188 770 188 548 C188 350 302 170 512 170 Z
- M512 382 C585 382 644 462 644 560 C644 658 585 738 512 738 C439 738 380 658 380 560 C380 462 439 382 512 382 Z"/>
-<path fill="#E85A3E" d="M716 250 C800 330 836 440 836 548 C836 770 704 900 512 900 C650 860 760 740 760 548 C760 430 744 320 716 250 Z"/>
-<path d="M290 360 C312 290 360 236 430 210" fill="none" stroke="#FFB09C" stroke-width="26" stroke-linecap="round"/>
-<g clip-path="url(#holelight0)"><rect x="370" y="380" width="290" height="420" fill="#BFD7FF"/>
-<circle class="sunrise" cx="512" cy="598" r="62" fill="#FFC93C"/>
-<path d="M370 648 C430 618 500 638 560 620 S640 610 660 618 V820 H370Z" fill="#3FB37F"/>
-<path d="M370 690 C440 670 520 700 660 674 V820 H370Z" fill="#2E9A69"/></g>
-
-</svg></div></div>
+  <div class="stage" data-a style="--i:1"><div class="tile" data-settle id="hero"></div></div>
   <h1 class="t-large" data-a style="--i:2;margin-top:4px">DayXero</h1>
   <p class="t-body muted" data-a style="--i:3;max-width:300px">The zero is Xero, with your sunrise inside. Quit Day, Day Xero and the character in one mark.</p>
   <div class="vars">
-    <div class="v" data-a style="--i:4"><div class="ic"><svg viewBox="0 0 1024 1024" width="72" height="72" class="" style="display:block">
-<defs><linearGradient id="bglight0" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFCF9C"/><stop offset="1" stop-color="#FFB27A"/></linearGradient>
-<clipPath id="holelight0"><ellipse cx="512" cy="560" rx="132" ry="178"/></clipPath></defs>
-<rect width="1024" height="1024" fill="url(#bglight0)"/>
-<ellipse cx="512" cy="905" rx="250" ry="34" fill="#000" opacity=".10"/>
-<path fill-rule="evenodd" fill="#FF7155" d="M512 170 C722 170 836 350 836 548 C836 770 704 900 512 900 C320 900 188 770 188 548 C188 350 302 170 512 170 Z
- M512 382 C585 382 644 462 644 560 C644 658 585 738 512 738 C439 738 380 658 380 560 C380 462 439 382 512 382 Z"/>
-<path fill="#E85A3E" d="M716 250 C800 330 836 440 836 548 C836 770 704 900 512 900 C650 860 760 740 760 548 C760 430 744 320 716 250 Z"/>
-<path d="M290 360 C312 290 360 236 430 210" fill="none" stroke="#FFB09C" stroke-width="26" stroke-linecap="round"/>
-<g clip-path="url(#holelight0)"><rect x="370" y="380" width="290" height="420" fill="#BFD7FF"/>
-<circle cx="512" cy="598" r="62" fill="#FFC93C"/>
-<path d="M370 648 C430 618 500 638 560 620 S640 610 660 618 V820 H370Z" fill="#3FB37F"/>
-<path d="M370 690 C440 670 520 700 660 674 V820 H370Z" fill="#2E9A69"/></g>
-
-</svg></div><span class="t-cap muted">Light</span></div>
-    <div class="v" data-a style="--i:5"><div class="ic"><svg viewBox="0 0 1024 1024" width="72" height="72" class="" style="display:block">
-<defs><linearGradient id="bgdark0" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1D2338"/><stop offset="1" stop-color="#0E1322"/></linearGradient>
-<clipPath id="holedark0"><ellipse cx="512" cy="560" rx="132" ry="178"/></clipPath></defs>
-<rect width="1024" height="1024" fill="url(#bgdark0)"/>
-<ellipse cx="512" cy="905" rx="250" ry="34" fill="#000" opacity=".10"/>
-<path fill-rule="evenodd" fill="#FF7155" d="M512 170 C722 170 836 350 836 548 C836 770 704 900 512 900 C320 900 188 770 188 548 C188 350 302 170 512 170 Z
- M512 382 C585 382 644 462 644 560 C644 658 585 738 512 738 C439 738 380 658 380 560 C380 462 439 382 512 382 Z"/>
-<path fill="#E85A3E" d="M716 250 C800 330 836 440 836 548 C836 770 704 900 512 900 C650 860 760 740 760 548 C760 430 744 320 716 250 Z"/>
-<path d="M290 360 C312 290 360 236 430 210" fill="none" stroke="#FFB09C" stroke-width="26" stroke-linecap="round"/>
-<g clip-path="url(#holedark0)"><rect x="370" y="380" width="290" height="420" fill="#24315C"/>
-<circle cx="512" cy="598" r="62" fill="#FFC93C"/>
-<path d="M370 648 C430 618 500 638 560 620 S640 610 660 618 V820 H370Z" fill="#3FB37F"/>
-<path d="M370 690 C440 670 520 700 660 674 V820 H370Z" fill="#2E9A69"/></g>
-
-</svg></div><span class="t-cap muted">Dark</span></div>
-    <div class="v" data-a style="--i:6"><div class="ic"><svg viewBox="0 0 1024 1024" width="72" height="72" class="" style="display:block">
-<defs><linearGradient id="bgtinted0" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2B2B2B"/><stop offset="1" stop-color="#141414"/></linearGradient>
-<clipPath id="holetinted0"><ellipse cx="512" cy="560" rx="132" ry="178"/></clipPath></defs>
-<rect width="1024" height="1024" fill="url(#bgtinted0)"/>
-<ellipse cx="512" cy="905" rx="250" ry="34" fill="#000" opacity=".10"/>
-<path fill-rule="evenodd" fill="#D9D9D9" d="M512 170 C722 170 836 350 836 548 C836 770 704 900 512 900 C320 900 188 770 188 548 C188 350 302 170 512 170 Z
- M512 382 C585 382 644 462 644 560 C644 658 585 738 512 738 C439 738 380 658 380 560 C380 462 439 382 512 382 Z"/>
-<path fill="#BDBDBD" d="M716 250 C800 330 836 440 836 548 C836 770 704 900 512 900 C650 860 760 740 760 548 C760 430 744 320 716 250 Z"/>
-<path d="M290 360 C312 290 360 236 430 210" fill="none" stroke="#F2F2F2" stroke-width="26" stroke-linecap="round"/>
-<g clip-path="url(#holetinted0)"><rect x="370" y="380" width="290" height="420" fill="#ADADAD"/>
-<circle cx="512" cy="598" r="62" fill="#FFFFFF"/>
-<path d="M370 648 C430 618 500 638 560 620 S640 610 660 618 V820 H370Z" fill="#6E6E6E"/>
-<path d="M370 690 C440 670 520 700 660 674 V820 H370Z" fill="#595959"/></g>
-
-</svg></div><span class="t-cap muted">Tinted</span></div>
-    <div class="v" data-a style="--i:7"><div class="ic"><svg viewBox="0 0 1024 1024" width="72" height="72" class="" style="display:block">
-<defs><linearGradient id="bglight1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFCF9C"/><stop offset="1" stop-color="#FFB27A"/></linearGradient>
-<clipPath id="holelight1"><ellipse cx="512" cy="612" rx="132" ry="178"/></clipPath></defs>
-<rect width="1024" height="1024" fill="url(#bglight1)"/>
-<ellipse cx="512" cy="905" rx="250" ry="34" fill="#000" opacity=".10"/>
-<path fill-rule="evenodd" fill="#FF7155" d="M512 150 C722 150 836 360 836 560 C836 770 704 900 512 900 C320 900 188 770 188 560 C188 360 302 150 512 150 Z
- M512 434 C585 434 644 514 644 612 C644 710 585 790 512 790 C439 790 380 710 380 612 C380 514 439 434 512 434 Z"/>
-<path fill="#E85A3E" d="M716 250 C800 330 836 440 836 560 C836 770 704 900 512 900 C650 860 760 740 760 560 C760 430 744 320 716 250 Z"/>
-<path d="M290 360 C312 290 360 236 430 210" fill="none" stroke="#FFB09C" stroke-width="26" stroke-linecap="round"/>
-<g clip-path="url(#holelight1)"><rect x="370" y="380" width="290" height="420" fill="#BFD7FF"/>
-<circle cx="512" cy="650" r="62" fill="#FFC93C"/>
-<path d="M370 700 C430 670 500 690 560 672 S640 662 660 670 V820 H370Z" fill="#3FB37F"/>
-<path d="M370 742 C440 722 520 752 660 726 V820 H370Z" fill="#2E9A69"/></g>
-<path d="M452 330 L452 352 M572 330 L572 352" stroke="#24163A" stroke-width="22" stroke-linecap="round"/><path d="M488 382 Q512 402 536 382" fill="none" stroke="#24163A" stroke-width="12" stroke-linecap="round"/>
-</svg></div><span class="t-cap muted">With face</span></div>
+    <div class="v" data-a style="--i:4"><div class="ic" id="v-light"></div><span class="t-cap muted">Light</span></div>
+    <div class="v" data-a style="--i:5"><div class="ic rim" id="v-dark"></div><span class="t-cap muted">Dark</span></div>
+    <div class="v" data-a style="--i:6"><div class="ic rim" id="v-tint"></div><span class="t-cap muted">Tinted</span></div>
+    <div class="v" data-a style="--i:7"><div class="ic" id="v-face"></div><span class="t-cap muted">With face</span></div>
   </div>
   <div class="home" data-a style="--i:8">
-    <div class="a"><div class="g"></div>Notes</div><div class="a"><div class="g"></div>Weather</div><div class="a"><div class="ic"><svg viewBox="0 0 1024 1024" width="60" height="60" class="" style="display:block">
-<defs><linearGradient id="bglight0" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFCF9C"/><stop offset="1" stop-color="#FFB27A"/></linearGradient>
-<clipPath id="holelight0"><ellipse cx="512" cy="560" rx="132" ry="178"/></clipPath></defs>
-<rect width="1024" height="1024" fill="url(#bglight0)"/>
-<ellipse cx="512" cy="905" rx="250" ry="34" fill="#000" opacity=".10"/>
-<path fill-rule="evenodd" fill="#FF7155" d="M512 170 C722 170 836 350 836 548 C836 770 704 900 512 900 C320 900 188 770 188 548 C188 350 302 170 512 170 Z
- M512 382 C585 382 644 462 644 560 C644 658 585 738 512 738 C439 738 380 658 380 560 C380 462 439 382 512 382 Z"/>
-<path fill="#E85A3E" d="M716 250 C800 330 836 440 836 548 C836 770 704 900 512 900 C650 860 760 740 760 548 C760 430 744 320 716 250 Z"/>
-<path d="M290 360 C312 290 360 236 430 210" fill="none" stroke="#FFB09C" stroke-width="26" stroke-linecap="round"/>
-<g clip-path="url(#holelight0)"><rect x="370" y="380" width="290" height="420" fill="#BFD7FF"/>
-<circle cx="512" cy="598" r="62" fill="#FFC93C"/>
-<path d="M370 648 C430 618 500 638 560 620 S640 610 660 618 V820 H370Z" fill="#3FB37F"/>
-<path d="M370 690 C440 670 520 700 660 674 V820 H370Z" fill="#2E9A69"/></g>
-
-</svg></div>DayXero</div><div class="a"><div class="g"></div>Music</div>
+    <svg class="wall" id="wall" width="346" height="118" viewBox="0 0 346 118" preserveAspectRatio="none" aria-hidden="true"></svg>
+    <div class="apps">
+      <div class="a"><div class="ic" id="n-clock"></div>Clock</div>
+      <div class="a"><div class="ic" id="n-weather"></div>Weather</div>
+      <div class="a"><div class="ic" id="n-dx"></div>DayXero</div>
+      <div class="a"><div class="ic" id="n-notes"></div>Notes</div>
+    </div>
   </div>
 </div></div>
-<script>if (DX.theme === 'dark') document.querySelectorAll('.home .ic').forEach(e => e.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">\n<defs><linearGradient id="bgdark0" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1D2338"/><stop offset="1" stop-color="#0E1322"/></linearGradient>\n<clipPath id="holedark0"><ellipse cx="512" cy="560" rx="132" ry="178"/></clipPath></defs>\n<rect width="1024" height="1024" fill="url(#bgdark0)"/>\n<ellipse cx="512" cy="905" rx="250" ry="34" fill="#000" opacity=".10"/>\n<path fill-rule="evenodd" fill="#FF7155" d="M512 170 C722 170 836 350 836 548 C836 770 704 900 512 900 C320 900 188 770 188 548 C188 350 302 170 512 170 Z\n M512 382 C585 382 644 462 644 560 C644 658 585 738 512 738 C439 738 380 658 380 560 C380 462 439 382 512 382 Z"/>\n<path fill="#E85A3E" d="M716 250 C800 330 836 440 836 548 C836 770 704 900 512 900 C650 860 760 740 760 548 C760 430 744 320 716 250 Z"/>\n<path d="M290 360 C312 290 360 236 430 210" fill="none" stroke="#FFB09C" stroke-width="26" stroke-linecap="round"/>\n<g clip-path="url(#holedark0)"><rect x="370" y="380" width="290" height="420" fill="#24315C"/>\n<circle cx="512" cy="598" r="62" fill="#FFC93C"/>\n<path d="M370 648 C430 618 500 638 560 620 S640 610 660 618 V820 H370Z" fill="#3FB37F"/>\n<path d="M370 690 C440 670 520 700 660 674 V820 H370Z" fill="#2E9A69"/></g>\n\n</svg>'.replace(/<svg [^>]*>/, '<svg viewBox="0 0 1024 1024" width="60" height="60" style="display:block">'));</script>
+<script>
+/* The icon, drawn once and recoloured per variant (light, dark, tinted, with face). */
+let n = 0;
+function appIcon(v, size, o = {}) {
+  const id = 'ai' + (++n);
+  const P = {
+    light: { bg: ['#FFCF9C', '#FFB27A'], body: '#FF7155', shade: '#E85A3E', hl: '#FFB09C', sky: '#BFD7FF', sun: '#FFC93C', h1: '#3FB37F', h2: '#2E9A69', floor: .10 },
+    dark:  { bg: ['#262E49', '#121829'], body: '#FF7155', shade: '#E85A3E', hl: '#FFB09C', sky: '#2B3A6B', sun: '#FFC93C', h1: '#3FB37F', h2: '#2E9A69', floor: .25 },
+    /* Tinted: iOS tints a greyscale icon. The window is kept dark so the white sun and pale hills still read as a sunrise. */
+    tint:  { bg: ['#2E2E2E', '#151515'], body: '#E2E2E2', shade: '#C4C4C4', hl: '#F7F7F7', sky: '#3A3A3A', sun: '#FFFFFF', h1: '#A6A6A6', h2: '#858585', floor: .25, sunY: -26 }
+  }[v];
+  const face = !!o.face, dy = face ? 52 : 0;
+  return `<svg viewBox="0 0 1024 1024" width="${size}" height="${size}" style="display:block" aria-hidden="true">
+  <defs><linearGradient id="${id}b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${P.bg[0]}"/><stop offset="1" stop-color="${P.bg[1]}"/></linearGradient>
+  <clipPath id="${id}h"><ellipse cx="512" cy="${560 + dy}" rx="132" ry="178"/></clipPath></defs>
+  <rect width="1024" height="1024" fill="url(#${id}b)"/>
+  <ellipse cx="512" cy="905" rx="250" ry="34" fill="#000" opacity="${P.floor}"/>
+  <path fill-rule="evenodd" fill="${P.body}" d="M512 ${170 - (face ? 20 : 0)} C722 ${170 - (face ? 20 : 0)} 836 ${350 + (face ? 10 : 0)} 836 ${548 + (face ? 12 : 0)} C836 770 704 900 512 900 C320 900 188 770 188 ${548 + (face ? 12 : 0)} C188 ${350 + (face ? 10 : 0)} 302 ${170 - (face ? 20 : 0)} 512 ${170 - (face ? 20 : 0)} Z
+   M512 ${382 + dy} C585 ${382 + dy} 644 ${462 + dy} 644 ${560 + dy} C644 ${658 + dy} 585 ${738 + dy} 512 ${738 + dy} C439 ${738 + dy} 380 ${658 + dy} 380 ${560 + dy} C380 ${462 + dy} 439 ${382 + dy} 512 ${382 + dy} Z"/>
+  <path fill="${P.shade}" d="M716 250 C800 330 836 440 836 548 C836 770 704 900 512 900 C650 860 760 740 760 548 C760 430 744 320 716 250 Z"/>
+  <path d="M290 360 C312 290 360 236 430 210" fill="none" stroke="${P.hl}" stroke-width="26" stroke-linecap="round"/>
+  <g clip-path="url(#${id}h)"><rect x="370" y="380" width="290" height="460" fill="${P.sky}"/>
+  <circle class="${o.rise ? 'sunrise' : ''}" cx="512" cy="${598 + dy + (P.sunY || 0)}" r="62" fill="${P.sun}"/>
+  <path d="M370 ${648 + dy} C430 ${618 + dy} 500 ${638 + dy} 560 ${620 + dy} S640 ${610 + dy} 660 ${618 + dy} V840 H370Z" fill="${P.h1}"/>
+  <path d="M370 ${690 + dy} C440 ${670 + dy} 520 ${700 + dy} 660 ${674 + dy} V840 H370Z" fill="${P.h2}"/></g>
+  ${face ? `<path d="M452 330 L452 352 M572 330 L572 352" stroke="#24163A" stroke-width="22" stroke-linecap="round"/><path d="M488 382 Q512 402 536 382" fill="none" stroke="#24163A" stroke-width="12" stroke-linecap="round"/>` : ''}
+  </svg>`;
+}
+const dark = DX.theme === 'dark';
+document.getElementById('hero').innerHTML = appIcon('light', 176, { rise: true });
+document.getElementById('v-light').innerHTML = appIcon('light', 72);
+document.getElementById('v-dark').innerHTML = appIcon('dark', 72);
+document.getElementById('v-tint').innerHTML = appIcon('tint', 72);
+document.getElementById('v-face').innerHTML = appIcon('light', 72, { face: true });
+document.getElementById('n-dx').innerHTML = appIcon(dark ? 'dark' : 'light', 60);
+if (dark) document.getElementById('n-dx').classList.add('rim');
+
+/* Wallpaper: soft overlapping shapes, cool so the apricot icon is the warm note on the page. */
+document.getElementById('wall').innerHTML = dark
+  ? `<defs><linearGradient id="wg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1B2542"/><stop offset="1" stop-color="#0D1220"/></linearGradient></defs>
+     <rect width="346" height="118" fill="url(#wg)"/><circle cx="40" cy="-10" r="90" fill="#24335A" opacity=".7"/><circle cx="300" cy="140" r="110" fill="#1C3A4A" opacity=".55"/><circle cx="210" cy="10" r="54" fill="#2A2F55" opacity=".5"/>`
+  : `<defs><linearGradient id="wg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#93ADC9"/><stop offset="1" stop-color="#6F8FB3"/></linearGradient></defs>
+     <rect width="346" height="118" fill="url(#wg)"/><circle cx="40" cy="-10" r="90" fill="#AFC4DA" opacity=".7"/><circle cx="300" cy="140" r="110" fill="#6E9A90" opacity=".6"/><circle cx="210" cy="10" r="54" fill="#A9BCD6" opacity=".55"/>`;
+
+/* Neighbour apps: generic, quiet, believable. */
+document.getElementById('n-clock').innerHTML = `<svg width="60" height="60" viewBox="0 0 60 60"><rect width="60" height="60" fill="#1C1C1E"/><circle cx="30" cy="30" r="22" fill="#F6F4F0"/>
+  ${Array.from({ length: 12 }, (_, i) => `<rect x="29.2" y="10" width="1.6" height="${i % 3 ? 3 : 5}" fill="#1C1C1E" transform="rotate(${i * 30} 30 30)"/>`).join('')}
+  <path d="M30 30 L30 17" stroke="#1C1C1E" stroke-width="2.6" stroke-linecap="round"/><path d="M30 30 L39 34" stroke="#1C1C1E" stroke-width="2.6" stroke-linecap="round"/><path d="M30 30 L21 41" stroke="#E5533D" stroke-width="1.2" stroke-linecap="round"/><circle cx="30" cy="30" r="2" fill="#E5533D"/></svg>`;
+document.getElementById('n-weather').innerHTML = `<svg width="60" height="60" viewBox="0 0 60 60"><defs><linearGradient id="wx" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5C9BE0"/><stop offset="1" stop-color="#3A72C2"/></linearGradient></defs>
+  <rect width="60" height="60" fill="url(#wx)"/><circle cx="24" cy="24" r="9" fill="#FFD66B"/><path d="M18 42 C12 42 11 34 17 33 C17 27 25 25 28 30 C30 25 40 25 40 32 C46 32 48 42 41 42 Z" fill="#fff"/></svg>`;
+document.getElementById('n-notes').innerHTML = `<svg width="60" height="60" viewBox="0 0 60 60"><rect width="60" height="60" fill="#FDFCF8"/><rect width="60" height="16" fill="#F4C84A"/>
+  <path d="M10 27 H50 M10 35 H50 M10 43 H38" stroke="#CFCBC2" stroke-width="2" stroke-linecap="round"/></svg>`;
+</script>
 </body></html>

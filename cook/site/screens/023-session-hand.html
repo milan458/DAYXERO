@@ -1,37 +1,38 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>023 Session hand</title>
-<meta name="motion" content="Title and stamps arrive (600ms, 90ms stagger). The five cards deal in from below one by one (760ms settle each, 130ms apart, starting at 300ms) into the fan; card 1 lands last, lifted 26pt and tilted, the only card that shows its name; the others show their type icon only. The up-next panel and button arrive after the deal. Light haptic on each card landing.">
+<meta name="motion" content="Title and stamps arrive (600ms, 90ms stagger). The four back cards deal in from below one by one into a fan behind (760ms settle each, 120ms apart, from 300ms), then card 1 rises in front of them (900ms settle at 820ms) with its outline and title; its mini waveform bars grow left to right (18ms apart). The button arrives last. Light haptic on each card landing, a medium one when card 1 lands.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
 .f-apricot{--face:#FFC38A}.f-sky{--face:#9CCBFF}.f-mint{--face:#9FE3BC}.f-sun{--face:#FFD966}
 .head{position:absolute;top:112px;left:0;right:0;display:grid;gap:6px}
 .stamps{position:absolute;top:192px;left:var(--gutter);right:var(--gutter);display:flex;align-items:center;gap:10px}
-.stamps .nx{width:34px;height:34px;border-radius:99px;display:grid;place-items:center;box-shadow:inset 0 0 0 2px var(--fg);font:800 15px/1 var(--display);color:var(--fg)}
 .stamps .t-foot{margin-left:6px}
-.fan{position:absolute;top:262px;left:0;right:0;height:290px}
-.pc{position:absolute;left:50%;top:44px;width:98px;height:162px;margin-left:-49px;border-radius:16px;background:var(--face);color:#1E1A3A;padding:10px 8px;
-  transform-origin:50% 50%;transform:translate(var(--x),var(--y)) rotate(var(--r));box-shadow:0 10px 22px rgba(60,40,20,.16),inset 0 0 0 1px rgba(255,255,255,.45);overflow:hidden}
-[data-theme="dark"] .pc{box-shadow:0 14px 26px rgba(0,0,0,.4),inset 0 0 0 1px rgba(255,255,255,.4)}
-.pc::after{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:rgba(30,26,58,.14)}
-.pc.up::after{display:none}
-.pc .ic{width:30px;height:30px;border-radius:99px;background:rgba(30,26,58,.1);display:grid;place-items:center}
-.pc .ic svg{width:18px;height:18px}
-.pc b{display:block;margin-top:8px;font:700 14px/1.12 var(--display);letter-spacing:-.2px;max-width:54px}
-.pc .m{display:block;margin-top:3px;font:600 13px/1.3 var(--body);opacity:.8}
-.pc .big{position:absolute;right:-12px;bottom:-14px;opacity:.14}
-.pc .big svg{width:76px;height:76px}
-.pc .ic{margin-left:2px}
-.pc .ty{display:block;margin-top:7px;font:700 13px/1.15 var(--body);letter-spacing:-.25px;max-width:44px;color:#1E1A3A}
-.pc.up{box-shadow:0 18px 30px rgba(60,40,20,.22),0 0 0 3px var(--fg)}
-[data-theme="dark"] .pc.up{box-shadow:0 18px 30px rgba(0,0,0,.45),0 0 0 3px var(--fg)}
-.pc.up b{font-size:18px;max-width:none;margin-top:10px}
-.pc.up .m{font-size:13px}
-.play .pc{animation:deal 760ms var(--settle) both;animation-delay:calc(300ms + var(--k) * 130ms)}
-@keyframes deal{from{opacity:0;transform:translate(0px,460px) rotate(0deg)}35%{opacity:1}to{opacity:1;transform:translate(var(--x),var(--y)) rotate(var(--r))}}
-.next{position:absolute;top:526px;left:var(--gutter);right:var(--gutter);display:flex;gap:14px;align-items:center}
-.mini{width:40px;height:54px;border-radius:9px;background:var(--face);color:#1E1A3A;display:grid;place-items:center;flex:none}
-.mini svg{width:20px;height:20px}
+/* the hand: four cards fanned behind, card 1 drawn out in front, all centred on the screen */
+.fan{position:absolute;top:306px;left:0;right:0;height:370px}
+.bc{position:absolute;left:50%;top:0;width:106px;height:160px;margin-left:-53px;border-radius:16px;background:var(--face);color:#1E1A3A;
+  display:grid;justify-items:center;align-content:start;gap:7px;padding-top:14px;transform-origin:50% 100%;
+  transform:translate(var(--x),var(--y)) rotate(var(--r));box-shadow:0 8px 18px rgba(60,40,20,.13)}
+[data-theme="dark"] .bc{box-shadow:0 10px 22px rgba(0,0,0,.42)}
+.bc .ic{width:32px;height:32px;border-radius:99px;background:rgba(30,26,58,.1);display:grid;place-items:center}
+.bc .ic svg{width:18px;height:18px}
+.bc b{font:700 14px/1 var(--display);letter-spacing:-.1px}
+.play .bc{animation:deal 760ms var(--settle) both;animation-delay:calc(300ms + var(--k) * 120ms)}
+@keyframes deal{from{opacity:0;transform:translate(0,420px) rotate(0deg)}35%{opacity:1}to{opacity:1;transform:translate(var(--x),var(--y)) rotate(var(--r))}}
+.front{position:absolute;left:50%;top:96px;width:240px;height:250px;margin-left:-120px;border-radius:24px;background:var(--face);color:#1E1A3A;
+  padding:18px 18px 16px;display:flex;flex-direction:column;transform:rotate(-2deg);
+  box-shadow:0 0 0 3px var(--g),0 0 0 5px var(--fg),0 16px 28px rgba(60,40,20,.18)}
+[data-theme="dark"] .front{box-shadow:0 0 0 3px var(--g),0 0 0 5px var(--fg),0 18px 32px rgba(0,0,0,.5)}
+.play .front{animation:lift 900ms var(--settle) both 820ms}
+@keyframes lift{from{opacity:0;transform:translateY(300px) rotate(0deg)}40%{opacity:1}to{opacity:1;transform:rotate(-2deg)}}
+.front .kind{display:flex;align-items:center;gap:8px;font:600 14px/1 var(--body);color:#3A2410}
+.front .kind .ic{width:32px;height:32px;border-radius:99px;background:rgba(30,26,58,.1);display:grid;place-items:center}
+.front .kind .ic svg{width:18px;height:18px}
+.front h2{font:800 25px/1.1 var(--display);letter-spacing:-.5px;margin:16px 0 0;text-wrap:balance}
+.front .wv{margin-top:auto;display:block}
+.front .wv rect{transform-box:fill-box;transform-origin:50% 50%}
+.play .front .wv rect{animation:bar 420ms var(--settle) both;animation-delay:calc(1300ms + var(--b) * 18ms)}
+@keyframes bar{from{transform:scaleY(.1)}to{transform:none}}
 </style>
 </head><body>
 <div class="screen" data-ground="table">
@@ -42,27 +43,25 @@
   </div>
   <div class="stamps" id="stamps" data-a style="--i:2"></div>
   <div class="fan" id="fan"></div>
-  <div class="next card" data-a style="--i:9;--d:500ms">
-    <div class="mini f-apricot" id="mini"></div>
-    <div class="grow" style="flex:1;min-width:0">
-      <p class="t-foot muted">Up next · Listen · 6 min</p>
-      <p class="t-head" style="margin-top:2px">Why it feels like it calms you</p>
-    </div>
-  </div>
-  <div class="dock"><button class="btn" data-a style="--i:10;--d:500ms">Play card 1</button></div>
+  <div class="dock"><button class="btn" data-a style="--i:10;--d:700ms">Play card 1</button></div>
 </div>
 <script>
-const MYTH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 010 17z" fill="currentColor"/></svg>';
-const ic = n => n === 'myth' ? MYTH : DX.icon(n);
+/* one glyph per card type: Listen headphones, Try hand, Reveal eye, Myth question mark, Try (plan) spark */
+const G = {
+  question: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8.6 8.6a3.5 3.5 0 116.2 2.2c-.9 1-2.8 1.7-2.8 3.6v.4"/><path d="M12 18.6h.01" stroke-width="3"/></svg>',
+  spark: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.8c.7 4.9 2.3 6.6 7.4 7.4-5.1.8-6.7 2.5-7.4 7.4-.7-4.9-2.3-6.6-7.4-7.4 5.1-.8 6.7-2.5 7.4-7.4z"/><circle cx="18.6" cy="18.4" r="1.8"/></svg>'
+};
+const ic = n => G[n] || DX.icon(n);
 document.getElementById('close').innerHTML = DX.icon('close');
-document.getElementById('mini').innerHTML = DX.icon('headphones');
 document.getElementById('stamps').innerHTML = [1,2,3].map(n => DX.badge({kind:'prep', n, size:44, bare:true})).join('') +
   DX.badge({kind:'prep', n:4, state:'next', size:44, bare:true}) + '<span class="t-foot muted">Today</span>';
-const cards = [
-  ['apricot','headphones','Listen','6 min'], ['sky','hand','Try','5 min'], ['apricot','eye','Reveal','6 min'],
-  ['sky','myth','Myth or fact','5 min'], ['mint','hand','Try','6 min']];
-const XS = [-119, -17, 29, 75, 121];
-document.getElementById('fan').innerHTML = cards.map((c, k) => `<div class="pc f-${c[0]} ${k === 0 ? 'up' : ''}" style="--x:${XS[k]}px;--r:${k === 0 ? -3 : (k - 2.5) * 2}deg;--y:${k === 0 ? -22 : [0,8,4,4,8][k]}px;--k:${k};z-index:${k === 0 ? 9 : k + 1}">
-  <span class="ic">${ic(c[1])}</span>${k === 0 ? `<b>${c[2]}</b><span class="m">${c[3]}</span>` : ''}${k === 0 || k === 4 ? `<span class="big">${ic(c[1])}</span>` : ''}</div>`).join('');
+const back = [['sky','hand','Try'], ['apricot','eye','Reveal'], ['sky','question','Myth'], ['mint','spark','Try']];
+const X = [-96, -33, 33, 96], Y = [22, 4, 4, 22], R = [-11, -4, 4, 11];
+/* mini waveform for the Listen card */
+const n = 28, W = 204, bw = 3.4, gap = (W - n * bw) / (n - 1);
+const hs = Array.from({length:n}, (_, i) => 6 + Math.round(22 * Math.abs(Math.sin(i * 1.7) * .6 + Math.sin(i * .45) * .4)));
+const wave = `<svg class="wv" width="${W}" height="30" viewBox="0 0 ${W} 30" aria-hidden="true">${hs.map((h, i) => `<rect x="${(i * (bw + gap)).toFixed(1)}" y="${15 - h / 2}" width="${bw}" height="${h}" rx="1.7" fill="#1E1A3A" fill-opacity="${i < 9 ? .7 : .26}" style="--b:${i}"/>`).join('')}</svg>`;
+document.getElementById('fan').innerHTML = back.map((c, k) => `<div class="bc f-${c[0]}" style="--x:${X[k]}px;--y:${Y[k]}px;--r:${R[k]}deg;--k:${k}"><span class="ic">${ic(c[1])}</span><b>${c[2]}</b></div>`).join('') +
+  `<div class="front f-apricot"><div class="kind"><span class="ic">${DX.icon('headphones')}</span>Listen · 6 min</div><h2>Why it feels like it calms you</h2>${wave}</div>`;
 </script>
 </body></html>

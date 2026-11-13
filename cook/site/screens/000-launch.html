@@ -6,9 +6,16 @@
 <style>
   /* Art palette (paper layers). Light: atmospheric peach to terracotta. Dark: navy night-before-dawn on the one dark neutral, warm rim light and sun. */
   .screen { --h-back: #FFD9AE; --h-mid: #FFA56C; --h-front: #E9643F; --h-base: #C94B33; --h-edge: rgba(255,255,255,.55);
-    --sun-a: #FFF4C9; --sun-b: #FFC93C; --ring-1: rgba(255,240,205,.55); --ring-2: rgba(255,236,200,.32); --lift: rgba(120,44,20,.22); --cloud: rgba(255,247,236,.7); }
-  [data-theme="dark"] .screen { --h-back: #2C3556; --h-mid: #1E2644; --h-front: #151B31; --h-base: #0E1322; --h-edge: rgba(255,195,138,.35);
-    --sun-a: #FFF1C2; --sun-b: #FFB255; --ring-1: rgba(255,195,138,.16); --ring-2: rgba(255,195,138,.08); --lift: rgba(0,0,0,.45); --cloud: rgba(255,214,170,.16); }
+    --h-back-2: var(--h-back); --h-mid-2: var(--h-mid); --h-front-2: var(--h-front);
+    --sun-a: #FFF4C9; --sun-b: #FFC93C; --ring-1: rgba(255,240,205,.55); --ring-2: rgba(255,236,200,.32); --lift: rgba(120,44,20,.22);
+    --cloud: rgba(255,247,236,.7); --cloud-lit: rgba(255,247,236,0); --sky: transparent; }
+  /* Dark: pre-dawn. Cool indigo air around the sun (no brown halo), moonlit paper clouds, paper hills shaded light at the ridge to dark below. */
+  [data-theme="dark"] .screen { --h-back: #36426E; --h-back-2: #232C4C; --h-mid: #263058; --h-mid-2: #19213C; --h-front: #1A2240; --h-front-2: #10162A; --h-base: #0C1121;
+    --h-edge: rgba(190,205,255,.30);
+    --sun-a: #FFF3CF; --sun-b: #FFBE5C; --ring-1: rgba(150,170,255,.16); --ring-2: rgba(130,150,250,.08); --lift: rgba(0,0,0,.5);
+    --cloud: rgba(200,212,245,.36); --cloud-lit: rgba(232,238,255,.7);
+    --sky: linear-gradient(to bottom, #0B1020 0%, #10172C 40%, #1A2346 72%, #222C55 100%); }
+  .sky { position: absolute; inset: 0 0 auto 0; height: 560px; background: var(--sky); z-index: 0; }
 
   .mark-wrap { position: absolute; left: 0; right: 0; top: 250px; text-align: center; z-index: 6; }
   .word { font: 800 70px/1 var(--display); letter-spacing: -2.6px; color: var(--fg); display: inline-flex; position: relative; }
@@ -23,12 +30,13 @@
   .sunwrap { top: 352px; height: 300px; z-index: 1; }
   .hill.back  { top: 420px; height: 404px; z-index: 2; filter: drop-shadow(0 -4px 10px var(--lift)); }
   .hill.mid   { top: 420px; height: 404px; z-index: 3; filter: drop-shadow(0 -5px 12px var(--lift)); }
-  .xwrap { left: 95px; width: 200px; top: 510px; height: 200px; z-index: 4; }
+  .xwrap { left: 95px; width: 200px; top: 495px; height: 200px; z-index: 4; }
   .hill.front { top: 440px; height: 404px; z-index: 5; filter: drop-shadow(0 -6px 14px var(--lift)); }
   .grain { position: absolute; inset: 0; z-index: 6; opacity: .4; mix-blend-mode: soft-light; pointer-events: none; }
 
   .cloud { position: absolute; z-index: 1; pointer-events: none; }
   .cloud path { fill: var(--cloud); }
+  .cloud path.lit { fill: none; stroke: var(--cloud-lit); stroke-width: 1.6; stroke-linecap: round; }
   .cloud.c1 { left: 20px; top: 420px; } .cloud.c2 { right: 22px; top: 392px; }
   .play .cloud.c1 { animation: cloud-l 1400ms cubic-bezier(.2,.8,.2,1) 600ms both; }
   .play .cloud.c2 { animation: cloud-r 1400ms cubic-bezier(.2,.8,.2,1) 760ms both; }
@@ -56,6 +64,7 @@
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
+  <div class="sky" aria-hidden="true"></div>
 
   <div class="mark-wrap">
     <div class="word" aria-label="DayXero">
@@ -67,8 +76,8 @@
     <p class="t-body tagline">Quit on your Quit Day.</p>
   </div>
 
-  <svg class="cloud c1" width="96" height="30" viewBox="0 0 96 30" aria-hidden="true"><path d="M8 28 C2 28 0 20 8 18 C8 10 18 6 26 11 C30 2 46 0 52 10 C60 6 72 8 74 18 C84 16 94 22 88 28 Z"/></svg>
-  <svg class="cloud c2" width="70" height="22" viewBox="0 0 96 30" aria-hidden="true"><path d="M8 28 C2 28 0 20 8 18 C8 10 18 6 26 11 C30 2 46 0 52 10 C60 6 72 8 74 18 C84 16 94 22 88 28 Z"/></svg>
+  <svg class="cloud c1" width="96" height="30" viewBox="0 0 96 30" aria-hidden="true"><path d="M8 28 C2 28 0 20 8 18 C8 10 18 6 26 11 C30 2 46 0 52 10 C60 6 72 8 74 18 C84 16 94 22 88 28 Z"/><path class="lit" d="M8 18 C8 10 18 6 26 11 C30 2 46 0 52 10 C60 6 72 8 74 18"/></svg>
+  <svg class="cloud c2" width="70" height="22" viewBox="0 0 96 30" aria-hidden="true"><path d="M8 28 C2 28 0 20 8 18 C8 10 18 6 26 11 C30 2 46 0 52 10 C60 6 72 8 74 18 C84 16 94 22 88 28 Z"/><path class="lit" d="M8 18 C8 10 18 6 26 11 C30 2 46 0 52 10 C60 6 72 8 74 18"/></svg>
 
   <div class="layer sunwrap" aria-hidden="true">
     <svg width="390" height="300" viewBox="0 0 390 300" style="overflow:visible">
@@ -85,13 +94,15 @@
 
   <div class="layer hill back" aria-hidden="true">
     <svg width="390" height="404" viewBox="0 0 390 404">
-      <path d="M0 96 C56 64 118 74 150 146 C170 196 222 204 242 160 C276 86 334 60 390 82 L390 404 L0 404 Z" fill="var(--h-back)"/>
+      <defs><linearGradient id="hb" x1="0" y1="0" x2="0" y2="1"><stop offset=".05" stop-color="var(--h-back)"/><stop offset=".45" stop-color="var(--h-back-2)"/></linearGradient></defs>
+      <path d="M0 96 C56 64 118 74 150 146 C170 196 222 204 242 160 C276 86 334 60 390 82 L390 404 L0 404 Z" fill="url(#hb)"/>
       <path d="M0 96 C56 64 118 74 150 146 C170 196 222 204 242 160 C276 86 334 60 390 82" fill="none" stroke="var(--h-edge)" stroke-width="2"/>
     </svg>
   </div>
   <div class="layer hill mid" aria-hidden="true">
     <svg width="390" height="404" viewBox="0 0 390 404">
-      <path d="M0 204 C56 170 116 176 158 216 C182 240 214 246 238 228 C282 190 336 172 390 192 L390 404 L0 404 Z" fill="var(--h-mid)"/>
+      <defs><linearGradient id="hm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--h-mid)"/><stop offset=".45" stop-color="var(--h-mid-2)"/></linearGradient></defs>
+      <path d="M0 204 C56 170 116 176 158 216 C182 240 214 246 238 228 C282 190 336 172 390 192 L390 404 L0 404 Z" fill="url(#hm)"/>
       <path d="M0 204 C56 170 116 176 158 216 C182 240 214 246 238 228 C282 190 336 172 390 192" fill="none" stroke="var(--h-edge)" stroke-width="2"/>
     </svg>
   </div>
@@ -100,7 +111,8 @@
 
   <div class="layer hill front" aria-hidden="true">
     <svg width="390" height="404" viewBox="0 0 390 404">
-      <path d="M0 292 C58 270 112 256 196 254 C280 252 334 272 390 288 L390 404 L0 404 Z" fill="var(--h-front)"/>
+      <defs><linearGradient id="hf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--h-front)"/><stop offset=".6" stop-color="var(--h-front-2)"/></linearGradient></defs>
+      <path d="M0 292 C58 270 112 256 196 254 C280 252 334 272 390 288 L390 404 L0 404 Z" fill="url(#hf)"/>
       <path d="M0 292 C58 270 112 256 196 254 C280 252 334 272 390 288" fill="none" stroke="var(--h-edge)" stroke-width="2"/>
       <path d="M0 360 C90 340 170 346 250 358 C310 366 356 360 390 352 L390 404 L0 404 Z" fill="var(--h-base)"/>
     </svg>

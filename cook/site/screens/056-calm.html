@@ -1,73 +1,105 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>056 Calm tools</title>
-<meta name="motion" content="Cards arrive top to bottom on the 90ms stagger; each tool has one large, simple mark on its family colour: a dot travels round the box (16s, the breathing pace), the grounding rings sit still, the urge is one wave with its rider, the wind-down moon on night blue. No haptic on load, light tap haptic on card press.">
+<meta name="motion" content="The title arrives, then the SOS card, then the four tool tiles on the 90ms stagger (left to right, top to bottom); each cast member settles into its own little scene 120ms after its tile (Jelli in the box window, Xero on the hill, Jelli on the wave, Glim on the night hill). Ambient: the dot walks the box track at the breathing pace (16s a round, the lit side follows it), Jelli breathes, the swell rolls slowly, the stars twinkle. Light tap haptic on tile press; the SOS card press gives a firmer tap and opens Craving SOS.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-/* screen-local helpers: icon fill, section labels, small icon tiles, bottom toast */
-.hd { display: grid; gap: 6px; padding-top: 58px; }
-.sec { padding: 22px 4px 8px; color: var(--muted); }
-.rt { font-weight: 600; }
-.ico-tile.s { width: 34px; height: 34px; border-radius: 11px; }
-.ico-tile.s svg { width: 19px; height: 19px; }
-.val { color: var(--muted); font: 500 15px/1.2 var(--body); white-space: nowrap; }
-.list > .row.tap { min-height: 56px; }
-.toast.b { top: auto; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
-.toast.b.in { opacity: 1; transform: none; }
-.toast.b .ck { flex: none; }
-.opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
-html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--sel) 72%, transparent); }
-.pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
-
-.tool { display: flex; align-items: center; gap: 16px; padding: 12px 16px 12px 12px; }
-.tool .grow { flex: 1; min-width: 0; display: grid; gap: 3px; }
-.art { width: 92px; height: 92px; border-radius: 22px; flex: none; position: relative; overflow: hidden; background: var(--card-2); }
-.art svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-.art { background: linear-gradient(160deg, #6FA8F0, #3F74D6); width: 84px; height: 84px; border-radius: 22px; }
-[data-theme="dark"] .art { background: linear-gradient(160deg, #5C93E0, #2F5FB8); }
-.tool { min-height: 112px; }
-.dur { display: inline-flex; align-items: center; gap: 5px; color: var(--muted); margin-top: 2px; }
-.dur svg { width: 14px; height: 14px; }
-.sos { display: flex; align-items: center; gap: 12px; padding: 14px 16px; }
-
+.hd { display: grid; gap: 6px; padding-top: 14px; }
+.sos { display: flex; align-items: center; gap: 14px; padding: 14px 16px 14px 14px; margin-top: 18px; border-radius: 22px;
+  background: #1F3C8C; color: #FFF8EE; box-shadow: 0 10px 24px rgba(31,60,140,.28); position: relative; overflow: hidden; text-decoration: none; }
+[data-theme="dark"] .sos { background: #1B3378; box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); }
+.sos .disc { width: 50px; height: 50px; border-radius: 99px; background: #FFF8EE; color: #1F3C8C; display: grid; place-items: center; flex: none; }
+.sos .disc svg { width: 26px; height: 26px; }
+.sos .grow { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.sos .t-foot { color: #D3DDF7; }
+.sos .chev { color: #FFF8EE; opacity: .9; }
+.tools { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+.tool { background: var(--card); border-radius: 22px; overflow: hidden; box-shadow: inset 0 0 0 1px var(--line); display: grid; }
+.tool .art { position: relative; height: 132px; overflow: hidden; border-radius: 22px 22px 0 0; }
+.tool .art > svg { position: absolute; inset: 0; display: block; }
+.tool .who { position: absolute; }
+.tool .txt { padding: 12px 14px 14px; display: grid; gap: 3px; }
+.tool .t-head { white-space: nowrap; }
+.tool .t-cap { color: var(--muted); white-space: nowrap; }
+.win { position: absolute; left: 47.5px; top: 30px; width: 72px; height: 72px; border-radius: 13px; overflow: hidden; }
+.win > svg { display: block; }
+.win .who { left: 4px; top: 6px; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
-<div class="nav"><button class="icon-btn" aria-label="Close" data-ic="close"></button></div>
-<div class="scroll"><div class="pad">
-  <div class="hd"><h1 class="t-large" data-a style="--i:0">Calm tools</h1><p class="t-foot muted" data-a style="--i:1">A few minutes instead of reaching for nicotine. Pick the one that fits right now.</p></div>
-  <div class="stack" style="margin-top:22px">
-    <div class="card tool" data-a style="--i:2">
-      <div class="art a-box"><svg viewBox="0 0 92 92"><rect x="24" y="24" width="44" height="44" rx="9" fill="none" stroke="#FFF8EE" stroke-opacity=".45" stroke-width="5"/><path d="M24 68 V33 Q24 24 33 24 H68" fill="none" stroke="#FFF8EE" stroke-width="5.5" stroke-linecap="round"/><circle r="7" fill="#FFF8EE" cx="0" cy="0"><animateMotion dur="16s" repeatCount="indefinite" path="M24 68 V24 H68 V68 Z" begin="-6s"/></circle></svg></div>
-      <div class="grow"><div class="t-head">Box breathing</div><div class="t-foot muted">In, hold, out, hold. Four counts.</div><span class="t-cap dur"><span data-ic="clock" data-s="14"></span>2 min</span></div>
-      <span class="chev" data-ic="chev" data-s="18"></span>
+<div class="scroll with-tabs"><div class="pad">
+  <div class="hd"><h1 class="t-large" data-a style="--i:0">Calm tools</h1><p class="t-foot muted" data-a style="--i:1">A few minutes instead of reaching for nicotine.</p></div>
+  <a class="sos" data-go="019-sos" data-a style="--i:2">
+    <span class="disc" data-ic="wave" data-s="26" data-w="2.4"></span>
+    <div class="grow"><div class="t-head">Craving right now?</div><div class="t-foot">Let&rsquo;s ride it out together. Most pass in a few minutes.</div></div>
+    <span class="chev" data-ic="chev" data-s="18"></span>
+  </a>
+  <div class="tools">
+    <div class="tool" data-a style="--i:3" data-go="057-calm-box">
+      <div class="art" id="a-box"></div>
+      <div class="txt"><div class="t-head">Box breathing</div><span class="t-cap">2 min &middot; In, hold, out</span></div>
     </div>
-    <div class="card tool" data-a style="--i:3">
-      <div class="art a-ground"><svg viewBox="0 0 92 92"><circle cx="46" cy="46" r="28" fill="none" stroke="#FFF8EE" stroke-opacity=".45" stroke-width="5"/><circle cx="46" cy="46" r="16" fill="none" stroke="#FFF8EE" stroke-width="5.5"/><circle cx="46" cy="46" r="7" fill="#FFF8EE"/></svg></div>
-      <div class="grow"><div class="t-head">5-4-3-2-1 grounding</div><div class="t-foot muted">Back to the room through your senses.</div><span class="t-cap dur"><span data-ic="clock" data-s="14"></span>3 min</span></div>
-      <span class="chev" data-ic="chev" data-s="18"></span>
+    <div class="tool" data-a style="--i:4" data-go="058-calm-grounding">
+      <div class="art" id="a-ground"></div>
+      <div class="txt"><div class="t-head">Grounding</div><span class="t-cap">3 min &middot; Five senses</span></div>
     </div>
-    <div class="card tool" data-a style="--i:4">
-      <div class="art a-urge"><svg viewBox="0 0 92 92"><path d="M12 66 H80" stroke="#FFF8EE" stroke-opacity=".45" stroke-width="5" stroke-linecap="round"/><path d="M12 66 C 30 66 34 26 46 26 S 62 66 80 66" fill="none" stroke="#FFF8EE" stroke-width="5.5" stroke-linecap="round"/><circle cx="62" cy="49" r="7" fill="#FFF8EE"/></svg></div>
-      <div class="grow"><div class="t-head">Notice the urge</div><div class="t-foot muted">Watch it rise and fall.</div><span class="t-cap dur"><span data-ic="clock" data-s="14"></span>1 min</span></div>
-      <span class="chev" data-ic="chev" data-s="18"></span>
+    <div class="tool" data-a style="--i:5" data-go="059-calm-notice">
+      <div class="art" id="a-urge"></div>
+      <div class="txt"><div class="t-head">Notice the urge</div><span class="t-cap">1 min &middot; Just watch</span></div>
     </div>
-    <div class="card tool" data-a style="--i:5">
-      <div class="art a-wind"><svg viewBox="0 0 92 92"><path d="M30 64 H62" stroke="#FFF8EE" stroke-opacity=".45" stroke-width="5" stroke-linecap="round"/><path d="M52 24 A22 22 0 1 0 70 52 A17 17 0 1 1 52 24 Z" fill="none" stroke="#FFF8EE" stroke-width="5.5" stroke-linejoin="round" transform="translate(-4 -4)"/><circle cx="66" cy="26" r="6" fill="#FFF8EE"/></svg></div>
-      <div class="grow"><div class="t-head">Wind down</div><div class="t-foot muted">A slow evening reset.</div><span class="t-cap dur"><span data-ic="clock" data-s="14"></span>5 min</span></div>
-      <span class="chev" data-ic="chev" data-s="18"></span>
-    </div>
-    <div class="card flat sos" data-a style="--i:6">
-      <span class="ico-tile s" data-ic="wave" style="background:var(--card)"></span>
-      <div class="grow" style="flex:1"><div class="t-body rt">Craving right now?</div><div class="t-foot muted">Craving SOS walks you through it.</div></div>
-      <span class="chev" data-ic="chev" data-s="18"></span>
+    <div class="tool" data-a style="--i:6">
+      <div class="art" id="a-wind"></div>
+      <div class="txt"><div class="t-head">Wind down</div><span class="t-cap">5 min &middot; Before sleep</span></div>
     </div>
   </div>
 </div></div>
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
+const dark = DX.theme === 'dark', W = 167, H = 132, $ = s => document.querySelector(s);
+const grad = (id, a, b, c) => `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/>${c ? `<stop offset=".6" stop-color="${b}"/><stop offset="1" stop-color="${c}"/>` : `<stop offset="1" stop-color="${b}"/>`}</linearGradient>`;
+const stars = (pts, o = .8) => pts.map(([x, y, r], i) => `<circle cx="${x}" cy="${y}" r="${r || 1.2}" fill="#fff" opacity="${i % 2 ? o * .6 : o}"/>`).join('');
+const svg = (inner) => `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" aria-hidden="true">${inner}</svg>`;
+const who = (html, x, y, d) => `<div class="who" style="left:${x}px;top:${y}px;--d:${d}ms" data-settle>${html}</div>`;
 
+/* Box breathing: ocean blue, Jelli in the sea window, one track with the lit side and the walking dot (as on 057). */
+const T = 'M44.5 101 V40 Q44.5 27 57.5 27 H109.5 Q122.5 27 122.5 40 V92 Q122.5 105 109.5 105 H57.5 Q44.5 105 44.5 92 Z';
+$('#a-box').innerHTML = svg(`<defs>${dark ? grad('ob', '#22409A', '#0F2366') : grad('ob', '#3A63E0', '#1F3C8C')}</defs><rect width="${W}" height="${H}" fill="url(#ob)"/>
+  ${stars([[18, 22], [148, 18, 1.4], [150, 112], [16, 104, 1.5]], .55)}
+  <path d="M38 33 V99 Q38 111 50 111 H117 Q129 111 129 99 V33 Q129 21 117 21 H50 Q38 21 38 33Z" fill="none" stroke="#FFF8EE" stroke-opacity=".38" stroke-width="3.5"/>
+  <path d="M38 99 V33 Q38 21 50 21" fill="none" stroke="#FFF8EE" stroke-width="4" stroke-linecap="round"/>
+  <circle r="5.5" fill="#FFF8EE"><animateMotion dur="16s" repeatCount="indefinite" begin="-2s" path="M38 99 V33 Q38 21 50 21 H117 Q129 21 129 33 V99 Q129 111 117 111 H50 Q38 111 38 99Z"/></circle>`)
+  + `<div class="win">${DX.char('horizon', { scene: 'sea', w: 72, h: 72, clarity: 100 })}${who(DX.char('jelli', { mood: 'breathe', size: 64 }), 4, 6, 420)}</div>`;
+if (DX.still) $('#a-box circle[r="5.5"]').outerHTML = '<circle cx="38" cy="66" r="5.5" fill="#FFF8EE"/>';
 
+/* Grounding: apricot dawn (pre-dawn in dark), Xero standing with both feet on the hill. */
+$('#a-ground').innerHTML = svg(dark
+  ? `<defs>${grad('gd', '#0D1630', '#24335C', '#5B5578')}</defs><rect width="${W}" height="${H}" fill="url(#gd)"/>${stars([[22, 20], [60, 12], [140, 26, 1.4], [104, 16]], .7)}
+     <radialGradient id="gh"><stop offset="0" stop-color="#F7B871" stop-opacity=".5"/><stop offset="1" stop-color="#F7B871" stop-opacity="0"/></radialGradient><circle cx="126" cy="94" r="36" fill="url(#gh)"/><circle cx="126" cy="94" r="13" fill="#F7B871" opacity=".92"/>
+     <path d="M0 100 C40 88 80 92 167 104 V132 H0Z" fill="#1C2C4E"/><path d="M0 116 C50 106 110 110 167 118 V132 H0Z" fill="#132240"/>`
+  : `<defs>${grad('ga', '#FFE6BF', '#FFCB95')}</defs><rect width="${W}" height="${H}" fill="url(#ga)"/>
+     <circle cx="124" cy="44" r="38" fill="#FFF1C9" opacity=".7"/><circle cx="124" cy="44" r="24" fill="#FFD966"/>
+     <path d="M0 98 C40 86 80 90 167 102 V132 H0Z" fill="#FFAE73"/><path d="M0 114 C50 104 110 108 167 116 V132 H0Z" fill="#FF9A6B"/>`)
+  + who(DX.char('xero', { mood: 'calm', size: 84 }), 20, 26, 520);
+
+/* Notice the urge: sky blue, Jelli riding the swell. */
+$('#a-urge').innerHTML = svg(dark
+  ? `<defs>${grad('sd', '#132A5C', '#2A4C8C')}</defs><rect width="${W}" height="${H}" fill="url(#sd)"/>${stars([[20, 18], [56, 30], [150, 16, 1.4], [120, 40]], .6)}
+     <path d="M0 108 C34 108 46 62 82 62 S 128 108 167 108 V132 H0Z" fill="#3A5FA8"/><path d="M0 108 C34 108 46 62 82 62 S 128 108 167 108" fill="none" stroke="#FFF8EE" stroke-width="3" stroke-linecap="round"/>
+     <path d="M0 118 C40 112 90 116 167 112 V132 H0Z" fill="#1F3A78"/>`
+  : `<defs>${grad('sl', '#8EC2FF', '#D9EEFF')}</defs><rect width="${W}" height="${H}" fill="url(#sl)"/>
+     <g fill="#FFFFFF" opacity=".9"><ellipse cx="132" cy="26" rx="20" ry="7"/><ellipse cx="122" cy="22" rx="10" ry="7"/></g>
+     <path d="M0 108 C34 108 46 62 82 62 S 128 108 167 108 V132 H0Z" fill="#5A9DFF"/><path d="M0 108 C34 108 46 62 82 62 S 128 108 167 108" fill="none" stroke="#1E1A3A" stroke-width="3" stroke-linecap="round"/>
+     <path d="M0 118 C40 112 90 116 167 112 V132 H0Z" fill="#2F72F2"/>`)
+  + who(DX.char('jelli', { mood: 'calm', size: 60 }), 66, 10, 620);
+
+/* Wind down: night blue with the moon, Glim settling on the hill. */
+$('#a-wind').innerHTML = svg(`<defs>${dark ? grad('nd', '#08101F', '#16244A', '#22315A') : grad('nl', '#0B1430', '#1B2B55', '#2C3D6A')}</defs><rect width="${W}" height="${H}" fill="url(#${dark ? 'nd' : 'nl'})"/>
+  ${stars([[18, 20], [46, 40], [84, 14, 1.5], [104, 44], [150, 70], [20, 70, 1.4]], .85)}
+  <radialGradient id="mh"><stop offset="0" stop-color="#F6E7C1" stop-opacity=".3"/><stop offset="1" stop-color="#F6E7C1" stop-opacity="0"/></radialGradient><circle cx="130" cy="34" r="30" fill="url(#mh)"/><path d="M19 14.5A7.5 7.5 0 019.5 5a7.5 7.5 0 109.5 9.5z" transform="translate(113 17) scale(1.6)" fill="#F6E7C1"/>
+  <path d="M0 102 C40 92 90 96 167 106 V132 H0Z" fill="#1C2C4E"/><path d="M0 116 C50 108 110 112 167 118 V132 H0Z" fill="#132240"/>`)
+  + who(DX.char('glim', { mood: 'sleepy', size: 82 }), 24, 26, 720);
+
+document.querySelector('.screen').insertAdjacentHTML('beforeend', DX.tabbar('calm'));
 </script>
 </body></html>

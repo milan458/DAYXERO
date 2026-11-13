@@ -1,30 +1,30 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>007 Make it personal</title>
-<meta name="motion" content="Progress eases from 4/11 to 5/11 (900ms). Question and both fields arrive (600ms, 90ms stagger). From 800ms the reason types in at 26ms a character with a blinking caret (about 1.3 s), then the caret fades and the suggestion chips arrive (600ms, 90ms stagger). Light haptic on Save my reason.">
+<meta name="motion" content="Progress eases from 4/11 to 5/11 (900ms). Question and both fields arrive (600ms, 90ms stagger). From 800ms the reason types in at 26ms a character with a blinking caret (about 1.3 s) while the count ticks 0 to 49 of 120; then the caret fades. The pencil sits in the field's corner (tap to edit). The four "add to your reason" chips arrive (600ms, 90ms stagger); tapping one appends it to the reason with a 520ms spring on the chip. Light haptic on Save my reason.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   .q .t-body { text-wrap: pretty; }
-  .lbl { color: var(--muted); margin: 4px 0 -2px; }
   .field { background: #fff; box-shadow: inset 0 0 0 1px rgba(30,26,58,.16); }
   [data-theme="dark"] .field { background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
-  .field.reason { min-height: 72px; line-height: 1.4; }
-  .lbl { font: 700 14px/1.3 var(--body) !important; color: var(--fg) !important; margin: 8px 0 0 !important; }
-  .answers { gap: 8px !important; }
-  .answers .chip { min-height: 40px; }
+  .lbl { font: 700 14px/1.3 var(--body) !important; color: var(--fg) !important; margin: 12px 0 0 !important; }
+  .lbl:first-child { margin-top: 0 !important; }
+  .answers { gap: 8px !important; padding-top: 26px !important; }
+  /* The reason field: an editable card, pencil top right, count bottom right. */
+  .field.reason { position: relative; min-height: 116px; padding: 16px 52px 34px 16px; font: 600 17px/1.4 var(--body); box-shadow: inset 0 0 0 2px var(--fg); }
+  .field.reason .pen { position: absolute; top: 10px; right: 10px; width: 34px; height: 34px; border-radius: 99px; display: grid; place-items: center; background: var(--card-2); color: var(--fg); }
+  .field.reason .pen svg { width: 17px; height: 17px; }
+  .field.reason .cnt { position: absolute; right: 14px; bottom: 10px; font: 500 13px/1 var(--body); color: var(--muted); }
   .caret { display: inline-block; width: 2px; height: 1.1em; vertical-align: -3px; margin-left: 1px; background: var(--fg); opacity: 0; }
   .typing .caret { opacity: 1; animation: blink 900ms steps(1) infinite; }
   @keyframes blink { 50% { opacity: 0; } }
-  .hint { display: flex; gap: 8px; align-items: center; color: var(--muted); margin-top: -2px; }
-  .hint svg { width: 16px; height: 16px; flex: none; }
-  .adds { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .adds .chip { justify-content: center; padding: 0 10px; white-space: nowrap; }
-  .preview { display: flex; align-items: center; gap: 10px; padding: 8px 14px 8px 6px; margin-top: 8px; background: var(--card-2); }
-  [data-theme="dark"] .preview { background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
-  .preview .xc { width: 60px; height: 60px; flex: none; display: grid; place-items: center; }
-  .preview .t-cap { margin-bottom: 4px; }
-  .preview .q2 { font-size: 15px; line-height: 1.35; font-style: italic; text-wrap: pretty; }
-  .chip.add::before { content: "+"; font: 600 17px/1 var(--body); margin-right: -2px; opacity: .7; }
+  /* Suggestions read as "add to your reason": a plus disc on each chip. */
+  .adds { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .adds .chip { justify-content: flex-start; padding: 0 12px 0 8px; white-space: nowrap; min-height: 48px; gap: 8px; }
+  .adds .chip .pl { width: 26px; height: 26px; border-radius: 99px; display: grid; place-items: center; background: var(--card-2); flex: none; }
+  .adds .chip .pl svg { width: 14px; height: 14px; }
+  .chip.added { animation: dx-chipland 520ms cubic-bezier(.3,1.4,.5,1) both; }
+  @keyframes dx-chipland { 0% { transform: scale(1); } 40% { transform: scale(1.08); } 100% { transform: scale(1); } }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
@@ -36,15 +36,17 @@
 
   <div class="q">
     <h1 class="t-large" data-a>Make this yours</h1>
-    <p class="t-body muted" data-a style="--i:1">When a craving hits, I'll show you your reason. It stays on this phone.</p>
+    <p class="t-body muted" data-a style="--i:1">When a craving hits, I&rsquo;ll show you your reason. It stays on this phone.</p>
   </div>
   <div class="answers">
     <p class="t-foot lbl" data-a style="--i:2">First name or nickname</p>
     <div class="field" data-a style="--i:2">Sam</div>
     <p class="t-foot lbl" data-a style="--i:3">Why are you quitting, Sam?</p>
-    <div class="field reason" id="reason" data-a style="--i:3"><span id="rt">Run with Aria without stopping to catch my breath</span><i class="caret"></i></div>
-    <p class="t-foot lbl" data-a style="--i:5">Or add one of these</p>
-    <div class="chips adds" data-a style="--i:6"><button class="chip add">Save $2,555 a year</button><button class="chip add">Breathe easier</button><button class="chip add">More energy</button><button class="chip add">Be there for family</button></div>
+    <div class="field reason" id="reason" data-a style="--i:3"><span id="rt">Run with Aria without stopping to catch my breath</span><i class="caret"></i>
+      <span class="pen" aria-label="Edit your reason"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l4.2-1L19 8.2a2.1 2.1 0 00-3-3L5.2 16 4 20zM14.5 6.7l3 3"/></svg></span>
+      <span class="cnt"><span id="cn">49</span> / 120</span></div>
+    <p class="t-foot lbl" data-a style="--i:5">Add to your reason</p>
+    <div class="chips adds" data-a style="--i:6"><button class="chip"><span class="pl" data-icon="plus"></span>Save $2,555 a year</button><button class="chip"><span class="pl" data-icon="plus"></span>Breathe easier</button><button class="chip"><span class="pl" data-icon="plus"></span>More energy</button><button class="chip"><span class="pl" data-icon="plus"></span>Be there for family</button></div>
   </div>
   <div class="dock">
     <button class="btn" data-a style="--i:7">Save my reason</button>
@@ -59,7 +61,9 @@
   DX.after(250, () => bar.style.setProperty('--p', '45.5%'));
   const full = 'Run with Aria without stopping to catch my breath', rt = document.getElementById('rt'), box = document.getElementById('reason');
   DX.after(0, () => { rt.textContent = ''; box.classList.add('typing'); });
-  for (let k = 1; k <= full.length; k++) DX.after(800 + k * 26, () => { rt.textContent = full.slice(0, k); });
+  const cn = document.getElementById('cn');
+  DX.after(0, () => { cn.textContent = '0'; });
+  for (let k = 1; k <= full.length; k++) DX.after(800 + k * 26, () => { rt.textContent = full.slice(0, k); cn.textContent = k; });
   DX.after(800 + full.length * 26 + 500, () => box.classList.remove('typing'));
 </script>
 </body></html>

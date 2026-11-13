@@ -1,27 +1,28 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>027 Session choice</title>
-<meta name="motion" content="Tag, question and helper arrive (600ms, 90ms stagger); the four option rows settle in (900ms, 120ms apart). At 1.5s the first row lands as the choice: it presses down 2pt, the ring and radio fill, the tick draws, and the row bumps (520ms spring) with a selection haptic. The note under the list fades in after the landing.">
+<meta name="motion" content="Tag, question and helper arrive (600ms, 90ms stagger); the four option rows settle in (900ms, 120ms apart). At 1.5s the first row lands as the choice: it presses down 2pt, its own sky tint fills in behind it with the thin outline (300ms), the radio fills and the tick draws, and the row bumps (520ms spring) with a selection haptic. Xero's line fades in under the list after the landing.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-.f-apricot{--face:#FFC38A}.f-sky{--face:#9CCBFF}.f-mint{--face:#9FE3BC}.f-sun{--face:#FFD966}
+.f-apricot{--face:#FFC38A}.f-sky{--face:#9CCBFF}.f-mint{--face:#9FE3BC}.f-rose{--face:#FFB9A6}
 .nav .side{width:44px;text-align:right;flex:none}
 .tag{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px 0 9px;border-radius:99px;background:var(--face);color:#1E1A3A;font:600 13px/1 var(--body);justify-self:start}
 .tag svg{width:16px;height:16px}
-.wrap{position:absolute;top:110px;left:0;right:0;bottom:150px;display:grid;align-content:start;gap:10px}
-.opts{display:grid;gap:10px;margin-top:10px}
+.wrap{position:absolute;top:110px;left:0;right:0;display:grid;align-content:start;gap:10px}
+.opts{display:grid;gap:10px;margin-top:12px}
 .opt .t-body{font-weight:600}
-.opts .opt{min-height:74px;padding:12px 16px 12px 12px;gap:14px}
+.opts .opt{min-height:72px;padding:12px 16px 12px 12px;gap:14px;transition:background .3s var(--ease),box-shadow .3s var(--ease)}
 .opt .lead{width:48px;height:48px;border-radius:14px;background:var(--face);color:#1E1A3A;display:grid;place-items:center;flex:none}
 .opt .lead svg{width:24px;height:24px}
 .opt .sub{display:block;font:500 13px/1.3 var(--body);color:var(--muted);margin-top:2px}
+/* selected: the option's own tint plus a thin outline (softer in dark) */
+.opts .opt.on{background:color-mix(in srgb,var(--face) 30%,var(--card));box-shadow:inset 0 0 0 1.5px var(--fg)}
+[data-theme="dark"] .opts .opt.on{background:color-mix(in srgb,var(--face) 16%,var(--card));box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--fg) 55%,transparent)}
 .opt.land{animation:land 560ms var(--spring) both}
 @keyframes land{0%{opacity:1;transform:translateY(2px) scale(.98)}45%{opacity:1;transform:scale(1.03)}100%{opacity:1;transform:none}}
-.note{display:flex;gap:12px;align-items:center;margin-top:8px;opacity:0;transition:opacity .6s var(--ease)}
+.note{display:flex;gap:12px;align-items:center;margin-top:18px;padding:0 4px 0 0;opacity:0;transition:opacity .6s var(--ease)}
 .note.show{opacity:1}
-.note{background:var(--card);border-radius:18px;padding:12px 16px 12px 10px;box-shadow:inset 0 0 0 1px var(--line);margin-top:22px}
-.note .t-foot{color:var(--fg);font-size:15px;line-height:1.4}
-.note #n-ic{flex:none;width:72px;height:72px;display:grid;place-items:center}
+.note #n-ic{flex:none;width:52px}
 </style>
 </head><body>
 <div class="screen" data-ground="table">
@@ -35,20 +36,22 @@
     <h1 class="t-title" data-a style="--i:1">When work piles up, what will you do first?</h1>
     <p class="t-foot muted" data-a style="--i:2">Pick one to do before anything else.</p>
     <div class="opts">
-      <button class="opt on" id="pick" data-settle style="--i:2"><span class="lead f-sky" data-ic="wave"></span><span class="grow"><span class="t-body">Two sighs</span><span class="sub">Recommended · 30 seconds</span></span><span class="radio"></span></button>
-      <button class="opt" data-settle style="--i:3"><span class="lead f-mint" data-ic="leaf"></span><span class="grow"><span class="t-body">Step outside for two minutes</span></span><span class="radio"></span></button>
-      <button class="opt" data-settle style="--i:4"><span class="lead f-apricot" data-ic="text"></span><span class="grow"><span class="t-body">Text someone</span></span><span class="radio"></span></button>
-      <button class="opt" data-settle style="--i:5"><span class="lead f-sky" data-ic="drop"></span><span class="grow"><span class="t-body">Get a glass of water</span></span><span class="radio"></span></button>
+      <button class="opt f-sky on" id="pick" data-settle style="--i:2"><span class="lead" data-ic="wave"></span><span class="grow"><span class="t-body">Two sighs</span><span class="sub">Recommended · 30 seconds</span></span><span class="radio"></span></button>
+      <button class="opt f-apricot" data-settle style="--i:3"><span class="lead" data-ic="sun"></span><span class="grow"><span class="t-body">Step outside, 2 min</span></span><span class="radio"></span></button>
+      <button class="opt f-rose" data-settle style="--i:4"><span class="lead" data-ic="chat"></span><span class="grow"><span class="t-body">Text someone</span></span><span class="radio"></span></button>
+      <button class="opt f-mint" data-settle style="--i:5"><span class="lead" data-ic="drop"></span><span class="grow"><span class="t-body">Get a glass of water</span></span><span class="radio"></span></button>
     </div>
-    <div class="note show" id="note"><span id="n-ic"></span><p class="t-foot">Your pick goes on your stress plan for Day Xero. You can change it any time.</p></div>
+    <div class="note show" id="note"><span id="n-ic"></span><p class="t-foot muted">Your pick goes on your stress plan for Day Xero. You can change it any time.</p></div>
   </div>
-  <div class="dock"><button class="btn" data-a style="--i:8">This one</button></div>
+  <div class="dock"><button class="btn" data-a style="--i:8">Make it my first move</button></div>
 </div>
 <script>
+const SPARK = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.8c.7 4.9 2.3 6.6 7.4 7.4-5.1.8-6.7 2.5-7.4 7.4-.7-4.9-2.3-6.6-7.4-7.4 5.1-.8 6.7-2.5 7.4-7.4z"/><circle cx="18.6" cy="18.4" r="1.8"/></svg>';
+const CHAT = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 7A2.5 2.5 0 017 4.5h10A2.5 2.5 0 0119.5 7v7a2.5 2.5 0 01-2.5 2.5h-6.2L7 19.8v-3.3A2.5 2.5 0 014.5 14z"/><path d="M8.5 10.5h.01M12 10.5h.01M15.5 10.5h.01" stroke-width="2.8"/></svg>';
 document.getElementById('close').innerHTML = DX.icon('close');
-document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic, {size:24}));
-document.getElementById('t-ic').innerHTML = DX.icon('hand', {size:16});
-document.getElementById('n-ic').innerHTML = DX.char('xero', {mood:'hello', size:72});
+document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = e.dataset.ic === 'chat' ? CHAT : DX.icon(e.dataset.ic, {size:24}));
+document.getElementById('t-ic').innerHTML = SPARK;
+document.getElementById('n-ic').innerHTML = DX.char('xero', {mood:'hello', size:52});
 if (!DX.still) {
   const pick = document.getElementById('pick'), note = document.getElementById('note');
   pick.classList.remove('on'); note.classList.remove('show');

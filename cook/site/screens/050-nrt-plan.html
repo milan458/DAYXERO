@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>050 NRT plan</title>
-<meta name="motion" content="Title arrives, then the step-down chart: the soft apricot 21, 14 and 7 mg bars (60%, 42%, 28% tint) grow up from the baseline one after another (900ms settle, 150ms apart), their labels sit just above each bar, and the week ranges arrive under them. The three step rows then settle in like a plan being laid out (120ms stagger). No completion here; the plan is confirmed on the reminders screen.">
+<meta name="motion" content="Title arrives, then the step-down chart: the soft apricot 21, 14 and 7 mg bars (64%, 52%, 42% tint; widths in the 6:2:2 ratio of their weeks) grow up from the baseline one after another (900ms settle, 150ms apart), their labels sit just above each bar, and the week ranges arrive under them. The three step rows (each with a chevron: tap to edit) then settle in like a plan being laid out (120ms stagger). No completion here; the plan is confirmed on the reminders screen.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -10,17 +10,21 @@
   .chart .hd { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
   .chart .hd .t-foot { color: var(--muted); }
   .chart { --apr: #FF9A5C; }
-  .bars { margin-top: 32px; height: 112px; display: flex; align-items: flex-end; gap: 12px; border-bottom: 1.5px solid var(--line); }
-  .bar { position: relative; height: var(--h); border-radius: 12px 12px 4px 4px; background: color-mix(in srgb, var(--apr) 60%, transparent); transform-origin: bottom; display: flex; justify-content: center; }
-  .bar:nth-child(2) { background: color-mix(in srgb, var(--apr) 42%, transparent); } .bar:nth-child(3) { background: color-mix(in srgb, var(--apr) 28%, transparent); }
+  .bars { margin-top: 32px; height: 112px; display: flex; align-items: flex-end; gap: 8px; border-bottom: 1.5px solid var(--line); }
+  .bar { position: relative; height: var(--h); border-radius: 12px 12px 4px 4px; background: color-mix(in srgb, var(--apr) 64%, transparent); transform-origin: bottom; display: flex; justify-content: center; }
+  .bar:nth-child(2) { background: color-mix(in srgb, var(--apr) 52%, transparent); } .bar:nth-child(3) { background: color-mix(in srgb, var(--apr) 42%, transparent); }
   .bar span { position: absolute; bottom: calc(100% + 6px); color: var(--fg); font: 700 15px/1 var(--display); letter-spacing: -.3px; white-space: nowrap; }
   .play .bar { animation: grow 900ms var(--settle) both; animation-delay: calc(var(--i) * 150ms + 250ms); }
   @keyframes grow { from { transform: scaleY(0); } to { transform: none; } }
-  .wks { display: flex; gap: 12px; margin-top: 8px; color: var(--muted); }
+  .wks { display: flex; gap: 8px; margin-top: 8px; color: var(--muted); }
   .wks span { text-align: center; }
   .steps-list { margin-top: 12px; }
   .steps-list .row { min-height: 58px; }
-  .sw { width: 12px; height: 32px; border-radius: 4px; background: color-mix(in srgb, #FF9A5C 60%, transparent); flex: none; }
+  .sw { width: 12px; height: 32px; border-radius: 4px; background: color-mix(in srgb, #FF9A5C 64%, transparent); flex: none; }
+  .steps-list .row { gap: 12px; }
+  .steps-list .chev { margin-left: -4px; }
+  /* the kit's selection (tint plus 2px outline); the reading ground's 1px chip line must not win */
+  .screen .chip.on { box-shadow: inset 0 0 0 2px var(--sel); }
   .row .t-head { font-size: 17px; }
   .row .t-foot { color: var(--muted); }
   .row .wk { font: 600 14px/1 var(--body); color: var(--muted); }
@@ -28,12 +32,12 @@
   .night > .t-foot { color: var(--muted); }
   .edit { margin-top: 8px; color: var(--muted); justify-content: flex-start; height: 36px; }
   /* dark: solid apricot tints (no brown from mixing with the navy ground) */
-  [data-theme="dark"] .bars .bar:nth-child(1) { background: #FFB27A !important; }
-  [data-theme="dark"] .bars .bar:nth-child(2) { background: #FFCB9E !important; }
-  [data-theme="dark"] .bars .bar:nth-child(3) { background: #FFE0C4 !important; }
-  [data-theme="dark"] .steps-list .row:nth-child(1) .sw { background: #FFB27A !important; }
-  [data-theme="dark"] .steps-list .row:nth-child(2) .sw { background: #FFCB9E !important; }
-  [data-theme="dark"] .steps-list .row:nth-child(3) .sw { background: #FFE0C4 !important; }
+  [data-theme="dark"] .bars .bar:nth-child(1) { background: #FFAD70 !important; }
+  [data-theme="dark"] .bars .bar:nth-child(2) { background: #FFC190 !important; }
+  [data-theme="dark"] .bars .bar:nth-child(3) { background: #FFD3AE !important; }
+  [data-theme="dark"] .steps-list .row:nth-child(1) .sw { background: #FFAD70 !important; }
+  [data-theme="dark"] .steps-list .row:nth-child(2) .sw { background: #FFC190 !important; }
+  [data-theme="dark"] .steps-list .row:nth-child(3) .sw { background: #FFD3AE !important; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -49,16 +53,16 @@
       <div class="card chart" data-a style="--i:2">
         <div class="hd"><p class="t-head">10 weeks, three steps</p><p class="t-foot">From Nov 13</p></div>
         <div class="bars">
-          <div class="bar" style="flex:5;--h:100%;--i:0"><span>21 mg</span></div>
-          <div class="bar" style="flex:2.6;--h:64%;--i:1"><span>14 mg</span></div>
-          <div class="bar" style="flex:2.6;--h:38%;--i:2"><span>7 mg</span></div>
+          <div class="bar" style="flex:6 1 0;--h:100%;--i:0"><span>21 mg</span></div>
+          <div class="bar" style="flex:2 1 0;--h:64%;--i:1"><span>14 mg</span></div>
+          <div class="bar" style="flex:2 1 0;--h:38%;--i:2"><span>7 mg</span></div>
         </div>
-        <div class="wks t-cap"><span style="flex:5">Weeks 1 to 6</span><span style="flex:2.6">7 to 8</span><span style="flex:2.6">9 to 10</span></div>
+        <div class="wks t-cap"><span style="flex:6 1 0">Weeks 1 to 6</span><span style="flex:2 1 0">7 to 8</span><span style="flex:2 1 0">9 to 10</span></div>
       </div>
       <div class="list steps-list">
-        <div class="row" data-settle style="--i:3"><i class="sw"></i><div class="grow"><p class="t-head">21 mg</p><p class="t-foot">Fri, Nov 13 to Thu, Dec 24</p></div><span class="wk">6 weeks</span></div>
-        <div class="row" data-settle style="--i:4"><i class="sw" style="background:color-mix(in srgb, #FF9A5C 42%, transparent)"></i><div class="grow"><p class="t-head">14 mg</p><p class="t-foot">Fri, Dec 25 to Thu, Jan 7</p></div><span class="wk">2 weeks</span></div>
-        <div class="row" data-settle style="--i:5"><i class="sw" style="background:color-mix(in srgb, #FF9A5C 28%, transparent)"></i><div class="grow"><p class="t-head">7 mg</p><p class="t-foot">Fri, Jan 8 to Thu, Jan 21</p></div><span class="wk">2 weeks</span></div>
+        <div class="row" data-settle style="--i:3"><i class="sw"></i><div class="grow"><p class="t-head">21 mg</p><p class="t-foot">Fri, Nov 13 to Thu, Dec 24</p></div><span class="wk">6 weeks</span><span class="chev" data-ic="chev"></span></div>
+        <div class="row" data-settle style="--i:4"><i class="sw" style="background:color-mix(in srgb, #FF9A5C 52%, transparent)"></i><div class="grow"><p class="t-head">14 mg</p><p class="t-foot">Fri, Dec 25 to Thu, Jan 7</p></div><span class="wk">2 weeks</span><span class="chev" data-ic="chev"></span></div>
+        <div class="row" data-settle style="--i:5"><i class="sw" style="background:color-mix(in srgb, #FF9A5C 42%, transparent)"></i><div class="grow"><p class="t-head">7 mg</p><p class="t-foot">Fri, Jan 8 to Thu, Jan 21</p></div><span class="wk">2 weeks</span><span class="chev" data-ic="chev"></span></div>
       </div>
       <div class="night" data-a style="--i:6">
         <p class="t-foot">At night</p>

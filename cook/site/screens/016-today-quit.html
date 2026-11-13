@@ -1,44 +1,39 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>016 Today, after Quit Day</title>
-<meta name="motion" content="The dawn sun rises (2.6s) while Xero settles onto the disc; the week ring sweeps to full (1.4s) and the 7 of '7 days free' counts up from 0 with the money and cigarettes counting alongside. At 1.6s the 7-day badge stamps into its card (spring, 620ms) and a shine crosses it; Xero switches to cheer for one hop; the 14-day badge's ring fills to half. Success haptic on the stamp.">
+<meta name="motion" content="The dawn sun rises (2.6s) while Xero settles onto the disc; the hairline week ring sweeps to full (1.4s) and the 7 of '7 days free' counts up from 0 with the money and cigarettes counting alongside. At 1.6s the 7-day badge stamps into its card (spring, 620ms) and a shine crosses it; Xero switches to cheer for one hop; the 14-day badge's ring fills to half (1s). The reading row arrives last. Success haptic on the stamp.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   .hero { position: absolute; left: 0; right: 0; top: 0; height: 344px; border-radius: 0 0 36px 36px; overflow: hidden; }
   .hero .scene { position: absolute; inset: 0; }
-  /* dark: pre-dawn, not brown. Navy night at the top lifting to a warm horizon glow. */
-  [data-theme="dark"] .ringwrap .disc { background: rgba(255,195,138,.2); }
   .ringwrap { position: absolute; left: 50%; top: 70px; width: 204px; height: 204px; margin-left: -102px; }
-  .ringwrap .ring { --ringc: #1E1A3A; }
-  [data-theme="dark"] .ringwrap .ring { --ringc: #FFC38A; }
-  .ringwrap .disc { position: absolute; inset: 20px; border-radius: 50%; background: rgba(255,248,238,.74); }
-  .ringwrap .ring { position: absolute; inset: 0; }
+  /* week complete: a hairline ring, not a heavy closed band */
+  .ringwrap .ring { position: absolute; inset: 0; --ringc: rgba(30,26,58,.55); }
+  [data-theme="dark"] .ringwrap .ring { --ringc: rgba(255,195,138,.75); }
+  .ringwrap .disc { position: absolute; inset: 14px; border-radius: 50%; background: rgba(255,248,238,.74); }
+  [data-theme="dark"] .ringwrap .disc { background: rgba(255,248,238,.1); }
   .ringwrap .ch { position: absolute; left: 0; right: 0; top: 35px; display: grid; place-items: center; }
   .pill { position: absolute; left: 0; right: 0; top: 290px; display: flex; justify-content: center; }
-  .pill span { background: var(--card); color: var(--fg); border-radius: 99px; padding: 10px 16px; font: 600 14px/1 var(--body); display: inline-flex; gap: 8px; align-items: center; box-shadow: 0 6px 16px rgba(30,26,58,.12); }
-  .pill i { width: 6px; height: 6px; border-radius: 99px; background: var(--fg); opacity: .4; }
+  .pill span { background: var(--card); color: var(--fg); border-radius: 99px; padding: 10px 16px; font: 600 14px/1 var(--body); box-shadow: 0 6px 16px rgba(30,26,58,.12); }
 
   .content { position: absolute; left: 0; right: 0; top: 368px; padding: 0 var(--gutter); }
   .hello { color: var(--muted); }
   .content h1 { margin-top: 4px; }
   .kept { margin-top: 8px; color: var(--muted); }
   .kept b { color: var(--fg); font-weight: 700; }
-  .newb { margin-top: 26px; display: flex; align-items: center; gap: 14px; padding: 18px 16px; }
+  .newb { margin-top: 24px; display: flex; align-items: center; gap: 14px; padding: 18px 16px; }
   .newb .grow { flex: 1; min-width: 0; }
-  .newb .t-head { white-space: nowrap; }
   .newb .t-foot { color: var(--muted); }
   .newb .medal { width: 76px; height: 76px; border-radius: 99px; flex: none; }
   .newb .nextb { flex: none; display: grid; justify-items: center; gap: 4px; padding-left: 14px; border-left: 1px solid var(--line); }
-  .newb .nextb .face { position: relative; width: 64px; height: 64px; display: grid; place-items: center; }
+  .newb .nextb .face { position: relative; width: 60px; height: 60px; display: grid; place-items: center; }
   .newb .nextb .face svg { position: absolute; inset: 0; }
   .newb .nextb .n { position: relative; font: 800 20px/1 var(--display); color: var(--fg); letter-spacing: -.4px; }
   .newb .nextb .t-cap { color: var(--fg); font-size: 13px; }
-  .sess { margin-top: 16px; display: flex; align-items: center; gap: 14px; padding: 18px 18px; }
-  .sess .grow { flex: 1; min-width: 0; }
-  .sess .t-foot { color: var(--muted); }
-  .sess .btn.small { width: auto; padding: 0 18px 0 14px; flex: none; }
-  .sess .btn svg { width: 16px; height: 16px; }
-  .sess .t-head { white-space: nowrap; }
+  .read { margin-top: 12px; }
+  .read .row { padding: 12px 16px 12px 14px; }
+  .read .t-foot { color: var(--muted); }
+  .read .t-head { font-size: 17px; }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot" data-status="on-art">
@@ -49,41 +44,45 @@
       <div class="ring" id="ring"></div>
       <div class="ch" id="xero" data-settle></div>
     </div>
-    <div class="pill" data-a style="--i:1;--d:500ms"><span>Week 1 complete<i></i>Fri, Nov 13</span></div>
+    <div class="pill" data-a style="--i:1;--d:500ms"><span>Fri, Nov 13</span></div>
   </div>
 
   <div class="content">
     <p class="t-foot hello" data-a style="--i:2">Good morning, Sam</p>
     <h1 class="t-display" data-a style="--i:3"><span data-count="7" data-dur="1100">7</span> days free</h1>
-    <p class="t-foot kept" data-a style="--i:4"><b><span data-count="49" data-prefix="$" data-dec="2" data-dur="1100">$49.00</span></b> kept &middot; <b><span data-count="84" data-dur="1100">84</span></b> cigarettes not smoked</p>
+    <p class="t-foot kept" data-a style="--i:4"><b><span data-count="49" data-prefix="$" data-dur="1100">$49</span></b> kept &middot; <b><span data-count="84" data-dur="1100">84</span></b> cigarettes not smoked</p>
 
     <div class="card newb" data-a style="--i:5">
       <div class="medal" data-stamp style="--d:1600ms"><div class="shine" id="b7" style="--d:2200ms;border-radius:99px"></div></div>
       <div class="grow">
-        <p class="t-foot">New badge</p>
-        <p class="t-head">One week free</p>
+        <p class="t-foot">Badge earned</p>
+        <p class="t-head">On to 14 days</p>
       </div>
       <div class="nextb" id="b14"></div>
     </div>
 
-    <div class="card sess" data-a style="--i:6">
-      <div class="grow">
-        <p class="t-foot">Day 7 &middot; 3 min read</p>
-        <p class="t-head">The noisy passengers</p>
+    <div class="list read" data-a style="--i:6">
+      <div class="row">
+        <span class="ico-tile" id="ic-read"></span>
+        <div class="grow">
+          <p class="t-foot">Today's read &middot; 3 min</p>
+          <p class="t-head">The noisy passengers</p>
+        </div>
+        <span class="chev" id="chev"></span>
       </div>
-      <button class="btn small" id="start"></button>
     </div>
   </div>
 </div>
 <script>
   const $ = s => document.querySelector(s);
   $('#scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 390, h: 344, clarity: 90 });
-  $('#ring').innerHTML = DX.ring({ size: 204, stroke: 11, p: 1, color: 'var(--ringc)', track: 'rgba(255,248,238,.72)' });
+  $('#ring').innerHTML = DX.ring({ size: 204, stroke: 3, p: 1, color: 'var(--ringc)', track: 'transparent' });
   const xero = mood => DX.char('xero', { mood, size: 136, stage: 2 });
   $('#xero').innerHTML = xero('hello');
   $('#b7').innerHTML = DX.badge({ kind: 'day', n: 7, size: 76, bare: true });
-  $('#b14').innerHTML = `<div class="face">${DX.badge({ kind: 'day', n: '', state: 'next', p: .5, size: 64, bare: true })}<span class="n">14</span></div><span class="t-cap">7 to go</span>`;
-  $('#start').innerHTML = DX.icon('play', { fill: 'currentColor', w: 1.5 }) + 'Start';
+  $('#b14').innerHTML = `<div class="face">${DX.badge({ kind: 'day', n: '', state: 'next', p: .5, size: 60, bare: true })}<span class="n">14</span></div><span class="t-cap">7 to go</span>`;
+  $('#ic-read').innerHTML = DX.icon('note');
+  $('#chev').innerHTML = DX.icon('chev', { size: 18 });
   $('.screen').insertAdjacentHTML('beforeend', DX.tabbar('today'));
   DX.after(1650, () => { $('#xero').innerHTML = xero('cheer'); });
   DX.after(3100, () => { $('#xero').innerHTML = xero('hello'); });

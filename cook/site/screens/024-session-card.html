@@ -1,32 +1,39 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>024 Session listen card</title>
-<meta name="motion" content="The apricot card rises into place (settle 900ms) while the five-step bar arrive. Waveform bars grow from the baseline left to right (40 bars, 18ms apart, 420ms each); at 1.2s play starts: the icon swaps to pause, the played colour sweeps across the bars (linear, follows playback) and the time counts. Transcript card arrives last. Light haptic on play.">
+<meta name="motion" content="The apricot player rises into place (settle 900ms) while the five-step bar arrives; Xero, in his headphones, settles onto the sun behind him and then sways gently to the audio (5s bob loop). The waveform bars grow from the centre line left to right (48 bars, 16ms apart, 420ms each); at 1.2s play starts: the icon swaps to pause, the played ink sweeps across the bars (linear, follows playback) and the elapsed time counts. The collapsed Read instead row and the button arrive last. Light haptic on play; tapping Read instead expands the transcript under the row (320ms ease).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-.f-apricot{--face:#FFC38A}.f-sky{--face:#9CCBFF}.f-mint{--face:#9FE3BC}.f-sun{--face:#FFD966}
 .nav .side{width:44px;text-align:right;flex:none}
-.face{background:var(--face);color:#1E1A3A;border-radius:26px;padding:20px 20px 18px;box-shadow:0 14px 28px rgba(60,40,20,.14)}
-[data-theme="dark"] .face{box-shadow:0 18px 34px rgba(0,0,0,.4)}
-.kind{display:flex;align-items:center;gap:8px;font:600 14px/1 var(--body);opacity:.78}
+.face{--face:#FFC38A;--face-2:#FFD3A6;--sunc:#FFE2B0;background:var(--face);color:#1E1A3A;border-radius:28px;overflow:hidden;box-shadow:0 16px 30px rgba(60,40,20,.14)}
+/* dark mode: the same apricot, toned down so it glows softly on navy instead of glaring */
+[data-theme="dark"] .face{--face:#D99863;--face-2:#E0A574;--sunc:#EBBC8C;box-shadow:0 18px 34px rgba(0,0,0,.45)}
+.art{position:relative;height:196px;background:linear-gradient(to bottom,var(--face-2),var(--face))}
+.art .sun{position:absolute;left:50%;top:26px;width:176px;height:176px;margin-left:-88px;border-radius:50%;background:var(--sunc)}
+.art .ring{position:absolute;left:50%;top:50%;border-radius:50%;border:2px solid rgba(30,26,58,.12)}
+.art .xw{position:absolute;left:50%;bottom:-10px;width:164px;margin-left:-82px}
+.in{padding:20px 20px 20px}
+.kind{display:flex;align-items:center;gap:8px;font:600 14px/1 var(--body);color:#3A2410}
+[data-theme="dark"] .kind{color:#2A1A0C}
 .kind svg{width:18px;height:18px}
-.player{display:flex;align-items:center;gap:14px;margin-top:20px}
-.pbtn{width:58px;height:58px;border-radius:99px;background:#1E1A3A;color:#FFF8EE;display:grid;place-items:center;flex:none;box-shadow:0 4px 0 rgba(30,26,58,.2)}
-.pbtn svg{width:24px;height:24px}
-.wave{position:relative;flex:1;height:44px}
+.wave{position:relative;height:56px;margin-top:18px}
 .wave .layer{position:absolute;inset:0;overflow:hidden}
 .wave .layer.on{width:var(--pp,14%)}
-.wave svg{display:block;height:44px}
+.wave svg{display:block;height:56px}
 .wave rect{transform-box:fill-box;transform-origin:50% 50%}
-.play .wave .base rect{animation:bar 420ms var(--settle) both;animation-delay:calc(200ms + var(--b) * 18ms)}
+.play .wave .base rect{animation:bar 420ms var(--settle) both;animation-delay:calc(200ms + var(--b) * 16ms)}
 @keyframes bar{from{transform:scaleY(.08)}to{transform:none}}
 .play .wave .layer.on{animation:sweep 6000ms linear both 1200ms}
 @keyframes sweep{from{width:0}to{width:var(--pp,14%)}}
-.times{display:flex;justify-content:space-between;margin:6px 0 0 72px}
-.times .t-cap{opacity:.78}
-.read{display:grid;gap:12px}
-.read .t-body + .t-body{margin-top:-2px}
-.read h3{font:700 16px/1.3 var(--display);margin:6px 0 0}
+.ctl{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;margin-top:10px}
+.ctl .t-cap{color:#3A2410}
+[data-theme="dark"] .ctl .t-cap{color:#2A1A0C}
+.ctl .t-cap:last-child{text-align:right}
+.pbtn{width:64px;height:64px;border-radius:99px;background:#1E1A3A;color:#FFF8EE;display:grid;place-items:center;box-shadow:0 4px 0 rgba(30,26,58,.22)}
+.pbtn svg{width:26px;height:26px}
+.disc{margin-top:16px}
+.disc .row{min-height:60px}
+.disc .ico-tile{background:var(--card-2)}
 </style>
 </head><body>
 <div class="screen" data-ground="table">
@@ -35,43 +42,61 @@
     <div class="grow"><div class="steps" aria-label="Card 1 of 5" data-a style="--i:0"><i class="now"></i><i></i><i></i><i></i><i></i></div></div>
     <span class="side t-foot muted">1 of 5</span>
   </div>
-  <div class="scroll" style="padding-top:112px">
+  <div class="scroll" style="padding-top:110px">
     <div class="pad">
-      <div class="face f-apricot" data-settle style="--i:0">
-        <div class="kind"><span id="k-ic"></span>Listen · 6 min</div>
-        <h1 class="t-title" style="margin-top:12px">Why it feels like it calms you</h1>
-        <div class="player">
-          <button class="pbtn" id="pbtn" aria-label="Pause"></button>
-          <div class="wave" id="wave" style="--pp:14%"></div>
+      <div class="face" data-settle style="--i:0">
+        <div class="art">
+          <div class="sun"></div>
+          <div class="xw" data-settle style="--i:2"><div class="bob" id="xero"></div></div>
         </div>
-        <div class="times"><span class="t-cap" data-count="50" data-delay="1200" data-dur="6000" id="el">0:50</span><span class="t-cap">6:00</span></div>
+        <div class="in">
+          <div class="kind"><span id="k-ic"></span>Listen · 6 min</div>
+          <h1 class="t-title" style="margin-top:10px">Why it feels like it calms you</h1>
+          <div class="wave" id="wave" style="--pp:14%"></div>
+          <div class="ctl">
+            <span class="t-cap" data-count="50" data-delay="1200" data-dur="6000" id="el">0:50</span>
+            <button class="pbtn" id="pbtn" aria-label="Pause"></button>
+            <span class="t-cap">6:00</span>
+          </div>
+        </div>
       </div>
-      <div style="display:flex;justify-content:space-between;align-items:baseline;margin:26px 2px 12px">
-        <h2 class="t-head" data-a style="--i:3">Read instead</h2><span class="t-foot muted" data-a style="--i:3">1 min read</span>
-      </div>
-      <div class="card read" data-a style="--i:4">
-        <h3>The loop</h3>
-        <p class="t-body">Something goes wrong. Your chest tightens. You light up, and a minute later you feel calmer.</p>
-        <p class="t-body">But part of that tension was nicotine wearing off. The cigarette closes the gap it opened.</p>
-        <p class="t-body muted">That's the loop. The audio walks through it.</p>
+      <div class="list disc" data-a style="--i:4">
+        <button class="row" style="width:100%;text-align:left" aria-expanded="false">
+          <span class="ico-tile" id="r-ic"></span>
+          <span class="grow"><span class="t-head" style="font-size:17px">Read instead</span></span>
+          <span class="t-foot muted">1 min</span>
+          <span class="chev" id="r-chev"></span>
+        </button>
       </div>
     </div>
   </div>
-  <div class="dock"><button class="btn" data-a style="--i:6">I've listened</button></div>
+  <div class="dock"><button class="btn" data-a style="--i:6">Next card</button></div>
 </div>
 <script>
 document.getElementById('close').innerHTML = DX.icon('close');
 document.getElementById('k-ic').innerHTML = DX.icon('headphones', {size:18});
+document.getElementById('r-ic').innerHTML = DX.icon('text');
+document.getElementById('r-chev').innerHTML = DX.icon('down', {size:18});
+/* Xero in headphones: the band and cups are drawn into his own body group so they sway with him */
+const PHONES = `<g aria-hidden="true">
+  <path d="M38 108 C30 -4 170 -4 162 108" fill="none" stroke="#1E1A3A" stroke-width="10" stroke-linecap="round"/>
+  <path d="M52 62 C66 30 100 22 122 26" fill="none" stroke="#FFF8EE" stroke-opacity=".35" stroke-width="3" stroke-linecap="round"/>
+  <rect x="18" y="88" width="30" height="48" rx="14" fill="#1E1A3A"/><rect x="24" y="96" width="9" height="32" rx="4.5" fill="#FF9A6B"/>
+  <rect x="152" y="88" width="30" height="48" rx="14" fill="#1E1A3A"/><rect x="167" y="96" width="9" height="32" rx="4.5" fill="#FF9A6B"/></g>`;
+let xs = DX.char('xero', {mood:'calm', size:164});
+const mi = xs.indexOf('stroke-width="3.5"'); const end = xs.indexOf('</path>', mi) + 7;
+xs = xs.slice(0, end) + PHONES + xs.slice(end);
+document.getElementById('xero').innerHTML = xs;
 const pb = document.getElementById('pbtn');
-pb.innerHTML = DX.icon('pause', {size:24, w:3});
-/* 40 bars, deterministic heights */
-const W = 224, n = 40, bw = 3.2, gap = (W - n * bw) / (n - 1);
-const hs = Array.from({length:n}, (_, i) => 8 + Math.round(30 * Math.abs(Math.sin(i * 1.7) * .6 + Math.sin(i * .45) * .4)));
-const bars = (op, cls) => `<svg width="${W}" viewBox="0 0 ${W} 44" class="${cls}">${hs.map((h, i) => `<rect x="${(i * (bw + gap)).toFixed(1)}" y="${22 - h / 2}" width="${bw}" height="${h}" rx="1.6" fill="#1E1A3A" fill-opacity="${op}" style="--b:${i}"/>`).join('')}</svg>`;
-document.getElementById('wave').innerHTML = `<div class="layer">${bars(.26, 'base')}</div><div class="layer on">${bars(1, '')}</div>`;
+pb.innerHTML = DX.icon('pause', {size:26, w:3});
+/* 48 bars, deterministic heights, full card width */
+const W = 306, n = 48, bw = 3.4, gap = (W - n * bw) / (n - 1);
+const hs = Array.from({length:n}, (_, i) => 8 + Math.round(42 * Math.abs(Math.sin(i * 1.7) * .6 + Math.sin(i * .45) * .4)));
+const bars = (op, cls) => `<svg width="${W}" viewBox="0 0 ${W} 56" class="${cls}">${hs.map((h, i) => `<rect x="${(i * (bw + gap)).toFixed(1)}" y="${28 - h / 2}" width="${bw}" height="${h}" rx="1.7" fill="#1E1A3A" fill-opacity="${op}" style="--b:${i}"/>`).join('')}</svg>`;
+document.getElementById('wave').innerHTML = `<div class="layer">${bars(.24, 'base')}</div><div class="layer on">${bars(1, '')}</div>`;
 /* elapsed time as m:ss */
 const el = document.getElementById('el');
 new MutationObserver(() => { const v = parseInt(el.textContent); if (!isNaN(v) && !el.textContent.includes(':')) el.textContent = '0:' + String(v).padStart(2, '0'); }).observe(el, {childList:true});
-if (!DX.still) { pb.innerHTML = DX.icon('play', {size:24, w:2.4, fill:'currentColor'}); DX.after(1200, () => { pb.innerHTML = DX.icon('pause', {size:24, w:3}); }); }
+if (!DX.still) { pb.innerHTML = DX.icon('play', {size:26, w:2.4, fill:'currentColor'}); DX.after(1200, () => { pb.innerHTML = DX.icon('pause', {size:26, w:3}); }); }
 </script>
 </body></html>

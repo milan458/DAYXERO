@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>035 Lesson audio</title>
-<meta name="motion" content="Art fades up, Xero settles (900ms) then bobs while audio plays. The scrubber draws from 0:00 to 1:12 over 1.2s with the elapsed time ticking in step, the knob pops on arrival, the play button bumps into its pause state. At 1.5s the Transcript toggle slides on (light haptic) and the transcript opens (500ms) with the spoken line in full ink. The Done listening button arrives last (600ms).">
+<meta name="motion" content="Art fades up, Xero settles in his headphones (900ms) then bobs while audio plays, and three sound arcs each side pulse outward (2.4s loop, 220ms apart) for as long as he is reading. The scrubber draws from 0:00 to 1:12 over 1.2s with the elapsed time ticking in step, the knob pops on arrival, the play button bumps into its pause state. At 1.5s the Transcript toggle slides on (light haptic) and the transcript opens (500ms) with the spoken line in full ink. The Done listening button arrives last (600ms).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -19,6 +19,17 @@
   .play-btn { width: 76px; height: 76px; border-radius: 99px; background: var(--btn); color: var(--btn-fg); display: grid; place-items: center; box-shadow: 0 5px 0 rgba(0,0,0,.18); }
   .play-btn svg { width: 30px; height: 30px; }
   .speed { width: 52px; height: 36px; border-radius: 99px; background: var(--card); box-shadow: inset 0 0 0 1.5px var(--line); color: var(--fg); font: 800 15px/36px var(--body); text-align: center; }
+  .speed.sleep { display: grid; place-items: center; }
+  .speed.sleep svg { width: 18px; height: 18px; }
+  .art .arcs { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .arcs path { fill: none; stroke: #FFF8EE; stroke-width: 3.5; stroke-linecap: round; }
+  [data-theme="dark"] .arcs path { stroke: #F3E7CC; }
+  .play .arcs path { animation: arc 2.4s ease-in-out infinite; animation-delay: var(--ad); }
+  @keyframes arc { 0%, 100% { opacity: var(--o); } 30% { opacity: calc(var(--o) * .35); } }
+  .still .arcs path { animation: none !important; }
+  /* on-state reads in both modes: the knob carries a tick */
+  .toggle.on::after { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6.5 12.5l3.5 3.5 7.5-8' fill='none' stroke='%231E1A3A' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-size: 16px; background-position: center; background-repeat: no-repeat; }
+  [data-theme="dark"] .toggle.on::after { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6.5 12.5l3.5 3.5 7.5-8' fill='none' stroke='%23FFF8EE' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
   .tx { margin-top: 16px; margin-bottom: 40px; padding: 4px 16px 16px; }
   .tx .row { min-height: 50px; }
   .tx-body { overflow: hidden; max-height: 0; transition: max-height 500ms var(--ease), opacity 500ms var(--ease); opacity: 0; display: grid; gap: 8px; }
@@ -37,6 +48,7 @@
     <div class="pad">
       <div class="art" data-a style="--i:0">
         <div class="scene" id="scene"></div>
+        <svg class="arcs" viewBox="0 0 346 232" aria-hidden="true" id="arcs"></svg>
         <div class="hero" data-settle style="--d:150ms"><div class="bob" id="hero"></div></div>
       </div>
       <div class="info">
@@ -56,7 +68,7 @@
         <button class="skip" aria-label="Back 15 seconds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12a7 7 0 107-7H8"/><path d="M10.5 2.5L8 5l2.5 2.5"/></svg><b>15</b></button>
         <button class="play-btn bump" style="--d:1500ms" aria-label="Pause" data-ic="pause"></button>
         <button class="skip" aria-label="Forward 15 seconds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12a7 7 0 11-7-7h4"/><path d="M13.5 2.5L16 5l-2.5 2.5"/></svg><b>15</b></button>
-        <span style="width:52px"></span>
+        <button class="speed sleep" aria-label="Sleep timer off"><span id="moon"></span></button>
       </div>
       <div class="card tx open" id="tx" data-a style="--i:5">
         <div class="row"><span data-ic="text" style="display:inline-flex"></span><p class="t-head grow" style="font-size:17px">Transcript</p><span class="toggle on" id="tg"></span></div>
@@ -72,7 +84,16 @@
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20, w: e.dataset.ic === 'pause' ? 3.2 : 2.2 })));
   document.getElementById('scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 346, h: 232 });
-  document.getElementById('hero').innerHTML = DX.char('xero', { mood: 'calm', size: 116 });
+  /* Xero reads the lesson aloud: headphones on, sound arcs pulsing out from him. */
+  const INKP = '#2A2440', phones = `<path d="M33 92 C30 24 170 24 167 92" fill="none" stroke="${INKP}" stroke-width="9" stroke-linecap="round"/>
+    <rect x="20" y="74" width="24" height="40" rx="11" fill="${INKP}"/><rect x="156" y="74" width="24" height="40" rx="11" fill="${INKP}"/>
+    <rect x="25" y="82" width="7" height="24" rx="3.5" fill="#FFD966"/><rect x="168" y="82" width="7" height="24" rx="3.5" fill="#FFD966"/>`;
+  document.getElementById('hero').innerHTML = DX.char('xero', { mood: 'calm', size: 116 }).replace(/(<path d="[^"]*" fill="[^"]*" stroke="#24163A" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><\/path>)/, '$1' + phones);
+  const cx = 173, cy = 156, arc = (r, a, side) => { const t = a * Math.PI / 180, x1 = cx + side * r * Math.cos(t), y1 = cy - r * Math.sin(t), y2 = cy + r * Math.sin(t);
+    return `M${x1.toFixed(1)} ${y1.toFixed(1)} A${r} ${r} 0 0 ${side > 0 ? 1 : 0} ${x1.toFixed(1)} ${y2.toFixed(1)}`; };
+  document.getElementById('arcs').innerHTML = [[78, 28, .95], [96, 24, .62], [114, 20, .34]].map(([r, a, o], i) =>
+    [-1, 1].map(sd => `<path d="${arc(r, a, sd)}" style="--o:${o};opacity:${o};--ad:${i * 220}ms"/>`).join('')).join('');
+  document.getElementById('moon').innerHTML = DX.icon('moon', { size: 18 });
   const tx = document.getElementById('tx'), tg = document.getElementById('tg'), el = document.getElementById('el');
   DX.after(0, () => { tx.classList.remove('open'); tg.classList.remove('on'); el.textContent = '0:00'; });
   DX.after(300, () => { const t0 = performance.now(); const tick = t => { const k = Math.min(1, (t - t0) / 1200), e = 1 - Math.pow(1 - k, 3), s = Math.round(72 * e);

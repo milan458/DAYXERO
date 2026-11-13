@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>020 Craving passed</title>
-<meta name="motion" content="The completion beat, gentle. A check draws on the pacer ring (420ms), then Jelli settles in cheering (900ms, one soft hop). Title and line fade up; at 900ms the wave count rolls from 22 to 23 while a '+1' floats up beside it (spring, the only one on the screen). At 1.3s the 25-wave badge fades in (700ms, no spring) and its ring creeps from 22 to 23 of 25 while "2 to go" settles under it. The button and the quiet 'What set it off?' link arrive last (the link opens the optional trigger sheet). Success haptic with the +1.">
+<meta name="motion" content="The completion beat, gentle. A check draws on the pacer ring (420ms), then Jelli settles in cheering (900ms, one soft hop). Title and line fade up; at 900ms the wave count rolls from 22 to 23 while a '+1' floats up beside it (spring, the only one on the screen). At 1.3s the 25-wave medallion fades in with its full rim (700ms, no spring) and the progress ring around it creeps from 22 to 23 of 25 while '2 more for your 25-wave badge' settles under the count. The button and the quiet 'What set it off?' link arrive last (the link opens the optional trigger sheet). Success haptic with the +1.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -11,31 +11,21 @@
   .hero .ck { position: absolute; right: 12px; top: 16px; }
   .txt { position: absolute; left: 0; right: 0; top: 326px; padding: 0 36px; text-align: center; }
   .txt .t-body { margin-top: 8px; color: var(--muted); }
-  .stack2 { position: absolute; left: 0; right: 0; top: 456px; padding: 0 var(--gutter); display: grid; gap: 10px; }
-  .waves { display: flex; align-items: center; gap: 20px; padding: 20px 22px; }
+  .stack2 { position: absolute; left: 0; right: 0; top: 462px; padding: 0 var(--gutter); }
+  .waves { display: flex; align-items: center; gap: 20px; padding: 20px 20px; }
   .waves .grow { flex: 1; min-width: 0; }
-  .waves .big { display: flex; align-items: flex-start; gap: 6px; position: relative; }
-  .waves .big .num { font-size: 48px; line-height: 1; }
-  .waves .plus { font: 800 18px/1 var(--display); color: var(--tick); margin-top: 2px; }
+  .waves .big { display: flex; align-items: flex-start; gap: 6px; }
+  .waves .big .num { font-size: 32px; line-height: 1; letter-spacing: -1px; }
+  .waves .plus { font: 800 16px/1 var(--display); color: var(--tick); margin-top: 0; }
   .waves .t-foot { color: var(--muted); margin-top: 4px; }
-  .waves .bd { flex: none; width: 128px; padding: 4px 0 2px 18px; border-left: 1px solid var(--line); display: grid; justify-items: center; gap: 10px; }
-  .waves .bd .face { position: relative; width: 84px; height: 84px; display: grid; place-items: center; }
-  .waves .bd .face svg { position: absolute; inset: 0; }
-  .waves .bd .n { position: relative; font: 800 26px/1 var(--display); color: var(--fg); letter-spacing: -.6px; }
-  .waves .bd .go { font: 800 18px/1.2 var(--display); color: var(--fg); text-align: center; }
-  .waves .bd .face circle[transform] { stroke: #FFF8EE; stroke-width: 6; }
-  .waves .bd .go span { margin-top: 2px; }
-  .waves .bd .go span { display: block; font: 600 13px/1.3 var(--body); color: var(--muted); white-space: nowrap; }
-  .waves .medal { position: relative; width: 96px; height: 96px; flex: none; }
+  .waves .go { margin-top: 10px; font: 500 15px/1.35 var(--body); color: var(--fg); text-wrap: balance; }
+  .waves .medal { position: relative; width: 100px; height: 100px; flex: none; }
   .waves .medal .mr { position: absolute; inset: 0; }
-  .waves .medal .mm { position: absolute; inset: 11px; opacity: .9; }
-  .waves .go { margin-top: 10px; font: 500 15px/1.3 var(--body); color: var(--fg); }
-  .waves .go b { font-weight: 800; }
+  .waves .medal .mm { position: absolute; inset: 10px; filter: drop-shadow(0 3px 6px rgba(6,16,50,.35)); }
   #ck [data-pop] { transform: none; }
   .play #ck [data-pop] { animation: dx-fade 500ms var(--ease) both; animation-delay: 0ms; }
   .dock .why { display: flex; justify-content: center; margin-top: 6px; }
-  .dock .why .link { color: var(--fg); opacity: 1; gap: 6px; display: inline-flex; align-items: center; font-size: 16px; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1.5px; }
-  .dock .why .link svg { width: 16px; height: 16px; }
+  .dock .why .link { color: var(--fg); opacity: 1; font-size: 16px; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1.5px; }
 </style>
 </head><body>
 <div class="screen" data-ground="ocean">
@@ -61,7 +51,7 @@
       <div class="grow">
         <div class="big"><span class="num" data-count="23" data-from="22" data-delay="900" data-dur="500">23</span><span class="plus float-up" style="--d:900ms">+1</span></div>
         <p class="t-foot">waves ridden out, 3 today</p>
-        <p class="go"><b>2 to go</b> to your 25 waves badge</p>
+        <p class="go">2 more for your 25&#8209;wave&nbsp;badge</p>
       </div>
     </div>
   </div>
@@ -73,13 +63,10 @@
 </div>
 <script>
   const $ = s => document.querySelector(s);
-  $('#why').insertAdjacentHTML('beforeend', DX.icon('chev', { size: 16 }));
   $('#jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 190 });
   $('#ck').innerHTML = DX.check({ size: 48, color: 'var(--tick)', fg: '#0B2A1C' });
-  $('#bd').innerHTML = DX.badge({ kind: 'wave', n: 25, size: 74, bare: true });
-  $('#mr').innerHTML = DX.ring({ size: 96, stroke: 5, p: 23 / 25, color: '#FFF8EE', track: 'rgba(255,248,238,.22)' });
+  $('#bd').innerHTML = DX.badge({ kind: 'wave', n: 25, size: 80, bare: true, label: '25 waves' });
+  $('#mr').innerHTML = DX.ring({ size: 100, stroke: 4, p: 23 / 25, color: '#FFF8EE', track: 'rgba(255,248,238,.22)' });
   DX.after(2700, () => { $('#jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 190, animate: false }); });
-  const fillBadge = (sel, from, to, delay) => DX.after(0, () => { const c = document.querySelector(sel + ' circle[transform]'); if (!c) return; const C = 2 * Math.PI * 48;
-    c.animate([{ strokeDashoffset: C * (1 - from) }, { strokeDashoffset: C * (1 - to) }], { duration: 1000, delay, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' }); });
 </script>
 </body></html>

@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>004 How much you smoke</title>
-<meta name="motion" content="Progress eases from 1/11 to 2/11 (900ms). Question, stepper card, chips and the money line arrive in order (600ms, 90ms stagger). At 900ms the plus button presses (spring bump 520ms), the count rolls from 11 to 12 (rises 10px, 300ms) and the yearly line counts up from $1,606 to $1,752 (700ms ease-out). Selection haptic on each step.">
+<meta name="motion" content="Progress eases from 1/11 to 2/11 (900ms). Question, stepper card, chips and the money line arrive in order (600ms, 90ms stagger). At 900ms the plus button presses (spring bump 520ms), the count rolls from 11 to 12 (rises 10px, 300ms) and the hero yearly figure counts up from $1,606 to $1,752 (700ms ease-out) while Xero (120px, cheering) bumps at 1100ms (520ms spring). Selection haptic on each step.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -14,20 +14,23 @@
   .stepper .icon-btn { width: 52px; height: 52px; }
   .stepper .icon-btn { background: var(--card-2); color: var(--fg); box-shadow: inset 0 0 0 1.5px var(--line); }
   .stepper .icon-btn { background: var(--sel); color: var(--sel-fg); box-shadow: none; }
-  .stepper { padding: 20px 16px; }
+  .stepper { padding: 24px 16px; }
   .stepper .mid { flex: 1; text-align: center; }
-  .stepper .t-display { font-size: 52px; display: inline-block; }
+  .stepper .t-display { font-size: 44px; display: inline-block; }
   .stepper .t-foot { color: var(--muted); }
   .roll { animation: roll 320ms var(--ease) both; }
   @keyframes roll { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
-  .lbl { font: 700 14px/1.3 var(--body); color: var(--fg); margin: 14px 0 0; }
-  .money { margin-top: 18px !important; padding: 18px; }
+  .lbl { font: 700 14px/1.3 var(--body); color: var(--fg); margin: 20px 0 0; }
+
   .chips.even { display: grid; grid-template-columns: repeat(4, 1fr); }
   .chips.even .chip { justify-content: center; padding: 0 8px; }
   .chips.three { grid-template-columns: repeat(3, 1fr); }
-  .money { display: flex; align-items: center; gap: 14px; margin-top: 8px; }
-  .money .ico-tile { background: var(--card); }
-  .money .num { font-size: 24px; }
+  /* The result is the hero: the yearly cost, big, with Xero reacting when it changes. */
+  .money { margin-top: 24px; padding: 22px 20px 20px; display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: 8px; }
+  .money .t-display { display: block; margin: 4px 0 2px; }
+  .money .xm { width: 120px; height: 120px; margin: -8px -10px -8px 0; }
+  .money .foot { grid-column: 1 / -1; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); color: var(--muted); }
+  .money .foot b { color: var(--fg); font-weight: 700; }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
@@ -49,20 +52,26 @@
     </div>
     <p class="t-foot lbl" data-a style="--i:3">Price of a pack of 20</p>
     <div class="chips even" data-a style="--i:3"><button class="chip on">$8</button><button class="chip">$10</button><button class="chip">$12</button><button class="chip">Other</button></div>
-    <div class="card flat money" data-a style="--i:5"><span class="ico-tile" data-icon="card"></span>
-      <div class="grow"><span class="num"><span data-count="1752" data-from="1606" data-prefix="$" data-delay="900" data-dur="700">$1,752</span> a year</span>
-      <p class="t-foot muted">on cigarettes alone, $4.80 a day</p></div></div>
+    <div class="card money" data-a style="--i:5">
+      <div><p class="t-foot muted">At $8 a pack, that&rsquo;s</p>
+        <span class="t-display num"><span data-count="1752" data-from="1606" data-prefix="$" data-delay="900" data-dur="700">$1,752</span></span>
+        <p class="t-foot">a year on cigarettes alone</p></div>
+      <div class="xm"><div id="xm"></div></div>
+      <p class="t-foot foot"><b>$4.80 a day.</b> Yours again from Quit Day.</p>
+    </div>
   </div>
   <div class="dock"><button class="btn" data-a style="--i:6">Next: your vape</button></div>
 </div>
 <script>
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
   document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 40 });
+  const xm = document.getElementById('xm'); xm.innerHTML = DX.char('xero', { mood: 'cheer', size: 120 });
   const bar = document.getElementById('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '9.1%'); void bar.offsetWidth; bar.style.transition = ''; });
   DX.after(250, () => bar.style.setProperty('--p', '18.2%'));
   const n = document.getElementById('n'), plus = document.getElementById('plus');
-  DX.after(0, () => { n.textContent = '11'; n.classList.remove('roll'); plus.classList.remove('bump'); });
+  DX.after(0, () => { n.textContent = '11'; n.classList.remove('roll'); plus.classList.remove('bump'); xm.classList.remove('bump'); });
   DX.after(900, () => { plus.classList.add('bump'); n.textContent = '12'; n.classList.add('roll'); });
+  DX.after(1100, () => xm.classList.add('bump'));
 </script>
 </body></html>

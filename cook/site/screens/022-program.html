@@ -1,35 +1,34 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>022 Program, prep week</title>
-<meta name="motion" content="Title and the segmented week control arrive (90ms stagger). The road fades in, then the ink line draws along it from Prep 1 to today's node (1100ms, ease); Prep 1 to 3 stamps and their labels arrive as the line reaches each one (about 360ms apart). Today's Prep 4 play node and the up-next card beside it arrive as the line lands, then the node breathes a soft pulse ring every 2.4s. Prep 5 to 7 (waiting: dashed prep-orange rings on cream with readable numerals) and the waiting Day Xero medallion (dashed gold ring, faint sun) fade in last. Light haptic when the line reaches today.">
+<meta name="motion" content="Title and the segmented week control arrive (90ms stagger). The paper-cut road fades in, then its finished stretch fills prep-orange from Prep 1 to today's node (1100ms, ease); Prep 1 to 3 stamps and their dimmed rows arrive as the fill reaches each one (about 360ms apart). Today's Prep 4 play node and the up-next card beside it arrive as the fill lands, then the node breathes a soft pulse ring every 2.4s. Prep 5 to 7 (dashed prep-orange rings on cream) fade in, then the paper-cut hills rise 30px into place back to front (100ms apart, 900ms) and the big Day Xero medallion rises out of them like a sunrise (1100ms settle) with its rays turning slowly. Light haptic when the fill reaches today.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .screen[data-ground="mint"] { --g: #FBF6EC; --road: #BCE8CF; --card-2: #EEF5EC; }
-  [data-theme="dark"] .screen[data-ground="mint"] { --road: #1F4A3A; }
-  [data-theme="dark"] .screen[data-ground="mint"] { --card-2: #212A41; }
-  .wait { position: relative; width: 44px; height: 44px; border-radius: 99px; background: var(--card); display: grid; place-items: center; color: var(--fg); }
-  .wait svg { position: absolute; inset: 0; }
-  .wait svg circle { stroke-width: 5; }
-  .wait .n { position: relative; font: 800 17px/1 var(--display); color: var(--fg); letter-spacing: -.3px; }
-  .wait.goalw { width: 60px; height: 60px; }
-  .wait.goalw .n { font-size: 22px; top: -6px; }
-  .lab.lock .k { color: var(--muted); }
-  .lab.lock .t-foot { color: var(--fg); }
+  .screen[data-ground="mint"] { --g: #FBF6EC; --road: #BCE8CF; --road-sh: rgba(36,73,58,.16); --done-road: #FFAE73; --card-2: #EEF5EC;
+    --h1: #CFEEDB; --h2: #AEE0C2; --h3: #8DCFA9; --hsh: rgba(36,73,58,.18); }
+  [data-theme="dark"] .screen[data-ground="mint"] { --road: #1F4A3A; --road-sh: rgba(0,0,0,.4); --done-road: #C47442; --card-2: #212A41;
+    --h1: #183A33; --h2: #14322C; --h3: #102A25; --hsh: rgba(0,0,0,.45); }
   .hdr { position: absolute; left: 0; right: 0; top: 60px; padding: 0 var(--gutter); }
   .hdr .t-foot { color: var(--muted); margin-top: 4px; }
-  .seg { position: absolute; left: var(--gutter); right: var(--gutter); top: 140px; height: 46px; border-radius: 16px; background: var(--card-2); padding: 4px; display: grid; grid-template-columns: 1.1fr 1fr 1fr 1fr 1fr; gap: 2px; }
-  .seg button { border-radius: 12px; font: 600 14px/1 var(--body); color: var(--fg); white-space: nowrap; }
-  .seg button.on { background: var(--sel); color: var(--sel-fg); box-shadow: 0 2px 6px rgba(30,26,58,.14); }
-  [data-theme="dark"] .seg { box-shadow: inset 0 0 0 1px var(--line); }
+  .seg { position: absolute; left: var(--gutter); right: var(--gutter); top: 140px; height: 46px; border-radius: 16px; background: color-mix(in srgb, var(--fg) 7%, var(--g)); padding: 4px; display: grid; grid-template-columns: 1.1fr 1fr 1fr 1fr 1fr; gap: 2px; }
+  .seg button { border-radius: 12px; font: 600 14px/1 var(--body); color: var(--muted); white-space: nowrap; }
+  .seg button.on { background: var(--sel); color: var(--sel-fg); font-weight: 800; box-shadow: 0 3px 10px rgba(30,26,58,.24); }
+  [data-theme="dark"] .seg { background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
+  [data-theme="dark"] .seg button.on { box-shadow: 0 3px 10px rgba(0,0,0,.4); }
   svg.road { position: absolute; left: 0; top: 0; pointer-events: none; }
   .node { position: absolute; transform: translate(-50%, -50%); }
-  .node .bg { border-radius: 99px; background: var(--g); }
+  .node .bg { border-radius: 99px; background: var(--g); box-shadow: 0 0 0 3px var(--g); }
   .lab { position: absolute; left: 136px; right: var(--gutter); transform: translateY(-50%); }
   .lab .k { font: 600 14px/1.3 var(--body); color: var(--muted); display: block; }
   .lab .t-foot { font-weight: 600; font-size: 15px; line-height: 1.3; }
-  .lab.lock .t-foot { font-weight: 500; color: var(--muted); }
-  .wait { box-shadow: 0 0 0 4px var(--g); }
-  .cur { width: 78px; height: 78px; border-radius: 99px; background: var(--btn); color: var(--btn-fg); display: grid; place-items: center; position: relative; box-shadow: 0 6px 0 rgba(0,0,0,.16), 0 0 0 6px var(--g); }
+  .lab.done > div { opacity: .6; }
+  .still .lab.done > div { opacity: .6 !important; }
+  .lab.lock .k { color: var(--muted); }
+  .lab.lock .t-foot { font-weight: 500; color: var(--fg); }
+  .wait { position: relative; width: 44px; height: 44px; border-radius: 99px; background: var(--card); display: grid; place-items: center; color: var(--fg); box-shadow: 0 0 0 3px var(--g); }
+  .wait svg { position: absolute; inset: 0; }
+  .wait .n { position: relative; font: 800 17px/1 var(--display); color: var(--fg); letter-spacing: -.3px; }
+  .cur { width: 76px; height: 76px; border-radius: 99px; background: var(--btn); color: var(--btn-fg); display: grid; place-items: center; position: relative; box-shadow: 0 6px 0 rgba(0,0,0,.16), 0 0 0 5px var(--g); }
   .cur svg { width: 30px; height: 30px; margin-left: 4px; }
   .cur::before { content: ""; position: absolute; inset: -6px; border-radius: 99px; box-shadow: 0 0 0 3px var(--fg); opacity: 0; }
   .play .cur::before { animation: pulse 2.4s var(--ease) 1.8s infinite; }
@@ -39,32 +38,54 @@
   [data-theme="dark"] .upnext::before { box-shadow: -1px 1px 0 0 var(--line); }
   .upnext .k { font: 600 14px/1.3 var(--body); color: var(--muted); }
   .upnext .t-foot { color: var(--muted); }
-  .goal .t-head { font-size: 18px; }
-</style></style>
+  /* destination: paper-cut hills and the Day Xero sunrise */
+  .land { position: absolute; left: 0; right: 0; bottom: 0; height: 230px; pointer-events: none; }
+  .land svg { position: absolute; left: 0; bottom: 0; display: block; }
+  .land .h { filter: drop-shadow(0 -3px 5px var(--hsh)); }
+  .play .land .h { animation: hill 900ms var(--settle) both; }
+  .play .land .h2 { animation-delay: 100ms; } .play .land .h3 { animation-delay: 200ms; }
+  .play .land .h1 { animation-delay: 1500ms; } .play .land .h2 { animation-delay: 1600ms; } .play .land .h3 { animation-delay: 1700ms; }
+  @keyframes hill { from { transform: translateY(30px); opacity: 0; } }
+  .sun { position: absolute; transform: translate(-50%, -50%); }
+  .play .sun > div { animation: rise 1100ms var(--settle) 1750ms both; }
+  @keyframes rise { from { transform: translateY(46px); opacity: 0; } }
+  .lab.goal .k { color: var(--muted); }
+  .lab.goal .t-head { font-size: 21px; }
+</style>
 </head><body>
 <div class="screen" data-ground="mint">
   <div class="hdr">
     <h1 class="t-large" data-a style="--i:0">Your program</h1>
     <p class="t-foot" data-a style="--i:1">Prep week, Day Xero, then four weeks</p>
   </div>
-  <div class="seg" data-a style="--i:2" role="tablist"><button class="on">Prep</button><button>Week 1</button><button>Week 2</button><button>Week 3</button><button>Week 4</button></div>
+  <div class="seg" data-a style="--i:2" role="tablist"><button class="on" aria-selected="true">Prep</button><button>Week 1</button><button>Week 2</button><button>Week 3</button><button>Week 4</button></div>
 
+  <div class="land" aria-hidden="true">
+    <svg class="h h1" width="390" height="230" viewBox="0 0 390 230"><path d="M0 66 C20 58 34 50 50 50 C74 50 92 58 110 62 C134 68 150 78 170 78 C206 78 236 80 260 76 C290 70 306 48 330 48 C356 48 374 52 390 54 V230 H0Z" fill="var(--h1)"/></svg>
+  </div>
   <svg class="road" width="390" height="844" viewBox="0 0 390 844" aria-hidden="true">
-    <path id="road" fill="none" stroke="var(--road)" stroke-width="18" stroke-linecap="round" data-fade style="--d:150ms"/>
-    <path id="future" fill="none" stroke="var(--fg)" stroke-opacity=".55" stroke-width="3" stroke-dasharray="1 9" stroke-linecap="round" data-fade style="--d:1300ms"/>
-    <path id="done" class="draw" fill="none" stroke="var(--fg)" stroke-width="4" stroke-linecap="round" style="--d:300ms;--dur:1100ms"/>
+    <path id="roadsh" fill="none" stroke="var(--road-sh)" stroke-width="32" stroke-linecap="round" transform="translate(0 3)" data-fade style="--d:150ms"/>
+    <path id="road" fill="none" stroke="var(--road)" stroke-width="30" stroke-linecap="round" data-fade style="--d:150ms"/>
+    <path id="future" fill="none" stroke="var(--fg)" stroke-opacity=".4" stroke-width="3" stroke-dasharray="1 9" stroke-linecap="round" data-fade style="--d:1300ms"/>
+    <path id="done" class="draw" fill="none" stroke="var(--done-road)" stroke-width="30" stroke-linecap="round" style="--d:300ms;--dur:1100ms"/>
   </svg>
+  <div class="land" aria-hidden="true">
+    <svg class="h h2" width="390" height="230" viewBox="0 0 390 230"><path d="M0 80 C24 76 46 72 70 74 C100 76 124 84 150 86 C180 88 206 94 230 92 C258 90 280 82 300 80 C330 77 362 74 390 76 V230 H0Z" fill="var(--h2)"/></svg>
+  </div>
   <div id="nodes"></div>
+  <div class="land" aria-hidden="true">
+    <svg class="h h3" width="390" height="230" viewBox="0 0 390 230"><path d="M0 94 C28 90 56 87 84 88 C110 89 130 94 150 98 C180 104 206 110 230 110 C262 110 292 104 320 102 C346 100 370 98 390 98 V230 H0Z" fill="var(--h3)"/></svg>
+  </div>
 
   <div class="card upnext" id="upnext" data-a style="--d:1250ms">
     <span class="k">Up next &middot; Prep 4 &middot; 28 min</span>
     <p class="t-head">The stress loop</p>
-    <p class="t-foot">Mon, Nov 2. Calm without it.</p>
+    <p class="t-foot">Today &middot; 5 short cards</p>
   </div>
 </div>
 <script>
   const $ = s => document.querySelector(s);
-  const P = [[92, 226], [56, 278], [92, 330], [64, 410], [92, 502], [56, 556], [92, 610], [72, 684], [72, 770]];
+  const P = [[92, 220], [58, 268], [92, 316], [64, 394], [92, 474], [58, 522], [92, 570], [84, 664]];
   function spline(pts) {
     let d = `M${pts[0][0]} ${pts[0][1]}`;
     for (let i = 0; i < pts.length - 1; i++) {
@@ -74,9 +95,10 @@
     return d;
   }
   $('#road').setAttribute('d', spline(P));
-  $('#future').setAttribute('d', spline(P.slice(3)));
+  $('#roadsh').setAttribute('d', spline(P));
+  $('#future').setAttribute('d', spline(P.slice(3, 7)));
   const done = $('#done'); done.setAttribute('d', spline(P.slice(0, 4)));
-  done.style.setProperty('--len', Math.ceil(done.getTotalLength()));
+  done.style.setProperty('--len', Math.ceil(done.getTotalLength()) + 40);
   $('#upnext').style.top = (P[3][1] - 48) + 'px';
 
   const titles = ["You don't have to quit today", 'The first one of the day', 'Use with your eyes open', 'The stress loop', 'Riding the wave', 'Make it easy on yourself', 'The night before'];
@@ -87,7 +109,7 @@
     if (n <= 3) {
       const d = 300 + i * 360;
       h += `<div class="node" style="left:${x}px;top:${y}px"><div data-a style="--d:${d}ms"><div class="bg">${DX.badge({ kind: 'prep', n, size: 42, bare: true })}</div></div></div>`;
-      h += `<div class="lab" style="top:${y}px"><div data-a style="--d:${d + 60}ms"><span class="k">Prep ${n} &middot; ${days[i]} &middot; done</span><p class="t-foot">${titles[i]}</p></div></div>`;
+      h += `<div class="lab done" style="top:${y}px"><div data-a style="--d:${d + 60}ms"><span class="k">Prep ${n} &middot; ${days[i]} &middot; done</span><p class="t-foot">${titles[i]}</p></div></div>`;
     } else if (n === 4) {
       h += `<div class="node" style="left:${x}px;top:${y}px"><div data-a style="--d:1250ms"><button class="cur" aria-label="Play Prep 4">${DX.icon('play', { fill: 'currentColor', w: 1.5 })}</button></div></div>`;
     } else {
@@ -96,8 +118,8 @@
     }
   });
   const [gx, gy] = P[7];
-  h += `<div class="node" style="left:${gx}px;top:${gy}px"><div data-fade style="--d:1500ms"><div class="wait goalw">${DX.badge({ kind: 'xero', n: '', state: 'next', size: 60, bare: true })}<span class="n">0</span></div></div></div>`;
-  h += `<div class="lab goal" style="top:${gy}px"><div data-fade style="--d:1550ms"><span class="k">Fri, Nov 6 &middot; your Quit Day</span><p class="t-head">Day Xero</p></div></div>`;
+  h += `<div class="sun" style="left:${gx}px;top:${gy}px"><div>${DX.badge({ kind: 'xero', size: 104, bare: true, state: 'next', label: 'Day Xero, waiting' })}</div></div>`;
+  h += `<div class="lab goal" style="top:${gy - 14}px;left:150px"><div data-fade style="--d:1900ms"><span class="k">Fri, Nov 6 &middot; in 4 days</span><p class="t-head">Day Xero</p></div></div>`;
   $('#nodes').innerHTML = h;
   $('.screen').insertAdjacentHTML('beforeend', DX.tabbar('program'));
 </script>

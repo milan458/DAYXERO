@@ -1,28 +1,28 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>029 Session commit</title>
-<meta name="motion" content="Tag, title, ring and Xero arrive (600ms, 90ms stagger). Holding the button (3s, auto at 1.2s) fills the button and sweeps the cream ring around in lockstep (linear, a soft haptic tick every 0.5s). On held: the ring snaps to sun yellow and a check pops and draws where the ring closes (success haptic); the date steps aside as the Day Xero badge in its waiting form stamps onto it (620ms spring, no rays: it is earned on the day itself) and the date fades back in under it; Xero swaps to cheer and bumps; the line below becomes Committed to Fri, Nov 6. The button turns into Committed.">
+<meta name="motion" content="Tag, title, helper, the ring with the Day Xero medallion resting faded inside it, and the date arrive (600ms, 90ms stagger). Holding the button (3s, auto at 1.2s) fills the button and sweeps the one ring around in lockstep (linear, a soft haptic tick every 0.5s); letting go drains it (300ms). On held: the ring turns sun yellow, the medallion stamps to full colour (620ms spring) with a shine, the date bumps (520ms spring), the helper cross-fades to Done. See you on Fri, Nov 6. and the button turns into Committed (success haptic).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-.f-apricot{--face:#FFC38A}.f-sky{--face:#9CCBFF}.f-mint{--face:#9FE3BC}.f-sun{--face:#FFD966}
+.f-mint{--face:#9FE3BC}
 .nav .side{width:44px;text-align:right;flex:none}
 .tag{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px 0 9px;border-radius:99px;background:var(--face);color:#1E1A3A;font:600 13px/1 var(--body);justify-self:start}
 .tag svg{width:16px;height:16px}
 .wrap{position:absolute;top:110px;left:0;right:0;display:grid;align-content:start;gap:10px}
-.ringbox{position:absolute;top:270px;left:50%;width:256px;height:256px;margin-left:-128px}
+.helper{transition:opacity .3s var(--ease)}
+.ringbox{position:absolute;top:268px;left:50%;width:292px;height:292px;margin-left:-146px}
 .ringbox svg.r{display:block;transform:rotate(-90deg)}
 .arc{transition:stroke .4s var(--ease)}
 .ringbox.done .arc{stroke:#F5B83D}
 [data-theme="dark"] .ringbox.done .arc{stroke:#FFD966}
-.centre{position:absolute;inset:0;display:grid;place-items:center;align-content:center;text-align:center;gap:2px;transition:opacity .35s var(--ease),transform .35s var(--ease)}
-.ringbox.done .centre{opacity:0;transform:scale(.9)}
-.centre .t-large{font-size:40px}
 .medal{position:absolute;inset:0;display:grid;place-items:center}
-.medal .stack{display:grid;justify-items:center;gap:6px;text-align:center}
 .medal .rays{display:none}
-.clasp{position:absolute;left:106px;top:-12px;width:44px;height:44px;border-radius:99px;box-shadow:0 0 0 5px var(--g)}
-.xrow{position:absolute;top:596px;left:var(--gutter);right:var(--gutter);display:flex;gap:14px;align-items:center}
-.xrow .say{display:grid;gap:2px}
+/* the ring is the medallion's rim: drop the badge's own gold edge so there is only one ring */
+.medal svg > circle[r="47"], .medal svg > circle[stroke="#fff"]{display:none}
+.medal .m{border-radius:50%;opacity:.38;filter:saturate(.25);transition:opacity .4s var(--ease),filter .4s var(--ease)}
+.ringbox.done .medal .m{opacity:1;filter:none}
+.when{position:absolute;top:588px;left:0;right:0;text-align:center;display:grid;gap:6px;justify-items:center}
+.when .t-large{font-size:36px}
 </style>
 </head><body>
 <div class="screen" data-ground="table">
@@ -34,42 +34,39 @@
   <div class="wrap pad">
     <span class="tag f-mint" data-a style="--i:0"><span id="t-ic"></span>Your stress plan · 6 min</span>
     <h1 class="t-title" data-a style="--i:1">Commit to your Quit Day</h1>
-    <p class="t-foot muted" data-a style="--i:2">Hold for three seconds to make it official. This one is a promise to yourself.</p>
+    <p class="t-foot muted helper" id="helper" data-a style="--i:2">Hold for three seconds to make it official. This one is a promise to yourself.</p>
   </div>
   <div class="ringbox" id="rb" data-a style="--i:3">
-    <svg class="r" width="256" height="256" viewBox="0 0 256 256">
-      <circle cx="128" cy="128" r="118" fill="none" stroke="var(--track)" stroke-width="16"/>
-      <circle class="arc" id="arc" cx="128" cy="128" r="118" fill="none" stroke="var(--fg)" stroke-width="16" stroke-linecap="round" stroke-dasharray="741.4" stroke-dashoffset="741.4"/>
+    <svg class="r" width="292" height="292" viewBox="0 0 292 292" aria-hidden="true">
+      <circle cx="146" cy="146" r="138" fill="none" stroke="var(--track)" stroke-width="12"/>
+      <circle class="arc" id="arc" cx="146" cy="146" r="138" fill="none" stroke="var(--fg)" stroke-width="12" stroke-linecap="round" stroke-dasharray="867.1" stroke-dashoffset="867.1"/>
     </svg>
-    <div class="centre"><span class="t-foot muted">Friday</span><span class="t-large">Nov 6</span><span class="t-foot muted">Day Xero</span></div>
-    <div class="medal" id="medal"></div>
-    <div class="clasp" id="clasp"></div>
+    <div class="medal"><div id="stampwrap"><div class="m" id="medal"></div></div></div>
   </div>
-  <div class="xrow" data-a style="--i:4">
-    <div id="xero" style="flex:none"></div>
-    <div class="say"><p class="t-head" id="say1">4 days to go</p><p class="t-foot muted" id="say2">Prep 5 to 7 get you ready. Keep using as normal until then.</p></div>
+  <div class="when" data-a style="--i:4">
+    <div id="date"><p class="t-large">Fri, Nov 6</p></div>
+    <p class="t-foot muted">Day Xero · 4 days to go</p>
   </div>
   <div class="dock"><button class="btn" id="hold" data-hold="3000" data-autohold="1200" data-done="Committed" data-a style="--i:5">Hold to commit</button></div>
 </div>
 <script>
+const SPARK = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.8c.7 4.9 2.3 6.6 7.4 7.4-5.1.8-6.7 2.5-7.4 7.4-.7-4.9-2.3-6.6-7.4-7.4 5.1-.8 6.7-2.5 7.4-7.4z"/><circle cx="18.6" cy="18.4" r="1.8"/></svg>';
 document.getElementById('close').innerHTML = DX.icon('close');
-document.getElementById('t-ic').innerHTML = DX.icon('hand', {size:16});
-const X = document.getElementById('xero'), arc = document.getElementById('arc'), rb = document.getElementById('rb'), btn = document.getElementById('hold');
-const C = 741.4;
-const reset = () => { X.innerHTML = DX.char('xero', {mood:'calm', size:100}); X.className = ''; rb.classList.remove('done'); document.getElementById('medal').innerHTML = ''; document.getElementById('clasp').innerHTML = ''; document.getElementById('clasp').style.visibility = 'hidden';
-  arc.style.transition = 'none'; arc.style.strokeDashoffset = C; document.getElementById('say1').textContent = '4 days to go';
-  document.getElementById('say2').textContent = 'Prep 5 to 7 get you ready. Keep using as normal until then.'; };
+document.getElementById('t-ic').innerHTML = SPARK;
+const arc = document.getElementById('arc'), rb = document.getElementById('rb'), btn = document.getElementById('hold'), helper = document.getElementById('helper');
+const sw = document.getElementById('stampwrap'), medal = document.getElementById('medal'), date = document.getElementById('date');
+medal.innerHTML = DX.badge({kind:'xero', size:262, bare:true, label:'Day Xero'});
+const C = 867.1, ASK = 'Hold for three seconds to make it official. This one is a promise to yourself.';
+const reset = () => { rb.classList.remove('done'); sw.removeAttribute('data-stamp'); medal.classList.remove('shine'); date.className = '';
+  arc.style.transition = 'none'; arc.style.strokeDashoffset = C; helper.textContent = ASK; };
 const fillRing = () => { if (rb.classList.contains('done')) return; arc.style.transition = 'stroke-dashoffset 3000ms linear, stroke .4s'; arc.style.strokeDashoffset = 0; };
 const drain = () => { if (rb.classList.contains('done')) return; arc.style.transition = 'stroke-dashoffset 300ms ease-out'; arc.style.strokeDashoffset = C; };
 btn.addEventListener('pointerdown', fillRing); btn.addEventListener('pointerup', drain); btn.addEventListener('pointerleave', drain);
 const complete = () => {
   arc.style.transition = 'stroke .4s'; arc.style.strokeDashoffset = 0; rb.classList.add('done');
-  document.getElementById('medal').innerHTML = `<div class="stack"><div data-stamp style="--d:350ms">${DX.badge({kind:'xero', n:'0', state:'next', size:138, bare:true})}</div>
-    <div data-fade style="--d:700ms"><p class="t-head">Fri, Nov 6</p><p class="t-cap muted" style="margin-top:2px">Day Xero</p></div></div>`;
-  const cl = document.getElementById('clasp'); cl.style.visibility = 'visible'; cl.innerHTML = DX.check({size:44, fg:'#0B2A1C', d:100});
-  X.innerHTML = DX.char('xero', {mood:'cheer', size:100}); X.className = 'bump';
-  document.getElementById('say1').textContent = 'Committed to Fri, Nov 6.';
-  document.getElementById('say2').textContent = 'You earn this badge on the day.';
+  sw.setAttribute('data-stamp', ''); sw.style.setProperty('--d', '120ms'); medal.classList.add('shine'); medal.style.setProperty('--d', '600ms');
+  date.className = 'bump'; date.style.setProperty('--d', '300ms');
+  helper.textContent = 'Done. See you on Fri, Nov 6.';
 };
 reset();
 document.addEventListener('held', complete);
