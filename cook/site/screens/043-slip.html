@@ -1,11 +1,11 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>043 Slip: thanks for telling me</title>
-<meta name="motion" content="Calm, no springs. The sea scene card fades up, its cloud drifting slowly; Jelli (calm, about 120px tall) settles onto the water from below (900ms) and then bobs. Title, the one line 'Nothing resets.' and the two tiles arrive with a 90ms stagger; the 7 and the 40% count up from 0 over 850ms; the day ticks fade in left to right (60ms apart from 500ms: the Day Xero sun, six ticks, today's ringed tick) while the sky picture on the tile's right half slides its cloud bank right to show 40% clear sky (900ms). The caption 'Slips don't cloud it.' arrives under the sky tile, then the button and 'Not now'. Soft haptic on appear only.">
+<meta name="motion" content="Calm, no springs. The sea scene card fades up, its cloud drifting slowly; Jelli (calm, about 120px tall) settles onto the water from below (900ms) and then bobs. Title, the one line 'Nothing resets.' and the two tiles arrive with a 90ms stagger; the 7 and the 40% count up from 0 over 850ms; the day ticks fade in left to right (60ms apart from 500ms: the Day Xero sun, six ticks, today's ringed tick) while the sky picture on the tile's right half (clouds and open sky only; the scene above holds the one sun) slides its cloud bank right to show 40% clear sky (900ms). One centred line, 'Slips don't cloud it.', arrives under both tiles, then the button and 'Not now'. Soft haptic on appear only.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .wrap { padding: 104px var(--gutter) 0; display: grid; gap: 0; }
-  .hero { position: relative; height: 236px; border-radius: 26px; overflow: hidden; }
+  .wrap { padding: 62px var(--gutter) 0; display: grid; gap: 0; }
+  .hero { position: relative; height: 252px; border-radius: 26px; overflow: hidden; }
   .hero svg { position: absolute; inset: 0; width: 100%; height: 100%; }
   .hero .jelli { position: absolute; left: 50%; bottom: 14px; margin-left: -88px; width: 176px; height: 176px; }
   .sea .sky0 { stop-color: #CBE4F6; } .sea .sky1 { stop-color: #F4EEE4; }
@@ -18,9 +18,9 @@
   [data-theme="dark"] .sea .cl { fill: #4A5D92; }
   [data-theme="dark"] .sea .w1 { fill: #3A5A9A; } [data-theme="dark"] .sea .w2 { fill: #2F4F8F; } [data-theme="dark"] .sea .w3 { fill: #26437E; } [data-theme="dark"] .sea .w4 { fill: #1B356A; }
   [data-theme="dark"] .sea .foam { opacity: .5; }
-  .wrap h1 { margin-top: 30px; }
+  .wrap h1 { margin-top: 28px; }
   .wrap .lead { margin-top: 10px; color: var(--muted); }
-  .kept { margin-top: 22px; }
+  .kept { margin-top: 24px; }
   .kept .stat { display: grid; gap: 4px; align-content: start; min-height: 116px; }
   .kept .stat .num { font-size: 34px; }
   .kept .ic { color: var(--muted); display: flex; align-items: center; gap: 6px; }
@@ -37,15 +37,13 @@
   .kept .stat.sky { position: relative; overflow: hidden; background: var(--cream); box-shadow: inset 0 0 0 1px var(--line); }
   .kept .stat.sky > svg.thumb { position: absolute; top: 0; right: 0; bottom: 0; width: 50%; height: 100%; -webkit-mask: linear-gradient(to right, transparent, #000 34%); mask: linear-gradient(to right, transparent, #000 34%); }
   .kept .stat.sky > span { position: relative; }
-  .skycap { margin: 8px 0 0 calc(50% + 5px + 16px); color: var(--muted); }
+  .skycap { margin-top: 14px; text-align: center; color: var(--muted); }
   .thumb .s0 { stop-color: #BFDDF4; } .thumb .s1 { stop-color: #FCEBD2; }
-  .thumb .sun { fill: #FFD25E; } .thumb .rim { fill: #FFE7A6; }
   .thumb .cl { fill: #FFFFFF; } .thumb .cl2 { fill: #EEF3FA; }
   .play .thumb .bank { animation: bank 900ms var(--settle) 300ms both; }
   @keyframes bank { from { transform: translateX(-60px); } to { transform: none; } }
   [data-theme="dark"] .kept .stat.sky { background: var(--card); }
   [data-theme="dark"] .thumb .s0 { stop-color: #16234A; } [data-theme="dark"] .thumb .s1 { stop-color: #3A4A7A; }
-  [data-theme="dark"] .thumb .sun { fill: #F7D58A; } [data-theme="dark"] .thumb .rim { fill: #F7D58A; opacity: .25; }
   [data-theme="dark"] .thumb .cl { fill: #56689C; } [data-theme="dark"] .thumb .cl2 { fill: #46588C; }
 </style>
 </head><body>
@@ -83,7 +81,6 @@
         <div class="stat sky" data-a style="--i:4">
           <svg class="thumb" viewBox="0 0 168 116" preserveAspectRatio="xMaxYMid slice" aria-hidden="true"><defs><linearGradient id="tk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="s0"/><stop offset="1" class="s1"/></linearGradient></defs>
             <rect width="168" height="116" fill="url(#tk)"/>
-            <circle class="rim" cx="140" cy="34" r="21"/><circle class="sun" cx="140" cy="34" r="14"/>
             <g class="bank"><path class="cl2" d="M56 116 V100 q6-14 24-10 q10-14 28-6 q14-10 30 2 q18-2 30 10 V116Z"/><path class="cl" d="M96 116 V106 q8-12 22-7 q10-9 24-1 q16-3 26 8 V116Z"/><path class="cl2" d="M150 54 q4-10 14-8 q4-2 4 0 V58 h-18z"/></g>
           </svg>
           <span class="t-cap ic" data-ic2="sun">Xero's sky</span>
@@ -91,7 +88,7 @@
           <span class="t-cap muted">clear</span>
         </div>
       </div>
-      <p class="t-cap skycap" data-a style="--i:5">Slips don't cloud it.</p>
+      <p class="t-foot skycap" data-a style="--i:5">Slips don't cloud it.</p>
     </div>
   </div>
   <div class="dock">

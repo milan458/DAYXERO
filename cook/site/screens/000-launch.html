@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>000 Launch</title>
-<meta name="motion" content="2.4 s, then hold. Dark mode: the same timeline with a low, warm amber sun that stops 46px lower, half behind the back hill. 0-1000ms back hill rises 220px (settle); 140-1140ms mid hill rises 260px; 280-1280ms front hill rises 300px, then the two near layers (one with a small paper shrub) follow at 360ms and 440ms (each paper layer casts a soft shadow up onto the one behind). 250-1750ms the sun climbs 240px into the valley (ease-out), its two paper rings open from 0.6 to 1 at 800-1900ms (dark mode: no rings; a warm amber radial glow opens behind the amber core instead). 700-1720ms the wordmark assembles: 7 letters, 60ms stagger, each rises 40px with a 6deg tilt and blur 6px to sharp on a soft spring (660ms). 1560-2010ms the coral underline draws under Xero. 1500-2340ms Xero (hero size) rises 170px from behind the front hill on a soft overshoot and lands under the sun like a halo; soft impact haptic at 2300ms. 1900-2400ms tagline fades up 10px. 600-2000ms two paper clouds slide in 36px from the sides and fade up. Holds the final frame; Xero blinks.">
+<meta name="motion" content="2.4 s, then hold. Dark mode: the same timeline with a low, warm amber sun that stops 46px lower, half behind the back hill. 0-1000ms back hill rises 220px (settle); 140-1140ms mid hill rises 260px; 280-1280ms front hill rises 300px, then the two near layers follow at 360ms and 440ms (each paper layer casts a soft shadow up onto the one behind). 250-1750ms the sun climbs 240px into the valley (ease-out), its two paper rings open from 0.6 to 1 at 800-1900ms (dark mode: no rings; a warm amber radial glow opens behind a cut-paper amber disc with a pale rim and a soft offset shadow). 700-1720ms the wordmark assembles: 7 letters, 60ms stagger, each rises 40px with a 6deg tilt and blur 6px to sharp on a soft spring (660ms). 1560-2010ms the coral underline draws under Xero. 1500-2340ms Xero (hero size) rises 170px from behind the front hill on a soft overshoot and lands under the sun like a halo; soft impact haptic at 2300ms. 1900-2400ms tagline fades up 10px. 600-2000ms two paper clouds slide in 36px from the sides and fade up. Holds the final frame; Xero blinks.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -12,8 +12,9 @@
     --cloud: rgba(255,247,236,.7); --cloud-lit: rgba(255,247,236,0); --sky: transparent; }
   /* Dark: pre-dawn. Cool indigo air around the sun (no brown halo), moonlit paper clouds, paper hills shaded light at the ridge to dark below. */
   /* Dark: each night hill is its own flat shade (far = lightest), and the sun is low and dim amber, half behind the hills. */
-  [data-theme="dark"] .screen { --h-back: #3A4674; --h-back-2: #36416C; --h-mid: #28335C; --h-mid-2: #252F55; --h-front: #212B53; --h-front-2: #1D264A; --h-near: #18203F; --h-base: #121932;
-    --h-edge: rgba(190,205,255,.26); --h-edge-low: rgba(190,205,255,.18); --h-bush: #131A35;
+  /* Round 8: each layer one clear step apart in value (critics: the dark hills merged into one mass). */
+  [data-theme="dark"] .screen { --h-back: #4B5889; --h-back-2: #465282; --h-mid: #37436F; --h-mid-2: #333E69; --h-front: #29335C; --h-front-2: #262F56; --h-near: #1D2647; --h-base: #141B36;
+    --h-edge: rgba(190,205,255,.3); --h-edge-low: rgba(190,205,255,.22);
     --sun-a: #FFE2A0; --sun-b: #F3A14A; --ring-1: transparent; --ring-2: transparent; --lift: rgba(0,0,0,.45);
     --cloud: rgba(200,212,245,.36); --cloud-lit: rgba(232,238,255,.7);
     --sky: linear-gradient(to bottom, #0B1020 0%, #10172C 40%, #1A2346 72%, #222C55 100%); }
@@ -106,7 +107,9 @@
         <circle class="ring" cx="195" cy="176" r="98" fill="var(--ring-1)" style="--d:800ms"/>
         <circle class="glow halo" cx="195" cy="176" r="170" fill="url(#glowG)"/>
         <circle cx="195" cy="176" r="68" fill="url(#sunG)"/>
+        <circle class="glow" cx="196.5" cy="179" r="69" fill="#B8642A" opacity=".55"/>
         <circle class="glow" cx="195" cy="176" r="68" fill="url(#coreG)"/>
+        <circle class="glow" cx="195" cy="176" r="67" fill="none" stroke="#FFEFC4" stroke-opacity=".7" stroke-width="2"/>
       </g></g>
     </svg>
   </div>
@@ -137,9 +140,7 @@
   </div>
   <div class="layer hill near" aria-hidden="true">
     <svg width="390" height="404" viewBox="0 0 390 404">
-      <g class="bush" fill="var(--h-bush)"><circle cx="42" cy="250" r="13"/><circle cx="60" cy="243" r="16"/><circle cx="78" cy="254" r="11"/></g>
       <path d="M0 262 C38 248 86 254 132 284 C186 318 258 326 314 300 C346 285 370 278 390 280 L390 404 L0 404 Z" fill="var(--h-near)"/>
-      <path d="M29.5 247 A13 13 0 0 1 47 238 A16 16 0 0 1 75.6 245 A11 11 0 0 1 88 252" fill="none" stroke="var(--h-edge-low)" stroke-width="1.6" stroke-linecap="round"/>
       <path d="M0 262 C38 248 86 254 132 284 C186 318 258 326 314 300 C346 285 370 278 390 280" fill="none" stroke="var(--h-edge-low)" stroke-width="2"/>
     </svg>
   </div>
