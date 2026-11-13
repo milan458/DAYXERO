@@ -16,7 +16,13 @@
   .pr { display: flex; align-items: center; gap: 14px; background: var(--card); border-radius: 18px; padding: 12px 14px 12px 14px; min-height: 70px; }
   [data-theme="dark"] .pr { box-shadow: inset 0 0 0 1px var(--line); }
   .pr .grow { flex: 1; min-width: 0; }
-  .pr .t-cap { color: var(--muted); display: block; margin-bottom: 3px; font-size: 12.5px; }
+  .pr .t-cap { color: var(--muted); display: block; margin-bottom: 3px; font-size: 13px; }
+  .pr.qd { min-height: 92px; padding: 16px 16px; background: #FFC38A; color: #1E1A3A; box-shadow: 0 10px 24px rgba(120,44,20,.14); }
+  .pr.qd .t-cap { color: #5A3A2A; }
+  .pr.qd .t-head { font-size: 24px; font-family: var(--display); font-weight: 800; letter-spacing: -.4px; }
+  .pr.qd .ico-tile { width: 48px; height: 48px; background: #FFF8EE; color: #1E1A3A; }
+  [data-theme="light"] .pr.qd, .screen[data-ground="apricot"] .pr.qd { background: color-mix(in srgb, #FF9A5C 55%, #FFF8EE); }
+  [data-theme="dark"] .pr.qd { background: #FFC38A; }
   .pr .t-head { font-size: 17px; }
   .pr .ico-tile { width: 38px; height: 38px; }
   .pr .ico-tile svg { width: 20px; height: 20px; }
@@ -52,8 +58,8 @@
   const setX = m => document.getElementById('xero').innerHTML = DX.char('xero', { mood: m, size: 88 }); setX('hello');
   const bw = document.getElementById('bw');
   const rows = [
-    ['calendar', 'Prep week', 'Fri, Oct 30 to Thu, Nov 5'],
     ['flag', 'Quit Day', 'Fri, Nov 6'],
+    ['calendar', 'Prep week', 'Fri, Oct 30 to Thu, Nov 5'],
     ['wave', 'Waves to watch', 'Coffee and Stress'],
     ['shield', 'Watch out for', 'Cravings and Stress'],
     ['heart', 'Your reason', '"Run with Aria without stopping to catch my breath"']
@@ -61,7 +67,7 @@
   const flag = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 21V4M6 4h11l-2.5 4L17 12H6"/></svg>';
   document.getElementById('plan').innerHTML = rows.map(([ic, k, v], i) => {
     const t = 450 + i * 380;
-    return `<div class="pr ${i === 4 ? 'reason' : ''}" data-settle style="--i:0;--d:${t}ms">
+    return `<div class="pr ${i === 4 ? 'reason' : ''} ${i === 0 ? 'qd' : ''}" data-settle style="--i:0;--d:${t}ms">
       <span class="ico-tile">${ic === 'flag' ? flag : DX.icon(ic)}</span>
       <div class="grow"><span class="t-cap">${k}</span><p class="t-head">${v}</p></div>
       <span class="tk">${DX.check({ size: 28, d: t + 450 })}</span></div>`;
