@@ -44,3 +44,8 @@ Observation: since about round H, scores have plateaued at 8.0–8.7. Each criti
 S01 8.3/8.05, S02 8.6/8.45, S03 8.3/8.1, S04 8.25/8.05, S05 7.95/7.8, S06 8.8/8.65, S07 7.95/7.8, S08 8.35/8.25, S09 8.2/8.05, S10 8.45/8.3, S11 8.65/8.45; S16 8.15/7.9, S17 8.35/8.1, S18 8.35/8.15, S19 8.25/8.05.
 Last consensus fixes: Week 2 node size on S19, green rail reaching today's node on S18, amber "$17 kept" chip contrast on S17. An evening Glim row on S17 was tried and removed again because it sat under the tab bar.
 10:52: canvas published (version 26). Final scoring: three fresh critics on all 19 screens, median per screen.
+
+## Final scoring (10:55), 3 fresh critics, median
+S01 8.4/8.3, S02 8.6/8.5, S03 8.2/8.4, S04 8.0/8.2, S05 8.3/8.4, S06 8.6/8.6, S07 8.2/8.2, S08 8.4/8.4, S09 8.0/8.1, S10 8.4/8.5, S11 8.2/8.3, S12 8.3/8.4, S13 8.4/8.5, S14 8.5/8.5, S15 8.5/8.6, S16 8.3/8.4, S17 8.2/8.3, S18 8.5/8.6, S19 8.4/8.5.
+Bar 9.2 not met. Run paused by the user, who will supply fresh screenshots and references for a new run.
+Consensus for next run (all three critics): muddy plum dark selected fill (system); S04 form wall, so collapse price/size/years like S05; S09 asks three questions at once; S13 "Nothing is charged today" set larger than the terms; S14 double affordance on quiet hours; step counter inconsistent on S12–S14; S17 hero identical to S16, so no payoff for being vape-free; S16 prep-day numbers read as dates; S01 ring and count disagree; S17/S19 lesson subtitle mismatch.
