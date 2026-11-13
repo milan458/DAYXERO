@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>036 Progress</title>
-<meta name="motion" content="The hero card fades up and its two small paper clouds part around the sun (900ms settle, left cloud slides left, right cloud slides right), leaving the numbers on clean sky; Xero settles onto his hill at 500ms and bobs. The 7 counts up (900ms) and $49.00 counts up beside it, then the Sky 40% clear tag fades in. In the same card, under the sky, the strip fades in left to right (70ms apart from 700ms): the Day Xero sun labelled Quit Day, then the seven days free (six apricot ticks and today's ringed tick), then the one-line sky note fades in at 1.3s. The three larger stats (equal columns) count up from 0. The Badges header carries only See all. The badge shelf arrives as one card, each medallion with only its date under it: the three earned day badges stamp in (140ms stagger), the 7-day badge gets a shine at 1.2s, then the 14-day badge fades in with its ring at half. No haptic on load.">
+<meta name="motion" content="The hero card fades up and its two small paper clouds part around the sun (900ms settle, left cloud slides left, right cloud slides right), leaving the numbers on clean sky; Xero settles onto his hill at 500ms and bobs. The 7 counts up (900ms) and $49.00 counts up beside it, then the Sky 40% clear tag fades in. In the same card, under the sky, the strip fades in left to right (70ms apart from 700ms): the Day Xero sun labelled Quit Day, then the seven days free (six apricot ticks and today's ringed tick), then the one-line sky note fades in at 1.3s. The three larger stats (spread edge to edge) count up from 0. The Badges header carries only See all. The badge shelf arrives as one card, each medallion with only its date under it: the three earned day badges stamp in (140ms stagger), the 7-day badge (today's, ringed in ink and lifted 3px) gets a shine at 1.2s, then the 14-day badge fades in with its ring at half. No haptic on load.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -9,7 +9,7 @@
   .top .icon-btn { width: 42px; height: 42px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
   /* the hero: the sky and the since-Quit-Day tick row in one card, so 7 is stated once */
   .hero-card { margin-top: 12px; border-radius: 26px; overflow: hidden; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
-  .sky { position: relative; height: 178px; overflow: hidden; color: var(--ink); }
+  .sky { position: relative; height: 198px; overflow: hidden; color: var(--ink); }
   .sky .scene { position: absolute; inset: 0; }
   .sky .scene svg { display: block; }
   .sky .bank { transform-box: view-box; }
@@ -17,29 +17,32 @@
   .play .sky .bank.r { animation: part-r 900ms var(--settle) 250ms both; }
   @keyframes part-l { from { transform: translateX(34px); } to { transform: none; } }
   @keyframes part-r { from { transform: translateX(-40px); } to { transform: none; } }
-  .sky .big { position: absolute; left: 20px; top: 16px; display: flex; align-items: baseline; gap: 8px; }
+  .sky .big { position: absolute; left: 20px; top: 24px; display: flex; align-items: baseline; gap: 8px; }
   .sky .big .num { font-size: 60px; line-height: 1; letter-spacing: -2.5px; }
-  .sky .kept { position: absolute; left: 21px; top: 84px; font: 600 15px/1.2 var(--body); }
+  .sky .kept { position: absolute; left: 21px; top: 92px; font: 600 15px/1.2 var(--body); }
   .sky .clear { position: absolute; left: 14px; bottom: 14px; height: 30px; padding: 0 12px 0 8px; border-radius: 99px; background: rgba(255,248,238,.94);
     display: inline-flex; align-items: center; gap: 6px; font: 600 13px/1 var(--body); color: var(--ink); }
   .sky .clear svg { width: 16px; height: 16px; }
-  .sky .xero { position: absolute; left: 246px; top: 52px; }
+  .sky .xero { position: absolute; left: 216px; top: 72px; }
   [data-theme="dark"] .sky { color: var(--cream); }
   [data-theme="dark"] .sky .clear { background: rgba(14,19,34,.7); color: var(--cream); box-shadow: inset 0 0 0 1px rgba(255,255,255,.16); }
   .note { padding: 10px 16px 13px; border-top: 1px solid var(--line); }
-  .quiet { margin-top: 18px; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); column-gap: 18px; padding: 0 4px; }
+  .quiet { margin-top: 24px; display: flex; justify-content: space-between; padding: 0 4px; }
   .quiet > div { display: grid; gap: 3px; }
   .quiet > div { gap: 5px; }
   .quiet .num { font: 800 30px/1 var(--display); letter-spacing: -.8px; }
   .quiet .lbl { font: 500 14px/1.25 var(--body); color: var(--muted); }
-  .shelf-h { margin-top: 20px; display: flex; align-items: baseline; justify-content: space-between; }
+  .shelf-h { margin-top: 26px; display: flex; align-items: baseline; justify-content: space-between; }
   .shelf-h .link { height: auto; min-height: 0; padding: 0; font: 700 15px/1 var(--body); color: var(--fg); text-decoration: underline; text-underline-offset: 3px; width: auto; opacity: 1; }
-  .bshelf { margin-top: 10px; padding: 16px 6px 14px; display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); }
+  .bshelf { margin-top: 12px; padding: 18px 6px 16px; display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); }
   .bshelf .badge { gap: 8px; }
   .bshelf .b-l { display: grid; gap: 2px; }
   .bshelf .b-l b { font: 700 14px/1.2 var(--body); color: var(--fg); }
   .bshelf .b-l span { font: 500 13px/1.2 var(--body); color: var(--muted); }
   .bshelf .b-l span.now { color: var(--fg); font-weight: 700; }
+  /* the current badge: an ink ring with a gap (like today's tick above) and a small lift */
+  .bshelf .badge.cur > .shine { box-shadow: 0 0 0 3px var(--card), 0 0 0 5px var(--fg), 0 10px 18px rgba(30,26,58,.18); transform: translateY(-3px); }
+  [data-theme="dark"] .bshelf .badge.cur > .shine { box-shadow: 0 0 0 3px var(--card), 0 0 0 5px var(--fg), 0 10px 18px rgba(0,0,0,.4); }
   .days { padding: 12px 10px 12px; display: grid; grid-template-columns: 60px repeat(7, 1fr); justify-items: center; }
   .days .xd { color: var(--fg); font-weight: 700; white-space: nowrap; position: relative; }
   .days .xd::after { content: ""; position: absolute; right: -8px; top: 3px; height: 20px; width: 1px; background: var(--line); }
@@ -98,15 +101,15 @@
   /* a small two-tone paper cloud (flat base, puffy top), drawn whole inside the card */
   const CL = 'M2 12h20a5 5 0 000-10 7 7 0 00-13-1 5 5 0 00-7 4 3.5 3.5 0 000 7z';
   const puff = (x, y, k, back, front) => `<path filter="url(#pl)" transform="translate(${x + 3 * k} ${y + 2.4 * k}) scale(${k})" d="${CL}" fill="${back}"/><path filter="url(#pl)" transform="translate(${x} ${y}) scale(${k})" d="${CL}" fill="${front}"/>`;
-  document.getElementById('sky').innerHTML = `<svg width="346" height="178" viewBox="0 0 346 178" aria-hidden="true">
+  document.getElementById('sky').innerHTML = `<svg width="346" height="198" viewBox="0 -20 346 198" aria-hidden="true">
     <defs><linearGradient id="psky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${K.sky[0]}"/><stop offset=".6" stop-color="${K.sky[1]}"/><stop offset="1" stop-color="${K.sky[2]}"/></linearGradient>
       <radialGradient id="pglow"><stop offset=".2" stop-color="${K.glow}" stop-opacity="${K.glowO}"/><stop offset="1" stop-color="${K.glow}" stop-opacity="0"/></radialGradient>
       <filter id="pl" x="-10%" y="-20%" width="120%" height="150%"><feDropShadow dx="0" dy="2" stdDeviation="2.4" flood-color="#1A0B2E" flood-opacity="${dark ? .5 : .14}"/></filter>
       <filter id="ph" x="-5%" y="-30%" width="110%" height="160%"><feDropShadow dx="0" dy="-2" stdDeviation="2.4" flood-color="#1A0B2E" flood-opacity="${dark ? .45 : .18}"/></filter></defs>
-    <rect width="346" height="178" fill="url(#psky)"/>
+    <rect y="-20" width="346" height="198" fill="url(#psky)"/>
     ${dark ? [[214, 22], [252, 44], [300, 18], [236, 70], [188, 50]].map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="${i % 2 ? 1.1 : 1.5}" fill="#fff" opacity="${i % 2 ? .5 : .85}"/>`).join('') : ''}
-    <circle cx="236" cy="${dark ? 124 : 86}" r="76" fill="url(#pglow)"/>
-    <circle cx="236" cy="${dark ? 124 : 86}" r="${dark ? 22 : 28}" fill="${K.sun}"/>
+    <circle cx="208" cy="${dark ? 124 : 86}" r="76" fill="url(#pglow)"/>
+    <circle cx="208" cy="${dark ? 124 : 86}" r="${dark ? 22 : 28}" fill="${K.sun}"/>
     <g class="bank l">${puff(184, 40, 1.9, K.c2, K.c1)}</g>
     <g class="bank r">${puff(266, 10, 2.1, K.c2, K.c1)}</g>
     <path filter="url(#ph)" d="M0 142 C60 128 130 136 190 132 C250 128 300 116 346 120 V178 H0z" fill="${K.hills[0]}"/>
@@ -122,7 +125,7 @@
     const anim = state === 'earned' ? `data-stamp style="--i:${i};--d:500ms"` : `data-fade style="--d:${900 + i * 80}ms"`;
     const svg = DX.badge({ kind: 'day', n, state, size: S, p: extra.p, label: name, bare: true });
     const art = extra.shine ? `<span class="shine" style="display:block;border-radius:99px;--d:1200ms">${svg}</span>` : svg;
-    return `<div class="badge ${state}" ${anim} aria-label="${name}, ${sub}">${art}<div class="b-l"><span class="${sub === 'Today' ? 'now' : ''}">${sub}</span></div></div>`;
+    return `<div class="badge ${state}${sub === 'Today' ? ' cur' : ''}" ${anim} aria-label="${name}, ${sub}">${art}<div class="b-l"><span class="${sub === 'Today' ? 'now' : ''}">${sub}</span></div></div>`;
   };
   document.getElementById('shelf').innerHTML =
     b(1, 'earned', '1 day', 'Nov 7', 0) +

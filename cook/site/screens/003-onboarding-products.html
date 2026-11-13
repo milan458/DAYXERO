@@ -23,14 +23,14 @@
   .opt .ico-tile svg { overflow: visible; width: 42px; height: 42px; }
   .answers { gap: 12px !important; }
   /* Round 10: the note is one quiet line (Xero now stands on the horizon strip below). */
-  .note { margin-top: 6px; padding: 0 4px; color: var(--muted); }
+  .note { margin-top: 6px; padding: 0 4px; color: var(--muted); text-wrap: balance; }
   .note b { font-weight: 700; color: var(--fg); }
   /* Round 10: the onboarding horizon strip (003 to 011, one element). Three flat paper hills in the launch style, soft paper
      shadows and no crest lines, sitting just above the dock and running full-bleed behind it; the screen's character stands on the
      crest. Light: cream and peach paper. Dark: the kit's night-meadow hills, kept quiet. */
   .screen { --hz-1: #FFD3A6; --hz-2: #FFE6CA; --hz-3: #F9B386; --hz-lift: rgba(120,44,20,.16); }
   [data-theme="dark"] .screen { --hz-1: #16233F; --hz-2: #0F1A31; --hz-3: #0A1326; --hz-lift: rgba(0,0,0,.55); }
-  .hz { position: absolute; z-index: 1; left: 0; top: calc(var(--hz-b, 752px) - 140px); width: 390px; height: 300px; pointer-events: none; }
+  .hz { position: absolute; z-index: 1; left: 0; top: calc(var(--hz-b, 752px) - 134px); width: 390px; height: 300px; pointer-events: none; }
   .hz .l { position: absolute; left: 0; top: 0; display: block; }
   .hz .l1 { filter: drop-shadow(0 -3px 8px var(--hz-lift)); }
   .hz .l2 { filter: drop-shadow(0 -4px 10px var(--hz-lift)); }
@@ -65,14 +65,14 @@
   <div class="dock"><button class="btn" data-a style="--i:6">Continue</button></div>
 </div>
 <script>
-  /* Round 10: the horizon strip. Strip y 140 is the top of the button; the character's feet sit on the middle hill's crest. */
+  /* Round 10: the horizon strip. Strip y 134 is the top of the button; the character's feet sit on the middle hill's crest. */
   function horizon(o) {
-    const back = 'M0 74 C44 60 92 54 140 64 C186 74 222 84 262 78 C306 71 350 58 390 62 L390 300 L0 300 Z',
+    const back = 'M0 82 C50 74 100 72 150 77 C198 82 234 78 268 66 C306 53 350 47 390 53 L390 300 L0 300 Z',
       mid = 'M0 108 C46 100 96 106 140 114 C180 121 214 114 250 104 C282 95 312 91 342 94 C362 96 378 100 390 104 L390 300 L0 300 Z',
       front = 'M0 128 C58 120 118 124 178 134 C236 143 300 136 350 124 C368 120 380 119 390 120 L390 300 L0 300 Z';
     const l = (i, d, extra = '') => `<svg class="l l${i}" width="390" height="300" viewBox="0 0 390 300"><path d="${d}" fill="var(--hz-${i})"/>${extra}</svg>`;
     const s = o.size || 72, x = o.x ?? 312, y = o.y ?? 92;
-    return l(1, back) + l(2, mid, o.pond || '') + `<div class="who" data-settle style="--d:420ms;left:${x - s / 2}px;top:${(y - .965 * s).toFixed(1)}px;width:${s}px;height:${s}px${o.clip ? `;overflow:hidden;height:${o.clip}px` : ''}"><div id="${o.id || 'hzc'}">${o.art}</div></div>` + (o.over || '') + l(3, front);
+    return l(1, back) + l(2, mid, o.pond || '') + `<div class="who" data-settle style="--d:420ms;left:${x - s / 2}px;top:${(o.top ?? (y - .965 * s)).toFixed(1)}px;width:${s}px;height:${s}px${o.clip ? `;overflow:hidden;height:${o.clip}px` : ''}"><div id="${o.id || 'hzc'}">${o.art}</div></div>` + (o.over || '') + l(3, front);
   }
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
   /* Paper-cut product objects (round 10: flat, no highlight strokes): Xero's own materials. Flat cut pieces, a crescent side shade,

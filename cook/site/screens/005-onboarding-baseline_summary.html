@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>005 Your baseline</title>
-<meta name="motion" content="Progress eases from 2/11 to 3/11 (900ms). Question arrives, then the hero card: 32 counts up (850ms, from 300ms) while the split bar grows left to right, cigarettes then vape (700ms each, 120ms apart), and the two legend lines fade in under their segments. Under a hairline the two cost figures ($2,555 a year | 365 hours of smoke breaks) count up side by side (850ms), then the estimates note fades up (600ms) beside a small calm Xero who bobs gently (5 s). No haptic; one soft tick when the counts land.">
+<meta name="motion" content="Progress eases from 2/11 to 3/11 (900ms). Question arrives, then the hero card: 32 counts up (850ms, from 300ms) while the split bar grows left to right, cigarettes then vape (700ms each, 120ms apart), and the two legend lines fade in under their segments. Under a hairline the two cost figures ($2,555 a year | 365 hours of smoke breaks) count up side by side (850ms), then the one-line estimates note fades up (600ms). The horizon strip above the dock settles up in three paper layers (0, 120, 240ms; 40px, 900ms settle) and a calm Xero (72px) settles onto its crest last (from 420ms). No haptic; one soft tick when the counts land.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -30,10 +30,26 @@
   .cost { display: grid; grid-template-columns: 1fr 1fr; column-gap: 14px; }
   .cost > div + div { padding-left: 14px; border-left: 1px solid var(--line); }
   .cost b { display: block; color: var(--fg); font-family: var(--display); font-weight: 800; font-size: 24px; line-height: 1.1; letter-spacing: -.5px; margin-bottom: 2px; }
-  /* A quiet note that these are estimates, with a small Xero (the page's one character). */
-  .estrow { display: flex; align-items: center; gap: 12px; padding: 0 4px; }
-  .estrow .xs { width: 60px; height: 60px; flex: none; }
+  /* A quiet note that these are estimates (round 10: text only; Xero stands on the horizon strip below, to its right). */
+  .estrow { padding: 0 4px; max-width: 250px; }
   .est { color: var(--muted); font-weight: 500; }
+  /* Round 10: the onboarding horizon strip (003 to 011, one element). Three flat paper hills in the launch style, soft paper
+     shadows and no crest lines, sitting just above the dock and running full-bleed behind it; the screen's character stands on the
+     crest. Light: cream and peach paper. Dark: the kit's night-meadow hills, kept quiet. */
+  .screen { --hz-1: #FFD3A6; --hz-2: #FFE6CA; --hz-3: #F9B386; --hz-lift: rgba(120,44,20,.16); }
+  [data-theme="dark"] .screen { --hz-1: #16233F; --hz-2: #0F1A31; --hz-3: #0A1326; --hz-lift: rgba(0,0,0,.55); }
+  .hz { position: absolute; z-index: 1; left: 0; top: calc(var(--hz-b, 752px) - 134px); width: 390px; height: 300px; pointer-events: none; }
+  .hz .l { position: absolute; left: 0; top: 0; display: block; }
+  .hz .l1 { filter: drop-shadow(0 -3px 8px var(--hz-lift)); }
+  .hz .l2 { filter: drop-shadow(0 -4px 10px var(--hz-lift)); }
+  .hz .l3 { filter: drop-shadow(0 -5px 12px var(--hz-lift)); }
+  .hz .who { position: absolute; }
+  .play .hz .l { animation: hz-up 900ms var(--settle) both; }
+  .play .hz .l2 { animation-delay: 120ms; }
+  .play .hz .l3 { animation-delay: 240ms; }
+  @keyframes hz-up { from { transform: translateY(40px); } to { transform: none; } }
+  .dock { background: none; }
+  .screen { --hz-b: 752px; }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
@@ -60,13 +76,24 @@
         <div><b class="num"><span data-count="365">365</span> hours</b><p class="t-foot">of smoke breaks</p></div>
       </div>
     </div>
-    <div class="estrow" data-a style="--i:3"><div class="xs bob" id="xs"></div><p class="t-foot est">Estimates from your answers. Change them any time.</p></div>
+    <div class="estrow" data-a style="--i:3"><p class="t-foot est">Estimates from your answers. Change them any time.</p></div>
   </div>
+  <div class="hz" id="hz" aria-hidden="true"></div>
+
   <div class="dock"><button class="btn" data-a style="--i:6">Continue</button></div>
 </div>
 <script>
+  /* Round 10: the horizon strip. Strip y 134 is the top of the button; the character's feet sit on the middle hill's crest. */
+  function horizon(o) {
+    const back = 'M0 82 C50 74 100 72 150 77 C198 82 234 78 268 66 C306 53 350 47 390 53 L390 300 L0 300 Z',
+      mid = 'M0 108 C46 100 96 106 140 114 C180 121 214 114 250 104 C282 95 312 91 342 94 C362 96 378 100 390 104 L390 300 L0 300 Z',
+      front = 'M0 128 C58 120 118 124 178 134 C236 143 300 136 350 124 C368 120 380 119 390 120 L390 300 L0 300 Z';
+    const l = (i, d, extra = '') => `<svg class="l l${i}" width="390" height="300" viewBox="0 0 390 300"><path d="${d}" fill="var(--hz-${i})"/>${extra}</svg>`;
+    const s = o.size || 72, x = o.x ?? 312, y = o.y ?? 92;
+    return l(1, back) + l(2, mid, o.pond || '') + `<div class="who" data-settle style="--d:420ms;left:${x - s / 2}px;top:${(o.top ?? (y - .965 * s)).toFixed(1)}px;width:${s}px;height:${s}px${o.clip ? `;overflow:hidden;height:${o.clip}px` : ''}"><div id="${o.id || 'hzc'}">${o.art}</div></div>` + (o.over || '') + l(3, front);
+  }
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
-  document.getElementById('xs').innerHTML = DX.char('xero', { mood: 'calm', size: 60 });
+  document.getElementById('hz').innerHTML = horizon({ art: DX.char('xero', { mood: 'calm', size: 72 }) });
   const bar = document.getElementById('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '18.2%'); void bar.offsetWidth; bar.style.transition = ''; });
   DX.after(250, () => bar.style.setProperty('--p', '27.3%'));

@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>038 Health change</title>
-<meta name="motion" content="The paper-cut dawn card fades up (light: a cool blue dawn sky over warm layered paper hills and a low gold sun; dark: night sky, moon and stars), its hills lift, Xero settles onto the front hill (900ms) and a soft pink glow blooms on his cheeks (600ms fade) while the little standing mirror beside him, which shows his smiling face reflected, catches a sparkle that pops (spring 420ms) and twinkles on a 2.4s loop. Then title, the timing card (the ring sweeps to half while the 7 in it counts up: Starts in about a week (around Day 14), you are on Day 7), the two paragraphs, the 'What you might notice' heading and rows, the Next change row, and last the source footer (as on the health timeline) arrive with a 90ms stagger; the Next change row opens the next change in the timeline (push). No haptic.">
+<meta name="motion" content="The paper-cut dawn card fades up (light: a cool blue dawn sky over warm layered paper hills and a low gold sun; dark: night sky, moon and stars), its hills lift, Xero settles onto the front hill (900ms) and a soft pink glow blooms on his cheeks (600ms fade) while the little standing mirror beside him, which shows his smiling face reflected, catches a sparkle that pops (spring 420ms) and twinkles on a 2.4s loop. Then title, the timing card (the ring sweeps to half while the 7 in it counts up: Starts in about a week (around Day 14), you are on Day 7), the two paragraphs, the 'What you might notice' heading and its three open rows (a small tinted spot icon each, hairlines between), the Next change row, and last the source footer (as on the health timeline) arrive with a 90ms stagger; the Next change row opens the next change in the timeline (push). No haptic.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -13,7 +13,7 @@
   .play .tw { animation: tw 2.4s ease-in-out 1.2s infinite; }
   @keyframes tw { 50% { transform: scale(.7); opacity: .6; } }
   .still .tw { animation: none !important; }
-  .head { margin-top: 14px; display: grid; gap: 6px; }
+  .head { margin-top: 24px; display: grid; gap: 6px; }
   .when { margin-top: 10px; padding: 10px 14px; display: flex; align-items: center; gap: 14px; }
   .when .ringwrap { position: relative; width: 52px; height: 52px; flex: none; color: var(--fg); }
   .when .ringwrap b { position: absolute; inset: 0; display: grid; place-content: center; font: 800 20px/1 var(--display); }
@@ -21,8 +21,13 @@
   .copy { margin-top: 10px; display: grid; gap: 8px; }
   .notice { margin-top: 12px; }
   .notice .nh { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-  .notice .list { margin-top: 6px; }
-  .notice .row { min-height: 40px; gap: 12px; padding-inline: 16px; padding-block: 7px; }
+  /* no box: small spot icons and hairlines only */
+  .notice .list { margin-top: 4px; background: none; box-shadow: none !important; border-radius: 0; }
+  .notice .list > .row { min-height: 44px; gap: 12px; padding: 8px 0; }
+  .notice .list > .row + .row { border-top: 1px solid var(--line); }
+  .notice .ic { width: 28px; height: 28px; border-radius: 99px; flex: none; display: grid; place-items: center; background: color-mix(in srgb, #FFB27A 30%, var(--g)); color: var(--fg); }
+  .notice .ic svg { width: 16px; height: 16px; }
+  [data-theme="dark"] .notice .ic { background: color-mix(in srgb, #FFB27A 20%, var(--card)); color: #FFD3B0; }
   .next { margin-top: 8px; }
   .next .row { min-height: 56px; padding-block: 7px; }
   .next .chev { display: grid; color: var(--muted); }
@@ -56,9 +61,9 @@
       <div class="notice">
         <div class="nh" data-a style="--i:5"><h2 class="t-head">What you might notice</h2></div>
         <div class="list" data-a style="--i:6">
-          <div class="row"><p class="t-foot grow" style="font-size:15px">Pinker, firmer gums</p></div>
-          <div class="row"><p class="t-foot grow" style="font-size:15px">Fresher breath and a sharper sense of taste</p></div>
-          <div class="row"><p class="t-foot grow" style="font-size:15px">A little bleeding when you brush at first. That's healing, not harm.</p></div>
+          <div class="row"><span class="ic" data-ic="heart"></span><p class="t-foot grow" style="font-size:15px">Pinker, firmer gums</p></div>
+          <div class="row"><span class="ic" data-ic="leaf"></span><p class="t-foot grow" style="font-size:15px">Fresher breath, sharper taste</p></div>
+          <div class="row"><span class="ic" data-ic="drop"></span><p class="t-foot grow" style="font-size:15px">A little bleeding when you brush at first. That's healing, not harm.</p></div>
         </div>
       </div>
       <div class="list next" data-a style="--i:7" data-go="037-health">
@@ -75,7 +80,7 @@
      mirror that catches a sparkle. Day: warm dawn with layered paper hills and a gold sun. Night: navy sky, crescent moon, stars, navy hills; the mirror reflects moonlight. */
   const K = dark
     ? { sky: ['#0D1630', '#1F2D55', '#3A4672'], halo: '#F6E7C1', haloO: .16, hills: ['#22335B', '#1A2949', '#121E38'], frame: '#E6DCCB', frame2: '#C2B6A2', glass: ['#5D7BC0', '#9DB8EA'], shine: '#F6EFE2', spark: '#FFD27A' }
-    : { sky: ['#B9D2F0', '#DDE6F2', '#FFE2CC'], halo: '#FFF6DA', haloO: .75, far: '#FFC9A6', hills: ['#FFAE86', '#F2865F', '#D9654A'], frame: '#F26E4C', frame2: '#D2563A', glass: ['#A9C8FF', '#DCEBFF'], shine: '#FFFFFF', spark: '#F5B83D' };
+    : { sky: ['#B9D2F0', '#DDE6F2', '#FFE2CC'], halo: '#FFF6DA', haloO: .75, far: '#FFC9A6', hills: ['#FFAE86', '#F2865F', '#D9654A'], frame: '#FFF4E4', frame2: '#E8D3B8', glass: ['#A9C8FF', '#DCEBFF'], shine: '#FFFFFF', spark: '#F5B83D' };
   const star4 = (x, y, r, f, cls = '') => `<path class="${cls}" d="M${x} ${y - r}Q${x} ${y} ${x + r} ${y}Q${x} ${y} ${x} ${y + r}Q${x} ${y} ${x - r} ${y}Q${x} ${y} ${x} ${y - r}Z" fill="${f}"/>`;
   document.getElementById('scene').innerHTML = `<svg viewBox="0 -16 346 194" width="346" height="194" aria-hidden="true">
     <defs><linearGradient id="lsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${K.sky[0]}"/><stop offset=".6" stop-color="${K.sky[1]}"/><stop offset="1" stop-color="${K.sky[2]}"/></linearGradient>

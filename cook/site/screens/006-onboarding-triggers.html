@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>006 When cravings hit</title>
-<meta name="motion" content="Progress eases from 3/11 to 4/11 (900ms). Question, then the two labelled chip groups (natural-width chips in balanced rows), Other as the last chip of the last row, and the count card arrive in reading order (600ms, 90ms stagger). At 900ms Stress takes the kit selection (warm tint and outline) with a 520ms spring bump (scale 1.1) and a selection haptic; the count reads 1 picked, then bumps to 2 picked and names both.">
+<meta name="motion" content="Progress eases from 3/11 to 4/11 (900ms). Question, then the two labelled chip groups (natural-width chips in balanced rows), Other as the last chip of the last row, and the one-line count arrive in reading order (600ms, 90ms stagger). The horizon strip above the dock settles up in three paper layers (0, 120, 240ms; 40px, 900ms settle) with a small pond in its dip, and Jelli (cravings are hers, 80px) rises into the pond last (from 420ms, 900ms settle), then floats gently (5 s bob). At 900ms Stress takes the kit selection (warm tint and outline) with a 520ms spring bump (scale 1.1) and a selection haptic; the count reads 1 picked, then bumps to 2 picked and names both.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -19,9 +19,31 @@
   .flow .r { display: flex; gap: 8px; }
   .flow .chip { flex: none; min-height: 48px; padding: 0 12px; white-space: nowrap; }
   /* Other closes the last chip row (round 8: no separate row or label, lower density). */
-  .count { display: flex; align-items: center; gap: 12px; margin-top: 14px; padding: 8px 16px 8px 10px; }
-  .count .xc { width: 56px; height: 56px; flex: none; }
-  .count b { font-weight: 700; }
+  /* Round 10: the count is one quiet line (Jelli, whose cravings these are, sits in the horizon strip below). */
+  .count { margin-top: 12px; padding: 0 4px; color: var(--muted); text-wrap: balance; }
+  .count b { font-weight: 700; color: var(--fg); }
+  /* Jelli's pond: a flat paper pool in the strip's dip; its front lip covers her lower half. */
+  .screen { --pond: #9CCBFF; --ripple: #EAF4FF; }
+  [data-theme="dark"] .screen { --pond: #1F3A68; --ripple: #4F6FA8; }
+  .hz .lp { position: absolute; left: 0; top: 0; }
+  .play .hz .lp { animation: hz-up 900ms var(--settle) 120ms both; }
+  /* Round 10: the onboarding horizon strip (003 to 011, one element). Three flat paper hills in the launch style, soft paper
+     shadows and no crest lines, sitting just above the dock and running full-bleed behind it; the screen's character stands on the
+     crest. Light: cream and peach paper. Dark: the kit's night-meadow hills, kept quiet. */
+  .screen { --hz-1: #FFD3A6; --hz-2: #FFE6CA; --hz-3: #F9B386; --hz-lift: rgba(120,44,20,.16); }
+  [data-theme="dark"] .screen { --hz-1: #16233F; --hz-2: #0F1A31; --hz-3: #0A1326; --hz-lift: rgba(0,0,0,.55); }
+  .hz { position: absolute; z-index: 1; left: 0; top: calc(var(--hz-b, 752px) - 134px); width: 390px; height: 300px; pointer-events: none; }
+  .hz .l { position: absolute; left: 0; top: 0; display: block; }
+  .hz .l1 { filter: drop-shadow(0 -3px 8px var(--hz-lift)); }
+  .hz .l2 { filter: drop-shadow(0 -4px 10px var(--hz-lift)); }
+  .hz .l3 { filter: drop-shadow(0 -5px 12px var(--hz-lift)); }
+  .hz .who { position: absolute; }
+  .play .hz .l { animation: hz-up 900ms var(--settle) both; }
+  .play .hz .l2 { animation-delay: 120ms; }
+  .play .hz .l3 { animation-delay: 240ms; }
+  @keyframes hz-up { from { transform: translateY(40px); } to { transform: none; } }
+  .dock { background: none; }
+  .screen { --hz-b: 752px; }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
@@ -45,17 +67,33 @@
       <div class="r"><button class="chip on" id="stress">Stress</button><button class="chip">Boredom</button><button class="chip">Low mood</button></div>
       <div class="r"><button class="chip">Anxiety</button><button class="chip">With friends</button><button class="chip">Other</button></div>
     </div>
-    <div class="card count" data-a style="--i:4"><div class="xc" id="xc"></div>
-      <p class="t-foot"><b id="n">2 picked.</b> <span id="names">Coffee and stress.</span> I&rsquo;ll check in around them.</p></div>
+    <p class="t-foot count" data-a style="--i:4"><b id="n">2 picked.</b> <span id="names">Coffee and stress.</span> I&rsquo;ll check in around them.</p>
   </div>
+  <div class="hz" id="hz" aria-hidden="true"></div>
+
   <div class="dock"><button class="btn" data-a style="--i:5">Continue</button></div>
 </div>
 <script>
+  /* Round 10: the horizon strip. Strip y 134 is the top of the button; the character's feet sit on the middle hill's crest. */
+  function horizon(o) {
+    const back = 'M0 82 C50 74 100 72 150 77 C198 82 234 78 268 66 C306 53 350 47 390 53 L390 300 L0 300 Z',
+      mid = 'M0 108 C46 100 96 106 140 114 C180 121 214 114 250 104 C282 95 312 91 342 94 C362 96 378 100 390 104 L390 300 L0 300 Z',
+      front = 'M0 128 C58 120 118 124 178 134 C236 143 300 136 350 124 C368 120 380 119 390 120 L390 300 L0 300 Z';
+    const l = (i, d, extra = '') => `<svg class="l l${i}" width="390" height="300" viewBox="0 0 390 300"><path d="${d}" fill="var(--hz-${i})"/>${extra}</svg>`;
+    const s = o.size || 72, x = o.x ?? 312, y = o.y ?? 92;
+    return l(1, back) + l(2, mid, o.pond || '') + `<div class="who" data-settle style="--d:420ms;left:${x - s / 2}px;top:${(o.top ?? (y - .965 * s)).toFixed(1)}px;width:${s}px;height:${s}px${o.clip ? `;overflow:hidden;height:${o.clip}px` : ''}"><div id="${o.id || 'hzc'}">${o.art}</div></div>` + (o.over || '') + l(3, front);
+  }
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
   const bar = document.getElementById('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '27.3%'); void bar.offsetWidth; bar.style.transition = ''; });
   DX.after(250, () => bar.style.setProperty('--p', '36.4%'));
-  document.getElementById('xc').innerHTML = DX.char('xero', { mood: 'hello', size: 56 });
+  /* Jelli in the pond: water line at strip y 119; she is clipped just under her bell and the pond's front lip covers the cut. */
+  const px = 172, wl = 119, js = 80;
+  document.getElementById('hz').innerHTML = horizon({ x: px, size: js, top: wl - 134 * js / 200, clip: Math.round(134 * js / 200),
+    art: `<div class="bob">${DX.char('jelli', { mood: 'hello', size: js })}</div>`,
+    pond: `<ellipse cx="${px}" cy="${wl}" rx="48" ry="8.5" fill="var(--pond)"/>`,
+    over: `<svg class="lp" width="390" height="300" viewBox="0 0 390 300"><path d="M${px - 48} ${wl} A48 8.5 0 0 0 ${px + 48} ${wl} Z" fill="var(--pond)"/>
+      <path d="M${px - 38} ${wl + 2.5} q6 -2.4 12 0 M${px + 26} ${wl + 2.5} q6 -2.4 12 0" fill="none" stroke="var(--ripple)" stroke-width="2" stroke-linecap="round"/></svg>` });
   const s = document.getElementById('stress'), n = document.getElementById('n'), names = document.getElementById('names');
   DX.after(0, () => { s.classList.remove('on', 'land'); n.textContent = '1 picked.'; names.textContent = 'Coffee.'; n.classList.remove('bump'); });
   DX.after(900, () => { s.classList.add('on', 'land'); n.textContent = '2 picked.'; names.textContent = 'Coffee and stress.'; n.style.display = 'inline-block'; n.classList.add('bump'); });

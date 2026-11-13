@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>030 Session breathe card</title>
-<meta name="motion" content="The bar shows card 2 two thirds done with Card 2 · Step 2 of 3 beside it; the mint step tag (A breath that works · 5 min) arrives (600ms). The mint Try card (deep dusk with a warm glow in dark mode) settles in (900ms) with the breath shape drawn faint across it. At 0.4s the guided breath plays and the shape is its pacer: the ink lights along the curve in time with the voice (the first breath rises and levels, the top-up sip rises again, then the long slow out falls away) and each point lights with its label as the ink reaches it (In at 0.8s, A little more pops coral at 1.2s, Long, slow out at 1.6s, its label set inside the card above the falling curve, where the playhead pulses); every breath the lit ink starts over and the elapsed time under the title counts on. Small Xero beside the time, on his own ground shadow, breathes with the guide (10s in and out). The three notes arrive as one list, row by row (600ms, 90ms stagger). While the breath plays, the dock holds only a quiet Skip to next card link; at 80% (4:00) it cross-fades into the solid Next card button (300ms, light haptic).">
+<meta name="motion" content="The bar shows card 2 two thirds done with Card 2 · Step 2 of 3 beside it; the mint step tag (Try · 5 min) arrives (600ms). The mint Try card, A breath that works in the moment (deep dusk with a warm glow in dark mode), settles in (900ms) with the breath shape drawn faint across it; the technique it guides is two sighs. At 0.4s the guided breath plays and the shape is its pacer: the ink lights along the curve in time with the voice (the first breath rises and levels, the top-up sip rises again, then the long slow out falls away) and each point lights with its label as the ink reaches it (In at 0.8s, A little more pops coral at 1.2s, Long, slow out at 1.6s, its label set on the falling limb at the right, under the curve's tail, while the playhead pulses on the limb); every breath the lit ink starts over and the elapsed time under the title counts on. Small Xero beside the time, on his own ground shadow, breathes with the guide (10s in and out). The three notes arrive as one list, row by row (600ms, 90ms stagger). While the breath plays, the dock holds only a quiet Skip to next card link; at 80% (4:00) it cross-fades into the solid Next card button (300ms, light haptic).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -17,7 +17,7 @@
 [data-theme="dark"] .face{--ink:#FFF8EE;--soft:#D6E6DC;--pb:#9FE3BC;--pb-fg:#1E1A3A;
   background:radial-gradient(80% 40% at 50% 22%,rgba(247,170,108,.26),rgba(247,170,108,0) 100%),linear-gradient(180deg,#27325C 0%,#1C2547 58%,#19223F 100%);
   box-shadow:0 18px 34px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,248,238,.08)}
-.face .art{height:136px}
+.face .art{height:150px}
 .face .art svg{display:block}
 .face .in{padding:6px 20px 18px}
 .player{display:flex;align-items:center;gap:14px;margin-top:14px}
@@ -26,10 +26,11 @@
 .player .tm{flex:1;min-width:0}
 .player .tm b{display:block;font:700 17px/1.2 var(--display);font-variant-numeric:tabular-nums}
 .player .tm span{display:block;font:500 13px/1.3 var(--body);color:var(--soft);margin-top:2px}
-.player .xs{position:relative;width:64px;height:64px;flex:none;margin:-8px -4px -8px 0}
-/* his own ground shadow, so he stands on the card */
-.player .xs::after{content:"";position:absolute;left:8px;top:55px;width:48px;height:11px;border-radius:50%;background:radial-gradient(closest-side,rgba(30,70,50,.4),rgba(30,70,50,0));z-index:-1}
-[data-theme="dark"] .player .xs::after{background:radial-gradient(closest-side,rgba(0,0,0,.75),rgba(0,0,0,0))}
+.player .xs{position:relative;isolation:isolate;width:82px;height:82px;flex:none;margin:-26px -10px -4px 0}
+.player .xs svg{position:relative;z-index:1}
+/* his own ground shadow, so he stands on the card (drawn inside his box, so it sits on the card, not under it) */
+.player .xs::after{content:"";position:absolute;left:11px;top:71px;width:60px;height:12px;border-radius:50%;background:radial-gradient(closest-side,rgba(24,66,44,.5),rgba(24,66,44,.22) 60%,rgba(24,66,44,0));z-index:0}
+[data-theme="dark"] .player .xs::after{background:radial-gradient(closest-side,rgba(0,0,0,.7),rgba(0,0,0,.3) 60%,rgba(0,0,0,0))}
 /* no loose breeze marks around the small Xero */
 .player .xs svg > g[stroke]{display:none}
 .pulse{transform-box:fill-box;transform-origin:50% 50%}
@@ -60,14 +61,14 @@
   </div>
   <div class="scroll" style="padding-top:112px">
     <div class="pad">
-      <span class="tag k-try" data-a style="--i:0"><span id="t-ic"></span>A breath that works · 5 min</span>
+      <span class="tag k-try" data-a style="--i:0"><span id="t-ic"></span>Try · 5 min</span>
       <div class="face" data-settle style="--i:0">
         <div class="art" id="art"></div>
         <div class="in">
-          <h1 class="t-title" style="margin-top:4px">Two sighs</h1>
+          <h1 class="t-title" style="margin-top:4px">A breath that works in the moment</h1>
           <div class="player">
             <button class="pbtn" id="pbtn" aria-label="Pause"></button>
-            <div class="tm"><b>0:43 <span style="display:inline;font:inherit;color:var(--soft);margin:0">/ 5:00</span></b><span>Guided breath</span></div>
+            <div class="tm"><b>0:43 <span style="display:inline;font:inherit;color:var(--soft);margin:0">/ 5:00</span></b><span>Guided: two sighs</span></div>
             <div class="xs" id="xs"></div>
           </div>
         </div>
@@ -89,18 +90,18 @@ document.getElementById('close').innerHTML = DX.icon('close');
 document.getElementById('t-ic').innerHTML = DX.icon('hand', {size:16});
 document.getElementById('pbtn').innerHTML = DX.icon('pause', {size:22, w:3});
 /* small Xero breathes along with the guide */
-document.getElementById('xs').innerHTML = DX.char('xero', {mood:'breathe', size:64});
+document.getElementById('xs').innerHTML = DX.char('xero', {mood:'breathe', size:82});
 /* the breath shape is the pacer: drawn faint, lit in ink up to the playhead. Each point carries its own label right beside it. */
 const BREATH = 'M22 118 C48 118 58 62 86 62 L118 62 C130 62 136 40 152 40 C204 40 258 118 324 118';
 const LIT = 'M22 118 C48 118 58 62 86 62 L118 62 C130 62 136 40 152 40 C178 40 204.5 59.5 232.75 79';
-document.getElementById('art').innerHTML = `<svg width="346" height="136" viewBox="0 0 346 136" aria-hidden="true">
-  <path d="${BREATH}" fill="none" stroke="var(--ink)" stroke-opacity=".22" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" data-fade style="--d:200ms"/>
+document.getElementById('art').innerHTML = `<svg width="346" height="150" viewBox="0 0 346 150" aria-hidden="true">
+  <path d="${BREATH}" fill="none" stroke="var(--ink)" stroke-opacity="${dark ? .22 : .35}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" data-fade style="--d:200ms"/>
   <path d="${LIT}" fill="none" stroke="var(--ink)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" class="draw" style="--len:290;--d:400ms;--dur:1250ms"/>
   <g font-family="DM Sans, sans-serif" font-weight="700" font-size="14" fill="var(--ink)">
     <circle cx="86" cy="62" r="4.5" fill="var(--ink)" data-fade style="--d:800ms"/><text x="86" y="48" text-anchor="middle" data-fade style="--d:800ms">In</text>
     <circle cx="152" cy="40" r="7" fill="#FF7A55" data-pop style="transform-origin:152px 40px;--d:1200ms"/><text x="152" y="24" text-anchor="middle" data-fade style="--d:1200ms">A little more</text>
     <circle class="pulse" cx="232.75" cy="79" r="9" fill="var(--ink)" fill-opacity=".25"/>
-    <circle cx="232.75" cy="79" r="6.5" fill="var(--ink)" data-fade style="--d:1600ms"/><text x="334" y="60" text-anchor="end" font-size="13.5" data-fade style="--d:1600ms">Long, slow out</text>
+    <circle cx="232.75" cy="79" r="6.5" fill="var(--ink)" data-fade style="--d:1600ms"/><text x="324" y="142" text-anchor="end" font-size="13.5" data-fade style="--d:1600ms">Long, slow out</text>
   </g></svg>`;
 /* small paper-cut spots (same family as 027): tinted sky, a cut-paper hill, one motif; navy pre-dawn in dark */
 const S = dark
