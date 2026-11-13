@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>037 Health timeline</title>
-<meta name="motion" content="Title and the Vaping / Smoking chips arrive; each card's larger paper-cut spot (its own motif: sunrise, clouds blowing away, a summit flag, a calm lake, a hand mirror with a sparkle) lifts in with the card, then the rail draws top to bottom (900ms clip reveal from 300ms) as one continuous line through the node centres, solid through today and dashed on to Ahead, while timeline cards arrive with a 90ms stagger. The rail node is each card's one status signal (an apricot dot for the start, green tick for each finished change, half-filled for under way, open ring for ahead); the line under each title is only its timing. The under-way card leads with a warm tint (an apricot hairline in dark mode); its node sends out a soft pulse ring every 2.4s (from 1.2s) while its 4px apricot bar fills to 50% (900ms settle). All spots and text sit on one column. Every card ends in a chevron and opens its detail. Switching chips cross-fades the list (250ms) with a selection haptic.">
+<meta name="motion" content="Title and the Vaping / Smoking chips arrive; each card's larger paper-cut spot (its own motif: sunrise, clouds blowing away, a summit flag, a calm lake, a hand mirror with a sparkle) lifts in with the card, then the rail draws top to bottom (900ms clip reveal from 300ms) as one continuous line through the node centres, solid through today and dashed on to Ahead, while timeline cards arrive with a 90ms stagger. The rail node is each card's one status signal (plain dot for the start, green tick for each finished change, half-filled for under way, open ring for ahead); the line under each title is only its timing. The under-way card leads with a warm tint (an apricot hairline in dark mode); its node sends out a soft pulse ring every 2.4s (from 1.2s) while its 4px apricot bar fills to 50% (900ms settle). All spots and text sit on one column. Every card ends in a chevron and opens its detail. Switching chips cross-fades the list (250ms) with a selection haptic.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -22,8 +22,7 @@
   @keyframes pulse { 0% { opacity: .35; transform: scale(.7); } 100% { opacity: 0; transform: scale(1.25); } }
   .still .node.now::before { animation: none !important; opacity: 0; }
   .node.ahead { box-shadow: inset 0 0 0 2.5px var(--muted); }
-  .node.past::after { content: ""; width: 12px; height: 12px; border-radius: 99px; background: #F6A262; }
-  [data-theme="dark"] .node.past::after { background: #FFC38A; }
+  .node.past::after { content: ""; width: 12px; height: 12px; border-radius: 99px; background: var(--muted); }
   .item { position: relative; display: flex; gap: 12px; align-items: center; padding: 10px 10px 10px 10px; }
   .item .grow { flex: 1; min-width: 0; display: grid; gap: 4px; }
   .item .t-head { font-size: 17px; line-height: 1.22; }
@@ -32,6 +31,7 @@
   .st { font: 600 14px/1.25 var(--body); color: var(--muted); }
   .chev { display: grid; color: var(--muted); }
   .chev svg { width: 18px; height: 18px; }
+  .item.past { background: transparent; }
   /* the under-way card leads: a soft warm tint and a little more height; its spot and text stay on the same column as the rest */
   .screen .tl .item.now { padding: 14px 10px 14px 10px; background: color-mix(in srgb, #FF9A5C 16%, #FFFFFF); box-shadow: inset 0 0 0 1.5px rgba(232,120,70,.45), 0 12px 26px rgba(30,26,58,.1); }
   /* dark: a warm navy tint with an apricot hairline */
@@ -86,7 +86,7 @@
           <span data-ic="chev" class="chev"></span>
         </div>
       </div>
-      <p class="t-cap muted" data-a style="--i:8;margin-top:22px">Typical times, everyone is different. Sources: <span class="source">NHS</span>, <span class="source">smokefree.gov</span></p>
+      <p class="t-cap muted" data-a style="--i:8;margin-top:22px;padding-left:30px">Typical times, everyone is different. Sources: <span class="source">NHS</span>, <span class="source">smokefree.gov</span></p>
     </div>
   </div>
 </div>

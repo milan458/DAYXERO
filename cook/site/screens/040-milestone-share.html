@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>040 Share card</title>
-<meta name="motion" content="The card (about 300pt wide, no avatar, Week 1 centred at the top) rises in and settles (900ms): its paper hills lift over a low sun, Xero (centred and larger, with a cream paper rim so he stands off the coral hills, grounded by a soft dark contact shadow) cheers in front of the one low sun, well below the stat lines and above the wordmark band. The Show on your card chips arrive (Days free shows selected, in the same filled tint and edge as the other on chips, with a lock instead of a tick, and does not toggle); at 1.3s the Cigarettes chip turns on (selection haptic) and its line fades into the card while the card bumps. Share sits in the dock; tapping it opens the system share sheet with the rendered card.">
+<meta name="motion" content="The card (about 300pt wide, no avatar, Week 1 centred at the top) rises in and settles (900ms): its paper hills lift over a low sun, Xero (centred and larger, with a cream paper rim so he stands off the coral hills) cheers in front of the sun, well below the stat lines and above the wordmark band, and the smaller filled day medallion (a sunrise sky with a big sun over the hills, no number since the line below says 7 days) stamps at 400ms. The Show on your card chips arrive (Days free sits in its own filled tone with a lock, no border, and no toggle); at 1.3s the Cigarettes chip turns on (selection haptic) and its line fades into the card while the card bumps. Share sits in the dock; tapping it opens the system share sheet with the rendered card.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -12,18 +12,17 @@
   .sc { position: relative; width: 254px; height: 376px; border-radius: 26px; overflow: hidden; color: #1E1A3A;
     background: linear-gradient(180deg, #FFB98A 0%, #FFD7AE 46%, #FFE9CF 70%);
     box-shadow: 0 18px 40px rgba(14,11,43,.22), 0 2px 0 rgba(14,11,43,.06); padding: 16px; display: flex; flex-direction: column; align-items: center; }
-  .sc .sun { position: absolute; left: 73px; top: 178px; width: 108px; height: 108px; border-radius: 99px; background: radial-gradient(circle at 40% 35%, #FFF6C8, #FFD25E 70%); opacity: .95; }
+  .sc .sun { position: absolute; left: 79px; top: 206px; width: 96px; height: 96px; border-radius: 99px; background: radial-gradient(circle at 40% 35%, #FFF6C8, #FFD25E 70%); opacity: .95; }
   .sc .hills { position: absolute; left: 0; right: 0; bottom: 0; width: 254px; height: 150px; display: block; }
   .sc .top { align-self: stretch; display: flex; justify-content: center; align-items: center; position: relative; }
   .sc .date { font: 700 13px/1 var(--body); color: #5A3420; }
-  .sc .big { position: relative; margin-top: 34px; font: 800 40px/1 var(--display); letter-spacing: -1.4px; }
-  .sc .lines { position: relative; margin-top: 10px; display: grid; gap: 2px; text-align: center; font: 700 15px/1.3 var(--body); color: #4A2A18; }
+  .sc .medal { margin-top: 12px; position: relative; }
+  .sc .big { position: relative; margin-top: 10px; font: 800 34px/1 var(--display); letter-spacing: -1.2px; }
+  .sc .lines { position: relative; margin-top: 7px; display: grid; gap: 2px; text-align: center; font: 700 14px/1.3 var(--body); color: #4A2A18; }
   .sc .lines span { transition: opacity .4s var(--ease), max-height .4s var(--ease); max-height: 20px; overflow: hidden; }
   .sc .lines span.off { opacity: 0; max-height: 0; }
   /* Xero, centred and larger, stands on the hills in front of the sun with a cream paper rim (figure/ground on the coral hills) */
-  .sc .xero { position: absolute; left: 66px; top: 204px; }
-  /* a real contact shadow on the hill under his feet (his own pale oval is removed so the rim cannot outline it) */
-  .sc .xshadow { position: absolute; left: 82px; top: 316px; width: 90px; height: 14px; border-radius: 50%; background: radial-gradient(closest-side, rgba(90,22,8,.42), rgba(90,22,8,0)); }
+  .sc .xero { position: absolute; left: 71px; top: 228px; }
   .sc .xero svg { filter: url(#rim); }
   .sc .mark-w { position: absolute; left: 14px; bottom: 9px; display: flex; align-items: center; gap: 6px; font: 800 14px/1 var(--display); color: #FFF8EE; letter-spacing: -.3px; }
   .sc .mark-w i { width: 10px; height: 10px; border-radius: 99px; background: #FFD966; }
@@ -37,8 +36,8 @@
   .show .chip:not(.on) svg { display: none; }
   /* Days free is always on the card: on, with a lock instead of a tick, and not toggleable */
   .show .chip.locked { cursor: default; }
-  /* it shows as selected (the same filled tint and edge as the other on chips), with a lock where they have a tick */
-  .show .chip.locked svg { color: var(--fg); }
+  .screen .show .chip.locked, [data-theme="dark"] .screen .show .chip.locked { background: color-mix(in srgb, var(--fg) 9%, var(--g)); color: var(--fg); box-shadow: none; font-weight: 600; }
+  .show .chip.locked svg { color: var(--muted); }
   .show .chip.locked svg { width: 15px; height: 15px; }
   /* unselected chips get a clear hairline in light */
   html:not([data-theme="dark"]) .show .chip:not(.on):not(.locked) { box-shadow: inset 0 0 0 1px rgba(30,26,58,.26); }
@@ -52,7 +51,7 @@
     <div class="grow title">Share your week</div>
     <span style="width:44px"></span>
   </div>
-  <div class="scroll" style="padding-top:124px">
+  <div class="scroll" style="padding-top:108px">
     <div class="pad">
       <div class="preview" data-settle style="--d:100ms">
         <div class="sc" id="card">
@@ -65,9 +64,9 @@
             <path filter="url(#scLift)" d="M0 128 C60 120 120 126 212 122 V150 H0z" fill="#C2402A"/>
           </svg>
           <div class="top"><span class="date">Week 1</span></div>
+          <div class="medal" data-stamp style="--d:400ms" id="medal"></div>
           <div class="big">7 days free</div>
           <div class="lines"><span>$49.00 kept</span><span id="l-cig">84 cigarettes not smoked</span><span id="l-wave" class="off">23 cravings ridden out</span></div>
-          <div class="xshadow"></div>
           <div class="xero" id="xero"></div>
           <div class="mark-w"><i></i>DayXero</div>
         </div>
@@ -85,7 +84,12 @@
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20, w: e.dataset.ic === 'check' ? 3 : e.dataset.ic === 'lock' ? 2.6 : 2.2 })));
   document.getElementById('sh').innerHTML = DX.icon('share', { size: 20 });
-  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'cheer', size: 122, stage: 3 }).replace(/<ellipse cx="100" cy="192" rx="48" ry="6"[^>]*><\/ellipse>/, '');
+  /* the kit day badge, filled: its face becomes a sunrise sky and the sun grows and rises over the hills */
+  document.getElementById('medal').innerHTML = DX.badge({ kind: 'day', n: '', size: 66, bare: true })
+    .replace('<svg ', '<svg ').replace(/(<svg[^>]*>)/, '$1<defs><linearGradient id="shSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF8A66"/><stop offset=".55" stop-color="#FFB27C"/><stop offset="1" stop-color="#FFE0B0"/></linearGradient><radialGradient id="shGlow"><stop offset=".3" stop-color="#FFF6C8" stop-opacity=".8"/><stop offset="1" stop-color="#FFF6C8" stop-opacity="0"/></radialGradient></defs>')
+    .replace('r="39" fill="#FFC38A"', 'r="39" fill="url(#shSky)"')
+    .replace(/<circle cx="[\d.]+" cy="[\d.]+" r="[\d.]+" fill="#FFD966"\/>/, '<circle cx="50" cy="62" r="30" fill="url(#shGlow)"/><circle cx="50" cy="64" r="19" fill="#FFD966"/>');
+  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'cheer', size: 112, stage: 3 });
   const t = document.getElementById('t-cig'), l = document.getElementById('l-cig'), card = document.getElementById('card');
   DX.after(0, () => { t.classList.remove('on'); l.classList.add('off'); });
   DX.after(1300, () => { t.classList.add('on'); l.classList.remove('off'); card.classList.remove('bump'); void card.offsetWidth; card.classList.add('bump'); });

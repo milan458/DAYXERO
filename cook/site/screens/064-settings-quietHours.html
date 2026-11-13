@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>064 Quiet hours</title>
-<meta name="motion" content="The moon start handle pops at 10 PM, then the dial arc sweeps from it, over its light track, round to 7 AM (1.4s settle) where the sun end handle fades in, as the 9 counts up in the centre; the From and Until tiles, the plain while-it-is-quiet notes and the NRT toggle row arrive below on the stagger. Changing a time drags either handle with a selection haptic per 15 minutes.">
+<meta name="motion" content="The moon start handle pops at 10 PM, then the dial arc sweeps from it, over its light track, round to 7 AM (1.4s settle) where the sun end handle fades in, as the 9 counts up in the centre (no icon there: the handles carry the moon and sun); the From and Until tiles (24px under the 12 PM label), the plain while-it-is-quiet notes and the NRT toggle row arrive below on the stagger. Changing a time drags either handle with a selection haptic per 15 minutes.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -31,7 +31,7 @@
 .ticks { position: absolute; inset: 0; color: var(--muted); }
 .times .t-foot { display: flex; align-items: center; gap: 6px; }
 .times .t-foot svg { width: 15px; height: 15px; }
-.times { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 42px; }
+.times { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 52px; }
 .times .card { padding: 14px 16px; display: grid; gap: 4px; }
 .times .num { font-size: 26px; line-height: 1.05; }
 
@@ -51,7 +51,7 @@
     <div class="rot" id="ring"></div>
     <span class="hand" style="left:67.0px;top:26.7px;--d:150ms" data-pop aria-label="Starts 10 PM"><span data-ic="moon" data-s="23"></span></span>
     <span class="hand" style="left:228.3px;top:150.5px" data-fade aria-label="Ends 7 AM"><span data-ic="sun" data-s="23"></span></span>
-    <div class="ctr"><span data-ic="moon" data-s="22"></span><span class="num" data-count="9">9</span><span class="t-foot muted">quiet hours</span></div>
+    <div class="ctr"><span class="num" data-count="9">9</span><span class="t-foot muted">quiet hours</span></div>
     <span class="hr t" style="left:122px;top:-14px">12 AM</span><span class="hr r" style="left:258px;top:122px">6 AM</span><span class="hr b" style="left:122px;top:258px">12 PM</span><span class="hr l" style="left:-14px;top:122px">6 PM</span>
   </div>
   <div class="times" data-a style="--i:3">

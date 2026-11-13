@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>035 Lesson audio</title>
-<meta name="motion" content="Art fades up (light: a warm paper-cut dawn with flat paper clouds, the sun low behind Xero, rising between two lifted hill layers) and Xero settles onto his hill in his headphones (900ms), then bobs gently while audio plays; three thin cream sound arcs each side pulse outward (2.4s loop, 220ms apart) for as long as he is reading. The centred title and line arrive, then the scrubber draws from 0:00 to 1:12 over 1.2s with the elapsed time ticking in step, the knob pops on arrival, and the play button bumps into its pause state. The 1x, Transcript and Timer pills arrive together as one row (same icon+label pill): 1x cycles 1x, 1.25x, 1.5x with a selection haptic, Transcript rotates its chevron (250ms) and opens the transcript below (500ms), Timer opens the sleep timer options. The live caption under them shows the line Xero is reading now: three small coral level bars pulse (900ms alternate) and each new spoken line cross-fades in (300ms out, 300ms in). Done listening arrives last (600ms) as a warm coral-outlined button (not yet, not disabled) and stays outlined until 80% has played (2:24 of 3:00), when it cross-fades into the solid primary button (300ms, light haptic), as on the session players.">
+<meta name="motion" content="Art fades up (light: a warm paper-cut dawn with flat paper clouds, the sun low behind Xero, rising between two lifted hill layers) and Xero settles onto his hill in his headphones (900ms), then bobs gently while audio plays; three thin cream sound arcs each side pulse outward (2.4s loop, 220ms apart) for as long as he is reading. The centred title and line arrive, then the scrubber draws from 0:00 to 1:12 over 1.2s with the elapsed time ticking in step, the knob pops on arrival, and the play button bumps into its pause state. The 1x, Transcript and Timer pills arrive together as one row (same icon+label pill): 1x cycles 1x, 1.25x, 1.5x with a selection haptic, Transcript rotates its chevron (250ms) and opens the transcript below (500ms), Timer opens the sleep timer options. The live caption under them shows the line Xero is reading now: three small coral level bars pulse (900ms alternate) and each new spoken line cross-fades in (300ms out, 300ms in). Done listening arrives last (600ms) as an outlined button and stays outlined until 80% has played (2:24 of 3:00), when it cross-fades into the solid primary button (300ms, light haptic), as on the session players.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -14,8 +14,8 @@
   .times { display: flex; justify-content: space-between; margin-top: 6px; color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; }
   .controls { margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 30px; }
   .skip { width: 52px; height: 52px; border-radius: 99px; display: grid; place-items: center; color: var(--fg); position: relative; }
-  .skip svg { width: 28px; height: 28px; }
-  .skip b { position: absolute; font: 800 12px/1 var(--body); letter-spacing: -.4px; top: 20.5px; left: 0; right: 0; text-align: center; }
+  .skip svg { width: 36px; height: 36px; }
+  .skip b { position: absolute; font: 800 13px/1 var(--body); top: 19.5px; left: 0; right: 0; text-align: center; }
   .play-btn { width: 76px; height: 76px; border-radius: 99px; background: var(--btn); color: var(--btn-fg); display: grid; place-items: center; box-shadow: 0 5px 0 rgba(0,0,0,.18); }
   .play-btn svg { width: 30px; height: 30px; }
   /* 1x, transcript and the sleep timer share one icon+label pill */
@@ -33,7 +33,7 @@
   @keyframes eq { to { transform: scaleY(.35); } }
   .still .live .eq i { animation: none !important; }
   .live p { white-space: nowrap; color: var(--fg); }
-  .dock .btn.ghost { box-shadow: inset 0 0 0 2px var(--mark); color: var(--fg); }
+  .dock .btn.ghost { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--fg) 52%, transparent); }
   .fore .arcs path { fill: none; stroke: #FFF8EE; stroke-width: 2; stroke-linecap: round; }
   .play .fore .arcs path { animation: arc 2.4s ease-in-out infinite; animation-delay: var(--ad); }
   @keyframes arc { 0%, 100% { opacity: var(--o); } 30% { opacity: calc(var(--o) * .35); } }
@@ -43,6 +43,8 @@
 <div class="screen" data-ground="reading">
   <div class="nav">
     <button class="icon-btn" aria-label="Close" data-ic="close"></button>
+    <div class="grow title">Listening</div>
+    <span style="width:44px"></span>
   </div>
   <div class="scroll" style="padding-top:104px">
     <div class="pad">
@@ -57,16 +59,16 @@
       </div>
       <div class="scrub" data-a style="--i:3">
         <svg viewBox="0 0 346 24" aria-label="1 minute 12 seconds of 3 minutes">
-          <line x1="3" y1="12" x2="343" y2="12" stroke="var(--track)" stroke-width="6" stroke-linecap="round"/>
-          <path class="draw" d="M3 12H140" stroke="var(--fg)" stroke-width="6" stroke-linecap="round" style="--len:137;--d:300ms;--dur:1200ms"/>
+          <line x1="6" y1="12" x2="340" y2="12" stroke="var(--track)" stroke-width="6" stroke-linecap="round"/>
+          <path class="draw" d="M6 12H140" stroke="var(--fg)" stroke-width="6" stroke-linecap="round" style="--len:134;--d:300ms;--dur:1200ms"/>
           <circle cx="140" cy="12" r="9" fill="var(--fg)" data-pop style="transform-origin:140px 12px;--d:1400ms"/>
         </svg>
         <div class="times t-cap"><span id="el">1:12</span><span>3:00</span></div>
       </div>
       <div class="controls" data-a style="--i:4">
-        <button class="skip" aria-label="Back 15 seconds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" style="overflow:visible"><path d="M3 12a9 9 0 109-9H9.5"/><path d="M12 .2L9.2 3l2.8 2.8"/></svg><b>15</b></button>
+        <button class="skip" aria-label="Back 15 seconds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12a7 7 0 107-7H8"/><path d="M10.5 2.5L8 5l2.5 2.5"/></svg><b>15</b></button>
         <button class="play-btn bump" style="--d:1500ms" aria-label="Pause" data-ic="pause"></button>
-        <button class="skip" aria-label="Forward 15 seconds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" style="overflow:visible"><path d="M21 12a9 9 0 11-9-9h2.5"/><path d="M12 .2L14.8 3 12 5.8"/></svg><b>15</b></button>
+        <button class="skip" aria-label="Forward 15 seconds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12a7 7 0 11-7-7h4"/><path d="M13.5 2.5L16 5l-2.5 2.5"/></svg><b>15</b></button>
       </div>
       <div class="pills" data-a style="--i:5">
         <button class="pill" aria-label="Playback speed 1x"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16.5a8 8 0 1116 0"/><path d="M12 16.5l4-4.5"/></svg></span>1x</button>

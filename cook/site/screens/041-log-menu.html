@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>041 Log sheet</title>
-<meta name="motion" content="Today (the dawn hero with Xero) softens behind the sheet: a soft 3px blur under one uniform scrim (a warm coral veil at 16% in light, a light navy veil at 20% in dark, no desaturation, so Xero keeps his colour) while its type fades out completely (250ms), so nothing ghosts above the sheet edge, as the sheet slides up from the bottom (450ms settle curve, light haptic as it lands). The craving row arrives first with a larger Jelli in place of an icon, then the Used nicotine? section header (the craving form's header style) and the quieter Puff and Cigarette group, each with a small paper-cut object in place of an icon (90ms stagger), then the slip note, which sits well clear of the home indicator. All three rows end in the same 44pt borderless tonal + button; tapping one bumps it and pushes the matching form.">
+<meta name="motion" content="Today (the dawn hero with Xero) softens behind the sheet: a soft 3px blur under one uniform scrim (a warm coral veil at 16% in light, navy at 40% in dark, no desaturation, so Xero keeps his colour) while its type fades back to 30% and is masked out to nothing before the sheet edge (250ms), as the sheet slides up from the bottom (450ms settle curve, light haptic as it lands). The craving row arrives first with a larger Jelli in place of an icon, then the Used nicotine? section header (the craving form's header style) and the quieter Puff and Cigarette group, each with a small paper-cut object in place of an icon (90ms stagger), then the slip note, which sits well clear of the home indicator. All three rows end in the same 44pt tonal + button; tapping one bumps it and pushes the matching form.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -21,12 +21,11 @@
   /* the veil: a soft blur under one uniform navy scrim (no desaturation), so Xero keeps his colour behind the sheet */
   .scrim { animation: none; background: rgba(150,58,34,.16); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
   .sheet { box-shadow: 0 -10px 30px rgba(74,40,16,.12); }
-  [data-theme="dark"] .scrim { background: rgba(6,9,18,.2); }
+  [data-theme="dark"] .scrim { background: rgba(6,9,18,.4); }
   /* Today's type steps back behind the sheet in both modes */
-  /* Today's type fades out completely behind the veil, so no ghost text sits above the sheet edge */
-  .today .content { opacity: 0; }
+  .today .content { opacity: .3; -webkit-mask-image: linear-gradient(to bottom, #000 0, transparent 64px); mask-image: linear-gradient(to bottom, #000 0, transparent 64px); }
   .play .today .content { animation: dim-type 250ms var(--ease) both; }
-  @keyframes dim-type { from { opacity: 1; } to { opacity: 0; } }
+  @keyframes dim-type { from { opacity: 1; } to { opacity: .3; } }
   .jelli-ic { width: 58px; height: 58px; flex: none; display: grid; place-items: center; margin: -4px 0 -4px -4px; }
   /* dark: the sheet is a lifted surface with a hairline top edge so it separates from the night behind it */
   [data-theme="dark"] .sheet { background: #172036; box-shadow: inset 0 1px 0 rgba(255,255,255,.16), 0 -12px 32px rgba(0,0,0,.45); }
@@ -43,12 +42,12 @@
   .list.minor { background: transparent; box-shadow: inset 0 0 0 1px var(--line); }
   .list.minor > .row { min-height: 56px; padding-block: 6px; gap: 12px; }
   /* Puff and Cigarette: small paper-cut objects in a quiet tone, the way Jelli stands in for an icon on the craving row */
-  .list.minor .pc { width: 32px; height: 32px; flex: none; display: grid; place-items: center; }
-  .list.minor .pc svg { width: 32px; height: 32px; display: block; overflow: visible; }
+  .list.minor .pc { width: 34px; height: 34px; flex: none; display: grid; place-items: center; }
+  .list.minor .pc svg { width: 34px; height: 34px; display: block; overflow: visible; }
   .list.minor .nm { font: 600 16px/1.2 var(--body); margin: 0 0 2px; }
   .list.minor .t-cap { color: var(--muted); font-weight: 500; }
   .add { width: 44px; height: 44px; border-radius: 99px; display: grid; place-items: center; flex: none; color: var(--fg);
-    background: color-mix(in srgb, var(--fg) 9%, transparent); box-shadow: none; }
+    background: color-mix(in srgb, var(--fg) 8%, transparent); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--fg) 18%, transparent); }
   .add svg { width: 20px; height: 20px; }
   .sofar { margin-top: 14px; padding: 14px 16px; }
   .sofar .h { display: flex; justify-content: space-between; align-items: baseline; }

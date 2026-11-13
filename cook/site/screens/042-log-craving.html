@@ -1,13 +1,13 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>042 Log a craving</title>
-<meta name="motion" content="Jelli settles in beside the title (900ms) and stays calm. Sections arrive with a 90ms stagger; the strength fill (Jelli's pink) slides to 5 (700ms settle) along its ten step ticks and the apricot-ringed knob lands on the fifth with a light haptic (a selection tick haptic per step when dragged). Under the scale, the SOS path (a quiet sea-tinted container holding a small ocean wave disc, lighter blue in dark, Too strong? Ride it out with SOS, and a chevron) arrives with the strength section and pushes SOS when tapped. The mood row uses four little moons (36pt) with the evening check-in's expressions (craters, a crescent shadow; navy Rough with tired lids (a light rim in dark), cream Okay with a darker outline, pale apricot Good, apricot Proud); a chosen mood shows only the kit chip selection. The note field is a taller multi-line field. Save rests until tapped: it presses, turns into its done state with a tick (success haptic) and the label becomes 'Saved · 4 today' with the 4 bumping (no toast); after 1.2s the form closes.">
+<meta name="motion" content="Jelli settles in beside the title (900ms) and stays calm. Sections arrive with a 90ms stagger; the strength fill (Jelli's pink) slides to 5 (700ms settle) along its ten step ticks and the apricot-ringed knob lands on the fifth with a light haptic (a selection tick haptic per step when dragged). Under the scale, the SOS path (a small ocean wave disc, Too strong? Ride it out with SOS, and a chevron) arrives with the strength section and pushes SOS when tapped. The mood row uses four little moons (about 30pt) with the evening check-in's expressions (craters, a crescent shadow; navy Rough with tired lids, cream Okay with a darker outline, pale apricot Good, apricot Proud); a chosen mood shows only the kit chip selection. The note field is a taller multi-line field. Save rests until tapped: it presses, turns into its done state with a tick (success haptic) and the label becomes 'Saved · 4 today' with the 4 bumping (no toast); after 1.2s the form closes.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   .hdr { display: flex; align-items: center; gap: 12px; margin-top: 2px; }
   .hdr .jl { width: 64px; height: 64px; flex: none; }
   .hdr .tt { display: grid; gap: 2px; }
-  .sec { margin-top: 20px; }
+  .sec { margin-top: 24px; }
   .sec.first { margin-top: 18px; }
   .note { display: flex; align-items: center; gap: 10px; }
   .note svg { width: 18px; height: 18px; flex: none; }
@@ -28,25 +28,21 @@
   .chips .chip { min-height: 42px; padding: 0 15px; font-size: 15px; }
   .chips.trig { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; }
   .chips.trig .chip { justify-content: center; padding: 0 8px; min-height: 46px; }
-  .sosl { margin-top: 12px; color: var(--muted); display: flex; }
-  /* the SOS path sits in a quiet container: a faint sea tint with a hairline */
-  .sosl a { flex: 1; display: flex; align-items: center; gap: 8px; min-height: 46px; padding: 0 12px 0 10px; border-radius: 16px; color: var(--fg); text-decoration: none; white-space: nowrap;
-    background: color-mix(in srgb, #3A68C8 7%, var(--card)); box-shadow: inset 0 0 0 1px color-mix(in srgb, #3A68C8 14%, var(--line)); }
-  [data-theme="dark"] .sosl a { background: color-mix(in srgb, #3A68C8 14%, var(--card)); box-shadow: inset 0 0 0 1px color-mix(in srgb, #6E8FE0 26%, transparent); }
+  .sosl { margin-top: 10px; color: var(--muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .sosl a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin: -6px 0; color: var(--fg); text-decoration: none; white-space: nowrap; }
   .sosl a .lead { color: var(--muted); font-weight: 500; }
   .sosl a b { font-weight: 700; }
   .sosl a .wv { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 99px; background: #1F3C8C; color: #FFF8EE; }
   .sosl a .wv svg { width: 16px; height: 16px; }
-  [data-theme="dark"] .sosl a .wv { background: #3F6FD6; }
-  .sosl a .cv { display: inline-flex; color: var(--muted); margin-left: auto; }
+  .sosl a .cv { display: inline-flex; color: var(--muted); }
   .sosl a .cv svg { width: 16px; height: 16px; }
   /* the note field is a card field with a hairline, not a beige well */
-  .field.note { background: var(--card); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fg) 16%, transparent); align-items: flex-start; min-height: 72px; }
+  .field.note { background: var(--card); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fg) 16%, transparent); align-items: flex-start; min-height: 80px; }
   .field.note svg { margin-top: 3px; }
   /* the same little moons as the evening check-in (054) */
   .faces { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 8px; }
   .chip.face { height: 80px; flex-direction: column; justify-content: center; gap: 7px; padding: 0; font-size: 15px; border-radius: 20px; }
-  .chip.face svg { width: 36px; height: 36px; }
+  .chip.face svg { width: 35px; height: 35px; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -104,8 +100,6 @@
     <path d="M24 4 A21 21 0 0 1 24 46 A13 21 0 0 0 24 4Z" fill="${f.sh}" opacity=".5"/>
     <g fill="${f.cr}"><circle cx="13" cy="13.5" r="2.6"/><circle cx="34.5" cy="12" r="1.9"/><circle cx="37" cy="37.5" r="2.3"/><circle cx="9.5" cy="34" r="1.4"/></g>
     <path d="M8 18a17 17 0 0 1 10-11" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="2.4" stroke-linecap="round"/>${f.d}</svg>`;
-  /* dark: Rough's navy moon gets a light cream rim so it stands off the navy chip */
-  if (DX.theme === 'dark') F.Rough.ol = 'rgba(246,239,226,.6)';
   document.getElementById('faces').innerHTML = Object.keys(F).map((n, i) => `<button class="chip face ${i === 1 ? 'on' : ''}">${moon(F[n])}${n}</button>`).join('');
   document.getElementById('jl').innerHTML = DX.char('jelli', { mood: 'calm', size: 64 });
   document.getElementById('ticks').innerHTML = Array.from({ length: 10 }, (_, i) => `<i style="left:${(i / 9 * 100).toFixed(2)}%"></i>`).join('');

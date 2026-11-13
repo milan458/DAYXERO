@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>065 What you use</title>
-<meta name="motion" content="The spend hero arrives first and counts up ($7 a day, $2,555 a year); the product checkboxes and the usual-day rows follow on the stagger. Checking or unchecking a product ticks its box (250ms) and shows or hides that product's rows (300ms settle). Each stepper tap nudges its number with a small bump and a selection haptic; tapping a price field opens the decimal keypad with the field outlined. The hero recounts live after every change.">
+<meta name="motion" content="The spend hero arrives first and counts up ($2,555 a year big, with $7 a day as a quiet note on its label line); the product checkboxes and the usual-day groups (one per product, each headed by its small product icon) follow on the stagger. Checking or unchecking a product ticks its box (250ms) and shows or hides that product's group (300ms settle). Each stepper tap nudges its number with a small bump and a selection haptic; tapping a price field opens the decimal keypad with the field outlined. The hero recounts live after every change.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -18,10 +18,16 @@
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
 .hero { margin-top: 16px; padding: 14px 18px 16px; display: grid; gap: 4px; }
-.hero .big { display: flex; align-items: baseline; gap: 6px; white-space: nowrap; }
-.hero .num { font-size: 32px; line-height: 1.05; }
+/* The year leads (big); the day figure is demoted to a quiet note on the label line. */
+.hero .lbl { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.hero .lbl .day { color: var(--muted); font-weight: 600; white-space: nowrap; }
+.hero .big { display: flex; align-items: baseline; gap: 8px; white-space: nowrap; }
+.hero .big .num { font-size: 40px; line-height: 1.05; letter-spacing: -1px; }
 .hero .t-head { font-weight: 700; }
-.hero .sep { color: var(--muted); margin: 0 4px; font: 700 19px/1 var(--display); }
+/* Usual day, grouped by product: a small product icon and name head each group. */
+.psec { display: flex; align-items: center; gap: 8px; }
+.psec svg { width: 18px; height: 18px; color: var(--fg); opacity: .75; }
+.psec + .list { margin-top: 0; }
 .grp { background: var(--card); border-radius: var(--r-card); box-shadow: inset 0 0 0 1px var(--line); overflow: hidden; }
 .grp .opt { border-radius: 0; background: transparent; box-shadow: none; min-height: 56px; padding: 8px 16px 8px 12px; }
 .grp .opt + .opt { border-top: 1px solid var(--line); }
@@ -45,8 +51,8 @@ html .screen .grp .opt.on { box-shadow: none; background: var(--sel-tint); }
 <div class="scroll"><div class="pad">
   <div class="hd"><h1 class="t-large" data-a style="--i:0">What you use</h1><p class="t-foot muted" data-a style="--i:1">This sets money kept and your counters.</p></div>
   <div class="card hero" data-a style="--i:2">
-    <span class="t-foot muted">Every day free keeps</span>
-    <div class="big"><span class="num" data-count="7" data-prefix="$">$7</span><span class="t-head">a day</span><span class="sep">&middot;</span><span class="num" data-count="2555" data-prefix="$">$2,555</span><span class="t-head">a year</span></div>
+    <div class="lbl"><span class="t-foot muted">Being free keeps</span><span class="t-foot day"><span data-count="7" data-prefix="$">$7</span> a day</span></div>
+    <div class="big"><span class="num" data-count="2555" data-prefix="$">$2,555</span><span class="t-head">a year</span></div>
   </div>
   <p class="t-foot muted sec" data-a style="--i:3">You use</p>
   <div class="grp" data-a style="--i:4" role="group" aria-label="You use, choose any">
@@ -54,12 +60,15 @@ html .screen .grp .opt.on { box-shadow: none; background: var(--sel-tint); }
     <button class="opt on" role="checkbox" aria-checked="true"><span class="ico-tile" data-ic="vape"></span><div class="grow"><div class="t-body rt">Vape</div></div><span class="radio box"></span></button>
     <button class="opt" role="checkbox" aria-checked="false"><span class="ico-tile" data-ic="pouch"></span><div class="grow"><div class="t-body rt">Nicotine pouches</div></div><span class="radio box"></span></button>
   </div>
-  <p class="t-foot muted sec" data-a style="--i:5">Your usual day</p>
-  <div class="list" data-a style="--i:6">
-    <div class="row"><div class="grow"><div class="t-body rt">Cigarettes a day</div></div><div class="step"><button aria-label="Less" data-ic="minus" data-s="16" data-w="2.6"></button><span class="num">12</span><button aria-label="More" data-ic="plus" data-s="16" data-w="2.6"></button></div></div>
+  <p class="t-foot muted sec psec" data-a style="--i:5"><span data-ic="cig" data-s="18"></span>Cigarettes on a usual day</p>
+  <div class="list" data-a style="--i:6" aria-label="Cigarettes">
+    <div class="row"><div class="grow"><div class="t-body rt">A day</div></div><div class="step"><button aria-label="Less" data-ic="minus" data-s="16" data-w="2.6"></button><span class="num">12</span><button aria-label="More" data-ic="plus" data-s="16" data-w="2.6"></button></div></div>
     <div class="row"><div class="grow"><div class="t-body rt">Price of a pack of 20</div></div><button class="pf" aria-label="Pack price, 8 dollars, tap to type">$8.00</button></div>
-    <div class="row"><div class="grow"><div class="t-body rt">Vape puffs a day</div></div><div class="step"><button aria-label="Less" data-ic="minus" data-s="16" data-w="2.6"></button><span class="num">200</span><button aria-label="More" data-ic="plus" data-s="16" data-w="2.6"></button></div></div>
-    <div class="row"><div class="grow"><div class="t-body rt">Vape spend a day</div></div><button class="pf" aria-label="Vape spend, 2 dollars 20, tap to type">$2.20</button></div>
+  </div>
+  <p class="t-foot muted sec psec" data-a style="--i:7"><span data-ic="vape" data-s="18"></span>Vape on a usual day</p>
+  <div class="list" data-a style="--i:8" aria-label="Vape">
+    <div class="row"><div class="grow"><div class="t-body rt">Puffs a day</div></div><div class="step"><button aria-label="Less" data-ic="minus" data-s="16" data-w="2.6"></button><span class="num">200</span><button aria-label="More" data-ic="plus" data-s="16" data-w="2.6"></button></div></div>
+    <div class="row"><div class="grow"><div class="t-body rt">Spend a day</div></div><button class="pf" aria-label="Vape spend, 2 dollars 20, tap to type">$2.20</button></div>
   </div>
 </div></div>
 </div>
