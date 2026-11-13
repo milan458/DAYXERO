@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>008 Onboarding obstacles</title>
-<meta name="motion" content="Progress eases from 5/11 to 6/11 (900ms settle). Question, the chips (006's pattern: rows of three, three and two, each chip growing from its natural width so every row fills the width) and the what-each-adds list (Irritability, 1-minute reset) arrive (600ms, 90ms stagger). At 900ms Social situations takes the kit selection with a 520ms spring bump and a light selection haptic; the count bumps from 1 picked to 2 picked and a second row (Social situations, What to say) settles in under the first (700ms settle). The horizon strip above the dock settles up in three paper layers (0, 120, 240ms; 40px, 900ms settle) and Xero (96px, on the right thirds line) settles onto the hill last (from 420ms), then waves: his right arm swings 16 degrees twice (2 x 800ms, from 1300ms) beside two large motion marks.">
+<meta name="motion" content="Progress eases from 5/11 to 6/11 (900ms settle). Question, the chips (006's pattern: natural widths, balanced rows of three, three and two) and the what-each-adds list (Irritability, 1-minute reset) arrive (600ms, 90ms stagger). At 900ms Social situations takes the kit selection with a 520ms spring bump and a light selection haptic; the count bumps from 1 picked to 2 picked and a second row (Social situations, What to say) settles in under the first (700ms settle).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -8,12 +8,10 @@
   .nav { padding-right: 26px; }
   /* Obstacles only (what gets in the way). Cravings and stress were asked on 006, so they are not here.
      Same chip pattern as 006: natural widths (12px side padding), hand-balanced rows (3, 3, 2). */
-  .answers { gap: 12px !important; padding-top: 18px !important; }
-  .flow { display: grid; gap: 8px; }
+  .answers { gap: 16px !important; padding-top: 24px !important; }
+  .flow { display: grid; gap: 10px; }
   .flow .r { display: flex; gap: 8px; }
   .flow .chip { flex: none; min-height: 48px; padding: 0 12px; white-space: nowrap; }
-  /* Round 11: each row fills the width evenly (chips grow from their natural widths, labels centred). Selection stays the kit's. */
-  .flow .chip { flex: 1 1 auto; justify-content: center; }
   /* What each pick unlocks: one row per pick, the obstacle on the left, the tool it adds on the right. */
   .gets { display: grid; gap: 10px; margin-top: 6px; }
   .gets .hd { display: flex; justify-content: space-between; align-items: baseline; color: var(--muted); }
@@ -29,24 +27,6 @@
   .gets .row.new { display: none; }
   .gets.two .row.new { display: flex; }
   .play .gets.two .row.new { animation: dx-settle 700ms var(--settle) both; }
-  /* Round 10: the onboarding horizon strip (003 to 011, one element). Three flat paper hills in the launch style, soft paper
-     shadows and no crest lines, sitting just above the dock and running full-bleed behind it; the screen's character stands on the
-     crest. Light: cream and peach paper. Dark: the kit's night-meadow hills, kept quiet. */
-  .screen { --hz-1: #FFD3A6; --hz-2: #FFE6CA; --hz-3: #F9B386; --hz-lift: rgba(120,44,20,.16); }
-  [data-theme="dark"] .screen { --hz-1: #16233F; --hz-2: #0F1A31; --hz-3: #0A1326; --hz-lift: rgba(0,0,0,.55); }
-  .hz { position: absolute; z-index: 1; left: 0; top: calc(var(--hz-b, 752px) - 134px); width: 390px; height: 300px; pointer-events: none; }
-  .hz .l { position: absolute; left: 0; top: 0; display: block; }
-  .hz .l1 { filter: drop-shadow(0 -3px 8px var(--hz-lift)); }
-  .hz .l2 { filter: drop-shadow(0 -4px 10px var(--hz-lift)); }
-  .hz .l3 { filter: drop-shadow(0 -5px 12px var(--hz-lift)); }
-  .hz .who { position: absolute; }
-  .play .hz .l { animation: hz-up 900ms var(--settle) both; }
-  .play .hz .l2 { animation-delay: 120ms; }
-  .play .hz .l3 { animation-delay: 240ms; }
-  @keyframes hz-up { from { transform: translateY(40px); } to { transform: none; } }
-  .dock { background: none; }
-  .screen { --hz-b: 712px; }
-  .dock { padding-bottom: 24px; }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
@@ -74,50 +54,14 @@
     </div>
   </div>
 
-  <div class="hz" id="hz" aria-hidden="true"></div>
-
   <div class="dock">
     <button class="btn" data-a style="--i:4">Continue</button>
     <a class="link" data-a style="--i:5">Skip for now</a>
   </div>
 </div>
 <script>
-  /* Round 11: the horizon strip. Strip y 134 is the top of the button. The character stands on the middle hill's crest at its own
-     x (a thirds line, 130 or 260), measured from the hill path, at 90-110px. */
-  const HZ = { back: 'M0 82 C50 74 100 72 150 77 C198 82 234 78 268 66 C306 53 350 47 390 53 L390 300 L0 300 Z',
-    mid: 'M0 108 C46 100 96 106 140 114 C180 121 214 114 250 104 C282 95 312 91 342 94 C362 96 378 100 390 104 L390 300 L0 300 Z',
-    front: 'M0 128 C58 120 118 124 178 134 C236 143 300 136 350 124 C368 120 380 119 390 120 L390 300 L0 300 Z' };
-  function crestY(x, d = HZ.mid) {
-    const NS = 'http://www.w3.org/2000/svg', sv = document.createElementNS(NS, 'svg'), p = document.createElementNS(NS, 'path');
-    sv.setAttribute('style', 'position:absolute;width:0;height:0'); p.setAttribute('d', d.split(' L390 300')[0]); sv.appendChild(p); document.body.appendChild(sv);
-    let lo = 0, hi = p.getTotalLength(); for (let i = 0; i < 28; i++) { const m = (lo + hi) / 2; if (p.getPointAtLength(m).x < x) lo = m; else hi = m; }
-    const y = p.getPointAtLength(lo).y; sv.remove(); return y;
-  }
-  function horizon(o) {
-    const l = (i, d, extra = '') => `<svg class="l l${i}" width="390" height="300" viewBox="0 0 390 300"><path d="${d}" fill="var(--hz-${i})"/>${extra}</svg>`;
-    const s = o.size || 100, x = o.x ?? 260, y = o.y ?? crestY(x) + (o.sink || 0);
-    return l(1, HZ.back) + l(2, HZ.mid, o.pond || '') + `<div class="who" data-settle style="--d:420ms;left:${x - s / 2}px;top:${(o.top ?? (y - .965 * s)).toFixed(1)}px;width:${s}px;height:${s}px${o.clip ? `;overflow:hidden;height:${o.clip}px` : ''}"><div id="${o.id || 'hzc'}">${o.art}</div></div>` + (o.over || '') + l(3, HZ.front);
-  }
-  /* Round 11: in dark scenes Xero's belly window shows dusk (a navy sky, a warm glow on the line, a low sun on the hill, two stars).
-     A screen-local recolour of the kit art. */
-  function dusk(svg) {
-    if (DX.theme !== 'dark') return svg;
-    return svg.replace('fill="#BFD7FF"></ellipse>', 'fill="#2D3E78"></ellipse>')
-      .replace(/<circle cx="100" cy="[\d.]+" r="11" fill="#FFC93C">[\s\S]*?<\/circle>/, '<rect x="76" y="128" width="48" height="34" fill="#F0A070" opacity=".14"></rect><rect x="76" y="140" width="48" height="22" fill="#F0A070" opacity=".2"></rect><circle cx="91" cy="122" r="1.6" fill="#FFF3DC"></circle><circle cx="108" cy="115" r="1.2" fill="#FFF3DC" opacity=".8"></circle><circle cx="101" cy="154" r="9.5" fill="#FFB65E"></circle>')
-      .replace('fill="#3FB37F"></path>', 'fill="#18234A"></path>');
-  }
-  /* Round 11: Xero's poses on the strip. armL/armR replace the kit arms (drawn behind the body); hold is drawn in front of him. */
-  function xero(mood, size, o = {}) {
-    let s = DX.char('xero', { mood, size }).replace('style="display: block"', 'style="display: block; overflow: visible"');
-    if (o.armL != null) s = s.replace(/<path d="M36 124 C26 132 22 142 24 152"[^>]*><\/path>/, o.armL);
-    if (o.armR != null) s = s.replace(/<path d="M164 124 C174 132 178 142 176 152"[^>]*><\/path>/, o.armR);
-    if (o.feet != null) s = s.replace(/<ellipse cx="84" cy="188"[^>]*><\/ellipse>\s*<ellipse cx="116" cy="188"[^>]*><\/ellipse>/, o.feet);
-    if (o.hold) s = s.replace(/<\/svg>\s*$/, o.hold + '</svg>');
-    return dusk(s);
-  }
-  const arm = (d, extra = '') => `<path d="${d}" fill="none" stroke="#FF7155" stroke-width="12" stroke-linecap="round">${extra}</path>`;
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
-  /* Paper-cut tool spots (round 10: flat, no highlight strokes): flat cut pieces, a crescent side shade, a soft paper shadow.
+  /* Paper-cut tool spots (round 8), the characters' idiom: flat cut pieces, a crescent side shade, one highlight, a soft paper shadow.
      A sun-timer for the reset, two overlapping speech bubbles for what to say. */
   const sh = DX.theme === 'dark' ? 'rgba(0,0,0,.55)' : 'rgba(120,52,24,.24)';
   const pf = id => `<defs><filter id="${id}" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="1.5" stdDeviation="1" flood-color="${sh}"/></filter></defs>`;
@@ -126,23 +70,17 @@
       <g filter="url(#t1)"><rect x="12.5" y="2" width="7" height="4.4" rx="1.8" fill="#FF7155"/><rect x="16.4" y="2" width="3.1" height="4.4" rx="1.4" fill="#E85A3E"/></g>
       <g filter="url(#t1)"><circle cx="16" cy="18.5" r="11.8" fill="#FFF8EE"/><path d="M22.5 8.6 A11.8 11.8 0 0 1 16 30.3 A13 13 0 0 0 22.5 8.6 Z" fill="#EFE1CF"/></g>
       <path d="M16 18.5 V9.4 A9.1 9.1 0 0 1 24.9 16.6 Z" fill="#FFC93C" filter="url(#t1)"/>
+      <path d="M7.6 15 C8.4 12.6 10 10.8 12.2 9.8" fill="none" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round"/>
       <circle cx="16" cy="18.5" r="2.1" fill="#1E1A3A"/></svg>`,
     talk: `<svg viewBox="0 0 32 32" aria-hidden="true">${pf('t2')}
       <g filter="url(#t2)"><path d="M6 5 h14 a4.5 4.5 0 0 1 4.5 4.5 v6 a4.5 4.5 0 0 1 -4.5 4.5 h-8 l-5 4 v-4 h-1 a4.5 4.5 0 0 1 -4.5 -4.5 v-6 a4.5 4.5 0 0 1 4.5 -4.5 z" fill="#FF7155"/>
-        <path d="M20.5 5.2 a4.5 4.5 0 0 1 4 4.3 v6 a4.5 4.5 0 0 1 -4.5 4.5 h-2 c2.4 -.6 3.6 -2.4 3.6 -4.6 v-6 c0 -1.8 -.4 -3.2 -1.1 -4.2 z" fill="#E85A3E"/></g>
+        <path d="M20.5 5.2 a4.5 4.5 0 0 1 4 4.3 v6 a4.5 4.5 0 0 1 -4.5 4.5 h-2 c2.4 -.6 3.6 -2.4 3.6 -4.6 v-6 c0 -1.8 -.4 -3.2 -1.1 -4.2 z" fill="#E85A3E"/>
+        <path d="M4.6 12 C4.8 9.6 5.8 8.2 7.6 7.6" fill="none" stroke="#FFB09C" stroke-width="1.6" stroke-linecap="round"/></g>
       <g filter="url(#t2)"><path d="M16.5 13 h10 a3.6 3.6 0 0 1 3.6 3.6 v5 a3.6 3.6 0 0 1 -3.6 3.6 h-.8 v3.8 l-4.6 -3.8 h-4.6 a3.6 3.6 0 0 1 -3.6 -3.6 v-5 a3.6 3.6 0 0 1 3.6 -3.6 z" fill="#FFF8EE"/>
         <path d="M13 21.6 c.4 2 1.8 3.4 3.8 3.6 h4.4 l1.2 1 h-5.9 a3.6 3.6 0 0 1 -3.5 -3.6 z" fill="#EFE1CF"/></g>
       <g fill="#FF7155"><circle cx="18.4" cy="19.2" r="1.35"/><circle cx="21.6" cy="19.2" r="1.35"/><circle cx="24.8" cy="19.2" r="1.35"/></g></svg>`
   };
   document.querySelectorAll('[data-art]').forEach(e => e.innerHTML = ART[e.dataset.art]);
-  /* Xero waving on the strip (002's wave: right arm raised, swinging twice, two small motion marks). */
-  const ink = DX.theme === 'dark' ? '#F3E9DE' : '#24163A';
-  const swing = DX.still ? '' : '<animateTransform attributeName="transform" type="rotate" values="0 162 112;-16 162 112;0 162 112;-16 162 112;0 162 112" keyTimes="0;.25;.5;.75;1" dur="1.6s" begin="1.3s" fill="freeze"/>';
-  /* Round 11: Xero (96px, right thirds line, a little down the hill face so he clears the list) waves; the motion marks are larger
-     and clearer (two long arcs off the hand, full ink at 80%). */
-  const wave = `<path d="M162 112 C172 98 178 86 176 74" fill="none" stroke="#FF7155" stroke-width="12" stroke-linecap="round">${swing}</path>`;
-  const marks = `<g fill="none" stroke="${ink}" stroke-width="5" stroke-linecap="round" opacity=".8"><path d="M190 60 q10 9 8 22"/><path d="M201 44 q15 14 10 34"/></g>`;
-  document.getElementById('hz').innerHTML = horizon({ x: 262, size: 96, sink: 14, art: xero('hello', 96, { armR: wave, hold: marks }) });
   document.querySelectorAll('[data-arrow]').forEach(e => e.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13.5 6.5L19 12l-5.5 5.5"/></svg>');
   const bar = document.getElementById('bar'), social = document.getElementById('social'), n = document.getElementById('n'), gets = document.getElementById('gets');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '45.5%'); void bar.offsetWidth; bar.style.transition = '';

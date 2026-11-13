@@ -178,3 +178,6 @@ session 023-032, lesson-log 033-042, slips-checkin 043-055.
 State after rounds 8-10 (best kept per section, Opus / Sonnet): onboarding 8.3 / 8.7 (r10) [r8 8.6 / 8.7]; Today-SOS-Program
 8.8 / 8.8 (r8); session 8.6 / 8.8 (r10); lesson-log 8.7 / 8.8 (r8); slips-checkin 8.6 / 8.6 (r9); calm-settings 8.6 / 8.8 (r9).
 App median about 8.7. Screens at >= 9.0 by a critic: 039 (9.2), 032, 059 (9.1), 018, 019, 028, 031, 046, 053, 057, 064 (9.0).
+- Onboarding round 11: Opus 8.5 / Sonnet 8.4. Against the true best (round 8: 8.6 / 8.7) rounds 10 and 11 are lower or equal on
+  both critics, and critics now call the repeated horizon strip a template. Reverted onboarding to round 8 (001562b); r10/r11
+  files kept in scratchpad.

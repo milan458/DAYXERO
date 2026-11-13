@@ -1,19 +1,21 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>011 Plan building</title>
-<meta name="motion" content="A short build beat. Progress eases 8/11 to 9/11 while the left-aligned title arrives and the horizon strip above the dock settles up in three paper layers (0, 120, 240ms; 40px, 900ms settle), then Xero (104px, on the left thirds line, cheering with both arms up) settles onto its crest (from 420ms). Three plan pieces (Quit Day Fri, Nov 6 on a cream card, waves to watch with two calm paper swells, your reason) settle up one by one, 420ms apart (900ms settle each), each warm paper-cut icon landing with its row; a light haptic as each row lands. At 2100ms the status line swaps to 'Built from your answers' with the screen's one green check popping in (420ms), Xero bumps (520ms spring, success haptic) and the button arrives.">
+<meta name="motion" content="A short build beat. Progress eases 8/11 to 9/11 while the left-aligned title arrives and Xero (cheer, proud) settles in to its right, bobbing. Three plan pieces (Quit Day Fri, Nov 6 on a cream card, waves to watch with a paper breaking wave, your reason) settle up one by one, 420ms apart (900ms settle each), each warm paper-cut icon landing with its row; a light haptic as each row lands. At 2100ms the status line swaps to 'Built from your answers' with the screen's one green check popping in (420ms), Xero bumps (520ms spring, success haptic) and the button arrives.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   /* Onboarding header: back button and progress only (no avatar); the bar ends at the gutter so the sun knob never collides. */
   .nav { padding-right: 26px; }
-  /* Round 10: the title is left-aligned like every other step; Xero (proud) now cheers on the horizon strip above the dock. */
-  .head { padding: 118px var(--gutter) 10px; }
+  /* Round 8: the title is left-aligned like every other step, with Xero (proud) beside it; three pieces below. No pinned note. */
+  .head { padding: 112px var(--gutter) 0; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+  .head .t-large { font-size: 30px; }
+  .head .xw { margin: 0 -6px 0 0; position: relative; width: 120px; height: 120px; flex: none; }
   .status { padding: 0 var(--gutter); position: relative; height: 32px; }
   .status p { position: absolute; left: var(--gutter); right: var(--gutter); top: 4px; justify-content: flex-start; text-align: left; transition: opacity .4s var(--ease), transform .4s var(--ease); }
   .status .b { opacity: 0; transform: translateY(6px); }
   .status.done .a { opacity: 0; transform: translateY(-6px); }
   .status.done .b { opacity: 1; transform: none; }
-  .plan { margin: 24px var(--gutter) 0; display: grid; gap: 14px; }
+  .plan { margin: 34px var(--gutter) 0; display: grid; gap: 16px; }
   .pr { display: flex; align-items: center; gap: 14px; background: var(--card); border-radius: 20px; padding: 18px 16px; min-height: 102px; }
   [data-theme="dark"] .pr { box-shadow: inset 0 0 0 1px var(--line); }
   .pr .grow { flex: 1; min-width: 0; }
@@ -28,23 +30,6 @@
   .pr .ico-tile { width: 48px; height: 48px; border-radius: 14px; }
   .pr .ico-tile svg { width: 34px; height: 34px; overflow: visible; }
   .pr.reason .t-head { font: italic 500 16px/1.35 var(--body); letter-spacing: 0; text-wrap: pretty; }
-  /* Round 10: the onboarding horizon strip (003 to 011, one element). Three flat paper hills in the launch style, soft paper
-     shadows and no crest lines, sitting just above the dock and running full-bleed behind it; the screen's character stands on the
-     crest. Light: cream and peach paper. Dark: the kit's night-meadow hills, kept quiet. */
-  .screen { --hz-1: #FFD3A6; --hz-2: #FFE6CA; --hz-3: #F9B386; --hz-lift: rgba(120,44,20,.16); }
-  [data-theme="dark"] .screen { --hz-1: #16233F; --hz-2: #0F1A31; --hz-3: #0A1326; --hz-lift: rgba(0,0,0,.55); }
-  .hz { position: absolute; z-index: 1; left: 0; top: calc(var(--hz-b, 752px) - 134px); width: 390px; height: 300px; pointer-events: none; }
-  .hz .l { position: absolute; left: 0; top: 0; display: block; }
-  .hz .l1 { filter: drop-shadow(0 -3px 8px var(--hz-lift)); }
-  .hz .l2 { filter: drop-shadow(0 -4px 10px var(--hz-lift)); }
-  .hz .l3 { filter: drop-shadow(0 -5px 12px var(--hz-lift)); }
-  .hz .who { position: absolute; }
-  .play .hz .l { animation: hz-up 900ms var(--settle) both; }
-  .play .hz .l2 { animation-delay: 120ms; }
-  .play .hz .l3 { animation-delay: 240ms; }
-  @keyframes hz-up { from { transform: translateY(40px); } to { transform: none; } }
-  .dock { background: none; }
-  .screen { --hz-b: 736px; }  /* round 11: the strip rises 16px so no empty band opens above it */
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
@@ -55,6 +40,7 @@
 
   <div class="head">
     <h1 class="t-large" data-a>Your plan,<br>built around you</h1>
+    <div class="xw" data-settle style="--d:200ms"><div id="bw"><div class="bob" id="xero"></div></div></div>
   </div>
   <div class="status" id="status" data-a style="--i:1">
     <p class="t-foot muted a">Putting the pieces together</p>
@@ -63,65 +49,31 @@
 
   <div class="plan" id="plan"></div>
 
-  <div class="hz" id="hz" aria-hidden="true"></div>
-
   <div class="dock">
     <button class="btn" data-a style="--d:2100ms">See my plan</button>
   </div>
 </div>
 <script>
-  /* Round 11: the horizon strip. Strip y 134 is the top of the button. The character stands on the middle hill's crest at its own
-     x (a thirds line, 130 or 260), measured from the hill path, at 90-110px. */
-  const HZ = { back: 'M0 82 C50 74 100 72 150 77 C198 82 234 78 268 66 C306 53 350 47 390 53 L390 300 L0 300 Z',
-    mid: 'M0 108 C46 100 96 106 140 114 C180 121 214 114 250 104 C282 95 312 91 342 94 C362 96 378 100 390 104 L390 300 L0 300 Z',
-    front: 'M0 128 C58 120 118 124 178 134 C236 143 300 136 350 124 C368 120 380 119 390 120 L390 300 L0 300 Z' };
-  function crestY(x, d = HZ.mid) {
-    const NS = 'http://www.w3.org/2000/svg', sv = document.createElementNS(NS, 'svg'), p = document.createElementNS(NS, 'path');
-    sv.setAttribute('style', 'position:absolute;width:0;height:0'); p.setAttribute('d', d.split(' L390 300')[0]); sv.appendChild(p); document.body.appendChild(sv);
-    let lo = 0, hi = p.getTotalLength(); for (let i = 0; i < 28; i++) { const m = (lo + hi) / 2; if (p.getPointAtLength(m).x < x) lo = m; else hi = m; }
-    const y = p.getPointAtLength(lo).y; sv.remove(); return y;
-  }
-  function horizon(o) {
-    const l = (i, d, extra = '') => `<svg class="l l${i}" width="390" height="300" viewBox="0 0 390 300"><path d="${d}" fill="var(--hz-${i})"/>${extra}</svg>`;
-    const s = o.size || 100, x = o.x ?? 260, y = o.y ?? crestY(x) + (o.sink || 0);
-    return l(1, HZ.back) + l(2, HZ.mid, o.pond || '') + `<div class="who" data-settle style="--d:420ms;left:${x - s / 2}px;top:${(o.top ?? (y - .965 * s)).toFixed(1)}px;width:${s}px;height:${s}px${o.clip ? `;overflow:hidden;height:${o.clip}px` : ''}"><div id="${o.id || 'hzc'}">${o.art}</div></div>` + (o.over || '') + l(3, HZ.front);
-  }
-  /* Round 11: in dark scenes Xero's belly window shows dusk (a navy sky, a warm glow on the line, a low sun on the hill, two stars).
-     A screen-local recolour of the kit art. */
-  function dusk(svg) {
-    if (DX.theme !== 'dark') return svg;
-    return svg.replace('fill="#BFD7FF"></ellipse>', 'fill="#2D3E78"></ellipse>')
-      .replace(/<circle cx="100" cy="[\d.]+" r="11" fill="#FFC93C">[\s\S]*?<\/circle>/, '<rect x="76" y="128" width="48" height="34" fill="#F0A070" opacity=".14"></rect><rect x="76" y="140" width="48" height="22" fill="#F0A070" opacity=".2"></rect><circle cx="91" cy="122" r="1.6" fill="#FFF3DC"></circle><circle cx="108" cy="115" r="1.2" fill="#FFF3DC" opacity=".8"></circle><circle cx="101" cy="154" r="9.5" fill="#FFB65E"></circle>')
-      .replace('fill="#3FB37F"></path>', 'fill="#18234A"></path>');
-  }
-  /* Round 11: Xero's poses on the strip. armL/armR replace the kit arms (drawn behind the body); hold is drawn in front of him. */
-  function xero(mood, size, o = {}) {
-    let s = DX.char('xero', { mood, size }).replace('style="display: block"', 'style="display: block; overflow: visible"');
-    if (o.armL != null) s = s.replace(/<path d="M36 124 C26 132 22 142 24 152"[^>]*><\/path>/, o.armL);
-    if (o.armR != null) s = s.replace(/<path d="M164 124 C174 132 178 142 176 152"[^>]*><\/path>/, o.armR);
-    if (o.feet != null) s = s.replace(/<ellipse cx="84" cy="188"[^>]*><\/ellipse>\s*<ellipse cx="116" cy="188"[^>]*><\/ellipse>/, o.feet);
-    if (o.hold) s = s.replace(/<\/svg>\s*$/, o.hold + '</svg>');
-    return dusk(s);
-  }
-  const arm = (d, extra = '') => `<path d="${d}" fill="none" stroke="#FF7155" stroke-width="12" stroke-linecap="round">${extra}</path>`;
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
-  /* Round 11: Xero (104px, left thirds line) cheers, both arms up. */
-  document.getElementById('hz').innerHTML = horizon({ x: 130, size: 104, art: '<div id="bw">' + xero('cheer', 104) + '</div>' });
+  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'cheer', size: 120 });
   const bw = document.getElementById('bw'), dark = DX.theme === 'dark';
   /* Paper-cut icons (round 8): flat cut pieces, each with a soft paper shadow, as on 003 and 008. */
   const sh = dark ? 'rgba(0,0,0,.55)' : 'rgba(120,52,24,.24)';
   const pf = id => `<defs><filter id="${id}" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="1.5" stdDeviation="1" flood-color="${sh}"/></filter></defs>`;
-  /* Paper-cut spots (round 10: flat, no highlights): the coral Day Xero pennant, two calm swells, a heart. */
+  /* Paper-cut spots in one warm family (coral, apricot, sun, cream): a pennant, a rising wave, a heart. */
   const ART = {
     flag: `<svg viewBox="0 0 32 32" aria-hidden="true">${pf('p1')}<ellipse cx="11" cy="27.6" rx="7" ry="2.2" fill="#FFC38A" filter="url(#p1)"/><rect x="9.6" y="4" width="2.8" height="24" rx="1.4" fill="#9A6A48" filter="url(#p1)"/>
-      <g filter="url(#p1)"><path d="M12.4 4.6 L27.6 10.3 L12.4 16 Z" fill="#FF7155"/><path d="M12.4 10.3 L27.6 10.3 L12.4 16 Z" fill="#E85A3E"/></g><circle cx="11" cy="4" r="2.2" fill="#FFC93C" filter="url(#p1)"/></svg>`,
-    /* Waves to watch (round 10): two calm paper swells in the SOS sea blues, the near one deeper, inside a pale sea disc. Flat. */
-    wave: `<svg viewBox="0 0 32 32" aria-hidden="true">${pf('p3')}<clipPath id="p3c"><circle cx="16" cy="16" r="13.5"/></clipPath>
-      <g filter="url(#p3)"><circle cx="16" cy="16" r="13.5" fill="#DCEBFF"/></g>
-      <g clip-path="url(#p3c)"><path d="M1 15.5 C5 12.5 9 12.5 13 15.5 S21 18.5 25 15.5 S31 13.5 31 13.5 V31 H1 Z" fill="#9CCBFF" filter="url(#p3)"/>
-        <path d="M1 21 C5 18 9 18 13 21 S21 24 25 21 S31 19 31 19 V31 H1 Z" fill="#2A52DB" filter="url(#p3)"/></g></svg>`,
+      <path d="M12.4 5 L27 10 L12.4 15.6 Z" fill="#FF7155" filter="url(#p1)"/><path d="M12.4 9.6 L20 10 L12.4 13 Z" fill="#FFB09C"/><circle cx="11" cy="4" r="2.2" fill="#FFD966" filter="url(#p1)"/></svg>`,
+    /* Waves to watch: a breaking wave cut from paper in the SOS sea blues (the craving wave), with a cream foam curl. No sun. */
+    wave: `<svg viewBox="0 0 32 32" aria-hidden="true">${pf('p3')}
+      <path d="M2.5 20 C6 16.5 9 16.5 12 19 C14.5 21 17 21 19 19.5 V28.5 H2.5 Z" fill="#9CCBFF" filter="url(#p3)"/>
+      <path d="M8 28.5 C9 19 13.5 9.5 21.5 7.5 C26.5 6.3 30 9 29.6 12.6 C29.3 15.4 26.4 16.2 24.6 14.6 C23.2 13.4 23.6 11.4 25.2 11 C22 10.2 18.6 13.6 18.2 19 C17.9 23 19.4 26.4 23 28.5 Z" fill="#2A52DB" filter="url(#p3)"/>
+      <path d="M12.4 28.5 C12.8 21 15.8 14.4 20.4 11.4 C17.6 15 16.6 19.6 17.2 23.6 C17.6 25.8 18.6 27.4 20 28.5 Z" fill="#1D3A9E"/>
+      <path d="M21.2 9.4 C24.2 8.2 27.4 9.2 27.8 11.8" fill="none" stroke="#FFF8EE" stroke-width="2" stroke-linecap="round"/>
+      <path d="M3 25.4 C5.4 23.6 7.4 23.6 9.4 25" fill="none" stroke="#FFF8EE" stroke-width="1.6" stroke-linecap="round" opacity=".9"/></svg>`,
     heart: `<svg viewBox="0 0 32 32" aria-hidden="true">${pf('p5')}<path d="M16 28.5 C8.6 24 3.5 19.4 3.5 13 C3.5 8.8 6.7 5.6 10.6 5.6 C13.1 5.6 15 7 16 8.9 C17 7 18.9 5.6 21.4 5.6 C25.3 5.6 28.5 8.8 28.5 13 C28.5 19.4 23.4 24 16 28.5 Z" fill="#FFF8EE" filter="url(#p5)"/>
-      <path d="M16 25.6 C10 21.8 6.6 18.2 6.6 13.4 C6.6 10.7 8.6 8.8 11 8.8 C13.2 8.8 14.8 10.2 16 12.6 C17.2 10.2 18.8 8.8 21 8.8 C23.4 8.8 25.4 10.7 25.4 13.4 C25.4 18.2 22 21.8 16 25.6 Z" fill="#FF7155"/></svg>`
+      <path d="M16 25.6 C10 21.8 6.6 18.2 6.6 13.4 C6.6 10.7 8.6 8.8 11 8.8 C13.2 8.8 14.8 10.2 16 12.6 C17.2 10.2 18.8 8.8 21 8.8 C23.4 8.8 25.4 10.7 25.4 13.4 C25.4 18.2 22 21.8 16 25.6 Z" fill="#FF7155"/>
+      <path d="M10 12.8 C10.4 11.4 11.4 10.7 12.6 10.6" fill="none" stroke="#FFB09C" stroke-width="2" stroke-linecap="round"/></svg>`
   };
   /* A short build beat: three pieces only. Prep stamps and the Day Xero medallion are revealed on the next screen. */
   const rows = [

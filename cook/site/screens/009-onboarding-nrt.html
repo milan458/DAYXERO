@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>009 Onboarding NRT</title>
-<meta name="motion" content="Progress eases from 6/11 to 7/11 (900ms) as the question, one short evidence line with a single Sources info link (tap opens the Cochrane 2018 and 2019 citations in a sheet) and three option rows arrive (600ms, 90ms stagger). At 900ms the first row selects (kit selection: warm tint, outline, ring fills and ticks, 250ms, selection haptic) and the card grows and its product chips unfold inside it (height 0 to auto, 420ms settle), then Patch and Gum fill with the warm tint and a small tick (tint only: no second outline inside the card) one after the other 160ms apart. The horizon strip above the dock settles up in three paper layers (0, 120, 240ms; 40px, 900ms settle) and Xero (100px, on the left thirds line), holding up a paper patch (about 25px), settles onto its crest last (from 420ms).">
+<meta name="motion" content="Progress eases from 6/11 to 7/11 (900ms) as the question, one short evidence line with a single Sources info link (tap opens the Cochrane 2018 and 2019 citations in a sheet) and three option rows arrive (600ms, 90ms stagger). At 900ms the first row selects (kit selection: warm tint, outline, ring fills and ticks, 250ms, selection haptic) and the card grows and its product chips unfold inside it (height 0 to auto, 420ms settle), then Patch and Gum fill with the warm tint and a small tick (no second outline) one after the other 160ms apart.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -25,8 +25,7 @@
   .q .source svg { width: 16px; height: 16px; }
   .what .inner .rule { height: 1px; background: var(--line); margin: 0 0 12px; }
   .what .lbl { font: 700 14px/1.3 var(--body); color: var(--fg); margin: 0 0 10px; }
-  /* Round 10: inside the selected card every chip is tint only (no hairlines, no outline inside the card's outline). */
-  .screen .og .chip:not(.on), [data-theme="dark"] .screen .og .chip:not(.on) { background: var(--card); box-shadow: none; }
+  .og .chip:not(.on) { background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
   /* Nested picks inside the selected card: a filled tint with a small tick, never a second outline level. */
   .screen .og .chip.on, [data-theme="dark"] .screen .og .chip.on { background: color-mix(in srgb, #FF9A5C 58%, #FFFFFF); box-shadow: none; color: var(--fg); }
   /* Dark: the nested picks are a deeper step of the kit's clean cream-peach lift (no brown). */
@@ -34,27 +33,10 @@
   .og .chip .tk { display: none; width: 16px; height: 16px; margin-left: -4px; }
   .og .chip.on .tk { display: grid; }
   .og .chip .tk svg { width: 16px; height: 16px; }
-  .answers { gap: 10px !important; }
-  .opt { min-height: 68px; }
+  .answers { gap: 12px !important; }
+  .opt { min-height: 72px; }
   .nrt2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .nrt2 .chip { justify-content: center; white-space: nowrap; padding: 0 10px; }
-  /* Round 10: the onboarding horizon strip (003 to 011, one element). Three flat paper hills in the launch style, soft paper
-     shadows and no crest lines, sitting just above the dock and running full-bleed behind it; the screen's character stands on the
-     crest. Light: cream and peach paper. Dark: the kit's night-meadow hills, kept quiet. */
-  .screen { --hz-1: #FFD3A6; --hz-2: #FFE6CA; --hz-3: #F9B386; --hz-lift: rgba(120,44,20,.16); }
-  [data-theme="dark"] .screen { --hz-1: #16233F; --hz-2: #0F1A31; --hz-3: #0A1326; --hz-lift: rgba(0,0,0,.55); }
-  .hz { position: absolute; z-index: 1; left: 0; top: calc(var(--hz-b, 752px) - 134px); width: 390px; height: 300px; pointer-events: none; }
-  .hz .l { position: absolute; left: 0; top: 0; display: block; }
-  .hz .l1 { filter: drop-shadow(0 -3px 8px var(--hz-lift)); }
-  .hz .l2 { filter: drop-shadow(0 -4px 10px var(--hz-lift)); }
-  .hz .l3 { filter: drop-shadow(0 -5px 12px var(--hz-lift)); }
-  .hz .who { position: absolute; }
-  .play .hz .l { animation: hz-up 900ms var(--settle) both; }
-  .play .hz .l2 { animation-delay: 120ms; }
-  .play .hz .l3 { animation-delay: 240ms; }
-  @keyframes hz-up { from { transform: translateY(40px); } to { transform: none; } }
-  .dock { background: none; }
-  .screen { --hz-b: 752px; }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
@@ -66,7 +48,7 @@
   <div class="q">
     <h1 class="t-large" data-a>Want to use nicotine replacement?</h1>
     <div class="ev" data-a style="--i:1">
-      <p class="t-body muted">It raises your odds of quitting by 50 to 60%. A&nbsp;patch plus a faster form works best.</p>
+      <p class="t-body muted">It raises your odds of quitting by 50 to 60%. A patch plus a faster form works best.</p>
       <a class="source" aria-label="Sources: Cochrane reviews, 2018 and 2019"><span data-icon="info"></span>Sources</a>
     </div>
   </div>
@@ -81,59 +63,16 @@
     <button class="opt" data-a style="--i:5"><div class="grow"><p class="t-head">Not for me</p><p class="t-foot">Behavioral prep only</p></div><span class="radio"></span></button>
   </div>
 
-  <div class="hz" id="hz" aria-hidden="true"></div>
-
   <div class="dock">
     <button class="btn" data-a style="--i:6">Continue</button>
   </div>
 </div>
 <script>
-  /* Round 11: the horizon strip. Strip y 134 is the top of the button. The character stands on the middle hill's crest at its own
-     x (a thirds line, 130 or 260), measured from the hill path, at 90-110px. */
-  const HZ = { back: 'M0 82 C50 74 100 72 150 77 C198 82 234 78 268 66 C306 53 350 47 390 53 L390 300 L0 300 Z',
-    mid: 'M0 108 C46 100 96 106 140 114 C180 121 214 114 250 104 C282 95 312 91 342 94 C362 96 378 100 390 104 L390 300 L0 300 Z',
-    front: 'M0 128 C58 120 118 124 178 134 C236 143 300 136 350 124 C368 120 380 119 390 120 L390 300 L0 300 Z' };
-  function crestY(x, d = HZ.mid) {
-    const NS = 'http://www.w3.org/2000/svg', sv = document.createElementNS(NS, 'svg'), p = document.createElementNS(NS, 'path');
-    sv.setAttribute('style', 'position:absolute;width:0;height:0'); p.setAttribute('d', d.split(' L390 300')[0]); sv.appendChild(p); document.body.appendChild(sv);
-    let lo = 0, hi = p.getTotalLength(); for (let i = 0; i < 28; i++) { const m = (lo + hi) / 2; if (p.getPointAtLength(m).x < x) lo = m; else hi = m; }
-    const y = p.getPointAtLength(lo).y; sv.remove(); return y;
-  }
-  function horizon(o) {
-    const l = (i, d, extra = '') => `<svg class="l l${i}" width="390" height="300" viewBox="0 0 390 300"><path d="${d}" fill="var(--hz-${i})"/>${extra}</svg>`;
-    const s = o.size || 100, x = o.x ?? 260, y = o.y ?? crestY(x) + (o.sink || 0);
-    return l(1, HZ.back) + l(2, HZ.mid, o.pond || '') + `<div class="who" data-settle style="--d:420ms;left:${x - s / 2}px;top:${(o.top ?? (y - .965 * s)).toFixed(1)}px;width:${s}px;height:${s}px${o.clip ? `;overflow:hidden;height:${o.clip}px` : ''}"><div id="${o.id || 'hzc'}">${o.art}</div></div>` + (o.over || '') + l(3, HZ.front);
-  }
-  /* Round 11: in dark scenes Xero's belly window shows dusk (a navy sky, a warm glow on the line, a low sun on the hill, two stars).
-     A screen-local recolour of the kit art. */
-  function dusk(svg) {
-    if (DX.theme !== 'dark') return svg;
-    return svg.replace('fill="#BFD7FF"></ellipse>', 'fill="#2D3E78"></ellipse>')
-      .replace(/<circle cx="100" cy="[\d.]+" r="11" fill="#FFC93C">[\s\S]*?<\/circle>/, '<rect x="76" y="128" width="48" height="34" fill="#F0A070" opacity=".14"></rect><rect x="76" y="140" width="48" height="22" fill="#F0A070" opacity=".2"></rect><circle cx="91" cy="122" r="1.6" fill="#FFF3DC"></circle><circle cx="108" cy="115" r="1.2" fill="#FFF3DC" opacity=".8"></circle><circle cx="101" cy="154" r="9.5" fill="#FFB65E"></circle>')
-      .replace('fill="#3FB37F"></path>', 'fill="#18234A"></path>');
-  }
-  /* Round 11: Xero's poses on the strip. armL/armR replace the kit arms (drawn behind the body); hold is drawn in front of him. */
-  function xero(mood, size, o = {}) {
-    let s = DX.char('xero', { mood, size }).replace('style="display: block"', 'style="display: block; overflow: visible"');
-    if (o.armL != null) s = s.replace(/<path d="M36 124 C26 132 22 142 24 152"[^>]*><\/path>/, o.armL);
-    if (o.armR != null) s = s.replace(/<path d="M164 124 C174 132 178 142 176 152"[^>]*><\/path>/, o.armR);
-    if (o.feet != null) s = s.replace(/<ellipse cx="84" cy="188"[^>]*><\/ellipse>\s*<ellipse cx="116" cy="188"[^>]*><\/ellipse>/, o.feet);
-    if (o.hold) s = s.replace(/<\/svg>\s*$/, o.hold + '</svg>');
-    return dusk(s);
-  }
-  const arm = (d, extra = '') => `<path d="${d}" fill="none" stroke="#FF7155" stroke-width="12" stroke-linecap="round">${extra}</path>`;
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = e.dataset.icon === 'info'
     ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor"/></svg>'
     : DX.icon(e.dataset.icon, { size: 16 }));
   document.querySelector('.icon-btn').innerHTML = DX.icon('back');
   document.querySelectorAll('[data-tick]').forEach(e => e.innerHTML = DX.icon('check', { size: 16, w: 3 }));
-  /* Round 11: Xero (100px, left thirds line) holds up a paper nicotine patch about 25px across: a cream square with its tan pad,
-     flat cut pieces with a soft paper shadow. */
-  const psh = DX.theme === 'dark' ? 'rgba(0,0,0,.5)' : 'rgba(120,52,24,.26)';
-  const patch = `<defs><filter id="ps" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="2.4" stdDeviation="1.6" flood-color="${psh}"/></filter></defs>
-    <g transform="rotate(12 192 62)" filter="url(#ps)"><rect x="167" y="37" width="50" height="50" rx="11" fill="#FFF4E6"/>
-      <path d="M217 58 V76 a11 11 0 0 1 -11 11 H180 c16 -2 26 -10 30 -24 z" fill="#EBD5BF"/><rect x="179" y="49" width="26" height="26" rx="8" fill="#F4B27E"/></g>`;
-  document.getElementById('hz').innerHTML = horizon({ x: 130, size: 100, art: xero('hello', 100, { armR: arm('M162 116 C172 108 178 98 181 88'), hold: patch }) });
   const $ = id => document.getElementById(id), bar = $('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '54.5%'); void bar.offsetWidth; bar.style.transition = '';
     $('o1').classList.remove('on'); $('what').classList.remove('open'); $('c1').classList.remove('on', 'bump'); $('c2').classList.remove('on', 'bump'); });

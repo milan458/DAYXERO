@@ -1,16 +1,16 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>010 Onboarding Quit Day</title>
-<meta name="motion" content="Progress eases 7/11 to 8/11; title, the prep-week card (seven tiles rise 45ms apart, today's Fri 30 in its coral disc, their prep dots pop left to right), the Quit Day row (a cream card with an apricot Nov 6 date page and a Change label with a right chevron: the tappable date picker), the hold button arrive in order, while the horizon strip above the dock settles up in three paper layers (0, 120, 240ms; 40px, 900ms settle) and Xero (100px, on the right thirds line, carrying the coral Day Xero flag, a swallowtail pennant with a cream zero, lowered on its pole) settles onto its crest last (from 420ms). Holding fills the button left to right over 1500ms with a soft ticking haptic; on complete the button shows its done state, Quit Day set (success haptic), the coral Day Xero flag Xero holds runs up its pole (44px, 700ms settle) while he bumps (520ms), and the row's caption swaps Quit Day, recommended for Quit Day set with a green tick and the title becomes Your Quit Day, Sam (300ms crossfade). 1200ms later the done button crossfades (350ms) into Continue. Tapping the Quit Day row opens the date wheel.">
+<meta name="motion" content="Progress eases 7/11 to 8/11; title, the prep-week card (seven tiles rise 45ms apart, today's Fri 30 in its coral disc, their prep dots pop left to right), the Quit Day row (a cream card with an apricot Nov 6 date page and a Change label with a right chevron: the tappable date picker), Xero on his hill (it fades into the ground above the dock) and the hold button arrive in order. Holding fills the button left to right over 1500ms with a soft ticking haptic; on complete the button shows its done state, Quit Day set (success haptic), the yellow flag Xero holds runs up its pole (34px, 700ms settle) while he bumps (520ms), and the row's caption swaps Quit Day, recommended for Quit Day set with a green tick (300ms crossfade). 1200ms later the done button crossfades (350ms) into Continue. Tapping the Quit Day row opens the date wheel.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   /* Onboarding header: back button and progress only (no avatar); the bar ends at the gutter so the sun knob never collides. */
   .nav { padding-right: 26px; }
-  .wk { margin: 34px var(--gutter) 0; padding: 14px 12px 12px; }
+  .wk { margin: 22px var(--gutter) 0; padding: 14px 12px 12px; }
   .wk-h { display: flex; justify-content: space-between; align-items: baseline; padding: 0 4px 10px; }
   /* Prep tiles sit lighter than the card in both modes (card-2), so the week always reads. */
   .days { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: 6px; }
-  .day { border-radius: 14px; background: var(--card-2); display: grid; justify-items: center; align-content: center; gap: 4px; height: 88px; }
+  .day { border-radius: 14px; background: var(--card-2); display: grid; justify-items: center; align-content: center; gap: 4px; height: 82px; }
   .day .t-cap { color: var(--muted); font-size: 13px; font-weight: 600; }
   .day .num { font-size: 22px; line-height: 1; }
   .day .pd { width: 8px; height: 8px; border-radius: 99px; background: #FF9A5C; margin-top: 2px; }
@@ -40,14 +40,14 @@
   .qd .chg { display: inline-flex; align-items: center; gap: 2px; flex: none; font: 600 14px/1 var(--body); color: var(--muted); }
   .qd .chev { color: var(--muted); width: 18px; height: 18px; }
   .qd .chev svg { width: 18px; height: 18px; }
-  /* Round 10: Xero stands on the horizon strip holding the coral Day Xero flag; it runs up the pole when Quit Day is set. */
-  .q { padding-top: 142px; }
-  /* Round 11: once set, the title reads "Your Quit Day, Sam" (a 300ms fade and 6px rise). */
-  #ttl { display: inline-block; }
-  .play #ttl.swap { animation: ttl-in 300ms var(--ease) both; }
-  @keyframes ttl-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-  .hz .pen { transform: translateY(44px); transition: transform 700ms var(--settle); }
-  .hz.set .pen { transform: none; }
+  /* Xero on his own small hill, holding a yellow flag that runs up the pole when Quit Day is set. */
+  /* Xero's hill ends above the dock: it fades into the ground before the button, so Continue sits clear of it. */
+  /* Round 8: Xero sits 14px closer to the week card, and his dome fades out well before the dock (no hard base above the CTA). */
+  .hero { position: absolute; left: 0; right: 0; top: 452px; height: 230px; }
+  .hero .hill { position: absolute; left: 0; top: 118px; }
+  .hero .xw { position: absolute; left: 127px; top: 30px; width: 128px; height: 128px; }
+  .hero .pen { transform: translateY(34px); transition: transform 700ms var(--settle); }
+  .hero.set .pen { transform: none; }
   .dock .t-cap { text-align: center; color: var(--muted); }
   /* After the hold: the done state shows, then the button hands over to Continue. */
   .btns { position: relative; height: 58px; }
@@ -55,25 +55,6 @@
   .btns #go { opacity: 0; pointer-events: none; transform: translateY(6px); }
   .btns.next #hold { opacity: 0; pointer-events: none; }
   .btns.next #go { opacity: 1; pointer-events: auto; transform: none; }
-  /* Round 10: the onboarding horizon strip (003 to 011, one element). Three flat paper hills in the launch style, soft paper
-     shadows and no crest lines, sitting just above the dock and running full-bleed behind it; the screen's character stands on the
-     crest. Light: cream and peach paper. Dark: the kit's night-meadow hills, kept quiet. */
-  .screen { --hz-1: #FFD3A6; --hz-2: #FFE6CA; --hz-3: #F9B386; --hz-lift: rgba(120,44,20,.16); }
-  [data-theme="dark"] .screen { --hz-1: #16233F; --hz-2: #0F1A31; --hz-3: #0A1326; --hz-lift: rgba(0,0,0,.55); }
-  .hz { position: absolute; z-index: 1; left: 0; top: calc(var(--hz-b, 752px) - 134px); width: 390px; height: 300px; pointer-events: none; }
-  .hz .l { position: absolute; left: 0; top: 0; display: block; }
-  .hz .l1 { filter: drop-shadow(0 -3px 8px var(--hz-lift)); }
-  .hz .l2 { filter: drop-shadow(0 -4px 10px var(--hz-lift)); }
-  .hz .l3 { filter: drop-shadow(0 -5px 12px var(--hz-lift)); }
-  .hz .who { position: absolute; }
-  .play .hz .l { animation: hz-up 900ms var(--settle) both; }
-  .play .hz .l2 { animation-delay: 120ms; }
-  .play .hz .l3 { animation-delay: 240ms; }
-  @keyframes hz-up { from { transform: translateY(40px); } to { transform: none; } }
-  .dock { background: none; }
-  /* Round 11: the strip rises 48px so no empty band sits between the week card and the hills. */
-  .screen { --hz-b: 660px; }
-  .hz { height: 340px; }  /* the raised strip's hills run 40px deeper so they still reach the bottom edge */
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
@@ -83,7 +64,7 @@
   </div>
 
   <div class="q">
-    <h1 class="t-large" data-a><span id="ttl">Pick your Quit Day, Sam</span></h1>
+    <h1 class="t-large" data-a>Pick your Quit Day, Sam</h1>
     <p class="t-body muted" data-a style="--i:1">I recommend a full week of prep first. Keep using as normal until then.</p>
   </div>
 
@@ -97,7 +78,10 @@
     </button>
   </div>
 
-  <div class="hz" id="hz" aria-hidden="true"></div>
+  <div class="hero" id="hero" aria-hidden="true">
+    <svg class="hill" id="hill" width="390" height="104" viewBox="0 0 390 104"></svg>
+    <div class="xw" data-settle style="--d:450ms"><div id="bw"><div id="xero"></div></div></div>
+  </div>
 
   <div class="dock">
     <div class="btns" id="btns" data-a style="--i:8">
@@ -108,56 +92,29 @@
   </div>
 </div>
 <script>
-  /* Round 11: the horizon strip. Strip y 134 is the top of the button. The character stands on the middle hill's crest at its own
-     x (a thirds line, 130 or 260), measured from the hill path, at 90-110px. */
-  const HZ = { back: 'M0 82 C50 74 100 72 150 77 C198 82 234 78 268 66 C306 53 350 47 390 53 L390 340 L0 340 Z',
-    mid: 'M0 108 C46 100 96 106 140 114 C180 121 214 114 250 104 C282 95 312 91 342 94 C362 96 378 100 390 104 L390 340 L0 340 Z',
-    front: 'M0 128 C58 120 118 124 178 134 C236 143 300 136 350 124 C368 120 380 119 390 120 L390 340 L0 340 Z' };
-  function crestY(x, d = HZ.mid) {
-    const NS = 'http://www.w3.org/2000/svg', sv = document.createElementNS(NS, 'svg'), p = document.createElementNS(NS, 'path');
-    sv.setAttribute('style', 'position:absolute;width:0;height:0'); p.setAttribute('d', d.split(' L390 340')[0]); sv.appendChild(p); document.body.appendChild(sv);
-    let lo = 0, hi = p.getTotalLength(); for (let i = 0; i < 28; i++) { const m = (lo + hi) / 2; if (p.getPointAtLength(m).x < x) lo = m; else hi = m; }
-    const y = p.getPointAtLength(lo).y; sv.remove(); return y;
-  }
-  function horizon(o) {
-    const l = (i, d, extra = '') => `<svg class="l l${i}" width="390" height="340" viewBox="0 0 390 340"><path d="${d}" fill="var(--hz-${i})"/>${extra}</svg>`;
-    const s = o.size || 100, x = o.x ?? 260, y = o.y ?? crestY(x) + (o.sink || 0);
-    return l(1, HZ.back) + l(2, HZ.mid, o.pond || '') + `<div class="who" data-settle style="--d:420ms;left:${x - s / 2}px;top:${(o.top ?? (y - .965 * s)).toFixed(1)}px;width:${s}px;height:${s}px${o.clip ? `;overflow:hidden;height:${o.clip}px` : ''}"><div id="${o.id || 'hzc'}">${o.art}</div></div>` + (o.over || '') + l(3, HZ.front);
-  }
-  /* Round 11: in dark scenes Xero's belly window shows dusk (a navy sky, a warm glow on the line, a low sun on the hill, two stars).
-     A screen-local recolour of the kit art. */
-  function dusk(svg) {
-    if (DX.theme !== 'dark') return svg;
-    return svg.replace('fill="#BFD7FF"></ellipse>', 'fill="#2D3E78"></ellipse>')
-      .replace(/<circle cx="100" cy="[\d.]+" r="11" fill="#FFC93C">[\s\S]*?<\/circle>/, '<rect x="76" y="128" width="48" height="34" fill="#F0A070" opacity=".14"></rect><rect x="76" y="140" width="48" height="22" fill="#F0A070" opacity=".2"></rect><circle cx="91" cy="122" r="1.6" fill="#FFF3DC"></circle><circle cx="108" cy="115" r="1.2" fill="#FFF3DC" opacity=".8"></circle><circle cx="101" cy="154" r="9.5" fill="#FFB65E"></circle>')
-      .replace('fill="#3FB37F"></path>', 'fill="#18234A"></path>');
-  }
-  /* Round 11: Xero's poses on the strip. armL/armR replace the kit arms (drawn behind the body); hold is drawn in front of him. */
-  function xero(mood, size, o = {}) {
-    let s = DX.char('xero', { mood, size }).replace('style="display: block"', 'style="display: block; overflow: visible"');
-    if (o.armL != null) s = s.replace(/<path d="M36 124 C26 132 22 142 24 152"[^>]*><\/path>/, o.armL);
-    if (o.armR != null) s = s.replace(/<path d="M164 124 C174 132 178 142 176 152"[^>]*><\/path>/, o.armR);
-    if (o.feet != null) s = s.replace(/<ellipse cx="84" cy="188"[^>]*><\/ellipse>\s*<ellipse cx="116" cy="188"[^>]*><\/ellipse>/, o.feet);
-    if (o.hold) s = s.replace(/<\/svg>\s*$/, o.hold + '</svg>');
-    return dusk(s);
-  }
-  const arm = (d, extra = '') => `<path d="${d}" fill="none" stroke="#FF7155" stroke-width="12" stroke-linecap="round">${extra}</path>`;
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
   const $ = id => document.getElementById(id), bar = $('bar');
   $('setTag').insertAdjacentHTML('beforeend', `<span class="okc">${DX.icon('check', { size: 11, w: 3.4 })}</span>`);
   const days = [['Fri', 30], ['Sat', 31], ['Sun', 1], ['Mon', 2], ['Tue', 3], ['Wed', 4], ['Thu', 5]];
   $('days').innerHTML = days.map(([d, n], i) => `<div class="day ${i === 0 ? 'today' : ''}" data-a style="--i:${i * .5 + 2.5}"><span class="t-cap">${i === 0 ? 'Today' : d}</span><span class="num">${n}</span><span class="pd" data-pop style="--i:0;--d:${700 + i * 90}ms"></span></div>`).join('');
-  /* Round 11: Xero (100px, right thirds line) carries the coral Day Xero flag: a larger swallowtail pennant with a cream zero (Xero's
-     mark), the pole held in his right hand. The pennant rides up the pole on set. Flat paper-cut, no outline, no gloss. */
-  const flag = `<path d="M190 158 L190 0" stroke="#8A5A3C" stroke-width="5" stroke-linecap="round"/><circle cx="190" cy="-2" r="6" fill="#FFC93C"/>
-    <g class="pen"><path d="M192 4 H250 L238 24 L250 44 H192 Z" fill="#FF7155"/><path d="M192 24 H238 L250 44 H192 Z" fill="#E85A3E"/>
-      <ellipse cx="216" cy="24" rx="7.5" ry="10.5" fill="none" stroke="#FFF8EE" stroke-width="4.2"/></g>`;
-  $('hz').innerHTML = horizon({ x: 262, size: 100, art: '<div id="bw">' + xero('hello', 100, { armR: flag + arm('M164 122 C176 118 184 110 188 100') }) + '</div>' });
+  /* A small paper hill so Xero stands on something. */
+  const dark = DX.theme === 'dark';
+  $('hill').innerHTML = `<defs><linearGradient id="hf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${dark ? '#212A41' : '#FFAE7A'}"/><stop offset=".22" stop-color="${dark ? '#212A41' : '#FFAE7A'}"/><stop offset=".5" style="stop-color: color-mix(in srgb, ${dark ? '#212A41' : '#FFAE7A'} 62%, var(--g))"/><stop offset=".78" style="stop-color: color-mix(in srgb, ${dark ? '#212A41' : '#FFAE7A'} 20%, var(--g))"/><stop offset="1" style="stop-color: var(--g)"/></linearGradient>
+    <linearGradient id="he" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${dark ? 'rgba(190,205,255,.22)' : 'rgba(255,255,255,.6)'}"/><stop offset=".7" stop-color="${dark ? 'rgba(190,205,255,0)' : 'rgba(255,255,255,0)'}"/></linearGradient></defs>
+    <path d="M10 104 C50 52 130 26 195 26 C260 26 340 52 380 104 Z" fill="url(#hf)"/>
+    <path d="M10 104 C50 52 130 26 195 26 C260 26 340 52 380 104" fill="none" stroke="url(#he)" stroke-width="2"/>`;
+  /* Xero, hello, holding a small yellow flag in his right hand (pole behind the hand; the pennant rides up on set). */
+  const flag = `<path d="M188 154 L188 30" stroke="#8A5A3C" stroke-width="4" stroke-linecap="round"/><circle cx="188" cy="28" r="4" fill="#F5B83D"/>
+    <path class="pen" d="M190 33 L216 42 L190 52 Z" fill="#FFD966" stroke="#F5B83D" stroke-width="2" stroke-linejoin="round"/>`;
+  const arm = '<path d="M164 122 C176 118 183 110 186 100" fill="none" stroke="#FF7155" stroke-width="12" stroke-linecap="round"></path>';
+  $('xero').innerHTML = DX.char('xero', { mood: 'hello', size: 128 })
+    .replace('style="display: block"', 'style="display: block; overflow: visible"')
+    .replace(/<path d="M164 124 C174 132 178 142 176 152"[^>]*><\/path>/, flag + arm);
   const reset = () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '63.6%'); void bar.offsetWidth; bar.style.transition = '';
-    $('qd').classList.remove('got'); $('ttl').textContent = 'Pick your Quit Day, Sam'; $('ttl').classList.remove('swap'); $('hz').classList.remove('set'); $('bw').classList.remove('bump'); $('btns').classList.remove('next'); };
+    $('qd').classList.remove('got'); $('hero').classList.remove('set'); $('bw').classList.remove('bump'); $('btns').classList.remove('next'); };
   DX.after(0, reset);
   DX.after(250, () => bar.style.setProperty('--p', '72.7%'));
-  const held = () => { $('qd').classList.add('got'); $('ttl').textContent = 'Your Quit Day, Sam'; $('ttl').classList.add('swap'); $('hz').classList.add('set'); const x = $('bw'); x.classList.remove('bump'); void x.offsetWidth; x.style.setProperty('--d', '120ms'); x.classList.add('bump'); };
+  const held = () => { $('qd').classList.add('got'); $('hero').classList.add('set'); const x = $('bw'); x.classList.remove('bump'); void x.offsetWidth; x.style.setProperty('--d', '120ms'); x.classList.add('bump'); };
   document.addEventListener('held', held);
   /* 1200ms after the hold lands, the button hands over to Continue. */
   DX.after(1600 + 1500 + 1200, () => $('btns').classList.add('next'));

@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>000 Launch</title>
-<meta name="motion" content="2.4 s, then hold. Dark mode: a pre-dawn sky (deep blue at the top easing to a lighter dawn blue at the horizon) and the same timeline with a warm amber sun that stops 8px higher, clearly above Xero's head; Xero's belly window shows a dusk sky (navy, a low sun, two stars). 0-1000ms back hill rises 220px (settle); 140-1140ms mid hill rises 260px; 280-1280ms front hill rises 300px, then the two near layers follow at 360ms and 440ms (each paper layer casts a soft shadow up onto the one behind; no crest lines). 250-1750ms the sun climbs 240px into the valley (ease-out), its two paper rings open from 0.6 to 1 at 800-1900ms (dark mode: no rings; a warm amber radial glow opens behind a cut-paper amber disc with a pale rim and a soft offset shadow). 700-1720ms the wordmark assembles: 7 letters, 60ms stagger, each rises 40px with a 6deg tilt and blur 6px to sharp on a soft spring (660ms). 1560-2010ms the coral underline draws under Xero. 1500-2340ms Xero (hero size) rises 170px from behind the front hill on a soft overshoot and lands under the sun like a halo; soft impact haptic at 2300ms. 1900-2400ms tagline fades up 10px. 600-2000ms two paper clouds slide in 36px from the sides and fade up. Holds the final frame; Xero blinks.">
+<meta name="motion" content="2.4 s, then hold. Dark mode: the same timeline with a low, warm amber sun that stops 46px lower, half behind the back hill. 0-1000ms back hill rises 220px (settle); 140-1140ms mid hill rises 260px; 280-1280ms front hill rises 300px, then the two near layers follow at 360ms and 440ms (each paper layer casts a soft shadow up onto the one behind). 250-1750ms the sun climbs 240px into the valley (ease-out), its two paper rings open from 0.6 to 1 at 800-1900ms (dark mode: no rings; a warm amber radial glow opens behind a cut-paper amber disc with a pale rim and a soft offset shadow). 700-1720ms the wordmark assembles: 7 letters, 60ms stagger, each rises 40px with a 6deg tilt and blur 6px to sharp on a soft spring (660ms). 1560-2010ms the coral underline draws under Xero. 1500-2340ms Xero (hero size) rises 170px from behind the front hill on a soft overshoot and lands under the sun like a halo; soft impact haptic at 2300ms. 1900-2400ms tagline fades up 10px. 600-2000ms two paper clouds slide in 36px from the sides and fade up. Holds the final frame; Xero blinks.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -17,8 +17,7 @@
     --h-edge: rgba(190,205,255,.3); --h-edge-low: rgba(190,205,255,.22);
     --sun-a: #FFE2A0; --sun-b: #F3A14A; --ring-1: transparent; --ring-2: transparent; --lift: rgba(0,0,0,.45);
     --cloud: rgba(200,212,245,.36); --cloud-lit: rgba(232,238,255,.7);
-    --sky: linear-gradient(to bottom, #080C1C 0%, #111934 18%, #1A2449 38%, #243160 60%, #2E3C70 82%, #34437A 100%); }
-  /* Round 10: the dark sky is a visible pre-dawn gradient from the very top (deep blue to a lighter dawn blue at the hills). */
+    --sky: linear-gradient(to bottom, #0B1020 0%, #10172C 40%, #1A2346 72%, #222C55 100%); }
   .sky { position: absolute; inset: 0 0 auto 0; height: 560px; background: var(--sky); z-index: 0; }
 
   .mark-wrap { position: absolute; left: 0; right: 0; top: 250px; text-align: center; z-index: 6; }
@@ -32,8 +31,8 @@
   .layer { position: absolute; left: 0; width: 390px; pointer-events: none; }
   .layer svg { display: block; }
   .sunwrap { top: 352px; height: 300px; z-index: 1; }
-  /* Round 11: dark keeps the sun where light has it, clearly above Xero's head (a full disc in the valley, not a sliver halo). */
-  [data-theme="dark"] .sunpos { transform: translateY(-8px); }
+  /* Dark: a low sun, sitting 46px lower so the back hill cuts it. */
+  [data-theme="dark"] .sunpos { transform: translateY(46px); }
   /* Dark: the sun is a warm amber glow (a soft radial halo behind a bright amber core), never a flat disc with grey rings. */
   .glow { display: none; }
   [data-theme="dark"] .glow { display: inline; }
@@ -119,12 +118,14 @@
     <svg width="390" height="404" viewBox="0 0 390 404">
       <defs><linearGradient id="hb" x1="0" y1="0" x2="0" y2="1"><stop offset=".05" stop-color="var(--h-back)"/><stop offset=".45" stop-color="var(--h-back-2)"/></linearGradient></defs>
       <path d="M0 96 C56 64 118 74 150 146 C170 196 222 204 242 160 C276 86 334 60 390 82 L390 404 L0 404 Z" fill="url(#hb)"/>
+      <path d="M0 96 C56 64 118 74 150 146 C170 196 222 204 242 160 C276 86 334 60 390 82" fill="none" stroke="var(--h-edge)" stroke-width="2"/>
     </svg>
   </div>
   <div class="layer hill mid" aria-hidden="true">
     <svg width="390" height="404" viewBox="0 0 390 404">
       <defs><linearGradient id="hm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--h-mid)"/><stop offset=".45" stop-color="var(--h-mid-2)"/></linearGradient></defs>
       <path d="M0 204 C56 170 116 176 158 216 C182 240 214 246 238 228 C282 190 336 172 390 192 L390 404 L0 404 Z" fill="url(#hm)"/>
+      <path d="M0 204 C56 170 116 176 158 216 C182 240 214 246 238 228 C282 190 336 172 390 192" fill="none" stroke="var(--h-edge)" stroke-width="2"/>
     </svg>
   </div>
 
@@ -134,30 +135,25 @@
     <svg width="390" height="404" viewBox="0 0 390 404">
       <defs><linearGradient id="hf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--h-front)"/><stop offset=".6" stop-color="var(--h-front-2)"/></linearGradient></defs>
       <path d="M0 292 C58 270 112 256 196 254 C280 252 334 272 390 288 L390 404 L0 404 Z" fill="url(#hf)"/>
+      <path d="M0 292 C58 270 112 256 196 254 C280 252 334 272 390 288" fill="none" stroke="var(--h-edge)" stroke-width="2"/>
     </svg>
   </div>
   <div class="layer hill near" aria-hidden="true">
     <svg width="390" height="404" viewBox="0 0 390 404">
       <path d="M0 262 C38 248 86 254 132 284 C186 318 258 326 314 300 C346 285 370 278 390 280 L390 404 L0 404 Z" fill="var(--h-near)"/>
+      <path d="M0 262 C38 248 86 254 132 284 C186 318 258 326 314 300 C346 285 370 278 390 280" fill="none" stroke="var(--h-edge-low)" stroke-width="2"/>
     </svg>
   </div>
   <div class="layer hill base" aria-hidden="true">
     <svg width="390" height="404" viewBox="0 0 390 404">
       <path d="M0 344 C52 324 112 324 172 340 C238 358 306 342 390 300 L390 404 L0 404 Z" fill="var(--h-base)"/>
+      <path d="M0 344 C52 324 112 324 172 340 C238 358 306 342 390 300" fill="none" stroke="var(--h-edge-low)" stroke-width="2"/>
     </svg>
   </div>
 
   <svg class="grain" width="390" height="844" aria-hidden="true"><filter id="gr"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .35 0"/></filter><rect width="390" height="844" filter="url(#gr)"/></svg>
 </div>
 <script>
-  /* Round 11: in dark scenes Xero's belly window shows dusk (a navy sky, a warm glow on the line, a low sun on the hill, two stars).
-     A screen-local recolour of the kit art. */
-  function dusk(svg) {
-    if (DX.theme !== 'dark') return svg;
-    return svg.replace('fill="#BFD7FF"></ellipse>', 'fill="#2D3E78"></ellipse>')
-      .replace(/<circle cx="100" cy="[\d.]+" r="11" fill="#FFC93C">[\s\S]*?<\/circle>/, '<rect x="76" y="128" width="48" height="34" fill="#F0A070" opacity=".14"></rect><rect x="76" y="140" width="48" height="22" fill="#F0A070" opacity=".2"></rect><circle cx="91" cy="122" r="1.6" fill="#FFF3DC"></circle><circle cx="108" cy="115" r="1.2" fill="#FFF3DC" opacity=".8"></circle><circle cx="101" cy="154" r="9.5" fill="#FFB65E"></circle>')
-      .replace('fill="#3FB37F"></path>', 'fill="#18234A"></path>');
-  }
-  document.getElementById('xero').innerHTML = dusk(DX.char('xero', { mood: 'hello', size: 200 }));
+  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'hello', size: 200 });
 </script>
 </body></html>

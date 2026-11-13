@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>007 Make it personal</title>
-<meta name="motion" content="Progress eases from 4/11 to 5/11 (900ms). Question and both fields arrive (600ms, 90ms stagger). The reason field takes focus (its own 2px coral focus ring fades in, 200ms); from 800ms the reason types in at 26ms a character with a blinking caret (about 1.3 s) while the count ticks 0 to 49 of 120; 700ms later the keyboard drops and the field blurs (focus ring and caret fade, 300ms), leaving the reason filled. The four + suggestion chips (two rows that fill the width) arrive (600ms, 90ms stagger); tapping one appends it to the reason with a 520ms spring on the chip. The horizon strip above the dock settles up in three paper layers (0, 120, 240ms; 40px, 900ms settle) and Xero (100px, on the left thirds line, holding up a small paper heart) settles onto its crest last (from 420ms). Light haptic on Continue.">
+<meta name="motion" content="Progress eases from 4/11 to 5/11 (900ms). Question and both fields arrive (600ms, 90ms stagger). The reason field takes focus (its own 2px coral focus ring fades in, 200ms); from 800ms the reason types in at 26ms a character with a blinking caret (about 1.3 s) while the count ticks 0 to 49 of 120; 700ms later the keyboard drops and the field blurs (focus ring and caret fade, 300ms), leaving the reason filled, and a small paper heart sticker pops onto its corner (620ms spring). The four + suggestion chips arrive (600ms, 90ms stagger); tapping one appends it to the reason with a 520ms spring on the chip. Light haptic on Continue.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -11,7 +11,7 @@
   [data-theme="dark"] .field { background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
   .lbl { font: 700 14px/1.3 var(--body) !important; color: var(--fg) !important; margin: 12px 0 0 !important; }
   .lbl:first-child { margin-top: 0 !important; }
-  .answers { gap: 8px !important; padding-top: 20px !important; }
+  .answers { gap: 8px !important; padding-top: 26px !important; }
   /* The reason field has focus: its own 2px coral focus ring (never the ink selection outline). Count bottom right. */
   .field.reason { position: relative; min-height: 0; padding: 14px 16px 30px; font: 600 17px/1.4 var(--body); }
   .field.reason.focus, [data-theme="dark"] .field.reason.focus { box-shadow: inset 0 0 0 2px var(--coral), 0 0 0 4px color-mix(in srgb, var(--coral) 22%, transparent); }
@@ -20,34 +20,18 @@
   .caret { display: inline-block; width: 2px; height: 1.1em; vertical-align: -3px; margin-left: 1px; background: var(--coral); opacity: 0; }
   .typing .caret { opacity: 1; animation: blink 900ms steps(1) infinite; }
   .still .caret { opacity: 0 !important; }
+  /* A small paper-cut heart pinned to the reason's corner, like a sticker: this is the line you'll see in a craving. */
+  .heart { position: absolute; right: -8px; top: -14px; width: 38px; height: 38px; transform: rotate(10deg); pointer-events: none; }
+  .play .heart { animation: heart-in 620ms var(--spring) both; animation-delay: 2300ms; }
+  @keyframes heart-in { 0% { opacity: 0; transform: rotate(10deg) scale(.4); } 60% { opacity: 1; } 100% { opacity: 1; transform: rotate(10deg) scale(1); } }
   @keyframes blink { 50% { opacity: 0; } }
   /* Suggestions are "+ add" chips at natural widths: a plus, then the words. */
   .adds { gap: 8px; }
   .adds .chip { padding: 0 14px 0 12px; white-space: nowrap; min-height: 46px; gap: 6px; }
-  /* Round 11: the two rows fill the width evenly (chips grow from their natural widths, labels centred). */
-  .adds .chip { flex: 1 1 auto; justify-content: center; }
   .adds .chip .pl { display: grid; place-items: center; flex: none; color: var(--coral); }
   .adds .chip .pl svg { width: 16px; height: 16px; }
   .chip.added { animation: dx-chipland 520ms cubic-bezier(.3,1.4,.5,1) both; }
   @keyframes dx-chipland { 0% { transform: scale(1); } 40% { transform: scale(1.08); } 100% { transform: scale(1); } }
-  /* Round 10: the onboarding horizon strip (003 to 011, one element). Three flat paper hills in the launch style, soft paper
-     shadows and no crest lines, sitting just above the dock and running full-bleed behind it; the screen's character stands on the
-     crest. Light: cream and peach paper. Dark: the kit's night-meadow hills, kept quiet. */
-  .screen { --hz-1: #FFD3A6; --hz-2: #FFE6CA; --hz-3: #F9B386; --hz-lift: rgba(120,44,20,.16); }
-  [data-theme="dark"] .screen { --hz-1: #16233F; --hz-2: #0F1A31; --hz-3: #0A1326; --hz-lift: rgba(0,0,0,.55); }
-  .hz { position: absolute; z-index: 1; left: 0; top: calc(var(--hz-b, 752px) - 134px); width: 390px; height: 300px; pointer-events: none; }
-  .hz .l { position: absolute; left: 0; top: 0; display: block; }
-  .hz .l1 { filter: drop-shadow(0 -3px 8px var(--hz-lift)); }
-  .hz .l2 { filter: drop-shadow(0 -4px 10px var(--hz-lift)); }
-  .hz .l3 { filter: drop-shadow(0 -5px 12px var(--hz-lift)); }
-  .hz .who { position: absolute; }
-  .play .hz .l { animation: hz-up 900ms var(--settle) both; }
-  .play .hz .l2 { animation-delay: 120ms; }
-  .play .hz .l3 { animation-delay: 240ms; }
-  @keyframes hz-up { from { transform: translateY(40px); } to { transform: none; } }
-  .dock { background: none; }
-  .screen { --hz-b: 712px; }
-  .dock { padding-bottom: 24px; }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
@@ -65,65 +49,29 @@
     <div class="field" data-a style="--i:2">Sam</div>
     <p class="t-foot lbl" data-a style="--i:3">Why are you quitting, Sam?</p>
     <div class="field reason" id="reason" data-a style="--i:3"><span id="rt">Run with Aria without stopping to catch my breath</span><i class="caret"></i>
-      <span class="cnt"><span id="cn">49</span> / 120</span></div>
+      <span class="cnt"><span id="cn">49</span> / 120</span><svg class="heart" id="heart" viewBox="0 0 40 40" aria-hidden="true"></svg></div>
     <p class="t-foot lbl" data-a style="--i:5">Add to your reason</p>
     <div class="chips adds" data-a style="--i:6"><button class="chip"><span class="pl" data-icon="plus"></span>Save money</button><button class="chip"><span class="pl" data-icon="plus"></span>Breathe easier</button><button class="chip"><span class="pl" data-icon="plus"></span>More energy</button><button class="chip"><span class="pl" data-icon="plus"></span>For my family</button></div>
   </div>
-  <div class="hz" id="hz" aria-hidden="true"></div>
-
   <div class="dock">
     <button class="btn" data-a style="--i:7">Continue</button>
     <a class="link" data-a style="--i:8">Skip for now</a>
   </div>
 </div>
 <script>
-  /* Round 11: the horizon strip. Strip y 134 is the top of the button. The character stands on the middle hill's crest at its own
-     x (a thirds line, 130 or 260), measured from the hill path, at 90-110px. */
-  const HZ = { back: 'M0 82 C50 74 100 72 150 77 C198 82 234 78 268 66 C306 53 350 47 390 53 L390 300 L0 300 Z',
-    mid: 'M0 108 C46 100 96 106 140 114 C180 121 214 114 250 104 C282 95 312 91 342 94 C362 96 378 100 390 104 L390 300 L0 300 Z',
-    front: 'M0 128 C58 120 118 124 178 134 C236 143 300 136 350 124 C368 120 380 119 390 120 L390 300 L0 300 Z' };
-  function crestY(x, d = HZ.mid) {
-    const NS = 'http://www.w3.org/2000/svg', sv = document.createElementNS(NS, 'svg'), p = document.createElementNS(NS, 'path');
-    sv.setAttribute('style', 'position:absolute;width:0;height:0'); p.setAttribute('d', d.split(' L390 300')[0]); sv.appendChild(p); document.body.appendChild(sv);
-    let lo = 0, hi = p.getTotalLength(); for (let i = 0; i < 28; i++) { const m = (lo + hi) / 2; if (p.getPointAtLength(m).x < x) lo = m; else hi = m; }
-    const y = p.getPointAtLength(lo).y; sv.remove(); return y;
-  }
-  function horizon(o) {
-    const l = (i, d, extra = '') => `<svg class="l l${i}" width="390" height="300" viewBox="0 0 390 300"><path d="${d}" fill="var(--hz-${i})"/>${extra}</svg>`;
-    const s = o.size || 100, x = o.x ?? 260, y = o.y ?? crestY(x) + (o.sink || 0);
-    return l(1, HZ.back) + l(2, HZ.mid, o.pond || '') + `<div class="who" data-settle style="--d:420ms;left:${x - s / 2}px;top:${(o.top ?? (y - .965 * s)).toFixed(1)}px;width:${s}px;height:${s}px${o.clip ? `;overflow:hidden;height:${o.clip}px` : ''}"><div id="${o.id || 'hzc'}">${o.art}</div></div>` + (o.over || '') + l(3, HZ.front);
-  }
-  /* Round 11: in dark scenes Xero's belly window shows dusk (a navy sky, a warm glow on the line, a low sun on the hill, two stars).
-     A screen-local recolour of the kit art. */
-  function dusk(svg) {
-    if (DX.theme !== 'dark') return svg;
-    return svg.replace('fill="#BFD7FF"></ellipse>', 'fill="#2D3E78"></ellipse>')
-      .replace(/<circle cx="100" cy="[\d.]+" r="11" fill="#FFC93C">[\s\S]*?<\/circle>/, '<rect x="76" y="128" width="48" height="34" fill="#F0A070" opacity=".14"></rect><rect x="76" y="140" width="48" height="22" fill="#F0A070" opacity=".2"></rect><circle cx="91" cy="122" r="1.6" fill="#FFF3DC"></circle><circle cx="108" cy="115" r="1.2" fill="#FFF3DC" opacity=".8"></circle><circle cx="101" cy="154" r="9.5" fill="#FFB65E"></circle>')
-      .replace('fill="#3FB37F"></path>', 'fill="#18234A"></path>');
-  }
-  /* Round 11: Xero's poses on the strip. armL/armR replace the kit arms (drawn behind the body); hold is drawn in front of him. */
-  function xero(mood, size, o = {}) {
-    let s = DX.char('xero', { mood, size }).replace('style="display: block"', 'style="display: block; overflow: visible"');
-    if (o.armL != null) s = s.replace(/<path d="M36 124 C26 132 22 142 24 152"[^>]*><\/path>/, o.armL);
-    if (o.armR != null) s = s.replace(/<path d="M164 124 C174 132 178 142 176 152"[^>]*><\/path>/, o.armR);
-    if (o.feet != null) s = s.replace(/<ellipse cx="84" cy="188"[^>]*><\/ellipse>\s*<ellipse cx="116" cy="188"[^>]*><\/ellipse>/, o.feet);
-    if (o.hold) s = s.replace(/<\/svg>\s*$/, o.hold + '</svg>');
-    return dusk(s);
-  }
-  const arm = (d, extra = '') => `<path d="${d}" fill="none" stroke="#FF7155" stroke-width="12" stroke-linecap="round">${extra}</path>`;
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon, e.classList.contains('pl') ? { w: 3 } : {}));
   const bar = document.getElementById('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '36.4%'); void bar.offsetWidth; bar.style.transition = ''; });
   DX.after(250, () => bar.style.setProperty('--p', '45.5%'));
-  /* Round 11: Xero (100px, left thirds line) holds up a small paper heart (cream backing, warm red heart): the reason he keeps for you. */
-  const heart = '<g transform="translate(157 31) scale(1.45)"><path d="M20 34 C11 28.5 5 23 5 15.8 C5 11 8.6 7.5 13 7.5 C16 7.5 18.4 9.2 20 11.4 C21.6 9.2 24 7.5 27 7.5 C31.4 7.5 35 11 35 15.8 C35 23 29 28.5 20 34 Z" fill="#FFF8EE"></path>'
-    + '<path d="M20 30.6 C12.6 26 8.4 21.6 8.4 16 C8.4 12.8 10.8 10.6 13.6 10.6 C16.2 10.6 18.2 12.2 20 15 C21.8 12.2 23.8 10.6 26.4 10.6 C29.2 10.6 31.6 12.8 31.6 16 C31.6 21.6 27.4 26 20 30.6 Z" fill="#E8455C"></path></g>';
-  document.getElementById('hz').innerHTML = horizon({ x: 130, size: 100, art: xero('hello', 100, { armR: arm('M162 116 C173 106 179 96 182 86'), hold: heart }) });
   const full = 'Run with Aria without stopping to catch my breath', rt = document.getElementById('rt'), box = document.getElementById('reason');
   DX.after(0, () => { rt.textContent = ''; box.classList.add('focus', 'typing'); });
   /* Typing done: the keyboard goes down, the field blurs (focus ring and caret fade), the reason stays filled. */
   DX.after(800 + full.length * 26 + 700, () => box.classList.remove('focus', 'typing'));
   const sh = DX.theme === 'dark' ? 'rgba(0,0,0,.5)' : 'rgba(110,50,20,.26)';
+  document.getElementById('heart').innerHTML = `<defs><filter id="hs" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="1.4" stdDeviation=".6" flood-color="${sh}"/></filter></defs>
+    <path d="M20 34 C11 28.5 5 23 5 15.8 C5 11 8.6 7.5 13 7.5 C16 7.5 18.4 9.2 20 11.4 C21.6 9.2 24 7.5 27 7.5 C31.4 7.5 35 11 35 15.8 C35 23 29 28.5 20 34 Z" fill="#FFF8EE" filter="url(#hs)"/>
+    <path d="M20 30.6 C12.6 26 8.4 21.6 8.4 16 C8.4 12.8 10.8 10.6 13.6 10.6 C16.2 10.6 18.2 12.2 20 15 C21.8 12.2 23.8 10.6 26.4 10.6 C29.2 10.6 31.6 12.8 31.6 16 C31.6 21.6 27.4 26 20 30.6 Z" fill="#FF7155"/>
+    <path d="M12.4 15.4 C12.8 13.8 13.8 13 15.2 12.9" fill="none" stroke="#FFB09C" stroke-width="2" stroke-linecap="round"/>`;
   const cn = document.getElementById('cn');
   DX.after(0, () => { cn.textContent = '0'; });
   for (let k = 1; k <= full.length; k++) DX.after(800 + k * 26, () => { rt.textContent = full.slice(0, k); cn.textContent = k; });
