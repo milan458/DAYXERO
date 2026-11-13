@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>064 Quiet hours</title>
-<meta name="motion" content="The moon start handle pops at 10 PM, then the dial arc sweeps from it round to 7 AM (1.4s settle) where the sun end handle fades in, as the 9 counts up in the centre; the From and Until tiles and the while-it-is-quiet list arrive below on the stagger. Changing a time drags either handle with a selection haptic per 15 minutes.">
+<meta name="motion" content="The moon start handle pops at 10 PM, then the dial arc sweeps from it round to 7 AM (1.4s settle) where the sun end handle fades in, as the 9 counts up in the centre; the From and Until tiles, the plain while-it-is-quiet notes and the NRT toggle row arrive below on the stagger. Changing a time drags either handle with a selection haptic per 15 minutes.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -19,7 +19,7 @@
 html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--sel) 72%, transparent); }
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
-.dial { position: relative; width: 228px; height: 228px; margin: 34px auto 0; }
+.dial { position: relative; width: 228px; height: 228px; margin: 36px auto 0; }
 .dial .rot { position: absolute; inset: 0; transform: rotate(330deg); }
 .dial .ctr { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; gap: 2px; justify-items: center; }
 .dial .ctr .num { font-size: 44px; line-height: 1; }
@@ -29,16 +29,21 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 .ticks { position: absolute; inset: 0; color: var(--muted); }
 .times .t-foot { display: flex; align-items: center; gap: 6px; }
 .times .t-foot svg { width: 15px; height: 15px; }
-.times { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 30px; }
+.times { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 32px; }
 .times .card { padding: 14px 16px; display: grid; gap: 4px; }
 .times .num { font-size: 26px; line-height: 1.05; }
 
+.sec { padding: 20px 4px 8px; color: var(--muted); }
+.plain { list-style: none; margin: 0; padding: 2px 4px 0; display: grid; gap: 10px; }
+.plain li { display: flex; align-items: center; gap: 12px; }
+.plain li svg { width: 20px; height: 20px; color: var(--muted); flex: none; }
+.ctl { margin-top: 14px; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
 <div class="nav"><button class="icon-btn" aria-label="Back" data-ic="back"></button></div>
 <div class="scroll"><div class="pad">
-  <div class="hd"><h1 class="t-large" data-a style="--i:0">Quiet hours</h1><p class="t-foot muted" data-a style="--i:1">Nothing arrives between these times. Anything due waits until they end.</p></div>
+  <div class="hd"><h1 class="t-large" data-a style="--i:0">Quiet hours</h1><p class="t-foot muted" data-a style="--i:1">Nothing arrives between these times.</p></div>
   <div class="dial" data-a style="--i:2">
     <svg class="ticks" width="228" height="228" viewBox="0 0 228 228" id="ticks"></svg>
     <div class="rot" id="ring"></div>
@@ -52,10 +57,12 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
     <div class="card"><span class="t-foot muted"><span data-ic="sun" data-s="15"></span>Until</span><span class="num">7:00 AM</span></div>
   </div>
   <p class="t-foot sec" data-a style="--i:4">While it is quiet</p>
-  <div class="list" data-a style="--i:5">
-    <div class="row " ><span class="ico-tile s" data-ic="bell"></span><div class="grow"><div class="t-body rt">Pledge and check-in nudges</div><div class="t-foot muted">Wait until 7:00 AM</div></div></div>
-    <div class="row " ><span class="ico-tile s" data-ic="wave"></span><div class="grow"><div class="t-body rt">Craving forecast</div><div class="t-foot muted">Paused overnight</div></div></div>
-    <div class="row " ><span class="ico-tile s" data-ic="patch"></span><div class="grow"><div class="t-body rt">NRT reminders</div><div class="t-foot muted">Patch times still get through</div></div><span class="toggle on"></span></div>
+  <ul class="plain" data-a style="--i:5">
+    <li><span data-ic="bell" data-s="20"></span><span class="t-foot">Pledge and check-in nudges move to 7 AM</span></li>
+    <li><span data-ic="wave" data-s="20"></span><span class="t-foot">Craving forecasts pause overnight</span></li>
+  </ul>
+  <div class="list ctl" data-a style="--i:6">
+    <div class="row"><span class="ico-tile s" data-ic="patch"></span><div class="grow"><div class="t-body rt">NRT reminders</div><div class="t-foot muted">Patch times still arrive</div></div><span class="toggle on"></span></div>
   </div>
 </div></div>
 </div>

@@ -1,19 +1,21 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>014 Paywall</title>
-<meta name="motion" content="Calm arrive only: headline, Xero (settles in his warm sun disc, 900ms), the two ticks draw in 90ms apart, then the Yearly hero card and the quiet Monthly and Lifetime rows, then the trial line. The Yearly row selects at 800ms (ring and tick, selection haptic) and the trial line draws left to right (900ms) with its three nodes fading in as the line reaches them. No springs, no shine: this screen stays quiet.">
+<meta name="motion" content="Calm arrive only: headline, Xero (settles in his warm sun disc, 900ms), the two ticks draw in 90ms apart, then the Yearly hero card and the quiet Monthly and Lifetime rows, then the trial line, and under the button the auto-renew line. The Yearly row (its 7 days free pill on its top edge) selects at 800ms (ring and tick, selection haptic) and the trial line draws left to right (900ms) with its three nodes fading in as the line reaches them. No springs, no shine: this screen stays quiet.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   .head { padding: 104px var(--gutter) 0; display: grid; grid-template-columns: 1fr 132px; gap: 8px; align-items: center; }
   .head .xs { position: relative; width: 132px; height: 132px; display: grid; place-items: center; }
   .head .xs::before { content: ""; position: absolute; inset: 6px; border-radius: 99px; background: radial-gradient(circle at 50% 45%, color-mix(in srgb, var(--sun) 55%, transparent), color-mix(in srgb, var(--sun) 12%, transparent) 70%, transparent 72%); }
+  /* Dark: a cool pre-dawn glow behind Xero (the warm sun over navy read olive). */
+  [data-theme="dark"] .head .xs::before { background: radial-gradient(circle at 50% 45%, rgba(150,170,255,.24), rgba(130,150,250,.08) 68%, transparent 71%); }
   .head .xs > * { position: relative; }
   .head .t-large { font-size: 30px; }
   .head .t-foot { margin-top: 6px; }
   .incl { padding: 14px var(--gutter) 0; display: grid; gap: 10px; }
   .incl .it { display: flex; align-items: center; gap: 10px; }
   .incl svg { width: 18px; height: 18px; flex: none; }
-  .plans { padding: 18px var(--gutter) 0; display: grid; gap: 8px; }
+  .plans { padding: 26px var(--gutter) 0; display: grid; gap: 8px; }
   .opt.lite { min-height: 56px; background: transparent; }
   .opt.lite .price .num { font-size: 17px; }
   .opt { min-height: 60px; padding: 10px 16px; }
@@ -21,7 +23,9 @@
   .opt .price .num { font-size: 18px; letter-spacing: -.3px; display: block; }
   .opt .price .t-cap { color: var(--muted); }
   .opt .t-head { font-size: 17px; display: flex; align-items: center; gap: 8px; }
-  .opt.hero { min-height: 88px; padding: 16px 18px; background: var(--card); }
+  .opt.hero { position: relative; min-height: 84px; padding: 16px 18px; background: var(--card); }
+  /* The trial pill sits above the Yearly row, on its top edge. */
+  .opt.hero .pill { position: absolute; top: -12px; left: 16px; }
   .opt.hero .t-head { font-size: 20px; }
   .opt.hero .price .num { font-size: 24px; }
   .opt.on { box-shadow: inset 0 0 0 2.5px var(--sel), 0 10px 24px rgba(90,40,20,.12); }
@@ -32,7 +36,7 @@
   .other .t-foot { font-weight: 600; }
   .other .t-cap { color: var(--muted); }
   .other .chev { transform: rotate(90deg); }
-  .pill { font: 700 13px/1 var(--body); padding: 5px 9px; border-radius: 99px; background: var(--sel); color: var(--sel-fg); letter-spacing: .1px; }
+  .pill { font: 700 13px/1 var(--body); padding: 6px 10px; border-radius: 99px; background: var(--sel); color: var(--sel-fg); letter-spacing: .1px; }
   .tlh { margin: 26px var(--gutter) 0; font-weight: 700; }
   .tl { margin: 24px var(--gutter) 0; position: relative; height: 66px; }
   .tl svg.ln { position: absolute; left: 7px; right: 7px; top: 6px; width: calc(100% - 14px); height: 4px; overflow: visible; }
@@ -44,10 +48,14 @@
   .tl .n .t-cap b { color: var(--fg); font-weight: 700; display: block; }
   .tl .n.mid { left: 50%; transform: translateX(-50%); justify-items: center; text-align: center; }
   .tl .n.end { right: 0; justify-items: end; text-align: right; }
-  .dock { gap: 4px; padding-top: 28px; }
+  .dock { gap: 2px; padding-top: 26px; padding-bottom: 26px; }
   .dock .link { height: 36px; font-size: 14px; }
   .dock .t-cap { text-align: center; color: var(--muted); font-weight: 500; }
   .dock .t-cap a { text-decoration: underline; text-underline-offset: 2px; }
+  .dock .renew { margin-top: 6px; text-wrap: balance; }
+  .dock .legal { display: flex; justify-content: center; align-items: center; gap: 6px; }
+  .dock .legal .link { height: 32px; }
+  .dock .legal span { color: var(--muted); }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
@@ -66,7 +74,7 @@
   <div class="incl" id="incl"></div>
 
   <div class="plans">
-    <button class="opt hero" id="yr" data-a style="--i:7"><span class="radio"></span><div class="grow"><p class="t-head">Yearly <span class="pill">7 days free</span></p><p class="t-foot">$3.33 a month</p></div><div class="price"><span class="num">$39.99</span><span class="t-cap">a year</span></div></button>
+    <button class="opt hero" id="yr" data-a style="--i:7"><span class="radio"></span><div class="grow"><span class="pill">7 days free</span><p class="t-head">Yearly</p><p class="t-foot">$3.33 a month</p></div><div class="price"><span class="num">$39.99</span><span class="t-cap">a year</span></div></button>
     <button class="opt lite" data-a style="--i:8"><span class="radio"></span><div class="grow"><p class="t-head">Monthly</p></div><div class="price"><span class="num">$9.99</span><span class="t-cap">a month</span></div></button>
     <button class="opt lite" data-a style="--i:9"><span class="radio"></span><div class="grow"><p class="t-head">Lifetime</p></div><div class="price"><span class="num">$99.99</span><span class="t-cap">once</span></div></button>
   </div>
@@ -80,8 +88,8 @@
 
   <div class="dock">
     <button class="btn" data-a style="--i:11">Start my 7-day free trial</button>
-    <a class="link" data-a style="--i:12">Restore purchases</a>
-    <p class="t-cap" data-a style="--i:12">Cancel anytime in Settings. <a>Terms</a> · <a>Privacy</a></p>
+    <p class="t-cap renew" data-a style="--i:12">Free for 7 days, then $39.99 a year. Renews automatically. Cancel anytime in Settings.</p>
+    <div class="legal" data-a style="--i:13"><a class="link">Restore purchases</a><span>·</span><a class="link">Terms</a><span>·</span><a class="link">Privacy</a></div>
   </div>
 </div>
 <script>

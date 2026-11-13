@@ -233,3 +233,6 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
 .still [data-a], .still [data-settle], .still [data-pop], .still [data-stamp], .still [data-fade] { opacity: 1 !important; }
 .still [data-a], .still [data-settle] { transform: none !important; }
 .screen:not(:has(.dock)) .toast { bottom: 40px; }
+
+/* Selected chips keep their outline on every ground (beats the hairline rule on reading/dark grounds). */
+.screen .chip.on, [data-theme="dark"] .screen .chip.on { box-shadow: inset 0 0 0 2px var(--sel); }

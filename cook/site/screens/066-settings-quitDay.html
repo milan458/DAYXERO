@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>066 Quit Day</title>
-<meta name="motion" content="The date card arrives, the day count rises 0 to 7 and the earned 7-day badge stamps in at 700ms; the seven day ticks of the first week pop in left to right (110ms apart) ending on the Today ring; the change card follows. Choose a new date opens a calm confirm sheet first, never a direct date wheel.">
+<meta name="motion" content="The date card arrives, the day count rises 0 to 7 and the earned 7-day badge stamps in at 700ms; the seven dated days of the first week (6 to 12) fill in left to right (110ms apart) ending on the Today ring, 13; the change card follows with Xero beside its heading. Choose a new date opens a calm confirm sheet first, never a direct date wheel.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -27,19 +27,17 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 .since .num { font-size: 40px; line-height: 1; }
 .kept { margin-top: 12px; display: flex; align-items: center; gap: 14px; padding: 14px 16px; }
 .btn.ghost.small { box-shadow: inset 0 0 0 2px var(--line); }
-.wk { margin-top: 10px; padding: 12px 16px 14px; }
-.days { display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px; margin-top: 10px; text-align: center; }
-.days b { display: grid; place-items: center; width: 36px; height: 36px; margin: 0 auto; border-radius: 99px; background: var(--tick); color: #fff; }
-.days b svg { width: 16px; height: 16px; }
-.days .td b { background: transparent; box-shadow: inset 0 0 0 2.5px var(--fg); color: var(--fg); font: 800 13px/1 var(--display); }
+.wk { margin-top: 10px; padding: 14px 16px 14px; }
+.wk .hdr { display: flex; justify-content: space-between; align-items: baseline; }
+.days { display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px; margin-top: 12px; text-align: center; }
+.days b { display: grid; place-items: center; width: 36px; height: 36px; margin: 0 auto; border-radius: 99px; background: var(--sel); color: var(--sel-fg); font: 800 15px/1 var(--display); font-variant-numeric: tabular-nums; }
+.days .td b { background: transparent; box-shadow: inset 0 0 0 2.5px var(--fg); color: var(--fg); }
 .days .t-cap { color: var(--muted); display: block; margin-top: 5px; }
-.warn { margin-top: 10px; padding: 16px 18px; display: grid; gap: 8px; position: relative; }
-.warn .xr { position: absolute; right: 8px; top: -10px; }
-.keep { display: grid; gap: 6px; margin: 0 0 2px; }
-.keep div { display: flex; align-items: center; gap: 10px; }
-.keep .ico-tile { width: 32px; height: 32px; border-radius: 10px; background: var(--card); }
-.keep .ico-tile svg { width: 17px; height: 17px; }
-
+.days .td .t-cap { color: var(--fg); }
+.warn { margin-top: 10px; padding: 16px 18px 18px; display: grid; gap: 8px; }
+.warn .top { display: flex; align-items: center; gap: 12px; }
+.warn .top .t-head { flex: 1; }
+.warn .xr { flex: none; width: 56px; height: 56px; margin: -6px -4px -8px 0; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -49,20 +47,23 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
   <div class="card hero" data-a style="--i:2">
     <div class="cal"><div class="m t-cap">November</div><div class="d">6</div><div class="w t-cap">Friday</div></div>
     <div class="since" style="flex:1"><div><span class="num" data-count="7">7</span> <span class="t-head">days</span></div><div class="t-foot muted">free since Nov 6</div></div>
-    <div id="xb" data-stamp style="--d:700ms"></div>
+    <div id="xb" data-stamp style="--d:700ms" aria-label="Day 7 medal"></div>
   </div>
 
-  <div class="card wk" data-a style="--i:3"><div class="t-foot muted">Your first week</div><div class="days"><span data-pop style="--i:0;--d:600ms"><b data-ic="check" data-s="14" data-w="3"></b><span class="t-cap">Fri</span></span><span data-pop style="--i:1;--d:600ms"><b data-ic="check" data-s="14" data-w="3"></b><span class="t-cap">Sat</span></span><span data-pop style="--i:2;--d:600ms"><b data-ic="check" data-s="14" data-w="3"></b><span class="t-cap">Sun</span></span><span data-pop style="--i:3;--d:600ms"><b data-ic="check" data-s="14" data-w="3"></b><span class="t-cap">Mon</span></span><span data-pop style="--i:4;--d:600ms"><b data-ic="check" data-s="14" data-w="3"></b><span class="t-cap">Tue</span></span><span data-pop style="--i:5;--d:600ms"><b data-ic="check" data-s="14" data-w="3"></b><span class="t-cap">Wed</span></span><span data-pop style="--i:6;--d:600ms"><b data-ic="check" data-s="14" data-w="3"></b><span class="t-cap">Thu</span></span><span class="td" data-pop style="--i:7;--d:600ms"><b>13</b><span class="t-cap">Today</span></span></div></div>
+  <div class="card wk" data-a style="--i:3"><div class="hdr"><span class="t-foot muted">Your first week</span><span class="t-cap muted">Nov 6 to 13</span></div><div class="days" id="days"></div></div>
   <div class="card warn" data-a style="--i:4">
-    <div class="xr" id="xr066"></div>
-    <div class="t-head" style="padding-right:96px">Need to change it?</div>
-    <p class="t-foot" style="padding-right:96px;color:var(--muted)">A slip does not start you over. A new date restarts the day count only. Badges, lessons and logs stay.</p>
-    <button class="btn ghost small" style="margin-top:8px">Choose a new date</button>
+    <div class="top"><div class="t-head">Need to change it?</div><div class="xr" id="xr066"></div></div>
+    <p class="t-foot muted">A slip does not start you over. A new date restarts the day count only. Badges, lessons and logs stay.</p>
+    <button class="btn ghost small" style="margin-top:6px">Choose a new date</button>
   </div>
 </div></div>
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
-document.getElementById('xb').innerHTML = DX.badge({ kind: 'day', n: 7, state: 'earned', size: 56, bare: true }); document.getElementById('xr066').innerHTML = DX.char('xero', { mood: 'calm', size: 88 });
+document.getElementById('xb').innerHTML = DX.badge({ kind: 'day', n: 7, state: 'earned', size: 64, bare: true, label: 'Day 7' });
+document.getElementById('xr066').innerHTML = DX.char('xero', { mood: 'calm', size: 60 });
+const wd = ['Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu'];
+document.getElementById('days').innerHTML = wd.map((d, i) => `<span data-pop style="--i:${i};--d:600ms"><b>${6 + i}</b><span class="t-cap">${d}</span></span>`).join('')
+  + `<span class="td" data-pop style="--i:7;--d:600ms"><b>13</b><span class="t-cap">Today</span></span>`;
 </script>
 </body></html>

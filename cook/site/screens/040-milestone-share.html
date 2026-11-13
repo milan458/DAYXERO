@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>040 Share card</title>
-<meta name="motion" content="The card rises in and settles (900ms): its paper hills lift, Xero cheers on the front hill and the Day 7 badge stamps at 400ms. The Show on your card chips arrive; at 1.3s the Cigarettes chip turns on (selection haptic) and its line fades into the card while the card bumps. Share sits in the dock; tapping it opens the system share sheet with the rendered card.">
+<meta name="motion" content="The card rises in and settles (900ms): its paper hills lift, Xero cheers on the third hill (clear of the wordmark band) and the day badge, its sun-over-hills mark with no number since the line below says 7 days, stamps at 400ms. The Show on your card chips arrive; at 1.3s the Cigarettes chip turns on (selection haptic) and its line fades into the card while the card bumps. Share sits in the dock; tapping it opens the system share sheet with the rendered card.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -21,15 +21,17 @@
   .sc .lines { position: relative; margin-top: 7px; display: grid; gap: 2px; text-align: center; font: 700 14px/1.3 var(--body); color: #4A2A18; }
   .sc .lines span { transition: opacity .4s var(--ease), max-height .4s var(--ease); max-height: 20px; overflow: hidden; }
   .sc .lines span.off { opacity: 0; max-height: 0; }
-  .sc .xero { position: absolute; left: 50%; bottom: 22px; margin-left: -56px; }
-  .sc .mark-w { position: absolute; left: 14px; bottom: 11px; display: flex; align-items: center; gap: 6px; font: 800 14px/1 var(--display); color: #FFF8EE; letter-spacing: -.3px; }
+  .sc .xero { position: absolute; left: 50%; bottom: 34px; margin-left: -38px; }
+  .sc .mark-w { position: absolute; left: 14px; bottom: 9px; display: flex; align-items: center; gap: 6px; font: 800 14px/1 var(--display); color: #FFF8EE; letter-spacing: -.3px; }
   .sc .mark-w i { width: 10px; height: 10px; border-radius: 99px; background: #FFD966; }
   .sc .url { position: absolute; right: 14px; bottom: 12px; font: 600 12px/1 var(--body); color: #FFE6D6; }
   .show { margin-top: 20px; }
   .show .t-foot { color: var(--muted); margin-bottom: 10px; }
   .show .chips { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .show .chips .chip { min-height: 42px; padding: 0 12px; font-size: 15px; justify-content: center; }
-  .screen .chip:not(.on), [data-theme="dark"] .screen .chip:not(.on) { box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--fg) 42%, transparent); }
+  /* selected chips stay light (the kit's tint, fill only) with a small tick, so the ink Share button leads */
+  .show .chip svg { width: 16px; height: 16px; margin-left: -4px; }
+  .show .chip:not(.on) svg { display: none; }
   [data-theme="dark"] .sc { box-shadow: 0 18px 40px rgba(0,0,0,.45), 0 0 0 1.5px rgba(255,255,255,.22); }
 </style>
 </head><body>
@@ -60,7 +62,7 @@
       </div>
       <div class="show" data-a style="--i:3">
         <p class="t-foot">Show on your card</p>
-        <div class="chips"><button class="chip on">Days free</button><button class="chip on">Money kept</button><button class="chip on" id="t-cig">Cigarettes</button><button class="chip">Waves ridden</button></div>
+        <div class="chips"><button class="chip on" data-ic="check">Days free</button><button class="chip on" data-ic="check">Money kept</button><button class="chip on" id="t-cig" data-ic="check">Cigarettes</button><button class="chip" data-ic="check">Waves ridden</button></div>
       </div>
     </div>
   </div>
@@ -69,10 +71,10 @@
   </div>
 </div>
 <script>
-  document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20 })));
+  document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20, w: e.dataset.ic === 'check' ? 3 : 2.2 })));
   document.getElementById('sh').innerHTML = DX.icon('share', { size: 20 });
-  document.getElementById('medal').innerHTML = DX.badge({ kind: 'day', n: 7, size: 84, bare: true });
-  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'cheer', size: 112, stage: 3 });
+  document.getElementById('medal').innerHTML = DX.badge({ kind: 'day', n: '', size: 84, bare: true });
+  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'cheer', size: 96, stage: 3 });
   const t = document.getElementById('t-cig'), l = document.getElementById('l-cig'), card = document.getElementById('card');
   DX.after(0, () => { t.classList.remove('on'); l.classList.add('off'); });
   DX.after(1300, () => { t.classList.add('on'); l.classList.remove('off'); card.classList.remove('bump'); void card.offsetWidth; card.classList.add('bump'); });
