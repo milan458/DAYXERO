@@ -1,23 +1,22 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>014 Paywall</title>
-<meta name="motion" content="Calm arrive only: headline, Xero (settles into his small cream disc, 900ms), the three small paper-cut coral stamps arrive and their cream ticks draw in 90ms apart, then the Yearly hero card and the Monthly and Lifetime rows, then the trial line, and under the button the one-line auto-renew note. $39.99 appears in the headline, the Yearly row and the end of the timeline (Nov 6, $39.99 charged). The Yearly row (its 7 days free pill on its top edge) takes the kit selection at 800ms (warm tint, outline, ring and tick; selection haptic) and the trial line draws left to right (900ms) with its three nodes fading in as the line reaches them. No springs, no shine: this screen stays quiet.">
+<meta name="motion" content="Calm arrive only: Xero (settles into his small cream disc at the right of the nav row, 900ms), headline, the three small paper-cut coral stamps arrive and their cream ticks draw in 90ms apart, then the Yearly hero card and the Monthly and Lifetime rows, then the trial line, and under the button the one-line auto-renew note. $39.99 appears in the headline, the Yearly row and the end of the timeline (Nov 6, $39.99 charged). The Yearly row (its 7 days free pill on its top edge) takes the kit selection at 800ms (warm tint, outline, ring and tick; selection haptic) and the trial line draws left to right (900ms) with its three nodes fading in as the line reaches them. No springs, no shine: this screen stays quiet.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  /* Round 8: a smaller disc (88px) so the headline has room; no ticket. */
-  .head { padding: 100px var(--gutter) 0; display: grid; grid-template-columns: 1fr 88px; gap: 10px; align-items: center; }
+  /* Round 11: Xero's disc is lifted into the nav row (right, 60px, like an avatar) so the headline runs the full width at the kit size. */
+  .head { padding: 116px var(--gutter) 0; }
   /* Xero sits in a cream disc (reads on apricot). Dark: the disc is the raised card tone. */
-  .head .xs { position: relative; width: 88px; height: 88px; border-radius: 99px; background: #FFF8EE; display: grid; place-items: center; }
-  [data-theme="dark"] .head .xs { background: var(--card-2); }
-  .head .xs > * { position: relative; margin-top: 4px; }
-  .head .t-large { font-size: 30px; }
+  .nav .xs { position: relative; width: 60px; height: 60px; border-radius: 99px; background: #FFF8EE; display: grid; place-items: center; flex: none; margin-top: 8px; }
+  [data-theme="dark"] .nav .xs { background: var(--card-2); }
+  .nav .xs > * { position: relative; margin-top: 3px; }
   .head .t-large span { display: block; white-space: nowrap; }
   .head .t-foot { margin-top: 6px; }
-  .incl { padding: 18px var(--gutter) 0; display: grid; gap: 9px; }
+  .incl { padding: 22px var(--gutter) 0; display: grid; gap: 10px; }
   .incl .it { display: flex; align-items: center; gap: 10px; }
   /* Benefit marks: small paper-cut stamps (a scalloped coral disc, soft paper shadow, cream tick), the prep-stamp family in miniature. */
   .incl svg { width: 22px; height: 22px; flex: none; overflow: visible; }
-  .plans { padding: 24px var(--gutter) 0; display: grid; gap: 8px; }
+  .plans { padding: 30px var(--gutter) 0; display: grid; gap: 8px; }
   .opt.lite { min-height: 52px; }
   .opt.lite .price .num { font-size: 17px; }
   .opt { min-height: 60px; padding: 10px 16px; }
@@ -40,7 +39,7 @@
   .other .chev { transform: rotate(90deg); }
   .pill { font: 700 13px/1 var(--body); padding: 6px 10px; border-radius: 99px; background: var(--sel); color: var(--sel-fg); letter-spacing: .1px; }
   .tlh { margin: 26px var(--gutter) 0; font-weight: 700; }
-  .tl { margin: 22px var(--gutter) 0; position: relative; height: 80px; }
+  .tl { margin: 28px var(--gutter) 0; position: relative; height: 80px; }  /* round 11: the list sits lower so no gap opens above the CTA */
   .tl svg.ln { position: absolute; left: 7px; right: 7px; top: 6px; width: calc(100% - 14px); height: 4px; overflow: visible; }
   .tl .n { position: absolute; top: 0; display: grid; gap: 6px; }
   .tl .n i { width: 16px; height: 16px; border-radius: 99px; background: var(--g); box-shadow: inset 0 0 0 3px var(--fg); display: block; }
@@ -63,6 +62,8 @@
 <div class="screen" data-ground="apricot">
   <div class="nav">
     <button class="icon-btn" aria-label="Back" data-icon="back"></button>
+    <div class="grow"></div>
+    <div class="xs" data-settle style="--d:150ms"><div class="bob" id="xero"></div></div>
   </div>
 
   <div class="head">
@@ -70,7 +71,6 @@
       <h1 class="t-large" data-a><span>7 days free, then</span><span>$39.99 a year</span></h1>
       <p class="t-foot muted" data-a style="--i:1">Craving SOS stays free, always.</p>
     </div>
-    <div class="xs" data-settle style="--d:150ms"><div class="bob" id="xero"></div></div>
   </div>
 
   <div class="incl" id="incl"></div>
@@ -97,7 +97,7 @@
 <script>
   document.querySelector('.icon-btn').innerHTML = DX.icon('back');
   /* Xero, hello, in his disc (round 8: no ticket). */
-  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'hello', size: 74 });
+  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'hello', size: 52 });
   /* What the plan buys after Quit Day leads; the prep it unlocks comes last. */
   /* SOS itself is free; the paid perk is Jelli's voice in it. */
   const items = ['Weeks 1 to 4 of coaching after Quit Day', 'Jelli&rsquo;s voice in SOS and Glim&rsquo;s check-ins', 'Prep 4 to 7 and your Day Xero badge'];

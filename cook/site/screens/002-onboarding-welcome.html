@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>002 Welcome</title>
-<meta name="motion" content="Continues the launch scene: the two paper hills settle up (0, 120ms; 900ms settle; the crest under Xero fades into the page, no seam) and the sun climbs 60px (1200ms ease-out; dark mode: a warm amber core in a soft amber glow). Xero settles onto the hill crest (900ms, from 300ms), then waves: his right arm swings 16 degrees twice (2 x 800ms, from 1200ms) with two small motion marks. At 1100ms the cream speech bubble (above and right of his raised hand, its tail aimed at his mouth) rises in (600ms). Headline, body and dock arrive in reading order from 500ms (600ms, 90ms stagger). Light haptic on Get started.">
+<meta name="motion" content="Continues the launch scene: the two paper hills settle up (0, 120ms; 900ms settle; the crest under Xero fades into the page, no seam) and the sun climbs 60px (1200ms ease-out; dark mode: a warm amber core in a soft amber glow). Xero (dark mode: a dusk sky in his belly window) settles onto the hill crest (900ms, from 300ms), then waves: his right arm swings 16 degrees twice (2 x 800ms, from 1200ms) with two small motion marks. At 1100ms the cream speech bubble (above and right of his raised hand, its tail aimed at his mouth) rises in (600ms). Headline, body and dock arrive in reading order from 500ms (600ms, 90ms stagger). Light haptic on Get started.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -88,12 +88,20 @@
   </div>
 </div>
 <script>
+  /* Round 11: in dark scenes Xero's belly window shows dusk (a navy sky, a warm glow on the line, a low sun on the hill, two stars).
+     A screen-local recolour of the kit art. */
+  function dusk(svg) {
+    if (DX.theme !== 'dark') return svg;
+    return svg.replace('fill="#BFD7FF"></ellipse>', 'fill="#2D3E78"></ellipse>')
+      .replace(/<circle cx="100" cy="[\d.]+" r="11" fill="#FFC93C">[\s\S]*?<\/circle>/, '<rect x="76" y="128" width="48" height="34" fill="#F0A070" opacity=".14"></rect><rect x="76" y="140" width="48" height="22" fill="#F0A070" opacity=".2"></rect><circle cx="91" cy="122" r="1.6" fill="#FFF3DC"></circle><circle cx="108" cy="115" r="1.2" fill="#FFF3DC" opacity=".8"></circle><circle cx="101" cy="154" r="9.5" fill="#FFB65E"></circle>')
+      .replace('fill="#3FB37F"></path>', 'fill="#18234A"></path>');
+  }
   /* Xero waving: the kit's hello pose with the right arm raised; it swings twice from 1200ms, two small motion marks by the hand. */
   const ink = DX.theme === 'dark' ? '#F3E9DE' : '#24163A';
   const swing = DX.still ? '' : '<animateTransform attributeName="transform" type="rotate" values="0 162 112;-16 162 112;0 162 112;-16 162 112;0 162 112" keyTimes="0;.25;.5;.75;1" dur="1.6s" begin="1.2s" fill="freeze"/>';
   const wave = `<path d="M162 112 C172 98 178 86 176 74" fill="none" stroke="#FF7155" stroke-width="12" stroke-linecap="round">${swing}</path>`
     + `<g fill="none" stroke="${ink}" stroke-width="3" stroke-linecap="round" opacity=".55"><path d="M186 62 q7 6 6 14"/><path d="M193 52 q9 9 6 22"/></g>`;
-  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'hello', size: 152 })
-    .replace(/<path d="M164 124 C174 132 178 142 176 152"[^>]*><\/path>/, wave);
+  document.getElementById('xero').innerHTML = dusk(DX.char('xero', { mood: 'hello', size: 152 })
+    .replace(/<path d="M164 124 C174 132 178 142 176 152"[^>]*><\/path>/, wave));
 </script>
 </body></html>

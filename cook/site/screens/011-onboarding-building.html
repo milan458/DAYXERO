@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>011 Plan building</title>
-<meta name="motion" content="A short build beat. Progress eases 8/11 to 9/11 while the left-aligned title arrives and the horizon strip above the dock settles up in three paper layers (0, 120, 240ms; 40px, 900ms settle), then Xero (72px, cheer) settles onto its crest (from 420ms). Three plan pieces (Quit Day Fri, Nov 6 on a cream card, waves to watch with two calm paper swells, your reason) settle up one by one, 420ms apart (900ms settle each), each warm paper-cut icon landing with its row; a light haptic as each row lands. At 2100ms the status line swaps to 'Built from your answers' with the screen's one green check popping in (420ms), Xero bumps (520ms spring, success haptic) and the button arrives.">
+<meta name="motion" content="A short build beat. Progress eases 8/11 to 9/11 while the left-aligned title arrives and the horizon strip above the dock settles up in three paper layers (0, 120, 240ms; 40px, 900ms settle), then Xero (104px, on the left thirds line, cheering with both arms up) settles onto its crest (from 420ms). Three plan pieces (Quit Day Fri, Nov 6 on a cream card, waves to watch with two calm paper swells, your reason) settle up one by one, 420ms apart (900ms settle each), each warm paper-cut icon landing with its row; a light haptic as each row lands. At 2100ms the status line swaps to 'Built from your answers' with the screen's one green check popping in (420ms), Xero bumps (520ms spring, success haptic) and the button arrives.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -44,7 +44,7 @@
   .play .hz .l3 { animation-delay: 240ms; }
   @keyframes hz-up { from { transform: translateY(40px); } to { transform: none; } }
   .dock { background: none; }
-  .screen { --hz-b: 752px; }
+  .screen { --hz-b: 736px; }  /* round 11: the strip rises 16px so no empty band opens above it */
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
@@ -70,17 +70,43 @@
   </div>
 </div>
 <script>
-  /* Round 10: the horizon strip. Strip y 134 is the top of the button; the character's feet sit on the middle hill's crest. */
-  function horizon(o) {
-    const back = 'M0 82 C50 74 100 72 150 77 C198 82 234 78 268 66 C306 53 350 47 390 53 L390 300 L0 300 Z',
-      mid = 'M0 108 C46 100 96 106 140 114 C180 121 214 114 250 104 C282 95 312 91 342 94 C362 96 378 100 390 104 L390 300 L0 300 Z',
-      front = 'M0 128 C58 120 118 124 178 134 C236 143 300 136 350 124 C368 120 380 119 390 120 L390 300 L0 300 Z';
-    const l = (i, d, extra = '') => `<svg class="l l${i}" width="390" height="300" viewBox="0 0 390 300"><path d="${d}" fill="var(--hz-${i})"/>${extra}</svg>`;
-    const s = o.size || 72, x = o.x ?? 312, y = o.y ?? 92;
-    return l(1, back) + l(2, mid, o.pond || '') + `<div class="who" data-settle style="--d:420ms;left:${x - s / 2}px;top:${(o.top ?? (y - .965 * s)).toFixed(1)}px;width:${s}px;height:${s}px${o.clip ? `;overflow:hidden;height:${o.clip}px` : ''}"><div id="${o.id || 'hzc'}">${o.art}</div></div>` + (o.over || '') + l(3, front);
+  /* Round 11: the horizon strip. Strip y 134 is the top of the button. The character stands on the middle hill's crest at its own
+     x (a thirds line, 130 or 260), measured from the hill path, at 90-110px. */
+  const HZ = { back: 'M0 82 C50 74 100 72 150 77 C198 82 234 78 268 66 C306 53 350 47 390 53 L390 300 L0 300 Z',
+    mid: 'M0 108 C46 100 96 106 140 114 C180 121 214 114 250 104 C282 95 312 91 342 94 C362 96 378 100 390 104 L390 300 L0 300 Z',
+    front: 'M0 128 C58 120 118 124 178 134 C236 143 300 136 350 124 C368 120 380 119 390 120 L390 300 L0 300 Z' };
+  function crestY(x, d = HZ.mid) {
+    const NS = 'http://www.w3.org/2000/svg', sv = document.createElementNS(NS, 'svg'), p = document.createElementNS(NS, 'path');
+    sv.setAttribute('style', 'position:absolute;width:0;height:0'); p.setAttribute('d', d.split(' L390 300')[0]); sv.appendChild(p); document.body.appendChild(sv);
+    let lo = 0, hi = p.getTotalLength(); for (let i = 0; i < 28; i++) { const m = (lo + hi) / 2; if (p.getPointAtLength(m).x < x) lo = m; else hi = m; }
+    const y = p.getPointAtLength(lo).y; sv.remove(); return y;
   }
+  function horizon(o) {
+    const l = (i, d, extra = '') => `<svg class="l l${i}" width="390" height="300" viewBox="0 0 390 300"><path d="${d}" fill="var(--hz-${i})"/>${extra}</svg>`;
+    const s = o.size || 100, x = o.x ?? 260, y = o.y ?? crestY(x) + (o.sink || 0);
+    return l(1, HZ.back) + l(2, HZ.mid, o.pond || '') + `<div class="who" data-settle style="--d:420ms;left:${x - s / 2}px;top:${(o.top ?? (y - .965 * s)).toFixed(1)}px;width:${s}px;height:${s}px${o.clip ? `;overflow:hidden;height:${o.clip}px` : ''}"><div id="${o.id || 'hzc'}">${o.art}</div></div>` + (o.over || '') + l(3, HZ.front);
+  }
+  /* Round 11: in dark scenes Xero's belly window shows dusk (a navy sky, a warm glow on the line, a low sun on the hill, two stars).
+     A screen-local recolour of the kit art. */
+  function dusk(svg) {
+    if (DX.theme !== 'dark') return svg;
+    return svg.replace('fill="#BFD7FF"></ellipse>', 'fill="#2D3E78"></ellipse>')
+      .replace(/<circle cx="100" cy="[\d.]+" r="11" fill="#FFC93C">[\s\S]*?<\/circle>/, '<rect x="76" y="128" width="48" height="34" fill="#F0A070" opacity=".14"></rect><rect x="76" y="140" width="48" height="22" fill="#F0A070" opacity=".2"></rect><circle cx="91" cy="122" r="1.6" fill="#FFF3DC"></circle><circle cx="108" cy="115" r="1.2" fill="#FFF3DC" opacity=".8"></circle><circle cx="101" cy="154" r="9.5" fill="#FFB65E"></circle>')
+      .replace('fill="#3FB37F"></path>', 'fill="#18234A"></path>');
+  }
+  /* Round 11: Xero's poses on the strip. armL/armR replace the kit arms (drawn behind the body); hold is drawn in front of him. */
+  function xero(mood, size, o = {}) {
+    let s = DX.char('xero', { mood, size }).replace('style="display: block"', 'style="display: block; overflow: visible"');
+    if (o.armL != null) s = s.replace(/<path d="M36 124 C26 132 22 142 24 152"[^>]*><\/path>/, o.armL);
+    if (o.armR != null) s = s.replace(/<path d="M164 124 C174 132 178 142 176 152"[^>]*><\/path>/, o.armR);
+    if (o.feet != null) s = s.replace(/<ellipse cx="84" cy="188"[^>]*><\/ellipse>\s*<ellipse cx="116" cy="188"[^>]*><\/ellipse>/, o.feet);
+    if (o.hold) s = s.replace(/<\/svg>\s*$/, o.hold + '</svg>');
+    return dusk(s);
+  }
+  const arm = (d, extra = '') => `<path d="${d}" fill="none" stroke="#FF7155" stroke-width="12" stroke-linecap="round">${extra}</path>`;
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
-  document.getElementById('hz').innerHTML = horizon({ art: '<div id="bw">' + DX.char('xero', { mood: 'cheer', size: 72 }) + '</div>' });
+  /* Round 11: Xero (104px, left thirds line) cheers, both arms up. */
+  document.getElementById('hz').innerHTML = horizon({ x: 130, size: 104, art: '<div id="bw">' + xero('cheer', 104) + '</div>' });
   const bw = document.getElementById('bw'), dark = DX.theme === 'dark';
   /* Paper-cut icons (round 8): flat cut pieces, each with a soft paper shadow, as on 003 and 008. */
   const sh = dark ? 'rgba(0,0,0,.55)' : 'rgba(120,52,24,.24)';

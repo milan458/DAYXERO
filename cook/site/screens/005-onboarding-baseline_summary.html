@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>005 Your baseline</title>
-<meta name="motion" content="Progress eases from 2/11 to 3/11 (900ms). Question arrives, then the hero card: 32 counts up (850ms, from 300ms) while the split bar grows left to right, cigarettes then vape (700ms each, 120ms apart), and the two legend lines fade in under their segments. Under a hairline the two cost figures ($2,555 a year | 365 hours of smoke breaks) count up side by side (850ms), then the one-line estimates note fades up (600ms). The horizon strip above the dock settles up in three paper layers (0, 120, 240ms; 40px, 900ms settle) and a calm Xero (72px) settles onto its crest last (from 420ms). No haptic; one soft tick when the counts land.">
+<meta name="motion" content="Progress eases from 2/11 to 3/11 (900ms). Question arrives, then the hero card: 32 counts up (850ms, from 300ms) while the split bar grows left to right, cigarettes then vape (700ms each, 120ms apart), and the two legend lines fade in under their segments. Under a hairline the two cost figures ($2,555 a year | 365 hours of smoke breaks) count up side by side (850ms), then the one-line estimates note fades up (600ms). The horizon strip above the dock settles up in three paper layers (0, 120, 240ms; 40px, 900ms settle) and a calm Xero (100px, on the right thirds line, seated on the crest with his feet out) settles onto it last (from 420ms). No haptic; one soft tick when the counts land.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -64,7 +64,7 @@
   </div>
   <div class="answers">
     <div class="card load" data-a style="--i:2">
-      <p class="t-foot muted">Your nicotine, counted in cigarettes</p>
+      <p class="t-foot muted">Nicotine, in cigarettes</p>
       <div class="big"><span class="t-display num"><span data-count="32">32</span></span><span class="t-title">a day</span></div>
       <div class="split" aria-hidden="true"><i class="c"></i><i class="v"></i></div>
       <div class="legend">
@@ -83,17 +83,46 @@
   <div class="dock"><button class="btn" data-a style="--i:6">Continue</button></div>
 </div>
 <script>
-  /* Round 10: the horizon strip. Strip y 134 is the top of the button; the character's feet sit on the middle hill's crest. */
-  function horizon(o) {
-    const back = 'M0 82 C50 74 100 72 150 77 C198 82 234 78 268 66 C306 53 350 47 390 53 L390 300 L0 300 Z',
-      mid = 'M0 108 C46 100 96 106 140 114 C180 121 214 114 250 104 C282 95 312 91 342 94 C362 96 378 100 390 104 L390 300 L0 300 Z',
-      front = 'M0 128 C58 120 118 124 178 134 C236 143 300 136 350 124 C368 120 380 119 390 120 L390 300 L0 300 Z';
-    const l = (i, d, extra = '') => `<svg class="l l${i}" width="390" height="300" viewBox="0 0 390 300"><path d="${d}" fill="var(--hz-${i})"/>${extra}</svg>`;
-    const s = o.size || 72, x = o.x ?? 312, y = o.y ?? 92;
-    return l(1, back) + l(2, mid, o.pond || '') + `<div class="who" data-settle style="--d:420ms;left:${x - s / 2}px;top:${(o.top ?? (y - .965 * s)).toFixed(1)}px;width:${s}px;height:${s}px${o.clip ? `;overflow:hidden;height:${o.clip}px` : ''}"><div id="${o.id || 'hzc'}">${o.art}</div></div>` + (o.over || '') + l(3, front);
+  /* Round 11: the horizon strip. Strip y 134 is the top of the button. The character stands on the middle hill's crest at its own
+     x (a thirds line, 130 or 260), measured from the hill path, at 90-110px. */
+  const HZ = { back: 'M0 82 C50 74 100 72 150 77 C198 82 234 78 268 66 C306 53 350 47 390 53 L390 300 L0 300 Z',
+    mid: 'M0 108 C46 100 96 106 140 114 C180 121 214 114 250 104 C282 95 312 91 342 94 C362 96 378 100 390 104 L390 300 L0 300 Z',
+    front: 'M0 128 C58 120 118 124 178 134 C236 143 300 136 350 124 C368 120 380 119 390 120 L390 300 L0 300 Z' };
+  function crestY(x, d = HZ.mid) {
+    const NS = 'http://www.w3.org/2000/svg', sv = document.createElementNS(NS, 'svg'), p = document.createElementNS(NS, 'path');
+    sv.setAttribute('style', 'position:absolute;width:0;height:0'); p.setAttribute('d', d.split(' L390 300')[0]); sv.appendChild(p); document.body.appendChild(sv);
+    let lo = 0, hi = p.getTotalLength(); for (let i = 0; i < 28; i++) { const m = (lo + hi) / 2; if (p.getPointAtLength(m).x < x) lo = m; else hi = m; }
+    const y = p.getPointAtLength(lo).y; sv.remove(); return y;
   }
+  function horizon(o) {
+    const l = (i, d, extra = '') => `<svg class="l l${i}" width="390" height="300" viewBox="0 0 390 300"><path d="${d}" fill="var(--hz-${i})"/>${extra}</svg>`;
+    const s = o.size || 100, x = o.x ?? 260, y = o.y ?? crestY(x) + (o.sink || 0);
+    return l(1, HZ.back) + l(2, HZ.mid, o.pond || '') + `<div class="who" data-settle style="--d:420ms;left:${x - s / 2}px;top:${(o.top ?? (y - .965 * s)).toFixed(1)}px;width:${s}px;height:${s}px${o.clip ? `;overflow:hidden;height:${o.clip}px` : ''}"><div id="${o.id || 'hzc'}">${o.art}</div></div>` + (o.over || '') + l(3, HZ.front);
+  }
+  /* Round 11: in dark scenes Xero's belly window shows dusk (a navy sky, a warm glow on the line, a low sun on the hill, two stars).
+     A screen-local recolour of the kit art. */
+  function dusk(svg) {
+    if (DX.theme !== 'dark') return svg;
+    return svg.replace('fill="#BFD7FF"></ellipse>', 'fill="#2D3E78"></ellipse>')
+      .replace(/<circle cx="100" cy="[\d.]+" r="11" fill="#FFC93C">[\s\S]*?<\/circle>/, '<rect x="76" y="128" width="48" height="34" fill="#F0A070" opacity=".14"></rect><rect x="76" y="140" width="48" height="22" fill="#F0A070" opacity=".2"></rect><circle cx="91" cy="122" r="1.6" fill="#FFF3DC"></circle><circle cx="108" cy="115" r="1.2" fill="#FFF3DC" opacity=".8"></circle><circle cx="101" cy="154" r="9.5" fill="#FFB65E"></circle>')
+      .replace('fill="#3FB37F"></path>', 'fill="#18234A"></path>');
+  }
+  /* Round 11: Xero's poses on the strip. armL/armR replace the kit arms (drawn behind the body); hold is drawn in front of him. */
+  function xero(mood, size, o = {}) {
+    let s = DX.char('xero', { mood, size }).replace('style="display: block"', 'style="display: block; overflow: visible"');
+    if (o.armL != null) s = s.replace(/<path d="M36 124 C26 132 22 142 24 152"[^>]*><\/path>/, o.armL);
+    if (o.armR != null) s = s.replace(/<path d="M164 124 C174 132 178 142 176 152"[^>]*><\/path>/, o.armR);
+    if (o.feet != null) s = s.replace(/<ellipse cx="84" cy="188"[^>]*><\/ellipse>\s*<ellipse cx="116" cy="188"[^>]*><\/ellipse>/, o.feet);
+    if (o.hold) s = s.replace(/<\/svg>\s*$/, o.hold + '</svg>');
+    return dusk(s);
+  }
+  const arm = (d, extra = '') => `<path d="${d}" fill="none" stroke="#FF7155" stroke-width="12" stroke-linecap="round">${extra}</path>`;
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
-  document.getElementById('hz').innerHTML = horizon({ art: DX.char('xero', { mood: 'calm', size: 72 }) });
+  /* Round 11: Xero (100px, right thirds line) sits calmly on the crest: body lowered onto the hill, feet out in front, hands resting. */
+  const foot = (x, r) => `<g transform="rotate(${r} ${x} 182)"><ellipse cx="${x}" cy="182" rx="17" ry="10" fill="#C9542F"></ellipse><ellipse cx="${x + (r < 0 ? -4 : 4)}" cy="181" rx="9" ry="5.5" fill="#E2704C"></ellipse></g>`;
+  document.getElementById('hz').innerHTML = horizon({ x: 262, size: 100, sink: 7, art: xero('calm', 100, {
+    armL: arm('M40 132 C30 146 32 160 44 168'), armR: arm('M160 132 C170 146 168 160 156 168'),
+    feet: '', hold: foot(58, -24) + foot(142, 24) }).replace('<g transform="translate(100 190)">', '<g transform="translate(100 190) scale(1.03 .95)">') });
   const bar = document.getElementById('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '18.2%'); void bar.offsetWidth; bar.style.transition = ''; });
   DX.after(250, () => bar.style.setProperty('--p', '27.3%'));

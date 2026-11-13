@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>003 What you are leaving behind</title>
-<meta name="motion" content="Progress eases from 0 to 1/11 (900ms settle). Question and helper arrive (600ms, 90ms stagger), then the three checkbox rows and the one-line note in order. Product tiles are flat paper-cut pieces with soft paper shadows (the cigarette is unlit). The horizon strip above the dock settles up in three paper layers (0, 120, 240ms; 40px, 900ms settle) and Xero (72px, hello) settles onto its crest last (from 420ms, 900ms). At 900ms Vape gets picked: the checkbox fills and ticks, the row takes the warm selection tint and dips to .97 and springs back (520ms), and the note's count switches from 1 to 2. Selection haptic on each pick.">
+<meta name="motion" content="Progress eases from 0 to 1/11 (900ms settle). Question and helper arrive (600ms, 90ms stagger), then the three checkbox rows and the one-line note (full width) in order. Product tiles are flat paper-cut pieces with soft paper shadows (the cigarette is unlit). The horizon strip above the dock settles up in three paper layers (0, 120, 240ms; 40px, 900ms settle) and Xero (100px, on the left thirds line, one empty hand held out palm up) settles onto its crest last (from 420ms, 900ms). At 900ms Vape gets picked: the checkbox fills and ticks, the row takes the warm selection tint and dips to .97 and springs back (520ms), and the note's count switches from 1 to 2. Selection haptic on each pick.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -23,7 +23,7 @@
   .opt .ico-tile svg { overflow: visible; width: 42px; height: 42px; }
   .answers { gap: 12px !important; }
   /* Round 10: the note is one quiet line (Xero now stands on the horizon strip below). */
-  .note { margin-top: 6px; padding: 0 4px; color: var(--muted); text-wrap: balance; }
+  .note { margin-top: 6px; padding: 0 4px; color: var(--muted); text-wrap: pretty; }
   .note b { font-weight: 700; color: var(--fg); }
   /* Round 10: the onboarding horizon strip (003 to 011, one element). Three flat paper hills in the launch style, soft paper
      shadows and no crest lines, sitting just above the dock and running full-bleed behind it; the screen's character stands on the
@@ -41,7 +41,7 @@
   .play .hz .l3 { animation-delay: 240ms; }
   @keyframes hz-up { from { transform: translateY(40px); } to { transform: none; } }
   .dock { background: none; }
-  .screen { --hz-b: 752px; }
+  .screen { --hz-b: 736px; }  /* round 11: the strip rises 16px so no empty band opens above it */
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
@@ -58,22 +58,47 @@
     <button class="opt multi on" data-a style="--i:2"><span class="ico-tile" data-art="cig"></span><span class="grow"><span class="t-head">Cigarettes</span><span class="t-foot">Manufactured or roll-ups</span></span><span class="radio"></span></button>
     <button class="opt multi on" id="vape" data-a style="--i:3"><span class="ico-tile" data-art="vape"></span><span class="grow"><span class="t-head">Vape</span><span class="t-foot">Disposables, pods or tanks</span></span><span class="radio"></span></button>
     <button class="opt multi" data-a style="--i:4"><span class="ico-tile" data-art="pouch"></span><span class="grow"><span class="t-head">Nicotine pouches</span><span class="t-foot">Zyn, Velo, snus</span></span><span class="radio"></span></button>
-    <p class="t-foot note" data-a style="--i:5"><b id="cnt">2 picked.</b> Lots of people use both. I&rsquo;ll plan for each.</p>
+    <p class="t-foot note" data-a style="--i:5"><b id="cnt">2 picked.</b> Lots of people use both.</p>
   </div>
   <div class="hz" id="hz" aria-hidden="true"></div>
 
   <div class="dock"><button class="btn" data-a style="--i:6">Continue</button></div>
 </div>
 <script>
-  /* Round 10: the horizon strip. Strip y 134 is the top of the button; the character's feet sit on the middle hill's crest. */
-  function horizon(o) {
-    const back = 'M0 82 C50 74 100 72 150 77 C198 82 234 78 268 66 C306 53 350 47 390 53 L390 300 L0 300 Z',
-      mid = 'M0 108 C46 100 96 106 140 114 C180 121 214 114 250 104 C282 95 312 91 342 94 C362 96 378 100 390 104 L390 300 L0 300 Z',
-      front = 'M0 128 C58 120 118 124 178 134 C236 143 300 136 350 124 C368 120 380 119 390 120 L390 300 L0 300 Z';
-    const l = (i, d, extra = '') => `<svg class="l l${i}" width="390" height="300" viewBox="0 0 390 300"><path d="${d}" fill="var(--hz-${i})"/>${extra}</svg>`;
-    const s = o.size || 72, x = o.x ?? 312, y = o.y ?? 92;
-    return l(1, back) + l(2, mid, o.pond || '') + `<div class="who" data-settle style="--d:420ms;left:${x - s / 2}px;top:${(o.top ?? (y - .965 * s)).toFixed(1)}px;width:${s}px;height:${s}px${o.clip ? `;overflow:hidden;height:${o.clip}px` : ''}"><div id="${o.id || 'hzc'}">${o.art}</div></div>` + (o.over || '') + l(3, front);
+  /* Round 11: the horizon strip. Strip y 134 is the top of the button. The character stands on the middle hill's crest at its own
+     x (a thirds line, 130 or 260), measured from the hill path, at 90-110px. */
+  const HZ = { back: 'M0 82 C50 74 100 72 150 77 C198 82 234 78 268 66 C306 53 350 47 390 53 L390 300 L0 300 Z',
+    mid: 'M0 108 C46 100 96 106 140 114 C180 121 214 114 250 104 C282 95 312 91 342 94 C362 96 378 100 390 104 L390 300 L0 300 Z',
+    front: 'M0 128 C58 120 118 124 178 134 C236 143 300 136 350 124 C368 120 380 119 390 120 L390 300 L0 300 Z' };
+  function crestY(x, d = HZ.mid) {
+    const NS = 'http://www.w3.org/2000/svg', sv = document.createElementNS(NS, 'svg'), p = document.createElementNS(NS, 'path');
+    sv.setAttribute('style', 'position:absolute;width:0;height:0'); p.setAttribute('d', d.split(' L390 300')[0]); sv.appendChild(p); document.body.appendChild(sv);
+    let lo = 0, hi = p.getTotalLength(); for (let i = 0; i < 28; i++) { const m = (lo + hi) / 2; if (p.getPointAtLength(m).x < x) lo = m; else hi = m; }
+    const y = p.getPointAtLength(lo).y; sv.remove(); return y;
   }
+  function horizon(o) {
+    const l = (i, d, extra = '') => `<svg class="l l${i}" width="390" height="300" viewBox="0 0 390 300"><path d="${d}" fill="var(--hz-${i})"/>${extra}</svg>`;
+    const s = o.size || 100, x = o.x ?? 260, y = o.y ?? crestY(x) + (o.sink || 0);
+    return l(1, HZ.back) + l(2, HZ.mid, o.pond || '') + `<div class="who" data-settle style="--d:420ms;left:${x - s / 2}px;top:${(o.top ?? (y - .965 * s)).toFixed(1)}px;width:${s}px;height:${s}px${o.clip ? `;overflow:hidden;height:${o.clip}px` : ''}"><div id="${o.id || 'hzc'}">${o.art}</div></div>` + (o.over || '') + l(3, HZ.front);
+  }
+  /* Round 11: in dark scenes Xero's belly window shows dusk (a navy sky, a warm glow on the line, a low sun on the hill, two stars).
+     A screen-local recolour of the kit art. */
+  function dusk(svg) {
+    if (DX.theme !== 'dark') return svg;
+    return svg.replace('fill="#BFD7FF"></ellipse>', 'fill="#2D3E78"></ellipse>')
+      .replace(/<circle cx="100" cy="[\d.]+" r="11" fill="#FFC93C">[\s\S]*?<\/circle>/, '<rect x="76" y="128" width="48" height="34" fill="#F0A070" opacity=".14"></rect><rect x="76" y="140" width="48" height="22" fill="#F0A070" opacity=".2"></rect><circle cx="91" cy="122" r="1.6" fill="#FFF3DC"></circle><circle cx="108" cy="115" r="1.2" fill="#FFF3DC" opacity=".8"></circle><circle cx="101" cy="154" r="9.5" fill="#FFB65E"></circle>')
+      .replace('fill="#3FB37F"></path>', 'fill="#18234A"></path>');
+  }
+  /* Round 11: Xero's poses on the strip. armL/armR replace the kit arms (drawn behind the body); hold is drawn in front of him. */
+  function xero(mood, size, o = {}) {
+    let s = DX.char('xero', { mood, size }).replace('style="display: block"', 'style="display: block; overflow: visible"');
+    if (o.armL != null) s = s.replace(/<path d="M36 124 C26 132 22 142 24 152"[^>]*><\/path>/, o.armL);
+    if (o.armR != null) s = s.replace(/<path d="M164 124 C174 132 178 142 176 152"[^>]*><\/path>/, o.armR);
+    if (o.feet != null) s = s.replace(/<ellipse cx="84" cy="188"[^>]*><\/ellipse>\s*<ellipse cx="116" cy="188"[^>]*><\/ellipse>/, o.feet);
+    if (o.hold) s = s.replace(/<\/svg>\s*$/, o.hold + '</svg>');
+    return dusk(s);
+  }
+  const arm = (d, extra = '') => `<path d="${d}" fill="none" stroke="#FF7155" stroke-width="12" stroke-linecap="round">${extra}</path>`;
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
   /* Paper-cut product objects (round 10: flat, no highlight strokes): Xero's own materials. Flat cut pieces, a crescent side shade,
      and a soft paper shadow under each piece. No speckles, no 3D, no emoji tilt. */
@@ -104,7 +129,10 @@
         <g clip-path="url(#pcDc)"><rect x="22.5" y="27" width="17" height="11" fill="#FFFDF8"/><rect x="22.5" y="34.2" width="17" height="4" fill="#EFE1CF"/></g></g></svg>`
   };
   document.querySelectorAll('[data-art]').forEach(e => e.innerHTML = ART[e.dataset.art]);
-  document.getElementById('hz').innerHTML = horizon({ art: DX.char('xero', { mood: 'hello', size: 72 }) });
+  /* Round 11: Xero (100px) on the left thirds line holds one empty hand out, palm up: the thing he is leaving behind is gone. */
+  document.getElementById('hz').innerHTML = horizon({ x: 130, size: 100, art: xero('hello', 100, {
+    armR: arm('M163 122 C178 122 190 116 198 106'),
+    hold: '<path d="M190 104 C194 112 206 112 211 102" fill="#FF7155" stroke="#FF7155" stroke-width="5" stroke-linejoin="round"></path><path d="M193 105 C197 110 204 110 208 104" fill="none" stroke="#FFB09C" stroke-width="2.4" stroke-linecap="round"></path>' }) });
   const bar = document.getElementById('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '0%'); void bar.offsetWidth; bar.style.transition = ''; });
   DX.after(250, () => bar.style.setProperty('--p', '9.1%'));

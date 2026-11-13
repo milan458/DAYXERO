@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>004 How much you smoke</title>
-<meta name="motion" content="Progress eases from 1/11 to 2/11 (900ms). Question, stepper card, chips and the money card arrive in order (600ms, 90ms stagger). At 900ms the plus button (outlined, the same weight as minus) presses: a quick tint fill and a spring bump (520ms), the count rolls from 11 to 12 (rises 10px, 300ms) and the yearly figure counts up from $1,606 to $1,752 (700ms ease-out); at 1100ms one more flat paper-cut coin drops onto the small coin pile beside the figure (18px drop, 420ms settle). The horizon strip above the dock settles up in three paper layers (0, 120, 240ms; 40px, 900ms settle) and a pleased, open-eyed Xero (72px) settles onto its crest last (from 420ms). Selection haptic on each step.">
+<meta name="motion" content="Progress eases from 1/11 to 2/11 (900ms). Question, stepper card, chips and the money card arrive in order (600ms, 90ms stagger). At 900ms the plus button (outlined, the same weight as minus) presses: a quick tint fill and a spring bump (520ms), the count rolls from 11 to 12 (rises 10px, 300ms) and the yearly figure counts up from $1,606 to $1,752 (700ms ease-out); at 1100ms one more flat paper-cut coin drops onto the small coin pile beside the figure (18px drop, 420ms settle). The horizon strip above the dock settles up in three paper layers (0, 120, 240ms; 40px, 900ms settle) and a pleased, open-eyed Xero (100px, on the right thirds line, holding up one paper coin) settles onto its crest last (from 420ms). Selection haptic on each step.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -94,17 +94,45 @@
   <div class="dock"><button class="btn" data-a style="--i:6">Next: your vape</button></div>
 </div>
 <script>
-  /* Round 10: the horizon strip. Strip y 134 is the top of the button; the character's feet sit on the middle hill's crest. */
-  function horizon(o) {
-    const back = 'M0 82 C50 74 100 72 150 77 C198 82 234 78 268 66 C306 53 350 47 390 53 L390 300 L0 300 Z',
-      mid = 'M0 108 C46 100 96 106 140 114 C180 121 214 114 250 104 C282 95 312 91 342 94 C362 96 378 100 390 104 L390 300 L0 300 Z',
-      front = 'M0 128 C58 120 118 124 178 134 C236 143 300 136 350 124 C368 120 380 119 390 120 L390 300 L0 300 Z';
-    const l = (i, d, extra = '') => `<svg class="l l${i}" width="390" height="300" viewBox="0 0 390 300"><path d="${d}" fill="var(--hz-${i})"/>${extra}</svg>`;
-    const s = o.size || 72, x = o.x ?? 312, y = o.y ?? 92;
-    return l(1, back) + l(2, mid, o.pond || '') + `<div class="who" data-settle style="--d:420ms;left:${x - s / 2}px;top:${(o.top ?? (y - .965 * s)).toFixed(1)}px;width:${s}px;height:${s}px${o.clip ? `;overflow:hidden;height:${o.clip}px` : ''}"><div id="${o.id || 'hzc'}">${o.art}</div></div>` + (o.over || '') + l(3, front);
+  /* Round 11: the horizon strip. Strip y 134 is the top of the button. The character stands on the middle hill's crest at its own
+     x (a thirds line, 130 or 260), measured from the hill path, at 90-110px. */
+  const HZ = { back: 'M0 82 C50 74 100 72 150 77 C198 82 234 78 268 66 C306 53 350 47 390 53 L390 300 L0 300 Z',
+    mid: 'M0 108 C46 100 96 106 140 114 C180 121 214 114 250 104 C282 95 312 91 342 94 C362 96 378 100 390 104 L390 300 L0 300 Z',
+    front: 'M0 128 C58 120 118 124 178 134 C236 143 300 136 350 124 C368 120 380 119 390 120 L390 300 L0 300 Z' };
+  function crestY(x, d = HZ.mid) {
+    const NS = 'http://www.w3.org/2000/svg', sv = document.createElementNS(NS, 'svg'), p = document.createElementNS(NS, 'path');
+    sv.setAttribute('style', 'position:absolute;width:0;height:0'); p.setAttribute('d', d.split(' L390 300')[0]); sv.appendChild(p); document.body.appendChild(sv);
+    let lo = 0, hi = p.getTotalLength(); for (let i = 0; i < 28; i++) { const m = (lo + hi) / 2; if (p.getPointAtLength(m).x < x) lo = m; else hi = m; }
+    const y = p.getPointAtLength(lo).y; sv.remove(); return y;
   }
+  function horizon(o) {
+    const l = (i, d, extra = '') => `<svg class="l l${i}" width="390" height="300" viewBox="0 0 390 300"><path d="${d}" fill="var(--hz-${i})"/>${extra}</svg>`;
+    const s = o.size || 100, x = o.x ?? 260, y = o.y ?? crestY(x) + (o.sink || 0);
+    return l(1, HZ.back) + l(2, HZ.mid, o.pond || '') + `<div class="who" data-settle style="--d:420ms;left:${x - s / 2}px;top:${(o.top ?? (y - .965 * s)).toFixed(1)}px;width:${s}px;height:${s}px${o.clip ? `;overflow:hidden;height:${o.clip}px` : ''}"><div id="${o.id || 'hzc'}">${o.art}</div></div>` + (o.over || '') + l(3, HZ.front);
+  }
+  /* Round 11: in dark scenes Xero's belly window shows dusk (a navy sky, a warm glow on the line, a low sun on the hill, two stars).
+     A screen-local recolour of the kit art. */
+  function dusk(svg) {
+    if (DX.theme !== 'dark') return svg;
+    return svg.replace('fill="#BFD7FF"></ellipse>', 'fill="#2D3E78"></ellipse>')
+      .replace(/<circle cx="100" cy="[\d.]+" r="11" fill="#FFC93C">[\s\S]*?<\/circle>/, '<rect x="76" y="128" width="48" height="34" fill="#F0A070" opacity=".14"></rect><rect x="76" y="140" width="48" height="22" fill="#F0A070" opacity=".2"></rect><circle cx="91" cy="122" r="1.6" fill="#FFF3DC"></circle><circle cx="108" cy="115" r="1.2" fill="#FFF3DC" opacity=".8"></circle><circle cx="101" cy="154" r="9.5" fill="#FFB65E"></circle>')
+      .replace('fill="#3FB37F"></path>', 'fill="#18234A"></path>');
+  }
+  /* Round 11: Xero's poses on the strip. armL/armR replace the kit arms (drawn behind the body); hold is drawn in front of him. */
+  function xero(mood, size, o = {}) {
+    let s = DX.char('xero', { mood, size }).replace('style="display: block"', 'style="display: block; overflow: visible"');
+    if (o.armL != null) s = s.replace(/<path d="M36 124 C26 132 22 142 24 152"[^>]*><\/path>/, o.armL);
+    if (o.armR != null) s = s.replace(/<path d="M164 124 C174 132 178 142 176 152"[^>]*><\/path>/, o.armR);
+    if (o.feet != null) s = s.replace(/<ellipse cx="84" cy="188"[^>]*><\/ellipse>\s*<ellipse cx="116" cy="188"[^>]*><\/ellipse>/, o.feet);
+    if (o.hold) s = s.replace(/<\/svg>\s*$/, o.hold + '</svg>');
+    return dusk(s);
+  }
+  const arm = (d, extra = '') => `<path d="${d}" fill="none" stroke="#FF7155" stroke-width="12" stroke-linecap="round">${extra}</path>`;
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
-  document.getElementById('hz').innerHTML = horizon({ art: DX.char('xero', { mood: 'hello', size: 72 }) });   /* pleased, eyes open */
+  /* Round 11: Xero (100px, right thirds line, pleased) holds up one paper coin, the same cut disc as the pile in the card. */
+  document.getElementById('hz').innerHTML = horizon({ x: 260, size: 100, art: xero('hello', 100, {
+    armR: arm('M162 116 C173 104 179 92 181 80'),
+    hold: '<circle cx="185.5" cy="62" r="18" fill="#F5B83D"></circle><circle cx="183" cy="60" r="18" fill="#FFD966"></circle><circle cx="183" cy="60" r="11" fill="none" stroke="#F5B83D" stroke-width="3"></circle>' }) });
   /* Paper-cut coins (round 10: no gloss): three flat cut discs in a small pile, each with an offset shade, one ring and a soft paper shadow;
      the top coin drops in. */
   const sh = DX.theme === 'dark' ? 'rgba(0,0,0,.55)' : 'rgba(120,52,24,.26)';

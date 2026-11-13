@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>001 One breath</title>
-<meta name="motion" content="Xero settles up 48px (900ms) inside three soft rings, then the rings and Xero breathe together for one 10 s cycle: 4 s in (scale .82 to 1.06), 6 s out. The rings are the only pacer. The headline arrives (600ms, 90ms stagger) with Breathe in; at 4000ms it swaps for And out (500ms fade and 6px rise; only one phrase is ever on screen, full contrast). On the out-breath two small, soft cream breath puffs start about 9px clear of his mouth and drift 16px outward as they fade (6 s). A hairline under the copy fills left to right over the 10 s (linear) to show the screen moves on by itself, above a quiet Skip. Gentle haptic at 0 and 4000ms marking the turn; auto-advances at 10.4 s.">
+<meta name="motion" content="Xero settles up 48px (900ms) inside three soft filled discs (dark mode: warm cream at low alpha, no rims; his belly window shows dusk), then the rings and Xero breathe together for one 10 s cycle: 4 s in (scale .82 to 1.06), 6 s out. The rings are the only pacer. The headline arrives (600ms, 90ms stagger) with Breathe in; at 4000ms it swaps for And out (500ms fade and 6px rise; only one phrase is ever on screen, full contrast). On the out-breath two small, soft cream breath puffs start about 9px clear of his mouth and drift 16px outward as they fade (6 s). A hairline under the copy fills left to right over the 10 s (linear) to show the screen moves on by itself, above a quiet Skip. Gentle haptic at 0 and 4000ms marking the turn; auto-advances at 10.4 s.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -14,11 +14,11 @@
   .rings i:nth-child(3) { width: 188px; height: 188px; --a: 100%; }
   /* Dark: the rings become a soft warm glow (apricot light on the night ground), each with a faint rim, so the pacer reads. */
   /* Round 8: a clean warm amber at low opacity (no peach-on-navy brown); the rims carry the shape. */
-  [data-theme="dark"] .rings i { background: radial-gradient(circle, color-mix(in srgb, #FFC24D var(--g1), transparent) 0%, color-mix(in srgb, #FFC24D var(--g2), transparent) 100%);
-    box-shadow: inset 0 0 0 1px rgba(255,200,120,var(--rim)); }
-  [data-theme="dark"] .rings i:nth-child(1) { --g1: 0%; --g2: 3.75%; --rim: .24; }
-  [data-theme="dark"] .rings i:nth-child(2) { --g1: 1.5%; --g2: 5.25%; --rim: .3; }
-  [data-theme="dark"] .rings i:nth-child(3) { --g1: 3%; --g2: 7.5%; --rim: .42; }
+  /* Round 11: dark rings are soft filled discs (flat warm cream at low alpha, stacking inward), no rims or target lines. */
+  [data-theme="dark"] .rings i { background: color-mix(in srgb, #FFCF8A var(--a), transparent); box-shadow: none; }
+  [data-theme="dark"] .rings i:nth-child(1) { --a: 4%; }
+  [data-theme="dark"] .rings i:nth-child(2) { --a: 6%; }
+  [data-theme="dark"] .rings i:nth-child(3) { --a: 9%; }
   .play .rings i:nth-child(1) { animation-delay: -.25s; }
   .play .rings i:nth-child(2) { animation-delay: -.12s; }
   .hero { position: relative; margin-top: 6px; }
@@ -56,13 +56,21 @@
   <div class="dock"><div class="timer" data-a style="--i:3" aria-hidden="true"><i></i></div><a class="link" data-a style="--i:4">Skip</a></div>
 </div>
 <script>
+  /* Round 11: in dark scenes Xero's belly window shows dusk (a navy sky, a warm glow on the line, a low sun on the hill, two stars).
+     A screen-local recolour of the kit art. */
+  function dusk(svg) {
+    if (DX.theme !== 'dark') return svg;
+    return svg.replace('fill="#BFD7FF"></ellipse>', 'fill="#2D3E78"></ellipse>')
+      .replace(/<circle cx="100" cy="[\d.]+" r="11" fill="#FFC93C">[\s\S]*?<\/circle>/, '<rect x="76" y="128" width="48" height="34" fill="#F0A070" opacity=".14"></rect><rect x="76" y="140" width="48" height="22" fill="#F0A070" opacity=".2"></rect><circle cx="91" cy="122" r="1.6" fill="#FFF3DC"></circle><circle cx="108" cy="115" r="1.2" fill="#FFF3DC" opacity=".8"></circle><circle cx="101" cy="154" r="9.5" fill="#FFB65E"></circle>')
+      .replace('fill="#3FB37F"></path>', 'fill="#18234A"></path>');
+  }
   /* The kit's breathe marks sit beside his arm; here they leave his mouth instead (cream on his coral face, then out past his cheek). */
   /* Round 8: the puffs start about 9px clear of his mouth (below his cheek blush), smaller and softer. */
   const wisps = `<g class="wisp" fill="#FFF8EE"><g transform="translate(3 7)">
     <g opacity=".72"><circle cx="119" cy="100.5" r="2.9"/><circle cx="123" cy="98.4" r="3.6"/><circle cx="127" cy="100.5" r="2.7"/><rect x="119" y="99.4" width="8" height="4" rx="2"/></g>
     <g opacity=".52"><circle cx="133" cy="106" r="1.9"/><circle cx="135.6" cy="104.6" r="2.3"/><circle cx="138.2" cy="106" r="1.7"/><rect x="133" y="105.3" width="5.2" height="2.6" rx="1.3"/></g>
     <circle cx="142.5" cy="110" r="1.2" opacity=".38"/></g></g>`;
-  document.getElementById('hero').innerHTML = DX.char('xero', { mood: 'breathe', size: 176 })
+  document.getElementById('hero').innerHTML = dusk(DX.char('xero', { mood: 'breathe', size: 176 }))
     .replace(/<g opacity="1" fill="none" stroke="#(?:24163A|F3E9DE)" stroke-width="3" stroke-linecap="round"><animateTransform[^>]*><\/animateTransform><path d="M172 100[^"]*"><\/path><path d="M176 112[^"]*"><\/path><\/g>/, '')
     .replace(/(<path d="M100 90 C106 90 106 101 100 101[^>]*><\/path>)/, '$1' + wisps);
   const i = document.getElementById('in'), o = document.getElementById('out');
