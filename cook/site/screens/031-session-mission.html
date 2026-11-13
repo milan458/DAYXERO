@@ -1,42 +1,54 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>031 Session mission</title>
-<meta name="motion" content="The sun-tinted mission card, the one hero, rises in first (settle 900ms) and Xero rises behind it until his eyes peek over its top edge (settle 900ms at 360ms, then a gentle 5s bob) with a light haptic. The headline and its line arrive inside the card (600ms, 90ms stagger), then the quiet list of what you learned arrives row by row (600ms, 90ms apart) and the button last.">
+<meta name="motion" content="The heading arrives (600ms). The sun-gold mission card, the one hero, rises in (settle 900ms) and Xero rises behind it, centred, until he stands peeking over its top edge with his window showing (settle 900ms at 360ms, then a gentle 5s bob) with a light haptic; his line arrives beside him (600ms). The card's label, line and note arrive inside it (600ms, 90ms stagger), then what you learned arrives row by row (600ms, 90ms apart), and the log link and button arrive last in the dock.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
 .nav .side{width:44px;text-align:right;flex:none}
-.top{position:absolute;top:112px;left:var(--gutter)}
-.mission{position:absolute;z-index:2;top:200px;left:var(--gutter);right:var(--gutter);border-radius:28px;padding:22px 22px 24px;
-  --ink:#1E1A3A;--soft:#5A4A10;background:linear-gradient(165deg,#FFEDB3,#FFDF8A);color:var(--ink);box-shadow:0 16px 32px rgba(120,90,10,.14)}
-/* dark mode: the same sun, toned down so it warms the card without glaring */
-[data-theme="dark"] .mission{--soft:#3E3208;background:linear-gradient(165deg,#EACB79,#DDB75E);box-shadow:0 18px 34px rgba(0,0,0,.45)}
+.top{position:absolute;top:114px;left:var(--gutter);right:var(--gutter)}
+/* the mission: bright sun gold in both modes (it is today's one celebration of intent), ink type */
+.mission{position:absolute;z-index:2;top:244px;left:var(--gutter);right:var(--gutter);border-radius:28px;padding:22px 22px 24px;
+  --ink:#1E1A3A;--soft:#4F400C;background:linear-gradient(165deg,#FFEDB0 0%,#FFE08A 55%,#FFD966 100%);color:var(--ink);box-shadow:0 16px 32px rgba(120,90,10,.16)}
+[data-theme="dark"] .mission{box-shadow:0 18px 40px rgba(0,0,0,.5),0 0 0 1px rgba(255,217,102,.25)}
 .mission .lab{display:flex;align-items:center;gap:8px;font:600 15px/1 var(--body);color:var(--soft)}
 .mission .lab svg{width:18px;height:18px}
-.mission h1{margin-top:20px;font-size:31px}
-.mission .t-body{margin-top:12px;color:var(--soft)}
-.mission .t-body a{color:var(--ink);font-weight:700;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1.5px;white-space:nowrap}
-/* Xero peeks over the card's top edge from behind it */
-.xw{position:absolute;z-index:1;right:40px;top:118px;width:118px}
-.learn{position:absolute;top:446px;left:var(--gutter);right:var(--gutter)}
-.learn ul{margin:12px 0 0;padding:0;list-style:none}
-.learn li{display:flex;gap:12px;align-items:baseline;padding:12px 0;border-top:1px solid var(--line)}
-.learn li:first-child{border-top:0;padding-top:4px}
-.learn li::before{content:"";width:6px;height:6px;border-radius:99px;background:var(--muted);opacity:.6;flex:none;transform:translateY(-3px)}
+.mission h2{margin-top:16px;font-size:31px}
+.mission .t-body{margin-top:10px;color:var(--soft)}
+/* Xero says: Xero at 64 and a bubble that hugs its text, tail to Xero (one component on 026, 027, 028, 031).
+   Here Xero stands centred behind the card, peeking over its edge with his window showing. */
+.xsay{display:flex;align-items:flex-end;gap:10px}
+.xsay .xs-x{width:64px;flex:none}
+.xsay .xs-b{position:relative;width:max-content;max-width:calc(100% - 74px);background:var(--card);border-radius:18px 18px 18px 6px;padding:11px 15px;margin:0 0 12px;font:500 15px/1.4 var(--body);color:var(--fg);box-shadow:0 2px 10px rgba(30,26,58,.07)}
+[data-theme="dark"] .xsay .xs-b{box-shadow:none}
+.xsay .xs-b::before{content:"";position:absolute;left:-7px;bottom:0;width:12px;height:14px;background:var(--card);clip-path:polygon(100% 0,100% 100%,0 100%)}
+.peek{position:absolute;z-index:1;top:179px;left:163px}
+.peek .xs-b{margin-bottom:30px}
+.learn{position:absolute;top:478px;left:var(--gutter);right:var(--gutter)}
+.learn ul{margin:6px 0 0;padding:0;list-style:none}
+.learn li{padding:12px 0;border-top:1px solid var(--line)}
+.learn li:first-child{border-top:0}
 .learn li .t-foot{color:var(--muted)}
+.logl{gap:6px}
+.logl svg{width:16px;height:16px}
 </style>
 </head><body>
 <div class="screen" data-ground="table">
   <div class="nav">
     <button class="icon-btn" aria-label="Close" id="close"></button>
-    <div class="grow"><div class="steps" aria-label="Card 5 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
+    <div class="grow"><div class="steps" aria-label="All 5 cards played"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
     <span class="side t-foot muted">5 of 5</span>
   </div>
-  <p class="top t-foot muted" data-a style="--i:0">All five cards played</p>
-  <div class="xw" data-settle style="--i:3"><div class="bob" id="mx"></div></div>
+  <div class="top">
+    <h1 class="t-title" data-a style="--i:0">Your mission for today</h1>
+  </div>
+  <div class="xsay peek">
+    <div class="xs-x" data-settle style="--i:3"><div class="bob" id="mx"></div></div>
+    <p class="xs-b" data-a style="--i:5">All five, done!</p>
+  </div>
   <div class="mission" data-settle style="--i:0">
     <div class="lab" data-a style="--i:2"><span id="m-ic"></span>For the rest of today</div>
-    <h1 class="t-large" data-a style="--i:3">When stress hits, do two sighs first.</h1>
-    <p class="t-body" data-a style="--i:4">Then use if you still want to, and <a href="#">log it tonight</a>.</p>
+    <h2 class="t-large" data-a style="--i:3">When stress hits, do two sighs first.</h2>
+    <p class="t-body" data-a style="--i:4">Then use if you still want to.</p>
   </div>
   <div class="learn">
     <h2 class="t-head" data-a style="--i:6">What you learned today</h2>
@@ -46,11 +58,15 @@
       <li data-a style="--i:9"><p class="t-foot">People who quit tend to feel less stressed, not more.</p></li>
     </ul>
   </div>
-  <div class="dock"><button class="btn" data-a style="--i:11">I'll try it</button></div>
+  <div class="dock">
+    <button class="link logl" data-a style="--i:10">If you do use, log it tonight<span id="l-chev"></span></button>
+    <button class="btn" data-a style="--i:11">I'll try it</button>
+  </div>
 </div>
 <script>
 document.getElementById('close').innerHTML = DX.icon('close');
 document.getElementById('m-ic').innerHTML = DX.icon('sun', {size:18});
-document.getElementById('mx').innerHTML = DX.char('xero', {mood:'hello', size:118});
+document.getElementById('l-chev').innerHTML = DX.icon('chev', {size:16, w:2.6});
+document.getElementById('mx').innerHTML = DX.char('xero', {mood:'cheer', size:64});
 </script>
 </body></html>

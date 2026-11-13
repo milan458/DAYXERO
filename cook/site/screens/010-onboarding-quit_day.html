@@ -1,40 +1,41 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>010 Onboarding Quit Day</title>
-<meta name="motion" content="Progress eases 7/11 to 8/11; title, the prep-week card (seven tiles rise 45ms apart, their prep dots pop left to right), the Quit Day tile, Xero and the hold button arrive in order. Holding fills the button left to right over 1500ms with a soft ticking haptic; on complete the button shows its done state, Quit Day set (success haptic), the Day Xero badge stamps into the Quit Day tile in its waiting form (620ms stamp spring; it is earned on Quit Day itself), Xero swaps to cheer with a 520ms bump and the line under him swaps to a popping check and the confirmation. 1200ms later the done button crossfades (350ms) into Continue.">
+<meta name="motion" content="Progress eases 7/11 to 8/11; title, the prep-week card (seven tiles rise 45ms apart, their prep dots pop left to right), the Quit Day row (the tappable date picker, chevron), Xero on his hill and the hold button arrive in order. Holding fills the button left to right over 1500ms with a soft ticking haptic; on complete the button shows its done state, Quit Day set (success haptic), the yellow flag Xero holds runs up its pole (34px, 700ms settle) while he bumps (520ms), and the row's caption swaps recommended for a ticked set (300ms crossfade). 1200ms later the done button crossfades (350ms) into Continue. Tapping the Quit Day row opens the date wheel.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   /* Onboarding header: back button and progress only (no avatar); the bar ends at the gutter so the sun knob never collides. */
   .nav { padding-right: 26px; }
   .wk { margin: 22px var(--gutter) 0; padding: 14px 12px 12px; }
-  .wk-h { display: flex; justify-content: space-between; align-items: center; padding: 0 4px 10px; }
-  .wk-h .link { height: 28px; font-size: 14px; }
+  .wk-h { display: flex; justify-content: space-between; align-items: baseline; padding: 0 4px 10px; }
   /* Prep tiles sit lighter than the card in both modes (card-2), so the week always reads. */
   .days { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: 6px; }
-  .day { border-radius: 14px; background: var(--card-2); display: grid; justify-items: center; align-content: center; gap: 4px; height: 86px; }
+  .day { border-radius: 14px; background: var(--card-2); display: grid; justify-items: center; align-content: center; gap: 4px; height: 82px; }
   .day .t-cap { color: var(--muted); font-size: 13px; font-weight: 600; }
   .day .num { font-size: 22px; line-height: 1; }
   .day .pd { width: 8px; height: 8px; border-radius: 99px; background: #FF9A5C; margin-top: 2px; }
-  /* Quit Day: its own wide tile under the week. */
-  .qd { margin-top: 8px; border-radius: 16px; background: var(--sel); color: var(--sel-fg); display: flex; align-items: center; gap: 14px; padding: 12px 16px 12px 12px; min-height: 68px; }
-  .qd .slot { width: 46px; height: 46px; flex: none; position: relative; display: grid; place-items: center; }
-  .qd .slot .ph { width: 40px; height: 40px; border-radius: 99px; box-shadow: inset 0 0 0 2.5px color-mix(in srgb, currentColor 40%, transparent); }
-  .qd .slot .ph::after { content: ""; position: absolute; left: 50%; top: 50%; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 99px; background: var(--sun); }
-  .qd.got .slot .ph { display: none; }
-  .qd .stamp { display: none; }
-  .qd.got .stamp { display: block; }
-  /* The waiting badge sits on a cream coin so it reads on the ink tile. */
-  .qd .stamp { width: 46px; height: 46px; border-radius: 99px; background: #FFF8EE; color: #1E1A3A; }
+  /* Quit Day: the tappable date picker row (ink tile, chevron), under the week. */
+  .qd { margin-top: 8px; width: 100%; text-align: left; border-radius: 16px; background: var(--sel); color: var(--sel-fg); display: flex; align-items: center; gap: 14px; padding: 12px 14px 12px 12px; min-height: 70px; }
+  .qd .cal { width: 46px; height: 46px; flex: none; border-radius: 13px; display: grid; place-items: center; background: color-mix(in srgb, var(--sel-fg) 14%, transparent); }
+  .qd .cal svg { width: 24px; height: 24px; }
   .qd .grow { flex: 1; min-width: 0; }
   .qd .t-head { font-size: 20px; }
   .qd .t-cap { opacity: .78; margin-top: 2px; }
-  .qd .tag { font: 700 13px/1 var(--body); padding: 7px 10px; border-radius: 99px; background: color-mix(in srgb, currentColor 14%, transparent); }
-  .hero { position: absolute; left: 0; right: 0; top: 470px; display: grid; justify-items: center; gap: 4px; }
-  .hero .say { position: relative; height: 26px; width: 100%; text-align: center; }
-  .hero .say p { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; gap: 8px; transition: opacity .4s var(--ease), transform .4s var(--ease); }
-  .hero .say .b { opacity: 0; transform: translateY(8px); }
-  .hero.done .say .a { opacity: 0; transform: translateY(-8px); }
-  .hero.done .say .b { opacity: 1; transform: none; }
+  .qd .t-head { white-space: nowrap; }
+  /* The status sits in the caption: Recommended, then Set once the hold lands (one confirmation). */
+  .qd .st { position: relative; display: inline-grid; vertical-align: top; }
+  .qd .st span { grid-area: 1 / 1; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; transition: opacity .3s var(--ease); }
+  .qd .st .set { opacity: 0; font-weight: 700; }
+  .qd .st .set svg { width: 13px; height: 13px; }
+  .qd.got .st .rec { opacity: 0; }
+  .qd.got .st .set { opacity: 1; }
+  .qd .chev { color: inherit; opacity: .7; width: 20px; height: 20px; }
+  /* Xero on his own small hill, holding a yellow flag that runs up the pole when Quit Day is set. */
+  .hero { position: absolute; left: 0; right: 0; top: 478px; height: 280px; }
+  .hero .hill { position: absolute; left: 0; top: 130px; }
+  .hero .xw { position: absolute; left: 122px; top: 34px; width: 136px; height: 136px; }
+  .hero .pen { transform: translateY(34px); transition: transform 700ms var(--settle); }
+  .hero.set .pen { transform: none; }
   .dock .t-cap { text-align: center; color: var(--muted); }
   /* After the hold: the done state shows, then the button hands over to Continue. */
   .btns { position: relative; height: 58px; }
@@ -52,30 +53,27 @@
 
   <div class="q">
     <h1 class="t-large" data-a>Pick your Quit Day, Sam</h1>
-    <p class="t-body muted" data-a style="--i:1">I recommend Fri, Nov 6 for a full 7-day prep. Keep using as normal until then.</p>
+    <p class="t-body muted" data-a style="--i:1">I recommend a full week of prep first. Keep using as normal until then.</p>
   </div>
 
   <div class="card wk" data-a style="--i:2">
-    <div class="wk-h"><p class="t-foot"><b>Prep week</b> <span class="muted">Oct 30 to Nov 5</span></p><a class="link">Change date</a></div>
+    <div class="wk-h"><p class="t-foot"><b>Your prep week</b></p><span class="t-foot muted">7 short sessions</span></div>
     <div class="days" id="days"></div>
-    <div class="qd" id="qd" data-a style="--i:6">
-      <div class="slot"><span class="ph"></span><div class="stamp" id="stamp" data-stamp style="--i:0"></div></div>
-      <div class="grow"><p class="t-head">Fri, Nov 6</p><p class="t-cap">Quit Day</p></div>
-      <span class="tag">Recommended</span>
-    </div>
+    <button class="qd" id="qd" data-a style="--i:6" aria-label="Quit Day, change date">
+      <span class="cal" data-icon="calendar"></span>
+      <div class="grow"><p class="t-head">Fri, Nov 6</p><p class="t-cap">Quit Day, <span class="st"><span class="rec">recommended</span><span class="set" id="setTag">set</span></span></p></div>
+      <span class="chev" data-icon="down"></span>
+    </button>
   </div>
 
-  <div class="hero" id="hero">
-    <div data-settle style="--d:450ms"><div id="bw"><div id="xero" class="bob"></div></div></div>
-    <div class="say" data-a style="--i:7">
-      <p class="t-foot muted a">A full 7-day prep. Hold the button to lock it in.</p>
-      <p class="t-foot b"><span id="ok"></span><b>Fri, Nov 6 is your Day Xero.</b></p>
-    </div>
+  <div class="hero" id="hero" aria-hidden="true">
+    <svg class="hill" id="hill" width="390" height="130" viewBox="0 0 390 130"></svg>
+    <div class="xw" data-settle style="--d:450ms"><div id="bw"><div id="xero"></div></div></div>
   </div>
 
   <div class="dock">
     <div class="btns" id="btns" data-a style="--i:8">
-      <button class="btn" id="hold" data-hold="1500" data-done="Quit Day set" data-autohold="1600">Hold to set Fri, Nov 6</button>
+      <button class="btn" id="hold" data-hold="1500" data-done="Quit Day set" data-autohold="1600">Hold to set your Quit Day</button>
       <button class="btn" id="go">Continue</button>
     </div>
     <p class="t-cap" data-a style="--i:9">Quit Day comes on this date, even if prep runs short. You can change it later.</p>
@@ -84,17 +82,25 @@
 <script>
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
   const $ = id => document.getElementById(id), bar = $('bar');
+  $('setTag').insertAdjacentHTML('afterbegin', DX.icon('check', { size: 13, w: 3.2 }));
   const days = [['Fri', 30], ['Sat', 31], ['Sun', 1], ['Mon', 2], ['Tue', 3], ['Wed', 4], ['Thu', 5]];
   $('days').innerHTML = days.map(([d, n], i) => `<div class="day" data-a style="--i:${i * .5 + 2.5}"><span class="t-cap">${d}</span><span class="num">${n}</span><span class="pd" data-pop style="--i:0;--d:${700 + i * 90}ms"></span></div>`).join('');
-  $('stamp').innerHTML = DX.badge({ kind: 'xero', state: 'next', size: 46, bare: true });
-  const setX = m => $('xero').innerHTML = DX.char('xero', { mood: m, size: 160 });
-  setX('hello');
+  /* A small paper hill so Xero stands on something. */
+  const dark = DX.theme === 'dark';
+  $('hill').innerHTML = `<path d="M0 130 C40 60 130 30 195 30 C260 30 350 60 390 130 Z" fill="${dark ? '#212A41' : '#FFAE7A'}"/>
+    <path d="M0 130 C40 60 130 30 195 30 C260 30 350 60 390 130" fill="none" stroke="${dark ? 'rgba(190,205,255,.22)' : 'rgba(255,255,255,.6)'}" stroke-width="2"/>`;
+  /* Xero, hello, holding a small yellow flag in his right hand (pole behind the hand; the pennant rides up on set). */
+  const flag = `<path d="M188 154 L188 30" stroke="#8A5A3C" stroke-width="4" stroke-linecap="round"/><circle cx="188" cy="28" r="4" fill="#F5B83D"/>
+    <path class="pen" d="M190 33 L216 42 L190 52 Z" fill="#FFD966" stroke="#F5B83D" stroke-width="2" stroke-linejoin="round"/>`;
+  const arm = '<path d="M164 122 C176 118 183 110 186 100" fill="none" stroke="#FF7155" stroke-width="12" stroke-linecap="round"></path>';
+  $('xero').innerHTML = DX.char('xero', { mood: 'hello', size: 136 })
+    .replace('style="display: block"', 'style="display: block; overflow: visible"')
+    .replace(/<path d="M164 124 C174 132 178 142 176 152"[^>]*><\/path>/, flag + arm);
   const reset = () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '63.6%'); void bar.offsetWidth; bar.style.transition = '';
-    $('qd').classList.remove('got'); $('hero').classList.remove('done'); $('bw').classList.remove('bump'); $('btns').classList.remove('next'); $('ok').innerHTML = ''; setX('hello'); };
+    $('qd').classList.remove('got'); $('hero').classList.remove('set'); $('bw').classList.remove('bump'); $('btns').classList.remove('next'); };
   DX.after(0, reset);
   DX.after(250, () => bar.style.setProperty('--p', '72.7%'));
-  const held = () => { $('qd').classList.add('got'); setX('cheer'); const x = $('bw'); x.classList.remove('bump'); void x.offsetWidth; x.style.setProperty('--d', '120ms'); x.classList.add('bump');
-    $('ok').innerHTML = DX.check({ size: 20 }); $('hero').classList.add('done'); };
+  const held = () => { $('qd').classList.add('got'); $('hero').classList.add('set'); const x = $('bw'); x.classList.remove('bump'); void x.offsetWidth; x.style.setProperty('--d', '120ms'); x.classList.add('bump'); };
   document.addEventListener('held', held);
   /* 1200ms after the hold lands, the button hands over to Continue. */
   DX.after(1600 + 1500 + 1200, () => $('btns').classList.add('next'));

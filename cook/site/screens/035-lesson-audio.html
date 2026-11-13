@@ -1,41 +1,33 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>035 Lesson audio</title>
-<meta name="motion" content="Art fades up, Xero settles in his headphones (900ms) then bobs while audio plays, and three sound arcs each side pulse outward (2.4s loop, 220ms apart) for as long as he is reading. The scrubber draws from 0:00 to 1:12 over 1.2s with the elapsed time ticking in step, the knob pops on arrival, the play button bumps into its pause state. At 1.5s the Transcript toggle slides on (light haptic) and the transcript opens (500ms) with the spoken line in full ink. The Done listening button arrives last (600ms).">
+<meta name="motion" content="Art fades up and Xero settles onto his hill in his headphones (900ms), then bobs gently while audio plays; three thin sound arcs each side pulse outward (2.4s loop, 220ms apart) for as long as he is reading. The scrubber draws from 0:00 to 1:12 over 1.2s with the elapsed time ticking in step, the knob pops on arrival, and the play button bumps into its pause state. The Show transcript row arrives with the controls; tapping it rotates its chevron (250ms) and opens the transcript below (500ms) with the spoken line in full ink. 1x is a text button that cycles 1x, 1.25x, 1.5x with a selection haptic. Done listening arrives last (600ms).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .art { position: relative; height: 232px; border-radius: 26px; overflow: hidden; margin-top: 6px; }
+  .art { position: relative; height: 288px; border-radius: 26px; overflow: hidden; margin-top: 4px; }
   .art .scene { position: absolute; inset: 0; }
-  .art .hero { position: absolute; left: 50%; bottom: 8px; margin-left: -58px; }
-  .info { margin-top: 16px; display: grid; gap: 4px; }
+  .art .fore { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .art .hero { position: absolute; left: 50%; top: 116px; margin-left: -60px; }
+  .info { margin-top: 18px; display: grid; gap: 4px; }
   .scrub { margin-top: 14px; }
   .scrub svg { display: block; width: 100%; height: 24px; overflow: visible; }
   .times { display: flex; justify-content: space-between; margin-top: 6px; color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; }
-  .controls { margin-top: 10px; display: flex; align-items: center; justify-content: space-between; padding: 0 4px; }
-  .controls > * { flex: none; }
+  .controls { margin-top: 12px; display: grid; grid-template-columns: 56px 1fr auto 1fr 56px; align-items: center; justify-items: center; }
   .skip { width: 52px; height: 52px; border-radius: 99px; display: grid; place-items: center; color: var(--fg); position: relative; }
   .skip svg { width: 36px; height: 36px; }
   .skip b { position: absolute; font: 800 13px/1 var(--body); top: 19.5px; left: 0; right: 0; text-align: center; }
   .play-btn { width: 76px; height: 76px; border-radius: 99px; background: var(--btn); color: var(--btn-fg); display: grid; place-items: center; box-shadow: 0 5px 0 rgba(0,0,0,.18); }
   .play-btn svg { width: 30px; height: 30px; }
-  .speed { width: 52px; height: 36px; border-radius: 99px; background: var(--card); box-shadow: inset 0 0 0 1.5px var(--line); color: var(--fg); font: 800 15px/36px var(--body); text-align: center; }
-  .speed.sleep { display: grid; place-items: center; }
-  .speed.sleep svg { width: 18px; height: 18px; }
-  .art .arcs { position: absolute; inset: 0; width: 100%; height: 100%; }
-  .arcs path { fill: none; stroke: #FFF8EE; stroke-width: 3.5; stroke-linecap: round; }
-  [data-theme="dark"] .arcs path { stroke: #F3E7CC; }
-  .play .arcs path { animation: arc 2.4s ease-in-out infinite; animation-delay: var(--ad); }
+  .rate { justify-self: start; height: 44px; padding: 0 6px; font: 700 16px/44px var(--body); color: var(--fg); }
+  .fore .arcs path { fill: none; stroke: #FFF8EE; stroke-width: 1.5; stroke-linecap: round; }
+  [data-theme="dark"] .fore .arcs path { stroke: #F3E7CC; }
+  .play .fore .arcs path { animation: arc 2.4s ease-in-out infinite; animation-delay: var(--ad); }
   @keyframes arc { 0%, 100% { opacity: var(--o); } 30% { opacity: calc(var(--o) * .35); } }
-  .still .arcs path { animation: none !important; }
-  /* on-state reads in both modes: the knob carries a tick */
-  .toggle.on::after { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6.5 12.5l3.5 3.5 7.5-8' fill='none' stroke='%231E1A3A' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-size: 16px; background-position: center; background-repeat: no-repeat; }
-  [data-theme="dark"] .toggle.on::after { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6.5 12.5l3.5 3.5 7.5-8' fill='none' stroke='%23FFF8EE' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
-  .tx { margin-top: 16px; margin-bottom: 40px; padding: 4px 16px 16px; }
-  .tx .row { min-height: 50px; }
-  .tx-body { overflow: hidden; max-height: 0; transition: max-height 500ms var(--ease), opacity 500ms var(--ease); opacity: 0; display: grid; gap: 8px; }
-  .tx.open .tx-body { max-height: 160px; opacity: 1; }
-  .tx-body .t-body { color: var(--muted); }
-  .tx-body .now { color: var(--fg); font-weight: 600; }
+  .still .fore .arcs path { animation: none !important; }
+  .tx { margin-top: 18px; }
+  .tx .row { min-height: 56px; gap: 12px; }
+  .tx .row > span { display: inline-flex; color: var(--muted); }
+  .tx .row .chev { width: auto; height: auto; transition: transform 250ms var(--ease); }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -44,11 +36,11 @@
     <div class="grow title">Listening</div>
     <span style="width:44px"></span>
   </div>
-  <div class="scroll" style="padding-top:100px">
+  <div class="scroll" style="padding-top:104px">
     <div class="pad">
       <div class="art" data-a style="--i:0">
         <div class="scene" id="scene"></div>
-        <svg class="arcs" viewBox="0 0 346 232" aria-hidden="true" id="arcs"></svg>
+        <svg class="fore" viewBox="0 0 346 288" aria-hidden="true" id="fore"></svg>
         <div class="hero" data-settle style="--d:150ms"><div class="bob" id="hero"></div></div>
       </div>
       <div class="info">
@@ -64,18 +56,14 @@
         <div class="times t-cap"><span id="el">1:12</span><span>3:00</span></div>
       </div>
       <div class="controls" data-a style="--i:4">
-        <span class="speed">1x</span>
+        <button class="rate" aria-label="Playback speed 1x">1x</button>
         <button class="skip" aria-label="Back 15 seconds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12a7 7 0 107-7H8"/><path d="M10.5 2.5L8 5l2.5 2.5"/></svg><b>15</b></button>
         <button class="play-btn bump" style="--d:1500ms" aria-label="Pause" data-ic="pause"></button>
         <button class="skip" aria-label="Forward 15 seconds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12a7 7 0 11-7-7h4"/><path d="M13.5 2.5L16 5l-2.5 2.5"/></svg><b>15</b></button>
-        <button class="speed sleep" aria-label="Sleep timer off"><span id="moon"></span></button>
+        <span></span>
       </div>
-      <div class="card tx open" id="tx" data-a style="--i:5">
-        <div class="row"><span data-ic="text" style="display:inline-flex"></span><p class="t-head grow" style="font-size:17px">Transcript</p><span class="toggle on" id="tg"></span></div>
-        <div class="tx-body">
-          <p class="t-body">Cravings are the noisy passengers.</p>
-          <p class="t-body now">They shout, they bargain, they promise that one won't hurt.</p>
-        </div>
+      <div class="list tx" data-a style="--i:5">
+        <button class="row" style="width:100%;text-align:left"><span data-ic="text"></span><p class="t-head grow" style="font-size:17px">Show transcript</p><span class="chev" data-ic="down"></span></button>
       </div>
     </div>
   </div>
@@ -83,21 +71,27 @@
 </div>
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20, w: e.dataset.ic === 'pause' ? 3.2 : 2.2 })));
-  document.getElementById('scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 346, h: 232 });
-  /* Xero reads the lesson aloud: headphones on, sound arcs pulsing out from him. */
+  const dark = DX.theme === 'dark';
+  document.getElementById('scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 346, h: 288 });
+  /* Xero reads the lesson aloud from his own hill: headphones on, thin sound arcs pulsing out from him. */
   const INKP = '#2A2440', phones = `<path d="M33 92 C30 24 170 24 167 92" fill="none" stroke="${INKP}" stroke-width="9" stroke-linecap="round"/>
     <rect x="20" y="74" width="24" height="40" rx="11" fill="${INKP}"/><rect x="156" y="74" width="24" height="40" rx="11" fill="${INKP}"/>
     <rect x="25" y="82" width="7" height="24" rx="3.5" fill="#FFD966"/><rect x="168" y="82" width="7" height="24" rx="3.5" fill="#FFD966"/>`;
-  document.getElementById('hero').innerHTML = DX.char('xero', { mood: 'calm', size: 116 }).replace(/(<path d="[^"]*" fill="[^"]*" stroke="#24163A" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><\/path>)/, '$1' + phones);
-  const cx = 173, cy = 156, arc = (r, a, side) => { const t = a * Math.PI / 180, x1 = cx + side * r * Math.cos(t), y1 = cy - r * Math.sin(t), y2 = cy + r * Math.sin(t);
+  document.getElementById('hero').innerHTML = DX.char('xero', { mood: 'calm', size: 120 }).replace(/(<path d="[^"]*" fill="[^"]*" stroke="#24163A" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><\/path>)/, '$1' + phones);
+  /* his hill: a paper-cut rise in front of the scene, crest at y 234 where his feet rest */
+  const hill = dark ? ['#1A2847', '#111C34'] : ['#E85A3E', '#C2402A'];
+  const cx = 173, cy = 172, arc = (r, a, side) => { const t = a * Math.PI / 180, x1 = cx + side * r * Math.cos(t), y1 = cy - r * Math.sin(t), y2 = cy + r * Math.sin(t);
     return `M${x1.toFixed(1)} ${y1.toFixed(1)} A${r} ${r} 0 0 ${side > 0 ? 1 : 0} ${x1.toFixed(1)} ${y2.toFixed(1)}`; };
-  document.getElementById('arcs').innerHTML = [[78, 28, .95], [96, 24, .62], [114, 20, .34]].map(([r, a, o], i) =>
-    [-1, 1].map(sd => `<path d="${arc(r, a, sd)}" style="--o:${o};opacity:${o};--ad:${i * 220}ms"/>`).join('')).join('');
-  document.getElementById('moon').innerHTML = DX.icon('moon', { size: 18 });
-  const tx = document.getElementById('tx'), tg = document.getElementById('tg'), el = document.getElementById('el');
-  DX.after(0, () => { tx.classList.remove('open'); tg.classList.remove('on'); el.textContent = '0:00'; });
+  document.getElementById('fore').innerHTML = `<defs><filter id="flift" x="-5%" y="-30%" width="110%" height="160%"><feDropShadow dx="0" dy="-2" stdDeviation="3" flood-color="#1A0B2E" flood-opacity="${dark ? .5 : .22}"/></filter>
+      <radialGradient id="fglow"><stop offset=".15" stop-color="#FFB25E" stop-opacity=".38"/><stop offset="1" stop-color="#FFB25E" stop-opacity="0"/></radialGradient></defs>
+    ${dark ? '<circle cx="173" cy="196" r="110" fill="url(#fglow)"/>' : ''}
+    <path filter="url(#flift)" d="M0 258 C60 242 120 234 173 234 C228 234 290 244 346 254 V288 H0z" fill="${hill[0]}"/>
+    <path filter="url(#flift)" d="M0 276 C80 266 170 272 250 276 C300 278 330 274 346 272 V288 H0z" fill="${hill[1]}"/>
+    <g class="arcs">${[[80, 28, .6], [98, 24, .42], [116, 20, .26]].map(([r, a, o], i) =>
+    [-1, 1].map(sd => `<path d="${arc(r, a, sd)}" style="--o:${o};opacity:${o};--ad:${i * 220}ms"/>`).join('')).join('')}</g>`;
+  const el = document.getElementById('el');
+  DX.after(0, () => { el.textContent = '0:00'; });
   DX.after(300, () => { const t0 = performance.now(); const tick = t => { const k = Math.min(1, (t - t0) / 1200), e = 1 - Math.pow(1 - k, 3), s = Math.round(72 * e);
     el.textContent = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); if (k < 1) requestAnimationFrame(tick); }; requestAnimationFrame(tick); });
-  DX.after(1500, () => { tg.classList.add('on'); tx.classList.add('open'); });
 </script>
 </body></html>

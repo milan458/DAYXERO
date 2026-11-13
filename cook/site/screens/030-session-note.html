@@ -1,80 +1,87 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>030 Session breathe card</title>
-<meta name="motion" content="The sky card (dusk blue in dark mode) settles in (900ms); its breath shape draws in (two in, one long out, 1600ms) and each point lights with its label as the line reaches it (In at 0.9s, A little more pops at the top at 1.3s, Long, slow out at 1.7s); the guided-breath progress line draws from 0 to the playhead (1400ms, 0:43 of 3:00). The three short steps arrive one by one (600ms, 90ms stagger) so reading paces itself. No haptic until the button.">
+<meta name="motion" content="The step bar shows card 2 two thirds done. The mint Try card (deep dusk with a warm glow in dark mode) settles in (900ms); its breath shape draws in (1600ms): the first breath rises and levels into a short plateau, the top-up sip rises again, then the long slow out falls away, and each point lights with its label as the line reaches it (In at 0.8s, A little more pops at the top at 1.2s, Long, slow out at 1.6s). The guided-breath line draws from 0 to the playhead (1400ms, 0:43 of the 3:00 guided breath) and then follows playback. The three steps arrive as one list, row by row (600ms, 90ms stagger). The button stays outlined while the breath plays and fills to solid at 80% (2:24, 300ms crossfade, light haptic).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-.f-apricot{--face:#FFC38A}.f-sky{--face:#9CCBFF}.f-mint{--face:#9FE3BC}.f-sun{--face:#FFD966}
 .nav .side{width:44px;text-align:right;flex:none}
-.face{--ink:#1E1A3A;--sky-a:#C9E3FF;--sky-b:#9CCBFF;--hill:#86BDF8;--dot:#1E1A3A;background:var(--sky-b);color:var(--ink);border-radius:26px;overflow:hidden;box-shadow:0 14px 28px rgba(60,40,20,.14)}
-/* dark mode: the same card at dusk, deep blue with cream ink, so it never glows light blue on navy */
-[data-theme="dark"] .face{--ink:#F3ECE0;--sky-a:#34598F;--sky-b:#22406F;--hill:#1C3762;--dot:#FFD966;box-shadow:0 18px 34px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.08)}
-.face .art{height:150px;overflow:hidden}
-.face .in{padding:16px 20px 18px}
-.kind{display:flex;align-items:center;gap:8px;font:600 14px/1 var(--body);opacity:.78}
+.steps > i.now::after{width:var(--sub,45%)}
+/* Try = mint. Dark mode: the same card at deep dusk with a warm glow, cream ink and mint accents (same treatment as the Listen player). */
+.face{--ink:#1E1A3A;--soft:#24493A;--acc:#1E1A3A;--pb:#1E1A3A;--pb-fg:#FFF8EE;color:var(--ink);border-radius:26px;overflow:hidden;
+  background:linear-gradient(180deg,#DAF5E5 0%,#AEE8C8 42%,#9FE3BC 100%);box-shadow:0 14px 28px rgba(30,70,50,.14)}
+[data-theme="dark"] .face{--ink:#FFF8EE;--soft:#D6E6DC;--acc:#9FE3BC;--pb:#9FE3BC;--pb-fg:#1E1A3A;
+  background:radial-gradient(80% 40% at 50% 22%,rgba(247,170,108,.26),rgba(247,170,108,0) 100%),linear-gradient(180deg,#27325C 0%,#1C2547 58%,#19223F 100%);
+  box-shadow:0 18px 34px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.07)}
+.face .art{height:142px}
+.face .in{padding:10px 20px 18px}
+.kind{display:flex;align-items:center;gap:8px;font:600 14px/1 var(--body);color:var(--soft)}
 .kind svg{width:18px;height:18px}
-.player{display:flex;align-items:center;gap:14px;margin-top:16px}
-.pbtn{width:52px;height:52px;border-radius:99px;background:var(--ink);color:var(--sky-b);display:grid;place-items:center;flex:none;box-shadow:0 4px 0 rgba(30,26,58,.2)}
+.player{display:flex;align-items:center;gap:14px;margin-top:14px}
+.pbtn{width:52px;height:52px;border-radius:99px;background:var(--pb);color:var(--pb-fg);display:grid;place-items:center;flex:none;box-shadow:0 4px 12px rgba(30,26,58,.2)}
 .pbtn svg{width:22px;height:22px}
 .line{flex:1;display:grid;gap:6px}
 .line svg{display:block;overflow:visible}
 .times{display:flex;justify-content:space-between}
-.times .t-cap{opacity:.72}
-.beats{display:grid;gap:24px;margin-top:30px}
-.beat{display:grid;gap:4px;padding-left:16px;border-left:3px solid #9CCBFF}
-.beat h3{font:800 19px/1.25 var(--display);letter-spacing:-.2px;margin:0}
-.beat .t-body{font-size:16px;line-height:1.5;color:var(--muted)}
+.times .t-cap{color:var(--soft)}
+/* the three steps: one list, one row style */
+.steps-l{margin-top:16px}
+.steps-l .row{align-items:flex-start;gap:14px;padding:14px 16px}
+.steps-l .ico-tile{width:36px;height:36px;border-radius:11px}
+.steps-l .ico-tile svg{width:20px;height:20px}
+.steps-l h3{font:700 16px/1.3 var(--display);letter-spacing:-.1px;margin:0}
+.steps-l .t-foot{color:var(--muted);margin-top:2px}
+/* the button waits outlined while the breath plays */
+.dock .btn.ghost{box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--fg) 34%,transparent)}
 </style>
 </head><body>
 <div class="screen" data-ground="table">
   <div class="nav">
     <button class="icon-btn" aria-label="Close" id="close"></button>
-    <div class="grow"><div class="steps" aria-label="Card 2 of 5"><i class="on"></i><i class="now"></i><i></i><i></i><i></i></div></div>
+    <div class="grow"><div class="steps" aria-label="Card 2 of 5, step 2 of 3" style="--sub:66%"><i class="on"></i><i class="now"></i><i></i><i></i><i></i></div></div>
     <span class="side t-foot muted">2 of 5</span>
   </div>
-  <div class="scroll" style="padding-top:112px">
+  <div class="scroll" style="padding-top:110px">
     <div class="pad">
-      <div class="face f-sky" data-settle style="--i:0">
+      <div class="face" data-settle style="--i:0">
         <div class="art" id="art"></div>
         <div class="in">
-          <div class="kind"><span id="k-ic"></span>Try · 3 min</div>
+          <div class="kind"><span id="k-ic"></span>Try · 5 min</div>
           <h1 class="t-title" style="margin-top:10px">A breath that works in the moment</h1>
           <div class="player">
-            <button class="pbtn" id="pbtn" aria-label="Play"></button>
+            <button class="pbtn" id="pbtn" aria-label="Pause"></button>
             <div class="line">
               <svg width="100%" height="12" viewBox="0 0 230 12" preserveAspectRatio="none">
                 <path d="M2 6H228" stroke="var(--ink)" stroke-opacity=".25" stroke-width="4" stroke-linecap="round"/>
-                <path d="M2 6H55" stroke="var(--ink)" stroke-width="4" stroke-linecap="round" class="draw" style="--len:55;--d:500ms;--dur:1400ms"/>
-                <circle cx="55" cy="6" r="6" fill="var(--ink)" data-fade style="--d:1800ms"/>
+                <path d="M2 6H56" stroke="var(--ink)" stroke-width="4" stroke-linecap="round" class="draw" style="--len:54;--d:500ms;--dur:1400ms"/>
               </svg>
-              <div class="times"><span class="t-cap">0:43</span><span class="t-cap">3:00</span></div>
+              <div class="times"><span class="t-cap">0:43</span><span class="t-cap">3:00 guided breath</span></div>
             </div>
           </div>
         </div>
       </div>
-      <div class="beats">
-        <div class="beat" data-a style="--i:3"><h3>Two in, one long out</h3><p class="t-body">Breathe in, sip in a little more, then a long slow out.</p></div>
-        <div class="beat" data-a style="--i:4"><h3>In a tense moment</h3><p class="t-body">Two or three sighs take thirty seconds.</p></div>
-        <div class="beat" data-a style="--i:5"><h3>Feeling light-headed?</h3><p class="t-body">Breathe normally, then rejoin.</p></div>
+      <div class="list steps-l">
+        <div class="row" data-a style="--i:3"><span class="ico-tile" data-ic="wave"></span><div class="grow"><h3>Two in, one long out</h3><p class="t-foot">Breathe in, sip in a little more, then a long slow out.</p></div></div>
+        <div class="row" data-a style="--i:4"><span class="ico-tile" data-ic="clock"></span><div class="grow"><h3>In a tense moment</h3><p class="t-foot">Two or three sighs take thirty seconds.</p></div></div>
+        <div class="row" data-a style="--i:5"><span class="ico-tile" data-ic="leaf"></span><div class="grow"><h3>Feeling light-headed?</h3><p class="t-foot">Breathe normally, then rejoin.</p></div></div>
       </div>
     </div>
   </div>
-  <div class="dock"><button class="btn" data-a style="--i:7">I'll sigh first today</button></div>
+  <div class="dock"><button class="btn ghost" data-a style="--i:7">I'll sigh first today</button></div>
 </div>
 <script>
 document.getElementById('close').innerHTML = DX.icon('close');
 document.getElementById('k-ic').innerHTML = DX.icon('hand', {size:18});
 document.getElementById('pbtn').innerHTML = DX.icon('pause', {size:22, w:3});
-/* one colour field: the breath shape drawn in the card's own sky blue (two in, one long out) */
-document.getElementById('art').innerHTML = `<svg width="100%" height="150" viewBox="0 0 346 150" preserveAspectRatio="none" aria-hidden="true">
-  <defs><linearGradient id="bsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--sky-a)"/><stop offset="1" stop-color="var(--sky-b)"/></linearGradient></defs>
-  <rect width="346" height="150" fill="url(#bsky)"/>
-  <path d="M0 128 C60 120 120 134 190 126 S300 118 346 124 V150 H0z" fill="var(--hill)" opacity=".6"/>
-  <path d="M26 120 C54 120 70 72 98 72 C112 72 120 66 128 58 C134 52 140 48 150 48 C206 48 262 120 322 120" fill="none" stroke="var(--ink)" stroke-opacity=".8" stroke-width="3.5" stroke-linecap="round" class="draw" style="--len:380;--d:400ms;--dur:1600ms"/>
+document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic, {size:20}));
+/* the breath shape on the card's own ground (no band): in, a short plateau, the top-up sip, then the long slow out */
+const knob = `<circle cx="${2 + 226 * 43 / 180}" cy="6" r="6" fill="var(--ink)" data-fade style="--d:1800ms"/>`;
+document.querySelector('.line svg').insertAdjacentHTML('beforeend', knob);
+document.getElementById('art').innerHTML = `<svg width="100%" height="142" viewBox="0 0 346 142" aria-hidden="true">
+  <path d="M22 124 C48 124 58 64 86 64 L118 64 C130 64 136 40 152 40 C204 40 258 124 324 124" fill="none" stroke="var(--ink)" stroke-opacity=".85" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" class="draw" style="--len:400;--d:400ms;--dur:1600ms"/>
   <g fill="var(--ink)" font-family="DM Sans, sans-serif" font-weight="700" font-size="14">
-    <circle cx="98" cy="72" r="4.5" data-fade style="--d:900ms"/><text x="88" y="58" text-anchor="end" data-fade style="--d:900ms">In</text>
-    <circle cx="150" cy="48" r="7" fill="var(--dot)" data-pop style="transform-origin:150px 48px;--d:1300ms"/><text x="150" y="28" text-anchor="middle" data-fade style="--d:1300ms">A little more</text>
-    <circle cx="217.5" cy="73.3" r="4.5" data-fade style="--d:1700ms"/><text x="229" y="62" data-fade style="--d:1700ms">Long, slow out</text>
+    <circle cx="86" cy="64" r="4.5" data-fade style="--d:800ms"/><text x="72" y="54" text-anchor="end" data-fade style="--d:800ms">In</text>
+    <circle cx="152" cy="40" r="7" fill="var(--acc)" data-pop style="transform-origin:152px 40px;--d:1200ms"/><text x="152" y="22" text-anchor="middle" data-fade style="--d:1200ms">A little more</text>
+    <circle cx="233" cy="82" r="4.5" data-fade style="--d:1600ms"/><text x="332" y="70" text-anchor="end" data-fade style="--d:1600ms">Long, slow out</text>
   </g></svg>`;
 </script>
 </body></html>

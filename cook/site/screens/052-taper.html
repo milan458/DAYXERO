@@ -1,88 +1,81 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>052 Pouch taper</title>
-<meta name="motion" content="Title arrives, then the strength chart: the 6, 3 and 1.5 mg bars grow from the baseline in turn (900ms settle, 150ms apart), then the dashed coral Quit Day line draws down through week 1 (Fri, Nov 6, 420ms) to show where today's Quit Day cuts the taper short. Step rows settle in (120ms stagger), then the timing note arrives with a soft warning haptic. The primary (Move Quit Day to Mon, Nov 23) slides the dashed marker along to the 0 mg column over 700ms and the dates update in place; 'Save my taper as is' is the quiet secondary.">
+<meta name="motion" content="Title arrives, then the one taper card: the 6, 3 and 1.5 mg bars grow from the baseline in turn (900ms settle, 150ms apart) with their start dates under them, then the coral Quit Day line draws down through week 1 (420ms) and its flag label 'Quit Day · Fri, Nov 6' fades in above the bars, showing where Quit Day cuts the taper short. The timing note arrives with a soft warning haptic, then the two equal choices, 'Shorten to fit' and 'Move Quit Day', arrive side by side in weight (90ms stagger). At 1.4s 'Shorten to fit' lands selected (kit tint, 2px outline, tick; 520ms settle, light haptic). Choosing 'Move Quit Day' instead slides the Quit Day line along to the 0 mg column over 700ms and its label updates to Mon, Nov 23. Save arrives last.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .nav .tag { margin-left: auto; height: 28px; padding: 0 12px; border-radius: 99px; background: var(--card-2); color: var(--muted); display: inline-flex; align-items: center; margin-right: 6px; }
+  .nav .tag { margin-left: auto; margin-right: 8px; color: var(--muted); }
   /* Bricolage's long Q tail sweeps under the 'u' and reads as the brand underline: the body face's Q here */
   .qg { font-family: var(--body); font-weight: 700; }
   .wrap { padding: 66px var(--gutter) 0; }
   .wrap .lead { margin-top: 8px; color: var(--muted); }
-  .chart { margin-top: 16px; padding: 14px 18px 12px; }
-  .bars { position: relative; margin-top: 26px; height: 72px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; align-items: end; border-bottom: 2px solid var(--line); }
-  /* today's Quit Day (Fri, Nov 6) falls 4 days into week 1: a dashed line where the taper and the date collide */
-  .qmark { position: absolute; left: calc((100% - 24px) / 4 * 4 / 7); top: -26px; bottom: -2px; width: 0; }
-  .qmark svg { position: absolute; left: -1.5px; top: 18px; overflow: visible; }
-  .qmark .t-cap { position: absolute; top: 0; left: -6px; white-space: nowrap; color: var(--fg); display: flex; align-items: center; gap: 5px; line-height: 14px; }
-  .qmark .t-cap::before { content: ""; width: 8px; height: 8px; border-radius: 99px; background: var(--mark); }
-  .bar { height: var(--h); border-radius: 10px 10px 3px 3px; background: color-mix(in srgb, #FFA766 var(--a), transparent); box-shadow: inset 0 2px 0 color-mix(in srgb, #F08A45 var(--a), transparent); transform-origin: bottom; }
-  [data-theme="dark"] .bar { background: color-mix(in srgb, #FFC38A var(--a), transparent); box-shadow: inset 0 2px 0 rgba(255,214,170,.55); }
+  .chart { margin-top: 16px; padding: 14px 16px 14px; }
+  .chart .sub { color: var(--muted); }
+  .bars { position: relative; margin-top: 40px; height: 76px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; align-items: end; border-bottom: 2px solid var(--line); }
+  /* Quit Day (Fri, Nov 6) falls 4 days into week 1: a coral line where the taper and the date collide, with a flag label above */
+  .qmark { position: absolute; left: calc((100% - 24px) / 4 * 4 / 7); top: -34px; bottom: -2px; width: 0; }
+  .qmark i { position: absolute; left: -3.5px; top: 20px; bottom: 0; width: 7px; border-radius: 3px; background: repeating-linear-gradient(to bottom, var(--qc) 0 5px, transparent 5px 9px) center top / 2.5px 100% no-repeat, var(--card); }
+  .qmark .flag { position: absolute; top: 0; left: -10px; height: 22px; padding: 0 9px 0 8px; border-radius: 8px; background: var(--qc); color: #fff; white-space: nowrap; display: flex; align-items: center; gap: 5px; font: 700 13px/1 var(--body); }
+  .chart { --qc: #C9441F; }
+  [data-theme="dark"] .chart { --qc: #FF8A66; }
+  [data-theme="dark"] .qmark .flag { color: #0E1322; }
+  .bar { height: var(--h); border-radius: 10px 10px 3px 3px; background: var(--c); transform-origin: bottom; }
+  .chart { --s1: #FB9A5E; --s2: #FDB384; --s3: #FFCBA6; }
+  [data-theme="dark"] .chart { --s1: #FFAD70; --s2: #FFC292; --s3: #FFD8B8; }
   .play .bar { animation: grow 900ms var(--settle) both; animation-delay: calc(var(--i) * 150ms + 250ms); }
   @keyframes grow { from { transform: scaleY(0); } to { transform: none; } }
+  .play .qmark i { animation: down 420ms var(--ease) 900ms both; transform-origin: top; }
+  @keyframes down { from { transform: scaleY(0); } }
   .qbar { align-self: end; width: 100%; height: 4px; border-radius: 3px 3px 0 0; background: var(--track); }
   .lbls { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 8px; text-align: center; color: var(--muted); }
-  .lbls b { display: block; color: var(--fg); font: 800 15px/1.1 var(--display); }
-  .steps-list { margin-top: 10px; }
-  .steps-list .row { min-height: 52px; }
-  .list > .row { padding: 8px 16px; }
-  .row .t-head { font-size: 16px; }
-  .row .t-foot { color: var(--muted); }
-  .row .wk { font: 600 14px/1 var(--body); color: var(--muted); }
-  .warn { margin-top: 18px; display: grid; gap: 10px; padding: 0 4px; }
-  .warn .top { display: flex; gap: 12px; align-items: flex-start; }
-  .warn .t-head { text-wrap: balance; }
-  .warn .top svg { width: 22px; height: 22px; flex: none; color: var(--mark); margin-top: 1px; }
-  .warn .t-foot { color: var(--muted); }
-  .warn .btn { width: auto; justify-self: start; padding: 0 18px; margin-left: 34px; box-shadow: inset 0 0 0 2px var(--line); }
-  .sw { width: 10px; height: 30px; border-radius: 4px; background: color-mix(in srgb, #FFA766 var(--a, 62%), transparent); flex: none; }
-  [data-theme="dark"] .sw { background: color-mix(in srgb, #FFC38A var(--a, 62%), transparent); }
-  .warn .link { justify-self: start; margin-left: 34px; font: 700 15px/1 var(--body); color: var(--fg); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--line); padding: 4px 0; }
-  /* dark: solid apricot tints (no brown from mixing with the navy ground) */
-  [data-theme="dark"] .bars .bar:nth-child(1) { background: #FFB27A !important; }
-  [data-theme="dark"] .bars .bar { box-shadow: none !important; }
-  [data-theme="dark"] .bars .bar:nth-child(2) { background: #FFCB9E !important; }
-  [data-theme="dark"] .bars .bar:nth-child(3) { background: #FFE0C4 !important; }
-  [data-theme="dark"] .steps-list .row:nth-child(1) .sw { background: #FFB27A !important; }
-  [data-theme="dark"] .steps-list .row:nth-child(2) .sw { background: #FFCB9E !important; }
-  [data-theme="dark"] .steps-list .row:nth-child(3) .sw { background: #FFE0C4 !important; }
+  .lbls b { display: block; color: var(--fg); font: 800 15px/1.15 var(--display); }
+  .warn { margin-top: 20px; display: flex; gap: 10px; align-items: flex-start; padding: 0 2px; }
+  .warn svg { width: 22px; height: 22px; flex: none; color: var(--qc, #C9441F); margin-top: 1px; }
+  [data-theme="dark"] .warn svg { color: #FF8A66; }
+  .warn .t-head { font-size: 17px; text-wrap: balance; }
+  .choices { margin-top: 12px; display: grid; gap: 10px; }
+  .choices .opt { min-height: 70px; padding: 11px 16px; }
+  .opt .nm { font: 700 17px/1.2 var(--display); display: block; margin-bottom: 2px; }
+  .opt .t-foot { font-size: 14px; }
+  .play .opt.land { animation: land 520ms var(--settle) both; }
+  @keyframes land { 0% { opacity: 1; transform: scale(.97); } 100% { opacity: 1; transform: none; } }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
   <div class="nav">
     <button class="icon-btn" aria-label="Close" data-ic="close"></button>
-    <span class="t-cap tag">Optional</span>
+    <span class="t-foot tag">Optional</span>
   </div>
   <div class="scroll">
     <div class="wrap">
       <h1 class="t-title" data-a style="--i:0">Step down your pouches</h1>
       <p class="t-foot lead" data-a style="--i:1">Lower the strength before Quit Day, so stopping feels smaller.</p>
       <div class="card chart" data-a style="--i:2">
+        <p class="t-foot sub">One week per step, from today</p>
         <div class="bars">
-          <div class="bar" style="--h:100%;--i:0;--a:62%"></div>
-          <div class="bar" style="--h:50%;--i:1;--a:46%"></div>
-          <div class="bar" style="--h:25%;--i:2;--a:38%"></div>
+          <div class="bar" style="--h:100%;--i:0;--c:var(--s1)"></div>
+          <div class="bar" style="--h:50%;--i:1;--c:var(--s2)"></div>
+          <div class="bar" style="--h:25%;--i:2;--c:var(--s3)"></div>
           <i class="qbar"></i>
-          <div class="qmark" data-fade style="--d:800ms"><span class="t-cap"><span>Quit Day, Fri</span></span><svg width="3" height="82" viewBox="0 0 3 82"><path d="M1.5 8V80.5" stroke="var(--card)" stroke-width="7" fill="none"/><path d="M1.5 1.5V80.5" stroke="var(--mark)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="4 5" fill="none"/></svg></div>
+          <div class="qmark"><span class="flag" data-fade style="--d:1100ms">Quit Day · Fri, Nov 6</span><i></i></div>
         </div>
-        <div class="lbls t-cap"><span><b>6 mg</b>Week 1</span><span><b>3 mg</b>Week 2</span><span><b>1.5 mg</b>Week 3</span><span><b>0 mg</b>Nov 23</span></div>
+        <div class="lbls t-cap"><span><b>6 mg</b>Nov 2</span><span><b>3 mg</b>Nov 9</span><span><b>1.5 mg</b>Nov 16</span><span><b>0 mg</b>Nov 23</span></div>
       </div>
-      <div class="list steps-list">
-        <div class="row" data-settle style="--i:3"><i class="sw"></i><div class="grow"><p class="t-head">6 mg</p><p class="t-foot">Today to Sun, Nov 8</p></div><span class="wk">1 week</span></div>
-        <div class="row" data-settle style="--i:4"><i class="sw" style="--a:46%;height:22px"></i><div class="grow"><p class="t-head">3 mg</p><p class="t-foot">Mon, Nov 9 to Sun, Nov 15</p></div><span class="wk">1 week</span></div>
-        <div class="row" data-settle style="--i:5"><i class="sw" style="--a:40%;height:14px"></i><div class="grow"><p class="t-head">1.5 mg</p><p class="t-foot">Mon, Nov 16 to Sun, Nov 22</p></div><span class="wk">1 week</span></div>
-      </div>
-      <div class="warn" data-a style="--i:7">
-        <div class="top"><span data-ic="clock"></span><div><p class="t-head" style="font-size:17px">3 weeks is longer than the 4&nbsp;days to <span class="qg">Q</span>uit&nbsp;Day</p><p class="t-foot">Move Quit Day to Mon, Nov 23 so every step fits, or shorten the steps.</p></div></div>
+      <div class="warn" data-a style="--i:3"><span data-ic="clock"></span><p class="t-head">3 weeks is longer than the 4&nbsp;days to <span class="qg">Q</span>uit&nbsp;Day. How should it fit?</p></div>
+      <div class="choices">
+        <button class="opt on" id="pick" data-a style="--i:4"><span class="grow"><span class="nm">Shorten to fit</span><span class="t-foot">Keep Fri, Nov 6, about a day per step</span></span><span class="radio"></span></button>
+        <button class="opt" data-a style="--i:5"><span class="grow"><span class="nm">Move <span class="qg">Q</span>uit Day</span><span class="t-foot">To Mon, Nov 23, a full week per step</span></span><span class="radio"></span></button>
       </div>
     </div>
   </div>
   <div class="dock">
-    <button class="btn" data-a style="--i:8"><span>Move <span class="qg">Q</span>uit Day to Mon, Nov 23</span></button>
-    <button class="link" data-a style="--i:9">Save my taper as is</button>
+    <button class="btn" data-a style="--i:6">Save my taper</button>
   </div>
 </div>
 <script>
-  document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic, e.dataset.ic === 'check' ? { w: 3.2 } : {}));
+  document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic));
+  const pick = document.getElementById('pick');
+  DX.after(0, () => pick.classList.remove('on', 'land'));
+  DX.after(1400, () => pick.classList.add('on', 'land'));
 </script>
 </body></html>

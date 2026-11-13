@@ -111,7 +111,8 @@
     const w = o.w || 390, h = o.h || 430, id = 'n' + (++nid), mx = o.moonX ?? w - 54, my = o.moonY ?? h * .55;
     const dark = theme === 'dark';
     const dawn = !!o.dawn;
-    const sky = dawn ? ['#0D1630', '#24335C', '#5B5578'] : dark ? ['#08101F', '#111D38', '#22315A'] : ['#0B1430', '#16244A', '#2C3D6A'], hills = dark ? ['#16233F', '#0F1A31', '#0A1326'] : ['#1C2C4E', '#132240', '#0F1B33'];
+    /* Light mode evening = dusk (slate blue to a muted rose horizon); dark mode = midnight. */
+    const sky = dawn ? ['#0D1630', '#24335C', '#5B5578'] : dark ? ['#08101F', '#111D38', '#22315A'] : ['#1E2B55', '#3E4C7E', '#A88A98'], hills = dark ? ['#16233F', '#0F1A31', '#0A1326'] : ['#2A3A62', '#1C2A4D', '#0F1B33'];
     const ground = dark ? '#0A1326' : '#0F1B33', moon = '#F6E7C1', glow = '#FFD37A';
     const st = [[.15, .09], [.38, .07], [.64, .15], [.82, .05], [.1, .26], [.51, .22], [.9, .28], [.28, .35], [.74, .4], [.05, .47], [.46, .14], [.95, .16]];
     const sx = w / 390, hy = y => (y / 430 * h).toFixed(1);

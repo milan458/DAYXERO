@@ -1,27 +1,33 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>032 Session complete</title>
-<meta name="motion" content="Sun rays fade in behind (200ms) and slowly turn, the Prep 4 medal stamps in (spring, 300ms) and shines; Xero settles beside the medal on one ground shadow and bumps at 1500ms. Title (coral underline under done) and line arrive; the shelf arrives, stamps 1 to 3 pop in left to right (110ms apart), then stamp 4 lands with a stamp and a shine (medium haptic) while the count ticks 3 to 4, and the Day Xero end-cap fades in last.">
+<meta name="motion" content="A soft paper sunburst fades in behind (300ms) and turns very slowly (26s loop); the plain Prep 4 medal stamps in (spring, 300ms) and shines; Xero settles beside it on one ground shadow, cheering, and bumps at 1500ms. Title (underline under done) and line arrive; the shelf arrives, stamps 1 to 3 pop in left to right (110ms apart), then stamp 4 lands with a stamp and a shine (medium haptic) while the count ticks 3 to 4; the dashed slots 5 to 7 and the Day Xero end-cap fade in last.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-.hero{position:absolute;top:130px;left:0;right:0;height:250px}
-/* medal centred; Xero overlaps its lower-right and both stand on one ground shadow */
-.burst{position:absolute;left:75px;top:0;width:240px;height:240px}
-.medal{position:absolute;left:115px;top:40px;width:160px;height:160px;border-radius:50%}
-.gshadow{position:absolute;left:108px;top:206px;width:232px;height:26px;border-radius:50%;background:radial-gradient(closest-side,rgba(30,26,58,.20),rgba(30,26,58,0))}
+.hero{position:absolute;top:110px;left:0;right:0;height:300px}
+/* soft paper sunburst: broad alternating wedges that fade out at the edge (no spiky triangles) */
+.burst{position:absolute;left:45px;top:0;width:300px;height:300px}
+.burst .wa{fill:#FFD966;fill-opacity:.5}
+.burst .wb{fill:#FFE9A8;fill-opacity:.55}
+[data-theme="dark"] .burst .wa{fill-opacity:.2}
+[data-theme="dark"] .burst .wb{fill:#FFD966;fill-opacity:.08}
+.medal{position:absolute;left:105px;top:60px;width:180px;height:180px;border-radius:50%}
+/* a plain medal face: no inner sun scene behind the numeral */
+.medal svg g[clip-path], .srow svg g[clip-path]{display:none}
+.medal svg text{font-size:42px}
+.gshadow{position:absolute;left:96px;top:240px;width:250px;height:28px;border-radius:50%;background:radial-gradient(closest-side,rgba(30,26,58,.20),rgba(30,26,58,0))}
 [data-theme="dark"] .gshadow{background:radial-gradient(closest-side,rgba(0,0,0,.55),rgba(0,0,0,0))}
-.xero{position:absolute;left:236px;top:118px}
+.xero{position:absolute;left:246px;top:146px}
 /* no stray sparkle marks around Xero on this screen */
 .xero svg > g[stroke]{display:none}
-.mid{position:absolute;top:400px;left:0;right:0;text-align:center;display:grid;gap:8px}
-/* coral underline in light mode (the table ground defaults to sun) */
-html[data-theme="light"] .screen .mark{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 16' preserveAspectRatio='none'%3E%3Cpath d='M3 10 C40 4 90 5 122 7 C152 9 178 11 197 4' fill='none' stroke='%23FF7A55' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E")}
+.mid{position:absolute;top:436px;left:0;right:0;text-align:center;display:grid;gap:8px}
 /* the shelf: one row of seven prep stamps, then the larger Day Xero end-cap */
-.shelf{position:absolute;top:528px;left:var(--gutter);right:var(--gutter);display:block;overflow:visible}
+.shelf{position:absolute;top:566px;left:var(--gutter);right:var(--gutter);display:block;overflow:visible}
 .srow{display:flex;align-items:center;gap:5px;padding-bottom:12px;border-bottom:1.5px solid var(--line)}
 .srow > span{display:block;flex:none}
-.srow svg text{font-size:40px}
-.srow .lk{color:var(--fg)}
+.srow svg text{font-size:44px}
+/* slots still to come: a dashed rim and numeral in the muted ink, at least 3:1 on the ground */
+.srow .lk{color:color-mix(in srgb,var(--muted) 85%,var(--g))}
 .srow .cap{margin-left:auto}
 /* the end-cap waits with a dashed rim but shows the brand mark in full colour */
 .srow .cap svg > g[opacity]{opacity:1}
@@ -32,8 +38,8 @@ html[data-theme="light"] .screen .mark{background-image:url("data:image/svg+xml,
 <div class="screen" data-ground="table">
   <div class="nav"><button class="icon-btn" aria-label="Close" id="close"></button></div>
   <div class="hero">
+    <svg class="burst" viewBox="0 0 300 300" data-fade style="--d:300ms" aria-hidden="true" id="burst"></svg>
     <div class="gshadow" data-fade style="--d:300ms"></div>
-    <svg class="burst" viewBox="0 0 260 260" data-fade style="--d:200ms"><g class="rays" id="rays"></g></svg>
     <div class="medal" data-stamp style="--d:300ms"><div class="shine" style="--d:1100ms;border-radius:50%" id="medal"></div></div>
     <div class="xero" data-settle style="--i:4"><div class="bump" style="--d:1500ms" id="xero"></div></div>
   </div>
@@ -49,17 +55,21 @@ html[data-theme="light"] .screen .mark{background-image:url("data:image/svg+xml,
 </div>
 <script>
 document.getElementById('close').innerHTML = DX.icon('close');
-document.getElementById('rays').innerHTML = Array.from({length:24}, (_, i) =>
-  `<path d="${i % 2 ? 'M130 26 L132.5 54 L127.5 54Z' : 'M130 16 L134 58 L126 58Z'}" fill="#F5B83D" fill-opacity="${i % 2 ? .55 : .9}" transform="rotate(${i * 15} 130 130)"/>`).join('');
-document.getElementById('medal').innerHTML = DX.badge({kind:'prep', n:4, size:160, bare:true});
-document.getElementById('xero').innerHTML = DX.char('xero', {mood:'cheer', size:100});
-/* locked slots: a dashed outline and the numeral only */
-const slot = n => `<svg width="36" height="36" viewBox="0 0 100 100" role="img" aria-label="Prep ${n} locked"><circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" stroke-opacity=".32" stroke-width="3.5" stroke-dasharray="7 7"/><text x="50" y="50" text-anchor="middle" dominant-baseline="middle" font-family="Bricolage Grotesque" font-weight="800" fill="currentColor" fill-opacity=".5">${n}</text></svg>`;
+/* 16 broad wedges, alternating two pale golds, masked by a radial fade so the edge dissolves like light on paper */
+const wedge = (i) => { const a0 = (i * 22.5 - 90) * Math.PI / 180, a1 = ((i + 1) * 22.5 - 90) * Math.PI / 180, R = 150;
+  return `<path class="${i % 2 ? 'wb' : 'wa'}" d="M150 150 L${(150 + R * Math.cos(a0)).toFixed(1)} ${(150 + R * Math.sin(a0)).toFixed(1)} A${R} ${R} 0 0 1 ${(150 + R * Math.cos(a1)).toFixed(1)} ${(150 + R * Math.sin(a1)).toFixed(1)}Z"/>`; };
+document.getElementById('burst').innerHTML = `<defs><radialGradient id="bf"><stop offset=".38" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+  <mask id="bm"><circle cx="150" cy="150" r="150" fill="url(#bf)"/></mask></defs>
+  <g mask="url(#bm)"><g class="rays" style="transform-box:fill-box;transform-origin:center">${Array.from({length:16}, (_, i) => wedge(i)).join('')}</g></g>`;
+document.getElementById('medal').innerHTML = DX.badge({kind:'prep', n:4, size:180, bare:true});
+document.getElementById('xero').innerHTML = DX.char('xero', {mood:'cheer', size:104});
+/* slots still to come: a dashed rim and the numeral only */
+const slot = n => `<svg width="36" height="36" viewBox="0 0 100 100" role="img" aria-label="Prep ${n}, still to come"><circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" stroke-width="4" stroke-dasharray="8 7"/><text x="50" y="50" text-anchor="middle" dominant-baseline="middle" font-family="Bricolage Grotesque" font-weight="800" fill="currentColor">${n}</text></svg>`;
 let h = '';
 for (let n = 1; n <= 7; n++) {
   if (n <= 3) h += `<span data-pop style="--d:1500ms;--i:${n}">${DX.badge({kind:'prep', n, size:36, bare:true})}</span>`;
   else if (n === 4) h += `<span data-stamp style="--d:2150ms;--i:0"><span class="st4 shine" style="--d:2650ms;display:block">${DX.badge({kind:'prep', n, size:36, bare:true})}</span></span>`;
-  else h += `<span class="lk">${slot(n)}</span>`;
+  else h += `<span class="lk" data-fade style="--d:2400ms">${slot(n)}</span>`;
 }
 h += `<span class="cap" data-fade style="--d:2500ms">${DX.badge({kind:'xero', size:54, state:'next', bare:true, label:'Day Xero'})}</span>`;
 document.getElementById('srow').innerHTML = h;

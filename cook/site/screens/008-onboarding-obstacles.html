@@ -1,17 +1,17 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>008 Onboarding obstacles</title>
-<meta name="motion" content="Progress eases from 5/11 to 6/11 (900ms settle). Question, the chips (006's pattern: natural widths, three balanced rows of two) and the count line arrive (600ms, 90ms stagger). At 900ms Social situations takes the kit selection with a 520ms spring bump and a light selection haptic; the count line changes from 1 picked to 2 picked with a bump and names the second tool (400ms fade).">
+<meta name="motion" content="Progress eases from 5/11 to 6/11 (900ms settle). Question, the chips (006's pattern: natural widths, balanced rows of three, three and two) and the count line arrive (600ms, 90ms stagger). At 900ms Social situations takes the kit selection with a 520ms spring bump and a light selection haptic; the count line changes from 1 picked to 2 picked with a bump and names the second tool (400ms fade).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   /* Onboarding header: back button and progress only (no avatar); the bar ends at the gutter so the sun knob never collides. */
   .nav { padding-right: 26px; }
   /* Obstacles only (what gets in the way). Cravings and stress were asked on 006, so they are not here.
-     Same chip pattern as 006: natural widths (12px side padding), hand-balanced rows of two. */
+     Same chip pattern as 006: natural widths (12px side padding), hand-balanced rows (3, 3, 2). */
   .answers { gap: 16px !important; padding-top: 24px !important; }
-  .flow { display: grid; gap: 8px; }
+  .flow { display: grid; gap: 10px; }
   .flow .r { display: flex; gap: 8px; }
-  .flow .chip { flex: none; padding: 0 12px; white-space: nowrap; }
+  .flow .chip { flex: none; min-height: 48px; padding: 0 12px; white-space: nowrap; }
   /* A plain count line, no card and no character. */
   .count { color: var(--muted); padding-top: 4px; }
   .count b { color: var(--fg); font-weight: 700; }
@@ -29,9 +29,9 @@
   </div>
   <div class="answers">
     <div class="flow" data-a style="--i:2">
-      <div class="r"><button class="chip on">Irritability</button><button class="chip" id="social">Social situations</button></div>
-      <div class="r"><button class="chip">Weight gain</button><button class="chip">Trouble focusing</button></div>
-      <div class="r"><button class="chip">Poor sleep</button><button class="chip">Low motivation</button></div>
+      <div class="r"><button class="chip on">Irritability</button><button class="chip" id="social">Social situations</button><button class="chip">Hunger</button></div>
+      <div class="r"><button class="chip">Weight gain</button><button class="chip">Poor sleep</button><button class="chip">Restlessness</button></div>
+      <div class="r"><button class="chip">Trouble focusing</button><button class="chip">Low motivation</button></div>
     </div>
     <p class="t-foot count" data-a style="--i:3"><b id="n">2 picked.</b> <span id="tl">You&rsquo;ll get a 2-minute reset for irritability and what to say in social situations.</span></p>
   </div>
