@@ -56,7 +56,7 @@ Next focus: type floor, voids, waiting badge, ocean, session light mode, generic
 Time: 17:19 to 17:38 | total elapsed 0.8h
 Focus: type floor, voids, waiting badge, calmer ocean, session light mode, characters on utility screens, collisions; Prep 4 content.
 Changes: 6 fixer groups over all screens; kit: ocean #1F3C8C, table cream in light, toast above dock, scrim blur, 2px selection, tab labels 12px; app icon screen added.
-Scores, eyeballed (anchored, 3 critics; tiles enlarged to 300px): overall 8.2 / 8.2 / (third pending at log time). Median 8.2 (flat vs round 1).
+Scores, eyeballed (anchored, 3 critics; tiles enlarged to 300px): overall 8.2 / 8.2 / 8.3. Median 8.2 (flat vs round 1).
 Read: fixes landed (critics now flag second-order issues), but the bar moved with them; systemic items remain: two dark neutrals,
 two success greens, grey waiting badge, density on choice screens, toasts near buttons, voids.
 Own score (not decisive): 8.4.

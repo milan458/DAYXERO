@@ -40,7 +40,7 @@
     const t = (k, label, ic) => `<a class="${active === k ? 'on' : ''}" data-go="${{ today: '016-today-quit', program: '022-program', progress: '036-progress' }[k]}">${icon(ic)}<span>${label}</span></a>`;
     return `<div class="tabfade"></div><nav class="tabbar" style="grid-template-columns:repeat(4,1fr)">
       ${t('today', 'Today', 'home')}${t('program', 'Program', 'path')}
-      <a class="sos" data-go="019-sos" aria-label="Craving SOS">${icon('wave', { size: 26, w: 2.4 })}</a>
+      <a class="sos" data-go="019-sos" aria-label="Craving SOS">${icon('wave', { size: 26, w: 2.4 })}<span>SOS</span></a>
       ${t('progress', 'Progress', 'chart')}</nav>`;
   }
 
@@ -126,7 +126,13 @@
       <rect y="${h - 70}" width="${w}" height="70" fill="url(#g${id})"/></svg>`;
   }
 
-  function charSvg(name, o = {}) { const f = window.DXC && window.DXC[name]; return f ? f(Object.assign({ animate: !still }, o)) : ''; }
+  function charSvg(name, o = {}) {
+    const f = window.DXC && window.DXC[name]; if (!f) return '';
+    let svg = f(Object.assign({ animate: !still }, o));
+    /* Dark mode: horizon scenes become dusk (dimmer, warmer) so heroes never glare at night. */
+    if (name === 'horizon' && theme === 'dark' && !o.noDusk) svg = svg.replace('style="display: block', 'style="filter: brightness(.6) saturate(.85) sepia(.12); display: block');
+    return svg;
+  }
 
   /* Count-ups: <span data-count="49" data-prefix="$" data-dec="2" data-from="0"> */
   function counts(root) {

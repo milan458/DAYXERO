@@ -4,7 +4,8 @@
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .nav .timer { color: var(--muted); font: 600 14px/1 var(--body); font-variant-numeric: tabular-nums; }
+  .screen { --muted: #F3EEE6; }
+  .nav .timer { color: var(--fg); background: var(--card); border-radius: 99px; padding: 9px 14px; font: 600 14px/1 var(--body); font-variant-numeric: tabular-nums; }
   .hero { position: absolute; left: 0; right: 0; top: 104px; height: 292px; display: grid; place-items: center; }
   .hero .breathe { position: relative; width: 292px; height: 292px; display: grid; place-items: center; }
   .hero .pacer { position: absolute; inset: 0; overflow: visible; }
@@ -20,7 +21,7 @@
   .reason .t-head { margin-top: 4px; font-size: 17px; }
   .dock .two { display: grid; grid-template-columns: 1.35fr 1fr; gap: 10px; }
   .dock .links { display: flex; justify-content: center; align-items: center; gap: 4px; }
-  .dock .links .link { padding: 0 10px; color: var(--muted); opacity: 1; }
+  .dock .links .link { padding: 0 10px; color: var(--fg); opacity: 1; }
   .dock .links i { width: 4px; height: 4px; border-radius: 99px; background: var(--muted); opacity: .7; }
 </style>
 </head><body>

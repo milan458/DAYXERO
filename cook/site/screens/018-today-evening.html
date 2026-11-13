@@ -8,8 +8,8 @@
   .greet { position: absolute; z-index: 2; left: 0; right: 0; top: 74px; padding: 0 var(--gutter); }
   .greet .sub { margin-top: 8px; color: var(--muted); }
   .greet .sub b { color: var(--fg); font-weight: 700; }
-  .glim { position: absolute; left: 34px; top: 138px; }
-  .content { position: absolute; left: 0; right: 0; top: 384px; padding: 0 var(--gutter); }
+  .glim { position: absolute; left: 44px; top: 140px; }
+  .content { position: absolute; left: 0; right: 0; top: 352px; padding: 0 var(--gutter); }
   .ci { padding: 18px; display: grid; gap: 16px; }
   .ci .t-foot { color: var(--muted); }
   .nights { padding: 14px 14px 12px; border-radius: 18px; background: var(--card-2); display: grid; gap: 12px; }
@@ -63,7 +63,7 @@
 <script>
   const $ = s => document.querySelector(s);
   $('#sky').innerHTML = DX.nightSky({ w: 390, h: 430, moonX: 316, moonY: 200 });
-  $('#glim').innerHTML = DX.char('glim', { mood: 'sleepy', size: 220 });
+  $('#glim').innerHTML = DX.char('glim', { mood: 'sleepy', size: 184 });
   $('#b7').innerHTML = DX.badge({ kind: 'night', n: '', state: 'next', p: 6 / 7, size: 44, bare: true }) + '<span class="n">7</span>';
   const dn = ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu'];
   $('#pips').innerHTML = dn.map((d, i) => `<div class="pip" data-fade style="--d:${500 + i * 90}ms"><b>${DX.icon('check', { size: 16, w: 3 })}</b><span class="t-cap">${d}</span></div>`).join('') + `<div class="pip tonight"><b>${DX.icon('moon', { size: 16, w: 2.4 })}</b><span class="t-cap">Tonight</span></div>`;

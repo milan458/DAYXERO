@@ -1,16 +1,17 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>020 Craving passed</title>
-<meta name="motion" content="The completion beat, gentle. A check draws on the pacer ring (420ms), then Jelli settles in cheering (900ms, one soft hop). Title and line fade up; at 900ms the wave count rolls from 22 to 23 while a '+1' floats up beside it (spring, the only one on the screen). At 1.3s the 25-wave badge fades in (700ms, no spring) and its ring creeps from 22 to 23 of 25 while "2 to go" settles under it. Trigger chips and the button arrive last. Success haptic with the +1.">
+<meta name="motion" content="The completion beat, gentle. A check draws on the pacer ring (420ms), then Jelli settles in cheering (900ms, one soft hop). Title and line fade up; at 900ms the wave count rolls from 22 to 23 while a '+1' floats up beside it (spring, the only one on the screen). At 1.3s the 25-wave badge fades in (700ms, no spring) and its ring creeps from 22 to 23 of 25 while "2 to go" settles under it. The button and the quiet 'What set it off?' link arrive last (the link opens the optional trigger sheet). Success haptic with the +1.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .hero { position: absolute; left: 0; right: 0; top: 60px; display: grid; place-items: center; }
+  .screen { --muted: #F3EEE6; }
+  .hero { position: absolute; left: 0; right: 0; top: 84px; display: grid; place-items: center; }
   .hero .disc { position: relative; width: 232px; height: 232px; display: grid; place-items: center; }
   .hero .disc svg.pacer { position: absolute; inset: 0; }
   .hero .ck { position: absolute; right: 12px; top: 16px; }
-  .txt { position: absolute; left: 0; right: 0; top: 304px; padding: 0 36px; text-align: center; }
+  .txt { position: absolute; left: 0; right: 0; top: 336px; padding: 0 36px; text-align: center; }
   .txt .t-body { margin-top: 8px; color: var(--muted); }
-  .stack2 { position: absolute; left: 0; right: 0; top: 418px; padding: 0 var(--gutter); display: grid; gap: 10px; }
+  .stack2 { position: absolute; left: 0; right: 0; top: 462px; padding: 0 var(--gutter); display: grid; gap: 10px; }
   .waves { display: flex; align-items: center; gap: 12px; padding: 16px 16px 16px 18px; }
   .waves .grow { flex: 1; min-width: 0; }
   .waves .big { display: flex; align-items: flex-start; gap: 6px; position: relative; }
@@ -25,8 +26,9 @@
   .waves .bd .go span { display: block; font: 600 12px/1.3 var(--body); color: var(--muted); }
   #ck [data-pop] { transform: none; }
   .play #ck [data-pop] { animation: dx-fade 500ms var(--ease) both; animation-delay: 0ms; }
-  .trig .t-foot { color: var(--muted); margin-bottom: 10px; }
-  .trig .chip { background: var(--card-2); }
+  .dock .why { display: flex; justify-content: center; margin-top: 6px; }
+  .dock .why .link { color: var(--fg); opacity: 1; gap: 6px; display: inline-flex; align-items: center; }
+  .dock .why .link svg { width: 16px; height: 16px; }
 </style>
 </head><body>
 <div class="screen" data-ground="ocean">
@@ -54,18 +56,16 @@
       </div>
       <div class="bd" data-fade style="--d:1300ms"><div class="face" id="bd"></div><p class="go">2 to go<span>25 waves badge</span></p></div>
     </div>
-    <div class="card trig" data-a style="--i:5">
-      <p class="t-foot">What set it off? Optional</p>
-      <div class="chips"><button class="chip">Coffee</button><button class="chip">Stress</button><button class="chip">Other</button></div>
-    </div>
   </div>
 
   <div class="dock">
     <button class="btn" data-a style="--i:6" data-go="016-today-quit">Back to my day</button>
+    <div class="why" data-a style="--i:7"><button class="link" id="why">What set it off?</button></div>
   </div>
 </div>
 <script>
   const $ = s => document.querySelector(s);
+  $('#why').insertAdjacentHTML('beforeend', DX.icon('chevron', { size: 16 }));
   $('#jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 190 });
   $('#ck').innerHTML = DX.check({ size: 48, color: 'var(--tick)', fg: '#0B2A1C' });
   $('#bd').innerHTML = DX.badge({ kind: 'wave', n: '', state: 'next', p: .92, size: 80, bare: true }) + '<span class="n">25</span>';

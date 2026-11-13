@@ -4,25 +4,25 @@
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .hero { position: absolute; left: 0; right: 0; top: 0; height: 344px; border-radius: 0 0 36px 36px; overflow: hidden; }
+  .hero { position: absolute; left: 0; right: 0; top: 0; height: 372px; border-radius: 0 0 36px 36px; overflow: hidden; }
   .hero .scene { position: absolute; inset: 0; }
   [data-theme="dark"] .hero .scene { filter: brightness(.8) saturate(.92); }
-  .ringwrap { position: absolute; left: 50%; top: 76px; width: 204px; height: 204px; margin-left: -102px; }
+  .ringwrap { position: absolute; left: 50%; top: 90px; width: 204px; height: 204px; margin-left: -102px; }
   .ringwrap .ring { --ringc: #FFF8EE; }
   [data-theme="dark"] .ringwrap .ring { --ringc: #FFC38A; }
   .ringwrap .disc { position: absolute; inset: 20px; border-radius: 50%; background: rgba(255,248,238,.74); }
   .ringwrap .ring { position: absolute; inset: 0; }
   .ringwrap .ch { position: absolute; left: 0; right: 0; top: 35px; display: grid; place-items: center; }
-  .pill { position: absolute; left: 0; right: 0; top: 294px; display: flex; justify-content: center; }
+  .pill { position: absolute; left: 0; right: 0; top: 318px; display: flex; justify-content: center; }
   .pill span { background: var(--card); color: var(--fg); border-radius: 99px; padding: 8px 14px; font: 600 14px/1 var(--body); display: inline-flex; gap: 8px; align-items: center; box-shadow: 0 6px 16px rgba(30,26,58,.12); }
   .pill i { width: 6px; height: 6px; border-radius: 99px; background: var(--fg); opacity: .4; }
 
-  .content { position: absolute; left: 0; right: 0; top: 368px; padding: 0 var(--gutter); }
+  .content { position: absolute; left: 0; right: 0; top: 398px; padding: 0 var(--gutter); }
   .hello { color: var(--muted); }
   .content h1 { margin-top: 4px; }
   .kept { margin-top: 8px; color: var(--muted); }
   .kept b { color: var(--fg); font-weight: 700; }
-  .newb { margin-top: 18px; display: flex; align-items: center; gap: 14px; padding: 14px 16px; }
+  .newb { margin-top: 22px; display: flex; align-items: center; gap: 14px; padding: 14px 16px; }
   .newb .grow { flex: 1; min-width: 0; }
   .newb .t-foot { color: var(--muted); }
   .newb .medal { width: 64px; height: 64px; border-radius: 99px; flex: none; }
@@ -31,7 +31,7 @@
   .newb .nextb .face svg { position: absolute; inset: 0; }
   .newb .nextb .n { position: relative; font: 800 17px/1 var(--display); color: var(--fg); letter-spacing: -.4px; }
   .newb .nextb .t-cap { color: var(--fg); font-size: 13px; }
-  .sess { margin-top: 10px; display: flex; align-items: center; gap: 14px; }
+  .sess { margin-top: 12px; display: flex; align-items: center; gap: 14px; }
   .sess .grow { flex: 1; min-width: 0; }
   .sess .t-foot { color: var(--muted); }
   .sess .btn.small { width: auto; padding: 0 18px 0 14px; flex: none; }
@@ -75,7 +75,7 @@
 </div>
 <script>
   const $ = s => document.querySelector(s);
-  $('#scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 390, h: 344, clarity: 90 });
+  $('#scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 390, h: 372, clarity: 90 });
   $('#ring').innerHTML = DX.ring({ size: 204, stroke: 8, p: 1, color: 'var(--ringc)', track: 'rgba(255,248,238,.3)' });
   const xero = mood => DX.char('xero', { mood, size: 136, stage: 2 });
   $('#xero').innerHTML = xero('hello');
