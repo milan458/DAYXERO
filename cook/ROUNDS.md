@@ -103,3 +103,10 @@ Read: plateau around 8.5; each round fixes the named items and the stricter crit
 into the kit as they appear (button lip, "+" sparkles, tab fade, selection style, Day Xero mark, tab bar).
 Kit after round 5: soft button shadow (no grey lip); star sparkles; 170px tab fade; selected chips white + 2px outline; radio
 rings 3:1; waiting Day Xero on a cream coin.
+
+Round 05 complete (all sections, real-size critics, Opus / Sonnet):
+onboarding 8.5 / 8.6; Today-SOS-Program 8.3 / 8.7; session 8.4 / 8.7; lesson-log 8.4 / 8.5; slips-checkin 8.5 / 8.7;
+calm-settings 8.7 / 8.8. Section medians 8.55, 8.5, 8.55, 8.45, 8.6, 8.75 -> app median 8.55 (round 4: 8.5).
+Screens at >= 9.0 by a critic: 018, 019, 024, 029, 032, 035, 039, 046, 053, 054, 055, 059, 060, 064, 066 (9.0-9.1).
+Kit after round 5: warm selection tint, `.opt.multi` checkboxes, coral toggles, brighter pre-dawn sun.
+Round 06: all six sections are in fixers.
