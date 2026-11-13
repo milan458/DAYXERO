@@ -116,3 +116,10 @@ Round 06 partial (real-size critics, Opus / Sonnet): Today-SOS-Program 8.4 / 8.6
 Plateau 8.5-8.7 (+/- 0.2 per round). 18 screens at >= 9.0 by a critic. Asked the user (non-blocking) for their own score of the
 current gallery to recalibrate against their eye, since rounds 1-6 fix named items and the stricter critic finds a new layer.
 Kit in round 6: night waiting ring visible, lit-sea ocean ground, light-mode dusk sky.
+Round 06 more: lesson-log 8.6 / 8.7 (r5 8.4 / 8.5; 039 at 9.2, 038 at 9.0 by Sonnet). Slips-checkin reverted to its r5 best
+after a regression on both critics (re-scored 8.6 / 8.7). Calm-settings round 6 fixes landed (056-070), critics running.
+
+## Round 07 (careful, keep-best)
+Rule: fixers change only the items critics listed and compare each screen with the previous best still; a section that drops
+on both critics reverts. Fixers running: onboarding 000-014, Today-SOS-Program 015-022 (concept redesign of 016/017/022),
+session 023-032, lesson-log 033-042, slips-checkin 043-055.
