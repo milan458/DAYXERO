@@ -194,16 +194,28 @@ struct ProgressTab: View {
     private func skyStrip(_ snap: HomeSnapshot) -> some View {
         let prep = isPrepPhase(snap)
         let clarity = prep ? CrewGrowth.prepClarity : CrewGrowth.clarity(daysClear: snap.daysClear)
-        return HorizonScene(.path, clarity: clarity, fit: .bottom)
-            .frame(height: 130)
+        // v5 (036): Xero's dawn with Xero cheering on the hill; the sky's clarity in a pill.
+        return HorizonScene(.dawn, clarity: clarity, fit: .bottom)
+            .frame(height: 170)
+            .overlay(alignment: .bottomTrailing) {
+                XeroView(mood: .cheer, stage: CrewGrowth.stage(daysClear: snap.daysClear), points: 110)
+                    .frame(width: 110, height: 110)
+                    .dxBob()
+                    .padding(.trailing, 14)
+                    .padding(.bottom, 4)
+                    .accessibilityHidden(true)
+            }
             .clipShape(RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
             .overlay(alignment: .bottomLeading) {
-                Text(prep ? "Sky \(clarity)% clear · clears from Quit Day" : "Sky \(clarity)% clear · clears a little each day")
-                    .dxType(.caption)
-                    .foregroundStyle(DX.Fill.navy)
-                    .padding(.horizontal, 12).padding(.vertical, 6)
-                    .background(DX.Fill.cream.opacity(0.92), in: Capsule())
-                    .padding(12)
+                HStack(spacing: 6) {
+                    DXIcon(.sun, size: 16, weight: 2)
+                    Text(prep ? "Sky \(clarity)% clear · clears from Quit Day" : "Sky \(clarity)% clear · clears a little each day")
+                        .dxType(.caption)
+                }
+                .foregroundStyle(DX.Fill.navy)
+                .padding(.horizontal, 12).padding(.vertical, 7)
+                .background(DX.Fill.cream.opacity(0.92), in: Capsule())
+                .padding(12)
             }
             .accessibilityElement(children: .combine)
     }
@@ -613,7 +625,8 @@ private struct ProgressStat: View {
                     Text(verbatim: format(value)).monospacedDigit()
                 }
             }
-            .dxType(.title)
+            // v5 kit `.stat`: a 28 pt display number over a 13 pt muted caption.
+            .dxFace(.display, 28, weight: 800, tracking: -0.5)
             .foregroundStyle(Read4.ink)
             .lineLimit(1).minimumScaleFactor(0.6)
             Text(verbatim: label).dxType(.caption).foregroundStyle(Read4.muted)

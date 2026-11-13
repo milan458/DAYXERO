@@ -12,8 +12,9 @@ struct HealthTimelineView: View {
     @State private var product: Product
     @State private var open: HealthTimeline.Item?
 
-    private let ground = DX.Ground.mint
-    private let card = Color(light: 0xFFF8EE, dark: 0x16382D)
+    /// v5 (037): what's changing reads on the reading ground, as a timeline of rows.
+    private let ground = DX.Ground.reading
+    private let card = DX.Ground.reading.card
 
     init(profile: UserProfile, onClose: (() -> Void)? = nil) {
         self.profile = profile
@@ -38,17 +39,25 @@ struct HealthTimelineView: View {
                 VStack(alignment: .leading, spacing: DX.Space.s) {
                     header(elapsed: elapsed, clock: clock, now: context.date)
                     if products.count > 1 { switcher }
-                    VStack(spacing: DX.Space.s) {
+                    VStack(spacing: 0) {
                         ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
-                            Button { open = item } label: { row(item, state: rowState(item, index: index, elapsed: elapsed)) }
-                                .buttonStyle(.plain)
+                            let state = rowState(item, index: index, elapsed: elapsed)
+                            let next = index + 1 < items.count ? rowState(items[index + 1], index: index + 1, elapsed: elapsed) : nil
+                            HStack(alignment: .center, spacing: 12) {
+                                HealthRail(state: railState(state), next: next.map(railState), first: index == 0)
+                                    .frame(width: 22)
+                                Button { open = item } label: { row(item, state: state) }
+                                    .buttonStyle(.dxPress)
+                            }
+                            .padding(.vertical, 5)
+                            .dxArrive(index, delay: 0.2)
                         }
                     }
                     .padding(.top, DX.Space.xs)
                     if let text = timeline?.note(for: product) { note(text) }
                     sources(timeline)
                 }
-                .padding(.horizontal, DX.Space.m)
+                .padding(.horizontal, DX.Layout.gutter)
                 .dxReadableColumn()
                 .padding(.top, DX.Space.s)
                 .padding(.bottom, DX.Space.xxl)
@@ -69,7 +78,10 @@ struct HealthTimelineView: View {
     }
 
     private func header(elapsed: Double, clock: DayClock, now: Date) -> some View {
-        HStack(alignment: .center, spacing: DX.Space.xs) {
+        VStack(alignment: .leading, spacing: 10) {
+            if let onClose {
+                DXIconButton(.back, label: "Close", action: onClose)
+            }
             VStack(alignment: .leading, spacing: 4) {
                 Group {
                     if elapsed < 0 {
@@ -82,44 +94,22 @@ struct HealthTimelineView: View {
                 }
                 .dxType(.footnote).foregroundStyle(ground.muted)
                 // S27.15: a plain title; the hand-drawn mark is kept for moments (reveal, greeting, milestones, finale).
-                Text("What's\nchanging")
+                Text("What's changing")
                     .dxType(.large).foregroundStyle(ground.ink)
                     .accessibilityAddTraits(.isHeader)
             }
-            Spacer(minLength: 0)
-            // S27.15: one illustration language, so Xero cheers here instead of the stock-style person.
-            XeroView(mood: .cheer, stage: CrewGrowth.stage(daysClear: max(0, DayClock(boundaryHour: profile.dayBoundaryHour)
-                .days(fromDate: profile.quitDay, to: .now) + 1)), points: 104)
-                .frame(width: 128, height: 128)
-                .accessibilityHidden(true)
-                .background(Color(light: (0xFFFFFF, 0.45), dark: (0xFFFFFF, 0.08)), in: Circle())
         }
-        .overlay(alignment: .topTrailing) {
-            if let onClose {
-                Button(action: onClose) { Image(systemName: "xmark") }
-                    .buttonStyle(.v4Icon).accessibilityLabel(Text("Close"))
-            }
-        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .dxGround(.reading, paint: false)
     }
 
+    /// v5 (037): the products as kit chips.
     private var switcher: some View {
-        HStack(spacing: 0) {
+        HStack(spacing: 8) {
             ForEach(products, id: \.self) { p in
-                let on = p == product
-                Button { product = p } label: {
-                    Text(label(p))
-                        .dxFont(14, weight: 700, style: .footnote)
-                        .foregroundStyle(on ? DX.Ground.reading.background : ground.ink)
-                        .frame(maxWidth: .infinity, minHeight: 44)
-                        .background(on ? ground.ink : .clear, in: Capsule())
-                }
-                .buttonStyle(.plain)
-                .accessibilityAddTraits(on ? [.isButton, .isSelected] : .isButton)
+                DXChip(label(p), isOn: p == product, on: .reading) { product = p }
             }
         }
-        .padding(4)
-        .background(Color(light: (0x1E1A3A, 0.08), dark: (0xFFFFFF, 0.08)), in: Capsule())
-        .sensoryFeedback(DX.Haptic.select, trigger: product)
     }
 
     private func label(_ product: Product) -> LocalizedStringKey {
@@ -161,41 +151,55 @@ struct HealthTimelineView: View {
         case .ahead: DX.Ground.reading.muted
         }
         let ahead = state == .ahead
-        return VStack(alignment: .leading, spacing: 6) {
-            Text(verbatim: item.title)
-                .dxFont(17, weight: 800, style: .headline)
-                .foregroundStyle(DX.Ground.reading.ink)
-                .multilineTextAlignment(.leading)
-                .fixedSize(horizontal: false, vertical: true)
-            Text(verbatim: label).dxFont(13, weight: 700, style: .footnote).foregroundStyle(labelColor)
-            if case let .now(fraction) = state, !item.isFelt {
-                GeometryReader { proxy in
-                    ZStack(alignment: .leading) {
-                        Capsule().fill(Color(light: 0xEDE6DA, dark: 0x2A4A3E))
-                        Capsule().fill(Color(hex: 0xFF7A55)).frame(width: proxy.size.width * min(1, max(0, fraction)))
-                    }
-                }
-                .frame(height: 8)
-                .padding(.top, 2)
-            }
-        }
-        .frame(maxWidth: .infinity, minHeight: Self.cardHeight - 36, alignment: .topLeading)
-        .padding(.leading, 18)
-        .padding(.vertical, 18)
-        .padding(.trailing, Self.artVisible + 4)
-        .background(alignment: .bottomTrailing) {
-            MilestoneCollage(id: item.id, size: Self.art, animate: !ahead)
+        let isNow: Bool = if case .now = state, !item.isFelt { true } else { false }
+        let shape = RoundedRectangle(cornerRadius: 20, style: .continuous)
+        // v5 (037): a 64 pt art tile, the title and when, the bar for the change under way, and a chevron.
+        return HStack(spacing: 14) {
+            MilestoneCollage(id: item.id, size: 96, animate: false)
+                .frame(width: 96, height: 96)
+                .scaleEffect(0.75)
+                .frame(width: 64, height: 64)
+                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                 .saturation(ahead ? 0.35 : 1)
                 .opacity(ahead ? 0.75 : 1)
-                .offset(x: Self.art - Self.artVisible, y: 26)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(verbatim: item.title)
+                    .dxType(.headline)
+                    .foregroundStyle(DX.Ground.reading.ink)
+                    .multilineTextAlignment(.leading)
+                    .fixedSize(horizontal: false, vertical: true)
+                Text(verbatim: label).dxType(.footnote).foregroundStyle(labelColor)
+                if case let .now(fraction) = state, !item.isFelt {
+                    GeometryReader { proxy in
+                        ZStack(alignment: .leading) {
+                            Capsule().fill(DX.Ground.reading.track)
+                            Capsule().fill(Color(hex: 0xFF7A55)).frame(width: proxy.size.width * min(1, max(0, fraction)))
+                        }
+                    }
+                    .frame(height: 6)
+                    .padding(.top, 4)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            DXIcon(.chev, size: 18).foregroundStyle(DX.Ground.reading.muted)
         }
-        .background(card)
-        .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+        .padding(12)
+        .background(isNow ? DX.Ground.reading.selTint : card, in: shape)
+        .overlay(shape.strokeBorder(isNow ? DX.Ground.reading.selEdge : DX.Ground.reading.line, lineWidth: isNow ? 2 : 1))
+        .shadow(color: isNow ? Color(light: (0xF26A45, 0.15), dark: (0x000000, 0)) : .clear, radius: 10, y: 6)
         .contentShape(Rectangle())
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(verbatim: "\(item.when). \(item.title)"))
         .accessibilityValue(Text(accessibilityValue(state)))
         .accessibilityHint(Text("Opens the full story"))
+    }
+
+    private func railState(_ state: RowState) -> HealthRail.Node {
+        switch state {
+        case .done: .done
+        case .now, .first: .now
+        case .ahead: .ahead
+        }
     }
 
     /// The art is drawn this big and shows this much of itself; the rest bleeds off the card's right edge.
@@ -514,5 +518,41 @@ struct HealthSummaryCard: View {
         }
         .buttonStyle(.plain)
         .accessibilityElement(children: .combine)
+    }
+}
+
+/// The timeline's rail (v5, 037): a green tick for done, a half-filled ring for the change under way, an open ring
+/// ahead; solid line through what's done, dashed after.
+struct HealthRail: View {
+    enum Node { case done, now, ahead }
+    let state: Node
+    let next: Node?
+    let first: Bool
+
+    var body: some View {
+        let ink = DX.Ground.reading.ink
+        ZStack {
+            GeometryReader { proxy in
+                Path { p in
+                    p.move(to: CGPoint(x: proxy.size.width / 2, y: first ? proxy.size.height / 2 : -6))
+                    p.addLine(to: CGPoint(x: proxy.size.width / 2, y: next == nil ? proxy.size.height / 2 : proxy.size.height + 6))
+                }
+                .stroke(ink.opacity(0.35), style: StrokeStyle(lineWidth: 2, dash: state == .ahead || next == .ahead ? [4, 4] : []))
+            }
+            switch state {
+            case .done:
+                Circle().fill(DX.Fill.done).frame(width: 20, height: 20)
+                DXIconShape(d: DX.Icon.check.d).stroke(.white, style: StrokeStyle(lineWidth: 2.2, lineCap: .round, lineJoin: .round))
+                    .frame(width: 12, height: 12)
+            case .now:
+                Circle().fill(DX.Ground.reading.background).frame(width: 20, height: 20)
+                Circle().trim(from: 0, to: 0.5).fill(ink).rotationEffect(.degrees(90)).frame(width: 20, height: 20)
+                Circle().strokeBorder(ink, lineWidth: 2.5).frame(width: 20, height: 20)
+            case .ahead:
+                Circle().fill(DX.Ground.reading.background).frame(width: 18, height: 18)
+                Circle().strokeBorder(ink.opacity(0.6), lineWidth: 2).frame(width: 18, height: 18)
+            }
+        }
+        .accessibilityHidden(true)
     }
 }

@@ -63,53 +63,55 @@ struct MilestoneMoment: View {
     @State private var appeared = false
     @State private var sharing = false
 
-    private let ground = DX.Ground.sun
+    /// v5 (039): milestones celebrate on Xero's apricot, the earned badge stamping into its rays.
+    private let ground = DX.Ground.apricot
 
     var body: some View {
         VStack(spacing: 0) {
             ScrollView {
                 VStack(spacing: 10) {
-                    // S27.16: each milestone has its own sky, token and company, and Xero grows with the stage.
-                    ZStack(alignment: .bottom) {
-                        HeroScene(milestone.scene, clarity: CrewGrowth.clarity(daysClear: stats.daysClear), height: 280, edge: ground.background)
+                    HStack {
+                        DXIconButton(.close, label: "Close", action: onClose)
+                        Spacer()
+                    }
+                    .environment(\.dxGround, ground)
+                    // The earned badge in its rays; the company (Xero, then Jelli, then the crew) cheers beside it.
+                    ZStack(alignment: .bottomTrailing) {
+                        MilestoneRays()
+                            .frame(width: 300, height: 300)
+                            .frame(maxWidth: .infinity)
+                            .dxFade(delay: 0.5)
+                        Group {
+                            switch milestone {
+                            case .quitDay: DXBadge(.xero, size: 160)
+                            case .days(365): DXBadge(.day, n: "1y", size: 160)
+                            case let .days(n): DXBadge(.day, n: n, size: 160, liftNumeral: true)
+                            }
+                        }
+                        .shadow(color: Color(light: (0x963214, 0.25), dark: (0x000000, 0.45)), radius: 8, y: 8)
+                        .dxShine(delay: 1.2)
+                        .dxStamp(delay: 0.3)
+                        .frame(maxWidth: .infinity)
+                        .padding(.bottom, 70)
                         company
+                            .scaleEffect(0.62, anchor: .bottomTrailing)
                             .scaleEffect(appeared || motion.reduce ? 1 : DX.Move.celebrateFromScale, anchor: .bottom)
                             .opacity(appeared ? 1 : 0)
-                            .offset(y: -6)
                             .accessibilityHidden(true)
                     }
-                    .overlay(alignment: .topLeading) {
-                        // The milestone's token, pinned to the sky like a sticker.
-                        KitArt(milestone.token, cornerRadius: 18, animate: false)
-                            .frame(width: 60, height: 60)
-                            .shadow(color: Color(hex: 0x1A0B2E).opacity(0.18), radius: 8, y: 6)
-                            .rotationEffect(.degrees(-8))
-                            .padding(.leading, 22 + DX.Layout.gutter)
-                            .padding(.top, 70)
-                            .accessibilityHidden(true)
-                    }
-                    .overlay(alignment: .topTrailing) {
-                        Button(action: onClose) {
-                            Image(systemName: "xmark").font(.system(size: 18, weight: .bold)).foregroundStyle(DX.Fill.navy)
-                                .frame(width: 44, height: 44)
-                                .background(DX.Fill.cream.opacity(0.85), in: Circle())
-                        }
-                        .buttonStyle(.plain)
-                        .accessibilityLabel(Text("Close"))
-                        .padding(.trailing, 10).padding(.top, 50)
-                    }
-                    .padding(.horizontal, -DX.Layout.gutter)
-                    .ignoresSafeArea(edges: .top)
-                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                    .frame(height: 300)
+                    .accessibilityHidden(true)
+                    HStack(alignment: .firstTextBaseline, spacing: 6) {
                         CountingText(Double(milestone.number), format: { String(Int($0.rounded())) })
-                            .dxType(.display).monospacedDigit()
-                        Text(verbatim: milestone.caption).dxType(.headline)
+                            .dxType(.headline).monospacedDigit()
+                        Text(verbatim: milestone.caption).dxType(.footnote)
                     }
                     .foregroundStyle(ground.ink)
                     .accessibilityElement(children: .ignore)
                     .accessibilityLabel(Text(verbatim: milestone.title))
                     .accessibilityAddTraits(.isHeader)
-                    Text(verbatim: milestone.title).dxType(.title).foregroundStyle(ground.ink).multilineTextAlignment(.center)
+                    Text(verbatim: milestone.title).dxType(.large).foregroundStyle(ground.ink).multilineTextAlignment(.center)
+                        .dxArrive(2, delay: 0.6)
                     if !milestone.line.isEmpty {
                         Text(verbatim: milestone.line).dxType(.body).foregroundStyle(ground.muted)
                             .multilineTextAlignment(.center).fixedSize(horizontal: false, vertical: true)
@@ -367,14 +369,14 @@ struct MilestonesRow: View {
 
     var body: some View {
         let next = Milestone.next(daysClear: daysClear)
-        VStack(alignment: .leading, spacing: DX.Space.xs) {
+        VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .firstTextBaseline) {
-                Text("Milestones").v4Text(.micro)
+                Text("Milestones").dxType(.headline).foregroundStyle(Read4.ink)
                 Spacer()
                 Text("\(Milestone.reached(daysClear: daysClear).count) of \(Milestone.all.count)").v4Text(.subtitle)
             }
             .accessibilityAddTraits(.isHeader)
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: DX.Space.xs), count: 4), spacing: DX.Space.xs) {
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 4), spacing: 14) {
                 ForEach(Milestone.all) { milestone in
                     let reached = milestone.isReached(daysClear: daysClear)
                     Button { if reached { onOpen(milestone) } } label: {
@@ -384,16 +386,15 @@ struct MilestonesRow: View {
                     .disabled(!reached)
                 }
             }
+            .padding(14)
+            .dxCard(on: .reading)
         }
         .padding(.top, DX.Space.s)
     }
 
+    /// v5 (036): the kit medallions. Quit Day is the Day Xero coin, the days their day badges; reached ones earned,
+    /// the next one with its ring toward it, the rest locked.
     private func badge(_ m: Milestone, reached: Bool, isNext: Bool) -> some View {
-        let top: String = switch m {
-        case .quitDay: "QD"
-        case .days(365): "1y"
-        case let .days(n): "\(n)"
-        }
         let bottom: String = if isNext {
             String(localized: "in \(m.reachedOnDay - daysClear) days")
         } else {
@@ -404,24 +405,45 @@ struct MilestonesRow: View {
             case .days: String(localized: "days")
             }
         }
-        return VStack(spacing: 0) {
-            Text(verbatim: top).dxType(.headline)
-            Text(verbatim: bottom).dxType(.caption).lineLimit(1).minimumScaleFactor(0.7)
-        }
-        .foregroundStyle(reached ? DX.Fill.cream : isNext ? Read4.ink : Read4.muted)
-        .frame(maxWidth: .infinity)
-        .aspectRatio(1, contentMode: .fit)
-        .background(reached ? DX.Fill.green : .clear, in: Circle())
-        .overlay {
-            if isNext {
-                Circle().strokeBorder(Read4.ink, lineWidth: 2)
-            } else if !reached {
-                Circle().strokeBorder(Read4.faint, style: StrokeStyle(lineWidth: 1, dash: [4, 4]))
+        let state: DXBadge.Status = reached ? .earned : isNext ? .next(nextFraction(m)) : .locked
+        return VStack(spacing: 6) {
+            Group {
+                switch m {
+                case .quitDay: DXBadge(.xero, state: state, size: 64)
+                case .days(365): DXBadge(.day, n: "1y", state: state, size: 64)
+                case let .days(n): DXBadge(.day, n: n, state: state, size: 64)
+                }
             }
+            Text(verbatim: bottom).dxType(.caption).lineLimit(1).minimumScaleFactor(0.7)
+                .foregroundStyle(isNext ? Read4.ink : Read4.muted)
         }
+        .frame(maxWidth: .infinity)
         .dynamicTypeSize(...DynamicTypeSize.xxLarge)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(verbatim: m.title))
         .accessibilityValue(Text(reached ? "Reached" : isNext ? "Next, in \(m.reachedOnDay - daysClear) days" : "Ahead"))
+    }
+
+    /// How far toward the next milestone, from the one before it.
+    private func nextFraction(_ m: Milestone) -> Double {
+        let before = Milestone.all.last { $0.reachedOnDay < m.reachedOnDay }?.reachedOnDay ?? 0
+        let span = Double(max(m.reachedOnDay - before, 1))
+        return min(1, max(0, Double(daysClear - before) / span))
+    }
+}
+
+/// The milestone's rays (v5, 039): sixteen soft paper rays fanning round the badge in two warm tones.
+struct MilestoneRays: View {
+    var body: some View {
+        ZStack {
+            ForEach(0..<16, id: \.self) { i in
+                Capsule()
+                    .fill(Color(hex: i.isMultiple(of: 2) ? 0xFFE7B0 : 0xFFA477).opacity(i.isMultiple(of: 2) ? 0.9 : 0.7))
+                    .frame(width: i.isMultiple(of: 2) ? 14 : 10, height: i.isMultiple(of: 2) ? 56 : 36)
+                    .offset(y: i.isMultiple(of: 2) ? -122 : -112)
+                    .rotationEffect(.degrees(Double(i) * 22.5))
+            }
+        }
+        .accessibilityHidden(true)
     }
 }
