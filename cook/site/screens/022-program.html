@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>022 Program, prep week</title>
-<meta name="motion" content="The 'Prep week' header and its progress line arrive (600ms, 90ms stagger). The road, one continuous paper-cut ribbon from Prep 1 to the Day Xero coin, fades in (600ms), then its finished stretch fills prep-orange from the top to today's stamp (1100ms, ease); Prep 1 to 3 stamps and their rows arrive as the fill reaches each one (about 360ms apart). Today's Prep 4 play stamp lands as the fill arrives (600ms arrive, no spring) with the up-next card beside it, then the stamp breathes a soft pulse ring every 2.4s. Prep 5 to 7 (dashed rings on cream) fade in, the dotted guide fades in along the road to the horizon, the two hills rise 24px into place back to front (100ms apart, 900ms), and the Day Xero coin rises onto the horizon like a sunrise (1100ms settle) while the warm glow behind it brightens (1.2s) and its label fades in. Last, the locked 'Weeks 1 to 4' row arrives on the hill (600ms). Light haptic when the fill reaches today.">
+<meta name="motion" content="The 'Prep week' header and its progress line arrive (600ms, 90ms stagger). The road, one continuous paper-cut ribbon of warm sand that runs down from Prep 1 and on over the horizon (24px+ from the screen edge), fades in (600ms), then its finished stretch fills prep-orange from the top to today's stamp (1100ms, ease); Prep 1 to 3 stamps and their rows (one step dimmer than the rows ahead) arrive as the fill reaches each one (about 360ms apart). Today's Prep 4 play stamp lands as the fill arrives (600ms arrive, no spring) with the up-next card beside it, and small Xero settles onto the road at it (900ms, at 1.3s) then bobs; the stamp breathes a soft pulse ring every 2.4s. Prep 5 to 7 (dashed rings on cream) fade in, the road's dashed centre line fades in from today to the horizon, the two hills rise 24px into place back to front (100ms apart, 900ms) and fill the lower third, and the Day Xero coin rises onto the horizon line beside the road like a sunrise (1100ms settle) while the warm glow behind it brightens (1.2s) and its label fades in. Last, the locked 'Weeks 1 to 4' row arrives on the hill (600ms). Light haptic when the fill reaches today.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -92,10 +92,14 @@
 
   <div class="glow" aria-hidden="true"></div>
   <svg class="road" width="390" height="844" viewBox="0 0 390 844" aria-hidden="true">
+    <!-- the road ends at the horizon line (it runs on over the hill), even while the back hill is still rising in -->
+    <clipPath id="sky22"><path d="M0 0 H390 V606 C340 616 290 625 222 622 C140 618 60 627 0 636 Z"/></clipPath>
+    <g clip-path="url(#sky22)">
     <path id="edge" fill="none" stroke="var(--road-edge)" stroke-width="56" stroke-linecap="round" stroke-linejoin="round" transform="translate(0 3)" data-fade style="--d:150ms"/>
     <path id="road" fill="none" stroke="var(--road)" stroke-width="52" stroke-linecap="round" stroke-linejoin="round" data-fade style="--d:150ms"/>
     <path id="done" fill="none" stroke="var(--done-road)" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/>
     <path id="future" fill="none" stroke="var(--road-line)" stroke-width="2.5" stroke-dasharray="7 9" stroke-linecap="round" data-fade style="--d:1300ms"/>
+    </g>
   </svg>
   <svg class="hill b" width="390" height="844" viewBox="0 0 390 844" aria-hidden="true"><path class="sh" d="M0 636 C60 627 140 618 222 622 C290 625 340 616 390 606 V844 H0Z" fill="var(--hb)"/><path d="M0 636 C60 627 140 618 222 622 C290 625 340 616 390 606" fill="none" stroke="var(--hrim)" stroke-width="1.5"/></svg>
   <div id="goal"></div>
