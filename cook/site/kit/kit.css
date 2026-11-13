@@ -223,7 +223,7 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
 /* Onboarding progress: the sun rides the end of the bar (one pattern for every onboarding step). */
 .progress.sun { overflow: visible; position: relative; }
 .progress.sun > i { position: relative; }
-.progress.sun > i::after { content: ""; position: absolute; right: -9px; top: 50%; width: 18px; height: 18px; margin-top: -9px; border-radius: 99px; background: #FFD966; box-shadow: 0 0 0 3px var(--g), 0 0 0 4.5px var(--fg); }
+.progress.sun > i::after { content: ""; position: absolute; right: -6px; top: 50%; width: 12px; height: 12px; margin-top: -6px; border-radius: 99px; background: #FFC93C; box-shadow: 0 0 0 2px var(--g), 0 0 10px 3px rgba(255,201,60,.55); }
 
 /* Onboarding question block: avatar row in nav, question as .t-large, helper as .t-body.muted. */
 .q { padding: 118px var(--gutter) 0; display: grid; gap: 10px; }

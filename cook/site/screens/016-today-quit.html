@@ -17,8 +17,8 @@
   .stage .medal .shine { border-radius: 99px; filter: drop-shadow(0 8px 14px rgba(150,50,20,.28)); }
   [data-theme="dark"] .stage .medal .shine { filter: drop-shadow(0 8px 16px rgba(0,0,0,.45)); }
   /* Xero's own ground: a paper-cut knoll inside the hero (a lighter hill, never the page colour, so the hero's corner stays whole) */
-  .knoll { --kn: #FFDDB8; --kn-b: #FFCC9A; --kn-rim: rgba(255,250,242,.95); }
-  [data-theme="dark"] .knoll { --kn: #26355E; --kn-b: #151F3A; --kn-rim: rgba(246,231,193,.42); }
+  .knoll { --kn: #FFDDB8; --kn-b: #FFCC9A; --kn-rim: rgba(255,250,242,.95); --kn-front: #B9422D; }
+  [data-theme="dark"] .knoll { --kn: #26355E; --kn-b: #151F3A; --kn-rim: rgba(246,231,193,.42); --kn-front: #0A1326; }
   .knoll { position: absolute; left: 244px; top: 336px; width: 160px; height: 68px; }
   .knoll svg { display: block; filter: drop-shadow(0 -3px 6px rgba(120,40,10,.22)); }
   [data-theme="dark"] .knoll svg { filter: drop-shadow(0 -3px 8px rgba(0,0,0,.5)); }
@@ -70,6 +70,7 @@
         <linearGradient id="kr16" gradientUnits="userSpaceOnUse" x1="0" y1="10" x2="0" y2="58"><stop offset="0" stop-color="var(--kn-rim)"/><stop offset="1" stop-color="var(--kn-rim)" stop-opacity="0"/></linearGradient></defs>
       <path d="M0 68 C10 32 44 10 82 10 C118 10 150 30 160 54 V68Z" fill="url(#kf16)"/>
       <path d="M0 68 C10 32 44 10 82 10 C118 10 150 30 160 54" fill="none" stroke="url(#kr16)" stroke-width="2.5"/>
+      <path d="M0 58 C40 52 100 54 160 48 V68 H0Z" fill="var(--kn-front)"/>
     </svg></div>
     <div class="xero" data-settle style="--d:400ms"><div class="bob" id="xero"></div></div>
     <div class="pill" data-a style="--i:1;--d:500ms"><span>Fri, Nov 13</span></div>
@@ -102,7 +103,9 @@
   /* the scene's sun sits behind the badge disc (a warm halo), never beside the numeral */
   /* dark: keep the stars out of the status bar and off the badge disc */
   $('#scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 390, h: 404, clarity: 90 })
-    .replace(/<circle cx="([\d.]+)" cy="([\d.]+)" r="(?:1\.2|1\.8)" fill="#fff"[^>]*>(?:<animate[^>]*\/>)?<\/circle>/g, (m, x, y) => (+y < 60 || Math.hypot(x - 195, y - 200) < 118) ? '' : m);
+    .replace(/<circle cx="([\d.]+)" cy="([\d.]+)" r="(?:1\.2|1\.8)" fill="#fff"[^>]*>(?:<animate[^>]*\/>)?<\/circle>/g, (m, x, y) => (+y < 60 || Math.hypot(x - 195, y - 200) < 118) ? '' : m)
+    /* light: the scene sun sits concentric behind the badge disc, a warm halo */
+    .replace(/<circle cx="200" cy="\d+" r="70" fill="url\(#h2Sun\)"/, '<circle cx="200" cy="148" r="70" fill="url(#h2Sun)"');
   const xero = mood => DX.char('xero', { mood, size: 104, stage: 2 });
   $('#xero').innerHTML = xero('hello');
   /* the badge's own little sun moves down onto its hill so it never crowds the numeral */
