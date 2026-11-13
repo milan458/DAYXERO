@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>048 NRT products</title>
-<meta name="motion" content="Title and the subtitle (with its count) arrive, then the five product rows arrive top to bottom (600ms, 90ms stagger), each paper-cut product settling a few px onto its disc as its row lands. Multi-select: rows carry the kit's rounded-square checkboxes. At 1.2s the Patch row lands checked: the kit's warm tint, 2px outline and tick settle in over 520ms with a light selection haptic, and the count in the subtitle rolls from 0 to 1. Tapping a third row gently shakes the count instead of checking it.">
+<meta name="motion" content="Title and the subtitle (with its count) arrive, then the five product rows arrive top to bottom (600ms, 90ms stagger), then Xero's tip settles in (900ms, then a slow bob). At 1.2s the Patch row lands selected: the kit's tint, 2px outline and tick settle in over 520ms with a light selection haptic, and the count in the subtitle rolls from 0 to 1. Tapping a third row gently shakes the count instead of selecting.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -8,18 +8,19 @@
   .wrap .lead { margin-top: 8px; color: var(--muted); }
   .wrap .lead b { color: var(--fg); font-weight: 600; }
   .opts { margin-top: 22px; display: grid; gap: 10px; }
-  .opts .opt { min-height: 74px; padding: 10px 16px 10px 12px; }
+  .opts .opt { min-height: 72px; padding: 10px 16px 10px 12px; }
   .opt .nm { font: 700 17px/1.2 var(--display); display: block; margin-bottom: 2px; }
   .opt .t-foot { font-size: 14px; }
   .play .opt.land { animation: land 520ms var(--settle) both; }
   @keyframes land { 0% { opacity: 1; transform: scale(.97); } 100% { opacity: 1; transform: none; } }
-  .art { width: 48px; height: 48px; flex: none; display: block; }
-  .play .art .obj { animation: drop 700ms var(--settle) both; animation-delay: calc(var(--i, 0) * 90ms + 200ms); }
-  @keyframes drop { from { transform: translateY(-4px); opacity: .0; } }
-  /* paper-cut palette: apricot, coral, sun and cream, on a soft apricot disc */
-  .art .bd { fill: #FFE4CC; }
-  .art .cream { fill: #FFF8EE; } .art .apr { fill: #FFB27F; } .art .apr2 { fill: #FFD3B0; } .art .coral { fill: #FF7A55; } .art .coral2 { fill: #E85A3E; } .art .sun { fill: #FFC93C; } .art .sun2 { fill: #F5B83D; }
-  [data-theme="dark"] .art .bd { fill: #2B3554; }
+  .opt .ico-tile { width: 46px; height: 46px; border-radius: 14px; }
+  .opt .ico-tile svg { width: 32px; height: 32px; }
+  /* bespoke duotone product glyphs: apricot fill under an ink line */
+  .gl { --acc: #FFB27F; --acc2: #FFDCC4; }
+  [data-theme="dark"] .gl { --acc: #F39A62; --acc2: #FFD3B4; }
+  .tip { margin-top: 18px; display: flex; gap: 10px; align-items: center; padding: 0 4px 0 0; }
+  .tip .xr { width: 64px; height: 64px; flex: none; margin: -6px 0 -6px -8px; }
+  .tip .t-foot { color: var(--muted); }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -33,13 +34,16 @@
       <h1 class="t-title" data-a style="--i:0">What are you using?</h1>
       <p class="t-foot lead" data-a style="--i:1">Pick up to two. <b id="picked">1 of 2 picked</b></p>
       <div class="opts">
-        <button class="opt multi on" id="patch" data-a style="--i:2"><svg class="art" data-p="patch" style="--i:2"></svg><span class="grow"><span class="nm">Patch</span><span class="t-foot">Worn all day, changed daily</span></span><span class="radio"></span></button>
-        <button class="opt multi" data-a style="--i:3"><svg class="art" data-p="gum" style="--i:3"></svg><span class="grow"><span class="nm">Gum</span><span class="t-foot">Chew, then park it</span></span><span class="radio"></span></button>
-        <button class="opt multi" data-a style="--i:4"><svg class="art" data-p="lozenge" style="--i:4"></svg><span class="grow"><span class="nm">Lozenge</span><span class="t-foot">Dissolves slowly in your mouth</span></span><span class="radio"></span></button>
-        <button class="opt multi" data-a style="--i:5"><svg class="art" data-p="spray" style="--i:5"></svg><span class="grow"><span class="nm">Mouth spray</span><span class="t-foot">The fastest for a sudden craving</span></span><span class="radio"></span></button>
-        <button class="opt multi" data-a style="--i:6"><svg class="art" data-p="inhaler" style="--i:6"></svg><span class="grow"><span class="nm">Inhaler</span><span class="t-foot">Puff on a cartridge</span></span><span class="radio"></span></button>
+        <button class="opt on" id="patch" data-a style="--i:2"><span class="ico-tile gl" data-p="patch"></span><span class="grow"><span class="nm">Patch</span><span class="t-foot">Worn all day, changed daily</span></span><span class="radio"></span></button>
+        <button class="opt" data-a style="--i:3"><span class="ico-tile gl" data-p="gum"></span><span class="grow"><span class="nm">Gum</span><span class="t-foot">Chew, then park it</span></span><span class="radio"></span></button>
+        <button class="opt" data-a style="--i:4"><span class="ico-tile gl" data-p="lozenge"></span><span class="grow"><span class="nm">Lozenge</span><span class="t-foot">Dissolves slowly in your mouth</span></span><span class="radio"></span></button>
+        <button class="opt" data-a style="--i:5"><span class="ico-tile gl" data-p="spray"></span><span class="grow"><span class="nm">Mouth spray</span><span class="t-foot">The fastest for a sudden craving</span></span><span class="radio"></span></button>
+        <button class="opt" data-a style="--i:6"><span class="ico-tile gl" data-p="inhaler"></span><span class="grow"><span class="nm">Inhaler</span><span class="t-foot">Puff on a cartridge</span></span><span class="radio"></span></button>
       </div>
-      <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><filter id="ps" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="1.3" stdDeviation="1" flood-color="#5A2A10" flood-opacity=".28"/></filter></defs></svg>
+      <div class="tip" data-a style="--i:7">
+        <div class="xr" data-settle style="--d:500ms"><div class="bob" id="xero"></div></div>
+        <p class="t-foot">Most people pair the patch with one faster form for sudden cravings.</p>
+      </div>
     </div>
   </div>
   <div class="dock">
@@ -48,15 +52,15 @@
 </div>
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic));
-  /* bespoke paper-cut products: flat layered shapes, each lifted with a soft paper shadow */
   const PP = {
-    patch: '<g filter="url(#ps)" transform="rotate(-10 24 24)"><path class="cream" d="M18 10H30L38 18V30a8 8 0 01-8 8H18a8 8 0 01-8-8V18a8 8 0 018-8z"/><rect class="apr" x="16.5" y="16.5" width="15" height="15" rx="4.5"/><path class="apr2" d="M30 10L38 18H32.4A2.4 2.4 0 0130 15.6z"/></g>',
-    gum: '<g filter="url(#ps)" transform="rotate(-9 24 24)"><rect class="coral" x="7" y="13" width="34" height="22" rx="6"/><rect class="cream" x="11" y="17" width="12" height="14" rx="5"/><rect class="cream" x="25" y="17" width="12" height="14" rx="5"/></g><path d="M14.5 21.2q2-1.6 4.2-.6M28.5 19.6q2-1.6 4.2-.6" stroke="#FFD3B0" stroke-width="1.6" fill="none" stroke-linecap="round" transform="rotate(-9 24 24)"/>',
-    lozenge: '<g filter="url(#ps)"><ellipse class="sun2" cx="29" cy="20.6" rx="9.5" ry="8.6"/><ellipse class="sun" cx="29" cy="18.6" rx="9.5" ry="8.6"/></g><g filter="url(#ps)"><ellipse class="coral2" cx="19.5" cy="30" rx="11" ry="9.6"/><ellipse class="apr" cx="19.5" cy="27.4" rx="11" ry="9.6"/><path d="M13.5 27.4h12" stroke="#FFF8EE" stroke-width="1.8" stroke-linecap="round" stroke-opacity=".8"/></g>',
-    spray: '<g filter="url(#ps)"><rect class="coral" x="15" y="19" width="17" height="22" rx="5"/><rect class="cream" x="15" y="26" width="17" height="7"/><rect class="cream" x="18.5" y="13.5" width="10" height="6.5" rx="2"/><rect class="apr2" x="21" y="8.5" width="5" height="6" rx="1.6"/><rect class="apr2" x="24.5" y="9" width="6.5" height="3.2" rx="1.6"/></g><circle class="sun" cx="35" cy="10.5" r="1.9"/><circle class="sun" cx="38.5" cy="7" r="1.5"/><circle class="sun" cx="38.6" cy="13.6" r="1.5"/>',
-    inhaler: '<g filter="url(#ps)" transform="rotate(-32 24 24)"><rect class="cream" x="5" y="18.5" width="28" height="11" rx="5.5"/><rect class="coral" x="31" y="19.8" width="12" height="8.4" rx="3.4"/><rect class="apr" x="10" y="21.2" width="13" height="5.6" rx="2.8"/></g>'
+    patch: '<rect x="3.5" y="3.5" width="17" height="17" rx="5" fill="var(--acc2)"/><rect x="7.5" y="7.5" width="9" height="9" rx="2.5" fill="var(--acc)"/><path d="M6 6h.01M18 6h.01M6 18h.01M18 18h.01" stroke-width="2.2"/>',
+    gum: '<rect x="3" y="5" width="13" height="8" rx="4" fill="var(--acc2)" transform="rotate(-12 9.5 9)"/><rect x="8" y="11" width="13" height="8" rx="4" fill="var(--acc)" transform="rotate(-12 14.5 15)"/><path d="M12 13.6l5.4-1.1" stroke-opacity=".5"/>',
+    lozenge: '<ellipse cx="12" cy="13" rx="8.5" ry="6.5" fill="var(--acc2)"/><ellipse cx="12" cy="11.5" rx="8.5" ry="6.5" fill="var(--acc)"/><path d="M7.5 11.5h9" stroke-opacity=".5"/>',
+    spray: '<rect x="7" y="9.5" width="10" height="11.5" rx="3" fill="var(--acc)"/><path d="M9.5 9.5V7h5v2.5" fill="var(--acc2)"/><path d="M11 7V4.5h4.5" /><path d="M18.5 3.5h.01M20.5 5.5h.01M18.5 6.5h.01" stroke-width="2"/><path d="M7 14.5h10" stroke-opacity=".5"/>',
+    inhaler: '<g transform="rotate(-35 12 12)"><rect x="2.5" y="8.8" width="13.5" height="6.4" rx="3.2" fill="var(--acc)"/><path d="M16 9.8h3.6a1.6 1.6 0 011.6 1.6v1.2a1.6 1.6 0 01-1.6 1.6H16" fill="var(--acc2)"/><path d="M7 12h5" stroke-opacity=".5"/></g>'
   };
-  document.querySelectorAll('[data-p]').forEach(e => { e.setAttribute('viewBox', '0 0 48 48'); e.setAttribute('aria-hidden', 'true'); e.innerHTML = `<circle class="bd" cx="24" cy="24" r="23"/><g class="obj"><g transform="translate(24 24) scale(1.1) translate(-24 -24)">${PP[e.dataset.p]}</g></g>`; });
+  document.querySelectorAll('[data-p]').forEach(e => e.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${PP[e.dataset.p]}</svg>`);
+  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'hello', size: 64 });
   const patch = document.getElementById('patch'), picked = document.getElementById('picked');
   DX.after(0, () => { patch.classList.remove('on', 'land'); picked.textContent = '0 of 2 picked'; });
   DX.after(1200, () => { patch.classList.add('on', 'land'); picked.textContent = '1 of 2 picked'; });

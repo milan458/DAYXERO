@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>051 NRT reminders</title>
-<meta name="motion" content="The little clock scene arrives first: the clock settles onto its paper hill (900ms) and its bells give one soft ring (two 6deg wobbles, 500ms), Xero settles beside it then bobs. Title, the two reminder cards (each with its time row) and the preview arrive (600ms, 90ms stagger); both toggles slide on as they land. Nothing is saved on load: the still shows 'Save reminders'. On tap the button presses (160ms), then turns to its done state, a green check and 'Saved' (no colour switch, no toast: the button is the confirmation), the Xero icon in the preview bumps once; success haptic on the check.">
+<meta name="motion" content="Title, the two reminder cards (each with its time row) and the preview arrive (600ms, 90ms stagger); both toggles slide on as they land. At 1.4s Done is pressed: the button keeps its ink colour and gains a green check (done state, no colour switch, no toast: the button is the confirmation), the bell in the preview bumps once. Success haptic on the check.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -21,16 +21,7 @@
   .noti .top .t-cap { color: var(--muted); }
   .caution { margin-top: 16px; font-size: 13px; display: flex; gap: 8px; align-items: center; color: var(--muted); white-space: nowrap; }
   .caution svg { width: 16px; height: 16px; flex: none; }
-  .rem { margin-top: 20px !important; gap: 14px; }
-  .head { display: grid; grid-template-columns: 1fr 132px; align-items: end; gap: 8px; }
-  .head .lead { margin-top: 8px; color: var(--muted); }
-  .scene { position: relative; width: 132px; height: 112px; margin-right: -6px; }
-  .scene svg.clock { position: absolute; right: 0; bottom: 0; }
-  .scene .xr { position: absolute; left: -2px; bottom: 2px; width: 64px; height: 64px; }
-  .clock .hill { fill: #FFD9B8; } .clock .body { fill: #FFD25E; } .clock .rim { fill: #F5B83D; } .clock .face { fill: #FFF8EE; } .clock .bell { fill: #FF7A55; } .clock .hand { stroke: #1E1A3A; }
-  [data-theme="dark"] .clock .hill { fill: #26304C; }
-  .play .clock .bells { transform-origin: 78px 30px; animation: ring 500ms ease-in-out 900ms 2; }
-  @keyframes ring { 25% { transform: rotate(6deg); } 75% { transform: rotate(-6deg); } }
+  .rem { margin-top: 24px !important; gap: 14px; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -41,22 +32,8 @@
   </div>
   <div class="scroll">
     <div class="wrap">
-      <div class="head">
-        <div>
-          <h1 class="t-title" data-a style="--i:1">Reminders</h1>
-          <p class="t-foot lead" data-a style="--i:2">For your 10-week patch plan, Nov 13 to Jan 21.</p>
-        </div>
-        <div class="scene" aria-hidden="true">
-          <svg class="clock" width="132" height="112" viewBox="0 0 132 112" data-settle style="--i:0"><defs><filter id="cs" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="1.6" stdDeviation="1.4" flood-color="#5A2A10" flood-opacity=".25"/></filter></defs>
-            <path class="hill" d="M6 112 C20 96 48 92 72 94 S118 98 132 108 V112Z"/>
-            <g class="bells" filter="url(#cs)"><path class="bell" d="M55 33a12 12 0 0117-14z"/><path class="bell" d="M101 33a12 12 0 00-17-14z"/><rect class="rim" x="74" y="18" width="8" height="8" rx="3"/></g>
-            <g filter="url(#cs)"><path class="rim" d="M60 92l-6 10M96 92l6 10" stroke="#F5B83D" stroke-width="5" stroke-linecap="round"/><circle class="rim" cx="78" cy="62" r="35"/><circle class="body" cx="78" cy="61" r="33"/><circle class="face" cx="78" cy="61" r="25"/></g>
-            <g class="hand" stroke-width="4" stroke-linecap="round"><path d="M78 61l-9.5 9.5" stroke-width="4.6"/><path d="M78 61v18" stroke-width="3"/></g><circle cx="78" cy="61" r="3.4" fill="#FF7A55"/>
-            <g fill="#1E1A3A" opacity=".35"><circle cx="78" cy="40" r="1.8"/><circle cx="99" cy="61" r="1.8"/><circle cx="78" cy="82" r="1.8"/><circle cx="57" cy="61" r="1.8"/></g>
-          </svg>
-          <div class="xr" data-settle style="--i:1;--d:200ms"><div class="bob" id="xero"></div></div>
-        </div>
-      </div>
+      <h1 class="t-title" data-a style="--i:0">Reminders</h1>
+      <p class="t-foot lead" data-a style="--i:1">For your 10-week patch plan, Nov 13 to Jan 21.</p>
       <div class="stack rem">
         <div class="card" data-a style="--i:3">
           <div class="row"><span class="ico-tile" data-ic="patch"></span><div class="grow"><p class="t-head">Fresh patch</p><p class="t-foot">Every day</p></div><span class="toggle on"></span></div>
@@ -75,20 +52,18 @@
     </div>
   </div>
   <div class="dock">
-    <button class="btn" id="done" data-a style="--i:7"><span class="lbl">Save reminders</span></button>
+    <button class="btn" id="done" data-a style="--i:7"><span class="lbl">Done</span></button>
   </div>
 </div>
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic));
   document.getElementById('app').innerHTML = DX.char('xero', { mood: 'hello', size: 40 });
-  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'hello', size: 64 });
   const btn = document.getElementById('done');
   function finish() {
     btn.classList.add('done-state');
-    btn.querySelector('.lbl').innerHTML = DX.icon('check', { size: 20, w: 3 }) + 'Saved';
-    document.querySelector('.noti .app').classList.add('bump');
+    btn.querySelector('.lbl').innerHTML = DX.icon('check', { size: 20, w: 3 }) + 'Done';
   }
-  /* saved only after the tap: the still shows the pre-tap state */
-  btn.addEventListener('click', () => { if (btn.classList.contains('done-state')) return; btn.classList.add('press'); setTimeout(() => { btn.classList.remove('press'); finish(); }, 160); });
+  DX.after(1400, () => { btn.classList.add('press'); setTimeout(() => { btn.classList.remove('press'); finish(); }, 160); });
+  DX.onStill(finish);
 </script>
 </body></html>

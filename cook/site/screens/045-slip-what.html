@@ -1,62 +1,44 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>045 Slip: what happened</title>
-<meta name="motion" content="Optional sheet-like step, opened from 'Add what happened' on the plan-saved screen; calm, no springs. The small sea strip fades in (600ms) with its front swell rocking slowly (7s); Jelli (calm, 92px) settles into the water (900ms) then bobs. The title, helper and 'Only you see this' arrive, then each question row arrives in order (600ms, 90ms stagger) on one shared three-column grid, then Save. Tapping a chip tints it and draws its 2px outline in 250ms with a light selection haptic. Save returns to the plan-saved screen; the X closes without saving.">
+<meta name="motion" content="Calm, no springs. Jelli (calm, 84px) settles in from below (900ms) then bobs slowly; the title, helper and the 'Only you see this' line arrive, then each question group arrives in order (600ms, 90ms stagger), then Save. Chips size to their words and share each row evenly. Tapping a chip tints it and draws its 2px outline in 250ms with a light selection haptic.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .wrap { padding: 58px var(--gutter) 0; }
-  .strip { position: relative; height: 108px; border-radius: 22px; overflow: hidden; }
-  .strip svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-  .strip .jl { position: absolute; left: 50%; top: 8px; margin-left: -46px; width: 92px; height: 92px; }
-  .sea .sky0 { stop-color: #CBE4F6; } .sea .sky1 { stop-color: #F4EEE4; }
-  .sea .sun { fill: #FFD25E; } .sea .rim { fill: #F5B83D; }
-  .sea .w1 { fill: #9CC8EE; } .sea .w2 { fill: #5E9FE2; } .sea .w3 { fill: #2F6FC4; }
-  [data-theme="dark"] .sea .sky0 { stop-color: #16234A; } [data-theme="dark"] .sea .sky1 { stop-color: #2C3D6A; }
-  [data-theme="dark"] .sea .sun { fill: #F6E7C1; } [data-theme="dark"] .sea .rim { fill: #E9D3A0; }
-  [data-theme="dark"] .sea .w1 { fill: #34548F; } [data-theme="dark"] .sea .w2 { fill: #26437E; } [data-theme="dark"] .sea .w3 { fill: #1B356A; }
-  .play .sea .rock { animation: rock 7s ease-in-out infinite; }
-  @keyframes rock { 50% { transform: translateX(-8px); } }
-  .wrap h1 { margin-top: 22px; }
-  .wrap h1 .opt-l { color: var(--muted); font-weight: 700; }
+  .wrap { padding: 60px var(--gutter) 0; }
+  .jl { width: 84px; height: 84px; margin-left: -8px; }
+  .wrap h1 { margin-top: 10px; }
   .wrap .lead { margin-top: 8px; color: var(--muted); }
-  .priv { margin-top: 6px; display: flex; align-items: center; gap: 6px; color: var(--muted); }
+  .priv { margin-top: 8px; display: flex; align-items: center; gap: 6px; color: var(--muted); }
   .priv svg { width: 16px; height: 16px; }
-  .qs { margin-top: 28px; display: grid; gap: 26px; }
-  .q6 { display: grid; gap: 12px; }
+  .qs { margin-top: 34px; display: grid; gap: 38px; }
+  .q6 { display: grid; gap: 14px; }
   .q6 .t-head { font-size: 17px; }
-  .q6 .chips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-  .q6 .chip { justify-content: center; min-height: 52px; padding: 0 6px; white-space: nowrap; }
+  .q6 .chips { display: flex; flex-wrap: nowrap; gap: 8px; }
+  .q6 .chip { flex: 1 1 auto; justify-content: center; min-height: 56px; padding: 0 12px; white-space: nowrap; }
+  /* the kit's selection (tint plus 2px outline); the reading ground's 1px chip line must not win */
+  .screen .chip.on { background: color-mix(in srgb, var(--sel) 8%, var(--card)); box-shadow: inset 0 0 0 2px var(--sel); }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
   <div class="nav">
-    <button class="icon-btn" aria-label="Close" data-ic="close"></button>
+    <button class="icon-btn" aria-label="Back" data-ic="back"></button>
+    <div class="grow"><div class="steps" aria-label="Step 3 of 3"><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
+    <span style="width:44px"></span>
   </div>
   <div class="scroll">
     <div class="wrap">
-      <div class="strip" data-fade>
-        <svg class="sea" viewBox="0 0 346 108" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="sky0"/><stop offset="1" class="sky1"/></linearGradient><filter id="pc" x="-5%" y="-40%" width="110%" height="180%"><feDropShadow dx="0" dy="-2" stdDeviation="2.2" flood-color="#10204A" flood-opacity=".22"/></filter></defs>
-          <rect width="346" height="108" fill="url(#sk)"/>
-          <circle class="rim" cx="292" cy="34" r="16"/><circle class="sun" cx="292" cy="34" r="13"/>
-          <path class="w1" filter="url(#pc)" d="M-10 62 C30 54 70 54 110 60 S190 70 230 62 S310 52 356 58 V120 H-10Z"/>
-        </svg>
-        <div class="jl" data-settle style="--d:200ms"><div class="bob" id="jelli"></div></div>
-        <svg class="sea" viewBox="0 0 346 108" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><filter id="pc2" x="-5%" y="-40%" width="110%" height="180%"><feDropShadow dx="0" dy="-2" stdDeviation="2.4" flood-color="#10204A" flood-opacity=".26"/></filter></defs>
-          <g class="rock"><path class="w2" filter="url(#pc2)" d="M-20 84 C20 76 60 76 100 82 S180 92 222 84 S310 74 366 80 V120 H-20Z"/></g>
-          <path class="w3" filter="url(#pc2)" d="M-10 98 C40 92 90 94 140 98 S250 104 356 94 V120 H-10Z"/>
-        </svg>
-      </div>
-      <h1 class="t-title" data-a style="--i:1">Add what happened <span class="opt-l">(optional)</span></h1>
+      <div class="jl" data-settle style="--i:0"><div class="bob" id="jelli"></div></div>
+      <h1 class="t-title" data-a style="--i:1">What happened?</h1>
       <p class="t-foot lead" data-a style="--i:2">No judgement. Just the facts, so the plan fits.</p>
       <p class="t-foot priv" data-a style="--i:3"><span data-ic="lock"></span>Only you see this.</p>
       <div class="qs">
         <div class="q6" data-a style="--i:4">
           <p class="t-head">What did you have?</p>
-          <div class="chips"><button class="chip on">Vape</button><button class="chip">Cigarettes</button><button class="chip">Both</button></div>
+          <div class="chips"><button class="chip on">Vape</button><button class="chip">Cigarettes</button></div>
         </div>
         <div class="q6" data-a style="--i:5">
           <p class="t-head">How much?</p>
-          <div class="chips"><button class="chip">A few puffs</button><button class="chip on">One session</button><button class="chip">Several</button></div>
+          <div class="chips"><button class="chip">A few puffs</button><button class="chip on">One session</button><button class="chip">More</button></div>
         </div>
         <div class="q6" data-a style="--i:6">
           <p class="t-head">When?</p>
@@ -71,6 +53,6 @@
 </div>
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic));
-  document.getElementById('jelli').innerHTML = DX.char('jelli', { mood: 'calm', size: 92 });
+  document.getElementById('jelli').innerHTML = DX.char('jelli', { mood: 'calm', size: 84 });
 </script>
 </body></html>

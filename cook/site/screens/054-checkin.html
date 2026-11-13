@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>054 Evening check-in</title>
-<meta name="motion" content="Dim and slow, no springs. The night sky fades in (700ms) with stars twinkling and fireflies drifting; Glim settles in (900ms) then bobs. The date line, title (its '3' counts up), the day choice, the waves row and the four moon faces arrive in order (600ms, 90ms stagger). The day choice uses the kit's option rows: 'Clear day' carries the warm selection tint, 2px outline and filled tick; 'Had a slip' keeps an empty ring. The mood faces are paper-cut crescent moons with their own expressions and tilts (Rough droops, Okay level, Good and Proud lift their chins); at 1.6s 'Good' fills with the kit tint and its moon tilts up a further 4deg (400ms settle) with a soft selection haptic. Edit is a readable outlined pill. Save arrives last, a solid cream button. By design the night ground and sky are the same in light and dark mode: Glim's evenings share one midnight palette in both modes.">
+<meta name="motion" content="Dim and slow, no springs. The night sky fades in (700ms) with stars twinkling and fireflies drifting; Glim settles in (900ms) then bobs. The date line, title (its '3' counts up), day choice, the waves row and the four faces arrive in order (600ms, 90ms stagger). The four mood faces are little moons (a tired slate moon with heavy lids, pale, warm, apricot) with their own expressions; at 1.6s 'Good' fills in and its face tilts up a touch (400ms settle) with a soft selection haptic. Edit is a readable outlined pill. Save arrives last, a solid cream button, unlike the tinted, outlined selections.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -11,7 +11,7 @@
   .body h1 { margin-top: 4px; }
   .body .lead { margin-top: 6px; color: var(--muted); }
   .daypick { margin-top: 16px; }
-  .daypick .opt { min-height: 54px; padding: 0 14px 0 16px; font: 700 16px/1 var(--body); }
+  .daypick .chip { justify-content: center; }
   .sos { margin-top: 10px; }
   .sos .row { padding: 8px 16px; min-height: 60px; }
   .sos .t-foot { color: var(--muted); }
@@ -21,7 +21,7 @@
   .faces { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
   .faces .chip { height: 116px; flex-direction: column; justify-content: center; gap: 8px; padding: 0; font-size: 15px; border-radius: 20px; }
   .faces .chip.on::before { display: none; }
-  .faces .chip svg { width: 58px; height: 58px; transition: transform .4s var(--settle); }
+  .faces .chip svg { width: 56px; height: 56px; transition: transform .4s var(--settle); }
   .faces .chip.on svg { transform: scale(1.08) rotate(-4deg); }
 </style>
 </head><body>
@@ -33,7 +33,7 @@
     <p class="t-foot day" data-a style="--i:2">Friday check-in, Day 7</p>
     <h1 class="t-title" data-a style="--i:3"><span data-count="3">3</span> waves today. All ridden out.</h1>
     <p class="t-foot lead" data-a style="--i:4">Each one makes the next a little quieter.</p>
-    <div class="grid2 daypick" data-a style="--i:5"><button class="opt on"><span class="grow">Clear day</span><span class="radio"></span></button><button class="opt" data-go="043-slip"><span class="grow">Had a slip</span><span class="radio"></span></button></div>
+    <div class="grid2 daypick" data-a style="--i:5"><button class="chip on">Clear day</button><button class="chip">Had a slip</button></div>
     <div class="list sos" data-a style="--i:6">
       <div class="row"><span class="ico-tile" data-ic="wave"></span><div class="grow"><p class="t-head" style="font-size:16px">Today's waves</p><p class="t-foot">Last one at 6:25 PM</p></div><button class="edit">Edit</button></div>
     </div>
@@ -55,19 +55,17 @@
   document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic));
   document.getElementById('sky').innerHTML = DX.nightSky({ w: 390, h: 320, moonX: 318, moonY: 104 });
   document.getElementById('glim').innerHTML = DX.char('glim', { mood: 'calm', size: 140 });
-  /* Four paper-cut crescent moons with faces (not emoji): each a crescent with a profile face on its thick side, tilted by mood.
-     Rough: a cool slate moon, drooping, a tired closed eye and a small frown. Okay: pale, level, a straight mouth. Good: warm gold, chin up,
-     happy closed eye and a smile. Proud: apricot, chin high, a big open smile and a little star in its hollow. */
-  const INK = '#0F1B33', CRES = 'M28.24 5.48A19 19 0 1 0 41.36 31.72A15 15 0 1 1 28.24 5.48Z', CH = '<circle cx="9.6" cy="23.8" r="2.7" fill="#FF8C6B" opacity=".55"/>';
+  /* Four characterful moon-faces: a cool slate cloud for Rough, a pale moon for Okay, warm moonlight for Good, apricot glow for Proud. */
+  const INK = '#0F1B33', CH = '<circle cx="12.5" cy="29" r="3.2" fill="#FF8C6B" opacity=".55"/><circle cx="35.5" cy="29" r="3.2" fill="#FF8C6B" opacity=".55"/>';
   const F = {
-    rough: { c: '#A9B8D6', t: 20, d: `<path d="M10.6 18.6q2.7 2.2 5.4 0" fill="none" stroke="${INK}" stroke-width="2.3" stroke-linecap="round"/><path d="M11.2 22.4q2.2.9 4.4 0" fill="none" stroke="${INK}" stroke-opacity=".28" stroke-width="1.5" stroke-linecap="round"/><path d="M12.2 29.4q2.5-2 5 0" fill="none" stroke="${INK}" stroke-width="2.3" stroke-linecap="round"/>` },
-    okay: { c: '#E8DCBC', t: 0, d: `<circle cx="13.6" cy="18.8" r="2.1" fill="${INK}"/><path d="M12.2 27.6h5" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"/>` },
-    good: { c: '#FFD37A', t: -10, d: `${CH}<path d="M11 19.6q2.5-3 5 0" fill="none" stroke="${INK}" stroke-width="2.3" stroke-linecap="round"/><path d="M11.4 26q3 3.8 6.2-.2" fill="none" stroke="${INK}" stroke-width="2.3" stroke-linecap="round"/>` },
-    proud: { c: '#FFB98A', t: -20, d: `${CH}<path d="M11 19.4q2.5-3 5 0" fill="none" stroke="${INK}" stroke-width="2.3" stroke-linecap="round"/><path d="M11.2 25.4h7.2q-.3 5.4-3.7 5.4t-3.5-5.4z" fill="${INK}"/><path d="M12.8 29q1.8 1 3.6 0" fill="none" stroke="#FF8C6B" stroke-width="1.8" stroke-linecap="round"/><path d="M36 13.5l1.1 2.4 2.4 1.1-2.4 1.1-1.1 2.4-1.1-2.4-2.4-1.1 2.4-1.1z" fill="#FFD37A"/>` }
+    /* tired, not angry: lids drooping at the outer corners over half-moon eyes, soft shadows under them, a small yawn */
+    rough: { c: '#A9B8D6', d: `<path d="M15 22.6a3 3 0 0 0 6 .4zM27 23a3 3 0 0 0 6-.4z" fill="${INK}"/><path d="M13.6 23.6l8-1.6M26.4 22l8 1.6" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"/><path d="M15.2 29q2.5 1.3 5 0M27.8 29q2.5 1.3 5 0" fill="none" stroke="${INK}" stroke-opacity=".28" stroke-width="1.6" stroke-linecap="round"/><ellipse cx="24" cy="34.6" rx="2.4" ry="2" fill="${INK}"/>` },
+    okay: { c: '#E8DCBC', d: `<circle cx="18" cy="22.5" r="2.3" fill="${INK}"/><circle cx="30" cy="22.5" r="2.3" fill="${INK}"/><path d="M18 32h12" stroke="${INK}" stroke-width="2.6" stroke-linecap="round"/>` },
+    good: { c: '#FFD37A', d: `${CH}<circle cx="18" cy="22" r="2.4" fill="${INK}"/><circle cx="30" cy="22" r="2.4" fill="${INK}"/><path d="M16.5 29c3 5 12 5 15 0" fill="none" stroke="${INK}" stroke-width="2.6" stroke-linecap="round"/>` },
+    proud: { c: '#FFB98A', d: `${CH}<path d="M14 23c1.8-3 5.2-3 7 0M27 23c1.8-3 5.2-3 7 0" fill="none" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"/><path d="M15.5 28.5h17c0 5.5-3.8 8.5-8.5 8.5s-8.5-3-8.5-8.5z" fill="${INK}"/><path d="M19.5 33.5c2.6 1.6 6.4 1.6 9 0" fill="none" stroke="#FF8C6B" stroke-width="2.2" stroke-linecap="round"/><path d="M40 6l1.2 2.6 2.6 1.2-2.6 1.2L40 13.6l-1.2-2.6-2.6-1.2 2.6-1.2z" fill="#FFD37A"/>` }
   };
   document.querySelectorAll('[data-f]').forEach(b => { const f = F[b.dataset.f]; b.insertAdjacentHTML('afterbegin',
-    `<svg viewBox="0 0 48 48" aria-hidden="true" style="overflow:visible"><g transform="rotate(${f.t} 24 24)"><path d="${CRES}" fill="${f.c}" filter="url(#ms)"/><path d="M8.96 18.53A16 16 0 0 1 16 10.14" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2.2" stroke-linecap="round"/>${f.d}</g></svg>`); });
-  document.body.insertAdjacentHTML('beforeend', '<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><filter id="ms" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="1.6" stdDeviation="1.2" flood-color="#04081A" flood-opacity=".45"/></filter></defs></svg>');
+    `<svg viewBox="0 0 48 48" aria-hidden="true" style="overflow:visible"><circle cx="24" cy="25" r="21" fill="${f.c}"/><path d="M8 18a17 17 0 0 1 10-11" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="2.4" stroke-linecap="round"/>${f.d}</svg>`); });
   const good = document.getElementById('good');
   DX.after(0, () => good.classList.remove('on'));
   DX.after(1600, () => good.classList.add('on'));

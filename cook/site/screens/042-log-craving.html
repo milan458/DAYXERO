@@ -1,21 +1,21 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>042 Log a craving</title>
-<meta name="motion" content="Jelli settles beside the title (900ms) and stays calm. Sections arrive with a 90ms stagger; the strength fill slides to 5 (700ms settle) along its ten step ticks and the knob lands on the fifth with a light haptic (a selection tick haptic per step when dragged). At 1.6s Save presses, turns into its done state 'Saved' with a tick (success haptic), and the label becomes 'Saved · 4 today' with the 4 bumping (no toast). The mood row uses the same four moon-faces as the evening check-in. After 1.2s the form closes.">
+<meta name="motion" content="Jelli settles in beside the title (900ms) and stays calm. Sections arrive with a 90ms stagger; the strength fill slides to 5 (700ms settle) along its ten step ticks and the knob lands on the fifth with a light haptic (a selection tick haptic per step when dragged). The mood row uses the same four little moons as the evening check-in (craters, a crescent shadow, tired lids on Rough); the chosen one tilts up a touch (400ms settle). Save rests until tapped: it presses, turns into its done state with a tick (success haptic) and the label becomes 'Saved · 4 today' with the 4 bumping (no toast); after 1.2s the form closes.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .sec { margin-top: 26px; }
-  .ttl { display: flex; align-items: center; justify-content: center; gap: 8px; margin-right: 44px; margin-left: -8px; }
-  .jl { width: 38px; height: 38px; flex: none; display: grid; place-items: center; }
-  .val { color: var(--muted); font-weight: 600; }
+  .hdr { display: flex; align-items: center; gap: 12px; margin-top: 2px; }
+  .hdr .jl { width: 64px; height: 64px; flex: none; }
+  .hdr .tt { display: grid; gap: 2px; }
+  .sec { margin-top: 24px; }
+  .sec.first { margin-top: 18px; }
   .note { display: flex; align-items: center; gap: 10px; }
   .note svg { width: 18px; height: 18px; flex: none; }
   .sec-h { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
   .sec-h .t-foot { color: var(--muted); }
-  .strength { padding: 18px 18px 18px; }
-  .strength .big { display: flex; align-items: baseline; gap: 6px; margin-top: 6px; }
-  .strength .big .num { font-size: 34px; line-height: 1; }
-  .slider { position: relative; height: 36px; margin-top: 8px; }
+  .val { font: 600 15px/1 var(--body); color: var(--muted); }
+  .val .num { font-size: 26px; color: var(--fg); margin-right: 4px; }
+  .slider { position: relative; height: 36px; margin-top: -2px; }
   .slider .ticks { position: absolute; left: 0; right: 0; top: 25px; height: 6px; }
   .slider .ticks i { position: absolute; top: 0; width: 2px; height: 6px; margin-left: -1px; border-radius: 2px; background: var(--muted); opacity: .45; }
   .slider .tr { position: absolute; left: 0; right: 0; top: 13px; height: 6px; border-radius: 99px; background: var(--track); }
@@ -25,13 +25,11 @@
   .chips .chip { min-height: 42px; padding: 0 15px; font-size: 15px; }
   .chips.trig { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; }
   .chips.trig .chip { justify-content: center; padding: 0 8px; min-height: 46px; }
-  .sosl { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); color: var(--muted); display: flex; align-items: center; gap: 6px; }
-  .sosl a { color: #1F3C8C; font-weight: 700; text-decoration: none; white-space: nowrap; }
-  [data-theme="dark"] .sosl a { color: #9FB6FF; }
-  /* the same moon-faces as the evening check-in (054) */
+  .sosl { margin-top: 12px; color: var(--muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .sosl a { color: var(--fg); font-weight: 700; text-decoration: underline; text-decoration-color: var(--mark); text-decoration-thickness: 2px; text-underline-offset: 4px; white-space: nowrap; }
+  /* the same little moons as the evening check-in (054) */
   .faces { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 8px; }
   .chip.face { height: 86px; flex-direction: column; justify-content: center; gap: 6px; padding: 0; font-size: 15px; border-radius: 20px; }
-  .chip.face.on::before { display: none; }
   .chip.face svg { width: 42px; height: 42px; transition: transform .4s var(--settle); }
   .chip.face.on svg { transform: scale(1.08) rotate(-4deg); }
 </style>
@@ -39,20 +37,22 @@
 <div class="screen" data-ground="reading">
   <div class="nav">
     <button class="icon-btn" aria-label="Close" data-ic="close" data-go="041-log-menu"></button>
-    <div class="grow ttl"><span class="jl" id="jl" data-settle style="--d:120ms"></span><div style="display:grid;gap:3px;text-align:left"><div class="title">A craving</div><div class="t-cap muted">Today, 9:41 AM</div></div></div>
-    <span style="width:44px"></span>
   </div>
   <div class="scroll" style="padding-top:104px">
     <div class="pad">
-      <div class="card strength" data-a style="--i:1;margin-top:4px">
-        <h2 class="t-head">How strong is it?</h2>
-        <div class="big"><span class="num" data-count="5">5</span><span class="t-foot val">of 10 · Moderate</span></div>
+      <div class="hdr">
+        <span class="jl" id="jl" data-settle style="--d:120ms"></span>
+        <div class="tt"><h1 class="t-title" data-a style="--i:0">A craving</h1><p class="t-foot muted" data-a style="--i:1">Today, 9:41 AM</p></div>
+      </div>
+
+      <div class="sec first" data-a style="--i:2">
+        <div class="sec-h"><h2 class="t-head">How strong is it?</h2><span class="val"><span class="num" data-count="5">5</span>of 10 · Moderate</span></div>
         <div class="slider" aria-label="Strength 5 of 10, moderate"><span class="tr"></span><span class="fi" id="fi"></span><span class="ticks" id="ticks"></span><span class="kn" id="kn"></span></div>
         <div class="scale t-cap"><span>Mild</span><span>Intense</span></div>
         <p class="t-foot sosl">Too strong to sit with? <a data-go="019-sos">Ride it out with SOS</a></p>
       </div>
 
-      <div class="sec" data-a style="--i:2">
+      <div class="sec" data-a style="--i:3">
         <div class="sec-h"><h2 class="t-head">What set it off?</h2></div>
         <div class="chips trig">
           <button class="chip on">Coffee</button><button class="chip">Stress</button><button class="chip">Waking up</button>
@@ -60,15 +60,14 @@
         </div>
       </div>
 
-      <div class="sec" data-a style="--i:3">
+      <div class="sec" data-a style="--i:4">
         <div class="sec-h"><h2 class="t-head">Mood</h2><span class="t-foot">Optional</span></div>
         <div class="faces" id="faces"></div>
       </div>
 
-      <div class="sec" data-a style="--i:4">
+      <div class="sec" data-a style="--i:5">
         <div class="field ph note"><span id="noteic"></span>Add a note, if it helps</div>
       </div>
-
     </div>
   </div>
   <div class="dock">
@@ -77,24 +76,27 @@
 </div>
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20 })));
-  /* Four moon-faces, copied from the evening check-in (054): slate cloud Rough, pale moon Okay, warm moonlight Good, apricot glow Proud. */
+  /* Four little moons, as in the evening check-in (054): each has craters and a crescent shadow; slate Rough with tired lids,
+     pale Okay, warm moonlight Good, apricot Proud. */
   const INK = '#0F1B33', CH = '<circle cx="12.5" cy="29" r="3.2" fill="#FF8C6B" opacity=".55"/><circle cx="35.5" cy="29" r="3.2" fill="#FF8C6B" opacity=".55"/>';
   const F = {
-    Rough: { c: '#A9B8D6', d: `<path d="M13 19.5l6-2.4M35 19.5l-6-2.4" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"/><circle cx="18" cy="24.5" r="2.3" fill="${INK}"/><circle cx="30" cy="24.5" r="2.3" fill="${INK}"/><path d="M17.5 35.5c3.6-4 9.4-4 13 0" fill="none" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"/>` },
-    Okay: { c: '#E8DCBC', d: `<circle cx="18" cy="22.5" r="2.3" fill="${INK}"/><circle cx="30" cy="22.5" r="2.3" fill="${INK}"/><path d="M18 32h12" stroke="${INK}" stroke-width="2.6" stroke-linecap="round"/>` },
-    Good: { c: '#FFD37A', d: `${CH}<circle cx="18" cy="22" r="2.4" fill="${INK}"/><circle cx="30" cy="22" r="2.4" fill="${INK}"/><path d="M16.5 29c3 5 12 5 15 0" fill="none" stroke="${INK}" stroke-width="2.6" stroke-linecap="round"/>` },
-    Proud: { c: '#FFB98A', d: `${CH}<path d="M14 23c1.8-3 5.2-3 7 0M27 23c1.8-3 5.2-3 7 0" fill="none" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"/><path d="M15.5 28.5h17c0 5.5-3.8 8.5-8.5 8.5s-8.5-3-8.5-8.5z" fill="${INK}"/><path d="M19.5 33.5c2.6 1.6 6.4 1.6 9 0" fill="none" stroke="#FF8C6B" stroke-width="2.2" stroke-linecap="round"/><path d="M40 6l1.2 2.6 2.6 1.2-2.6 1.2L40 13.6l-1.2-2.6-2.6-1.2 2.6-1.2z" fill="#FFD37A"/>` }
+    Rough: { c: '#A9B8D6', sh: '#7385AE', d: `<path d="M15 22.6a3 3 0 0 0 6 .4zM27 23a3 3 0 0 0 6-.4z" fill="${INK}"/><path d="M13.6 23.6l8-1.6M26.4 22l8 1.6" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"/><path d="M15.2 29q2.5 1.3 5 0M27.8 29q2.5 1.3 5 0" fill="none" stroke="${INK}" stroke-opacity=".28" stroke-width="1.6" stroke-linecap="round"/><ellipse cx="24" cy="34.6" rx="2.4" ry="2" fill="${INK}"/>` },
+    Okay: { c: '#E8DCBC', sh: '#C2B28A', d: `<circle cx="18" cy="22.5" r="2.3" fill="${INK}"/><circle cx="30" cy="22.5" r="2.3" fill="${INK}"/><path d="M18 32h12" stroke="${INK}" stroke-width="2.6" stroke-linecap="round"/>` },
+    Good: { c: '#FFD37A', sh: '#E0A646', d: `${CH}<circle cx="18" cy="22" r="2.4" fill="${INK}"/><circle cx="30" cy="22" r="2.4" fill="${INK}"/><path d="M16.5 29c3 5 12 5 15 0" fill="none" stroke="${INK}" stroke-width="2.6" stroke-linecap="round"/>` },
+    Proud: { c: '#FFB98A', sh: '#E58A58', d: `${CH}<path d="M14 23c1.8-3 5.2-3 7 0M27 23c1.8-3 5.2-3 7 0" fill="none" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"/><path d="M15.5 28.5h17c0 5.5-3.8 8.5-8.5 8.5s-8.5-3-8.5-8.5z" fill="${INK}"/><path d="M19.5 33.5c2.6 1.6 6.4 1.6 9 0" fill="none" stroke="#FF8C6B" stroke-width="2.2" stroke-linecap="round"/><path d="M41 4l1.2 2.6 2.6 1.2-2.6 1.2L41 11.6l-1.2-2.6-2.6-1.2 2.6-1.2z" fill="#F5B83D"/>` }
   };
-  document.getElementById('faces').innerHTML = Object.keys(F).map((n, i) => `<button class="chip face ${i === 1 ? 'on' : ''}"><svg viewBox="0 0 48 48" aria-hidden="true" style="overflow:visible"><circle cx="24" cy="25" r="21" fill="${F[n].c}"/><path d="M8 18a17 17 0 0 1 10-11" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="2.4" stroke-linecap="round"/>${F[n].d}</svg>${n}</button>`).join('');
-  document.getElementById('jl').innerHTML = DX.char('jelli', { mood: 'calm', size: 38 });
+  const moon = f => `<svg viewBox="0 0 48 48" aria-hidden="true" style="overflow:visible"><circle cx="24" cy="25" r="21" fill="${f.c}"/>
+    <path d="M24 4 A21 21 0 0 1 24 46 A14 21 0 0 0 24 4Z" fill="${f.sh}" opacity=".42"/>
+    <g fill="${f.sh}" opacity=".5"><circle cx="13.5" cy="14" r="2.4"/><circle cx="34.5" cy="12.5" r="1.7"/><circle cx="36" cy="38" r="2.1"/></g>
+    <path d="M8 18a17 17 0 0 1 10-11" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2.4" stroke-linecap="round"/>${f.d}</svg>`;
+  document.getElementById('faces').innerHTML = Object.keys(F).map((n, i) => `<button class="chip face ${i === 1 ? 'on' : ''}">${moon(F[n])}${n}</button>`).join('');
+  document.getElementById('jl').innerHTML = DX.char('jelli', { mood: 'calm', size: 64 });
   document.getElementById('ticks').innerHTML = Array.from({ length: 10 }, (_, i) => `<i style="left:${(i / 9 * 100).toFixed(2)}%"></i>`).join('');
   document.getElementById('noteic').innerHTML = DX.icon('note', { size: 18 });
   const fi = document.getElementById('fi'), kn = document.getElementById('kn'), save = document.getElementById('save'), lbl = document.getElementById('lbl');
-  const done = () => { save.classList.add('done-state'); lbl.innerHTML = DX.icon('check', { size: 20, w: 3 }) + '<span>Saved · <b class="bump" style="display:inline-block;font-weight:inherit">4</b> today</span>'; };
+  /* tapping Save: press, done state, the count bumps; the form then closes */
+  save.addEventListener('click', () => { save.classList.add('done-state'); lbl.innerHTML = DX.icon('check', { size: 20, w: 3 }) + '<span>Saved · <b class="bump" style="display:inline-block;font-weight:inherit">4</b> today</span>'; });
   DX.after(0, () => { fi.style.transition = kn.style.transition = 'none'; fi.style.width = '0%'; kn.style.left = '0%'; save.classList.remove('done-state'); lbl.textContent = 'Save'; });
   DX.after(350, () => { fi.style.transition = kn.style.transition = ''; fi.style.width = ''; kn.style.left = ''; });
-  DX.after(1450, () => save.classList.add('press'));
-  DX.after(1600, () => { save.classList.remove('press'); done(); });
-  DX.onStill(done);
 </script>
 </body></html>

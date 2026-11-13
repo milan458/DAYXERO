@@ -1,53 +1,68 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>044 Slip: talk it through</title>
-<meta name="motion" content="The 'Your one-minute plan' label and the sentence 'If it's after [Coffee], then I'll...' arrive (600ms); the Coffee token is a dropdown (tap opens a short sheet: Coffee, Stress, After a meal, Something else) and its chevron nudges down once at 700ms. The four rows arrive top to bottom (600ms, 90ms stagger), then the quiet Craving SOS link. At 1.3s 'Have it somewhere new' lands: the kit's warm tint, 2px outline and filled tick settle in over 520ms; the other rows stay fully readable. Light selection haptic on the land.">
+<meta name="motion" content="Title, trigger chips, the if-then heading with small Jelli (settles in 900ms, then a slow bob) and the four rows arrive top to bottom (600ms, 90ms stagger). At 1.3s the 'Have it somewhere new' row lands: its 2px outline, light tint and filled tick settle in over 520ms, the same selection style as the Coffee chip; the other rows stay fully readable. Light selection haptic on the land.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .wrap { padding: 128px var(--gutter) 0; }
-  .wrap .lbl { color: var(--muted); }
-  .wrap h1 { margin-top: 8px; font-size: 28px; line-height: 1.3; letter-spacing: -.8px; }
-  .tok { display: inline-flex; align-items: center; gap: 4px; height: 42px; padding: 0 8px 0 13px; margin: 0 2px; vertical-align: 1px; border-radius: 12px; background: var(--sel-tint); box-shadow: inset 0 0 0 2px var(--sel); font: inherit; color: var(--fg); }
-  .tok svg { width: 18px; height: 18px; }
-  .play .tok svg { animation: nudge 600ms var(--settle) 700ms both; }
-  @keyframes nudge { 40% { transform: translateY(3px); } }
-  .opts { margin-top: 26px; display: grid; gap: 10px; }
-  .opts .opt { min-height: 64px; padding: 9px 16px 9px 12px; gap: 12px; font: 600 16px/1.3 var(--body); }
+  .wrap { padding: 66px var(--gutter) 0; }
+  .wrap .lead { margin-top: 8px; color: var(--muted); }
+  .sec { margin-top: 26px; display: grid; gap: 12px; }
+  .sec .chips.two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .sec .chips.two .chip { justify-content: center; }
+  .opts { display: grid; gap: 8px; }
+  .opts .opt { min-height: 60px; padding: 8px 16px 8px 12px; gap: 12px; font: 600 16px/1.3 var(--body); transition: box-shadow .35s var(--ease); }
+  .opts .opt > * { transition: opacity .45s var(--ease); }
+  .opts .opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
   .play .opt.land { animation: land 520ms var(--settle) both; }
   @keyframes land { 0% { opacity: 1; transform: scale(.97); } 100% { opacity: 1; transform: none; } }
   .play .opt.land .radio { animation: tick 520ms var(--settle) both; }
   @keyframes tick { 0% { transform: scale(.5); } 100% { transform: none; } }
-  .ico-tile.s { width: 42px; height: 42px; border-radius: 12px; flex: none; }
-  .ico-tile.s svg { width: 28px; height: 28px; }
+  /* one selection style for chips and rows: the kit's tint plus a 2px outline (the reading ground's 1px chip line must not win) */
+  .screen .chip.on, .screen .opt.on { background: color-mix(in srgb, var(--sel) 8%, var(--card)); box-shadow: inset 0 0 0 2px var(--sel); }
+  .ico-tile.s { width: 40px; height: 40px; border-radius: 12px; flex: none; }
+  .ico-tile.s svg { width: 26px; height: 26px; }
   .gl { --acc: #FFB27F; --acc2: #FFD9BF; }
+  .gl.sea { --acc: #8FB0F2; --acc2: #C9D8FA; }
   [data-theme="dark"] .gl { --acc: #F39A62; --acc2: #FFD3B4; }
-  .sos { margin-top: 16px; text-decoration: none; display: flex; align-items: center; gap: 8px; height: 40px; color: var(--muted); font: 600 15px/1 var(--body); }
-  .sos svg { width: 18px; height: 18px; }
-  .sos .chev { width: 16px; height: 16px; margin-left: -2px; }
+  [data-theme="dark"] .gl.sea { --acc: #6F92E0; --acc2: #34497F; }
+  .ifh { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .ifh .jl { width: 56px; height: 56px; margin: -14px -4px -10px 0; flex: none; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
   <div class="nav">
     <button class="icon-btn" aria-label="Close" data-ic="close"></button>
-    <div class="grow"><div class="steps" aria-label="Step 2 of 2"><i class="on"></i><i class="on"></i></div></div>
+    <div class="grow"><div class="steps" aria-label="Step 2 of 3"><i class="on"></i><i class="on"></i><i></i></div></div>
     <span style="width:44px"></span>
   </div>
   <div class="scroll">
     <div class="wrap">
-      <p class="t-foot lbl" data-a style="--i:0">Your one-minute plan</p>
-      <h1 class="t-title" data-a style="--i:1">If it's after <button class="tok" aria-label="Moment: Coffee. Change">Coffee<span data-ic="down"></span></button>,<br>then I'll...</h1>
-      <div class="opts" id="opts">
-        <button class="opt" data-a style="--i:3"><span class="ico-tile s gl" data-g="shoe"></span><span class="grow">Take a short walk</span><span class="radio"></span></button>
-        <button class="opt" data-a style="--i:4"><span class="ico-tile s gl" data-g="mug"></span><span class="grow">Switch to tea for a week</span><span class="radio"></span></button>
-        <button class="opt on" id="pick" data-a style="--i:5"><span class="ico-tile s gl" data-g="pin"></span><span class="grow">Have it somewhere new</span><span class="radio"></span></button>
-        <button class="opt" data-a style="--i:6"><span class="ico-tile s gl" data-g="gum"></span><span class="grow">Chew gum instead</span><span class="radio"></span></button>
+      <h1 class="t-title" data-a style="--i:0">Pick the moment, then what you'll do instead.</h1>
+
+      <div class="sec">
+        <p class="t-head" data-a style="--i:2">What set it off?</p>
+        <div class="chips two" data-a style="--i:3">
+          <button class="chip on">Coffee</button>
+          <button class="chip">Stress</button>
+          <button class="chip">After a meal</button>
+          <button class="chip">Something else</button>
+        </div>
       </div>
-      <a class="sos" data-a style="--i:7" data-go="019-sos"><span data-ic="wave"></span>Craving right now? Open SOS<span class="chev" data-ic="chev"></span></a>
+
+      <div class="sec">
+        <div class="ifh" data-a style="--i:4"><p class="t-head">If it's after coffee, then I'll...</p><div class="jl" data-settle style="--d:300ms"><div class="bob" id="jelli"></div></div></div>
+        <div class="opts picked" id="opts">
+          <button class="opt" data-a style="--i:5"><span class="ico-tile s gl" data-g="shoe"></span><span class="grow">Take a short walk</span><span class="radio"></span></button>
+          <button class="opt" data-a style="--i:6"><span class="ico-tile s gl" data-g="mug"></span><span class="grow">Switch to tea for a week</span><span class="radio"></span></button>
+          <button class="opt on" id="pick" data-a style="--i:7"><span class="ico-tile s gl" data-g="pin"></span><span class="grow">Have it somewhere new</span><span class="radio"></span></button>
+          <button class="opt" data-a style="--i:8"><span class="ico-tile s gl sea" data-g="wave"></span><span class="grow">Open Craving SOS</span><span class="radio"></span></button>
+        </div>
+      </div>
     </div>
   </div>
   <div class="dock">
-    <button class="btn" data-a style="--i:8" data-go="046-slip-done">Save my plan</button>
-    <button class="link" data-a style="--i:9">Not now</button>
+    <button class="btn" data-a style="--i:10" data-go="046-slip-done">Save my plan</button>
+    <button class="link" data-a style="--i:11">Not now</button>
   </div>
 </div>
 <script>
@@ -57,11 +72,12 @@
     shoe: '<path d="M2.8 17.2v-4.6c0-.8.7-1.3 1.4-1.1l3.3.9 1.9-3.6c.3-.6 1.1-.8 1.6-.4l1.3.9c.8 2 2.5 3.2 4.9 3.7l2.2.5c1.6.4 2.6 1.7 2.6 3.3v.4z" fill="var(--acc)"/><path d="M2.8 17.2h18.4v1.3c0 .5-.4.9-.9.9H3.7a.9.9 0 01-.9-.9z" fill="var(--acc2)"/><path d="M2.8 17.2v-4.6c0-.8.7-1.3 1.4-1.1l3.3.9 1.9-3.6c.3-.6 1.1-.8 1.6-.4l1.3.9c.8 2 2.5 3.2 4.9 3.7l2.2.5c1.6.4 2.6 1.7 2.6 3.3v1.9c0 .5-.4.9-.9.9H3.7a.9.9 0 01-.9-.9zM2.8 17.2h18.4M9.6 10.6l1.7 1M8.7 12.3l1.7 1"/>',
     mug: '<path d="M5 9.5h11v6a4 4 0 01-4 4H9a4 4 0 01-4-4z" fill="var(--acc)"/><path d="M5 9.5h11v6a4 4 0 01-4 4H9a4 4 0 01-4-4zM16 11h1.4a2.6 2.6 0 010 5.2H16"/><path d="M8.6 3.6c-.9 1 .9 1.8 0 2.8M12.2 3.6c-.9 1 .9 1.8 0 2.8" stroke-opacity=".55"/>',
     pin: '<ellipse cx="12" cy="20.6" rx="5" ry="1.4" fill="var(--acc2)" fill-opacity=".7" stroke="none"/><path d="M12 20s-6.2-5.4-6.2-10.3a6.2 6.2 0 0112.4 0C18.2 14.6 12 20 12 20z" fill="var(--acc)"/><circle cx="12" cy="9.8" r="2.4" fill="var(--card)"/>',
-    gum: '<rect x="3.2" y="8.6" width="17.6" height="8.4" rx="2.4" fill="var(--acc2)" transform="rotate(-14 12 12.8)"/><rect x="3.2" y="8.6" width="10.4" height="8.4" rx="2.4" fill="var(--acc)" transform="rotate(-14 12 12.8)"/><rect x="3.2" y="8.6" width="17.6" height="8.4" rx="2.4" transform="rotate(-14 12 12.8)"/><path d="M13.6 8.6v8.4" transform="rotate(-14 12 12.8)"/>'
+    wave: '<path d="M2.5 13.2c2.4-2.6 4.8-2.6 7.2 0s4.8 2.6 7.2 0c1.6-1.7 3.2-2.2 4.6-1.6v5.2a2.2 2.2 0 01-2.2 2.2H4.7a2.2 2.2 0 01-2.2-2.2z" fill="var(--acc)" stroke="none"/><path d="M2.5 13.2c2.4-2.6 4.8-2.6 7.2 0s4.8 2.6 7.2 0c1.6-1.7 3.2-2.2 4.6-1.6M2.5 7.4c2.4-2.6 4.8-2.6 7.2 0s4.8 2.6 7.2 0c1.6-1.7 3.2-2.2 4.6-1.6" fill="none"/>'
   };
   document.querySelectorAll('[data-g]').forEach(e => e.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${G[e.dataset.g]}</svg>`);
-  const pick = document.getElementById('pick');
-  DX.after(0, () => pick.classList.remove('on', 'land'));
-  DX.after(1300, () => pick.classList.add('on', 'land'));
+  document.getElementById('jelli').innerHTML = DX.char('jelli', { mood: 'calm', size: 56 });
+  const opts = document.getElementById('opts'), pick = document.getElementById('pick');
+  DX.after(0, () => { opts.classList.remove('picked'); pick.classList.remove('on', 'land'); });
+  DX.after(1300, () => { pick.classList.add('on', 'land'); opts.classList.add('picked'); });
 </script>
 </body></html>

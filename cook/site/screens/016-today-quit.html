@@ -9,27 +9,27 @@
   .tabbar a { color: color-mix(in srgb, var(--fg) 72%, transparent); }
   .tabfade { height: 132px; }
 
-  .hero { position: absolute; left: 0; right: 0; top: 0; height: 376px; border-radius: 0 0 36px 36px; overflow: hidden; }
+  .hero { position: absolute; left: 0; right: 0; top: 0; height: 404px; border-radius: 0 0 36px 36px; overflow: hidden; }
   .hero .scene { position: absolute; inset: 0; }
   /* the badge, on the same cream disc as prep week, left of centre so Xero has room */
-  .stage { position: absolute; left: 44px; top: 92px; width: 200px; height: 200px; }
+  .stage { position: absolute; left: 44px; top: 104px; width: 200px; height: 200px; }
   .stage .disc { position: absolute; inset: 0; border-radius: 50%; background: rgba(255,248,238,.74); box-shadow: 0 0 34px rgba(255,248,238,.45); }
   [data-theme="dark"] .stage .disc { background: rgba(255,248,238,.1); box-shadow: 0 0 40px rgba(255,195,138,.12); }
   .stage .medal { position: absolute; left: 22px; top: 22px; width: 156px; height: 156px; }
   .stage .medal .shine { border-radius: 99px; filter: drop-shadow(0 8px 14px rgba(150,50,20,.28)); }
   [data-theme="dark"] .stage .medal .shine { filter: drop-shadow(0 8px 16px rgba(0,0,0,.45)); }
   /* Xero's own ground: a paper-cut knoll in the page colour, standing clear of the badge */
-  .knoll { position: absolute; left: 236px; top: 270px; width: 170px; height: 106px; }
+  .knoll { position: absolute; left: 234px; top: 336px; width: 144px; height: 68px; }
   .knoll svg { display: block; filter: drop-shadow(0 -3px 6px rgba(120,40,10,.22)); }
   [data-theme="dark"] .knoll svg { filter: drop-shadow(0 -3px 8px rgba(0,0,0,.5)); }
   .play .knoll { animation: kn 900ms var(--settle) 250ms both; }
   @keyframes kn { from { transform: translateY(20px); opacity: 0; } }
-  .xero { position: absolute; left: 262px; top: 186px; }
-  .pill { position: absolute; left: 44px; width: 200px; top: 350px; display: flex; justify-content: center; }
+  .xero { position: absolute; left: 254px; top: 246px; }
+  .pill { position: absolute; left: 44px; width: 200px; top: 384px; display: flex; justify-content: center; }
   .pill span { background: var(--card); color: var(--fg); border-radius: 99px; padding: 10px 16px; font: 600 14px/1 var(--body); box-shadow: 0 6px 16px rgba(30,26,58,.12); white-space: nowrap; }
   [data-theme="dark"] .pill span { box-shadow: inset 0 0 0 1px var(--line), 0 6px 16px rgba(0,0,0,.3); }
 
-  .content { position: absolute; left: 0; right: 0; top: 404px; padding: 0 var(--gutter); }
+  .content { position: absolute; left: 0; right: 0; top: 434px; padding: 0 var(--gutter); }
   .hi { color: var(--muted); }
   .content .t-large { margin-top: 2px; }
   .stats { margin-top: 8px; display: flex; align-items: baseline; gap: 10px; font: 500 17px/1.3 var(--body); color: var(--muted); }
@@ -42,12 +42,12 @@
   .togo .t-foot b { font-weight: 800; }
 
   /* the top of the Now card (same card as 017), peeking above the tab bar */
-  .peek { position: absolute; left: 0; right: 0; top: 650px; padding: 0 var(--gutter); }
+  .peek { position: absolute; left: 0; right: 0; top: 626px; padding: 0 var(--gutter); }
   .grp { font: 700 19px/1.2 var(--display); letter-spacing: -.2px; margin: 0 0 10px 2px; }
   .now { position: relative; background: var(--cream-card); border-radius: 26px; box-shadow: inset 0 0 0 1px var(--line), var(--lift); overflow: hidden; }
   .art { position: relative; height: 172px; }
   .art svg.scene { position: absolute; inset: 0; display: block; }
-  .art .fig { position: absolute; left: 236px; top: 52px; }
+  .art .fig { position: absolute; left: 244px; top: 62px; }
   .art .txt { position: absolute; left: 18px; top: 18px; width: 208px; }
   .art .txt .t-foot { color: var(--muted); font-size: 14px; }
   .art .txt .t-title { margin-top: 4px; font-size: 23px; }
@@ -60,9 +60,9 @@
       <div class="disc" data-fade style="--d:100ms"></div>
       <div class="medal" data-stamp style="--d:600ms"><div class="shine" id="b7" style="--d:1200ms"></div></div>
     </div>
-    <div class="knoll" aria-hidden="true"><svg width="170" height="106" viewBox="0 0 170 106">
-      <path d="M0 40 C18 18 46 8 80 8 C116 8 146 20 170 34 V106 H0Z" fill="var(--g)"/>
-      <path d="M0 40 C18 18 46 8 80 8 C116 8 146 20 170 34" fill="none" stroke="#FFF8EE" stroke-opacity=".5" stroke-width="2"/>
+    <div class="knoll" aria-hidden="true"><svg width="144" height="68" viewBox="0 0 144 68">
+      <path d="M0 68 C6 34 36 12 72 12 C108 12 138 34 144 68Z" fill="var(--g)"/>
+      <path d="M4 52 C14 28 40 14 72 14 C104 14 130 28 140 52" fill="none" stroke="#FFF8EE" stroke-opacity=".55" stroke-width="2" stroke-linecap="round"/>
     </svg></div>
     <div class="xero" data-settle style="--d:400ms"><div class="bob" id="xero"></div></div>
     <div class="pill" data-a style="--i:1;--d:500ms"><span>Fri, Nov 13</span></div>
@@ -92,7 +92,9 @@
 <script>
   const $ = s => document.querySelector(s);
   const dark = DX.theme === 'dark';
-  $('#scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 390, h: 376, clarity: 90 });
+  /* the scene's sun sits behind the badge disc (a warm halo), never beside the numeral */
+  $('#scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 390, h: 404, clarity: 90 })
+    .replace(/<circle cx="200" cy="(\d+)" r="70"/, '<circle cx="159" cy="$1" r="70"').replaceAll('cx="195"', 'cx="144"');
   const xero = mood => DX.char('xero', { mood, size: 104, stage: 2 });
   $('#xero').innerHTML = xero('hello');
   /* the badge's own little sun moves down onto its hill so it never crowds the numeral */
@@ -112,7 +114,7 @@
     <g filter="url(#nl)"><path d="M0 128 C50 114 100 112 150 120 C200 128 250 116 300 108 C320 105 334 106 346 108 V172 H0Z" fill="${c.h1}"/></g>
     <g filter="url(#nl)"><path d="M0 146 C40 136 90 134 140 140 C180 145 210 146 240 140 C270 134 300 126 346 128 V172 H0Z" fill="${c.h2}"/><path d="M0 146 C40 136 90 134 140 140 C180 145 210 146 240 140 C270 134 300 126 346 128" fill="none" stroke="${c.rim}" stroke-width="1.5"/></g>
     <g filter="url(#nl)"><path d="M0 158 C60 152 120 154 176 156 C214 157 236 148 260 142 C290 135 320 138 346 144 V172 H0Z" fill="${c.h3}"/></g>`;
-  $('#xero2').innerHTML = DX.char('xero', { mood: 'breathe', size: 100, stage: 2, animate: false });
+  $('#xero2').innerHTML = DX.char('xero', { mood: 'breathe', size: 88, stage: 2, animate: false });
   $('.screen').insertAdjacentHTML('beforeend', DX.tabbar('today'));
   DX.after(1300, () => { $('#xero').innerHTML = xero('cheer'); });
   DX.after(2800, () => { $('#xero').innerHTML = xero('hello'); });
