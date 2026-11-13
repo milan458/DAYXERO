@@ -244,7 +244,7 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
 .opt.multi .radio { border-radius: 7px; }
 
 /* Toggles: coral on-track in both modes; the off track is clearly visible. */
-.toggle { background: color-mix(in srgb, var(--fg) 22%, transparent); }
+.toggle { background: color-mix(in srgb, var(--fg) 30%, transparent); }
 .toggle::after { box-shadow: 0 1px 3px rgba(0,0,0,.3); }
 
 /* Ocean (SOS): a lit sea, lighter in light mode, deep in dark mode; --g is the bottom colour so docks and fades match. */

@@ -173,3 +173,8 @@ session 023-032, lesson-log 033-042, slips-checkin 043-055.
 - Today-SOS-Program round 10 (022 only): Opus 8.5 / Sonnet 8.7 (r8 8.8 / 8.8): lower on both, 022 reverted to round 8 (r10 file kept in scratchpad).
 - Lesson-log round 9: Opus 8.5 / Sonnet 8.6 (r8 8.7 / 8.8): lower on both, reverted to round 8 (e8f2d70).
 - Onboarding round 10 (horizon strip, on r8): Opus 8.3 / Sonnet 8.7 (r8 8.6 / 8.7): not lower on both, kept. Opus wants varied, larger cast poses on the strip and warmer dark selection.
+- Calm-settings round 9: Opus 8.6 / Sonnet 8.8 (r8 8.6 / 8.7): kept. 059 9.1, 057 and 064 9.0 (Sonnet).
+- Kit: off toggles 30% ink (critics: off tracks vanished on white cards).
+State after rounds 8-10 (best kept per section, Opus / Sonnet): onboarding 8.3 / 8.7 (r10) [r8 8.6 / 8.7]; Today-SOS-Program
+8.8 / 8.8 (r8); session 8.6 / 8.8 (r10); lesson-log 8.7 / 8.8 (r8); slips-checkin 8.6 / 8.6 (r9); calm-settings 8.6 / 8.8 (r9).
+App median about 8.7. Screens at >= 9.0 by a critic: 039 (9.2), 032, 059 (9.1), 018, 019, 028, 031, 046, 053, 057, 064 (9.0).
