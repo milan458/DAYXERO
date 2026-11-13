@@ -1,76 +1,72 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>064 Quiet hours</title>
-<meta name="motion" content="The moon start handle pops at 10 PM, then the dial arc sweeps from it round to 7 AM (1.4s settle) where the sun end handle fades in, as the 9 counts up in the centre; the From and Until tiles, the plain while-it-is-quiet notes and the NRT toggle row arrive below on the stagger. Changing a time drags either handle with a selection haptic per 15 minutes.">
+<meta name="motion" content="The moon start handle pops at 10 PM, then the dial arc sweeps from it round to 8 AM (1.4s settle) where the sun end handle fades in, as the 10 counts up in the centre; the From and Until tiles, the while-it-is-quiet card (Glim settles asleep on his hill, 400ms, zzz drifting) and the NRT toggle row arrive below on the stagger. Changing a time drags either handle with a selection haptic per 15 minutes.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-/* screen-local helpers: icon fill, section labels, small icon tiles, bottom toast */
 .hd { display: grid; gap: 6px; padding-top: 58px; }
-.sec { padding: 22px 4px 8px; color: var(--muted); }
 .rt { font-weight: 600; }
 .ico-tile.s { width: 34px; height: 34px; border-radius: 11px; }
 .ico-tile.s svg { width: 19px; height: 19px; }
-.val { color: var(--muted); font: 500 15px/1.2 var(--body); white-space: nowrap; }
-.list > .row.tap { min-height: 56px; }
-.toast.b { top: auto; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
-.toast.b.in { opacity: 1; transform: none; }
-.toast.b .ck { flex: none; }
-.opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
-html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--sel) 72%, transparent); }
-.pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.ico-tile.apr { background: #FFE6D0; color: #A8481F; }
+[data-theme="dark"] .ico-tile.apr { background: rgba(255,195,138,.16); color: #FFC38A; }
 
-.dial { position: relative; width: 228px; height: 228px; margin: 36px auto 0; }
-.dial .rot { position: absolute; inset: 0; transform: rotate(330deg); }
+.dial { position: relative; width: 228px; height: 228px; margin: 40px auto 0; }
+.dial .rot { position: absolute; inset: 0; transform: rotate(300deg); }
 .dial .ctr { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; gap: 2px; justify-items: center; }
-.dial .ctr .num { font-size: 44px; line-height: 1; }
+.dial .ctr .num { font-size: 48px; line-height: 1; }
 .hr { position: absolute; color: var(--fg); opacity: .78; transform: translate(-50%, -50%); white-space: nowrap; font: 700 14px/1 var(--body); }
-.hand { position: absolute; width: 38px; height: 38px; margin: -19px 0 0 -19px; border-radius: 99px; background: var(--card); box-shadow: 0 0 0 3px var(--fg), 0 4px 10px rgba(20,20,40,.18); display: grid; place-items: center; color: var(--fg); z-index: 2; }
-.hand svg { width: 19px; height: 19px; }
+.hand { position: absolute; width: 32px; height: 32px; margin: -16px 0 0 -16px; border-radius: 99px; background: var(--card); box-shadow: 0 0 0 2px var(--fg), 0 3px 8px rgba(20,20,40,.16); display: grid; place-items: center; color: var(--fg); z-index: 2; }
+.hand svg { width: 17px; height: 17px; }
 .ticks { position: absolute; inset: 0; color: var(--muted); }
+.times { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 36px; }
+.times .card { padding: 13px 16px; display: grid; gap: 4px; }
 .times .t-foot { display: flex; align-items: center; gap: 6px; }
 .times .t-foot svg { width: 15px; height: 15px; }
-.times { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 32px; }
-.times .card { padding: 14px 16px; display: grid; gap: 4px; }
 .times .num { font-size: 26px; line-height: 1.05; }
 
-.sec { padding: 20px 4px 8px; color: var(--muted); }
-.plain { list-style: none; margin: 0; padding: 2px 4px 0; display: grid; gap: 10px; }
-.plain li { display: flex; align-items: center; gap: 12px; }
-.plain li svg { width: 20px; height: 20px; color: var(--muted); flex: none; }
-.ctl { margin-top: 14px; }
+.quiet { display: flex; align-items: flex-end; gap: 12px; margin-top: 12px; padding: 12px 16px 14px 10px; }
+.quiet .g { position: relative; width: 76px; height: 72px; flex: none; }
+.quiet .g .mound { position: absolute; left: 0; bottom: 0; }
+.quiet .g .who { position: absolute; left: 4px; top: -10px; }
+.quiet ul { list-style: none; margin: 0; padding: 0 0 4px; display: grid; gap: 8px; flex: 1; }
+.quiet li { display: flex; gap: 8px; align-items: baseline; }
+.quiet li i { width: 6px; height: 6px; border-radius: 99px; background: var(--muted); flex: none; transform: translateY(-2px); }
+.ctl { margin-top: 12px; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
 <div class="nav"><button class="icon-btn" aria-label="Back" data-ic="back"></button></div>
 <div class="scroll"><div class="pad">
-  <div class="hd"><h1 class="t-large" data-a style="--i:0">Quiet hours</h1><p class="t-foot muted" data-a style="--i:1">Nothing arrives between these times.</p></div>
+  <div class="hd"><h1 class="t-large" data-a style="--i:0">Quiet hours</h1><p class="t-foot muted" data-a style="--i:1">Anything due in these hours waits until morning.</p></div>
   <div class="dial" data-a style="--i:2">
     <svg class="ticks" width="228" height="228" viewBox="0 0 228 228" id="ticks"></svg>
     <div class="rot" id="ring"></div>
-    <span class="hand" style="left:63px;top:25.7px;--d:150ms" data-pop aria-label="Starts 10 PM"><span data-ic="moon" data-s="19"></span></span>
-    <span class="hand" style="left:212.5px;top:140.4px" data-fade aria-label="Ends 7 AM"><span data-ic="sun" data-s="19"></span></span>
-    <div class="ctr"><span data-ic="moon" data-s="22"></span><span class="num" data-count="9">9</span><span class="t-foot muted">quiet hours</span></div>
-    <span class="hr" style="left:114px;top:-14px">12 AM</span><span class="hr" style="left:258px;top:114px">6 AM</span><span class="hr" style="left:114px;top:242px">12 PM</span><span class="hr" style="left:-30px;top:114px">6 PM</span>
+    <span class="hand" style="left:61px;top:22.2px;--d:150ms" data-pop aria-label="Starts 10 PM"><span data-ic="moon" data-s="17"></span></span>
+    <span class="hand" style="left:205.8px;top:167px" data-fade aria-label="Ends 8 AM"><span data-ic="sun" data-s="17"></span></span>
+    <div class="ctr"><span class="num" data-count="10">10</span><span class="t-foot muted">quiet hours</span></div>
+    <span class="hr" style="left:114px;top:-16px">12 AM</span><span class="hr" style="left:258px;top:114px">6 AM</span><span class="hr" style="left:114px;top:244px">12 PM</span><span class="hr" style="left:-30px;top:114px">6 PM</span>
   </div>
   <div class="times" data-a style="--i:3">
     <div class="card"><span class="t-foot muted"><span data-ic="moon" data-s="15"></span>From</span><span class="num">10:00 PM</span></div>
-    <div class="card"><span class="t-foot muted"><span data-ic="sun" data-s="15"></span>Until</span><span class="num">7:00 AM</span></div>
+    <div class="card"><span class="t-foot muted"><span data-ic="sun" data-s="15"></span>Until</span><span class="num">8:00 AM</span></div>
   </div>
-  <p class="t-foot sec" data-a style="--i:4">While it is quiet</p>
-  <ul class="plain" data-a style="--i:5">
-    <li><span data-ic="bell" data-s="20"></span><span class="t-foot">Pledge and check-in nudges move to 7 AM</span></li>
-    <li><span data-ic="wave" data-s="20"></span><span class="t-foot">Craving forecasts pause overnight</span></li>
-  </ul>
-  <div class="list ctl" data-a style="--i:6">
-    <div class="row"><span class="ico-tile s" data-ic="patch"></span><div class="grow"><div class="t-body rt">NRT reminders</div><div class="t-foot muted">Patch times still arrive</div></div><span class="toggle on"></span></div>
+  <div class="card flat quiet" data-a style="--i:4">
+    <span class="g"><span class="mound" id="mound"></span><span class="who" id="glim" data-settle style="--d:400ms"></span></span>
+    <ul><li><i></i><span class="t-foot">Pledge and check-in nudges wait until 8 AM</span></li><li><i></i><span class="t-foot">Craving forecasts pause overnight</span></li></ul>
+  </div>
+  <div class="list ctl" data-a style="--i:5">
+    <div class="row"><span class="ico-tile s apr" data-ic="patch"></span><div class="grow"><div class="t-body rt">NRT reminders</div><div class="t-foot muted">Patch times still arrive</div></div><span class="toggle on"></span></div>
   </div>
 </div></div>
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
-
-document.getElementById('ring').innerHTML = DX.ring({ size: 228, stroke: 24, p: 9 / 24, color: 'var(--fg)', track: 'var(--track)', dot: false });
-document.getElementById('ticks').innerHTML = Array.from({ length: 24 }, (_, i) => { const a = i * Math.PI / 12, big = i % 6 === 0, r = 78; return `<circle cx="${(114 + r * Math.sin(a)).toFixed(1)}" cy="${(114 - r * Math.cos(a)).toFixed(1)}" r="${big ? 2.4 : 1.4}" fill="currentColor" opacity="${big ? .7 : .45}"/>`; }).join('');
-
+const dark = DX.theme === 'dark';
+/* 10 PM to 8 AM: the arc starts at 10 PM (300deg round from 12 AM at the top) and runs 10 of 24 hours. */
+document.getElementById('ring').innerHTML = DX.ring({ size: 228, stroke: 16, p: 10 / 24, color: 'var(--fg)', track: 'var(--track)', dot: false });
+document.getElementById('ticks').innerHTML = Array.from({ length: 24 }, (_, i) => { const a = i * Math.PI / 12, big = i % 6 === 0, r = 80; return `<circle cx="${(114 + r * Math.sin(a)).toFixed(1)}" cy="${(114 - r * Math.cos(a)).toFixed(1)}" r="${big ? 2.4 : 1.4}" fill="currentColor" opacity="${big ? .7 : .45}"/>`; }).join('');
+document.getElementById('mound').innerHTML = `<svg width="76" height="20" viewBox="0 0 76 20" aria-hidden="true"><path d="M2 20 C10 6 26 2 38 2 C50 2 66 6 74 20Z" fill="${dark ? '#2C3A5E' : '#E4D9C8'}"/></svg>`;
+document.getElementById('glim').innerHTML = DX.char('glim', { mood: 'sleepy', size: 68 });
 </script>
 </body></html>

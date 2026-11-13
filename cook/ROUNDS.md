@@ -110,3 +110,8 @@ calm-settings 8.7 / 8.8. Section medians 8.55, 8.5, 8.55, 8.45, 8.6, 8.75 -> app
 Screens at >= 9.0 by a critic: 018, 019, 024, 029, 032, 035, 039, 046, 053, 054, 055, 059, 060, 064, 066 (9.0-9.1).
 Kit after round 5: warm selection tint, `.opt.multi` checkboxes, coral toggles, brighter pre-dawn sun.
 Round 06: all six sections are in fixers.
+
+Round 06 partial (real-size critics, Opus / Sonnet): Today-SOS-Program 8.4 / 8.6; session 8.5 / 8.7; slips-checkin (Sonnet) 8.4.
+Plateau 8.5-8.7 (+/- 0.2 per round). 18 screens at >= 9.0 by a critic. Asked the user (non-blocking) for their own score of the
+current gallery to recalibrate against their eye, since rounds 1-6 fix named items and the stricter critic finds a new layer.
+Kit in round 6: night waiting ring visible, lit-sea ocean ground, light-mode dusk sky.

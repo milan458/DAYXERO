@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>041 Log sheet</title>
-<meta name="motion" content="Today (the dawn hero with Xero) stays sharp under a warm dim (a terracotta multiply in light, a 50% night veil in dark; 250ms fade) while the sheet slides up from the bottom (450ms settle curve, light haptic as it lands). The craving row arrives first, then the Used nicotine? label and the quieter Puff and Cigarette group (90ms stagger), then the slip note. Tapping a + bumps the button and pushes the matching form.">
+<meta name="motion" content="Today (the dawn hero with Xero) softens behind a light veil (a soft desaturating dim in light, a 50% night veil in dark; its type fades back to half strength; 250ms) while the sheet slides up from the bottom (450ms settle curve, light haptic as it lands). The craving row arrives first with a small Jelli in place of an icon, then the Used nicotine? label and the quieter Puff and Cigarette group (90ms stagger), then the slip note. Tapping a + bumps the button and pushes the matching form.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -19,8 +19,13 @@
   .today .content .t-foot { color: var(--muted); }
   .screen > .sbar { z-index: 45; color: #FFF8EE; }
   /* warm dim: a terracotta multiply keeps Today's apricot warm and saturated instead of going muddy brown under a navy veil */
-  .scrim { animation: none; background: #DDB3A2; mix-blend-mode: multiply; backdrop-filter: none; -webkit-backdrop-filter: none; }
-  [data-theme="dark"] .scrim { background: rgba(6,9,18,.5); mix-blend-mode: normal; }
+  .scrim { animation: none; background: rgba(46,30,38,.16); backdrop-filter: saturate(.62) brightness(.97); -webkit-backdrop-filter: saturate(.62) brightness(.97); }
+  [data-theme="dark"] .scrim { background: rgba(6,9,18,.5); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  /* Today's type steps back behind the sheet in both modes */
+  .today .content { opacity: .5; }
+  .play .today .content { animation: dim-type 250ms var(--ease) both; }
+  @keyframes dim-type { from { opacity: 1; } to { opacity: .5; } }
+  .jelli-ic { width: 44px; height: 44px; flex: none; display: grid; place-items: center; }
   /* dark: the sheet is a lifted surface with a hairline top edge so it separates from the night behind it */
   [data-theme="dark"] .sheet { background: #172036; box-shadow: inset 0 1px 0 rgba(255,255,255,.16), 0 -12px 32px rgba(0,0,0,.45); }
   [data-theme="dark"] .sheet .grab { background: rgba(255,255,255,.28); }
@@ -74,18 +79,19 @@
     <div class="grab"></div>
     <div class="sheet-h"><h1 class="t-title">Log</h1><span class="t-foot muted">Today, Fri, Nov 13</span></div>
     <div class="list main">
-      <div class="row" data-a style="--i:3"><span class="ico-tile" data-ic="wave"></span><div class="grow"><p class="t-head" style="font-size:17px">A craving</p><p class="t-foot">3 today, all ridden out</p></div><button class="add" aria-label="Log a craving" data-ic="plus" data-go="042-log-craving"></button></div>
+      <div class="row" data-a style="--i:3"><span class="jelli-ic" id="jl"></span><div class="grow"><p class="t-head" style="font-size:17px">A craving</p><p class="t-foot">3 today, all ridden out</p></div><button class="add" aria-label="Log a craving" data-ic="plus" data-go="042-log-craving"></button></div>
     </div>
     <p class="t-foot sec-l" data-a style="--i:4">Used nicotine?</p>
     <div class="list minor" data-a style="--i:5">
       <div class="row"><span class="ico-tile" data-ic="vape"></span><div class="grow"><p class="nm">Puff</p><p class="t-cap">None logged today</p></div><button class="add ghost" aria-label="Log a puff" data-ic="plus"></button></div>
       <div class="row"><span class="ico-tile" data-ic="cig"></span><div class="grow"><p class="nm">Cigarette</p><p class="t-cap">None logged today</p></div><button class="add ghost" aria-label="Log a cigarette" data-ic="plus"></button></div>
     </div>
-    <p class="t-foot note" data-a style="--i:7"><span data-ic="shield"></span>A use after Quit Day is logged as a slip. Nothing resets.</p>
+    <p class="t-foot note" data-a style="--i:7">A use after Quit Day is logged as a slip. Nothing resets.</p>
   </div>
 </div>
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20 })));
+  document.getElementById('jl').innerHTML = DX.char('jelli', { mood: 'calm', size: 44 });
   document.getElementById('tx').innerHTML = DX.char('xero', { mood: 'hello', size: 134, stage: 2, animate: false });
   document.getElementById('scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 390, h: 322, clarity: 90, animate: false });
 </script>
