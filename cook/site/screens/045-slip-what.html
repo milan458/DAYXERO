@@ -1,12 +1,13 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>045 Slip: what happened</title>
-<meta name="motion" content="Calm, no springs. Jelli (calm, 84px) settles in from below (900ms) then bobs slowly; the title, helper and the 'Only you see this' line arrive, then each question group arrives in order (600ms, 90ms stagger), then Save. Chips size to their words and share each row evenly. Tapping a chip tints it and draws its 2px outline in 250ms with a light selection haptic.">
+<meta name="motion" content="Optional step (reached from 'Add what happened'): no progress bar, an X to close and a 'Skip' link. Calm, no springs. Small Jelli settles in at the right of the title (900ms, then a slow bob; the same place on every slip screen); the title, helper and the 'Only you see this' line arrive, then each question group arrives in order (600ms, 90ms stagger), then Save and Skip. Selected chips use the kit's warm selection (tint plus 2px outline). Chips size to their words and share each row evenly. Tapping a chip tints it and draws its 2px outline in 250ms with a light selection haptic.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .wrap { padding: 60px var(--gutter) 0; }
-  .jl { width: 84px; height: 84px; margin-left: -8px; }
-  .wrap h1 { margin-top: 10px; }
+  .wrap { padding: 66px var(--gutter) 0; }
+  /* the slip flow's one Jelli placement: small, at the right of the screen title (044, 045) */
+  .ttl { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .ttl .jl { width: 56px; height: 56px; margin: -4px -4px -8px 0; flex: none; }
   .wrap .lead { margin-top: 8px; color: var(--muted); }
   .priv { margin-top: 8px; display: flex; align-items: center; gap: 6px; color: var(--muted); }
   .priv svg { width: 16px; height: 16px; }
@@ -15,22 +16,19 @@
   .q6 .t-head { font-size: 17px; }
   .q6 .chips { display: flex; flex-wrap: nowrap; gap: 8px; }
   .q6 .chip { flex: 1 1 auto; justify-content: center; min-height: 56px; padding: 0 12px; white-space: nowrap; }
-  /* the kit's selection (tint plus 2px outline); the reading ground's 1px chip line must not win */
-  .screen .chip.on { background: color-mix(in srgb, var(--sel) 8%, var(--card)); box-shadow: inset 0 0 0 2px var(--sel); }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
   <div class="nav">
-    <button class="icon-btn" aria-label="Back" data-ic="back"></button>
-    <div class="grow"><div class="steps" aria-label="Step 3 of 3"><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
-    <span style="width:44px"></span>
+    <button class="icon-btn" aria-label="Close" data-ic="close" data-go="046-slip-done"></button>
   </div>
   <div class="scroll">
     <div class="wrap">
-      <div class="jl" data-settle style="--i:0"><div class="bob" id="jelli"></div></div>
-      <h1 class="t-title" data-a style="--i:1">What happened?</h1>
-      <p class="t-foot lead" data-a style="--i:2">No judgement. Just the facts, so the plan fits.</p>
-      <p class="t-foot priv" data-a style="--i:3"><span data-ic="lock"></span>Only you see this.</p>
+      <div class="ttl"><div>
+        <h1 class="t-title" data-a style="--i:1">What happened?</h1>
+        <p class="t-foot lead" data-a style="--i:2">No judgement. Just the facts, so the plan fits.</p>
+        <p class="t-foot priv" data-a style="--i:3"><span data-ic="lock"></span>Only you see this.</p>
+      </div><div class="jl" data-settle style="--d:200ms"><div class="bob" id="jelli"></div></div></div>
       <div class="qs">
         <div class="q6" data-a style="--i:4">
           <p class="t-head">What did you have?</p>
@@ -49,10 +47,11 @@
   </div>
   <div class="dock">
     <button class="btn" data-a style="--i:7" data-go="046-slip-done">Save</button>
+    <button class="link" data-a style="--i:8" data-go="046-slip-done">Skip</button>
   </div>
 </div>
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic));
-  document.getElementById('jelli').innerHTML = DX.char('jelli', { mood: 'calm', size: 84 });
+  document.getElementById('jelli').innerHTML = DX.char('jelli', { mood: 'calm', size: 56 });
 </script>
 </body></html>

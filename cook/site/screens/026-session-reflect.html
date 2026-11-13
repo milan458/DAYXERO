@@ -1,75 +1,68 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>026 Session reflect</title>
-<meta name="motion" content="The step bar shows card 5 a third done and the mint tag arrives with its step line (Step 1 of 3), then the title and line (600ms, 90ms stagger). Your two picks settle in as rows one after another (900ms settle, 120ms apart) while the picked count runs 0 to 2; as the second slot fills, the other options arrive dimmed (600ms, to 55% opacity) because both slots are taken. Xero settles in with his line last. Tapping a row's x frees a slot: the row slides back into the options (360ms) and the options brighten (250ms) with a selection haptic; tapping an option then fills the free slot.">
+<meta name="motion" content="The bar shows card 5 a third done with Card 5 · Step 1 of 3 beside it; the mint tag, title and line arrive (600ms, 90ms stagger), then the chips arrive row by row (600ms, 90ms apart), every option at full contrast. At 1.1s Work piling up takes the kit selection (warm tint and outline, 250ms) with a 520ms spring bump and a selection haptic, and at 1.5s Too much at once does the same. Each pick writes itself into Your plan so far (the phrase cross-fades into its line, 300ms), leaving the I'll blank for step 2. Picks are capped at two: tapping a third option selects it and releases the oldest pick in the same beat (250ms cross-fade, its plan line rewrites), so the screen never dims or blocks. Continue arrives last.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
 /* Your stress plan is a Try card: mint + spark */
 .k-try{--face:#9FE3BC}
 [data-theme="dark"] .k-try{--face:#8FD3AD}
-.nav .side{width:44px;text-align:right;flex:none}
 .steps > i.now::after{width:var(--sub,45%)}
-.wrap{position:absolute;top:110px;left:0;right:0;display:grid;align-content:start;gap:10px}
-.tagrow{display:flex;align-items:center;justify-content:space-between}
-.tag{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px 0 9px;border-radius:99px;background:var(--face);color:#1E1A3A;font:600 13px/1 var(--body)}
+.nav .side{flex:none;color:var(--muted)}
+.wrap{position:absolute;top:112px;left:0;right:0;display:grid;align-content:start;gap:10px}
+.tag{justify-self:start;display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px 0 9px;border-radius:99px;background:var(--face);color:#1E1A3A;font:600 13px/1 var(--body)}
 .tag svg{width:16px;height:16px}
-/* sub-steps inside this card */
-.lh{display:flex;justify-content:space-between;align-items:baseline;margin-top:12px}
-.lh b{font:600 15px/1.4 var(--body)}
-.list .row{gap:12px;min-height:58px;padding-right:12px}
-.list .row .t-foot{color:var(--fg);font-weight:600}
-.rm{width:34px;height:34px;border-radius:99px;background:var(--card-2);color:var(--fg);display:grid;place-items:center;flex:none}
-.rm svg{width:15px;height:15px}
-.swap{margin-top:12px}
-/* the other options: an even 2 x 3 grid, dimmed while both slots are taken */
-.more{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.more .chip{justify-content:center;min-height:44px;padding:0 12px;border-radius:99px;font:600 14px/1 var(--body);box-shadow:inset 0 0 0 1px var(--line);transition:opacity .25s var(--ease)}
-.more .chip.add{background:transparent;box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--fg) 40%,transparent);gap:6px}
-.more .chip.add svg{width:16px;height:16px}
-.more.full .chip{opacity:.55}
-/* Xero says: Xero at 64 and a bubble that hugs its text, tail to Xero (one component on 026, 027, 028, 031) */
-.xsay{display:flex;align-items:flex-end;gap:10px}
-.xsay .xs-x{width:64px;flex:none}
-.xsay .xs-b{position:relative;width:max-content;max-width:calc(100% - 74px);background:var(--card);border-radius:18px 18px 18px 6px;padding:11px 15px;margin:0 0 12px;font:500 15px/1.4 var(--body);color:var(--fg);box-shadow:0 2px 10px rgba(30,26,58,.07)}
-[data-theme="dark"] .xsay .xs-b{box-shadow:none}
-.xsay .xs-b::before{content:"";position:absolute;left:-7px;bottom:0;width:12px;height:14px;background:var(--card);clip-path:polygon(100% 0,100% 100%,0 100%)}
-.say-at{position:absolute;left:var(--gutter);right:var(--gutter);top:642px}
+/* the options: 006's chip pattern, natural widths in hand-balanced rows, all at full contrast */
+.flow{display:grid;gap:10px;margin-top:22px}
+.flow .r{display:flex;gap:8px}
+.flow .chip{flex:none;min-height:48px;padding:0 14px;white-space:nowrap}
+.flow .chip.add{background:transparent;box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--fg) 40%,transparent);gap:6px;padding-left:12px}
+.flow .chip.add svg{width:16px;height:16px}
+/* the plan forming: your two picks become the "when" of two plan lines; the "I'll" stays blank until step 2 */
+.plan{margin-top:30px;display:grid;gap:12px;padding:16px 18px 16px}
+.plan .t-cap{color:var(--muted)}
+.plan .pl{margin:0;display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;font:500 16px/1.35 var(--body)}
+.plan .pl b{font-weight:700}
+.plan .blank{width:58px;height:24px;border-radius:8px;border:1.5px dashed color-mix(in srgb,var(--fg) 34%,transparent)}
+.plan .pl + .pl{padding-top:12px;border-top:1px solid var(--line)}
+.chip.land{animation:land 520ms var(--spring) both}
+@keyframes land{0%{transform:scale(1)}40%{transform:scale(1.08)}100%{transform:none}}
 </style>
 </head><body>
 <div class="screen" data-ground="table">
   <div class="nav">
     <button class="icon-btn" aria-label="Close" id="close"></button>
     <div class="grow"><div class="steps" aria-label="Card 5 of 5, step 1 of 3" style="--sub:33%"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="now"></i></div></div>
-    <span class="side t-foot muted">5 of 5</span>
+    <span class="side t-cap">Card 5 · Step 1 of 3</span>
   </div>
   <div class="wrap pad">
-    <div class="tagrow" data-a style="--i:0"><span class="tag k-try"><span id="t-ic"></span>Your stress plan · 6 min</span><span class="t-foot muted sub">Step 1 of 3</span></div>
+    <span class="tag k-try" data-a style="--i:0"><span id="t-ic"></span>Your stress plan · 6 min</span>
     <h1 class="t-title" data-a style="--i:1">What gets to you most?</h1>
-    <p class="t-foot muted" data-a style="--i:2">Pick the two that come up most.</p>
-    <div class="lh" data-a style="--i:3"><b>Your two</b><span class="t-foot muted"><span data-count="2" data-from="0">2</span> of 2 picked</span></div>
-    <div class="list">
-      <div class="row" data-settle style="--i:2"><span class="grow t-foot">Work piling up</span><button class="rm" aria-label="Remove Work piling up"></button></div>
-      <div class="row" data-settle style="--i:3"><span class="grow t-foot">Too much at once</span><button class="rm" aria-label="Remove Too much at once"></button></div>
+    <p class="t-foot muted" data-a style="--i:2">Pick the two that come up most often.</p>
+    <div class="flow">
+      <div class="r" data-a style="--i:3"><button class="chip on" id="c1">Work piling up</button><button class="chip">Money worries</button></div>
+      <div class="r" data-a style="--i:4"><button class="chip">A deadline</button><button class="chip">Bad news</button><button class="chip">Running late</button></div>
+      <div class="r" data-a style="--i:5"><button class="chip">Family chaos</button><button class="chip on" id="c2">Too much at once</button></div>
+      <div class="r" data-a style="--i:6"><button class="chip">Tension with someone</button><button class="chip add" id="add"></button></div>
     </div>
-    <p class="t-foot muted swap" data-a style="--i:5">Remove one to swap in another</p>
-    <div class="more full" data-a style="--i:6">
-      <button class="chip">A deadline</button><button class="chip">Money worries</button>
-      <button class="chip">Running late</button><button class="chip">Family chaos</button>
-      <button class="chip">An argument</button><button class="chip add" id="add"></button>
+    <div class="plan card" data-a style="--i:7">
+      <p class="t-cap">Your plan so far</p>
+      <p class="pl"><span>When <b>work piles up</b>, I'll</span><i class="blank" aria-label="to be chosen"></i></p>
+      <p class="pl"><span>When it's <b>too much at once</b>, I'll</span><i class="blank" aria-label="to be chosen"></i></p>
     </div>
   </div>
-  <div class="xsay say-at" data-a style="--i:8">
-    <div class="xs-x" data-settle style="--i:8"><div id="xr"></div></div>
-    <p class="xs-b">Most people pick work.<br>Naming it starts your plan.</p>
-  </div>
-  <div class="dock"><button class="btn" data-a style="--i:10">Continue</button></div>
+  <div class="dock"><button class="btn" data-a style="--i:8">Continue</button></div>
 </div>
 <script>
 const SPARK = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.8c.7 4.9 2.3 6.6 7.4 7.4-5.1.8-6.7 2.5-7.4 7.4-.7-4.9-2.3-6.6-7.4-7.4 5.1-.8 6.7-2.5 7.4-7.4z"/><circle cx="18.6" cy="18.4" r="1.8"/></svg>';
 document.getElementById('close').innerHTML = DX.icon('close');
 document.getElementById('t-ic').innerHTML = SPARK;
-document.getElementById('xr').innerHTML = DX.char('xero', {mood:'hello', size:64});
 document.getElementById('add').innerHTML = DX.icon('plus', {size:16, w:2.6}) + 'Add your own';
-document.querySelectorAll('.rm').forEach(t => t.innerHTML = DX.icon('close', {size:15, w:2.6}));
+if (!DX.still) {
+  const c1 = document.getElementById('c1'), c2 = document.getElementById('c2');
+  c1.classList.remove('on'); c2.classList.remove('on');
+  DX.after(1100, () => c1.classList.add('on', 'land'));
+  DX.after(1500, () => c2.classList.add('on', 'land'));
+}
 </script>
 </body></html>

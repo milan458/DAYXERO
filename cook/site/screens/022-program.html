@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>022 Program, prep week</title>
-<meta name="motion" content="The 'Prep week' header and its progress line arrive (600ms, 90ms stagger). The road, one continuous paper-cut ribbon from Prep 1 to the Day Xero coin, fades in (600ms), then its finished stretch fills prep-orange from the top to today's stamp (1100ms, ease); Prep 1 to 3 stamps and their rows arrive as the fill reaches each one (about 360ms apart). Today's Prep 4 play stamp lands as the fill arrives (600ms arrive, no spring) with the up-next card beside it, then the stamp breathes a soft pulse ring every 2.4s. Prep 5 to 7 (dashed rings on cream) fade in, the dotted guide draws on to the horizon, the two hills rise 24px into place back to front (100ms apart, 900ms), and the Day Xero coin rises onto the horizon like a sunrise (1100ms settle) while the warm glow behind it brightens (1.2s) and its label fades in. Last, the locked 'Weeks 1 to 4' row arrives on the hill (600ms). Light haptic when the fill reaches today.">
+<meta name="motion" content="The 'Prep week' header and its progress line arrive (600ms, 90ms stagger). The road, one continuous paper-cut ribbon from Prep 1 to the Day Xero coin, fades in (600ms), then its finished stretch fills prep-orange from the top to today's stamp (1100ms, ease); Prep 1 to 3 stamps and their rows arrive as the fill reaches each one (about 360ms apart). Today's Prep 4 play stamp lands as the fill arrives (600ms arrive, no spring) with the up-next card beside it, then the stamp breathes a soft pulse ring every 2.4s. Prep 5 to 7 (dashed rings on cream) fade in, the dotted guide fades in along the road to the horizon, the two hills rise 24px into place back to front (100ms apart, 900ms), and the Day Xero coin rises onto the horizon like a sunrise (1100ms settle) while the warm glow behind it brightens (1.2s) and its label fades in. Last, the locked 'Weeks 1 to 4' row arrives on the hill (600ms). Light haptic when the fill reaches today.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -40,7 +40,8 @@
   .cur::before { content: ""; position: absolute; inset: -6px; border-radius: 99px; box-shadow: 0 0 0 3px var(--fg); opacity: 0; }
   .play .cur::before { animation: pulse 2.4s var(--ease) 1.8s infinite; }
   @keyframes pulse { 0% { opacity: .4; transform: scale(1); } 100% { opacity: 0; transform: scale(1.3); } }
-  .upnext { position: absolute; left: 116px; right: var(--gutter); padding: 14px 16px 15px; overflow: visible; transform: translateY(-50%); box-shadow: 0 8px 22px rgba(36,73,58,.12); }
+  .upw { position: absolute; left: 116px; right: var(--gutter); transform: translateY(-50%); }
+  .upnext { position: relative; padding: 14px 16px 15px; overflow: visible; box-shadow: 0 8px 22px rgba(36,73,58,.12); }
   [data-theme="dark"] .upnext { box-shadow: inset 0 0 0 1px var(--line); }
   .upnext::before { content: ""; position: absolute; left: -6px; top: 50%; width: 14px; height: 14px; margin-top: -7px; background: inherit; border-radius: 3px; transform: rotate(45deg); }
   [data-theme="dark"] .upnext::before { box-shadow: -1px 1px 0 0 var(--line); }
@@ -50,10 +51,11 @@
   /* the horizon: a warm glow where Day Xero rises, two paper-cut hills */
   .glow { position: absolute; left: 0; right: 0; top: 430px; height: 300px; pointer-events: none;
     background: radial-gradient(210px 160px at 196px 174px, rgba(var(--glow), var(--glow-a)), rgba(var(--glow), calc(var(--glow-a) * .35)) 55%, rgba(var(--glow), 0) 100%),
-                linear-gradient(180deg, rgba(var(--glow), 0) 34%, rgba(var(--glow), calc(var(--glow-a) * .45)) 58%, rgba(var(--glow), 0) 60%); }
-  .play .glow { animation: dx-fade 1200ms var(--ease) 1800ms both; }
+                linear-gradient(180deg, rgba(var(--glow), 0) 34%, rgba(var(--glow), calc(var(--glow-a) * .45)) 56%, rgba(var(--glow), 0) 66%); }
+  .play .glow { animation: glowin 1200ms var(--ease) 1800ms both; }
+  @keyframes glowin { from { opacity: 0; } }
   .hill { position: absolute; left: 0; top: 0; pointer-events: none; }
-  .hill path.f { filter: drop-shadow(0 -3px 5px var(--hsh)); }
+  .hill path.sh { filter: drop-shadow(0 -3px 5px var(--hsh)); }
   .play .hill { animation: hill 900ms var(--settle) both; }
   .play .hill.b { animation-delay: 1500ms; } .play .hill.f { animation-delay: 1600ms; }
   @keyframes hill { from { transform: translateY(24px); opacity: 0; } }
@@ -82,7 +84,7 @@
   </div>
 
   <div class="glow" aria-hidden="true"></div>
-  <svg class="hill b" width="390" height="844" viewBox="0 0 390 844" aria-hidden="true"><path class="f" d="M0 606 C50 590 110 584 170 590 C230 596 290 592 340 582 C362 578 378 576 390 576 V844 H0Z" fill="var(--hb)"/><path d="M0 606 C50 590 110 584 170 590 C230 596 290 592 340 582 C362 578 378 576 390 576" fill="none" stroke="var(--hrim)" stroke-width="1.5"/></svg>
+  <svg class="hill b" width="390" height="844" viewBox="0 0 390 844" aria-hidden="true"><path class="sh" d="M0 606 C50 590 110 584 170 590 C230 596 290 592 340 582 C362 578 378 576 390 576 V844 H0Z" fill="var(--hb)"/><path d="M0 606 C50 590 110 584 170 590 C230 596 290 592 340 582 C362 578 378 576 390 576" fill="none" stroke="var(--hrim)" stroke-width="1.5"/></svg>
   <svg class="road" width="390" height="844" viewBox="0 0 390 844" aria-hidden="true">
     <path id="edge" fill="none" stroke="var(--road-edge)" stroke-width="44" stroke-linecap="round" stroke-linejoin="round" transform="translate(0 3)" data-fade style="--d:150ms"/>
     <path id="road" fill="none" stroke="var(--road)" stroke-width="40" stroke-linecap="round" stroke-linejoin="round" data-fade style="--d:150ms"/>
@@ -90,7 +92,7 @@
     <path id="future" fill="none" stroke="var(--fg)" stroke-opacity=".4" stroke-width="3" stroke-dasharray="1 10" stroke-linecap="round" data-fade style="--d:1300ms"/>
   </svg>
   <div id="goal"></div>
-  <svg class="hill f" width="390" height="844" viewBox="0 0 390 844" aria-hidden="true"><path class="f" d="M0 650 C60 636 120 630 180 634 C240 638 300 646 390 628 V844 H0Z" fill="var(--hf)"/><path d="M0 650 C60 636 120 630 180 634 C240 638 300 646 390 628" fill="none" stroke="var(--hrim)" stroke-width="1.5"/></svg>
+  <svg class="hill f" width="390" height="844" viewBox="0 0 390 844" aria-hidden="true"><path class="sh" d="M0 650 C60 636 120 630 180 634 C240 638 300 646 390 628 V844 H0Z" fill="var(--hf)"/><path d="M0 650 C60 636 120 630 180 634 C240 638 300 646 390 628" fill="none" stroke="var(--hrim)" stroke-width="1.5"/></svg>
   <div id="nodes"></div>
 
   <div class="tease" data-a style="--d:2100ms" aria-label="Weeks 1 to 4, locked until Friday, November 6">
@@ -129,7 +131,7 @@
       h += `<div class="lab done" style="top:${y}px"><div data-a style="--d:${d + 60}ms"><span class="k">Prep ${n} &middot; ${days[i]} &middot; done</span><p class="t-foot">${titles[i]}</p></div></div>`;
     } else if (n === 4) {
       h += `<div class="node" style="left:${X}px;top:${y}px"><div data-a style="--d:1250ms"><button class="cur" aria-label="Play Prep 4, The stress loop"><svg class="sc" viewBox="0 0 100 100"><g fill="var(--btn)">${seal(50, 50, 41, 18, 8.4)}</g><circle cx="50" cy="50" r="38" fill="none" stroke="var(--btn-fg)" stroke-opacity=".28" stroke-width="2" stroke-dasharray="3 5"/></svg><span class="pl">${DX.icon('play', { size: 30, fill: 'currentColor', w: 1.5 })}</span></button></div></div>`;
-      h += `<div class="card upnext" style="top:${y}px"><div data-a style="--d:1250ms"><span class="k">Today &middot; Prep 4 &middot; 5 cards &middot; 28 min</span><p class="t-head">The stress loop</p></div></div>`;
+      h += `<div class="upw" style="top:${y}px"><div class="card upnext" data-a style="--d:1250ms"><span class="k">Today &middot; Prep 4 &middot; 5 cards &middot; 28 min</span><p class="t-head">The stress loop</p></div></div>`;
     } else {
       h += `<div class="node" style="left:${X}px;top:${y}px"><div data-fade style="--d:1400ms"><div class="stamp wait">${DX.badge({ kind: 'prep', n: '', state: 'next', size: 42, bare: true })}<span class="n">${n}</span></div></div></div>`;
       h += `<div class="lab" style="top:${y}px"><div data-fade style="--d:1450ms"><span class="k">Prep ${n} &middot; opens ${days[i]}</span><p class="t-foot">${titles[i]}</p></div></div>`;

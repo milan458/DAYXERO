@@ -1,20 +1,20 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>000 Launch</title>
-<meta name="motion" content="2.4 s, then hold. Dark mode: the same timeline with a low, dim amber sun that stops 46px lower, half behind the back hill. 0-1000ms back hill rises 220px (settle); 140-1140ms mid hill rises 260px; 280-1280ms front hill rises 300px (each paper layer casts a soft shadow up onto the one behind). 250-1750ms the sun climbs 240px into the valley (ease-out), its two paper rings open from 0.6 to 1 at 800-1900ms. 700-1720ms the wordmark assembles: 7 letters, 60ms stagger, each rises 40px with a 6deg tilt and blur 6px to sharp on a soft spring (660ms). 1560-2010ms the coral underline draws under Xero. 1500-2340ms Xero (hero size) rises 170px from behind the front hill on a soft overshoot and lands under the sun like a halo; soft impact haptic at 2300ms. 1900-2400ms tagline fades up 10px. 600-2000ms two paper clouds slide in 36px from the sides and fade up. Holds the final frame; Xero blinks.">
+<meta name="motion" content="2.4 s, then hold. Dark mode: the same timeline with a low, warm amber sun that stops 46px lower, half behind the back hill. 0-1000ms back hill rises 220px (settle); 140-1140ms mid hill rises 260px; 280-1280ms front hill rises 300px, then the two near layers (one with a small paper shrub) follow at 360ms and 440ms (each paper layer casts a soft shadow up onto the one behind). 250-1750ms the sun climbs 240px into the valley (ease-out), its two paper rings open from 0.6 to 1 at 800-1900ms (dark mode: no rings; a warm amber radial glow opens behind the amber core instead). 700-1720ms the wordmark assembles: 7 letters, 60ms stagger, each rises 40px with a 6deg tilt and blur 6px to sharp on a soft spring (660ms). 1560-2010ms the coral underline draws under Xero. 1500-2340ms Xero (hero size) rises 170px from behind the front hill on a soft overshoot and lands under the sun like a halo; soft impact haptic at 2300ms. 1900-2400ms tagline fades up 10px. 600-2000ms two paper clouds slide in 36px from the sides and fade up. Holds the final frame; Xero blinks.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   /* Art palette (paper layers). Light: atmospheric peach to terracotta. Dark: navy night-before-dawn on the one dark neutral, warm rim light and sun. */
   /* Light: the hill directly behind Xero is pale cream-peach so his coral body separates; the front band is a soft terracotta, not brick. */
-  .screen { --h-back: #FFD2A2; --h-mid: #FFE6CA; --h-front: #F7A578; --h-base: #F08F62; --h-edge: rgba(255,255,255,.6);
+  .screen { --h-back: #FFD2A2; --h-mid: #FFE6CA; --h-front: #F7A578; --h-near: #F39466; --h-base: #EC8456; --h-edge: rgba(255,255,255,.6); --h-edge-low: rgba(255,236,214,.5); --h-bush: #EA8253;
     --h-back-2: var(--h-back); --h-mid-2: var(--h-mid); --h-front-2: var(--h-front);
     --sun-a: #FFF4C9; --sun-b: #FFC93C; --ring-1: rgba(255,240,205,.55); --ring-2: rgba(255,236,200,.32); --lift: rgba(120,44,20,.22);
     --cloud: rgba(255,247,236,.7); --cloud-lit: rgba(255,247,236,0); --sky: transparent; }
   /* Dark: pre-dawn. Cool indigo air around the sun (no brown halo), moonlit paper clouds, paper hills shaded light at the ridge to dark below. */
   /* Dark: each night hill is its own flat shade (far = lightest), and the sun is low and dim amber, half behind the hills. */
-  [data-theme="dark"] .screen { --h-back: #3A4674; --h-back-2: #36416C; --h-mid: #28335C; --h-mid-2: #252F55; --h-front: #19213F; --h-front-2: #171E3A; --h-base: #0F1529;
-    --h-edge: rgba(190,205,255,.26);
-    --sun-a: #F2C98C; --sun-b: #D9964E; --ring-1: rgba(232,170,100,.13); --ring-2: rgba(232,170,100,.06); --lift: rgba(0,0,0,.45);
+  [data-theme="dark"] .screen { --h-back: #3A4674; --h-back-2: #36416C; --h-mid: #28335C; --h-mid-2: #252F55; --h-front: #212B53; --h-front-2: #1D264A; --h-near: #18203F; --h-base: #121932;
+    --h-edge: rgba(190,205,255,.26); --h-edge-low: rgba(190,205,255,.18); --h-bush: #131A35;
+    --sun-a: #FFE2A0; --sun-b: #F3A14A; --ring-1: transparent; --ring-2: transparent; --lift: rgba(0,0,0,.45);
     --cloud: rgba(200,212,245,.36); --cloud-lit: rgba(232,238,255,.7);
     --sky: linear-gradient(to bottom, #0B1020 0%, #10172C 40%, #1A2346 72%, #222C55 100%); }
   .sky { position: absolute; inset: 0 0 auto 0; height: 560px; background: var(--sky); z-index: 0; }
@@ -32,10 +32,19 @@
   .sunwrap { top: 352px; height: 300px; z-index: 1; }
   /* Dark: a low sun, sitting 46px lower so the back hill cuts it. */
   [data-theme="dark"] .sunpos { transform: translateY(46px); }
+  /* Dark: the sun is a warm amber glow (a soft radial halo behind a bright amber core), never a flat disc with grey rings. */
+  .glow { display: none; }
+  [data-theme="dark"] .glow { display: inline; }
+  [data-theme="dark"] .ring { display: none; }
+  .halo { transform-box: fill-box; transform-origin: center; }
+  .play .halo { animation: ring-open 1100ms cubic-bezier(.2,.8,.2,1) 800ms both; }
   .hill.back  { top: 420px; height: 404px; z-index: 2; filter: drop-shadow(0 -4px 10px var(--lift)); }
   .hill.mid   { top: 420px; height: 404px; z-index: 3; filter: drop-shadow(0 -5px 12px var(--lift)); }
   .xwrap { left: 95px; width: 200px; top: 495px; height: 200px; z-index: 4; }
   .hill.front { top: 440px; height: 404px; z-index: 5; filter: drop-shadow(0 -6px 14px var(--lift)); }
+  /* Two nearer paper layers fill the foot of the screen: rolling, lit at the ridge, each casting up onto the one behind. */
+  .hill.near { top: 440px; height: 404px; z-index: 5; filter: drop-shadow(0 -5px 12px var(--lift)); }
+  .hill.base { top: 440px; height: 404px; z-index: 5; filter: drop-shadow(0 -5px 12px var(--lift)); }
   .grain { position: absolute; inset: 0; z-index: 6; opacity: .4; mix-blend-mode: soft-light; pointer-events: none; }
 
   .cloud { position: absolute; z-index: 1; pointer-events: none; }
@@ -50,6 +59,8 @@
   .play .hill.back  { animation: rise-220 1000ms cubic-bezier(.2,.8,.2,1) 0ms both; }
   .play .hill.mid   { animation: rise-260 1000ms cubic-bezier(.2,.8,.2,1) 140ms both; }
   .play .hill.front { animation: rise-300 1000ms cubic-bezier(.2,.8,.2,1) 280ms both; }
+  .play .hill.near { animation: rise-300 1000ms cubic-bezier(.2,.8,.2,1) 360ms both; }
+  .play .hill.base { animation: rise-300 1000ms cubic-bezier(.2,.8,.2,1) 440ms both; }
   @keyframes rise-220 { from { transform: translateY(220px); } to { transform: none; } }
   @keyframes rise-260 { from { transform: translateY(260px); } to { transform: none; } }
   @keyframes rise-300 { from { transform: translateY(300px); } to { transform: none; } }
@@ -77,7 +88,7 @@
         <svg class="uline" viewBox="0 0 200 18" preserveAspectRatio="none" aria-hidden="true"><path class="draw" d="M4 11 C40 4 92 5 124 8 C154 10 178 12 196 5" fill="none" stroke="var(--mark)" stroke-width="5.5" stroke-linecap="round" style="--len:200;--d:1560ms;--dur:450ms" vector-effect="non-scaling-stroke"/></svg>
       </span>
     </div>
-    <p class="t-body tagline">Quit on your Quit Day.</p>
+    <p class="t-body tagline">Your quit, on your day.</p>
   </div>
 
   <svg class="cloud c1" width="96" height="30" viewBox="0 0 96 30" aria-hidden="true"><path d="M8 28 C2 28 0 20 8 18 C8 10 18 6 26 11 C30 2 46 0 52 10 C60 6 72 8 74 18 C84 16 94 22 88 28 Z"/><path class="lit" d="M8 18 C8 10 18 6 26 11 C30 2 46 0 52 10 C60 6 72 8 74 18"/></svg>
@@ -87,11 +98,15 @@
     <svg width="390" height="300" viewBox="0 0 390 300" style="overflow:visible">
       <defs>
         <radialGradient id="sunG" cx=".4" cy=".34" r=".72"><stop offset="0" stop-color="var(--sun-a)"/><stop offset="1" stop-color="var(--sun-b)"/></radialGradient>
+        <radialGradient id="glowG"><stop offset="0" stop-color="#FFB862" stop-opacity=".7"/><stop offset=".42" stop-color="#F7A04E" stop-opacity=".32"/><stop offset=".72" stop-color="#E88A45" stop-opacity=".09"/><stop offset="1" stop-color="#E07F40" stop-opacity="0"/></radialGradient>
+        <radialGradient id="coreG" cx=".5" cy=".45" r=".55"><stop offset="0" stop-color="#FFE7A8"/><stop offset=".6" stop-color="#FFC266"/><stop offset="1" stop-color="#F49A45"/></radialGradient>
       </defs>
       <g class="sunpos"><g class="sun">
         <circle class="ring" cx="195" cy="176" r="126" fill="var(--ring-2)" style="--d:900ms"/>
         <circle class="ring" cx="195" cy="176" r="98" fill="var(--ring-1)" style="--d:800ms"/>
+        <circle class="glow halo" cx="195" cy="176" r="170" fill="url(#glowG)"/>
         <circle cx="195" cy="176" r="68" fill="url(#sunG)"/>
+        <circle class="glow" cx="195" cy="176" r="68" fill="url(#coreG)"/>
       </g></g>
     </svg>
   </div>
@@ -118,7 +133,20 @@
       <defs><linearGradient id="hf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--h-front)"/><stop offset=".6" stop-color="var(--h-front-2)"/></linearGradient></defs>
       <path d="M0 292 C58 270 112 256 196 254 C280 252 334 272 390 288 L390 404 L0 404 Z" fill="url(#hf)"/>
       <path d="M0 292 C58 270 112 256 196 254 C280 252 334 272 390 288" fill="none" stroke="var(--h-edge)" stroke-width="2"/>
-      <path d="M0 360 C90 340 170 346 250 358 C310 366 356 360 390 352 L390 404 L0 404 Z" fill="var(--h-base)"/>
+    </svg>
+  </div>
+  <div class="layer hill near" aria-hidden="true">
+    <svg width="390" height="404" viewBox="0 0 390 404">
+      <g class="bush" fill="var(--h-bush)"><circle cx="42" cy="250" r="13"/><circle cx="60" cy="243" r="16"/><circle cx="78" cy="254" r="11"/></g>
+      <path d="M0 262 C38 248 86 254 132 284 C186 318 258 326 314 300 C346 285 370 278 390 280 L390 404 L0 404 Z" fill="var(--h-near)"/>
+      <path d="M29.5 247 A13 13 0 0 1 47 238 A16 16 0 0 1 75.6 245 A11 11 0 0 1 88 252" fill="none" stroke="var(--h-edge-low)" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M0 262 C38 248 86 254 132 284 C186 318 258 326 314 300 C346 285 370 278 390 280" fill="none" stroke="var(--h-edge-low)" stroke-width="2"/>
+    </svg>
+  </div>
+  <div class="layer hill base" aria-hidden="true">
+    <svg width="390" height="404" viewBox="0 0 390 404">
+      <path d="M0 344 C52 324 112 324 172 340 C238 358 306 342 390 300 L390 404 L0 404 Z" fill="var(--h-base)"/>
+      <path d="M0 344 C52 324 112 324 172 340 C238 358 306 342 390 300" fill="none" stroke="var(--h-edge-low)" stroke-width="2"/>
     </svg>
   </div>
 

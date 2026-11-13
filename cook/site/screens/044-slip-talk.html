@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>044 Slip: talk it through</title>
-<meta name="motion" content="Title, trigger chips, the if-then heading with small Jelli (settles in 900ms, then a slow bob) and the four rows arrive top to bottom (600ms, 90ms stagger). At 1.3s the 'Have it somewhere new' row lands: its 2px outline, light tint and filled tick settle in over 520ms, the same selection style as the Coffee chip; the other rows stay fully readable. Light selection haptic on the land.">
+<meta name="motion" content="Small Jelli settles in at the right of the title (900ms, then a slow bob; the same place on every slip screen), then the title, trigger chips, the if-then heading and the four rows (peach duotone glyph tiles, as on the NRT products list) arrive top to bottom (600ms, 90ms stagger). At 1.3s the 'Have it somewhere new' row lands: its 2px outline, the kit's warm selection tint and filled tick settle in over 520ms, the same selection style as the Coffee chip; the other rows stay fully readable. Light selection haptic on the land.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -17,16 +17,13 @@
   @keyframes land { 0% { opacity: 1; transform: scale(.97); } 100% { opacity: 1; transform: none; } }
   .play .opt.land .radio { animation: tick 520ms var(--settle) both; }
   @keyframes tick { 0% { transform: scale(.5); } 100% { transform: none; } }
-  /* one selection style for chips and rows: the kit's tint plus a 2px outline (the reading ground's 1px chip line must not win) */
-  .screen .chip.on, .screen .opt.on { background: color-mix(in srgb, var(--sel) 8%, var(--card)); box-shadow: inset 0 0 0 2px var(--sel); }
   .ico-tile.s { width: 40px; height: 40px; border-radius: 12px; flex: none; }
   .ico-tile.s svg { width: 26px; height: 26px; }
   .gl { --acc: #FFB27F; --acc2: #FFD9BF; }
-  .gl.sea { --acc: #8FB0F2; --acc2: #C9D8FA; }
   [data-theme="dark"] .gl { --acc: #F39A62; --acc2: #FFD3B4; }
-  [data-theme="dark"] .gl.sea { --acc: #6F92E0; --acc2: #34497F; }
-  .ifh { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-  .ifh .jl { width: 56px; height: 56px; margin: -14px -4px -10px 0; flex: none; }
+  /* the slip flow's one Jelli placement: small, at the right of the screen title (044, 045) */
+  .ttl { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .ttl .jl { width: 56px; height: 56px; margin: -4px -4px -8px 0; flex: none; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -37,7 +34,7 @@
   </div>
   <div class="scroll">
     <div class="wrap">
-      <h1 class="t-title" data-a style="--i:0">Pick the moment, then what you'll do instead.</h1>
+      <div class="ttl"><h1 class="t-title" data-a style="--i:0">Pick the moment, then what you'll do instead.</h1><div class="jl" data-settle style="--d:200ms"><div class="bob" id="jelli"></div></div></div>
 
       <div class="sec">
         <p class="t-head" data-a style="--i:2">What set it off?</p>
@@ -50,12 +47,12 @@
       </div>
 
       <div class="sec">
-        <div class="ifh" data-a style="--i:4"><p class="t-head">If it's after coffee, then I'll...</p><div class="jl" data-settle style="--d:300ms"><div class="bob" id="jelli"></div></div></div>
+        <p class="t-head" data-a style="--i:4">If it's after coffee, then I'll...</p>
         <div class="opts picked" id="opts">
           <button class="opt" data-a style="--i:5"><span class="ico-tile s gl" data-g="shoe"></span><span class="grow">Take a short walk</span><span class="radio"></span></button>
           <button class="opt" data-a style="--i:6"><span class="ico-tile s gl" data-g="mug"></span><span class="grow">Switch to tea for a week</span><span class="radio"></span></button>
           <button class="opt on" id="pick" data-a style="--i:7"><span class="ico-tile s gl" data-g="pin"></span><span class="grow">Have it somewhere new</span><span class="radio"></span></button>
-          <button class="opt" data-a style="--i:8"><span class="ico-tile s gl sea" data-g="wave"></span><span class="grow">Open Craving SOS</span><span class="radio"></span></button>
+          <button class="opt" data-a style="--i:8"><span class="ico-tile s gl" data-g="wave"></span><span class="grow">Open Craving SOS</span><span class="radio"></span></button>
         </div>
       </div>
     </div>
