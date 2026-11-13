@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>005 Your baseline</title>
-<meta name="motion" content="Progress eases from 2/11 to 3/11 (900ms). Question arrives, then the hero card: 32 counts up (850ms, from 300ms) while the split bar grows left to right, cigarettes then vape (700ms each, 120ms apart), and the two legend lines fade in under their segments. The cost card (same card style) arrives (600ms) and counts up $2,555 and 365 (850ms). No haptic; one soft tick when the counts land.">
+<meta name="motion" content="Progress eases from 2/11 to 3/11 (900ms). Question arrives, then the hero card: 32 counts up (850ms, from 300ms) while the split bar grows left to right, cigarettes then vape (700ms each, 120ms apart), and the two legend lines fade in under their segments. Under a hairline the one cost line ($2,555 a year · 365 hours of breaks) counts up (850ms), then the quiet estimates note fades up (600ms). No haptic; one soft tick when the counts land.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -8,28 +8,29 @@
   .nav { padding-right: 26px; }
   .q .t-body { text-wrap: pretty; }
   /* One hero: 32 a day. Everything else is a quiet list that shows its working. */
-  .load { padding: 24px 20px 24px; }
-  .load .big { display: flex; align-items: baseline; gap: 10px; margin: 6px 0 18px; }
-  .load .big .t-display { font-size: 76px; letter-spacing: -2.5px; line-height: .95; }
-  .split { display: flex; gap: 4px; height: 10px; }
+  .load { padding: 28px 22px 24px; }
+  .load .big { display: flex; align-items: baseline; gap: 10px; margin: 10px 0 22px; }
+  .load .big .t-display { font-size: 92px; letter-spacing: -3px; line-height: .92; }
+  .split { display: flex; gap: 4px; height: 12px; }
   .split i { display: block; border-radius: 99px; transform-origin: left; }
   .split .c { flex: 12; background: var(--fg); }
   .split .v { flex: 20; background: var(--coral); }
   .play .split i { animation: grow 700ms var(--settle) both; animation-delay: 400ms; }
   .play .split .v { animation-delay: 520ms; }
   @keyframes grow { from { transform: scaleX(0); } to { transform: none; } }
-  .legend { display: grid; gap: 6px; margin-top: 16px; }
+  .legend { display: grid; gap: 8px; margin-top: 18px; }
   .legend p { display: flex; gap: 8px; align-items: baseline; }
   .legend .dot { width: 9px; height: 9px; border-radius: 99px; flex: none; transform: translateY(-1px); }
   .legend .dot.c { background: var(--fg); } .legend .dot.v { background: var(--coral); }
   .legend b { font-weight: 700; }
   .answers { gap: 18px !important; padding-top: 30px !important; }
-  /* The cost list: the same white card as the hero (one card style), two rows that show their working. */
-  .cost .row { align-items: flex-start; padding: 16px 20px; min-height: 0; }
-  .cost .t-head { display: block; text-wrap: balance; }
-  .cost .t-head .num { font-size: 24px; letter-spacing: -.6px; }
-  .cost .t-foot { color: var(--muted); margin-top: 4px; }
-  .cost .t-foot b { color: var(--fg); font-weight: 600; }
+  /* Cost: one quiet line under the hero, in the same card. */
+  .cost { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
+  .cost .t-foot { color: var(--muted); }
+  .cost b { color: var(--fg); font-family: var(--display); font-weight: 800; font-size: 17px; letter-spacing: -.3px; }
+  .cost .dot-sep { margin: 0 4px; }
+  /* A quiet note that these are estimates. */
+  .est { color: var(--muted); font-weight: 500; text-align: center; }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
@@ -51,13 +52,9 @@
         <p class="t-foot"><span class="dot c"></span><span><b>12</b> cigarettes you smoke</span></p>
         <p class="t-foot"><span class="dot v"></span><span><b>20</b> more from about 200 vape puffs</span></p>
       </div>
+      <div class="cost"><p class="t-foot"><b class="num"><span data-count="2555" data-prefix="$">$2,555</span></b> a year <span class="dot-sep">&middot;</span> <b class="num"><span data-count="365">365</span></b> hours of breaks</p></div>
     </div>
-    <div class="list cost" data-a style="--i:3">
-      <div class="row"><div class="grow"><p class="t-head"><span class="num"><span data-count="2555" data-prefix="$">$2,555</span></span> a year on nicotine</p>
-        <p class="t-foot"><b>$7 a day:</b> $4.80 cigarettes + $2.20 vape</p></div></div>
-      <div class="row"><div class="grow"><p class="t-head"><span class="num"><span data-count="365">365</span> hours</span> a year on smoke breaks</p>
-        <p class="t-foot"><b>Cigarettes and vape:</b> about 1 hour a day</p></div></div>
-    </div>
+    <p class="t-cap est" data-a style="--i:3">Estimates from your answers. Change them any time.</p>
   </div>
   <div class="dock"><button class="btn" data-a style="--i:6">Continue</button></div>
 </div>

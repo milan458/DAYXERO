@@ -1,13 +1,15 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>036 Progress</title>
-<meta name="motion" content="The sky card fades up and its two paper cloud banks part (900ms settle, left bank slides left, right bank slides right) to show the 40% of sky that has cleared, with the sun behind; Xero settles onto his hill at 500ms and bobs. The 7 counts up (900ms) and $49.00 counts up beside it, then the Sky 40% clear tag fades in. The quiet stat line counts up from 0. The badge shelf arrives as one card: the three earned day badges stamp in (140ms stagger), the 7-day badge gets a shine at 1.2s, then the 14-day badge fades in with its ring at half. The Since Quit Day row fades in left to right (70ms apart from 700ms): the Day Xero sun, six light ticks, then today's ringed tick. No haptic on load.">
+<meta name="motion" content="The hero card fades up and its two small paper clouds part around the sun (900ms settle, left cloud slides left, right cloud slides right), leaving the numbers on clean sky; Xero settles onto his hill at 500ms and bobs. The 7 counts up (900ms) and $49.00 counts up beside it, then the Sky 40% clear tag fades in. In the same card, under the sky, the since-Quit-Day row fades in left to right (70ms apart from 700ms): the Day Xero sun, six apricot ticks, then today's ringed tick. The quiet stat line counts up from 0. The badge shelf arrives as one card: the three earned day badges stamp in (140ms stagger), the 7-day badge gets a shine at 1.2s, then the 14-day badge fades in with its ring at half. No haptic on load.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   .top { display: flex; align-items: center; gap: 8px; }
   .top h1 { flex: 1; }
   .top .icon-btn { width: 42px; height: 42px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
-  .sky { position: relative; margin-top: 12px; height: 178px; border-radius: 26px; overflow: hidden; color: var(--ink); }
+  /* the hero: the sky and the since-Quit-Day tick row in one card, so 7 is stated once */
+  .hero-card { margin-top: 12px; border-radius: 26px; overflow: hidden; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
+  .sky { position: relative; height: 178px; overflow: hidden; color: var(--ink); }
   .sky .scene { position: absolute; inset: 0; }
   .sky .scene svg { display: block; }
   .sky .bank { transform-box: view-box; }
@@ -25,7 +27,7 @@
   [data-theme="dark"] .sky { color: var(--cream); }
   [data-theme="dark"] .sky .clear { background: rgba(14,19,34,.7); color: var(--cream); box-shadow: inset 0 0 0 1px rgba(255,255,255,.16); }
   .cap { margin: 8px 0 0 4px; }
-  .quiet { margin-top: 14px; display: grid; grid-template-columns: repeat(3, auto); justify-content: space-between; padding: 0 4px; }
+  .quiet { margin-top: 14px; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); column-gap: 18px; padding: 0 4px; }
   .quiet > div { display: grid; gap: 3px; }
   .quiet .num { font: 800 20px/1 var(--display); letter-spacing: -.4px; }
   .quiet .lbl { font: 500 13px/1.25 var(--body); color: var(--muted); }
@@ -36,16 +38,14 @@
   .bshelf .b-l { display: grid; gap: 2px; }
   .bshelf .b-l b { font: 700 14px/1.2 var(--body); color: var(--fg); }
   .bshelf .b-l span { font: 500 13px/1.2 var(--body); color: var(--muted); }
-  .week { margin-top: 10px; padding: 12px 16px 12px; }
-  .week .wh { display: flex; justify-content: space-between; align-items: baseline; }
-  .week .wh .t-cap { color: var(--muted); font-weight: 500; }
-  .days { margin-top: 10px; display: grid; grid-template-columns: repeat(8, 1fr); justify-items: center; }
+  .days { padding: 12px 10px 12px; display: grid; grid-template-columns: repeat(8, 1fr); justify-items: center; }
   .days > span { display: grid; justify-items: center; gap: 5px; font: 600 12px/1 var(--body); color: var(--muted); }
-  .days i { width: 26px; height: 26px; border-radius: 99px; background: var(--card-2); color: var(--fg); display: grid; place-items: center; }
-  .days i svg { width: 14px; height: 14px; opacity: .7; }
+  /* done days: apricot discs with an ink tick, clear in both modes */
+  .days i { width: 26px; height: 26px; border-radius: 99px; background: #FFC38A; color: #1E1A3A; display: grid; place-items: center; }
+  .days i svg { width: 14px; height: 14px; }
   .days .xd i { background: #FFD966; color: #1E1A3A; }
   .days .xd i svg { opacity: 1; }
-  .days .today i { background: var(--card); box-shadow: inset 0 0 0 2px var(--fg); }
+  .days .today i { background: var(--card); color: var(--fg); box-shadow: inset 0 0 0 2px var(--fg); }
   .days .today i svg { opacity: 1; }
   .days .today { color: var(--fg); font-weight: 700; }
 </style>
@@ -58,30 +58,28 @@
         <button class="icon-btn" aria-label="Log" data-ic="plus" data-go="041-log-menu"></button>
         <button class="icon-btn" aria-label="Settings" data-ic="gear"></button>
       </div>
-      <p class="t-foot muted" data-a style="--i:1;margin-top:4px">Day 7 · Quit Day was Fri, Nov 6</p>
+      <p class="t-foot muted" data-a style="--i:1;margin-top:4px">Quit Day was Fri, Nov 6</p>
 
-      <div class="sky" data-a style="--i:2">
+      <div class="hero-card" data-a style="--i:2">
+      <div class="sky">
         <div class="scene" id="sky"></div>
         <div class="big"><span class="num" data-count="7" data-dur="900">7</span><span class="t-head">days free</span></div>
         <div class="kept"><span data-count="49" data-prefix="$" data-dec="2">$49.00</span> kept so far</div>
         <span class="clear" data-fade style="--d:1000ms"><span data-ic="sun"></span>Sky 40% clear</span>
         <div class="xero" data-settle style="--d:500ms"><div class="bob" id="xero"></div></div>
       </div>
+      <div class="days" id="days" aria-label="Every day since Quit Day, Fri, Nov 6, to today"></div>
+      </div>
       <p class="t-cap muted cap" data-a style="--i:3">Your sky clears a little each day you stay free.</p>
 
       <div class="quiet" data-a style="--i:3">
-        <div><span class="num" data-count="84">84</span><span class="lbl">cigarettes not smoked</span></div>
-        <div><span class="num" data-count="1400">1,400</span><span class="lbl">puffs not taken</span></div>
-        <div><span class="num" data-count="23">23</span><span class="lbl">waves ridden</span></div>
+        <div><span class="num" data-count="84">84</span><span class="lbl">cigarettes<br>not smoked</span></div>
+        <div><span class="num" data-count="1400">1,400</span><span class="lbl">puffs<br>not taken</span></div>
+        <div><span class="num" data-count="23">23</span><span class="lbl">waves<br>ridden</span></div>
       </div>
 
-      <div class="shelf-h" data-a style="--i:4"><h2 class="t-head">Badges <span class="t-foot muted" style="font-weight:500;margin-left:6px">14 earned</span></h2><button class="link">See all</button></div>
+      <div class="shelf-h" data-a style="--i:4"><h2 class="t-head">Badges</h2><button class="link">See all</button></div>
       <div class="card bshelf" data-a style="--i:5" id="shelf"></div>
-
-      <div class="card week" data-a style="--i:6">
-        <div class="wh"><p class="t-head" style="font-size:16px">Since Quit Day</p><p class="t-cap">Fri, Nov 6 to today</p></div>
-        <div class="days" id="days"></div>
-      </div>
     </div>
   </div>
   <div id="tabs"></div>
@@ -89,12 +87,14 @@
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20 })));
   const dark = DX.theme === 'dark';
-  /* One idea: the sky is clearing. Two paper-cut cloud banks have parted to show the 40% of sky that is clear, the sun behind
-     the gap, Xero on his hill. Dark mode: the same scene at pre-dawn (navy sky, slate clouds, a low warm sun, a few stars). */
+  /* One idea: the sky is clearing. Two small paper clouds have parted around the sun (whole, inside the card), the numbers sit
+     on clean sky, Xero on his hill. Dark mode: the same scene at pre-dawn (navy sky, slate clouds, a low warm sun, a few stars). */
   const K = dark
     ? { sky: ['#0D1630', '#1F2D55', '#3F4A72'], sun: '#FFD27A', glow: '#FFB25E', glowO: .4, c1: '#33446F', c2: '#283A63', c3: '#1F2F55', hills: ['#1E2B4A', '#16233F', '#0F1A31'], star: 1 }
     : { sky: ['#FFB98A', '#FFD3AC', '#FFE8CC'], sun: '#FFD25E', glow: '#FFF6C8', glowO: .7, c1: '#FFF8F0', c2: '#FBE6D6', c3: '#F4D2BE', hills: ['#FFAE73', '#FF8A5E', '#E8674A'], star: 0 };
-  const cloud = (d, f, o = 1) => `<path filter="url(#pl)" d="${d}" fill="${f}" opacity="${o}"/>`;
+  /* a small two-tone paper cloud (flat base, puffy top), drawn whole inside the card */
+  const CL = 'M2 12h20a5 5 0 000-10 7 7 0 00-13-1 5 5 0 00-7 4 3.5 3.5 0 000 7z';
+  const puff = (x, y, k, back, front) => `<path filter="url(#pl)" transform="translate(${x + 3 * k} ${y + 2.4 * k}) scale(${k})" d="${CL}" fill="${back}"/><path filter="url(#pl)" transform="translate(${x} ${y}) scale(${k})" d="${CL}" fill="${front}"/>`;
   document.getElementById('sky').innerHTML = `<svg width="346" height="178" viewBox="0 0 346 178" aria-hidden="true">
     <defs><linearGradient id="psky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${K.sky[0]}"/><stop offset=".6" stop-color="${K.sky[1]}"/><stop offset="1" stop-color="${K.sky[2]}"/></linearGradient>
       <radialGradient id="pglow"><stop offset=".2" stop-color="${K.glow}" stop-opacity="${K.glowO}"/><stop offset="1" stop-color="${K.glow}" stop-opacity="0"/></radialGradient>
@@ -104,24 +104,16 @@
     ${dark ? [[214, 22], [252, 44], [300, 18], [236, 70], [188, 50]].map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="${i % 2 ? 1.1 : 1.5}" fill="#fff" opacity="${i % 2 ? .5 : .85}"/>`).join('') : ''}
     <circle cx="236" cy="${dark ? 124 : 86}" r="76" fill="url(#pglow)"/>
     <circle cx="236" cy="${dark ? 124 : 86}" r="${dark ? 22 : 28}" fill="${K.sun}"/>
-    <g class="bank l">
-      ${cloud('M-20 124 C-20 104 0 92 22 96 C26 70 54 58 78 68 C92 46 128 44 146 64 C170 58 192 72 190 94 C204 98 210 112 202 124 Z', K.c3)}
-      ${cloud('M-20 104 C-20 86 -2 76 18 80 C24 56 50 46 72 56 C86 34 118 32 136 50 C158 44 178 58 176 78 C188 82 192 96 184 104 Z', K.c2)}
-      ${cloud('M-20 82 C-18 64 0 56 16 60 C22 38 46 28 66 36 C80 16 110 14 126 30 C146 26 162 38 160 56 C170 60 172 74 164 82 Z', K.c1)}
-    </g>
-    <g class="bank r">
-      ${cloud('M286 70 C284 54 298 44 314 48 C320 30 346 26 360 40 L370 40 V76 H292 C286 76 286 72 286 70Z', K.c3)}
-      ${cloud('M300 50 C298 36 312 26 326 30 C334 14 358 12 368 26 V56 H306 C300 56 300 52 300 50Z', K.c2)}
-      ${cloud('M316 30 C316 20 326 12 338 16 C344 4 362 4 370 14 V36 H320 C316 36 316 32 316 30Z', K.c1)}
-    </g>
+    <g class="bank l">${puff(184, 40, 1.9, K.c2, K.c1)}</g>
+    <g class="bank r">${puff(266, 10, 2.1, K.c2, K.c1)}</g>
     <path filter="url(#ph)" d="M0 142 C60 128 130 136 190 132 C250 128 300 116 346 120 V178 H0z" fill="${K.hills[0]}"/>
     <path filter="url(#ph)" d="M150 178 C190 158 240 148 286 148 C316 148 336 152 346 156 V178z" fill="${K.hills[1]}"/>
     <path filter="url(#ph)" d="M0 166 C50 160 110 166 160 170 C200 173 230 172 260 178 H0z" fill="${K.hills[2]}"/>
   </svg>`;
   document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'cheer', size: 100 });
-  /* Since Quit Day: Fri (Day Xero, the sun), six light ticks, today's ringed tick */
+  /* Since Quit Day, inside the hero card: Fri (Day Xero, the sun), six apricot ticks, today's ringed tick */
   document.getElementById('days').innerHTML = ['F', 'S', 'S', 'M', 'T', 'W', 'T', 'F'].map((d, i) =>
-    `<span class="${i === 0 ? 'xd' : i === 7 ? 'today' : ''}" data-fade style="--d:${700 + i * 70}ms"><i>${i === 0 ? DX.icon('sun', { size: 14, w: 2.4 }) : DX.icon('check', { size: 14, w: i === 7 ? 3 : 2 })}</i>${d}</span>`).join('');
+    `<span class="${i === 0 ? 'xd' : i === 7 ? 'today' : ''}" data-fade style="--d:${700 + i * 70}ms"><i>${i === 0 ? DX.icon('sun', { size: 14, w: 2.4 }) : DX.icon('check', { size: 14, w: i === 7 ? 3 : 2.6 })}</i>${d}</span>`).join('');
   const S = 66;
   const b = (n, state, name, sub, i, extra = {}) => {
     const anim = state === 'earned' ? `data-stamp style="--i:${i};--d:500ms"` : `data-fade style="--d:${900 + i * 80}ms"`;
@@ -133,7 +125,7 @@
     b(1, 'earned', '1 day', 'Nov 7', 0) +
     b(3, 'earned', '3 days', 'Nov 9', 1) +
     b(7, 'earned', '7 days', 'Today', 2, { shine: true }) +
-    b(14, 'next', '14 days', '7 to go', 3, { p: .5 });
+    b(14, 'next', '14 days', 'Nov 20', 3, { p: .5 });
   document.getElementById('tabs').outerHTML = DX.tabbar('progress');
 </script>
 </body></html>

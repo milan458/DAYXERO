@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>006 When cravings hit</title>
-<meta name="motion" content="Progress eases from 3/11 to 4/11 (900ms). Question, then the two labelled chip groups (natural-width chips in balanced rows) and the count card arrive in reading order (600ms, 90ms stagger). At 900ms Stress takes the kit selection (warm tint and outline) with a 520ms spring bump (scale 1.1) and a selection haptic; the count reads 1 picked, then bumps to 2 picked and names both.">
+<meta name="motion" content="Progress eases from 3/11 to 4/11 (900ms). Question, then the two labelled chip groups (natural-width chips in balanced rows), the Other chip that closes the whole set, and the count card arrive in reading order (600ms, 90ms stagger). At 900ms Stress takes the kit selection (warm tint and outline) with a 520ms spring bump (scale 1.1) and a selection haptic; the count reads 1 picked, then bumps to 2 picked and names both.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -12,14 +12,17 @@
 
   /* Triggers only (when and what sets it off). Obstacles live on 008, so nothing is asked twice.
      Chips keep their natural widths (12px side padding) in hand-balanced rows: no stretching, no orphans. */
-  .answers { gap: 10px !important; padding-top: 20px !important; }
-  .lbl { font: 600 14px/1.3 var(--body); color: var(--muted); margin: 10px 0 0; }
+  .answers { gap: 10px !important; padding-top: 14px !important; }
+  .lbl { font: 600 14px/1.3 var(--body); color: var(--muted); margin: 6px 0 0; }
   .lbl:first-child { margin-top: 0; }
   .flow { display: grid; gap: 10px; }
   .flow .r { display: flex; gap: 8px; }
   .flow .chip { flex: none; min-height: 48px; padding: 0 12px; white-space: nowrap; }
-  .count { display: flex; align-items: center; gap: 12px; margin-top: 16px; padding: 10px 16px 10px 10px; }
-  .count .xc { width: 64px; height: 64px; flex: none; }
+  /* Other closes the whole set (moments and feelings), after both groups. */
+  .flow.other { margin-top: 8px; }
+  .flow.other .r { align-items: center; gap: 12px; }
+  .count { display: flex; align-items: center; gap: 12px; margin-top: 8px; padding: 8px 16px 8px 10px; }
+  .count .xc { width: 56px; height: 56px; flex: none; }
   .count b { font-weight: 700; }
 </style>
 </head><body>
@@ -42,10 +45,11 @@
     <p class="lbl" data-a style="--i:3">Feelings and people</p>
     <div class="flow" data-a style="--i:3">
       <div class="r"><button class="chip on" id="stress">Stress</button><button class="chip">Boredom</button><button class="chip">Low mood</button></div>
-      <div class="r"><button class="chip">Anxiety</button><button class="chip">With friends</button><button class="chip">Other</button></div>
+      <div class="r"><button class="chip">Anxiety</button><button class="chip">With friends</button></div>
     </div>
+    <div class="flow other" data-a style="--i:3"><div class="r"><button class="chip">Other</button><span class="t-foot muted">Something not listed</span></div></div>
     <div class="card count" data-a style="--i:4"><div class="xc" id="xc"></div>
-      <p class="t-foot"><b id="n">2 picked.</b> <span id="names">Coffee and stress.</span> I&rsquo;ll check in just before them.</p></div>
+      <p class="t-foot"><b id="n">2 picked.</b> <span id="names">Coffee and stress.</span> I&rsquo;ll check in around them.</p></div>
   </div>
   <div class="dock"><button class="btn" data-a style="--i:5">Continue</button></div>
 </div>
@@ -54,7 +58,7 @@
   const bar = document.getElementById('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '27.3%'); void bar.offsetWidth; bar.style.transition = ''; });
   DX.after(250, () => bar.style.setProperty('--p', '36.4%'));
-  document.getElementById('xc').innerHTML = DX.char('xero', { mood: 'hello', size: 64 });
+  document.getElementById('xc').innerHTML = DX.char('xero', { mood: 'hello', size: 56 });
   const s = document.getElementById('stress'), n = document.getElementById('n'), names = document.getElementById('names');
   DX.after(0, () => { s.classList.remove('on', 'land'); n.textContent = '1 picked.'; names.textContent = 'Coffee.'; n.classList.remove('bump'); });
   DX.after(900, () => { s.classList.add('on', 'land'); n.textContent = '2 picked.'; names.textContent = 'Coffee and stress.'; n.style.display = 'inline-block'; n.classList.add('bump'); });

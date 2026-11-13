@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>008 Onboarding obstacles</title>
-<meta name="motion" content="Progress eases from 5/11 to 6/11 (900ms settle). Question, the chips (006's pattern: natural widths, balanced rows of three, three and two) and the count line arrive (600ms, 90ms stagger). At 900ms Social situations takes the kit selection with a 520ms spring bump and a light selection haptic; the count line changes from 1 picked to 2 picked with a bump and names the second tool (400ms fade).">
+<meta name="motion" content="Progress eases from 5/11 to 6/11 (900ms settle). Question, the chips (006's pattern: natural widths, balanced rows of three, three and two) and the what-each-adds list (Irritability, 1-minute reset) arrive (600ms, 90ms stagger). At 900ms Social situations takes the kit selection with a 520ms spring bump and a light selection haptic; the count bumps from 1 picked to 2 picked and a second row (Social situations, What to say) settles in under the first (700ms settle).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -12,9 +12,21 @@
   .flow { display: grid; gap: 10px; }
   .flow .r { display: flex; gap: 8px; }
   .flow .chip { flex: none; min-height: 48px; padding: 0 12px; white-space: nowrap; }
-  /* A plain count line, no card and no character. */
-  .count { color: var(--muted); padding-top: 4px; }
-  .count b { color: var(--fg); font-weight: 700; }
+  /* What each pick unlocks: one row per pick, the obstacle on the left, the tool it adds on the right. */
+  .gets { display: grid; gap: 10px; margin-top: 6px; }
+  .gets .hd { display: flex; justify-content: space-between; align-items: baseline; color: var(--muted); }
+  .gets .hd b { color: var(--fg); font-weight: 700; }
+  .gets .list > .row { min-height: 64px; padding: 10px 14px; gap: 12px; }
+  .gets .from { color: var(--muted); white-space: nowrap; font: 500 15px/1.25 var(--body); }
+  .gets .arr { width: 16px; height: 16px; flex: none; color: var(--muted); align-self: center; display: grid; }
+  .gets .arr svg { width: 16px; height: 16px; }
+  .gets .to { font: 700 16px/1.25 var(--display); letter-spacing: -.2px; }
+  .gets .ico-tile { width: 40px; height: 40px; border-radius: 12px; }
+  .gets .ico-tile svg { width: 30px; height: 30px; overflow: visible; }
+  .gets .grow { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; row-gap: 2px; }
+  .gets .row.new { display: none; }
+  .gets.two .row.new { display: flex; }
+  .play .gets.two .row.new { animation: dx-settle 700ms var(--settle) both; }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
@@ -33,22 +45,39 @@
       <div class="r"><button class="chip">Weight gain</button><button class="chip">Poor sleep</button><button class="chip">Restlessness</button></div>
       <div class="r"><button class="chip">Trouble focusing</button><button class="chip">Low motivation</button></div>
     </div>
-    <p class="t-foot count" data-a style="--i:3"><b id="n">2 picked.</b> <span id="tl">You&rsquo;ll get a 2-minute reset for irritability and what to say in social situations.</span></p>
+    <div class="gets" id="gets" data-a style="--i:3">
+      <p class="t-foot hd"><span><b id="n">2 picked.</b> Here&rsquo;s what each one adds</span></p>
+      <div class="list">
+        <div class="row"><span class="ico-tile" data-art="reset"></span><div class="grow"><span class="t-foot from">Irritability</span><span class="arr" data-arrow></span><span class="to">1-minute reset</span></div></div>
+        <div class="row new"><span class="ico-tile" data-art="talk"></span><div class="grow"><span class="t-foot from">Social situations</span><span class="arr" data-arrow></span><span class="to">What to say</span></div></div>
+      </div>
+    </div>
   </div>
 
   <div class="dock">
     <button class="btn" data-a style="--i:4">Continue</button>
-    <a class="link" data-a style="--i:5">Skip this one</a>
+    <a class="link" data-a style="--i:5">Skip for now</a>
   </div>
 </div>
 <script>
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
-  const bar = document.getElementById('bar'), social = document.getElementById('social'), n = document.getElementById('n'), tl = document.getElementById('tl');
-  const one = 'You&rsquo;ll get a 2-minute reset for irritability.', two = 'You&rsquo;ll get a 2-minute reset for irritability and what to say in social situations.';
+  /* Paper-cut tool spots in the kit palette: a sun-timer for the reset, a speech bubble for what to say. */
+  const sh = DX.theme === 'dark' ? 'rgba(0,0,0,.5)' : 'rgba(110,50,20,.26)';
+  const pf = id => `<defs><filter id="${id}" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="1.2" stdDeviation=".4" flood-color="${sh}"/></filter></defs>`;
+  const ART = {
+    reset: `<svg viewBox="0 0 32 32" aria-hidden="true">${pf('t1')}<rect x="13" y="2.5" width="6" height="3.4" rx="1.4" fill="#FF7155" filter="url(#t1)"/><circle cx="16" cy="18" r="11.5" fill="#FFF8EE" filter="url(#t1)"/>
+      <path d="M16 18 V8.5 A9.5 9.5 0 0 1 25.4 16.6 Z" fill="#FF9A5C"/><circle cx="16" cy="18" r="9.5" fill="none" stroke="#FFC38A" stroke-width="1.4"/><circle cx="16" cy="18" r="2" fill="#1E1A3A"/></svg>`,
+    talk: `<svg viewBox="0 0 32 32" aria-hidden="true">${pf('t2')}<path d="M5 6.5 h17 a4 4 0 0 1 4 4 v7 a4 4 0 0 1 -4 4 h-9 l-5.5 4.5 v-4.5 h-2.5 a4 4 0 0 1 -4 -4 v-7 a4 4 0 0 1 4 -4 z" fill="#FF7155" filter="url(#t2)"/>
+      <path d="M17 13 h9 a3.4 3.4 0 0 1 3.4 3.4 v5.4 a3.4 3.4 0 0 1 -3.4 3.4 h-1 v3.6 l-4.4 -3.6 h-3.6 a3.4 3.4 0 0 1 -3.4 -3.4 v-5.4 a3.4 3.4 0 0 1 3.4 -3.4 z" fill="#FFF8EE" filter="url(#t2)"/>
+      <g fill="#FF9A5C"><circle cx="18.6" cy="19.2" r="1.3"/><circle cx="21.8" cy="19.2" r="1.3"/><circle cx="25" cy="19.2" r="1.3"/></g></svg>`
+  };
+  document.querySelectorAll('[data-art]').forEach(e => e.innerHTML = ART[e.dataset.art]);
+  document.querySelectorAll('[data-arrow]').forEach(e => e.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13.5 6.5L19 12l-5.5 5.5"/></svg>');
+  const bar = document.getElementById('bar'), social = document.getElementById('social'), n = document.getElementById('n'), gets = document.getElementById('gets');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '45.5%'); void bar.offsetWidth; bar.style.transition = '';
-    social.classList.remove('on', 'bump'); n.textContent = '1 picked.'; n.classList.remove('bump'); tl.innerHTML = one; });
+    social.classList.remove('on', 'bump'); n.textContent = '1 picked.'; n.classList.remove('bump'); gets.classList.remove('two'); });
   DX.after(250, () => bar.style.setProperty('--p', '54.5%'));
-  const land = () => { social.classList.add('on', 'bump'); n.textContent = '2 picked.'; n.style.display = 'inline-block'; n.classList.add('bump'); tl.innerHTML = two; };
+  const land = () => { social.classList.add('on', 'bump'); n.textContent = '2 picked.'; n.style.display = 'inline-block'; n.classList.add('bump'); gets.classList.add('two'); };
   DX.after(900, land); DX.onStill(land);
 </script>
 </body></html>

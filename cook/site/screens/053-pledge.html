@@ -8,20 +8,22 @@
   .scene .fade { position: absolute; left: 0; right: 0; bottom: 0; height: 70px; background: linear-gradient(to bottom, color-mix(in srgb, var(--g) 0%, transparent), var(--g)); }
   .scene .wash { position: absolute; inset: 0; display: none; background: linear-gradient(to bottom, rgba(14,19,34,.94) 0%, rgba(14,19,34,.7) 14%, rgba(14,19,34,.25) 24%, rgba(14,19,34,0) 30%, rgba(14,19,34,0) 64%, rgba(14,19,34,.3) 76%, rgba(14,19,34,.7) 88%); }
   .scene .stars { position: absolute; left: 0; right: 0; top: 0; height: 120px; display: none; background-image: radial-gradient(1.6px 1.6px at 62px 96px, #FFF8EE 60%, transparent), radial-gradient(1.3px 1.3px at 148px 70px, #FFF8EE 60%, transparent), radial-gradient(1.5px 1.5px at 262px 92px, #FFF8EE 60%, transparent), radial-gradient(1.2px 1.2px at 318px 64px, #FFF8EE 60%, transparent), radial-gradient(1.4px 1.4px at 30px 104px, #FFF8EE 60%, transparent); opacity: .8; }
-  [data-theme="dark"] .scene .wash, [data-theme="dark"] .scene .stars { display: block; }
-  [data-theme="dark"] .scene svg rect.hazemove { opacity: .1 !important; }
   [data-theme="dark"] .scene .fade { height: 130px; background: linear-gradient(to bottom, color-mix(in srgb, var(--g) 0%, transparent), var(--g) 82%); }
+  /* light: a soft cream glow behind Xero lifts him off the deeper hills */
+  .glow { position: absolute; left: 50%; top: 196px; width: 300px; height: 230px; margin-left: -150px; border-radius: 50%; background: radial-gradient(closest-side, rgba(255,246,226,.85), rgba(255,246,226,.45) 55%, rgba(255,246,226,0)); pointer-events: none; }
+  [data-theme="dark"] .glow { display: none; }
   .nav .icon-btn.on-art { background: rgba(255,248,238,.78); color: var(--ink); box-shadow: 0 1px 2px rgba(30,26,58,.12); }
-  [data-theme="dark"] .nav .icon-btn.on-art { background: rgba(255,248,238,.16); color: var(--cream); box-shadow: inset 0 0 0 1px rgba(255,248,238,.28); backdrop-filter: blur(6px); }
-  /* dark: the dawn band reads pre-dawn, not sunset */
-  [data-theme="dark"] .scene svg { filter: saturate(.75); }
+  [data-theme="dark"] .nav .icon-btn.on-art { background: rgba(255,248,238,.18); color: var(--cream); box-shadow: inset 0 0 0 1px rgba(255,248,238,.32); backdrop-filter: blur(6px); }
   /* light: the coral underline needs more weight on the apricot ground */
   :root:not([data-theme="dark"]) .body .mark { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 16' preserveAspectRatio='none'%3E%3Cpath d='M3 10 C40 4 90 5 122 7 C152 9 178 11 197 4' fill='none' stroke='%23D9461F' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E"); }
   .scene svg circle.sunmove { transition: transform 1.6s var(--settle); }
   .scene svg rect.hazemove { transition: opacity 1.6s var(--ease); }
-  .up .scene svg circle.sunmove { transform: translate(92px, -44px) scale(.62); }
-  .scene svg circle.sunmove.r70 { stroke: #FFE9B8; stroke-width: 10; stroke-opacity: .55; filter: drop-shadow(0 0 22px rgba(255,214,130,.75)); }
-   [data-theme="dark"] .scene svg circle.sunmove.r70 { fill-opacity: .55; stroke: #FFE9B8; stroke-opacity: .25; stroke-width: 18; filter: blur(3px) drop-shadow(0 0 30px rgba(255,214,150,.6)); }
+  /* light: the risen sun sits 24px in from the right edge, with a crisp rim */
+  .up .scene svg circle.sunmove { transform: translate(77px, -44px) scale(.62); }
+  .scene svg circle.sunmove.r70 { stroke: #FFF1C9; stroke-width: 6; filter: drop-shadow(0 0 16px rgba(255,214,130,.6)); }
+  /* dark: the pre-dawn sun waits on the horizon and lifts 40px when you pledge */
+  .scene svg circle.dawnsun { transition: transform 1.6s var(--settle); }
+  .up .scene svg circle.dawnsun { transform: translateY(-40px); }
   .xero { position: absolute; left: 50%; top: 206px; width: 200px; height: 200px; margin-left: -100px; }
   .nav { top: 50px; }
   .body { position: absolute; left: 0; right: 0; top: 414px; padding: 0 var(--gutter); text-align: center; }
@@ -38,6 +40,7 @@
 </head><body>
 <div class="screen" data-ground="apricot" data-status="on-art" id="sc">
   <div class="scene" id="scene" data-fade><div class="wash"></div><div class="stars"></div><div class="fade"></div></div>
+  <div class="glow" data-fade style="--d:200ms"></div>
   <div class="xero" data-settle style="--i:1"><div class="bob" id="xero"></div></div>
   <div class="nav"><button class="icon-btn on-art" aria-label="Close" data-ic="close"></button></div>
   <div class="body">
@@ -57,8 +60,14 @@
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic));
   const scene = document.getElementById('scene'), xero = document.getElementById('xero'), sc = document.getElementById('sc');
-  scene.insertAdjacentHTML('afterbegin', DX.char('horizon', { scene: 'dawn', w: 390, h: 420, clarity: 40, noDusk: true }));
+  const dark = document.documentElement.dataset.theme === 'dark';
+  scene.insertAdjacentHTML('afterbegin', dark ? DX.nightSky({ w: 390, h: 420, dawn: true }) : DX.char('horizon', { scene: 'dawn', w: 390, h: 420, clarity: 40, noDusk: true }));
   const svg = scene.querySelector('svg');
+  /* light: deeper hill silhouettes */
+  const HILL = { '#FF9D6E': '#FA8A5B', '#FF7A55': '#EC6440', '#E85A3E': '#D04A2F', '#C2402A': '#A8361F' };
+  if (!dark) svg.querySelectorAll('path').forEach(p => { const f = (p.getAttribute('fill') || '').toUpperCase(); if (HILL[f]) p.setAttribute('fill', HILL[f]); });
+  /* dark: move the pre-dawn sun off Xero's shoulder to the right, sitting on the hills */
+  if (dark) svg.querySelectorAll('circle').forEach(c => { if (['80', '44', '24'].includes(c.getAttribute('r'))) { c.setAttribute('cx', '306'); c.setAttribute('cy', '286'); c.classList.add('dawnsun'); } });
   /* the scene's sparkle sits under the status bar: move it down beside the sun */
   svg.querySelectorAll('path').forEach(p => { if ((p.getAttribute('d') || '').startsWith('M330 34')) p.setAttribute('transform', 'translate(-91 40)'); });
   svg.querySelectorAll('circle').forEach(c => { const r = c.getAttribute('r'); if (r === '70' || r === '130') { c.classList.add('sunmove', 'r' + r); c.style.transformBox = 'fill-box'; c.style.transformOrigin = 'center'; } });

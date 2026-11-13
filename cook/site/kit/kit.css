@@ -157,9 +157,9 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
 .tabbar a.on { color: var(--fg); font-weight: 700; }
 .tabbar a.sos { width: 58px; height: 58px; margin: -40px auto 0; border-radius: 999px; background: #1F3C8C; color: #FFF8EE; box-shadow: 0 8px 20px rgba(31,60,140,.4); display: grid; place-items: center; gap: 0; }
 .tabbar a.sos { position: relative; }
-.tabbar a.sos span { position: absolute; bottom: -13px; left: 50%; transform: translateX(-50%); color: var(--muted); font: 600 12px/1 var(--body); }
+.tabbar a.sos span { position: absolute; bottom: -11px; left: 50%; transform: translateX(-50%); color: var(--muted); font: 600 12px/1 var(--body); }
 .scroll.with-tabs { padding-bottom: 120px; }
-.tabfade { position: absolute; z-index: 24; left: 0; right: 0; bottom: 0; height: 170px; background: linear-gradient(to bottom, color-mix(in srgb, var(--g) 0%, transparent), var(--g) 55%); pointer-events: none; }
+.tabfade { position: absolute; z-index: 24; left: 0; right: 0; bottom: 0; height: 190px; background: linear-gradient(to bottom, color-mix(in srgb, var(--g) 0%, transparent) 0%, color-mix(in srgb, var(--g) 78%, transparent) 34%, var(--g) 52%); pointer-events: none; }
 
 /* ---------- sheets and toasts ---------- */
 .scrim { position: absolute; inset: 0; z-index: 40; background: rgba(14,19,34,.38); backdrop-filter: blur(6px) saturate(.8); }

@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>035 Lesson audio</title>
-<meta name="motion" content="Art fades up (light: a warm paper-cut dawn, the sun low behind Xero between two lifted hill layers) and Xero settles onto his hill in his headphones (900ms), then bobs gently while audio plays; three thin sound arcs each side pulse outward (2.4s loop, 220ms apart) for as long as he is reading. The scrubber draws from 0:00 to 1:12 over 1.2s with the elapsed time ticking in step, the knob pops on arrival, and the play button bumps into its pause state. The Show transcript text disclosure arrives with the controls; tapping it rotates its chevron (250ms) and opens the transcript below (500ms) with the spoken line in full ink. 1x (left) and the sleep Timer with its moon (right) mirror each other as text buttons; 1x cycles 1x, 1.25x, 1.5x with a selection haptic, Timer opens the sleep timer options. Done listening arrives last (600ms) as an outlined button and stays outlined until 80% has played (2:24 of 3:00), when it cross-fades into the solid primary button (300ms, light haptic), as on the session players.">
+<meta name="motion" content="Art fades up (light: a warm paper-cut dawn, the sun low behind Xero, rising between two lifted hill layers) and Xero settles onto his hill in his headphones (900ms), then bobs gently while audio plays; three thin sound arcs each side pulse outward (2.4s loop, 220ms apart) for as long as he is reading. The scrubber draws from 0:00 to 1:12 over 1.2s with the elapsed time ticking in step, the knob pops on arrival, and the play button bumps into its pause state. The Show transcript text disclosure arrives with the controls; tapping it rotates its chevron (250ms) and opens the transcript below (500ms) with the spoken line in full ink. 1x (left) and the sleep Timer with its moon (right) mirror each other as text buttons; 1x cycles 1x, 1.25x, 1.5x with a selection haptic, Timer opens the sleep timer options. Done listening arrives last (600ms) as an outlined button and stays outlined until 80% has played (2:24 of 3:00), when it cross-fades into the solid primary button (300ms, light haptic), as on the session players.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -20,8 +20,7 @@
   .play-btn svg { width: 30px; height: 30px; }
   /* 1x and the sleep timer mirror each other: same size, same weight, one at each edge */
   .rate, .timer { height: 44px; padding: 0 6px; display: inline-flex; align-items: center; gap: 6px; font: 700 16px/1 var(--body); color: var(--fg); }
-  .rate { justify-self: start; }
-  .timer { justify-self: end; }
+  .rate, .timer { justify-self: center; }
   .timer svg { width: 18px; height: 18px; }
   .fore .arcs path { fill: none; stroke: #7A2A3E; stroke-width: 2; stroke-linecap: round; }
   [data-theme="dark"] .fore .arcs path { stroke: #F3E7CC; }
@@ -87,8 +86,8 @@
       <filter id="alift" x="-5%" y="-30%" width="110%" height="160%"><feDropShadow dx="0" dy="-2" stdDeviation="2.6" flood-color="#1A0B2E" flood-opacity=".2"/></filter></defs>
     <rect width="346" height="288" fill="url(#asky)"/>
     <g filter="url(#asoft)" fill="#FFF4E6" opacity=".8"><ellipse cx="62" cy="52" rx="36" ry="10"/><ellipse cx="84" cy="43" rx="20" ry="9"/><ellipse cx="282" cy="40" rx="30" ry="9"/></g>
-    <circle cx="173" cy="196" r="132" fill="url(#ahalo)"/>
-    <circle cx="173" cy="196" r="66" fill="#FFD25E"/>
+    <circle cx="173" cy="176" r="130" fill="url(#ahalo)"/>
+    <circle cx="173" cy="176" r="72" fill="#FFD86E"/>
     <path filter="url(#alift)" d="M0 190 C50 172 104 176 150 188 C204 202 286 170 346 176 V288 H0z" fill="#FFA06C"/>
     <path filter="url(#alift)" d="M0 220 C64 204 132 212 196 220 C254 227 306 208 346 212 V288 H0z" fill="#FF8558"/>
   </svg>`;
