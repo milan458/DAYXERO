@@ -12,7 +12,7 @@
     share: 'M12 15V4M7.5 8.5L12 4l4.5 4.5M5 13v6h14v-6', bell: 'M6 16V11a6 6 0 0112 0v5l1.5 2h-15zM10 20.5h4',
     wave: 'M3 14c2.5-3 5-3 7.5 0s5 3 7.5 0 2.5-1.5 3-1.5M3 9c2.5-3 5-3 7.5 0s5 3 7.5 0', drop: 'M12 3.5c3 4 6 7.2 6 10.5a6 6 0 01-12 0c0-3.3 3-6.5 6-10.5z',
     moon: 'M19 14.5A7.5 7.5 0 019.5 5a7.5 7.5 0 109.5 9.5z', sun: 'M12 16a4 4 0 100-8 4 4 0 000 8zM12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4',
-    leaf: 'M5 19c0-8 5-13 14-14 0 9-5 14-13 14zM5 19l7-7', home: 'M4 10.5L12 4l8 6.5V20h-5.5v-6h-5v6H4z', path: 'M6 20c0-4 12-4 12-8S6 8 6 4M6 4h.01M18 12h.01M6 20h.01',
+    leaf: 'M5 19c0-8 5-13 14-14 0 9-5 14-13 14zM5 19l7-7', home: 'M4 10.5L12 4l8 6.5V20h-5.5v-6h-5v6H4z', path: 'M9 4.5L3.5 6.8v12.7L9 17.2l6 2.3 5.5-2.3V4.5L15 6.8zM9 4.5v12.7M15 6.8v12.7',
     chart: 'M5 20V10M12 20V4M19 20v-7', heart: 'M12 20s-7-4.4-7-10a4 4 0 017-2.6A4 4 0 0119 10c0 5.6-7 10-7 10z', lungs: 'M12 4v7M12 11c-2 0-3-1.5-4.5-1.5C5 9.5 4 13 4 16c0 2 1 3.5 3 3.5 2.5 0 5-2 5-6zM12 11c2 0 3-1.5 4.5-1.5C19 9.5 20 13 20 16c0 2-1 3.5-3 3.5-2.5 0-5-2-5-6z',
     cig: 'M3 14h14v4H3zM17 14h4v4h-4zM18 11c0-2 2-2 2-4', vape: 'M9 3h6v4H9zM8 7h8v14H8zM11 11h2', pouch: 'M5 8h14v10a2 2 0 01-2 2H7a2 2 0 01-2-2zM8 8V6a4 4 0 018 0v2',
     patch: 'M5 5h14v14H5zM9 9h6v6H9z', calendar: 'M4 6h16v14H4zM4 10h16M8 3.5v4M16 3.5v4', clock: 'M12 21a9 9 0 100-18 9 9 0 000 18zM12 7v5l3 2',
@@ -47,7 +47,7 @@
   /* Progress ring. p 0..1. Animates from 0 unless still. */
   function ring(o = {}) {
     const s = o.size || 220, w = o.stroke || 14, r = (s - w) / 2, c = 2 * Math.PI * r, p = Math.max(0, Math.min(1, o.p ?? .5));
-    const col = o.color || 'currentColor', tr = o.track || 'rgba(30,26,58,.14)';
+    const col = o.color || 'currentColor', tr = o.track || 'var(--track)';
     return `<svg width="${s}" height="${s}" viewBox="0 0 ${s} ${s}" style="transform:rotate(-90deg);display:block">
       <circle cx="${s / 2}" cy="${s / 2}" r="${r}" fill="none" stroke="${tr}" stroke-width="${w}"/>
       <circle class="ringarc" cx="${s / 2}" cy="${s / 2}" r="${r}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linecap="round"
@@ -60,7 +60,7 @@
   function check(o = {}) {
     const s = o.size || 96, col = o.color || 'var(--tick)', fg = o.fg || '#fff';
     return `<svg width="${s}" height="${s}" viewBox="0 0 100 100" aria-label="Done" style="display:block">
-      <circle cx="50" cy="50" r="46" fill="${col}" data-pop style="transform-origin:50px 50px;--d:${o.d || 0}ms"/>
+      <circle cx="50" cy="50" r="46" fill="${col}" ${o.calm ? 'data-fade' : 'data-pop'} style="transform-origin:50px 50px;--d:${o.d || 0}ms"/>
       <path d="M30 52l13 13 28-30" fill="none" stroke="${fg}" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" class="draw" style="--len:70;--d:${(o.d || 0) + 320}ms;--dur:420ms"/>
     </svg>`;
   }
@@ -95,7 +95,7 @@
          <circle cx="50" cy="50" r="39" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="2"/>
          <text x="50" y="${kind === 'xero' ? 42 : 50}" text-anchor="middle" dominant-baseline="middle" font-family="Bricolage Grotesque" font-weight="800" font-size="${label}" fill="${pal.ink}" letter-spacing="-1">${n}</text>`;
     const ringNext = next ? `<circle cx="50" cy="50" r="48" fill="none" stroke="currentColor" stroke-opacity=".22" stroke-width="3"/>` + (o.p != null ? `<circle cx="50" cy="50" r="48" fill="none" stroke="var(--fg)" stroke-width="3" stroke-linecap="round" stroke-dasharray="${2 * Math.PI * 48}" stroke-dashoffset="${2 * Math.PI * 48 * (1 - o.p)}" transform="rotate(-90 50 50)"/>` : '') : '';
-    const svg = `<svg width="${s}" height="${s}" viewBox="0 0 100 100" style="display:block;overflow:visible" role="img" aria-label="${o.label || ''} ${state}">${next ? `<g style="opacity:.5;filter:saturate(.35)">${face}</g>` : face}${ringNext}</svg>`;
+    const svg = `<svg width="${s}" height="${s}" viewBox="0 0 100 100" style="display:block;overflow:visible" role="img" aria-label="${o.label || ''} ${state}">${next ? `<g style="opacity:.42">${face}</g>` : face}${ringNext}</svg>`;
     if (o.bare) return svg;
     return `<div class="badge ${o.cls || ''}" ${o.attr || ''}>${svg}${o.label ? `<span class="t-cap">${o.label}</span>` : ''}</div>`;
   }

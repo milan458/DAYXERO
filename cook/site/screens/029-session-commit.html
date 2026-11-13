@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>029 Session commit</title>
-<meta name="motion" content="Tag, title, ring and Xero arrive (600ms, 90ms stagger). Holding the button (3s, auto at 1.2s) fills the button and sweeps the cream ring around in lockstep (linear, a soft haptic tick every 0.5s). On held: the ring snaps to sun yellow, the date fades out, the Day Xero badge stamps into the ring (620ms spring) with its rays turning and a shine pass, Xero swaps to cheer and bumps, the line below swaps, success haptic. The button turns into Committed.">
+<meta name="motion" content="Tag, title, ring and Xero arrive (600ms, 90ms stagger). Holding the button (3s, auto at 1.2s) fills the button and sweeps the cream ring around in lockstep (linear, a soft haptic tick every 0.5s). On held: the ring snaps to sun yellow and a check pops and draws where the ring closes (success haptic); the date steps aside as the Day Xero badge in its waiting form stamps onto it (620ms spring, no rays: it is earned on the day itself) and the date fades back in under it; Xero swaps to cheer and bumps; the line below becomes Committed to Fri, Nov 6. The button turns into Committed.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -21,7 +21,9 @@
 .ringbox.done .centre{opacity:0;transform:scale(.9)}
 .centre .t-large{font-size:40px}
 .medal{position:absolute;inset:0;display:grid;place-items:center}
-.medal .sw{padding:12px;border-radius:50%}
+.medal .stack{display:grid;justify-items:center;gap:6px;text-align:center}
+.medal .rays{display:none}
+.clasp{position:absolute;left:106px;top:-12px;width:44px;height:44px;border-radius:99px;box-shadow:0 0 0 5px var(--g)}
 .xrow{position:absolute;top:536px;left:var(--gutter);right:var(--gutter);display:flex;gap:14px;align-items:center}
 .xrow .say{display:grid;gap:2px}
 </style>
@@ -44,6 +46,7 @@
     </svg>
     <div class="centre"><span class="t-foot muted">Friday</span><span class="t-large">Nov 6</span><span class="t-foot muted">Day Xero</span></div>
     <div class="medal" id="medal"></div>
+    <div class="clasp" id="clasp"></div>
   </div>
   <div class="xrow" data-a style="--i:4">
     <div id="xero" style="flex:none"></div>
@@ -56,7 +59,7 @@ document.getElementById('close').innerHTML = DX.icon('close');
 document.getElementById('t-ic').innerHTML = DX.icon('eye', {size:16});
 const X = document.getElementById('xero'), arc = document.getElementById('arc'), rb = document.getElementById('rb'), btn = document.getElementById('hold');
 const C = 741.4;
-const reset = () => { X.innerHTML = DX.char('xero', {mood:'calm', size:88}); X.className = ''; rb.classList.remove('done'); document.getElementById('medal').innerHTML = '';
+const reset = () => { X.innerHTML = DX.char('xero', {mood:'calm', size:88}); X.className = ''; rb.classList.remove('done'); document.getElementById('medal').innerHTML = ''; document.getElementById('clasp').innerHTML = ''; document.getElementById('clasp').style.visibility = 'hidden';
   arc.style.transition = 'none'; arc.style.strokeDashoffset = C; document.getElementById('say1').textContent = '3 days to go';
   document.getElementById('say2').textContent = 'Prep 6 and 7 get you ready. Keep using as normal until then.'; };
 const fillRing = () => { if (rb.classList.contains('done')) return; arc.style.transition = 'stroke-dashoffset 3000ms linear, stroke .4s'; arc.style.strokeDashoffset = 0; };
@@ -64,19 +67,16 @@ const drain = () => { if (rb.classList.contains('done')) return; arc.style.trans
 btn.addEventListener('pointerdown', fillRing); btn.addEventListener('pointerup', drain); btn.addEventListener('pointerleave', drain);
 const complete = () => {
   arc.style.transition = 'stroke .4s'; arc.style.strokeDashoffset = 0; rb.classList.add('done');
-  document.getElementById('medal').innerHTML = `<div class="sw shine" data-stamp style="--d:500ms">${DX.badge({kind:'xero', n:'0', size:160, bare:true})}</div>`;
+  document.getElementById('medal').innerHTML = `<div class="stack"><div data-stamp style="--d:350ms">${DX.badge({kind:'xero', n:'0', state:'next', p:1, size:104, bare:true})}</div>
+    <div data-fade style="--d:700ms"><p class="t-head">Fri, Nov 6</p><p class="t-cap muted" style="margin-top:2px">Day Xero</p></div></div>`;
+  const cl = document.getElementById('clasp'); cl.style.visibility = 'visible'; cl.innerHTML = DX.check({size:44, fg:'#0B2A1C', d:100});
   X.innerHTML = DX.char('xero', {mood:'cheer', size:88}); X.className = 'bump';
-  document.getElementById('say1').textContent = 'Day Xero is set';
-  document.getElementById('say2').textContent = 'Fri, Nov 6. 3 days to go, and I\'ll be with you each one.';
+  document.getElementById('say1').textContent = 'Committed to Fri, Nov 6.';
+  document.getElementById('say2').textContent = 'You earn this badge on the day.';
 };
 reset();
 document.addEventListener('held', complete);
 DX.after(0, reset);
 DX.after(1200, fillRing);
-DX.onStill(() => {
-  btn.classList.add('done-state');
-  const l = btn.querySelector('.lbl'); if (l) l.innerHTML = DX.icon('check', {size:20, w:3}) + 'Committed';
-  complete();
-});
 </script>
 </body></html>

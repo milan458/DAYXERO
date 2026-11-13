@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>032 Session complete</title>
-<meta name="motion" content="Sun rays fade in and start a slow turn; the large Prep 5 stamp lands (620ms spring) with a success haptic and a shine pass at 900ms. Xero settles in cheering and bumps. Title and line arrive, then the stamp row lights up in sequence: Prep 1 to 4 pop (110ms apart), Prep 5 stamps last with its own shine and a light haptic; 6, 7 and Day Xero stay waiting. The button arrives last.">
+<meta name="motion" content="Sun rays fade in and start a slow turn; the large Prep 5 stamp lands (620ms spring) with a success haptic and a shine pass at 900ms. Xero settles in cheering and bumps. Title and line arrive, then the stamp row lights up in sequence: Prep 1 to 4 pop (110ms apart), Prep 5 stamps last with its own shine and a light haptic; 6 and 7 stay locked and Day Xero stays in its waiting form (earned on the day). The button arrives last.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -8,9 +8,10 @@
 .burst{position:absolute;left:50%;top:0;width:260px;height:260px;margin-left:-130px}
 .medal{position:absolute;left:50%;top:46px;width:168px;height:168px;margin-left:-84px;border-radius:50%}
 .xero{position:absolute;left:280px;top:150px}
-.mid{position:absolute;top:388px;left:0;right:0;text-align:center;display:grid;gap:8px}
-.shelf2{position:absolute;top:484px;left:var(--gutter);right:var(--gutter)}
-.srow{display:flex;align-items:center;justify-content:space-between}
+.mid{position:absolute;top:372px;left:0;right:0;text-align:center;display:grid;gap:8px}
+.shelf2{position:absolute;top:462px;left:var(--gutter);right:var(--gutter)}
+.srow{display:grid;grid-template-columns:repeat(4,1fr);justify-items:center;row-gap:12px}
+.srow .rays{display:none}
 .srow .sep{width:1px;height:30px;background:var(--line)}
 .srow .waiting{opacity:.55}
 .slab{display:flex;justify-content:space-between;margin-top:12px}
@@ -30,7 +31,7 @@
   </div>
   <div class="shelf2 card" data-a style="--i:8">
     <div class="srow" id="srow"></div>
-    <div class="slab t-cap muted"><span><span data-count="5" data-from="4" data-delay="2150" data-dur="400">5</span> of 7 stamped · Prep 6 tomorrow</span><span>Day Xero</span></div>
+    <div class="slab t-cap muted" style="justify-content:center"><span><span data-count="5" data-from="4" data-delay="2150" data-dur="400">5</span> of 7 stamped · Day Xero on Fri, Nov 6</span></div>
   </div>
   <div class="dock"><button class="btn" data-a style="--i:12">See you tomorrow</button></div>
 </div>
@@ -42,11 +43,11 @@ document.getElementById('medal').innerHTML = DX.badge({kind:'prep', n:5, size:16
 document.getElementById('xero').innerHTML = DX.char('xero', {mood:'cheer', size:96});
 let h = '';
 for (let n = 1; n <= 7; n++) {
-  if (n <= 4) h += `<span data-pop style="--d:1500ms;--i:${n}">${DX.badge({kind:'prep', n, size:32, bare:true})}</span>`;
-  else if (n === 5) h += `<span data-stamp style="--d:2150ms;--i:0"><span class="st5 shine" style="--d:2650ms;display:block">${DX.badge({kind:'prep', n, size:32, bare:true})}</span></span>`;
-  else h += `<span>${DX.badge({kind:'prep', n, size:32, state:'locked', bare:true})}</span>`;
+  if (n <= 4) h += `<span data-pop style="--d:1500ms;--i:${n}">${DX.badge({kind:'prep', n, size:50, bare:true})}</span>`;
+  else if (n === 5) h += `<span data-stamp style="--d:2150ms;--i:0"><span class="st5 shine" style="--d:2650ms;display:block">${DX.badge({kind:'prep', n, size:50, bare:true})}</span></span>`;
+  else h += `<span>${DX.badge({kind:'prep', n, size:50, state:'locked', bare:true})}</span>`;
 }
-h += `<span class="sep"></span><span>${DX.badge({kind:'xero', n:'0', size:40, state:'locked', bare:true})}</span>`;
+h += `<span>${DX.badge({kind:'xero', n:'0', size:50, state:'next', p:1, bare:true})}</span>`;
 document.getElementById('srow').innerHTML = h;
 </script>
 </body></html>

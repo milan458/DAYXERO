@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>012 Plan reveal</title>
-<meta name="motion" content="Progress eases 9/11 to 10/11; title arrives and the underline draws under 'ready'. The money card arrives and $2,555 counts up from $0 over 1200ms. The stamp row fades in left to right (Prep 1 to 7 pop 90ms apart, Prep 1 in its 'next' state), then the Day Xero medallion stamps in last with a shine and a light haptic. The free and full lists and the button arrive after.">
+<meta name="motion" content="Progress eases 9/11 to 10/11; title arrives and the underline draws under 'ready'. The money card arrives and $2,555 counts up from $0 over 1200ms. The stamp row fades in left to right (Prep 1 to 7 pop 90ms apart, Prep 1 in its 'next' state), then the Day Xero medallion fades in last in its waiting form (700ms, no spring: it is earned on Quit Day itself). The free and full lists and the button arrive after.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -11,7 +11,6 @@
   .money .t-cap { color: var(--muted); text-align: right; }
   .stamps { display: flex; justify-content: space-between; margin-top: 14px; }
   .stamps .pb { flex: none; border-radius: 99px; }
-  .stamps .pb.next svg { opacity: 1 !important; }
   .stamps .pb.next { box-shadow: 0 0 0 2.5px var(--card), 0 0 0 4.5px var(--fg); }
   .stamps .badge { gap: 0; }
   .then { display: flex; align-items: center; gap: 12px; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line); }
@@ -48,7 +47,7 @@
       <p class="t-foot" style="font-weight:700">Seven prep stamps to collect</p>
       <div class="stamps" id="stamps"></div>
       <div class="lab"><span class="t-cap">Prep 1 starts today</span><span class="t-cap">One a day</span></div>
-      <div class="then"><span id="xb" data-stamp style="--i:0;--d:1450ms"></span><div><p class="t-foot" style="font-weight:700">Day Xero, Fri, Nov 6</p><span class="t-cap">Earned the moment you hold to commit</span></div></div>
+      <div class="then"><span id="xb" data-fade style="--d:1450ms"></span><div><p class="t-foot" style="font-weight:700">Day Xero, Fri, Nov 6</p><span class="t-cap">Earned on the day you quit</span></div></div>
     </div>
 
     <div class="card tiers" data-a style="--i:4">
@@ -69,7 +68,7 @@
   let h = '';
   for (let i = 1; i <= 7; i++) h += `<span class="pb ${i === 1 ? 'next' : ''}" data-pop style="--i:0;--d:${700 + i * 90}ms">${DX.badge({ kind: 'prep', n: i, size: 38, state: i === 1 ? 'next' : 'locked', bare: true })}</span>`;
   document.getElementById('stamps').innerHTML = h;
-  document.getElementById('xb').innerHTML = `<span class="shine" style="display:block;border-radius:99px;--d:1900ms">${DX.badge({ kind: 'xero', n: '0', size: 52, bare: true })}</span>`;
+  document.getElementById('xb').innerHTML = DX.badge({ kind: 'xero', n: '0', state: 'next', p: 0, size: 52, bare: true });
   const bar = document.getElementById('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '81.8%'); void bar.offsetWidth; bar.style.transition = ''; });
   DX.after(250, () => bar.style.setProperty('--p', '90.9%'));

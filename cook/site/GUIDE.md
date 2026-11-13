@@ -78,7 +78,11 @@ Milestone screen (the earned badge celebrated).
 ## The one persona and calendar (use these numbers, nothing else)
 - Sam. Uses cigarettes (12 a day) and a vape. Triggers: Coffee, Stress. Reason: "Run with Aria without stopping to catch my breath".
 - Joined Fri, Oct 30. Prep week Fri, Oct 30 to Thu, Nov 5 (Prep 1 to 7). Quit Day = Day Xero = Fri, Nov 6.
-- Prep-week screens: today is Tue, Nov 3, Prep 5, "3 days to Quit Day", Prep 1-4 stamped, $7 a day still spent.
+- Prep-week screens: today is Mon, Nov 2, Prep 4 "The stress loop" (28 min), "4 days to Quit Day", Prep 1-3 stamped, $7 a day still spent.
+  Real program titles (DayXeroCore/Resources/program.json): Prep 1 You don't have to quit today; Prep 2 The first one of the day;
+  Prep 3 Use with your eyes open; Prep 4 The stress loop (cards: Why it feels like it calms you 6 min; A breath that works in the
+  moment 5 min; What stress actually is 6 min; Stress and mood 5 min; Your stress plan 6 min); Prep 5 Riding the wave;
+  Prep 6 Make it easy on yourself; Prep 7 The night before. Day Xero Fri, Nov 6.
 - After-quit screens: today is Fri, Nov 13, Day 7, "7 days free", $49.00 kept, 84 cigarettes not smoked, 1,400 puffs not taken,
   23 waves ridden (3 today), 6 evening check-ins, sky 40% clear, next badge 14 days (7 to go), next wave badge 25 (2 to go).
 - Money: $7 a day, $2,555 a year. Pack $8, 20 cigarettes. Pricing: Yearly $39.99 ($3.33 a month), Monthly $9.99, Lifetime $99.99, 7-day free trial.

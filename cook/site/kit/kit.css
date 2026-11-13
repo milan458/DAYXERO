@@ -29,18 +29,19 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
    Always a night sky (DX.nightSky) over a midnight-blue ground; "violet" kept as an alias. */
 .screen[data-ground="violet"], .screen[data-ground="night"] { --g: #0F1B33; --fg: #F6EFE2; --muted: #AEB8D3; --card: #17243F; --card-2: #1E2D4C; --line: rgba(255,255,255,.12);
   --btn: #F3E7CC; --btn-fg: #0F1B33; --sel: #F3E7CC; --sel-fg: #0F1B33; --tick: #7FD9A8; --mark: #FFD37A; --track: rgba(255,255,255,.16); --dark: 1; }
-.screen[data-ground="table"]   { --g: #1E1A3A; --fg: var(--cream); --muted: #C9C3E6; --card: #2A255F; --card-2: #24204D; --line: rgba(255,255,255,.14);
+.screen[data-ground="table"]   { --g: #141B2E; --fg: var(--cream); --muted: #BCC3D6; --card: #1F2840; --card-2: #1A2238; --line: rgba(255,255,255,.14);
   --btn: var(--cream); --btn-fg: var(--ink); --sel: var(--cream); --sel-fg: var(--ink); --tick: var(--done-on-dark); --mark: var(--sun); --track: rgba(255,255,255,.18); --dark: 1; }
 
 /* ---------- grounds (dark) ---------- */
-[data-theme="dark"] .screen { --g: #0E0B2B; --fg: var(--cream); --muted: #B8B3D9; --card: #1B1747; --card-2: #2A255F; --line: rgba(255,255,255,.12);
+/* Dark mode, "midnight": low-saturation blue-black instead of indigo/plum (user: the dark navy purple felt too bright). */
+[data-theme="dark"] .screen { --g: #0E1322; --fg: var(--cream); --muted: #B3BACC; --card: #182034; --card-2: #212A41; --line: rgba(255,255,255,.12);
   --btn: var(--cream); --btn-fg: var(--ink); --sel: var(--cream); --sel-fg: var(--ink); --tick: var(--done-on-dark); --mark: #FF9A7A; --track: rgba(255,255,255,.14); --dark: 1; }
-[data-theme="dark"] .screen[data-ground="apricot"] { --g: #241433; --muted: #E0C8E8; --card: #34204A; --card-2: #3E2856; --btn: var(--cream); --btn-fg: #241433; --sel: #FFC38A; --sel-fg: #241433; --mark: #FFC38A; }
+[data-theme="dark"] .screen[data-ground="apricot"] { --g: #1C1618; --muted: #DCC6BD; --card: #2A2124; --card-2: #352A2C; --btn: var(--cream); --btn-fg: #1C1618; --sel: #FFC38A; --sel-fg: #1C1618; --mark: #FFC38A; }
 [data-theme="dark"] .screen[data-ground="mint"]    { --g: #0F2A22; --muted: #A9D9C0; --card: #173A30; --card-2: #1E4639; --btn: var(--cream); --btn-fg: #0F2A22; --sel: #9FE3BC; --sel-fg: #0F2A22; --mark: #9FE3BC; }
-[data-theme="dark"] .screen[data-ground="sun"]     { --g: #241433; --muted: #E0C8E8; --card: #34204A; --card-2: #3E2856; --btn: var(--cream); --btn-fg: #241433; --sel: var(--sun); --sel-fg: #241433; --mark: var(--sun); }
+[data-theme="dark"] .screen[data-ground="sun"]     { --g: #1C1618; --muted: #DCC6BD; --card: #2A2124; --card-2: #352A2C; --btn: var(--cream); --btn-fg: #1C1618; --sel: var(--sun); --sel-fg: #1C1618; --mark: var(--sun); }
 [data-theme="dark"] .screen[data-ground="ocean"]   { --g: #0B1A4A; --muted: #B9C9FF; --card: #152A6A; --card-2: #1B3378; --btn: var(--cream); --btn-fg: #0B1A4A; --sel: var(--cream); --sel-fg: #0B1A4A; }
 [data-theme="dark"] .screen[data-ground="violet"], [data-theme="dark"] .screen[data-ground="night"] { --g: #0A1326; --muted: #A3ADC8; --card: #121D35; --card-2: #182540; --btn: #EADDC0; --btn-fg: #0A1326; --sel: #EADDC0; --sel-fg: #0A1326; }
-[data-theme="dark"] .screen[data-ground="table"]   { --g: #0B0920; --card: #1B1747; --card-2: #15123A; }
+[data-theme="dark"] .screen[data-ground="table"]   { --g: #0A0E19; --card: #172033; --card-2: #121A2B; }
 
 /* ---------- phone ---------- */
 .screen { position: relative; width: 390px; height: 844px; overflow: hidden; background: var(--g); color: var(--fg); margin: 0 auto; }

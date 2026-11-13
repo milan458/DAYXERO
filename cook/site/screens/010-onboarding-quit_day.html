@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>010 Onboarding Quit Day</title>
-<meta name="motion" content="Progress eases 7/11 to 8/11; title, week strip (tiles rise 90ms apart, the seven prep dots pop in left to right), Xero and the hold button arrive in order. Holding fills the button left to right over 1500ms with a soft ticking haptic; on release-complete the button turns to its done state (success haptic), the Day Xero stamp slams onto the Fri 6 tile (620ms spring) with a shine, Xero swaps to cheer with a 520ms bump, and the line under him fades to the confirmation.">
+<meta name="motion" content="Progress eases 7/11 to 8/11; title, week strip (tiles rise 90ms apart, the seven prep dots pop in left to right), Xero and the hold button arrive in order. Holding fills the button left to right over 1500ms with a soft ticking haptic; on release-complete the button turns to its done state (success haptic), the Day Xero badge lands on the Fri 6 tile in its waiting form (620ms stamp spring, faded until it is earned on Quit Day itself), Xero swaps to cheer with a 520ms bump, and the line under him fades to the confirmation.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -73,7 +73,7 @@
   const days = [['Fri', 30], ['Sat', 31], ['Sun', 1], ['Mon', 2], ['Tue', 3], ['Wed', 4], ['Thu', 5]];
   $('days').innerHTML = days.map(([d, n], i) => `<div class="day" data-a style="--i:${i * .5 + 2.5}"><span class="t-cap">${d}</span><span class="num">${n}</span><span class="pd" data-pop style="--i:0;--d:${700 + i * 90}ms"></span></div>`).join('')
     + `<div class="day qd" data-a style="--i:6.5"><span class="t-cap">Fri</span><span class="num">6</span><span class="sundot"></span><div class="stamp" id="stamp" data-stamp style="--i:0"></div></div>`;
-  $('stamp').innerHTML = `<div class="shine" style="border-radius:99px;--d:500ms">${DX.badge({ kind: 'xero', n: '0', size: 50, bare: true })}</div>`;
+  $('stamp').innerHTML = DX.badge({ kind: 'xero', n: '0', state: 'next', p: 1, size: 50, bare: true });
   const setX = m => $('xero').innerHTML = DX.char('xero', { mood: m, size: 140 });
   setX('hello');
   const reset = () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '63.6%'); void bar.offsetWidth; bar.style.transition = '';
@@ -82,6 +82,5 @@
   DX.after(250, () => bar.style.setProperty('--p', '72.7%'));
   const held = () => { $('stamp').classList.add('show'); setX('cheer'); const x = $('bw'); x.classList.remove('bump'); void x.offsetWidth; x.style.setProperty('--d', '120ms'); x.classList.add('bump'); $('hero').classList.add('done'); };
   document.addEventListener('held', held);
-  DX.onStill(() => { const b = $('hold'); b.classList.add('done-state'); b.querySelector('.lbl').innerHTML = DX.icon('check', { size: 20, w: 3 }) + (b.dataset.done); held(); });
 </script>
 </body></html>
