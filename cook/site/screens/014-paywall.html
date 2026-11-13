@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>014 Paywall</title>
-<meta name="motion" content="Calm arrive only: headline, Xero (settles into his cream disc holding a small ticket, 900ms), the three ink ticks draw in 90ms apart, then the Yearly hero card and the Monthly and Lifetime rows, then the trial line, and under the button the auto-renew line. The Yearly row (its 7 days free pill on its top edge) takes the kit selection at 800ms (warm tint, outline, ring and tick; selection haptic) and the trial line draws left to right (900ms) with its three nodes fading in as the line reaches them. No springs, no shine: this screen stays quiet.">
+<meta name="motion" content="Calm arrive only: headline, Xero (settles into his cream disc holding a small ticket, 900ms), the three ink ticks draw in 90ms apart, then the Yearly hero card and the Monthly and Lifetime rows, then the trial line, and under the button the one-line auto-renew note (the price lives in the headline, so it is not repeated). The Yearly row (its 7 days free pill on its top edge) takes the kit selection at 800ms (warm tint, outline, ring and tick; selection haptic) and the trial line draws left to right (900ms) with its three nodes fading in as the line reaches them. No springs, no shine: this screen stays quiet.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -9,7 +9,8 @@
   .head .xs { position: relative; width: 116px; height: 116px; border-radius: 99px; background: #FFF8EE; display: grid; place-items: center; }
   [data-theme="dark"] .head .xs { background: var(--card-2); }
   .head .xs > * { position: relative; margin-top: 4px; }
-  .head .t-large { font-size: 30px; }
+  .head .t-large { font-size: 28px; }
+  .head .t-large span { display: block; white-space: nowrap; }
   .head .t-foot { margin-top: 6px; }
   .incl { padding: 14px var(--gutter) 0; display: grid; gap: 8px; }
   .incl .it { display: flex; align-items: center; gap: 10px; }
@@ -62,8 +63,8 @@
 
   <div class="head">
     <div>
-      <h1 class="t-large" data-a>Start free, pay on Quit Day</h1>
-      <p class="t-foot muted" data-a style="--i:1">Nothing is charged before Quit Day.</p>
+      <h1 class="t-large" data-a><span>7 days free, then</span><span>$39.99 a year</span></h1>
+      <p class="t-foot muted" data-a style="--i:1">Craving SOS stays free, always.</p>
     </div>
     <div class="xs" data-settle style="--d:150ms"><div class="bob" id="xero"></div></div>
   </div>
@@ -79,13 +80,13 @@
   <div class="tl" data-a style="--i:10">
     <svg class="ln" viewBox="0 0 300 4" preserveAspectRatio="none"><path d="M0 2 H300" stroke="var(--track)" stroke-width="3"/><path class="draw" d="M0 2 H300" stroke="var(--fg)" stroke-width="3" style="--len:300;--d:1300ms;--dur:900ms"/></svg>
     <div class="n now" style="left:0"><i></i><span class="t-cap"><b>Today</b>Full access</span></div>
-    <div class="n mid" data-fade style="--d:1750ms"><i></i><span class="t-cap"><b>Day 5, Nov 3</b>We remind you</span></div>
-    <div class="n end" data-fade style="--d:2150ms"><i></i><span class="t-cap"><b>Fri, Nov 6</b>$39.99 a year</span></div>
+    <div class="n mid" data-fade style="--d:1750ms"><i></i><span class="t-cap"><b>Nov 3</b>We remind you</span></div>
+    <div class="n end" data-fade style="--d:2150ms"><i></i><span class="t-cap"><b>Nov 6</b>$39.99 a year</span></div>
   </div>
 
   <div class="dock">
     <button class="btn" data-a style="--i:11">Start my 7-day free trial</button>
-    <p class="t-cap renew" data-a style="--i:12">Free for 7 days, then $39.99 a year. Renews automatically. Cancel anytime in Settings.</p>
+    <p class="t-cap renew" data-a style="--i:12">Renews automatically. Cancel anytime in Settings.</p>
     <div class="legal" data-a style="--i:13"><a class="link">Restore purchases</a><span>·</span><a class="link">Terms</a><span>·</span><a class="link">Privacy</a></div>
   </div>
 </div>
@@ -99,7 +100,8 @@
     .replace('style="display: block"', 'style="display: block; overflow: visible"')
     .replace(/<path d="M164 124 C174 132 178 142 176 152"[^>]*><\/path>/, ticket + arm);
   /* What the plan buys after Quit Day leads; the prep it unlocks comes last. */
-  const items = ['Weeks 1 to 4 with Jelli&rsquo;s voice coaching', 'Craving SOS and Glim&rsquo;s evening check-ins', 'Prep 4 to 7 and your Day Xero badge'];
+  /* SOS itself is free; the paid perk is Jelli's voice in it. */
+  const items = ['Weeks 1 to 4 of coaching after Quit Day', 'Jelli&rsquo;s voice in SOS and Glim&rsquo;s check-ins', 'Prep 4 to 7 and your Day Xero badge'];
   document.getElementById('incl').innerHTML = items.map((t, i) => `<div class="it" data-a style="--i:${i + 2}">
     <svg viewBox="0 0 24 24" fill="none" stroke="var(--fg)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path class="draw" d="M5 12.5l4.5 4.5L19 7.5" style="--len:24;--d:${300 + i * 90}ms"/></svg>
     <p class="t-foot">${t}</p></div>`).join('');
