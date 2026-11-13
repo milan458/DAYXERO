@@ -18,29 +18,32 @@
   .body { position: absolute; left: 0; right: 0; top: 150px; padding: 0 var(--gutter); }
   .tl { position: relative; margin-top: 16px; padding-left: 30px; display: grid; gap: 12px; }
   .spine { position: absolute; left: 9px; top: 42px; bottom: 42px; width: 3px; border-radius: 3px;
-    background: repeating-linear-gradient(to bottom, color-mix(in srgb, var(--fg) 34%, transparent) 0 4px, transparent 4px 10px); }
+    background: repeating-linear-gradient(to bottom, color-mix(in srgb, var(--fg) 45%, transparent) 0 5px, transparent 5px 10px); }
   .spine i { position: absolute; left: 0; top: 0; width: 3px; height: var(--done, 54%); border-radius: 3px; background: var(--fg); transform-origin: top; }
   .play .spine i { animation: spine 900ms var(--ease) 200ms backwards; }
   @keyframes spine { from { transform: scaleY(0); } }
+  .still .spine i { animation: none; }
   .item { position: relative; }
   .node { position: absolute; left: -30px; top: 50%; margin-top: -10px; width: 21px; height: 21px; border-radius: 99px; background: var(--g); box-shadow: inset 0 0 0 3px var(--fg); }
   .node.now { background: var(--fg); box-shadow: 0 0 0 5px color-mix(in srgb, var(--fg) 16%, transparent); }
   .play .node.now { animation: nodeb 2.4s ease-in-out infinite; }
   @keyframes nodeb { 50% { box-shadow: 0 0 0 9px color-mix(in srgb, var(--fg) 6%, transparent); } }
   .node.later { box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--fg) 34%, transparent); }
-  .rowc { display: flex; align-items: center; gap: 14px; min-height: 84px; padding: 14px 16px 14px 14px; }
+  .rowc { display: flex; align-items: center; gap: 12px; min-height: 84px; padding: 14px 16px 14px 14px; }
   .rowc .grow { flex: 1; min-width: 0; }
   .rowc .lbl { color: var(--muted); }
   .rowc .t-head { font-size: 17px; line-height: 1.25; }
   .rowc .t-head b { font-weight: 800; }
   .item.now .rowc { box-shadow: inset 0 0 0 2px var(--fg); }
-  .btn.small { width: auto; padding: 0 16px; flex: none; }
+  .btn.small { width: auto; padding: 0 14px; flex: none; }
+  .rowc .t-head { white-space: normal; }
+  .nw { white-space: nowrap; }
   .btn.small svg { width: 16px; height: 16px; }
-  .tile { width: 48px; height: 48px; border-radius: 14px; background: var(--card-2); flex: none; position: relative; overflow: hidden; display: grid; place-items: center; color: var(--fg); }
+  .tile { width: 46px; height: 46px; border-radius: 14px; background: var(--card-2); flex: none; position: relative; overflow: hidden; display: grid; place-items: center; color: var(--fg); }
   .tile svg { position: relative; width: 24px; height: 24px; }
   .tile .water { position: absolute; left: 0; right: 0; bottom: 0; height: var(--lvl, 37.5%); background: color-mix(in srgb, #5A9DFF 45%, transparent); transition: height 600ms var(--settle); }
   .tile.badge-t { background: none; overflow: visible; }
-  .tile.badge-t svg { width: 48px; height: 48px; position: absolute; inset: 0; }
+  .tile.badge-t svg { width: 46px; height: 46px; position: absolute; inset: 0; }
   .tile.badge-t .n { position: relative; font: 800 16px/1 var(--display); color: var(--fg); }
   .val { position: relative; display: inline-block; }
   .plus { position: absolute; right: -22px; top: -8px; font: 800 16px/1 var(--display); color: var(--tick); opacity: 0; }
@@ -95,7 +98,7 @@
           <span class="tile" id="tile"><span class="water"></span></span>
           <div class="grow">
             <p class="t-foot lbl">Water</p>
-            <p class="t-head"><span class="val"><b id="gl">3</b><span class="plus" id="plus">+1</span></span> of 8 glasses</p>
+            <p class="t-head nw"><span class="val"><b id="gl">3</b><span class="plus" id="plus">+1</span></span> of 8 glasses</p>
           </div>
           <button class="btn small" id="addw"></button>
         </div>
@@ -139,7 +142,7 @@
   $('#addw').innerHTML = DX.icon('plus', { w: 2.8 }) + '1 glass';
   $('#glim').innerHTML = DX.char('glim', { mood: 'sleepy', size: 44, animate: false });
   $('#ic-clock').innerHTML = DX.icon('clock', { size: 20 });
-  $('#b14').innerHTML = DX.badge({ kind: 'day', n: '', state: 'next', p: .5, size: 48, bare: true }) + '<span class="n">14</span>';
+  $('#b14').innerHTML = DX.badge({ kind: 'day', n: '', state: 'next', p: .5, size: 46, bare: true }) + '<span class="n">14</span>';
   $('.screen').insertAdjacentHTML('beforeend', DX.tabbar('today'));
   // spine: solid through the rows already done today (now, waves, water), dashed after
   DX.after(0, () => { const tl = $('.tl'), sp = $('.spine'), its = tl.querySelectorAll('.item'); const top = its[0].offsetTop + its[0].offsetHeight / 2, mid = its[2].offsetTop + its[2].offsetHeight / 2, end = its[4].offsetTop + its[4].offsetHeight / 2;
