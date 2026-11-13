@@ -24,7 +24,7 @@
   .chip.face.on::before { display: none; }
   .chip.face svg { width: 42px; height: 42px; transition: transform .4s var(--settle); }
   .chip.face.on svg { transform: scale(1.08) rotate(-4deg); }
-  .chip:not(.on) { box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--fg) 30%, transparent); }
+  .screen .chip:not(.on), [data-theme="dark"] .screen .chip:not(.on) { box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--fg) 30%, transparent); }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
