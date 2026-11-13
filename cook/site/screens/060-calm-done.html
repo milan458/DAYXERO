@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>060 Calm done</title>
-<meta name="motion" content="The paper sea disc fades in, Jelli settles into it cheering (hop loop, 250ms), then the small check pops beside Jelli and its tick draws (900ms, success haptic); the headline with its drawn underline and the line arrive, Jelli's two 4-point stars twinkle in; the compact minutes row counts 6 to 8 at 1.2s with a +2 floating up and the +2 just now tag fading in beside it; the optional feeling chips arrive last. No other springs.">
+<meta name="motion" content="The paper sea disc fades in, Jelli settles into it cheering (hop loop, 250ms), then the small check pops beside Jelli and its tick draws (900ms, success haptic); the headline with its drawn underline and the line arrive, Jelli's two 4-point stars twinkle in; the compact minutes row counts 7 to 8 at 1.2s with a +1 floating up and the +1 just now tag fading in beside it (one minute, from Notice the urge); the optional feeling chips arrive last with none selected. No other springs.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -35,7 +35,9 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 .feel { margin-top: 24px; display: grid; gap: 10px; }
 .screen { --tertiary: #8A8598; }
 [data-theme="dark"] .screen { --tertiary: #79819A; }
-.opt3 { color: var(--tertiary); font-weight: 500; }
+.opt3 { color: var(--muted); font-weight: 500; }
+/* The "done" underline is coral in both modes, as on the other hero screens in light. */
+.top .mark, [data-theme="dark"] .top .mark { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 16' preserveAspectRatio='none'%3E%3Cpath d='M3 10 C40 4 90 5 122 7 C152 9 178 11 197 4' fill='none' stroke='%23FF7A55' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E"); }
 
 </style>
 </head><body>
@@ -49,17 +51,17 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
       <div class="ck" id="ck"></div>
     </div>
     <h1 class="t-large" data-a style="--i:2">Nicely <span class="mark">done</span></h1>
-    <p class="t-body muted" data-a style="--i:3">Two minutes, and the urge got smaller.<br>That is a skill you just practised.</p>
+    <p class="t-body muted" data-a style="--i:3">One minute, and the urge got smaller.<br>That is a skill you just practised.</p>
   </div>
   <div class="card calm" data-a style="--i:4">
     <span class="ico-tile" data-ic="wave" data-s="22" style="background:linear-gradient(160deg,#3A63E0,#1F3C8C);color:#FFF8EE"></span>
-    <div class="grow"><span class="num" data-count="8" data-from="6" data-delay="1200">8</span> <span class="t-foot">min of calm today</span></div>
-    <span class="gain" data-fade style="--d:1300ms">+2 just now</span>
-    <span class="plus float-up" style="--d:1300ms">+2</span>
+    <div class="grow"><span class="num" data-count="8" data-from="7" data-delay="1200">8</span> <span class="t-foot">min of calm today</span></div>
+    <span class="gain" data-fade style="--d:1300ms">+1 just now</span>
+    <span class="plus float-up" style="--d:1300ms">+1</span>
   </div>
   <div class="feel">
     <p class="t-foot" data-a style="--i:5">Feeling calmer? <span class="opt3">Optional</span></p>
-    <div class="chips" data-a style="--i:6"><button class="chip">Much calmer</button><button class="chip on" id="pick">A bit</button><button class="chip">Not really</button></div>
+    <div class="chips" data-a style="--i:6"><button class="chip">Much calmer</button><button class="chip">A bit</button><button class="chip">Not really</button></div>
   </div>
 </div></div>
 <div class="dock"><button class="btn" data-a style="--i:7">Back to my day</button><button class="link" data-a style="--i:8" data-go="019-sos">Still craving? Open Craving SOS</button></div>

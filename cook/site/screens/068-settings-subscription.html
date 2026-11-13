@@ -16,13 +16,13 @@
 .toast.b.in { opacity: 1; transform: none; }
 .toast.b .ck { flex: none; }
 .opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
-html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--sel) 72%, transparent); }
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
 .plan { margin-top: 16px; padding: 16px 20px 18px; display: grid; gap: 4px; }
 .plan .price { display: flex; align-items: baseline; gap: 6px; margin-top: 6px; }
 .plan .price .num { font-size: 36px; line-height: 1; }
-.status { display: inline-flex; align-items: center; gap: 6px; color: var(--tick); }
+.status { display: inline-flex; align-items: center; gap: 6px; color: #17804F; }
+[data-theme="dark"] .status { color: var(--tick); }
 .status i { width: 8px; height: 8px; border-radius: 99px; background: currentColor; }
 .get { margin-top: 12px; padding: 0; overflow: hidden; }
 .get .art { position: relative; height: 96px; overflow: hidden; }

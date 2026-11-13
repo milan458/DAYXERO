@@ -1,12 +1,12 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>070 Apple Health</title>
-<meta name="motion" content="The connected card arrives with the DayXero tile and the neutral Works with Apple Health badge; the dotted link fades in between them (500ms) and its check pops (900ms, light success haptic); the write and read groups follow on the stagger. Flipping a toggle opens the system Health permission sheet.">
+<meta name="motion" content="The connected card arrives with the DayXero tile and a plain Apple Health tile (the app's own line heart on the warm card tint, no Apple artwork); the dotted link fades in between them (500ms) and its check pops (900ms, light success haptic); the write and read groups follow on the stagger. Flipping a toggle opens the system Health permission sheet.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
 /* screen-local helpers: icon fill, section labels, small icon tiles, bottom toast */
 .hd { display: grid; gap: 6px; padding-top: 58px; }
-.sec { padding: 22px 4px 8px; color: var(--muted); }
+.sec { padding: 22px 4px 8px; color: var(--muted); font-size: 14px; }
 .rt { font-weight: 600; }
 .ico-tile.s { width: 34px; height: 34px; border-radius: 11px; }
 .ico-tile.s svg { width: 19px; height: 19px; }
@@ -16,7 +16,6 @@
 .toast.b.in { opacity: 1; transform: none; }
 .toast.b .ck { flex: none; }
 .opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
-html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--sel) 72%, transparent); }
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
 .link-card { margin-top: 16px; padding: 18px 18px 16px; display: grid; justify-items: center; gap: 4px; text-align: center; }
@@ -26,12 +25,8 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 .wire::before { content: ""; position: absolute; left: 6px; right: 6px; top: 50%; border-top: 2.5px dotted var(--muted); }
 .wire .ok { position: relative; width: 24px; height: 24px; border-radius: 99px; background: var(--tick); color: #fff; display: grid; place-items: center; }
 .wire .ok svg { width: 13px; height: 13px; }
-.wh { display: inline-flex; align-items: center; gap: 10px; height: 52px; padding: 0 16px 0 12px; border-radius: 12px; background: var(--fg); color: var(--g); text-align: left; flex: none; }
-.wh .hi { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--g) 55%, transparent); }
-.wh .hi svg { width: 18px; height: 18px; }
-.wh .w { display: grid; gap: 2px; }
-.wh .w small { font: 600 12px/1 var(--body); opacity: .8; }
-.wh .w b { font: 700 16px/1 var(--body); letter-spacing: -.2px; }
+.app.hk { background: var(--card-2); color: var(--fg); }
+.app.hk svg { width: 30px; height: 30px; }
 .list > .row { min-height: 64px; }
 </style>
 </head><body>
@@ -40,8 +35,8 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 <div class="scroll"><div class="pad">
   <div class="hd"><h1 class="t-large" data-a style="--i:0">Apple Health</h1><p class="t-foot muted" data-a style="--i:1">You choose what DayXero shares with Health.</p></div>
   <div class="card link-card" data-a style="--i:2">
-    <div class="apps"><span class="app" id="dx070"></span><span class="wire" data-fade style="--d:500ms"><span class="ok" data-ic="check" data-s="13" data-w="3.2" data-pop style="--d:900ms"></span></span><span class="wh" role="img" aria-label="Works with Apple Health"><span class="hi" data-ic="heart" data-s="18" data-w="2.2"></span><span class="w"><small>Works with</small><b>Apple Health</b></span></span></div>
-    <div class="t-head">Connected to Health</div>
+    <div class="apps"><span class="app" id="dx070"></span><span class="wire" data-fade style="--d:500ms"><span class="ok" data-ic="check" data-s="13" data-w="3.2" data-pop style="--d:900ms"></span></span><span class="app hk" role="img" aria-label="Apple Health"><span data-ic="heart" data-s="30" data-w="2.2"></span></span></div>
+    <div class="t-head">Connected to Apple Health</div>
     <div class="t-foot muted">Since Fri, Oct 30</div>
   </div>
   <p class="t-foot sec" data-a style="--i:3">DayXero writes</p>

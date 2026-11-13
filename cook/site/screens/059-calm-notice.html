@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>059 Notice the urge</title>
-<meta name="motion" content="One painted scene: the sky and the layered sea fade in (600ms), the urge line draws left to right over 2.4s as the swell fills in under it, then the three points and their labels fade in beside them (It rises, It peaks, It passes). Jelli, seated on the line, rides it for 12s (slow ease) up to the crest and down towards the sea, while the single 28px prompt cross-fades every 3s (600ms): notice, it rises, the peak, watch it fall. Dark mode is the same scene at night. No springs, no haptic until It's passing is tapped (soft success haptic, goes to 060).">
+<meta name="motion" content="One painted scene: the sky and the layered sea fade in (600ms), the urge line draws left to right over 2.4s as the swell fills in under it, then the three points and their labels fade in beside them (It rises, It peaks, It passes; It peaks sits 18px above the crest dot). Jelli, seated on the line, rides it for 12s (slow ease) up to the crest and down towards the sea; the It peaks tag fades out (700ms) as Jelli nears the crest and back in once Jelli has passed, so they never overlap, while the single 28px prompt cross-fades every 3s (600ms): notice, it rises, the peak, watch it fall. Dark mode is the same scene at night. No springs, no haptic until It's passing is tapped (soft success haptic, goes to 060).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -33,6 +33,10 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 .lab { position: absolute; transform: translate(0, -50%); font: 700 14px/1 var(--body); color: #1E1A3A; background: #FFF8EE; padding: 8px 12px; border-radius: 99px; box-shadow: 0 2px 8px rgba(20,30,70,.12); white-space: nowrap; }
 .lab.r { transform: translate(-100%, -50%); }
 .lab.c { transform: translate(-50%, -100%); }
+/* "It peaks" sits 18px above the crest dot; it steps aside (fades) while Jelli crosses the crest, then comes back. */
+.play #peak { animation: peakdip 12s linear both; }
+@keyframes peakdip { 0%, 30% { opacity: 1; } 36%, 66% { opacity: 0; } 72%, 100% { opacity: 1; } }
+.still #peak { animation: none !important; opacity: 1; }
 .time { color: var(--muted); }
 </style>
 </head><body>
@@ -43,7 +47,7 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
   <p class="say" id="say" data-a style="--i:2">Notice where you feel it.</p>
 </div>
 <div class="card chart" data-a style="--i:3" id="chart">
-  <div data-fade style="--d:1300ms;position:absolute;inset:0"><span class="lab r" style="left:93px;top:198px">It rises</span><span class="lab c" style="left:173px;top:80px">It peaks</span><span class="lab" style="left:253px;top:198px">It passes</span></div>
+  <div data-fade style="--d:1300ms;position:absolute;inset:0"><span class="lab r" style="left:93px;top:198px">It rises</span><span class="lab c" id="peak" style="left:173px;top:70px">It peaks</span><span class="lab" style="left:253px;top:198px">It passes</span></div>
   <div data-fade style="--d:1200ms;position:absolute;inset:0"><span class="rider" id="rider"></span></div>
 </div>
 <div class="dock"><button class="btn" data-a style="--i:4">It's passing</button><button class="link" data-a style="--i:5">I need more help</button></div>

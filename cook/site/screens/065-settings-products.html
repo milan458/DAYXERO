@@ -16,7 +16,6 @@
 .toast.b.in { opacity: 1; transform: none; }
 .toast.b .ck { flex: none; }
 .opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
-html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--sel) 72%, transparent); }
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
 .hero { margin-top: 16px; padding: 14px 18px 16px; display: grid; gap: 4px; }
@@ -27,7 +26,7 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 .grp { background: var(--card); border-radius: var(--r-card); box-shadow: inset 0 0 0 1px var(--line); overflow: hidden; }
 .grp .opt { border-radius: 0; background: transparent; box-shadow: none; min-height: 56px; padding: 8px 16px 8px 12px; }
 .grp .opt + .opt { border-top: 1px solid var(--line); }
-html .screen .grp .opt.on { box-shadow: none; }
+html .screen .grp .opt.on { box-shadow: none; background: var(--sel-tint); }
 .grp .opt .ico-tile { width: 34px; height: 34px; border-radius: 11px; }
 .grp .opt .ico-tile svg { width: 19px; height: 19px; }
 .opt .radio.box { border-radius: 7px; }
