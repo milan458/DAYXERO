@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>067 Currency</title>
-<meta name="motion" content="The search field and rows arrive on the stagger; at 0.9s US Dollar is picked (ring and tick 250ms, selection haptic) and saves at once with a success haptic: the filled radio is the done state, no toast. The note about prices not converting sits above the search, so it is read before a switch. Typing in search filters rows with a 200ms fade.">
+<meta name="motion" content="The search field and rows arrive on the stagger; at 0.9s US Dollar is picked (ring and tick 250ms, selection haptic) and saves at once with a success haptic: the filled radio is the done state, no toast. The line saying amounts are not converted sits under the title, so it is read before a switch. Typing in search filters rows with a 200ms fade.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -29,8 +29,6 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 .grp .opt + .opt { border-top: 1px solid var(--line); }
 html .screen .grp .opt.on { box-shadow: none; }
 .sec { padding: 24px 4px 10px; font-size: 14px; }
-.note { display: flex; gap: 10px; align-items: flex-start; margin-top: 16px; padding: 12px 14px; border-radius: 16px; background: var(--card-2); }
-.note svg { width: 18px; height: 18px; flex: none; margin-top: 2px; color: var(--muted); }
 .sec { padding: 20px 4px 8px; font-size: 14px; }
 .grp .opt { min-height: 60px; }
 </style>
@@ -38,9 +36,8 @@ html .screen .grp .opt.on { box-shadow: none; }
 <div class="screen" data-ground="reading">
 <div class="nav"><button class="icon-btn" aria-label="Back" data-ic="back"></button></div>
 <div class="scroll"><div class="pad">
-  <div class="hd"><h1 class="t-large" data-a style="--i:0">Currency</h1><p class="t-foot muted" data-a style="--i:1">Used for money kept and the prices you entered.</p></div>
-  <div class="note" data-a style="--i:2"><span data-ic="globe" data-s="18"></span><p class="t-foot">Switching changes the symbol only. Your prices are not converted, so update them in What you use.</p></div>
-  <div class="field ph search" style="margin-top:14px" data-a style="--i:2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>Search currencies</div>
+  <div class="hd"><h1 class="t-large" data-a style="--i:0">Currency</h1><p class="t-foot muted" data-a style="--i:1">Used for money kept and your prices. Switching does not convert the amounts.</p></div>
+  <div class="field ph search" style="margin-top:18px;--i:2" data-a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>Search currencies</div>
   <p class="t-foot muted sec" data-a style="--i:3">Your region</p>
   <div class="grp" data-a style="--i:4">
     <button class="opt" id="usd"><span class="sym">$</span><div class="grow"><div class="t-body rt">US Dollar</div><div class="t-foot">USD</div></div><span class="radio"></span></button>

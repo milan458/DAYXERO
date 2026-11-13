@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>069 Privacy and your data</title>
-<meta name="motion" content="The lead card arrives and Xero settles into it (300ms), then the data list and the coral delete card arrive on the stagger. Delete everything asks for a 2s hold on a confirm sheet (warning haptic), so it can never be a slip of the thumb.">
+<meta name="motion" content="The lead card arrives and Xero settles into it (300ms), then the data list (anonymous usage off by default) and the delete card arrive on the stagger. Delete everything is a quiet coral text button: tapping it opens a confirm sheet (warning haptic) whose coral button must be held for 2s; the fill sweeps left to right, letting go early springs it back (250ms), and only a full hold erases the data (heavy haptic, then the app returns to Welcome).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -22,17 +22,11 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 .lead { display: flex; gap: 12px; align-items: center; padding: 10px 16px 10px 8px; margin-top: 18px; }
 .lead .grow { flex: 1; }
 .list .row.tall { align-items: flex-start; padding-top: 14px; padding-bottom: 14px; }
-.card.flat.del { margin-top: 16px; padding: 20px; display: grid; gap: 10px; background: #FFE9E1; box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--coral) 55%, transparent); }
-[data-theme="dark"] .card.flat.del { background: color-mix(in srgb, var(--coral) 16%, var(--card)); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--coral) 45%, transparent); }
-.del .t-foot { color: #5A2418; }
-[data-theme="dark"] .del .t-foot { color: var(--fg); opacity: .85; }
-.del .t-head { color: var(--danger-fg); }
-.btn.danger { background: var(--danger-fg); color: #FFF8EE; box-shadow: none; }
-[data-theme="dark"] .btn.danger { color: #2A1410; }
-.btn.danger svg { width: 18px; height: 18px; }
-.screen { --danger-fg: #A32F18; }
+.del { margin-top: 12px; padding: 16px 18px 8px; display: grid; gap: 6px; }
+.del .t-foot { color: var(--muted); }
+.dlink { justify-self: start; display: inline-flex; align-items: center; height: 44px; margin-left: -2px; font: 700 16px/1 var(--body); color: var(--danger-fg); }
+.screen { --danger-fg: #B23A1E; }
 [data-theme="dark"] .screen { --danger-fg: #FF9A7A; }
-
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -41,14 +35,14 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
   <div class="hd"><h1 class="t-large" data-a style="--i:0">Privacy and your data</h1><p class="t-foot muted" data-a style="--i:1">No account, no ads, no selling. Here is exactly what happens.</p></div>
   <div class="card lead" data-a style="--i:2"><span id="xr069" data-settle style="--d:300ms"></span><div class="grow"><div class="t-head">It stays on this phone</div><div class="t-foot muted">Your plan, reasons, logs and notes never leave this iPhone.</div></div></div>
   <div class="list" data-a style="--i:3;margin-top:12px">
-    <div class="row tall" ><span class="ico-tile s" data-ic="chart"></span><div class="grow"><div class="t-body rt">Share anonymous usage</div><div class="t-foot muted">Counts like &ldquo;lesson started&rdquo;. Never your words.</div></div><span class="toggle on"></span></div>
+    <div class="row tall" ><span class="ico-tile s" data-ic="chart"></span><div class="grow"><div class="t-body rt">Share anonymous usage</div><div class="t-foot muted">Off unless you turn it on. Counts like &ldquo;lesson started&rdquo;, never your words.</div></div><span class="toggle"></span></div>
     <div class="row " ><span class="ico-tile s" data-ic="share"></span><div class="grow"><div class="t-body rt">Export my data</div><div class="t-foot muted">A file you can keep or move</div></div><span class="chev" data-ic="chev" data-s="18"></span></div>
     <div class="row tall" ><span class="ico-tile s" data-ic="lock"></span><div class="grow"><div class="t-body rt">Face ID lock</div><div class="t-foot muted">Ask for Face ID when DayXero opens</div></div><span class="toggle"></span></div>
   </div>
-  <div class="card flat del" data-a style="--i:4">
-    <div class="t-head">Delete all my data</div>
+  <div class="card del" data-a style="--i:4">
+    <div class="t-body rt">Delete all my data</div>
     <p class="t-foot">Erases your plan, days, badges and notes from this phone. This cannot be undone.</p>
-    <button class="btn small danger" style="margin-top:4px">Delete everything</button>
+    <button class="dlink">Delete everything&hellip;</button>
   </div>
 </div></div>
 </div>

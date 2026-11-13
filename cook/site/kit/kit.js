@@ -134,6 +134,8 @@
     const f = window.DXC && window.DXC[name]; if (!f) return '';
     let svg = f(Object.assign({ animate: !still }, o));
     /* Dark mode: horizon scenes become dusk (dimmer, warmer) so heroes never glare at night. */
+    /* Sparkles are 4-point stars (a "+" read as an add button). */
+    svg = svg.replace(/<path d="M(\d+) (\d+) l0 (\d+) M\d+ \d+ l\d+ 0"><\/path>/g, (m, x, y, l) => { x = +x; y = +y + (+l) / 2; const r = (+l) / 2 + 1; return `<path d="M${x} ${y - r} Q${x} ${y} ${x + r} ${y} Q${x} ${y} ${x} ${y + r} Q${x} ${y} ${x - r} ${y} Q${x} ${y} ${x} ${y - r}Z" fill="#FFC93C" stroke="none"></path>`; });
     /* Dark mode: the sparkles, zzz and breeze marks around characters turn cream so they show on navy. */
     if (name !== 'horizon' && theme === 'dark') svg = svg.replace(/(<g opacity="[^"]*" (?:fill="none" )?stroke=")#24163A/g, '$1#F3E9DE');
     /* Dark mode: horizon scenes are repainted as the midnight-meadow night (navy hills, moon, stars), never a brown overlay. */

@@ -91,3 +91,15 @@ slips-checkin (Sonnet) 8.5; calm-settings (Sonnet) 8.6. Median of section median
 Screens at or above 9.0 by a critic: 039 (9.2), 018, 019, 034, 038, 046, 032 (9.0).
 Kit after round 4: Day Xero badge is the brand mark; 5-slot tab bar with SOS centred and a Calm tab; night badge moon motif;
 dark mornings use a pre-dawn sky; chips fill-only; toggles brand ink.
+
+---
+
+## Round 05 (section loop)
+
+Time: 18:08 to 18:27 | total elapsed 1.6h
+Section scores at real size (Opus / Sonnet): Today-SOS-Program 8.3 / 8.7 (r4 8.5 / 8.7); session 8.4 / 8.7 (r4 8.4 / 8.5).
+Onboarding, slips-checkin: being scored. Lesson-log, calm-settings: fixers running.
+Read: plateau around 8.5; each round fixes the named items and the stricter critic finds a new layer. Systemic repeats are moved
+into the kit as they appear (button lip, "+" sparkles, tab fade, selection style, Day Xero mark, tab bar).
+Kit after round 5: soft button shadow (no grey lip); star sparkles; 170px tab fade; selected chips white + 2px outline; radio
+rings 3:1; waiting Day Xero on a cream coin.
