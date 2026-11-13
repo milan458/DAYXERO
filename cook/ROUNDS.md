@@ -194,3 +194,4 @@ App median about 8.7. Screens at >= 9.0 by a critic: 039 (9.2), 032, 059 (9.1), 
   059 8.6/8.6/8.6=8.6 (8.8) reverted; 064 8.7/8.6/8.8=8.7 (8.5) kept. Reverted files restored from 7b22813 (h1 files in scratchpad).
   Read: even with three critics and one screen per fixer, 8 of 13 hero screens went down. The critics' ceiling for these
   mockups sits around 8.6-8.9; each pass trades one set of named flaws for a new set.
+## Stopped by the user after the hero pass. Final summary in cook/FINAL.md.
