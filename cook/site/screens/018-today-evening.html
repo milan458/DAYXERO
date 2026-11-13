@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>018 Today, evening</title>
-<meta name="motion" content="Evening Today, all slow. The sky fades in (700ms): a dim lavender-peach dusk in light mode, the midnight meadow in dark, with stars twinkling and fireflies drifting; the paper-cut knoll rises 24px into place (900ms) and Glim, awake and waving hello, settles onto it (900ms) then keeps a slow bob. Greeting, waves line and the check-in card arrive with a 90ms stagger; inside it the six done nights fade in left to right (90ms apart, no springs) and Friday's waiting 7-night badge breathes its gold outline (4s in, 6s out). Soft haptic on appear only.">
+<meta name="motion" content="Evening Today, all slow. The sky fades in (700ms): a dim lavender-peach dusk in light mode, the midnight meadow in dark, with stars twinkling and fireflies drifting; the paper-cut knoll rises 24px into place (900ms) and Glim, awake and waving hello, settles onto it (900ms) then keeps a slow bob; the warm pool his belly casts on the knoll fades up with him and breathes with his glow (2.6s loop). Greeting, waves line and the check-in card arrive with a 90ms stagger; inside it the six done nights fade in left to right (90ms apart, no springs) and Friday's waiting 7-night badge (44px) sits in a solid gold ring that breathes (4s in, 6s out). Soft haptic on appear only.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -10,6 +10,11 @@
   .knoll svg { display: block; filter: drop-shadow(0 -3px 6px rgba(4,8,20,.35)); }
   .play .knoll { animation: knoll 900ms var(--settle) 100ms both; }
   @keyframes knoll { from { transform: translateY(24px); opacity: 0; } }
+  .tabbar a { color: color-mix(in srgb, var(--fg) 72%, transparent); }
+  /* Glim's belly light pools warm on the knoll under him */
+  .knoll .pool { transform-box: fill-box; transform-origin: center; }
+  .play .knoll .pool { animation: pool 2.6s ease-in-out infinite; }
+  @keyframes pool { 50% { opacity: .72; transform: scale(.94); } }
   .greet { position: absolute; z-index: 2; left: 0; right: 0; top: 74px; padding: 0 var(--gutter); }
   .greet .sub { margin-top: 8px; color: #E4E6F0; }
   [data-theme="dark"] .greet .sub { color: var(--muted); }
@@ -18,6 +23,7 @@
   .content { position: absolute; left: 0; right: 0; top: 358px; padding: 0 var(--gutter); }
   .ci { padding: 18px 18px 20px; display: grid; gap: 14px; }
   .ci .t-foot { color: var(--muted); }
+  .ci .who { color: #D3D9EA; font-weight: 600; }
   .ci .divider { margin: 0; }
   /* the one progress encoding: seven nights, tonight is the waiting 7-night badge */
   .pips { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; align-items: end; }
@@ -25,14 +31,18 @@
   .pip b { width: 30px; height: 30px; margin: 5px 0; border-radius: 99px; background: var(--fg); color: var(--g); display: grid; place-items: center; }
   .pip b svg { width: 16px; height: 16px; }
   .pip .t-cap { color: var(--muted); font-size: 13px; font-weight: 600; white-space: nowrap; }
-  .pip.tonight .face { position: relative; width: 42px; height: 42px; border-radius: 99px; }
-  .pip.tonight .face::after { content: ""; position: absolute; inset: -4px; border-radius: 99px; box-shadow: inset 0 0 0 2px #FFD37A; opacity: .75; }
+  .pip.tonight .face { position: relative; width: 44px; height: 44px; border-radius: 99px; margin-bottom: -2px; }
+  .pip.tonight .face::before { content: ""; position: absolute; inset: 2px; border-radius: 99px; background: rgba(255,211,122,.12); }
+  .pip.tonight .face svg { position: relative; }
+  .pip.tonight .face::after { content: ""; position: absolute; inset: -4px; border-radius: 99px; box-shadow: inset 0 0 0 2.5px #FFD37A, 0 0 12px rgba(255,211,122,.35); }
   .play .pip.tonight .face::after { animation: breathe2 10s cubic-bezier(.45,0,.55,1) infinite; }
-  @keyframes breathe2 { 0% { transform: scale(.94); opacity: .45; } 40% { transform: scale(1.06); opacity: .9; } 100% { transform: scale(.94); opacity: .45; } }
+  @keyframes breathe2 { 0% { transform: scale(.96); opacity: .7; } 40% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(.96); opacity: .7; } }
   .pip.tonight .t-cap { color: #FFD37A; font-weight: 800; }
   .ci .note b { color: var(--fg); font-weight: 700; }
   .ci .btn { margin-top: 2px; }
   .ci .btn svg { width: 18px; height: 18px; }
+  /* dark: a softer, dimmer cream so the one button does not glare at night */
+  [data-theme="dark"] .ci .btn { background: #D8CCB2; box-shadow: 0 4px 14px rgba(0,0,0,.35); }
 </style>
 </head><body>
 <div class="screen" data-ground="night" data-status="on-art">
@@ -40,6 +50,8 @@
   <div class="knoll" aria-hidden="true"><svg width="390" height="110" viewBox="0 0 390 110">
     <path d="M-10 64 C40 40 90 30 140 30 C196 30 250 44 300 70 C330 86 360 96 400 98 V110 H-10Z" fill="var(--k1)"/>
     <path d="M-10 64 C40 40 90 30 140 30 C196 30 250 44 300 70 C330 86 360 96 400 98" fill="none" stroke="var(--rim)" stroke-width="1.5"/>
+    <defs><radialGradient id="pool18"><stop offset="0" stop-color="#FFD37A" stop-opacity=".55"/><stop offset=".55" stop-color="#FFC36B" stop-opacity=".18"/><stop offset="1" stop-color="#FFC36B" stop-opacity="0"/></radialGradient></defs>
+    <ellipse class="pool" cx="148" cy="40" rx="96" ry="26" fill="url(#pool18)"/>
     <path d="M-10 92 C60 78 130 76 200 84 C260 90 330 88 400 76 V110 H-10Z" fill="var(--k2)" opacity=".55"/>
   </svg></div>
   <div class="glim" data-settle style="--d:200ms"><div class="bob" id="glim"></div></div>
@@ -52,7 +64,7 @@
   <div class="content">
     <div class="card ci" data-a style="--i:4">
       <div>
-        <p class="t-foot">With Glim &middot; 1 min</p>
+        <p class="t-foot who">With Glim &middot; 1 min</p>
         <p class="t-title" style="margin-top:4px">How did today go?</p>
       </div>
       <div class="divider"></div>
@@ -87,7 +99,7 @@
   $('#glim').innerHTML = DX.char('glim', { mood: 'hello', size: 180 });
   const dn = ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu'];
   $('#pips').innerHTML = dn.map((d, i) => `<div class="pip" data-fade style="--d:${500 + i * 90}ms"><b>${DX.icon('check', { size: 16, w: 3 })}</b><span class="t-cap">${d}</span></div>`).join('')
-    + `<div class="pip tonight" data-fade style="--d:1100ms"><div class="face">${DX.badge({ kind: 'night', n: 7, state: 'next', size: 42, bare: true, label: '7 nights' })}</div><span class="t-cap">Fri</span></div>`;
+    + `<div class="pip tonight" data-fade style="--d:1100ms"><div class="face">${DX.badge({ kind: 'night', n: 7, state: 'next', size: 44, bare: true, label: '7 nights' })}</div><span class="t-cap">Fri</span></div>`;
   $('#go').innerHTML = DX.icon('moon', { w: 2.4 }) + 'Check in';
   $('.screen').insertAdjacentHTML('beforeend', DX.tabbar('today'));
 </script>

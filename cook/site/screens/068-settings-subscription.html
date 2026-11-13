@@ -1,38 +1,26 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>068 Subscription</title>
-<meta name="motion" content="The plan card arrives and the price counts up to $39.99; the What you get card follows: its dawn (pre-dawn in dark) lifts the sun and drifts its clouds while Xero settles onto the near hill (450ms), then the four perks fade in one under another, 90ms apart. Manage in the App Store (secondary) opens the App Store subscription sheet; Restore purchases shows a small spinner, then a check.">
+<meta name="motion" content="The plan card arrives with its own scene: the sun lifts behind the far hill (light: dawn; dark: a bright pre-dawn sun), the path draws up the near hill (900ms) and Xero settles on the top holding his ticket (450ms, the ticket tips once as he lands); then the price counts up to $39.99 and the Your plan includes rows fade in one under another, 90ms apart. Manage in the App Store (secondary) opens the App Store subscription sheet; Restore purchases shows a small spinner, then a check.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-/* screen-local helpers: icon fill, section labels, small icon tiles, bottom toast */
 .hd { display: grid; gap: 6px; padding-top: 58px; }
-.sec { padding: 22px 4px 8px; color: var(--muted); }
-.rt { font-weight: 600; }
-.ico-tile.s { width: 34px; height: 34px; border-radius: 11px; }
-.ico-tile.s svg { width: 19px; height: 19px; }
-.val { color: var(--muted); font: 500 15px/1.2 var(--body); white-space: nowrap; }
-.list > .row.tap { min-height: 56px; }
-.toast.b { top: auto; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
-.toast.b.in { opacity: 1; transform: none; }
-.toast.b .ck { flex: none; }
-.opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
-html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--sel) 72%, transparent); }
-.pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
-
-.plan { margin-top: 16px; padding: 16px 20px 18px; display: grid; gap: 4px; }
-.plan .price { display: flex; align-items: baseline; gap: 6px; margin-top: 6px; }
+.ico-tile.apr { background: #FFE6D0; color: #A8481F; } .ico-tile.sky { background: #E1E7F8; color: #2C468E; } .ico-tile.mint { background: #DDF1E4; color: #22704A; }
+[data-theme="dark"] .ico-tile.apr { background: rgba(255,195,138,.16); color: #FFC38A; } [data-theme="dark"] .ico-tile.sky { background: rgba(160,186,255,.15); color: #B4C6FF; } [data-theme="dark"] .ico-tile.mint { background: rgba(159,227,188,.13); color: #9FE3BC; }
+.plan { margin-top: 16px; padding: 0; overflow: hidden; }
+.plan .art { position: relative; height: 128px; overflow: hidden; }
+.plan .art > svg { position: absolute; inset: 0; display: block; }
+.plan .art .who { position: absolute; left: 214px; top: 12px; width: 84px; height: 84px; }
+.plan .art .tk { position: absolute; left: 66px; top: 50px; transform: rotate(-14deg); transform-origin: 10% 50%; }
+.plan .body { padding: 14px 20px 18px; display: grid; gap: 4px; }
+.status { justify-self: start; display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; border-radius: 99px; background: var(--card-2); color: var(--fg); }
+.status i { width: 8px; height: 8px; border-radius: 99px; background: #2FA36B; }
+.plan .price { display: flex; align-items: baseline; gap: 6px; margin-top: 2px; }
 .plan .price .num { font-size: 36px; line-height: 1; }
-.status { display: inline-flex; align-items: center; gap: 6px; color: var(--tick); }
-.status i { width: 8px; height: 8px; border-radius: 99px; background: currentColor; }
-.get { margin-top: 12px; padding: 0; overflow: hidden; }
-.get .art { position: relative; height: 96px; overflow: hidden; }
-.get .art > svg, .get .art .hill { position: absolute; inset: 0; }
-.get .art .xs { position: absolute; left: 236px; top: 16px; }
-.get .body { padding: 14px 18px 16px; display: grid; gap: 8px; }
-.get .it { display: flex; align-items: center; gap: 12px; min-height: 30px; }
+.get { margin-top: 12px; padding: 14px 18px 16px; display: grid; gap: 8px; }
+.get .it { display: flex; align-items: center; gap: 12px; min-height: 32px; }
 .get .it .ico-tile { width: 30px; height: 30px; border-radius: 10px; }
 .get .it .ico-tile svg { width: 17px; height: 17px; }
-.get .it .t-foot { color: var(--fg); }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -40,31 +28,43 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 <div class="scroll"><div class="pad">
   <div class="hd"><h1 class="t-large" data-a style="--i:0">Subscription</h1><p class="t-foot muted" data-a style="--i:1">Billed and renewed through your Apple ID.</p></div>
   <div class="card plan" data-a style="--i:2">
-    <span class="status t-cap"><i></i>Active</span>
-    <div class="t-title" style="margin-top:4px">DayXero Yearly</div>
-    <div class="price"><span class="num" data-count="39.99" data-dec="2" data-prefix="$">$39.99</span><span class="t-head">a year</span></div>
-    <p class="t-foot muted">About $3.33 a month. Renews Nov 6, 2027.</p>
+    <div class="art" id="art"><div class="who" data-settle style="--d:450ms"><span id="xr"></span><span class="tk" id="tk"></span></div></div>
+    <div class="body">
+      <span class="status t-cap"><i></i>Active</span>
+      <div class="t-title" style="margin-top:6px">DayXero Yearly</div>
+      <div class="price"><span class="num" data-count="39.99" data-dec="2" data-prefix="$">$39.99</span><span class="t-head">a year</span></div>
+      <p class="t-foot muted">Renews Fri, Nov 6, 2027</p>
+    </div>
   </div>
   <div class="card get" data-a style="--i:3">
-    <div class="art" id="get"><div class="hill" id="hill"></div><div class="xs" id="xr" data-settle style="--d:450ms"></div></div>
-    <div class="body">
-      <div class="t-head" style="margin-bottom:2px">What you get</div>
-      <div class="it" data-fade style="--d:500ms"><span class="ico-tile" data-ic="sun"></span><span class="t-foot">Your prep week and your plan</span></div>
-      <div class="it" data-fade style="--d:590ms"><span class="ico-tile" data-ic="wave"></span><span class="t-foot">Craving SOS, any time</span></div>
-      <div class="it" data-fade style="--d:680ms"><span class="ico-tile" data-ic="note"></span><span class="t-foot">Daily lessons and evening check-ins</span></div>
-      <div class="it" data-fade style="--d:770ms"><span class="ico-tile" data-ic="medal"></span><span class="t-foot">Badges and money kept</span></div>
-    </div>
+    <div class="t-head" style="margin-bottom:2px">Your plan includes</div>
+    <div class="it" data-fade style="--d:500ms"><span class="ico-tile apr" data-ic="sun"></span><span class="t-foot">Your prep week and your plan</span></div>
+    <div class="it" data-fade style="--d:590ms"><span class="ico-tile sky" data-ic="wave"></span><span class="t-foot">Craving SOS, any time</span></div>
+    <div class="it" data-fade style="--d:680ms"><span class="ico-tile mint" data-ic="note"></span><span class="t-foot">Daily lessons and evening check-ins</span></div>
+    <div class="it" data-fade style="--d:770ms"><span class="ico-tile apr" data-ic="medal"></span><span class="t-foot">Badges and money kept</span></div>
   </div>
 </div></div>
 <div class="dock"><button class="btn ghost" data-a style="--i:4">Manage in the App Store</button><button class="link" data-a style="--i:5">Restore purchases</button></div>
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
-const dark = DX.theme === 'dark';
-/* Same scene in both modes: dawn in light, the kit's pre-dawn in dark; Xero stands on the near hill beside the sun. */
-document.getElementById('get').insertAdjacentHTML('afterbegin', DX.char('horizon', { scene: 'dawn', w: 346, h: 96, clarity: 90, fit: 'xMidYMid slice' }));
-document.getElementById('hill').innerHTML = `<svg width="346" height="96" viewBox="0 0 346 96" aria-hidden="true"><defs><linearGradient id="sh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${dark ? '#1A2846' : '#FFA27A'}"/><stop offset="1" stop-color="${dark ? '#0F1A31' : '#F0794F'}"/></linearGradient></defs>
-  <path d="M0 96 V88 C80 86 170 82 230 76 C262 73 300 76 346 82 V96Z" fill="url(#sh)"/></svg>`;
-document.getElementById('xr').innerHTML = DX.char('xero', { mood: 'hello', size: 62 });
+const dark = DX.theme === 'dark', W = 346, H = 128;
+/* Its own scene: a path climbing a single near hill to Xero, who stands on the top holding his ticket; the sun rises behind the far hill on the left.
+   Light: dawn. Dark: pre-dawn with a bright sun. */
+const c = dark
+  ? { sky: ['#14214A', '#3B4A80', '#D9967A'], glow: '#FFD08A', sun: '#FFDB8A', far: '#2E3B6E', near: '#1F2A55', path: '#F3D9B4', star: 1 }
+  : { sky: ['#FFC9A0', '#FFE0C2', '#FFF0DD'], glow: '#FFF3C4', sun: '#FFD966', far: '#FFBE8F', near: '#FF9C6E', path: '#FFF4E4', star: 0 };
+document.getElementById('art').insertAdjacentHTML('afterbegin', `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" aria-hidden="true"><defs>
+  <linearGradient id="ssk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c.sky[0]}"/><stop offset=".6" stop-color="${c.sky[1]}"/><stop offset="1" stop-color="${c.sky[2]}"/></linearGradient>
+  <radialGradient id="ssg"><stop offset="0" stop-color="${c.glow}" stop-opacity="${dark ? .8 : .9}"/><stop offset="1" stop-color="${c.glow}" stop-opacity="0"/></radialGradient></defs>
+  <rect width="${W}" height="${H}" fill="url(#ssk)"/>
+  ${c.star ? [[30, 18], [120, 12], [178, 30], [316, 20], [282, 44]].map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="${i % 2 ? 1.1 : 1.5}" fill="#fff" opacity="${i % 2 ? .55 : .9}"/>`).join('') : `<g fill="#FFFFFF" opacity=".9"><ellipse cx="300" cy="28" rx="24" ry="7"/><ellipse cx="290" cy="23" rx="12" ry="7"/></g>`}
+  <circle cx="86" cy="96" r="64" fill="url(#ssg)"/><circle cx="86" cy="96" r="${dark ? 27 : 25}" fill="${c.sun}"/>
+  <path d="M0 108 C40 98 90 96 140 104 C170 109 190 112 210 112 V128 H0Z" fill="${c.far}"/>
+  <path d="M110 128 C150 120 196 92 256 92 C300 92 330 104 346 112 V128Z" fill="${c.near}"/>
+  <path d="M150 128 C178 122 200 112 220 104 C230 100 240 97 252 95" fill="none" stroke="${c.path}" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 7" class="draw" style="--len:140;--dur:900ms;--d:300ms"/></svg>`);
+document.getElementById('xr').innerHTML = DX.char('xero', { mood: 'hello', size: 84 });
+/* The ticket in his right hand: cream, notched, one coral star. */
+document.getElementById('tk').innerHTML = `<svg width="30" height="20" viewBox="0 0 30 20" aria-hidden="true"><path d="M2 2 H28 V7 A3 3 0 0 0 28 13 V18 H2 V13 A3 3 0 0 0 2 7Z" fill="#FFF8EE" stroke="#E85A3E" stroke-width="1.6" stroke-linejoin="round"/><path d="M10 5.5 l1.3 2.7 3 .4 -2.2 2 .5 2.9 -2.6 -1.4 -2.6 1.4 .5 -2.9 -2.2 -2 3 -.4z" fill="#FF7A55"/><path d="M18 8h6M18 12h4" stroke="#E85A3E" stroke-width="1.6" stroke-linecap="round"/></svg>`;
 </script>
 </body></html>
