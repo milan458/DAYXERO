@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>020 Craving passed</title>
-<meta name="motion" content="The completion beat, gentle. The pacer ring from SOS closes: a cream arc draws round from the right of the top gap to its left (900ms), and in the gap it leaves, the check seals it: a cream knockout disc fades in with the sun disc inside it (500ms, at 900ms) and the ink tick draws (420ms). Jelli settles in cheering (900ms, one soft hop), the same silhouette as on SOS (arms down, no sparkles). Title and line fade up and the yellow underline under 'out' draws in. At 900ms the wave count rolls from 22 to 23 while a '+1' floats up beside it (spring, the only one on the screen). At 1.3s the wave medallion (the kit wave badge with a cream core and gold rim, no numeral, so 23 leads) fades in (700ms, no spring) and its solid progress ring extends from 22 to 23 of 25 (400ms), leaving a short gap of two that matches '2 more to your 25-wave badge'. The button and the quiet 'What set it off?' text button arrive last (it opens the optional trigger sheet). Success haptic with the +1.">
+<meta name="motion" content="The completion beat, gentle. The pacer ring from SOS closes: a cream arc draws round from the right of the top gap to its left (900ms), and in the gap it leaves a cream knockout fades in (500ms, at 900ms) with a small sun inside: its disc grows in (700ms, at 1.15s) and its eight short rays open out (600ms, at 1.45s). Jelli settles in cheering (900ms, one soft hop), the same silhouette as on SOS (arms down, no sparkles). Title and line fade up and the yellow underline under 'out' draws in. The stats sit centred on the sea with no card: at 1.3s the wave medallion (the kit wave badge with a cream core and gold rim, no numeral) fades in (700ms, no spring) and its gold progress ring on a solid faint track extends from 22 to 23 of 25 (400ms), leaving a short gap of two that matches '2 more to your 25-wave badge'; under it the count rolls from 22 to 23 (from 900ms) while a '+1' floats up beside it (spring, the only one on the screen). The button and the quiet 'What set it off?' text button arrive last (it opens the optional trigger sheet). Success haptic with the +1.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -9,11 +9,15 @@
   .hero .disc { position: relative; width: 232px; height: 232px; display: grid; place-items: center; }
   .hero .disc svg.pacer { position: absolute; inset: 0; overflow: visible; }
   .hero .closed { filter: drop-shadow(0 0 8px rgba(255,248,238,.35)); }
-  /* the check is drawn on the ring itself: a sun disc where the arc closes, an ink tick */
-  /* the check sits in the ring's top gap on a cream knockout, clear of both arc ends */
+  /* the ring's top gap holds a cream knockout with a small sun inside: the day comes back once the wave has passed */
   .hero .ck { position: absolute; left: 116px; top: 3px; width: 52px; height: 52px; margin: -26px 0 0 -26px; filter: drop-shadow(0 4px 10px rgba(6,16,50,.3)); }
-  .play .hero .ck circle { animation: ckin 500ms var(--ease) 900ms both; }
+  .hero .ck .sun, .hero .ck .ray { transform-box: view-box; transform-origin: 26px 26px; }
+  .play .hero .ck .ko { animation: ckin 500ms var(--ease) 900ms both; }
+  .play .hero .ck .sun { animation: sunin 700ms var(--ease) 1150ms both; }
+  .play .hero .ck .ray { animation: rayin 600ms var(--ease) 1450ms both; }
   @keyframes ckin { from { opacity: 0; } }
+  @keyframes sunin { from { opacity: 0; transform: scale(.4); } }
+  @keyframes rayin { from { opacity: 0; transform: scale(.7); } }
   /* a stronger hand-drawn underline under 'out' */
   .play .txt .mark { animation: ul 700ms var(--ease) 700ms both; }
   @keyframes ul { from { background-size: 0% 15px; } }
@@ -22,25 +26,24 @@
   .txt { position: absolute; left: 0; right: 0; top: 322px; padding: 0 20px; text-align: center; }
   .txt .t-body { margin-top: 8px; color: var(--muted); }
   .txt .t-body span { display: block; white-space: nowrap; }
-  .stack2 { position: absolute; left: 0; right: 0; top: 446px; padding: 0 var(--gutter); }
-  .waves { display: flex; align-items: center; gap: 18px; padding: 18px 18px 18px 16px; }
-  /* on the lit sea the card is a frosted lift, not a darker patch */
-  .waves { background: rgba(255,248,238,.12); box-shadow: inset 0 0 0 1px rgba(255,248,238,.2); }
-  [data-theme="dark"] .waves { background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
-  .waves .grow { flex: 1; min-width: 0; }
-  .waves .big { display: flex; align-items: flex-start; gap: 6px; }
-  .waves .big .num { font-size: 40px; line-height: 1; letter-spacing: -1.2px; }
-  .waves .plus { font: 800 16px/1 var(--display); color: var(--sun); margin-top: 2px; }
-  .waves .t-foot { color: var(--muted); margin-top: 4px; }
-  .waves .next { color: var(--fg); font-weight: 600; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
+  /* the stats, centred on the sea with no slab: the medallion, then 23 under it */
+  .stack2 { position: absolute; left: 0; right: 0; top: 442px; padding: 0 var(--gutter); }
+  .waves { display: grid; justify-items: center; text-align: center; }
+  .waves .big { position: relative; margin-top: 8px; }
+  .waves .big .num { font-size: 44px; line-height: 1; letter-spacing: -1.4px; }
+  .waves .plus { position: absolute; left: 100%; top: 0; margin-left: 6px; font: 800 16px/1 var(--display); color: var(--sun); }
+  .waves .t-foot { color: var(--muted); margin-top: 6px; }
+  .waves .next { color: var(--fg); font-weight: 600; margin-top: 2px; }
   .waves .medal { position: relative; width: 124px; height: 124px; flex: none; }
   .waves .medal .ticks { position: absolute; inset: 0; overflow: visible; }
   .waves .medal .mm { position: absolute; inset: 15px; filter: drop-shadow(0 3px 6px rgba(6,16,50,.35)); }
-  /* one solid progress ring round the medallion: 23 of 25 */
+  /* one solid gold progress ring round the medallion on a solid faint track: 23 of 25 */
   .waves .medal .arc23 { stroke-dasharray: 364.4; stroke-dashoffset: 29.2; }
   .play .waves .medal .arc23 { animation: lit 400ms var(--ease) 1700ms both; }
   @keyframes lit { from { stroke-dashoffset: 43.7; } }
-  .dock .why { display: flex; justify-content: center; margin-top: 2px; }
+  /* the dock sits lower, so there is no dead band under the quiet text button */
+  .dock { gap: 4px; padding-top: 30px; padding-bottom: 22px; }
+  .dock .why { display: flex; justify-content: center; }
   .dock .why .link { height: 44px; padding: 0 16px; color: var(--fg); opacity: .92; font: 600 16px/1 var(--body); }
 </style>
 </head><body>
@@ -53,10 +56,10 @@
         <g class="closed"><circle class="draw" cx="116" cy="116" r="113" fill="none" stroke="#FFF8EE" stroke-width="3" stroke-linecap="round" transform="rotate(-71 116 116)" style="--len:635;--dur:900ms"/></g>
       </svg>
       <div id="jelli" data-settle style="--d:250ms"></div>
-      <svg class="ck" viewBox="0 0 52 52" aria-label="Done">
-        <circle cx="26" cy="26" r="24" fill="#FFF8EE"/>
-        <circle cx="26" cy="26" r="18.5" fill="#FFD966"/>
-        <path d="M17.5 26.5l5.5 5.5 11.5-12" fill="none" stroke="#1E1A3A" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" class="draw" style="--len:28;--d:1150ms;--dur:420ms"/>
+      <svg class="ck" viewBox="0 0 52 52" aria-label="Passed">
+        <circle class="ko" cx="26" cy="26" r="24" fill="#FFF8EE"/>
+        <g class="ray" fill="none" stroke="#F5B83D" stroke-width="2.6" stroke-linecap="round" id="rays"></g>
+        <circle class="sun" cx="26" cy="26" r="8.5" fill="#FFC93C"/>
       </svg>
     </div>
   </div>
@@ -67,13 +70,11 @@
   </div>
 
   <div class="stack2">
-    <div class="card waves" data-a style="--i:4">
+    <div class="waves" data-a style="--i:4">
       <div class="medal" data-fade style="--d:1300ms" aria-label="23 of 25 waves toward the 25-wave badge"><svg class="ticks" id="ticks" viewBox="0 0 124 124"></svg><div class="mm" id="bd"></div></div>
-      <div class="grow">
-        <div class="big"><span class="num" data-count="23" data-from="22" data-delay="900" data-dur="500">23</span><span class="plus float-up" style="--d:900ms">+1</span></div>
-        <p class="t-foot">waves ridden out<br>3 today</p>
-        <p class="t-foot next">2 more to your 25&#8209;wave badge</p>
-      </div>
+      <div class="big"><span class="num" data-count="23" data-from="22" data-delay="900" data-dur="500">23</span><span class="plus float-up" style="--d:900ms">+1</span></div>
+      <p class="t-foot">waves ridden out &middot; 3 today</p>
+      <p class="t-foot next">2 more to your 25&#8209;wave badge</p>
     </div>
   </div>
 
@@ -94,8 +95,11 @@
     .replace('r="47" fill="#1D3A9E"', 'r="47" fill="#F5B83D"').replace('r="39" fill="#2A52DB"', 'r="39" fill="#FFF3DC"')
     .replace('fill="#5C7FF0"', 'fill="#6F93F2"').replace('fill="#1D3A9E" opacity=".7"', 'fill="#2A52DB" opacity=".85"');
   /* the 23-of-25 ring: one solid track, one solid cream arc with a short gap of two still to ride */
-  $('#ticks').innerHTML = `<circle cx="62" cy="62" r="58" fill="none" stroke="#FFF8EE" stroke-opacity=".22" stroke-width="6"/>
-    <circle class="arc23" cx="62" cy="62" r="58" fill="none" stroke="#FFF8EE" stroke-width="6" stroke-linecap="round" transform="rotate(-90 62 62)"/>`;
+  $('#ticks').innerHTML = `<circle cx="62" cy="62" r="58" fill="none" stroke="#FFF8EE" stroke-opacity=".2" stroke-width="6"/>
+    <circle class="arc23" cx="62" cy="62" r="58" fill="none" stroke="#FFD966" stroke-width="6" stroke-linecap="round" transform="rotate(-90 62 62)"/>`;
+  /* the small sun's eight short rays */
+  $('#rays').innerHTML = Array.from({ length: 8 }, (_, i) => { const a = i * Math.PI / 4, c = Math.cos(a), sn = Math.sin(a);
+    return `<path d="M${(26 + 12 * c).toFixed(2)} ${(26 + 12 * sn).toFixed(2)} L${(26 + 16.5 * c).toFixed(2)} ${(26 + 16.5 * sn).toFixed(2)}"/>`; }).join('');
   DX.after(2700, () => { $('#jelli').innerHTML = jelli({ animate: false }); });
 </script>
 </body></html>

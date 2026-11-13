@@ -21,7 +21,7 @@
 .prof { display: flex; align-items: center; gap: 14px; padding: 12px 14px 12px 12px; margin-top: 2px; }
 .prof .scene { position: relative; width: 72px; height: 72px; border-radius: 18px; overflow: hidden; flex: none; }
 .prof .scene > svg { position: absolute; inset: 0; display: block; }
-.prof .scene .xs { position: absolute; left: 13px; top: 13px; }
+.prof .scene .xs { position: absolute; left: 8px; top: 13px; }
 .prof .grow { flex: 1; min-width: 0; }
 .prof .medal .badge { gap: 3px; }
 .prof .medal .t-cap { color: var(--fg); font-weight: 700; }
@@ -72,10 +72,10 @@ const dark = DX.theme === 'dark';
 /* The profile window: dawn in light, pre-dawn in dark, one smooth radial glow (no rings), no clouds; Xero stands on the hill. */
 document.getElementById('scene').insertAdjacentHTML('afterbegin', `<svg width="72" height="72" viewBox="0 0 72 72" aria-hidden="true"><defs>
   <linearGradient id="psk" x1="0" y1="0" x2="0" y2="1">${dark ? '<stop offset="0" stop-color="#0D1630"/><stop offset=".6" stop-color="#22325A"/><stop offset="1" stop-color="#3C4A78"/>' : '<stop offset="0" stop-color="#FFE6BF"/><stop offset="1" stop-color="#FFC994"/>'}</linearGradient>
-  <radialGradient id="pgl" cx="54" cy="44" r="34" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${dark ? '#FFC27A' : '#FFF4D2'}" stop-opacity="${dark ? .55 : .9}"/><stop offset=".35" stop-color="${dark ? '#FFB06A' : '#FFEFC6'}" stop-opacity="${dark ? .24 : .5}"/><stop offset=".7" stop-color="${dark ? '#FFB06A' : '#FFEFC6'}" stop-opacity="${dark ? .07 : .15}"/><stop offset="1" stop-color="${dark ? '#FFB06A' : '#FFEFC6'}" stop-opacity="0"/></radialGradient>
+  <radialGradient id="pgl" cx="55" cy="22" r="34" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${dark ? '#FFC27A' : '#FFF4D2'}" stop-opacity="${dark ? .55 : .9}"/><stop offset=".35" stop-color="${dark ? '#FFB06A' : '#FFEFC6'}" stop-opacity="${dark ? .24 : .5}"/><stop offset=".7" stop-color="${dark ? '#FFB06A' : '#FFEFC6'}" stop-opacity="${dark ? .07 : .15}"/><stop offset="1" stop-color="${dark ? '#FFB06A' : '#FFEFC6'}" stop-opacity="0"/></radialGradient>
   <linearGradient id="phl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${dark ? '#24365E' : '#FFA27A'}"/><stop offset="1" stop-color="${dark ? '#16243F' : '#F0794F'}"/></linearGradient></defs>
   <rect width="72" height="72" fill="url(#psk)"/>${dark ? '<circle cx="12" cy="12" r=".9" fill="#fff" opacity=".8"/><circle cx="34" cy="7" r=".7" fill="#fff" opacity=".5"/><circle cx="64" cy="14" r=".9" fill="#fff" opacity=".7"/>' : ''}
-  <rect width="72" height="72" fill="url(#pgl)"/><circle cx="54" cy="44" r="9" fill="${dark ? '#FFC27A' : '#FFD966'}"/>
+  <rect width="72" height="72" fill="url(#pgl)"/><circle cx="55" cy="22" r="8.5" fill="${dark ? '#FFC27A' : '#FFD966'}"/>
   <path d="M0 72 V60 C16 56 30 54 42 55 C54 56 64 59 72 62 V72Z" fill="url(#phl)"/></svg>`);
 document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 46 });
 document.getElementById('bdg').innerHTML = DX.badge({ kind: 'day', n: 7, state: 'earned', size: 44, label: 'Day 7' });

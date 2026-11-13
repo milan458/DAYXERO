@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>062 Reminders</title>
-<meta name="motion" content="Groups arrive on the stagger; at 1.0s the Craving forecast toggle slides on (300ms settle, light haptic); the toggle is its own done state (no toast). That makes three, so the Daily lesson toggle (only the toggle) dims to its disabled state (300ms) and its line cross-fades to the reason, which stays at full muted colour. Tapping the disabled toggle gives a gentle shake and a warning haptic. Each time pill opens a wheel picker sheet; the new time settles into the pill.">
+<meta name="motion" content="Groups arrive on the stagger; at 1.0s the Craving forecast toggle slides on (300ms settle, light haptic); the toggle is its own done state (no toast). That makes three: the small used count beside Every day ticks from 2 of 3 to 3 of 3 used (its third dot fills, 250ms), and the Daily lesson toggle (only the toggle) dims to 40% (300ms) as its line cross-fades to the reason, which stays at full muted colour. Every toggle sits level with its row's first line. Tapping the disabled toggle gives a gentle shake and a warning haptic. Each time pill (outlined, with a small chevron) opens a wheel picker sheet; the new time settles into the pill.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -18,11 +18,20 @@
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
 .list > .row { min-height: 66px; padding-top: 12px; padding-bottom: 12px; }
-.list > .row.timed { align-items: flex-start; }
-.list > .row.timed .ico-tile, .list > .row.timed .toggle { margin-top: 2px; }
+/* Every toggle row aligns to its first line: the icon tile and the toggle centre on the title's line box (24px). */
+.list > .row.tg { align-items: flex-start; }
+.list > .row.tg .ico-tile { margin-top: -5px; }
+.list > .row.tg .toggle { margin-top: -4px; }
 .sec { padding: 24px 4px 10px; font-size: 14px; }
-.time { display: inline-flex; align-items: center; height: 32px; padding: 0 11px; margin-top: 6px; border-radius: 10px; background: var(--card-2); font: 600 15px/1 var(--body); color: var(--fg); font-variant-numeric: tabular-nums; }
-.toggle.dis { opacity: .35; }
+.sec.hasuse { display: flex; align-items: center; justify-content: space-between; }
+.used { display: inline-flex; align-items: center; gap: 6px; font: 600 13px/1 var(--body); color: var(--muted); }
+.used .dots { display: inline-flex; gap: 3px; }
+.used .dots i { width: 7px; height: 7px; border-radius: 99px; box-shadow: inset 0 0 0 1.5px currentColor; transition: background .25s var(--ease); }
+.used .dots i.on { background: currentColor; }
+/* Time pills read as tappable: an outline and a small chevron. */
+.time { display: inline-flex; align-items: center; gap: 4px; height: 32px; padding: 0 8px 0 11px; margin-top: 6px; border-radius: 10px; background: var(--card-2); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--fg) 18%, transparent); font: 600 15px/1 var(--body); color: var(--fg); font-variant-numeric: tabular-nums; }
+.time svg { width: 14px; height: 14px; color: var(--muted); }
+.toggle.dis { opacity: .4; }
 .row .ico-tile, .row .rt, .toggle { transition: opacity .3s var(--ease); }
 .capnote { transition: opacity .3s var(--ease); }
 </style>
@@ -31,15 +40,15 @@
 <div class="nav"><button class="icon-btn" aria-label="Back" data-ic="back"></button></div>
 <div class="scroll"><div class="pad">
   <div class="hd"><h1 class="t-large" data-a style="--i:0">Reminders</h1><p class="t-foot muted" data-a style="--i:1">Gentle nudges, at most three a day.</p></div>
-  <p class="t-foot muted sec" data-a style="--i:2">Every day</p>
+  <p class="t-foot muted sec hasuse" data-a style="--i:2"><span>Every day</span><span class="used" id="used" aria-label="3 of 3 reminders used"><span class="dots"><i class="on"></i><i class="on"></i><i id="d3"></i></span><span id="usedt">2 of 3 used</span></span></p>
   <div class="list" data-a style="--i:3">
-    <div class="row timed"><span class="ico-tile s" data-ic="sun"></span><div class="grow"><div class="t-body rt">Morning pledge</div><button class="time" aria-label="Change time, 8:00 AM">8:00 AM</button></div><span class="toggle on"></span></div>
-    <div class="row timed"><span class="ico-tile s" data-ic="moon"></span><div class="grow"><div class="t-body rt">Evening check-in</div><button class="time" aria-label="Change time, 9:00 PM">9:00 PM</button></div><span class="toggle on"></span></div>
-    <div class="row" id="lesson"><span class="ico-tile s" data-ic="note"></span><div class="grow"><div class="t-body rt">Daily lesson</div><div class="t-foot muted capnote" id="lnote">Off. You will find it on Today</div></div><span class="toggle" id="lt" aria-disabled="false"></span></div>
+    <div class="row tg"><span class="ico-tile s" data-ic="sun"></span><div class="grow"><div class="t-body rt">Morning pledge</div><button class="time" aria-label="Change time, 8:00 AM">8:00 AM<span data-ic="down" data-s="14" data-w="2.6"></span></button></div><span class="toggle on"></span></div>
+    <div class="row tg"><span class="ico-tile s" data-ic="moon"></span><div class="grow"><div class="t-body rt">Evening check-in</div><button class="time" aria-label="Change time, 9:00 PM">9:00 PM<span data-ic="down" data-s="14" data-w="2.6"></span></button></div><span class="toggle on"></span></div>
+    <div class="row tg" id="lesson"><span class="ico-tile s" data-ic="note"></span><div class="grow"><div class="t-body rt">Daily lesson</div><div class="t-foot muted capnote" id="lnote">Off. You will find it on Today</div></div><span class="toggle" id="lt" aria-disabled="false"></span></div>
   </div>
   <p class="t-foot muted sec" data-a style="--i:4">Before a craving</p>
   <div class="list" data-a style="--i:5">
-    <div class="row"><span class="ico-tile s" data-ic="wave"></span><div class="grow"><div class="t-body rt">Craving forecast</div><div class="t-foot muted">Before coffee and stress</div></div><span class="toggle" id="fc"></span></div>
+    <div class="row tg"><span class="ico-tile s" data-ic="wave"></span><div class="grow"><div class="t-body rt">Craving forecast</div><div class="t-foot muted">Before coffee and stress</div></div><span class="toggle" id="fc"></span></div>
   </div>
   <p class="t-foot muted sec" data-a style="--i:6">Do not disturb</p>
   <div class="list" data-a style="--i:7">
@@ -53,7 +62,7 @@ document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.da
 const fc = document.getElementById('fc'), lt = document.getElementById('lt'), lesson = document.getElementById('lesson'), lnote = document.getElementById('lnote');
 /* Forecast goes on: that is three, so Daily lesson is capped (disabled toggle, the reason in its own row). */
 DX.beat(1000, () => {
-  fc.classList.add('on');
+  fc.classList.add('on'); document.getElementById('d3').classList.add('on'); document.getElementById('usedt').textContent = '3 of 3 used';
   lt.classList.add('dis'); lt.setAttribute('aria-disabled', 'true'); lesson.classList.add('capped');
   lnote.style.opacity = 0; setTimeout(() => { lnote.textContent = 'Three is the daily limit. Turn one off to use this.'; lnote.style.opacity = 1; }, DX.still ? 0 : 300);
 });

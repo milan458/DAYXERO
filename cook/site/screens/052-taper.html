@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>052 Pouch taper</title>
-<meta name="motion" content="Title and lead arrive, then the two-line timing note leads (soft warning haptic): this 3-week taper doesn't fit in the 4 days before Quit Day (today is Mon, Nov 2; Quit Day Fri, Nov 6). The strength chart arrives: the 6, 3 and 1.5 mg bars grow from the baseline in turn (900ms settle, 150ms apart); the 6 mg bar is solid up to Quit Day and striped after it, the 3 and 1.5 mg bars are striped (they run past Quit Day), and at 900ms the coral Quit Day dot pops onto the axis where the 6 mg bar splits (Fri, Nov 6). Axis labels are the week start dates. Step rows (each with a chevron: tap to edit) settle in (120ms stagger). The coral target ring on the 0 mg column (Mon, Nov 23) fades in at 1s. The X is the only way out at the top (no Skip). The primary (Move Quit Day to Mon, Nov 23) slides the coral dot along the axis into the 0 mg column's target ring over 700ms, the stripes fill in solid and the dates update in place; 'Save my taper as is' is the quiet secondary.">
+<meta name="motion" content="The conflict is the title: 'Your taper needs 3 weeks' arrives (soft warning haptic), then the lead (Quit Day is in 4 days; today is Mon, Nov 2, Quit Day Fri, Nov 6). The strength chart arrives with its legend (Quit Day, Runs past Quit Day): the 6, 3 and 1.5 mg bars, one apricot with a deeper edge (the heights carry the mg), grow from the baseline in turn (900ms settle, 150ms apart); the 6 mg bar is solid up to Quit Day and striped after it, the 3 and 1.5 mg bars are striped (they run past Quit Day), and at 900ms the coral Quit Day dot pops onto the axis where the 6 mg bar splits, with a coral hairline up through the split and its 'Fri 6' tag above the bar. Axis labels are the week start dates. Step rows (swatch, mg, dates, chevron: tap to edit) settle in (120ms stagger). The coral target ring on the 0 mg column (Mon, Nov 23) fades in at 1s. The X is the only way out at the top (no Skip). The primary (Move Quit Day to Mon, Nov 23) slides the coral dot and its tag along the axis into the 0 mg column's target ring over 700ms (the tag reads 'Mon 23'), the stripes fill in solid and the dates update in place; 'Save my taper as is' is the quiet secondary.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -8,13 +8,13 @@
   .qg { font-family: var(--body); font-weight: 700; }
   .wrap { padding: 66px var(--gutter) 0; }
   .wrap .lead { margin-top: 8px; color: var(--muted); }
-  .chart { margin-top: 20px; padding: 16px 18px 14px; }
+  .chart { margin-top: 22px; padding: 18px 18px 16px; }
   /* key: the coral dot is Quit Day on the axis; stripes are the part of the taper that runs past it */
   .key { display: flex; gap: 18px; align-items: center; color: var(--muted); font: 500 14px/1.2 var(--body); }
   .key span { display: inline-flex; align-items: center; gap: 6px; }
   .key .kq { width: 11px; height: 11px; border-radius: 99px; background: var(--mark); flex: none; }
   .key .kh { width: 18px; height: 12px; border-radius: 3px; flex: none; }
-  .bars { position: relative; margin-top: 36px; height: 88px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; align-items: end; border-bottom: 2px solid var(--line); }
+  .bars { position: relative; margin-top: 38px; height: 112px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; align-items: end; border-bottom: 2px solid var(--line); }
   /* one apricot for every bar (the heights carry the mg); light adds a deeper edge (3.5:1 on the card) so the short 1.5 mg bar reads */
   .chart, .steps-list { --c: #FFB27A; --edge: #D9692A; }
   [data-theme="dark"] .chart, [data-theme="dark"] .steps-list { --edge: #FFB27A; }
@@ -35,19 +35,18 @@
   /* Quit Day (Fri, Nov 6) falls 4 days into week 1: a coral dot on the axis where the 6 mg bar splits */
   .qmark { position: absolute; left: calc((100% - 24px) / 4 * 4 / 7); bottom: -1px; width: 0; height: 0; }
   .qmark i { position: absolute; left: -6.5px; top: -6.5px; width: 13px; height: 13px; border-radius: 99px; background: var(--mark); box-shadow: 0 0 0 2.5px var(--card); }
-  .qmark .ql { position: absolute; left: -1px; bottom: 0; width: 2px; height: 96px; border-radius: 2px; background: var(--mark); }
-  .qmark .qt { position: absolute; bottom: 96px; left: 0; transform: translateX(-50%); height: 22px; padding: 0 8px; border-radius: 99px; background: var(--mark); color: var(--ink); font: 700 13px/22px var(--body); white-space: nowrap; }
+  .qmark .ql { position: absolute; left: -1px; bottom: 0; width: 2px; height: 120px; border-radius: 2px; background: var(--mark); }
+  .qmark .qt { position: absolute; bottom: 120px; left: 0; transform: translateX(-50%); height: 22px; padding: 0 8px; border-radius: 99px; background: var(--mark); color: var(--ink); font: 700 13px/22px var(--body); white-space: nowrap; }
   .play .bar { animation: grow 900ms var(--settle) both; animation-delay: calc(var(--i) * 150ms + 250ms); }
   @keyframes grow { from { transform: scaleY(0); } to { transform: none; } }
   .qbar { align-self: end; width: 100%; height: 4px; border-radius: 3px 3px 0 0; background: var(--track); }
   .lbls { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 8px; text-align: center; color: var(--muted); }
   .lbls b { display: block; color: var(--fg); font: 800 15px/1.1 var(--display); }
-  .steps-list { margin-top: 14px; }
+  .steps-list { margin-top: 16px; }
   .steps-list .row { min-height: 52px; }
   .list > .row { padding: 8px 16px; }
   .row .t-head { font-size: 16px; }
   .row .t-foot { color: var(--muted); }
-  .row .wk { font: 600 14px/1 var(--body); color: var(--muted); }
   .steps-list .chev { margin-left: -4px; }
   .steps-list .row { gap: 12px; }
   /* swatches: the same apricot and edge as the bars, heights by mg */

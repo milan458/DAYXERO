@@ -1,30 +1,32 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>031 Session mission</title>
-<meta name="motion" content="The full bar and the heading arrive (600ms). The honey mission card, the one hero, rises in (settle 900ms); Xero climbs up behind it, his head rising over the top edge (settle 900ms at 360ms), then his two hands, drawn as their own shapes, land gripping the card's top edge (spring pop 700ms at 1150ms, light haptic) and he blinks. The card's label, line and note arrive inside it (600ms, 90ms stagger), then what you learned arrives as a light card, row by row, each with its small paper stamp (600ms, 90ms apart), and the log link and button arrive last in the dock.">
+<meta name="motion" content="The full bar (All 5 cards done beside it) and the heading arrive (600ms). The honey mission card, the one hero, rises in (settle 900ms); Xero climbs up behind it, his head rising over the top edge (settle 900ms at 360ms), then his two hands, drawn as their own shapes, land gripping the card's top edge (spring pop 700ms at 1150ms, light haptic) and he blinks. The card's label, line and note arrive inside it (600ms, 90ms stagger), then what you learned arrives as a light card, row by row, each with a plain ink check (600ms, 90ms apart), and the log link and button arrive last in the dock.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
+/* session chrome, identical on 024-031: the bar keeps one length because the label sits in a fixed slot */
+.nav .side{flex:none;width:122px;text-align:right;white-space:nowrap;color:var(--muted)}
 .top{position:absolute;top:114px;left:var(--gutter);right:var(--gutter)}
 /* the mission: honey in both modes (today's one celebration of intent), ink type; dark mode is a deeper honey, never a glare */
-.mission{position:absolute;z-index:2;top:236px;left:var(--gutter);right:var(--gutter);border-radius:28px;padding:22px 22px 24px;
+.mission{position:absolute;z-index:2;top:212px;left:var(--gutter);right:var(--gutter);border-radius:28px;padding:22px 22px 24px;
   --ink:#1E1A3A;--soft:#4F400C;background:linear-gradient(165deg,#FFEDB0 0%,#FFE08A 55%,#FFD966 100%);color:var(--ink);box-shadow:0 16px 32px rgba(120,90,10,.16)}
 [data-theme="dark"] .mission{--soft:#3A2A06;background:linear-gradient(165deg,#FAD26A 0%,#F2BC45 55%,#EBAD32 100%);box-shadow:0 18px 40px rgba(0,0,0,.45)}
 .mission .lab{font:600 15px/1 var(--body);color:var(--soft)}
 .mission h2{margin-top:12px;font-size:34px}
 .mission .t-body{margin-top:8px;color:var(--soft)}
 /* Xero climbs up behind the card: head over the edge, hands in front of it (same 136px drawing, two layers; the edge crosses him at y=107 of 200, above his window) */
-.peek,.hands{position:absolute;left:206px;top:163px;width:136px;height:136px;pointer-events:none}
+.peek,.hands{position:absolute;left:206px;top:139px;width:136px;height:136px;pointer-events:none}
 .peek{z-index:1}
 .hands{z-index:3}
 .peek svg > g[stroke]{display:none}
-.learn{position:absolute;top:428px;left:var(--gutter);right:var(--gutter)}
-/* what you learned: a light card of three rows, each with a small paper stamp (the same craft as the notes on 030) */
+.learn{position:absolute;top:404px;left:var(--gutter);right:var(--gutter)}
+/* what you learned: a light card of three rows, each with a plain ink check (stamps are for preps only) */
 .learn ul{margin:12px 0 0;padding:0;list-style:none}
 .learn li{display:flex;align-items:flex-start;gap:12px;padding:13px 16px}
 .learn li + li{border-top:1px solid var(--line)}
 .learn li .t-foot{color:var(--fg);opacity:.86}
-.learn .stp{width:26px;height:26px;flex:none;margin-top:-1px;display:block}
-.learn .stp svg{display:block}
+.learn .stp{width:22px;height:22px;flex:none;margin-top:0;display:block;color:var(--fg)}
+.learn .stp svg{display:block;width:22px;height:22px}
 .logl{gap:6px}
 .logl svg{width:16px;height:16px}
 </style>
@@ -33,6 +35,7 @@
   <div class="nav">
     <button class="icon-btn" aria-label="Close" id="close"></button>
     <div class="grow"><div class="steps" aria-label="All 5 cards played"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
+    <span class="side t-cap">All 5 cards done</span>
   </div>
   <div class="top">
     <h1 class="t-title" data-a style="--i:0">Your mission for today</h1>
@@ -47,8 +50,8 @@
   <div class="learn">
     <h2 class="t-head" data-a style="--i:6">What you learned today</h2>
     <ul class="list">
-      <li data-a style="--i:7"><span class="stp"></span><p class="t-foot">Stress and the gap feel the same in your body.</p></li>
-      <li data-a style="--i:8"><span class="stp"></span><p class="t-foot">A cigarette eases the gap it made, not the day.</p></li>
+      <li data-a style="--i:7"><span class="stp"></span><p class="t-foot">Stress and a nicotine craving feel the same in your body.</p></li>
+      <li data-a style="--i:8"><span class="stp"></span><p class="t-foot">A cigarette only eases the craving it caused, not the day.</p></li>
       <li data-a style="--i:9"><span class="stp"></span><p class="t-foot">People who quit tend to feel less stressed, not more.</p></li>
     </ul>
   </div>
@@ -70,9 +73,7 @@ const hand = (x, flip) => `<g transform="translate(${x} 107) scale(${flip ? -1 :
   <path d="M-4.2 3.5 V10.6 M3.6 3.5 V10.6" stroke="#B9452A" stroke-width="2" stroke-linecap="round"/>
   <path d="M-10 -6.5 C-7 -9.5 -3 -10.5 1 -10.5" fill="none" stroke="#FFB09C" stroke-width="3" stroke-linecap="round"/></g>`;
 document.getElementById('hands').innerHTML = `<svg width="136" height="136" viewBox="0 0 200 200" aria-hidden="true" style="overflow:visible">${hand(44, false)}${hand(156, true)}</svg>`;
-/* small paper stamps for what you learned: a scalloped apricot stamp with an ink tick */
-const sc = (cx, cy, r, n, a) => { let d = ''; for (let i = 0; i <= n * 2; i++) { const t = Math.PI * i / n - Math.PI / 2, rr = i % 2 ? r - a : r; d += (i ? 'L' : 'M') + (cx + rr * Math.cos(t)).toFixed(1) + ' ' + (cy + rr * Math.sin(t)).toFixed(1); } return d + 'Z'; };
-const STAMP = `<svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="${sc(13, 13, 12.5, 10, 1.6)}" fill="#FF9A5C"/><circle cx="13" cy="13" r="9.2" fill="#FFC38A"/><circle cx="13" cy="13" r="9.2" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="1"/><path d="M8.8 13.4l2.8 2.8 5.6-6" fill="none" stroke="#1E1A3A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-document.querySelectorAll('.learn .stp').forEach(e => e.innerHTML = STAMP);
+/* plain ink checks for what you learned (the scalloped stamps belong to the preps) */
+document.querySelectorAll('.learn .stp').forEach(e => e.innerHTML = DX.icon('check', {size:22, w:2.6}));
 </script>
 </body></html>
