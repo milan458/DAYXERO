@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>040 Share card</title>
-<meta name="motion" content="The card rises in and settles (900ms): its paper hills lift, Xero cheers on the middle hill (clear ground beneath him, well above the wordmark band) and the filled day medallion (a sunrise sky with a big sun over the hills, no number since the line below says 7 days) stamps at 400ms. The Show on your card chips arrive; at 1.3s the Cigarettes chip turns on (selection haptic) and its line fades into the card while the card bumps. Share sits in the dock; tapping it opens the system share sheet with the rendered card.">
+<meta name="motion" content="The card (about 300pt wide, no avatar, Week 1 centred at the top) rises in and settles (900ms): its paper hills lift, Xero cheers on the third hill in clear sky (well below the stat lines, well above the wordmark band) and the filled day medallion (a sunrise sky with a big sun over the hills, no number since the line below says 7 days) stamps at 400ms. The Show on your card chips arrive (Days free is locked on, with a lock and no toggle); at 1.3s the Cigarettes chip turns on (selection haptic) and its line fades into the card while the card bumps. Share sits in the dock; tapping it opens the system share sheet with the rendered card.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -8,20 +8,21 @@
   .fmt .chips { justify-content: center; }
   .preview { display: grid; place-items: center; margin-top: 4px; }
   .preview .sc { zoom: 1.18; }
-  .sc { position: relative; width: 212px; height: 376px; border-radius: 26px; overflow: hidden; color: #1E1A3A;
+  /* about 300pt wide on screen (254 x 1.18) */
+  .sc { position: relative; width: 254px; height: 376px; border-radius: 26px; overflow: hidden; color: #1E1A3A;
     background: linear-gradient(180deg, #FFB98A 0%, #FFD7AE 46%, #FFE9CF 70%);
     box-shadow: 0 18px 40px rgba(14,11,43,.22), 0 2px 0 rgba(14,11,43,.06); padding: 16px; display: flex; flex-direction: column; align-items: center; }
-  .sc .sun { position: absolute; left: 132px; top: 196px; width: 64px; height: 64px; border-radius: 99px; background: radial-gradient(circle at 40% 35%, #FFF6C8, #FFD25E 70%); opacity: .9; }
-  .sc .hills { position: absolute; left: 0; right: 0; bottom: 0; width: 212px; height: 150px; display: block; }
-  .sc .top { align-self: stretch; display: flex; justify-content: space-between; align-items: center; position: relative; }
-  .sc .ini { width: 30px; height: 30px; border-radius: 99px; background: #1E1A3A; color: #FFF8EE; display: grid; place-items: center; font: 800 15px/1 var(--display); }
+  .sc .sun { position: absolute; left: 40px; top: 228px; width: 60px; height: 60px; border-radius: 99px; background: radial-gradient(circle at 40% 35%, #FFF6C8, #FFD25E 70%); opacity: .9; }
+  .sc .hills { position: absolute; left: 0; right: 0; bottom: 0; width: 254px; height: 150px; display: block; }
+  .sc .top { align-self: stretch; display: flex; justify-content: center; align-items: center; position: relative; }
   .sc .date { font: 700 13px/1 var(--body); color: #5A3420; }
-  .sc .medal { margin-top: 12px; position: relative; }
+  .sc .medal { margin-top: 10px; position: relative; }
   .sc .big { position: relative; margin-top: 8px; font: 800 34px/1 var(--display); letter-spacing: -1.2px; }
   .sc .lines { position: relative; margin-top: 7px; display: grid; gap: 2px; text-align: center; font: 700 14px/1.3 var(--body); color: #4A2A18; }
   .sc .lines span { transition: opacity .4s var(--ease), max-height .4s var(--ease); max-height: 20px; overflow: hidden; }
   .sc .lines span.off { opacity: 0; max-height: 0; }
-  .sc .xero { position: absolute; left: 110px; top: 230px; }
+  /* Xero stands on the third hill in clear sky: well below the stat lines, well above the wordmark band */
+  .sc .xero { position: absolute; left: 140px; top: 256px; }
   .sc .mark-w { position: absolute; left: 14px; bottom: 9px; display: flex; align-items: center; gap: 6px; font: 800 14px/1 var(--display); color: #FFF8EE; letter-spacing: -.3px; }
   .sc .mark-w i { width: 10px; height: 10px; border-radius: 99px; background: #FFD966; }
   .sc .url { position: absolute; right: 14px; bottom: 12px; font: 600 12px/1 var(--body); color: #FFE6D6; }
@@ -32,6 +33,11 @@
   /* selected chips stay light (the kit's tint, fill only) with a small tick, so the ink Share button leads */
   .show .chip svg { width: 16px; height: 16px; margin-left: -4px; }
   .show .chip:not(.on) svg { display: none; }
+  /* Days free is always on the card: on, with a lock instead of a tick, and not toggleable */
+  .show .chip.locked { cursor: default; }
+  .show .chip.locked svg { width: 15px; height: 15px; }
+  /* unselected chips get a clear hairline in light */
+  html:not([data-theme="dark"]) .show .chip:not(.on) { box-shadow: inset 0 0 0 1px rgba(30,26,58,.26); }
   [data-theme="dark"] .sc { box-shadow: 0 18px 40px rgba(0,0,0,.45), 0 0 0 1.5px rgba(255,255,255,.22); }
 </style>
 </head><body>
@@ -52,7 +58,7 @@
             <path filter="url(#scLift)" d="M0 106 C40 94 90 100 130 110 C170 118 196 106 212 102 V150 H0z" fill="#E85A3E"/>
             <path filter="url(#scLift)" d="M0 128 C60 120 120 126 212 122 V150 H0z" fill="#C2402A"/>
           </svg>
-          <div class="top"><span class="ini">S</span><span class="date">Week 1</span></div>
+          <div class="top"><span class="date">Week 1</span></div>
           <div class="medal" data-stamp style="--d:400ms" id="medal"></div>
           <div class="big">7 days free</div>
           <div class="lines"><span>$49.00 kept</span><span id="l-cig">84 cigarettes not smoked</span><span id="l-wave" class="off">23 cravings ridden out</span></div>
@@ -62,7 +68,7 @@
       </div>
       <div class="show" data-a style="--i:3">
         <p class="t-foot">Show on your card</p>
-        <div class="chips"><button class="chip on" data-ic="check">Days free</button><button class="chip on" data-ic="check">Money kept</button><button class="chip on" id="t-cig" data-ic="check">Cigarettes</button><button class="chip" data-ic="check">Waves ridden</button></div>
+        <div class="chips"><button class="chip on locked" aria-disabled="true" aria-label="Days free, always shown" data-ic="lock">Days free</button><button class="chip on" data-ic="check">Money kept</button><button class="chip on" id="t-cig" data-ic="check">Cigarettes</button><button class="chip" data-ic="check">Waves ridden</button></div>
       </div>
     </div>
   </div>
@@ -71,7 +77,7 @@
   </div>
 </div>
 <script>
-  document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20, w: e.dataset.ic === 'check' ? 3 : 2.2 })));
+  document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20, w: e.dataset.ic === 'check' ? 3 : e.dataset.ic === 'lock' ? 2.6 : 2.2 })));
   document.getElementById('sh').innerHTML = DX.icon('share', { size: 20 });
   /* the kit day badge, filled: its face becomes a sunrise sky and the sun grows and rises over the hills */
   document.getElementById('medal').innerHTML = DX.badge({ kind: 'day', n: '', size: 88, bare: true })

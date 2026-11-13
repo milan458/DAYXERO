@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>057 Box breathing</title>
-<meta name="motion" content="One square track runs round the sea window. The dot walks it at an even pace, 4s a side (16s a round), and only the side it is on is lit: at each corner the lit stroke slides on to the next side (400ms) as the readout word cross-fades (220ms) and the numeral ticks 4 to 1 each second on the same baseline. The window and Jelli inside it swell over the in side, hold, shrink over the out side and hold (Jelli breathes with it). The round pips fill as each round completes. A soft haptic tick at every corner, nothing else.">
+<meta name="motion" content="One square track runs round the sea window. The dot walks it at an even pace, 4s a side (16s a round), and only the side it is on is lit: at each corner the lit stroke slides on to the next side (400ms) as the readout word cross-fades (220ms) and the numeral ticks 4 to 1 each second on the same baseline. The window and Jelli inside it swell over the in side, hold, shrink over the out side and hold (Jelli breathes with it). The round pips count completed rounds only: a pip fills as its round ends (Round 2 shows one filled pip). A soft haptic tick at every corner, nothing else.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -48,7 +48,7 @@
 </div>
 <p class="say" data-a style="--i:2" aria-live="polite"><span class="w" id="phase">Breathe in</span><span class="num" id="count">4</span></p>
 <p class="t-body muted cue" id="cue" data-a style="--i:3">In through your nose. Let your belly fill.</p>
-<div class="rnd" data-a style="--i:4"><span class="pips" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i><i></i></span><span class="t-foot muted" id="round">Round 2 of 4</span></div>
+<div class="rnd" data-a style="--i:4"><span class="pips" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></span><span class="t-foot muted" id="round">Round 2 of 4</span></div>
 <div class="dock"><button class="btn ghost" data-a style="--i:5">End session</button></div>
 </div>
 <script>
@@ -70,8 +70,8 @@ function set(k, n, g) {
   count.textContent = n;
 }
 for (let s = 0; s < 48; s++) { const g = Math.floor(s / 4), k = g % 4, n = 4 - (s % 4); DX.after(s * 1000, () => set(k, n, g)); }
-DX.after(16000, () => { round.textContent = 'Round 3 of 4'; pips[2].classList.add('on'); });
-DX.after(32000, () => { round.textContent = 'Round 4 of 4'; pips[3].classList.add('on'); });
+DX.after(16000, () => { round.textContent = 'Round 3 of 4'; pips[1].classList.add('on'); });
+DX.after(32000, () => { round.textContent = 'Round 4 of 4'; pips[2].classList.add('on'); });
 DX.onStill(() => { lit.style.strokeDashoffset = -100; phase.textContent = P[1].w; cue.textContent = P[1].c; count.textContent = 2; });
 </script>
 </body></html>

@@ -112,14 +112,14 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip { min-height: 44px; padding: 0 16px; border-radius: var(--r-chip); background: var(--card); display: inline-flex; align-items: center; gap: 8px; font: 600 15px/1 var(--body); color: var(--fg); transition: background .25s var(--ease), color .25s var(--ease), transform .2s var(--ease); }
 .screen[data-ground="reading"] .chip, [data-theme="dark"] .chip { box-shadow: inset 0 0 0 1px var(--line); }
-.chip.on { background: var(--sel-tint); color: var(--fg); font-weight: 700; box-shadow: inset 0 0 0 2px var(--sel); }
+.chip.on { background: var(--sel-tint); color: var(--fg); font-weight: 700; box-shadow: inset 0 0 0 2px var(--sel-edge, var(--sel)); }
 
 :root { --tick-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
 .opt { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; min-height: 64px; padding: 12px 16px; border-radius: 18px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); transition: box-shadow .25s var(--ease), transform .2s var(--ease); }
 .opt .grow { flex: 1; min-width: 0; }
 .opt .t-foot { color: var(--muted); }
 .opt .radio { width: 24px; height: 24px; border-radius: 99px; box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--fg) 38%, transparent); flex: none; display: grid; place-items: center; }
-.opt.on { box-shadow: inset 0 0 0 2px var(--sel); background: var(--sel-tint); }
+.opt.on { box-shadow: inset 0 0 0 2px var(--sel-edge, var(--sel)); background: var(--sel-tint); }
 .opt.on .radio { background: var(--sel); box-shadow: none; }
 .opt.on .radio::after { content: ""; width: 14px; height: 14px; background: var(--sel-fg); -webkit-mask: var(--tick-svg) center/contain no-repeat; mask: var(--tick-svg) center/contain no-repeat; }
 .toggle { width: 52px; height: 32px; border-radius: 99px; background: var(--track); position: relative; flex: none; transition: background .25s var(--ease); }
@@ -235,7 +235,7 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
 .screen:not(:has(.dock)) .toast { bottom: 40px; }
 
 /* Selected chips keep their outline on every ground (beats the hairline rule on reading/dark grounds). */
-.screen .chip.on, [data-theme="dark"] .screen .chip.on { box-shadow: inset 0 0 0 2px var(--sel); }
+.screen .chip.on, [data-theme="dark"] .screen .chip.on { box-shadow: inset 0 0 0 2px var(--sel-edge, var(--sel)); }
 
 /* Selection tint: warm apricot on light grounds, a cream lift on dark and colour grounds. */
 .screen { --sel-tint: color-mix(in srgb, #FF9A5C 32%, #FFFFFF); }
@@ -250,3 +250,6 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
 /* Ocean (SOS): a lit sea, lighter in light mode, deep in dark mode; --g is the bottom colour so docks and fades match. */
 .screen[data-ground="ocean"] { --g: #1F3C8C; background: radial-gradient(120% 55% at 50% -8%, rgba(255,255,255,.2), transparent 62%), linear-gradient(180deg, #3A68C8 0%, #2A50AA 45%, #1F3C8C 100%); }
 [data-theme="dark"] .screen[data-ground="ocean"] { --g: #0A1638; background: radial-gradient(120% 55% at 50% -8%, rgba(160,190,255,.10), transparent 62%), linear-gradient(180deg, #13295F 0%, #0E1F4C 50%, #0A1638 100%); }
+
+/* Warm selection in dark mode on the neutral dark ground (critics: slate + white outline read as disabled). Ocean and night keep cream. */
+[data-theme="dark"] .screen:not([data-ground="ocean"]):not([data-ground="violet"]):not([data-ground="night"]) { --sel-tint: color-mix(in srgb, #FF9A5C 22%, var(--card)); --sel-edge: #FFB27A; }

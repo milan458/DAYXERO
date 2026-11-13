@@ -1,18 +1,18 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>058 Grounding</title>
-<meta name="motion" content="The step card arrives and Jelli settles onto its top edge (500ms, then a slow calm float); the pips fill one by one at 0.9s, 1.7s and 2.5s with a small bump and a light haptic each, as if tapped. The Next button stays quiet (outlined, muted label) until the last pip fills, then it fills to the primary ink in 300ms with a soft success haptic. Tapping Next fills the next bar segment (500ms) and the next step slides in from the right.">
+<meta name="motion" content="The step card arrives and Jelli settles onto its top edge (500ms, then a slow calm float); the pips fill one by one at 0.9s, 1.7s and 2.5s with a small bump and a light haptic each, as if tapped. The fourth pip stays an open ring for the user to tap; the Next button stays quiet (outlined, muted label) until that last pip fills, then it fills to the primary ink in 300ms with a soft success haptic. Tapping Next fills the next bar segment (500ms) and the next step slides in from the right.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
 .nav .steps { flex: 1; margin-right: 56px; }
 .lead { position: absolute; left: var(--gutter); right: var(--gutter); top: 118px; }
-.jel { position: absolute; left: 50%; top: 182px; margin-left: -70px; width: 140px; height: 140px; z-index: 2; }
-.cur { position: absolute; left: var(--gutter); right: var(--gutter); top: 308px; padding: 42px 22px 26px; display: grid; gap: 10px; text-align: center; justify-items: center; }
+.jel { position: absolute; left: 50%; top: 196px; margin-left: -70px; width: 140px; height: 140px; z-index: 2; }
+.cur { position: absolute; left: var(--gutter); right: var(--gutter); top: 322px; padding: 42px 22px 26px; display: grid; gap: 10px; text-align: center; justify-items: center; }
 .head { display: flex; align-items: center; gap: 14px; justify-content: center; }
 .head .big { font: 800 92px/.86 var(--display); letter-spacing: -3px; }
 .head .t-title { text-align: left; }
 .pips { display: flex; gap: 14px; margin-top: 14px; }
-.pips i { width: 54px; height: 54px; border-radius: 99px; box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--fg) 38%, transparent); display: grid; place-items: center; transition: background .3s var(--ease); }
+.pips i { width: 54px; height: 54px; border-radius: 99px; box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--fg) 55%, transparent); display: grid; place-items: center; transition: background .3s var(--ease); }
 .pips i.on { background: var(--sel); box-shadow: none; }
 .pips i.on::after { content: ""; width: 22px; height: 22px; background: var(--sel-fg); -webkit-mask: var(--tick-svg) center/contain no-repeat; mask: var(--tick-svg) center/contain no-repeat; }
 .hint { color: var(--muted); }

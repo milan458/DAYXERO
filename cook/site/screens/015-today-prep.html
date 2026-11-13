@@ -10,7 +10,7 @@
   .screen[data-ground="apricot"] { --g: #FBF4EA; --card: #FFFCF7; }
   .content .card { box-shadow: inset 0 0 0 1px var(--line), 0 1px 0 rgba(74,40,16,.04), 0 10px 26px rgba(74,40,16,.08); }
   /* Xero stands on his own paper-cut knoll inside the hero (same story as 016), no floating disc */
-  .knoll { position: absolute; left: 75px; top: 204px; width: 240px; height: 102px; --kn: #FFC796; --kn-rim: rgba(255,248,238,.8); }
+  .knoll { position: absolute; left: 45px; top: 204px; width: 300px; height: 102px; --kn: #FFC796; --kn-rim: rgba(255,248,238,.8); }
   [data-theme="dark"] .knoll { --kn: #1C2744; --kn-rim: rgba(246,231,193,.26); }
   .knoll svg { display: block; filter: drop-shadow(0 -3px 7px rgba(120,40,10,.24)); }
   [data-theme="dark"] .knoll svg { filter: drop-shadow(0 -3px 8px rgba(0,0,0,.5)); }
@@ -67,10 +67,10 @@
 <div class="screen" data-ground="apricot" data-status="on-art">
   <div class="hero">
     <div class="scene" id="scene"></div>
-    <div class="knoll" aria-hidden="true"><svg width="240" height="102" viewBox="0 0 240 102">
-      <path d="M0 102 C8 44 60 10 120 10 C180 10 232 44 240 102Z" fill="var(--kn)"/>
+    <div class="knoll" aria-hidden="true"><svg width="300" height="102" viewBox="0 0 300 102">
+      <path d="M0 102 C22 40 92 10 150 10 C208 10 278 40 300 102Z" fill="var(--kn)"/>
       <defs><linearGradient id="rim15" gradientUnits="userSpaceOnUse" x1="0" y1="10" x2="0" y2="84"><stop offset="0" stop-color="var(--kn-rim)"/><stop offset="1" stop-color="var(--kn-rim)" stop-opacity="0"/></linearGradient></defs>
-      <path d="M0 102 C8 44 60 10 120 10 C180 10 232 44 240 102" fill="none" stroke="url(#rim15)" stroke-width="2.5"/>
+      <path d="M0 102 C22 40 92 10 150 10 C208 10 278 40 300 102" fill="none" stroke="url(#rim15)" stroke-width="2.5"/>
     </svg></div>
     <div class="ringwrap">
       <div class="ch" data-settle><div class="bob" id="xero"></div></div>
