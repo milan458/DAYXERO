@@ -184,3 +184,6 @@ App median about 8.7. Screens at >= 9.0 by a critic: 039 (9.2), 032, 059 (9.1), 
 ## Option 2 (user, after round 11): push the hero screens (13 screens at ~9.0) to a genuine 9.2; form screens stay at their current best.
 - Hero critics: three per pass (Opus, Sonnet, Fable, per the user); a screen's score is the median of the three, and a change is kept unless the median drops.
 - Kit: the hand-drawn underline is coral in both modes on day grounds (critics flagged coral in light, yellow/apricot in dark on 012, 039, 046, 053). Ocean and night keep their gold.
+- Hero baseline h0 (Opus / Sonnet / Fable -> median): 000 8.8/8.7/8.7=8.7; 012 8.6/8.5/8.5=8.5; 018 8.6/8.7/8.6=8.6;
+  019 8.9/8.8/8.9=8.9; 028 8.6/8.7/8.8=8.7; 031 8.8/8.9/8.5=8.8; 032 8.6/9.0/8.7=8.7; 039 8.9/8.8/8.8=8.8; 046 8.6/8.6/8.5=8.6;
+  053 8.7/8.9/8.7=8.7; 057 8.7/8.8/8.7=8.7; 059 8.8/8.9/8.6=8.8; 064 8.5/8.9/8.5=8.5.
