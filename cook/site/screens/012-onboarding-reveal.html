@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>012 Plan reveal</title>
-<meta name="motion" content="Progress eases 9/11 to 10/11; title arrives and the underline draws under 'ready'. The Day Xero medallion is the hero: its cream coin, right of centre and glowing warm amber in both modes, pops in (700ms spring, from 300ms); a soft paper ground line fades in under it; Xero, smaller, settles onto that ground to its left, about 40px in from the edge and clear of the glow (900ms, from 450ms), and cheers, bobbing. The caption arrives, then the stamp card: Prep 1 pops in as the kit's up-next prep stamp and Prep 2 to 7 pop in as the kit's locked prep stamps, 90ms apart (from 900ms). The button arrives after. Light haptic when the medallion lands and on the button.">
+<meta name="motion" content="Progress eases 9/11 to 10/11; title arrives and the underline draws under 'ready'. The Day Xero medallion is the hero: its cream coin, right of centre and glowing warm amber in both modes, pops in (700ms spring, from 300ms); a soft paper ground line fades in under it; Xero, smaller, settles onto that ground to its left, about 40px in from the edge and clear of the glow (900ms, from 450ms), and cheers, bobbing. The caption arrives, then the stamp card: Prep 1 to 7 pop in as the kit's prep stamps in their waiting (next) form, warm dashed rims with numerals, 90ms apart (from 900ms). The button arrives after. Light haptic when the medallion lands and on the button.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -30,7 +30,7 @@
   .sh { display: flex; justify-content: space-between; align-items: baseline; }
   .stamps { display: flex; justify-content: space-between; margin: 16px -2px 0; color: var(--fg); }
   .stamps .pb { flex: none; display: block; }
-  /* Round 9: the stamps are the kit's prep badges as drawn (Prep 1 up next, Prep 2 to 7 locked), no local restyling. */
+  /* Round 9: the stamps are the kit's prep badges as drawn in their waiting (next) form, warm dashed rims, no local restyling. */
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
@@ -76,7 +76,7 @@
   const dk = DX.theme === 'dark', gc = dk ? '#212A41' : '#FFAE7A';
   document.getElementById('ground').innerHTML = `<defs><linearGradient id="gf" x1="0" y1="0" x2="0" y2="1"><stop offset=".1" stop-color="${gc}"/><stop offset=".55" style="stop-color: color-mix(in srgb, ${gc} 45%, var(--g))"/><stop offset="1" style="stop-color: var(--g)"/></linearGradient></defs>
     <path d="M0 22 C110 6 280 6 390 22 V56 H0 Z" fill="url(#gf)"/><path d="M0 22 C110 6 280 6 390 22" fill="none" stroke="${dk ? 'rgba(190,205,255,.24)' : 'rgba(255,255,255,.7)'}" stroke-width="2"/>`;
-  for (let i = 1; i <= 7; i++) h += `<span class="pb ${i === 1 ? '' : 'lk'}" data-pop style="--i:0;--d:${900 + i * 90}ms">${DX.badge({ kind: 'prep', n: i, state: i === 1 ? 'next' : 'locked', size: 42, bare: true, label: 'Prep ' + i })}</span>`;
+  for (let i = 1; i <= 7; i++) h += `<span class="pb" data-pop style="--i:0;--d:${900 + i * 90}ms">${DX.badge({ kind: 'prep', n: i, state: 'next', size: 42, bare: true, label: 'Prep ' + i})}</span>`;
   document.getElementById('stamps').innerHTML = h;
   const bar = document.getElementById('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '81.8%'); void bar.offsetWidth; bar.style.transition = ''; });

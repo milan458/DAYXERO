@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>021 After a slip, plan</title>
-<meta name="motion" content="Quiet tier, no springs. The paper-cut sea card builds back to front: the four wave layers rise 40px into place 100ms apart (900ms each) while Jelli (calm) settles down into the water between them (900ms), then keeps a slow bob, half in the sea; the small sun fades in last (in dark mode a warm, low sun sitting on the water with a horizon glow). The title and the progress note arrive with a 90ms stagger, then the if-then line, whose 'coffee' token is tappable (it opens the short moment sheet: Coffee, Stress, After a meal, Something else; its chevron nudges down once at 900ms) with the comma tight after it, and its three option rows, each with a small leading glyph (walk, place, gum), settle in one by one (120ms apart); the chosen row carries the kit's warm selection with an apricot edge in both modes (in light the kit tint plus a screen-set apricot edge; in dark the kit's apricot tint at about 13% with its apricot edge) and its tick. On Save the button turns to its done state and a soft success haptic plays.">
+<meta name="motion" content="Quiet tier, no springs. The paper-cut sea card builds back to front: the four wave layers rise 40px into place 100ms apart (900ms each) while Jelli (calm) settles down into the water between them (900ms), then keeps a slow bob, half in the sea; the small sun fades in last (in dark mode a warm, low sun sitting on the water with a horizon glow). The title and the progress note arrive with a 90ms stagger, then the if-then line, whose 'coffee' token is tappable (it opens the short moment sheet: Coffee, Stress, After a meal, Something else; its chevron nudges down once at 900ms) with the comma tight after it, and its three option rows, each with a small leading glyph (walk, place, gum), settle in one by one (120ms apart); the chosen row carries the kit's warm selection with an apricot edge in both modes (the kit's warm tint and edge in light; in dark the kit's soft lift with its apricot edge) and its tick. On Save the button turns to its done state and a soft success haptic plays.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -49,8 +49,6 @@
   .plan .opt .gl { width: 22px; height: 22px; flex: none; color: var(--muted); display: grid; place-items: center; }
   .plan .opt .gl svg { width: 22px; height: 22px; }
   .plan .opt.on .gl { color: var(--fg); }
-  /* light: the selected row is the kit's warm tint with an apricot edge (the kit sets this edge only in dark) */
-  .screen[data-ground="reading"] { --sel-edge: #F08A4B; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -100,7 +98,7 @@
   const GL = {
     walk: '<circle cx="13.5" cy="4.6" r="2"/><path d="M12.6 8.6l-2.3 5.6 3 3.2 1.2 4.1M10.3 14.2l-2.4 6.8M8.6 11.6l3.2-2.8 3.4 1.2 1.9 3"/>',
     place: '<path d="M12 21s-6.5-5.8-6.5-11.3a6.5 6.5 0 0113 0C18.5 15.2 12 21 12 21z"/><circle cx="12" cy="9.8" r="2.4"/>',
-    gum: '<rect x="3.5" y="8" width="17" height="8" rx="2.2"/><path d="M8.5 8v8M15.5 8l-3 8"/>'
+    gum: '<g transform="rotate(-32 12 12)"><rect x="3" y="8.5" width="18" height="7" rx="1.8"/><path d="M14.5 8.5v7M17.5 8.5v7"/></g>'
   };
   document.querySelectorAll('[data-gl]').forEach(el => { el.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${GL[el.dataset.gl]}</svg>`; });
 </script>

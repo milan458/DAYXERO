@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>008 Onboarding obstacles</title>
-<meta name="motion" content="Progress eases from 5/11 to 6/11 (900ms settle). Question, the chips (006's pattern: rows of three, three and two, justified edge to edge) and the what-each-adds list (Irritability, 1-minute reset, with flat paper-cut timer and speech spots) arrive (600ms, 90ms stagger). At 900ms Social situations takes the kit selection with a 520ms spring bump and a light selection haptic; the count bumps from 1 picked to 2 picked and a second row (Social situations, What to say) settles in under the first (700ms settle).">
+<meta name="motion" content="Progress eases from 5/11 to 6/11 (900ms settle). Question, the chips (006's pattern: rows of three, three and two, justified edge to edge) and the what-each-adds list (Irritability, 1-minute reset, with flat paper-cut timer and speech spots) arrive (600ms, 90ms stagger). At 900ms Social situations takes the kit selection with a 520ms spring bump and a light selection haptic; the count bumps from 1 picked to 2 picked and a second row (Social situations, What to say) settles in under the first (700ms settle); Continue sits at the same height as on 003-007, with Skip for now below it.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -25,6 +25,9 @@
   .gets .ico-tile { width: 40px; height: 40px; border-radius: 12px; }
   .gets .ico-tile svg { width: 30px; height: 30px; overflow: visible; }
   .gets .grow { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; row-gap: 2px; }
+  /* Round 9: Continue sits at the same y as 003-007 (bottom 34px); Skip for now sits below it in the bottom inset. */
+  .dock { padding-bottom: 0; gap: 0; }
+  .dock .link { height: 34px; }
   .gets .row.new { display: none; }
   .gets.two .row.new { display: flex; }
   .play .gets.two .row.new { animation: dx-settle 700ms var(--settle) both; }

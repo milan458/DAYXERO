@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>066 Quit Day</title>
-<meta name="motion" content="The date card arrives, the day count rises 0 to 7 and the earned 7-day badge stamps in at 700ms; the seven dated days of the first week (6 to 12) fill in left to right (110ms apart) ending on the Today ring, 13; the change card follows with Xero beside its heading. Choose a new date opens a calm confirm sheet first, never a direct date wheel.">
+<meta name="motion" content="The date card arrives and the day count rises 0 to 7; in the first-week strip the Day Xero sun (Fri, Nov 6) stamps in first (600ms), then days 1 to 7 (Nov 7 to 13) fill in as apricot discs left to right (110ms apart), ending on the Today ring, 13; the change card follows. Choose a new date opens a calm confirm sheet first, never a direct date wheel.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -27,16 +27,19 @@
 .btn.ghost.small { box-shadow: inset 0 0 0 2px var(--line); }
 .wk { margin-top: 10px; padding: 14px 16px 14px; }
 .wk .hdr { display: flex; justify-content: space-between; align-items: baseline; }
+/* Day Xero (Nov 6) is the sun; days 1 to 7 (Nov 7 to 13) are apricot discs; Today (13) keeps its ring. */
 .days { display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px; margin-top: 12px; text-align: center; }
-.days b { display: grid; place-items: center; width: 36px; height: 36px; margin: 0 auto; border-radius: 99px; background: var(--sel); color: var(--sel-fg); font: 800 15px/1 var(--display); font-variant-numeric: tabular-nums; }
-.days .td b { background: transparent; box-shadow: inset 0 0 0 2.5px var(--fg); color: var(--fg); }
-.days .t-cap { color: var(--muted); display: block; margin-top: 5px; }
-.days .td .t-cap { color: var(--fg); }
-#xb .badge { gap: 4px; }
+.days b { display: grid; place-items: center; width: 36px; height: 36px; margin: 0 auto; border-radius: 99px; background: #FFC38A; color: #1E1A3A; font: 800 15px/1 var(--display); font-variant-numeric: tabular-nums; }
+.days .td b { background: #FFC38A; box-shadow: 0 0 0 2.5px var(--card), 0 0 0 5px var(--fg); }
+.days .xd b { background: radial-gradient(circle at 50% 50%, #FFD966 0 58%, transparent 60%); position: relative; }
+.days .xd b svg { position: absolute; inset: -6px; width: 48px; height: 48px; }
+.days .xd b span { position: relative; }
+.days .t-cap { color: var(--muted); display: block; margin-top: 5px; white-space: nowrap; }
+.days .td .t-cap, .days .xd .t-cap { color: var(--fg); font-weight: 700; }
+.days .xd .t-cap { font-size: 12px; letter-spacing: -.2px; }
 .warn { margin-top: 10px; padding: 16px 18px 18px; display: grid; gap: 8px; }
 .warn .top { display: flex; align-items: center; gap: 12px; }
 .warn .top .t-head { flex: 1; }
-.warn .xr { flex: none; width: 56px; height: 56px; margin: -6px -4px -8px 0; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -46,12 +49,11 @@
   <div class="card hero" data-a style="--i:2">
     <div class="cal"><div class="m t-cap">November</div><div class="d">6</div><div class="w t-cap">Friday</div></div>
     <div class="since" style="flex:1"><div><span class="num" data-count="7">7</span> <span class="t-head">days</span></div><div class="t-foot muted">free since Nov 6</div></div>
-    <div id="xb" data-stamp style="--d:700ms" aria-label="Day 7 medal"></div>
   </div>
 
-  <div class="card wk" data-a style="--i:3"><div class="hdr"><span class="t-foot muted">Your first week</span><span class="t-cap muted">Nov 6 to 13</span></div><div class="days" id="days"></div></div>
+  <div class="card wk" data-a style="--i:3"><div class="hdr"><span class="t-foot muted">Your first week</span><span class="t-cap muted">Day Xero, then days 1 to 7</span></div><div class="days" id="days"></div></div>
   <div class="card warn" data-a style="--i:4">
-    <div class="top"><div class="t-head">Need to change it?</div><div class="xr" id="xr066"></div></div>
+    <div class="top"><div class="t-head">Need to change it?</div></div>
     <p class="t-foot muted">A slip does not start you over. A new date restarts the day count only. Badges, lessons and logs stay.</p>
     <button class="btn ghost small" style="margin-top:6px">Choose a new date</button>
   </div>
@@ -59,10 +61,11 @@
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
-document.getElementById('xb').innerHTML = DX.badge({ kind: 'day', n: 7, state: 'earned', size: 60, label: 'Day 7' });
-document.getElementById('xr066').innerHTML = DX.char('xero', { mood: 'calm', size: 60 });
-const wd = ['Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu'];
-document.getElementById('days').innerHTML = wd.map((d, i) => `<span data-pop style="--i:${i};--d:600ms"><b>${6 + i}</b><span class="t-cap">${d}</span></span>`).join('')
-  + `<span class="td" data-pop style="--i:7;--d:600ms"><b>13</b><span class="t-cap">Today</span></span>`;
+/* Nov 6 is Day Xero: a small sun with short rays. Nov 7 to 13 are days 1 to 7 (Sat to Fri); 13 is today, Day 7. */
+const rays = `<svg viewBox="0 0 48 48" aria-hidden="true">${Array.from({ length: 12 }, (_, i) => `<path d="M24 1.5 L26 7 L22 7Z" fill="#F5B83D" transform="rotate(${i * 30} 24 24)"/>`).join('')}</svg>`;
+const wd = ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu'];
+document.getElementById('days').innerHTML = `<span class="xd" data-stamp style="--d:600ms" aria-label="Friday, November 6: Day Xero"><b>${rays}<span>6</span></b><span class="t-cap">Day Xero</span></span>`
+  + wd.map((d, i) => `<span data-pop style="--i:${i + 1};--d:600ms" aria-label="Day ${i + 1}"><b>${7 + i}</b><span class="t-cap">${d}</span></span>`).join('')
+  + `<span class="td" data-pop style="--i:7;--d:600ms" aria-label="Today, Day 7"><b>13</b><span class="t-cap">Today</span></span>`;
 </script>
 </body></html>

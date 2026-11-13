@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>041 Log sheet</title>
-<meta name="motion" content="Today (the dawn hero with Xero) softens behind the sheet: a soft 3px blur under one uniform navy scrim (24% in light, 40% in dark, no desaturation, so Xero keeps his colour) while its type fades back to 30% (250ms) while the sheet slides up from the bottom (450ms settle curve, light haptic as it lands). The craving row arrives first with a small Jelli in place of an icon, then the Used nicotine? label and the quieter Puff and Cigarette group, each with a small paper-cut object in a quiet tone in place of an icon (90ms stagger), then the slip note, which sits well clear of the home indicator. Tapping a + bumps the button and pushes the matching form.">
+<meta name="motion" content="Today (the dawn hero with Xero) softens behind the sheet: a soft 3px blur under one uniform scrim (a warm coral veil at 16% in light, navy at 40% in dark, no desaturation, so Xero keeps his colour) while its type fades back to 30% and is masked out to nothing before the sheet edge (250ms), as the sheet slides up from the bottom (450ms settle curve, light haptic as it lands). The craving row arrives first with a larger Jelli in place of an icon, then the Used nicotine? section header (the craving form's header style) and the quieter Puff and Cigarette group, each with a small paper-cut object in place of an icon (90ms stagger), then the slip note, which sits well clear of the home indicator. All three rows end in the same 44pt tonal + button; tapping one bumps it and pushes the matching form.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -19,14 +19,14 @@
   .today .content .t-foot { color: var(--muted); }
   .screen > .sbar { z-index: 45; color: #FFF8EE; }
   /* the veil: a soft blur under one uniform navy scrim (no desaturation), so Xero keeps his colour behind the sheet */
-  .scrim { animation: none; background: rgba(14,19,34,.24); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
+  .scrim { animation: none; background: rgba(150,58,34,.16); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
   .sheet { box-shadow: 0 -10px 30px rgba(74,40,16,.12); }
   [data-theme="dark"] .scrim { background: rgba(6,9,18,.4); }
   /* Today's type steps back behind the sheet in both modes */
-  .today .content { opacity: .3; }
+  .today .content { opacity: .3; -webkit-mask-image: linear-gradient(to bottom, #000 0, transparent 64px); mask-image: linear-gradient(to bottom, #000 0, transparent 64px); }
   .play .today .content { animation: dim-type 250ms var(--ease) both; }
   @keyframes dim-type { from { opacity: 1; } to { opacity: .3; } }
-  .jelli-ic { width: 44px; height: 44px; flex: none; display: grid; place-items: center; }
+  .jelli-ic { width: 58px; height: 58px; flex: none; display: grid; place-items: center; margin: -4px 0 -4px -4px; }
   /* dark: the sheet is a lifted surface with a hairline top edge so it separates from the night behind it */
   [data-theme="dark"] .sheet { background: #172036; box-shadow: inset 0 1px 0 rgba(255,255,255,.16), 0 -12px 32px rgba(0,0,0,.45); }
   [data-theme="dark"] .sheet .grab { background: rgba(255,255,255,.28); }
@@ -36,9 +36,9 @@
   @keyframes sheet-up { from { transform: translateY(100%); } to { transform: none; } }
   .sheet { padding-bottom: 46px; top: auto; height: auto; }
   .sheet-h { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px; }
-  .sheet .list.main .row { min-height: 74px; }
+  .sheet .list.main .row { min-height: 78px; }
   .sheet .row .t-foot { color: var(--muted); }
-  .sec-l { margin: 14px 0 8px 2px; color: var(--muted); }
+  .sec-h { margin: 22px 0 12px; display: flex; justify-content: space-between; align-items: baseline; }
   .list.minor { background: transparent; box-shadow: inset 0 0 0 1px var(--line); }
   .list.minor > .row { min-height: 56px; padding-block: 6px; gap: 12px; }
   /* Puff and Cigarette: small paper-cut objects in a quiet tone, the way Jelli stands in for an icon on the craving row */
@@ -46,9 +46,8 @@
   .list.minor .pc svg { width: 34px; height: 34px; display: block; overflow: visible; }
   .list.minor .nm { font: 600 16px/1.2 var(--body); margin: 0 0 2px; }
   .list.minor .t-cap { color: var(--muted); font-weight: 500; }
-  .add.ghost { width: 38px; height: 38px; background: transparent; color: var(--fg); box-shadow: inset 0 0 0 1.5px var(--line); }
-  .add.ghost svg { width: 18px; height: 18px; }
-  .add { width: 44px; height: 44px; border-radius: 99px; background: var(--btn, #1E1A3A); display: grid; place-items: center; color: var(--btn-fg, #FFF8EE); flex: none; }
+  .add { width: 44px; height: 44px; border-radius: 99px; display: grid; place-items: center; flex: none; color: var(--fg);
+    background: color-mix(in srgb, var(--fg) 8%, transparent); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--fg) 18%, transparent); }
   .add svg { width: 20px; height: 20px; }
   .sofar { margin-top: 14px; padding: 14px 16px; }
   .sofar .h { display: flex; justify-content: space-between; align-items: baseline; }
@@ -83,25 +82,26 @@
     <div class="list main">
       <div class="row" data-a style="--i:3"><span class="jelli-ic" id="jl"></span><div class="grow"><p class="t-head" style="font-size:17px">A craving</p><p class="t-foot">3 today, all ridden out</p></div><button class="add" aria-label="Log a craving" data-ic="plus" data-go="042-log-craving"></button></div>
     </div>
-    <p class="t-foot sec-l" data-a style="--i:4">Used nicotine?</p>
+    <div class="sec-h" data-a style="--i:4"><h2 class="t-head">Used nicotine?</h2></div>
     <div class="list minor" data-a style="--i:5">
-      <div class="row"><span class="pc" data-pc="vape"></span><div class="grow"><p class="nm">Puff</p><p class="t-cap">None logged today</p></div><button class="add ghost" aria-label="Log a puff" data-ic="plus"></button></div>
-      <div class="row"><span class="pc" data-pc="cig"></span><div class="grow"><p class="nm">Cigarette</p><p class="t-cap">None logged today</p></div><button class="add ghost" aria-label="Log a cigarette" data-ic="plus"></button></div>
+      <div class="row"><span class="pc" data-pc="vape"></span><div class="grow"><p class="nm">Puff</p><p class="t-cap">None logged today</p></div><button class="add" aria-label="Log a puff" data-ic="plus"></button></div>
+      <div class="row"><span class="pc" data-pc="cig"></span><div class="grow"><p class="nm">Cigarette</p><p class="t-cap">None logged today</p></div><button class="add" aria-label="Log a cigarette" data-ic="plus"></button></div>
     </div>
     <p class="t-foot note" data-a style="--i:7">A use after Quit Day is logged as a slip. Nothing resets.</p>
   </div>
 </div>
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20 })));
-  document.getElementById('jl').innerHTML = DX.char('jelli', { mood: 'calm', size: 44 });
+  document.getElementById('jl').innerHTML = DX.char('jelli', { mood: 'calm', size: 58 });
   document.getElementById('tx').innerHTML = DX.char('xero', { mood: 'hello', size: 134, stage: 2, animate: false });
   document.getElementById('scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 390, h: 322, clarity: 90, animate: false });
   /* quiet paper-cut objects (muted cream and slate, a soft lift shadow), sized to sit where an icon would */
   const dk = DX.theme === 'dark';
   const Q = dk ? { a: '#C9C2B4', b: '#9E97A8', c: '#6E7896', tip: '#D8A48E', sh: .55 } : { a: '#E9E1D3', b: '#C9C0B2', c: '#8B8698', tip: '#E2A68C', sh: .2 };
+  const V = dk ? { top: Q.c, body: Q.a, side: Q.b, led: Q.c } : { top: '#5E5874', body: '#B4ADC2', side: '#857D99', led: '#FFB27A' };
   const lift = `filter="url(#pcq)"`;
   const PC = {
-    vape: `<g ${lift} transform="rotate(-18 17 18)"><rect x="12.5" y="4" width="9" height="6" rx="2.2" fill="${Q.c}"/><rect x="11" y="9" width="12" height="22" rx="3.6" fill="${Q.a}"/><rect x="11" y="9" width="5" height="22" rx="2.6" fill="${Q.b}" opacity=".55"/><circle cx="17" cy="15.5" r="1.6" fill="${Q.c}"/></g>`,
+    vape: `<g ${lift} transform="rotate(-18 17 18)"><rect x="12.5" y="4" width="9" height="6" rx="2.2" fill="${V.top}"/><rect x="11" y="9" width="12" height="22" rx="3.6" fill="${V.body}"/><rect x="11" y="9" width="5" height="22" rx="2.6" fill="${V.side}" opacity=".6"/><circle cx="17" cy="15.5" r="1.7" fill="${V.led}"/></g>`,
     cig: `<g ${lift} transform="rotate(-24 17 17)"><rect x="3" y="14" width="28" height="6.4" rx="3.2" fill="${Q.a}"/><rect x="3" y="14" width="9" height="6.4" rx="3.2" fill="${Q.tip}"/><rect x="9" y="14" width="3" height="6.4" fill="${Q.tip}"/><path d="M30 13 c2 -2 0 -4 2 -6" fill="none" stroke="${Q.c}" stroke-opacity=".7" stroke-width="1.6" stroke-linecap="round"/></g>`
   };
   document.body.insertAdjacentHTML('beforeend', `<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="pcq" x="-20%" y="-20%" width="140%" height="160%"><feDropShadow dx="0" dy="1.4" stdDeviation="1.2" flood-color="#1A0B2E" flood-opacity="${Q.sh}"/></filter></svg>`);

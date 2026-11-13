@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>064 Quiet hours</title>
-<meta name="motion" content="The moon start handle pops at 10 PM, then the dial arc sweeps from it round to 7 AM (1.4s settle) where the sun end handle fades in, as the 9 counts up in the centre; the From and Until tiles, the plain while-it-is-quiet notes and the NRT toggle row arrive below on the stagger. Changing a time drags either handle with a selection haptic per 15 minutes.">
+<meta name="motion" content="The moon start handle pops at 10 PM, then the dial arc sweeps over its light track from it round to 7 AM (1.4s settle) where the sun end handle fades in, as the 9 counts up in the centre; the From and Until tiles, the plain while-it-is-quiet notes and the NRT toggle row arrive below on the stagger. Changing a time drags either handle with a selection haptic per 15 minutes.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -17,17 +17,21 @@
 .toast.b .ck { flex: none; }
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
-.dial { position: relative; width: 228px; height: 228px; margin: 36px auto 0; }
+.dial { position: relative; width: 244px; height: 244px; margin: 46px auto 0; }
 .dial .rot { position: absolute; inset: 0; transform: rotate(330deg); }
 .dial .ctr { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; gap: 2px; justify-items: center; }
-.dial .ctr .num { font-size: 44px; line-height: 1; }
-.hr { position: absolute; color: var(--fg); opacity: .78; transform: translate(-50%, -50%); white-space: nowrap; font: 700 14px/1 var(--body); }
-.hand { position: absolute; width: 38px; height: 38px; margin: -19px 0 0 -19px; border-radius: 99px; background: var(--card); box-shadow: 0 0 0 3px var(--fg), 0 4px 10px rgba(20,20,40,.18); display: grid; place-items: center; color: var(--fg); z-index: 2; }
-.hand svg { width: 19px; height: 19px; }
+.dial .ctr .num { font-size: 46px; line-height: 1; }
+/* Hour labels sit on an even ring: each one 14px clear of the dial's outer edge. */
+.hr { position: absolute; color: var(--fg); opacity: .78; white-space: nowrap; font: 700 14px/1 var(--body); }
+.hr.t { transform: translate(-50%, -100%); } .hr.b { transform: translate(-50%, 0); } .hr.l { transform: translate(-100%, -50%); } .hr.r { transform: translate(0, -50%); }
+.hand { position: absolute; width: 42px; height: 42px; margin: -21px 0 0 -21px; border-radius: 99px; background: var(--card); box-shadow: 0 0 0 3px var(--fg), 0 4px 10px rgba(20,20,40,.18); display: grid; place-items: center; color: var(--fg); z-index: 2; }
+.hand svg { width: 23px; height: 23px; }
+.screen { --dtrack: rgba(30,26,58,.065); }
+[data-theme="dark"] .screen { --dtrack: var(--track); }
 .ticks { position: absolute; inset: 0; color: var(--muted); }
 .times .t-foot { display: flex; align-items: center; gap: 6px; }
 .times .t-foot svg { width: 15px; height: 15px; }
-.times { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 32px; }
+.times { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 42px; }
 .times .card { padding: 14px 16px; display: grid; gap: 4px; }
 .times .num { font-size: 26px; line-height: 1.05; }
 
@@ -43,12 +47,12 @@
 <div class="scroll"><div class="pad">
   <div class="hd"><h1 class="t-large" data-a style="--i:0">Quiet hours</h1><p class="t-foot muted" data-a style="--i:1">Only what you allow arrives in these hours.</p></div>
   <div class="dial" data-a style="--i:2">
-    <svg class="ticks" width="228" height="228" viewBox="0 0 228 228" id="ticks"></svg>
+    <svg class="ticks" width="244" height="244" viewBox="0 0 244 244" id="ticks"></svg>
     <div class="rot" id="ring"></div>
-    <span class="hand" style="left:63px;top:25.7px;--d:150ms" data-pop aria-label="Starts 10 PM"><span data-ic="moon" data-s="19"></span></span>
-    <span class="hand" style="left:212.5px;top:140.4px" data-fade aria-label="Ends 7 AM"><span data-ic="sun" data-s="19"></span></span>
+    <span class="hand" style="left:67.0px;top:26.7px;--d:150ms" data-pop aria-label="Starts 10 PM"><span data-ic="moon" data-s="23"></span></span>
+    <span class="hand" style="left:228.3px;top:150.5px" data-fade aria-label="Ends 7 AM"><span data-ic="sun" data-s="23"></span></span>
     <div class="ctr"><span data-ic="moon" data-s="22"></span><span class="num" data-count="9">9</span><span class="t-foot muted">quiet hours</span></div>
-    <span class="hr" style="left:114px;top:-14px">12 AM</span><span class="hr" style="left:258px;top:114px">6 AM</span><span class="hr" style="left:114px;top:242px">12 PM</span><span class="hr" style="left:-30px;top:114px">6 PM</span>
+    <span class="hr t" style="left:122px;top:-14px">12 AM</span><span class="hr r" style="left:258px;top:122px">6 AM</span><span class="hr b" style="left:122px;top:258px">12 PM</span><span class="hr l" style="left:-14px;top:122px">6 PM</span>
   </div>
   <div class="times" data-a style="--i:3">
     <div class="card"><span class="t-foot muted"><span data-ic="moon" data-s="15"></span>From</span><span class="num">10:00 PM</span></div>
@@ -67,8 +71,8 @@
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
 
-document.getElementById('ring').innerHTML = DX.ring({ size: 228, stroke: 24, p: 9 / 24, color: 'var(--fg)', track: 'var(--track)', dot: false });
-document.getElementById('ticks').innerHTML = Array.from({ length: 24 }, (_, i) => { const a = i * Math.PI / 12, big = i % 6 === 0, r = 78; return `<circle cx="${(114 + r * Math.sin(a)).toFixed(1)}" cy="${(114 - r * Math.cos(a)).toFixed(1)}" r="${big ? 2.4 : 1.4}" fill="currentColor" opacity="${big ? .7 : .45}"/>`; }).join('');
+document.getElementById('ring').innerHTML = DX.ring({ size: 244, stroke: 24, p: 9 / 24, color: 'var(--fg)', track: 'var(--dtrack)', dot: false });
+document.getElementById('ticks').innerHTML = Array.from({ length: 24 }, (_, i) => { const a = i * Math.PI / 12, big = i % 6 === 0, r = 84; return `<circle cx="${(122 + r * Math.sin(a)).toFixed(1)}" cy="${(122 - r * Math.cos(a)).toFixed(1)}" r="${big ? 2.4 : 1.4}" fill="currentColor" opacity="${big ? .7 : .45}"/>`; }).join('');
 
 </script>
 </body></html>
