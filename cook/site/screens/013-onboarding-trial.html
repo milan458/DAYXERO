@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>013 Two nudges</title>
-<meta name="motion" content="Progress fills to 11/11 (900ms) and the sun lands at the end of the bar. Title and helper arrive, then the two nudges settle in 380ms apart, each with a soft notification haptic: Xero's 8:00 AM card, then Glim's 9:00 PM card, which carries a small night scene introducing Glim (72px, hello, on the hill under the moon; stars twinkle and fireflies drift, ambient). The quiet-hours line (moon 10 PM to sun 8 AM) arrives last (600ms, from 1400ms).">
+<meta name="motion" content="Progress fills to 11/11 (900ms) and the sun lands at the end of the bar. Title and helper arrive, then the two nudges settle in 380ms apart, each with a soft notification haptic: Xero's 8:00 AM card, then Glim's 9:00 PM card (the same notification card), which carries a small night strip on top introducing Glim (72px, hello, on the hill under the moon; stars twinkle and fireflies drift, ambient). The quiet-hours line (moon 10 PM to sun 7 AM, matching Settings) arrives last (600ms, from 1400ms).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -15,16 +15,15 @@
   .ntf .top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 3px; }
   .ntf .top .t-cap { color: var(--muted); font-size: 13px; }
   .ntf .t-foot { font-size: 15px; font-weight: 500; line-height: 1.4; }
-  /* Glim's nudge comes with its own small night: a strip of the midnight sky with Glim on the hill. Night palette in both modes. */
-  .night { border-radius: 22px; overflow: hidden; background: #0F1B33; color: #F6EFE2; box-shadow: 0 10px 24px rgba(15,27,51,.22); }
-  [data-theme="dark"] .night { background: #0A1326; box-shadow: inset 0 0 0 1px rgba(255,255,255,.12); }
-  .night .sky { position: relative; height: 116px; }
+  /* Both nudges sit in the same notification card. Glim's card carries a small night strip on top (the art is night in both modes),
+     but the notification itself is the same container, type and colours as Xero's. */
+  .night { padding: 0; display: block; overflow: hidden; }
+  .night .sky { position: relative; height: 104px; color: #F6EFE2; }
   .night .sky > svg { display: block; }
-  .night .gl { position: absolute; left: 22px; top: 30px; }
-  .night .meet { position: absolute; left: 104px; top: 22px; }
+  .night .gl { position: absolute; left: 22px; top: 22px; }
+  .night .meet { position: absolute; left: 104px; top: 20px; }
   .night .meet .t-cap { color: #AEB8D3; display: block; margin-top: 2px; }
-  .night .ntf { background: transparent; box-shadow: none; border-radius: 0; padding-top: 6px; }
-  .night .ntf .top .t-cap { color: #AEB8D3; }
+  .night .row-n { display: grid; grid-template-columns: 40px 1fr; gap: 12px; padding: 12px 16px 16px; }
   /* Quiet hours: one line, moon to sun. */
   .quiet { margin: 18px var(--gutter) 0; display: flex; align-items: center; justify-content: center; gap: 6px; color: var(--muted); }
   .quiet b { color: var(--fg); font-weight: 700; }
@@ -45,14 +44,14 @@
 
   <div class="day">
     <div class="ntf" data-settle style="--i:0;--d:650ms"><span class="ic x" id="ix"></span><div><div class="top"><span class="t-cap">DayXero &middot; Xero</span><span class="t-cap">8:00 AM</span></div><p class="t-foot">Good morning. Ten seconds for today&rsquo;s pledge?</p></div></div>
-    <div class="night" data-settle style="--i:0;--d:1030ms">
+    <div class="ntf night" data-settle style="--i:0;--d:1030ms">
       <div class="sky"><div id="sky"></div><div class="gl" id="gl"></div>
         <div class="meet"><p class="t-head">Meet Glim</p><span class="t-cap">Your evening friend</span></div></div>
-      <div class="ntf"><span class="ic g" id="ig"></span><div><div class="top"><span class="t-cap">DayXero &middot; Glim</span><span class="t-cap">9:00 PM</span></div><p class="t-foot">How did today go? Take a minute to check in.</p></div></div>
+      <div class="row-n"><span class="ic g" id="ig"></span><div><div class="top"><span class="t-cap">DayXero &middot; Glim</span><span class="t-cap">9:00 PM</span></div><p class="t-foot">How did today go? Take a minute to check in.</p></div></div>
     </div>
   </div>
 
-  <p class="t-foot quiet" data-a style="--d:1400ms"><b>Quiet hours</b><span class="g" data-icon="moon"></span>10 PM to<span class="g" data-icon="sun"></span>8 AM</p>
+  <p class="t-foot quiet" data-a style="--d:1400ms"><b>Quiet hours</b><span class="g" data-icon="moon"></span>10 PM to<span class="g" data-icon="sun"></span>7 AM</p>
 
   <div class="dock">
     <button class="btn" data-a style="--i:5">Yes, remind me</button>
@@ -63,7 +62,7 @@
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon, { w: 2.4 }));
   document.getElementById('ix').innerHTML = DX.char('xero', { mood: 'hello', size: 40, animate: false });
   document.getElementById('ig').innerHTML = DX.char('glim', { mood: 'calm', size: 40, animate: false });
-  document.getElementById('sky').innerHTML = DX.nightSky({ w: 346, h: 116, moonX: 314, moonY: 38 });
+  document.getElementById('sky').innerHTML = DX.nightSky({ w: 346, h: 104, moonX: 314, moonY: 36 });
   document.getElementById('gl').innerHTML = DX.char('glim', { mood: 'hello', size: 72 });
   const bar = document.getElementById('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '90.9%'); void bar.offsetWidth; bar.style.transition = ''; });

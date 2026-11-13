@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>012 Plan reveal</title>
-<meta name="motion" content="Progress eases 9/11 to 10/11; title arrives and the underline draws under 'ready'. The Day Xero medallion is the hero: its cream coin, glowing warm, pops in (700ms spring, from 300ms); Xero settles in beside it at a smaller size (900ms, from 450ms) and cheers, bobbing. The caption arrives, then the stamp card: Prep 1 pops in its up-next form and Prep 2 to 7 pop in locked, 90ms apart (from 900ms). The button arrives after. Light haptic when the medallion lands and on the button.">
+<meta name="motion" content="Progress eases 9/11 to 10/11; title arrives and the underline draws under 'ready'. The Day Xero medallion is the hero: its cream coin, centred and glowing warm amber in both modes, pops in (700ms spring, from 300ms); Xero, smaller and off to its lower left, settles in (900ms, from 450ms) and cheers, bobbing. The caption arrives, then the stamp card: Prep 1 pops in its up-next form and Prep 2 to 7 pop in dim (locked, no padlocks), 90ms apart (from 900ms). The button arrives after. Light haptic when the medallion lands and on the button.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -9,11 +9,13 @@
   .q { padding-top: 112px; gap: 8px; }
   /* Hero: the Day Xero medallion (kit xero badge, waiting form) on its cream coin, glowing; Xero cheers beside it, smaller. */
   .hero { position: relative; height: 186px; margin: 26px var(--gutter) 0; }
-  .hero .coin { position: absolute; left: 142px; top: 4px; width: 172px; height: 172px; border-radius: 99px; background: #FFF8EE; display: grid; place-items: center;
+  .hero .coin { position: absolute; left: 87px; top: 4px; width: 172px; height: 172px; border-radius: 99px; background: #FFF8EE; display: grid; place-items: center;
     box-shadow: 0 0 0 10px rgba(255,217,102,.30), 0 0 46px 14px rgba(255,201,60,.42); }
-  [data-theme="dark"] .hero .coin { box-shadow: 0 0 0 9px rgba(255,248,238,.10), 0 0 44px 12px rgba(255,205,130,.26); }
+  /* Dark: the halo is warm amber too (never grey). */
+  [data-theme="dark"] .hero .coin { box-shadow: 0 0 0 3px rgba(255,214,140,.6), 0 0 26px 8px rgba(255,190,90,.5), 0 0 80px 22px rgba(255,160,60,.24); }
   .hero .coin .med { color: #F5B83D; }
-  .hero .xc { position: absolute; left: 16px; top: 52px; }
+  /* The medallion leads, centred; Xero is smaller, off to its lower left, cheering up at it. */
+  .hero .xc { position: absolute; left: -2px; top: 92px; }
   .cap { padding: 28px var(--gutter) 0; text-align: center; display: grid; gap: 4px; }
   .cap .t-foot { color: var(--muted); }
   .wrap { padding: 24px var(--gutter) 0; }
@@ -22,6 +24,8 @@
   .stamps .pb { flex: none; display: block; }
   /* Locked stamps: the kit's locked medallion with a solid hairline instead of a dashed one (fewer dashes in the row). */
   .stamps .pb.lk circle[stroke-dasharray] { stroke-dasharray: none; stroke-opacity: .22; }
+  /* Locked = dim: no padlocks, just a faint ring and number. */
+  .stamps .pb.lk { opacity: .7; }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
@@ -41,7 +45,7 @@
   </div>
 
   <div class="cap">
-    <p class="t-title" data-a style="--i:3">Day Xero, Fri, Nov 6</p>
+    <p class="t-title" data-a style="--i:3">Day Xero &middot; Fri, Nov 6</p>
     <p class="t-foot" data-a style="--i:4">Your Quit Day. This medallion is yours that day.</p>
   </div>
 
@@ -60,9 +64,11 @@
 <script>
   document.querySelector('.icon-btn').innerHTML = DX.icon('back');
   document.getElementById('med').innerHTML = DX.badge({ kind: 'xero', n: '0', state: 'next', size: 140, bare: true, label: 'Day Xero' });
-  document.getElementById('hx').innerHTML = DX.char('xero', { mood: 'cheer', size: 112 });
+  document.getElementById('hx').innerHTML = DX.char('xero', { mood: 'cheer', size: 84 });
   let h = '';
-  for (let i = 1; i <= 7; i++) h += `<span class="pb ${i === 1 ? '' : 'lk'}" data-pop style="--i:0;--d:${900 + i * 90}ms">${DX.badge({ kind: 'prep', n: i, state: i === 1 ? 'next' : 'locked', size: 42, bare: true, label: 'Prep ' + i })}</span>`;
+  /* Locked stamps drop the kit's padlock (dim = locked) and centre their number. */
+  const unlock = svg => svg.replace(/<path d="M43 62v-3a7 7 0 0114 0v3M40 62h20v12H40z"[^>]*\/?>(<\/path>)?/, '').replace(/<text x="50" y="50"/, '<text x="50" y="50" dominant-baseline="central"');
+  for (let i = 1; i <= 7; i++) h += `<span class="pb ${i === 1 ? '' : 'lk'}" data-pop style="--i:0;--d:${900 + i * 90}ms">${unlock(DX.badge({ kind: 'prep', n: i, state: i === 1 ? 'next' : 'locked', size: 42, bare: true, label: 'Prep ' + i }))}</span>`;
   document.getElementById('stamps').innerHTML = h;
   const bar = document.getElementById('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '81.8%'); void bar.offsetWidth; bar.style.transition = ''; });

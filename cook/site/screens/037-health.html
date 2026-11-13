@@ -1,17 +1,24 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>037 Health timeline</title>
-<meta name="motion" content="Title and the Vaping / Smoking chips arrive; each card's paper-cut spot (its own motif: sunrise, clouds blowing away, a summit flag, a calm lake, a hand mirror with a sparkle) lifts in with the card, then the rail draws top to bottom (900ms) while timeline cards arrive with a 90ms stagger. Each finished change carries a tick on its rail node, in with its card (the first change, withdrawal starting, gets a plain node and a neutral Started; the withdrawal peak reads Passed); the Under way bar fills to 50% (900ms settle); the Ahead node is an open ring. Every card ends in a chevron and opens its detail. Switching chips cross-fades the list (250ms) with a selection haptic.">
+<meta name="motion" content="Title and the Vaping / Smoking chips arrive; each card's paper-cut spot (its own motif: sunrise, clouds blowing away, a summit flag, a calm lake, a hand mirror with a sparkle) lifts in with the card, then the rail draws top to bottom (900ms) while timeline cards arrive with a 90ms stagger. Each finished change carries a tick on its rail node, in with its card (the first change, Withdrawal began, gets a plain node and a neutral 'A few hours in'; the withdrawal peak reads Passed). The under-way card leads with a soft warm tint; its rail node is half filled and sends out a soft pulse ring every 2.4s (from 1.2s) while its bar fills to 50% (900ms settle); the Ahead node is an open ring. All spots and text sit on one column. Every card ends in a chevron and opens its detail. Switching chips cross-fades the list (250ms) with a selection haptic.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   .tl { position: relative; margin-top: 20px; padding-left: 30px; display: grid; gap: 12px; }
   .rail { position: absolute; left: 9px; top: 24px; bottom: 40px; width: 2px; }
   .rail svg { display: block; width: 2px; height: 100%; overflow: visible; }
+  /* light: the rail is a real line (about 3:1 on cream); dark keeps the hairline */
+  .tl { --rail: color-mix(in srgb, var(--fg) 50%, var(--g)); }
+  [data-theme="dark"] .tl { --rail: var(--line); }
   .node { position: absolute; left: -30px; top: 50%; margin-top: -10px; width: 20px; height: 20px; border-radius: 99px; display: grid; place-items: center; background: var(--g); }
   .node.done { background: var(--tick); color: #fff; }
   .node.done svg { width: 12px; height: 12px; }
-  .node.now { box-shadow: inset 0 0 0 2.5px var(--fg); }
-  .node.now::after { content: ""; width: 8px; height: 8px; border-radius: 99px; background: var(--fg); }
+  /* under way: a half-filled node (the right half, like a ring at 50%) with a soft pulse while the change is happening */
+  .node.now { background: conic-gradient(var(--fg) 0 50%, var(--g) 0); box-shadow: inset 0 0 0 2.5px var(--fg); }
+  .node.now::before { content: ""; position: absolute; inset: -5px; border-radius: 99px; box-shadow: 0 0 0 2px var(--fg); opacity: 0; }
+  .play .node.now::before { animation: pulse 2.4s ease-out 1.2s infinite; }
+  @keyframes pulse { 0% { opacity: .35; transform: scale(.7); } 100% { opacity: 0; transform: scale(1.25); } }
+  .still .node.now::before { animation: none !important; opacity: 0; }
   .node.ahead { box-shadow: inset 0 0 0 2.5px var(--muted); }
   .node.past::after { content: ""; width: 12px; height: 12px; border-radius: 99px; background: var(--muted); }
   .item { position: relative; display: flex; gap: 12px; align-items: center; padding: 14px 10px 14px 12px; }
@@ -24,8 +31,9 @@
   .chev { display: grid; color: var(--muted); }
   .chev svg { width: 18px; height: 18px; }
   .item.past { background: transparent; }
-  .item.now { padding: 16px 10px 16px 12px; box-shadow: inset 0 0 0 2px var(--fg), 0 10px 24px rgba(30,26,58,.08); }
-  .item.now .ill { width: 64px; height: 64px; border-radius: 18px; }
+  /* the under-way card leads: a soft warm tint and a little more height; its spot and text stay on the same column as the rest */
+  .item.now { padding: 18px 10px 18px 12px; background: color-mix(in srgb, #FF9A5C 16%, #FFFFFF); box-shadow: inset 0 0 0 2px var(--fg), 0 12px 26px rgba(30,26,58,.1); }
+  [data-theme="dark"] .item.now { background: color-mix(in srgb, #FFF8EE 9%, var(--card)); box-shadow: inset 0 0 0 2px var(--fg), 0 12px 26px rgba(0,0,0,.3); }
   .item.now .t-head { font-size: 18px; }
   .item.now .st { color: var(--fg); }
   .item.now .progress { height: 8px; margin-top: 4px; border-radius: 99px; }
@@ -41,12 +49,12 @@
       <div class="chips" data-a style="--i:2;margin-top:16px"><button class="chip on">Vaping</button><button class="chip">Smoking</button></div>
 
       <div class="tl">
-        <div class="rail"><svg viewBox="0 0 2 100" preserveAspectRatio="none"><path class="draw" d="M1 0V100" stroke="var(--line)" stroke-width="2" vector-effect="non-scaling-stroke" style="--len:100;--dur:900ms;--d:300ms"/></svg></div>
+        <div class="rail"><svg viewBox="0 0 2 100" preserveAspectRatio="none"><path class="draw" d="M1 0V100" stroke="var(--rail)" stroke-width="2" vector-effect="non-scaling-stroke" style="--len:100;--dur:900ms;--d:300ms"/></svg></div>
 
         <div class="card item past" data-a style="--i:3">
           <span class="node past"></span>
           <span class="ill" data-spot="rise"></span>
-          <div class="grow"><p class="t-head">Withdrawal can start</p><span class="st">Started · a few hours in</span></div>
+          <div class="grow"><p class="t-head">Withdrawal began</p><span class="st">A few hours in</span></div>
           <span data-ic="chev" class="chev"></span>
         </div>
         <div class="card item past" data-a style="--i:4">

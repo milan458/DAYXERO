@@ -1,40 +1,38 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>011 Plan building</title>
-<meta name="motion" content="Progress eases 8/11 to 9/11 while the title arrives and Xero (calm) settles in beside his pinned note. The five plan rows then settle up one by one, 380ms apart (900ms settle each), each paper icon landing with its row; a light haptic as each row lands. After the last row the status line swaps to 'Built from your answers' with the screen's one green check popping in (420ms), the note's pin bumps (520ms spring, success haptic) and the button arrives.">
+<meta name="motion" content="A short build beat. Progress eases 8/11 to 9/11 while the title arrives and Xero (cheer, eyes open, proud) settles in beside his pinned note, bobbing. Three plan pieces (Quit Day on a cream card, waves to watch, your reason) settle up one by one, 420ms apart (900ms settle each), each warm paper-cut icon landing with its row; a light haptic as each row lands. At 2100ms the status line swaps to 'Built from your answers' with the screen's one green check popping in (420ms), the note's pin bumps (520ms spring, success haptic) and the button arrives.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   /* Onboarding header: back button and progress only (no avatar); the bar ends at the gutter so the sun knob never collides. */
   .nav { padding-right: 26px; }
-  .head { padding: 116px var(--gutter) 0; display: grid; grid-template-columns: 1fr 112px; align-items: center; gap: 10px; }
-  .head .xw { margin: 0; justify-self: end; position: relative; width: 112px; height: 92px; }
-  .head .xw #bw { position: absolute; right: 0; top: 0; }
+  /* A centred build beat: Xero, proud, with his pinned note; the title under him; three pieces below. */
+  .head { padding: 112px var(--gutter) 0; display: grid; justify-items: center; text-align: center; gap: 8px; }
+  .head .xw { margin: 0; position: relative; width: 196px; height: 104px; }
+  .head .xw #bw { position: absolute; left: 46px; top: 0; }
   /* Xero's pinned note: a cream paper slip with a coral pin, beside him. */
-  .head .note { position: absolute; left: 0; top: 26px; transform: rotate(-9deg); }
+  .head .note { position: absolute; left: 6px; top: 34px; transform: rotate(-9deg); }
   .head .note .pin { transform-box: fill-box; transform-origin: center; }
-  .head .t-large { font-size: 28px; }
-  .status { padding: 8px var(--gutter) 0; position: relative; height: 30px; }
-  .status p { position: absolute; left: var(--gutter); top: 8px; transition: opacity .4s var(--ease), transform .4s var(--ease); }
+  .head .t-large { font-size: 30px; }
+  .status { padding: 8px var(--gutter) 0; position: relative; height: 32px; }
+  .status p { position: absolute; left: 0; right: 0; top: 8px; justify-content: center; text-align: center; transition: opacity .4s var(--ease), transform .4s var(--ease); }
   .status .b { opacity: 0; transform: translateY(6px); }
   .status.done .a { opacity: 0; transform: translateY(-6px); }
   .status.done .b { opacity: 1; transform: none; }
-  .plan { margin: 16px var(--gutter) 0; display: grid; gap: 10px; }
-  .pr { display: flex; align-items: center; gap: 14px; background: var(--card); border-radius: 18px; padding: 12px 14px 12px 14px; min-height: 70px; }
+  .plan { margin: 22px var(--gutter) 0; display: grid; gap: 12px; }
+  .pr { display: flex; align-items: center; gap: 14px; background: var(--card); border-radius: 20px; padding: 16px 16px; min-height: 84px; }
   [data-theme="dark"] .pr { box-shadow: inset 0 0 0 1px var(--line); }
   .pr .grow { flex: 1; min-width: 0; }
   .pr .t-cap { color: var(--muted); display: block; margin-bottom: 3px; font-size: 13px; }
-  /* Quit Day: the ink hero tile (same as the Quit Day tile on 010), distinct from the apricot ground. */
-  .pr.qd { min-height: 88px; padding: 16px 16px; background: var(--sel); color: var(--sel-fg); box-shadow: 0 10px 24px rgba(30,26,58,.16); }
-  .pr.qd .t-cap { color: inherit; opacity: .75; }
-  .pr.qd .t-head { font-size: 24px; font-family: var(--display); font-weight: 800; letter-spacing: -.4px; }
-  .pr.qd .ico-tile { width: 48px; height: 48px; background: color-mix(in srgb, var(--sel-fg) 14%, transparent); color: inherit; }
-  .pr.qd .ico-tile svg { width: 32px; height: 32px; }
-  [data-theme="dark"] .pr.qd { box-shadow: none; }
+  /* Quit Day: the same cream card with a hairline as the Quit Day row on 010 (never ink, so it can't read as a button). */
+  .pr.qd { background: #FFF8EE; box-shadow: inset 0 0 0 1px var(--line); }
+  [data-theme="dark"] .pr.qd { background: var(--card-2); box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); }
+  .pr.qd .t-head { font-size: 22px; font-family: var(--display); font-weight: 800; letter-spacing: -.4px; }
   .pr .sub { display: block; color: var(--muted); margin-top: 3px; }
   .status .b { display: flex; align-items: center; gap: 8px; }
   .pr .t-head { font-size: 17px; }
-  .pr .ico-tile { width: 38px; height: 38px; }
-  .pr .ico-tile svg { width: 28px; height: 28px; overflow: visible; }
+  .pr .ico-tile { width: 48px; height: 48px; border-radius: 14px; }
+  .pr .ico-tile svg { width: 34px; height: 34px; overflow: visible; }
   .pr.reason .t-head { font: italic 500 16px/1.35 var(--body); letter-spacing: 0; text-wrap: pretty; }
 </style>
 </head><body>
@@ -45,8 +43,8 @@
   </div>
 
   <div class="head">
-    <h1 class="t-large" data-a>Your plan,<br>built around you</h1>
     <div class="xw" data-settle style="--d:200ms"><svg class="note" id="note" width="40" height="46" viewBox="0 0 40 46" aria-hidden="true"></svg><div id="bw"><div class="bob" id="xero"></div></div></div>
+    <h1 class="t-large" data-a>Your plan,<br>built around you</h1>
   </div>
   <div class="status" id="status" data-a style="--i:1">
     <p class="t-foot muted a">Putting the pieces together</p>
@@ -56,38 +54,39 @@
   <div class="plan" id="plan"></div>
 
   <div class="dock">
-    <button class="btn" data-a style="--d:2500ms">See my plan</button>
+    <button class="btn" data-a style="--d:2100ms">See my plan</button>
   </div>
 </div>
 <script>
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
-  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'calm', size: 88 });
+  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'cheer', size: 104 });
   const bw = document.getElementById('bw'), dark = DX.theme === 'dark';
   /* Paper-cut icons: flat cut pieces, each with a short paper shadow. */
   const sh = dark ? 'rgba(0,0,0,.5)' : 'rgba(110,50,20,.26)';
   const pf = id => `<defs><filter id="${id}" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="1.2" stdDeviation=".4" flood-color="${sh}"/></filter></defs>`;
+  /* Paper-cut spots in one warm family (coral, apricot, sun, cream): a pennant, a rising wave, a heart. */
   const ART = {
-    flag: `<svg viewBox="0 0 32 32" aria-hidden="true">${pf('p1')}<rect x="8" y="5" width="2.6" height="23" rx="1.3" fill="#B07A52" filter="url(#p1)"/><path d="M10.6 6 L25 10.5 L10.6 16 Z" fill="#FFD966" filter="url(#p1)"/><ellipse cx="9.3" cy="28" rx="5" ry="1.6" fill="#FF9A5C" filter="url(#p1)"/></svg>`,
-    cal: `<svg viewBox="0 0 32 32" aria-hidden="true">${pf('p2')}<rect x="4" y="7" width="24" height="21" rx="4" fill="#FFFDF8" filter="url(#p2)"/><path d="M4 11 a4 4 0 0 1 4 -4 h16 a4 4 0 0 1 4 4 v3 h-24 z" fill="#FF7155" filter="url(#p2)"/>
-      <rect x="9.5" y="4" width="3" height="6" rx="1.5" fill="#1E1A3A"/><rect x="19.5" y="4" width="3" height="6" rx="1.5" fill="#1E1A3A"/>
-      <g fill="#FFB27A"><circle cx="10" cy="19" r="1.6"/><circle cx="16" cy="19" r="1.6"/><circle cx="22" cy="19" r="1.6"/><circle cx="10" cy="24" r="1.6"/><circle cx="16" cy="24" r="1.6"/></g><circle cx="22" cy="24" r="2.2" fill="#FFC93C"/></svg>`,
-    wave: `<svg viewBox="0 0 32 32" aria-hidden="true">${pf('p3')}<path d="M3 15 C7 10 11 10 14 14 C17 18 21 18 24 14 C26 11.5 28 11 29 11.5 V27 H3 Z" fill="#5C7FF0" filter="url(#p3)"/><path d="M3 21 C7 17 11 17 14 20.5 C17 24 21 24 24 20.5 C26 18.5 28 18 29 18.5 V27 H3 Z" fill="#2A52DB" filter="url(#p3)"/><circle cx="23" cy="7" r="2" fill="#9CCBFF" filter="url(#p3)"/></svg>`,
-    shield: `<svg viewBox="0 0 32 32" aria-hidden="true">${pf('p4')}<path d="M16 3.5 L26 7.5 V15 C26 21.5 21.5 26 16 28.5 C10.5 26 6 21.5 6 15 V7.5 Z" fill="#3FB37F" filter="url(#p4)"/><path d="M16 8 L22 10.5 V15.5 C22 19.5 19.5 22.4 16 24 C12.5 22.4 10 19.5 10 15.5 V10.5 Z" fill="#9FE3BC" filter="url(#p4)"/><circle cx="16" cy="15.5" r="2.6" fill="#FFF8EE" filter="url(#p4)"/></svg>`,
-    heart: `<svg viewBox="0 0 32 32" aria-hidden="true">${pf('p5')}<path d="M16 27.5 C9 23 4 18.5 4 12.5 C4 8.5 7 5.5 10.6 5.5 C13 5.5 14.8 6.8 16 8.6 C17.2 6.8 19 5.5 21.4 5.5 C25 5.5 28 8.5 28 12.5 C28 18.5 23 23 16 27.5 Z" fill="#FF7155" filter="url(#p5)"/><path d="M9 11.5 C9.5 9.6 10.8 8.6 12.4 8.5" fill="none" stroke="#FFB09C" stroke-width="2.4" stroke-linecap="round"/></svg>`
+    flag: `<svg viewBox="0 0 32 32" aria-hidden="true">${pf('p1')}<ellipse cx="11" cy="27.6" rx="7" ry="2.2" fill="#FFC38A" filter="url(#p1)"/><rect x="9.6" y="4" width="2.8" height="24" rx="1.4" fill="#9A6A48" filter="url(#p1)"/>
+      <path d="M12.4 5 L27 10 L12.4 15.6 Z" fill="#FF7155" filter="url(#p1)"/><path d="M12.4 9.6 L20 10 L12.4 13 Z" fill="#FFB09C"/><circle cx="11" cy="4" r="2.2" fill="#FFD966" filter="url(#p1)"/></svg>`,
+    wave: `<svg viewBox="0 0 32 32" aria-hidden="true">${pf('p3')}<circle cx="23" cy="9" r="4.2" fill="#FFD966" filter="url(#p3)"/>
+      <path d="M3 17 C7 12 11 12 14 16 C17 20 21 20 24 16 C26 13.5 28 13 29 13.5 V28 H3 Z" fill="#FFC38A" filter="url(#p3)"/>
+      <path d="M3 22.5 C7 18.5 11 18.5 14 22 C17 25.5 21 25.5 24 22 C26 20 28 19.5 29 20 V28 H3 Z" fill="#FF7155" filter="url(#p3)"/></svg>`,
+    heart: `<svg viewBox="0 0 32 32" aria-hidden="true">${pf('p5')}<path d="M16 28.5 C8.6 24 3.5 19.4 3.5 13 C3.5 8.8 6.7 5.6 10.6 5.6 C13.1 5.6 15 7 16 8.9 C17 7 18.9 5.6 21.4 5.6 C25.3 5.6 28.5 8.8 28.5 13 C28.5 19.4 23.4 24 16 28.5 Z" fill="#FFF8EE" filter="url(#p5)"/>
+      <path d="M16 25.6 C10 21.8 6.6 18.2 6.6 13.4 C6.6 10.7 8.6 8.8 11 8.8 C13.2 8.8 14.8 10.2 16 12.6 C17.2 10.2 18.8 8.8 21 8.8 C23.4 8.8 25.4 10.7 25.4 13.4 C25.4 18.2 22 21.8 16 25.6 Z" fill="#FF7155"/>
+      <path d="M10 12.8 C10.4 11.4 11.4 10.7 12.6 10.6" fill="none" stroke="#FFB09C" stroke-width="2" stroke-linecap="round"/></svg>`
   };
   document.getElementById('note').innerHTML = `${pf('pn')}<rect x="5" y="6" width="30" height="36" rx="3" fill="#FFF8EE" filter="url(#pn)"/>
     <g stroke="#E2D6C6" stroke-width="2.2" stroke-linecap="round"><path d="M11 20 H29"/><path d="M11 26 H29"/><path d="M11 32 H23"/></g>
     <g class="pin" id="pin"><circle cx="20" cy="9" r="4.6" fill="#FF7155" filter="url(#pn)"/><circle cx="18.6" cy="7.8" r="1.4" fill="#FFB09C"/></g>`;
+  /* A short build beat: three pieces only. Prep stamps and the Day Xero medallion are revealed on the next screen. */
   const rows = [
     ['flag', 'Quit Day', 'Next Friday'],
-    ['cal', 'Prep week', '7 short sessions, one a day'],
     ['wave', 'Waves to watch', 'Coffee and stress', 'When your cravings tend to rise'],
-    ['shield', 'Tools for', 'Irritability and social situations'],
     ['heart', 'Your reason', '&ldquo;Run with Aria without stopping to catch my breath&rdquo;']
   ];
   document.getElementById('plan').innerHTML = rows.map(([ic, k, v, sub], i) => {
-    const t = 450 + i * 380;
-    return `<div class="pr ${i === 4 ? 'reason' : ''} ${i === 0 ? 'qd' : ''}" data-settle style="--i:0;--d:${t}ms">
+    const t = 450 + i * 420;
+    return `<div class="pr ${i === 2 ? 'reason' : ''} ${i === 0 ? 'qd' : ''}" data-settle style="--i:0;--d:${t}ms">
       <span class="ico-tile">${ART[ic]}</span>
       <div class="grow"><span class="t-cap">${k}</span><p class="t-head">${v}</p>${sub ? `<span class="t-cap sub">${sub}</span>` : ''}</div></div>`;
   }).join('');
@@ -97,6 +96,6 @@
   DX.after(250, () => bar.style.setProperty('--p', '81.8%'));
   /* The one check on the screen: the plan is built. Rows carry no ticks. */
   const done = () => { st.classList.add('done'); document.getElementById('ok').innerHTML = DX.check({ size: 20 }); pin.classList.add('bump'); };
-  DX.after(2500, done); DX.onStill(done);
+  DX.after(2100, done); DX.onStill(done);
 </script>
 </body></html>

@@ -1,33 +1,37 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>038 Health change</title>
-<meta name="motion" content="The paper-cut dawn card fades up (night sky in dark), its hills lift, Xero settles onto the front hill (900ms) and a soft pink glow blooms on his cheeks (600ms fade) while the little standing mirror beside him catches a sparkle that pops (spring 420ms) and twinkles on a 2.4s loop. Then title, the timing card (the ring sweeps to half, Day 7 of the roughly 14 days before gums start to change, while the 7 counts up), the two paragraphs and the 'What you might notice' rows arrive with a 90ms stagger. No haptic.">
+<meta name="motion" content="The paper-cut dawn card fades up (warm layered paper hills and a low gold sun in light, night sky in dark), its hills lift, Xero settles onto the front hill (900ms) and a soft pink glow blooms on his cheeks (600ms fade) while the little standing mirror beside him catches a sparkle that pops (spring 420ms) and twinkles on a 2.4s loop. Then title, the timing card (the ring sweeps to half while the 7 in it counts up: Day 7 of about 14, usually 2 to 6 weeks), the two paragraphs, the 'What you might notice' heading (its NHS source on the right) and rows, then the Next change row arrive with a 90ms stagger; the Next change row opens the next change in the timeline (push). No haptic.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .art { position: relative; height: 178px; border-radius: 26px; overflow: hidden; }
+  .art { position: relative; height: 166px; border-radius: 26px; overflow: hidden; }
   .art .scene { position: absolute; inset: 0; }
   .art .scene svg { display: block; }
-  .art .hero { position: absolute; left: 70px; top: 30px; }
-  .art .glow { position: absolute; left: 70px; top: 30px; width: 128px; height: 128px; pointer-events: none; }
+  .art .hero { position: absolute; left: 58px; top: 8px; }
+  .art .glow { position: absolute; left: 58px; top: 8px; width: 146px; height: 146px; pointer-events: none; }
   .tw { transform-box: fill-box; transform-origin: center; }
   .play .tw { animation: tw 2.4s ease-in-out 1.2s infinite; }
   @keyframes tw { 50% { transform: scale(.7); opacity: .6; } }
   .still .tw { animation: none !important; }
-  .head { margin-top: 18px; display: grid; gap: 6px; }
-  .when { margin-top: 14px; display: flex; align-items: center; gap: 14px; }
-  .when .ringwrap { position: relative; width: 68px; height: 68px; flex: none; color: var(--fg); }
-  .when .ringwrap b { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 1px; font: 800 22px/1 var(--display); }
-  .when .ringwrap b small { font: 600 12px/1 var(--body); color: var(--muted); }
+  .head { margin-top: 16px; display: grid; gap: 6px; }
+  .when { margin-top: 12px; padding: 14px 16px; display: flex; align-items: center; gap: 14px; }
+  .when .ringwrap { position: relative; width: 60px; height: 60px; flex: none; color: var(--fg); }
+  .when .ringwrap b { position: absolute; inset: 0; display: grid; place-content: center; font: 800 22px/1 var(--display); }
   .when .grow { flex: 1; display: grid; gap: 2px; }
-  .copy { margin-top: 14px; display: grid; gap: 10px; }
-  .notice { margin-top: 16px; }
-  .notice .list { margin-top: 10px; }
-  .notice .row { min-height: 44px; gap: 12px; padding-inline: 16px; }
+  .copy { margin-top: 12px; display: grid; gap: 10px; }
+  .notice { margin-top: 14px; }
+  .notice .nh { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .notice .list { margin-top: 8px; }
+  .notice .row { min-height: 42px; gap: 12px; padding-inline: 16px; padding-block: 8px; }
+  .next { margin-top: 12px; }
+  .next .row { min-height: 60px; padding-block: 9px; }
+  .next .chev { display: grid; color: var(--muted); }
+  .next .chev svg { width: 18px; height: 18px; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
   <div class="nav"><button class="icon-btn" aria-label="Close" data-ic="close" data-go="037-health"></button></div>
-  <div class="scroll" style="padding-top:106px">
+  <div class="scroll" style="padding-top:102px">
     <div class="pad">
       <div class="art" data-a style="--i:0">
         <div class="scene" id="scene"></div>
@@ -40,8 +44,8 @@
       </div>
 
       <div class="card when" data-a style="--i:2">
-        <div class="ringwrap"><span id="ring"></span><b><small>Day</small><span data-count="7">7</span></b></div>
-        <div class="grow"><p class="t-head" style="font-size:17px">Starts in about a week</p><p class="t-foot muted">Usually 2 to 6 weeks after Quit Day</p></div>
+        <div class="ringwrap"><span id="ring"></span><b><span data-count="7">7</span></b></div>
+        <div class="grow"><p class="t-head" style="font-size:17px">Day 7 of about 14</p><p class="t-foot muted">Usually 2 to 6 weeks</p></div>
       </div>
 
       <div class="copy">
@@ -50,14 +54,16 @@
       </div>
 
       <div class="notice">
-        <h2 class="t-head" data-a style="--i:5">What you might notice</h2>
+        <div class="nh" data-a style="--i:5"><h2 class="t-head">What you might notice</h2><span class="t-cap muted">Source: <span class="source">NHS</span></span></div>
         <div class="list" data-a style="--i:6">
           <div class="row"><p class="t-foot grow" style="font-size:15px">Pinker, firmer gums</p></div>
           <div class="row"><p class="t-foot grow" style="font-size:15px">Fresher breath and a sharper sense of taste</p></div>
           <div class="row"><p class="t-foot grow" style="font-size:15px">A little bleeding when you brush at first. That's healing, not harm.</p></div>
         </div>
       </div>
-      <p class="t-cap muted" data-a style="--i:7;margin-top:12px">Source: <span class="source">NHS Better Health</span></p>
+      <div class="list next" data-a style="--i:7" data-go="037-health">
+        <div class="row"><div class="grow"><p class="t-foot muted">Next change</p><p class="t-head" style="font-size:17px">Breathing gets easier</p></div><span class="chev" data-ic="chev"></span></div>
+      </div>
     </div>
   </div>
 </div>
@@ -65,12 +71,12 @@
   document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20 })));
   const dark = DX.theme === 'dark';
   /* Paper-cut scene led by Xero: he stands on the front hill smiling, a soft pink glow on his cheeks, beside a little standing
-     mirror that catches a sparkle. Day: blush dawn. Night: navy sky, crescent moon, stars, navy hills; the mirror reflects moonlight. */
+     mirror that catches a sparkle. Day: warm dawn with layered paper hills and a gold sun. Night: navy sky, crescent moon, stars, navy hills; the mirror reflects moonlight. */
   const K = dark
     ? { sky: ['#0D1630', '#1F2D55', '#3A4672'], halo: '#F6E7C1', haloO: .16, hills: ['#22335B', '#1A2949', '#121E38'], frame: '#E6DCCB', frame2: '#C2B6A2', glass: ['#5D7BC0', '#9DB8EA'], shine: '#F6EFE2', spark: '#FFD27A' }
-    : { sky: ['#FFC2AA', '#FFDCCB', '#FFEFE4'], halo: '#FFF8EE', haloO: .7, hills: ['#FFC9B4', '#FFAF98', '#F4977E'], frame: '#FF8A6B', frame2: '#E86F52', glass: ['#A9C8FF', '#DCEBFF'], shine: '#FFFFFF', spark: '#F5B83D' };
+    : { sky: ['#FFB08A', '#FFD0B0', '#FFE8D6'], halo: '#FFF6DA', haloO: .75, far: '#FFC4A0', hills: ['#FFAE86', '#FF9670', '#EE7A58'], frame: '#F26E4C', frame2: '#D2563A', glass: ['#A9C8FF', '#DCEBFF'], shine: '#FFFFFF', spark: '#F5B83D' };
   const star4 = (x, y, r, f, cls = '') => `<path class="${cls}" d="M${x} ${y - r}Q${x} ${y} ${x + r} ${y}Q${x} ${y} ${x} ${y + r}Q${x} ${y} ${x - r} ${y}Q${x} ${y} ${x} ${y - r}Z" fill="${f}"/>`;
-  document.getElementById('scene').innerHTML = `<svg viewBox="0 0 346 178" width="346" height="178" aria-hidden="true">
+  document.getElementById('scene').innerHTML = `<svg viewBox="0 12 346 166" width="346" height="166" aria-hidden="true">
     <defs><linearGradient id="lsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${K.sky[0]}"/><stop offset=".6" stop-color="${K.sky[1]}"/><stop offset="1" stop-color="${K.sky[2]}"/></linearGradient>
       <linearGradient id="lglass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${K.glass[1]}"/><stop offset="1" stop-color="${K.glass[0]}"/></linearGradient>
       <radialGradient id="lhalo"><stop offset=".2" stop-color="${K.halo}" stop-opacity="${K.haloO}"/><stop offset="1" stop-color="${K.halo}" stop-opacity="0"/></radialGradient>
@@ -79,10 +85,11 @@
     <rect width="346" height="178" fill="url(#lsky)"/>
     ${dark ? [[30, 24], [92, 14], [166, 30], [214, 12], [256, 46], [60, 66]].map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="${i % 2 ? 1.1 : 1.6}" fill="#fff" opacity="${i % 2 ? .5 : .85}"/>`).join('')
       + `<circle cx="300" cy="40" r="40" fill="url(#lhalo)"/><path d="M300 24 A16 16 0 1 0 314 48 A13 13 0 1 1 300 24Z" fill="#F6E7C1"/>`
-      : `<circle cx="134" cy="92" r="96" fill="url(#lhalo)"/><circle cx="296" cy="44" r="20" fill="#FFD9A0" opacity=".9"/>`}
+      : `<circle cx="132" cy="88" r="96" fill="url(#lhalo)"/><circle cx="312" cy="50" r="42" fill="url(#lhalo)"/><circle cx="312" cy="50" r="19" fill="#FFD25E"/>`
+      + `<path filter="url(#llift)" d="M0 110 C50 96 108 102 160 108 S282 92 346 100 V178 H0z" fill="${K.far}"/>`}
     <path filter="url(#llift)" d="M0 128 C60 112 120 120 180 124 S300 110 346 116 V178 H0z" fill="${K.hills[0]}"/>
     <path filter="url(#llift)" d="M0 158 C50 150 100 152 150 156 C210 161 280 146 346 150 V178 H0z" fill="${K.hills[1]}"/>
-    <g filter="url(#ldrop)" transform="translate(246 156) rotate(-8)">
+    <g filter="url(#ldrop)" transform="translate(252 160) rotate(-8) scale(1.16)">
       <path d="M-14 0 C-14 -6 -6 -8 0 -8 C6 -8 14 -6 14 0Z" fill="${K.frame2}"/>
       <rect x="-3" y="-30" width="6" height="24" rx="3" fill="${K.frame2}"/>
       <ellipse cx="0" cy="-58" rx="25" ry="31" fill="${K.frame}"/>
@@ -92,11 +99,11 @@
       <path d="M-11 -66 C-9 -74 -3 -79 4 -80" fill="none" stroke="${K.shine}" stroke-opacity=".9" stroke-width="3.4" stroke-linecap="round"/>
       <path d="M-8 -52 l14 -14" stroke="${K.shine}" stroke-opacity=".5" stroke-width="2.4" stroke-linecap="round"/>
     </g>
-    <g data-pop style="--d:1000ms;transform-origin:268px 86px">${star4(270, 84, 9, K.spark, 'tw')}</g>
-    <g data-pop style="--d:1150ms;transform-origin:224px 70px">${star4(224, 70, 5.5, K.spark, 'tw')}</g>
+    <g data-pop style="--d:1000ms;transform-origin:286px 84px">${star4(286, 84, 9.5, K.spark, 'tw')}</g>
+    <g data-pop style="--d:1150ms;transform-origin:218px 50px">${star4(218, 50, 6, K.spark, 'tw')}</g>
     <path filter="url(#llift)" d="M0 166 C70 160 150 170 220 168 C280 166 320 162 346 164 V178 H0z" fill="${K.hills[2]}"/>
   </svg>`;
-  document.getElementById('hero').innerHTML = DX.char('xero', { mood: 'hello', size: 128 });
-  document.getElementById('ring').innerHTML = DX.ring({ size: 68, stroke: 6, p: 7 / 14, color: 'var(--fg)', track: 'var(--track)' });
+  document.getElementById('hero').innerHTML = DX.char('xero', { mood: 'hello', size: 146 });
+  document.getElementById('ring').innerHTML = DX.ring({ size: 60, stroke: 6, p: 7 / 14, color: 'var(--fg)', track: 'var(--track)' });
 </script>
 </body></html>
