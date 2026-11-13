@@ -1,16 +1,16 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>057 Box breathing</title>
-<meta name="motion" content="The whole square is a faint track round the sea window; the dot walks it at an even pace, 4s a side (16s a round), and only the side it is on is lit: at each corner the lit stroke slides on to the next side (400ms) as the readout word cross-fades (220ms) and the numeral ticks 4 to 1 each second on the same baseline. The window and Jelli inside it swell over the in side, hold, shrink over the out side and hold (Jelli breathes with it). The round pips under the readout fill as each round completes. Pause freezes the dot, the count and the swell where they are (the glyph becomes play, light tap haptic); End session is a quiet text button. A soft haptic tick at every corner, nothing else.">
+<meta name="motion" content="One square track runs round the sea window. The dot walks it at an even pace, 4s a side (16s a round), and only the side it is on is lit: at each corner the lit stroke slides on to the next side (400ms) as the readout word cross-fades (220ms) and the numeral ticks 4 to 1 each second on the same baseline. The window and Jelli inside it swell over the in side, hold, shrink over the out side and hold (Jelli breathes with it). The round pips fill as each round completes. A soft haptic tick at every corner, nothing else.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-.screen { --trk: color-mix(in srgb, var(--fg) 14%, transparent); --pip: color-mix(in srgb, var(--fg) 24%, transparent); }
+.screen { --trk: #8E8A9E; }
+[data-theme="dark"] .screen { --trk: #5D6683; }
 .nav .title { flex: 1; text-align: center; margin-right: 56px; }
-.box { position: absolute; left: 15px; top: 132px; width: 360px; height: 360px; }
+.box { position: absolute; left: 15px; top: 116px; width: 360px; height: 360px; }
 .box > svg { position: absolute; inset: 0; overflow: visible; }
 .fillsq { position: absolute; left: 50px; top: 50px; width: 260px; height: 260px; border-radius: 24px; overflow: hidden; transform: scale(.78); }
 .fillsq .sea { position: absolute; inset: 0; }
-.fillsq .sea svg { display: block; }
 .jel { position: absolute; left: 50px; top: 50px; width: 260px; height: 260px; display: grid; place-items: center; transform: scale(.84); }
 .play .fillsq { animation: sq 16s cubic-bezier(.45,0,.55,1) infinite; }
 .play .jel { animation: jl 16s cubic-bezier(.45,0,.55,1) infinite; }
@@ -19,24 +19,20 @@
 .still .fillsq { animation: none !important; transform: scale(1); }
 .still .jel { animation: none !important; transform: scale(1.02); }
 #lit { transition: stroke-dashoffset .4s var(--ease); }
-.dot { position: absolute; left: 0; top: 0; width: 18px; height: 18px; border-radius: 99px; background: var(--fg); box-shadow: 0 0 0 4px var(--g);
+.dot { position: absolute; left: 0; top: 0; width: 24px; height: 24px; border-radius: 99px; background: var(--fg); box-shadow: 0 0 0 5px var(--g), 0 0 0 7px color-mix(in srgb, var(--fg) 22%, transparent);
   offset-path: path("M39.37 320.63 A32 32 0 0 1 30 298 V62 A32 32 0 0 1 39.37 39.37 A32 32 0 0 1 62 30 H298 A32 32 0 0 1 320.63 39.37 A32 32 0 0 1 330 62 V298 A32 32 0 0 1 320.63 320.63 A32 32 0 0 1 298 330 H62 A32 32 0 0 1 39.37 320.63 Z");
   offset-rotate: 0deg; offset-distance: 0%; }
 .play .dot { animation: go 16s linear infinite; }
 @keyframes go { to { offset-distance: 100%; } }
 .still .dot { animation: none !important; offset-distance: 37.5%; }
-.say { position: absolute; left: 0; right: 0; top: 514px; text-align: center; margin: 0; white-space: nowrap; }
+.say { position: absolute; left: 0; right: 0; top: 498px; text-align: center; margin: 0; white-space: nowrap; }
 .say .w { font: 800 30px/1 var(--display); letter-spacing: -.6px; transition: opacity .22s var(--ease); }
 .say .num { font-size: 64px; line-height: 1; display: inline-block; min-width: 40px; text-align: left; margin-left: 10px; }
-.cue { position: absolute; left: 40px; right: 40px; top: 590px; text-align: center; transition: opacity .4s var(--ease); }
-.rnd { position: absolute; left: 0; right: 0; top: 634px; display: flex; gap: 10px; align-items: center; justify-content: center; }
+.cue { position: absolute; left: 40px; right: 40px; top: 574px; text-align: center; transition: opacity .4s var(--ease); }
+.rnd { position: absolute; left: 0; right: 0; top: 664px; display: flex; gap: 10px; align-items: center; justify-content: center; }
 .rnd .pips { display: flex; gap: 6px; }
-.rnd i { width: 8px; height: 8px; border-radius: 99px; background: var(--pip); }
+.rnd i { width: 8px; height: 8px; border-radius: 99px; background: var(--trk); }
 .rnd i.on { background: var(--fg); }
-.ctrls { display: flex; align-items: center; justify-content: center; gap: 18px; }
-.pz { width: 60px; height: 60px; border-radius: 99px; display: grid; place-items: center; background: var(--card); color: var(--fg); box-shadow: inset 0 0 0 1.5px var(--line), 0 4px 12px rgba(20,20,40,.08); }
-.pz svg { width: 22px; height: 22px; }
-.ctrls .link { padding: 0 6px; color: var(--muted); opacity: 1; font-weight: 600; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -45,36 +41,21 @@
   <div class="fillsq"><span class="sea" id="sea"></span></div>
   <div class="jel" id="jel"></div>
   <svg width="360" height="360" viewBox="0 0 360 360" aria-hidden="true">
-    <path id="trk" d="M39.37 320.63 A32 32 0 0 1 30 298 V62 A32 32 0 0 1 39.37 39.37 A32 32 0 0 1 62 30 H298 A32 32 0 0 1 320.63 39.37 A32 32 0 0 1 330 62 V298 A32 32 0 0 1 320.63 320.63 A32 32 0 0 1 298 330 H62 A32 32 0 0 1 39.37 320.63 Z" fill="none" stroke="var(--trk)" stroke-width="3"/>
-    <path id="lit" pathLength="400" d="M39.37 320.63 A32 32 0 0 1 30 298 V62 A32 32 0 0 1 39.37 39.37 A32 32 0 0 1 62 30 H298 A32 32 0 0 1 320.63 39.37 A32 32 0 0 1 330 62 V298 A32 32 0 0 1 320.63 320.63 A32 32 0 0 1 298 330 H62 A32 32 0 0 1 39.37 320.63 Z" fill="none" stroke="var(--fg)" stroke-width="5" stroke-linecap="round" stroke-dasharray="100 300" stroke-dashoffset="0"/>
+    <path id="trk" d="M39.37 320.63 A32 32 0 0 1 30 298 V62 A32 32 0 0 1 39.37 39.37 A32 32 0 0 1 62 30 H298 A32 32 0 0 1 320.63 39.37 A32 32 0 0 1 330 62 V298 A32 32 0 0 1 320.63 320.63 A32 32 0 0 1 298 330 H62 A32 32 0 0 1 39.37 320.63 Z" fill="none" stroke="var(--trk)" stroke-width="5"/>
+    <path id="lit" pathLength="400" d="M39.37 320.63 A32 32 0 0 1 30 298 V62 A32 32 0 0 1 39.37 39.37 A32 32 0 0 1 62 30 H298 A32 32 0 0 1 320.63 39.37 A32 32 0 0 1 330 62 V298 A32 32 0 0 1 320.63 320.63 A32 32 0 0 1 298 330 H62 A32 32 0 0 1 39.37 320.63 Z" fill="none" stroke="var(--fg)" stroke-width="9" stroke-linecap="round" stroke-dasharray="100 300" stroke-dashoffset="0"/>
   </svg>
   <span class="dot"></span>
 </div>
 <p class="say" data-a style="--i:2" aria-live="polite"><span class="w" id="phase">Breathe in</span><span class="num" id="count">4</span></p>
 <p class="t-body muted cue" id="cue" data-a style="--i:3">In through your nose. Let your belly fill.</p>
 <div class="rnd" data-a style="--i:4"><span class="pips" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i><i></i></span><span class="t-foot muted" id="round">Round 2 of 4</span></div>
-<div class="dock"><div class="ctrls" data-a style="--i:5"><button class="pz" aria-label="Pause" data-ic="pause" data-s="22" data-w="3"></button><button class="link">End session</button></div></div>
+<div class="dock"><button class="btn ghost" data-a style="--i:5">End session</button></div>
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
-const dark = DX.theme === 'dark';
 
-/* Dark: a night sea painted for this window. The low pre-dawn sun sits off to the right, clear of Jelli; three layered night waves with foam lines. */
-function nightSea(w, h) {
-  const wave = (y, a, ph) => { const s = w / 3; let d = `M0 ${y}`; for (let i = 0; i < 3; i++) { const x0 = i * s, up = (i + ph) % 2 ? -a : a; d += ` C${x0 + s * .35} ${y + up} ${x0 + s * .65} ${y + up} ${x0 + s} ${y}`; } return d; };
-  const L = [[h * .62, 9, 0, '#22407A'], [h * .73, 11, 1, '#1A3468'], [h * .86, 9, 0, '#112552']];
-  const foam = (y, a, ph) => { const s = w / 3; return [0, 1, 2].filter(i => (i + ph) % 2).map(i => { const x = i * s + s * .5, yy = y - a * .75; return `<path d="M${x - s * .3} ${yy + 4} Q${x} ${yy - 4} ${x + s * .3} ${yy + 4}" fill="none" stroke="#C9D8F7" stroke-opacity=".55" stroke-width="2.4" stroke-linecap="round"/><circle cx="${x + s * .36}" cy="${yy + 7}" r="1.6" fill="#C9D8F7" opacity=".5"/>`; }).join(''); };
-  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true"><defs>
-    <linearGradient id="nsk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0B1736"/><stop offset=".62" stop-color="#22386A"/><stop offset="1" stop-color="#3A4C7E"/></linearGradient>
-    <radialGradient id="nsg"><stop offset="0" stop-color="#FFC27A" stop-opacity=".6"/><stop offset="1" stop-color="#FFC27A" stop-opacity="0"/></radialGradient></defs>
-    <rect width="${w}" height="${h}" fill="url(#nsk)"/>
-    ${[[.12, .1], [.3, .2], [.52, .07], [.7, .16], [.9, .09], [.2, .36], [.86, .32]].map(([x, y], i) => `<circle cx="${x * w}" cy="${y * h}" r="${i % 3 ? 1.1 : 1.6}" fill="#fff" opacity="${i % 2 ? .5 : .85}"/>`).join('')}
-    <circle cx="${w * .86}" cy="${h * .59}" r="${h * .2}" fill="url(#nsg)"/><circle cx="${w * .86}" cy="${h * .59}" r="${h * .065}" fill="#FFD08A"/>
-    ${L.map(([y, a, ph, c]) => `<path d="${wave(y, a, ph)} V${h} H0Z" fill="${c}"/>${foam(y, a, ph)}`).join('')}
-    <g stroke="#FFD08A" stroke-linecap="round" stroke-width="2.2"><path d="M${w * .8} ${h * .675} h${w * .09}" opacity=".7"/><path d="M${w * .83} ${h * .705} h${w * .05}" opacity=".5"/><path d="M${w * .78} ${h * .705} h${w * .025}" opacity=".4"/></g></svg>`;
-}
-document.getElementById('sea').innerHTML = dark ? nightSea(260, 260) : DX.char('horizon', { scene: 'sea', w: 260, h: 260, clarity: 100 });
-document.getElementById('jel').innerHTML = DX.char('jelli', { mood: 'breathe', size: 184 }).replace(/<g opacity="1"( fill="none" stroke="#FFFFFF")/, '<g opacity="0"$1');
+document.getElementById('sea').innerHTML = DX.char('horizon', { scene: 'sea', w: 260, h: 260, clarity: 100 });
+document.getElementById('jel').innerHTML = DX.char('jelli', { mood: 'breathe', size: 184 });
 const P = [
   { w: 'Breathe in', c: 'In through your nose. Let your belly fill.' },
   { w: 'Hold', c: 'Soft and still. Let your shoulders drop.' },

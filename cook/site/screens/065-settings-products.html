@@ -1,42 +1,45 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>065 What you use</title>
-<meta name="motion" content="The spend hero arrives first and counts up ($2,555 a year big, then $7 a day) as Xero settles onto his little hill in its corner (450ms); the product checkboxes and the usual-day rows follow on the stagger. Checking or unchecking a product ticks its box (250ms), tints its row and shows or hides that product's rows (300ms settle). Each stepper tap nudges its number with a small bump and a selection haptic; tapping a price field opens the decimal keypad with the field outlined in ink. The hero recounts live after every change.">
+<meta name="motion" content="The spend hero arrives first and counts up ($7 a day, $2,555 a year); the product checkboxes and the usual-day rows follow on the stagger. Checking or unchecking a product ticks its box (250ms) and shows or hides that product's rows (300ms settle). Each stepper tap nudges its number with a small bump and a selection haptic; tapping a price field opens the decimal keypad with the field outlined. The hero recounts live after every change.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
+/* screen-local helpers: icon fill, section labels, small icon tiles, bottom toast */
 .hd { display: grid; gap: 6px; padding-top: 58px; }
-.sec { padding: 16px 4px 8px; color: var(--muted); font-size: 14px; }
+.sec { padding: 22px 4px 8px; color: var(--muted); }
 .rt { font-weight: 600; }
-.ico-tile.apr { background: #FFE6D0; color: #A8481F; }
-[data-theme="dark"] .ico-tile.apr { background: rgba(255,195,138,.16); color: #FFC38A; }
+.ico-tile.s { width: 34px; height: 34px; border-radius: 11px; }
+.ico-tile.s svg { width: 19px; height: 19px; }
+.val { color: var(--muted); font: 500 15px/1.2 var(--body); white-space: nowrap; }
+.list > .row.tap { min-height: 56px; }
+.toast.b { top: auto; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
+.toast.b.in { opacity: 1; transform: none; }
+.toast.b .ck { flex: none; }
+.opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
+html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--sel) 72%, transparent); }
+.pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
-.hero { position: relative; overflow: hidden; margin-top: 16px; padding: 14px 18px 16px; display: grid; gap: 2px; min-height: 112px; }
+.hero { margin-top: 16px; padding: 14px 18px 16px; display: grid; gap: 4px; }
 .hero .big { display: flex; align-items: baseline; gap: 6px; white-space: nowrap; }
-.hero .big .num { font-size: 40px; line-height: 1.05; letter-spacing: -1px; }
-.hero .day { display: flex; align-items: baseline; gap: 5px; color: var(--muted); }
-.hero .day .num { font-size: 19px; color: var(--fg); letter-spacing: -.2px; }
-.hero .scene { position: absolute; right: 0; bottom: 0; width: 120px; height: 118px; pointer-events: none; }
-.hero .scene .mound { position: absolute; right: 0; bottom: 0; }
-.hero .scene .who { position: absolute; right: 20px; bottom: 6px; }
-/* multi-select: the kit's .opt multi checkboxes inside one grouped list; a checked row takes the warm tint */
-.grp { position: relative; background: var(--card); border-radius: var(--r-card); overflow: hidden; }
-.grp::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--line); pointer-events: none; }
+.hero .num { font-size: 32px; line-height: 1.05; }
+.hero .t-head { font-weight: 700; }
+.hero .sep { color: var(--muted); margin: 0 4px; font: 700 19px/1 var(--display); }
+.grp { background: var(--card); border-radius: var(--r-card); box-shadow: inset 0 0 0 1px var(--line); overflow: hidden; }
 .grp .opt { border-radius: 0; background: transparent; box-shadow: none; min-height: 56px; padding: 8px 16px 8px 12px; }
 .grp .opt + .opt { border-top: 1px solid var(--line); }
-.screen .grp .opt.on, html .screen .grp .opt.on { box-shadow: none; background: var(--sel-tint); }
-.grp .opt .radio { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--fg) 50%, transparent); }
-.grp .opt.on .radio { box-shadow: none; }
+html .screen .grp .opt.on { box-shadow: none; }
 .grp .opt .ico-tile { width: 34px; height: 34px; border-radius: 11px; }
 .grp .opt .ico-tile svg { width: 19px; height: 19px; }
-.list > .row { min-height: 56px; padding-top: 7px; padding-bottom: 7px; }
+.opt .radio.box { border-radius: 7px; }
+.sec { padding: 20px 4px 8px; font-size: 14px; }
+.list > .row { min-height: 56px; padding-top: 6px; padding-bottom: 6px; }
 .step { display: flex; align-items: center; gap: 6px; }
 .step button { width: 40px; height: 40px; border-radius: 99px; background: var(--card-2); display: grid; place-items: center; color: var(--fg); }
 .step button svg { width: 16px; height: 16px; }
 .step .num { font-size: 19px; min-width: 44px; text-align: center; }
-/* price fields read as editable inputs: an inset field with an outline and a pencil */
-.pf { height: 42px; min-width: 112px; padding: 0 12px 0 10px; border-radius: 12px; background: var(--g); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--fg) 30%, transparent); display: inline-flex; align-items: center; gap: 6px; font: 800 19px/1 var(--display); font-variant-numeric: tabular-nums; letter-spacing: -.3px; color: var(--fg); }
-.pf .pen { width: 15px; height: 15px; color: var(--muted); flex: none; margin-right: auto; }
-.pf .cur { color: var(--muted); font-weight: 700; }
+.pf { height: 40px; min-width: 96px; padding: 0 14px; border-radius: 12px; background: var(--card-2); box-shadow: inset 0 0 0 1px var(--line); display: inline-flex; align-items: center; justify-content: flex-end; gap: 2px; font: 800 19px/1 var(--display); font-variant-numeric: tabular-nums; letter-spacing: -.3px; color: var(--fg); }
+.pf .cur { color: var(--muted); font-weight: 700; margin-right: 1px; }
+.hd + .card { margin-top: 16px; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -44,34 +47,25 @@
 <div class="scroll"><div class="pad">
   <div class="hd"><h1 class="t-large" data-a style="--i:0">What you use</h1><p class="t-foot muted" data-a style="--i:1">This sets money kept and your counters.</p></div>
   <div class="card hero" data-a style="--i:2">
-    <span class="t-foot muted">Staying free keeps</span>
-    <div class="big"><span class="num" data-count="2555" data-prefix="$">$2,555</span><span class="t-head">a year</span></div>
-    <div class="day"><span class="num" data-count="7" data-prefix="$">$7</span><span class="t-foot">a day</span></div>
-    <div class="scene"><span class="mound" id="mound"></span><span class="who" id="xr" data-settle style="--d:450ms"></span></div>
+    <span class="t-foot muted">Every day free keeps</span>
+    <div class="big"><span class="num" data-count="7" data-prefix="$">$7</span><span class="t-head">a day</span><span class="sep">&middot;</span><span class="num" data-count="2555" data-prefix="$">$2,555</span><span class="t-head">a year</span></div>
   </div>
-  <p class="t-foot sec" data-a style="--i:3">You use</p>
+  <p class="t-foot muted sec" data-a style="--i:3">You use</p>
   <div class="grp" data-a style="--i:4" role="group" aria-label="You use, choose any">
-    <button class="opt multi on" role="checkbox" aria-checked="true"><span class="ico-tile apr" data-ic="cig"></span><div class="grow"><div class="t-body rt">Cigarettes</div></div><span class="radio"></span></button>
-    <button class="opt multi on" role="checkbox" aria-checked="true"><span class="ico-tile apr" data-ic="vape"></span><div class="grow"><div class="t-body rt">Vape</div></div><span class="radio"></span></button>
-    <button class="opt multi" role="checkbox" aria-checked="false"><span class="ico-tile apr" id="tin"></span><div class="grow"><div class="t-body rt">Nicotine pouches</div></div><span class="radio"></span></button>
+    <button class="opt on" role="checkbox" aria-checked="true"><span class="ico-tile" data-ic="cig"></span><div class="grow"><div class="t-body rt">Cigarettes</div></div><span class="radio box"></span></button>
+    <button class="opt on" role="checkbox" aria-checked="true"><span class="ico-tile" data-ic="vape"></span><div class="grow"><div class="t-body rt">Vape</div></div><span class="radio box"></span></button>
+    <button class="opt" role="checkbox" aria-checked="false"><span class="ico-tile" data-ic="pouch"></span><div class="grow"><div class="t-body rt">Nicotine pouches</div></div><span class="radio box"></span></button>
   </div>
-  <p class="t-foot sec" data-a style="--i:5">Your usual day</p>
+  <p class="t-foot muted sec" data-a style="--i:5">Your usual day</p>
   <div class="list" data-a style="--i:6">
     <div class="row"><div class="grow"><div class="t-body rt">Cigarettes a day</div></div><div class="step"><button aria-label="Less" data-ic="minus" data-s="16" data-w="2.6"></button><span class="num">12</span><button aria-label="More" data-ic="plus" data-s="16" data-w="2.6"></button></div></div>
-    <div class="row"><div class="grow"><div class="t-body rt">Price of a pack of 20</div></div><button class="pf" aria-label="Pack price, 8 dollars, tap to edit"><span class="pen"></span><span class="cur">$</span>8.00</button></div>
+    <div class="row"><div class="grow"><div class="t-body rt">Price of a pack of 20</div></div><button class="pf" aria-label="Pack price, 8 dollars, tap to type"><span class="cur">$</span>8.00</button></div>
     <div class="row"><div class="grow"><div class="t-body rt">Vape puffs a day</div></div><div class="step"><button aria-label="Less" data-ic="minus" data-s="16" data-w="2.6"></button><span class="num">200</span><button aria-label="More" data-ic="plus" data-s="16" data-w="2.6"></button></div></div>
-    <div class="row"><div class="grow"><div class="t-body rt">Vape spend a day</div></div><button class="pf" aria-label="Vape spend, 2 dollars 20, tap to edit"><span class="pen"></span><span class="cur">$</span>2.20</button></div>
+    <div class="row"><div class="grow"><div class="t-body rt">Vape spend a day</div></div><button class="pf" aria-label="Vape spend, 2 dollars 20, tap to type"><span class="cur">$</span>2.20</button></div>
   </div>
 </div></div>
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
-const dark = DX.theme === 'dark';
-const line = (d, s = 19) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
-/* Nicotine pouches: a round tin (lid and body), so it never reads as a padlock. */
-document.getElementById('tin').innerHTML = line('M4.5 9.5c0-1.9 3.4-3.5 7.5-3.5s7.5 1.6 7.5 3.5-3.4 3.5-7.5 3.5-7.5-1.6-7.5-3.5zM4.5 9.5v5c0 1.9 3.4 3.5 7.5 3.5s7.5-1.6 7.5-3.5v-5M9 9.3h6');
-document.querySelectorAll('.pen').forEach(e => e.innerHTML = line('M4 20h4L18.5 9.5a2.1 2.1 0 00-3-3L5 17zM14 8l3 3', 15));
-document.getElementById('mound').innerHTML = `<svg width="120" height="34" viewBox="0 0 120 34" aria-hidden="true"><path d="M0 34 C14 14 40 6 66 6 C92 6 110 12 120 18 V34Z" fill="${dark ? '#2A3658' : '#FFD9B6'}"/></svg>`;
-document.getElementById('xr').innerHTML = DX.char('xero', { mood: 'hello', size: 76 });
 </script>
 </body></html>

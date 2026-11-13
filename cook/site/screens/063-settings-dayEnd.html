@@ -1,64 +1,70 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>063 Day ends</title>
-<meta name="motion" content="The grouped list arrives with Midnight selected; at 1.0s the selection moves to 4 AM (the check disc pops in 250ms and the row takes the warm tint, selection haptic) and saves at once with a success haptic: the check disc is the done state, no toast. Below, Glim settles onto his little hill (400ms) and the timeline fills Thursday up to the 4 AM mark (700ms) as the 1:30 check-in dot lands on the Thursday side (1.3s).">
+<meta name="motion" content="Options arrive on the stagger with Midnight selected; at 1.0s the selection moves to 4 AM (ring and tick 250ms, selection haptic), the timeline below fills Thursday from 8 PM to the 4 AM tick (fade, 700ms), past the midnight tick, and the labelled 1:30 check-in dot pops onto it (1.3s) so it plainly lands on Thursday; the choice saves at once with a success haptic (the filled radio is the done state, no toast).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
+/* screen-local helpers: icon fill, section labels, small icon tiles, bottom toast */
 .hd { display: grid; gap: 6px; padding-top: 58px; }
-/* One single-choice pattern for settings: a grouped list, a 3:1 ring per row, a check disc on the selected row. */
-.screen { --ring: color-mix(in srgb, var(--fg) 50%, transparent); }
-.list.pick { margin-top: 22px; }
-.list.pick > .row { min-height: 60px; padding: 10px 16px; width: 100%; text-align: left; transition: background .25s var(--ease); }
-.pick .row .t-foot { color: var(--muted); }
-.pick .radio { width: 24px; height: 24px; border-radius: 99px; box-shadow: inset 0 0 0 2px var(--ring); flex: none; display: grid; place-items: center; }
-.pick .row.on { background: var(--sel-tint); }
-.list.pick { position: relative; }
-.list.pick::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--line); pointer-events: none; }
-.pick .row.on .radio { background: var(--sel); box-shadow: none; }
-.pick .row.on .radio::after { content: ""; width: 14px; height: 14px; background: var(--sel-fg); -webkit-mask: var(--tick-svg) center/contain no-repeat; mask: var(--tick-svg) center/contain no-repeat; }
-.pick .lbl { font: 700 17px/1.25 var(--display); }
-.tl { margin-top: 18px; padding: 16px 18px 18px; }
-.tl .head { display: flex; align-items: flex-end; gap: 12px; }
-.tl .g { position: relative; width: 76px; height: 70px; flex: none; }
-.tl .g .mound { position: absolute; left: 0; bottom: 0; }
-.tl .g .who { position: absolute; left: 6px; top: -6px; }
-.tl .head p { flex: 1; padding-bottom: 6px; }
-.bar { position: relative; height: 54px; margin-top: 14px; }
-.bar .ln { position: absolute; left: 0; right: 0; top: 8px; height: 6px; border-radius: 99px; background: var(--track); }
-.bar .seg { position: absolute; left: 0; top: 8px; height: 6px; border-radius: 99px; background: var(--fg); width: 66.67%; }
-.bar .end { position: absolute; top: 2px; width: 3px; height: 18px; margin-left: -1.5px; border-radius: 2px; background: var(--fg); }
-.bar .ci { position: absolute; top: 1px; width: 20px; height: 20px; margin-left: -10px; border-radius: 99px; background: var(--card-2); box-shadow: inset 0 0 0 4px var(--mark); }
-.bar .lab { position: absolute; top: 30px; transform: translateX(-50%); font: 600 15px/1 var(--body); white-space: nowrap; }
-.bar .lab.fri { color: var(--muted); }
+.sec { padding: 22px 4px 8px; color: var(--muted); }
+.rt { font-weight: 600; }
+.ico-tile.s { width: 34px; height: 34px; border-radius: 11px; }
+.ico-tile.s svg { width: 19px; height: 19px; }
+.val { color: var(--muted); font: 500 15px/1.2 var(--body); white-space: nowrap; }
+.list > .row.tap { min-height: 56px; }
+.toast.b { top: auto; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
+.toast.b.in { opacity: 1; transform: none; }
+.toast.b .ck { flex: none; }
+.opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
+html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--sel) 72%, transparent); }
+.pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+.opts { display: grid; gap: 10px; margin-top: 22px; }
+.opts .opt { min-height: 64px; }
+.tl { margin-top: 22px; padding: 16px 18px 14px; }
+.tl .head { display: flex; align-items: center; gap: 14px; }
+.tl .av { width: 56px; height: 56px; border-radius: 18px; flex: none; position: relative; overflow: hidden; background: linear-gradient(180deg, #0B1430, #2C3D6A); }
+.tl .av > svg { position: absolute; inset: 0; }
+.tl .av .g { position: absolute; left: 0; top: 2px; }
+.bar { position: relative; height: 74px; margin-top: 14px; }
+.bar .ln { position: absolute; left: 0; right: 0; top: 36px; height: 4px; border-radius: 99px; background: var(--track); }
+.bar .seg { position: absolute; left: 0; top: 35px; height: 6px; border-radius: 99px; background: var(--fg); width: 66.67%; }
+.bar .mid { position: absolute; top: 30px; width: 2px; height: 16px; margin-left: -1px; border-radius: 2px; background: var(--fg); opacity: .55; }
+.bar .end { position: absolute; top: 26px; width: 3px; height: 24px; margin-left: -1.5px; border-radius: 2px; background: var(--fg); }
+.bar .ci { position: absolute; top: 29px; width: 20px; height: 20px; margin-left: -10px; border-radius: 99px; background: var(--card-2); box-shadow: inset 0 0 0 4px var(--mark); }
+.bar .lab { position: absolute; white-space: nowrap; transform: translateX(-50%); }
+.bar .up { top: 0; font: 700 13px/1.3 var(--body); color: var(--fg); }
+.bar .dn { top: 54px; color: var(--muted); }
+.bar .l { transform: none; }
+.bar .r { transform: translateX(-100%); }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
 <div class="nav"><button class="icon-btn" aria-label="Back" data-ic="back"></button></div>
 <div class="scroll"><div class="pad">
   <div class="hd"><h1 class="t-large" data-a style="--i:0">When your day ends</h1><p class="t-foot muted" data-a style="--i:1">Up late? A check-in before this time still counts for the day you just had.</p></div>
-  <div class="list pick" role="radiogroup" aria-label="Day ends at" data-a style="--i:2">
-    <button class="row on" id="o0" role="radio"><div class="grow"><div class="lbl">Midnight</div></div><span class="radio"></span></button>
-    <button class="row" role="radio"><div class="grow"><div class="lbl">2 AM</div></div><span class="radio"></span></button>
-    <button class="row" id="o4" role="radio"><div class="grow"><div class="lbl">4 AM</div><div class="t-foot">Default, fits most late nights</div></div><span class="radio"></span></button>
-    <button class="row" role="radio"><div class="grow"><div class="lbl">6 AM</div><div class="t-foot">For night shifts and late finishes</div></div><span class="radio"></span></button>
+  <div class="opts">
+    <div data-a style="--i:2"><button class="opt on" id="o0"><div class="grow"><div class="t-head">Midnight</div></div><span class="radio"></span></button></div>
+    <div data-a style="--i:3"><button class="opt" ><div class="grow"><div class="t-head">2 AM</div></div><span class="radio"></span></button></div>
+    <div data-a style="--i:4"><button class="opt" id="o4"><div class="grow"><div class="t-head">4 AM</div><div class="t-foot">Default, fits most late nights</div></div><span class="radio"></span></button></div>
+    <div data-a style="--i:5"><button class="opt" ><div class="grow"><div class="t-head">6 AM</div><div class="t-foot">For night shifts and late finishes</div></div><span class="radio"></span></button></div>
   </div>
-  <div class="card flat tl" data-a style="--i:3">
-    <div class="head"><span class="g"><span class="mound" id="mound"></span><span class="who" id="glim063" data-settle style="--d:400ms"></span></span><p class="t-body">A check-in at 1:30 AM still counts for Thursday. Friday starts at 4 AM.</p></div>
-    <div class="bar" aria-label="Thursday runs on to 4 AM; the 1:30 AM check-in counts for Thursday">
+  <div class="card flat tl" data-a style="--i:6">
+    <div class="head"><span class="av" id="glim063"></span><p class="t-body" style="flex:1">A check-in at 1:30 AM still counts for Thursday. Friday starts at 4 AM.</p></div>
+    <div class="bar" aria-label="Thursday runs on past midnight to 4 AM; the 1:30 AM check-in counts for Thursday">
       <div class="ln"></div><div class="seg" data-fade style="--d:700ms"></div>
-      <div class="end" style="left:66.67%"></div><div class="ci" style="left:45.83%;--d:1300ms" data-pop></div>
-      <span class="lab" style="left:33.33%">Thursday</span><span class="lab fri" style="left:83.33%">Friday</span>
+      <div class="mid" style="left:33.33%"></div><div class="end" style="left:66.67%"></div><div class="ci" style="left:45.83%;--d:1300ms" data-pop></div>
+      <span class="lab up l t-cap" style="left:0">Thursday</span><span class="lab up t-cap" style="left:45.83%">1:30 check-in</span><span class="lab up r t-cap" style="left:100%;color:var(--muted)">Friday</span>
+      <span class="lab dn l t-cap" style="left:0">8 PM</span><span class="lab dn t-cap" style="left:33.33%">Midnight</span><span class="lab dn t-cap" style="left:66.67%">4 AM</span><span class="lab dn r t-cap" style="left:100%">8 AM</span>
     </div>
   </div>
 </div></div>
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
-const dark = DX.theme === 'dark';
-/* Glim, small, standing on a little hill inside the card (no tile behind him). */
-document.getElementById('mound').innerHTML = `<svg width="76" height="20" viewBox="0 0 76 20" aria-hidden="true"><path d="M2 20 C10 6 26 2 38 2 C50 2 66 6 74 20Z" fill="${dark ? '#2C3A5E' : '#E4D9C8'}"/></svg>`;
-document.getElementById('glim063').innerHTML = DX.char('glim', { mood: 'calm', size: 64 });
+
 const o0 = document.getElementById('o0'), o4 = document.getElementById('o4');
+document.getElementById('glim063').innerHTML = `<svg width="56" height="56" viewBox="0 0 56 56" aria-hidden="true"><circle cx="10" cy="10" r="1" fill="#fff" opacity=".8"/><circle cx="46" cy="14" r="1.2" fill="#fff" opacity=".6"/><circle cx="40" cy="6" r=".9" fill="#fff" opacity=".7"/><path d="M0 48 C18 42 36 44 56 50 V56 H0Z" fill="#1C2C4E"/></svg><span class="g">${DX.char('glim', { mood: 'calm', size: 56 })}</span>`;
 function pick() { o0.classList.remove('on'); o4.classList.add('on'); }
 DX.after(1000, pick); DX.onStill(pick);
 </script>

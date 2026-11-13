@@ -1,61 +1,60 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>067 Currency</title>
-<meta name="motion" content="The search field and the grouped lists arrive on the stagger, Xero settling onto the search field's top edge (450ms); at 0.9s US Dollar is picked (its check disc pops in 250ms and the row takes the warm tint, selection haptic) and saves at once with a success haptic: the check disc is the done state, no toast. The line saying amounts are not converted sits under the title, so it is read before a switch. All currencies continues below and scrolls; typing in search filters every row with a 200ms fade.">
+<meta name="motion" content="The search field and rows arrive on the stagger; at 0.9s US Dollar is picked (ring and tick 250ms, selection haptic) and saves at once with a success haptic: the filled radio is the done state, no toast. The line saying amounts are not converted sits under the title, so it is read before a switch. Typing in search filters rows with a 200ms fade.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-.hd { display: grid; gap: 6px; padding-top: 58px; padding-right: 80px; }
-.sec { padding: 18px 4px 8px; color: var(--muted); font-size: 14px; }
+/* screen-local helpers: icon fill, section labels, small icon tiles, bottom toast */
+.hd { display: grid; gap: 6px; padding-top: 58px; }
+.sec { padding: 22px 4px 8px; color: var(--muted); }
 .rt { font-weight: 600; }
-.srch { position: relative; margin-top: 16px; }
-.search { display: flex; align-items: center; gap: 10px; height: 50px; padding: 0 16px; border-radius: 16px; background: var(--card); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--fg) 30%, transparent); font: 500 16px/1 var(--body); color: var(--muted); }
-.search svg { width: 19px; height: 19px; color: var(--fg); flex: none; }
-.perch { position: absolute; right: 18px; top: -62px; width: 64px; height: 64px; }
-/* One single-choice pattern for settings: a grouped list, a 3:1 ring per row, a check disc on the selected row. */
-.screen { --ring: color-mix(in srgb, var(--fg) 50%, transparent); }
-.list.pick > .row { min-height: 56px; padding: 7px 16px 7px 12px; width: 100%; text-align: left; transition: background .25s var(--ease); }
-.pick .row .t-foot { color: var(--muted); }
-.pick .radio { width: 24px; height: 24px; border-radius: 99px; box-shadow: inset 0 0 0 2px var(--ring); flex: none; display: grid; place-items: center; }
-.pick .row.on { background: var(--sel-tint); }
-.list.pick { position: relative; }
-.list.pick::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--line); pointer-events: none; }
-.pick .row.on .radio { background: var(--sel); box-shadow: none; }
-.pick .row.on .radio::after { content: ""; width: 14px; height: 14px; background: var(--sel-fg); -webkit-mask: var(--tick-svg) center/contain no-repeat; mask: var(--tick-svg) center/contain no-repeat; }
+.ico-tile.s { width: 34px; height: 34px; border-radius: 11px; }
+.ico-tile.s svg { width: 19px; height: 19px; }
+.val { color: var(--muted); font: 500 15px/1.2 var(--body); white-space: nowrap; }
+.list > .row.tap { min-height: 56px; }
+.toast.b { top: auto; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
+.toast.b.in { opacity: 1; transform: none; }
+.toast.b .ck { flex: none; }
+.opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
+html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--sel) 72%, transparent); }
+.pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+.search { display: flex; align-items: center; gap: 10px; margin-top: 18px; }
+.search svg { width: 18px; height: 18px; color: var(--muted); }
+.opts { display: grid; gap: 8px; margin-top: 14px; }
+.opt { min-height: 60px; padding: 10px 16px 10px 12px; }
 .sym { width: 40px; height: 40px; border-radius: 12px; background: var(--card-2); display: grid; place-items: center; font: 700 17px/1 var(--body); letter-spacing: -.2px; flex: none; }
-.pick .row .grow { display: flex; align-items: baseline; gap: 8px; }
-.code { font: 500 14px/1 var(--body); color: var(--muted); }
-.more { position: absolute; z-index: 5; left: 0; right: 0; bottom: 0; height: 130px; background: linear-gradient(to bottom, color-mix(in srgb, var(--g) 0%, transparent), var(--g) 85%); pointer-events: none; }
+.grp { background: var(--card); border-radius: var(--r-card); box-shadow: inset 0 0 0 1px var(--line); overflow: hidden; }
+.grp .opt { border-radius: 0; background: transparent; box-shadow: none; min-height: 66px; }
+.grp .opt + .opt { border-top: 1px solid var(--line); }
+html .screen .grp .opt.on { box-shadow: none; }
+.sec { padding: 24px 4px 10px; font-size: 14px; }
+.sec { padding: 20px 4px 8px; font-size: 14px; }
+.grp .opt { min-height: 60px; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
 <div class="nav"><button class="icon-btn" aria-label="Back" data-ic="back"></button></div>
 <div class="scroll"><div class="pad">
-  <div class="hd"><h1 class="t-large" data-a style="--i:0">Currency</h1><p class="t-foot muted" data-a style="--i:1">For money kept and your prices. Switching does not convert amounts.</p></div>
-  <div class="srch" data-a style="--i:2"><div class="perch" id="xr" data-settle style="--d:450ms"></div>
-    <div class="search" role="searchbox" aria-label="Search currencies"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>Search currencies</div></div>
-  <p class="t-foot sec" data-a style="--i:3">Your region</p>
-  <div class="list pick" role="radiogroup" aria-label="Currency" data-a style="--i:4">
-    <button class="row" id="usd" role="radio"><span class="sym">$</span><div class="grow"><span class="t-body rt">US Dollar</span><span class="code">USD</span></div><span class="radio"></span></button>
+  <div class="hd"><h1 class="t-large" data-a style="--i:0">Currency</h1><p class="t-foot muted" data-a style="--i:1">Used for money kept and your prices. Switching does not convert the amounts.</p></div>
+  <div class="field ph search" style="margin-top:18px;--i:2" data-a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>Search currencies</div>
+  <p class="t-foot muted sec" data-a style="--i:3">Your region</p>
+  <div class="grp" data-a style="--i:4">
+    <button class="opt" id="usd"><span class="sym">$</span><div class="grow"><div class="t-body rt">US Dollar</div><div class="t-foot">USD</div></div><span class="radio"></span></button>
   </div>
-  <p class="t-foot sec" data-a style="--i:5">Common</p>
-  <div class="list pick" data-a style="--i:6">
-    <button class="row" role="radio"><span class="sym">&pound;</span><div class="grow"><span class="t-body rt">British Pound</span><span class="code">GBP</span></div><span class="radio"></span></button>
-    <button class="row" role="radio"><span class="sym">&euro;</span><div class="grow"><span class="t-body rt">Euro</span><span class="code">EUR</span></div><span class="radio"></span></button>
-    <button class="row" role="radio"><span class="sym">C$</span><div class="grow"><span class="t-body rt">Canadian Dollar</span><span class="code">CAD</span></div><span class="radio"></span></button>
-    <button class="row" role="radio"><span class="sym">A$</span><div class="grow"><span class="t-body rt">Australian Dollar</span><span class="code">AUD</span></div><span class="radio"></span></button>
-  </div>
-  <p class="t-foot sec" data-a style="--i:7">All currencies</p>
-  <div class="list pick" data-a style="--i:8">
-    <button class="row" role="radio"><span class="sym">$</span><div class="grow"><span class="t-body rt">Argentine Peso</span><span class="code">ARS</span></div><span class="radio"></span></button>
-    <button class="row" role="radio"><span class="sym">R$</span><div class="grow"><span class="t-body rt">Brazilian Real</span><span class="code">BRL</span></div><span class="radio"></span></button>
-    <button class="row" role="radio"><span class="sym">&yen;</span><div class="grow"><span class="t-body rt">Chinese Yuan</span><span class="code">CNY</span></div><span class="radio"></span></button>
+  <p class="t-foot muted sec" data-a style="--i:5">Common</p>
+  <div class="grp" data-a style="--i:6">
+    <button class="opt"><span class="sym">&pound;</span><div class="grow"><div class="t-body rt">British Pound</div><div class="t-foot">GBP</div></div><span class="radio"></span></button>
+    <button class="opt"><span class="sym">&euro;</span><div class="grow"><div class="t-body rt">Euro</div><div class="t-foot">EUR</div></div><span class="radio"></span></button>
+    <button class="opt"><span class="sym">C$</span><div class="grow"><div class="t-body rt">Canadian Dollar</div><div class="t-foot">CAD</div></div><span class="radio"></span></button>
+    <button class="opt"><span class="sym">A$</span><div class="grow"><div class="t-body rt">Australian Dollar</div><div class="t-foot">AUD</div></div><span class="radio"></span></button>
+    <button class="opt"><span class="sym">&#8377;</span><div class="grow"><div class="t-body rt">Indian Rupee</div><div class="t-foot">INR</div></div><span class="radio"></span></button>
   </div>
 </div></div>
-<div class="more"></div>
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
-document.getElementById('xr').innerHTML = DX.char('xero', { mood: 'hello', size: 64 });
+
 const usd = document.getElementById('usd');
 DX.after(900, () => usd.classList.add('on')); DX.onStill(() => usd.classList.add('on'));
 </script>
