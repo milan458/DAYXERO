@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>055 Check-in done</title>
-<meta name="motion" content="Done beat, kept dim. The night sky fades in; Glim (cheer) settles in (900ms) and the green check pops at its side and draws (500ms in, success haptic). Title arrives. The evening count rolls 6 to 7 (from 1.1s) with a small '+1' floating up, then the 7-night badge stamps in (620ms spring, medium haptic) and a shine sweeps across it once. Good night arrives last.">
+<meta name="motion" content="Done beat, kept dim. The night sky fades in; Glim (cheer) settles in (900ms) and the green check pops at its side and draws (500ms in, success haptic). Title arrives. The evening count rolls 6 to 7 (from 1.1s) with a small '+1' floating up, then at 1.7s the 7-night badge stamps in inside its sun-gold ring (620ms spring, medium haptic) and at 2.35s a shine sweeps across it once. Good night arrives last.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -11,6 +11,7 @@
   .body .day { color: var(--muted); }
   .body h1 { margin-top: 6px; }
   .earn { margin-top: 24px; text-align: left; display: flex; gap: 16px; align-items: center; padding: 16px 18px; }
+  .bdg-in { width: 84px; height: 84px; border-radius: 99px; }
   .bdg { width: 84px; height: 84px; border-radius: 99px; flex: none; box-shadow: 0 0 0 3px var(--card), 0 0 0 5px var(--sun); }
   .earn .lbl { color: var(--muted); }
   .cnt { display: flex; align-items: baseline; gap: 8px; position: relative; }
@@ -32,7 +33,7 @@
     <p class="t-foot day" data-a style="--i:2">Check-in saved</p>
     <h1 class="t-large" data-a style="--i:3">Rest well, Sam. See you tomorrow.</h1>
     <div class="card earn" data-a style="--i:4">
-      <div class="bdg shine" id="badge" data-stamp style="--d:1500ms"></div>
+      <div class="bdg" data-stamp style="--i:0;--d:1700ms"><div class="bdg-in shine" id="badge" style="--d:2350ms"></div></div>
       <div class="grow">
         <p class="t-foot lbl">Evening check-ins</p>
         <div class="cnt"><span class="num" data-count="7" data-from="6" data-delay="1100" data-dur="500">7</span><span class="of">nights</span><span class="plus float-up" style="--d:1150ms">+1</span></div>
@@ -45,7 +46,7 @@
     </div>
   </div>
   <div class="dock">
-    <button class="btn" data-a style="--i:8">Good night</button>
+    <button class="btn" data-a style="--i:8" data-go="016-today-quit">Good night</button>
   </div>
 </div>
 <script>

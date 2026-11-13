@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>015 Today, prep week</title>
-<meta name="motion" content="The dawn sun rises behind the hills (2.6s) while Xero settles onto the cream disc (900ms); the prep ring sweeps from 0 to 4 of 7 (1.4s, 250ms delay) and its dot fades in at the end. Greeting, countdown (the 3 counts up), reason, session card and the stamps strip arrive with a 90ms stagger; Prep 1 to 4 stamp in one by one (140ms apart) and the Prep 5 slot breathes a soft outline. Light haptic when the ring lands.">
+<meta name="motion" content="The dawn sun rises behind the hills (2.6s) while Xero settles onto the cream disc (900ms); the prep ring sweeps from 0 to 4 of 7 (1.4s, 250ms delay) and its dot fades in at the end. Greeting, countdown (the 3 counts up), reason, session card and the stamps strip arrive with a 90ms stagger; Prep 1 to 4 rise in one by one (90ms apart, no spring: they were earned earlier) and the Prep 5 slot breathes a soft outline. Light haptic when the ring lands.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -77,7 +77,7 @@
   $('#ic-sess').innerHTML = DX.icon('headphones');
   $('#start').innerHTML = DX.icon('play', { fill: 'currentColor', w: 1.5 }) + 'Start';
   let h = ''; const days = ['Fri','Sat','Sun','Mon','Today','Wed','Thu'];
-  for (let n = 1; n <= 4; n++) h += `<div class="slot" data-stamp style="--i:${n};--d:700ms">${DX.badge({ kind: 'prep', n, size: 34, bare: true })}<span class="t-cap">${days[n-1]}</span></div>`;
+  for (let n = 1; n <= 4; n++) h += `<div class="slot" data-a style="--i:${n};--d:640ms">${DX.badge({ kind: 'prep', n, size: 34, bare: true })}<span class="t-cap">${days[n-1]}</span></div>`;
   h += `<div class="slot now">${DX.badge({ kind: 'prep', n: 5, state: 'locked', size: 34, bare: true })}<span class="t-cap" style="color:var(--fg)">Today</span></div>`;
   for (let n = 6; n <= 7; n++) h += `<div class="slot">${DX.badge({ kind: 'prep', n, state: 'locked', size: 34, bare: true })}<span class="t-cap">${days[n-1]}</span></div>`;
   h += `<span class="sep"></span><div class="slot goal">${DX.badge({ kind: 'xero', n: '0', size: 34, bare: true })}<span class="t-cap">Nov 6</span></div>`;

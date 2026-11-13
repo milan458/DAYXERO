@@ -95,9 +95,9 @@
          <circle cx="50" cy="50" r="39" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="2"/>
          <text x="50" y="${kind === 'xero' ? 42 : 50}" text-anchor="middle" dominant-baseline="middle" font-family="Bricolage Grotesque" font-weight="800" font-size="${label}" fill="${pal.ink}" letter-spacing="-1">${n}</text>`;
     const ringNext = next ? `<circle cx="50" cy="50" r="48" fill="none" stroke="currentColor" stroke-opacity=".22" stroke-width="3"/>` + (o.p != null ? `<circle cx="50" cy="50" r="48" fill="none" stroke="var(--fg)" stroke-width="3" stroke-linecap="round" stroke-dasharray="${2 * Math.PI * 48}" stroke-dashoffset="${2 * Math.PI * 48 * (1 - o.p)}" transform="rotate(-90 50 50)"/>` : '') : '';
-    const svg = `<svg width="${s}" height="${s}" viewBox="0 0 100 100" style="display:block;overflow:visible;${next ? 'opacity:.9' : ''}" role="img" aria-label="${o.label || ''} ${state}">${next && !locked ? '' : ''}${face}${ringNext}</svg>`;
+    const svg = `<svg width="${s}" height="${s}" viewBox="0 0 100 100" style="display:block;overflow:visible" role="img" aria-label="${o.label || ''} ${state}">${next ? `<g style="opacity:.5;filter:saturate(.35)">${face}</g>` : face}${ringNext}</svg>`;
     if (o.bare) return svg;
-    return `<div class="badge" ${o.attr || ''}>${svg}${o.label ? `<span class="t-cap">${o.label}</span>` : ''}</div>`;
+    return `<div class="badge ${o.cls || ''}" ${o.attr || ''}>${svg}${o.label ? `<span class="t-cap">${o.label}</span>` : ''}</div>`;
   }
 
 
