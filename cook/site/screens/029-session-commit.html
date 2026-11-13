@@ -31,11 +31,11 @@
 <div class="screen" data-ground="table">
   <div class="nav">
     <button class="icon-btn" aria-label="Close" id="close"></button>
-    <div class="grow"><div class="pips"><i class="done"></i><i class="done"></i><i class="done"></i><i class="now"></i><i></i></div></div>
-    <span class="side t-foot muted">4 of 5</span>
+    <div class="grow"><div class="pips"><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="now"></i></div></div>
+    <span class="side t-foot muted">5 of 5</span>
   </div>
   <div class="wrap pad">
-    <span class="tag f-apricot" data-a style="--i:0"><span id="t-ic"></span>Reveal · 7 min</span>
+    <span class="tag f-mint" data-a style="--i:0"><span id="t-ic"></span>Try · 6 min</span>
     <h1 class="t-title" data-a style="--i:1">Commit to your Quit Day</h1>
     <p class="t-foot muted" data-a style="--i:2">Hold for three seconds to make it official. This one is a promise to yourself.</p>
   </div>
@@ -50,18 +50,18 @@
   </div>
   <div class="xrow" data-a style="--i:4">
     <div id="xero" style="flex:none"></div>
-    <div class="say"><p class="t-head" id="say1">3 days to go</p><p class="t-foot muted" id="say2">Prep 6 and 7 get you ready. Keep using as normal until then.</p></div>
+    <div class="say"><p class="t-head" id="say1">4 days to go</p><p class="t-foot muted" id="say2">Prep 5 to 7 get you ready. Keep using as normal until then.</p></div>
   </div>
   <div class="dock"><button class="btn" id="hold" data-hold="3000" data-autohold="1200" data-done="Committed" data-a style="--i:5">Hold to commit</button></div>
 </div>
 <script>
 document.getElementById('close').innerHTML = DX.icon('close');
-document.getElementById('t-ic').innerHTML = DX.icon('eye', {size:16});
+document.getElementById('t-ic').innerHTML = DX.icon('hand', {size:16});
 const X = document.getElementById('xero'), arc = document.getElementById('arc'), rb = document.getElementById('rb'), btn = document.getElementById('hold');
 const C = 741.4;
 const reset = () => { X.innerHTML = DX.char('xero', {mood:'calm', size:88}); X.className = ''; rb.classList.remove('done'); document.getElementById('medal').innerHTML = ''; document.getElementById('clasp').innerHTML = ''; document.getElementById('clasp').style.visibility = 'hidden';
-  arc.style.transition = 'none'; arc.style.strokeDashoffset = C; document.getElementById('say1').textContent = '3 days to go';
-  document.getElementById('say2').textContent = 'Prep 6 and 7 get you ready. Keep using as normal until then.'; };
+  arc.style.transition = 'none'; arc.style.strokeDashoffset = C; document.getElementById('say1').textContent = '4 days to go';
+  document.getElementById('say2').textContent = 'Prep 5 to 7 get you ready. Keep using as normal until then.'; };
 const fillRing = () => { if (rb.classList.contains('done')) return; arc.style.transition = 'stroke-dashoffset 3000ms linear, stroke .4s'; arc.style.strokeDashoffset = 0; };
 const drain = () => { if (rb.classList.contains('done')) return; arc.style.transition = 'stroke-dashoffset 300ms ease-out'; arc.style.strokeDashoffset = C; };
 btn.addEventListener('pointerdown', fillRing); btn.addEventListener('pointerup', drain); btn.addEventListener('pointerleave', drain);

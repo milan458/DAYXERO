@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>026 Session reflect</title>
-<meta name="motion" content="The mint Try tag and title arrive (600ms, 90ms stagger). Your three reasons settle in as rows one after another (900ms settle, 120ms apart), then the Why now field and the suggestion chips arrive. Tapping a chip flies it into the list as a new row (selection haptic); the 3 of 5 count bumps.">
+<meta name="motion" content="The mint Try tag and title arrive (600ms, 90ms stagger). Your two picks settle in as rows one after another (900ms settle, 120ms apart) while the picked count runs 0 to 2, then the add-your-own field and the other options arrive. Tapping a chip swaps it into the list as a row (selection haptic) and the count bumps.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -25,24 +25,23 @@
 <div class="screen" data-ground="table">
   <div class="nav">
     <button class="icon-btn" aria-label="Close" id="close"></button>
-    <div class="grow"><div class="pips"><i class="done"></i><i class="done"></i><i class="now"></i><i></i><i></i></div></div>
-    <span class="side t-foot muted">3 of 5</span>
+    <div class="grow"><div class="pips"><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="now"></i></div></div>
+    <span class="side t-foot muted">5 of 5</span>
   </div>
   <div class="wrap pad">
-    <span class="tag f-mint" data-a style="--i:0"><span id="t-ic"></span>Try · 5 min</span>
-    <h1 class="t-title" data-a style="--i:1">Your reasons</h1>
-    <p class="t-foot muted" data-a style="--i:2">When you joined, you told us why. Add any others, up to five.</p>
-    <div class="lh" data-a style="--i:3"><span class="t-foot" style="font-weight:600">Yours</span><span class="t-foot muted">Room for <span data-count="2" data-from="3">2</span> more</span></div>
+    <span class="tag f-mint" data-a style="--i:0"><span id="t-ic"></span>Try · 6 min</span>
+    <h1 class="t-title" data-a style="--i:1">What gets to you most?</h1>
+    <p class="t-foot muted" data-a style="--i:2">Pick the two that come up most often. Add your own if it's missing.</p>
+    <div class="lh" data-a style="--i:3"><span class="t-foot" style="font-weight:600">Your two</span><span class="t-foot muted"><span data-count="2" data-from="0">2</span> of 2 picked</span></div>
     <div class="list">
-      <div class="row" data-settle style="--i:2"><span class="grow t-foot">Run with Aria without stopping to catch my breath</span><button class="x" aria-label="Remove"></button></div>
-      <div class="row" data-settle style="--i:3"><span class="grow t-foot">Save for the trip to Lisbon</span><button class="x" aria-label="Remove"></button></div>
-      <div class="row" data-settle style="--i:4"><span class="grow t-foot">Be there for Aria's big days</span><button class="x" aria-label="Remove"></button></div>
+      <div class="row" data-settle style="--i:2"><span class="grow t-foot">Work piling up</span><button class="x" aria-label="Remove"></button></div>
+      <div class="row" data-settle style="--i:3"><span class="grow t-foot">Too much at once</span><button class="x" aria-label="Remove"></button></div>
     </div>
-    <div class="field ph" data-a style="--i:7"><span id="plus"></span>Why now? Add your own</div>
-    <p class="t-foot muted" data-a style="--i:8;margin-top:6px">Or pick one</p>
+    <div class="field ph" data-a style="--i:7"><span id="plus"></span>Something else? Add your own</div>
+    <p class="t-foot muted" data-a style="--i:8;margin-top:6px">Or swap one in</p>
     <div class="chips" data-a style="--i:9">
-      <button class="chip">Breathe easier</button><button class="chip">Save the money</button>
-      <button class="chip">Feel calm</button><button class="chip">For the people I love</button>
+      <button class="chip">A deadline</button><button class="chip">Money worries</button>
+      <button class="chip">Tension with someone</button><button class="chip">Running late</button>
     </div>
   </div>
   <div class="dock"><button class="btn" data-a style="--i:10">Continue</button></div>

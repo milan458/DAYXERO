@@ -29,3 +29,19 @@ Best so far: none yet
 - 16:50 "finishing actions and completion animations" missing | open
 - 16:50 milestones prep days to Day Xero and after quit, with animations | open
 - 16:50 polish launch wordmark animation, 2-3 s | open
+
+---
+
+## Round 01
+
+Time: 16:50 to 17:19 | total elapsed 0.5h
+Focus: build all 71 screens on one kit (7 parallel builders), because nothing existed yet.
+Changes: kit (tokens, components, motion, badges, night sky), 71 screens light + dark, gallery artifact https://claude.ai/artifact/Rr6N6a8AJjTMecrzUZBXXp
+Stills: cook/stills/r01/ | Critic sheets: scratchpad crit1/
+Scores, eyeballed: anchored critics (rubric anchors: before app 6.5, Kwit 7.5, Calm 8.0, Headspace 8.5-9), 3 critics (2 Opus, 1 Sonnet)
+Overall per critic: 8.2 / 8.2 / 8.0, median 8.2. Lowest screens: 041 (7.5-7.8), 059 (7.4-7.7), 057 (7.5-7.8), 023 (7.7-7.8), 010 (7.7-8.2).
+Calibration: anchors carry the user's scale; residual offset not measurable without a new user score (none yet).
+Own score (not decisive): 8.0
+Measured: render problems 0 (render.mjs: no page errors, no missing .screen). Motion strips for 14 screens captured.
+Not checked: real-device performance; VoiceOver.
+Next focus: type floor, voids, waiting badge, ocean, session light mode, generic utility screens, collisions (cook/critic/r02-fixes.md).

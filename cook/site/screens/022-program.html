@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>022 Program, prep week</title>
-<meta name="motion" content="Title and the segmented control arrive (90ms stagger). The road fades in, then the ink line draws along it from Prep 1 to today's node (1100ms, ease); each earned stamp arrives as the line reaches it (about 200ms apart). Today's play node and its up-next card arrive as the line lands, then the node breathes a soft pulse ring every 2.4s. Prep 6 and 7, the Day Xero medallion (rays turning slowly) and the week hint fade in last. Light haptic when the line reaches today.">
+<meta name="motion" content="Title and the segmented control arrive (90ms stagger). The road fades in, then the ink line draws along it from Prep 1 to today's node (1100ms, ease); Prep 1 to 3 stamps arrive as the line reaches each one (about 360ms apart). Today's Prep 4 play node and its up-next card arrive as the line lands, then the node breathes a soft pulse ring every 2.4s. Prep 5 to 7 (locked), the Day Xero medallion (rays turning slowly) and the week hint fade in last. Light haptic when the line reaches today.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -21,7 +21,7 @@
   .cur::before { content: ""; position: absolute; inset: -6px; border-radius: 99px; box-shadow: 0 0 0 3px var(--fg); opacity: 0; }
   .play .cur::before { animation: pulse 2.4s var(--ease) 1.8s infinite; }
   @keyframes pulse { 0% { opacity: .45; transform: scale(1); } 100% { opacity: 0; transform: scale(1.35); } }
-  .upnext { position: absolute; left: 116px; right: var(--gutter); top: 398px; padding: 12px 14px; display: grid; gap: 2px; }
+  .upnext { position: absolute; left: 116px; right: var(--gutter); top: 350px; padding: 12px 14px; display: grid; gap: 2px; }
   .upnext .t-foot { color: var(--muted); }
   .upnext .t-cap { color: var(--muted); }
   .goal { position: absolute; left: 152px; top: 634px; transform: translateY(-50%); }
@@ -45,7 +45,7 @@
   <div id="nodes"></div>
 
   <div class="card upnext" data-a style="--d:1250ms">
-    <span class="t-cap">Up next &middot; Prep 5 &middot; 28 min</span>
+    <span class="t-cap">Up next &middot; Prep 4 &middot; 28 min</span>
     <p class="t-head">The stress loop</p>
     <p class="t-foot">Today. Calm without it.</p>
   </div>
@@ -58,7 +58,7 @@
 </div>
 <script>
   const $ = s => document.querySelector(s);
-  const P = [[62, 228], [126, 276], [62, 324], [126, 372], [70, 440], [126, 512], [62, 560], [108, 634], [64, 704], [64, 770]];
+  const P = [[126, 228], [62, 276], [126, 324], [70, 392], [126, 464], [62, 512], [126, 560], [108, 634], [64, 704], [64, 770]];
   function spline(pts) {
     let d = `M${pts[0][0]} ${pts[0][1]}`;
     for (let i = 0; i < pts.length - 1; i++) {
@@ -68,21 +68,21 @@
     return d;
   }
   $('#road').setAttribute('d', spline(P.slice(0, 9)));
-  $('#future').setAttribute('d', spline(P.slice(4)));
-  const done = $('#done'); done.setAttribute('d', spline(P.slice(0, 5)));
+  $('#future').setAttribute('d', spline(P.slice(3)));
+  const done = $('#done'); done.setAttribute('d', spline(P.slice(0, 4)));
   done.style.setProperty('--len', Math.ceil(done.getTotalLength()));
 
-  const titles = ["You don't have to quit today", 'The first one of the day', 'Use with your eyes open', 'Make it easy on yourself', 'The stress loop', 'Riding the wave', 'The night before'];
+  const titles = ["You don't have to quit today", 'The first one of the day', 'Use with your eyes open', 'The stress loop', 'Riding the wave', 'Make it easy on yourself', 'The night before'];
   const days = ['Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu'];
   let h = '';
   P.slice(0, 7).forEach(([x, y], i) => {
     const n = i + 1;
-    if (n <= 4) {
-      const d = 300 + i * 240;
+    if (n <= 3) {
+      const d = 300 + i * 360;
       h += `<div class="node" style="left:${x}px;top:${y}px"><div data-a style="--d:${d}ms"><div class="bg">${DX.badge({ kind: 'prep', n, size: 40, bare: true })}</div></div></div>`;
       h += `<div class="lab" style="left:${x + 32}px;top:${y}px"><div data-a style="--d:${d + 60}ms"><span class="t-cap">Prep ${n} &middot; ${days[i]}, done</span><p class="t-foot">${titles[i]}</p></div></div>`;
-    } else if (n === 5) {
-      h += `<div class="node" style="left:${x}px;top:${y}px"><div data-a style="--d:1250ms"><button class="cur" aria-label="Play Prep 5">${DX.icon('play', { fill: 'currentColor', w: 1.5 })}</button></div></div>`;
+    } else if (n === 4) {
+      h += `<div class="node" style="left:${x}px;top:${y}px"><div data-a style="--d:1250ms"><button class="cur" aria-label="Play Prep 4">${DX.icon('play', { fill: 'currentColor', w: 1.5 })}</button></div></div>`;
     } else {
       h += `<div class="node" style="left:${x}px;top:${y}px"><div data-fade style="--d:1400ms"><div class="bg" style="color:var(--fg)">${DX.badge({ kind: 'prep', n, state: 'locked', size: 38, bare: true })}</div></div></div>`;
       h += `<div class="lab lock" style="left:${x + 32}px;top:${y}px"><div data-fade style="--d:1450ms"><span class="t-cap">Prep ${n} &middot; ${days[i]}</span><p class="t-foot">${titles[i]}</p></div></div>`;

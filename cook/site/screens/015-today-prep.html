@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>015 Today, prep week</title>
-<meta name="motion" content="The dawn sun rises behind the hills (2.6s) while Xero settles onto the cream disc (900ms); the prep ring sweeps from 0 to 4 of 7 (1.4s, 250ms delay) and its dot fades in at the end. Greeting, countdown (the 3 counts up), reason, session card and the stamps strip arrive with a 90ms stagger; Prep 1 to 4 rise in one by one (90ms apart, no spring: they were earned earlier) and the Prep 5 slot breathes a soft outline. Light haptic when the ring lands.">
+<meta name="motion" content="The dawn sun rises behind the hills (2.6s) while Xero settles onto the cream disc (900ms); the prep ring sweeps from 0 to 3 of 7 (1.4s, 250ms delay) and its dot fades in at the end. Greeting, countdown (the 4 counts down from 7), reason, session card and the stamps strip arrive with a 90ms stagger; Prep 1 to 3 rise in one by one (90ms apart, no spring: they were earned earlier) and today's Prep 4 slot breathes a soft outline. Light haptic when the ring lands.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -45,25 +45,25 @@
       <div class="ring" id="ring"></div>
       <div class="ch" id="xero" data-settle></div>
     </div>
-    <div class="pill" data-a style="--i:1;--d:500ms"><span>Prep 5 of 7<i></i>Tue, Nov 3</span></div>
+    <div class="pill" data-a style="--i:1;--d:500ms"><span>Prep 4 of 7<i></i>Mon, Nov 2</span></div>
   </div>
 
   <div class="content">
     <h1 class="t-large" data-a style="--i:2">Good morning, Sam</h1>
-    <p class="t-body count" data-a style="--i:3"><b><span data-count="3" data-from="7" data-delay="500">3</span> days</b> to Quit Day. Today is about stress.</p>
+    <p class="t-body count" data-a style="--i:3"><b><span data-count="4" data-from="7" data-delay="500">4</span> days</b> to Quit Day. Today is about stress.</p>
     <p class="t-foot reason" data-a style="--i:4">&ldquo;Run with Aria without stopping to catch my breath&rdquo;</p>
 
     <div class="card sess" data-a style="--i:5">
       <span class="ico-tile" id="ic-sess"></span>
       <div class="grow">
-        <p class="t-foot">Prep 5 &middot; 28 min</p>
+        <p class="t-foot">Prep 4 &middot; 28 min</p>
         <p class="t-head">The stress loop</p>
       </div>
       <button class="btn small" id="start"></button>
     </div>
 
     <div class="card stamps" data-a style="--i:6">
-      <div class="head"><span class="t-head" style="font-size:17px">Prep stamps</span><span class="t-foot muted"><span data-count="4">4</span> of 7</span></div>
+      <div class="head"><span class="t-head" style="font-size:17px">Prep stamps</span><span class="t-foot muted"><span data-count="3">3</span> of 7</span></div>
       <div class="row8" id="row8"></div>
     </div>
     <h2 class="t-title peek" data-a style="--i:7">Through the day</h2>
@@ -72,14 +72,14 @@
 <script>
   const $ = s => document.querySelector(s);
   $('#scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 390, h: 338, clarity: 85 });
-  $('#ring').innerHTML = DX.ring({ size: 210, stroke: 12, p: 4 / 7, color: '#1E1A3A', track: 'rgba(255,248,238,.55)', dot: true });
+  $('#ring').innerHTML = DX.ring({ size: 210, stroke: 12, p: 3 / 7, color: '#1E1A3A', track: 'rgba(255,248,238,.55)', dot: true });
   $('#xero').innerHTML = DX.char('xero', { mood: 'hello', size: 138, stage: 1 });
   $('#ic-sess').innerHTML = DX.icon('headphones');
   $('#start').innerHTML = DX.icon('play', { fill: 'currentColor', w: 1.5 }) + 'Start';
-  let h = ''; const days = ['Fri','Sat','Sun','Mon','Today','Wed','Thu'];
-  for (let n = 1; n <= 4; n++) h += `<div class="slot" data-a style="--i:${n};--d:640ms">${DX.badge({ kind: 'prep', n, size: 34, bare: true })}<span class="t-cap">${days[n-1]}</span></div>`;
-  h += `<div class="slot now">${DX.badge({ kind: 'prep', n: 5, state: 'locked', size: 34, bare: true })}<span class="t-cap" style="color:var(--fg)">Today</span></div>`;
-  for (let n = 6; n <= 7; n++) h += `<div class="slot">${DX.badge({ kind: 'prep', n, state: 'locked', size: 34, bare: true })}<span class="t-cap">${days[n-1]}</span></div>`;
+  let h = ''; const days = ['Fri','Sat','Sun','Today','Tue','Wed','Thu'];
+  for (let n = 1; n <= 3; n++) h += `<div class="slot" data-a style="--i:${n};--d:640ms">${DX.badge({ kind: 'prep', n, size: 34, bare: true })}<span class="t-cap">${days[n-1]}</span></div>`;
+  h += `<div class="slot now">${DX.badge({ kind: 'prep', n: 4, state: 'locked', size: 34, bare: true })}<span class="t-cap" style="color:var(--fg)">Today</span></div>`;
+  for (let n = 5; n <= 7; n++) h += `<div class="slot">${DX.badge({ kind: 'prep', n, state: 'locked', size: 34, bare: true })}<span class="t-cap">${days[n-1]}</span></div>`;
   h += `<span class="sep"></span><div class="slot goal">${DX.badge({ kind: 'xero', n: '0', size: 34, bare: true })}<span class="t-cap">Nov 6</span></div>`;
   $('#row8').innerHTML = h;
   $('.screen').insertAdjacentHTML('beforeend', DX.tabbar('today'));

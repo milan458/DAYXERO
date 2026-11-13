@@ -46,7 +46,7 @@
   </div>
   <div class="mid pad">
     <h1 class="t-large" data-a style="--i:0;--d:900ms">Card played</h1>
-    <p class="t-foot muted" data-a style="--i:1;--d:900ms">Why stress asks for a cigarette · 6 min</p>
+    <p class="t-foot muted" data-a style="--i:1;--d:900ms">Why it feels like it calms you · 6 min</p>
   </div>
   <div class="rate pad" data-a style="--i:2;--d:900ms">
     <p class="t-foot muted">How was this card?</p>
@@ -55,17 +55,16 @@
   <div class="next card" data-a style="--i:3;--d:900ms">
     <div class="mini f-sky" id="mini"></div>
     <div style="flex:1;min-width:0">
-      <p class="t-foot muted">Up next · Myth or fact · 3 min</p>
-      <p class="t-head" style="margin-top:2px">Smoking calms my nerves</p>
+      <p class="t-foot muted">Up next · Try · 5 min</p>
+      <p class="t-head" style="margin-top:2px">A breath that works in the moment</p>
     </div>
   </div>
   <div class="dock"><button class="btn" data-a style="--i:4;--d:900ms">Play the next card</button></div>
 </div>
 <script>
-const MYTH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 010 17z" fill="currentColor"/></svg>';
 document.getElementById('close').innerHTML = DX.icon('close');
 document.getElementById('f-ic').innerHTML = DX.icon('headphones');
-document.getElementById('mini').innerHTML = MYTH;
+document.getElementById('mini').innerHTML = DX.icon('hand');
 document.getElementById('chk').innerHTML = DX.check({size:66, color:'#1E1A3A', fg:'#FFD966', d:1100});
 if (!DX.still) {
   const p2 = document.getElementById('p2'), lbl = document.getElementById('lbl');

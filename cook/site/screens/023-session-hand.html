@@ -27,10 +27,10 @@
 </style>
 </head><body>
 <div class="screen" data-ground="table">
-  <div class="nav"><button class="icon-btn" aria-label="Close" id="close"></button><div class="grow"></div><span class="t-foot muted">Tue, Nov 3</span></div>
+  <div class="nav"><button class="icon-btn" aria-label="Close" id="close"></button><div class="grow"></div><span class="t-foot muted">Mon, Nov 2</span></div>
   <div class="head pad">
     <h1 class="t-large" data-a style="--i:0">The <span class="mark">stress</span> loop</h1>
-    <p class="t-foot muted" data-a style="--i:1">Prep 5 · 5 cards · about 28 min</p>
+    <p class="t-foot muted" data-a style="--i:1">Prep 4 · 5 cards · about 28 min</p>
   </div>
   <div class="stamps" id="stamps" data-a style="--i:2"></div>
   <div class="fan" id="fan"></div>
@@ -38,7 +38,7 @@
     <div class="mini f-apricot" id="mini"></div>
     <div class="grow" style="flex:1;min-width:0">
       <p class="t-foot muted">Up next · Listen · 6 min</p>
-      <p class="t-head" style="margin-top:2px">Why stress asks for a cigarette</p>
+      <p class="t-head" style="margin-top:2px">Why it feels like it calms you</p>
     </div>
   </div>
   <div class="dock"><button class="btn" data-a style="--i:10;--d:500ms">Play card 1</button></div>
@@ -48,11 +48,11 @@ const MYTH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-
 const ic = n => n === 'myth' ? MYTH : DX.icon(n);
 document.getElementById('close').innerHTML = DX.icon('close');
 document.getElementById('mini').innerHTML = DX.icon('headphones');
-document.getElementById('stamps').innerHTML = [1,2,3,4].map(n => DX.badge({kind:'prep', n, size:44, bare:true})).join('') +
-  DX.badge({kind:'prep', n:5, state:'next', size:44, bare:true}) + '<span class="t-foot muted">Today</span>';
+document.getElementById('stamps').innerHTML = [1,2,3].map(n => DX.badge({kind:'prep', n, size:44, bare:true})).join('') +
+  DX.badge({kind:'prep', n:4, state:'next', size:44, bare:true}) + '<span class="t-foot muted">Today</span>';
 const cards = [
-  ['apricot','headphones','Listen','6 min'], ['sky','myth','Myth or fact','3 min'], ['mint','hand','Try','5 min'],
-  ['apricot','eye','Reveal','7 min'], ['sky','headphones','Listen','7 min']];
+  ['apricot','headphones','Listen','6 min'], ['sky','hand','Try','5 min'], ['apricot','eye','Reveal','6 min'],
+  ['sky','myth','Myth or fact','5 min'], ['mint','hand','Try','6 min']];
 document.getElementById('fan').innerHTML = cards.map((c, k) => `<div class="pc f-${c[0]} ${k === 0 ? 'up' : ''}" style="--x:${(k - 2) * 62}px;--r:${(k - 2) * 3}deg;--y:${k === 0 ? -20 : [10,3,0,3,10][k]}px;--k:${k};z-index:${k + 1}">
   <span class="ic">${ic(c[1])}</span><b>${c[2]}</b><span class="m">${c[3]}</span>${k === 4 ? `<span class="big">${ic(c[1])}</span>` : ''}</div>`).join('');
 </script>
