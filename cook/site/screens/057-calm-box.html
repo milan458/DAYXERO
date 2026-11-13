@@ -74,7 +74,7 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
 
-document.getElementById('sea').innerHTML = DX.char('horizon', { scene: 'sea', w: 200, h: 200, clarity: 100 });
+document.getElementById('sea').innerHTML = DX.char('horizon', { scene: 'sea', w: 200, h: 200, clarity: 100, noDusk: true });
 document.getElementById('jel').innerHTML = DX.char('jelli', { mood: 'breathe', size: 150 });
 const P = [
   { w: 'Breathe in', c: 'In through your nose. Let your belly fill.', d: 'M50 270 V50' },
