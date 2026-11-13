@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>063 Day ends</title>
-<meta name="motion" content="Options arrive on the stagger with Midnight selected; at 1.0s the selection moves to 4 AM (ring and tick 250ms, selection haptic), the timeline below shows the 1:30 AM check-in landing on Thursday; the choice saves at once with a success haptic (the filled radio is the done state, no toast).">
+<meta name="motion" content="Options arrive on the stagger with Midnight selected; at 1.0s the selection moves to 4 AM (ring and tick 250ms, selection haptic), the timeline below fills Thursday from 8 PM to the 4 AM tick (fade, 700ms), past the midnight tick, and the labelled 1:30 check-in dot pops onto it (1.3s) so it plainly lands on Thursday; the choice saves at once with a success haptic (the filled radio is the done state, no toast).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -21,15 +21,22 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 
 .opts { display: grid; gap: 10px; margin-top: 22px; }
 .opts .opt { min-height: 64px; }
-.tl { margin-top: 24px; padding: 16px 18px 16px; }
-.tl .head { display: flex; align-items: center; gap: 12px; }
-.bar { position: relative; height: 34px; margin-top: 12px; }
-.bar .ln { position: absolute; left: 0; right: 0; top: 16px; height: 2px; background: var(--line); }
-.bar .seg { position: absolute; left: 0; top: 14px; height: 6px; border-radius: 99px; background: var(--fg); width: 70%; }
-.bar .tick { position: absolute; top: 8px; width: 2px; height: 18px; background: var(--fg); }
-.bar .ci { position: absolute; top: 8px; width: 18px; height: 18px; border-radius: 99px; background: var(--card); box-shadow: inset 0 0 0 3px var(--mark); margin-left: -9px; }
-.tlab { display: flex; justify-content: space-between; color: var(--muted); }
-
+.tl { margin-top: 22px; padding: 16px 18px 14px; }
+.tl .head { display: flex; align-items: center; gap: 14px; }
+.tl .av { width: 56px; height: 56px; border-radius: 18px; flex: none; position: relative; overflow: hidden; background: linear-gradient(180deg, #0B1430, #2C3D6A); }
+.tl .av > svg { position: absolute; inset: 0; }
+.tl .av .g { position: absolute; left: 0; top: 2px; }
+.bar { position: relative; height: 74px; margin-top: 14px; }
+.bar .ln { position: absolute; left: 0; right: 0; top: 36px; height: 4px; border-radius: 99px; background: var(--track); }
+.bar .seg { position: absolute; left: 0; top: 35px; height: 6px; border-radius: 99px; background: var(--fg); width: 80%; }
+.bar .mid { position: absolute; top: 30px; width: 2px; height: 16px; margin-left: -1px; border-radius: 2px; background: var(--fg); opacity: .55; }
+.bar .end { position: absolute; top: 26px; width: 3px; height: 24px; margin-left: -1.5px; border-radius: 2px; background: var(--fg); }
+.bar .ci { position: absolute; top: 29px; width: 20px; height: 20px; margin-left: -10px; border-radius: 99px; background: var(--card-2); box-shadow: inset 0 0 0 4px var(--mark); }
+.bar .lab { position: absolute; white-space: nowrap; transform: translateX(-50%); }
+.bar .up { top: 0; font: 700 13px/1.3 var(--body); color: var(--fg); }
+.bar .dn { top: 54px; color: var(--muted); }
+.bar .l { transform: none; }
+.bar .r { transform: translateX(-100%); }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -43,9 +50,13 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
     <div data-a style="--i:5"><button class="opt" ><div class="grow"><div class="t-head">6 AM</div><div class="t-foot">For night shifts and late finishes</div></div><span class="radio"></span></button></div>
   </div>
   <div class="card flat tl" data-a style="--i:6">
-    <div class="head"><span id="glim063"></span><p class="t-body" style="flex:1">A check-in at 1:30 AM still counts for Thursday. The new day starts at 4 AM.</p></div>
-    <div class="bar"><div class="ln"></div><div class="seg"></div><div class="ci" style="left:41%"></div><div class="tick" style="left:70%"></div></div>
-    <div class="tlab"><span class="t-foot">Thu 6 PM</span><span class="t-foot" style="margin-left:22%">Ends 4 AM</span><span class="t-foot">Fri</span></div>
+    <div class="head"><span class="av" id="glim063"></span><p class="t-body" style="flex:1">A check-in at 1:30 AM still counts for Thursday. Friday starts at 4 AM.</p></div>
+    <div class="bar" aria-label="Thursday runs from 8 PM to 4 AM; the 1:30 AM check-in counts for Thursday">
+      <div class="ln"></div><div class="seg" data-fade style="--d:700ms"></div>
+      <div class="mid" style="left:40%"></div><div class="end" style="left:80%"></div><div class="ci" style="left:55%;--d:1300ms" data-pop></div>
+      <span class="lab up l t-cap" style="left:0">Thursday</span><span class="lab up t-cap" style="left:55%">1:30 check-in</span><span class="lab up r t-cap" style="left:100%;color:var(--muted)">Friday</span>
+      <span class="lab dn l t-cap" style="left:0">8 PM</span><span class="lab dn t-cap" style="left:40%">Midnight</span><span class="lab dn t-cap" style="left:80%">4 AM</span><span class="lab dn r t-cap" style="left:100%">6 AM</span>
+    </div>
   </div>
 </div></div>
 </div>
@@ -53,9 +64,8 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
 
 const o0 = document.getElementById('o0'), o4 = document.getElementById('o4');
-document.getElementById('glim063').innerHTML = DX.char('glim', { mood: 'calm', size: 64 });
+document.getElementById('glim063').innerHTML = `<svg width="56" height="56" viewBox="0 0 56 56" aria-hidden="true"><circle cx="10" cy="10" r="1" fill="#fff" opacity=".8"/><circle cx="46" cy="14" r="1.2" fill="#fff" opacity=".6"/><circle cx="40" cy="6" r=".9" fill="#fff" opacity=".7"/><path d="M0 48 C18 42 36 44 56 50 V56 H0Z" fill="#1C2C4E"/></svg><span class="g">${DX.char('glim', { mood: 'calm', size: 56 })}</span>`;
 function pick() { o0.classList.remove('on'); o4.classList.add('on'); }
 DX.after(1000, pick); DX.onStill(pick);
-document.querySelectorAll('.ck').forEach(e => e.innerHTML = DX.check({ size: 26, d: 1350 }));
 </script>
 </body></html>

@@ -24,7 +24,7 @@
   .quiet .t-cap { color: var(--muted); display: block; margin-top: 2px; }
   /* The day at a glance: two pins and the quiet band (10 PM to 8 AM, an hour after Glim's 9 PM check-in). */
   .clock { margin: 28px var(--gutter) 0; padding: 16px 18px 14px; }
-  .clock .ft { color: var(--muted); margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
+  .clock .ft { color: var(--muted); margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); text-wrap: balance; }
   .clock .hd { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
   .clock .hd .t-cap { color: var(--muted); }
   .bar24 { position: relative; height: 12px; border-radius: 99px; background: color-mix(in srgb, var(--fg) 10%, transparent); }
@@ -57,11 +57,11 @@
     <svg class="line" width="2" height="118"><path class="draw" d="M1 0 V118" stroke="currentColor" stroke-opacity=".3" stroke-width="2" stroke-dasharray="3 5" style="--len:118;--d:500ms;--dur:700ms"/></svg>
     <div class="it" data-settle style="--i:0;--d:650ms">
       <span class="node" data-icon="sun"></span>
-      <div class="ntf"><span class="ic x" id="ix"></span><div><div class="top"><span class="t-cap">DayXero · Xero</span><span class="t-cap">8:00 AM</span></div><p class="t-foot">Good morning. Ten seconds for today's pledge?</p></div></div>
+      <div class="ntf"><span class="ic x" id="ix"></span><div><div class="top"><span class="t-cap">DayXero · Xero</span><span class="t-cap">8:00 AM</span></div><p class="t-foot">Good morning. Ten seconds for today&rsquo;s pledge?</p></div></div>
     </div>
     <div class="it" data-settle style="--i:0;--d:1030ms">
       <span class="node" data-icon="moon" id="moon"></span>
-      <div class="ntf"><span class="ic g" id="ig"></span><div><div class="top"><span class="t-cap">DayXero · Glim</span><span class="t-cap">9:00 PM</span></div><p class="t-foot">How did today go? A one-minute check-in.</p></div></div>
+      <div class="ntf"><span class="ic g" id="ig"></span><div><div class="top"><span class="t-cap">DayXero · Glim</span><span class="t-cap">9:00 PM</span></div><p class="t-foot">How did today go? Take a minute to check in.</p></div></div>
     </div>
   </div>
 

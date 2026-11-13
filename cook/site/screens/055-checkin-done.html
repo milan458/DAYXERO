@@ -1,52 +1,46 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>055 Check-in done</title>
-<meta name="motion" content="Done beat, kept dim. The night sky fades in (700ms); Glim (cheer) settles in beside the empty badge spot (900ms) then bobs. At 1.1s the 7-night badge stamps in large (168px) inside its sun-gold ring (620ms spring, medium haptic) and at 1.75s a shine sweeps across it once. The small check by 'Check-in saved' pops and draws (success haptic), the title arrives with the underline under 'well', the nights count rolls 6 to 7 with a '+1' floating up, and the next-badge bar sweeps to 50%. Good night arrives last.">
+<meta name="motion" content="Done beat, kept dim. The night sky fades in (700ms); Glim (cheer) settles onto the hill at the badge's lower right (900ms) then bobs, one soft shadow under both. At 1.1s the 7-night badge stamps in (156px) inside its sun-gold ring (620ms spring, medium haptic), a '+1' floats up from it, and at 1.75s a shine sweeps across it once. The small check by 'Check-in saved' pops and draws (success haptic), the title arrives with the underline under 'well', then the next-badge bar sweeps from 0 to 50% across the full card width (900ms) and the calm row arrives. Good night arrives last.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .sky { position: absolute; left: 0; right: 0; top: 0; height: 400px; }
-  .hero { position: absolute; left: 0; right: 0; top: 120px; height: 190px; }
-  .bdg { position: absolute; left: 52px; top: 4px; width: 156px; height: 156px; border-radius: 99px; box-shadow: 0 0 0 5px #F2C14E, 0 0 0 9px #B98A2A, 0 10px 30px rgba(0,0,0,.35); }
-  .bdg::before, .bdg::after { content: ""; position: absolute; top: 132px; width: 34px; height: 52px; background: linear-gradient(#F2C14E, #D9A23A); z-index: -1; clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%); }
-  .bdg::before { left: 36px; transform: rotate(14deg); } .bdg::after { right: 36px; transform: rotate(-14deg); }
+  .sky { position: absolute; left: 0; right: 0; top: 0; height: 440px; }
+  .hero { position: absolute; left: 0; right: 0; top: 150px; height: 210px; }
+  .shadow { position: absolute; left: 92px; top: 178px; width: 236px; height: 22px; border-radius: 50%; background: radial-gradient(closest-side, rgba(4,8,20,.55), rgba(4,8,20,0)); }
+  .bdg { position: absolute; left: 105px; top: 0; width: 156px; height: 156px; border-radius: 99px; box-shadow: 0 0 0 5px #F2C14E, 0 0 0 9px #B98A2A, 0 10px 30px rgba(0,0,0,.35); }
   .bdg-in { width: 156px; height: 156px; border-radius: 99px; overflow: hidden; }
-  .glim { position: absolute; left: 240px; top: 50px; width: 132px; height: 132px; }
-  .body { position: absolute; left: 0; right: 0; top: 348px; padding: 0 var(--gutter); }
+  .plus { position: absolute; left: 230px; top: -8px; font: 800 18px/1 var(--display); color: #FFD37A; opacity: 0; }
+  .glim { position: absolute; left: 226px; top: 76px; width: 116px; height: 116px; }
+  .body { position: absolute; left: 0; right: 0; top: 400px; padding: 0 var(--gutter); }
   .saved { display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--muted); }
   .saved .ck { width: 22px; height: 22px; flex: none; }
   .body h1 { margin-top: 8px; text-align: center; }
-  .counts { margin-top: 26px; }
-  .counts .stat { display: grid; gap: 4px; padding: 16px; }
-  .cnt { display: flex; align-items: baseline; gap: 6px; position: relative; }
-  .cnt .num { font-size: 36px; line-height: 1; }
-  .cnt .u { font: 600 15px/1 var(--body); color: var(--muted); }
-  .plus { position: absolute; left: 30px; top: -14px; font: 800 16px/1 var(--display); color: var(--tick); opacity: 0; }
-  .counts .t-foot { color: var(--muted); }
-  .counts .progress { height: 6px; margin-top: 6px; }
-  .calm { margin-top: 14px; }
+  .next { margin-top: 26px; display: grid; gap: 12px; padding: 18px; }
+  .next .top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .next .t-head { font-size: 17px; }
+  .next .t-foot { color: var(--muted); }
+  .next .progress { height: 8px; }
+  .play .next .progress > i { animation: sweep 900ms var(--settle) 1300ms both; }
+  @keyframes sweep { from { width: 0; } }
+  .calm { margin-top: 12px; }
   .calm .t-foot { color: var(--muted); }
 </style>
 </head><body>
 <div class="screen" data-ground="night" data-status="on-art">
   <div class="sky" id="sky" data-fade></div>
   <div class="hero">
+    <div class="shadow" data-fade style="--d:400ms"></div>
     <div class="bdg" data-stamp style="--d:1100ms"><div class="bdg-in shine" id="badge" style="--d:1750ms"></div></div>
+    <span class="plus float-up" style="--d:1250ms">+1</span>
     <div class="glim" data-settle style="--i:1"><div class="bob" id="glim"></div></div>
   </div>
   <div class="nav"><button class="icon-btn" aria-label="Close" data-ic="close"></button></div>
   <div class="body">
-    <p class="t-foot saved" data-a style="--i:2"><span class="ck" id="check"></span>Check-in saved. 7 nights badge earned.</p>
+    <p class="t-foot saved" data-a style="--i:2"><span class="ck" id="check"></span>Check-in saved. New badge earned.</p>
     <h1 class="t-large" data-a style="--i:3">Rest <span class="mark">well</span>, Sam. See you tomorrow.</h1>
-    <div class="grid2 counts" data-a style="--i:4">
-      <div class="stat">
-        <div class="cnt"><span class="num" data-count="7" data-from="6" data-delay="1100" data-dur="500">7</span><span class="u">nights</span><span class="plus float-up" style="--d:1150ms">+1</span></div>
-        <p class="t-foot">checked in with Glim</p>
-      </div>
-      <div class="stat">
-        <div class="cnt"><span class="num">14</span><span class="u">nights</span></div>
-        <p class="t-foot">next badge, 7 to go</p>
-        <span class="progress" style="--p:50%"><i></i></span>
-      </div>
+    <div class="card next" data-a style="--i:4">
+      <div class="top"><p class="t-head">Next badge: 14 nights</p><p class="t-foot">Halfway</p></div>
+      <span class="progress" style="--p:50%"><i></i></span>
     </div>
     <div class="list calm" data-a style="--i:5">
       <div class="row"><span class="ico-tile" data-ic="moon"></span><div class="grow"><p class="t-head" style="font-size:16px">If tonight feels restless</p><p class="t-foot">Slow breathing with Glim, 3 min</p></div><span class="chev" data-ic="chev"></span></div>
@@ -58,10 +52,18 @@
 </div>
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic));
-  document.getElementById('sky').innerHTML = DX.nightSky({ w: 390, h: 400, moonX: 330, moonY: 92 });
-  document.getElementById('glim').innerHTML = DX.char('glim', { mood: 'cheer', size: 124 });
+  document.getElementById('sky').innerHTML = DX.nightSky({ w: 390, h: 440, moonX: 336, moonY: 96 });
+  document.getElementById('glim').innerHTML = DX.char('glim', { mood: 'cheer', size: 116 });
   document.getElementById('check').innerHTML = DX.check({ size: 22, d: 900 });
   document.getElementById('badge').innerHTML = DX.badge({ kind: 'night', n: 7, size: 156, bare: true, label: '7 nights' });
-  (function(){ const b = document.querySelector('#badge svg'); if (!b) return; b.querySelectorAll('circle').forEach(c => { if (c.getAttribute('r') === '9') c.outerHTML = '<path d="M74 18 A13 13 0 1 0 84 38 A10 10 0 1 1 74 18Z" fill="#FFD37A"/><circle cx="26" cy="28" r="1.6" fill="#F6EFE2"/><circle cx="38" cy="16" r="1.2" fill="#F6EFE2" opacity=".8"/><circle cx="58" cy="22" r="1.3" fill="#F6EFE2" opacity=".7"/>'; }); })();
+  /* give the numeral room: the badge's crescent moon moves up and out, a little smaller */
+  (function () {
+    const b = document.querySelector('#badge svg'); if (!b) return;
+    b.querySelectorAll('circle').forEach(c => {
+      const r = c.getAttribute('r');
+      if (r === '11' && c.getAttribute('cx') === '70') { c.setAttribute('cx', '70'); c.setAttribute('cy', '26'); c.setAttribute('r', '8'); }
+      if (r === '10' && c.getAttribute('cx') === '64') { c.setAttribute('cx', '66'); c.setAttribute('cy', '23'); c.setAttribute('r', '7.2'); }
+    });
+  })();
 </script>
 </body></html>
