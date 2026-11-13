@@ -1,0 +1,68 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>040 Share card</title>
+<meta name="motion" content="The card rises in with a slight tilt that settles to 0 (900ms), its badge stamps at 400ms. Toggle rows arrive with a 90ms stagger. At 1.3s the Cigarettes toggle slides on (selection haptic) and its line fades into the card while the card bumps. Share sits in the dock; tapping it opens the system share sheet with the rendered card.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+  .preview { display: grid; place-items: center; margin-top: 4px; }
+  .sc { position: relative; width: 212px; height: 318px; border-radius: 24px; overflow: hidden; background: #FFC38A; color: #1E1A3A;
+    box-shadow: 0 18px 40px rgba(14,11,43,.22), 0 2px 0 rgba(14,11,43,.06); padding: 16px; display: flex; flex-direction: column; align-items: center; }
+  .sc .hills { position: absolute; left: 0; right: 0; bottom: 0; height: 96px; }
+  .sc .top { align-self: stretch; display: flex; justify-content: space-between; align-items: center; position: relative; }
+  .sc .ini { width: 30px; height: 30px; border-radius: 99px; background: #1E1A3A; color: #FFF8EE; display: grid; place-items: center; font: 800 15px/1 var(--display); }
+  .sc .date { font: 600 11.5px/1 var(--body); color: #5A3420; }
+  .sc .medal { margin-top: 10px; position: relative; }
+  .sc .big { position: relative; margin-top: 8px; font: 800 30px/1 var(--display); letter-spacing: -1px; }
+  .sc .lines { position: relative; margin-top: 8px; display: grid; gap: 3px; text-align: center; font: 600 12.5px/1.3 var(--body); color: #5A3420; }
+  .sc .lines span { transition: opacity .4s var(--ease), max-height .4s var(--ease); max-height: 20px; overflow: hidden; }
+  .sc .lines span.off { opacity: 0; max-height: 0; }
+  .sc .mark-w { position: relative; margin-top: auto; display: flex; align-items: center; gap: 6px; font: 800 15px/1 var(--display); color: #FFF8EE; letter-spacing: -.3px; }
+  .sc .mark-w i { width: 12px; height: 12px; border-radius: 99px; background: #FFD966; }
+  .opts { margin-top: 20px; }
+  .opts .row { min-height: 54px; }
+  .opts .val { color: var(--muted); font: 500 15px/1 var(--body); }
+</style>
+</head><body>
+<div class="screen" data-ground="reading">
+  <div class="nav">
+    <button class="icon-btn" aria-label="Close" data-ic="close" data-go="039-milestone"></button>
+    <div class="grow title">Share your week</div>
+    <span style="width:44px"></span>
+  </div>
+  <div class="scroll" style="padding-top:110px">
+    <div class="pad">
+      <div class="preview" data-settle>
+        <div class="sc" id="card">
+          <svg class="hills" viewBox="0 0 212 96" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M0 40 C50 18 100 30 140 36 S200 30 212 26 V96 H0z" fill="#FFAE73"/>
+            <path d="M0 62 C60 48 120 70 212 52 V96 H0z" fill="#FF9A6B"/>
+            <path d="M0 80 C70 70 140 88 212 76 V96 H0z" fill="#FF7155" opacity=".7"/>
+          </svg>
+          <div class="top"><span class="ini">S</span><span class="date">Nov 6 to Nov 13</span></div>
+          <div class="medal" data-stamp style="--d:400ms" id="medal"></div>
+          <div class="big">7 days free</div>
+          <div class="lines"><span>$49.00 kept</span><span id="l-cig">84 cigarettes not smoked</span><span id="l-wave" class="off">23 cravings ridden out</span></div>
+          <div class="mark-w"><i></i>DayXero</div>
+        </div>
+      </div>
+      <div class="list opts" data-a style="--i:2">
+        <div class="row"><div class="grow t-foot" style="font-size:16px">Days free <span class="val">7</span></div><span class="toggle on"></span></div>
+        <div class="row"><div class="grow t-foot" style="font-size:16px">Money kept <span class="val">$49.00</span></div><span class="toggle on"></span></div>
+        <div class="row"><div class="grow t-foot" style="font-size:16px">Cigarettes not smoked <span class="val">84</span></div><span class="toggle on" id="t-cig"></span></div>
+        <div class="row"><div class="grow t-foot" style="font-size:16px">Waves ridden <span class="val">23</span></div><span class="toggle"></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="dock">
+    <button class="btn" data-a style="--i:4"><span id="sh" style="display:inline-flex"></span>Share</button>
+  </div>
+</div>
+<script>
+  document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20 })));
+  document.getElementById('sh').innerHTML = DX.icon('share', { size: 20 });
+  document.getElementById('medal').innerHTML = DX.badge({ kind: 'day', n: 7, size: 96, bare: true });
+  const t = document.getElementById('t-cig'), l = document.getElementById('l-cig'), card = document.getElementById('card');
+  DX.after(0, () => { t.classList.remove('on'); l.classList.add('off'); });
+  DX.after(1300, () => { t.classList.add('on'); l.classList.remove('off'); card.classList.remove('bump'); void card.offsetWidth; card.classList.add('bump'); });
+</script>
+</body></html>

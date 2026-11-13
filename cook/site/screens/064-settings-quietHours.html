@@ -17,11 +17,11 @@
 .toast.b .ck { flex: none; }
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
-.dial { position: relative; width: 220px; height: 220px; margin: 24px auto 4px; }
+.dial { position: relative; width: 220px; height: 220px; margin: 40px auto 4px; }
 .dial .rot { position: absolute; inset: 0; transform: rotate(330deg); }
 .dial .ctr { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; gap: 2px; justify-items: center; }
 .dial .ctr .num { font-size: 40px; line-height: 1; }
-.hr { position: absolute; color: var(--muted); transform: translate(-50%, -50%); }
+.hr { position: absolute; color: var(--muted); transform: translate(-50%, -50%); white-space: nowrap; }
 
 </style>
 </head><body>
@@ -40,7 +40,7 @@
     <div class="row " ><div class="grow"><div class="t-body rt">Until</div></div><span class="pill">7:00 AM</span></div>
   </div>
   <div class="list" data-a style="--i:4;margin-top:12px">
-    <div class="row " ><span class="ico-tile s" data-ic="patch"></span><div class="grow"><div class="t-body rt">Let NRT reminders through</div><div class="t-foot muted">Patch times you set yourself</div></div><span class="toggle on"></span></div>
+    <div class="row " ><span class="ico-tile s" data-ic="patch"></span><div class="grow"><div class="t-body rt">NRT reminders</div><div class="t-foot muted">Your patch times still come through</div></div><span class="toggle on"></span></div>
   </div>
 </div></div>
 </div>

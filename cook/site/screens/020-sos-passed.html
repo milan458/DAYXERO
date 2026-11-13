@@ -1,0 +1,68 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>020 Craving passed</title>
+<meta name="motion" content="The completion beat, gentle. A check draws on the pacer ring (420ms), then Jelli settles in cheering (900ms, one soft hop). Title and line fade up; at 900ms the wave count rolls from 22 to 23 while a '+1' floats up beside it (spring, the only one besides the badge). At 1.3s the 25-wave badge pops in with its ring at 23 of 25. Trigger chips and the button arrive last. Success haptic with the +1.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+  .hero { position: absolute; left: 0; right: 0; top: 70px; display: grid; place-items: center; }
+  .hero .disc { position: relative; width: 210px; height: 210px; display: grid; place-items: center; }
+  .hero .disc svg.pacer { position: absolute; inset: 0; }
+  .hero .ck { position: absolute; right: 8px; top: 14px; }
+  .txt { position: absolute; left: 0; right: 0; top: 296px; padding: 0 36px; text-align: center; }
+  .txt .t-body { margin-top: 8px; color: var(--muted); }
+  .stack2 { position: absolute; left: 0; right: 0; top: 410px; padding: 0 var(--gutter); display: grid; gap: 10px; }
+  .waves { display: flex; align-items: center; gap: 12px; padding: 16px 16px 16px 18px; }
+  .waves .grow { flex: 1; min-width: 0; }
+  .waves .big { display: flex; align-items: flex-start; gap: 6px; position: relative; }
+  .waves .big .num { font-size: 48px; line-height: 1; }
+  .waves .plus { font: 800 18px/1 var(--display); color: var(--tick); margin-top: 2px; }
+  .waves .t-foot { color: var(--muted); margin-top: 4px; }
+  .waves .bd { flex: none; padding-left: 14px; border-left: 1px solid var(--line); }
+  #ck [data-pop] { transform: none; }
+  .play #ck [data-pop] { animation: dx-fade 500ms var(--ease) both; animation-delay: 0ms; }
+  .trig .t-foot { color: var(--muted); margin-bottom: 10px; }
+  .trig .chip { background: var(--card-2); }
+</style>
+</head><body>
+<div class="screen" data-ground="ocean">
+  <div class="hero">
+    <div class="disc">
+      <svg class="pacer" viewBox="0 0 210 210" aria-hidden="true">
+        <circle cx="105" cy="105" r="101" fill="none" stroke="currentColor" stroke-opacity=".22" stroke-width="2"/>
+      </svg>
+      <div id="jelli" data-settle style="--d:250ms"></div>
+      <div class="ck" id="ck"></div>
+    </div>
+  </div>
+
+  <div class="txt">
+    <h1 class="t-large" data-a style="--i:2">You rode it <span class="mark">out</span></h1>
+    <p class="t-body" data-a style="--i:3">Four minutes, start to finish. Each one you ride makes the next a little quieter.</p>
+  </div>
+
+  <div class="stack2">
+    <div class="card waves" data-a style="--i:4">
+      <div class="grow">
+        <div class="big"><span class="num" data-count="23" data-from="22" data-delay="900" data-dur="500">23</span><span class="plus float-up" style="--d:900ms">+1</span></div>
+        <p class="t-foot">waves ridden out &middot; 3 today</p>
+      </div>
+      <div class="bd" id="bd" data-pop style="--d:1300ms"></div>
+    </div>
+    <div class="card trig" data-a style="--i:5">
+      <p class="t-foot">What set it off? Optional</p>
+      <div class="chips"><button class="chip">Coffee</button><button class="chip">Stress</button><button class="chip">Other</button></div>
+    </div>
+  </div>
+
+  <div class="dock">
+    <button class="btn" data-a style="--i:6" data-go="016-today-quit">Back to my day</button>
+  </div>
+</div>
+<script>
+  const $ = s => document.querySelector(s);
+  $('#jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 168 });
+  $('#ck').innerHTML = DX.check({ size: 44, color: 'var(--tick)', fg: '#0B2A1C' });
+  $('#bd').innerHTML = DX.badge({ kind: 'wave', n: 25, state: 'next', p: .92, size: 64, label: '25 waves, 2 to go' });
+  DX.after(2700, () => { $('#jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 168, animate: false }); });
+</script>
+</body></html>

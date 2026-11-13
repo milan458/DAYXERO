@@ -21,8 +21,8 @@
 .done-step { display: flex; align-items: center; gap: 12px; padding: 12px 16px; }
 .done-step .tk { width: 26px; height: 26px; border-radius: 99px; background: var(--tick); color: #fff; display: grid; place-items: center; flex: none; }
 [data-theme="dark"] .done-step .tk { color: #0B2A1C; }
-.now { padding: 22px 20px 20px; display: grid; gap: 10px; }
-.now .big { font: 800 88px/0.9 var(--display); letter-spacing: -3px; }
+.cur { padding: 22px 20px 20px; display: grid; gap: 10px; }
+.cur .big { font: 800 88px/0.9 var(--display); letter-spacing: -3px; }
 .pips { display: flex; gap: 10px; margin-top: 8px; }
 .pips i { width: 44px; height: 44px; border-radius: 99px; box-shadow: inset 0 0 0 2px var(--line); display: grid; place-items: center; transition: background .3s var(--ease); }
 .pips i.on { background: var(--sel); box-shadow: none; }
@@ -39,7 +39,7 @@
 <div class="scroll"><div class="pad" style="padding-top:58px">
   <p class="t-foot muted" data-a style="--i:0">5-4-3-2-1 grounding</p>
   <div class="card flat done-step" data-a style="--i:1;margin-top:12px"><span class="tk" data-ic="check" data-s="16" data-w="3"></span><span class="t-body rt" style="flex:1">5 things you can see</span><span class="t-cap muted">Done</span></div>
-  <div class="card now" data-a style="--i:2;margin-top:10px">
+  <div class="card cur" data-a style="--i:2;margin-top:10px">
     <div style="display:flex;align-items:flex-end;gap:12px"><span class="big">4</span><span class="t-title" style="padding-bottom:6px">things you<br>can feel</span></div>
     <p class="t-body muted">Touch them, or just notice them.</p>
     <div class="ex"><span class="t-foot">Your feet on the floor</span><span class="t-foot">The chair</span><span class="t-foot">Your clothes</span><span class="t-foot">The air</span></div>

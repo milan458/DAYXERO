@@ -1,0 +1,74 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>051 NRT reminders</title>
+<meta name="motion" content="Title, the two reminder cards and the preview arrive (600ms, 90ms stagger); both toggles slide on as they land. At 1.4s Done is pressed: the button turns green with a tick, the 'NRT plan set' toast drops in from the top (500ms settle) and its check pops and draws, the bell in the preview bumps once. Success haptic on the check.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+  .wrap { padding: 66px var(--gutter) 0; }
+  .wrap .lead { margin-top: 8px; color: var(--muted); }
+  .rem { margin-top: 20px; }
+  .rem .card { padding: 6px 16px; }
+  .rem .row { min-height: 64px; }
+  .rem .row .t-head { font-size: 17px; }
+  .rem .row .t-foot { color: var(--muted); }
+  .rem .sub { border-top: 1px solid var(--line); min-height: 52px; }
+  .time { height: 36px; padding: 0 14px; border-radius: 12px; background: var(--card-2); display: inline-flex; align-items: center; font: 700 16px/1 var(--display); font-variant-numeric: tabular-nums; }
+  .pv { margin-top: 18px; }
+  .pv > .t-foot { color: var(--muted); margin-bottom: 8px; }
+  .noti { display: flex; gap: 12px; align-items: center; padding: 12px 14px; border-radius: 20px; background: var(--card-2); }
+  .noti .app { width: 40px; height: 40px; border-radius: 11px; background: #FFC38A; display: grid; place-items: center; overflow: hidden; flex: none; }
+  .noti .top { display: flex; justify-content: space-between; }
+  .noti .top .t-cap { color: var(--muted); }
+  .caution { margin-top: 10px; display: flex; gap: 10px; align-items: flex-start; color: var(--muted); }
+  .caution svg { width: 18px; height: 18px; flex: none; margin-top: 1px; }
+  .toast { opacity: 0; transform: translateY(-24px); transition: opacity .4s var(--ease), transform .5s var(--settle); }
+  .toast.show { opacity: 1; transform: none; }
+  .toast .ck { width: 30px; height: 30px; flex: none; }
+  .toast .t-cap { opacity: .7; display: block; margin-top: 2px; }
+</style>
+</head><body>
+<div class="screen" data-ground="reading">
+  <div class="nav">
+    <button class="icon-btn" aria-label="Back" data-ic="back"></button>
+    <div class="grow"><div class="steps" aria-label="Step 4 of 4"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
+    <span style="width:44px"></span>
+  </div>
+  <div class="toast" id="toast" role="status"><span class="ck" id="tck"></span><span><span>NRT plan set</span><span class="t-cap">21 mg until Thu, Dec 24</span></span></div>
+  <div class="scroll">
+    <div class="wrap">
+      <h1 class="t-title" data-a style="--i:0">Reminders</h1>
+      <p class="t-foot lead" data-a style="--i:1">So you don't have to remember.</p>
+      <div class="stack rem">
+        <div class="card" data-a style="--i:2">
+          <div class="row"><span class="ico-tile" data-ic="patch"></span><div class="grow"><p class="t-head">Fresh patch</p><p class="t-foot">Every day</p></div><span class="toggle on"></span></div>
+          <div class="row sub"><p class="t-foot grow" style="color:var(--muted)">Time</p><span class="time">7:30 AM</span></div>
+        </div>
+        <div class="card" data-a style="--i:3">
+          <div class="row"><span class="ico-tile" data-ic="calendar"></span><div class="grow"><p class="t-head">Step-down days</p><p class="t-foot">The evening before each step</p></div><span class="toggle on"></span></div>
+        </div>
+      </div>
+      <div class="pv" data-a style="--i:4">
+        <p class="t-foot">What you'll see</p>
+        <div class="noti"><span class="app" id="app"></span><div class="grow"><div class="top"><span class="t-cap" style="color:var(--fg)">DayXero</span><span class="t-cap">7:30 AM</span></div><p class="t-foot">Fresh patch time. New spot, then on with your day.</p></div></div>
+      </div>
+      <p class="t-cap caution" data-a style="--i:5"><span data-ic="shield"></span><span>Follow the label on your pack and ask a pharmacist or doctor. DayXero doesn't give dosing advice.</span></p>
+    </div>
+  </div>
+  <div class="dock">
+    <button class="btn" id="done" data-a style="--i:6"><span class="lbl">Done</span></button>
+  </div>
+</div>
+<script>
+  document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic));
+  document.getElementById('app').innerHTML = DX.char('xero', { mood: 'hello', size: 40 });
+  const btn = document.getElementById('done'), toast = document.getElementById('toast'), tck = document.getElementById('tck');
+  function finish() {
+    btn.classList.add('done-state');
+    btn.querySelector('.lbl').innerHTML = DX.icon('check', { size: 20, w: 3 }) + 'Done';
+    tck.innerHTML = DX.check({ size: 30, d: 150 });
+    toast.classList.add('show');
+  }
+  DX.after(1400, () => { btn.classList.add('press'); setTimeout(() => { btn.classList.remove('press'); finish(); }, 160); });
+  DX.onStill(finish);
+</script>
+</body></html>

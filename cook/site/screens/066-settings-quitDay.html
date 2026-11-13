@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>066 Quit Day</title>
-<meta name="motion" content="The date card arrives, the day count rises 0 to 7, and the Day Xero badge stamps in at 700ms; the change card follows. Choose a new date opens a calm confirm sheet first, never a direct date wheel.">
+<meta name="motion" content="The date card arrives, the day count rises 0 to 7 and the Day Xero badge stamps in at 700ms; the seven day ticks of the first week pop in left to right (110ms apart) ending on the Today ring; the change card follows. Choose a new date opens a calm confirm sheet first, never a direct date wheel.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -24,7 +24,15 @@
 .cal .w { padding-bottom: 8px; color: var(--muted); }
 .since .num { font-size: 40px; line-height: 1; }
 .kept { margin-top: 12px; display: flex; align-items: center; gap: 14px; padding: 14px 16px; }
-.warn { margin-top: 22px; padding: 18px; display: grid; gap: 10px; }
+.btn.ghost.small { box-shadow: inset 0 0 0 2px var(--line); }
+.wk { margin-top: 12px; padding: 14px 16px; }
+.days { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; margin-top: 10px; text-align: center; }
+.days b { display: grid; place-items: center; width: 30px; height: 30px; margin: 0 auto; border-radius: 99px; background: var(--tick); color: #fff; }
+[data-theme="dark"] .days b { color: #0B2A1C; }
+.days b svg { width: 14px; height: 14px; }
+.days .td b { background: transparent; box-shadow: inset 0 0 0 2.5px var(--fg); color: var(--fg); font: 800 13px/1 var(--display); }
+.days .t-cap { color: var(--muted); display: block; margin-top: 5px; }
+.warn { margin-top: 12px; padding: 18px; display: grid; gap: 10px; }
 
 </style>
 </head><body>
@@ -37,7 +45,9 @@
     <div class="since" style="flex:1"><div><span class="num" data-count="7">7</span> <span class="t-head">days</span></div><div class="t-foot muted">free since Fri, Nov 6</div></div>
     <div id="xb" data-stamp style="--d:700ms"></div>
   </div>
-  <div class="card flat warn" data-a style="--i:3">
+
+  <div class="card wk" data-a style="--i:3"><div class="t-foot muted">Your first week</div><div class="days"><span data-pop style="--i:0;--d:600ms"><b data-ic="check" data-s="14" data-w="3"></b><span class="t-cap">Fri</span></span><span data-pop style="--i:1;--d:600ms"><b data-ic="check" data-s="14" data-w="3"></b><span class="t-cap">Sat</span></span><span data-pop style="--i:2;--d:600ms"><b data-ic="check" data-s="14" data-w="3"></b><span class="t-cap">Sun</span></span><span data-pop style="--i:3;--d:600ms"><b data-ic="check" data-s="14" data-w="3"></b><span class="t-cap">Mon</span></span><span data-pop style="--i:4;--d:600ms"><b data-ic="check" data-s="14" data-w="3"></b><span class="t-cap">Tue</span></span><span data-pop style="--i:5;--d:600ms"><b data-ic="check" data-s="14" data-w="3"></b><span class="t-cap">Wed</span></span><span data-pop style="--i:6;--d:600ms"><b data-ic="check" data-s="14" data-w="3"></b><span class="t-cap">Thu</span></span><span class="td" data-pop style="--i:7;--d:600ms"><b>13</b><span class="t-cap">Today</span></span></div></div>
+  <div class="card flat warn" data-a style="--i:4">
     <div class="t-head">Need to change it?</div>
     <p class="t-foot muted">If you slipped, you do not have to start over. A new date restarts the day count. Your badges, lessons and logs all stay.</p>
     <button class="btn ghost small" style="margin-top:4px">Choose a new date</button>

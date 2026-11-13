@@ -16,7 +16,7 @@
   .combo span { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px; border-radius: 10px; background: var(--card-2); font: 600 13px/1 var(--body); }
   .combo span svg { width: 16px; height: 16px; }
   .combo b { align-self: center; font: 700 15px/1 var(--display); color: var(--muted); }
-  .caution { margin-top: 10px; display: flex; gap: 12px; align-items: flex-start; }
+  .ev .caution { margin-top: 0; display: flex; gap: 12px; align-items: flex-start; }
   .caution svg { width: 20px; height: 20px; flex: none; margin-top: 1px; }
 </style>
 </head><body>
@@ -25,23 +25,22 @@
   <div class="scroll">
     <div class="wrap">
       <h1 class="t-large" data-a style="--i:0">Keep your NRT on <span class="mark">track</span></h1>
-      <p class="t-body lead" data-a style="--i:1">Tell us what's on your pack. We'll remind you to change patches and when each step down is due.</p>
+      <p class="t-body lead" data-a style="--i:1">We'll remind you to change patches and when each step down is due.</p>
       <div class="stack ev">
         <div class="card" data-a style="--i:2">
           <p class="t-foot lbl">Why it's worth it</p>
           <div class="big"><span class="num">50 to <span data-count="60" data-from="50" data-suffix="%">60%</span></span></div>
-          <p class="t-body">more likely to quit than people who go without.</p>
+          <p class="t-body">more likely to quit than without NRT.</p>
           <a class="source">Source: Cochrane review of 133 trials, 2018</a>
         </div>
         <div class="card" data-a style="--i:3">
           <p class="t-foot lbl">What works best</p>
-          <div class="combo"><span data-ic2="patch">Patch</span><b>+</b><span data-ic2="clock">Gum or lozenge</span></div>
-          <p class="t-body">A patch plus a faster form works better than either alone.</p>
+          <p class="t-head" style="font-size:18px">A patch plus a faster form works better than either alone.</p>
           <a class="source">Source: Cochrane review of combination NRT, 2019</a>
         </div>
         <div class="card flat caution t-foot" data-a style="--i:4">
           <span data-ic="shield"></span>
-          <span>Follow the label on your pack and ask a pharmacist or doctor. DayXero doesn't give dosing advice.</span>
+          <span>Follow your pack's label and ask a pharmacist or doctor. DayXero doesn't give dosing advice.</span>
         </div>
       </div>
     </div>

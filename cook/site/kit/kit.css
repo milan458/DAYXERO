@@ -20,9 +20,9 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
 .screen { --g: #FBF7F1; --fg: var(--ink); --muted: #5E5975; --card: #FFFFFF; --card-2: #F1EBE2; --line: rgba(30,26,58,.12);
   --btn: var(--ink); --btn-fg: var(--cream); --sel: var(--ink); --sel-fg: var(--cream); --tick: var(--done); --mark: var(--coral);
   --track: rgba(30,26,58,.12); --dark: 0; }
-.screen[data-ground="apricot"] { --g: #FFC38A; --muted: #5A3420; --card: rgba(255,255,255,.92); --card-2: rgba(255,255,255,.55); --line: rgba(30,26,58,.12); --track: rgba(30,26,58,.14); }
-.screen[data-ground="mint"]    { --g: #9FE3BC; --muted: #24493A; --card: rgba(255,255,255,.92); --card-2: rgba(255,255,255,.55); --track: rgba(30,26,58,.14); }
-.screen[data-ground="sun"]     { --g: #FFD966; --muted: #5A4A10; --card: rgba(255,255,255,.92); --card-2: rgba(255,255,255,.55); --track: rgba(30,26,58,.14); }
+.screen[data-ground="apricot"] { --g: #FFC38A; --muted: #5A3420; --card: rgba(255,255,255,.92); --card-2: color-mix(in srgb, var(--g) 38%, #fff); --line: rgba(30,26,58,.12); --track: rgba(30,26,58,.14); }
+.screen[data-ground="mint"]    { --g: #9FE3BC; --muted: #24493A; --card: rgba(255,255,255,.92); --card-2: color-mix(in srgb, var(--g) 38%, #fff); --track: rgba(30,26,58,.14); }
+.screen[data-ground="sun"]     { --g: #FFD966; --muted: #5A4A10; --card: rgba(255,255,255,.92); --card-2: color-mix(in srgb, var(--g) 38%, #fff); --track: rgba(30,26,58,.14); }
 .screen[data-ground="ocean"]   { --g: #2A52DB; --fg: var(--cream); --muted: #DCE4FF; --card: #1D3A9E; --card-2: #2447C2; --line: rgba(255,255,255,.16);
   --btn: var(--cream); --btn-fg: #1D3A9E; --sel: var(--cream); --sel-fg: #1D3A9E; --tick: var(--done-on-dark); --mark: var(--sun); --track: rgba(255,255,255,.2); --dark: 1; }
 /* Night (Glim's evenings): "Midnight meadow" (user, 13 Nov: purple was too bright at night; picked from 4 full-screen directions).
@@ -35,9 +35,9 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
 /* ---------- grounds (dark) ---------- */
 [data-theme="dark"] .screen { --g: #0E0B2B; --fg: var(--cream); --muted: #B8B3D9; --card: #1B1747; --card-2: #2A255F; --line: rgba(255,255,255,.12);
   --btn: var(--cream); --btn-fg: var(--ink); --sel: var(--cream); --sel-fg: var(--ink); --tick: var(--done-on-dark); --mark: #FF9A7A; --track: rgba(255,255,255,.14); --dark: 1; }
-[data-theme="dark"] .screen[data-ground="apricot"] { --g: #241433; --muted: #E0C8E8; --card: #34204A; --card-2: #3E2856; --btn: #FFC38A; --btn-fg: #241433; --sel: #FFC38A; --sel-fg: #241433; --mark: #FFC38A; }
-[data-theme="dark"] .screen[data-ground="mint"]    { --g: #0F2A22; --muted: #A9D9C0; --card: #173A30; --card-2: #1E4639; --btn: #9FE3BC; --btn-fg: #0F2A22; --sel: #9FE3BC; --sel-fg: #0F2A22; --mark: #9FE3BC; }
-[data-theme="dark"] .screen[data-ground="sun"]     { --g: #241433; --muted: #E0C8E8; --card: #34204A; --card-2: #3E2856; --btn: var(--sun); --btn-fg: #241433; --sel: var(--sun); --sel-fg: #241433; --mark: var(--sun); }
+[data-theme="dark"] .screen[data-ground="apricot"] { --g: #241433; --muted: #E0C8E8; --card: #34204A; --card-2: #3E2856; --btn: var(--cream); --btn-fg: #241433; --sel: #FFC38A; --sel-fg: #241433; --mark: #FFC38A; }
+[data-theme="dark"] .screen[data-ground="mint"]    { --g: #0F2A22; --muted: #A9D9C0; --card: #173A30; --card-2: #1E4639; --btn: var(--cream); --btn-fg: #0F2A22; --sel: #9FE3BC; --sel-fg: #0F2A22; --mark: #9FE3BC; }
+[data-theme="dark"] .screen[data-ground="sun"]     { --g: #241433; --muted: #E0C8E8; --card: #34204A; --card-2: #3E2856; --btn: var(--cream); --btn-fg: #241433; --sel: var(--sun); --sel-fg: #241433; --mark: var(--sun); }
 [data-theme="dark"] .screen[data-ground="ocean"]   { --g: #0B1A4A; --muted: #B9C9FF; --card: #152A6A; --card-2: #1B3378; --btn: var(--cream); --btn-fg: #0B1A4A; --sel: var(--cream); --sel-fg: #0B1A4A; }
 [data-theme="dark"] .screen[data-ground="violet"], [data-theme="dark"] .screen[data-ground="night"] { --g: #0A1326; --muted: #A3ADC8; --card: #121D35; --card-2: #182540; --btn: #EADDC0; --btn-fg: #0A1326; --sel: #EADDC0; --sel-fg: #0A1326; }
 [data-theme="dark"] .screen[data-ground="table"]   { --g: #0B0920; --card: #1B1747; --card-2: #15123A; }

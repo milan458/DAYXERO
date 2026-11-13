@@ -94,7 +94,7 @@
          <circle cx="50" cy="50" r="39" fill="${pal.face}"/><g clip-path="url(#${id})">${art}</g>
          <circle cx="50" cy="50" r="39" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="2"/>
          <text x="50" y="${kind === 'xero' ? 42 : 50}" text-anchor="middle" dominant-baseline="middle" font-family="Bricolage Grotesque" font-weight="800" font-size="${label}" fill="${pal.ink}" letter-spacing="-1">${n}</text>`;
-    const ringNext = next && o.p != null ? `<circle cx="50" cy="50" r="48" fill="none" stroke="var(--fg)" stroke-width="3" stroke-linecap="round" stroke-dasharray="${2 * Math.PI * 48}" stroke-dashoffset="${2 * Math.PI * 48 * (1 - o.p)}" transform="rotate(-90 50 50)"/>` : '';
+    const ringNext = next ? `<circle cx="50" cy="50" r="48" fill="none" stroke="currentColor" stroke-opacity=".22" stroke-width="3"/>` + (o.p != null ? `<circle cx="50" cy="50" r="48" fill="none" stroke="var(--fg)" stroke-width="3" stroke-linecap="round" stroke-dasharray="${2 * Math.PI * 48}" stroke-dashoffset="${2 * Math.PI * 48 * (1 - o.p)}" transform="rotate(-90 50 50)"/>` : '') : '';
     const svg = `<svg width="${s}" height="${s}" viewBox="0 0 100 100" style="display:block;overflow:visible;${next ? 'opacity:.9' : ''}" role="img" aria-label="${o.label || ''} ${state}">${next && !locked ? '' : ''}${face}${ringNext}</svg>`;
     if (o.bare) return svg;
     return `<div class="badge" ${o.attr || ''}>${svg}${o.label ? `<span class="t-cap">${o.label}</span>` : ''}</div>`;
@@ -163,6 +163,7 @@
       btn.onpointerdown = start; btn.onpointerup = stop; btn.onpointerleave = stop;
       btn._reset = () => { clearTimeout(timer); btn.classList.remove('done-state'); lbl.innerHTML = orig; fill.style.transition = 'none'; fill.style.transform = 'scaleX(0)'; };
       btn._auto = () => { btn.classList.add('press'); start(); setTimeout(() => btn.classList.remove('press'), ms); };
+      btn._finish = () => { fill.style.transition = 'none'; fill.style.transform = 'scaleX(1)'; finish(); };
     });
   }
 
@@ -193,7 +194,9 @@
     if (still) document.body.classList.add('still');
     document.querySelectorAll('.screen').forEach(sc => { if (!sc.querySelector('.sbar') && !sc.hasAttribute('data-nostatus')) sc.insertAdjacentHTML('afterbegin', statusBar(sc.dataset.status || '')); });
     holds(document); links(document);
-    const go = () => { play(); if (still) { document.body.classList.add('ready'); (window.DX_STILL || []).forEach(fn => fn()); } };
+    const go = () => { play(); if (still) {
+      document.querySelectorAll('[data-autohold]').forEach(b => b._finish && b._finish());   // stills show the held, final state
+      (window.DX_BEATS || []).forEach(fn => fn()); (window.DX_STILL || []).forEach(fn => fn()); document.body.classList.add('ready'); } };
     (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(() => requestAnimationFrame(go));
     window.addEventListener('message', e => { if (e.data === 'replay') play(); });
     document.addEventListener('keydown', e => { if (e.key === 'r') play(); });
@@ -201,6 +204,8 @@
 
   window.DX = { icon, statusBar, tabbar, ring, check, badge, nightSky, char: charSvg, theme, still, play, init,
     after(ms, fn) { (window.DX_SCRIPT = window.DX_SCRIPT || []).push(t => t.push(setTimeout(fn, ms))); },
+    /* beat: a scripted step that also runs (instantly) in still renders, so stills show the final state. */
+    beat(ms, fn) { (window.DX_SCRIPT = window.DX_SCRIPT || []).push(t => t.push(setTimeout(fn, ms))); (window.DX_BEATS = window.DX_BEATS || []).push(fn); },
     onStill(fn) { (window.DX_STILL = window.DX_STILL || []).push(fn); } };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();

@@ -1,0 +1,53 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>006 When cravings hit</title>
+<meta name="motion" content="Progress eases from 3/11 to 4/11 (900ms). Question, the two labels and chip groups arrive in reading order (600ms, 90ms stagger). At 900ms Stress fills to selected with a 520ms spring bump (scale 1.1) and a selection haptic; the dock line updates to 2 triggers.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+  .q .t-body { text-wrap: pretty; }
+  .land { animation: dx-land 520ms cubic-bezier(.3,1.4,.5,1) both; }
+  @keyframes dx-land { 0% { transform: scale(1); } 40% { transform: scale(.97); } 100% { transform: scale(1); } }
+  .chip.land { animation-name: dx-chipland; }
+  @keyframes dx-chipland { 0% { transform: scale(1); } 40% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+  .lbl { color: var(--muted); margin: 6px 0 -2px; }
+  .lbl + .chips { margin-bottom: 8px; }
+  .wake { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .wake .chip { justify-content: center; }
+</style>
+</head><body>
+<div class="screen" data-ground="apricot">
+  <div class="nav">
+    <button class="icon-btn" aria-label="Back" data-icon="back"></button>
+    <div class="grow"><div class="progress sun"><i id="bar" style="--p:36.4%"></i></div></div>
+    <div class="avatar" id="av"></div>
+  </div>
+
+  <div class="q">
+    <h1 class="t-large" data-a>When do cravings hit hardest?</h1>
+    <p class="t-body muted" data-a style="--i:1">I'll time your check-ins around them.</p>
+  </div>
+  <div class="answers">
+    <p class="t-foot lbl" data-a style="--i:2">How soon after waking do you first use?</p>
+    <div class="chips wake" data-a style="--i:2"><button class="chip">Within 5 min</button><button class="chip on">6 to 30 min</button><button class="chip">31 to 60 min</button><button class="chip">After an hour</button></div>
+    <p class="t-foot lbl" data-a style="--i:3">What sets you off? Pick any.</p>
+    <div class="chips" data-a style="--i:4">
+      <button class="chip">Waking up</button><button class="chip on">Coffee</button><button class="chip">After meals</button>
+      <button class="chip on" id="stress">Stress</button><button class="chip">Drinking</button><button class="chip">Boredom</button>
+      <button class="chip">With friends</button><button class="chip">Driving</button><button class="chip">Work breaks</button>
+      <button class="chip">On my phone</button><button class="chip">Something else</button>
+    </div>
+  </div>
+  <div class="dock"><button class="btn" data-a style="--i:5">Continue</button></div>
+</div>
+<script>
+  document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
+  document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 40 });
+  const bar = document.getElementById('bar');
+  DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '27.3%'); void bar.offsetWidth; bar.style.transition = ''; });
+  DX.after(250, () => bar.style.setProperty('--p', '36.4%'));
+  const s = document.getElementById('stress');
+  DX.after(0, () => s.classList.remove('on', 'land'));
+  DX.after(900, () => s.classList.add('on', 'land'));
+</script>
+</body></html>

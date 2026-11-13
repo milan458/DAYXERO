@@ -1,0 +1,66 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>028 Session slider</title>
+<meta name="motion" content="Tag, question and helper arrive (600ms, 90ms stagger). The slider track fades in, then the thumb glides from 0 to 5 (1100ms settle, from 400ms) with the fill following it, while the big number counts 0 to 5 in step; a soft tick haptic on each whole number. Xero settles in last with his line.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+.f-apricot{--face:#FFC38A}.f-sky{--face:#9CCBFF}.f-mint{--face:#9FE3BC}.f-sun{--face:#FFD966}
+.pips{display:flex;gap:6px;justify-content:center;align-items:center}
+.pips i{width:13px;height:18px;border-radius:4px;background:var(--track)}
+.pips i.done{background:#FFD966}
+.pips i.now{background:transparent;box-shadow:inset 0 0 0 2px var(--fg)}
+.nav .side{width:44px;text-align:right;flex:none}
+.tag{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px 0 9px;border-radius:99px;background:var(--face);color:#1E1A3A;font:600 13px/1 var(--body);justify-self:start}
+.tag svg{width:16px;height:16px}
+.wrap{position:absolute;top:110px;left:0;right:0;display:grid;align-content:start;gap:10px}
+.big{position:absolute;top:286px;left:0;right:0;text-align:center}
+.big .num{font-size:104px;line-height:1;letter-spacing:-3px;display:block}
+.big .t-foot{margin-top:4px}
+.sl{position:absolute;top:462px;left:var(--gutter);right:var(--gutter)}
+.track{position:relative;height:10px;border-radius:99px;background:var(--track);margin:0 4px}
+.track .fill{position:absolute;left:0;top:0;bottom:0;width:var(--v);border-radius:inherit;background:var(--fg)}
+.track .thumb{position:absolute;top:50%;left:var(--v);width:36px;height:36px;margin:-18px 0 0 -18px;border-radius:99px;background:var(--fg);box-shadow:0 4px 12px rgba(0,0,0,.35),0 0 0 6px color-mix(in srgb,var(--fg) 18%,transparent);display:grid;place-items:center}
+.track .thumb::after{content:"";width:10px;height:10px;border-radius:99px;background:var(--g)}
+.play .track .fill{animation:fillw 1100ms var(--settle) both 400ms}
+.play .track .thumb{animation:glide 1100ms var(--settle) both 400ms}
+@keyframes fillw{from{width:0}to{width:var(--v)}}
+@keyframes glide{from{left:0}to{left:var(--v)}}
+.ticks{display:flex;justify-content:space-between;margin:18px 4px 0;padding:0}
+.ticks span{width:14px;text-align:center}
+.ends{display:flex;justify-content:space-between;margin-top:10px}
+.xrow{position:absolute;top:592px;left:var(--gutter);right:var(--gutter);display:flex;gap:12px;align-items:flex-end}
+.xrow .bubble{background:var(--card);color:var(--fg)}
+</style>
+</head><body>
+<div class="screen" data-ground="table">
+  <div class="nav">
+    <button class="icon-btn" aria-label="Close" id="close"></button>
+    <div class="grow"><div class="pips"><i class="done"></i><i class="done"></i><i class="now"></i><i></i><i></i></div></div>
+    <span class="side t-foot muted">3 of 5</span>
+  </div>
+  <div class="wrap pad">
+    <span class="tag f-mint" data-a style="--i:0"><span id="t-ic"></span>Try · 5 min</span>
+    <h1 class="t-title" data-a style="--i:1">Right now, how much do you feel the gap?</h1>
+    <p class="t-foot muted" data-a style="--i:2">The gap is the restless, empty feeling as nicotine wears off.</p>
+  </div>
+  <div class="big" data-a style="--i:3">
+    <span class="num" data-count="5" data-delay="400" data-dur="1100">5</span>
+    <p class="t-foot muted">out of 10</p>
+  </div>
+  <div class="sl" data-fade style="--d:300ms">
+    <div class="track" style="--v:50%"><i class="fill"></i><i class="thumb" role="slider" aria-valuemin="0" aria-valuemax="10" aria-valuenow="5"></i></div>
+    <div class="ticks t-cap muted"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
+    <div class="ends t-foot muted"><span>Not at all</span><span>A lot</span></div>
+  </div>
+  <div class="xrow">
+    <div id="xero" data-settle style="--i:6;flex:none"></div>
+    <p class="bubble" data-a style="--i:8">An honest 5. Most people feel it most with coffee or under stress.</p>
+  </div>
+  <div class="dock"><button class="btn" data-a style="--i:9">That's about right</button></div>
+</div>
+<script>
+document.getElementById('close').innerHTML = DX.icon('close');
+document.getElementById('t-ic').innerHTML = DX.icon('hand', {size:16});
+document.getElementById('xero').innerHTML = DX.char('xero', {mood:'calm', size:88});
+</script>
+</body></html>

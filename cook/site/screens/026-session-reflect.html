@@ -1,0 +1,56 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>026 Session reflect</title>
+<meta name="motion" content="The mint Try tag and title arrive (600ms, 90ms stagger). Your three reasons settle in as rows one after another (900ms settle, 120ms apart), then the Why now field and the suggestion chips arrive. Tapping a chip flies it into the list as a new row (selection haptic); the 3 of 5 count bumps.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+.f-apricot{--face:#FFC38A}.f-sky{--face:#9CCBFF}.f-mint{--face:#9FE3BC}.f-sun{--face:#FFD966}
+.pips{display:flex;gap:6px;justify-content:center;align-items:center}
+.pips i{width:13px;height:18px;border-radius:4px;background:var(--track)}
+.pips i.done{background:#FFD966}
+.pips i.now{background:transparent;box-shadow:inset 0 0 0 2px var(--fg)}
+.nav .side{width:44px;text-align:right;flex:none}
+.tag{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px 0 9px;border-radius:99px;background:var(--face);color:#1E1A3A;font:600 13px/1 var(--body);justify-self:start}
+.tag svg{width:16px;height:16px}
+.wrap{position:absolute;top:110px;left:0;right:0;bottom:150px;display:grid;align-content:start;gap:10px}
+.list .row{gap:12px}
+.list .row .t-foot{font-size:15px;color:var(--fg)}
+.x{width:32px;height:32px;border-radius:99px;background:var(--card-2);color:var(--muted);display:grid;place-items:center;flex:none}
+.x svg{width:14px;height:14px}
+.lh{display:flex;justify-content:space-between;align-items:baseline;margin-top:8px}
+.field{display:flex;align-items:center;gap:10px}
+.field svg{width:18px;height:18px;flex:none}
+</style>
+</head><body>
+<div class="screen" data-ground="table">
+  <div class="nav">
+    <button class="icon-btn" aria-label="Close" id="close"></button>
+    <div class="grow"><div class="pips"><i class="done"></i><i class="done"></i><i class="now"></i><i></i><i></i></div></div>
+    <span class="side t-foot muted">3 of 5</span>
+  </div>
+  <div class="wrap pad">
+    <span class="tag f-mint" data-a style="--i:0"><span id="t-ic"></span>Try · 5 min</span>
+    <h1 class="t-title" data-a style="--i:1">Your reasons</h1>
+    <p class="t-foot muted" data-a style="--i:2">When you joined, you told us why. Add any others, up to five.</p>
+    <div class="lh" data-a style="--i:3"><span class="t-foot" style="font-weight:600">Yours</span><span class="t-foot muted">Room for <span data-count="2" data-from="3">2</span> more</span></div>
+    <div class="list">
+      <div class="row" data-settle style="--i:2"><span class="grow t-foot">Run with Aria without stopping to catch my breath</span><button class="x" aria-label="Remove"></button></div>
+      <div class="row" data-settle style="--i:3"><span class="grow t-foot">Save for the trip to Lisbon</span><button class="x" aria-label="Remove"></button></div>
+      <div class="row" data-settle style="--i:4"><span class="grow t-foot">Be there for Aria's big days</span><button class="x" aria-label="Remove"></button></div>
+    </div>
+    <div class="field ph" data-a style="--i:7"><span id="plus"></span>Why now? Add your own</div>
+    <p class="t-foot muted" data-a style="--i:8;margin-top:6px">Or pick one</p>
+    <div class="chips" data-a style="--i:9">
+      <button class="chip">Breathe easier</button><button class="chip">Save the money</button>
+      <button class="chip">Feel calm</button><button class="chip">For the people I love</button>
+    </div>
+  </div>
+  <div class="dock"><button class="btn" data-a style="--i:10">Continue</button></div>
+</div>
+<script>
+document.getElementById('close').innerHTML = DX.icon('close');
+document.getElementById('t-ic').innerHTML = DX.icon('hand', {size:16});
+document.getElementById('plus').innerHTML = DX.icon('plus', {size:18});
+document.querySelectorAll('.x').forEach(b => b.innerHTML = DX.icon('close', {size:14, w:2.6}));
+</script>
+</body></html>

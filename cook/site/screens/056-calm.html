@@ -32,7 +32,9 @@
 .senses i.on { opacity: 1; background: var(--mark); }
 .glim { position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); }
 /* Wind down tile uses the night teal (art colour), Glim's body is the only purple */
-.art.night { background: #152733; }
+.art.night { background: #0F1B33; }
+.art.night .sky { position: absolute; inset: 0; }
+.art.night .sky svg { width: 76px; height: 76px; }
 .sos { display: flex; align-items: center; gap: 12px; padding: 14px 16px; }
 
 </style>
@@ -58,8 +60,8 @@
       <span class="chev" data-ic="chev" data-s="18"></span>
     </div>
     <div class="card tool" data-a style="--i:5">
-      <div class="art night"><span class="glim" id="glim"></span></div>
-      <div class="grow"><div class="t-head">Wind down with Glim</div><div class="t-foot muted">A slow evening reset before sleep.</div><span class="t-cap dur"><span data-ic="clock" data-s="14"></span>5 min</span></div>
+      <div class="art night"><span class="sky" id="sky"></span><span class="glim" id="glim"></span></div>
+      <div class="grow"><div class="t-head">Wind down</div><div class="t-foot muted">A slow evening reset with Glim.</div><span class="t-cap dur"><span data-ic="clock" data-s="14"></span>5 min</span></div>
       <span class="chev" data-ic="chev" data-s="18"></span>
     </div>
     <div class="card flat sos" data-a style="--i:6">
@@ -72,6 +74,6 @@
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
-document.getElementById('glim').innerHTML = DX.char('glim', { mood: 'calm', size: 72 });
+document.getElementById('sky').innerHTML = DX.nightSky({ w: 190, h: 190, moonX: 150, moonY: 46 }); document.getElementById('glim').innerHTML = DX.char('glim', { mood: 'calm', size: 72 });
 </script>
 </body></html>

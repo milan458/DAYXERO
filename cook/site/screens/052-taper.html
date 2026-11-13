@@ -1,0 +1,70 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>052 Pouch taper</title>
+<meta name="motion" content="Title arrives, then the strength chart: the 6, 3 and 1.5 mg bars grow from the baseline in turn (900ms settle, 150ms apart) and the Quit Day marker fades in last. Step rows settle in (120ms stagger), then the timing note arrives with a soft warning haptic. Tapping Move Quit Day slides the marker and dates in place.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+  .nav .opt-lbl { margin-left: auto; color: var(--muted); padding-right: 6px; }
+  .wrap { padding: 66px var(--gutter) 0; }
+  .wrap .lead { margin-top: 8px; color: var(--muted); }
+  .chart { margin-top: 16px; padding: 16px 18px 12px; }
+  .bars { height: 72px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; align-items: end; border-bottom: 2px solid var(--line); }
+  .bar { height: var(--h); border-radius: 10px 10px 3px 3px; background: var(--fg); transform-origin: bottom; }
+  .play .bar { animation: grow 900ms var(--settle) both; animation-delay: calc(var(--i) * 150ms + 250ms); }
+  @keyframes grow { from { transform: scaleY(0); } to { transform: none; } }
+  .qd { justify-self: center; align-self: end; margin-bottom: 6px; width: 22px; height: 22px; border-radius: 99px; background: var(--tick); display: grid; place-items: center; color: #fff; }
+  [data-theme="dark"] .qd { color: #0B2A1C; }
+  .qd svg { width: 14px; height: 14px; }
+  .lbls { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 8px; text-align: center; color: var(--muted); }
+  .lbls b { display: block; color: var(--fg); font: 800 15px/1.1 var(--display); }
+  .steps-list { margin-top: 10px; }
+  .steps-list .row { min-height: 52px; }
+  .list > .row { padding: 8px 16px; }
+  .row .t-head { font-size: 16px; }
+  .row .t-foot { color: var(--muted); }
+  .row .wk { font: 600 14px/1 var(--body); color: var(--muted); }
+  .warn { margin-top: 10px; display: grid; gap: 10px; }
+  .warn .top { display: flex; gap: 12px; align-items: flex-start; }
+  .warn .top svg { width: 22px; height: 22px; flex: none; color: var(--mark); margin-top: 1px; }
+  .warn .t-foot { color: var(--muted); }
+  .warn .btn { width: auto; justify-self: start; padding: 0 18px; margin-left: 34px; box-shadow: inset 0 0 0 2px var(--line); }
+  .sw { width: 10px; height: 30px; border-radius: 4px; background: var(--fg); flex: none; }
+</style>
+</head><body>
+<div class="screen" data-ground="reading">
+  <div class="nav">
+    <button class="icon-btn" aria-label="Close" data-ic="close"></button>
+    <span class="t-foot opt-lbl">Optional</span>
+  </div>
+  <div class="scroll">
+    <div class="wrap">
+      <h1 class="t-title" data-a style="--i:0">Step down your <span class="mark">pouches</span></h1>
+      <p class="t-foot lead" data-a style="--i:1">Lower the strength before Quit Day, so stopping feels smaller.</p>
+      <div class="card chart" data-a style="--i:2">
+        <div class="bars">
+          <div class="bar" style="--h:100%;--i:0"></div>
+          <div class="bar" style="--h:50%;--i:1;opacity:.7"></div>
+          <div class="bar" style="--h:25%;--i:2;opacity:.48"></div>
+          <div class="qd" data-fade style="--d:800ms" data-ic="check"></div>
+        </div>
+        <div class="lbls t-cap"><span><b>6 mg</b>Week 1</span><span><b>3 mg</b>Week 2</span><span><b>1.5 mg</b>Week 3</span><span><b>Quit Day</b>0 mg</span></div>
+      </div>
+      <div class="list steps-list">
+        <div class="row" data-settle style="--i:3"><i class="sw"></i><div class="grow"><p class="t-head">6 mg</p><p class="t-foot">Today to Mon, Nov 9</p></div><span class="wk">1 week</span></div>
+        <div class="row" data-settle style="--i:4"><i class="sw" style="opacity:.7;height:22px"></i><div class="grow"><p class="t-head">3 mg</p><p class="t-foot">Tue, Nov 10 to Mon, Nov 16</p></div><span class="wk">1 week</span></div>
+        <div class="row" data-settle style="--i:5"><i class="sw" style="opacity:.48;height:14px"></i><div class="grow"><p class="t-head">1.5 mg</p><p class="t-foot">Tue, Nov 17 to Mon, Nov 23</p></div><span class="wk">1 week</span></div>
+      </div>
+      <div class="card warn" data-a style="--i:7">
+        <div class="top"><span data-ic="clock"></span><div><p class="t-head" style="font-size:17px">3 weeks is longer than the 3 days to Quit Day</p><p class="t-foot">Move Quit Day to Tue, Nov 24, or shorten the steps.</p></div></div>
+        <button class="btn ghost small">Move Quit Day</button>
+      </div>
+    </div>
+  </div>
+  <div class="dock">
+    <button class="btn" data-a style="--i:8">Save my taper</button>
+  </div>
+</div>
+<script>
+  document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic, e.dataset.ic === 'check' ? { w: 3.2 } : {}));
+</script>
+</body></html>

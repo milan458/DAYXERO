@@ -18,13 +18,13 @@
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
 .nav .title { flex: 1; text-align: center; margin-right: 56px; }
-.wrap { position: absolute; left: 0; right: 0; top: 150px; display: grid; justify-items: center; gap: 0; }
+.wrap { position: absolute; left: 0; right: 0; top: 196px; display: grid; justify-items: center; gap: 0; }
 .rnd { display: flex; gap: 8px; align-items: center; }
 .rnd i { width: 8px; height: 8px; border-radius: 99px; background: var(--track); }
 .rnd i.on { background: var(--fg); }
 .box { position: relative; width: 300px; height: 300px; margin-top: 22px; }
 .box svg { position: absolute; inset: 0; }
-.fillsq { position: absolute; left: 50px; top: 50px; width: 200px; height: 200px; border-radius: 30px; background: var(--card-2); transform: scale(.62); }
+.fillsq { position: absolute; left: 62px; top: 62px; width: 176px; height: 176px; border-radius: 16px; background: var(--card-2); transform: scale(.62); }
 .play .fillsq { animation: sq 16s cubic-bezier(.45,0,.55,1) infinite; }
 @keyframes sq { 0% { transform: scale(.62); } 25%, 50% { transform: scale(1); } 75%, 100% { transform: scale(.62); } }
 .still .fillsq { animation: none !important; transform: scale(1); }
@@ -53,7 +53,7 @@
   <p class="t-foot muted" data-a style="--i:1;margin-top:8px" id="round">Round 2 of 4</p>
   <div class="box" data-fade style="--d:200ms">
     <div class="fillsq"></div>
-    <svg width="300" height="300" viewBox="0 0 300 300"><rect x="50" y="50" width="200" height="200" rx="4" fill="none" stroke="var(--track)" stroke-width="5"/>
+    <svg width="300" height="300" viewBox="0 0 300 300"><rect x="50" y="50" width="200" height="200" rx="6" fill="none" stroke="var(--track)" stroke-width="5"/>
       <path id="act" d="M50 250 V50" fill="none" stroke="var(--fg)" stroke-width="5" stroke-linecap="round"/></svg>
     <span class="side s0 t-cap on">Breathe in</span><span class="side s1 t-cap">Hold</span><span class="side s2 t-cap">Breathe out</span><span class="side s3 t-cap">Hold</span>
     <div class="mid"><div class="t-title lab" id="phase">Breathe in</div><div class="num" id="count">4</div></div>

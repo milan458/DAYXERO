@@ -1,0 +1,55 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>003 What you are leaving behind</title>
+<meta name="motion" content="Progress eases from 0 to 1/11 (900ms settle). Question and helper arrive (600ms, 90ms stagger), then the three option rows and the note in order. At 900ms Vape gets picked: the ring fills and ticks, the row dips to .97 and springs back (520ms), the note count cross-fades from 1 to 2. Selection haptic on each pick.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+  .q .t-body { text-wrap: pretty; }
+  .land { animation: dx-land 520ms cubic-bezier(.3,1.4,.5,1) both; }
+  @keyframes dx-land { 0% { transform: scale(1); } 40% { transform: scale(.97); } 100% { transform: scale(1); } }
+  .chip.land { animation-name: dx-chipland; }
+  @keyframes dx-chipland { 0% { transform: scale(1); } 40% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+  .opt { min-height: 76px; gap: 16px; }
+  .opt .ico-tile { width: 46px; height: 46px; border-radius: 14px; }
+  .opt .t-head { display: block; }
+  .opt .t-foot { display: block; margin-top: 2px; }
+  .opt.on .ico-tile { background: var(--sel); color: var(--sel-fg); }
+  .opt .ico-tile { transition: background .25s var(--ease), color .25s var(--ease); }
+  .note { display: flex; gap: 12px; align-items: center; margin-top: 6px; padding: 14px 16px; }
+  .note .ico-tile { width: 36px; height: 36px; border-radius: 11px; background: var(--card); }
+  .note .ico-tile svg { width: 18px; height: 18px; }
+  .note b { font-weight: 700; }
+</style>
+</head><body>
+<div class="screen" data-ground="apricot">
+  <div class="nav">
+    <button class="icon-btn" aria-label="Back" data-icon="back"></button>
+    <div class="grow"><div class="progress sun"><i id="bar" style="--p:9.1%"></i></div></div>
+    <div class="avatar" id="av"></div>
+  </div>
+
+  <div class="q">
+    <h1 class="t-large" data-a>What are you leaving behind?</h1>
+    <p class="t-body muted" data-a style="--i:1">Pick everything you use now. I'll set up a counter for each one.</p>
+  </div>
+  <div class="answers">
+    <button class="opt on" data-a style="--i:2"><span class="ico-tile" data-icon="cig"></span><span class="grow"><span class="t-head">Cigarettes</span><span class="t-foot">Manufactured or roll-ups</span></span><span class="radio"></span></button>
+    <button class="opt on" id="vape" data-a style="--i:3"><span class="ico-tile" data-icon="vape"></span><span class="grow"><span class="t-head">Vape</span><span class="t-foot">Disposables, pods or tanks</span></span><span class="radio"></span></button>
+    <button class="opt" data-a style="--i:4"><span class="ico-tile" data-icon="pouch"></span><span class="grow"><span class="t-head">Nicotine pouches</span><span class="t-foot">Zyn, Velo, snus</span></span><span class="radio"></span></button>
+    <div class="card flat note" data-a style="--i:5"><span class="ico-tile" data-icon="leaf"></span>
+      <p class="t-foot"><b id="cnt">2 picked.</b> Using both is common. I'll plan for each one.</p></div>
+  </div>
+  <div class="dock"><button class="btn" data-a style="--i:6">Continue</button></div>
+</div>
+<script>
+  document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
+  document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 40 });
+  const bar = document.getElementById('bar');
+  DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '0%'); void bar.offsetWidth; bar.style.transition = ''; });
+  DX.after(250, () => bar.style.setProperty('--p', '9.1%'));
+  const v = document.getElementById('vape'), cnt = document.getElementById('cnt');
+  DX.after(0, () => { v.classList.remove('on', 'land'); cnt.textContent = '1 picked.'; });
+  DX.after(900, () => { v.classList.add('on', 'land'); cnt.textContent = '2 picked.'; });
+</script>
+</body></html>

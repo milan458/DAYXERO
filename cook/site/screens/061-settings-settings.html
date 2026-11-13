@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>061 Settings</title>
-<meta name="motion" content="Title, profile card and each group arrive top to bottom on the 90ms stagger; the 7-day badge on the profile card stamps in at 500ms. Rows highlight on press with a light tap haptic and push their page from the right.">
+<meta name="motion" content="The profile card (with the plan) and each group arrive top to bottom on the 90ms stagger; the 7-day badge on the profile card stamps in at 500ms. Rows highlight on press with a light tap haptic and push their page from the right.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -17,21 +17,29 @@
 .toast.b .ck { flex: none; }
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
-.prof { display: flex; align-items: center; gap: 14px; padding: 14px 16px; }
-.prof .av { width: 56px; height: 56px; border-radius: 99px; background: var(--card-2); display: grid; place-items: center; overflow: hidden; flex: none; }
+.nav .title { flex: 1; text-align: center; margin-right: 56px; }
+.prof { padding: 0; overflow: hidden; margin-top: 58px; }
+.prof .top { display: flex; align-items: center; gap: 14px; padding: 14px 16px; }
+.prof .av { width: 52px; height: 52px; border-radius: 99px; background: var(--card-2); display: grid; place-items: center; overflow: hidden; flex: none; }
 .prof .grow { flex: 1; min-width: 0; }
-.foot { text-align: center; padding: 18px 0 0; color: var(--muted); }
+.prof .subs { display: flex; align-items: center; gap: 12px; padding: 0 16px; min-height: 50px; border-top: 1px solid var(--line); }
+.sec { padding: 16px 4px 7px; }
+.list > .row { min-height: 50px; padding-top: 7px; padding-bottom: 7px; }
+.ico-tile.s { width: 32px; height: 32px; }
+.foot { display: flex; justify-content: center; gap: 6px; padding-top: 14px; color: var(--muted); }
 
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
-<div class="nav"><button class="icon-btn" aria-label="Close" data-ic="close"></button></div>
+<div class="nav"><button class="icon-btn" aria-label="Close" data-ic="close"></button><div class="title" data-a style="--i:0">Settings</div></div>
 <div class="scroll"><div class="pad">
-  <div class="hd"><h1 class="t-large" data-a style="--i:0">Settings</h1></div>
-  <div class="card prof" data-a style="--i:1;margin-top:16px">
-    <div class="av" id="av"></div>
-    <div class="grow"><div class="t-head">Sam</div><div class="t-foot muted">Day 7 &middot; 7 days free</div></div>
-    <div id="bdg" data-stamp style="--d:500ms"></div>
+  <div class="card prof" data-a style="--i:1">
+    <div class="top">
+      <div class="av" id="av"></div>
+      <div class="grow"><div class="t-title">Sam</div><div class="t-foot muted">Day 7 &middot; 7 days free</div></div>
+      <div id="bdg" data-stamp style="--d:500ms"></div>
+    </div>
+    <div class="subs"><span class="ico-tile s" data-ic="star"></span><span class="t-body rt" style="flex:1">DayXero Yearly</span><span class="val">Renews Nov 5</span><span class="chev" data-ic="chev" data-s="18"></span></div>
   </div>
   <p class="t-foot sec" data-a style="--i:2">Your plan</p>
   <div class="list" data-a style="--i:3">
@@ -45,24 +53,18 @@
     <div class="row " ><span class="ico-tile s" data-ic="moon"></span><div class="grow"><div class="t-body rt">Quiet hours</div></div><span class="val">10 PM to 7 AM</span><span class="chev" data-ic="chev" data-s="18"></span></div>
     <div class="row " ><span class="ico-tile s" data-ic="clock"></span><div class="grow"><div class="t-body rt">Day ends at</div></div><span class="val">4 AM</span><span class="chev" data-ic="chev" data-s="18"></span></div>
   </div>
-  <p class="t-foot sec" data-a style="--i:6">Subscription</p>
+  <p class="t-foot sec" data-a style="--i:6">Data</p>
   <div class="list" data-a style="--i:7">
-    <div class="row " ><span class="ico-tile s" data-ic="star"></span><div class="grow"><div class="t-body rt">DayXero Yearly</div><div class="t-foot muted">Renews Fri, Nov 5, 2027</div></div><span class="chev" data-ic="chev" data-s="18"></span></div>
-  </div>
-  <p class="t-foot sec" data-a style="--i:8">Data</p>
-  <div class="list" data-a style="--i:9">
     <div class="row " ><span class="ico-tile s" data-ic="heart"></span><div class="grow"><div class="t-body rt">Apple Health</div></div><span class="val">On</span><span class="chev" data-ic="chev" data-s="18"></span></div>
     <div class="row " ><span class="ico-tile s" data-ic="shield"></span><div class="grow"><div class="t-body rt">Privacy and your data</div></div><span class="chev" data-ic="chev" data-s="18"></span></div>
   </div>
-  <p class="t-foot sec">About</p>
-  <div class="list"><div class="row " ><span class="ico-tile s" data-ic="note"></span><div class="grow"><div class="t-body rt">About DayXero</div></div><span class="chev" data-ic="chev" data-s="18"></span></div></div>
+  <div class="foot t-cap" data-a style="--i:8"><span>About DayXero</span><span>&middot;</span><span>Version 1.4</span><span>&middot;</span><span>Terms</span></div>
 </div></div>
-<div class="tabfade" style="height:110px"></div>
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
 
-document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 56 });
+document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 52 });
 document.getElementById('bdg').innerHTML = DX.badge({ kind: 'day', n: 7, state: 'earned', size: 46 });
 
 </script>

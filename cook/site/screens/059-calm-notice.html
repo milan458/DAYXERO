@@ -41,10 +41,10 @@
 </div>
 <div class="sea">
   <svg width="390" height="250" viewBox="0 0 390 250" preserveAspectRatio="none">
-    <path d="M-10 200 C 70 200 110 40 195 40 S 320 200 400 200 V250 H-10Z" fill="var(--card-2)" data-fade style="--d:900ms"/>
+    <defs><linearGradient id="wf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--card-2)"/><stop offset="1" style="stop-color:var(--g)"/></linearGradient></defs><path d="M-10 200 C 70 200 110 40 195 40 S 320 200 400 200 V250 H-10Z" fill="url(#wf)" data-fade style="--d:900ms"/><path d="M-10 200 H400" stroke="var(--line)" stroke-width="2" stroke-dasharray="2 8" stroke-linecap="round"/>
     <path d="M-10 200 C 70 200 110 40 195 40 S 320 200 400 200" fill="none" stroke="var(--fg)" stroke-width="3" stroke-linecap="round" class="draw" style="--len:520;--dur:2400ms;--d:300ms"/>
   </svg>
-  <span class="rider" data-fade style="margin:-10px 0 0 -10px;--d:1200ms"></span>
+  <div data-fade style="--d:1200ms;position:absolute;inset:0"><span class="rider" style="margin:-10px 0 0 -10px"></span></div>
 </div>
 <div class="marks" data-a style="--i:3"><span class="t-cap">Rises</span><span class="t-cap">Peaks</span><span class="t-cap">Passes</span></div>
 <div class="dock"><button class="btn" data-a style="--i:4">It's passing</button><button class="link" data-a style="--i:5">I need more help</button></div>

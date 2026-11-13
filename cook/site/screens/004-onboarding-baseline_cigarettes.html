@@ -1,0 +1,67 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>004 How much you smoke</title>
+<meta name="motion" content="Progress eases from 1/11 to 2/11 (900ms). Question, stepper card, chips and the money line arrive in order (600ms, 90ms stagger). At 900ms the plus button presses (spring bump 520ms), the count rolls from 11 to 12 (rises 10px, 300ms) and the yearly line counts up from $1,606 to $1,752 (700ms ease-out). Selection haptic on each step.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+  .q .t-body { text-wrap: pretty; }
+  .land { animation: dx-land 520ms cubic-bezier(.3,1.4,.5,1) both; }
+  @keyframes dx-land { 0% { transform: scale(1); } 40% { transform: scale(.97); } 100% { transform: scale(1); } }
+  .chip.land { animation-name: dx-chipland; }
+  @keyframes dx-chipland { 0% { transform: scale(1); } 40% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+  .stepper { display: flex; align-items: center; gap: 12px; padding: 14px; }
+  .stepper .icon-btn { width: 52px; height: 52px; }
+  .stepper .icon-btn.plus { background: var(--sel); color: var(--sel-fg); }
+  .stepper .mid { flex: 1; text-align: center; }
+  .stepper .t-display { font-size: 52px; display: inline-block; }
+  .stepper .t-foot { color: var(--muted); }
+  .roll { animation: roll 320ms var(--ease) both; }
+  @keyframes roll { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  .lbl { color: var(--muted); margin: 10px 0 -2px; }
+  .chips.even { display: grid; grid-template-columns: repeat(4, 1fr); }
+  .chips.even .chip { justify-content: center; padding: 0 8px; }
+  .chips.three { grid-template-columns: repeat(3, 1fr); }
+  .money { display: flex; align-items: center; gap: 14px; margin-top: 8px; }
+  .money .ico-tile { background: var(--card); }
+  .money .num { font-size: 24px; }
+</style>
+</head><body>
+<div class="screen" data-ground="apricot">
+  <div class="nav">
+    <button class="icon-btn" aria-label="Back" data-icon="back"></button>
+    <div class="grow"><div class="progress sun"><i id="bar" style="--p:18.2%"></i></div></div>
+    <div class="avatar" id="av"></div>
+  </div>
+
+  <div class="q">
+    <h1 class="t-large" data-a>How much do you smoke?</h1>
+    <p class="t-body muted" data-a style="--i:1">A rough guess is fine. No judgement, and you can change it later.</p>
+  </div>
+  <div class="answers">
+    <div class="card stepper" data-a style="--i:2">
+      <button class="icon-btn" aria-label="Fewer" data-icon="minus"></button>
+      <div class="mid"><span class="t-display num" id="n">12</span><p class="t-foot">cigarettes a day</p></div>
+      <button class="icon-btn plus" id="plus" aria-label="More" data-icon="plus"></button>
+    </div>
+    <p class="t-foot lbl" data-a style="--i:3">Pack price</p>
+    <div class="chips even" data-a style="--i:3"><button class="chip on">$8</button><button class="chip">$10</button><button class="chip">$12</button><button class="chip">Other</button></div>
+    <p class="t-foot lbl" data-a style="--i:4">Cigarettes in a pack</p>
+    <div class="chips even three" data-a style="--i:4"><button class="chip">10</button><button class="chip on">20</button><button class="chip">25</button></div>
+    <div class="card flat money" data-a style="--i:5"><span class="ico-tile" data-icon="card"></span>
+      <div class="grow"><span class="num"><span data-count="1752" data-from="1606" data-prefix="$" data-delay="900" data-dur="700">$1,752</span> a year</span>
+      <p class="t-foot muted">on cigarettes alone, $4.80 a day</p></div></div>
+  </div>
+  <div class="dock"><button class="btn" data-a style="--i:6">Next: your vape</button></div>
+</div>
+<script>
+  document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
+  document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 40 });
+  const bar = document.getElementById('bar');
+  DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '9.1%'); void bar.offsetWidth; bar.style.transition = ''; });
+  DX.after(250, () => bar.style.setProperty('--p', '18.2%'));
+  const n = document.getElementById('n'), plus = document.getElementById('plus');
+  DX.after(0, () => { n.textContent = '11'; n.classList.remove('roll'); plus.classList.remove('bump'); });
+  DX.after(900, () => { plus.classList.add('bump'); n.textContent = '12'; n.classList.add('roll'); });
+</script>
+</body></html>

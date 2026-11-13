@@ -53,7 +53,7 @@ Dark mode is automatic from tokens; never write separate dark colours except art
 - Count-up: `<span data-count="49" data-prefix="$" data-dec="2">` for every number that changed or matters.
 - Rings: `DX.ring({size, stroke, p, color, track, dot:true})` sweeps from 0. Shine: class `shine` on a newly earned item.
 - Ambient: `.bob` characters, `.drift` clouds, `.breathe` (4s in, 6s out) for SOS and calm.
-- `DX.after(ms, fn)` for scripted beats (e.g. flip a card, switch a label). Write the `<meta name="motion">` spec for every screen.
+- `DX.beat(ms, fn)` for scripted beats (runs after ms when playing AND instantly in still renders, so stills show the final state; prefer it over DX.after). Hold buttons with `data-autohold` render held in stills and fire 'held'. Don't put `.bob`/`.bump` on the same element as `data-settle`/`data-pop`: wrap. `DX.after(ms, fn)` for scripted beats (e.g. flip a card, switch a label). Write the `<meta name="motion">` spec for every screen.
 
 ## Completion moments (the app's biggest gap; every finishing action gets one)
 Whenever the user finishes something (hold to commit, save a plan, finish a card, finish a session, pass a craving, check in,

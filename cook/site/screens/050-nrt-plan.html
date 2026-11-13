@@ -1,0 +1,69 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>050 NRT plan</title>
+<meta name="motion" content="Title arrives, then the step-down chart: the 21, 14 and 7 mg bars grow up from the baseline one after another (900ms settle, 150ms apart), their labels fade in on top, and the week ranges arrive under them. The three step rows then settle in like a plan being laid out (120ms stagger). No completion here; the plan is confirmed on the reminders screen.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+  .wrap { padding: 66px var(--gutter) 0; }
+  .wrap .lead { margin-top: 8px; color: var(--muted); }
+  .chart { margin-top: 18px; padding: 18px 18px 14px; }
+  .chart .hd { display: flex; justify-content: space-between; align-items: baseline; }
+  .chart .hd .t-foot { color: var(--muted); }
+  .bars { margin-top: 14px; height: 132px; display: flex; align-items: flex-end; gap: 6px; border-bottom: 2px solid var(--line); }
+  .bar { position: relative; height: var(--h); border-radius: 12px 12px 4px 4px; background: var(--fg); transform-origin: bottom; display: flex; justify-content: center; }
+  .bar:nth-child(2) { opacity: .72; } .bar:nth-child(3) { opacity: .48; }
+  .bar span { position: absolute; top: 10px; color: var(--g); font: 800 15px/1 var(--display); letter-spacing: -.3px; white-space: nowrap; }
+  .bar:nth-child(3) span { top: auto; bottom: calc(100% + 6px); color: var(--fg); }
+  .play .bar { animation: grow 900ms var(--settle) both; animation-delay: calc(var(--i) * 150ms + 250ms); }
+  @keyframes grow { from { transform: scaleY(0); } to { transform: none; } }
+  .wks { display: flex; gap: 6px; margin-top: 8px; color: var(--muted); }
+  .wks span { text-align: center; }
+  .steps-list { margin-top: 12px; }
+  .steps-list .row { min-height: 60px; }
+  .sw { width: 12px; height: 32px; border-radius: 4px; background: var(--fg); flex: none; }
+  .row .t-head { font-size: 17px; }
+  .row .t-foot { color: var(--muted); }
+  .row .wk { font: 600 14px/1 var(--body); color: var(--muted); }
+  .night { margin-top: 18px; display: grid; gap: 10px; }
+  .night > .t-foot { color: var(--muted); }
+  .edit { margin-top: 8px; color: var(--muted); justify-content: flex-start; height: 36px; }
+</style>
+</head><body>
+<div class="screen" data-ground="reading">
+  <div class="nav">
+    <button class="icon-btn" aria-label="Back" data-ic="back"></button>
+    <div class="grow"><div class="steps" aria-label="Step 3 of 4"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div></div>
+    <span style="width:44px"></span>
+  </div>
+  <div class="scroll">
+    <div class="wrap">
+      <h1 class="t-title" data-a style="--i:0">Your patch <span class="mark">plan</span></h1>
+      <p class="t-foot lead" data-a style="--i:1">From your pack's label. Tap a step to change it.</p>
+      <div class="card chart" data-a style="--i:2">
+        <div class="hd"><p class="t-head">10 weeks, three steps</p><p class="t-foot">From Fri, Nov 13</p></div>
+        <div class="bars">
+          <div class="bar" style="flex:6;--h:100%;--i:0"><span>21 mg</span></div>
+          <div class="bar" style="flex:2;--h:66%;--i:1"><span>14 mg</span></div>
+          <div class="bar" style="flex:2;--h:33%;--i:2"><span>7 mg</span></div>
+        </div>
+        <div class="wks t-cap"><span style="flex:6">Weeks 1 to 6</span><span style="flex:2">7 to 8</span><span style="flex:2">9 to 10</span></div>
+      </div>
+      <div class="list steps-list">
+        <div class="row" data-settle style="--i:3"><i class="sw"></i><div class="grow"><p class="t-head">21 mg</p><p class="t-foot">Fri, Nov 13 to Thu, Dec 24</p></div><span class="wk">6 weeks</span></div>
+        <div class="row" data-settle style="--i:4"><i class="sw" style="opacity:.72"></i><div class="grow"><p class="t-head">14 mg</p><p class="t-foot">Fri, Dec 25 to Thu, Jan 7</p></div><span class="wk">2 weeks</span></div>
+        <div class="row" data-settle style="--i:5"><i class="sw" style="opacity:.48"></i><div class="grow"><p class="t-head">7 mg</p><p class="t-foot">Fri, Jan 8 to Thu, Jan 21</p></div><span class="wk">2 weeks</span></div>
+      </div>
+      <div class="night" data-a style="--i:6">
+        <p class="t-foot">At night</p>
+        <div class="chips"><button class="chip on">Keep it on</button><button class="chip">Take it off at bedtime</button></div>
+      </div>
+    </div>
+  </div>
+  <div class="dock">
+    <button class="btn" data-a style="--i:7" data-go="051-nrt-reminders">Use this plan</button>
+  </div>
+</div>
+<script>
+  document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic));
+</script>
+</body></html>

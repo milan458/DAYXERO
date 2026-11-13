@@ -1,0 +1,54 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>041 Log sheet</title>
+<meta name="motion" content="Today dims under the scrim (250ms fade) while the sheet slides up from the bottom (450ms settle curve, light haptic as it lands). The three rows arrive with a 90ms stagger, then the slip note. Tapping a + bumps the button and pushes the matching form.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+  /* the dimmed Today behind (apricot ground drawn as blocks) */
+  .today { position: absolute; inset: 0; background: #FFC38A; padding: 60px var(--gutter) 0; }
+  [data-theme="dark"] .today { background: #241433; }
+  .week { display: flex; justify-content: space-between; }
+  .week i { width: 38px; height: 38px; border-radius: 99px; background: rgba(255,255,255,.5); }
+  [data-theme="dark"] .week i { background: #34204A; }
+  .week i.on { background: var(--fg); }
+  .blk { border-radius: 12px; background: var(--fg); opacity: .85; }
+  .today .ring { margin: 34px auto 0; width: 230px; height: 230px; border-radius: 999px; box-shadow: inset 0 0 0 16px rgba(30,26,58,.12); display: grid; place-items: center; }
+  [data-theme="dark"] .today .ring { box-shadow: inset 0 0 0 16px rgba(255,255,255,.1); }
+  .scrim { animation: none; }
+  .play .scrim { animation: dx-fade 250ms var(--ease) both; }
+  .play .sheet { animation: sheet-up 450ms var(--settle) both; }
+  @keyframes sheet-up { from { transform: translateY(100%); } to { transform: none; } }
+  .sheet { padding-bottom: 40px; }
+  .sheet-h { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px; }
+  .sheet .row { min-height: 68px; }
+  .sheet .row .t-foot { color: var(--muted); }
+  .add { width: 44px; height: 44px; border-radius: 99px; background: var(--card-2); display: grid; place-items: center; color: var(--fg); flex: none; }
+  .add svg { width: 20px; height: 20px; }
+  .note { margin-top: 16px; display: flex; gap: 10px; align-items: flex-start; color: var(--muted); }
+  .note svg { width: 18px; height: 18px; flex: none; margin-top: 1px; }
+</style>
+</head><body>
+<div class="screen" data-ground="reading">
+  <div class="today" aria-hidden="true">
+    <div class="week"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div>
+    <h2 class="t-large" style="margin-top:28px">Good morning, Sam</h2>
+    <p class="t-foot" style="margin-top:8px;opacity:.8">Day 7 · 7 days free</p>
+    <div class="ring"><div id="tx"></div></div>
+  </div>
+  <div class="scrim"></div>
+  <div class="sheet">
+    <div class="grab"></div>
+    <div class="sheet-h"><h1 class="t-title">Log</h1><span class="t-foot muted">Today, Fri, Nov 13</span></div>
+    <div class="list">
+      <div class="row" data-a style="--i:3"><span class="ico-tile" data-ic="flame"></span><div class="grow"><p class="t-head" style="font-size:17px">A craving</p><p class="t-foot">How strong, what set it off</p></div><button class="add" aria-label="Log a craving" data-ic="plus" data-go="042-log-craving"></button></div>
+      <div class="row" data-a style="--i:4"><span class="ico-tile" data-ic="vape"></span><div class="grow"><p class="t-head" style="font-size:17px">Puff</p><p class="t-foot">None logged today</p></div><button class="add" aria-label="Log a puff" data-ic="plus"></button></div>
+      <div class="row" data-a style="--i:5"><span class="ico-tile" data-ic="cig"></span><div class="grow"><p class="t-head" style="font-size:17px">Cigarette</p><p class="t-foot">None logged today</p></div><button class="add" aria-label="Log a cigarette" data-ic="plus"></button></div>
+    </div>
+    <p class="t-foot note" data-a style="--i:6"><span data-ic="shield"></span>A use after Quit Day is logged as a slip. Nothing resets.</p>
+  </div>
+</div>
+<script>
+  document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20 })));
+  document.getElementById('tx').innerHTML = DX.char('xero', { mood: 'hello', size: 120, animate: false });
+</script>
+</body></html>

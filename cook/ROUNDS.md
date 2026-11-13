@@ -20,6 +20,9 @@ Best so far: none yet
 - 17:00 Onboarding becomes one continuous ground: the horizon rises from dawn to day as answers are given (surprise), instead of orange/blue/green switching.
 - 17:00 The prep session "hand" sits on a deep ink card table in both modes; cards carry the colour, replacing the violet ground (violet stays Glim's).
 
+- 17:14 Dark mode primary button is cream on every ground (was the ground hue on apricot/mint), because button colour drift was the baseline critics' top consistency complaint.
+- 17:14 Kit: DX.beat (scripted steps also land in stills), autohold buttons render held in stills, next badges get a track ring, tinted tiles on colour grounds (builder report).
+
 ## User feedback inbox
 - 17:03 "the dark navy purple ... background, even when the evening glim comes in, it seems very shiny for anybody's eyes ... explore ... some other color" | round 1 | teal rejected ("No, they all look bad" 17:06, about flat swatches); 4 full-screen directions rendered (cook/night-directions.png); A Midnight meadow applied: ground #0F1B33 / #0A1326, DX.nightSky art
 - 16:50 "keep dayxero's identity, but tighten it ... so many colors" | open

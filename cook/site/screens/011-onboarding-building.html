@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>011 Plan building</title>
-<meta name="motion" content="Progress eases 8/11 to 9/11 while the title arrives and Xero settles in beside it. The five plan rows then settle up one by one, 380ms apart (900ms settle each); 450ms after each row lands its tick disc pops and the check draws (420ms) with a light haptic. After the last tick the status line swaps to 'Built from your answers' with a success haptic and the button arrives.">
+<meta name="motion" content="Progress eases 8/11 to 9/11 while the title arrives and Xero settles in beside it. The five plan rows then settle up one by one, 380ms apart (900ms settle each); 450ms after each row lands its tick disc pops and the check draws (420ms) with a light haptic. After the last tick the status line swaps to 'Built from your answers', Xero switches to cheer with a 520ms bump (success haptic) and the button arrives.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -32,7 +32,7 @@
 
   <div class="head">
     <h1 class="t-large" data-a>Your plan, built around you</h1>
-    <div class="xw" data-settle style="--d:200ms"><div class="bob" id="xero"></div></div>
+    <div class="xw" data-settle style="--d:200ms"><div id="bw"><div class="bob" id="xero"></div></div></div>
   </div>
   <div class="status" id="status" data-a style="--i:1">
     <p class="t-foot muted a">Putting the pieces together</p>
@@ -48,7 +48,8 @@
 <script>
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
   document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 40 });
-  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'cheer', size: 88 });
+  const setX = m => document.getElementById('xero').innerHTML = DX.char('xero', { mood: m, size: 88 }); setX('hello');
+  const bw = document.getElementById('bw');
   const rows = [
     ['calendar', 'Prep week', 'Fri, Oct 30 to Thu, Nov 5'],
     ['flag', 'Quit Day', 'Fri, Nov 6'],
@@ -65,8 +66,9 @@
       <span class="tk">${DX.check({ size: 28, d: t + 450 })}</span></div>`;
   }).join('');
   const bar = document.getElementById('bar'), st = document.getElementById('status');
-  DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '72.7%'); void bar.offsetWidth; bar.style.transition = ''; st.classList.remove('done'); });
+  DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '72.7%'); void bar.offsetWidth; bar.style.transition = ''; st.classList.remove('done'); bw.classList.remove('bump'); setX('hello'); });
   DX.after(250, () => bar.style.setProperty('--p', '81.8%'));
-  DX.after(2500, () => st.classList.add('done')); DX.onStill(() => st.classList.add('done'));
+  const done = () => { st.classList.add('done'); setX('cheer'); bw.classList.add('bump'); };
+  DX.after(2500, done); DX.onStill(done);
 </script>
 </body></html>
