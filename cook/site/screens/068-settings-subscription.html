@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>068 Subscription</title>
-<meta name="motion" content="The plan card arrives: Active, the plan name, then the price counts up to $39.99 and its renews row fades in under the divider, with the change-or-cancel line last; the What you get card follows and its four perks fade in one under another, 90ms apart. Manage in the App Store (secondary) opens the App Store subscription sheet; Restore purchases shows a small spinner, then a check.">
+<meta name="motion" content="The plan card arrives: in its small dawn window (pre-dawn in dark) Xero settles onto the hill (450ms), beside the plan name and its apricot Active status; then the price counts up to $39.99 and its renews row fades in under the divider, with the change-or-cancel line (the one mention of Apple ID) last; the What you get card follows and its four perks fade in one under another, 90ms apart. Manage in the App Store (secondary) opens the App Store subscription sheet; Restore purchases shows a small spinner, then a check.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -19,9 +19,16 @@
 
 /* Plan card hierarchy: plan name (the title) with its Active status, the price, then one quiet renews row and the how-to-cancel line. */
 .plan { margin-top: 16px; padding: 16px 18px 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; }
-.plan .ph { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.status { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; border-radius: 99px; color: #17804F; background: color-mix(in srgb, #1F9D63 12%, transparent); }
-[data-theme="dark"] .status { color: #5FD39B; background: color-mix(in srgb, #1F9D63 22%, transparent); }
+.plan .ph { display: flex; align-items: center; gap: 14px; }
+.plan .ph .who { display: grid; gap: 6px; justify-items: start; }
+/* A small dawn window, as on the Settings profile: Xero standing on the hill. */
+.plan .scene { position: relative; width: 64px; height: 64px; border-radius: 16px; overflow: hidden; flex: none; }
+.plan .scene > svg { position: absolute; inset: 0; display: block; }
+.plan .scene .xs { position: absolute; left: 7px; top: 11px; }
+/* Active: the warm apricot status, not green. */
+.status { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; border-radius: 99px; color: #A8441E; background: color-mix(in srgb, #FFB27A 32%, transparent); }
+.status i { background: #F26A45 !important; }
+[data-theme="dark"] .status { color: #FFC89A; background: color-mix(in srgb, #FFB27A 18%, transparent); }
 .status i { width: 7px; height: 7px; border-radius: 99px; background: currentColor; }
 .plan .price { display: flex; align-items: baseline; gap: 6px; margin-top: 10px; }
 .plan .price .num { font-size: 30px; line-height: 1; }
@@ -29,7 +36,7 @@
 .plan .kv { display: flex; justify-content: space-between; align-items: center; min-height: 46px; margin-top: 14px; border-top: 1px solid var(--line); }
 .plan .kv .v { font-weight: 600; }
 .plan .howto { display: flex; align-items: center; min-height: 44px; border-top: 1px solid var(--line); color: var(--muted); font-weight: 500; }
-.get { margin-top: 16px; padding: 16px 18px 16px; display: grid; gap: 6px; }
+.get { margin-top: 14px; padding: 16px 18px 16px; display: grid; gap: 6px; }
 .get .it { display: flex; align-items: center; gap: 12px; min-height: 32px; }
 .get .it .ico-tile { width: 32px; height: 32px; border-radius: 10px; }
 .get .it .ico-tile svg { width: 18px; height: 18px; }
@@ -39,9 +46,9 @@
 <div class="screen" data-ground="reading">
 <div class="nav"><button class="icon-btn" aria-label="Back" data-ic="back"></button></div>
 <div class="scroll"><div class="pad">
-  <div class="hd"><h1 class="t-large" data-a style="--i:0">Subscription</h1><p class="t-foot muted" data-a style="--i:1">Billed and renewed through your Apple ID.</p></div>
+  <div class="hd"><h1 class="t-large" data-a style="--i:0">Subscription</h1><p class="t-foot muted" data-a style="--i:1">Everything in DayXero is open to you.</p></div>
   <div class="card plan" data-a style="--i:2">
-    <div class="ph"><div class="t-title">DayXero Yearly</div><span class="status t-cap"><i></i>Active</span></div>
+    <div class="ph"><div class="scene" id="scene"><div class="xs" id="av" data-settle style="--d:450ms"></div></div><div class="who"><div class="t-title">DayXero Yearly</div><span class="status t-cap"><i></i>Active</span></div></div>
     <div class="price"><span class="num" data-count="39.99" data-dec="2" data-prefix="$">$39.99</span><span class="t-head">a year</span></div>
     <p class="t-foot muted per">About $3.33 a month</p>
     <div class="kv" data-fade style="--d:450ms"><span class="t-foot muted">Renews</span><span class="t-foot v">Nov 6, 2027</span></div>
@@ -59,5 +66,15 @@
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
+const dark = DX.theme === 'dark';
+/* The plan window: dawn in light, pre-dawn in dark (as on 061), Xero standing on the hill. */
+document.getElementById('scene').insertAdjacentHTML('afterbegin', `<svg width="64" height="64" viewBox="0 0 72 72" aria-hidden="true"><defs>
+  <linearGradient id="psk" x1="0" y1="0" x2="0" y2="1">${dark ? '<stop offset="0" stop-color="#0D1630"/><stop offset=".6" stop-color="#22325A"/><stop offset="1" stop-color="#3C4A78"/>' : '<stop offset="0" stop-color="#FFE6BF"/><stop offset="1" stop-color="#FFC994"/>'}</linearGradient>
+  <radialGradient id="pgl" cx="55" cy="22" r="34" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${dark ? '#FFC27A' : '#FFF4D2'}" stop-opacity="${dark ? .55 : .9}"/><stop offset=".35" stop-color="${dark ? '#FFB06A' : '#FFEFC6'}" stop-opacity="${dark ? .24 : .5}"/><stop offset=".7" stop-color="${dark ? '#FFB06A' : '#FFEFC6'}" stop-opacity="${dark ? .07 : .15}"/><stop offset="1" stop-color="${dark ? '#FFB06A' : '#FFEFC6'}" stop-opacity="0"/></radialGradient>
+  <linearGradient id="phl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${dark ? '#24365E' : '#FFA27A'}"/><stop offset="1" stop-color="${dark ? '#16243F' : '#F0794F'}"/></linearGradient></defs>
+  <rect width="72" height="72" fill="url(#psk)"/>${dark ? '<circle cx="12" cy="12" r=".9" fill="#fff" opacity=".8"/><circle cx="34" cy="7" r=".7" fill="#fff" opacity=".5"/><circle cx="64" cy="14" r=".9" fill="#fff" opacity=".7"/>' : ''}
+  <rect width="72" height="72" fill="url(#pgl)"/><circle cx="55" cy="22" r="8.5" fill="${dark ? '#FFC27A' : '#FFD966'}"/>
+  <path d="M0 72 V60 C16 56 30 54 42 55 C54 56 64 59 72 62 V72Z" fill="url(#phl)"/></svg>`);
+document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 41 });
 </script>
 </body></html>
