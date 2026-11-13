@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>029 Session commit</title>
-<meta name="motion" content="The bar shows card 5 at its last step with Card 5 · Step 3 of 3 beside it; tag, title, your plan chip (When work piles up: two sighs first), helper, the Day Xero medal (the kit medal, resting faded inside its empty hold ring) and the date arrive (600ms, 90ms stagger). Holding the button (3s, auto at 1.2s) fills the button and sweeps the ring around the medal in lockstep (linear, a soft haptic tick every 0.5s); letting go drains both (300ms). On held: the ring turns sun gold, the medal stamps to full colour (620ms spring), its rays start their slow turn (26s loop) and a soft shine crosses it, the date bumps (520ms spring), the title cross-fades to You're committed and the helper to its second line (400ms), card 5's segment fills, and the button shows Committed (success haptic). 1200ms later the done button cross-fades (350ms) into Continue.">
+<meta name="motion" content="The bar shows card 5 at its last step with Card 5 · Step 3 of 3 beside it; tag, title, your plan chip (When work piles up: two sighs first), helper, the Day Xero medal (the kit medal: gold rim, the brand mark, a soft shine; resting faded inside its empty hold ring) and the date arrive (600ms, 90ms stagger). Holding the button (3s, auto at 1.2s) fills the button and sweeps the ring around the medal in lockstep (linear, a soft haptic tick every 0.5s); letting go drains both (300ms). On held: the ring turns sun gold, the medal stamps to full colour (620ms spring), and a soft shine crosses its face, the date bumps (520ms spring), the title cross-fades to You're committed and the helper to its second line (400ms), card 5's segment fills, and the button shows Committed (success haptic). 1200ms later the done button cross-fades (350ms) into Continue.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -21,14 +21,16 @@
 .swap .b{opacity:0;transform:translateY(6px)}
 .done .swap .a{opacity:0;transform:translateY(-6px)}
 .done .swap .b{opacity:1;transform:none}
-/* the hold ring around the kit Day Xero medal (rays, gold rim, the brand mark), with a soft shine on the face */
+/* the hold ring around the kit Day Xero medal (gold rim, the brand mark), with a soft shine on the face */
 .ringbox{position:absolute;top:290px;left:50%;width:256px;height:256px;margin-left:-128px}
 .ringbox svg.r{position:absolute;inset:0;display:block;transform:rotate(-90deg)}
 .arc{transition:stroke .4s var(--ease)}
 .done .arc{stroke:#F5B83D}
 [data-theme="dark"] .done .arc{stroke:#FFD966}
-.coin{position:absolute;left:28px;top:28px;width:200px;height:200px}
-.coin .m{position:relative;width:200px;height:200px;border-radius:50%;opacity:.38;filter:saturate(.25);transition:opacity .4s var(--ease),filter .4s var(--ease)}
+.coin{position:absolute;left:24px;top:24px;width:208px;height:208px}
+/* the hold ring is the medal's glory here, so the kit rays (teeth at this size) stay off */
+.coin .rays{display:none}
+.coin .m{position:relative;width:208px;height:208px;border-radius:50%;opacity:.38;filter:saturate(.25);transition:opacity .4s var(--ease),filter .4s var(--ease)}
 .done .coin .m{opacity:1;filter:none}
 .coin .gloss{position:absolute;inset:0;pointer-events:none}
 .when{position:absolute;top:566px;left:0;right:0;text-align:center;display:grid;gap:6px;justify-items:center}
@@ -77,9 +79,9 @@ document.getElementById('close').innerHTML = DX.icon('close');
 document.querySelectorAll('.sp').forEach(e => e.insertAdjacentHTML('afterbegin', SPARK));
 const $ = id => document.getElementById(id);
 const arc = $('arc'), scr = $('scr'), btn = $('hold'), sw = $('stampwrap'), medal = $('medal'), date = $('date');
-/* the kit medal as it is (rays, gold rim, face, the brand mark), plus a soft top-left shine clipped to the face */
-medal.innerHTML = DX.badge({kind:'xero', size:200, bare:true, label:'Day Xero'}) +
-  `<svg class="gloss" width="200" height="200" viewBox="0 0 100 100" aria-hidden="true"><defs>
+/* the kit medal (gold rim, face, the brand mark), plus a soft top-left shine clipped to the medal */
+medal.innerHTML = DX.badge({kind:'xero', size:208, bare:true, label:'Day Xero'}) +
+  `<svg class="gloss" width="208" height="208" viewBox="0 0 100 100" aria-hidden="true"><defs>
     <radialGradient id="gl" cx="34%" cy="26%" r="62%"><stop offset="0" stop-color="#fff" stop-opacity=".5"/><stop offset=".45" stop-color="#fff" stop-opacity=".12"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
     <clipPath id="glc"><circle cx="50" cy="50" r="46.5"/></clipPath></defs>
     <circle cx="50" cy="50" r="46.5" fill="url(#gl)" clip-path="url(#glc)"/></svg>`;
