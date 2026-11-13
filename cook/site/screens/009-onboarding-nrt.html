@@ -1,12 +1,12 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>009 Onboarding NRT</title>
-<meta name="motion" content="Progress eases from 6/11 to 7/11 (900ms) as the question, the two evidence lines (each with its own source) and three option rows arrive (600ms, 90ms stagger). At 900ms the first row selects (kit selection: warm tint, outline, ring fills and ticks, 250ms, selection haptic) and the card grows and its product chips unfold inside it (height 0 to auto, 420ms settle), then Patch and Gum fill with the warm tint and a small tick (no second outline) one after the other 160ms apart.">
+<meta name="motion" content="Progress eases from 6/11 to 7/11 (900ms) as the question, one short evidence line with a single Sources info link (tap opens the Cochrane 2018 and 2019 citations in a sheet) and three option rows arrive (600ms, 90ms stagger). At 900ms the first row selects (kit selection: warm tint, outline, ring fills and ticks, 250ms, selection haptic) and the card grows and its product chips unfold inside it (height 0 to auto, 420ms settle), then Patch and Gum fill with the warm tint and a small tick (no second outline) one after the other 160ms apart.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   /* Onboarding header: back button and progress only (no avatar); the bar ends at the gutter so the sun knob never collides. */
   .nav { padding-right: 26px; }
-  /* Each claim carries its own source, right under it. */
+  /* Round 8: the two claims share one short paragraph and one "Sources" info link (opens the citations sheet). */
   .q { gap: 8px; }
   .q .ev { display: grid; gap: 2px; justify-items: start; }
   .q .ev + .ev { margin-top: 2px; }
@@ -20,7 +20,7 @@
   /* The first option and its product chips share one card; when picked, the whole card takes the kit selection (warm tint + 2px outline). */
   .og { border-radius: 18px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); transition: box-shadow .25s var(--ease), background .25s var(--ease); }
   .og .opt { background: transparent; box-shadow: none !important; }
-  .og:has(.opt.on) { box-shadow: inset 0 0 0 2px var(--sel); background: var(--sel-tint); }
+  .og:has(.opt.on) { box-shadow: inset 0 0 0 2px var(--sel-edge, var(--sel)); background: var(--sel-tint); }
   .what .inner { padding: 0 16px 16px; }
   .q .source svg { width: 16px; height: 16px; }
   .what .inner .rule { height: 1px; background: var(--line); margin: 0 0 12px; }
@@ -28,7 +28,8 @@
   .og .chip:not(.on) { background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
   /* Nested picks inside the selected card: a filled tint with a small tick, never a second outline level. */
   .screen .og .chip.on, [data-theme="dark"] .screen .og .chip.on { background: color-mix(in srgb, #FF9A5C 58%, #FFFFFF); box-shadow: none; color: var(--fg); }
-  [data-theme="dark"] .screen .og .chip.on { background: color-mix(in srgb, #FFF8EE 26%, var(--card)); }
+  /* Dark: the nested picks are a deeper step of the kit's warm peach selection (not a cream lift). */
+  [data-theme="dark"] .screen .og .chip.on { background: color-mix(in srgb, #FF9A5C 42%, var(--card)); }
   .og .chip .tk { display: none; width: 16px; height: 16px; margin-left: -4px; }
   .og .chip.on .tk { display: grid; }
   .og .chip .tk svg { width: 16px; height: 16px; }
@@ -47,12 +48,8 @@
   <div class="q">
     <h1 class="t-large" data-a>Want to use nicotine replacement?</h1>
     <div class="ev" data-a style="--i:1">
-      <p class="t-body muted">It raises your odds of quitting by 50 to 60%.</p>
-      <a class="source"><span data-icon="note"></span>Cochrane review, 2018 (NRT vs no NRT)</a>
-    </div>
-    <div class="ev" data-a style="--i:2">
-      <p class="t-body muted">A patch plus a faster form works best.</p>
-      <a class="source"><span data-icon="note"></span>Cochrane, 2019 (combination NRT)</a>
+      <p class="t-body muted">It raises your odds of quitting by 50 to 60%. A patch plus a faster form works best.</p>
+      <a class="source" aria-label="Sources: Cochrane reviews, 2018 and 2019"><span data-icon="info"></span>Sources</a>
     </div>
   </div>
   <div class="answers">
@@ -71,7 +68,9 @@
   </div>
 </div>
 <script>
-  document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon, { size: 16 }));
+  document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = e.dataset.icon === 'info'
+    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor"/></svg>'
+    : DX.icon(e.dataset.icon, { size: 16 }));
   document.querySelector('.icon-btn').innerHTML = DX.icon('back');
   document.querySelectorAll('[data-tick]').forEach(e => e.innerHTML = DX.icon('check', { size: 16, w: 3 }));
   const $ = id => document.getElementById(id), bar = $('bar');

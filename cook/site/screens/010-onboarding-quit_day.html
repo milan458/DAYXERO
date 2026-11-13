@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>010 Onboarding Quit Day</title>
-<meta name="motion" content="Progress eases 7/11 to 8/11; title, the prep-week card (seven tiles rise 45ms apart, today's Fri 30 in its coral disc, their prep dots pop left to right), the Quit Day row (a cream card with an apricot Nov 6 date page and a chevron: the tappable date picker), Xero on his hill (it fades into the ground above the dock) and the hold button arrive in order. Holding fills the button left to right over 1500ms with a soft ticking haptic; on complete the button shows its done state, Quit Day set (success haptic), the yellow flag Xero holds runs up its pole (34px, 700ms settle) while he bumps (520ms), and the row's caption swaps Quit Day, recommended for Quit Day set with a green tick (300ms crossfade). 1200ms later the done button crossfades (350ms) into Continue. Tapping the Quit Day row opens the date wheel.">
+<meta name="motion" content="Progress eases 7/11 to 8/11; title, the prep-week card (seven tiles rise 45ms apart, today's Fri 30 in its coral disc, their prep dots pop left to right), the Quit Day row (a cream card with an apricot Nov 6 date page and a Change label with a right chevron: the tappable date picker), Xero on his hill (it fades into the ground above the dock) and the hold button arrive in order. Holding fills the button left to right over 1500ms with a soft ticking haptic; on complete the button shows its done state, Quit Day set (success haptic), the yellow flag Xero holds runs up its pole (34px, 700ms settle) while he bumps (520ms), and the row's caption swaps Quit Day, recommended for Quit Day set with a green tick (300ms crossfade). 1200ms later the done button crossfades (350ms) into Continue. Tapping the Quit Day row opens the date wheel.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -36,10 +36,14 @@
   .qd .st .set .okc svg { width: 11px; height: 11px; }
   .qd.got .st .rec { opacity: 0; }
   .qd.got .st .set { opacity: 1; }
-  .qd .chev { color: var(--muted); width: 20px; height: 20px; }
+  /* Round 8: the picker says what tapping does: "Change" and a right chevron. */
+  .qd .chg { display: inline-flex; align-items: center; gap: 2px; flex: none; font: 600 14px/1 var(--body); color: var(--muted); }
+  .qd .chev { color: var(--muted); width: 18px; height: 18px; }
+  .qd .chev svg { width: 18px; height: 18px; }
   /* Xero on his own small hill, holding a yellow flag that runs up the pole when Quit Day is set. */
   /* Xero's hill ends above the dock: it fades into the ground before the button, so Continue sits clear of it. */
-  .hero { position: absolute; left: 0; right: 0; top: 466px; height: 230px; }
+  /* Round 8: Xero sits 14px closer to the week card, and his dome fades out well before the dock (no hard base above the CTA). */
+  .hero { position: absolute; left: 0; right: 0; top: 452px; height: 230px; }
   .hero .hill { position: absolute; left: 0; top: 118px; }
   .hero .xw { position: absolute; left: 127px; top: 30px; width: 128px; height: 128px; }
   .hero .pen { transform: translateY(34px); transition: transform 700ms var(--settle); }
@@ -70,7 +74,7 @@
     <button class="qd" id="qd" data-a style="--i:6" aria-label="Quit Day, change date">
       <span class="cal" aria-hidden="true"><span class="mo">Nov</span><span class="dd">6</span></span>
       <div class="grow"><p class="t-head">Fri, Nov 6</p><p class="t-cap"><span class="st"><span class="rec">Quit Day, recommended</span><span class="set" id="setTag">Quit Day set</span></span></p></div>
-      <span class="chev" data-icon="down"></span>
+      <span class="chg">Change<span class="chev" data-icon="chev"></span></span>
     </button>
   </div>
 
@@ -95,7 +99,7 @@
   $('days').innerHTML = days.map(([d, n], i) => `<div class="day ${i === 0 ? 'today' : ''}" data-a style="--i:${i * .5 + 2.5}"><span class="t-cap">${i === 0 ? 'Today' : d}</span><span class="num">${n}</span><span class="pd" data-pop style="--i:0;--d:${700 + i * 90}ms"></span></div>`).join('');
   /* A small paper hill so Xero stands on something. */
   const dark = DX.theme === 'dark';
-  $('hill').innerHTML = `<defs><linearGradient id="hf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${dark ? '#212A41' : '#FFAE7A'}"/><stop offset=".5" stop-color="${dark ? '#212A41' : '#FFAE7A'}"/><stop offset="1" style="stop-color: var(--g)"/></linearGradient>
+  $('hill').innerHTML = `<defs><linearGradient id="hf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${dark ? '#212A41' : '#FFAE7A'}"/><stop offset=".22" stop-color="${dark ? '#212A41' : '#FFAE7A'}"/><stop offset=".5" style="stop-color: color-mix(in srgb, ${dark ? '#212A41' : '#FFAE7A'} 62%, var(--g))"/><stop offset=".78" style="stop-color: color-mix(in srgb, ${dark ? '#212A41' : '#FFAE7A'} 20%, var(--g))"/><stop offset="1" style="stop-color: var(--g)"/></linearGradient>
     <linearGradient id="he" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${dark ? 'rgba(190,205,255,.22)' : 'rgba(255,255,255,.6)'}"/><stop offset=".7" stop-color="${dark ? 'rgba(190,205,255,0)' : 'rgba(255,255,255,0)'}"/></linearGradient></defs>
     <path d="M10 104 C50 52 130 26 195 26 C260 26 340 52 380 104 Z" fill="url(#hf)"/>
     <path d="M10 104 C50 52 130 26 195 26 C260 26 340 52 380 104" fill="none" stroke="url(#he)" stroke-width="2"/>`;
