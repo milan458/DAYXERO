@@ -1,0 +1,56 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>060 Calm done</title>
+<meta name="motion" content="The check disc pops (150ms) and the tick draws, the headline and line arrive, then Jelli settles into the card (700ms) and minutes of calm counts 6 to 8 at 1.2s with a +2 floating up; chips arrive last. Success haptic with the tick; no other springs.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+/* screen-local helpers: icon fill, section labels, small icon tiles, bottom toast */
+.hd { display: grid; gap: 6px; padding-top: 58px; }
+.sec { padding: 22px 4px 8px; color: var(--muted); }
+.rt { font-weight: 600; }
+.ico-tile.s { width: 34px; height: 34px; border-radius: 11px; }
+.ico-tile.s svg { width: 19px; height: 19px; }
+.val { color: var(--muted); font: 500 15px/1.2 var(--body); white-space: nowrap; }
+.list > .row.tap { min-height: 56px; }
+.toast.b { top: auto; bottom: 40px; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
+.toast.b.in { opacity: 1; transform: none; }
+.toast.b .ck { flex: none; }
+.pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+.top { position: absolute; left: var(--gutter); right: var(--gutter); top: 118px; display: grid; justify-items: center; text-align: center; gap: 10px; }
+.calm { display: flex; align-items: center; gap: 14px; padding: 12px 18px 12px 10px; margin-top: 26px; position: relative; }
+.calm .num { font-size: 40px; line-height: 1; }
+.plus { position: absolute; left: 150px; top: 6px; color: var(--tick); font: 800 18px/1 var(--display); }
+.feel { margin-top: 26px; display: grid; gap: 10px; }
+
+</style>
+</head><body>
+<div class="screen" data-ground="reading">
+<div class="nav"><button class="icon-btn" aria-label="Close" data-ic="close"></button></div>
+<div class="scroll"><div class="pad">
+  <div class="top">
+    <div id="ck"></div>
+    <h1 class="t-large" data-a style="--i:2;margin-top:6px">Nicely <span class="mark">done</span></h1>
+    <p class="t-body muted" data-a style="--i:3">Two minutes, and the urge got smaller.<br>That is a skill you just practised.</p>
+  </div>
+  <div style="height:300px"></div>
+  <div class="card calm" data-a style="--i:4">
+    <div id="jelli" data-settle style="--d:700ms"></div>
+    <div><div><span class="num" data-count="8" data-from="6" data-delay="1200">8</span> <span class="t-head">min</span></div><div class="t-foot muted">of calm today</div></div>
+    <span class="plus float-up" style="--d:1300ms">+2</span>
+  </div>
+  <div class="feel">
+    <p class="t-foot muted" data-a style="--i:5">A bit calmer? Optional</p>
+    <div class="chips" data-a style="--i:6"><button class="chip">Much calmer</button><button class="chip on" id="pick">A bit</button><button class="chip">Not really</button></div>
+  </div>
+</div></div>
+<div class="dock"><button class="btn" data-a style="--i:7">Back to my day</button><button class="link" data-a style="--i:8" data-go="019-sos">Still craving? Open Craving SOS</button></div>
+</div>
+<script>
+document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
+
+document.getElementById('ck').innerHTML = DX.check({ size: 92, d: 150 });
+document.getElementById('jelli').innerHTML = DX.char('jelli', { mood: 'calm', size: 88 });
+
+</script>
+</body></html>

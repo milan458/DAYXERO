@@ -1,0 +1,53 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>064 Quiet hours</title>
+<meta name="motion" content="The dial arc sweeps from 10 PM round to 7 AM (1.4s settle) as the 9 counts up in the centre; the toggles and time rows arrive below on the stagger. Changing a time drags the arc end with a selection haptic per 15 minutes.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+/* screen-local helpers: icon fill, section labels, small icon tiles, bottom toast */
+.hd { display: grid; gap: 6px; padding-top: 58px; }
+.sec { padding: 22px 4px 8px; color: var(--muted); }
+.rt { font-weight: 600; }
+.ico-tile.s { width: 34px; height: 34px; border-radius: 11px; }
+.ico-tile.s svg { width: 19px; height: 19px; }
+.val { color: var(--muted); font: 500 15px/1.2 var(--body); white-space: nowrap; }
+.list > .row.tap { min-height: 56px; }
+.toast.b { top: auto; bottom: 40px; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
+.toast.b.in { opacity: 1; transform: none; }
+.toast.b .ck { flex: none; }
+.pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+.dial { position: relative; width: 220px; height: 220px; margin: 24px auto 4px; }
+.dial .rot { position: absolute; inset: 0; transform: rotate(330deg); }
+.dial .ctr { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; gap: 2px; justify-items: center; }
+.dial .ctr .num { font-size: 40px; line-height: 1; }
+.hr { position: absolute; color: var(--muted); transform: translate(-50%, -50%); }
+
+</style>
+</head><body>
+<div class="screen" data-ground="reading">
+<div class="nav"><button class="icon-btn" aria-label="Back" data-ic="back"></button></div>
+<div class="scroll"><div class="pad">
+  <div class="hd"><h1 class="t-large" data-a style="--i:0">Quiet hours</h1><p class="t-foot muted" data-a style="--i:1">Nothing arrives between these times. Anything due waits until they end.</p></div>
+  <div class="dial" data-a style="--i:2">
+    <div class="rot" id="ring"></div>
+    <div class="ctr"><span data-ic="moon" data-s="22"></span><span class="num" data-count="9">9</span><span class="t-cap muted">quiet hours</span></div>
+    <span class="hr t-cap" style="left:110px;top:-12px">12 AM</span><span class="hr t-cap" style="left:244px;top:110px">6 AM</span><span class="hr t-cap" style="left:110px;top:232px">12 PM</span><span class="hr t-cap" style="left:-26px;top:110px">6 PM</span>
+  </div>
+  <div class="list" data-a style="--i:3;margin-top:24px">
+    <div class="row " ><span class="ico-tile s" data-ic="moon"></span><div class="grow"><div class="t-body rt">Quiet hours</div></div><span class="toggle on"></span></div>
+    <div class="row " ><div class="grow"><div class="t-body rt">From</div></div><span class="pill">10:00 PM</span></div>
+    <div class="row " ><div class="grow"><div class="t-body rt">Until</div></div><span class="pill">7:00 AM</span></div>
+  </div>
+  <div class="list" data-a style="--i:4;margin-top:12px">
+    <div class="row " ><span class="ico-tile s" data-ic="patch"></span><div class="grow"><div class="t-body rt">Let NRT reminders through</div><div class="t-foot muted">Patch times you set yourself</div></div><span class="toggle on"></span></div>
+  </div>
+</div></div>
+</div>
+<script>
+document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
+
+document.getElementById('ring').innerHTML = DX.ring({ size: 220, stroke: 16, p: 9 / 24, color: 'var(--fg)', track: 'var(--track)', dot: true });
+
+</script>
+</body></html>

@@ -1,0 +1,50 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>070 Apple Health</title>
+<meta name="motion" content="The connected card arrives and its heart gives one soft bump at 700ms; the write and read groups follow on the stagger. Flipping a toggle opens the system Health permission sheet.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+/* screen-local helpers: icon fill, section labels, small icon tiles, bottom toast */
+.hd { display: grid; gap: 6px; padding-top: 58px; }
+.sec { padding: 22px 4px 8px; color: var(--muted); }
+.rt { font-weight: 600; }
+.ico-tile.s { width: 34px; height: 34px; border-radius: 11px; }
+.ico-tile.s svg { width: 19px; height: 19px; }
+.val { color: var(--muted); font: 500 15px/1.2 var(--body); white-space: nowrap; }
+.list > .row.tap { min-height: 56px; }
+.toast.b { top: auto; bottom: 40px; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
+.toast.b.in { opacity: 1; transform: none; }
+.toast.b .ck { flex: none; }
+.pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+.lead { display: flex; gap: 14px; align-items: center; padding: 16px; margin-top: 18px; }
+.lead .ico-tile { width: 48px; height: 48px; border-radius: 15px; color: var(--mark); }
+.lead .ico-tile svg { width: 26px; height: 26px; }
+.beat { transform-origin: center; }
+.play .beat { animation: dx-bump 520ms var(--spring) both; animation-delay: 700ms; }
+
+</style>
+</head><body>
+<div class="screen" data-ground="reading">
+<div class="nav"><button class="icon-btn" aria-label="Back" data-ic="back"></button></div>
+<div class="scroll"><div class="pad">
+  <div class="hd"><h1 class="t-large" data-a style="--i:0">Apple Health</h1><p class="t-foot muted" data-a style="--i:1">Keep your quit next to the rest of your health. You choose what is shared.</p></div>
+  <div class="card lead" data-a style="--i:2"><span class="ico-tile beat" data-ic="heart"></span><div><div class="t-head">Connected</div><div class="t-foot muted">Since Fri, Oct 30</div></div></div>
+  <p class="t-foot sec" data-a style="--i:3">DayXero writes</p>
+  <div class="list" data-a style="--i:4">
+    <div class="row " ><span class="ico-tile s" data-ic="leaf"></span><div class="grow"><div class="t-body rt">Mindful minutes</div><div class="t-foot muted">From calm tools and Craving SOS</div></div><span class="toggle on"></span></div>
+  </div>
+  <p class="t-foot sec" data-a style="--i:5">DayXero reads</p>
+  <div class="list" data-a style="--i:6">
+    <div class="row " ><span class="ico-tile s" data-ic="heart"></span><div class="grow"><div class="t-body rt">Resting heart rate</div><div class="t-foot muted">To show your body recovering</div></div><span class="toggle on"></span></div>
+    <div class="row " ><span class="ico-tile s" data-ic="moon"></span><div class="grow"><div class="t-body rt">Sleep</div><div class="t-foot muted">Nights often change in week one</div></div><span class="toggle on"></span></div>
+    <div class="row " ><span class="ico-tile s" data-ic="people"></span><div class="grow"><div class="t-body rt">Steps</div><div class="t-foot muted">Not shared</div></div><span class="toggle"></span></div>
+  </div>
+  <p class="t-foot muted" data-a style="--i:7;padding:14px 4px 0">Health asks you first, and DayXero never sees what you turn off. You can change this any time in the Health app.</p>
+</div></div>
+</div>
+<script>
+document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
+
+</script>
+</body></html>

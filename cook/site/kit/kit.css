@@ -25,9 +25,10 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
 .screen[data-ground="sun"]     { --g: #FFD966; --muted: #5A4A10; --card: rgba(255,255,255,.92); --card-2: rgba(255,255,255,.55); --track: rgba(30,26,58,.14); }
 .screen[data-ground="ocean"]   { --g: #2A52DB; --fg: var(--cream); --muted: #DCE4FF; --card: #1D3A9E; --card-2: #2447C2; --line: rgba(255,255,255,.16);
   --btn: var(--cream); --btn-fg: #1D3A9E; --sel: var(--cream); --sel-fg: #1D3A9E; --tick: var(--done-on-dark); --mark: var(--sun); --track: rgba(255,255,255,.2); --dark: 1; }
-/* Night (Glim's evenings): deep teal night, low saturation so it is easy on the eyes after dark (user, 13 Nov). "violet" kept as an alias. */
-.screen[data-ground="violet"], .screen[data-ground="night"] { --g: #152733; --fg: #F3EDE0; --muted: #B9CAD3; --card: #1E3442; --card-2: #243C4B; --line: rgba(255,255,255,.12);
-  --btn: #EDE6D3; --btn-fg: #152733; --sel: #EDE6D3; --sel-fg: #152733; --tick: #7FD9A8; --mark: #FFE27A; --track: rgba(255,255,255,.16); --dark: 1; }
+/* Night (Glim's evenings): "Midnight meadow" (user, 13 Nov: purple was too bright at night; picked from 4 full-screen directions).
+   Always a night sky (DX.nightSky) over a midnight-blue ground; "violet" kept as an alias. */
+.screen[data-ground="violet"], .screen[data-ground="night"] { --g: #0F1B33; --fg: #F6EFE2; --muted: #AEB8D3; --card: #17243F; --card-2: #1E2D4C; --line: rgba(255,255,255,.12);
+  --btn: #F3E7CC; --btn-fg: #0F1B33; --sel: #F3E7CC; --sel-fg: #0F1B33; --tick: #7FD9A8; --mark: #FFD37A; --track: rgba(255,255,255,.16); --dark: 1; }
 .screen[data-ground="table"]   { --g: #1E1A3A; --fg: var(--cream); --muted: #C9C3E6; --card: #2A255F; --card-2: #24204D; --line: rgba(255,255,255,.14);
   --btn: var(--cream); --btn-fg: var(--ink); --sel: var(--cream); --sel-fg: var(--ink); --tick: var(--done-on-dark); --mark: var(--sun); --track: rgba(255,255,255,.18); --dark: 1; }
 
@@ -38,7 +39,7 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
 [data-theme="dark"] .screen[data-ground="mint"]    { --g: #0F2A22; --muted: #A9D9C0; --card: #173A30; --card-2: #1E4639; --btn: #9FE3BC; --btn-fg: #0F2A22; --sel: #9FE3BC; --sel-fg: #0F2A22; --mark: #9FE3BC; }
 [data-theme="dark"] .screen[data-ground="sun"]     { --g: #241433; --muted: #E0C8E8; --card: #34204A; --card-2: #3E2856; --btn: var(--sun); --btn-fg: #241433; --sel: var(--sun); --sel-fg: #241433; --mark: var(--sun); }
 [data-theme="dark"] .screen[data-ground="ocean"]   { --g: #0B1A4A; --muted: #B9C9FF; --card: #152A6A; --card-2: #1B3378; --btn: var(--cream); --btn-fg: #0B1A4A; --sel: var(--cream); --sel-fg: #0B1A4A; }
-[data-theme="dark"] .screen[data-ground="violet"], [data-theme="dark"] .screen[data-ground="night"] { --g: #0C1A23; --muted: #A9BBC4; --card: #15262F; --card-2: #1B2F3A; --btn: #E6DECA; --btn-fg: #0C1A23; --sel: #E6DECA; --sel-fg: #0C1A23; }
+[data-theme="dark"] .screen[data-ground="violet"], [data-theme="dark"] .screen[data-ground="night"] { --g: #0A1326; --muted: #A3ADC8; --card: #121D35; --card-2: #182540; --btn: #EADDC0; --btn-fg: #0A1326; --sel: #EADDC0; --sel-fg: #0A1326; }
 [data-theme="dark"] .screen[data-ground="table"]   { --g: #0B0920; --card: #1B1747; --card-2: #15123A; }
 
 /* ---------- phone ---------- */

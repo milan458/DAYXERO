@@ -15,14 +15,14 @@
   .day.qd .t-cap { color: inherit; opacity: .8; }
   .day.qd .num { font-size: 23px; }
   .day.qd .sundot { width: 9px; height: 9px; border-radius: 99px; background: var(--sun); margin-top: 3px; }
-  .stamp { position: absolute; right: -14px; top: -20px; display: none; }
+  .stamp { position: absolute; right: -28px; top: -30px; display: none; }
   .stamp.show { display: block; }
   .legend { display: flex; align-items: center; gap: 14px; margin: 12px calc(var(--gutter) + 4px) 0; }
   .legend span { display: inline-flex; align-items: center; gap: 6px; }
   .legend i { width: 8px; height: 8px; border-radius: 99px; background: #FF9A5C; display: block; }
-  .legend i.q { background: var(--sel); width: 10px; height: 10px; border-radius: 3px; }
+  .legend i.qd2 { background: var(--sel); width: 10px; height: 10px; border-radius: 3px; }
   .legend .link { margin-left: auto; height: 32px; font-size: 14px; text-decoration: underline; text-underline-offset: 3px; }
-  .hero { position: absolute; left: 0; right: 0; top: 498px; display: grid; justify-items: center; gap: 4px; }
+  .hero { position: absolute; left: 0; right: 0; top: 450px; display: grid; justify-items: center; gap: 4px; }
   .hero .say { position: relative; height: 22px; width: 100%; text-align: center; }
   .hero .say p { position: absolute; inset: 0; transition: opacity .4s var(--ease), transform .4s var(--ease); }
   .hero .say .b { opacity: 0; transform: translateY(8px); }
@@ -44,12 +44,12 @@
   </div>
 
   <div class="card wk" data-a style="--i:2">
-    <div class="wk-h"><p class="t-foot" style="font-weight:700">Oct 30 to Nov 6</p><p class="t-cap muted">7 prep days, then Quit Day</p></div>
+    <div class="wk-h"><p class="t-foot"><b>Prep week</b> <span class="muted">Oct 30 to Nov 5</span></p></div>
     <div class="days" id="days"></div>
   </div>
   <div class="legend" data-a style="--i:3">
     <span class="t-cap"><i></i>Prep</span>
-    <span class="t-cap"><i class="q"></i>Quit Day</span>
+    <span class="t-cap"><i class="qd2"></i>Quit Day</span>
     <a class="link">Pick another date</a>
   </div>
 
@@ -73,7 +73,7 @@
   const days = [['Fri', 30], ['Sat', 31], ['Sun', 1], ['Mon', 2], ['Tue', 3], ['Wed', 4], ['Thu', 5]];
   $('days').innerHTML = days.map(([d, n], i) => `<div class="day" data-a style="--i:${i * .5 + 2.5}"><span class="t-cap">${d}</span><span class="num">${n}</span><span class="pd" data-pop style="--i:0;--d:${700 + i * 90}ms"></span></div>`).join('')
     + `<div class="day qd" data-a style="--i:6.5"><span class="t-cap">Fri</span><span class="num">6</span><span class="sundot"></span><div class="stamp" id="stamp" data-stamp style="--i:0"></div></div>`;
-  $('stamp').innerHTML = `<div class="shine" style="border-radius:99px;--d:500ms">${DX.badge({ kind: 'xero', n: '0', size: 46, bare: true })}</div>`;
+  $('stamp').innerHTML = `<div class="shine" style="border-radius:99px;--d:500ms">${DX.badge({ kind: 'xero', n: '0', size: 50, bare: true })}</div>`;
   const setX = m => $('xero').innerHTML = DX.char('xero', { mood: m, size: 140 });
   setX('hello');
   const reset = () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '63.6%'); void bar.offsetWidth; bar.style.transition = '';

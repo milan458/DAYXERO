@@ -75,7 +75,7 @@
       xero: { edge: '#F5B83D', face: '#FFD966', hill: '#FFC38A', ink: '#1E1A3A', sun: '#FF7A55' },
       day: { edge: '#FF7155', face: '#FFC38A', hill: '#FF9A6B', ink: '#1E1A3A', sun: '#FFD966' },
       wave: { edge: '#1D3A9E', face: '#2A52DB', hill: '#5C7FF0', ink: '#FFF8EE', sun: '#9CCBFF' },
-      night: { edge: '#0F2230', face: '#1E3442', hill: '#2E5062', ink: '#F3EDE0', sun: '#FFE27A' }
+      night: { edge: '#0D182E', face: '#1C2C4E', hill: '#2C3D6A', ink: '#F6EFE2', sun: '#FFD37A' }
     }[kind];
     const locked = state === 'locked', next = state === 'next';
     const edgePath = kind === 'prep' ? scallop(50, 50, 48, 14, 4) : '';
@@ -98,6 +98,32 @@
     const svg = `<svg width="${s}" height="${s}" viewBox="0 0 100 100" style="display:block;overflow:visible;${next ? 'opacity:.9' : ''}" role="img" aria-label="${o.label || ''} ${state}">${next && !locked ? '' : ''}${face}${ringNext}</svg>`;
     if (o.bare) return svg;
     return `<div class="badge" ${o.attr || ''}>${svg}${o.label ? `<span class="t-cap">${o.label}</span>` : ''}</div>`;
+  }
+
+
+  /* Night sky for Glim's evenings ("Midnight meadow"): gradient sky, moon with halo, a few stars, three hills, four firefly glows.
+     DX.nightSky({w:390, h:430, moonX:336, moonY:236}) ; fades into the night ground at the bottom. Stars twinkle, fireflies drift. */
+  let nid = 0;
+  function nightSky(o = {}) {
+    const w = o.w || 390, h = o.h || 430, id = 'n' + (++nid), mx = o.moonX ?? w - 54, my = o.moonY ?? h * .55;
+    const dark = theme === 'dark';
+    const sky = dark ? ['#08101F', '#111D38', '#22315A'] : ['#0B1430', '#16244A', '#2C3D6A'], hills = dark ? ['#16233F', '#0F1A31', '#0A1326'] : ['#1C2C4E', '#132240', '#0F1B33'];
+    const ground = dark ? '#0A1326' : '#0F1B33', moon = '#F6E7C1', glow = '#FFD37A';
+    const st = [[.15, .09], [.38, .07], [.64, .15], [.82, .05], [.1, .26], [.51, .22], [.9, .28], [.28, .35], [.74, .4], [.05, .47], [.46, .14], [.95, .16]];
+    const sx = w / 390, hy = y => (y / 430 * h).toFixed(1);
+    return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="display:block" aria-hidden="true"><defs>
+      <linearGradient id="s${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sky[0]}"/><stop offset=".55" stop-color="${sky[1]}"/><stop offset="1" stop-color="${sky[2]}"/></linearGradient>
+      <radialGradient id="m${id}"><stop offset="0" stop-color="${moon}" stop-opacity=".32"/><stop offset="1" stop-color="${moon}" stop-opacity="0"/></radialGradient>
+      <radialGradient id="f${id}"><stop offset="0" stop-color="${glow}" stop-opacity=".9"/><stop offset="1" stop-color="${glow}" stop-opacity="0"/></radialGradient>
+      <linearGradient id="g${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${ground}" stop-opacity="0"/><stop offset="1" stop-color="${ground}"/></linearGradient></defs>
+      <rect width="${w}" height="${h}" fill="url(#s${id})"/>
+      <circle cx="${mx}" cy="${my}" r="70" fill="url(#m${id})"/><circle cx="${mx}" cy="${my}" r="20" fill="${moon}"/>
+      ${st.map(([x, y], i) => `<circle cx="${(x * w).toFixed(1)}" cy="${(y * h).toFixed(1)}" r="${i % 3 ? 1.2 : 1.8}" fill="#fff" opacity="${i % 2 ? .5 : .85}">${still ? '' : `<animate attributeName="opacity" values="${i % 2 ? '.5;.15;.5' : '.85;.35;.85'}" dur="${(1.6 + (i % 5) * .35).toFixed(2)}s" repeatCount="indefinite"/>`}</circle>`).join('')}
+      <path d="M0 ${hy(300)} C${70 * sx} ${hy(270)} ${140 * sx} ${hy(282)} ${210 * sx} ${hy(296)} S${330 * sx} ${hy(300)} ${w} ${hy(270)} V${h} H0z" fill="${hills[0]}"/>
+      <path d="M0 ${hy(340)} C${90 * sx} ${hy(316)} ${170 * sx} ${hy(340)} ${250 * sx} ${hy(332)} S${350 * sx} ${hy(318)} ${w} ${hy(326)} V${h} H0z" fill="${hills[1]}"/>
+      <path d="M0 ${hy(380)} C${80 * sx} ${hy(368)} ${160 * sx} ${hy(386)} ${240 * sx} ${hy(378)} S${350 * sx} ${hy(366)} ${w} ${hy(372)} V${h} H0z" fill="${hills[2]}"/>
+      ${[[.18, 320], [.3, 352], [.77, 346], [.88, 312]].map(([x, y], i) => `<g>${still ? '' : `<animateTransform attributeName="transform" type="translate" values="0 0;${i % 2 ? 6 : -6} -8;0 0" dur="${5 + i}s" repeatCount="indefinite"/>`}<circle cx="${(x * w).toFixed(1)}" cy="${hy(y)}" r="9" fill="url(#f${id})"/><circle cx="${(x * w).toFixed(1)}" cy="${hy(y)}" r="1.8" fill="${glow}"/></g>`).join('')}
+      <rect y="${h - 70}" width="${w}" height="70" fill="url(#g${id})"/></svg>`;
   }
 
   function charSvg(name, o = {}) { const f = window.DXC && window.DXC[name]; return f ? f(Object.assign({ animate: !still }, o)) : ''; }
@@ -173,7 +199,7 @@
     document.addEventListener('keydown', e => { if (e.key === 'r') play(); });
   }
 
-  window.DX = { icon, statusBar, tabbar, ring, check, badge, char: charSvg, theme, still, play, init,
+  window.DX = { icon, statusBar, tabbar, ring, check, badge, nightSky, char: charSvg, theme, still, play, init,
     after(ms, fn) { (window.DX_SCRIPT = window.DX_SCRIPT || []).push(t => t.push(setTimeout(fn, ms))); },
     onStill(fn) { (window.DX_STILL = window.DX_STILL || []).push(fn); } };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();

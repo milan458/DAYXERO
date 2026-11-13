@@ -17,7 +17,8 @@
   .opt .price .t-cap { color: var(--muted); }
   .opt .t-head { font-size: 17px; display: flex; align-items: center; gap: 8px; }
   .pill { font: 700 12px/1 var(--body); padding: 5px 8px; border-radius: 99px; background: var(--sel); color: var(--sel-fg); letter-spacing: .1px; }
-  .tl { margin: 16px var(--gutter) 0; position: relative; height: 62px; }
+  .tlh { margin: 20px var(--gutter) 0; font-weight: 700; }
+  .tl { margin: 12px var(--gutter) 0; position: relative; height: 62px; }
   .tl svg.ln { position: absolute; left: 7px; right: 7px; top: 6px; width: calc(100% - 14px); height: 4px; overflow: visible; }
   .tl .n { position: absolute; top: 0; display: grid; gap: 6px; }
   .tl .n i { width: 16px; height: 16px; border-radius: 99px; background: var(--g); box-shadow: inset 0 0 0 3px var(--fg); display: block; }
@@ -40,7 +41,7 @@
   <div class="head">
     <div>
       <h1 class="t-large" data-a>Sam, your plan is ready</h1>
-      <p class="t-foot muted" data-a style="--i:1">Everything for your Fri, Nov 6 Quit Day.</p>
+      <p class="t-foot muted" data-a style="--i:1">For your Quit Day, Fri, Nov 6.</p>
     </div>
     <div data-settle style="--d:150ms"><div class="bob" id="xero"></div></div>
   </div>
@@ -53,6 +54,7 @@
     <button class="opt" data-a style="--i:9"><span class="radio"></span><div class="grow"><p class="t-head">Lifetime</p><p class="t-foot">Pay once, keep it</p></div><div class="price"><span class="num">$99.99</span><span class="t-cap">one time</span></div></button>
   </div>
 
+  <p class="t-foot tlh" data-a style="--i:10">How your free week works</p>
   <div class="tl" data-a style="--i:10">
     <svg class="ln" viewBox="0 0 300 4" preserveAspectRatio="none"><path d="M0 2 H300" stroke="var(--track)" stroke-width="3"/><path class="draw" d="M0 2 H300" stroke="var(--fg)" stroke-width="3" style="--len:300;--d:1300ms;--dur:900ms"/></svg>
     <div class="n now" style="left:0"><i></i><span class="t-cap"><b>Today</b>Full access</span></div>

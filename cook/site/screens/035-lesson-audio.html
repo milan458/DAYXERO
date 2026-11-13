@@ -1,0 +1,80 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>035 Lesson audio</title>
+<meta name="motion" content="Art fades up, Xero settles (900ms) then bobs while audio plays. The scrubber draws from 0:00 to 1:12 over 1.2s with the elapsed time ticking in step, the knob pops on arrival, the play button bumps into its pause state. At 1.5s the Transcript toggle slides on (light haptic) and the transcript opens (500ms) with the spoken line in full ink.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+  .art { position: relative; height: 244px; border-radius: 26px; overflow: hidden; margin-top: 6px; }
+  .art .scene { position: absolute; inset: 0; }
+  .art .hero { position: absolute; left: 50%; bottom: 6px; margin-left: -62px; }
+  .info { margin-top: 18px; display: grid; gap: 4px; }
+  .scrub { margin-top: 18px; }
+  .scrub svg { display: block; width: 100%; height: 24px; overflow: visible; }
+  .times { display: flex; justify-content: space-between; margin-top: 6px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .controls { margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 30px; }
+  .skip { width: 52px; height: 52px; border-radius: 99px; display: grid; place-items: center; color: var(--fg); position: relative; }
+  .skip svg { width: 30px; height: 30px; }
+  .skip b { position: absolute; font: 700 10px/1 var(--body); top: 21px; }
+  .play-btn { width: 76px; height: 76px; border-radius: 99px; background: var(--btn); color: var(--btn-fg); display: grid; place-items: center; box-shadow: 0 5px 0 rgba(0,0,0,.18); }
+  .play-btn svg { width: 30px; height: 30px; }
+  .speed { width: 52px; height: 32px; border-radius: 99px; background: var(--card-2); font: 700 13px/32px var(--body); text-align: center; }
+  .tx { margin-top: 20px; padding: 6px 16px 14px; }
+  .tx .row { min-height: 50px; }
+  .tx-body { overflow: hidden; max-height: 0; transition: max-height 500ms var(--ease), opacity 500ms var(--ease); opacity: 0; display: grid; gap: 8px; }
+  .tx.open .tx-body { max-height: 140px; opacity: 1; }
+  .tx-body .t-body { color: var(--muted); }
+  .tx-body .now { color: var(--fg); font-weight: 600; }
+</style>
+</head><body>
+<div class="screen" data-ground="reading">
+  <div class="nav">
+    <button class="icon-btn" aria-label="Close" data-ic="close"></button>
+    <div class="grow title">Listening</div>
+    <span style="width:44px"></span>
+  </div>
+  <div class="scroll" style="padding-top:104px">
+    <div class="pad">
+      <div class="art" data-a style="--i:0">
+        <div class="scene" id="scene"></div>
+        <div class="hero" data-settle style="--d:150ms"><div class="bob" id="hero"></div></div>
+      </div>
+      <div class="info">
+        <h1 class="t-title" data-a style="--i:1">The noisy passengers</h1>
+        <p class="t-foot muted" data-a style="--i:2">Day 7 lesson · read by Xero</p>
+      </div>
+      <div class="scrub" data-a style="--i:3">
+        <svg viewBox="0 0 346 24" aria-label="1 minute 12 seconds of 3 minutes">
+          <line x1="6" y1="12" x2="340" y2="12" stroke="var(--track)" stroke-width="6" stroke-linecap="round"/>
+          <path class="draw" d="M6 12H140" stroke="var(--fg)" stroke-width="6" stroke-linecap="round" style="--len:134;--d:300ms;--dur:1200ms"/>
+          <circle cx="140" cy="12" r="9" fill="var(--fg)" data-pop style="transform-origin:140px 12px;--d:1400ms"/>
+        </svg>
+        <div class="times t-cap"><span id="el">1:12</span><span>3:00</span></div>
+      </div>
+      <div class="controls" data-a style="--i:4">
+        <span class="speed">1x</span>
+        <button class="skip" aria-label="Back 15 seconds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12a7 7 0 107-7H8"/><path d="M10.5 2.5L8 5l2.5 2.5"/></svg><b>15</b></button>
+        <button class="play-btn bump" style="--d:1500ms" aria-label="Pause" data-ic="pause"></button>
+        <button class="skip" aria-label="Forward 15 seconds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12a7 7 0 11-7-7h4"/><path d="M13.5 2.5L16 5l-2.5 2.5"/></svg><b>15</b></button>
+        <span style="width:52px"></span>
+      </div>
+      <div class="card tx open" id="tx" data-a style="--i:5">
+        <div class="row"><span data-ic="text" style="display:inline-flex"></span><p class="t-head grow" style="font-size:17px">Transcript</p><span class="toggle on" id="tg"></span></div>
+        <div class="tx-body">
+          <p class="t-body">Cravings are the noisy passengers.</p>
+          <p class="t-body now">They shout, they bargain, they promise that one won't hurt.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20, w: e.dataset.ic === 'pause' ? 3.2 : 2.2 })));
+  document.getElementById('scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 346, h: 244 });
+  document.getElementById('hero').innerHTML = DX.char('xero', { mood: 'calm', size: 124 });
+  const tx = document.getElementById('tx'), tg = document.getElementById('tg'), el = document.getElementById('el');
+  DX.after(0, () => { tx.classList.remove('open'); tg.classList.remove('on'); el.textContent = '0:00'; });
+  DX.after(300, () => { const t0 = performance.now(); const tick = t => { const k = Math.min(1, (t - t0) / 1200), e = 1 - Math.pow(1 - k, 3), s = Math.round(72 * e);
+    el.textContent = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); if (k < 1) requestAnimationFrame(tick); }; requestAnimationFrame(tick); });
+  DX.after(1500, () => { tg.classList.add('on'); tx.classList.add('open'); });
+</script>
+</body></html>

@@ -1,0 +1,85 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>015 Today, prep week</title>
+<meta name="motion" content="The dawn sun rises behind the hills (2.6s) while Xero settles onto the cream disc (900ms); the prep ring sweeps from 0 to 4 of 7 (1.4s, 250ms delay) and its dot fades in at the end. Greeting, countdown (the 3 counts up), reason, session card and the stamps strip arrive with a 90ms stagger; Prep 1 to 4 stamp in one by one (140ms apart) and the Prep 5 slot breathes a soft outline. Light haptic when the ring lands.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+  .hero { position: absolute; left: 0; right: 0; top: 0; height: 338px; border-radius: 0 0 36px 36px; overflow: hidden; }
+  .hero .scene { position: absolute; inset: 0; }
+  [data-theme="dark"] .hero .scene { filter: brightness(.8) saturate(.92); }
+  .ringwrap { position: absolute; left: 50%; top: 64px; width: 210px; height: 210px; margin-left: -105px; }
+  .ringwrap .disc { position: absolute; inset: 21px; border-radius: 50%; background: rgba(255,248,238,.74); }
+  .ringwrap .ring { position: absolute; inset: 0; }
+  .ringwrap .ch { position: absolute; left: 0; right: 0; top: 36px; display: grid; place-items: center; }
+  .pill { position: absolute; left: 0; right: 0; top: 284px; display: flex; justify-content: center; }
+  .pill span { background: var(--card); color: var(--fg); border-radius: 99px; padding: 8px 14px; font: 600 14px/1 var(--body); display: inline-flex; gap: 8px; align-items: center; box-shadow: 0 6px 16px rgba(30,26,58,.12); }
+  .pill i { width: 6px; height: 6px; border-radius: 99px; background: var(--fg); opacity: .4; }
+
+  .content { position: absolute; left: 0; right: 0; top: 362px; padding: 0 var(--gutter); }
+  .content .count { margin-top: 6px; }
+  .content .count b { font-weight: 700; }
+  .reason { margin-top: 10px; color: var(--muted); }
+  .sess { margin-top: 22px; display: flex; align-items: center; gap: 14px; }
+  .sess .grow { flex: 1; min-width: 0; }
+  .sess .t-foot { color: var(--muted); }
+  .sess .btn.small { width: auto; padding: 0 18px 0 14px; flex: none; }
+  .sess .btn svg { width: 16px; height: 16px; }
+  .stamps { margin-top: 12px; padding: 14px 16px 12px; }
+  .stamps .head { display: flex; justify-content: space-between; align-items: baseline; }
+  .stamps .row8 { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; }
+  .stamps .slot { position: relative; width: 34px; display: grid; justify-items: center; gap: 6px; }
+  .stamps .slot .t-cap { color: var(--muted); font-size: 12px; white-space: nowrap; }
+  .stamps .now::before { content: ""; position: absolute; top: -4px; left: -4px; width: 42px; height: 42px; border-radius: 99px; box-shadow: inset 0 0 0 2px var(--fg); opacity: .5; }
+  .play .stamps .now::before { animation: nowpulse 2.4s ease-in-out infinite; }
+  @keyframes nowpulse { 50% { opacity: .15; transform: scale(1.08); } }
+  .stamps .goal svg { opacity: .55; filter: saturate(.7); }
+  .stamps .sep { width: 1px; height: 26px; background: var(--line); }
+</style>
+</head><body>
+<div class="screen" data-ground="apricot" data-status="on-art">
+  <div class="hero">
+    <div class="scene" id="scene"></div>
+    <div class="ringwrap">
+      <div class="disc"></div>
+      <div class="ring" id="ring"></div>
+      <div class="ch" id="xero" data-settle></div>
+    </div>
+    <div class="pill" data-a style="--i:1;--d:500ms"><span>Prep 5 of 7<i></i>Tue, Nov 3</span></div>
+  </div>
+
+  <div class="content">
+    <h1 class="t-large" data-a style="--i:2">Good morning, Sam</h1>
+    <p class="t-body count" data-a style="--i:3"><b><span data-count="3" data-from="7" data-delay="500">3</span> days</b> to Quit Day. Today is about stress.</p>
+    <p class="t-foot reason" data-a style="--i:4">&ldquo;Run with Aria without stopping to catch my breath&rdquo;</p>
+
+    <div class="card sess" data-a style="--i:5">
+      <span class="ico-tile" id="ic-sess"></span>
+      <div class="grow">
+        <p class="t-foot">Prep 5 &middot; 28 min</p>
+        <p class="t-head">The stress loop</p>
+      </div>
+      <button class="btn small" id="start"></button>
+    </div>
+
+    <div class="card stamps" data-a style="--i:6">
+      <div class="head"><span class="t-head" style="font-size:17px">Prep stamps</span><span class="t-foot muted"><span data-count="4">4</span> of 7</span></div>
+      <div class="row8" id="row8"></div>
+    </div>
+  </div>
+</div>
+<script>
+  const $ = s => document.querySelector(s);
+  $('#scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 390, h: 338, clarity: 85 });
+  $('#ring').innerHTML = DX.ring({ size: 210, stroke: 12, p: 4 / 7, color: '#1E1A3A', track: 'rgba(255,248,238,.55)', dot: true });
+  $('#xero').innerHTML = DX.char('xero', { mood: 'hello', size: 138, stage: 1 });
+  $('#ic-sess').innerHTML = DX.icon('headphones');
+  $('#start').innerHTML = DX.icon('play', { fill: 'currentColor', w: 1.5 }) + 'Start';
+  let h = ''; const days = ['Fri','Sat','Sun','Mon','Today','Wed','Thu'];
+  for (let n = 1; n <= 4; n++) h += `<div class="slot" data-stamp style="--i:${n};--d:700ms">${DX.badge({ kind: 'prep', n, size: 34, bare: true })}<span class="t-cap">${days[n-1]}</span></div>`;
+  h += `<div class="slot now">${DX.badge({ kind: 'prep', n: 5, state: 'locked', size: 34, bare: true })}<span class="t-cap" style="color:var(--fg)">Today</span></div>`;
+  for (let n = 6; n <= 7; n++) h += `<div class="slot">${DX.badge({ kind: 'prep', n, state: 'locked', size: 34, bare: true })}<span class="t-cap">${days[n-1]}</span></div>`;
+  h += `<span class="sep"></span><div class="slot goal">${DX.badge({ kind: 'xero', n: '0', size: 34, bare: true })}<span class="t-cap">Nov 6</span></div>`;
+  $('#row8').innerHTML = h;
+  $('.screen').insertAdjacentHTML('beforeend', DX.tabbar('today'));
+</script>
+</body></html>

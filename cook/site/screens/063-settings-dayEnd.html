@@ -1,0 +1,60 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>063 Day ends</title>
+<meta name="motion" content="Options arrive on the stagger with Midnight selected; at 1.0s the selection moves to 4 AM (ring and tick 250ms, selection haptic), the timeline below shows the 1:30 AM check-in landing on Thursday, and at 1.3s the Saved toast rises from the bottom with a drawn check.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+/* screen-local helpers: icon fill, section labels, small icon tiles, bottom toast */
+.hd { display: grid; gap: 6px; padding-top: 58px; }
+.sec { padding: 22px 4px 8px; color: var(--muted); }
+.rt { font-weight: 600; }
+.ico-tile.s { width: 34px; height: 34px; border-radius: 11px; }
+.ico-tile.s svg { width: 19px; height: 19px; }
+.val { color: var(--muted); font: 500 15px/1.2 var(--body); white-space: nowrap; }
+.list > .row.tap { min-height: 56px; }
+.toast.b { top: auto; bottom: 40px; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
+.toast.b.in { opacity: 1; transform: none; }
+.toast.b .ck { flex: none; }
+.pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+.opts { display: grid; gap: 10px; margin-top: 20px; }
+.tl { margin-top: 18px; padding: 16px 16px 14px; }
+.bar { position: relative; height: 34px; margin-top: 12px; }
+.bar .ln { position: absolute; left: 0; right: 0; top: 16px; height: 2px; background: var(--line); }
+.bar .seg { position: absolute; left: 0; top: 14px; height: 6px; border-radius: 99px; background: var(--fg); width: 70%; }
+.bar .tick { position: absolute; top: 8px; width: 2px; height: 18px; background: var(--fg); }
+.bar .ci { position: absolute; top: 8px; width: 18px; height: 18px; border-radius: 99px; background: var(--card); box-shadow: inset 0 0 0 3px var(--mark); margin-left: -9px; }
+.tlab { display: flex; justify-content: space-between; color: var(--muted); }
+
+</style>
+</head><body>
+<div class="screen" data-ground="reading">
+<div class="nav"><button class="icon-btn" aria-label="Back" data-ic="back"></button></div>
+<div class="scroll"><div class="pad">
+  <div class="hd"><h1 class="t-large" data-a style="--i:0">When your day ends</h1><p class="t-foot muted" data-a style="--i:1">Up late? A check-in before this time still counts for the day you just had.</p></div>
+  <div class="opts">
+    <div data-a style="--i:2"><button class="opt on" id="o0"><div class="grow"><div class="t-head">Midnight</div></div><span class="radio"></span></button></div>
+    <div data-a style="--i:3"><button class="opt" ><div class="grow"><div class="t-head">2 AM</div></div><span class="radio"></span></button></div>
+    <div data-a style="--i:4"><button class="opt" id="o4"><div class="grow"><div class="t-head">4 AM</div><div class="t-foot">Default, fits most late nights</div></div><span class="radio"></span></button></div>
+    <div data-a style="--i:5"><button class="opt" ><div class="grow"><div class="t-head">6 AM</div><div class="t-foot">For night shifts and late finishes</div></div><span class="radio"></span></button></div>
+  </div>
+  <div class="card flat tl" data-a style="--i:6">
+    <p class="t-foot">A check-in at 1:30 AM counts for Thursday.</p>
+    <div class="bar"><div class="ln"></div><div class="seg"></div><div class="ci" style="left:41%"></div><div class="tick" style="left:70%"></div></div>
+    <div class="tlab"><span class="t-cap">Thu 6 PM</span><span class="t-cap" style="margin-left:24%">Day ends 4 AM</span><span class="t-cap">Fri</span></div>
+  </div>
+</div></div>
+<div class="toast b" role="status"><span class="ck"></span>Saved. Your day now ends at 4 AM.</div>
+</div>
+<script>
+document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
+
+const o0 = document.getElementById('o0'), o4 = document.getElementById('o4');
+function pick() { o0.classList.remove('on'); o4.classList.add('on'); }
+DX.after(1000, pick); DX.onStill(pick);
+const toast = document.querySelector('.toast.b');
+DX.after(1300, () => toast.classList.add('in'));
+DX.onStill(() => toast.classList.add('in'));
+document.querySelectorAll('.ck').forEach(e => e.innerHTML = DX.check({ size: 26, d: 1350 }));
+</script>
+</body></html>

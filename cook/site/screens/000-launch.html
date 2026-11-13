@@ -42,7 +42,7 @@
   @keyframes letter-in { 0% { opacity: 0; transform: translateY(40px) rotate(-6deg) scale(.92); filter: blur(6px); }
     45% { opacity: 1; filter: blur(0); } 100% { opacity: 1; transform: none; filter: blur(0); } }
   .play .xwrap { animation: xero-up 840ms cubic-bezier(.3,1.25,.5,1) 1500ms both; }
-  @keyframes xero-up { from { transform: translateY(170px); } to { transform: none; } }
+  @keyframes xero-up { 0% { opacity: 0; transform: translateY(170px); } 1% { opacity: 1; } 100% { opacity: 1; transform: none; } }
   .play .tagline { animation: tag-in 500ms var(--ease) 1900ms both; }
   @keyframes tag-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 </style>

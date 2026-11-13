@@ -1,0 +1,78 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>034 Lesson cards</title>
+<meta name="motion" content="The stack edges arrive first, then the top card is dealt face down and turns over at 450ms (rotateY 180 to 0, 800ms settle curve, light haptic as it lands). The road on the card draws (900ms) and the sun pops, paragraphs arrive with a 90ms stagger, pips and the Turn it over button last. Tapping Turn it over flips the card to its back (reflection prompt) the same way.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+  .label { display: flex; align-items: center; gap: 8px; color: var(--muted); }
+  .label svg { width: 18px; height: 18px; }
+  .stack-wrap { position: relative; margin-top: 14px; height: 492px; perspective: 1400px; }
+  .edge { position: absolute; left: 0; right: 0; top: 0; height: 466px; border-radius: 26px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
+  .edge.e1 { transform: translateY(13px) scale(.95); opacity: .85; }
+  .edge.e2 { transform: translateY(25px) scale(.9); opacity: .6; }
+  .flip { position: absolute; left: 0; right: 0; top: 0; height: 466px; transform-style: preserve-3d; transition: transform 800ms var(--settle); }
+  .flip.back { transform: rotateY(180deg); transition: none; }
+  .face { position: absolute; inset: 0; border-radius: 26px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line), 0 14px 30px rgba(30,26,58,.08);
+    backface-visibility: hidden; -webkit-backface-visibility: hidden; padding: 22px 24px; display: flex; flex-direction: column; }
+  .face.rear { transform: rotateY(180deg); background: var(--card-2); align-items: center; justify-content: center; text-align: center; gap: 10px; }
+  .road { height: 92px; margin: -4px -6px 6px; color: var(--fg); }
+  .road .ground { fill: var(--card-2); }
+  .copy { display: grid; gap: 12px; margin-top: 8px; }
+  .copy .t-body { color: var(--fg); }
+  .copy .t-body.soft { color: var(--muted); }
+  .turn { margin-top: auto; display: flex; align-items: center; gap: 8px; color: var(--muted); }
+  .turn svg { width: 18px; height: 18px; }
+  .pips { display: flex; justify-content: center; gap: 6px; margin-top: 4px; }
+  .pips i { width: 7px; height: 7px; border-radius: 99px; background: var(--track); }
+  .pips i.on { width: 22px; background: var(--fg); }
+</style>
+</head><body>
+<div class="screen" data-ground="reading">
+  <div class="nav">
+    <button class="icon-btn" aria-label="Close" data-ic="close"></button>
+    <div class="grow"><div class="steps"><i class="now"></i><i></i><i></i><i></i></div></div>
+    <span class="t-foot muted" style="width:44px;text-align:right">1 of 4</span>
+  </div>
+  <div class="scroll" style="padding-top:110px">
+    <div class="pad">
+      <p class="t-foot label" data-a style="--i:0"><span data-ic="card"></span>The noisy passengers · 90-second read</p>
+      <div class="stack-wrap">
+        <div class="edge e2" data-fade style="--d:0ms"></div>
+        <div class="edge e1" data-fade style="--d:80ms"></div>
+        <div class="flip" id="flip">
+          <article class="face front">
+            <svg class="road" viewBox="0 0 300 92" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+              <circle cx="232" cy="34" r="15" fill="var(--sun)" data-pop style="transform-origin:232px 34px;--d:700ms"/>
+              <path class="ground" d="M0 62 C60 50 120 56 170 60 S260 52 300 56 V92 H0z"/>
+              <path d="M0 62 C60 50 120 56 170 60 S260 52 300 56" fill="none" stroke="currentColor" stroke-opacity=".25" stroke-width="2" stroke-linecap="round"/>
+              <path class="draw" d="M150 92 C150 80 120 76 128 68 C134 62 160 62 168 59" fill="none" stroke="var(--mark)" stroke-width="5" stroke-linecap="round" style="--len:110;--d:600ms;--dur:900ms"/>
+            </svg>
+            <h1 class="t-title" data-a style="--i:3">You're the driver</h1>
+            <div class="copy">
+              <p class="t-body" data-a style="--i:4">Think of your quit as a long drive. You're at the wheel, and you choose where the car goes.</p>
+              <p class="t-body" data-a style="--i:5">Cravings are the noisy passengers. They shout, they bargain, they promise that one won't hurt.</p>
+              <p class="t-body soft" data-a style="--i:6">You don't have to argue or throw them out. Let them talk. Keep your eyes on the road.</p>
+            </div>
+            <p class="t-foot turn" data-a style="--i:7"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0113.7-5.6L20 8.5M20 4v4.5h-4.5M20 12a8 8 0 01-13.7 5.6L4 15.5M4 20v-4.5h4.5"/></svg>Tap the card to turn it over</p>
+          </article>
+          <article class="face rear">
+            <p class="t-foot muted">Day 7 lesson</p>
+            <p class="t-title">The noisy passengers</p>
+          </article>
+        </div>
+      </div>
+      <div class="pips" data-a style="--i:8"><i class="on"></i><i></i><i></i><i></i></div>
+    </div>
+  </div>
+  <div class="dock">
+    <button class="btn" data-a style="--i:9">Turn it over</button>
+  </div>
+</div>
+<script>
+  document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20 })));
+  const flip = document.getElementById('flip');
+  if (!DX.still) flip.classList.add('back');
+  DX.after(0, () => flip.classList.add('back'));
+  DX.after(450, () => flip.classList.remove('back'));
+</script>
+</body></html>

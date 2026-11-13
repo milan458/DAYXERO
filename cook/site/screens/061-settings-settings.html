@@ -1,0 +1,69 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>061 Settings</title>
+<meta name="motion" content="Title, profile card and each group arrive top to bottom on the 90ms stagger; the 7-day badge on the profile card stamps in at 500ms. Rows highlight on press with a light tap haptic and push their page from the right.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+/* screen-local helpers: icon fill, section labels, small icon tiles, bottom toast */
+.hd { display: grid; gap: 6px; padding-top: 58px; }
+.sec { padding: 22px 4px 8px; color: var(--muted); }
+.rt { font-weight: 600; }
+.ico-tile.s { width: 34px; height: 34px; border-radius: 11px; }
+.ico-tile.s svg { width: 19px; height: 19px; }
+.val { color: var(--muted); font: 500 15px/1.2 var(--body); white-space: nowrap; }
+.list > .row.tap { min-height: 56px; }
+.toast.b { top: auto; bottom: 40px; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
+.toast.b.in { opacity: 1; transform: none; }
+.toast.b .ck { flex: none; }
+.pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+.prof { display: flex; align-items: center; gap: 14px; padding: 14px 16px; }
+.prof .av { width: 56px; height: 56px; border-radius: 99px; background: var(--card-2); display: grid; place-items: center; overflow: hidden; flex: none; }
+.prof .grow { flex: 1; min-width: 0; }
+.foot { text-align: center; padding: 18px 0 0; color: var(--muted); }
+
+</style>
+</head><body>
+<div class="screen" data-ground="reading">
+<div class="nav"><button class="icon-btn" aria-label="Close" data-ic="close"></button></div>
+<div class="scroll"><div class="pad">
+  <div class="hd"><h1 class="t-large" data-a style="--i:0">Settings</h1></div>
+  <div class="card prof" data-a style="--i:1;margin-top:16px">
+    <div class="av" id="av"></div>
+    <div class="grow"><div class="t-head">Sam</div><div class="t-foot muted">Day 7 &middot; 7 days free</div></div>
+    <div id="bdg" data-stamp style="--d:500ms"></div>
+  </div>
+  <p class="t-foot sec" data-a style="--i:2">Your plan</p>
+  <div class="list" data-a style="--i:3">
+    <div class="row " ><span class="ico-tile s" data-ic="calendar"></span><div class="grow"><div class="t-body rt">Quit Day</div></div><span class="val">Fri, Nov 6</span><span class="chev" data-ic="chev" data-s="18"></span></div>
+    <div class="row " ><span class="ico-tile s" data-ic="cig"></span><div class="grow"><div class="t-body rt">What you use</div></div><span class="val">Cigarettes, vape</span><span class="chev" data-ic="chev" data-s="18"></span></div>
+    <div class="row " ><span class="ico-tile s" data-ic="globe"></span><div class="grow"><div class="t-body rt">Currency</div></div><span class="val">USD</span><span class="chev" data-ic="chev" data-s="18"></span></div>
+  </div>
+  <p class="t-foot sec" data-a style="--i:4">Reminders</p>
+  <div class="list" data-a style="--i:5">
+    <div class="row " ><span class="ico-tile s" data-ic="bell"></span><div class="grow"><div class="t-body rt">Reminders</div></div><span class="val">3 on</span><span class="chev" data-ic="chev" data-s="18"></span></div>
+    <div class="row " ><span class="ico-tile s" data-ic="moon"></span><div class="grow"><div class="t-body rt">Quiet hours</div></div><span class="val">10 PM to 7 AM</span><span class="chev" data-ic="chev" data-s="18"></span></div>
+    <div class="row " ><span class="ico-tile s" data-ic="clock"></span><div class="grow"><div class="t-body rt">Day ends at</div></div><span class="val">4 AM</span><span class="chev" data-ic="chev" data-s="18"></span></div>
+  </div>
+  <p class="t-foot sec" data-a style="--i:6">Subscription</p>
+  <div class="list" data-a style="--i:7">
+    <div class="row " ><span class="ico-tile s" data-ic="star"></span><div class="grow"><div class="t-body rt">DayXero Yearly</div><div class="t-foot muted">Renews Fri, Nov 5, 2027</div></div><span class="chev" data-ic="chev" data-s="18"></span></div>
+  </div>
+  <p class="t-foot sec" data-a style="--i:8">Data</p>
+  <div class="list" data-a style="--i:9">
+    <div class="row " ><span class="ico-tile s" data-ic="heart"></span><div class="grow"><div class="t-body rt">Apple Health</div></div><span class="val">On</span><span class="chev" data-ic="chev" data-s="18"></span></div>
+    <div class="row " ><span class="ico-tile s" data-ic="shield"></span><div class="grow"><div class="t-body rt">Privacy and your data</div></div><span class="chev" data-ic="chev" data-s="18"></span></div>
+  </div>
+  <p class="t-foot sec">About</p>
+  <div class="list"><div class="row " ><span class="ico-tile s" data-ic="note"></span><div class="grow"><div class="t-body rt">About DayXero</div></div><span class="chev" data-ic="chev" data-s="18"></span></div></div>
+</div></div>
+<div class="tabfade" style="height:110px"></div>
+</div>
+<script>
+document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
+
+document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 56 });
+document.getElementById('bdg').innerHTML = DX.badge({ kind: 'day', n: 7, state: 'earned', size: 46 });
+
+</script>
+</body></html>

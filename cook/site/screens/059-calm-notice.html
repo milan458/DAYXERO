@@ -1,0 +1,61 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>059 Notice the urge</title>
+<meta name="motion" content="The wave line draws left to right over 2.4s and the soft fill fades under it; the dot then rides the wave for 12s (slow ease) while the single prompt cross-fades every 3s: notice, it rises, the peak, watch it fall. No springs, no haptic until It is passing is tapped (soft success haptic, goes to 060).">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+/* screen-local helpers: icon fill, section labels, small icon tiles, bottom toast */
+.hd { display: grid; gap: 6px; padding-top: 58px; }
+.sec { padding: 22px 4px 8px; color: var(--muted); }
+.rt { font-weight: 600; }
+.ico-tile.s { width: 34px; height: 34px; border-radius: 11px; }
+.ico-tile.s svg { width: 19px; height: 19px; }
+.val { color: var(--muted); font: 500 15px/1.2 var(--body); white-space: nowrap; }
+.list > .row.tap { min-height: 56px; }
+.toast.b { top: auto; bottom: 40px; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
+.toast.b.in { opacity: 1; transform: none; }
+.toast.b .ck { flex: none; }
+.pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+.nav .title { flex: 1; text-align: center; margin-right: 56px; }
+.prompt { position: absolute; left: var(--gutter); right: var(--gutter); top: 150px; text-align: center; display: grid; gap: 10px; justify-items: center; }
+.prompt .t-title { min-height: 60px; transition: opacity .5s var(--ease), transform .5s var(--ease); }
+.prompt .t-title.out { opacity: 0; transform: translateY(-8px); }
+.sea { position: absolute; left: 0; right: 0; top: 330px; height: 250px; }
+.sea svg { position: absolute; inset: 0; }
+.rider { position: absolute; left: 0; top: 0; width: 20px; height: 20px; border-radius: 99px; background: var(--fg); box-shadow: 0 0 0 6px color-mix(in srgb, var(--fg) 14%, transparent);
+  offset-path: path("M-10 200 C 70 200 110 40 195 40 S 320 200 400 200"); offset-rotate: 0deg; offset-distance: 8%; }
+.play .rider { animation: ride 12s cubic-bezier(.4,0,.6,1) forwards; }
+@keyframes ride { from { offset-distance: 8%; } to { offset-distance: 80%; } }
+.still .rider { animation: none !important; offset-distance: 72%; }
+.marks { position: absolute; left: 0; right: 0; top: 590px; display: flex; justify-content: space-between; padding: 0 34px; color: var(--muted); }
+.time { color: var(--muted); }
+
+</style>
+</head><body>
+<div class="screen" data-ground="reading">
+<div class="nav"><button class="icon-btn" aria-label="Close" data-ic="close"></button><div class="title" data-a style="--i:0">Notice the urge</div></div>
+<div class="prompt">
+  <p class="t-foot time" data-a style="--i:1">About a minute</p>
+  <p class="t-title" id="say" data-a style="--i:2">Notice where you feel it.</p>
+</div>
+<div class="sea">
+  <svg width="390" height="250" viewBox="0 0 390 250" preserveAspectRatio="none">
+    <path d="M-10 200 C 70 200 110 40 195 40 S 320 200 400 200 V250 H-10Z" fill="var(--card-2)" data-fade style="--d:900ms"/>
+    <path d="M-10 200 C 70 200 110 40 195 40 S 320 200 400 200" fill="none" stroke="var(--fg)" stroke-width="3" stroke-linecap="round" class="draw" style="--len:520;--dur:2400ms;--d:300ms"/>
+  </svg>
+  <span class="rider" data-fade style="margin:-10px 0 0 -10px;--d:1200ms"></span>
+</div>
+<div class="marks" data-a style="--i:3"><span class="t-cap">Rises</span><span class="t-cap">Peaks</span><span class="t-cap">Passes</span></div>
+<div class="dock"><button class="btn" data-a style="--i:4">It's passing</button><button class="link" data-a style="--i:5">I need more help</button></div>
+</div>
+<script>
+document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
+
+const say = document.getElementById('say');
+const lines = [[3000, 'It rises. You do not have to act.'], [6000, 'This is the peak. Breathe out slowly.'], [9000, 'Watch it fall away.']];
+lines.forEach(([t, s]) => DX.after(t, () => { say.classList.add('out'); setTimeout(() => { say.textContent = s; say.classList.remove('out'); }, 500); }));
+DX.onStill(() => { say.textContent = 'Watch it fall away.'; });
+
+</script>
+</body></html>

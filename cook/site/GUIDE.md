@@ -25,7 +25,7 @@ content never looks clipped). Leave >= 150px of bottom space for the dock, or 12
 ## Grounds: one per screen, by meaning (this is the core fix: the app had 7 colours "all over")
 - `apricot`: Xero, your days: Launch, Welcome, onboarding, Quit Day, Today (morning/day), Pledge, Milestones.
 - `ocean`: Jelli: Craving SOS and its outcomes only.
-- `violet` (now a deep teal NIGHT colour, #152733; `night` is an alias): Glim: evening only (evening Today variant, check-in, wind-down). Kept dim on purpose: easy on the eyes at night. Never use purple fills on these screens; Glim's own purple body is the only purple.
+- `night` (alias `violet`): Glim's evenings only (evening Today, check-in, wind-down). Midnight blue ground with a night sky: put `DX.nightSky({w:390,h:430})` as the top art (it fades into the ground). No purple fills or purple gradients anywhere; Glim's own purple body is the only purple. Do NOT use DX.char('horizon',{scene:'night'}) (too purple).
 - `mint`: your plan: Program tab, plan reveal / plan built.
 - `reading` (cream light, deep navy dark): reading and serious screens: lessons, slips, health, NRT, taper, log sheets, progress, settings, paywall, calm tools list.
 - `table` (deep ink in both modes): the prep session "hand" and its cards (cards carry the colour).

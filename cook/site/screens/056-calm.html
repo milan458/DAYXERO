@@ -1,0 +1,77 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>056 Calm tools</title>
+<meta name="motion" content="Cards arrive top to bottom on the 90ms stagger; in the box card a coral dot keeps travelling the square (8s loop), the wave line in the Notice card draws over 1.2s and its dot fades in at the crest; Glim flutters slowly. No haptic on load, light tap haptic on card press.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+/* screen-local helpers: icon fill, section labels, small icon tiles, bottom toast */
+.hd { display: grid; gap: 6px; padding-top: 58px; }
+.sec { padding: 22px 4px 8px; color: var(--muted); }
+.rt { font-weight: 600; }
+.ico-tile.s { width: 34px; height: 34px; border-radius: 11px; }
+.ico-tile.s svg { width: 19px; height: 19px; }
+.val { color: var(--muted); font: 500 15px/1.2 var(--body); white-space: nowrap; }
+.list > .row.tap { min-height: 56px; }
+.toast.b { top: auto; bottom: 40px; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
+.toast.b.in { opacity: 1; transform: none; }
+.toast.b .ck { flex: none; }
+.pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+.tool { display: flex; align-items: center; gap: 16px; padding: 14px 16px 14px 14px; }
+.tool .grow { flex: 1; min-width: 0; display: grid; gap: 3px; }
+.art { width: 76px; height: 76px; border-radius: 18px; background: var(--card-2); flex: none; display: grid; place-items: center; position: relative; overflow: hidden; }
+.art svg { display: block; }
+.dur { display: inline-flex; align-items: center; gap: 5px; color: var(--muted); }
+.dur svg { width: 14px; height: 14px; }
+.boxdot { position: absolute; left: 0; top: 0; width: 10px; height: 10px; border-radius: 99px; background: var(--mark); offset-path: path("M22 54 V22 H54 V54 Z"); offset-rotate: 0deg; offset-distance: 30%; }
+.play .boxdot { animation: bx 8s linear infinite; }
+@keyframes bx { to { offset-distance: 100%; } }
+.still .boxdot { animation: none !important; offset-distance: 30%; }
+.senses { display: grid; grid-template-columns: repeat(3, 12px); gap: 7px; }
+.senses i { width: 12px; height: 12px; border-radius: 99px; background: var(--fg); opacity: .18; }
+.senses i.on { opacity: 1; background: var(--mark); }
+.glim { position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); }
+/* Wind down tile uses the night teal (art colour), Glim's body is the only purple */
+.art.night { background: #152733; }
+.sos { display: flex; align-items: center; gap: 12px; padding: 14px 16px; }
+
+</style>
+</head><body>
+<div class="screen" data-ground="reading">
+<div class="nav"><button class="icon-btn" aria-label="Close" data-ic="close"></button></div>
+<div class="scroll"><div class="pad">
+  <div class="hd"><h1 class="t-large" data-a style="--i:0">Calm tools</h1><p class="t-foot muted" data-a style="--i:1">A few minutes instead of reaching for nicotine. Pick the one that fits right now.</p></div>
+  <div class="stack" style="margin-top:22px">
+    <div class="card tool" data-a style="--i:2">
+      <div class="art"><svg width="76" height="76" viewBox="0 0 76 76"><rect x="22" y="22" width="32" height="32" rx="3" fill="none" stroke="var(--fg)" stroke-opacity=".9" stroke-width="2.4"/></svg><span class="boxdot" style="margin:-5px 0 0 -5px"></span></div>
+      <div class="grow"><div class="t-head">Box breathing</div><div class="t-foot muted">In, hold, out, hold. Four counts each.</div><span class="t-cap dur"><span data-ic="clock" data-s="14"></span>2 min</span></div>
+      <span class="chev" data-ic="chev" data-s="18"></span>
+    </div>
+    <div class="card tool" data-a style="--i:3">
+      <div class="art"><div class="senses"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i style="visibility:hidden"></i></div></div>
+      <div class="grow"><div class="t-head">5-4-3-2-1 grounding</div><div class="t-foot muted">Come back to the room with your five senses.</div><span class="t-cap dur"><span data-ic="clock" data-s="14"></span>3 min</span></div>
+      <span class="chev" data-ic="chev" data-s="18"></span>
+    </div>
+    <div class="card tool" data-a style="--i:4">
+      <div class="art"><svg width="76" height="76" viewBox="0 0 76 76"><path d="M10 52 C22 52 26 24 38 24 S54 52 66 52" fill="none" stroke="var(--fg)" stroke-width="2.6" stroke-linecap="round" class="draw" style="--len:80;--d:700ms;--dur:1200ms"/><circle cx="38" cy="24" r="5" fill="var(--mark)" data-fade style="--d:1500ms"/></svg></div>
+      <div class="grow"><div class="t-head">Notice the urge</div><div class="t-foot muted">Watch it rise and fall without acting.</div><span class="t-cap dur"><span data-ic="clock" data-s="14"></span>1 min</span></div>
+      <span class="chev" data-ic="chev" data-s="18"></span>
+    </div>
+    <div class="card tool" data-a style="--i:5">
+      <div class="art night"><span class="glim" id="glim"></span></div>
+      <div class="grow"><div class="t-head">Wind down with Glim</div><div class="t-foot muted">A slow evening reset before sleep.</div><span class="t-cap dur"><span data-ic="clock" data-s="14"></span>5 min</span></div>
+      <span class="chev" data-ic="chev" data-s="18"></span>
+    </div>
+    <div class="card flat sos" data-a style="--i:6">
+      <span class="ico-tile s" data-ic="wave" style="background:var(--card)"></span>
+      <div class="grow" style="flex:1"><div class="t-body rt">Craving right now?</div><div class="t-foot muted">Craving SOS walks you through it.</div></div>
+      <span class="chev" data-ic="chev" data-s="18"></span>
+    </div>
+  </div>
+</div></div>
+</div>
+<script>
+document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
+document.getElementById('glim').innerHTML = DX.char('glim', { mood: 'calm', size: 72 });
+</script>
+</body></html>

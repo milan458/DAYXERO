@@ -1,0 +1,51 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>066 Quit Day</title>
+<meta name="motion" content="The date card arrives, the day count rises 0 to 7, and the Day Xero badge stamps in at 700ms; the change card follows. Choose a new date opens a calm confirm sheet first, never a direct date wheel.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+/* screen-local helpers: icon fill, section labels, small icon tiles, bottom toast */
+.hd { display: grid; gap: 6px; padding-top: 58px; }
+.sec { padding: 22px 4px 8px; color: var(--muted); }
+.rt { font-weight: 600; }
+.ico-tile.s { width: 34px; height: 34px; border-radius: 11px; }
+.ico-tile.s svg { width: 19px; height: 19px; }
+.val { color: var(--muted); font: 500 15px/1.2 var(--body); white-space: nowrap; }
+.list > .row.tap { min-height: 56px; }
+.toast.b { top: auto; bottom: 40px; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
+.toast.b.in { opacity: 1; transform: none; }
+.toast.b .ck { flex: none; }
+.pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+.hero { display: flex; align-items: center; gap: 16px; padding: 18px; margin-top: 20px; }
+.cal { width: 84px; border-radius: 18px; overflow: hidden; background: var(--card-2); text-align: center; flex: none; }
+.cal .m { background: var(--fg); color: var(--g); padding: 6px 0; }
+.cal .d { font: 800 40px/1 var(--display); padding: 8px 0 4px; letter-spacing: -1px; }
+.cal .w { padding-bottom: 8px; color: var(--muted); }
+.since .num { font-size: 40px; line-height: 1; }
+.kept { margin-top: 12px; display: flex; align-items: center; gap: 14px; padding: 14px 16px; }
+.warn { margin-top: 22px; padding: 18px; display: grid; gap: 10px; }
+
+</style>
+</head><body>
+<div class="screen" data-ground="reading">
+<div class="nav"><button class="icon-btn" aria-label="Back" data-ic="back"></button></div>
+<div class="scroll"><div class="pad">
+  <div class="hd"><h1 class="t-large" data-a style="--i:0">Your Quit Day</h1><p class="t-foot muted" data-a style="--i:1">The day you stopped. Everything counts from here.</p></div>
+  <div class="card hero" data-a style="--i:2">
+    <div class="cal"><div class="m t-cap">November</div><div class="d">6</div><div class="w t-cap">Friday</div></div>
+    <div class="since" style="flex:1"><div><span class="num" data-count="7">7</span> <span class="t-head">days</span></div><div class="t-foot muted">free since Fri, Nov 6</div></div>
+    <div id="xb" data-stamp style="--d:700ms"></div>
+  </div>
+  <div class="card flat warn" data-a style="--i:3">
+    <div class="t-head">Need to change it?</div>
+    <p class="t-foot muted">If you slipped, you do not have to start over. A new date restarts the day count. Your badges, lessons and logs all stay.</p>
+    <button class="btn ghost small" style="margin-top:4px">Choose a new date</button>
+  </div>
+</div></div>
+</div>
+<script>
+document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
+document.getElementById('xb').innerHTML = DX.badge({ kind: 'xero', n: '0', state: 'earned', size: 54, bare: true });
+</script>
+</body></html>

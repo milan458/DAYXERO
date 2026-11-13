@@ -4,9 +4,10 @@
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .day { position: relative; margin: 26px var(--gutter) 0; display: grid; gap: 14px; padding-left: 52px; }
-  .day svg.line { position: absolute; left: 17px; top: 18px; overflow: visible; }
-  .node { position: absolute; left: 0; width: 36px; height: 36px; border-radius: 99px; display: grid; place-items: center; background: var(--card); color: var(--fg); }
+  .day { position: relative; margin: 26px var(--gutter) 0; display: grid; gap: 14px; }
+  .day svg.line { position: absolute; left: 17px; top: 30px; overflow: visible; }
+  .it { display: grid; grid-template-columns: 36px 1fr; gap: 14px; align-items: start; }
+  .node { position: relative; margin-top: 12px; width: 36px; height: 36px; border-radius: 99px; display: grid; place-items: center; background: var(--card); color: var(--fg); }
   .node svg { width: 18px; height: 18px; }
   .ntf { position: relative; background: var(--card); border-radius: 22px; padding: 12px 14px 14px; display: grid; grid-template-columns: 40px 1fr; gap: 12px; box-shadow: 0 10px 24px rgba(30,26,58,.10); }
   [data-theme="dark"] .ntf { box-shadow: inset 0 0 0 1px var(--line); }
@@ -16,7 +17,8 @@
   .ntf .top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 3px; }
   .ntf .top .t-cap { color: var(--muted); }
   .ntf .t-foot { font-size: 15px; font-weight: 500; }
-  .when { display: block; margin: 0 0 6px 2px; color: var(--muted); }
+  .quiet { padding: 14px 4px 0; }
+  .quiet .t-cap { color: var(--muted); display: block; margin-top: 2px; }
   .note { margin: 18px var(--gutter) 0 calc(var(--gutter) + 52px); }
 </style>
 </head><body>
@@ -29,23 +31,24 @@
 
   <div class="q">
     <h1 class="t-large" data-a>Two small <span class="mark">nudges</span> a day</h1>
-    <p class="t-body muted" data-a style="--i:1">Xero says good morning, Glim checks in at night. Quiet hours by default, and no guilt, ever.</p>
+    <p class="t-body muted" data-a style="--i:1">Xero says good morning. Glim checks in at night. No guilt, ever.</p>
   </div>
 
   <div class="day">
-    <svg class="line" width="2" height="160"><path class="draw" d="M1 0 V160" stroke="currentColor" stroke-opacity=".28" stroke-width="2" stroke-dasharray="3 5" style="--len:160;--d:500ms;--dur:700ms"/></svg>
-    <div data-settle style="--i:0;--d:650ms">
-      <span class="node" data-icon="sun" style="top:6px"></span>
-      <span class="t-cap when">Morning</span>
+    <svg class="line" width="2" height="230"><path class="draw" d="M1 0 V230" stroke="currentColor" stroke-opacity=".3" stroke-width="2" stroke-dasharray="3 5" style="--len:230;--d:500ms;--dur:900ms"/></svg>
+    <div class="it" data-settle style="--i:0;--d:650ms">
+      <span class="node" data-icon="sun"></span>
       <div class="ntf"><span class="ic x" id="ix"></span><div><div class="top"><span class="t-cap">DayXero · Xero</span><span class="t-cap">8:00 AM</span></div><p class="t-foot">Good morning. Ten seconds for today's pledge?</p></div></div>
     </div>
-    <div data-settle style="--i:0;--d:1030ms">
-      <span class="node" data-icon="moon" id="moon" style="top:6px"></span>
-      <span class="t-cap when">Evening</span>
+    <div class="it" data-settle style="--i:0;--d:1030ms">
+      <span class="node" data-icon="moon" id="moon"></span>
       <div class="ntf"><span class="ic g" id="ig"></span><div><div class="top"><span class="t-cap">DayXero · Glim</span><span class="t-cap">9:00 PM</span></div><p class="t-foot">How did today go? A one-minute check-in, if you have it.</p></div></div>
     </div>
+    <div class="it" data-a style="--i:0;--d:1400ms">
+      <span class="node" id="qn" style="margin-top:6px"></span>
+      <div class="quiet" style="padding-top:8px"><p class="t-foot" style="font-weight:700">Then quiet until morning</p><span class="t-cap">Nothing else unless you ask for it. Change times in Settings.</span></div>
+    </div>
   </div>
-  <p class="t-cap muted note" data-a style="--i:4;--d:600ms">You can change the times in Settings.</p>
 
   <div class="dock">
     <button class="btn" data-a style="--i:5">Yes, remind me</button>
@@ -57,6 +60,7 @@
   document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 40 });
   document.getElementById('ix').innerHTML = DX.char('xero', { mood: 'hello', size: 40, animate: false });
   document.getElementById('ig').innerHTML = DX.char('glim', { mood: 'calm', size: 40, animate: false });
+  document.getElementById('qn').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0112 0v5l1.5 2h-15zM10 20.5h4M4 4l16 16"/></svg>';
   const bar = document.getElementById('bar'), moon = document.getElementById('moon');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '90.9%'); void bar.offsetWidth; bar.style.transition = ''; moon.classList.remove('bump'); });
   DX.after(250, () => bar.style.setProperty('--p', '100%'));

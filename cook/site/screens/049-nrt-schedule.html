@@ -1,0 +1,58 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>049 NRT schedule</title>
+<meta name="motion" content="Title and the country chips arrive, then the four schedule rows arrive top to bottom (600ms, 90ms stagger); each row's small step shape draws left to right as it lands. At 1.3s the 10 week row lands selected (520ms settle, light haptic). The list ends well above the dock.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+  .wrap { padding: 66px var(--gutter) 0; }
+  .wrap .lead { margin-top: 8px; color: var(--muted); }
+  .chips { margin-top: 18px; }
+  .opts { margin-top: 18px; display: grid; gap: 8px; }
+  .opt { min-height: 68px; padding: 10px 14px 10px 16px; }
+  .opt .nm { font: 700 16px/1.25 var(--display); display: block; margin-bottom: 2px; }
+  .opt .t-foot { font-size: 13px; }
+  .stair { width: 46px; height: 26px; flex: none; color: var(--muted); }
+  .opt.on .stair { color: var(--fg); }
+  .play .opt.land { animation: land 520ms var(--settle) both; }
+  @keyframes land { 0% { opacity: 1; transform: scale(.97); } 100% { opacity: 1; transform: none; } }
+</style>
+</head><body>
+<div class="screen" data-ground="reading">
+  <div class="nav">
+    <button class="icon-btn" aria-label="Back" data-ic="back"></button>
+    <div class="grow"><div class="steps" aria-label="Step 2 of 4"><i class="on"></i><i class="on"></i><i></i><i></i></div></div>
+    <span style="width:44px"></span>
+  </div>
+  <div class="scroll">
+    <div class="wrap">
+      <h1 class="t-title" data-a style="--i:0">Which schedule is on your pack?</h1>
+      <p class="t-foot lead" data-a style="--i:1">Labels differ by brand and country. Pick the one that matches yours.</p>
+      <div class="chips" data-a style="--i:2">
+        <button class="chip on">US</button><button class="chip">UK</button><button class="chip">Australia</button><button class="chip">Germany</button><button class="chip">India</button><button class="chip">Elsewhere</button>
+      </div>
+      <div class="opts">
+        <button class="opt on" id="pick" data-a style="--i:3"><span class="grow"><span class="nm">10 weeks from 21 mg</span><span class="t-foot">21 mg 6 wk, 14 mg 2 wk, 7 mg 2 wk</span></span><span class="stair" data-s="6,2,2|21,14,7"></span><span class="radio"></span></button>
+        <button class="opt" data-a style="--i:4"><span class="grow"><span class="nm">8 weeks from 21 mg</span><span class="t-foot">21 mg 4 wk, 14 mg 2 wk, 7 mg 2 wk</span></span><span class="stair" data-s="4,2,2|21,14,7"></span><span class="radio"></span></button>
+        <button class="opt" data-a style="--i:5"><span class="grow"><span class="nm">8 weeks from 14 mg</span><span class="t-foot">14 mg 6 wk, 7 mg 2 wk</span></span><span class="stair" data-s="6,2|14,7"></span><span class="radio"></span></button>
+        <button class="opt" data-a style="--i:6"><span class="grow"><span class="nm">My pack says something else</span><span class="t-foot">Enter each step yourself</span></span><span class="radio"></span></button>
+      </div>
+    </div>
+  </div>
+  <div class="dock">
+    <button class="btn" data-a style="--i:7" data-go="050-nrt-plan">Use this schedule</button>
+  </div>
+</div>
+<script>
+  document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic));
+  /* tiny step-down shape: widths by weeks (out of 10), heights by mg (out of 21) */
+  document.querySelectorAll('[data-s]').forEach(e => {
+    const [w, h] = e.dataset.s.split('|').map(s => s.split(',').map(Number));
+    let x = 0, r = '';
+    w.forEach((wk, i) => { const bw = wk / 10 * 46, bh = h[i] / 21 * 24; r += `<rect x="${x + .5}" y="${26 - bh}" width="${bw - 2}" height="${bh}" rx="2" fill="currentColor" opacity="${1 - i * .25}"/>`; x += bw; });
+    e.innerHTML = `<svg viewBox="0 0 46 26" width="46" height="26">${r}</svg>`;
+  });
+  const pick = document.getElementById('pick');
+  DX.after(0, () => pick.classList.remove('on', 'land'));
+  DX.after(1300, () => pick.classList.add('on', 'land'));
+</script>
+</body></html>

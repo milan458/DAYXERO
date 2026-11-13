@@ -9,11 +9,13 @@
   .money { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
   .money .num { font-size: 44px; line-height: .95; letter-spacing: -1.4px; display: block; margin-top: 6px; }
   .money .t-cap { color: var(--muted); text-align: right; }
-  .stamps { display: flex; align-items: center; gap: 4px; margin-top: 12px; position: relative; }
-  .stamps .pb { flex: none; }
-  .stamps .arrow { flex: 1; height: 2px; min-width: 6px; background: repeating-linear-gradient(90deg, var(--line) 0 4px, transparent 4px 7px); }
-  .stamps .xb { flex: none; margin-left: 2px; }
-  .stamps .pb .badge, .stamps .xb .badge { gap: 0; }
+  .stamps { display: flex; justify-content: space-between; margin-top: 14px; }
+  .stamps .pb { flex: none; border-radius: 99px; }
+  .stamps .pb.next svg { opacity: 1 !important; }
+  .stamps .pb.next { box-shadow: 0 0 0 2.5px var(--card), 0 0 0 4.5px var(--fg); }
+  .stamps .badge { gap: 0; }
+  .then { display: flex; align-items: center; gap: 12px; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line); }
+  .then .t-cap { color: var(--muted); display: block; margin-top: 2px; }
   .lab { display: flex; justify-content: space-between; margin-top: 8px; }
   .lab .t-cap { color: var(--muted); }
   .tiers { display: grid; gap: 10px; }
@@ -43,9 +45,10 @@
     </div>
 
     <div class="card" data-a style="--i:3">
-      <p class="t-foot" style="font-weight:700">Seven prep stamps, then Day Xero</p>
+      <p class="t-foot" style="font-weight:700">Seven prep stamps to collect</p>
       <div class="stamps" id="stamps"></div>
-      <div class="lab"><span class="t-cap">Prep 1 starts today</span><span class="t-cap">Fri, Nov 6</span></div>
+      <div class="lab"><span class="t-cap">Prep 1 starts today</span><span class="t-cap">One a day</span></div>
+      <div class="then"><span id="xb" data-stamp style="--i:0;--d:1450ms"></span><div><p class="t-foot" style="font-weight:700">Day Xero, Fri, Nov 6</p><span class="t-cap">Earned the moment you hold to commit</span></div></div>
     </div>
 
     <div class="card tiers" data-a style="--i:4">
@@ -64,9 +67,9 @@
   document.querySelector('.icon-btn').innerHTML = DX.icon('back');
   document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 40 });
   let h = '';
-  for (let i = 1; i <= 7; i++) h += `<span class="pb" data-pop style="--i:0;--d:${700 + i * 90}ms">${DX.badge({ kind: 'prep', n: i, size: 30, state: i === 1 ? 'next' : 'locked', p: i === 1 ? 0 : null })}</span>`;
-  h += `<span class="arrow" data-fade style="--d:1300ms"></span><span class="xb" data-stamp style="--i:0;--d:1450ms"><span class="shine" style="display:block;border-radius:99px;--d:1900ms">${DX.badge({ kind: 'xero', n: '0', size: 50 })}</span></span>`;
+  for (let i = 1; i <= 7; i++) h += `<span class="pb ${i === 1 ? 'next' : ''}" data-pop style="--i:0;--d:${700 + i * 90}ms">${DX.badge({ kind: 'prep', n: i, size: 38, state: i === 1 ? 'next' : 'locked', bare: true })}</span>`;
   document.getElementById('stamps').innerHTML = h;
+  document.getElementById('xb').innerHTML = `<span class="shine" style="display:block;border-radius:99px;--d:1900ms">${DX.badge({ kind: 'xero', n: '0', size: 52, bare: true })}</span>`;
   const bar = document.getElementById('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '81.8%'); void bar.offsetWidth; bar.style.transition = ''; });
   DX.after(250, () => bar.style.setProperty('--p', '90.9%'));

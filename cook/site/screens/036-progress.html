@@ -1,0 +1,107 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>036 Progress</title>
+<meta name="motion" content="The sky card fades up with its sun rising (clarity 40), the 7 counts up (850ms) while 'Sky 40% clear' arrives. Stat tiles arrive with a 90ms stagger and each number counts up from 0. The badge shelf arrives row by row: earned badges stamp in (140ms stagger), the 7-day badge gets a shine at 1.2s, next badges sweep their progress ring. No haptic on load.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+  .top { display: flex; align-items: center; gap: 8px; }
+  .top h1 { flex: 1; }
+  .pill-btn { height: 40px; padding: 0 14px 0 10px; border-radius: 99px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); display: inline-flex; align-items: center; gap: 4px; font: 700 15px/1 var(--body); }
+  .pill-btn svg { width: 18px; height: 18px; }
+  .top .icon-btn { width: 40px; height: 40px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
+  .sky { position: relative; margin-top: 14px; height: 128px; border-radius: 24px; overflow: hidden; color: var(--ink); }
+  .sky .scene { position: absolute; inset: 0; }
+  .sky .big { position: absolute; left: 18px; top: 14px; display: flex; align-items: baseline; gap: 8px; }
+  .sky .big .num { font-size: 52px; line-height: 1; letter-spacing: -2px; }
+  .sky .big .t-head { color: var(--ink); }
+  .sky .clear { position: absolute; left: 14px; bottom: 12px; height: 30px; padding: 0 12px 0 8px; border-radius: 99px; background: rgba(255,248,238,.9);
+    display: inline-flex; align-items: center; gap: 6px; font: 600 13px/1 var(--body); }
+  .sky .clear svg { width: 16px; height: 16px; }
+  .stats { margin-top: 10px; display: grid; grid-template-columns: 1.08fr 1.06fr 1fr .86fr; background: var(--card); border-radius: 20px; box-shadow: inset 0 0 0 1px var(--line); padding: 14px 4px; }
+  .stats > div { padding: 0 6px 0 8px; }
+  .stats > div + div { border-left: 1px solid var(--line); }
+  .stats .num { font-size: 21px; line-height: 1; display: block; }
+  .stats .t-cap { color: var(--muted); display: block; margin-top: 6px; font-weight: 500; }
+  .shelf-h { margin-top: 22px; display: flex; align-items: baseline; justify-content: space-between; }
+  .group { margin-top: 10px; padding: 14px 14px 12px; }
+  .group-h { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 10px; }
+  .group-h .t-foot:last-child { color: var(--muted); }
+  .bgrid { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); row-gap: 10px; }
+  .bgrid .badge { gap: 4px; }
+  .bgrid .badge .t-cap { font-weight: 500; white-space: nowrap; }
+  .bgrid .badge.next .t-cap { color: var(--fg); font-weight: 700; }
+  .stamps { display: flex; justify-content: space-between; }
+  .stamps .badge { gap: 0; }
+</style>
+</head><body>
+<div class="screen" data-ground="reading">
+  <div class="scroll with-tabs" style="padding-top:56px">
+    <div class="pad">
+      <div class="top" data-a style="--i:0">
+        <h1 class="t-large">Your progress</h1>
+        <button class="pill-btn" data-go="041-log-menu"><span data-ic="plus"></span>Log</button>
+        <button class="icon-btn" aria-label="Settings" data-ic="gear"></button>
+      </div>
+      <p class="t-foot muted" data-a style="--i:1;margin-top:4px">Day 7 · Quit Day was Fri, Nov 6</p>
+
+      <div class="sky" data-a style="--i:2">
+        <div class="scene" id="sky"></div>
+        <div class="big"><span class="num" data-count="7" data-dur="900">7</span><span class="t-head">days free</span></div>
+        <span class="clear"><span data-ic="sun"></span>Sky 40% clear · clears a little each day</span>
+      </div>
+
+      <div class="stats" data-a style="--i:3">
+        <div><span class="num" data-count="49" data-prefix="$" data-dec="2">$49.00</span><span class="t-cap">kept</span></div>
+        <div><span class="num" data-count="84">84</span><span class="t-cap">cigarettes not smoked</span></div>
+        <div><span class="num" data-count="1400">1,400</span><span class="t-cap">puffs not taken</span></div>
+        <div><span class="num" data-count="23">23</span><span class="t-cap">waves ridden</span></div>
+      </div>
+
+      <div class="shelf-h" data-a style="--i:4"><h2 class="t-head">Badges</h2><span class="t-foot muted">14 of 26 earned</span></div>
+
+      <div class="card group" data-a style="--i:5">
+        <div class="group-h"><span class="t-foot" style="font-weight:700">Days free</span><span class="t-foot">Next: 14 days, 7 to go</span></div>
+        <div class="bgrid" id="days"></div>
+      </div>
+      <div class="card group" data-a style="--i:6">
+        <div class="group-h"><span class="t-foot" style="font-weight:700">Prep week</span><span class="t-foot">All 8 stamped</span></div>
+        <div class="stamps" id="prep"></div>
+      </div>
+      <div class="card group" data-a style="--i:7">
+        <div class="group-h"><span class="t-foot" style="font-weight:700">Waves ridden</span><span class="t-foot">Next: 25, 2 to go</span></div>
+        <div class="bgrid" id="waves"></div>
+      </div>
+      <div class="card group" data-a style="--i:8">
+        <div class="group-h"><span class="t-foot" style="font-weight:700">Evening check-ins</span><span class="t-foot">Next: 7 nights, 1 to go</span></div>
+        <div class="bgrid" id="nights" style="grid-template-columns:repeat(5,minmax(0,1fr))"></div>
+      </div>
+    </div>
+  </div>
+  <div id="tabs"></div>
+</div>
+<script>
+  document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20 })));
+  document.getElementById('sky').innerHTML = DX.char('horizon', { scene: 'dawn', w: 346, h: 128, clarity: 40 });
+  let k = 0;
+  const b = (kind, n, state, label, extra = {}) => {
+    const anim = state === 'earned' ? `data-stamp style="--i:${k++};--d:500ms"` : `data-fade style="--d:${700 + k * 60}ms"`;
+    const cls = state === 'next' ? 'next' : '';
+    const svg = DX.badge({ kind, n, state, size: 50, p: extra.p, bare: true });
+    return `<div class="badge ${cls}" ${anim}>${extra.shine ? `<span class="shine" style="display:block;border-radius:99px;--d:1200ms">${svg}</span>` : svg}<span class="t-cap">${label}</span></div>`;
+  };
+  const day = n => n === 1 ? '1 day' : n + ' days';
+  document.getElementById('days').innerHTML =
+    [1, 3, 7].map(n => b('day', n, 'earned', day(n), n === 7 ? { shine: true } : {})).join('') +
+    b('day', 14, 'next', '14 days', { p: .5 }) +
+    [30, 60, 90, 180, 365].map(n => b('day', n, 'locked', day(n))).join('');
+  k = 0;
+  document.getElementById('prep').innerHTML =
+    [1, 2, 3, 4, 5, 6, 7].map(n => `<div class="badge" data-stamp style="--i:${k++};--d:700ms">${DX.badge({ kind: 'prep', n, size: 36, bare: true })}</div>`).join('') +
+    `<div class="badge" data-stamp style="--i:${k++};--d:700ms">${DX.badge({ kind: 'xero', n: '0', size: 36, bare: true })}</div>`;
+  k = 0;
+  document.getElementById('waves').innerHTML = b('wave', 1, 'earned', '1 wave') + b('wave', 10, 'earned', '10 waves') + b('wave', 25, 'next', '25 waves', { p: .92 }) + b('wave', 50, 'locked', '50 waves') + b('wave', 100, 'locked', '100 waves');
+  k = 0;
+  document.getElementById('nights').innerHTML = b('night', 3, 'earned', '3 nights') + b('night', 7, 'next', '7 nights', { p: 6 / 7 }) + b('night', 14, 'locked', '14 nights') + b('night', 30, 'locked', '30 nights');
+  document.getElementById('tabs').outerHTML = DX.tabbar('progress');
+</script>
+</body></html>

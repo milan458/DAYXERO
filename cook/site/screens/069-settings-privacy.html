@@ -1,0 +1,49 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>069 Privacy and your data</title>
+<meta name="motion" content="The lock card, the data list and the delete card arrive on the stagger, nothing else moves. Delete everything asks for a 2s hold on a confirm sheet (warning haptic), so it can never be a slip of the thumb.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+/* screen-local helpers: icon fill, section labels, small icon tiles, bottom toast */
+.hd { display: grid; gap: 6px; padding-top: 58px; }
+.sec { padding: 22px 4px 8px; color: var(--muted); }
+.rt { font-weight: 600; }
+.ico-tile.s { width: 34px; height: 34px; border-radius: 11px; }
+.ico-tile.s svg { width: 19px; height: 19px; }
+.val { color: var(--muted); font: 500 15px/1.2 var(--body); white-space: nowrap; }
+.list > .row.tap { min-height: 56px; }
+.toast.b { top: auto; bottom: 40px; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
+.toast.b.in { opacity: 1; transform: none; }
+.toast.b .ck { flex: none; }
+.pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+.lead { display: flex; gap: 14px; align-items: center; padding: 16px; margin-top: 18px; }
+.lead .ico-tile { width: 48px; height: 48px; border-radius: 15px; }
+.lead .ico-tile svg { width: 26px; height: 26px; }
+.list .row.tall { align-items: flex-start; padding-top: 14px; padding-bottom: 14px; }
+.del { margin-top: 12px; padding: 16px; display: grid; gap: 10px; }
+.del .btn { color: var(--fg); }
+
+</style>
+</head><body>
+<div class="screen" data-ground="reading">
+<div class="nav"><button class="icon-btn" aria-label="Back" data-ic="back"></button></div>
+<div class="scroll"><div class="pad">
+  <div class="hd"><h1 class="t-large" data-a style="--i:0">Privacy and your data</h1><p class="t-foot muted" data-a style="--i:1">No account, no ads, no selling. Here is exactly what happens.</p></div>
+  <div class="card lead" data-a style="--i:2"><span class="ico-tile" data-ic="lock"></span><div><div class="t-head">It stays on this phone</div><div class="t-foot muted">Your plan, reasons, logs and notes never leave this iPhone.</div></div></div>
+  <div class="list" data-a style="--i:3;margin-top:12px">
+    <div class="row tall" ><span class="ico-tile s" data-ic="chart"></span><div class="grow"><div class="t-body rt">Share anonymous usage</div><div class="t-foot muted">Counts like &ldquo;lesson started&rdquo;. Never your words.</div></div><span class="toggle on"></span></div>
+    <div class="row " ><span class="ico-tile s" data-ic="share"></span><div class="grow"><div class="t-body rt">Export my data</div><div class="t-foot muted">A file you can keep or move</div></div><span class="chev" data-ic="chev" data-s="18"></span></div>
+  </div>
+  <div class="card flat del" data-a style="--i:4">
+    <div class="t-head">Delete all my data</div>
+    <p class="t-foot muted">This erases your plan, days, badges and notes from this phone. It cannot be undone, and we cannot recover it.</p>
+    <button class="btn ghost small">Delete everything</button>
+  </div>
+</div></div>
+</div>
+<script>
+document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
+
+</script>
+</body></html>

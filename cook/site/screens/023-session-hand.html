@@ -1,0 +1,59 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>023 Session hand</title>
+<meta name="motion" content="Title and stamps arrive (600ms, 90ms stagger). The five cards deal in from below one by one (760ms settle each, 130ms apart, starting at 300ms), rotating into the fan; card 1 lands last-lifted 26pt above the hand with a cream ring. The up-next panel and button arrive after the deal. Light haptic on each card landing.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+.f-apricot{--face:#FFC38A}.f-sky{--face:#9CCBFF}.f-mint{--face:#9FE3BC}.f-sun{--face:#FFD966}
+.head{position:absolute;top:112px;left:0;right:0;display:grid;gap:6px}
+.stamps{position:absolute;top:196px;left:var(--gutter);right:var(--gutter);display:flex;align-items:center;gap:8px}
+.stamps .nx{width:34px;height:34px;border-radius:99px;display:grid;place-items:center;box-shadow:inset 0 0 0 2px var(--fg);font:800 15px/1 var(--display);color:var(--fg)}
+.stamps .t-foot{margin-left:6px}
+.fan{position:absolute;top:276px;left:0;right:0;height:240px}
+.pc{position:absolute;left:50%;top:36px;width:104px;height:158px;margin-left:-52px;border-radius:17px;background:var(--face);color:#1E1A3A;padding:10px 9px;
+  transform-origin:50% 50%;transform:translate(var(--x),var(--y)) rotate(var(--r));box-shadow:0 14px 26px rgba(0,0,0,.34),inset 0 0 0 1px rgba(255,255,255,.4);overflow:hidden}
+.pc .ic{width:32px;height:32px;border-radius:99px;background:rgba(30,26,58,.1);display:grid;place-items:center}
+.pc .ic svg{width:18px;height:18px}
+.pc b{display:block;margin-top:8px;font:700 14px/1.12 var(--display);letter-spacing:-.2px;max-width:54px}
+.pc .m{display:block;margin-top:3px;font:600 12px/1.3 var(--body);opacity:.72}
+.pc .big{position:absolute;right:-10px;bottom:-12px;opacity:.13}
+.pc .big svg{width:84px;height:84px}
+.pc.up{box-shadow:0 18px 30px rgba(0,0,0,.4),0 0 0 3px var(--fg)}
+.play .pc{animation:deal 760ms var(--settle) both;animation-delay:calc(300ms + var(--k) * 130ms)}
+@keyframes deal{from{opacity:0;transform:translate(0px,460px) rotate(0deg)}35%{opacity:1}to{opacity:1;transform:translate(var(--x),var(--y)) rotate(var(--r))}}
+.next{position:absolute;top:544px;left:var(--gutter);right:var(--gutter);display:flex;gap:14px;align-items:center}
+.mini{width:40px;height:54px;border-radius:9px;background:var(--face);color:#1E1A3A;display:grid;place-items:center;flex:none}
+.mini svg{width:20px;height:20px}
+</style>
+</head><body>
+<div class="screen" data-ground="table">
+  <div class="nav"><button class="icon-btn" aria-label="Close" id="close"></button><div class="grow"></div><span class="t-foot muted">Tue, Nov 3</span></div>
+  <div class="head pad">
+    <h1 class="t-large" data-a style="--i:0">The <span class="mark">stress</span> loop</h1>
+    <p class="t-foot muted" data-a style="--i:1">Prep 5 · 5 cards · about 28 min</p>
+  </div>
+  <div class="stamps" id="stamps" data-a style="--i:2"></div>
+  <div class="fan" id="fan"></div>
+  <div class="next card" data-a style="--i:9;--d:500ms">
+    <div class="mini f-apricot" id="mini"></div>
+    <div class="grow" style="flex:1;min-width:0">
+      <p class="t-foot muted">Up next · Listen · 6 min</p>
+      <p class="t-head" style="margin-top:2px">Why stress asks for a cigarette</p>
+    </div>
+  </div>
+  <div class="dock"><button class="btn" data-a style="--i:10;--d:500ms">Play card 1</button></div>
+</div>
+<script>
+const MYTH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 010 17z" fill="currentColor"/></svg>';
+const ic = n => n === 'myth' ? MYTH : DX.icon(n);
+document.getElementById('close').innerHTML = DX.icon('close');
+document.getElementById('mini').innerHTML = DX.icon('headphones');
+document.getElementById('stamps').innerHTML = [1,2,3,4].map(n => DX.badge({kind:'prep', n, size:34, bare:true})).join('') +
+  '<span class="nx">5</span><span class="t-foot muted">Prep 5 today</span>';
+const cards = [
+  ['apricot','headphones','Listen','6 min'], ['sky','myth','Myth or fact','3 min'], ['mint','hand','Try','5 min'],
+  ['apricot','eye','Reveal','7 min'], ['sky','headphones','Listen','7 min']];
+document.getElementById('fan').innerHTML = cards.map((c, k) => `<div class="pc f-${c[0]} ${k === 0 ? 'up' : ''}" style="--x:${(k - 2) * 62}px;--r:${(k - 2) * 3}deg;--y:${k === 0 ? -20 : [10,3,0,3,10][k]}px;--k:${k};z-index:${k + 1}">
+  <span class="ic">${ic(c[1])}</span><b>${c[2]}</b><span class="m">${c[3]}</span>${k === 4 ? `<span class="big">${ic(c[1])}</span>` : ''}</div>`).join('');
+</script>
+</body></html>
