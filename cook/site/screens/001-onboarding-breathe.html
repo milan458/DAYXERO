@@ -4,24 +4,25 @@
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  /* One calm ring set (~300px), 32px above the headline. */
-  .stage { position: absolute; left: 0; right: 0; top: 212px; height: 300px; display: grid; place-items: center; }
+  /* One calm ring set (~300px), 18px above the headline (round 10: the gap is closed; the set sits lower, the copy higher). */
+  .stage { position: absolute; left: 0; right: 0; top: 222px; height: 300px; display: grid; place-items: center; }
   .rings { position: absolute; inset: 0; display: grid; place-items: center; }
-  .rings i { position: absolute; border-radius: 999px; background: color-mix(in srgb, var(--card-2) var(--a), transparent); }
-  .rings i:nth-child(1) { width: 300px; height: 300px; --a: 38%; }
-  .rings i:nth-child(2) { width: 244px; height: 244px; --a: 62%; }
+  /* Round 10: about 1.5x the contrast against the ground (a lighter cream at the same steps). */
+  .rings i { position: absolute; border-radius: 999px; background: color-mix(in srgb, #FFF8F0 var(--a), transparent); }
+  .rings i:nth-child(1) { width: 300px; height: 300px; --a: 40%; }
+  .rings i:nth-child(2) { width: 244px; height: 244px; --a: 65%; }
   .rings i:nth-child(3) { width: 188px; height: 188px; --a: 100%; }
   /* Dark: the rings become a soft warm glow (apricot light on the night ground), each with a faint rim, so the pacer reads. */
   /* Round 8: a clean warm amber at low opacity (no peach-on-navy brown); the rims carry the shape. */
   [data-theme="dark"] .rings i { background: radial-gradient(circle, color-mix(in srgb, #FFC24D var(--g1), transparent) 0%, color-mix(in srgb, #FFC24D var(--g2), transparent) 100%);
     box-shadow: inset 0 0 0 1px rgba(255,200,120,var(--rim)); }
-  [data-theme="dark"] .rings i:nth-child(1) { --g1: 0%; --g2: 2.5%; --rim: .16; }
-  [data-theme="dark"] .rings i:nth-child(2) { --g1: 1%; --g2: 3.5%; --rim: .2; }
-  [data-theme="dark"] .rings i:nth-child(3) { --g1: 2%; --g2: 5%; --rim: .28; }
+  [data-theme="dark"] .rings i:nth-child(1) { --g1: 0%; --g2: 3.75%; --rim: .24; }
+  [data-theme="dark"] .rings i:nth-child(2) { --g1: 1.5%; --g2: 5.25%; --rim: .3; }
+  [data-theme="dark"] .rings i:nth-child(3) { --g1: 3%; --g2: 7.5%; --rim: .42; }
   .play .rings i:nth-child(1) { animation-delay: -.25s; }
   .play .rings i:nth-child(2) { animation-delay: -.12s; }
   .hero { position: relative; margin-top: 6px; }
-  .copy { position: absolute; left: 0; right: 0; top: 556px; text-align: center; padding: 0 var(--gutter); display: grid; gap: 12px; justify-items: center; }
+  .copy { position: absolute; left: 0; right: 0; top: 536px; text-align: center; padding: 0 var(--gutter); display: grid; gap: 12px; justify-items: center; }
   .copy h1 { position: relative; height: 34px; width: 100%; }
   .copy h1 span { position: absolute; left: 0; right: 0; top: 0; display: block; transition: opacity 500ms var(--ease), transform 500ms var(--ease); }
   .copy h1 .dim { opacity: 0; transform: translateY(6px); }
