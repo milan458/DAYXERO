@@ -12,8 +12,8 @@
 .mission .lab{font:600 15px/1 var(--body);color:var(--soft)}
 .mission h2{margin-top:12px;font-size:34px}
 .mission .t-body{margin-top:8px;color:var(--soft)}
-/* Xero climbs up behind the card: head over the edge, hands in front of it (same 136px drawing, two layers; the edge crosses him at y=112 of 200) */
-.peek,.hands{position:absolute;left:206px;top:160px;width:136px;height:136px;pointer-events:none}
+/* Xero climbs up behind the card: head over the edge, hands in front of it (same 136px drawing, two layers; the edge crosses him at y=107 of 200, above his window) */
+.peek,.hands{position:absolute;left:206px;top:163px;width:136px;height:136px;pointer-events:none}
 .peek{z-index:1}
 .hands{z-index:3}
 .peek svg > g[stroke]{display:none}
@@ -57,10 +57,10 @@
 <script>
 document.getElementById('close').innerHTML = DX.icon('close');
 document.getElementById('l-chev').innerHTML = DX.icon('chev', {size:16, w:2.6});
-/* the card's top edge crosses Xero at y=112 of his 200 drawing: eyes, cheeks and smile stay above it, his arms stay behind it */
+/* the card's top edge crosses Xero at y=107 of his 200 drawing: eyes, cheeks and smile stay above it, his arms stay behind it */
 document.getElementById('mx').innerHTML = DX.char('xero', {mood:'hello', size:136});
 /* his two hands, gripping the edge in front of the card */
-const hand = (x, flip) => `<g transform="translate(${x} 112) scale(${flip ? -1 : 1} 1)"><path d="M-17 0 C-17 -10 -9 -14 0 -14 C9 -14 17 -10 17 0 C17 8 11 12 0 12 C-11 12 -17 8 -17 0Z" fill="#FF7155"/>
+const hand = (x, flip) => `<g transform="translate(${x} 107) scale(${flip ? -1 : 1} 1)"><path d="M-17 0 C-17 -10 -9 -14 0 -14 C9 -14 17 -10 17 0 C17 8 11 12 0 12 C-11 12 -17 8 -17 0Z" fill="#FF7155"/>
   <path d="M-17 0 C-17 8 -11 12 0 12 C11 12 17 8 17 0 C14 5 8 7 0 7 C-8 7 -14 5 -17 0Z" fill="#E85A3E"/>
   <path d="M-6 -2 V5 M3 -2 V5" stroke="#C9542F" stroke-width="2.2" stroke-linecap="round"/>
   <path d="M-10 -8 C-7 -11 -3 -12 1 -12" fill="none" stroke="#FFB09C" stroke-width="3" stroke-linecap="round"/></g>`;
