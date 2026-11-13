@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>005 Your baseline</title>
-<meta name="motion" content="Progress eases from 2/11 to 3/11 (900ms). Question arrives, then the hero card: 32 counts up (850ms, from 300ms) while the split bar grows left to right, cigarettes then vape (700ms each, 120ms apart), and the two legend lines fade in under their segments. Under a hairline the one cost line ($2,555 a year · 365 hours of breaks) counts up (850ms), then the quiet estimates note fades up (600ms). No haptic; one soft tick when the counts land.">
+<meta name="motion" content="Progress eases from 2/11 to 3/11 (900ms). Question arrives, then the hero card: 32 counts up (850ms, from 300ms) while the split bar grows left to right, cigarettes then vape (700ms each, 120ms apart), and the two legend lines fade in under their segments. Under a hairline the two cost figures ($2,555 a year | 365 hours of smoke breaks) count up side by side (850ms), then the estimates note fades up (600ms) beside a small calm Xero who bobs gently (5 s). No haptic; one soft tick when the counts land.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -27,10 +27,13 @@
   /* Cost: one quiet line under the hero, in the same card. */
   .cost { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
   .cost .t-foot { color: var(--muted); }
-  .cost b { color: var(--fg); font-family: var(--display); font-weight: 800; font-size: 17px; letter-spacing: -.3px; }
-  .cost .dot-sep { margin: 0 4px; }
-  /* A quiet note that these are estimates. */
-  .est { color: var(--muted); font-weight: 500; text-align: center; }
+  .cost { display: grid; grid-template-columns: 1fr 1fr; column-gap: 14px; }
+  .cost > div + div { padding-left: 14px; border-left: 1px solid var(--line); }
+  .cost b { display: block; color: var(--fg); font-family: var(--display); font-weight: 800; font-size: 24px; line-height: 1.1; letter-spacing: -.5px; margin-bottom: 2px; }
+  /* A quiet note that these are estimates, with a small Xero (the page's one character). */
+  .estrow { display: flex; align-items: center; gap: 12px; padding: 0 4px; }
+  .estrow .xs { width: 60px; height: 60px; flex: none; }
+  .est { color: var(--muted); font-weight: 500; }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
@@ -52,14 +55,18 @@
         <p class="t-foot"><span class="dot c"></span><span><b>12</b> cigarettes you smoke</span></p>
         <p class="t-foot"><span class="dot v"></span><span><b>20</b> more from about 200 vape puffs</span></p>
       </div>
-      <div class="cost"><p class="t-foot"><b class="num"><span data-count="2555" data-prefix="$">$2,555</span></b> a year <span class="dot-sep">&middot;</span> <b class="num"><span data-count="365">365</span></b> hours of breaks</p></div>
+      <div class="cost">
+        <div><b class="num"><span data-count="2555" data-prefix="$">$2,555</span></b><p class="t-foot">a year</p></div>
+        <div><b class="num"><span data-count="365">365</span> hours</b><p class="t-foot">of smoke breaks</p></div>
+      </div>
     </div>
-    <p class="t-cap est" data-a style="--i:3">Estimates from your answers. Change them any time.</p>
+    <div class="estrow" data-a style="--i:3"><div class="xs bob" id="xs"></div><p class="t-foot est">Estimates from your answers. Change them any time.</p></div>
   </div>
   <div class="dock"><button class="btn" data-a style="--i:6">Continue</button></div>
 </div>
 <script>
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
+  document.getElementById('xs').innerHTML = DX.char('xero', { mood: 'calm', size: 60 });
   const bar = document.getElementById('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '18.2%'); void bar.offsetWidth; bar.style.transition = ''; });
   DX.after(250, () => bar.style.setProperty('--p', '27.3%'));

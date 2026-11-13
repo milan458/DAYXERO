@@ -18,10 +18,8 @@
   .flow { display: grid; gap: 10px; }
   .flow .r { display: flex; gap: 8px; }
   .flow .chip { flex: none; min-height: 48px; padding: 0 12px; white-space: nowrap; }
-  /* Other closes the whole set (moments and feelings), after both groups. */
-  .flow.other { margin-top: 8px; }
-  .flow.other .r { align-items: center; gap: 12px; }
-  .count { display: flex; align-items: center; gap: 12px; margin-top: 8px; padding: 8px 16px 8px 10px; }
+  /* Other closes the last chip row (round 8: no separate row or label, lower density). */
+  .count { display: flex; align-items: center; gap: 12px; margin-top: 14px; padding: 8px 16px 8px 10px; }
   .count .xc { width: 56px; height: 56px; flex: none; }
   .count b { font-weight: 700; }
 </style>
@@ -45,9 +43,8 @@
     <p class="lbl" data-a style="--i:3">Feelings and people</p>
     <div class="flow" data-a style="--i:3">
       <div class="r"><button class="chip on" id="stress">Stress</button><button class="chip">Boredom</button><button class="chip">Low mood</button></div>
-      <div class="r"><button class="chip">Anxiety</button><button class="chip">With friends</button></div>
+      <div class="r"><button class="chip">Anxiety</button><button class="chip">With friends</button><button class="chip">Other</button></div>
     </div>
-    <div class="flow other" data-a style="--i:3"><div class="r"><button class="chip">Other</button><span class="t-foot muted">Something not listed</span></div></div>
     <div class="card count" data-a style="--i:4"><div class="xc" id="xc"></div>
       <p class="t-foot"><b id="n">2 picked.</b> <span id="names">Coffee and stress.</span> I&rsquo;ll check in around them.</p></div>
   </div>

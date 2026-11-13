@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>029 Session commit</title>
-<meta name="motion" content="The bar shows card 5 at its last step with Card 5 · Step 3 of 3 beside it; tag, title, your plan chip (When work piles up: two sighs first), helper, the Day Xero medal (the kit medal: gold rim, the brand mark, a soft shine; resting faded inside its empty hold ring) and the date arrive (600ms, 90ms stagger). Holding the button (3s, auto at 1.2s) fills the button and sweeps the ring around the medal in lockstep (linear, a soft haptic tick every 0.5s); letting go drains both (300ms). On held: the ring turns sun gold, the medal stamps to full colour (620ms spring), and a soft shine crosses its face, the date bumps (520ms spring), the title cross-fades to You're committed and the helper to its second line (400ms), card 5's segment fills, and the button shows Committed (success haptic). 1200ms later the done button cross-fades (350ms) into Continue.">
+<meta name="motion" content="The bar shows card 5 at its last step with Card 5 · Step 3 of 3 beside it; tag, title, your plan chip (When work piles up: two sighs first), helper, the Day Xero medal (the kit medal: gold rim, the brand mark, a soft shine; resting faded inside its empty hold ring) and the date arrive (600ms, 90ms stagger). Holding the button (3s, auto at 1.2s) fills the button and fills the thin muted track around the medal with gold in lockstep (linear, a soft haptic tick every 0.5s); letting go drains both (300ms). On held: the ring stays closed in the medal rim's gold, the medal stamps to full colour (620ms spring), and a soft shine crosses its face, the date bumps (520ms spring), the title cross-fades to You're committed and the helper to its second line (400ms), card 5's segment fills, and the button shows Committed (success haptic). 1200ms later the done button cross-fades (350ms) into Continue.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -8,13 +8,14 @@
 [data-theme="dark"] .k-try{--face:#8FD3AD}
 .steps > i.now::after{width:var(--sub,45%);transition:width .5s var(--settle)}
 .nav .side{flex:none;color:var(--muted)}
-.wrap{position:absolute;top:112px;left:0;right:0;display:grid;align-content:start;gap:10px}
-.tag{justify-self:start;display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px 0 9px;border-radius:99px;background:var(--face);color:#1E1A3A;font:600 13px/1 var(--body)}
+/* the medal is centred, so the header block is centred over it */
+.wrap{position:absolute;top:112px;left:0;right:0;display:grid;align-content:start;justify-items:center;text-align:center;gap:10px}
+.tag{justify-self:center;display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px 0 9px;border-radius:99px;background:var(--face);color:#1E1A3A;font:600 13px/1 var(--body)}
 .tag svg{width:16px;height:16px}
 /* dark: a deep mint pill with a mint label, never pale mint glaring on navy */
 [data-theme="dark"] .tag.k-try{background:#1A4434;color:#9FE3BC;box-shadow:inset 0 0 0 1px rgba(159,227,188,.22)}
 /* the plan you are committing to, in one line */
-.plan{justify-self:start;display:inline-flex;align-items:center;gap:9px;height:38px;padding:0 15px 0 6px;border-radius:99px;background:var(--card);box-shadow:inset 0 0 0 1px var(--line);font:600 14px/1 var(--body);white-space:nowrap}
+.plan{justify-self:center;display:inline-flex;align-items:center;gap:9px;height:38px;padding:0 15px 0 6px;border-radius:99px;background:var(--card);box-shadow:inset 0 0 0 1px var(--line);font:600 14px/1 var(--body);white-space:nowrap}
 .plan .d{width:26px;height:26px;border-radius:99px;background:var(--face);color:#1E1A3A;display:grid;place-items:center;flex:none}
 .plan .d svg{width:15px;height:15px}
 /* title and helper swap in place after the hold */
@@ -24,18 +25,16 @@
 .done .swap .a{opacity:0;transform:translateY(-6px)}
 .done .swap .b{opacity:1;transform:none}
 /* the hold ring around the kit Day Xero medal (gold rim, the brand mark), with a soft shine on the face */
-.ringbox{position:absolute;top:290px;left:50%;width:256px;height:256px;margin-left:-128px}
+.ringbox{position:absolute;top:282px;left:50%;width:296px;height:296px;margin-left:-148px}
 .ringbox svg.r{position:absolute;inset:0;display:block;transform:rotate(-90deg)}
 .arc{transition:stroke .4s var(--ease)}
-.done .arc{stroke:#F5B83D}
-[data-theme="dark"] .done .arc{stroke:#FFD966}
-.coin{position:absolute;left:24px;top:24px;width:208px;height:208px}
+.coin{position:absolute;left:28px;top:28px;width:240px;height:240px}
 /* the hold ring is the medal's glory here, so the kit rays (teeth at this size) stay off */
 .coin .rays{display:none}
-.coin .m{position:relative;width:208px;height:208px;border-radius:50%;opacity:.38;filter:saturate(.25);transition:opacity .4s var(--ease),filter .4s var(--ease)}
+.coin .m{position:relative;width:240px;height:240px;border-radius:50%;opacity:.38;filter:saturate(.25);transition:opacity .4s var(--ease),filter .4s var(--ease)}
 .done .coin .m{opacity:1;filter:none}
 .coin .gloss{position:absolute;inset:0;pointer-events:none}
-.when{position:absolute;top:566px;left:0;right:0;text-align:center;display:grid;gap:6px;justify-items:center}
+.when{position:absolute;top:604px;left:0;right:0;text-align:center;display:grid;gap:6px;justify-items:center}
 .when .t-large{font-size:36px}
 /* after the hold the button hands over to Continue (same as Quit Day in onboarding) */
 .btns{position:relative;height:58px}
@@ -59,14 +58,14 @@
   </div>
   <div class="ringbox" data-a style="--i:4">
     <div class="coin"><div id="stampwrap"><div class="m" id="medal"></div></div></div>
-    <svg class="r" width="256" height="256" viewBox="0 0 256 256" aria-hidden="true">
-      <circle cx="128" cy="128" r="122" fill="none" stroke="var(--track)" stroke-width="10"/>
-      <circle class="arc" id="arc" cx="128" cy="128" r="122" fill="none" stroke="var(--fg)" stroke-width="10" stroke-linecap="round" stroke-dasharray="766.5" stroke-dashoffset="766.5"/>
+    <svg class="r" width="296" height="296" viewBox="0 0 296 296" aria-hidden="true">
+      <circle cx="148" cy="148" r="144" fill="none" stroke="var(--track)" stroke-width="3.5"/>
+      <circle class="arc" id="arc" cx="148" cy="148" r="144" fill="none" stroke="#F5B83D" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="904.8" stroke-dashoffset="904.8"/>
     </svg>
   </div>
   <div class="when" data-a style="--i:5">
     <div id="date"><p class="t-large">Fri, Nov 6</p></div>
-    <p class="t-foot muted">Day Xero · 4 days to go</p>
+    <p class="t-foot muted">4 days to Day Xero</p>
   </div>
   <div class="dock">
     <div class="btns" id="btns" data-a style="--i:6">
@@ -82,12 +81,12 @@ document.querySelectorAll('.sp').forEach(e => e.insertAdjacentHTML('afterbegin',
 const $ = id => document.getElementById(id);
 const arc = $('arc'), scr = $('scr'), btn = $('hold'), sw = $('stampwrap'), medal = $('medal'), date = $('date');
 /* the kit medal (gold rim, face, the brand mark), plus a soft top-left shine clipped to the medal */
-medal.innerHTML = DX.badge({kind:'xero', size:208, bare:true, label:'Day Xero'}) +
-  `<svg class="gloss" width="208" height="208" viewBox="0 0 100 100" aria-hidden="true"><defs>
+medal.innerHTML = DX.badge({kind:'xero', size:240, bare:true, label:'Day Xero'}) +
+  `<svg class="gloss" width="240" height="240" viewBox="0 0 100 100" aria-hidden="true"><defs>
     <radialGradient id="gl" cx="34%" cy="26%" r="62%"><stop offset="0" stop-color="#fff" stop-opacity=".5"/><stop offset=".45" stop-color="#fff" stop-opacity=".12"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
     <clipPath id="glc"><circle cx="50" cy="50" r="46.5"/></clipPath></defs>
     <circle cx="50" cy="50" r="46.5" fill="url(#gl)" clip-path="url(#glc)"/></svg>`;
-const C = 766.5;
+const C = 904.8;
 const reset = () => { scr.classList.remove('done'); $('btns').classList.remove('next'); sw.removeAttribute('data-stamp'); medal.classList.remove('shine'); date.className = '';
   $('steps').style.setProperty('--sub', '83%'); arc.style.transition = 'none'; arc.style.strokeDashoffset = C; };
 const fillRing = () => { if (scr.classList.contains('done')) return; arc.style.transition = 'stroke-dashoffset 3000ms linear, stroke .4s'; arc.style.strokeDashoffset = 0; };
