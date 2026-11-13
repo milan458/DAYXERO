@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>047 NRT on track</title>
-<meta name="motion" content="Reading pace, no springs. Title and lead arrive, then the evidence card with '60%' counting up from 0 (850ms), then the combination card and the caution note (600ms each, 90ms stagger); the button arrives last. No haptic until the button tap.">
+<meta name="motion" content="Reading pace, no springs. Title and lead arrive, then the hero evidence card: '60%' counts up from 50 (850ms) while the 'Without' and 'With NRT' bars grow from the left (900ms, apricot bar 150ms later), then the combination card and the caution note (600ms each, 90ms stagger); the button arrives last. No haptic until the button tap.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -10,7 +10,18 @@
   .ev .card { display: grid; gap: 6px; }
   .ev .t-foot.lbl { color: var(--muted); }
   .big { display: flex; align-items: baseline; gap: 10px; }
-  .big .num { font-size: 40px; line-height: 1; letter-spacing: -1.2px; }
+  .big .num { font-size: 60px; line-height: .95; letter-spacing: -2px; }
+  .hero { padding: 20px 20px 18px; gap: 10px !important; }
+  .hero .t-body { font-size: 17px; font-weight: 500; }
+  .cmp { display: grid; gap: 10px; margin: 8px 0 4px; }
+  .cmp .r { display: grid; grid-template-columns: 96px 1fr; align-items: center; gap: 10px; }
+  .cmp .t-foot { color: var(--muted); font-size: 13px; }
+  .cmp .bar { height: 14px; border-radius: 99px; background: var(--track); overflow: hidden; }
+  .cmp .bar i { display: block; height: 100%; width: var(--w); border-radius: inherit; background: var(--muted); opacity: .45; transform-origin: left; }
+  .cmp .bar.yes i { background: #FF9A5C; opacity: .85; }
+  .play .cmp .bar i { animation: grow 900ms var(--settle) both; animation-delay: var(--d, 400ms); }
+  @keyframes grow { from { transform: scaleX(0); } }
+  .combo { margin: 4px 0 2px; }
   .ev .source { margin-top: 4px; justify-self: start; }
   .combo { display: flex; gap: 8px; margin: 2px 0 2px; }
   .combo span { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px; border-radius: 10px; background: var(--card-2); font: 600 13px/1 var(--body); }
@@ -24,18 +35,23 @@
   <div class="nav"><button class="icon-btn" aria-label="Close" data-ic="close"></button></div>
   <div class="scroll">
     <div class="wrap">
-      <h1 class="t-large" data-a style="--i:0">Keep your NRT on <span class="mark">track</span></h1>
+      <h1 class="t-large" data-a style="--i:0">Keep your NRT on track</h1>
       <p class="t-body lead" data-a style="--i:1">We'll remind you to change patches and when each step down is due.</p>
       <div class="stack ev">
-        <div class="card" data-a style="--i:2">
+        <div class="card hero" data-a style="--i:2">
           <p class="t-foot lbl">Why it's worth it</p>
           <div class="big"><span class="num">50 to <span data-count="60" data-from="50" data-suffix="%">60%</span></span></div>
           <p class="t-body">more likely to quit than without NRT.</p>
+          <div class="cmp" aria-hidden="true">
+            <div class="r"><span class="t-foot">Without NRT</span><span class="bar"><i style="--w:62%;--d:500ms"></i></span></div>
+            <div class="r"><span class="t-foot" style="color:var(--fg)">With NRT</span><span class="bar yes"><i style="--w:100%;--d:650ms"></i></span></div>
+          </div>
           <a class="source">Source: Cochrane review of 133 trials, 2018</a>
         </div>
         <div class="card" data-a style="--i:3">
           <p class="t-foot lbl">What works best</p>
-          <p class="t-head" style="font-size:18px">A patch plus a faster form works better than either alone.</p>
+          <div class="combo"><span><span data-ic2="patch"></span>Patch</span><b>+</b><span>Gum or lozenge</span></div>
+          <p class="t-head" style="font-size:17px">A patch plus a faster form works better than either alone.</p>
           <a class="source">Source: Cochrane review of combination NRT, 2019</a>
         </div>
         <div class="card flat caution t-foot" data-a style="--i:4">

@@ -30,7 +30,8 @@
   .text { position: absolute; z-index: 1; left: 0; right: 0; top: 412px; padding: 0 var(--gutter); display: grid; gap: 14px; }
   .terms { text-align: center; color: var(--muted); padding: 0 8px; }
   .terms u { text-underline-offset: 2px; }
-  .dock { gap: 4px; padding-top: 24px; }
+  .dock { gap: 2px; padding-top: 24px; }
+  .terms { white-space: nowrap; margin-top: 6px; }
   .dock .btn { margin-bottom: 6px; }
 </style>
 </head><body>
@@ -72,7 +73,7 @@
   <div class="dock">
     <button class="btn" data-a style="--i:8">Get started</button>
     <a class="link" data-a style="--i:9">Restore purchases</a>
-    <p class="t-cap terms" data-a style="--i:10">Stays private on this phone. By continuing you confirm you're 18+ and agree to the <u>Terms</u> and <u>Privacy Policy</u>.</p>
+    <p class="t-cap terms" data-a style="--i:10">18+ only. By continuing you agree to the <u>Terms</u> and <u>Privacy</u>.</p>
   </div>
 </div>
 <script>

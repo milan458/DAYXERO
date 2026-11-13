@@ -8,17 +8,20 @@
   .load { padding: 18px 18px 16px; }
   .load .big { display: flex; align-items: baseline; gap: 10px; margin: 6px 0 14px; }
   .load .big .t-display { font-size: 52px; }
-  .split { display: flex; gap: 4px; height: 12px; }
+  .split { display: flex; gap: 4px; height: 8px; }
   .split i { display: block; border-radius: 99px; transform-origin: left; }
   .split .c { flex: 12; background: var(--fg); }
-  .split .v { flex: 20; background: color-mix(in srgb, var(--fg) 34%, transparent); }
+  .split .v { flex: 20; background: var(--coral); }
   .play .split i { animation: grow 700ms var(--settle) both; animation-delay: 400ms; }
   .play .split .v { animation-delay: 520ms; }
   @keyframes grow { from { transform: scaleX(0); } to { transform: none; } }
   .legend { display: grid; gap: 8px; margin-top: 14px; }
   .legend .row { min-height: 0; gap: 10px; align-items: flex-start; }
   .legend .dot { width: 10px; height: 10px; border-radius: 99px; margin-top: 5px; flex: none; }
-  .legend .dot.c { background: var(--fg); } .legend .dot.v { background: color-mix(in srgb, var(--fg) 34%, transparent); }
+  .legend .dot.c { background: var(--fg); } .legend .dot.v { background: var(--coral); }
+  .xcard { display: flex; gap: 14px; align-items: center; margin-top: 2px; }
+  .xcard .xc { width: 88px; height: 88px; flex: none; }
+  .answers { gap: 12px !important; }
   .legend b { font-weight: 700; }
   .stat .num { font-size: 30px; }
   .stat .t-foot { color: var(--muted); margin-top: 6px; }
@@ -51,11 +54,14 @@
       <div class="stat" data-a style="--i:3"><span class="ico-tile" data-icon="card"></span><span class="num" data-count="2555" data-prefix="$">$2,555</span><p class="t-foot">a year to keep<br>at $7 a day</p></div>
       <div class="stat" data-a style="--i:4"><span class="ico-tile" data-icon="clock"></span><span class="num"><span data-count="365">365</span> hrs</span><p class="t-foot">a year back<br>an hour a day</p></div>
     </div>
+    <div class="card xcard" data-a style="--i:5"><div class="xc" data-settle><div class="bob" id="xc"></div></div>
+      <p class="t-body">That's normal. We'll bring both down together, one prep day at a time.</p></div>
   </div>
-  <div class="dock"><button class="btn" data-a style="--i:5">Continue</button></div>
+  <div class="dock"><button class="btn" data-a style="--i:6">Continue</button></div>
 </div>
 <script>
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
+  document.getElementById('xc').innerHTML = DX.char('xero', { mood: 'calm', size: 88 });
   document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 40 });
   const bar = document.getElementById('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '18.2%'); void bar.offsetWidth; bar.style.transition = ''; });

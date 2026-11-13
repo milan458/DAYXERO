@@ -4,7 +4,7 @@ const dir = 'cook/site/screens';
 const files = fs.readdirSync(dir).filter(f => /^\d{3}-.*\.html$/.test(f)).sort();
 const round = process.argv[2] || 'r01'; const score = process.argv[3] || '';
 const sections = [
-  ['launch', 'Launch', 0, 0, 'The intro, now a 2.4 s paper-cut sunrise.'],
+  ['launch', 'Icon and launch', 0, 0, 'A new icon where the zero is Xero, and a 2.4 s paper-cut sunrise to open the app.'],
   ['onboarding', 'Onboarding', 1, 13, 'One apricot ground; the sun rides the progress bar.'],
   ['paywall', 'Paywall', 14, 14, 'Calm, credible, one plan picker.'],
   ['today', 'Today', 15, 18, 'Prep, Day 7, through the day, evening with Glim.'],

@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>044 Slip: talk it through</title>
-<meta name="motion" content="Title, trigger chips and the if-then rows arrive top to bottom (600ms, 90ms stagger). At 1.3s the 'have it somewhere new' row lands: its outline and tick settle in over 520ms and the other rows ease back to 55%. Light selection haptic on the land.">
+<meta name="motion" content="Title, trigger chips and the if-then rows arrive top to bottom (600ms, 90ms stagger). At 1.3s the 'Have it somewhere new' row lands: its 2px outline and filled tick settle in over 520ms; the other rows stay fully readable. Light selection haptic on the land.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -10,7 +10,7 @@
   .opts { display: grid; gap: 8px; }
   .opts .opt { min-height: 58px; padding: 10px 16px; font: 600 16px/1.3 var(--body); transition: box-shadow .35s var(--ease); }
   .opts .opt > * { transition: opacity .45s var(--ease); }
-  .opts.picked .opt:not(.on) > * { opacity: .55; }
+  .opts .opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
   .play .opt.land { animation: land 520ms var(--settle) both; }
   @keyframes land { 0% { opacity: 1; transform: scale(.97); } 100% { opacity: 1; transform: none; } }
   .play .opt.land .radio { animation: tick 520ms var(--settle) both; }
@@ -27,7 +27,7 @@
   </div>
   <div class="scroll">
     <div class="wrap">
-      <h1 class="t-title" data-a style="--i:0">Let's <span class="mark">plan</span> for next time.</h1>
+      <h1 class="t-title" data-a style="--i:0">Let's plan for next time.</h1>
       <p class="t-foot lead" data-a style="--i:1">Pick the moment, then one thing you'll do instead.</p>
 
       <div class="sec">
@@ -43,10 +43,10 @@
       <div class="sec">
         <p class="t-head" data-a style="--i:4">If it's after coffee, then I'll...</p>
         <div class="opts picked" id="opts">
-          <button class="opt" data-a style="--i:5"><span class="grow">take a short walk</span><span class="radio"></span></button>
-          <button class="opt" data-a style="--i:6"><span class="grow">switch to tea for a week</span><span class="radio"></span></button>
-          <button class="opt on" id="pick" data-a style="--i:7"><span class="grow">have it somewhere new</span><span class="radio"></span></button>
-          <button class="opt" data-a style="--i:8"><span class="grow">open Craving SOS</span><span class="radio"></span></button>
+          <button class="opt" data-a style="--i:5"><span class="grow">Take a short walk</span><span class="radio"></span></button>
+          <button class="opt" data-a style="--i:6"><span class="grow">Switch to tea for a week</span><span class="radio"></span></button>
+          <button class="opt on" id="pick" data-a style="--i:7"><span class="grow">Have it somewhere new</span><span class="radio"></span></button>
+          <button class="opt" data-a style="--i:8"><span class="grow">Open Craving SOS</span><span class="radio"></span></button>
           <button class="link own" data-a style="--i:9"><span data-ic="plus"></span>Write my own</button>
         </div>
       </div>

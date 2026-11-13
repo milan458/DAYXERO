@@ -10,7 +10,8 @@
 .pips i.done{background:#FFD966}
 .pips i.now{background:transparent;box-shadow:inset 0 0 0 2px var(--fg)}
 .nav .side{width:44px;text-align:right;flex:none}
-.face{background:var(--face);color:#1E1A3A;border-radius:26px;padding:20px 20px 18px;box-shadow:0 18px 34px rgba(0,0,0,.3)}
+.face{background:var(--face);color:#1E1A3A;border-radius:26px;padding:20px 20px 18px;box-shadow:0 14px 28px rgba(60,40,20,.14)}
+[data-theme="dark"] .face{box-shadow:0 18px 34px rgba(0,0,0,.4)}
 .kind{display:flex;align-items:center;gap:8px;font:600 14px/1 var(--body);opacity:.78}
 .kind svg{width:18px;height:18px}
 .player{display:flex;align-items:center;gap:14px;margin-top:20px}
@@ -26,7 +27,7 @@
 .play .wave .layer.on{animation:sweep 6000ms linear both 1200ms}
 @keyframes sweep{from{width:0}to{width:var(--pp,14%)}}
 .times{display:flex;justify-content:space-between;margin:6px 0 0 72px}
-.times .t-cap{opacity:.7}
+.times .t-cap{opacity:.78}
 .read{display:grid;gap:12px}
 .read .t-body + .t-body{margin-top:-2px}
 .read h3{font:700 16px/1.3 var(--display);margin:6px 0 0}
@@ -53,12 +54,10 @@
         <h2 class="t-head" data-a style="--i:3">Read instead</h2><span class="t-foot muted" data-a style="--i:3">4 min read</span>
       </div>
       <div class="card read" data-a style="--i:4">
-        <h3>The moment it seems to work</h3>
-        <p class="t-body">Welcome to day four. Think of the last time stress really hit. What did you reach for?</p>
         <h3>The loop</h3>
         <p class="t-body">Something goes wrong. Your chest tightens. You light up, and a minute later you feel calmer.</p>
-        <p class="t-body">So it looks like smoking fixes stress. But part of that tension was the gap: nicotine wearing off, adding its own restlessness to the day.</p>
-        <p class="t-body">The cigarette closes the gap it opened. That's the loop.</p>
+        <p class="t-body">But part of that tension was nicotine wearing off. The cigarette closes the gap it opened.</p>
+        <p class="t-body muted">That's the loop. The audio walks through it.</p>
       </div>
     </div>
   </div>

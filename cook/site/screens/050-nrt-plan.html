@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>050 NRT plan</title>
-<meta name="motion" content="Title arrives, then the step-down chart: the 21, 14 and 7 mg bars grow up from the baseline one after another (900ms settle, 150ms apart), their labels fade in on top, and the week ranges arrive under them. The three step rows then settle in like a plan being laid out (120ms stagger). No completion here; the plan is confirmed on the reminders screen.">
+<meta name="motion" content="Title arrives, then the step-down chart: the soft apricot 21, 14 and 7 mg bars (60%, 42%, 28% tint) grow up from the baseline one after another (900ms settle, 150ms apart), their labels sit just above each bar, and the week ranges arrive under them. The three step rows then settle in like a plan being laid out (120ms stagger). No completion here; the plan is confirmed on the reminders screen.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -9,18 +9,18 @@
   .chart { margin-top: 18px; padding: 18px 18px 14px; }
   .chart .hd { display: flex; justify-content: space-between; align-items: baseline; }
   .chart .hd .t-foot { color: var(--muted); }
-  .bars { margin-top: 14px; height: 132px; display: flex; align-items: flex-end; gap: 6px; border-bottom: 2px solid var(--line); }
-  .bar { position: relative; height: var(--h); border-radius: 12px 12px 4px 4px; background: var(--fg); transform-origin: bottom; display: flex; justify-content: center; }
-  .bar:nth-child(2) { background: color-mix(in srgb, var(--fg) 72%, var(--card)); } .bar:nth-child(3) { background: color-mix(in srgb, var(--fg) 46%, var(--card)); }
-  .bar span { position: absolute; top: 10px; color: var(--g); font: 800 15px/1 var(--display); letter-spacing: -.3px; white-space: nowrap; }
-  .bar:nth-child(3) span { top: auto; bottom: calc(100% + 6px); color: var(--fg); }
+  .chart { --apr: #FF9A5C; }
+  .bars { margin-top: 30px; height: 120px; display: flex; align-items: flex-end; gap: 6px; border-bottom: 1.5px solid var(--line); }
+  .bar { position: relative; height: var(--h); border-radius: 12px 12px 4px 4px; background: color-mix(in srgb, var(--apr) 60%, transparent); transform-origin: bottom; display: flex; justify-content: center; }
+  .bar:nth-child(2) { background: color-mix(in srgb, var(--apr) 42%, transparent); } .bar:nth-child(3) { background: color-mix(in srgb, var(--apr) 28%, transparent); }
+  .bar span { position: absolute; bottom: calc(100% + 6px); color: var(--fg); font: 700 15px/1 var(--display); letter-spacing: -.3px; white-space: nowrap; }
   .play .bar { animation: grow 900ms var(--settle) both; animation-delay: calc(var(--i) * 150ms + 250ms); }
   @keyframes grow { from { transform: scaleY(0); } to { transform: none; } }
   .wks { display: flex; gap: 6px; margin-top: 8px; color: var(--muted); }
   .wks span { text-align: center; }
   .steps-list { margin-top: 12px; }
   .steps-list .row { min-height: 60px; }
-  .sw { width: 12px; height: 32px; border-radius: 4px; background: var(--fg); flex: none; }
+  .sw { width: 12px; height: 32px; border-radius: 4px; background: color-mix(in srgb, #FF9A5C 60%, transparent); flex: none; }
   .row .t-head { font-size: 17px; }
   .row .t-foot { color: var(--muted); }
   .row .wk { font: 600 14px/1 var(--body); color: var(--muted); }
@@ -37,7 +37,7 @@
   </div>
   <div class="scroll">
     <div class="wrap">
-      <h1 class="t-title" data-a style="--i:0">Your patch <span class="mark">plan</span></h1>
+      <h1 class="t-title" data-a style="--i:0">Your patch plan</h1>
       <p class="t-foot lead" data-a style="--i:1">From your pack's label. Tap a step to change it.</p>
       <div class="card chart" data-a style="--i:2">
         <div class="hd"><p class="t-head">10 weeks, three steps</p><p class="t-foot">From Fri, Nov 13</p></div>
@@ -50,8 +50,8 @@
       </div>
       <div class="list steps-list">
         <div class="row" data-settle style="--i:3"><i class="sw"></i><div class="grow"><p class="t-head">21 mg</p><p class="t-foot">Fri, Nov 13 to Thu, Dec 24</p></div><span class="wk">6 weeks</span></div>
-        <div class="row" data-settle style="--i:4"><i class="sw" style="opacity:.72"></i><div class="grow"><p class="t-head">14 mg</p><p class="t-foot">Fri, Dec 25 to Thu, Jan 7</p></div><span class="wk">2 weeks</span></div>
-        <div class="row" data-settle style="--i:5"><i class="sw" style="opacity:.48"></i><div class="grow"><p class="t-head">7 mg</p><p class="t-foot">Fri, Jan 8 to Thu, Jan 21</p></div><span class="wk">2 weeks</span></div>
+        <div class="row" data-settle style="--i:4"><i class="sw" style="background:color-mix(in srgb, #FF9A5C 42%, transparent)"></i><div class="grow"><p class="t-head">14 mg</p><p class="t-foot">Fri, Dec 25 to Thu, Jan 7</p></div><span class="wk">2 weeks</span></div>
+        <div class="row" data-settle style="--i:5"><i class="sw" style="background:color-mix(in srgb, #FF9A5C 28%, transparent)"></i><div class="grow"><p class="t-head">7 mg</p><p class="t-foot">Fri, Jan 8 to Thu, Jan 21</p></div><span class="wk">2 weeks</span></div>
       </div>
       <div class="night" data-a style="--i:6">
         <p class="t-foot">At night</p>

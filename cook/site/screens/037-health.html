@@ -1,10 +1,10 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>037 Health timeline</title>
-<meta name="motion" content="Title and the Vaping / Smoking chips arrive, then the rail draws top to bottom (900ms) while timeline cards arrive with a 90ms stagger. Done ticks draw as each card lands; the Under way bar fills to 50% (900ms settle). Switching chips cross-fades the list (250ms) with a selection haptic.">
+<meta name="motion" content="Title and the Vaping / Smoking chips arrive; each card's paper-cut spot (layered hills with its sun, cloud or peak) lifts in with the card, then the rail draws top to bottom (900ms) while timeline cards arrive with a 90ms stagger. Done ticks draw as each card lands; the Under way bar fills to 50% (900ms settle). Switching chips cross-fades the list (250ms) with a selection haptic.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .tl { position: relative; margin-top: 16px; padding-left: 30px; display: grid; gap: 10px; }
+  .tl { position: relative; margin-top: 18px; padding-left: 30px; display: grid; gap: 12px; }
   .rail { position: absolute; left: 9px; top: 20px; bottom: 30px; width: 2px; }
   .rail svg { display: block; width: 2px; height: 100%; overflow: visible; }
   .node { position: absolute; left: -30px; top: 50%; margin-top: -10px; width: 20px; height: 20px; border-radius: 99px; display: grid; place-items: center; background: var(--g); }
@@ -14,18 +14,20 @@
   .node.now { box-shadow: inset 0 0 0 2.5px var(--fg); }
   .node.now::after { content: ""; width: 8px; height: 8px; border-radius: 99px; background: var(--fg); }
   .node.ahead { box-shadow: inset 0 0 0 2px var(--line); }
-  .item { position: relative; display: flex; gap: 14px; align-items: center; padding: 12px 14px 12px 12px; }
+  .item { position: relative; display: flex; gap: 14px; align-items: center; padding: 14px 14px 14px 12px; }
   .item .grow { flex: 1; min-width: 0; display: grid; gap: 5px; }
   .item .t-head { font-size: 16.5px; line-height: 1.22; }
-  .ill { width: 56px; height: 56px; border-radius: 16px; background: var(--card-2); flex: none; display: grid; place-items: center; color: var(--fg); }
-  .ill svg { width: 44px; height: 44px; overflow: visible; }
-  .st { display: flex; align-items: center; gap: 6px; font: 600 13px/1.2 var(--body); color: var(--muted); }
-  .st.done { color: var(--tick); }
+  .ill { width: 62px; height: 62px; border-radius: 18px; overflow: hidden; flex: none; display: block; box-shadow: inset 0 0 0 1px var(--line);
+    --sp-sky: #FFE6C8; --sp-h1: #FFAE73; --sp-h2: #FF8A5E; --sp-h3: #E8674A; --sp-cloud: #FFF8EE; }
+  [data-theme="dark"] .ill { --sp-sky: #3A2A2E; --sp-h1: #8A4A3A; --sp-h2: #6E3A30; --sp-h3: #552C27; --sp-cloud: #E9DCCB; }
+  .ill svg { width: 62px; height: 62px; display: block; }
+  .st { display: flex; align-items: center; gap: 6px; font: 600 14px/1.25 var(--body); color: var(--fg); opacity: .82; }
+  .st.done { color: var(--tick); opacity: 1; }
   .st svg { width: 14px; height: 14px; }
   .item .progress { height: 6px; margin-top: 2px; }
   .item .progress > i { background: var(--fg); }
   .item.ahead .t-head { color: var(--fg); }
-  .item.ahead .ill { opacity: .75; }
+  .item.ahead .ill { filter: saturate(.7); }
   .chev { margin-left: 2px; display: grid; }
   .chev svg { width: 18px; height: 18px; }
 </style>
@@ -43,27 +45,27 @@
 
         <div class="card item" data-a style="--i:3">
           <span class="node done" data-ic="check"></span>
-          <span class="ill"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="31" cy="17" r="9" fill="var(--sun)" stroke="none"/><circle cx="22" cy="26" r="13" fill="var(--card)"/><path d="M22 19v7l5 3"/></svg></span>
+          <span class="ill" data-spot="rise"></span>
           <div class="grow"><p class="t-head">Withdrawal can start</p><span class="st done"><span data-ic="check"></span>Done · a few hours in</span></div>
         </div>
         <div class="card item" data-a style="--i:4">
           <span class="node done" data-ic="check"></span>
-          <span class="ill"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12c5 6 10 11 10 17a10 10 0 01-20 0c0-6 5-11 10-17z" fill="var(--card)"/><circle cx="35" cy="14" r="3" fill="var(--mark)" stroke="none"/><circle cx="40" cy="6" r="2" fill="var(--mark)" stroke="none" opacity=".6"/></svg></span>
+          <span class="ill" data-spot="cloud"></span>
           <div class="grow"><p class="t-head">Most nicotine has left your body</p><span class="st done"><span data-ic="check"></span>Done · a few days in</span></div>
         </div>
         <div class="card item" data-a style="--i:5">
           <span class="node done" data-ic="check"></span>
-          <span class="ill"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="34" cy="13" r="5" fill="var(--sun)" stroke="none"/><path d="M4 34c6 0 8-18 16-18s9 18 16 18 6-4 8-4"/><path d="M4 41h40" opacity=".35"/></svg></span>
+          <span class="ill" data-spot="peak"></span>
           <div class="grow"><p class="t-head">Withdrawal is at its strongest</p><span class="st done"><span data-ic="check"></span>Done · the first week</span></div>
         </div>
         <div class="card item" data-a style="--i:6">
           <span class="node now"></span>
-          <span class="ill"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="30" cy="18" r="9" fill="var(--sun)" stroke="none"/><path d="M14 36h20a7 7 0 000-14 10 10 0 00-19 3 5.5 5.5 0 00-1 11z" fill="var(--card)"/></svg></span>
+          <span class="ill" data-spot="sunny"></span>
           <div class="grow"><p class="t-head">Mood swings from withdrawal ease</p><span class="st">Under way · 1 to 2 weeks</span><div class="progress"><i style="--p:50%" id="bar"></i></div></div>
         </div>
         <div class="card item ahead" data-a style="--i:7" data-go="038-health-item">
           <span class="node ahead"></span>
-          <span class="ill"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 24c5-6 10-7 16-3 6-4 11-3 16 3-5 9-27 9-32 0z" fill="var(--mark)" fill-opacity=".85"/><path d="M8 24c9 3 23 3 32 0"/><path d="M38 9l2 4 4 1-4 1-2 4-1-4-4-1 4-1z" fill="var(--sun)" stroke="none"/></svg></span>
+          <span class="ill" data-spot="lips"></span>
           <div class="grow"><p class="t-head">Healthier lips and gums</p><span class="st">Ahead · starts in 2 days</span></div>
           <span data-ic="chev" class="chev"></span>
         </div>
@@ -74,6 +76,19 @@
 </div>
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20, w: e.dataset.ic === 'check' ? 3.2 : 2.2 })));
+  const hills = (peak) => `<path filter="url(#pcLift)" d="${peak ? 'M0 40 L18 26 L27 33 L40 16 L56 34 V62 H0z' : 'M0 40 C14 32 28 36 40 34 S52 30 62 32 V62 H0z'}" fill="var(--sp-h1)"/>
+    <path filter="url(#pcLift)" d="M0 47 C16 41 34 49 62 43 V62 H0z" fill="var(--sp-h2)"/><path filter="url(#pcLift)" d="M0 55 C20 51 40 57 62 52 V62 H0z" fill="var(--sp-h3)"/>`;
+  const sun = (cx, cy, r) => `<circle cx="${cx}" cy="${cy}" r="${r}" fill="var(--sun)"/>`;
+  const cloud = (x, y, k = 1) => `<path transform="translate(${x} ${y}) scale(${k})" d="M2 12h20a5 5 0 000-10 7 7 0 00-13-1 5 5 0 00-7 4 3.5 3.5 0 000 7z" fill="var(--sp-cloud)"/>`;
+  const SP = {
+    rise: sun(31, 38, 11) + hills(),
+    cloud: sun(40, 18, 8) + cloud(8, 14, .9) + hills(),
+    peak: sun(46, 16, 6) + hills(true),
+    sunny: sun(34, 22, 10) + cloud(10, 22, 1.05) + hills(),
+    lips: `<path d="M13 26c6-7 12-8 18-4 6-4 12-3 18 4-6 10-30 10-36 0z" fill="var(--mark)"/><path d="M13 26c11 3 25 3 36 0" stroke="var(--ink)" stroke-opacity=".55" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M49 8l1.6 3.6 3.6 1.2-3.6 1.2L49 18l-1.2-4-3.6-1.2 3.6-1.2z" fill="var(--sun)"/>` + hills().replace(/M0 40 C14 32 28 36 40 34 S52 30 62 32/, 'M0 44 C14 38 28 42 40 40 S52 36 62 38')
+  };
+  document.body.insertAdjacentHTML('beforeend', '<svg width="0" height="0" style="position:absolute"><filter id="pcLift" x="-5%" y="-20%" width="110%" height="140%"><feDropShadow dx="0" dy="-1.2" stdDeviation="1.2" flood-color="#1A0B2E" flood-opacity=".22"/></filter></svg>');
+  document.querySelectorAll('[data-spot]').forEach(e => e.innerHTML = `<svg viewBox="0 0 62 62" aria-hidden="true"><rect width="62" height="62" fill="var(--sp-sky)"/>${SP[e.dataset.spot]}</svg>`);
   const bar = document.getElementById('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.width = '0%'; });
   DX.after(700, () => { bar.style.transition = ''; bar.style.width = ''; });

@@ -4,8 +4,16 @@
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .answers .chips { gap: 10px; }
-  .answers .chip { min-height: 48px; }
+  .answers { gap: 10px !important; padding-top: 18px !important; }
+  .lbl { font: 700 14px/1.3 var(--body); color: var(--fg); margin: 6px 0 0; }
+  .answers .chips.two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .answers .chip { min-height: 48px; justify-content: flex-start; padding: 0 14px; }
+  .plan { display: flex; gap: 10px; align-items: center; margin-top: 10px; padding: 14px 8px 14px 18px; }
+  .plan .xc { width: 88px; height: 88px; flex: none; }
+  .plan .rows { display: grid; gap: 6px; margin-top: 8px; }
+  .plan .r { display: flex; gap: 8px; align-items: baseline; }
+  .plan .r .t-foot.k { color: var(--muted); width: 74px; flex: none; }
+  .plan .r .t-foot.v { font-weight: 600; }
   .sum { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
   .sum .ico-tile { background: var(--sel); color: var(--sel-fg); width: 36px; height: 36px; border-radius: 11px; }
   .sum .ico-tile svg { width: 18px; height: 18px; }
@@ -24,22 +32,26 @@
     <p class="t-body muted" data-a style="--i:1">Pick any that might trip you up. I'll build your plan around them.</p>
   </div>
   <div class="answers">
-    <div class="chips" data-a style="--i:2">
-      <button class="chip on">Cravings</button>
-      <button class="chip" id="stress">Stress</button>
-      <button class="chip">Social situations</button>
-      <button class="chip">Irritability</button>
-      <button class="chip">Weight gain</button>
-      <button class="chip">Sleep</button>
-      <button class="chip">Low motivation</button>
-      <button class="chip">Something else</button>
+    <p class="lbl" data-a style="--i:2">In the moment</p>
+    <div class="chips two" data-a style="--i:2">
+      <button class="chip on">Cravings</button><button class="chip" id="stress">Stress</button>
+      <button class="chip">Irritability</button><button class="chip">Low motivation</button>
     </div>
-    <div class="card sum" data-a style="--i:3">
-      <span class="ico-tile" data-icon="shield"></span>
+    <p class="lbl" data-a style="--i:3">Around you</p>
+    <div class="chips two" data-a style="--i:3">
+      <button class="chip">Social situations</button><button class="chip">Weight gain</button>
+      <button class="chip">Sleep</button><button class="chip">Something else</button>
+    </div>
+    <div class="card plan" data-a style="--i:4">
       <div class="grow">
-        <p class="t-foot"><span class="num" id="n">1</span> <span id="nw">picked</span>. Each one gets its own plan.</p>
-        <p class="t-cap muted" style="margin-top:3px">You can change these any time.</p>
+        <p class="t-head">Your plan so far</p>
+        <div class="rows">
+          <div class="r"><span class="t-foot k">Using</span><span class="t-foot v">Cigarettes and vape</span></div>
+          <div class="r"><span class="t-foot k">Triggers</span><span class="t-foot v">Coffee, Stress</span></div>
+          <div class="r"><span class="t-foot k">Watch for</span><span class="t-foot v"><span id="n">Cravings, Stress</span></span></div>
+        </div>
       </div>
+      <div class="xc"><div class="bob" id="xc"></div></div>
     </div>
   </div>
 
@@ -50,12 +62,13 @@
 </div>
 <script>
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
+  document.getElementById('xc').innerHTML = DX.char('xero', { mood: 'calm', size: 88 });
   document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 40 });
   const bar = document.getElementById('bar'), stress = document.getElementById('stress'), n = document.getElementById('n');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '45.5%'); void bar.offsetWidth; bar.style.transition = '';
-    stress.classList.remove('on', 'bump'); n.textContent = '1'; n.classList.remove('bump'); });
+    stress.classList.remove('on', 'bump'); n.textContent = 'Cravings'; n.classList.remove('bump'); });
   DX.after(250, () => bar.style.setProperty('--p', '54.5%'));
-  const land = () => { stress.classList.add('on', 'bump'); n.textContent = '2'; n.style.display = 'inline-block'; n.classList.add('bump'); };
+  const land = () => { stress.classList.add('on', 'bump'); n.textContent = 'Cravings, Stress'; n.style.display = 'inline-block'; n.classList.add('bump'); };
   DX.after(900, land); DX.onStill(land);
 </script>
 </body></html>

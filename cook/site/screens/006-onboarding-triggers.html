@@ -10,10 +10,13 @@
   .chip.land { animation-name: dx-chipland; }
   @keyframes dx-chipland { 0% { transform: scale(1); } 40% { transform: scale(1.1); } 100% { transform: scale(1); } }
 
-  .lbl { color: var(--muted); margin: 6px 0 -2px; }
-  .lbl + .chips { margin-bottom: 8px; }
-  .wake { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-  .wake .chip { justify-content: center; }
+  .answers { gap: 10px !important; padding-top: 18px !important; }
+  .lbl { font: 700 14px/1.3 var(--body); color: var(--fg); margin: 6px 0 0; }
+  .wake { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .wake .chip { justify-content: center; padding: 0 6px; }
+  .xcard { display: flex; align-items: center; gap: 12px; padding: 6px 16px 6px 6px; margin-top: 10px; }
+  .xcard .xc { width: 88px; height: 88px; flex: none; }
+  .xcard b { font-weight: 700; }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
@@ -28,20 +31,26 @@
     <p class="t-body muted" data-a style="--i:1">I'll time your check-ins around them.</p>
   </div>
   <div class="answers">
-    <p class="t-foot lbl" data-a style="--i:2">How soon after waking do you first use?</p>
-    <div class="chips wake" data-a style="--i:2"><button class="chip">Within 5 min</button><button class="chip on">6 to 30 min</button><button class="chip">31 to 60 min</button><button class="chip">After an hour</button></div>
-    <p class="t-foot lbl" data-a style="--i:3">What sets you off? Pick any.</p>
-    <div class="chips" data-a style="--i:4">
+    <p class="lbl" data-a style="--i:2">First use after waking</p>
+    <div class="chips wake" data-a style="--i:2"><button class="chip">5 min</button><button class="chip on">6-30 min</button><button class="chip">31-60 min</button><button class="chip">1 hr +</button></div>
+    <p class="lbl" data-a style="--i:3">Moments in your day</p>
+    <div class="chips" data-a style="--i:3">
       <button class="chip">Waking up</button><button class="chip on">Coffee</button><button class="chip">After meals</button>
-      <button class="chip on" id="stress">Stress</button><button class="chip">Drinking</button><button class="chip">Boredom</button>
-      <button class="chip">With friends</button><button class="chip">Driving</button><button class="chip">Work breaks</button>
-      <button class="chip">On my phone</button><button class="chip">Something else</button>
+      <button class="chip">Work breaks</button><button class="chip">Driving</button><button class="chip">On my phone</button>
     </div>
+    <p class="lbl" data-a style="--i:4">Feelings and people</p>
+    <div class="chips" data-a style="--i:4">
+      <button class="chip on" id="stress">Stress</button><button class="chip">Boredom</button><button class="chip">Drinking</button>
+      <button class="chip">With friends</button><button class="chip">Something else</button>
+    </div>
+    <div class="card xcard" data-a style="--i:5"><div class="xc"><div class="bob" id="xc"></div></div>
+      <p class="t-foot"><b>Coffee and Stress.</b> I'll check in before your first coffee, and Jelli is one tap away for stress.</p></div>
   </div>
   <div class="dock"><button class="btn" data-a style="--i:5">Continue</button></div>
 </div>
 <script>
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
+  document.getElementById('xc').innerHTML = DX.char('xero', { mood: 'hello', size: 88 });
   document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 40 });
   const bar = document.getElementById('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '27.3%'); void bar.offsetWidth; bar.style.transition = ''; });

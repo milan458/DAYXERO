@@ -10,18 +10,18 @@
   .info { margin-top: 18px; display: grid; gap: 4px; }
   .scrub { margin-top: 18px; }
   .scrub svg { display: block; width: 100%; height: 24px; overflow: visible; }
-  .times { display: flex; justify-content: space-between; margin-top: 6px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .times { display: flex; justify-content: space-between; margin-top: 6px; color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; }
   .controls { margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 30px; }
   .skip { width: 52px; height: 52px; border-radius: 99px; display: grid; place-items: center; color: var(--fg); position: relative; }
   .skip svg { width: 36px; height: 36px; }
-  .skip b { position: absolute; font: 700 12px/1 var(--body); top: 20px; left: 0; right: 0; text-align: center; }
+  .skip b { position: absolute; font: 800 13px/1 var(--body); top: 19.5px; left: 0; right: 0; text-align: center; }
   .play-btn { width: 76px; height: 76px; border-radius: 99px; background: var(--btn); color: var(--btn-fg); display: grid; place-items: center; box-shadow: 0 5px 0 rgba(0,0,0,.18); }
   .play-btn svg { width: 30px; height: 30px; }
-  .speed { width: 52px; height: 32px; border-radius: 99px; background: var(--card-2); font: 700 13px/32px var(--body); text-align: center; }
-  .tx { margin-top: 20px; padding: 6px 16px 14px; }
+  .speed { width: 52px; height: 36px; border-radius: 99px; background: var(--card); box-shadow: inset 0 0 0 1.5px var(--line); color: var(--fg); font: 800 15px/36px var(--body); text-align: center; }
+  .tx { margin-top: 20px; margin-bottom: 40px; padding: 6px 16px 18px; }
   .tx .row { min-height: 50px; }
   .tx-body { overflow: hidden; max-height: 0; transition: max-height 500ms var(--ease), opacity 500ms var(--ease); opacity: 0; display: grid; gap: 8px; }
-  .tx.open .tx-body { max-height: 140px; opacity: 1; }
+  .tx.open .tx-body { max-height: 160px; opacity: 1; }
   .tx-body .t-body { color: var(--muted); }
   .tx-body .now { color: var(--fg); font-weight: 600; }
 </style>
@@ -52,9 +52,9 @@
       </div>
       <div class="controls" data-a style="--i:4">
         <span class="speed">1x</span>
-        <button class="skip" aria-label="Back 15 seconds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12a7 7 0 107-7H8"/><path d="M10.5 2.5L8 5l2.5 2.5"/></svg><b>15</b></button>
+        <button class="skip" aria-label="Back 15 seconds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12a7 7 0 107-7H8"/><path d="M10.5 2.5L8 5l2.5 2.5"/></svg><b>15</b></button>
         <button class="play-btn bump" style="--d:1500ms" aria-label="Pause" data-ic="pause"></button>
-        <button class="skip" aria-label="Forward 15 seconds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12a7 7 0 11-7-7h4"/><path d="M13.5 2.5L16 5l-2.5 2.5"/></svg><b>15</b></button>
+        <button class="skip" aria-label="Forward 15 seconds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12a7 7 0 11-7-7h4"/><path d="M13.5 2.5L16 5l-2.5 2.5"/></svg><b>15</b></button>
         <span style="width:52px"></span>
       </div>
       <div class="card tx open" id="tx" data-a style="--i:5">

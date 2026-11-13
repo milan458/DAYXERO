@@ -1,17 +1,17 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>033 Lesson intro</title>
-<meta name="motion" content="The art card fades up (600ms), Xero settles onto the path at 200ms (900ms) and keeps a slow bob. Title, subtitle and the three 'inside' rows arrive with a 90ms stagger, then the Begin button. Light haptic on Begin.">
+<meta name="motion" content="The paper-cut dawn card fades up (600ms) with its sun rising (2.6s), Xero settles onto the hills at 200ms (900ms) and keeps a slow bob. Title, subtitle and the three 'inside' rows arrive with a 90ms stagger, then the Begin button. Light haptic on Begin.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .art { position: relative; height: 216px; border-radius: 26px; overflow: hidden; margin-top: 8px; }
+  .art { position: relative; height: 258px; border-radius: 26px; overflow: hidden; margin-top: 8px; }
   .art .scene { position: absolute; inset: 0; }
-  .art .hero { position: absolute; left: 50%; bottom: 4px; margin-left: -60px; }
+  .art .hero { position: absolute; left: 50%; bottom: 10px; margin-left: -68px; }
   .art .tag { position: absolute; left: 14px; top: 14px; display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px;
     border-radius: 99px; background: rgba(255,248,238,.9); color: var(--ink); font: 600 13px/1 var(--body); }
   .art .tag svg { width: 15px; height: 15px; }
-  .head { margin-top: 20px; display: grid; gap: 8px; }
-  .inside { margin-top: 18px; }
+  .head { margin-top: 22px; display: grid; gap: 8px; }
+  .inside { margin-top: 20px; }
   .list.inside > .row { min-height: 54px; padding-block: 8px; }
   .inside .t-foot { color: var(--muted); }
   .meta { display: flex; gap: 8px; align-items: center; color: var(--muted); }
@@ -33,7 +33,7 @@
       </div>
       <div class="head">
         <p class="t-foot muted" data-a style="--i:1">Today's lesson · Fri, Nov 13</p>
-        <h1 class="t-large" data-a style="--i:2">The noisy <span class="mark">passengers</span></h1>
+        <h1 class="t-large" data-a style="--i:2">The noisy passengers</h1>
         <p class="t-body muted" data-a style="--i:3">Let them talk. Keep driving.</p>
       </div>
       <div class="list inside" data-a style="--i:4">
@@ -50,7 +50,7 @@
 </div>
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20 })));
-  document.getElementById('scene').innerHTML = DX.char('horizon', { scene: 'path', w: 346, h: 216 });
-  document.getElementById('hero').innerHTML = DX.char('xero', { mood: 'hello', size: 120 });
+  document.getElementById('scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 346, h: 258 });
+  document.getElementById('hero').innerHTML = DX.char('xero', { mood: 'hello', size: 136 });
 </script>
 </body></html>

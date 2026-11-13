@@ -23,6 +23,9 @@ Best so far: none yet
 - 17:14 Dark mode primary button is cream on every ground (was the ground hue on apricot/mint), because button colour drift was the baseline critics' top consistency complaint.
 - 17:14 Kit: DX.beat (scripted steps also land in stills), autohold buttons render held in stills, next badges get a track ring, tinted tiles on colour grounds (builder report).
 
+- 17:26 App icon redesigned (user allowed it): the 0 of DayXero is Xero's body with the sunrise window; light, dark, tinted and a with-face alternative (cook/site/icon/, screen 000-app-icon).
+- 17:22 Prep week aligned to the real program: today is Mon Nov 2, Prep 4 The stress loop (program.json), session cards use the real Prep 4 card titles.
+
 ## User feedback inbox
 - 17:03 "the dark navy purple ... background, even when the evening glim comes in, it seems very shiny for anybody's eyes ... explore ... some other color" | round 1 | teal rejected ("No, they all look bad" 17:06, about flat swatches); 4 full-screen directions rendered (cook/night-directions.png); A Midnight meadow applied: ground #0F1B33 / #0A1326, DX.nightSky art
 - 16:50 "keep dayxero's identity, but tighten it ... so many colors" | open

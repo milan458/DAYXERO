@@ -6,7 +6,11 @@
 <style>
   .q .t-body { text-wrap: pretty; }
   .lbl { color: var(--muted); margin: 4px 0 -2px; }
+  .field { background: #fff; box-shadow: inset 0 0 0 1px rgba(30,26,58,.16); }
+  [data-theme="dark"] .field { background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
   .field.reason { min-height: 84px; line-height: 1.45; }
+  .lbl { font: 700 14px/1.3 var(--body) !important; color: var(--fg) !important; margin: 8px 0 0 !important; }
+  .answers { gap: 10px !important; }
   .caret { display: inline-block; width: 2px; height: 1.1em; vertical-align: -3px; margin-left: 1px; background: var(--fg); opacity: 0; }
   .typing .caret { opacity: 1; animation: blink 900ms steps(1) infinite; }
   @keyframes blink { 50% { opacity: 0; } }
@@ -23,7 +27,7 @@
   </div>
 
   <div class="q">
-    <h1 class="t-large" data-a>Make this <span class="mark">yours</span></h1>
+    <h1 class="t-large" data-a>Make this yours</h1>
     <p class="t-body muted" data-a style="--i:1">Your name and your reason. Both stay on this phone.</p>
   </div>
   <div class="answers">
@@ -31,7 +35,7 @@
     <div class="field" data-a style="--i:2">Sam</div>
     <p class="t-foot lbl" data-a style="--i:3">Why are you quitting, Sam?</p>
     <div class="field reason" id="reason" data-a style="--i:3"><span id="rt">Run with Aria without stopping to catch my breath</span><i class="caret"></i></div>
-    <p class="t-cap hint" data-a style="--i:4"><span data-icon="wave"></span>When a craving hits, I'll show you this.</p>
+    <p class="t-foot hint" data-a style="--i:4"><span data-icon="wave"></span>When a craving hits, I'll show you this.</p>
     <p class="t-foot lbl" data-a style="--i:5">Or add one of these</p>
     <div class="chips" data-a style="--i:6"><button class="chip add">Save $2,555 a year</button><button class="chip add">Breathe easier</button><button class="chip add">More energy</button><button class="chip add">Be there for family</button></div>
   </div>

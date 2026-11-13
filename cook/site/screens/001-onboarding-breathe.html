@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>001 One breath</title>
-<meta name="motion" content="Xero settles up 48px (900ms) inside three soft rings, then the rings and Xero breathe together for one 10 s cycle: 4 s in (scale .82 to 1.06), 6 s out. The headline arrives (600ms, 90ms stagger) with Breathe in lit; at 4000ms the emphasis cross-fades to ...and out (500ms). The in/out meter fills linearly with the breath (4 s, then 6 s). Gentle haptic at 0 and 4000ms marking the turn; auto-advances at 10.4 s.">
+<meta name="motion" content="Xero settles up 48px (900ms) inside three soft rings, then the rings and Xero breathe together for one 10 s cycle: 4 s in (scale .82 to 1.06), 6 s out. The headline arrives (600ms, 90ms stagger) with Breathe in lit; at 4000ms Breathe in swaps for And out (500ms fade and 6px rise; only one word is ever on screen, full contrast). The in/out meter fills linearly with the breath (4 s, then 6 s). Gentle haptic at 0 and 4000ms marking the turn; auto-advances at 10.4 s.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -14,14 +14,15 @@
   .play .rings i:nth-child(2) { animation-delay: -.12s; }
   .hero { position: relative; }
   .copy { position: absolute; left: 0; right: 0; top: 540px; text-align: center; padding: 0 var(--gutter); display: grid; gap: 12px; justify-items: center; }
-  .copy h1 span { display: block; transition: opacity 500ms var(--ease); }
-  .copy h1 .dim { opacity: .32; }
+  .copy h1 { position: relative; height: 40px; width: 100%; }
+  .copy h1 span { position: absolute; left: 0; right: 0; top: 0; display: block; transition: opacity 500ms var(--ease), transform 500ms var(--ease); }
+  .copy h1 .dim { opacity: 0; transform: translateY(6px); }
   .meter { position: absolute; left: 56px; right: 56px; top: 704px; display: grid; grid-template-columns: 4fr 6fr; gap: 6px; }
   .meter .seg { display: grid; gap: 8px; }
   .meter .bar { height: 6px; border-radius: 99px; background: var(--track); overflow: hidden; }
   .meter .bar b { display: block; height: 100%; width: 100%; background: var(--fg); border-radius: inherit; transform-origin: left; }
-  .meter .t-cap { color: var(--muted); }
-  .meter .seg:last-child .t-cap { text-align: right; }
+  .meter .t-foot { color: var(--muted); font-weight: 600; }
+  .meter .seg:last-child .t-foot { text-align: right; }
   .play .meter .in b { animation: fillx 4000ms linear both; }
   .play .meter .out b { animation: fillx 6000ms linear 4000ms both; }
   @keyframes fillx { from { transform: scaleX(0); } to { transform: none; } }
@@ -35,13 +36,13 @@
   </div>
 
   <div class="copy">
-    <h1 class="t-large" data-a style="--i:1"><span id="in">Breathe in...</span><span id="out">...and out</span></h1>
+    <h1 class="t-large" data-a style="--i:1"><span id="in">Breathe in</span><span id="out" class="dim">And out</span></h1>
     <p class="t-body muted" data-a style="--i:2">One slow breath before I ask anything.<br>In for 4, out for 6.</p>
   </div>
 
   <div class="meter" data-a style="--i:3" aria-label="Breath: in for 4, out for 6">
-    <div class="seg in"><div class="bar"><b></b></div><span class="t-cap">In 4</span></div>
-    <div class="seg out"><div class="bar"><b></b></div><span class="t-cap">Out 6</span></div>
+    <div class="seg in"><div class="bar"><b></b></div><span class="t-foot">In 4</span></div>
+    <div class="seg out"><div class="bar"><b></b></div><span class="t-foot">Out 6</span></div>
   </div>
 
   <div class="dock"><a class="link" data-a style="--i:4">Skip</a></div>
@@ -51,6 +52,6 @@
   const i = document.getElementById('in'), o = document.getElementById('out');
   DX.after(0, () => { i.classList.remove('dim'); o.classList.add('dim'); });
   DX.after(4000, () => { i.classList.add('dim'); o.classList.remove('dim'); });
-  DX.onStill(() => { i.classList.add('dim'); });
+  DX.onStill(() => { i.classList.add('dim'); o.classList.remove('dim'); });
 </script>
 </body></html>

@@ -15,7 +15,8 @@
   .word .ch { display: inline-block; transform-origin: 50% 90%; }
   .word .xero { position: relative; display: inline-flex; }
   .word .uline { position: absolute; left: -2px; width: calc(100% + 6px); bottom: -15px; height: 18px; overflow: visible; }
-  .tagline { margin-top: 30px; }
+  .tagline { margin-top: 30px; font: 600 16px/1.4 var(--body); color: var(--fg); opacity: .9; letter-spacing: .1px; }
+  [data-theme="dark"] .tagline { opacity: 1; color: #F3E3D6; }
 
   .layer { position: absolute; left: 0; width: 390px; pointer-events: none; }
   .layer svg { display: block; }
@@ -63,7 +64,7 @@
         <svg class="uline" viewBox="0 0 200 18" preserveAspectRatio="none" aria-hidden="true"><path class="draw" d="M4 11 C40 4 92 5 124 8 C154 10 178 12 196 5" fill="none" stroke="var(--mark)" stroke-width="5.5" stroke-linecap="round" style="--len:200;--d:1560ms;--dur:450ms" vector-effect="non-scaling-stroke"/></svg>
       </span>
     </div>
-    <p class="t-body muted tagline">Quit on your Quit Day.</p>
+    <p class="t-body tagline">Quit on your Quit Day.</p>
   </div>
 
   <svg class="cloud c1" width="96" height="30" viewBox="0 0 96 30" aria-hidden="true"><path d="M8 28 C2 28 0 20 8 18 C8 10 18 6 26 11 C30 2 46 0 52 10 C60 6 72 8 74 18 C84 16 94 22 88 28 Z"/></svg>

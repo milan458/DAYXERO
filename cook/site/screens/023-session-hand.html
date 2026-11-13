@@ -9,19 +9,26 @@
 .stamps{position:absolute;top:192px;left:var(--gutter);right:var(--gutter);display:flex;align-items:center;gap:10px}
 .stamps .nx{width:34px;height:34px;border-radius:99px;display:grid;place-items:center;box-shadow:inset 0 0 0 2px var(--fg);font:800 15px/1 var(--display);color:var(--fg)}
 .stamps .t-foot{margin-left:6px}
-.fan{position:absolute;top:282px;left:0;right:0;height:240px}
-.pc{position:absolute;left:50%;top:36px;width:104px;height:158px;margin-left:-52px;border-radius:17px;background:var(--face);color:#1E1A3A;padding:10px 9px;
-  transform-origin:50% 50%;transform:translate(var(--x),var(--y)) rotate(var(--r));box-shadow:0 14px 26px rgba(0,0,0,.34),inset 0 0 0 1px rgba(255,255,255,.4);overflow:hidden}
+.fan{position:absolute;top:290px;left:0;right:0;height:250px}
+.pc{position:absolute;left:50%;top:40px;width:112px;height:168px;margin-left:-56px;border-radius:18px;background:var(--face);color:#1E1A3A;padding:12px 11px;
+  transform-origin:50% 50%;transform:translate(var(--x),var(--y)) rotate(var(--r));box-shadow:0 10px 22px rgba(60,40,20,.16),inset 0 0 0 1px rgba(255,255,255,.45);overflow:hidden}
+[data-theme="dark"] .pc{box-shadow:0 14px 26px rgba(0,0,0,.4),inset 0 0 0 1px rgba(255,255,255,.4)}
+.pc::after{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:rgba(30,26,58,.14)}
+.pc.up::after{display:none}
 .pc .ic{width:32px;height:32px;border-radius:99px;background:rgba(30,26,58,.1);display:grid;place-items:center}
 .pc .ic svg{width:18px;height:18px}
 .pc b{display:block;margin-top:8px;font:700 14px/1.12 var(--display);letter-spacing:-.2px;max-width:54px}
 .pc .m{display:block;margin-top:3px;font:600 12px/1.3 var(--body);opacity:.72}
-.pc .big{position:absolute;right:-10px;bottom:-12px;opacity:.13}
-.pc .big svg{width:84px;height:84px}
-.pc.up{box-shadow:0 18px 30px rgba(0,0,0,.4),0 0 0 3px var(--fg)}
+.pc .big{position:absolute;right:-12px;bottom:-14px;opacity:.14}
+.pc .big svg{width:88px;height:88px}
+.pc .ic{margin-left:4px}
+.pc.up{box-shadow:0 18px 30px rgba(60,40,20,.22),0 0 0 3px var(--fg)}
+[data-theme="dark"] .pc.up{box-shadow:0 18px 30px rgba(0,0,0,.45),0 0 0 3px var(--fg)}
+.pc.up b{font-size:19px;max-width:none;margin-top:12px}
+.pc.up .m{font-size:13px}
 .play .pc{animation:deal 760ms var(--settle) both;animation-delay:calc(300ms + var(--k) * 130ms)}
 @keyframes deal{from{opacity:0;transform:translate(0px,460px) rotate(0deg)}35%{opacity:1}to{opacity:1;transform:translate(var(--x),var(--y)) rotate(var(--r))}}
-.next{position:absolute;top:550px;left:var(--gutter);right:var(--gutter);display:flex;gap:14px;align-items:center}
+.next{position:absolute;top:592px;left:var(--gutter);right:var(--gutter);display:flex;gap:14px;align-items:center}
 .mini{width:40px;height:54px;border-radius:9px;background:var(--face);color:#1E1A3A;display:grid;place-items:center;flex:none}
 .mini svg{width:20px;height:20px}
 </style>
@@ -29,7 +36,7 @@
 <div class="screen" data-ground="table">
   <div class="nav"><button class="icon-btn" aria-label="Close" id="close"></button><div class="grow"></div><span class="t-foot muted">Mon, Nov 2</span></div>
   <div class="head pad">
-    <h1 class="t-large" data-a style="--i:0">The <span class="mark">stress</span> loop</h1>
+    <h1 class="t-large" data-a style="--i:0">The stress loop</h1>
     <p class="t-foot muted" data-a style="--i:1">Prep 4 · 5 cards · about 28 min</p>
   </div>
   <div class="stamps" id="stamps" data-a style="--i:2"></div>
@@ -53,7 +60,7 @@ document.getElementById('stamps').innerHTML = [1,2,3].map(n => DX.badge({kind:'p
 const cards = [
   ['apricot','headphones','Listen','6 min'], ['sky','hand','Try','5 min'], ['apricot','eye','Reveal','6 min'],
   ['sky','myth','Myth or fact','5 min'], ['mint','hand','Try','6 min']];
-document.getElementById('fan').innerHTML = cards.map((c, k) => `<div class="pc f-${c[0]} ${k === 0 ? 'up' : ''}" style="--x:${(k - 2) * 62}px;--r:${(k - 2) * 3}deg;--y:${k === 0 ? -20 : [10,3,0,3,10][k]}px;--k:${k};z-index:${k + 1}">
-  <span class="ic">${ic(c[1])}</span><b>${c[2]}</b><span class="m">${c[3]}</span>${k === 4 ? `<span class="big">${ic(c[1])}</span>` : ''}</div>`).join('');
+document.getElementById('fan').innerHTML = cards.map((c, k) => `<div class="pc f-${c[0]} ${k === 0 ? 'up' : ''}" style="--x:${k === 0 ? -116 : (k - 2) * 52 + 20}px;--r:${k === 0 ? -6 : (k - 2) * 3}deg;--y:${k === 0 ? -26 : [10,6,2,4,10][k]}px;--k:${k};z-index:${k === 0 ? 9 : k + 1}">
+  <span class="ic">${ic(c[1])}</span>${k === 0 ? `<b>${c[2]}</b><span class="m">${c[3]}</span>` : ''}<span class="big">${ic(c[1])}</span></div>`).join('');
 </script>
 </body></html>

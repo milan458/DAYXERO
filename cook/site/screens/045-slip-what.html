@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>045 Slip: what happened</title>
-<meta name="motion" content="Calm, no springs. Title and helper arrive, then each question group arrives in order (600ms, 90ms stagger), then the privacy note and Save. Tapping a chip fills it in 250ms with a light selection haptic.">
+<meta name="motion" content="Calm, no springs. Title and helper arrive, then each question group arrives in order (600ms, 90ms stagger), then the 'Only you see this' card with Jelli (calm, settles in 900ms then bobs), then Save. Chips sit in even two and three column rows so no option wraps alone. Tapping a chip fills it in 250ms with a light selection haptic.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -10,8 +10,14 @@
   .q6 { display: grid; gap: 12px; padding: 18px 0; }
   .q6 + .q6 { border-top: 1px solid var(--line); }
   .q6 .t-head { font-size: 17px; }
-  .note { margin-top: 10px; display: flex; gap: 12px; align-items: center; color: var(--muted); }
-  .note svg { width: 18px; height: 18px; flex: none; }
+  .chips.three { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .chips.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .chips.three .chip, .chips.two .chip { justify-content: center; padding: 0 10px; }
+  .why { margin-top: 14px; display: flex; gap: 14px; align-items: center; padding: 14px 18px 14px 8px; }
+  .why .jl { width: 96px; height: 96px; flex: none; display: grid; place-items: center; }
+  .why .t-foot { color: var(--muted); margin-top: 4px; }
+  .why .lk { display: inline-flex; align-items: center; gap: 6px; }
+  .why .lk svg { width: 16px; height: 16px; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -27,18 +33,24 @@
       <div class="qs">
         <div class="q6" data-a style="--i:2">
           <p class="t-head">What did you have?</p>
-          <div class="chips"><button class="chip on">Vape</button><button class="chip">Cigarettes</button></div>
+          <div class="chips two"><button class="chip on">Vape</button><button class="chip">Cigarettes</button></div>
         </div>
         <div class="q6" data-a style="--i:3">
           <p class="t-head">How much?</p>
-          <div class="chips"><button class="chip">A few puffs</button><button class="chip on">One session</button><button class="chip">More</button></div>
+          <div class="chips three"><button class="chip">A few puffs</button><button class="chip on">One session</button><button class="chip">More</button></div>
         </div>
         <div class="q6" data-a style="--i:4">
           <p class="t-head">When?</p>
-          <div class="chips"><button class="chip on">Just now</button><button class="chip">Earlier today</button><button class="chip">Yesterday</button></div>
+          <div class="chips three"><button class="chip on">Just now</button><button class="chip">Earlier today</button><button class="chip">Yesterday</button></div>
         </div>
       </div>
-      <p class="t-foot note" data-a style="--i:5"><span data-ic="lock"></span>Only you see this. It helps Jelli spot your patterns.</p>
+      <div class="card why" data-a style="--i:5">
+        <div class="jl" data-settle style="--d:500ms"><div class="bob" id="jelli"></div></div>
+        <div class="grow">
+          <p class="t-head lk" style="font-size:17px"><span data-ic="lock"></span>Only you see this</p>
+          <p class="t-foot">It helps Jelli spot your patterns, like coffee mornings, so the plan fits.</p>
+        </div>
+      </div>
     </div>
   </div>
   <div class="dock">
@@ -47,5 +59,6 @@
 </div>
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic));
+  document.getElementById('jelli').innerHTML = DX.char('jelli', { mood: 'calm', size: 88 });
 </script>
 </body></html>

@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>048 NRT products</title>
-<meta name="motion" content="Title arrives, then the four product rows arrive top to bottom (600ms, 90ms stagger). At 1.2s the Patch row lands selected: outline and tick settle in over 520ms with a light selection haptic, and the '1 of 2 picked' line updates. Tapping a third row gently shakes the counter instead of selecting.">
+<meta name="motion" content="Title arrives, then the four product rows arrive top to bottom (600ms, 90ms stagger). At 1.2s the Patch row lands selected: outline and tick settle in over 520ms with a light selection haptic, and the '1 of 2 picked' line updates. Xero (hello, 88px) settles into the tip card below and bobs. Tapping a third row gently shakes the counter instead of selecting.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -13,8 +13,13 @@
   .play .opt.land { animation: land 520ms var(--settle) both; }
   @keyframes land { 0% { opacity: 1; transform: scale(.97); } 100% { opacity: 1; transform: none; } }
   .count { margin-top: 14px; display: flex; justify-content: space-between; align-items: center; color: var(--muted); }
-  .tip { margin-top: 12px; display: flex; gap: 12px; align-items: center; }
-  .tip svg { width: 20px; height: 20px; flex: none; }
+  .opt { min-height: 72px; }
+  .opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
+  .opt .ico-tile { width: 46px; height: 46px; border-radius: 14px; }
+  .opt .ico-tile svg { width: 24px; height: 24px; }
+  .tip { margin-top: 14px; display: flex; gap: 12px; align-items: center; padding: 12px 18px 12px 8px; }
+  .tip .xr { width: 92px; height: 92px; flex: none; display: grid; place-items: center; }
+  .tip .t-foot { color: var(--muted); margin-top: 4px; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -34,7 +39,13 @@
         <button class="opt" data-a style="--i:5"><span class="ico-tile" data-p="inhaler"></span><span class="grow"><span class="nm">Inhaler</span><span class="t-foot">Puff on a cartridge</span></span><span class="radio"></span></button>
       </div>
       <p class="t-foot count" data-a style="--i:6"><span id="picked">1 of 2 picked</span></p>
-      <div class="card flat tip t-foot" data-a style="--i:7"><span data-ic="sparkle"></span><span>Add gum or a lozenge for sudden cravings. Patch plus one of these is the pairing that works best.</span></div>
+      <div class="card tip" data-a style="--i:7">
+        <div class="xr" data-settle style="--d:500ms"><div class="bob" id="xero"></div></div>
+        <div class="grow">
+          <p class="t-head" style="font-size:17px">Patch plus one more</p>
+          <p class="t-foot">Add gum or a lozenge for sudden cravings. It's the pairing that works best.</p>
+        </div>
+      </div>
     </div>
   </div>
   <div class="dock">
@@ -50,6 +61,7 @@
     inhaler: '<rect x="8" y="2.5" width="8" height="5" rx="1.5"/><rect x="6.5" y="7.5" width="11" height="14" rx="3"/><path d="M10 12h4"/>'
   };
   document.querySelectorAll('[data-p]').forEach(e => e.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${PP[e.dataset.p]}</svg>`);
+  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'hello', size: 88 });
   const patch = document.getElementById('patch'), picked = document.getElementById('picked');
   DX.after(0, () => { patch.classList.remove('on', 'land'); picked.textContent = '0 of 2 picked'; });
   DX.after(1200, () => { patch.classList.add('on', 'land'); picked.textContent = '1 of 2 picked'; });

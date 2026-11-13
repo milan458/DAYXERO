@@ -12,13 +12,16 @@
 
   .stepper { display: flex; align-items: center; gap: 12px; padding: 14px; }
   .stepper .icon-btn { width: 52px; height: 52px; }
-  .stepper .icon-btn.plus { background: var(--sel); color: var(--sel-fg); }
+  .stepper .icon-btn { background: var(--card-2); color: var(--fg); box-shadow: inset 0 0 0 1.5px var(--line); }
+  .stepper .icon-btn.plus { background: var(--sel); color: var(--sel-fg); box-shadow: none; }
+  .stepper { padding: 20px 16px; }
   .stepper .mid { flex: 1; text-align: center; }
   .stepper .t-display { font-size: 52px; display: inline-block; }
   .stepper .t-foot { color: var(--muted); }
   .roll { animation: roll 320ms var(--ease) both; }
   @keyframes roll { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
-  .lbl { color: var(--muted); margin: 10px 0 -2px; }
+  .lbl { font: 700 14px/1.3 var(--body); color: var(--fg); margin: 14px 0 0; }
+  .money { margin-top: 18px !important; padding: 18px; }
   .chips.even { display: grid; grid-template-columns: repeat(4, 1fr); }
   .chips.even .chip { justify-content: center; padding: 0 8px; }
   .chips.three { grid-template-columns: repeat(3, 1fr); }

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+<defs><linearGradient id="bglight0" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFCF9C"/><stop offset="1" stop-color="#FFB27A"/></linearGradient>
+<clipPath id="holelight0"><ellipse cx="512" cy="560" rx="132" ry="178"/></clipPath></defs>
+<rect width="1024" height="1024" fill="url(#bglight0)"/>
+<ellipse cx="512" cy="905" rx="250" ry="34" fill="#000" opacity=".10"/>
+<path fill-rule="evenodd" fill="#FF7155" d="M512 170 C722 170 836 350 836 548 C836 770 704 900 512 900 C320 900 188 770 188 548 C188 350 302 170 512 170 Z
+ M512 382 C585 382 644 462 644 560 C644 658 585 738 512 738 C439 738 380 658 380 560 C380 462 439 382 512 382 Z"/>
+<path fill="#E85A3E" d="M716 250 C800 330 836 440 836 548 C836 770 704 900 512 900 C650 860 760 740 760 548 C760 430 744 320 716 250 Z"/>
+<path d="M290 360 C312 290 360 236 430 210" fill="none" stroke="#FFB09C" stroke-width="26" stroke-linecap="round"/>
+<g clip-path="url(#holelight0)"><rect x="370" y="380" width="290" height="420" fill="#BFD7FF"/>
+<circle cx="512" cy="598" r="62" fill="#FFC93C"/>
+<path d="M370 648 C430 618 500 638 560 620 S640 610 660 618 V820 H370Z" fill="#3FB37F"/>
+<path d="M370 690 C440 670 520 700 660 674 V820 H370Z" fill="#2E9A69"/></g>
+
+</svg>
