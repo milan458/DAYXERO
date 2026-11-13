@@ -81,6 +81,8 @@ jobs:
           if pick: print(pick["udid"])
           ')
           echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+          # Start it now so it has warmed up by the time the screenshots begin.
+          [ -n "$UDID" ] && { xcrun simctl boot "$UDID" 2>/dev/null || true; }
 
       - name: Build and test
         run: |
@@ -382,16 +384,29 @@ jobs:
           shoot light large onb-trial-mock-light -dx.onboardingStep trial -dx.store mock
           fi
           fi
+          echo "$BRANCH" > shots-branch
+      # Saves whatever screenshots were taken, even when the step above fails, times out or is cancelled,
+      # so a late problem never throws the set away. Retries the push through network blips.
+      - name: Save screenshots
+        if: always() && github.event_name == 'workflow_dispatch' && inputs.screenshots
+        run: |
+          [ -n "$(ls shots/*.png 2>/dev/null)" ] || { echo "No screenshots to save"; exit 0; }
+          BRANCH=$(cat shots-branch 2>/dev/null)
+          if [ -z "$BRANCH" ]; then
+            if [ "${{ inputs.core_only }}" = "true" ]; then BRANCH=ci-screens-core
+            elif [ "${{ inputs.v4_only }}" = "true" ]; then BRANCH=ci-screens-v4
+            else BRANCH=ci-screens; fi
+          fi
+          echo "Saving $(ls shots/*.png | wc -l) screenshots to $BRANCH"
           cd shots
           git init -q -b "$BRANCH"
           git config user.name "ci" && git config user.email "ci@users.noreply.github.com"
           git add . && git commit -qm "Screenshots for ${GITHUB_SHA::7}"
-          # Retried: a network blip at the end shouldn't lose an hour of screenshots.
           for try in 1 2 3 4 5 6; do
-            git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" "$BRANCH" && break
-            [ "$try" = 6 ] && exit 1
+            git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" "$BRANCH" && exit 0
             sleep $((try * 15))
           done
+          exit 1
 
       # Logs live in blob storage that some readers can't reach, so surface the
       # errors as annotations (readable through the checks API) as well.
