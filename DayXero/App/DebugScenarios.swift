@@ -5,9 +5,10 @@ import SwiftData
 import UIKit
 
 /// Sample people at different points in the program, for CI screenshots
-/// (`-dx.homeScenario prep|quitday|day3|done|day12|free|returning`). Seeds an in-memory store only.
+/// (`-dx.homeScenario prep|quitday|day3|done|day7|day12|free|returning`). Seeds an in-memory store only.
+/// `day7` is the v5 persona after Quit Day (cook/site/GUIDE.md): joined 14 days ago, Quit Day 7 days ago, 3 waves today.
 enum DebugScenario: String {
-    case prep, quitday, day3, done, day12, free
+    case prep, quitday, day3, done, day7, day12, free
     /// Back after a 4-day break: the program owes a replay (S5.7).
     case returning
 
@@ -25,6 +26,7 @@ enum DebugScenario: String {
         case .prep: (-3, 4)
         case .quitday: (-7, 0)
         case .day3, .done: (-9, -2)
+        case .day7: (-14, -7)
         case .day12: (-18, -11)
         case .free: (-1, 5)
         case .returning: (-13, -6)
@@ -100,7 +102,7 @@ enum DebugScenario: String {
             context.insert(IfThenPlan(situation: "after coffee", action: "take a short walk", createdAt: now.addingTimeInterval(-1700)))
         }
         // A few cravings ridden out earlier today, for "That's 4 this week" in Craving SOS.
-        if self == .day3 {
+        if self == .day3 || self == .day7 {
             for hours in 1...3 {
                 let entry = LogEntry(kind: .craving, timestamp: now.addingTimeInterval(Double(-hours) * 3600))
                 entry.outcome = .passed
@@ -119,6 +121,7 @@ enum DebugScenario: String {
         case .day3: done = (1...prepDays).map { ProgramDayID(phase: .prep, index: $0) } + (1...2).map { ProgramDayID(phase: .quit, index: $0) }
         case .done: done = (1...prepDays).map { ProgramDayID(phase: .prep, index: $0) } + (1...3).map { ProgramDayID(phase: .quit, index: $0) }
         case .day12: done = (1...prepDays).map { ProgramDayID(phase: .prep, index: $0) } + (1...7).map { ProgramDayID(phase: .quit, index: $0) }
+        case .day7: done = (1...prepDays).map { ProgramDayID(phase: .prep, index: $0) } + (1...6).map { ProgramDayID(phase: .quit, index: $0) }
         case .free: done = [ProgramDayID(phase: .prep, index: 1)]
         case .returning: done = (1...prepDays).map { ProgramDayID(phase: .prep, index: $0) } + (1...3).map { ProgramDayID(phase: .quit, index: $0) }
         }
@@ -140,6 +143,7 @@ enum DebugScenario: String {
         case .day3, .returning: 9
         case .done: 10
         case .day12: 17
+        case .day7: 13
         case .free: 1
         }
         if let content = ProgramContent.bundled {

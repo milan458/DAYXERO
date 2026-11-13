@@ -2,9 +2,10 @@ import DayXeroCore
 import SwiftData
 import SwiftUI
 
-/// Today (Today redesign, 4 Nov 2026, from Milan's sketch): a sky with the week, the greeting and a ring with the crew;
-/// under it the one card that matters now; then the day as a timeline. Scrolling folds the sky into a slim card
-/// pinned at the top. After 6 PM the whole screen goes dark with Glim (see `HomeView`).
+/// Today (v5, cook/site/screens/015-018): a paper-cut scene with the crew, the greeting and the day's line; under it
+/// the one card that matters now, the prep countdown, the day's log, then the rest of the day as quiet lists.
+/// Scrolling folds the scene into a slim header pinned at the top. After 6 PM the whole screen goes dark with Glim
+/// on the night ground (see `HomeView`). Motion specs are in TodayHero.swift and TodayTimeline.swift.
 ///
 /// Every number here comes from the same place the rest of the app reads it, so Today, Program and Progress agree:
 /// prep sessions and days clear from `HomeSnapshot`, the session from `ProgramToday`, smoke-free days from
@@ -66,15 +67,16 @@ struct TodayView: View {
                     .overlay(alignment: .top) {
                         if showSlim {
                             TodaySlimHeader(model: day.hero)
-                                .padding(.horizontal, DX.Space.m)
                                 .dxReadableColumn()
-                                .padding(.top, top + DX.Space.xxs)
+                                .background(alignment: .top) {
+                                    pageColor(day).opacity(0.94).background(.ultraThinMaterial).ignoresSafeArea(edges: .top)
+                                }
                                 .transition(.move(edge: .top).combined(with: .opacity))
                         }
                     }
                 }
             }
-            .background(TodayInk.page.ignoresSafeArea())
+            .background(pageBackground(day).ignoresSafeArea())
         }
         .animation(motion.animation(DX.Move.settle), value: showSlim)
         .overlay(alignment: .bottom) {
@@ -173,14 +175,41 @@ struct TodayView: View {
             .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { heroHeight = $0 }
     }
 
-    /// The focus card and the timeline.
-    private func lower(_ day: TodayDay) -> some View {
-        VStack(alignment: .leading, spacing: DX.Space.m) {
-            focusCard(day).id("lower")
-            timeline(day)
+    /// The page: the kit's lighter cream under the scene during prep (015); after Quit Day the apricot ground fading
+    /// to cream down the scroll (016, 017); the night ground after 6 PM (018).
+    private func pageColor(_ day: TodayDay) -> Color {
+        day.night ? DX.Ground.violet.background : TodayInk.page
+    }
+
+    @ViewBuilder
+    private func pageBackground(_ day: TodayDay) -> some View {
+        if day.night {
+            DX.Ground.violet.background
+        } else if day.state == .postQuit {
+            LinearGradient(stops: [.init(color: Color(light: 0xFFC38A, dark: 0x0E1322), location: 0),
+                                   .init(color: Color(light: 0xFFD9B4, dark: 0x0E1322), location: 0.45),
+                                   .init(color: TodayInk.page, location: 1)], startPoint: .top, endPoint: .bottom)
+        } else {
+            TodayInk.page
         }
-        .padding(.horizontal, DX.Space.m)
-        .padding(.top, DX.Space.xs)
+    }
+
+    /// The focus card, the prep countdown, the day's log and the rest of the day.
+    private func lower(_ day: TodayDay) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            focusCard(day).id("lower").dxArrive(4)
+            if day.state == .prep, let stamps = day.stamps {
+                TodayPrepStamps(daysToQuit: stamps.daysToQuit, quitDate: stamps.quitDate, done: stamps.done,
+                                total: stamps.total, current: stamps.current)
+                    .dxArrive(5)
+            }
+            if day.focus != .recovery {
+                logRows(day).todayCard().dxArrive(6)
+            }
+            timeline(day).padding(.top, 12)
+        }
+        .padding(.horizontal, DX.Layout.gutter)
+        .padding(.top, day.night ? -24 : 18)
         // Room for the floating tab bar is HomeView's bottom inset (UX-11).
         .padding(.bottom, DX.Space.s)
         .dxReadableColumn()
@@ -200,18 +229,23 @@ struct TodayView: View {
         case .recovery:
             let copy = day.recovery
             TodayFocusCard(art: .recovery(id: copy.featuredID ?? ""), kicker: copy.kicker, title: copy.title, detail: copy.line,
-                           crewStage: day.crewStage) { showHealth = true }
-                .accessibilityHint(Text("Opens what changes in your body"))
+                           crewStage: day.crewStage, action: { showHealth = true }) {
+                Rectangle().fill(TodayInk.line).frame(height: 1)
+                logRows(day)
+            }
+            .accessibilityHint(Text("Opens what changes in your body"))
         case .checkIn:
             TodayFocusCard(art: .checkIn, kicker: String(localized: "With Glim · 1 min"),
                            title: String(localized: "A minute on how today went"), button: String(localized: "Check in"),
-                           buttonFill: Color(hex: 0x6B4FD8), crewStage: day.crewStage) { showCheckIn = true }
-                .accessibilityHint(Text("Opens the evening check-in"))
+                           crewStage: day.crewStage, action: { showCheckIn = true }) {
+                TodayNightTicks(nights: day.nights)
+            }
+            .accessibilityHint(Text("Opens the evening check-in"))
         case .windDown:
             TodayFocusCard(art: .windDown, kicker: String(localized: "Wind down"),
                            title: String(localized: "Can't sleep? Breathe with Glim"),
                            detail: String(localized: "A slow breath, then rest."), button: String(localized: "Breathe"),
-                           buttonFill: Color(hex: 0x6B4FD8), crewStage: day.crewStage) { showCalmTools = true }
+                           crewStage: day.crewStage) { showCalmTools = true }
         }
     }
 
@@ -219,62 +253,55 @@ struct TodayView: View {
 
     @ViewBuilder
     private func timeline(_ day: TodayDay) -> some View {
-        TodayTimeline {
-            if day.pledgedAt != nil || day.showsPledge || day.sessionDone != nil || day.sessionRow {
-                TodaySectionLabel(text: String(localized: "Morning"))
-                if let time = day.pledgedAt {
-                    TodayStep(node: .done) { TodayDoneRow(title: String(localized: "Morning pledge"), detail: done(at: time)) }
-                } else if day.showsPledge {
-                    TodayStep(node: .later) {
+        let morning = day.pledgedAt != nil || day.showsPledge || day.sessionDone != nil || day.sessionRow
+        let recoveryRow = day.state == .postQuit && day.focus != .recovery
+        let challenge: PrepChallenge? = if day.state == .prep, case .prep = day.snap.phase {
+            PrepChallenge.forPrepDay(day.snap.prepDayNumber)
+        } else { nil }
+        let evening = day.checkedInAt != nil || day.focus != .checkIn
+        VStack(alignment: .leading, spacing: 22) {
+            if morning {
+                TodaySection(title: String(localized: "Morning"), index: 7) {
+                    if let time = day.pledgedAt {
+                        TodayStep(node: .done) { TodayDoneRow(title: String(localized: "Morning pledge"), detail: done(at: time)) }
+                    } else if day.showsPledge {
                         TodayRowCard(glyph: .pledge, title: String(localized: "Morning pledge"), trailing: String(localized: "10 sec"),
                                      showsChevron: true) { showPledge = true }
                             .accessibilityHint(Text("Opens the morning pledge"))
                     }
-                }
-                if let finished = day.sessionDone {
-                    TodayStep(node: .done) { TodayDoneRow(title: finished.title, detail: done(at: finished.time)) }
-                } else if day.sessionRow, let today = day.program {
-                    TodayStep(node: .later) {
+                    if let finished = day.sessionDone {
+                        TodayStep(node: .done) { TodayDoneRow(title: finished.title, detail: done(at: finished.time)) }
+                    } else if day.sessionRow, let today = day.program {
                         TodaySessionCard(today: today, style: .row, onOpen: openSession, onUnlock: unlock)
                     }
                 }
             }
-
-            TodaySectionLabel(text: String(localized: "Through the day"))
-            if day.state == .postQuit, day.focus != .recovery {
-                TodayStep(node: .later) {
-                    TodayRowCard(eyebrow: day.recovery.kicker, title: day.recovery.title, fill: TodayInk.recovery,
-                                 showsChevron: true) { showHealth = true }
-                        .accessibilityHint(Text("Opens what changes in your body"))
+            if recoveryRow || challenge != nil {
+                TodaySection(title: String(localized: "Through the day"), index: 8) {
+                    if recoveryRow {
+                        TodayRowCard(icon: .heart, eyebrow: day.recovery.kicker, title: day.recovery.title, showsChevron: true) { showHealth = true }
+                            .accessibilityHint(Text("Opens what changes in your body"))
+                    }
+                    if let challenge {
+                        if day.challengeDone {
+                            TodayStep(node: .done) { TodayDoneRow(title: String(localized: challenge.title), detail: String(localized: "Done")) }
+                        } else {
+                            challengeRow(challenge, day: day)
+                        }
+                    }
                 }
             }
-            TodayStep(node: .later) { logCard(day) }
-            if day.state == .prep, case .prep = day.snap.phase {
-                let challenge = PrepChallenge.forPrepDay(day.snap.prepDayNumber)
-                if day.challengeDone {
-                    TodayStep(node: .done) { TodayDoneRow(title: String(localized: challenge.title), detail: String(localized: "Done")) }
-                } else {
-                    TodayStep(node: .later) { challengeRow(challenge, day: day) }
-                }
-            }
-
-            TodaySectionLabel(text: String(localized: "Evening"))
-            if let time = day.checkedInAt {
-                TodayStep(node: .done) { TodayDoneRow(title: String(localized: "Evening check-in"), detail: done(at: time)) }
-            } else if day.focus != .checkIn {
-                TodayStep(node: .later) {
-                    TodayRowCard(title: String(localized: "Check in with Glim · 1 min"),
-                                 detail: String(localized: "Opens at 6 PM"), fill: TodayInk.waiting, detailColor: TodayInk.waitingInk,
-                                 action: nil)
-                }
-            }
-
-            if let ahead = day.ahead {
-                TodayStep(node: ahead.isQuitDay ? .quitDay : .milestone) {
-                    Text(verbatim: ahead.text)
-                        .dxFont(15, weight: 700, style: .subheadline)
-                        .foregroundStyle(ahead.isQuitDay ? Color(light: 0x8E2F18, dark: 0xFFB09C) : DX.Fill.green)
-                        .frame(minHeight: 36)
+            if evening || day.ahead != nil {
+                TodaySection(title: String(localized: "Evening"), index: 9) {
+                    if let time = day.checkedInAt {
+                        TodayStep(node: .done) { TodayDoneRow(title: String(localized: "Evening check-in"), detail: done(at: time)) }
+                    } else if day.focus != .checkIn {
+                        TodayRowCard(icon: .moon, title: String(localized: "Check in with Glim · 1 min"),
+                                     detail: String(localized: "Opens at 6 PM"), action: nil)
+                    }
+                    if let ahead = day.ahead {
+                        TodayAheadRow(text: ahead.text, isQuitDay: ahead.isQuitDay, milestone: day.snap.nextMilestone)
+                    }
                 }
             }
         }
@@ -290,27 +317,22 @@ struct TodayView: View {
             challengeDoneOn = day.clock.day(containing: day.now).timeIntervalSince1970
             Analytics.track(.prepChallengeDone(day: day.snap.prepDayNumber))
         } label: {
-            HStack(alignment: .top, spacing: DX.Space.s) {
-                Image(systemName: "bolt.fill").font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(TodayInk.ink)
-                    .frame(width: 30, height: 30)
-                    .background(DX.Fill.surface, in: Circle())
-                    .accessibilityHidden(true)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Today's challenge · 1 min").dxFont(13, weight: 500, style: .footnote).foregroundStyle(TodayInk.muted)
-                    Text(challenge.title).dxFont(16, weight: 600, style: .body).foregroundStyle(TodayInk.ink)
+            HStack(alignment: .top, spacing: 14) {
+                DXIcon(.flame, size: 22).foregroundStyle(TodayInk.muted).padding(.top, 2)
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("Today's challenge · 1 min").dxType(.caption).foregroundStyle(TodayInk.muted)
+                    Text(challenge.title).dxFace(.display, 16, weight: 700).foregroundStyle(TodayInk.ink)
                         .fixedSize(horizontal: false, vertical: true)
-                    Text(challenge.detail).dxFont(13, weight: 500, style: .footnote).foregroundStyle(TodayInk.muted)
+                    Text(challenge.detail).dxFace(.body, 13, weight: 500).foregroundStyle(TodayInk.muted)
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .multilineTextAlignment(.leading)
             }
-            .padding(12)
-            .background(TodayInk.card, in: RoundedRectangle(cornerRadius: DX.Layout.smallCardRadius, style: .continuous))
+            .padding(.leading, 16).padding(.trailing, 14).padding(.vertical, 12)
             .contentShape(Rectangle())
         }
-        .buttonStyle(.plain)
+        .buttonStyle(.dxPress)
         .sensoryFeedback(DX.Haptic.commit, trigger: day.challengeDone)
         .accessibilityHint(Text("Marks it done"))
     }
@@ -319,7 +341,8 @@ struct TodayView: View {
 
     /// Through the day: every product before Day Xero with batch buttons (puffs by five and ten, so a vape day isn't a
     /// hundred taps); after it, urges surfed; water always. Tapping a count opens the log for anything else.
-    private func logCard(_ day: TodayDay) -> some View {
+    /// The day's log rows (kit 017): a 40 pt icon tile, the count and its line, small pill buttons on the right.
+    private func logRows(_ day: TodayDay) -> some View {
         VStack(spacing: 0) {
             if day.state == .prep {
                 ForEach(Array(day.products.enumerated()), id: \.element) { index, product in
@@ -332,12 +355,11 @@ struct TodayView: View {
             divider
             TodayWaterRow(profile: profile, now: day.now)
         }
-        .padding(.leading, 12).padding(.trailing, 8).padding(.vertical, 6)
-        .background(TodayInk.card, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .padding(.horizontal, 16).padding(.vertical, 4)
     }
 
     private var divider: some View {
-        Rectangle().fill(DX.Fill.hairline).frame(height: 1).padding(.leading, 40)
+        Rectangle().fill(TodayInk.line).frame(height: 1)
     }
 
     private func useRow(_ product: Product, day: TodayDay) -> some View {
@@ -365,13 +387,11 @@ struct TodayView: View {
             .accessibilityHint(Text("Opens the log"))
             ForEach(Array(batches.enumerated()), id: \.element) { index, batch in
                 Button { logUse(product, count: batch) } label: {
-                    Text(verbatim: "+\(batch)")
-                        .dxFont(15, weight: 700, style: .subheadline)
-                        .foregroundStyle(index == 0 ? TodayInk.page : TodayInk.ink)
-                        .frame(width: 52, height: 44)
-                        .background(index == 0 ? TodayInk.ink : DX.Fill.surface, in: Capsule())
+                    Text(verbatim: "+\(batch)").frame(minWidth: 20)
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(.dx(index == 0 ? .small : .ghostSmall, on: .apricot))
+                .frame(height: 44)
+                .fixedSize()
                 .accessibilityLabel(Text(batchLabel(product, count: batch)))
                 .accessibilityIdentifier(index == 0 ? "home.log.\(product.rawValue)" : "home.log.\(product.rawValue).\(batch)")
             }
@@ -386,21 +406,18 @@ struct TodayView: View {
         let todayCount = ridden.filter { day.clock.day(containing: $0.timestamp) == today }.count
         return HStack(spacing: 10) {
             LogIcon(glyph: .urge)
-            HStack(spacing: 6) {
+            VStack(alignment: .leading, spacing: 1) {
                 countText(ridden.count, unit: String(localized: "urges surfed"))
                 if todayCount > 0 {
-                    Text("+\(todayCount) today").dxFont(13, weight: 700, style: .footnote).foregroundStyle(DX.Fill.green)
+                    Text("+\(todayCount) today").dxType(.caption).foregroundStyle(DX.Fill.green)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .accessibilityElement(children: .combine)
-            Button { log.open() } label: {
-                Text("Log").dxFont(15, weight: 700, style: .subheadline)
-                    .foregroundStyle(TodayInk.page)
-                    .frame(width: 60, height: 44)
-                    .background(TodayInk.ink, in: Capsule())
-            }
-            .buttonStyle(.plain)
+            Button { log.open() } label: { Text("Log") }
+                .buttonStyle(.dx(.ghostSmall, on: .apricot))
+                .frame(height: 44)
+                .fixedSize()
             .accessibilityLabel(Text("Log a craving or slip"))
             .accessibilityIdentifier("home.log.urge")
         }
@@ -409,9 +426,9 @@ struct TodayView: View {
 
     /// "4 cigarettes": the number in the display face.
     private func countText(_ count: Int, unit: String) -> some View {
-        let big = DX.Typeface4.scaledFont(22, weight: 800, style: .title2, dynamicTypeSize: typeSize)
+        let big = DX.Typeface4.scaledFont(19, weight: 800, style: .title2, dynamicTypeSize: typeSize)
         return Text("\(Text(verbatim: "\(count)").font(big).foregroundStyle(TodayInk.ink)) \(Text(verbatim: unit))")
-            .dxFont(15, weight: 500, style: .subheadline)
+            .dxFont(15, weight: 600, style: .subheadline)
             .foregroundStyle(TodayInk.ink)
             .contentTransition(.numericText())
             .lineLimit(1).minimumScaleFactor(0.75)
@@ -463,14 +480,15 @@ struct TodayView: View {
                 }
             }
         }
-        .dxFont(14, weight: 600, style: .footnote)
-        .foregroundStyle(Read4.onInk)
+        // v5 kit `.toast`: ink in light, cream in dark, radius 20.
+        .dxFace(.body, 15, weight: 600)
+        .foregroundStyle(Color(light: 0xFFF8EE, dark: 0x1E1A3A))
         .buttonStyle(.plain)
-        .padding(.vertical, DX.Space.xs).padding(.leading, 10).padding(.trailing, 14)
+        .padding(.vertical, DX.Space.xs).padding(.leading, 12).padding(.trailing, 16)
         .frame(minHeight: 52)
-        .background(Read4.ink, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
-        .shadow(color: Color.black.opacity(0.15), radius: 16, y: 8)
-        .padding(.horizontal, DX.Space.m)
+        .background(Color(light: 0x1E1A3A, dark: 0xFFF8EE), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .shadow(color: Color.black.opacity(0.25), radius: 15, y: 12)
+        .padding(.horizontal, 16)
         .padding(.bottom, DX.Space.s)
         .transition(.move(edge: .bottom).combined(with: .opacity))
         .accessibilityElement(children: .contain)
@@ -609,6 +627,14 @@ private struct TodayDay {
         let isQuitDay: Bool
     }
 
+    struct Stamps {
+        let daysToQuit: Int
+        let quitDate: String
+        let done: Int
+        let total: Int
+        let current: Int?
+    }
+
     let now: Date
     let clock: DayClock
     let snap: HomeSnapshot
@@ -628,6 +654,10 @@ private struct TodayDay {
     let ahead: Ahead?
     let crewStage: Int
     let hero: TodayHeroModel
+    /// The prep countdown (015).
+    let stamps: Stamps?
+    /// The last seven nights for the check-in (018).
+    let nights: [TodayNightTicks.Night]
 
     init(view: TodayView, now: Date) {
         let profile = view.profile
@@ -655,6 +685,12 @@ private struct TodayDay {
         showsPledge = pledgedAt == nil && (force == "pledge" || rhythm.isPledgeTime(now))
         let checkIn = view.checkInsValue.first { rhythm.hasCheckedIn([$0.day], at: now) }
         checkedInAt = force == "checkedIn" ? now : checkIn?.madeAt
+        let checkInDays = view.checkInsValue.map(\.day)
+        nights = (0..<7).reversed().map { back in
+            let date = clock.calendar.date(byAdding: .day, value: -back, to: now) ?? now
+            return TodayNightTicks.Night(date: clock.day(containing: date),
+                                         done: back == 0 ? false : rhythm.hasCheckedIn(checkInDays, at: date), isTonight: back == 0)
+        }
 
         var focus = TodayFocus.pick(hour: TodayClock.hour(at: now), postQuit: state == .postQuit,
                                     checkedIn: checkedInAt != nil, sessionOpen: sessionOpen)
@@ -709,14 +745,18 @@ private struct TodayDay {
             ahead = nil
         }
 
-        // The sky and the slim card.
-        let sessionsDone = view.sessionRecordsValue.compactMap(\.completedAt) + (profile.progress?.completions.map(\.completedAt) ?? [])
+        // The scene and the slim header.
         let slips = view.logsValue.filter { $0.kind == .slip }.map(\.timestamp)
-        let week = TodayWeek.make(now: now, quitDay: profile.quitDay, programStart: profile.createdAt,
-                                  sessionsDone: sessionsDone, slips: slips, clock: clock)
         let initial = profile.name.trimmingCharacters(in: .whitespacesAndNewlines).first.map { String($0).uppercased() }
         let greeting = TodayClock.greeting(at: now, name: profile.name)
         let quitDate = profile.quitDay.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))
+        let todayDate = now.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))
+        let avoided = snap.counters.first { $0.product == primary } ?? snap.counters.first
+        let avoidedUnit: String = switch avoided?.product ?? primary {
+        case .cigarettes: (avoided?.avoided ?? 0) == 1 ? String(localized: "cigarette not smoked") : String(localized: "cigarettes not smoked")
+        case .vape: (avoided?.avoided ?? 0) == 1 ? String(localized: "puff not taken") : String(localized: "puffs not taken")
+        case .pouches: (avoided?.avoided ?? 0) == 1 ? String(localized: "pouch not used") : String(localized: "pouches not used")
+        }
         switch state {
         case .prep:
             let countdown: String = switch daysToQuit {
@@ -725,24 +765,23 @@ private struct TodayDay {
             default: String(localized: "\(daysToQuit) days to Quit Day")
             }
             let done = snap.prepDone, total = max(snap.prepTotal, 1)
-            let ringBig: String = switch daysToQuit {
-            case 0: String(localized: "Today")
-            case 1: String(localized: "1 day")
-            default: String(localized: "\(daysToQuit) days")
-            }
+            let label = program.map { if case .open = $0.kind { $0.label } else { "" } } ?? ""
+            stamps = Stamps(daysToQuit: daysToQuit, quitDate: quitDate, done: done, total: total,
+                            current: sessionOpen && done < total ? done + 1 : nil)
             hero = TodayHeroModel(
-                night: night, week: week, greeting: greeting,
+                night: night, mode: .prep, greeting: greeting,
                 line: daysToQuit == 0 ? countdown : "\(countdown) · \(quitDate)",
                 why: view.why, profileInitial: initial,
-                ring: .sessions(done: done, total: total, current: sessionOpen && done < total ? done : nil),
-                ringBig: ringBig, ringSmall: String(localized: "\(done) of \(total) done"),
-                ringLabel: String(localized: "Prep: \(done) of \(total) sessions done"),
-                pill: nil,
+                pill: label.isEmpty ? todayDate : "\(todayDate) · \(label)",
+                titleLead: "", titleWord: "", moneyKept: 0, currencyCode: snap.currencyCode, avoided: 0, avoidedUnit: "",
+                nextMilestone: nil, nextFraction: 0, aheadText: nil,
                 slimTitle: countdown,
                 slimLine: daysToQuit == 0 ? String(localized: "Prep \(done) of \(total) done")
                     : String(localized: "\(quitDate) · Prep \(done) of \(total) done"),
-                slimDigit: "\(daysToQuit)", crewStage: crewStage)
+                crewStage: crewStage,
+                accessibilityLabel: String(localized: "Prep: \(done) of \(total) sessions done"))
         case .postQuit:
+            stamps = nil
             let timeFree = TimeFree.short(now.timeIntervalSince(view.quitMoment))
             let resilience = Resilience.days(quitDay: profile.quitDay, slips: slips, now: now, clock: clock)
             let free: String = switch primary {
@@ -750,22 +789,23 @@ private struct TodayDay {
             case .vape: String(localized: "\(resilience.clear) of \(resilience.total) days vape-free")
             case .pouches: String(localized: "\(resilience.clear) of \(resilience.total) days pouch-free")
             }
-            let fraction = TodayRing.fraction(elapsedHours: elapsed, nextChangeFromHours: nextChange?.fromHours)
             let next: String? = nextChange.map {
                 String(localized: "Next: \($0.title) · \(TodayView.relative(hours: $0.fromHours - elapsed))")
             }
+            let earned = Milestones.days.last { $0 <= snap.daysClear }
             hero = TodayHeroModel(
-                night: night, week: week, greeting: greeting,
+                night: night, mode: .postQuit(earned: earned), greeting: greeting,
                 line: String(localized: "Day \(max(snap.daysClear, 1)) · \(free)"),
                 why: view.why, profileInitial: initial,
-                ring: .toNextChange(fraction),
-                ringBig: timeFree, ringSmall: String(localized: "free"),
-                ringLabel: [String(localized: "\(timeFree) free."), next].compactMap { $0 }.joined(separator: " "),
-                pill: next.map { "\($0) · \(String(localized: "\(money) kept"))" }
-                    ?? String(localized: "Every change on the timeline has started · \(money) kept"),
+                pill: todayDate,
+                titleLead: timeFree, titleWord: String(localized: "free"),
+                moneyKept: NSDecimalNumber(decimal: snap.moneyKept).doubleValue, currencyCode: snap.currencyCode,
+                avoided: avoided?.avoided ?? 0, avoidedUnit: avoidedUnit,
+                nextMilestone: snap.nextMilestone, nextFraction: snap.milestoneFraction, aheadText: ahead?.text,
                 slimTitle: String(localized: "\(timeFree) free"),
                 slimLine: String(localized: "\(resilience.clear) of \(resilience.total) days · \(resilience.percent)% · \(money) kept"),
-                slimDigit: "\(max(snap.daysClear, 1))", crewStage: crewStage)
+                crewStage: crewStage,
+                accessibilityLabel: [String(localized: "\(timeFree) free."), next].compactMap { $0 }.joined(separator: " "))
         }
     }
 }
@@ -802,12 +842,12 @@ private struct TodayWaterRow: View {
         let glasses = WaterFormat.glasses(total)
         let goalGlasses = max(goal / WaterGoal.glassMl, 1)
         let units = waterProfiles.first?.units ?? WaterUnits.default()
-        let big = DX.Typeface4.scaledFont(22, weight: 800, style: .title2, dynamicTypeSize: typeSize)
+        let big = DX.Typeface4.scaledFont(19, weight: 800, style: .title2, dynamicTypeSize: typeSize)
         HStack(spacing: 10) {
             LogIcon(glyph: .water)
             VStack(alignment: .leading, spacing: 0) {
                 Text("\(Text(verbatim: "\(glasses)").font(big).foregroundStyle(TodayInk.ink)) of \(goalGlasses) glasses")
-                    .dxFont(15, weight: 500, style: .subheadline)
+                    .dxFont(15, weight: 600, style: .subheadline)
                     .foregroundStyle(TodayInk.ink)
                     .contentTransition(.numericText())
                     .lineLimit(1).minimumScaleFactor(0.75)
@@ -824,12 +864,11 @@ private struct TodayWaterRow: View {
                 logged += 1
                 Analytics.track(.waterLogged(source: WaterSource.app.rawValue, drink: drink.rawValue))
             } label: {
-                Text("+1 glass").dxFont(15, weight: 700, style: .subheadline)
-                    .foregroundStyle(TodayInk.ink)
-                    .frame(width: 100, height: 44)
-                    .background(LogGlyph.water.chip, in: Capsule())
+                Text("+1 glass")
             }
-            .buttonStyle(.plain)
+            .buttonStyle(.dx(.ghostSmall, on: .apricot))
+            .frame(height: 44)
+            .fixedSize()
             // "Add", not "Log": UI tests find the use log by a button containing "Log".
             .accessibilityLabel(Text("Add \(Text(drink.name))"))
             .accessibilityIdentifier("today.water.add")

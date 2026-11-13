@@ -26,8 +26,10 @@ struct ProgramView: View {
     @AppStorage(DailyReminderSettings.weeklyKey) private var weekly = DailyReminderSettings.offUntilChosen
 
     private let ground = DX.Ground.mint
-    /// Tiles and the note card on mint: cream in light, deep green in dark.
-    private let tileFill = Color(light: 0xFFF8EE, dark: 0x16382D)
+    /// v5 (022): the plan's page is a warm cream in light with sage hills at the bottom; the one navy in dark.
+    private let page = Color(light: 0xFBF6EC, dark: 0x0E1322)
+    /// Tiles and the note card: kit card-2 on the plan page.
+    private let tileFill = Color(light: 0xEEF5EC, dark: 0x212A41)
 
     var body: some View {
         TimelineView(.everyMinute) { timeline in
@@ -38,30 +40,40 @@ struct ProgramView: View {
                 VStack(alignment: .leading, spacing: 12) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Prep, Quit Day, then four weeks").dxType(.footnote).foregroundStyle(ground.muted)
+                            .dxArrive(1)
                         // Plain title: the hand-drawn mark is kept for celebrations and onboarding (S27.15).
                         Text("Your program")
                             .dxType(.large).foregroundStyle(ground.ink)
                             .accessibilityAddTraits(.isHeader)
+                            .dxArrive(0)
                     }
                     if let content = store.content {
                         let phase = selectedPhase(content, current: current)
                         phasePicker(content, states: states, current: current, selected: phase.id)
                         if let graduated = profile.progress?.graduatedAt { completeHeader(graduated) }
+                        let nextPhase = content.phases.firstIndex { $0.id == phase.id }
+                            .flatMap { $0 + 1 < content.phases.count ? content.phases[$0 + 1] : nil }
                         ProgramPathMap(stops: stops(phase, content: content, states: states, current: current, store: store),
-                                       ground: ground) { stop in
+                                       ground: ground,
+                                       goal: nextPhase.map { .init(title: $0.title, isDayXero: $0.id == "dayxero") }) { stop in
                             guard let session = content.session(stop.id) else { return }
                             sheet = StopSheet(session: session, title: stop.title, state: states[stop.id] ?? .locked,
                                               needsUpgrade: stop.needsUpgrade)
                         }
                         if let line = nextLine(content, states: states, current: current, variant: store.variant) {
-                            HStack(alignment: .top, spacing: 10) {
-                                Image(systemName: "lock.open").font(.system(size: 15, weight: .semibold)).foregroundStyle(DX.Fill.green)
-                                    .accessibilityHidden(true)
-                                Text(verbatim: line).dxType(.footnote).foregroundStyle(DX.Ground.reading.ink)
+                            // v5 (022): the locked row on the hill, a lock tile and one line.
+                            HStack(spacing: 14) {
+                                DXIcon(.lock, size: 20, weight: 2.4)
+                                    .foregroundStyle(ground.ink)
+                                    .frame(width: 36, height: 36)
+                                    .background(Color(light: (0xFFFFFF, 0.7), dark: (0xFFFFFF, 0.08)), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
+                                Text(verbatim: line).dxType(.footnote).fontWeight(.semibold).foregroundStyle(ground.ink)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
-                            .padding(14)
-                            .background(tileFill, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+                            .padding(12)
+                            .background(Color(light: (0xFFFFFF, 0.55), dark: (0x182034, 0.9)), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                            .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(DX.Ground.reading.line, lineWidth: 1))
+                            .dxArrive(0, delay: 2.1)
                         }
                         Text(verbatim: phaseHeading(phase, states: states)).dxType(.footnote)
                             .foregroundStyle(ground.muted)
@@ -77,7 +89,8 @@ struct ProgramView: View {
                 .padding(.top, DX.Space.l)
                 .padding(.bottom, DX.Space.l)
             }
-            .background(ground.background.ignoresSafeArea())
+            .background(page.ignoresSafeArea())
+            .dxGround(.mint, paint: false)
         }
         .sheet(item: $sheet, onDismiss: {
             guard let item = afterSheet else { return }

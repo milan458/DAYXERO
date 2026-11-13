@@ -5,7 +5,7 @@ import SwiftUI
 public extension DX {
     /// v5: `primary` is the one button; `small` the 44 pt one inside cards; `ghost` (and `secondary`, its old name)
     /// the outlined second choice; `quiet` the text link.
-    enum ButtonKind: Sendable { case primary, secondary, quiet, ghost, small }
+    enum ButtonKind: Sendable { case primary, secondary, quiet, ghost, small, ghostSmall }
 
     /// Primary and secondary colours per ground and appearance (tokens.json → "buttons").
     struct ButtonColors: Sendable {
@@ -56,7 +56,7 @@ public extension DX {
                 // cream on ocean, parchment on night); the fill is the label colour at 22% (kit `.btn .fill`).
                 let t = ground.tokens(dark: dark)
                 return ButtonColors(background: t.btn, foreground: t.btnFg, fill: DX.Ground.mix(t.btnFg, 0.22, over: t.btn), lip: false)
-            case (.secondary, _), (.ghost, _):
+            case (.secondary, _), (.ghost, _), (.ghostSmall, _):
                 return ButtonColors(background: nil, foreground: dark ? s.inkDark : s.inkLight, fill: 0, lip: false)
             case (.quiet, _):
                 return ButtonColors(background: nil, foreground: dark ? s.inkDark : s.inkLight, fill: 0, lip: false)
@@ -101,8 +101,8 @@ private struct V4ButtonBody<Label: View>: View {
         let colors = DX.ButtonColors.make(kind, on: ground, dark: scheme == .dark, destructive: destructive)
         let g = ground.resolved
         let quiet = kind == .quiet
-        let small = kind == .small
-        let outlined = kind == .secondary || kind == .ghost
+        let small = kind == .small || kind == .ghostSmall
+        let outlined = kind == .secondary || kind == .ghost || kind == .ghostSmall
         let height: CGFloat = quiet ? 40 : small ? DX.Layout.smallButtonHeight : DX.Layout.buttonHeight
         let fill = colors.background.map { Color(hex: $0) }
         label
