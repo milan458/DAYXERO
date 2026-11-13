@@ -25,8 +25,9 @@
   .lead span { display: block; }
   .lead.gone { opacity: 0 !important; transition: opacity 1200ms var(--ease); }
   /* the reason: a quiet centred quote under the breath word, no card. It takes the helper lines' place once they fade. */
-  .reason { position: absolute; left: 0; right: 0; top: 530px; padding: 0 44px; text-align: center; transition: opacity 1200ms var(--ease); }
-  .reason.wait { opacity: 0 !important; }
+  .reason { position: absolute; left: 0; right: 0; top: 530px; padding: 0 44px; text-align: center; }
+  .reason .rin { transition: opacity 1200ms var(--ease); }
+  .reason .rin.wait { opacity: 0; }
   /* the label is cream on the sea (well above 4.5:1 in both modes) */
   .reason .t-cap { color: #F3EEE6; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
   .reason .t-cap svg { width: 14px; height: 14px; }
@@ -60,10 +61,10 @@
   <div class="word t-large" data-a style="--i:2;--d:200ms"><span id="w-in">Breathe in</span><span id="w-out" class="off">and out</span></div>
   <p class="t-foot lead" id="lead" data-a style="--i:3;--d:200ms"><span>Most cravings pass in a few minutes.</span><span>Hold Jelli to feel the pace.</span></p>
 
-  <div class="reason" id="reason" data-a style="--i:4;--d:200ms">
+  <div class="reason" data-a style="--i:4;--d:200ms"><div class="rin" id="reason">
     <p class="t-cap"><span id="heart"></span>Your reason</p>
     <p class="t-body">&ldquo;Run with Aria without stopping to catch my breath&rdquo;</p>
-  </div>
+  </div></div>
 
   <div class="dock">
     <button class="btn" data-a style="--i:6;--d:200ms" data-go="020-sos-passed">It passed</button>

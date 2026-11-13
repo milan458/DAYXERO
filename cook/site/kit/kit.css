@@ -253,3 +253,5 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
 
 /* Warm selection in dark mode on the neutral dark ground (critics: slate + white outline read as disabled). Ocean and night keep cream. */
 [data-theme="dark"] .screen:not([data-ground="ocean"]):not([data-ground="violet"]):not([data-ground="night"]) { --sel-tint: color-mix(in srgb, #FFE6CF 11%, var(--card)); --sel-edge: #FFB27A; }
+/* Ocean (SOS) and night (Glim) keep their cream selection edge in both modes. */
+.screen[data-ground="ocean"], .screen[data-ground="violet"], .screen[data-ground="night"] { --sel-edge: var(--sel); }
