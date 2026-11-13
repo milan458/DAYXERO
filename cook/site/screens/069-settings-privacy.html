@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>069 Privacy and your data</title>
-<meta name="motion" content="The lead card arrives and Xero settles into it (300ms), then the data list (anonymous usage off by default) and the delete card arrive on the stagger. Delete everything is a quiet coral text button: tapping it opens a confirm sheet (warning haptic) whose coral button must be held for 2s; the fill sweeps left to right, letting go early springs it back (250ms), and only a full hold erases the data (heavy haptic, then the app returns to Welcome).">
+<meta name="motion" content="The lead card arrives and Xero settles onto the dawn hill in its small phone-shaped window (300ms), then the data list (anonymous usage off by default) and the delete card arrive on the stagger. Delete everything is a quiet coral text button on its own line under a hairline, apart from the body text: tapping it opens a confirm sheet (warning haptic) whose coral button must be held for 2s; the fill sweeps left to right, letting go early springs it back (250ms), and only a full hold erases the data (heavy haptic, then the app returns to Welcome).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -17,8 +17,15 @@
 .toast.b .ck { flex: none; }
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
-.lead { display: flex; gap: 12px; align-items: center; padding: 14px 16px 14px 8px; margin-top: 22px; }
+.lead { display: flex; gap: 16px; align-items: center; padding: 14px 16px 14px 14px; margin-top: 22px; }
 .lead .grow { flex: 1; }
+/* Xero stands on a dawn hill inside a small phone-shaped window: it stays on this phone. */
+.phone { position: relative; width: 64px; height: 100px; flex: none; border-radius: 17px; padding: 3px; background: color-mix(in srgb, var(--fg) 82%, var(--card)); }
+[data-theme="dark"] .phone { background: color-mix(in srgb, var(--fg) 28%, var(--card)); }
+.phone .scr { position: relative; width: 100%; height: 100%; border-radius: 14px; overflow: hidden; }
+.phone .scr > svg { position: absolute; inset: 0; display: block; }
+.phone .scr .xs { position: absolute; left: 4px; top: 38px; }
+.phone .notch { position: absolute; z-index: 2; left: 50%; top: 7px; width: 16px; height: 4px; margin-left: -8px; border-radius: 99px; background: inherit; }
 /* Toggle rows: the icon tile and the toggle sit level with the title's first line. */
 .list > .row { padding-top: 16px; padding-bottom: 16px; }
 .list .row.tall { align-items: flex-start; }
@@ -26,6 +33,7 @@
 .list .row.tall .toggle { margin-top: -4px; }
 .del { margin-top: 16px; padding: 18px 18px 8px; display: grid; gap: 6px; }
 .del .t-foot { color: var(--muted); }
+.del .act { margin: 8px -18px 0; padding: 2px 18px 0; border-top: 1px solid var(--line); }
 .dlink { justify-self: start; display: inline-flex; align-items: center; height: 44px; margin-left: -2px; font: 700 16px/1 var(--body); color: var(--danger-fg); }
 .screen { --danger-fg: #B23A1E; }
 [data-theme="dark"] .screen { --danger-fg: #FF9A7A; }
@@ -35,7 +43,7 @@
 <div class="nav"><button class="icon-btn" aria-label="Back" data-ic="back"></button></div>
 <div class="scroll"><div class="pad">
   <div class="hd"><h1 class="t-large" data-a style="--i:0">Privacy and your data</h1><p class="t-foot muted" data-a style="--i:1">No account, no ads, no selling. Here is exactly what happens.</p></div>
-  <div class="card lead" data-a style="--i:2"><span id="xr069" data-settle style="--d:300ms"></span><div class="grow"><div class="t-head">It stays on this phone</div><div class="t-foot muted">Your plan, reasons, logs and notes never leave this iPhone.</div></div></div>
+  <div class="card lead" data-a style="--i:2"><span class="phone" aria-hidden="true"><span class="notch"></span><span class="scr" id="scr069"><span class="xs" id="xr069" data-settle style="--d:300ms"></span></span></span><div class="grow"><div class="t-head">It stays on this phone</div><div class="t-foot muted">Your plan, reasons, logs and notes never leave this iPhone.</div></div></div>
   <div class="list" data-a style="--i:3;margin-top:16px">
     <div class="row tall" ><span class="ico-tile s" data-ic="chart"></span><div class="grow"><div class="t-body rt">Share anonymous usage</div><div class="t-foot muted">Counts like &ldquo;lesson started&rdquo;. Never your words.</div></div><span class="toggle"></span></div>
     <div class="row " ><span class="ico-tile s" data-ic="share"></span><div class="grow"><div class="t-body rt">Export my data</div><div class="t-foot muted">A file you can keep or move</div></div><span class="chev" data-ic="chev" data-s="18"></span></div>
@@ -44,12 +52,19 @@
   <div class="card del" data-a style="--i:4">
     <div class="t-head">Delete all my data</div>
     <p class="t-foot">Erases your plan, days, badges and notes from this phone. This cannot be undone.</p>
-    <button class="dlink">Delete everything&hellip;</button>
+    <div class="act"><button class="dlink">Delete everything&hellip;</button></div>
   </div>
 </div></div>
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
-document.getElementById('xr069').innerHTML = DX.char('xero', { mood: 'calm', size: 88 });
+const dark = DX.theme === 'dark';
+document.getElementById('scr069').insertAdjacentHTML('afterbegin', `<svg width="58" height="94" viewBox="0 0 58 94" aria-hidden="true"><defs>
+  <linearGradient id="vsk" x1="0" y1="0" x2="0" y2="1">${dark ? '<stop offset="0" stop-color="#0D1630"/><stop offset=".6" stop-color="#22325A"/><stop offset="1" stop-color="#3C4A78"/>' : '<stop offset="0" stop-color="#FFE6BF"/><stop offset="1" stop-color="#FFC994"/>'}</linearGradient>
+  <linearGradient id="vhl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${dark ? '#24365E' : '#FFA27A'}"/><stop offset="1" stop-color="${dark ? '#16243F' : '#F0794F'}"/></linearGradient></defs>
+  <rect width="58" height="94" fill="url(#vsk)"/>${dark ? '<circle cx="10" cy="20" r=".9" fill="#fff" opacity=".8"/><circle cx="30" cy="14" r=".7" fill="#fff" opacity=".5"/>' : ''}
+  <circle cx="42" cy="28" r="7" fill="${dark ? '#FFC27A' : '#FFD966'}"/>
+  <path d="M0 94 V80 C14 76 26 75 34 76 C44 77 52 79 58 81 V94Z" fill="url(#vhl)"/></svg>`);
+document.getElementById('xr069').innerHTML = DX.char('xero', { mood: 'calm', size: 50 });
 </script>
 </body></html>

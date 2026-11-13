@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>070 Apple Health</title>
-<meta name="motion" content="The connected card arrives with the DayXero app icon (the zero with its sunrise, whole) and a plain Apple Health tile (the app's own line heart on a lifted tile, no Apple artwork); the 40px dotted link draws out between them (500ms) and its check pops (900ms, light success haptic); the write and read groups follow on the stagger, then the Open Health row. Flipping a toggle opens the system Health permission sheet; Open Health switches to the Health app.">
+<meta name="motion" content="The connected card arrives with the DayXero app icon (the zero with its sunrise, whole) and a plain Apple Health tile (the app's own coral line heart on a white tile with a hairline, a lifted navy tile in dark; no Apple artwork); the 56px dotted link draws out between them (500ms) and its apricot check pops (900ms, light success haptic); the write and read groups follow on the stagger, then the Open Health row. Flipping a toggle opens the system Health permission sheet; Open Health switches to the Health app.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -21,14 +21,15 @@
 .apps { display: flex; align-items: center; gap: 0; margin-bottom: 8px; }
 .app { width: 56px; height: 56px; border-radius: 15px; display: grid; place-items: center; overflow: hidden; box-shadow: 0 6px 16px rgba(20,20,40,.14), inset 0 0 0 1px rgba(0,0,0,.06); flex: none; }
 .app > svg { display: block; }
-/* The link: about 40px of visible dots (20 each side), with the check sitting on its middle. */
-.wire { width: 76px; position: relative; height: 24px; display: grid; place-items: center; }
+/* The link: about 56px of visible dots (28 each side), with the check sitting on its middle. */
+.wire { width: 92px; position: relative; height: 24px; display: grid; place-items: center; }
 .wire::before { content: ""; position: absolute; left: 4px; right: 4px; top: 50%; margin-top: -1.5px; height: 3px; background: radial-gradient(circle, var(--muted) 1.4px, transparent 1.7px) 0 50% / 7px 3px repeat-x; }
-.wire .ok { position: relative; width: 22px; height: 22px; border-radius: 99px; background: var(--tick); color: #fff; display: grid; place-items: center; box-shadow: 0 0 0 3px var(--card); }
+.wire .ok { position: relative; width: 22px; height: 22px; border-radius: 99px; background: #FFAE73; color: #1E1A3A; display: grid; place-items: center; box-shadow: 0 0 0 3px var(--card); }
 .wire .ok svg { width: 12px; height: 12px; }
 /* Health tile: lifted off the card in both modes (dark: a clearly lighter navy tile). */
-.app.hk { background: var(--card-2); color: var(--fg); }
-[data-theme="dark"] .app.hk { background: #34405F; box-shadow: 0 6px 16px rgba(0,0,0,.3), inset 0 0 0 1px rgba(255,255,255,.12); }
+/* Light: a white tile with a hairline and a coral heart. */
+.app.hk { background: #FFFFFF; color: #F26A45; box-shadow: 0 6px 16px rgba(20,20,40,.10), inset 0 0 0 1px var(--line); }
+[data-theme="dark"] .app.hk { background: #34405F; color: #FF9A7A; box-shadow: 0 6px 16px rgba(0,0,0,.3), inset 0 0 0 1px rgba(255,255,255,.12); }
 .app.hk svg { width: 28px; height: 28px; }
 .since { color: color-mix(in srgb, var(--fg) 78%, var(--card)); }
 .sec { padding: 14px 4px 7px; }
