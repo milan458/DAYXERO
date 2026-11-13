@@ -21,16 +21,16 @@
 .read .num{font-size:160px;line-height:.86;letter-spacing:-3px;display:block}
 .read .of{font:700 28px/1 var(--display);color:var(--muted);letter-spacing:-.3px}
 .read .xf{width:136px;height:136px;flex:none;margin-bottom:-8px}
-.sl{margin-top:38px}
-.track{position:relative;height:10px;border-radius:99px;margin:0 6px;background:linear-gradient(90deg,#8EC1FF,#C9A9C8 50%,#FF7A55)}
+.sl{margin-top:46px}
+.track{position:relative;height:12px;border-radius:99px;margin:0 6px;background:linear-gradient(90deg,#8EC1FF,#C9A9C8 50%,#FF7A55)}
 [data-theme="dark"] .track{background:linear-gradient(90deg,#6FA6EE,#B48FA9 50%,#F0704E)}
-.track .thumb{position:absolute;z-index:1;top:50%;left:var(--v);width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:99px;background:#fff;
+.track .thumb{position:absolute;z-index:1;top:50%;left:var(--v);width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:99px;background:#fff;
   box-shadow:0 0 0 4px #C9A9C8 inset,0 4px 12px rgba(30,26,58,.28)}
 [data-theme="dark"] .track .thumb{background:#FFF8EE;box-shadow:0 0 0 4px #B48FA9 inset,0 4px 14px rgba(0,0,0,.5)}
 .play .track .thumb{animation:glide 1100ms var(--settle) both 400ms}
 @keyframes glide{from{left:0}to{left:var(--v)}}
 /* 11 short ticks, 0 to 10, under the track */
-.ticks{position:relative;height:8px;margin:14px 6px 0}
+.ticks{position:relative;height:8px;margin:18px 6px 0}
 .ticks i{position:absolute;top:0;width:2px;height:8px;margin-left:-1px;border-radius:2px;background:color-mix(in srgb,var(--fg) 30%,transparent)}
 .ticks i.mj{height:8px;background:color-mix(in srgb,var(--fg) 50%,transparent)}
 .ends{display:flex;justify-content:space-between;margin-top:12px}
@@ -41,7 +41,7 @@
 [data-theme="dark"] .ends span:first-child{color:#9CCBFF}
 [data-theme="dark"] .ends span:last-child{color:#FF9A7A}
 /* Xero's line sits under the slider, its pointer under the thumb */
-.say{position:relative;margin:30px auto 0;width:max-content;max-width:320px;background:var(--card);border-radius:20px;padding:14px 20px;text-align:center;font:500 16px/1.42 var(--body);box-shadow:0 2px 10px rgba(30,26,58,.07)}
+.say{position:relative;margin:36px auto 0;width:max-content;max-width:320px;background:var(--card);border-radius:20px;padding:14px 20px;text-align:center;font:500 16px/1.42 var(--body);box-shadow:0 2px 10px rgba(30,26,58,.07)}
 [data-theme="dark"] .say{box-shadow:inset 0 0 0 1px var(--line)}
 .say::before{content:"";position:absolute;left:50%;top:-7px;width:14px;height:14px;margin-left:-7px;background:var(--card);border-radius:3px 0 0 0;transform:rotate(45deg)}
 [data-theme="dark"] .say::before{box-shadow:inset 1px 1px 0 var(--line)}

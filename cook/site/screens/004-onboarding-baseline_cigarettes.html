@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>004 How much you smoke</title>
-<meta name="motion" content="Progress eases from 1/11 to 2/11 (900ms). Question, stepper card, chips and the money card arrive in order (600ms, 90ms stagger). At 900ms the plus button (outlined, the same weight as minus) presses: a quick tint fill and a spring bump (520ms), the count rolls from 11 to 12 (rises 10px, 300ms) and the yearly figure counts up from $1,606 to $1,752 (700ms ease-out); at 1100ms one more coin drops onto the paper coin stack beside Xero (calm, 18px drop, 420ms settle). Selection haptic on each step.">
+<meta name="motion" content="Progress eases from 1/11 to 2/11 (900ms). Question, stepper card, chips and the money card arrive in order (600ms, 90ms stagger). At 900ms the plus button (outlined, the same weight as minus) presses: a quick tint fill and a spring bump (520ms), the count rolls from 11 to 12 (rises 10px, 300ms) and the yearly figure counts up from $1,606 to $1,752 (700ms ease-out); at 1100ms one more flat paper-cut coin drops onto the small coin pile beside a pleased, open-eyed Xero (calm, 18px drop, 420ms settle). Selection haptic on each step.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -35,7 +35,7 @@
   /* The result is the hero: the yearly cost, big, with Xero reacting when it changes. */
   .money { margin-top: 24px; padding: 22px 16px 20px 20px; display: grid; grid-template-columns: minmax(0,1fr) 112px; align-items: center; column-gap: 10px; }
   .money .t-display { display: block; margin: 4px 0 2px; }
-  /* Xero, calm, beside a small paper coin stack (the money, not a cheer): their own column, nothing touching the edge. */
+  /* Xero, pleased and open-eyed, beside a small paper coin pile (the money, not a cheer): their own column, nothing touching the edge. */
   .money .xm { position: relative; width: 112px; height: 100px; justify-self: end; }
   .money .xm .xc { position: absolute; right: 0; top: 6px; }
   .money .xm .coins { position: absolute; left: 0; bottom: 6px; }
@@ -76,12 +76,14 @@
 </div>
 <script>
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
-  const xm = document.getElementById('xm'); xm.innerHTML = DX.char('xero', { mood: 'calm', size: 80 });
-  /* Paper coin stack: four cut coins, each casting a short shadow on the one below; the top coin drops in. */
-  const sh = DX.theme === 'dark' ? 'rgba(0,0,0,.5)' : 'rgba(110,50,20,.28)';
-  const coin = (y, top) => `<g ${top ? 'class="coin-top"' : ''} filter="url(#cs)"><rect x="4" y="${y}" width="32" height="8" rx="4" fill="#F5B83D"/><ellipse cx="20" cy="${y + 1}" rx="16" ry="4.2" fill="#FFD966"/>${top ? `<ellipse cx="20" cy="${y + 1}" rx="9" ry="2.2" fill="none" stroke="#F5B83D" stroke-width="1.4"/>` : ''}</g>`;
-  document.getElementById('coins').innerHTML = `<defs><filter id="cs" x="-20%" y="-30%" width="140%" height="180%"><feDropShadow dx="0" dy="1.3" stdDeviation=".5" flood-color="${sh}"/></filter></defs>`
-    + [36, 29, 22, 15].map((y, k) => coin(y, k === 3)).join('');
+  const xm = document.getElementById('xm'); xm.innerHTML = DX.char('xero', { mood: 'hello', size: 80 });   /* pleased, eyes open */
+  /* Paper-cut coins (round 8): three flat cut discs in a small pile, each with a crescent shade, one ring and a soft paper shadow;
+     the top coin drops in. */
+  const sh = DX.theme === 'dark' ? 'rgba(0,0,0,.55)' : 'rgba(120,52,24,.26)';
+  const coin = (cx, cy, top) => `<g ${top ? 'class="coin-top"' : ''} filter="url(#cs)"><circle cx="${cx + 1.3}" cy="${cy + 1}" r="10.5" fill="#F5B83D"/><circle cx="${cx}" cy="${cy}" r="10.5" fill="#FFD966"/>
+    <circle cx="${cx}" cy="${cy}" r="6.4" fill="none" stroke="#F5B83D" stroke-width="1.6"/><path d="M${cx - 7.4} ${cy - 2.6} a8 8 0 0 1 4.6 -4.8" fill="none" stroke="#FFF3C4" stroke-width="1.6" stroke-linecap="round"/></g>`;
+  document.getElementById('coins').innerHTML = `<defs><filter id="cs" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="1.6" stdDeviation="1" flood-color="${sh}"/></filter></defs>`
+    + coin(12, 33) + coin(27, 33) + coin(19.5, 17.5, true);
   const bar = document.getElementById('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '9.1%'); void bar.offsetWidth; bar.style.transition = ''; });
   DX.after(250, () => bar.style.setProperty('--p', '18.2%'));
