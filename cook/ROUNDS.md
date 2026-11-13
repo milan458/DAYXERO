@@ -136,3 +136,7 @@ session 023-032, lesson-log 033-042, slips-checkin 043-055.
   ground; ocean and night keep cream. Both section critics named slate dark selections as the top systemic fault.
 - Onboarding round 7: Opus 8.6 / Sonnet 8.7 (r5 8.5 / 8.6): kept. Kit: onboarding progress sun is a small glowing dot at the
   fill tip (critics read the ringed 18px sun as a slider knob).
+- Calm-settings round 7 (careful, on the r5 base): Opus 8.7 / Sonnet 8.4 (r5 8.7 / 8.8): kept (equal on Opus; it carries the
+  factual fixes: 1 min box breathing, +1 calm minute, no pre-selected answer, Health tile in the app's own style).
+- Lesson-log round 7: Sonnet 8.8 (best 8.7); Opus pending. Kit: subtler dark selection tint (13% apricot over card).
+- User asked to stop after this round: no new fixers; remaining round 8 fixers finish, get scored, keep-best applied.

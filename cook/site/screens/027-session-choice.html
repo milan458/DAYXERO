@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>027 Session choice</title>
-<meta name="motion" content="The bar moves to two thirds of card 5 and its label turns to Card 5 · Step 2 of 3 (500ms settle); tag, question and helper arrive (600ms, 90ms stagger) and the four option rows settle in (900ms, 120ms apart), each with its small paper-cut spot lifting in with the row. At 1.5s the first row lands as the choice: it presses down 2pt, the kit tint and 1.5px outline fill in (300ms), the radio fills and the tick draws, and the row bumps (520ms spring) with a selection haptic; the spot's two breaths drift right 3pt and back (900ms). The button arrives last.">
+<meta name="motion" content="The bar moves to two thirds of card 5 and its label turns to Card 5 · Step 2 of 3 (500ms settle); tag, question and helper arrive (600ms, 90ms stagger) and the four option rows settle in (900ms, 120ms apart), each with its small paper-cut spot lifting in with the row. At 1.5s the first row lands as the choice: it presses down 2pt, the kit selection tint and outline fill in (300ms), the radio fills and the tick draws, and the row bumps (520ms spring) with a selection haptic; the spot's two breaths drift right 3pt and back (900ms). The button arrives last.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -11,17 +11,17 @@
 .wrap{position:absolute;top:112px;left:0;right:0;display:grid;align-content:start;gap:10px}
 .tag{justify-self:start;display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px 0 9px;border-radius:99px;background:var(--face);color:#1E1A3A;font:600 13px/1 var(--body)}
 .tag svg{width:16px;height:16px}
-.opts{display:grid;gap:10px;margin-top:14px}
+/* dark: a deep mint pill with a mint label, never pale mint glaring on navy */
+[data-theme="dark"] .tag.k-try{background:#1A4434;color:#9FE3BC;box-shadow:inset 0 0 0 1px rgba(159,227,188,.22)}
+.opts{display:grid;gap:12px;margin-top:18px}
 .opt .t-body{font-weight:600}
-.opts .opt{min-height:80px;padding:12px 16px 12px 12px;gap:14px}
-/* selection: the kit tint with a 1.5px outline */
-.screen .opts .opt.on{box-shadow:inset 0 0 0 1.5px var(--sel)}
+.opts .opt{min-height:96px;padding:14px 16px 14px 14px;gap:16px}
 /* small paper-cut spots, one per option */
-.spot{width:52px;height:52px;border-radius:15px;overflow:hidden;flex:none;display:block}
-.spot svg{display:block;width:52px;height:52px}
+.spot{width:62px;height:62px;border-radius:17px;overflow:hidden;flex:none;display:block}
+.spot svg{display:block;width:62px;height:62px}
 .sub-l{display:flex;align-items:center;gap:8px;font:500 13px/1.3 var(--body);color:var(--muted);margin-top:4px}
-/* recommended: a small mint pill */
-.rec{display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:99px;background:var(--face);color:#1E1A3A;font:600 12px/1 var(--body)}
+/* recommended: a small ink outline pill (reads on the selection tint in both modes) */
+.rec{display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:99px;background:transparent;color:var(--fg);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--fg) 70%,transparent);font:600 12px/1 var(--body)}
 .opt.land{animation:land 560ms var(--spring) both}
 .opt.land .breaths{animation:puff 900ms var(--ease) both}
 @keyframes puff{50%{transform:translateX(3px)}}
@@ -39,7 +39,7 @@
     <h1 class="t-title" data-a style="--i:1">When work piles up, what will you do first?</h1>
     <p class="t-foot muted" data-a style="--i:2">Pick one to do before anything else.</p>
     <div class="opts">
-      <button class="opt on" id="pick" data-settle style="--i:2"><span class="spot" data-spot="sigh"></span><span class="grow"><span class="t-body">Two sighs</span><span class="sub-l">30 seconds<span class="rec k-try">Recommended</span></span></span><span class="radio"></span></button>
+      <button class="opt on" id="pick" data-settle style="--i:2"><span class="spot" data-spot="sigh"></span><span class="grow"><span class="t-body">Two sighs</span><span class="sub-l">30 seconds<span class="rec">Recommended</span></span></span><span class="radio"></span></button>
       <button class="opt" data-settle style="--i:3"><span class="spot" data-spot="outside"></span><span class="grow"><span class="t-body">Step outside</span><span class="sub-l">2 minutes</span></span><span class="radio"></span></button>
       <button class="opt" data-settle style="--i:4"><span class="spot" data-spot="text"></span><span class="grow"><span class="t-body">Text someone</span><span class="sub-l">1 minute</span></span><span class="radio"></span></button>
       <button class="opt" data-settle style="--i:5"><span class="spot" data-spot="water"></span><span class="grow"><span class="t-body">Get a glass of water</span><span class="sub-l">1 minute</span></span><span class="radio"></span></button>
@@ -55,15 +55,16 @@ document.getElementById('t-ic').innerHTML = SPARK;
    Dark mode is the kit's pre-dawn: navy sky, deep hills, cream paper. */
 const dark = DX.theme === 'dark';
 const S = dark
-  ? { mint:'#1E2C52', sky:'#1E2C52', rose:'#1E2C52', blue:'#1E2C52', g1:'#2C4A55', g2:'#22394A', sun:'#FFD27A', p:'#E6DCCB', p2:'#C9BFAE', coral:'#E9886C', water:'#8FB1E8', ink:'#0F1B33' }
-  : { mint:'#D3F0DF', sky:'#DCE8FF', rose:'#FFE3D6', blue:'#CFE2FA', g1:'#9FE3BC', g2:'#7FD3A6', sun:'#FFD25E', p:'#FFFFFF', p2:'#F1DFC8', coral:'#FF8A6B', water:'#8EC1FF', ink:'#1E1A3A' };
+  ? { mint:'#1E2C52', sky:'#1E2C52', rose:'#1E2C52', blue:'#1E2C52', g1:'#2C4A55', g2:'#22394A', sun:'#FFD27A', p:'#E6DCCB', p2:'#C9BFAE', coral:'#FFD27A', water:'#8FC9C0', ink:'#0F1B33' }
+  : { mint:'#D3F0DF', sky:'#D3F0DF', rose:'#D3F0DF', blue:'#D3F0DF', g1:'#9FE3BC', g2:'#7FD3A6', sun:'#FFD25E', p:'#FFFFFF', p2:'#F1DFC8', coral:'#FFD25E', water:'#8FD9C8', ink:'#1E1A3A' };
+/* one thumbnail palette on every row: the plan's mint sky and hills, white paper motifs, one sun-gold accent */
 const lift = `filter="url(#pc)"`;
 const hills = `<path ${lift} d="M0 35 C12 30 30 34 48 30 V48 H0z" fill="${S.g1}"/><path ${lift} d="M0 42 C16 38 32 43 48 39 V48 H0z" fill="${S.g2}"/>`;
 const SPOTS = {
   sigh: [S.mint, hills + `<g class="breaths" fill="none" stroke="${S.p}" stroke-width="2.8" stroke-linecap="round"><path d="M7 13h18c4.5 0 6-6 1.5-6.4-3-.3-3.6 3.4-1.2 4"/><path d="M12 22h22c4.5 0 6 6 1.5 6.4-3 .3-3.6-3.4-1.2-4"/></g>`],
   outside: [S.sky, `<circle cx="34" cy="14" r="6.5" fill="${S.sun}"/><path ${lift} d="M0 31 C9 25 20 25 28 29 S42 29 48 26 V48 H0z" fill="${S.g1}"/><path ${lift} d="M0 39 C14 35 30 41 48 36 V48 H0z" fill="${S.g2}"/>
     <path d="M17 48 C19 43 27 41.5 25.5 37.5 C24.6 35.4 22 34.6 23.4 32 L25.6 32 C25 34 27.6 35.2 28.4 37.4 C30 42.4 23.5 44 24.5 48Z" fill="${S.p}"/>`],
-  text: [S.rose, `<g ${lift}><rect x="7" y="9" width="23" height="15" rx="6" fill="${S.coral}"/><path d="M11 23 L10 28 L16 23.5Z" fill="${S.coral}"/></g>
+  text: [S.rose, hills + `<g ${lift}><rect x="7" y="9" width="23" height="15" rx="6" fill="${S.coral}"/><path d="M11 23 L10 28 L16 23.5Z" fill="${S.coral}"/></g>
     <g ${lift}><rect x="17" y="20" width="24" height="16" rx="6" fill="${S.p}"/><path d="M35 35 L37 40 L30 35.5Z" fill="${S.p}"/></g>
     <g fill="${S.ink}" fill-opacity=".55"><circle cx="23.5" cy="28" r="1.7"/><circle cx="29" cy="28" r="1.7"/><circle cx="34.5" cy="28" r="1.7"/></g>`],
   water: [S.blue, `<path ${lift} d="M0 40 C16 37 32 41 48 38 V48 H0z" fill="${S.g2}"/>

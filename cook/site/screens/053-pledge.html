@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>053 Daily pledge</title>
-<meta name="motion" content="Light: the dawn scene (deeper hill silhouettes) fades in with a soft cream glow behind Xero; dark: a true navy pre-dawn sky (the kit's night sky, dawn variant: a few twinkling stars, navy hills) with the sun waiting on the horizon at the right. Xero settles onto the hill (900ms) then bobs; date, pledge (underline under 'won't'), one quiet line, reason card and the hold button arrive in order (90ms stagger). At 1.5s the button is held for 1s (fill sweeps left to right, light ticking haptic), turns to 'Pledged' with a green check and a success haptic; the sun rises over 1.6s (light: up and to the right, ending 24px in from the edge with a crisp cream rim, the haze thinning; dark: 40px up off the horizon), Xero swaps to cheer and re-settles, and the line 'Glim will check in tonight at 9:00 PM. No pressure.' fades in under the button.">
+<meta name="motion" content="Prep week: today is Mon, Nov 2, '4 days to Quit Day'. Light: the dawn scene (deeper hill silhouettes, no film grain, the left cloud clear of the X) fades in, and two soft hills continue the ground under the reason card and the button (fading up from the bottom) with a soft cream glow behind Xero; dark: a true navy pre-dawn sky (the kit's night sky, dawn variant: a few twinkling stars, navy hills) with the sun waiting on the horizon at the right. Xero settles onto the hill (900ms) then bobs; date, pledge (underline under 'won't'), one quiet line, reason card and the hold button arrive in order (90ms stagger). At 1.5s the button is held for 1s (fill sweeps left to right, light ticking haptic), turns to 'Pledged' with a green check and a success haptic; the sun rises over 1.6s (light: up and to the right, ending 24px in from the edge with a crisp cream rim (no blur), the haze thinning; dark: 40px up off the horizon), Xero swaps to cheer and re-settles, and the line 'Glim will check in tonight at 9:00 PM. No pressure.' fades in under the button.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -18,7 +18,7 @@
   .scene svg rect.hazemove { transition: opacity 1.6s var(--ease); }
   /* light: the risen sun sits 24px in from the right edge, with a crisp rim */
   .up .scene svg circle.sunmove { transform: translate(77px, -44px) scale(.62); }
-  .scene svg circle.sunmove.r70 { stroke: #FFF1C9; stroke-width: 6; filter: drop-shadow(0 0 16px rgba(255,214,130,.6)); }
+  .scene svg circle.sunmove.r70 { stroke: #FFF6DE; stroke-width: 7; }
   /* dark: the pre-dawn sun waits on the horizon and lifts 40px when you pledge */
   .scene svg circle.dawnsun { transition: transform 1.6s var(--settle); }
   .scene svg circle.dawnsun.r80 { filter: blur(14px); } .scene svg circle.dawnsun.r44 { filter: blur(6px); }
@@ -34,16 +34,22 @@
   .after { height: 18px; display: flex; align-items: center; justify-content: center; gap: 6px; color: var(--muted); opacity: 0; transform: translateY(6px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
   .after svg { width: 16px; height: 16px; }
   .up .after { opacity: 1; transform: none; }
-  .dock { gap: 12px; padding-bottom: 42px; }
+  .dock { gap: 12px; padding-bottom: 42px; background: none; }
+  /* the hills continue softly under the reason card, so the bottom is not a flat peach band */
+  .ground { position: absolute; left: 0; right: 0; bottom: 0; height: 250px; pointer-events: none; }
+  .ground svg { display: block; width: 100%; height: 100%; }
+  .ground .h1 { fill: #FFB57E; } .ground .h2 { fill: #FFA872; }
+  [data-theme="dark"] .ground .h1 { fill: #131A2D; } [data-theme="dark"] .ground .h2 { fill: #171F35; }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot" data-status="on-art" id="sc">
   <div class="scene" id="scene" data-fade><div class="fade"></div></div>
+  <div class="ground" data-fade style="--d:300ms"><svg viewBox="0 0 390 250" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="gf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".55" stop-color="#fff" stop-opacity="1"/></linearGradient><mask id="gm"><rect width="390" height="250" fill="url(#gf)"/></mask></defs><g mask="url(#gm)"><path class="h1" d="M0 70 C90 40 170 52 250 70 S350 86 390 60 V250 H0Z"/><path class="h2" d="M0 150 C80 128 160 136 230 152 S340 166 390 140 V250 H0Z"/></g></svg></div>
   <div class="glow" data-fade style="--d:200ms"></div>
   <div class="xero" data-settle style="--i:1"><div class="bob" id="xero"></div></div>
   <div class="nav"><button class="icon-btn on-art" aria-label="Close" data-ic="close"></button></div>
   <div class="body">
-    <p class="t-foot day" data-a style="--i:2">Friday, Day 7</p>
+    <p class="t-foot day" data-a style="--i:2">Monday, 4 days to Quit Day</p>
     <h1 class="t-large" data-a style="--i:3">Today, I <span class="mark">won't</span> use nicotine.</h1>
     <p class="t-body sub" data-a style="--i:4">One wave at a time, just for today.</p>
     <div class="card why" data-a style="--i:5">
@@ -67,6 +73,10 @@
   if (!dark) svg.querySelectorAll('path').forEach(p => { const f = (p.getAttribute('fill') || '').toUpperCase(); if (HILL[f]) p.setAttribute('fill', HILL[f]); });
   /* dark: move the pre-dawn sun off Xero's shoulder to the right, sitting on the hills */
   if (dark) svg.querySelectorAll('circle').forEach(c => { if (['80', '44', '24'].includes(c.getAttribute('r'))) { c.setAttribute('cx', '306'); c.setAttribute('cy', '300'); c.classList.add('dawnsun', 'r' + c.getAttribute('r')); } });
+  /* light: no film grain over the scene, so the sun's cream rim stays crisp */
+  if (!dark) svg.querySelectorAll('rect[filter]').forEach(r => r.remove());
+  /* light: the left cloud moves clear of the X (it was cut off behind it at the edge) */
+  if (!dark) svg.querySelectorAll('ellipse').forEach(e => { const cx = e.getAttribute('cx'); if (cx === '70') { e.setAttribute('cx', '150'); e.setAttribute('cy', '84'); } if (cx === '98') { e.setAttribute('cx', '178'); e.setAttribute('cy', '72'); } });
   /* the scene's sparkle sits under the status bar: move it down beside the sun */
   svg.querySelectorAll('path').forEach(p => { if ((p.getAttribute('d') || '').startsWith('M330 34')) p.setAttribute('transform', 'translate(-91 40)'); });
   svg.querySelectorAll('circle').forEach(c => { const r = c.getAttribute('r'); if (r === '70' || r === '130') { c.classList.add('sunmove', 'r' + r); c.style.transformBox = 'fill-box'; c.style.transformOrigin = 'center'; } });

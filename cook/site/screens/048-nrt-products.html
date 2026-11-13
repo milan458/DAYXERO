@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>048 NRT products</title>
-<meta name="motion" content="Title and the subtitle (with its count) arrive, then the five product rows arrive top to bottom (600ms, 90ms stagger), then Xero settles in beside a short how-to for 'Chew, then park it' (900ms, then a slow bob). At 1.2s the Patch row lands selected: the kit's tint, 2px outline and tick settle in over 520ms with a light selection haptic, and the count in the subtitle rolls from 0 to 1. Tapping a third row gently shakes the count instead of selecting.">
+<meta name="motion" content="Title and the subtitle (with its count) arrive, then the five product rows arrive top to bottom (600ms, 90ms stagger), then Xero settles in beside a short how-to for the selected product (900ms, then a slow bob); the tip follows the selection (Patch: 'Put a new patch on a clean, hairless spot each morning.'), cross-fading 250ms when the selection changes. At 1.2s the Patch row lands selected: the kit's tint, 2px outline and tick settle in over 520ms with a light selection haptic, and the count in the subtitle rolls from 0 to 1. Tapping a third row gently shakes the count instead of selecting.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -43,7 +43,7 @@
       </div>
       <div class="tip" data-a style="--i:7">
         <div class="xr" data-settle style="--d:500ms"><div class="bob" id="xero"></div></div>
-        <p class="t-foot"><b>Chew, then park it:</b> chew the gum slowly until it tingles, then park it between your cheek and gum.</p>
+        <p class="t-foot" id="tip"><b>Patch:</b> put a new patch on a clean, hairless spot each morning.</p>
       </div>
     </div>
   </div>

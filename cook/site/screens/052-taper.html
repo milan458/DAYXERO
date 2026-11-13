@@ -1,10 +1,9 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>052 Pouch taper</title>
-<meta name="motion" content="Title and lead arrive, then the timing note leads (soft warning haptic): this 3-week taper doesn't fit in the 4 days before Quit Day. The strength chart arrives: the 6, 3 and 1.5 mg bars grow from the baseline in turn (900ms settle, 150ms apart); the 6 mg bar is solid up to Quit Day and striped after it, the 3 and 1.5 mg bars are striped (they run past Quit Day), and at 900ms the coral Quit Day dot pops onto the axis where the 6 mg bar splits (Fri, Nov 6). Axis labels are the week start dates. Step rows (each with a chevron: tap to edit) settle in (120ms stagger). Skip is a quiet text button top right. The primary (Move Quit Day to Mon, Nov 23) slides the coral dot along the axis to the 0 mg column over 700ms, the stripes fill in solid and the dates update in place; 'Save my taper as is' is the quiet secondary.">
+<meta name="motion" content="Title and lead arrive, then the two-line timing note leads (soft warning haptic): this 3-week taper doesn't fit in the 4 days before Quit Day (today is Mon, Nov 2; Quit Day Fri, Nov 6). The strength chart arrives: the 6, 3 and 1.5 mg bars grow from the baseline in turn (900ms settle, 150ms apart); the 6 mg bar is solid up to Quit Day and striped after it, the 3 and 1.5 mg bars are striped (they run past Quit Day), and at 900ms the coral Quit Day dot pops onto the axis where the 6 mg bar splits (Fri, Nov 6). Axis labels are the week start dates. Step rows (each with a chevron: tap to edit) settle in (120ms stagger). The coral target ring on the 0 mg column (Mon, Nov 23) fades in at 1s. The X is the only way out at the top (no Skip). The primary (Move Quit Day to Mon, Nov 23) slides the coral dot along the axis into the 0 mg column's target ring over 700ms, the stripes fill in solid and the dates update in place; 'Save my taper as is' is the quiet secondary.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .nav .skip { margin-left: auto; height: 44px; padding: 0 10px; font: 600 15px/1 var(--body); color: var(--fg); opacity: .85; }
   /* Bricolage's long Q tail sweeps under the 'u' and reads as the brand underline: the body face's Q here */
   .qg { font-family: var(--body); font-weight: 700; }
   .wrap { padding: 66px var(--gutter) 0; }
@@ -21,6 +20,13 @@
   .bar { height: var(--h); border-radius: 10px 10px 3px 3px; background: var(--c); transform-origin: bottom; display: flex; }
   /* runs past Quit Day: the bar's own colour in stripes, inside a fine outline */
   .hatch, .key .kh { background: repeating-linear-gradient(135deg, var(--c) 0 3px, transparent 3px 6.5px), color-mix(in srgb, var(--c) 22%, transparent); box-shadow: inset 0 0 0 1.5px var(--c); }
+  /* dark: lighter stripes (the gaps carry half the bar colour, so no heavy navy bands) */
+  [data-theme="dark"] .hatch, [data-theme="dark"] .key .kh { background: repeating-linear-gradient(135deg, var(--c) 0 3px, transparent 3px 6.5px), color-mix(in srgb, var(--c) 55%, var(--card)); }
+  /* the new Quit Day target on the 0 mg column (Mon, Nov 23): a coral ring the dot slides into */
+  .qbar { position: relative; }
+  .qtarget { position: absolute; left: 50%; bottom: -1px; width: 0; height: 0; }
+  .qtarget i { position: absolute; left: -9px; top: -9px; width: 18px; height: 18px; border-radius: 99px; background: var(--card); box-shadow: inset 0 0 0 2.5px var(--mark); }
+  .qtarget i::after { content: ""; position: absolute; inset: 5px; border-radius: 99px; background: color-mix(in srgb, var(--mark) 45%, transparent); }
   .bar.split { background: none; gap: 0; }
   .bar.split .pre { flex: 4 1 0; background: var(--c); border-radius: 10px 0 0 3px; }
   .bar.split .post { flex: 3 1 0; border-radius: 0 10px 3px 0; }
@@ -59,14 +65,13 @@
 <div class="screen" data-ground="reading">
   <div class="nav">
     <button class="icon-btn" aria-label="Close" data-ic="close"></button>
-    <button class="skip">Skip</button>
   </div>
   <div class="scroll">
     <div class="wrap">
       <h1 class="t-title" data-a style="--i:0">Step down your pouches</h1>
       <p class="t-foot lead" data-a style="--i:1">Lower the strength before Quit Day, so stopping feels smaller.</p>
       <div class="warn" data-a style="--i:2">
-        <div class="top"><span data-ic="clock"></span><div><p class="t-head" style="font-size:17px">This taper doesn't fit before <span class="qg">Q</span>uit&nbsp;Day</p><p class="t-foot">It takes 3 weeks and Quit Day is in 4 days. Move Quit Day to Mon, Nov 23 so every step fits, or shorten the steps.</p></div></div>
+        <div class="top"><span data-ic="clock"></span><div><p class="t-head" style="font-size:17px">This taper doesn't fit before <span class="qg">Q</span>uit&nbsp;Day</p><p class="t-foot">It takes 3 weeks. Quit Day is in 4 days.</p></div></div>
       </div>
       <div class="card chart" data-a style="--i:3">
         <p class="t-cap key"><span><i class="kq"></i>Quit Day, Fri, Nov 6</span><span><i class="kh"></i>Runs past Quit Day</span></p>
@@ -74,13 +79,13 @@
           <div class="bar split" style="--h:100%;--i:0;--c:var(--c1)"><i class="pre"></i><i class="post hatch"></i></div>
           <div class="bar hatch" style="--h:50%;--i:1;--c:var(--c2)"></div>
           <div class="bar hatch" style="--h:25%;--i:2;--c:var(--c3)"></div>
-          <i class="qbar"></i>
+          <i class="qbar"><span class="qtarget" data-fade style="--d:1000ms"><i></i></span></i>
           <div class="qmark" data-pop style="--d:900ms"><i></i></div>
         </div>
         <div class="lbls t-cap"><span><b>6 mg</b>Nov 2</span><span><b>3 mg</b>Nov 9</span><span><b>1.5 mg</b>Nov 16</span><span><b>0 mg</b>Nov 23</span></div>
       </div>
       <div class="list steps-list">
-        <div class="row" data-settle style="--i:4"><i class="sw"></i><div class="grow"><p class="t-head">6 mg</p><p class="t-foot">Today to Sun, Nov 8</p></div><span class="wk">1 week</span><span class="chev" data-ic="chev"></span></div>
+        <div class="row" data-settle style="--i:4"><i class="sw"></i><div class="grow"><p class="t-head">6 mg</p><p class="t-foot">Mon, Nov 2 to Sun, Nov 8</p></div><span class="wk">1 week</span><span class="chev" data-ic="chev"></span></div>
         <div class="row" data-settle style="--i:5"><i class="sw" style="--a:46%;height:22px"></i><div class="grow"><p class="t-head">3 mg</p><p class="t-foot">Mon, Nov 9 to Sun, Nov 15</p></div><span class="wk">1 week</span><span class="chev" data-ic="chev"></span></div>
         <div class="row" data-settle style="--i:6"><i class="sw" style="--a:42%;height:16px"></i><div class="grow"><p class="t-head">1.5 mg</p><p class="t-foot">Mon, Nov 16 to Sun, Nov 22</p></div><span class="wk">1 week</span><span class="chev" data-ic="chev"></span></div>
       </div>

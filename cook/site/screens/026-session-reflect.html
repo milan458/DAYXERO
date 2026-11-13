@@ -12,18 +12,23 @@
 .wrap{position:absolute;top:112px;left:0;right:0;display:grid;align-content:start;gap:10px}
 .tag{justify-self:start;display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px 0 9px;border-radius:99px;background:var(--face);color:#1E1A3A;font:600 13px/1 var(--body)}
 .tag svg{width:16px;height:16px}
+/* dark: a deep mint pill with a mint label, never pale mint glaring on navy */
+[data-theme="dark"] .tag.k-try{background:#1A4434;color:#9FE3BC;box-shadow:inset 0 0 0 1px rgba(159,227,188,.22)}
 /* the options: 006's chip pattern, natural widths in hand-balanced rows, all at full contrast */
-.flow{display:grid;gap:10px;margin-top:22px}
+/* rows are packed edge to edge: each chip grows to share its row, so no row ends short */
+.flow{display:grid;gap:12px;margin-top:24px}
 .flow .r{display:flex;gap:8px}
-.flow .chip{flex:none;min-height:48px;padding:0 14px;white-space:nowrap}
+.flow .chip{flex:1 1 auto;justify-content:center;min-height:52px;padding:0 14px;white-space:nowrap}
 .flow .chip.add{background:transparent;box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--fg) 40%,transparent);gap:6px;padding-left:12px}
 .flow .chip.add svg{width:16px;height:16px}
 /* the plan forming: your two picks become the "when" of two plan lines; the "I'll" stays blank until step 2 */
-.plan{margin-top:30px;display:grid;gap:14px;padding:16px 18px 18px}
+.plan{margin-top:38px;display:grid;gap:18px;padding:20px 20px 24px}
 .plan .t-cap{color:var(--muted)}
-.plan .pl{margin:0;display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;font:500 16px/1.35 var(--body)}
+.plan .pl{margin:0;display:flex;align-items:flex-end;flex-wrap:nowrap;gap:4px 8px;font:500 16px/1.35 var(--body)}
 .plan .pl b{font-weight:700}
-.plan .blank{width:58px;height:24px;border-radius:8px;border:1.5px dashed color-mix(in srgb,var(--fg) 34%,transparent)}
+.plan .pl > span{flex:none}
+/* the blank is a clear write-in slot: an underline waiting for step 2 */
+.plan .blank{flex:1;min-width:56px;max-width:120px;height:21px;border-bottom:2px solid color-mix(in srgb,var(--fg) 45%,transparent)}
 .plan .pl b{transition:opacity .3s var(--ease)}
 .plan .pl b.wait{opacity:0}
 .chip.land{animation:land 520ms var(--spring) both}
