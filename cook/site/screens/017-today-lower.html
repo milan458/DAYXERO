@@ -19,10 +19,10 @@
   .tl { position: relative; margin-top: 16px; padding-left: 30px; display: grid; gap: 12px; }
   .spine { position: absolute; left: 9px; top: 42px; bottom: 42px; width: 3px; border-radius: 3px;
     background: repeating-linear-gradient(to bottom, color-mix(in srgb, var(--fg) 45%, transparent) 0 5px, transparent 5px 10px); }
-  .spine i { position: absolute; left: 0; top: 0; width: 3px; height: var(--done, 54%); border-radius: 3px; background: var(--fg); transform-origin: top; }
-  .play .spine i { animation: spine 900ms var(--ease) 200ms backwards; }
+  .spine .done { position: absolute; display: block; left: 0; top: 0; width: 3px; height: var(--done, 54%); border-radius: 3px; background: var(--fg); transform-origin: top; }
+  .play .spine .done { animation: spine 900ms var(--ease) 200ms backwards; }
   @keyframes spine { from { transform: scaleY(0); } }
-  .still .spine i { animation: none; }
+  .still .spine .done { animation: none; }
   .item { position: relative; }
   .node { position: absolute; left: -30px; top: 50%; margin-top: -10px; width: 21px; height: 21px; border-radius: 99px; background: var(--g); box-shadow: inset 0 0 0 3px var(--fg); }
   .node.now { background: var(--fg); box-shadow: 0 0 0 5px color-mix(in srgb, var(--fg) 16%, transparent); }
@@ -66,7 +66,7 @@
   <div class="body">
     <h2 class="t-title" data-a style="--i:1">Through the day</h2>
     <div class="tl">
-      <div class="spine" aria-hidden="true"><i></i></div>
+      <div class="spine" aria-hidden="true"><b class="done"></b></div>
 
       <div class="item now" data-a style="--i:2">
         <span class="node now"></span>
@@ -145,7 +145,7 @@
   $('#b14').innerHTML = DX.badge({ kind: 'day', n: '', state: 'next', p: .5, size: 46, bare: true }) + '<span class="n">14</span>';
   $('.screen').insertAdjacentHTML('beforeend', DX.tabbar('today'));
   // spine: solid through the rows already done today (now, waves, water), dashed after
-  DX.after(0, () => { const tl = $('.tl'), sp = $('.spine'), its = tl.querySelectorAll('.item'); const top = its[0].offsetTop + its[0].offsetHeight / 2, mid = its[2].offsetTop + its[2].offsetHeight / 2, end = its[4].offsetTop + its[4].offsetHeight / 2;
+  DX.beat(0, () => { const tl = $('.tl'), sp = $('.spine'), its = tl.querySelectorAll('.item'); const top = its[0].offsetTop + its[0].offsetHeight / 2, mid = its[2].offsetTop + its[2].offsetHeight / 2, end = its[4].offsetTop + its[4].offsetHeight / 2;
     sp.style.top = top + 'px'; sp.style.bottom = 'auto'; sp.style.height = (end - top) + 'px'; sp.style.setProperty('--done', (mid - top) + 'px'); });
 
   function addGlass(anim) {

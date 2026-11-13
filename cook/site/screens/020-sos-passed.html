@@ -4,13 +4,13 @@
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .hero { position: absolute; left: 0; right: 0; top: 68px; display: grid; place-items: center; }
-  .hero .disc { position: relative; width: 244px; height: 244px; display: grid; place-items: center; }
+  .hero { position: absolute; left: 0; right: 0; top: 60px; display: grid; place-items: center; }
+  .hero .disc { position: relative; width: 232px; height: 232px; display: grid; place-items: center; }
   .hero .disc svg.pacer { position: absolute; inset: 0; }
   .hero .ck { position: absolute; right: 12px; top: 16px; }
-  .txt { position: absolute; left: 0; right: 0; top: 326px; padding: 0 36px; text-align: center; }
+  .txt { position: absolute; left: 0; right: 0; top: 304px; padding: 0 36px; text-align: center; }
   .txt .t-body { margin-top: 8px; color: var(--muted); }
-  .stack2 { position: absolute; left: 0; right: 0; top: 446px; padding: 0 var(--gutter); display: grid; gap: 10px; }
+  .stack2 { position: absolute; left: 0; right: 0; top: 418px; padding: 0 var(--gutter); display: grid; gap: 10px; }
   .waves { display: flex; align-items: center; gap: 12px; padding: 16px 16px 16px 18px; }
   .waves .grow { flex: 1; min-width: 0; }
   .waves .big { display: flex; align-items: flex-start; gap: 6px; position: relative; }
@@ -32,9 +32,9 @@
 <div class="screen" data-ground="ocean">
   <div class="hero">
     <div class="disc">
-      <svg class="pacer" viewBox="0 0 244 244" aria-hidden="true">
-        <circle cx="122" cy="122" r="104" fill="currentColor" fill-opacity=".06"/>
-        <circle cx="122" cy="122" r="119" fill="none" stroke="currentColor" stroke-opacity=".4" stroke-width="2.5"/>
+      <svg class="pacer" viewBox="0 0 232 232" aria-hidden="true">
+        <circle cx="116" cy="116" r="98" fill="currentColor" fill-opacity=".06"/>
+        <circle cx="116" cy="116" r="113" fill="none" stroke="currentColor" stroke-opacity=".4" stroke-width="2.5"/>
       </svg>
       <div id="jelli" data-settle style="--d:250ms"></div>
       <div class="ck" id="ck"></div>
@@ -66,10 +66,10 @@
 </div>
 <script>
   const $ = s => document.querySelector(s);
-  $('#jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 200 });
+  $('#jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 190 });
   $('#ck').innerHTML = DX.check({ size: 48, color: 'var(--tick)', fg: '#0B2A1C' });
   $('#bd').innerHTML = DX.badge({ kind: 'wave', n: '', state: 'next', p: .92, size: 80, bare: true }) + '<span class="n">25</span>';
-  DX.after(2700, () => { $('#jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 200, animate: false }); });
+  DX.after(2700, () => { $('#jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 190, animate: false }); });
   const fillBadge = (sel, from, to, delay) => DX.after(0, () => { const c = document.querySelector(sel + ' circle[transform]'); if (!c) return; const C = 2 * Math.PI * 48;
     c.animate([{ strokeDashoffset: C * (1 - from) }, { strokeDashoffset: C * (1 - to) }], { duration: 1000, delay, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' }); });
   fillBadge('#bd', .88, .92, 1500);

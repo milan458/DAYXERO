@@ -22,7 +22,7 @@
   .cur::before { content: ""; position: absolute; inset: -6px; border-radius: 99px; box-shadow: 0 0 0 3px var(--fg); opacity: 0; }
   .play .cur::before { animation: pulse 2.4s var(--ease) 1.8s infinite; }
   @keyframes pulse { 0% { opacity: .45; transform: scale(1); } 100% { opacity: 0; transform: scale(1.35); } }
-  .upnext { position: absolute; left: 122px; right: var(--gutter); transform: translateY(-50%); padding: 14px 16px; display: grid; gap: 3px; overflow: visible; }
+  .upnext { position: absolute; left: 122px; right: var(--gutter); padding: 14px 16px; display: grid; gap: 3px; overflow: visible; }
   .upnext::before { content: ""; position: absolute; left: -6px; top: 50%; width: 14px; height: 14px; margin-top: -7px; background: inherit; border-radius: 3px; transform: rotate(45deg); }
   [data-theme="dark"] .upnext::before { box-shadow: -1px 1px 0 0 var(--line); }
   .upnext .k { font: 600 13px/1.3 var(--body); color: var(--muted); }
@@ -65,7 +65,7 @@
   $('#future').setAttribute('d', spline(P.slice(3)));
   const done = $('#done'); done.setAttribute('d', spline(P.slice(0, 4)));
   done.style.setProperty('--len', Math.ceil(done.getTotalLength()));
-  $('#upnext').style.top = P[3][1] + 'px';
+  $('#upnext').style.top = (P[3][1] - 47) + 'px';
 
   const titles = ["You don't have to quit today", 'The first one of the day', 'Use with your eyes open', 'The stress loop', 'Riding the wave', 'Make it easy on yourself', 'The night before'];
   const days = ['Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu'];
