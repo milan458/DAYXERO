@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>029 Session commit</title>
-<meta name="motion" content="The step bar fills to the last third of card 5 and the tag's step dots reach 3 of 3; tag, title, helper, the ringed Day Xero medal (resting faded inside its empty rim) and the date arrive (600ms, 90ms stagger). Holding the button (3s, auto at 1.2s) fills the button and sweeps the medal's rim around in lockstep (linear, a soft haptic tick every 0.5s); letting go drains both (300ms). On held: the rim turns sun gold, the medal face stamps to full colour (620ms spring) with a shine, the date bumps (520ms spring), the title cross-fades to You're committed and the helper to its done line (400ms), and the button shows Committed (success haptic). 1200ms later the done button cross-fades (350ms) into Continue.">
+<meta name="motion" content="The step bar fills to the last third of card 5 and the tag's step line reads Step 3 of 3; tag, title, helper, the ringed Day Xero medal (resting faded inside its empty rim) and the date arrive (600ms, 90ms stagger). Holding the button (3s, auto at 1.2s) fills the button and sweeps the medal's rim around in lockstep (linear, a soft haptic tick every 0.5s); letting go drains both (300ms). On held: the rim turns sun gold, the medal face stamps to full colour (620ms spring) with a shine, the date bumps (520ms spring), the title cross-fades to You're committed and the helper to its done line (400ms), and the button shows Committed (success haptic). 1200ms later the done button cross-fades (350ms) into Continue.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -12,9 +12,6 @@
 .tagrow{display:flex;align-items:center;justify-content:space-between}
 .tag{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px 0 9px;border-radius:99px;background:var(--face);color:#1E1A3A;font:600 13px/1 var(--body)}
 .tag svg{width:16px;height:16px}
-.sub{display:flex;gap:6px;align-items:center}
-.sub i{width:8px;height:8px;border-radius:99px;background:var(--track)}
-.sub i.on{background:var(--fg)}
 /* title and helper swap in place after the hold */
 .swap{display:grid}
 .swap > *{grid-area:1/1;transition:opacity .4s var(--ease),transform .4s var(--ease)}
@@ -22,7 +19,7 @@
 .done .swap .a{opacity:0;transform:translateY(-6px)}
 .done .swap .b{opacity:1;transform:none}
 /* one ringed medal: the hold ring is the medal's rim and the Day Xero coin fills it edge to edge */
-.ringbox{position:absolute;top:266px;left:50%;width:264px;height:264px;margin-left:-132px}
+.ringbox{position:absolute;top:280px;left:50%;width:264px;height:264px;margin-left:-132px}
 .ringbox svg.r{position:absolute;inset:0;display:block;transform:rotate(-90deg)}
 .arc{transition:stroke .4s var(--ease)}
 .done .arc{stroke:#F5B83D}
@@ -32,7 +29,7 @@
 .coin svg > circle[r="47"], .coin svg > circle[stroke="#fff"]{display:none}
 .coin .m{border-radius:50%;opacity:.38;filter:saturate(.25);transition:opacity .4s var(--ease),filter .4s var(--ease)}
 .done .coin .m{opacity:1;filter:none}
-.when{position:absolute;top:566px;left:0;right:0;text-align:center;display:grid;gap:6px;justify-items:center}
+.when{position:absolute;top:578px;left:0;right:0;text-align:center;display:grid;gap:6px;justify-items:center}
 .when .t-large{font-size:36px}
 /* after the hold the button hands over to Continue (same as Quit Day in onboarding) */
 .btns{position:relative;height:58px}
@@ -49,7 +46,7 @@
     <span class="side t-foot muted">5 of 5</span>
   </div>
   <div class="wrap pad">
-    <div class="tagrow" data-a style="--i:0"><span class="tag k-try"><span id="t-ic"></span>Your stress plan · 6 min</span><span class="sub" aria-label="Step 3 of 3"><i class="on"></i><i class="on"></i><i class="on"></i></span></div>
+    <div class="tagrow" data-a style="--i:0"><span class="tag k-try"><span id="t-ic"></span>Your stress plan · 6 min</span><span class="t-foot muted sub">Step 3 of 3</span></div>
     <h1 class="t-title swap" data-a style="--i:1"><span class="a">Commit to your Quit Day</span><span class="b">You're committed</span></h1>
     <p class="t-foot muted swap" data-a style="--i:2"><span class="a">Hold for three seconds to make it official.</span><span class="b">Done. This one is a promise to yourself.</span></p>
   </div>

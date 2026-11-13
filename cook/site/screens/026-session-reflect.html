@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>026 Session reflect</title>
-<meta name="motion" content="The step bar shows card 5 a third done and the mint tag arrives with its step dots (1 of 3), then the title and line (600ms, 90ms stagger). Your two picks settle in as rows one after another (900ms settle, 120ms apart) while the picked count runs 0 to 2; as the second slot fills, the other options arrive dimmed (600ms, to 55% opacity) because both slots are taken. Xero settles in with his line last. Tapping a row's x frees a slot: the row slides back into the options (360ms) and the options brighten (250ms) with a selection haptic; tapping an option then fills the free slot.">
+<meta name="motion" content="The step bar shows card 5 a third done and the mint tag arrives with its step line (Step 1 of 3), then the title and line (600ms, 90ms stagger). Your two picks settle in as rows one after another (900ms settle, 120ms apart) while the picked count runs 0 to 2; as the second slot fills, the other options arrive dimmed (600ms, to 55% opacity) because both slots are taken. Xero settles in with his line last. Tapping a row's x frees a slot: the row slides back into the options (360ms) and the options brighten (250ms) with a selection haptic; tapping an option then fills the free slot.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -14,9 +14,6 @@
 .tag{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px 0 9px;border-radius:99px;background:var(--face);color:#1E1A3A;font:600 13px/1 var(--body)}
 .tag svg{width:16px;height:16px}
 /* sub-steps inside this card */
-.sub{display:flex;gap:6px;align-items:center}
-.sub i{width:8px;height:8px;border-radius:99px;background:var(--track)}
-.sub i.on{background:var(--fg)}
 .lh{display:flex;justify-content:space-between;align-items:baseline;margin-top:12px}
 .lh b{font:600 15px/1.4 var(--body)}
 .list .row{gap:12px;min-height:58px;padding-right:12px}
@@ -46,7 +43,7 @@
     <span class="side t-foot muted">5 of 5</span>
   </div>
   <div class="wrap pad">
-    <div class="tagrow" data-a style="--i:0"><span class="tag k-try"><span id="t-ic"></span>Your stress plan · 6 min</span><span class="sub" aria-label="Step 1 of 3"><i class="on"></i><i></i><i></i></span></div>
+    <div class="tagrow" data-a style="--i:0"><span class="tag k-try"><span id="t-ic"></span>Your stress plan · 6 min</span><span class="t-foot muted sub">Step 1 of 3</span></div>
     <h1 class="t-title" data-a style="--i:1">What gets to you most?</h1>
     <p class="t-foot muted" data-a style="--i:2">Pick the two that come up most.</p>
     <div class="lh" data-a style="--i:3"><b>Your two</b><span class="t-foot muted"><span data-count="2" data-from="0">2</span> of 2 picked</span></div>
