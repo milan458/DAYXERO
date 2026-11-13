@@ -11,8 +11,7 @@
   /* Round 8: Xero stands on a soft paper ground line; the medallion sits on the same horizon (ground behind, coin, then Xero). */
   .hero { position: relative; height: 204px; margin: 26px var(--gutter) 0; }
   /* Round 10: no crest line; the ground lifts off the page with a soft cast shadow only. */
-  .hero .ground { position: absolute; left: calc(-1 * var(--gutter)); top: 150px; width: 390px; height: 56px; z-index: 0; overflow: visible; filter: drop-shadow(0 -4px 10px var(--lift)); }
-  .screen { --lift: rgba(120,44,20,.16); } [data-theme="dark"] .screen { --lift: rgba(0,0,0,.5); }
+  .hero .ground { position: absolute; left: calc(-1 * var(--gutter)); top: 150px; width: 390px; height: 56px; z-index: 0; overflow: visible; }
   .hero .coin { z-index: 1; }
   .hero .xc { z-index: 2; }
   .hero .coin { position: absolute; left: 87px; top: 4px; width: 172px; height: 172px; border-radius: 99px; background: #FFF8EE; display: grid; place-items: center;
@@ -78,7 +77,8 @@
   const unlock = svg => svg.replace(/<path d="M43 62v-3a7 7 0 0114 0v3M40 62h20v12H40z"[^>]*\/?>(<\/path>)?/, '').replace(/<text x="50" y="50"/, '<text x="50" y="50" dominant-baseline="central"').replace(/font-size="30"/, 'font-size="34"');
   /* The ground line: a low paper hill that fades into the page (cast shadow, no lit edge). */
   const dk = DX.theme === 'dark', gc = dk ? '#212A41' : '#FFAE7A';
-  document.getElementById('ground').innerHTML = `<defs><linearGradient id="gf" x1="0" y1="0" x2="0" y2="1"><stop offset=".1" stop-color="${gc}"/><stop offset=".55" style="stop-color: color-mix(in srgb, ${gc} 45%, var(--g))"/><stop offset="1" style="stop-color: var(--g)"/></linearGradient></defs>
+  document.getElementById('ground').innerHTML = `<defs><filter id="gb" x="-5%" y="-60%" width="110%" height="220%"><feGaussianBlur stdDeviation="5"/></filter><linearGradient id="gf" x1="0" y1="0" x2="0" y2="1"><stop offset=".1" stop-color="${gc}"/><stop offset=".55" style="stop-color: color-mix(in srgb, ${gc} 45%, var(--g))"/><stop offset="1" style="stop-color: var(--g)"/></linearGradient></defs>
+    <path d="M0 18 C110 2 280 2 390 18 V34 H0 Z" fill="${dk ? 'rgba(0,0,0,.5)' : 'rgba(120,44,20,.16)'}" filter="url(#gb)"/>
     <path d="M0 22 C110 6 280 6 390 22 V56 H0 Z" fill="url(#gf)"/>`;
   for (let i = 1; i <= 7; i++) h += `<span class="pb ${i === 1 ? '' : 'lk'}" data-pop style="--i:0;--d:${900 + i * 90}ms">${unlock(DX.badge({ kind: 'prep', n: i, state: i === 1 ? 'next' : 'locked', size: 42, bare: true, label: 'Prep ' + i }))}</span>`;
   document.getElementById('stamps').innerHTML = h;

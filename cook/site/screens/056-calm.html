@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>056 Calm tools</title>
-<meta name="motion" content="The title arrives, then the four tool tiles on the 90ms stagger (left to right, top to bottom); each cast member settles into its own little scene 120ms after its tile (Jelli in the box window, Jelli on the dawn hill, Jelli seated on the crest of the swell, Glim on the night hill). In dark mode each tile keeps its own tint (ocean blue, warm pre-dawn, night sea, midnight). The quiet This week row fades in last and its 24 counts up from 0 (850ms). Ambient: in the box tile the dot walks the track at the breathing pace (16s a round) and the lit side steps along with it at each corner; the cast keep their own idle loops (Jelli breathes in the window, Jelli floats on the hill and on the swell, Glim dozes with drifting zzz). Light tap haptic on tile press. Craving SOS stays one tap away in the tab bar.">
+<meta name="motion" content="The title arrives, then the four tool tiles on the 90ms stagger (left to right, top to bottom); each cast member settles into its own little scene 120ms after its tile (Jelli in the box window, Jelli seated on the dawn hill over her contact shadow, Jelli seated on the crest of the long low swell, Glim on the night hill). Each tile has its own palette (ocean blue, apricot dawn, dusk sea with the sun setting behind the swell, midnight); dark mode keeps them (ocean blue, warm pre-dawn, night dusk, midnight). The quiet This week row, in its own soft container, fades in last and its 24 counts up from 0 (850ms). Ambient: in the box tile the dot walks the track at the breathing pace (16s a round) and the lit side steps along with it at each corner; the cast keep their own idle loops (Jelli breathes in the window, Jelli floats on the hill and on the swell, Glim dozes with drifting zzz). Light tap haptic on tile press. Craving SOS stays one tap away in the tab bar.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -13,10 +13,10 @@
 .tool .txt { padding: 12px 14px 14px; display: grid; gap: 3px; }
 .tool .t-head { white-space: nowrap; }
 .tool .t-cap { color: var(--muted); white-space: nowrap; }
-.win { position: absolute; left: 47.5px; top: 46px; width: 72px; height: 72px; border-radius: 13px; overflow: hidden; }
+.win { position: absolute; left: 43.5px; top: 42px; width: 80px; height: 80px; border-radius: 12px; overflow: hidden; }
 .win > svg { display: block; }
 .win .who { left: 4px; top: 6px; }
-.week { display: flex; align-items: center; gap: 10px; margin-top: 18px; padding: 0 4px; color: var(--muted); }
+.week { display: flex; align-items: center; gap: 10px; margin-top: 16px; padding: 13px 16px; border-radius: 16px; background: var(--card-2); color: var(--muted); }
 .week svg { width: 18px; height: 18px; flex: none; }
 .week b { color: var(--fg); font-weight: 700; }
 </style>
@@ -53,6 +53,11 @@ const stars = (pts, o = .8) => pts.map(([x, y, r], i) => `<circle cx="${x}" cy="
 /* Each scene is drawn on a 132-high stage; the tile is 164 high, so the stage sits oy down and the sky fills above it. */
 const svg = (inner, oy) => `<svg width="${W}" height="${H}" viewBox="0 ${-oy} ${W} ${H}" aria-hidden="true">${inner}</svg>`;
 const bg = (oy, fill) => `<rect y="${-oy}" width="${W}" height="${H}" fill="${fill}"/>`;
+/* The light sea window: the kit sea, with a flat sun and no grain, and without the white crescent in the water. */
+const cleanSea = (w, h) => DX.char('horizon', { scene: 'sea', w, h, clarity: 100 })
+  .replace(/<path d="M90 236 C102 222[^>]*><\/path>/, '')
+  .replace(/(<circle cx="110" cy="96" r="34" fill=")url\(#h2Sun[^)]*\)/, '$1#FFCB4A')
+  .replace(/<rect width="400" height="300" filter="url\(#h2Grain[^)]*\)"><\/rect>/, '');
 const who = (html, x, y, d) => `<div class="who" style="left:${x}px;top:${y}px;--d:${d}ms" data-settle>${html}</div>`;
 
 /* Dark mode window: the 057 night sea (sun off to the side, layered water, soft sea floor). */
@@ -75,10 +80,10 @@ const nightSea = (w, h, k) => `<svg width="${w}" height="${h}" viewBox="0 0 260 
 const T = 'M38 99 V33 Q38 21 50 21 H117 Q129 21 129 33 V99 Q129 111 117 111 H50 Q38 111 38 99Z';
 $('#a-box').innerHTML = svg(`<defs>${dark ? grad('ob', '#22409A', '#0F2366') : grad('ob', '#3A63E0', '#1F3C8C')}</defs>${bg(16, 'url(#ob)')}
   ${stars([[18, 22], [148, 18, 1.4], [150, 112], [16, 104, 1.5]], .55)}
-  <path d="${T}" fill="none" stroke="#FFF8EE" stroke-opacity=".38" stroke-width="3.5"/>
-  <path d="${T}" pathLength="400" fill="none" stroke="#FFF8EE" stroke-width="4" stroke-linecap="round" stroke-dasharray="100 300" stroke-dashoffset="0">${DX.still ? '' : '<animate attributeName="stroke-dashoffset" values="0;-100;-200;-300" keyTimes="0;.25;.5;.75" calcMode="discrete" dur="16s" begin="-2s" repeatCount="indefinite"/>'}</path>
+  <path d="${T}" fill="none" stroke="#FFF8EE" stroke-opacity=".38" stroke-width="2.5"/>
+  <path d="${T}" pathLength="400" fill="none" stroke="#FFF8EE" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="100 300" stroke-dashoffset="0">${DX.still ? '' : '<animate attributeName="stroke-dashoffset" values="0;-100;-200;-300" keyTimes="0;.25;.5;.75" calcMode="discrete" dur="16s" begin="-2s" repeatCount="indefinite"/>'}</path>
   <circle r="5.5" fill="#FFF8EE"><animateMotion dur="16s" repeatCount="indefinite" begin="-2s" path="${T}"/></circle>`, 16)
-  + `<div class="win">${dark ? nightSea(72, 72, 'b') : DX.char('horizon', { scene: 'sea', w: 72, h: 72, clarity: 100 })}${who(DX.char('jelli', { mood: 'breathe', size: 64 }), 4, 6, 420)}</div>`;
+  + `<div class="win">${dark ? nightSea(80, 80, 'b') : cleanSea(80, 80)}${who(DX.char('jelli', { mood: 'breathe', size: 70 }), 5, 6, 420)}</div>`;
 if (DX.still) $('#a-box circle[r="5.5"]').outerHTML = '<circle cx="38" cy="66" r="5.5" fill="#FFF8EE"/>';
 
 /* Grounding: apricot dawn in light, a warm pre-dawn in dark; Jelli (as on 058) rests on the near hill. */
@@ -88,19 +93,22 @@ $('#a-ground').innerHTML = svg(dark
      <path d="M0 98 C40 86 80 90 167 102 V132 H0Z" fill="#4A2C24"/><path d="M0 114 C50 104 110 108 167 116 V132 H0Z" fill="#33201C"/>`
   : `<defs>${grad('ga', '#FFE6BF', '#FFCB95')}</defs>${bg(32, 'url(#ga)')}
      <circle cx="124" cy="44" r="38" fill="#FFF1C9" opacity=".7"/><circle cx="124" cy="44" r="24" fill="#FFD966"/>
-     <path d="M0 98 C40 86 80 90 167 102 V132 H0Z" fill="#FFAE73"/><path d="M0 114 C50 104 110 108 167 116 V132 H0Z" fill="#FF9A6B"/>`, 32)
-  + who(DX.char('jelli', { mood: 'calm', size: 84 }), 16, 49, 520);
+     <path d="M0 98 C40 86 80 90 167 102 V132 H0Z" fill="#FFA068"/><path d="M0 98 C40 86 80 90 167 102" fill="none" stroke="#FFC08A" stroke-width="2"/><path d="M0 114 C50 104 110 108 167 116 V132 H0Z" fill="#F98C5C"/>
+     <ellipse cx="58" cy="92" rx="23" ry="3.6" fill="#B8532C" opacity=".32"/>`, 32)
+  + who(DX.char('jelli', { mood: 'calm', size: 84 }).replace('fill="#000000" opacity="0.08"', 'fill="#000000" opacity="0"'), 16, dark ? 49 : 47, 520);
 
-/* Notice the urge: sky blue, Jelli seated on the crest of the swell; dark uses the 059 night sea (same sky, swell and sea blues). */
+/* Notice the urge: a dusk sea (dusty blue sky to a warm horizon, the sun setting behind a long low swell), so it is not the Box blue; Jelli sits on the crest. */
+const SW = 'M0 110 C36 110 50 76 84 76 S 132 110 167 110';
 $('#a-urge').innerHTML = svg(dark
-  ? `<defs>${grad('sd', '#0E1E46', '#1E3A72')}${grad('sw', '#3A62A8', '#26457F')}</defs>${bg(32, 'url(#sd)')}${stars([[20, 18], [44, 40], [150, 16, 1.4], [128, 44]], .6)}
-     <path d="M0 108 C34 108 46 62 82 62 S 128 108 167 108 V132 H0Z" fill="url(#sw)"/><path d="M0 108 C34 108 46 62 82 62 S 128 108 167 108" fill="none" stroke="#FFF8EE" stroke-width="3" stroke-linecap="round"/>
-     <path d="M0 118 C40 112 90 116 167 112 V132 H0Z" fill="#1A3266"/>`
-  : `<defs>${grad('sl', '#8EC2FF', '#D9EEFF')}</defs>${bg(32, 'url(#sl)')}
-     <g fill="#FFFFFF" opacity=".9"><ellipse cx="140" cy="22" rx="18" ry="6.5"/><ellipse cx="131" cy="18" rx="9" ry="6.5"/></g>
-     <path d="M0 108 C34 108 46 62 82 62 S 128 108 167 108 V132 H0Z" fill="#5A9DFF"/><path d="M0 108 C34 108 46 62 82 62 S 128 108 167 108" fill="none" stroke="#1E1A3A" stroke-width="3" stroke-linecap="round"/>
-     <path d="M0 118 C40 112 90 116 167 112 V132 H0Z" fill="#2F72F2"/>`, 32)
-  + who(DX.char('jelli', { mood: 'calm', size: 76 }), 44, 22, 620);
+  ? `<defs>${grad('sd', '#0F1A38', '#2B3A64', '#6E5560')}</defs>${bg(32, 'url(#sd)')}${stars([[20, 18], [44, 40], [150, 16, 1.4], [128, 44]], .6)}
+     <circle cx="140" cy="98" r="10" fill="#FFC27A"/>
+     <path d="${SW} V132 H0Z" fill="#2B4A86"/><path d="${SW}" fill="none" stroke="#FFF8EE" stroke-width="3" stroke-linecap="round"/>
+     <path d="M0 120 C40 115 90 118 167 115 V132 H0Z" fill="#1C3566"/>`
+  : `<defs>${grad('sl', '#7F93C2', '#D9AFA4', '#FBCBA4')}</defs>${bg(32, 'url(#sl)')}
+     <circle cx="140" cy="98" r="10" fill="#FFE2A2"/>
+     <path d="${SW} V132 H0Z" fill="#3E639E"/><path d="${SW}" fill="none" stroke="#FFF8EE" stroke-width="3" stroke-linecap="round"/>
+     <path d="M0 120 C40 115 90 118 167 115 V132 H0Z" fill="#2E4E88"/>`, 32)
+  + who(DX.char('jelli', { mood: 'calm', size: 76 }), 46, 37, 620);
 
 /* Wind down: night blue with the moon, Glim settling on the hill. */
 $('#a-wind').innerHTML = svg(`<defs>${dark ? grad('nd', '#08101F', '#16244A', '#22315A') : grad('nl', '#0B1430', '#1B2B55', '#2C3D6A')}</defs>${bg(32, `url(#${dark ? 'nd' : 'nl'})`)}

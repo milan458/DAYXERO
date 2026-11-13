@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>059 Notice the urge</title>
-<meta name="motion" content="One painted scene: the sky and the layered sea fade in (600ms), the urge line draws edge to edge over 2.4s (a long low swell that rises, crests and runs out to the card edges) as the swell fills in under it, then the three points and their labels fade in beside them (It rises, It peaks, It passes; It peaks sits 18px above the crest dot). Jelli, seated on the line (the line passes behind her tentacle tips), rides it for 12s (slow ease) up to the crest and down, settling on the calm water at the far end; the It peaks tag fades out (700ms) as Jelli nears the crest and back in once Jelli has passed, so they never overlap, while the single 28px prompt cross-fades every 3s (600ms): notice, it rises, the peak, watch it fall. Dark mode is the same scene at night. No springs, no haptic until It's passing is tapped (soft success haptic, goes to 060).">
+<meta name="motion" content="One painted scene: the sky and the layered sea fade in (600ms), the urge line draws edge to edge over 2.4s (a long, low swell, wider than it is tall, filled in the sea's own blue, that rises, crests and runs out to the card edges) as the swell fills in under it, then the three points and their labels fade in beside them (It rises, It peaks, It passes; It peaks sits 18px above the crest dot, the side labels sit at least 20px in from the card edges). Jelli, seated on the line (the line passes behind her tentacle tips), rides it for 12s (slow ease) up to the crest and down, settling on the calm water near the far end, 12px in from where the swell meets it; the It peaks tag fades out (700ms) as Jelli nears the crest and back in once Jelli has passed, so they never overlap, while the single 28px prompt (the only line above the scene) cross-fades every 3s (600ms): notice, it rises, the peak, watch it fall. Dark mode is the same scene at night. No springs, no haptic until It's passing is tapped (soft success haptic, goes to 060).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -18,20 +18,21 @@
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
 .nav .title { flex: 1; text-align: center; margin-right: 56px; }
-.prompt { position: absolute; left: 28px; right: 28px; top: 124px; text-align: center; display: grid; gap: 10px; justify-items: center; }
-.prompt .say { font: 800 28px/1.18 var(--display); letter-spacing: -.6px; min-height: 72px; text-wrap: balance; transition: opacity .6s var(--ease), transform .6s var(--ease); }
+.prompt { position: absolute; left: 28px; right: 28px; top: 138px; text-align: center; display: grid; justify-items: center; }
+.prompt .say { font: 800 28px/1.18 var(--display); letter-spacing: -.6px; min-height: 72px; display: grid; align-items: center; text-wrap: balance; transition: opacity .6s var(--ease), transform .6s var(--ease); }
 .prompt .say.out { opacity: 0; transform: translateY(-8px); }
 .chart { position: absolute; left: var(--gutter); right: var(--gutter); top: 246px; height: 410px; padding: 0; overflow: hidden; border-radius: 28px; box-shadow: none !important; }
 .chart svg { position: absolute; left: 0; top: 0; }
 .rider { position: absolute; left: 0; top: 0; width: 80px; height: 80px;
-  offset-path: path("M40 300 C 100 300 116 96 173 96 S 246 300 306 300 H312"); offset-rotate: 0deg; offset-distance: 0%; offset-anchor: 50% 93%; }
+  offset-path: path("M30 300 C 80 300 116 160 173 160 S 266 300 316 300"); offset-rotate: 0deg; offset-distance: var(--s, 0px); offset-anchor: 50% 93%; }
 .play .rider { animation: ride 12s cubic-bezier(.4,0,.6,1) forwards; }
-@keyframes ride { from { offset-distance: 0%; } to { offset-distance: 100%; } }
-.still .rider { animation: none !important; offset-distance: 100%; }
+@keyframes ride { from { offset-distance: var(--s, 0px); } to { offset-distance: var(--e, 100%); } }
+.still .rider { animation: none !important; offset-distance: var(--e, 100%); }
 .lab { position: absolute; transform: translate(0, -50%); font: 700 14px/1 var(--body); color: #1E1A3A; background: #FFF8EE; padding: 8px 10px; border-radius: 99px; box-shadow: 0 2px 8px rgba(20,30,70,.12); white-space: nowrap; }
 .lab.r { transform: translate(-100%, -50%); }
 .lab.c { transform: translate(-50%, -100%); }
-/* "It peaks" sits 18px above the crest dot; it steps aside (fades) while Jelli crosses the crest, then comes back. */
+/* "It peaks" sits 18px above the crest dot; It rises and It passes sit just above their dots, 25px in from the card edges. */
+/* (was:) "It peaks" sits 18px above the crest dot; it steps aside (fades) while Jelli crosses the crest, then comes back. */
 .play #peak { animation: peakdip 12s linear both; }
 @keyframes peakdip { 0%, 30% { opacity: 1; } 36%, 66% { opacity: 0; } 72%, 100% { opacity: 1; } }
 .still #peak { animation: none !important; opacity: 1; }
@@ -41,11 +42,10 @@
 <div class="screen" data-ground="reading">
 <div class="nav"><button class="icon-btn" aria-label="Close" data-ic="close"></button><div class="title t-head" data-a style="--i:0">Notice the urge</div></div>
 <div class="prompt">
-  <p class="t-foot time" data-a style="--i:1">About a minute. Just watch.</p>
   <p class="say" id="say" data-a style="--i:2">Notice where you feel it.</p>
 </div>
 <div class="card chart" data-a style="--i:3" id="chart">
-  <div data-fade style="--d:1300ms;position:absolute;inset:0"><span class="lab r" style="left:96px;top:198px">It rises</span><span class="lab c" id="peak" style="left:173px;top:70px">It peaks</span><span class="lab" style="left:250px;top:198px">It passes</span></div>
+  <div data-fade style="--d:1300ms;position:absolute;inset:0"><span class="lab r" style="left:107px;top:191px">It rises</span><span class="lab c" id="peak" style="left:173px;top:134px">It peaks</span><span class="lab" style="left:239px;top:191px">It passes</span></div>
   <div data-fade style="--d:1200ms;position:absolute;inset:0"><span class="rider" id="rider"></span></div>
 </div>
 <div class="dock"><button class="btn" data-a style="--i:4">It's passing</button><button class="link" data-a style="--i:5">I need more help</button></div>
@@ -56,11 +56,12 @@ document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.da
 const dark = DX.theme === 'dark';
 /* Light: a pale sky over a clearly bluer swell. Dark: the night sea, each band a shade deeper with a faint lit crest, for depth. */
 const C = dark
-  ? { sky: ['#0E1E46', '#1E3A72'], swell: ['#3A62A8', '#26457F'], sea: [['#2A4C92', '#203E7C'], ['#1D3870', '#16305F'], ['#132A58', '#0E2149']], crest: '#A8C2FF', line: '#FFF8EE', star: 1 }
-  : { sky: ['#BFDDFF', '#EAF4FF'], swell: ['#86BCFF', '#5A9AF2'], sea: [['#4F93FA', '#3F84F2'], ['#2F72F2', '#2766E0'], ['#1F55D0', '#1A4BC0']], crest: '#FFFFFF', line: '#1E1A3A', star: 0 };
+  ? { sky: ['#0E1E46', '#1E3A72'], swell: ['#2A4C92', '#203E7C'], sea: [['#2A4C92', '#203E7C'], ['#1D3870', '#16305F'], ['#132A58', '#0E2149']], crest: '#A8C2FF', line: '#FFF8EE', star: 1 }
+  : { sky: ['#BFDDFF', '#EAF4FF'], swell: ['#4F93FA', '#3F84F2'], sea: [['#4F93FA', '#3F84F2'], ['#2F72F2', '#2766E0'], ['#1F55D0', '#1A4BC0']], crest: '#FFFFFF', line: '#1E1A3A', star: 0 };
 const pt = (x, y) => `<circle cx="${x}" cy="${y}" r="6.5" fill="${C.line}" stroke="${dark ? '#26457F' : '#FFF8EE'}" stroke-width="3"/>`;
-/* The urge line: rises from the left edge, crests, and runs out flat to the right edge (Jelli rides the middle part). */
-const U = 'M-6 304 C 14 304 24 300 40 300 C 100 300 116 96 173 96 S 246 300 306 300 C 322 300 334 303 352 303';
+/* The urge line: a long, low swell in the sea's own blue (wide, with a low crest, so it reads as water, not a chart); it runs out flat to both card edges. */
+const R = 'M30 300 C 80 300 116 160 173 160 S 266 300 316 300';
+const U = 'M-6 302 C 8 302 18 300 30 300 C 80 300 116 160 173 160 S 266 300 316 300 C 328 300 338 302 352 302';
 const band = (d, i) => `<path d="${d} V410 H-10Z" fill="url(#ksea${i})"/><path d="${d}" fill="none" stroke="${C.crest}" stroke-opacity="${dark ? .16 : .28}" stroke-width="2"/>`;
 document.getElementById('chart').insertAdjacentHTML('afterbegin', `<svg width="346" height="410" viewBox="0 0 346 410" aria-hidden="true"><defs>
   <linearGradient id="ksky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${C.sky[0]}"/><stop offset="1" stop-color="${C.sky[1]}"/></linearGradient>
@@ -72,13 +73,18 @@ document.getElementById('chart').insertAdjacentHTML('afterbegin', `<svg width="3
     : '<g fill="#fff" opacity=".9"><ellipse cx="282" cy="56" rx="30" ry="10"/><ellipse cx="268" cy="49" rx="15" ry="11"/></g><g fill="#fff" opacity=".7" filter="url(#kblur)"><ellipse cx="62" cy="112" rx="28" ry="8"/><ellipse cx="74" cy="105" rx="14" ry="9"/><ellipse cx="52" cy="108" rx="10" ry="7"/></g>'}
   <path d="${U} V410 H-10Z" fill="url(#kswl)" data-fade style="--d:900ms"/>
   <path d="${U}" fill="none" stroke="${C.line}" stroke-width="4" stroke-linecap="round" pathLength="100" class="draw" style="--len:100;--dur:2400ms;--d:300ms"/>
-  <g data-fade style="--d:1300ms">${pt(107.6, 198)}${pt(173, 96)}${pt(238.4, 198)}</g>
+  <g data-fade style="--d:1300ms">${pt(119.4, 199.4)}${pt(173, 160)}${pt(226.6, 199.4)}</g>
   <g data-fade style="--d:600ms">
     ${band('M-10 322 C 50 308 110 312 170 322 C 240 334 300 314 356 310', 0)}
     ${band('M-10 352 C 60 340 120 342 190 354 C 260 366 310 346 356 342', 1)}
     ${band('M-10 382 C 70 370 140 374 210 384 C 280 394 330 378 356 374', 2)}
   </g></svg>`);
-document.getElementById('rider').innerHTML = DX.char('jelli', { mood: 'calm', size: 80 });
+const rider = document.getElementById('rider');
+rider.innerHTML = DX.char('jelli', { mood: 'calm', size: 80 });
+/* Jelli rides the swell from x 44 to x 300 (12px in from where the line meets the calm water): find those lengths on the path. */
+{ const pe = document.createElementNS('http://www.w3.org/2000/svg', 'path'); pe.setAttribute('d', R); const L = pe.getTotalLength();
+  const at = x => { let lo = 0, hi = L; for (let k = 0; k < 30; k++) { const m = (lo + hi) / 2; if (pe.getPointAtLength(m).x < x) lo = m; else hi = m; } return lo; };
+  rider.style.setProperty('--s', at(44).toFixed(1) + 'px'); rider.style.setProperty('--e', at(300).toFixed(1) + 'px'); }
 const say = document.getElementById('say');
 const lines = [[3000, 'It rises. You do not have to act.'], [6000, 'This is the peak. Breathe out slowly.'], [9000, 'Watch it fall away.']];
 lines.forEach(([t, s]) => DX.after(t, () => { say.classList.add('out'); setTimeout(() => { say.textContent = s; say.classList.remove('out'); }, 600); }));
