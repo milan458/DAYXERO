@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>061 Settings</title>
-<meta name="motion" content="The profile card arrives first: its dawn sky (pre-dawn in dark) lifts its sun as Xero settles onto the near hill at 450ms, then the Day 7 medal stamps onto the card edge at 700ms; each group arrives top to bottom on the 90ms stagger. Rows highlight on press with a light tap haptic and push their page from the right.">
+<meta name="motion" content="The profile card arrives first: in its small dawn window (pre-dawn in dark) the sun lifts as Xero settles onto the hill at 450ms, then the Day 7 medal stamps in beside the name at 700ms with its label; each group arrives top to bottom on the 90ms stagger, the account group (Subscription, Help and contact, About) last. Rows and the profile card highlight on press with a light tap haptic and push their page from the right.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -17,29 +17,29 @@
 .toast.b .ck { flex: none; }
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
-.prof { padding: 0; overflow: hidden; margin-top: 4px; position: relative; }
-.prof .sky { position: relative; height: 104px; overflow: hidden; }
-.prof .sky .art, .prof .sky .hill { position: absolute; inset: 0; }
-.prof .sky .hill svg { display: block; }
-.prof .sky .xs { position: absolute; left: 50%; top: 22px; margin-left: -33px; }
-.prof .top { display: flex; align-items: center; gap: 14px; padding: 12px 96px 14px 16px; }
+/* Profile: one tappable row card. A small dawn window (Xero standing on the hill), name, the Day 7 medal with its label, chevron. */
+.prof { display: flex; align-items: center; gap: 14px; padding: 12px 14px 12px 12px; margin-top: 2px; }
+.prof .scene { position: relative; width: 72px; height: 72px; border-radius: 18px; overflow: hidden; flex: none; }
+.prof .scene > svg { position: absolute; inset: 0; display: block; }
+.prof .scene .xs { position: absolute; left: 13px; top: 13px; }
 .prof .grow { flex: 1; min-width: 0; }
-.prof .medal { position: absolute; right: 16px; top: 70px; border-radius: 99px; box-shadow: 0 0 0 4px var(--card); }
-.sec { padding: 15px 4px 7px; font-size: 14px; }
-.list > .row { min-height: 54px; padding-top: 6px; padding-bottom: 6px; }
+.prof .medal .badge { gap: 3px; }
+.prof .medal .t-cap { color: var(--fg); font-weight: 700; }
+.sec { padding: 12px 4px 6px; font-size: 14px; font-weight: 600; }
+.list > .row { min-height: 47px; padding-top: 5px; padding-bottom: 5px; }
 .ico-tile.s { width: 32px; height: 32px; }
 .hd { padding-top: 0; }
+.gap { height: 14px; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
 <div class="nav"><button class="icon-btn" aria-label="Close" data-ic="close"></button><div class="grow title" data-a style="--i:0">Settings</div><span style="width:44px;flex:none"></span></div>
 <div class="scroll" style="padding-top:98px"><div class="pad">
-  <div class="card prof" data-a style="--i:1">
-    <div class="sky"><div class="art" id="sky"></div><div class="hill" id="hill"></div><div class="xs" id="av" data-settle style="--d:450ms"></div></div>
-    <div class="top">
-      <div class="grow"><div class="t-title">Sam</div><div class="t-foot muted">DayXero Yearly, renews Nov 6</div></div>
-    </div>
+  <div class="card prof" data-a style="--i:1" role="button" aria-label="Your profile">
+    <div class="scene" id="scene"><div class="xs" id="av" data-settle style="--d:450ms"></div></div>
+    <div class="grow"><div class="t-title">Sam</div><div class="t-foot muted">Joined Fri, Oct 30</div></div>
     <div class="medal" id="bdg" data-stamp style="--d:700ms"></div>
+    <span class="chev" data-ic="chev" data-s="18"></span>
   </div>
   <p class="t-foot muted sec" data-a style="--i:2">Your plan</p>
   <div class="list" data-a style="--i:3">
@@ -57,17 +57,31 @@
     <div class="row"><span class="ico-tile s" data-ic="heart"></span><div class="grow"><div class="t-body rt">Apple Health</div></div><span class="val">On</span><span class="chev" data-ic="chev" data-s="18"></span></div>
     <div class="row"><span class="ico-tile s" data-ic="shield"></span><div class="grow"><div class="t-body rt">Privacy</div></div><span class="chev" data-ic="chev" data-s="18"></span></div>
   </div>
+  <div class="gap"></div>
+  <div class="list" data-a style="--i:8" aria-label="Account and help">
+    <div class="row"><span class="ico-tile s" data-ic="card"></span><div class="grow"><div class="t-body rt">Subscription</div></div><span class="val">Yearly</span><span class="chev" data-ic="chev" data-s="18"></span></div>
+    <div class="row"><span class="ico-tile s" id="ic-help"></span><div class="grow"><div class="t-body rt">Help and contact</div></div><span class="chev" data-ic="chev" data-s="18"></span></div>
+    <div class="row"><span class="ico-tile s" id="ic-about"></span><div class="grow"><div class="t-body rt">About</div></div><span class="val">Version 2.4</span><span class="chev" data-ic="chev" data-s="18"></span></div>
+  </div>
 </div></div>
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
 
 const dark = DX.theme === 'dark';
-/* Dawn in light; the kit repaints it as the pre-dawn night in dark. Xero stands on the near hill. */
-document.getElementById('sky').innerHTML = DX.char('horizon', { scene: 'dawn', w: 346, h: 104, clarity: 88, fit: 'xMidYMid slice' });
-document.getElementById('hill').innerHTML = `<svg width="346" height="104" viewBox="0 0 346 104" aria-hidden="true"><defs><linearGradient id="ph" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${dark ? '#1A2846' : '#FFA27A'}"/><stop offset="1" stop-color="${dark ? '#0F1A31' : '#F0794F'}"/></linearGradient></defs>
-  <path d="M0 104 V92 C50 88 110 80 150 79 C196 78 250 84 346 94 V104Z" fill="url(#ph)"/></svg>`;
-document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 66 });
-document.getElementById('bdg').innerHTML = DX.badge({ kind: 'day', n: 7, state: 'earned', size: 64, bare: true, label: 'Day 7' });
+/* The profile window: dawn in light, pre-dawn in dark, one smooth radial glow (no rings), no clouds; Xero stands on the hill. */
+document.getElementById('scene').insertAdjacentHTML('afterbegin', `<svg width="72" height="72" viewBox="0 0 72 72" aria-hidden="true"><defs>
+  <linearGradient id="psk" x1="0" y1="0" x2="0" y2="1">${dark ? '<stop offset="0" stop-color="#0D1630"/><stop offset=".6" stop-color="#22325A"/><stop offset="1" stop-color="#3C4A78"/>' : '<stop offset="0" stop-color="#FFE6BF"/><stop offset="1" stop-color="#FFC994"/>'}</linearGradient>
+  <radialGradient id="pgl" cx="54" cy="44" r="34" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${dark ? '#FFC27A' : '#FFF4D2'}" stop-opacity="${dark ? .55 : .9}"/><stop offset=".35" stop-color="${dark ? '#FFB06A' : '#FFEFC6'}" stop-opacity="${dark ? .24 : .5}"/><stop offset=".7" stop-color="${dark ? '#FFB06A' : '#FFEFC6'}" stop-opacity="${dark ? .07 : .15}"/><stop offset="1" stop-color="${dark ? '#FFB06A' : '#FFEFC6'}" stop-opacity="0"/></radialGradient>
+  <linearGradient id="phl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${dark ? '#24365E' : '#FFA27A'}"/><stop offset="1" stop-color="${dark ? '#16243F' : '#F0794F'}"/></linearGradient></defs>
+  <rect width="72" height="72" fill="url(#psk)"/>${dark ? '<circle cx="12" cy="12" r=".9" fill="#fff" opacity=".8"/><circle cx="34" cy="7" r=".7" fill="#fff" opacity=".5"/><circle cx="64" cy="14" r=".9" fill="#fff" opacity=".7"/>' : ''}
+  <rect width="72" height="72" fill="url(#pgl)"/><circle cx="54" cy="44" r="9" fill="${dark ? '#FFC27A' : '#FFD966'}"/>
+  <path d="M0 72 V60 C16 56 30 54 42 55 C54 56 64 59 72 62 V72Z" fill="url(#phl)"/></svg>`);
+document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 46 });
+document.getElementById('bdg').innerHTML = DX.badge({ kind: 'day', n: 7, state: 'earned', size: 44, label: 'Day 7' });
+/* Help and About: screen-local glyphs in the kit's line style (the kit has neither). */
+const glyph = d => `<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
+document.getElementById('ic-help').innerHTML = glyph('M12 21a9 9 0 100-18 9 9 0 000 18zM9.6 9.6a2.5 2.5 0 114.3 1.8c-.9.8-1.9 1.3-1.9 2.6M12 17v.1');
+document.getElementById('ic-about').innerHTML = glyph('M12 21a9 9 0 100-18 9 9 0 000 18zM12 11v5.5M12 7.8v.1');
 </script>
 </body></html>

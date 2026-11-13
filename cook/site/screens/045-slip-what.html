@@ -4,7 +4,8 @@
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .wrap { padding: 66px var(--gutter) 0; }
+  /* no nav row on this optional step: the title sits right under the status bar */
+  .wrap { padding: 20px var(--gutter) 0; }
   /* the slip flow's one Jelli placement: small, at the right of the screen title (044, 045) */
   .ttl { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
   .ttl { align-items: center; }
@@ -18,12 +19,12 @@
   .wrap .lead { margin-top: 8px; color: var(--muted); }
   .priv { margin-top: 8px; display: flex; align-items: center; gap: 6px; color: var(--muted); }
   .priv svg { width: 16px; height: 16px; }
-  .qs { margin-top: 36px; display: grid; gap: 42px; }
+  .qs { margin-top: 40px; display: grid; gap: 46px; }
   .q6 { display: grid; gap: 14px; }
   .q6 .t-head { font-size: 17px; }
   /* chips in a row share it in equal widths */
   .q6 .chips { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 8px; }
-  .q6 .chip { justify-content: center; min-height: 56px; padding: 0 6px; white-space: nowrap; }
+  .q6 .chip { justify-content: center; min-height: 56px; padding: 0 12px; white-space: nowrap; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -41,11 +42,11 @@
         </div>
         <div class="q6" data-a style="--i:5">
           <p class="t-head">How much?</p>
-          <div class="chips"><button class="chip">A few puffs</button><button class="chip on">One session</button><button class="chip">More</button></div>
+          <div class="chips"><button class="chip">A few puffs</button><button class="chip on">Session</button><button class="chip">More</button></div>
         </div>
         <div class="q6" data-a style="--i:6">
           <p class="t-head">When?</p>
-          <div class="chips"><button class="chip on">Just now</button><button class="chip">Earlier today</button><button class="chip">Yesterday</button></div>
+          <div class="chips"><button class="chip on">Just now</button><button class="chip">Earlier</button><button class="chip">Yesterday</button></div>
         </div>
       </div>
     </div>

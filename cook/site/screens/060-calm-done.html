@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>060 Calm done</title>
-<meta name="motion" content="The paper sea disc fades in, Jelli settles into it cheering (hop loop, 250ms), then the small check pops beside Jelli and its tick draws (900ms, success haptic); the headline with its drawn underline and the line arrive, Jelli's two 4-point stars twinkle in; the compact minutes row counts 7 to 8 at 1.2s with a +1 floating up and the +1 just now tag fading in beside it (one minute, from Notice the urge); the optional feeling chips arrive last with none selected. No other springs.">
+<meta name="motion" content="The paper sea disc fades in (in dark mode the night sea, its low sun off to the left of Jelli), Jelli settles into it cheering (hop loop, 250ms), then the small apricot check (18px) pops in front of the done line under the disc and its tick draws (900ms, success haptic); the headline with its drawn underline and the line arrive, Jelli's two 4-point stars twinkle in; the compact minutes row counts 7 to 8 at 1.2s with a +1 floating up and the +1 just now tag fading in beside it (one minute, from Notice the urge); the three equal feeling chips arrive last with none selected (tapping one fills it with the warm selection and a selection haptic). No other springs.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -19,12 +19,13 @@
 html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--sel) 72%, transparent); }
 .pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
-.top { padding-top: 70px; display: grid; justify-items: center; text-align: center; gap: 10px; }
-.hero { position: relative; width: 240px; height: 210px; margin-bottom: 6px; }
-.hero .halo { position: absolute; left: 20px; top: 10px; width: 200px; height: 200px; border-radius: 99px; overflow: hidden; }
-.hero .jel { position: absolute; left: 30px; top: 6px; }
-.hero .ck { position: absolute; right: 6px; top: 6px; }
-.calm { display: flex; align-items: center; gap: 12px; padding: 10px 12px 10px 10px; margin-top: 22px; position: relative; border-radius: 20px; }
+.top { padding-top: 76px; display: grid; justify-items: center; text-align: center; gap: 8px; }
+.hero { position: relative; width: 240px; height: 206px; }
+.hero .halo { position: absolute; left: 20px; top: 6px; width: 200px; height: 200px; border-radius: 99px; overflow: hidden; }
+.hero .jel { position: absolute; left: 30px; top: 2px; }
+.done { display: inline-flex; align-items: center; gap: 7px; color: var(--muted); margin-top: 6px; }
+.done .ck { width: 18px; height: 18px; flex: none; }
+.calm { display: flex; align-items: center; gap: 12px; padding: 10px 12px 10px 10px; margin-top: 20px; position: relative; border-radius: 20px; }
 .calm .ico-tile { width: 40px; height: 40px; border-radius: 13px; }
 .calm .ico-tile svg { width: 22px; height: 22px; }
 .calm .grow { flex: 1; min-width: 0; white-space: nowrap; }
@@ -32,7 +33,11 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 .calm .num { font-size: 26px; line-height: 1; }
 .gain { flex: none; height: 30px; padding: 0 11px; border-radius: 99px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 13px/1 var(--body); color: var(--fg); white-space: nowrap; }
 .plus { position: absolute; left: 40px; top: -6px; color: var(--tick); font: 800 18px/1 var(--display); }
-.feel { margin-top: 24px; display: grid; gap: 10px; }
+.feel { margin-top: 20px; display: grid; gap: 10px; }
+.feel .fq { font-weight: 600; }
+/* Three equal chips, centred labels, a firmer outline so they read as buttons. */
+.feel .chips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.feel .chip { justify-content: center; min-height: 48px; padding: 0 6px; white-space: nowrap; box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--fg) 20%, transparent); }
 .screen { --tertiary: #8A8598; }
 [data-theme="dark"] .screen { --tertiary: #79819A; }
 .opt3 { color: var(--muted); font-weight: 500; }
@@ -48,8 +53,8 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
     <div class="hero">
       <div class="halo" id="halo" data-fade style="--d:0ms"></div>
       <div class="jel" data-settle style="--d:250ms"><div id="jelli"></div></div>
-      <div class="ck" id="ck"></div>
     </div>
+    <p class="t-cap done" data-a style="--i:1"><span class="ck" id="ck"></span>Notice the urge &middot; 1 min</p>
     <h1 class="t-large" data-a style="--i:2">Nicely <span class="mark">done</span></h1>
     <p class="t-body muted" data-a style="--i:3">One minute, and the urge got smaller.<br>That is a skill you just practised.</p>
   </div>
@@ -60,7 +65,7 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
     <span class="plus float-up" style="--d:1300ms">+1</span>
   </div>
   <div class="feel">
-    <p class="t-foot" data-a style="--i:5">Feeling calmer? <span class="opt3">Optional</span></p>
+    <p class="t-foot" data-a style="--i:5"><span class="fq">Feeling calmer?</span> <span class="opt3">Optional</span></p>
     <div class="chips" data-a style="--i:6"><button class="chip">Much calmer</button><button class="chip">A bit</button><button class="chip">Not really</button></div>
   </div>
 </div></div>
@@ -69,11 +74,27 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
 
-document.getElementById('halo').innerHTML = DX.char('horizon', { scene: 'sea', w: 200, h: 200, clarity: 100 });
+/* Dark mode: the 057 night sea (the kit's dark horizon puts its sun dead centre, behind the tentacles): low sun off to the left, as in light mode. */
+const nightSea = (w, h, k) => `<svg width="${w}" height="${h}" viewBox="0 0 260 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>
+  <linearGradient id="ns${k}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0C1838"/><stop offset=".6" stop-color="#1A2C5C"/><stop offset="1" stop-color="#2E4680"/></linearGradient>
+  <radialGradient id="ng${k}"><stop offset="0" stop-color="#FFD27A" stop-opacity=".42"/><stop offset=".5" stop-color="#FFB25E" stop-opacity=".12"/><stop offset="1" stop-color="#FFB25E" stop-opacity="0"/></radialGradient>
+  <linearGradient id="nw${k}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2A52A6"/><stop offset="1" stop-color="#173372"/></linearGradient>
+  <linearGradient id="nf${k}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3E5590"/><stop offset="1" stop-color="#2C3F74"/></linearGradient></defs>
+  <rect width="260" height="260" fill="url(#ns${k})"/>
+  ${[[150, 30, 1.6], [214, 58, 1.2], [112, 70, 1.1], [236, 22, 1.4], [184, 100, 1], [24, 24, 1.2]].map(([x, y, r], i) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#fff" opacity="${i % 2 ? .5 : .8}"/>`).join('')}
+  <circle cx="52" cy="84" r="64" fill="url(#ng${k})"/><circle cx="52" cy="84" r="21" fill="#FFD27A"/>
+  <path d="M0 150 C60 144 120 153 180 147 S 240 144 260 148 V260 H0Z" fill="url(#nw${k})"/>
+  <ellipse cx="54" cy="163" rx="30" ry="4" fill="#FFD27A" opacity=".22"/><ellipse cx="54" cy="163" rx="14" ry="2.2" fill="#FFE2A6" opacity=".4"/>
+  <path d="M0 184 C60 174 130 188 190 178 S 245 174 260 178 V260 H0Z" fill="#1A3A80" opacity=".75"/>
+  <path d="M0 184 C60 174 130 188 190 178 S 245 174 260 178" fill="none" stroke="#9DB8FF" stroke-opacity=".18" stroke-width="2"/>
+  <path d="M0 228 C50 216 100 224 150 218 S 228 212 260 220 V260 H0Z" fill="url(#nf${k})"/>
+  <ellipse cx="206" cy="236" rx="11" ry="4.5" fill="#566CA6"/><ellipse cx="44" cy="240" rx="7" ry="3" fill="#566CA6"/></svg>`;
+document.getElementById('halo').innerHTML = DX.theme === 'dark' ? nightSea(200, 200, 'h') : DX.char('horizon', { scene: 'sea', w: 200, h: 200, clarity: 100 });
 /* Jelli's cheer stars (the kit's 4-point stars) sit lower, beside the bell, so they never land on the sun. */
 document.getElementById('jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 180 })
   .replace(/<g opacity="1" (stroke="#[0-9A-Fa-f]{6}" stroke-width="3" stroke-linecap="round">)(?=<path d="M24 )/, '<g opacity="1" transform="translate(0 56)" $1');
-document.getElementById('ck').innerHTML = DX.check({ size: 56, d: 900 });
+/* The done check: small (18px) and apricot with an ink tick, not system green. */
+document.getElementById('ck').innerHTML = DX.check({ size: 18, d: 900, color: '#FFAE73', fg: '#1E1A3A' });
 
 </script>
 </body></html>

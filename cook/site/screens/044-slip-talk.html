@@ -21,6 +21,9 @@
   .ico-tile.s { width: 40px; height: 40px; border-radius: 12px; flex: none; }
   .ico-tile.s svg { width: 26px; height: 26px; }
   .gl { --acc: #FFB27F; --acc2: #FFD9BF; }
+  /* light: the glyph tile in the selected row turns white so it holds on the selection tint */
+  .opt.on .ico-tile { background: #FFFFFF; transition: background .3s var(--ease); }
+  [data-theme="dark"] .opt.on .ico-tile { background: var(--card-2); }
   [data-theme="dark"] .gl { --acc: #F39A62; --acc2: #FFD3B4; }
   /* the slip flow's one Jelli placement: small, at the right of the screen title (044, 045) */
   .ttl { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
@@ -44,7 +47,7 @@
   </div>
   <div class="scroll">
     <div class="wrap">
-      <div class="ttl"><h1 class="t-title" data-a style="--i:0">Pick the moment, then what you'll do instead.</h1><div class="jl" data-settle style="--d:200ms"><div class="j bob" id="jelli"></div><svg class="sea" viewBox="0 0 84 34" aria-hidden="true"><path class="w1" d="M0 12 C14 6 26 6 42 11 S70 16 84 9 V34 H0Z"/><path class="w2" d="M0 22 C16 17 30 18 44 22 S70 26 84 20 V34 H0Z"/></svg></div></div>
+      <div class="ttl"><h1 class="t-title" data-a style="--i:0">Pick the moment and what to do instead.</h1><div class="jl" data-settle style="--d:200ms"><div class="j bob" id="jelli"></div><svg class="sea" viewBox="0 0 84 34" aria-hidden="true"><path class="w1" d="M0 12 C14 6 26 6 42 11 S70 16 84 9 V34 H0Z"/><path class="w2" d="M0 22 C16 17 30 18 44 22 S70 26 84 20 V34 H0Z"/></svg></div></div>
 
       <div class="sec">
         <p class="t-head" data-a style="--i:2">What set it off?</p>

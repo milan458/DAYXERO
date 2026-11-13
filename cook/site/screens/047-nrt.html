@@ -1,12 +1,12 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>047 Why NRT helps</title>
-<meta name="motion" content="Reading pace, no springs. Title and lead arrive, then the evidence card: '60%' counts up from 50 (850ms) while the 'Without' and 'With NRT' bars grow from the left (900ms, the apricot bar 150ms later, its deeper tail showing the extra), the With NRT bar stops at 90% of its track, and at 1.3s the label 'the extra' fades in under the deeper tail; then the combination card with Xero settling in (900ms, then a slow bob). The button and the 'Find a pharmacist' action link arrive last (the dosing note lives once in the flow, on the reminders screen). No haptic until the button tap.">
+<meta name="motion" content="Reading pace, no springs. Title and lead arrive, then the evidence card: '60%' counts up from 50 (850ms) while the 'Without' and 'With NRT' bars grow from the left (900ms, the apricot bar 150ms later, its deeper tail showing the extra), the With NRT bar stops at 90% of its track, and at 1.3s the label 'the extra' fades in under the deeper tail; then the combination card with Xero settling into his apricot art slot (900ms, then a slow bob). The two bars have no full-scale track: they only compare with each other (relative odds). The button and the 'Find a pharmacist' action link arrive last (the dosing note lives once in the flow, on the reminders screen). No haptic until the button tap.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .wrap { padding: 72px var(--gutter) 0; }
+  .wrap { padding: 64px var(--gutter) 0; }
   .wrap .lead { margin-top: 10px; color: var(--muted); }
-  .ev { margin-top: 22px; gap: 14px; }
+  .ev { margin-top: 20px; gap: 12px; }
   .ev .card { display: grid; gap: 6px; }
   .ev .t-foot.lbl { color: var(--muted); }
   .big { display: flex; align-items: baseline; gap: 10px; }
@@ -18,7 +18,8 @@
   .cmp .bar { position: relative; }
   .cmp .r.yes .bar.yes i { background: linear-gradient(90deg, #FFC9A3 0 62.5%, #FF8A4C 62.5% 100%); opacity: 1; }
   .cmp .t-foot { color: var(--fg); font-size: 14px; }
-  .cmp .bar { height: 14px; border-radius: 99px; background: var(--track); overflow: hidden; }
+  /* no full-scale track: the two bars only compare with each other (relative odds) */
+  .cmp .bar { height: 14px; border-radius: 99px; background: none; overflow: hidden; }
   .cmp .bar i { display: block; height: 100%; width: var(--w); border-radius: inherit; background: var(--muted); opacity: .45; transform-origin: left; }
   .cmp .bar.yes i { background: #FF9A5C; opacity: .85; }
   .play .cmp .bar i { animation: grow 900ms var(--settle) both; animation-delay: var(--d, 400ms); }
@@ -29,8 +30,10 @@
   .combo span { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px; border-radius: 10px; background: var(--card-2); font: 600 13px/1 var(--body); }
   .combo span svg { width: 16px; height: 16px; }
   .combo b { align-self: center; font: 700 15px/1 var(--display); color: var(--muted); }
-  .ev .card.best { display: flex; gap: 12px; align-items: center; padding: 16px 16px 18px 8px; }
-  .best .x { width: 92px; flex: none; display: grid; place-items: center; }
+  .ev .card.best { display: flex; gap: 16px; align-items: center; padding: 14px 18px 14px 14px; }
+  /* Xero's own art slot: a soft apricot tile with room around him */
+  .best .x { width: 112px; height: 112px; flex: none; border-radius: 18px; background: color-mix(in srgb, #FFB27A 22%, var(--card)); display: grid; place-items: center; }
+  [data-theme="dark"] .best .x { background: var(--card-2); }
   .best .grow { display: grid; gap: 6px; }
   /* the deeper tail of the NRT bar is the extra: labelled under it */
   .cmp .tail { display: grid; grid-template-columns: 76px 1fr; gap: 10px; margin-top: -4px; }
@@ -76,6 +79,6 @@
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic));
   document.querySelectorAll('[data-ic2]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic2, { w: 2.4 })));
-  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'hello', size: 96 });
+  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'hello', size: 112 });
 </script>
 </body></html>

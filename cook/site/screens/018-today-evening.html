@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>018 Today, evening</title>
-<meta name="motion" content="Evening Today, all slow. The sky fades in (700ms): a dim lavender-peach dusk in light mode, the midnight meadow in dark, with stars twinkling (kept clear of the status bar and the words) and fireflies drifting; the paper-cut knoll rises 24px into place (900ms) and Glim, awake and waving hello, settles onto it (900ms) then keeps a slow bob; the warm pool his belly casts on the knoll fades up with him and breathes with his glow (2.6s loop). Greeting, waves line and the check-in card arrive with a 90ms stagger; inside it the six done nights fade in left to right (90ms apart, no springs) and Friday's waiting 7-night badge (44px) sits in a solid gold ring that breathes (4s in, 6s out). Soft haptic on appear only.">
+<meta name="motion" content="Evening Today is dark on purpose in both appearance modes (Glim's evening, the same as check-in 054/055: the night ground never switches to cream). All slow. The sky fades in (700ms): a dim lavender-peach dusk over the midnight hills in light mode, the midnight meadow in dark, with stars twinkling (kept clear of the status bar and the words) and fireflies drifting; the paper-cut knoll rises 24px into place (900ms) and Glim, awake, settles onto the centre of its crest (900ms) under the moon, raises one arm and waves twice (1.3s, from 1.2s), then keeps a slow bob; the warm pool his belly casts on the knoll fades up with him and breathes with his glow (2.6s loop). Greeting, waves line and the check-in card arrive with a 90ms stagger; inside it the six done nights fade in left to right (90ms apart, no springs) and Friday's waiting 7-night badge (44px, a big 7, no inner dashes) sits in one solid gold ring that breathes (4s in, 6s out). Soft haptic on appear only.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -18,7 +18,7 @@
   .greet .sub { margin-top: 8px; color: #E4E6F0; }
   [data-theme="dark"] .greet .sub { color: var(--muted); }
   .greet .sub b { color: var(--fg); font-weight: 700; }
-  .glim { position: absolute; left: 58px; top: 164px; }
+  .glim { position: absolute; left: 105px; top: 164px; }
   .content { position: absolute; left: 0; right: 0; top: 376px; padding: 0 var(--gutter); }
   .ci { padding: 18px 18px 20px; display: grid; gap: 14px; }
   .ci .t-foot { color: var(--muted); }
@@ -48,10 +48,10 @@
 <div class="screen" data-ground="night" data-status="on-art">
   <div class="sky" id="sky" data-fade></div>
   <div class="knoll" aria-hidden="true"><svg width="390" height="110" viewBox="0 0 390 110">
-    <path d="M-10 64 C40 40 90 30 140 30 C196 30 250 44 300 70 C330 86 360 96 400 98 V110 H-10Z" fill="var(--k1)"/>
-    <path d="M-10 64 C40 40 90 30 140 30 C196 30 250 44 300 70 C330 86 360 96 400 98" fill="none" stroke="var(--rim)" stroke-width="1.5"/>
+    <path d="M-10 74 C50 48 120 30 195 30 C270 30 336 48 400 78 V110 H-10Z" fill="var(--k1)"/>
+    <path d="M-10 74 C50 48 120 30 195 30 C270 30 336 48 400 78" fill="none" stroke="var(--rim)" stroke-width="1.5"/>
     <defs><radialGradient id="pool18"><stop offset="0" stop-color="#FFD37A" stop-opacity=".7"/><stop offset=".5" stop-color="#FFC36B" stop-opacity=".24"/><stop offset="1" stop-color="#FFC36B" stop-opacity="0"/></radialGradient></defs>
-    <ellipse class="pool" cx="148" cy="40" rx="96" ry="26" fill="url(#pool18)"/>
+    <ellipse class="pool" cx="195" cy="40" rx="96" ry="26" fill="url(#pool18)"/>
     <path d="M-10 92 C60 78 130 76 200 84 C260 90 330 88 400 76 V110 H-10Z" fill="var(--k2)" opacity=".55"/>
   </svg></div>
   <div class="glim" data-settle style="--d:200ms"><div class="bob" id="glim"></div></div>
@@ -89,7 +89,7 @@
       <rect width="${w}" height="${h}" fill="url(#dk)"/>
       <ellipse cx="${w * .42}" cy="300" rx="260" ry="90" fill="url(#dh)"/>
       ${st.map(([x, y], i) => `<circle cx="${(x * w).toFixed(1)}" cy="${(y * h).toFixed(1)}" r="${i % 3 ? 1.1 : 1.5}" fill="#fff" opacity="${i % 2 ? .35 : .6}">${DX.still ? '' : `<animate attributeName="opacity" values="${i % 2 ? '.35;.1;.35' : '.6;.25;.6'}" dur="${(1.8 + (i % 4) * .4).toFixed(2)}s" repeatCount="indefinite"/>`}</circle>`).join('')}
-      <circle cx="316" cy="186" r="58" fill="url(#dm)"/><circle cx="316" cy="186" r="17" fill="#FBF0DA"/>
+      <circle cx="334" cy="174" r="58" fill="url(#dm)"/><circle cx="334" cy="174" r="17" fill="#FBF0DA"/>
       <path d="M0 300 C70 270 140 282 210 296 S330 300 ${w} 270 V${h} H0z" fill="#1C2C4E"/>
       <path d="M0 340 C90 316 170 340 250 332 S350 318 ${w} 326 V${h} H0z" fill="#132240"/>
       <path d="M0 380 C80 368 160 386 240 378 S350 366 ${w} 372 V${h} H0z" fill="#0F1B33"/>
@@ -98,11 +98,15 @@
   }
   /* dark: mask the kit's stars out of the status bar and the greeting */
   const clearStars = svg => svg.replace(/<circle cx="([\d.]+)" cy="([\d.]+)" r="(?:1\.2|1\.8)" fill="#fff"[^>]*>(?:<animate[^>]*\/>)?<\/circle>/g, (m, x, y) => (+y < 70 || (+y < 158 && +x < 330)) ? '' : m);
-  $('#sky').innerHTML = DX.theme === 'dark' ? clearStars(DX.nightSky({ w: 390, h: 430, moonX: 316, moonY: 186 })) : duskSky();
-  $('#glim').innerHTML = DX.char('glim', { mood: 'hello', size: 180 });
+  $('#sky').innerHTML = DX.theme === 'dark' ? clearStars(DX.nightSky({ w: 390, h: 430, moonX: 334, moonY: 174 })) : duskSky();
+  /* Glim waves hello: his right arm is raised (it waves twice at 1.2s while playing; the still shows it raised) */
+  const wave = DX.still ? '' : '<animateTransform attributeName="transform" type="rotate" values="0 134 112;-16 134 112;4 134 112;-16 134 112;0 134 112" dur="1.3s" begin="1.2s" repeatCount="2"/>';
+  $('#glim').innerHTML = DX.char('glim', { mood: 'hello', size: 180 })
+    .replace('<path d="M136 114 C146 120 150 128 148 136" fill="none" stroke="#6B4FD8" stroke-width="9" stroke-linecap="round"></path>',
+      `<path d="M134 112 C148 106 158 94 161 80" fill="none" stroke="#6B4FD8" stroke-width="9" stroke-linecap="round">${wave}</path>`);
   const dn = ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu'];
   $('#pips').innerHTML = dn.map((d, i) => `<div class="pip" data-fade style="--d:${500 + i * 90}ms"><b>${DX.icon('check', { size: 16, w: 3 })}</b><span class="t-cap">${d}</span></div>`).join('')
-    + `<div class="pip tonight" data-fade style="--d:1100ms"><div class="face">${DX.badge({ kind: 'night', n: 7, state: 'next', size: 44, bare: true, label: '7 nights' })}</div><span class="t-cap">Fri</span></div>`;
+    + `<div class="pip tonight" data-fade style="--d:1100ms"><div class="face">${DX.badge({ kind: 'night', n: 7, state: 'next', size: 44, bare: true, label: '7 nights' }).replace(/<circle cx="50" cy="50" r="45" fill="none"[^>]*stroke-dasharray="6 5"[^>]*>(?:<\/circle>)?/, '').replace(/<circle cx="50" cy="50" r="48" fill="none"[^>]*>(?:<\/circle>)?/, '').replace('y="50" text-anchor="middle" dominant-baseline="middle" font-family="Bricolage Grotesque" font-weight="800" font-size="30"', 'y="53" text-anchor="middle" dominant-baseline="middle" font-family="Bricolage Grotesque" font-weight="800" font-size="46"')}</div><span class="t-cap">Fri</span></div>`;
   $('#go').innerHTML = DX.icon('moon', { w: 2.4 }) + 'Check in';
   $('.screen').insertAdjacentHTML('beforeend', DX.tabbar('today'));
 </script>

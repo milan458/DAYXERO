@@ -1,17 +1,23 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>046 Slip: plan saved</title>
-<meta name="motion" content="Done beat: Jelli (cheer) settles in (900ms) over a soft ground shadow (dark mode), then the small apricot check pops on the shoulder of its bell (pinned there, it bobs with Jelli) and its ink tick draws (320ms later, 420ms) with a success haptic. Title arrives and the hand-drawn underline sits under 'saved', then the plan card settles up from 48px like a card being put down (900ms), then the plan card's 17px line, then the Day 7 card (one line: 'Your sky stays 40% clear.') arrives with the badge fading in intact (no stamp: nothing was lost or earned). Button and link arrive last.">
+<meta name="motion" content="Done beat, no X (Back to Today is the way out): Jelli's small sea disc fades in (as on 044 and 045), Jelli (cheer) settles in (900ms) above a soft shadow on the water (both modes), then the small apricot check pops on the shoulder of its bell (pinned there, it bobs with Jelli) and its ink tick draws (320ms later, 420ms) with a success haptic. Title arrives and the hand-drawn underline sits under 'saved', then the plan card settles up from 48px like a card being put down (900ms), then the plan card's 17px line, then the Day 7 card (one line: 'Your sky stays 40% clear.') arrives with the badge fading in intact (no stamp: nothing was lost or earned). Button and link arrive last.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .hero { position: absolute; left: 0; right: 0; top: 106px; height: 184px; display: grid; place-items: center; }
-  .hero .jl { width: 176px; height: 176px; }
+  .hero { position: absolute; left: 0; right: 0; top: 94px; height: 188px; display: grid; place-items: center; }
+  /* Jelli floats in her own sea disc (as on 044 and 045), with a soft shadow on the water in both modes */
+  .disc { position: relative; width: 188px; height: 188px; border-radius: 99px; overflow: hidden; background: linear-gradient(#CFE5F7, #EAF2F8); }
+  .disc svg.sea { position: absolute; left: 0; bottom: 0; width: 188px; height: 70px; display: block; }
+  .disc .w1 { fill: #8FC0EC; } .disc .w2 { fill: #4A8FDB; }
+  .disc .gs { position: absolute; left: 50%; top: 152px; width: 80px; height: 12px; margin-left: -38px; border-radius: 50%; background: radial-gradient(closest-side, rgba(16,32,74,.42), rgba(16,32,74,0)); }
+  [data-theme="dark"] .disc { background: linear-gradient(#1C2A55, #33477A); }
+  [data-theme="dark"] .disc .w1 { fill: #3A5A9A; } [data-theme="dark"] .disc .w2 { fill: #2A4A8A; }
+  [data-theme="dark"] .disc .gs { background: radial-gradient(closest-side, rgba(3,8,24,.75), rgba(3,8,24,0)); }
+  .disc .jl { position: absolute; left: 16px; top: 2px; width: 156px; height: 156px; }
   /* the check is pinned to Jelli's bell (inside the bob, so it moves with Jelli) */
-  .hero .bob { position: relative; width: 176px; height: 176px; }
-  /* dark: Jelli's ground shadow (the art's own is too faint on navy) */
-  .hero .gs { position: absolute; left: 50%; bottom: 0; width: 84px; height: 12px; margin-left: -42px; border-radius: 50%; background: radial-gradient(closest-side, rgba(0,0,0,.55), rgba(0,0,0,0)); display: none; }
-  [data-theme="dark"] .hero .gs { display: block; }
-  .hero .ck { position: absolute; left: 118px; top: 30px; width: 40px; height: 40px; border-radius: 99px; box-shadow: 0 0 0 4px var(--g); }
+  .disc .bob { position: relative; width: 156px; height: 156px; }
+  .disc .ck { position: absolute; left: 102px; top: 22px; width: 38px; height: 38px; border-radius: 99px; box-shadow: 0 0 0 3px #EAF2F8; }
+  [data-theme="dark"] .disc .ck { box-shadow: 0 0 0 3px #22325F; }
   .wrap { position: absolute; left: 0; right: 0; top: 306px; padding: 0 var(--gutter); }
   .wrap .head { text-align: center; }
   .wrap .lead { margin-top: 8px; color: var(--muted); }
@@ -24,11 +30,9 @@
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
-  <div class="nav">
-    <button class="icon-btn" aria-label="Close" data-ic="close"></button>
-  </div>
   <div class="hero">
-    <div class="jl" data-settle style="position:relative"><i class="gs"></i><div class="bob"><div id="jelli"></div><div class="ck" id="check"></div></div></div>
+    <div class="disc" data-fade><svg class="sea" viewBox="0 0 188 70" preserveAspectRatio="none" aria-hidden="true"><path class="w1" d="M0 24 C30 14 60 14 94 22 S156 32 188 20 V70 H0Z"/><path class="w2" d="M0 42 C34 34 64 35 96 41 S158 48 188 38 V70 H0Z"/></svg><i class="gs"></i>
+      <div class="jl" data-settle style="--d:200ms"><div class="bob"><div id="jelli"></div><div class="ck" id="check"></div></div></div></div>
   </div>
   <div class="wrap">
     <div class="head">
@@ -55,8 +59,8 @@
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic, { w: 2.4 }));
   /* cheer Jelli without its ink sparkle marks (they read as a stray tick beside the check) */
-  document.getElementById('jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 176 }).replace(/<g opacity="1" stroke="#(?:24163A|F3E9DE)"[^>]*>.*?<\/g>/s, '');
-  document.getElementById('check').innerHTML = DX.check({ size: 40, d: 500, color: '#FFB070', fg: '#1E1A3A' });
+  document.getElementById('jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 156 }).replace(/<g opacity="1" stroke="#(?:24163A|F3E9DE)"[^>]*>.*?<\/g>/s, '');
+  document.getElementById('check').innerHTML = DX.check({ size: 38, d: 500, color: '#FFB070', fg: '#1E1A3A' });
   document.getElementById('badge').innerHTML = DX.badge({ kind: 'day', n: 7, size: 72, bare: true });
 </script>
 </body></html>

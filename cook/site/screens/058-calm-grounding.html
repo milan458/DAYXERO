@@ -1,41 +1,52 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>058 Grounding</title>
-<meta name="motion" content="The step card arrives and Jelli settles onto its top edge (500ms, then a slow calm float); the pips fill one by one at 0.9s, 1.7s and 2.5s with a small bump and a light haptic each, as if tapped. The fourth pip stays an open ring for the user to tap; the Next button stays quiet (outlined, muted label) until that last pip fills, then it fills to the primary ink in 300ms with a soft success haptic. Tapping Next fills the next bar segment (500ms) and the next step slides in from the right.">
+<meta name="motion" content="The step card arrives and Jelli settles onto its top edge (500ms), her soft contact shadow fading in under her; then a slow calm float (5s), the shadow narrowing and fading as she lifts and firming as she sits back down. The pips fill one by one at 0.9s, 1.7s and 2.5s with a small bump and a light haptic each, as if tapped. The fourth pip stays an open ring for the user to tap; meanwhile the Next button waits (outlined, full-contrast label, its small ring three quarters full, matching the pips); when the last pip fills the ring closes and the button fills to the primary ink in 300ms with a soft success haptic. Tapping Next fills the third bar segment whole (500ms) and the next step slides in from the right.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
 .nav .steps { flex: 1; margin-right: 56px; }
 .lead { position: absolute; left: var(--gutter); right: var(--gutter); top: 118px; }
-.jel { position: absolute; left: 50%; top: 196px; margin-left: -70px; width: 140px; height: 140px; z-index: 2; }
-.cur { position: absolute; left: var(--gutter); right: var(--gutter); top: 322px; padding: 42px 22px 26px; display: grid; gap: 10px; text-align: center; justify-items: center; }
+.jel { position: absolute; left: 50%; top: 166px; margin-left: -80px; width: 160px; height: 160px; z-index: 2; }
+/* Jelli's tentacle tips meet the card's top edge (y 315); her contact shadow lies on the card just under the edge, clear of the border line. */
+.cur { position: absolute; left: var(--gutter); right: var(--gutter); top: 315px; padding: 46px 22px 28px; display: grid; gap: 12px; text-align: center; justify-items: center; }
+.seat { position: absolute; left: 50%; top: 1px; width: 112px; height: 13px; margin-left: -56px; background: radial-gradient(50% 100% at 50% 0, var(--shd), transparent); pointer-events: none; transform-origin: 50% 0; }
+.screen { --shd: rgba(30,26,58,.2); }
+[data-theme="dark"] .screen { --shd: rgba(0,0,0,.6); }
+.play .seat { animation: seat 5s ease-in-out infinite; }
+@keyframes seat { 50% { transform: scaleX(.82); opacity: .55; } }
+.still .seat { animation: none !important; }
 .head { display: flex; align-items: center; gap: 14px; justify-content: center; }
-.head .big { font: 800 92px/.86 var(--display); letter-spacing: -3px; }
+.head .big { font: 800 100px/.86 var(--display); letter-spacing: -3px; }
 .head .t-title { text-align: left; }
-.pips { display: flex; gap: 14px; margin-top: 14px; }
-.pips i { width: 54px; height: 54px; border-radius: 99px; box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--fg) 55%, transparent); display: grid; place-items: center; transition: background .3s var(--ease); }
+.pips { display: flex; gap: 14px; margin-top: 12px; }
+.pips i { width: 58px; height: 58px; border-radius: 99px; box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--fg) 55%, transparent); display: grid; place-items: center; transition: background .3s var(--ease); }
 .pips i.on { background: var(--sel); box-shadow: none; }
 .pips i.on::after { content: ""; width: 22px; height: 22px; background: var(--sel-fg); -webkit-mask: var(--tick-svg) center/contain no-repeat; mask: var(--tick-svg) center/contain no-repeat; }
 .hint { color: var(--muted); }
-.btn.quiet { background: transparent; color: var(--muted); box-shadow: inset 0 0 0 2px var(--line); transition: background .3s var(--ease), color .3s var(--ease), box-shadow .3s var(--ease); }
+/* Waiting, not disabled: the outline and the full-contrast label stay; a small ring shows 3 of 4 noticed. */
+.btn.wait { background: transparent; color: var(--fg); box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--fg) 26%, transparent); transition: background .3s var(--ease), color .3s var(--ease), box-shadow .3s var(--ease); }
+.btn.wait .ring { width: 20px; height: 20px; flex: none; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
-<div class="nav"><button class="icon-btn" aria-label="Close" data-ic="close"></button><div class="steps" aria-label="Step 2 of 5"><i class="on"></i><i class="now"></i><i></i><i></i><i></i></div></div>
+<div class="nav"><button class="icon-btn" aria-label="Close" data-ic="close"></button><div class="steps" aria-label="Step 2 of 5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div></div>
 <p class="t-foot muted lead" data-a style="--i:0">5-4-3-2-1 grounding &middot; Step 2 of 5</p>
 <div class="jel" id="jel" data-settle style="--d:500ms"></div>
 <div class="card cur" data-a style="--i:1">
+  <span class="seat" data-fade style="--d:700ms" aria-hidden="true"></span>
   <div class="head"><span class="big">4</span><span class="t-title">things you<br>can feel</span></div>
   <p class="t-body">Touch them, or just notice them.</p>
   <p class="t-foot muted">Your feet on the floor, the chair, your clothes, the air on your skin.</p>
   <div class="pips" id="pips" aria-label="3 of 4 noticed"><i></i><i></i><i></i><i></i></div>
   <p class="t-cap hint">Tap one for each thing you notice</p>
 </div>
-<div class="dock"><button class="btn quiet" id="next" data-a style="--i:3" aria-disabled="true">Next: 3 things you can hear</button></div>
+<div class="dock"><button class="btn wait" id="next" data-a style="--i:3" aria-label="Next: 3 things you can hear. Waiting for one more."><svg class="ring" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-opacity=".25" stroke-width="3"/><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="35.34 47.12" transform="rotate(-90 10 10)"/></svg>Next: 3 things you can hear</button></div>
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
 
-document.getElementById('jel').innerHTML = `<div class="bob">${DX.char('jelli', { mood: 'calm', size: 140 })}</div>`;
+/* Her own contact shadow lives on the card (.seat), so the kit's ground ellipse is dropped here. */
+document.getElementById('jel').innerHTML = `<div class="bob">${DX.char('jelli', { mood: 'calm', size: 160 }).replace('fill="#000000" opacity="0.08"', 'fill="#000000" opacity="0"')}</div>`;
 const pips = document.querySelectorAll('#pips i');
 [900, 1700, 2500].forEach((t, i) => DX.after(t, () => { pips[i].classList.add('on'); pips[i].classList.add('bump'); }));
 DX.onStill(() => { [0, 1, 2].forEach(i => pips[i].classList.add('on')); });

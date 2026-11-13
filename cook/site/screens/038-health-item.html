@@ -1,30 +1,30 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>038 Health change</title>
-<meta name="motion" content="The paper-cut dawn card fades up (warm layered paper hills and a low gold sun in light, night sky in dark), its hills lift, Xero settles onto the front hill (900ms) and a soft pink glow blooms on his cheeks (600ms fade) while the little standing mirror beside him catches a sparkle that pops (spring 420ms) and twinkles on a 2.4s loop. Then title, the timing card (the ring sweeps to half while the 7 in it counts up: Starts around Day 14, you are on Day 7), the two paragraphs, the 'What you might notice' heading (its NHS source on the right) and rows, then the Next change row arrive with a 90ms stagger; the Next change row opens the next change in the timeline (push). No haptic.">
+<meta name="motion" content="The paper-cut dawn card fades up (light: a cool blue dawn sky over warm layered paper hills and a low gold sun; dark: night sky, moon and stars), its hills lift, Xero settles onto the front hill (900ms) and a soft pink glow blooms on his cheeks (600ms fade) while the little standing mirror beside him, which shows his smiling face reflected, catches a sparkle that pops (spring 420ms) and twinkles on a 2.4s loop. Then title, the timing card (the ring sweeps to half while the 7 in it counts up: Starts around Day 14, you are on Day 7), the two paragraphs, the 'What you might notice' heading and rows, the Next change row, and last the source footer (as on the health timeline) arrive with a 90ms stagger; the Next change row opens the next change in the timeline (push). No haptic.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .art { position: relative; height: 166px; border-radius: 26px; overflow: hidden; }
+  .art { position: relative; height: 194px; border-radius: 26px; overflow: hidden; }
   .art .scene { position: absolute; inset: 0; }
   .art .scene svg { display: block; }
-  .art .hero { position: absolute; left: 58px; top: 8px; }
-  .art .glow { position: absolute; left: 58px; top: 8px; width: 146px; height: 146px; pointer-events: none; }
+  .art .hero { position: absolute; left: 50px; top: 20px; }
+  .art .glow { position: absolute; left: 50px; top: 20px; width: 162px; height: 162px; pointer-events: none; }
   .tw { transform-box: fill-box; transform-origin: center; }
   .play .tw { animation: tw 2.4s ease-in-out 1.2s infinite; }
   @keyframes tw { 50% { transform: scale(.7); opacity: .6; } }
   .still .tw { animation: none !important; }
-  .head { margin-top: 16px; display: grid; gap: 6px; }
-  .when { margin-top: 12px; padding: 14px 16px; display: flex; align-items: center; gap: 14px; }
-  .when .ringwrap { position: relative; width: 60px; height: 60px; flex: none; color: var(--fg); }
-  .when .ringwrap b { position: absolute; inset: 0; display: grid; place-content: center; font: 800 22px/1 var(--display); }
+  .head { margin-top: 14px; display: grid; gap: 6px; }
+  .when { margin-top: 10px; padding: 10px 14px; display: flex; align-items: center; gap: 14px; }
+  .when .ringwrap { position: relative; width: 52px; height: 52px; flex: none; color: var(--fg); }
+  .when .ringwrap b { position: absolute; inset: 0; display: grid; place-content: center; font: 800 20px/1 var(--display); }
   .when .grow { flex: 1; display: grid; gap: 2px; }
-  .copy { margin-top: 12px; display: grid; gap: 10px; }
-  .notice { margin-top: 14px; }
+  .copy { margin-top: 10px; display: grid; gap: 8px; }
+  .notice { margin-top: 12px; }
   .notice .nh { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-  .notice .list { margin-top: 8px; }
-  .notice .row { min-height: 42px; gap: 12px; padding-inline: 16px; padding-block: 8px; }
-  .next { margin-top: 12px; }
-  .next .row { min-height: 60px; padding-block: 9px; }
+  .notice .list { margin-top: 6px; }
+  .notice .row { min-height: 40px; gap: 12px; padding-inline: 16px; padding-block: 7px; }
+  .next { margin-top: 8px; }
+  .next .row { min-height: 56px; padding-block: 7px; }
   .next .chev { display: grid; color: var(--muted); }
   .next .chev svg { width: 18px; height: 18px; }
 </style>
@@ -49,12 +49,12 @@
       </div>
 
       <div class="copy">
-        <p class="t-body" data-a style="--i:3">Nicotine tightens the small blood vessels in your gums. That can hide bleeding and slow healing.</p>
+        <p class="t-body" data-a style="--i:3">Nicotine tightens the blood vessels in your gums, hiding bleeding and slowing healing.</p>
         <p class="t-body" data-a style="--i:4">As blood flow comes back, your gums get pinker and firmer and your lips less dry.</p>
       </div>
 
       <div class="notice">
-        <div class="nh" data-a style="--i:5"><h2 class="t-head">What you might notice</h2><span class="t-cap muted">Source: <span class="source">NHS</span></span></div>
+        <div class="nh" data-a style="--i:5"><h2 class="t-head">What you might notice</h2></div>
         <div class="list" data-a style="--i:6">
           <div class="row"><p class="t-foot grow" style="font-size:15px">Pinker, firmer gums</p></div>
           <div class="row"><p class="t-foot grow" style="font-size:15px">Fresher breath and a sharper sense of taste</p></div>
@@ -64,6 +64,7 @@
       <div class="list next" data-a style="--i:7" data-go="037-health">
         <div class="row"><div class="grow"><p class="t-foot muted">Next change</p><p class="t-head" style="font-size:17px">Breathing gets easier</p></div><span class="chev" data-ic="chev"></span></div>
       </div>
+      <p class="t-cap muted" data-a style="--i:8;margin-top:12px">Typical times, everyone is different. Source: <span class="source">NHS</span></p>
     </div>
   </div>
 </div>
@@ -74,15 +75,15 @@
      mirror that catches a sparkle. Day: warm dawn with layered paper hills and a gold sun. Night: navy sky, crescent moon, stars, navy hills; the mirror reflects moonlight. */
   const K = dark
     ? { sky: ['#0D1630', '#1F2D55', '#3A4672'], halo: '#F6E7C1', haloO: .16, hills: ['#22335B', '#1A2949', '#121E38'], frame: '#E6DCCB', frame2: '#C2B6A2', glass: ['#5D7BC0', '#9DB8EA'], shine: '#F6EFE2', spark: '#FFD27A' }
-    : { sky: ['#FFB08A', '#FFD0B0', '#FFE8D6'], halo: '#FFF6DA', haloO: .75, far: '#FFC4A0', hills: ['#FFAE86', '#FF9670', '#EE7A58'], frame: '#F26E4C', frame2: '#D2563A', glass: ['#A9C8FF', '#DCEBFF'], shine: '#FFFFFF', spark: '#F5B83D' };
+    : { sky: ['#B9D2F0', '#DDE6F2', '#FFE2CC'], halo: '#FFF6DA', haloO: .75, far: '#FFC9A6', hills: ['#FFAE86', '#F2865F', '#D9654A'], frame: '#F26E4C', frame2: '#D2563A', glass: ['#A9C8FF', '#DCEBFF'], shine: '#FFFFFF', spark: '#F5B83D' };
   const star4 = (x, y, r, f, cls = '') => `<path class="${cls}" d="M${x} ${y - r}Q${x} ${y} ${x + r} ${y}Q${x} ${y} ${x} ${y + r}Q${x} ${y} ${x - r} ${y}Q${x} ${y} ${x} ${y - r}Z" fill="${f}"/>`;
-  document.getElementById('scene').innerHTML = `<svg viewBox="0 12 346 166" width="346" height="166" aria-hidden="true">
+  document.getElementById('scene').innerHTML = `<svg viewBox="0 -16 346 194" width="346" height="194" aria-hidden="true">
     <defs><linearGradient id="lsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${K.sky[0]}"/><stop offset=".6" stop-color="${K.sky[1]}"/><stop offset="1" stop-color="${K.sky[2]}"/></linearGradient>
       <linearGradient id="lglass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${K.glass[1]}"/><stop offset="1" stop-color="${K.glass[0]}"/></linearGradient>
       <radialGradient id="lhalo"><stop offset=".2" stop-color="${K.halo}" stop-opacity="${K.haloO}"/><stop offset="1" stop-color="${K.halo}" stop-opacity="0"/></radialGradient>
       <filter id="llift" x="-10%" y="-30%" width="120%" height="160%"><feDropShadow dx="0" dy="-2" stdDeviation="2.4" flood-color="#1A0B2E" flood-opacity="${dark ? .45 : .16}"/></filter>
       <filter id="ldrop" x="-30%" y="-20%" width="160%" height="150%"><feDropShadow dx="0" dy="2.5" stdDeviation="2.5" flood-color="#1A0B2E" flood-opacity="${dark ? .5 : .2}"/></filter></defs>
-    <rect width="346" height="178" fill="url(#lsky)"/>
+    <rect y="-20" width="346" height="198" fill="url(#lsky)"/>
     ${dark ? [[30, 24], [92, 14], [166, 30], [214, 12], [256, 46], [60, 66]].map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="${i % 2 ? 1.1 : 1.6}" fill="#fff" opacity="${i % 2 ? .5 : .85}"/>`).join('')
       + `<circle cx="300" cy="40" r="40" fill="url(#lhalo)"/><path d="M300 24 A16 16 0 1 0 314 48 A13 13 0 1 1 300 24Z" fill="#F6E7C1"/>`
       : `<circle cx="132" cy="88" r="96" fill="url(#lhalo)"/><circle cx="312" cy="50" r="42" fill="url(#lhalo)"/><circle cx="312" cy="50" r="19" fill="#FFD25E"/>`
@@ -95,15 +96,17 @@
       <ellipse cx="0" cy="-58" rx="25" ry="31" fill="${K.frame}"/>
       <ellipse cx="0" cy="-58" rx="19" ry="25" fill="url(#lglass)"/>
       <clipPath id="lgc"><ellipse cx="0" cy="-58" rx="19" ry="25"/></clipPath>
-      <g clip-path="url(#lgc)"><ellipse cx="-12" cy="-44" rx="13" ry="16" fill="#FF7155" opacity=".75"/><circle cx="-8" cy="-48" r="2.6" fill="#FF5F86" opacity=".7"/></g>
+      <g clip-path="url(#lgc)" opacity=".92"><ellipse cx="-3" cy="-46" rx="16" ry="20" fill="#E85A3E"/><ellipse cx="-5.5" cy="-46.5" rx="13.8" ry="19.4" fill="#FF7155"/>
+        <circle cx="-8.5" cy="-52" r="2" fill="#24163A"/><circle cx="1.5" cy="-52" r="2" fill="#24163A"/><path d="M-7.5 -46.5 q4.5 3.6 9 0" fill="none" stroke="#24163A" stroke-width="1.8" stroke-linecap="round"/>
+        <circle cx="-12" cy="-47.5" r="2.6" fill="#FF5F86" opacity=".6"/><circle cx="5.5" cy="-47.5" r="2.6" fill="#FF5F86" opacity=".6"/></g>
       <path d="M-11 -66 C-9 -74 -3 -79 4 -80" fill="none" stroke="${K.shine}" stroke-opacity=".9" stroke-width="3.4" stroke-linecap="round"/>
-      <path d="M-8 -52 l14 -14" stroke="${K.shine}" stroke-opacity=".5" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M4 -68 l8 -8" stroke="${K.shine}" stroke-opacity=".6" stroke-width="2.4" stroke-linecap="round"/>
     </g>
     <g data-pop style="--d:1000ms;transform-origin:286px 84px">${star4(286, 84, 9.5, K.spark, 'tw')}</g>
     <g data-pop style="--d:1150ms;transform-origin:218px 50px">${star4(218, 50, 6, K.spark, 'tw')}</g>
     <path filter="url(#llift)" d="M0 166 C70 160 150 170 220 168 C280 166 320 162 346 164 V178 H0z" fill="${K.hills[2]}"/>
   </svg>`;
-  document.getElementById('hero').innerHTML = DX.char('xero', { mood: 'hello', size: 146 });
-  document.getElementById('ring').innerHTML = DX.ring({ size: 60, stroke: 6, p: 7 / 14, color: 'var(--fg)', track: 'var(--track)' });
+  document.getElementById('hero').innerHTML = DX.char('xero', { mood: 'hello', size: 162 });
+  document.getElementById('ring').innerHTML = DX.ring({ size: 52, stroke: 5.5, p: 7 / 14, color: 'var(--fg)', track: 'var(--track)' });
 </script>
 </body></html>

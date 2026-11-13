@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>019 Craving SOS</title>
-<meta name="motion" content="Calm, no springs. Jelli and the single pacer ring (with its soft glow) fade up together and breathe as one: 4s in (scale up), 6s out (scale down), looping. The ring shows the breath: a cream arc sweeps round the ring from the top over the 4s in-breath while a soft inner fill swells behind Jelli, then the arc unwinds and the fill ebbs over the 6s out-breath. The breath word under Jelli crossfades in 600ms between 'Breathe in' and 'and out' in time with the breath, and Jelli's mouth follows it: closed on the in-breath, a soft open 'o' on the out-breath. The ride timer counts up from 0:00 each second. The helper lines under the breath word show for the first breath only, then fade out over 1.2s at 10s; the still is mid-ride at 3:12, so they are gone there and Jelli and the word carry the pace. The quiet reason line, the button and the two quiet text buttons (Text a friend, I slipped) arrive with a slow 90ms stagger. Touching and holding Jelli gives a soft rhythmic haptic at the breath pace.">
+<meta name="motion" content="Calm, no springs. Jelli and the single pacer ring (with its soft glow) fade up together and breathe as one: 4s in (scale up), 6s out (scale down), looping. The ring shows the breath: a cream arc sweeps round the ring from the top over the 4s in-breath while a soft inner fill swells behind Jelli, then the arc unwinds and the fill ebbs over the 6s out-breath. The breath word under Jelli crossfades in 600ms between 'Breathe in' and 'and out' in time with the breath, and Jelli's mouth follows it: closed on the in-breath, a soft open 'o' on the out-breath. The ride timer counts up from 0:00 each second. The helper lines under the breath word show for the first breath only, then fade out over 1.2s at 10s; the still is mid-ride at 3:12, so they are gone there and Jelli and the word carry the pace. Once the helper lines have faded, the reason crossfades into their place under the breath word (1.2s): a quiet centred quote, no card, its small 'Your reason' label in cream. The button and the two quiet text buttons (Text a friend, I slipped, separated by space alone) arrive with a slow 90ms stagger. The pacer arc and its track are 3px, and the ring is the only ring (no bubbles beside Jelli). Touching and holding Jelli gives a soft rhythmic haptic at the breath pace.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -24,23 +24,17 @@
   .lead { position: absolute; left: 0; right: 0; top: 506px; padding: 0 40px; text-align: center; color: var(--muted); }
   .lead span { display: block; }
   .lead.gone { opacity: 0 !important; transition: opacity 1200ms var(--ease); }
-  /* the reason, quieter and lower: a faint frosted line, not a card */
-  .cards { position: absolute; left: 0; right: 0; top: 574px; padding: 0 var(--gutter); }
-  .reason { display: flex; gap: 12px; align-items: center; padding: 12px 16px; border-radius: 18px; }
-  .reason { background: rgba(255,248,238,.06); box-shadow: inset 0 0 0 1px rgba(255,248,238,.12); }
-  .reason .ico-tile { width: 34px; height: 34px; border-radius: 10px; background: rgba(255,248,238,.1); }
-  .reason .ico-tile svg { width: 18px; height: 18px; }
-  [data-theme="dark"] .reason { background: rgba(255,248,238,.04); box-shadow: inset 0 0 0 1px var(--line); }
-  .reason .grow { flex: 1; min-width: 0; }
-  .reason .t-cap { color: var(--muted); font-weight: 500; }
-  .reason .t-foot { margin-top: 2px; color: var(--fg); opacity: .9; }
+  /* the reason: a quiet centred quote under the breath word, no card. It takes the helper lines' place once they fade. */
+  .reason { position: absolute; left: 0; right: 0; top: 530px; padding: 0 44px; text-align: center; transition: opacity 1200ms var(--ease); }
+  .reason.wait { opacity: 0 !important; }
+  /* the label is cream on the sea (well above 4.5:1 in both modes) */
+  .reason .t-cap { color: #F3EEE6; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+  .reason .t-cap svg { width: 14px; height: 14px; }
+  .reason .t-body { margin-top: 6px; color: var(--fg); text-wrap: balance; }
   .dock { gap: 8px; padding-top: 32px; padding-bottom: 30px; }
-  /* two quiet, clearly separate text buttons (44px targets) */
-  .dock .quiet { display: grid; grid-template-columns: 1fr auto 1fr; column-gap: 12px; align-items: center; height: 44px; }
+  /* two quiet text buttons (44px targets), separated by space alone */
+  .dock .quiet { display: flex; justify-content: center; gap: 36px; align-items: center; height: 44px; }
   .dock .quiet .link { height: 44px; padding: 0 12px; font: 600 16px/1 var(--body); color: var(--fg); opacity: .92; }
-  .dock .quiet .link:first-child { justify-self: end; }
-  .dock .quiet .link:last-child { justify-self: start; }
-  .dock .quiet i { width: 1.5px; height: 22px; border-radius: 1px; background: rgba(255,248,238,.45); }
 </style>
 </head><body>
 <div class="screen" data-ground="ocean">
@@ -56,8 +50,8 @@
         <defs><radialGradient id="pg"><stop offset="0" stop-color="#FFF8EE" stop-opacity=".07"/><stop offset=".78" stop-color="#FFF8EE" stop-opacity=".07"/><stop offset=".97" stop-color="#FFF8EE" stop-opacity=".16"/><stop offset="1" stop-color="#FFF8EE" stop-opacity="0"/></radialGradient></defs>
         <circle class="glow" cx="140" cy="140" r="137"/>
         <circle class="swell" cx="140" cy="140" r="128" fill="#FFF8EE" fill-opacity=".08"/>
-        <circle class="outer" cx="140" cy="140" r="137" fill="none" stroke="currentColor" stroke-width="3.5"/>
-        <circle class="arc" cx="140" cy="140" r="137" fill="none" stroke="#FFF8EE" stroke-width="3.5" stroke-linecap="round" transform="rotate(-90 140 140)"/>
+        <circle class="outer" cx="140" cy="140" r="137" fill="none" stroke="currentColor" stroke-width="3"/>
+        <circle class="arc" cx="140" cy="140" r="137" fill="none" stroke="#FFF8EE" stroke-width="3" stroke-linecap="round" transform="rotate(-90 140 140)"/>
       </svg>
       <div id="jelli"></div>
     </div>
@@ -66,26 +60,22 @@
   <div class="word t-large" data-a style="--i:2;--d:200ms"><span id="w-in">Breathe in</span><span id="w-out" class="off">and out</span></div>
   <p class="t-foot lead" id="lead" data-a style="--i:3;--d:200ms"><span>Most cravings pass in a few minutes.</span><span>Hold Jelli to feel the pace.</span></p>
 
-  <div class="cards">
-    <div class="reason" data-a style="--i:4;--d:200ms">
-      <span class="ico-tile" id="heart"></span>
-      <div class="grow">
-        <p class="t-cap">Your reason</p>
-        <p class="t-foot">&ldquo;Run with Aria without stopping to catch my breath&rdquo;</p>
-      </div>
-    </div>
+  <div class="reason" id="reason" data-a style="--i:4;--d:200ms">
+    <p class="t-cap"><span id="heart"></span>Your reason</p>
+    <p class="t-body">&ldquo;Run with Aria without stopping to catch my breath&rdquo;</p>
   </div>
 
   <div class="dock">
     <button class="btn" data-a style="--i:6;--d:200ms" data-go="020-sos-passed">It passed</button>
-    <div class="quiet" data-a style="--i:7;--d:200ms"><button class="link">Text a friend</button><i></i><button class="link" data-go="021-sos-slipped">I slipped</button></div>
+    <div class="quiet" data-a style="--i:7;--d:200ms"><button class="link">Text a friend</button><button class="link" data-go="021-sos-slipped">I slipped</button></div>
   </div>
 </div>
 <script>
   const $ = s => document.querySelector(s);
   $('#close').innerHTML = DX.icon('close');
-  $('#jelli').innerHTML = DX.char('jelli', { mood: 'breathe', size: 220 });
-  $('#heart').innerHTML = DX.icon('heart');
+  /* no bubble rings beside Jelli: the pacer ring is the only ring */
+  $('#jelli').innerHTML = DX.char('jelli', { mood: 'breathe', size: 220 }).replace(/<g opacity="[^"]*" fill="none" stroke="#FFFFFF" stroke-width="2.5">[\s\S]*?<\/g>/, '');
+  $('#heart').innerHTML = DX.icon('heart', { w: 2.4 });
   /* Jelli's mouth follows the breath: closed (in through the nose), a soft 'o' on the way out. */
   const mouth = $('#jelli path[fill="#24163A"]'), openD = mouth ? mouth.getAttribute('d') : '';
   const setMouth = out => { if (!mouth) return; if (out) { mouth.setAttribute('d', openD); mouth.setAttribute('fill', '#24163A'); } else { mouth.setAttribute('d', 'M94 107 Q100 111.5 106 107'); mouth.setAttribute('fill', 'none'); } };
@@ -99,10 +89,10 @@
     loop();
     secs = 0; $('#t').textContent = '0:00'; const tick = () => { if (g !== gen) return; secs++; $('#t').textContent = Math.floor(secs / 60) + ':' + String(secs % 60).padStart(2, '0'); setTimeout(tick, 1000); };
     setTimeout(tick, 1000);
-    $('#lead').classList.remove('gone');
+    $('#lead').classList.remove('gone'); $('#reason').classList.add('wait');
   });
   /* the helper copy only guides the first breath (4s in, 6s out), then fades; the still is at 3:12, so it is gone there */
-  DX.after(10000, () => $('#lead').classList.add('gone'));
-  DX.onStill(() => $('#lead').classList.add('gone'));
+  DX.after(10000, () => { $('#lead').classList.add('gone'); $('#reason').classList.remove('wait'); });
+  DX.onStill(() => { $('#lead').classList.add('gone'); $('#reason').classList.remove('wait'); });
 </script>
 </body></html>

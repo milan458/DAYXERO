@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>006 When cravings hit</title>
-<meta name="motion" content="Progress eases from 3/11 to 4/11 (900ms). Question, then the two labelled chip groups (natural-width chips in balanced rows), Other as the last chip of the last row, and the count card arrive in reading order (600ms, 90ms stagger). At 900ms Stress takes the kit selection (warm tint and outline) with a 520ms spring bump (scale 1.1) and a selection haptic; the count reads 1 picked, then bumps to 2 picked and names both.">
+<meta name="motion" content="Progress eases from 3/11 to 4/11 (900ms). Question, then the two labelled chip groups (chips justified edge to edge in balanced rows), Other as the last chip of the last row, and the count card arrive in reading order (600ms, 90ms stagger). At 900ms Stress takes the kit selection (warm tint and outline) with a 520ms spring bump (scale 1.1) and a selection haptic; the count reads 1 picked, then bumps to 2 picked and names both, beside a small Jelli (cravings are Jelli's).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -17,7 +17,8 @@
   .lbl:first-child { margin-top: 0; }
   .flow { display: grid; gap: 10px; }
   .flow .r { display: flex; gap: 8px; }
-  .flow .chip { flex: none; min-height: 48px; padding: 0 12px; white-space: nowrap; }
+  /* Round 9: each row is justified to the full gutter width (chips grow in proportion), so no ragged right edges. */
+  .flow .chip { flex: 1 1 auto; justify-content: center; min-height: 48px; padding: 0 12px; white-space: nowrap; }
   /* Other closes the last chip row (round 8: no separate row or label, lower density). */
   .count { display: flex; align-items: center; gap: 12px; margin-top: 14px; padding: 8px 16px 8px 10px; }
   .count .xc { width: 56px; height: 56px; flex: none; }
@@ -55,7 +56,8 @@
   const bar = document.getElementById('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '27.3%'); void bar.offsetWidth; bar.style.transition = ''; });
   DX.after(250, () => bar.style.setProperty('--p', '36.4%'));
-  document.getElementById('xc').innerHTML = DX.char('xero', { mood: 'hello', size: 56 });
+  /* Cravings belong to Jelli (round 9): a small Jelli in the count card, so this screen differs from 008. */
+  document.getElementById('xc').innerHTML = DX.char('jelli', { mood: 'hello', size: 56 });
   const s = document.getElementById('stress'), n = document.getElementById('n'), names = document.getElementById('names');
   DX.after(0, () => { s.classList.remove('on', 'land'); n.textContent = '1 picked.'; names.textContent = 'Coffee.'; n.classList.remove('bump'); });
   DX.after(900, () => { s.classList.add('on', 'land'); n.textContent = '2 picked.'; names.textContent = 'Coffee and stress.'; n.style.display = 'inline-block'; n.classList.add('bump'); });

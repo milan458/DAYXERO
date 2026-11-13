@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>007 Make it personal</title>
-<meta name="motion" content="Progress eases from 4/11 to 5/11 (900ms). Question and both fields arrive (600ms, 90ms stagger). The reason field takes focus (its own 2px coral focus ring fades in, 200ms); from 800ms the reason types in at 26ms a character with a blinking caret (about 1.3 s) while the count ticks 0 to 49 of 120; 700ms later the keyboard drops and the field blurs (focus ring and caret fade, 300ms), leaving the reason filled, and a small paper heart sticker pops onto its corner (620ms spring). The four + suggestion chips arrive (600ms, 90ms stagger); tapping one appends it to the reason with a 520ms spring on the chip. Light haptic on Continue.">
+<meta name="motion" content="Progress eases from 4/11 to 5/11 (900ms). Question and both fields arrive (600ms, 90ms stagger). The reason field takes focus (its own 2px coral focus ring fades in, 200ms); from 800ms the reason types in at 26ms a character with a blinking caret (about 1.3 s) while the count ticks 0 to 49 of 120; 700ms later the keyboard drops and the field blurs (focus ring and caret fade, 300ms), leaving the reason filled, and a small paper heart sticker pops into its top-right corner, inside the field (620ms spring). The four + suggestion chips arrive (600ms, 90ms stagger); tapping one appends it to the reason with a 520ms spring on the chip. Continue stays at the same height as on 003-006, with Skip for now below it. Light haptic on Continue.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -13,7 +13,8 @@
   .lbl:first-child { margin-top: 0 !important; }
   .answers { gap: 8px !important; padding-top: 26px !important; }
   /* The reason field has focus: its own 2px coral focus ring (never the ink selection outline). Count bottom right. */
-  .field.reason { position: relative; min-height: 0; padding: 14px 16px 30px; font: 600 17px/1.4 var(--body); }
+  /* Round 9: the reason uses the same text weight and size as the name; the right padding keeps the words clear of the heart. */
+  .field.reason { position: relative; min-height: 0; padding: 14px 46px 30px 16px; font: 500 16px/1.4 var(--body); }
   .field.reason.focus, [data-theme="dark"] .field.reason.focus { box-shadow: inset 0 0 0 2px var(--coral), 0 0 0 4px color-mix(in srgb, var(--coral) 22%, transparent); }
   .field.reason .cnt { position: absolute; right: 14px; bottom: 10px; font: 500 13px/1 var(--body); color: var(--muted); }
   .field.reason { transition: box-shadow 300ms var(--ease); }
@@ -21,7 +22,8 @@
   .typing .caret { opacity: 1; animation: blink 900ms steps(1) infinite; }
   .still .caret { opacity: 0 !important; }
   /* A small paper-cut heart pinned to the reason's corner, like a sticker: this is the line you'll see in a craving. */
-  .heart { position: absolute; right: -8px; top: -14px; width: 38px; height: 38px; transform: rotate(10deg); pointer-events: none; }
+  /* Round 9: tucked inside the field's top-right corner (no longer hanging off the edge). */
+  .heart { position: absolute; right: 10px; top: 10px; width: 28px; height: 28px; transform: rotate(10deg); pointer-events: none; }
   .play .heart { animation: heart-in 620ms var(--spring) both; animation-delay: 2300ms; }
   @keyframes heart-in { 0% { opacity: 0; transform: rotate(10deg) scale(.4); } 60% { opacity: 1; } 100% { opacity: 1; transform: rotate(10deg) scale(1); } }
   @keyframes blink { 50% { opacity: 0; } }
@@ -30,6 +32,9 @@
   .adds .chip { padding: 0 14px 0 12px; white-space: nowrap; min-height: 46px; gap: 6px; }
   .adds .chip .pl { display: grid; place-items: center; flex: none; color: var(--coral); }
   .adds .chip .pl svg { width: 16px; height: 16px; }
+  /* Round 9: Continue sits at the same y as 003-006 (bottom 34px); Skip for now sits below it in the bottom inset. */
+  .dock { padding-bottom: 0; gap: 0; }
+  .dock .link { height: 34px; }
   .chip.added { animation: dx-chipland 520ms cubic-bezier(.3,1.4,.5,1) both; }
   @keyframes dx-chipland { 0% { transform: scale(1); } 40% { transform: scale(1.08); } 100% { transform: scale(1); } }
 </style>

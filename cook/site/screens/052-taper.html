@@ -10,16 +10,18 @@
   .wrap .lead { margin-top: 8px; color: var(--muted); }
   .chart { margin-top: 20px; padding: 16px 18px 14px; }
   /* key: the coral dot is Quit Day on the axis; stripes are the part of the taper that runs past it */
-  .key { display: flex; gap: 16px; align-items: center; color: var(--muted); font-weight: 500; }
+  .key { display: flex; gap: 18px; align-items: center; color: var(--muted); font: 500 14px/1.2 var(--body); }
   .key span { display: inline-flex; align-items: center; gap: 6px; }
-  .key .kq { width: 9px; height: 9px; border-radius: 99px; background: var(--mark); flex: none; }
-  .key .kh { width: 14px; height: 10px; border-radius: 3px; flex: none; --c: var(--c1); }
-  .bars { position: relative; margin-top: 18px; height: 88px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; align-items: end; border-bottom: 2px solid var(--line); }
-  .chart { --c1: color-mix(in srgb, #FFA766 62%, transparent); --c2: color-mix(in srgb, #FFA766 50%, transparent); --c3: color-mix(in srgb, #FFA766 42%, transparent); --edge: #F08A45; }
-  [data-theme="dark"] .chart { --c1: #FFB27A; --c2: #FFCB9E; --c3: #FFE0C4; --edge: #FFB27A; }
+  .key .kq { width: 11px; height: 11px; border-radius: 99px; background: var(--mark); flex: none; }
+  .key .kh { width: 18px; height: 12px; border-radius: 3px; flex: none; }
+  .bars { position: relative; margin-top: 36px; height: 88px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; align-items: end; border-bottom: 2px solid var(--line); }
+  /* one apricot for every bar (the heights carry the mg); light adds a deeper edge (3.5:1 on the card) so the short 1.5 mg bar reads */
+  .chart, .steps-list { --c: #FFB27A; --edge: #D9692A; }
+  [data-theme="dark"] .chart, [data-theme="dark"] .steps-list { --edge: #FFB27A; }
   .bar { height: var(--h); border-radius: 10px 10px 3px 3px; background: var(--c); transform-origin: bottom; display: flex; }
+  .bar:not(.split), .bar.split .pre { box-shadow: inset 0 0 0 1.5px var(--edge); }
   /* runs past Quit Day: the bar's own colour in stripes, inside a fine outline */
-  .hatch, .key .kh { background: repeating-linear-gradient(135deg, var(--c) 0 3px, transparent 3px 6.5px), color-mix(in srgb, var(--c) 22%, transparent); box-shadow: inset 0 0 0 1.5px var(--c); }
+  .hatch, .key .kh { background: repeating-linear-gradient(135deg, #F59A5C 0 3px, transparent 3px 6.5px), #FFF1E6; box-shadow: inset 0 0 0 1.5px var(--edge) !important; }
   /* dark: lighter stripes (pale peach gaps, so no heavy navy bands) */
   [data-theme="dark"] .hatch, [data-theme="dark"] .key .kh { background: repeating-linear-gradient(135deg, var(--c) 0 3px, transparent 3px 6.5px), color-mix(in srgb, var(--c) 30%, #FFF3E6); }
   /* the new Quit Day target on the 0 mg column (Mon, Nov 23): a coral ring the dot slides into */
@@ -33,6 +35,8 @@
   /* Quit Day (Fri, Nov 6) falls 4 days into week 1: a coral dot on the axis where the 6 mg bar splits */
   .qmark { position: absolute; left: calc((100% - 24px) / 4 * 4 / 7); bottom: -1px; width: 0; height: 0; }
   .qmark i { position: absolute; left: -6.5px; top: -6.5px; width: 13px; height: 13px; border-radius: 99px; background: var(--mark); box-shadow: 0 0 0 2.5px var(--card); }
+  .qmark .ql { position: absolute; left: -1px; bottom: 0; width: 2px; height: 96px; border-radius: 2px; background: var(--mark); }
+  .qmark .qt { position: absolute; bottom: 96px; left: 0; transform: translateX(-50%); height: 22px; padding: 0 8px; border-radius: 99px; background: var(--mark); color: var(--ink); font: 700 13px/22px var(--body); white-space: nowrap; }
   .play .bar { animation: grow 900ms var(--settle) both; animation-delay: calc(var(--i) * 150ms + 250ms); }
   @keyframes grow { from { transform: scaleY(0); } to { transform: none; } }
   .qbar { align-self: end; width: 100%; height: 4px; border-radius: 3px 3px 0 0; background: var(--track); }
@@ -44,22 +48,10 @@
   .row .t-head { font-size: 16px; }
   .row .t-foot { color: var(--muted); }
   .row .wk { font: 600 14px/1 var(--body); color: var(--muted); }
-  .warn { margin-top: 22px; display: grid; gap: 10px; padding: 0 4px; }
   .steps-list .chev { margin-left: -4px; }
   .steps-list .row { gap: 12px; }
-  .warn .top { display: flex; gap: 12px; align-items: flex-start; }
-  .warn .t-head { text-wrap: balance; }
-  .warn .top svg { width: 22px; height: 22px; flex: none; color: var(--mark); margin-top: 1px; }
-  .warn .t-foot { color: var(--muted); }
-  .warn .btn { width: auto; justify-self: start; padding: 0 18px; margin-left: 34px; box-shadow: inset 0 0 0 2px var(--line); }
-  /* swatches: solid, with a fine edge so the palest (1.5 mg) still reads */
-  .sw { width: 10px; height: 30px; border-radius: 4px; background: color-mix(in srgb, #FFA766 var(--a, 62%), transparent); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, #F08A45 70%, transparent); flex: none; }
-  [data-theme="dark"] .sw { background: color-mix(in srgb, #FFC38A var(--a, 62%), transparent); box-shadow: none; }
-  .warn .link { justify-self: start; margin-left: 34px; font: 700 15px/1 var(--body); color: var(--fg); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--line); padding: 4px 0; }
-  /* dark: solid apricot tints (no brown from mixing with the navy ground) */
-  [data-theme="dark"] .steps-list .row:nth-child(1) .sw { background: #FFB27A !important; }
-  [data-theme="dark"] .steps-list .row:nth-child(2) .sw { background: #FFCB9E !important; }
-  [data-theme="dark"] .steps-list .row:nth-child(3) .sw { background: #FFE0C4 !important; }
+  /* swatches: the same apricot and edge as the bars, heights by mg */
+  .sw { width: 10px; height: 30px; border-radius: 4px; background: var(--c); box-shadow: inset 0 0 0 1.5px var(--edge); flex: none; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -68,26 +60,23 @@
   </div>
   <div class="scroll">
     <div class="wrap">
-      <h1 class="t-title" data-a style="--i:0">Step down your pouches</h1>
-      <p class="t-foot lead" data-a style="--i:1">Lower the strength before Quit Day, so stopping feels smaller.</p>
-      <div class="warn" data-a style="--i:2">
-        <div class="top"><span data-ic="clock"></span><div><p class="t-head" style="font-size:17px">This taper doesn't fit before <span class="qg">Q</span>uit&nbsp;Day</p><p class="t-foot">It takes 3 weeks. Quit Day is in 4 days.</p></div></div>
-      </div>
+      <h1 class="t-title" data-a style="--i:0">Your taper needs 3 weeks</h1>
+      <p class="t-foot lead" data-a style="--i:1">Quit Day is in 4 days. Stepping your pouches down first makes stopping feel smaller.</p>
       <div class="card chart" data-a style="--i:3">
-        <p class="t-cap key"><span><i class="kq"></i>Quit Day, Fri, Nov 6</span><span><i class="kh"></i>Runs past Quit Day</span></p>
+        <p class="key"><span><i class="kq"></i>Quit Day</span><span><i class="kh"></i>Runs past Quit Day</span></p>
         <div class="bars">
-          <div class="bar split" style="--h:100%;--i:0;--c:var(--c1)"><i class="pre"></i><i class="post hatch"></i></div>
-          <div class="bar hatch" style="--h:50%;--i:1;--c:var(--c2)"></div>
-          <div class="bar hatch" style="--h:25%;--i:2;--c:var(--c3)"></div>
+          <div class="bar split" style="--h:100%;--i:0"><i class="pre"></i><i class="post hatch"></i></div>
+          <div class="bar hatch" style="--h:50%;--i:1"></div>
+          <div class="bar hatch" style="--h:25%;--i:2"></div>
           <i class="qbar"><span class="qtarget" data-fade style="--d:1000ms"><i></i></span></i>
-          <div class="qmark" data-pop style="--d:900ms"><i></i></div>
+          <div class="qmark" data-pop style="--d:900ms"><b class="ql"></b><i></i><span class="qt">Fri 6</span></div>
         </div>
         <div class="lbls t-cap"><span><b>6 mg</b>Nov 2</span><span><b>3 mg</b>Nov 9</span><span><b>1.5 mg</b>Nov 16</span><span><b>0 mg</b>Nov 23</span></div>
       </div>
       <div class="list steps-list">
-        <div class="row" data-settle style="--i:4"><i class="sw"></i><div class="grow"><p class="t-head">6 mg</p><p class="t-foot">Mon, Nov 2 to Sun, Nov 8</p></div><span class="wk">1 week</span><span class="chev" data-ic="chev"></span></div>
-        <div class="row" data-settle style="--i:5"><i class="sw" style="--a:46%;height:22px"></i><div class="grow"><p class="t-head">3 mg</p><p class="t-foot">Mon, Nov 9 to Sun, Nov 15</p></div><span class="wk">1 week</span><span class="chev" data-ic="chev"></span></div>
-        <div class="row" data-settle style="--i:6"><i class="sw" style="--a:42%;height:16px"></i><div class="grow"><p class="t-head">1.5 mg</p><p class="t-foot">Mon, Nov 16 to Sun, Nov 22</p></div><span class="wk">1 week</span><span class="chev" data-ic="chev"></span></div>
+        <div class="row" data-settle style="--i:4"><i class="sw"></i><div class="grow"><p class="t-head">6 mg</p><p class="t-foot">Mon, Nov 2 to Sun, Nov 8</p></div><span class="chev" data-ic="chev"></span></div>
+        <div class="row" data-settle style="--i:5"><i class="sw" style="height:20px"></i><div class="grow"><p class="t-head">3 mg</p><p class="t-foot">Mon, Nov 9 to Sun, Nov 15</p></div><span class="chev" data-ic="chev"></span></div>
+        <div class="row" data-settle style="--i:6"><i class="sw" style="height:12px"></i><div class="grow"><p class="t-head">1.5 mg</p><p class="t-foot">Mon, Nov 16 to Sun, Nov 22</p></div><span class="chev" data-ic="chev"></span></div>
       </div>
     </div>
   </div>

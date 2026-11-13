@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>008 Onboarding obstacles</title>
-<meta name="motion" content="Progress eases from 5/11 to 6/11 (900ms settle). Question, the chips (006's pattern: natural widths, balanced rows of three, three and two) and the what-each-adds list (Irritability, 1-minute reset) arrive (600ms, 90ms stagger). At 900ms Social situations takes the kit selection with a 520ms spring bump and a light selection haptic; the count bumps from 1 picked to 2 picked and a second row (Social situations, What to say) settles in under the first (700ms settle).">
+<meta name="motion" content="Progress eases from 5/11 to 6/11 (900ms settle). Question, the chips (006's pattern: rows of three, three and two, justified edge to edge) and the what-each-adds list (Irritability, 1-minute reset, with flat paper-cut timer and speech spots) arrive (600ms, 90ms stagger). At 900ms Social situations takes the kit selection with a 520ms spring bump and a light selection haptic; the count bumps from 1 picked to 2 picked and a second row (Social situations, What to say) settles in under the first (700ms settle).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -11,7 +11,8 @@
   .answers { gap: 16px !important; padding-top: 24px !important; }
   .flow { display: grid; gap: 10px; }
   .flow .r { display: flex; gap: 8px; }
-  .flow .chip { flex: none; min-height: 48px; padding: 0 12px; white-space: nowrap; }
+  /* Round 9: rows justified to the full gutter width (chips grow in proportion), no ragged right edges. */
+  .flow .chip { flex: 1 1 auto; justify-content: center; min-height: 48px; padding: 0 12px; white-space: nowrap; }
   /* What each pick unlocks: one row per pick, the obstacle on the left, the tool it adds on the right. */
   .gets { display: grid; gap: 10px; margin-top: 6px; }
   .gets .hd { display: flex; justify-content: space-between; align-items: baseline; color: var(--muted); }
@@ -46,7 +47,7 @@
       <div class="r"><button class="chip">Trouble focusing</button><button class="chip">Low motivation</button></div>
     </div>
     <div class="gets" id="gets" data-a style="--i:3">
-      <p class="t-foot hd"><span><b id="n">2 picked.</b> Here&rsquo;s what each one adds</span></p>
+      <p class="t-foot hd"><span><b id="n">2 picked.</b> Here&rsquo;s what each one adds:</span></p>
       <div class="list">
         <div class="row"><span class="ico-tile" data-art="reset"></span><div class="grow"><span class="t-foot from">Irritability</span><span class="arr" data-arrow></span><span class="to">1-minute reset</span></div></div>
         <div class="row new"><span class="ico-tile" data-art="talk"></span><div class="grow"><span class="t-foot from">Social situations</span><span class="arr" data-arrow></span><span class="to">What to say</span></div></div>
@@ -61,23 +62,18 @@
 </div>
 <script>
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
-  /* Paper-cut tool spots (round 8), the characters' idiom: flat cut pieces, a crescent side shade, one highlight, a soft paper shadow.
-     A sun-timer for the reset, two overlapping speech bubbles for what to say. */
-  const sh = DX.theme === 'dark' ? 'rgba(0,0,0,.55)' : 'rgba(120,52,24,.24)';
-  const pf = id => `<defs><filter id="${id}" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="1.5" stdDeviation="1" flood-color="${sh}"/></filter></defs>`;
+  /* Paper-cut tool spots (round 9): flat cut pieces only, no gloss, no highlights, no blur shadows. Layers are separated by a thin
+     cut line in the tile colour. A sun-timer for the reset, two overlapping speech bubbles for what to say. */
   const ART = {
-    reset: `<svg viewBox="0 0 32 32" aria-hidden="true">${pf('t1')}
-      <g filter="url(#t1)"><rect x="12.5" y="2" width="7" height="4.4" rx="1.8" fill="#FF7155"/><rect x="16.4" y="2" width="3.1" height="4.4" rx="1.4" fill="#E85A3E"/></g>
-      <g filter="url(#t1)"><circle cx="16" cy="18.5" r="11.8" fill="#FFF8EE"/><path d="M22.5 8.6 A11.8 11.8 0 0 1 16 30.3 A13 13 0 0 0 22.5 8.6 Z" fill="#EFE1CF"/></g>
-      <path d="M16 18.5 V9.4 A9.1 9.1 0 0 1 24.9 16.6 Z" fill="#FFC93C" filter="url(#t1)"/>
-      <path d="M7.6 15 C8.4 12.6 10 10.8 12.2 9.8" fill="none" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round"/>
-      <circle cx="16" cy="18.5" r="2.1" fill="#1E1A3A"/></svg>`,
-    talk: `<svg viewBox="0 0 32 32" aria-hidden="true">${pf('t2')}
-      <g filter="url(#t2)"><path d="M6 5 h14 a4.5 4.5 0 0 1 4.5 4.5 v6 a4.5 4.5 0 0 1 -4.5 4.5 h-8 l-5 4 v-4 h-1 a4.5 4.5 0 0 1 -4.5 -4.5 v-6 a4.5 4.5 0 0 1 4.5 -4.5 z" fill="#FF7155"/>
-        <path d="M20.5 5.2 a4.5 4.5 0 0 1 4 4.3 v6 a4.5 4.5 0 0 1 -4.5 4.5 h-2 c2.4 -.6 3.6 -2.4 3.6 -4.6 v-6 c0 -1.8 -.4 -3.2 -1.1 -4.2 z" fill="#E85A3E"/>
-        <path d="M4.6 12 C4.8 9.6 5.8 8.2 7.6 7.6" fill="none" stroke="#FFB09C" stroke-width="1.6" stroke-linecap="round"/></g>
-      <g filter="url(#t2)"><path d="M16.5 13 h10 a3.6 3.6 0 0 1 3.6 3.6 v5 a3.6 3.6 0 0 1 -3.6 3.6 h-.8 v3.8 l-4.6 -3.8 h-4.6 a3.6 3.6 0 0 1 -3.6 -3.6 v-5 a3.6 3.6 0 0 1 3.6 -3.6 z" fill="#FFF8EE"/>
-        <path d="M13 21.6 c.4 2 1.8 3.4 3.8 3.6 h4.4 l1.2 1 h-5.9 a3.6 3.6 0 0 1 -3.5 -3.6 z" fill="#EFE1CF"/></g>
+    reset: `<svg viewBox="0 0 32 32" aria-hidden="true">
+      <rect x="12.6" y="2.2" width="6.8" height="4.6" rx="1.6" fill="#FF7155"/>
+      <circle cx="16" cy="18.4" r="12" fill="#FF7155"/>
+      <circle cx="16" cy="18.4" r="9.6" fill="#FFF8EE"/>
+      <path d="M16 18.4 V8.8 A9.6 9.6 0 0 1 25.4 16.6 Z" fill="#FFC93C"/>
+      <circle cx="16" cy="18.4" r="2" fill="#1E1A3A"/></svg>`,
+    talk: `<svg viewBox="0 0 32 32" aria-hidden="true">
+      <path d="M6 4.5 h13.5 a4.5 4.5 0 0 1 4.5 4.5 v6 a4.5 4.5 0 0 1 -4.5 4.5 h-7.5 l-5 4 v-4 h-1 a4.5 4.5 0 0 1 -4.5 -4.5 v-6 a4.5 4.5 0 0 1 4.5 -4.5 z" fill="#FF7155"/>
+      <path d="M16.5 13 h10 a3.6 3.6 0 0 1 3.6 3.6 v5 a3.6 3.6 0 0 1 -3.6 3.6 h-.8 v3.8 l-4.6 -3.8 h-4.6 a3.6 3.6 0 0 1 -3.6 -3.6 v-5 a3.6 3.6 0 0 1 3.6 -3.6 z" fill="#FFF8EE" stroke="var(--card-2)" stroke-width="2.6" stroke-linejoin="round" paint-order="stroke"/>
       <g fill="#FF7155"><circle cx="18.4" cy="19.2" r="1.35"/><circle cx="21.6" cy="19.2" r="1.35"/><circle cx="24.8" cy="19.2" r="1.35"/></g></svg>`
   };
   document.querySelectorAll('[data-art]').forEach(e => e.innerHTML = ART[e.dataset.art]);

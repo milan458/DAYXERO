@@ -1,15 +1,17 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>037 Health timeline</title>
-<meta name="motion" content="Title and the Vaping / Smoking chips arrive; each card's paper-cut spot (its own motif: sunrise, clouds blowing away, a summit flag, a calm lake, a hand mirror with a sparkle) lifts in with the card, then the rail draws top to bottom (900ms) while timeline cards arrive with a 90ms stagger. Each finished change carries a tick on its rail node, in with its card (the first change, Withdrawal began, gets a plain node and a neutral 'A few hours in'; the withdrawal peak reads Passed). The under-way card leads with a soft warm tint; its rail node is half filled and sends out a soft pulse ring every 2.4s (from 1.2s) while its bar fills to 50% (900ms settle); the Ahead node is an open ring. All spots and text sit on one column. Every card ends in a chevron and opens its detail. Switching chips cross-fades the list (250ms) with a selection haptic.">
+<meta name="motion" content="Title and the Vaping / Smoking chips arrive; each card's larger paper-cut spot (its own motif: sunrise, clouds blowing away, a summit flag, a calm lake, a hand mirror with a sparkle) lifts in with the card, then the rail draws top to bottom (900ms clip reveal from 300ms) as one continuous line through the node centres, solid through today and dashed on to Ahead, while timeline cards arrive with a 90ms stagger. The rail node is each card's one status signal (plain dot for the start, green tick for each finished change, half-filled for under way, open ring for ahead); the line under each title is only its timing. The under-way card leads with a warm tint (an apricot hairline in dark mode); its node sends out a soft pulse ring every 2.4s (from 1.2s) while its 4px apricot bar fills to 50% (900ms settle). All spots and text sit on one column. Every card ends in a chevron and opens its detail. Switching chips cross-fades the list (250ms) with a selection haptic.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   .tl { position: relative; margin-top: 20px; padding-left: 30px; display: grid; gap: 12px; }
-  .rail { position: absolute; left: 9px; top: 24px; bottom: 40px; width: 2px; }
-  .rail svg { display: block; width: 2px; height: 100%; overflow: visible; }
-  /* light: the rail is a real line (about 3:1 on cream); dark keeps the hairline */
+  /* one continuous rail through the node centres (measured), solid through today, dashed on to Ahead; it draws top to bottom */
+  .rail { position: absolute; left: 0; top: 0; bottom: 0; width: 20px; }
+  .rail svg { display: block; overflow: visible; }
+  .play .rail { animation: rail-in 900ms var(--ease) 300ms both; }
+  @keyframes rail-in { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
   .tl { --rail: color-mix(in srgb, var(--fg) 50%, var(--g)); }
-  [data-theme="dark"] .tl { --rail: var(--line); }
+  [data-theme="dark"] .tl { --rail: color-mix(in srgb, var(--fg) 34%, var(--g)); }
   .node { position: absolute; left: -30px; top: 50%; margin-top: -10px; width: 20px; height: 20px; border-radius: 99px; display: grid; place-items: center; background: var(--g); }
   .node.done { background: var(--tick); color: #fff; }
   .node.done svg { width: 12px; height: 12px; }
@@ -21,23 +23,25 @@
   .still .node.now::before { animation: none !important; opacity: 0; }
   .node.ahead { box-shadow: inset 0 0 0 2.5px var(--muted); }
   .node.past::after { content: ""; width: 12px; height: 12px; border-radius: 99px; background: var(--muted); }
-  .item { position: relative; display: flex; gap: 12px; align-items: center; padding: 14px 10px 14px 12px; }
+  .item { position: relative; display: flex; gap: 12px; align-items: center; padding: 10px 10px 10px 10px; }
   .item .grow { flex: 1; min-width: 0; display: grid; gap: 4px; }
   .item .t-head { font-size: 17px; line-height: 1.22; }
-  .ill { width: 56px; height: 56px; border-radius: 16px; overflow: hidden; flex: none; display: block; }
+  .ill { width: 64px; height: 64px; border-radius: 17px; overflow: hidden; flex: none; display: block; }
   .ill svg { width: 100%; height: 100%; display: block; }
   .st { font: 600 14px/1.25 var(--body); color: var(--muted); }
-  .st.done { color: var(--tick); }
   .chev { display: grid; color: var(--muted); }
   .chev svg { width: 18px; height: 18px; }
   .item.past { background: transparent; }
   /* the under-way card leads: a soft warm tint and a little more height; its spot and text stay on the same column as the rest */
-  .screen .tl .item.now { padding: 18px 10px 18px 12px; background: color-mix(in srgb, #FF9A5C 16%, #FFFFFF); box-shadow: inset 0 0 0 1.5px rgba(232,120,70,.45), 0 12px 26px rgba(30,26,58,.1); }
-  [data-theme="dark"] .screen .tl .item.now { background: color-mix(in srgb, #FFF8EE 9%, var(--card)); box-shadow: inset 0 0 0 1.5px rgba(255,248,238,.22), 0 12px 26px rgba(0,0,0,.3); }
+  .screen .tl .item.now { padding: 14px 10px 14px 10px; background: color-mix(in srgb, #FF9A5C 16%, #FFFFFF); box-shadow: inset 0 0 0 1.5px rgba(232,120,70,.45), 0 12px 26px rgba(30,26,58,.1); }
+  /* dark: a warm navy tint with an apricot hairline */
+  [data-theme="dark"] .screen .tl .item.now { background: color-mix(in srgb, #FFB27A 9%, var(--card)); box-shadow: inset 0 0 0 1.5px rgba(255,178,122,.7), 0 12px 26px rgba(0,0,0,.3); }
   .item.now .t-head { font-size: 18px; }
   .item.now .st { color: var(--fg); }
-  .item.now .progress { height: 8px; margin-top: 4px; border-radius: 99px; }
-  .item.now .progress > i { background: var(--fg); border-radius: 99px; }
+  .item.now .progress { height: 4px; margin-top: 6px; border-radius: 99px; background: rgba(232,120,70,.2); }
+  .item.now .progress > i { background: #F08A4B; border-radius: 99px; }
+  [data-theme="dark"] .item.now .progress { background: rgba(255,178,122,.2); }
+  [data-theme="dark"] .item.now .progress > i { background: #FFB27A; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -49,7 +53,7 @@
       <div class="chips" data-a style="--i:2;margin-top:16px"><button class="chip on">Vaping</button><button class="chip">Smoking</button></div>
 
       <div class="tl">
-        <div class="rail"><svg viewBox="0 0 2 100" preserveAspectRatio="none"><path class="draw" d="M1 0V100" stroke="var(--rail)" stroke-width="2" vector-effect="non-scaling-stroke" style="--len:100;--dur:900ms;--d:300ms"/></svg></div>
+        <div class="rail" id="rail" aria-hidden="true"></div>
 
         <div class="card item past" data-a style="--i:3">
           <span class="node past"></span>
@@ -58,31 +62,31 @@
           <span data-ic="chev" class="chev"></span>
         </div>
         <div class="card item past" data-a style="--i:4">
-          <span class="node done" data-ic="check"></span>
+          <span class="node done" data-ic="check" aria-label="Done"></span>
           <span class="ill" data-spot="cloud"></span>
-          <div class="grow"><p class="t-head">Most nicotine has left your body</p><span class="st done">Done · a few days in</span></div>
+          <div class="grow"><p class="t-head">Most nicotine has left your body</p><span class="st">A few days in</span></div>
           <span data-ic="chev" class="chev"></span>
         </div>
         <div class="card item past" data-a style="--i:5">
-          <span class="node done" data-ic="check"></span>
+          <span class="node done" data-ic="check" aria-label="Done"></span>
           <span class="ill" data-spot="peak"></span>
-          <div class="grow"><p class="t-head">Withdrawal peaks</p><span class="st done">Passed · the first week</span></div>
+          <div class="grow"><p class="t-head">Withdrawal peaks</p><span class="st">The first week</span></div>
           <span data-ic="chev" class="chev"></span>
         </div>
         <div class="card item now" data-a style="--i:6">
-          <span class="node now"></span>
+          <span class="node now" aria-label="Under way"></span>
           <span class="ill" data-spot="lake"></span>
-          <div class="grow"><p class="t-head">Mood swings settle</p><span class="st">Under way · 1 to 2 weeks</span><div class="progress"><i style="--p:50%" id="bar"></i></div></div>
+          <div class="grow"><p class="t-head">Mood swings settle</p><span class="st">1 to 2 weeks</span><div class="progress"><i style="--p:50%" id="bar"></i></div></div>
           <span data-ic="chev" class="chev"></span>
         </div>
         <div class="card item ahead" data-a style="--i:7" data-go="038-health-item">
-          <span class="node ahead"></span>
+          <span class="node ahead" aria-label="Ahead"></span>
           <span class="ill" data-spot="mirror"></span>
-          <div class="grow"><p class="t-head">Healthier lips and gums</p><span class="st">Ahead · in about a week</span></div>
+          <div class="grow"><p class="t-head">Healthier lips and gums</p><span class="st">In about a week</span></div>
           <span data-ic="chev" class="chev"></span>
         </div>
       </div>
-      <p class="t-cap muted" data-a style="--i:8;margin-top:14px;padding-left:30px">Typical times, everyone is different. Sources: <span class="source">NHS</span>, <span class="source">smokefree.gov</span></p>
+      <p class="t-cap muted" data-a style="--i:8;margin-top:22px;padding-left:30px">Typical times, everyone is different. Sources: <span class="source">NHS</span>, <span class="source">smokefree.gov</span></p>
     </div>
   </div>
 </div>
@@ -114,6 +118,14 @@
   };
   document.body.insertAdjacentHTML('beforeend', `<svg width="0" height="0" style="position:absolute"><filter id="pcLift" x="-5%" y="-20%" width="110%" height="140%"><feDropShadow dx="0" dy="-1.2" stdDeviation="1.2" flood-color="#1A0B2E" flood-opacity="${dark ? .5 : .22}"/></filter><radialGradient id="gSun"><stop offset=".3" stop-color="#FFB25E" stop-opacity=".5"/><stop offset="1" stop-color="#FFB25E" stop-opacity="0"/></radialGradient><radialGradient id="gMoon"><stop offset=".3" stop-color="#F6E7C1" stop-opacity=".35"/><stop offset="1" stop-color="#F6E7C1" stop-opacity="0"/></radialGradient></svg>`);
   document.querySelectorAll('[data-spot]').forEach(e => e.innerHTML = `<svg viewBox="0 0 62 62" aria-hidden="true"><rect width="62" height="62" fill="${SP[e.dataset.spot][0]}"/>${SP[e.dataset.spot][1]}</svg>`);
+  /* rail: measured from the laid-out node centres (offsets ignore the arrive transforms) */
+  DX.beat(0, () => {
+    const tl = document.querySelector('.tl'), nodes = [...tl.querySelectorAll('.node')];
+    const ys = nodes.map(n => n.parentElement.offsetTop + n.offsetTop + n.offsetHeight / 2);
+    let solid = '', dash = '';
+    for (let i = 0; i < ys.length - 1; i++) { const seg = `M10 ${ys[i]}V${ys[i + 1]}`; if (nodes[i + 1].classList.contains('ahead')) dash += seg; else solid += seg; }
+    document.getElementById('rail').innerHTML = `<svg width="20" height="${tl.offsetHeight}"><path d="${solid}" stroke="var(--rail)" stroke-width="2"/><path d="${dash}" stroke="var(--rail)" stroke-width="2" stroke-dasharray="3 5" stroke-linecap="round"/></svg>`;
+  });
   const bar = document.getElementById('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.width = '0%'; });
   DX.after(700, () => { bar.style.transition = ''; bar.style.width = ''; });

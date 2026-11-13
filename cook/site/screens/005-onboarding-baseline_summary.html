@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>005 Your baseline</title>
-<meta name="motion" content="Progress eases from 2/11 to 3/11 (900ms). Question arrives, then the hero card: 32 counts up (850ms, from 300ms) while the split bar grows left to right, cigarettes then vape (700ms each, 120ms apart), and the two legend lines fade in under their segments. Under a hairline the two cost figures ($2,555 a year | 365 hours of smoke breaks) count up side by side (850ms), then the estimates note fades up (600ms) beside a small calm Xero who bobs gently (5 s). No haptic; one soft tick when the counts land.">
+<meta name="motion" content="Progress eases from 2/11 to 3/11 (900ms). Question arrives, then the hero card: 32 counts up (850ms, from 300ms) while the split bar grows left to right, cigarettes then vape (700ms each, 120ms apart), and the two legend lines fade in under their segments. Under a hairline the two cost figures ($2,555 a year | 365 hours of smoke breaks) count up side by side (850ms), then the estimates note fades up (600ms) beside a small Xero with an open smile who bobs gently (5 s). No haptic; one soft tick when the counts land.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -66,7 +66,7 @@
 </div>
 <script>
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
-  document.getElementById('xs').innerHTML = DX.char('xero', { mood: 'calm', size: 60 });
+  document.getElementById('xs').innerHTML = DX.char('xero', { mood: 'hello', size: 60 });
   const bar = document.getElementById('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '18.2%'); void bar.offsetWidth; bar.style.transition = ''; });
   DX.after(250, () => bar.style.setProperty('--p', '27.3%'));

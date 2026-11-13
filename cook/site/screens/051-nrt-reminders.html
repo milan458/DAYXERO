@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>051 NRT reminders</title>
-<meta name="motion" content="Title, the two reminder cards (each with a peach duotone glyph tile, as on the products list, and its time row) and the preview (a card with a hairline, like a real notification) arrive (600ms, 90ms stagger); both coral toggles slide on as they land. The flow's one dosing note sits under the preview. At 1.4s Done is pressed: the button keeps its ink colour and gains a green check (done state, no colour switch, no toast: the button is the confirmation), the bell in the preview bumps once. Success haptic on the check.">
+<meta name="motion" content="Title, the two reminder cards (each with a peach duotone glyph tile, as on the products list, and its time row) and the preview (a white banner, a card in dark mode, with a hairline and a soft shadow, like an iOS notification) arrive (600ms, 90ms stagger); both coral toggles slide on as they land. The flow's one dosing note sits under the preview. At 1.4s Done is pressed: the button keeps its ink colour and gains a green check (done state, no colour switch, no toast: the button is the confirmation), the bell in the preview bumps once. Success haptic on the check.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -15,7 +15,9 @@
   .time { height: 36px; padding: 0 14px; border-radius: 12px; background: var(--card-2); display: inline-flex; align-items: center; font: 700 16px/1 var(--display); font-variant-numeric: tabular-nums; }
   .pv { margin-top: 34px; }
   .pv > .t-foot { color: var(--muted); margin-bottom: 8px; }
-  .noti { display: flex; gap: 12px; align-items: center; padding: 15px 14px; border-radius: 20px; background: var(--card-2); box-shadow: inset 0 0 0 1px var(--line); }
+  /* like an iOS banner: white (a card in dark mode), a hairline and a soft shadow */
+  .noti { display: flex; gap: 12px; align-items: center; padding: 15px 14px; border-radius: 20px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line), 0 8px 24px rgba(30,26,58,.10), 0 1px 3px rgba(30,26,58,.06); }
+  [data-theme="dark"] .noti { box-shadow: inset 0 0 0 1px var(--line), 0 10px 28px rgba(0,0,0,.35); }
   .noti .app { width: 40px; height: 40px; border-radius: 11px; background: #FFC38A; display: grid; place-items: center; overflow: hidden; flex: none; }
   .noti .top { display: flex; justify-content: space-between; }
   .noti .top .t-cap { color: var(--muted); }
@@ -62,7 +64,7 @@
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic));
   const PP = {
-    patch: '<rect x="3.5" y="3.5" width="17" height="17" rx="5" fill="var(--acc2)"/><rect x="7.5" y="7.5" width="9" height="9" rx="2.5" fill="var(--acc)"/><path d="M6 6h.01M18 6h.01M6 18h.01M18 18h.01" stroke-width="2.2"/>',
+    patch: '<g transform="rotate(-8 12 12)"><path d="M7.2 3.8h9.6a3.4 3.4 0 013.4 3.4v8.4l-4.6 4.6H7.2a3.4 3.4 0 01-3.4-3.4V7.2a3.4 3.4 0 013.4-3.4z" fill="var(--acc2)"/><path d="M20.2 15.6h-3.2a1.4 1.4 0 00-1.4 1.4v3.2z" fill="var(--acc)"/><circle cx="11.4" cy="11.4" r="3.7" fill="var(--acc)"/></g>',
     /* a calendar page with a small step-down inside */
     steps: '<rect x="3.5" y="5" width="17" height="15.5" rx="3.5" fill="var(--acc2)"/><path d="M3.5 9.8V8.5A3.5 3.5 0 017 5h10a3.5 3.5 0 013.5 3.5v1.3z" fill="var(--acc)"/><path d="M8 3v3.6M16 3v3.6"/><path d="M6.6 18v-5.4h3.7V18zM10.3 18v-3.5h3.6V18zM13.9 18v-1.8h3.5V18z" fill="var(--acc)" stroke-width="1.3"/>'
   };

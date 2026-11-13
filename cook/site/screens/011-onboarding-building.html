@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>011 Plan building</title>
-<meta name="motion" content="A short build beat. Progress eases 8/11 to 9/11 while the left-aligned title arrives and Xero (cheer, proud) settles in to its right, bobbing. Three plan pieces (Quit Day Fri, Nov 6 on a cream card, waves to watch with a paper breaking wave, your reason) settle up one by one, 420ms apart (900ms settle each), each warm paper-cut icon landing with its row; a light haptic as each row lands. At 2100ms the status line swaps to 'Built from your answers' with the screen's one green check popping in (420ms), Xero bumps (520ms spring, success haptic) and the button arrives.">
+<meta name="motion" content="A short build beat. Progress eases 8/11 to 9/11 while the left-aligned title arrives and Xero (cheer, proud) settles in to its right, bobbing. Three plan pieces (Quit Day Fri, Nov 6 on a cream card, waves to watch with a flat paper-cut breaking wave, your reason) settle up one by one, 420ms apart (900ms settle each), each warm paper-cut icon landing with its row; a light haptic as each row lands. At 2100ms the status line swaps to 'Built from your answers' with the screen's one green check popping in (420ms), Xero bumps (520ms spring, success haptic) and the button arrives.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -29,6 +29,10 @@
   .pr .t-head { font-size: 17px; }
   .pr .ico-tile { width: 48px; height: 48px; border-radius: 14px; }
   .pr .ico-tile svg { width: 34px; height: 34px; overflow: visible; }
+  /* Round 9 (dark): every plan card is one visible step above the page (card-2 with a hairline), and every icon sits on its own
+     tile one step above the card, the flag included. */
+  [data-theme="dark"] .pr, [data-theme="dark"] .pr.qd { background: var(--card-2); box-shadow: inset 0 0 0 1px rgba(255,255,255,.12); }
+  [data-theme="dark"] .pr .ico-tile { background: #2D3753; }
   .pr.reason .t-head { font: italic 500 16px/1.35 var(--body); letter-spacing: 0; text-wrap: pretty; }
 </style>
 </head><body>
@@ -64,13 +68,13 @@
   const ART = {
     flag: `<svg viewBox="0 0 32 32" aria-hidden="true">${pf('p1')}<ellipse cx="11" cy="27.6" rx="7" ry="2.2" fill="#FFC38A" filter="url(#p1)"/><rect x="9.6" y="4" width="2.8" height="24" rx="1.4" fill="#9A6A48" filter="url(#p1)"/>
       <path d="M12.4 5 L27 10 L12.4 15.6 Z" fill="#FF7155" filter="url(#p1)"/><path d="M12.4 9.6 L20 10 L12.4 13 Z" fill="#FFB09C"/><circle cx="11" cy="4" r="2.2" fill="#FFD966" filter="url(#p1)"/></svg>`,
-    /* Waves to watch: a breaking wave cut from paper in the SOS sea blues (the craving wave), with a cream foam curl. No sun. */
-    wave: `<svg viewBox="0 0 32 32" aria-hidden="true">${pf('p3')}
-      <path d="M2.5 20 C6 16.5 9 16.5 12 19 C14.5 21 17 21 19 19.5 V28.5 H2.5 Z" fill="#9CCBFF" filter="url(#p3)"/>
-      <path d="M8 28.5 C9 19 13.5 9.5 21.5 7.5 C26.5 6.3 30 9 29.6 12.6 C29.3 15.4 26.4 16.2 24.6 14.6 C23.2 13.4 23.6 11.4 25.2 11 C22 10.2 18.6 13.6 18.2 19 C17.9 23 19.4 26.4 23 28.5 Z" fill="#2A52DB" filter="url(#p3)"/>
-      <path d="M12.4 28.5 C12.8 21 15.8 14.4 20.4 11.4 C17.6 15 16.6 19.6 17.2 23.6 C17.6 25.8 18.6 27.4 20 28.5 Z" fill="#1D3A9E"/>
-      <path d="M21.2 9.4 C24.2 8.2 27.4 9.2 27.8 11.8" fill="none" stroke="#FFF8EE" stroke-width="2" stroke-linecap="round"/>
-      <path d="M3 25.4 C5.4 23.6 7.4 23.6 9.4 25" fill="none" stroke="#FFF8EE" stroke-width="1.6" stroke-linecap="round" opacity=".9"/></svg>`,
+    /* Waves to watch (round 9): a flat paper-cut breaking wave in the SOS sea blues. Three flat cut pieces (sea band, curl, inner
+       curl) and a cream foam cap; no shadows, no highlights, no gloss. */
+    wave: `<svg viewBox="0 0 32 32" aria-hidden="true">
+      <path d="M2.5 21 C6 18 9 18 12 20.4 C14.6 22.4 17 22.4 19.4 21 V28.5 H2.5 Z" fill="#9CCBFF"/>
+      <path d="M8 28.5 C9 19 13.5 9.5 21.5 7.5 C26.5 6.3 30 9 29.6 12.6 C29.3 15.4 26.4 16.2 24.6 14.6 C23.2 13.4 23.6 11.4 25.2 11 C22 10.2 18.6 13.6 18.2 19 C17.9 23 19.4 26.4 23 28.5 Z" fill="#2A52DB"/>
+      <path d="M13.2 28.5 C13.6 21.4 16.2 15.2 20.4 11.4 C17.8 15.2 16.8 19.6 17.4 23.6 C17.8 25.8 18.8 27.4 20.2 28.5 Z" fill="#1D3A9E"/>
+      <path d="M20.6 8.6 C23.8 6.9 28.1 7.6 29.3 10.6 C27.6 9.4 25 9.2 22.6 10.2 Z" fill="#FFF8EE"/></svg>`,
     heart: `<svg viewBox="0 0 32 32" aria-hidden="true">${pf('p5')}<path d="M16 28.5 C8.6 24 3.5 19.4 3.5 13 C3.5 8.8 6.7 5.6 10.6 5.6 C13.1 5.6 15 7 16 8.9 C17 7 18.9 5.6 21.4 5.6 C25.3 5.6 28.5 8.8 28.5 13 C28.5 19.4 23.4 24 16 28.5 Z" fill="#FFF8EE" filter="url(#p5)"/>
       <path d="M16 25.6 C10 21.8 6.6 18.2 6.6 13.4 C6.6 10.7 8.6 8.8 11 8.8 C13.2 8.8 14.8 10.2 16 12.6 C17.2 10.2 18.8 8.8 21 8.8 C23.4 8.8 25.4 10.7 25.4 13.4 C25.4 18.2 22 21.8 16 25.6 Z" fill="#FF7155"/>
       <path d="M10 12.8 C10.4 11.4 11.4 10.7 12.6 10.6" fill="none" stroke="#FFB09C" stroke-width="2" stroke-linecap="round"/></svg>`

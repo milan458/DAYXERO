@@ -1,34 +1,33 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>039 Milestone Day 7</title>
-<meta name="motion" content="The badge sits on the centre line of the text, and two layers of soft paper rays (rounded capsules, warm cream at about 60% in dark), centred on the badge, fan out over its top like a sunrise (fade and scale from 90%, 700ms), then sway gently (3 degrees, 8s loop, the two layers in opposite directions). At 250ms the Day 7 badge stamps in (620ms spring, success haptic on landing; the 7 clean on its face, the little sunrise vignette low along the bottom) and a shine crosses it at 900ms. Xero settles in at 500ms on the same ground to the right of the badge, clear of it, and cheers (bob loop); one soft shadow under both. Date, headline, the stat line (both numbers count up from 0 at 1.1s, 900ms) and the line arrive with a 90ms stagger; the line ends in a small info button that shows the source (smokefree.gov) in a popover. Keep going and Share my card arrive last.">
+<meta name="motion" content="The badge sits on the centre line of the text, and two layers of soft paper rays (rounded capsules; in dark, long cream rays at 85% with short apricot rays between them), centred on the badge, fan out over its top like a sunrise (fade and scale from 90%, 700ms), then sway gently (3 degrees, 8s loop, the two layers in opposite directions). At 250ms the Day 7 badge stamps in (620ms spring, success haptic on landing; the kit day badge, its little sun clear of the 7) and a shine crosses it at 900ms. Xero settles in at 500ms on the same ground to the right of the badge, 16px clear of it, and cheers (bob loop); one soft shadow under both. Date, headline, the quieter stat line (regular weight, secondary colour; both numbers count up from 0 at 1.1s, 900ms) and the line arrive with a 90ms stagger; the line ends in a small info button (44pt target) that shows the source (smokefree.gov) in a popover. Keep going and Share my card arrive last.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .stage { position: absolute; left: 0; right: 0; top: 118px; height: 300px; }
+  .stage { position: absolute; left: 0; right: 0; top: 146px; height: 320px; }
   .rays-wrap { position: absolute; left: 195px; top: 150px; width: 0; height: 0;
     --ray-back: #FFE6AE; --ray-front: #FF9D5C; --ray-shadow: rgba(160,70,20,.22); }
-  /* dark: warm cream rays at about 60%, quiet on the night ground (not saturated gold) */
-  [data-theme="dark"] .rays-wrap { --ray-back: rgba(255,240,216,.55); --ray-front: rgba(255,236,208,.68); --ray-shadow: rgba(0,0,0,.4); }
-  .rays-wrap svg { position: absolute; left: -160px; top: -160px; width: 320px; height: 320px; overflow: visible; }
+  /* dark: cream rays at 85% with an apricot inner layer (never taupe) */
+  [data-theme="dark"] .rays-wrap { --ray-back: rgba(255,248,238,.85); --ray-front: #FFB27A; --ray-shadow: rgba(0,0,0,.4); }
+  .rays-wrap svg { position: absolute; left: -168px; top: -168px; width: 336px; height: 336px; overflow: visible; }
   .rays-wrap .lay { filter: drop-shadow(0 2px 2px var(--ray-shadow)); }
   .play .rays-wrap { animation: rays-in 700ms var(--settle) 100ms both; }
   @keyframes rays-in { from { opacity: 0; transform: scale(.9); } to { opacity: 1; transform: none; } }
-  .medal { position: absolute; left: 115px; top: 70px; z-index: 1; }
-  .ground { position: absolute; left: 112px; top: 214px; width: 258px; height: 22px; border-radius: 50%; background: radial-gradient(closest-side, rgba(30,26,58,.2), rgba(30,26,58,0)); }
+  .medal { position: absolute; left: 111px; top: 66px; z-index: 1; }
+  .ground { position: absolute; left: 108px; top: 218px; width: 266px; height: 22px; border-radius: 50%; background: radial-gradient(closest-side, rgba(30,26,58,.2), rgba(30,26,58,0)); }
   [data-theme="dark"] .ground { background: radial-gradient(closest-side, rgba(0,0,0,.55), rgba(0,0,0,0)); }
   .medal .shine { display: block; border-radius: 999px; }
-  .cheer { position: absolute; left: 274px; top: 127px; z-index: 2; }
+  .cheer { position: absolute; left: 277px; top: 131px; z-index: 2; } /* his raised arm starts about 10px into the box: 16px clear of the ring */
   .sway { transform-origin: 0 0; }
   .play .sway.a { animation: sway 8s ease-in-out infinite alternate; }
   .play .sway.b { animation: sway 8s ease-in-out infinite alternate-reverse; }
   @keyframes sway { from { transform: rotate(-3deg); } to { transform: rotate(3deg); } }
-  .copy { position: absolute; left: 0; right: 0; top: 408px; text-align: center; display: grid; gap: 10px; justify-items: center; padding: 0 var(--gutter); }
+  .copy { position: absolute; left: 0; right: 0; top: 452px; text-align: center; display: grid; gap: 10px; justify-items: center; padding: 0 var(--gutter); }
   .copy .t-body { max-width: 300px; }
-  .copy .stat-line { font: 700 17px/1.3 var(--body); color: var(--fg); }
-  .copy .stat-line .num { font-size: 19px; letter-spacing: -.3px; }
+  .copy .stat-line { font: 400 17px/1.35 var(--body); color: var(--muted); }
+  .copy .stat-line .num { font: inherit; letter-spacing: 0; font-variant-numeric: tabular-nums; }
   /* the source sits behind a small info button at the end of the line */
-  .copy .info { display: inline-grid; place-items: center; width: 22px; height: 22px; margin: -4px 0 0 6px; vertical-align: middle; color: var(--muted); position: relative; }
-  .copy .info::before { content: ""; position: absolute; inset: -11px; }
+  .copy .info { display: inline-grid; place-items: center; width: 44px; height: 44px; margin: -14px -11px -11px -5px; vertical-align: middle; color: var(--muted); position: relative; }
   .copy .info svg { width: 20px; height: 20px; display: block; }
 </style>
 </head><body>
@@ -61,12 +60,8 @@
     return `<path d="M${(r0 * x).toFixed(1)} ${(r0 * y).toFixed(1)} L${(r1 * x).toFixed(1)} ${(r1 * y).toFixed(1)}" stroke="${col}" stroke-width="${w}" stroke-linecap="round"/>`; };
   document.getElementById('raysB').innerHTML = Array.from({ length: 7 }, (_, i) => ray(-72 + i * 24, 92, 138, 14, 'var(--ray-back)')).join('');
   document.getElementById('raysF').innerHTML = Array.from({ length: 6 }, (_, i) => ray(-60 + i * 24, 94, 116, 10, 'var(--ray-front)')).join('');
-  /* the kit day badge: the 7 stands alone on a clean face; its little sunrise vignette (hills and sun) is lowered to a band
-     along the bottom of the face, well below the numeral */
-  document.getElementById('medal').innerHTML = DX.badge({ kind: 'day', n: 7, size: 160, bare: true })
-    .replace(/<circle cx="[\d.]+" cy="[\d.]+" r="[\d.]+" fill="#FFD966"\/>/, '<circle cx="66" cy="81" r="6.5" fill="#FFD966"/>')
-    .replace('M0 74 C24 62 48 66 70 72 S96 70 100 68 V100 H0z', 'M0 83 C24 77 48 79 70 82.5 S96 81 100 80 V100 H0z')
-    .replace('M0 84 C30 76 60 90 100 80 V100 H0z', 'M0 90 C30 86 60 94 100 88.5 V100 H0z');
+  /* the kit day badge as drawn by the kit (its sun sits clear of the 7) */
+  document.getElementById('medal').innerHTML = DX.badge({ kind: 'day', n: 7, size: 168, bare: true });
   document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'cheer', size: 100 });
   document.getElementById('sh').innerHTML = DX.icon('share', { size: 20 });
 </script>

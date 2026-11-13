@@ -1,20 +1,24 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>050 NRT plan</title>
-<meta name="motion" content="Title arrives, then the step-down chart: the solid apricot 21, 14 and 7 mg bars (the same three tints in light and dark; widths in the 6:2:2 ratio of their weeks; the plan starts on Quit Day, Fri, Nov 6) grow up from the baseline one after another (900ms settle, 150ms apart), their labels sit just above each bar, and the week ranges arrive under them. Three compact date rows (swatch, mg, dates, chevron: tap to edit) then settle in like a plan being laid out (120ms stagger), then the 'At night' section (bold label, a one-line helper about vivid dreams, two chips) arrives. No completion here; the plan is confirmed on the reminders screen.">
+<meta name="motion" content="Title arrives, then the step-down chart: the chart title with 'From Fri, Nov 6' under it, then the solid apricot 21, 14 and 7 mg bars (the same three tints in light and dark, with a deeper apricot edge in light so the palest holds 3:1 on the card; widths in the 6:2:2 ratio of their weeks; the plan starts on Quit Day, Fri, Nov 6) grow up from the baseline one after another (900ms settle, 150ms apart), their labels sit just above each bar, and the week ranges arrive under them. Three compact date rows (swatch, mg, dates, chevron: tap to edit) then settle in like a plan being laid out (120ms stagger), then the 'At night' section (bold label, a one-line helper about vivid dreams, two chips) arrives. No completion here; the plan is confirmed on the reminders screen.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   .wrap { padding: 66px var(--gutter) 0; }
   .wrap .lead { margin-top: 8px; color: var(--muted); }
   .chart { margin-top: 16px; padding: 18px 18px 14px; }
-  .chart .hd { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .chart .hd { display: grid; gap: 2px; }
   .chart .hd .t-foot { color: var(--muted); }
   .chart { --apr: #FF9A5C; }
-  .bars { margin-top: 32px; height: 120px; display: flex; align-items: flex-end; gap: 8px; border-bottom: 1.5px solid var(--line); }
+  .bars { margin-top: 28px; height: 102px; display: flex; align-items: flex-end; gap: 8px; border-bottom: 1.5px solid var(--line); }
   /* one set of solid apricot tints, the same strength in light and dark */
   .chart, .steps-list { --t1: #FFAD70; --t2: #FFC190; --t3: #FFD3AE; }
   .bar { position: relative; height: var(--h); border-radius: 12px 12px 4px 4px; background: var(--t1); transform-origin: bottom; display: flex; justify-content: center; }
   .bar:nth-child(2) { background: var(--t2); } .bar:nth-child(3) { background: var(--t3); }
+  /* light: a deeper apricot edge (3.5:1 on the white card) so even the palest 7 mg bar reads; dark needs none */
+  .chart, .steps-list { --edge: #D9692A; }
+  .bar, .sw { box-shadow: inset 0 0 0 1.5px var(--edge); }
+  [data-theme="dark"] .bar, [data-theme="dark"] .sw { box-shadow: none; }
   .bar span { position: absolute; bottom: calc(100% + 6px); color: var(--fg); font: 700 15px/1 var(--display); letter-spacing: -.3px; white-space: nowrap; }
   .play .bar { animation: grow 900ms var(--settle) both; animation-delay: calc(var(--i) * 150ms + 250ms); }
   @keyframes grow { from { transform: scaleY(0); } to { transform: none; } }

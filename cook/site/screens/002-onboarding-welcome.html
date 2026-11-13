@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>002 Welcome</title>
-<meta name="motion" content="Continues the launch scene: the two paper hills settle up (0, 120ms; 900ms settle; the crest under Xero fades into the page, no seam) and the sun climbs 60px (1200ms ease-out; dark mode: a warm amber core in a soft amber glow). Xero settles onto the hill crest (900ms, from 300ms), then waves: his right arm swings 16 degrees twice (2 x 800ms, from 1200ms) with two small motion marks. At 1100ms the cream speech bubble (tail toward his hand) rises in (600ms). Headline, body and dock arrive in reading order from 500ms (600ms, 90ms stagger). Light haptic on Get started.">
+<meta name="motion" content="Continues the launch scene: the two paper hills settle up (0, 120ms; 900ms settle; the crest under Xero fades into the page, no seam) and the sun climbs 60px (1200ms ease-out; dark mode: a warm amber core in a soft amber glow). Xero settles onto the hill crest (900ms, from 300ms), then waves: his right arm swings 16 degrees twice (2 x 800ms, from 1200ms) with two small motion marks. At 1100ms the cream speech bubble (tail toward his mouth) rises in (600ms). Headline, body and dock arrive in reading order from 500ms (600ms, 90ms stagger). Light haptic on Get started.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -27,14 +27,15 @@
   @keyframes hillup { from { transform: translateY(80px); } to { transform: none; } }
   /* Xero stands on the crest (feet on the ridge line at y 360), waving. */
   .xw { position: absolute; z-index: 4; left: 82px; top: 216px; width: 152px; height: 152px; --d: 300ms; }
-  /* Speech bubble: cream in both modes, tail pointing at his waving hand. */
+  /* Speech bubble: cream in both modes, tail on its left edge pointing down at his mouth (round 9). */
   .hi { position: absolute; z-index: 6; left: 238px; top: 196px; --d: 1100ms; }
-  .hi .bubble { position: relative; max-width: none; background: #FFF8EE; color: #1E1A3A; font: 700 15px/1.2 var(--display); padding: 11px 12px; border-radius: 18px 18px 18px 6px; white-space: nowrap; box-shadow: 0 6px 18px rgba(90,40,20,.12); }
-  .hi .bubble::before { content: ""; position: absolute; left: 4px; bottom: -9px; width: 16px; height: 12px; background: #FFF8EE;
-    clip-path: path('M2 0 L14 0 C10 4 5 8 0 12 C1 8 2 4 2 0 Z'); }
+  .hi .bubble { position: relative; max-width: none; background: #FFF8EE; color: #1E1A3A; font: 700 15px/1.2 var(--display); padding: 11px 12px; border-radius: 18px; white-space: nowrap; box-shadow: 0 6px 18px rgba(90,40,20,.12); }
+  .hi .bubble::before { content: ""; position: absolute; left: -11px; bottom: 2px; width: 16px; height: 16px; background: #FFF8EE;
+    clip-path: path('M16 0 L16 10 C11 12 5 14 0 16 C5 11 9 6 12 0 Z'); }
   [data-theme="dark"] .hi .bubble { box-shadow: 0 6px 18px rgba(0,0,0,.35); }
   .text { position: absolute; z-index: 1; left: 0; right: 0; top: 462px; padding: 0 var(--gutter); display: grid; gap: 12px; }
-  .text .mark { white-space: nowrap; }
+  /* Round 9: the underline sits 3px lower so it clears the descender of the y in "day". */
+  .text .mark { white-space: nowrap; padding-bottom: 7px; }
   /* One underline colour in both modes: coral. */
   [data-theme="dark"] .text .mark { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 16' preserveAspectRatio='none'%3E%3Cpath d='M3 10 C40 4 90 5 122 7 C152 9 178 11 197 4' fill='none' stroke='%23FF7A55' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E"); }
   /* Dark: feather the foot of the night hill into the page (an eased fade, no seam line). */
@@ -57,9 +58,10 @@
         <defs><radialGradient id="sg" cx=".4" cy=".34" r=".72"><stop offset="0" stop-color="var(--sun-a)"/><stop offset="1" stop-color="var(--sun-b)"/></radialGradient>
           <radialGradient id="glowG"><stop offset="0" stop-color="#FFB862" stop-opacity=".7"/><stop offset=".42" stop-color="#F7A04E" stop-opacity=".32"/><stop offset=".72" stop-color="#E88A45" stop-opacity=".09"/><stop offset="1" stop-color="#E07F40" stop-opacity="0"/></radialGradient>
           <radialGradient id="coreG" cx=".5" cy=".45" r=".55"><stop offset="0" stop-color="#FFE7A8"/><stop offset=".6" stop-color="#FFC266"/><stop offset="1" stop-color="#F49A45"/></radialGradient></defs>
-        <circle class="glow" cx="112" cy="232" r="136" fill="url(#glowG)"/>
-        <circle cx="112" cy="232" r="104" fill="var(--ring-2)"/><circle cx="112" cy="232" r="80" fill="var(--ring-1)"/><circle cx="112" cy="232" r="54" fill="url(#sg)"/>
-        <circle class="glow" cx="112" cy="232" r="54" fill="url(#coreG)"/>
+        <!-- Round 9: the sun sits up and left so Xero's head stays at least 12px clear of the disc. -->
+        <circle class="glow" cx="90" cy="200" r="124" fill="url(#glowG)"/>
+        <circle cx="90" cy="200" r="94" fill="var(--ring-2)"/><circle cx="90" cy="200" r="72" fill="var(--ring-1)"/><circle cx="90" cy="200" r="48" fill="url(#sg)"/>
+        <circle class="glow" cx="90" cy="200" r="48" fill="url(#coreG)"/>
       </svg>
     </div>
     <div class="layer back">

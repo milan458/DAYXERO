@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>048 NRT products</title>
-<meta name="motion" content="Title and the subtitle (with its count) arrive, then the five product rows arrive top to bottom (600ms, 90ms stagger), then Xero settles in beside a short how-to for the selected product (900ms, then a slow bob); the tip follows the selection (Patch: 'Put a new patch on a clean, hairless spot each morning.'), cross-fading 250ms when the selection changes. At 1.2s the Patch row lands selected: the kit's tint, 2px outline and tick settle in over 520ms with a light selection haptic, and the count in the subtitle rolls from 0 to 1. Tapping a third row gently shakes the count instead of selecting.">
+<meta name="motion" content="Title and the subtitle (with its count) arrive, then the five product rows arrive top to bottom (600ms, 90ms stagger), then a tinted tip card arrives and Xero settles into it beside a short how-to for the selected product (900ms, then a slow bob); the tip follows the selection (Patch: 'Put a new patch on a clean, hairless spot each morning.'), cross-fading 250ms when the selection changes. At 1.2s the Patch row lands selected: the kit's tint, 2px outline and tick settle in over 520ms with a light selection haptic, and the count in the subtitle rolls from 0 to 1. Tapping a third row gently shakes the count instead of selecting.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -18,8 +18,12 @@
   /* bespoke duotone product glyphs: apricot fill under an ink line */
   .gl { --acc: #FFB27F; --acc2: #FFDCC4; }
   [data-theme="dark"] .gl { --acc: #F39A62; --acc2: #FFD3B4; }
-  .tip { margin-top: 18px; display: flex; gap: 10px; align-items: center; padding: 0 4px 0 0; }
-  .tip .xr { width: 64px; height: 64px; flex: none; margin: -6px 0 -6px -8px; }
+  /* light: the glyph tile in the selected row turns white so it holds on the selection tint */
+  .opt.on .ico-tile { background: #FFFFFF; transition: background .3s var(--ease); }
+  [data-theme="dark"] .opt.on .ico-tile { background: var(--card-2); }
+  /* Xero's how-to sits in its own tinted tip card */
+  .tip { margin-top: 16px; display: flex; gap: 10px; align-items: center; padding: 10px 16px 10px 8px; border-radius: 18px; }
+  .tip .xr { width: 64px; height: 64px; flex: none; }
   .tip .t-foot { color: var(--muted); }
   .tip .t-foot b { color: var(--fg); font-weight: 700; }
 </style>
@@ -41,7 +45,7 @@
         <button class="opt" data-a style="--i:5"><span class="ico-tile gl" data-p="spray"></span><span class="grow"><span class="nm">Mouth spray</span><span class="t-foot">The fastest for a sudden craving</span></span><span class="radio"></span></button>
         <button class="opt" data-a style="--i:6"><span class="ico-tile gl" data-p="inhaler"></span><span class="grow"><span class="nm">Inhaler</span><span class="t-foot">Puff on a cartridge</span></span><span class="radio"></span></button>
       </div>
-      <div class="tip" data-a style="--i:7">
+      <div class="card flat tip" data-a style="--i:7">
         <div class="xr" data-settle style="--d:500ms"><div class="bob" id="xero"></div></div>
         <p class="t-foot" id="tip"><b>Patch:</b> put a new patch on a clean, hairless spot each morning.</p>
       </div>
@@ -54,11 +58,11 @@
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic));
   const PP = {
-    patch: '<rect x="3.5" y="3.5" width="17" height="17" rx="5" fill="var(--acc2)"/><rect x="7.5" y="7.5" width="9" height="9" rx="2.5" fill="var(--acc)"/><path d="M6 6h.01M18 6h.01M6 18h.01M18 18h.01" stroke-width="2.2"/>',
+    patch: '<g transform="rotate(-8 12 12)"><path d="M7.2 3.8h9.6a3.4 3.4 0 013.4 3.4v8.4l-4.6 4.6H7.2a3.4 3.4 0 01-3.4-3.4V7.2a3.4 3.4 0 013.4-3.4z" fill="var(--acc2)"/><path d="M20.2 15.6h-3.2a1.4 1.4 0 00-1.4 1.4v3.2z" fill="var(--acc)"/><circle cx="11.4" cy="11.4" r="3.7" fill="var(--acc)"/></g>',
     gum: '<rect x="3" y="5" width="13" height="8" rx="4" fill="var(--acc2)" transform="rotate(-12 9.5 9)"/><rect x="8" y="11" width="13" height="8" rx="4" fill="var(--acc)" transform="rotate(-12 14.5 15)"/><path d="M12 13.6l5.4-1.1" stroke-opacity=".5"/>',
     lozenge: '<ellipse cx="12" cy="13" rx="8.5" ry="6.5" fill="var(--acc2)"/><ellipse cx="12" cy="11.5" rx="8.5" ry="6.5" fill="var(--acc)"/><path d="M7.5 11.5h9" stroke-opacity=".5"/>',
     spray: '<rect x="7" y="9.5" width="10" height="11.5" rx="3" fill="var(--acc)"/><path d="M9.5 9.5V7h5v2.5" fill="var(--acc2)"/><path d="M11 7V4.5h4.5" /><path d="M18.5 3.5h.01M20.5 5.5h.01M18.5 6.5h.01" stroke-width="2"/><path d="M7 14.5h10" stroke-opacity=".5"/>',
-    inhaler: '<g transform="rotate(-30 12 13)"><path d="M14.8 9.4h4l2.6 1.2v4.8l-2.6 1.2h-4z" fill="var(--acc2)"/><rect x="1.4" y="8.4" width="13.6" height="9.2" rx="2.4" fill="var(--acc)"/><rect x="4.2" y="11.1" width="7.6" height="3.8" rx="1.9" fill="var(--acc2)" stroke-width="1.4"/></g><path d="M21 3.4h.01M22.6 6.2h.01M18.8 2.2h.01" stroke-width="2"/>'
+    inhaler: '<g transform="rotate(35 12 12)"><path d="M8.6 9.4L3.6 10.3a1.7 1.7 0 000 3.4l5 .9z" fill="var(--acc2)"/><rect x="8.6" y="7.6" width="13" height="8.8" rx="4.4" fill="var(--acc)"/><path d="M13.4 7.6v8.8" stroke-opacity=".55"/></g>'
   };
   document.querySelectorAll('[data-p]').forEach(e => e.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${PP[e.dataset.p]}</svg>`);
   document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'hello', size: 64 });
