@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>056 Calm tools</title>
-<meta name="motion" content="The title arrives, then the four tool tiles on the 90ms stagger (left to right, top to bottom); each cast member settles into its own little scene 120ms after its tile (Jelli in the box window, Jelli seated on the dawn hill over her contact shadow, Jelli seated on the crest of the long low swell, Glim on the night hill). Each tile has its own palette (ocean blue, apricot dawn, dusk sea with the sun setting behind the swell, midnight); dark mode keeps them (ocean blue, warm pre-dawn, night dusk, midnight). The quiet This week row, in its own soft container, fades in last and its 24 counts up from 0 (850ms). Ambient: in the box tile the dot walks the track at the breathing pace (16s a round) and the lit side steps along with it at each corner; the cast keep their own idle loops (Jelli breathes in the window, Jelli floats on the hill and on the swell, Glim dozes with drifting zzz). Light tap haptic on tile press. Craving SOS stays one tap away in the tab bar.">
+<meta name="motion" content="The title arrives, then the four tool tiles on the 90ms stagger (left to right, top to bottom); each cast member settles into its own little scene 120ms after its tile (Jelli in the box window, Jelli seated on the dawn hill over her contact shadow, Jelli seated on the crest of the long low swell, Glim on the night hill). Each tile has its own palette (ocean blue, apricot dawn, dusk sea with a low sun beside the swell, midnight); dark mode keeps them (ocean blue, warm pre-dawn, night dusk, midnight). The quiet This week row, in its own soft container, fades in last and its 24 counts up from 0 (850ms). Ambient: in the box tile the dot walks the track at the breathing pace (16s a round) and the lit side steps along with it at each corner; the cast keep their own idle loops (Jelli breathes in the window, Jelli floats on the hill and on the swell, Glim dozes with drifting zzz). Light tap haptic on tile press. Craving SOS stays one tap away in the tab bar.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -97,17 +97,17 @@ $('#a-ground').innerHTML = svg(dark
      <ellipse cx="58" cy="92" rx="23" ry="3.6" fill="#B8532C" opacity=".32"/>`, 32)
   + who(DX.char('jelli', { mood: 'calm', size: 84 }).replace('fill="#000000" opacity="0.08"', 'fill="#000000" opacity="0"'), 16, dark ? 49 : 47, 520);
 
-/* Notice the urge: a dusk sea (dusty blue sky to a warm horizon, the sun setting behind a long low swell), so it is not the Box blue; Jelli sits on the crest. */
+/* Notice the urge: a dusk sea (sea-blue sky warming to the horizon, a low sun beside a long low swell in deep dusk blue), so it is not the Box blue; Jelli sits on the crest. */
 const SW = 'M0 110 C36 110 50 76 84 76 S 132 110 167 110';
 $('#a-urge').innerHTML = svg(dark
-  ? `<defs>${grad('sd', '#0F1A38', '#2B3A64', '#6E5560')}</defs>${bg(32, 'url(#sd)')}${stars([[20, 18], [44, 40], [150, 16, 1.4], [128, 44]], .6)}
-     <circle cx="140" cy="98" r="10" fill="#FFC27A"/>
-     <path d="${SW} V132 H0Z" fill="#2B4A86"/><path d="${SW}" fill="none" stroke="#FFF8EE" stroke-width="3" stroke-linecap="round"/>
-     <path d="M0 120 C40 115 90 118 167 115 V132 H0Z" fill="#1C3566"/>`
-  : `<defs>${grad('sl', '#7F93C2', '#D9AFA4', '#FBCBA4')}</defs>${bg(32, 'url(#sl)')}
-     <circle cx="140" cy="98" r="10" fill="#FFE2A2"/>
-     <path d="${SW} V132 H0Z" fill="#3E639E"/><path d="${SW}" fill="none" stroke="#FFF8EE" stroke-width="3" stroke-linecap="round"/>
-     <path d="M0 120 C40 115 90 118 167 115 V132 H0Z" fill="#2E4E88"/>`, 32)
+  ? `<defs>${grad('sd', '#0C1C30', '#1F3D55', '#6A5548')}<radialGradient id="sg"><stop offset="0" stop-color="#FFC27A" stop-opacity=".45"/><stop offset="1" stop-color="#FFC27A" stop-opacity="0"/></radialGradient></defs>${bg(32, 'url(#sd)')}${stars([[20, 18], [44, 40], [150, 16, 1.4], [128, 44]], .6)}
+     <circle cx="138" cy="80" r="22" fill="url(#sg)"/><circle cx="138" cy="80" r="8" fill="#FFC27A"/>
+     <path d="${SW} V132 H0Z" fill="#244A72"/><path d="${SW}" fill="none" stroke="#FFF8EE" stroke-width="3" stroke-linecap="round"/>
+     <path d="M0 120 C40 115 90 118 167 115 V132 H0Z" fill="#183656"/>`
+  : `<defs>${grad('sl', '#5F95AE', '#CDBBA6', '#F8C9A2')}<radialGradient id="sg"><stop offset="0" stop-color="#FFF1C9" stop-opacity=".8"/><stop offset="1" stop-color="#FFF1C9" stop-opacity="0"/></radialGradient></defs>${bg(32, 'url(#sl)')}
+     <circle cx="138" cy="80" r="22" fill="url(#sg)"/><circle cx="138" cy="80" r="8" fill="#FFD97A"/>
+     <path d="${SW} V132 H0Z" fill="#2F5E8E"/><path d="${SW}" fill="none" stroke="#FFF8EE" stroke-width="3" stroke-linecap="round"/>
+     <path d="M0 120 C40 115 90 118 167 115 V132 H0Z" fill="#244C7A"/>`, 32)
   + who(DX.char('jelli', { mood: 'calm', size: 76 }), 46, 37, 620);
 
 /* Wind down: night blue with the moon, Glim settling on the hill. */

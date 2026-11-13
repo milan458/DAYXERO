@@ -172,3 +172,4 @@ session 023-032, lesson-log 033-042, slips-checkin 043-055.
 - Session round 10 (on r8): Opus 8.6 / Sonnet 8.8 (r8 8.7 / 8.7): mixed, kept (carries the 027/030 content fix). 032 at 9.1, 028 and 031 at 9.0 (Sonnet).
 - Today-SOS-Program round 10 (022 only): Opus 8.5 / Sonnet 8.7 (r8 8.8 / 8.8): lower on both, 022 reverted to round 8 (r10 file kept in scratchpad).
 - Lesson-log round 9: Opus 8.5 / Sonnet 8.6 (r8 8.7 / 8.8): lower on both, reverted to round 8 (e8f2d70).
+- Onboarding round 10 (horizon strip, on r8): Opus 8.3 / Sonnet 8.7 (r8 8.6 / 8.7): not lower on both, kept. Opus wants varied, larger cast poses on the strip and warmer dark selection.

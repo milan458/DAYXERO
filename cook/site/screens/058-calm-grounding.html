@@ -6,13 +6,13 @@
 <style>
 .nav .steps { flex: 1; margin-right: 56px; }
 .lead { position: absolute; left: var(--gutter); right: var(--gutter); top: 118px; }
-.jel { position: absolute; left: 50%; top: 182px; margin-left: -88px; width: 176px; height: 176px; z-index: 2; }
-/* Jelli's tentacle tips meet the card's top edge (y 345); her contact shadow lies on the card just under the edge, clear of the border line. */
-.cur { position: absolute; left: var(--gutter); right: var(--gutter); top: 345px; padding: 46px 22px 28px; display: grid; gap: 12px; text-align: center; justify-items: center; }
+.jel { position: absolute; left: 50%; top: 175px; margin-left: -88px; width: 176px; height: 176px; z-index: 2; }
+/* Jelli's tentacle tips meet the card's top edge (y 338); her contact shadow lies on the card just under the edge, clear of the border line. */
+.cur { position: absolute; left: var(--gutter); right: var(--gutter); top: 338px; padding: 46px 22px 28px; display: grid; gap: 12px; text-align: center; justify-items: center; }
 .seat { position: absolute; left: 50%; top: 1px; width: 120px; height: 14px; margin-left: -60px; background: radial-gradient(50% 100% at 50% 0, var(--shd), transparent); pointer-events: none; transform-origin: 50% 0; }
 .screen { --shd: rgba(30,26,58,.2); }
 [data-theme="dark"] .screen { --shd: rgba(2,4,12,.95); }
-[data-theme="dark"] .seat { height: 16px; }
+[data-theme="dark"] .seat { height: 18px; }
 .play .seat { animation: seat 5s ease-in-out infinite; }
 @keyframes seat { 50% { transform: scaleX(.82); opacity: .55; } }
 .still .seat { animation: none !important; }
