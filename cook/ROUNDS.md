@@ -142,3 +142,8 @@ session 023-032, lesson-log 033-042, slips-checkin 043-055.
 - User asked to stop after this round: no new fixers; remaining round 8 fixers finish, get scored, keep-best applied.
 - Lesson-log round 7: Opus 8.4 / Sonnet 8.8 (r6 8.6 / 8.7): mixed, kept. Fixed the 037/038 timing contradiction by hand
   (038 now "Starts around Day 14 / You are on Day 7", matching 037's "Ahead · in about a week").
+- User (mid-round 8): "dont stop after round 8, stop after reaching 9.2". The loop continues until every section reaches 9.2.
+- Today-SOS-Program round 8: Opus 8.8 / Sonnet 8.8 (r7 8.6 / 8.6): kept. Slips-checkin round 8: Sonnet 8.7 (r7 8.5); Opus
+  pending. Session round 8 done, critics next. Pledge (053) stays on Day 7 (it is the daily after-quit pledge).
+- Kit: dark dawn sun is a soft radial glow (critics saw flat grey discs); progress badges in the next state use a solid faint
+  track (the dashed half-ring read as a spinner); tab fade 150px with a short 30-40% ramp so peeking rows keep full opacity.
