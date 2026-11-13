@@ -61,7 +61,7 @@ document.getElementById('stamps').innerHTML = [1,2,3].map(n => DX.badge({kind:'p
 const cards = [
   ['apricot','headphones','Listen','6 min'], ['sky','hand','Try','5 min'], ['apricot','eye','Reveal','6 min'],
   ['sky','myth','Myth or fact','5 min'], ['mint','hand','Try','6 min']];
-const XS = [-120, -34, 18, 70, 122];
+const XS = [-124, -26, 22, 72, 122];
 document.getElementById('fan').innerHTML = cards.map((c, k) => `<div class="pc f-${c[0]} ${k === 0 ? 'up' : ''}" style="--x:${XS[k]}px;--r:${k === 0 ? -3 : (k - 2.5) * 2}deg;--y:${k === 0 ? -22 : [0,8,4,4,8][k]}px;--k:${k};z-index:${k === 0 ? 9 : k + 1}">
   <span class="ic">${ic(c[1])}</span>${k === 0 ? `<b>${c[2]}</b><span class="m">${c[3]}</span>` : `<span class="ty">${c[2]}</span>`}${k === 0 || k === 4 ? `<span class="big">${ic(c[1])}</span>` : ''}</div>`).join('');
 </script>
