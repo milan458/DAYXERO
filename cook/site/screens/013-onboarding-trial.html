@@ -1,46 +1,35 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>013 Two nudges</title>
-<meta name="motion" content="Progress fills to 11/11 (900ms) and the sun lands at the end. Title and helper arrive, then the day line draws top to bottom (700ms) and the two notification previews settle in 380ms apart, each with a soft notification haptic: Xero at 8:00 AM, Glim at 9:00 PM. The moon node bumps once when the second lands, then the quiet-hours card rises in (600ms): its hatched 10 PM to 8 AM band and the two pins (sun 8 AM, moon 9 PM) show the whole day at a glance.">
+<meta name="motion" content="Progress fills to 11/11 (900ms) and the sun lands at the end of the bar. Title and helper arrive, then the two nudges settle in 380ms apart, each with a soft notification haptic: Xero's 8:00 AM card, then Glim's 9:00 PM card, whose small night scene fades up first (500ms) with Glim settling onto the hill (900ms) and waving hello while the stars twinkle. The quiet-hours line arrives last (600ms).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   /* Onboarding header: back button and progress only (no avatar); the bar ends at the gutter so the sun knob never collides. */
   .nav { padding-right: 26px; }
-  .day { position: relative; margin: 36px var(--gutter) 0; display: grid; gap: 26px; }
-  .day svg.line { position: absolute; left: 17px; top: 30px; overflow: visible; }
-  .it { display: grid; grid-template-columns: 36px 1fr; gap: 14px; align-items: start; }
-  .node { position: relative; margin-top: 12px; width: 36px; height: 36px; border-radius: 99px; display: grid; place-items: center; background: var(--card); color: var(--fg); }
-  .node svg { width: 18px; height: 18px; }
-  .ntf { position: relative; background: var(--card); border-radius: 22px; padding: 12px 14px 14px; display: grid; grid-template-columns: 40px 1fr; gap: 12px; box-shadow: 0 10px 24px rgba(30,26,58,.10); }
+  .day { margin: 26px var(--gutter) 0; display: grid; gap: 12px; }
+  .ntf { position: relative; background: var(--card); border-radius: 22px; padding: 14px 16px 16px; display: grid; grid-template-columns: 40px 1fr; gap: 12px; box-shadow: 0 10px 24px rgba(30,26,58,.10); }
   [data-theme="dark"] .ntf { box-shadow: inset 0 0 0 1px var(--line); }
   .ntf .ic { width: 40px; height: 40px; border-radius: 11px; overflow: hidden; display: grid; place-items: center; }
   .ntf .ic.x { background: #FFC38A; }
-  .ntf .ic.g { background: #0F1B33; }
+  .ntf .ic.g { background: #1E2D4C; }
   .ntf .top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 3px; }
   .ntf .top .t-cap { color: var(--muted); font-size: 13px; }
-  .ntf { padding: 14px 16px 16px; }
-  .ntf .t-foot { line-height: 1.4; }
-  .quiet .t-cap { font-size: 14px !important; font-weight: 500 !important; line-height: 1.4; }
-  .ntf .t-foot { font-size: 15px; font-weight: 500; }
-  .quiet { padding: 14px 4px 0; }
-  .quiet .t-cap { color: var(--muted); display: block; margin-top: 2px; }
-  /* The day at a glance: two pins and the quiet band (10 PM to 8 AM, an hour after Glim's 9 PM check-in). */
-  .clock { margin: 28px var(--gutter) 0; padding: 16px 18px 14px; }
-  .clock .ft { color: var(--muted); margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); text-wrap: balance; }
-  .clock .hd { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
-  .clock .hd .t-cap { color: var(--muted); }
-  .bar24 { position: relative; height: 12px; border-radius: 99px; background: color-mix(in srgb, var(--fg) 10%, transparent); }
-  .bar24 .qz { position: absolute; top: 0; bottom: 0; border-radius: 99px; background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--fg) 26%, transparent) 0 3px, transparent 3px 7px); }
-  .bar24 .pin { position: absolute; top: 50%; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 99px; background: var(--card); box-shadow: 0 0 0 3px var(--fg); display: grid; place-items: center; }
-  .bar24 .pin.am { background: var(--sun); }
-  .bar24 .pin.pm { background: #16244A; }
-  .bar24 .pin svg { width: 13px; height: 13px; }
-  .bar24 .pin.pm svg { color: #F6E7C1; }
-  .bar24 .pin.am svg { color: #1E1A3A; }
-  [data-theme="dark"] .bar24 .pin { box-shadow: 0 0 0 3px var(--g), 0 0 0 4px var(--line); }
-  .ticks { position: relative; height: 16px; margin-top: 9px; }
-  .ticks span { position: absolute; transform: translateX(-50%); font: 600 13px/1 var(--body); color: var(--muted); white-space: nowrap; }
-  .ticks span.l { transform: none; } .ticks span.r { transform: translateX(-100%); }
+  .ntf .t-foot { font-size: 15px; font-weight: 500; line-height: 1.4; }
+  /* Glim's nudge comes with its own small night: a strip of the midnight sky with Glim on the hill. Night palette in both modes. */
+  .night { border-radius: 22px; overflow: hidden; background: #17243F; color: #F6EFE2; box-shadow: 0 10px 24px rgba(15,27,51,.22); }
+  [data-theme="dark"] .night { background: #121D35; box-shadow: inset 0 0 0 1px rgba(255,255,255,.12); }
+  .night .sky { position: relative; height: 116px; }
+  .night .sky > svg { display: block; }
+  .night .gl { position: absolute; left: 22px; top: 30px; }
+  .night .meet { position: absolute; left: 104px; top: 22px; }
+  .night .meet .t-cap { color: #AEB8D3; display: block; margin-top: 2px; }
+  .night .ntf { background: transparent; box-shadow: none; border-radius: 0; padding-top: 6px; }
+  .night .ntf .top .t-cap { color: #AEB8D3; }
+  /* Quiet hours: one line, moon to sun. */
+  .quiet { margin: 18px var(--gutter) 0; display: flex; align-items: center; justify-content: center; gap: 6px; color: var(--muted); }
+  .quiet b { color: var(--fg); font-weight: 700; }
+  .quiet .g { display: inline-grid; place-items: center; color: var(--fg); }
+  .quiet .g svg { width: 17px; height: 17px; }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
@@ -55,26 +44,15 @@
   </div>
 
   <div class="day">
-    <svg class="line" width="2" height="118"><path class="draw" d="M1 0 V118" stroke="currentColor" stroke-opacity=".3" stroke-width="2" stroke-dasharray="3 5" style="--len:118;--d:500ms;--dur:700ms"/></svg>
-    <div class="it" data-settle style="--i:0;--d:650ms">
-      <span class="node" data-icon="sun"></span>
-      <div class="ntf"><span class="ic x" id="ix"></span><div><div class="top"><span class="t-cap">DayXero · Xero</span><span class="t-cap">8:00 AM</span></div><p class="t-foot">Good morning. Ten seconds for today&rsquo;s pledge?</p></div></div>
-    </div>
-    <div class="it" data-settle style="--i:0;--d:1030ms">
-      <span class="node" data-icon="moon" id="moon"></span>
-      <div class="ntf"><span class="ic g" id="ig"></span><div><div class="top"><span class="t-cap">DayXero · Glim</span><span class="t-cap">9:00 PM</span></div><p class="t-foot">How did today go? Take a minute to check in.</p></div></div>
+    <div class="ntf" data-settle style="--i:0;--d:650ms"><span class="ic x" id="ix"></span><div><div class="top"><span class="t-cap">DayXero, Xero</span><span class="t-cap">8:00 AM</span></div><p class="t-foot">Good morning. Ten seconds for today&rsquo;s pledge?</p></div></div>
+    <div class="night" data-settle style="--i:0;--d:1030ms">
+      <div class="sky"><div id="sky"></div><div class="gl" id="gl"></div>
+        <div class="meet"><p class="t-head">Meet Glim</p><span class="t-cap">Your evening check-in friend</span></div></div>
+      <div class="ntf"><span class="ic g" id="ig"></span><div><div class="top"><span class="t-cap">DayXero, Glim</span><span class="t-cap">9:00 PM</span></div><p class="t-foot">How did today go? Take a minute to check in.</p></div></div>
     </div>
   </div>
 
-  <div class="card clock" data-a style="--d:1400ms">
-    <div class="hd"><p class="t-foot"><b>Quiet hours</b></p><span class="t-cap">10 PM to 8 AM</span></div>
-    <div class="bar24">
-      <span class="qz" style="left:0;width:33.3%"></span><span class="qz" style="left:91.7%;right:0"></span>
-      <span class="pin am" style="left:33.3%" id="pam"></span><span class="pin pm" style="left:87.5%" id="ppm"></span>
-    </div>
-    <div class="ticks"><span class="l" style="left:0">12 AM</span><span style="left:25%">6 AM</span><span style="left:50%">12 PM</span><span style="left:75%">6 PM</span><span class="r" style="left:100%">12 AM</span></div>
-    <p class="t-cap ft">No nudges while you sleep. Change it anytime in Settings.</p>
-  </div>
+  <p class="t-foot quiet" data-a style="--d:1400ms"><b>Quiet hours</b><span class="g" data-icon="moon"></span>10 PM to<span class="g" data-icon="sun"></span>8 AM</p>
 
   <div class="dock">
     <button class="btn" data-a style="--i:5">Yes, remind me</button>
@@ -82,14 +60,13 @@
   </div>
 </div>
 <script>
-  document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
+  document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon, { w: 2.4 }));
   document.getElementById('ix').innerHTML = DX.char('xero', { mood: 'hello', size: 40, animate: false });
   document.getElementById('ig').innerHTML = DX.char('glim', { mood: 'calm', size: 40, animate: false });
-  document.getElementById('pam').innerHTML = DX.icon('sun', { w: 2.6 });
-  document.getElementById('ppm').innerHTML = DX.icon('moon', { w: 2.6 });
-  const bar = document.getElementById('bar'), moon = document.getElementById('moon');
-  DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '90.9%'); void bar.offsetWidth; bar.style.transition = ''; moon.classList.remove('bump'); });
+  document.getElementById('sky').innerHTML = DX.nightSky({ w: 346, h: 116, moonX: 312, moonY: 40 });
+  document.getElementById('gl').innerHTML = DX.char('glim', { mood: 'hello', size: 72 });
+  const bar = document.getElementById('bar');
+  DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '90.9%'); void bar.offsetWidth; bar.style.transition = ''; });
   DX.after(250, () => bar.style.setProperty('--p', '100%'));
-  DX.after(1500, () => moon.classList.add('bump'));
 </script>
 </body></html>

@@ -1,27 +1,24 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>053 Daily pledge</title>
-<meta name="motion" content="Dawn scene fades in (in dark mode the same scene is pre-dawn: a deep night wash with a few still stars over a low, dimmed sun, ending in clean ground under the title), Xero settles onto the hill (900ms) then bobs; date, pledge (underline under 'won't'), one quiet line, reason card and the hold button arrive in order (90ms stagger). At 1.5s the button is held for 1s (fill sweeps left to right, light ticking haptic), turns green 'Pledged' with a success haptic; the sun rises 40px and the haze thins over 1.6s, Xero swaps to cheer and re-settles, and the line 'Glim will check in tonight at 9:00 PM. No pressure.' fades in under the button.">
+<meta name="motion" content="Dawn scene fades in (light: soft pale-peach paper hills behind Xero so the coral character stands clear, under a crisp gold-rimmed sun; dark: the kit's pre-dawn sky, navy hills and a low amber sun at the right, never a brown wash), Xero settles onto the hill (900ms) then bobs; date, pledge (underline under 'won't'), one quiet line, reason card and the hold button arrive in order (90ms stagger). At 1.5s the button is held for 1s (fill sweeps left to right, light ticking haptic), turns green 'Pledged' with a success haptic; the sun rises over 1.6s (light: up and to the right; dark: the amber sun lifts 36px) and the haze thins, Xero swaps to cheer and re-settles, and the line 'Glim will check in tonight at 9:00 PM. No pressure.' fades in under the button.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   .scene { position: absolute; left: 0; right: 0; top: 0; height: 420px; overflow: hidden; }
   .scene .fade { position: absolute; left: 0; right: 0; bottom: 0; height: 70px; background: linear-gradient(to bottom, color-mix(in srgb, var(--g) 0%, transparent), var(--g)); }
-  .scene .wash { position: absolute; inset: 0; display: none; background: linear-gradient(to bottom, rgba(14,19,34,.94) 0%, rgba(14,19,34,.7) 14%, rgba(14,19,34,.25) 24%, rgba(14,19,34,0) 30%, rgba(14,19,34,0) 64%, rgba(14,19,34,.3) 76%, rgba(14,19,34,.7) 88%); }
-  .scene .stars { position: absolute; left: 0; right: 0; top: 0; height: 120px; display: none; background-image: radial-gradient(1.6px 1.6px at 62px 96px, #FFF8EE 60%, transparent), radial-gradient(1.3px 1.3px at 148px 70px, #FFF8EE 60%, transparent), radial-gradient(1.5px 1.5px at 262px 92px, #FFF8EE 60%, transparent), radial-gradient(1.2px 1.2px at 318px 64px, #FFF8EE 60%, transparent), radial-gradient(1.4px 1.4px at 30px 104px, #FFF8EE 60%, transparent); opacity: .8; }
-  [data-theme="dark"] .scene .wash, [data-theme="dark"] .scene .stars { display: block; }
-  [data-theme="dark"] .scene svg rect.hazemove { opacity: .1 !important; }
-  [data-theme="dark"] .scene .fade { height: 130px; background: linear-gradient(to bottom, color-mix(in srgb, var(--g) 0%, transparent), var(--g) 82%); }
+  [data-theme="dark"] .scene .fade { height: 110px; background: linear-gradient(to bottom, color-mix(in srgb, var(--g) 0%, transparent), var(--g) 80%); }
   .nav .icon-btn.on-art { background: rgba(255,248,238,.78); color: var(--ink); box-shadow: 0 1px 2px rgba(30,26,58,.12); }
   [data-theme="dark"] .nav .icon-btn.on-art { background: rgba(255,248,238,.16); color: var(--cream); box-shadow: inset 0 0 0 1px rgba(255,248,238,.28); backdrop-filter: blur(6px); }
-  /* dark: the dawn band reads pre-dawn, not sunset */
-  [data-theme="dark"] .scene svg { filter: saturate(.75); }
+  /* dark: the kit's pre-dawn sky (navy hills, a low amber sun moved right of Xero), never a brown overlay */
+  .scene svg circle.dsun { transition: transform 1.6s var(--settle); }
+  .up .scene svg circle.dsun { transform: translateY(-36px); }
   /* light: the coral underline needs more weight on the apricot ground */
   :root:not([data-theme="dark"]) .body .mark { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 16' preserveAspectRatio='none'%3E%3Cpath d='M3 10 C40 4 90 5 122 7 C152 9 178 11 197 4' fill='none' stroke='%23D9461F' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E"); }
   .scene svg circle.sunmove { transition: transform 1.6s var(--settle); }
   .scene svg rect.hazemove { transition: opacity 1.6s var(--ease); }
   .up .scene svg circle.sunmove { transform: translate(92px, -44px) scale(.62); }
-  .scene svg circle.sunmove.r70 { stroke: #FFE9B8; stroke-width: 10; stroke-opacity: .55; filter: drop-shadow(0 0 22px rgba(255,214,130,.75)); }
-   [data-theme="dark"] .scene svg circle.sunmove.r70 { fill-opacity: .55; stroke: #FFE9B8; stroke-opacity: .25; stroke-width: 18; filter: blur(3px) drop-shadow(0 0 30px rgba(255,214,150,.6)); }
+  /* light: a crisp gold-rimmed sun with a soft cream halo, so it reads against the peach sky */
+  .scene svg circle.sunmove.r70 { stroke: #EE9A2E; stroke-width: 6; filter: drop-shadow(0 0 0 rgba(0,0,0,0)) drop-shadow(0 0 16px rgba(255,246,214,.95)); }
   .xero { position: absolute; left: 50%; top: 206px; width: 200px; height: 200px; margin-left: -100px; }
   .nav { top: 50px; }
   .body { position: absolute; left: 0; right: 0; top: 414px; padding: 0 var(--gutter); text-align: center; }
@@ -37,7 +34,7 @@
 </style>
 </head><body>
 <div class="screen" data-ground="apricot" data-status="on-art" id="sc">
-  <div class="scene" id="scene" data-fade><div class="wash"></div><div class="stars"></div><div class="fade"></div></div>
+  <div class="scene" id="scene" data-fade><div class="fade"></div></div>
   <div class="xero" data-settle style="--i:1"><div class="bob" id="xero"></div></div>
   <div class="nav"><button class="icon-btn on-art" aria-label="Close" data-ic="close"></button></div>
   <div class="body">
@@ -57,11 +54,23 @@
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic));
   const scene = document.getElementById('scene'), xero = document.getElementById('xero'), sc = document.getElementById('sc');
-  scene.insertAdjacentHTML('afterbegin', DX.char('horizon', { scene: 'dawn', w: 390, h: 420, clarity: 40, noDusk: true }));
+  const dark = DX.theme === 'dark';
+  scene.insertAdjacentHTML('afterbegin', DX.char('horizon', { scene: 'dawn', w: 390, h: 420, clarity: 40, noDusk: !dark }));
   const svg = scene.querySelector('svg');
+  if (dark) {
+    /* pre-dawn: the kit's dawn night sky; its low sun moves right so Xero never hides it */
+    svg.querySelectorAll('circle').forEach(c => { if (/^#FF(B25E|C36B|D27A)$/i.test(c.getAttribute('fill') || '')) { c.setAttribute('cx', '316'); c.setAttribute('cy', '240'); c.classList.add('dsun'); if (+c.getAttribute('r') > 30) c.style.filter = 'blur(5px)'; } });
+  } else {
+    /* figure-ground: soft pale-peach paper hills behind the coral Xero */
+    const soft = { '#FF9D6E': '#FFE1C2', '#FF7A55': '#FFD3AC', '#E85A3E': '#FFC79A', '#C2402A': '#FFBE8C' };
+    svg.querySelectorAll('path[fill]').forEach(p => { const f = p.getAttribute('fill').toUpperCase(); if (soft[f]) p.setAttribute('fill', soft[f]); });
+    const sun = document.createElementNS('http://www.w3.org/2000/svg', 'radialGradient'); sun.id = 'sunX'; sun.setAttribute('cx', '.4'); sun.setAttribute('cy', '.36'); sun.setAttribute('r', '.7');
+    sun.innerHTML = '<stop offset="0" stop-color="#FFFBE6"/><stop offset=".55" stop-color="#FFE48A"/><stop offset="1" stop-color="#FFC93C"/>';
+    svg.querySelector('defs').appendChild(sun);
+  }
   /* the scene's sparkle sits under the status bar: move it down beside the sun */
   svg.querySelectorAll('path').forEach(p => { if ((p.getAttribute('d') || '').startsWith('M330 34')) p.setAttribute('transform', 'translate(-91 40)'); });
-  svg.querySelectorAll('circle').forEach(c => { const r = c.getAttribute('r'); if (r === '70' || r === '130') { c.classList.add('sunmove', 'r' + r); c.style.transformBox = 'fill-box'; c.style.transformOrigin = 'center'; } });
+  if (!dark) svg.querySelectorAll('circle').forEach(c => { const r = c.getAttribute('r'); if (r === '70' || r === '130') { c.classList.add('sunmove', 'r' + r); c.style.transformBox = 'fill-box'; c.style.transformOrigin = 'center'; if (r === '70') c.setAttribute('fill', 'url(#sunX)'); } });
   svg.querySelectorAll('rect').forEach(r => { if (r.getAttribute('fill') && r.getAttribute('fill').startsWith('#') && +r.getAttribute('opacity') > 0) { r.classList.add('hazemove'); r.dataset.o = r.getAttribute('opacity'); } });
   xero.innerHTML = DX.char('xero', { mood: 'hello', size: 200 });
   function pledged() {

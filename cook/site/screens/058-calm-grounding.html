@@ -6,8 +6,8 @@
 <style>
 .nav .title { flex: 1; text-align: center; margin-right: 56px; }
 .bar { position: absolute; left: 64px; right: 64px; top: 112px; }
-.jel { position: absolute; left: 50%; top: 186px; margin-left: -66px; width: 132px; height: 132px; z-index: 2; }
-.cur { position: absolute; left: var(--gutter); right: var(--gutter); top: 318px; padding: 34px 22px 30px; display: grid; gap: 12px; text-align: center; justify-items: center; }
+.jel { position: absolute; left: 50%; top: 194px; margin-left: -74px; width: 148px; height: 148px; z-index: 2; }
+.cur { position: absolute; left: var(--gutter); right: var(--gutter); top: 336px; padding: 34px 22px 30px; display: grid; gap: 12px; text-align: center; justify-items: center; }
 .head { display: flex; align-items: center; gap: 14px; justify-content: center; }
 .head .big { font: 800 92px/.86 var(--display); letter-spacing: -3px; }
 .head .t-title { text-align: left; }
@@ -34,7 +34,7 @@
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
 /* Jelli sits on the card's top edge: her tentacle tips and shadow rest on it, no bubbles. */
-document.getElementById('jel').innerHTML = DX.char('jelli', { mood: 'calm', size: 132 }).replace(/<g opacity="1"( fill="none" stroke="#FFFFFF")/, '<g opacity="0"$1');
+document.getElementById('jel').innerHTML = DX.char('jelli', { mood: 'calm', size: 148 }).replace(/<g opacity="1"( fill="none" stroke="#FFFFFF")/, '<g opacity="0"$1');
 const pips = document.querySelectorAll('#pips i');
 [900, 1700, 2500].forEach((t, i) => DX.after(t, () => { pips[i].classList.add('on'); pips[i].classList.add('bump'); }));
 DX.onStill(() => { [0, 1, 2].forEach(i => pips[i].classList.add('on')); });

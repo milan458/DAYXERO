@@ -1,49 +1,29 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>059 Notice the urge</title>
-<meta name="motion" content="One painted scene: the sky and the layered sea fade in (600ms), the urge line draws left to right over 2.4s as the swell fills in under it, then the three points and their labels fade in beside them (It rises, It peaks, It passes). Jelli, seated on the line, rides it for 12s (slow ease) up to the crest and down towards the sea, while the single 28px prompt cross-fades every 3s (600ms): notice, it rises, the peak, watch it fall. Dark mode is the same scene at night. No springs, no haptic until It's passing is tapped (soft success haptic, goes to 060).">
+<meta name="motion" content="One painted scene: the sky and the layered sea fade in (600ms), then the urge draws left to right over 2.4s as a single wave crest with a foam edge (no fill under it); the three points fade in on the crest with their labels tied to them by short leaders (It rises, It peaks, It passes). Jelli, seated on the foam, rides the crest for 12s (slow ease) up to the peak and just over it, while the single 28px prompt cross-fades every 3s (600ms): notice, it rises, the peak, watch it fall. Dark mode is the same scene at night: moonlit, with foam lines on each layer of the sea. No springs, no haptic until It's passing is tapped (soft success haptic, goes to 060).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-/* screen-local helpers: icon fill, section labels, small icon tiles, bottom toast */
-.hd { display: grid; gap: 6px; padding-top: 58px; }
-.sec { padding: 22px 4px 8px; color: var(--muted); }
-.rt { font-weight: 600; }
-.ico-tile.s { width: 34px; height: 34px; border-radius: 11px; }
-.ico-tile.s svg { width: 19px; height: 19px; }
-.val { color: var(--muted); font: 500 15px/1.2 var(--body); white-space: nowrap; }
-.list > .row.tap { min-height: 56px; }
-.toast.b { top: auto; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
-.toast.b.in { opacity: 1; transform: none; }
-.toast.b .ck { flex: none; }
-.opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
-html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--sel) 72%, transparent); }
-.pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
-
 .nav .title { flex: 1; text-align: center; margin-right: 56px; }
-.prompt { position: absolute; left: 28px; right: 28px; top: 124px; text-align: center; display: grid; gap: 10px; justify-items: center; }
-.prompt .say { font: 800 28px/1.18 var(--display); letter-spacing: -.6px; min-height: 72px; text-wrap: balance; transition: opacity .6s var(--ease), transform .6s var(--ease); }
+.prompt { position: absolute; left: 28px; right: 28px; top: 118px; text-align: center; }
+.prompt .say { margin: 0; font: 800 28px/1.18 var(--display); letter-spacing: -.6px; min-height: 66px; display: grid; place-items: center; text-wrap: balance; transition: opacity .6s var(--ease), transform .6s var(--ease); }
 .prompt .say.out { opacity: 0; transform: translateY(-8px); }
-.chart { position: absolute; left: var(--gutter); right: var(--gutter); top: 246px; height: 410px; padding: 0; overflow: hidden; border-radius: 28px; box-shadow: none !important; }
+.chart { position: absolute; left: var(--gutter); right: var(--gutter); top: 196px; height: 456px; padding: 0; overflow: hidden; border-radius: 28px; box-shadow: none !important; }
 .chart svg { position: absolute; left: 0; top: 0; }
-.rider { position: absolute; left: 0; top: 0; width: 80px; height: 80px;
-  offset-path: path("M40 300 C 100 300 116 96 173 96 S 246 300 306 300"); offset-rotate: 0deg; offset-distance: 4%; offset-anchor: 50% 95%; }
+.rider { position: absolute; left: 0; top: 0; width: 84px; height: 84px;
+  offset-path: path("M40 311 C 100 311 116 107 173 107 S 246 311 306 311"); offset-rotate: 0deg; offset-distance: 4%; offset-anchor: 50% 92%; }
 .play .rider { animation: ride 12s cubic-bezier(.4,0,.6,1) forwards; }
-@keyframes ride { from { offset-distance: 4%; } to { offset-distance: 95%; } }
-.still .rider { animation: none !important; offset-distance: 95%; }
-.lab { position: absolute; transform: translate(0, -50%); font: 700 14px/1 var(--body); color: #1E1A3A; background: #FFF8EE; padding: 8px 12px; border-radius: 99px; box-shadow: 0 2px 8px rgba(20,30,70,.12); white-space: nowrap; }
+@keyframes ride { from { offset-distance: 4%; } to { offset-distance: 55.5%; } }
+.still .rider { animation: none !important; offset-distance: 55.5%; }
+.lab { position: absolute; transform: translate(0, -50%); font: 700 14px/1 var(--body); color: #1E1A3A; background: #FFF8EE; padding: 8px 12px; border-radius: 99px; box-shadow: 0 2px 8px rgba(20,30,70,.14); white-space: nowrap; }
 .lab.r { transform: translate(-100%, -50%); }
-.lab.c { transform: translate(-50%, -100%); }
-.time { color: var(--muted); }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
 <div class="nav"><button class="icon-btn" aria-label="Close" data-ic="close"></button><div class="title t-head" data-a style="--i:0">Notice the urge</div></div>
-<div class="prompt">
-  <p class="t-foot time" data-a style="--i:1">About a minute. Just watch.</p>
-  <p class="say" id="say" data-a style="--i:2">Notice where you feel it.</p>
-</div>
-<div class="card chart" data-a style="--i:3" id="chart">
-  <div data-fade style="--d:1300ms;position:absolute;inset:0"><span class="lab r" style="left:93px;top:198px">It rises</span><span class="lab c" style="left:173px;top:80px">It peaks</span><span class="lab" style="left:253px;top:198px">It passes</span></div>
+<div class="prompt"><p class="say" id="say" data-a style="--i:1">Notice where you feel it.</p></div>
+<div class="card chart" data-a style="--i:2" id="chart">
+  <div data-fade style="--d:1300ms;position:absolute;inset:0"><span class="lab r" style="left:92px;top:218px">It rises</span><span class="lab r" style="left:154px;top:116px">It peaks</span><span class="lab" style="left:254px;top:218px">It passes</span></div>
   <div data-fade style="--d:1200ms;position:absolute;inset:0"><span class="rider" id="rider"></span></div>
 </div>
 <div class="dock"><button class="btn" data-a style="--i:4">It's passing</button><button class="link" data-a style="--i:5">I need more help</button></div>
@@ -53,23 +33,32 @@ document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.da
 
 const dark = DX.theme === 'dark';
 const C = dark
-  ? { sky: ['#0C1734', '#1A2D58'], swell: ['#2E4C88', '#1E3566'], sea: ['#1C2C4E', '#16233F', '#0F1A31'], line: '#FFF8EE', star: 1 }
-  : { sky: ['#BFDDFF', '#EAF4FF'], swell: ['#A9D2FF', '#7DB6FF'], sea: ['#5A9DFF', '#2F72F2', '#1F55D0'], line: '#1E1A3A', star: 0 };
-const pt = (x, y) => `<circle cx="${x}" cy="${y}" r="6.5" fill="${C.line}" stroke="${dark ? '#1E3566' : '#FFF8EE'}" stroke-width="3"/>`;
-document.getElementById('chart').insertAdjacentHTML('afterbegin', `<svg width="346" height="410" viewBox="0 0 346 410" aria-hidden="true"><defs>
-  <linearGradient id="ksky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${C.sky[0]}"/><stop offset="1" stop-color="${C.sky[1]}"/></linearGradient>
-  <linearGradient id="kswl" x1="0" y1="0" x2="0" y2="1"><stop offset=".2" stop-color="${C.swell[0]}"/><stop offset="1" stop-color="${C.swell[1]}"/></linearGradient></defs>
-  <rect width="346" height="410" fill="url(#ksky)"/>
-  ${C.star ? [[40, 40], [92, 76], [290, 52], [318, 120], [24, 150], [226, 30]].map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="${i % 2 ? 1.2 : 1.7}" fill="#fff" opacity="${i % 2 ? .5 : .8}"/>`).join('') : '<g fill="#fff" opacity=".9"><ellipse cx="282" cy="56" rx="30" ry="10"/><ellipse cx="268" cy="49" rx="15" ry="11"/></g>'}
-  <path d="M-10 300 H40 C 100 300 116 96 173 96 S 246 300 306 300 H356 V410 H-10Z" fill="url(#kswl)" data-fade style="--d:900ms"/>
-  <path d="M40 300 C 100 300 116 96 173 96 S 246 300 306 300" fill="none" stroke="${C.line}" stroke-width="4" stroke-linecap="round" pathLength="100" class="draw" style="--len:100;--dur:2400ms;--d:300ms"/>
-  <g data-fade style="--d:1300ms">${pt(107.6, 198)}${pt(173, 96)}${pt(238.4, 198)}</g>
+  ? { sky: ['#0A1532', '#1A2E5C', '#2A4274'], crest: '#2F5596', foam: '#DCE8FF', sea: ['#22407A', '#1A3468', '#132A58', '#0D1F46'], seaFoam: '#9DB4E8', lab: '#2F5596', pt: '#0F1F44' }
+  : { sky: ['#B4D7FF', '#CBE4FF', '#D8ECFF'], crest: '#4E8FF0', foam: '#FFFFFF', sea: ['#6AA6FF', '#4A88F2', '#2F6CE0', '#2256C8'], seaFoam: '#FFFFFF', lab: '#4E8FF0', pt: '#1E1A3A' };
+const CR = 'M-10 320 H40 C 100 320 116 116 173 116 S 246 320 306 320 H356';
+const wave = (y, a, ph) => { const s = 346 / 3; let d = `M-10 ${y}`; for (let i = 0; i < 3; i++) { const x0 = i * s, up = (i + ph) % 2 ? -a : a; d += ` C${x0 + s * .35} ${y + up} ${x0 + s * .65} ${y + up} ${x0 + s + (i === 2 ? 10 : 0)} ${y}`; } return d; };
+const foam = (y, a, ph) => [0, 1, 2].filter(i => (i + ph) % 2).map(i => { const s = 346 / 3, x = i * s + s * .5, yy = y - a * .75; return `<path d="M${x - s * .3} ${yy + 4} Q${x} ${yy - 4} ${x + s * .3} ${yy + 4}" fill="none" stroke="${C.seaFoam}" stroke-opacity=".6" stroke-width="2.4" stroke-linecap="round"/><circle cx="${x + s * .36}" cy="${yy + 7}" r="1.8" fill="${C.seaFoam}" opacity=".55"/>`; }).join('');
+const layers = [[338, 8, 0], [366, 10, 1], [398, 9, 0], [428, 8, 1]];
+/* a dot on the crest's foam edge and the short leader that ties its label to it */
+const pt = (x, y, x2, y2) => `<path d="M${x} ${y} L${x2} ${y2}" stroke="${dark ? '#FFF8EE' : '#1E1A3A'}" stroke-opacity=".7" stroke-width="2" stroke-linecap="round"/><circle cx="${x}" cy="${y}" r="7" fill="${dark ? '#FFF8EE' : '#1E1A3A'}" stroke="${dark ? C.crest : '#FFFFFF'}" stroke-width="3"/>`;
+document.getElementById('chart').insertAdjacentHTML('afterbegin', `<svg width="346" height="456" viewBox="0 0 346 456" aria-hidden="true"><defs>
+  <linearGradient id="ksky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${C.sky[0]}"/><stop offset=".6" stop-color="${C.sky[1]}"/><stop offset="1" stop-color="${C.sky[2]}"/></linearGradient>
+  <radialGradient id="kmoon"><stop offset="0" stop-color="#F6E7C1" stop-opacity=".35"/><stop offset="1" stop-color="#F6E7C1" stop-opacity="0"/></radialGradient></defs>
+  <rect width="346" height="456" fill="url(#ksky)"/>
+  ${dark
+    ? [[40, 40], [92, 76], [250, 30], [318, 120], [24, 150], [206, 54], [140, 26]].map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="${i % 2 ? 1.2 : 1.7}" fill="#fff" opacity="${i % 2 ? .5 : .85}"/>`).join('')
+      + '<circle cx="296" cy="62" r="40" fill="url(#kmoon)"/><circle cx="296" cy="62" r="15" fill="#F6E7C1"/><circle cx="290" cy="57" r="13.5" fill="#132550"/>'
+    : '<g fill="#fff" opacity=".95"><ellipse cx="282" cy="56" rx="30" ry="10"/><ellipse cx="268" cy="49" rx="15" ry="11"/><ellipse cx="54" cy="96" rx="22" ry="7"/></g>'}
   <g data-fade style="--d:600ms">
-    <path d="M-10 322 C 50 308 110 312 170 322 C 240 334 300 314 356 310 V410 H-10Z" fill="${C.sea[0]}"/>
-    <path d="M-10 352 C 60 340 120 342 190 354 C 260 366 310 346 356 342 V410 H-10Z" fill="${C.sea[1]}"/>
-    <path d="M-10 382 C 70 370 140 374 210 384 C 280 394 330 378 356 374 V410 H-10Z" fill="${C.sea[2]}"/>
-  </g></svg>`);
-document.getElementById('rider').innerHTML = DX.char('jelli', { mood: 'calm', size: 80 });
+    ${layers.map(([y, a, ph], i) => `<path d="${wave(y, a, ph)} V456 H-10Z" fill="${C.sea[i]}"/>${foam(y, a, ph)}`).join('')}
+    ${dark ? '<g stroke="#F6E7C1" stroke-linecap="round" stroke-width="2.2"><path d="M284 352 h20" opacity=".5"/><path d="M290 378 h9" opacity=".35"/></g>' : ''}
+  </g>
+  <path d="${CR}" fill="none" stroke="${C.foam}" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" transform="translate(0 -4)" pathLength="100" class="draw" style="--len:100;--dur:2400ms;--d:300ms"/>
+  <path d="${CR}" fill="none" stroke="${C.crest}" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" pathLength="100" class="draw" style="--len:100;--dur:2400ms;--d:300ms"/>
+  <g fill="${C.foam}" data-fade style="--d:2400ms"><circle cx="150" cy="104" r="2.2"/><circle cx="196" cy="103" r="1.8"/><circle cx="141" cy="112" r="1.4"/><circle cx="206" cy="110" r="1.4"/></g>
+  <g data-fade style="--d:1300ms">${pt(107.6, 218, 92, 218)}${pt(173, 116, 154, 116)}${pt(238.4, 218, 254, 218)}</g>
+  </svg>`);
+document.getElementById('rider').innerHTML = DX.char('jelli', { mood: 'calm', size: 84 }).replace(/<g opacity="1"( fill="none" stroke="#FFFFFF")/, '<g opacity="0"$1');
 const say = document.getElementById('say');
 const lines = [[3000, 'It rises. You do not have to act.'], [6000, 'This is the peak. Breathe out slowly.'], [9000, 'Watch it fall away.']];
 lines.forEach(([t, s]) => DX.after(t, () => { say.classList.add('out'); setTimeout(() => { say.textContent = s; say.classList.remove('out'); }, 600); }));
