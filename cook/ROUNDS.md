@@ -8,6 +8,7 @@ Gate: stills approved [no]
 Best so far: none yet
 
 ## Decisions
+- 18:51 Keep-best rule: when a section's round scores lower than the previous round on both critics, revert its screens to the best round and re-score (slips-checkin round 6 regressed on all 13 screens: 8.2/8.4 vs 8.5/8.7; reverted to commit 55006fd; round 6 versions kept in scratchpad e_r6_backup).
 - 17:57 Plateau plan: rounds 1-3 moved 8.2 -> 8.3 with fixes; next lever is reduction (Headspace-style: one art, one headline, few elements per screen), per-section critics with full-size (390px) tiles so type is judged at real size, and a fixer-critic loop per section.
 - 17:08 Night ground for Glim: Midnight meadow (direction A of cook/night-directions.png) replaces teal after user rejected the flat swatches; full sky art makes night read rich without glare.
 - 17:04 (superseded) Night ground for Glim: deep teal night #152733 / #0C1A23 chosen from 6 candidates (scratchpad night.png): dimmest comfortable option that still separates from reading navy and ocean; Glim's purple and yellow glow read best on it. Glim's own design unchanged.
