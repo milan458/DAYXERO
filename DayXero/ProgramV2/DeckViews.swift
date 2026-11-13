@@ -30,9 +30,10 @@ extension DeckCard.Format {
 
 extension DeckCard {
     /// The ground the card's own screen sits on.
+    /// v5 (023-031): the session sits on the table; reveal and myth read in the table's ink on their coloured card.
     var screenGround: DX.Ground {
         switch format {
-        case .reveal, .myth: return .violet
+        case .reveal, .myth: return .table
         case .listen: return ground.flatMap(DX.Ground.init(rawValue:)) ?? .apricot
         case .activity: return ground.flatMap(DX.Ground.init(rawValue:)) ?? .mint
         case .breathe: return ground.flatMap(DX.Ground.init(rawValue:)) ?? .sky
@@ -50,9 +51,23 @@ extension DeckCard {
         }
     }
 
+    /// v5: the card's colour on the table, in the hand and as its own screen's card (kit 023: listen apricot, reveal
+    /// blue, myth coral, try green, breathe blue; deep versions of each in dark).
+    var faceColor: Color {
+        switch format {
+        case .listen: Color(light: 0xFFC38A, dark: 0x4A3328)
+        case .reveal, .breathe: Color(light: 0xBFD7FF, dark: 0x22355E)
+        case .myth: Color(light: 0xFFB4A0, dark: 0x4A2A30)
+        case .activity: Color(light: 0xB8E6C8, dark: 0x1E3A33)
+        }
+    }
+
+    /// Words on a card face: the table's ink.
+    var faceInk: Color { DX.Ground.table.ink }
+
     /// "Card 2 of 5 · Reveal · 5 min".
     func eyebrow(position: Int, of total: Int) -> String {
-        String(localized: "Card \(position) of \(total) · \(format.label) · \(minutes) min").uppercased()
+        String(localized: "Card \(position) of \(total) · \(format.label) · \(minutes) min")
     }
 }
 
@@ -108,7 +123,7 @@ struct DeckHandView: View {
     let onClose: () -> Void
 
     @State private var selected: String?
-    private let ground = DX.Ground.violet
+    private let ground = DX.Ground.table
     private let motion = MotionPolicy()
 
     private var focus: DeckCard? {
@@ -118,7 +133,7 @@ struct DeckHandView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            DeckTopBar(ground: ground, eyebrow: "\(session.label) · \(String(localized: "Today's hand"))".uppercased(),
+            DeckTopBar(ground: ground, eyebrow: "\(session.label) · \(String(localized: "Today's hand"))",
                        trailing: String(localized: "\(played.count) of \(cards.count) played"), onClose: onClose)
             Text(verbatim: ctx.text(session.title)).dxType(.large).foregroundStyle(ground.ink)
                 .fixedSize(horizontal: false, vertical: true)
@@ -140,7 +155,7 @@ struct DeckHandView: View {
                     .dxType(.footnote).foregroundStyle(ground.ink)
                     .frame(maxWidth: .infinity, minHeight: DX.Layout.touchTarget)
                     .padding(.horizontal, 12)
-                    .background(Color(hex: 0x2A1C6E), in: Capsule())
+                    .background(DX.Ground.table.card, in: Capsule())
                     .accessibilityIdentifier("program.deck.waiting")
             } else {
                 Button(action: onPlay) { Text(verbatim: ctaTitle) }
@@ -190,11 +205,10 @@ struct DeckHandView: View {
     }
 
     private func face(_ card: DeckCard, number: Int) -> some View {
-        let face = card.faceGround
         let done = played.contains(card.id)
         return VStack(alignment: .leading, spacing: 6) {
             HStack {
-                Text(verbatim: card.format.label.uppercased()).dxFont(12, weight: 800, style: .caption2)
+                Text(verbatim: card.format.label).dxFont(12, weight: 800, style: .caption2)
                 Spacer(minLength: 0)
                 if done { Image(systemName: "checkmark").font(.system(size: 14, weight: .heavy)) }
             }
@@ -205,16 +219,16 @@ struct DeckHandView: View {
                 .multilineTextAlignment(.leading)
             Text(verbatim: String(localized: "\(card.minutes) min")).dxFont(12, weight: 700, style: .caption2)
         }
-        .foregroundStyle(face.ink)
+        .foregroundStyle(card.faceInk)
         .padding(12)
         .frame(width: 126, height: 184)
-        .background(face.background, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .background(card.faceColor, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
         .overlay {
             if card.id == focus?.id {
-                RoundedRectangle(cornerRadius: 18, style: .continuous).stroke(DX.Ground.sun.background, lineWidth: 4)
+                RoundedRectangle(cornerRadius: 18, style: .continuous).stroke(DX.Ground.table.selEdge, lineWidth: 3)
             }
         }
-        .shadow(color: .black.opacity(0.28), radius: 12, x: 0, y: 8)
+        .shadow(color: Color(light: (0x4A2810, 0.18), dark: (0x000000, 0.4)), radius: 12, x: 0, y: 8)
         .opacity(done && card.id != focus?.id ? 0.85 : 1)
     }
 
@@ -222,8 +236,8 @@ struct DeckHandView: View {
         let number = (cards.firstIndex { $0.id == card.id } ?? 0) + 1
         let state = played.contains(card.id) ? String(localized: "Played") : (card.id == next ? String(localized: "Next") : String(localized: "Later today"))
         return VStack(alignment: .leading, spacing: 4) {
-            Text(verbatim: "\(card.eyebrow(position: number, of: cards.count)) · \(state.uppercased())")
-                .dxType(.caption).foregroundStyle(DX.Ground.sun.background)
+            Text(verbatim: "\(card.eyebrow(position: number, of: cards.count)) · \(state)")
+                .dxType(.caption).foregroundStyle(ground.muted)
             Text(verbatim: ctx.text(card.title)).dxType(.headline).foregroundStyle(ground.ink)
                 .fixedSize(horizontal: false, vertical: true)
             if let intro = card.intro {
@@ -233,7 +247,7 @@ struct DeckHandView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
-        .background(Color(hex: 0x2A1C6E), in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .dxCard(on: .table)
         .accessibilityElement(children: .combine)
     }
 }
@@ -344,7 +358,7 @@ struct DeckListenView: View {
                 }
                 ForEach(Array((card.script?.chapters ?? []).enumerated()), id: \.offset) { i, chapter in
                     VStack(alignment: .leading, spacing: 10) {
-                        Text(verbatim: String(localized: "Chapter \(i + 1)").uppercased()).dxType(.caption).foregroundStyle(ground.muted)
+                        Text(verbatim: String(localized: "Chapter \(i + 1)")).dxType(.caption).foregroundStyle(ground.muted)
                         Text(verbatim: chapter.title).dxType(.headline).foregroundStyle(ground.ink)
                             .fixedSize(horizontal: false, vertical: true)
                         ForEach(Array(ProgramInline.paragraphs(ctx.text(chapter.text), ctx.variant).enumerated()), id: \.offset) { _, paragraph in
@@ -395,7 +409,7 @@ struct DeckRevealView: View {
 
     @State private var open: Set<Int> = []
     @State private var deeper: Int?
-    private let ground = DX.Ground.violet
+    private let ground = DX.Ground.table
     private let motion = MotionPolicy()
 
     /// The person's own triggers first (Prep 2 shows four of six), from onboarding.
@@ -462,8 +476,8 @@ struct DeckRevealView: View {
                 Button { deeper = index } label: {
                     Text(String(localized: "Go deeper")).dxFont(14, weight: 700, style: .footnote)
                         .frame(maxWidth: .infinity, minHeight: DX.Layout.touchTarget)
-                        .foregroundStyle(DX.Ground.violet.ink)
-                        .background(Color(hex: 0x1E1A3A), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                        .foregroundStyle(ground.btnFg)
+                        .background(ground.btn, in: Capsule())
                 }
                 .buttonStyle(.plain)
             }
@@ -476,8 +490,8 @@ struct DeckRevealView: View {
                 withAnimation(motion.animation(DX.Move.settle)) { _ = open.insert(index) }
             } label: {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text(verbatim: String(localized: "Question \(index + 1)").uppercased())
-                        .dxFont(12, weight: 700, style: .caption2).foregroundStyle(DX.Ground.sun.background)
+                    Text(verbatim: String(localized: "Question \(index + 1)"))
+                        .dxFont(13, weight: 700, style: .caption2).foregroundStyle(ground.muted)
                     Text(verbatim: ctx.text(reveal.front)).dxFont(18, weight: 800, style: .headline).foregroundStyle(ground.ink)
                         .multilineTextAlignment(.leading)
                         .fixedSize(horizontal: false, vertical: true)
@@ -489,7 +503,7 @@ struct DeckRevealView: View {
                 }
                 .padding(14)
                 .frame(maxWidth: .infinity, minHeight: 240, alignment: .topLeading)
-                .background(Color(hex: 0x2A1C6E), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+                .background(DX.Ground.table.card, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
             }
             .buttonStyle(.plain)
             .accessibilityLabel(Text(verbatim: String(localized: "Question \(index + 1): \(ctx.text(reveal.front)). Turn over")))
@@ -499,7 +513,7 @@ struct DeckRevealView: View {
     private func deeperSheet(_ reveal: DeckCard.Reveal, index: Int) -> some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DX.Space.s) {
-                Text(verbatim: String(localized: "Go deeper · Question \(index + 1)").uppercased()).dxType(.caption).foregroundStyle(Read4.muted)
+                Text(verbatim: String(localized: "Go deeper · Question \(index + 1)")).dxType(.caption).foregroundStyle(Read4.muted)
                 Text(verbatim: ctx.text(reveal.front)).dxType(.title).foregroundStyle(Read4.ink)
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityAddTraits(.isHeader)
@@ -538,7 +552,7 @@ struct DeckMythView: View {
 
     @State private var index = 0
     @State private var pick: DeckCard.Statement.Answer?
-    private let ground = DX.Ground.violet
+    private let ground = DX.Ground.table
     private let motion = MotionPolicy()
 
     private var statements: [DeckCard.Statement] { card.statements ?? [] }
@@ -568,7 +582,7 @@ struct DeckMythView: View {
         let face: DX.Ground = !answered ? .sun : (truth(statement) == .fact ? .sky : truth(statement) == .myth ? .apricot : .sun)
         return ScrollView {
             VStack(alignment: .leading, spacing: 12) {
-                Text(verbatim: String(localized: "Statement \(index + 1) of \(statements.count)").uppercased())
+                Text(verbatim: String(localized: "Statement \(index + 1) of \(statements.count)"))
                     .dxType(.caption).foregroundStyle(face.muted)
                 Text(verbatim: "\u{201C}\(ctx.text(statement.text))\u{201D}")
                     .dxFont(answered ? 24 : 32, weight: 800, style: .title1).foregroundStyle(face.ink)
@@ -697,7 +711,7 @@ struct DeckCardPlayedView: View {
 
     @State private var rating: String?
     @State private var landed = false
-    private let ground = DX.Ground.violet
+    private let ground = DX.Ground.table
     private let motion = MotionPolicy()
     static let ratings = ["Not for me", "Okay", "Good", "Really helped"]
 
@@ -707,7 +721,7 @@ struct DeckCardPlayedView: View {
     var body: some View {
         VStack(spacing: DX.Space.s) {
             HStack {
-                Text(verbatim: String(localized: "\(position) of \(total) played").uppercased()).dxType(.caption).foregroundStyle(ground.muted)
+                Text(verbatim: String(localized: "\(position) of \(total) played")).dxType(.caption).foregroundStyle(ground.muted)
                 Spacer()
             }
             ScrollView {
@@ -725,12 +739,12 @@ struct DeckCardPlayedView: View {
                     ratingRow
                     if let next {
                         HStack(spacing: 12) {
-                            RoundedRectangle(cornerRadius: 10, style: .continuous).fill(next.faceGround.background)
+                            RoundedRectangle(cornerRadius: 10, style: .continuous).fill(next.faceColor)
                                 .frame(width: 40, height: 56)
-                                .overlay(Image(systemName: next.format.symbol).foregroundStyle(next.faceGround.ink))
+                                .overlay(Image(systemName: next.format.symbol).foregroundStyle(next.faceInk))
                                 .accessibilityHidden(true)
                             VStack(alignment: .leading, spacing: 2) {
-                                Text(verbatim: String(localized: "Next · \(next.format.label) · \(next.minutes) min").uppercased())
+                                Text(verbatim: String(localized: "Next · \(next.format.label) · \(next.minutes) min"))
                                     .dxType(.caption).foregroundStyle(ground.muted)
                                 Text(verbatim: ctx.text(next.title)).dxType(.headline).foregroundStyle(ground.ink)
                                     .fixedSize(horizontal: false, vertical: true)
@@ -778,19 +792,18 @@ struct DeckCardPlayedView: View {
     }
 
     private var face: some View {
-        let g = card.faceGround
         return VStack(alignment: .leading, spacing: 6) {
-            Text(verbatim: card.format.label.uppercased()).dxFont(12, weight: 800, style: .caption2)
+            Text(verbatim: card.format.label).dxFont(12, weight: 800, style: .caption2)
             Spacer(minLength: 0)
             Image(systemName: "checkmark").font(.system(size: 44, weight: .heavy)).frame(maxWidth: .infinity)
             Spacer(minLength: 0)
             Text(verbatim: ctx.text(card.title)).dxFont(14, weight: 700, style: .footnote).lineLimit(3)
         }
-        .foregroundStyle(g.ink)
+        .foregroundStyle(card.faceInk)
         .padding(14)
         .frame(width: 140, height: 204)
-        .background(g.background, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).stroke(DX.Ground.sun.background, lineWidth: 4))
+        .background(card.faceColor, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).stroke(Color(hex: 0xFFD966), lineWidth: 4))
         .rotationEffect(.degrees(landed || motion.reduce ? -6 : -14))
         .scaleEffect(landed || motion.reduce ? 1 : 1.08)
         .accessibilityHidden(true)
@@ -809,9 +822,11 @@ struct DeckCardPlayedView: View {
                         Text(LocalizedStringKey(value)).dxFont(13, weight: 700, style: .caption1)
                             .multilineTextAlignment(.center)
                             .frame(maxWidth: .infinity, minHeight: 52)
-                            .foregroundStyle(on ? Color(hex: 0x1E1A3A) : ground.ink)
-                            .background(on ? DX.Ground.sun.background : DX.Fill.onColourCard(for: ground),
-                                        in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                            .foregroundStyle(ground.ink)
+                            .background(on ? ground.selTint : ground.card2,
+                                        in: RoundedRectangle(cornerRadius: DX.Layout.chipRadius, style: .continuous))
+                            .overlay(RoundedRectangle(cornerRadius: DX.Layout.chipRadius, style: .continuous)
+                                .strokeBorder(on ? ground.selEdge : .clear, lineWidth: 2))
                     }
                     .buttonStyle(.plain)
                     .accessibilityAddTraits(on ? .isSelected : [])
@@ -819,7 +834,7 @@ struct DeckCardPlayedView: View {
             }
         }
         .padding(14)
-        .background(Color(hex: 0x2A1C6E), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .background(DX.Ground.table.card, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
         .padding(.top, DX.Space.s)
     }
 }
@@ -837,8 +852,14 @@ struct DeckRecapView: View {
     let onDone: () -> Void
 
     @State private var shown = false
-    private let ground = DX.Ground.sun
+    private let ground = DX.Ground.table
     private let motion = MotionPolicy()
+
+    /// "P4" → 4: the prep stamp the day earns (032).
+    private var prepNumber: Int? {
+        guard session.id.hasPrefix("P") else { return nil }
+        return Int(session.id.dropFirst())
+    }
 
     private var statLines: [String] {
         (session.recap?.statLines ?? []).compactMap { $0.resolve(ctx.variant) }
@@ -849,12 +870,37 @@ struct DeckRecapView: View {
         VStack(spacing: DX.Space.m) {
             ScrollView {
                 VStack(alignment: .leading, spacing: DX.Space.m) {
+                    // v5 (032): the day's stamp lands big in its rays, Xero cheers beside it.
+                    ZStack(alignment: .bottomTrailing) {
+                        ZStack {
+                            ForEach(0..<12, id: \.self) { i in
+                                Capsule().fill(Color(hex: 0xFFD25A))
+                                    .frame(width: 8, height: 30)
+                                    .offset(y: -112)
+                                    .rotationEffect(.degrees(Double(i) * 30))
+                            }
+                            .dxFade(delay: 0.6)
+                            if let n = prepNumber {
+                                DXBadge(.prep, n: n, size: 170)
+                            } else {
+                                DXBadge(.xero, size: 170)
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+                        .dxStamp(delay: 0.2)
+                        .dxShine(delay: 1)
+                        XeroView(mood: .cheer, stage: 1, points: 92)
+                            .frame(width: 92, height: 92)
+                            .dxSettle(delay: 0.5)
+                    }
+                    .frame(height: 260)
+                    .accessibilityHidden(true)
                     HStack(spacing: 6) {
                         ForEach(Array((session.deck ?? []).enumerated()), id: \.offset) { i, card in
                             Image(systemName: "checkmark").font(.system(size: 18, weight: .heavy))
-                                .foregroundStyle(card.faceGround.ink)
+                                .foregroundStyle(card.faceInk)
                                 .frame(width: 46, height: 64)
-                                .background(card.faceGround == .sun ? DX.Fill.raised : card.faceGround.background,
+                                .background(card.faceColor,
                                             in: RoundedRectangle(cornerRadius: 10, style: .continuous))
                                 .scaleEffect(shown || motion.reduce ? 1 : 0.8)
                                 .opacity(shown || motion.reduce ? 1 : 0)
@@ -873,9 +919,9 @@ struct DeckRecapView: View {
                             ForEach(Array(learned.enumerated()), id: \.offset) { i, line in
                                 HStack(alignment: .firstTextBaseline, spacing: 10) {
                                     Text(verbatim: "\(i + 1)").dxFont(13, weight: 800, style: .caption1)
-                                        .foregroundStyle(DX.Ground.sun.background)
+                                        .foregroundStyle(ground.btnFg)
                                         .frame(width: 24, height: 24)
-                                        .background(Color(hex: 0x1E1A3A), in: Circle())
+                                        .background(ground.btn, in: Circle())
                                     Text(verbatim: ctx.text(line)).dxType(.body).foregroundStyle(ground.ink)
                                         .fixedSize(horizontal: false, vertical: true)
                                 }

@@ -119,9 +119,9 @@ struct FollowUpSheet: View {
     private func header(_ session: ProgramContent.Session, store: ProgramStore, step: Int, of steps: Int) -> String {
         let times = session.mission?.followUpTimes ?? 1
         let base = String(localized: "\(session.label) mission")
-        guard times > 1 else { return "\(base) · \(step + 1) of \(steps)".uppercased() }
+        guard times > 1 else { return "\(base) · \(step + 1) of \(steps)" }
         let run = min(Self.runsDone(store: store, sessionId: session.id, completed: false) + 1, times)
-        return String(localized: "\(base) · Check-in \(run) of \(times) · \(step + 1) of \(steps)").uppercased()
+        return String(localized: "\(base) · Check-in \(run) of \(times) · \(step + 1) of \(steps)")
     }
 
     /// The answer that counts finished runs of a follow-up that comes back.

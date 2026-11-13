@@ -302,7 +302,7 @@ struct CommitBeat: View {
                     .frame(height: 260)
                     .clipShape(RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
                     .accessibilityHidden(true)
-                    Text(verbatim: "\(Date.now.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))) · \(String(localized: "Quit Day")) · \(ctx.store.minutes(of: session)) \(String(localized: "min"))".uppercased())
+                    Text(verbatim: "\(Date.now.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))) · \(String(localized: "Quit Day")) · \(ctx.store.minutes(of: session)) \(String(localized: "min"))")
                         .dxType(.caption).foregroundStyle(ground.muted)
                         .padding(.top, DX.Space.xs)
                     Text(verbatim: session.title.resolve(ctx.variant) ?? "").dxType(.large).foregroundStyle(ground.ink)
@@ -826,7 +826,7 @@ struct PlanCardImage: View {
             Text(verbatim: "DayXero · My plan").dxFont(44, weight: 800, style: .title1).foregroundStyle(Color(hex: 0xFFC38A))
             ForEach(Array(rows.enumerated()), id: \.offset) { _, row in
                 VStack(alignment: .leading, spacing: 10) {
-                    Text(verbatim: row.0.uppercased()).dxFont(26, weight: 700, style: .caption1).tracking(2)
+                    Text(verbatim: row.0).dxFont(26, weight: 700, style: .caption1).tracking(2)
                         .foregroundStyle(Color(hex: 0xFFC38A))
                     ForEach(row.1, id: \.self) { line in
                         Text(verbatim: line).dxFont(40, weight: 500, style: .body).foregroundStyle(DX.Fill.cream)

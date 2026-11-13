@@ -342,7 +342,7 @@ struct PerItemBeat: View {
             let item = items[min(index, items.count - 1)]
             BeatFrame(beat: beat, canContinue: ready(index), onContinue: next,
                       onSkip: { ctx.finish(beat, skipped: true); onDone() }) {
-                Text(verbatim: String(localized: "\(index + 1) of \(items.count) · \(item)").uppercased())
+                Text(verbatim: String(localized: "\(index + 1) of \(items.count) · \(item)"))
                     .dxType(.caption).foregroundStyle(Read4.accent)
                 ForEach(questions, id: \.id) { question in
                     VStack(alignment: .leading, spacing: 10) {

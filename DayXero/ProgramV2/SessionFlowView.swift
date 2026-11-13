@@ -40,6 +40,7 @@ struct SessionFlowView: View {
             if let session, steps.indices.contains(index) {
                 if showsHeader(steps[index]) { header(session) }
                 stepView(steps[index], session: session)
+                    .modifier(DeckCardPanel(color: panelColor))
                     .id(steps[index])
                     .transition(motion.reduce ? .opacity : .asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity),
                                                                        removal: .opacity))
@@ -49,8 +50,9 @@ struct SessionFlowView: View {
         .dxReadableColumn()
         .padding(.top, DX.Space.s)
         .padding(.bottom, DX.Space.xs)
-        .foregroundStyle(Read4.ink)
-        .background(stepGround.background.ignoresSafeArea())
+        .foregroundStyle(stepGround.ink)
+        .background(pageGround.background.ignoresSafeArea())
+        .environment(\.dxGround, stepGround)
         .animation(motion.animation(DX.Move.settle), value: stepGround)
         .animation(motion.animation(DX.Move.settle), value: index)
         .onAppear(perform: start)
@@ -64,26 +66,38 @@ struct SessionFlowView: View {
         }
     }
 
-    /// Most steps are on the reading ground. Day Xero's hold (Q1) is on apricot and its completion (Q2) on sun.
-    /// The deck: the hand, reveal, myth and played screens on violet, a listen or activity on its card's ground,
-    /// a day's recap on sun.
+    /// v5 (023-032): the session is played on the table ground, and each card's own screen sits on its coloured
+    /// card (`DeckCardPanel`). Day Xero's hold (Q1) stays on apricot and its completion and the finale on sun.
     private var stepGround: DX.Ground {
-        guard let session, steps.indices.contains(index) else { return .reading }
+        guard let session, steps.indices.contains(index) else { return .table }
         switch steps[index] {
         case .hand, .played:
-            return .violet
+            return .table
         case let .card(id):
-            return session.deck?.first { $0.id == id }?.screenGround ?? .violet
+            return session.deck?.first { $0.id == id }?.screenGround ?? .table
         case .completion where session.isDeck && session.id != ProgramV2Access.offerAfter:
-            return .sun
+            return .table
         case let .beat(id):
-            return session.everyBeat.first { $0.id == id }?.sets == "quit_timestamp" ? .apricot : .reading
+            return session.everyBeat.first { $0.id == id }?.sets == "quit_timestamp" ? .apricot : .table
         case .completion:
             let finale = session.beats.contains { $0.sets == "graduated_at" }
-            return session.id == ProgramV2Access.offerAfter || (finale && !isReplay) ? .sun : .reading
+            return session.id == ProgramV2Access.offerAfter || (finale && !isReplay) ? .sun : .table
         default:
-            return .reading
+            return .table
         }
+    }
+
+    /// The page behind a card's own screen is the table; the card carries the colour.
+    private var pageGround: DX.Ground {
+        guard let session, steps.indices.contains(index), case .card = steps[index] else { return stepGround }
+        _ = session
+        return .table
+    }
+
+    /// A card's own screen sits on its coloured card (kit 024).
+    private var panelColor: Color? {
+        guard let session, steps.indices.contains(index), case let .card(id) = steps[index] else { return nil }
+        return session.deck?.first { $0.id == id }?.faceColor
     }
 
     // MARK: Steps
@@ -305,24 +319,31 @@ struct SessionFlowView: View {
     private func header(_ session: ProgramContent.Session) -> some View {
         HStack(spacing: 12) {
             Button(action: close) {
-                Image(systemName: "xmark").font(.system(size: 16, weight: .bold)).foregroundStyle(Read4.ink)
+                DXIcon(.close, size: 20, weight: 2.4).foregroundStyle(stepGround.ink)
                     .frame(width: 44, height: 44)
-                    .background(Read4.surface, in: Circle())
+                    .background(stepGround.card2, in: Circle())
             }
             .buttonStyle(.plain)
             .accessibilityLabel(Text(isReplay ? "Close" : "Close. Your place is saved."))
             if Self.canGoBack(from: index, in: steps, beats: allBeats(session)) {
                 Button(action: goBack) {
-                    Image(systemName: "chevron.left").font(.system(size: 16, weight: .bold)).foregroundStyle(Read4.ink)
+                    DXIcon(.back, size: 20, weight: 2.4).foregroundStyle(stepGround.ink)
                         .frame(width: 44, height: 44)
-                        .background(Read4.surface, in: Circle())
+                        .background(stepGround.card2, in: Circle())
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(Text("Back"))
                 .accessibilityIdentifier("program.session.back")
                 .transition(.opacity)
             }
-            V4ProgressBar(value: Double(index + 1) / Double(max(steps.count, 1)))
+            // Segments for a short session (kit 027), the bar for a long one.
+            Group {
+                if steps.count <= 8 {
+                    DXSteps(count: max(steps.count, 1), current: index)
+                } else {
+                    DXProgress(Double(index + 1) / Double(max(steps.count, 1)))
+                }
+            }
                 .accessibilityLabel(Text("\(session.label), step \(index + 1) of \(steps.count)"))
             if isReplay {
                 Text("Replay").dxType(.caption)
@@ -330,10 +351,6 @@ struct SessionFlowView: View {
                     .padding(.horizontal, 10).padding(.vertical, 6)
                     .background(Read4.surface, in: Capsule())
             }
-            XeroView(mood: .hello, stage: 1, size: .avatar, animate: false)
-                .background(DX.Ground.apricot.background, in: Circle())
-                .clipShape(Circle())
-                .accessibilityHidden(true)
         }
         .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
         .padding(.bottom, DX.Space.s)
@@ -497,7 +514,7 @@ struct SessionIntro: View {
 
     /// "SUN 8 NOV · DAY 2": today's date and the session's label.
     private var eyebrow: String {
-        "\(Date.now.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))) · \(session.label)".uppercased()
+        "\(Date.now.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))) · \(session.label)"
     }
 
     private var clarity: Int {
@@ -800,6 +817,23 @@ struct SessionCompletion: View {
         .sensoryFeedback(.success, trigger: shown)
         .onAppear {
             withAnimation(motion.animation(DX.Move.settle)) { shown = true }
+        }
+    }
+}
+
+/// A card's own screen on its coloured card (v5, kit 024): radius 28, a soft lift; nothing for other steps.
+private struct DeckCardPanel: ViewModifier {
+    let color: Color?
+
+    func body(content: Content) -> some View {
+        if let color {
+            content
+                .padding(16)
+                .background(color, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
+                .shadow(color: Color(light: (0x4A2810, 0.14), dark: (0x000000, 0.4)), radius: 14, y: 10)
+                .padding(.bottom, 6)
+        } else {
+            content
         }
     }
 }

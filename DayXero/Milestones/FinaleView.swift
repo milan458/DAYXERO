@@ -39,7 +39,7 @@ struct FinaleView: View {
                     .overlay { Confetti().allowsHitTesting(false) }
                     .padding(.horizontal, -DX.Layout.gutter)
                     .ignoresSafeArea(edges: .top)
-                    Text(verbatim: "\(label) · \(String(localized: "program complete")) · \(Date.now.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)))".uppercased())
+                    Text(verbatim: "\(label) · \(String(localized: "program complete")) · \(Date.now.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)))")
                         .dxType(.caption).foregroundStyle(ground.muted)
                     Text(snap.daysClear == 1 ? "1 day. Clear skies." : "\(snap.daysClear) days. Clear skies.")
                         .dxType(.display).foregroundStyle(ground.ink)
