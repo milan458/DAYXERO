@@ -39,3 +39,8 @@ System: light --line raised to .22; all small coral text must use --accent-text.
 - K: S12 8.0/8.2, S13 8.3/8.4, S14 7.9/8.05, S15 8.3/8.4, S16 8.45/8.5, S17 8.6/8.65, S18 8.05/8.2, S19 8.05/8.2.
 Observation: since about round H, scores have plateaued at 8.0–8.7. Each critic pass finds new and sometimes contradictory nits (e.g. add vs remove Xero on Program, card vs row for Quit Day). The strict rubric ("most good work scores 7–8.5") may cap what these critics award. From round J, builders fix only points both critics raised.
 10:30 container restart; two builders were resumed from their transcripts and no files were lost.
+
+## Round L (10:46), 2 critics, averaged
+S01 8.3/8.05, S02 8.6/8.45, S03 8.3/8.1, S04 8.25/8.05, S05 7.95/7.8, S06 8.8/8.65, S07 7.95/7.8, S08 8.35/8.25, S09 8.2/8.05, S10 8.45/8.3, S11 8.65/8.45; S16 8.15/7.9, S17 8.35/8.1, S18 8.35/8.15, S19 8.25/8.05.
+Last consensus fixes: Week 2 node size on S19, green rail reaching today's node on S18, amber "$17 kept" chip contrast on S17. An evening Glim row on S17 was tried and removed again because it sat under the tab bar.
+10:52: canvas published (version 26). Final scoring: three fresh critics on all 19 screens, median per screen.
