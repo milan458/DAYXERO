@@ -19,7 +19,7 @@
   .typing .caret { opacity: 1; animation: blink 900ms steps(1) infinite; }
   @keyframes blink { 50% { opacity: 0; } }
   /* Suggestions read as "add to your reason": a plus disc on each chip. */
-  .adds { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .adds { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   .adds .chip { justify-content: flex-start; padding: 0 12px 0 8px; white-space: nowrap; min-height: 48px; gap: 8px; }
   .adds .chip .pl { width: 26px; height: 26px; border-radius: 99px; display: grid; place-items: center; background: var(--card-2); flex: none; }
   .adds .chip .pl svg { width: 14px; height: 14px; }
@@ -46,7 +46,7 @@
       <span class="pen" aria-label="Edit your reason"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l4.2-1L19 8.2a2.1 2.1 0 00-3-3L5.2 16 4 20zM14.5 6.7l3 3"/></svg></span>
       <span class="cnt"><span id="cn">49</span> / 120</span></div>
     <p class="t-foot lbl" data-a style="--i:5">Add to your reason</p>
-    <div class="chips adds" data-a style="--i:6"><button class="chip"><span class="pl" data-icon="plus"></span>Save $2,555 a year</button><button class="chip"><span class="pl" data-icon="plus"></span>Breathe easier</button><button class="chip"><span class="pl" data-icon="plus"></span>More energy</button><button class="chip"><span class="pl" data-icon="plus"></span>Be there for family</button></div>
+    <div class="chips adds" data-a style="--i:6"><button class="chip"><span class="pl" data-icon="plus"></span>Save $2,555</button><button class="chip"><span class="pl" data-icon="plus"></span>Breathe easier</button><button class="chip"><span class="pl" data-icon="plus"></span>More energy</button><button class="chip"><span class="pl" data-icon="plus"></span>For my family</button></div>
   </div>
   <div class="dock">
     <button class="btn" data-a style="--i:7">Save my reason</button>

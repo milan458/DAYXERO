@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>051 NRT reminders</title>
-<meta name="motion" content="Title, the two reminder cards and the preview arrive (600ms, 90ms stagger); both toggles slide on as they land. At 1.4s Done is pressed: the button keeps its ink colour and gains a green check (done state, no colour switch, no toast: the button is the confirmation), the bell in the preview bumps once. Success haptic on the check.">
+<meta name="motion" content="Title, the two reminder cards (each with its time row) and the preview arrive (600ms, 90ms stagger); both toggles slide on as they land. At 1.4s Done is pressed: the button keeps its ink colour and gains a green check (done state, no colour switch, no toast: the button is the confirmation), the bell in the preview bumps once. Success haptic on the check.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -13,20 +13,15 @@
   .rem .row .t-foot { color: var(--muted); }
   .rem .sub { border-top: 1px solid var(--line); min-height: 52px; }
   .time { height: 36px; padding: 0 14px; border-radius: 12px; background: var(--card-2); display: inline-flex; align-items: center; font: 700 16px/1 var(--display); font-variant-numeric: tabular-nums; }
-  .pv { margin-top: 28px; }
+  .pv { margin-top: 24px; }
   .pv > .t-foot { color: var(--muted); margin-bottom: 8px; }
   .noti { display: flex; gap: 12px; align-items: center; padding: 12px 14px; border-radius: 20px; background: var(--card-2); }
   .noti .app { width: 40px; height: 40px; border-radius: 11px; background: #FFC38A; display: grid; place-items: center; overflow: hidden; flex: none; }
   .noti .top { display: flex; justify-content: space-between; }
   .noti .top .t-cap { color: var(--muted); }
-  .caution { margin-top: 14px; font-size: 13px; display: flex; gap: 10px; align-items: flex-start; color: var(--muted); }
-  .caution svg { width: 18px; height: 18px; flex: none; margin-top: 1px; }
-  .plan { margin-top: 22px; display: flex; gap: 14px; align-items: center; padding: 14px 16px; }
-  .plan .t-foot { color: var(--muted); }
-  .mini { width: 48px; height: 48px; border-radius: 14px; background: var(--card-2); display: flex; align-items: flex-end; justify-content: center; gap: 4px; padding-bottom: 11px; flex: none; }
-  .mini i { width: 8px; border-radius: 3px 3px 2px 2px; background: color-mix(in srgb, #FF9A5C 75%, transparent); }
-  .rem { margin-top: 12px !important; }
-  [data-theme="dark"] .mini i { opacity: 1 !important; background: #FFB27A; } [data-theme="dark"] .mini i:nth-child(2) { background: #FFCB9E; } [data-theme="dark"] .mini i:nth-child(3) { background: #FFE0C4; }
+  .caution { margin-top: 14px; font-size: 13px; display: flex; gap: 8px; align-items: center; color: var(--muted); white-space: nowrap; }
+  .caution svg { width: 16px; height: 16px; flex: none; }
+  .rem { margin-top: 22px !important; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -38,26 +33,26 @@
   <div class="scroll">
     <div class="wrap">
       <h1 class="t-title" data-a style="--i:0">Reminders</h1>
-      <p class="t-foot lead" data-a style="--i:1">So you don't have to remember.</p>
-      <div class="card plan" data-a style="--i:2"><span class="mini"><i style="height:24px"></i><i style="height:16px;opacity:.7"></i><i style="height:10px;opacity:.5"></i></span><div class="grow"><p class="t-foot">Your patch plan</p><p class="t-head" style="font-size:17px">21 mg, then 14, then 7</p><p class="t-foot">Fri, Nov 13 to Thu, Jan 21</p></div></div>
+      <p class="t-foot lead" data-a style="--i:1">For your 10-week patch plan, Nov 13 to Jan 21.</p>
       <div class="stack rem">
         <div class="card" data-a style="--i:3">
           <div class="row"><span class="ico-tile" data-ic="patch"></span><div class="grow"><p class="t-head">Fresh patch</p><p class="t-foot">Every day</p></div><span class="toggle on"></span></div>
           <div class="row sub"><p class="t-foot grow" style="color:var(--muted)">Time</p><span class="time">7:30 AM</span></div>
         </div>
-        <div class="card" data-a style="--i:3">
-          <div class="row"><span class="ico-tile" data-ic="calendar"></span><div class="grow"><p class="t-head">Step-down days</p><p class="t-foot">The evening before each step</p></div><span class="toggle on"></span></div>
+        <div class="card" data-a style="--i:4">
+          <div class="row"><span class="ico-tile" data-ic="calendar"></span><div class="grow"><p class="t-head">Step-down days</p><p class="t-foot">Evening before each step</p></div><span class="toggle on"></span></div>
+          <div class="row sub"><p class="t-foot grow" style="color:var(--muted)">Time</p><span class="time">8:00 PM</span></div>
         </div>
       </div>
-      <div class="pv" data-a style="--i:4">
+      <div class="pv" data-a style="--i:5">
         <p class="t-foot">What you'll see</p>
         <div class="noti"><span class="app" id="app"></span><div class="grow"><div class="top"><span class="t-cap" style="color:var(--fg)">DayXero</span><span class="t-cap">7:30 AM</span></div><p class="t-foot">Fresh patch time. New spot, then on with your day.</p></div></div>
       </div>
-      <p class="t-cap caution" data-a style="--i:5"><span data-ic="shield"></span><span>Follow the label on your pack and ask a pharmacist or doctor. DayXero doesn't give dosing advice.</span></p>
+      <p class="t-cap caution" data-a style="--i:6"><span data-ic="shield"></span><span>Dosing comes from your pack's label, not DayXero.</span></p>
     </div>
   </div>
   <div class="dock">
-    <button class="btn" id="done" data-a style="--i:6"><span class="lbl">Done</span></button>
+    <button class="btn" id="done" data-a style="--i:7"><span class="lbl">Done</span></button>
   </div>
 </div>
 <script>
