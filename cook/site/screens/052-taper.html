@@ -32,6 +32,14 @@
   .sw { width: 10px; height: 30px; border-radius: 4px; background: color-mix(in srgb, #FFA766 var(--a, 62%), transparent); flex: none; }
   [data-theme="dark"] .sw { background: color-mix(in srgb, #FFC38A var(--a, 62%), transparent); }
   .warn .link { justify-self: start; margin-left: 34px; font: 700 15px/1 var(--body); color: var(--fg); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--line); padding: 4px 0; }
+  /* dark: solid apricot tints (no brown from mixing with the navy ground) */
+  [data-theme="dark"] .bars .bar:nth-child(1) { background: #FFB27A !important; }
+  [data-theme="dark"] .bars .bar { box-shadow: none !important; }
+  [data-theme="dark"] .bars .bar:nth-child(2) { background: #FFCB9E !important; }
+  [data-theme="dark"] .bars .bar:nth-child(3) { background: #FFE0C4 !important; }
+  [data-theme="dark"] .steps-list .row:nth-child(1) .sw { background: #FFB27A !important; }
+  [data-theme="dark"] .steps-list .row:nth-child(2) .sw { background: #FFCB9E !important; }
+  [data-theme="dark"] .steps-list .row:nth-child(3) .sw { background: #FFE0C4 !important; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
