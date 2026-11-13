@@ -140,3 +140,5 @@ session 023-032, lesson-log 033-042, slips-checkin 043-055.
   factual fixes: 1 min box breathing, +1 calm minute, no pre-selected answer, Health tile in the app's own style).
 - Lesson-log round 7: Sonnet 8.8 (best 8.7); Opus pending. Kit: subtler dark selection tint (13% apricot over card).
 - User asked to stop after this round: no new fixers; remaining round 8 fixers finish, get scored, keep-best applied.
+- Lesson-log round 7: Opus 8.4 / Sonnet 8.8 (r6 8.6 / 8.7): mixed, kept. Fixed the 037/038 timing contradiction by hand
+  (038 now "Starts around Day 14 / You are on Day 7", matching 037's "Ahead · in about a week").

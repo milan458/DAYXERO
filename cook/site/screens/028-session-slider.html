@@ -15,13 +15,13 @@
 /* dark: a deep mint pill with a mint label, never pale mint glaring on navy */
 [data-theme="dark"] .tag.k-try{background:#1A4434;color:#9FE3BC;box-shadow:inset 0 0 0 1px rgba(159,227,188,.22)}
 /* the reading: number and Xero's face side by side, the track straight under them */
-.unit{position:absolute;top:338px;left:var(--gutter);right:var(--gutter)}
-.read{display:flex;align-items:flex-end;justify-content:center;gap:14px;height:124px}
+.unit{position:absolute;top:290px;left:var(--gutter);right:var(--gutter)}
+.read{display:flex;align-items:flex-end;justify-content:center;gap:16px;height:158px}
 .read .n{display:flex;align-items:baseline;gap:4px}
-.read .num{font-size:128px;line-height:.86;letter-spacing:-3px;display:block}
-.read .of{font:700 24px/1 var(--display);color:var(--muted);letter-spacing:-.3px}
-.read .xf{width:104px;height:104px;flex:none;margin-bottom:-6px}
-.sl{margin-top:26px}
+.read .num{font-size:160px;line-height:.86;letter-spacing:-3px;display:block}
+.read .of{font:700 28px/1 var(--display);color:var(--muted);letter-spacing:-.3px}
+.read .xf{width:136px;height:136px;flex:none;margin-bottom:-8px}
+.sl{margin-top:38px}
 .track{position:relative;height:10px;border-radius:99px;margin:0 6px;background:linear-gradient(90deg,#8EC1FF,#C9A9C8 50%,#FF7A55)}
 [data-theme="dark"] .track{background:linear-gradient(90deg,#6FA6EE,#B48FA9 50%,#F0704E)}
 .track .thumb{position:absolute;z-index:1;top:50%;left:var(--v);width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:99px;background:#fff;
@@ -33,15 +33,15 @@
 .ticks{position:relative;height:8px;margin:14px 6px 0}
 .ticks i{position:absolute;top:0;width:2px;height:8px;margin-left:-1px;border-radius:2px;background:color-mix(in srgb,var(--fg) 30%,transparent)}
 .ticks i.mj{height:8px;background:color-mix(in srgb,var(--fg) 50%,transparent)}
-.ends{display:flex;justify-content:space-between;margin-top:10px}
+.ends{display:flex;justify-content:space-between;margin-top:12px}
 .ends span{font:600 15px/1 var(--body)}
 /* both labels hold at least 4.5:1 on the ground */
-.ends span:first-child{color:#2A5DB0}
+.ends span:first-child{color:#1F4E9E}
 .ends span:last-child{color:#C2441F}
 [data-theme="dark"] .ends span:first-child{color:#9CCBFF}
 [data-theme="dark"] .ends span:last-child{color:#FF9A7A}
 /* Xero's line sits under the slider, its pointer under the thumb */
-.say{position:relative;margin:24px auto 0;width:max-content;max-width:300px;background:var(--card);border-radius:18px;padding:12px 16px;text-align:center;font:500 15px/1.4 var(--body);box-shadow:0 2px 10px rgba(30,26,58,.07)}
+.say{position:relative;margin:30px auto 0;width:max-content;max-width:320px;background:var(--card);border-radius:20px;padding:14px 20px;text-align:center;font:500 16px/1.42 var(--body);box-shadow:0 2px 10px rgba(30,26,58,.07)}
 [data-theme="dark"] .say{box-shadow:inset 0 0 0 1px var(--line)}
 .say::before{content:"";position:absolute;left:50%;top:-7px;width:14px;height:14px;margin-left:-7px;background:var(--card);border-radius:3px 0 0 0;transform:rotate(45deg)}
 [data-theme="dark"] .say::before{box-shadow:inset 1px 1px 0 var(--line)}
@@ -68,7 +68,7 @@
       <div class="ticks" id="ticks"></div>
       <div class="ends"><span>Calm</span><span>Very tense</span></div>
     </div>
-    <p class="say" data-a style="--i:6">An honest 5. Let's see what<br>three minutes of breathing does.</p>
+    <p class="say" data-a style="--i:6">An honest 5. Let's see what<br>five minutes of breathing does.</p>
   </div>
   <div class="dock"><button class="btn" data-a style="--i:9">That's about right</button></div>
 </div>
@@ -77,10 +77,10 @@ document.getElementById('close').innerHTML = DX.icon('close');
 document.getElementById('t-ic').innerHTML = DX.icon('hand', {size:16});
 document.getElementById('ticks').innerHTML = Array.from({length:11}, (_, i) => `<i class="${i % 5 ? '' : 'mj'}" style="left:${i * 10}%"></i>`).join('');
 /* Xero's face follows the slider: calm 0-3, plain 4, a little tense 5-6 (open eyes, flat wavering mouth, raised inner brows), tense 7+ */
-const BROWS = (k) => `<g fill="none" stroke="#24163A" stroke-width="3.5" stroke-linecap="round"><path d="M77 ${66 + k} L90 ${62 - k}"/><path d="M110 ${62 - k} L123 ${66 + k}"/></g>`;
+const BROWS = (k) => `<g fill="none" stroke="#24163A" stroke-width="${k ? 3.5 : 3}" stroke-linecap="round">${k ? `<path d="M77 ${66 + k} L90 ${62 - k}"/><path d="M110 ${62 - k} L123 ${66 + k}"/>` : `<path d="M77 64.5 Q83.5 62.4 90 63"/><path d="M110 63 Q116.5 62.4 123 64.5"/>`}</g>`;
 function xeroAt(v) {
-  if (v <= 3) return DX.char('xero', {mood:'calm', size:104});
-  let s = DX.char('xero', {mood:'hello', size:104});
+  if (v <= 3) return DX.char('xero', {mood:'calm', size:136});
+  let s = DX.char('xero', {mood:'hello', size:136});
   if (v === 4) return s;
   const mouth = v >= 7 ? 'M90 96 Q93.5 92 97 96 Q100.5 100 104 96 Q107.5 92 111 96' : 'M92 95 Q96 93 100 95 Q104 97 108 95';
   s = s.replace(/<path d="M92 92 Q100 100 108 92"/, `<path d="${mouth}"`);

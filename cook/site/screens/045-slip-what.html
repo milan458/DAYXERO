@@ -4,21 +4,21 @@
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .wrap { padding: 46px var(--gutter) 0; }
+  .wrap { padding: 66px var(--gutter) 0; }
   /* the slip flow's one Jelli placement: small, at the right of the screen title (044, 045) */
   .ttl { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
   .ttl { align-items: center; }
   /* Jelli sits in her own small sea disc next to the title (anchored, not a floating sticker), as on 044 */
   .ttl .jl { position: relative; width: 84px; height: 84px; flex: none; border-radius: 99px; overflow: hidden; background: linear-gradient(#CFE5F7, #EAF2F8); }
-  .ttl .jl .j { position: absolute; left: 0; top: 4px; width: 84px; height: 84px; }
-  .ttl .jl svg.sea { position: absolute; left: 0; bottom: 0; width: 84px; height: 34px; display: block; }
+  .ttl .jl .j { position: absolute; left: 0; top: -6px; width: 84px; height: 84px; }
+  .ttl .jl svg.sea { position: absolute; left: 0; bottom: 0; width: 84px; height: 24px; display: block; }
   .jl .w1 { fill: #8FC0EC; } .jl .w2 { fill: #4A8FDB; }
   [data-theme="dark"] .ttl .jl { background: linear-gradient(#1C2A55, #33477A); }
   [data-theme="dark"] .jl .w1 { fill: #2F4F8F; } [data-theme="dark"] .jl .w2 { fill: #1B356A; }
   .wrap .lead { margin-top: 8px; color: var(--muted); }
   .priv { margin-top: 8px; display: flex; align-items: center; gap: 6px; color: var(--muted); }
   .priv svg { width: 16px; height: 16px; }
-  .qs { margin-top: 34px; display: grid; gap: 38px; }
+  .qs { margin-top: 36px; display: grid; gap: 42px; }
   .q6 { display: grid; gap: 14px; }
   .q6 .t-head { font-size: 17px; }
   /* chips in a row share it in equal widths */
