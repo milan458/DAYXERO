@@ -1,34 +1,39 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>045 Slip: what happened</title>
-<meta name="motion" content="Optional step (reached from 'Add what happened'): no progress bar, an X to close and a 'Skip' link. Calm, no springs. Small Jelli settles in at the right of the title (900ms, then a slow bob; the same place on every slip screen); the title, helper and the 'Only you see this' line arrive, then each question group arrives in order (600ms, 90ms stagger), then Save and Skip. Selected chips use the kit's warm selection (tint plus 2px outline). Chips size to their words and share each row evenly. Tapping a chip tints it and draws its 2px outline in 250ms with a light selection haptic.">
+<meta name="motion" content="Optional step (reached from 'Add what happened'): no progress bar and no X: the 'Skip' link is the way out. Calm, no springs. Jelli settles into her small sea disc at the right of the title (900ms, then a slow bob; the same placement as 044); the title, helper and the 'Only you see this' line arrive, then each question group arrives in order (600ms, 90ms stagger), then Save and Skip. Selected chips use the kit's warm selection (tint plus 2px outline). Chips in a row have equal widths. Tapping a chip tints it and draws its 2px outline in 250ms with a light selection haptic.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .wrap { padding: 66px var(--gutter) 0; }
+  .wrap { padding: 46px var(--gutter) 0; }
   /* the slip flow's one Jelli placement: small, at the right of the screen title (044, 045) */
   .ttl { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
-  .ttl .jl { width: 56px; height: 56px; margin: -4px -4px -8px 0; flex: none; }
+  .ttl { align-items: center; }
+  /* Jelli sits in her own small sea disc next to the title (anchored, not a floating sticker), as on 044 */
+  .ttl .jl { position: relative; width: 84px; height: 84px; flex: none; border-radius: 99px; overflow: hidden; background: linear-gradient(#CFE5F7, #EAF2F8); }
+  .ttl .jl .j { position: absolute; left: 0; top: 4px; width: 84px; height: 84px; }
+  .ttl .jl svg.sea { position: absolute; left: 0; bottom: 0; width: 84px; height: 34px; display: block; }
+  .jl .w1 { fill: #8FC0EC; } .jl .w2 { fill: #4A8FDB; }
+  [data-theme="dark"] .ttl .jl { background: linear-gradient(#1C2A55, #33477A); }
+  [data-theme="dark"] .jl .w1 { fill: #2F4F8F; } [data-theme="dark"] .jl .w2 { fill: #1B356A; }
   .wrap .lead { margin-top: 8px; color: var(--muted); }
   .priv { margin-top: 8px; display: flex; align-items: center; gap: 6px; color: var(--muted); }
   .priv svg { width: 16px; height: 16px; }
   .qs { margin-top: 34px; display: grid; gap: 38px; }
   .q6 { display: grid; gap: 14px; }
   .q6 .t-head { font-size: 17px; }
-  .q6 .chips { display: flex; flex-wrap: nowrap; gap: 8px; }
-  .q6 .chip { flex: 1 1 auto; justify-content: center; min-height: 56px; padding: 0 12px; white-space: nowrap; }
+  /* chips in a row share it in equal widths */
+  .q6 .chips { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 8px; }
+  .q6 .chip { justify-content: center; min-height: 56px; padding: 0 6px; white-space: nowrap; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
-  <div class="nav">
-    <button class="icon-btn" aria-label="Close" data-ic="close" data-go="046-slip-done"></button>
-  </div>
   <div class="scroll">
     <div class="wrap">
       <div class="ttl"><div>
         <h1 class="t-title" data-a style="--i:1">What happened?</h1>
         <p class="t-foot lead" data-a style="--i:2">No judgement. Just the facts,<br>so the plan fits.</p>
         <p class="t-foot priv" data-a style="--i:3"><span data-ic="lock"></span>Only you see this.</p>
-      </div><div class="jl" data-settle style="--d:200ms"><div class="bob" id="jelli"></div></div></div>
+      </div><div class="jl" data-settle style="--d:200ms"><div class="j bob" id="jelli"></div><svg class="sea" viewBox="0 0 84 34" aria-hidden="true"><path class="w1" d="M0 12 C14 6 26 6 42 11 S70 16 84 9 V34 H0Z"/><path class="w2" d="M0 22 C16 17 30 18 44 22 S70 26 84 20 V34 H0Z"/></svg></div></div>
       <div class="qs">
         <div class="q6" data-a style="--i:4">
           <p class="t-head">What did you have?</p>
@@ -52,6 +57,6 @@
 </div>
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic));
-  document.getElementById('jelli').innerHTML = DX.char('jelli', { mood: 'calm', size: 56 });
+  document.getElementById('jelli').innerHTML = DX.char('jelli', { mood: 'calm', size: 84 });
 </script>
 </body></html>

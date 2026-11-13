@@ -1,17 +1,19 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>054 Evening check-in</title>
-<meta name="motion" content="Night palette in both light and dark modes (Glim's evening: the midnight ground and night sky never switch to cream). Dim and slow, no springs. The night sky fades in (700ms) with stars twinkling and fireflies drifting; Glim settles in (900ms) then bobs. The date line, title ('3 waves today. Each one ridden out.', its '3' counts up), day choice, the waves row and the four faces arrive in order (600ms, 90ms stagger). The four mood faces are the same little moons as the craving log (craters and a crescent shadow: a tired slate moon with heavy lids, pale, warm, apricot) with their own expressions; at 1.6s 'Good' fills in and its face tilts up a touch (400ms settle) with a soft selection haptic. Edit is a readable outlined pill. Save arrives last, a solid cream button, unlike the tinted, outlined selections.">
+<meta name="motion" content="Night palette in both light and dark modes (Glim's evening: the midnight ground and night sky never switch to cream). Dim and slow, no springs. The night sky fades in (700ms) with stars twinkling and fireflies drifting; Glim settles in (900ms) then bobs. The date line, title ('3 waves today. Each one ridden out.', its '3' counts up), day choice, the waves row and the four faces arrive in order (600ms, 90ms stagger). Glim is the hero (184px, filling the top third). 'Clear day / Had a slip' is a plain segmented control (a raised segment slides under the choice, 250ms). The four mood faces are drawn by the same code as the craving log (042): navy Rough with cream features and tired lids, cream Okay, pale apricot Good, apricot Proud, with craters and crescent shading; at 1.6s 'Good' fills in and its face tilts up a touch (400ms settle) with a soft selection haptic. Edit is a readable outlined pill. Save arrives last, a solid cream button, unlike the tinted, outlined selections.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   .sky { position: absolute; left: 0; right: 0; top: 0; height: 320px; }
-  .glim { position: absolute; left: 50%; top: 104px; width: 140px; height: 140px; margin-left: -70px; }
+  .glim { position: absolute; left: 50%; top: 80px; width: 184px; height: 184px; margin-left: -92px; }
   .body { position: absolute; left: 0; right: 0; top: 288px; padding: 0 var(--gutter); }
   .body .day { color: var(--muted); }
   .body h1 { margin-top: 4px; }
   .body .lead { margin-top: 6px; color: var(--muted); }
-  .daypick { margin-top: 14px; }
-  .daypick .chip { justify-content: center; }
+  /* Clear day / Had a slip: a plain segmented control (a raised segment on a track), not the mood picker's tint and outline */
+  .seg { margin-top: 14px; display: grid; grid-template-columns: 1fr 1fr; padding: 4px; border-radius: 16px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
+  .seg button { height: 40px; border-radius: 12px; font: 600 15px/1 var(--body); color: var(--muted); }
+  .seg button.on { background: color-mix(in srgb, var(--fg) 16%, var(--card)); color: var(--fg); font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,.3); }
   .sos { margin-top: 10px; }
   .sos .row { padding: 8px 16px; min-height: 60px; }
   .sos .t-foot { color: var(--muted); }
@@ -33,7 +35,7 @@
     <p class="t-foot day" data-a style="--i:2">Friday check-in, Day 7</p>
     <h1 class="t-title" data-a style="--i:3"><span data-count="3">3</span> waves today.<br>Each one ridden out.</h1>
     <p class="t-foot lead" data-a style="--i:4">Every wave makes the next a little quieter.</p>
-    <div class="grid2 daypick" data-a style="--i:5"><button class="chip on">Clear day</button><button class="chip">Had a slip</button></div>
+    <div class="seg" role="radiogroup" data-a style="--i:5"><button class="on" role="radio" aria-checked="true">Clear day</button><button role="radio" aria-checked="false">Had a slip</button></div>
     <div class="list sos" data-a style="--i:6">
       <div class="row"><span class="ico-tile" data-ic="wave"></span><div class="grow"><p class="t-head" style="font-size:16px">Today's waves</p><p class="t-foot">Last one at 6:25 PM</p></div><button class="edit">Edit</button></div>
     </div>
@@ -54,22 +56,21 @@
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic));
   document.getElementById('sky').innerHTML = DX.nightSky({ w: 390, h: 320, moonX: 318, moonY: 104 });
-  document.getElementById('glim').innerHTML = DX.char('glim', { mood: 'calm', size: 140 });
-  /* Four little moons, as in the craving log (042): each has craters and a crescent shadow; slate Rough with tired lids,
-     pale Okay, warm moonlight Good, apricot Proud. */
-  const INK = '#0F1B33', CH = '<circle cx="12.5" cy="29" r="3.2" fill="#FF8C6B" opacity=".55"/><circle cx="35.5" cy="29" r="3.2" fill="#FF8C6B" opacity=".55"/>';
+  document.getElementById('glim').innerHTML = DX.char('glim', { mood: 'calm', size: 184 });
+  /* The same four little moons as the craving log (042), drawn by the same code: navy Rough with cream features and tired lids,
+     cream Okay, pale apricot Good, apricot Proud; stronger craters and crescent shading. */
+  const INK = '#0F1B33', CR = '#F6EFE2', CH = '<circle cx="12.5" cy="29" r="3.2" fill="#FF8C6B" opacity=".55"/><circle cx="35.5" cy="29" r="3.2" fill="#FF8C6B" opacity=".55"/>';
   const F = {
-    /* tired, not angry: lids drooping at the outer corners over half-moon eyes, soft shadows under them, a small yawn */
-    rough: { c: '#A9B8D6', sh: '#7385AE', d: `<path d="M15 22.6a3 3 0 0 0 6 .4zM27 23a3 3 0 0 0 6-.4z" fill="${INK}"/><path d="M13.6 23.6l8-1.6M26.4 22l8 1.6" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"/><path d="M15.2 29q2.5 1.3 5 0M27.8 29q2.5 1.3 5 0" fill="none" stroke="${INK}" stroke-opacity=".28" stroke-width="1.6" stroke-linecap="round"/><ellipse cx="24" cy="34.6" rx="2.4" ry="2" fill="${INK}"/>` },
-    okay: { c: '#E8DCBC', sh: '#C2B28A', d: `<circle cx="18" cy="22.5" r="2.3" fill="${INK}"/><circle cx="30" cy="22.5" r="2.3" fill="${INK}"/><path d="M18 32h12" stroke="${INK}" stroke-width="2.6" stroke-linecap="round"/>` },
-    good: { c: '#FFD37A', sh: '#E0A646', d: `${CH}<circle cx="18" cy="22" r="2.4" fill="${INK}"/><circle cx="30" cy="22" r="2.4" fill="${INK}"/><path d="M16.5 29c3 5 12 5 15 0" fill="none" stroke="${INK}" stroke-width="2.6" stroke-linecap="round"/>` },
-    proud: { c: '#FFB98A', sh: '#E58A58', d: `${CH}<path d="M14 23c1.8-3 5.2-3 7 0M27 23c1.8-3 5.2-3 7 0" fill="none" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"/><path d="M15.5 28.5h17c0 5.5-3.8 8.5-8.5 8.5s-8.5-3-8.5-8.5z" fill="${INK}"/><path d="M19.5 33.5c2.6 1.6 6.4 1.6 9 0" fill="none" stroke="#FF8C6B" stroke-width="2.2" stroke-linecap="round"/><path d="M40 6l1.2 2.6 2.6 1.2-2.6 1.2L40 13.6l-1.2-2.6-2.6-1.2 2.6-1.2z" fill="#FFD37A"/>` }
+    rough: { c: '#4C5C88', sh: '#26335A', cr: '#33416C', d: `<path d="M15 22.6a3 3 0 0 0 6 .4zM27 23a3 3 0 0 0 6-.4z" fill="${CR}"/><path d="M13.6 23.6l8-1.6M26.4 22l8 1.6" stroke="${CR}" stroke-width="2.4" stroke-linecap="round"/><path d="M15.2 29q2.5 1.3 5 0M27.8 29q2.5 1.3 5 0" fill="none" stroke="${CR}" stroke-opacity=".35" stroke-width="1.6" stroke-linecap="round"/><ellipse cx="24" cy="34.6" rx="2.4" ry="2" fill="${CR}"/>` },
+    okay: { c: '#EFE5CF', sh: '#BFAE8A', cr: '#D2C3A2', d: `<circle cx="18" cy="22.5" r="2.3" fill="${INK}"/><circle cx="30" cy="22.5" r="2.3" fill="${INK}"/><path d="M18 32h12" stroke="${INK}" stroke-width="2.6" stroke-linecap="round"/>` },
+    good: { c: '#FFD8B0', sh: '#E9A673', cr: '#F2BF92', d: `${CH}<circle cx="18" cy="22" r="2.4" fill="${INK}"/><circle cx="30" cy="22" r="2.4" fill="${INK}"/><path d="M16.5 29c3 5 12 5 15 0" fill="none" stroke="${INK}" stroke-width="2.6" stroke-linecap="round"/>` },
+    proud: { c: '#FFB27A', sh: '#DC7E4E', cr: '#EE9A66', d: `${CH}<path d="M14 23c1.8-3 5.2-3 7 0M27 23c1.8-3 5.2-3 7 0" fill="none" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"/><path d="M15.5 28.5h17c0 5.5-3.8 8.5-8.5 8.5s-8.5-3-8.5-8.5z" fill="${INK}"/><path d="M19.5 33.5c2.6 1.6 6.4 1.6 9 0" fill="none" stroke="#FF8C6B" stroke-width="2.2" stroke-linecap="round"/><path d="M41 4l1.2 2.6 2.6 1.2-2.6 1.2L41 11.6l-1.2-2.6-2.6-1.2 2.6-1.2z" fill="#F5B83D"/>` }
   };
-  document.querySelectorAll('[data-f]').forEach(b => { const f = F[b.dataset.f]; b.insertAdjacentHTML('afterbegin',
-    `<svg viewBox="0 0 48 48" aria-hidden="true" style="overflow:visible"><circle cx="24" cy="25" r="21" fill="${f.c}"/>
-    <path d="M24 4 A21 21 0 0 1 24 46 A14 21 0 0 0 24 4Z" fill="${f.sh}" opacity=".42"/>
-    <g fill="${f.sh}" opacity=".5"><circle cx="13.5" cy="14" r="2.4"/><circle cx="34.5" cy="12.5" r="1.7"/><circle cx="36" cy="38" r="2.1"/></g>
-    <path d="M8 18a17 17 0 0 1 10-11" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2.4" stroke-linecap="round"/>${f.d}</svg>`); });
+  const moon = f => `<svg viewBox="0 0 48 48" aria-hidden="true" style="overflow:visible"><circle cx="24" cy="25" r="21" fill="${f.c}"/>
+    <path d="M24 4 A21 21 0 0 1 24 46 A13 21 0 0 0 24 4Z" fill="${f.sh}" opacity=".5"/>
+    <g fill="${f.cr}"><circle cx="13" cy="13.5" r="2.6"/><circle cx="34.5" cy="12" r="1.9"/><circle cx="37" cy="37.5" r="2.3"/><circle cx="9.5" cy="34" r="1.4"/></g>
+    <path d="M8 18a17 17 0 0 1 10-11" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="2.4" stroke-linecap="round"/>${f.d}</svg>`;
+  document.querySelectorAll('[data-f]').forEach(b => b.insertAdjacentHTML('afterbegin', moon(F[b.dataset.f])));
   const good = document.getElementById('good');
   DX.after(0, () => good.classList.remove('on'));
   DX.after(1600, () => good.classList.add('on'));

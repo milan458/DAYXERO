@@ -6,14 +6,14 @@
 <style>
 /* one colour per card type, shared by every session screen: Listen apricot, Try mint, Reveal sky, Myth or fact rose.
    Dark mode deepens the pastels a step so they sit on navy without glaring. */
-.k-listen{--face:#FFC38A;--face-2:#FFD6AC;--sunc:#FFE6BC}.k-try{--face:#9FE3BC}.k-reveal{--face:#9CCBFF}.k-myth{--face:#FFB9A6}
-[data-theme="dark"] .k-listen{--face:#F3B47E;--face-2:#F7C595;--sunc:#FDDDAE}[data-theme="dark"] .k-try{--face:#8FD3AD}[data-theme="dark"] .k-reveal{--face:#8EBBEC}[data-theme="dark"] .k-myth{--face:#EFA894}
+.k-listen{--face:#FFC38A;--face-2:#FFD6AC;--sunc:radial-gradient(circle,#FFE48A 0,#FFD35E 66%,#FFC94F 100%)}.k-try{--face:#9FE3BC}.k-reveal{--face:#9CCBFF}.k-myth{--face:#FFB9A6}
+[data-theme="dark"] .k-listen{--face:#F3B47E;--face-2:#F7C595;--sunc:#FDDDAE}[data-theme="dark"] .k-try{--face:#8FD3AD}[data-theme="dark"] .bc.k-try{--face:color-mix(in srgb,#8FD3AD 85%,#0E1322)}[data-theme="dark"] .k-reveal{--face:#8EBBEC}[data-theme="dark"] .k-myth{--face:#EFA894}
 .head{position:absolute;top:112px;left:0;right:0;display:grid;gap:6px}
 .stamps{position:absolute;top:184px;left:var(--gutter);right:var(--gutter);display:flex;align-items:center;gap:8px}
 .stamps .t-foot{margin-left:8px}
 /* the hand: four cards standing level behind (icons only), card 1 drawn out in front. The hand is 310px wide, centred. */
-.fan{position:absolute;top:318px;left:50%;width:310px;margin-left:-155px;height:360px}
-.bc{position:absolute;top:0;left:calc(50% + var(--x));width:84px;height:170px;margin-left:-42px;border-radius:16px;background:var(--face);color:#1E1A3A;
+.fan{position:absolute;top:266px;left:50%;width:310px;margin-left:-155px;height:420px}
+.bc{position:absolute;top:0;left:calc(50% + var(--x));width:84px;height:184px;margin-left:-42px;border-radius:16px;background:var(--face);color:#1E1A3A;
   display:grid;justify-items:center;align-content:start;padding-top:14px;transform:translateY(var(--y));box-shadow:0 8px 18px rgba(60,40,20,.12)}
 [data-theme="dark"] .bc{box-shadow:0 10px 22px rgba(0,0,0,.42)}
 .bc .ic{width:36px;height:36px;border-radius:99px;background:rgba(30,26,58,.1);display:grid;place-items:center}
@@ -21,16 +21,16 @@
 .play .bc{animation:deal 760ms var(--settle) both;animation-delay:calc(300ms + var(--k) * 120ms)}
 @keyframes deal{from{opacity:0;transform:translateY(420px)}35%{opacity:1}to{opacity:1;transform:translateY(var(--y))}}
 /* card 1: a small Listen player, the same art as the card it opens (024) */
-.front{position:absolute;left:50%;top:82px;width:252px;margin-left:-126px;border-radius:24px;background:var(--face);color:#1E1A3A;overflow:hidden;
-  box-shadow:0 0 0 1.5px var(--fg),0 16px 28px rgba(60,40,20,.18)}
-[data-theme="dark"] .front{box-shadow:0 0 0 1.5px var(--fg),0 18px 32px rgba(0,0,0,.5)}
+.front{position:absolute;left:50%;top:92px;width:272px;margin-left:-136px;border-radius:26px;background:var(--face);color:#1E1A3A;overflow:hidden;
+  box-shadow:0 2px 4px rgba(60,40,20,.10),0 14px 24px rgba(60,40,20,.16),0 30px 50px rgba(60,40,20,.20)}
+[data-theme="dark"] .front{box-shadow:inset 0 1px 0 rgba(255,248,238,.35),0 14px 26px rgba(0,0,0,.45),0 32px 56px rgba(0,0,0,.55)}
 .play .front{animation:lift 900ms var(--settle) both 820ms}
 @keyframes lift{from{opacity:0;transform:translateY(300px)}40%{opacity:1}to{opacity:1;transform:none}}
-.front .art{position:relative;height:138px;background:linear-gradient(to bottom,var(--face-2),var(--face))}
-.front .sun{position:absolute;left:50%;top:16px;width:120px;height:120px;margin-left:-60px;border-radius:50%;background:var(--sunc)}
-.front .xw{position:absolute;left:50%;bottom:-6px;width:124px;margin-left:-62px}
+.front .art{position:relative;height:164px;background:linear-gradient(to bottom,var(--face-2),var(--face))}
+.front .sun{position:absolute;left:50%;top:18px;width:140px;height:140px;margin-left:-70px;border-radius:50%;background:var(--sunc)}
+.front .xw{position:absolute;left:50%;bottom:-7px;width:146px;margin-left:-73px}
 .play .front .xw{animation:dx-settle 700ms var(--settle) both 1200ms}
-.front .in{padding:14px 18px 20px}
+.front .in{padding:16px 20px 22px}
 .front .kind{display:flex;align-items:center;gap:7px;font:600 14px/1 var(--body);color:#3A2410}
 .front .kind svg{width:17px;height:17px}
 .front h2{font:800 24px/1.1 var(--display);letter-spacing:-.5px;margin:10px 0 0;text-wrap:balance}
@@ -66,7 +66,7 @@ const PHONES = `<g aria-hidden="true">
   <path d="M52 62 C66 30 100 22 122 26" fill="none" stroke="#FFF8EE" stroke-opacity=".35" stroke-width="3" stroke-linecap="round"/>
   <rect x="18" y="88" width="30" height="48" rx="14" fill="#1E1A3A"/><rect x="24" y="96" width="9" height="32" rx="4.5" fill="#FF9A6B"/>
   <rect x="152" y="88" width="30" height="48" rx="14" fill="#1E1A3A"/><rect x="167" y="96" width="9" height="32" rx="4.5" fill="#FF9A6B"/></g>`;
-let xs = DX.char('xero', {mood:'calm', size:124});
+let xs = DX.char('xero', {mood:'calm', size:146});
 const mi = xs.indexOf('stroke-width="3.5"'); const end = xs.indexOf('</path>', mi) + 7;
 xs = xs.slice(0, end) + PHONES + xs.slice(end);
 document.getElementById('fan').innerHTML = back.map((c, k) => `<div class="bc k-${c[0]}" style="--x:${X[k]}px;--y:${Y[k]}px;--k:${k}" aria-label="${c[2]}"><span class="ic">${ic(c[1])}</span></div>`).join('') +

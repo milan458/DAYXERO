@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>020 Craving passed</title>
-<meta name="motion" content="The completion beat, gentle. The pacer ring from SOS closes: a cream arc draws round from the right of the top gap to its left (900ms), and in the gap it leaves, the check seals it: a cream knockout disc fades in with the sun disc inside it (500ms, at 900ms) and the ink tick draws (420ms). Jelli settles in cheering (900ms, one soft hop). Title and line fade up and the yellow underline under 'out' draws in. At 900ms the wave count rolls from 22 to 23 while a '+1' floats up beside it (spring, the only one on the screen). At 1.3s the wave medallion (the kit wave badge, no numeral, so 23 leads) fades in (700ms, no spring) and the 23rd of its 25 rim segments lights (400ms), leaving a short gap of two that matches '2 more to your 25-wave badge'. The button and the quiet 'What set it off?' text button arrive last (it opens the optional trigger sheet). Success haptic with the +1.">
+<meta name="motion" content="The completion beat, gentle. The pacer ring from SOS closes: a cream arc draws round from the right of the top gap to its left (900ms), and in the gap it leaves, the check seals it: a cream knockout disc fades in with the sun disc inside it (500ms, at 900ms) and the ink tick draws (420ms). Jelli settles in cheering (900ms, one soft hop), the same silhouette as on SOS (arms down, no sparkles). Title and line fade up and the yellow underline under 'out' draws in. At 900ms the wave count rolls from 22 to 23 while a '+1' floats up beside it (spring, the only one on the screen). At 1.3s the wave medallion (the kit wave badge with a cream core and gold rim, no numeral, so 23 leads) fades in (700ms, no spring) and its solid progress ring extends from 22 to 23 of 25 (400ms), leaving a short gap of two that matches '2 more to your 25-wave badge'. The button and the quiet 'What set it off?' text button arrive last (it opens the optional trigger sheet). Success haptic with the +1.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -36,10 +36,12 @@
   .waves .medal { position: relative; width: 124px; height: 124px; flex: none; }
   .waves .medal .ticks { position: absolute; inset: 0; overflow: visible; }
   .waves .medal .mm { position: absolute; inset: 15px; filter: drop-shadow(0 3px 6px rgba(6,16,50,.35)); }
-  .play .waves .medal .t23 { animation: lit 400ms var(--ease) 1700ms both; }
-  @keyframes lit { from { stroke-opacity: .22; } }
+  /* one solid progress ring round the medallion: 23 of 25 */
+  .waves .medal .arc23 { stroke-dasharray: 364.4; stroke-dashoffset: 29.2; }
+  .play .waves .medal .arc23 { animation: lit 400ms var(--ease) 1700ms both; }
+  @keyframes lit { from { stroke-dashoffset: 43.7; } }
   .dock .why { display: flex; justify-content: center; margin-top: 2px; }
-  .dock .why .link { height: 44px; padding: 0 16px; color: var(--fg); opacity: 1; font: 600 16px/1 var(--body); text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 5px; text-decoration-color: rgba(255,248,238,.5); }
+  .dock .why .link { height: 44px; padding: 0 16px; color: var(--fg); opacity: .92; font: 600 16px/1 var(--body); }
 </style>
 </head><body>
 <div class="screen" data-ground="ocean">
@@ -82,18 +84,18 @@
 </div>
 <script>
   const $ = s => document.querySelector(s);
-  $('#jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 190 });
-  /* the medallion carries the wave glyph only, so 23 leads */
-  $('#bd').innerHTML = DX.badge({ kind: 'wave', n: '', size: 94, bare: true, label: '25-wave badge' });
-  /* the 23-of-25 arc: 25 short rim segments round the medallion, 23 lit cream, 2 still to ride */
-  let t = '';
-  const c = 62, r = 58, step = 2 * Math.PI / 25, gap = .055;
-  for (let i = 0; i < 25; i++) {
-    const a0 = -Math.PI / 2 + i * step + gap, a1 = -Math.PI / 2 + (i + 1) * step - gap;
-    const p = a => `${(c + r * Math.cos(a)).toFixed(2)} ${(c + r * Math.sin(a)).toFixed(2)}`;
-    t += `<path ${i === 22 ? 'class="t23"' : ''} d="M${p(a0)} A${r} ${r} 0 0 1 ${p(a1)}" fill="none" stroke="#FFF8EE" stroke-opacity="${i < 23 ? 1 : .22}" stroke-width="6" stroke-linecap="round"/>`;
-  }
-  $('#ticks').innerHTML = t;
-  DX.after(2700, () => { $('#jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 190, animate: false }); });
+  /* on-model with SOS: the cheer face and hop, but arms hang like tentacles (no raised lobes) and no sparkles */
+  const jelli = o => DX.char('jelli', Object.assign({ mood: 'cheer', size: 190 }, o))
+    .replace('M56 118 C42 106 38 92 44 78', 'M58 120 C50 136 60 150 52 166').replace('M144 118 C158 106 162 92 156 78', 'M142 120 C150 136 140 150 148 166')
+    .replace(/<path d="[^"]*" fill="#FFC93C" stroke="none"><\/path>/g, '');
+  $('#jelli').innerHTML = jelli();
+  /* the medallion carries the wave glyph only, so 23 leads: a cream core and a gold rim so it reads on the sea */
+  $('#bd').innerHTML = DX.badge({ kind: 'wave', n: '', size: 94, bare: true, label: '25-wave badge' })
+    .replace('r="47" fill="#1D3A9E"', 'r="47" fill="#F5B83D"').replace('r="39" fill="#2A52DB"', 'r="39" fill="#FFF3DC"')
+    .replace('fill="#5C7FF0"', 'fill="#6F93F2"').replace('fill="#1D3A9E" opacity=".7"', 'fill="#2A52DB" opacity=".85"');
+  /* the 23-of-25 ring: one solid track, one solid cream arc with a short gap of two still to ride */
+  $('#ticks').innerHTML = `<circle cx="62" cy="62" r="58" fill="none" stroke="#FFF8EE" stroke-opacity=".22" stroke-width="6"/>
+    <circle class="arc23" cx="62" cy="62" r="58" fill="none" stroke="#FFF8EE" stroke-width="6" stroke-linecap="round" transform="rotate(-90 62 62)"/>`;
+  DX.after(2700, () => { $('#jelli').innerHTML = jelli({ animate: false }); });
 </script>
 </body></html>

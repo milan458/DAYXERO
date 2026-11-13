@@ -35,6 +35,11 @@
   [data-theme="dark"] .hi .bubble { box-shadow: 0 6px 18px rgba(0,0,0,.35); }
   .text { position: absolute; z-index: 1; left: 0; right: 0; top: 462px; padding: 0 var(--gutter); display: grid; gap: 12px; }
   .text .mark { white-space: nowrap; }
+  /* One underline colour in both modes: coral (matches the launch underline). */
+  [data-theme="dark"] .text .mark { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 16' preserveAspectRatio='none'%3E%3Cpath d='M3 10 C40 4 90 5 122 7 C152 9 178 11 197 4' fill='none' stroke='%23FF7A55' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E"); }
+  /* Dark: feather the foot of the night hill into the page (an eased fade, no seam line). */
+  [data-theme="dark"] .art::after { content: ""; position: absolute; z-index: 3; left: 0; right: 0; bottom: 0; height: 96px; pointer-events: none;
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--g) 0%, transparent) 0%, color-mix(in srgb, var(--g) 35%, transparent) 30%, color-mix(in srgb, var(--g) 75%, transparent) 62%, var(--g) 92%); }
   .hl > span { display: block; white-space: nowrap; }
   .dock { gap: 0; padding-top: 24px; }
   .dock .btn { margin-bottom: 4px; }

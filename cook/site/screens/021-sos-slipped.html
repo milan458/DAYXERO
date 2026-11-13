@@ -1,10 +1,10 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>021 After a slip, plan</title>
-<meta name="motion" content="Quiet tier, no springs. The paper-cut sea card builds back to front: the four wave layers rise 40px into place 100ms apart (900ms each) while Jelli (calm) settles down into the water between them (900ms), then keeps a slow bob, half in the sea; the small sun fades in last (in dark mode a warm, low sun sitting on the water with a horizon glow). The title and the progress note arrive with a 90ms stagger, then the if-then line, whose 'coffee' token is tappable (it opens the short moment sheet: Coffee, Stress, After a meal, Something else; its chevron nudges down once at 900ms), and its three option rows settle in one by one (120ms apart); the chosen row carries the warm selection (apricot tint in light, amber at about 15% with an apricot outline in dark) and its tick. On Save the button turns to its done state and a soft success haptic plays.">
+<meta name="motion" content="Quiet tier, no springs. The paper-cut sea card builds back to front: the four wave layers rise 40px into place 100ms apart (900ms each) while Jelli (calm) settles down into the water between them (900ms), then keeps a slow bob, half in the sea; the small sun fades in last (in dark mode a warm, low sun sitting on the water with a horizon glow). The title and the progress note arrive with a 90ms stagger, then the if-then line, whose 'coffee' token is tappable (it opens the short moment sheet: Coffee, Stress, After a meal, Something else; its chevron nudges down once at 900ms), and its three option rows settle in one by one (120ms apart); the chosen row carries the kit selection (warm apricot tint in light, the kit's cream lift in dark) and its tick. On Save the button turns to its done state and a soft success haptic plays.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .hero { position: absolute; left: var(--gutter); right: var(--gutter); top: 104px; height: 184px; border-radius: 28px; overflow: hidden;
+  .hero { position: absolute; left: var(--gutter); right: var(--gutter); top: 114px; height: 178px; border-radius: 28px; overflow: hidden;
     --sky-a: #BFD8FF; --sky-b: #FFE6CC; --sun: #FFC85A; --w1: #A9CBFF; --w2: #7EAAF5; --w3: #5486E6; --w4: #3463CC; --edge: rgba(255,255,255,.75); --lift: rgba(16,40,120,.32);
     box-shadow: inset 0 0 0 1px rgba(30,26,58,.08); }
   /* light: the same layered paper-cut sea as dark, by morning (blue sky warming to peach at the horizon, a low sun, grain) */
@@ -20,13 +20,10 @@
   [data-theme="dark"] .hero .sunwrap { left: 244px; top: 46px; }
   [data-theme="dark"] .hero .day { display: none; }
   [data-theme="dark"] .hero .low { display: block; }
-  /* the plan: the selected row takes the warm selection; dark uses amber at about 15% with an apricot outline */
-  [data-theme="dark"] .plan .opt.on { background: color-mix(in srgb, #FFB061 15%, var(--card)); box-shadow: inset 0 0 0 2px #FFC38A; }
-  [data-theme="dark"] .plan .opt.on .radio { background: #FFC38A; }
-  [data-theme="dark"] .plan .opt.on .radio::after { background: #0E1322; }
-  /* the moment is a tappable token, as on the slip plan */
-  .tok { display: inline-flex; align-items: center; gap: 3px; height: 34px; padding: 0 6px 0 11px; margin: 0 1px; vertical-align: 1px; border-radius: 11px; background: var(--sel-tint); box-shadow: inset 0 0 0 2px var(--sel); font: inherit; font-weight: 800; color: var(--fg); }
-  [data-theme="dark"] .tok { background: color-mix(in srgb, #FFB061 15%, var(--card)); box-shadow: inset 0 0 0 2px #FFC38A; }
+  /* the plan: the selected row takes the kit selection tint in both modes */
+  /* the moment is a tappable token, as on the slip plan: on the text baseline, a light outline, 4px before the comma */
+  .tok { display: inline-flex; align-items: center; gap: 3px; height: 32px; padding: 0 6px 0 11px; margin: 0 4px 0 1px; vertical-align: baseline; line-height: 1; border-radius: 11px; background: var(--sel-tint); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--fg) 30%, transparent); font: inherit; font-weight: 800; color: var(--fg); }
+  .tok span { display: inline-flex; }
   .tok svg { width: 17px; height: 17px; }
   .play .tok svg { animation: nudge 600ms var(--settle) 900ms both; }
   @keyframes nudge { 40% { transform: translateY(3px); } }
@@ -40,11 +37,11 @@
   .play .hero .lay { animation: wv 900ms cubic-bezier(.2,.8,.2,1) both; }
   .play .hero .l2 { animation-delay: 100ms; } .play .hero .l3 { animation-delay: 200ms; } .play .hero .l4 { animation-delay: 300ms; }
   @keyframes wv { from { transform: translateY(40px); } to { transform: none; } }
-  .head { position: absolute; left: 0; right: 0; top: 308px; padding: 0 var(--gutter); }
+  .head { position: absolute; left: 0; right: 0; top: 312px; padding: 0 var(--gutter); }
   .head .t-title { font-size: 26px; }
   .note { margin-top: 8px; color: var(--muted); }
   .note b { color: var(--fg); font-weight: 600; }
-  .plan { position: absolute; left: 0; right: 0; top: 444px; padding: 0 var(--gutter); }
+  .plan { position: absolute; left: 0; right: 0; top: 448px; padding: 0 var(--gutter); }
   .plan .ifthen { margin-top: 0; line-height: 34px; }
   .plan .opts { margin-top: 12px; display: grid; gap: 8px; }
   .plan .opt { min-height: 56px; padding: 6px 16px; }
@@ -61,7 +58,7 @@
     <div class="lay l2"><svg viewBox="0 0 346 96" height="96"><path d="M0 34 C34 18 70 20 104 34 C140 48 176 46 210 30 C248 14 300 18 346 32 V96 H0Z" fill="var(--w2)"/><path d="M0 34 C34 18 70 20 104 34 C140 48 176 46 210 30 C248 14 300 18 346 32" fill="none" stroke="var(--edge)" stroke-width="2"/></svg></div>
     <div class="jel" data-settle style="--d:200ms"><div class="bob" id="jelli"></div></div>
     <div class="lay l3"><svg viewBox="0 0 346 66" height="66"><path d="M0 26 C30 12 62 12 92 24 C124 38 158 38 190 24 C224 10 262 10 294 22 C314 30 330 30 346 24 V66 H0Z" fill="var(--w3)"/><path d="M0 26 C30 12 62 12 92 24 C124 38 158 38 190 24 C224 10 262 10 294 22 C314 30 330 30 346 24" fill="none" stroke="var(--edge)" stroke-width="2"/></svg></div>
-    <svg class="grain" width="346" height="184" aria-hidden="true"><filter id="gr21" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 .1  0 0 0 .2 0"/></filter><rect width="346" height="184" filter="url(#gr21)"/></svg>
+    <svg class="grain" width="346" height="178" aria-hidden="true"><filter id="gr21" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 .1  0 0 0 .2 0"/></filter><rect width="346" height="178" filter="url(#gr21)"/></svg>
     <div class="lay l4"><svg viewBox="0 0 346 36" height="36"><path d="M0 16 C40 4 80 6 118 16 C160 28 200 26 240 14 C280 4 316 6 346 14 V36 H0Z" fill="var(--w4)"/></svg></div>
   </div>
   <div class="nav">

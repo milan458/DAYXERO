@@ -12,11 +12,12 @@
 [data-theme="dark"] .face{--ink:#FFF8EE;--soft:#E9DCCB;--pb:#FFC38A;--pb-fg:#1E1A3A;
   background:radial-gradient(80% 36% at 50% 32%,rgba(247,170,108,.30),rgba(247,170,108,0) 100%),linear-gradient(180deg,#27325C 0%,#1C2547 58%,#19223F 100%);
   box-shadow:0 18px 34px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,248,238,.08)}
-.art{position:relative;height:266px;background:linear-gradient(to bottom,var(--face-2),var(--face))}
+.art{position:relative;height:322px;background:linear-gradient(to bottom,var(--face-2),var(--face))}
 [data-theme="dark"] .art{background:none}
-.art .sun{position:absolute;left:50%;top:34px;width:208px;height:208px;margin-left:-104px;border-radius:50%;background:var(--sunc)}
+/* light: a warm, saturated sun with a soft glow so it reads on the apricot */
+.art .sun{position:absolute;left:50%;top:38px;width:240px;height:240px;margin-left:-120px;border-radius:50%;background:radial-gradient(circle,#FFE48A 0,#FFD35E 66%,#FFC94F 100%);box-shadow:0 0 60px 14px rgba(255,214,94,.55)}
 [data-theme="dark"] .art .sun{background:radial-gradient(circle,#F9C083 0,#F2A766 70%,#EC9A5E 100%);box-shadow:0 0 90px 24px rgba(247,168,106,.30)}
-.art .xw{position:absolute;left:50%;bottom:-8px;width:196px;margin-left:-98px}
+.art .xw{position:absolute;left:50%;bottom:-9px;width:226px;margin-left:-113px}
 .in{padding:18px 20px 18px}
 .kind{display:flex;align-items:center;gap:8px;font:600 14px/1 var(--body);color:var(--soft)}
 .kind svg{width:18px;height:18px}
@@ -86,6 +87,7 @@
   </div>
 </div>
 <script>
+const dark = DX.theme === 'dark';
 document.getElementById('close').innerHTML = DX.icon('close');
 document.getElementById('k-ic').innerHTML = DX.icon('headphones', {size:18});
 document.getElementById('r-ic').innerHTML = DX.icon('text', {size:17});
@@ -99,7 +101,7 @@ const PHONES = `<g aria-hidden="true">
   <path d="M52 62 C66 30 100 22 122 26" fill="none" stroke="#FFF8EE" stroke-opacity=".35" stroke-width="3" stroke-linecap="round"/>
   <rect x="18" y="88" width="30" height="48" rx="14" fill="#1E1A3A"/><rect x="24" y="96" width="9" height="32" rx="4.5" fill="#FF9A6B"/>
   <rect x="152" y="88" width="30" height="48" rx="14" fill="#1E1A3A"/><rect x="167" y="96" width="9" height="32" rx="4.5" fill="#FF9A6B"/></g>`;
-let xs = DX.char('xero', {mood:'calm', size:196});
+let xs = DX.char('xero', {mood:'calm', size:226});
 const mi = xs.indexOf('stroke-width="3.5"'); const end = xs.indexOf('</path>', mi) + 7;
 xs = xs.slice(0, end) + PHONES + xs.slice(end);
 document.getElementById('xero').innerHTML = xs;
@@ -109,7 +111,7 @@ pb.innerHTML = DX.icon('pause', {size:26, w:3});
 const W = 306, n = 48, bw = 3.4, gap = (W - n * bw) / (n - 1);
 const hs = Array.from({length:n}, (_, i) => 8 + Math.round(38 * Math.abs(Math.sin(i * 1.7) * .6 + Math.sin(i * .45) * .4)));
 const bars = (op, cls) => `<svg width="${W}" viewBox="0 0 ${W} 52" class="${cls}">${hs.map((h, i) => `<rect x="${(i * (bw + gap)).toFixed(1)}" y="${26 - h / 2}" width="${bw}" height="${h}" rx="1.7" fill="var(--ink)" fill-opacity="${op}" style="--b:${i}"/>`).join('')}</svg>`;
-document.getElementById('wave').innerHTML = `<div class="layer">${bars(.3, 'base')}</div><div class="layer on">${bars(1, '')}</div><i class="head" aria-hidden="true"></i>`;
+document.getElementById('wave').innerHTML = `<div class="layer">${bars(dark ? .42 : .55, 'base')}</div><div class="layer on">${bars(1, '')}</div><i class="head" aria-hidden="true"></i>`;
 /* elapsed time as m:ss */
 const el = document.getElementById('el');
 new MutationObserver(() => { const v = parseInt(el.textContent); if (!isNaN(v) && !el.textContent.includes(':')) el.textContent = '0:' + String(v).padStart(2, '0'); }).observe(el, {childList:true});
