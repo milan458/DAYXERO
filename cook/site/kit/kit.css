@@ -222,3 +222,7 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
 /* Onboarding question block: avatar row in nav, question as .t-large, helper as .t-body.muted. */
 .q { padding: 118px var(--gutter) 0; display: grid; gap: 10px; }
 .q + .answers { padding: 22px var(--gutter) 0; display: grid; gap: 10px; }
+
+/* Stills always show arrived elements, even when a looping class (.bob, .bump) shares the element. */
+.still [data-a], .still [data-settle], .still [data-pop], .still [data-stamp], .still [data-fade] { opacity: 1 !important; }
+.still [data-a], .still [data-settle] { transform: none !important; }

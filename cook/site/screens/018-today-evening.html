@@ -50,5 +50,8 @@
   $('#b7').innerHTML = DX.badge({ kind: 'night', n: 7, state: 'next', p: 6 / 7, size: 46, bare: true });
   $('#go').innerHTML = DX.icon('moon', { w: 2.4 }) + 'Check in';
   $('.screen').insertAdjacentHTML('beforeend', DX.tabbar('today'));
+  const fillBadge = (sel, from, to, delay) => DX.after(0, () => { const c = document.querySelector(sel + ' circle[transform]'); if (!c) return; const C = 2 * Math.PI * 48;
+    c.animate([{ strokeDashoffset: C * (1 - from) }, { strokeDashoffset: C * (1 - to) }], { duration: 1000, delay, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' }); });
+  fillBadge('#b7', 0, 6 / 7, 700);
 </script>
 </body></html>

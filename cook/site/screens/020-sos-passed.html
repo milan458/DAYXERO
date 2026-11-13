@@ -64,5 +64,8 @@
   $('#ck').innerHTML = DX.check({ size: 44, color: 'var(--tick)', fg: '#0B2A1C' });
   $('#bd').innerHTML = DX.badge({ kind: 'wave', n: 25, state: 'next', p: .92, size: 64, label: '25 waves, 2 to go' });
   DX.after(2700, () => { $('#jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 168, animate: false }); });
+  const fillBadge = (sel, from, to, delay) => DX.after(0, () => { const c = document.querySelector(sel + ' circle[transform]'); if (!c) return; const C = 2 * Math.PI * 48;
+    c.animate([{ strokeDashoffset: C * (1 - from) }, { strokeDashoffset: C * (1 - to) }], { duration: 1000, delay, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' }); });
+  fillBadge('#bd', .88, .92, 1500);
 </script>
 </body></html>
