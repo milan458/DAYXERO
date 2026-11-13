@@ -1,13 +1,13 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>039 Milestone Day 7</title>
-<meta name="motion" content="Two layers of soft paper rays fan out behind the badge (fade and scale from 90%, 700ms), then sway gently (3 degrees, 8s loop, the two layers in opposite directions). At 250ms the Day 7 badge stamps in (620ms spring, success haptic on landing) and a shine crosses it at 900ms. Xero settles in at 500ms on the same ground to the right of the badge, clear of it, and cheers (bob loop); one soft shadow under both. Date, headline, the stat line (both numbers count up from 0 at 1.1s, 900ms), the line and the source arrive with a 90ms stagger. Keep going and Share my card arrive last.">
+<meta name="motion" content="Two layers of soft paper rays fan out over the top of the badge like a sunrise (fade and scale from 90%, 700ms), then sway gently (3 degrees, 8s loop, the two layers in opposite directions). At 250ms the Day 7 badge stamps in (620ms spring, success haptic on landing) and a shine crosses it at 900ms. Xero settles in at 500ms on the same ground to the right of the badge, clear of it, and cheers (bob loop); one soft shadow under both. Date, headline, the stat line (both numbers count up from 0 at 1.1s, 900ms), the line and the source arrive with a 90ms stagger. Keep going and Share my card arrive last.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .stage { position: absolute; left: 0; right: 0; top: 96px; height: 300px; }
+  .stage { position: absolute; left: 0; right: 0; top: 118px; height: 300px; }
   .rays-wrap { position: absolute; left: 149px; top: 150px; width: 0; height: 0;
-    --ray-back: #FFDC94; --ray-front: #FFF0CC; --ray-shadow: rgba(160,70,20,.22); }
-  [data-theme="dark"] .rays-wrap { --ray-back: #9C6A26; --ray-front: #D99A3A; --ray-shadow: rgba(0,0,0,.5); }
+    --ray-back: #FFD585; --ray-front: #FFEFC6; --ray-shadow: rgba(160,70,20,.22); }
+  [data-theme="dark"] .rays-wrap { --ray-back: #C98B30; --ray-front: #F2B84E; --ray-shadow: rgba(0,0,0,.5); }
   .rays-wrap svg { position: absolute; left: -160px; top: -160px; width: 320px; height: 320px; overflow: visible; }
   .rays-wrap .lay { filter: drop-shadow(0 2px 2px var(--ray-shadow)); }
   .play .rays-wrap { animation: rays-in 700ms var(--settle) 100ms both; }
@@ -21,7 +21,7 @@
   .play .sway.a { animation: sway 8s ease-in-out infinite alternate; }
   .play .sway.b { animation: sway 8s ease-in-out infinite alternate-reverse; }
   @keyframes sway { from { transform: rotate(-3deg); } to { transform: rotate(3deg); } }
-  .copy { position: absolute; left: 0; right: 0; top: 380px; text-align: center; display: grid; gap: 10px; justify-items: center; padding: 0 var(--gutter); }
+  .copy { position: absolute; left: 0; right: 0; top: 408px; text-align: center; display: grid; gap: 10px; justify-items: center; padding: 0 var(--gutter); }
   .copy .t-body { max-width: 300px; }
   .copy .stat-line { font: 700 17px/1.3 var(--body); color: var(--fg); }
   .copy .stat-line .num { font-size: 19px; letter-spacing: -.3px; }
@@ -55,8 +55,9 @@
   /* Soft paper rays: broad petals with rounded tips, in two layers (long pale ones behind, shorter warm ones in front, offset
      by half a step), each layer casting a soft paper shadow. Dark: warm golds, never translucent (no olive on navy). */
   const ray = (len, base, w, fill) => `<path d="M${-w} ${-base} C${-w * .8} ${-(base + len) * .6} ${-w * .55} ${-(base + len - 8)} 0 ${-(base + len)} C${w * .55} ${-(base + len - 8)} ${w * .8} ${-(base + len) * .6} ${w} ${-base}Z" fill="${fill}"/>`;
-  document.getElementById('raysB').innerHTML = Array.from({ length: 16 }, (_, i) => `<g transform="rotate(${i * 22.5})">${ray(70, 70, 15, 'var(--ray-back)')}</g>`).join('');
-  document.getElementById('raysF').innerHTML = Array.from({ length: 16 }, (_, i) => `<g transform="rotate(${i * 22.5 + 11.25})">${ray(44, 72, 11, 'var(--ray-front)')}</g>`).join('');
+  /* a sunrise fan over the upper half only, so nothing reaches the ground line or the text below */
+  document.getElementById('raysB').innerHTML = Array.from({ length: 9 }, (_, i) => `<g transform="rotate(${-84 + i * 21})">${ray(68, 68, 17, 'var(--ray-back)')}</g>`).join('');
+  document.getElementById('raysF').innerHTML = Array.from({ length: 8 }, (_, i) => `<g transform="rotate(${-73.5 + i * 21})">${ray(44, 70, 12, 'var(--ray-front)')}</g>`).join('');
   /* the kit day badge, with its sun moved down and right so it sits on the hills clear of the 7 */
   document.getElementById('medal').innerHTML = DX.badge({ kind: 'day', n: 7, size: 160, bare: true }).replace('<circle cx="66" cy="64" r="12"', '<circle cx="74" cy="68" r="10.5"');
   document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'cheer', size: 100 });
