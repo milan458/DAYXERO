@@ -1,54 +1,58 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>046 Slip: plan saved</title>
-<meta name="motion" content="Done beat, no X (Back to Today is the way out): Jelli's small sea disc fades in (as on 044 and 045), Jelli (cheer) settles in (900ms) above a soft shadow on the water (both modes), then the small apricot check pops on the shoulder of its bell (pinned there, it bobs with Jelli) and its ink tick draws (320ms later, 420ms) with a success haptic. Title arrives and the hand-drawn underline sits under 'saved', then the plan card settles up from 48px like a card being put down (900ms), then the plan card's 17px line, then the Day 7 card (one line: 'Your sky stays 40% clear.') arrives with the badge fading in intact (no stamp: nothing was lost or earned). Button and link arrive last.">
+<meta name="motion" content="Done beat, no X (Back to Today is the way out): Jelli's small sea disc fades in (as on 044 and 045), Jelli (cheer face, the same six-tentacle Jelli as SOS and Calm) settles down into the water (900ms) so her bell rests on the waterline with her tentacles under a translucent front wave, then keeps a slow bob; the small apricot check pops on the disc's upper-right rim and its ink tick draws (320ms later, 420ms) with a success haptic. Title arrives and the hand-drawn underline sits under 'saved', then the plan card settles up from 48px like a card being put down (900ms), then the quiet Day 7 line (a small badge and 'Still Day 7. Nothing resets.', no card) fades in with the badge intact (no stamp: nothing was lost or earned). Button and link arrive last.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   .hero { position: absolute; left: 0; right: 0; top: 94px; height: 188px; display: grid; place-items: center; }
-  /* Jelli floats in her own sea disc (as on 044 and 045), with a soft shadow on the water in both modes */
+  .dwrap { position: relative; width: 188px; height: 188px; }
+  /* Jelli rests in her own sea disc (as on 044 and 045): bell on the waterline, tentacles under a translucent front wave */
   .disc { position: relative; width: 188px; height: 188px; border-radius: 99px; overflow: hidden; background: linear-gradient(#CFE5F7, #EAF2F8); }
-  .disc svg.sea { position: absolute; left: 0; bottom: 0; width: 188px; height: 70px; display: block; }
-  .disc .w1 { fill: #8FC0EC; } .disc .w2 { fill: #4A8FDB; }
-  .disc .gs { position: absolute; left: 50%; top: 152px; width: 80px; height: 12px; margin-left: -38px; border-radius: 50%; background: radial-gradient(closest-side, rgba(16,32,74,.42), rgba(16,32,74,0)); }
+  .disc svg.sea { position: absolute; left: 0; bottom: 0; width: 188px; height: 82px; display: block; }
+  .disc svg.front { z-index: 2; height: 58px; }
+  .disc .w1 { fill: #8FC0EC; } .disc .w2 { fill: #4A8FDB; } .disc .w3 { fill: #3F82D2; opacity: .62; } .disc .lip { fill: none; stroke: #EAF5FF; stroke-opacity: .55; stroke-width: 2; stroke-linecap: round; }
   [data-theme="dark"] .disc { background: linear-gradient(#1C2A55, #33477A); }
-  [data-theme="dark"] .disc .w1 { fill: #3A5A9A; } [data-theme="dark"] .disc .w2 { fill: #2A4A8A; }
-  [data-theme="dark"] .disc .gs { background: radial-gradient(closest-side, rgba(3,8,24,.75), rgba(3,8,24,0)); }
-  .disc .jl { position: absolute; left: 16px; top: 2px; width: 156px; height: 156px; }
-  /* the check is pinned to Jelli's bell (inside the bob, so it moves with Jelli) */
-  .disc .bob { position: relative; width: 156px; height: 156px; }
-  .disc .ck { position: absolute; left: 102px; top: 22px; width: 38px; height: 38px; border-radius: 99px; box-shadow: 0 0 0 3px #EAF2F8; }
-  [data-theme="dark"] .disc .ck { box-shadow: 0 0 0 3px #22325F; }
-  .wrap { position: absolute; left: 0; right: 0; top: 306px; padding: 0 var(--gutter); }
+  [data-theme="dark"] .disc .w1 { fill: #3A5A9A; } [data-theme="dark"] .disc .w2 { fill: #2A4A8A; } [data-theme="dark"] .disc .w3 { fill: #22417F; opacity: .7; } [data-theme="dark"] .disc .lip { stroke: #9FB8EA; stroke-opacity: .4; }
+  .disc .jl { position: absolute; z-index: 1; left: 16px; top: 38px; width: 156px; height: 156px; }
+  /* the check sits on the disc's upper-right rim, clear of Jelli's bell */
+  .ck { position: absolute; z-index: 3; right: 6px; top: 8px; width: 40px; height: 40px; border-radius: 99px; box-shadow: 0 0 0 4px var(--g); }
+  .wrap { position: absolute; left: 0; right: 0; top: 322px; padding: 0 var(--gutter); }
   .wrap .head { text-align: center; }
-  .wrap .lead { margin-top: 8px; color: var(--muted); }
+  .wrap .lead { margin-top: 7px; color: var(--muted); }
+  .wrap .lead span { display: block; }
   .plan { margin-top: 26px; display: grid; gap: 6px; }
   .plan .say { font: 600 17px/1.4 var(--body); margin: 0; text-wrap: pretty; }
-  .plan .when { color: var(--muted); display: flex; align-items: center; gap: 6px; }
-  .plan .when svg { width: 16px; height: 16px; }
-  .kept { margin-top: 12px; padding: 16px 18px; display: flex; gap: 14px; align-items: center; }
+  .plan .when { color: var(--muted); display: flex; align-items: center; gap: 7px; }
+  .plan .when svg { width: 18px; height: 18px; }
+  /* the Day 7 line is quiet: a plain row under the plan, not a second card */
+  .kept { margin-top: 18px; display: flex; gap: 10px; align-items: center; justify-content: center; }
   .kept .t-foot { color: var(--muted); }
+  .kept .t-foot b { color: var(--fg); font-weight: 700; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
   <div class="hero">
-    <div class="disc" data-fade><svg class="sea" viewBox="0 0 188 70" preserveAspectRatio="none" aria-hidden="true"><path class="w1" d="M0 24 C30 14 60 14 94 22 S156 32 188 20 V70 H0Z"/><path class="w2" d="M0 42 C34 34 64 35 96 41 S158 48 188 38 V70 H0Z"/></svg><i class="gs"></i>
-      <div class="jl" data-settle style="--d:200ms"><div class="bob"><div id="jelli"></div><div class="ck" id="check"></div></div></div></div>
+    <div class="dwrap">
+      <div class="disc" data-fade>
+        <svg class="sea" viewBox="0 0 188 70" preserveAspectRatio="none" aria-hidden="true"><path class="w1" d="M0 24 C30 14 60 14 94 22 S156 32 188 20 V70 H0Z"/><path class="w2" d="M0 46 C34 38 64 39 96 45 S158 52 188 42 V70 H0Z"/></svg>
+        <div class="jl" data-settle style="--d:200ms"><div class="bob"><div id="jelli"></div></div></div>
+        <svg class="sea front" viewBox="0 0 188 50" preserveAspectRatio="none" aria-hidden="true"><path class="w3" d="M0 14 C30 6 62 7 96 13 S158 20 188 10 V50 H0Z"/><path class="lip" d="M0 14 C30 6 62 7 96 13 S158 20 188 10"/></svg>
+      </div>
+      <div class="ck" id="check"></div>
+    </div>
   </div>
   <div class="wrap">
     <div class="head">
       <h1 class="t-large" data-a style="--i:2">Plan <span class="mark">saved</span></h1>
-      <p class="t-body lead" data-a style="--i:3">Every slip shows you something. Now you have a plan for this one.</p>
+      <p class="t-body lead" data-a style="--i:3"><span>Every slip shows you something.</span><span>Now you have a plan for this one.</span></p>
     </div>
     <div class="card plan" data-settle style="--i:4;--d:200ms">
-      <p class="t-foot when"><span data-ic="clock"></span>Your plan for coffee</p>
+      <p class="t-foot when"><span id="planic"></span>Your plan for coffee</p>
       <p class="say">If it's after coffee, then I'll have it somewhere new.</p>
     </div>
-    <div class="card kept" data-a style="--i:7">
+    <div class="kept" data-a style="--i:7">
       <div id="badge"></div>
-      <div class="grow">
-        <p class="t-head">Still Day 7</p>
-        <p class="t-foot">Your sky stays 40% clear.</p>
-      </div>
+      <p class="t-foot"><b>Still Day 7.</b> Nothing resets.</p>
     </div>
   </div>
   <div class="dock">
@@ -57,10 +61,15 @@
   </div>
 </div>
 <script>
-  document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic, { w: 2.4 }));
-  /* cheer Jelli without its ink sparkle marks (they read as a stray tick beside the check) */
-  document.getElementById('jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 156 }).replace(/<g opacity="1" stroke="#(?:24163A|F3E9DE)"[^>]*>.*?<\/g>/s, '');
-  document.getElementById('check').innerHTML = DX.check({ size: 38, d: 500, color: '#FFB070', fg: '#1E1A3A' });
-  document.getElementById('badge').innerHTML = DX.badge({ kind: 'day', n: 7, size: 72, bare: true });
+  /* plan glyph: a small path from a start dot to a goal dot */
+  document.getElementById('planic').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6.5 17.5 C11 17.5 8 11 12.5 11 S15.5 6.5 17.5 6.5"/><circle cx="5" cy="18" r="2.2" fill="currentColor" stroke="none"/><circle cx="19" cy="6" r="2.6"/></svg>';
+  /* cheer Jelli: the same six-tentacle model as SOS and Calm (arms hang as the outer tentacles, so nothing reads as ears),
+     and without the ink sparkle marks (they read as a stray tick beside the check) */
+  document.getElementById('jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 156 })
+    .replace(/<g opacity="1" stroke="#(?:24163A|F3E9DE)"[^>]*>.*?<\/g>/s, '')
+    .replace('d="M56 118 C42 106 38 92 44 78"', 'd="M58 120 C50 136 60 150 52 166"')
+    .replace('d="M144 118 C158 106 162 92 156 78"', 'd="M142 120 C150 136 140 150 148 166"');
+  document.getElementById('check').innerHTML = DX.check({ size: 40, d: 500, color: '#FFB070', fg: '#1E1A3A' });
+  document.getElementById('badge').innerHTML = DX.badge({ kind: 'day', n: 7, size: 36, bare: true });
 </script>
 </body></html>

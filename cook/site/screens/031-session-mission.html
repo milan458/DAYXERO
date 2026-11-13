@@ -1,34 +1,35 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>031 Session mission</title>
-<meta name="motion" content="The full bar and the heading arrive (600ms). The honey mission card (the 029 medal's gold: its pale face to its face gold, with the medal's gold rim), the one hero, rises in (settle 900ms); Xero climbs up behind it, his head and his bent arms (elbows out, shoulders over the edge) rising over the top edge (settle 900ms at 360ms), then his two hands, drawn as their own shapes, land gripping the card's top edge (spring pop 700ms at 1150ms, light haptic) and he blinks. The card's label, line and note arrive inside it (600ms, 90ms stagger), then what you learned arrives as a light card, row by row, each with its small paper stamp (600ms, 90ms apart), and the log link and button arrive last in the dock.">
+<meta name="motion" content="The full bar and the heading arrive (600ms). The honey mission card (one thin gold rim), the one hero, rises in (settle 900ms); Xero climbs up behind it, his face and his forearms rising over the top edge (settle 900ms at 360ms), then his two flat coral hands land gripping the card's top edge (spring pop 700ms at 1150ms, light haptic) and he blinks. The card's label, line and note arrive inside it (600ms, 90ms stagger), then what you learned arrives as a quiet list, row by row, each with its small paper stamp (600ms, 90ms apart), and the button and the log link under it arrive last in the dock.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-.top{position:absolute;top:114px;left:var(--gutter);right:var(--gutter)}
-/* the mission: honey in both modes (today's one celebration of intent), ink type; dark mode is a deeper honey, never a glare */
-.mission{position:absolute;z-index:2;top:236px;left:var(--gutter);right:var(--gutter);border-radius:28px;padding:22px 22px 24px;
-  --ink:#1E1A3A;--soft:#4F400C;background:linear-gradient(165deg,#FFE9A8 0%,#FFE08A 50%,#FFD966 100%);color:var(--ink);
-  box-shadow:inset 0 0 0 3px #F5B83D,inset 0 5px 0 rgba(255,255,255,.35),0 16px 32px rgba(120,90,10,.16)}
-/* the same gold as the Day Xero medal on 029: its pale face, its face gold and its rim (#F5B83D) */
-[data-theme="dark"] .mission{--soft:#3A2A06;background:linear-gradient(165deg,#FAD26A 0%,#F2BC45 55%,#EBAD32 100%);box-shadow:inset 0 0 0 3px #F5B83D,inset 0 5px 0 rgba(255,255,255,.22),0 18px 40px rgba(0,0,0,.45)}
+/* the heading sits left in two lines, beside Xero's head, so the card follows it closely */
+.top{position:absolute;top:122px;left:var(--gutter);width:176px}
+/* the mission: honey in both modes (today's one celebration of intent), ink type, one thin gold rim; dark is a flatter, deeper honey */
+.mission{position:absolute;z-index:2;top:206px;left:var(--gutter);right:var(--gutter);border-radius:28px;padding:26px 22px 28px;
+  --ink:#1E1A3A;--soft:#4F400C;background:linear-gradient(170deg,#FFEBB0 0%,#FFE08A 100%);color:var(--ink);
+  box-shadow:inset 0 0 0 1.5px #EDB23A,0 14px 30px rgba(120,90,10,.14)}
+[data-theme="dark"] .mission{--soft:#3A2A06;background:linear-gradient(170deg,#FBD670 0%,#F5C651 100%);box-shadow:inset 0 0 0 1.5px #FFE6A0,0 18px 40px rgba(0,0,0,.45)}
 .mission .lab{font:600 15px/1 var(--body);color:var(--soft)}
 .mission h2{margin-top:12px;font-size:34px}
 .mission .t-body{margin-top:8px;color:var(--soft)}
-/* Xero climbs up behind the card: head over the edge, hands in front of it (same 136px drawing, two layers; the edge crosses him at y=107 of 200, above his window) */
-.peek,.hands{position:absolute;left:206px;top:163px;width:136px;height:136px;pointer-events:none}
+/* Xero climbs up behind the card: face and forearms over the edge, flat hands in front of it (same 160px drawing, two layers; the edge crosses him at y=107 of 200, under his smile) */
+.peek,.hands{position:absolute;left:198px;top:120.4px;width:160px;height:160px;pointer-events:none}
 .peek{z-index:1}
 .hands{z-index:3}
 .peek svg > g[stroke]{display:none}
-.learn{position:absolute;top:428px;left:var(--gutter);right:var(--gutter)}
-/* what you learned: a light card of three rows, each with a small paper stamp (the same craft as the notes on 030) */
-.learn ul{margin:12px 0 0;padding:0;list-style:none}
-.learn li{display:flex;align-items:flex-start;gap:12px;padding:13px 16px}
-.learn li + li{border-top:1px solid var(--line)}
-.learn li .t-foot{color:var(--fg);opacity:.86}
-.learn .stp{width:26px;height:26px;flex:none;margin-top:-1px;display:block}
+/* what you learned: a quiet borderless list at secondary weight, each row with a small paper stamp */
+.learn{position:absolute;top:404px;left:var(--gutter);right:var(--gutter)}
+.learn h2{font-size:17px}
+.learn ul{margin:8px 0 0;padding:0;list-style:none}
+.learn li{display:flex;align-items:flex-start;gap:12px;padding:10px 0}
+.learn li .t-foot{color:var(--muted)}
+.learn .stp{width:22px;height:22px;flex:none;margin-top:0;display:block}
 .learn .stp svg{display:block}
-.logl{gap:6px}
+.logl{gap:6px;height:36px}
 .logl svg{width:16px;height:16px}
+.dock{gap:6px;padding-bottom:26px}
 </style>
 </head><body>
 <div class="screen" data-ground="table">
@@ -37,7 +38,7 @@
     <div class="grow"><div class="steps" aria-label="All 5 cards played"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
   </div>
   <div class="top">
-    <h1 class="t-title" data-a style="--i:0">Your mission for today</h1>
+    <h1 class="t-title" data-a style="--i:0">Your mission<br>for today</h1>
   </div>
   <div class="peek" data-settle style="--i:3" id="mx"></div>
   <div class="mission" data-settle style="--i:0">
@@ -45,42 +46,36 @@
     <h2 class="t-large" data-a style="--i:3">Two sighs first.</h2>
     <p class="t-body" data-a style="--i:4">Then, if you still want one, that's okay.</p>
   </div>
-  <div class="hands" data-pop style="--d:1150ms;transform-origin:68px 76px" id="hands"></div>
+  <div class="hands" data-pop style="--d:1150ms;transform-origin:80px 90px" id="hands"></div>
   <div class="learn">
     <h2 class="t-head" data-a style="--i:6">What you learned today</h2>
-    <ul class="list">
+    <ul>
       <li data-a style="--i:7"><span class="stp"></span><p class="t-foot">Stress and the gap feel the same in your body.</p></li>
       <li data-a style="--i:8"><span class="stp"></span><p class="t-foot">A cigarette eases the gap it made, not the day.</p></li>
       <li data-a style="--i:9"><span class="stp"></span><p class="t-foot">People who quit tend to feel less stressed, not more.</p></li>
     </ul>
   </div>
   <div class="dock">
-    <button class="link logl" data-a style="--i:10">If you do use, log it tonight<span id="l-chev"></span></button>
-    <button class="btn" data-a style="--i:11">I'll try it</button>
+    <button class="btn" data-a style="--i:10">I'll try it</button>
+    <button class="link logl" data-a style="--i:11">If you do use, log it tonight<span id="l-chev"></span></button>
   </div>
 </div>
 <script>
 document.getElementById('close').innerHTML = DX.icon('close');
 document.getElementById('l-chev').innerHTML = DX.icon('chev', {size:16, w:2.6});
-/* the card's top edge crosses Xero at y=107 of his 200 drawing: eyes, cheeks and smile stay above it, his arms stay behind it */
-/* his arms: elbows out above the edge, from his shoulders down to his hands, so he reads as climbing up, not a cut dome */
-const arm = (flip) => `<g transform="translate(${flip ? 200 : 0} 0) scale(${flip ? -1 : 1} 1)" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M68 82 C54 74 31 74 27 86 C25 94 32 100 40 103" stroke="#B9452A" stroke-width="14"/>
-  <path d="M68 82 C54 74 31 74 27 86 C25 94 32 100 40 103" stroke="#FF7155" stroke-width="9.6"/></g>`;
-/* the arms sit behind his body, so only the elbows show past his sides */
-document.getElementById('mx').innerHTML = `<svg width="136" height="136" viewBox="0 0 200 200" aria-hidden="true" style="position:absolute;left:0;top:0;overflow:visible">${arm(false)}${arm(true)}</svg>` +
-  `<div style="position:relative">${DX.char('xero', {mood:'hello', size:136})}</div>`;
-/* his two hands, gripping the edge in front of the card */
-/* each hand is its own shape: a palm on the edge with three fingers curled over it, outlined so it reads apart from his body */
-const hand = (x, flip) => `<g transform="translate(${x} 107) scale(${flip ? -1 : 1} 1)">
-  <ellipse cx="0" cy="14" rx="15" ry="3.2" fill="#3A2A06" opacity=".16"/>
-  <path d="M-16 1 C-16 -9 -8 -13 0 -13 C8 -13 16 -9 16 1 L16 6 C16 11 11 13 7.5 13 C5.5 13 4.2 12 3.6 11 C2.6 12.6 1 13.2 -.4 13.2 C-2 13.2 -3.4 12.4 -4.2 11 C-5 12.4 -6.6 13.2 -8.2 13.2 C-12.6 13.2 -16 10.4 -16 6Z" fill="#FF7155" stroke="#B9452A" stroke-width="2.4" stroke-linejoin="round"/>
-  <path d="M-4.2 3.5 V10.6 M3.6 3.5 V10.6" stroke="#B9452A" stroke-width="2" stroke-linecap="round"/>
-  <path d="M-10 -6.5 C-7 -9.5 -3 -10.5 1 -10.5" fill="none" stroke="#FFB09C" stroke-width="3" stroke-linecap="round"/></g>`;
-document.getElementById('hands').innerHTML = `<svg width="136" height="136" viewBox="0 0 200 200" aria-hidden="true" style="overflow:visible">${hand(44, false)}${hand(156, true)}</svg>`;
+/* the card's top edge crosses Xero at y=107 of his 200 drawing: eyes, cheeks and smile stay well above it */
+/* his forearms: from his sides out and down to the edge, the same 12-wide coral strokes as his standing arms, behind his body */
+const arm = (flip) => `<path transform="translate(${flip ? 200 : 0} 0) scale(${flip ? -1 : 1} 1)" d="M46 88 C30 84 15 90 13 104" fill="none" stroke="#FF7155" stroke-width="12" stroke-linecap="round"/>`;
+document.getElementById('mx').innerHTML = `<svg width="160" height="160" viewBox="0 0 200 200" aria-hidden="true" style="position:absolute;left:0;top:0;overflow:visible">${arm(false)}${arm(true)}</svg>` +
+  `<div style="position:relative">${DX.char('xero', {mood:'hello', size:160})}</div>`;
+/* his two hands gripping the edge in front of the card: flat coral mittens, the lower half over the card face, with his own shade underneath (no outlines, no finger lines) */
+const hand = (x) => `<g transform="translate(${x} 107)">
+  <rect x="-15" y="-6" width="30" height="18" rx="9" fill="#E85A3E"/>
+  <rect x="-15" y="-9" width="30" height="18" rx="9" fill="#FF7155"/></g>`;
+document.getElementById('hands').innerHTML = `<svg width="160" height="160" viewBox="0 0 200 200" aria-hidden="true" style="overflow:visible">${hand(13)}${hand(187)}</svg>`;
 /* small paper stamps for what you learned: a scalloped apricot stamp with an ink tick */
 const sc = (cx, cy, r, n, a) => { let d = ''; for (let i = 0; i <= n * 2; i++) { const t = Math.PI * i / n - Math.PI / 2, rr = i % 2 ? r - a : r; d += (i ? 'L' : 'M') + (cx + rr * Math.cos(t)).toFixed(1) + ' ' + (cy + rr * Math.sin(t)).toFixed(1); } return d + 'Z'; };
-const STAMP = `<svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="${sc(13, 13, 12.5, 10, 1.6)}" fill="#FF9A5C"/><circle cx="13" cy="13" r="9.2" fill="#FFC38A"/><circle cx="13" cy="13" r="9.2" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="1"/><path d="M8.8 13.4l2.8 2.8 5.6-6" fill="none" stroke="#1E1A3A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const STAMP = `<svg width="22" height="22" viewBox="0 0 26 26" aria-hidden="true"><path d="${sc(13, 13, 12.5, 10, 1.6)}" fill="#FF9A5C"/><circle cx="13" cy="13" r="9.2" fill="#FFC38A"/><circle cx="13" cy="13" r="9.2" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="1"/><path d="M8.8 13.4l2.8 2.8 5.6-6" fill="none" stroke="#1E1A3A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 document.querySelectorAll('.learn .stp').forEach(e => e.innerHTML = STAMP);
 </script>
 </body></html>

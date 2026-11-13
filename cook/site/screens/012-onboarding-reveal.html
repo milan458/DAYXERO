@@ -7,23 +7,28 @@
   /* Onboarding header: back button and progress only (no avatar); the bar ends at the gutter so the sun knob never collides. */
   .nav { padding-right: 26px; }
   .q { padding-top: 112px; gap: 8px; }
-  /* Hero: the Day Xero medallion (kit xero badge, waiting form) on its cream coin, glowing; Xero cheers beside it, smaller. */
-  /* Round 8: Xero stands on a soft paper ground line; the medallion sits on the same horizon (ground behind, coin, then Xero). */
-  .hero { position: relative; height: 204px; margin: 26px var(--gutter) 0; }
-  .hero .ground { position: absolute; left: calc(-1 * var(--gutter)); top: 150px; width: 390px; height: 56px; z-index: 0; }
-  .hero .coin { z-index: 1; }
-  .hero .xc { z-index: 2; }
-  .hero .coin { position: absolute; left: 87px; top: 4px; width: 172px; height: 172px; border-radius: 99px; background: #FFF8EE; display: grid; place-items: center;
-    box-shadow: 0 0 0 10px rgba(255,217,102,.30), 0 0 46px 14px rgba(255,201,60,.42); }
-  /* Dark: the halo is warm amber too (never grey). */
+  /* Paper grounds (like 000 Launch): a far layer behind the coin and a filled near layer the coin is seated in; Xero stands on it. */
+  .screen { --far: #FFD3A6; --near: #FFAF7A; --lift: rgba(120,44,20,.15); }
+  [data-theme="dark"] .screen { --far: #1F2950; --near: #161F38; --lift: rgba(0,0,0,.5); }
+  /* The pair (Xero + medallion) is one centred group: Xero 100 box (about 80pt of character), 14pt off the coin rim. */
+  .hero { position: relative; height: 196px; margin: 48px 0 0; }
+  .hero .gr { position: absolute; left: 0; width: 390px; height: 640px; pointer-events: none; }
+  .hero .gr.far { top: 104px; z-index: 0; filter: drop-shadow(0 -2px 4px var(--lift)); }
+  .hero .gr.near { top: 140px; z-index: 2; filter: drop-shadow(0 -3px 6px var(--lift)); }
+  .hero .coin { position: absolute; z-index: 1; left: 152px; top: 0; width: 180px; height: 180px; border-radius: 99px; background: #FFF8EE; display: grid; place-items: center;
+    box-shadow: 0 0 0 9px rgba(255,248,238,.55), 0 0 0 20px rgba(255,248,238,.2), 0 0 46px 20px rgba(255,206,110,.55); }
+  /* Light: the waiting ring is dark gold on the cream coin. */
+  .hero .coin svg circle[stroke-dasharray] { stroke: #B9800F; }
+  /* Dark: the halo is warm amber too (never grey), and the ring keeps the kit's gold. */
   [data-theme="dark"] .hero .coin { box-shadow: 0 0 0 3px rgba(255,214,140,.6), 0 0 26px 8px rgba(255,190,90,.5), 0 0 80px 22px rgba(255,160,60,.24); }
-  .hero .coin .med { color: #F5B83D; }
-  /* The medallion leads, centred; Xero is smaller, off to its lower left, cheering up at it. */
-  .hero .xc { position: absolute; left: -10px; top: 92px; }
-  .cap { padding: 22px var(--gutter) 0; text-align: center; display: grid; gap: 4px; }
+  [data-theme="dark"] .hero .coin svg circle[stroke-dasharray] { stroke: #F5B83D; }
+  .hero .xc { position: absolute; z-index: 3; left: 47px; top: 77px; }
+  .cap, .wrap { position: relative; z-index: 3; }
+  .cap { padding: 18px var(--gutter) 0; text-align: center; display: grid; gap: 4px; }
   .cap .t-foot { color: var(--muted); }
-  .wrap { padding: 26px var(--gutter) 0; }
+  .wrap { padding: 24px var(--gutter) 0; }
   .wrap .card { padding: 20px 18px 22px; }
+  [data-theme="dark"] .wrap .card { background: var(--card-2); }
   .sh { display: flex; justify-content: space-between; align-items: baseline; }
   .stamps { display: flex; justify-content: space-between; margin: 16px -2px 0; color: var(--fg); }
   .stamps .pb { flex: none; display: block; }
@@ -31,6 +36,15 @@
   .stamps .pb.lk circle[stroke-dasharray] { stroke-dasharray: none; stroke-opacity: .22; }
   /* Locked = quieter, never illegible: a faint ring, and a 14px numeral at .64 ink (over 3:1 on the card in both modes). */
   .stamps .pb.lk text { fill-opacity: .64; }
+  /* Up next (Prep 1): a solid apricot ring on a warm fill, never grey. */
+  .stamps .pb.nx circle[r="48"] { display: none; }
+  .stamps .pb.nx circle[fill-opacity] { fill: #FFE2C6; fill-opacity: 1; }
+  .stamps .pb.nx circle[stroke-dasharray] { stroke-dasharray: none; stroke: #F2884A; }
+  [data-theme="dark"] .stamps .pb.nx circle[fill-opacity] { fill: #FF9A5C; fill-opacity: .2; }
+  [data-theme="dark"] .stamps .pb.nx circle[stroke-dasharray] { stroke: #FFA46B; }
+  .stamps .pb.nx text { fill: var(--fg); }
+  /* The CTA dock fades into the near ground, not the sky. */
+  .dock { background: linear-gradient(to bottom, color-mix(in srgb, var(--near) 0%, transparent), var(--near) 34%); }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
@@ -45,8 +59,9 @@
   </div>
 
   <div class="hero">
+    <svg class="gr far" data-fade style="--d:150ms" viewBox="0 0 390 640" aria-hidden="true"><path d="M0 44 C60 30 110 34 150 46 C190 58 230 30 290 18 C330 10 365 12 390 18 V640 H0Z" fill="var(--far)"/></svg>
     <div class="coin" data-pop style="--d:300ms"><div class="med" id="med"></div></div>
-    <svg class="ground" id="ground" viewBox="0 0 390 56" aria-hidden="true"></svg>
+    <svg class="gr near" data-fade style="--d:250ms" viewBox="0 0 390 640" aria-hidden="true"><path d="M0 40 C90 26 170 22 242 26 C300 29 350 34 390 38 V640 H0Z" fill="var(--near)"/></svg>
     <div class="xc" data-settle style="--d:450ms"><div class="bob" id="hx"></div></div>
   </div>
 
@@ -69,16 +84,12 @@
 </div>
 <script>
   document.querySelector('.icon-btn').innerHTML = DX.icon('back');
-  document.getElementById('med').innerHTML = DX.badge({ kind: 'xero', n: '0', state: 'next', size: 140, bare: true, label: 'Day Xero' });
-  document.getElementById('hx').innerHTML = DX.char('xero', { mood: 'cheer', size: 84 });
+  document.getElementById('med').innerHTML = DX.badge({ kind: 'xero', n: '0', state: 'next', size: 146, bare: true, label: 'Day Xero' });
+  document.getElementById('hx').innerHTML = DX.char('xero', { mood: 'cheer', size: 100 });
   let h = '';
   /* Locked stamps drop the kit's padlock (dim = locked) and centre their number. */
   const unlock = svg => svg.replace(/<path d="M43 62v-3a7 7 0 0114 0v3M40 62h20v12H40z"[^>]*\/?>(<\/path>)?/, '').replace(/<text x="50" y="50"/, '<text x="50" y="50" dominant-baseline="central"').replace(/font-size="30"/, 'font-size="34"');
-  /* The ground line: a low paper hill with a lit edge that fades into the page. */
-  const dk = DX.theme === 'dark', gc = dk ? '#212A41' : '#FFAE7A';
-  document.getElementById('ground').innerHTML = `<defs><linearGradient id="gf" x1="0" y1="0" x2="0" y2="1"><stop offset=".1" stop-color="${gc}"/><stop offset=".55" style="stop-color: color-mix(in srgb, ${gc} 45%, var(--g))"/><stop offset="1" style="stop-color: var(--g)"/></linearGradient></defs>
-    <path d="M0 22 C110 6 280 6 390 22 V56 H0 Z" fill="url(#gf)"/><path d="M0 22 C110 6 280 6 390 22" fill="none" stroke="${dk ? 'rgba(190,205,255,.24)' : 'rgba(255,255,255,.7)'}" stroke-width="2"/>`;
-  for (let i = 1; i <= 7; i++) h += `<span class="pb ${i === 1 ? '' : 'lk'}" data-pop style="--i:0;--d:${900 + i * 90}ms">${unlock(DX.badge({ kind: 'prep', n: i, state: i === 1 ? 'next' : 'locked', size: 42, bare: true, label: 'Prep ' + i }))}</span>`;
+  for (let i = 1; i <= 7; i++) h += `<span class="pb ${i === 1 ? 'nx' : 'lk'}" data-pop style="--i:0;--d:${900 + i * 90}ms">${unlock(DX.badge({ kind: 'prep', n: i, state: i === 1 ? 'next' : 'locked', size: 42, bare: true, label: 'Prep ' + i }))}</span>`;
   document.getElementById('stamps').innerHTML = h;
   const bar = document.getElementById('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '81.8%'); void bar.offsetWidth; bar.style.transition = ''; });

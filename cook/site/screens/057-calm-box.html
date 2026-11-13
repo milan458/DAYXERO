@@ -1,11 +1,12 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>057 Box breathing</title>
-<meta name="motion" content="One square track runs round the sea window, with a thin 10px mat between them. The dot walks it at an even pace, 4s a side (16s a round), and only the straight side it is on is lit, drawn on the frame line at 1.5x its weight with square ends: at each corner the lit stroke slides on to the next side (400ms) as the readout word cross-fades (220ms) and the numeral ticks 4 to 1 each second on the same baseline. In light mode the sea has a flat sun and no grain; in dark mode the window is the night sea with the low sun off to the left and a soft sea floor. The readout (word and numeral, cue, round pips) sits centred between the window and the button. The window and Jelli inside it swell over the in side, hold, shrink over the out side and hold (Jelli breathes with it). The round pips count completed rounds only: a pip fills as its round ends (Round 2 shows one filled pip). A soft haptic tick at every corner, nothing else.">
+<meta name="motion" content="One square track runs round the sea window, with a thin 10px mat between them. The dot walks it at an even pace, 4s a side (16s a round), and only the straight side it is on is lit: drawn on the track's own centreline at the same weight, its flat ends landing exactly on the corner tangents. At each corner the lit stroke slides on to the next side (400ms) as the readout word cross-fades (220ms) and the numeral ticks 4 to 1 each second on the same baseline. In light mode the window is a paper-cut day sea (flat sun, crisp clouds, crisp wave bands, no blur or grain); in dark mode it is the night sea with a flat low moon off to the left and clean bands, no reflection or sea-floor marks. The readout (word and numeral close in size, cue, round pips) sits between the window and the button with even gaps. The window and Jelli inside it swell over the in side, hold, shrink over the out side and hold (Jelli breathes with it: her mouth is a small open O while breathing in and out and closes to a soft line on each hold). The round pips count completed rounds only: a pip fills as its round ends (Round 2 shows one filled pip). A soft haptic tick at every corner, nothing else.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-.screen { --trk: #8E8A9E; }
-[data-theme="dark"] .screen { --trk: #5D6683; }
+/* The frame is tinted toward the sea (light: pale sea blue; dark: deep sea navy), never lavender-grey. */
+.screen { --trk: #B4C8EA; }
+[data-theme="dark"] .screen { --trk: #2F4A86; }
 .nav .title { flex: 1; text-align: center; margin-right: 56px; }
 .box { position: absolute; left: 15px; top: 116px; width: 360px; height: 360px; }
 .box > svg { position: absolute; inset: 0; overflow: visible; }
@@ -25,13 +26,14 @@
 .play .dot { animation: go 16s linear infinite; }
 @keyframes go { to { offset-distance: 100%; } }
 .still .dot { animation: none !important; offset-distance: 37.5%; }
-.say { position: absolute; left: 0; right: 0; top: 509px; text-align: center; margin: 0; white-space: nowrap; }
-.say .w { font: 800 30px/1 var(--display); letter-spacing: -.6px; transition: opacity .22s var(--ease); }
-.say .num { font-size: 64px; line-height: 1; display: inline-block; margin-left: 10px; }
-.cue { position: absolute; left: 40px; right: 40px; top: 585px; text-align: center; transition: opacity .4s var(--ease); }
-.rnd { position: absolute; left: 0; right: 0; top: 663px; display: flex; gap: 10px; align-items: center; justify-content: center; }
+.say { position: absolute; left: 0; right: 0; top: 512px; text-align: center; margin: 0; white-space: nowrap; }
+.say .w { font: 800 38px/1 var(--display); letter-spacing: -.6px; transition: opacity .22s var(--ease); }
+.say .num { font-size: 50px; line-height: 1; display: inline-block; margin-left: 12px; }
+.cue { position: absolute; left: 40px; right: 40px; top: 578px; text-align: center; transition: opacity .4s var(--ease); }
+.rnd { position: absolute; left: 0; right: 0; top: 666px; display: flex; gap: 10px; align-items: center; justify-content: center; }
 .rnd .pips { display: flex; gap: 8px; }
-.rnd i { width: 10px; height: 10px; border-radius: 99px; box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--fg) 55%, transparent); }
+.rnd #round { color: color-mix(in srgb, var(--fg) 84%, var(--g)); }
+.rnd i { width: 12px; height: 12px; border-radius: 99px; box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--fg) 55%, transparent); }
 .rnd i.on { background: var(--fg); box-shadow: none; }
 </style>
 </head><body>
@@ -41,8 +43,8 @@
   <div class="fillsq"><span class="sea" id="sea"></span></div>
   <div class="jel" id="jel"></div>
   <svg width="360" height="360" viewBox="0 0 360 360" aria-hidden="true">
-    <path id="trk" d="M39.37 320.63 A32 32 0 0 1 30 298 V62 A32 32 0 0 1 39.37 39.37 A32 32 0 0 1 62 30 H298 A32 32 0 0 1 320.63 39.37 A32 32 0 0 1 330 62 V298 A32 32 0 0 1 320.63 320.63 A32 32 0 0 1 298 330 H62 A32 32 0 0 1 39.37 320.63 Z" fill="none" stroke="var(--trk)" stroke-width="5"/>
-    <path id="lit" pathLength="400" d="M39.37 320.63 A32 32 0 0 1 30 298 V62 A32 32 0 0 1 39.37 39.37 A32 32 0 0 1 62 30 H298 A32 32 0 0 1 320.63 39.37 A32 32 0 0 1 330 62 V298 A32 32 0 0 1 320.63 320.63 A32 32 0 0 1 298 330 H62 A32 32 0 0 1 39.37 320.63 Z" fill="none" stroke="var(--fg)" stroke-width="7.5" stroke-linecap="butt" stroke-dasharray="82.44 317.56" stroke-dashoffset="-8.78"/>
+    <path id="trk" d="M39.37 320.63 A32 32 0 0 1 30 298 V62 A32 32 0 0 1 39.37 39.37 A32 32 0 0 1 62 30 H298 A32 32 0 0 1 320.63 39.37 A32 32 0 0 1 330 62 V298 A32 32 0 0 1 320.63 320.63 A32 32 0 0 1 298 330 H62 A32 32 0 0 1 39.37 320.63 Z" fill="none" stroke="var(--trk)" stroke-width="6"/>
+    <path id="lit" pathLength="400" d="M39.37 320.63 A32 32 0 0 1 30 298 V62 A32 32 0 0 1 39.37 39.37 A32 32 0 0 1 62 30 H298 A32 32 0 0 1 320.63 39.37 A32 32 0 0 1 330 62 V298 A32 32 0 0 1 320.63 320.63 A32 32 0 0 1 298 330 H62 A32 32 0 0 1 39.37 320.63 Z" fill="none" stroke="var(--fg)" stroke-width="6" stroke-linecap="butt" stroke-dasharray="82.44 317.56" stroke-dashoffset="-8.78"/>
   </svg>
   <span class="dot"></span>
 </div>
@@ -54,28 +56,28 @@
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
 
-/* Dark mode: a night sea drawn here (the kit's dark horizon puts its sun dead centre, behind Jelli): low sun off to the left as in light mode, layered water, a soft sea floor. */
-const nightSea = (w, h, k) => `<svg width="${w}" height="${h}" viewBox="0 0 260 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>
-  <linearGradient id="ns${k}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0C1838"/><stop offset=".6" stop-color="#1A2C5C"/><stop offset="1" stop-color="#2E4680"/></linearGradient>
-  <radialGradient id="ng${k}"><stop offset="0" stop-color="#FFD27A" stop-opacity=".42"/><stop offset=".5" stop-color="#FFB25E" stop-opacity=".12"/><stop offset="1" stop-color="#FFB25E" stop-opacity="0"/></radialGradient>
-  <linearGradient id="nw${k}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2A52A6"/><stop offset="1" stop-color="#173372"/></linearGradient>
-  <linearGradient id="nf${k}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3E5590"/><stop offset="1" stop-color="#2C3F74"/></linearGradient></defs>
-  <rect width="260" height="260" fill="url(#ns${k})"/>
+/* Both seas are paper-cut: flat fills, crisp edges, no blur, glow or grain. The sun (moon) sits low and off to the left so Jelli stays clear. */
+const band = (d, fill, crest, o) => `<path d="${d} V260 H0Z" fill="${fill}"/><path d="${d}" fill="none" stroke="${crest}" stroke-opacity="${o}" stroke-width="1.5"/>`;
+const W1 = 'M0 150 C60 143 120 153 180 147 S 240 143 260 147', W2 = 'M0 178 C60 168 130 184 190 174 S 245 170 260 174', W3 = 'M0 208 C50 198 110 212 170 204 S 236 198 260 204', W4 = 'M0 236 C60 228 120 240 180 232 S 240 228 260 232';
+const cloud = (x, y, k, fill) => `<g fill="${fill}" transform="translate(${x} ${y}) scale(${k})"><rect x="-30" y="-6" width="60" height="14" rx="7"/><circle cx="-12" cy="-6" r="11"/><circle cx="6" cy="-10" r="14"/><circle cx="20" cy="-2" r="9"/></g>`;
+const daySea = (w, h) => `<svg width="${w}" height="${h}" viewBox="0 0 260 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>
+  <linearGradient id="ds" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6AAEFF"/><stop offset="1" stop-color="#CFE8FF"/></linearGradient></defs>
+  <rect width="260" height="260" fill="url(#ds)"/>
+  <circle cx="54" cy="86" r="22" fill="#FFCB4A"/>
+  ${cloud(204, 46, 1, '#FFFFFF')}${cloud(118, 30, .6, '#F2F8FF')}
+  ${band(W1, '#A6D0FF', '#FFFFFF', .7)}${band(W2, '#62A2FF', '#FFFFFF', .45)}${band(W3, '#3378F0', '#FFFFFF', .3)}${band(W4, '#1E52C8', '#FFFFFF', .2)}</svg>`;
+const nightSea = (w, h) => `<svg width="${w}" height="${h}" viewBox="0 0 260 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>
+  <linearGradient id="ns" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0C1838"/><stop offset=".6" stop-color="#1A2C5C"/><stop offset="1" stop-color="#2E4680"/></linearGradient></defs>
+  <rect width="260" height="260" fill="url(#ns)"/>
   ${[[150, 30, 1.6], [214, 58, 1.2], [112, 70, 1.1], [236, 22, 1.4], [184, 100, 1], [24, 24, 1.2]].map(([x, y, r], i) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#fff" opacity="${i % 2 ? .5 : .8}"/>`).join('')}
-  <circle cx="52" cy="84" r="64" fill="url(#ng${k})"/><circle cx="52" cy="84" r="21" fill="#FFD27A"/>
-  <path d="M0 150 C60 144 120 153 180 147 S 240 144 260 148 V260 H0Z" fill="url(#nw${k})"/>
-  <ellipse cx="54" cy="163" rx="30" ry="4" fill="#FFD27A" opacity=".22"/><ellipse cx="54" cy="163" rx="14" ry="2.2" fill="#FFE2A6" opacity=".4"/>
-  <path d="M0 184 C60 174 130 188 190 178 S 245 174 260 178 V260 H0Z" fill="#1A3A80" opacity=".75"/>
-  <path d="M0 184 C60 174 130 188 190 178 S 245 174 260 178" fill="none" stroke="#9DB8FF" stroke-opacity=".18" stroke-width="2"/>
-  <path d="M0 228 C50 216 100 224 150 218 S 228 212 260 220 V260 H0Z" fill="url(#nf${k})"/>
-  <ellipse cx="206" cy="236" rx="11" ry="4.5" fill="#566CA6"/><ellipse cx="44" cy="240" rx="7" ry="3" fill="#566CA6"/></svg>`;
-/* Light: the kit sea with a flat sun and no grain, and without the white crescent in the water. */
-const cleanSea = (w, h) => DX.char('horizon', { scene: 'sea', w, h, clarity: 100 })
-  .replace(/<path d="M90 236 C102 222[^>]*><\/path>/, '')
-  .replace(/(<circle cx="110" cy="96" r="34" fill=")url\(#h2Sun[^)]*\)/, '$1#FFCB4A')
-  .replace(/<rect width="400" height="300" filter="url\(#h2Grain[^)]*\)"><\/rect>/, '');
-document.getElementById('sea').innerHTML = DX.theme === 'dark' ? nightSea(276, 276, 'w') : cleanSea(276, 276);
+  <circle cx="54" cy="86" r="21" fill="#FFD98A"/>
+  ${band(W1, '#284C9A', '#A8C2FF', .35)}${band(W2, '#1F3F84', '#A8C2FF', .22)}${band(W3, '#18346F', '#A8C2FF', .16)}${band(W4, '#122A5C', '#A8C2FF', .12)}</svg>`;
+document.getElementById('sea').innerHTML = DX.theme === 'dark' ? nightSea(276, 276) : daySea(276, 276);
 document.getElementById('jel').innerHTML = DX.char('jelli', { mood: 'breathe', size: 184 });
+/* Jelli's mouth: a small open O while breathing in and out, a closed soft line on each hold. */
+const mouth = document.querySelector('#jel path[stroke-width="3.5"][stroke-linejoin="round"]');
+const OPEN = { d: mouth.getAttribute('d'), f: mouth.getAttribute('fill') }, SHUT = { d: 'M95 107 Q100 111 105 107', f: 'none' };
+const setMouth = hold => { const m = hold ? SHUT : OPEN; mouth.setAttribute('d', m.d); mouth.setAttribute('fill', m.f); };
 const P = [
   { w: 'Breathe in', c: 'In through your nose. Let your belly fill.' },
   { w: 'Hold', c: 'Soft and still. Let your shoulders drop.' },
@@ -85,13 +87,13 @@ const phase = document.getElementById('phase'), count = document.getElementById(
 /* g counts sides walked so far: the dash offset only ever decreases, so the lit stroke always slides forward (never back round the square at a new round). */
 function set(k, n, g) {
   const p = P[k];
-  if (n === 4) { phase.style.opacity = 0; cue.style.opacity = 0; setTimeout(() => { phase.textContent = p.w; cue.textContent = p.c; phase.style.opacity = 1; cue.style.opacity = 1; }, 220);
+  if (n === 4) { phase.style.opacity = 0; cue.style.opacity = 0; setTimeout(() => { phase.textContent = p.w; cue.textContent = p.c; setMouth(k % 2 === 1); phase.style.opacity = 1; cue.style.opacity = 1; }, 220);
     lit.style.strokeDashoffset = -100 * g - 8.78; }
   count.textContent = n;
 }
 for (let s = 0; s < 48; s++) { const g = Math.floor(s / 4), k = g % 4, n = 4 - (s % 4); DX.after(s * 1000, () => set(k, n, g)); }
 DX.after(16000, () => { round.textContent = 'Round 3 of 4'; pips[1].classList.add('on'); });
 DX.after(32000, () => { round.textContent = 'Round 4 of 4'; pips[2].classList.add('on'); });
-DX.onStill(() => { lit.style.strokeDashoffset = -108.78; phase.textContent = P[1].w; cue.textContent = P[1].c; count.textContent = 2; });
+DX.onStill(() => { lit.style.strokeDashoffset = -108.78; phase.textContent = P[1].w; cue.textContent = P[1].c; count.textContent = 2; setMouth(true); });
 </script>
 </body></html>
