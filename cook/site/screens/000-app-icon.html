@@ -19,7 +19,9 @@
 /* Dark board: the Dark icon is the hero, with the same hairline rim iOS draws on dark wallpapers. */
 [data-theme="dark"] .tile::after { content:""; position:absolute; inset:0; border-radius:inherit; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.16); pointer-events:none; }
 /* Dark board: the card sits one step lighter than the icon, so the Dark icon's edge reads all the way round. */
-[data-theme="dark"] .stage { background: radial-gradient(90% 80% at 50% 36%, #3E4C78 0%, #2E3961 58%, #252F52 100%); box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); }
+/* Dark board: the page navy itself with a hairline, so the board never competes with the Dark icon. */
+[data-theme="dark"] .stage { background: var(--g); box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); }
+[data-theme="dark"] .tile::after { box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.22); }
 .sunrise { transform: translateY(0); }
 .play .sunrise { animation: rise 1.2s cubic-bezier(.2,.8,.2,1) .7s both; }
 @keyframes rise { from { transform: translateY(70px); } to { transform: none; } }
@@ -71,11 +73,14 @@ function appIcon(v, size, o = {}) {
     light: { bg: ['#FFCF9C', '#FFB27A'], body: '#FF7155', shade: '#E85A3E', hl: '#FFB09C', sky: '#BFD7FF', sun: '#FFC93C', h1: '#3FB37F', h2: '#2E9A69', floor: .10 },
     dark:  { bg: ['#262E49', '#121829'], body: '#FF7155', shade: '#E85A3E', hl: '#FFB09C', sky: '#2B3A6B', sun: '#FFC93C', h1: '#3FB37F', h2: '#2E9A69', floor: .25 },
     /* Tinted: iOS tints a greyscale icon. The window is kept dark so the white sun and pale hills still read as a sunrise. */
-    tint:  { bg: ['#2E2E2E', '#151515'], body: '#E2E2E2', shade: '#C4C4C4', hl: '#F7F7F7', sky: '#3A3A3A', sun: '#FFFFFF', h1: '#A6A6A6', h2: '#858585', floor: .25, sunY: -26 }
+    /* Tinted: the window is a true cut-out (the icon's own black shows through, with a pale rim), so it reads as a hole in the zero. */
+    tint:  { bg: ['#2A2A2A', '#141414'], body: '#E6E6E6', shade: '#C4C4C4', hl: '#F7F7F7', sky: '#161616', sun: '#FFFFFF', h1: '#8C8C8C', h2: '#6E6E6E', floor: .25, sunY: -26, rim: '#9A9A9A' }
   }[v];
   const face = !!o.face, dy = face ? 52 : 0;
   /* Small sizes (home screen, settings): the window keeps sky, one bigger sun and one hill, so it still reads at 60 px. */
   const simple = size < 100;
+  /* Home-screen size (60 px): one large sun rising out of the window floor, no hill stripe. */
+  const tiny = size <= 64;
   return `<svg viewBox="0 0 1024 1024" width="${size}" height="${size}" style="display:block" aria-hidden="true">
   <defs><linearGradient id="${id}b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${P.bg[0]}"/><stop offset="1" stop-color="${P.bg[1]}"/></linearGradient>
   <clipPath id="${id}h"><ellipse cx="512" cy="${560 + dy}" rx="132" ry="178"/></clipPath></defs>
@@ -86,9 +91,10 @@ function appIcon(v, size, o = {}) {
   <path fill="${P.shade}" d="M716 250 C800 330 836 440 836 548 C836 770 704 900 512 900 C650 860 760 740 760 548 C760 430 744 320 716 250 Z"/>
   <path d="M290 360 C312 290 360 236 430 210" fill="none" stroke="${P.hl}" stroke-width="26" stroke-linecap="round"/>
   <g clip-path="url(#${id}h)"><rect x="370" y="380" width="290" height="460" fill="${P.sky}"/>
-  ${simple ? `<circle cx="512" cy="${604 + dy}" r="86" fill="${P.sun}"/><path d="M370 ${668 + dy} C430 ${640 + dy} 540 ${636 + dy} 660 ${662 + dy} V840 H370Z" fill="${P.h1}"/></g>` : `<circle class="${o.rise ? 'sunrise' : ''}" cx="512" cy="${598 + dy + (P.sunY || 0)}" r="62" fill="${P.sun}"/>
+  ${tiny ? `<circle cx="512" cy="${652 + dy}" r="112" fill="${P.sun}"/></g>` : simple ? `<circle cx="512" cy="${604 + dy}" r="86" fill="${P.sun}"/><path d="M370 ${668 + dy} C430 ${640 + dy} 540 ${636 + dy} 660 ${662 + dy} V840 H370Z" fill="${P.h1}"/></g>` : `<circle class="${o.rise ? 'sunrise' : ''}" cx="512" cy="${598 + dy + (P.sunY || 0)}" r="62" fill="${P.sun}"/>
   <path d="M370 ${648 + dy} C430 ${618 + dy} 500 ${638 + dy} 560 ${620 + dy} S640 ${610 + dy} 660 ${618 + dy} V840 H370Z" fill="${P.h1}"/>
   <path d="M370 ${690 + dy} C440 ${670 + dy} 520 ${700 + dy} 660 ${674 + dy} V840 H370Z" fill="${P.h2}"/></g>`}
+  ${P.rim ? `<ellipse cx="512" cy="${560 + dy}" rx="132" ry="178" fill="none" stroke="${P.rim}" stroke-width="16"/>` : ''}
   ${face ? `<path d="M452 330 L452 352 M572 330 L572 352" stroke="#24163A" stroke-width="22" stroke-linecap="round"/><path d="M488 382 Q512 402 536 382" fill="none" stroke="#24163A" stroke-width="12" stroke-linecap="round"/>` : ''}
   </svg>`;
 }
@@ -105,8 +111,9 @@ if (dark) document.getElementById('n-dx').classList.add('rim');
 document.getElementById('wall').innerHTML = dark
   ? `<defs><linearGradient id="wg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1B2542"/><stop offset="1" stop-color="#0D1220"/></linearGradient></defs>
      <rect width="346" height="118" fill="url(#wg)"/><circle cx="40" cy="-10" r="90" fill="#24335A" opacity=".7"/><circle cx="300" cy="140" r="110" fill="#1C3A4A" opacity=".55"/><circle cx="210" cy="10" r="54" fill="#2A2F55" opacity=".5"/>`
-  : `<defs><linearGradient id="wg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#93ADC9"/><stop offset="1" stop-color="#6F8FB3"/></linearGradient></defs>
-     <rect width="346" height="118" fill="url(#wg)"/><circle cx="40" cy="-10" r="90" fill="#AFC4DA" opacity=".7"/><circle cx="300" cy="140" r="110" fill="#6E9A90" opacity=".6"/><circle cx="210" cy="10" r="54" fill="#A9BCD6" opacity=".55"/>`;
+  /* Light: a deep teal-to-blue wallpaper (cool and saturated, like a stock iOS wallpaper) so the apricot icon is the one warm note. */
+  : `<defs><linearGradient id="wg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2F6E8E"/><stop offset="1" stop-color="#1F3F6E"/></linearGradient></defs>
+     <rect width="346" height="118" fill="url(#wg)"/><circle cx="40" cy="-10" r="90" fill="#3F87A2" opacity=".7"/><circle cx="300" cy="140" r="110" fill="#1B5A63" opacity=".7"/><circle cx="210" cy="10" r="54" fill="#3A5E92" opacity=".55"/>`;
 
 /* Neighbour apps: generic, quiet, believable. */
 document.getElementById('n-clock').innerHTML = `<svg width="60" height="60" viewBox="0 0 60 60"><rect width="60" height="60" fill="#1C1C1E"/><circle cx="30" cy="30" r="22" fill="#F6F4F0"/>
