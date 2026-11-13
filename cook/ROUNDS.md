@@ -32,3 +32,10 @@ S01 8.3/8.25, S02 8.6/8.45, S03 8.4/8.35, S04 8.0/8.0, S05 8.0/8.0, S06 8.65/8.6
 Real bug found: on S02 a `.hz>img` rule overrode the hero width (strip at the right edge), and the light crop caught the Dynamic Island. Fixed.
 System: light --line raised to .22; all small coral text must use --accent-text.
 10:17: the asset store returned store_unavailable twice; uploads for hero-welcome3, reveal3 and xero-sun are pending.
+
+## Rounds I–K (10:20–10:46), 2 critics each, averaged
+- I: S02 8.3/8.45, S12 8.0/8.2, S13 8.4/8.45, S14 8.3/8.35, S15 8.25/8.4, S16 8.3/8.4, S17 8.5/8.6, S18 8.35/8.5, S19 8.35/8.5.
+- J: S01 8.15/8.2, S02 8.5/8.6, S03 8.1/8.05, S04 8.1/8.05, S05 7.8/7.75, S06 8.4/8.4, S07 8.1/8.05, S08 8.15/8.15, S09 8.05/8.05, S10 8.25/8.25, S11 8.35/8.4; S16 8.0/8.25, S17 7.95/8.15, S18 8.05/8.2, S19 7.9/8.1.
+- K: S12 8.0/8.2, S13 8.3/8.4, S14 7.9/8.05, S15 8.3/8.4, S16 8.45/8.5, S17 8.6/8.65, S18 8.05/8.2, S19 8.05/8.2.
+Observation: since about round H, scores have plateaued at 8.0–8.7. Each critic pass finds new and sometimes contradictory nits (e.g. add vs remove Xero on Program, card vs row for Quit Day). The strict rubric ("most good work scores 7–8.5") may cap what these critics award. From round J, builders fix only points both critics raised.
+10:30 container restart; two builders were resumed from their transcripts and no files were lost.
