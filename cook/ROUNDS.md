@@ -128,3 +128,6 @@ session 023-032, lesson-log 033-042, slips-checkin 043-055.
   factual slips (box duration, weekday). Careful round 7 started on the r5 base.
 - Today-SOS-Program round 7 (016, 017, 022 redesigned): Sonnet 8.6 (r6 8.6); Opus pending. Main fault: cards sliced by the tab
   bar (015-017). Kit: inactive tab labels 72% ink.
+- Today-SOS-Program round 7: Opus 8.6 / Sonnet 8.6 (r6 8.4 / 8.6): kept. Kit after: Day Xero mark redrawn as a typographic
+  zero with the sunrise window (critics read the old round mark as an egg); day/prep badge sun moved clear of the numeral;
+  190px eased tab fade (no sliced cards; local short fades removed); SOS label on the tab label baseline.
