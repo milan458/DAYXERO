@@ -2,6 +2,11 @@ import DayXeroCore
 import SwiftData
 import SwiftUI
 
+/// Motion (021): Quiet tier, no springs. The paper-cut sea card builds back to front while Jelli (calm) settles down
+/// into the water (900ms), then keeps a slow bob, half in the sea. The title and the progress note arrive with a 90ms
+/// stagger, then the if-then line and its option rows settle in one by one (120ms apart); the chosen row carries the
+/// kit's warm selection and its tick. On Save the button turns to its done state and a soft success haptic plays.
+///
 /// After a slip (F15, quiet tier on the reading ground): Jelli thanks them, nothing resets, and one
 /// if-then plan for next time. What happened (product, amount, when) is optional, after the plan.
 /// The slip is already saved when this opens; every step only adds details.
@@ -76,6 +81,7 @@ struct SlipFlow: View {
         }
         .foregroundStyle(ground.ink)
         .background(ground.background.ignoresSafeArea())
+        .dxGround(.reading, paint: false)
         .animation(motion.animation(DX.Move.settle), value: stage)
         .sensoryFeedback(DX.Haptic.commit, trigger: savedFeedback)
         .onAppear(perform: prefill)
@@ -95,15 +101,15 @@ struct SlipFlow: View {
             Button {
                 if stage == .what { stage = plansUnlocked ? .done : .talk } else { onDone() }
             } label: {
-                Image(systemName: stage == .what ? "chevron.left" : "xmark")
-                    .font(.system(size: 18, weight: .bold))
+                DXIcon(stage == .what ? .back : .close, size: 20, weight: 2.4)
                     .frame(width: 44, height: 44)
+                    .background(ground.card2, in: Circle())
             }
-            .buttonStyle(.plain)
+            .buttonStyle(.dxPress)
             .accessibilityLabel(stage == .what ? Text("Back") : Text("Close. The slip is saved."))
-            HStack(spacing: 6) {
+            HStack(spacing: 5) {
                 ForEach(1...3, id: \.self) { i in
-                    Capsule().fill(i <= min(stage.rawValue, 3) ? ground.ink : DX.Fill.surface).frame(height: 6)
+                    Capsule().fill(i <= min(stage.rawValue, 3) ? ground.ink : ground.track).frame(height: 6)
                 }
             }
             .accessibilityElement()
@@ -122,21 +128,19 @@ struct SlipFlow: View {
         return VStack(spacing: 0) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 14) {
-                    HStack(spacing: 14) {
-                        JelliView(mood: .calm, stage: 2, size: .card)
-                            .frame(width: 88, height: 88)
-                            .background(DX.Ground.ocean.background, in: RoundedRectangle(cornerRadius: 26, style: .continuous))
-                            .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
-                            .accessibilityHidden(true)
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("With Jelli").dxFont(14, weight: 700, style: .footnote).foregroundStyle(ground.muted)
-                            // Plain title: the hand-drawn mark is kept for celebrations (S27.15).
-                            Text("Thanks for\ntelling me.")
-                                .dxType(.large)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .accessibilityAddTraits(.isHeader)
-                        }
+                    // v5 (021): Jelli half in a paper-cut sea, then the title.
+                    SlipSeaCard()
+                        .frame(height: 178)
+                        .accessibilityHidden(true)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("With Jelli").dxType(.footnote).foregroundStyle(ground.muted)
+                        // Plain title: the hand-drawn mark is kept for celebrations (S27.15).
+                        Text("Thanks for\ntelling me.")
+                            .dxType(.title)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .accessibilityAddTraits(.isHeader)
                     }
+                    .padding(.top, 6)
                     .dxArrive(0)
                     Text(talkLine)
                         .dxType(.body)
@@ -152,36 +156,31 @@ struct SlipFlow: View {
                         .dxArrive(2)
                         if offersFreshStart, !freshStartDismissed { freshStart.dxArrive(3) }
                     } else {
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("What set it off?").dxFont(16, weight: 700, style: .body)
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("What set it off?").dxType(.headline)
                             TriggerPicker(mine: profile?.triggers ?? [], selection: $trigger)
                             Text("If it's \(situation), then I'll…")
-                                .dxFont(19, weight: 700, style: .headline)
+                                .dxType(.headline)
                                 .fixedSize(horizontal: false, vertical: true)
-                                .padding(.top, 4)
-                            VStack(spacing: 8) {
-                                ForEach(suggestions, id: \.self) { idea in
+                                .padding(.top, 8)
+                            VStack(spacing: 10) {
+                                ForEach(Array(suggestions.enumerated()), id: \.element) { index, idea in
                                     ThenOption(text: idea, isOn: !writingOwn && action == idea) {
                                         action = idea
                                         writingOwn = false
                                     }
+                                    .dxSettle(index, delay: 0.3)
                                 }
                                 ThenOption(text: String(localized: "write my own"), isOn: writingOwn) { writingOwn = true }
                                 if writingOwn {
                                     TextField("", text: $ownAction, prompt: Text("go for a run").foregroundStyle(ground.muted))
-                                        .dxFont(16, weight: 500, style: .body)
-                                        .padding(.horizontal, 14)
-                                        .frame(minHeight: 48)
-                                        .background(DX.Fill.surface, in: RoundedRectangle(cornerRadius: DX.Layout.answerChipRadius, style: .continuous))
+                                        .textFieldStyle(.dx)
                                         .accessibilityLabel(Text("Then I'll"))
                                 }
                             }
                             .accessibilityElement(children: .contain)
                             .accessibilityLabel(Text("Then I will"))
                         }
-                        .padding(16)
-                        .background(DX.Fill.raised, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
-                        .shadow(color: Color(light: (0x1E1A3A, 0.07), dark: (0x000000, 0)), radius: 11, y: 8)
                         .dxArrive(2)
                     }
                 }
@@ -245,7 +244,7 @@ struct SlipFlow: View {
                         .dxArrive(1)
                     if let action = entry?.nextTime ?? chosenAction {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("YOUR PLAN").dxType(.caption).foregroundStyle(ground.muted)
+                            Text("Your plan").dxType(.caption).foregroundStyle(ground.muted)
                             Text("If it's \(String(localized: (trigger ?? .other).situation)), then I'll \(action).")
                                 .dxFont(19, weight: 700, style: .headline)
                                 .fixedSize(horizontal: false, vertical: true)
@@ -303,7 +302,7 @@ struct SlipFlow: View {
     /// "Keep going as I am" just hides the card.
     private var freshStart: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("FROM JELLI").dxType(.caption).foregroundStyle(ground.muted)
+            Text("From Jelli").dxType(.caption).foregroundStyle(ground.muted)
             Text("You've slipped on four of the last seven days. That's information, not failure. Want to pick a fresh Quit Day? Everything you've learned and logged stays.")
                 .dxType(.footnote)
                 .fixedSize(horizontal: false, vertical: true)
@@ -382,7 +381,7 @@ struct SlipFlow: View {
     // MARK: Pieces
 
     private func label(_ text: LocalizedStringKey) -> some View {
-        Text(text).dxType(.caption).textCase(.uppercase).foregroundStyle(ground.muted).padding(.top, DX.Space.s)
+        Text(text).dxType(.footnote).foregroundStyle(ground.muted).padding(.top, DX.Space.s)
     }
 
     private func amountTitle(_ value: SlipAmount) -> String {
@@ -488,35 +487,43 @@ struct SlipFlow: View {
     }
 }
 
-/// One "then I'll…" choice as a radio row: ink when chosen, with a green dot.
+/// One "then I'll…" choice: the kit option row with its radio and the warm selection.
 private struct ThenOption: View {
     let text: String
     let isOn: Bool
     let action: () -> Void
 
     var body: some View {
-        Button(action: action) {
-            HStack {
-                Text(verbatim: text)
-                    .dxFont(16, weight: 600, style: .body)
-                    .multilineTextAlignment(.leading)
-                    .fixedSize(horizontal: false, vertical: true)
-                Spacer(minLength: 8)
-                Circle()
-                    .strokeBorder(isOn ? DX.Fill.green : DX.Ground.reading.muted, lineWidth: isOn ? 6 : 2)
-                    .background(Circle().fill(isOn ? DX.Fill.greenOnDark : .clear))
-                    .frame(width: 22, height: 22)
-                    .accessibilityHidden(true)
+        DXOptionRow(Text(verbatim: text), isOn: isOn, on: .reading, action: action)
+    }
+}
+
+/// Jelli half in a paper-cut sea (021): the sea horizon, Jelli settling into the water between the back waves and
+/// the front one, then a slow bob.
+struct SlipSeaCard: View {
+    @Environment(\.colorScheme) private var scheme
+
+    var body: some View {
+        let dark = scheme == .dark
+        ZStack(alignment: .bottom) {
+            HorizonScene(.sea, clarity: 90, fit: .bottom)
+            JelliView(mood: .calm, stage: 2, points: 140)
+                .frame(width: 140, height: 140)
+                .dxBob(4, period: 6)
+                .dxSettle()
+                .offset(y: 14)
+            Canvas { ctx, size in
+                ctx.scaleBy(x: size.width / 346, y: size.height / 60)
+                ctx.fill(SVGPath.path("M0 22 C40 8 80 8 120 20 S200 34 240 18 S310 6 346 16 V60 H0Z"),
+                         with: .color(Color(hex: dark ? 0x13295F : 0x3A68C8)))
+                ctx.stroke(SVGPath.path("M0 22 C40 8 80 8 120 20 S200 34 240 18 S310 6 346 16"),
+                           with: .color(.white.opacity(dark ? 0.15 : 0.45)), lineWidth: 1.5)
+                ctx.fill(SVGPath.path("M0 42 C50 32 110 34 170 40 S280 46 346 36 V60 H0Z"),
+                         with: .color(Color(hex: dark ? 0x0E1F4C : 0x2A50AA)))
             }
-            .foregroundStyle(isOn ? DX.Ground.reading.background : DX.Ground.reading.ink)
-            .padding(.horizontal, 14).padding(.vertical, 12)
-            .frame(minHeight: 48)
-            .background(isOn ? DX.Ground.reading.ink : DX.Fill.surface,
-                        in: RoundedRectangle(cornerRadius: DX.Layout.answerChipRadius, style: .continuous))
+            .frame(height: 60)
         }
-        .buttonStyle(.plain)
-        .sensoryFeedback(DX.Haptic.select, trigger: isOn)
-        .accessibilityAddTraits(isOn ? [.isButton, .isSelected] : .isButton)
+        .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
     }
 }
 
@@ -530,7 +537,7 @@ struct PlanCard: View {
     var body: some View {
         // The two answers are bold runs inside the sentence, so they need `.font` (a Text), not `.dxFont` (a view).
         let strong = DX.Typeface4.scaledFont(16, weight: 600, style: .body, dynamicTypeSize: typeSize)
-        V4Card(padding: 14) {
+        V4Card(padding: 16) {
             VStack(alignment: .leading, spacing: 6) {
                 Text(title).v4Text(.subtitle)
                 Text("If it's \(Text(verbatim: situation).font(strong)), then I'll \(Text(verbatim: action).font(strong))")

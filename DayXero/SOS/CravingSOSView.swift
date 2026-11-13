@@ -6,6 +6,21 @@ import UIKit
 /// Craving SOS (F13–F15): Xero hands over to Jelli on the ocean, the person breathes 4 in, 6 out
 /// and the time they've ridden counts up. No countdown and no prediction line (design doc §10).
 /// Opens straight into the session, with nothing to load first.
+///
+/// Motion (019): Calm, no springs. Jelli and the single pacer ring (with its soft glow) fade up together and breathe
+/// as one: 4s in (scale up), 6s out (scale down), looping. The ring shows the breath: a cream arc sweeps round the
+/// ring from the top over the 4s in-breath while a soft inner fill swells behind Jelli, then the arc unwinds and the
+/// fill ebbs over the 6s out-breath. The breath word under Jelli crossfades in 600ms between 'Breathe in' and 'and
+/// out' in time with the breath. The ride timer counts up from 0:00 each second. The quiet reason line, the button and
+/// the two quiet text buttons (Text a friend, I slipped) arrive with a slow 90ms stagger. Touching and holding Jelli
+/// gives a soft rhythmic haptic at the breath pace.
+///
+/// Motion (020): The completion beat, gentle. The pacer ring from SOS closes and the check seals it: a cream knockout
+/// disc fades in with the sun disc inside it (500ms, at 900ms) and the ink tick draws (420ms). Jelli settles in
+/// cheering (900ms). Title and line fade up and the yellow underline under 'out' draws in. At 900ms the wave count
+/// rolls up by one while a '+1' floats up beside it (spring, the only one on the screen). At 1.3s the wave medallion
+/// fades in (700ms, no spring) and its progress ring extends toward the next wave badge. The button and the quiet
+/// text button arrive last. Success haptic with the +1.
 struct CravingSOSView: View {
     /// nil before onboarding is finished; the session still works.
     let profile: UserProfile?
@@ -103,11 +118,8 @@ struct CravingSOSView: View {
     // MARK: F13 Session
 
     private var sessionView: some View {
-        let ground = SOSColors.ocean
-        return ZStack {
-            ground.background.ignoresSafeArea()
-            // During the sighs Jelli carries its own glow, on the sigh's rhythm rather than 4 in, 6 out.
-            SOSWater(ring: !sighing).ignoresSafeArea()
+        ZStack {
+            SOSSea().ignoresSafeArea()
             VStack(spacing: 0) {
                 topBar
                 ScrollView {
@@ -131,6 +143,7 @@ struct CravingSOSView: View {
             }
             .dxReadableColumn(avoidingFold: false)
         }
+        .dxGround(.ocean, paint: false)
         .sosBreathHaptics(hapticsOn && stage == .session && !sighing)
     }
 
@@ -138,14 +151,16 @@ struct CravingSOSView: View {
     /// the break menu, and the sensory tricks (CHAR-03).
     @ViewBuilder
     private var ridingItOut: some View {
-        JelliView(mood: .breathe, stage: CrewGrowth.stage(daysClear: daysClear), size: .hero)
-            .offset(x: jelliIn || motion.reduce ? 0 : 90)
-            .opacity(jelliIn ? 1 : 0)
-            // Jelli makes room for the break menu (S27.18).
-            .frame(height: 170)
-            .accessibilityHidden(true)
+        SOSPacer(diameter: 276) {
+            JelliView(mood: .breathe, stage: CrewGrowth.stage(daysClear: daysClear), points: 190)
+                .frame(width: 190, height: 190)
+        }
+        .opacity(jelliIn ? 1 : 0)
+        .padding(.top, 18)
+        .accessibilityHidden(true)
         SOSBreathWords()
             .foregroundStyle(SOSColors.cream)
+            .padding(.top, 10)
         riddenLine
             .dxArrive(5)
         // Their why comes first, above the fold, before the break menu (UX-06).
@@ -166,6 +181,16 @@ struct CravingSOSView: View {
 
     private var topBar: some View {
         HStack {
+            // v5: the leading control top-left (kit `.icon-btn` on the ocean's card-2).
+            Button(action: close) {
+                DXIcon(.close, size: 20, weight: 2.4)
+                    .foregroundStyle(SOSColors.cream)
+                    .frame(width: 44, height: 44)
+                    .background(SOSColors.ocean.card2, in: Circle())
+            }
+            .buttonStyle(.dxPress)
+            .accessibilityLabel(Text("Close"))
+            Spacer()
             if practice {
                 Text("Practice run · nothing is saved")
                     .dxFont(13, weight: 700, style: .footnote)
@@ -181,17 +206,9 @@ struct CravingSOSView: View {
                     .background(DX.Ground.apricot.background, in: Circle())
                     .clipShape(Circle())
             }
-            Spacer()
-            Button(action: close) {
-                Image(systemName: "xmark").font(.system(size: 18, weight: .bold))
-                    .foregroundStyle(SOSColors.cream)
-                    .frame(width: 44, height: 44)
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel(Text("Close"))
         }
         .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
-        .padding(.leading, 14).padding(.trailing, 10)
+        .padding(.horizontal, 16)
         .padding(.top, 4)
         .frame(minHeight: 48)
     }
@@ -213,16 +230,17 @@ struct CravingSOSView: View {
     private var actions: some View {
         VStack(spacing: 8) {
             // Side by side, or stacked when the text is too large for one row.
+            // v5: one primary; "Still strong" is the outlined second choice beside it.
             ViewThatFits(in: .horizontal) {
                 HStack(spacing: 8) { passedButton; strongButton.fixedSize(horizontal: true, vertical: false) }
                 VStack(spacing: 8) { passedButton; strongButton.frame(maxWidth: .infinity) }
             }
-            HStack(spacing: 6) {
+            HStack(spacing: 18) {
                 ShareLink(item: String(localized: "Having a craving right now. Could you talk for five minutes?")) {
                     Text("Text a friend")
                 }
                 .buttonStyle(QuietLink())
-                Text(verbatim: "·").foregroundStyle(SOSColors.ocean.muted).accessibilityHidden(true)
+                Rectangle().fill(SOSColors.ocean.muted.opacity(0.5)).frame(width: 1, height: 22).accessibilityHidden(true)
                 Button("I slipped") { finish(.slipped) }
                     .buttonStyle(QuietLink())
             }
@@ -241,7 +259,7 @@ struct CravingSOSView: View {
     /// More help when the wave is strong: the calm tools (decision 26).
     private var strongButton: some View {
         Button("Still strong") { showCalmTools = true }
-            .buttonStyle(SolidPill())
+            .buttonStyle(.dx(.ghost, on: .ocean))
             .lineLimit(1)
     }
 
@@ -404,31 +422,25 @@ private struct PassedView: View {
 
     var body: some View {
         ZStack {
-            ground.background.ignoresSafeArea()
-            RisingBubbles().ignoresSafeArea()
+            SOSSea().ignoresSafeArea()
             VStack(spacing: 0) {
                 ScrollView {
                     VStack(spacing: 10) {
-                        JelliView(mood: .cheer, stage: CravingSOSView.crewStage(profile: profile, at: endedAt), size: .hero)
-                            .scaleEffect(shown || motion.reduce ? 1 : DX.Move.celebrateFromScale)
-                            .offset(y: shown || motion.reduce ? 0 : 60)
-                            .opacity(shown ? 1 : 0)
-                            .frame(height: 230, alignment: .bottom)
-                            .accessibilityHidden(true)
-                        Text("You rode it out.")
+                        sealedRing
+                            .padding(.top, 12)
+                        MarkedTitle("You rode it ", marking: String(localized: "out"), trail: ".", color: DX.Mark.color(on: .ocean))
                             .dxType(.large)
                             .foregroundStyle(ground.ink)
-                            .multilineTextAlignment(.center)
-                            .accessibilityAddTraits(.isHeader)
-                            .dxArrive(3)
+                            .padding(.top, 10)
+                            .dxFade(delay: 0.3)
                         Text("That wave lasted \(lasted). Each one you ride makes the next a little quieter.")
-                            .dxType(.body)
+                            .dxType(.footnote)
                             .foregroundStyle(ground.muted)
                             .multilineTextAlignment(.center)
                             .fixedSize(horizontal: false, vertical: true)
                             .padding(.horizontal, 8)
-                            .dxArrive(4)
-                        wavesTile.padding(.top, 6).dxArrive(5)
+                            .dxFade(delay: 0.45)
+                        wavesTile.padding(.top, 16).dxFade(delay: 0.6)
                         if !menu.isEmpty { helpedCard.dxArrive(6) }
                         triggerCard.dxArrive(7)
                         handBack.dxArrive(8)
@@ -442,18 +454,37 @@ private struct PassedView: View {
                     CravingLog.annotate(startedAt: startedAt, trigger: trigger, intensity: nil, helped: helped, in: context)
                     onDone()
                 }
-                .buttonStyle(.dx(.primary, on: .sky))
+                .buttonStyle(.dx(.primary, on: .ocean))
                 .padding(.horizontal, DX.Layout.buttonGutter)
                 .padding(.bottom, DX.Space.xs)
                 .dxArrive(9)
             }
             .dxReadableColumn()
         }
+        .dxGround(.ocean, paint: false)
+        .sensoryFeedback(DX.Haptic.commit, trigger: bumped)
         .task {
-            withAnimation(motion.animation(DX.Move.celebrate)) { shown = true }
-            try? await Task.sleep(for: .seconds(motion.reduce ? 0 : 1.2))
-            withAnimation(motion.animation(DX.Move.celebrate)) { bumped = true }
+            withAnimation(motion.animation(DX.Move.settle)) { shown = true }
+            try? await Task.sleep(for: .seconds(motion.reduce ? 0 : 0.9))
+            withAnimation(motion.animation(DX.Move.count)) { bumped = true }
         }
+    }
+
+    /// The pacer, closed, with the check sealing the top gap and Jelli cheering inside (020).
+    private var sealedRing: some View {
+        SOSPacer(diameter: 230, closed: true) {
+            JelliView(mood: .cheer, stage: CravingSOSView.crewStage(profile: profile, at: endedAt), points: 170)
+                .frame(width: 170, height: 170)
+                .dxSettle()
+        }
+        .overlay(alignment: .top) {
+            ZStack {
+                Circle().fill(Color(hex: 0xFFF8EE)).frame(width: 46, height: 46)
+                DXCheck(size: 36, color: Color(hex: 0xFFD966), tick: Color(hex: 0x1E1A3A), calm: true, delay: 0.9)
+            }
+            .offset(y: -23)
+        }
+        .accessibilityHidden(true)
     }
 
     /// "2 minutes, 10 seconds".
@@ -463,31 +494,40 @@ private struct PassedView: View {
         return Duration.seconds(seconds).formatted(.units(allowed: units, width: .wide))
     }
 
+    /// The waves card (020): the wave medallion inside a ring toward the next wave badge, the count rolling up by one
+    /// with a "+1" floating beside it.
     private var wavesTile: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 0) {
-                HStack(alignment: .firstTextBaseline, spacing: 8) {
-                    Text(verbatim: "\(bumped ? ridden + 1 : ridden)")
-                        .dxType(.large)
-                        .monospacedDigit()
-                        .contentTransition(.numericText())
-                    Text(verbatim: "+1")
-                        .dxFont(16, weight: 700, style: .body)
-                        .foregroundStyle(DX.Fill.green)
-                        .opacity(bumped ? 1 : 0)
-                        .scaleEffect(bumped ? 1 : 0.5)
-                        .offset(y: bumped ? 0 : 8)
-                        .accessibilityHidden(true)
+        let count = ridden + 1
+        let next = [1, 10, 25, 50, 100].first { $0 > count } ?? max(count, 1)
+        let previous = [0, 1, 10, 25, 50, 100].last { $0 < next } ?? 0
+        let p = Double(count - previous) / Double(max(next - previous, 1))
+        return HStack(spacing: 18) {
+            ZStack {
+                DXRing(p: p, size: 104, stroke: 6, color: Color(hex: 0xFFF8EE), track: Color.white.opacity(0.22))
+                ZStack {
+                    Circle().fill(Color(hex: 0xF5B83D)).frame(width: 80, height: 80)
+                    Circle().fill(Color(hex: 0xFFF4DE)).frame(width: 66, height: 66)
+                    WaveCore().frame(width: 66, height: 66).clipShape(Circle())
                 }
-                Text((bumped ? ridden + 1 : ridden) == 1 ? "wave ridden out" : "waves ridden out").dxType(.footnote).foregroundStyle(ground.muted)
+            }
+            .frame(width: 104, height: 104)
+            .dxFade(delay: 1.3)
+            VStack(alignment: .leading, spacing: 2) {
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                    CountingText(Double(count), from: Double(ridden), delay: 0.9, duration: 0.6) { String(Int($0.rounded())) }
+                        .dxFace(.display, 40, weight: 800, tracking: -1.2)
+                    DXFloatUp("+1", trigger: bumped, delay: 0.9)
+                }
+                Text(count == 1 ? "wave ridden out" : "waves ridden out").dxType(.footnote).foregroundStyle(ground.muted)
             }
             Spacer(minLength: 0)
         }
         .foregroundStyle(ground.ink)
-        .padding(.horizontal, 16).padding(.vertical, 14)
-        .background(SOSColors.skyCard, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .padding(18)
+        .background(SOSColors.skyCard.opacity(0.7), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(SOSColors.ocean.line, lineWidth: 1))
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text("\(ridden + 1) waves ridden out"))
+        .accessibilityLabel(Text("\(count) waves ridden out"))
     }
 
     /// "What helped?": the break menu plus "Just breathing" (S27.18). The pick is saved on this craving and puts that
@@ -516,7 +556,8 @@ private struct PassedView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 16).padding(.vertical, 14)
-        .background(SOSColors.skyCard, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .background(SOSColors.skyCard.opacity(0.7), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(SOSColors.ocean.line, lineWidth: 1))
     }
 
     private var triggerCard: some View {
@@ -530,7 +571,8 @@ private struct PassedView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 16).padding(.vertical, 14)
-        .background(SOSColors.skyCard, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .background(SOSColors.skyCard.opacity(0.7), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(SOSColors.ocean.line, lineWidth: 1))
     }
 
     /// The hand back: Xero's avatar and one line in Xero's voice.
@@ -546,19 +588,6 @@ private struct PassedView: View {
                 .fixedSize(horizontal: false, vertical: true)
             Spacer(minLength: 0)
         }
-    }
-}
-
-/// "Still strong": the solid ocean fill, cream text, 58 pt.
-private struct SolidPill: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .dxFont(16, weight: 600, style: .body)
-            .foregroundStyle(SOSColors.cream)
-            .padding(.horizontal, 18)
-            .frame(minHeight: DX.Layout.buttonHeight)
-            .background(SOSColors.solid, in: Capsule())
-            .opacity(configuration.isPressed ? 0.85 : 1)
     }
 }
 
@@ -585,7 +614,7 @@ struct SOSPracticeEnd: View {
 
     var body: some View {
         ZStack {
-            ground.background.ignoresSafeArea()
+            SOSSea().ignoresSafeArea()
             VStack(spacing: DX.Space.m) {
                 Spacer(minLength: 0)
                 JelliView(mood: passed ? .cheer : .calm, stage: 1, size: .scene)
@@ -602,12 +631,35 @@ struct SOSPracticeEnd: View {
                     .fixedSize(horizontal: false, vertical: true)
                 Spacer(minLength: 0)
                 Button("Back to Day Xero", action: onDone)
-                    .buttonStyle(.dx(.primary, on: .sky))
+                    .buttonStyle(.dx(.primary, on: .ocean))
                     .accessibilityIdentifier("sos.practice.done")
             }
             .padding(.horizontal, DX.Layout.gutter)
             .padding(.bottom, DX.Space.xs)
             .dxReadableColumn(avoidingFold: false)
+        }
+        .dxGround(.ocean, paint: false)
+    }
+}
+
+/// The lit sea every SOS screen sits on (kit ocean): a top glow over the three-stop gradient.
+struct SOSSea: View {
+    var body: some View {
+        ZStack {
+            DX.Ground.oceanGradient
+            RadialGradient(colors: [Color(light: (0xFFFFFF, 0.2), dark: (0xA0BEFF, 0.10)), .clear],
+                           center: UnitPoint(x: 0.5, y: -0.08), startRadius: 0, endRadius: 420)
+        }
+    }
+}
+
+/// The wave medallion's core: two waves on cream (kit wave badge, no numeral).
+private struct WaveCore: View {
+    var body: some View {
+        Canvas { ctx, size in
+            ctx.scaleBy(x: size.width / 100, y: size.height / 100)
+            ctx.fill(SVGPath.path("M0 58c8-7 16-7 24 0s16 7 24 0 16-7 24 0 16-7 28 0v42H0z"), with: .color(Color(hex: 0x5C7FF0)))
+            ctx.fill(SVGPath.path("M0 72c8-6 16-6 24 0s16 6 24 0 16-6 24 0 16-6 28 0v28H0z"), with: .color(Color(hex: 0x2A52DB)))
         }
     }
 }

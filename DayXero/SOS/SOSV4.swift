@@ -2,19 +2,21 @@ import DayXeroCore
 import SwiftUI
 import UIKit
 
-/// v4 Craving SOS colours (design doc §10, F13 and F14). SOS is Jelli's ocean; Passed is the sky.
+/// Craving SOS colours (v5, cook/site/screens/019-021): SOS and its outcomes are all Jelli's ocean, a lit sea
+/// (`DX.Ground.oceanGradient`); Passed stays on the ocean (the sky ground retired). Cards are the ocean's own card.
 enum SOSColors {
     static let ocean = DX.Ground.ocean
-    static let sky = DX.Ground.sky
-    /// The solid secondary fill on ocean: buttons, the reason card. #1D3A9E replaced a 16% cream tint (3.29:1).
-    static let solid = Color(light: 0x1D3A9E, dark: 0x1B2C66)
+    /// Passed: the ocean too (v5).
+    static let sky = DX.Ground.ocean
+    /// The solid fill on ocean: the reason card, the break menu, the hold pad (kit `--card`).
+    static let solid = DX.Ground.ocean.card
     static let glow = Color(light: (0x9CCBFF, 0.30), dark: (0x2A52DB, 0.25))
     static let waveBack = Color(light: 0x2449CC, dark: 0x13286A)
     static let waveFront = Color(light: 0x1F40B8, dark: 0x1A3384)
     static let cream = DX.Fill.cream
-    /// Cards on the sky: cream at 72% in light, white at 8% in dark.
-    static let skyCard = Color(light: (0xFFF8EE, 0.72), dark: (0xFFFFFF, 0.08))
-    static let skyChip = Color(light: (0xFFFFFF, 1), dark: (0xFFFFFF, 0.08))
+    /// Cards and chips on Passed: the ocean's card and card-2.
+    static let skyCard = DX.Ground.ocean.card
+    static let skyChip = DX.Ground.ocean.card2
     static let bubble = Color(light: (0xFFF8EE, 0.85), dark: (0x9CCBFF, 0.45))
 }
 
@@ -111,7 +113,8 @@ struct SOSBreathHaptics: ViewModifier {
     }
 }
 
-/// A v4 choice chip: 44 pt, radius 14, ink when chosen.
+/// A choice chip with the old v4 call shape; v5 draws the one kit chip (`DXChip`) for the ground it sits on
+/// (`.dxGround`), so the colour arguments are kept for call sites but no longer used.
 struct V4Chip: View {
     let text: String
     let isOn: Bool
@@ -122,18 +125,7 @@ struct V4Chip: View {
     let action: () -> Void
 
     var body: some View {
-        Button(action: action) {
-            Text(verbatim: text)
-                .dxFont(16, weight: 600, style: .body)
-                .foregroundStyle(isOn ? selectedInk : ink)
-                .padding(.horizontal, 14)
-                .frame(minHeight: 44)
-                .background(isOn ? selectedFill : fill,
-                            in: RoundedRectangle(cornerRadius: DX.Layout.answerChipRadius, style: .continuous))
-        }
-        .buttonStyle(.plain)
-        .sensoryFeedback(DX.Haptic.select, trigger: isOn)
-        .accessibilityAddTraits(isOn ? [.isButton, .isSelected] : .isButton)
+        DXChip(verbatim: text, isOn: isOn, action: action)
     }
 }
 
@@ -181,11 +173,16 @@ struct SOSReasonCard: View {
 
     var body: some View {
         Button(action: next) {
-            HStack(alignment: .center, spacing: 12) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("YOUR REASON").dxType(.caption).foregroundStyle(SOSColors.ocean.muted)
-                    Text(verbatim: reason.text)
-                        .dxFont(19, weight: 700, style: .headline)
+            // v5 (019): a heart tile, "Your reason" and the reason in their own words, on the ocean card.
+            HStack(alignment: .center, spacing: 14) {
+                DXIcon(.heart, size: 20)
+                    .foregroundStyle(SOSColors.cream)
+                    .frame(width: 34, height: 34)
+                    .background(SOSColors.ocean.card2, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Your reason").dxType(.caption).foregroundStyle(SOSColors.ocean.muted)
+                    Text(verbatim: "“\(reason.text)”")
+                        .dxType(.footnote)
                         .foregroundStyle(SOSColors.cream)
                         .multilineTextAlignment(.leading)
                         .fixedSize(horizontal: false, vertical: true)
@@ -199,7 +196,8 @@ struct SOSReasonCard: View {
                 }
             }
             .padding(.horizontal, 16).padding(.vertical, 14)
-            .background(SOSColors.solid, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+            .background(SOSColors.solid.opacity(0.7), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(SOSColors.ocean.line, lineWidth: 1))
         }
         .buttonStyle(.plain)
         .disabled(!canAdvance)
@@ -222,7 +220,7 @@ struct SOSBreakMenuCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(isOwn ? LocalizedStringKey("YOUR BREAK MENU") : LocalizedStringKey("TRY ONE WHILE IT PASSES"))
+            Text(isOwn ? LocalizedStringKey("Your break menu") : LocalizedStringKey("Try one while it passes"))
                 .dxType(.caption).foregroundStyle(SOSColors.ocean.muted)
                 .accessibilityAddTraits(.isHeader)
             DXFlowLayout(spacing: 8) {
@@ -232,8 +230,8 @@ struct SOSBreakMenuCard: View {
                         .foregroundStyle(SOSColors.cream)
                         .padding(.horizontal, 14)
                         .frame(minHeight: 44)
-                        .background(Color(light: (0xFFF8EE, 0.12), dark: (0xFFFFFF, 0.10)),
-                                    in: RoundedRectangle(cornerRadius: DX.Layout.answerChipRadius, style: .continuous))
+                        .background(SOSColors.ocean.card2,
+                                    in: RoundedRectangle(cornerRadius: DX.Layout.chipRadius, style: .continuous))
                 }
             }
             if !isOwn, let buildingDay {
@@ -254,9 +252,49 @@ struct SOSBreakMenuCard: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 16).padding(.vertical, 14)
-        .background(SOSColors.solid, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .background(SOSColors.solid.opacity(0.7), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(SOSColors.ocean.line, lineWidth: 1))
         .accessibilityElement(children: .contain)
     }
+}
+
+/// The pacer (019): one ring round Jelli that shows the breath. A cream arc sweeps round from the top over the 4 s
+/// in-breath while a soft inner fill swells, then unwinds and ebbs over the 6 s out-breath; ring and Jelli scale with
+/// it. Calm, no springs. With Reduce Motion the ring holds a quarter and the words carry the pace.
+struct SOSPacer<Content: View>: View {
+    var diameter: CGFloat = 276
+    /// Passed (020): the arc closes from the top gap and stays full.
+    var closed = false
+    @ViewBuilder let content: Content
+    private let motion = MotionPolicy()
+
+    var body: some View {
+        let still = !motion.breathes || closed
+        TimelineView(.animation(minimumInterval: 1 / 30, paused: still)) { timeline in
+            let t = timeline.date.timeIntervalSinceReferenceDate
+            let cycle = DX.Move.inhale + DX.Move.exhale
+            let phase = t.truncatingRemainder(dividingBy: cycle)
+            let arc = still ? (closed ? 1 : 0.25) : phase < DX.Move.inhale
+                ? easeInOut(phase / DX.Move.inhale) : 1 - easeInOut((phase - DX.Move.inhale) / DX.Move.exhale)
+            let breath = still ? 0.4 : DX.Move.breath(at: t)
+            ZStack {
+                Circle().fill(Color.white.opacity(0.06 + 0.06 * breath))
+                    .shadow(color: Color(hex: 0xBFD7FF).opacity(0.35), radius: 24)
+                Circle().fill(Color.white.opacity(0.05 + 0.07 * breath)).padding(diameter * 0.09)
+                Circle().stroke(Color.white.opacity(0.22), lineWidth: 4)
+                Circle().trim(from: 0, to: arc)
+                    .stroke(SOSColors.cream, style: StrokeStyle(lineWidth: 4, lineCap: .round))
+                    .rotationEffect(.degrees(-90))
+                    .shadow(color: .white.opacity(0.5), radius: 4)
+                content
+            }
+            .frame(width: diameter, height: diameter)
+            .scaleEffect(still ? 1 : 0.96 + 0.06 * breath)
+        }
+        .accessibilityHidden(true)
+    }
+
+    private func easeInOut(_ x: Double) -> Double { 0.5 - 0.5 * cos(.pi * max(0, min(1, x))) }
 }
 
 /// F14: small rings rising through the sky.
