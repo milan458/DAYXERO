@@ -19,6 +19,10 @@ on:
         description: "With screenshots: only the v4 gallery pages, pushed to ci-screens-v4 (quick)"
         type: boolean
         default: false
+      skip_tests:
+        description: "Build without running the tests (screenshots only)"
+        type: boolean
+        default: false
       core_only:
         description: "With screenshots: only one shot of each current screen, light and dark, pushed to ci-screens-core"
         type: boolean
@@ -81,7 +85,9 @@ jobs:
       - name: Build and test
         run: |
           set -o pipefail
-          xcodebuild test \
+          ACTION=test
+          [ "${{ inputs.skip_tests }}" = "true" ] && ACTION=build
+          xcodebuild $ACTION \
             -project DayXero.xcodeproj \
             -scheme DayXero \
             -destination "id=${{ steps.sim.outputs.udid }}" \
