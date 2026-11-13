@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>055 Check-in done</title>
-<meta name="motion" content="Done beat, kept dim. The night sky fades in (700ms) with no moon of its own (the badge's moon is the only one) and no star under the status bar; a small hill fades in at the badge's lower right and Glim (cheer, 132px) settles onto it, at least 18px clear of the gold ring (900ms), then bobs; a soft shadow sits under the badge. At 1.1s the 7-night badge stamps in (156px, centred on the text below) inside its sun-gold ring (620ms spring, medium haptic), a '+1' floats up from it, and at 1.75s a shine sweeps across it once. The small check by 'Check-in saved' pops and draws (success haptic), the title arrives with the underline under 'well', then the next-badge bar sweeps from 0 to 50% across the full card width (900ms) and the calm row arrives. Good night arrives last.">
+<meta name="motion" content="Done beat, kept dim. The night sky fades in (700ms) with no moon of its own (the badge's moon is the only one) and no star under the status bar; a small hill fades in at the badge's lower right and Glim (cheer, 132px, his lantern a warm yellow radial glow) settles onto it, at least 18px clear of the gold ring (900ms), then bobs; a soft shadow sits under the badge. At 1.1s the 7-night badge stamps in (156px, centred on the text below) inside its sun-gold ring (620ms spring, medium haptic), a '+1' floats up from it, and at 1.75s a shine sweeps across it once. The small check by 'Check-in saved' pops and draws (success haptic), the title arrives with the underline under 'well', then the next-badge bar sweeps from 0 to 50% across the full card width (900ms) and the calm row arrives. Good night arrives last.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -63,7 +63,9 @@
   /* one moon only: the badge's. The sky's moon and halo go, and no star sits under the status bar */
   document.querySelectorAll('#sky circle').forEach(c => { if (c.getAttribute('cx') === '336') c.remove();
     else if (c.getAttribute('fill') === '#fff' && +c.getAttribute('cy') < 54) c.remove(); });
-  document.getElementById('glim').innerHTML = DX.char('glim', { mood: 'cheer', size: 132 });
+  /* Glim's lantern glow: a warm yellow radial, not a flat ring (as on 054) */
+  document.getElementById('glim').innerHTML = DX.char('glim', { mood: 'cheer', size: 132 }).replace(/<circle cx="100" cy="150" r="38" fill="#FFE27A" opacity="[^"]*">[\s\S]*?<\/circle>/,
+    '<radialGradient id="lg55"><stop offset="0" stop-color="#FFD966" stop-opacity=".85"/><stop offset=".55" stop-color="#FFC94A" stop-opacity=".32"/><stop offset="1" stop-color="#FFC94A" stop-opacity="0"/></radialGradient><circle cx="100" cy="150" r="60" fill="url(#lg55)"></circle>');
   document.getElementById('check').innerHTML = DX.check({ size: 22, d: 900 });
   document.getElementById('badge').innerHTML = DX.badge({ kind: 'night', n: 7, size: 156, bare: true, label: '7 nights' });
   /* give the numeral room: the badge's crescent moon moves up and out, a little smaller */
