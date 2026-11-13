@@ -18,14 +18,28 @@ public enum SVGPath {
     static func tokenize(_ d: String) -> [Token] {
         var tokens: [Token] = []
         var number = ""
+        // Arc commands write their two flags as single digits that may run together ("a5 5 0 0110 0"):
+        // count the numbers since an A so the 4th and 5th of each 7 are read one character each.
+        var inArc = false
+        var arcIndex = 0
         func flush() {
-            if let value = Double(number) { tokens.append(.number(CGFloat(value))) }
+            if let value = Double(number) {
+                tokens.append(.number(CGFloat(value)))
+                if inArc { arcIndex += 1 }
+            }
             number = ""
         }
         for ch in d {
+            if inArc, number.isEmpty, arcIndex % 7 == 3 || arcIndex % 7 == 4, ch == "0" || ch == "1" {
+                tokens.append(.number(ch == "1" ? 1 : 0))
+                arcIndex += 1
+                continue
+            }
             if ch.isLetter && ch != "e" && ch != "E" {
                 flush()
                 tokens.append(.command(ch))
+                inArc = ch == "A" || ch == "a"
+                arcIndex = 0
             } else if ch == "-" || ch == "+" {
                 // A sign starts a new number unless it follows an exponent.
                 if let last = number.last, last == "e" || last == "E" {

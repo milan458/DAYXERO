@@ -1,28 +1,29 @@
 import CoreText
 import SwiftUI
 
-/// The four tabs (S27.11, 1 Nov 2026): Today · Program · SOS · Progress. Evening folded into Today's evening and
-/// night states; Me became Progress, with Settings behind its gear. Was five (decision 21).
+/// The five tabs (v5, kit.js `tabbar`): Today · Program · SOS (raised) · Calm · Progress. Was four (S27.11); Calm
+/// came back as a tab so the calm tools are one tap away, and SOS still opens Craving SOS rather than a tab.
 public enum V4Tab: String, CaseIterable, Sendable {
-    case today, program, sos, progress
+    case today, program, sos, calm, progress
 
     public var label: String {
         switch self {
         case .today: "Today"
         case .program: "Program"
         case .sos: "SOS / Breathe"
+        case .calm: "Calm"
         case .progress: "Progress"
         }
     }
 
-    /// Monochrome outline icons (24 × 24), like the system tab bar's SF Symbols.
-    var icon: String {
+    /// The kit's line icons.
+    var kitIcon: DX.Icon {
         switch self {
-        case .today: "M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"
-        case .program: "M12 21V11 M12 13C6 13 4 9 4 5c5 0 8 3 8 8Z M12 11c0-4 3-7 8-7 0 4-3 7-8 7Z"
-        // SOS draws the lungs symbol in its raised button instead (UX-10); this wave is only a fallback.
-        case .sos: "M3 12c3-4 6-4 9 0s6 4 9 0"
-        case .progress: "M5 20V11 M12 20V5 M19 20v-6"
+        case .today: .home
+        case .program: .path
+        case .sos: .wave
+        case .calm: .leaf
+        case .progress: .chart
         }
     }
 }
@@ -36,69 +37,70 @@ struct IconShape: Shape {
     }
 }
 
-/// The floating tab bar (S27.11): a translucent glass capsule with monochrome outline icons and a soft lozenge
-/// behind the selected tab, in the spirit of iOS 26's tab bar. It stays custom rather than `TabView` because SOS
-/// opens Craving SOS instead of switching tabs, and iPhone Duo stands the dock on its side edge.
+/// The floating tab bar (kit `.tabbar`): a 70 pt rounded panel (radius 28) on the ground's card at 96% with a blur,
+/// a soft shadow and a hairline, inset 14 pt from the sides. Icons are the kit's line icons (2.6 pt on the selected
+/// tab, 2.1 off) over 12 pt labels; the selected tab is the ink, the others the ink at 72%.
 ///
-/// SOS (UX-10, 2 Nov 2026) is a solid ocean button with the lungs symbol, raised 6 pt above the bar and labelled
-/// "SOS / Breathe", so it can be found in a hurry. Its glow breathes at 0.1 Hz, on the same 4 in, 6 out rhythm Jelli
-/// breathes in Craving SOS; with Reduce Motion it stays still.
+/// SOS is a raised 58 pt ocean circle (#1F3C8C) with the wave, its label under it, lifted 44 pt so it breaks the
+/// bar's top edge. Its glow breathes at 0.1 Hz with Jelli (4 in, 6 out); with Reduce Motion it stays still.
 public struct V4TabBar: View {
     /// The bar's height, without the raised SOS button.
     public static let height: CGFloat = 70
-    /// How far the SOS button rises above the bar's top edge.
-    public static let sosRise: CGFloat = 6
-    /// The space tab content keeps clear at the bottom so the bar never covers the last card (UX-11): the bar, the
-    /// raised button, the gap under the bar, and 16 pt of breathing room.
+    /// How far the SOS button rises above the bar's top edge (58 pt circle, 44 pt negative margin, centred row).
+    public static let sosRise: CGFloat = 20
+    /// The space tab content keeps clear at the bottom (kit `.scroll.with-tabs`: 120 pt from the screen's bottom).
     public static let contentInset: CGFloat = height + sosRise + DX.Space.xxs + DX.Space.m
 
     @Binding var selection: V4Tab
+    let ground: DX.Ground?
     @Environment(\.colorScheme) private var scheme
+    @Environment(\.dxGround) private var envGround
 
-    public init(selection: Binding<V4Tab>) {
+    public init(selection: Binding<V4Tab>, ground: DX.Ground? = nil) {
         _selection = selection
+        self.ground = ground
     }
 
     public var body: some View {
+        let g = (ground ?? envGround).resolved
         let dark = scheme == .dark
+        let shape = RoundedRectangle(cornerRadius: DX.Layout.tabBarRadius, style: .continuous)
         HStack(spacing: 0) {
             ForEach(V4Tab.allCases, id: \.self) { tab in
                 if tab == .sos {
-                    sosButton(dark: dark)
+                    sosButton(g)
                 } else {
-                    tabButton(tab, dark: dark)
+                    tabButton(tab, g)
                 }
             }
         }
-        .padding(.horizontal, 6)
         .frame(height: Self.height)
         .background {
-            // Glass: content shows through, softened, instead of an opaque white pill.
-            Capsule().fill(.regularMaterial)
-                .shadow(color: dark ? Color.black.opacity(0.45) : Color(hex: 0x1E1A3A).opacity(0.12), radius: 14, x: 0, y: 10)
+            ZStack {
+                shape.fill(.ultraThinMaterial)
+                shape.fill(g.card.opacity(0.96))
+            }
+            .shadow(color: dark ? .black.opacity(0.45) : Color(hex: 0x1E1A3A).opacity(0.18), radius: 15, x: 0, y: 10)
         }
-        .overlay(Capsule().strokeBorder(dark ? Color.white.opacity(0.14) : Color(hex: 0x1E1A3A).opacity(0.10), lineWidth: 1))
-        .padding(.horizontal, 12)
+        .overlay(shape.strokeBorder(g.line, lineWidth: 1))
+        .padding(.horizontal, 14)
         .sensoryFeedback(DX.Haptic.select, trigger: selection)
     }
 
-    private func tabButton(_ tab: V4Tab, dark: Bool) -> some View {
+    private func tabButton(_ tab: V4Tab, _ g: DX.Ground) -> some View {
         let on = tab == selection
-        let color: Color = on ? Color(hex: dark ? 0xFFF8EE : 0x1E1A3A) : Color(hex: dark ? 0xB8B3D9 : 0x5E5975)
+        let color = on ? g.ink : g.ink.opacity(0.72)
         return Button { selection = tab } label: {
-            VStack(spacing: 3) {
-                IconShape(d: tab.icon)
-                    .stroke(color, style: StrokeStyle(lineWidth: on ? 2.4 : 2, lineCap: .round, lineJoin: .round))
-                    .frame(width: 22, height: 22)
+            VStack(spacing: 4) {
+                DXIcon(tab.kitIcon, size: 24, weight: on ? 2.6 : 2.1)
                 Text(tab.label)
                     .font(DX.Typeface4.font(.body, size: 12, weight: on ? 700 : 600).swiftUI)
-                    .foregroundStyle(color)
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
             }
+            .foregroundStyle(color)
             .frame(maxWidth: .infinity, minHeight: 58)
-            .background(on ? (dark ? Color.white.opacity(0.12) : Color(hex: 0x1E1A3A).opacity(0.07)) : .clear, in: Capsule())
-            .contentShape(Capsule())
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .accessibilityLabel(tab.label)
@@ -107,32 +109,28 @@ public struct V4TabBar: View {
         .accessibilityShowsLargeContentViewer()
     }
 
-    /// The raised SOS button: a 46 pt ocean circle with the lungs symbol, its top 6 pt above the bar, and
-    /// "SOS / Breathe" under it on the same line as the other tabs' names.
-    private func sosButton(dark: Bool) -> some View {
-        let ocean = Color(hex: dark ? 0x3D66F0 : 0x2A52DB)
-        let ink = Color(hex: dark ? 0x9CC0FF : 0x2A52DB)
-        let circle: CGFloat = 46
+    /// The raised SOS button: a 58 pt ocean circle with the wave, lifted above the bar, its name under it.
+    private func sosButton(_ g: DX.Ground) -> some View {
+        let ocean = Color(hex: 0x1F3C8C)
+        let circle: CGFloat = 58
         return Button { selection = .sos } label: {
-            VStack(spacing: 2) {
+            VStack(spacing: 3) {
                 ZStack {
-                    SOSBreathGlow(color: ocean, diameter: circle)
+                    SOSBreathGlow(color: Color(hex: 0x3A68C8), diameter: circle)
                     Circle().fill(ocean)
-                        .shadow(color: ocean.opacity(0.35), radius: 6, x: 0, y: 3)
-                    Image(systemName: "lungs.fill")
-                        .font(.system(size: 19, weight: .semibold))
+                        .shadow(color: ocean.opacity(0.4), radius: 10, x: 0, y: 8)
+                    DXIcon(.wave, size: 26, weight: 2.4)
                         .foregroundStyle(Color(hex: 0xFFF8EE))
                 }
                 .frame(width: circle, height: circle)
                 Text(V4Tab.sos.label)
-                    .font(DX.Typeface4.font(.body, size: 11, weight: 800).swiftUI)
-                    .foregroundStyle(ink)
+                    .font(DX.Typeface4.font(.body, size: 12, weight: 600).swiftUI)
+                    .foregroundStyle(g.muted)
                     .lineLimit(1)
-                    .minimumScaleFactor(0.75)
+                    .fixedSize()
             }
             .frame(maxWidth: .infinity)
-            // Centred in the 70 pt bar the stack would start 4 pt down; lift it so the circle's top sits 6 pt above.
-            .offset(y: -(Self.sosRise + 4))
+            .offset(y: -Self.sosRise)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
@@ -156,7 +154,7 @@ struct SOSBreathGlow: View {
             Circle()
                 .fill(color.opacity(0.28 - 0.14 * breath))
                 .frame(width: diameter, height: diameter)
-                .scaleEffect(1 + 0.32 * breath)
+                .scaleEffect(1 + 0.22 * breath)
         }
         .allowsHitTesting(false)
         .accessibilityHidden(true)

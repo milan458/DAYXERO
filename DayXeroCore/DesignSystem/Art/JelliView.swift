@@ -21,8 +21,8 @@ public struct JelliView: View {
 
     public var body: some View {
         let mood = mood, stage = stage
-        CrewCanvas(label: "Jelli", size: size, animate: animate) { ctx, time, on in
-            JelliView.draw(&ctx, mood: mood, stage: stage, time: time, animate: on)
+        CrewCanvas(label: "Jelli", size: size, animate: animate) { ctx, time, on, dark in
+            JelliView.draw(&ctx, mood: mood, stage: stage, time: time, animate: on, dark: dark)
         }
     }
 
@@ -31,7 +31,7 @@ public struct JelliView: View {
         "M\(x) 122 C\(x - 6 * k) 138 \(x + 6 * k) 152 \(x) 166 C\(x - 4 * k) 174 \(x + 2 * k) 180 \(x - 2 * k) 186"
     }
 
-    nonisolated static func draw(_ ctx: inout GraphicsContext, mood: CrewMood, stage: Int, time t: Double, animate on: Bool) {
+    nonisolated static func draw(_ ctx: inout GraphicsContext, mood: CrewMood, stage: Int, time t: Double, animate on: Bool, dark: Bool = false) {
         let cheer = mood == .cheer
         let cheerTimes = [0, 0.15, 0.35, 0.55, 1.0]
 
@@ -93,11 +93,11 @@ public struct JelliView: View {
         Crew.Face.make(mood, y: 92).draw(in: &b, y: 92, time: t, animate: on, blinkPeriod: 4.2, mood: mood, color: Crew.ink)
 
         if cheer {
-            Crew.stroke(&ctx, "M24 60 l0 12 M18 66 l12 0", Crew.ink, 3)
-            Crew.stroke(&ctx, "M176 56 l0 10 M171 61 l10 0", Crew.ink, 3)
+            Crew.sparkle(&ctx, x: 24, y: 60, length: 12)
+            Crew.sparkle(&ctx, x: 176, y: 56, length: 10)
         }
         if mood == .sleepy {
-            Crew.zzz(&ctx, at: CGPoint(x: 154, y: 30), time: t, animate: on, color: Crew.ink)
+            Crew.zzz(&ctx, at: CGPoint(x: 154, y: 30), time: t, animate: on, color: Crew.markColor(dark: dark))
         }
     }
 }

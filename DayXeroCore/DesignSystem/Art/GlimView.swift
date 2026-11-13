@@ -21,12 +21,12 @@ public struct GlimView: View {
 
     public var body: some View {
         let mood = mood, stage = stage
-        CrewCanvas(label: "Glim", size: size, animate: animate) { ctx, time, on in
-            GlimView.draw(&ctx, mood: mood, stage: stage, time: time, animate: on)
+        CrewCanvas(label: "Glim", size: size, animate: animate) { ctx, time, on, dark in
+            GlimView.draw(&ctx, mood: mood, stage: stage, time: time, animate: on, dark: dark)
         }
     }
 
-    nonisolated static func draw(_ ctx: inout GraphicsContext, mood: CrewMood, stage: Int, time t: Double, animate on: Bool) {
+    nonisolated static func draw(_ ctx: inout GraphicsContext, mood: CrewMood, stage: Int, time t: Double, animate on: Bool, dark: Bool = false) {
         let cheer = mood == .cheer
         let cheerTimes = [0, 0.15, 0.35, 0.55, 1.0]
         let yellow = Color(hex: 0xFFE27A)

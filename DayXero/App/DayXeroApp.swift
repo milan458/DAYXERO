@@ -39,6 +39,8 @@ struct DayXeroApp: App {
     var body: some Scene {
         WindowGroup {
             RootView()
+                // v5: every switch is the kit toggle (coral on, the ink at 30% off).
+                .toggleStyle(.dx)
                 .environment(entitlement)
                 .task { await entitlement.refresh() }
         }

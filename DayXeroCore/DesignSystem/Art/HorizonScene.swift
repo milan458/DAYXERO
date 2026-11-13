@@ -28,8 +28,18 @@ public struct HorizonScene: View {
     }
 
     public var body: some View {
+        if colorScheme == .dark {
+            // v5 (kit.js `charSvg`): in dark mode every horizon is repainted as the midnight meadow, never a dimmed
+            // day: the night scene keeps its moon, every other scene gets the pre-dawn glow.
+            NightSky(dawn: kind != .night, animate: animate)
+        } else {
+            daylight
+        }
+    }
+
+    @ViewBuilder private var daylight: some View {
         let moving = animate && !motion.reduce
-        let kind = kind, clarity = clarity, fit = fit, appeared = appeared, dark = colorScheme == .dark
+        let kind = kind, clarity = clarity, fit = fit, appeared = appeared, dark = false
         TimelineView(.animation(paused: !moving)) { timeline in
             Canvas { ctx, size in
                 // preserveAspectRatio "xMid… slice": cover, centred horizontally.

@@ -23,12 +23,12 @@ public struct XeroView: View {
 
     public var body: some View {
         let mood = mood, stage = stage
-        CrewCanvas(label: "Xero", size: size, animate: animate) { ctx, time, on in
-            XeroView.draw(&ctx, mood: mood, stage: stage, time: time, animate: on)
+        CrewCanvas(label: "Xero", size: size, animate: animate) { ctx, time, on, dark in
+            XeroView.draw(&ctx, mood: mood, stage: stage, time: time, animate: on, dark: dark)
         }
     }
 
-    nonisolated static func draw(_ ctx: inout GraphicsContext, mood: CrewMood, stage: Int, time t: Double, animate on: Bool) {
+    nonisolated static func draw(_ ctx: inout GraphicsContext, mood: CrewMood, stage: Int, time t: Double, animate on: Bool, dark: Bool = false) {
         let cheer = mood == .cheer
         let cheerTimes = [0, 0.15, 0.35, 0.55, 1.0]
 
@@ -113,18 +113,18 @@ public struct XeroView: View {
 
         // Marks outside the body.
         if cheer {
-            Crew.stroke(&ctx, "M26 64 l0 12 M20 70 l12 0", Crew.ink, 3)
-            Crew.stroke(&ctx, "M174 70 l0 10 M169 75 l10 0", Crew.ink, 3)
+            Crew.sparkle(&ctx, x: 26, y: 64, length: 12)
+            Crew.sparkle(&ctx, x: 174, y: 70, length: 10)
         }
         if mood == .sleepy {
-            Crew.zzz(&ctx, at: CGPoint(x: 150, y: 40), time: t, animate: on, color: Crew.ink)
+            Crew.zzz(&ctx, at: CGPoint(x: 150, y: 40), time: t, animate: on, color: Crew.markColor(dark: dark))
         }
         if mood == .breathe {
             let drift = ArtTrack([[0, 0], [8, 0], [0, 0]], duration: 5).value(at: t, animate: on)
             var b = ctx
             b.translateBy(x: drift[0], y: drift[1])
-            Crew.stroke(&b, "M172 100 q8 -5 16 0", Crew.ink, 3)
-            Crew.stroke(&b, "M176 112 q6 -4 12 0", Crew.ink, 3)
+            Crew.stroke(&b, "M172 100 q8 -5 16 0", Crew.markColor(dark: dark), 3)
+            Crew.stroke(&b, "M176 112 q6 -4 12 0", Crew.markColor(dark: dark), 3)
         }
     }
 

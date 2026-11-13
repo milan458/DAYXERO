@@ -18,12 +18,30 @@ public extension View {
 
     /// A translucent card laid on a coloured ground.
     func dxCardOnColour(radius: CGFloat = DX.Layout.smallCardRadius, on ground: DX.Ground? = nil) -> some View {
-        padding(16).background(ground.map(DX.Fill.onColourCard(for:)) ?? DX.Fill.cardOnColour, in: RoundedRectangle(cornerRadius: radius, style: .continuous))
+        padding(16).dxCardChrome(on: ground ?? .apricot, radius: radius)
+    }
+
+    /// v5: the ground's card fill and, where the kit draws one, its hairline; no padding.
+    func dxCardChrome(on ground: DX.Ground, radius: CGFloat = DX.Layout.cardRadius) -> some View {
+        modifier(CardChrome(ground: ground, radius: radius))
     }
 
     /// A card on the reading ground.
     func dxReadingCard(radius: CGFloat = DX.Layout.smallCardRadius) -> some View {
-        padding(16).background(DX.Fill.surface, in: RoundedRectangle(cornerRadius: radius, style: .continuous))
+        padding(16).dxCardChrome(on: .reading, radius: radius)
+    }
+}
+
+private struct CardChrome: ViewModifier {
+    let ground: DX.Ground
+    let radius: CGFloat
+    @Environment(\.colorScheme) private var scheme
+
+    func body(content: Content) -> some View {
+        let shape = RoundedRectangle(cornerRadius: radius, style: .continuous)
+        content
+            .background(ground.resolved.card, in: shape)
+            .overlay { if ground.resolved.tokens(dark: scheme == .dark).hairline { shape.strokeBorder(ground.resolved.line, lineWidth: 1) } }
     }
 }
 
@@ -47,7 +65,7 @@ public struct TopCard: View {
         Button(action: action) {
             HStack(spacing: 14) {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(kicker.uppercased()).dxType(.caption).dxInk(ground, muted: true)
+                    Text(kicker).dxType(.caption).dxInk(ground, muted: true)
                     Text(title).dxType(.headline).dxInk(ground)
                     Text(detail).dxType(.footnote).dxInk(ground, muted: true)
                 }
@@ -81,24 +99,40 @@ public struct TopCard: View {
 /// ₹20,697 for a ₹1,47,304 year, and 0 for 5 prep done or 7 days to Quit Day.
 public struct CountingText: View {
     let value: Double
+    let from: Double
+    let delay: Double
+    let duration: Double
     let format: (Double) -> String
     @State private var appeared = false
     private let motion = MotionPolicy()
 
-    public init(_ value: Double, format: @escaping (Double) -> String) {
+    public init(_ value: Double, from: Double = 0, delay: Double = 0, duration: Double = 0.85, format: @escaping (Double) -> String) {
         self.value = value
+        self.from = from
+        self.delay = delay
+        self.duration = duration
         self.format = format
     }
 
+    /// v5 (kit `data-count`): a prefix, a suffix and fixed decimals, grouped like the locale, counting from `from`.
+    public init(_ value: Double, from: Double = 0, prefix: String = "", suffix: String = "", decimals: Int = 0,
+                delay: Double = 0.3, duration: Double = 0.85) {
+        self.init(value, from: from, delay: delay, duration: duration) { v in
+            prefix + v.formatted(.number.precision(.fractionLength(decimals))) + suffix
+        }
+    }
+
+    private var curve: Animation { .timingCurve(0.33, 1, 0.68, 1, duration: duration) }
+
     public var body: some View {
-        CountingNumber(animatableData: appeared || !motion.counts ? value : 0, format: format)
-            .animation(motion.counts ? DX.Move.count : nil, value: value)
+        CountingNumber(animatableData: appeared || !motion.counts ? value : from, format: format)
+            .animation(motion.counts ? curve : nil, value: value)
             .onAppear {
                 guard !appeared else { return }
                 if !motion.counts {
                     appeared = true
                 } else {
-                    withAnimation(DX.Move.count) { appeared = true }
+                    withAnimation(curve.delay(delay)) { appeared = true }
                 }
             }
     }
@@ -130,13 +164,15 @@ public struct StatTile: View {
     }
 
     public var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
-            CountingText(value, format: format).dxType(.title).dxInk(ground)
+        // v5 kit `.stat`: a 28 pt display number over a 13 pt muted caption, on the ground's card, radius 20.
+        VStack(alignment: .leading, spacing: 6) {
+            CountingText(value, format: format).dxFace(.display, 28, weight: 800, tracking: -0.5).dxInk(ground)
                 .lineLimit(1).minimumScaleFactor(0.6)
             Text(label).dxType(.caption).dxInk(ground, muted: true)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .dxCardOnColour(on: ground)
+        .padding(.vertical, 14).padding(.horizontal, 16)
+        .dxCardChrome(on: ground, radius: 20)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("\(format(value)) \(label)")
     }
@@ -201,7 +237,7 @@ public struct PlanStepRow: View {
                 .background(DX.Fill.green, in: Circle())
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 2) {
-                Text(kicker.uppercased()).dxType(.caption).dxInk(ground, muted: true)
+                Text(kicker).dxType(.caption).dxInk(ground, muted: true)
                 Text(value).dxType(.body).dxInk(ground)
             }
             Spacer(minLength: 0)
@@ -236,7 +272,7 @@ public struct ProgramDayCard: View {
                 .background(iconBox, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 2) {
-                Text(kicker.uppercased()).dxType(.caption).dxInk(ground, muted: true)
+                Text(kicker).dxType(.caption).dxInk(ground, muted: true)
                 Text(title).dxType(.headline).dxInk(ground)
             }
             Spacer(minLength: 0)
@@ -305,7 +341,7 @@ public struct HealthFactCard: View {
 
     public var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("\(status.uppercased()) · \(when.uppercased())").dxType(.caption).dxInk(.reading, muted: true)
+            Text("\(status) · \(when)").dxType(.caption).dxInk(.reading, muted: true)
             Text(title).dxType(.headline).dxInk(.reading)
             if !line.isEmpty { Text(line).dxType(.body).dxInk(.reading) }
             Text(sourceLabel).dxType(.caption).dxInk(.reading, muted: true)

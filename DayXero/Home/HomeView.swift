@@ -2,7 +2,8 @@ import DayXeroCore
 import SwiftData
 import SwiftUI
 
-/// The app after onboarding: four tabs, Today · Program · SOS · Progress (S27.11, 1 Nov 2026). Evening folded into
+/// The app after onboarding: five tabs (v5), Today · Program · SOS · Calm · Progress. Was four, Today · Program · SOS ·
+/// Progress (S27.11, 1 Nov 2026). Evening folded into
 /// Today's evening and night states; Me became Progress, with Settings behind its gear. On iPhone Duo with vertical
 /// bars, the older dock stands on the side edge.
 struct HomeView: View {
@@ -23,7 +24,7 @@ struct HomeView: View {
     }
 
     private var isTodayTab: Bool {
-        !["program", "progress", "me"].contains(tab)
+        !["program", "progress", "me", "calm"].contains(tab)
     }
 
     private var home: some View {
@@ -68,6 +69,9 @@ extension HomeView {
         case "progress", "me":
             // Progress, with Settings behind its gear (S27.11). "me" is the old tab id.
             ProgressTab(profile: profile)
+        case "calm":
+            // v5: the calm tools as a tab; "Back to SOS" in a tool opens Craving SOS.
+            CalmToolsView(onClose: { tab = "today" }, startSOS: { sos.open(source: "calm") }, showsClose: false)
         default:
             // "evening", "toolkit" and "water" are old tab ids: their content now lives on Today (S27.11, S27.12).
             TodayView(profile: profile)
@@ -82,6 +86,7 @@ extension HomeView {
                 switch tab {
                 case "program": .program
                 case "progress", "me": .progress
+                case "calm": .calm
                 default: .today
                 }
             },
@@ -90,6 +95,7 @@ extension HomeView {
                 case .sos: sos.open(source: "dock")
                 case .today: tab = "today"
                 case .program: tab = "program"
+                case .calm: tab = "calm"
                 case .progress: tab = "progress"
                 }
             }
@@ -101,6 +107,7 @@ extension HomeView {
             items: [
                 DXDockItem(id: "today", title: "Today", systemImage: "house"),
                 DXDockItem(id: "program", title: "Program", systemImage: "book.closed"),
+                DXDockItem(id: "calm", title: "Calm", systemImage: "leaf"),
                 DXDockItem(id: "progress", title: "Progress", systemImage: "chart.bar"),
             ],
             selection: Binding(get: {

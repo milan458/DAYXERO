@@ -3,7 +3,9 @@ import SwiftUI
 /// v4 buttons (design doc §6, patterns 1 and 2). A button takes its colours from the
 /// ground it sits on, so colour follows the character.
 public extension DX {
-    enum ButtonKind: Sendable { case primary, secondary, quiet }
+    /// v5: `primary` is the one button; `small` the 44 pt one inside cards; `ghost` (and `secondary`, its old name)
+    /// the outlined second choice; `quiet` the text link.
+    enum ButtonKind: Sendable { case primary, secondary, quiet, ghost, small }
 
     /// Primary and secondary colours per ground and appearance (tokens.json → "buttons").
     struct ButtonColors: Sendable {
@@ -36,7 +38,7 @@ public extension DX {
         /// secondary buttons' words red (S27.20).
         public static func make(_ kind: ButtonKind, on ground: Ground, dark: Bool, destructive: Bool) -> ButtonColors {
             let base = make(kind, on: ground, dark: dark)
-            if destructive, kind == .primary {
+            if destructive, kind == .primary || kind == .small {
                 return ButtonColors(background: dark ? destructiveFillDark : destructiveFillLight,
                                     foreground: dark ? 0x1E1A3A : 0xFFFFFF, fill: dark ? 0xFF8A80 : 0xA8000F, lip: false)
             }
@@ -49,12 +51,12 @@ public extension DX {
             let ground = ground.resolved
             let s = ground.spec
             switch (kind, dark) {
-            case (.primary, _):
+            case (.primary, _), (.small, _):
                 // v5: one button. `--btn` on `--btn-fg` from the ground's tokens (ink on light grounds, cream on dark,
                 // cream on ocean, parchment on night); the fill is the label colour at 22% (kit `.btn .fill`).
                 let t = ground.tokens(dark: dark)
                 return ButtonColors(background: t.btn, foreground: t.btnFg, fill: DX.Ground.mix(t.btnFg, 0.22, over: t.btn), lip: false)
-            case (.secondary, _):
+            case (.secondary, _), (.ghost, _):
                 return ButtonColors(background: nil, foreground: dark ? s.inkDark : s.inkLight, fill: 0, lip: false)
             case (.quiet, _):
                 return ButtonColors(background: nil, foreground: dark ? s.inkDark : s.inkLight, fill: 0, lip: false)
@@ -97,29 +99,32 @@ private struct V4ButtonBody<Label: View>: View {
 
     var body: some View {
         let colors = DX.ButtonColors.make(kind, on: ground, dark: scheme == .dark, destructive: destructive)
-        let height: CGFloat = kind == .quiet ? DX.Layout.touchTarget : DX.Layout.buttonHeight
-        // Disabled stays legible (S27.20): a card fill, the ground's muted words and a hairline, never a 50% fade.
-        let disabledFilled = !enabled && kind != .quiet
+        let g = ground.resolved
+        let quiet = kind == .quiet
+        let small = kind == .small
+        let outlined = kind == .secondary || kind == .ghost
+        let height: CGFloat = quiet ? 40 : small ? DX.Layout.smallButtonHeight : DX.Layout.buttonHeight
+        let fill = colors.background.map { Color(hex: $0) }
         label
-            .dxType(kind == .quiet ? .footnote : .headline)
-            .foregroundStyle(enabled ? Color(hex: colors.foreground) : ground.resolved.muted)
-            .frame(maxWidth: kind == .quiet ? nil : .infinity, minHeight: height)
-            .padding(.horizontal, kind == .quiet ? 8 : 24)
+            // kit `.btn`: 700 17 display; `.small` 15; `.link` 600 15 body at 85%.
+            .dxFace(quiet ? .body : .display, quiet || small ? 15 : 17, weight: quiet ? 600 : 700, tracking: quiet ? 0 : -0.1)
+            .foregroundStyle(Color(hex: colors.foreground).opacity(quiet ? 0.85 : 1))
+            .multilineTextAlignment(.center)
+            .frame(maxWidth: quiet || small ? nil : .infinity, minHeight: height)
+            .padding(.horizontal, quiet ? 8 : small ? 18 : 24)
             .background {
-                if disabledFilled {
-                    Capsule().fill(ground.resolved == .reading ? DX.Fill.surface : DX.Fill.onColourCard(for: ground.resolved))
-                        .overlay(Capsule().strokeBorder(DX.Fill.hairline, lineWidth: 1))
-                } else if let bg = colors.background {
-                    Capsule().fill(Color(hex: bg))
-                        .shadow(color: .black.opacity(colors.lip && !pressed ? 0.2 : 0), radius: 0, x: 0, y: 6)
-                } else if kind == .secondary {
-                    Capsule().strokeBorder(Color(hex: colors.foreground), lineWidth: 2)
+                if let fill, !outlined {
+                    Capsule().fill(fill)
+                        .shadow(color: fill.opacity(pressed ? 0.18 : 0.22), radius: pressed ? 4 : small ? 6 : 9, x: 0, y: pressed ? 2 : small ? 4 : 6)
+                } else if outlined {
+                    Capsule().strokeBorder(g.line, lineWidth: 2)
                 }
             }
+            // kit `.btn[disabled]`: 38% and no shadow.
+            .opacity(enabled ? 1 : 0.38)
             .contentShape(Capsule())
-            .offset(y: pressed && colors.lip ? 3 : 0)
             .scaleEffect(pressed ? motion.pressedScale : 1)
-            .animation(motion.animation(DX.Move.settle), value: pressed)
+            .animation(motion.animation(.timingCurve(0.2, 0.7, 0.2, 1, duration: 0.15)), value: pressed)
     }
 }
 
@@ -149,23 +154,32 @@ public struct HoldButton: View {
 
     public var body: some View {
         let colors = DX.ButtonColors.make(.primary, on: ground, dark: scheme == .dark)
+        let bg = Color(hex: colors.background ?? 0x1E1A3A)
         ZStack(alignment: .leading) {
-            Capsule().fill(Color(hex: colors.background ?? 0x1E1A3A))
-                .shadow(color: .black.opacity(colors.lip ? 0.2 : 0), radius: 0, x: 0, y: 6)
+            Capsule().fill(bg)
+                .shadow(color: bg.opacity(0.22), radius: 9, x: 0, y: 6)
+            // kit: the fill is the label colour at 22%, left to right; it fades once done (the button keeps its colour).
             GeometryReader { proxy in
                 Rectangle()
-                    .fill(Color(hex: colors.fill))
-                    .frame(width: proxy.size.width * (done ? 1 : progress))
+                    .fill(Color(hex: colors.foreground).opacity(0.22))
+                    .frame(width: proxy.size.width * progress)
+                    .opacity(done ? 0 : 1)
+                    .animation(.easeOut(duration: 0.3), value: done)
             }
             .clipShape(Capsule())
             HStack(spacing: 8) {
-                Text(done ? doneLabel : label)
-                    .dxType(.headline)
                 if done {
-                    Image(systemName: "checkmark")
-                        .font(.headline.weight(.bold))
+                    // The done state: a green disc with a white tick, then the done label.
+                    DXIconShape(d: DX.Icon.check.d)
+                        .stroke(.white, style: StrokeStyle(lineWidth: 3 * 18 / 24, lineCap: .round, lineJoin: .round))
+                        .frame(width: 18, height: 18)
+                        .padding(3)
+                        .background(DX.Fill.done, in: Circle())
+                        .transition(.scale(scale: 0.4).combined(with: .opacity))
                         .accessibilityHidden(true)
                 }
+                Text(done ? doneLabel : label)
+                    .dxFace(.display, 17, weight: 700, tracking: -0.1)
             }
             .foregroundStyle(Color(hex: colors.foreground))
             .frame(maxWidth: .infinity)
@@ -197,7 +211,7 @@ public struct HoldButton: View {
     private func complete() {
         guard !done else { return }
         haptics.stop()
-        done = true
+        withAnimation(DX.Move.pop) { done = true }
         action()
     }
 }

@@ -12,7 +12,11 @@ struct CalmToolsView: View {
     @State private var open: CalmTool?
     @State private var rewardCard = false
 
-    init(onClose: @escaping () -> Void, fromSOS: Bool = false, startSOS: (() -> Void)? = nil) {
+    /// v5: Calm is a tab, which has no close button.
+    var showsClose = true
+
+    init(onClose: @escaping () -> Void, fromSOS: Bool = false, startSOS: (() -> Void)? = nil, showsClose: Bool = true) {
+        self.showsClose = showsClose
         self.onClose = onClose
         self.fromSOS = fromSOS
         self.startSOS = startSOS
@@ -49,9 +53,11 @@ struct CalmToolsView: View {
         }
         .scrollBounceBehavior(.basedOnSize)
         .overlay(alignment: .topLeading) {
-            Button(action: onClose) { Image(systemName: "xmark") }
-                .buttonStyle(.v4Icon).accessibilityLabel(Text("Close"))
-                .padding(.leading, DX.Space.m).padding(.top, DX.Space.s)
+            if showsClose {
+                Button(action: onClose) { Image(systemName: "xmark") }
+                    .buttonStyle(.v4Icon).accessibilityLabel(Text("Close"))
+                    .padding(.leading, DX.Space.m).padding(.top, DX.Space.s)
+            }
         }
         .background(ground.background.ignoresSafeArea())
         .fullScreenCover(isPresented: $rewardCard) {

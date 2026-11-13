@@ -92,6 +92,17 @@ enum Crew {
         ctx.translateBy(x: -pivot.x, y: -pivot.y)
     }
 
+    /// The marks drawn outside the body (zzz, breeze): the ink in light, cream in dark (v5, kit.js `charSvg`).
+    static func markColor(dark: Bool) -> Color { dark ? Color(hex: 0xF3E9DE) : ink }
+
+    /// v5 sparkle: a four-point star in sun yellow where the canvas drew a "+" (`M x y l0 len M … l len 0`), which read
+    /// as an add button (kit.js `charSvg`).
+    static func sparkle(_ ctx: inout GraphicsContext, x: Double, y top: Double, length: Double) {
+        let y = top + length / 2, r = length / 2 + 1
+        fill(&ctx, "M\(x) \(y - r) Q\(x) \(y) \(x + r) \(y) Q\(x) \(y) \(x) \(y + r) Q\(x) \(y) \(x - r) \(y) Q\(x) \(y) \(x) \(y - r)Z",
+             Color(hex: 0xFFC93C))
+    }
+
     /// The sparkle, zzz and breeze marks drawn outside the body.
     static func zzz(_ ctx: inout GraphicsContext, at origin: CGPoint, time: Double, animate: Bool, color: Color) {
         let float = ArtTrack([[0, 0], [5, -8], [0, 0]], duration: 3).value(at: time, animate: animate)
@@ -109,15 +120,17 @@ struct CrewCanvas: View {
     let label: String
     let size: CGFloat
     let animate: Bool
-    let draw: @Sendable (inout GraphicsContext, Double, Bool) -> Void
+    let draw: @Sendable (inout GraphicsContext, Double, Bool, Bool) -> Void
     private let motion = MotionPolicy()
+    @Environment(\.colorScheme) private var scheme
 
     var body: some View {
         let moving = animate && !motion.reduce
+        let dark = scheme == .dark
         TimelineView(.animation(paused: !moving)) { timeline in
             Canvas { ctx, canvasSize in
                 ctx.scaleBy(x: canvasSize.width / 200, y: canvasSize.height / 200)
-                draw(&ctx, timeline.date.timeIntervalSinceReferenceDate, moving)
+                draw(&ctx, timeline.date.timeIntervalSinceReferenceDate, moving, dark)
             }
         }
         .frame(width: size, height: size)

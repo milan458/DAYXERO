@@ -1,7 +1,7 @@
 import DayXeroCore
 import SwiftUI
 
-/// The v4 reading tier (cream in light, navy #0E0B2B in dark): lessons, Program and Progress.
+/// The reading tier (v5: cream in light, the one navy #0E1322 in dark): lessons, Program and Progress.
 /// Every app screen on the reading ground uses these (the old palette was removed in Phase 8).
 enum Read4 {
     static let ground = DX.Ground.reading
@@ -10,8 +10,8 @@ enum Read4 {
     static let muted = DX.Ground.reading.muted
     /// Decorative only (unselected rings, dividers); never for text.
     static let faint = Color(light: (0x1E1A3A, 0.38), dark: (0xFFF8EE, 0.38))
-    static let hairline = Color(light: (0x1E1A3A, 0.12), dark: (0xFFFFFF, 0.14))
-    static let track = Color(light: (0x1E1A3A, 0.12), dark: (0xFFFFFF, 0.16))
+    static let hairline = DX.Ground.reading.line
+    static let track = DX.Ground.reading.track
     /// Cards on the reading ground.
     static let card = DX.Fill.raised
     /// Inset fills: chips, fields, quiet rows.
@@ -30,11 +30,11 @@ extension View {
         modifier(V4TextModifier(style: style, color: color))
     }
 
-    /// A card on the reading ground: raised fill, radius 18 (or as given), no outline.
-    func v4Card(padding: CGFloat = DX.Space.m, radius: CGFloat = DX.Layout.smallCardRadius) -> some View {
+    /// A card on the reading ground (v5 kit `.card`): white with a hairline, radius 22.
+    func v4Card(padding: CGFloat = DX.Space.m, radius: CGFloat = DX.Layout.cardRadius) -> some View {
         self.padding(padding)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Read4.card, in: RoundedRectangle(cornerRadius: radius, style: .continuous))
+            .dxCardChrome(on: .reading, radius: radius)
     }
 }
 
@@ -49,7 +49,8 @@ private struct V4TextModifier: ViewModifier {
         case .cardHeading, .button: content.dxType(.headline).foregroundStyle(color ?? Read4.ink)
         case .body: content.dxType(.body).foregroundStyle(color ?? Read4.ink)
         case .subtitle: content.dxType(.footnote).foregroundStyle(color ?? Read4.muted)
-        case .micro: content.dxType(.caption).textCase(.uppercase).foregroundStyle(color ?? Read4.muted)
+        // v5: no uppercase eyebrows; the micro label is a sentence-case caption.
+        case .micro: content.dxType(.caption).foregroundStyle(color ?? Read4.muted)
         case .heroDenominator: content.dxType(.headline).foregroundStyle(color ?? Read4.muted).monospacedDigit()
         }
     }
@@ -65,17 +66,10 @@ struct V4Card<Content: View>: View {
     }
 }
 
-/// The v4 secondary on the reading ground: a surface pill with ink text, 58 pt.
+/// The secondary on the reading ground (v5 kit `.btn.ghost`): an outlined 58 pt pill with ink words.
 struct V4SecondaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .dxFont(16, weight: 600, style: .body)
-            .foregroundStyle(Read4.ink)
-            .multilineTextAlignment(.center)
-            .padding(.horizontal, 18)
-            .frame(maxWidth: .infinity, minHeight: DX.Layout.buttonHeight)
-            .background(Read4.surface, in: Capsule())
-            .opacity(configuration.isPressed ? 0.8 : 1)
+        V4ButtonStyle(.ghost, on: .reading).makeBody(configuration: configuration)
     }
 }
 
@@ -83,32 +77,34 @@ extension ButtonStyle where Self == V4SecondaryButtonStyle {
     static var v4Secondary: V4SecondaryButtonStyle { V4SecondaryButtonStyle() }
 }
 
-/// The v4 progress bar on the reading ground: green on a soft track, 8 pt.
+/// The progress bar on the reading ground (v5 kit `.progress`): the ink on the track, 8 pt.
 struct V4ProgressBar: View {
     let value: Double
 
     var body: some View {
-        GeometryReader { proxy in
-            ZStack(alignment: .leading) {
-                Capsule().fill(Read4.track)
-                Capsule().fill(Read4.accent).frame(width: proxy.size.width * min(1, max(0, value)))
-            }
-        }
-        .frame(height: 8)
-        .accessibilityElement()
-        .accessibilityValue(Text("\(Int((min(1, max(0, value)) * 100).rounded())) percent"))
+        DXProgress(value).environment(\.dxGround, .reading)
     }
 }
 
-/// A 44 pt round icon button on the reading ground (replaces the old `.dxIcon`).
+/// A 44 pt round icon button (v5 kit `.icon-btn`): card-2 disc, ink icon; follows the ground it sits on.
 struct V4IconButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
-        configuration.label
+        V4IconButtonBody(label: configuration.label, pressed: configuration.isPressed)
+    }
+}
+
+private struct V4IconButtonBody: View {
+    let label: ButtonStyleConfiguration.Label
+    let pressed: Bool
+    @Environment(\.dxGround) private var ground
+
+    var body: some View {
+        label
             .font(.system(size: 16, weight: .bold))
-            .foregroundStyle(Read4.ink)
+            .foregroundStyle(ground.resolved.ink)
             .frame(width: 44, height: 44)
-            .background(Read4.surface, in: Circle())
-            .opacity(configuration.isPressed ? 0.7 : 1)
+            .background(ground.resolved.card2, in: Circle())
+            .scaleEffect(pressed ? DX.Move.pressedScale : 1)
     }
 }
 
@@ -116,11 +112,10 @@ extension ButtonStyle where Self == V4IconButtonStyle {
     static var v4Icon: V4IconButtonStyle { V4IconButtonStyle() }
 }
 
-/// An on/off chip with the old `DXChip` call shape.
+/// An on/off chip with the old `DXChip` call shape (v5: the one chip, `DXChip`).
 struct V4ToggleChip: View {
     let title: LocalizedStringKey
     @Binding var isOn: Bool
-    @State private var taps = 0
 
     init(_ title: LocalizedStringKey, isOn: Binding<Bool>) {
         self.title = title
@@ -128,20 +123,7 @@ struct V4ToggleChip: View {
     }
 
     var body: some View {
-        Button {
-            taps += 1
-            isOn.toggle()
-        } label: {
-            Text(title)
-                .dxFont(16, weight: isOn ? 700 : 600, style: .body)
-                .foregroundStyle(isOn ? Read4.onInk : Read4.ink)
-                .padding(.horizontal, 14)
-                .frame(minHeight: 44)
-                .background(isOn ? Read4.ink : Read4.surface, in: RoundedRectangle(cornerRadius: DX.Layout.answerChipRadius, style: .continuous))
-        }
-        .buttonStyle(.dxPress)
-        .sensoryFeedback(DX.Haptic.select, trigger: taps)
-        .accessibilityAddTraits(isOn ? [.isButton, .isSelected] : .isButton)
+        DXChip(title, isOn: isOn) { isOn.toggle() }
     }
 }
 
@@ -179,14 +161,11 @@ struct V4TextField: View {
     }
 
     var body: some View {
+        // v5: a sentence-case footnote label (no uppercase eyebrows) over the kit field.
         VStack(alignment: .leading, spacing: 6) {
-            Text(label).dxType(.caption).textCase(.uppercase).foregroundStyle(Read4.muted)
+            Text(label).dxType(.footnote).foregroundStyle(Read4.muted)
             TextField("", text: $text, prompt: Text(prompt).foregroundStyle(Read4.muted))
-                .dxType(.body)
-                .foregroundStyle(Read4.ink)
-                .padding(.horizontal, 14)
-                .frame(minHeight: 48)
-                .background(Read4.surface, in: RoundedRectangle(cornerRadius: DX.Layout.answerChipRadius, style: .continuous))
+                .textFieldStyle(.dx)
                 .accessibilityLabel(Text(label))
         }
     }
