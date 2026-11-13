@@ -8,6 +8,7 @@
 .k-listen{--face:#FFC38A}.k-try{--face:#9FE3BC}
 [data-theme="dark"] .k-listen{--face:#F3B47E}[data-theme="dark"] .k-try{--face:#8FD3AD}
 .nav .side{flex:none;text-align:right}
+.steps > i.now::after{width:var(--sub,45%);transition:width .5s var(--settle)}
 .stage{position:absolute;top:122px;left:0;right:0;height:300px;perspective:900px}
 .flip{position:absolute;left:50%;top:10px;width:196px;height:268px;margin-left:-98px;transform-style:preserve-3d;transform:rotate(4deg) rotateY(180deg)}
 .play .flip{animation:fly 1100ms var(--settle) both 150ms}

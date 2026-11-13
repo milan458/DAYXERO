@@ -1,13 +1,23 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>021 After a slip, plan</title>
-<meta name="motion" content="Quiet tier, no springs. The paper-cut sea card builds back to front: the four wave layers rise 40px into place 100ms apart (900ms each) while Jelli (calm) settles down into the water between them (900ms), then keeps a slow bob, half in the sea; the small sun fades in last. The title and the progress note arrive with a 90ms stagger, then the if-then line and its three option rows settle in one by one (120ms apart). On Save the button turns to its done state and a soft success haptic plays.">
+<meta name="motion" content="Quiet tier, no springs. The paper-cut sea card builds back to front: the four wave layers rise 40px into place 100ms apart (900ms each) while Jelli (calm) settles down into the water between them (900ms), then keeps a slow bob, half in the sea; the small sun fades in last (in dark mode a warm, low sun sitting on the water with a horizon glow). The title and the progress note arrive with a 90ms stagger, then the if-then line and its three option rows settle in one by one (120ms apart); the chosen row carries a warm apricot tint and its tick. On Save the button turns to its done state and a soft success haptic plays.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   .hero { position: absolute; left: var(--gutter); right: var(--gutter); top: 104px; height: 184px; border-radius: 28px; overflow: hidden;
     --sky-a: #DCEBFF; --sky-b: #F4F8FF; --sun: #FFD37A; --w1: #B9D4FF; --w2: #8DB5FA; --w3: #5F8EEA; --w4: #3D6BD2; --edge: rgba(255,255,255,.7); --lift: rgba(20,50,130,.22); }
-  [data-theme="dark"] .hero { --sky-a: #0E1C4A; --sky-b: #1A2E6A; --sun: #FFE3A3; --w1: #24407F; --w2: #2C4F98; --w3: #3762B4; --w4: #4776CC; --edge: rgba(185,201,255,.35); --lift: rgba(0,0,0,.4); box-shadow: inset 0 0 0 1px var(--line); }
+  [data-theme="dark"] .hero { --sky-a: #0E1C4A; --sky-b: #3A3F72; --sun: #FFB061; --w1: #24407F; --w2: #2C4F98; --w3: #3762B4; --w4: #4776CC; --edge: rgba(185,201,255,.35); --lift: rgba(0,0,0,.4); box-shadow: inset 0 0 0 1px var(--line); }
   .hero .sky { position: absolute; inset: 0; background: linear-gradient(180deg, var(--sky-a), var(--sky-b)); }
+  .hero .sunwrap { position: absolute; left: 262px; top: 16px; }
+  /* dark: the sun sits low on the water, warm, with a horizon glow (never a moon) */
+  .hero .low { display: none; }
+  [data-theme="dark"] .hero .sky { background: linear-gradient(180deg, #0E1C4A 0%, #23306A 50%, #6B4E6E 78%, #B8735A 100%); }
+  [data-theme="dark"] .hero .sunwrap { left: 244px; top: 46px; }
+  [data-theme="dark"] .hero .day { display: none; }
+  [data-theme="dark"] .hero .low { display: block; }
+  /* the plan: the selected row takes a warm tint */
+  .plan .opt.on { background: #FFF1E2; }
+  [data-theme="dark"] .plan .opt.on { background: color-mix(in srgb, #FFC38A 12%, var(--card)); }
   .hero .lay { position: absolute; left: 0; right: 0; bottom: 0; }
   .hero .lay svg { display: block; width: 100%; }
   .hero .l1 { z-index: 1; filter: drop-shadow(0 -3px 5px var(--lift)); }
@@ -18,7 +28,6 @@
   .play .hero .lay { animation: wv 900ms cubic-bezier(.2,.8,.2,1) both; }
   .play .hero .l2 { animation-delay: 100ms; } .play .hero .l3 { animation-delay: 200ms; } .play .hero .l4 { animation-delay: 300ms; }
   @keyframes wv { from { transform: translateY(40px); } to { transform: none; } }
-  .nav .cap { flex: 1; text-align: center; color: var(--muted); margin-right: 44px; }
   .head { position: absolute; left: 0; right: 0; top: 308px; padding: 0 var(--gutter); }
   .head .t-title { font-size: 26px; }
   .note { margin-top: 8px; color: var(--muted); }
@@ -35,7 +44,10 @@
 <div class="screen" data-ground="reading">
   <div class="hero" aria-hidden="true">
     <div class="sky"></div>
-    <svg style="position:absolute;left:262px;top:16px" width="48" height="48" viewBox="0 0 96 96" data-fade style="--d:700ms"><defs><radialGradient id="sg21" cx=".42" cy=".38" r=".7"><stop offset="0" stop-color="#FFF6D6"/><stop offset="1" stop-color="var(--sun)"/></radialGradient></defs><circle cx="48" cy="48" r="46" fill="var(--sun)" opacity=".14"/><circle cx="48" cy="48" r="36" fill="var(--sun)" opacity=".22"/><circle cx="48" cy="48" r="27" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="3"/><circle cx="48" cy="48" r="21" fill="url(#sg21)"/></svg>
+    <div class="sunwrap" data-fade style="--d:700ms">
+      <svg class="day" width="48" height="48" viewBox="0 0 96 96"><defs><radialGradient id="sg21" cx=".42" cy=".38" r=".7"><stop offset="0" stop-color="#FFF6D6"/><stop offset="1" stop-color="var(--sun)"/></radialGradient></defs><circle cx="48" cy="48" r="46" fill="var(--sun)" opacity=".14"/><circle cx="48" cy="48" r="36" fill="var(--sun)" opacity=".22"/><circle cx="48" cy="48" r="27" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="3"/><circle cx="48" cy="48" r="21" fill="url(#sg21)"/></svg>
+      <svg class="low" width="84" height="84" viewBox="0 0 84 84"><defs><radialGradient id="lg21"><stop offset="0" stop-color="#FFB061" stop-opacity=".55"/><stop offset="1" stop-color="#FFB061" stop-opacity="0"/></radialGradient><radialGradient id="ls21" cx=".45" cy=".35" r=".75"><stop offset="0" stop-color="#FFD9A0"/><stop offset="1" stop-color="#FF9A5C"/></radialGradient></defs><circle cx="42" cy="42" r="42" fill="url(#lg21)"/><circle cx="42" cy="42" r="20" fill="url(#ls21)"/></svg>
+    </div>
     <div class="lay l1"><svg viewBox="0 0 346 120" height="120"><path d="M0 40 C40 22 76 26 112 40 C150 54 186 50 222 34 C262 18 304 22 346 38 V120 H0Z" fill="var(--w1)"/><path d="M0 40 C40 22 76 26 112 40 C150 54 186 50 222 34 C262 18 304 22 346 38" fill="none" stroke="var(--edge)" stroke-width="2"/></svg></div>
     <div class="lay l2"><svg viewBox="0 0 346 96" height="96"><path d="M0 34 C34 18 70 20 104 34 C140 48 176 46 210 30 C248 14 300 18 346 32 V96 H0Z" fill="var(--w2)"/><path d="M0 34 C34 18 70 20 104 34 C140 48 176 46 210 30 C248 14 300 18 346 32" fill="none" stroke="var(--edge)" stroke-width="2"/></svg></div>
     <div class="jel" data-settle style="--d:200ms"><div class="bob" id="jelli"></div></div>
@@ -44,7 +56,6 @@
   </div>
   <div class="nav">
     <button class="icon-btn" aria-label="Close" id="close"></button>
-    <p class="t-foot cap">With Jelli</p>
   </div>
 
   <div class="head">
@@ -57,7 +68,7 @@
     <div class="opts">
       <button class="opt" data-settle style="--i:5"><span class="grow t-body">Take a short walk first</span><span class="radio"></span></button>
       <button class="opt on" data-settle style="--i:6"><span class="grow t-body">Have it somewhere new</span><span class="radio"></span></button>
-      <button class="opt" data-settle style="--i:7"><span class="grow t-body">Open Craving SOS</span><span class="radio"></span></button>
+      <button class="opt" data-settle style="--i:7"><span class="grow t-body">Swap it for gum</span><span class="radio"></span></button>
     </div>
   </div>
 
