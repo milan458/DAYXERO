@@ -12,7 +12,7 @@
   [data-theme="dark"] .screen[data-ground="mint"] { --page: #0E1322; --muted: #B3BACC; --road: #4A4134; --road-edge: rgba(0,0,0,.5); --road-line: rgba(255,232,200,.42); --done-road: #C27A4E; --card-2: #212A41;
     --hb: #1E3646; --hf: #172B3A; --hrim: rgba(200,225,235,.14); --hsh: rgba(0,0,0,.5); --glow: 255,176,104; --glow-a: .3; --g: var(--hf); }
 
-  .hdr { position: absolute; left: 0; right: 0; top: 56px; padding: 0 var(--gutter); }
+  .hdr { position: absolute; left: 0; right: 0; top: 52px; padding: 0 var(--gutter); }
   .hdr .t-foot { color: var(--muted); margin-top: 4px; }
   .hdr .t-foot b { color: var(--fg); font-weight: 700; }
 
@@ -44,8 +44,10 @@
   .play .cur::before { animation: pulse 2.4s var(--ease) 1.8s infinite; }
   @keyframes pulse { 0% { opacity: .4; transform: scale(1); } 100% { opacity: 0; transform: scale(1.3); } }
   .upw { position: absolute; left: 116px; right: var(--gutter); transform: translateY(-50%); }
-  /* Xero, small, stands at today's stamp (his feet tucked behind it) */
-  .me { position: absolute; width: 40px; height: 40px; }
+  /* Xero, small, stands on the road at today's stamp; a thin cream paper edge keeps him clear of the orange road */
+  .me { position: absolute; z-index: 1; width: 40px; height: 40px; }
+  .me #xme { filter: drop-shadow(0 0 1px rgba(255,248,238,.95)) drop-shadow(0 0 1px rgba(255,248,238,.9)) drop-shadow(0 3px 4px rgba(120,40,10,.25)); }
+  [data-theme="dark"] .me #xme { filter: drop-shadow(0 0 1px rgba(255,248,238,.6)) drop-shadow(0 3px 5px rgba(0,0,0,.45)); }
   .upnext { position: relative; padding: 14px 16px 15px; overflow: visible; box-shadow: 0 8px 22px rgba(36,73,58,.12); }
   [data-theme="dark"] .upnext { box-shadow: inset 0 0 0 1px var(--line); }
   .upnext::before { content: ""; position: absolute; left: -6px; top: 50%; width: 14px; height: 14px; margin-top: -7px; background: inherit; border-radius: 3px; transform: rotate(45deg); }
@@ -55,8 +57,8 @@
 
   /* the horizon: a warm glow where Day Xero rises, two paper-cut hills */
   .glow { position: absolute; left: 0; right: 0; top: 420px; height: 280px; pointer-events: none;
-    background: radial-gradient(200px 150px at 222px 158px, rgba(var(--glow), var(--glow-a)), rgba(var(--glow), calc(var(--glow-a) * .35)) 55%, rgba(var(--glow), 0) 100%),
-                linear-gradient(180deg, rgba(var(--glow), 0) 42%, rgba(var(--glow), calc(var(--glow-a) * .45)) 70%, rgba(var(--glow), 0) 80%); }
+    background: radial-gradient(200px 150px at 222px 164px, rgba(var(--glow), var(--glow-a)), rgba(var(--glow), calc(var(--glow-a) * .35)) 55%, rgba(var(--glow), 0) 100%),
+                linear-gradient(180deg, rgba(var(--glow), 0) 44%, rgba(var(--glow), calc(var(--glow-a) * .45)) 72%, rgba(var(--glow), 0) 82%); }
   .play .glow { animation: glowin 1200ms var(--ease) 1800ms both; }
   @keyframes glowin { from { opacity: 0; } }
   .hill { position: absolute; left: 0; top: 0; pointer-events: none; }
@@ -74,7 +76,7 @@
 
   /* after the horizon: what opens next, locked */
   /* on the hill, clear above the tab fade (which starts at 694) */
-  .tease { position: absolute; left: var(--gutter); right: var(--gutter); top: 638px; height: 48px; padding: 0 16px 0 10px; display: flex; align-items: center; gap: 12px; border-radius: 18px;
+  .tease { position: absolute; left: var(--gutter); right: var(--gutter); top: 644px; height: 48px; padding: 0 16px 0 10px; display: flex; align-items: center; gap: 12px; border-radius: 18px;
     background: color-mix(in srgb, var(--card) 72%, transparent); box-shadow: inset 0 0 0 1px var(--line); }
   [data-theme="dark"] .tease { background: color-mix(in srgb, var(--card) 80%, transparent); }
   .tease .lk { width: 34px; height: 34px; border-radius: 12px; display: grid; place-items: center; background: color-mix(in srgb, var(--fg) 8%, transparent); color: var(--fg); flex: none; }
@@ -95,9 +97,9 @@
     <path id="done" fill="none" stroke="var(--done-road)" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/>
     <path id="future" fill="none" stroke="var(--road-line)" stroke-width="2.5" stroke-dasharray="7 9" stroke-linecap="round" data-fade style="--d:1300ms"/>
   </svg>
-  <svg class="hill b" width="390" height="844" viewBox="0 0 390 844" aria-hidden="true"><path class="sh" d="M0 630 C60 621 140 612 222 616 C290 619 340 610 390 600 V844 H0Z" fill="var(--hb)"/><path d="M0 630 C60 621 140 612 222 616 C290 619 340 610 390 600" fill="none" stroke="var(--hrim)" stroke-width="1.5"/></svg>
+  <svg class="hill b" width="390" height="844" viewBox="0 0 390 844" aria-hidden="true"><path class="sh" d="M0 636 C60 627 140 618 222 622 C290 625 340 616 390 606 V844 H0Z" fill="var(--hb)"/><path d="M0 636 C60 627 140 618 222 622 C290 625 340 616 390 606" fill="none" stroke="var(--hrim)" stroke-width="1.5"/></svg>
   <div id="goal"></div>
-  <svg class="hill f" width="390" height="844" viewBox="0 0 390 844" aria-hidden="true"><path class="sh" d="M0 706 C80 694 170 690 250 698 C310 704 350 700 390 692 V844 H0Z" fill="var(--hf)"/><path d="M0 706 C80 694 170 690 250 698 C310 704 350 700 390 692" fill="none" stroke="var(--hrim)" stroke-width="1.5"/></svg>
+  <svg class="hill f" width="390" height="844" viewBox="0 0 390 844" aria-hidden="true"><path class="sh" d="M0 714 C80 702 170 698 250 706 C310 712 350 708 390 700 V844 H0Z" fill="var(--hf)"/><path d="M0 714 C80 702 170 698 250 706 C310 712 350 708 390 700" fill="none" stroke="var(--hrim)" stroke-width="1.5"/></svg>
   <div id="nodes"></div>
 
   <div class="tease" data-a style="--d:2100ms" aria-label="Weeks 1 to 4, locked until Friday, November 6">
@@ -108,10 +110,10 @@
 <script>
   const $ = s => document.querySelector(s);
   /* stamps about 54px apart (today's stamp 64px from its neighbours), so the ribbon reads as a road */
-  const X = 66, Y = [150, 202, 254, 344, 410, 462, 514], G = [222, 578];
+  const X = 66, Y = [146, 198, 250, 350, 416, 468, 520], G = [222, 584];
   /* one smooth ribbon: a Catmull-Rom spline straight down the node column, then a gentle bend over the horizon (the back hill hides its far end) */
   const pts = Y.map(y => [X, y]);
-  pts.push([X + 2, 566], [X + 12, 612], [X + 34, 652]);
+  pts.push([X + 2, 572], [X + 12, 618], [X + 34, 658]);
   const seg = (p, i) => { const p0 = p[i - 1] || p[i], p1 = p[i], p2 = p[i + 1], p3 = p[i + 2] || p2;
     const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6], c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
     return ` C${c1[0].toFixed(1)} ${c1[1].toFixed(1)} ${c2[0].toFixed(1)} ${c2[1].toFixed(1)} ${p2[0]} ${p2[1]}`; };
@@ -136,8 +138,8 @@
       h += `<div class="node" style="left:${X}px;top:${y}px"><div data-a style="--d:${d}ms"><div class="stamp">${DX.badge({ kind: 'prep', n: '', size: 42, bare: true })}<span class="n">${n}</span></div></div></div>`;
       h += `<div class="lab done" style="top:${y}px"><div data-a style="--d:${d + 60}ms"><span class="k">Prep ${n} &middot; ${days[i]} &middot; done</span><p class="t-foot">${titles[i]}</p></div></div>`;
     } else if (n === 4) {
-      h += `<div class="me" style="left:${X - 20}px;top:${y - 65}px"><div data-settle style="--d:1300ms"><div class="bob" id="xme"></div></div></div>`;
       h += `<div class="node" style="left:${X}px;top:${y}px"><div data-a style="--d:1250ms"><button class="cur" aria-label="Play Prep 4, The stress loop"><svg class="sc" viewBox="0 0 100 100" width="68" height="68"><g fill="var(--btn)">${seal(50, 50, 41, 18, 8.4)}</g><circle cx="50" cy="50" r="38" fill="none" stroke="var(--btn-fg)" stroke-opacity=".28" stroke-width="2" stroke-dasharray="3 5"/></svg><span class="pl">${DX.icon('play', { size: 26, fill: 'currentColor', w: 1.5 })}</span></button></div></div>`;
+      h += `<div class="me" style="left:${X - 20}px;top:${y - 72}px"><div data-settle style="--d:1300ms"><div class="bob" id="xme"></div></div></div>`;
       h += `<div class="upw" style="top:${y}px"><div class="card upnext" data-a style="--d:1250ms"><span class="k">Today &middot; Prep 4 &middot; 5 cards &middot; 28 min</span><p class="t-head">The stress loop</p></div></div>`;
     } else {
       h += `<div class="node" style="left:${X}px;top:${y}px"><div data-fade style="--d:1400ms"><div class="stamp wait">${DX.badge({ kind: 'prep', n: '', state: 'next', size: 42, bare: true })}<span class="n">${n}</span></div></div></div>`;
