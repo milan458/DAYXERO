@@ -1,147 +1,147 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>017 Today, through the day</title>
-<meta name="motion" content="Scrolled Today. The compact header arrives, then 'Now' and its three cream cards rise with a 90ms stagger; the Happening now card lifts onto its soft shadow (600ms). 'Later today' and its quieter grouped list arrive last (90ms stagger, no lift). At 1.2s the '1 glass' button presses: a '+1' floats up from the count, the count bumps from 3 to 4 (spring bump, 520ms) and the water in the tile rises from 3/8 to 4/8 (600ms settle). Light haptic on the tap, soft success tick on the bump.">
+<meta name="motion" content="Today, scrolled. The compact header (Xero full figure at 32px, 7 days free, $49 kept) is already pinned. 'Now' and its one illustrated cream card arrive (600ms): inside it the paper-cut hills rise 16px back to front (100ms apart, 900ms settle), Xero settles onto the front knoll (900ms) and breathes, his breeze marks drifting; the title and the grouped actions fade up after (90ms stagger). At 1.2s '+1 glass' presses: a '+1' floats up from the count, the count bumps from 3 to 4 (spring bump, 520ms) and the water in the drawn glass rises from 3/8 to 4/8 (600ms settle). 'Later' and its one quiet list arrive last (90ms stagger, no lift). Light haptic on the tap, soft success tick on the bump.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  /* cream cards with real separation on apricot: solid cream plus a hairline and a soft warm shadow */
-  .screen { --cream-card: #FFFBF5; --lift: 0 1px 0 rgba(74,40,16,.04), 0 6px 16px rgba(74,40,16,.10); }
-  [data-theme="dark"] .screen { --cream-card: var(--card); --lift: 0 8px 20px rgba(0,0,0,.28); }
-  .top { position: absolute; z-index: 5; left: 0; right: 0; top: 56px; padding: 0 var(--gutter); }
-  .mini { display: flex; align-items: center; gap: 12px; padding: 10px 16px 10px 10px; background: var(--cream-card); box-shadow: inset 0 0 0 1px var(--line), var(--lift); }
-  .mini .av { width: 46px; height: 46px; flex: none; border-radius: 99px; background: var(--card-2); display: grid; place-items: center; overflow: hidden; }
-  .mini .grow { flex: 1; min-width: 0; }
-  .mini .t-foot { color: var(--muted); }
-  .mini .money { text-align: right; display: grid; gap: 2px; }
-  .mini .money .num { font: 800 20px/1 var(--display); }
-  .mini .money .t-cap { color: var(--muted); }
+  /* the page warms toward cream as it scrolls: apricot only at the very top */
+  .screen[data-ground="apricot"] { --g: #FBF4EA; --cream-card: #FFFCF7; --well: #F6EDE1; --lift: 0 1px 0 rgba(74,40,16,.04), 0 10px 26px rgba(74,40,16,.10);
+    background: linear-gradient(180deg, #FFC38A 0px, #FFD7B0 96px, #FBE9D6 220px, #FBF4EA 380px); }
+  [data-theme="dark"] .screen[data-ground="apricot"] { --g: #0E1322; --cream-card: var(--card); --well: var(--card-2); --lift: 0 10px 24px rgba(0,0,0,.3);
+    background: radial-gradient(120% 30% at 50% -6%, rgba(255,195,138,.12), transparent 70%), #0E1322; }
+  .tabbar a { color: color-mix(in srgb, var(--fg) 72%, transparent); }
+  .tabfade { height: 110px; }
 
-  .body { position: absolute; left: 0; right: 0; top: 150px; padding: 0 var(--gutter); }
-  .grp { font: 700 17px/1.2 var(--display); letter-spacing: -.2px; margin: 0 0 10px 2px; }
-  .grp.later { margin-top: 22px; color: var(--muted); }
-  .now-list { display: grid; gap: 10px; }
-  .rowc { display: flex; align-items: center; gap: 12px; min-height: 66px; padding: 11px 14px 11px 12px; background: var(--cream-card); border-radius: 20px; box-shadow: inset 0 0 0 1px var(--line), var(--lift); }
-  .rowc .grow { flex: 1; min-width: 0; }
-  .rowc .t-head { font-size: 16px; line-height: 1.25; }
-  .rowc .t-foot { color: var(--muted); font-size: 14px; margin-top: 2px; }
-  .rowc.hero { min-height: 92px; padding: 16px 14px 16px 14px; }
-  .rowc.hero .t-head { font-size: 19px; line-height: 1.2; }
-  .rowc.hero .tile { width: 52px; height: 52px; border-radius: 14px; }
-  .rowc.hero .tile svg { width: 30px; height: 30px; }
-  .btn.small { width: auto; padding: 0 14px; flex: none; height: 40px; }
-  .btn.small svg { width: 16px; height: 16px; }
-  .tile { width: 40px; height: 40px; border-radius: 12px; background: var(--card-2); flex: none; position: relative; overflow: hidden; display: grid; place-items: center; color: var(--fg); }
-  .tile svg { position: relative; width: 22px; height: 22px; }
-  .tile .water { position: absolute; left: 0; right: 0; bottom: 0; height: var(--lvl, 37.5%); background: color-mix(in srgb, #5A9DFF 45%, transparent); transition: height 600ms var(--settle); }
+  /* compact pinned header */
+  .top { position: absolute; z-index: 5; left: 0; right: 0; top: 52px; height: 52px; padding: 0 var(--gutter) 0 16px; display: flex; align-items: center; gap: 10px; }
+  .top .fig { width: 36px; height: 36px; flex: none; display: grid; place-items: center; }
+  .top .grow { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 8px; }
+  .top .t-head { font-size: 18px; }
+  .top .t-cap { color: var(--muted); }
+  .top .money { display: flex; align-items: baseline; gap: 5px; }
+  .top .money .num { font-size: 20px; line-height: 1; }
+  .top .money .t-cap { color: var(--muted); }
+
+  .body { position: absolute; left: 0; right: 0; top: 118px; padding: 0 var(--gutter); }
+  .grp { font: 700 19px/1.2 var(--display); letter-spacing: -.2px; margin: 0 0 10px 2px; }
+  .grp.later { margin-top: 26px; }
+
+  /* the one Now card: illustrated, cream, the day's two small actions grouped inside */
+  .now { position: relative; background: var(--cream-card); border-radius: 26px; box-shadow: inset 0 0 0 1px var(--line), var(--lift); overflow: hidden; }
+  .art { position: relative; height: 172px; }
+  .art svg.scene { position: absolute; inset: 0; display: block; }
+  .art .h { transform-box: fill-box; }
+  .play .art .h { animation: hrise 900ms var(--settle) both; }
+  .play .art .h2 { animation-delay: 100ms; } .play .art .h3 { animation-delay: 200ms; }
+  @keyframes hrise { from { transform: translateY(16px); opacity: 0; } }
+  .art .fig { position: absolute; left: 236px; top: 52px; }
+  .art .txt { position: absolute; left: 18px; top: 18px; width: 208px; }
+  .art .txt .t-foot { color: var(--muted); font-size: 14px; }
+  .art .txt .t-title { margin-top: 4px; font-size: 23px; }
+  .well { margin: 0 12px 12px; border-radius: 18px; background: var(--well); }
+  .act { display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 8px 10px 8px 10px; }
+  .act + .act { border-top: 1px solid var(--line); }
+  .act .grow { flex: 1; min-width: 0; }
+  .act .t-head { font-size: 17px; line-height: 1.2; }
+  .act .t-cap { color: var(--muted); margin-top: 2px; }
+  .glyph { width: 42px; height: 42px; flex: none; border-radius: 13px; display: grid; place-items: center; background: var(--cream-card); box-shadow: inset 0 0 0 1px var(--line); color: var(--fg); }
+  .glyph.sea { background: #1F3C8C; color: #FFF8EE; box-shadow: none; }
+  .glyph.sea svg { width: 22px; height: 22px; }
+  .act .btn.small { width: auto; flex: none; height: 44px; padding: 0 16px; font-size: 15px; background: var(--cream-card); }
+  .act .btn.small svg { width: 16px; height: 16px; }
+  .glass .wtr { transition: transform 600ms var(--settle); }
   .val { position: relative; display: inline-block; }
   #gl { display: inline-block; }
-  .plus { position: absolute; right: -22px; top: -8px; font: 800 16px/1 var(--display); color: var(--tick); opacity: 0; }
-  .chev { width: 20px; height: 20px; }
-  /* later: one quieter grouped list, translucent, no shadow, lighter titles */
-  .later-list { border-radius: 20px; background: color-mix(in srgb, var(--cream-card) 52%, transparent); box-shadow: inset 0 0 0 1px var(--line); overflow: hidden; }
-  [data-theme="dark"] .later-list { background: color-mix(in srgb, var(--card) 55%, transparent); }
-  .later-list .rowc { background: none; box-shadow: none; border-radius: 0; min-height: 60px; padding: 9px 14px 9px 12px; }
-  .later-list .rowc + .rowc { border-top: 1px solid var(--line); }
-  .later-list .t-head { font-size: 16px; font-weight: 600; }
-  .later-list .tile { width: 36px; height: 36px; border-radius: 11px; background: transparent; color: var(--muted); }
-  .later-list .tile svg { width: 21px; height: 21px; }
-  .play .rowc.hero { animation: lift 600ms var(--ease) 500ms both; }
-  @keyframes lift { from { box-shadow: inset 0 0 0 1px var(--line), 0 0 0 rgba(0,0,0,0); } }
+  .plus { position: absolute; right: -24px; top: -6px; font: 800 16px/1 var(--display); color: var(--tick); opacity: 0; }
+
+  /* later: one quiet list, same order as the top of Today */
+  .later-list { border-radius: 22px; background: color-mix(in srgb, var(--cream-card) 60%, transparent); box-shadow: inset 0 0 0 1px var(--line); overflow: hidden; }
+  .lrow { display: flex; align-items: center; gap: 14px; min-height: 62px; padding: 10px 14px 10px 16px; }
+  .lrow + .lrow { border-top: 1px solid var(--line); }
+  .lrow .grow { flex: 1; min-width: 0; }
+  .lrow .t-head { font-size: 16px; font-weight: 700; }
+  .lrow .t-cap { color: var(--muted); margin-top: 3px; font-size: 13px; font-weight: 500; }
+  .lrow .ic { width: 22px; height: 22px; flex: none; color: var(--muted); }
+  .lrow .chev { width: 18px; height: 18px; }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
-  <div class="top" data-a style="--i:0">
-    <div class="card mini">
-      <div class="av" id="xero"></div>
-      <div class="grow">
-        <p class="t-head" style="font-size:17px">7 days free</p>
-        <p class="t-foot">Fri, Nov 13</p>
-      </div>
-      <div class="money"><span class="num">$49</span><span class="t-cap">kept</span></div>
-    </div>
+  <div class="top">
+    <span class="fig" id="xmini"></span>
+    <div class="grow"><span class="t-head">7 days free</span><span class="t-cap">Fri, Nov 13</span></div>
+    <div class="money"><span class="num">$49</span><span class="t-cap">kept</span></div>
   </div>
 
   <div class="body">
-    <h2 class="grp" data-a style="--i:1">Now</h2>
-    <div class="now-list">
-      <div class="rowc hero" data-a style="--i:2">
-        <span class="tile" id="ic-now"></span>
-        <div class="grow">
-          <p class="t-head">Most nicotine has left your body</p>
+    <h2 class="grp" data-a style="--i:0">Now</h2>
+    <div class="now" data-a style="--i:1">
+      <div class="art" aria-hidden="true">
+        <svg class="scene" id="scene" width="346" height="172" viewBox="0 0 346 172"></svg>
+        <div class="fig" data-settle style="--d:300ms"><div id="xero"></div></div>
+        <div class="txt" data-a style="--i:2;--d:200ms">
           <p class="t-foot">Happening now &middot; Day 7</p>
+          <p class="t-title">Most nicotine has left your body</p>
         </div>
-        <span class="chev" id="chev1"></span>
       </div>
-      <div class="rowc" data-a style="--i:3">
-        <span class="tile" id="ic-wave"></span>
-        <div class="grow">
-          <p class="t-head"><span data-count="3">3</span> waves ridden</p>
-          <p class="t-foot">Today</p>
+      <div class="well" data-a style="--i:3;--d:200ms">
+        <div class="act">
+          <span class="glyph sea" id="ic-wave"></span>
+          <div class="grow"><p class="t-head"><span data-count="3">3</span> waves today</p><p class="t-cap">Ridden out with SOS</p></div>
+          <button class="btn small ghost">Log</button>
         </div>
-        <button class="btn small ghost">Log</button>
-      </div>
-      <div class="rowc" data-a style="--i:4">
-        <span class="tile" id="tile"><span class="water"></span></span>
-        <div class="grow">
-          <p class="t-head"><span class="val"><span id="gl">3</span><span class="plus" id="plus">+1</span></span> of 8 glasses</p>
-          <p class="t-foot">Water</p>
+        <div class="act">
+          <span class="glyph glass" id="glass"></span>
+          <div class="grow"><p class="t-head"><span class="val"><span id="gl">3</span><span class="plus" id="plus">+1</span></span> of 8</p><p class="t-cap">Glasses of water</p></div>
+          <button class="btn small ghost" id="addw"></button>
         </div>
-        <button class="btn small ghost" id="addw"></button>
       </div>
     </div>
 
-    <h2 class="grp later" data-a style="--i:5">Later today</h2>
-    <div class="later-list" data-a style="--i:6">
-      <div class="rowc">
-        <span class="tile" id="ic-read"></span>
-        <div class="grow">
-          <p class="t-head">The noisy passengers</p>
-          <p class="t-foot">Today's read &middot; 3 min</p>
-        </div>
-        <span class="chev" id="chev2"></span>
-      </div>
-      <div class="rowc">
-        <span class="tile" id="ic-eve"></span>
-        <div class="grow">
-          <p class="t-head">Check in with Glim</p>
-          <p class="t-foot">Evening &middot; 6 PM</p>
-        </div>
-        <span class="chev" id="chev3"></span>
-      </div>
-      <div class="rowc">
-        <span class="tile" id="ic-bed"></span>
-        <div class="grow">
-          <p class="t-head">Slow wind-down breath</p>
-          <p class="t-foot">Before bed &middot; 10 PM &middot; 3 min</p>
-        </div>
-        <span class="chev" id="chev4"></span>
-      </div>
+    <h2 class="grp later" data-a style="--i:4">Later</h2>
+    <div class="later-list" data-a style="--i:5">
+      <div class="lrow"><span class="ic" data-ic="note"></span><div class="grow"><p class="t-head">The noisy passengers</p><p class="t-cap">Today's read &middot; 3 min</p></div><span class="chev" data-ic="chev"></span></div>
+      <div class="lrow"><span class="ic" data-ic="moon"></span><div class="grow"><p class="t-head">Check-in with Glim</p><p class="t-cap">Opens 6 PM &middot; nudge at 9 PM</p></div><span class="chev" data-ic="chev"></span></div>
+      <div class="lrow"><span class="ic" data-ic="leaf"></span><div class="grow"><p class="t-head">Wind-down breath</p><p class="t-cap">10 PM &middot; 3 min</p></div><span class="chev" data-ic="chev"></span></div>
     </div>
   </div>
 </div>
 <script>
   const $ = s => document.querySelector(s);
-  /* a clearer lung glyph in the kit's line style: windpipe, two bronchi, two lobes */
-  const lungs = (s = 30) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5v7.5M12 11c-.6 1.3-1.6 2-2.6 2.4M12 11c.6 1.3 1.6 2 2.6 2.4"/><path d="M9.4 7C6.8 7.4 4 10.6 4 15.4 4 18.3 5.2 20 7.3 20c1.9 0 3.1-1 3.1-3.2V8.3C10.4 7.5 10 6.9 9.4 7z"/><path d="M14.6 7c2.6.4 5.4 3.6 5.4 8.4 0 2.9-1.2 4.6-3.3 4.6-1.9 0-3.1-1-3.1-3.2V8.3c0-.8.4-1.4 1-1.3z"/></svg>`;
-  $('#xero').innerHTML = DX.char('xero', { mood: 'hello', size: 40, stage: 2, animate: false });
-  $('#ic-now').innerHTML = lungs();
-  ['#chev1', '#chev2', '#chev3', '#chev4'].forEach(s => { $(s).innerHTML = DX.icon('chev', { size: 20 }); });
-  $('#ic-wave').innerHTML = DX.icon('wave');
-  $('#ic-read').innerHTML = DX.icon('note');
-  $('#ic-eve').innerHTML = DX.icon('moon');
-  $('#ic-bed').innerHTML = DX.icon('leaf');
-  $('#tile').insertAdjacentHTML('beforeend', DX.icon('drop'));
+  const dark = DX.theme === 'dark';
+  /* paper-cut morning: warm sky, a low sun, three layered hills; Xero stands on the front knoll */
+  const c = dark
+    ? { s0: '#1A2442', s1: '#2B3052', s2: '#5A4558', sun: '#FFB877', glow: '#FFB877', h1: '#2C3A60', h2: '#22304F', h3: '#182034', rim: 'rgba(246,231,193,.18)', sh: '#000000' }
+    : { s0: '#FFF6EA', s1: '#FFE9D2', s2: '#FFD3A8', sun: '#FFC93C', glow: '#FFD27A', h1: '#FFC796', h2: '#FFAE73', h3: '#FFFCF7', rim: 'rgba(255,255,255,.55)', sh: '#8A3A12' };
+  $('#scene').innerHTML = `<defs>
+      <linearGradient id="nk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c.s0}"/><stop offset=".6" stop-color="${c.s1}"/><stop offset="1" stop-color="${c.s2}"/></linearGradient>
+      <radialGradient id="ng"><stop offset="0" stop-color="${c.glow}" stop-opacity=".55"/><stop offset="1" stop-color="${c.glow}" stop-opacity="0"/></radialGradient>
+      <filter id="nl" x="-5%" y="-30%" width="110%" height="160%"><feDropShadow dx="0" dy="-2" stdDeviation="3" flood-color="${c.sh}" flood-opacity="${dark ? .45 : .16}"/></filter></defs>
+    <rect width="346" height="172" fill="url(#nk)"/>
+    <circle cx="196" cy="118" r="54" fill="url(#ng)"/><circle cx="196" cy="118" r="20" fill="${c.sun}"/>
+    <g class="h h1" filter="url(#nl)"><path d="M0 128 C50 114 100 112 150 120 C200 128 250 116 300 108 C320 105 334 106 346 108 V172 H0Z" fill="${c.h1}"/></g>
+    <g class="h h2" filter="url(#nl)"><path d="M0 146 C40 136 90 134 140 140 C180 145 210 146 240 140 C270 134 300 126 346 128 V172 H0Z" fill="${c.h2}"/><path d="M0 146 C40 136 90 134 140 140 C180 145 210 146 240 140 C270 134 300 126 346 128" fill="none" stroke="${c.rim}" stroke-width="1.5"/></g>
+    <g class="h h3" filter="url(#nl)"><path d="M0 158 C60 152 120 154 176 156 C214 157 236 148 260 142 C290 135 320 138 346 144 V172 H0Z" fill="${c.h3}"/></g>`;
+  $('#xero').innerHTML = DX.char('xero', { mood: 'breathe', size: 100, stage: 2 });
+  $('#xmini').innerHTML = DX.char('xero', { mood: 'hello', size: 36, stage: 2, animate: false });
+  $('#ic-wave').innerHTML = DX.icon('wave', { w: 2.4 });
+  /* a drawn glass: water level is a translate on the fill */
+  $('#glass').innerHTML = `<svg width="26" height="32" viewBox="0 0 26 32" aria-hidden="true"><defs><clipPath id="gcl"><path d="M3.5 3 H22.5 L20.4 28.2 Q20.2 30 18.4 30 H7.6 Q5.8 30 5.6 28.2 Z"/></clipPath></defs>
+    <g clip-path="url(#gcl)"><g class="wtr" id="wtr" style="transform:translateY(0)"><path d="M0 18.6 C4 17.4 8 19.8 13 18.6 S22 17.4 26 18.6 V40 H0Z" fill="#8EC1F5"/><path d="M0 18.6 C4 17.4 8 19.8 13 18.6 S22 17.4 26 18.6" fill="none" stroke="#5A9DEB" stroke-width="1.2"/></g></g>
+    <path d="M3.5 3 H22.5 L20.4 28.2 Q20.2 30 18.4 30 H7.6 Q5.8 30 5.6 28.2 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M7.4 7.5 L8.4 22" stroke="#FFFFFF" stroke-opacity=".8" stroke-width="1.8" stroke-linecap="round"/></svg>`;
+  document.querySelectorAll('[data-ic]').forEach(el => { el.innerHTML = DX.icon(el.dataset.ic, { size: el.classList.contains('chev') ? 18 : 22 }); });
   $('#addw').innerHTML = DX.icon('plus', { w: 2.8 }) + '1 glass';
   $('.screen').insertAdjacentHTML('beforeend', DX.tabbar('today'));
 
+  /* 3/8 to 4/8: the glass interior is 27px tall, so one glass is about 3.4px of water */
   function addGlass(anim) {
     $('#gl').textContent = '4';
-    $('#tile').style.setProperty('--lvl', '50%');
+    $('#wtr').style.transform = 'translateY(-3.4px)';
     if (!anim) return;
     const gl = $('#gl'); gl.classList.remove('bump'); void gl.offsetWidth; gl.classList.add('bump');
     const pl = $('#plus'); pl.classList.remove('float-up'); void pl.offsetWidth; pl.classList.add('float-up');
   }
-  function reset() { $('#gl').textContent = '3'; $('#tile').style.setProperty('--lvl', '37.5%'); $('#plus').classList.remove('float-up'); $('#gl').classList.remove('bump'); }
+  function reset() { $('#gl').textContent = '3'; $('#wtr').style.transform = 'translateY(0)'; $('#plus').classList.remove('float-up'); $('#gl').classList.remove('bump'); }
   DX.after(0, reset);
   DX.after(1200, () => { const b = $('#addw'); b.classList.add('press'); setTimeout(() => b.classList.remove('press'), 160); addGlass(true); });
   DX.onStill(() => addGlass(false));
