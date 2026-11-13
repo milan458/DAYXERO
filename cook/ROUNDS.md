@@ -8,6 +8,7 @@ Gate: stills approved [no]
 Best so far: none yet
 
 ## Decisions
+- 17:04 Night ground for Glim: deep teal night #152733 / #0C1A23 chosen from 6 candidates (scratchpad night.png): dimmest comfortable option that still separates from reading navy and ocean; Glim's purple and yellow glow read best on it. Glim's own design unchanged.
 - 16:55 Deliverable is a multi-file Artifact: kit (tokens, components, motion, characters) + one HTML file per screen + gallery index, because 70 screens x 2 modes need one shared system to stay consistent.
 - 16:58 Characters and horizon scenes converted from design/handoff/canvas/project/*.dc.html by cook/tools/dc2js.mjs, because identity must stay intact.
 - 17:00 Grounds cut from 7 in use to 5 with one rule each: apricot = Xero/days, ocean = Jelli/SOS, violet = Glim/evening, mint = plan/program, reading (cream | navy) = reading, settings, slips, health, NRT, paywall. Sun only inside celebrations. Sky retired as a ground.
@@ -19,6 +20,7 @@ Best so far: none yet
 - 17:00 The prep session "hand" sits on a deep ink card table in both modes; cards carry the colour, replacing the violet ground (violet stays Glim's).
 
 ## User feedback inbox
+- 17:03 "the dark navy purple ... background, even when the evening glim comes in, it seems very shiny for anybody's eyes ... explore ... some other color" | round 1 | in progress: night ground changed to deep teal #152733 (dark #0C1A23), dimmed cream button
 - 16:50 "keep dayxero's identity, but tighten it ... so many colors" | open
 - 16:50 "finishing actions and completion animations" missing | open
 - 16:50 milestones prep days to Day Xero and after quit, with animations | open

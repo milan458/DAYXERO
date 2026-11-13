@@ -75,7 +75,7 @@
       xero: { edge: '#F5B83D', face: '#FFD966', hill: '#FFC38A', ink: '#1E1A3A', sun: '#FF7A55' },
       day: { edge: '#FF7155', face: '#FFC38A', hill: '#FF9A6B', ink: '#1E1A3A', sun: '#FFD966' },
       wave: { edge: '#1D3A9E', face: '#2A52DB', hill: '#5C7FF0', ink: '#FFF8EE', sun: '#9CCBFF' },
-      night: { edge: '#2A1C6E', face: '#4A3596', hill: '#6B4FD8', ink: '#FFF8EE', sun: '#FFE27A' }
+      night: { edge: '#0F2230', face: '#1E3442', hill: '#2E5062', ink: '#F3EDE0', sun: '#FFE27A' }
     }[kind];
     const locked = state === 'locked', next = state === 'next';
     const edgePath = kind === 'prep' ? scallop(50, 50, 48, 14, 4) : '';

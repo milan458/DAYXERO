@@ -1,0 +1,103 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>000 Launch</title>
+<meta name="motion" content="2.4 s, then hold. 0-1000ms back hill rises 220px (settle); 140-1140ms mid hill rises 260px; 280-1280ms front hill rises 300px (each paper layer casts a soft shadow up onto the one behind). 250-1750ms the sun climbs 240px into the valley (ease-out), its two paper rings open from 0.6 to 1 at 800-1900ms. 700-1720ms the wordmark assembles: 7 letters, 60ms stagger, each rises 40px with a 6deg tilt and blur 6px to sharp on a soft spring (660ms). 1560-2010ms the coral underline draws under Xero. 1500-2340ms Xero rises 170px from behind the front hill on a soft overshoot and lands under the sun like a halo; soft impact haptic at 2300ms. 1900-2400ms tagline fades up 10px. Holds the final frame; Xero blinks.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+  /* Art palette (paper layers). Light: atmospheric peach to terracotta. Dark: plum night-before-dawn. */
+  .screen { --h-back: #FFD9AE; --h-mid: #FFA56C; --h-front: #E9643F; --h-base: #C94B33; --h-edge: rgba(255,255,255,.55);
+    --sun-a: #FFF4C9; --sun-b: #FFC93C; --ring-1: rgba(255,240,205,.55); --ring-2: rgba(255,236,200,.32); --lift: rgba(120,44,20,.22); }
+  [data-theme="dark"] .screen { --h-back: #4A2C66; --h-mid: #39204F; --h-front: #1F1030; --h-base: #160A24; --h-edge: rgba(255,195,138,.35);
+    --sun-a: #FFF1C2; --sun-b: #FFB255; --ring-1: rgba(255,195,138,.16); --ring-2: rgba(255,195,138,.08); --lift: rgba(0,0,0,.45); }
+
+  .mark-wrap { position: absolute; left: 0; right: 0; top: 214px; text-align: center; z-index: 6; }
+  .word { font: 800 70px/1 var(--display); letter-spacing: -2.6px; color: var(--fg); display: inline-flex; position: relative; }
+  .word .ch { display: inline-block; transform-origin: 50% 90%; }
+  .word .xero { position: relative; display: inline-flex; }
+  .word .uline { position: absolute; left: -2px; width: calc(100% + 6px); bottom: -15px; height: 18px; overflow: visible; }
+  .tagline { margin-top: 30px; }
+
+  .layer { position: absolute; left: 0; width: 390px; pointer-events: none; }
+  .layer svg { display: block; }
+  .sunwrap { top: 400px; height: 300px; z-index: 1; }
+  .hill.back  { top: 440px; height: 404px; z-index: 2; filter: drop-shadow(0 -4px 10px var(--lift)); }
+  .hill.mid   { top: 440px; height: 404px; z-index: 3; filter: drop-shadow(0 -5px 12px var(--lift)); }
+  .xwrap { left: 120px; width: 150px; top: 568px; height: 150px; z-index: 4; }
+  .hill.front { top: 440px; height: 404px; z-index: 5; filter: drop-shadow(0 -6px 14px var(--lift)); }
+  .grain { position: absolute; inset: 440px 0 0 0; z-index: 6; opacity: .5; mix-blend-mode: soft-light; pointer-events: none; }
+
+  /* ---------- timeline ---------- */
+  .play .hill.back  { animation: rise-220 1000ms cubic-bezier(.2,.8,.2,1) 0ms both; }
+  .play .hill.mid   { animation: rise-260 1000ms cubic-bezier(.2,.8,.2,1) 140ms both; }
+  .play .hill.front { animation: rise-300 1000ms cubic-bezier(.2,.8,.2,1) 280ms both; }
+  @keyframes rise-220 { from { transform: translateY(220px); } to { transform: none; } }
+  @keyframes rise-260 { from { transform: translateY(260px); } to { transform: none; } }
+  @keyframes rise-300 { from { transform: translateY(300px); } to { transform: none; } }
+  .play .sun { animation: sun-climb 1500ms cubic-bezier(.25,.75,.25,1) 250ms both; }
+  @keyframes sun-climb { from { transform: translateY(240px); } to { transform: none; } }
+  .ring { transform-box: fill-box; transform-origin: center; }
+  .play .ring { animation: ring-open 1100ms cubic-bezier(.2,.8,.2,1) both; animation-delay: var(--d); }
+  @keyframes ring-open { from { opacity: 0; transform: scale(.6); } to { opacity: 1; transform: none; } }
+  .play .word .ch { animation: letter-in 660ms cubic-bezier(.3,1.3,.5,1) both; animation-delay: calc(700ms + var(--n) * 60ms); }
+  @keyframes letter-in { 0% { opacity: 0; transform: translateY(40px) rotate(-6deg) scale(.92); filter: blur(6px); }
+    45% { opacity: 1; filter: blur(0); } 100% { opacity: 1; transform: none; filter: blur(0); } }
+  .play .xwrap { animation: xero-up 840ms cubic-bezier(.3,1.25,.5,1) 1500ms both; }
+  @keyframes xero-up { from { transform: translateY(170px); } to { transform: none; } }
+  .play .tagline { animation: tag-in 500ms var(--ease) 1900ms both; }
+  @keyframes tag-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+</style>
+</head><body>
+<div class="screen" data-ground="apricot">
+
+  <div class="mark-wrap">
+    <div class="word" aria-label="DayXero">
+      <span class="ch" style="--n:0">D</span><span class="ch" style="--n:1">a</span><span class="ch" style="--n:2">y</span>
+      <span class="xero"><span class="ch" style="--n:3">X</span><span class="ch" style="--n:4">e</span><span class="ch" style="--n:5">r</span><span class="ch" style="--n:6">o</span>
+        <svg class="uline" viewBox="0 0 200 18" preserveAspectRatio="none" aria-hidden="true"><path class="draw" d="M4 11 C40 4 92 5 124 8 C154 10 178 12 196 5" fill="none" stroke="var(--mark)" stroke-width="5.5" stroke-linecap="round" style="--len:200;--d:1560ms;--dur:450ms" vector-effect="non-scaling-stroke"/></svg>
+      </span>
+    </div>
+    <p class="t-body muted tagline">Quit on your Quit Day.</p>
+  </div>
+
+  <div class="layer sunwrap" aria-hidden="true">
+    <svg width="390" height="300" viewBox="0 0 390 300" style="overflow:visible">
+      <defs>
+        <radialGradient id="sunG" cx=".4" cy=".34" r=".72"><stop offset="0" stop-color="var(--sun-a)"/><stop offset="1" stop-color="var(--sun-b)"/></radialGradient>
+      </defs>
+      <g class="sun">
+        <circle class="ring" cx="195" cy="176" r="126" fill="var(--ring-2)" style="--d:900ms"/>
+        <circle class="ring" cx="195" cy="176" r="98" fill="var(--ring-1)" style="--d:800ms"/>
+        <circle cx="195" cy="176" r="68" fill="url(#sunG)"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="layer hill back" aria-hidden="true">
+    <svg width="390" height="404" viewBox="0 0 390 404">
+      <path d="M0 96 C56 64 118 74 150 146 C170 196 222 204 242 160 C276 86 334 60 390 82 L390 404 L0 404 Z" fill="var(--h-back)"/>
+      <path d="M0 96 C56 64 118 74 150 146 C170 196 222 204 242 160 C276 86 334 60 390 82" fill="none" stroke="var(--h-edge)" stroke-width="2"/>
+    </svg>
+  </div>
+  <div class="layer hill mid" aria-hidden="true">
+    <svg width="390" height="404" viewBox="0 0 390 404">
+      <path d="M0 204 C56 170 116 176 158 216 C182 240 214 246 238 228 C282 190 336 172 390 192 L390 404 L0 404 Z" fill="var(--h-mid)"/>
+      <path d="M0 204 C56 170 116 176 158 216 C182 240 214 246 238 228 C282 190 336 172 390 192" fill="none" stroke="var(--h-edge)" stroke-width="2"/>
+    </svg>
+  </div>
+
+  <div class="layer xwrap" id="xero"></div>
+
+  <div class="layer hill front" aria-hidden="true">
+    <svg width="390" height="404" viewBox="0 0 390 404">
+      <path d="M0 292 C58 270 112 256 196 254 C280 252 334 272 390 288 L390 404 L0 404 Z" fill="var(--h-front)"/>
+      <path d="M0 292 C58 270 112 256 196 254 C280 252 334 272 390 288" fill="none" stroke="var(--h-edge)" stroke-width="2"/>
+      <path d="M0 360 C90 340 170 346 250 358 C310 366 356 360 390 352 L390 404 L0 404 Z" fill="var(--h-base)"/>
+    </svg>
+  </div>
+
+  <svg class="grain" width="390" height="404" aria-hidden="true"><filter id="gr"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .35 0"/></filter><rect width="390" height="404" filter="url(#gr)"/></svg>
+</div>
+<script>
+  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'hello', size: 150 });
+</script>
+</body></html>

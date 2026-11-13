@@ -25,8 +25,9 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
 .screen[data-ground="sun"]     { --g: #FFD966; --muted: #5A4A10; --card: rgba(255,255,255,.92); --card-2: rgba(255,255,255,.55); --track: rgba(30,26,58,.14); }
 .screen[data-ground="ocean"]   { --g: #2A52DB; --fg: var(--cream); --muted: #DCE4FF; --card: #1D3A9E; --card-2: #2447C2; --line: rgba(255,255,255,.16);
   --btn: var(--cream); --btn-fg: #1D3A9E; --sel: var(--cream); --sel-fg: #1D3A9E; --tick: var(--done-on-dark); --mark: var(--sun); --track: rgba(255,255,255,.2); --dark: 1; }
-.screen[data-ground="violet"]  { --g: #4A3596; --fg: var(--cream); --muted: #DCD4FF; --card: #3A2880; --card-2: #43308C; --line: rgba(255,255,255,.16);
-  --btn: var(--cream); --btn-fg: #3A2880; --sel: var(--cream); --sel-fg: #3A2880; --tick: var(--done-on-dark); --mark: var(--sun); --track: rgba(255,255,255,.2); --dark: 1; }
+/* Night (Glim's evenings): deep teal night, low saturation so it is easy on the eyes after dark (user, 13 Nov). "violet" kept as an alias. */
+.screen[data-ground="violet"], .screen[data-ground="night"] { --g: #152733; --fg: #F3EDE0; --muted: #B9CAD3; --card: #1E3442; --card-2: #243C4B; --line: rgba(255,255,255,.12);
+  --btn: #EDE6D3; --btn-fg: #152733; --sel: #EDE6D3; --sel-fg: #152733; --tick: #7FD9A8; --mark: #FFE27A; --track: rgba(255,255,255,.16); --dark: 1; }
 .screen[data-ground="table"]   { --g: #1E1A3A; --fg: var(--cream); --muted: #C9C3E6; --card: #2A255F; --card-2: #24204D; --line: rgba(255,255,255,.14);
   --btn: var(--cream); --btn-fg: var(--ink); --sel: var(--cream); --sel-fg: var(--ink); --tick: var(--done-on-dark); --mark: var(--sun); --track: rgba(255,255,255,.18); --dark: 1; }
 
@@ -37,7 +38,7 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
 [data-theme="dark"] .screen[data-ground="mint"]    { --g: #0F2A22; --muted: #A9D9C0; --card: #173A30; --card-2: #1E4639; --btn: #9FE3BC; --btn-fg: #0F2A22; --sel: #9FE3BC; --sel-fg: #0F2A22; --mark: #9FE3BC; }
 [data-theme="dark"] .screen[data-ground="sun"]     { --g: #241433; --muted: #E0C8E8; --card: #34204A; --card-2: #3E2856; --btn: var(--sun); --btn-fg: #241433; --sel: var(--sun); --sel-fg: #241433; --mark: var(--sun); }
 [data-theme="dark"] .screen[data-ground="ocean"]   { --g: #0B1A4A; --muted: #B9C9FF; --card: #152A6A; --card-2: #1B3378; --btn: var(--cream); --btn-fg: #0B1A4A; --sel: var(--cream); --sel-fg: #0B1A4A; }
-[data-theme="dark"] .screen[data-ground="violet"]  { --g: #140E3A; --muted: #B8B3D9; --card: #221A56; --card-2: #2A2163; --btn: var(--cream); --btn-fg: #140E3A; --sel: var(--cream); --sel-fg: #140E3A; }
+[data-theme="dark"] .screen[data-ground="violet"], [data-theme="dark"] .screen[data-ground="night"] { --g: #0C1A23; --muted: #A9BBC4; --card: #15262F; --card-2: #1B2F3A; --btn: #E6DECA; --btn-fg: #0C1A23; --sel: #E6DECA; --sel-fg: #0C1A23; }
 [data-theme="dark"] .screen[data-ground="table"]   { --g: #0B0920; --card: #1B1747; --card-2: #15123A; }
 
 /* ---------- phone ---------- */
@@ -47,7 +48,7 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
 .sbar { position: absolute; z-index: 30; top: 0; left: 0; right: 0; height: 50px; display: flex; align-items: center; justify-content: space-between; padding: 6px 30px 0 38px; font: 600 16px/1 var(--body); color: var(--fg); pointer-events: none; }
 .sbar .ic { display: flex; gap: 6px; align-items: center; }
 .sbar.on-art { color: var(--ink); }
-[data-theme="dark"] .sbar.on-art, .screen[data-ground="ocean"] .sbar.on-art, .screen[data-ground="violet"] .sbar.on-art { color: var(--cream); }
+[data-theme="dark"] .sbar.on-art, .screen[data-ground="ocean"] .sbar.on-art, .screen[data-ground="violet"] .sbar.on-art, .screen[data-ground="night"] .sbar.on-art { color: var(--cream); }
 
 /* ---------- type: seven steps ---------- */
 .t-display { font: 800 40px/1.02 var(--display); letter-spacing: -1.2px; margin: 0; text-wrap: balance; }
@@ -61,7 +62,7 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
 .num { font-family: var(--display); font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -.5px; }
 .mark { background: no-repeat left 100% / 100% 12px; padding-bottom: 4px;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 16' preserveAspectRatio='none'%3E%3Cpath d='M3 10 C40 4 90 5 122 7 C152 9 178 11 197 4' fill='none' stroke='%23FF7A55' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E"); }
-.screen[data-ground="ocean"] .mark, .screen[data-ground="violet"] .mark, .screen[data-ground="table"] .mark, [data-theme="dark"] .mark {
+.screen[data-ground="ocean"] .mark, .screen[data-ground="violet"] .mark, .screen[data-ground="night"] .mark, .screen[data-ground="table"] .mark, [data-theme="dark"] .mark {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 16' preserveAspectRatio='none'%3E%3Cpath d='M3 10 C40 4 90 5 122 7 C152 9 178 11 197 4' fill='none' stroke='%23FFD966' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E"); }
 
 /* ---------- nav row: leading control left, progress centre, avatar right ---------- */
@@ -139,7 +140,7 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
 .btn .fill { position: absolute; inset: 0; transform-origin: left; transform: scaleX(0); background: color-mix(in srgb, var(--btn-fg) 22%, transparent); }
 .btn .lbl { position: relative; display: flex; align-items: center; gap: 8px; }
 .btn.done-state { background: var(--tick); color: #fff; }
-[data-theme="dark"] .btn.done-state, .screen[data-ground="ocean"] .btn.done-state, .screen[data-ground="violet"] .btn.done-state, .screen[data-ground="table"] .btn.done-state { color: #0B2A1C; }
+[data-theme="dark"] .btn.done-state, .screen[data-ground="ocean"] .btn.done-state, .screen[data-ground="violet"] .btn.done-state, .screen[data-ground="night"] .btn.done-state, .screen[data-ground="table"] .btn.done-state { color: #0B2A1C; }
 
 /* ---------- tab bar ---------- */
 .tabbar { position: absolute; z-index: 26; left: 14px; right: 14px; bottom: 26px; height: 70px; border-radius: 28px; background: color-mix(in srgb, var(--card) 96%, transparent); backdrop-filter: blur(16px); box-shadow: 0 10px 30px rgba(30,26,58,.18), inset 0 0 0 1px var(--line); display: grid; grid-template-columns: repeat(5, 1fr); align-items: center; }

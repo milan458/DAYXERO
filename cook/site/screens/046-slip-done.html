@@ -1,0 +1,59 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>046 Slip: plan saved</title>
+<meta name="motion" content="Done beat: Jelli (cheer) settles in (900ms), the green check pops at its side and its tick draws (320ms later, 420ms) with a success haptic. Title arrives, then the plan card settles up from 48px like a card being put down (900ms), then the Day 7 card arrives with the badge fading in intact (no stamp: nothing was lost or earned). Button and link arrive last.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+  .hero { position: absolute; left: 0; right: 0; top: 104px; height: 150px; display: grid; place-items: center; }
+  .hero .jl { width: 140px; height: 140px; }
+  .hero .ck { position: absolute; left: calc(50% + 34px); top: 92px; width: 52px; height: 52px; border-radius: 99px; box-shadow: 0 0 0 4px var(--g); }
+  .wrap { position: absolute; left: 0; right: 0; top: 270px; padding: 0 var(--gutter); }
+  .wrap .head { text-align: center; }
+  .wrap .lead { margin-top: 8px; color: var(--muted); }
+  .plan { margin-top: 22px; display: grid; gap: 6px; }
+  .plan .t-title { font-size: 22px; }
+  .plan .when { color: var(--muted); display: flex; align-items: center; gap: 6px; }
+  .plan .when svg { width: 16px; height: 16px; }
+  .kept { margin-top: 10px; display: flex; gap: 14px; align-items: center; }
+  .kept .t-foot { color: var(--muted); }
+</style>
+</head><body>
+<div class="screen" data-ground="reading">
+  <div class="nav">
+    <button class="icon-btn" aria-label="Close" data-ic="close"></button>
+    <div class="grow"><div class="steps" aria-label="Done"><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
+    <span style="width:44px"></span>
+  </div>
+  <div class="hero">
+    <div class="jl" id="jelli" data-settle></div>
+    <div class="ck" id="check"></div>
+  </div>
+  <div class="wrap">
+    <div class="head">
+      <h1 class="t-large" data-a style="--i:2">Plan saved</h1>
+      <p class="t-body lead" data-a style="--i:3">Every slip shows you something. Now you have a plan for this one.</p>
+    </div>
+    <div class="card plan" data-settle style="--i:4;--d:200ms">
+      <p class="t-foot when"><span data-ic="clock"></span>Your plan for coffee</p>
+      <p class="t-title">If it's after coffee, then I'll have it somewhere new.</p>
+    </div>
+    <div class="card flat kept" data-a style="--i:7">
+      <div id="badge"></div>
+      <div class="grow">
+        <p class="t-head">Still Day 7. Nothing resets.</p>
+        <p class="t-foot">7 days free since Fri, Nov 6. Xero's sky stays 40% clear.</p>
+      </div>
+    </div>
+  </div>
+  <div class="dock">
+    <button class="btn" data-a style="--i:8">Back to Today</button>
+    <button class="link" data-a style="--i:9" data-go="045-slip-what">Add what happened</button>
+  </div>
+</div>
+<script>
+  document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic, { w: 2.4 }));
+  document.getElementById('jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 140 });
+  document.getElementById('check').innerHTML = DX.check({ size: 52, d: 500 });
+  document.getElementById('badge').innerHTML = DX.badge({ kind: 'day', n: 7, size: 60, bare: true });
+</script>
+</body></html>

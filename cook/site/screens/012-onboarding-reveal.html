@@ -1,0 +1,74 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>012 Plan reveal</title>
+<meta name="motion" content="Progress eases 9/11 to 10/11; title arrives and the underline draws under 'ready'. The money card arrives and $2,555 counts up from $0 over 1200ms. The stamp row fades in left to right (Prep 1 to 7 pop 90ms apart, Prep 1 in its 'next' state), then the Day Xero medallion stamps in last with a shine and a light haptic. The free and full lists and the button arrive after.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+  .q { padding-top: 112px; gap: 8px; }
+  .wrap { padding: 18px var(--gutter) 0; display: grid; gap: 10px; }
+  .money { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+  .money .num { font-size: 44px; line-height: .95; letter-spacing: -1.4px; display: block; margin-top: 6px; }
+  .money .t-cap { color: var(--muted); text-align: right; }
+  .stamps { display: flex; align-items: center; gap: 4px; margin-top: 12px; position: relative; }
+  .stamps .pb { flex: none; }
+  .stamps .arrow { flex: 1; height: 2px; min-width: 6px; background: repeating-linear-gradient(90deg, var(--line) 0 4px, transparent 4px 7px); }
+  .stamps .xb { flex: none; margin-left: 2px; }
+  .stamps .pb .badge, .stamps .xb .badge { gap: 0; }
+  .lab { display: flex; justify-content: space-between; margin-top: 8px; }
+  .lab .t-cap { color: var(--muted); }
+  .tiers { display: grid; gap: 10px; }
+  .tier { display: grid; grid-template-columns: 22px 1fr; gap: 10px; align-items: start; }
+  .tier svg { width: 18px; height: 18px; margin-top: 1px; }
+  .tier .t-foot b { font-weight: 700; }
+  .tier .tk { color: var(--tick); }
+  .tier .lk { color: var(--muted); }
+</style>
+</head><body>
+<div class="screen" data-ground="mint">
+  <div class="nav">
+    <button class="icon-btn" aria-label="Back" data-icon="back"></button>
+    <div class="grow"><div class="progress sun"><i id="bar" style="--p:90.9%"></i></div></div>
+    <div class="avatar" id="av"></div>
+  </div>
+
+  <div class="q">
+    <h1 class="t-large" data-a>Your plan is <span class="mark">ready</span></h1>
+    <p class="t-body muted" data-a style="--i:1">Prep 1 to 3 are on us. Nothing is charged today.</p>
+  </div>
+
+  <div class="wrap">
+    <div class="card money" data-a style="--i:2">
+      <div><p class="t-foot muted">Money you'll keep in year 1</p><span class="num" data-count="2555" data-prefix="$" data-dur="1200" data-delay="450">$2,555</span></div>
+      <p class="t-cap">$7 a day,<br>every day free</p>
+    </div>
+
+    <div class="card" data-a style="--i:3">
+      <p class="t-foot" style="font-weight:700">Seven prep stamps, then Day Xero</p>
+      <div class="stamps" id="stamps"></div>
+      <div class="lab"><span class="t-cap">Prep 1 starts today</span><span class="t-cap">Fri, Nov 6</span></div>
+    </div>
+
+    <div class="card tiers" data-a style="--i:4">
+      <div class="tier"><span class="tk" data-icon="check"></span><p class="t-foot"><b>Free:</b> Prep 1 to 3, your counter, Craving SOS and evening check-ins</p></div>
+      <div class="tier"><span class="lk" data-icon="lock"></span><p class="t-foot"><b>Full program:</b> Prep 4 to 7, the Day Xero kit, Weeks 1 to 4 and voice coaching</p></div>
+    </div>
+  </div>
+
+  <div class="dock">
+    <button class="btn" data-a style="--i:5">Start my prep week</button>
+    <a class="link" data-a style="--i:6">See all plans</a>
+  </div>
+</div>
+<script>
+  document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon, { w: 2.6 }));
+  document.querySelector('.icon-btn').innerHTML = DX.icon('back');
+  document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 40 });
+  let h = '';
+  for (let i = 1; i <= 7; i++) h += `<span class="pb" data-pop style="--i:0;--d:${700 + i * 90}ms">${DX.badge({ kind: 'prep', n: i, size: 30, state: i === 1 ? 'next' : 'locked', p: i === 1 ? 0 : null })}</span>`;
+  h += `<span class="arrow" data-fade style="--d:1300ms"></span><span class="xb" data-stamp style="--i:0;--d:1450ms"><span class="shine" style="display:block;border-radius:99px;--d:1900ms">${DX.badge({ kind: 'xero', n: '0', size: 50 })}</span></span>`;
+  document.getElementById('stamps').innerHTML = h;
+  const bar = document.getElementById('bar');
+  DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '81.8%'); void bar.offsetWidth; bar.style.transition = ''; });
+  DX.after(250, () => bar.style.setProperty('--p', '90.9%'));
+</script>
+</body></html>

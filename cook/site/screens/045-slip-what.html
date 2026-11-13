@@ -1,0 +1,51 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>045 Slip: what happened</title>
+<meta name="motion" content="Calm, no springs. Title and helper arrive, then each question group arrives in order (600ms, 90ms stagger), then the privacy note and Save. Tapping a chip fills it in 250ms with a light selection haptic.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+  .wrap { padding: 66px var(--gutter) 0; }
+  .wrap .lead { margin-top: 8px; color: var(--muted); }
+  .qs { margin-top: 18px; }
+  .q6 { display: grid; gap: 12px; padding: 18px 0; }
+  .q6 + .q6 { border-top: 1px solid var(--line); }
+  .q6 .t-head { font-size: 17px; }
+  .note { margin-top: 10px; display: flex; gap: 12px; align-items: center; color: var(--muted); }
+  .note svg { width: 18px; height: 18px; flex: none; }
+</style>
+</head><body>
+<div class="screen" data-ground="reading">
+  <div class="nav">
+    <button class="icon-btn" aria-label="Back" data-ic="back"></button>
+    <div class="grow"><div class="steps" aria-label="Step 3 of 3"><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
+    <span style="width:44px"></span>
+  </div>
+  <div class="scroll">
+    <div class="wrap">
+      <h1 class="t-title" data-a style="--i:0">What happened?</h1>
+      <p class="t-foot lead" data-a style="--i:1">No judgement. Just the facts, so the plan fits.</p>
+      <div class="qs">
+        <div class="q6" data-a style="--i:2">
+          <p class="t-head">What did you have?</p>
+          <div class="chips"><button class="chip on">Vape</button><button class="chip">Cigarettes</button></div>
+        </div>
+        <div class="q6" data-a style="--i:3">
+          <p class="t-head">How much?</p>
+          <div class="chips"><button class="chip">A few puffs</button><button class="chip on">One session</button><button class="chip">More</button></div>
+        </div>
+        <div class="q6" data-a style="--i:4">
+          <p class="t-head">When?</p>
+          <div class="chips"><button class="chip on">Just now</button><button class="chip">Earlier today</button><button class="chip">Yesterday</button></div>
+        </div>
+      </div>
+      <p class="t-foot note" data-a style="--i:5"><span data-ic="lock"></span>Only you see this. It helps Jelli spot your patterns.</p>
+    </div>
+  </div>
+  <div class="dock">
+    <button class="btn" data-a style="--i:6" data-go="046-slip-done">Save</button>
+  </div>
+</div>
+<script>
+  document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic));
+</script>
+</body></html>

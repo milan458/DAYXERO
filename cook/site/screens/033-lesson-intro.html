@@ -1,0 +1,56 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>033 Lesson intro</title>
+<meta name="motion" content="The art card fades up (600ms), Xero settles onto the path at 200ms and keeps a slow bob; the road line draws (900ms). Title, subtitle and the three 'inside' rows arrive with a 90ms stagger, then the Begin button. Light haptic on Begin.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+  .art { position: relative; height: 216px; border-radius: 26px; overflow: hidden; margin-top: 8px; }
+  .art .scene { position: absolute; inset: 0; }
+  .art .hero { position: absolute; left: 50%; bottom: 4px; margin-left: -60px; }
+  .art .tag { position: absolute; left: 14px; top: 14px; display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px;
+    border-radius: 99px; background: rgba(255,248,238,.9); color: var(--ink); font: 600 13px/1 var(--body); }
+  .art .tag svg { width: 15px; height: 15px; }
+  .head { margin-top: 20px; display: grid; gap: 8px; }
+  .inside { margin-top: 18px; }
+  .list.inside > .row { min-height: 54px; padding-block: 8px; }
+  .inside .t-foot { color: var(--muted); }
+  .meta { display: flex; gap: 8px; align-items: center; color: var(--muted); }
+  .meta svg { width: 16px; height: 16px; }
+</style>
+</head><body>
+<div class="screen" data-ground="reading">
+  <div class="nav">
+    <button class="icon-btn" aria-label="Close" data-ic="close"></button>
+    <div class="grow"><div class="steps"><i></i><i></i><i></i><i></i></div></div>
+    <span class="t-foot muted" style="width:44px;text-align:right">Day 7</span>
+  </div>
+  <div class="scroll" style="padding-top:104px">
+    <div class="pad">
+      <div class="art" data-a style="--i:0">
+        <div class="scene" id="scene"></div>
+        <div class="hero" data-settle style="--d:200ms"><div class="bob" id="hero"></div></div>
+        <span class="tag"><span data-ic="clock"></span>3 min</span>
+      </div>
+      <div class="head">
+        <p class="t-foot muted" data-a style="--i:1">Today's lesson · Fri, Nov 13</p>
+        <h1 class="t-large" data-a style="--i:2">The noisy <span class="mark">passengers</span></h1>
+        <p class="t-body muted" data-a style="--i:3">Let them talk. Keep driving.</p>
+      </div>
+      <div class="list inside" data-a style="--i:4">
+        <div class="row"><span class="ico-tile" data-ic="card"></span><div class="grow"><p class="t-head" style="font-size:17px">A short read</p><p class="t-foot">Four cards, about 90 seconds</p></div></div>
+        <div class="row"><span class="ico-tile" data-ic="hand"></span><div class="grow"><p class="t-head" style="font-size:17px">A few activities</p><p class="t-foot">Quick taps, no wrong answers</p></div></div>
+        <div class="row"><span class="ico-tile" data-ic="flame"></span><div class="grow"><p class="t-head" style="font-size:17px">Today's mission</p><p class="t-foot">One small thing to try today</p></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="dock">
+    <button class="btn" data-a style="--i:6" data-go="034-lesson-cards">Begin</button>
+    <button class="link" data-a style="--i:7" data-go="035-lesson-audio"><span data-ic="headphones" style="display:inline-flex;margin-right:8px"></span>Listen instead</button>
+  </div>
+</div>
+<script>
+  document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20 })));
+  document.getElementById('scene').innerHTML = DX.char('horizon', { scene: 'path', w: 346, h: 216 });
+  document.getElementById('hero').innerHTML = DX.char('xero', { mood: 'hello', size: 120 });
+</script>
+</body></html>
