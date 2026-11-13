@@ -152,7 +152,7 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
 
 /* ---------- tab bar ---------- */
 .tabbar { position: absolute; z-index: 26; left: 14px; right: 14px; bottom: 26px; height: 70px; border-radius: 28px; background: color-mix(in srgb, var(--card) 96%, transparent); backdrop-filter: blur(16px); box-shadow: 0 10px 30px rgba(30,26,58,.18), inset 0 0 0 1px var(--line); display: grid; grid-template-columns: repeat(5, 1fr) !important; align-items: center; }
-.tabbar a { display: grid; justify-items: center; gap: 4px; font: 600 12px/1 var(--body); color: color-mix(in srgb, var(--fg) 55%, transparent); text-decoration: none; }
+.tabbar a { display: grid; justify-items: center; gap: 4px; font: 600 12px/1 var(--body); color: color-mix(in srgb, var(--fg) 72%, transparent); text-decoration: none; }
 .tabbar a svg { width: 24px; height: 24px; }
 .tabbar a.on { color: var(--fg); font-weight: 700; }
 .tabbar a.sos { width: 58px; height: 58px; margin: -40px auto 0; border-radius: 999px; background: #1F3C8C; color: #FFF8EE; box-shadow: 0 8px 20px rgba(31,60,140,.4); display: grid; place-items: center; gap: 0; }

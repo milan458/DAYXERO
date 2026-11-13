@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>001 One breath</title>
-<meta name="motion" content="Xero settles up 48px (900ms) inside three soft rings, then the rings and Xero breathe together for one 10 s cycle: 4 s in (scale .82 to 1.06), 6 s out. The rings are the only pacer. The headline arrives (600ms, 90ms stagger) with Breathe in; at 4000ms it swaps for And out (500ms fade and 6px rise; only one phrase is ever on screen, full contrast). Gentle haptic at 0 and 4000ms marking the turn; auto-advances at 10.4 s.">
+<meta name="motion" content="Xero settles up 48px (900ms) inside three soft rings, then the rings and Xero breathe together for one 10 s cycle: 4 s in (scale .82 to 1.06), 6 s out. The rings are the only pacer. The headline arrives (600ms, 90ms stagger) with Breathe in; at 4000ms it swaps for And out (500ms fade and 6px rise; only one phrase is ever on screen, full contrast). On the out-breath three cream breath marks leave his mouth and drift 16px outward as they fade (6 s). A hairline under the copy fills left to right over the 10 s (linear) to show the screen moves on by itself, above a quiet Skip. Gentle haptic at 0 and 4000ms marking the turn; auto-advances at 10.4 s.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -11,6 +11,12 @@
   .rings i:nth-child(1) { width: 300px; height: 300px; --a: 38%; }
   .rings i:nth-child(2) { width: 244px; height: 244px; --a: 62%; }
   .rings i:nth-child(3) { width: 188px; height: 188px; --a: 100%; }
+  /* Dark: the rings become a soft warm glow (apricot light on the night ground), each with a faint rim, so the pacer reads. */
+  [data-theme="dark"] .rings i { background: radial-gradient(circle, color-mix(in srgb, #FFC38A var(--g1), transparent) 0%, color-mix(in srgb, #FFC38A var(--g2), transparent) 100%);
+    box-shadow: inset 0 0 0 1px rgba(255,214,170,.14), 0 0 34px rgba(255,180,110,.10); }
+  [data-theme="dark"] .rings i:nth-child(1) { --g1: 3%; --g2: 9%; }
+  [data-theme="dark"] .rings i:nth-child(2) { --g1: 5%; --g2: 13%; }
+  [data-theme="dark"] .rings i:nth-child(3) { --g1: 9%; --g2: 18%; }
   .play .rings i:nth-child(1) { animation-delay: -.25s; }
   .play .rings i:nth-child(2) { animation-delay: -.12s; }
   .hero { position: relative; margin-top: 6px; }
@@ -18,7 +24,17 @@
   .copy h1 { position: relative; height: 34px; width: 100%; }
   .copy h1 span { position: absolute; left: 0; right: 0; top: 0; display: block; transition: opacity 500ms var(--ease), transform 500ms var(--ease); }
   .copy h1 .dim { opacity: 0; transform: translateY(6px); }
-  .dock { background: none; }
+  .dock { background: none; gap: 14px; padding-bottom: 30px; }
+  /* A hairline that fills over the 10 s breath: the screen moves on by itself. */
+  .timer { height: 2px; border-radius: 99px; background: var(--track); overflow: hidden; margin: 0 auto; width: 132px; }
+  .timer i { display: block; height: 100%; width: 100%; background: var(--fg); opacity: .7; transform-origin: left; transform: scaleX(.6); }
+  .play .timer i { animation: tick 10000ms linear both; }
+  @keyframes tick { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  .still .timer i { animation: none !important; transform: scaleX(.6); }
+  /* Breath marks: three soft wisps leaving Xero's mouth on the out-breath. */
+  .wisp { opacity: 1; }
+  .play .wisp { animation: wisp 6000ms cubic-bezier(.3,.6,.3,1) 4000ms both; }
+  @keyframes wisp { 0% { opacity: 0; transform: translate(-6px, -2px); } 20% { opacity: 1; } 80% { opacity: .9; } 100% { opacity: 0; transform: translate(10px, 3px); } }
 </style>
 </head><body>
 <div class="screen" data-ground="apricot">
@@ -33,10 +49,15 @@
   </div>
 
 
-  <div class="dock"><a class="link" data-a style="--i:4">Skip for now</a></div>
+  <div class="dock"><div class="timer" data-a style="--i:3" aria-hidden="true"><i></i></div><a class="link" data-a style="--i:4">Skip</a></div>
 </div>
 <script>
-  document.getElementById('hero').innerHTML = DX.char('xero', { mood: 'breathe', size: 176 });
+  /* The kit's breathe marks sit beside his arm; here they leave his mouth instead (cream on his coral face, then out past his cheek). */
+  const wisps = `<g class="wisp" fill="none" stroke="#FFF8EE" stroke-width="3.2" stroke-linecap="round" opacity=".95">
+    <path d="M108 96 C114 94 118 97 124 96"/><path d="M107 101 C115 103 121 101 128 104"/><path d="M109 106 C114 109 118 110 122 112" opacity=".7"/></g>`;
+  document.getElementById('hero').innerHTML = DX.char('xero', { mood: 'breathe', size: 176 })
+    .replace(/<g opacity="1" fill="none" stroke="#(?:24163A|F3E9DE)" stroke-width="3" stroke-linecap="round"><animateTransform[^>]*><\/animateTransform><path d="M172 100[^"]*"><\/path><path d="M176 112[^"]*"><\/path><\/g>/, '')
+    .replace(/(<path d="M100 90 C106 90 106 101 100 101[^>]*><\/path>)/, '$1' + wisps);
   const i = document.getElementById('in'), o = document.getElementById('out');
   DX.after(0, () => { i.classList.remove('dim'); o.classList.add('dim'); });
   DX.after(4000, () => { i.classList.add('dim'); o.classList.remove('dim'); });
