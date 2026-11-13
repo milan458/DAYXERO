@@ -161,7 +161,7 @@ struct ProgressTab: View {
     private func header(_ snap: HomeSnapshot) -> some View {
         HStack(alignment: .center) {
             VStack(alignment: .leading, spacing: 2) {
-                Text(eyebrow(snap)).dxType(.caption).textCase(.uppercase).foregroundStyle(Read4.muted)
+                Text(eyebrow(snap)).dxType(.caption).foregroundStyle(Read4.muted)
                 // S27.15: plain title; the hand-drawn mark is kept for moments.
                 Text("Your progress")
                     .dxType(.large).foregroundStyle(Read4.ink)
@@ -266,7 +266,7 @@ struct ProgressTab: View {
         let items = timeline?.items(for: product) ?? []
         let elapsed = HealthTimeline.elapsedHours(quitDay: profile.quitDay, now: now, clock: DayClock(boundaryHour: profile.dayBoundaryHour))
         let (current, next) = HealthTimeline.nowAndNext(items, elapsedHours: elapsed)
-        Text("What's changing").dxType(.caption).textCase(.uppercase).foregroundStyle(Read4.muted)
+        Text("What's changing").dxType(.caption).foregroundStyle(Read4.muted)
             .padding(.top, DX.Space.m)
             .accessibilityAddTraits(.isHeader)
         if let current {

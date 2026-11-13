@@ -67,7 +67,7 @@ struct SlipFlow: View {
             topBar
             if practice {
                 Label("Practice · nothing is logged", systemImage: "figure.walk.motion")
-                    .dxType(.caption).textCase(.uppercase)
+                    .dxType(.caption)
                     .foregroundStyle(ground.muted)
                     .padding(.horizontal, 12).padding(.vertical, 6)
                     .overlay(Capsule().strokeBorder(ground.muted, style: StrokeStyle(lineWidth: 1.5, dash: [4, 3])))

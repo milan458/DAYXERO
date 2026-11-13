@@ -508,7 +508,7 @@ struct DeckRevealView: View {
                     .fixedSize(horizontal: false, vertical: true)
                 if let keep = reveal.keep {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(String(localized: "Keep in mind")).dxType(.caption).textCase(.uppercase).foregroundStyle(Read4.muted)
+                        Text(String(localized: "Keep in mind")).dxType(.caption).foregroundStyle(Read4.muted)
                         Text(verbatim: ctx.text(keep)).dxType(.headline).foregroundStyle(Read4.ink)
                             .fixedSize(horizontal: false, vertical: true)
                     }
@@ -869,7 +869,7 @@ struct DeckRecapView: View {
                         .fixedSize(horizontal: false, vertical: true)
                     if let learned = session.recap?.learned, !learned.isEmpty {
                         VStack(alignment: .leading, spacing: 10) {
-                            Text(String(localized: "What you learned today")).dxType(.caption).textCase(.uppercase).foregroundStyle(ground.muted)
+                            Text(String(localized: "What you learned today")).dxType(.caption).foregroundStyle(ground.muted)
                             ForEach(Array(learned.enumerated()), id: \.offset) { i, line in
                                 HStack(alignment: .firstTextBaseline, spacing: 10) {
                                     Text(verbatim: "\(i + 1)").dxFont(13, weight: 800, style: .caption1)
@@ -895,7 +895,7 @@ struct DeckRecapView: View {
                     }
                     if let mission = session.mission {
                         VStack(alignment: .leading, spacing: 8) {
-                            Text(String(localized: "For the rest of today")).dxType(.caption).textCase(.uppercase).foregroundStyle(Read4.muted)
+                            Text(String(localized: "For the rest of today")).dxType(.caption).foregroundStyle(Read4.muted)
                             Text(verbatim: ctx.text(mission.text)).dxType(.headline).foregroundStyle(Read4.ink)
                                 .fixedSize(horizontal: false, vertical: true)
                         }
@@ -905,7 +905,7 @@ struct DeckRecapView: View {
                     }
                     if !isReplay, let tomorrow = session.recap?.tomorrow {
                         VStack(alignment: .leading, spacing: 2) {
-                            Text(String(localized: "Tomorrow")).dxType(.caption).textCase(.uppercase).foregroundStyle(ground.muted)
+                            Text(String(localized: "Tomorrow")).dxType(.caption).foregroundStyle(ground.muted)
                             Text(verbatim: ctx.text(tomorrow)).dxType(.body).foregroundStyle(ground.ink)
                                 .fixedSize(horizontal: false, vertical: true)
                         }

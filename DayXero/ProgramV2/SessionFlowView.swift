@@ -325,7 +325,7 @@ struct SessionFlowView: View {
             V4ProgressBar(value: Double(index + 1) / Double(max(steps.count, 1)))
                 .accessibilityLabel(Text("\(session.label), step \(index + 1) of \(steps.count)"))
             if isReplay {
-                Text("Replay").dxType(.caption).textCase(.uppercase)
+                Text("Replay").dxType(.caption)
                     .foregroundStyle(Read4.muted)
                     .padding(.horizontal, 10).padding(.vertical, 6)
                     .background(Read4.surface, in: Capsule())
@@ -608,7 +608,7 @@ struct MissionCard: View {
                 .accessibilityHidden(true)
                 .padding(.top, DX.Space.m)
             VStack(alignment: .leading, spacing: 12) {
-                Text("Today's mission").dxType(.caption).textCase(.uppercase).foregroundStyle(ground.muted)
+                Text("Today's mission").dxType(.caption).foregroundStyle(ground.muted)
                 Text(verbatim: ctx.text(mission.text))
                     .dxType(.title)
                     .foregroundStyle(ground.ink)
@@ -710,7 +710,7 @@ struct SessionCompletion: View {
                         .accessibilityAddTraits(.isHeader)
                     if let mission = session.mission {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("Today's mission").dxType(.caption).textCase(.uppercase).foregroundStyle(ground.muted)
+                            Text("Today's mission").dxType(.caption).foregroundStyle(ground.muted)
                             Text(verbatim: ctx.text(mission.text)).dxType(.body).foregroundStyle(ground.ink)
                                 .fixedSize(horizontal: false, vertical: true)
                         }
@@ -770,7 +770,7 @@ struct SessionCompletion: View {
                     .clipShape(RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
                     .accessibilityHidden(true)
                     .padding(.top, DX.Space.m)
-                    Text("\(session.label) done").dxType(.caption).textCase(.uppercase).foregroundStyle(Read4.muted)
+                    Text("\(session.label) done").dxType(.caption).foregroundStyle(Read4.muted)
                         .padding(.top, DX.Space.s)
                     Text(verbatim: ctx.text(session.completionText))
                         .dxType(.large)

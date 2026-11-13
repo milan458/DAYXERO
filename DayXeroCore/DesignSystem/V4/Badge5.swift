@@ -176,7 +176,7 @@ public struct DXBadge: View {
         .frame(width: 100 * s, height: 100 * s)
     }
 
-    static func scallop(cx: Double, cy: Double, r: Double, n: Int, a: Double) -> String {
+    public static func scallop(cx: Double, cy: Double, r: Double, n: Int, a: Double) -> String {
         var d = ""
         for i in 0...(n * 2) {
             let ang = Double.pi * Double(i) / Double(n) - .pi / 2
@@ -188,9 +188,10 @@ public struct DXBadge: View {
 }
 
 /// A path in the kit's 100 × 100 box, scaled to the frame.
-struct Box: Shape {
+public struct Box: Shape {
     let d: String
-    func path(in rect: CGRect) -> Path {
+    public init(d: String) { self.d = d }
+    public func path(in rect: CGRect) -> Path {
         SVGPath.path(d).applying(CGAffineTransform(scaleX: rect.width / 100, y: rect.height / 100))
             .offsetBy(dx: rect.minX, dy: rect.minY)
     }

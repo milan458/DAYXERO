@@ -20,7 +20,7 @@ public struct DXCravingSlider: View {
     public var body: some View {
         VStack(alignment: .leading, spacing: DX.Space.s) {
             HStack {
-                Text("How strong is it?").dxType(.caption).textCase(.uppercase).foregroundStyle(DX.Ground.reading.muted)
+                Text("How strong is it?").dxType(.caption).foregroundStyle(DX.Ground.reading.muted)
                 Spacer()
                 Text(Self.word(for: value)).dxType(.footnote).foregroundStyle(DX.Ground.reading.muted)
             }

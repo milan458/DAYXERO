@@ -47,6 +47,7 @@ struct OnboardingFlow: View {
         }
         .foregroundStyle(ground.ink)
         .background(ground.background.ignoresSafeArea())
+        .environment(\.dxGround, ground)
         .animation(motion.animation(DX.Move.settle), value: model.step)
         .animation(motion.animation(.easeInOut(duration: 0.5)), value: breathed)
         #if DEBUG
@@ -80,28 +81,26 @@ struct OnboardingFlow: View {
                                                removal: .move(edge: .leading).combined(with: .opacity))
     }
 
-    /// F03 header: back, Xero's avatar and a green progress bar. Over art, the bar gets a cream backing to stay legible.
+    /// The nav row (v5 kit `.nav`): the back button on card-2, then the progress with the sun riding its end. Over
+    /// art, the bar gets a cream backing to stay legible.
     private func topBar(onArt: Bool) -> some View {
         HStack(spacing: 12) {
             if model.canGoBack {
                 Button { model.back() } label: {
-                    Image(systemName: "chevron.left").font(.system(size: 16, weight: .bold))
+                    DXIcon(.back, size: 20, weight: 2.4)
                         .frame(width: 44, height: 44)
-                        .background(DX.Fill.cardOnColour, in: Circle())
+                        .background(ground.card2, in: Circle())
                         .foregroundStyle(ground.ink)
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(.dxPress)
                 .accessibilityLabel(Text("Back"))
             }
-            XeroView(mood: .hello, stage: 1, size: .avatar, animate: false)
-                .background(DX.Ground.apricot.background, in: Circle())
-                .clipShape(Circle())
-                .accessibilityHidden(true)
             OnbProgressBar(value: model.progress, ground: ground)
                 .padding(onArt ? 6 : 0)
                 .background(onArt ? DX.Fill.cream.opacity(0.85) : .clear, in: Capsule())
+                .padding(.trailing, 8)
         }
-        .frame(minHeight: 48)
+        .frame(minHeight: 52)
     }
 
     @ViewBuilder
@@ -136,8 +135,12 @@ struct OnboardingFlow: View {
     }
 }
 
-/// Standard question layout (F03): Xero asks in a bubble, the controls sit in the answer tray,
-/// and the footer is pinned. Lilac ground (talking with Xero).
+/// Standard question layout (v5, 003-010): the question as a large title, the helper line under it, the answers as kit
+/// option rows and chips, and Continue in the dock. Apricot ground.
+///
+/// Motion (003): the question and helper arrive (600ms, 90ms stagger), then the option rows settle in one by one; a
+/// choice takes the warm tint and edge (250ms) with a selection tick; the sun rides the progress bar to the next step
+/// (900ms settle).
 struct OnboardingScaffold<Content: View, Footer: View>: View {
     let title: LocalizedStringKey
     var subtitle: LocalizedStringKey? = nil
@@ -150,24 +153,33 @@ struct OnboardingScaffold<Content: View, Footer: View>: View {
     @ViewBuilder let content: () -> Content
     @ViewBuilder let footer: () -> Footer
 
+    @Environment(\.dxGround) private var ground
+
     var body: some View {
         VStack(spacing: 0) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 10) {
                     if let eyebrow {
-                        Text(eyebrow).dxType(.caption).textCase(.uppercase).foregroundStyle(DX.Ground.lilac.muted)
+                        Text(eyebrow).dxType(.footnote).foregroundStyle(ground.muted)
                             .dxArrive(0)
                     }
-                    XeroBubble(text: Text(title), large: true, fill: bubbleFill, border: bubbleBorder)
+                    Text(title)
+                        .dxType(.large)
+                        .foregroundStyle(ground.ink)
+                        .fixedSize(horizontal: false, vertical: true)
                         .accessibilityAddTraits(.isHeader)
                         .dxArrive(0)
                     if let subtitle {
-                        XeroBubble(text: Text(subtitle), fill: bubbleFill, border: bubbleBorder).dxArrive(1)
+                        Text(subtitle)
+                            .dxType(.body)
+                            .foregroundStyle(ground.muted)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .dxArrive(1)
                     }
                     AnswerTrayCard(label: trayLabel) {
                         VStack(alignment: .leading, spacing: 10) { content() }
                     }
-                    .padding(.top, 8)
+                    .padding(.top, 12)
                     .dxArrive(2)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -184,9 +196,15 @@ struct OnboardingScaffold<Content: View, Footer: View>: View {
                 VStack(spacing: DX.Space.xs) { footer() }
                     .padding(.horizontal, DX.Layout.buttonGutter)
                     .dxReadableColumn()
-                    .padding(.top, DX.Space.xs)
+                    .padding(.top, 28)
                     .padding(.bottom, DX.Space.xs)
-                    .background(DX.Ground.lilac.background)
+                    .background {
+                        // kit `.dock`: the ground fading in over the last 34% above the button.
+                        LinearGradient(stops: [.init(color: ground.background.opacity(0), location: 0),
+                                               .init(color: ground.background, location: 0.34)],
+                                       startPoint: .top, endPoint: .bottom)
+                            .ignoresSafeArea(edges: .bottom)
+                    }
             }
         }
     }
@@ -216,11 +234,11 @@ struct ContinueButton: View {
     var body: some View {
         VStack(spacing: 4) {
             Button(title) { model.next() }
-                .buttonStyle(.dx(.primary, on: .lilac))
+                .buttonStyle(.dx(.primary, on: .apricot))
                 .disabled(!model.canContinue)
             if let skipTitle {
                 Button(skipTitle) { model.skip() }
-                    .buttonStyle(.dx(.quiet, on: .lilac))
+                    .buttonStyle(.dx(.quiet, on: .apricot))
             }
         }
     }

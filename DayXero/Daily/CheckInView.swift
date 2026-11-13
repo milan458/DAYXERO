@@ -378,7 +378,7 @@ struct TomorrowPlan: View {
         VStack(spacing: 0) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("One small plan").dxType(.caption).textCase(.uppercase).foregroundStyle(ground.muted)
+                    Text("One small plan").dxType(.caption).foregroundStyle(ground.muted)
                     // Plain title: the hand-drawn mark is kept for celebrations (S27.15).
                     Text("For tomorrow")
                         .dxType(.large).foregroundStyle(ground.ink)

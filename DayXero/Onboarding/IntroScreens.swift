@@ -67,21 +67,22 @@ struct ProductsScreen: View {
             product(.vape, title: "Vape or e-cigarette", detail: "Disposables, pods or refillable tanks")
             product(.pouches, title: "Nicotine pouches or snus", detail: "Zyn, Velo or other oral pouches")
             if model.products.count > 1 {
-                HStack(alignment: .top, spacing: DX.Space.s) {
-                    Image(systemName: "lightbulb").font(.system(size: 16, weight: .light)).foregroundStyle(Onb.accent)
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Using both is common").dxFont(14, weight: 600, style: .subheadline)
-                            .foregroundStyle(Onb.accent)
+                // v5 (003): Xero says it, on the cream card.
+                HStack(alignment: .center, spacing: 14) {
+                    XeroView(mood: .hello, stage: 1, points: 72)
+                        .frame(width: 72, height: 72)
+                        .accessibilityHidden(true)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Using both is common").dxType(.footnote).fontWeight(.bold).foregroundStyle(Onb.ink)
                         Text("I'll plan for each one in your prep week.")
-                            .onbText(.subtitle).fixedSize(horizontal: false, vertical: true)
+                            .dxType(.footnote).foregroundStyle(Onb.ink).fixedSize(horizontal: false, vertical: true)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .padding(.vertical, 14).padding(.horizontal, DX.Space.m)
-                .background(Onb.accentSoft, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-                .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .strokeBorder(Onb.accent.opacity(0.7), style: StrokeStyle(lineWidth: 1, dash: [5, 4])))
-                .padding(.top, DX.Space.s)
+                .padding(.vertical, 14).padding(.horizontal, 16)
+                .background(Color(light: 0xFFFCF7, dark: 0x182034), in: RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous).strokeBorder(Onb.hairline))
+                .padding(.top, 14)
                 .transition(.opacity.combined(with: .move(edge: .top)))
                 .accessibilityElement(children: .combine)
             }

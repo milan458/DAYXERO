@@ -1,31 +1,44 @@
 import DayXeroCore
 import SwiftUI
 
-/// The opening animation (brand canvas, "Opening animation"). The forest wordmark grows from the bottom up:
-/// grass, trunk, leaves from where the trunk splits outward, highlights, then "Day" and "ero" slide out from
-/// behind the tree. It holds for a second and fades into the app. It always plays to the end; there's no skip.
-/// The static launch screen is the same paper colour, so nothing jumps between the two.
+/// The opening animation (v5, cook/site/screens/000-launch): a 2.4 s paper-cut sunrise. The hills rise back to front,
+/// the sun climbs into the valley and its rings open, the wordmark assembles letter by letter with the coral underline
+/// under "Xero", and Xero rises from behind the front hill to land under the sun. It holds, then fades into the app.
+/// It always plays to the end; there's no skip. The static launch screen is the same apricot, so nothing jumps.
+///
+/// Motion (000): 0-1000ms back hill rises 220px (settle); 140-1140ms mid hill rises 260px; 280-1280ms front hill rises
+/// 300px, then the two near layers follow at 360ms and 440ms (each paper layer casts a soft shadow up onto the one
+/// behind). 250-1750ms the sun climbs 240px into the valley (ease-out), its two paper rings open from 0.6 to 1 at
+/// 800-1900ms (dark mode: no rings; a warm amber glow opens behind the disc, which stops 72px higher at 84% size, and
+/// seven faint stars fade in across the top band). 700-1720ms the wordmark assembles: 7 letters, 60ms stagger, each
+/// rises 40px with a 6deg tilt and blur 6px to sharp on a soft spring (660ms). 1560-2010ms the coral underline draws
+/// under Xero. 1500-2340ms Xero rises 170px from behind the front hill on a soft overshoot and lands under the sun;
+/// soft impact haptic at 2300ms. 600-2000ms two paper-cut clouds slide in 36px from the sides and fade up. Holds the
+/// final frame.
 struct LaunchGrowOverlay: View {
     let onFinished: @MainActor () -> Void
     private let motion = MotionPolicy()
     @State private var start: Date?
+    @State private var landed = false
 
     var body: some View {
         let timing = motion.reduce ? LaunchGrowTiming.reduced : .full
         TimelineView(.animation) { context in
-            let t = start.map { context.date.timeIntervalSince($0) } ?? 0
-            let fade = timing.fade(at: t)
-            ZStack {
-                ForestGrowColors.paper.ignoresSafeArea()
-                ForestWordmark(size: 68, time: motion.reduce ? 10 : t)
-                    .opacity(motion.reduce ? Ease.progress(t, from: 0, to: 0.3) : 1)
-            }
-            .opacity(1 - fade)
-            .scaleEffect(1 + 0.04 * fade)
+            let t = motion.reduce ? 10 : start.map { context.date.timeIntervalSince($0) } ?? 0
+            let fade = timing.fade(at: start.map { context.date.timeIntervalSince($0) } ?? 0)
+            LaunchScene(t: t)
+                .opacity(motion.reduce ? Ease.progress(start.map { context.date.timeIntervalSince($0) } ?? 0, from: 0, to: 0.3) : 1)
+                .opacity(1 - fade)
+                .scaleEffect(1 + 0.04 * fade)
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(verbatim: "DayXero"))
+        .sensoryFeedback(.impact(flexibility: .soft, intensity: 0.6), trigger: landed)
         .onAppear { if start == nil { start = .now } }
+        .task {
+            try? await Task.sleep(for: .seconds(motion.reduce ? 0 : LaunchTimeline.xeroLands))
+            landed = true
+        }
         .task {
             try? await Task.sleep(for: .seconds(timing.end))
             onFinished()
@@ -37,6 +50,7 @@ struct LaunchGrowOverlay: View {
     static var shouldPlay: Bool {
         if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil { return false }
         #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("-dx.launch") { return true }
         return !ProcessInfo.processInfo.arguments.contains { $0.hasPrefix("-dx.") }
         #else
         return true
@@ -44,180 +58,242 @@ struct LaunchGrowOverlay: View {
     }
 }
 
-/// Grow 1.6 s, hold 1 s, fade 0.4 s. With Reduce Motion the whole wordmark fades in over 0.3 s instead.
+/// The sunrise runs 2.4 s, holds 0.6 s, then fades over 0.4 s. With Reduce Motion the finished scene fades in over
+/// 0.3 s and holds instead.
 struct LaunchGrowTiming {
     let fadeStart: Double
     let end: Double
 
-    static let full = LaunchGrowTiming(fadeStart: 2.6, end: 3.0)
+    static let full = LaunchGrowTiming(fadeStart: 3.0, end: 3.4)
     static let reduced = LaunchGrowTiming(fadeStart: 1.3, end: 1.7)
 
     func fade(at t: Double) -> Double { Ease.progress(t, from: fadeStart, to: end) }
 }
 
-enum ForestGrowColors {
-    static let paper = Color(hex: 0xF6F0E6)
-    static let ink = Color(hex: 0x1E1A3A)
-    static let dark = Color(hex: 0x2F5E46)
-    static let mid = Color(hex: 0x4F8A5E)
-    static let light = Color(hex: 0x9CCB8E)
-    static let trunk = Color(hex: 0x7A4E36)
-}
+/// Where each layer is at a moment of the sunrise (kit 000 timeline), in the kit's 390-wide points.
+enum LaunchTimeline {
+    static let duration = 2.4
+    static let xeroLands = 2.3
 
-/// "Day", the leafy X tree, "ero", drawn at `time` seconds into the grow. Any time past 1.6 s is the finished mark.
-struct ForestWordmark: View {
-    let size: CGFloat
-    let time: Double
-
-    var body: some View {
-        let words = Ease.progress(time, from: 1.12, to: 1.58)
-        HStack(alignment: .firstTextBaseline, spacing: 0) {
-            word("Day")
-                .offset(x: 0.32 * size * (1 - words))
-                .opacity(words)
-            ForestTree(time: time)
-                .frame(width: (size * 0.67).rounded(), height: (size * 0.98).rounded())
-                .alignmentGuide(.firstTextBaseline) { $0.height - 0.26 * size }
-                .padding(.leading, 0.03 * size)
-                .padding(.trailing, 0.01 * size)
-            word("ero")
-                .offset(x: -0.32 * size * (1 - words))
-                .opacity(words)
-        }
-        .environment(\.layoutDirection, .leftToRight)
+    /// How far a hill still has to rise: back 220 from 0 s, mid 260 from 0.14 s, front 300 from 0.28 s, the near
+    /// layers 300 from 0.36 s and 0.44 s; each over 1 s on the settle curve.
+    static func hill(_ index: Int, at t: Double) -> CGFloat {
+        let (delay, rise): (Double, CGFloat) = [(0, 220), (0.14, 260), (0.28, 300), (0.36, 300), (0.44, 300)][index]
+        return rise * CGFloat(1 - Ease.settle(t, from: delay, to: delay + 1))
     }
 
-    private func word(_ text: String) -> some View {
-        Text(verbatim: text)
-            .font(DX.Typeface4.swiftUIFont(.display, size: size, weight: 800))
-            .tracking(-0.03 * size)
-            .foregroundStyle(ForestGrowColors.ink)
-            .fixedSize()
-    }
+    static func sun(at t: Double) -> CGFloat { 240 * CGFloat(1 - Ease.sun(t, from: 0.25, to: 1.75)) }
+    static func ring(_ delay: Double, at t: Double) -> Double { Ease.settle(t, from: delay, to: delay + 1.1) }
+    static func letter(_ n: Int, at t: Double) -> Double { Ease.spring(t, from: 0.7 + Double(n) * 0.06, to: 0.7 + Double(n) * 0.06 + 0.66) }
+    static func underline(at t: Double) -> Double { Ease.progress(t, from: 1.56, to: 2.01) }
+    static func xero(at t: Double) -> Double { Ease.overshoot(t, from: 1.5, to: 2.34) }
+    static func cloud(_ delay: Double, at t: Double) -> Double { Ease.settle(t, from: delay, to: delay + 1.4) }
+    static func star(_ delay: Double, at t: Double) -> Double { Ease.progress(t, from: delay, to: delay + 0.9) }
 }
 
-/// The leafy X: ground, trunk, two diagonal rows of dark leaves, a lighter layer, highlights.
-/// Coordinates are the brand canvas's 100 × 146 view box.
-struct ForestTree: View {
-    let time: Double
+/// The sunrise at time `t`, laid out from the bottom of the screen in the kit's 390 × 844 space.
+struct LaunchScene: View {
+    let t: Double
+    @Environment(\.colorScheme) private var scheme
+
+    private struct Palette {
+        let back, mid, front, near, base, edge, edgeLow, cloud, cloudShade, lift: Color
+        let sunA, sunB: Color
+    }
+
+    private var palette: Palette {
+        scheme == .dark
+            ? Palette(back: Color(hex: 0x4B5889), mid: Color(hex: 0x37436F), front: Color(hex: 0x29335C), near: Color(hex: 0x1D2647),
+                      base: Color(hex: 0x141B36), edge: .clear, edgeLow: .clear, cloud: Color(hex: 0x34416F),
+                      cloudShade: .black.opacity(0.35), lift: .black.opacity(0.5), sunA: Color(hex: 0xFFE2A0), sunB: Color(hex: 0xF3A14A))
+            : Palette(back: Color(hex: 0xFFD2A2), mid: Color(hex: 0xFFE6CA), front: Color(hex: 0xF7A578), near: Color(hex: 0xF39466),
+                      base: Color(hex: 0xEC8456), edge: .white.opacity(0.6), edgeLow: Color(hex: 0xFFECD6).opacity(0.5),
+                      cloud: Color(hex: 0xFFE9D2), cloudShade: Color(hex: 0x96461E).opacity(0.16), lift: Color(hex: 0x782C14).opacity(0.13),
+                      sunA: Color(hex: 0xFFF4C9), sunB: Color(hex: 0xFFC93C))
+    }
+
+    static let hills: [(top: CGFloat, d: String)] = [
+        (420, "M0 96 C56 64 118 74 150 146 C170 196 222 204 242 160 C276 86 334 60 390 82 L390 404 L0 404 Z"),
+        (420, "M0 204 C56 170 116 176 158 216 C182 240 214 246 238 228 C282 190 336 172 390 192 L390 404 L0 404 Z"),
+        (440, "M0 292 C58 270 112 256 196 254 C280 252 334 272 390 288 L390 404 L0 404 Z"),
+        (440, "M0 262 C38 248 86 254 132 284 C186 318 258 326 314 300 C346 285 370 278 390 280 L390 404 L0 404 Z"),
+        (440, "M0 344 C52 324 112 324 172 340 C238 358 306 342 390 300 L390 404 L0 404 Z"),
+    ]
 
     var body: some View {
-        // Leaves overshoot their circles while they pop, so draw with a little room around the frame.
-        let pad: CGFloat = 6
-        Canvas { context, size in
-            let k = (size.width - 2 * pad) / 100
-            context.translateBy(x: pad, y: pad)
-            context.scaleBy(x: k, y: k)
-
-            let ground = Ease.progress(time, from: 0.15, to: 0.42)
-            if ground > 0 {
-                let rx = 24 * ground
-                context.opacity = ground
-                context.fill(Path(ellipseIn: CGRect(x: 50 - rx, y: 133, width: 2 * rx, height: 12)), with: .color(ForestGrowColors.mid))
-                context.opacity = 1
-            }
-
-            let trunk = Ease.progress(time, from: 0.28, to: 0.72)
-            if trunk > 0 {
-                var c = context
-                c.translateBy(x: 0, y: 138)
-                c.scaleBy(x: 1, y: trunk)
-                c.translateBy(x: 0, y: -138)
-                c.fill(Self.trunk, with: .color(ForestGrowColors.trunk))
-            }
-
-            for leaf in ForestLeaf.all {
-                let scale = leaf.scale(at: time)
-                guard scale > 0 else { continue }
-                let r = leaf.r * scale
-                context.fill(Path(ellipseIn: CGRect(x: leaf.x - r, y: leaf.y - r, width: 2 * r, height: 2 * r)),
-                             with: .color(leaf.layer.color))
+        let dark = scheme == .dark
+        let p = palette
+        GeometryReader { proxy in
+            let s = proxy.size.width / 390
+            // The scene is anchored to the bottom; the kit's y 0 sits this far above the top of the screen.
+            let top = proxy.size.height - 844 * s
+            ZStack(alignment: .topLeading) {
+                if dark {
+                    LinearGradient(stops: [.init(color: Color(hex: 0x0B1020), location: 0), .init(color: Color(hex: 0x10172C), location: 0.4),
+                                           .init(color: Color(hex: 0x1A2346), location: 0.72), .init(color: Color(hex: 0x222C55), location: 1)],
+                                   startPoint: .top, endPoint: .bottom)
+                        .frame(height: max(0, top + 560 * s))
+                    stars(s: s, top: top)
+                }
+                sun(s: s, top: top, dark: dark, p: p)
+                cloud(width: 124, x: 14, y: 412, from: -36, delay: 0.6, s: s, top: top, p: p)
+                cloud(width: 92, x: 390 - 16 - 92, y: 384, from: 36, delay: 0.76, s: s, top: top, p: p)
+                hill(0, fill: p.back, edge: p.edge, s: s, top: top, p: p)
+                hill(1, fill: p.mid, edge: p.edge, s: s, top: top, p: p)
+                XeroView(mood: .hello, stage: 1, points: 200 * s)
+                    .frame(width: 200 * s, height: 200 * s)
+                    .offset(x: 95 * s, y: top + (495 + 170 * CGFloat(1 - LaunchTimeline.xero(at: t))) * s)
+                    .opacity(t >= 1.5 ? 1 : 0)
+                hill(2, fill: p.front, edge: p.edge, s: s, top: top, p: p)
+                hill(3, fill: p.near, edge: p.edgeLow, s: s, top: top, p: p)
+                hill(4, fill: p.base, edge: p.edgeLow, s: s, top: top, p: p)
+                wordmark(s: s, dark: dark)
+                    .frame(width: proxy.size.width)
+                    .offset(y: top + 250 * s)
             }
         }
-        .padding(-pad)
+        // Dark: below the sky band the air keeps its last colour behind the hills.
+        .background(scheme == .dark ? Color(hex: 0x222C55) : DX.Ground.apricot.background)
+        .ignoresSafeArea()
+    }
+
+    private func hill(_ i: Int, fill: Color, edge: Color, s: CGFloat, top: CGFloat, p: Palette) -> some View {
+        let layer = Self.hills[i]
+        return Canvas { ctx, size in
+            ctx.scaleBy(x: s, y: s)
+            let path = SVGPath.path(layer.d)
+            var lifted = ctx
+            lifted.addFilter(.shadow(color: p.lift, radius: scheme == .dark ? 9 : 4, y: scheme == .dark ? -4 : -2))
+            lifted.fill(path, with: .color(fill))
+            let ridge = SVGPath.path(String(layer.d.prefix { $0 != "L" }))
+            ctx.stroke(ridge, with: .color(edge), lineWidth: 2)
+        }
+        .frame(width: 390 * s, height: 404 * s)
+        .offset(y: top + (layer.top + LaunchTimeline.hill(i, at: t)) * s)
+        .allowsHitTesting(false)
+    }
+
+    @ViewBuilder
+    private func sun(s: CGFloat, top: CGFloat, dark: Bool, p: Palette) -> some View {
+        let climb = LaunchTimeline.sun(at: t)
+        let y = top + (352 + 176 + climb - (dark ? 72 : 0)) * s
+        let scale: CGFloat = dark ? 0.84 : 1
+        ZStack {
+            if dark {
+                Circle().fill(RadialGradient(stops: [.init(color: Color(hex: 0xFFB862).opacity(0.7), location: 0),
+                                                     .init(color: Color(hex: 0xF7A04E).opacity(0.32), location: 0.42),
+                                                     .init(color: Color(hex: 0xE88A45).opacity(0.09), location: 0.72),
+                                                     .init(color: Color(hex: 0xE07F40).opacity(0), location: 1)],
+                                             center: .center, startRadius: 0, endRadius: 170 * s))
+                    .frame(width: 340 * s, height: 340 * s)
+                    .scaleEffect(0.6 + 0.4 * LaunchTimeline.ring(0.8, at: t))
+                    .opacity(LaunchTimeline.ring(0.8, at: t))
+            } else {
+                Circle().fill(Color(hex: 0xFFECC8).opacity(0.32)).frame(width: 252 * s, height: 252 * s)
+                    .scaleEffect(0.6 + 0.4 * LaunchTimeline.ring(0.9, at: t)).opacity(LaunchTimeline.ring(0.9, at: t))
+                Circle().fill(Color(hex: 0xFFF0CD).opacity(0.55)).frame(width: 196 * s, height: 196 * s)
+                    .scaleEffect(0.6 + 0.4 * LaunchTimeline.ring(0.8, at: t)).opacity(LaunchTimeline.ring(0.8, at: t))
+            }
+            Circle().fill(RadialGradient(colors: [p.sunA, p.sunB], center: UnitPoint(x: 0.4, y: 0.34), startRadius: 0, endRadius: 98 * s))
+                .frame(width: 136 * s, height: 136 * s)
+            if dark {
+                Circle().stroke(Color(hex: 0xFFEFC4).opacity(0.7), lineWidth: 2).frame(width: 134 * s, height: 134 * s)
+            }
+        }
+        .scaleEffect(scale)
+        .position(x: 195 * s, y: y)
+    }
+
+    private func cloud(width: CGFloat, x: CGFloat, y: CGFloat, from: CGFloat, delay: Double, s: CGFloat, top: CGFloat, p: Palette) -> some View {
+        let k = LaunchTimeline.cloud(delay, at: t)
+        return Canvas { ctx, size in
+            ctx.scaleBy(x: size.width / 108, y: size.height / 42)
+            var shaded = ctx
+            shaded.addFilter(.shadow(color: p.cloudShade, radius: 1.5, y: 2))
+            shaded.fill(SVGPath.path("M10 40 C2 40 0 30 9 27 C8 17 20 11 30 16 C35 4 56 1 64 14 C72 8 86 11 88 23 C99 22 106 31 100 40 Z"),
+                        with: .color(p.cloud))
+        }
+        .frame(width: width * s, height: width * 42 / 108 * s)
+        .offset(x: (x + from * CGFloat(1 - k)) * s, y: top + y * s)
+        .opacity(k)
+    }
+
+    private func stars(s: CGFloat, top: CGFloat) -> some View {
+        let list: [(CGFloat, CGFloat, CGFloat, Double, Double)] = [(62, 96, 1.5, 0.55, 0.2), (148, 72, 1.1, 0.4, 0.32), (236, 128, 1.3, 0.45, 0.44),
+                                                                (318, 84, 1.7, 0.6, 0.26), (352, 176, 1.1, 0.38, 0.52), (34, 198, 1.2, 0.4, 0.38),
+                                                                (112, 158, 1, 0.32, 0.6)]
+        return ZStack(alignment: .topLeading) {
+            ForEach(Array(list.enumerated()), id: \.offset) { _, star in
+                Circle().fill(Color(hex: 0xF3E9D6))
+                    .frame(width: star.2 * 2, height: star.2 * 2)
+                    .opacity(star.3 * LaunchTimeline.star(star.4, at: t))
+                    .offset(x: star.0 * s - star.2, y: star.1 * s - star.2)
+            }
+        }
+    }
+
+    private func wordmark(s: CGFloat, dark: Bool) -> some View {
+        let letters = Array("DayXero")
+        let ink = dark ? Color(hex: 0xFFF8EE) : Color(hex: 0x1E1A3A)
+        return HStack(spacing: -2.6 * s) {
+            ForEach(Array(letters.enumerated()), id: \.offset) { n, ch in
+                let k = LaunchTimeline.letter(n, at: t)
+                Text(verbatim: String(ch))
+                    .font(Font(DX.Typeface4.font(.display, size: 70 * s, weight: 800) as CTFont))
+                    .foregroundStyle(ink)
+                    .opacity(min(1, k / 0.45))
+                    .blur(radius: 6 * max(0, 1 - k / 0.45))
+                    .scaleEffect(0.92 + 0.08 * k, anchor: UnitPoint(x: 0.5, y: 0.9))
+                    .rotationEffect(.degrees(-6 * (1 - k)), anchor: UnitPoint(x: 0.5, y: 0.9))
+                    .offset(y: 40 * s * CGFloat(1 - k))
+                    .overlay(alignment: .bottomLeading) {
+                        if n == 3 {
+                            // The coral underline under "Xero", drawn left to right.
+                            GeometryReader { _ in
+                                SVGPathShape(d: "M4 11 C40 4 92 5 124 8 C154 10 178 12 196 5", box: CGSize(width: 200, height: 18))
+                                    .trim(from: 0, to: LaunchTimeline.underline(at: t))
+                                    .stroke(dark ? Color(hex: 0xFF8A65) : Color(hex: 0xFF7A55),
+                                            style: StrokeStyle(lineWidth: 5.5 * s, lineCap: .round))
+                                    .frame(width: 150 * s, height: 18 * s)
+                            }
+                            .frame(width: 150 * s, height: 18 * s)
+                            .offset(x: -2 * s, y: 15 * s)
+                        }
+                    }
+            }
+        }
         .accessibilityHidden(true)
     }
-
-    private static let trunk: Path = {
-        var p = Path()
-        p.move(to: CGPoint(x: 46, y: 58))
-        p.addCurve(to: CGPoint(x: 41, y: 138), control1: CGPoint(x: 47, y: 92), control2: CGPoint(x: 45, y: 118))
-        p.addLine(to: CGPoint(x: 59, y: 138))
-        p.addCurve(to: CGPoint(x: 54, y: 58), control1: CGPoint(x: 55, y: 118), control2: CGPoint(x: 53, y: 92))
-        p.closeSubpath()
-        return p
-    }()
 }
 
-struct ForestLeaf {
-    enum Layer {
-        case dark, mid, light
-        var color: Color {
-            switch self {
-            case .dark: ForestGrowColors.dark
-            case .mid: ForestGrowColors.mid
-            case .light: ForestGrowColors.light
-            }
-        }
+/// An SVG path in its own box, stretched to the frame.
+struct SVGPathShape: Shape {
+    let d: String
+    let box: CGSize
+    func path(in rect: CGRect) -> Path {
+        SVGPath.path(d).applying(CGAffineTransform(scaleX: rect.width / box.width, y: rect.height / box.height))
+            .offsetBy(dx: rect.minX, dy: rect.minY)
     }
-
-    let layer: Layer
-    let x: CGFloat
-    let y: CGFloat
-    let r: CGFloat
-    let start: Double
-    let duration: Double
-    let overshoot: CGFloat
-
-    /// 0 before the leaf pops, up past 1 at 60 % of its pop, then settles at 1.
-    func scale(at t: Double) -> CGFloat {
-        let split = start + duration * 0.6
-        if t <= start { return 0 }
-        if t < split { return overshoot * Ease.progress(t, from: start, to: split) }
-        return overshoot + (1 - overshoot) * Ease.progress(t, from: split, to: start + duration)
-    }
-
-    private static let dark: [(CGFloat, CGFloat, CGFloat)] = [
-        (14, 13.5, 12.5), (23, 23.8, 11), (32, 34, 11), (41, 44.2, 11), (50, 54.5, 13), (59, 64.8, 11), (68, 75, 11),
-        (77, 85.2, 11), (86, 95.5, 12.5), (86, 13.5, 12.5), (77, 23.8, 11), (68, 34, 11), (59, 44.2, 11),
-        (41, 64.8, 11), (32, 75, 11), (23, 85.2, 11), (14, 95.5, 12.5),
-    ]
-    private static let mid: [(CGFloat, CGFloat, CGFloat)] = [
-        (12.5, 10.5, 9), (21.5, 20.8, 7.9), (30.5, 31, 7.9), (39.5, 41.2, 7.9), (48.5, 51.5, 9.4), (57.5, 61.8, 7.9),
-        (66.5, 72, 7.9), (75.5, 82.2, 7.9), (84.5, 92.5, 9), (84.5, 10.5, 9), (75.5, 20.8, 7.9), (66.5, 31, 7.9),
-        (57.5, 41.2, 7.9), (39.5, 61.8, 7.9), (30.5, 72, 7.9), (21.5, 82.2, 7.9), (12.5, 92.5, 9),
-    ]
-    private static let light: [(CGFloat, CGFloat, CGFloat)] = [
-        (10.5, 7.5, 2.6), (28.5, 28, 2.6), (46.5, 48.5, 2.6), (64.5, 69, 2.6), (82.5, 89.5, 2.6), (82.5, 7.5, 2.6),
-        (64.5, 28, 2.6), (28.5, 69, 2.6), (10.5, 89.5, 2.6),
-    ]
-
-    /// Nearest the split in the trunk (50, 56) pops first. Dark leaves, then the lighter layer, then highlights.
-    /// Each layer spreads over its own reach, so the farthest highlight still lands by 1.58 s.
-    static let all: [ForestLeaf] = {
-        func distance(_ x: CGFloat, _ y: CGFloat) -> Double { Double(hypot(x - 50, y - 56)) }
-        func make(_ list: [(CGFloat, CGFloat, CGFloat)], _ layer: Layer, base: Double, spread: Double,
-                  duration: Double, overshoot: CGFloat) -> [ForestLeaf] {
-            let far = list.map { distance($0.0, $0.1) }.max() ?? 1
-            return list.map { x, y, r in
-                ForestLeaf(layer: layer, x: x, y: y, r: r, start: base + spread * distance(x, y) / far,
-                           duration: duration, overshoot: overshoot)
-            }
-        }
-        return make(dark, .dark, base: 0.62, spread: 0.5, duration: 0.3, overshoot: 1.18)
-            + make(mid, .mid, base: 0.72, spread: 0.5, duration: 0.28, overshoot: 1.12)
-            + make(light, .light, base: 1.08, spread: 0.3, duration: 0.2, overshoot: 1.4)
-    }()
 }
 
-/// The canvas's cubic-bezier(.3, .7, .4, 1), applied between two times.
+/// The kit's curves, applied between two times.
 enum Ease {
-    private static let curve = UnitCurve.bezier(startControlPoint: UnitPoint(x: 0.3, y: 0.7),
-                                                endControlPoint: UnitPoint(x: 0.4, y: 1))
+    private static let curve = UnitCurve.bezier(startControlPoint: UnitPoint(x: 0.3, y: 0.7), endControlPoint: UnitPoint(x: 0.4, y: 1))
+    private static let settleCurve = UnitCurve.bezier(startControlPoint: UnitPoint(x: 0.2, y: 0.8), endControlPoint: UnitPoint(x: 0.2, y: 1))
+    private static let sunCurve = UnitCurve.bezier(startControlPoint: UnitPoint(x: 0.25, y: 0.75), endControlPoint: UnitPoint(x: 0.25, y: 1))
+    /// cubic-bezier(.3, 1.3, .5, 1) and (.3, 1.25, .5, 1): soft springs that overshoot a little.
+    private static let springCurve = UnitCurve.bezier(startControlPoint: UnitPoint(x: 0.3, y: 1.3), endControlPoint: UnitPoint(x: 0.5, y: 1))
+    private static let overshootCurve = UnitCurve.bezier(startControlPoint: UnitPoint(x: 0.3, y: 1.25), endControlPoint: UnitPoint(x: 0.5, y: 1))
 
-    static func progress(_ t: Double, from a: Double, to b: Double) -> Double {
+    private static func apply(_ c: UnitCurve, _ t: Double, _ a: Double, _ b: Double) -> Double {
         guard t > a else { return 0 }
         guard t < b else { return 1 }
-        return curve.value(at: (t - a) / (b - a))
+        return c.value(at: (t - a) / (b - a))
     }
+
+    static func progress(_ t: Double, from a: Double, to b: Double) -> Double { apply(curve, t, a, b) }
+    static func settle(_ t: Double, from a: Double, to b: Double) -> Double { apply(settleCurve, t, a, b) }
+    static func sun(_ t: Double, from a: Double, to b: Double) -> Double { apply(sunCurve, t, a, b) }
+    static func spring(_ t: Double, from a: Double, to b: Double) -> Double { apply(springCurve, t, a, b) }
+    static func overshoot(_ t: Double, from a: Double, to b: Double) -> Double { apply(overshootCurve, t, a, b) }
 }

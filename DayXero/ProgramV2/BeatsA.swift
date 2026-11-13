@@ -72,7 +72,7 @@ struct QuizBeat: View {
                             OptionRow(text: option.text, selected: isRight, outlined: isPick && !isRight, dimmed: !isRight && !isPick) {
                                 if isRight || isPick {
                                     Text(isRight ? (isPick ? "Your pick · correct answer" : "Correct answer") : "Your pick")
-                                        .dxFont(12, weight: 700, style: .caption2).tracking(0.8).textCase(.uppercase)
+                                        .dxFont(12, weight: 700, style: .caption2).tracking(0.8)
                                         .foregroundStyle(isRight ? Read4.accent : Read4.muted)
                                 }
                             }

@@ -8,22 +8,21 @@ import UserNotifications
 
 private let shortDate = Date.FormatStyle.dateTime.weekday(.abbreviated).day().month(.abbreviated)
 
-// MARK: F01 Breathe · coral
+// MARK: F01 Breathe · apricot (v5)
 
 /// One slow breath before any question. Skip is there from the start (S27.10); the screen carries on by itself after
 /// two full 10 s breaths.
+///
+/// Motion (001): the three cream rings and Xero breathe as one, 4 s in and 6 s out; the word crossfades with the
+/// breath; the thin line at the foot fills toward the moment the screen carries on; Skip waits under it.
 struct BreatheScreen: View {
     let onDone: () -> Void
     private let motion = MotionPolicy()
+    @State private var opened = Date.now
+    @State private var total = 20.0
 
     var body: some View {
         VStack(spacing: 0) {
-            HStack {
-                Spacer()
-                Button("Skip", action: onDone)
-                    .buttonStyle(.dx(.quiet, on: .coral))
-            }
-            .padding(.horizontal, DX.Layout.gutter)
             Spacer(minLength: 12)
             ZStack {
                 // The rings, the words and Xero all breathe on the one reference clock (QW2). The rings used to count
@@ -33,7 +32,7 @@ struct BreatheScreen: View {
                     ZStack {
                         ForEach(0..<3) { ring in
                             Circle()
-                                .fill(DX.Fill.cream.opacity(0.16 - Double(ring) * 0.04))
+                                .fill(DX.Fill.cream.opacity(0.5 - Double(ring) * 0.14))
                                 .frame(width: 170 + CGFloat(ring) * 60, height: 170 + CGFloat(ring) * 60)
                                 .scaleEffect(0.72 + 0.28 * p)
                         }
@@ -54,10 +53,25 @@ struct BreatheScreen: View {
                 .padding(.horizontal, 40)
                 .padding(.top, 10)
             Spacer()
+            // v5 (001): Skip at the foot, under a thin line that fills toward the screen carrying on.
+            TimelineView(.animation(minimumInterval: 1 / 15)) { timeline in
+                let p = min(1, timeline.date.timeIntervalSince(opened) / total)
+                ZStack(alignment: .leading) {
+                    Capsule().fill(DX.Ground.apricot.track)
+                    Capsule().fill(DX.Ground.apricot.ink).frame(width: 132 * p)
+                }
+                .frame(width: 132, height: 3)
+            }
+            .accessibilityHidden(true)
+            Button("Skip", action: onDone)
+                .buttonStyle(.dx(.quiet, on: .coral))
+                .padding(.top, 18)
         }
         .padding(.vertical, DX.Space.s)
         .task {
-            try? await Task.sleep(for: .seconds(motion.reduce ? 5 : Self.autoAdvance(at: .now)))
+            total = motion.reduce ? 5 : Self.autoAdvance(at: .now)
+            opened = .now
+            try? await Task.sleep(for: .seconds(total))
             guard !Task.isCancelled else { return }
             onDone()
         }
@@ -235,17 +249,25 @@ struct QuitDayScreen: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
                     Text(model.name.isEmpty ? "Pick your Quit Day" : "Pick your Quit Day, \(model.name)")
-                        .dxType(.title).foregroundStyle(ground.ink)
+                        .dxType(.large).foregroundStyle(ground.ink)
+                        .fixedSize(horizontal: false, vertical: true)
                         .accessibilityAddTraits(.isHeader)
+                        .dxArrive(0)
                     Text("I recommend \(Text(model.recommendedQuitDay, format: shortDate).bold()) for a full 7-day prep. Ready sooner? Any day from \(Text(model.quitDayRange.lowerBound, format: shortDate).bold()) works. Keep using as normal until then.")
                         .dxType(.body).foregroundStyle(ground.muted)
                         .fixedSize(horizontal: false, vertical: true)
-                    dateStrip
-                    HStack {
-                        legend(DX.Fill.cardOnColour, "Prep · \(max(model.prepDays, 0)) days")
-                        Spacer()
-                        legend(ground.ink, "Quit Day")
+                    // v5 (010): the prep week on one card, prep days dotted, Quit Day in ink.
+                    VStack(alignment: .leading, spacing: 14) {
+                        dateStrip
+                        HStack {
+                            legend(TodayInk.coral, "Prep · \(max(model.prepDays, 0)) days")
+                            Spacer()
+                            legend(ground.ink, "Quit Day")
+                        }
                     }
+                    .padding(14)
+                    .dxCard(on: ground)
+                    .dxArrive(2)
                     Button("Pick another date") { picking = true }
                         .buttonStyle(.dx(.quiet, on: ground))
                 }
@@ -294,14 +316,16 @@ struct QuitDayScreen: View {
                 let prep = day < model.calendar.startOfDay(for: model.quitDay)
                 let selectable = model.quitDayRange.contains(day)
                 Button { model.quitDay = day } label: {
-                    VStack(spacing: 2) {
+                    VStack(spacing: 4) {
                         Text(day, format: .dateTime.weekday(.abbreviated)).dxType(.caption)
-                        Text(day, format: .dateTime.day()).dxType(.headline)
+                        Text(day, format: .dateTime.day()).dxFace(.display, 19, weight: 800, tracking: -0.4)
+                        Circle().fill(quit ? Color.clear : TodayInk.coral).frame(width: 6, height: 6)
+                            .opacity(prep ? 1 : 0)
                     }
-                    .foregroundStyle(quit ? ground.background : ground.ink)
-                    .frame(maxWidth: .infinity, minHeight: 58)
-                    .background(quit ? ground.ink : (prep ? DX.Fill.cardOnColour : Color.clear),
-                                in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    .foregroundStyle(quit ? Color(light: 0xFFF8EE, dark: 0x0E1322) : ground.ink)
+                    .frame(maxWidth: .infinity, minHeight: 72)
+                    .background(quit ? ground.ink : ground.card2,
+                                in: RoundedRectangle(cornerRadius: 12, style: .continuous))
                 }
                 .buttonStyle(.dxPress)
                 .disabled(!selectable)
@@ -316,20 +340,20 @@ struct QuitDayScreen: View {
 
     private func legend(_ color: Color, _ title: LocalizedStringKey) -> some View {
         HStack(spacing: 6) {
-            RoundedRectangle(cornerRadius: 4).fill(color).frame(width: 14, height: 14)
+            Circle().fill(color).frame(width: 8, height: 8)
             Text(title).dxType(.caption).foregroundStyle(ground.muted)
         }
     }
 }
 
-// MARK: F05 Your plan builds · mint
+// MARK: F05 Your plan builds · apricot (v5)
 
 struct BuildingScreen: View {
     let model: OnboardingModel
     @State private var shown = 0
     @State private var friends = false
     private let motion = MotionPolicy()
-    private let ground = DX.Ground.mint
+    private let ground = DX.Ground.apricot
 
     private struct Row: Identifiable {
         let id: Int
@@ -449,7 +473,7 @@ struct PlanRevealScreen: View {
     @Environment(Entitlement.self) private var entitlement
     @State private var paywall: PaywallModel?
     @State private var showPlans = false
-    private let ground = DX.Ground.mint
+    private let ground = DX.Ground.apricot
 
     private var annual: PlanOption? { paywall?.plans.first { $0.plan == .annual } }
 
@@ -457,11 +481,14 @@ struct PlanRevealScreen: View {
         VStack(spacing: 0) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Step \(model.stepNumber) of \(model.stepTotal)").dxType(.caption).textCase(.uppercase).foregroundStyle(ground.muted)
+                    Text("Step \(model.stepNumber) of \(model.stepTotal)").dxType(.caption).foregroundStyle(ground.muted)
                     MarkedTitle(String(localized: "Your plan is "), marking: String(localized: "ready"), color: DX.Mark.color(on: ground))
-                        .dxType(.title).foregroundStyle(ground.ink)
+                        .dxType(.large).foregroundStyle(ground.ink)
+                        .dxArrive(0)
                     Text(entitlement.isPro ? "Everything is unlocked." : "Prep 1 to 3 are on us. Nothing is charged today.")
                         .dxType(.body).foregroundStyle(ground.muted)
+                        .dxArrive(1)
+                    revealHero
                     savings
                     builtAround
                     includes
@@ -520,9 +547,45 @@ struct PlanRevealScreen: View {
         return others.joined(separator: " · ")
     }
 
+    /// 012: the Day Xero medallion waiting in a warm glow, Xero cheering on the hill beside it, the date under them.
+    private var revealHero: some View {
+        VStack(spacing: 6) {
+            ZStack(alignment: .bottomLeading) {
+                ZStack {
+                    Circle().fill(Color(light: (0xFFF8EE, 0.35), dark: (0xFFC38A, 0.06))).frame(width: 220, height: 220)
+                    Circle().fill(Color(light: (0xFFF8EE, 0.6), dark: (0xFFC38A, 0.10))).frame(width: 180, height: 180)
+                    DXBadge(.xero, state: .next(nil), size: 148)
+                        .dxStamp(delay: 0.5)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.leading, 70)
+                .padding(.bottom, 28)
+                // The hill runs off both edges without widening the column.
+                Knoll(kind: .big)
+                    .frame(height: 70)
+                    .padding(.horizontal, -40)
+                    .offset(y: 10)
+                XeroView(mood: .cheer, stage: 1, points: 104)
+                    .frame(width: 104, height: 104)
+                    .dxSettle(delay: 0.3)
+                    .padding(.leading, 18)
+                    .padding(.bottom, 26)
+            }
+            .frame(height: 236)
+            .clipped()
+            .accessibilityHidden(true)
+            Text(verbatim: "Day Xero · \(model.quitDay.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day()))")
+                .dxType(.headline)
+                .foregroundStyle(ground.ink)
+                .frame(maxWidth: .infinity)
+                .dxArrive(2)
+        }
+        .padding(.vertical, 6)
+    }
+
     private var savings: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text("Money you'll keep in year 1").dxType(.caption).textCase(.uppercase).foregroundStyle(ground.muted)
+            Text("Money you'll keep in year 1").dxType(.caption).foregroundStyle(ground.muted)
             Text(verbatim: model.stats.moneyPerYear.formatted(.currency(code: model.currencyCode).precision(.fractionLength(0))))
                 .dxType(.display).foregroundStyle(ground.ink)
                 .lineLimit(1).minimumScaleFactor(0.6)
@@ -538,7 +601,7 @@ struct PlanRevealScreen: View {
         let lines = Obstacle.planLines(for: model.obstacles)
         if !lines.isEmpty {
             VStack(alignment: .leading, spacing: 8) {
-                Text("Built around what gets in your way").dxType(.caption).textCase(.uppercase).foregroundStyle(ground.muted)
+                Text("Built around what gets in your way").dxType(.caption).foregroundStyle(ground.muted)
                 ForEach(Array(lines.enumerated()), id: \.offset) { _, line in
                     Label {
                         Text(line).dxType(.footnote).foregroundStyle(ground.ink).fixedSize(horizontal: false, vertical: true)
@@ -580,7 +643,7 @@ struct PlanRevealScreen: View {
         default: String(localized: "If you start it at Prep 4 on \(s), it runs to \(e). I'll remind you on \(r).")
         }
         return VStack(alignment: .leading, spacing: 6) {
-            Text("At Prep 4 · \(start.formatted(shortDate))").dxType(.caption).textCase(.uppercase)
+            Text("At Prep 4 · \(start.formatted(shortDate))").dxType(.caption)
                 .foregroundStyle(DX.Fill.cream.opacity(0.85))
             if let annual {
                 Text("\(days) days free, then \(annual.priceText) a year").dxType(.headline).foregroundStyle(DX.Fill.cream)
@@ -623,8 +686,10 @@ struct TrialScreen: View {
         VStack(spacing: 0) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 14) {
-                    Text("Two small nudges a day").dxType(.title).foregroundStyle(ground.ink)
+                    Text("Two small nudges a day").dxType(.large).foregroundStyle(ground.ink)
+                        .fixedSize(horizontal: false, vertical: true)
                         .accessibilityAddTraits(.isHeader)
+                        .dxArrive(0)
                     Text("Xero says good morning, Glim checks in at night. Anything more is your choice, in Settings. No guilt, ever, and quiet hours by default.")
                         .dxType(.body).foregroundStyle(ground.muted)
                         .fixedSize(horizontal: false, vertical: true)

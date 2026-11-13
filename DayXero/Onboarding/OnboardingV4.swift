@@ -1,13 +1,13 @@
 import DayXeroCore
 import SwiftUI
 
-/// v4 onboarding palette. Question content sits in an answer tray on the reading surface
-/// (white in light, #2A255F in dark), so it uses the reading ground's ink and muted colours.
+/// v5 onboarding palette (cook/site/screens/001-014): every question sits on Xero's apricot (the one navy in dark),
+/// answers are kit option rows on the ground's card, so ink and muted come from the apricot ground.
 enum Onb {
-    static let ink = DX.Ground.reading.ink
-    static let muted = DX.Ground.reading.muted
-    static let raised = DX.Fill.raised
-    static let surface = DX.Fill.surface
+    static let ink = DX.Ground.apricot.ink
+    static let muted = DX.Ground.apricot.muted
+    static let raised = DX.Ground.apricot.card
+    static let surface = DX.Ground.apricot.card2
     /// Text on an ink-filled chip.
     static let onInk = DX.Ground.reading.background
     static let hairline = Color(light: (0x1E1A3A, 0.12), dark: (0xFFFFFF, 0.14))
@@ -16,31 +16,24 @@ enum Onb {
 
     /// The ground each step sits on (design doc §10, F01–F07).
     static func ground(for step: OnboardingStep) -> DX.Ground {
-        switch step {
-        case .welcome, .quitDay, .trial: .apricot
-        case .building, .reveal: .mint
-        default: .lilac
-        }
+        // v5: every onboarding mockup, from the breath to the trial, sits on apricot.
+        _ = step
+        return .apricot
     }
 }
 
-/// The answer tray: the reading surface the controls sit on, under Xero's question.
+/// The answers under the question (v5): no tray and no "YOUR ANSWER" eyebrow; the option rows and chips sit on the
+/// ground in one 10 pt column (kit `.answers`). `label` is kept for call sites and no longer drawn.
 struct AnswerTrayCard<Content: View>: View {
-    var label: LocalizedStringKey? = "YOUR ANSWER"
+    var label: LocalizedStringKey? = nil
     @ViewBuilder let content: () -> Content
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            if let label {
-                Text(label).dxType(.caption).foregroundStyle(Onb.muted)
-                    .accessibilityHidden(true)
-            }
             content()
         }
         .foregroundStyle(Onb.ink)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(18)
-        .background(Onb.raised, in: RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
     }
 }
 
@@ -50,15 +43,15 @@ struct XeroBubble: View {
     var large = false
     /// Card on colour on the lilac chat ground. On the cream reading ground pass `DX.Fill.surface` and a hairline,
     /// or the bubble disappears into the page.
-    var fill: Color = DX.Fill.cardOnColour
-    var border: Color = .clear
+    var fill: Color = DX.Ground.apricot.card
+    var border: Color = DX.Ground.apricot.line
 
     var body: some View {
         let shape = UnevenRoundedRectangle(topLeadingRadius: 20, bottomLeadingRadius: 4,
                                            bottomTrailingRadius: 20, topTrailingRadius: 20, style: .continuous)
         text
             .dxType(large ? .headline : .body)
-            .foregroundStyle(DX.Ground.lilac.ink)
+            .foregroundStyle(Onb.ink)
             .fixedSize(horizontal: false, vertical: true)
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
@@ -69,19 +62,14 @@ struct XeroBubble: View {
     }
 }
 
-/// v4 progress bar: green fill on a soft track.
+/// The onboarding progress (v5 kit `.progress.sun`): the ink on the track with the sun riding its end.
 struct OnbProgressBar: View {
     let value: Double
     let ground: DX.Ground
 
     var body: some View {
-        GeometryReader { proxy in
-            ZStack(alignment: .leading) {
-                Capsule().fill(ground.ink.opacity(0.14))
-                Capsule().fill(DX.Fill.green).frame(width: proxy.size.width * min(1, max(0, value)))
-            }
-        }
-        .frame(height: 8)
+        DXProgress(value, sun: true)
+            .environment(\.dxGround, ground)
         .accessibilityElement()
         .accessibilityLabel(Text("Setup progress"))
         .accessibilityValue(Text("\(Int((value * 100).rounded())) percent"))
@@ -111,19 +99,25 @@ struct OnbOptionCard: View {
     }
 
     var body: some View {
+        // v5 kit `.opt` with a 52 pt art tile: the ground's card, a hairline; chosen, the warm tint, a 2 pt edge and the
+        // filled radio with a tick.
+        let g = DX.Ground.apricot
+        let shape = RoundedRectangle(cornerRadius: DX.Layout.optionRadius, style: .continuous)
         Button {
             taps += 1
             action()
         } label: {
-            HStack(spacing: 12) {
+            HStack(spacing: 14) {
                 if let glyph {
                     LogIcon(glyph: glyph, size: 40)
+                        .frame(width: 52, height: 52)
+                        .background(g.card2, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                 } else if let systemImage {
                     Image(systemName: systemImage)
-                        .font(.system(size: 17, weight: .semibold))
-                        .foregroundStyle(isSelected ? Onb.onInk : Onb.ink)
-                        .frame(width: 40, height: 40)
-                        .background(isSelected ? Onb.ink : Onb.raised, in: Circle())
+                        .font(.system(size: 19, weight: .semibold))
+                        .foregroundStyle(Onb.ink)
+                        .frame(width: 52, height: 52)
+                        .background(g.card2, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                         .accessibilityHidden(true)
                 }
                 VStack(alignment: .leading, spacing: 2) {
@@ -131,17 +125,16 @@ struct OnbOptionCard: View {
                     if let detail { Text(detail).dxType(.footnote).foregroundStyle(Onb.muted) }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
-                    .font(.system(size: 22))
-                    .foregroundStyle(isSelected ? DX.Fill.green : Onb.hairline)
-                    .accessibilityHidden(true)
+                .multilineTextAlignment(.leading)
+                DXRadio(isOn: isSelected, ground: g)
             }
-            .padding(14)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
             .frame(minHeight: 64)
-            .background(Onb.surface, in: RoundedRectangle(cornerRadius: DX.Layout.answerChipRadius + 4, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: DX.Layout.answerChipRadius + 4, style: .continuous)
-                .strokeBorder(isSelected ? Onb.ink : .clear, lineWidth: 2))
+            .background(isSelected ? g.selTint : g.card, in: shape)
+            .overlay(shape.strokeBorder(isSelected ? g.selEdge : g.line, lineWidth: isSelected ? 2 : 1))
             .contentShape(Rectangle())
+            .animation(DX.Move.arrive.speed(2.4), value: isSelected)
         }
         .buttonStyle(.dxPress)
         .sensoryFeedback(DX.Haptic.select, trigger: taps)
@@ -166,7 +159,7 @@ private struct OnbTextModifier: ViewModifier {
         case .cardHeading, .button: content.dxType(.headline).foregroundStyle(Onb.ink)
         case .body: content.dxType(.body).foregroundStyle(Onb.ink)
         case .subtitle: content.dxType(.footnote).foregroundStyle(Onb.muted)
-        case .micro: content.dxType(.caption).textCase(.uppercase).foregroundStyle(Onb.muted)
+        case .micro: content.dxType(.caption).foregroundStyle(Onb.muted)
         case .heroDenominator: content.dxType(.headline).foregroundStyle(Onb.muted).monospacedDigit()
         }
     }

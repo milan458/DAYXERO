@@ -322,7 +322,7 @@ struct HealthItemCard: View {
         Text(stateText)
             .dxFont(12, weight: 700, style: .caption2)
             .tracking(0.6)
-            .textCase(.uppercase)
+            
             .lineLimit(1)
             .foregroundStyle(state == .done ? DX.Fill.cream : isUnderWay ? Read4.onInk : Read4.muted)
             .padding(.vertical, 3).padding(.horizontal, 8)

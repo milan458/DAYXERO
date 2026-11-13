@@ -367,20 +367,24 @@ public struct NotificationPreview<Avatar: View>: View {
     }
 
     public var body: some View {
+        // v5 (013): a cream card (the navy card in dark), "DayXero · Xero" and the time, then the message.
         HStack(alignment: .top, spacing: 12) {
             avatar.frame(width: 40, height: 40).clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
             VStack(alignment: .leading, spacing: 2) {
                 HStack {
-                    Text("DAYXERO · \(sender.uppercased())").dxType(.caption)
+                    Text(verbatim: "DayXero · \(sender)").dxType(.caption)
                     Spacer()
                     Text(time).dxType(.caption)
                 }
-                .foregroundStyle(Color(hex: 0x5E5975))
-                Text(message).dxType(.footnote).foregroundStyle(DX.Fill.navy)
+                .foregroundStyle(Color(light: 0x1E1A3A, dark: 0xFFF8EE))
+                Text(message).dxType(.body).foregroundStyle(Color(light: 0x1E1A3A, dark: 0xFFF8EE))
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
-        .padding(14)
-        .background(DX.Fill.cream, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .padding(16)
+        .background(Color(light: 0xFFFCF7, dark: 0x182034), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(Color(light: (0x1E1A3A, 0), dark: (0xFFFFFF, 0.12)), lineWidth: 1))
+        .shadow(color: Color(light: (0x4A2810, 0.08), dark: (0x000000, 0)), radius: 10, y: 6)
         .accessibilityElement(children: .combine)
     }
 }

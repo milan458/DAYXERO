@@ -13,6 +13,27 @@ enum AppLinks {
 /// The full paywall (S3.1–S3.6), opened from "See all plans", Settings, Program, Today and the locked features.
 /// There is no paywall after onboarding (S27.2): the close button is always there and nothing here is a first run.
 /// Every plan is sold whenever the Quit Day is; the 7-day trial starts the day it's bought (MON-01).
+/// The paywall's palette (v5, cook/site/screens/014): Xero's apricot ground (the one navy in dark), kit cards and the
+/// warm selection; ticks in coral.
+///
+/// Motion (014): the title and Xero arrive (600ms, 90ms stagger); the three benefit rows tick in one by one; the plan
+/// rows settle (120ms apart) with the yearly row already chosen; the trial timeline draws left to right (900ms) and its
+/// three stops pop in as it reaches them; the button arrives last.
+enum PW {
+    static let ground = DX.Ground.apricot
+    static let background = DX.Ground.apricot.background
+    static let ink = DX.Ground.apricot.ink
+    static let muted = DX.Ground.apricot.muted
+    static let card = DX.Ground.apricot.card
+    static let surface = DX.Ground.apricot.card2
+    static let hairline = DX.Ground.apricot.line
+    static let faint = DX.Ground.apricot.ink.opacity(0.38)
+    static let accent = Color(hex: 0xFF7A55)
+    static let accentSoft = DX.Ground.apricot.selTint
+    static let onInk = Color(light: 0xFFF8EE, dark: 0x0E1322)
+    static let amber = Read4.amber
+}
+
 struct PaywallView: View {
     let name: String
     let quitDay: Date
@@ -56,7 +77,7 @@ struct PaywallView: View {
         }
         .animation(motion.animation(DX.Move.settle), value: model.phase)
         .animation(motion.animation(DX.Move.settle), value: model.notice != nil)
-        .background(Read4.background.ignoresSafeArea())
+        .background(PW.background.ignoresSafeArea())
         .task {
             model.quitDay = quitDay
             model.spend = spend ?? PaywallModel.Spend(profile: profiles.first)
@@ -101,7 +122,7 @@ struct PaywallView: View {
                 }
             }
             .dxFont(14, weight: 400, style: .footnote)
-            .foregroundStyle(Read4.muted)
+            .foregroundStyle(PW.muted)
             .fixedSize(horizontal: false, vertical: true)
             .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -119,14 +140,28 @@ struct PaywallView: View {
 
     private var main: some View {
         VStack(spacing: 0) {
-            header.padding(.horizontal, DX.Space.m).padding(.top, DX.Space.xs).dxReadableColumn()
+            header.padding(.horizontal, DX.Layout.gutter).padding(.top, DX.Space.xs).dxReadableColumn()
             ScrollView {
                 VStack(alignment: .leading, spacing: DX.Space.xs) {
-                    Text(verbatim: Self.readyTitle(name: name)).v4Text(.title).accessibilityAddTraits(.isHeader)
-                    Text("Everything for your \(quitDay, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)) Quit Day.")
-                        .v4Text(.subtitle)
+                    // v5 (014): the title beside Xero on a cream disc.
+                    HStack(alignment: .top, spacing: 12) {
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text(verbatim: Self.readyTitle(name: name)).dxType(.title).foregroundStyle(PW.ink)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .accessibilityAddTraits(.isHeader)
+                            Text("Everything for your \(quitDay, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)) Quit Day.")
+                                .dxType(.footnote).foregroundStyle(PW.muted)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        XeroView(mood: .hello, stage: 2, points: 72)
+                            .frame(width: 88, height: 88)
+                            .background(Color(light: 0xFFF8EE, dark: 0x182034), in: Circle())
+                            .dxSettle()
+                            .accessibilityHidden(true)
+                    }
+                    .dxArrive(0)
                     // MON-01: what the full program adds, in the order the person meets it.
-                    VStack(alignment: .leading, spacing: 7) {
+                    VStack(alignment: .leading, spacing: 10) {
                         included("Prep 4 to 7 and your Day Xero launch kit")
                         included("Weeks 1 to 4 of the program path")
                         included("Jelli's voice coaching")
@@ -135,7 +170,7 @@ struct PaywallView: View {
                     }
                     .padding(.top, DX.Space.s)
                     Text(FreeLine.text)
-                        .dxFont(14, weight: 400, style: .footnote).foregroundStyle(Read4.muted)
+                        .dxFont(14, weight: 400, style: .footnote).foregroundStyle(PW.muted)
                         .padding(.bottom, DX.Space.s)
                     anchor
                     plans
@@ -143,14 +178,14 @@ struct PaywallView: View {
                         footer.padding(.top, DX.Space.l)
                     }
                 }
-                .padding(.horizontal, DX.Space.m)
+                .padding(.horizontal, DX.Layout.gutter)
                 .dxReadableColumn()
                 .padding(.top, DX.Space.m)
                 .padding(.bottom, typeSize.isAccessibilitySize ? DX.Space.xl : 0)
             }
             if !typeSize.isAccessibilitySize {
                 footer
-                    .padding(.horizontal, DX.Space.m)
+                    .padding(.horizontal, DX.Layout.gutter)
                     .dxReadableColumn()
                     .padding(.bottom, DX.Space.xs)
             }
@@ -171,13 +206,12 @@ struct PaywallView: View {
                 model.dismissed()
                 onClose()
             } label: {
-                Image(systemName: "xmark").font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(Read4.muted)
-                    .frame(width: 36, height: 36)
-                    .background(Read4.card, in: Circle())
-                    .overlay(Circle().strokeBorder(Read4.hairline))
+                DXIcon(.close, size: 20, weight: 2.4)
+                    .foregroundStyle(PW.ink)
+                    .frame(width: 44, height: 44)
+                    .background(PW.surface, in: Circle())
             }
-            .buttonStyle(.plain)
+            .buttonStyle(.dxPress)
             .accessibilityLabel(Text("Close and continue with the free version"))
             Spacer()
             Button("Restore purchases") {
@@ -185,17 +219,25 @@ struct PaywallView: View {
                 Task { await model.restore() }
             }
                 .dxFont(14, weight: 500, style: .footnote)
-                .foregroundStyle(Read4.muted)
+                .foregroundStyle(PW.muted)
                 .buttonStyle(.plain)
         }
         .frame(minHeight: 44)
     }
 
     private func included(_ text: LocalizedStringKey) -> some View {
-        Label {
-            Text(text).dxFont(14, weight: 400, style: .subheadline).foregroundStyle(Read4.ink)
-        } icon: {
-            Image(systemName: "checkmark").font(.system(size: 12, weight: .bold)).foregroundStyle(Read4.accent)
+        // v5 (014): a coral scalloped tick, then the benefit.
+        HStack(spacing: 12) {
+            ZStack {
+                Box(d: DXBadge.scallop(cx: 50, cy: 50, r: 48, n: 10, a: 6)).fill(PW.accent)
+                DXIconShape(d: DX.Icon.check.d)
+                    .stroke(.white, style: StrokeStyle(lineWidth: 2.4, lineCap: .round, lineJoin: .round))
+                    .padding(5)
+            }
+            .frame(width: 22, height: 22)
+            .accessibilityHidden(true)
+            Text(text).dxType(.footnote).foregroundStyle(PW.ink)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 
@@ -204,7 +246,7 @@ struct PaywallView: View {
         VStack(spacing: DX.Space.xs) {
             if model.plans.isEmpty {
                 ForEach(0..<3, id: \.self) { _ in
-                    RoundedRectangle(cornerRadius: 20, style: .continuous).fill(Read4.surface).frame(height: 60)
+                    RoundedRectangle(cornerRadius: 20, style: .continuous).fill(PW.surface).frame(height: 60)
                 }
                 .accessibilityHidden(true)
             } else {
@@ -231,12 +273,12 @@ struct PaywallView: View {
                 Task { await model.purchase() }
             } label: {
                 if model.phase == .purchasing {
-                    ProgressView().tint(Read4.onInk)
+                    ProgressView().tint(PW.onInk)
                 } else {
                     Text(ctaTitle)
                 }
             }
-            .buttonStyle(.dx(.primary, on: .reading))
+            .buttonStyle(.dx(.primary, on: .apricot))
             .disabled(model.phase != .ready)
             .accessibilityIdentifier("paywall.cta")
             terms
@@ -260,7 +302,7 @@ struct PaywallView: View {
             }
         }
         .dxFont(14, weight: 400, style: .footnote)
-        .foregroundStyle(Read4.muted)
+        .foregroundStyle(PW.muted)
     }
 
     private var ctaTitle: LocalizedStringKey {
@@ -286,8 +328,8 @@ struct PaywallView: View {
             }
         }
         .dxFont(12, weight: 400, style: .caption2)
-        .foregroundStyle(Read4.muted)
-        .tint(Read4.muted)
+        .foregroundStyle(PW.muted)
+        .tint(PW.muted)
     }
 
     @ViewBuilder
@@ -305,7 +347,7 @@ struct PaywallView: View {
 
     private var failed: some View {
         VStack(spacing: 0) {
-            header.padding(.horizontal, DX.Space.m).padding(.top, DX.Space.xs).dxReadableColumn()
+            header.padding(.horizontal, DX.Layout.gutter).padding(.top, DX.Space.xs).dxReadableColumn()
             Spacer()
             V4StateView(.error, systemImage: "exclamationmark.circle", title: "Couldn't reach the App Store",
                         message: "Check your connection and try again. Prep 1 to 3, your counter and Craving SOS work without it.",
@@ -315,7 +357,7 @@ struct PaywallView: View {
                 model.dismissed()
                 onClose()
             }
-            .buttonStyle(.dx(.quiet, on: .reading))
+            .buttonStyle(.dx(.quiet, on: .apricot))
             .padding(.bottom, DX.Space.xs)
         }
     }
@@ -328,48 +370,52 @@ private struct PlanRow: View {
     let action: () -> Void
 
     var body: some View {
-        Button(action: action) {
-            HStack(spacing: DX.Space.s) {
+        let g = PW.ground
+        let shape = RoundedRectangle(cornerRadius: DX.Layout.optionRadius, style: .continuous)
+        return Button(action: action) {
+            HStack(spacing: 14) {
+                // The kit radio: a filled ink disc with a tick when chosen.
                 ZStack {
-                    Circle().strokeBorder(isSelected ? .clear : Read4.faint, lineWidth: 1.5)
                     if isSelected {
-                        Circle().fill(Read4.accent)
-                        Circle().fill(Color.black).frame(width: 7, height: 7)
+                        Circle().fill(g.sel)
+                        DXIconShape(d: DX.Icon.check.d)
+                            .stroke(g.selFg, style: StrokeStyle(lineWidth: 2.2, lineCap: .round, lineJoin: .round))
+                            .frame(width: 14, height: 14)
+                    } else {
+                        Circle().strokeBorder(PW.faint, lineWidth: 2)
                     }
                 }
-                .frame(width: 20, height: 20)
+                .frame(width: 24, height: 24)
                 VStack(alignment: .leading, spacing: 1) {
-                    Text(title).dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.ink)
-                    Text(detail).v4Text(.subtitle)
+                    Text(title).dxType(.headline).foregroundStyle(PW.ink)
+                    Text(detail).dxType(.footnote).foregroundStyle(PW.muted)
                 }
                 Spacer(minLength: DX.Space.xs)
                 VStack(alignment: .trailing, spacing: 1) {
-                    Text(verbatim: option.priceText).dxFont(16, weight: 700, style: .body)
-                        .monospacedDigit().foregroundStyle(Read4.ink)
-                    Text(period).dxFont(12, weight: 500, style: .caption2).foregroundStyle(Read4.muted)
+                    Text(verbatim: option.priceText).dxFace(.display, isSelected ? 22 : 17, weight: 800, tracking: -0.4)
+                        .monospacedDigit().foregroundStyle(PW.ink)
+                    Text(period).dxType(.caption).foregroundStyle(PW.muted)
                 }
             }
-            .padding(.vertical, 11)
-            .padding(.horizontal, 14)
-            .background(Read4.card, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-            .overlay(
-                RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .strokeBorder(isSelected ? Read4.accent : Read4.hairline, lineWidth: isSelected ? 1.5 : 1)
-            )
-            .overlay(alignment: .topTrailing) {
+            .padding(.vertical, 14)
+            .padding(.horizontal, 16)
+            .frame(minHeight: 64)
+            .background(isSelected ? g.selTint : g.card, in: shape)
+            .overlay(shape.strokeBorder(isSelected ? g.selEdge : g.line, lineWidth: isSelected ? 2 : 1))
+            .overlay(alignment: .topLeading) {
                 if let days = option.trialDays {
-                    Text(savingPercent.map { "\(days) DAYS FREE · SAVE \($0)%" as LocalizedStringKey } ?? "\(days) DAYS FREE")
-                        .dxFont(12, weight: 700, style: .caption2)
-                        .tracking(0.4)
-                        .foregroundStyle(DX.Fill.cream)
-                        .padding(.vertical, 3).padding(.horizontal, 8)
-                        .background(Read4.accent, in: Capsule())
-                        .offset(x: -14, y: -9)
+                    Text(savingPercent.map { "\(days) days free · save \($0)%" as LocalizedStringKey } ?? "\(days) days free")
+                        .dxType(.caption)
+                        .foregroundStyle(PW.onInk)
+                        .padding(.vertical, 4).padding(.horizontal, 10)
+                        .background(PW.ink, in: Capsule())
+                        .offset(x: 16, y: -12)
                 }
             }
             .contentShape(Rectangle())
+            .animation(DX.Move.arrive.speed(2.4), value: isSelected)
         }
-        .buttonStyle(.plain)
+        .buttonStyle(.dxPress)
         .sensoryFeedback(DX.Haptic.select, trigger: isSelected)
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
@@ -421,14 +467,14 @@ private struct PaywallMessage: View {
             Spacer()
             Image(systemName: systemImage)
                 .font(.system(size: 28, weight: .semibold))
-                .foregroundStyle(tint == .sage ? DX.Fill.cream : Read4.accent)
+                .foregroundStyle(tint == .sage ? DX.Fill.cream : PW.accent)
                 .frame(width: 76, height: 76)
-                .background(tint == .sage ? Read4.accent : Read4.accentSoft, in: Circle())
+                .background(tint == .sage ? PW.accent : PW.accentSoft, in: Circle())
                 .accessibilityHidden(true)
             Text(title).v4Text(.title).multilineTextAlignment(.center)
             Text(message).v4Text(.subtitle).multilineTextAlignment(.center)
             Spacer()
-            Button(button, action: action).buttonStyle(.dx(.primary, on: .reading))
+            Button(button, action: action).buttonStyle(.dx(.primary, on: .apricot))
         }
         .padding(.horizontal, DX.Space.l)
         .dxReadableColumn()
@@ -442,18 +488,18 @@ private struct NoticeBanner: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: 10) {
-            Image(systemName: "exclamationmark.circle").foregroundStyle(Read4.amber)
-            Text(text).dxFont(14, weight: 400, style: .footnote).foregroundStyle(Read4.ink)
+            Image(systemName: "exclamationmark.circle").foregroundStyle(PW.amber)
+            Text(text).dxFont(14, weight: 400, style: .footnote).foregroundStyle(PW.ink)
                 .frame(maxWidth: .infinity, alignment: .leading)
             Button(action: onDismiss) {
-                Image(systemName: "xmark").font(.system(size: 11, weight: .semibold)).foregroundStyle(Read4.muted)
+                Image(systemName: "xmark").font(.system(size: 11, weight: .semibold)).foregroundStyle(PW.muted)
             }
             .buttonStyle(.plain)
             .accessibilityLabel(Text("Dismiss"))
         }
         .padding(DX.Space.s)
-        .background(Read4.card, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(Read4.hairline))
+        .background(PW.card, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(PW.hairline))
         .shadow(color: Color.black.opacity(0.15), radius: 16, y: 8)
         .accessibilityElement(children: .combine)
     }
@@ -482,7 +528,7 @@ struct BillingSheet: View {
             }
             .padding(DX.Space.l)
         }
-        .background(Read4.background.ignoresSafeArea())
+        .background(PW.background.ignoresSafeArea())
         .manageSubscriptionsSheet(isPresented: $manage)
     }
 
@@ -490,10 +536,10 @@ struct BillingSheet: View {
         HStack(spacing: 10) {
             Text(verbatim: "\(number)")
                 .dxFont(12, weight: 700, style: .caption2)
-                .foregroundStyle(Read4.ink)
+                .foregroundStyle(PW.ink)
                 .frame(width: 24, height: 24)
-                .background(Read4.surface, in: Circle())
-            Text(text).dxFont(14, weight: 400, style: .footnote).foregroundStyle(Read4.ink)
+                .background(PW.surface, in: Circle())
+            Text(text).dxFont(14, weight: 400, style: .footnote).foregroundStyle(PW.ink)
         }
         .accessibilityElement(children: .combine)
     }
@@ -518,7 +564,7 @@ struct PriceAnchorLine: View {
         }
         .padding(.vertical, 10).padding(.horizontal, 14)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(ground == .reading ? Read4.accentSoft : DX.Fill.onColourCard(for: ground),
+        .background(ground == .reading ? PW.accentSoft : DX.Fill.onColourCard(for: ground),
                     in: RoundedRectangle(cornerRadius: 18, style: .continuous))
         .accessibilityElement(children: .combine)
     }
