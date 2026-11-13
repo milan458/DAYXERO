@@ -16,18 +16,18 @@
   .nights .hd { display: flex; align-items: center; gap: 12px; }
   .nights .hd .grow { flex: 1; min-width: 0; }
   .nights .hd .t-head { font-size: 17px; }
-  .nights .face { position: relative; width: 44px; height: 44px; display: grid; place-items: center; flex: none; }
+  .nights .face { position: relative; width: 52px; height: 52px; display: grid; place-items: center; flex: none; }
   .nights .face svg { position: absolute; inset: 0; }
   .nights .face .n { position: relative; font: 800 16px/1 var(--display); color: var(--fg); }
   .pips { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
   .pip { display: grid; justify-items: center; gap: 6px; }
   .pip b { width: 30px; height: 30px; border-radius: 99px; background: var(--fg); color: var(--g); display: grid; place-items: center; }
   .pip b svg { width: 16px; height: 16px; }
-  .pip .t-cap { color: var(--muted); font-size: 12px; white-space: nowrap; }
+  .pip .t-cap { color: var(--muted); font-size: 13px; font-weight: 600; white-space: nowrap; }
   .pip.tonight b { background: none; box-shadow: inset 0 0 0 2px var(--fg); border: 0; outline: 2px dashed color-mix(in srgb, var(--fg) 45%, transparent); outline-offset: 3px; color: var(--fg); }
   .play .pip.tonight b { animation: breathe2 10s ease-in-out infinite; }
   @keyframes breathe2 { 40% { outline-offset: 6px; } }
-  .pip.tonight .t-cap { color: var(--fg); }
+  .pip.tonight .t-cap { color: var(--fg); font-weight: 800; }
   .ci .btn svg { width: 18px; height: 18px; }
 </style>
 </head><body>
@@ -64,9 +64,9 @@
   const $ = s => document.querySelector(s);
   $('#sky').innerHTML = DX.nightSky({ w: 390, h: 430, moonX: 316, moonY: 200 });
   $('#glim').innerHTML = DX.char('glim', { mood: 'sleepy', size: 184 });
-  $('#b7').innerHTML = DX.badge({ kind: 'night', n: '', state: 'next', p: 6 / 7, size: 44, bare: true }) + '<span class="n">7</span>';
+  $('#b7').innerHTML = DX.badge({ kind: 'night', n: 7, state: 'next', p: 6 / 7, size: 52, bare: true });
   const dn = ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu'];
-  $('#pips').innerHTML = dn.map((d, i) => `<div class="pip" data-fade style="--d:${500 + i * 90}ms"><b>${DX.icon('check', { size: 16, w: 3 })}</b><span class="t-cap">${d}</span></div>`).join('') + `<div class="pip tonight"><b>${DX.icon('moon', { size: 16, w: 2.4 })}</b><span class="t-cap">Tonight</span></div>`;
+  $('#pips').innerHTML = dn.map((d, i) => `<div class="pip" data-fade style="--d:${500 + i * 90}ms"><b>${DX.icon('check', { size: 16, w: 3 })}</b><span class="t-cap">${d}</span></div>`).join('') + `<div class="pip tonight"><b>${DX.icon('moon', { size: 16, w: 2.4 })}</b><span class="t-cap">Fri</span></div>`;
   $('#go').innerHTML = DX.icon('moon', { w: 2.4 }) + 'Check in';
   $('.screen').insertAdjacentHTML('beforeend', DX.tabbar('today'));
   const fillBadge = (sel, from, to, delay) => DX.after(0, () => { const c = document.querySelector(sel + ' circle[transform]'); if (!c) return; const C = 2 * Math.PI * 48;

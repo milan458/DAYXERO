@@ -14,12 +14,9 @@
   .stamps { display: flex; justify-content: space-between; margin-top: 16px; }
   .stamps .pb { flex: none; border-radius: 99px; }
   .stamps .pb.next { box-shadow: 0 0 0 2.5px var(--card), 0 0 0 4.5px var(--fg); }
+  .stamps .pb:not(.next) { opacity: .42; filter: saturate(.5); }
+  .stamps { margin-left: -4px; margin-right: -4px; }
   .stamps .badge { gap: 0; }
-  .stamps .pb svg text { fill-opacity: .82; font-size: 40px; transform: translateY(13px); }
-  .stamps .pb svg path { display: none; }
-  .stamps .pb svg circle { stroke-opacity: .5; }
-  .stamps .pb.next svg > g { opacity: .6 !important; }
-  .stamps .pb.next svg text { transform: none; fill-opacity: 1; }
   .then { display: flex; align-items: center; gap: 14px; margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--line); }
   .then .t-cap { color: var(--muted); display: block; margin-top: 2px; }
   .lab { display: flex; justify-content: space-between; margin-top: 8px; }
@@ -69,7 +66,7 @@
   document.getElementById('hx').innerHTML = DX.char('xero', { mood: 'cheer', size: 168 });
   document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 40 });
   let h = '';
-  for (let i = 1; i <= 7; i++) h += `<span class="pb ${i === 1 ? 'next' : ''}" data-pop style="--i:0;--d:${700 + i * 90}ms">${DX.badge({ kind: 'prep', n: i, size: 42, state: i === 1 ? 'next' : 'locked', bare: true })}</span>`;
+  for (let i = 1; i <= 7; i++) h += `<span class="pb ${i === 1 ? 'next' : ''}" data-pop style="--i:0;--d:${700 + i * 90}ms">${DX.badge({ kind: 'prep', n: i, size: 44, bare: true })}</span>`;
   document.getElementById('stamps').innerHTML = h;
   document.getElementById('xb').innerHTML = DX.badge({ kind: 'xero', n: '0', state: 'next', p: 0, size: 52, bare: true });
   const bar = document.getElementById('bar');

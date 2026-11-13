@@ -5,19 +5,16 @@
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
 .f-apricot{--face:#FFC38A}.f-sky{--face:#9CCBFF}.f-mint{--face:#9FE3BC}.f-sun{--face:#FFD966}
-.pips{display:flex;gap:8px;justify-content:center;align-items:center}
-.pips i{width:20px;height:26px;border-radius:6px;background:var(--track);box-shadow:inset 0 0 0 1.5px var(--line)}
-.pips i.done{background:#FFD966 url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 20 26%27%3E%3Cpath d=%27M6 13.5l3 3 5.5-6%27 fill=%27none%27 stroke=%27%231E1A3A%27 stroke-width=%272.2%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E") center/100% 100% no-repeat;box-shadow:none}
 .nav .side{width:44px;text-align:right;flex:none}
 .wrap{position:absolute;top:110px;left:0;right:0;display:grid;align-content:start;gap:14px}
 .learn{display:grid;gap:18px;margin:6px 0 0;padding:0 2px}
 .learn li{display:flex;gap:12px;align-items:flex-start;list-style:none}
 .learn ul{margin:0;padding:0}
-.learn .tk{width:24px;height:24px;border-radius:99px;background:color-mix(in srgb,var(--tick) 22%,transparent);display:grid;place-items:center;flex:none;margin-top:1px}
+.learn .tk{width:26px;height:26px;border-radius:99px;background:var(--tick);display:grid;place-items:center;flex:none;margin-top:1px}
 .money{display:flex;align-items:center;gap:14px}
 .money .num{font:800 28px/1 var(--display);letter-spacing:-.5px}
 .money .pill{flex:none;text-align:right}
-.mission{position:absolute;top:432px;left:var(--gutter);right:var(--gutter);display:flex;gap:8px;align-items:flex-end;padding:22px 20px 20px;min-height:232px;box-shadow:0 14px 34px rgba(30,26,58,.10),inset 0 0 0 1px var(--line)}
+.mission{position:absolute;top:400px;left:var(--gutter);right:var(--gutter);display:flex;gap:8px;align-items:flex-end;padding:22px 20px 20px;min-height:232px;box-shadow:0 14px 34px rgba(30,26,58,.10),inset 0 0 0 1px var(--line)}
 [data-theme="dark"] .mission{box-shadow:0 16px 34px rgba(0,0,0,.35),inset 0 0 0 1px var(--line)}
 .mission .txt{align-self:stretch;align-content:start}
 .mission .t-title{margin-top:6px}
@@ -31,7 +28,7 @@
 <div class="screen" data-ground="table">
   <div class="nav">
     <button class="icon-btn" aria-label="Close" id="close"></button>
-    <div class="grow"><div class="pips"><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i></div></div>
+    <div class="grow"><div class="steps" aria-label="Card 5 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
     <span class="side t-foot muted">5 of 5</span>
   </div>
   <div class="wrap pad">
@@ -58,6 +55,6 @@ document.getElementById('close').innerHTML = DX.icon('close');
 document.getElementById('m-ic').innerHTML = DX.icon('sun', {size:16});
 document.getElementById('mx').innerHTML = DX.char('xero', {mood:'hello', size:112});
 [1,2,3].forEach(i => document.getElementById('tk' + i).innerHTML =
-  `<svg width="14" height="14" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="var(--tick)" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" class="draw" style="--len:24;--d:${300 + i * 160}ms;--dur:420ms"/></svg>`);
+  `<svg width="16" height="16" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" class="draw" style="--len:24;--d:${300 + i * 160}ms;--dur:420ms"/></svg>`);
 </script>
 </body></html>

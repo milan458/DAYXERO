@@ -11,8 +11,8 @@
   .hero .ck { position: absolute; right: 12px; top: 16px; }
   .txt { position: absolute; left: 0; right: 0; top: 326px; padding: 0 36px; text-align: center; }
   .txt .t-body { margin-top: 8px; color: var(--muted); }
-  .stack2 { position: absolute; left: 0; right: 0; top: 448px; padding: 0 var(--gutter); display: grid; gap: 10px; }
-  .waves { display: flex; align-items: center; gap: 16px; padding: 22px 22px 22px 22px; }
+  .stack2 { position: absolute; left: 0; right: 0; top: 456px; padding: 0 var(--gutter); display: grid; gap: 10px; }
+  .waves { display: flex; align-items: center; gap: 20px; padding: 20px 22px; }
   .waves .grow { flex: 1; min-width: 0; }
   .waves .big { display: flex; align-items: flex-start; gap: 6px; position: relative; }
   .waves .big .num { font-size: 48px; line-height: 1; }
@@ -26,6 +26,11 @@
   .waves .bd .face circle[transform] { stroke: #FFF8EE; stroke-width: 6; }
   .waves .bd .go span { margin-top: 2px; }
   .waves .bd .go span { display: block; font: 600 13px/1.3 var(--body); color: var(--muted); white-space: nowrap; }
+  .waves .medal { position: relative; width: 96px; height: 96px; flex: none; }
+  .waves .medal .mr { position: absolute; inset: 0; }
+  .waves .medal .mm { position: absolute; inset: 11px; opacity: .9; }
+  .waves .go { margin-top: 10px; font: 500 15px/1.3 var(--body); color: var(--fg); }
+  .waves .go b { font-weight: 800; }
   #ck [data-pop] { transform: none; }
   .play #ck [data-pop] { animation: dx-fade 500ms var(--ease) both; animation-delay: 0ms; }
   .dock .why { display: flex; justify-content: center; margin-top: 6px; }
@@ -52,11 +57,12 @@
 
   <div class="stack2">
     <div class="card waves" data-a style="--i:4">
+      <div class="medal" data-fade style="--d:1300ms"><div class="mr" id="mr"></div><div class="mm" id="bd"></div></div>
       <div class="grow">
         <div class="big"><span class="num" data-count="23" data-from="22" data-delay="900" data-dur="500">23</span><span class="plus float-up" style="--d:900ms">+1</span></div>
-        <p class="t-foot">waves ridden out &middot; 3 today</p>
+        <p class="t-foot">waves ridden out, 3 today</p>
+        <p class="go"><b>2 to go</b> to your 25 waves badge</p>
       </div>
-      <div class="bd" data-fade style="--d:1300ms"><div class="face" id="bd"></div><p class="go">2 to go<span>25 waves badge</span></p></div>
     </div>
   </div>
 
@@ -70,10 +76,10 @@
   $('#why').insertAdjacentHTML('beforeend', DX.icon('chev', { size: 16 }));
   $('#jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 190 });
   $('#ck').innerHTML = DX.check({ size: 48, color: 'var(--tick)', fg: '#0B2A1C' });
-  $('#bd').innerHTML = DX.badge({ kind: 'wave', n: '', state: 'next', p: .92, size: 84, bare: true }) + '<span class="n">25</span>';
+  $('#bd').innerHTML = DX.badge({ kind: 'wave', n: 25, size: 74, bare: true });
+  $('#mr').innerHTML = DX.ring({ size: 96, stroke: 5, p: 23 / 25, color: '#FFF8EE', track: 'rgba(255,248,238,.22)' });
   DX.after(2700, () => { $('#jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 190, animate: false }); });
   const fillBadge = (sel, from, to, delay) => DX.after(0, () => { const c = document.querySelector(sel + ' circle[transform]'); if (!c) return; const C = 2 * Math.PI * 48;
     c.animate([{ strokeDashoffset: C * (1 - from) }, { strokeDashoffset: C * (1 - to) }], { duration: 1000, delay, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' }); });
-  fillBadge('#bd', .88, .92, 1500);
 </script>
 </body></html>

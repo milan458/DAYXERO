@@ -7,9 +7,7 @@
   .hero { position: absolute; left: 0; right: 0; top: 0; height: 346px; border-radius: 0 0 36px 36px; overflow: hidden; }
   .hero .scene { position: absolute; inset: 0; }
   /* dark: pre-dawn, not brown. Navy night at the top lifting to a warm horizon glow. */
-  [data-theme="dark"] .hero .scene svg { filter: brightness(.82) saturate(.95); }
   [data-theme="dark"] .ringwrap .disc { background: rgba(255,195,138,.2); }
-  [data-theme="dark"] .hero .scene::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(14,19,34,.9) 0%, rgba(14,19,34,.62) 38%, rgba(14,19,34,.38) 70%, rgba(14,19,34,.55) 100%); }
   .ringwrap { position: absolute; left: 50%; top: 72px; width: 210px; height: 210px; margin-left: -105px; }
   .ringwrap .disc { position: absolute; inset: 21px; border-radius: 50%; background: rgba(255,248,238,.74); }
   .ringwrap .ring { position: absolute; inset: 0; --ringc: #1E1A3A; --ringt: rgba(255,248,238,.72); }
@@ -82,7 +80,7 @@
 </div>
 <script>
   const $ = s => document.querySelector(s);
-  $('#scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 390, h: 346, clarity: 85, noDusk: true });
+  $('#scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 390, h: 346, clarity: 85 });
   $('#ring').innerHTML = DX.ring({ size: 210, stroke: 11, p: 3 / 7, color: 'var(--ringc)', track: 'var(--ringt)', dot: true });
   $('#xero').innerHTML = DX.char('xero', { mood: 'hello', size: 138, stage: 1 });
   $('#ic-sess').innerHTML = DX.icon('headphones');

@@ -15,9 +15,9 @@
   .day.qd .t-cap { color: inherit; opacity: .8; }
   .day.qd .num { font-size: 23px; }
   .day.qd .sundot { width: 9px; height: 9px; border-radius: 99px; background: var(--sun); margin-top: 3px; }
-  .day { height: 88px; }
+  .day { height: 100px; }
   .day.qd { gap: 4px; padding-top: 2px; }
-  .stamp { display: none; width: 34px; height: 34px; }
+  .stamp { display: none; width: 40px; height: 40px; margin-top: 2px; }
   .stamp.show { display: block; }
   .day.qd.got .sundot { display: none; }
   .legend .t-cap { font-size: 14px; font-weight: 600; color: var(--fg); }
@@ -26,7 +26,7 @@
   .legend i { width: 10px; height: 10px; border-radius: 99px; background: #FF9A5C; display: block; }
   .legend i.qd2 { background: var(--sel); width: 10px; height: 10px; border-radius: 3px; }
   .legend .link { margin-left: auto; height: 32px; font-size: 14px; text-decoration: underline; text-underline-offset: 3px; }
-  .hero { position: absolute; left: 0; right: 0; top: 444px; display: grid; justify-items: center; gap: 6px; }
+  .hero { position: absolute; left: 0; right: 0; top: 456px; display: grid; justify-items: center; gap: 6px; }
   .hero .say .t-foot { font-size: 15px; }
   .hero .say { position: relative; height: 22px; width: 100%; text-align: center; }
   .hero .say p { position: absolute; inset: 0; transition: opacity .4s var(--ease), transform .4s var(--ease); }
@@ -78,7 +78,7 @@
   const days = [['Fri', 30], ['Sat', 31], ['Sun', 1], ['Mon', 2], ['Tue', 3], ['Wed', 4], ['Thu', 5]];
   $('days').innerHTML = days.map(([d, n], i) => `<div class="day" data-a style="--i:${i * .5 + 2.5}"><span class="t-cap">${d}</span><span class="num">${n}</span><span class="pd" data-pop style="--i:0;--d:${700 + i * 90}ms"></span></div>`).join('')
     + `<div class="day qd" data-a style="--i:6.5"><span class="t-cap">Fri</span><span class="num">6</span><span class="sundot"></span><div class="stamp" id="stamp" data-stamp style="--i:0"></div></div>`;
-  $('stamp').innerHTML = DX.badge({ kind: 'xero', n: '0', state: 'next', p: 1, size: 34, bare: true });
+  $('stamp').innerHTML = DX.badge({ kind: 'xero', n: '0', size: 40, bare: true });
   const setX = m => $('xero').innerHTML = DX.char('xero', { mood: m, size: 200 });
   setX('hello');
   const reset = () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '63.6%'); void bar.offsetWidth; bar.style.transition = '';

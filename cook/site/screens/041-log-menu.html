@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>041 Log sheet</title>
-<meta name="motion" content="Today (the dawn hero ring with Xero) softens under the navy blur scrim (250ms fade) while the sheet slides up from the bottom (450ms settle curve, light haptic as it lands). The three rows arrive with a 90ms stagger, then the Today so far card (cravings count up to 3) and the slip note. Tapping a + bumps the button and pushes the matching form.">
+<meta name="motion" content="Today (the dawn hero with Xero) stays sharp under a 40% navy scrim (250ms fade) while the sheet slides up from the bottom (450ms settle curve, light haptic as it lands). The three rows arrive with a 90ms stagger, then the slip note. Tapping a + bumps the button and pushes the matching form.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -9,7 +9,6 @@
   [data-theme="dark"] .today { background: #0E1322; --fg: var(--cream); --muted: #B3BACC; }
   .today .hero { position: absolute; left: 0; right: 0; top: 0; height: 322px; border-radius: 0 0 36px 36px; overflow: hidden; }
   .today .scene { position: absolute; inset: 0; }
-  [data-theme="dark"] .today .scene { filter: brightness(.8) saturate(.92); }
   .today .ringwrap { position: absolute; left: 50%; top: 60px; width: 200px; height: 200px; margin-left: -100px; }
   .today .disc { position: absolute; inset: 20px; border-radius: 50%; background: rgba(255,248,238,.74); }
   .today .ring { position: absolute; inset: 0; }
@@ -19,16 +18,16 @@
   .today .content { position: absolute; left: 0; right: 0; top: 340px; padding: 0 var(--gutter); }
   .today .content .t-foot { color: var(--muted); }
   .screen > .sbar { z-index: 45; color: #FFF8EE; }
-  .scrim { animation: none; background: rgba(14,19,34,.42); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
-  [data-theme="dark"] .scrim { background: rgba(8,11,22,.6); }
+  .scrim { animation: none; background: rgba(14,19,34,.4); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  [data-theme="dark"] .scrim { background: rgba(8,11,22,.4); }
   .play .scrim { animation: dx-fade 250ms var(--ease) both; }
   .play .sheet { animation: sheet-up 450ms var(--settle) both; }
   @keyframes sheet-up { from { transform: translateY(100%); } to { transform: none; } }
-  .sheet { padding-bottom: 40px; }
+  .sheet { padding-bottom: 34px; top: auto; height: auto; }
   .sheet-h { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px; }
   .sheet .row { min-height: 78px; }
   .sheet .row .t-foot { color: var(--muted); }
-  .add { width: 44px; height: 44px; border-radius: 99px; background: var(--card-2); display: grid; place-items: center; color: var(--fg); flex: none; }
+  .add { width: 44px; height: 44px; border-radius: 99px; background: var(--btn, #1E1A3A); display: grid; place-items: center; color: var(--btn-fg, #FFF8EE); flex: none; }
   .add svg { width: 20px; height: 20px; }
   .sofar { margin-top: 14px; padding: 14px 16px; }
   .sofar .h { display: flex; justify-content: space-between; align-items: baseline; }

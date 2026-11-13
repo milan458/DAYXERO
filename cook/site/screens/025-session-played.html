@@ -5,12 +5,6 @@
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
 .f-apricot{--face:#FFC38A}.f-sky{--face:#9CCBFF}.f-mint{--face:#9FE3BC}.f-sun{--face:#FFD966}
-.pips{display:flex;gap:8px;justify-content:center;align-items:center}
-.pips i{width:20px;height:26px;border-radius:6px;background:var(--track);box-shadow:inset 0 0 0 1.5px var(--line);position:relative;overflow:hidden}
-.pips i.done{background:#FFD966 url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 20 26%27%3E%3Cpath d=%27M6 13.5l3 3 5.5-6%27 fill=%27none%27 stroke=%27%231E1A3A%27 stroke-width=%272.2%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E") center/100% 100% no-repeat;box-shadow:none}
-.pips i.now{background:var(--card);box-shadow:inset 0 0 0 2.5px var(--fg)}
-.pips i.fill::after{content:"";position:absolute;inset:0;background:var(--track);transform-origin:top;transform:scaleY(0)}
-.play .pips i.fill::after{animation:pipfill 500ms var(--settle) both 1300ms}
 @keyframes pipfill{from{transform:scaleY(1)}to{transform:scaleY(0)}}
 .nav .side{width:44px;text-align:right;flex:none}
 .stage{position:absolute;top:126px;left:0;right:0;height:228px;perspective:900px}
@@ -24,9 +18,9 @@
 .side-f.back .pat{position:absolute;inset:0}
 .side-f.back .rim{position:absolute;inset:7px;border-radius:14px;box-shadow:inset 0 0 0 1.5px rgba(30,26,58,.22)}
 .side-f.back .chk{position:absolute;left:50%;top:44px;margin-left:-29px}
-.side-f.back .lb{position:absolute;left:0;right:0;bottom:16px;text-align:center}
+.side-f.back .lb{position:absolute;left:0;right:0;bottom:22px;text-align:center}
 .side-f.back .lb b{margin:0;font:800 17px/1.1 var(--display);letter-spacing:-.2px}
-.side-f.back .lb span{display:block;margin-top:3px;font:600 13px/1.2 var(--body);opacity:.8}
+.side-f.back .lb span{display:block;margin-top:4px;font:600 13px/1.2 var(--body);color:#4A3418}
 .side-f .ic{width:34px;height:34px;border-radius:99px;background:rgba(30,26,58,.1);display:grid;place-items:center}
 .side-f .ic svg{width:18px;height:18px}
 .side-f b{display:block;margin-top:8px;font:700 15px/1.1 var(--display)}
@@ -40,7 +34,7 @@
 <div class="screen" data-ground="table">
   <div class="nav">
     <button class="icon-btn" aria-label="Close" id="close"></button>
-    <div class="grow"><div class="pips"><i class="done fill"></i><i class="now" id="p2"></i><i></i><i></i><i></i></div></div>
+    <div class="grow"><div class="steps" aria-label="Card 2 of 5"><i class="on"></i><i class="now" id="p2"></i><i></i><i></i><i></i></div></div>
     <span class="side t-foot muted" id="lbl">2 of 5</span>
   </div>
   <div class="stage">
@@ -74,10 +68,10 @@ document.getElementById('mini').innerHTML = DX.icon('hand');
 document.getElementById('chk').innerHTML = DX.check({size:58, color:'#1E1A3A', fg:'#FFD966', d:1100});
 /* sun back face: a paper-cut sunburst behind the check, low hills at the foot */
 document.getElementById('pat').innerHTML = `<svg width="128" height="182" viewBox="0 0 128 182" aria-hidden="true">
-  <g transform="translate(64 73)">${Array.from({length:16}, (_, i) => `<path d="M0 -14 L7 -120 L-7 -120Z" fill="#F5B83D" fill-opacity="${i % 2 ? .28 : .5}" transform="rotate(${i * 22.5})"/>`).join('')}
+  <g transform="translate(64 73)">${Array.from({length:12}, (_, i) => `<path d="M0 -14 L6 -120 L-6 -120Z" fill="#F5B83D" fill-opacity=".16" transform="rotate(${i * 30})"/>`).join('')}
   <circle r="44" fill="#FFE38A"/><circle r="44" fill="none" stroke="#F5B83D" stroke-opacity=".6" stroke-width="2" stroke-dasharray="3 5"/></g>
-  <path d="M0 150 C30 138 56 142 80 148 C100 153 116 148 128 144 L128 182 L0 182Z" fill="#FFC38A"/>
-  <path d="M0 164 C34 156 66 160 92 166 C108 170 120 168 128 166 L128 182 L0 182Z" fill="#FFA86E"/></svg>`;
+  <path d="M0 168 C30 162 56 164 80 168 C100 171 116 168 128 166 L128 182 L0 182Z" fill="#FFC38A"/>
+  <path d="M0 176 C34 172 66 174 92 177 C108 179 120 178 128 177 L128 182 L0 182Z" fill="#FFA86E"/></svg>`;
 if (!DX.still) {
   const p2 = document.getElementById('p2'), lbl = document.getElementById('lbl');
   p2.classList.remove('now'); lbl.textContent = '1 of 5';

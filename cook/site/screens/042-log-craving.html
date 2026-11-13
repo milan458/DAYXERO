@@ -16,6 +16,8 @@
   .slider .kn { position: absolute; top: 2px; left: 44%; width: 28px; height: 28px; margin-left: -14px; border-radius: 99px; background: #fff; box-shadow: 0 2px 8px rgba(14,11,43,.25), inset 0 0 0 1px rgba(14,11,43,.08); transition: left 700ms var(--settle); }
   .scale { display: flex; justify-content: space-between; color: var(--muted); }
   .chips .chip { min-height: 42px; padding: 0 15px; font-size: 15px; }
+  .chips.trig { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; }
+  .chips.trig .chip { justify-content: center; padding: 0 8px; min-height: 46px; }
   .sosl { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); color: var(--muted); display: flex; align-items: center; gap: 6px; }
   .sosl a { color: var(--fg); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
   /* the same moon-faces as the evening check-in (054) */
@@ -45,9 +47,9 @@
 
       <div class="sec" data-a style="--i:2">
         <div class="sec-h"><h2 class="t-head">What set it off?</h2></div>
-        <div class="chips">
+        <div class="chips trig">
           <button class="chip on">Coffee</button><button class="chip">Stress</button><button class="chip">Waking up</button>
-          <button class="chip">After meals</button><button class="chip">Driving</button><button class="chip">Something else</button>
+          <button class="chip">After meals</button><button class="chip">Driving</button><button class="chip">Other</button>
         </div>
       </div>
 

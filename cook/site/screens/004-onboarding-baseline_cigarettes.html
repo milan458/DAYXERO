@@ -13,7 +13,7 @@
   .stepper { display: flex; align-items: center; gap: 12px; padding: 14px; }
   .stepper .icon-btn { width: 52px; height: 52px; }
   .stepper .icon-btn { background: var(--card-2); color: var(--fg); box-shadow: inset 0 0 0 1.5px var(--line); }
-  .stepper .icon-btn.plus { background: var(--sel); color: var(--sel-fg); box-shadow: none; }
+  .stepper .icon-btn { background: var(--sel); color: var(--sel-fg); box-shadow: none; }
   .stepper { padding: 20px 16px; }
   .stepper .mid { flex: 1; text-align: center; }
   .stepper .t-display { font-size: 52px; display: inline-block; }
@@ -43,7 +43,7 @@
   </div>
   <div class="answers">
     <div class="card stepper" data-a style="--i:2">
-      <button class="icon-btn" aria-label="Fewer" data-icon="minus"></button>
+      <button class="icon-btn minus" aria-label="Fewer" data-icon="minus"></button>
       <div class="mid"><span class="t-display num" id="n">12</span><p class="t-foot">cigarettes a day</p></div>
       <button class="icon-btn plus" id="plus" aria-label="More" data-icon="plus"></button>
     </div>

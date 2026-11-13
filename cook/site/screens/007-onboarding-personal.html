@@ -36,7 +36,7 @@
 
   <div class="q">
     <h1 class="t-large" data-a>Make this yours</h1>
-    <p class="t-body muted" data-a style="--i:1">Your name and your reason. Both stay on this phone.</p>
+    <p class="t-body muted" data-a style="--i:1">When a craving hits, I'll show you your reason. It stays on this phone.</p>
   </div>
   <div class="answers">
     <p class="t-foot lbl" data-a style="--i:2">First name or nickname</p>
@@ -45,7 +45,6 @@
     <div class="field reason" id="reason" data-a style="--i:3"><span id="rt">Run with Aria without stopping to catch my breath</span><i class="caret"></i></div>
     <p class="t-foot lbl" data-a style="--i:5">Or add one of these</p>
     <div class="chips adds" data-a style="--i:6"><button class="chip add">Save $2,555 a year</button><button class="chip add">Breathe easier</button><button class="chip add">More energy</button><button class="chip add">Be there for family</button></div>
-    <div class="card preview" data-a style="--i:7"><div class="xc" id="xp" data-settle style="--d:500ms"></div><div class="grow"><p class="t-cap muted">When a craving hits, I'll show you</p><p class="t-head q2">"Run with Aria without stopping<br>to catch my breath"</p></div></div>
   </div>
   <div class="dock">
     <button class="btn" data-a style="--i:7">Save my reason</button>
@@ -54,7 +53,6 @@
 </div>
 <script>
   document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
-  document.getElementById('xp').innerHTML = DX.char('xero', { mood: 'calm', size: 60 });
   document.getElementById('av').innerHTML = DX.char('xero', { mood: 'hello', size: 40 });
   const bar = document.getElementById('bar');
   DX.after(0, () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '36.4%'); void bar.offsetWidth; bar.style.transition = ''; });

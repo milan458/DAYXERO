@@ -4,19 +4,29 @@
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .wrap { padding: 108px var(--gutter) 0; display: grid; gap: 0; }
-  .hero { position: relative; height: 164px; border-radius: 26px; overflow: hidden; }
-  .hero .scene { position: absolute; inset: 0; }
-  .hero .jelli { position: absolute; left: 50%; bottom: 4px; margin-left: -60px; width: 120px; height: 120px; }
+  .wrap { padding: 104px var(--gutter) 0; display: grid; gap: 0; }
+  .hero { position: relative; height: 224px; border-radius: 26px; overflow: hidden; }
+  .hero svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .hero .jelli { position: absolute; left: 50%; bottom: 38px; margin-left: -58px; width: 116px; height: 116px; }
+  .sea .sky0 { stop-color: #CBE4F6; } .sea .sky1 { stop-color: #F4EEE4; }
+  .sea .sun { fill: #FFD98A; } .sea .rim { fill: #F7C46A; } .sea .halo { fill: #FFE7B0; opacity: .5; }
+  .sea .cl { fill: #FFFBF4; }
+  .sea .w1 { fill: #A9D0F0; } .sea .w2 { fill: #78B3E8; } .sea .w3 { fill: #4A8FDB; } .sea .w4 { fill: #2F6FC4; }
+  .sea .foam { fill: none; stroke: #FFF8EE; stroke-width: 3; stroke-linecap: round; opacity: .85; }
+  [data-theme="dark"] .sea .sky0 { stop-color: #1C2A55; } [data-theme="dark"] .sea .sky1 { stop-color: #33477A; }
+  [data-theme="dark"] .sea .sun { fill: #FFF1CF; } [data-theme="dark"] .sea .rim { fill: #F2DDA6; } [data-theme="dark"] .sea .halo { fill: #FFE6A8; opacity: .12; }
+  [data-theme="dark"] .sea .cl { fill: #4A5D92; }
+  [data-theme="dark"] .sea .w1 { fill: #3A5A9A; } [data-theme="dark"] .sea .w2 { fill: #2F4F8F; } [data-theme="dark"] .sea .w3 { fill: #26437E; } [data-theme="dark"] .sea .w4 { fill: #1B356A; }
+  [data-theme="dark"] .sea .foam { opacity: .5; }
   .wrap h1 { margin-top: 20px; }
   .wrap .lead { margin-top: 10px; color: var(--muted); }
-  .kept { margin-top: 18px; }
+  .kept { margin-top: 22px; }
   .kept .stat { display: grid; gap: 4px; }
   .kept .stat .num { font-size: 34px; }
   .kept .ic { color: var(--muted); display: flex; align-items: center; gap: 6px; }
   .kept .ic svg { width: 16px; height: 16px; }
   .week { display: flex; gap: 5px; margin-top: 8px; }
-  .week i { width: 14px; height: 14px; border-radius: 99px; background: var(--fg); }
+  .week { gap: 6px; } .week i { width: 8px; height: 16px; border-radius: 4px; background: #F2A93B; }
   .kept .progress { margin-top: 12px; height: 6px; }
   .next { margin-top: 12px; display: flex; gap: 14px; align-items: center; }
   .next .t-foot { color: var(--muted); }
@@ -31,8 +41,19 @@
   <div class="scroll">
     <div class="wrap">
       <div class="hero" data-a style="--i:0">
-        <div class="scene" id="scene"></div>
+        <svg class="sea" viewBox="0 0 346 224" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="sky0"/><stop offset="1" class="sky1"/></linearGradient><filter id="pc" x="-5%" y="-20%" width="110%" height="140%"><feDropShadow dx="0" dy="-2" stdDeviation="2.4" flood-color="#10204A" flood-opacity=".22"/></filter></defs>
+          <rect width="346" height="224" fill="url(#sk)"/>
+          <circle class="halo" cx="262" cy="58" r="46" opacity=".35"/><circle class="halo" cx="262" cy="58" r="36"/><circle class="rim" cx="262" cy="58" r="28"/><circle class="sun" cx="262" cy="58" r="24"/>
+          <path class="cl drift" d="M40 52 q8-16 26-10 q10-12 24-2 q14 0 12 12 H34 q-4-8 6-0z" filter="url(#pc)"/>
+          <path class="w1" filter="url(#pc)" d="M0 110 C40 98 80 98 120 108 S200 122 240 108 S318 94 346 104 V240 H0Z"/>
+          <path class="w2" filter="url(#pc)" d="M0 140 C50 126 92 128 132 138 S222 152 262 138 S322 126 346 134 V240 H0Z"/>
+        </svg>
         <div class="jelli" data-settle style="--d:200ms"><div class="bob" id="jelli"></div></div>
+        <svg class="sea" viewBox="0 0 346 224" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><filter id="pc2" x="-5%" y="-30%" width="110%" height="160%"><feDropShadow dx="0" dy="-2" stdDeviation="2.6" flood-color="#10204A" flood-opacity=".26"/></filter></defs>
+          <path class="w3" filter="url(#pc2)" d="M0 178 C36 166 76 166 112 176 S190 190 232 178 S310 164 346 174 V240 H0Z"/>
+          <path class="foam" d="M60 172 q10-5 20 0 M250 174 q10-5 20 0"/>
+          <path class="w4" filter="url(#pc2)" d="M0 204 C50 194 100 196 150 204 S250 214 346 200 V240 H0Z"/>
+        </svg>
       </div>
       <h1 class="t-large" data-a style="--i:1">Thanks for telling me.</h1>
       <p class="t-body lead" data-a style="--i:2">Nothing resets: your 7 days and Xero's sky stay as they are.</p>
@@ -48,16 +69,10 @@
           <span class="progress" style="--p:40%"><i></i></span>
         </div>
       </div>
-      <div class="card flat next" data-a style="--i:5">
-        <span class="ico-tile" data-ic="clock" style="background:var(--card)"></span>
-        <div class="grow">
-          <p class="t-head" style="font-size:17px">One small plan, about a minute</p>
-          <p class="t-foot">For the moment that set this off, so the next one is easier.</p>
-        </div>
-      </div>
     </div>
   </div>
   <div class="dock">
+    <p class="t-foot muted" data-a style="--i:5;text-align:center;margin-bottom:12px">One small plan for next time. About a minute.</p>
     <button class="btn" data-a style="--i:6" data-go="044-slip-talk">Let's make a plan</button>
     <button class="link" data-a style="--i:7">Not now</button>
   </div>
@@ -65,7 +80,6 @@
 <script>
   document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = DX.icon(e.dataset.ic));
   document.querySelectorAll('[data-ic2]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic2, { w: 2.4 })));
-  document.getElementById('jelli').innerHTML = DX.char('jelli', { mood: 'calm', size: 120 });
-  document.getElementById('scene').innerHTML = DX.char('horizon', { scene: 'sea', w: 346, h: 164, clarity: 90 });
+  document.getElementById('jelli').innerHTML = DX.char('jelli', { mood: 'calm', size: 116 });
 </script>
 </body></html>

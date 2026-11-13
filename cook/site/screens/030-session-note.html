@@ -5,10 +5,6 @@
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
 .f-apricot{--face:#FFC38A}.f-sky{--face:#9CCBFF}.f-mint{--face:#9FE3BC}.f-sun{--face:#FFD966}
-.pips{display:flex;gap:8px;justify-content:center;align-items:center}
-.pips i{width:20px;height:26px;border-radius:6px;background:var(--track);box-shadow:inset 0 0 0 1.5px var(--line)}
-.pips i.done{background:#FFD966 url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 20 26%27%3E%3Cpath d=%27M6 13.5l3 3 5.5-6%27 fill=%27none%27 stroke=%27%231E1A3A%27 stroke-width=%272.2%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E") center/100% 100% no-repeat;box-shadow:none}
-.pips i.now{background:var(--card);box-shadow:inset 0 0 0 2.5px var(--fg)}
 .nav .side{width:44px;text-align:right;flex:none}
 .face{background:var(--face);color:#1E1A3A;border-radius:26px;overflow:hidden;box-shadow:0 14px 28px rgba(60,40,20,.14)}
 [data-theme="dark"] .face{box-shadow:0 18px 34px rgba(0,0,0,.4)}
@@ -32,7 +28,7 @@
 <div class="screen" data-ground="table">
   <div class="nav">
     <button class="icon-btn" aria-label="Close" id="close"></button>
-    <div class="grow"><div class="pips"><i class="done"></i><i class="now"></i><i></i><i></i><i></i></div></div>
+    <div class="grow"><div class="steps" aria-label="Card 2 of 5"><i class="on"></i><i class="now"></i><i></i><i></i><i></i></div></div>
     <span class="side t-foot muted">2 of 5</span>
   </div>
   <div class="scroll" style="padding-top:112px">
@@ -74,8 +70,8 @@ document.getElementById('art').innerHTML = `<svg width="100%" height="136" viewB
   <path d="M0 112 C60 104 120 118 190 110 S300 102 346 108 V136 H0z" fill="#86BDF8" opacity=".55"/>
   <path d="M26 104 C54 104 70 56 98 56 C112 56 120 50 128 42 C134 36 140 32 150 32 C206 32 262 104 322 104" fill="none" stroke="#1E1A3A" stroke-opacity=".75" stroke-width="3.5" stroke-linecap="round" class="draw" style="--len:380;--d:400ms;--dur:1600ms"/>
   <circle cx="150" cy="32" r="7" fill="#1E1A3A" data-pop style="transform-origin:150px 32px;--d:1900ms"/>
-  <text x="62" y="46" font-family="DM Sans, sans-serif" font-weight="700" font-size="13" fill="#1E1A3A" fill-opacity=".72" text-anchor="middle">In</text>
-  <text x="150" y="22" font-family="DM Sans, sans-serif" font-weight="700" font-size="13" fill="#1E1A3A" fill-opacity=".72" text-anchor="middle">A little more</text>
-  <text x="282" y="52" font-family="DM Sans, sans-serif" font-weight="700" font-size="13" fill="#1E1A3A" fill-opacity=".72" text-anchor="middle">Long, slow out</text></svg>`;
+  <text x="62" y="46" font-family="DM Sans, sans-serif" font-weight="700" font-size="14.5" fill="#1E1A3A" fill-opacity=".92" text-anchor="middle">In</text>
+  <text x="150" y="22" font-family="DM Sans, sans-serif" font-weight="700" font-size="14.5" fill="#1E1A3A" fill-opacity=".92" text-anchor="middle">A little more</text>
+  <text x="282" y="52" font-family="DM Sans, sans-serif" font-weight="700" font-size="14.5" fill="#1E1A3A" fill-opacity=".92" text-anchor="middle">Long, slow out</text></svg>`;
 </script>
 </body></html>

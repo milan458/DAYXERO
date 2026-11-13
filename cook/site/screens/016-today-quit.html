@@ -7,11 +7,9 @@
   .hero { position: absolute; left: 0; right: 0; top: 0; height: 344px; border-radius: 0 0 36px 36px; overflow: hidden; }
   .hero .scene { position: absolute; inset: 0; }
   /* dark: pre-dawn, not brown. Navy night at the top lifting to a warm horizon glow. */
-  [data-theme="dark"] .hero .scene svg { filter: brightness(.82) saturate(.95); }
   [data-theme="dark"] .ringwrap .disc { background: rgba(255,195,138,.2); }
-  [data-theme="dark"] .hero .scene::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(14,19,34,.9) 0%, rgba(14,19,34,.62) 38%, rgba(14,19,34,.38) 70%, rgba(14,19,34,.55) 100%); }
   .ringwrap { position: absolute; left: 50%; top: 70px; width: 204px; height: 204px; margin-left: -102px; }
-  .ringwrap .ring { --ringc: #FFF8EE; }
+  .ringwrap .ring { --ringc: #1E1A3A; }
   [data-theme="dark"] .ringwrap .ring { --ringc: #FFC38A; }
   .ringwrap .disc { position: absolute; inset: 20px; border-radius: 50%; background: rgba(255,248,238,.74); }
   .ringwrap .ring { position: absolute; inset: 0; }
@@ -25,14 +23,15 @@
   .content h1 { margin-top: 4px; }
   .kept { margin-top: 8px; color: var(--muted); }
   .kept b { color: var(--fg); font-weight: 700; }
-  .newb { margin-top: 26px; display: flex; align-items: center; gap: 16px; padding: 18px 18px; }
+  .newb { margin-top: 26px; display: flex; align-items: center; gap: 14px; padding: 18px 16px; }
   .newb .grow { flex: 1; min-width: 0; }
+  .newb .t-head { white-space: nowrap; }
   .newb .t-foot { color: var(--muted); }
-  .newb .medal { width: 64px; height: 64px; border-radius: 99px; flex: none; }
-  .newb .nextb { flex: none; display: grid; justify-items: center; gap: 4px; padding-left: 16px; border-left: 1px solid var(--line); }
-  .newb .nextb .face { position: relative; width: 52px; height: 52px; display: grid; place-items: center; }
+  .newb .medal { width: 76px; height: 76px; border-radius: 99px; flex: none; }
+  .newb .nextb { flex: none; display: grid; justify-items: center; gap: 4px; padding-left: 14px; border-left: 1px solid var(--line); }
+  .newb .nextb .face { position: relative; width: 64px; height: 64px; display: grid; place-items: center; }
   .newb .nextb .face svg { position: absolute; inset: 0; }
-  .newb .nextb .n { position: relative; font: 800 17px/1 var(--display); color: var(--fg); letter-spacing: -.4px; }
+  .newb .nextb .n { position: relative; font: 800 20px/1 var(--display); color: var(--fg); letter-spacing: -.4px; }
   .newb .nextb .t-cap { color: var(--fg); font-size: 13px; }
   .sess { margin-top: 16px; display: flex; align-items: center; gap: 14px; padding: 18px 18px; }
   .sess .grow { flex: 1; min-width: 0; }
@@ -78,12 +77,12 @@
 </div>
 <script>
   const $ = s => document.querySelector(s);
-  $('#scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 390, h: 344, clarity: 90, noDusk: true });
-  $('#ring').innerHTML = DX.ring({ size: 204, stroke: 11, p: 1, color: 'var(--ringc)', track: 'rgba(255,248,238,.3)' });
+  $('#scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 390, h: 344, clarity: 90 });
+  $('#ring').innerHTML = DX.ring({ size: 204, stroke: 11, p: 1, color: 'var(--ringc)', track: 'rgba(255,248,238,.72)' });
   const xero = mood => DX.char('xero', { mood, size: 136, stage: 2 });
   $('#xero').innerHTML = xero('hello');
-  $('#b7').innerHTML = DX.badge({ kind: 'day', n: 7, size: 64, bare: true });
-  $('#b14').innerHTML = `<div class="face">${DX.badge({ kind: 'day', n: '', state: 'next', p: .5, size: 52, bare: true })}<span class="n">14</span></div><span class="t-cap">7 to go</span>`;
+  $('#b7').innerHTML = DX.badge({ kind: 'day', n: 7, size: 76, bare: true });
+  $('#b14').innerHTML = `<div class="face">${DX.badge({ kind: 'day', n: '', state: 'next', p: .5, size: 64, bare: true })}<span class="n">14</span></div><span class="t-cap">7 to go</span>`;
   $('#start').innerHTML = DX.icon('play', { fill: 'currentColor', w: 1.5 }) + 'Start';
   $('.screen').insertAdjacentHTML('beforeend', DX.tabbar('today'));
   DX.after(1650, () => { $('#xero').innerHTML = xero('cheer'); });

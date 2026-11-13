@@ -1,13 +1,14 @@
 # Cook ledger: DayXero UI/UX redesign
 
 Started: 2026-11-13 16:50 UTC
-Time: cap 2h (ends 18:50 UTC)
+Time: cap 2h lifted at 17:57 by the user ("keep going till it hits 9.2"); run continues until the bar is met
 Bar: every screen >= 9.2 overall (light and dark), critic median after calibration
 Calibration offset: anchored critics (see BRIEF); residual measured in round 1
 Gate: stills approved [no]
 Best so far: none yet
 
 ## Decisions
+- 17:57 Plateau plan: rounds 1-3 moved 8.2 -> 8.3 with fixes; next lever is reduction (Headspace-style: one art, one headline, few elements per screen), per-section critics with full-size (390px) tiles so type is judged at real size, and a fixer-critic loop per section.
 - 17:08 Night ground for Glim: Midnight meadow (direction A of cook/night-directions.png) replaces teal after user rejected the flat swatches; full sky art makes night read rich without glare.
 - 17:04 (superseded) Night ground for Glim: deep teal night #152733 / #0C1A23 chosen from 6 candidates (scratchpad night.png): dimmest comfortable option that still separates from reading navy and ocean; Glim's purple and yellow glow read best on it. Glim's own design unchanged.
 - 16:55 Deliverable is a multi-file Artifact: kit (tokens, components, motion, characters) + one HTML file per screen + gallery index, because 70 screens x 2 modes need one shared system to stay consistent.
@@ -27,6 +28,7 @@ Best so far: none yet
 - 17:22 Prep week aligned to the real program: today is Mon Nov 2, Prep 4 The stress loop (program.json), session cards use the real Prep 4 card titles.
 
 ## User feedback inbox
+- 17:57 "keep going till it hits 9.2" | open: cap lifted, rounds continue until critic median >= 9.2
 - 17:03 "the dark navy purple ... background, even when the evening glim comes in, it seems very shiny for anybody's eyes ... explore ... some other color" | round 1 | teal rejected ("No, they all look bad" 17:06, about flat swatches); 4 full-screen directions rendered (cook/night-directions.png); A Midnight meadow applied: ground #0F1B33 / #0A1326, DX.nightSky art
 - 16:50 "keep dayxero's identity, but tighten it ... so many colors" | open
 - 16:50 "finishing actions and completion animations" missing | open

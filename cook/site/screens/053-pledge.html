@@ -15,7 +15,9 @@
   [data-theme="dark"] .nav .icon-btn.on-art { background: rgba(14,19,34,.55); color: var(--cream); }
   .scene svg circle.sunmove { transition: transform 1.6s var(--settle); }
   .scene svg rect.hazemove { transition: opacity 1.6s var(--ease); }
-  .up .scene svg circle.sunmove { transform: translateY(-30px); }
+  .up .scene svg circle.sunmove { transform: translate(92px, -44px) scale(.62); }
+  .scene svg circle.sunmove { stroke: #FFE9B8; stroke-width: 10; stroke-opacity: .55; filter: drop-shadow(0 0 22px rgba(255,214,130,.75)); }
+  [data-theme="dark"] .scene svg circle.sunmove { fill-opacity: .55; stroke: #FFE9B8; stroke-opacity: .25; stroke-width: 18; filter: blur(3px) drop-shadow(0 0 30px rgba(255,214,150,.6)); }
   .xero { position: absolute; left: 50%; top: 206px; width: 200px; height: 200px; margin-left: -100px; }
   .nav { top: 50px; }
   .body { position: absolute; left: 0; right: 0; top: 414px; padding: 0 var(--gutter); text-align: center; }
@@ -53,7 +55,7 @@
   const scene = document.getElementById('scene'), xero = document.getElementById('xero'), sc = document.getElementById('sc');
   scene.insertAdjacentHTML('afterbegin', DX.char('horizon', { scene: 'dawn', w: 390, h: 420, clarity: 40, noDusk: true }));
   const svg = scene.querySelector('svg');
-  svg.querySelectorAll('circle').forEach(c => { const r = c.getAttribute('r'); if (r === '70' || r === '130') { c.classList.add('sunmove'); c.style.transformBox = 'view-box'; } });
+  svg.querySelectorAll('circle').forEach(c => { const r = c.getAttribute('r'); if (r === '70' || r === '130') { c.classList.add('sunmove'); c.style.transformBox = 'fill-box'; c.style.transformOrigin = 'center'; } });
   svg.querySelectorAll('rect').forEach(r => { if (r.getAttribute('fill') && r.getAttribute('fill').startsWith('#') && +r.getAttribute('opacity') > 0) { r.classList.add('hazemove'); r.dataset.o = r.getAttribute('opacity'); } });
   xero.innerHTML = DX.char('xero', { mood: 'hello', size: 200 });
   function pledged() {

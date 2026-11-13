@@ -19,7 +19,7 @@
   .reason .grow { flex: 1; min-width: 0; }
   .reason .t-foot { color: var(--muted); }
   .reason .t-head { margin-top: 4px; font-size: 17px; }
-  .dock .two { display: grid; grid-template-columns: 1.35fr 1fr; gap: 10px; }
+  .dock .strong { color: var(--fg); opacity: 1; font-size: 16px; font-weight: 700; }
   .dock .links { display: flex; justify-content: center; align-items: center; gap: 4px; }
   .dock .links .link { padding: 0 10px; color: var(--fg); opacity: 1; }
   .dock .links i { width: 4px; height: 4px; border-radius: 99px; background: var(--muted); opacity: .7; }
@@ -57,10 +57,8 @@
   </div>
 
   <div class="dock">
-    <div class="two" data-a style="--i:6;--d:200ms">
-      <button class="btn" data-go="020-sos-passed">It passed</button>
-      <button class="btn ghost">Still strong</button>
-    </div>
+    <button class="btn" data-a style="--i:6;--d:200ms" data-go="020-sos-passed">It passed</button>
+    <button class="link strong" data-a style="--i:6;--d:200ms">Still strong</button>
     <div class="links" data-a style="--i:7;--d:200ms">
       <button class="link">Text a friend</button><i></i><button class="link" data-go="021-sos-slipped">I slipped</button>
     </div>
