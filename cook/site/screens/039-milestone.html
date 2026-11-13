@@ -64,7 +64,7 @@
   /* the kit day badge: the 7 stands alone on a clean face; its little sunrise vignette (hills and sun) is lowered to a band
      along the bottom of the face, well below the numeral */
   document.getElementById('medal').innerHTML = DX.badge({ kind: 'day', n: 7, size: 160, bare: true })
-    .replace('<circle cx="66" cy="64" r="12"', '<circle cx="66" cy="81" r="6.5"')
+    .replace(/<circle cx="[\d.]+" cy="[\d.]+" r="[\d.]+" fill="#FFD966"\/>/, '<circle cx="66" cy="81" r="6.5" fill="#FFD966"/>')
     .replace('M0 74 C24 62 48 66 70 72 S96 70 100 68 V100 H0z', 'M0 83 C24 77 48 79 70 82.5 S96 81 100 80 V100 H0z')
     .replace('M0 84 C30 76 60 90 100 80 V100 H0z', 'M0 90 C30 86 60 94 100 88.5 V100 H0z');
   document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'cheer', size: 100 });

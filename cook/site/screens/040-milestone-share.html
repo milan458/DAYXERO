@@ -77,7 +77,7 @@
   document.getElementById('medal').innerHTML = DX.badge({ kind: 'day', n: '', size: 88, bare: true })
     .replace('<svg ', '<svg ').replace(/(<svg[^>]*>)/, '$1<defs><linearGradient id="shSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF8A66"/><stop offset=".55" stop-color="#FFB27C"/><stop offset="1" stop-color="#FFE0B0"/></linearGradient><radialGradient id="shGlow"><stop offset=".3" stop-color="#FFF6C8" stop-opacity=".8"/><stop offset="1" stop-color="#FFF6C8" stop-opacity="0"/></radialGradient></defs>')
     .replace('r="39" fill="#FFC38A"', 'r="39" fill="url(#shSky)"')
-    .replace('<circle cx="66" cy="64" r="12" fill="#FFD966"/>', '<circle cx="50" cy="62" r="30" fill="url(#shGlow)"/><circle cx="50" cy="64" r="19" fill="#FFD966"/>');
+    .replace(/<circle cx="[\d.]+" cy="[\d.]+" r="[\d.]+" fill="#FFD966"\/>/, '<circle cx="50" cy="62" r="30" fill="url(#shGlow)"/><circle cx="50" cy="64" r="19" fill="#FFD966"/>');
   document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'cheer', size: 84, stage: 3 });
   const t = document.getElementById('t-cig'), l = document.getElementById('l-cig'), card = document.getElementById('card');
   DX.after(0, () => { t.classList.remove('on'); l.classList.add('off'); });
