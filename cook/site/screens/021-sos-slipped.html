@@ -1,23 +1,35 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>021 After a slip, plan</title>
-<meta name="motion" content="Quiet tier, no springs. The paper-cut sea card builds back to front: the four wave layers rise 40px into place 100ms apart (900ms each) while Jelli (calm) settles down into the water between them (900ms), then keeps a slow bob, half in the sea; the small sun fades in last (in dark mode a warm, low sun sitting on the water with a horizon glow). The title and the progress note arrive with a 90ms stagger, then the if-then line and its three option rows settle in one by one (120ms apart); the chosen row carries a warm apricot tint and its tick. On Save the button turns to its done state and a soft success haptic plays.">
+<meta name="motion" content="Quiet tier, no springs. The paper-cut sea card builds back to front: the four wave layers rise 40px into place 100ms apart (900ms each) while Jelli (calm) settles down into the water between them (900ms), then keeps a slow bob, half in the sea; the small sun fades in last (in dark mode a warm, low sun sitting on the water with a horizon glow). The title and the progress note arrive with a 90ms stagger, then the if-then line, whose 'coffee' token is tappable (it opens the short moment sheet: Coffee, Stress, After a meal, Something else; its chevron nudges down once at 900ms), and its three option rows settle in one by one (120ms apart); the chosen row carries the warm selection (apricot tint in light, amber at about 15% with an apricot outline in dark) and its tick. On Save the button turns to its done state and a soft success haptic plays.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
   .hero { position: absolute; left: var(--gutter); right: var(--gutter); top: 104px; height: 184px; border-radius: 28px; overflow: hidden;
-    --sky-a: #DCEBFF; --sky-b: #F4F8FF; --sun: #FFD37A; --w1: #B9D4FF; --w2: #8DB5FA; --w3: #5F8EEA; --w4: #3D6BD2; --edge: rgba(255,255,255,.7); --lift: rgba(20,50,130,.22); }
+    --sky-a: #BFD8FF; --sky-b: #FFE6CC; --sun: #FFC85A; --w1: #A9CBFF; --w2: #7EAAF5; --w3: #5486E6; --w4: #3463CC; --edge: rgba(255,255,255,.75); --lift: rgba(16,40,120,.32);
+    box-shadow: inset 0 0 0 1px rgba(30,26,58,.08); }
+  /* light: the same layered paper-cut sea as dark, by morning (blue sky warming to peach at the horizon, a low sun, grain) */
+  .hero .sky { background: linear-gradient(180deg, #9EC2FF 0%, #C9DCFF 22%, #FFE2C6 42%, #FFC995 58%, #FFC995 100%) !important; }
+  .hero .grain { position: absolute; inset: 0; z-index: 6; pointer-events: none; opacity: .3; }
   [data-theme="dark"] .hero { --sky-a: #0E1C4A; --sky-b: #3A3F72; --sun: #FFB061; --w1: #24407F; --w2: #2C4F98; --w3: #3762B4; --w4: #4776CC; --edge: rgba(185,201,255,.35); --lift: rgba(0,0,0,.4); box-shadow: inset 0 0 0 1px var(--line); }
   .hero .sky { position: absolute; inset: 0; background: linear-gradient(180deg, var(--sky-a), var(--sky-b)); }
-  .hero .sunwrap { position: absolute; left: 262px; top: 16px; }
+  .hero .sunwrap { position: absolute; left: 248px; top: 40px; }
   /* dark: the sun sits low on the water, warm, with a horizon glow (never a moon) */
   .hero .low { display: none; }
-  [data-theme="dark"] .hero .sky { background: linear-gradient(180deg, #0E1C4A 0%, #22306A 24%, #5A4A72 40%, #A2685E 52%, #B8735A 100%); }
+  [data-theme="dark"] .hero .sky { background: linear-gradient(180deg, #0E1C4A 0%, #22306A 24%, #5A4A72 40%, #A2685E 52%, #B8735A 100%) !important; }
+  [data-theme="dark"] .hero .grain { opacity: .4; }
   [data-theme="dark"] .hero .sunwrap { left: 244px; top: 46px; }
   [data-theme="dark"] .hero .day { display: none; }
   [data-theme="dark"] .hero .low { display: block; }
-  /* the plan: the selected row takes a warm tint */
-  .plan .opt.on { background: #FFF1E2; }
-  [data-theme="dark"] .plan .opt.on { background: color-mix(in srgb, #FF9A5C 20%, var(--card)); }
+  /* the plan: the selected row takes the warm selection; dark uses amber at about 15% with an apricot outline */
+  [data-theme="dark"] .plan .opt.on { background: color-mix(in srgb, #FFB061 15%, var(--card)); box-shadow: inset 0 0 0 2px #FFC38A; }
+  [data-theme="dark"] .plan .opt.on .radio { background: #FFC38A; }
+  [data-theme="dark"] .plan .opt.on .radio::after { background: #0E1322; }
+  /* the moment is a tappable token, as on the slip plan */
+  .tok { display: inline-flex; align-items: center; gap: 3px; height: 34px; padding: 0 6px 0 11px; margin: 0 1px; vertical-align: 1px; border-radius: 11px; background: var(--sel-tint); box-shadow: inset 0 0 0 2px var(--sel); font: inherit; font-weight: 800; color: var(--fg); }
+  [data-theme="dark"] .tok { background: color-mix(in srgb, #FFB061 15%, var(--card)); box-shadow: inset 0 0 0 2px #FFC38A; }
+  .tok svg { width: 17px; height: 17px; }
+  .play .tok svg { animation: nudge 600ms var(--settle) 900ms both; }
+  @keyframes nudge { 40% { transform: translateY(3px); } }
   .hero .lay { position: absolute; left: 0; right: 0; bottom: 0; }
   .hero .lay svg { display: block; width: 100%; }
   .hero .l1 { z-index: 1; filter: drop-shadow(0 -3px 5px var(--lift)); }
@@ -36,7 +48,7 @@
   .plan .ask { color: var(--muted); }
   .plan .chips { margin-top: 8px; }
   .plan .ifthen { margin-top: 0; }
-  .plan .ifthen b { font-weight: 800; }
+  .plan .ifthen { line-height: 34px; }
   .plan .opts { margin-top: 12px; display: grid; gap: 8px; }
   .plan .opt { min-height: 56px; padding: 6px 16px; }
 </style>
@@ -52,6 +64,7 @@
     <div class="lay l2"><svg viewBox="0 0 346 96" height="96"><path d="M0 34 C34 18 70 20 104 34 C140 48 176 46 210 30 C248 14 300 18 346 32 V96 H0Z" fill="var(--w2)"/><path d="M0 34 C34 18 70 20 104 34 C140 48 176 46 210 30 C248 14 300 18 346 32" fill="none" stroke="var(--edge)" stroke-width="2"/></svg></div>
     <div class="jel" data-settle style="--d:200ms"><div class="bob" id="jelli"></div></div>
     <div class="lay l3"><svg viewBox="0 0 346 66" height="66"><path d="M0 26 C30 12 62 12 92 24 C124 38 158 38 190 24 C224 10 262 10 294 22 C314 30 330 30 346 24 V66 H0Z" fill="var(--w3)"/><path d="M0 26 C30 12 62 12 92 24 C124 38 158 38 190 24 C224 10 262 10 294 22 C314 30 330 30 346 24" fill="none" stroke="var(--edge)" stroke-width="2"/></svg></div>
+    <svg class="grain" width="346" height="184" aria-hidden="true"><filter id="gr21" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 .1  0 0 0 .2 0"/></filter><rect width="346" height="184" filter="url(#gr21)"/></svg>
     <div class="lay l4"><svg viewBox="0 0 346 36" height="36"><path d="M0 16 C40 4 80 6 118 16 C160 28 200 26 240 14 C280 4 316 6 346 14 V36 H0Z" fill="var(--w4)"/></svg></div>
   </div>
   <div class="nav">
@@ -64,7 +77,7 @@
   </div>
 
   <div class="plan">
-    <p class="t-head ifthen" data-a style="--i:5">Next time after <b>coffee</b>, I'll&hellip;</p>
+    <p class="t-head ifthen" data-a style="--i:5">Next time after <button class="tok" aria-label="Moment: coffee. Change">coffee<span id="tokc"></span></button>, I'll&hellip;</p>
     <div class="opts">
       <button class="opt" data-settle style="--i:5"><span class="grow t-body">Take a short walk first</span><span class="radio"></span></button>
       <button class="opt on" data-settle style="--i:6"><span class="grow t-body">Have it somewhere new</span><span class="radio"></span></button>
@@ -80,6 +93,7 @@
 <script>
   const $ = s => document.querySelector(s);
   $('#close').innerHTML = DX.icon('close');
+  $('#tokc').innerHTML = DX.icon('down', { w: 2.6 });
   $('#jelli').innerHTML = DX.char('jelli', { mood: 'calm', size: 200 });
 </script>
 </body></html>

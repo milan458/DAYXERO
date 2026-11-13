@@ -1,43 +1,43 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>069 Privacy and your data</title>
-<meta name="motion" content="The lead card arrives and Xero settles into it (300ms), then the data list (anonymous usage off by default) and the delete card arrive on the stagger. Delete everything is a quiet coral text button: tapping it opens a confirm sheet (warning haptic) whose coral button must be held for 2s; the fill sweeps left to right, letting go early springs it back (250ms), and only a full hold erases the data (heavy haptic, then the app returns to Welcome).">
+<meta name="motion" content="The privacy hero arrives first: Xero settles beside the phone on the little hill (300ms) and the shield on its screen draws its tick (600ms); then the data list (anonymous usage off by default) and the delete card arrive on the stagger. Delete everything is a quiet coral text button: tapping it opens a confirm sheet (warning haptic) whose coral button must be held for 2s; the fill sweeps left to right, letting go early springs it back (250ms), and only a full hold erases the data (heavy haptic, then the app returns to Welcome).">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-/* screen-local helpers: icon fill, section labels, small icon tiles, bottom toast */
 .hd { display: grid; gap: 6px; padding-top: 58px; }
-.sec { padding: 22px 4px 8px; color: var(--muted); }
 .rt { font-weight: 600; }
 .ico-tile.s { width: 34px; height: 34px; border-radius: 11px; }
 .ico-tile.s svg { width: 19px; height: 19px; }
-.val { color: var(--muted); font: 500 15px/1.2 var(--body); white-space: nowrap; }
-.list > .row.tap { min-height: 56px; }
-.toast.b { top: auto; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
-.toast.b.in { opacity: 1; transform: none; }
-.toast.b .ck { flex: none; }
-.opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
-html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--sel) 72%, transparent); }
-.pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
-
-.lead { display: flex; gap: 12px; align-items: center; padding: 10px 16px 10px 8px; margin-top: 18px; }
-.lead .grow { flex: 1; }
-.list .row.tall { align-items: flex-start; padding-top: 14px; padding-bottom: 14px; }
+.ico-tile.apr { background: #FFE6D0; color: #A8481F; } .ico-tile.sky { background: #E1E7F8; color: #2C468E; } .ico-tile.mint { background: #DDF1E4; color: #22704A; }
+[data-theme="dark"] .ico-tile.apr { background: rgba(255,195,138,.16); color: #FFC38A; } [data-theme="dark"] .ico-tile.sky { background: rgba(160,186,255,.15); color: #B4C6FF; } [data-theme="dark"] .ico-tile.mint { background: rgba(159,227,188,.13); color: #9FE3BC; }
+.list > .row { min-height: 64px; padding-top: 10px; padding-bottom: 10px; }
+.lead { margin-top: 16px; padding: 0; overflow: hidden; }
+.lead .art { position: relative; height: 112px; overflow: hidden; }
+.lead .art > svg { position: absolute; inset: 0; display: block; }
+.lead .art .who { position: absolute; left: 96px; top: 20px; }
+.lead .txt { padding: 12px 18px 16px; display: grid; gap: 4px; }
+.lead .txt .t-title { font-size: 22px; }
 .del { margin-top: 12px; padding: 16px 18px 8px; display: grid; gap: 6px; }
 .del .t-foot { color: var(--muted); }
-.dlink { justify-self: start; display: inline-flex; align-items: center; height: 44px; margin-left: -2px; font: 700 16px/1 var(--body); color: var(--danger-fg); }
-.screen { --danger-fg: #B23A1E; }
+.dlink { justify-self: start; display: inline-flex; align-items: center; gap: 8px; height: 44px; margin-left: -2px; font: 700 16px/1 var(--body); color: var(--danger-fg); }
+.dlink svg { width: 18px; height: 18px; }
+/* coral, readable: 4.9:1 on the white card, 7.8:1 on the dark card */
+.screen { --danger-fg: #C8472A; }
 [data-theme="dark"] .screen { --danger-fg: #FF9A7A; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
 <div class="nav"><button class="icon-btn" aria-label="Back" data-ic="back"></button></div>
 <div class="scroll"><div class="pad">
-  <div class="hd"><h1 class="t-large" data-a style="--i:0">Privacy and your data</h1><p class="t-foot muted" data-a style="--i:1">No account, no ads, no selling. Here is exactly what happens.</p></div>
-  <div class="card lead" data-a style="--i:2"><span id="xr069" data-settle style="--d:300ms"></span><div class="grow"><div class="t-head">It stays on this phone</div><div class="t-foot muted">Your plan, reasons, logs and notes never leave this iPhone.</div></div></div>
+  <div class="hd"><h1 class="t-large" data-a style="--i:0">Privacy and your data</h1><p class="t-foot muted" data-a style="--i:1">No account, no ads, no selling.</p></div>
+  <div class="card lead" data-a style="--i:2">
+    <div class="art" id="art"><span class="who" id="xr069" data-settle style="--d:300ms"></span></div>
+    <div class="txt"><div class="t-title">It stays on this phone</div><p class="t-foot muted">Your plan, reasons, logs and notes never leave this iPhone.</p></div>
+  </div>
   <div class="list" data-a style="--i:3;margin-top:12px">
-    <div class="row tall" ><span class="ico-tile s" data-ic="chart"></span><div class="grow"><div class="t-body rt">Share anonymous usage</div><div class="t-foot muted">Counts like &ldquo;lesson started&rdquo;. Never your words.</div></div><span class="toggle"></span></div>
-    <div class="row " ><span class="ico-tile s" data-ic="share"></span><div class="grow"><div class="t-body rt">Export my data</div><div class="t-foot muted">A file you can keep or move</div></div><span class="chev" data-ic="chev" data-s="18"></span></div>
-    <div class="row tall" ><span class="ico-tile s" data-ic="lock"></span><div class="grow"><div class="t-body rt">Face ID lock</div><div class="t-foot muted">Ask for Face ID when DayXero opens</div></div><span class="toggle"></span></div>
+    <div class="row"><span class="ico-tile s sky" data-ic="chart"></span><div class="grow"><div class="t-body rt">Share anonymous usage</div><div class="t-foot muted">Never your words</div></div><span class="toggle"></span></div>
+    <div class="row"><span class="ico-tile s mint" data-ic="share"></span><div class="grow"><div class="t-body rt">Export my data</div><div class="t-foot muted">A file you can keep or move</div></div><span class="chev" data-ic="chev" data-s="18"></span></div>
+    <div class="row"><span class="ico-tile s apr" id="face"></span><div class="grow"><div class="t-body rt">Face ID lock</div><div class="t-foot muted">Ask when DayXero opens</div></div><span class="toggle"></span></div>
   </div>
   <div class="card del" data-a style="--i:4">
     <div class="t-body rt">Delete all my data</div>
@@ -48,6 +48,26 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
-document.getElementById('xr069').innerHTML = DX.char('xero', { mood: 'calm', size: 88 });
+const dark = DX.theme === 'dark', W = 346, H = 112;
+/* Face ID row: a face inside scan corners (its own glyph, nothing like the pouch tin or a padlock). */
+document.getElementById('face').innerHTML = '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8.5V6a2 2 0 012-2h2.5M15.5 4H18a2 2 0 012 2v2.5M20 15.5V18a2 2 0 01-2 2h-2.5M8.5 20H6a2 2 0 01-2-2v-2.5M9 9.5v1.2M15 9.5v1.2M9.2 15c1.6 1.3 4 1.3 5.6 0"/></svg>';
+/* The hero scene: Xero beside a phone that holds a shield, both standing on a soft hill (light: warm day; dark: night). */
+const c = dark
+  ? { sky: ['#0E1A3A', '#1E2F5C'], hill: '#2A3866', hill2: '#1E2A52', phone: '#0B1226', screen: '#24386E', shield: '#FFC38A', tick: '#0B1226', star: 1 }
+  : { sky: ['#FFE3C6', '#FFF1E0'], hill: '#FFC897', hill2: '#FFB27E', phone: '#1E1A3A', screen: '#FFF8EE', shield: '#FF9A5C', tick: '#FFF8EE', star: 0 };
+document.getElementById('art').insertAdjacentHTML('afterbegin', `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" aria-hidden="true"><defs>
+  <linearGradient id="psk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c.sky[0]}"/><stop offset="1" stop-color="${c.sky[1]}"/></linearGradient></defs>
+  <rect width="${W}" height="${H}" fill="url(#psk)"/>
+  ${c.star ? [[30, 20], [70, 46], [250, 16], [300, 40], [326, 14], [24, 70]].map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="${i % 2 ? 1.1 : 1.5}" fill="#fff" opacity="${i % 2 ? .5 : .85}"/>`).join('') + '<circle cx="306" cy="30" r="9" fill="#F6E7C1"/><circle cx="302" cy="27" r="8" fill="#13214A"/>'
+    : '<g fill="#FFFFFF" opacity=".95"><ellipse cx="290" cy="26" rx="26" ry="8"/><ellipse cx="278" cy="20" rx="13" ry="8"/><ellipse cx="52" cy="34" rx="18" ry="6"/></g>'}
+  <path d="M0 102 C60 94 120 90 180 92 C240 94 300 100 346 104 V112 H0Z" fill="${c.hill2}"/>
+  <path d="M60 112 C100 98 140 94 180 94 C220 94 260 100 290 112Z" fill="${c.hill}"/>
+  <g transform="translate(186 26)">
+    <rect x="0" y="0" width="44" height="72" rx="10" fill="${c.phone}"/>
+    <rect x="4" y="5" width="36" height="62" rx="7" fill="${c.screen}"/>
+    <path d="M22 18 l11 4.5 v8.5 c0 7 -4.6 11.4 -11 14 c-6.4 -2.6 -11 -7 -11 -14 v-8.5z" fill="${c.shield}"/>
+    <path d="M16.5 31.5 l4 4 l7.5 -8" fill="none" stroke="${c.tick}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="draw" style="--len:20;--d:600ms"/>
+  </g></svg>`);
+document.getElementById('xr069').innerHTML = DX.char('xero', { mood: 'calm', size: 80 });
 </script>
 </body></html>

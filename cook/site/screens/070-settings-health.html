@@ -1,38 +1,33 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>070 Apple Health</title>
-<meta name="motion" content="The connected card arrives with the DayXero tile and the neutral Works with Apple Health badge; the dotted link fades in between them (500ms) and its check pops (900ms, light success haptic); the write and read groups follow on the stagger. Flipping a toggle opens the system Health permission sheet.">
+<meta name="motion" content="The connected card arrives: Xero settles onto his little hill (400ms), the dotted link fades in across to the neutral Works with Apple Health badge (500ms) and its apricot check pops in the middle (900ms, light success haptic); the write and read groups follow on the stagger. Flipping a toggle opens the system Health permission sheet.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-/* screen-local helpers: icon fill, section labels, small icon tiles, bottom toast */
 .hd { display: grid; gap: 6px; padding-top: 58px; }
-.sec { padding: 22px 4px 8px; color: var(--muted); }
+.sec { padding: 18px 4px 8px; color: var(--muted); font-size: 14px; }
 .rt { font-weight: 600; }
 .ico-tile.s { width: 34px; height: 34px; border-radius: 11px; }
 .ico-tile.s svg { width: 19px; height: 19px; }
-.val { color: var(--muted); font: 500 15px/1.2 var(--body); white-space: nowrap; }
-.list > .row.tap { min-height: 56px; }
-.toast.b { top: auto; opacity: 0; transform: translateY(18px); transition: opacity .4s var(--ease), transform .55s var(--settle); }
-.toast.b.in { opacity: 1; transform: none; }
-.toast.b .ck { flex: none; }
-.opt.on { box-shadow: inset 0 0 0 2px var(--sel); }
-html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--sel) 72%, transparent); }
-.pill { height: 34px; padding: 0 12px; border-radius: 11px; background: var(--card-2); display: inline-flex; align-items: center; font: 600 15px/1 var(--body); color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.ico-tile.apr { background: #FFE6D0; color: #A8481F; } .ico-tile.sky { background: #E1E7F8; color: #2C468E; } .ico-tile.mint { background: #DDF1E4; color: #22704A; }
+[data-theme="dark"] .ico-tile.apr { background: rgba(255,195,138,.16); color: #FFC38A; } [data-theme="dark"] .ico-tile.sky { background: rgba(160,186,255,.15); color: #B4C6FF; } [data-theme="dark"] .ico-tile.mint { background: rgba(159,227,188,.13); color: #9FE3BC; }
+.list > .row { min-height: 62px; padding-top: 9px; padding-bottom: 9px; }
 
-.link-card { margin-top: 16px; padding: 18px 18px 16px; display: grid; justify-items: center; gap: 4px; text-align: center; }
-.apps { display: flex; align-items: center; gap: 0; margin-bottom: 12px; }
-.app { width: 64px; height: 64px; border-radius: 18px; display: grid; place-items: center; overflow: hidden; box-shadow: 0 6px 16px rgba(20,20,40,.14), inset 0 0 0 1px rgba(0,0,0,.06); flex: none; background: #FFD9B8; }
-.wire { width: 48px; position: relative; height: 24px; display: grid; place-items: center; }
-.wire::before { content: ""; position: absolute; left: 6px; right: 6px; top: 50%; border-top: 2.5px dotted var(--muted); }
-.wire .ok { position: relative; width: 24px; height: 24px; border-radius: 99px; background: var(--tick); color: #fff; display: grid; place-items: center; }
-.wire .ok svg { width: 13px; height: 13px; }
-.wh { display: inline-flex; align-items: center; gap: 10px; height: 52px; padding: 0 16px 0 12px; border-radius: 12px; background: var(--fg); color: var(--g); text-align: left; flex: none; }
-.wh .hi { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--g) 55%, transparent); }
-.wh .hi svg { width: 18px; height: 18px; }
-.wh .w { display: grid; gap: 2px; }
-.wh .w small { font: 600 12px/1 var(--body); opacity: .8; }
+.link-card { margin-top: 16px; padding: 14px 18px 16px; display: grid; justify-items: center; gap: 4px; text-align: center; }
+.apps { display: flex; align-items: flex-end; margin-bottom: 10px; }
+.me { position: relative; width: 80px; height: 80px; flex: none; }
+.me .mound { position: absolute; left: 0; bottom: 0; }
+.me .who { position: absolute; left: 4px; top: -2px; }
+.wire { width: 86px; position: relative; height: 28px; display: grid; place-items: center; margin-bottom: 12px; }
+.wire svg.dots { position: absolute; left: 0; top: 0; }
+.wire .ok { position: relative; width: 28px; height: 28px; border-radius: 99px; background: #FFB27A; color: #1E1A3A; display: grid; place-items: center; box-shadow: 0 0 0 3px var(--card); }
+.wire .ok svg { width: 15px; height: 15px; }
+/* neutral text badge: the same outlined style in both modes (no Apple artwork, no inversion) */
+.wh { display: inline-flex; align-items: center; gap: 8px; height: 52px; padding: 0 12px 0 11px; border-radius: 14px; background: transparent; color: var(--fg); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--fg) 34%, transparent); text-align: left; flex: none; margin-bottom: 0; }
+.wh svg { width: 18px; height: 18px; flex: none; }
+.wh .w { display: grid; gap: 3px; }
+.wh .w small { font: 600 12px/1 var(--body); color: var(--muted); }
 .wh .w b { font: 700 16px/1 var(--body); letter-spacing: -.2px; }
-.list > .row { min-height: 64px; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -40,27 +35,33 @@ html:not([data-theme="dark"]) .opt.on { box-shadow: inset 0 0 0 2px color-mix(in
 <div class="scroll"><div class="pad">
   <div class="hd"><h1 class="t-large" data-a style="--i:0">Apple Health</h1><p class="t-foot muted" data-a style="--i:1">You choose what DayXero shares with Health.</p></div>
   <div class="card link-card" data-a style="--i:2">
-    <div class="apps"><span class="app" id="dx070"></span><span class="wire" data-fade style="--d:500ms"><span class="ok" data-ic="check" data-s="13" data-w="3.2" data-pop style="--d:900ms"></span></span><span class="wh" role="img" aria-label="Works with Apple Health"><span class="hi" data-ic="heart" data-s="18" data-w="2.2"></span><span class="w"><small>Works with</small><b>Apple Health</b></span></span></div>
+    <div class="apps">
+      <span class="me"><span class="mound" id="mound"></span><span class="who" id="xr" data-settle style="--d:400ms"></span></span>
+      <span class="wire"><svg class="dots" width="86" height="28" viewBox="0 0 86 28" aria-hidden="true" data-fade style="--d:500ms"><path d="M5 14 H81" stroke="currentColor" stroke-opacity=".6" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="0.1 7.6"/></svg><span class="ok" data-ic="check" data-s="15" data-w="3.2" data-pop style="--d:900ms"></span></span>
+      <span class="wh" role="img" aria-label="Works with Apple Health" style="margin-bottom:0"><span data-ic="heart" data-s="18" data-w="2.2"></span><span class="w"><small>Works with</small><b>Apple Health</b></span></span>
+    </div>
     <div class="t-head">Connected to Health</div>
     <div class="t-foot muted">Since Fri, Oct 30</div>
   </div>
   <p class="t-foot sec" data-a style="--i:3">DayXero writes</p>
   <div class="list" data-a style="--i:4">
-    <div class="row " ><span class="ico-tile s" data-ic="leaf"></span><div class="grow"><div class="t-body rt">Mindful minutes</div><div class="t-foot muted">From calm tools and SOS</div></div><span class="toggle on"></span></div>
+    <div class="row"><span class="ico-tile s mint" data-ic="leaf"></span><div class="grow"><div class="t-body rt">Mindful minutes</div><div class="t-foot muted">From calm tools and SOS</div></div><span class="toggle on"></span></div>
   </div>
   <p class="t-foot sec" data-a style="--i:5">DayXero reads</p>
   <div class="list" data-a style="--i:6">
-    <div class="row " ><span class="ico-tile s" data-ic="heart"></span><div class="grow"><div class="t-body rt">Resting heart rate</div><div class="t-foot muted">To chart your recovery</div></div><span class="toggle on"></span></div>
-    <div class="row " ><span class="ico-tile s" data-ic="moon"></span><div class="grow"><div class="t-body rt">Sleep</div><div class="t-foot muted">Sleep shifts in week one</div></div><span class="toggle on"></span></div>
-    <div class="row " ><span class="ico-tile s" id="steps"></span><div class="grow"><div class="t-body rt">Steps</div><div class="t-foot muted">Walks during a craving</div></div><span class="toggle"></span></div>
+    <div class="row"><span class="ico-tile s apr" data-ic="heart"></span><div class="grow"><div class="t-body rt">Resting heart rate</div><div class="t-foot muted">To chart your recovery</div></div><span class="toggle on"></span></div>
+    <div class="row"><span class="ico-tile s sky" data-ic="moon"></span><div class="grow"><div class="t-body rt">Sleep</div><div class="t-foot muted">Sleep shifts in week one</div></div><span class="toggle on"></span></div>
+    <div class="row"><span class="ico-tile s mint" id="steps"></span><div class="grow"><div class="t-body rt">Steps</div><div class="t-foot muted">Used to suggest walks during cravings</div></div><span class="toggle"></span></div>
   </div>
-  <p class="t-foot muted" data-a style="--i:7;padding:14px 4px 0">Health asks you first, and DayXero never sees what you turn off.</p>
+  <p class="t-foot muted" data-a style="--i:7;padding:12px 4px 0">Health asks you first, every time.</p>
 </div></div>
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
+const dark = DX.theme === 'dark';
 /* Steps: a screen-local footprints glyph in the kit's line style (the kit has no steps icon). */
 document.getElementById('steps').innerHTML = '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 3.5c1.8 0 2.8 2 2.8 4.4S9.3 12 7.5 12 4.7 10.3 4.7 7.9 5.7 3.5 7.5 3.5zM5.6 15h3.8M16.5 8.5c1.8 0 2.8 2 2.8 4.4S18.3 17 16.5 17s-2.8-1.7-2.8-4.1 1-4.4 2.8-4.4zM14.6 20h3.8"/></svg>';
-document.getElementById('dx070').innerHTML = DX.char('xero', { mood: 'hello', size: 64 });
+document.getElementById('mound').innerHTML = `<svg width="80" height="20" viewBox="0 0 80 20" aria-hidden="true"><path d="M2 20 C10 6 28 2 40 2 C52 2 70 6 78 20Z" fill="${dark ? '#2A3658' : '#FFD9B6'}"/></svg>`;
+document.getElementById('xr').innerHTML = DX.char('xero', { mood: 'hello', size: 72 });
 </script>
 </body></html>
