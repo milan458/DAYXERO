@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>021 After a slip, plan</title>
-<meta name="motion" content="Quiet tier, no springs. The paper-cut sea card builds back to front: the four wave layers rise 40px into place 100ms apart (900ms each) while Jelli (calm) settles down into the water between them (900ms), then keeps a slow bob, half in the sea; the small sun fades in last (in dark mode a warm, low sun sitting on the water with a horizon glow). The title and the progress note arrive with a 90ms stagger, then the if-then line, whose 'coffee' token is tappable (it opens the short moment sheet: Coffee, Stress, After a meal, Something else; its chevron nudges down once at 900ms) with the comma tight after it, and its three option rows, each with a small leading glyph (walk, place, gum), settle in one by one (120ms apart); the chosen row carries the kit's warm selection with an apricot edge in both modes (the kit's warm tint and edge in light; in dark the kit's soft lift with its apricot edge) and its tick. On Save the button turns to its done state and a soft success haptic plays.">
+<meta name="motion" content="Quiet tier, no springs. The paper-cut sea card builds back to front: the four wave layers rise 40px into place 100ms apart (900ms each) while Jelli (calm) settles down into the water between them (900ms), then keeps a slow bob, half in the sea; the small sun fades in last (in dark mode a warm, low sun sitting on the water with a horizon glow). The title and the progress note arrive with a 90ms stagger, then the if-then line, whose 'coffee' token is tappable (it opens the short moment sheet: Coffee, Stress, After a meal, Something else; its chevron nudges down once at 900ms), and its three option rows settle in one by one (120ms apart); the chosen row carries the kit's warm selection (apricot tint in light; in dark the kit's apricot tint at about 13% with an apricot edge) and its tick. On Save the button turns to its done state and a soft success haptic plays.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -21,8 +21,8 @@
   [data-theme="dark"] .hero .day { display: none; }
   [data-theme="dark"] .hero .low { display: block; }
   /* the plan: the selected row takes the kit selection tint in both modes */
-  /* the moment is a tappable token, as on the slip plan: on the text baseline, a light outline, the comma right after it */
-  .tok { display: inline-flex; align-items: center; gap: 3px; height: 32px; padding: 0 6px 0 11px; margin: 0 0 0 1px; vertical-align: baseline; line-height: 1; border-radius: 11px; background: var(--sel-tint); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--fg) 30%, transparent); font: inherit; font-weight: 800; color: var(--fg); }
+  /* the moment is a tappable token, as on the slip plan: on the text baseline, a light outline, 4px before the comma */
+  .tok { display: inline-flex; align-items: center; gap: 3px; height: 32px; padding: 0 6px 0 11px; margin: 0 4px 0 1px; vertical-align: baseline; line-height: 1; border-radius: 11px; background: var(--sel-tint); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--fg) 30%, transparent); font: inherit; font-weight: 800; color: var(--fg); }
   .tok span { display: inline-flex; }
   .tok svg { width: 17px; height: 17px; }
   .play .tok svg { animation: nudge 600ms var(--settle) 900ms both; }
@@ -44,11 +44,7 @@
   .plan { position: absolute; left: 0; right: 0; top: 448px; padding: 0 var(--gutter); }
   .plan .ifthen { margin-top: 0; line-height: 34px; }
   .plan .opts { margin-top: 12px; display: grid; gap: 8px; }
-  .plan .opt { min-height: 56px; padding: 6px 16px 6px 14px; gap: 12px; }
-  /* a small leading glyph per option: walk, place, gum */
-  .plan .opt .gl { width: 22px; height: 22px; flex: none; color: var(--muted); display: grid; place-items: center; }
-  .plan .opt .gl svg { width: 22px; height: 22px; }
-  .plan .opt.on .gl { color: var(--fg); }
+  .plan .opt { min-height: 56px; padding: 6px 16px; }
 </style>
 </head><body>
 <div class="screen" data-ground="reading">
@@ -77,9 +73,9 @@
   <div class="plan">
     <p class="t-head ifthen" data-a style="--i:5">Next time after <button class="tok" aria-label="Moment: coffee. Change">coffee<span id="tokc"></span></button>, I'll&hellip;</p>
     <div class="opts">
-      <button class="opt" data-settle style="--i:5"><span class="gl" data-gl="walk"></span><span class="grow t-body">Take a short walk first</span><span class="radio"></span></button>
-      <button class="opt on" data-settle style="--i:6"><span class="gl" data-gl="place"></span><span class="grow t-body">Have it somewhere new</span><span class="radio"></span></button>
-      <button class="opt" data-settle style="--i:7"><span class="gl" data-gl="gum"></span><span class="grow t-body">Swap it for gum</span><span class="radio"></span></button>
+      <button class="opt" data-settle style="--i:5"><span class="grow t-body">Take a short walk first</span><span class="radio"></span></button>
+      <button class="opt on" data-settle style="--i:6"><span class="grow t-body">Have it somewhere new</span><span class="radio"></span></button>
+      <button class="opt" data-settle style="--i:7"><span class="grow t-body">Swap it for gum</span><span class="radio"></span></button>
     </div>
   </div>
 
@@ -92,14 +88,6 @@
   const $ = s => document.querySelector(s);
   $('#close').innerHTML = DX.icon('close');
   $('#tokc').innerHTML = DX.icon('down', { w: 2.6 });
-  /* no stray bubble ring beside Jelli */
-  $('#jelli').innerHTML = DX.char('jelli', { mood: 'calm', size: 200 }).replace(/<g opacity="[^"]*" fill="none" stroke="#FFFFFF" stroke-width="2.5">[\s\S]*?<\/g>/, '');
-  /* leading glyphs, drawn in the kit's icon style (24 grid, 2.2 round strokes) */
-  const GL = {
-    walk: '<circle cx="13.5" cy="4.6" r="2"/><path d="M12.6 8.6l-2.3 5.6 3 3.2 1.2 4.1M10.3 14.2l-2.4 6.8M8.6 11.6l3.2-2.8 3.4 1.2 1.9 3"/>',
-    place: '<path d="M12 21s-6.5-5.8-6.5-11.3a6.5 6.5 0 0113 0C18.5 15.2 12 21 12 21z"/><circle cx="12" cy="9.8" r="2.4"/>',
-    gum: '<g transform="rotate(-32 12 12)"><rect x="3" y="8.5" width="18" height="7" rx="1.8"/><path d="M14.5 8.5v7M17.5 8.5v7"/></g>'
-  };
-  document.querySelectorAll('[data-gl]').forEach(el => { el.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${GL[el.dataset.gl]}</svg>`; });
+  $('#jelli').innerHTML = DX.char('jelli', { mood: 'calm', size: 200 });
 </script>
 </body></html>

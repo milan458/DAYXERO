@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
 <title>017 Today, through the day</title>
-<meta name="motion" content="Today, scrolled. The compact header (Xero full figure at 32px, 7 days free, $49 kept) is already pinned: a translucent bar (20px blur) with a hairline under it, and content scrolls beneath it. 'Now' and its one illustrated cream card arrive (600ms): inside it the paper-cut hills rise 16px back to front (100ms apart, 900ms settle), Xero settles onto the front knoll (900ms) and breathes, his breeze marks drifting; the title and the two actions under the card's hairline fade up after (90ms stagger). At 1.2s '+1 glass' presses: a '+1' floats up from the count, the count bumps from 3 to 4 (spring bump, 520ms) and the water in the drawn glass rises from 3/8 to 4/8 (600ms settle). 'Later' and its one quiet list arrive last (90ms stagger, no lift); each row's small tile is tinted by whose it is (the read apricot, the check-in Glim's lavender, the breath mint). Light haptic on the tap, soft success tick on the bump.">
+<meta name="motion" content="Today, scrolled. The compact header (Xero full figure at 32px, 7 days free, $49 kept) is already pinned. 'Now' and its one illustrated cream card arrive (600ms): inside it the paper-cut hills rise 16px back to front (100ms apart, 900ms settle), Xero settles onto the front knoll (900ms) and breathes, his breeze marks drifting; the title and the two actions under the card's hairline fade up after (90ms stagger). At 1.2s '+1 glass' presses: a '+1' floats up from the count, the count bumps from 3 to 4 (spring bump, 520ms) and the water in the drawn glass rises from 3/8 to 4/8 (600ms settle). 'Later' and its one quiet list arrive last (90ms stagger, no lift). Light haptic on the tap, soft success tick on the bump.">
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
@@ -11,10 +11,7 @@
     background: radial-gradient(120% 30% at 50% -6%, rgba(255,195,138,.12), transparent 70%), #0E1322; }
 
   /* compact pinned header */
-  /* the pinned header is a bar: a translucent material under the status bar, with a hairline under it */
-  .top { position: absolute; z-index: 5; left: 0; right: 0; top: 0; height: 106px; padding: 52px var(--gutter) 2px 16px; display: flex; align-items: center; gap: 10px;
-    background: rgba(255,238,220,.55); -webkit-backdrop-filter: blur(20px) saturate(1.4); backdrop-filter: blur(20px) saturate(1.4); box-shadow: 0 1px 0 var(--line); }
-  [data-theme="dark"] .top { background: color-mix(in srgb, #182034 72%, transparent); box-shadow: 0 1px 0 rgba(255,255,255,.1); }
+  .top { position: absolute; z-index: 5; left: 0; right: 0; top: 52px; height: 52px; padding: 0 var(--gutter) 0 16px; display: flex; align-items: center; gap: 10px; }
   .top .fig { width: 32px; height: 32px; flex: none; display: grid; place-items: center; }
   .top .grow { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 8px; }
   .top .t-head { font-size: 18px; }
@@ -23,7 +20,7 @@
   .top .money .num { font-size: 20px; line-height: 1; }
   .top .money .t-cap { color: var(--muted); }
 
-  .body { position: absolute; left: 0; right: 0; top: 122px; padding: 0 var(--gutter); }
+  .body { position: absolute; left: 0; right: 0; top: 118px; padding: 0 var(--gutter); }
   .grp { font: 700 19px/1.2 var(--display); letter-spacing: -.2px; margin: 0 0 10px 2px; }
   .grp.later { margin-top: 26px; }
 
@@ -51,7 +48,7 @@
   .glyph svg { width: 22px; height: 22px; }
   .glyph.sea { color: #2A50AA; }
   [data-theme="dark"] .glyph.sea { color: #9DB4F2; }
-  .act .btn.small { width: 112px; flex: none; height: 44px; padding: 0 12px; font-size: 15px; background: var(--cream-card); }
+  .act .btn.small { width: auto; flex: none; height: 44px; padding: 0 16px; font-size: 15px; background: var(--cream-card); }
   .act .btn.small svg { width: 16px; height: 16px; }
   .glass .wtr { transition: transform 600ms var(--settle); }
   .val { position: relative; display: inline-block; }
@@ -60,20 +57,12 @@
 
   /* later: one quiet list, same order as the top of Today */
   .later-list { border-radius: 22px; background: color-mix(in srgb, var(--cream-card) 60%, transparent); box-shadow: inset 0 0 0 1px var(--line); overflow: hidden; }
-  .lrow { display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 8px 14px 8px 12px; }
+  .lrow { display: flex; align-items: center; gap: 14px; min-height: 62px; padding: 10px 14px 10px 16px; }
   .lrow + .lrow { border-top: 1px solid var(--line); }
   .lrow .grow { flex: 1; min-width: 0; }
   .lrow .t-head { font-size: 16px; font-weight: 700; }
   .lrow .t-cap { color: var(--muted); margin-top: 3px; font-size: 13px; font-weight: 500; }
-  /* one small tile per row, tinted by whose it is: the read is Xero's apricot, the check-in Glim's lavender, the breath mint */
-  .lrow .ic { width: 36px; height: 36px; flex: none; border-radius: 11px; display: grid; place-items: center; }
-  .lrow .ic svg { width: 19px; height: 19px; }
-  .lrow .ic.read { background: #FFE2C4; color: #A9521A; }
-  .lrow .ic.glim { background: #ECE5FF; color: #5B3FC8; }
-  .lrow .ic.mint { background: #D9F2E3; color: #1F6E48; }
-  [data-theme="dark"] .lrow .ic.read { background: rgba(255,178,122,.16); color: #FFB27A; }
-  [data-theme="dark"] .lrow .ic.glim { background: rgba(154,132,240,.2); color: #C7B8FF; }
-  [data-theme="dark"] .lrow .ic.mint { background: rgba(159,227,188,.15); color: #9FE3BC; }
+  .lrow .ic { width: 22px; height: 22px; flex: none; color: var(--muted); }
   .lrow .chev { width: 18px; height: 18px; }
 </style>
 </head><body>
@@ -103,7 +92,7 @@
         </div>
         <div class="act">
           <span class="glyph glass" id="glass"></span>
-          <div class="grow"><p class="t-head"><span class="val"><span id="gl">3</span><span class="plus" id="plus">+1</span></span> of 8 glasses</p><p class="t-cap">Water today</p></div>
+          <div class="grow"><p class="t-head"><span class="val"><span id="gl">3</span><span class="plus" id="plus">+1</span></span> of 8</p><p class="t-cap">Glasses of water</p></div>
           <button class="btn small ghost" id="addw"></button>
         </div>
       </div>
@@ -111,9 +100,9 @@
 
     <h2 class="grp later" data-a style="--i:4">Later</h2>
     <div class="later-list" data-a style="--i:5">
-      <div class="lrow"><span class="ic read" data-ic="note"></span><div class="grow"><p class="t-head">The noisy passengers</p><p class="t-cap">Today's read &middot; 3 min</p></div><span class="chev" data-ic="chev"></span></div>
-      <div class="lrow"><span class="ic glim" data-ic="moon"></span><div class="grow"><p class="t-head">Check-in with Glim</p><p class="t-cap">Opens 6 PM &middot; nudge at 9 PM</p></div><span class="chev" data-ic="chev"></span></div>
-      <div class="lrow"><span class="ic mint" data-ic="leaf"></span><div class="grow"><p class="t-head">Wind-down breath</p><p class="t-cap">10 PM &middot; 3 min</p></div><span class="chev" data-ic="chev"></span></div>
+      <div class="lrow"><span class="ic" data-ic="note"></span><div class="grow"><p class="t-head">The noisy passengers</p><p class="t-cap">Today's read &middot; 3 min</p></div><span class="chev" data-ic="chev"></span></div>
+      <div class="lrow"><span class="ic" data-ic="moon"></span><div class="grow"><p class="t-head">Check-in with Glim</p><p class="t-cap">Opens 6 PM &middot; nudge at 9 PM</p></div><span class="chev" data-ic="chev"></span></div>
+      <div class="lrow"><span class="ic" data-ic="leaf"></span><div class="grow"><p class="t-head">Wind-down breath</p><p class="t-cap">10 PM &middot; 3 min</p></div><span class="chev" data-ic="chev"></span></div>
     </div>
   </div>
 </div>
@@ -141,7 +130,7 @@
     <g clip-path="url(#gcl)"><g class="wtr" id="wtr" style="transform:translateY(0)"><path d="M0 18.6 C4 17.4 8 19.8 13 18.6 S22 17.4 26 18.6 V40 H0Z" fill="#8EC1F5"/><path d="M0 18.6 C4 17.4 8 19.8 13 18.6 S22 17.4 26 18.6" fill="none" stroke="#5A9DEB" stroke-width="1.2"/></g></g>
     <path d="M3.5 3 H22.5 L20.4 28.2 Q20.2 30 18.4 30 H7.6 Q5.8 30 5.6 28.2 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
     <path d="M7.4 7.5 L8.4 22" stroke="#FFFFFF" stroke-opacity=".8" stroke-width="1.8" stroke-linecap="round"/></svg>`;
-  document.querySelectorAll('[data-ic]').forEach(el => { el.innerHTML = DX.icon(el.dataset.ic, { size: el.classList.contains('chev') ? 18 : 19 }); });
+  document.querySelectorAll('[data-ic]').forEach(el => { el.innerHTML = DX.icon(el.dataset.ic, { size: el.classList.contains('chev') ? 18 : 22 }); });
   $('#addw').innerHTML = DX.icon('plus', { w: 2.8 }) + '1 glass';
   $('.screen').insertAdjacentHTML('beforeend', DX.tabbar('today'));
 

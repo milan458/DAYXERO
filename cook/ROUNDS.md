@@ -164,3 +164,5 @@ session 023-032, lesson-log 033-042, slips-checkin 043-055.
   mostly composition (dead bands above the CTA on form screens, small secondary art) and critic noise.
 - Lesson-log round 8: Opus 8.7 / Sonnet 8.8 (r7 8.4 / 8.8): kept. 038 timing now reads "Starts in about a week / Around Day 14",
   the same words as the 037 row.
+- Today-SOS-Program round 9: Opus 8.6 / Sonnet 8.3 (r8 8.8 / 8.8): lower on both, reverted to round 8 (backup in scratchpad).
+  Kit: SOS disc 4px higher so its label clears it.
