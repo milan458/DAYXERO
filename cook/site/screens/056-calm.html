@@ -4,16 +4,16 @@
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-.hd { display: grid; gap: 6px; padding-top: 14px; }
-.tools { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+.hd { display: grid; gap: 6px; padding-top: 22px; }
+.tools { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 12px; margin-top: 22px; }
 .tool { background: var(--card); border-radius: 22px; overflow: hidden; box-shadow: inset 0 0 0 1px var(--line); display: grid; }
-.tool .art { position: relative; height: 132px; overflow: hidden; border-radius: 22px 22px 0 0; }
+.tool .art { position: relative; height: 156px; overflow: hidden; border-radius: 22px 22px 0 0; }
 .tool .art > svg { position: absolute; inset: 0; display: block; }
 .tool .who { position: absolute; }
 .tool .txt { padding: 12px 14px 14px; display: grid; gap: 3px; }
 .tool .t-head { white-space: nowrap; }
 .tool .t-cap { color: var(--muted); white-space: nowrap; }
-.win { position: absolute; left: 47.5px; top: 30px; width: 72px; height: 72px; border-radius: 13px; overflow: hidden; }
+.win { position: absolute; left: 47.5px; top: 42px; width: 72px; height: 72px; border-radius: 13px; overflow: hidden; }
 .win > svg { display: block; }
 .win .who { left: 4px; top: 6px; }
 </style>
@@ -43,49 +43,51 @@
 </div>
 <script>
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = DX.icon(e.dataset.ic, { size: +(e.dataset.s || 24), w: +(e.dataset.w || 2.2) }); });
-const dark = DX.theme === 'dark', W = 167, H = 132, $ = s => document.querySelector(s);
+const dark = DX.theme === 'dark', W = 167, H = 156, $ = s => document.querySelector(s);
 const grad = (id, a, b, c) => `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/>${c ? `<stop offset=".6" stop-color="${b}"/><stop offset="1" stop-color="${c}"/>` : `<stop offset="1" stop-color="${b}"/>`}</linearGradient>`;
 const stars = (pts, o = .8) => pts.map(([x, y, r], i) => `<circle cx="${x}" cy="${y}" r="${r || 1.2}" fill="#fff" opacity="${i % 2 ? o * .6 : o}"/>`).join('');
-const svg = (inner) => `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" aria-hidden="true">${inner}</svg>`;
+/* Each scene is drawn on a 132-high stage; the tile is 156 high, so the stage sits oy down and the sky fills above it. */
+const svg = (inner, oy) => `<svg width="${W}" height="${H}" viewBox="0 ${-oy} ${W} ${H}" aria-hidden="true">${inner}</svg>`;
+const bg = (oy, fill) => `<rect y="${-oy}" width="${W}" height="${H}" fill="${fill}"/>`;
 const who = (html, x, y, d) => `<div class="who" style="left:${x}px;top:${y}px;--d:${d}ms" data-settle>${html}</div>`;
 
 /* Box breathing: ocean blue, Jelli in the sea window, one track with the lit side and the walking dot (as on 057). */
 const T = 'M38 99 V33 Q38 21 50 21 H117 Q129 21 129 33 V99 Q129 111 117 111 H50 Q38 111 38 99Z';
-$('#a-box').innerHTML = svg(`<defs>${dark ? grad('ob', '#22409A', '#0F2366') : grad('ob', '#3A63E0', '#1F3C8C')}</defs><rect width="${W}" height="${H}" fill="url(#ob)"/>
+$('#a-box').innerHTML = svg(`<defs>${dark ? grad('ob', '#22409A', '#0F2366') : grad('ob', '#3A63E0', '#1F3C8C')}</defs>${bg(12, 'url(#ob)')}
   ${stars([[18, 22], [148, 18, 1.4], [150, 112], [16, 104, 1.5]], .55)}
   <path d="${T}" fill="none" stroke="#FFF8EE" stroke-opacity=".38" stroke-width="3.5"/>
   <path d="${T}" pathLength="400" fill="none" stroke="#FFF8EE" stroke-width="4" stroke-linecap="round" stroke-dasharray="100 300" stroke-dashoffset="0">${DX.still ? '' : '<animate attributeName="stroke-dashoffset" values="0;-100;-200;-300" keyTimes="0;.25;.5;.75" calcMode="discrete" dur="16s" begin="-2s" repeatCount="indefinite"/>'}</path>
-  <circle r="5.5" fill="#FFF8EE"><animateMotion dur="16s" repeatCount="indefinite" begin="-2s" path="${T}"/></circle>`)
+  <circle r="5.5" fill="#FFF8EE"><animateMotion dur="16s" repeatCount="indefinite" begin="-2s" path="${T}"/></circle>`, 12)
   + `<div class="win">${DX.char('horizon', { scene: 'sea', w: 72, h: 72, clarity: 100 })}${who(DX.char('jelli', { mood: 'breathe', size: 64 }), 4, 6, 420)}</div>`;
 if (DX.still) $('#a-box circle[r="5.5"]').outerHTML = '<circle cx="38" cy="66" r="5.5" fill="#FFF8EE"/>';
 
 /* Grounding: apricot dawn (pre-dawn in dark), Xero standing with both feet on the hill. */
 $('#a-ground').innerHTML = svg(dark
-  ? `<defs>${grad('gd', '#0D1630', '#24335C', '#5B5578')}</defs><rect width="${W}" height="${H}" fill="url(#gd)"/>${stars([[22, 20], [60, 12], [140, 26, 1.4], [104, 16]], .7)}
+  ? `<defs>${grad('gd', '#0D1630', '#24335C', '#5B5578')}</defs>${bg(24, 'url(#gd)')}${stars([[22, 20], [60, 12], [140, 26, 1.4], [104, 16]], .7)}
      <radialGradient id="gh"><stop offset="0" stop-color="#F7B871" stop-opacity=".5"/><stop offset="1" stop-color="#F7B871" stop-opacity="0"/></radialGradient><circle cx="126" cy="94" r="36" fill="url(#gh)"/><circle cx="126" cy="94" r="13" fill="#F7B871" opacity=".92"/>
      <path d="M0 100 C40 88 80 92 167 104 V132 H0Z" fill="#1C2C4E"/><path d="M0 116 C50 106 110 110 167 118 V132 H0Z" fill="#132240"/>`
-  : `<defs>${grad('ga', '#FFE6BF', '#FFCB95')}</defs><rect width="${W}" height="${H}" fill="url(#ga)"/>
+  : `<defs>${grad('ga', '#FFE6BF', '#FFCB95')}</defs>${bg(24, 'url(#ga)')}
      <circle cx="124" cy="44" r="38" fill="#FFF1C9" opacity=".7"/><circle cx="124" cy="44" r="24" fill="#FFD966"/>
-     <path d="M0 98 C40 86 80 90 167 102 V132 H0Z" fill="#FFAE73"/><path d="M0 114 C50 104 110 108 167 116 V132 H0Z" fill="#FF9A6B"/>`)
-  + who(DX.char('xero', { mood: 'calm', size: 84 }), 20, 26, 520);
+     <path d="M0 98 C40 86 80 90 167 102 V132 H0Z" fill="#FFAE73"/><path d="M0 114 C50 104 110 108 167 116 V132 H0Z" fill="#FF9A6B"/>`, 24)
+  + who(DX.char('xero', { mood: 'calm', size: 84 }), 20, 50, 520);
 
-/* Notice the urge: sky blue, Jelli riding the swell. */
+/* Notice the urge: sky blue, Jelli riding the swell; dark uses the 059 night sea (same sky, swell and sea blues). */
 $('#a-urge').innerHTML = svg(dark
-  ? `<defs>${grad('sd', '#132A5C', '#2A4C8C')}</defs><rect width="${W}" height="${H}" fill="url(#sd)"/>${stars([[20, 18], [56, 30], [150, 16, 1.4], [120, 40]], .6)}
-     <path d="M0 108 C34 108 46 62 82 62 S 128 108 167 108 V132 H0Z" fill="#3A5FA8"/><path d="M0 108 C34 108 46 62 82 62 S 128 108 167 108" fill="none" stroke="#FFF8EE" stroke-width="3" stroke-linecap="round"/>
-     <path d="M0 118 C40 112 90 116 167 112 V132 H0Z" fill="#1F3A78"/>`
-  : `<defs>${grad('sl', '#8EC2FF', '#D9EEFF')}</defs><rect width="${W}" height="${H}" fill="url(#sl)"/>
+  ? `<defs>${grad('sd', '#0C1734', '#1A2D58')}</defs>${bg(24, 'url(#sd)')}${stars([[20, 18], [56, 30], [150, 16, 1.4], [120, 40]], .6)}
+     <path d="M0 108 C34 108 46 62 82 62 S 128 108 167 108 V132 H0Z" fill="#2E4C88"/><path d="M0 108 C34 108 46 62 82 62 S 128 108 167 108" fill="none" stroke="#FFF8EE" stroke-width="3" stroke-linecap="round"/>
+     <path d="M0 118 C40 112 90 116 167 112 V132 H0Z" fill="#1C2C4E"/>`
+  : `<defs>${grad('sl', '#8EC2FF', '#D9EEFF')}</defs>${bg(24, 'url(#sl)')}
      <g fill="#FFFFFF" opacity=".9"><ellipse cx="132" cy="26" rx="20" ry="7"/><ellipse cx="122" cy="22" rx="10" ry="7"/></g>
      <path d="M0 108 C34 108 46 62 82 62 S 128 108 167 108 V132 H0Z" fill="#5A9DFF"/><path d="M0 108 C34 108 46 62 82 62 S 128 108 167 108" fill="none" stroke="#1E1A3A" stroke-width="3" stroke-linecap="round"/>
-     <path d="M0 118 C40 112 90 116 167 112 V132 H0Z" fill="#2F72F2"/>`)
-  + who(DX.char('jelli', { mood: 'calm', size: 60 }), 66, 10, 620);
+     <path d="M0 118 C40 112 90 116 167 112 V132 H0Z" fill="#2F72F2"/>`, 24)
+  + who(DX.char('jelli', { mood: 'calm', size: 60 }), 66, 34, 620);
 
 /* Wind down: night blue with the moon, Glim settling on the hill. */
-$('#a-wind').innerHTML = svg(`<defs>${dark ? grad('nd', '#08101F', '#16244A', '#22315A') : grad('nl', '#0B1430', '#1B2B55', '#2C3D6A')}</defs><rect width="${W}" height="${H}" fill="url(#${dark ? 'nd' : 'nl'})"/>
+$('#a-wind').innerHTML = svg(`<defs>${dark ? grad('nd', '#08101F', '#16244A', '#22315A') : grad('nl', '#0B1430', '#1B2B55', '#2C3D6A')}</defs>${bg(24, `url(#${dark ? 'nd' : 'nl'})`)}
   ${stars([[18, 20], [46, 40], [84, 14, 1.5], [104, 44], [150, 70], [20, 70, 1.4]], .85)}
   <radialGradient id="mh"><stop offset="0" stop-color="#F6E7C1" stop-opacity=".3"/><stop offset="1" stop-color="#F6E7C1" stop-opacity="0"/></radialGradient><circle cx="130" cy="34" r="30" fill="url(#mh)"/><path d="M19 14.5A7.5 7.5 0 019.5 5a7.5 7.5 0 109.5 9.5z" transform="translate(113 17) scale(1.6)" fill="#F6E7C1"/>
-  <path d="M0 102 C40 92 90 96 167 106 V132 H0Z" fill="#1C2C4E"/><path d="M0 116 C50 108 110 112 167 118 V132 H0Z" fill="#132240"/>`)
-  + who(DX.char('glim', { mood: 'sleepy', size: 82 }), 24, 26, 720);
+  <path d="M0 102 C40 92 90 96 167 106 V132 H0Z" fill="#1C2C4E"/><path d="M0 116 C50 108 110 112 167 118 V132 H0Z" fill="#132240"/>`, 24)
+  + who(DX.char('glim', { mood: 'sleepy', size: 82 }), 24, 50, 720);
 
 document.querySelector('.screen').insertAdjacentHTML('beforeend', DX.tabbar('calm'));
 </script>
