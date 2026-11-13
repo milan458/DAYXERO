@@ -105,7 +105,7 @@
   $('#scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 390, h: 404, clarity: 90 })
     .replace(/<circle cx="([\d.]+)" cy="([\d.]+)" r="(?:1\.2|1\.8)" fill="#fff"[^>]*>(?:<animate[^>]*\/>)?<\/circle>/g, (m, x, y) => (+y < 60 || Math.hypot(x - 195, y - 200) < 118) ? '' : m)
     /* light: the scene sun sits concentric behind the badge disc, a warm halo */
-    .replace(/<circle cx="200" cy="\d+" r="70" fill="url\(#h2Sun\)"/, '<circle cx="200" cy="148" r="70" fill="url(#h2Sun)"');
+    .replace(/<circle cx="200" cy="\d+" r="70" fill="url\(#(h2Sun[^)]*)\)"/, '<circle cx="200" cy="148" r="70" fill="url(#$1)"');
   const xero = mood => DX.char('xero', { mood, size: 104, stage: 2 });
   $('#xero').innerHTML = xero('hello');
   /* the badge's own little sun moves down onto its hill so it never crowds the numeral */
