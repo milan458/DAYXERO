@@ -182,3 +182,4 @@ App median about 8.7. Screens at >= 9.0 by a critic: 039 (9.2), 032, 059 (9.1), 
   both critics, and critics now call the repeated horizon strip a template. Reverted onboarding to round 8 (001562b); r10/r11
   files kept in scratchpad.
 ## Option 2 (user, after round 11): push the hero screens (13 screens at ~9.0) to a genuine 9.2; form screens stay at their current best.
+- Hero critics: three per pass (Opus, Sonnet, Fable, per the user); a screen's score is the median of the three, and a change is kept unless the median drops.
