@@ -61,7 +61,7 @@ struct SessionFlowView: View {
     /// The deck's own screens carry their close button; beats keep the lesson bar.
     private func showsHeader(_ step: FlowStep) -> Bool {
         switch step {
-        case .completion, .hand, .card, .played, .mission, .intro: false
+        case .completion, .hand, .card, .played, .mission, .intro, .cards: false
         default: true
         }
     }
@@ -423,7 +423,7 @@ struct SessionFlowView: View {
             }
         case .cards:
             CardStackStep(session: session, ctx: ctx, canListen: ProgramAudioStep.hasRecording(session, ctx: ctx),
-                          onListen: { switchLesson(to: .audio) }, onDone: advance)
+                          onListen: { switchLesson(to: .audio) }, onClose: close, onDone: advance)
         case .audio:
             VStack(spacing: DX.Space.xs) {
                 if !(session.cards ?? []).isEmpty {
