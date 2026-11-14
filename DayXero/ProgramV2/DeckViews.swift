@@ -1086,8 +1086,14 @@ struct DeckActivityIntro: View {
     }
 }
 
-// MARK: - F6 Card played
+// MARK: - F6 Card played (v5, 025)
 
+/// A card, done: it flips over to its back, a paper sun with a check, and the day moves on.
+///
+/// Motion (025): the card lifts from below and flips over (1100 ms settle) to its back, landing with a slight tilt; at
+/// 1.1 s the rays fan out from the disc (500 ms, 30 ms apart) and an ink check draws across the sun (420 ms, success
+/// haptic); dark mode pools a warm glow under it. The card's segment fills to full at 1.3 s. Title and line arrive,
+/// then "How was it?" and its three quiet chips; Up next and the button arrive last.
 struct DeckCardPlayedView: View {
     let card: DeckCard
     let position: Int
@@ -1100,53 +1106,58 @@ struct DeckCardPlayedView: View {
     let onLater: () -> Void
 
     @State private var rating: String?
-    @State private var landed = false
+    @State private var flipped = false
+    @State private var stamped = false
+    @State private var full = false
+    @Environment(\.colorScheme) private var scheme
     private let ground = DX.Ground.table
     private let motion = MotionPolicy()
-    static let ratings = ["Not for me", "Okay", "Good", "Really helped"]
-
-    /// An activity's own words are its button here; a listen, reveal or myth already said them.
-    private var activity: Bool { card.format == .activity || card.format == .breathe }
+    static let ratings = ["Helpful", "Just okay", "Not for me"]
 
     var body: some View {
-        VStack(spacing: DX.Space.s) {
-            HStack {
-                Text(verbatim: String(localized: "\(position) of \(total) played")).dxType(.caption).foregroundStyle(ground.muted)
-                Spacer()
-            }
+        VStack(spacing: 0) {
+            DeckNavRow(total: total, current: position, sub: full ? 1 : 0.14, onClose: onLater)
             ScrollView {
-                VStack(spacing: DX.Space.s) {
-                    face
-                        .padding(.top, DX.Space.m)
-                    Text(String(localized: "Card played")).dxType(.title).foregroundStyle(ground.ink)
-                        .accessibilityAddTraits(.isHeader)
-                    if !activity {
-                        Text(verbatim: String(localized: "You said: \u{201C}\(ctx.text(card.commit))\u{201D}"))
-                            .dxType(.body).foregroundStyle(ground.muted)
+                VStack(spacing: 0) {
+                    ZStack {
+                        if scheme == .dark {
+                            Ellipse()
+                                .fill(RadialGradient(stops: [.init(color: Color(red: 247 / 255, green: 170 / 255, blue: 108 / 255).opacity(0.4), location: 0),
+                                                             .init(color: Color(red: 247 / 255, green: 170 / 255, blue: 108 / 255).opacity(0.16), location: 0.55),
+                                                             .init(color: .clear, location: 1)], center: .center, startRadius: 0, endRadius: 190))
+                                .frame(width: 380, height: 250)
+                                .offset(y: 88)
+                                .dxFade(delay: 1.1)
+                        }
+                        flipCard
+                    }
+                    .frame(height: 336)
+                    .padding(.top, 6)
+                    VStack(spacing: 8) {
+                        Text(verbatim: doneTitle).dxType(.large).foregroundStyle(ground.ink)
+                            .multilineTextAlignment(.center)
+                            .accessibilityAddTraits(.isHeader)
+                        Text(verbatim: ctx.text(card.title)).dxType(.footnote).foregroundStyle(ground.muted)
                             .multilineTextAlignment(.center)
                             .fixedSize(horizontal: false, vertical: true)
                     }
-                    ratingRow
-                    if let next {
-                        HStack(spacing: 12) {
-                            RoundedRectangle(cornerRadius: 10, style: .continuous).fill(next.faceColor)
-                                .frame(width: 40, height: 56)
-                                .overlay(Image(systemName: next.format.symbol).foregroundStyle(next.faceInk))
-                                .accessibilityHidden(true)
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(verbatim: String(localized: "Next · \(next.format.label) · \(next.minutes) min"))
-                                    .dxType(.caption).foregroundStyle(ground.muted)
-                                Text(verbatim: ctx.text(next.title)).dxType(.headline).foregroundStyle(ground.ink)
-                                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.top, 22)
+                    .dxArrive(0, delay: 0.9)
+                    VStack(spacing: 9) {
+                        Text("How was it?").dxFace(.body, 13, weight: 500).foregroundStyle(ground.muted)
+                        HStack(spacing: 8) {
+                            ForEach(Self.ratings, id: \.self) { value in
+                                ratingChip(value)
                             }
-                            Spacer(minLength: 0)
                         }
-                        .padding(.top, DX.Space.s)
                     }
+                    .padding(.top, 26)
+                    .dxArrive(2, delay: 0.9)
                 }
             }
             .scrollBounceBehavior(.basedOnSize)
-            VStack(spacing: 8) {
+            .scrollClipDisabled()
+            VStack(spacing: 10) {
                 if let nextOpensAt {
                     // The evening card waits for the evening: the place is saved and the hand says when.
                     Text(verbatim: String(localized: "The next card opens at \(nextOpensAt). It's meant for the evening."))
@@ -1157,75 +1168,209 @@ struct DeckCardPlayedView: View {
                         .buttonStyle(.dx(.primary, on: ground))
                         .accessibilityIdentifier("program.deck.later")
                 } else {
+                    if let next { upNext(next).dxArrive(3, delay: 0.9) }
                     Button(action: onNext) { Text(verbatim: primaryTitle) }
                         .buttonStyle(.dx(.primary, on: ground))
                         .accessibilityIdentifier("program.deck.next")
-                    if next != nil {
-                        Button(String(localized: "Later. Back to my hand"), action: onLater)
-                            .buttonStyle(.dx(.quiet, on: ground))
-                    }
+                        .dxArrive(4, delay: 0.9)
                 }
             }
+            .padding(.top, 10)
             .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         }
         .foregroundStyle(ground.ink)
-        .sensoryFeedback(.success, trigger: landed)
+        .sensoryFeedback(.success, trigger: stamped) { _, now in now }
         .onAppear {
             if case let .text(saved)? = ctx.answer("\(card.id).rating") { rating = saved }
-            withAnimation(motion.animation(DX.Move.celebrate)) { landed = true }
+            guard !motion.reduce else { flipped = true; stamped = true; full = true; return }
+            withAnimation(DX.Move.settle.speed(0.9 / 1.1).delay(0.15)) { flipped = true }
+            Task {
+                try? await Task.sleep(for: .seconds(1.1))
+                stamped = true
+                try? await Task.sleep(for: .seconds(0.2))
+                withAnimation(.timingCurve(0.2, 0.8, 0.2, 1, duration: 0.5)) { full = true }
+            }
         }
+    }
+
+    /// "First card, done".
+    private var doneTitle: String {
+        let f = NumberFormatter()
+        f.numberStyle = .ordinal
+        f.numberStyle = .spellOut
+        let ordinal: String = switch position {
+        case 1: String(localized: "First")
+        case 2: String(localized: "Second")
+        case 3: String(localized: "Third")
+        case 4: String(localized: "Fourth")
+        case 5: String(localized: "Fifth")
+        default: String(localized: "Card \(position)")
+        }
+        return position == total && total > 1 ? String(localized: "Last card, done") : String(localized: "\(ordinal) card, done")
     }
 
     private var primaryTitle: String {
-        if activity { return ctx.text(card.commit) }
-        return next == nil ? String(localized: "See today's recap") : String(localized: "Play the next card")
+        guard let next else { return String(localized: "See today's recap") }
+        _ = next
+        return String(localized: "Play card \(position + 1)")
     }
 
-    private var face: some View {
-        return VStack(alignment: .leading, spacing: 6) {
-            Text(verbatim: card.format.label).dxFont(12, weight: 800, style: .caption2)
-            Spacer(minLength: 0)
-            Image(systemName: "checkmark").font(.system(size: 44, weight: .heavy)).frame(maxWidth: .infinity)
-            Spacer(minLength: 0)
-            Text(verbatim: ctx.text(card.title)).dxFont(14, weight: 700, style: .footnote).lineLimit(3)
+    private var flipCard: some View {
+        ZStack {
+            front.modifier(FlipFace(angle: flipped ? 180 : 0, back: false))
+            back.modifier(FlipFace(angle: flipped ? 180 : 0, back: true))
         }
-        .foregroundStyle(card.faceInk)
-        .padding(14)
-        .frame(width: 140, height: 204)
-        .background(card.faceColor, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).stroke(Color(hex: 0xFFD966), lineWidth: 4))
-        .rotationEffect(.degrees(landed || motion.reduce ? -6 : -14))
-        .scaleEffect(landed || motion.reduce ? 1 : 1.08)
-        .accessibilityHidden(true)
+        .frame(width: 226, height: 302)
+        .rotationEffect(.degrees(flipped ? 4 : 0))
+        .scaleEffect(flipped || motion.reduce ? 1 : 1.2)
+        .offset(y: flipped || motion.reduce ? 0 : 320)
+        .accessibilityElement()
+        .accessibilityLabel(Text(verbatim: "\(card.format.label), \(ctx.text(card.title)), done"))
     }
 
-    private var ratingRow: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text(String(localized: "How was this card? Optional")).dxFont(14, weight: 700, style: .footnote).foregroundStyle(ground.muted)
-            HStack(spacing: 8) {
-                ForEach(Self.ratings, id: \.self) { value in
-                    let on = rating == value
-                    Button {
-                        rating = value
-                        ctx.save("\(card.id).rating", .text(value))
-                    } label: {
-                        Text(LocalizedStringKey(value)).dxFont(13, weight: 700, style: .caption1)
-                            .multilineTextAlignment(.center)
-                            .frame(maxWidth: .infinity, minHeight: 52)
-                            .foregroundStyle(ground.ink)
-                            .background(on ? ground.selTint : ground.card2,
-                                        in: RoundedRectangle(cornerRadius: DX.Layout.chipRadius, style: .continuous))
-                            .overlay(RoundedRectangle(cornerRadius: DX.Layout.chipRadius, style: .continuous)
-                                .strokeBorder(on ? ground.selEdge : .clear, lineWidth: 2))
+    private var front: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            DeckGlyph(card: card).frame(width: 20, height: 20)
+                .frame(width: 36, height: 36)
+                .background(Color(hex: 0x1E1A3A).opacity(0.1), in: Circle())
+            Text(verbatim: card.format.label).dxFace(.display, 17, weight: 700).padding(.top, 10)
+            Text(verbatim: String(localized: "\(card.minutes) min")).dxType(.caption).opacity(0.7)
+            Spacer()
+        }
+        .foregroundStyle(DX.Fill.navy)
+        .padding(18)
+        .frame(width: 226, height: 302, alignment: .topLeading)
+        .background(card.faceColor, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .shadow(color: scheme == .dark ? .black.opacity(0.5) : Color(red: 60 / 255, green: 40 / 255, blue: 20 / 255).opacity(0.18), radius: 17, y: 18)
+    }
+
+    /// The back: the card's own colour, a crisp paper sun with twelve rays and an ink check, a cream band naming it.
+    private var back: some View {
+        ZStack(alignment: .bottom) {
+            card.faceColor
+            GeometryReader { proxy in
+                let s = proxy.size.width / 196
+                ZStack {
+                    ForEach(0..<12, id: \.self) { i in
+                        let a = Double(i) * .pi / 6
+                        Path { p in
+                            p.move(to: CGPoint(x: 98 + 58 * cos(a), y: 106 + 58 * sin(a)))
+                            p.addLine(to: CGPoint(x: 98 + 76 * cos(a), y: 106 + 76 * sin(a)))
+                        }
+                        .stroke(Color(hex: 0xFFF1D6), style: StrokeStyle(lineWidth: 8, lineCap: .round))
+                        .scaleEffect(stamped || motion.reduce ? 1 : 0.3, anchor: UnitPoint(x: (98 + 67 * cos(a)) / 196, y: (106 + 67 * sin(a)) / 262))
+                        .opacity(stamped || motion.reduce ? 1 : 0)
+                        .animation(DX.Move.settle.speed(0.9 / 0.5).delay(Double(i) * 0.03), value: stamped)
                     }
-                    .buttonStyle(.plain)
-                    .accessibilityAddTraits(on ? .isSelected : [])
+                    Circle().fill(Color(hex: 0xFFF1D6)).frame(width: 92, height: 92).position(x: 98, y: 106)
+                    Path { p in
+                        p.move(to: CGPoint(x: 77, y: 107)); p.addLine(to: CGPoint(x: 91, y: 121)); p.addLine(to: CGPoint(x: 118, y: 92))
+                    }
+                    .trim(from: 0, to: stamped || motion.reduce ? 1 : 0)
+                    .stroke(Color(hex: 0x1E1A3A), style: StrokeStyle(lineWidth: 9, lineCap: .round, lineJoin: .round))
+                    .animation(.timingCurve(0.2, 0.7, 0.2, 1, duration: 0.42), value: stamped)
                 }
+                .frame(width: 196, height: 262)
+                .scaleEffect(s, anchor: .topLeading)
+            }
+            HStack(spacing: 8) {
+                DeckGlyph(card: card).frame(width: 17, height: 17)
+                Text(verbatim: "\(card.format.label) · \(String(localized: "\(card.minutes) min"))")
+            }
+            .dxFace(.body, 14, weight: 600)
+            .foregroundStyle(DX.Fill.navy)
+            .frame(maxWidth: .infinity, minHeight: 56)
+            .background(Color(light: 0xFFF8EE, dark: 0xE9DCC6))
+        }
+        .frame(width: 226, height: 302)
+        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .shadow(color: scheme == .dark ? .black.opacity(0.5) : Color(red: 60 / 255, green: 40 / 255, blue: 20 / 255).opacity(0.18), radius: 17, y: 18)
+    }
+
+    private func ratingChip(_ value: String) -> some View {
+        let on = rating == value
+        return Button {
+            rating = value
+            ctx.save("\(card.id).rating", .text(value))
+        } label: {
+            Text(LocalizedStringKey(value))
+                .dxFace(.body, 14, weight: on ? 700 : 500)
+                .foregroundStyle(ground.ink.opacity(on ? 1 : 0.82))
+                .padding(.horizontal, 14)
+                .frame(minHeight: 36)
+                .background(on ? ground.selTint : .clear, in: Capsule())
+                .overlay(Capsule().strokeBorder(on ? ground.selEdge : Color(light: (0x1E1A3A, 0.16), dark: (0xFFF8EE, 0.16)),
+                                                lineWidth: on ? 2 : 1))
+                .frame(minHeight: DX.Layout.touchTarget)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .sensoryFeedback(DX.Haptic.select, trigger: on)
+        .accessibilityAddTraits(on ? [.isButton, .isSelected] : .isButton)
+    }
+
+    private func upNext(_ next: DeckCard) -> some View {
+        HStack(spacing: 12) {
+            NextSpot(card: next)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(verbatim: "\(String(localized: "Up next")) · \(next.format.label) · \(String(localized: "\(next.minutes) min"))")
+                    .dxType(.caption).foregroundStyle(ground.muted)
+                Text(verbatim: ctx.text(next.title)).dxFace(.body, 15, weight: 600).foregroundStyle(ground.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(.horizontal, 4).padding(.bottom, 4)
+        .accessibilityElement(children: .combine)
+    }
+}
+
+/// Shows the front face up to 90° of the turn and the back face after it, so the card reads as one flipping card.
+private struct FlipFace: ViewModifier, Animatable {
+    /// The turn in degrees. Nonisolated so it can satisfy `Animatable` under Swift 6.
+    nonisolated var animatableData: Double
+    let back: Bool
+
+    init(angle: Double, back: Bool) {
+        animatableData = angle
+        self.back = back
+    }
+
+    func body(content: Content) -> some View {
+        let angle = animatableData
+        content
+            .rotation3DEffect(.degrees(back ? angle - 180 : angle), axis: (x: 0, y: 1, z: 0), perspective: 0.5)
+            .opacity(back ? (angle >= 90 ? 1 : 0) : (angle < 90 ? 1 : 0))
+    }
+}
+
+/// The next card's small paper-cut spot (025): for a Try card two breaths over a mint hill; otherwise its glyph on its
+/// colour. Ringed so it holds on cream.
+private struct NextSpot: View {
+    let card: DeckCard
+    @Environment(\.colorScheme) private var scheme
+
+    var body: some View {
+        let dark = scheme == .dark
+        ZStack {
+            if card.format == .breathe {
+                (dark ? Color(hex: 0x1E2C52) : Color(hex: 0xA9E6C4))
+                GridShape(d: "M0 35 C12 30 30 34 48 30 V48 H0z", grid: 48).fill(dark ? Color(hex: 0x2C4A55) : Color(hex: 0x6FCB98))
+                GridShape(d: "M0 42 C16 38 32 43 48 39 V48 H0z", grid: 48).fill(dark ? Color(hex: 0x22394A) : Color(hex: 0x4FB883))
+                GridShape(d: "M7 13h18c4.5 0 6-6 1.5-6.4-3-.3-3.6 3.4-1.2 4", grid: 48)
+                    .stroke(dark ? Color(hex: 0xE6DCCB) : .white, style: StrokeStyle(lineWidth: 2.3, lineCap: .round))
+                GridShape(d: "M12 22h22c4.5 0 6 6 1.5 6.4-3 .3-3.6-3.4-1.2-4", grid: 48)
+                    .stroke(dark ? Color(hex: 0xE6DCCB) : .white, style: StrokeStyle(lineWidth: 2.3, lineCap: .round))
+            } else {
+                card.faceColor
+                DeckGlyph(card: card).frame(width: 20, height: 20).foregroundStyle(DX.Fill.navy)
             }
         }
-        .padding(14)
-        .background(DX.Ground.table.card, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
-        .padding(.top, DX.Space.s)
+        .frame(width: 40, height: 40)
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous)
+            .strokeBorder(dark ? Color(hex: 0x9FE3BC).opacity(0.38) : Color(hex: 0x1F6E48).opacity(0.3), lineWidth: 1.5))
+        .accessibilityHidden(true)
     }
 }
 
