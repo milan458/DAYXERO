@@ -16,13 +16,36 @@ final class LogRouter {
     }
 
     var page: Page?
-    /// The sheet's height. Set before the sheet opens, so a craving or a slip opens full height straight away
-    /// instead of growing mid-presentation.
-    var detent = PresentationDetent.medium
+    /// What opens once the menu sheet has gone (v5): the menu is a sheet over Today, the forms are full screen.
+    var pending: Page?
 
     func open(_ page: Page = .menu) {
-        detent = page == .menu ? .medium : .large
         self.page = page
+    }
+
+    /// From the menu to a form: the sheet goes down, then the form comes up full screen.
+    func push(_ next: Page) {
+        pending = next
+        page = nil
+    }
+
+    /// The menu sheet's binding.
+    var menuShown: Bool {
+        get { page == .menu }
+        set { if !newValue, page == .menu { page = nil } }
+    }
+
+    /// The full-screen form's binding.
+    var form: Page? {
+        get { page == .menu ? nil : page }
+        set { page = newValue }
+    }
+
+    /// After the menu sheet is dismissed.
+    func menuDismissed() {
+        guard let next = pending else { return }
+        pending = nil
+        page = next
     }
 }
 
@@ -30,17 +53,20 @@ final class LogRouter {
 struct LogSheet: View {
     let profile: UserProfile?
     let start: LogRouter.Page
-    @Binding var detent: PresentationDetent
+    /// From the menu to a form (the router takes the sheet down first).
+    var onPush: ((LogRouter.Page) -> Void)?
     let onClose: () -> Void
 
     @Environment(\.modelContext) private var context
     @Environment(SOSRouter.self) private var sos
+    @Environment(\.colorScheme) private var scheme
     @State private var path: [LogRouter.Page] = []
     @State private var slip: LogEntry?
     /// The slip logged when the sheet opens straight to one (the widget's "Slipped? Log it").
     @State private var startSlip: LogEntry?
     @State private var logged = false
     @Query(filter: #Predicate<LogEntry> { $0.kindRaw != "craving" }) private var uses: [LogEntry]
+    @Query(filter: #Predicate<LogEntry> { $0.kindRaw == "craving" }) private var cravings: [LogEntry]
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -55,9 +81,6 @@ struct LogSheet: View {
                 Analytics.track(.slipLogged(source: "widget"))
             }
         }
-        // The menu fits half the screen; the craving form and the slip screen get the full height.
-        .onChange(of: path) { detent = fullHeight ? .large : .medium }
-        .onChange(of: slip) { detent = fullHeight ? .large : .medium }
     }
 
     /// What the sheet opens on. A craving or a slip opened from a widget, Siri or a link is the sheet's first page,
@@ -86,10 +109,8 @@ struct LogSheet: View {
         }
     }
 
-    private var fullHeight: Bool { start != .menu || !path.isEmpty || slip != nil }
-
     private var cravingForm: some View {
-        CravingLogForm(profile: profile, onSaved: onClose, onSOS: {
+        CravingLogForm(profile: profile, onSaved: onClose, onClose: onClose, onSOS: {
             onClose()
             sos.open(source: "log")
         })
@@ -101,38 +122,108 @@ struct LogSheet: View {
             .toolbar(.hidden, for: .navigationBar)
     }
 
+    /// v5 (041): "Log" and today's date; a craving with Jelli, then "Used nicotine?" with a quieter row per product,
+    /// each ending in the same tonal plus; then the slip note.
     private var menu: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: DX.Space.xs) {
-                Text("Log").v4Text(.title).padding(.bottom, DX.Space.xs)
-                NavigationLink(value: LogRouter.Page.craving) {
-                    LogRow(title: "A craving", detail: "How strong, what set it off", glyph: .craving)
+        let ground = DX.Ground.reading
+        return ScrollView {
+            VStack(alignment: .leading, spacing: 0) {
+                HStack(alignment: .firstTextBaseline) {
+                    Text("Log").dxType(.title).foregroundStyle(ground.ink).accessibilityAddTraits(.isHeader)
+                    Spacer()
+                    Text(verbatim: todayLabel).dxType(.footnote).foregroundStyle(ground.muted)
                 }
-                .buttonStyle(.plain)
-                ForEach(products, id: \.self) { product in
-                    Button { logUse(product) } label: {
-                        // UX-12: "Cigarette / 0 logged today". The row says it once; no "I used" heading over it.
-                        LogRow(title: LogSheet.useTitle(product), detail: "\(todayCount(product)) logged today",
-                               glyph: .product(product))
+                .padding(.bottom, 14)
+                Button { open(.craving) } label: {
+                    HStack(spacing: 14) {
+                        JelliView(mood: .calm, stage: 1, points: 58)
+                            .frame(width: 58, height: 58)
+                            .padding(EdgeInsets(top: -4, leading: -4, bottom: -4, trailing: 0))
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("A craving").dxFace(.display, 17, weight: 700, tracking: -0.2).foregroundStyle(ground.ink)
+                            Text(verbatim: cravingLine).dxType(.footnote).foregroundStyle(ground.muted)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        AddDisc()
                     }
-                    .buttonStyle(.plain)
-                    .accessibilityHint(Text(isSlip ? "Logs a slip. Nothing resets." : "Logs one now"))
-                    // Home's prep rows share the name, so UI tests find the sheet's by this.
-                    .accessibilityIdentifier("log.use.\(product.rawValue)")
+                    .padding(.horizontal, 16).padding(.vertical, 10)
+                    .frame(minHeight: 78)
+                    .background((scheme == .dark ? Color(hex: 0x1F2942) : ground.card), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(ground.line, lineWidth: 1))
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.dxPress)
+                .accessibilityLabel(Text("Log a craving"))
+                .dxArrive(3, delay: 0)
+                if !products.isEmpty {
+                    Text("Used nicotine?").dxType(.headline).foregroundStyle(ground.ink)
+                        .padding(.top, 22).padding(.bottom, 12)
+                        .accessibilityAddTraits(.isHeader)
+                        .dxArrive(4, delay: 0)
+                    VStack(spacing: 0) {
+                        ForEach(Array(products.enumerated()), id: \.element) { i, product in
+                            Button { logUse(product) } label: {
+                                HStack(spacing: 12) {
+                                    PaperUseObject(product: product).frame(width: 34, height: 34)
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text(LogSheet.useTitle(product)).dxFont(16, weight: 600, style: .body).foregroundStyle(ground.ink)
+                                        Text(verbatim: countLine(product)).dxFont(13, weight: 500, style: .caption1).foregroundStyle(ground.muted)
+                                    }
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    AddDisc()
+                                }
+                                .padding(.horizontal, 16).padding(.vertical, 6)
+                                .frame(minHeight: 56)
+                                .overlay(alignment: .top) { if i > 0 { Rectangle().fill(ground.line).frame(height: 1) } }
+                                .contentShape(Rectangle())
+                            }
+                            .buttonStyle(.dxPress)
+                            .accessibilityHint(Text(isSlip ? "Logs a slip. Nothing resets." : "Logs one now"))
+                            // Home's prep rows share the name, so UI tests find the sheet's by this.
+                            .accessibilityIdentifier("log.use.\(product.rawValue)")
+                        }
+                    }
+                    .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(ground.line, lineWidth: 1))
+                    .dxArrive(5, delay: 0)
                 }
                 if isSlip {
                     Text("A use after Quit Day is logged as a slip. Nothing resets.")
-                        .v4Text(.subtitle)
-                        .frame(maxWidth: .infinity)
-                        .multilineTextAlignment(.center)
-                        .padding(.top, DX.Space.xs)
+                        .dxType(.footnote).foregroundStyle(ground.muted)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.top, 18)
+                        .dxArrive(7, delay: 0)
                 }
             }
-            .padding(.vertical, DX.Space.m).padding(.horizontal, DX.Layout.gutter)
+            .padding(.top, 26).padding(.bottom, DX.Space.m).padding(.horizontal, DX.Layout.gutter)
         }
         .scrollBounceBehavior(.basedOnSize)
-        .background(Read4.background.ignoresSafeArea())
+        .background((scheme == .dark ? Color(hex: 0x172036) : ground.background).ignoresSafeArea())
+        .dxGround(.reading, paint: false)
         .toolbar(.hidden, for: .navigationBar)
+    }
+
+    private var todayLabel: String {
+        String(localized: "Today, \(Date.now.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day()))")
+    }
+
+    /// "3 today, all ridden out", "1 today", or what the form asks.
+    private var cravingLine: String {
+        let clock = DayClock(boundaryHour: profile?.dayBoundaryHour ?? 4)
+        let today = clock.day(containing: .now)
+        let mine = cravings.filter { clock.day(containing: $0.timestamp) == today }
+        guard !mine.isEmpty else { return String(localized: "How strong, what set it off") }
+        let ridden = mine.filter { $0.outcome == .passed }.count
+        if ridden == mine.count { return String(localized: "\(mine.count) today, all ridden out") }
+        return String(localized: "\(mine.count) today")
+    }
+
+    private func countLine(_ product: Product) -> String {
+        let n = todayCount(product)
+        return n == 0 ? String(localized: "None logged today") : String(localized: "\(n) logged today")
+    }
+
+    private func open(_ page: LogRouter.Page) {
+        if let onPush { onPush(page) } else { path.append(page) }
     }
 
     private var products: [Product] {
@@ -158,7 +249,7 @@ struct LogSheet: View {
         logged.toggle()
         if entry.kind == .slip {
             Analytics.track(.slipLogged(source: "log"))
-            slip = entry
+            if let onPush { onPush(.slipPlan) } else { slip = entry }
         } else {
             onClose()
             NotificationCenter.default.post(name: .dxUseLogged, object: nil)
@@ -174,157 +265,255 @@ struct LogSheet: View {
     }
 }
 
-private struct LogRow: View {
-    let title: LocalizedStringKey
-    let detail: LocalizedStringKey
-    /// The log icon family (4 Nov 2026), the same icons Today, Recent logs and onboarding use.
-    let glyph: LogGlyph
-
+/// The tonal plus every log row ends in (041): 44 pt, ink at 8% with a soft ring.
+private struct AddDisc: View {
     var body: some View {
-        HStack(spacing: DX.Space.s) {
-            LogIcon(glyph: glyph, size: 42)
-            VStack(alignment: .leading, spacing: 1) {
-                Text(title).dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.ink)
-                Text(detail).v4Text(.subtitle)
-            }
-            Spacer(minLength: DX.Space.xs)
-            // v5 (041): a quiet card-2 disc with the ink plus.
-            DXIcon(.plus, size: 18, weight: 2.4)
-                .foregroundStyle(Read4.ink)
-                .frame(width: 44, height: 44)
-                .background(Read4.surface, in: Circle())
-                .overlay(Circle().strokeBorder(Read4.hairline))
-        }
-        .padding(.vertical, DX.Space.s)
-        .padding(.horizontal, 14)
-        .background(Read4.card, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(Read4.hairline))
-        .contentShape(Rectangle())
-        .accessibilityElement(children: .combine)
+        let ink = DX.Ground.reading.ink
+        DXIcon(.plus, size: 20)
+            .foregroundStyle(ink)
+            .frame(width: 44, height: 44)
+            .background(ink.opacity(0.08), in: Circle())
+            .overlay(Circle().strokeBorder(ink.opacity(0.18), lineWidth: 1.5))
+            .accessibilityHidden(true)
     }
 }
 
-/// Log a craving without starting a session (S7.2). Also used to add details to a logged use.
+/// Log a craving without starting a session (v5, 042). Also used to add details to a logged use.
 struct CravingLogForm: View {
     let profile: UserProfile?
     /// Adds details to this entry instead of logging a new craving.
     var editing: LogEntry?
     let onSaved: () -> Void
+    var onClose: (() -> Void)?
     var onSOS: (() -> Void)?
 
     @Environment(\.modelContext) private var context
+    @Environment(\.dismiss) private var dismiss
+    @Query(filter: #Predicate<LogEntry> { $0.kindRaw == "craving" }) private var cravings: [LogEntry]
     @State private var strength = 5
     @State private var trigger: Trigger?
-    @State private var mood: Mood?
-    @State private var place: Place?
+    @State private var mood: CheckInMood?
+    @State private var note = ""
+    @State private var showAllTriggers = false
     @State private var saved = false
+    @State private var savedCount = 0
+    @FocusState private var noteFocused: Bool
     private let openedAt = Date.now
+    private let ground = DX.Ground.reading
 
     var body: some View {
         VStack(spacing: 0) {
+            HStack {
+                DXIconButton(.close, label: "Close") { if let onClose { onClose() } else { dismiss() } }
+                Spacer()
+            }
+            .padding(.horizontal, 16)
+            .frame(height: 52)
             ScrollView {
-                VStack(alignment: .leading, spacing: DX.Space.s) {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(editing == nil ? LocalizedStringKey("A craving") : LocalizedStringKey("Add details")).dxType(.title).foregroundStyle(Read4.ink)
-                        // Adding details shows when the use was logged, not when this form opened.
-                        Text(verbatim: (editing?.timestamp ?? openedAt).formatted(.dateTime.weekday(.abbreviated).day().month().hour().minute()))
-                            .v4Text(.subtitle)
+                VStack(alignment: .leading, spacing: 0) {
+                    HStack(spacing: 12) {
+                        JelliView(mood: .calm, stage: 1, points: 64)
+                            .frame(width: 64, height: 64)
+                            .dxSettle(delay: 0.12)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(editing == nil ? LocalizedStringKey("A craving") : LocalizedStringKey("Add details"))
+                                .dxType(.title).foregroundStyle(ground.ink)
+                                .accessibilityAddTraits(.isHeader)
+                                .dxArrive(0, delay: 0)
+                            // Adding details shows when the use was logged, not when this form opened.
+                            Text(verbatim: whenLabel).dxType(.footnote).foregroundStyle(ground.muted)
+                                .dxArrive(1, delay: 0)
+                        }
                     }
                     if editing == nil || editing?.kind == .craving {
-                        // No fixed height: the slider's own content (labels, number, 44 pt track) sets it,
-                        // and grows with Dynamic Type instead of overflowing a 110 pt frame.
-                        DXCravingSlider(value: $strength)
+                        VStack(alignment: .leading, spacing: 0) {
+                            CravingStrengthSlider(value: $strength)
+                            if let onSOS {
+                                Button(action: onSOS) {
+                                    HStack(spacing: 8) {
+                                        DXIcon(.wave, size: 16, weight: 2.4).foregroundStyle(Color(hex: 0xFFF8EE))
+                                            .frame(width: 26, height: 26)
+                                            .background(Color(hex: 0x1F3C8C), in: Circle())
+                                        Text("Too strong?").dxFont(15, weight: 500, style: .subheadline).foregroundStyle(ground.muted)
+                                        Text("Ride it out with SOS").dxFont(15, weight: 700, style: .subheadline).foregroundStyle(ground.ink)
+                                        DXIcon(.chev, size: 16, weight: 2.4).foregroundStyle(ground.muted)
+                                    }
+                                    .frame(minHeight: 44)
+                                    .contentShape(Rectangle())
+                                }
+                                .buttonStyle(.plain)
+                                .padding(.top, 4)
+                            }
+                        }
+                        .padding(.top, 18)
+                        .dxArrive(2, delay: 0)
                     }
                     section("What set it off?") {
-                        DXFlowLayout {
-                            ForEach(orderedTriggers, id: \.self) { t in
-                                V4SetChip(t.title, value: t, selection: single($trigger))
-                            }
+                        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 3), spacing: 8) {
+                            ForEach(shownTriggers, id: \.self) { t in triggerChip(t) }
                         }
                     }
-                    section("Mood", optional: true) {
-                        HStack(spacing: 6) {
-                            ForEach(Mood.allCases, id: \.self) { m in moodButton(m) }
+                    .dxArrive(3, delay: 0)
+                    section("Mood", trailing: String(localized: "Optional")) {
+                        HStack(spacing: 8) {
+                            ForEach(CheckInMood.allCases, id: \.self) { m in moodButton(m) }
                         }
                     }
-                    section("Where?", optional: true) {
-                        DXFlowLayout {
-                            ForEach(Place.allCases, id: \.self) { p in
-                                V4SetChip(p.title, value: p, selection: single($place))
-                            }
-                        }
-                    }
+                    .dxArrive(4, delay: 0)
+                    noteField
+                        .padding(.top, 24)
+                        .dxArrive(5, delay: 0)
                 }
-                .padding(.vertical, DX.Space.m).padding(.horizontal, DX.Layout.gutter)
+                .padding(.horizontal, DX.Layout.gutter)
+                .padding(.top, 0).padding(.bottom, DX.Space.m)
             }
             .scrollBounceBehavior(.basedOnSize)
-            VStack(spacing: DX.Space.xxs) {
-                Button("Save", action: save).buttonStyle(.dx(.primary, on: .reading))
-                if let onSOS {
-                    Button("Ride it out with SOS instead", action: onSOS).buttonStyle(.dx(.quiet, on: .reading))
-                }
-            }
-            .padding(.horizontal, DX.Layout.gutter)
-            .dxReadableColumn()
-            .padding(.bottom, DX.Space.xs)
+            .scrollDismissesKeyboard(.interactively)
+            saveButton
+                .padding(.horizontal, DX.Layout.buttonGutter)
+                .padding(.bottom, DX.Space.xs)
+                .dxArrive(6, delay: 0)
         }
-        .background(Read4.background.ignoresSafeArea())
+        .dxReadableColumn()
+        .background(ground.background.ignoresSafeArea())
+        .dxGround(.reading, paint: false)
+        .toolbar(.hidden, for: .navigationBar)
         .sensoryFeedback(DX.Haptic.commit, trigger: saved)
         .onAppear {
             guard let editing else { return }
             trigger = editing.trigger
-            mood = editing.mood
-            place = editing.place
+            mood = editing.mood.map(Self.face)
+            note = editing.note ?? ""
             if let i = editing.intensity { strength = i }
         }
     }
 
-    private func section(_ title: LocalizedStringKey, optional: Bool = false, @ViewBuilder content: () -> some View) -> some View {
-        VStack(alignment: .leading, spacing: DX.Space.xs) {
-            // v5 (042): section labels are 19 pt headlines.
-            if optional {
-                Text("\(Text(title)) \(Text("· optional").foregroundStyle(Read4.muted).font(DX.TypeStep.footnote.font()))").dxType(.headline).foregroundStyle(Read4.ink)
-            } else {
-                Text(title).dxType(.headline).foregroundStyle(Read4.ink)
+    private var whenLabel: String {
+        let date = editing?.timestamp ?? openedAt
+        let time = date.formatted(date: .omitted, time: .shortened)
+        if Calendar.current.isDateInToday(date) { return String(localized: "Today, \(time)") }
+        return date.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day().hour().minute())
+    }
+
+    private func section(_ title: LocalizedStringKey, trailing: String? = nil, @ViewBuilder content: () -> some View) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(alignment: .firstTextBaseline) {
+                Text(title).dxType(.headline).foregroundStyle(ground.ink).accessibilityAddTraits(.isHeader)
+                Spacer()
+                if let trailing { Text(verbatim: trailing).dxType(.footnote).foregroundStyle(ground.muted) }
             }
             content()
         }
-        .padding(.top, DX.Space.xs)
+        .padding(.top, 24)
     }
 
-    private func moodButton(_ m: Mood) -> some View {
-        let on = mood == m
-        return Button { mood = on ? nil : m } label: {
-            VStack(spacing: 4) {
-                Circle().fill(on ? Read4.accent : Read4.track).frame(width: 22, height: 22)
-                Text(m.title).dxFont(12, weight: 500, style: .caption2)
-                    .foregroundStyle(on ? Read4.ink : Read4.muted)
-                    .lineLimit(1).minimumScaleFactor(0.7)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, DX.Space.xs)
-            .background(Read4.card, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .strokeBorder(on ? Read4.accent : Read4.hairline, lineWidth: on ? 1.5 : 1))
+    /// Five triggers (yours first) and Other; Other opens the rest.
+    private var shownTriggers: [Trigger] {
+        let mine = profile?.triggers ?? []
+        var first: [Trigger] = []
+        for t in mine + [.coffee, .stress, .morning, .meals, .driving] where t != .other && !first.contains(t) { first.append(t) }
+        let head = Array(first.prefix(5))
+        if showAllTriggers {
+            return head + Trigger.allCases.filter { !head.contains($0) && $0 != .other } + [.other]
         }
-        .buttonStyle(.plain)
-        .accessibilityLabel(Text(m.title))
+        if let trigger, !head.contains(trigger), trigger != .other { return head + [trigger, .other] }
+        return head + [.other]
+    }
+
+    private func triggerChip(_ t: Trigger) -> some View {
+        let on = trigger == t
+        let shape = RoundedRectangle(cornerRadius: 14, style: .continuous)
+        return Button {
+            if t == .other, !showAllTriggers {
+                withAnimation(DX.Move.settle) { showAllTriggers = true }
+            }
+            trigger = on ? nil : t
+        } label: {
+            Text(t == .other ? LocalizedStringResource("Other") : t.title)
+                .dxFont(15, weight: 600, style: .subheadline).foregroundStyle(ground.ink)
+                .lineLimit(2).minimumScaleFactor(0.8).multilineTextAlignment(.center)
+                .padding(.horizontal, 8)
+                .frame(maxWidth: .infinity, minHeight: 46)
+                .background(on ? ground.selTint : ground.card, in: shape)
+                .overlay(shape.strokeBorder(on ? ground.selEdge : ground.line, lineWidth: on ? 2 : 1))
+                .contentShape(shape)
+        }
+        .buttonStyle(.dxPress)
+        .sensoryFeedback(DX.Haptic.select, trigger: on)
         .accessibilityAddTraits(on ? .isSelected : [])
     }
 
-    private var orderedTriggers: [Trigger] {
-        let mine = profile?.triggers ?? []
-        return mine + Trigger.allCases.filter { !mine.contains($0) }
+    private func moodButton(_ m: CheckInMood) -> some View {
+        let on = mood == m
+        let shape = RoundedRectangle(cornerRadius: 20, style: .continuous)
+        return Button { mood = on ? nil : m } label: {
+            VStack(spacing: 7) {
+                MoodMoon(mood: m).frame(width: 35, height: 35)
+                Text(verbatim: m.label).dxFont(15, weight: 600, style: .subheadline).foregroundStyle(ground.ink)
+                    .lineLimit(1).minimumScaleFactor(0.8)
+            }
+            .frame(maxWidth: .infinity, minHeight: 80)
+            .background(on ? ground.selTint : ground.card, in: shape)
+            .overlay(shape.strokeBorder(on ? ground.selEdge : ground.line, lineWidth: on ? 2 : 1))
+            .contentShape(shape)
+        }
+        .buttonStyle(.dxPress)
+        .sensoryFeedback(DX.Haptic.select, trigger: on)
+        .accessibilityLabel(Text(verbatim: m.label))
+        .accessibilityAddTraits(on ? .isSelected : [])
     }
 
-    private func single<T: Hashable>(_ value: Binding<T?>) -> Binding<Set<T>> {
-        Binding(
-            get: { value.wrappedValue.map { [$0] } ?? [] },
-            set: { new in
-                let old = value.wrappedValue
-                value.wrappedValue = new.first { $0 != old } ?? (old.map(new.contains) == true ? old : nil)
+    private var noteField: some View {
+        HStack(alignment: .top, spacing: 10) {
+            DXIcon(.note, size: 18).foregroundStyle(ground.muted).padding(.top, 3)
+            TextField(String(localized: "Add a note, if it helps"), text: $note, axis: .vertical)
+                .dxType(.body)
+                .foregroundStyle(ground.ink)
+                .lineLimit(2...6)
+                .focused($noteFocused)
+        }
+        .padding(.horizontal, 16).padding(.vertical, 14)
+        .frame(maxWidth: .infinity, minHeight: 80, alignment: .topLeading)
+        .background(ground.card, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(ground.ink.opacity(0.16), lineWidth: 1))
+        .contentShape(Rectangle())
+        .onTapGesture { noteFocused = true }
+    }
+
+    /// Save rests until tapped, then turns into its done state: "✓ Saved · 4 today", and the form closes after 1.2 s.
+    private var saveButton: some View {
+        Button(action: save) {
+            HStack(spacing: 8) {
+                if saved {
+                    DXIcon(.check, size: 20, weight: 3)
+                    Text("Saved · \(Text(verbatim: "\(savedCount)").contentTransition(.numericText())) today")
+                } else {
+                    Text("Save")
+                }
             }
-        )
+            .frame(maxWidth: .infinity)
+        }
+        .buttonStyle(.dx(.primary, on: .reading))
+        .disabled(saved)
+        .animation(DX.Move.settle, value: saved)
+    }
+
+    private static func face(_ mood: Mood) -> CheckInMood {
+        switch mood {
+        case .low, .meh: .rough
+        case .okay: .okay
+        case .good: .good
+        case .great: .proud
+        }
+    }
+
+    private static func stored(_ mood: CheckInMood) -> Mood {
+        switch mood {
+        case .rough: .low
+        case .okay: .okay
+        case .good: .good
+        case .proud: .great
+        }
     }
 
     private func save() {
@@ -335,10 +524,16 @@ struct CravingLogForm: View {
         }()
         if entry.kind == .craving { entry.intensity = strength }
         entry.triggerRaw = trigger?.rawValue
-        entry.mood = mood
-        entry.place = place
+        entry.mood = mood.map(Self.stored)
+        entry.note = note.isEmpty ? nil : note
         try? context.save()
-        saved.toggle()
-        onSaved()
+        let clock = DayClock(boundaryHour: profile?.dayBoundaryHour ?? 4)
+        let today = clock.day(containing: .now)
+        savedCount = cravings.filter { clock.day(containing: $0.timestamp) == today }.count
+        saved = true
+        Task {
+            try? await Task.sleep(for: .milliseconds(1200))
+            onSaved()
+        }
     }
 }

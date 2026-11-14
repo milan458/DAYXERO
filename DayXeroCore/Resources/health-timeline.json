@@ -305,8 +305,8 @@
         "id": "withdrawal-start",
         "fromHours": 0,
         "toHours": 4,
-        "when": "A few hours",
-        "title": "Withdrawal can start",
+        "when": "A few hours in",
+        "title": "Withdrawal begins",
         "line": "Cravings, restlessness or irritability are common.",
         "detail": "Withdrawal can begin within a few hours of your last nicotine. It's a sign your body is adjusting.",
         "source": "smokefree",
@@ -325,7 +325,7 @@
         "id": "nicotine-gone",
         "fromHours": 24,
         "toHours": 72,
-        "when": "A few days",
+        "when": "A few days in",
         "title": "Most nicotine has left your body",
         "line": "Its by-product, cotinine, halves about every 15 to 20 hours.",
         "detail": "Nicotine itself clears within hours. Cotinine, what your body turns it into, halves about every 15 to 20 hours, so within a few days most of it is gone.",
@@ -344,8 +344,8 @@
         "id": "withdrawal-peak",
         "fromHours": 0,
         "toHours": 168,
-        "when": "First week",
-        "title": "Withdrawal is usually at its strongest",
+        "when": "The first week",
+        "title": "Withdrawal peaks",
         "line": "The hardest stretch for most people.",
         "detail": "For most people, withdrawal is strongest in the first days to week, then weakens the longer you stay nicotine-free.",
         "source": "smokefree",
@@ -365,7 +365,7 @@
         "fromHours": 168,
         "toHours": 336,
         "when": "1 to 2 weeks",
-        "title": "Mood changes from withdrawal usually ease",
+        "title": "Mood swings settle",
         "line": "",
         "detail": "Low mood, irritability or anxiety from withdrawal usually get better within a week or two. If they don't, talk to a doctor.",
         "source": "smokefree-mood",
@@ -427,16 +427,16 @@
         "when": "2 to 6 weeks",
         "title": "Healthier lips and gums",
         "line": "Less dryness, more of your natural colour.",
-        "detail": "Nicotine squeezes the tiny blood vessels in your lips and gums, and constant hits dry out your mouth. Take it away, and they start to recover.",
+        "detail": "Nicotine tightens the blood vessels in your gums, hiding bleeding and slowing healing.",
         "kind": "looks",
         "story": [
-          "Nicotine squeezes the tiny blood vessels in your lips and gums, and constant hits dry out your mouth. Take it away, and they start to recover.",
-          "Over a few weeks your lips get softer and your gums look pinker and healthier. It's quiet and gradual, the kind of thing you notice in the mirror one morning."
+          "Nicotine tightens the blood vessels in your gums, hiding bleeding and slowing healing.",
+          "As blood flow comes back, your gums get pinker and firmer and your lips less dry."
         ],
         "notice": [
-          "Softer, less dry lips",
-          "Pinker, healthier-looking gums",
-          "A mouth that feels less dry"
+          "Pinker, firmer gums",
+          "Fresher breath and a sharper sense of taste",
+          "A little bleeding when you brush at first. That's healing, not harm."
         ],
         "helps": "Sip water through the day, and keep up with brushing and flossing."
       },

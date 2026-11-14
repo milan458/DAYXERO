@@ -109,10 +109,17 @@ struct RootView: View {
                     }
                 }
             }
-            .sheet(item: $log.page) { page in
-                LogSheet(profile: profiles.first, start: page, detent: $log.detent) { log.page = nil }
+            // v5 (041): the menu is a sheet over Today; a craving or a slip is a full-screen form (042-046).
+            .sheet(isPresented: $log.menuShown, onDismiss: { log.menuDismissed() }) {
+                LogSheet(profile: profiles.first, start: .menu, onPush: { log.push($0) }) { log.page = nil }
                     .environment(sos)
-                    .presentationDetents([.medium, .large], selection: $log.detent)
+                    .presentationDetents([.height(436), .large])
+                    .presentationDragIndicator(.visible)
+                    .presentationCornerRadius(32)
+            }
+            .fullScreenCover(item: $log.form) { page in
+                LogSheet(profile: profiles.first, start: page) { log.page = nil }
+                    .environment(sos)
             }
             // Craving SOS sits above everything, so every way in reaches it in one step (S6.5).
             .fullScreenCover(item: $sos.launch) { launch in

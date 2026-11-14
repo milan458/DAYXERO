@@ -119,7 +119,7 @@ struct TodayView: View {
                 celebrating = nil
             }
         }
-        .sheet(isPresented: $showHealth) {
+        .fullScreenCover(isPresented: $showHealth) {
             HealthTimelineView(profile: profile, onClose: { showHealth = false })
         }
         .fullScreenCover(isPresented: $showPledge) {

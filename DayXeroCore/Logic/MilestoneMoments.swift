@@ -65,17 +65,17 @@ public enum Milestone: Hashable, Sendable, Identifiable {
     public var title: String {
         switch self {
         case .quitDay: String(localized: "Quit Day")
-        case .days(1): String(localized: "Your first full day")
-        case .days(3): String(localized: "Three days in")
-        case .days(7): String(localized: "One week in")
-        case .days(14): String(localized: "Two weeks in")
-        case .days(30): String(localized: "One month in")
-        case .days(60): String(localized: "Two months in")
-        case .days(90): String(localized: "Three months in")
-        case .days(100): String(localized: "100 days in")
-        case .days(180): String(localized: "Six months in")
-        case .days(365): String(localized: "One year in")
-        case let .days(n): String(localized: "\(n) days in")
+        case .days(1): String(localized: "One day free")
+        case .days(3): String(localized: "Three days free")
+        case .days(7): String(localized: "One week free")
+        case .days(14): String(localized: "Two weeks free")
+        case .days(30): String(localized: "One month free")
+        case .days(60): String(localized: "Two months free")
+        case .days(90): String(localized: "Three months free")
+        case .days(100): String(localized: "100 days free")
+        case .days(180): String(localized: "Six months free")
+        case .days(365): String(localized: "One year free")
+        case let .days(n): String(localized: "\(n) days free")
         }
     }
 

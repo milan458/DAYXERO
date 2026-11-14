@@ -22,6 +22,7 @@ struct ProgressTab: View {
     /// S27.11: Progress is the fourth tab and the way into Settings (Export, Delete, Privacy).
     @State private var showSettings = false
     @State private var showPaywall = false
+    @State private var showBadges = false
 
     var body: some View {
         TimelineView(.everyMinute) { timeline in
@@ -46,14 +47,19 @@ struct ProgressTab: View {
         .sheet(isPresented: $sharing) {
             ShareCardMaker(milestone: nil, stats: MilestoneStats(profile: profile, logs: entries)).presentationDetents([.large])
         }
-        .sheet(isPresented: $showHealth) {
+        .fullScreenCover(isPresented: $showHealth) {
             HealthTimelineView(profile: profile, onClose: { showHealth = false })
-                .presentationDetents([.large])
         }
         .sheet(isPresented: $showSettings) {
             SettingsSheet(profile: profile)
         }
         .fullProgramPaywall(isPresented: $showPaywall, profile: profile)
+        .sheet(isPresented: $showBadges) {
+            MilestonesSheet(daysClear: HomeSnapshot(profile: profile, isPro: entitlement.isPro, sessions: sessionRecords).daysClear) { m in
+                showBadges = false
+                milestoneOpen = m
+            }
+        }
         .sheet(item: $editing) { entry in
             Group {
                 if entry.kind == .slip {
@@ -76,7 +82,7 @@ struct ProgressTab: View {
                 VStack(alignment: .leading, spacing: 10) { built }
                     .padding(.horizontal, DX.Layout.gutter)
                     .dxReadableColumn()
-                    .padding(.top, DX.Space.s)
+                    .padding(.top, 2)
                     .padding(.bottom, DX.Space.l)
             }
             #if DEBUG
@@ -91,11 +97,11 @@ struct ProgressTab: View {
     @ViewBuilder
     private func gained(_ snap: HomeSnapshot, insights: Insights) -> some View {
         header(snap)
-        skyStrip(snap)
-        tiles(snap, insights: insights)
-        moneyLine(snap)
+        hero(snap, now: insights.now)
+        stats(snap)
         if !isPrepPhase(snap) {
-            MilestonesRow(daysClear: snap.daysClear) { milestoneOpen = $0 }
+            ProgressBadgeShelf(quitDay: profile.quitDay, daysClear: snap.daysClear, now: insights.now,
+                               onSeeAll: { showBadges = true }, onOpen: { milestoneOpen = $0 })
         }
     }
 
@@ -157,116 +163,96 @@ struct ProgressTab: View {
 
     // MARK: What you've gained (S7.4)
 
-    /// F12: "Since Quit Day · Fri 6 Nov" / "Your progress", with Log beside it.
+    /// v5 (036): "Your progress" with Settings beside it, and "Quit Day was Fri, Nov 6" under it.
     private func header(_ snap: HomeSnapshot) -> some View {
-        HStack(alignment: .center) {
-            VStack(alignment: .leading, spacing: 2) {
-                Text(eyebrow(snap)).dxType(.caption).foregroundStyle(Read4.muted)
-                // S27.15: plain title; the hand-drawn mark is kept for moments.
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(alignment: .center, spacing: 8) {
                 Text("Your progress")
                     .dxType(.large).foregroundStyle(Read4.ink)
                     .accessibilityAddTraits(.isHeader)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Button { showSettings = true } label: {
+                    DXIcon(.gear, size: 20)
+                        .foregroundStyle(Read4.ink)
+                        .frame(width: 42, height: 42)
+                        .background(DX.Ground.reading.card, in: Circle())
+                        .overlay(Circle().strokeBorder(DX.Ground.reading.line, lineWidth: 1))
+                        .frame(width: 44, height: 44)
+                        .contentShape(Circle())
+                }
+                .buttonStyle(.dxPress)
+                .accessibilityLabel(Text("Settings"))
+                .accessibilityIdentifier("progress.settings")
             }
-            Spacer()
-            LogButton { log.open() }
-            Button { showSettings = true } label: {
-                Image(systemName: "gearshape").font(.system(size: 17, weight: .semibold))
-                    .foregroundStyle(Read4.ink)
-                    .frame(width: 44, height: 44)
-                    .background(Read4.card, in: Circle())
-                    .overlay(Circle().strokeBorder(Read4.hairline))
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel(Text("Settings"))
-            .accessibilityIdentifier("progress.settings")
+            .dxArrive(0, delay: 0)
+            Text(eyebrow(snap)).dxType(.footnote).foregroundStyle(Read4.muted)
+                .dxArrive(1, delay: 0)
         }
-        .padding(.top, DX.Space.m)
     }
 
     private func eyebrow(_ snap: HomeSnapshot) -> String {
         if case let .prep(days) = snap.phase {
             return days == 1 ? String(localized: "Quit Day in 1 day") : String(localized: "Quit Day in \(days) days")
         }
-        return String(localized: "Since Quit Day · \(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)))")
+        return String(localized: "Quit Day was \(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day()))")
     }
 
-    /// The path at the sky's clarity, with "Sky 28% clear · clears a little each day".
-    private func skyStrip(_ snap: HomeSnapshot) -> some View {
+    /// v5 (036): the sky and the days since Quit Day in one card. In prep the sky waits for Quit Day.
+    private func hero(_ snap: HomeSnapshot, now: Date) -> some View {
         let prep = isPrepPhase(snap)
         let clarity = prep ? CrewGrowth.prepClarity : CrewGrowth.clarity(daysClear: snap.daysClear)
-        // v5 (036): Xero's dawn with Xero cheering on the hill; the sky's clarity in a pill.
-        return HorizonScene(.dawn, clarity: clarity, fit: .bottom)
-            .frame(height: 170)
-            .overlay(alignment: .bottomTrailing) {
-                XeroView(mood: .cheer, stage: CrewGrowth.stage(daysClear: snap.daysClear), points: 110)
-                    .frame(width: 110, height: 110)
-                    .dxBob()
-                    .padding(.trailing, 14)
-                    .padding(.bottom, 4)
-                    .accessibilityHidden(true)
-            }
-            .clipShape(RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
-            .overlay(alignment: .bottomLeading) {
-                HStack(spacing: 6) {
-                    DXIcon(.sun, size: 16, weight: 2)
-                    Text(prep ? "Sky \(clarity)% clear · clears from Quit Day" : "Sky \(clarity)% clear · clears a little each day")
-                        .dxType(.caption)
-                }
-                .foregroundStyle(DX.Fill.navy)
-                .padding(.horizontal, 12).padding(.vertical, 7)
-                .background(DX.Fill.cream.opacity(0.92), in: Capsule())
-                .padding(12)
-            }
-            .accessibilityElement(children: .combine)
+        let code = snap.currencyCode
+        let cents: (Double) -> String = { Decimal($0).formatted(.currency(code: code).precision(.fractionLength(2))) }
+        let whole: (Double) -> String = { Decimal($0).formatted(.currency(code: code).precision(.fractionLength(0))) }
+        let daysToQuit = Self.daysToQuit(snap)
+        return ProgressHeroCard(
+            count: prep ? daysToQuit : snap.daysClear,
+            countLabel: prep ? (daysToQuit == 1 ? String(localized: "day to Quit Day") : String(localized: "days to Quit Day"))
+                : (snap.daysClear == 1 ? String(localized: "day free") : String(localized: "days free")),
+            money: NSDecimalNumber(decimal: prep ? snap.moneyPerYear : snap.moneyKept).doubleValue,
+            moneyFormat: prep ? whole : cents,
+            moneyLabel: prep ? String(localized: "you'll keep a year") : String(localized: "kept so far"),
+            clarity: clarity, quitDay: profile.quitDay, today: now, showsDays: !prep,
+            note: prep ? String(localized: "Your sky starts clearing on Quit Day.") : String(localized: "Each day free clears a little more of your sky."))
+            .padding(.top, 2)
+            .dxArrive(2, delay: 0)
     }
 
-    /// A 2×2 grid: days clear, waves ridden out, not used, kept. In prep: prep done, waves, yearly, Quit Day. Only the
-    /// money counts up (QW5): every tile used to start from zero, so "0 days to Quit Day" showed for most of a second.
-    @ViewBuilder
-    private func tiles(_ snap: HomeSnapshot, insights: Insights) -> some View {
-        let columns = typeSize.isAccessibilitySize
-            ? [GridItem(.flexible())]
-            : [GridItem(.flexible(), spacing: 8), GridItem(.flexible())]
+    /// Three larger stats in equal columns, counting up: what's not been used, and waves ridden. In prep, prep done
+    /// and waves.
+    private func stats(_ snap: HomeSnapshot) -> some View {
         let ridden = entries.filter { $0.kind == .craving && $0.outcome == .passed }.count
-        let code = snap.currencyCode
-        let whole: (Double) -> String = { Decimal($0).formatted(.currency(code: code).precision(.fractionLength(0))) }
-        let cents: (Double) -> String = { Decimal($0).formatted(.currency(code: code).precision(.fractionLength(2))) }
-        LazyVGrid(columns: columns, alignment: .leading, spacing: 8) {
-            if isPrepPhase(snap) {
-                ProgressStat(value: Double(snap.prepDone), label: String(localized: "of \(snap.prepTotal) prep done"))
-                // "0 waves ridden out" reads as failure in a week where nobody is meant to resist yet (S27.5).
-                if ridden > 0 {
-                    ProgressStat(value: Double(ridden), label: ridden == 1 ? String(localized: "wave ridden out") : String(localized: "waves ridden out"))
-                }
-                // UX-12: forward-looking, never "saved" before Quit Day.
-                ProgressStat(value: NSDecimalNumber(decimal: snap.moneyPerYear).doubleValue, label: String(localized: "you'll keep / year"), format: whole,
-                             counts: true)
-                // The same countdown as Today's header, from the chosen Quit Day (S27.5).
-                let daysToQuit = Self.daysToQuit(snap)
-                ProgressStat(value: Double(daysToQuit), label: daysToQuit == 1 ? String(localized: "day to Quit Day") : String(localized: "days to Quit Day"))
-            } else {
-                ProgressStat(value: Double(snap.daysClear), label: snap.daysClear == 1 ? String(localized: "day since Quit Day") : String(localized: "days since Quit Day"))
-                ProgressStat(value: Double(ridden), label: ridden == 1 ? String(localized: "wave ridden out") : String(localized: "waves ridden out"))
-                ForEach(snap.counters) { counter in
-                    ProgressStat(value: Double(counter.avoided), label: String(localized: avoidedLabel(counter.product, count: counter.avoided)))
-                }
-                ProgressStat(value: NSDecimalNumber(decimal: snap.moneyKept).doubleValue, label: String(localized: "kept"), format: cents,
-                             counts: true)
+        var items: [(Int, String)] = []
+        if isPrepPhase(snap) {
+            items.append((snap.prepDone, String(localized: "of \(snap.prepTotal) prep\nsessions done")))
+        } else {
+            let counters = snap.counters.sorted { $0.product == .cigarettes && $1.product != .cigarettes }
+            for counter in counters.prefix(2) {
+                items.append((counter.avoided, String(localized: avoidedLabel(counter.product, count: counter.avoided))))
             }
         }
-    }
-
-    /// "$7 a day, about $2,555 a year. 2 evening check-ins with Glim."
-    private func moneyLine(_ snap: HomeSnapshot) -> some View {
-        let code = snap.currencyCode
-        let perDay = (snap.moneyPerYear / 365).formatted(.currency(code: code).precision(.fractionLength(0)))
-        let perYear = snap.moneyPerYear.formatted(.currency(code: code).precision(.fractionLength(0)))
-        let checkInLine = checkIns.isEmpty ? "" : " " + (checkIns.count == 1 ? String(localized: "1 evening check-in with Glim.")
-                                                         : String(localized: "\(checkIns.count) evening check-ins with Glim."))
-        return Text(verbatim: String(localized: "\(perDay) a day, about \(perYear) a year.") + checkInLine)
-            .dxType(.footnote)
-            .foregroundStyle(Read4.muted)
-            .fixedSize(horizontal: false, vertical: true)
+        items.append((ridden, ridden == 1 ? String(localized: "wave\nridden") : String(localized: "waves\nridden")))
+        let columns = typeSize.isAccessibilitySize ? [GridItem(.flexible())]
+            : Array(repeating: GridItem(.flexible(), spacing: 18, alignment: .topLeading), count: 3)
+        return LazyVGrid(columns: columns, alignment: .leading, spacing: 14) {
+            ForEach(Array(items.enumerated()), id: \.offset) { _, item in
+                VStack(alignment: .leading, spacing: 5) {
+                    CountingText(Double(item.0), duration: 0.9) { Double($0).rounded().formatted(.number.precision(.fractionLength(0))) }
+                        .dxFace(.display, 30, weight: 800, tracking: -0.8)
+                        .monospacedDigit()
+                        .foregroundStyle(Read4.ink)
+                        .lineLimit(1).minimumScaleFactor(0.6)
+                    Text(verbatim: item.1).dxFont(14, weight: 500, style: .footnote).foregroundStyle(Read4.muted)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(Text(verbatim: "\(item.0) \(item.1.replacingOccurrences(of: "\n", with: " "))"))
+            }
+        }
+        .padding(.horizontal, 4)
+        .padding(.top, 8)
+        .dxArrive(3, delay: 0)
     }
 
     /// What's changing: the change under way and the next one, each with its illustration (CHAR-05), and the
@@ -351,9 +337,9 @@ struct ProgressTab: View {
 
     private func avoidedLabel(_ product: Product, count: Int) -> String.LocalizationValue {
         switch product {
-        case .cigarettes: count == 1 ? "cigarette not smoked" : "cigarettes not smoked"
-        case .vape: count == 1 ? "puff not taken" : "puffs not taken"
-        case .pouches: count == 1 ? "pouch not used" : "pouches not used"
+        case .cigarettes: count == 1 ? "cigarette\nnot smoked" : "cigarettes\nnot smoked"
+        case .vape: count == 1 ? "puff\nnot taken" : "puffs\nnot taken"
+        case .pouches: count == 1 ? "pouch\nnot used" : "pouches\nnot used"
         }
     }
 

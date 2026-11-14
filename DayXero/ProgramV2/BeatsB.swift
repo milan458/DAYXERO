@@ -750,9 +750,10 @@ struct ShareBeat: View {
     }
 
     private var card: Image? {
-        let renderer = ImageRenderer(content: ShareCard(days: days, extras: quote.map { ["“\($0).”"] } ?? [], look: .dawn)
-            .frame(width: 1080, height: 1080))
-        renderer.scale = 1
+        let renderer = ImageRenderer(content: ShareCard(days: days, lines: quote.map { ["“\($0).”"] } ?? [])
+            .frame(width: ShareCard.size.width, height: ShareCard.size.height)
+            .environment(\.colorScheme, .light))
+        renderer.scale = 1080 / ShareCard.size.width
         return renderer.uiImage.map(Image.init(uiImage:))
     }
 
