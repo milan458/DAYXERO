@@ -20,6 +20,8 @@ struct ProgramPathMap: View {
         enum Kind { case done, today, locked, goal }
         let id: String
         let title: String
+        /// "Prep 1 · Fri · done", "Today · Prep 4 · 5 cards · 28 min", "Prep 5 · opens Tue".
+        let kicker: String
         let kind: Kind
         let minutes: Int
         let needsUpgrade: Bool
@@ -30,6 +32,8 @@ struct ProgramPathMap: View {
     struct Goal {
         let title: String
         let isDayXero: Bool
+        /// The date under the title ("Fri, Nov 6").
+        var subtitle: String?
     }
 
     let stops: [Stop]
@@ -37,6 +41,7 @@ struct ProgramPathMap: View {
     var goal: Goal?
     let onTap: (Stop) -> Void
     @State private var filled = false
+    @State private var reached = false
     private let motion = MotionPolicy()
 
     /// The road's column, the gap between stamps (today's gets more room), and the goal's drop onto the horizon.
@@ -44,6 +49,8 @@ struct ProgramPathMap: View {
     private let step: CGFloat = 54
     private let todayGap: CGFloat = 64
     static let road = Color(light: 0xCBEBD8, dark: 0x34526B)
+    /// 022: neutral text on the plan page (no green).
+    static let muted = Color(light: 0x5E5975, dark: 0xB3BACC)
     static let roadEdge = Color(light: (0x24493A, 0.16), dark: (0x000000, 0.5))
     static let roadDone = Color(light: 0xFFAE73, dark: 0xC27A4E)
 
@@ -54,38 +61,50 @@ struct ProgramPathMap: View {
         let ys = yPositions()
         let last = goal == nil ? stops.count - 1 : stops.count
         let goalY = (ys.last ?? 0)
-        let height = goalY + 90
+        let height = goalY + 30
         let todayIndex = stops.firstIndex { $0.kind == .today }
         let doneUpTo = todayIndex ?? (stops.lastIndex { $0.kind == .done } ?? -1)
         GeometryReader { proxy in
             let width = proxy.size.width
-            let goalX = min(140, width * 0.36)
+            let goalX = min(128, width * 0.36)
             let points = roadPoints(ys: ys, goalX: goalX)
             ZStack(alignment: .topLeading) {
-                ProgramHills(top: goalY - 20)
-                    .frame(width: width + 2 * DX.Layout.gutter, height: height + 60)
-                    .offset(x: -DX.Layout.gutter)
-                    .accessibilityHidden(true)
-                Canvas { ctx, _ in
-                    guard points.count > 1 else { return }
-                    let road = spline(points, 0, slots - 1)
-                    var edge = ctx
-                    edge.translateBy(x: 0, y: 3)
-                    edge.stroke(road, with: .color(Self.roadEdge), style: StrokeStyle(lineWidth: 56, lineCap: .round, lineJoin: .round))
-                    ctx.stroke(road, with: .color(Self.road), style: StrokeStyle(lineWidth: 52, lineCap: .round, lineJoin: .round))
-                    if doneUpTo > 0 {
-                        ctx.stroke(spline(points, 0, doneUpTo).trimmedPath(from: 0, to: filled || motion.reduce ? 1 : 0),
-                                   with: .color(Self.roadDone), style: StrokeStyle(lineWidth: 52, lineCap: .round, lineJoin: .round))
-                    }
-                    ctx.stroke(spline(points, max(doneUpTo, 0) + 1, slots - 1), with: .color(ground.ink.opacity(0.4)),
-                               style: StrokeStyle(lineWidth: 3, lineCap: .round, dash: [1, 10]))
+                // The warm glow where Day Xero rises, brightening as the coin comes up.
+                if goal != nil {
+                    HorizonGlow()
+                        .frame(width: width + 2 * DX.Layout.gutter, height: 280)
+                        .offset(x: -DX.Layout.gutter, y: goalY - 162)
+                        .dxFade(delay: 1.8)
+                        .accessibilityHidden(true)
                 }
-                .animation(motion.animation(.timingCurve(0.2, 0.7, 0.2, 1, duration: 1.1)), value: filled)
+                ProgramHill(layer: .back, top: goalY - 14)
+                    .frame(width: width + 2 * DX.Layout.gutter, height: height + 700)
+                    .offset(x: -DX.Layout.gutter)
+                    .modifier(HillRise(delay: 1.5))
+                    .accessibilityHidden(true)
+                Group {
+                    SplineShape(points: points, from: 0, to: points.count - 1)
+                        .stroke(Self.roadEdge, style: StrokeStyle(lineWidth: 56, lineCap: .round, lineJoin: .round))
+                        .offset(y: 3)
+                    SplineShape(points: points, from: 0, to: points.count - 1)
+                        .stroke(Self.road, style: StrokeStyle(lineWidth: 52, lineCap: .round, lineJoin: .round))
+                }
+                .dxFade(delay: 0.15)
                 .accessibilityHidden(true)
+                if doneUpTo > 0 {
+                    // The finished stretch fills prep-orange from the top to today's stamp (1100 ms).
+                    SplineShape(points: points, from: 0, to: doneUpTo)
+                        .trim(from: 0, to: filled || motion.reduce ? 1 : 0)
+                        .stroke(Self.roadDone, style: StrokeStyle(lineWidth: 52, lineCap: .round, lineJoin: .round))
+                        .accessibilityHidden(true)
+                }
+                SplineShape(points: points, from: max(doneUpTo, 0) + 1, to: points.count - 1)
+                    .stroke(ground.ink.opacity(0.4), style: StrokeStyle(lineWidth: 3, lineCap: .round, dash: [1, 10]))
+                    .dxFade(delay: 1.3)
+                    .accessibilityHidden(true)
 
                 if let goal {
                     ZStack {
-                        goalGlow
                         if goal.isDayXero {
                             DXBadge(.xero, state: .next(nil), size: 76)
                         } else {
@@ -93,18 +112,29 @@ struct ProgramPathMap: View {
                         }
                     }
                     .frame(width: 76, height: 76)
+                    .shadow(color: Color(red: 150 / 255, green: 90 / 255, blue: 20 / 255).opacity(0.24), radius: 6, y: 6)
                     .position(x: goalX, y: goalY)
-                    .dxSettle(delay: 1.3)
+                    .modifier(CoinRise())
                     .accessibilityElement()
-                    .accessibilityLabel(Text(verbatim: goal.title))
-                    Text(verbatim: goal.title)
-                        .dxType(.headline)
-                        .foregroundStyle(ground.ink)
-                        .fixedSize()
-                        .position(x: goalX + 50 + 50, y: goalY - 4)
-                        .dxFade(delay: 1.9)
-                        .accessibilityHidden(true)
+                    .accessibilityLabel(Text(verbatim: [goal.title, goal.subtitle].compactMap { $0 }.joined(separator: ", ")))
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(verbatim: goal.title).dxFace(.display, 20, weight: 700, tracking: -0.2).foregroundStyle(ground.ink)
+                        if let subtitle = goal.subtitle {
+                            Text(verbatim: subtitle).dxFace(.body, 14, weight: 600).foregroundStyle(Self.muted)
+                        }
+                    }
+                    .fixedSize()
+                    .frame(width: max(width - goalX - 52, 10), alignment: .leading)
+                    .position(x: goalX + 52 + max(width - goalX - 52, 10) / 2, y: goalY - 4)
+                    .dxFade(delay: 1.9)
+                    .accessibilityHidden(true)
                 }
+                ProgramHill(layer: .front, top: goalY - 14)
+                    .frame(width: width + 2 * DX.Layout.gutter, height: height + 700)
+                    .offset(x: -DX.Layout.gutter)
+                    .modifier(HillRise(delay: 1.6))
+                    .allowsHitTesting(false)
+                    .accessibilityHidden(true)
                 ForEach(Array(stops.enumerated()), id: \.element.id) { index, stop in
                     let isGoal = goal == nil && index == last && stops.count > 1
                     let p = isGoal ? CGPoint(x: goalX, y: goalY) : CGPoint(x: x, y: ys[index])
@@ -112,28 +142,24 @@ struct ProgramPathMap: View {
                         .buttonStyle(.dxPress)
                         .position(p)
                         .modifier(StopArrive(index: index, kind: stop.kind, isGoal: isGoal))
-                        .accessibilityLabel(Text(verbatim: stop.title))
+                        .accessibilityLabel(Text(verbatim: "\(stop.kicker). \(stop.title)"))
                         .accessibilityValue(Text(verbatim: stop.accessibility))
                         .accessibilityHint(Text("Shows this session"))
                     label(stop, isGoal: isGoal, at: p, width: width)
-                        .modifier(StopArrive(index: index, kind: stop.kind, isGoal: isGoal))
+                        .modifier(StopArrive(index: index, kind: stop.kind, isGoal: isGoal, label: true))
                 }
             }
         }
         .frame(height: height)
-        .sensoryFeedback(.impact(weight: .light), trigger: filled)
+        .sensoryFeedback(.impact(weight: .light), trigger: reached) { _, now in now }
         .onAppear {
             guard !filled else { return }
-            withAnimation(motion.animation(.timingCurve(0.2, 0.7, 0.2, 1, duration: 1.1)).delay(0.15)) { filled = true }
+            withAnimation(motion.animation(.timingCurve(0.2, 0.7, 0.2, 1, duration: 1.1)).delay(0.3)) { filled = true }
+            Task {
+                try? await Task.sleep(for: .seconds(1.4))
+                reached = doneUpTo > 0
+            }
         }
-    }
-
-    private var goalGlow: some View {
-        Circle()
-            .fill(RadialGradient(colors: [Color(light: (0xFFAC50, 0.5), dark: (0xFFB068, 0.3)), .clear],
-                                 center: .center, startRadius: 0, endRadius: 70))
-            .frame(width: 150, height: 150)
-            .allowsHitTesting(false)
     }
 
     /// Top-down: stamps 54 pt apart, today's 64 pt from its neighbours; the goal 62 pt under the last stamp.
@@ -162,29 +188,10 @@ struct ProgramPathMap: View {
         return pts
     }
 
-    /// A Catmull-Rom spline through the points `from`...`to` (road indices map to stops; the last stop is the end).
-    private func spline(_ all: [CGPoint], _ fromStop: Int, _ toStop: Int) -> Path {
-        let lastStop = slots - 1
-        let from = fromStop
-        let to = toStop >= lastStop ? all.count - 1 : toStop
-        var path = Path()
-        guard from < all.count, to < all.count, from <= to else { return path }
-        path.move(to: all[from])
-        guard from < to else { return path }
-        for i in from..<to {
-            let p0 = all[max(i - 1, 0)], p1 = all[i], p2 = all[i + 1], p3 = all[min(i + 2, all.count - 1)]
-            let c1 = CGPoint(x: p1.x + (p2.x - p0.x) / 6, y: p1.y + (p2.y - p0.y) / 6)
-            let c2 = CGPoint(x: p2.x - (p3.x - p1.x) / 6, y: p2.y - (p3.y - p1.y) / 6)
-            path.addCurve(to: p2, control1: c1, control2: c2)
-        }
-        return path
-    }
-
     @ViewBuilder
     private func node(_ stop: Stop, number: Int, isGoal: Bool) -> some View {
         if isGoal {
             ZStack {
-                goalGlow
                 DXBadge(.xero, state: stop.kind == .done ? .earned : .next(nil), size: 76)
             }
             .frame(width: 76, height: 76)
@@ -192,6 +199,8 @@ struct ProgramPathMap: View {
             switch stop.kind {
             case .done:
                 ZStack {
+                    // kit `.stamp`: a 3 pt ring of the page round each stamp, so it sits on the road like a seal.
+                    Circle().fill(Color(light: 0xFBF6EC, dark: 0x0E1322)).frame(width: 48, height: 48)
                     DXBadge(.prep, size: 42)
                     Text(verbatim: "\(number)").dxFace(.display, 17, weight: 800, tracking: -0.3).foregroundStyle(Color(hex: 0x1E1A3A))
                 }
@@ -199,7 +208,8 @@ struct ProgramPathMap: View {
                 TodaySeal()
             case .locked, .goal:
                 ZStack {
-                    Circle().fill(Color(light: 0xFBF6EC, dark: 0x182034)).frame(width: 42, height: 42)
+                    Circle().fill(Color(light: 0xFBF6EC, dark: 0x0E1322)).frame(width: 48, height: 48)
+                    Circle().fill(Color(light: 0xFFFFFF, dark: 0x212A41)).frame(width: 42, height: 42)
                     DXBadge(.prep, state: .next(nil), size: 42)
                     if stop.needsUpgrade {
                         DXIcon(.lock, size: 14, weight: 2.4).foregroundStyle(ground.ink)
@@ -215,35 +225,50 @@ struct ProgramPathMap: View {
     private func label(_ stop: Stop, isGoal: Bool, at p: CGPoint, width: CGFloat) -> some View {
         if isGoal {
             Text(verbatim: stop.title)
-                .dxType(.headline)
+                .dxFace(.display, 20, weight: 700, tracking: -0.2)
                 .foregroundStyle(ground.ink)
                 .fixedSize()
-                .position(x: p.x + 50 + 60, y: p.y - 4)
+                .position(x: p.x + 52 + 50, y: p.y - 4)
                 .accessibilityHidden(true)
         } else if stop.kind == .today {
-            let left = p.x + 42
-            VStack(alignment: .leading, spacing: 2) {
-                Text("Today · \(stop.minutes) min").dxType(.caption).foregroundStyle(DX.Ground.reading.muted)
+            // The up-next card beside today's stamp, with a small pointer toward it.
+            let left = p.x + 50
+            VStack(alignment: .leading, spacing: 3) {
+                Text(verbatim: stop.kicker).dxFace(.body, 13, weight: 600).foregroundStyle(DX.Ground.reading.muted)
+                    .lineLimit(1).minimumScaleFactor(0.8)
                 Text(verbatim: stop.title).dxType(.headline).foregroundStyle(DX.Ground.reading.ink)
                     .lineLimit(2).minimumScaleFactor(0.8)
             }
             .padding(.horizontal, 16)
-            .padding(.vertical, 14)
+            .padding(.top, 14).padding(.bottom, 15)
             .frame(width: width - left, alignment: .leading)
-            .background(Color(light: 0xFFFFFF, dark: 0x182034), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
-            .shadow(color: Color(light: (0x24493A, 0.12), dark: (0x000000, 0.3)), radius: 10, y: 6)
+            .background(alignment: .leading) {
+                ZStack(alignment: .leading) {
+                    RoundedRectangle(cornerRadius: 3).fill(Color(light: 0xFFFFFF, dark: 0x182034))
+                        .frame(width: 14, height: 14).rotationEffect(.degrees(45)).offset(x: -6)
+                    RoundedRectangle(cornerRadius: 22, style: .continuous).fill(Color(light: 0xFFFFFF, dark: 0x182034))
+                }
+                .shadow(color: Color(light: (0x24493A, 0.12), dark: (0x000000, 0)), radius: 11, y: 8)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 22, style: .continuous)
+                        .strokeBorder(Color(light: (0xFFFFFF, 0), dark: (0xFFFFFF, 0.12)), lineWidth: 1)
+                }
+            }
             .position(x: left + (width - left) / 2, y: p.y)
             .accessibilityHidden(true)
         } else {
             let left = p.x + 40
-            Text(verbatim: stop.title)
-                .dxFace(stop.kind == .done ? .body : .body, 15, weight: stop.kind == .done ? 500 : 600)
-                .foregroundStyle(stop.kind == .done ? ground.muted : ground.ink)
-                .lineLimit(2)
-                .minimumScaleFactor(0.85)
-                .frame(width: width - left, alignment: .leading)
-                .position(x: left + (width - left) / 2, y: p.y)
-                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 1) {
+                Text(verbatim: stop.kicker).dxFace(.body, 13, weight: 600).foregroundStyle(Self.muted)
+                    .lineLimit(1).minimumScaleFactor(0.8)
+                Text(verbatim: stop.title)
+                    .dxFace(.body, 15, weight: stop.kind == .done ? 500 : 600)
+                    .foregroundStyle(stop.kind == .done ? Self.muted : ground.ink)
+                    .lineLimit(1).minimumScaleFactor(0.85)
+            }
+            .frame(width: width - left, alignment: .leading)
+            .position(x: left + (width - left) / 2, y: p.y)
+            .accessibilityHidden(true)
         }
     }
 }
@@ -292,22 +317,96 @@ private struct StopArrive: ViewModifier {
     let index: Int
     let kind: ProgramPathMap.Stop.Kind
     let isGoal: Bool
+    var label = false
 
     func body(content: Content) -> some View {
         if isGoal {
-            content.dxSettle(delay: 1.3)
+            content.modifier(CoinRise())
         } else {
             switch kind {
-            case .done: content.dxArrive(0, delay: 0.3 + Double(index) * 0.36)
+            case .done: content.dxArrive(0, delay: 0.3 + Double(index) * 0.36 + (label ? 0.06 : 0))
             case .today: content.dxArrive(0, delay: 1.25)
-            case .locked, .goal: content.dxFade(delay: 1.4)
+            case .locked, .goal: content.dxFade(delay: label ? 1.45 : 1.4)
             }
         }
     }
 }
 
-/// The two sage hills the road runs into (kit 022 `.hill.b` and `.hill.f`), drawn from `top`.
-struct ProgramHills: View {
+/// The coin rises onto the horizon like a sunrise: 40 pt up and in, 1100 ms settle, from 1.75 s.
+private struct CoinRise: ViewModifier {
+    @State private var up = false
+    private let motion = MotionPolicy()
+
+    func body(content: Content) -> some View {
+        content
+            .offset(y: up || motion.reduce ? 0 : 40)
+            .opacity(up || motion.reduce ? 1 : 0)
+            .onAppear {
+                withAnimation(motion.animation(DX.Move.settle.speed(0.9 / 1.1)).delay(1.75)) { up = true }
+            }
+    }
+}
+
+/// A hill rises 24 pt into place (900 ms settle).
+private struct HillRise: ViewModifier {
+    let delay: Double
+    @State private var up = false
+    private let motion = MotionPolicy()
+
+    func body(content: Content) -> some View {
+        content
+            .offset(y: up || motion.reduce ? 0 : 24)
+            .opacity(up || motion.reduce ? 1 : 0)
+            .onAppear { withAnimation(motion.animation(DX.Move.settle).delay(delay)) { up = true } }
+    }
+}
+
+/// A Catmull-Rom spline through `points[from...to]`, as a shape, so its stroke can be trimmed and animated.
+private struct SplineShape: Shape {
+    let points: [CGPoint]
+    let from: Int
+    let to: Int
+
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        guard from >= 0, to < points.count, from <= to else { return path }
+        path.move(to: points[from])
+        guard from < to else { return path }
+        for i in from..<to {
+            let p0 = points[max(i - 1, 0)], p1 = points[i], p2 = points[i + 1], p3 = points[min(i + 2, points.count - 1)]
+            let c1 = CGPoint(x: p1.x + (p2.x - p0.x) / 6, y: p1.y + (p2.y - p0.y) / 6)
+            let c2 = CGPoint(x: p2.x - (p3.x - p1.x) / 6, y: p2.y - (p3.y - p1.y) / 6)
+            path.addCurve(to: p2, control1: c1, control2: c2)
+        }
+        return path
+    }
+}
+
+/// The warm glow where Day Xero rises (kit 022 `.glow`): a soft radial pool round the coin and a faint band on the horizon.
+private struct HorizonGlow: View {
+    @Environment(\.colorScheme) private var scheme
+
+    var body: some View {
+        let a = scheme == .dark ? 0.3 : 0.66
+        let glow = scheme == .dark ? Color(red: 1, green: 176 / 255, blue: 104 / 255) : Color(red: 1, green: 172 / 255, blue: 80 / 255)
+        GeometryReader { proxy in
+            ZStack(alignment: .topLeading) {
+                LinearGradient(stops: [.init(color: glow.opacity(0), location: 0.34), .init(color: glow.opacity(a * 0.45), location: 0.56),
+                                       .init(color: glow.opacity(0), location: 0.66)], startPoint: .top, endPoint: .bottom)
+                Ellipse()
+                    .fill(RadialGradient(stops: [.init(color: glow.opacity(a), location: 0), .init(color: glow.opacity(a * 0.35), location: 0.55),
+                                                 .init(color: glow.opacity(0), location: 1)], center: .center, startRadius: 0, endRadius: 200))
+                    .frame(width: 400, height: 300)
+                    .position(x: 150 * proxy.size.width / 390, y: 162)
+            }
+        }
+    }
+}
+
+/// One of the two sage hills the road runs into (kit 022 `.hill.b` and `.hill.f`), drawn from `top`.
+struct ProgramHill: View {
+    enum Layer { case back, front }
+    let layer: Layer
     let top: CGFloat
     @Environment(\.colorScheme) private var scheme
 
@@ -316,28 +415,26 @@ struct ProgramHills: View {
         Canvas { ctx, size in
             let sx = size.width / 390
             func y(_ v: CGFloat) -> CGFloat { top + (v - 548) }
-            let back = Color(hex: dark ? 0x1E3646 : 0xE4E6D2), front = Color(hex: dark ? 0x172B3A : 0xD2D9BE)
+            let fill = layer == .back ? Color(hex: dark ? 0x1E3646 : 0xE4E6D2) : Color(hex: dark ? 0x172B3A : 0xD2D9BE)
             let rim = dark ? Color(hex: 0xC8E1EB).opacity(0.14) : Color.white.opacity(0.7)
             let sh = dark ? Color.black.opacity(0.5) : Color(hex: 0x464828).opacity(0.18)
-            var b = Path()
-            b.move(to: CGPoint(x: 0, y: y(576)))
-            b.addCurve(to: CGPoint(x: 170 * sx, y: y(562)), control1: CGPoint(x: 50 * sx, y: y(562)), control2: CGPoint(x: 110 * sx, y: y(556)))
-            b.addCurve(to: CGPoint(x: 340 * sx, y: y(554)), control1: CGPoint(x: 230 * sx, y: y(568)), control2: CGPoint(x: 290 * sx, y: y(564)))
-            b.addCurve(to: CGPoint(x: 390 * sx, y: y(548)), control1: CGPoint(x: 362 * sx, y: y(550)), control2: CGPoint(x: 378 * sx, y: y(548)))
-            var bFill = b
-            bFill.addLine(to: CGPoint(x: size.width, y: size.height)); bFill.addLine(to: CGPoint(x: 0, y: size.height)); bFill.closeSubpath()
+            var edge = Path()
+            if layer == .back {
+                edge.move(to: CGPoint(x: 0, y: y(576)))
+                edge.addCurve(to: CGPoint(x: 170 * sx, y: y(562)), control1: CGPoint(x: 50 * sx, y: y(562)), control2: CGPoint(x: 110 * sx, y: y(556)))
+                edge.addCurve(to: CGPoint(x: 340 * sx, y: y(554)), control1: CGPoint(x: 230 * sx, y: y(568)), control2: CGPoint(x: 290 * sx, y: y(564)))
+                edge.addCurve(to: CGPoint(x: 390 * sx, y: y(548)), control1: CGPoint(x: 362 * sx, y: y(550)), control2: CGPoint(x: 378 * sx, y: y(548)))
+            } else {
+                edge.move(to: CGPoint(x: 0, y: y(600)))
+                edge.addCurve(to: CGPoint(x: 180 * sx, y: y(586)), control1: CGPoint(x: 60 * sx, y: y(588)), control2: CGPoint(x: 120 * sx, y: y(582)))
+                edge.addCurve(to: CGPoint(x: 390 * sx, y: y(580)), control1: CGPoint(x: 240 * sx, y: y(590)), control2: CGPoint(x: 300 * sx, y: y(596)))
+            }
+            var area = edge
+            area.addLine(to: CGPoint(x: size.width, y: size.height)); area.addLine(to: CGPoint(x: 0, y: size.height)); area.closeSubpath()
             var lifted = ctx
             lifted.addFilter(.shadow(color: sh, radius: 5, y: -3))
-            lifted.fill(bFill, with: .color(back))
-            ctx.stroke(b, with: .color(rim), lineWidth: 1.5)
-            var f = Path()
-            f.move(to: CGPoint(x: 0, y: y(600)))
-            f.addCurve(to: CGPoint(x: 180 * sx, y: y(586)), control1: CGPoint(x: 60 * sx, y: y(588)), control2: CGPoint(x: 120 * sx, y: y(582)))
-            f.addCurve(to: CGPoint(x: 390 * sx, y: y(580)), control1: CGPoint(x: 240 * sx, y: y(590)), control2: CGPoint(x: 300 * sx, y: y(596)))
-            var fFill = f
-            fFill.addLine(to: CGPoint(x: size.width, y: size.height)); fFill.addLine(to: CGPoint(x: 0, y: size.height)); fFill.closeSubpath()
-            lifted.fill(fFill, with: .color(front))
-            ctx.stroke(f, with: .color(rim), lineWidth: 1.5)
+            lifted.fill(area, with: .color(fill))
+            ctx.stroke(edge, with: .color(rim), lineWidth: 1.5)
         }
     }
 }

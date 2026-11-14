@@ -15,9 +15,6 @@ struct ProgramView: View {
     @State private var open: SessionOpen?
     @State private var upgradeTitle: String?
     @State private var showPaywall = false
-    @State private var picked: String?
-    /// Which ends of the phase track have more pills past them (QW9).
-    @State private var trackFades = TrackFades()
     /// The stop whose sheet is open (UX-02).
     @State private var sheet: StopSheet?
     /// What the sheet's button asked for, done once the sheet has closed so a session or paywall can open.
@@ -38,55 +35,49 @@ struct ProgramView: View {
             let current = store.current(now: timeline.date)?.id
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Prep, Quit Day, then four weeks").dxType(.footnote).foregroundStyle(ground.muted)
-                            .dxArrive(1)
-                        // Plain title: the hand-drawn mark is kept for celebrations and onboarding (S27.15).
-                        Text("Your program")
-                            .dxType(.large).foregroundStyle(ground.ink)
-                            .accessibilityAddTraits(.isHeader)
-                            .dxArrive(0)
-                    }
                     if let content = store.content {
                         let phase = selectedPhase(content, current: current)
-                        phasePicker(content, states: states, current: current, selected: phase.id)
+                        header(phase, states: states, now: timeline.date)
                         if let graduated = profile.progress?.graduatedAt { completeHeader(graduated) }
                         let nextPhase = content.phases.firstIndex { $0.id == phase.id }
                             .flatMap { $0 + 1 < content.phases.count ? content.phases[$0 + 1] : nil }
-                        ProgramPathMap(stops: stops(phase, content: content, states: states, current: current, store: store),
+                        ProgramPathMap(stops: stops(phase, content: content, states: states, current: current, store: store, now: timeline.date),
                                        ground: ground,
-                                       goal: nextPhase.map { .init(title: $0.title, isDayXero: $0.id == "dayxero") }) { stop in
+                                       goal: nextPhase.map { next in
+                                           .init(title: next.title, isDayXero: next.id == "dayxero",
+                                                 subtitle: next.id == "dayxero"
+                                                    ? profile.quitDay.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day()) : nil)
+                                       }) { stop in
                             guard let session = content.session(stop.id) else { return }
                             sheet = StopSheet(session: session, title: stop.title, state: states[stop.id] ?? .locked,
                                               needsUpgrade: stop.needsUpgrade)
                         }
-                        if let line = nextLine(content, states: states, current: current, variant: store.variant) {
+                        if let line = teaseLine(phase, content: content, states: states, current: current, variant: store.variant) {
                             // v5 (022): the locked row on the hill, a lock tile and one line.
-                            HStack(spacing: 14) {
-                                DXIcon(.lock, size: 20, weight: 2.4)
+                            HStack(spacing: 12) {
+                                DXIcon(.lock, size: 18, weight: 2.4)
                                     .foregroundStyle(ground.ink)
-                                    .frame(width: 36, height: 36)
-                                    .background(Color(light: (0xFFFFFF, 0.7), dark: (0xFFFFFF, 0.08)), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
+                                    .frame(width: 34, height: 34)
+                                    .background(ground.ink.opacity(0.08), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
                                 Text(verbatim: line).dxFace(.body, 15, weight: 600).foregroundStyle(ground.ink)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
-                            .padding(12)
-                            .background(Color(light: (0xFFFFFF, 0.55), dark: (0x182034, 0.9)), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                            .padding(.leading, 10).padding(.trailing, 16)
+                            .frame(minHeight: 48)
+                            .background(Color(light: (0xFFFFFF, 0.72), dark: (0x182034, 0.8)), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
                             .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(DX.Ground.reading.line, lineWidth: 1))
+                            .accessibilityElement(children: .combine)
                             .dxArrive(0, delay: 2.1)
                         }
-                        Text(verbatim: phaseHeading(phase, states: states)).dxType(.footnote)
-                            .foregroundStyle(ground.muted)
                         // After graduation the program keeps going: boosters on Days 45, 60 and 90, and Glim
                         // checking in once a week if they want it (S27.18).
                         if profile.progress?.graduatedAt != nil { weeklyCheckIn }
                     }
-                    variantLine.padding(.top, DX.Space.s)
                     nrtGroup(now: timeline.date)
                 }
                 .padding(.horizontal, DX.Layout.gutter)
                 .dxReadableColumn()
-                .padding(.top, DX.Space.l)
+                .padding(.top, 8)
                 .padding(.bottom, DX.Space.l)
             }
             .background(page.ignoresSafeArea())
@@ -119,98 +110,94 @@ struct ProgramView: View {
 
     /// The phase picked, else the one holding today's session, else the last.
     private func selectedPhase(_ content: ProgramContent, current: String?) -> ProgramContent.Phase {
-        if let picked, let phase = content.phases.first(where: { $0.id == picked }) { return phase }
         if let current, let phase = content.phases.first(where: { $0.sessionIds.contains(current) }) { return phase }
         return content.phases.last ?? content.phases[0]
     }
 
-    /// Phase pills in a track: a tick when done, ink for the one shown. The track runs edge to edge and scrolls the
-    /// pill shown to the centre, with the ends fading out, so a pill is never cut off mid-word at the screen edge.
-    private func phasePicker(_ content: ProgramContent, states: [String: ProgramUnlock.State], current: String?, selected: String) -> some View {
-        ScrollViewReader { proxy in
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 2) {
-                    ForEach(content.phases) { phase in
-                        let done = !phase.sessionIds.isEmpty && phase.sessionIds.allSatisfy { if case .completed = states[$0] { true } else { false } }
-                        let on = phase.id == selected
-                        Button {
-                            withAnimation(motion.animation(DX.Move.settle)) { picked = phase.id }
-                        } label: {
-                            HStack(spacing: 4) {
-                                Text(verbatim: phase.title).dxFont(14, weight: 700, style: .footnote)
-                                    .lineLimit(1)
-                                if done { Image(systemName: "checkmark").font(.system(size: 11, weight: .heavy)) }
-                            }
-                            // A pill is as wide as its title: it scrolls rather than squeezing or wrapping.
-                            .fixedSize()
-                            .foregroundStyle(on ? DX.Ground.reading.background : ground.ink)
-                            .padding(.horizontal, 14)
-                            .frame(minHeight: DX.Layout.touchTarget)
-                            .background(on ? ground.ink : Color.clear, in: Capsule())
-                            .contentShape(Capsule())
-                        }
-                        .buttonStyle(.plain)
-                        .id(phase.id)
-                        .accessibilityAddTraits(on ? [.isButton, .isSelected] : .isButton)
-                        .accessibilityValue(Text(done ? "Done" : ""))
-                    }
-                }
-                .padding(4)
-                .background(Color(light: (0x1E1A3A, 0.08), dark: (0xFFFFFF, 0.08)), in: Capsule())
-            }
-            // At rest the track lines up with the title; scrolled, it runs to the screen edges under the fades.
-            .contentMargins(.horizontal, DX.Layout.gutter, for: .scrollContent)
-            .padding(.horizontal, -DX.Layout.gutter)
-            .onScrollGeometryChange(for: TrackFades.self) { geo in
-                TrackFades(leading: geo.contentOffset.x > -geo.contentInsets.leading + 1,
-                           trailing: geo.contentOffset.x + geo.containerSize.width < geo.contentSize.width + geo.contentInsets.trailing - 1)
-            } action: { _, fades in
-                withAnimation(motion.animation(.easeOut(duration: 0.2))) { trackFades = fades }
-            }
-            .mask { Self.edgeFade(trackFades) }
-            .onAppear { proxy.scrollTo(selected, anchor: .center) }
-            .onChange(of: selected) { _, id in
-                withAnimation(motion.animation(DX.Move.settle)) { proxy.scrollTo(id, anchor: .center) }
-            }
-        }
-    }
-
-    /// Opaque in the middle, fading to clear at each end: over the gutter alone where the track ends, and 28 pt further
-    /// in where more pills lie past the edge, so a cut-off pill visibly fades rather than stopping dead (QW9).
-    private static func edgeFade(_ fades: TrackFades) -> some View {
-        HStack(spacing: 0) {
-            LinearGradient(colors: [.clear, .black], startPoint: .leading, endPoint: .trailing)
-                .frame(width: DX.Layout.gutter + (fades.leading ? 28 : 0))
-            Rectangle().fill(.black)
-            LinearGradient(colors: [.black, .clear], startPoint: .leading, endPoint: .trailing)
-                .frame(width: DX.Layout.gutter + (fades.trailing ? 28 : 0))
-        }
-    }
-
-    private func phaseHeading(_ phase: ProgramContent.Phase, states: [String: ProgramUnlock.State]) -> String {
+    /// v5 (022): "Prep week", then "3 of 7 done · 4 days to Day Xero".
+    private func header(_ phase: ProgramContent.Phase, states: [String: ProgramUnlock.State], now: Date) -> some View {
         let done = phase.sessionIds.filter { if case .completed = states[$0] { true } else { false } }.count
-        return String(localized: "\(phase.title) · \(done) of \(phase.sessionIds.count) done")
+        let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
+        let days = max(clock.calendar.dateComponents([.day], from: clock.day(containing: now), to: clock.startOfDate(profile.quitDay)).day ?? 0, 0)
+        let count = Text("\(done) of \(phase.sessionIds.count)").dxRun(15, weight: 700).foregroundStyle(ground.ink)
+        let tail: Text = if phase.id == "prep" {
+            days == 0 ? Text(" done · Day Xero is today") : Text(" done · ^[\(days) day](inflect: true) to Day Xero")
+        } else {
+            Text(" done")
+        }
+        return VStack(alignment: .leading, spacing: 4) {
+            Text(verbatim: phase.id == "prep" ? String(localized: "Prep week") : phase.title)
+                .dxType(.large).foregroundStyle(ground.ink)
+                .accessibilityAddTraits(.isHeader)
+                .dxArrive(0)
+            (count + tail).dxType(.footnote).foregroundStyle(ProgramPathMap.muted)
+                .dxArrive(1)
+        }
     }
 
     // MARK: Path
 
     private func stops(_ phase: ProgramContent.Phase, content: ProgramContent, states: [String: ProgramUnlock.State],
-                       current: String?, store: ProgramStore) -> [ProgramPathMap.Stop] {
+                       current: String?, store: ProgramStore, now: Date) -> [ProgramPathMap.Stop] {
+        let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
+        let today = clock.day(containing: now)
         let ids = phase.sessionIds
+        // Sessions open one a day in order: a later one's day follows the one before it.
+        var cursor = today
         return ids.enumerated().compactMap { index, id in
             guard let session = content.session(id) else { return nil }
             let state = states[id] ?? .locked
             let open = state == .available || state == .inProgress
             let needsUpgrade = open && ProgramV2Access.needsUpgrade(id, isPro: entitlement.isPro)
+            let label = session.label
             let kind: ProgramPathMap.Stop.Kind
-            if case .completed = state { kind = .done }
-            else if open && !needsUpgrade { kind = .today }
-            else if index == ids.count - 1 { kind = .goal }
-            else { kind = .locked }
-            return ProgramPathMap.Stop(id: id, title: session.title.resolve(store.variant) ?? "", kind: kind,
+            let kicker: String
+            switch state {
+            case let .completed(date):
+                kind = .done
+                cursor = clock.day(containing: date)
+                kicker = String(localized: "\(label) · \(date.formatted(.dateTime.weekday(.abbreviated))) · done")
+            case .available, .inProgress:
+                kind = .today
+                cursor = today
+                let cards = session.deck?.count ?? session.cards?.count ?? 0
+                let parts = [String(localized: "Today"), label] + (cards > 0 ? [String(AttributedString(localized: "^[\(cards) card](inflect: true)").characters)] : [])
+                    + [String(localized: "\(store.minutes(of: session)) min")]
+                kicker = parts.joined(separator: " · ")
+            case let .scheduled(wait):
+                kind = index == ids.count - 1 ? .goal : .locked
+                let opens: Date = switch wait {
+                case .tomorrow: clock.calendar.date(byAdding: .day, value: 1, to: today) ?? today
+                case let .dayXero(date): clock.startOfDate(date)
+                case let .quitDay(days): clock.calendar.date(byAdding: .day, value: days, to: clock.startOfDate(profile.quitDay)) ?? today
+                }
+                cursor = opens
+                kicker = String(localized: "\(label) · opens \(Self.opensText(opens, today: today, calendar: clock.calendar))")
+            case .locked:
+                kind = index == ids.count - 1 ? .goal : .locked
+                cursor = clock.calendar.date(byAdding: .day, value: 1, to: max(cursor, today)) ?? cursor
+                kicker = String(localized: "\(label) · opens \(Self.opensText(cursor, today: today, calendar: clock.calendar))")
+            }
+            return ProgramPathMap.Stop(id: id, title: session.title.resolve(store.variant) ?? "", kicker: kicker, kind: kind,
                                        minutes: store.minutes(of: session), needsUpgrade: needsUpgrade,
                                        accessibility: accessibilityState(state))
         }
+    }
+
+    /// "Tue" within the coming week, "Mon, Nov 16" further out.
+    private static func opensText(_ date: Date, today: Date, calendar: Calendar) -> String {
+        let days = calendar.dateComponents([.day], from: today, to: date).day ?? 0
+        return days < 7 ? date.formatted(.dateTime.weekday(.abbreviated))
+            : date.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day())
+    }
+
+    /// The locked row on the hill: during prep, when the weeks open; later, what's next.
+    private func teaseLine(_ phase: ProgramContent.Phase, content: ProgramContent, states: [String: ProgramUnlock.State],
+                           current: String?, variant: ProgramVariant) -> String? {
+        if phase.id == "prep" {
+            return String(localized: "Weeks 1 to 4 open on \(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day()))")
+        }
+        return nextLine(content, states: states, current: current, variant: variant)
     }
 
     /// "Next up: Lower the bar, tomorrow. No rush." for the next session that's waiting.
@@ -433,38 +420,4 @@ struct ProgramView: View {
             }
         }
     }
-
-    private var variantLine: some View {
-        let primary = profile.primaryProduct?.product ?? .cigarettes
-        let others = profile.products.map(\.product).filter { $0 != primary }
-        return HStack(spacing: DX.Space.xs) {
-            Image(systemName: "book.closed").foregroundStyle(Read4.accent)
-            Text(variantText(primary: primary, others: others)).dxType(.footnote).foregroundStyle(Read4.muted)
-            Spacer(minLength: 0)
-        }
-        .padding(12)
-        .background(Read4.card, in: RoundedRectangle(cornerRadius: DX.Layout.smallCardRadius, style: .continuous))
-    }
-
-    private func variantText(primary: Product, others: [Product]) -> AttributedString {
-        let name: String = switch primary {
-        case .cigarettes: String(localized: "Smoking program")
-        case .vape: String(localized: "Vaping program")
-        case .pouches: String(localized: "Pouches program")
-        }
-        var text = AttributedString(name)
-        text.font = DX.Typeface4.swiftUIFont(.body, size: 14, weight: 600)
-        text.foregroundColor = Read4.ink
-        if !others.isEmpty {
-            let list = ListFormatter.localizedString(byJoining: others.map { String(localized: $0.title).lowercased() })
-            text += AttributedString(String(localized: ", with notes for \(list)"))
-        }
-        return text
-    }
-}
-
-/// Whether the phase track has more pills past its leading and trailing edges.
-private struct TrackFades: Equatable {
-    var leading = false
-    var trailing = false
 }

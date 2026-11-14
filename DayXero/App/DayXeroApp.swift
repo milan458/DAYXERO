@@ -83,13 +83,18 @@ struct RootView: View {
     @State private var finishingOnboarding = false
     /// The forest wordmark grows over whatever opens first, on a cold start only.
     @State private var launching = LaunchGrowOverlay.shouldPlay
+    /// The first screen is built as the launch scene starts to fade, so its entrance plays where it can be seen
+    /// (it used to run under the scene and be over by the time the scene lifted).
+    @State private var revealed = !LaunchGrowOverlay.shouldPlay
     private let motion = MotionPolicy()
 
     var body: some View {
-        routed
+        Group {
+            if revealed { routed } else { LaunchPaperColor() }
+        }
             .overlay {
                 if launching {
-                    LaunchGrowOverlay { launching = false }
+                    LaunchGrowOverlay(onReveal: { revealed = true }) { launching = false }
                 }
             }
             .preferredColorScheme(AppearanceSetting(rawValue: appearance)?.colorScheme)
@@ -219,5 +224,12 @@ struct RootView: View {
             })
             .transition(.opacity)
         }
+    }
+}
+
+/// What sits under the launch scene before the first screen is revealed: the launch colour, edge to edge.
+private struct LaunchPaperColor: View {
+    var body: some View {
+        Color("LaunchPaper").ignoresSafeArea()
     }
 }

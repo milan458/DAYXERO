@@ -16,6 +16,8 @@ import SwiftUI
 /// soft impact haptic at 2300ms. 600-2000ms two paper-cut clouds slide in 36px from the sides and fade up. Holds the
 /// final frame.
 struct LaunchGrowOverlay: View {
+    /// Called as the scene starts to fade, so the screen under it can build and run its own entrance as it's revealed.
+    var onReveal: @MainActor () -> Void = {}
     let onFinished: @MainActor () -> Void
     private let motion = MotionPolicy()
     @State private var start: Date?
@@ -40,7 +42,9 @@ struct LaunchGrowOverlay: View {
             landed = true
         }
         .task {
-            try? await Task.sleep(for: .seconds(timing.end))
+            try? await Task.sleep(for: .seconds(timing.fadeStart))
+            onReveal()
+            try? await Task.sleep(for: .seconds(timing.end - timing.fadeStart))
             onFinished()
         }
     }
