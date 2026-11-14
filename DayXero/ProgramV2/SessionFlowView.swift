@@ -61,7 +61,7 @@ struct SessionFlowView: View {
     /// The deck's own screens carry their close button; beats keep the lesson bar.
     private func showsHeader(_ step: FlowStep) -> Bool {
         switch step {
-        case .completion, .hand, .card, .played: false
+        case .completion, .hand, .card, .played, .mission: false
         default: true
         }
     }
@@ -427,7 +427,8 @@ struct SessionFlowView: View {
             }
         case .mission:
             if let mission = session.mission {
-                MissionCard(mission: mission, ctx: ctx) {
+                MissionCard(mission: mission, ctx: ctx, learned: (session.recap?.learned ?? []).map { ctx.text($0) },
+                            total: session.deck?.count ?? 5, onClose: close) {
                     if !isReplay { store.missionShown(session.id) }
                     advance()
                 }
@@ -654,45 +655,142 @@ struct ProgramAudioStep: View {
 
 // MARK: - Mission
 
-/// P5: the mission on an apricot card (Xero's colour), then "Got it".
+/// The day's mission (v5, 031): the heading, the honey mission card with Xero climbing up behind it and gripping its
+/// top edge, what you learned today as stamped rows, a link to log tonight, and "I'll try it".
+///
+/// Motion (031): the heading arrives; the card rises in (900 ms settle); Xero climbs up behind it (900 ms at 360 ms) and
+/// his hands land on the edge (700 ms spring at 1.15 s, light haptic). The card's words arrive inside it, then the
+/// learned rows one by one with their stamps, then the link and the button.
 struct MissionCard: View {
     let mission: ProgramContent.Mission
     let ctx: BeatContext
+    var learned: [String] = []
+    var total = 5
+    var onClose: () -> Void = {}
     let onDone: () -> Void
 
+    @Environment(LogRouter.self) private var log: LogRouter?
+    @State private var gripped = false
+    private let ground = DX.Ground.table
+
     var body: some View {
-        let ground = DX.Ground.apricot
-        // Top-anchored, with Xero at card size and "Got it" right under the card (S27.14).
-        VStack(alignment: .leading, spacing: DX.Space.m) {
-            XeroView(mood: .hello, size: .card)
-                .accessibilityHidden(true)
-                .padding(.top, DX.Space.m)
-            VStack(alignment: .leading, spacing: 12) {
-                Text("Today's mission").dxType(.caption).foregroundStyle(ground.muted)
-                Text(verbatim: ctx.text(mission.text))
-                    .dxType(.title)
-                    .foregroundStyle(ground.ink)
-                    .fixedSize(horizontal: false, vertical: true)
-                Text(mission.followUp == nil ? "It stays on your Today card until the next session."
-                     : "When you log it, we'll ask two quick questions. It stays on your Today card until the next session.")
-                    .dxType(.footnote)
-                    .foregroundStyle(ground.muted)
-                    .fixedSize(horizontal: false, vertical: true)
+        VStack(spacing: 0) {
+            DeckNavRow(total: total, current: total + 1, onClose: onClose)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("Your mission for today").dxType(.title).foregroundStyle(ground.ink)
+                        .accessibilityAddTraits(.isHeader)
+                        .dxArrive(0)
+                    ZStack(alignment: .topTrailing) {
+                        // Xero climbs up behind the card: his head and shoulders over the top edge.
+                        XeroView(mood: .hello, stage: 0, points: 118)
+                            .frame(width: 118, height: 78, alignment: .top)
+                            .clipped()
+                            .offset(x: -18, y: -66)
+                            .dxSettle(3)
+                            .accessibilityHidden(true)
+                        missionCard
+                        // ...and his two hands grip the card's top edge.
+                        HStack(spacing: 46) {
+                            Capsule().fill(Color(hex: 0xFF7155)).frame(width: 20, height: 13)
+                            Capsule().fill(Color(hex: 0xFF7155)).frame(width: 20, height: 13)
+                        }
+                        .shadow(color: Color(hex: 0xE85A3E).opacity(0.5), radius: 0, y: 2)
+                        .offset(x: -27, y: -6)
+                        .scaleEffect(gripped ? 1 : 0.4)
+                        .opacity(gripped ? 1 : 0)
+                        .accessibilityHidden(true)
+                    }
+                    .padding(.top, 74)
+                    if !learned.isEmpty {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("What you learned today").dxType(.headline).foregroundStyle(ground.ink)
+                                .dxArrive(6)
+                            VStack(alignment: .leading, spacing: 0) {
+                                ForEach(Array(learned.enumerated()), id: \.offset) { i, line in
+                                    HStack(alignment: .top, spacing: 12) {
+                                        ZStack {
+                                            GridShape(d: DXBadge.scallop(cx: 12, cy: 12, r: 11.5, n: 10, a: 1.4), grid: 24).fill(Color(hex: 0xFF9A5C))
+                                            DXIcon(.check, size: 12, weight: 3.2).foregroundStyle(.white)
+                                        }
+                                        .frame(width: 22, height: 22)
+                                        Text(verbatim: line).dxType(.footnote).foregroundStyle(ground.ink)
+                                            .fixedSize(horizontal: false, vertical: true)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                    }
+                                    .padding(.vertical, 12)
+                                    .overlay(alignment: .top) { if i > 0 { Rectangle().fill(ground.line).frame(height: 1) } }
+                                    .dxArrive(7 + i)
+                                }
+                            }
+                            .padding(.horizontal, 16)
+                            .background(ground.card, in: RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
+                            .overlay(RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous).strokeBorder(ground.line, lineWidth: 1))
+                        }
+                        .padding(.top, 26)
+                    }
+                }
+                .padding(.top, 8)
+                .padding(.bottom, DX.Space.m)
+                .padding(.horizontal, DX.Layout.gutter)
             }
-            .padding(20)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background {
-                RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous)
-                    .fill(ground.background)
-                    .shadow(color: .black.opacity(0.12), radius: 0, x: 0, y: 5)
+            .padding(.horizontal, -DX.Layout.gutter)
+            .scrollBounceBehavior(.basedOnSize)
+            VStack(spacing: 6) {
+                if mission.logType != nil, let log {
+                    Button {
+                        onDone()
+                        log.open(.menu)
+                    } label: {
+                        HStack(spacing: 4) {
+                            Text("If you do use, log it tonight")
+                            DXIcon(.chev, size: 14, weight: 2.6)
+                        }
+                        .dxFace(.body, 15, weight: 600)
+                        .foregroundStyle(ground.ink.opacity(0.85))
+                        .frame(minHeight: 40)
+                    }
+                    .buttonStyle(.plain)
+                    .dxArrive(10)
+                }
+                Button("I'll try it", action: onDone)
+                    .buttonStyle(.dx(.primary, on: .table))
+                    .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+                    .dxArrive(11)
             }
-            .accessibilityElement(children: .combine)
-            .dxArrive(0)
-            Button("Got it", action: onDone)
-                .buttonStyle(.dx(.primary, on: .reading))
-                .dynamicTypeSize(...DynamicTypeSize.accessibility1)
-            Spacer(minLength: 0)
         }
+        .sensoryFeedback(.impact(weight: .light), trigger: gripped) { _, now in now }
+        .task {
+            try? await Task.sleep(for: .seconds(1.15))
+            withAnimation(.timingCurve(0.3, 1.4, 0.5, 1, duration: 0.7)) { gripped = true }
+        }
+    }
+
+    /// The honey card: the 029 medal's gold, its pale face to its face gold, with the gold rim.
+    private var missionCard: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Today's mission").dxFace(.body, 14, weight: 600).foregroundStyle(Color(hex: 0x5A3A0A))
+                .dxArrive(2)
+            Text(verbatim: ctx.text(mission.text))
+                .dxType(.title)
+                .foregroundStyle(DX.Fill.navy)
+                .fixedSize(horizontal: false, vertical: true)
+                .dxArrive(3)
+            Text(mission.followUp == nil ? "It stays on your Today card until the next session."
+                 : "When you log it, we'll ask two quick questions. It stays on your Today card until the next session.")
+                .dxType(.footnote)
+                .foregroundStyle(Color(hex: 0x5A3A0A))
+                .fixedSize(horizontal: false, vertical: true)
+                .dxArrive(4)
+        }
+        .padding(.horizontal, 20).padding(.top, 24).padding(.bottom, 22)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(LinearGradient(colors: [Color(hex: 0xFFF1C2), Color(hex: 0xFFD966)], startPoint: .top, endPoint: .bottom),
+                    in: RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous).strokeBorder(Color(hex: 0xF5B83D), lineWidth: 2))
+        .shadow(color: Color(red: 150 / 255, green: 100 / 255, blue: 20 / 255).opacity(0.18), radius: 12, y: 10)
+        .accessibilityElement(children: .combine)
+        .dxSettle()
     }
 }
 
