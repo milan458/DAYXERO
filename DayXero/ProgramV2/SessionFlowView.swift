@@ -74,7 +74,8 @@ struct SessionFlowView: View {
         case .hand, .played:
             return .table
         case let .card(id):
-            return session.deck?.first { $0.id == id }?.screenGround ?? .table
+            let card = session.deck?.first { $0.id == id }
+            return card?.format == .listen ? .table : card?.screenGround ?? .table
         case .completion where session.isDeck && session.id != ProgramV2Access.offerAfter:
             return .table
         case let .beat(id):
@@ -96,8 +97,10 @@ struct SessionFlowView: View {
 
     /// A card's own screen sits on its coloured card (kit 024).
     private var panelColor: Color? {
-        guard let session, steps.indices.contains(index), case let .card(id) = steps[index] else { return nil }
-        return session.deck?.first { $0.id == id }?.faceColor
+        guard let session, steps.indices.contains(index), case let .card(id) = steps[index],
+              let card = session.deck?.first(where: { $0.id == id }) else { return nil }
+        // v5 (024): the listen card is its own player on the table, not a screen on a coloured panel.
+        return card.format == .listen ? nil : card.faceColor
     }
 
     // MARK: Steps

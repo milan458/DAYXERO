@@ -13,7 +13,7 @@ extension DeckCard.Format {
         case .reveal: String(localized: "Reveal")
         case .myth: String(localized: "Myth or fact")
         case .activity: String(localized: "Try")
-        case .breathe: String(localized: "Breathe")
+        case .breathe: String(localized: "Try")
         }
     }
 
@@ -53,12 +53,27 @@ extension DeckCard {
 
     /// v5: the card's colour on the table, in the hand and as its own screen's card (kit 023: listen apricot, reveal
     /// blue, myth coral, try green, breathe blue; deep versions of each in dark).
+    /// v5 (023): one colour per card type, shared by every session screen. Listen apricot, Try mint, Reveal sky, Myth
+    /// or fact rose; the plan card takes the plan's honey (the gold of the 029 medal and the 031 mission), so the two
+    /// Try cards never read as twins. Dark deepens each a step.
     var faceColor: Color {
         switch format {
-        case .listen: Color(light: 0xFFC38A, dark: 0x4A3328)
-        case .reveal, .breathe: Color(light: 0xBFD7FF, dark: 0x22355E)
-        case .myth: Color(light: 0xFFB4A0, dark: 0x4A2A30)
-        case .activity: Color(light: 0xB8E6C8, dark: 0x1E3A33)
+        case .listen: Color(light: 0xFFC38A, dark: 0xF3B47E)
+        case .breathe: Color(light: 0x9FE3BC, dark: 0x8FD3AD)
+        case .reveal: Color(light: 0x9CCBFF, dark: 0x8EBBEC)
+        case .myth: Color(light: 0xFFB9A6, dark: 0xEFA894)
+        case .activity: Color(light: 0xFFDB85, dark: 0xF5CF78)
+        }
+    }
+
+    /// The back of the card in the hand (dark: a dusk tint of its colour, so only the front card glows).
+    var backColor: Color {
+        switch format {
+        case .listen: Color(light: 0xFFC38A, dark: 0x93684E)
+        case .breathe: Color(light: 0x9FE3BC, dark: 0x5A8574)
+        case .reveal: Color(light: 0x9CCBFF, dark: 0x5A7698)
+        case .myth: Color(light: 0xFFB9A6, dark: 0x92675F)
+        case .activity: Color(light: 0xFFDB85, dark: 0x947043)
         }
     }
 
@@ -108,8 +123,15 @@ struct DeckTopBar: View {
     }
 }
 
-// MARK: - F1 Today's hand
+// MARK: - F1 Today's hand (v5, 023)
 
+/// Today's hand: the title and length, the prep stamps so far, the other cards standing level behind (icons only), and
+/// the card to play drawn out in front.
+///
+/// Motion (023): title, line and stamps arrive (600 ms, 90 ms stagger). The back cards deal in from below one by one
+/// (760 ms settle each, 120 ms apart, from 300 ms); the front card rises level in front of them (900 ms at 820 ms) and,
+/// on a Listen card, Xero in his headphones settles in front of its sun (700 ms at 1.2 s) and sways to the music. The
+/// button arrives last. A light haptic as each card lands, a medium one for the front card.
 struct DeckHandView: View {
     let session: ProgramContent.Session
     let ctx: BeatContext
@@ -122,49 +144,94 @@ struct DeckHandView: View {
     let onPlay: () -> Void
     let onClose: () -> Void
 
-    @State private var selected: String?
+    @State private var dealt = 0
+    @State private var front = false
+    @Environment(\.colorScheme) private var scheme
     private let ground = DX.Ground.table
     private let motion = MotionPolicy()
 
-    private var focus: DeckCard? {
-        let id = selected ?? next ?? cards.last?.id
-        return cards.first { $0.id == id }
+    private var focus: DeckCard? { cards.first { $0.id == (next ?? cards.last?.id) } }
+
+    private var prepNumber: Int? {
+        guard session.phaseId == "prep" else { return nil }
+        return Int(session.label.filter(\.isNumber))
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            DeckTopBar(ground: ground, eyebrow: "\(session.label) · \(String(localized: "Today's hand"))",
-                       trailing: String(localized: "\(played.count) of \(cards.count) played"), onClose: onClose)
-            Text(verbatim: ctx.text(session.title)).dxType(.large).foregroundStyle(ground.ink)
-                .fixedSize(horizontal: false, vertical: true)
-                .accessibilityAddTraits(.isHeader)
-            Text(verbatim: ctx.text(session.subtitle)).dxType(.body).foregroundStyle(ground.muted)
-                .fixedSize(horizontal: false, vertical: true)
-                .padding(.top, 6)
+            HStack {
+                DXIconButton(.close, label: "Close. Your place is saved.", action: onClose)
+                Spacer()
+                if !played.isEmpty {
+                    Text("\(played.count) of \(cards.count) played").dxType(.footnote).foregroundStyle(ground.muted)
+                }
+            }
+            .frame(height: 52)
+            .padding(.horizontal, -6)
+            VStack(alignment: .leading, spacing: 6) {
+                Text(verbatim: ctx.text(session.title)).dxType(.large).foregroundStyle(ground.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityAddTraits(.isHeader)
+                    .dxArrive(0)
+                Text(verbatim: lengthLine).dxType(.footnote).foregroundStyle(ground.muted)
+                    .dxArrive(1)
+            }
+            .padding(.top, 8)
+            if let n = prepNumber {
+                HStack(spacing: 8) {
+                    ForEach(1...max(n, 1), id: \.self) { i in
+                        DXBadge(.prep, n: i, state: i < n ? .earned : .next(nil), size: 46)
+                    }
+                    Text("Today").dxType(.footnote).foregroundStyle(ground.muted).padding(.leading, 8)
+                }
+                .padding(.top, 18)
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(Text("Prep stamps: \(n - 1) earned, \(session.label) today"))
+                .dxArrive(2)
+            }
             fan
                 .frame(maxWidth: .infinity)
-                .frame(height: 300)
-                .padding(.top, DX.Space.s)
-            if let focus {
-                info(focus)
+                .frame(height: 420, alignment: .top)
+                .padding(.top, prepNumber == nil ? 40 : 26)
+            Spacer(minLength: 0)
+            Group {
+                if let waitingUntil, let next, let index = cards.firstIndex(where: { $0.id == next }) {
+                    // Evening cards open at 6 pm; the day keeps its place until then.
+                    Label(String(localized: "Card \(index + 1) opens at \(waitingUntil). Your place is saved."), systemImage: "moon.stars")
+                        .dxType(.footnote).foregroundStyle(ground.ink)
+                        .frame(maxWidth: .infinity, minHeight: DX.Layout.touchTarget)
+                        .padding(.horizontal, 12)
+                        .background(DX.Ground.table.card, in: Capsule())
+                        .accessibilityIdentifier("program.deck.waiting")
+                } else {
+                    Button(action: onPlay) { Text(verbatim: ctaTitle) }
+                        .buttonStyle(.dx(.primary, on: ground))
+                        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+                        .accessibilityIdentifier("program.deck.play")
+                }
             }
-            Spacer(minLength: DX.Space.s)
-            if let waitingUntil, let next, let index = cards.firstIndex(where: { $0.id == next }) {
-                // Evening cards open at 6 pm; the day keeps its place until then.
-                Label(String(localized: "Card \(index + 1) opens at \(waitingUntil). Your place is saved."), systemImage: "moon.stars")
-                    .dxType(.footnote).foregroundStyle(ground.ink)
-                    .frame(maxWidth: .infinity, minHeight: DX.Layout.touchTarget)
-                    .padding(.horizontal, 12)
-                    .background(DX.Ground.table.card, in: Capsule())
-                    .accessibilityIdentifier("program.deck.waiting")
-            } else {
-                Button(action: onPlay) { Text(verbatim: ctaTitle) }
-                    .buttonStyle(.dx(.primary, on: ground))
-                    .dynamicTypeSize(...DynamicTypeSize.accessibility1)
-                    .accessibilityIdentifier("program.deck.play")
-            }
+            .dxArrive(0, delay: 1.6)
         }
         .foregroundStyle(ground.ink)
+        .sensoryFeedback(.impact(weight: .light), trigger: dealt)
+        .sensoryFeedback(.impact(weight: .medium), trigger: front) { _, now in now }
+        .task {
+            guard !motion.reduce else { dealt = 4; front = true; return }
+            try? await Task.sleep(for: .milliseconds(300 + 600))
+            for _ in 0..<min(cards.count - 1, 4) {
+                dealt += 1
+                try? await Task.sleep(for: .milliseconds(120))
+            }
+            try? await Task.sleep(for: .milliseconds(200))
+            front = true
+        }
+    }
+
+    /// "Prep 4 · 5 cards · about 28 min".
+    private var lengthLine: String {
+        let minutes = cards.reduce(0) { $0 + $1.minutes }
+        let count = String(AttributedString(localized: "^[\(cards.count) card](inflect: true)").characters)
+        return "\(session.label) · \(count) · \(String(localized: "about \(minutes) min"))"
     }
 
     private var ctaTitle: String {
@@ -172,30 +239,98 @@ struct DeckHandView: View {
             return ctx.isReplay ? String(localized: "Start again") : String(localized: "Finish the day")
         }
         if ctx.isReplay { return String(localized: "Start again") }
-        return played.isEmpty ? String(localized: "Play the first card") : String(localized: "Play card \(index + 1)")
+        return String(localized: "Play card \(index + 1)")
     }
 
+    /// Four cards standing level behind (the outer two a step lower), the focus card drawn out in front.
     private var fan: some View {
-        let count = cards.count
-        return ZStack {
-            ForEach(Array(cards.enumerated()), id: \.element.id) { i, card in
-                let mid = Double(count - 1) / 2
-                let angle = (Double(i) - mid) * 13
-                let isFocus = card.id == focus?.id
-                Button {
-                    withAnimation(motion.animation(DX.Move.settle)) { selected = card.id }
-                } label: {
-                    face(card, number: i + 1)
-                }
-                .buttonStyle(.plain)
-                .rotationEffect(.degrees(angle), anchor: UnitPoint(x: 0.5, y: 1.6))
-                .offset(y: isFocus ? -40 : 0)
-                .zIndex(isFocus ? 10 : Double(i))
-                .accessibilityLabel(Text(verbatim: label(card, number: i + 1)))
-                .accessibilityAddTraits(isFocus ? .isSelected : [])
+        let back = cards.filter { $0.id != focus?.id }.prefix(4)
+        let xs: [CGFloat] = [-113, -38, 38, 113], ys: [CGFloat] = [16, 0, 0, 16]
+        return ZStack(alignment: .top) {
+            ForEach(Array(back.enumerated()), id: \.element.id) { k, card in
+                backCard(card)
+                    .offset(x: xs[min(k, 3)], y: ys[min(k, 3)])
+                    .modifier(Deal(index: k))
+            }
+            if let focus {
+                frontCard(focus)
+                    .padding(.top, 100)
+                    .modifier(Lift())
             }
         }
-        .padding(.top, 50)
+        .frame(width: 310)
+    }
+
+    private func backCard(_ card: DeckCard) -> some View {
+        let number = (cards.firstIndex { $0.id == card.id } ?? 0) + 1
+        return VStack {
+            // The icon on a soft spot (dark: the card's bright colour, so the icon still reads as the card's).
+            DeckGlyph(card: card).frame(width: 19, height: 19).foregroundStyle(DX.Fill.navy)
+                .frame(width: 36, height: 36)
+                .background(scheme == .dark ? card.faceColor : Color(hex: 0x1E1A3A).opacity(0.1), in: Circle())
+            if played.contains(card.id) {
+                DXIcon(.check, size: 16, weight: 3).foregroundStyle(DX.Fill.navy).padding(.top, 4)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(.top, 14)
+        .frame(width: 84, height: 196)
+        .background(card.backColor, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .shadow(color: Color(light: (0x3C2814, 0.12), dark: (0x000000, 0.42)), radius: 9, y: 8)
+        .accessibilityElement()
+        .accessibilityLabel(Text(verbatim: label(card, number: number)))
+    }
+
+    private func frontCard(_ card: DeckCard) -> some View {
+        let number = (cards.firstIndex { $0.id == card.id } ?? 0) + 1
+        return VStack(alignment: .leading, spacing: 0) {
+            ZStack(alignment: .bottom) {
+                LinearGradient(colors: [card.format == .listen ? Color(light: 0xFFD6AC, dark: 0xF7C595) : card.faceColor, card.faceColor],
+                               startPoint: .top, endPoint: .bottom)
+                if card.format == .listen {
+                    Circle()
+                        .fill(RadialGradient(colors: [Color(hex: 0xFFE48A), Color(hex: 0xFFD35E), Color(hex: 0xFFC94F)],
+                                             center: .center, startRadius: 0, endRadius: 76))
+                        .frame(width: 152, height: 152)
+                        .frame(maxHeight: .infinity, alignment: .top)
+                        .padding(.top, 20)
+                    XeroView(mood: .calm, stage: 0, points: 158, pose: .headphones)
+                        .dxBob()
+                        .offset(y: 7)
+                        .dxSettle(delay: 1.2)
+                } else {
+                    DeckGlyph(card: card)
+                        .frame(width: 56, height: 56)
+                        .foregroundStyle(DX.Fill.navy)
+                        .frame(width: 112, height: 112)
+                        .background(Color(hex: 0xFFFFFF).opacity(0.45), in: Circle())
+                        .frame(maxHeight: .infinity)
+                }
+            }
+            .frame(height: 180)
+            .clipped()
+            VStack(alignment: .leading, spacing: 10) {
+                HStack(spacing: 7) {
+                    DeckGlyph(card: card).frame(width: 17, height: 17)
+                    Text(verbatim: "\(card.format.label) · \(String(localized: "\(card.minutes) min"))")
+                }
+                .dxFace(.body, 14, weight: 600)
+                .foregroundStyle(Color(hex: 0x3A2410))
+                Text(verbatim: ctx.text(card.title))
+                    .dxFace(.display, 26, weight: 800, tracking: -0.5)
+                    .foregroundStyle(DX.Fill.navy)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(.top, 16).padding(.horizontal, 20).padding(.bottom, 22)
+        }
+        .frame(width: 284)
+        .background(card.faceColor)
+        .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
+        .shadow(color: Color(light: (0x3C2814, 0.10), dark: (0x000000, 0.45)), radius: 2, y: 2)
+        .shadow(color: Color(light: (0x3C2814, 0.16), dark: (0x000000, 0.45)), radius: 12, y: 14)
+        .shadow(color: Color(light: (0x3C2814, 0.20), dark: (0x000000, 0.55)), radius: 25, y: 30)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(verbatim: label(card, number: number)))
     }
 
     private func label(_ card: DeckCard, number: Int) -> String {
@@ -204,51 +339,58 @@ struct DeckHandView: View {
             .joined(separator: ", ")
     }
 
-    private func face(_ card: DeckCard, number: Int) -> some View {
-        let done = played.contains(card.id)
-        return VStack(alignment: .leading, spacing: 6) {
-            HStack {
-                Text(verbatim: card.format.label).dxFont(12, weight: 800, style: .caption2)
-                Spacer(minLength: 0)
-                if done { Image(systemName: "checkmark").font(.system(size: 14, weight: .heavy)) }
-            }
-            Spacer(minLength: 0)
-            Image(systemName: card.format.symbol).font(.system(size: 30, weight: .bold)).frame(maxWidth: .infinity)
-            Spacer(minLength: 0)
-            Text(verbatim: ctx.text(card.title)).dxFont(14, weight: 700, style: .footnote).lineLimit(3)
-                .multilineTextAlignment(.leading)
-            Text(verbatim: String(localized: "\(card.minutes) min")).dxFont(12, weight: 700, style: .caption2)
+    /// A back card deals in from below and stands in its place (760 ms settle, 120 ms apart, from 300 ms).
+    private struct Deal: ViewModifier {
+        let index: Int
+        @State private var in_ = false
+        private let motion = MotionPolicy()
+
+        func body(content: Content) -> some View {
+            content
+                .offset(y: in_ || motion.reduce ? 0 : 420)
+                .opacity(in_ || motion.reduce ? 1 : 0)
+                .onAppear {
+                    withAnimation(motion.animation(DX.Move.settle.speed(0.9 / 0.76)).delay(0.3 + Double(index) * 0.12)) { in_ = true }
+                }
         }
-        .foregroundStyle(card.faceInk)
-        .padding(12)
-        .frame(width: 126, height: 184)
-        .background(card.faceColor, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .overlay {
-            if card.id == focus?.id {
-                RoundedRectangle(cornerRadius: 18, style: .continuous).stroke(DX.Ground.table.selEdge, lineWidth: 3)
-            }
-        }
-        .shadow(color: Color(light: (0x4A2810, 0.18), dark: (0x000000, 0.4)), radius: 12, x: 0, y: 8)
-        .opacity(done && card.id != focus?.id ? 0.85 : 1)
     }
 
-    private func info(_ card: DeckCard) -> some View {
-        let number = (cards.firstIndex { $0.id == card.id } ?? 0) + 1
-        let state = played.contains(card.id) ? String(localized: "Played") : (card.id == next ? String(localized: "Next") : String(localized: "Later today"))
-        return VStack(alignment: .leading, spacing: 4) {
-            Text(verbatim: "\(card.eyebrow(position: number, of: cards.count)) · \(state)")
-                .dxType(.caption).foregroundStyle(ground.muted)
-            Text(verbatim: ctx.text(card.title)).dxType(.headline).foregroundStyle(ground.ink)
-                .fixedSize(horizontal: false, vertical: true)
-            if let intro = card.intro {
-                Text(verbatim: ctx.text(intro)).dxType(.footnote).foregroundStyle(ground.muted)
-                    .fixedSize(horizontal: false, vertical: true)
+    /// The front card rises level in front (900 ms settle at 820 ms).
+    private struct Lift: ViewModifier {
+        @State private var up = false
+        private let motion = MotionPolicy()
+
+        func body(content: Content) -> some View {
+            content
+                .offset(y: up || motion.reduce ? 0 : 300)
+                .opacity(up || motion.reduce ? 1 : 0)
+                .onAppear { withAnimation(motion.animation(DX.Move.settle).delay(0.82)) { up = true } }
+        }
+    }
+}
+
+/// One glyph per card type (023): Listen headphones, Try a hand, Reveal an eye, Myth or fact a question mark, the plan
+/// card a spark.
+struct DeckGlyph: View {
+    let card: DeckCard
+
+    var body: some View {
+        switch card.format {
+        case .listen: DXIcon(.headphones, size: 24, weight: 2.4).scaledToFit()
+        case .breathe: DXIcon(.hand, size: 24, weight: 2.4).scaledToFit()
+        case .reveal: DXIcon(.eye, size: 24, weight: 2.4).scaledToFit()
+        case .myth:
+            ZStack {
+                GridShape(d: "M8.6 8.6a3.5 3.5 0 116.2 2.2c-.9 1-2.8 1.7-2.8 3.6v.4", grid: 24)
+                    .stroke(style: StrokeStyle(lineWidth: 2.4, lineCap: .round, lineJoin: .round))
+                GridShape(d: "M12 18.6h.01", grid: 24).stroke(style: StrokeStyle(lineWidth: 3, lineCap: .round))
+            }
+        case .activity:
+            ZStack {
+                GridShape(d: "M12 2.8c.7 4.9 2.3 6.6 7.4 7.4-5.1.8-6.7 2.5-7.4 7.4-.7-4.9-2.3-6.6-7.4-7.4 5.1-.8 6.7-2.5 7.4-7.4z", grid: 24).fill()
+                GridShape(d: "M16.8 18.4a1.8 1.8 0 103.6 0 1.8 1.8 0 10-3.6 0z", grid: 24).fill()
             }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(16)
-        .dxCard(on: .table)
-        .accessibilityElement(children: .combine)
     }
 }
 
@@ -280,10 +422,80 @@ struct DeckCardScreen: View {
     }
 }
 
-// MARK: - F2 Listen
+// MARK: - F2 Listen (v5, 024)
 
-/// The listen card. Until the recordings are in the bundle it shows the script to read, chapter by chapter, with a
-/// note that the audio is on its way. With a recording, it plays with captions, and the button waits for the end.
+/// The card's place in the day (kit `.steps`): one segment per card, played ones full, the current one filling as a
+/// sliver with its own progress. `label` sits beside it ("Card 5 · Step 1 of 3").
+struct DeckStepBar: View {
+    let total: Int
+    /// 1-based.
+    let current: Int
+    /// The current card's own progress, 0...1.
+    var sub: Double = 0
+    var label: String?
+    @Environment(\.dxGround) private var ground
+
+    var body: some View {
+        let g = ground.resolved
+        HStack(spacing: 10) {
+            HStack(spacing: 5) {
+                ForEach(1...max(total, 1), id: \.self) { i in
+                    GeometryReader { proxy in
+                        ZStack(alignment: .leading) {
+                            Capsule().fill(g.track)
+                            if i < current {
+                                Capsule().fill(g.ink)
+                            } else if i == current {
+                                UnevenRoundedRectangle(topLeadingRadius: 3, bottomLeadingRadius: 3, bottomTrailingRadius: 1,
+                                                       topTrailingRadius: 1)
+                                    .fill(g.ink)
+                                    .frame(width: max(min(12, proxy.size.width), proxy.size.width * min(max(sub, 0), 1)))
+                            }
+                        }
+                    }
+                    .frame(height: 6)
+                }
+            }
+            .animation(.timingCurve(0.2, 0.8, 0.2, 1, duration: 0.5), value: sub)
+            if let label {
+                Text(verbatim: label).dxFace(.body, 13, weight: 600).foregroundStyle(g.muted).lineLimit(1).fixedSize()
+            }
+        }
+        .accessibilityElement()
+        .accessibilityLabel(Text(verbatim: label ?? String(localized: "Card \(current) of \(total)")))
+    }
+}
+
+/// The deck screens' nav row: the close button, then the step bar.
+struct DeckNavRow: View {
+    let total: Int
+    let current: Int
+    var sub: Double = 0
+    var label: String?
+    var onBack: (() -> Void)?
+    let onClose: () -> Void
+
+    var body: some View {
+        HStack(spacing: 12) {
+            DXIconButton(.close, label: "Close. Your place is saved.", action: onClose)
+            if let onBack { DXIconButton(.back, label: "Back", action: onBack) }
+            DeckStepBar(total: total, current: current, sub: sub, label: label)
+        }
+        .frame(height: 52)
+        .padding(.horizontal, -6)
+        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+    }
+}
+
+/// The listen card (024): an apricot player with Xero in his headphones before the sun, a waveform with the playhead,
+/// the times and the controls. It plays the recording, or reads the script aloud until the recordings are in. Read opens
+/// the transcript under the controls.
+///
+/// Motion (024): the player rises into place (900 ms) while the bar arrives; Xero settles before the sun and sways to
+/// the audio. The waveform bars grow from the centre line left to right (48 bars, 16 ms apart, 420 ms each); at 1.2 s
+/// play starts and the played ink and the playhead sweep with playback, the elapsed time counts, and the card's segment
+/// fills. While it plays the dock holds a quiet "Skip to next card"; at 80% it crossfades into "Next card" (300 ms,
+/// light haptic).
 struct DeckListenView: View {
     let card: DeckCard
     let position: Int
@@ -294,10 +506,12 @@ struct DeckListenView: View {
     let onClose: () -> Void
     var onSaveForLater: (() -> Void)?
 
-    @State private var finished = false
+    @State private var narrator: LessonNarrator?
     @State private var reading = false
-
-    private var ground: DX.Ground { card.screenGround }
+    @State private var grown = false
+    @State private var unlocked = false
+    @Environment(\.colorScheme) private var scheme
+    private let motion = MotionPolicy()
 
     private var recording: URL? {
         guard let naming = ctx.store.content?.audio else { return nil }
@@ -307,93 +521,269 @@ struct DeckListenView: View {
             ?? Bundle.main.url(forResource: base, withExtension: ext)
     }
 
+    private var paragraphs: [String] {
+        (card.script?.chapters ?? []).flatMap { ProgramInline.paragraphs(ctx.text($0.text), ctx.variant) }
+    }
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            DeckTopBar(ground: ground, eyebrow: card.eyebrow(position: position, of: total), onClose: onClose)
-            if let recording, !reading {
-                VStack(spacing: DX.Space.s) {
-                    LessonAudioStep(title: ctx.text(card.title),
-                                    narrator: LessonNarrator(segments: captions, url: recording, seconds: Double(card.minutes * 60)),
-                                    startAt: 0, onPosition: { _ in }, onFinish: { finished = true })
-                    Button(String(localized: "Read it instead")) { reading = true }
-                        .buttonStyle(.dx(.quiet, on: ground))
-                }
-                .frame(maxHeight: .infinity)
-            } else {
-                script
-            }
-            buttons(hasRecording: recording != nil && !reading)
-        }
-        .foregroundStyle(ground.ink)
-    }
-
-    /// The script as captions for the recording: one segment per paragraph, spread over the track.
-    private var captions: [(start: Double, text: String)] {
-        let paragraphs = (card.script?.chapters ?? []).flatMap { ProgramInline.paragraphs(ctx.text($0.text), ctx.variant) }
-        let seconds = Double(card.minutes * 60)
-        let total = max(paragraphs.reduce(0) { $0 + $1.count }, 1)
-        var start = 0.0
-        return paragraphs.map { p in
-            defer { start += seconds * Double(p.count) / Double(total) }
-            return (start, p)
-        }
-    }
-
-    private var script: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: DX.Space.s) {
-                Text(verbatim: ctx.text(card.title)).dxType(.large).foregroundStyle(ground.ink)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .accessibilityAddTraits(.isHeader)
-                if let intro = card.intro {
-                    Text(verbatim: ctx.text(intro)).dxType(.body).foregroundStyle(ground.muted)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                if recording == nil {
-                    Label(String(localized: "The audio is on its way. Read it for now."), systemImage: "headphones")
-                        .dxFont(14, weight: 700, style: .footnote)
-                        .foregroundStyle(ground.ink)
-                        .padding(.horizontal, 12).padding(.vertical, 8)
-                        .background(DX.Fill.onColourCard(for: ground), in: Capsule())
-                }
-                ForEach(Array((card.script?.chapters ?? []).enumerated()), id: \.offset) { i, chapter in
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text(verbatim: String(localized: "Chapter \(i + 1)")).dxType(.caption).foregroundStyle(ground.muted)
-                        Text(verbatim: chapter.title).dxType(.headline).foregroundStyle(ground.ink)
-                            .fixedSize(horizontal: false, vertical: true)
-                        ForEach(Array(ProgramInline.paragraphs(ctx.text(chapter.text), ctx.variant).enumerated()), id: \.offset) { _, paragraph in
-                            Text(verbatim: paragraph).dxFont(18, weight: 450, style: .body).foregroundStyle(ground.ink)
-                                .lineSpacing(5)
+        let dark = scheme == .dark
+        let ink = dark ? DX.Fill.cream : DX.Fill.navy
+        TimelineView(.animation(minimumInterval: 1 / 20, paused: !(narrator?.playing ?? false))) { timeline in
+            let elapsed = narrator?.elapsed(at: timeline.date) ?? 0
+            let length = max(narrator?.total ?? Double(card.minutes * 60), 1)
+            let p = min(max(elapsed / length, 0), 1)
+            VStack(spacing: 0) {
+                DeckNavRow(total: total, current: position, sub: p, onClose: { narrator?.stop(); onClose() })
+                    .dxArrive(0)
+                ScrollView {
+                    VStack(spacing: 0) {
+                        art(dark: dark)
+                        VStack(alignment: .leading, spacing: 0) {
+                            HStack(spacing: 8) {
+                                DXIcon(.headphones, size: 18)
+                                Text(verbatim: "\(card.format.label) · \(String(localized: "\(card.minutes) min"))")
+                                Spacer()
+                                Button {
+                                    withAnimation(.timingCurve(0.2, 0.7, 0.2, 1, duration: 0.32)) { reading.toggle() }
+                                } label: {
+                                    HStack(spacing: 6) {
+                                        DXIcon(.text, size: 17)
+                                        Text(reading ? "Hide" : "Read")
+                                    }
+                                    .foregroundStyle(ink)
+                                    .frame(height: 32)
+                                }
+                                .buttonStyle(.plain)
+                                .accessibilityValue(Text(reading ? "Transcript shown" : ""))
+                            }
+                            .dxFace(.body, 14, weight: 600)
+                            .foregroundStyle(dark ? Color(hex: 0xE9DCCB) : Color(hex: 0x3A2410))
+                            Text(verbatim: ctx.text(card.title))
+                                .dxType(.title).foregroundStyle(ink)
                                 .fixedSize(horizontal: false, vertical: true)
+                                .padding(.top, 10)
+                                .accessibilityAddTraits(.isHeader)
+                            Waveform(progress: p, grown: grown, ink: ink, face: dark ? Color(hex: 0x222D54) : card.faceColor)
+                                .frame(height: 52)
+                                .padding(.top, 16)
+                                .accessibilityElement()
+                                .accessibilityLabel(Text("Playback"))
+                                .accessibilityValue(Text("\(Self.clock(elapsed)) of \(Self.clock(length))"))
+                            HStack {
+                                Text(verbatim: Self.clock(elapsed)).monospacedDigit()
+                                Spacer()
+                                Text(verbatim: Self.clock(length)).monospacedDigit()
+                            }
+                            .dxType(.caption)
+                            .foregroundStyle(dark ? Color(hex: 0xE9DCCB) : Color(hex: 0x3A2410))
+                            .padding(.top, 8)
+                            HStack(spacing: 34) {
+                                SkipButton(forward: false, ink: ink) { narrator?.skip(-15) }
+                                Button { narrator?.toggle() } label: {
+                                    DXIcon((narrator?.playing ?? false) ? .pause : .play, size: 26, weight: 2.4, filled: !(narrator?.playing ?? false))
+                                        .foregroundStyle(dark ? DX.Fill.navy : DX.Fill.cream)
+                                        .offset(x: (narrator?.playing ?? false) ? 0 : 2)
+                                        .frame(width: 64, height: 64)
+                                        .background(dark ? Color(hex: 0xFFC38A) : DX.Fill.navy, in: Circle())
+                                        .shadow(color: dark ? .black.opacity(0.35) : Color(hex: 0x1E1A3A).opacity(0.22), radius: 8, y: 6)
+                                }
+                                .buttonStyle(.dxPress)
+                                .accessibilityLabel(Text((narrator?.playing ?? false) ? "Pause" : "Play"))
+                                SkipButton(forward: true, ink: ink) { narrator?.skip(15) }
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.top, 12)
+                            if reading {
+                                VStack(alignment: .leading, spacing: 12) {
+                                    ForEach(Array(paragraphs.enumerated()), id: \.offset) { _, paragraph in
+                                        Text(verbatim: paragraph).dxFace(.body, 17, weight: 450).foregroundStyle(ink)
+                                            .lineSpacing(4)
+                                            .fixedSize(horizontal: false, vertical: true)
+                                    }
+                                }
+                                .padding(.top, 18)
+                                .transition(.opacity.combined(with: .move(edge: .top)))
+                            }
                         }
+                        .padding(.top, 18).padding(.horizontal, 20).padding(.bottom, 24)
                     }
-                    .padding(.top, DX.Space.s)
+                    .background(face(dark: dark))
+                    .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+                    .shadow(color: dark ? .black.opacity(0.45) : Color(red: 60 / 255, green: 40 / 255, blue: 20 / 255).opacity(0.14), radius: 15, y: 16)
+                    .padding(.top, 6)
+                    .dxSettle()
+                    .padding(.bottom, 12)
                 }
-                if let after = card.after {
-                    Text(verbatim: ctx.text(after)).dxType(.title).foregroundStyle(ground.ink)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .padding(.top, DX.Space.m)
-                }
+                .scrollBounceBehavior(.basedOnSize)
+                .scrollIndicators(.hidden)
+                .scrollClipDisabled()
+                gate(open: unlocked || p >= 0.8 || ctx.isReplay || (narrator?.finished ?? false))
+                    .padding(.top, 8)
+                    .dxArrive(6)
             }
-            .padding(.bottom, DX.Space.m)
         }
-        .scrollBounceBehavior(.basedOnSize)
+        .sensoryFeedback(.impact(weight: .light), trigger: unlocked) { _, now in now }
+        .onAppear {
+            guard narrator == nil else { return }
+            let transcript = paragraphs.joined(separator: " ")
+            let n = LessonNarrator(transcript: transcript, url: recording, seconds: card.minutes * 60)
+            n.onFinish = { unlocked = true }
+            narrator = n
+            withAnimation(motion.reduce ? nil : .linear(duration: 0.01).delay(0.2)) { grown = true }
+            Task {
+                try? await Task.sleep(for: .seconds(1.2))
+                if !Task.isCancelled, !ctx.isReplay { narrator?.play() }
+            }
+        }
+        .onDisappear { narrator?.stop() }
     }
 
-    private func buttons(hasRecording: Bool) -> some View {
-        VStack(spacing: 8) {
-            if !hasRecording || finished || ctx.isReplay {
-                Button(action: onDone) { Text(verbatim: ctx.text(card.commit)) }
-                    .buttonStyle(.dx(.primary, on: ground))
+    /// Light: apricot, warm toward the top. Dark: the same player at deep dusk with a warm glow behind the sun.
+    @ViewBuilder private func face(dark: Bool) -> some View {
+        if dark {
+            ZStack {
+                LinearGradient(stops: [.init(color: Color(hex: 0x27325C), location: 0), .init(color: Color(hex: 0x1C2547), location: 0.58),
+                                       .init(color: Color(hex: 0x19223F), location: 1)], startPoint: .top, endPoint: .bottom)
+                RadialGradient(colors: [Color(red: 247 / 255, green: 170 / 255, blue: 108 / 255).opacity(0.3), .clear],
+                               center: UnitPoint(x: 0.5, y: 0.32), startRadius: 0, endRadius: 220)
+            }
+        } else {
+            card.faceColor
+        }
+    }
+
+    private func art(dark: Bool) -> some View {
+        ZStack(alignment: .bottom) {
+            if !dark {
+                LinearGradient(colors: [Color(hex: 0xFFD6AC), card.faceColor], startPoint: .top, endPoint: .bottom)
+            }
+            Circle()
+                .fill(dark ? RadialGradient(colors: [Color(hex: 0xF9C083), Color(hex: 0xF2A766), Color(hex: 0xEC9A5E)], center: .center, startRadius: 0, endRadius: 120)
+                      : RadialGradient(colors: [Color(hex: 0xFFE48A), Color(hex: 0xFFD35E), Color(hex: 0xFFC94F)], center: .center, startRadius: 0, endRadius: 120))
+                .frame(width: 240, height: 240)
+                .shadow(color: dark ? Color(red: 247 / 255, green: 168 / 255, blue: 106 / 255).opacity(0.3) : Color(red: 1, green: 214 / 255, blue: 94 / 255).opacity(0.55),
+                        radius: dark ? 45 : 30)
+                .frame(maxHeight: .infinity, alignment: .top)
+                .padding(.top, 38)
+            XeroView(mood: .calm, stage: 0, points: 226, pose: .headphones)
+                .dxBob()
+                .offset(y: 9)
+                .dxSettle(2)
+        }
+        .frame(height: 334)
+        .clipped()
+        .accessibilityHidden(true)
+    }
+
+    /// While it plays, a quiet skip; from 80% (or once played), the solid button.
+    private func gate(open: Bool) -> some View {
+        VStack(spacing: 4) {
+            ZStack {
+                Button(String(localized: "Skip to next card")) { narrator?.stop(); onDone() }
+                    .dxFace(.body, 15, weight: 600)
+                    .foregroundStyle(DX.Ground.table.muted)
+                    .frame(maxWidth: .infinity, minHeight: 58)
+                    .contentShape(Rectangle())
+                    .buttonStyle(.plain)
+                    .opacity(open ? 0 : 1)
+                    .allowsHitTesting(!open)
+                    .accessibilityHidden(open)
+                Button(String(localized: "Next card")) { narrator?.stop(); onDone() }
+                    .buttonStyle(.dx(.primary, on: .table))
+                    .opacity(open ? 1 : 0)
+                    .allowsHitTesting(open)
+                    .accessibilityHidden(!open)
                     .accessibilityIdentifier("program.deck.commit")
             }
+            .animation(.timingCurve(0.2, 0.7, 0.2, 1, duration: 0.3), value: open)
             if let onSaveForLater, !ctx.isReplay {
-                Button(String(localized: "Save it for later"), action: onSaveForLater)
-                    .buttonStyle(.dx(.quiet, on: ground))
+                Button(String(localized: "Save it for later")) { narrator?.stop(); onSaveForLater() }
+                    .buttonStyle(.dx(.quiet, on: .table))
             }
         }
         .dynamicTypeSize(...DynamicTypeSize.accessibility1)
-        .padding(.top, DX.Space.s)
+    }
+
+    static func clock(_ seconds: Double) -> String {
+        let s = max(Int(seconds.rounded(.down)), 0)
+        return String(format: "%d:%02d", s / 60, s % 60)
+    }
+}
+
+/// 48 bars: the base in a soft ink, the played part in full ink, a playhead with a knob riding its end. The bars grow
+/// from the centre line left to right as the card arrives.
+private struct Waveform: View {
+    let progress: Double
+    let grown: Bool
+    let ink: Color
+    let face: Color
+    private let motion = MotionPolicy()
+
+    private static let heights: [CGFloat] = (0..<48).map { i in
+        let x = Double(i)
+        return CGFloat(0.28 + 0.72 * abs(sin(x * 0.61) * 0.6 + sin(x * 0.23 + 1) * 0.4))
+    }
+
+    var body: some View {
+        GeometryReader { proxy in
+            let w = proxy.size.width, h = proxy.size.height
+            let bar = (w - 47 * 3) / 48
+            ZStack(alignment: .leading) {
+                bars(w: w, h: h, bar: bar, color: ink.opacity(0.28))
+                bars(w: w, h: h, bar: bar, color: ink)
+                    .mask(alignment: .leading) { Rectangle().frame(width: w * progress) }
+                Capsule().fill(ink).frame(width: 2, height: h + 8)
+                    .overlay {
+                        Circle().fill(ink).frame(width: 16, height: 16)
+                            .overlay(Circle().stroke(face, lineWidth: 3))
+                            .shadow(color: .black.opacity(0.2), radius: 3, y: 2)
+                    }
+                    .offset(x: w * progress - 1)
+            }
+        }
+    }
+
+    private func bars(w: CGFloat, h: CGFloat, bar: CGFloat, color: Color) -> some View {
+        HStack(spacing: 3) {
+            ForEach(0..<48, id: \.self) { i in
+                Capsule().fill(color)
+                    .frame(width: bar, height: h * Self.heights[i])
+                    .scaleEffect(y: grown || motion.reduce ? 1 : 0.08)
+                    .animation(motion.reduce ? nil : DX.Move.settle.speed(0.9 / 0.42).delay(Double(i) * 0.016), value: grown)
+            }
+        }
+        .frame(height: h)
+    }
+}
+
+/// Back or forward 15 seconds: a circular arrow with the 15 inside.
+private struct SkipButton: View {
+    let forward: Bool
+    let ink: Color
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            ZStack {
+                ZStack {
+                    GridShape(d: "M7.8 8.3A13 13 0 1 1 4.2 19.8", grid: 34)
+                    GridShape(d: "M7.8 2.5v5.8h5.8", grid: 34)
+                }
+                .foregroundStyle(.clear)
+                .overlay {
+                    ZStack {
+                        GridShape(d: "M7.8 8.3A13 13 0 1 1 4.2 19.8", grid: 34).stroke(ink, style: StrokeStyle(lineWidth: 2.2, lineCap: .round, lineJoin: .round))
+                        GridShape(d: "M7.8 2.5v5.8h5.8", grid: 34).stroke(ink, style: StrokeStyle(lineWidth: 2.2, lineCap: .round, lineJoin: .round))
+                    }
+                }
+                .frame(width: 34, height: 34)
+                .scaleEffect(x: forward ? -1 : 1)
+                Text(verbatim: "15").dxFace(.body, 11, weight: 700, tracking: -0.3).foregroundStyle(ink).padding(.top, 1)
+            }
+            .frame(width: 44, height: 44)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text(forward ? "Forward 15 seconds" : "Back 15 seconds"))
     }
 }
 

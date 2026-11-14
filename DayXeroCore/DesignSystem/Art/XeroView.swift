@@ -15,7 +15,7 @@ public struct XeroView: View {
     /// Kit poses on top of a mood (001, 002): breath puffs that leave his mouth on the out-breath (in place of the
     /// marks beside his arm), or a raised right arm that waves twice from 1.2 s. Both run on a clock that starts at
     /// `since`, so they line up with the rest of the screen.
-    public enum Pose: Sendable { case standard, breathPuffs, wave, holdFlag }
+    public enum Pose: Sendable { case standard, breathPuffs, wave, holdFlag, headphones }
 
     public init(mood: CrewMood = .hello, stage: Int = 1, size: DX.CharacterSize = .scene, animate: Bool = true) {
         self.init(mood: mood, stage: stage, points: size.rawValue, animate: animate)
@@ -137,6 +137,16 @@ public struct XeroView: View {
         Crew.fill(&g, Crew.circle(72, 92, 7), look.highlight, opacity: look.cheek)
         Crew.fill(&g, Crew.circle(128, 92, 7), look.highlight, opacity: look.cheek)
         Crew.Face.make(mood, y: 78).draw(in: &g, y: 78, time: t, animate: on, blinkPeriod: 4.5, mood: mood, color: Crew.ink)
+        if pose == .headphones {
+            // 023/024: Xero listening. The band and cups sit in his body group, so they sway with him.
+            let ink = Color(hex: 0x1E1A3A)
+            Crew.stroke(&g, "M38 108 C30 -4 170 -4 162 108", ink, 10)
+            Crew.stroke(&g, "M52 62 C66 30 100 22 122 26", Color(hex: 0xFFF8EE).opacity(0.35), 3)
+            g.fill(Path(roundedRect: CGRect(x: 18, y: 88, width: 30, height: 48), cornerRadius: 14), with: .color(ink))
+            g.fill(Path(roundedRect: CGRect(x: 24, y: 96, width: 9, height: 32), cornerRadius: 4.5), with: .color(Color(hex: 0xFF9A6B)))
+            g.fill(Path(roundedRect: CGRect(x: 152, y: 88, width: 30, height: 48), cornerRadius: 14), with: .color(ink))
+            g.fill(Path(roundedRect: CGRect(x: 167, y: 96, width: 9, height: 32), cornerRadius: 4.5), with: .color(Color(hex: 0xFF9A6B)))
+        }
 
         // Marks outside the body.
         if cheer {
