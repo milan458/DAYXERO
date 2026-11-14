@@ -61,7 +61,7 @@ struct SessionFlowView: View {
     /// The deck's own screens carry their close button; beats keep the lesson bar.
     private func showsHeader(_ step: FlowStep) -> Bool {
         switch step {
-        case .completion, .hand, .card, .played, .mission: false
+        case .completion, .hand, .card, .played, .mission, .intro: false
         default: true
         }
     }
@@ -274,6 +274,15 @@ struct SessionFlowView: View {
         steps[index] = step
     }
 
+    /// "or listen instead" on the intro (033): the lesson ahead becomes the recording, remembered for next time.
+    private func listenFromIntro() {
+        if let i = steps.firstIndex(of: .cards) {
+            lessonFormat = LessonFormat.listen.rawValue
+            steps[i] = .audio
+        }
+        advance()
+    }
+
     private func advance() {
         guard index + 1 < steps.count else { dismiss(); return }
         index += 1
@@ -404,7 +413,10 @@ struct SessionFlowView: View {
         let ctx = context(for: session)
         switch step {
         case .intro:
-            SessionIntro(session: session, variant: ctx.variant, isReplay: isReplay, reads: steps.contains(.cards), onBegin: advance)
+            SessionIntro(session: session, variant: ctx.variant, isReplay: isReplay, reads: steps.contains(.cards), onBegin: advance,
+                         onListen: steps.contains(.cards) && ProgramAudioStep.hasRecording(session, ctx: ctx)
+                            ? { listenFromIntro() } : nil,
+                         onClose: close)
         case let .beat(id):
             if let beat = allBeats(session).first(where: { $0.id == id }) {
                 BeatScreen(beat: beat, ctx: ctx, onDone: advance, onBack: backAction(session))
@@ -497,63 +509,111 @@ struct SessionIntro: View {
 
     @Environment(\.modelContext) private var context
 
-    /// P1: the path at the sky's clarity, Xero 140, the session's label, title and subtitle.
+    var onListen: (() -> Void)?
+    var onClose: () -> Void = {}
+
+    /// v5 (033): close, the lesson's art, "Day 7 lesson · 3 min", the title and line, what's inside, and Begin with
+    /// "or listen instead" under it.
     var body: some View {
-        VStack(spacing: DX.Space.m) {
+        let g = DX.Ground.table
+        VStack(spacing: 0) {
+            HStack {
+                DXIconButton(.close, label: isReplay ? "Close" : "Close. Your place is saved.", action: onClose)
+                Spacer()
+            }
+            .frame(height: 52)
+            .padding(.horizontal, -6)
             ScrollView {
-                VStack(alignment: .leading, spacing: 10) {
+                VStack(alignment: .leading, spacing: 0) {
                     ZStack(alignment: .bottom) {
                         HorizonScene(.path, clarity: clarity, fit: .bottom)
-                        XeroView(mood: .hello, stage: 1, size: .scene).offset(y: -4)
+                        XeroView(mood: .hello, stage: 0, size: .scene).offset(y: -4).dxBob()
                     }
-                    .frame(height: 220)
-                    .clipShape(RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
-                    .padding(.bottom, DX.Space.s)
+                    .frame(height: 196)
+                    .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
                     .accessibilityHidden(true)
-                    .dxArrive(0)
-                    Text(verbatim: eyebrow).dxType(.caption).foregroundStyle(Read4.muted).dxArrive(1)
+                    .dxFade()
+                    Text(verbatim: meta).dxType(.footnote).foregroundStyle(g.muted)
+                        .padding(.top, 22)
+                        .dxArrive(1)
                     Text(verbatim: session.title.resolve(variant) ?? "")
                         .dxType(.large)
-                        .foregroundStyle(Read4.ink)
+                        .foregroundStyle(g.ink)
                         .fixedSize(horizontal: false, vertical: true)
                         .accessibilityAddTraits(.isHeader)
-                        .dxArrive(1)
-                    Text(verbatim: session.subtitle.resolve(variant) ?? "").dxType(.body).foregroundStyle(Read4.muted).dxArrive(2)
-                    // Only a session with a mission promises one (Graduation has none).
-                    Group {
-                        if reads {
-                            // MON-04: the read version's own length, not the audio's. "3 min · 90-second read" read as two
-                            // different lengths for one session (QW4); the card stack says its own 90 seconds.
-                            if session.mission != nil {
-                                Label("\(session.readMinutes()) min · A short read, a few activities and today's mission",
-                                      systemImage: "rectangle.stack")
-                            } else {
-                                Label("\(session.readMinutes()) min · A short read and a few activities",
-                                      systemImage: "rectangle.stack")
-                            }
-                        } else if session.mission != nil {
-                            Label("\(session.durationMinutes) min · Audio, activities and today's mission", systemImage: "headphones")
-                        } else {
-                            Label("\(session.durationMinutes) min · Audio and activities", systemImage: "headphones")
-                        }
-                    }
-                    .dxType(.footnote).foregroundStyle(Read4.ink)
-                    .dxArrive(2)
-                    if let hint = session.listenHint?.resolve(variant) {
-                        Label(hint, systemImage: "clock")
-                            .dxType(.footnote).foregroundStyle(Read4.ink)
-                            .v4Card()
-                            .padding(.top, DX.Space.xs)
-                            .dxArrive(3)
-                    }
+                        .padding(.top, 6)
+                        .dxArrive(2)
+                    Text(verbatim: session.subtitle.resolve(variant) ?? "").dxType(.body).foregroundStyle(g.muted)
+                        .padding(.top, 6)
+                        .dxArrive(3)
+                    inside.padding(.top, 18)
                 }
+                .padding(.bottom, DX.Space.m)
             }
             .scrollBounceBehavior(.basedOnSize)
-            // The header already says Replay; the button just starts it (QW4).
-            Button(isReplay ? "Start" : "Begin", action: onBegin)
-                .buttonStyle(.dx(.primary, on: .reading))
-                .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+            VStack(spacing: 6) {
+                // The header already says Replay; the button just starts it (QW4).
+                Button(isReplay ? "Start" : "Begin", action: onBegin)
+                    .buttonStyle(.dx(.primary, on: .table))
+                    .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+                if let onListen {
+                    Button(action: onListen) {
+                        HStack(spacing: 6) {
+                            DXIcon(.headphones, size: 16, weight: 2.4)
+                            Text("or listen instead")
+                        }
+                        .dxFace(.body, 14, weight: 600)
+                        .foregroundStyle(g.ink.opacity(0.85))
+                        .frame(minHeight: 36)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .padding(.top, 10)
+            .dxArrive(7)
         }
+    }
+
+    /// "Day 7 lesson · 3 min".
+    private var meta: String {
+        let minutes = reads ? session.readMinutes() : session.durationMinutes
+        return "\(session.label) \(String(localized: "lesson")) · \(String(localized: "\(minutes) min"))"
+    }
+
+    /// What's inside (033): the read, the activities, today's mission, each with a small paper spot.
+    private var inside: some View {
+        let g = DX.Ground.table
+        let cards = session.cards?.count ?? 0
+        var rows: [(DX.Icon, String, String)] = []
+        if reads {
+            rows.append((.text, String(localized: "A short read"),
+                         cards > 0 ? String(AttributedString(localized: "^[\(cards) card](inflect: true), about 2 min").characters) : String(localized: "About 2 min")))
+        } else {
+            rows.append((.headphones, String(localized: "A short listen"), String(localized: "\(session.durationMinutes) min, read by Xero")))
+        }
+        if !session.beats.isEmpty { rows.append((.hand, String(localized: "A few activities"), String(localized: "Quick taps, about 1 min"))) }
+        if session.mission != nil { rows.append((.flame, String(localized: "Today's mission"), String(localized: "One small thing to try today"))) }
+        return VStack(spacing: 0) {
+            ForEach(Array(rows.enumerated()), id: \.offset) { i, row in
+                HStack(spacing: 12) {
+                    DXIcon(row.0, size: 17, weight: 2.4).foregroundStyle(Color(hex: 0x1E1A3A))
+                        .frame(width: 34, height: 34)
+                        .background(LinearGradient(colors: [Color(hex: 0xFFE2C6), Color(hex: 0xFFC38A)], startPoint: .top, endPoint: .bottom),
+                                    in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text(verbatim: row.1).dxFace(.display, 15, weight: 700).foregroundStyle(g.ink)
+                        Text(verbatim: row.2).dxType(.caption).foregroundStyle(g.muted)
+                    }
+                    Spacer(minLength: 0)
+                }
+                .padding(.horizontal, 12).padding(.vertical, 9)
+                .overlay(alignment: .top) { if i > 0 { Rectangle().fill(g.line).frame(height: 1) } }
+                .dxArrive(4 + i)
+            }
+        }
+        .background(g.card, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(g.line, lineWidth: 1))
+        .accessibilityElement(children: .combine)
     }
 
     /// "SUN 8 NOV · DAY 2": today's date and the session's label.
