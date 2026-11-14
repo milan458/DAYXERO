@@ -73,7 +73,7 @@ struct OnboardingFlow: View {
 
     /// Steps whose hero art runs under the status bar: the header floats over the art instead of pushing it down.
     private var overlaysTopBar: Bool {
-        model.step == .quitDay
+        false
     }
 
     private var transition: AnyTransition {
@@ -176,11 +176,11 @@ struct OnboardingScaffold<Content: View, Footer: View>: View {
                             .fixedSize(horizontal: false, vertical: true)
                             .dxArrive(1)
                     }
+                    // Each screen staggers its own answers in (kit `data-a`, --i from 2).
                     AnswerTrayCard(label: trayLabel) {
-                        VStack(alignment: .leading, spacing: 10) { content() }
+                        VStack(alignment: .leading, spacing: 12) { content() }
                     }
                     .padding(.top, 12)
-                    .dxArrive(2)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, DX.Layout.gutter)

@@ -11,6 +11,8 @@ enum Onb {
     /// Text on an ink-filled chip.
     static let onInk = DX.Ground.reading.background
     static let hairline = Color(light: (0x1E1A3A, 0.12), dark: (0xFFFFFF, 0.14))
+    /// Chips and cards on apricot have no hairline in light (kit); dark grounds give them one.
+    static let chipLine = Color(light: (0x1E1A3A, 0), dark: (0xFFFFFF, 0.12))
     static let accent = DX.Fill.green
     static let accentSoft = DX.Fill.greenSoft
 
@@ -83,17 +85,29 @@ struct OnbOptionCard: View {
     let systemImage: String?
     /// A product's log icon (4 Nov 2026), in place of a symbol: the same icon the product has everywhere else.
     let glyph: LogGlyph?
+    /// The kit's paper-cut product object (003), in a 52 pt tile.
+    var art: Product? = nil
+    /// Multi-select rows use the kit's rounded-square checkbox.
+    var multi = false
+    var minHeight: CGFloat = 64
     let isSelected: Bool
     let action: () -> Void
     /// One selection haptic per tap, on the card tapped (a trigger on `isSelected` fired twice in a single-choice group).
     @State private var taps = 0
+    /// kit `.land`: a picked row dips to .97 and springs back (520 ms).
+    @State private var land = 0
+    private let motion = MotionPolicy()
 
     init(_ title: LocalizedStringResource, detail: LocalizedStringResource? = nil, systemImage: String? = nil,
-         glyph: LogGlyph? = nil, isSelected: Bool, action: @escaping () -> Void) {
+         glyph: LogGlyph? = nil, art: Product? = nil, multi: Bool = false, minHeight: CGFloat = 64,
+         isSelected: Bool, action: @escaping () -> Void) {
         self.title = title
         self.detail = detail
         self.systemImage = systemImage
         self.glyph = glyph
+        self.art = art
+        self.multi = multi
+        self.minHeight = minHeight
         self.isSelected = isSelected
         self.action = action
     }
@@ -105,10 +119,16 @@ struct OnbOptionCard: View {
         let shape = RoundedRectangle(cornerRadius: DX.Layout.optionRadius, style: .continuous)
         Button {
             taps += 1
+            let picking = !isSelected
             action()
+            if picking { land += 1 }
         } label: {
-            HStack(spacing: 14) {
-                if let glyph {
+            HStack(spacing: art == nil ? 14 : 16) {
+                if let art {
+                    ProductArt(product: art)
+                        .frame(width: 52, height: 52)
+                        .background(g.card2, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                } else if let glyph {
                     LogIcon(glyph: glyph, size: 40)
                         .frame(width: 52, height: 52)
                         .background(g.card2, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
@@ -126,17 +146,22 @@ struct OnbOptionCard: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .multilineTextAlignment(.leading)
-                DXRadio(isOn: isSelected, ground: g)
+                DXRadio(isOn: isSelected, multi: multi, ground: g)
             }
             .padding(.horizontal, 16)
-            .padding(.vertical, 14)
-            .frame(minHeight: 64)
+            .padding(.vertical, 12)
+            .frame(minHeight: minHeight)
             .background(isSelected ? g.selTint : g.card, in: shape)
             .overlay(shape.strokeBorder(isSelected ? g.selEdge : g.line, lineWidth: isSelected ? 2 : 1))
             .contentShape(Rectangle())
             .animation(DX.Move.arrive.speed(2.4), value: isSelected)
         }
         .buttonStyle(.dxPress)
+        .phaseAnimator([1.0, 0.97, 1.0], trigger: land) { view, scale in
+            view.scaleEffect(motion.reduce ? 1 : scale)
+        } animation: { scale in
+            scale == 0.97 ? .timingCurve(0.3, 1.4, 0.5, 1, duration: 0.21) : .timingCurve(0.3, 1.4, 0.5, 1, duration: 0.31)
+        }
         .sensoryFeedback(DX.Haptic.select, trigger: taps)
         .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
     }

@@ -54,44 +54,56 @@ struct UnderAgeScreen: View {
     }
 }
 
-/// Screen 2 (S22): what they use, with a note when it's more than one.
+/// Screen 2 (S22, v5 003): what they use, as checkbox rows with paper-cut product art, and Xero's note with the count.
+///
+/// Motion (003): question and helper arrive (600 ms, 90 ms stagger), then the three rows and the note in order. A pick
+/// fills and ticks the checkbox, tints the row and dips it to .97 (520 ms spring); the note's count changes while Xero
+/// bobs beside it. Selection haptic on each pick.
 struct ProductsScreen: View {
     @Bindable var model: OnboardingModel
-    private let motion = MotionPolicy()
 
     var body: some View {
         OnboardingScaffold(title: "What are you leaving behind?",
-                           subtitle: "Pick everything you use now. I'll set up your counters and body timeline for each one.",
+                           subtitle: "Pick everything you use now. I'll set up a counter for each one.",
                            model: model) {
-            product(.cigarettes, title: "Cigarettes", detail: "Manufactured or roll-ups")
-            product(.vape, title: "Vape or e-cigarette", detail: "Disposables, pods or refillable tanks")
-            product(.pouches, title: "Nicotine pouches or snus", detail: "Zyn, Velo or other oral pouches")
-            if model.products.count > 1 {
-                // v5 (003): Xero says it, on the cream card.
-                HStack(alignment: .center, spacing: 14) {
-                    XeroView(mood: .hello, stage: 1, points: 72)
-                        .frame(width: 72, height: 72)
-                        .accessibilityHidden(true)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Using both is common").dxType(.footnote).fontWeight(.bold).foregroundStyle(Onb.ink)
-                        Text("I'll plan for each one in your prep week.")
-                            .dxType(.footnote).foregroundStyle(Onb.ink).fixedSize(horizontal: false, vertical: true)
-                    }
+            product(.cigarettes, title: "Cigarettes", detail: "Manufactured or roll-ups").dxArrive(2)
+            product(.vape, title: "Vape", detail: "Disposables, pods or tanks").dxArrive(3)
+            product(.pouches, title: "Nicotine pouches", detail: "Zyn, Velo, snus").dxArrive(4)
+            // v5 (003): Xero's note on the cream card, with the count.
+            HStack(alignment: .center, spacing: 12) {
+                XeroView(mood: .hello, stage: 0, points: 88)
+                    .dxBob()
+                    .frame(width: 88, height: 88)
+                    .accessibilityHidden(true)
+                note
+                    .dxType(.body)
+                    .foregroundStyle(Onb.ink)
+                    .fixedSize(horizontal: false, vertical: true)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                }
-                .padding(.vertical, 14).padding(.horizontal, 16)
-                .background(Color(light: 0xFFFCF7, dark: 0x182034), in: RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
-                .overlay(RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous).strokeBorder(Onb.hairline))
-                .padding(.top, 14)
-                .transition(.opacity.combined(with: .move(edge: .top)))
-                .accessibilityElement(children: .combine)
+                    .contentTransition(.numericText())
+                    .animation(.easeInOut(duration: 0.25), value: model.products.count)
             }
+            .padding(.leading, 14).padding(.trailing, 20).padding(.vertical, 18)
+            .background(Color(light: 0xFFF8EE, dark: 0x182034), in: RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous).strokeBorder(Onb.hairline))
+            .padding(.top, 4)
+            .accessibilityElement(children: .combine)
+            .dxArrive(5)
         }
-        .animation(motion.animation(DX.Move.settle), value: model.products.count > 1)
+    }
+
+    private var note: Text {
+        let n = model.products.count
+        let bold = Text("\(n) picked.").dxRun(16, weight: 700)
+        switch n {
+        case 0: return Text("Pick all you use. Lots of people use more than one.")
+        case 1: return bold + Text(" Lots of people use more than one. Pick them all.")
+        default: return bold + Text(" Lots of people use both. I'll plan for each.")
+        }
     }
 
     private func product(_ product: Product, title: LocalizedStringResource, detail: LocalizedStringResource) -> some View {
-        OnbOptionCard(title, detail: detail, glyph: .product(product), isSelected: model.products.contains(product)) {
+        OnbOptionCard(title, detail: detail, art: product, multi: true, minHeight: 84, isSelected: model.products.contains(product)) {
             if model.products.contains(product) { model.products.remove(product) } else { model.products.insert(product) }
         }
     }

@@ -218,7 +218,7 @@ struct CravingSOSView: View {
         TimelineView(.periodic(from: startedAt, by: 1)) { timeline in
             let seconds = max(0, Int(timeline.date.timeIntervalSince(startedAt)))
             let clock = String(format: "%d:%02d", seconds / 60, seconds % 60)
-            Text("Most cravings pass within a few minutes. Ride it with me. \(Text("You've ridden \(clock).").fontWeight(.bold).foregroundStyle(SOSColors.cream))")
+            Text("Most cravings pass within a few minutes. Ride it with me. \(Text("You've ridden \(clock).").dxRun(16, weight: 700).foregroundStyle(SOSColors.cream))")
                 .dxType(.body)
                 .foregroundStyle(SOSColors.ocean.muted)
                 .multilineTextAlignment(.center)

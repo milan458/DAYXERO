@@ -67,7 +67,7 @@ struct ProgramView: View {
                                     .foregroundStyle(ground.ink)
                                     .frame(width: 36, height: 36)
                                     .background(Color(light: (0xFFFFFF, 0.7), dark: (0xFFFFFF, 0.08)), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
-                                Text(verbatim: line).dxType(.footnote).fontWeight(.semibold).foregroundStyle(ground.ink)
+                                Text(verbatim: line).dxFace(.body, 15, weight: 600).foregroundStyle(ground.ink)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
                             .padding(12)

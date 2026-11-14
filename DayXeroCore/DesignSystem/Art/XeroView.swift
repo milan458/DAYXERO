@@ -9,26 +9,36 @@ public struct XeroView: View {
     let stage: Int
     let size: CGFloat
     let animate: Bool
+    let pose: Pose
+    let since: Double
+
+    /// Kit poses on top of a mood (001, 002): breath puffs that leave his mouth on the out-breath (in place of the
+    /// marks beside his arm), or a raised right arm that waves twice from 1.2 s. Both run on a clock that starts at
+    /// `since`, so they line up with the rest of the screen.
+    public enum Pose: Sendable { case standard, breathPuffs, wave, holdFlag }
 
     public init(mood: CrewMood = .hello, stage: Int = 1, size: DX.CharacterSize = .scene, animate: Bool = true) {
         self.init(mood: mood, stage: stage, points: size.rawValue, animate: animate)
     }
 
-    public init(mood: CrewMood, stage: Int, points: CGFloat, animate: Bool = true) {
+    public init(mood: CrewMood, stage: Int, points: CGFloat, animate: Bool = true, pose: Pose = .standard, since: Date? = nil) {
         self.mood = mood
-        self.stage = min(4, max(1, stage))
+        self.stage = min(4, max(0, stage))
         self.size = points
         self.animate = animate
+        self.pose = pose
+        self.since = since?.timeIntervalSinceReferenceDate ?? 0
     }
 
     public var body: some View {
-        let mood = mood, stage = stage
+        let mood = mood, stage = stage, pose = pose, since = since
         CrewCanvas(label: "Xero", size: size, animate: animate) { ctx, time, on, dark in
-            XeroView.draw(&ctx, mood: mood, stage: stage, time: time, animate: on, dark: dark)
+            XeroView.draw(&ctx, mood: mood, stage: stage, time: time - since, animate: on, dark: dark, pose: pose)
         }
     }
 
-    nonisolated static func draw(_ ctx: inout GraphicsContext, mood: CrewMood, stage: Int, time t: Double, animate on: Bool, dark: Bool = false) {
+    nonisolated static func draw(_ ctx: inout GraphicsContext, mood: CrewMood, stage: Int, time t: Double, animate on: Bool, dark: Bool = false,
+                                 pose: Pose = .standard) {
         let cheer = mood == .cheer
         let cheerTimes = [0, 0.15, 0.35, 0.55, 1.0]
 
@@ -45,7 +55,7 @@ public struct XeroView: View {
         let sway = mood == .sleepy
             ? ArtTrack(scalars: [-3, 3, -3], times: Crew.spline, duration: 7, spline: true).scalar(at: t, animate: on)
             : 0
-        let sunRest: Double = [168, 156, 142, 128][stage - 1]
+        let sunRest: Double = [168, 156, 142, 128][max(stage, 1) - 1]
         let sunY = mood == .breathe
             ? ArtTrack(scalars: [sunRest, sunRest - 16, sunRest], times: [0, 0.4, 1], duration: 10, spline: true).scalar(at: t, animate: on)
             : ArtTrack(scalars: [sunRest, sunRest - 3, sunRest], times: Crew.spline, duration: 4, spline: true).scalar(at: t, animate: on)
@@ -83,7 +93,24 @@ public struct XeroView: View {
         Crew.fill(&g, Crew.ellipse(116, 188, 12, 7), look.feet)
         let coral = look.body
         Crew.stroke(&g, cheer ? "M38 112 C28 98 24 86 26 74" : "M36 124 C26 132 22 142 24 152", coral, 12)
-        Crew.stroke(&g, cheer ? "M162 112 C172 98 176 86 174 74" : "M164 124 C174 132 178 142 176 152", coral, 12)
+        if pose == .wave {
+            // Two 16° swings from 1.2 s (2 × 800 ms), then it rests raised.
+            let local = on ? t - 1.2 : 2
+            let swing = local <= 0 || local >= 1.6 ? 0 : -16 * sin(local / 0.8 * .pi).magnitude
+            var arm = g
+            arm.translateBy(x: 162, y: 112)
+            arm.rotate(by: .degrees(swing))
+            arm.translateBy(x: -162, y: -112)
+            Crew.stroke(&arm, "M162 112 C172 98 178 86 176 74", coral, 12)
+            let ink = dark ? Color(hex: 0xF3E9DE) : Color(hex: 0x24163A)
+            Crew.stroke(&ctx, "M186 62 q7 6 6 14", ink.opacity(0.55), 3)
+            Crew.stroke(&ctx, "M193 52 q9 9 6 22", ink.opacity(0.55), 3)
+        } else if pose == .holdFlag {
+            // 010: the right arm reaches out to hold the flag's pole (drawn by the screen, behind him).
+            Crew.stroke(&g, "M164 122 C176 118 183 110 186 100", coral, 12)
+        } else {
+            Crew.stroke(&g, cheer ? "M162 112 C172 98 176 86 174 74" : "M164 124 C174 132 178 142 176 152", coral, 12)
+        }
 
         // Body with the hole cut out, shade and highlight.
         Crew.fill(&g, "M100 34 C138 34 166 68 166 112 C166 156 138 188 100 188 C62 188 34 156 34 112 C34 68 62 34 100 34 Z M100 109 C112 109 121 121 121 138 C121 155 112 167 100 167 C88 167 79 155 79 138 C79 121 88 109 100 109 Z",
@@ -119,7 +146,28 @@ public struct XeroView: View {
         if mood == .sleepy {
             Crew.zzz(&ctx, at: CGPoint(x: 150, y: 40), time: t, animate: on, color: Crew.markColor(dark: dark))
         }
-        if mood == .breathe {
+        if mood == .breathe && pose == .breathPuffs {
+            // Two soft cream puffs about 9 pt clear of his mouth, drifting out and fading over the 6 s out-breath.
+            let cycle = t.truncatingRemainder(dividingBy: 10)
+            let p = on ? max(0, (cycle - 4) / 6) : 0.6
+            let eased = UnitCurve.bezier(startControlPoint: UnitPoint(x: 0.3, y: 0.6), endControlPoint: UnitPoint(x: 0.3, y: 1)).value(at: p)
+            let opacity = !on ? 1 : cycle < 4 ? 0 : p < 0.2 ? p / 0.2 : p < 0.8 ? 1 - (p - 0.2) / 0.6 * 0.1 : 0.9 * (1 - (p - 0.8) / 0.2)
+            var w = g
+            w.translateBy(x: 3 - 6 + 16 * eased, y: 7 - 2 + 5 * eased)
+            w.opacity = opacity
+            let cream = Color(hex: 0xFFF8EE)
+            var a = w
+            a.opacity = opacity * 0.72
+            for c in [(119.0, 100.5, 2.9), (123, 98.4, 3.6), (127, 100.5, 2.7)] { Crew.fill(&a, Crew.circle(c.0, c.1, c.2), cream) }
+            a.fill(Path(roundedRect: CGRect(x: 119, y: 99.4, width: 8, height: 4), cornerRadius: 2), with: .color(cream))
+            var b = w
+            b.opacity = opacity * 0.52
+            for c in [(133.0, 106.0, 1.9), (135.6, 104.6, 2.3), (138.2, 106, 1.7)] { Crew.fill(&b, Crew.circle(c.0, c.1, c.2), cream) }
+            b.fill(Path(roundedRect: CGRect(x: 133, y: 105.3, width: 5.2, height: 2.6), cornerRadius: 1.3), with: .color(cream))
+            var d = w
+            d.opacity = opacity * 0.38
+            Crew.fill(&d, Crew.circle(142.5, 110, 1.2), cream)
+        } else if mood == .breathe {
             let drift = ArtTrack([[0, 0], [8, 0], [0, 0]], duration: 5).value(at: t, animate: on)
             var b = ctx
             b.translateBy(x: drift[0], y: drift[1])
@@ -138,8 +186,14 @@ public struct XeroView: View {
         public let cheek: Double
     }
 
+    /// The kit's Xero (chars.js), as every v5 mockup draws him outside the growth story: full size, #FF7155, no sprout.
+    /// Pass stage 0 for it.
+    public nonisolated static let kit = Look(grow: 1, body: Color(hex: 0xFF7155), shade: Color(hex: 0xE85A3E), highlight: Color(hex: 0xFFB09C),
+                                             feet: Color(hex: 0xC9542F), cheek: 0.8)
+
     public nonisolated static func look(stage: Int) -> Look {
-        switch min(4, max(1, stage)) {
+        switch min(4, max(0, stage)) {
+        case 0: kit
         case 1: Look(grow: 0.8, body: Color(hex: 0xFF9478), shade: Color(hex: 0xF27858), highlight: Color(hex: 0xFFC8B8),
                      feet: Color(hex: 0xD86A48), cheek: 0.55)
         case 2: Look(grow: 0.88, body: Color(hex: 0xFF8064), shade: Color(hex: 0xEC6648), highlight: Color(hex: 0xFFBBA8),

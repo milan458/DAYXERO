@@ -47,7 +47,9 @@ public enum CravingOutcome: String, Codable, Sendable {
 /// Situations that bring on cravings, in the order onboarding shows them.
 public enum Trigger: String, Codable, CaseIterable, Sendable {
     /// `finishedTask` (CLIN-09, 2 Nov 2026): the "I've earned one" moment after a job is done.
-    case morning, coffee, meals, stress, alcohol, boredom, social, driving, work, finishedTask, phone, other
+    /// `evening`, `lowMood` and `anxiety` (v5, 006): onboarding's moments and feelings. `finishedTask` and `phone` stay for
+    /// answers saved before, and are no longer offered there.
+    case morning, coffee, meals, stress, alcohol, boredom, social, driving, work, finishedTask, phone, evening, lowMood, anxiety, other
 
     public var title: LocalizedStringResource {
         switch self {
@@ -62,6 +64,9 @@ public enum Trigger: String, Codable, CaseIterable, Sendable {
         case .work: "Work breaks"
         case .finishedTask: "Finished a task / chore"
         case .phone: "On my phone"
+        case .evening: "Evenings"
+        case .lowMood: "Low mood"
+        case .anxiety: "Anxiety"
         case .other: "Something else"
         }
     }
@@ -80,6 +85,9 @@ public enum Trigger: String, Codable, CaseIterable, Sendable {
         case .work: ["take my break somewhere new", "walk around the block", "take a break with a non-smoker", "drink water"]
         case .finishedTask: ["pick a real reward from my list", "make a proper tea or coffee", "step outside for two minutes", "open the reward card in Calm tools"]
         case .phone: ["put the phone down for five minutes", "move to another room", "chew sugar-free gum", "open Craving SOS"]
+        case .evening: ["start a new evening routine", "go for a walk after dinner", "make a herbal tea", "open Craving SOS"]
+        case .lowMood: ["text someone I trust", "step outside for ten minutes", "breathe slowly for one minute", "open Craving SOS"]
+        case .anxiety: ["breathe slowly for one minute", "ground myself: five things I can see", "step away for five minutes", "open Craving SOS"]
         case .other: ["open Craving SOS", "take a short walk", "drink water", "text a friend"]
         }
     }
@@ -98,6 +106,9 @@ public enum Trigger: String, Codable, CaseIterable, Sendable {
         case .work: "a work break"
         case .finishedTask: "finishing a task"
         case .phone: "scrolling time"
+        case .evening: "an evening at home"
+        case .lowMood: "a low moment"
+        case .anxiety: "an anxious moment"
         case .other: "a strong craving"
         }
     }
@@ -143,7 +154,9 @@ public enum PastAttempts: String, Codable, CaseIterable, Sendable {
 
 /// What got in the way of a past attempt.
 public enum Obstacle: String, Codable, CaseIterable, Sendable {
-    case cravings, stress, social, irritability, weight, sleep, motivation, other
+    /// `hunger`, `restlessness` and `focus` (v5, 008). `cravings`, `stress` and `other` stay for answers saved before;
+    /// cravings and stress are asked on the triggers screen now.
+    case cravings, stress, social, irritability, hunger, weight, sleep, restlessness, focus, motivation, other
 
     public var title: LocalizedStringResource {
         switch self {
@@ -151,10 +164,30 @@ public enum Obstacle: String, Codable, CaseIterable, Sendable {
         case .stress: "Stress"
         case .social: "Social situations"
         case .irritability: "Irritability"
-        case .weight: "Weight"
-        case .sleep: "Sleep"
-        case .motivation: "Lost motivation"
+        case .hunger: "Hunger"
+        case .weight: "Weight gain"
+        case .sleep: "Poor sleep"
+        case .restlessness: "Restlessness"
+        case .focus: "Trouble focusing"
+        case .motivation: "Low motivation"
         case .other: "Other"
+        }
+    }
+
+    /// What picking it adds to the plan, in a few words (008: "Irritability → 1-minute reset").
+    public var tool: LocalizedStringResource? {
+        switch self {
+        case .cravings: "Craving SOS"
+        case .stress: "Calm tools"
+        case .social: "What to say"
+        case .irritability: "1-minute reset"
+        case .hunger: "Meals and water"
+        case .weight: "Walks and meals"
+        case .sleep: "Evening wind-down"
+        case .restlessness: "Drop anchor"
+        case .focus: "5-4-3-2-1 reset"
+        case .motivation: "Your reason, daily"
+        case .other: nil
         }
     }
 }
@@ -168,8 +201,11 @@ extension Obstacle {
         case .stress: "Calm tools and the stress-loop session are in your plan from prep week."
         case .social: "The Nights out session plans what you'll say and do before your first one."
         case .irritability: "Week 1 can feel short-fused. Slow breathing with Glim takes the edge off."
+        case .hunger: "Hunger can rise for a few weeks. Regular meals and your water goal keep it steady."
         case .weight: "Proper meals, water and walks are part of your first week."
         case .sleep: "Glim's evening wind-down is there for restless nights."
+        case .restlessness: "Drop anchor in Calm tools brings you back into the room when you can't sit still."
+        case .focus: "Foggy days pass. The 5-4-3-2-1 grounding in Calm tools helps you refocus."
         case .motivation: "Your reason shows on every pledge and every Craving SOS."
         case .other: nil
         }

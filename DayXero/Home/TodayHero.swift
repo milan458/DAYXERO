@@ -320,7 +320,7 @@ struct TodayHero: View {
                 Text(verbatim: "\(next)").dxFace(.display, 12.5, weight: 800, tracking: -0.3).foregroundStyle(TodayInk.ink)
             }
             .frame(width: 28, height: 28)
-            Text(verbatim: text).dxType(.footnote).fontWeight(.semibold).foregroundStyle(TodayInk.ink)
+            Text(verbatim: text).dxFace(.body, 15, weight: 600).foregroundStyle(TodayInk.ink)
         }
         .padding(.leading, 10)
         .padding(.trailing, 18)

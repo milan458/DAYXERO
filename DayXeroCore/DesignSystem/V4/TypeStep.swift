@@ -160,6 +160,16 @@ public extension View {
     }
 }
 
+public extension Text {
+    /// A styled run inside a sentence, at an explicit size and weight that follows Dynamic Type. The app's faces are
+    /// fixed-weight fonts, so `fontWeight(.bold)` has no effect on them; use this for the bold words in a line.
+    @MainActor func dxRun(_ size: CGFloat, weight: CGFloat, family: DX.TypeStep.Family = .body) -> Text {
+        let traits = UITraitCollection(preferredContentSizeCategory: UITraitCollection.current.preferredContentSizeCategory)
+        let scaled = UIFontMetrics(forTextStyle: .body).scaledValue(for: size, compatibleWith: traits)
+        return font(Font(DX.Typeface4.font(family, size: scaled, weight: weight) as CTFont))
+    }
+}
+
 private final class V4BundleToken {}
 
 /// A v4 face at an explicit size and weight, for places that sit between the seven steps while

@@ -175,7 +175,7 @@ struct CheckInView: View {
                     if logged == 0 && cravings == nil {
                         Text("No cravings logged today")
                     } else {
-                        Text("From today's SOS: \(Text("\(rode) of \(count) waves ridden out").fontWeight(.bold))")
+                        Text("From today's SOS: \(Text("\(rode) of \(count) waves ridden out").dxRun(15, weight: 700))")
                     }
                 }
                 .dxType(.footnote).foregroundStyle(ground.ink)

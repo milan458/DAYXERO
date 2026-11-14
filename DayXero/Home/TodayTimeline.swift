@@ -421,7 +421,7 @@ struct TodayPrepStamps: View {
                 }
                 VStack(spacing: 7) {
                     DXBadge(.xero, state: .next(nil), size: 50)
-                    Text(verbatim: "Day Xero").dxType(.caption).fontWeight(.bold).foregroundStyle(TodayInk.ink).fixedSize()
+                    Text(verbatim: "Day Xero").dxFace(.body, 13, weight: 700).foregroundStyle(TodayInk.ink).fixedSize()
                 }
                 .frame(width: 50)
                 .padding(.top, -1)

@@ -221,7 +221,7 @@ final class OnboardingModel {
         switch step {
         case .products: !products.isEmpty
         case let .baseline(product): baseline(for: product).isComplete
-        case .triggers: firstUse != nil && !triggers.isEmpty
+        case .triggers: !triggers.isEmpty
         case .personal: !trimmedName.isEmpty && !why.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         case .obstacles: !obstacles.isEmpty
         case .nrt: nrtInterest != nil
@@ -271,8 +271,8 @@ final class OnboardingModel {
         baselines = [.vape: vape, .cigarettes: cigarettes]
         firstUse = .withinThirty
         triggers = [.coffee, .stress]
-        why = ReasonDraft(text: "To keep up with Maya at the park")
-        obstacles = [.cravings, .stress]
+        why = ReasonDraft(text: "Run with Aria without stopping to catch my breath")
+        obstacles = [.irritability, .social]
         nrtInterest = .using
         nrtFormats = [.patch, .gum]
         let steps = sequence
@@ -333,7 +333,7 @@ final class OnboardingModel {
         var times: [TimeOfDay] = []
         if (firstUse != nil && firstUse != .later) || triggers.contains(.coffee) || triggers.contains(.morning) { times.append(.morning) }
         if triggers.contains(.meals) || triggers.contains(.work) { times.append(.midday) }
-        if triggers.contains(.alcohol) || triggers.contains(.social) { times.append(.evening) }
+        if triggers.contains(.alcohol) || triggers.contains(.social) || triggers.contains(.evening) { times.append(.evening) }
         return times
     }
 

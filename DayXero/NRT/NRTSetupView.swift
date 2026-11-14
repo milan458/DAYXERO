@@ -210,7 +210,7 @@ struct NRTSetupView: View {
                 .dxArrive(2)
                 // S27.6: combination NRT is the best-evidenced option (Cochrane 2019, RR 1.25, high certainty).
                 HStack(spacing: 16) {
-                    XeroView(mood: .hello, stage: 1, points: 92)
+                    XeroView(mood: .hello, stage: 0, points: 92)
                         .dxBob()
                         .frame(width: 112, height: 112)
                         .background(Color(light: 0xFFEBDB, dark: 0x212A41), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
@@ -241,7 +241,7 @@ struct NRTSetupView: View {
                 Button {
                     if let url = URL(string: "https://maps.apple.com/?q=pharmacy") { openURL(url) }
                 } label: {
-                    Text("Find a pharmacist").fontWeight(.bold).foregroundStyle(g.ink)
+                    Text("Find a pharmacist").dxRun(15, weight: 700).foregroundStyle(g.ink)
                         .underline(color: g.mark)
                 }
                 .buttonStyle(.plain)
@@ -259,7 +259,7 @@ struct NRTSetupView: View {
             Text("What are you using?").dxType(.title).foregroundStyle(g.ink)
                 .accessibilityAddTraits(.isHeader)
                 .dxArrive(0)
-            (Text("Pick up to two. ") + Text("\(chosen.count) of 2 picked").fontWeight(.semibold).foregroundStyle(g.ink))
+            (Text("Pick up to two. ") + Text("\(chosen.count) of 2 picked").dxRun(15, weight: 600).foregroundStyle(g.ink))
                 .dxType(.footnote).foregroundStyle(g.muted)
                 .modifier(Shake(trigger: shake))
                 .padding(.top, 8)
@@ -275,7 +275,7 @@ struct NRTSetupView: View {
             }
             .padding(.top, 22)
             HStack(spacing: 10) {
-                XeroView(mood: .hello, stage: 1, points: 56)
+                XeroView(mood: .hello, stage: 0, points: 56)
                     .dxBob()
                     .frame(width: 64, height: 64)
                     .accessibilityHidden(true)
@@ -295,7 +295,7 @@ struct NRTSetupView: View {
 
     /// Xero's how-to for the product picked last, or the combination tip before anything is picked.
     private var tip: Text {
-        let bold = { (s: LocalizedStringKey) in Text(s).fontWeight(.bold).foregroundStyle(ground.ink) }
+        let bold = { (s: LocalizedStringKey) in Text(s).dxRun(15, weight: 700).foregroundStyle(ground.ink) }
         switch chosen.last {
         case .patch: return bold("Patch:") + Text(" put a new patch on a clean, hairless spot each morning.")
         case .gum: return bold("Gum:") + Text(" chew slowly until it tingles, then park it between your cheek and gum.")
@@ -403,7 +403,7 @@ struct NRTSetupView: View {
         let mg = preset.steps.allSatisfy { $0.strengthMg > 0 }
             ? Text(verbatim: Self.list(preset.steps.map { $0.strengthMg.formatted(.number.precision(.fractionLength(0...1))) }) + " mg")
             : Text("Fewer pieces each step")
-        return first.fontWeight(.bold).foregroundStyle(ground.ink) + Text(verbatim: "\n") + mg
+        return first.dxRun(14, weight: 700).foregroundStyle(ground.ink) + Text(verbatim: "\n") + mg
     }
 
     /// "6, 2 and 2".
@@ -576,7 +576,7 @@ struct NRTSetupView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("What you'll see").dxType(.footnote).foregroundStyle(g.muted)
                     HStack(spacing: 12) {
-                        XeroView(mood: .hello, stage: 1, points: 34, animate: false)
+                        XeroView(mood: .hello, stage: 0, points: 34, animate: false)
                             .frame(width: 40, height: 40)
                             .background(Color(hex: 0xFFC38A))
                             .clipShape(RoundedRectangle(cornerRadius: 11, style: .continuous))
@@ -588,7 +588,7 @@ struct NRTSetupView: View {
                                 Text(verbatim: preview.time).foregroundStyle(g.muted)
                             }
                             .dxType(.caption)
-                            Text(verbatim: preview.title).fontWeight(.bold)
+                            Text(verbatim: preview.title).dxRun(15, weight: 700)
                                 .dxType(.footnote).foregroundStyle(g.ink)
                             Text(verbatim: preview.body)
                                 .dxType(.footnote).foregroundStyle(g.ink)

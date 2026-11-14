@@ -8,96 +8,149 @@ import UserNotifications
 
 private let shortDate = Date.FormatStyle.dateTime.weekday(.abbreviated).day().month(.abbreviated)
 
-// MARK: F01 Breathe · apricot (v5)
+// MARK: F01 Breathe · apricot (v5, 001)
 
-/// One slow breath before any question. Skip is there from the start (S27.10); the screen carries on by itself after
-/// two full 10 s breaths.
+/// One slow breath before any question. Skip is there from the start (S27.10).
 ///
-/// Motion (001): the three cream rings and Xero breathe as one, 4 s in and 6 s out; the word crossfades with the
-/// breath; the thin line at the foot fills toward the moment the screen carries on; Skip waits under it.
+/// Motion (001): Xero settles up 48 pt (900 ms) inside three soft rings, then the rings and Xero breathe together for
+/// one 10 s cycle, 4 s in (scale .82 to 1.06) and 6 s out. "Breathe in" swaps for "And out" at 4 s (500 ms fade and
+/// 6 pt rise). On the out-breath two cream puffs drift from his mouth. A hairline fills over the 10 s above a quiet
+/// Skip. A gentle haptic at 0 and 4 s; the screen moves on at 10.4 s.
 struct BreatheScreen: View {
     let onDone: () -> Void
     private let motion = MotionPolicy()
     @State private var opened = Date.now
-    @State private var total = 20.0
+    @State private var turned = false
+    @State private var settled = false
+    @Environment(\.colorScheme) private var scheme
+
+    private let ground = DX.Ground.apricot
 
     var body: some View {
-        VStack(spacing: 0) {
-            Spacer(minLength: 12)
-            ZStack {
-                // The rings, the words and Xero all breathe on the one reference clock (QW2). The rings used to count
-                // from when the screen opened, so they could shrink under "Breathe in" and barely move on the way out.
-                TimelineView(.animation(paused: !motion.breathes)) { timeline in
-                    let p = motion.breathes ? DX.Move.breath(at: timeline.date.timeIntervalSinceReferenceDate) : 0.5
+        GeometryReader { proxy in
+            let h = proxy.size.height + proxy.safeAreaInsets.top + proxy.safeAreaInsets.bottom
+            let y = { (v: CGFloat) in v / 844 * h - proxy.safeAreaInsets.top }
+            ZStack(alignment: .top) {
+                TimelineView(.animation(paused: motion.reduce)) { timeline in
+                    let t = motion.reduce ? 4 : timeline.date.timeIntervalSince(opened)
+                    let scale = Self.breathScale(at: t)
+                    // The rings are the pacer; Xero breathes in his own pose inside them.
                     ZStack {
-                        ForEach(0..<3) { ring in
-                            Circle()
-                                .fill(DX.Fill.cream.opacity(0.5 - Double(ring) * 0.14))
-                                .frame(width: 170 + CGFloat(ring) * 60, height: 170 + CGFloat(ring) * 60)
-                                .scaleEffect(0.72 + 0.28 * p)
-                        }
+                        rings.scaleEffect(scale)
+                        XeroView(mood: .breathe, stage: 0, points: 176, pose: .breathPuffs, since: opened)
+                            .padding(.top, 12)
+                            .offset(y: settled ? 0 : 48)
+                            .opacity(settled ? 1 : 0)
                     }
+                    .frame(width: 300, height: 300)
                 }
-                XeroView(mood: .breathe, stage: 1, size: .hero)
-                    .dxArrive(0)
-            }
-            .frame(height: 340)
-            .accessibilityHidden(true)
-            BreathingWords(inhale: String(localized: "Breathe in"), exhale: String(localized: "…and out"))
-                .foregroundStyle(DX.Ground.coral.ink)
-                .padding(.top, 8)
-            Text("One slow breath before I ask anything. In for 4, out for 6.")
-                .dxType(.body)
-                .foregroundStyle(DX.Ground.coral.muted)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 40)
-                .padding(.top, 10)
-            Spacer()
-            // v5 (001): Skip at the foot, under a thin line that fills toward the screen carrying on.
-            TimelineView(.animation(minimumInterval: 1 / 15)) { timeline in
-                let p = min(1, timeline.date.timeIntervalSince(opened) / total)
-                ZStack(alignment: .leading) {
-                    Capsule().fill(DX.Ground.apricot.track)
-                    Capsule().fill(DX.Ground.apricot.ink).frame(width: 132 * p)
+                .position(x: proxy.size.width / 2, y: y(212 + 150))
+                .accessibilityHidden(true)
+                VStack(spacing: 12) {
+                    ZStack {
+                        Text("Breathe in")
+                            .opacity(turned ? 0 : 1).offset(y: turned ? 6 : 0)
+                        Text("And out")
+                            .opacity(turned ? 1 : 0).offset(y: turned ? 0 : 6)
+                    }
+                    .dxType(.large)
+                    .foregroundStyle(ground.ink)
+                    .animation(.timingCurve(0.2, 0.7, 0.2, 1, duration: 0.5), value: turned)
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel(Text(turned ? "And out" : "Breathe in"))
+                    .accessibilityAddTraits(.isHeader)
+                    .dxArrive(1)
+                    Text("One slow breath before we start.")
+                        .dxType(.body)
+                        .foregroundStyle(ground.muted)
+                        .multilineTextAlignment(.center)
+                        .dxArrive(2)
                 }
-                .frame(width: 132, height: 3)
+                .padding(.horizontal, DX.Layout.gutter)
+                .frame(width: proxy.size.width)
+                .offset(y: y(556))
+                VStack(spacing: 14) {
+                    // A hairline that fills over the breath: the screen moves on by itself.
+                    TimelineView(.animation(minimumInterval: 1 / 30, paused: motion.reduce)) { timeline in
+                        let p = motion.reduce ? 0.6 : min(1, max(0, timeline.date.timeIntervalSince(opened) / 10))
+                        ZStack(alignment: .leading) {
+                            Capsule().fill(ground.ink.opacity(0.2))
+                            Capsule().fill(ground.ink).frame(width: 132 * p)
+                        }
+                        .frame(width: 132, height: 3)
+                    }
+                    .accessibilityHidden(true)
+                    .dxArrive(3)
+                    Button("Skip", action: onDone)
+                        .buttonStyle(.dx(.quiet, on: ground))
+                        .dxArrive(4)
+                }
+                .frame(maxHeight: .infinity, alignment: .bottom)
+                .padding(.bottom, max(0, 30 - proxy.safeAreaInsets.bottom))
             }
-            .accessibilityHidden(true)
-            Button("Skip", action: onDone)
-                .buttonStyle(.dx(.quiet, on: .coral))
-                .padding(.top, 18)
         }
-        .padding(.vertical, DX.Space.s)
+        .sensoryFeedback(.impact(weight: .light), trigger: turned)
         .task {
-            total = motion.reduce ? 5 : Self.autoAdvance(at: .now)
             opened = .now
-            try? await Task.sleep(for: .seconds(total))
+            withAnimation(motion.animation(DX.Move.settle)) { settled = true }
+            guard !motion.reduce else {
+                turned = true
+                try? await Task.sleep(for: .seconds(5))
+                if !Task.isCancelled { onDone() }
+                return
+            }
+            try? await Task.sleep(for: .seconds(4))
+            guard !Task.isCancelled else { return }
+            turned = true
+            try? await Task.sleep(for: .seconds(6.4))
             guard !Task.isCancelled else { return }
             onDone()
         }
     }
-}
 
-extension BreatheScreen {
-    /// Seconds until the screen carries on by itself: the end of a second full breath on the shared clock. A breath
-    /// joined with more than half of it left counts as the first.
-    static func autoAdvance(at now: Date) -> Double {
-        let cycle = DX.Move.inhale + DX.Move.exhale
-        let left = cycle - now.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: cycle)
-        return left + (left > cycle / 2 ? cycle : 2 * cycle)
+    /// Three rings, 300, 244 and 188 pt: card-2 at 38, 62 and 100% on apricot; in dark, soft amber glows with rims.
+    private var rings: some View {
+        let dark = scheme == .dark
+        return ZStack {
+            ForEach(0..<3, id: \.self) { i in
+                let size: CGFloat = [300, 244, 188][i]
+                if dark {
+                    let g1 = [0.0, 0.01, 0.02][i], g2 = [0.025, 0.035, 0.05][i], rim = [0.16, 0.2, 0.28][i]
+                    Circle()
+                        .fill(RadialGradient(colors: [Color(hex: 0xFFC24D).opacity(g1), Color(hex: 0xFFC24D).opacity(g2)],
+                                             center: .center, startRadius: 0, endRadius: size / 2))
+                        .overlay(Circle().strokeBorder(Color(red: 1, green: 200 / 255, blue: 120 / 255).opacity(rim), lineWidth: 1))
+                        .frame(width: size, height: size)
+                } else {
+                    Circle().fill(ground.card2.opacity([0.38, 0.62, 1][i])).frame(width: size, height: size)
+                }
+            }
+        }
+    }
+
+    /// The kit's `dx-breathe`: .82 to 1.06 over the first 4 s, back to .82 by 10 s, eased on each leg.
+    static func breathScale(at t: Double) -> CGFloat {
+        let curve = UnitCurve.bezier(startControlPoint: UnitPoint(x: 0.45, y: 0), endControlPoint: UnitPoint(x: 0.55, y: 1))
+        let c = t.truncatingRemainder(dividingBy: 10)
+        if c < 4 { return 0.82 + 0.24 * curve.value(at: c / 4) }
+        return 1.06 - 0.24 * curve.value(at: (c - 4) / 6)
     }
 }
 
-// MARK: F02 Welcome · apricot
+// MARK: F02 Welcome · apricot (v5, 002)
 
 /// The promise, a restore link for returning buyers, and the 18+ line with Terms and Privacy.
+///
+/// Motion (002): continues the launch scene. The two paper hills settle up (0 and 120 ms, 900 ms) and the sun climbs
+/// 60 pt (1200 ms). Xero settles onto the crest from 300 ms, then waves twice from 1.2 s. At 1.1 s the speech bubble
+/// rises in. Headline, body and dock arrive in reading order from 500 ms. Light haptic on Get started.
 struct WelcomeScreen: View {
     let model: OnboardingModel
     @Environment(Entitlement.self) private var entitlement
     @State private var restoreNote: LocalizedStringKey?
     @State private var restoring = false
-    @State private var cheer = false
-    @State private var bubble = false
+    @State private var opened = Date.now
+    @State private var started = 0
     private let motion = MotionPolicy()
 
     @Environment(\.dynamicTypeSize) private var typeSize
@@ -105,101 +158,95 @@ struct WelcomeScreen: View {
     private let ground = DX.Ground.apricot
 
     var body: some View {
-        Group {
-            if typeSize.isAccessibilitySize {
-                // At the largest sizes the page scrolls, with a shorter hero, so nothing is cut off.
-                ScrollView { page(heroHeight: 240) }
-                    .scrollBounceBehavior(.basedOnSize)
-                    .ignoresSafeArea(edges: .top)
-            } else {
-                page(heroHeight: 360)
-            }
-        }
-        .task {
-            // Xero rises, says hello, then cheers once.
-            try? await Task.sleep(for: .seconds(motion.reduce ? 0.2 : 1.3))
-            withAnimation(motion.animation(DX.Move.arrive)) { bubble = true }
-            try? await Task.sleep(for: .seconds(1.2))
-            cheer = !motion.reduce
-            try? await Task.sleep(for: .seconds(1.4))
-            cheer = false
-        }
-    }
-
-    private func page(heroHeight: CGFloat) -> some View {
-        VStack(spacing: 0) {
-            ZStack(alignment: .bottom) {
-                HeroScene(.dawn, clarity: CrewGrowth.prepClarity, height: heroHeight, edge: ground.background)
-                XeroView(mood: cheer ? .cheer : .hello, stage: 1, size: .hero)
-                    .offset(y: -18)
-                    .dxArrive(0)
-                    .overlay(alignment: .topTrailing) {
-                        if bubble {
-                            Text("Hi! I'm Xero.")
-                                .dxType(.headline)
-                                .foregroundStyle(DX.Fill.navy)
-                                // A short callout over the art; it is capped so it stays beside Xero.
-                                .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
-                                .padding(.horizontal, 14).padding(.vertical, 10)
-                                .background(DX.Fill.cream, in: UnevenRoundedRectangle(topLeadingRadius: 18, bottomLeadingRadius: 4,
-                                                                                     bottomTrailingRadius: 18, topTrailingRadius: 18))
-                                .offset(x: 70, y: 10)
-                                .transition(.scale(scale: 0.6, anchor: .bottomLeading).combined(with: .opacity))
+        GeometryReader { proxy in
+            let scale = proxy.size.width / 390
+            ScrollView {
+                VStack(alignment: .leading, spacing: 0) {
+                    WelcomeArt(opened: opened)
+                        .frame(width: proxy.size.width, height: 450 * scale)
+                    VStack(alignment: .leading, spacing: 12) {
+                        VStack(alignment: .leading, spacing: 0) {
+                            HStack(spacing: 0) {
+                                Text("Quit on your ")
+                                Text("own day.").dxMark(color: DX.Mark.color(on: .apricot))
+                            }
+                            Text("We'll get you ready.")
+                        }
+                        .dxType(.large)
+                        .foregroundStyle(ground.ink)
+                        .lineLimit(typeSize.isAccessibilitySize ? nil : 1)
+                        .minimumScaleFactor(0.8)
+                        .accessibilityElement(children: .combine)
+                        .accessibilityAddTraits(.isHeader)
+                        .dxArrive(6, delay: 0)
+                        Text("Short prep sessions for up to 7 days, while you still smoke or vape.")
+                            .dxType(.body)
+                            .foregroundStyle(ground.muted)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .dxArrive(7, delay: 0)
+                        if let restoreNote {
+                            Text(restoreNote).dxType(.footnote).foregroundStyle(ground.muted)
                         }
                     }
+                    .padding(.horizontal, DX.Layout.gutter)
+                    .padding(.top, 12)
+                    .padding(.bottom, 24)
+                }
             }
-            .ignoresSafeArea(edges: .top)
-            VStack(alignment: .leading, spacing: 10) {
-                VStack(alignment: .leading, spacing: 0) {
-                    Text("Don't quit today.")
-                    Text("Quit on your Quit Day.")
-                }
-                .dxType(.large)
-                .foregroundStyle(ground.ink)
-                .fixedSize(horizontal: false, vertical: true)
-                .accessibilityElement(children: .combine)
-                .accessibilityAddTraits(.isHeader)
-                .dxArrive(1)
-                Text("Prep for up to 7 days while you still use as normal, then quit on the day you choose.")
-                    .dxType(.body)
-                    .foregroundStyle(ground.muted)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .dxArrive(2)
-                if let restoreNote {
-                    Text(restoreNote).dxType(.footnote).foregroundStyle(ground.muted)
-                }
-                Spacer(minLength: 8)
-                Button("Get started") { model.next() }
+            .scrollBounceBehavior(.basedOnSize)
+            .scrollDisabled(!typeSize.isAccessibilitySize)
+            .ignoresSafeArea(.container, edges: .top)
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                VStack(spacing: 0) {
+                    Button("Get started") {
+                        started += 1
+                        model.next()
+                    }
                     .buttonStyle(.dx(.primary, on: ground))
-                    .dxArrive(3)
-                Button("Restore purchases") { Task { await restore() } }
-                    .buttonStyle(.dx(.quiet, on: ground))
-                    .frame(maxWidth: .infinity)
-                    .disabled(restoring)
-                legal
-                    .dxType(.caption)
-                    .foregroundStyle(ground.muted)
-                    .tint(ground.ink)
-                    .multilineTextAlignment(.center)
-                    .frame(maxWidth: .infinity)
+                    .padding(.bottom, 4)
+                    .dxArrive(8, delay: 0)
+                    Button("Restore purchases") { Task { await restore() } }
+                        .dxFace(.body, 14, weight: 500)
+                        .foregroundStyle(ground.muted)
+                        .frame(height: 34)
+                        .frame(maxWidth: .infinity)
+                        .contentShape(Rectangle())
+                        .buttonStyle(.plain)
+                        .disabled(restoring)
+                        .dxArrive(9, delay: 0)
+                    legal
+                        .dxType(.caption)
+                        .foregroundStyle(ground.muted)
+                        .tint(ground.muted)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 8)
+                        .padding(.top, 2)
+                        .frame(maxWidth: .infinity)
+                        .dxArrive(10, delay: 0)
+                }
+                .padding(.horizontal, DX.Layout.gutter)
+                .padding(.top, 24)
+                .padding(.bottom, 4)
             }
-            .padding(.horizontal, DX.Layout.buttonGutter)
-            .dxReadableColumn()
-            .padding(.bottom, DX.Space.xs)
         }
+        .dxReadableColumn()
+        .sensoryFeedback(.impact(weight: .light), trigger: started)
+        .onAppear { opened = .now }
     }
 
-    /// The 18+ line with the Terms and Privacy Policy links (S15.4, S27.1).
+    /// The 18+ line with the Terms and Privacy links (S15.4, S27.1), underlined as in 002.
     private var legal: Text {
         let terms = "[\(String(localized: "Terms"))](\(AppLinks.terms.absoluteString))"
         let line: String
         if let privacy = AppLinks.privacy {
-            let policy = "[\(String(localized: "Privacy Policy"))](\(privacy.absoluteString))"
-            line = String(localized: "Takes 2 minutes and stays private on this phone. By continuing you confirm you're 18+ and agree to the \(terms) and \(policy).")
+            let policy = "[\(String(localized: "Privacy"))](\(privacy.absoluteString))"
+            line = String(localized: "18+ only. By continuing you agree to our \(terms) and \(policy).")
         } else {
-            line = String(localized: "Takes 2 minutes and stays private on this phone. By continuing you confirm you're 18+ and agree to the \(terms).")
+            line = String(localized: "18+ only. By continuing you agree to our \(terms).")
         }
-        return Text((try? AttributedString(markdown: line)) ?? AttributedString(line))
+        var text = (try? AttributedString(markdown: line)) ?? AttributedString(line)
+        for run in text.runs where run.link != nil { text[run.range].underlineStyle = .single }
+        return Text(text)
     }
 
     /// Someone who bought before (new phone, reinstall) gets Pro back now.
@@ -219,81 +266,101 @@ struct WelcomeScreen: View {
     }
 }
 
-// MARK: F04 Quit Day · apricot
+// MARK: F04 Quit Day · apricot (v5, 010)
 
+/// The prep week on one card (a tile per prep day, today in a coral disc, a prep dot under each), the Quit Day row that
+/// opens the date wheel, Xero on his hill with a flag, and the hold.
+///
+/// Motion (010): title, the week card (tiles rise 45 ms apart, dots pop left to right), the Quit Day row, Xero and the
+/// hold arrive in order. Holding fills the button over 1500 ms; on complete it shows "Quit Day set", the flag runs up
+/// its pole (34 pt, 700 ms) while Xero bumps, and the row's caption swaps to "Quit Day set" with a green tick. 1200 ms
+/// later the button crossfades into Continue.
 struct QuitDayScreen: View {
     @Bindable var model: OnboardingModel
     @State private var picking = false
     @State private var committed = false
+    @State private var showContinue = false
+    private let motion = MotionPolicy()
     private let ground = DX.Ground.apricot
 
-    /// The eight days from today to the recommended Quit Day (or the chosen one, if sooner).
-    private var strip: [Date] {
-        let end = model.calendar.startOfDay(for: max(model.quitDay, model.recommendedQuitDay))
+    /// The prep days, today to the day before Quit Day (at most seven).
+    private var prepDays: [Date] {
+        let quit = model.calendar.startOfDay(for: model.quitDay)
         var days: [Date] = []
         var day = model.today
-        while day <= end, days.count < 8 {
+        while day < quit, days.count < 7 {
             days.append(day)
-            day = model.calendar.date(byAdding: .day, value: 1, to: day) ?? end.addingTimeInterval(1)
+            day = model.calendar.date(byAdding: .day, value: 1, to: day) ?? quit
         }
         return days
     }
 
+    private var recommended: Bool { model.calendar.isDate(model.quitDay, inSameDayAs: model.recommendedQuitDay) }
+
     var body: some View {
-        VStack(spacing: 0) {
-            ZStack(alignment: .bottom) {
-                HeroScene(.dawn, clarity: CrewGrowth.prepClarity, height: 250, edge: ground.background)
-                XeroView(mood: .hello, stage: 1, size: .scene).offset(y: -14)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 10) {
+                Text(model.name.isEmpty ? "Pick your Quit Day" : "Pick your Quit Day, \(model.name)")
+                    .dxType(.large).foregroundStyle(ground.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityAddTraits(.isHeader)
+                    .dxArrive(0)
+                Text("I recommend a full week of prep first. Keep using as normal until then.")
+                    .dxType(.body).foregroundStyle(ground.muted)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .dxArrive(1)
+                weekCard.padding(.top, 12).dxArrive(2)
+                hero.padding(.top, 2)
             }
-            .ignoresSafeArea(edges: .top)
-            ScrollView {
-                VStack(alignment: .leading, spacing: 12) {
-                    Text(model.name.isEmpty ? "Pick your Quit Day" : "Pick your Quit Day, \(model.name)")
-                        .dxType(.large).foregroundStyle(ground.ink)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .accessibilityAddTraits(.isHeader)
-                        .dxArrive(0)
-                    Text("I recommend \(Text(model.recommendedQuitDay, format: shortDate).bold()) for a full 7-day prep. Ready sooner? Any day from \(Text(model.quitDayRange.lowerBound, format: shortDate).bold()) works. Keep using as normal until then.")
-                        .dxType(.body).foregroundStyle(ground.muted)
-                        .fixedSize(horizontal: false, vertical: true)
-                    // v5 (010): the prep week on one card, prep days dotted, Quit Day in ink.
-                    VStack(alignment: .leading, spacing: 14) {
-                        dateStrip
-                        HStack {
-                            legend(TodayInk.coral, "Prep · \(max(model.prepDays, 0)) days")
-                            Spacer()
-                            legend(ground.ink, "Quit Day")
+            .padding(.horizontal, DX.Layout.gutter)
+            .dxReadableColumn()
+            .padding(.top, DX.Space.m)
+        }
+        .scrollBounceBehavior(.basedOnSize)
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            VStack(spacing: 10) {
+                ZStack {
+                    HoldButton(String(localized: "Hold to set your Quit Day"), done: String(localized: "Quit Day set"),
+                               duration: 1.5, on: ground) {
+                        withAnimation(motion.animation(DX.Move.settle.speed(0.9 / 0.7))) { committed = true }
+                        Task {
+                            try? await Task.sleep(for: .seconds(1.2))
+                            withAnimation(.timingCurve(0.2, 0.7, 0.2, 1, duration: 0.35)) { showContinue = true }
                         }
                     }
-                    .padding(14)
-                    .dxCard(on: ground)
-                    .dxArrive(2)
-                    Button("Pick another date") { picking = true }
-                        .buttonStyle(.dx(.quiet, on: ground))
+                    .accessibilityIdentifier("onboarding.hold")
+                    .disabled(!model.canContinue)
+                    .opacity(showContinue ? 0 : 1)
+                    .allowsHitTesting(!showContinue)
+                    Button("Continue") { model.next() }
+                        .buttonStyle(.dx(.primary, on: ground))
+                        .opacity(showContinue ? 1 : 0)
+                        .offset(y: showContinue ? 0 : 6)
+                        .allowsHitTesting(showContinue)
+                        .accessibilityHidden(!showContinue)
                 }
-                .padding(.horizontal, DX.Layout.gutter)
-                .dxReadableColumn()
-            }
-            VStack(spacing: 6) {
-                HoldButton("Hold to set \(model.quitDay.formatted(shortDate))",
-                           done: String(localized: "Quit Day set · \(model.quitDay.formatted(shortDate))"),
-                           duration: DX.Move.hold, on: ground) {
-                    committed = true
-                    Task {
-                        try? await Task.sleep(for: .seconds(0.8))
-                        model.next()
-                    }
-                }
-                .accessibilityIdentifier("onboarding.hold")
-                .disabled(!model.canContinue)
-                Text("Hold for 1 second. Quit Day comes on this date, even if prep runs short. You can change it later.")
+                .dxArrive(8)
+                Text("Quit Day comes on this date, even if prep runs short. You can change it later.")
                     .dxType(.caption).foregroundStyle(ground.muted)
+                    .multilineTextAlignment(.center)
+                    .dxArrive(9)
             }
-            .padding(.horizontal, DX.Layout.buttonGutter)
+            .padding(.horizontal, DX.Layout.gutter)
             .dxReadableColumn()
+            .padding(.top, 28)
             .padding(.bottom, DX.Space.xs)
+            .background {
+                LinearGradient(stops: [.init(color: ground.background.opacity(0), location: 0), .init(color: ground.background, location: 0.34)],
+                               startPoint: .top, endPoint: .bottom)
+                    .ignoresSafeArea(edges: .bottom)
+            }
         }
-        // Back and progress come from the flow's shared header, which floats over the art inside the safe area (QW3).
+        .sensoryFeedback(.success, trigger: committed) { _, done in done }
+        .onChange(of: model.quitDay) {
+            // A new date has to be held again.
+            committed = false
+            showContinue = false
+        }
         .sheet(isPresented: $picking) {
             NavigationStack {
                 ScrollView {
@@ -309,39 +376,192 @@ struct QuitDayScreen: View {
         }
     }
 
-    private var dateStrip: some View {
-        HStack(spacing: 4) {
-            ForEach(strip, id: \.self) { day in
-                let quit = model.calendar.isDate(day, inSameDayAs: model.quitDay)
-                let prep = day < model.calendar.startOfDay(for: model.quitDay)
-                let selectable = model.quitDayRange.contains(day)
-                Button { model.quitDay = day } label: {
-                    VStack(spacing: 4) {
-                        Text(day, format: .dateTime.weekday(.abbreviated)).dxType(.caption)
-                        Text(day, format: .dateTime.day()).dxFace(.display, 19, weight: 800, tracking: -0.4)
-                        Circle().fill(quit ? Color.clear : TodayInk.coral).frame(width: 6, height: 6)
-                            .opacity(prep ? 1 : 0)
-                    }
-                    .foregroundStyle(quit ? Color(light: 0xFFF8EE, dark: 0x0E1322) : ground.ink)
-                    .frame(maxWidth: .infinity, minHeight: 72)
-                    .background(quit ? ground.ink : ground.card2,
-                                in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-                }
-                .buttonStyle(.dxPress)
-                .disabled(!selectable)
-                // Only the day becoming Quit Day buzzes, not the one it leaves.
-                .sensoryFeedback(DX.Haptic.select, trigger: quit) { _, isQuit in isQuit }
-                .accessibilityLabel(Text(day, format: .dateTime.weekday(.wide).day().month(.wide)))
-                .accessibilityValue(Text(quit ? "Quit Day" : (prep ? "Prep day" : "")))
-                .accessibilityAddTraits(quit ? [.isButton, .isSelected] : .isButton)
+    private var weekCard: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(alignment: .firstTextBaseline) {
+                Text("Your prep week").dxFace(.body, 15, weight: 700).foregroundStyle(ground.ink)
+                Spacer()
+                Text("^[\(prepDays.count) short session](inflect: true)").dxType(.footnote).foregroundStyle(ground.muted)
             }
+            .padding(.horizontal, 4).padding(.bottom, 10)
+            if !prepDays.isEmpty {
+                HStack(spacing: 6) {
+                    ForEach(Array(prepDays.enumerated()), id: \.element) { i, day in
+                        dayTile(day, today: i == 0)
+                            .dxArrive(0, delay: 0.225 + Double(i) * 0.045)
+                    }
+                    // Keep the tiles a week wide when prep is shorter.
+                    ForEach(prepDays.count..<7, id: \.self) { _ in Color.clear.frame(maxWidth: .infinity, minHeight: 82) }
+                }
+            }
+            quitRow.padding(.top, 8).dxArrive(6)
+        }
+        .padding(.top, 14).padding(.horizontal, 12).padding(.bottom, 12)
+        .background(ground.card, in: RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous).strokeBorder(Onb.chipLine, lineWidth: 1))
+    }
+
+    private func dayTile(_ day: Date, today: Bool) -> some View {
+        VStack(spacing: 4) {
+            Text(today ? String(localized: "Today") : day.formatted(.dateTime.weekday(.abbreviated)))
+                .dxFace(.body, 13, weight: today ? 700 : 600)
+                .foregroundStyle(today ? ground.ink : ground.muted)
+                .lineLimit(1).minimumScaleFactor(0.7)
+            Text(day, format: .dateTime.day())
+                .dxFace(.display, today ? 18 : 22, weight: 800, tracking: today ? -0.4 : -0.5)
+                .foregroundStyle(today ? Color.white : ground.ink)
+                .frame(width: today ? 30 : nil, height: today ? 30 : nil)
+                .background { if today { Circle().fill(DX.Fill.coral) } }
+                .padding(.vertical, today ? -4 : 0)
+            Circle().fill(Color(hex: 0xFF9A5C)).frame(width: 8, height: 8).padding(.top, 2)
+                .dxPop(0, delay: 0.7 + Double(prepDays.firstIndex(of: day) ?? 0) * 0.09)
+        }
+        .frame(maxWidth: .infinity, minHeight: 82)
+        .background(ground.card2, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(day, format: .dateTime.weekday(.wide).day().month(.wide)))
+        .accessibilityValue(Text("Prep day"))
+    }
+
+    /// The tappable Quit Day: a cream card with an apricot date page, the date, its caption and "Change".
+    private var quitRow: some View {
+        Button { picking = true } label: {
+            HStack(spacing: 14) {
+                VStack(spacing: 0) {
+                    Text(model.quitDay, format: .dateTime.month(.abbreviated))
+                        .dxFace(.body, 11, weight: 700).tracking(0.2)
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity).frame(height: 16)
+                        .background(Color(hex: 0xFF7155))
+                    Text(model.quitDay, format: .dateTime.day())
+                        .dxFace(.display, 24, weight: 800, tracking: -0.6)
+                        .foregroundStyle(DX.Fill.navy)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+                .frame(width: 48, height: 52)
+                .background(Color(hex: 0xFFC38A))
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .shadow(color: Color(red: 110 / 255, green: 50 / 255, blue: 20 / 255).opacity(0.16), radius: 0, y: 2)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(model.quitDay, format: .dateTime.weekday(.abbreviated).month(.abbreviated).day())
+                        .dxFace(.display, 20, weight: 700, tracking: -0.2).foregroundStyle(ground.ink)
+                        .lineLimit(1).minimumScaleFactor(0.8)
+                    ZStack(alignment: .leading) {
+                        Text(recommended ? "Quit Day, recommended" : "Quit Day")
+                            .foregroundStyle(ground.muted)
+                            .opacity(committed ? 0 : 1)
+                        HStack(spacing: 4) {
+                            Text("Quit Day set").foregroundStyle(ground.ink)
+                            DXIcon(.check, size: 11, weight: 3.4).foregroundStyle(.white)
+                                .frame(width: 16, height: 16).background(DX.Fill.done, in: Circle())
+                                .padding(.leading, 2)
+                        }
+                        .dxFace(.body, 13, weight: 700)
+                        .opacity(committed ? 1 : 0)
+                    }
+                    .dxType(.caption)
+                    .animation(.timingCurve(0.2, 0.7, 0.2, 1, duration: 0.3), value: committed)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                HStack(spacing: 2) {
+                    Text("Change").dxFace(.body, 14, weight: 600)
+                    DXIcon(.chev, size: 18)
+                }
+                .foregroundStyle(ground.muted)
+            }
+            .padding(.leading, 10).padding(.trailing, 14).padding(.vertical, 10)
+            .frame(minHeight: 70)
+            .background(Color(light: 0xFFF8EE, dark: 0x212A41), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .strokeBorder(Color(light: (0x1E1A3A, 0.12), dark: (0xFFFFFF, 0.14)), lineWidth: 1))
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.dxPress)
+        .accessibilityLabel(Text("Quit Day, \(model.quitDay.formatted(.dateTime.weekday(.wide).day().month(.wide)))"))
+        .accessibilityHint(Text("Change the date"))
+    }
+
+    /// Xero on his own small paper hill, holding a yellow flag that runs up its pole when Quit Day is set.
+    private var hero: some View {
+        Color.clear
+            .frame(height: 230)
+            .overlay(alignment: .top) {
+                QuitHill()
+                    .frame(width: 390, height: 104)
+                    .offset(y: 118)
+            }
+            .overlay(alignment: .top) {
+                XeroView(mood: .hello, stage: 0, points: 128, pose: .holdFlag)
+                    .background(alignment: .topLeading) {
+                        FlagPole(raised: committed)
+                            .frame(width: 128, height: 128)
+                    }
+                    .offset(x: -4, y: 30)
+                    .dxBump(committed)
+                    .dxSettle(delay: 0.45)
+            }
+            .accessibilityHidden(true)
+    }
+}
+
+/// The yellow pennant on its pole (010), in Xero's 200-unit space, so it scales with him.
+private struct FlagPole: View {
+    let raised: Bool
+
+    var body: some View {
+        GeometryReader { proxy in
+            let s = proxy.size.width / 200
+            ZStack(alignment: .topLeading) {
+                Path { p in p.move(to: CGPoint(x: 188, y: 154)); p.addLine(to: CGPoint(x: 188, y: 30)) }
+                    .stroke(Color(hex: 0x8A5A3C), style: StrokeStyle(lineWidth: 4, lineCap: .round))
+                Circle().fill(Color(hex: 0xF5B83D)).frame(width: 8, height: 8).offset(x: 184, y: 24)
+                Pennant().fill(Color(hex: 0xFFD966))
+                    .overlay(Pennant().stroke(Color(hex: 0xF5B83D), style: StrokeStyle(lineWidth: 2, lineJoin: .round)))
+                    .offset(y: raised ? 0 : 34)
+            }
+            .frame(width: 200, height: 200, alignment: .topLeading)
+            .scaleEffect(s, anchor: .topLeading)
         }
     }
 
-    private func legend(_ color: Color, _ title: LocalizedStringKey) -> some View {
-        HStack(spacing: 6) {
-            Circle().fill(color).frame(width: 8, height: 8)
-            Text(title).dxType(.caption).foregroundStyle(ground.muted)
+    private struct Pennant: Shape {
+        func path(in rect: CGRect) -> Path {
+            Path { p in
+                p.move(to: CGPoint(x: 190, y: 33)); p.addLine(to: CGPoint(x: 216, y: 42)); p.addLine(to: CGPoint(x: 190, y: 52)); p.closeSubpath()
+            }
+        }
+    }
+}
+
+/// Xero's small hill: apricot fading into the ground before the dock, with a soft light edge.
+private struct QuitHill: View {
+    @Environment(\.colorScheme) private var scheme
+
+    var body: some View {
+        let dark = scheme == .dark
+        let top = dark ? Color(hex: 0x212A41) : Color(hex: 0xFFAE7A)
+        let g = DX.Ground.apricot.background
+        ZStack {
+            HillShape(closed: true)
+                .fill(LinearGradient(stops: [.init(color: top, location: 0), .init(color: top, location: 0.22),
+                                             .init(color: top.mix(with: g, by: 0.38), location: 0.5),
+                                             .init(color: top.mix(with: g, by: 0.8), location: 0.78), .init(color: g, location: 1)],
+                                     startPoint: .top, endPoint: .bottom))
+            HillShape(closed: false)
+                .stroke(LinearGradient(stops: [.init(color: dark ? Color(red: 190 / 255, green: 205 / 255, blue: 1).opacity(0.22) : .white.opacity(0.6), location: 0),
+                                               .init(color: .clear, location: 0.7)], startPoint: .top, endPoint: .bottom), lineWidth: 2)
+        }
+    }
+
+    private struct HillShape: Shape {
+        let closed: Bool
+        func path(in rect: CGRect) -> Path {
+            var p = Path()
+            p.move(to: CGPoint(x: 10, y: 104))
+            p.addCurve(to: CGPoint(x: 195, y: 26), control1: CGPoint(x: 50, y: 52), control2: CGPoint(x: 130, y: 26))
+            p.addCurve(to: CGPoint(x: 380, y: 104), control1: CGPoint(x: 260, y: 26), control2: CGPoint(x: 340, y: 52))
+            if closed { p.closeSubpath() }
+            return p.applying(CGAffineTransform(translationX: (rect.width - 390) / 2, y: 0))
         }
     }
 }
