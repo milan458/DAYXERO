@@ -987,39 +987,55 @@ struct PlanCardBeat: View {
     var body: some View {
         BeatFrame(beat: beat, onContinue: { ctx.finish(beat); onDone() }) {
             VStack(alignment: .leading, spacing: DX.Space.s) {
+                // v5 (029): the promise, each part of the plan on its own card, and the Day Xero medal it leads to.
                 BeatPrompt(text: ctx.text(beat.title))
-                VStack(alignment: .leading, spacing: 0) {
+                Text("A promise to yourself, with a plan behind it.")
+                    .dxType(.footnote).foregroundStyle(DX.Ground.table.muted)
+                    .padding(.top, -14)
+                    .dxArrive(2)
+                VStack(spacing: 8) {
                     ForEach(Array(rows.enumerated()), id: \.offset) { i, row in
-                        if i > 0 { Divider() }
-                        HStack(alignment: .top) {
-                            VStack(alignment: .leading, spacing: 3) {
-                                Text(verbatim: Self.heading(row.key)).v4Text(.micro).foregroundStyle(Read4.accent)
+                        HStack(alignment: .center, spacing: 12) {
+                            DXIcon(.sparkle, size: 16, weight: 2.6).foregroundStyle(Color(hex: 0x1E1A3A))
+                                .frame(width: 34, height: 34)
+                                .background(Color(hex: 0xB8EBCD), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(verbatim: Self.heading(row.key)).dxType(.caption).foregroundStyle(DX.Ground.table.muted)
                                 ForEach(row.lines, id: \.self) { line in
                                     Text(verbatim: line)
-                                        .dxFont(row.key == "identity_statement" ? 19 : 16, weight: row.key == "identity_statement" ? 700 : 400, style: .body)
-                                        .foregroundStyle(Read4.ink)
+                                        .dxFace(.display, 17, weight: 700)
+                                        .foregroundStyle(DX.Ground.table.ink)
+                                        .fixedSize(horizontal: false, vertical: true)
                                 }
                             }
-                            Spacer()
+                            Spacer(minLength: 0)
                             if beat.editable, isEditable(row.key) {
                                 Button { startEditing(row.key) } label: {
-                                    Image(systemName: "pencil").foregroundStyle(Read4.muted).frame(width: 44, height: 44)
+                                    DXIcon(.note, size: 18).foregroundStyle(DX.Ground.table.muted).frame(width: 44, height: 44)
                                 }
                                 .buttonStyle(.plain)
                                 .accessibilityLabel(Text("Edit \(Self.heading(row.key))"))
                             }
                         }
-                        .padding(.vertical, 12)
+                        .padding(.horizontal, 14).padding(.vertical, 12)
+                        .background(DX.Ground.table.card, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(DX.Ground.table.line, lineWidth: 1))
+                        .accessibilityElement(children: .combine)
+                        .dxArrive(3 + i)
                     }
                 }
-                .padding(.horizontal, DX.Space.m)
-                .background(Read4.card, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
-                .overlay(RoundedRectangle(cornerRadius: 24, style: .continuous).strokeBorder(Read4.hairline))
+                medal.padding(.top, 10)
                 if let image {
                     ShareLink(item: image, preview: SharePreview(Text("My plan"), image: image)) {
-                        Label("Save to Photos or share", systemImage: "photo").frame(maxWidth: .infinity)
+                        HStack(spacing: 6) {
+                            DXIcon(.share, size: 16, weight: 2.4)
+                            Text("Save to Photos or share")
+                        }
+                        .dxFace(.body, 15, weight: 600)
+                        .foregroundStyle(DX.Ground.table.ink.opacity(0.85))
+                        .frame(maxWidth: .infinity, minHeight: 40)
                     }
-                    .buttonStyle(.v4Secondary)
+                    .buttonStyle(.plain)
                 }
             }
         }
@@ -1043,6 +1059,31 @@ struct PlanCardBeat: View {
     struct EditKey: Identifiable {
         let key: String
         var id: String { key }
+    }
+
+    /// The Day Xero medal on its gold, with the date and the days to it (029). Shown before the Quit Day.
+    @ViewBuilder private var medal: some View {
+        let profile = ctx.store.profile
+        let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
+        let days = clock.calendar.dateComponents([.day], from: clock.day(containing: .now), to: clock.startOfDate(profile.quitDay)).day ?? 0
+        if days > 0 {
+            VStack(spacing: 10) {
+                ZStack {
+                    Circle().fill(RadialGradient(colors: [Color(hex: 0xFFE9A8), Color(hex: 0xF5B83D)], center: .center, startRadius: 0, endRadius: 100))
+                        .frame(width: 196, height: 196)
+                    Circle().strokeBorder(Color(hex: 0xF5B83D), lineWidth: 4).frame(width: 196, height: 196)
+                    Circle().fill(Color(hex: 0xFFF4DE)).frame(width: 150, height: 150)
+                    XeroMarkBadge()
+                }
+                .dxPop(0, delay: 0.5)
+                Text(verbatim: profile.quitDay.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day()))
+                    .dxFace(.display, 20, weight: 700).foregroundStyle(DX.Ground.table.ink)
+                Text(verbatim: String(AttributedString(localized: "^[\(days) day](inflect: true) to Day Xero").characters))
+                    .dxType(.footnote).foregroundStyle(DX.Ground.table.muted)
+            }
+            .frame(maxWidth: .infinity)
+            .accessibilityElement(children: .combine)
+        }
     }
 
     private func isEditable(_ key: String) -> Bool {
@@ -1088,5 +1129,12 @@ struct PlanCardImage: View {
         .padding(80)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(DX.Fill.navy)
+    }
+}
+
+/// Day Xero's mark (the kit's Xero coin face) for the commitment medal.
+private struct XeroMarkBadge: View {
+    var body: some View {
+        DXBadge(.xero, size: 140)
     }
 }
