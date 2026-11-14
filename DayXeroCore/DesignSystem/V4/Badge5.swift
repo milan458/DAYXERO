@@ -22,6 +22,8 @@ public struct DXBadge: View {
     let label: String?
     /// Lifts the numeral 5 points (the Today hero, so the badge's sun never crowds it).
     let liftNumeral: Bool
+    /// The waiting ring's colour, when a screen sets its own (012: dark gold on the cream coin in light).
+    var ringColor: Color?
     @Environment(\.dxGround) private var ground
     private let motion = MotionPolicy()
 
@@ -73,6 +75,13 @@ public struct DXBadge: View {
     }
 
     private var current: Color { ground.resolved.ink }
+
+    /// The same badge with its waiting ring in `color`.
+    public func ring(_ color: Color) -> DXBadge {
+        var copy = self
+        copy.ringColor = color
+        return copy
+    }
     private var numeralSize: CGFloat { n.count > 2 ? 22 : 30 }
 
     @ViewBuilder private var medal: some View {
@@ -121,7 +130,7 @@ public struct DXBadge: View {
     }
 
     private func next(_ s: CGFloat, p: Double?) -> some View {
-        let ringColor = Color(hex: kind == .night ? pal.sun : pal.edge)
+        let ringColor = self.ringColor ?? Color(hex: kind == .night ? pal.sun : pal.edge)
         return ZStack {
             Circle().fill(kind == .xero ? Color(hex: 0xFFF4DE).opacity(0.92) : current.opacity(0.06))
                 .frame(width: 90 * s, height: 90 * s)

@@ -65,8 +65,9 @@ struct CrewArtTests {
         #expect(looks.map(\.grow) == [0.8, 0.88, 0.95, 1])
         #expect(Set(looks.map(\.body)).count == 4, "Every stage has its own body colour")
         #expect(looks.map(\.cheek) == looks.map(\.cheek).sorted(), "Cheeks warm up with the stage")
-        // Out-of-range stages clamp to the ends.
-        #expect(XeroView.look(stage: 0) == looks[0])
+        // Stage 0 is the kit's Xero (v5 mockups): full size, #FF7155. Out-of-range stages clamp to the ends.
+        #expect(XeroView.look(stage: 0) == XeroView.kit)
+        #expect(XeroView.look(stage: -2) == XeroView.kit)
         #expect(XeroView.look(stage: 9) == looks[3])
     }
 }

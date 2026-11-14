@@ -228,7 +228,7 @@ public enum NotificationPlan {
 /// All notification wording in one place (S14.3), drafted by Claude and kept by Milan.
 public enum NotificationCopy {
     public static let pledge = (String(localized: "Good morning"), String(localized: "Ten seconds for today's pledge?"))
-    public static let checkIn = (String(localized: "How did today go?"), String(localized: "A one-minute check-in, if you have it."))
+    public static let checkIn = (String(localized: "How did today go?"), String(localized: "Take a minute to check in."))
     /// Glim's weekly check-in after graduation (S27.18).
     public static let weekly = (String(localized: "How was your week?"), String(localized: "Glim's Sunday check-in. One minute, if you have it."))
 

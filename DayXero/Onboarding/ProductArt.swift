@@ -128,3 +128,53 @@ struct Art44: Shape {
         base.applying(CGAffineTransform(scaleX: rect.width / 44, y: rect.height / 44)).offsetBy(dx: rect.minX, dy: rect.minY)
     }
 }
+
+/// An SVG path on a square art grid of `grid` units, scaled to the frame.
+struct GridShape: Shape {
+    let d: String
+    var grid: CGFloat = 32
+
+    func path(in rect: CGRect) -> Path {
+        SVGPath.path(d).applying(CGAffineTransform(scaleX: rect.width / grid, y: rect.height / grid)).offsetBy(dx: rect.minX, dy: rect.minY)
+    }
+}
+
+/// The three plan pieces' paper-cut art (011): a flag for Quit Day, a breaking wave, a heart for the reason.
+struct PlanPieceArt: View {
+    enum Kind { case flag, wave, heart }
+    let kind: Kind
+    var size: CGFloat = 34
+    @Environment(\.colorScheme) private var scheme
+
+    var body: some View {
+        let shadow = scheme == .dark ? Color.black.opacity(0.55) : Color(red: 120 / 255, green: 52 / 255, blue: 24 / 255).opacity(0.24)
+        ZStack {
+            switch kind {
+            case .flag:
+                Ellipse().fill(Color(hex: 0xFFC38A)).frame(width: 14, height: 4.4).position(x: 11, y: 27.6).shadow(color: shadow, radius: 1, y: 1.5)
+                RoundedRectangle(cornerRadius: 1.4).fill(Color(hex: 0x9A6A48)).frame(width: 2.8, height: 24).position(x: 11, y: 16)
+                    .shadow(color: shadow, radius: 1, y: 1.5)
+                GridShape(d: "M12.4 5 L27 10 L12.4 15.6 Z").fill(Color(hex: 0xFF7155)).shadow(color: shadow, radius: 1, y: 1.5)
+                GridShape(d: "M12.4 9.6 L20 10 L12.4 13 Z").fill(Color(hex: 0xFFB09C))
+                Circle().fill(Color(hex: 0xFFD966)).frame(width: 4.4, height: 4.4).position(x: 11, y: 4).shadow(color: shadow, radius: 1, y: 1.5)
+            case .wave:
+                GridShape(d: "M2.5 20 C6 16.5 9 16.5 12 19 C14.5 21 17 21 19 19.5 V28.5 H2.5 Z").fill(Color(hex: 0x9CCBFF)).shadow(color: shadow, radius: 1, y: 1.5)
+                GridShape(d: "M8 28.5 C9 19 13.5 9.5 21.5 7.5 C26.5 6.3 30 9 29.6 12.6 C29.3 15.4 26.4 16.2 24.6 14.6 C23.2 13.4 23.6 11.4 25.2 11 C22 10.2 18.6 13.6 18.2 19 C17.9 23 19.4 26.4 23 28.5 Z")
+                    .fill(Color(hex: 0x2A52DB)).shadow(color: shadow, radius: 1, y: 1.5)
+                GridShape(d: "M12.4 28.5 C12.8 21 15.8 14.4 20.4 11.4 C17.6 15 16.6 19.6 17.2 23.6 C17.6 25.8 18.6 27.4 20 28.5 Z").fill(Color(hex: 0x1D3A9E))
+                GridShape(d: "M21.2 9.4 C24.2 8.2 27.4 9.2 27.8 11.8").stroke(Color(hex: 0xFFF8EE), style: StrokeStyle(lineWidth: 2, lineCap: .round))
+                GridShape(d: "M3 25.4 C5.4 23.6 7.4 23.6 9.4 25").stroke(Color(hex: 0xFFF8EE).opacity(0.9), style: StrokeStyle(lineWidth: 1.6, lineCap: .round))
+            case .heart:
+                GridShape(d: "M16 28.5 C8.6 24 3.5 19.4 3.5 13 C3.5 8.8 6.7 5.6 10.6 5.6 C13.1 5.6 15 7 16 8.9 C17 7 18.9 5.6 21.4 5.6 C25.3 5.6 28.5 8.8 28.5 13 C28.5 19.4 23.4 24 16 28.5 Z")
+                    .fill(Color(hex: 0xFFF8EE)).shadow(color: shadow, radius: 1, y: 1.5)
+                GridShape(d: "M16 25.6 C10 21.8 6.6 18.2 6.6 13.4 C6.6 10.7 8.6 8.8 11 8.8 C13.2 8.8 14.8 10.2 16 12.6 C17.2 10.2 18.8 8.8 21 8.8 C23.4 8.8 25.4 10.7 25.4 13.4 C25.4 18.2 22 21.8 16 25.6 Z")
+                    .fill(Color(hex: 0xFF7155))
+                GridShape(d: "M10 12.8 C10.4 11.4 11.4 10.7 12.6 10.6").stroke(Color(hex: 0xFFB09C), style: StrokeStyle(lineWidth: 2, lineCap: .round))
+            }
+        }
+        .frame(width: 32, height: 32)
+        .scaleEffect(size / 32)
+        .frame(width: size, height: size)
+        .accessibilityHidden(true)
+    }
+}

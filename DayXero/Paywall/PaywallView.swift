@@ -140,55 +140,72 @@ struct PaywallView: View {
 
     private var main: some View {
         VStack(spacing: 0) {
-            header.padding(.horizontal, DX.Layout.gutter).padding(.top, DX.Space.xs).dxReadableColumn()
+            header.padding(.horizontal, 16).padding(.top, DX.Space.xs).dxReadableColumn()
             ScrollView {
-                VStack(alignment: .leading, spacing: DX.Space.xs) {
-                    // v5 (014): the title beside Xero on a cream disc.
-                    HStack(alignment: .top, spacing: 12) {
+                VStack(alignment: .leading, spacing: 0) {
+                    // v5 (014): the offer as the headline, Xero in his cream disc beside it.
+                    HStack(alignment: .center, spacing: 10) {
                         VStack(alignment: .leading, spacing: 6) {
-                            Text(verbatim: Self.readyTitle(name: name)).dxType(.title).foregroundStyle(PW.ink)
+                            headline
+                                .dxFace(.display, 30, weight: 800, tracking: -1)
+                                .foregroundStyle(PW.ink)
                                 .fixedSize(horizontal: false, vertical: true)
                                 .accessibilityAddTraits(.isHeader)
-                            Text("Everything for your \(quitDay, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)) Quit Day.")
+                                .dxArrive(0)
+                            Text("Craving SOS stays free, always.")
                                 .dxType(.footnote).foregroundStyle(PW.muted)
+                                .dxArrive(1)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        XeroView(mood: .hello, stage: 2, points: 72)
+                        XeroView(mood: .hello, stage: 0, points: 72)
+                            .dxBob()
+                            .padding(.top, 4)
                             .frame(width: 88, height: 88)
-                            .background(Color(light: 0xFFF8EE, dark: 0x182034), in: Circle())
-                            .dxSettle()
+                            .background(Color(light: 0xFFF8EE, dark: 0x212A41), in: Circle())
+                            .dxSettle(delay: 0.15)
                             .accessibilityHidden(true)
                     }
-                    .dxArrive(0)
                     // MON-01: what the full program adds, in the order the person meets it.
-                    VStack(alignment: .leading, spacing: 10) {
-                        included("Prep 4 to 7 and your Day Xero launch kit")
-                        included("Weeks 1 to 4 of the program path")
-                        included("Jelli's voice coaching")
-                        included("If-then slip planner and a 12-week NRT schedule")
-                        included("Trigger heatmaps")
+                    VStack(alignment: .leading, spacing: 9) {
+                        included("Weeks 1 to 4 of coaching after Quit Day", index: 0)
+                        included("Jelli's voice in SOS and Glim's check-ins", index: 1)
+                        included("Prep 4 to 7 and your Day Xero badge", index: 2)
                     }
-                    .padding(.top, DX.Space.s)
-                    Text(FreeLine.text)
-                        .dxFont(14, weight: 400, style: .footnote).foregroundStyle(PW.muted)
-                        .padding(.bottom, DX.Space.s)
-                    anchor
-                    plans
+                    .padding(.top, 18)
+                    plans.padding(.top, 24)
+                    timeline.padding(.top, 22)
                     if typeSize.isAccessibilitySize {
                         footer.padding(.top, DX.Space.l)
                     }
                 }
                 .padding(.horizontal, DX.Layout.gutter)
                 .dxReadableColumn()
-                .padding(.top, DX.Space.m)
-                .padding(.bottom, typeSize.isAccessibilitySize ? DX.Space.xl : 0)
+                .padding(.top, 4)
+                .padding(.bottom, typeSize.isAccessibilitySize ? DX.Space.xl : DX.Space.m)
             }
+            .scrollBounceBehavior(.basedOnSize)
             if !typeSize.isAccessibilitySize {
                 footer
                     .padding(.horizontal, DX.Layout.gutter)
                     .dxReadableColumn()
-                    .padding(.bottom, DX.Space.xs)
+                    .padding(.top, 10)
+                    .padding(.bottom, 4)
             }
+        }
+    }
+
+    /// "7 days free, then $39.99 a year", or the plan's readiness when there's no trial on offer.
+    @ViewBuilder
+    private var headline: some View {
+        if let annual = model.plans.first(where: { $0.plan == .annual }), let days = annual.trialDays {
+            VStack(alignment: .leading, spacing: 0) {
+                Text("\(days) days free, then")
+                Text("\(annual.priceText) a year")
+            }
+            .lineLimit(1).minimumScaleFactor(0.8)
+            .accessibilityElement(children: .combine)
+        } else {
+            Text(verbatim: Self.readyTitle(name: name))
         }
     }
 
@@ -206,68 +223,67 @@ struct PaywallView: View {
                 model.dismissed()
                 onClose()
             } label: {
-                DXIcon(.close, size: 20, weight: 2.4)
+                DXIcon(.back, size: 20, weight: 2.4)
                     .foregroundStyle(PW.ink)
                     .frame(width: 44, height: 44)
                     .background(PW.surface, in: Circle())
             }
             .buttonStyle(.dxPress)
-            .accessibilityLabel(Text("Close and continue with the free version"))
+            .accessibilityLabel(Text("Back. Continue with the free version"))
             Spacer()
-            Button("Restore purchases") {
-                onPurchaseStarted()
-                Task { await model.restore() }
-            }
-                .dxFont(14, weight: 500, style: .footnote)
-                .foregroundStyle(PW.muted)
-                .buttonStyle(.plain)
         }
-        .frame(minHeight: 44)
+        .frame(height: 52)
     }
 
-    private func included(_ text: LocalizedStringKey) -> some View {
-        // v5 (014): a coral scalloped tick, then the benefit.
-        HStack(spacing: 12) {
-            ZStack {
-                Box(d: DXBadge.scallop(cx: 50, cy: 50, r: 48, n: 10, a: 6)).fill(PW.accent)
-                DXIconShape(d: DX.Icon.check.d)
-                    .stroke(.white, style: StrokeStyle(lineWidth: 2.4, lineCap: .round, lineJoin: .round))
-                    .padding(5)
-            }
-            .frame(width: 22, height: 22)
-            .accessibilityHidden(true)
+    /// A benefit with its small paper-cut coral stamp, the cream tick drawing in 90 ms apart.
+    private func included(_ text: LocalizedStringKey, index: Int) -> some View {
+        HStack(spacing: 10) {
+            BenefitStamp(delay: 0.3 + Double(index) * 0.09)
             Text(text).dxType(.footnote).foregroundStyle(PW.ink)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .dxArrive(2 + index)
     }
 
     @ViewBuilder
     private var plans: some View {
-        VStack(spacing: DX.Space.xs) {
+        VStack(spacing: 8) {
             if model.plans.isEmpty {
-                ForEach(0..<3, id: \.self) { _ in
-                    RoundedRectangle(cornerRadius: 20, style: .continuous).fill(PW.surface).frame(height: 60)
+                ForEach(0..<3, id: \.self) { i in
+                    RoundedRectangle(cornerRadius: 18, style: .continuous).fill(PW.surface).frame(height: i == 0 ? 80 : 52)
                 }
                 .accessibilityHidden(true)
             } else {
-                ForEach(model.plans) { option in
-                    PlanRow(option: option, isSelected: model.selected == option.plan, savingPercent: model.annualSavingPercent) {
+                ForEach(Array(model.plans.enumerated()), id: \.element.id) { i, option in
+                    PlanRow(option: option, isSelected: model.selected == option.plan) {
                         model.select(option.plan)
                     }
+                    .padding(.top, option.trialDays != nil ? 12 : 0)
+                    .dxArrive(7 + i)
                 }
             }
-            trialNote
         }
-        .padding(.top, DX.Space.xs)
+    }
+
+    /// The trial as a line: today, the reminder, the day it ends. It draws left to right (900 ms) and each stop fades
+    /// in as the line reaches it. Without a trial, the charge says what happens instead.
+    @ViewBuilder
+    private var timeline: some View {
+        if let option = model.selectedOption, let end = model.trialEndDate {
+            let lead = TrialReminder.leadDays(trialEndsAt: end, now: .now)
+            let remind = Calendar.current.date(byAdding: .day, value: -lead, to: end) ?? end
+            TrialTimeline(end: end, remind: model.canRemind ? remind : nil)
+                .id(option.plan)
+                .dxArrive(10)
+        } else if let option = model.selectedOption {
+            chargeLine(option)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .dxArrive(10)
+        }
     }
 
     private var footer: some View {
-        VStack(spacing: DX.Space.xs) {
-            if let option = model.selectedOption {
-                chargeLine(option)
-                    .multilineTextAlignment(.center)
-                    .frame(maxWidth: .infinity)
-            }
+        VStack(spacing: 2) {
             Button {
                 onPurchaseStarted()
                 Task { await model.purchase() }
@@ -281,7 +297,14 @@ struct PaywallView: View {
             .buttonStyle(.dx(.primary, on: .apricot))
             .disabled(model.phase != .ready)
             .accessibilityIdentifier("paywall.cta")
-            terms
+            .dxArrive(11)
+            Text(model.selected == .lifetime ? "One payment. No subscription to cancel." : "Renews automatically. Cancel anytime in Settings.")
+                .dxFace(.body, 13, weight: 500)
+                .foregroundStyle(PW.muted)
+                .multilineTextAlignment(.center)
+                .padding(.top, 6)
+                .dxArrive(12)
+            legal.dxArrive(13)
         }
     }
 
@@ -289,16 +312,11 @@ struct PaywallView: View {
         Group {
             switch option.plan {
             case .annual:
-                if let end = model.trialEndDate {
-                    Text("Free until \(Text(end, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)).bold()), then \(option.priceText) a year.")
-                    + (model.canRemind ? Text("\nWe'll remind you \(reminderLead) before.") : Text(""))
-                } else {
-                    Text("\(Text("\(option.priceText) today").bold()), then every year until you cancel.")
-                }
+                Text("\(Text("\(option.priceText) today").dxRun(14, weight: 700)), then every year until you cancel.")
             case .monthly:
-                Text("\(Text("\(option.priceText) today").bold()), then every month until you cancel.")
+                Text("\(Text("\(option.priceText) today").dxRun(14, weight: 700)), then every month until you cancel.")
             case .lifetime:
-                Text("\(Text("\(option.priceText) once.").bold()) No subscription, nothing to cancel.")
+                Text("\(Text("\(option.priceText) once.").dxRun(14, weight: 700)) No subscription, nothing to cancel.")
             }
         }
         .dxFont(14, weight: 400, style: .footnote)
@@ -316,30 +334,30 @@ struct PaywallView: View {
         }
     }
 
-    private var terms: some View {
-        VStack(spacing: 2) {
-            if model.selected != .lifetime {
-                Text("Cancel in Settings › Apple ID › Subscriptions.").multilineTextAlignment(.center)
-            }
-            // One centred line when it fits, stacked when text is large.
-            ViewThatFits {
-                HStack(spacing: 6) { termsLinks(separators: true) }
-                VStack(spacing: 4) { termsLinks(separators: false) }
-            }
+    /// Restore purchases · Terms · Privacy (S15.4).
+    private var legal: some View {
+        ViewThatFits {
+            HStack(spacing: 6) { legalLinks(separators: true) }
+            VStack(spacing: 4) { legalLinks(separators: false) }
         }
-        .dxFont(12, weight: 400, style: .caption2)
-        .foregroundStyle(PW.muted)
-        .tint(PW.muted)
+        .dxFace(.body, 14, weight: 600)
+        .foregroundStyle(PW.ink.opacity(0.85))
+        .tint(PW.ink.opacity(0.85))
     }
 
     @ViewBuilder
-    private func termsLinks(separators: Bool) -> some View {
-        Button("How billing works") { showBilling = true }.buttonStyle(.plain).underline()
-        if separators { Text(verbatim: "·") }
-        Link("Terms", destination: AppLinks.terms).underline()
+    private func legalLinks(separators: Bool) -> some View {
+        Button("Restore purchases") {
+            onPurchaseStarted()
+            Task { await model.restore() }
+        }
+        .buttonStyle(.plain)
+        .frame(minHeight: 32)
+        if separators { Text(verbatim: "·").foregroundStyle(PW.muted) }
+        Link("Terms", destination: AppLinks.terms).frame(minHeight: 32)
         if let privacy = AppLinks.privacy {
-            if separators { Text(verbatim: "·") }
-            Link("Privacy", destination: privacy).underline()
+            if separators { Text(verbatim: "·").foregroundStyle(PW.muted) }
+            Link("Privacy", destination: privacy).frame(minHeight: 32)
         }
     }
 
@@ -363,52 +381,46 @@ struct PaywallView: View {
     }
 }
 
+/// A plan (014): the radio on the left, the name, the price on the right. The trial plan is the hero row (80 pt, its
+/// "7 days free" pill on its top edge); the others are lighter (52 pt).
 private struct PlanRow: View {
     let option: PlanOption
     let isSelected: Bool
-    let savingPercent: Int?
     let action: () -> Void
+
+    private var hero: Bool { option.trialDays != nil }
 
     var body: some View {
         let g = PW.ground
         let shape = RoundedRectangle(cornerRadius: DX.Layout.optionRadius, style: .continuous)
         return Button(action: action) {
             HStack(spacing: 14) {
-                // The kit radio: a filled ink disc with a tick when chosen.
-                ZStack {
-                    if isSelected {
-                        Circle().fill(g.sel)
-                        DXIconShape(d: DX.Icon.check.d)
-                            .stroke(g.selFg, style: StrokeStyle(lineWidth: 2.2, lineCap: .round, lineJoin: .round))
-                            .frame(width: 14, height: 14)
-                    } else {
-                        Circle().strokeBorder(PW.faint, lineWidth: 2)
-                    }
-                }
-                .frame(width: 24, height: 24)
+                DXRadio(isOn: isSelected, ground: g)
                 VStack(alignment: .leading, spacing: 1) {
-                    Text(title).dxType(.headline).foregroundStyle(PW.ink)
-                    Text(detail).dxType(.footnote).foregroundStyle(PW.muted)
+                    Text(title).dxFace(.display, hero ? 20 : 17, weight: 700, tracking: -0.2).foregroundStyle(PW.ink)
+                    if hero, let perMonth = option.perMonthText {
+                        Text("\(perMonth) a month").dxType(.footnote).foregroundStyle(PW.ink)
+                    }
                 }
                 Spacer(minLength: DX.Space.xs)
                 VStack(alignment: .trailing, spacing: 1) {
-                    Text(verbatim: option.priceText).dxFace(.display, isSelected ? 22 : 17, weight: 800, tracking: -0.4)
+                    Text(verbatim: option.priceText).dxFace(.display, hero ? 24 : 17, weight: 800, tracking: -0.3)
                         .monospacedDigit().foregroundStyle(PW.ink)
                     Text(period).dxType(.caption).foregroundStyle(PW.muted)
                 }
             }
-            .padding(.vertical, 14)
-            .padding(.horizontal, 16)
-            .frame(minHeight: 64)
-            .background(isSelected ? g.selTint : g.card, in: shape)
+            .padding(.vertical, hero ? 14 : 10)
+            .padding(.horizontal, hero ? 18 : 16)
+            .frame(minHeight: hero ? 80 : 52)
+            .background(isSelected ? (hero ? Color(light: 0xFFEFE5, dark: 0x2A3044) : g.selTint) : g.card, in: shape)
             .overlay(shape.strokeBorder(isSelected ? g.selEdge : g.line, lineWidth: isSelected ? 2 : 1))
             .overlay(alignment: .topLeading) {
                 if let days = option.trialDays {
-                    Text(savingPercent.map { "\(days) days free · save \($0)%" as LocalizedStringKey } ?? "\(days) days free")
-                        .dxType(.caption)
-                        .foregroundStyle(PW.onInk)
-                        .padding(.vertical, 4).padding(.horizontal, 10)
-                        .background(PW.ink, in: Capsule())
+                    Text("\(days) days free")
+                        .dxFace(.body, 13, weight: 700).tracking(0.1)
+                        .foregroundStyle(g.selFg)
+                        .padding(.vertical, 6).padding(.horizontal, 10)
+                        .background(g.sel, in: Capsule())
                         .offset(x: 16, y: -12)
                 }
             }
@@ -429,26 +441,98 @@ private struct PlanRow: View {
         }
     }
 
-    private var detail: LocalizedStringKey {
+    private var period: LocalizedStringKey {
         switch option.plan {
-        case .annual:
-            if let perMonth = option.perMonthText {
-                // With a trial, the badge carries the saving.
-                if let savingPercent, option.trialDays == nil { return "\(perMonth) a month · save \(savingPercent)%" }
-                return "\(perMonth) a month"
+        case .annual: "a year"
+        case .monthly: "a month"
+        case .lifetime: "once"
+        }
+    }
+}
+
+/// The trial line (014): Today (full access), the reminder, the day it ends and the plan starts.
+private struct TrialTimeline: View {
+    let end: Date
+    let remind: Date?
+    @State private var drawn = false
+    private let motion = MotionPolicy()
+
+    var body: some View {
+        let format = Date.FormatStyle.dateTime.month(.abbreviated).day()
+        VStack(spacing: 0) {
+            GeometryReader { proxy in
+                let w = proxy.size.width - 14
+                ZStack(alignment: .leading) {
+                    Capsule().fill(PW.ground.track).frame(width: w, height: 3).offset(x: 7)
+                    Capsule().fill(PW.ink).frame(width: w * (drawn || motion.reduce ? 1 : 0), height: 3).offset(x: 7)
+                    node(filled: true).offset(x: 0)
+                    if remind != nil {
+                        node(filled: false).offset(x: proxy.size.width / 2 - 8)
+                            .opacity(drawn || motion.reduce ? 1 : 0)
+                            .animation(.easeOut(duration: 0.7).delay(0.45), value: drawn)
+                    }
+                    node(filled: false).offset(x: proxy.size.width - 16)
+                        .opacity(drawn || motion.reduce ? 1 : 0)
+                        .animation(.easeOut(duration: 0.7).delay(0.85), value: drawn)
+                }
             }
-            return "Billed yearly"
-        case .monthly: return "Cancel anytime"
-        case .lifetime: return "Pay once"
+            .frame(height: 16)
+            HStack(alignment: .top) {
+                stop(Text("Today"), Text("Full access"), align: .leading)
+                Spacer(minLength: 4)
+                if let remind {
+                    stop(Text(remind, format: format), Text("We remind you"), align: .center)
+                    Spacer(minLength: 4)
+                }
+                stop(Text(end, format: format), Text("Trial ends,\nplan starts"), align: .trailing)
+            }
+            .padding(.top, 6)
+        }
+        .accessibilityElement(children: .combine)
+        .onAppear {
+            withAnimation(motion.reduce ? nil : .timingCurve(0.2, 0.7, 0.2, 1, duration: 0.9).delay(0.4)) { drawn = true }
         }
     }
 
-    private var period: LocalizedStringKey {
-        switch option.plan {
-        case .annual: "per year"
-        case .monthly: "per month"
-        case .lifetime: "one time"
+    private func node(filled: Bool) -> some View {
+        Circle()
+            .fill(filled ? PW.ink : PW.background)
+            .overlay(Circle().strokeBorder(PW.ink, lineWidth: 3))
+            .frame(width: 16, height: 16)
+    }
+
+    private func stop(_ title: Text, _ detail: Text, align: HorizontalAlignment) -> some View {
+        VStack(alignment: align, spacing: 1) {
+            title.dxFace(.body, 15, weight: 700).foregroundStyle(PW.ink)
+            detail.dxFace(.body, 14, weight: 600).foregroundStyle(PW.muted)
         }
+        .multilineTextAlignment(align == .leading ? .leading : align == .trailing ? .trailing : .center)
+        .fixedSize()
+    }
+}
+
+/// A benefit mark: a small scalloped coral stamp with a soft paper shadow, its cream tick drawing in.
+private struct BenefitStamp: View {
+    let delay: Double
+    @State private var drawn = false
+    @Environment(\.colorScheme) private var scheme
+    private let motion = MotionPolicy()
+
+    var body: some View {
+        let shadow = scheme == .dark ? Color.black.opacity(0.55) : Color(red: 120 / 255, green: 52 / 255, blue: 24 / 255).opacity(0.26)
+        ZStack {
+            GridShape(d: DXBadge.scallop(cx: 12, cy: 12, r: 11.5, n: 10, a: 1.4), grid: 24).fill(Color(hex: 0xFF7155))
+                .shadow(color: shadow, radius: 1, y: 1.6)
+            GridShape(d: "M16.6 4.6 A9 9 0 0 1 16.6 19.4 A10 10 0 0 0 16.6 4.6 Z", grid: 24).fill(Color(hex: 0xE85A3E))
+            GridShape(d: "M7.4 12.4l3.1 3.1L16.8 9", grid: 24)
+                .trim(from: 0, to: drawn || motion.reduce ? 1 : 0)
+                .stroke(Color(hex: 0xFFF8EE), style: StrokeStyle(lineWidth: 2.6, lineCap: .round, lineJoin: .round))
+        }
+        .frame(width: 24, height: 24)
+        .scaleEffect(22 / 24)
+        .frame(width: 22, height: 22)
+        .accessibilityHidden(true)
+        .onAppear { withAnimation(.timingCurve(0.2, 0.7, 0.2, 1, duration: 0.52).delay(delay)) { drawn = true } }
     }
 }
 

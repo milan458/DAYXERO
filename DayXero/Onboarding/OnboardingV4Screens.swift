@@ -566,115 +566,144 @@ private struct QuitHill: View {
     }
 }
 
-// MARK: F05 Your plan builds · apricot (v5)
+// MARK: F05 Your plan builds · apricot (v5, 011)
 
+/// A short build beat: the title with Xero (proud) beside it, then three plan pieces settle up one by one, then the
+/// status line says it's built and the button arrives.
+///
+/// Motion (011): the pieces settle 420 ms apart (900 ms each) from 450 ms, a light haptic as each lands. At 2.1 s the
+/// status swaps to "Built from your answers" with the screen's one green check (420 ms pop), Xero bumps (success
+/// haptic) and the button arrives.
 struct BuildingScreen: View {
     let model: OnboardingModel
-    @State private var shown = 0
-    @State private var friends = false
+    @State private var built = false
+    @State private var landed = 0
     private let motion = MotionPolicy()
     private let ground = DX.Ground.apricot
 
     private struct Row: Identifiable {
         let id: Int
+        let art: PlanPieceArt.Kind
         let kicker: String
         let value: String
-        /// A plain line under the row, e.g. what a wave is the first time the plan says it (S27.10).
         var detail: String? = nil
+        var quit = false
     }
 
     private var rows: [Row] {
-        let first = model.today
-        let last = model.calendar.date(byAdding: .day, value: -1, to: model.calendar.startOfDay(for: model.quitDay)) ?? first
-        let usage = ListFormatter.localizedString(byJoining: model.orderedProducts.map { product in
-            switch product {
-            case .cigarettes: String(localized: "cigarettes")
-            case .vape: String(localized: "vape")
-            case .pouches: String(localized: "pouches")
-            }
-        })
-        let waves = Trigger.allCases.filter(model.triggers.contains).prefix(2).map { String(localized: $0.title).lowercased() }
-        var all = [
-            Row(id: 0, kicker: String(localized: "Prep week"),
-                value: model.prepDays > 1 ? "\(first.formatted(shortDate)) to \(last.formatted(shortDate))" : first.formatted(shortDate)),
-            Row(id: 1, kicker: String(localized: "Quit Day"),
-                value: String(localized: "\(model.quitDay.formatted(shortDate)) · no more \(usage)")),
-        ]
+        var all = [Row(id: 0, art: .flag, kicker: String(localized: "Quit Day"),
+                       value: model.quitDay.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day()), quit: true)]
+        let waves = Trigger.allCases.filter(model.triggers.contains).prefix(2)
+            .map { $0 == .other ? String(localized: "other moments") : String(localized: $0.title).lowercased() }
         if !waves.isEmpty {
-            all.append(Row(id: 2, kicker: String(localized: "Waves to watch"), value: ListFormatter.localizedString(byJoining: waves).capitalizedFirst,
-                           detail: String(localized: "A wave is a craving: it rises, peaks and passes.")))
-        }
-        // What gets in the way shapes the plan (S27.10).
-        let obstacles = Obstacle.allCases.filter { model.obstacles.contains($0) && $0 != .other }.prefix(3)
-            .map { String(localized: $0.title).lowercased() }
-        if !obstacles.isEmpty {
-            all.append(Row(id: 3, kicker: String(localized: "Watch out for"),
-                           value: ListFormatter.localizedString(byJoining: Array(obstacles)).capitalizedFirst))
+            all.append(Row(id: 1, art: .wave, kicker: String(localized: "Waves to watch"),
+                           value: BaselineScreenCopy.list(Array(waves)).capitalizedFirst,
+                           detail: String(localized: "When your cravings tend to rise")))
         }
         let why = model.why.text.trimmingCharacters(in: .whitespacesAndNewlines)
         if !why.isEmpty {
-            all.append(Row(id: 4, kicker: String(localized: "Your reason"), value: "“\(why)”"))
+            all.append(Row(id: 2, art: .heart, kicker: String(localized: "Your reason"), value: "“\(why)”"))
         }
         return all
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 12) {
-                    HStack(alignment: .center, spacing: 12) {
-                        XeroView(mood: .hello, stage: 1, size: .card)
-                        Text("Your plan, built around you").dxType(.title).foregroundStyle(ground.ink)
-                            .accessibilityAddTraits(.isHeader)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 0) {
+                HStack(alignment: .center, spacing: 6) {
+                    Text("Your plan,\nbuilt around you")
+                        .dxFace(.display, 30, weight: 800, tracking: -1)
+                        .foregroundStyle(ground.ink)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .accessibilityAddTraits(.isHeader)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .dxArrive(0)
+                    XeroView(mood: .cheer, stage: 0, points: 120)
+                        .dxBob()
+                        .dxBump(built)
+                        .frame(width: 120, height: 120)
+                        .padding(.trailing, -6)
+                        .dxSettle(delay: 0.2)
+                        .accessibilityHidden(true)
+                }
+                ZStack(alignment: .leading) {
+                    Text("Putting the pieces together")
+                        .dxType(.footnote).foregroundStyle(ground.muted)
+                        .opacity(built ? 0 : 1).offset(y: built ? -6 : 0)
+                    HStack(spacing: 8) {
+                        DXCheck(size: 20).scaleEffect(built ? 1 : 0.4).opacity(built ? 1 : 0)
+                            .animation(.timingCurve(0.3, 1.4, 0.5, 1, duration: 0.42), value: built)
+                        (Text("Built from your answers.").dxRun(15, weight: 700).foregroundStyle(ground.ink) + Text(" All yours."))
+                            .dxType(.footnote).foregroundStyle(ground.ink)
                     }
-                    ForEach(rows.prefix(shown)) { row in
-                        VStack(alignment: .leading, spacing: 6) {
-                            PlanStepRow(kicker: row.kicker, value: row.value, ground: ground)
-                            if let detail = row.detail {
-                                Text(detail).dxType(.footnote).foregroundStyle(ground.muted)
-                                    .fixedSize(horizontal: false, vertical: true)
-                                    .padding(.horizontal, 4)
+                    .opacity(built ? 1 : 0).offset(y: built ? 0 : 6)
+                }
+                .animation(.timingCurve(0.2, 0.7, 0.2, 1, duration: 0.4), value: built)
+                .frame(height: 32, alignment: .leading)
+                .dxArrive(1)
+                VStack(spacing: 16) {
+                    ForEach(Array(rows.enumerated()), id: \.element.id) { i, row in
+                        piece(row)
+                            .dxSettle(0, delay: 0.45 + Double(i) * 0.42)
+                            .task {
+                                try? await Task.sleep(for: .seconds(motion.reduce ? 0 : 0.45 + Double(i) * 0.42 + 0.6))
+                                landed += 1
                             }
-                        }
-                        .transition(.move(edge: .bottom).combined(with: .opacity))
-                    }
-                    if friends {
-                        HStack(spacing: 12) {
-                            HStack(spacing: -10) {
-                                JelliView(mood: .hello, stage: 1, size: .avatar, animate: false)
-                                    .background(DX.Ground.ocean.background, in: Circle()).clipShape(Circle())
-                                GlimView(mood: .hello, stage: 1, size: .avatar, animate: false)
-                                    .background(DX.Ground.violet.background, in: Circle()).clipShape(Circle())
-                            }
-                            .accessibilityHidden(true)
-                            Text("Two friends join later. **Jelli** at your first craving, **Glim** on your first evening.")
-                                .dxType(.footnote).foregroundStyle(ground.ink)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
-                        .dxCardOnColour()
-                        .transition(.opacity)
                     }
                 }
-                .padding(.horizontal, DX.Layout.gutter)
-                .padding(.top, DX.Space.m)
-                .dxReadableColumn()
+                .padding(.top, 34)
             }
+            .padding(.horizontal, DX.Layout.gutter)
+            .padding(.top, DX.Space.s)
+            .dxReadableColumn()
+        }
+        .scrollBounceBehavior(.basedOnSize)
+        .safeAreaInset(edge: .bottom, spacing: 0) {
             Button("See my plan") { model.next() }
                 .buttonStyle(.dx(.primary, on: ground))
-                .disabled(!friends)
-                .padding(.horizontal, DX.Layout.buttonGutter)
+                .opacity(built ? 1 : 0)
+                .offset(y: built ? 0 : 18)
+                .allowsHitTesting(built)
+                .accessibilityHidden(!built)
+                .animation(.timingCurve(0.2, 0.7, 0.2, 1, duration: 0.6), value: built)
+                .padding(.horizontal, DX.Layout.gutter)
                 .dxReadableColumn()
+                .padding(.top, 28)
                 .padding(.bottom, DX.Space.xs)
         }
+        .sensoryFeedback(.impact(weight: .light), trigger: landed)
+        .sensoryFeedback(.success, trigger: built) { _, done in done }
         .task {
-            let step = motion.reduce ? 0.15 : 0.6
-            for i in 1...rows.count {
-                try? await Task.sleep(for: .seconds(step))
-                withAnimation(motion.animation(DX.Move.settle)) { shown = i }
-            }
-            try? await Task.sleep(for: .seconds(step))
-            withAnimation(motion.animation(DX.Move.arrive)) { friends = true }
+            try? await Task.sleep(for: .seconds(motion.reduce ? 0.3 : 2.1))
+            built = true
         }
+    }
+
+    private func piece(_ row: Row) -> some View {
+        HStack(spacing: 14) {
+            PlanPieceArt(kind: row.art)
+                .frame(width: 48, height: 48)
+                .background(ground.card2, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+            VStack(alignment: .leading, spacing: 3) {
+                Text(verbatim: row.kicker).dxType(.caption).foregroundStyle(ground.muted)
+                Text(verbatim: row.value)
+                    .dxFace(.display, row.quit ? 22 : 17, weight: row.quit ? 800 : 700, tracking: row.quit ? -0.4 : -0.2)
+                    .foregroundStyle(ground.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+                if let detail = row.detail {
+                    Text(verbatim: detail).dxType(.caption).foregroundStyle(ground.muted)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .padding(.horizontal, 16).padding(.vertical, 18)
+        .frame(minHeight: 102)
+        .background(row.quit ? Color(light: 0xFFF8EE, dark: 0x212A41) : ground.card, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .strokeBorder(row.quit ? Color(light: (0x1E1A3A, 0.12), dark: (0xFFFFFF, 0.14)) : Onb.chipLine, lineWidth: 1)
+        }
+        .accessibilityElement(children: .combine)
     }
 }
 
@@ -682,212 +711,235 @@ private extension String {
     var capitalizedFirst: String { prefix(1).uppercased() + dropFirst() }
 }
 
-// MARK: F06 Your plan is ready · mint
+// MARK: F06 Your plan is ready · apricot (v5, 012)
 
-/// Prep 1 to 3 are free; the 7-day trial is offered at Prep 4 (MON-01, replacing decision 15), so with the usual week of
-/// prep it runs past the Quit Day. Nothing is charged here.
+/// The Day Xero medallion as the hero, Xero cheering beside it on the near paper ground, the date, and the prep stamps.
+/// Prep 1 to 3 are free; the 7-day trial is offered at Prep 4 (MON-01), and the paywall carries its terms. Nothing is
+/// charged here.
+///
+/// Motion (012): the underline draws under "ready"; the far and near grounds fade in (150, 250 ms); the coin pops in
+/// (700 ms spring, from 300 ms) seated behind the ridge; Xero settles beside it (from 450 ms) and cheers, bobbing. The
+/// caption, then the stamps card: Prep 1 in its up-next form and Prep 2 to 7 quieter, popping 90 ms apart from 900 ms.
+/// A light haptic as the medallion lands.
 struct PlanRevealScreen: View {
     let model: OnboardingModel
     let onContinue: () -> Void
 
     @Environment(Entitlement.self) private var entitlement
-    @State private var paywall: PaywallModel?
+    @Environment(\.colorScheme) private var scheme
     @State private var showPlans = false
+    @State private var landed = false
     private let ground = DX.Ground.apricot
 
-    private var annual: PlanOption? { paywall?.plans.first { $0.plan == .annual } }
+    private var near: Color { Color(light: 0xFFAF7A, dark: 0x161F38) }
+    private var far: Color { Color(light: 0xFFD3A6, dark: 0x1F2950) }
 
     var body: some View {
-        VStack(spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("Step \(model.stepNumber) of \(model.stepTotal)").dxType(.caption).foregroundStyle(ground.muted)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 0) {
+                VStack(alignment: .leading, spacing: 8) {
                     MarkedTitle(String(localized: "Your plan is "), marking: String(localized: "ready"), color: DX.Mark.color(on: ground))
                         .dxType(.large).foregroundStyle(ground.ink)
+                        .accessibilityAddTraits(.isHeader)
                         .dxArrive(0)
-                    Text(entitlement.isPro ? "Everything is unlocked." : "Prep 1 to 3 are on us. Nothing is charged today.")
-                        .dxType(.body).foregroundStyle(ground.muted)
+                    Text(verbatim: lead).dxType(.body).foregroundStyle(ground.muted)
                         .dxArrive(1)
-                    revealHero
-                    savings
-                    builtAround
-                    includes
-                    if !entitlement.isPro { trialCard }
-                    // Set apart from the cards above and clear of the pinned buttons below (QW9).
-                    Text(HealthInfoView.oneLine).dxType(.caption).foregroundStyle(ground.muted)
-                        .multilineTextAlignment(.center).frame(maxWidth: .infinity)
-                        .padding(.top, DX.Space.s)
                 }
                 .padding(.horizontal, DX.Layout.gutter)
-                .padding(.top, DX.Space.m)
-                .padding(.bottom, DX.Space.l)
-                .dxReadableColumn()
+                hero.padding(.top, 58)
+                VStack(spacing: 4) {
+                    Text(verbatim: "Day Xero · \(model.quitDay.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day()))")
+                        .dxType(.title).foregroundStyle(ground.ink)
+                    Text("Your Quit Day. This medallion is yours that day.")
+                        .dxType(.footnote).foregroundStyle(ground.muted)
+                }
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal, DX.Layout.gutter)
+                .padding(.top, 24)
+                .dxArrive(3)
+                stamps
+                    .padding(.horizontal, DX.Layout.gutter)
+                    .padding(.top, 28)
+                    .dxArrive(5)
             }
-            VStack(spacing: 4) {
-                Button("Start my prep week", action: onContinue)
-                    .buttonStyle(.dx(.primary, on: ground))
-                if !entitlement.isPro, let annual {
-                    Button {
-                        showPlans = true
-                    } label: {
-                        Text("See all plans · \(plansLine(annual))")
-                    }
-                    .buttonStyle(.dx(.quiet, on: ground))
+            .padding(.top, DX.Space.s)
+            .padding(.bottom, DX.Space.l)
+            .dxReadableColumn()
+        }
+        .scrollBounceBehavior(.basedOnSize)
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            VStack(spacing: 10) {
+                Button("Start my prep week") {
+                    landed.toggle()
+                    onContinue()
+                }
+                .buttonStyle(.dx(.primary, on: ground))
+                .dxArrive(6)
+                if !entitlement.isPro {
+                    Button("See all plans") { showPlans = true }
+                        .dxFace(.body, 15, weight: 600)
+                        .foregroundStyle(ground.ink.opacity(0.85))
+                        .frame(height: 40)
+                        .frame(maxWidth: .infinity)
+                        .contentShape(Rectangle())
+                        .buttonStyle(.plain)
+                        .dxArrive(7)
                 }
             }
-            .padding(.horizontal, DX.Layout.buttonGutter)
+            .padding(.horizontal, DX.Layout.gutter)
             .dxReadableColumn()
+            .padding(.top, 36)
             .padding(.bottom, DX.Space.xs)
+            .background {
+                // The dock fades into the near ground, not the sky.
+                LinearGradient(stops: [.init(color: near.opacity(0), location: 0), .init(color: near, location: 0.34)],
+                               startPoint: .top, endPoint: .bottom)
+                    .ignoresSafeArea(edges: .bottom)
+            }
         }
+        .sensoryFeedback(.impact(weight: .light), trigger: landed)
         .task {
-            guard paywall == nil, !entitlement.isPro else { return }
-            let loading = PaywallModel(store: entitlement.store, entitlement: entitlement)
-            await loading.load(trackView: false)
-            paywall = loading
+            try? await Task.sleep(for: .seconds(1.0))
+            landed.toggle()
         }
         .fullScreenCover(isPresented: $showPlans) {
-            if paywall != nil {
-                // Its own model, so its load tracks the paywall view.
-                PaywallView(name: model.name, quitDay: model.quitDay,
-                            model: PaywallModel(store: entitlement.store, entitlement: entitlement), onClose: { showPlans = false },
-                            spend: PaywallModel.Spend(perYear: model.stats.moneyPerYear, currencyCode: model.currencyCode,
-                                                      products: model.orderedProducts))
-            }
+            PaywallView(name: model.name, quitDay: model.quitDay,
+                        model: PaywallModel(store: entitlement.store, entitlement: entitlement), onClose: { showPlans = false },
+                        spend: PaywallModel.Spend(perYear: model.stats.moneyPerYear, currencyCode: model.currencyCode,
+                                                  products: model.orderedProducts))
         }
     }
 
-    private func plansLine(_ annual: PlanOption) -> String {
-        let others = (paywall?.plans ?? []).filter { $0.plan != .annual }.map { option -> String in
-            switch option.plan {
-            case .monthly: String(localized: "\(option.priceText) a month")
-            case .lifetime: String(localized: "\(option.priceText) lifetime")
-            default: option.priceText
-            }
-        }
-        return others.joined(separator: " · ")
+    /// "Seven prep days, then your Quit Day."
+    private var lead: String {
+        let n = max(model.prepDays, 0)
+        if n == 0 { return String(localized: "Your Quit Day is today.") }
+        let f = NumberFormatter()
+        f.numberStyle = .spellOut
+        let word = (f.string(from: n as NSNumber) ?? "\(n)").capitalizedFirst
+        return n == 1 ? String(localized: "One prep day, then your Quit Day.") : String(localized: "\(word) prep days, then your Quit Day.")
     }
 
-    /// 012: the Day Xero medallion waiting in a warm glow, Xero cheering on the hill beside it, the date under them.
-    private var revealHero: some View {
-        VStack(spacing: 6) {
-            ZStack(alignment: .bottomLeading) {
-                ZStack {
-                    Circle().fill(Color(light: (0xFFF8EE, 0.35), dark: (0xFFC38A, 0.06))).frame(width: 220, height: 220)
-                    Circle().fill(Color(light: (0xFFF8EE, 0.6), dark: (0xFFC38A, 0.10))).frame(width: 180, height: 180)
-                    DXBadge(.xero, state: .next(nil), size: 148)
-                        .dxStamp(delay: 0.5)
+    /// The two paper grounds, the coin with the waiting medallion, and Xero. The near ground runs on down the page.
+    private var hero: some View {
+        let dark = scheme == .dark
+        let lift = dark ? Color.black.opacity(0.5) : Color(red: 120 / 255, green: 44 / 255, blue: 20 / 255).opacity(0.15)
+        return Color.clear
+            .frame(height: 196)
+            .overlay(alignment: .topLeading) {
+                ZStack(alignment: .topLeading) {
+                    GridShape(d: "M0 44 C60 30 110 34 150 46 C190 58 230 30 290 18 C330 10 365 12 390 18 V640 H0Z", grid: 390)
+                        .fill(far)
+                        .frame(width: 390, height: 390)
+                        .shadow(color: lift, radius: 2, y: -2)
+                        .offset(y: 104)
+                        .dxFade(delay: 0.15)
+                    coin
+                        .offset(x: 152, y: 0)
+                        .dxPop(delay: 0.3)
+                    GridShape(d: "M0 40 C90 26 170 22 242 26 C300 29 350 34 390 38 V640 H0Z", grid: 390)
+                        .fill(near)
+                        .frame(width: 390, height: 390)
+                        .shadow(color: lift, radius: 3, y: -3)
+                        .offset(y: 140)
+                        .dxFade(delay: 0.25)
+                    XeroView(mood: .cheer, stage: 0, points: 100)
+                        .dxBob()
+                        .offset(x: 47, y: 77)
+                        .dxSettle(delay: 0.45)
                 }
+                .frame(width: 390, alignment: .topLeading)
                 .frame(maxWidth: .infinity)
-                .padding(.leading, 70)
-                .padding(.bottom, 28)
-                // The hill runs off both edges without widening the column.
-                Knoll(kind: .big)
-                    .frame(height: 70)
-                    .padding(.horizontal, -40)
-                    .offset(y: 10)
-                XeroView(mood: .cheer, stage: 1, points: 104)
-                    .frame(width: 104, height: 104)
-                    .dxSettle(delay: 0.3)
-                    .padding(.leading, 18)
-                    .padding(.bottom, 26)
             }
-            .frame(height: 236)
-            .clipped()
-            .accessibilityHidden(true)
-            Text(verbatim: "Day Xero · \(model.quitDay.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day()))")
-                .dxType(.headline)
-                .foregroundStyle(ground.ink)
-                .frame(maxWidth: .infinity)
-                .dxArrive(2)
-        }
-        .padding(.vertical, 6)
+            .zIndex(-1)
+            .accessibilityElement()
+            .accessibilityLabel(Text("The Day Xero medallion, waiting for your Quit Day, with Xero cheering beside it."))
     }
 
-    private var savings: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text("Money you'll keep in year 1").dxType(.caption).foregroundStyle(ground.muted)
-            Text(verbatim: model.stats.moneyPerYear.formatted(.currency(code: model.currencyCode).precision(.fractionLength(0))))
-                .dxType(.display).foregroundStyle(ground.ink)
-                .lineLimit(1).minimumScaleFactor(0.6)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .dxCardOnColour(radius: DX.Layout.cardRadius)
-        .accessibilityElement(children: .combine)
-    }
-
-    /// One line per obstacle picked, saying what the plan does about it (S27.10). Hidden when none were picked.
-    @ViewBuilder
-    private var builtAround: some View {
-        let lines = Obstacle.planLines(for: model.obstacles)
-        if !lines.isEmpty {
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Built around what gets in your way").dxType(.caption).foregroundStyle(ground.muted)
-                ForEach(Array(lines.enumerated()), id: \.offset) { _, line in
-                    Label {
-                        Text(line).dxType(.footnote).foregroundStyle(ground.ink).fixedSize(horizontal: false, vertical: true)
-                    } icon: {
-                        Image(systemName: "checkmark").font(.system(size: 12, weight: .bold)).foregroundStyle(ground.ink)
-                    }
-                }
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .dxCardOnColour()
-            .accessibilityElement(children: .combine)
-        }
-    }
-
-    private var includes: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("**Always free:** Prep 1 to 3, your counter, Craving SOS, a 60-second breathing timer and evening check-ins")
-            Text("**With the full program:** Prep 4 to 7, your Day Xero launch kit, Weeks 1 to 4, Jelli's voice coaching, if-then slip plans, a 12-week NRT schedule and trigger heatmaps")
-        }
-        .dxType(.footnote)
-        .foregroundStyle(ground.ink)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .dxCardOnColour()
-    }
-
-    /// The 7-day trial at Prep 4 (MON-01): Prep 1 is today, so Prep 4 opens three days from now at the earliest.
-    private var trialCard: some View {
-        let start = FullProgram.earliestPaywallDay(firstDay: .now, calendar: model.calendar)
-        let days = annual?.trialDays ?? FullProgram.trialDays
-        let end = model.calendar.date(byAdding: .day, value: days, to: start) ?? start
-        let lead = TrialReminder.leadDays(trialEndsAt: end, now: start)
-        let remind = model.calendar.date(byAdding: .day, value: -lead, to: end) ?? end
-        let after = FullProgram.trialEndsDaysAfterQuitDay(trialEnd: end, quitDay: model.quitDay, calendar: model.calendar)
-        let (s, e, r) = (start.formatted(shortDate), end.formatted(shortDate), remind.formatted(shortDate))
-        let runs: String = switch after {
-        case 2...: String(localized: "If you start it at Prep 4 on \(s), it runs to \(e), \(after) days after your Quit Day. I'll remind you on \(r).")
-        case 1: String(localized: "If you start it at Prep 4 on \(s), it runs to \(e), the day after your Quit Day. I'll remind you on \(r).")
-        case 0: String(localized: "If you start it at Prep 4 on \(s), it runs to \(e), your Quit Day. I'll remind you on \(r).")
-        default: String(localized: "If you start it at Prep 4 on \(s), it runs to \(e). I'll remind you on \(r).")
-        }
-        return VStack(alignment: .leading, spacing: 6) {
-            Text("At Prep 4 · \(start.formatted(shortDate))").dxType(.caption)
-                .foregroundStyle(DX.Fill.cream.opacity(0.85))
-            if let annual {
-                Text("\(days) days free, then \(annual.priceText) a year").dxType(.headline).foregroundStyle(DX.Fill.cream)
-                if let perMonth = annual.perMonthText {
-                    Text("That's \(perMonth) a month. I'll ask you at Prep 4, not before.")
-                        .dxType(.footnote).foregroundStyle(DX.Fill.cream.opacity(0.85))
-                }
+    private var coin: some View {
+        let dark = scheme == .dark
+        return ZStack {
+            if dark {
+                Circle().fill(Color(red: 1, green: 160 / 255, blue: 60 / 255).opacity(0.24)).frame(width: 180 + 44, height: 180 + 44).blur(radius: 40)
+                Circle().fill(Color(red: 1, green: 190 / 255, blue: 90 / 255).opacity(0.5)).frame(width: 180 + 16, height: 180 + 16).blur(radius: 13)
+                Circle().fill(Color(red: 1, green: 214 / 255, blue: 140 / 255).opacity(0.6)).frame(width: 186, height: 186)
             } else {
-                Text("I'll ask you about the full program at Prep 4, not before.").dxType(.headline).foregroundStyle(DX.Fill.cream)
+                Circle().fill(Color(red: 1, green: 206 / 255, blue: 110 / 255).opacity(0.55)).frame(width: 220, height: 220).blur(radius: 23)
+                Circle().fill(Color(hex: 0xFFF8EE).opacity(0.2)).frame(width: 220, height: 220)
+                Circle().fill(Color(hex: 0xFFF8EE).opacity(0.55)).frame(width: 198, height: 198)
             }
-            Text("\(runs) Cancel any time in Settings › Apple ID › Subscriptions.")
-                .dxType(.caption).foregroundStyle(DX.Fill.cream.opacity(0.85))
-                .fixedSize(horizontal: false, vertical: true)
+            Circle().fill(Color(hex: 0xFFF8EE)).frame(width: 180, height: 180)
+            DXBadge(.xero, state: .next(nil), size: 150)
+                .ring(dark ? Color(hex: 0xF5B83D) : Color(hex: 0xB9800F))
+                .environment(\.dxGround, .reading)
+                .environment(\.colorScheme, .light)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(16)
-        .background(DX.Fill.navy, in: RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
+        .frame(width: 180, height: 180)
+    }
+
+    /// One stamp a prep day: Prep 1 up next (an apricot ring on a warm fill), the rest locked and quieter.
+    private var stamps: some View {
+        let count = max(min(model.prepDays, 7), 1)
+        return VStack(alignment: .leading, spacing: 16) {
+            HStack(alignment: .firstTextBaseline) {
+                Text("Prep stamps").dxType(.headline).foregroundStyle(ground.ink)
+                Spacer()
+                Text("One a day").dxType(.footnote).foregroundStyle(ground.muted)
+            }
+            HStack(spacing: 0) {
+                ForEach(1...count, id: \.self) { i in
+                    PrepStamp(n: i, next: i == 1)
+                        .dxPop(0, delay: 0.9 + Double(i) * 0.09)
+                    if i < count { Spacer(minLength: 0) }
+                }
+            }
+            .padding(.horizontal, -2)
+        }
+        .padding(.top, 22).padding(.horizontal, 18).padding(.bottom, 24)
+        .background(Color(light: 0xFFFFFF, dark: 0x212A41).opacity(scheme == .dark ? 1 : 0.92),
+                    in: RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous).strokeBorder(Onb.chipLine, lineWidth: 1))
         .accessibilityElement(children: .combine)
+        .accessibilityLabel(Text("Prep stamps, one a day. Prep 1 is up next."))
     }
 }
 
-// MARK: F07 Reminders · apricot
+/// A 42 pt prep stamp (012): up next, a solid apricot ring on a warm fill; locked, a faint ring and a 14 pt numeral at
+/// 64% ink.
+private struct PrepStamp: View {
+    let n: Int
+    let next: Bool
+    @Environment(\.colorScheme) private var scheme
 
-/// Two small nudges a day: Xero's morning pledge and Glim's evening check-in.
+    var body: some View {
+        let ink = DX.Ground.apricot.ink
+        let dark = scheme == .dark
+        ZStack {
+            if next {
+                Circle().fill(dark ? Color(hex: 0xFF9A5C).opacity(0.2) : Color(hex: 0xFFE2C6))
+                Circle().strokeBorder(dark ? Color(hex: 0xFFA46B) : Color(hex: 0xF2884A), lineWidth: 1.5)
+            } else {
+                Circle().fill(ink.opacity(0.06))
+                Circle().strokeBorder(ink.opacity(0.22), lineWidth: 1.3)
+            }
+            Text(verbatim: "\(n)")
+                .dxFace(.display, 14, weight: 800, tracking: -0.4)
+                .foregroundStyle(next ? ink : ink.opacity(0.64))
+        }
+        .frame(width: 38, height: 38)
+        .padding(2)
+    }
+}
+
+// MARK: F07 Reminders · apricot (v5, 013)
+
+/// Two small nudges a day: Xero's morning pledge and Glim's evening check-in, as the notifications will look, and the
+/// quiet hours.
+///
+/// Motion (013): the bar fills to the end and the sun lands; title and helper arrive, then the two cards settle in 380 ms
+/// apart with a soft haptic each. Glim's card carries a night scene as inset header art (stars twinkle). The quiet-hours
+/// line arrives last (from 1.4 s).
 struct TrialScreen: View {
     let name: String
     let quitDay: Date
@@ -895,41 +947,66 @@ struct TrialScreen: View {
     let onDone: () -> Void
 
     @State private var asking = false
+    @State private var landed = 0
     private let ground = DX.Ground.apricot
 
     private func time(_ minute: Int) -> String {
+        let date = Calendar.current.date(bySettingHour: minute / 60, minute: minute % 60, second: 0, of: .now) ?? .now
+        return minute % 60 == 0 ? date.formatted(.dateTime.hour()) : date.formatted(.dateTime.hour().minute())
+    }
+
+    private func clock(_ minute: Int) -> String {
         let date = Calendar.current.date(bySettingHour: minute / 60, minute: minute % 60, second: 0, of: .now) ?? .now
         return date.formatted(.dateTime.hour().minute())
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 14) {
-                    Text("Two small nudges a day").dxType(.large).foregroundStyle(ground.ink)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .accessibilityAddTraits(.isHeader)
-                        .dxArrive(0)
-                    Text("Xero says good morning, Glim checks in at night. Anything more is your choice, in Settings. No guilt, ever, and quiet hours by default.")
-                        .dxType(.body).foregroundStyle(ground.muted)
-                        .fixedSize(horizontal: false, vertical: true)
-                    NotificationPreview(sender: "Xero", time: time(DailyReminderSettings.pledgeMinute ?? DailyReminderSettings.defaultPledge),
-                                        message: "\(NotificationCopy.pledge.0). \(NotificationCopy.pledge.1)") {
-                        XeroView(mood: .hello, stage: 1, size: .avatar, animate: false).background(DX.Ground.apricot.background)
-                    }
+        ScrollView {
+            VStack(alignment: .leading, spacing: 0) {
+                Text("Two small nudges a day").dxType(.large).foregroundStyle(ground.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityAddTraits(.isHeader)
+                    .dxArrive(0)
+                Text("Xero says good morning. Glim checks in at night. No guilt, ever.")
+                    .dxType(.body).foregroundStyle(ground.muted)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.top, 10)
                     .dxArrive(1)
-                    NotificationPreview(sender: "Glim", time: time(DailyReminderSettings.checkInMinute ?? DailyReminderSettings.defaultCheckIn),
-                                        message: "\(NotificationCopy.checkIn.0) \(NotificationCopy.checkIn.1)") {
-                        GlimView(mood: .hello, stage: 1, size: .avatar, animate: false).background(DX.Ground.violet.background)
+                VStack(spacing: 14) {
+                    nudge(sender: "Xero", time: clock(DailyReminderSettings.pledgeMinute ?? DailyReminderSettings.defaultPledge),
+                          message: "\(NotificationCopy.pledge.0). \(NotificationCopy.pledge.1)") {
+                        XeroView(mood: .hello, stage: 0, points: 40, animate: false)
+                            .frame(width: 40, height: 40)
+                            .background(Color(hex: 0xFFC38A))
                     }
-                    .dxArrive(2)
-                    Text("You can change the times in Settings.").dxType(.footnote).foregroundStyle(ground.muted)
+                    .dxSettle(0, delay: 0.65)
+                    .task { try? await Task.sleep(for: .seconds(1.2)); landed += 1 }
+                    glimCard
+                        .dxSettle(0, delay: 1.03)
+                        .task { try? await Task.sleep(for: .seconds(1.6)); landed += 1 }
                 }
-                .padding(.horizontal, DX.Layout.gutter)
-                .padding(.top, DX.Space.m)
-                .dxReadableColumn()
+                .padding(.top, 30)
+                HStack(spacing: 6) {
+                    Text("Quiet hours").dxFace(.body, 15, weight: 700).foregroundStyle(ground.ink)
+                    DXIcon(.moon, size: 17).foregroundStyle(ground.ink)
+                    Text(verbatim: "\(time(DailyReminderSettings.plan.quietStart ?? DailyReminderSettings.defaultQuietStart)) \(String(localized: "to"))")
+                    DXIcon(.sun, size: 17).foregroundStyle(ground.ink)
+                    Text(verbatim: time(DailyReminderSettings.plan.quietEnd ?? DailyReminderSettings.defaultQuietEnd))
+                }
+                .dxType(.footnote).foregroundStyle(ground.muted)
+                .frame(maxWidth: .infinity)
+                .padding(.top, 26)
+                .accessibilityElement(children: .combine)
+                .dxArrive(0, delay: 1.4)
             }
-            VStack(spacing: 4) {
+            .padding(.horizontal, DX.Layout.gutter)
+            .padding(.top, DX.Space.m)
+            .dxReadableColumn()
+        }
+        .scrollBounceBehavior(.basedOnSize)
+        .sensoryFeedback(.impact(weight: .light, intensity: 0.6), trigger: landed)
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            VStack(spacing: 10) {
                 Button("Yes, remind me") {
                     asking = true
                     Task {
@@ -939,12 +1016,86 @@ struct TrialScreen: View {
                 }
                 .buttonStyle(.dx(.primary, on: ground))
                 .disabled(asking)
+                .dxArrive(5)
                 Button("Not right now", action: onDone)
-                    .buttonStyle(.dx(.quiet, on: ground))
+                    .dxFace(.body, 15, weight: 600)
+                    .foregroundStyle(ground.ink.opacity(0.85))
+                    .frame(height: 40)
+                    .frame(maxWidth: .infinity)
+                    .contentShape(Rectangle())
+                    .buttonStyle(.plain)
+                    .dxArrive(6)
             }
-            .padding(.horizontal, DX.Layout.buttonGutter)
+            .padding(.horizontal, DX.Layout.gutter)
             .dxReadableColumn()
+            .padding(.top, 28)
             .padding(.bottom, DX.Space.xs)
         }
+    }
+
+    /// A notification as it will look: the sender's tile, "DayXero · Xero", the time, the words.
+    private func nudge(sender: String, time: String, message: String, @ViewBuilder icon: () -> some View) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            icon().clipShape(RoundedRectangle(cornerRadius: 11, style: .continuous))
+            VStack(alignment: .leading, spacing: 3) {
+                HStack(alignment: .firstTextBaseline) {
+                    Text(verbatim: "DayXero · \(sender)")
+                    Spacer()
+                    Text(verbatim: time)
+                }
+                .dxType(.caption).foregroundStyle(ground.muted)
+                Text(verbatim: message).dxFace(.body, 15, weight: 500).foregroundStyle(ground.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .padding(.top, 14).padding(.horizontal, 16).padding(.bottom, 16)
+        .background(ground.card, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(Onb.chipLine, lineWidth: 1))
+        .shadow(color: Color(light: (0x1E1A3A, 0.10), dark: (0x000000, 0)), radius: 12, y: 10)
+        .accessibilityElement(children: .combine)
+    }
+
+    /// Glim's card: the same notification, with a night scene inset on top introducing Glim.
+    private var glimCard: some View {
+        VStack(spacing: 0) {
+            ZStack(alignment: .topLeading) {
+                NightSky(moon: CGPoint(x: 296, y: 40))
+                GlimView(mood: .hello, stage: 1, points: 72)
+                    .offset(x: 18, y: 30)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Meet Glim").dxType(.headline).foregroundStyle(Color(hex: 0xF6EFE2))
+                    Text("Your evening friend").dxType(.caption).foregroundStyle(Color(hex: 0xAEB8D3))
+                }
+                .offset(x: 100, y: 32)
+            }
+            .frame(height: 128)
+            .frame(maxWidth: .infinity, alignment: .topLeading)
+            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .environment(\.colorScheme, .dark)
+            .accessibilityElement(children: .combine)
+            HStack(alignment: .top, spacing: 12) {
+                GlimView(mood: .hello, stage: 1, points: 40, animate: false)
+                    .frame(width: 40, height: 40)
+                    .background(Color(hex: 0x1E2D4C))
+                    .clipShape(RoundedRectangle(cornerRadius: 11, style: .continuous))
+                VStack(alignment: .leading, spacing: 3) {
+                    HStack(alignment: .firstTextBaseline) {
+                        Text(verbatim: "DayXero · Glim")
+                        Spacer()
+                        Text(verbatim: clock(DailyReminderSettings.checkInMinute ?? DailyReminderSettings.defaultCheckIn))
+                    }
+                    .dxType(.caption).foregroundStyle(ground.muted)
+                    Text(verbatim: "\(NotificationCopy.checkIn.0) \(NotificationCopy.checkIn.1)")
+                        .dxFace(.body, 15, weight: 500).foregroundStyle(ground.ink)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .accessibilityElement(children: .combine)
+            }
+            .padding(.top, 14).padding(.horizontal, 10).padding(.bottom, 16)
+        }
+        .padding([.top, .horizontal], 6)
+        .background(ground.card, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(Onb.chipLine, lineWidth: 1))
+        .shadow(color: Color(light: (0x1E1A3A, 0.10), dark: (0x000000, 0)), radius: 12, y: 10)
     }
 }

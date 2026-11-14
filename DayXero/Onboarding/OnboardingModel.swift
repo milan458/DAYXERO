@@ -257,7 +257,7 @@ final class OnboardingModel {
     }
 
     var canGoBack: Bool {
-        path.count > 1 && step != .reveal && step != .trial && step != .building
+        path.count > 1 && step != .trial
     }
 
     #if DEBUG

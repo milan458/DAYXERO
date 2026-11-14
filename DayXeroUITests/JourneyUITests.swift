@@ -20,17 +20,15 @@ final class JourneyUITests: XCTestCase {
         tapWhenStill(app, skip, name: "Skip")
         // F02 Welcome: the 18+ confirmation is the footer.
         snap(app, "01-welcome")
-        tap(app.buttons["Get started"])
-        tap(button(app, "Disposables"))
+        tapSettled(app, "Get started")
+        tap(button(app, "Disposables"), timeout: 10)
         snap(app, "02-products")
         tapSettled(app, "Continue")
         // The vape baseline starts on the region's usual price, so it can go straight on.
         snap(app, "03-baseline")
         tapSettled(app, "Calculate my baseline")
-        XCTAssert(app.staticTexts["Total daily nicotine load"].waitForExistence(timeout: 5) ||
-                  app.staticTexts["TOTAL DAILY NICOTINE LOAD"].exists, "Baseline summary didn't appear")
+        XCTAssert(app.staticTexts["Your nicotine, counted in cigarettes"].waitForExistence(timeout: 5), "Baseline summary didn't appear")
         tapSettled(app, "Continue")
-        tap(button(app, "6–30 min"))
         tap(button(app, "Coffee"))
         tapSettled(app, "Continue")
         // Name, then the reason: submitting the name moves to the reason field.
@@ -39,8 +37,8 @@ final class JourneyUITests: XCTestCase {
         name.tap()
         name.typeText("Sam\n")
         app.typeText("Breathe easier")
-        tapSettled(app, "Save my reason")
-        tap(button(app, "First time"))
+        tapSettled(app, "Continue")
+        tap(button(app, "Irritability"))
         tapSettled(app, "Continue")
         tap(button(app, "Not for me"))
         tapSettled(app, "Continue")
@@ -49,9 +47,14 @@ final class JourneyUITests: XCTestCase {
         let hold = app.buttons["onboarding.hold"]
         XCTAssert(hold.waitForExistence(timeout: 5))
         hold.press(forDuration: 2.2)
-        // F05 the plan builds, then F06 the plan is ready: prep week is free, nothing is charged.
+        // The hold hands over to Continue once Quit Day is set (010).
+        tapSettled(app, "Continue")
+        // F05 the plan builds, then F06 the plan is ready: prep week is free, nothing is charged. The button arrives
+        // once the plan is built (011); give it a moment to land.
+        XCTAssert(app.buttons["See my plan"].waitForExistence(timeout: 10))
+        sleep(1)
         tapSettled(app, "See my plan")
-        XCTAssert(app.staticTexts["Your plan is ready"].waitForExistence(timeout: 10), "Plan screen didn't appear")
+        XCTAssert(app.buttons["Start my prep week"].waitForExistence(timeout: 10), "Plan screen didn't appear")
         snap(app, "05-plan")
         tapSettled(app, "Start my prep week")
         // F07 reminders: allowing asks for notifications.
@@ -67,7 +70,7 @@ final class JourneyUITests: XCTestCase {
         // Closing Prep 1 unplayed leaves it undone and on Today's card, whatever the hour (QW1).
         XCTAssert(app.descendants(matching: .any)["today.lesson"].waitForExistence(timeout: 10),
                   "Prep 1 left Today's card after it was closed")
-        let undone = app.descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH %@", "Prep: 0 of")).firstMatch
+        let undone = app.descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH %@ OR label BEGINSWITH %@", "Prep: 0 of", "Prep 0 of")).firstMatch
         XCTAssert(undone.waitForExistence(timeout: 5), "Prep 1 was counted as done without being played")
 
         // Prep Home (S4): log a use, ride out a craving, visit each tab. The use cell's label opens the log (UX-05).

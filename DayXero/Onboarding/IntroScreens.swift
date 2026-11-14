@@ -80,7 +80,7 @@ struct ProductsScreen: View {
                     .foregroundStyle(Onb.ink)
                     .fixedSize(horizontal: false, vertical: true)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .contentTransition(.numericText())
+                    .contentTransition(.opacity)
                     .animation(.easeInOut(duration: 0.25), value: model.products.count)
             }
             .padding(.leading, 14).padding(.trailing, 20).padding(.vertical, 18)
