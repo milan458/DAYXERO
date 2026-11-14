@@ -319,7 +319,47 @@ struct SessionFlowView: View {
     // MARK: Chrome
 
     /// The lesson bar: close ("Your place is saved."), a green bar over the steps, and Xero's avatar.
+    @ViewBuilder
     private func header(_ session: ProgramContent.Session) -> some View {
+        if session.isDeck, let place = deckBeatPlace(session) {
+            // v5 (026-030): close, the day's card bar with this card filling by its steps, "Card 5 · Step 1 of 3",
+            // then the card's mint tag.
+            VStack(alignment: .leading, spacing: 14) {
+                DeckNavRow(total: place.total, current: place.position, sub: Double(place.step) / Double(max(place.steps, 1)),
+                           label: String(localized: "Card \(place.position) · Step \(place.step) of \(place.steps)"), onClose: close)
+                HStack(spacing: 6) {
+                    DeckGlyph(card: place.card).frame(width: 14, height: 14)
+                    Text(verbatim: place.tag)
+                }
+                .dxFace(.body, 13, weight: 700)
+                .foregroundStyle(Color(hex: 0x1E1A3A))
+                .padding(.horizontal, 10)
+                .frame(height: 26)
+                .background(Color(light: 0xB8EBCD, dark: 0x8FD3AD), in: Capsule())
+                .dxArrive(0)
+                .id(place.card.id)
+            }
+            .padding(.bottom, 12)
+        } else {
+            legacyHeader(session)
+        }
+    }
+
+    /// Where a deck beat sits: its card, the card's place in the day, and the beat's step among the card's own steps.
+    private func deckBeatPlace(_ session: ProgramContent.Session) -> (card: DeckCard, position: Int, total: Int, step: Int, steps: Int, tag: String)? {
+        guard owners.indices.contains(index), let owner = owners[index], let place = deckPosition(owner, in: session) else { return nil }
+        let own = steps.indices.filter { owners.indices.contains($0) && owners[$0] == owner }.filter {
+            if case .beat = steps[$0] { true } else { false }
+        }
+        guard let k = own.firstIndex(of: index) else { return nil }
+        let ctx = context(for: session)
+        let title = ctx.text(place.card.title)
+        let tag = place.card.format == .breathe || place.card.format == .listen
+            ? "\(title) · \(String(localized: "\(place.card.minutes) min"))" : title
+        return (place.card, place.position, place.total, k + 1, own.count, tag)
+    }
+
+    private func legacyHeader(_ session: ProgramContent.Session) -> some View {
         HStack(spacing: 12) {
             Button(action: close) {
                 DXIcon(.close, size: 20, weight: 2.4).foregroundStyle(stepGround.ink)

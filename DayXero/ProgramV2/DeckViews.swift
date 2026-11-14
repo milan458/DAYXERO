@@ -612,11 +612,12 @@ struct DeckListenView: View {
                     .shadow(color: dark ? .black.opacity(0.45) : Color(red: 60 / 255, green: 40 / 255, blue: 20 / 255).opacity(0.14), radius: 15, y: 16)
                     .padding(.top, 6)
                     .dxSettle()
-                    .padding(.bottom, 12)
+                    .padding(.bottom, 28)
+                    .padding(.horizontal, DX.Layout.gutter)
                 }
+                .padding(.horizontal, -DX.Layout.gutter)
                 .scrollBounceBehavior(.basedOnSize)
                 .scrollIndicators(.hidden)
-                .scrollClipDisabled()
                 gate(open: unlocked || p >= 0.8 || ctx.isReplay || (narrator?.finished ?? false))
                     .padding(.top, 8)
                     .dxArrive(6)
@@ -1156,7 +1157,6 @@ struct DeckCardPlayedView: View {
                 }
             }
             .scrollBounceBehavior(.basedOnSize)
-            .scrollClipDisabled()
             VStack(spacing: 10) {
                 if let nextOpensAt {
                     // The evening card waits for the evening: the place is saved and the hand says when.

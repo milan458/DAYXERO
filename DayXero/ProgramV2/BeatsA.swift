@@ -313,7 +313,7 @@ struct SliderBeat: View {
     }
 
     var body: some View {
-        BeatFrame(beat: beat, onContinue: next) {
+        BeatFrame(beat: beat, continueTitle: comparing ? "Continue" : "That's about right", onContinue: next) {
             VStack(alignment: .leading, spacing: DX.Space.l) {
                 BeatPrompt(text: ctx.text(beat.prompt))
                 if comparing, let earlier {
@@ -324,19 +324,68 @@ struct SliderBeat: View {
                         Text(verbatim: "10 · \(ctx.text(beat.maxLabel))")
                     }
                     .v4Text(.subtitle)
+                    if !ctx.text(beat.feedback).isEmpty { BeatFeedback(text: ctx.text(beat.feedback)) }
                 } else {
-                    BeatSlider(value: $value, minLabel: ctx.text(beat.minLabel), maxLabel: ctx.text(beat.maxLabel), large: true)
-                        .padding(.top, DX.Space.l)
-                }
-                // Feedback shows once the value is set: after the comparison when there is one.
-                if comparing || (earlier == nil && touched), !ctx.text(beat.feedback).isEmpty {
-                    BeatFeedback(text: ctx.text(beat.feedback))
+                    // v5 (028): the reading as one unit: the number, the calm-to-tense track, and Xero with his line.
+                    VStack(spacing: 18) {
+                        HStack(alignment: .firstTextBaseline, spacing: 2) {
+                            Text(verbatim: "\(Int(value))")
+                                .dxFace(.display, 96, weight: 800, tracking: -3)
+                                .monospacedDigit()
+                                .contentTransition(.numericText(value: value))
+                            Text(verbatim: "/10").dxFace(.display, 24, weight: 800).foregroundStyle(DX.Ground.table.muted)
+                        }
+                        .foregroundStyle(DX.Ground.table.ink)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, -14)
+                        TensionTrack(value: $value, minLabel: ctx.text(beat.minLabel), maxLabel: ctx.text(beat.maxLabel))
+                        HStack(alignment: .center, spacing: 10) {
+                            XeroView(mood: Int(value) <= 3 ? .calm : .hello, stage: 0, points: 112)
+                                .animation(.easeInOut(duration: 0.15), value: Int(value) <= 3)
+                                .accessibilityHidden(true)
+                            Text(verbatim: line)
+                                .dxType(.footnote).foregroundStyle(DX.Ground.table.ink)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .padding(.horizontal, 14).padding(.vertical, 12)
+                                .background(DX.Ground.table.card, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                                .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(DX.Ground.table.line, lineWidth: 1))
+                                .contentTransition(.opacity)
+                                .animation(.easeInOut(duration: 0.2), value: Int(value))
+                                .dxArrive(6)
+                        }
+                        .padding(.top, 8)
+                    }
+                    .dxFade(delay: 0.27)
                 }
             }
         }
-        .onChange(of: value) { touched = true }
-        .onAppear {
-            if case let .number(n)? = ctx.answer(beat.saveAs) { value = Double(n) }
+        .sensoryFeedback(.selection, trigger: Int(value))
+        .onChange(of: value) { if settled { touched = true } }
+        .task {
+            if case let .number(n)? = ctx.answer(beat.saveAs) { value = Double(n); settled = true; return }
+            // The thumb glides up from Calm to the middle while the number counts with it.
+            guard !motion.reduce else { settled = true; return }
+            value = 0
+            try? await Task.sleep(for: .milliseconds(400))
+            for v in 1...5 {
+                withAnimation(.timingCurve(0.2, 0.8, 0.2, 1, duration: 0.22)) { value = Double(v) }
+                try? await Task.sleep(for: .milliseconds(220))
+            }
+            settled = true
+        }
+    }
+
+    @State private var settled = false
+
+    /// Xero's line for where the reading sits: the beat's own feedback, or a word for a tension check.
+    private var line: String {
+        let n = Int(value)
+        let feedback = ctx.text(beat.feedback)
+        if !feedback.isEmpty && touched { return feedback }
+        return switch n {
+        case 0...3: String(localized: "A calm \(n). Let's see what a few minutes of breathing does.")
+        case 4...6: String(localized: "An honest \(n). Let's see what five minutes of breathing does.")
+        default: String(localized: "A tense \(n). Five minutes of breathing can take the edge off.")
         }
     }
 
@@ -662,5 +711,59 @@ struct FlipCard: View {
         .frame(maxWidth: .infinity, minHeight: 120, alignment: .leading)
         .background(isBack ? Read4.accentSoft : Read4.card, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
         .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(isBack ? .clear : Read4.hairline))
+    }
+}
+
+/// The calm-to-tense track (028): calm blue to coral, a white thumb, eleven short ticks under it and the two ends.
+struct TensionTrack: View {
+    @Binding var value: Double
+    let minLabel: String
+    let maxLabel: String
+
+    var body: some View {
+        VStack(spacing: 8) {
+            GeometryReader { proxy in
+                let w = proxy.size.width
+                ZStack(alignment: .leading) {
+                    Capsule()
+                        .fill(LinearGradient(colors: [Color(hex: 0x9CCBFF), Color(hex: 0xFFB27F), Color(hex: 0xFF7A55)], startPoint: .leading, endPoint: .trailing))
+                        .frame(height: 10)
+                    Circle().fill(.white)
+                        .overlay(Circle().strokeBorder(DX.Ground.table.ink.opacity(0.15), lineWidth: 1))
+                        .shadow(color: .black.opacity(0.18), radius: 4, y: 2)
+                        .frame(width: 30, height: 30)
+                        .offset(x: (w - 30) * value / 10)
+                }
+                .frame(height: 30)
+                .contentShape(Rectangle())
+                .gesture(DragGesture(minimumDistance: 0).onChanged { g in
+                    value = min(max(((g.location.x - 15) / max(w - 30, 1) * 10).rounded(), 0), 10)
+                })
+            }
+            .frame(height: 30)
+            HStack(spacing: 0) {
+                ForEach(0...10, id: \.self) { i in
+                    Capsule().fill(DX.Ground.table.ink.opacity(0.22)).frame(width: 2, height: 6)
+                    if i < 10 { Spacer(minLength: 0) }
+                }
+            }
+            .padding(.horizontal, 14)
+            HStack {
+                Text(verbatim: minLabel).foregroundStyle(Color(light: 0x2F6FCC, dark: 0x9CCBFF))
+                Spacer()
+                Text(verbatim: maxLabel).foregroundStyle(Color(light: 0xD9542E, dark: 0xFF8A65))
+            }
+            .dxFace(.body, 13, weight: 700)
+        }
+        .accessibilityElement()
+        .accessibilityLabel(Text(verbatim: "\(minLabel) to \(maxLabel)"))
+        .accessibilityValue(Text("\(Int(value)) of 10"))
+        .accessibilityAdjustableAction { direction in
+            switch direction {
+            case .increment: value = min(value + 1, 10)
+            case .decrement: value = max(value - 1, 0)
+            @unknown default: break
+            }
+        }
     }
 }
