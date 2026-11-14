@@ -195,6 +195,7 @@ struct NRTInviteRow: View {
 
 /// The optional pouch-strength taper (S9.3). It ends the day before Quit Day and only runs if it fits;
 /// moving Quit Day to make room is the person's choice, never automatic.
+/// v5 (052): when it doesn't fit, the conflict is the title, and the chart shows where Quit Day falls in it.
 struct TaperSetupView: View {
     let profile: UserProfile
     let onDone: () -> Void
@@ -204,6 +205,8 @@ struct TaperSetupView: View {
     @State private var editing: Int?
     @State private var remindersOn = true
     @State private var saved = false
+    private let motion = MotionPolicy()
+    private let ground = DX.Ground.reading
 
     init(profile: UserProfile, onDone: @escaping () -> Void) {
         self.profile = profile
@@ -213,65 +216,144 @@ struct TaperSetupView: View {
     }
 
     var body: some View {
+        let g = ground
         let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
         let fits = PouchTaperPlan.fits(steps: steps, quitDay: profile.quitDay, now: .now, clock: clock)
         let start = PouchTaperPlan.startDate(steps: steps, quitDay: profile.quitDay, clock: clock)
         let schedule = StepSchedule(startDate: fits ? start : clock.day(containing: .now), steps: steps, clock: clock)
-        VStack(spacing: DX.Space.xs) {
+        let weeks = steps.reduce(0) { $0 + $1.weeks }
+        let most = max(steps.map(\.strengthMg).max() ?? 1, 0.1)
+        VStack(spacing: 0) {
             HStack {
-                Button(action: onDone) { Image(systemName: "xmark") }
-                    .buttonStyle(.v4Icon).accessibilityLabel(Text("Close"))
+                DXIconButton(.close, label: "Close", action: onDone)
                 Spacer()
-                Text("Optional").v4Text(.micro)
-                Spacer()
-                Color.clear.frame(width: 44, height: 1)
             }
-            .padding(.top, DX.Space.s)
+            .padding(.horizontal, 16)
+            .frame(height: 52)
+            .padding(.top, 8)
             ScrollView {
-                VStack(alignment: .leading, spacing: DX.Space.xs) {
-                    Text("Step down your pouches").v4Text(.title)
-                    Text("Lower the strength before Quit Day, so stopping feels smaller.").v4Text(.subtitle)
-                    StrengthBars(steps: steps)
-                    V4Card(padding: 14) {
-                        VStack(spacing: 0) {
-                            ForEach(schedule.spans, id: \.index) { span in
-                                Button { editing = span.index } label: { StepRow(span: span, type: nil, highlighted: span.index == 0) }
-                                    .buttonStyle(.plain)
+                VStack(alignment: .leading, spacing: 0) {
+                    Group {
+                        if fits {
+                            Text("Step down your pouches")
+                        } else {
+                            Text("Your taper needs ^[\(weeks) week](inflect: true)")
+                        }
+                    }
+                    .dxType(.title).foregroundStyle(g.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityAddTraits(.isHeader)
+                    .dxArrive(0)
+                    Group {
+                        if fits {
+                            Text("Lower the strength before Quit Day, so stopping feels smaller. It ends the day before Quit Day, \(profile.quitDay.formatted(.dateTime.weekday(.wide).month(.abbreviated).day())).")
+                        } else {
+                            Text("Quit Day is in ^[\(daysToQuit(clock)) day](inflect: true). Stepping your pouches down first makes stopping feel smaller.")
+                        }
+                    }
+                    .dxType(.footnote).foregroundStyle(g.muted)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.top, 8)
+                    .dxArrive(1)
+                    TaperChart(schedule: schedule, quitDay: profile.quitDay, fits: fits, clock: clock)
+                        .padding(.top, -2)
+                        .padding(.bottom, -2)
+                        .dxCard()
+                        .padding(.top, 22)
+                        .dxArrive(3)
+                    DXList {
+                        ForEach(schedule.spans, id: \.index) { span in
+                            Button { editing = span.index } label: {
+                                HStack(spacing: 12) {
+                                    RoundedRectangle(cornerRadius: 4, style: .continuous)
+                                        .fill(NRTPalette.bar)
+                                        .overlay(RoundedRectangle(cornerRadius: 4, style: .continuous).strokeBorder(NRTPalette.taperEdge, lineWidth: 1.5))
+                                        .frame(width: 10, height: max(12, 30 * span.step.strengthMg / most))
+                                        .frame(height: 30)
+                                    VStack(alignment: .leading, spacing: 1) {
+                                        Text(verbatim: NRTReminderPlan.strength(span.step.strengthMg))
+                                            .dxFace(.display, 16, weight: 700).foregroundStyle(g.ink)
+                                        Text(verbatim: StepRow.dates(span, separator: String(localized: "to")))
+                                            .dxType(.footnote).foregroundStyle(g.muted)
+                                    }
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    DXIcon(.chev, size: 18).foregroundStyle(g.muted).padding(.leading, -4)
+                                }
+                                .padding(.horizontal, 16).padding(.vertical, 8)
+                                .frame(minHeight: 52)
+                                .contentShape(Rectangle())
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityElement(children: .combine)
+                            .accessibilityHint(Text("Change this step"))
+                            .dxSettle(4 + span.index)
+                        }
+                    }
+                    .padding(.top, 16)
+                    Toggle(isOn: $remindersOn) {
+                        HStack(spacing: 14) {
+                            NRTGlyphTile(glyph: NRTGlyph(.steps, size: 28), tile: 46)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Step-down reminders").dxFace(.display, 17, weight: 700).foregroundStyle(g.ink)
+                                Text("The evening before each step").dxType(.footnote).foregroundStyle(g.muted)
                             }
                         }
                     }
-                    if fits {
-                        Text("Ends the day before Quit Day, \(profile.quitDay.formatted(.dateTime.weekday(.wide).day().month())).").v4Text(.subtitle)
-                    } else {
-                        fitNotice(clock: clock)
-                    }
-                    Toggle("Remind me the evening before each step", isOn: $remindersOn)
-                        .dxFont(14, weight: 400, style: .footnote)
-                        .tint(Read4.accent)
-                        .padding(.top, DX.Space.xs)
+                    .padding(.horizontal, 16).padding(.vertical, 12)
+                    .background(g.card, in: RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous).strokeBorder(g.line, lineWidth: 1))
+                    .padding(.top, 16)
+                    .dxArrive(7)
                     Text("Pouches aren't NRT, so there's no label for this. It's a plan you set; change any step to suit the strengths you can buy.")
-                        .v4Text(.subtitle)
+                        .dxType(.caption).foregroundStyle(g.muted)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.horizontal, 4)
+                        .padding(.top, 14)
+                        .dxArrive(7)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, DX.Layout.gutter)
+                .padding(.top, 14)
+                .padding(.bottom, DX.Space.m)
             }
             .scrollBounceBehavior(.basedOnSize)
-            Button("Save my taper") { save(start: start) }.buttonStyle(.dx(.primary, on: .reading)).disabled(!fits)
-                .dxDisabledReason("Shorten the steps or move Quit Day first.", shown: !fits)
-            if profile.pouchTaper != nil {
-                Button("Remove the taper", role: .destructive) {
-                    profile.pouchTaper = nil
-                    try? context.save()
-                    NRTReminders.refresh(profile: profile)
-                    onDone()
+            DXActionDock {
+                if fits {
+                    Button("Save my taper") { save(start: start) }
+                        .buttonStyle(.dx(.primary, on: .reading))
+                        .dxArrive(8)
+                    if profile.pouchTaper != nil {
+                        Button("Remove the taper", role: .destructive) {
+                            profile.pouchTaper = nil
+                            try? context.save()
+                            NRTReminders.refresh(profile: profile)
+                            onDone()
+                        }
+                        .buttonStyle(.dx(.quiet, on: .reading))
+                    }
+                } else {
+                    // Nothing moves on its own: moving Quit Day is a choice, and so is shortening the steps.
+                    let newQuit = PouchTaperPlan.quitDayToFit(steps: steps, now: .now, clock: clock)
+                    Button("Move Quit Day to \(newQuit.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day()))") {
+                        withAnimation(motion.animation(.timingCurve(0.2, 0.8, 0.2, 1, duration: 0.7))) {
+                            profile.quitDay = newQuit
+                        }
+                        try? context.save()
+                    }
+                    .buttonStyle(.dx(.primary, on: .reading))
+                    .dxArrive(8)
+                    Button("Shorten the steps instead") { editing = max(steps.count - 1, 0) }
+                        .buttonStyle(.dx(.quiet, on: .reading))
+                        .dxArrive(9)
                 }
-                .buttonStyle(.dx(.quiet, on: .reading))
             }
+            .padding(.top, -36)
         }
-        .padding(.horizontal, DX.Layout.gutter)
         .dxReadableColumn()
-        .padding(.bottom, DX.Space.xs)
-        .background(Read4.background.ignoresSafeArea())
+        .dxGround(ground)
+        .toggleStyle(.dx)
         .sensoryFeedback(DX.Haptic.commit, trigger: saved)
+        .sensoryFeedback(.warning, trigger: fits) { _, now in !now }
         .sheet(item: Binding(get: { editing.map { EditIndex(id: $0) } }, set: { editing = $0?.id })) { item in
             if steps.indices.contains(item.id) {
                 StepEditor(type: nil, initial: steps[item.id],
@@ -284,21 +366,8 @@ struct TaperSetupView: View {
 
     private struct EditIndex: Identifiable { let id: Int }
 
-    /// When the taper doesn't fit: shorten it, or move Quit Day yourself. Nothing moves on its own.
-    private func fitNotice(clock: DayClock) -> some View {
-        let newQuit = PouchTaperPlan.quitDayToFit(steps: steps, now: .now, clock: clock)
-        return V4Card(padding: 14) {
-            VStack(alignment: .leading, spacing: DX.Space.xs) {
-                Text("This taper needs \(steps.reduce(0) { $0 + $1.weeks }) weeks, and Quit Day is sooner than that.")
-                    .dxFont(14, weight: 400, style: .footnote).foregroundStyle(Read4.ink)
-                Text("Shorten the steps, or move Quit Day if you'd like the full taper.").v4Text(.subtitle)
-                Button("Move Quit Day to \(newQuit.formatted(.dateTime.weekday(.abbreviated).day().month()))") {
-                    profile.quitDay = newQuit
-                    try? context.save()
-                }
-                .buttonStyle(.v4Secondary)
-            }
-        }
+    private func daysToQuit(_ clock: DayClock) -> Int {
+        max(clock.calendar.dateComponents([.day], from: clock.day(containing: .now), to: clock.startOfDate(profile.quitDay)).day ?? 0, 0)
     }
 
     private func save(start: Date) {
@@ -316,36 +385,5 @@ struct TaperSetupView: View {
             NRTReminders.refresh(profile: profile)
         }
         onDone()
-    }
-}
-
-private struct StrengthBars: View {
-    let steps: [PlanStep]
-
-    var body: some View {
-        let most = max(steps.map(\.strengthMg).max() ?? 1, 1)
-        V4Card(padding: 14) {
-            VStack(alignment: .leading, spacing: DX.Space.xs) {
-                Text("Strength by step").v4Text(.cardHeading)
-                HStack(alignment: .bottom, spacing: DX.Space.xs) {
-                    ForEach(Array(steps.enumerated()), id: \.offset) { i, step in
-                        VStack(spacing: 4) {
-                            RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                .fill(i == 0 ? Read4.accent : Read4.track)
-                                .frame(height: max(6, 72 * step.strengthMg / most))
-                            Text(verbatim: NRTReminderPlan.strength(step.strengthMg)).v4Text(.subtitle)
-                        }
-                        .frame(maxWidth: .infinity)
-                    }
-                    VStack(spacing: 4) {
-                        RoundedRectangle(cornerRadius: 3).fill(Read4.track).frame(height: 3)
-                        Text("Quit Day").v4Text(.subtitle).lineLimit(1).minimumScaleFactor(0.8)
-                    }
-                    .frame(maxWidth: .infinity)
-                }
-                .frame(height: 100, alignment: .bottom)
-            }
-        }
-        .accessibilityElement(children: .combine)
     }
 }
