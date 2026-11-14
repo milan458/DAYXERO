@@ -210,24 +210,275 @@ struct BreatheBeat: View {
     @AppStorage("dx.voiceGuidance") private var voiceOn = true
     @State private var savedVoice: Bool?
 
+    /// The deck card this breath belongs to (P4's "A breath that works in the moment"), for its title.
+    private var card: DeckCard? {
+        ctx.session.deck?.first { card in card.beats.contains { $0.id == beat.id } || card.before.contains { $0.id == beat.id } }
+    }
+
     var body: some View {
-        VStack(spacing: DX.Space.s) {
-            Text(verbatim: ctx.text(beat.label)).dxFont(19, weight: 600, style: .title3)
-                .foregroundStyle(Read4.ink).multilineTextAlignment(.center)
-            OrbBreathingPanel(pattern: beat.pattern ?? "box", cycles: beat.cycles) {
+        if beat.pattern == "sigh" {
+            TryBreathCard(title: card.map { ctx.text($0.title) } ?? ctx.text(beat.label), cycles: beat.cycles ?? 18) {
                 ctx.finish(beat)
                 onDone()
             }
-            .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
-            // A reading card with a hairline, no longer a black panel (S27.12).
-            .overlay(RoundedRectangle(cornerRadius: 28, style: .continuous).strokeBorder(Read4.hairline))
+        } else {
+            VStack(spacing: DX.Space.s) {
+                Text(verbatim: ctx.text(beat.label)).dxFont(19, weight: 600, style: .title3)
+                    .foregroundStyle(Read4.ink).multilineTextAlignment(.center)
+                OrbBreathingPanel(pattern: beat.pattern ?? "box", cycles: beat.cycles) {
+                    ctx.finish(beat)
+                    onDone()
+                }
+                .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+                // A reading card with a hairline, no longer a black panel (S27.12).
+                .overlay(RoundedRectangle(cornerRadius: 28, style: .continuous).strokeBorder(Read4.hairline))
+            }
+            .onAppear {
+                savedVoice = voiceOn
+                voiceOn = false
+            }
+            .onDisappear { if let savedVoice { voiceOn = savedVoice } }
         }
-        .onAppear {
-            savedVoice = voiceOn
-            voiceOn = false
-        }
-        .onDisappear { if let savedVoice { voiceOn = savedVoice } }
     }
+}
+
+/// The Try card (030): two sighs, guided. The breath's shape is drawn across the mint card and is its pacer: the ink
+/// lights along it in time with each breath (in, a little more, the long slow out), with a playhead riding it. The
+/// player shows the time, small Xero breathes beside it, three notes sit under the card, and the dock holds a quiet
+/// skip that turns into "Next card" at 80%.
+struct TryBreathCard: View {
+    let title: String
+    let cycles: Int
+    let onDone: () -> Void
+
+    /// Two in through the nose (2 s), a top-up sip (1 s), a long slow breath out (6 s).
+    private static let phases: [(seconds: Double, end: Double)] = [(2, 0.3), (1, 0.42), (6, 1)]
+    private static var cycle: Double { phases.reduce(0) { $0 + $1.seconds } }
+
+    @State private var started: Date?
+    @State private var pausedAt: Double = 0
+    @State private var playing = false
+    @State private var breaths = 0
+    @Environment(\.colorScheme) private var scheme
+    private let motion = MotionPolicy()
+
+    private var total: Double { Double(cycles) * Self.cycle }
+
+    var body: some View {
+        TimelineView(.animation(minimumInterval: 1 / 30, paused: !playing)) { timeline in
+            let elapsed = min(playing ? pausedAt + timeline.date.timeIntervalSince(started ?? timeline.date) : pausedAt, total)
+            let within = elapsed.truncatingRemainder(dividingBy: Self.cycle)
+            let lit = Self.curveFraction(within)
+            VStack(spacing: 0) {
+                ScrollView {
+                    VStack(spacing: 14) {
+                        face(lit: lit, elapsed: elapsed)
+                        notes
+                    }
+                    .padding(.bottom, DX.Space.m)
+                    .padding(.horizontal, DX.Layout.gutter)
+                }
+                .padding(.horizontal, -DX.Layout.gutter)
+                .scrollBounceBehavior(.basedOnSize)
+                gate(open: elapsed >= total * 0.8)
+                    .padding(.top, 8)
+            }
+            .onChange(of: Int(elapsed / Self.cycle)) { _, n in breaths = n }
+            .onChange(of: elapsed >= total) { _, done in if done { playing = false } }
+        }
+        .sensoryFeedback(.impact(weight: .light, intensity: 0.5), trigger: breaths)
+        .task {
+            try? await Task.sleep(for: .seconds(0.4))
+            play()
+        }
+    }
+
+    private func play() {
+        started = .now
+        playing = true
+    }
+
+    private func toggle() {
+        if playing {
+            pausedAt += Date.now.timeIntervalSince(started ?? .now)
+            playing = false
+        } else {
+            play()
+        }
+    }
+
+    /// Where the lit ink has reached along the curve for a moment within one breath.
+    static func curveFraction(_ t: Double) -> Double {
+        var start = 0.0, from = 0.0
+        for phase in phases {
+            if t < start + phase.seconds {
+                let p = (t - start) / phase.seconds
+                let eased = UnitCurve.easeInOut.value(at: p)
+                return from + (phase.end - from) * eased
+            }
+            start += phase.seconds
+            from = phase.end
+        }
+        return 1
+    }
+
+    private func face(lit: Double, elapsed: Double) -> some View {
+        let dark = scheme == .dark
+        let ink = dark ? DX.Fill.cream : DX.Fill.navy
+        return VStack(alignment: .leading, spacing: 0) {
+            BreathCurve(lit: lit, ink: ink)
+                .frame(height: 150)
+                .padding(.top, 10)
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 14) {
+                Text(verbatim: title).dxType(.title).foregroundStyle(ink)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityAddTraits(.isHeader)
+                HStack(spacing: 12) {
+                    Button(action: toggle) {
+                        DXIcon(playing ? .pause : .play, size: 20, weight: 2.4, filled: !playing)
+                            .foregroundStyle(dark ? DX.Fill.navy : DX.Fill.cream)
+                            .frame(width: 44, height: 44)
+                            .background(dark ? Color(hex: 0x9FE3BC) : DX.Fill.navy, in: Circle())
+                    }
+                    .buttonStyle(.dxPress)
+                    .accessibilityLabel(Text(playing ? "Pause" : "Play"))
+                    VStack(alignment: .leading, spacing: 1) {
+                        (Text(verbatim: DeckListenView.clock(elapsed)).dxRun(15, weight: 700)
+                         + Text(verbatim: " / \(DeckListenView.clock(total))"))
+                            .monospacedDigit()
+                        Text("Guided: two sighs")
+                    }
+                    .dxType(.footnote)
+                    .foregroundStyle(ink)
+                    Spacer()
+                    XeroView(mood: .breathe, stage: 0, points: 52)
+                        .accessibilityHidden(true)
+                }
+            }
+            .padding(.horizontal, 20).padding(.bottom, 20).padding(.top, 4)
+        }
+        .background {
+            if dark {
+                ZStack {
+                    LinearGradient(colors: [Color(hex: 0x27325C), Color(hex: 0x19223F)], startPoint: .top, endPoint: .bottom)
+                    RadialGradient(colors: [Color(hex: 0x9FE3BC).opacity(0.18), .clear], center: UnitPoint(x: 0.5, y: 0.3), startRadius: 0, endRadius: 200)
+                }
+            } else {
+                LinearGradient(colors: [Color(hex: 0xC8F1D9), Color(hex: 0x9FE3BC)], startPoint: .top, endPoint: .bottom)
+            }
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+        .shadow(color: dark ? .black.opacity(0.45) : Color(red: 40 / 255, green: 70 / 255, blue: 50 / 255).opacity(0.14), radius: 15, y: 14)
+        .dxSettle()
+    }
+
+    private var notes: some View {
+        let rows: [(DX.Icon, LocalizedStringKey, LocalizedStringKey)] = [
+            (.wave, "Why it works", "A long breath out slows your heart."),
+            (.clock, "In a tense moment", "Two or three sighs take thirty seconds."),
+            (.drop, "Feeling light-headed?", "Breathe normally for a moment, then rejoin."),
+        ]
+        return VStack(alignment: .leading, spacing: 0) {
+            ForEach(Array(rows.enumerated()), id: \.offset) { i, row in
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack(spacing: 10) {
+                        DXIcon(row.0, size: 16, weight: 2.4).foregroundStyle(Color(hex: 0x1E1A3A))
+                            .frame(width: 28, height: 28)
+                            .background(Color(hex: 0xC8F1D9), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+                        Text(row.1).dxFace(.display, 16, weight: 700).foregroundStyle(DX.Ground.table.ink)
+                    }
+                    Text(row.2).dxType(.footnote).foregroundStyle(DX.Ground.table.muted)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .padding(.horizontal, 16).padding(.vertical, 12)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .overlay(alignment: .top) { if i > 0 { Rectangle().fill(DX.Ground.table.line).frame(height: 1) } }
+                .dxArrive(3 + i)
+            }
+        }
+        .background(DX.Ground.table.card, in: RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous).strokeBorder(DX.Ground.table.line, lineWidth: 1))
+    }
+
+    private func gate(open: Bool) -> some View {
+        ZStack {
+            Button(String(localized: "Skip to next card"), action: onDone)
+                .dxFace(.body, 15, weight: 600)
+                .foregroundStyle(DX.Ground.table.muted)
+                .frame(maxWidth: .infinity, minHeight: 58)
+                .contentShape(Rectangle())
+                .buttonStyle(.plain)
+                .opacity(open ? 0 : 1)
+                .allowsHitTesting(!open)
+                .accessibilityHidden(open)
+            Button(String(localized: "Next card"), action: onDone)
+                .buttonStyle(.dx(.primary, on: .table))
+                .opacity(open ? 1 : 0)
+                .allowsHitTesting(open)
+                .accessibilityHidden(!open)
+        }
+        .animation(.timingCurve(0.2, 0.7, 0.2, 1, duration: 0.3), value: open)
+        .sensoryFeedback(.impact(weight: .light), trigger: open) { _, now in now }
+        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+    }
+}
+
+/// The two-sighs breath as a shape (030): in and level, a top-up sip, then the long slow out. Drawn faint; the lit ink
+/// runs along it to `lit`, each point lighting its label as the ink reaches it.
+private struct BreathCurve: View {
+    let lit: Double
+    let ink: Color
+
+    var body: some View {
+        GeometryReader { proxy in
+            let w = proxy.size.width, h = proxy.size.height
+            let curve = BreathShape()
+            ZStack(alignment: .topLeading) {
+                curve.stroke(ink.opacity(0.18), style: StrokeStyle(lineWidth: 4, lineCap: .round, lineJoin: .round))
+                curve.trim(from: 0, to: lit).stroke(ink, style: StrokeStyle(lineWidth: 4, lineCap: .round, lineJoin: .round))
+                dot(at: BreathShape.point(0.3, w, h), on: lit >= 0.28, color: ink)
+                dot(at: BreathShape.point(0.42, w, h), on: lit >= 0.4, color: DX.Fill.coral)
+                dot(at: BreathShape.point(0.86, w, h), on: lit >= 0.84, color: ink)
+                label("In", at: BreathShape.point(0.3, w, h), dy: -22, on: lit >= 0.28)
+                label("A little more", at: BreathShape.point(0.42, w, h), dy: -22, on: lit >= 0.4)
+                label("Long, slow out", at: BreathShape.point(0.86, w, h), dy: 22, on: lit >= 0.84)
+            }
+        }
+        .padding(.horizontal, 22)
+    }
+
+    private func dot(at p: CGPoint, on: Bool, color: Color) -> some View {
+        Circle().fill(on ? color : ink.opacity(0.25)).frame(width: 12, height: 12).position(p)
+            .animation(.easeOut(duration: 0.25), value: on)
+    }
+
+    private func label(_ text: LocalizedStringKey, at p: CGPoint, dy: CGFloat, on: Bool) -> some View {
+        Text(text).dxFace(.body, 13, weight: 700).foregroundStyle(ink)
+            .fixedSize()
+            .position(x: p.x, y: p.y + dy)
+            .opacity(on ? 1 : 0.45)
+            .animation(.easeOut(duration: 0.25), value: on)
+    }
+}
+
+private struct BreathShape: Shape {
+    /// The curve on a unit box: rise and level, a small sip up, the long fall.
+    static func path(_ w: CGFloat, _ h: CGFloat) -> Path {
+        var p = Path()
+        p.move(to: CGPoint(x: 0, y: h * 0.85))
+        p.addCurve(to: CGPoint(x: w * 0.24, y: h * 0.38), control1: CGPoint(x: w * 0.1, y: h * 0.85), control2: CGPoint(x: w * 0.14, y: h * 0.4))
+        p.addLine(to: CGPoint(x: w * 0.34, y: h * 0.36))
+        p.addCurve(to: CGPoint(x: w * 0.44, y: h * 0.18), control1: CGPoint(x: w * 0.38, y: h * 0.36), control2: CGPoint(x: w * 0.4, y: h * 0.18))
+        p.addCurve(to: CGPoint(x: w, y: h * 0.86), control1: CGPoint(x: w * 0.62, y: h * 0.18), control2: CGPoint(x: w * 0.8, y: h * 0.82))
+        return p
+    }
+
+    static func point(_ f: Double, _ w: CGFloat, _ h: CGFloat) -> CGPoint {
+        path(w, h).trimmedPath(from: 0, to: max(f, 0.001)).currentPoint ?? .zero
+    }
+
+    func path(in rect: CGRect) -> Path { Self.path(rect.width, rect.height) }
 }
 
 // MARK: - commit
