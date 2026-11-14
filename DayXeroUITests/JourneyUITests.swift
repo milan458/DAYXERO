@@ -125,9 +125,11 @@ final class JourneyUITests: XCTestCase {
         XCTAssert(app.buttons["Craving SOS"].waitForExistence(timeout: 10))
         snap(app, "30-home-day12")
         visitTabs(app, prefix: "31-day12")
-        tap(app.buttons["Profile and settings"])
+        // v5: Settings opens from the gear on Progress.
+        tap(app.buttons["Progress"].firstMatch)
+        tap(app.buttons["Settings"].firstMatch)
         snap(app, "32-settings")
-        tap(app.buttons["Done"])
+        tap(app.buttons["Close"].firstMatch)
         XCTAssert(app.buttons["Craving SOS"].waitForExistence(timeout: 5))
     }
 
@@ -138,7 +140,9 @@ final class JourneyUITests: XCTestCase {
         let row = app.staticTexts["today.water.count"]
         let add = app.buttons["today.water.add"]
         // Today fits without scrolling; on a small screen, scroll until the cell is on screen.
-        for _ in 0..<4 where !(add.exists && add.isHittable) {
+        // Clear of the floating tab bar too: a tap under it would land on a tab.
+        let tabTop = app.buttons["Today"].firstMatch.frame.minY - 12
+        for _ in 0..<4 where !(add.exists && add.isHittable && add.frame.maxY < tabTop) {
             app.scrollViews.firstMatch.swipeUp()
             RunLoop.current.run(until: .now.addingTimeInterval(0.6))
         }
@@ -185,10 +189,9 @@ final class JourneyUITests: XCTestCase {
         tap(app.buttons["Craving SOS"])
         // F13: Jelli's session, with "It passed" on screen from the start (no countdown).
         XCTAssert(app.buttons["It passed"].waitForExistence(timeout: 5))
-        XCTAssert(app.buttons["Still strong"].exists)
         snap(app, "sos-session")
         tap(app.buttons["It passed"])
-        XCTAssert(app.staticTexts["You rode it out."].waitForExistence(timeout: 5))
+        XCTAssert(app.staticTexts["You rode it out"].waitForExistence(timeout: 5))
         tap(app.buttons["Back to my day"])
         XCTAssert(app.buttons["Craving SOS"].waitForExistence(timeout: 5))
     }

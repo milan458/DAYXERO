@@ -35,6 +35,8 @@ struct ProgramToday {
     let kind: Kind
     let label: String
     let title: String
+    /// The session's line ("A breath that works in the moment"), for Today's line under the greeting (015).
+    let subtitle: String
     let minutes: Int
     /// The latest finished session's mission, shown until the next session opens.
     let mission: String?
@@ -56,6 +58,7 @@ struct ProgramToday {
             kind = .complete
             label = ""
             title = ""
+            subtitle = ""
             minutes = 0
             prepRunsOver = false
             isCatchUp = false
@@ -63,6 +66,7 @@ struct ProgramToday {
         }
         label = session.label
         title = session.title.resolve(variant) ?? ""
+        subtitle = session.subtitle.resolve(variant) ?? ""
         minutes = store.minutes(of: session)
         prepRunsOver = session.phaseId == "prep" && store.clock.day(containing: now) >= store.clock.startOfDate(store.profile.quitDay)
         if prepRunsOver {

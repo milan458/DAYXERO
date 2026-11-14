@@ -79,6 +79,8 @@ struct TodayHeroModel {
     /// The slim header's title and line.
     let slimTitle: String
     let slimLine: String
+    /// "$49", beside "kept" on the right of the slim header after Quit Day (017).
+    var slimMoney: String?
     let crewStage: Int
     let accessibilityLabel: String
 }
@@ -124,10 +126,6 @@ struct TodayHero: View {
             pill
                 .frame(maxWidth: .infinity)
                 .offset(y: height - 50 - (model.mode == .prep ? 0 : 36))
-            profileButton
-                .frame(maxWidth: .infinity, alignment: .trailing)
-                .padding(.trailing, DX.Layout.gutter)
-                .padding(.top, topInset + 4)
         }
         .frame(height: height)
         .clipShape(UnevenRoundedRectangle(bottomLeadingRadius: 36, bottomTrailingRadius: 36, style: .continuous))
@@ -246,7 +244,6 @@ struct TodayHero: View {
                     .foregroundStyle(TodayInk.muted)
                     .fixedSize(horizontal: false, vertical: true)
                     .dxArrive(3)
-                why
             }
             .padding(.horizontal, DX.Layout.gutter)
         case .postQuit:
@@ -261,7 +258,6 @@ struct TodayHero: View {
                     .padding(.top, 2)
                     .dxArrive(3)
                 stats.padding(.top, 8).dxArrive(4)
-                why
                 if let ahead = model.aheadText, let next = model.nextMilestone {
                     nextChip(next: next, text: ahead)
                         .padding(.top, 18)
@@ -364,7 +360,6 @@ struct TodayHero: View {
                         .fixedSize(horizontal: false, vertical: true)
                         .accessibilityAddTraits(.isHeader)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    profileButton
                 }
                 .dxArrive(1)
                 Text(verbatim: model.line)
@@ -448,7 +443,7 @@ struct TodaySlimHeader: View {
             }
             .frame(width: 40, height: 40)
             .accessibilityHidden(true)
-            VStack(alignment: .leading, spacing: 1) {
+            HStack(alignment: .firstTextBaseline, spacing: 8) {
                 Text(verbatim: model.slimTitle)
                     .dxFace(.display, 19, weight: 800, tracking: -0.3)
                     .foregroundStyle(TodayInk.ink)
@@ -459,6 +454,12 @@ struct TodaySlimHeader: View {
                     .lineLimit(1).minimumScaleFactor(0.75)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
+            if let money = model.slimMoney {
+                HStack(alignment: .firstTextBaseline, spacing: 4) {
+                    Text(verbatim: money).dxFace(.display, 20, weight: 800, tracking: -0.4).foregroundStyle(TodayInk.ink)
+                    Text("kept").dxType(.caption).foregroundStyle(TodayInk.muted)
+                }
+            }
         }
         .padding(.horizontal, DX.Layout.gutter)
         .padding(.vertical, 10)

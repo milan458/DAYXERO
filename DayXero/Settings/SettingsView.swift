@@ -6,185 +6,199 @@ import UIKit
 import UserNotifications
 import WidgetKit
 
-/// Settings behind the profile button on Home (S15.1–S15.4, S15.6, S15.7).
+/// Settings (v5, 061): the profile card, then the plan, the day, the data and the account, each its own group, every
+/// row pushing its page from the right. Opened from the profile button on Today and the gear on Progress.
 struct SettingsSheet: View {
     let profile: UserProfile
     var start: Page?
 
     enum Page: String, Hashable {
-        case reminders, dayEnd, quietHours, products, quitDay, currency, subscription, privacy, health
+        case reminders, dayEnd, quietHours, products, quitDay, currency, allCurrencies, subscription, privacy, health,
+             help, about, display
     }
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
     @Environment(Entitlement.self) private var entitlement
-    @AppStorage("dx.sosHaptics") private var haptics = true
-    @AppStorage("dx.voiceGuidance") private var voiceGuidance = true
-    @AppStorage(WidgetSync.privacyKey) private var widgetPrivacy = false
-    @AppStorage(WidgetSync.privacyHomeKey) private var widgetPrivacyHome = false
-    @AppStorage(AppearanceSetting.key) private var appearance = AppearanceSetting.automatic.rawValue
+    @AppStorage(DailyReminderSettings.pledgeKey) private var pledge = DailyReminderSettings.defaultPledge
+    @AppStorage(DailyReminderSettings.lessonKey) private var lesson = DailyReminderSettings.offUntilChosen
+    @AppStorage(DailyReminderSettings.checkInKey) private var checkIn = DailyReminderSettings.defaultCheckIn
+    @AppStorage(DailyReminderSettings.milestoneKey) private var milestone = DailyReminderSettings.offUntilChosen
     @State private var path: [Page] = []
-    @State private var confirmDelete = false
-    @State private var exportURL: URL?
+    @State private var planName: String?
+    private let ground = DX.Ground.reading
 
     var body: some View {
         NavigationStack(path: $path) {
-            List {
-                Section("Your quit") {
-                    NavigationLink(value: Page.products) {
-                        LabeledContent { Text(verbatim: productNames) } label: { SettingLabel("Products", systemImage: "cloud") }
-                    }
-                    NavigationLink(value: Page.quitDay) {
-                        LabeledContent { Text(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).day().month())) } label: {
-                            SettingLabel("Quit Day", systemImage: "calendar")
-                        }
-                    }
-                    NavigationLink(value: Page.dayEnd) {
-                        LabeledContent { Text(DayEndSettings.label(profile.dayBoundaryHour)) } label: { SettingLabel("Day ends at", systemImage: "moon") }
-                    }
-                    NavigationLink(value: Page.currency) {
-                        LabeledContent { Text(verbatim: "\(profile.currencyCode) · \(CurrencyChoice.symbol(profile.currencyCode))") } label: {
-                            SettingLabel("Currency", systemImage: "banknote")
-                        }
-                    }
-                }
-.listRowBackground(Read4.card)
-                Section {
-                    NavigationLink(value: Page.reminders) { SettingLabel("Notifications", systemImage: "bell") }
-                    Toggle(isOn: $haptics) { SettingLabel("Breathing haptics", systemImage: "water.waves") }
-                    Toggle(isOn: $voiceGuidance) { SettingLabel("Voice guidance", systemImage: "waveform") }
-                    Picker(selection: $appearance) {
-                        ForEach(AppearanceSetting.allCases, id: \.rawValue) { Text($0.title).tag($0.rawValue) }
-                    } label: {
-                        SettingLabel("Appearance", systemImage: "circle.lefthalf.filled")
-                    }
-                } header: {
-                    Text("App")
-                } footer: {
-                    // MON-01: the voice is part of the full program; the setting is kept for when it's unlocked.
-                    Text(entitlement.isPro ? "Other haptics follow System Haptics in iPhone Settings."
-                         : "Other haptics follow System Haptics in iPhone Settings. Jelli's voice coaching comes with the full program.")
-                }
-.listRowBackground(Read4.card)
-                if DemoMode.isAvailable {
-                    Section {
-                        Toggle(isOn: Binding(get: { entitlement.demo }, set: { on in
-                            entitlement.setDemo(on)
-                            DailyReminders.isPro = entitlement.isPro
-                            WidgetSync.refresh(in: context, isPro: entitlement.isPro)
-                        })) {
-                            SettingLabel("Demo mode", systemImage: "sparkles.rectangle.stack")
-                        }
-                        .accessibilityIdentifier("settings.demoMode")
-                    } header: {
-                        Text("Testing")
-                    } footer: {
-                        Text("Unlocks everything, opens every program session at any time, and lets you pick any Quit Day, past ones too. Only in test builds.")
-                    }
-.listRowBackground(Read4.card)
-                }
-                // Widgets (S17.11): what widgets anyone can see show.
-                Section {
-                    Toggle(isOn: $widgetPrivacy) { SettingLabel("Privacy mode on the Lock Screen", systemImage: "eye.slash") }
-                    if widgetPrivacy {
-                        Toggle(isOn: $widgetPrivacyHome) { SettingLabel("Apply to Home Screen", systemImage: "apps.iphone") }
-                    }
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Add Craving SOS to your Lock Screen").dxFont(16, weight: 600, style: .body)
-                        Text("Long-press the Lock Screen, tap Customize, then swap the torch or camera button for Craving SOS.")
-                            .v4Text(.subtitle)
-                    }
-                    .padding(.vertical, 2)
-                } header: {
-                    Text("Widgets")
-                } footer: {
-                    Text("Hides money and the word nicotine from widgets anyone can see.")
-                }
-.listRowBackground(Read4.card)
-                .onChange(of: widgetPrivacy) { WidgetSync.refresh(in: context, isPro: entitlement.isPro) }
-                .onChange(of: widgetPrivacyHome) { WidgetSync.refresh(in: context, isPro: entitlement.isPro) }
-                Section("Subscription") {
-                    NavigationLink(value: Page.subscription) {
-                        LabeledContent { Text(entitlement.isPro ? "Pro" : "Free") } label: { SettingLabel("DayXero Pro", systemImage: "star") }
+            home
+                .navigationDestination(for: Page.self) { page in
+                    switch page {
+                    case .reminders: NotificationSettingsView()
+                    case .quietHours: QuietHoursView()
+                    case .dayEnd: DayEndSettings(profile: profile)
+                    case .products: ProductsSettingsView(profile: profile)
+                    case .quitDay: QuitDaySettingsView(profile: profile)
+                    case .currency: CurrencySettingsView(profile: profile)
+                    case .allCurrencies: AllCurrenciesView(profile: profile)
+                    case .subscription: SubscriptionSettingsView(profile: profile)
+                    case .privacy: PrivacySettingsView(profile: profile, onDeleteAll: {
+                        dismiss()
+                        DataTools.deleteAll(context: context)
+                    })
+                    case .health: HealthInfoView()
+                    case .help: HelpSettingsView()
+                    case .about: AboutSettingsView()
+                    case .display: DisplaySettingsView()
                     }
                 }
-.listRowBackground(Read4.card)
-                Section("Your data") {
-                    NavigationLink(value: Page.privacy) { SettingLabel("Privacy", systemImage: "lock") }
-                    Button { exportURL = DataTools.export(context: context, profile: profile) } label: {
-                        SettingLabel("Export my data", systemImage: "square.and.arrow.up")
-                    }
-                    .foregroundStyle(Read4.ink)
-                    Button(role: .destructive) { confirmDelete = true } label: {
-                        Label("Delete all data", systemImage: "trash")
-                    }
+        }
+        .dxGround(.reading)
+        .onAppear { if let start, path.isEmpty { path = [start] } }
+        .task {
+            if let plan = await entitlement.store.currentPlan()?.plan {
+                planName = switch plan {
+                case .annual: String(localized: "Yearly")
+                case .monthly: String(localized: "Monthly")
+                case .lifetime: String(localized: "Lifetime")
                 }
-.listRowBackground(Read4.card)
-                Section {
-                    NavigationLink(value: Page.health) { SettingLabel("Health information", systemImage: "heart") }
-                    Link(destination: AppLinks.terms) { SettingLabel("Terms of use", systemImage: "doc.text") }
-                        .foregroundStyle(Read4.ink)
-                    if let privacy = AppLinks.privacy {
-                        Link(destination: privacy) { SettingLabel("Privacy policy", systemImage: "hand.raised") }
-                            .foregroundStyle(Read4.ink)
-                    }
-                } header: {
-                    Text("About")
-                } footer: {
-                    Text(verbatim: "DayXero \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "")")
-                        .frame(maxWidth: .infinity)
-                        .padding(.top, DX.Space.s)
-                }
-.listRowBackground(Read4.card)
-            }
-            .dxSettingsList()
-            .navigationTitle("Settings")
-            .navigationBarTitleDisplayMode(.inline)
-            // v5: the leading close button, top-left.
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button { dismiss() } label: { DXIcon(.close, size: 18, weight: 2.4).foregroundStyle(Read4.ink) }
-                        .accessibilityLabel(Text("Done"))
-                }
-            }
-            .navigationDestination(for: Page.self) { page in
-                switch page {
-                case .reminders: NotificationSettingsView()
-                case .quietHours: QuietHoursView()
-                case .dayEnd: DayEndSettings(profile: profile)
-                case .products: ProductsSettingsView(profile: profile)
-                case .quitDay: QuitDaySettingsView(profile: profile)
-                case .currency: CurrencySettingsView(profile: profile)
-                case .subscription: SubscriptionSettingsView(profile: profile)
-                case .privacy: PrivacySettingsView()
-                case .health: HealthInfoView()
-                }
-            }
-            .alert("Delete everything?", isPresented: $confirmDelete) {
-                Button("Delete everything", role: .destructive) {
-                    dismiss()
-                    DataTools.deleteAll(context: context)
-                }
-                Button("Cancel", role: .cancel) {}
-            } message: {
-                Text("This removes your plan, logs, check-ins and progress from this iPhone. It can't be undone. Your subscription isn't affected.")
-            }
-            .sheet(item: Binding(get: { exportURL.map(ExportFile.init) }, set: { if $0 == nil { exportURL = nil } })) { file in
-                ShareSheet(items: [file.url])
             }
         }
-        .onAppear { if let start, path.isEmpty { path = [start] } }
     }
 
+    private var home: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 0) {
+                NavigationLink(value: Page.quitDay) { profileCard }
+                    .buttonStyle(.dxPress)
+                    .padding(.top, 2)
+                    .dxArrive(1)
+
+                SettingsSection("Your plan", top: 14, index: 2)
+                DXList {
+                    link(.quitDay, "Quit Day", icon: .calendar, value: Text(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day())))
+                    link(.products, "What you use", icon: .cig, value: Text(verbatim: productNames))
+                    link(.currency, "Currency", icon: .globe, value: Text(verbatim: profile.currencyCode))
+                }
+                .dxArrive(3)
+
+                SettingsSection("Your day", top: 14, index: 4)
+                DXList {
+                    link(.reminders, "Reminders", icon: .bell, value: Text("\(remindersOn) on"))
+                    link(.dayEnd, "Day ends at", icon: .clock, value: Text(verbatim: DayEndSettings.label(profile.dayBoundaryHour)))
+                    link(.display, "Sound and display", glyph: SettingsGlyph.display, value: nil)
+                }
+                .dxArrive(5)
+
+                SettingsSection("Your data", top: 14, index: 6)
+                DXList {
+                    link(.health, "Health information", icon: .heart, value: nil)
+                    link(.privacy, "Privacy", icon: .shield, value: nil)
+                }
+                .dxArrive(7)
+
+                SettingsSection("Account", top: 14, index: 8)
+                DXList {
+                    link(.subscription, "Subscription", icon: .card,
+                         value: Text(verbatim: planName ?? (entitlement.isPro ? String(localized: "Pro") : String(localized: "Free"))))
+                    link(.help, "Help and contact", glyph: SettingsGlyph.help, value: nil)
+                    link(.about, "About", glyph: SettingsGlyph.info, value: Text("Version \(AboutSettingsView.version)"))
+                }
+                .accessibilityLabel(Text("Account and help"))
+                .dxArrive(9)
+
+                if DemoMode.isAvailable { demo.dxArrive(10) }
+            }
+            .padding(.horizontal, DX.Layout.gutter)
+            .padding(.bottom, 32)
+            .dxReadableColumn()
+        }
+        .scrollIndicators(.hidden)
+        .safeAreaInset(edge: .top, spacing: 0) {
+            DXNavRow(leading: .close, label: "Close", onLeading: { dismiss() }) {
+                Text("Settings").dxFace(.display, 16, weight: 700).foregroundStyle(ground.ink).dxArrive(0)
+            }
+            .padding(.top, 8)
+            .background(ground.background.ignoresSafeArea(edges: .top))
+        }
+        .background(ground.background.ignoresSafeArea())
+        .toolbar(.hidden, for: .navigationBar)
+        .toggleStyle(.dx)
+    }
+
+    /// Sam, joined when, and the days-free medal (the number shown once, on the medal).
+    private var profileCard: some View {
+        let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
+        let stats = ProgressStats(quitDay: profile.quitDay, baselines: [], clock: clock)
+        let prep = stats.isPrep(at: .now)
+        return HStack(spacing: 14) {
+            SettingsDawn()
+            VStack(alignment: .leading, spacing: 2) {
+                Text(verbatim: profile.name.isEmpty ? String(localized: "You") : profile.name)
+                    .dxType(.title).foregroundStyle(ground.ink).lineLimit(1)
+                Text("Joined \(profile.createdAt.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day()))")
+                    .dxType(.footnote).foregroundStyle(ground.muted)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            Group {
+                if prep {
+                    DXBadge(.prep, n: stats.daysUntilQuitDay(at: .now), state: .next(nil), size: 44,
+                            label: String(localized: "To Quit Day"))
+                } else {
+                    DXBadge(.day, n: stats.daysClear(at: .now), size: 44, label: String(localized: "Days free"))
+                }
+            }
+            .dxStamp(0, delay: 0.7)
+            DXIcon(.chev, size: 18).foregroundStyle(ground.muted)
+        }
+        .padding(.vertical, 12)
+        .padding(.leading, 12)
+        .padding(.trailing, 14)
+        .dxCardChrome(on: .reading)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(Text("Your profile"))
+    }
+
+    private var demo: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            SettingsSection("Testing", top: 14)
+            DXList {
+                SettingsSwitchRow("Demo mode", icon: .sparkle, isOn: Binding(get: { entitlement.demo }, set: { on in
+                    entitlement.setDemo(on)
+                    DailyReminders.isPro = entitlement.isPro
+                    WidgetSync.refresh(in: context, isPro: entitlement.isPro)
+                }))
+                .accessibilityIdentifier("settings.demoMode")
+            }
+            Text("Unlocks everything, opens every program session at any time, and lets you pick any Quit Day, past ones too. Only in test builds.")
+                .dxType(.caption).foregroundStyle(ground.muted)
+                .padding(.horizontal, 4)
+                .padding(.top, 8)
+        }
+    }
+
+    private func link(_ page: Page, _ title: LocalizedStringKey, icon: DX.Icon, value: Text?) -> some View {
+        NavigationLink(value: page) { SettingsRow(title, icon: icon, value: value) }
+            .buttonStyle(.dxPress)
+    }
+
+    private func link(_ page: Page, _ title: LocalizedStringKey, glyph: String, value: Text?) -> some View {
+        NavigationLink(value: page) { SettingsRow(Text(title), icon: glyph, value: value) }
+            .buttonStyle(.dxPress)
+    }
+
+    /// The reminders a person has switched on.
+    private var remindersOn: Int {
+        [pledge, checkIn, lesson, milestone].filter { $0 >= 0 }.count
+    }
+
+    /// "Cigarettes, vape".
     private var productNames: String {
-        ListFormatter.localizedString(byJoining: profile.products.map { String(localized: $0.product.title) })
+        let names = profile.products.sorted { ($0.isPrimary ? 0 : 1) < ($1.isPrimary ? 0 : 1) }.map { String(localized: $0.product.title) }
+        guard let first = names.first else { return "" }
+        return ([first] + names.dropFirst().map { $0.lowercased() }).joined(separator: ", ")
     }
 }
 
-private struct ExportFile: Identifiable {
-    let url: URL
-    var id: URL { url }
-}
 
 /// The system share sheet, for the export file.
 struct ShareSheet: UIViewControllerRepresentable {
@@ -195,26 +209,6 @@ struct ShareSheet: UIViewControllerRepresentable {
     }
 
     func updateUIViewController(_ controller: UIActivityViewController, context: Context) {}
-}
-
-struct SettingLabel: View {
-    let title: LocalizedStringKey
-    let systemImage: String
-
-    init(_ title: LocalizedStringKey, systemImage: String) {
-        self.title = title
-        self.systemImage = systemImage
-    }
-
-    var body: some View {
-        // v5 (061): a 36 pt card-2 tile with the ink icon, then the title in the display face.
-        Label {
-            Text(title).dxFace(.display, 16, weight: 700).foregroundStyle(Read4.ink)
-        } icon: {
-            Image(systemName: systemImage).font(.system(size: 15, weight: .medium)).foregroundStyle(Read4.ink)
-                .frame(width: 36, height: 36).background(Read4.surface, in: RoundedRectangle(cornerRadius: 11, style: .continuous))
-        }
-    }
 }
 
 /// Automatic, Light or Dark (S15.1).
@@ -236,476 +230,6 @@ enum AppearanceSetting: String, CaseIterable {
         case .light: .light
         case .dark: .dark
         }
-    }
-}
-
-// MARK: - Products and baselines
-
-struct ProductsSettingsView: View {
-    let profile: UserProfile
-    @Environment(\.modelContext) private var context
-    @State private var editing: ProductUse?
-
-    var body: some View {
-        List {
-            Section {
-                ForEach(profile.products.sorted { ($0.isPrimary ? 0 : 1) < ($1.isPrimary ? 0 : 1) }) { use in
-                    Button { editing = use } label: {
-                        VStack(alignment: .leading, spacing: 4) {
-                            HStack {
-                                Text(use.product.title).dxFont(16, weight: 600, style: .body)
-                                Spacer()
-                                if use.isPrimary { Text("Main").v4Text(.micro, color: Read4.accent) }
-                            }
-                            Group {
-                                if use.product == .vape {
-                                    Text("\(podsLine(use.podsPerWeek)) · \(use.pricePerPurchase.formatted(.currency(code: profile.currencyCode))) each")
-                                } else {
-                                    Text("\(unitsLine(use.product, Int(use.unitsPerDay))) · \(use.pricePerPurchase.formatted(.currency(code: profile.currencyCode))) for \(Int(use.unitsPerPurchase))")
-                                }
-                            }
-                            .v4Text(.subtitle)
-                        }
-                    }
-                    .foregroundStyle(Read4.ink)
-                }
-                Menu {
-                    ForEach(DayXeroCore.Product.allCases.filter { p in !profile.products.contains { $0.product == p } }, id: \.self) { p in
-                        Button(String(localized: p.title)) { add(p) }
-                    }
-                } label: {
-                    Label("Add a product", systemImage: "plus")
-                }
-                .disabled(profile.products.count == DayXeroCore.Product.allCases.count)
-            } footer: {
-                Text("Changing a baseline updates money kept and counters from Quit Day. Days clear don't change.")
-            }
-.listRowBackground(Read4.card)
-        }
-        .navigationTitle("Products")
-        .dxSettingsList()
-        .sheet(item: $editing) { use in
-            ProductEditor(use: use, profile: profile).presentationDetents([.large])
-        }
-    }
-
-    /// "1 pod a week", "2.5 pods a week".
-    private func podsLine(_ pods: Double) -> String {
-        pods == 1 ? String(localized: "1 pod a week") : String(localized: "\(VapeUsage.format(pods)) pods a week")
-    }
-
-    /// "1 cigarette a day", "12 cigarettes a day".
-    private func unitsLine(_ product: DayXeroCore.Product, _ count: Int) -> String {
-        switch product {
-        case .cigarettes: String(localized: "\(count) cigarettes a day")
-        case .vape: String(localized: "\(count) puffs a day")
-        case .pouches: String(localized: "\(count) pouches a day")
-        }
-    }
-
-    private func add(_ product: DayXeroCore.Product) {
-        let use = ProductUse(product: product, isPrimary: profile.products.isEmpty,
-                             unitsPerDay: product == .vape ? VapeUsage.puffsPerDay(podsPerWeek: 2, puffsPerPod: 600) : 10,
-                             pricePerPurchase: 10, unitsPerPurchase: product == .vape ? 600 : 20)
-        profile.products.append(use)
-        try? context.save()
-        editing = use
-    }
-}
-
-/// The currency money is shown in (S18.17): the region's to begin with, any other on request. It relabels
-/// amounts; it doesn't convert them.
-struct CurrencySettingsView: View {
-    let profile: UserProfile
-    @Environment(\.modelContext) private var context
-    @Environment(Entitlement.self) private var entitlement
-    @State private var search = ""
-
-    var body: some View {
-        let codes = CurrencyChoice.codes()
-        let regional = CurrencyChoice.defaultCode()
-        List {
-            Section {
-                ForEach(codes.filter(matches), id: \.self) { code in
-                    Button { choose(code) } label: {
-                        HStack {
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(verbatim: CurrencyChoice.name(code)).foregroundStyle(Read4.ink)
-                                Text(verbatim: code == regional ? "\(code) · \(CurrencyChoice.symbol(code)) · \(String(localized: "your region"))"
-                                                                : "\(code) · \(CurrencyChoice.symbol(code))")
-                                    .v4Text(.subtitle)
-                            }
-                            Spacer()
-                            if code == profile.currencyCode {
-                                Image(systemName: "checkmark").foregroundStyle(Read4.accent)
-                            }
-                        }
-                    }
-                    .accessibilityAddTraits(code == profile.currencyCode ? .isSelected : [])
-                }
-            } footer: {
-                Text("Changes the currency your money is shown in. Prices you've entered keep their numbers, so if they were in another currency, update them in Products.")
-            }
-.listRowBackground(Read4.card)
-        }
-        .searchable(text: $search, prompt: Text("Search currencies"))
-        .navigationTitle("Currency")
-        .dxSettingsList()
-    }
-
-    private func matches(_ code: String) -> Bool {
-        let query = search.trimmingCharacters(in: .whitespaces)
-        guard !query.isEmpty else { return true }
-        return code.localizedCaseInsensitiveContains(query) || CurrencyChoice.name(code).localizedCaseInsensitiveContains(query)
-    }
-
-    private func choose(_ code: String) {
-        guard code != profile.currencyCode else { return }
-        profile.currencyCode = code
-        try? context.save()
-        WidgetSync.refresh(in: context, isPro: entitlement.isPro)
-        Analytics.track(.currencyChanged(code: code))
-    }
-}
-
-struct ProductEditor: View {
-    @Bindable var use: ProductUse
-    let profile: UserProfile
-    @Environment(\.modelContext) private var context
-    @Environment(\.dismiss) private var dismiss
-    @State private var price = ""
-
-    private var priceLabel: LocalizedStringKey {
-        switch use.product {
-        case .cigarettes: use.unitsPerPurchase == 1 ? "Price of one cigarette" : "Price of a pack"
-        case .vape: "Price of one"
-        case .pouches: "Price of a can"
-        }
-    }
-
-    private var perPurchaseLabel: LocalizedStringKey {
-        switch use.product {
-        case .cigarettes: "Cigarettes in a pack"
-        case .vape: "Puffs in a pod"
-        case .pouches: "Pouches in a can"
-        }
-    }
-
-    var body: some View {
-        NavigationStack {
-            Form {
-                Section {
-                    if use.product == .vape {
-                        // Pods a week is what vapers know; puffs a day is worked out from it (S18.8).
-                        Stepper(value: $use.podsPerWeek, in: VapeUsage.podsStep...100, step: VapeUsage.podsStep) {
-                            LabeledContent { Text(verbatim: VapeUsage.format(use.podsPerWeek)) } label: { Text("Pods a week") }
-                        }
-                    } else {
-                        Stepper(value: $use.unitsPerDay, in: 1...2000, step: 1) {
-                            LabeledContent { Text(verbatim: "\(Int(use.unitsPerDay))") } label: { Text("\(Text(use.product.unit).foregroundStyle(Read4.ink)) a day") }
-                        }
-                    }
-                    if use.product == .cigarettes {
-                        Picker("How you buy them", selection: Binding(get: { use.unitsPerPurchase == 1 },
-                                                                      set: { use.unitsPerPurchase = $0 ? 1 : 20 })) {
-                            Text("By the pack").tag(false)
-                            Text("One at a time").tag(true)
-                        }
-                    }
-                    LabeledContent(priceLabel) {
-                        TextField("10.00", text: $price).keyboardType(.decimalPad).multilineTextAlignment(.trailing)
-                    }
-                    if !(use.product == .cigarettes && use.unitsPerPurchase == 1) {
-                        Stepper(value: Binding(get: { use.unitsPerPurchase },
-                                               set: { if use.product == .vape { use.setPuffsPerPod($0) } else { use.unitsPerPurchase = $0 } }),
-                                in: 1...5000, step: use.product == .vape ? 50 : 1) {
-                            LabeledContent { Text(verbatim: "\(Int(use.unitsPerPurchase))") } label: { Text(perPurchaseLabel) }
-                        }
-                    }
-                } footer: {
-                    if let value = Decimal(string: price.replacingOccurrences(of: ",", with: ".")), value > 0, use.unitsPerPurchase > 0 {
-                        let yearly = value * Decimal(use.unitsPerDay) / Decimal(use.unitsPerPurchase) * 365
-                        if use.product == .cigarettes, use.unitsPerPurchase > 1 {
-                            Text("That's \(value / Decimal(use.unitsPerPurchase), format: .currency(code: profile.currencyCode)) a cigarette, about \(yearly, format: .currency(code: profile.currencyCode).precision(.fractionLength(0))) a year.")
-                        } else {
-                            Text("That's about \(yearly, format: .currency(code: profile.currencyCode).precision(.fractionLength(0))) a year.")
-                        }
-                    }
-                }
-.listRowBackground(Read4.card)
-                if !use.isPrimary {
-                    Section {
-                        Button("Make this my main product") {
-                            profile.products.forEach { $0.isPrimary = false }
-                            use.isPrimary = true
-                        }
-                    }
-.listRowBackground(Read4.card)
-                }
-                if profile.products.count > 1 {
-                    Section {
-                        Button("Remove \(String(localized: use.product.title).lowercased())", role: .destructive) {
-                            let wasPrimary = use.isPrimary
-                            profile.products.removeAll { $0 === use }
-                            context.delete(use)
-                            if wasPrimary { profile.products.first?.isPrimary = true }
-                            try? context.save()
-                            dismiss()
-                        }
-                    }
-.listRowBackground(Read4.card)
-                }
-            }
-            .navigationTitle(Text(use.product.title))
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done") {
-                        if let value = Decimal(string: price.replacingOccurrences(of: ",", with: ".")), value > 0 { use.pricePerPurchase = value }
-                        try? context.save()
-                        WidgetCenter.shared.reloadAllTimelines()
-                        dismiss()
-                    }
-                }
-            }
-            .onAppear { price = "\(use.pricePerPurchase)" }
-        }
-        .dxSettingsList()
-    }
-}
-
-// MARK: - Quit Day
-
-/// Before Quit Day: the onboarding calendar. After: only by choice, "Set a new Quit Day" restarts the count (Milan: allow it).
-struct QuitDaySettingsView: View {
-    let profile: UserProfile
-    @Environment(\.modelContext) private var context
-    @State private var newDate = Date.now
-    @State private var choosing = false
-    @State private var confirm = false
-
-    var body: some View {
-        let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
-        let stats = ProgressStats(quitDay: profile.quitDay, baselines: [], clock: clock)
-        let today = Calendar.current.startOfDay(for: .now)
-        let latest = Calendar.current.date(byAdding: .day, value: 30, to: today) ?? today
-        List {
-            Section {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(profile.quitDay.formatted(.dateTime.weekday(.wide).day().month(.wide))).dxFont(16, weight: 600, style: .headline)
-                    if stats.isPrep(at: .now) {
-                        Text("In \(stats.daysUntilQuitDay(at: .now)) days").v4Text(.subtitle)
-                    } else {
-                        Text("\(stats.daysClear(at: .now)) days since Quit Day").v4Text(.subtitle)
-                    }
-                }
-            }
-.listRowBackground(Read4.card)
-            if DemoMode.isOn {
-                Section {
-                    DatePicker("Quit Day", selection: Binding(get: { profile.quitDay }, set: { setQuitDay($0) }),
-                               in: (Calendar.current.date(byAdding: .year, value: -2, to: today) ?? today)...(Calendar.current.date(byAdding: .year, value: 1, to: today) ?? today),
-                               displayedComponents: .date)
-                        .datePickerStyle(.graphical)
-                } header: {
-                    Text("Demo mode")
-                } footer: {
-                    Text("Any date, past ones too. Counters, money kept and milestones follow it straight away.")
-                }
-.listRowBackground(Read4.card)
-            } else if stats.isPrep(at: .now) {
-                Section {
-                    DatePicker("Quit Day", selection: Binding(get: { profile.quitDay }, set: { setQuitDay($0) }),
-                               in: (Calendar.current.date(byAdding: .day, value: 1, to: today) ?? today)...latest, displayedComponents: .date)
-                        .datePickerStyle(.graphical)
-                } footer: {
-                    Text("Your prep days adjust to fit.")
-                }
-.listRowBackground(Read4.card)
-            } else {
-                Section {
-                    Text("Your Quit Day has passed. If you'd like to start counting again from a new date, you can set one. Your lessons, logs and plans all stay.")
-                        .v4Text(.subtitle)
-                    if choosing {
-                        DatePicker("New Quit Day", selection: $newDate, in: today...latest, displayedComponents: .date).datePickerStyle(.graphical)
-                        Button("Use this date") { confirm = true }
-                    } else {
-                        Button("Set a new Quit Day") { choosing = true; newDate = today }
-                    }
-                }
-.listRowBackground(Read4.card)
-            }
-        }
-        .navigationTitle("Quit Day")
-        .dxSettingsList()
-        .alert("Start counting from \(newDate.formatted(.dateTime.weekday(.wide).day().month()))?", isPresented: $confirm) {
-            Button("Set new Quit Day") {
-                setQuitDay(newDate)
-                UserDefaults.standard.removeObject(forKey: CelebratedMilestones.key)
-                choosing = false
-            }
-            Button("Cancel", role: .cancel) {}
-        } message: {
-            Text("Days clear and milestones will count from the new date. Your lessons, logs and plans stay.")
-        }
-    }
-
-    private func setQuitDay(_ date: Date) {
-        profile.quitDay = Calendar.current.startOfDay(for: date)
-        try? context.save()
-        DailyReminders.refresh(in: context)
-        WidgetCenter.shared.reloadAllTimelines()
-    }
-}
-
-// MARK: - Subscription
-
-struct SubscriptionSettingsView: View {
-    let profile: UserProfile
-    @Environment(Entitlement.self) private var entitlement
-    @State private var current: CurrentPlan?
-    @State private var plans: [PlanOption] = []
-    @State private var manage = false
-    @State private var restoring = false
-    @State private var restoreNote: String?
-    @State private var showPaywall = false
-
-    var body: some View {
-        List {
-            Section {
-                if let current {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Your plan").v4Text(.micro)
-                        Text(verbatim: planLine(current)).dxFont(16, weight: 600, style: .headline)
-                        if let date = current.renews {
-                            Text(current.willRenew ? "Renews on \(date.formatted(date: .long, time: .omitted))" : "Ends on \(date.formatted(date: .long, time: .omitted))")
-                                .v4Text(.subtitle)
-                        }
-                    }
-                    if current.plan != .lifetime {
-                        Button("Manage subscription") { manage = true }
-                    }
-                } else if entitlement.isPro {
-                    Text("DayXero Pro is active.")
-                } else {
-                    Button("Unlock the full program") {
-                        // The trial is sold whenever the Quit Day is (MON-01), so Superwall's paywall is fine any day.
-                        // Superwall's paywall when a campaign has one here; DayXero's otherwise (S20).
-                        Paywalls.present(.upgradeFromSettings) { outcome in
-                            switch outcome {
-                            case .fallback: showPaywall = true
-                            case .unlocked: entitlement.grant()
-                            case .closed: break
-                            }
-                        }
-                    }
-                }
-                Button(restoring ? "Restoring…" : "Restore purchases") {
-                    Task {
-                        restoring = true
-                        let found = (try? await entitlement.store.restore()) ?? false
-                        Analytics.track(.purchasesRestored(success: found))
-                        if found { entitlement.grant() }
-                        current = await entitlement.store.currentPlan()
-                        restoreNote = found ? String(localized: "Purchases restored.") : String(localized: "No purchases found for this Apple ID.")
-                        restoring = false
-                    }
-                }
-                .disabled(restoring)
-            } footer: {
-                Text(restoreNote ?? String(localized: "Payment, renewal and cancellation are handled by your Apple ID."))
-            }
-.listRowBackground(Read4.card)
-        }
-        .navigationTitle("DayXero Pro")
-        .dxSettingsList()
-        .task {
-            current = await entitlement.store.currentPlan()
-            plans = (try? await entitlement.store.loadPlans()) ?? []
-        }
-        .manageSubscriptionsSheet(isPresented: $manage)
-        .fullScreenCover(isPresented: $showPaywall) {
-            PaywallView(name: profile.name, quitDay: profile.quitDay,
-                        model: PaywallModel(store: entitlement.store, entitlement: entitlement),
-                        onClose: { showPaywall = false })
-        }
-    }
-
-    private func planLine(_ current: CurrentPlan) -> String {
-        let price = plans.first { $0.plan == current.plan }?.priceText
-        let name: String = switch current.plan {
-        case .annual: String(localized: "Annual")
-        case .monthly: String(localized: "Monthly")
-        case .lifetime: String(localized: "Lifetime")
-        }
-        guard let price else { return name }
-        return switch current.plan {
-        case .annual: String(localized: "\(name) · \(price) a year")
-        case .monthly: String(localized: "\(name) · \(price) a month")
-        case .lifetime: String(localized: "\(name) · \(price)")
-        }
-    }
-}
-
-// MARK: - Privacy and health
-
-struct PrivacySettingsView: View {
-    @State private var shareUsage = AnalyticsConsent.isOn
-
-    var body: some View {
-        List {
-            Section {
-                fact("iphone", "No account", "Your plan, reasons, photos, logs and notes are stored only on this iPhone.")
-                fact("chart.bar", "Anonymous usage data", "Things like \"lesson started\" or \"paywall shown\", so we can improve DayXero. Never your reasons, notes, photos or anything you type. Sent to PostHog (US).")
-                fact("star", "Purchases", "Handled by Apple and RevenueCat with an anonymous ID.")
-            } header: {
-                Text("Your data stays on this iPhone")
-            }
-.listRowBackground(Read4.card)
-            Section {
-                Toggle("Share anonymous usage data", isOn: $shareUsage)
-                    .onChange(of: shareUsage) { _, on in AnalyticsConsent.set(on) }
-                if let privacy = AppLinks.privacy {
-                    Link("Privacy policy", destination: privacy)
-                }
-            }
-.listRowBackground(Read4.card)
-        }
-        .navigationTitle("Privacy")
-        .dxSettingsList()
-    }
-
-    private func fact(_ icon: String, _ title: LocalizedStringKey, _ body: LocalizedStringKey) -> some View {
-        HStack(alignment: .top, spacing: DX.Space.s) {
-            Image(systemName: icon).font(.system(size: 14)).foregroundStyle(Read4.accent)
-                .frame(width: 30, height: 30).background(Read4.accentSoft, in: Circle())
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title).dxFont(16, weight: 600, style: .body)
-                Text(body).v4Text(.subtitle)
-            }
-        }
-        .padding(.vertical, 4)
-        .accessibilityElement(children: .combine)
-    }
-}
-
-/// The health disclaimer (S15.6): educational support, not medical treatment.
-struct HealthInfoView: View {
-    static var oneLine: LocalizedStringKey { "DayXero offers education and support. It isn't medical treatment." }
-
-    var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: DX.Space.s) {
-                Text("DayXero offers education and support to help you stop using nicotine. It isn't medical treatment, and it doesn't replace advice from a doctor or pharmacist.")
-                Text("If you're pregnant, have a health condition or take other medication, talk to a doctor or pharmacist before using NRT.")
-                Text("Health facts in the app name their sources, and you can open each one.")
-                Text("If you're struggling with your mood, or in crisis, contact a doctor or your local emergency number.")
-            }
-            .dxFont(16, weight: 400, style: .body)
-            .foregroundStyle(Read4.ink)
-            .padding(DX.Space.m)
-        }
-        .background(Read4.background.ignoresSafeArea())
-        .navigationTitle("Health information")
     }
 }
 
@@ -785,16 +309,3 @@ enum DataTools {
     }
 }
 
-extension View {
-    /// v5 settings (061-070): lists on the reading ground with white grouped rows and the kit's coral switches, the
-    /// title inline.
-    func dxSettingsList() -> some View {
-        self
-            .scrollContentBackground(.hidden)
-            .background(Read4.background.ignoresSafeArea())
-            .toggleStyle(.dx)
-            .tint(Color(hex: 0xF26A45))
-            .environment(\.dxGround, .reading)
-            .navigationBarTitleDisplayMode(.inline)
-    }
-}

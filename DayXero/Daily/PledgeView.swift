@@ -76,27 +76,32 @@ struct PledgeView: View {
                         .dxFont(14, weight: 700, style: .footnote)
                         .foregroundStyle(ground.muted)
                         .dxArrive(4)
-                    Text(verbatim: prep ? Self.prepHeadline : chosen.headline)
-                        .dxType(.large)
-                        .foregroundStyle(ground.ink)
-                        .multilineTextAlignment(.center)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .contentTransition(.opacity)
-                        .accessibilityAddTraits(.isHeader)
-                        .dxArrive(5)
-                    if !prep {
-                        HStack(spacing: 6) {
-                            ForEach(Wording.allCases, id: \.self) { w in
-                                V4Chip(text: w.chip, isOn: chosen == w, fill: DX.Fill.onColourCard(for: ground), ink: ground.ink,
-                                       selectedFill: ground.ink, selectedInk: ground.background) {
-                                    withAnimation(motion.animation(.easeInOut(duration: 0.25))) { wording = w.rawValue }
-                                }
+                    Group {
+                        if prep {
+                            Text(verbatim: Self.prepHeadline)
+                        } else if chosen == .wontUse {
+                            // 053: the underline under "won't".
+                            VStack(spacing: 0) {
+                                MarkedTitle(String(localized: "Today, I "), marking: String(localized: "won't"),
+                                            color: DX.Mark.color(on: .apricot))
+                                Text("use nicotine.")
                             }
+                            .accessibilityElement(children: .combine)
+                        } else {
+                            Text(verbatim: chosen.headline)
                         }
-                        .disabled(pledged)
-                        .accessibilityElement(children: .contain)
-                        .accessibilityLabel(Text("Pledge wording"))
-                        .dxArrive(6)
+                    }
+                    .dxType(.large)
+                    .foregroundStyle(ground.ink)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityAddTraits(.isHeader)
+                    .dxArrive(5)
+                    if !prep {
+                        Text("One wave at a time, just for today.")
+                            .dxType(.body).foregroundStyle(ground.ink.opacity(0.8))
+                            .multilineTextAlignment(.center)
+                            .dxArrive(6)
                     }
                     if let reason = todaysReason(dayNumber: day) {
                         // v5 (053): a heart tile, "Because" and the reason, on the cream card.
@@ -128,14 +133,16 @@ struct PledgeView: View {
             }
             .scrollBounceBehavior(.basedOnSize)
             VStack(spacing: 8) {
-                HoldButton(String(localized: "Hold to pledge"), done: String(localized: "Pledged for today"),
+                HoldButton(String(localized: "Hold to pledge"), done: String(localized: "Pledged"),
                            duration: DX.Move.hold, on: ground, action: pledge)
                     .accessibilityLabel(Text("Pledge for today. Hold for one second, or double-tap with VoiceOver."))
                 if let line = checkInLine {
-                    Text(verbatim: line)
-                        .dxType(.footnote)
-                        .foregroundStyle(ground.muted)
-                        .multilineTextAlignment(.center)
+                    HStack(alignment: .firstTextBaseline, spacing: 6) {
+                        DXIcon(.moon, size: 14).alignmentGuide(.firstTextBaseline) { $0[.bottom] - 2 }
+                        Text(verbatim: line).multilineTextAlignment(.center)
+                    }
+                    .dxType(.caption)
+                    .foregroundStyle(ground.ink.opacity(0.75))
                 }
             }
             .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
@@ -154,14 +161,14 @@ struct PledgeView: View {
     /// "Sunday · Day 3", or the weekday alone before Quit Day. The weekday follows the day boundary: 1am is still last night.
     private func dayLine(_ day: Int, clock: DayClock) -> String {
         let weekday = DailyRhythm(clock: clock).day(at: .now).formatted(.dateTime.weekday(.wide))
-        return day > 0 ? String(localized: "\(weekday) · Day \(day)") : weekday
+        return day > 0 ? String(localized: "\(weekday), Day \(day)") : weekday
     }
 
     /// "Glim will check in tonight at 9:00 PM. No pressure." Only when the check-in reminder is on.
     private var checkInLine: String? {
         guard let minute = DailyReminderSettings.checkInMinute,
               let time = Calendar.current.date(bySettingHour: minute / 60, minute: minute % 60, second: 0, of: .now) else { return nil }
-        return String(localized: "Glim will check in tonight at \(time.formatted(date: .omitted, time: .shortened)). No pressure.")
+        return String(localized: "Glim will check in tonight at \(time.formatted(date: .omitted, time: .shortened)).\nNo pressure.")
     }
 
     private func todaysReason(dayNumber: Int) -> Reason? {

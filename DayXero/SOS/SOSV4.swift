@@ -76,12 +76,12 @@ struct SOSBreathWords: View {
             let t = timeline.date.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: DX.Move.inhale + DX.Move.exhale)
             let breathingIn = t < DX.Move.inhale
             let into = breathingIn ? t : t - DX.Move.inhale
-            let fade = motion.breathes ? min(1, into / 0.5) : 1
+            let fade = motion.breathes ? min(1, into / 0.6) : 1
             ZStack {
-                Text("Breathe in… 4").opacity(breathingIn ? fade : 1 - fade)
-                Text("…and out, 6").opacity(breathingIn ? 1 - fade : fade)
+                Text("Breathe in").opacity(breathingIn ? fade : 1 - fade)
+                Text("and out").opacity(breathingIn ? 1 - fade : fade)
             }
-            .dxType(.display)
+            .dxType(.large)
             .multilineTextAlignment(.center)
             .minimumScaleFactor(0.7)
             .lineLimit(1)

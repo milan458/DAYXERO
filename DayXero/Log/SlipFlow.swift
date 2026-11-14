@@ -87,7 +87,7 @@ struct SlipFlow: View {
         .fullScreenCover(isPresented: $showNRT) {
             if let profile { NRTSetupView(profile: profile) { showNRT = false } }
         }
-        .sheet(isPresented: $showQuitDay) {
+        .fullScreenCover(isPresented: $showQuitDay) {
             // Settings › Quit Day sets the new date; logs, plans and history are untouched.
             if let profile { SettingsSheet(profile: profile, start: .quitDay) }
         }

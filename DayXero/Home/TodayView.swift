@@ -131,7 +131,7 @@ struct TodayView: View {
         .fullScreenCover(isPresented: $showCalmTools) {
             CalmToolsView(onClose: { showCalmTools = false }, fromSOS: false)
         }
-        .sheet(isPresented: $showSettings) {
+        .fullScreenCover(isPresented: $showSettings) {
             SettingsSheet(profile: profile, start: settingsPage)
         }
         .sheet(isPresented: $showUpgrade) {
@@ -197,13 +197,20 @@ struct TodayView: View {
     /// The focus card, the prep countdown, the day's log and the rest of the day.
     private func lower(_ day: TodayDay) -> some View {
         VStack(alignment: .leading, spacing: 10) {
+            if day.focus == .recovery {
+                Text("Now").dxFace(.display, 19, weight: 700, tracking: -0.2).foregroundStyle(TodayInk.ink)
+                    .padding(.leading, 2)
+                    .accessibilityAddTraits(.isHeader)
+                    .dxArrive(4)
+            }
             focusCard(day).id("lower").dxArrive(4)
             if day.state == .prep, let stamps = day.stamps {
                 TodayPrepStamps(daysToQuit: stamps.daysToQuit, quitDate: stamps.quitDate, done: stamps.done,
                                 total: stamps.total, current: stamps.current)
                     .dxArrive(5)
             }
-            if day.focus != .recovery {
+            // Waves and water ride in the Now card by day; in the evening they keep their own card.
+            if day.night && day.focus != .recovery {
                 logRows(day).todayCard().dxArrive(6)
             }
             timeline(day).padding(.top, 12)
@@ -228,7 +235,8 @@ struct TodayView: View {
             }
         case .recovery:
             let copy = day.recovery
-            TodayFocusCard(art: .recovery(id: copy.featuredID ?? ""), kicker: copy.kicker, title: copy.title, detail: copy.line,
+            TodayFocusCard(art: .recovery(id: copy.featuredID ?? ""),
+                           kicker: String(localized: "\(copy.kicker) · Day \(max(day.snap.daysClear, 1))"), title: copy.title,
                            crewStage: day.crewStage, action: { showHealth = true }) {
                 Rectangle().fill(TodayInk.line).frame(height: 1)
                 logRows(day)
@@ -236,9 +244,22 @@ struct TodayView: View {
             .accessibilityHint(Text("Opens what changes in your body"))
         case .checkIn:
             TodayFocusCard(art: .checkIn, kicker: String(localized: "With Glim · 1 min"),
-                           title: String(localized: "A minute on how today went"), button: String(localized: "Check in"),
+                           title: String(localized: "How did today go?"), button: String(localized: "Check in"),
                            crewStage: day.crewStage, action: { showCheckIn = true }) {
                 TodayNightTicks(nights: day.nights)
+                let done = day.nights.filter(\.done).count
+                Group {
+                    if done == 6 {
+                        Text("\(Text("6 of 7 nights.").bold())\nTonight earns your 7-night badge.")
+                    } else if done == 0 {
+                        Text("\(Text("Your first night this week.").bold())\nSeven in a row earns the night badge.")
+                    } else {
+                        Text("\(Text("\(done) of 7 nights.").bold())\nTonight makes it \(done + 1).")
+                    }
+                }
+                .dxType(.footnote)
+                .foregroundStyle(DX.Ground.violet.muted)
+                .fixedSize(horizontal: false, vertical: true)
             }
             .accessibilityHint(Text("Opens the evening check-in"))
         case .windDown:
@@ -251,59 +272,90 @@ struct TodayView: View {
 
     // MARK: Timeline
 
+    /// The rest of the day as one quiet list (015 "Later today", 017 "Later"): the pledge, today's read, the prep
+    /// challenge, logging the day's use and water during prep, Glim's check-in and the wind-down breath.
     @ViewBuilder
     private func timeline(_ day: TodayDay) -> some View {
-        let morning = day.pledgedAt != nil || day.showsPledge || day.sessionDone != nil || day.sessionRow
-        let recoveryRow = day.state == .postQuit && day.focus != .recovery
         let challenge: PrepChallenge? = if day.state == .prep, case .prep = day.snap.phase {
             PrepChallenge.forPrepDay(day.snap.prepDayNumber)
         } else { nil }
-        let evening = day.checkedInAt != nil || day.focus != .checkIn
-        VStack(alignment: .leading, spacing: 22) {
-            if morning {
-                TodaySection(title: String(localized: "Morning"), index: 7) {
-                    if let time = day.pledgedAt {
-                        TodayStep(node: .done) { TodayDoneRow(title: String(localized: "Morning pledge"), detail: done(at: time)) }
-                    } else if day.showsPledge {
-                        TodayRowCard(glyph: .pledge, title: String(localized: "Morning pledge"), trailing: String(localized: "10 sec"),
-                                     showsChevron: true) { showPledge = true }
-                            .accessibilityHint(Text("Opens the morning pledge"))
-                    }
-                    if let finished = day.sessionDone {
-                        TodayStep(node: .done) { TodayDoneRow(title: finished.title, detail: done(at: finished.time)) }
-                    } else if day.sessionRow, let today = day.program {
-                        TodaySessionCard(today: today, style: .row, onOpen: openSession, onUnlock: unlock)
-                    }
+        let recoveryRow = day.state == .postQuit && day.focus != .recovery
+        TodaySection(title: day.state == .prep && !day.night ? String(localized: "Later today") : String(localized: "Later"), index: 7) {
+            if let time = day.pledgedAt {
+                TodayStep(node: .done) { TodayDoneRow(title: String(localized: "Morning pledge"), detail: done(at: time)) }
+            } else if day.showsPledge {
+                TodayRowCard(icon: .sun, title: String(localized: "Morning pledge"), detail: String(localized: "10 sec"),
+                             showsChevron: true) { showPledge = true }
+                    .accessibilityHint(Text("Opens the morning pledge"))
+            }
+            if let finished = day.sessionDone {
+                TodayStep(node: .done) { TodayDoneRow(title: finished.title, detail: done(at: finished.time)) }
+            } else if day.sessionRow, let today = day.program {
+                readRow(today)
+            }
+            if recoveryRow {
+                TodayRowCard(icon: .heart, eyebrow: day.recovery.kicker, title: day.recovery.title, showsChevron: true) { showHealth = true }
+                    .accessibilityHint(Text("Opens what changes in your body"))
+            }
+            if let challenge {
+                if day.challengeDone {
+                    TodayStep(node: .done) { TodayDoneRow(title: String(localized: challenge.title), detail: String(localized: "Done")) }
+                } else {
+                    challengeRow(challenge, day: day)
                 }
             }
-            if recoveryRow || challenge != nil {
-                TodaySection(title: String(localized: "Through the day"), index: 8) {
-                    if recoveryRow {
-                        TodayRowCard(icon: .heart, eyebrow: day.recovery.kicker, title: day.recovery.title, showsChevron: true) { showHealth = true }
-                            .accessibilityHint(Text("Opens what changes in your body"))
-                    }
-                    if let challenge {
-                        if day.challengeDone {
-                            TodayStep(node: .done) { TodayDoneRow(title: String(localized: challenge.title), detail: String(localized: "Done")) }
-                        } else {
-                            challengeRow(challenge, day: day)
-                        }
-                    }
-                }
+            if day.state == .prep && !day.night {
+                TodayRowCard(icon: .note, title: logTitle(day.products.first ?? primaryProduct),
+                             detail: String(localized: "Tonight · 1 min"), showsChevron: true) { log.open() }
+                    .accessibilityIdentifier("home.log.use")
+                TodayWaterRow(profile: profile, now: day.now)
+                    .padding(.horizontal, 16)
             }
-            if evening || day.ahead != nil {
-                TodaySection(title: String(localized: "Evening"), index: 9) {
-                    if let time = day.checkedInAt {
-                        TodayStep(node: .done) { TodayDoneRow(title: String(localized: "Evening check-in"), detail: done(at: time)) }
-                    } else if day.focus != .checkIn {
-                        TodayRowCard(icon: .moon, title: String(localized: "Check in with Glim · 1 min"),
-                                     detail: String(localized: "Opens at 6 PM"), action: nil)
-                    }
-                    if let ahead = day.ahead {
-                        TodayAheadRow(text: ahead.text, isQuitDay: ahead.isQuitDay, milestone: day.snap.nextMilestone)
-                    }
-                }
+            if let time = day.checkedInAt {
+                TodayStep(node: .done) { TodayDoneRow(title: String(localized: "Evening check-in"), detail: done(at: time)) }
+            } else if day.focus != .checkIn {
+                TodayRowCard(icon: .moon, title: String(localized: "Check-in with Glim"),
+                             detail: checkInLine, showsChevron: true) { showCheckIn = true }
+                    .accessibilityHint(Text("Opens the evening check-in"))
             }
+            if day.focus != .windDown {
+                TodayRowCard(icon: .leaf, title: String(localized: "Wind-down breath"),
+                             detail: String(localized: "10 PM · 3 min"), showsChevron: true) { showCalmTools = true }
+            }
+        }
+    }
+
+    /// Today's read in the Later list (017): the title, "Today's read · 3 min".
+    @ViewBuilder
+    private func readRow(_ today: ProgramToday) -> some View {
+        if case let .open(id, inProgress, needsUpgrade) = today.kind {
+            TodayRowCard(icon: .note, title: today.title.isEmpty ? today.label : today.title,
+                         detail: inProgress ? String(localized: "Continue · \(today.minutes) min")
+                             : today.isCatchUp ? String(localized: "Catch up · \(today.minutes) min")
+                             : String(localized: "Today's read · \(today.minutes) min"),
+                         trailing: needsUpgrade ? String(localized: "Unlock") : nil, showsChevron: true) {
+                if needsUpgrade { unlock(id, today.title) } else { openSession(id) }
+            }
+            .accessibilityIdentifier("today.lesson")
+        } else {
+            TodaySessionCard(today: today, style: .row, onOpen: openSession, onUnlock: unlock)
+        }
+    }
+
+    /// "Opens 6 PM · nudge at 9 PM".
+    private var checkInLine: String {
+        let minute = UserDefaults.standard.object(forKey: DailyReminderSettings.checkInKey) as? Int ?? DailyReminderSettings.defaultCheckIn
+        guard minute >= 0 else { return String(localized: "Opens 6 PM") }
+        let date = Calendar.current.date(bySettingHour: minute / 60, minute: minute % 60, second: 0, of: .now) ?? .now
+        return String(localized: "Opens 6 PM · nudge at \(date.formatted(date: .omitted, time: .shortened))")
+    }
+
+    /// "Log today's cigarettes".
+    private func logTitle(_ product: Product) -> String {
+        switch product {
+        case .cigarettes: String(localized: "Log today's cigarettes")
+        case .vape: String(localized: "Log today's vaping")
+        case .pouches: String(localized: "Log today's pouches")
         }
     }
 
@@ -399,29 +451,30 @@ struct TodayView: View {
         .frame(minHeight: 52)
     }
 
-    /// Urges surfed after Day Xero (UX-09): cravings ridden out, all time, and today's.
+    /// Waves ridden today (017): the wave tile, "3 waves today", "Ridden out with SOS", Log a wave.
     private func urgesRow(_ day: TodayDay) -> some View {
         let ridden = logs.filter { $0.kind == .craving && $0.outcome == .passed }
         let today = day.clock.day(containing: day.now)
         let todayCount = ridden.filter { day.clock.day(containing: $0.timestamp) == today }.count
-        return HStack(spacing: 10) {
-            LogIcon(glyph: .urge)
+        return HStack(spacing: 12) {
+            DXIcon(.wave, size: 22).foregroundStyle(Color(light: 0x3554B5, dark: 0x9DB4FF))
+                .frame(width: 44, height: 44)
+                .background(Color(light: 0xF1E8DA, dark: 0x26304C), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
+                .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 1) {
-                countText(ridden.count, unit: String(localized: "urges surfed"))
-                if todayCount > 0 {
-                    Text("+\(todayCount) today").dxType(.caption).foregroundStyle(DX.Fill.green)
-                }
+                countText(todayCount, unit: todayCount == 1 ? String(localized: "wave today") : String(localized: "waves today"))
+                Text("Ridden out with SOS").dxType(.caption).foregroundStyle(TodayInk.muted)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .accessibilityElement(children: .combine)
-            Button { log.open() } label: { Text("Log") }
+            Button { log.open() } label: { Text("Log a wave") }
                 .buttonStyle(.dx(.ghostSmall, on: .apricot))
                 .frame(height: 44)
                 .fixedSize()
-            .accessibilityLabel(Text("Log a craving or slip"))
-            .accessibilityIdentifier("home.log.urge")
+                .accessibilityLabel(Text("Log a craving or slip"))
+                .accessibilityIdentifier("home.log.urge")
         }
-        .frame(minHeight: 52)
+        .frame(minHeight: 62)
     }
 
     /// "4 cigarettes": the number in the display face.
@@ -768,9 +821,10 @@ private struct TodayDay {
             let label = program.map { if case .open = $0.kind { $0.label } else { "" } } ?? ""
             stamps = Stamps(daysToQuit: daysToQuit, quitDate: quitDate, done: done, total: total,
                             current: sessionOpen && done < total ? done + 1 : nil)
+            let theme: String? = if case .open? = program?.kind, let line = program?.subtitle, !line.isEmpty { line } else { nil }
             hero = TodayHeroModel(
                 night: night, mode: .prep, greeting: greeting,
-                line: daysToQuit == 0 ? countdown : "\(countdown) · \(quitDate)",
+                line: night ? String(localized: "\(countdown) · \(quitDate)") : theme.map { String(localized: "Today: \($0).") } ?? (daysToQuit == 0 ? countdown : "\(countdown) · \(quitDate)"),
                 why: view.why, profileInitial: initial,
                 pill: label.isEmpty ? todayDate : "\(todayDate) · \(label)",
                 titleLead: "", titleWord: "", moneyKept: 0, currencyCode: snap.currencyCode, avoided: 0, avoidedUnit: "",
@@ -793,17 +847,28 @@ private struct TodayDay {
                 String(localized: "Next: \($0.title) · \(TodayView.relative(hours: $0.fromHours - elapsed))")
             }
             let earned = Milestones.days.last { $0 <= snap.daysClear }
+            // The day a badge lands, the title is the badge (016); otherwise the time free.
+            let fresh = earned.map { snap.daysClear - $0 <= 1 } ?? false
+            let waves = view.logsValue.filter { $0.kind == .craving && $0.outcome == .passed && clock.day(containing: $0.timestamp) == today }.count
             hero = TodayHeroModel(
                 night: night, mode: .postQuit(earned: earned), greeting: greeting,
-                line: String(localized: "Day \(max(snap.daysClear, 1)) · \(free)"),
+                line: waves == 1 ? String(localized: "1 wave ridden today") : String(localized: "\(waves) waves ridden today"),
                 why: view.why, profileInitial: initial,
                 pill: todayDate,
-                titleLead: timeFree, titleWord: String(localized: "free"),
+                titleLead: fresh ? String(localized: "\(earned ?? 0)-day badge") : timeFree,
+                titleWord: fresh ? String(localized: "earned") : String(localized: "free"),
                 moneyKept: NSDecimalNumber(decimal: snap.moneyKept).doubleValue, currencyCode: snap.currencyCode,
                 avoided: avoided?.avoided ?? 0, avoidedUnit: avoidedUnit,
-                nextMilestone: snap.nextMilestone, nextFraction: snap.milestoneFraction, aheadText: ahead?.text,
-                slimTitle: String(localized: "\(timeFree) free"),
-                slimLine: String(localized: "\(resilience.clear) of \(resilience.total) days · \(resilience.percent)% · \(money) kept"),
+                nextMilestone: snap.nextMilestone,
+                nextFraction: snap.nextMilestone.map { Double(snap.daysClear) / Double(max($0, 1)) } ?? 1,
+                aheadText: snap.nextMilestone.map { next in
+                    let left = max(next - snap.daysClear, 1)
+                    return left == 1 ? String(localized: "1 day to your \(next)-day badge")
+                        : String(localized: "\(left) days to your \(next)-day badge")
+                },
+                slimTitle: snap.daysClear == 1 ? String(localized: "1 day free") : String(localized: "\(snap.daysClear) days free"),
+                slimLine: todayDate,
+                slimMoney: money,
                 crewStage: crewStage,
                 accessibilityLabel: [String(localized: "\(timeFree) free."), next].compactMap { $0 }.joined(separator: " "))
         }
@@ -843,20 +908,20 @@ private struct TodayWaterRow: View {
         let goalGlasses = max(goal / WaterGoal.glassMl, 1)
         let units = waterProfiles.first?.units ?? WaterUnits.default()
         let big = DX.Typeface4.scaledFont(19, weight: 800, style: .title2, dynamicTypeSize: typeSize)
-        HStack(spacing: 10) {
-            LogIcon(glyph: .water)
+        HStack(spacing: 12) {
+            WaterGlassTile(fill: Double(glasses) / Double(goalGlasses))
             VStack(alignment: .leading, spacing: 0) {
-                Text("\(Text(verbatim: "\(glasses)").font(big).foregroundStyle(TodayInk.ink)) of \(goalGlasses) glasses")
+                Text("\(Text(verbatim: "\(glasses)").font(big).foregroundStyle(TodayInk.ink)) of \(goalGlasses)")
                     .dxFont(15, weight: 600, style: .subheadline)
                     .foregroundStyle(TodayInk.ink)
                     .contentTransition(.numericText())
                     .lineLimit(1).minimumScaleFactor(0.75)
                     .accessibilityLabel(Text("Water · \(glasses) of \(goalGlasses) glasses"))
                     .accessibilityIdentifier("today.water.count")
-                // UX-12: the daily goal, in litres or fl oz from the water settings.
-                Text("\(WaterFormat.amount(goal, units: units)) \(WaterFormat.unit(units)) daily goal")
-                    .dxFont(13, weight: 500, style: .footnote).foregroundStyle(TodayInk.muted)
+                Text("Glasses of water")
+                    .dxType(.caption).foregroundStyle(TodayInk.muted)
                     .lineLimit(1).minimumScaleFactor(0.8)
+                    .accessibilityLabel(Text("Daily goal \(WaterFormat.amount(goal, units: units)) \(WaterFormat.unit(units))"))
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             Button {
@@ -864,7 +929,10 @@ private struct TodayWaterRow: View {
                 logged += 1
                 Analytics.track(.waterLogged(source: WaterSource.app.rawValue, drink: drink.rawValue))
             } label: {
-                Text("+1 glass")
+                HStack(spacing: 6) {
+                    DXIcon(.plus, size: 15, weight: 2.6)
+                    Text("1 glass")
+                }
             }
             .buttonStyle(.dx(.ghostSmall, on: .apricot))
             .frame(height: 44)
@@ -873,7 +941,29 @@ private struct TodayWaterRow: View {
             .accessibilityLabel(Text("Add \(Text(drink.name))"))
             .accessibilityIdentifier("today.water.add")
         }
-        .frame(minHeight: 56)
+        .frame(minHeight: 62)
         .sensoryFeedback(.impact(weight: .medium), trigger: logged)
+    }
+}
+
+/// The drawn glass on the water row (017): its water rises to the day's share of the goal.
+private struct WaterGlassTile: View {
+    let fill: Double
+    private let motion = MotionPolicy()
+
+    var body: some View {
+        Canvas { ctx, size in
+            ctx.scaleBy(x: size.width / 44, y: size.height / 44)
+            let glass = SVGPath.path("M14 11h16l-2 22a2 2 0 01-2 1.8h-8A2 2 0 0116 33z")
+            let level = 33 - 20 * min(max(fill, 0), 1)
+            var inner = ctx
+            inner.clip(to: glass)
+            inner.fill(Path(CGRect(x: 0, y: level, width: 44, height: 44)), with: .color(Color(hex: 0x7FB6F2)))
+            ctx.stroke(glass, with: .color(Color(hex: 0x3554B5)), style: StrokeStyle(lineWidth: 2, lineJoin: .round))
+        }
+        .frame(width: 44, height: 44)
+        .background(Color(light: 0xF1E8DA, dark: 0x26304C), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
+        .animation(motion.animation(DX.Move.settle), value: fill)
+        .accessibilityHidden(true)
     }
 }

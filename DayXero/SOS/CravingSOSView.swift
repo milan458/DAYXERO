@@ -157,11 +157,12 @@ struct CravingSOSView: View {
         }
         .opacity(jelliIn ? 1 : 0)
         .padding(.top, 18)
+        .modifier(HoldJelli())
         .accessibilityHidden(true)
         SOSBreathWords()
             .foregroundStyle(SOSColors.cream)
             .padding(.top, 10)
-        riddenLine
+        helperLines
             .dxArrive(5)
         // Their why comes first, above the fold, before the break menu (UX-06).
         if let reason = currentReason {
@@ -169,9 +170,6 @@ struct CravingSOSView: View {
                 .padding(.top, 6)
                 .dxArrive(6)
         }
-        HoldToFeelPad()
-            .padding(.top, currentReason == nil ? 6 : 4)
-            .dxArrive(6)
         SOSBreakMenuCard(items: menu.isEmpty ? starterBreaks : menu, isOwn: !menu.isEmpty,
                          buildingDay: buildingDayLabel, fastActingNRT: hasFastActingNRT)
             .dxArrive(7)
@@ -199,12 +197,20 @@ struct CravingSOSView: View {
                     .background(SOSColors.cream, in: Capsule())
                     .accessibilityIdentifier("sos.practice")
             }
-            HandOverChip(String(localized: "Xero passed you to Jelli")) {
-                // The chip's avatar slot is 28 pt; draw Xero at that size so nothing spills.
-                XeroView(mood: .calm, stage: 1, points: 28, animate: false)
-                    .frame(width: 28, height: 28)
-                    .background(DX.Ground.apricot.background, in: Circle())
-                    .clipShape(Circle())
+            if !practice, !sighing {
+                // "Riding it · 3:12": the ride timer, counting up each second (019).
+                TimelineView(.periodic(from: startedAt, by: 1)) { timeline in
+                    let seconds = max(0, Int(timeline.date.timeIntervalSince(startedAt)))
+                    Text("Riding it · \(String(format: "%d:%02d", seconds / 60, seconds % 60))")
+                        .dxFont(14, weight: 700, style: .footnote)
+                        .monospacedDigit()
+                        .foregroundStyle(SOSColors.cream)
+                        .padding(.horizontal, 14)
+                        .frame(height: 36)
+                        .background(SOSColors.ocean.card2, in: Capsule())
+                        .accessibilityLabel(Text("Riding it, \(seconds / 60) minutes \(seconds % 60) seconds"))
+                }
+                .dxFade(delay: 0.2)
             }
         }
         .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
@@ -213,17 +219,20 @@ struct CravingSOSView: View {
         .frame(minHeight: 48)
     }
 
-    /// "Most cravings pass within a few minutes. Ride it with me. You've ridden 0:52." The time counts up.
-    private var riddenLine: some View {
+    /// The helper lines under the breath word (019): for the first breath only, then they fade out at 10 s.
+    private var helperLines: some View {
         TimelineView(.periodic(from: startedAt, by: 1)) { timeline in
-            let seconds = max(0, Int(timeline.date.timeIntervalSince(startedAt)))
-            let clock = String(format: "%d:%02d", seconds / 60, seconds % 60)
-            Text("Most cravings pass within a few minutes. Ride it with me. \(Text("You've ridden \(clock).").dxRun(16, weight: 700).foregroundStyle(SOSColors.cream))")
-                .dxType(.body)
-                .foregroundStyle(SOSColors.ocean.muted)
-                .multilineTextAlignment(.center)
-                .fixedSize(horizontal: false, vertical: true)
-                .padding(.horizontal, 12)
+            let early = timeline.date.timeIntervalSince(startedAt) < 10
+            VStack(spacing: 2) {
+                Text("Most cravings pass in a few minutes.")
+                Text("Hold Jelli to feel the pace.")
+            }
+            .dxType(.footnote)
+            .foregroundStyle(SOSColors.ocean.muted)
+            .multilineTextAlignment(.center)
+            .opacity(early ? 1 : 0)
+            .animation(.easeOut(duration: 1.2), value: early)
+            .accessibilityHidden(!early)
         }
     }
 
@@ -231,10 +240,7 @@ struct CravingSOSView: View {
         VStack(spacing: 8) {
             // Side by side, or stacked when the text is too large for one row.
             // v5: one primary; "Still strong" is the outlined second choice beside it.
-            ViewThatFits(in: .horizontal) {
-                HStack(spacing: 8) { passedButton; strongButton.fixedSize(horizontal: true, vertical: false) }
-                VStack(spacing: 8) { passedButton; strongButton.frame(maxWidth: .infinity) }
-            }
+            passedButton
             HStack(spacing: 18) {
                 ShareLink(item: String(localized: "Having a craving right now. Could you talk for five minutes?")) {
                     Text("Text a friend")
@@ -253,13 +259,6 @@ struct CravingSOSView: View {
     private var passedButton: some View {
         Button("It passed") { finish(.passed) }
             .buttonStyle(.dx(.primary, on: .ocean))
-            .lineLimit(1)
-    }
-
-    /// More help when the wave is strong: the calm tools (decision 26).
-    private var strongButton: some View {
-        Button("Still strong") { showCalmTools = true }
-            .buttonStyle(.dx(.ghost, on: .ocean))
             .lineLimit(1)
     }
 
@@ -338,7 +337,7 @@ struct CravingSOSView: View {
     // MARK: F15 I slipped
 
     private var slippedView: some View {
-        SlipFlow(entry: CravingLog.entry(startedAt: startedAt, in: context), profile: profile, onDone: onClose)
+        SOSSlipPlan(entry: CravingLog.entry(startedAt: startedAt, in: context), profile: profile, onDone: onClose)
     }
 
     // MARK: Flow
@@ -412,11 +411,13 @@ private struct PassedView: View {
     let onDone: () -> Void
 
     @Environment(\.modelContext) private var context
+    @Query(filter: #Predicate<LogEntry> { $0.kindRaw == "craving" }) private var cravings: [LogEntry]
     private let motion = MotionPolicy()
     @State private var trigger: Trigger?
     @State private var helped: String?
     @State private var shown = false
     @State private var bumped = false
+    @State private var asking = false
 
     private let ground = SOSColors.sky
 
@@ -428,22 +429,19 @@ private struct PassedView: View {
                     VStack(spacing: 10) {
                         sealedRing
                             .padding(.top, 12)
-                        MarkedTitle("You rode it ", marking: String(localized: "out"), trail: ".", color: DX.Mark.color(on: .ocean))
+                        MarkedTitle("You rode it ", marking: String(localized: "out"), color: DX.Mark.color(on: .ocean))
                             .dxType(.large)
                             .foregroundStyle(ground.ink)
                             .padding(.top, 10)
                             .dxFade(delay: 0.3)
-                        Text("That wave lasted \(lasted). Each one you ride makes the next a little quieter.")
-                            .dxType(.footnote)
+                        Text("\(lasted), start to finish. Each one you ride makes the next quieter.")
+                            .dxType(.body)
                             .foregroundStyle(ground.muted)
                             .multilineTextAlignment(.center)
                             .fixedSize(horizontal: false, vertical: true)
                             .padding(.horizontal, 8)
                             .dxFade(delay: 0.45)
                         wavesTile.padding(.top, 16).dxFade(delay: 0.6)
-                        if !menu.isEmpty { helpedCard.dxArrive(6) }
-                        triggerCard.dxArrive(7)
-                        handBack.dxArrive(8)
                     }
                     .padding(.horizontal, DX.Layout.gutter)
                     .padding(.top, DX.Space.m)
@@ -456,13 +454,34 @@ private struct PassedView: View {
                 }
                 .buttonStyle(.dx(.primary, on: .ocean))
                 .padding(.horizontal, DX.Layout.buttonGutter)
-                .padding(.bottom, DX.Space.xs)
                 .dxArrive(9)
+                // The optional trigger (and what helped) on its own sheet (020).
+                Button(trigger == nil ? "What set it off?" : "Set off by \(Text(trigger!.title).bold())") { asking = true }
+                    .buttonStyle(QuietLink())
+                    .padding(.bottom, DX.Space.xs)
+                    .dxArrive(10)
             }
             .dxReadableColumn()
         }
         .dxGround(.ocean, paint: false)
         .sensoryFeedback(DX.Haptic.commit, trigger: bumped)
+        .sheet(isPresented: $asking) {
+            ScrollView {
+                VStack(spacing: 12) {
+                    triggerCard
+                    if !menu.isEmpty { helpedCard }
+                    Button("Done") { asking = false }
+                        .buttonStyle(.dx(.primary, on: .ocean))
+                        .padding(.top, 4)
+                }
+                .padding(.horizontal, DX.Layout.gutter)
+                .padding(.top, 24)
+            }
+            .background(SOSSea().ignoresSafeArea())
+            .presentationDetents([.medium, .large])
+            .presentationCornerRadius(32)
+            .dxGround(.ocean, paint: false)
+        }
         .task {
             withAnimation(motion.animation(DX.Move.settle)) { shown = true }
             try? await Task.sleep(for: .seconds(motion.reduce ? 0 : 0.9))
@@ -501,6 +520,8 @@ private struct PassedView: View {
         let next = [1, 10, 25, 50, 100].first { $0 > count } ?? max(count, 1)
         let previous = [0, 1, 10, 25, 50, 100].last { $0 < next } ?? 0
         let p = Double(count - previous) / Double(max(next - previous, 1))
+        let day = DayClock(boundaryHour: profile?.dayBoundaryHour ?? 4)
+        let today = max(1, cravings.filter { $0.outcome == .passed && day.day(containing: $0.timestamp) == day.day(containing: endedAt) }.count)
         return HStack(spacing: 18) {
             ZStack {
                 DXRing(p: p, size: 104, stroke: 6, color: Color(hex: 0xFFF8EE), track: Color.white.opacity(0.22))
@@ -519,6 +540,14 @@ private struct PassedView: View {
                     DXFloatUp("+1", trigger: bumped, delay: 0.9)
                 }
                 Text(count == 1 ? "wave ridden out" : "waves ridden out").dxType(.footnote).foregroundStyle(ground.muted)
+                Text("\(today) today").dxType(.footnote).foregroundStyle(ground.muted)
+                if next > count {
+                    Rectangle().fill(SOSColors.ocean.line).frame(height: 1).padding(.vertical, 8)
+                    Text(next - count == 1 ? "1 more to your \(next)-wave badge" : "\(next - count) more to your \(next)-wave badge")
+                        .dxFont(15, weight: 700, style: .subheadline)
+                        .foregroundStyle(ground.ink)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
             }
             Spacer(minLength: 0)
         }

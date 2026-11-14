@@ -522,16 +522,20 @@ struct TodayNightTicks: View {
                                 .stroke(Color(hex: 0x0F1B33), style: StrokeStyle(lineWidth: 2.4, lineCap: .round, lineJoin: .round))
                                 .frame(width: 14, height: 14)
                         } else if night.isTonight {
-                            Circle().strokeBorder(Color(hex: 0xFFD37A), lineWidth: 2.5).padding(-4)
+                            // Tonight's waiting night badge (018): its count in a solid gold ring that breathes.
+                            Circle().strokeBorder(Color(hex: 0xFFD37A), lineWidth: 2.5).padding(-5)
+                                .phaseAnimator([1.0, 1.06]) { v, scale in v.scaleEffect(scale) } animation: { scale in
+                                    .easeInOut(duration: scale > 1 ? 4 : 6)
+                                }
                             Circle().fill(ground.card2)
                             Circle().strokeBorder(Color(hex: 0xF3E7CC).opacity(0.7), style: StrokeStyle(lineWidth: 1.5, dash: [3, 3])).padding(3)
-                            Text(verbatim: night.date.formatted(.dateTime.day())).dxFace(.display, 13, weight: 800).foregroundStyle(ground.ink)
+                            Text(verbatim: "\(nights.filter(\.done).count + 1)").dxFace(.display, 14, weight: 800).foregroundStyle(ground.ink)
                         } else {
                             Circle().strokeBorder(ground.ink.opacity(0.25), lineWidth: 2)
                         }
                     }
-                    .frame(width: 30, height: 30)
-                    .dxPop(index, delay: 0.5)
+                    .frame(width: 34, height: 34)
+                    .dxFade(delay: 0.5 + Double(index) * 0.09)
                     Text(verbatim: night.date.formatted(.dateTime.weekday(.abbreviated)))
                         .dxType(.caption)
                         .foregroundStyle(night.isTonight ? Color(hex: 0xFFD37A) : ground.muted)

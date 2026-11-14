@@ -4,8 +4,8 @@ import SwiftUI
 import UIKit
 import UserNotifications
 
-/// Every notification in one place (S14.2): grouped as your day and your plan, each with its own switch and time,
-/// plus quiet hours. Changes reschedule straight away.
+/// Reminders (v5, 062): gentle nudges, at most three a day. Every day (the pledge and the check-in each with a time
+/// pill that opens the wheel, the daily lesson), the plan's own reminders, then quiet hours. Changes reschedule at once.
 struct NotificationSettingsView: View {
     @AppStorage(DailyReminderSettings.pledgeKey) private var pledge = DailyReminderSettings.defaultPledge
     @AppStorage(DailyReminderSettings.lessonKey) private var lesson = DailyReminderSettings.offUntilChosen
@@ -20,63 +20,63 @@ struct NotificationSettingsView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.scenePhase) private var scenePhase
     @State private var denied = false
+    @State private var picking: TimePick?
+    private let ground = DX.Ground.reading
 
     var body: some View {
-        List {
+        SettingsPage("Reminders", lead: Text("Gentle nudges, at most three a day.")) {
             if denied {
-                Section {
-                    HStack(spacing: DX.Space.s) {
-                        Text("Notifications are off for DayXero in iPhone Settings.").dxFont(14, weight: 400, style: .footnote)
-                        Spacer(minLength: DX.Space.xs)
-                        Button("Turn on") {
-                            if let url = URL(string: UIApplication.openNotificationSettingsURLString) { UIApplication.shared.open(url) }
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .tint(Read4.ink)
+                HStack(spacing: 12) {
+                    Text("Notifications are off for DayXero in iPhone Settings.").dxType(.footnote).foregroundStyle(ground.ink)
+                    Spacer(minLength: 8)
+                    Button("Turn on") {
+                        if let url = URL(string: UIApplication.openNotificationSettingsURLString) { UIApplication.shared.open(url) }
                     }
+                    .buttonStyle(.dx(.small, on: .reading))
+                    .fixedSize()
                 }
-                .listRowBackground(Read4.amber.opacity(0.14))
+                .dxCard(on: .reading, flat: true, tight: true)
+                .padding(.top, 16)
             }
-            Section("Your day") {
-                row("Morning pledge", detail: "Skipped once you've pledged", systemImage: "sun.max", minute: $pledge, fallback: DailyReminderSettings.defaultPledge)
-                row("Lesson ready", detail: "When a new day opens", systemImage: "book.closed", minute: $lesson, fallback: DailyReminderSettings.defaultLesson)
-                row("Evening check-in", detail: "Skipped once you've checked in", systemImage: "moon", minute: $checkIn, fallback: DailyReminderSettings.defaultCheckIn)
-                row("Milestones", detail: "On the day", systemImage: "flag", minute: $milestone, fallback: DailyReminderSettings.defaultMilestone)
+            SettingsSection("Every day", trailing: Text("\(used) of 3 used"), index: 2)
+            DXList {
+                timed("Morning pledge", icon: .sun, minute: $pledge, fallback: DailyReminderSettings.defaultPledge,
+                      off: "Off. Pledge from Today")
+                timed("Evening check-in", icon: .moon, minute: $checkIn, fallback: DailyReminderSettings.defaultCheckIn,
+                      off: "Off. Check in from Today")
+                timed("Daily lesson", icon: .note, minute: $lesson, fallback: DailyReminderSettings.defaultLesson,
+                      off: "Off. You will find it on Today")
             }
-.listRowBackground(Read4.card)
             .disabled(denied)
-            Section {
-                Toggle(isOn: $nrt) { label("NRT", detail: "Patch changes and step-downs", systemImage: "bandage") }
-                Toggle(isOn: $away) { label("When you've been away", detail: "Two gentle notes, then quiet", systemImage: "water.waves") }
+            .dxArrive(3)
+            SettingsSection("Along the way", index: 4)
+            DXList {
+                timed("Milestones", glyph: SettingsGlyph.flag, minute: $milestone, fallback: DailyReminderSettings.defaultMilestone,
+                      off: "On the day you reach one")
+                SettingsSwitchRow("NRT", icon: .patch, detail: Text("Patch changes and step-downs"), isOn: $nrt)
+                SettingsSwitchRow("When you've been away", icon: .wave, detail: Text("Two gentle notes, then quiet"), isOn: $away)
                 // CLIN-06: as cravings fade, the program steps back.
-                Toggle(isOn: $quietGraduation) {
-                    label("Quiet graduation", detail: "Fewer reminders from Week 3, as cravings fade", systemImage: "leaf")
-                }
+                SettingsSwitchRow("Quiet graduation", icon: .leaf, detail: Text("Fewer reminders from Week 3, as cravings fade"),
+                                  isOn: $quietGraduation)
                 // After the four weeks, Glim checks in once a week (S27.18). Off until chosen.
-                row("Weekly check-in", detail: "Sundays, after the four weeks", systemImage: "calendar", minute: $weekly,
-                    fallback: DailyReminderSettings.defaultWeekly)
-            } header: {
-                Text("Your plan")
+                timed("Weekly check-in", icon: .calendar, minute: $weekly, fallback: DailyReminderSettings.defaultWeekly,
+                      off: "Sundays, after the four weeks")
             }
-.listRowBackground(Read4.card)
             .disabled(denied)
-            Section {
+            .dxArrive(5)
+            SettingsSection("Do not disturb", index: 6)
+            DXList {
                 NavigationLink(value: SettingsSheet.Page.quietHours) {
-                    LabeledContent {
-                        Text(quietStart < 0 ? String(localized: "Off") : "\(time(quietStart)) – \(time(quietEnd))")
-                    } label: {
-                        label("Quiet hours", detail: "Nothing between these times", systemImage: "clock")
-                    }
+                    SettingsRow("Quiet hours", icon: .clock,
+                                detail: quietStart < 0 ? Text("Off") : Text("\(settingsTime(quietStart)) to \(settingsTime(quietEnd))"),
+                                minHeight: 66)
                 }
-            } header: {
-                Text("Quiet hours")
-            } footer: {
-                Text("At most three a day from the program, and fewer from Week 3 with quiet graduation. NRT reminders you set always arrive.")
+                .buttonStyle(.dxPress)
             }
-.listRowBackground(Read4.card)
+            .dxArrive(7)
         }
-        .dxSettingsList()
-        .navigationTitle("Notifications")
+        .sheet(item: $picking) { TimeWheelSheet(pick: $0) }
+        .animation(.easeInOut(duration: 0.3), value: [pledge, checkIn, lesson, milestone, weekly])
         .onChange(of: [pledge, lesson, checkIn, milestone, weekly, quietStart, quietEnd]) { refresh() }
         .onChange(of: away) { refresh() }
         .onChange(of: quietGraduation) { refresh() }
@@ -87,37 +87,30 @@ struct NotificationSettingsView: View {
         }
     }
 
+    /// The daily three that are on.
+    private var used: Int { [pledge, checkIn, lesson].filter { $0 >= 0 }.count }
+
     private func refresh() {
         DailyReminders.refresh(in: context)
         NRTReminders.refresh(profile: try? context.fetch(FetchDescriptor<UserProfile>()).first)
     }
 
-    private func label(_ title: LocalizedStringKey, detail: LocalizedStringKey, systemImage: String) -> some View {
-        HStack(spacing: DX.Space.s) {
-            Image(systemName: systemImage).font(.system(size: 14)).foregroundStyle(Read4.ink)
-                .frame(width: 30, height: 30).background(Read4.surface, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-            VStack(alignment: .leading, spacing: 1) {
-                Text(title).dxFont(16, weight: 600, style: .body)
-                Text(detail).v4Text(.subtitle)
-            }
-        }
+    private func timed(_ title: LocalizedStringKey, icon: DX.Icon, minute: Binding<Int>, fallback: Int, off: LocalizedStringKey) -> some View {
+        timed(title, glyph: icon.d, minute: minute, fallback: fallback, off: off)
     }
 
-    private func row(_ title: LocalizedStringKey, detail: LocalizedStringKey, systemImage: String, minute: Binding<Int>, fallback: Int) -> some View {
-        VStack(alignment: .leading, spacing: DX.Space.xs) {
-            Toggle(isOn: Binding(get: { minute.wrappedValue >= 0 }, set: { minute.wrappedValue = $0 ? fallback : -1 })) {
-                label(title, detail: detail, systemImage: systemImage)
-            }
-            if minute.wrappedValue >= 0 {
-                DatePicker("Time", selection: Self.timeBinding(minute), displayedComponents: .hourAndMinute)
-                    .dxFont(14, weight: 400, style: .footnote)
+    /// A reminder with its time: on, the pill under the title; off, the line saying where to find it.
+    private func timed(_ title: LocalizedStringKey, glyph: String, minute: Binding<Int>, fallback: Int, off: LocalizedStringKey) -> some View {
+        let on = Binding(get: { minute.wrappedValue >= 0 }, set: { minute.wrappedValue = $0 ? fallback : -1 })
+        return SettingsSwitchRow(title, glyph: glyph, detail: on.wrappedValue ? nil : Text(off), isOn: on) {
+            if on.wrappedValue {
+                TimePill(minute: minute.wrappedValue) {
+                    picking = TimePick(id: "\(title)", title: title, minute: minute)
+                }
+                .padding(.top, 6)
+                .transition(.opacity)
             }
         }
-    }
-
-    private func time(_ minute: Int) -> String {
-        (Calendar.current.date(bySettingHour: minute / 60, minute: minute % 60, second: 0, of: .now) ?? .now)
-            .formatted(date: .omitted, time: .shortened)
     }
 
     static func timeBinding(_ minute: Binding<Int>) -> Binding<Date> {
@@ -128,48 +121,60 @@ struct NotificationSettingsView: View {
     }
 }
 
-/// Quiet hours (S14.2): a from/until pair with a 24-hour strip of today's notifications against the quiet band.
+/// Quiet hours (v5, 064): a 24-hour dial from the moon handle round to the sun handle, sleeping Glim and the hours in
+/// the middle; From and Until tiles; what still arrives. Either handle drags in 15-minute steps.
 struct QuietHoursView: View {
     @AppStorage(DailyReminderSettings.quietStartKey) private var start = DailyReminderSettings.defaultQuietStart
     @AppStorage(DailyReminderSettings.quietEndKey) private var end = DailyReminderSettings.defaultQuietEnd
     @AppStorage(DailyReminderSettings.nrtThroughQuietKey) private var nrtThrough = true
-    @AppStorage(DailyReminderSettings.pledgeKey) private var pledge = DailyReminderSettings.defaultPledge
-    @AppStorage(DailyReminderSettings.lessonKey) private var lesson = DailyReminderSettings.offUntilChosen
-    @AppStorage(DailyReminderSettings.checkInKey) private var checkIn = DailyReminderSettings.defaultCheckIn
     @Environment(\.modelContext) private var context
+    @State private var picking: TimePick?
+    @State private var drawn = false
+    private let ground = DX.Ground.reading
+    private let motion = MotionPolicy()
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: DX.Space.s) {
-                Text("Nothing arrives between these times. Anything due waits until they end.").v4Text(.subtitle)
-                Toggle("Quiet hours", isOn: Binding(get: { start >= 0 }, set: {
-                    start = $0 ? DailyReminderSettings.defaultQuietStart : -1
-                    end = $0 ? DailyReminderSettings.defaultQuietEnd : -1
-                }))
-                .dxFont(16, weight: 600, style: .body)
-                if start >= 0 {
-                    HStack(spacing: DX.Space.xs) {
-                        timeCard("From", minute: $start)
-                        timeCard("Until", minute: $end)
-                    }
-                    strip
-                    Text("Grey is quiet. Green marks are your daily notifications.").v4Text(.subtitle)
-                }
-                Toggle(isOn: $nrtThrough) {
-                    VStack(alignment: .leading, spacing: 1) {
-                        Text("Let my NRT times through").dxFont(16, weight: 600, style: .body)
-                        Text("Times you set yourself").v4Text(.subtitle)
-                    }
-                }
-                .padding(.top, DX.Space.s)
+        let on = start >= 0
+        SettingsPage("Quiet hours", lead: Text("Only what you allow arrives in these hours.")) {
+            dial
+                .frame(maxWidth: .infinity)
+                .padding(.top, 46)
+                .padding(.bottom, 46)
+                .opacity(on ? 1 : 0.4)
+                .allowsHitTesting(on)
+                .dxArrive(2)
+            HStack(spacing: 10) {
+                tile("From", icon: .moon, minute: $start)
+                tile("Until", icon: .sun, minute: $end)
             }
-            .padding(DX.Space.m)
+            .opacity(on ? 1 : 0.4)
+            .allowsHitTesting(on)
+            .dxArrive(3)
+            HStack(spacing: 10) {
+                DXIcon(.bell, size: 20).foregroundStyle(ground.muted)
+                Text(on ? "Nudges wait until \(settingsTime(end))." : "Quiet hours are off.")
+                    .dxType(.footnote).foregroundStyle(ground.muted)
+            }
+            .padding(.horizontal, 4)
+            .padding(.top, 14)
+            .dxArrive(4)
+            DXList {
+                SettingsSwitchRow("Quiet hours", icon: .moon, detail: Text("Hold reminders overnight"),
+                                  isOn: Binding(get: { start >= 0 }, set: {
+                                      start = $0 ? DailyReminderSettings.defaultQuietStart : -1
+                                      end = $0 ? DailyReminderSettings.defaultQuietEnd : -1
+                                  }))
+                SettingsSwitchRow("NRT reminders", icon: .patch, detail: Text("Your NRT times still arrive"), isOn: $nrtThrough)
+            }
+            .padding(.top, 14)
+            .dxArrive(5)
         }
-        .dxSettingsList()
-        .background(Read4.background.ignoresSafeArea())
-        .navigationTitle("Quiet hours")
+        .sheet(item: $picking) { TimeWheelSheet(pick: $0) }
         .onChange(of: [start, end]) { refresh() }
         .onChange(of: nrtThrough) { refresh() }
+        .onAppear {
+            if motion.reduce { drawn = true } else { withAnimation(.timingCurve(0.2, 0.8, 0.2, 1, duration: 1.4).delay(0.3)) { drawn = true } }
+        }
     }
 
     private func refresh() {
@@ -177,43 +182,105 @@ struct QuietHoursView: View {
         NRTReminders.refresh(profile: try? context.fetch(FetchDescriptor<UserProfile>()).first)
     }
 
-    private func timeCard(_ title: LocalizedStringKey, minute: Binding<Int>) -> some View {
-        V4Card(padding: 14) {
-            VStack(spacing: 4) {
-                Text(title).v4Text(.micro)
-                DatePicker(title, selection: NotificationSettingsView.timeBinding(minute), displayedComponents: .hourAndMinute)
-                    .labelsHidden()
-            }
-            .frame(maxWidth: .infinity)
-        }
-    }
+    private var span: Int { start < 0 ? 0 : (end - start + 1440) % 1440 }
 
-    /// 24 hours, quiet band in grey (Read4.track), today's notifications as green marks (DX.Fill.green).
-    private var strip: some View {
-        GeometryReader { geo in
-            let w = geo.size.width
-            let x = { (m: Int) in w * CGFloat(m) / 1440 }
-            ZStack(alignment: .leading) {
-                RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Read4.card)
-                if start > end {
-                    Rectangle().fill(Read4.track).frame(width: x(end))
-                    Rectangle().fill(Read4.track).frame(width: w - x(start)).offset(x: x(start))
-                } else {
-                    Rectangle().fill(Read4.track).frame(width: x(end) - x(start)).offset(x: x(start))
-                }
-                ForEach([pledge, lesson, checkIn].filter { $0 >= 0 }, id: \.self) { m in
-                    RoundedRectangle(cornerRadius: 3).fill(DX.Fill.green).frame(width: 6, height: 14).offset(x: x(m) - 3)
-                }
+    /// 12 AM at the top, round clockwise through the day.
+    private var dial: some View {
+        let size: CGFloat = 244
+        let ring: CGFloat = 26
+        let r = (size - ring) / 2
+        let s = Double(max(start, 0)) / 1440
+        let f = Double(span) / 1440
+        let navy = Color(light: 0x1E1A3A, dark: 0xFFF6EA)
+        return ZStack {
+            Circle().stroke(Color(light: 0xE6DCCB, dark: 0x32364A), lineWidth: ring).frame(width: 2 * r, height: 2 * r)
+            Circle()
+                .trim(from: 0, to: drawn ? f : 0)
+                .stroke(navy, style: StrokeStyle(lineWidth: ring, lineCap: .round))
+                .frame(width: 2 * r, height: 2 * r)
+                .rotationEffect(.degrees(-90 + s * 360))
+            ForEach(0..<4, id: \.self) { i in
+                Circle().fill(ground.muted.opacity(0.6)).frame(width: 4, height: 4)
+                    .offset(y: -(r - ring / 2 - 16))
+                    .rotationEffect(.degrees(Double(i) * 90))
             }
-            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            VStack(spacing: 0) {
+                GlimView(mood: .sleepy, stage: 1, points: 66)
+                    .dxFade(delay: 0.5)
+                Text(verbatim: hoursText).dxFace(.display, 44, weight: 800, tracking: -1).foregroundStyle(ground.ink)
+                    .contentTransition(.numericText())
+                Text("quiet hours").dxType(.footnote).foregroundStyle(ground.muted)
+            }
+            handle(.moon, minute: $start, radius: r).dxPop(0, delay: 0.15)
+            handle(.sun, minute: $end, radius: r).opacity(drawn ? 1 : 0)
+            hour("12 AM", angle: 0, distance: size / 2 + 22)
+            hour("6 AM", angle: 90, distance: size / 2 + 30)
+            hour("12 PM", angle: 180, distance: size / 2 + 22)
+            hour("6 PM", angle: 270, distance: size / 2 + 30)
         }
-        .frame(height: 34)
+        .frame(width: size, height: size)
+        .coordinateSpace(.named("dial"))
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text("Quiet from \(time(start)) until \(time(end))"))
+        .accessibilityLabel(Text("Quiet from \(settingsTime(start)) until \(settingsTime(end)), \(hoursText) hours"))
     }
 
-    private func time(_ minute: Int) -> String {
-        (Calendar.current.date(bySettingHour: max(minute, 0) / 60, minute: max(minute, 0) % 60, second: 0, of: .now) ?? .now)
-            .formatted(date: .omitted, time: .shortened)
+    private var hoursText: String {
+        let h = Double(span) / 60
+        return h == h.rounded() ? "\(Int(h))" : h.formatted(.number.precision(.fractionLength(1)))
+    }
+
+    private func hour(_ text: LocalizedStringKey, angle: Double, distance: CGFloat) -> some View {
+        let a = angle * .pi / 180
+        return Text(text).dxType(.caption).foregroundStyle(ground.muted).fixedSize()
+            .offset(x: distance * sin(a), y: -distance * cos(a))
+    }
+
+    private func handle(_ icon: DX.Icon, minute: Binding<Int>, radius: CGFloat) -> some View {
+        let a = Double(max(minute.wrappedValue, 0)) / 1440 * 2 * .pi
+        return DXIcon(icon, size: 23)
+            .foregroundStyle(ground.ink)
+            .frame(width: 46, height: 46)
+            .background(ground.card, in: Circle())
+            .overlay(Circle().strokeBorder(Color(light: 0x1E1A3A, dark: 0xE9E1D3), lineWidth: 3))
+            .shadow(color: .black.opacity(0.12), radius: 4, y: 2)
+            .offset(x: radius * sin(a), y: -radius * cos(a))
+            .gesture(
+                DragGesture(coordinateSpace: .named("dial"))
+                    .onChanged { g in
+                        let dx = g.location.x - 122, dy = g.location.y - 122
+                        var angle = atan2(dx, -dy)
+                        if angle < 0 { angle += 2 * .pi }
+                        let m = Int((angle / (2 * .pi) * 1440 / 15).rounded()) * 15 % 1440
+                        if m != minute.wrappedValue { minute.wrappedValue = m }
+                    }
+            )
+            .sensoryFeedback(DX.Haptic.select, trigger: minute.wrappedValue)
+            .accessibilityHidden(true)
+    }
+
+    private func tile(_ title: LocalizedStringKey, icon: DX.Icon, minute: Binding<Int>) -> some View {
+        Button { picking = TimePick(id: "\(title)", title: title, minute: minute) } label: {
+            VStack(alignment: .leading, spacing: 6) {
+                HStack(spacing: 6) {
+                    DXIcon(icon, size: 15)
+                    Text(title)
+                    Spacer(minLength: 4)
+                    DXIcon(.down, size: 14, weight: 2.6)
+                        .frame(width: 24, height: 24)
+                        .background(ground.card2, in: Circle())
+                }
+                .dxType(.footnote).foregroundStyle(ground.muted)
+                Text(verbatim: settingsTime(minute.wrappedValue)).dxFace(.display, 24, weight: 800, tracking: -0.4)
+                    .foregroundStyle(ground.ink)
+                    .monospacedDigit()
+                    .lineLimit(1).minimumScaleFactor(0.7)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .dxCardChrome(on: .reading)
+        }
+        .buttonStyle(.dxPress)
+        .accessibilityLabel(Text("\(Text(title)), \(settingsTime(minute.wrappedValue))"))
     }
 }

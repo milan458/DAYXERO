@@ -50,7 +50,7 @@ struct ProgressTab: View {
         .fullScreenCover(isPresented: $showHealth) {
             HealthTimelineView(profile: profile, onClose: { showHealth = false })
         }
-        .sheet(isPresented: $showSettings) {
+        .fullScreenCover(isPresented: $showSettings) {
             SettingsSheet(profile: profile)
         }
         .fullProgramPaywall(isPresented: $showPaywall, profile: profile)

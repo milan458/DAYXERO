@@ -345,3 +345,37 @@ struct SensoryTricksSheet: View {
         .presentationBackground(SOSColors.ocean.background)
     }
 }
+
+/// Touching and holding Jelli (019): a soft rhythmic haptic at the breath's pace, stronger on the in-breath.
+struct HoldJelli: ViewModifier {
+    @AppStorage("dx.sosHaptics") private var hapticsOn = true
+    @State private var haptics = HapticPlayer()
+    @State private var holding = false
+
+    func body(content: Content) -> some View {
+        content
+            .contentShape(Circle())
+            .gesture(
+                DragGesture(minimumDistance: 0)
+                    .onChanged { _ in
+                        guard !holding else { return }
+                        holding = true
+                        if hapticsOn { haptics.startPulse() }
+                    }
+                    .onEnded { _ in
+                        holding = false
+                        haptics.stop()
+                    }
+            )
+            .task(id: holding) {
+                while holding, !Task.isCancelled {
+                    let cycle = DX.Move.inhale + DX.Move.exhale
+                    let t = Date.now.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: cycle)
+                    let strength = t < DX.Move.inhale ? 0.25 + 0.45 * t / DX.Move.inhale : 0.7 - 0.6 * (t - DX.Move.inhale) / DX.Move.exhale
+                    if hapticsOn { haptics.setPulse(strength: strength) }
+                    try? await Task.sleep(for: .milliseconds(100))
+                }
+            }
+            .onDisappear { haptics.stop() }
+    }
+}
