@@ -25,42 +25,58 @@ struct CalmToolsView: View {
         #endif
     }
 
-    private let ground = DX.Ground.periwinkle
+    private var ground: DX.Ground { showsClose ? .periwinkle : .reading }
+    @Query private var uses: [ToolUse]
 
+    /// v5 (056): the title and its line, then the four tools as tiles, each with its own little scene; the quiet This
+    /// week row last. Motion: the title arrives, then the tiles on the 90 ms stagger; each cast member settles into its
+    /// scene 120 ms after its tile; the This week row fades in last and its minutes count up (850 ms).
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: DX.Space.xs) {
-                // v5 (056): the tab opens on its title; the header art stays for the sheet opened from SOS and Today.
+            VStack(alignment: .leading, spacing: 0) {
+                // The sheet opened from SOS and Today keeps its header art.
                 if showsClose {
                     CalmHeaderArt()
                         .frame(maxWidth: .infinity)
                         .padding(.top, DX.Space.xs)
                 }
-                // A plain title: the hand-drawn mark is kept for Today's greeting, milestones, the finale and onboarding (S27.15).
-                Text("Calm tools")
-                    .dxType(.large).foregroundStyle(ground.ink)
-                    .accessibilityAddTraits(.isHeader)
-                Text("Short things to do instead of reaching for nicotine.").dxType(.body).foregroundStyle(ground.muted)
-                    .padding(.bottom, DX.Space.xs)
-                // CLIN-04: for the moment straight after finishing something.
-                Button { rewardCard = true } label: { RewardCardRow() }.buttonStyle(.plain)
-                // v5 (056): the tools as a grid of tall art cards.
-                // A plain Grid, not a lazy one: every tool is built, so each one is there for VoiceOver and UI tests
-                // even below the fold.
-                let tools = Array(CalmTool.allCases)
-                Grid(horizontalSpacing: 12, verticalSpacing: 12) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Calm tools")
+                        .dxType(.large).foregroundStyle(ground.ink)
+                        .accessibilityAddTraits(.isHeader)
+                        .dxArrive(0)
+                    Text("A few minutes instead of reaching for nicotine.").dxType(.footnote).foregroundStyle(ground.muted)
+                        .dxArrive(1)
+                }
+                .padding(.top, showsClose ? 0 : 22)
+                // CLIN-04: from SOS and Today, the reward card for the moment straight after finishing something.
+                if showsClose {
+                    Button { rewardCard = true } label: { RewardCardRow() }.buttonStyle(.plain)
+                        .padding(.top, 16)
+                }
+                // A plain Grid, not a lazy one: every tool is built, so each one is there for VoiceOver and UI tests.
+                let tools = CalmTool.shelf
+                Grid(horizontalSpacing: 12, verticalSpacing: 16) {
                     ForEach(Array(stride(from: 0, to: tools.count, by: 2)), id: \.self) { start in
                         GridRow(alignment: .top) {
                             ForEach(start..<min(start + 2, tools.count), id: \.self) { index in
-                                Button { open = tools[index] } label: { CalmToolCard(tool: tools[index]) }
-                                    .buttonStyle(.dxPress)
-                                    .dxArrive(index, delay: 0.15)
+                                Button { open = tools[index] } label: {
+                                    CalmToolCard(tool: tools[index], castDelay: Double(index + 2) * DX.Move.arriveStagger + 0.12)
+                                }
+                                .buttonStyle(.dxPress)
+                                .sensoryFeedback(.impact(weight: .light), trigger: open) { _, now in now == tools[index] }
+                                .dxArrive(index + 2)
                             }
-                            if start + 1 >= tools.count { Color.clear.gridCellUnsizedAxes([.horizontal, .vertical]) }
                         }
                     }
                 }
-                HelpLine(compact: true, ground: ground).padding(.top, DX.Space.s)
+                .padding(.top, 26)
+                weekRow
+                    .padding(.top, 16)
+                    .dxArrive(6)
+                if showsClose {
+                    HelpLine(compact: true, ground: ground).padding(.top, DX.Space.s)
+                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, DX.Layout.gutter)
@@ -88,6 +104,29 @@ struct CalmToolsView: View {
                 }
             }
         }
+    }
+
+    /// "This week: 24 min of calm", in its own soft container.
+    private var weekRow: some View {
+        let week = Calendar.current.dateInterval(of: .weekOfYear, for: .now)
+        let minutes = CalmTool.minutes(in: uses.filter { week?.contains($0.startedAt) ?? false })
+        return HStack(spacing: 10) {
+            DXIcon(.leaf, size: 18).foregroundStyle(ground.muted)
+            HStack(spacing: 0) {
+                Text("This week: ")
+                CountingText(Double(minutes), delay: 0.7) { v in String(localized: "\(Int(v.rounded())) min") }
+                    .dxFace(.body, 15, weight: 700).foregroundStyle(ground.ink)
+                Text(" of calm")
+            }
+            .dxType(.footnote).foregroundStyle(ground.muted)
+            .lineLimit(1)
+            Spacer(minLength: 0)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 13)
+        .background(ground.card2, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text("This week: \(minutes) min of calm"))
     }
 }
 
@@ -126,28 +165,29 @@ private struct CalmCloud: Shape {
     }
 }
 
-/// A calm tool as a tall card (v5, 056): its moving art on top, the title and "N min" under it on the card.
+/// A calm tool as a tile (v5, 056): its scene on top, the title and "N min · detail" under it on the card.
 struct CalmToolCard: View {
     let tool: CalmTool
+    var castDelay: Double = 0
+    private let ground = DX.Ground.reading
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            KitArt(CalmToolRow.art(tool), cornerRadius: 0)
-                .frame(maxWidth: .infinity)
-                .frame(height: 150)
-                .clipped()
-            VStack(alignment: .leading, spacing: 2) {
-                Text(tool.title).dxType(.headline).foregroundStyle(DX.Ground.reading.ink)
-                    .lineLimit(2).minimumScaleFactor(0.85)
-                Text("\(tool.minutes) min").dxType(.caption).foregroundStyle(DX.Ground.reading.muted)
+            CalmTileArt(tool: tool, castDelay: castDelay)
+                .clipShape(UnevenRoundedRectangle(topLeadingRadius: 22, topTrailingRadius: 22, style: .continuous))
+            VStack(alignment: .leading, spacing: 3) {
+                Text(tool.title).dxType(.headline).foregroundStyle(ground.ink)
+                    .lineLimit(1).minimumScaleFactor(0.8)
+                Text(verbatim: "\(String(localized: "\(tool.minutes) min")) · \(String(localized: tool.detail))")
+                    .dxType(.caption).foregroundStyle(ground.muted)
+                    .lineLimit(1).minimumScaleFactor(0.8)
             }
-            .padding(.horizontal, 14)
-            .padding(.vertical, 12)
+            .padding(EdgeInsets(top: 12, leading: 14, bottom: 14, trailing: 14))
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .background(DX.Ground.reading.card)
-        .clipShape(RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous).strokeBorder(DX.Ground.reading.line, lineWidth: 1))
+        .background(ground.card)
+        .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(ground.line, lineWidth: 1))
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Text(tool.title))
         .accessibilityValue(Text("\(tool.minutes) min. \(Text(tool.detail))"))
@@ -229,7 +269,7 @@ struct HelpLine: View {
     }
 }
 
-/// Runs one calm tool, then a light "a bit calmer?" close (S12.1).
+/// Runs one calm tool, then the done screen (S12.1; v5, 057-060).
 struct CalmToolPlayer: View {
     let tool: CalmTool
     var fromSOS = false
@@ -237,16 +277,13 @@ struct CalmToolPlayer: View {
     let onDone: (Bool) -> Void
 
     @Environment(\.modelContext) private var context
-    private let motion = MotionPolicy()
     @State private var startedAt = Date.now
     @State private var finished = false
     @State private var step = 0
     @State private var ticked = 0
-    @State private var thought: String?
-    @State private var ownThought = ""
-    @State private var writingOwn = false
     @State private var use: ToolUse?
-    @State private var answered: Bool?
+    /// Debug stills: open a tool part way through.
+    private var still = false
 
     init(tool: CalmTool, fromSOS: Bool = false, onDone: @escaping (Bool) -> Void) {
         self.tool = tool
@@ -258,165 +295,72 @@ struct CalmToolPlayer: View {
         _startedAt = State(initialValue: Date.now.addingTimeInterval(-d.double(forKey: "dx.calmElapsed")))
         _step = State(initialValue: d.integer(forKey: "dx.calmStep"))
         _ticked = State(initialValue: d.integer(forKey: "dx.calmTicked"))
-        if tool == .noticeAndName, d.integer(forKey: "dx.calmStep") > 0 { _thought = State(initialValue: String(localized: NoticeAndName.thoughts[0])) }
+        still = tool == .noticeAndName && d.integer(forKey: "dx.calmStep") > 0
         #endif
     }
 
     var body: some View {
         VStack(spacing: 0) {
-            if finished { done } else { running }
+            if finished {
+                CalmDoneView(tool: tool, fromSOS: fromSOS, use: use, onDone: onDone)
+            } else {
+                running
+            }
         }
         .padding(.horizontal, DX.Layout.gutter)
         .dxReadableColumn()
         .padding(.bottom, DX.Space.xs)
-        .background(Read4.background.ignoresSafeArea())
+        .dxGround(.reading)
         .onAppear {
-            let record = ToolUse(tool: tool.rawValue, startedAt: startedAt)
+            let record = ToolUse(tool: tool.rawValue, startedAt: startedAt, finished: finished)
             context.insert(record)
             try? context.save()
             use = record
         }
-        .sensoryFeedback(DX.Haptic.commit, trigger: finished)
-        .sensoryFeedback(DX.Haptic.select, trigger: ticked)
+        .sensoryFeedback(DX.Haptic.commit, trigger: finished) { _, now in now }
     }
 
     // MARK: Running
 
     @ViewBuilder
     private var running: some View {
-        topBar
         switch tool {
-        case .boxBreathing, .longerOutBreath:
-            OrbBreathingPanel(pattern: tool.orbPattern ?? "box") { finish(early: false) }
-        case .grounding: grounding
-        case .noticeAndName: notice
-        case .dropAnchor: anchor
+        case .boxBreathing:
+            CalmBoxView(startedAt: startedAt, onClose: { finish(early: true) }, onFinished: { finish(early: false) })
+        case .grounding:
+            CalmGroundingView(step: $step, ticked: $ticked, onClose: { finish(early: true) }, onFinished: { finish(early: false) })
+        case .noticeAndName:
+            CalmUrgeView(still: still, onClose: { finish(early: true) }, onPassing: { finish(early: false) }, onMoreHelp: {
+                use?.finished = false
+                try? context.save()
+                onDone(true)
+            })
+        case .longerOutBreath:
+            topBar
+            OrbBreathingPanel(pattern: tool.orbPattern ?? "478", cycles: tool.cycles) { finish(early: false) }
+        case .dropAnchor:
+            topBar
+            anchor
         }
     }
 
     private var topBar: some View {
         VStack(spacing: DX.Space.s) {
-            if let total = steps {
-                HStack(spacing: 4) {
-                    ForEach(0..<total, id: \.self) { i in
-                        Capsule().fill(i <= step ? Read4.ink : Read4.track).frame(height: 4)
-                    }
-                }
-                .accessibilityHidden(true)
+            if tool == .dropAnchor {
+                DXSteps(count: DropAnchor.steps.count, current: step + 1)
+                    .accessibilityHidden(true)
             }
             HStack {
-                Button { finish(early: true) } label: { Image(systemName: "xmark") }
-                    .buttonStyle(.v4Icon).accessibilityLabel(Text("Stop"))
+                DXIconButton(.close, label: "Close") { finish(early: true) }
                 Spacer()
-                Text(tool.title).v4Text(.micro)
+                Text(tool.title).dxType(.headline)
                 Spacer()
                 Color.clear.frame(width: 44, height: 1)
             }
+            .padding(.horizontal, -6)
             .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
         }
-        .padding(.top, DX.Space.s)
-    }
-
-    private var steps: Int? {
-        switch tool {
-        case .grounding: Grounding.steps.count
-        case .noticeAndName: 3
-        case .dropAnchor: DropAnchor.steps.count
-        case .boxBreathing, .longerOutBreath: nil
-        }
-    }
-
-    private var grounding: some View {
-        let current = Grounding.steps[min(step, Grounding.steps.count - 1)]
-        return VStack(alignment: .leading, spacing: DX.Space.s) {
-            Text(verbatim: "\(current.count)").dxFont(40, weight: 700, style: .largeTitle)
-                .foregroundStyle(Read4.accent).padding(.top, DX.Space.l)
-            Text(current.sense).v4Text(.title)
-            Text(current.hint).v4Text(.subtitle)
-            DXFlowLayout(spacing: DX.Space.xs) {
-                ForEach(0..<current.count, id: \.self) { i in
-                    Button { ticked = max(ticked, i + 1) } label: {
-                        Image(systemName: "checkmark").font(.system(size: 15, weight: .bold))
-                            .foregroundStyle(i < ticked ? DX.Fill.cream : .clear)
-                            .frame(width: 44, height: 44)
-                            .background(i < ticked ? Read4.accent : .clear, in: Circle())
-                            .overlay(Circle().strokeBorder(i < ticked ? .clear : Read4.faint, lineWidth: 1.5))
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel(Text("Found \(i + 1)"))
-                }
-            }
-            .padding(.top, DX.Space.xs)
-            // The button sits right under the content, not pinned to the bottom (S27.14).
-            Button(step + 1 < Grounding.steps.count ? "Next: \(Grounding.steps[step + 1].count) \(String(localized: Grounding.steps[step + 1].sense))" : "Done") {
-                ticked = 0
-                if step + 1 < Grounding.steps.count { step += 1 } else { finish(early: false) }
-            }
-            .buttonStyle(.dx(.primary, on: .reading))
-            .padding(.top, DX.Space.s)
-            Spacer(minLength: 0)
-        }
-    }
-
-    private var notice: some View {
-        VStack(alignment: .leading, spacing: DX.Space.s) {
-            switch step {
-            case 0:
-                Text("What's your mind telling you?").v4Text(.title).padding(.top, DX.Space.l)
-                Text("Pick the closest, or write your own.").v4Text(.subtitle)
-                DXFlowLayout {
-                    ForEach(NoticeAndName.thoughts.map { String(localized: $0) }, id: \.self) { t in
-                        V4ToggleChip(LocalizedStringKey(t), isOn: Binding(get: { !writingOwn && thought == t }, set: { if $0 { thought = t; writingOwn = false } }))
-                    }
-                    V4ToggleChip("write my own", isOn: $writingOwn)
-                }
-                if writingOwn { V4TextField("The thought", prompt: "I'll never manage", text: $ownThought) }
-                Button("Next") { step = 1 }.buttonStyle(.dx(.primary, on: .reading)).disabled(chosenThought == nil)
-                    .dxDisabledReason("Pick a thought, or write your own.", shown: chosenThought == nil)
-                    .padding(.top, DX.Space.s)
-                Spacer(minLength: 0)
-            case 1:
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("Say it this way").v4Text(.micro)
-                    Text("I'm noticing I'm having the thought \(Text(verbatim: "“\(chosenThought ?? "")”").foregroundStyle(Read4.accent))")
-                        .dxFont(24, weight: 600, style: .title2).foregroundStyle(Read4.ink)
-                }
-                .padding(DX.Space.m)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Read4.card, in: RoundedRectangle(cornerRadius: 26, style: .continuous))
-                .overlay(RoundedRectangle(cornerRadius: 26, style: .continuous).strokeBorder(Read4.hairline))
-                .padding(.top, DX.Space.l)
-                Text("It's a thought, not an order. You can let it sit there while you get on with your day.").v4Text(.subtitle)
-                Button("Next") { step = 2 }.buttonStyle(.dx(.primary, on: .reading))
-                    .padding(.top, DX.Space.s)
-                Spacer(minLength: 0)
-            default:
-                timedBreaths
-                    .padding(.top, DX.Space.l)
-                Button("Done") { finish(early: false) }.buttonStyle(.dx(.primary, on: .reading))
-                    .padding(.top, DX.Space.s)
-                Spacer(minLength: 0)
-            }
-        }
-    }
-
-    /// Three slow breaths with the thought, then done.
-    private var timedBreaths: some View {
-        TimelineView(.animation(minimumInterval: motion.reduce ? 1 : 1.0 / 30)) { timeline in
-            let elapsed = timeline.date.timeIntervalSince(startedAt)
-            let breath = CravingWave.breath(at: elapsed)
-            VStack(spacing: DX.Space.s) {
-                Circle()
-                    .fill(RadialGradient(colors: [Read4.accent.opacity(0.6), Read4.accent.opacity(0.2), .clear],
-                                         center: .center, startRadius: 0, endRadius: 90))
-                    .scaleEffect(motion.breathes ? 0.7 + 0.3 * breath.scale : 0.86)
-                    .overlay(Text("\(NoticeAndName.breaths) breaths").dxFont(19, weight: 600, style: .title3)
-                        .foregroundStyle(Read4.ink))
-                    .frame(width: 180, height: 180)
-                Text(breath.phase == .breatheIn ? "Breathe in" : "Breathe out").v4Text(.subtitle)
-            }
-            .frame(maxWidth: .infinity)
-        }
+        .padding(.top, DX.Space.xs)
     }
 
     private var anchor: some View {
@@ -438,59 +382,6 @@ struct CalmToolPlayer: View {
         }
     }
 
-    private var chosenThought: String? {
-        if writingOwn {
-            let text = ownThought.trimmingCharacters(in: .whitespacesAndNewlines)
-            return text.isEmpty ? nil : text
-        }
-        return thought
-    }
-
-    // MARK: Done
-
-    private var done: some View {
-        // Top-anchored, with the buttons right under the choices (S27.14).
-        VStack(spacing: DX.Space.s) {
-            Image(systemName: "checkmark").font(.system(size: 30, weight: .bold)).foregroundStyle(Read4.accent)
-                .frame(width: 76, height: 76).background(Read4.accentSoft, in: Circle())
-                .padding(.top, DX.Space.xl)
-                .accessibilityHidden(true)
-            Text("Nicely done").v4Text(.title)
-            Text("A bit calmer? \(Text("· optional").foregroundStyle(Read4.faint))").v4Text(.subtitle)
-            HStack(spacing: DX.Space.xs) {
-                calmerButton(true, "A bit")
-                calmerButton(false, "Not really")
-            }
-            if answered == false {
-                Text("That's okay. Try another tool, or ride it out with Craving SOS.").v4Text(.subtitle).multilineTextAlignment(.center)
-            }
-            Button("Done") { onDone(false) }.buttonStyle(.dx(.primary, on: .reading))
-                .padding(.top, DX.Space.s)
-            Button(fromSOS ? "Back to Craving SOS" : "Still craving? Start Craving SOS") {
-                onDone(true)
-            }
-            .buttonStyle(.dx(.quiet, on: .reading))
-            Spacer(minLength: 0)
-        }
-    }
-
-    private func calmerButton(_ value: Bool, _ title: LocalizedStringKey) -> some View {
-        let on = answered == value
-        return Button {
-            answered = value
-            use?.calmer = value
-            try? context.save()
-        } label: {
-            Text(title).dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.ink)
-                .frame(maxWidth: .infinity, minHeight: 52)
-                .background(Read4.card, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-                .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .strokeBorder(on ? Read4.accent : Read4.hairline, lineWidth: on ? 1.5 : 1))
-        }
-        .buttonStyle(.plain)
-        .accessibilityAddTraits(on ? .isSelected : [])
-    }
-
     // MARK: Flow
 
     private func finish(early: Bool) {
@@ -499,7 +390,7 @@ struct CalmToolPlayer: View {
         if early {
             onDone(false)
         } else {
-            finished = true
+            withAnimation(DX.Move.fade) { finished = true }
         }
     }
 }

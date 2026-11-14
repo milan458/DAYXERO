@@ -158,23 +158,23 @@ final class JourneyUITests: XCTestCase {
     }
 
     /// Every calm tool opens and closes without the app going down. Box breathing and the longer out-breath run on the
-    /// Bio-Orb and crashed on open (1 Nov 2026); this keeps all five honest.
+    /// Bio-Orb and crashed on open (1 Nov 2026); this keeps the four on the shelf (v5, 056) honest.
     func testEveryCalmToolOpens() {
         let app = launch(["-dx.homeScenario", "day3", "-dx.store", "pro", "-dx.openCalmList", "YES"])
         XCTAssert(app.staticTexts["Calm tools"].waitForExistence(timeout: 10), "The calm tools list didn't open")
-        for title in ["Box breathing", "Longer out-breath", "5-4-3-2-1", "Notice and name", "Drop anchor"] {
+        for title in ["Box breathing", "Grounding", "Notice the urge", "Wind down"] {
             let row = button(app, title)
             XCTAssert(row.waitForExistence(timeout: 5), "No \"\(title)\" row")
             // v5: the tools are a grid of tall cards, so the last ones sit below the fold.
             scrollIntoView(app, row)
             tapWhenStill(app, row, name: title)
-            let stop = app.buttons["Stop"]
+            let stop = app.buttons["Close"].firstMatch
             XCTAssert(stop.waitForExistence(timeout: 10), "\"\(title)\" didn't open")
             // Let the orb draw and its clock tick for a moment before checking the app is still up.
             RunLoop.current.run(until: .now.addingTimeInterval(2))
             XCTAssertEqual(app.state, .runningForeground, "The app went down opening \"\(title)\"")
             snap(app, "50-calm-\(title.lowercased().filter { $0.isLetter || $0.isNumber })")
-            tapWhenStill(app, stop, name: "Stop")
+            tapWhenStill(app, stop, name: "Close")
             XCTAssert(app.staticTexts["Calm tools"].waitForExistence(timeout: 5), "\"\(title)\" didn't close")
         }
     }

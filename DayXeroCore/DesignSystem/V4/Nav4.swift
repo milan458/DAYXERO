@@ -10,7 +10,7 @@ public enum V4Tab: String, CaseIterable, Sendable {
         switch self {
         case .today: "Today"
         case .program: "Program"
-        case .sos: "SOS / Breathe"
+        case .sos: "SOS"
         case .calm: "Calm"
         case .progress: "Progress"
         }

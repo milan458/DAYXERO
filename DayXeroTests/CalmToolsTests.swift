@@ -6,7 +6,8 @@ import Testing
 struct CalmToolsTests {
     @Test func threeToFiveShortTools() {
         #expect((3...5).contains(CalmTool.allCases.count))
-        #expect(CalmTool.allCases.allSatisfy { $0.minutes <= 3 })
+        #expect(CalmTool.allCases.allSatisfy { $0.minutes <= 5 })
+        #expect(CalmTool.shelf.count == 4)
     }
 
     @Test func boxBreathingGoesRoundTheSquare() {

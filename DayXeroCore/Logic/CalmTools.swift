@@ -9,27 +9,28 @@ public enum CalmTool: String, CaseIterable, Sendable, Identifiable {
     public var title: LocalizedStringResource {
         switch self {
         case .boxBreathing: "Box breathing"
-        case .longerOutBreath: "Longer out-breath"
-        case .grounding: "5-4-3-2-1"
-        case .noticeAndName: "Notice and name"
+        case .longerOutBreath: "Wind down"
+        case .grounding: "Grounding"
+        case .noticeAndName: "Notice the urge"
         case .dropAnchor: "Drop anchor"
         }
     }
 
     public var detail: LocalizedStringResource {
         switch self {
-        case .boxBreathing: "In, hold, out, hold."
-        case .longerOutBreath: "In 4, hold 7, out 8."
-        case .grounding: "Use your five senses."
-        case .noticeAndName: "Label the thought. Let it be."
+        case .boxBreathing: "In, hold, out"
+        case .longerOutBreath: "Before sleep"
+        case .grounding: "Five senses"
+        case .noticeAndName: "Just watch"
         case .dropAnchor: "Feet down. Come back to the room."
         }
     }
 
     public var minutes: Int {
         switch self {
-        case .grounding: 2
-        case .boxBreathing, .longerOutBreath, .noticeAndName, .dropAnchor: 1
+        case .grounding: 3
+        case .longerOutBreath: 5
+        case .boxBreathing, .noticeAndName, .dropAnchor: 1
         }
     }
 
@@ -51,6 +52,17 @@ public enum CalmTool: String, CaseIterable, Sendable, Identifiable {
         case .longerOutBreath: "478"
         case .grounding, .noticeAndName, .dropAnchor: nil
         }
+    }
+
+    /// The four tools on the Calm tab (v5, 056), in their grid order. Drop anchor stays in the evening wind-down.
+    public static let shelf: [CalmTool] = [.boxBreathing, .grounding, .noticeAndName, .longerOutBreath]
+
+    /// Wind down runs the 4-7-8 breath for about five minutes (16 rounds of 19 s).
+    public var cycles: Int? { self == .longerOutBreath ? 16 : nil }
+
+    /// Minutes of calm in `uses` (finished tools only), as on the Calm tab and its done screen.
+    public static func minutes(in uses: [ToolUse]) -> Int {
+        uses.filter(\.finished).reduce(0) { $0 + (CalmTool(rawValue: $1.toolRaw)?.minutes ?? 0) }
     }
 }
 
@@ -86,15 +98,17 @@ public enum Grounding {
     public struct Step: Sendable, Equatable {
         public let count: Int
         public let sense: LocalizedStringResource
+        /// The one-line instruction under the count (v5, 058).
+        public let line: LocalizedStringResource
         public let hint: LocalizedStringResource
     }
 
     public static let steps: [Step] = [
-        Step(count: 5, sense: "things you can see", hint: "Look around slowly. Colours, shapes, light."),
-        Step(count: 4, sense: "things you can feel", hint: "Your feet on the floor, the chair, your clothes, the air."),
-        Step(count: 3, sense: "things you can hear", hint: "Near and far. Traffic, voices, your own breathing."),
-        Step(count: 2, sense: "things you can smell", hint: "Or two smells you like, if nothing's around."),
-        Step(count: 1, sense: "thing you can taste", hint: "A sip of water, or just what's in your mouth now."),
+        Step(count: 5, sense: "things you can see", line: "Let your eyes move slowly.", hint: "Colours, shapes, light, something you hadn't noticed."),
+        Step(count: 4, sense: "things you can feel", line: "Touch them, or just notice them.", hint: "Your feet on the floor, the chair, your clothes, the air on your skin."),
+        Step(count: 3, sense: "things you can hear", line: "Listen near, then far.", hint: "Traffic, voices, the hum of a room, your own breathing."),
+        Step(count: 2, sense: "things you can smell", line: "Breathe in through your nose.", hint: "Or two smells you like, if nothing's around."),
+        Step(count: 1, sense: "thing you can taste", line: "Notice what's there now.", hint: "A sip of water, or just what's in your mouth."),
     ]
 }
 
