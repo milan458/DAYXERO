@@ -170,31 +170,71 @@ struct ChoiceBeat: View {
                 if nothingToPick {
                     emptyState
                 } else if beat.multi {
-                    if let limit {
-                        Text("\(selected.count) of \(limit) picked").dxFont(16, weight: 600, style: .body)
-                            .foregroundStyle(Read4.accent)
-                    }
+                    // v5 (026): chips hug their words in left-aligned rows; at the cap a new pick releases the oldest.
                     DXFlowLayout(spacing: 8) {
-                        ForEach(options) { option in
-                            let on = selected.contains(option.id)
-                            BeatChip(text: option.text, on: on, muted: !on && limit.map { selected.count >= $0 } == true) { toggle(option.id) }
+                        ForEach(Array(options.enumerated()), id: \.element.id) { i, option in
+                            BeatChip(text: option.text, on: selected.contains(option.id)) { toggle(option.id) }
+                                .dxArrive(0, delay: 0.27 + Double(i) * 0.045)
+                        }
+                        if beat.allowOther {
+                            Button { selectOther() } label: {
+                                HStack(spacing: 6) {
+                                    DXIcon(.plus, size: 16, weight: 2.6).foregroundStyle(DX.Fill.coral)
+                                    Text("Add your own").dxFace(.body, 15, weight: 600).foregroundStyle(DX.Ground.table.ink)
+                                }
+                                .padding(.leading, 12).padding(.trailing, 14)
+                                .frame(minHeight: 44)
+                                .overlay(RoundedRectangle(cornerRadius: DX.Layout.chipRadius, style: .continuous)
+                                    .strokeBorder(otherOn ? DX.Ground.table.selEdge : DX.Ground.table.ink.opacity(0.28),
+                                                  style: StrokeStyle(lineWidth: otherOn ? 2 : 1.4, dash: otherOn ? [] : [4, 3])))
+                                .background(otherOn ? DX.Ground.table.selTint : .clear, in: RoundedRectangle(cornerRadius: DX.Layout.chipRadius, style: .continuous))
+                            }
+                            .buttonStyle(.plain)
                         }
                     }
+                    if beat.allowOther && otherOn {
+                        TextField("Your own", text: $other)
+                            .dxFace(.body, 16, weight: 500)
+                            .padding(14)
+                            .background(DX.Ground.table.card, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                            .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).strokeBorder(DX.Ground.table.line, lineWidth: 1))
+                    }
+                    if beat.saveAs == "stress_triggers" { planSoFar.padding(.top, 14) }
                 } else {
-                    ForEach(options) { option in
-                        Button { selectSingle(option.id) } label: { OptionRow(text: option.text, selected: selected.contains(option.id)) }
-                            .buttonStyle(.plain)
-                            .accessibilityAddTraits(selected.contains(option.id) ? .isSelected : [])
+                    // v5 (027): each option with its small paper-cut spot, a detail line and the Recommended pill.
+                    ForEach(Array(options.enumerated()), id: \.element.id) { i, option in
+                        Button { selectSingle(option.id) } label: {
+                            OptionRow(text: option.text, selected: selected.contains(option.id)) {
+                                if option.detail != nil || option.recommended == true {
+                                    HStack(spacing: 8) {
+                                        if let detail = option.detail {
+                                            Text(verbatim: detail).dxType(.footnote).foregroundStyle(DX.Ground.table.muted)
+                                        }
+                                        if option.recommended == true {
+                                            Text("Recommended").dxFace(.body, 11, weight: 700)
+                                                .foregroundStyle(DX.Ground.table.ink)
+                                                .padding(.horizontal, 7).frame(height: 18)
+                                                .overlay(Capsule().strokeBorder(DX.Ground.table.ink.opacity(0.7), lineWidth: 1))
+                                        }
+                                    }
+                                }
+                            } leading: {
+                                ChoiceSpot(id: option.id)
+                            }
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityAddTraits(selected.contains(option.id) ? .isSelected : [])
+                        .dxSettle(0, delay: 0.27 + Double(i) * 0.12)
                     }
                 }
-                if beat.allowOther {
+                if beat.allowOther && !beat.multi {
                     Button { selectOther() } label: {
                         OptionRow(text: String(localized: "Something else"), selected: otherOn) {
                             if otherOn {
                                 TextField("Your own", text: $other)
-                                    .dxFont(16, weight: 500, style: .body)
+                                    .dxFace(.body, 16, weight: 500)
                                     .padding(12)
-                                    .background(Read4.card, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                                    .background(DX.Ground.table.card2, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                             }
                         }
                     }
@@ -209,6 +249,33 @@ struct ChoiceBeat: View {
         .sensoryFeedback(DX.Haptic.select, trigger: selected)
         .sensoryFeedback(.impact(weight: .light), trigger: fullHaptic)
         .onAppear(perform: restore)
+    }
+
+    /// "Your plan so far" (026): each pick writes itself into a "When …, I'll ____" line, left blank for the next step.
+    private var planSoFar: some View {
+        let picked = options.filter { selected.contains($0.id) }.map { $0.text.prefix(1).lowercased() + $0.text.dropFirst() }
+        return VStack(alignment: .leading, spacing: 10) {
+            Text("Your plan so far").dxType(.caption).foregroundStyle(DX.Ground.table.muted)
+            ForEach(0..<2, id: \.self) { i in
+                HStack(alignment: .firstTextBaseline, spacing: 6) {
+                    if i < picked.count {
+                        (Text("When ") + Text(verbatim: picked[i]).dxRun(15, weight: 700) + Text(", I'll"))
+                            .contentTransition(.opacity)
+                    } else {
+                        Text("When ") + Text(verbatim: "…").dxRun(15, weight: 700) + Text(", I'll")
+                    }
+                    Rectangle().fill(DX.Ground.table.ink.opacity(0.35)).frame(width: 74, height: 1.5).offset(y: -2)
+                }
+                .dxType(.footnote).foregroundStyle(DX.Ground.table.ink)
+                .animation(.easeInOut(duration: 0.3), value: picked)
+            }
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(DX.Ground.table.card, in: RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous).strokeBorder(DX.Ground.table.line, lineWidth: 1))
+        .accessibilityElement(children: .combine)
+        .dxArrive(8)
     }
 
     private var fromReasons: Bool { beat.optionsFrom == "reasons" }
@@ -243,6 +310,9 @@ struct ChoiceBeat: View {
         if let i = selected.firstIndex(of: id) {
             selected.remove(at: i)
         } else if let limit, selected.count + (otherOn ? 1 : 0) >= limit {
+            // At the cap a new pick releases the oldest, so the screen never blocks (026).
+            if !selected.isEmpty { selected.removeFirst() } else { otherOn = false }
+            selected.append(id)
             fullHaptic.toggle()
         } else {
             selected.append(id)

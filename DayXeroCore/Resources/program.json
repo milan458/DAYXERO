@@ -1756,82 +1756,100 @@
             {
               "id": "P4.5d",
               "type": "choice",
-              "prompt": "When the first one hits, what will you do first, before anything else? Two sighs is the one we recommend.",
+              "prompt": "When the first one hits, what will you do first? Pick one to do before anything else.",
               "allowOther": true,
               "saveAs": "stress_plan_1",
               "options": [
                 {
                   "id": "sigh",
-                  "text": "Two sighs"
+                  "text": "Two sighs",
+                  "detail": "30 seconds",
+                  "recommended": true
                 },
                 {
                   "id": "outside",
-                  "text": "Step outside for two minutes"
+                  "text": "Step outside",
+                  "detail": "2 minutes"
                 },
                 {
                   "id": "text",
-                  "text": "Text someone"
+                  "text": "Text someone",
+                  "detail": "1 minute"
                 },
                 {
                   "id": "water",
-                  "text": "Get a glass of water"
+                  "text": "Get a glass of water",
+                  "detail": "1 minute"
                 },
                 {
                   "id": "walk",
-                  "text": "Walk around the block"
+                  "text": "Walk around the block",
+                  "detail": "5 minutes"
                 },
                 {
                   "id": "shake",
-                  "text": "Shake out my hands and shoulders"
+                  "text": "Shake out my hands and shoulders",
+                  "detail": "30 seconds"
                 },
                 {
                   "id": "write",
-                  "text": "Write down what's bugging me"
+                  "text": "Write down what's bugging me",
+                  "detail": "2 minutes"
                 },
                 {
                   "id": "name",
-                  "text": "Name it: stress, the gap, or both"
+                  "text": "Name it: stress, the gap, or both",
+                  "detail": "10 seconds"
                 }
               ]
             },
             {
               "id": "P4.5e",
               "type": "choice",
-              "prompt": "And when the second one hits, what will you do first? The same plan both times is fine. Simple works.",
+              "prompt": "And when the second one hits, what will you do first? The same move both times is fine.",
               "allowOther": true,
               "saveAs": "stress_plan_2",
               "options": [
                 {
                   "id": "sigh",
-                  "text": "Two sighs"
+                  "text": "Two sighs",
+                  "detail": "30 seconds",
+                  "recommended": true
                 },
                 {
                   "id": "outside",
-                  "text": "Step outside for two minutes"
+                  "text": "Step outside",
+                  "detail": "2 minutes"
                 },
                 {
                   "id": "text",
-                  "text": "Text someone"
+                  "text": "Text someone",
+                  "detail": "1 minute"
                 },
                 {
                   "id": "water",
-                  "text": "Get a glass of water"
+                  "text": "Get a glass of water",
+                  "detail": "1 minute"
                 },
                 {
                   "id": "walk",
-                  "text": "Walk around the block"
+                  "text": "Walk around the block",
+                  "detail": "5 minutes"
                 },
                 {
                   "id": "shake",
-                  "text": "Shake out my hands and shoulders"
+                  "text": "Shake out my hands and shoulders",
+                  "detail": "30 seconds"
                 },
                 {
                   "id": "write",
-                  "text": "Write down what's bugging me"
+                  "text": "Write down what's bugging me",
+                  "detail": "2 minutes"
                 },
                 {
                   "id": "name",
-                  "text": "Name it: stress, the gap, or both"
+                  "text": "Name it: stress, the gap, or both",
+                  "detail": "10 seconds"
                 }
               ]
             },

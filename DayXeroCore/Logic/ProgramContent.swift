@@ -277,11 +277,17 @@ public struct Beat: Decodable, Sendable, Identifiable {
         public let text: String
         /// Takes priority over the beat's feedback when this option is chosen.
         public let feedback: String?
+        /// A short line under the option ("30 seconds"), v5 027.
+        public let detail: String?
+        /// Marked "Recommended" (027).
+        public let recommended: Bool?
 
-        public init(id: String, text: String, feedback: String? = nil) {
+        public init(id: String, text: String, feedback: String? = nil, detail: String? = nil, recommended: Bool? = nil) {
             self.id = id
             self.text = text
             self.feedback = feedback
+            self.detail = detail
+            self.recommended = recommended
         }
     }
 

@@ -146,26 +146,30 @@ struct BeatFeedback: View {
 
 /// An option row (kit `.opt`): the words, an optional detail, and the radio on the right; chosen, the warm tint, a
 /// 2 pt edge and a filled radio with a tick, and a 520 ms spring bump as it lands.
-struct OptionRow<Detail: View>: View {
+struct OptionRow<Detail: View, Leading: View>: View {
     let text: String
     var selected = false
     var outlined = false
     var dimmed = false
     let detail: () -> Detail
+    let leading: () -> Leading
     private let motion = MotionPolicy()
 
-    init(text: String, selected: Bool = false, outlined: Bool = false, dimmed: Bool = false, @ViewBuilder detail: @escaping () -> Detail) {
+    init(text: String, selected: Bool = false, outlined: Bool = false, dimmed: Bool = false, @ViewBuilder detail: @escaping () -> Detail,
+         @ViewBuilder leading: @escaping () -> Leading) {
         self.text = text
         self.selected = selected
         self.outlined = outlined
         self.dimmed = dimmed
         self.detail = detail
+        self.leading = leading
     }
 
     var body: some View {
         let g = DX.Ground.table
         let shape = RoundedRectangle(cornerRadius: DX.Layout.optionRadius, style: .continuous)
         HStack(alignment: .center, spacing: 14) {
+            leading()
             VStack(alignment: .leading, spacing: 3) {
                 Text(verbatim: text).dxType(.body).foregroundStyle(g.ink)
                     .fixedSize(horizontal: false, vertical: true)
@@ -187,9 +191,67 @@ struct OptionRow<Detail: View>: View {
     }
 }
 
-extension OptionRow where Detail == EmptyView {
+extension OptionRow where Leading == EmptyView {
+    init(text: String, selected: Bool = false, outlined: Bool = false, dimmed: Bool = false, @ViewBuilder detail: @escaping () -> Detail) {
+        self.init(text: text, selected: selected, outlined: outlined, dimmed: dimmed, detail: detail) { EmptyView() }
+    }
+}
+
+extension OptionRow where Detail == EmptyView, Leading == EmptyView {
     init(text: String, selected: Bool = false, outlined: Bool = false, dimmed: Bool = false) {
-        self.init(text: text, selected: selected, outlined: outlined, dimmed: dimmed) { EmptyView() }
+        self.init(text: text, selected: selected, outlined: outlined, dimmed: dimmed, detail: { EmptyView() }) { EmptyView() }
+    }
+}
+
+/// A choice's small paper-cut spot (027): the plan's mint sky and hills with a white paper motif and one sun-gold
+/// accent; dark mode is the kit's pre-dawn.
+struct ChoiceSpot: View {
+    let id: String
+    @Environment(\.colorScheme) private var scheme
+
+    var body: some View {
+        let dark = scheme == .dark
+        let sky = dark ? Color(hex: 0x1E2C52) : Color(hex: 0xD3F0DF)
+        let g1 = dark ? Color(hex: 0x2C4A55) : Color(hex: 0x9FE3BC), g2 = dark ? Color(hex: 0x22394A) : Color(hex: 0x7FD3A6)
+        let paper = dark ? Color(hex: 0xE6DCCB) : Color.white
+        let sun = dark ? Color(hex: 0xFFD27A) : Color(hex: 0xFFD25E)
+        ZStack {
+            sky
+            switch id {
+            case "outside":
+                Circle().fill(sun).frame(width: 13, height: 13).position(x: 34, y: 14)
+            default: EmptyView()
+            }
+            GridShape(d: "M0 35 C12 30 30 34 48 30 V48 H0z", grid: 48).fill(g1)
+            GridShape(d: "M0 42 C16 38 32 43 48 39 V48 H0z", grid: 48).fill(g2)
+            switch id {
+            case "sigh":
+                GridShape(d: "M7 13h18c4.5 0 6-6 1.5-6.4-3-.3-3.6 3.4-1.2 4", grid: 48).stroke(paper, style: StrokeStyle(lineWidth: 2.8, lineCap: .round))
+                GridShape(d: "M12 22h22c4.5 0 6 6 1.5 6.4-3 .3-3.6-3.4-1.2-4", grid: 48).stroke(paper, style: StrokeStyle(lineWidth: 2.8, lineCap: .round))
+            case "text":
+                RoundedRectangle(cornerRadius: 6).fill(sun).frame(width: 23, height: 15).position(x: 18.5, y: 16.5)
+                GridShape(d: "M11 23 L10 28 L16 23.5Z", grid: 48).fill(sun)
+            case "water":
+                GridShape(d: "M17 10 h14 l-2 22 h-10z", grid: 48).fill(paper)
+                GridShape(d: "M18.2 18 h11.6 l-1.3 13 h-9z", grid: 48).fill(Color(hex: 0x8FD9C8))
+            case "outside": EmptyView()
+            default:
+                DXIcon(icon, size: 18, weight: 2.4).foregroundStyle(dark ? paper : Color(hex: 0x1E1A3A)).position(x: 24, y: 17)
+            }
+        }
+        .frame(width: 48, height: 48)
+        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .accessibilityHidden(true)
+    }
+
+    private var icon: DX.Icon {
+        switch id {
+        case "walk": .leaf
+        case "shake": .hand
+        case "write": .note
+        case "name": .text
+        default: .sparkle
+        }
     }
 }
 
