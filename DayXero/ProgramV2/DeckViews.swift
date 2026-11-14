@@ -1401,112 +1401,184 @@ struct DeckRecapView: View {
             .compactMap { ctx.placeholders.fill(ProgramInline.resolve($0, ctx.variant)) }
     }
 
+    @State private var stamped = false
+    @State private var counted = false
+    @State private var cheer = false
+    @Environment(\.colorScheme) private var scheme
+
+    /// v5 (032): rays fan out behind the day's medal and turn slowly; the medal stamps in and shines; Xero settles
+    /// beside it, cheering, and bumps at 1.5 s. Title and line arrive; the shelf's earned stamps pop in left to right,
+    /// today's lands with a stamp and a shine (medium haptic) while the count ticks up; the waiting stamps and the Day
+    /// Xero medal fade in last.
     var body: some View {
-        VStack(spacing: DX.Space.m) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: DX.Space.m) {
-                    // v5 (032): the day's stamp lands big in its rays, Xero cheers beside it.
-                    ZStack(alignment: .bottomTrailing) {
-                        ZStack {
-                            ForEach(0..<12, id: \.self) { i in
-                                Capsule().fill(Color(hex: 0xFFD25A))
-                                    .frame(width: 8, height: 30)
-                                    .offset(y: -112)
-                                    .rotationEffect(.degrees(Double(i) * 30))
-                            }
-                            .dxFade(delay: 0.6)
-                            if let n = prepNumber {
-                                DXBadge(.prep, n: n, size: 170)
-                            } else {
-                                DXBadge(.xero, size: 170)
-                            }
-                        }
-                        .frame(maxWidth: .infinity)
-                        .dxStamp(delay: 0.2)
-                        .dxShine(delay: 1)
-                        XeroView(mood: .cheer, stage: 1, points: 92)
-                            .frame(width: 92, height: 92)
-                            .dxSettle(delay: 0.5)
-                    }
-                    .frame(height: 260)
-                    .accessibilityHidden(true)
-                    HStack(spacing: 6) {
-                        ForEach(Array((session.deck ?? []).enumerated()), id: \.offset) { i, card in
-                            Image(systemName: "checkmark").font(.system(size: 18, weight: .heavy))
-                                .foregroundStyle(card.faceInk)
-                                .frame(width: 46, height: 64)
-                                .background(card.faceColor,
-                                            in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-                                .scaleEffect(shown || motion.reduce ? 1 : 0.8)
-                                .opacity(shown || motion.reduce ? 1 : 0)
-                                .animation(motion.animation(DX.Move.celebrate).delay(Double(i) * 0.09), value: shown)
-                        }
-                    }
-                    .accessibilityHidden(true)
-                    .padding(.top, DX.Space.s)
-                    Text(verbatim: String(localized: "\(session.label), done.")).dxType(.large).foregroundStyle(ground.ink)
-                        .accessibilityAddTraits(.isHeader)
-                    Text(verbatim: ctx.text(session.completionText)).dxType(.body).foregroundStyle(ground.ink)
-                        .fixedSize(horizontal: false, vertical: true)
-                    if let learned = session.recap?.learned, !learned.isEmpty {
-                        VStack(alignment: .leading, spacing: 10) {
-                            Text(String(localized: "What you learned today")).dxType(.caption).foregroundStyle(ground.muted)
-                            ForEach(Array(learned.enumerated()), id: \.offset) { i, line in
-                                HStack(alignment: .firstTextBaseline, spacing: 10) {
-                                    Text(verbatim: "\(i + 1)").dxFont(13, weight: 800, style: .caption1)
-                                        .foregroundStyle(ground.btnFg)
-                                        .frame(width: 24, height: 24)
-                                        .background(ground.btn, in: Circle())
-                                    Text(verbatim: ctx.text(line)).dxType(.body).foregroundStyle(ground.ink)
-                                        .fixedSize(horizontal: false, vertical: true)
-                                }
-                            }
-                        }
-                    }
-                    if !statLines.isEmpty {
-                        VStack(alignment: .leading, spacing: 4) {
-                            ForEach(statLines, id: \.self) { line in
-                                Text(verbatim: line).dxType(.headline).foregroundStyle(ground.ink)
-                                    .fixedSize(horizontal: false, vertical: true)
-                            }
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(16)
-                        .background(DX.Fill.onColourCard(for: ground), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
-                    }
-                    if let mission = session.mission {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(String(localized: "For the rest of today")).dxType(.caption).foregroundStyle(Read4.muted)
-                            Text(verbatim: ctx.text(mission.text)).dxType(.headline).foregroundStyle(Read4.ink)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(16)
-                        .background(DX.Fill.raised, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
-                    }
-                    if !isReplay, let tomorrow = session.recap?.tomorrow {
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(String(localized: "Tomorrow")).dxType(.caption).foregroundStyle(ground.muted)
-                            Text(verbatim: ctx.text(tomorrow)).dxType(.body).foregroundStyle(ground.ink)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
-                    }
-                    if let next, !isReplay {
-                        Label(next, systemImage: "calendar").dxType(.footnote).foregroundStyle(ground.ink)
-                    }
-                    if let opensFullProgram, !isReplay {
-                        Text(opensFullProgram).dxType(.footnote).foregroundStyle(ground.muted)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                }
+        VStack(spacing: 0) {
+            HStack {
+                DXIconButton(.close, label: "Close", action: onDone)
+                Spacer()
             }
+            .frame(height: 52)
+            .padding(.horizontal, -6)
+            ScrollView {
+                VStack(spacing: 0) {
+                    Color.clear.frame(height: 310)
+                        .overlay(alignment: .top) { hero }
+                    VStack(spacing: 8) {
+                        MarkedTitle("\(session.label) ", marking: String(localized: "done"), trail: ".", color: DX.Mark.color(on: .table))
+                            .dxType(.large).foregroundStyle(ground.ink)
+                            .accessibilityAddTraits(.isHeader)
+                        Text(verbatim: line).dxType(.body).foregroundStyle(ground.muted)
+                            .multilineTextAlignment(.center)
+                    }
+                    .padding(.top, 20)
+                    .dxArrive(6)
+                    if let n = prepNumber { shelf(n).padding(.top, 34).dxArrive(8) }
+                }
+                .padding(.horizontal, DX.Layout.gutter)
+            }
+            .padding(.horizontal, -DX.Layout.gutter)
             .scrollBounceBehavior(.basedOnSize)
-            Button(isReplay ? String(localized: "Done") : String(localized: "See you tomorrow"), action: onDone)
-                .buttonStyle(.dx(.primary, on: ground))
-                .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+            VStack(spacing: 8) {
+                if let opensFullProgram {
+                    Text(verbatim: opensFullProgram).dxType(.footnote).foregroundStyle(ground.muted)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Button(action: onDone) { Text(verbatim: buttonTitle) }
+                    .buttonStyle(.dx(.primary, on: ground))
+                    .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+                    .accessibilityIdentifier("program.deck.done")
+            }
+            .padding(.top, 10)
+            .dxArrive(12)
         }
         .foregroundStyle(ground.ink)
-        .sensoryFeedback(.success, trigger: shown)
-        .onAppear { shown = true }
+        .sensoryFeedback(.impact(weight: .medium), trigger: counted) { _, now in now }
+        .task {
+            guard !motion.reduce else { stamped = true; counted = true; return }
+            try? await Task.sleep(for: .milliseconds(300))
+            withAnimation(.timingCurve(0.3, 1.4, 0.5, 1, duration: DX.Move.stamp)) { stamped = true }
+            try? await Task.sleep(for: .milliseconds(1200))
+            cheer.toggle()
+            try? await Task.sleep(for: .milliseconds(650))
+            withAnimation(.easeOut(duration: 0.4)) { counted = true }
+        }
+    }
+
+    /// "4 days to Day Xero · 3 preps to go".
+    private var line: String {
+        let profile = ctx.store.profile
+        let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
+        let days = max(clock.calendar.dateComponents([.day], from: clock.day(containing: .now), to: clock.startOfDate(profile.quitDay)).day ?? 0, 0)
+        var parts: [String] = []
+        if days > 0 { parts.append(String(AttributedString(localized: "^[\(days) day](inflect: true) to Day Xero").characters)) }
+        if let n = prepNumber, n < 7 { parts.append(String(AttributedString(localized: "^[\(7 - n) prep](inflect: true) to go").characters)) }
+        if parts.isEmpty, let next { parts.append(next) }
+        return parts.joined(separator: " · ")
+    }
+
+    private var buttonTitle: String {
+        if isReplay { return String(localized: "Done") }
+        if let next, next.contains(String(localized: "ready now")) { return String(localized: "Back to my day") }
+        return String(localized: "See you tomorrow")
+    }
+
+    /// The paper rays (open where Xero stands), the day's medal and Xero cheering beside it on one ground shadow.
+    private var hero: some View {
+        ZStack(alignment: .topLeading) {
+            SlowRays(color: scheme == .dark ? Color(hex: 0xE8B24A) : Color(hex: 0xF9C23C))
+                .frame(width: 320, height: 320)
+                .offset(x: 12)
+            Ellipse()
+                .fill(RadialGradient(colors: [scheme == .dark ? Color.black.opacity(0.5) : Color(hex: 0x1E1A3A).opacity(0.18), .clear],
+                                     center: .center, startRadius: 0, endRadius: 145))
+                .frame(width: 290, height: 28)
+                .offset(x: 80, y: 250)
+                .dxFade(delay: 0.3)
+            Group {
+                if let n = prepNumber {
+                    DXBadge(.prep, n: n, size: 180)
+                } else {
+                    DXBadge(.day, n: session.label.filter(\.isNumber), size: 180)
+                }
+            }
+            .frame(width: 180, height: 180)
+            .scaleEffect(stamped || motion.reduce ? 1 : 1.8)
+            .rotationEffect(.degrees(stamped || motion.reduce ? 0 : -14))
+            .opacity(stamped || motion.reduce ? 1 : 0)
+            .offset(x: 82, y: 70)
+            XeroView(mood: .cheer, stage: 0, points: 104)
+                .dxBump(cheer)
+                .offset(x: 274, y: 156)
+                .dxSettle(4)
+        }
+        .frame(width: 390, alignment: .topLeading)
+        .frame(maxWidth: .infinity)
+        .accessibilityElement()
+        .accessibilityLabel(Text("\(session.label) done. Xero cheers beside your new stamp."))
+    }
+
+    /// The shelf: stamps 1 to 7 (earned, today's landing with a stamp, the rest waiting) and Day Xero at the end.
+    private func shelf(_ n: Int) -> some View {
+        let profile = ctx.store.profile
+        return VStack(spacing: 14) {
+            HStack(spacing: 5) {
+                ForEach(1...7, id: \.self) { i in
+                    Group {
+                        if i < n {
+                            DXBadge(.prep, n: i, size: 36).dxPop(0, delay: 1.5 + Double(i) * 0.11)
+                        } else if i == n {
+                            DXBadge(.prep, n: i, size: 36)
+                                .scaleEffect(counted || motion.reduce ? 1 : 1.8)
+                                .opacity(counted || motion.reduce ? 1 : 0)
+                        } else {
+                            DXBadge(.prep, n: i, state: .next(nil), size: 36).dxFade(delay: 2.4)
+                        }
+                    }
+                }
+                Spacer(minLength: 0)
+                DXBadge(.xero, state: .next(nil), size: 54)
+                    .opacity(scheme == .dark ? 0.7 : 1)
+                    .dxFade(delay: 2.5)
+            }
+            .padding(.bottom, 12)
+            .overlay(alignment: .bottom) { Rectangle().fill(ground.line).frame(height: 1.5) }
+            Text("\(counted ? n : n - 1) of 7 stamped · Day Xero on \(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day()))")
+                .dxFace(.body, 14, weight: 600).foregroundStyle(ground.muted)
+                .contentTransition(.numericText())
+        }
+        .accessibilityElement(children: .combine)
+    }
+}
+
+/// Sixteen paper rays round the medal, long and short in turn, left open where Xero stands; they grow out from the
+/// centre (500 ms, 25 ms apart, from 300 ms), then turn very slowly (26 s a turn).
+private struct SlowRays: View {
+    let color: Color
+    @State private var grown = false
+    private let motion = MotionPolicy()
+
+    var body: some View {
+        TimelineView(.animation(paused: motion.reduce)) { timeline in
+            let turn = motion.reduce ? 0 : timeline.date.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: 26) / 26 * 360
+            ZStack {
+                ForEach(Array((0..<16).filter { !(4...9).contains($0) }), id: \.self) { i in
+                    let a = (Double(i) * 22.5 - 90) * .pi / 180
+                    let r1: CGFloat = i % 2 == 1 ? 118 : 134
+                    Path { p in
+                        p.move(to: CGPoint(x: 160 + 100 * cos(a), y: 160 + 100 * sin(a)))
+                        p.addLine(to: CGPoint(x: 160 + r1 * cos(a), y: 160 + r1 * sin(a)))
+                    }
+                    .stroke(color, style: StrokeStyle(lineWidth: 10, lineCap: .round))
+                    .scaleEffect(grown || motion.reduce ? 1 : 0.6, anchor: .center)
+                    .opacity(grown || motion.reduce ? 1 : 0)
+                    .animation(DX.Move.settle.speed(0.9 / 0.5).delay(0.3 + Double(i) * 0.025), value: grown)
+                }
+            }
+            .frame(width: 320, height: 320)
+            .shadow(color: Color(hex: 0x1A0B2E).opacity(0.08), radius: 0.8, y: 1)
+            .rotationEffect(.degrees(turn))
+        }
+        .onAppear { grown = true }
+        .accessibilityHidden(true)
     }
 }
