@@ -182,8 +182,9 @@ struct ProgramContentTests {
         #expect(w4s1.audio.pick(for: .smoking, nrtActive: false) == "default")
         let p1 = try #require(program.session("P1"))
         #expect(p1.audio.pick(for: .vaping, nrtActive: true) == "vaping")
-        let w1d1 = try #require(program.session("W1D1"))
-        #expect(w1d1.audio.pick(for: .pouches, nrtActive: false) == "default")
+        // W1D2's recording is the same for every product, so it ships once as "default".
+        let w1d2 = try #require(program.session("W1D2"))
+        #expect(w1d2.audio.pick(for: .pouches, nrtActive: false) == "default")
         #expect(program.audio.file(session: "P1", variant: "vaping") == "vo_P1_vaping.m4a")
     }
 

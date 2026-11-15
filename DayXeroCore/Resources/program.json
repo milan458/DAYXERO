@@ -3555,7 +3555,7 @@
       "id": "W1D1", "phaseId": "w1", "label": "Day 2",
       "title": "Look after the basics", "subtitle": "Food, water, sleep", "durationMinutes": 3,
       "unlock": { "rule": "days_since_quit", "minDay": 1 },
-      "audio": { "variants": ["default"] },
+      "audio": { "variants": ["smoking", "vaping", "pouches"] },
       "cards": [
         { "front": "Why the basics, now?", "back": "Hungry, thirsty and tired can all feel a bit like a craving. Look after them and cravings are easier to spot." },
         { "front": "Hungrier than usual?", "back": "Common in the first weeks. Keep easy snacks around: fruit, nuts, crunchy veg." },
@@ -3684,7 +3684,7 @@
       "id": "W1D6", "phaseId": "w1", "label": "Day 7",
       "title": "“Just one”", "subtitle": "Play the tape forward", "durationMinutes": 4,
       "unlock": { "rule": "days_since_quit", "minDay": 6 },
-      "audio": { "variants": ["default"] },
+      "audio": { "variants": ["smoking", "vaping", "pouches"] },
       "cards": [
         { "front": "“Just one won't hurt”", "back": "Play the tape forward: one, then this weekend, then whenever you're stressed." },
         { "front": "“I've proven I can quit”", "back": "You have. Keep the proof." },
@@ -4009,7 +4009,7 @@
       "id": "W4S3", "phaseId": "w4", "label": "Day 31",
       "title": "Graduation", "subtitle": "“I don't use nicotine”", "durationMinutes": 5,
       "unlock": { "rule": "days_since_quit", "minDay": 30 },
-      "audio": { "variants": ["smoking","vaping","pouches"] },
+      "audio": { "variants": ["default"] },
       "cards": [
         { "front": "You did the program", "back": "Prep, Day Xero and four weeks after. All of it." },
         { "front": "Who you are now", "back": "Not “I'm trying to quit”. Pick a line that's yours, like “I don't use nicotine”." },
