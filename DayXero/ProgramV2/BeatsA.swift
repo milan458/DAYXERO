@@ -726,7 +726,7 @@ struct TapRevealBeat: View {
         BeatFrame(beat: beat, canContinue: ctx.isReplay || seen.count >= cards.count, onContinue: { ctx.finish(beat); onDone() }) {
             VStack(alignment: .leading, spacing: DX.Space.s) {
                 if let title = beat.title.map({ ctx.text($0) }), !title.isEmpty { BeatPrompt(text: title) }
-                Text("\(seen.count) of \(cards.count) flipped").dxFace(.body, 14, weight: 600)
+                Text("\(seen.count) of \(cards.count) turned over").dxFace(.body, 14, weight: 600)
                     .foregroundStyle(DX.Ground.table.muted)
                 ForEach(Array(cards.enumerated()), id: \.offset) { i, card in
                     FlipCard(front: card.front, back: card.back, flipped: flipped.contains(i), reduceMotion: motion.reduce) {
@@ -745,6 +745,9 @@ struct TapRevealBeat: View {
     }
 }
 
+/// A flip card (v5, after the lesson cards of 034). Face down it is an apricot card with the question and "Turn over";
+/// turned over, a white card with the question small and the answer beside a coral rule. It turns as one card, and
+/// cross-fades with Reduce Motion.
 struct FlipCard: View {
     let front: String
     let back: String
@@ -752,14 +755,13 @@ struct FlipCard: View {
     let reduceMotion: Bool
     let action: () -> Void
 
+    private var angle: Double { flipped ? 0 : 180 }
+
     var body: some View {
         Button(action: action) {
-            ZStack {
-                face(back: false).opacity(flipped ? 0 : 1)
-                face(back: true).opacity(flipped ? 1 : 0)
-                    .rotation3DEffect(.degrees(reduceMotion ? 0 : 180), axis: (0, 1, 0))
-            }
-            .rotation3DEffect(.degrees(flipped && !reduceMotion ? 180 : 0), axis: (0, 1, 0), perspective: 0.6)
+            answer.modifier(LessonFlip(angle: angle, isRear: false))
+                .overlay { question.modifier(LessonFlip(angle: angle, isRear: true)) }
+                .shadow(color: Color(red: 60 / 255, green: 40 / 255, blue: 20 / 255).opacity(0.1), radius: 8, y: 6)
         }
         .buttonStyle(.plain)
         .accessibilityElement(children: .ignore)
@@ -767,26 +769,39 @@ struct FlipCard: View {
         .accessibilityHint(Text(flipped ? "Turns the card back" : "Turns the card over"))
     }
 
-    private func face(back isBack: Bool) -> some View {
-        VStack(alignment: .leading, spacing: DX.Space.xs) {
-            if isBack {
-                Text(verbatim: front).dxType(.caption).foregroundStyle(DX.Ground.table.muted).foregroundStyle(DX.Ground.table.ink)
-                Text(verbatim: back).dxFace(.body, 16, weight: 400).foregroundStyle(DX.Ground.table.ink)
-                    .fixedSize(horizontal: false, vertical: true)
-            } else {
-                Text(verbatim: front).dxFace(.display, 19, weight: 600).foregroundStyle(DX.Ground.table.ink)
-                    .fixedSize(horizontal: false, vertical: true)
-                HStack(spacing: 6) {
-                    DXIcon(.card, size: 16)
-                    Text("Tap to flip")
-                }.dxFace(.body, 14, weight: 400)
-                    .foregroundStyle(DX.Ground.table.muted)
-            }
+    /// Turned over: the question, small, and the answer.
+    private var answer: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text(verbatim: front).dxType(.caption).foregroundStyle(DX.Ground.table.muted)
+                .fixedSize(horizontal: false, vertical: true)
+            Text(verbatim: back).dxFace(.body, 16, weight: 600).foregroundStyle(DX.Ground.table.ink)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.leading, 12)
+                .overlay(alignment: .leading) { Capsule().fill(DX.Fill.coral).frame(width: 3) }
         }
-        .padding(DX.Space.m)
-        .frame(maxWidth: .infinity, minHeight: 120, alignment: .leading)
-        .background(isBack ? DX.Ground.table.selTint : DX.Ground.table.card, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(isBack ? .clear : DX.Ground.table.line))
+        .padding(18)
+        .frame(maxWidth: .infinity, minHeight: 140, alignment: .leading)
+        .background(DX.Ground.table.card, in: RoundedRectangle(cornerRadius: 26, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 26, style: .continuous).strokeBorder(DX.Ground.table.line))
+    }
+
+    /// Face down: the question on apricot. The ink is fixed, because the card is apricot in light and dark.
+    private var question: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(verbatim: front).dxFace(.display, 19, weight: 700).foregroundStyle(Color(hex: 0x1E1A3A))
+                .fixedSize(horizontal: false, vertical: true)
+            Spacer(minLength: 0)
+            HStack(spacing: 6) {
+                DXIcon(.card, size: 16)
+                Text("Turn over")
+            }
+            .dxFace(.body, 14, weight: 700)
+            .foregroundStyle(Color(hex: 0x4A2810))
+        }
+        .padding(18)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .background(LinearGradient(colors: [Color(hex: 0xFFE2C6), Color(hex: 0xFFC38A)], startPoint: .top, endPoint: .bottom),
+                    in: RoundedRectangle(cornerRadius: 26, style: .continuous))
     }
 }
 

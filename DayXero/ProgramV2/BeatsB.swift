@@ -32,14 +32,23 @@ struct PlanBuilderBeat: View {
         BeatFrame(beat: beat, canContinue: !plans.isEmpty || canAdd, onContinue: finish) {
             VStack(alignment: .leading, spacing: DX.Space.s) {
                 BeatPrompt(text: ctx.text(beat.prompt))
+                // v5 (029): each plan made sits on its own card, stamped.
                 ForEach(Array(plans.enumerated()), id: \.offset) { i, plan in
-                    HStack(alignment: .top) {
+                    HStack(alignment: .top, spacing: 12) {
+                        DXIcon(.check, size: 16, weight: 2.8).foregroundStyle(DX.Ground.table.selFg)
+                            .frame(width: 28, height: 28)
+                            .background(DX.Ground.table.sel, in: Circle())
+                            .accessibilityHidden(true)
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("Plan \(i + 1)").dxType(.caption).foregroundStyle(DX.Ground.table.muted).foregroundStyle(DX.Ground.table.ink)
-                            Text(verbatim: ProgramAnswerValue.plans([plan]).lines.first ?? "")
-                                .dxFace(.body, 16, weight: 400).foregroundStyle(DX.Ground.table.ink)
+                            Text("If").dxType(.caption).foregroundStyle(DX.Ground.table.muted)
+                            Text(verbatim: plan.situation).dxFace(.body, 16, weight: 500).foregroundStyle(DX.Ground.table.ink)
+                                .fixedSize(horizontal: false, vertical: true)
+                            Text("Then I will").dxType(.caption).foregroundStyle(DX.Ground.table.muted)
+                                .padding(.top, 4)
+                            Text(verbatim: plan.action).dxFace(.body, 16, weight: 700).foregroundStyle(DX.Ground.table.ink)
+                                .fixedSize(horizontal: false, vertical: true)
                         }
-                        Spacer()
+                        Spacer(minLength: 0)
                         Button { plans.remove(at: i) } label: {
                             DXIcon(.close, size: 12, weight: 2.6).foregroundStyle(DX.Ground.table.muted)
                                 .frame(width: 44, height: 44)
@@ -47,8 +56,10 @@ struct PlanBuilderBeat: View {
                         .buttonStyle(.plain)
                         .accessibilityLabel(Text("Remove plan \(i + 1)"))
                     }
-                    .padding(DX.Space.m)
-                    .background(DX.Ground.table.selTint, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                    .padding(.leading, 16).padding(.vertical, 14).padding(.trailing, 4)
+                    .background(DX.Ground.table.card, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(DX.Ground.table.line))
+                    .accessibilityElement(children: .combine)
                 }
                 VStack(alignment: .leading, spacing: 10) {
                     Text("Plan \(plans.count + 1)").dxType(.caption).foregroundStyle(DX.Ground.table.muted)
@@ -78,17 +89,17 @@ struct PlanBuilderBeat: View {
                     }
                 }
                 .padding(DX.Space.m)
-                .background(DX.Ground.table.card, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-                .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(DX.Ground.table.line))
+                .background(DX.Ground.table.card, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(DX.Ground.table.line))
                 Button(action: addPlan) {
                     HStack(spacing: 6) {
                         DXIcon(.plus, size: 16)
                         Text("Add another plan")
-                    }.dxFace(.body, 16, weight: 600)
-                        .foregroundStyle(DX.Ground.table.ink).frame(minHeight: 44)
+                    }
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(.dx(.ghostSmall, on: .table))
                 .disabled(!canAdd)
+                .opacity(canAdd ? 1 : 0.5)
             }
         }
         .onAppear {
