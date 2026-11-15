@@ -516,7 +516,7 @@ struct TodayView: View {
                 LogIcon(glyph: .product(product))
                     .environment(\.colorScheme, .dark)
             } else {
-                Image(systemName: "checkmark").font(.system(size: 13, weight: .bold))
+                DXIcon(.check, size: 13, weight: 2.6)
             }
             Text(toastTitle(product, logged: entries.count, total: count)).lineLimit(2)
             Spacer(minLength: DX.Space.xs)

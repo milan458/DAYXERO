@@ -670,7 +670,7 @@ struct HealthSummaryCard: View {
                     }
                 }
                 Spacer(minLength: DX.Space.xs)
-                Image(systemName: "chevron.right").font(.system(size: 13, weight: .semibold)).foregroundStyle(Read4.muted)
+                DXIcon(.chev, size: 13, weight: 2.6).foregroundStyle(Read4.muted)
             }
             .padding(14)
             .background(Read4.card, in: RoundedRectangle(cornerRadius: 28, style: .continuous))

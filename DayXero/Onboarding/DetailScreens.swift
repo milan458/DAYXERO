@@ -901,7 +901,7 @@ struct PersonalScreen: View {
                         Image(uiImage: image).resizable().scaledToFill()
                             .frame(width: 28, height: 28).clipShape(Circle())
                     } else {
-                        Image(systemName: "heart").font(.system(size: 16, weight: .semibold)).foregroundStyle(DX.Fill.coral)
+                        DXIcon(.heart, size: 16, weight: 2.6).foregroundStyle(DX.Fill.coral)
                     }
                     Text(photo == nil ? "Add a photo of who it's for" as LocalizedStringKey : "Photo added. Tap to change it")
                         .font(DX.Typeface4.swiftUIFont(.body, size: 15, weight: 600)).foregroundStyle(Onb.ink)
@@ -1081,7 +1081,7 @@ private struct ObstacleRow: View {
                 .background(DX.Ground.apricot.card2, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
             HStack(alignment: .firstTextBaseline, spacing: 8) {
                 Text(obstacle.title).dxFace(.body, 15, weight: 500).foregroundStyle(Onb.muted).lineLimit(1)
-                Image(systemName: "arrow.right").font(.system(size: 13, weight: .bold)).foregroundStyle(Onb.ink)
+                DXIcon(.chev, size: 13, weight: 2.6).foregroundStyle(Onb.ink)
                 if let tool = obstacle.tool {
                     Text(tool).dxFace(.display, 16, weight: 700, tracking: -0.2).foregroundStyle(Onb.ink).lineLimit(1).minimumScaleFactor(0.8)
                 }
@@ -1311,7 +1311,7 @@ private struct NRTSourcesSheet: View {
             ForEach([HealthSources.nrtCochrane2018, HealthSources.nrtCombinationCochrane2019], id: \.url) { source in
                 Link(destination: source.url) {
                     HStack(alignment: .top, spacing: 10) {
-                        Image(systemName: "doc.text").foregroundStyle(Onb.muted)
+                        DXIcon(.note, size: 18, weight: 2.6).foregroundStyle(Onb.muted)
                         Text(source.label).dxType(.footnote).underline().foregroundStyle(Onb.ink).multilineTextAlignment(.leading)
                     }
                 }

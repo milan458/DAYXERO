@@ -86,7 +86,7 @@ struct CalmToolsView: View {
         .scrollBounceBehavior(.basedOnSize)
         .overlay(alignment: .topLeading) {
             if showsClose {
-                Button(action: onClose) { Image(systemName: "xmark") }
+                Button(action: onClose) { DXIcon(.close, size: 18, weight: 2.6) }
                     .buttonStyle(.v4Icon).accessibilityLabel(Text("Close"))
                     .padding(.leading, DX.Space.m).padding(.top, DX.Space.s)
             }
@@ -210,7 +210,7 @@ struct CalmToolRow: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             if !typeSize.isAccessibilitySize {
-                Image(systemName: "chevron.right").font(.system(size: 13, weight: .bold)).foregroundStyle(DX.Ground.reading.ink)
+                DXIcon(.chev, size: 13, weight: 2.6).foregroundStyle(DX.Ground.reading.ink)
                     .accessibilityHidden(true)
             }
         }
@@ -256,7 +256,7 @@ struct HelpLine: View {
                 Text("If stress or anxiety is getting in the way of everyday life, talk to a doctor or a mental health professional. In a crisis, call your local emergency number.")
                     .v4Text(.subtitle)
                 Link(destination: Self.directory) {
-                    Text("Find a helpline near you").dxFont(14, weight: 400, style: .footnote).underline().foregroundStyle(Read4.accent)
+                    Text("Find a helpline near you").dxFont(14, weight: 400, style: .footnote).underline().foregroundStyle(DX.Ground.reading.ink)
                 }
                 .frame(minHeight: DX.Layout.touchTarget, alignment: .leading)
                 .contentShape(Rectangle())
@@ -367,7 +367,7 @@ struct CalmToolPlayer: View {
     private var anchor: some View {
         let current = DropAnchor.steps[min(step, DropAnchor.steps.count - 1)]
         return VStack(alignment: .leading, spacing: DX.Space.s) {
-            Image(systemName: "figure.stand").font(.system(size: 36)).foregroundStyle(Read4.accent)
+            Image(systemName: "figure.stand").font(.system(size: 36)).foregroundStyle(DX.Ground.reading.ink)
                 .frame(width: DX.CharacterSize.card.rawValue, height: DX.CharacterSize.card.rawValue)
                 .background(Read4.accentSoft, in: Circle())
                 .padding(.top, DX.Space.l)
@@ -408,7 +408,7 @@ struct RewardCardRow: View {
                     .dxType(.footnote).foregroundStyle(DX.Ground.reading.muted).multilineTextAlignment(.leading)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            Image(systemName: "chevron.right").font(.system(size: 13, weight: .bold)).foregroundStyle(DX.Ground.reading.ink)
+            DXIcon(.chev, size: 13, weight: 2.6).foregroundStyle(DX.Ground.reading.ink)
                 .accessibilityHidden(true)
         }
         .padding(8)
@@ -440,7 +440,7 @@ struct RewardDefusionView: View {
             .accessibilityHidden(true)
             .padding(.top, DX.Space.s)
             HStack {
-                Button { close(finished: false) } label: { Image(systemName: "xmark") }
+                Button { close(finished: false) } label: { DXIcon(.close, size: 18, weight: 2.6) }
                     .buttonStyle(.v4Icon).accessibilityLabel(Text("Close"))
                 Spacer()
                 Text("With Glim").v4Text(.micro)
@@ -452,7 +452,7 @@ struct RewardDefusionView: View {
                     let current = RewardDefusion.steps[min(step, RewardDefusion.steps.count - 1)]
                     if step == 0 {
                         Text("\u{201C}\(Text(RewardDefusion.thought))\u{201D}")
-                            .dxFont(24, weight: 600, style: .title2).foregroundStyle(Read4.accent)
+                            .dxFont(24, weight: 600, style: .title2).foregroundStyle(DX.Ground.reading.ink)
                             .padding(.top, DX.Space.m)
                     }
                     Text(current.title).v4Text(.title).padding(.top, step == 0 ? 0 : DX.Space.m)

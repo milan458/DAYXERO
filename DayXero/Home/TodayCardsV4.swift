@@ -32,7 +32,7 @@ struct ColourCard: View {
                     .background(DX.Fill.cream, in: Capsule())
                     .fixedSize()
             } else if chevron, action != nil {
-                Image(systemName: "chevron.right")
+                DXIcon(.chev, size: 18, weight: 2.6)
                     .font(.system(size: 16, weight: .heavy))
                     .frame(width: 44, height: 44)
                     .background(DX.Fill.cream.opacity(0.2), in: Circle())

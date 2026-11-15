@@ -155,7 +155,7 @@ struct HoldToFeelPad: View {
         .background(SOSColors.solid, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
         .overlay {
             VStack(spacing: 4) {
-                Image(systemName: "hand.point.up.left.fill").font(.system(size: 22, weight: .semibold))
+                DXIcon(.hand, size: 22, weight: 2.6)
                 Text("Hold to feel").dxFont(16, weight: 700, style: .body)
                 Text("Something for your hands").dxType(.footnote).foregroundStyle(SOSColors.ocean.muted)
             }
@@ -286,7 +286,7 @@ struct SensoryTricksButton: View {
     var body: some View {
         Button(action: action) {
             HStack(spacing: 12) {
-                Image(systemName: "sparkles").font(.system(size: 17, weight: .semibold))
+                DXIcon(.sparkle, size: 17, weight: 2.6)
                     .frame(width: 40, height: 40)
                     .background(SOSColors.cream.opacity(0.14), in: Circle())
                     .accessibilityHidden(true)
@@ -295,7 +295,7 @@ struct SensoryTricksButton: View {
                     Text("Cold, sour, or a straw").dxType(.footnote).foregroundStyle(SOSColors.ocean.muted)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                Image(systemName: "chevron.up").font(.system(size: 13, weight: .bold)).accessibilityHidden(true)
+                DXIcon(.down, size: 13, weight: 2.6).rotationEffect(.degrees(180)).accessibilityHidden(true)
             }
             .foregroundStyle(SOSColors.cream)
             .padding(.horizontal, 14).padding(.vertical, 10)

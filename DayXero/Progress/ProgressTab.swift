@@ -281,7 +281,7 @@ struct ProgressTab: View {
                 .fixedSize(horizontal: false, vertical: true)
         }
         Button { showHealth = true } label: {
-            Label("See the whole timeline", systemImage: "chevron.right")
+            HStack(spacing: 6) { Text("See the whole timeline"); DXIcon(.chev, size: 14, weight: 2.6) }
                 .labelStyle(TrailingIcon())
                 .dxFont(14, weight: 700, style: .footnote)
                 .foregroundStyle(Read4.ink)
@@ -580,7 +580,7 @@ struct LogButton: View {
 
     var body: some View {
         Button(action: action) {
-            Label("Log", systemImage: "plus")
+            HStack(spacing: 6) { DXIcon(.plus, size: 16); Text("Log") }
                 .dxFont(14, weight: 600, style: .footnote)
                 .foregroundStyle(Read4.ink)
                 .padding(.horizontal, 14)
