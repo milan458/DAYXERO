@@ -93,7 +93,7 @@ struct DeckCloseButton: View {
 
     var body: some View {
         Button(action: action) {
-            Image(systemName: "xmark").font(.system(size: 16, weight: .bold)).foregroundStyle(ground.ink)
+            DXIcon(.close, size: 18, weight: 2.6).foregroundStyle(ground.ink)
                 .frame(width: 44, height: 44)
                 .background(DX.Fill.onColourCard(for: ground), in: Circle())
         }
@@ -115,7 +115,7 @@ struct DeckTopBar: View {
             Text(verbatim: eyebrow).dxType(.caption).foregroundStyle(ground.muted)
                 .lineLimit(2).frame(maxWidth: .infinity, alignment: .leading)
             if let trailing {
-                Text(verbatim: trailing).dxFont(14, weight: 700, style: .footnote).foregroundStyle(ground.ink)
+                Text(verbatim: trailing).dxFace(.body, 14, weight: 700).foregroundStyle(ground.ink)
             }
         }
         .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
@@ -197,7 +197,10 @@ struct DeckHandView: View {
             Group {
                 if let waitingUntil, let next, let index = cards.firstIndex(where: { $0.id == next }) {
                     // Evening cards open at 6 pm; the day keeps its place until then.
-                    Label(String(localized: "Card \(index + 1) opens at \(waitingUntil). Your place is saved."), systemImage: "moon.stars")
+                    HStack(spacing: 8) {
+                        DXIcon(.moon, size: 18)
+                        Text(verbatim: String(localized: "Card \(index + 1) opens at \(waitingUntil). Your place is saved."))
+                    }
                         .dxType(.footnote).foregroundStyle(ground.ink)
                         .frame(maxWidth: .infinity, minHeight: DX.Layout.touchTarget)
                         .padding(.horizontal, 12)
@@ -893,13 +896,13 @@ struct DeckRevealView: View {
         let face = DX.Ground.sky
         if isOpen {
             VStack(alignment: .leading, spacing: 8) {
-                Text(verbatim: ctx.text(reveal.front)).dxFont(12, weight: 700, style: .caption2).foregroundStyle(face.muted)
+                Text(verbatim: ctx.text(reveal.front)).dxFace(.body, 12, weight: 700).foregroundStyle(face.muted)
                     .fixedSize(horizontal: false, vertical: true)
-                Text(verbatim: ctx.text(reveal.answer)).dxFont(16, weight: 700, style: .callout).foregroundStyle(face.ink)
+                Text(verbatim: ctx.text(reveal.answer)).dxFace(.body, 16, weight: 700).foregroundStyle(face.ink)
                     .fixedSize(horizontal: false, vertical: true)
                 Spacer(minLength: 0)
                 Button { deeper = index } label: {
-                    Text(String(localized: "Go deeper")).dxFont(14, weight: 700, style: .footnote)
+                    Text(String(localized: "Go deeper")).dxFace(.body, 14, weight: 700)
                         .frame(maxWidth: .infinity, minHeight: DX.Layout.touchTarget)
                         .foregroundStyle(ground.btnFg)
                         .background(ground.btn, in: Capsule())
@@ -916,12 +919,12 @@ struct DeckRevealView: View {
             } label: {
                 VStack(alignment: .leading, spacing: 8) {
                     Text(verbatim: String(localized: "Question \(index + 1)"))
-                        .dxFont(13, weight: 700, style: .caption2).foregroundStyle(ground.muted)
-                    Text(verbatim: ctx.text(reveal.front)).dxFont(18, weight: 800, style: .headline).foregroundStyle(ground.ink)
+                        .dxFace(.body, 13, weight: 700).foregroundStyle(ground.muted)
+                    Text(verbatim: ctx.text(reveal.front)).dxFace(.body, 18, weight: 800).foregroundStyle(ground.ink)
                         .multilineTextAlignment(.leading)
                         .fixedSize(horizontal: false, vertical: true)
                     Spacer(minLength: 0)
-                    Text(String(localized: "Turn over")).dxFont(14, weight: 700, style: .footnote).foregroundStyle(ground.ink)
+                    Text(String(localized: "Turn over")).dxFace(.body, 14, weight: 700).foregroundStyle(ground.ink)
                         .frame(maxWidth: .infinity, minHeight: DX.Layout.touchTarget)
                         .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous)
                             .strokeBorder(ground.ink.opacity(0.35), style: StrokeStyle(lineWidth: 2, dash: [6, 5])))
@@ -938,30 +941,30 @@ struct DeckRevealView: View {
     private func deeperSheet(_ reveal: DeckCard.Reveal, index: Int) -> some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DX.Space.s) {
-                Text(verbatim: String(localized: "Go deeper · Question \(index + 1)")).dxType(.caption).foregroundStyle(Read4.muted)
-                Text(verbatim: ctx.text(reveal.front)).dxType(.title).foregroundStyle(Read4.ink)
+                Text(verbatim: String(localized: "Go deeper · Question \(index + 1)")).dxType(.caption).foregroundStyle(DX.Ground.reading.muted)
+                Text(verbatim: ctx.text(reveal.front)).dxType(.title).foregroundStyle(DX.Ground.reading.ink)
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityAddTraits(.isHeader)
-                Text(verbatim: ctx.text(reveal.deeper)).dxFont(17, weight: 400, style: .body).foregroundStyle(Read4.ink)
+                Text(verbatim: ctx.text(reveal.deeper)).dxFace(.body, 17, weight: 400).foregroundStyle(DX.Ground.reading.ink)
                     .lineSpacing(5)
                     .fixedSize(horizontal: false, vertical: true)
                 if let keep = reveal.keep {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(String(localized: "Keep in mind")).dxType(.caption).foregroundStyle(Read4.muted)
-                        Text(verbatim: ctx.text(keep)).dxType(.headline).foregroundStyle(Read4.ink)
+                        Text(String(localized: "Keep in mind")).dxType(.caption).foregroundStyle(DX.Ground.reading.muted)
+                        Text(verbatim: ctx.text(keep)).dxType(.headline).foregroundStyle(DX.Ground.reading.ink)
                             .fixedSize(horizontal: false, vertical: true)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .v4Card()
                 }
                 if let source = reveal.source {
-                    Text(verbatim: String(localized: "Source: \(ctx.text(source))")).dxType(.footnote).foregroundStyle(Read4.muted)
+                    Text(verbatim: String(localized: "Source: \(ctx.text(source))")).dxType(.footnote).foregroundStyle(DX.Ground.reading.muted)
                 }
             }
             .padding(DX.Layout.gutter)
             .padding(.top, DX.Space.m)
         }
-        .background(Read4.background.ignoresSafeArea())
+        .background(DX.Ground.reading.background.ignoresSafeArea())
     }
 }
 
@@ -1010,15 +1013,15 @@ struct DeckMythView: View {
                 Text(verbatim: String(localized: "Statement \(index + 1) of \(statements.count)"))
                     .dxType(.caption).foregroundStyle(face.muted)
                 Text(verbatim: "\u{201C}\(ctx.text(statement.text))\u{201D}")
-                    .dxFont(answered ? 24 : 32, weight: 800, style: .title1).foregroundStyle(face.ink)
+                    .dxFace(.display, answered ? 24 : 32, weight: 800).foregroundStyle(face.ink)
                     .fixedSize(horizontal: false, vertical: true)
                 if let pick {
                     HStack(spacing: 8) {
                         Text(verbatim: verdictLabel(truth(statement)))
-                            .dxFont(14, weight: 800, style: .footnote).foregroundStyle(Color(hex: 0xFFF8EE))
+                            .dxFace(.body, 14, weight: 800).foregroundStyle(Color(hex: 0xFFF8EE))
                             .padding(.horizontal, 12).padding(.vertical, 6)
                             .background(Color(hex: 0x1E1A3A), in: Capsule())
-                        Text(verbatim: called(pick, statement)).dxFont(14, weight: 700, style: .footnote).foregroundStyle(face.muted)
+                        Text(verbatim: called(pick, statement)).dxFace(.body, 14, weight: 700).foregroundStyle(face.muted)
                     }
                     Text(verbatim: ctx.text(statement.verdict)).dxType(.headline).foregroundStyle(face.ink)
                         .fixedSize(horizontal: false, vertical: true)
@@ -1061,9 +1064,19 @@ struct DeckMythView: View {
         VStack(spacing: 8) {
             if pick == nil {
                 HStack(spacing: 12) {
-                    Button { pick = .myth } label: { Label(String(localized: "Myth"), systemImage: "chevron.left") }
+                    Button { pick = .myth } label: {
+                        HStack(spacing: 6) {
+                            DXIcon(.back, size: 16, weight: 2.6)
+                            Text(verbatim: String(localized: "Myth"))
+                        }
+                    }
                         .buttonStyle(.dx(.secondary, on: ground))
-                    Button { pick = .fact } label: { Label(String(localized: "Fact"), systemImage: "chevron.right") }
+                    Button { pick = .fact } label: {
+                        HStack(spacing: 6) {
+                            Text(verbatim: String(localized: "Fact"))
+                            DXIcon(.chev, size: 16, weight: 2.6)
+                        }
+                    }
                         .buttonStyle(.dx(.secondary, on: ground))
                 }
             } else if index + 1 < statements.count {
@@ -1100,7 +1113,8 @@ struct DeckActivityIntro: View {
         VStack(alignment: .leading, spacing: DX.Space.s) {
             DeckTopBar(ground: ground, eyebrow: card.eyebrow(position: position, of: total), onClose: onClose)
             Spacer(minLength: 0)
-            Image(systemName: card.format.symbol).font(.system(size: 40, weight: .bold)).foregroundStyle(ground.ink)
+            DeckGlyph(card: card).foregroundStyle(ground.ink)
+                .frame(width: 40, height: 40)
                 .frame(width: 88, height: 88)
                 .background(DX.Fill.onColourCard(for: ground), in: Circle())
                 .accessibilityHidden(true)
