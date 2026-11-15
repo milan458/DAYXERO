@@ -450,7 +450,8 @@ struct ProgressTab: View {
         let weeks = insights.weeks()
         let most = max(weeks.map(\.cravings).max() ?? 1, 1)
         let current = weeks.last
-        return V4Card(padding: 14) {
+        // v5: the same panel as the other patterns, this week's bar in the patterns' coral.
+        return patternPanel {
             VStack(alignment: .leading, spacing: DX.Space.s) {
                 HStack(alignment: .firstTextBaseline) {
                     Text("Cravings by week").v4Text(.cardHeading)
@@ -463,7 +464,7 @@ struct ProgressTab: View {
                             Text(verbatim: week.cravings.formatted()).dxFont(12, weight: 600, style: .caption1)
                                 .foregroundStyle(Read4.ink)
                             RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                .fill(week.isCurrent ? Read4.accent : Read4.track)
+                                .fill(week.isCurrent ? DX.Fill.coral : Read4.track)
                                 .frame(height: max(4, 72 * CGFloat(week.cravings) / CGFloat(most)))
                             Text(weekLabel(week, back: weeks.count - 1 - index))
                                 .dxFont(12, weight: 400, style: .caption2)

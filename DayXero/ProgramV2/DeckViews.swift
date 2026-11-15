@@ -846,8 +846,9 @@ struct DeckRevealView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            DeckTopBar(ground: ground, eyebrow: card.eyebrow(position: position, of: total),
-                       trailing: String(localized: "\(open.count) of \(reveals.count)"), onClose: onClose)
+            // v5: the day's card bar; this card's segment fills as its questions are turned over.
+            DeckNavRow(total: total, current: position, sub: reveals.isEmpty ? 0 : Double(open.count) / Double(reveals.count),
+                       label: String(localized: "\(open.count) of \(reveals.count) turned over"), onClose: onClose)
             ScrollView {
                 VStack(alignment: .leading, spacing: DX.Space.s) {
                     Text(verbatim: ctx.text(card.title)).dxType(.title).foregroundStyle(ground.ink)
@@ -881,6 +882,7 @@ struct DeckRevealView: View {
             .padding(.top, DX.Space.s)
         }
         .foregroundStyle(ground.ink)
+        .sensoryFeedback(DX.Haptic.select, trigger: open)
         .sheet(item: Binding(get: { deeper.map(DeeperIndex.init) }, set: { deeper = $0?.id })) { item in
             deeperSheet(reveals[item.id], index: item.id)
                 .presentationDetents([.medium, .large])
@@ -890,52 +892,65 @@ struct DeckRevealView: View {
 
     private struct DeeperIndex: Identifiable { let id: Int }
 
-    @ViewBuilder
+    /// One question (v5, after the lesson cards of 034): face down, an apricot card with the question; turned over, a
+    /// white card with the answer beside a coral rule and "Go deeper". It turns as one card.
     private func tile(_ reveal: DeckCard.Reveal, index: Int) -> some View {
         let isOpen = open.contains(index) || ctx.isReplay
-        let face = DX.Ground.sky
-        if isOpen {
+        let angle: Double = isOpen ? 0 : 180
+        return answerFace(reveal, index: index)
+            .modifier(LessonFlip(angle: angle, isRear: false))
+            .allowsHitTesting(isOpen)
+            .overlay {
+                questionFace(reveal, index: index)
+                    .modifier(LessonFlip(angle: angle, isRear: true))
+                    .allowsHitTesting(!isOpen)
+            }
+            .shadow(color: Color(red: 60 / 255, green: 40 / 255, blue: 20 / 255).opacity(0.1), radius: 8, y: 6)
+    }
+
+    private func answerFace(_ reveal: DeckCard.Reveal, index: Int) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text(verbatim: ctx.text(reveal.front)).dxType(.caption).foregroundStyle(ground.muted)
+                .fixedSize(horizontal: false, vertical: true)
+            Text(verbatim: ctx.text(reveal.answer)).dxFace(.body, 16, weight: 700).foregroundStyle(ground.ink)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.leading, 10)
+                .overlay(alignment: .leading) { Capsule().fill(DX.Fill.coral).frame(width: 3) }
+            Spacer(minLength: 0)
+            Button(String(localized: "Go deeper")) { deeper = index }
+                .buttonStyle(.dx(.ghostSmall, on: ground))
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, minHeight: 240, alignment: .topLeading)
+        .background(ground.card, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(ground.line))
+    }
+
+    /// Face down. The ink is fixed, because the card is apricot in light and dark.
+    private func questionFace(_ reveal: DeckCard.Reveal, index: Int) -> some View {
+        Button {
+            withAnimation(motion.animation(DX.Move.settle)) { _ = open.insert(index) }
+        } label: {
             VStack(alignment: .leading, spacing: 8) {
-                Text(verbatim: ctx.text(reveal.front)).dxFace(.body, 12, weight: 700).foregroundStyle(face.muted)
-                    .fixedSize(horizontal: false, vertical: true)
-                Text(verbatim: ctx.text(reveal.answer)).dxFace(.body, 16, weight: 700).foregroundStyle(face.ink)
+                Text(verbatim: String(localized: "Question \(index + 1)"))
+                    .dxFace(.body, 13, weight: 700).foregroundStyle(Color(hex: 0x4A2810))
+                Text(verbatim: ctx.text(reveal.front)).dxFace(.display, 18, weight: 800).foregroundStyle(Color(hex: 0x1E1A3A))
+                    .multilineTextAlignment(.leading)
                     .fixedSize(horizontal: false, vertical: true)
                 Spacer(minLength: 0)
-                Button { deeper = index } label: {
-                    Text(String(localized: "Go deeper")).dxFace(.body, 14, weight: 700)
-                        .frame(maxWidth: .infinity, minHeight: DX.Layout.touchTarget)
-                        .foregroundStyle(ground.btnFg)
-                        .background(ground.btn, in: Capsule())
+                HStack(spacing: 6) {
+                    DXIcon(.card, size: 16)
+                    Text(String(localized: "Turn over"))
                 }
-                .buttonStyle(.plain)
+                .dxFace(.body, 14, weight: 700).foregroundStyle(Color(hex: 0x4A2810))
             }
             .padding(14)
-            .frame(maxWidth: .infinity, minHeight: 240, alignment: .topLeading)
-            .background(face.background, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-            .transition(motion.reduce ? .opacity : .scale(scale: 0.92).combined(with: .opacity))
-        } else {
-            Button {
-                withAnimation(motion.animation(DX.Move.settle)) { _ = open.insert(index) }
-            } label: {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(verbatim: String(localized: "Question \(index + 1)"))
-                        .dxFace(.body, 13, weight: 700).foregroundStyle(ground.muted)
-                    Text(verbatim: ctx.text(reveal.front)).dxFace(.body, 18, weight: 800).foregroundStyle(ground.ink)
-                        .multilineTextAlignment(.leading)
-                        .fixedSize(horizontal: false, vertical: true)
-                    Spacer(minLength: 0)
-                    Text(String(localized: "Turn over")).dxFace(.body, 14, weight: 700).foregroundStyle(ground.ink)
-                        .frame(maxWidth: .infinity, minHeight: DX.Layout.touchTarget)
-                        .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous)
-                            .strokeBorder(ground.ink.opacity(0.35), style: StrokeStyle(lineWidth: 2, dash: [6, 5])))
-                }
-                .padding(14)
-                .frame(maxWidth: .infinity, minHeight: 240, alignment: .topLeading)
-                .background(DX.Ground.table.card, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel(Text(verbatim: String(localized: "Question \(index + 1): \(ctx.text(reveal.front)). Turn over")))
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            .background(LinearGradient(colors: [Color(hex: 0xFFE2C6), Color(hex: 0xFFC38A)], startPoint: .top, endPoint: .bottom),
+                        in: RoundedRectangle(cornerRadius: 22, style: .continuous))
         }
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text(verbatim: String(localized: "Question \(index + 1): \(ctx.text(reveal.front)). Turn over")))
     }
 
     private func deeperSheet(_ reveal: DeckCard.Reveal, index: Int) -> some View {
@@ -987,8 +1002,10 @@ struct DeckMythView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            DeckTopBar(ground: ground, eyebrow: card.eyebrow(position: position, of: total),
-                       trailing: statements.isEmpty ? nil : String(localized: "\(index + 1) of \(statements.count)"), onClose: onClose)
+            // v5: the day's card bar; this card's segment fills as the statements are answered.
+            DeckNavRow(total: total, current: position,
+                       sub: statements.isEmpty ? 0 : (Double(index) + (pick == nil ? 0 : 1)) / Double(statements.count),
+                       label: statements.isEmpty ? nil : String(localized: "Statement \(index + 1) of \(statements.count)"), onClose: onClose)
             if statements.indices.contains(index) {
                 statementCard(statements[index])
                     .id(index)
@@ -999,6 +1016,7 @@ struct DeckMythView: View {
         .foregroundStyle(ground.ink)
         .animation(motion.animation(DX.Move.settle), value: index)
         .animation(motion.animation(DX.Move.settle), value: pick)
+        .sensoryFeedback(DX.Haptic.select, trigger: pick)
     }
 
     private func truth(_ statement: DeckCard.Statement) -> DeckCard.Statement.Answer {
@@ -1010,8 +1028,6 @@ struct DeckMythView: View {
         let face: DX.Ground = !answered ? .sun : (truth(statement) == .fact ? .sky : truth(statement) == .myth ? .apricot : .sun)
         return ScrollView {
             VStack(alignment: .leading, spacing: 12) {
-                Text(verbatim: String(localized: "Statement \(index + 1) of \(statements.count)"))
-                    .dxType(.caption).foregroundStyle(face.muted)
                 Text(verbatim: "\u{201C}\(ctx.text(statement.text))\u{201D}")
                     .dxFace(.display, answered ? 24 : 32, weight: 800).foregroundStyle(face.ink)
                     .fixedSize(horizontal: false, vertical: true)
@@ -1021,6 +1037,7 @@ struct DeckMythView: View {
                             .dxFace(.body, 14, weight: 800).foregroundStyle(Color(hex: 0xFFF8EE))
                             .padding(.horizontal, 12).padding(.vertical, 6)
                             .background(Color(hex: 0x1E1A3A), in: Capsule())
+                            .dxPop()
                         Text(verbatim: called(pick, statement)).dxFace(.body, 14, weight: 700).foregroundStyle(face.muted)
                     }
                     Text(verbatim: ctx.text(statement.verdict)).dxType(.headline).foregroundStyle(face.ink)
@@ -1038,8 +1055,8 @@ struct DeckMythView: View {
             }
             .padding(22)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(face.background, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
-            .shadow(color: .black.opacity(0.25), radius: 18, x: 0, y: 12)
+            .background(face.background, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
+            .shadow(color: Color(light: (0x3C2814, 0.14), dark: (0x000000, 0.45)), radius: 15, y: 12)
             .padding(.vertical, 8)
         }
         .scrollBounceBehavior(.basedOnSize)
