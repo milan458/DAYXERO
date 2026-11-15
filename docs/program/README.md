@@ -22,15 +22,15 @@ Each track is rendered three times (smoking, vaping, pouches) from the `{s: … 
 | P1 · 5 | Tonight: what you noticed (evening) | ≈ 7:00 | 828 / 829 / 829 |
 | P2 · 1 | The autopilot | ≈ 6:20 | 794 / 796 / 798 |
 | P2 · 5 | Tonight: one small wait (evening) | ≈ 5:00 | 631 / 633 / 632 |
-| P3 · 1 | Curiosity beats craving | ≈ 6:15 | 804 / 807 / 803 |
+| P3 · 1 | Curiosity beats craving | ≈ 6:05 | 780 / 783 / 779 |
 | P3 · 3 | One with full attention (played during a use) | ≈ 6:30 | 750 / 742 / 770 |
 | P4 · 1 | Why it feels like it calms you | ≈ 6:10 | 765 / 775 / 766 |
 | P5 · 1 | Surfing the urge (guided practice) | ≈ 7:10 | 835 / 837 / 834 |
 | P5 · 5 | Thoughts are not orders (evening) | ≈ 5:30 | 632 (one render) |
-| P6 · 1 | You don't have to white-knuckle it | ≈ 6:10 | 753 / 753 / 782 |
+| P6 · 1 | You don't have to white-knuckle it | ≈ 6:10 | 751 / 751 / 780 |
 | P7 · 1 | What you're actually giving up | ≈ 7:15 | 843 / 844 / 844 |
 | P7 · 5 | The last one (guided, ends on the hold) | ≈ 6:45 | 714 / 710 / 717 |
-| DX · 1 | Day Xero (morning, ends on the hold) | ≈ 6:30 | 760 / 748 / 749 |
+| DX · 1 | Day Xero (morning, ends on the hold) | ≈ 6:30 | 764 / 748 / 749 |
 | DX · 5 | One day (evening) | ≈ 7:15 | 797 / 797 / 799 |
 
 ## Decided (Milan, 6 Nov 2026)
