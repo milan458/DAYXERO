@@ -204,7 +204,7 @@ struct ChecklistBeat: View {
 
 // MARK: - breathe
 
-/// The Bio-Orb for a set number of cycles, voice off: the session audio just played.
+/// A breathing step: the sigh on its own card (030), any other pattern on the breath pacer.
 struct BreatheBeat: View {
     let beat: Beat
     let ctx: BeatContext
@@ -228,13 +228,12 @@ struct BreatheBeat: View {
             VStack(spacing: DX.Space.s) {
                 Text(verbatim: ctx.text(beat.label)).dxFace(.display, 19, weight: 600)
                     .foregroundStyle(DX.Ground.table.ink).multilineTextAlignment(.center)
-                OrbBreathingPanel(pattern: beat.pattern ?? "box", cycles: beat.cycles) {
+                // v5: the breath pacer, in place of the Bio-Orb.
+                BreathPacerPanel(pattern: beat.pattern ?? "box", cycles: beat.cycles) {
                     ctx.finish(beat)
                     onDone()
                 }
-                .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
-                // A reading card with a hairline, no longer a black panel (S27.12).
-                .overlay(RoundedRectangle(cornerRadius: 28, style: .continuous).strokeBorder(DX.Ground.table.line))
+                Spacer(minLength: 0)
             }
             .onAppear {
                 savedVoice = voiceOn

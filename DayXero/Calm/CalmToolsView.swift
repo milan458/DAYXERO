@@ -337,7 +337,8 @@ struct CalmToolPlayer: View {
             })
         case .longerOutBreath:
             topBar
-            OrbBreathingPanel(pattern: tool.orbPattern ?? "478", cycles: tool.cycles) { finish(early: false) }
+            BreathPacerPanel(pattern: tool.orbPattern ?? "478", cycles: tool.cycles) { finish(early: false) }
+            Spacer(minLength: 0)
         case .dropAnchor:
             topBar
             anchor
