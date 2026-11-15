@@ -1462,6 +1462,14 @@ struct DeckRecapView: View {
                             .accessibilityAddTraits(.isHeader)
                         Text(verbatim: line).dxType(.body).foregroundStyle(ground.muted)
                             .multilineTextAlignment(.center)
+                            .fixedSize(horizontal: false, vertical: true)
+                        // After Day Xero a day closes on its own line, then when the next one opens.
+                        if !session.isDeck, let next, !isReplay {
+                            Text(verbatim: next).dxType(.footnote).foregroundStyle(ground.muted)
+                                .multilineTextAlignment(.center)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .padding(.top, 6)
+                        }
                     }
                     .padding(.top, 20)
                     .dxArrive(6)
@@ -1500,6 +1508,11 @@ struct DeckRecapView: View {
 
     /// "4 days to Day Xero · 3 preps to go".
     private var line: String {
+        if !session.isDeck {
+            // "Day 2 done. Look after the basics…": the title already says the first part.
+            let text = ctx.text(session.completionText), lead = "\(session.label) done. "
+            return text.hasPrefix(lead) ? String(text.dropFirst(lead.count)) : text
+        }
         let profile = ctx.store.profile
         let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
         let days = max(clock.calendar.dateComponents([.day], from: clock.day(containing: .now), to: clock.startOfDate(profile.quitDay)).day ?? 0, 0)
@@ -1586,7 +1599,7 @@ struct DeckRecapView: View {
 
 /// Sixteen paper rays round the medal, long and short in turn, left open where Xero stands; they grow out from the
 /// centre (500 ms, 25 ms apart, from 300 ms), then turn very slowly (26 s a turn).
-private struct SlowRays: View {
+struct SlowRays: View {
     let color: Color
     @State private var grown = false
     private let motion = MotionPolicy()
