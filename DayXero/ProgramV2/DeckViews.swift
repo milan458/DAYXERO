@@ -487,6 +487,11 @@ struct DeckNavRow: View {
     }
 }
 
+/// When each paragraph of a listen card's transcript starts in its recording (`tx_<card>_<variant>.json`).
+private struct ListenTimings: Decodable {
+    let paragraphs: [Double]
+}
+
 /// The listen card (024): an apricot player with Xero in his headphones before the sun, a waveform with the playhead,
 /// the times and the controls. It plays the recording, or reads the script aloud until the recordings are in. Read opens
 /// the transcript under the controls.
@@ -510,6 +515,8 @@ struct DeckListenView: View {
     @State private var reading = false
     @State private var grown = false
     @State private var unlocked = false
+    /// When each paragraph of the transcript starts in the recording, in seconds. Empty without a recording.
+    @State private var starts: [Double] = []
     @Environment(\.colorScheme) private var scheme
     private let motion = MotionPolicy()
 
@@ -525,6 +532,20 @@ struct DeckListenView: View {
         (card.script?.chapters ?? []).flatMap { ProgramInline.paragraphs(ctx.text($0.text), ctx.variant) }
     }
 
+    /// The recording's paragraph timings (`tx_P1_5_smoking.json`, beside the audio), or nothing when the file is
+    /// missing or was made for a different script.
+    private func loadStarts() -> [Double] {
+        guard let naming = ctx.store.content?.audio else { return [] }
+        let name = naming.transcript(session: card.audioKey, variant: session.audio.pick(for: ctx.variant, nrtActive: ctx.nrtActive))
+        let base = (name as NSString).deletingPathExtension, ext = (name as NSString).pathExtension
+        guard let url = Bundle.main.url(forResource: base, withExtension: ext, subdirectory: naming.folder)
+                ?? Bundle.main.url(forResource: base, withExtension: ext),
+              let data = try? Data(contentsOf: url),
+              let timings = try? JSONDecoder().decode(ListenTimings.self, from: data),
+              timings.paragraphs.count == paragraphs.count else { return [] }
+        return timings.paragraphs
+    }
+
     var body: some View {
         let dark = scheme == .dark
         let ink = dark ? DX.Fill.cream : DX.Fill.navy
@@ -532,92 +553,103 @@ struct DeckListenView: View {
             let elapsed = narrator?.elapsed(at: timeline.date) ?? 0
             let length = max(narrator?.total ?? Double(card.minutes * 60), 1)
             let p = min(max(elapsed / length, 0), 1)
+            let speaking: Int? = starts.isEmpty ? nil : starts.lastIndex(where: { $0 <= elapsed + 0.05 })
             VStack(spacing: 0) {
                 DeckNavRow(total: total, current: position, sub: p, onClose: { narrator?.stop(); onClose() })
                     .dxArrive(0)
-                ScrollView {
-                    VStack(spacing: 0) {
-                        art(dark: dark)
-                        VStack(alignment: .leading, spacing: 0) {
-                            HStack(spacing: 8) {
-                                DXIcon(.headphones, size: 18)
-                                Text(verbatim: "\(card.format.label) · \(String(localized: "\(card.minutes) min"))")
-                                Spacer()
-                                Button {
-                                    withAnimation(.timingCurve(0.2, 0.7, 0.2, 1, duration: 0.32)) { reading.toggle() }
-                                } label: {
-                                    HStack(spacing: 6) {
-                                        DXIcon(.text, size: 17)
-                                        Text(reading ? "Hide" : "Read")
+                ScrollViewReader { reader in
+                    ScrollView {
+                        VStack(spacing: 0) {
+                            art(dark: dark)
+                            VStack(alignment: .leading, spacing: 0) {
+                                HStack(spacing: 8) {
+                                    DXIcon(.headphones, size: 18)
+                                    Text(verbatim: "\(card.format.label) · \(String(localized: "\(card.minutes) min"))")
+                                    Spacer()
+                                    Button {
+                                        withAnimation(.timingCurve(0.2, 0.7, 0.2, 1, duration: 0.32)) { reading.toggle() }
+                                    } label: {
+                                        HStack(spacing: 6) {
+                                            DXIcon(.text, size: 17)
+                                            Text(reading ? "Hide" : "Read")
+                                        }
+                                        .foregroundStyle(ink)
+                                        .frame(height: 32)
                                     }
-                                    .foregroundStyle(ink)
-                                    .frame(height: 32)
+                                    .buttonStyle(.plain)
+                                    .accessibilityValue(Text(reading ? "Transcript shown" : ""))
                                 }
-                                .buttonStyle(.plain)
-                                .accessibilityValue(Text(reading ? "Transcript shown" : ""))
-                            }
-                            .dxFace(.body, 14, weight: 600)
-                            .foregroundStyle(dark ? Color(hex: 0xE9DCCB) : Color(hex: 0x3A2410))
-                            Text(verbatim: ctx.text(card.title))
-                                .dxType(.title).foregroundStyle(ink)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .padding(.top, 10)
-                                .accessibilityAddTraits(.isHeader)
-                            Waveform(progress: p, grown: grown, ink: ink, face: dark ? Color(hex: 0x222D54) : card.faceColor)
-                                .frame(height: 52)
-                                .padding(.top, 16)
-                                .accessibilityElement()
-                                .accessibilityLabel(Text("Playback"))
-                                .accessibilityValue(Text("\(Self.clock(elapsed)) of \(Self.clock(length))"))
-                            HStack {
-                                Text(verbatim: Self.clock(elapsed)).monospacedDigit()
-                                Spacer()
-                                Text(verbatim: Self.clock(length)).monospacedDigit()
-                            }
-                            .dxType(.caption)
-                            .foregroundStyle(dark ? Color(hex: 0xE9DCCB) : Color(hex: 0x3A2410))
-                            .padding(.top, 8)
-                            HStack(spacing: 34) {
-                                SkipButton(forward: false, ink: ink) { narrator?.skip(-15) }
-                                Button { narrator?.toggle() } label: {
-                                    DXIcon((narrator?.playing ?? false) ? .pause : .play, size: 26, weight: 2.4, filled: !(narrator?.playing ?? false))
-                                        .foregroundStyle(dark ? DX.Fill.navy : DX.Fill.cream)
-                                        .offset(x: (narrator?.playing ?? false) ? 0 : 2)
-                                        .frame(width: 64, height: 64)
-                                        .background(dark ? Color(hex: 0xFFC38A) : DX.Fill.navy, in: Circle())
-                                        .shadow(color: dark ? .black.opacity(0.35) : Color(hex: 0x1E1A3A).opacity(0.22), radius: 8, y: 6)
+                                .dxFace(.body, 14, weight: 600)
+                                .foregroundStyle(dark ? Color(hex: 0xE9DCCB) : Color(hex: 0x3A2410))
+                                Text(verbatim: ctx.text(card.title))
+                                    .dxType(.title).foregroundStyle(ink)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                    .padding(.top, 10)
+                                    .accessibilityAddTraits(.isHeader)
+                                Waveform(progress: p, grown: grown, ink: ink, face: dark ? Color(hex: 0x222D54) : card.faceColor)
+                                    .frame(height: 52)
+                                    .padding(.top, 16)
+                                    .accessibilityElement()
+                                    .accessibilityLabel(Text("Playback"))
+                                    .accessibilityValue(Text("\(Self.clock(elapsed)) of \(Self.clock(length))"))
+                                HStack {
+                                    Text(verbatim: Self.clock(elapsed)).monospacedDigit()
+                                    Spacer()
+                                    Text(verbatim: Self.clock(length)).monospacedDigit()
                                 }
-                                .buttonStyle(.dxPress)
-                                .accessibilityLabel(Text((narrator?.playing ?? false) ? "Pause" : "Play"))
-                                SkipButton(forward: true, ink: ink) { narrator?.skip(15) }
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding(.top, 12)
-                            if reading {
-                                VStack(alignment: .leading, spacing: 12) {
-                                    ForEach(Array(paragraphs.enumerated()), id: \.offset) { _, paragraph in
-                                        Text(verbatim: paragraph).dxFace(.body, 17, weight: 450).foregroundStyle(ink)
-                                            .lineSpacing(4)
-                                            .fixedSize(horizontal: false, vertical: true)
+                                .dxType(.caption)
+                                .foregroundStyle(dark ? Color(hex: 0xE9DCCB) : Color(hex: 0x3A2410))
+                                .padding(.top, 8)
+                                HStack(spacing: 34) {
+                                    SkipButton(forward: false, ink: ink) { narrator?.skip(-15) }
+                                    Button { narrator?.toggle() } label: {
+                                        DXIcon((narrator?.playing ?? false) ? .pause : .play, size: 26, weight: 2.4, filled: !(narrator?.playing ?? false))
+                                            .foregroundStyle(dark ? DX.Fill.navy : DX.Fill.cream)
+                                            .offset(x: (narrator?.playing ?? false) ? 0 : 2)
+                                            .frame(width: 64, height: 64)
+                                            .background(dark ? Color(hex: 0xFFC38A) : DX.Fill.navy, in: Circle())
+                                            .shadow(color: dark ? .black.opacity(0.35) : Color(hex: 0x1E1A3A).opacity(0.22), radius: 8, y: 6)
                                     }
+                                    .buttonStyle(.dxPress)
+                                    .accessibilityLabel(Text((narrator?.playing ?? false) ? "Pause" : "Play"))
+                                    SkipButton(forward: true, ink: ink) { narrator?.skip(15) }
                                 }
-                                .padding(.top, 18)
-                                .transition(.opacity.combined(with: .move(edge: .top)))
+                                .frame(maxWidth: .infinity)
+                                .padding(.top, 12)
+                                if reading {
+                                    VStack(alignment: .leading, spacing: 12) {
+                                        ForEach(Array(paragraphs.enumerated()), id: \.offset) { i, paragraph in
+                                            Text(verbatim: paragraph).dxFace(.body, 17, weight: 450).foregroundStyle(ink)
+                                                .lineSpacing(4)
+                                                .fixedSize(horizontal: false, vertical: true)
+                                                .opacity(speaking == nil || speaking == i ? 1 : 0.5)
+                                                .animation(motion.reduce ? nil : .easeInOut(duration: 0.3), value: speaking)
+                                                .id("paragraph-\(i)")
+                                        }
+                                    }
+                                    .padding(.top, 18)
+                                    .transition(.opacity.combined(with: .move(edge: .top)))
+                                }
                             }
+                            .padding(.top, 18).padding(.horizontal, 20).padding(.bottom, 24)
                         }
-                        .padding(.top, 18).padding(.horizontal, 20).padding(.bottom, 24)
+                        .background(face(dark: dark))
+                        .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+                        .shadow(color: dark ? .black.opacity(0.45) : Color(red: 60 / 255, green: 40 / 255, blue: 20 / 255).opacity(0.14), radius: 15, y: 16)
+                        .padding(.top, 6)
+                        .dxSettle()
+                        .padding(.bottom, 28)
+                        .padding(.horizontal, DX.Layout.gutter)
                     }
-                    .background(face(dark: dark))
-                    .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
-                    .shadow(color: dark ? .black.opacity(0.45) : Color(red: 60 / 255, green: 40 / 255, blue: 20 / 255).opacity(0.14), radius: 15, y: 16)
-                    .padding(.top, 6)
-                    .dxSettle()
-                    .padding(.bottom, 28)
-                    .padding(.horizontal, DX.Layout.gutter)
+                    .padding(.horizontal, -DX.Layout.gutter)
+                    .scrollBounceBehavior(.basedOnSize)
+                    .scrollIndicators(.hidden)
+                    // The transcript follows the voice: the paragraph being spoken stays in view.
+                    .onChange(of: speaking) { _, now in
+                        guard reading, let now else { return }
+                        withAnimation(motion.reduce ? nil : .easeInOut(duration: 0.4)) { reader.scrollTo("paragraph-\(now)", anchor: .center) }
+                    }
                 }
-                .padding(.horizontal, -DX.Layout.gutter)
-                .scrollBounceBehavior(.basedOnSize)
-                .scrollIndicators(.hidden)
                 gate(open: unlocked || p >= 0.8 || ctx.isReplay || (narrator?.finished ?? false))
                     .padding(.top, 8)
                     .dxArrive(6)
@@ -627,7 +659,9 @@ struct DeckListenView: View {
         .onAppear {
             guard narrator == nil else { return }
             let transcript = paragraphs.joined(separator: " ")
-            let n = LessonNarrator(transcript: transcript, url: recording, seconds: card.minutes * 60)
+            let audio = recording
+            let n = LessonNarrator(transcript: transcript, url: audio, seconds: card.minutes * 60)
+            starts = audio == nil ? [] : loadStarts()
             n.onFinish = { unlocked = true }
             narrator = n
             withAnimation(motion.reduce ? nil : .linear(duration: 0.01).delay(0.2)) { grown = true }

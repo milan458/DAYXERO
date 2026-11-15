@@ -27,7 +27,7 @@
       "label": "Prep 1",
       "title": "You don't have to quit today",
       "subtitle": "How the prep week works",
-      "durationMinutes": 31,
+      "durationMinutes": 28,
       "unlock": {
         "rule": "first"
       },
@@ -44,7 +44,7 @@
           "id": "P1.1",
           "format": "listen",
           "title": "Keep using. Just watch.",
-          "minutes": 6,
+          "minutes": 5,
           "ground": "apricot",
           "commit": "I'll just watch today",
           "intro": "Put your headphones in if you can. Nothing to do but listen.",
@@ -293,7 +293,7 @@
           "id": "P1.5",
           "format": "listen",
           "title": "Tonight: what you noticed",
-          "minutes": 7,
+          "minutes": 5,
           "ground": "violet",
           "commit": "I'm ready for tomorrow",
           "after": "You looked. That's the start.",
@@ -429,7 +429,7 @@
       "label": "Prep 2",
       "title": "The first one of the day",
       "subtitle": "Loosen the morning routine",
-      "durationMinutes": 30,
+      "durationMinutes": 28,
       "unlock": {
         "rule": "next_day_after_previous"
       },
@@ -446,7 +446,7 @@
           "id": "P2.1",
           "format": "listen",
           "title": "The autopilot",
-          "minutes": 6,
+          "minutes": 5,
           "ground": "apricot",
           "commit": "I'll catch the cue",
           "intro": "Yesterday you watched the gap. Today, what sets it off.",
@@ -892,7 +892,7 @@
           "id": "P2.5",
           "format": "listen",
           "title": "Tonight: one small wait",
-          "minutes": 5,
+          "minutes": 4,
           "ground": "violet",
           "commit": "I'm set for the morning",
           "after": "One moment, one short wait.",
@@ -954,7 +954,7 @@
       "label": "Prep 3",
       "title": "Use with your eyes open",
       "subtitle": "One session, full attention",
-      "durationMinutes": 30,
+      "durationMinutes": 28,
       "unlock": {
         "rule": "next_day_after_previous"
       },
@@ -971,7 +971,7 @@
           "id": "P3.1",
           "format": "listen",
           "title": "Curiosity beats craving",
-          "minutes": 6,
+          "minutes": 5,
           "ground": "apricot",
           "commit": "I'll look today",
           "intro": "Listen now. The guided use comes later.",
@@ -1037,7 +1037,7 @@
           "id": "P3.3",
           "format": "listen",
           "title": "One with full attention",
-          "minutes": 6,
+          "minutes": 5,
           "ground": "apricot",
           "commit": "I really looked",
           "canSaveForLater": true,
@@ -1503,7 +1503,7 @@
       "label": "Prep 4",
       "title": "The stress loop",
       "subtitle": "A breath that works in the moment",
-      "durationMinutes": 28,
+      "durationMinutes": 27,
       "unlock": {
         "rule": "next_day_after_previous"
       },
@@ -1520,7 +1520,7 @@
           "id": "P4.1",
           "format": "listen",
           "title": "Why it feels like it calms you",
-          "minutes": 6,
+          "minutes": 5,
           "ground": "apricot",
           "commit": "I've felt that loop",
           "script": {
@@ -1941,7 +1941,7 @@
       "label": "Prep 5",
       "title": "Riding the wave",
       "subtitle": "The skill that matters most",
-      "durationMinutes": 28,
+      "durationMinutes": 25,
       "unlock": {
         "rule": "next_day_after_previous"
       },
@@ -1958,7 +1958,7 @@
           "id": "P5.1",
           "format": "listen",
           "title": "Surfing the urge",
-          "minutes": 7,
+          "minutes": 5,
           "ground": "apricot",
           "commit": "I can ride it",
           "intro": "A guided practice, about seven minutes. Find somewhere to sit. If you can, have your {product} where you can see it. You won't use it during the track. Still in prep: you can use as normal afterwards if you want to.",
@@ -2196,7 +2196,7 @@
           "id": "P5.5",
           "format": "listen",
           "title": "Thoughts are not orders",
-          "minutes": 5,
+          "minutes": 4,
           "ground": "violet",
           "commit": "Noticed, not obeyed",
           "intro": "A short, quiet practice for the evening. About five minutes. Somewhere comfortable is best.",
@@ -2245,7 +2245,7 @@
       "label": "Prep 6",
       "title": "Make it easy on yourself",
       "subtitle": "Set up your space and your support",
-      "durationMinutes": 29,
+      "durationMinutes": 28,
       "unlock": {
         "rule": "next_day_after_previous"
       },
@@ -2262,7 +2262,7 @@
           "id": "P6.1",
           "format": "listen",
           "title": "You don't have to white-knuckle it",
-          "minutes": 6,
+          "minutes": 5,
           "ground": "apricot",
           "commit": "I'll make it easy",
           "script": {
@@ -2616,7 +2616,7 @@
       "label": "Prep 7",
       "title": "The night before",
       "subtitle": "Clear out and get ready",
-      "durationMinutes": 31,
+      "durationMinutes": 27,
       "unlock": {
         "rule": "next_day_after_previous"
       },
@@ -2633,7 +2633,7 @@
           "id": "P7.1",
           "format": "listen",
           "title": "What you're actually giving up",
-          "minutes": 7,
+          "minutes": 5,
           "ground": "apricot",
           "commit": "I'm not giving anything up",
           "intro": "About 7 minutes. Keep using as normal today.",
@@ -2926,7 +2926,7 @@
           "id": "P7.5",
           "format": "listen",
           "title": "The last one",
-          "minutes": 7,
+          "minutes": 5,
           "ground": "violet",
           "commit": "I'm ready for tomorrow",
           "intro": "About 7 minutes. Have your last one ready, or just listen if you've already had it.",
@@ -3021,7 +3021,7 @@
       "label": "Day Xero",
       "title": "Day Xero",
       "subtitle": "Your first day",
-      "durationMinutes": 30,
+      "durationMinutes": 27,
       "unlock": {
         "rule": "day_xero"
       },
@@ -3038,7 +3038,7 @@
           "id": "DX.1",
           "format": "listen",
           "title": "Day Xero",
-          "minutes": 6,
+          "minutes": 5,
           "ground": "apricot",
           "commit": "I've started",
           "script": {
@@ -3503,7 +3503,7 @@
           "id": "DX.5",
           "format": "listen",
           "title": "One day",
-          "minutes": 7,
+          "minutes": 5,
           "ground": "violet",
           "commit": "One day done",
           "intro": "About 7 minutes. A good one to hear somewhere quiet, close to bed.",
