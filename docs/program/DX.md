@@ -65,7 +65,7 @@ If you're using nicotine replacement, use it the way your pack says. It takes th
 
 Tell someone that today's the day. A message back from a friend can carry you through a wave.
 
-Eat proper meals, keep water close, and if you drink coffee, {s: have about half your usual. Now that you've stopped smoking, the same cup hits harder. | v: notice whether it leaves you jittery. That can feel a lot like a craving. | p: notice whether it leaves you jittery. That can feel a lot like a craving.}
+Eat proper meals, keep water close, and if you drink coffee, {s: make it a smaller cup, earlier in the day. Now that you've stopped smoking, the same cup hits harder. | v: notice whether it leaves you jittery. That can feel a lot like a craving. | p: notice whether it leaves you jittery. That can feel a lot like a craving.}
 
 And if you slip, [pause] it doesn't wipe anything out. Your count isn't reset. Tap "I slipped," be kind to yourself, notice what set it off, and carry on from right there. A slip is information, not the end of anything. The very next choice is the one that matters.
 
@@ -81,7 +81,9 @@ When you're ready, press and hold the button on your screen for three seconds. W
 
 You're not losing anything today. You're getting through one day, one wave at a time. [pause] I'll be with you this evening.
 
-Word count: 760 spoken words in the smoking render, 748 vaping, 749 pouches (≈ 6:30 with pauses)
+Word count: 764 spoken words in the smoking render, 748 vaping, 749 pouches (≈ 6:30 with pauses)
+
+> Edited 15 Nov 2026: the smoking coffee line now says "a smaller cup, earlier in the day" (audio style guide C6) in place of "about half your usual".
 
 ---
 
