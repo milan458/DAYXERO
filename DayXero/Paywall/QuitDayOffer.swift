@@ -23,8 +23,8 @@ struct QuitDayOffer: View {
                 ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
-        .foregroundStyle(Read4.ink)
-        .background(Read4.background.ignoresSafeArea())
+        .foregroundStyle(DX.Ground.reading.ink)
+        .background(DX.Ground.reading.background.ignoresSafeArea())
         .task {
             let model = PaywallModel(store: entitlement.store, entitlement: entitlement)
             self.model = model
@@ -69,9 +69,9 @@ struct QuitDayOffer: View {
                     model.dismissed()
                     onClose()
                 } label: {
-                    Image(systemName: "xmark").font(.system(size: 16, weight: .bold)).foregroundStyle(Read4.ink)
+                    DXIcon(.close, size: 18, weight: 2.6).foregroundStyle(DX.Ground.reading.ink)
                         .frame(width: 44, height: 44)
-                        .background(Read4.surface, in: Circle())
+                        .background(DX.Ground.reading.card2, in: Circle())
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(Text("Close and continue with the free version"))
@@ -81,7 +81,7 @@ struct QuitDayOffer: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
                     Text(verbatim: headline).dxType(.large).accessibilityAddTraits(.isHeader).dxArrive(0)
-                    Text(verbatim: line(model)).dxType(.body).foregroundStyle(Read4.muted)
+                    Text(verbatim: line(model)).dxType(.body).foregroundStyle(DX.Ground.reading.muted)
                         .fixedSize(horizontal: false, vertical: true)
                         .dxArrive(1)
                     VStack(alignment: .leading, spacing: 8) {
@@ -89,7 +89,7 @@ struct QuitDayOffer: View {
                         included("Jelli's voice coaching")
                         included("If-then slip planner and a 12-week NRT schedule")
                         included("Trigger heatmaps")
-                        Text(FreeLine.text).dxType(.footnote).foregroundStyle(Read4.muted)
+                        Text(FreeLine.text).dxType(.footnote).foregroundStyle(DX.Ground.reading.muted)
                             .padding(.top, 2)
                     }
                     .v4Card()
@@ -156,7 +156,7 @@ struct QuitDayOffer: View {
         Label {
             Text(text).dxType(.body)
         } icon: {
-            Image(systemName: "checkmark.circle.fill").foregroundStyle(Read4.accent)
+            DXIcon(.check, size: 20, weight: 2.6).foregroundStyle(DX.Ground.reading.mark)
         }
     }
 
@@ -174,9 +174,9 @@ struct QuitDayOffer: View {
                 if let lifetime = model.plans.first(where: { $0.plan == .lifetime }) {
                     Button { model.select(.lifetime) } label: {
                         Text("Pay once · \(lifetime.priceText)")
-                            .dxFont(14, weight: model.selected == .lifetime ? 700 : 600, style: .footnote)
+                            .dxFace(.body, 14, weight: model.selected == .lifetime ? 700 : 600)
                             .underline(model.selected == .lifetime)
-                            .foregroundStyle(Read4.ink)
+                            .foregroundStyle(DX.Ground.reading.ink)
                             .frame(maxWidth: .infinity, minHeight: 44)
                     }
                     .buttonStyle(.plain)
@@ -190,26 +190,29 @@ struct QuitDayOffer: View {
         let on = model.selected == option.plan
         return Button { model.select(option.plan) } label: {
             HStack(alignment: .top, spacing: 12) {
-                Image(systemName: on ? "largecircle.fill.circle" : "circle")
-                    .font(.system(size: 22)).foregroundStyle(on ? Read4.accent : Read4.faint)
+                ZStack {
+                    Circle().strokeBorder(on ? DX.Ground.reading.sel : DX.Ground.reading.line, lineWidth: 2)
+                    if on { Circle().fill(DX.Ground.reading.sel).padding(5) }
+                }
+                .frame(width: 22, height: 22)
                     .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 4) {
                     if option.plan == .annual, let days = option.trialDays {
                         Text(model.annualSavingPercent.map { "\(days) DAYS FREE · SAVE \($0)%" as LocalizedStringKey } ?? "\(days) DAYS FREE")
-                            .dxType(.caption).foregroundStyle(Read4.accent)
+                            .dxType(.caption).foregroundStyle(DX.Ground.reading.ink)
                     }
                     Text(option.plan == .annual ? "Yearly" : "Monthly").dxType(.headline)
                     Text(option.plan == .annual ? (option.perMonthText.map { "\($0) a month" } ?? "") : String(localized: "Billed today · Cancel anytime"))
-                        .dxType(.footnote).foregroundStyle(Read4.muted)
+                        .dxType(.footnote).foregroundStyle(DX.Ground.reading.muted)
                 }
                 Spacer(minLength: 0)
                 Text(option.plan == .annual ? "\(option.priceText)/yr" : "\(option.priceText)/mo")
                     .dxType(.headline).monospacedDigit()
             }
             .padding(14)
-            .background(Read4.card, in: RoundedRectangle(cornerRadius: DX.Layout.smallCardRadius, style: .continuous))
+            .background(DX.Ground.reading.card, in: RoundedRectangle(cornerRadius: DX.Layout.smallCardRadius, style: .continuous))
             .overlay(RoundedRectangle(cornerRadius: DX.Layout.smallCardRadius, style: .continuous)
-                .strokeBorder(on ? Read4.ink : .clear, lineWidth: 2))
+                .strokeBorder(on ? DX.Ground.reading.ink : .clear, lineWidth: 2))
         }
         .buttonStyle(.plain)
         .accessibilityElement(children: .combine)
@@ -233,14 +236,14 @@ struct QuitDayOffer: View {
     private func step(_ when: String, _ what: String, first: Bool = false, last: Bool = false) -> some View {
         HStack(alignment: .top, spacing: 12) {
             VStack(spacing: 0) {
-                Rectangle().fill(first ? .clear : Read4.track).frame(width: 2, height: 6)
-                Circle().fill(first ? Read4.accent : Read4.track).frame(width: 12, height: 12)
-                Rectangle().fill(last ? .clear : Read4.track).frame(width: 2).frame(maxHeight: .infinity)
+                Rectangle().fill(first ? .clear : DX.Ground.reading.track).frame(width: 2, height: 6)
+                Circle().fill(first ? DX.Ground.reading.sel : DX.Ground.reading.track).frame(width: 12, height: 12)
+                Rectangle().fill(last ? .clear : DX.Ground.reading.track).frame(width: 2).frame(maxHeight: .infinity)
             }
             .frame(width: 12)
             VStack(alignment: .leading, spacing: 2) {
-                Text(verbatim: when).dxFont(14, weight: 700, style: .footnote)
-                Text(verbatim: what).dxType(.footnote).foregroundStyle(Read4.muted).fixedSize(horizontal: false, vertical: true)
+                Text(verbatim: when).dxFace(.body, 14, weight: 700)
+                Text(verbatim: what).dxType(.footnote).foregroundStyle(DX.Ground.reading.muted).fixedSize(horizontal: false, vertical: true)
             }
             .padding(.bottom, last ? 0 : 12)
         }
@@ -267,8 +270,8 @@ struct QuitDayOffer: View {
                 VStack(spacing: 4) { links(model, separators: false) }
             }
             .dxType(.caption)
-            .foregroundStyle(Read4.muted)
-            .tint(Read4.muted)
+            .foregroundStyle(DX.Ground.reading.muted)
+            .tint(DX.Ground.reading.muted)
         }
         .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
         .padding(.horizontal, DX.Layout.buttonGutter)
@@ -304,11 +307,11 @@ struct QuitDayOffer: View {
     private func message(icon: String, title: LocalizedStringKey, line: String, button: LocalizedStringKey) -> some View {
         VStack(spacing: 14) {
             Spacer()
-            Image(systemName: icon).font(.system(size: 30, weight: .bold)).foregroundStyle(Read4.accent)
-                .frame(width: 76, height: 76).background(Read4.accentSoft, in: Circle())
+            Image(systemName: icon).font(.system(size: 30, weight: .bold)).foregroundStyle(DX.Ground.reading.ink)
+                .frame(width: 76, height: 76).background(DX.Ground.reading.selTint, in: Circle())
                 .accessibilityHidden(true)
             Text(title).dxType(.large).multilineTextAlignment(.center).accessibilityAddTraits(.isHeader)
-            Text(verbatim: line).dxType(.body).foregroundStyle(Read4.muted).multilineTextAlignment(.center)
+            Text(verbatim: line).dxType(.body).foregroundStyle(DX.Ground.reading.muted).multilineTextAlignment(.center)
             Spacer()
             Button(button, action: onClose).buttonStyle(.dx(.primary, on: .reading))
         }
