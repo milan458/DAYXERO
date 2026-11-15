@@ -20,3 +20,6 @@ wrangler.dev.jsonc
 
 # Colour Lab screens (npm run colour-lab:build)
 tools/colour-lab/screens/
+
+# Rendered program audio (tools/vo_render.py); kept out of git
+vo_out/
