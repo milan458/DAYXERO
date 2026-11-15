@@ -23,8 +23,8 @@ struct StatRevealBeat: View {
             VStack(alignment: .leading, spacing: DX.Space.l) {
                 ForEach(Array(lines.enumerated()), id: \.offset) { i, line in
                     Text(verbatim: line)
-                        .dxFont(32, weight: 600, style: .title1)
-                        .foregroundStyle(i == lines.count - 1 ? Read4.accent : Read4.ink)
+                        .dxFace(.display, 32, weight: 600)
+                        .foregroundStyle(i == lines.count - 1 ? DX.Ground.table.ink : DX.Ground.table.ink)
                         .fixedSize(horizontal: false, vertical: true)
                         .opacity(i < shown ? 1 : 0)
                         .offset(y: i < shown || motion.reduce ? 0 : 10)
@@ -72,8 +72,8 @@ struct QuizBeat: View {
                             OptionRow(text: option.text, selected: isRight, outlined: isPick && !isRight, dimmed: !isRight && !isPick) {
                                 if isRight || isPick {
                                     Text(isRight ? (isPick ? "Your pick · correct answer" : "Correct answer") : "Your pick")
-                                        .dxFont(12, weight: 700, style: .caption2).tracking(0.8)
-                                        .foregroundStyle(isRight ? Read4.accent : Read4.muted)
+                                        .dxFace(.body, 12, weight: 700).tracking(0.8)
+                                        .foregroundStyle(isRight ? DX.Ground.table.ink : DX.Ground.table.muted)
                                 }
                             }
                         }
@@ -242,7 +242,7 @@ struct ChoiceBeat: View {
                 }
                 if let feedback { BeatFeedback(text: feedback).padding(.top, DX.Space.xs) }
                 if let footer = beat.footer.map({ ctx.text($0) }), !footer.isEmpty {
-                    Text(verbatim: footer).v4Text(.subtitle).padding(.top, DX.Space.xs)
+                    Text(verbatim: footer).dxType(.footnote).foregroundStyle(DX.Ground.table.muted).padding(.top, DX.Space.xs)
                 }
             }
         }
@@ -293,12 +293,15 @@ struct ChoiceBeat: View {
     private var emptyState: some View {
         VStack(alignment: .leading, spacing: DX.Space.s) {
             Text(emptyMessage)
-                .dxFont(16, weight: 400, style: .body)
-                .foregroundStyle(Read4.muted)
+                .dxFace(.body, 16, weight: 400)
+                .foregroundStyle(DX.Ground.table.muted)
                 .fixedSize(horizontal: false, vertical: true)
             if let onBack {
                 Button(action: onBack) {
-                    Label(emptyBackTitle, systemImage: "chevron.left")
+                    HStack(spacing: 6) {
+                        DXIcon(.back, size: 16)
+                        Text(emptyBackTitle)
+                    }
                 }
                 .buttonStyle(.dx(.secondary, on: .reading))
                 .accessibilityIdentifier("program.choice.back")
@@ -393,7 +396,7 @@ struct SliderBeat: View {
                         Spacer()
                         Text(verbatim: "10 · \(ctx.text(beat.maxLabel))")
                     }
-                    .v4Text(.subtitle)
+                    .dxType(.footnote).foregroundStyle(DX.Ground.table.muted)
                     if !ctx.text(beat.feedback).isEmpty { BeatFeedback(text: ctx.text(beat.feedback)) }
                 } else {
                     // v5 (028): the reading as one unit: the number, the calm-to-tense track, and Xero with his line.
@@ -486,13 +489,13 @@ struct CompareValues: View {
 
     private func box(_ label: String, _ value: Int, highlight: Bool) -> some View {
         VStack(alignment: .leading, spacing: DX.Space.xs) {
-            Text(verbatim: label).v4Text(.micro).foregroundStyle(highlight ? Read4.accent : Read4.muted)
-            Text(verbatim: "\(value)").dxFont(40, weight: 700, style: .largeTitle)
-                .foregroundStyle(Read4.ink)
+            Text(verbatim: label).dxType(.caption).foregroundStyle(DX.Ground.table.muted).foregroundStyle(highlight ? DX.Ground.table.ink : DX.Ground.table.muted)
+            Text(verbatim: "\(value)").dxFace(.display, 40, weight: 700)
+                .foregroundStyle(DX.Ground.table.ink)
         }
         .padding(DX.Space.m)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(highlight ? Read4.accentSoft : Read4.surface, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .background(highlight ? DX.Ground.table.selTint : DX.Ground.table.card2, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
     }
 }
 
@@ -506,22 +509,22 @@ struct BeatSlider: View {
     var body: some View {
         VStack(spacing: DX.Space.s) {
             if large {
-                Text(verbatim: "\(Int(value))").dxFont(40, weight: 700, style: .largeTitle)
-                    .foregroundStyle(Read4.ink)
+                Text(verbatim: "\(Int(value))").dxFace(.display, 40, weight: 700)
+                    .foregroundStyle(DX.Ground.table.ink)
                     .contentTransition(.numericText(value: value))
                     .frame(maxWidth: .infinity)
                     .accessibilityHidden(true)
             }
             Slider(value: $value, in: 0...10, step: 1)
-                .tint(Read4.accent)
+                .tint(DX.Ground.table.sel)
                 .accessibilityValue(Text(verbatim: "\(Int(value)) of 10, \(minLabel) to \(maxLabel)"))
             HStack {
                 Text(verbatim: minLabel)
                 Spacer()
                 Text(verbatim: maxLabel)
             }
-            .dxFont(14, weight: 400, style: .footnote)
-            .foregroundStyle(Read4.muted)
+            .dxFace(.body, 14, weight: 400)
+            .foregroundStyle(DX.Ground.table.muted)
             .accessibilityHidden(true)
         }
         .sensoryFeedback(DX.Haptic.select, trigger: Int(value))
@@ -546,17 +549,17 @@ struct SliderGroupBeat: View {
                 ForEach(beat.sliders ?? [], id: \.saveAs) { item in
                     VStack(alignment: .leading, spacing: DX.Space.xs) {
                         HStack(alignment: .firstTextBaseline) {
-                            Text(verbatim: item.label).dxFont(16, weight: 600, style: .body)
+                            Text(verbatim: item.label).dxFace(.body, 16, weight: 600)
                             Spacer()
-                            Text(verbatim: "\(Int(values[item.saveAs] ?? 5))").dxFont(24, weight: 700, style: .title3)
+                            Text(verbatim: "\(Int(values[item.saveAs] ?? 5))").dxFace(.display, 24, weight: 700)
                         }
-                        .foregroundStyle(Read4.ink)
+                        .foregroundStyle(DX.Ground.table.ink)
                         BeatSlider(value: Binding(get: { values[item.saveAs] ?? 5 }, set: { values[item.saveAs] = $0 }),
                                    minLabel: item.minLabel, maxLabel: item.maxLabel)
                     }
                     .padding(DX.Space.m)
-                    .background(Read4.card, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-                    .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(Read4.hairline))
+                    .background(DX.Ground.table.card, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(DX.Ground.table.line))
                 }
                 if done, !ctx.text(beat.feedback).isEmpty { BeatFeedback(text: ctx.text(beat.feedback)) }
             }
@@ -600,10 +603,10 @@ struct ReflectBeat: View {
                 if let guides = beat.guidePrompts {
                     DXFlowLayout(spacing: 6) {
                         ForEach(guides, id: \.self) { guide in
-                            Text(verbatim: guide).dxFont(14, weight: 400, style: .footnote)
-                                .foregroundStyle(Read4.muted)
+                            Text(verbatim: guide).dxFace(.body, 14, weight: 400)
+                                .foregroundStyle(DX.Ground.table.muted)
                                 .padding(.horizontal, 10).padding(.vertical, 6)
-                                .background(Read4.surface, in: Capsule())
+                                .background(DX.Ground.table.card2, in: Capsule())
                         }
                     }
                 }
@@ -615,14 +618,14 @@ struct ReflectBeat: View {
                     }
                 }
                 if isList {
-                    Text("\(entries.count) of \(beat.maxEntries ?? 1)").v4Text(.subtitle)
+                    Text("\(entries.count) of \(beat.maxEntries ?? 1)").dxType(.footnote).foregroundStyle(DX.Ground.table.muted)
                     ForEach(Array(entries.enumerated()), id: \.offset) { i, entry in
                         HStack {
                             TextField("", text: Binding(get: { entries.indices.contains(i) ? entries[i] : "" },
                                                         set: { if entries.indices.contains(i) { entries[i] = String($0.prefix(limit)) } }))
-                                .dxFont(16, weight: 400, style: .body)
+                                .dxFace(.body, 16, weight: 400)
                             Button { entries.remove(at: i) } label: {
-                                Image(systemName: "xmark").font(.system(size: 12, weight: .semibold)).foregroundStyle(Read4.muted)
+                                DXIcon(.close, size: 12, weight: 2.6).foregroundStyle(DX.Ground.table.muted)
                                     .frame(width: 44, height: 44)
                             }
                             .buttonStyle(.plain)
@@ -630,16 +633,16 @@ struct ReflectBeat: View {
                         }
                         .padding(.leading, DX.Space.m)
                         .frame(minHeight: 54)
-                        .background(Read4.card, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-                        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(Read4.hairline))
+                        .background(DX.Ground.table.card, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(DX.Ground.table.line))
                     }
                     if entries.count < (beat.maxEntries ?? 1) {
                         TextField(ctx.text(beat.placeholder), text: $draft)
-                            .dxFont(16, weight: 400, style: .body)
+                            .dxFace(.body, 16, weight: 400)
                             .padding(.horizontal, DX.Space.m)
                             .frame(minHeight: 54)
                             .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous)
-                                .strokeBorder(Read4.faint, style: StrokeStyle(lineWidth: 1.5, dash: [5, 4])))
+                                .strokeBorder(DX.Ground.table.line, style: StrokeStyle(lineWidth: 1.5, dash: [5, 4])))
                             .submitLabel(.done)
                             .onSubmit(addDraft)
                             .focused($focused)
@@ -647,13 +650,13 @@ struct ReflectBeat: View {
                 } else {
                     TextField(ctx.text(beat.placeholder), text: $draft, axis: .vertical)
                         .lineLimit(beat.length == .long ? 8...14 : 2...4)
-                        .dxFont(16, weight: 400, style: .body)
+                        .dxFace(.body, 16, weight: 400)
                         .padding(DX.Space.m)
-                        .background(Read4.card, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-                        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(focused ? Read4.accent : Read4.hairline, lineWidth: 1.5))
+                        .background(DX.Ground.table.card, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(focused ? DX.Ground.table.selEdge : DX.Ground.table.line, lineWidth: 1.5))
                         .focused($focused)
                         .onChange(of: draft) { _, text in if text.count > limit { draft = String(text.prefix(limit)) } }
-                    Text(verbatim: "\(draft.count) / \(limit.formatted())").v4Text(.subtitle).frame(maxWidth: .infinity, alignment: .trailing)
+                    Text(verbatim: "\(draft.count) / \(limit.formatted())").dxType(.footnote).foregroundStyle(DX.Ground.table.muted).frame(maxWidth: .infinity, alignment: .trailing)
                 }
             }
         }
@@ -723,8 +726,8 @@ struct TapRevealBeat: View {
         BeatFrame(beat: beat, canContinue: ctx.isReplay || seen.count >= cards.count, onContinue: { ctx.finish(beat); onDone() }) {
             VStack(alignment: .leading, spacing: DX.Space.s) {
                 if let title = beat.title.map({ ctx.text($0) }), !title.isEmpty { BeatPrompt(text: title) }
-                Text("\(seen.count) of \(cards.count) flipped").dxFont(14, weight: 600, style: .footnote)
-                    .foregroundStyle(Read4.muted)
+                Text("\(seen.count) of \(cards.count) flipped").dxFace(.body, 14, weight: 600)
+                    .foregroundStyle(DX.Ground.table.muted)
                 ForEach(Array(cards.enumerated()), id: \.offset) { i, card in
                     FlipCard(front: card.front, back: card.back, flipped: flipped.contains(i), reduceMotion: motion.reduce) {
                         withAnimation(motion.animation(.spring(response: 0.5, dampingFraction: 0.8))) {
@@ -734,7 +737,7 @@ struct TapRevealBeat: View {
                     }
                 }
                 if let footer = beat.footer.map({ ctx.text($0) }), !footer.isEmpty {
-                    Text(verbatim: footer).v4Text(.subtitle).padding(.top, DX.Space.xs)
+                    Text(verbatim: footer).dxType(.footnote).foregroundStyle(DX.Ground.table.muted).padding(.top, DX.Space.xs)
                 }
             }
         }
@@ -767,20 +770,23 @@ struct FlipCard: View {
     private func face(back isBack: Bool) -> some View {
         VStack(alignment: .leading, spacing: DX.Space.xs) {
             if isBack {
-                Text(verbatim: front).v4Text(.micro).foregroundStyle(Read4.accent)
-                Text(verbatim: back).dxFont(16, weight: 400, style: .body).foregroundStyle(Read4.ink)
+                Text(verbatim: front).dxType(.caption).foregroundStyle(DX.Ground.table.muted).foregroundStyle(DX.Ground.table.ink)
+                Text(verbatim: back).dxFace(.body, 16, weight: 400).foregroundStyle(DX.Ground.table.ink)
                     .fixedSize(horizontal: false, vertical: true)
             } else {
-                Text(verbatim: front).dxFont(19, weight: 600, style: .title3).foregroundStyle(Read4.ink)
+                Text(verbatim: front).dxFace(.display, 19, weight: 600).foregroundStyle(DX.Ground.table.ink)
                     .fixedSize(horizontal: false, vertical: true)
-                Label("Tap to flip", systemImage: "arrow.triangle.2.circlepath").dxFont(14, weight: 400, style: .footnote)
-                    .foregroundStyle(Read4.muted)
+                HStack(spacing: 6) {
+                    DXIcon(.card, size: 16)
+                    Text("Tap to flip")
+                }.dxFace(.body, 14, weight: 400)
+                    .foregroundStyle(DX.Ground.table.muted)
             }
         }
         .padding(DX.Space.m)
         .frame(maxWidth: .infinity, minHeight: 120, alignment: .leading)
-        .background(isBack ? Read4.accentSoft : Read4.card, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(isBack ? .clear : Read4.hairline))
+        .background(isBack ? DX.Ground.table.selTint : DX.Ground.table.card, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(isBack ? .clear : DX.Ground.table.line))
     }
 }
 
