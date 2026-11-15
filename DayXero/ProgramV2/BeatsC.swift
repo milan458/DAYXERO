@@ -56,10 +56,10 @@ struct BodyMapBeat: View {
         .onAppear(perform: restore)
     }
 
+    /// v5: a paper-cut figure on its own card. Each place is a kit chip; a chosen place glows warm behind its chip.
     private var figure: some View {
         let width: CGFloat = 220, height: CGFloat = 330
         return ZStack {
-            // A plain figure: head, body, arms and legs in the reading ground's inset fill.
             Group {
                 Circle().frame(width: 58, height: 58).position(x: width / 2, y: 34)
                 RoundedRectangle(cornerRadius: 30, style: .continuous).frame(width: 96, height: 130).position(x: width / 2, y: 140)
@@ -68,28 +68,32 @@ struct BodyMapBeat: View {
                 Capsule().frame(width: 30, height: 120).position(x: width / 2 - 22, y: 262)
                 Capsule().frame(width: 30, height: 120).position(x: width / 2 + 22, y: 262)
             }
-            .foregroundStyle(DX.Ground.table.card2)
+            .foregroundStyle(Color(light: 0xFFD9B8, dark: 0x2A3560))
+            .shadow(color: .black.opacity(0.1), radius: 0, y: 3)
             .accessibilityHidden(true)
             ForEach(onFigure) { option in
                 let spot = Self.spots[option.id] ?? .center
-                let on = selected.contains(option.id)
-                Button { toggle(option.id) } label: {
-                    Text(verbatim: option.text)
-                        .dxFace(.body, 14, weight: on ? 700 : 600)
-                        .foregroundStyle(on ? DX.Ground.table.selFg : DX.Ground.table.ink)
-                        .padding(.horizontal, 12)
-                        .frame(minHeight: 36)
-                        .background(on ? DX.Ground.table.sel : DX.Ground.table.card, in: Capsule())
-                        .overlay(Capsule().strokeBorder(on ? DX.Ground.table.sel : DX.Ground.table.line, lineWidth: 1))
-                        .frame(minWidth: 44, minHeight: 44)
-                        .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
-                .accessibilityAddTraits(on ? .isSelected : [])
-                .position(x: spot.x * width, y: spot.y * height)
+                Circle().fill(DX.Fill.coral.opacity(0.3))
+                    .frame(width: 72, height: 72)
+                    .blur(radius: 8)
+                    .scaleEffect(selected.contains(option.id) ? 1 : 0.4)
+                    .opacity(selected.contains(option.id) ? 1 : 0)
+                    .position(x: spot.x * width, y: spot.y * height)
+                    .accessibilityHidden(true)
+            }
+            ForEach(onFigure) { option in
+                let spot = Self.spots[option.id] ?? .center
+                BeatChip(text: option.text, on: selected.contains(option.id)) { toggle(option.id) }
+                    .position(x: spot.x * width, y: spot.y * height)
             }
         }
         .frame(width: width, height: height)
+        .animation(.spring(response: 0.35, dampingFraction: 0.7), value: selected)
+        .padding(.vertical, 16)
+        .frame(maxWidth: .infinity)
+        .background(DX.Ground.table.card, in: RoundedRectangle(cornerRadius: 26, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 26, style: .continuous).strokeBorder(DX.Ground.table.line))
+        .sensoryFeedback(DX.Haptic.select, trigger: selected)
     }
 
     private func toggle(_ id: String) {

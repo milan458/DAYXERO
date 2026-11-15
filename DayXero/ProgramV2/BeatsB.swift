@@ -520,27 +520,31 @@ struct CommitBeat: View {
     private var plain: some View {
         VStack(spacing: DX.Space.l) {
             Spacer()
+            if doneAt != nil {
+                // v5: the promise, stamped.
+                DXIcon(.check, size: 30, weight: 3).foregroundStyle(DX.Ground.table.selFg)
+                    .frame(width: 72, height: 72)
+                    .background(DX.Ground.table.sel, in: Circle())
+                    .dxPop()
+                    .accessibilityHidden(true)
+            }
             Text(verbatim: doneAt == nil ? ctx.text(beat.text) : String(localized: "Committed."))
                 .dxType(.title)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(DX.Ground.table.ink)
                 .fixedSize(horizontal: false, vertical: true)
             if let doneAt {
-                Label {
-                    Text("Done on \(doneAt.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)))")
-                } icon: {
-                    DXIcon(.check, size: 20, weight: 2.6).foregroundStyle(DX.Ground.table.mark)
-                }
-                .dxType(.footnote).foregroundStyle(DX.Ground.table.muted)
+                Text("Done on \(doneAt.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)))")
+                    .dxType(.footnote).foregroundStyle(DX.Ground.table.muted)
             }
             Spacer()
             if doneAt == nil {
                 HoldButton(String(localized: "Hold to commit"), done: String(localized: "Committed"),
-                           duration: seconds, on: .reading, action: commit)
+                           duration: seconds, on: .table, action: commit)
                     .accessibilityLabel(Text(verbatim: ctx.text(beat.text)))
                 Text("Hold for 1 second").dxType(.footnote).foregroundStyle(DX.Ground.table.muted)
             } else {
-                Button("Continue", action: onDone).buttonStyle(.dx(.primary, on: .reading))
+                Button("Continue", action: onDone).buttonStyle(.dx(.primary, on: .table))
             }
         }
         .sensoryFeedback(DX.Haptic.commit, trigger: doneAt)
@@ -577,7 +581,7 @@ struct CommitBeat: View {
                         .fixedSize(horizontal: false, vertical: true)
                     if let reason {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("BECAUSE").dxType(.caption).foregroundStyle(ground.muted)
+                            Text("Because").dxType(.caption).foregroundStyle(ground.muted)
                             Text(verbatim: reason.text).dxFace(.display, 19, weight: 700).foregroundStyle(ground.ink)
                                 .fixedSize(horizontal: false, vertical: true)
                         }
@@ -595,7 +599,10 @@ struct CommitBeat: View {
                                duration: seconds, on: ground, action: commit)
                         .accessibilityLabel(Text("Start Day Xero. Hold for one second, or double-tap with VoiceOver."))
                 } else {
-                    Label("Day Xero started", systemImage: "checkmark.circle.fill")
+                    HStack(spacing: 8) {
+                        DXIcon(.check, size: 20, weight: 2.8)
+                        Text("Day Xero started")
+                    }
                         .dxFace(.body, 16, weight: 700).foregroundStyle(ground.ink)
                         .frame(minHeight: 44)
                     Button("Continue", action: onDone).buttonStyle(.dx(.primary, on: ground))
