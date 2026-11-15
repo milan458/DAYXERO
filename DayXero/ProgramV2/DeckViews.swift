@@ -792,7 +792,7 @@ private struct Waveform: View {
 }
 
 /// Back or forward 15 seconds: a circular arrow with the 15 inside.
-private struct SkipButton: View {
+struct SkipButton: View {
     let forward: Bool
     let ink: Color
     let action: () -> Void

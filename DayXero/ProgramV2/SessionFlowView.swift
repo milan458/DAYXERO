@@ -428,11 +428,14 @@ struct SessionFlowView: View {
             VStack(spacing: DX.Space.xs) {
                 if !(session.cards ?? []).isEmpty {
                     Button { switchLesson(to: .cards) } label: {
-                        Label("Read it in \(ProgramContent.cardStackSeconds) seconds instead", systemImage: "rectangle.stack")
-                            .dxFont(14, weight: 600, style: .footnote)
+                        HStack(spacing: 6) {
+                            DXIcon(.text, size: 17)
+                            Text("Read it in \(ProgramContent.cardStackSeconds) seconds instead")
+                        }
+                        .dxFace(.body, 14, weight: 600)
                     }
                     .buttonStyle(.plain)
-                    .foregroundStyle(Read4.accent)
+                    .foregroundStyle(stepGround.ink)
                     .frame(maxWidth: .infinity, minHeight: DX.Layout.touchTarget, alignment: .leading)
                 }
                 ProgramAudioStep(session: session, ctx: ctx, record: record, onDone: advance)
@@ -679,7 +682,8 @@ struct ProgramAudioStep: View {
     var body: some View {
         VStack(spacing: DX.Space.s) {
             if let narrator {
-                LessonAudioStep(title: session.title.resolve(ctx.variant) ?? "", narrator: narrator,
+                LessonAudioStep(title: session.title.resolve(ctx.variant) ?? "",
+                                subtitle: String(localized: "\(session.label) lesson"), narrator: narrator,
                                 startAt: ctx.isReplay ? 0 : record?.audioPosition ?? 0,
                                 onPosition: { seconds in
                                     guard !ctx.isReplay, let record else { return }
@@ -687,11 +691,8 @@ struct ProgramAudioStep: View {
                                     record.audioVariant = variantName
                                     try? context.save()
                                 },
-                                onFinish: { finished = true })
+                                onFinish: { finished = true }, onDone: onDone)
                     .frame(maxHeight: .infinity)
-                if finished || ctx.isReplay {
-                    Button("Continue", action: onDone).buttonStyle(.dx(.primary, on: .reading)).dynamicTypeSize(...DynamicTypeSize.accessibility1)
-                }
             } else {
                 noRecording
             }

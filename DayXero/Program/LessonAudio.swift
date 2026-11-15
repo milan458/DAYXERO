@@ -286,9 +286,13 @@ final class LessonNarrator: NSObject, AVSpeechSynthesizerDelegate {
     }
 }
 
-/// The audio step of a lesson. The top half holds the cloud wave, which swells with the voice, and the controls under it.
-/// The bottom half holds captions that rise from below and fade out at the top, the current line in the middle.
-/// The lesson moves on to its exercise when the audio ends.
+/// The audio step of a lesson (v5, 035): Xero in his headphones on a paper-cut hill at dawn, the title, a scrubber with
+/// the times, the controls, the speed and transcript pills, and the line being read now. "Done listening" waits
+/// outlined at the foot and turns solid once 80% has played.
+///
+/// Motion (035): the art fades up and Xero settles, then bobs; three thin arcs each side pulse outward for as long as
+/// he is reading. Play starts by itself after 1.2 s. Each new spoken line cross-fades in (300 ms). At 80% the outlined
+/// button cross-fades into the solid one (300 ms, light haptic).
 struct LessonAudioStep: View {
     let title: String
     let subtitle: String
@@ -296,10 +300,16 @@ struct LessonAudioStep: View {
 
     @State private var narrator: LessonNarrator
     @State private var scrubbing: Double?
+    @State private var reading = false
+    @State private var ended = false
     /// Where to start, for a session resumed mid-audio.
     private var startAt: Double = 0
     /// Called every few seconds and on pause with the position, so a closed session resumes there.
     private var onPosition: ((Double) -> Void)?
+    /// "Done listening". Without it the step has no button and moves on by itself when the audio ends.
+    private var onDone: (() -> Void)?
+    @Environment(\.dxGround) private var ground
+    @Environment(\.colorScheme) private var scheme
     private let motion = MotionPolicy()
 
     init(title: String, subtitle: String, file: String?, seconds: Int, transcript: String, onFinish: @escaping () -> Void) {
@@ -314,37 +324,67 @@ struct LessonAudioStep: View {
     }
 
     /// For a program v2 session: a narrator built from a timed transcript, resuming at `startAt`.
-    init(title: String, narrator: LessonNarrator, startAt: Double, onPosition: @escaping (Double) -> Void, onFinish: @escaping () -> Void) {
+    init(title: String, subtitle: String = "", narrator: LessonNarrator, startAt: Double, onPosition: @escaping (Double) -> Void,
+         onFinish: @escaping () -> Void, onDone: (() -> Void)? = nil) {
         self.title = title
-        self.subtitle = ""
+        self.subtitle = subtitle
         self.onFinish = onFinish
         self.startAt = startAt
         self.onPosition = onPosition
+        self.onDone = onDone
         _narrator = State(initialValue: narrator)
     }
 
     var body: some View {
-        VStack(spacing: DX.Space.s) {
-            VStack(spacing: 4) {
-                Label("Audio session", systemImage: "headphones").v4Text(.micro)
-                Text(title).v4Text(.title).multilineTextAlignment(.center)
+        VStack(spacing: 0) {
+            ScrollViewReader { reader in
+                ScrollView {
+                    VStack(spacing: 0) {
+                        LessonAudioArt(playing: narrator.playing, dark: scheme == .dark)
+                            .dxArrive(0)
+                        VStack(spacing: 4) {
+                            Text(verbatim: title).dxType(.title).foregroundStyle(ground.ink)
+                                .multilineTextAlignment(.center)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .accessibilityAddTraits(.isHeader)
+                            if !subtitle.isEmpty {
+                                Text(verbatim: subtitle).dxType(.footnote).foregroundStyle(ground.muted)
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.top, 18)
+                        .dxArrive(1)
+                        scrubber.padding(.top, 14).dxArrive(2)
+                        controls.padding(.top, 10).dxArrive(3)
+                        pills.padding(.top, 16).dxArrive(4)
+                        live.padding(.top, 22).dxArrive(5)
+                        if reading {
+                            transcript.padding(.top, 18)
+                                .transition(.opacity)
+                        }
+                    }
+                    .padding(.bottom, 16)
+                }
+                .scrollBounceBehavior(.basedOnSize)
+                .scrollIndicators(.hidden)
+                // The open transcript follows the voice.
+                .onChange(of: narrator.index) { _, i in
+                    guard reading else { return }
+                    withAnimation(motion.reduce ? nil : .easeInOut(duration: 0.4)) { reader.scrollTo("line-\(i)", anchor: .center) }
+                }
             }
-            .dynamicTypeSize(...DynamicTypeSize.accessibility1)
-            XeroBreathRing(playing: narrator.playing)
-                .frame(height: 200)
-            scrubber
-            controls
-            captions
-                .frame(maxHeight: .infinity)
-            if narrator.finished {
-                Label("Nice. On to the exercise.", systemImage: "checkmark")
-                    .dxFont(14, weight: 600, style: .footnote)
-                    .foregroundStyle(Read4.accent)
+            if let onDone {
+                gate(onDone).padding(.top, 8).dxArrive(6)
             }
         }
+        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         .onAppear {
             narrator.onFinish = { finished() }
             if startAt > 0 { narrator.seek(to: startAt) }
+        }
+        .task {
+            try? await Task.sleep(for: .seconds(1.2))
+            if !Task.isCancelled, !narrator.playing, !narrator.finished { narrator.play() }
         }
         .onChange(of: narrator.playing) { _, playing in if !playing { onPosition?(narrator.elapsed()) } }
         .task(id: narrator.playing) {
@@ -361,50 +401,75 @@ struct LessonAudioStep: View {
     }
 
     private func finished() {
+        ended = true
         Task {
             try? await Task.sleep(for: .seconds(1.2))
             onFinish()
         }
     }
 
-    // MARK: Captions
+    // MARK: Done
 
-    private var captions: some View {
-        GeometryReader { geo in
-            ScrollViewReader { proxy in
-                ScrollView(showsIndicators: false) {
-                    VStack(spacing: DX.Space.m) {
-                        ForEach(Array(narrator.sentences.enumerated()), id: \.offset) { i, sentence in
-                            let distance = abs(i - narrator.index)
-                            Button { narrator.jump(toSentence: i) } label: {
-                                Text(verbatim: sentence)
-                                    .dxFont(24, weight: distance == 0 ? 700 : 500, style: .title3)
-                                    .tracking(-0.3)
-                                    .lineSpacing(3)
-                                    .foregroundStyle(Read4.ink)
-                                    .opacity(distance == 0 ? 1 : distance == 1 ? 0.45 : distance == 2 ? 0.2 : 0.08)
-                                    .multilineTextAlignment(.center)
-                                    .frame(maxWidth: .infinity)
-                            }
-                            .buttonStyle(.plain)
-                            .id(i)
-                            .accessibilityHint(Text("Plays from here"))
-                        }
-                    }
-                    // Room above and below, so the first and last lines can sit in the middle too.
-                    .padding(.vertical, max(geo.size.height / 2 - 30, 0))
-                    .animation(motion.animation(DX.Move.settle), value: narrator.index)
+    /// Outlined while it plays; solid from 80% or once it has played through.
+    private func gate(_ onDone: @escaping () -> Void) -> some View {
+        let played = narrator.total > 0 ? narrator.elapsed() / narrator.total : 0
+        let open = ended || narrator.finished || played >= 0.8
+        return ZStack {
+            Button(String(localized: "Done listening"), action: onDone)
+                .buttonStyle(.dx(.ghost, on: ground))
+                .opacity(open ? 0 : 1)
+                .allowsHitTesting(!open)
+                .accessibilityHidden(open)
+            Button(String(localized: "Done listening"), action: onDone)
+                .buttonStyle(.dx(.primary, on: ground))
+                .opacity(open ? 1 : 0)
+                .allowsHitTesting(open)
+                .accessibilityHidden(!open)
+        }
+        .animation(.timingCurve(0.2, 0.7, 0.2, 1, duration: 0.3), value: open)
+        .sensoryFeedback(.impact(weight: .light), trigger: open) { _, now in now }
+    }
+
+    // MARK: The line being read
+
+    private var currentLine: String {
+        narrator.sentences.indices.contains(narrator.index) ? narrator.sentences[narrator.index] : ""
+    }
+
+    private var live: some View {
+        HStack(spacing: 10) {
+            LessonLevelBars(playing: narrator.playing, color: ground.mark)
+            Text(verbatim: "\u{201C}\(currentLine)\u{201D}")
+                .dxType(.footnote).foregroundStyle(ground.ink)
+                .lineLimit(2)
+                .multilineTextAlignment(.center)
+                .id("live-\(narrator.index)")
+                .transition(.opacity)
+        }
+        .frame(maxWidth: .infinity)
+        .animation(motion.reduce ? nil : .easeInOut(duration: 0.3), value: narrator.index)
+        .accessibilityElement(children: .combine)
+    }
+
+    /// Every line, the one being read at full strength. A tap plays from that line.
+    private var transcript: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            ForEach(Array(narrator.sentences.enumerated()), id: \.offset) { i, sentence in
+                Button { narrator.jump(toSentence: i) } label: {
+                    Text(verbatim: sentence).dxFace(.body, 17, weight: i == narrator.index ? 600 : 450)
+                        .foregroundStyle(ground.ink)
+                        .opacity(i == narrator.index ? 1 : 0.5)
+                        .lineSpacing(4)
+                        .multilineTextAlignment(.leading)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
-                .mask(LinearGradient(stops: [.init(color: .clear, location: 0), .init(color: .black, location: 0.24),
-                                             .init(color: .black, location: 0.76), .init(color: .clear, location: 1)],
-                                     startPoint: .top, endPoint: .bottom))
-                .onAppear { proxy.scrollTo(narrator.index, anchor: .center) }
-                .onChange(of: narrator.index) { _, i in
-                    withAnimation(motion.animation(DX.Move.settle)) { proxy.scrollTo(i, anchor: .center) }
-                }
+                .buttonStyle(.plain)
+                .id("line-\(i)")
+                .accessibilityHint(Text("Plays from here"))
             }
         }
-        .frame(minHeight: 180)
+        .animation(motion.reduce ? nil : .easeInOut(duration: 0.3), value: narrator.index)
     }
 
     // MARK: Player
@@ -416,10 +481,10 @@ struct LessonAudioStep: View {
             VStack(spacing: 6) {
                 GeometryReader { geo in
                     ZStack(alignment: .leading) {
-                        Capsule().fill(Read4.track).frame(height: 4)
-                        Capsule().fill(Read4.ink).frame(width: geo.size.width * fraction, height: 4)
-                        Circle().fill(Read4.ink).frame(width: 14, height: 14)
-                            .offset(x: geo.size.width * fraction - 7)
+                        Capsule().fill(ground.track).frame(height: 6)
+                        Capsule().fill(ground.ink).frame(width: max(geo.size.width * fraction, 6), height: 6)
+                        Circle().fill(ground.ink).frame(width: 18, height: 18)
+                            .offset(x: min(max(geo.size.width * fraction - 9, 0), geo.size.width - 18))
                     }
                     .frame(maxHeight: .infinity)
                     .contentShape(Rectangle())
@@ -442,68 +507,177 @@ struct LessonAudioStep: View {
                 HStack {
                     Text(Duration.seconds(elapsed), format: .time(pattern: .minuteSecond))
                     Spacer()
-                    Text(Duration.seconds(max(narrator.total - elapsed, 0)), format: .time(pattern: .minuteSecond))
+                    Text(Duration.seconds(narrator.total), format: .time(pattern: .minuteSecond))
                 }
-                .dxFont(12, weight: 600, style: .caption1).monospacedDigit()
-                .foregroundStyle(Read4.muted)
-                .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+                .dxType(.caption).monospacedDigit()
+                .foregroundStyle(ground.ink)
             }
         }
     }
 
     private var controls: some View {
-        HStack(spacing: 0) {
+        HStack(spacing: 30) {
+            SkipButton(forward: false, ink: ground.ink) { narrator.skip(-15) }
+            Button { narrator.toggle() } label: {
+                DXIcon(narrator.playing ? .pause : .play, size: 30, weight: 2.4, filled: !narrator.playing)
+                    .foregroundStyle(ground.btnFg)
+                    .offset(x: narrator.playing ? 0 : 2)
+                    .frame(width: 76, height: 76)
+                    .background(ground.btn, in: Circle())
+                    .shadow(color: .black.opacity(0.18), radius: 0, y: 5)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(Text(narrator.playing ? "Pause" : "Play"))
+            SkipButton(forward: true, ink: ground.ink) { narrator.skip(15) }
+        }
+        .frame(maxWidth: .infinity)
+    }
+
+    /// Speed and Transcript share one pill shape.
+    private var pills: some View {
+        HStack(spacing: 8) {
             Button { narrator.cycleSpeed() } label: {
-                Text(verbatim: narrator.speed.formatted(.number.precision(.fractionLength(1...2))) + "×")
-                    .dxFont(14, weight: 600, style: .footnote)
-                    .foregroundStyle(Read4.ink)
-                    .frame(minWidth: 52, minHeight: 34)
-                    .background(Read4.surface, in: Capsule())
+                pill {
+                    Text(verbatim: narrator.speed.formatted(.number.precision(.fractionLength(0...2))) + "×")
+                }
             }
             .accessibilityLabel(Text("Speed"))
             .accessibilityValue(Text(verbatim: "\(narrator.speed)×"))
-            Spacer()
-            Button { narrator.skip(-15) } label: { Image(systemName: "gobackward.15").font(.system(size: 22)) }
-                .accessibilityLabel(Text("Back 15 seconds"))
-                .frame(width: 48, height: 48)
-            Button { narrator.toggle() } label: {
-                Image(systemName: narrator.playing ? "pause.fill" : "play.fill")
-                    .font(.system(size: 22))
-                    .foregroundStyle(Read4.onInk)
-                    .frame(width: 60, height: 60)
-                    .background(Read4.ink, in: Circle())
+            Button {
+                withAnimation(motion.reduce ? nil : .easeInOut(duration: 0.3)) { reading.toggle() }
+            } label: {
+                pill {
+                    DXIcon(.text, size: 18)
+                    Text("Transcript")
+                    DXIcon(.down, size: 16).foregroundStyle(ground.muted)
+                        .rotationEffect(.degrees(reading ? 180 : 0))
+                }
             }
-            .padding(.horizontal, DX.Space.s)
-            .accessibilityLabel(Text(narrator.playing ? "Pause" : "Play"))
-            Button { narrator.skip(15) } label: { Image(systemName: "goforward.15").font(.system(size: 22)) }
-                .accessibilityLabel(Text("Forward 15 seconds"))
-                .frame(width: 48, height: 48)
-            Spacer()
-            Color.clear.frame(width: 52, height: 34)
+            .accessibilityValue(Text(reading ? "Transcript shown" : ""))
         }
         .buttonStyle(.plain)
-        .foregroundStyle(Read4.ink)
-        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+        .frame(maxWidth: .infinity)
+    }
+
+    private func pill<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
+        HStack(spacing: 7) { content() }
+            .dxFace(.body, 15, weight: 600)
+            .foregroundStyle(ground.ink)
+            .padding(.horizontal, 15)
+            .frame(height: 44)
+            .background(ground.card2, in: Capsule())
     }
 }
 
-/// P2: Xero 140 in a ring that breathes on the 4 s in, 6 s out clock while the audio plays.
-struct XeroBreathRing: View {
+/// Three small level bars beside the line being read; they move while the audio plays.
+private struct LessonLevelBars: View {
     let playing: Bool
+    let color: Color
+    private let motion = MotionPolicy()
+    private static let heights: [CGFloat] = [8, 14, 10]
+
+    var body: some View {
+        TimelineView(.animation(minimumInterval: 1 / 20, paused: !playing || motion.reduce)) { timeline in
+            let t = timeline.date.timeIntervalSinceReferenceDate
+            HStack(alignment: .bottom, spacing: 2) {
+                ForEach(0..<3, id: \.self) { i in
+                    let k: CGFloat = playing && !motion.reduce ? CGFloat(0.675 + 0.325 * cos((t / 1.8 + Double(i) * 0.2) * 2 * .pi)) : 1
+                    Capsule().fill(color).frame(width: 3, height: Self.heights[i] * k)
+                }
+            }
+            .frame(height: 14, alignment: .bottom)
+        }
+        .accessibilityHidden(true)
+    }
+}
+
+/// The scene of the lesson audio step (035). Light: a paper-cut dawn, the sun low behind Xero between lifted hills.
+/// Dark: the same hills before dawn with a warm glow. Xero stands on the nearest hill in his headphones, and three
+/// thin arcs each side pulse while he reads.
+private struct LessonAudioArt: View {
+    let playing: Bool
+    let dark: Bool
     private let motion = MotionPolicy()
 
     var body: some View {
-        TimelineView(.animation(paused: !playing || !motion.breathes)) { timeline in
-            let breath = playing && motion.breathes ? DX.Move.breath(at: timeline.date.timeIntervalSinceReferenceDate) : 0.4
-            ZStack {
-                Circle().fill(Read4.accentSoft)
-                    .frame(width: 168 + 28 * breath, height: 168 + 28 * breath)
-                Circle().strokeBorder(Read4.accent.opacity(0.35), lineWidth: 3)
-                    .frame(width: 192 + 28 * breath, height: 192 + 28 * breath)
-                XeroView(mood: playing ? .breathe : .calm, stage: 1, size: .scene, animate: playing)
-            }
-            .frame(maxWidth: .infinity)
+        ZStack {
+            sky
+            Circle().fill(dark ? Color(hex: 0xFFB25E).opacity(0.3) : Color(hex: 0xFFD86E))
+                .frame(width: 144, height: 144)
+                .blur(radius: dark ? 24 : 0)
+                .offset(y: 28)
+            LessonHill(left: 0.66, crest: 0.62, right: 0.61).fill(dark ? Color(hex: 0x22305A) : Color(hex: 0xFFA06C))
+            LessonHill(left: 0.76, crest: 0.74, right: 0.74).fill(dark ? Color(hex: 0x1D2A50) : Color(hex: 0xFF8558))
+            LessonHill(left: 0.90, crest: 0.81, right: 0.88).fill(dark ? Color(hex: 0x1A2847) : Color(hex: 0xE85A3E))
+            LessonHill(left: 0.96, crest: 0.94, right: 0.945).fill(dark ? Color(hex: 0x111C34) : Color(hex: 0xC2402A))
+            arcs
+            XeroView(mood: .calm, stage: 0, points: 120, animate: playing, pose: .headphones)
+                .dxBob()
+                .offset(y: 24)
+                .dxSettle(1)
         }
+        .frame(height: 264)
+        .frame(maxWidth: .infinity)
+        .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
         .accessibilityHidden(true)
+    }
+
+    @ViewBuilder private var sky: some View {
+        if dark {
+            LinearGradient(colors: [Color(hex: 0x27325C), Color(hex: 0x19223F)], startPoint: .top, endPoint: .bottom)
+        } else {
+            LinearGradient(stops: [.init(color: Color(hex: 0xFF7E5A), location: 0), .init(color: Color(hex: 0xFFB27A), location: 0.6),
+                                   .init(color: Color(hex: 0xFFDDB0), location: 1)], startPoint: .top, endPoint: .bottom)
+        }
+    }
+
+    private var arcs: some View {
+        TimelineView(.animation(minimumInterval: 1 / 20, paused: !playing || motion.reduce)) { timeline in
+            let t = timeline.date.timeIntervalSinceReferenceDate
+            ZStack {
+                ForEach(0..<3, id: \.self) { i in
+                    let pulse: Double = playing && !motion.reduce ? 0.675 + 0.325 * cos((t / 2.4 - Double(i) * 0.09) * 2 * .pi) : 1
+                    LessonSoundArcs(radius: 80 + CGFloat(i) * 18, spread: 28 - Double(i) * 4)
+                        .stroke(Color(hex: 0xFFF8EE), style: StrokeStyle(lineWidth: 2, lineCap: .round))
+                        .opacity(0.7 * pulse)
+                }
+            }
+            .offset(y: 24)
+        }
+    }
+}
+
+/// A paper hill: a soft rise across the scene, filled to the bottom. Heights are shares of the box, from the top.
+private struct LessonHill: Shape {
+    let left: CGFloat
+    let crest: CGFloat
+    let right: CGFloat
+
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: CGPoint(x: rect.minX, y: rect.height * left))
+        path.addQuadCurve(to: CGPoint(x: rect.maxX, y: rect.height * right),
+                          control: CGPoint(x: rect.midX, y: rect.height * (2 * crest - (left + right) / 2)))
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
+        path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
+        path.closeSubpath()
+        return path
+    }
+}
+
+/// One sound arc on each side of the centre.
+private struct LessonSoundArcs: Shape {
+    let radius: CGFloat
+    /// Half the arc's sweep, in degrees.
+    let spread: Double
+
+    func path(in rect: CGRect) -> Path {
+        let centre = CGPoint(x: rect.midX, y: rect.midY)
+        var path = Path()
+        path.addArc(center: centre, radius: radius, startAngle: .degrees(-spread), endAngle: .degrees(spread), clockwise: false)
+        var left = Path()
+        left.addArc(center: centre, radius: radius, startAngle: .degrees(180 - spread), endAngle: .degrees(180 + spread), clockwise: false)
+        path.addPath(left)
+        return path
     }
 }
