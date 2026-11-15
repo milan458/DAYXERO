@@ -39,7 +39,13 @@ final class LessonNarrator: NSObject, AVSpeechSynthesizerDelegate {
         // About 2.6 words a second at the coach's speaking rate.
         let estimated = sentences.map { max(Double($0.split(separator: " ").count) / 2.6, 1.2) }
         let estimatedTotal = estimated.reduce(0, +)
-        let length = url == nil ? estimatedTotal : Double(max(seconds, 1))
+        // A recording runs for as long as its file does; `seconds` is the planned length, used only if the file can't be read.
+        let length: Double
+        if let url {
+            length = LessonNarrator.duration(of: url) ?? Double(max(seconds, 1))
+        } else {
+            length = estimatedTotal
+        }
         // With a recording the sentences share its length by their number of characters.
         let weights = url == nil ? estimated : sentences.map { Double(max($0.count, 1)) }
         let weightTotal = max(weights.reduce(0, +), 1)
@@ -62,7 +68,7 @@ final class LessonNarrator: NSObject, AVSpeechSynthesizerDelegate {
         let ordered = segments.sorted { $0.start < $1.start }
         sentences = ordered.map(\.text)
         self.url = url
-        let length = max(seconds, (ordered.last?.start ?? 0) + 1)
+        let length = max(LessonNarrator.duration(of: url) ?? seconds, (ordered.last?.start ?? 0) + 1)
         starts = ordered.map(\.start)
         durations = ordered.indices.map { i in (i + 1 < ordered.count ? ordered[i + 1].start : length) - ordered[i].start }
         total = length
@@ -72,6 +78,15 @@ final class LessonNarrator: NSObject, AVSpeechSynthesizerDelegate {
             let values = Self.loudness(of: url)
             await MainActor.run { self.loudness = values }
         }
+    }
+
+    /// How long the recording really is, in seconds. The planned minutes in program.json are only an estimate, and
+    /// a track that ends early must still reach its end (the Continue gate and the finish both depend on it).
+    nonisolated static func duration(of url: URL) -> Double? {
+        guard let file = try? AVAudioFile(forReading: url) else { return nil }
+        let rate = file.processingFormat.sampleRate
+        guard rate > 0, file.length > 0 else { return nil }
+        return Double(file.length) / rate
     }
 
     /// Reads the recording once and keeps how loud each thirtieth of a second is, scaled so normal speech reaches 1.
