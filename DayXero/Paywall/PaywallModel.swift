@@ -3,6 +3,7 @@ import Foundation
 import SwiftData
 import Observation
 import UserNotifications
+import WidgetKit
 
 /// Whether the person has the full program. Checked at launch and after any purchase or restore.
 @MainActor
@@ -90,7 +91,11 @@ final class Entitlement {
         if remembers { UserDefaults.standard.set(purchased, forKey: Self.rememberedKey) }
         Self.isProNow = isPro
         // Siri and widget actions that run without opening the app check this.
-        if PlanGate.isActive != isPro { PlanGate.isActive = isPro }
+        // The widgets blank to their subscribe state without a plan, so they redraw when it changes.
+        if PlanGate.isActive != isPro {
+            PlanGate.isActive = isPro
+            WidgetCenter.shared.reloadAllTimelines()
+        }
         Self.trialEndsNow = demo ? nil : trialEndsAt
     }
 }
