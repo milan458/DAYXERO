@@ -3,11 +3,12 @@
 Safe to run again: anything that already exists is left as it is.
 
   App Store Connect (ASC_KEY_ID, ASC_ISSUER_ID, $RUNNER_TEMP/AuthKey_<id>.p8):
-    subscription group "DayXero Pro" with dayxero.annual (7-day free trial, MON-01) and dayxero.monthly,
-    the non-consumable dayxero.lifetime, English names, prices in every territory, and review screenshots.
+    subscription group "DayXero Pro" with dayxero.annual (3-day free trial) and dayxero.quarterly, the two plans the
+    app sells (16 Nov 2026), plus dayxero.monthly and the non-consumable dayxero.lifetime, which are no longer on
+    the paywall but stay for anyone who bought them. English names, prices in every territory, review screenshots.
   RevenueCat (RC_SECRET_KEY, RC_PROJECT_ID; skipped when not set):
-    the three products, the "pro" entitlement, and the current "default" offering with
-    $rc_annual, $rc_monthly and $rc_lifetime packages. Prints the app's public SDK key.
+    the four products, the "pro" entitlement, and the current "default" offering with
+    $rc_annual, $rc_three_month, $rc_monthly and $rc_lifetime packages. Prints the app's public SDK key.
 """
 import hashlib
 import json
@@ -25,14 +26,20 @@ SUBSCRIPTIONS = [
     # product ID, reference name, period, level, USD price, App Store name (30 max) and description (55 max)
     ("dayxero.annual", "Annual", "ONE_YEAR", 1, "39.99", "DayXero Pro Annual",
      "Full quit program, insights and NRT planner, yearly."),
+    ("dayxero.quarterly", "Quarterly", "THREE_MONTHS", 2, "19.99", "DayXero Pro 3 Months",
+     "Full quit program, insights and NRT planner, 3 months."),
     ("dayxero.monthly", "Monthly", "ONE_MONTH", 2, "9.99", "DayXero Pro Monthly",
      "Full quit program, insights and NRT planner, monthly."),
 ]
 LIFETIME = ("dayxero.lifetime", "Lifetime", "79.99", "DayXero Pro Lifetime",
             "Full quit program, insights and NRT planner, for good.")
-# MON-01: 7 days, sold at the Prep 4 paywall. Only applied where no trial is set yet; change a live one in App Store Connect.
-TRIAL = {"dayxero.annual": "ONE_WEEK"}
-REVIEW_NOTE = "Unlocks DayXero Pro. Prep 1 to 3 are free; the paywall appears at Prep 4 and from locked features."
+# 3 days, sold on the paywall after onboarding (16 Nov 2026). Only applied where no trial is set yet; change a live
+# one in App Store Connect.
+TRIAL = {"dayxero.annual": "THREE_DAYS"}
+# Prices set by hand instead of Apple's equivalent of the US price: product ID -> territory -> price there.
+# Only applied when the product's prices are first set; change a live price in App Store Connect.
+LOCAL_PRICES = {"dayxero.quarterly": {"IND": "1499"}}
+REVIEW_NOTE = "Unlocks DayXero Pro. The paywall appears after onboarding and from the program, NRT plan and heatmaps."
 SCREENSHOT = os.environ.get("REVIEW_SCREENSHOT", "")
 
 
@@ -153,8 +160,28 @@ def subscription(gid, product_id, ref, period, level, usd, name, description, al
         if not usa:
             print(f"::error title={product_id}: no ${usd} price point::Closest: {[p['attributes']['customerPrice'] for p in points][:40]}")
             raise SystemExit(1)
-        # The US price, plus Apple's equivalent price in every other territory.
-        targets = [usa["id"]] + [p["id"] for p in all_pages(f"/v1/subscriptionPricePoints/{usa['id']}/equalizations?limit=200")]
+        # The US price, plus Apple's equivalent price in every other territory, unless a local price is set above.
+        equal = all_pages(f"/v1/subscriptionPricePoints/{usa['id']}/equalizations?limit=200&include=territory")
+        local = {}
+        for territory, amount in LOCAL_PRICES.get(product_id, {}).items():
+            there = all_pages(f"/v1/subscriptions/{sid}/pricePoints?filter[territory]={territory}&limit=200")
+            point = next((p for p in there if float(p["attributes"]["customerPrice"]) == float(amount)), None)
+            if point:
+                local[territory] = point["id"]
+                print(f"{product_id}: {amount} in {territory}")
+            else:
+                print(f"::warning title={product_id}: no {amount} price point in {territory}::Left on Apple's equivalent of ${usd}; set it in App Store Connect.")
+        swapped = set()
+        targets = [usa["id"]]
+        for p in equal:
+            territory = ((p.get("relationships") or {}).get("territory") or {}).get("data") or {}
+            if territory.get("id") in local:
+                targets.append(local[territory["id"]])
+                swapped.add(territory["id"])
+            else:
+                targets.append(p["id"])
+        for territory in set(local) - swapped:
+            print(f"::warning title={product_id}: {territory} price not applied::Couldn't tell which equivalent price is {territory}'s; set it in App Store Connect.")
         for ppid in targets:
             asc("POST", "/v1/subscriptionPrices", {"data": {"type": "subscriptionPrices", "attributes": {"startDate": None, "preserveCurrentPrice": False},
                                                             "relationships": {"subscription": rel("subscriptions", sid),
@@ -304,7 +331,7 @@ def revenuecat():
         ents["pro"] = data["id"]
         print("RevenueCat: entitlement 'pro' added")
     rc("POST", f"/entitlements/{ents['pro']}/actions/attach_products", {"product_ids": [products[w[0]] for w in wanted]}, allow=(409, 422))
-    print("RevenueCat: all three products unlock 'pro'")
+    print("RevenueCat: every product unlocks 'pro'")
 
     offerings = {o["lookup_key"]: o for o in rc_items("/offerings")}
     if "default" not in offerings:
@@ -319,6 +346,7 @@ def revenuecat():
 
     packages = {p["lookup_key"]: p["id"] for p in rc_items(f"/offerings/{offering}/packages")}
     for position, (key, store_id, label) in enumerate([("$rc_annual", "dayxero.annual", "Annual"),
+                                                       ("$rc_three_month", "dayxero.quarterly", "3 months"),
                                                        ("$rc_monthly", "dayxero.monthly", "Monthly"),
                                                        ("$rc_lifetime", "dayxero.lifetime", "Lifetime")], start=1):
         if key not in packages:

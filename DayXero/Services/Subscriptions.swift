@@ -19,8 +19,14 @@ struct PlanOption: Identifiable, Equatable, Sendable {
 /// Product identifiers, as set up in App Store Connect and RevenueCat.
 enum Plan: String, CaseIterable, Sendable {
     case annual = "dayxero.annual"
+    case quarterly = "dayxero.quarterly"
+    /// No longer sold (16 Nov 2026); kept so someone who bought one still sees their plan in Settings.
     case monthly = "dayxero.monthly"
+    /// No longer sold (16 Nov 2026); kept so someone who bought one still sees their plan in Settings.
     case lifetime = "dayxero.lifetime"
+
+    /// What the paywalls sell: yearly with the free trial, and 3 months.
+    static let offered: [Plan] = [.annual, .quarterly]
 }
 
 enum PurchaseOutcome: Equatable, Sendable {
@@ -46,10 +52,13 @@ protocol PurchaseStore: AnyObject {
     func hasPro() async -> Bool
     /// The active plan for Settings (S15.2), or nil when there isn't one.
     func currentPlan() async -> CurrentPlan?
+    /// When the free trial ends, while the person is in one; nil once they've paid or without a subscription.
+    func trialEnd() async -> Date?
 }
 
 extension PurchaseStore {
     func currentPlan() async -> CurrentPlan? { nil }
+    func trialEnd() async -> Date? { nil }
 }
 
 /// What Settings shows about the person's subscription.
@@ -133,6 +142,12 @@ final class Subscriptions: PurchaseStore {
         return CurrentPlan(plan: plan, renews: pro.expirationDate, willRenew: pro.willRenew)
     }
 
+    func trialEnd() async -> Date? {
+        guard isConfigured, let info = try? await Purchases.shared.customerInfo(),
+              let pro = info.entitlements[Self.entitlement], pro.isActive, pro.periodType == .trial else { return nil }
+        return pro.expirationDate
+    }
+
     /// Restore purchases (also offered in Settings, S15.2).
     func restore() async throws -> Bool {
         guard isConfigured else { throw StoreError.unavailable }
@@ -154,11 +169,14 @@ final class Subscriptions: PurchaseStore {
 }
 
 #if DEBUG
-/// Stand-in store for previews and CI screenshots (`-dx.store mock|failing`).
+/// Stand-in store for previews and CI screenshots (`-dx.store mock|failing|slow|pro|trial`).
 @MainActor
 final class MockStore: PurchaseStore {
-    enum Mode: String { case mock, failing, slow, pro }
+    /// `trial` is someone two days into the free trial.
+    enum Mode: String { case mock, failing, slow, pro, trial }
     let mode: Mode
+    /// What was bought this launch, and when, so a refresh keeps it like the real store would.
+    private var bought: (plan: Plan, at: Date)?
 
     init(mode: Mode) {
         self.mode = mode
@@ -168,17 +186,32 @@ final class MockStore: PurchaseStore {
         if mode == .slow { try await Task.sleep(for: .seconds(60)) }
         if mode == .failing { throw StoreError.unavailable }
         return [
-            PlanOption(plan: .annual, price: 39.99, currencyCode: "USD", priceText: "$39.99", perMonthText: "$3.33", trialDays: 7),
-            PlanOption(plan: .monthly, price: 9.99, currencyCode: "USD", priceText: "$9.99", perMonthText: nil, trialDays: nil),
-            PlanOption(plan: .lifetime, price: 99.99, currencyCode: "USD", priceText: "$99.99", perMonthText: nil, trialDays: nil),
+            PlanOption(plan: .annual, price: 39.99, currencyCode: "USD", priceText: "$39.99", perMonthText: "$3.33", trialDays: 3),
+            PlanOption(plan: .quarterly, price: 19.99, currencyCode: "USD", priceText: "$19.99", perMonthText: nil, trialDays: nil),
         ]
     }
 
-    func purchase(_ plan: Plan) async throws -> PurchaseOutcome { .purchased }
+    func purchase(_ plan: Plan) async throws -> PurchaseOutcome {
+        bought = (plan: plan, at: Date.now)
+        return .purchased
+    }
     func restore() async throws -> Bool { false }
-    func hasPro() async -> Bool { mode == .pro }
+    func hasPro() async -> Bool { mode == .pro || mode == .trial || bought != nil }
     func currentPlan() async -> CurrentPlan? {
-        mode == .pro ? CurrentPlan(plan: .annual, renews: Calendar.current.date(byAdding: .year, value: 1, to: .now), willRenew: true) : nil
+        switch mode {
+        case .pro:
+            return CurrentPlan(plan: .annual, renews: Calendar.current.date(byAdding: .year, value: 1, to: .now), willRenew: true)
+        case .trial:
+            let end = await trialEnd()
+            return CurrentPlan(plan: .annual, renews: end, willRenew: true)
+        default:
+            return nil
+        }
+    }
+    func trialEnd() async -> Date? {
+        if mode == .trial { return Calendar.current.date(byAdding: .day, value: 1, to: .now) }
+        guard let bought, bought.plan == .annual else { return nil }
+        return Calendar.current.date(byAdding: .day, value: 3, to: bought.at)
     }
 }
 #endif

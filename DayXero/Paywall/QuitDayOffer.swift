@@ -74,7 +74,7 @@ struct QuitDayOffer: View {
                         .background(Read4.surface, in: Circle())
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel(Text("Close and continue with the free version"))
+                .accessibilityLabel(Text("Close"))
             }
             .padding(.horizontal, DX.Layout.gutter)
             .padding(.top, DX.Space.xs)
@@ -86,11 +86,8 @@ struct QuitDayOffer: View {
                         .dxArrive(1)
                     VStack(alignment: .leading, spacing: 8) {
                         included("Weeks 1 to 4 of the program path")
-                        included("Jelli's voice coaching")
-                        included("If-then slip planner and a 12-week NRT schedule")
+                        included("A 12-week NRT schedule")
                         included("Trigger heatmaps")
-                        Text(FreeLine.text).dxType(.footnote).foregroundStyle(Read4.muted)
-                            .padding(.top, 2)
                     }
                     .v4Card()
                     .dxArrive(2)
@@ -198,12 +195,12 @@ struct QuitDayOffer: View {
                         Text(model.annualSavingPercent.map { "\(days) DAYS FREE · SAVE \($0)%" as LocalizedStringKey } ?? "\(days) DAYS FREE")
                             .dxType(.caption).foregroundStyle(Read4.accent)
                     }
-                    Text(option.plan == .annual ? "Yearly" : "Monthly").dxType(.headline)
+                    Text(option.plan == .annual ? "Yearly" : "3 months").dxType(.headline)
                     Text(option.plan == .annual ? (option.perMonthText.map { "\($0) a month" } ?? "") : String(localized: "Billed today · Cancel anytime"))
                         .dxType(.footnote).foregroundStyle(Read4.muted)
                 }
                 Spacer(minLength: 0)
-                Text(option.plan == .annual ? "\(option.priceText)/yr" : "\(option.priceText)/mo")
+                Text(option.plan == .annual ? "\(option.priceText)/yr" : "\(option.priceText)/3 mo")
                     .dxType(.headline).monospacedDigit()
             }
             .padding(14)
@@ -294,6 +291,7 @@ struct QuitDayOffer: View {
         case .annual:
             if let days = option.trialDays { return "Start my \(days)-day free trial" }
             return "Subscribe for \(option.priceText) a year"
+        case .quarterly: return "Subscribe for \(option.priceText) every 3 months"
         case .monthly: return "Subscribe for \(option.priceText) a month"
         case .lifetime: return "Buy lifetime for \(option.priceText)"
         }

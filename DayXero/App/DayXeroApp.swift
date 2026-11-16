@@ -64,8 +64,8 @@ struct DayXeroApp: App {
     }
 }
 
-/// Routes between onboarding and Home. There's no paywall after onboarding: the prep week and Day Xero are free,
-/// and the trial is offered on Quit Day after the Day Xero session (decisions 15 and 23).
+/// Routes between onboarding, the hard paywall and Home (16 Nov 2026). Without an active plan the paywall is the
+/// only screen after onboarding, and it can't be closed.
 struct RootView: View {
     @Query private var profiles: [UserProfile]
     @AppStorage("dx.underAge") private var underAge = false
@@ -79,6 +79,8 @@ struct RootView: View {
     /// Onboarding saves the profile before its last screen (reminders). This keeps that screen up until it's done,
     /// instead of the new profile swapping Home in underneath it.
     @State private var finishingOnboarding = false
+    /// Once a purchase or restore starts on the paywall, it stays up for its "You're all set" screen.
+    @State private var paywallPurchaseStarted = false
     /// The forest wordmark grows over whatever opens first, on a cold start only.
     @State private var launching = LaunchGrowOverlay.shouldPlay
     private let motion = MotionPolicy()
@@ -94,7 +96,7 @@ struct RootView: View {
             .environment(sos)
             .environment(log)
             .environment(nrt)
-            .fullScreenCover(item: $nrt.sheet) { sheet in
+            .fullScreenCover(item: behindPaywall($nrt.sheet)) { sheet in
                 if let profile = profiles.first {
                     switch sheet {
                     case .setup: NRTSetupView(profile: profile) { nrt.sheet = nil }
@@ -102,15 +104,20 @@ struct RootView: View {
                     }
                 }
             }
-            .sheet(item: $log.page) { page in
+            .sheet(item: behindPaywall($log.page)) { page in
                 LogSheet(profile: profiles.first, start: page, detent: $log.detent) { log.page = nil }
                     .environment(sos)
                     .presentationDetents([.medium, .large], selection: $log.detent)
             }
-            // Craving SOS sits above everything, so every way in reaches it in one step (S6.5).
-            .fullScreenCover(item: $sos.launch) { launch in
+            // Craving SOS sits above everything in the app, so every way in reaches it in one step (S6.5). Like the
+            // log and NRT sheets it stays behind the hard paywall: a widget, Siri or a link can't open it without a plan.
+            .fullScreenCover(item: behindPaywall($sos.launch)) { launch in
                 CravingSOSView(profile: profiles.first, source: launch.source) { sos.launch = nil }
             }
+            // A request that arrives without a plan is dropped, not kept for later.
+            .onChange(of: sos.launch != nil) { _, asked in if asked, !entitlement.isPro { sos.launch = nil } }
+            .onChange(of: log.page != nil) { _, asked in if asked, !entitlement.isPro { log.page = nil } }
+            .onChange(of: nrt.sheet != nil) { _, asked in if asked, !entitlement.isPro { nrt.sheet = nil } }
             // Widgets read a snapshot; rebuild it after anything is saved (S17.1).
             .onReceive(NotificationCenter.default.publisher(for: ModelContext.didSave)) { _ in
                 WidgetSync.refresh(in: modelContext, isPro: entitlement.isPro)
@@ -139,6 +146,8 @@ struct RootView: View {
                 WidgetSync.refresh(in: modelContext, isPro: entitlement.isPro)
                 NRTReminders.refresh(profile: profiles.first)
                 if let profile = profiles.first { Paywalls.setAttributes(for: profile) }
+                // A trial that has turned into a paid plan, or one that ended unpaid, shows up here.
+                Task { await entitlement.refreshOnReturn() }
                 DailyReminders.isPro = entitlement.isPro
                 DailyReminders.refresh(in: modelContext)
                 SOSBridge.openSession = { [sos] source in sos.open(source: source) }
@@ -164,6 +173,11 @@ struct RootView: View {
                 }
                 #endif
             }
+    }
+
+    /// A sheet or cover that only shows with an active plan (the hard paywall, 16 Nov 2026).
+    private func behindPaywall<Item>(_ item: Binding<Item?>) -> Binding<Item?> {
+        Binding(get: { entitlement.isPro ? item.wrappedValue : nil }, set: { item.wrappedValue = $0 })
     }
 
     @ViewBuilder
@@ -198,24 +212,83 @@ struct RootView: View {
         if underAge {
             UnderAgeScreen().background(Read4.background.ignoresSafeArea())
         } else if let profile = profiles.first, !finishingOnboarding {
-            #if DEBUG
-            if let session = UserDefaults.standard.string(forKey: "dx.openSession") {
-                // Screenshots: a program v2 session, at the step given by -dx.sessionStep.
-                SessionFlowView(sessionId: session, profile: profile)
-            } else {
-                HomeView(profile: profile)
-                    .transition(.opacity)
-            }
-            #else
-            HomeView(profile: profile)
+            if !entitlement.isPro || paywallPurchaseStarted {
+                HardPaywall(profile: profile, onPurchaseStarted: { paywallPurchaseStarted = true }) {
+                    withAnimation(motion.animation(.easeInOut(duration: 0.3))) { paywallPurchaseStarted = false }
+                }
                 .transition(.opacity)
-            #endif
+            } else {
+                home(profile)
+            }
         } else {
             OnboardingFlow(onSaving: { finishingOnboarding = true }, onFinished: {
                 // "Start my prep week" queued Prep 1 (FirstLesson); Home opens it once it has faded in.
                 withAnimation(motion.animation(.easeInOut(duration: 0.3))) { finishingOnboarding = false }
             })
             .transition(.opacity)
+        }
+    }
+
+    @ViewBuilder
+    private func home(_ profile: UserProfile) -> some View {
+        #if DEBUG
+        if let session = UserDefaults.standard.string(forKey: "dx.openSession") {
+            // Screenshots: a program v2 session, at the step given by -dx.sessionStep.
+            SessionFlowView(sessionId: session, profile: profile)
+        } else {
+            HomeView(profile: profile)
+                .transition(.opacity)
+        }
+        #else
+        HomeView(profile: profile)
+            .transition(.opacity)
+        #endif
+    }
+}
+
+/// The hard paywall (16 Nov 2026): shown whenever there's no active plan, straight after onboarding and after a
+/// subscription ends. There's no way past it but a purchase or a restore. Superwall's paywall shows first when a
+/// campaign has one for `onboarding_complete`; closing that one leads to DayXero's own, not into the app.
+struct HardPaywall: View {
+    let profile: UserProfile
+    let onPurchaseStarted: () -> Void
+    let onDone: () -> Void
+
+    @Environment(Entitlement.self) private var entitlement
+    @State private var asked = false
+    @State private var showOwn = false
+
+    var body: some View {
+        ZStack {
+            Read4.background.ignoresSafeArea()
+            if showOwn {
+                PaywallView(name: profile.name, quitDay: profile.quitDay,
+                            model: PaywallModel(store: entitlement.store, entitlement: entitlement),
+                            onClose: onDone, onPurchaseStarted: onPurchaseStarted, closable: false)
+            }
+        }
+        .safeAreaInset(edge: .bottom) {
+            // Test builds only (debug and TestFlight): the way in without a purchase.
+            if DemoMode.isAvailable, showOwn {
+                Button("Demo mode (test builds)") { entitlement.setDemo(true) }
+                    .dxFont(12, weight: 500, style: .caption2)
+                    .foregroundStyle(Read4.muted)
+                    .buttonStyle(.plain)
+                    .padding(.bottom, 2)
+            }
+        }
+        .task {
+            guard !asked else { return }
+            asked = true
+            Paywalls.present(.onboardingComplete) { outcome in
+                switch outcome {
+                case .unlocked:
+                    entitlement.grantFromElsewhere()
+                    onDone()
+                case .fallback, .closed:
+                    showOwn = true
+                }
+            }
         }
     }
 }

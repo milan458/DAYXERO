@@ -65,7 +65,11 @@ struct ProgramStore {
     func states(now: Date = .now) -> [(id: String, state: ProgramUnlock.State)] {
         let records = unlockRecords()
         let states = unlock()?.states(records: records, quitDay: profile.quitDay, quitTimestamp: profile.progress?.quitTimestamp, now: now) ?? []
-        guard DemoMode.isOn else { return states }
+        guard DemoMode.isOn else {
+            // A free trial opens Prep 1 to 3 only; the rest waits for the trial to end (16 Nov 2026).
+            guard let trialEnd = Entitlement.trialEndsNow, trialEnd > now else { return states }
+            return ProgramUnlock.holding(states, untilTrialEnds: trialEnd, open: FullProgram.trialSessionIds)
+        }
         // Demo mode: every session open at any time, in any order.
         return states.map { item -> (id: String, state: ProgramUnlock.State) in
             if case .completed = item.state { return item }

@@ -1,8 +1,8 @@
 import DayXeroCore
 import SwiftUI
 
-/// A paid feature's place for someone on the free tier (MON-01): what it does, and one way to the paywall. The free
-/// part of the screen around it keeps working.
+/// A paid feature's place for someone on the free tier (the NRT schedule, trigger heatmaps): what it does, and one way
+/// to the paywall. The free part of the screen around it keeps working.
 struct LockedFeatureCard: View {
     let title: LocalizedStringKey
     let line: LocalizedStringKey

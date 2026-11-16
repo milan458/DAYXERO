@@ -9,6 +9,45 @@ import WidgetKit
 struct SnapshotEntry: TimelineEntry {
     let date: Date
     let snapshot: WidgetSnapshot
+    /// No active plan (the hard paywall, 16 Nov 2026): the widget shows the subscribe state instead of any figures.
+    var locked = false
+}
+
+/// What every widget shows without an active plan: no figures, no buttons. Tapping it opens the app, which opens
+/// on the paywall. `onViolet` is false on the quick-log widget's reading ground.
+struct WidgetSubscribeView: View {
+    var onViolet = true
+    @Environment(\.widgetFamily) private var family
+
+    private var ink: Color { onViolet ? .white : DX.Ground.reading.ink }
+    private var muted: Color { onViolet ? .white.opacity(0.6) : DX.Ground.reading.muted }
+
+    var body: some View {
+        switch family {
+        case .accessoryInline:
+            Text("DayXero: start your plan")
+        case .accessoryCircular:
+            Image(systemName: "lock.fill").font(.system(size: 18, weight: .semibold))
+                .accessibilityLabel(Text("DayXero: start your plan"))
+        case .accessoryRectangular:
+            VStack(alignment: .leading, spacing: 1) {
+                Text(verbatim: "DayXero").font(DX.Typeface4.swiftUIFont(.body, size: 14, weight: 700))
+                Text("Start your plan in the app").font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 500))
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        default:
+            VStack(alignment: .leading, spacing: DX.Space.xxs) {
+                Image(systemName: "lock.fill").font(.system(size: 15, weight: .semibold)).foregroundStyle(muted)
+                    .accessibilityHidden(true)
+                Spacer(minLength: 0)
+                Text("Start your plan").font(DX.Typeface4.swiftUIFont(.body, size: 16, weight: 700)).foregroundStyle(ink)
+                Text("Open DayXero to subscribe and use this widget.")
+                    .font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 500)).foregroundStyle(muted)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        }
+    }
 }
 
 /// Reads the App Group snapshot. Entries at the day boundary (so the day count rolls over on time) and, for the
@@ -21,7 +60,8 @@ struct SnapshotProvider: TimelineProvider {
     }
 
     func getSnapshot(in context: Context, completion: @escaping (SnapshotEntry) -> Void) {
-        completion(SnapshotEntry(date: .now, snapshot: context.isPreview ? .sample() : (WidgetSnapshot.load() ?? .sample())))
+        completion(SnapshotEntry(date: .now, snapshot: context.isPreview ? .sample() : (WidgetSnapshot.load() ?? .sample()),
+                                 locked: !context.isPreview && !PlanGate.isActive))
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<SnapshotEntry>) -> Void) {
@@ -33,7 +73,8 @@ struct SnapshotProvider: TimelineProvider {
         if includeWindowEdges, let window = snapshot.nextWindow {
             dates += [window.start, window.end].filter { $0 > now }
         }
-        let entries = dates.sorted().map { SnapshotEntry(date: $0, snapshot: snapshot) }
+        let locked = !PlanGate.isActive
+        let entries = dates.sorted().map { SnapshotEntry(date: $0, snapshot: snapshot, locked: locked) }
         completion(Timeline(entries: entries, policy: .atEnd))
     }
 }
@@ -42,7 +83,7 @@ private struct ModeReader<Content: View>: View {
     @Environment(\.widgetRenderingMode) private var mode
     @Environment(\.widgetFamily) private var family
     @Environment(\.showsWidgetContainerBackground) private var showsBackground
-    let content: (WidgetRenderingMode, WidgetFamily, Bool) -> Content
+    @ViewBuilder let content: (WidgetRenderingMode, WidgetFamily, Bool) -> Content
 
     var body: some View {
         content(mode, family, !showsBackground)
@@ -54,7 +95,9 @@ struct DaysFreeWidget: Widget {
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: WidgetSnapshot.Kind.days, provider: SnapshotProvider()) { entry in
             ModeReader { mode, family, standBy in
-                DayCounterWidgetView(snapshot: entry.snapshot, family: family, mode: mode, standBy: standBy)
+                if entry.locked { WidgetSubscribeView() } else {
+                    DayCounterWidgetView(snapshot: entry.snapshot, family: family, mode: mode, standBy: standBy)
+                }
             }
         }
         .configurationDisplayName("Days since Quit Day")
@@ -66,7 +109,9 @@ struct DaysFreeWidget: Widget {
 struct CravingSOSWidget: Widget {
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: WidgetSnapshot.Kind.sos, provider: SnapshotProvider()) { entry in
-            ModeReader { mode, family, _ in SOSWidgetView(snapshot: entry.snapshot, family: family, mode: mode) }
+            ModeReader { mode, family, _ in
+                if entry.locked { WidgetSubscribeView() } else { SOSWidgetView(snapshot: entry.snapshot, family: family, mode: mode) }
+            }
         }
         .configurationDisplayName("Craving SOS")
         .description("One tap to ride out a craving.")
@@ -77,7 +122,9 @@ struct CravingSOSWidget: Widget {
 struct TodayWidget: Widget {
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: WidgetSnapshot.Kind.today, provider: SnapshotProvider(includeWindowEdges: true)) { entry in
-            ModeReader { mode, _, _ in TodayWidgetView(snapshot: entry.snapshot, mode: mode) }
+            ModeReader { mode, _, _ in
+                if entry.locked { WidgetSubscribeView() } else { TodayWidgetView(snapshot: entry.snapshot, mode: mode) }
+            }
         }
         .configurationDisplayName("Today")
         .description("Days, money kept, water and your next lesson.")
@@ -88,7 +135,9 @@ struct TodayWidget: Widget {
 struct WaterWidget: Widget {
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: WidgetSnapshot.Kind.water, provider: SnapshotProvider()) { entry in
-            ModeReader { mode, family, _ in WaterWidgetView(snapshot: entry.snapshot, family: family, mode: mode) }
+            ModeReader { mode, family, _ in
+                if entry.locked { WidgetSubscribeView() } else { WaterWidgetView(snapshot: entry.snapshot, family: family, mode: mode) }
+            }
         }
         .configurationDisplayName("Water")
         .description("See today's water and log a glass.")
@@ -100,8 +149,10 @@ struct ForecastWidget: Widget {
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: WidgetSnapshot.Kind.forecast, provider: SnapshotProvider(includeWindowEdges: true)) { entry in
             ModeReader { mode, family, _ in
-                ForecastWidgetView(snapshot: entry.snapshot, family: family, mode: mode, date: entry.date,
-                                   guarding: !Activity<GuardActivityAttributes>.activities.isEmpty)
+                if entry.locked { WidgetSubscribeView() } else {
+                    ForecastWidgetView(snapshot: entry.snapshot, family: family, mode: mode, date: entry.date,
+                                       guarding: !Activity<GuardActivityAttributes>.activities.isEmpty)
+                }
             }
         }
         .configurationDisplayName("Craving forecast")

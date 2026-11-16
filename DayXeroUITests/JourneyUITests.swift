@@ -1,7 +1,7 @@
 import XCTest
 
 /// The whole journey on a real build (S16.1): onboarding → prep → Quit Day → first week → maintenance.
-/// The paywall now follows Day Xero (decision 23), so it is no longer part of the onboarding run.
+/// The hard paywall follows onboarding (16 Nov 2026): the run starts the free trial there on the mock store.
 /// The clock can't move forward in a UI test, so the later stages launch with a seeded scenario.
 /// Each step saves a screenshot: as a test attachment, and to $DX_SHOTS when CI sets it (S16.2).
 @MainActor
@@ -49,7 +49,7 @@ final class JourneyUITests: XCTestCase {
         let hold = app.buttons["onboarding.hold"]
         XCTAssert(hold.waitForExistence(timeout: 5))
         hold.press(forDuration: 2.2)
-        // F05 the plan builds, then F06 the plan is ready: prep week is free, nothing is charged.
+        // F05 the plan builds, then F06 the plan is ready: nothing is charged on it.
         tapSettled(app, "See my plan")
         XCTAssert(app.staticTexts["Your plan is ready"].waitForExistence(timeout: 10), "Plan screen didn't appear")
         snap(app, "05-plan")
@@ -59,7 +59,13 @@ final class JourneyUITests: XCTestCase {
         tapSettled(app, "Yes, remind me")
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
         if springboard.alerts.buttons["Allow"].waitForExistence(timeout: 5) { springboard.alerts.buttons["Allow"].tap() }
-        // No paywall after onboarding (decision 15): Prep 1 opens by itself; close it to reach Home.
+        // The first-run paywall: start the free trial, then "You're all set" leads on.
+        let cta = app.buttons["paywall.cta"]
+        XCTAssert(cta.waitForExistence(timeout: 10), "The paywall didn't follow onboarding")
+        snap(app, "06-paywall")
+        tapWhenStill(app, cta, name: "Start trial")
+        tapSettled(app, "Start")
+        // Prep 1 opens by itself after the paywall; close it to reach Home.
         let closeLesson = button(app, "Your place is saved")
         XCTAssert(closeLesson.waitForExistence(timeout: 10), "Prep day 1 didn't open after onboarding")
         snap(app, "06b-day1")

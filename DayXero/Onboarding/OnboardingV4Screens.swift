@@ -440,8 +440,8 @@ private extension String {
 
 // MARK: F06 Your plan is ready · mint
 
-/// Prep 1 to 3 are free; the 7-day trial is offered at Prep 4 (MON-01, replacing decision 15), so with the usual week of
-/// prep it runs past the Quit Day. Nothing is charged here.
+/// The plan and what it includes. The hard paywall follows onboarding (16 Nov 2026): yearly with a 3-day trial, or
+/// 3 months. Nothing is charged here.
 struct PlanRevealScreen: View {
     let model: OnboardingModel
     let onContinue: () -> Void
@@ -460,7 +460,7 @@ struct PlanRevealScreen: View {
                     Text("Step \(model.stepNumber) of \(model.stepTotal)").dxType(.caption).textCase(.uppercase).foregroundStyle(ground.muted)
                     MarkedTitle(String(localized: "Your plan is "), marking: String(localized: "ready"), color: DX.Mark.color(on: ground))
                         .dxType(.title).foregroundStyle(ground.ink)
-                    Text(entitlement.isPro ? "Everything is unlocked." : "Prep 1 to 3 are on us. Nothing is charged today.")
+                    Text(entitlement.isPro ? "Everything is unlocked." : "Here's what's in it. Nothing is charged on this screen.")
                         .dxType(.body).foregroundStyle(ground.muted)
                     savings
                     builtAround
@@ -512,6 +512,7 @@ struct PlanRevealScreen: View {
     private func plansLine(_ annual: PlanOption) -> String {
         let others = (paywall?.plans ?? []).filter { $0.plan != .annual }.map { option -> String in
             switch option.plan {
+            case .quarterly: String(localized: "\(option.priceText) for 3 months")
             case .monthly: String(localized: "\(option.priceText) a month")
             case .lifetime: String(localized: "\(option.priceText) lifetime")
             default: option.priceText
@@ -555,8 +556,7 @@ struct PlanRevealScreen: View {
 
     private var includes: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("**Always free:** Prep 1 to 3, your counter, Craving SOS, a 60-second breathing timer and evening check-ins")
-            Text("**With the full program:** Prep 4 to 7, your Day Xero launch kit, Weeks 1 to 4, Jelli's voice coaching, if-then slip plans, a 12-week NRT schedule and trigger heatmaps")
+            Text("**Your plan includes:** your prep days, your Day Xero launch kit, Weeks 1 to 4, Craving SOS and the calm tools, your counter and logging, a 12-week NRT schedule and trigger heatmaps")
         }
         .dxType(.footnote)
         .foregroundStyle(ground.ink)
@@ -564,34 +564,27 @@ struct PlanRevealScreen: View {
         .dxCardOnColour()
     }
 
-    /// The 7-day trial at Prep 4 (MON-01): Prep 1 is today, so Prep 4 opens three days from now at the earliest.
+    /// The 3-day trial on the yearly plan, offered on the paywall that follows onboarding (16 Nov 2026).
     private var trialCard: some View {
-        let start = FullProgram.earliestPaywallDay(firstDay: .now, calendar: model.calendar)
+        let start = Date.now
         let days = annual?.trialDays ?? FullProgram.trialDays
         let end = model.calendar.date(byAdding: .day, value: days, to: start) ?? start
         let lead = TrialReminder.leadDays(trialEndsAt: end, now: start)
         let remind = model.calendar.date(byAdding: .day, value: -lead, to: end) ?? end
-        let after = FullProgram.trialEndsDaysAfterQuitDay(trialEnd: end, quitDay: model.quitDay, calendar: model.calendar)
-        let (s, e, r) = (start.formatted(shortDate), end.formatted(shortDate), remind.formatted(shortDate))
-        let runs: String = switch after {
-        case 2...: String(localized: "If you start it at Prep 4 on \(s), it runs to \(e), \(after) days after your Quit Day. I'll remind you on \(r).")
-        case 1: String(localized: "If you start it at Prep 4 on \(s), it runs to \(e), the day after your Quit Day. I'll remind you on \(r).")
-        case 0: String(localized: "If you start it at Prep 4 on \(s), it runs to \(e), your Quit Day. I'll remind you on \(r).")
-        default: String(localized: "If you start it at Prep 4 on \(s), it runs to \(e). I'll remind you on \(r).")
-        }
+        let (e, r) = (end.formatted(shortDate), remind.formatted(shortDate))
         return VStack(alignment: .leading, spacing: 6) {
-            Text("At Prep 4 · \(start.formatted(shortDate))").dxType(.caption).textCase(.uppercase)
+            Text("Free trial").dxType(.caption).textCase(.uppercase)
                 .foregroundStyle(DX.Fill.cream.opacity(0.85))
             if let annual {
                 Text("\(days) days free, then \(annual.priceText) a year").dxType(.headline).foregroundStyle(DX.Fill.cream)
                 if let perMonth = annual.perMonthText {
-                    Text("That's \(perMonth) a month. I'll ask you at Prep 4, not before.")
+                    Text("That's \(perMonth) a month. You choose in a moment.")
                         .dxType(.footnote).foregroundStyle(DX.Fill.cream.opacity(0.85))
                 }
             } else {
-                Text("I'll ask you about the full program at Prep 4, not before.").dxType(.headline).foregroundStyle(DX.Fill.cream)
+                Text("You can try the full program free for \(days) days.").dxType(.headline).foregroundStyle(DX.Fill.cream)
             }
-            Text("\(runs) Cancel any time in Settings › Apple ID › Subscriptions.")
+            Text("If you start it today, it runs to \(e) and I'll remind you on \(r). Prep 1 to 3 open one a day during the trial. Cancel any time in Settings › Apple ID › Subscriptions.")
                 .dxType(.caption).foregroundStyle(DX.Fill.cream.opacity(0.85))
                 .fixedSize(horizontal: false, vertical: true)
         }

@@ -180,8 +180,7 @@ jobs:
           P="-dx.paywallPreview YES -dx.store"
           shoot dark large pw-annual-dark $P mock
           shoot light large pw-annual-light $P mock
-          shoot dark large pw-monthly-dark $P mock -dx.paywallPlan monthly
-          shoot dark large pw-lifetime-dark $P mock -dx.paywallPlan lifetime
+          shoot dark large pw-quarterly-dark $P mock -dx.paywallPlan quarterly
           shoot dark large pw-loading-dark $P slow
           shoot dark large pw-failed-dark $P failing
           shoot dark large pw-unlocked-dark $P mock -dx.paywallPhase unlocked
@@ -191,14 +190,13 @@ jobs:
           for sc in prep quitday day3 done day12; do
             shoot dark large "home-$sc-dark" -dx.homeScenario "$sc" -dx.store pro
           done
-          shoot dark large home-free-dark -dx.homeScenario free -dx.store mock -dx.paywallDone YES
+          shoot dark large hard-paywall-dark -dx.homeScenario free -dx.store mock
           shoot light large home-day3-light -dx.homeScenario day3 -dx.store pro
           shoot light large home-prep-light -dx.homeScenario prep -dx.store pro
           shoot dark accessibility-extra-extra-extra-large home-day3-dark-ax5 -dx.homeScenario day3 -dx.store pro
           D3="-dx.homeScenario day3 -dx.store pro"
           shoot dark large prog-tab-dark $D3 -dx.tab program
           shoot light large prog-tab-light $D3 -dx.tab program
-          shoot dark large prog-free-dark -dx.homeScenario free -dx.store mock -dx.paywallDone YES -dx.tab program
           # Program v2: sessions at a step (-dx.openSession <id> -dx.sessionStep <n>), the tab, Home and SOS.
           PR="-dx.homeScenario prep -dx.store pro"
           D12="-dx.homeScenario day12 -dx.store pro"
@@ -259,7 +257,7 @@ jobs:
           shoot dark large prog-progress-firstweek-dark -dx.homeScenario day3 -dx.store pro -dx.tab progress
           # Early patterns before a week of logs: with a few logs (prep), and with none (S18.7).
           shoot dark large prog-progress-prep-dark -dx.homeScenario prep -dx.store pro -dx.tab progress
-          shoot light large prog-progress-empty-light -dx.homeScenario free -dx.store mock -dx.paywallDone YES -dx.tab progress
+          shoot light large prog-progress-empty-light -dx.homeScenario free -dx.store pro -dx.tab progress
           shoot dark accessibility-extra-extra-extra-large prog-progress-dark-ax5 $P12 -dx.tab progress
           shoot dark large log-menu-dark $P12 -dx.logSheet menu
           shoot dark large log-craving-dark $P12 -dx.logSheet craving

@@ -300,7 +300,12 @@ struct DeckListenView: View {
                 VStack(spacing: DX.Space.s) {
                     LessonAudioStep(title: ctx.text(card.title),
                                     narrator: LessonNarrator(segments: captions, url: recording, seconds: Double(card.minutes * 60)),
-                                    startAt: 0, onPosition: { _ in }, onFinish: { finished = true })
+                                    startAt: UserDefaults.standard.double(forKey: Self.positionKey(recording)),
+                                    onPosition: { UserDefaults.standard.set($0, forKey: Self.positionKey(recording)) },
+                                    onFinish: {
+                                        UserDefaults.standard.removeObject(forKey: Self.positionKey(recording))
+                                        finished = true
+                                    })
                     Button(String(localized: "Read it instead")) { reading = true }
                         .buttonStyle(.dx(.quiet, on: ground))
                 }
@@ -311,6 +316,11 @@ struct DeckListenView: View {
             buttons(hasRecording: recording != nil && !reading)
         }
         .foregroundStyle(ground.ink)
+    }
+
+    /// Where a listen card's place is kept, so leaving part-way and coming back carries on from the same point.
+    static func positionKey(_ recording: URL) -> String {
+        "dx.audioPosition.\(recording.deletingPathExtension().lastPathComponent)"
     }
 
     /// The script as captions for the recording: one segment per paragraph, spread over the track.

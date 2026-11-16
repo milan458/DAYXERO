@@ -77,6 +77,7 @@ struct LogUseIntent: AppIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult & ProvidesDialog {
+        guard PlanGate.isActive else { return .result(dialog: "DayXero needs an active plan. Open the app to start one.") }
         let container = try SOSBridge.container ?? DataStore.makeContainer()
         let entry = UseLog.log(product.product, in: container.mainContext)
         WidgetCenter.shared.reloadAllTimelines()
