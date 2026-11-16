@@ -18,9 +18,12 @@ enum Onb {
 
     /// The ground each step sits on (design doc §10, F01–F07).
     static func ground(for step: OnboardingStep) -> DX.Ground {
-        // v5: every onboarding mockup, from the breath to the trial, sits on apricot.
-        _ = step
-        return .apricot
+        // v5: every onboarding mockup, from the breath to the trial, sits on apricot; the Craving SOS tour is Jelli's
+        // ocean, the ground the real SOS opens on.
+        switch step {
+        case .cravingSOS: .ocean
+        default: .apricot
+        }
     }
 }
 

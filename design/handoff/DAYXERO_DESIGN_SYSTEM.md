@@ -538,6 +538,23 @@ All screens are 390×844 with props `theme` (light | dark), `motion` (bool) and 
 - "I already have an account".
 - Small print with **Terms and Privacy links** and the 18+ line.
 
+**How it works** · apricot (added 16 Nov 2026, code only: `TourScreens.swift`, no canvas artboard)
+- After Welcome. Title "How your quit works" with the hand-drawn mark on "works".
+- A dawn horizon card (h 148, radius 24). Its clarity starts at 20 and settles to 48, then 100, as the three stops land.
+- A road with three stops, text straight on the ground: Prep (open ring), Quit Day (the one large solid stop), Four weeks (small solid).
+- Nothing is asked. "Continue" is live from the start.
+
+**Craving SOS** · ocean (added 16 Nov 2026, code only)
+- After the triggers. Title "If it's after coffee, you'll have this." (`Trigger.situation` of their first trigger).
+- Three cream rings and the real "Breathe in" / "…and out" words on the shared 4 s / 6 s clock. No countdown, no prediction.
+- A navy card with Jelli at 40: "Jelli rides each wave with you and never judges. In prep you'll also plan for your biggest moments: coffee and stress."
+- On ocean the header's back button takes the navy card and the progress bar the bright green #2FD08A (the deep green is 1.0:1 on ocean).
+
+**Your day** · apricot over violet (added 16 Nov 2026, code only)
+- After NRT, before the Quit Day pick. Title "Each day opens and closes the same way".
+- Morning on apricot: Xero 88, "A ten-second pledge", and a card with the pledge line and their reason.
+- Night: a violet sheet with a paper-edge top settles up (Settle, 56 pt). Glim at 40, "A one-minute check-in", the four drawn mood faces as a picture (not selectable), "Miss one and nothing breaks. No guilt, ever."
+
 **F03 Questions** · lilac (chat)
 - Header: Xero avatar 40, a progress bar (green #0F6E43, 3/6 → 50%), close.
 - Messages arrive in sequence with typing dots.

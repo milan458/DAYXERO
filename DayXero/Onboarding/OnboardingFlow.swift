@@ -107,13 +107,16 @@ struct OnboardingFlow: View {
     private func screen(for step: OnboardingStep) -> some View {
         switch step {
         case .welcome: WelcomeScreen(model: model)
+        case .howItWorks: HowItWorksScreen(model: model)
         case .products: ProductsScreen(model: model)
         case let .baseline(product): BaselineScreen(model: model, product: product)
         case .baselineSummary: BaselineSummaryScreen(model: model)
         case .triggers: TriggersScreen(model: model)
+        case .cravingSOS: CravingSOSIntroScreen(model: model)
         case .personal: PersonalScreen(model: model)
         case .obstacles: ObstaclesScreen(model: model)
         case .nrt: NRTScreen(model: model)
+        case .yourDay: YourDayScreen(model: model)
         case .quitDay: QuitDayScreen(model: model)
         case .building: BuildingScreen(model: model)
         case .reveal: PlanRevealScreen(model: model) { saveAndContinue() }
