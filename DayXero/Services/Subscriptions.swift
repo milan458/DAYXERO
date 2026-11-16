@@ -192,7 +192,7 @@ final class MockStore: PurchaseStore {
     }
 
     func purchase(_ plan: Plan) async throws -> PurchaseOutcome {
-        bought = (plan, .now)
+        bought = (plan: plan, at: Date.now)
         return .purchased
     }
     func restore() async throws -> Bool { false }
