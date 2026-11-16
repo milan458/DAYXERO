@@ -89,6 +89,8 @@ final class Entitlement {
     private func publish() {
         if remembers { UserDefaults.standard.set(purchased, forKey: Self.rememberedKey) }
         Self.isProNow = isPro
+        // Siri and widget actions that run without opening the app check this.
+        if PlanGate.isActive != isPro { PlanGate.isActive = isPro }
         Self.trialEndsNow = demo ? nil : trialEndsAt
     }
 }
