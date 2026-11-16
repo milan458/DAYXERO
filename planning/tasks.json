@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-11-16T09:56:57.513Z"
+    "updated": "2026-11-16T10:01:04.385Z"
   },
   "now": {
     "section": "S30",
@@ -3192,7 +3192,7 @@
           "id": "S33.1",
           "title": "Access rules: no free program session; trial opens Prep 1 to 3 only, the rest waits for the trial to end",
           "status": "in_progress",
-          "notes": "FullProgram, ProgramUnlock.holding, ProgramStore.states, Entitlement.trialEndsAt. Built; waiting on CI.",
+          "notes": "FullProgram, ProgramUnlock.holding, ProgramStore.states, Entitlement.trialEndsAt. Built; waiting on CI.\n16 Nov: FullProgram and ProgramUnlock compiled and their tests passed in a Swift 6 Linux container (16 tests). Not yet built in Xcode: iOS CI runs 277 and 278 failed at start with no log, like every run since 15 Nov 10:09.",
           "created": "2026-11-16T09:56:57.326Z",
           "completed": null
         },
@@ -3200,7 +3200,7 @@
           "id": "S33.2",
           "title": "First-run paywall after onboarding (Superwall onboarding_complete, DayXero's own as fallback); two plans; copy on every paywall, the plan reveal and Settings",
           "status": "in_progress",
-          "notes": "Built; waiting on CI.",
+          "notes": "Built; waiting on CI.\n16 Nov: syntax-checked only; needs the iOS build (CI runner failing at start).",
           "created": "2026-11-16T09:56:57.364Z",
           "completed": null
         },
@@ -3208,7 +3208,7 @@
           "id": "S33.3",
           "title": "Audio carries on from where it was paused, after leaving the app or closing it",
           "status": "in_progress",
-          "notes": "A saved place was never applied to a recording (the player didn't exist yet), so it restarted from the top. Deck listen cards now save their place too. Built; waiting on CI.",
+          "notes": "A saved place was never applied to a recording (the player didn't exist yet), so it restarted from the top. Deck listen cards now save their place too. Built; waiting on CI.\n16 Nov: syntax-checked only; needs the iOS build and a check on a phone.",
           "created": "2026-11-16T09:56:57.396Z",
           "completed": null
         },
@@ -3224,6 +3224,21 @@
     }
   ],
   "log": [
+    {
+      "time": "2026-11-16T10:01:04.385Z",
+      "type": "note",
+      "message": "S33.3: 16 Nov: syntax-checked only; needs the iOS build and a check on a phone."
+    },
+    {
+      "time": "2026-11-16T10:01:04.351Z",
+      "type": "note",
+      "message": "S33.2: 16 Nov: syntax-checked only; needs the iOS build (CI runner failing at start)."
+    },
+    {
+      "time": "2026-11-16T10:01:04.316Z",
+      "type": "note",
+      "message": "S33.1: 16 Nov: FullProgram and ProgramUnlock compiled and their tests passed in a Swift 6 Linux container (16 tests). Not yet built in Xcode: iOS CI runs 277 and 278 failed at start with no log, like every run since 15 Nov 10:09."
+    },
     {
       "time": "2026-11-16T09:56:57.513Z",
       "type": "status",
