@@ -96,21 +96,25 @@ struct ReasonDraft: Identifiable, Equatable {
 }
 
 /// The onboarding steps (S22). The age check is the welcome screen's footer; the name is asked with the reason.
+/// `howItWorks`, `cravingSOS` and `yourDay` ask nothing: they show what DayXero is (16 Nov 2026, TourScreens.swift).
 enum OnboardingStep: Hashable {
-    case welcome, products, baseline(Product), baselineSummary, triggers, personal, obstacles,
-         nrt, quitDay, building, reveal, trial
+    case welcome, howItWorks, products, baseline(Product), baselineSummary, triggers, cravingSOS, personal, obstacles,
+         nrt, yourDay, quitDay, building, reveal, trial
 
     /// Analytics and screenshot name.
     var key: String {
         switch self {
         case .welcome: "welcome"
+        case .howItWorks: "how_it_works"
         case .products: "products"
         case let .baseline(product): "baseline_\(product.rawValue)"
         case .baselineSummary: "baseline_summary"
         case .triggers: "triggers"
+        case .cravingSOS: "craving_sos"
         case .personal: "personal"
         case .obstacles: "obstacles"
         case .nrt: "nrt"
+        case .yourDay: "your_day"
         case .quitDay: "quit_day"
         case .building: "building"
         case .reveal: "reveal"
@@ -180,8 +184,8 @@ final class OnboardingModel {
 
     /// Steps in order for the current answers. Baselines repeat per product.
     var sequence: [OnboardingStep] {
-        [.welcome, .products] + orderedProducts.map(OnboardingStep.baseline)
-            + [.baselineSummary, .triggers, .personal, .obstacles, .nrt, .quitDay, .building, .reveal, .trial]
+        [.welcome, .howItWorks, .products] + orderedProducts.map(OnboardingStep.baseline)
+            + [.baselineSummary, .triggers, .cravingSOS, .personal, .obstacles, .nrt, .yourDay, .quitDay, .building, .reveal, .trial]
     }
 
     /// The steps the bar counts: the baseline screens share one slot, so the total is the same whatever is picked.

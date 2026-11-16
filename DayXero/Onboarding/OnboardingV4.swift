@@ -17,8 +17,9 @@ enum Onb {
     /// The ground each step sits on (design doc §10, F01–F07).
     static func ground(for step: OnboardingStep) -> DX.Ground {
         switch step {
-        case .welcome, .quitDay, .trial: .apricot
+        case .welcome, .howItWorks, .yourDay, .quitDay, .trial: .apricot
         case .building, .reveal: .mint
+        case .cravingSOS: .ocean
         default: .lilac
         }
     }
@@ -78,7 +79,9 @@ struct OnbProgressBar: View {
         GeometryReader { proxy in
             ZStack(alignment: .leading) {
                 Capsule().fill(ground.ink.opacity(0.14))
-                Capsule().fill(DX.Fill.green).frame(width: proxy.size.width * min(1, max(0, value)))
+                // The deep green has no contrast with ocean (1.0:1); the bright one holds 3:1 on the cream-ink grounds.
+                Capsule().fill(ground.spec.inkLight == 0xFFF8EE ? DX.Fill.greenOnDark : DX.Fill.green)
+                    .frame(width: proxy.size.width * min(1, max(0, value)))
             }
         }
         .frame(height: 8)

@@ -21,6 +21,9 @@ final class JourneyUITests: XCTestCase {
         // F02 Welcome: the 18+ confirmation is the footer.
         snap(app, "01-welcome")
         tap(app.buttons["Get started"])
+        // How it works: prep, Quit Day, four weeks. Nothing to answer.
+        snap(app, "01b-how-it-works")
+        tapSettled(app, "Continue")
         tap(button(app, "Disposables"))
         snap(app, "02-products")
         tapSettled(app, "Continue")
@@ -33,6 +36,10 @@ final class JourneyUITests: XCTestCase {
         tap(button(app, "6–30 min"))
         tap(button(app, "Coffee"))
         tapSettled(app, "Continue")
+        // Craving SOS, for the trigger just picked.
+        XCTAssert(app.staticTexts["If it's after coffee, you'll have this."].waitForExistence(timeout: 5), "The SOS screen didn't follow the triggers")
+        snap(app, "03b-craving-sos")
+        tapSettled(app, "Continue")
         // Name, then the reason: submitting the name moves to the reason field.
         let name = app.textFields.firstMatch
         XCTAssert(name.waitForExistence(timeout: 5))
@@ -43,6 +50,9 @@ final class JourneyUITests: XCTestCase {
         tap(button(app, "First time"))
         tapSettled(app, "Continue")
         tap(button(app, "Not for me"))
+        tapSettled(app, "Continue")
+        // Your day: the morning pledge and the night check-in.
+        snap(app, "03c-your-day")
         tapSettled(app, "Continue")
         // F04 Quit Day: hold for 1.5 s.
         snap(app, "04-quit-day")

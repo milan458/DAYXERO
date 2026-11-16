@@ -25,19 +25,37 @@ struct OnboardingModelTests {
         #expect(baselines == [.baseline(.cigarettes), .baseline(.vape)])
     }
 
-    @Test func welcomeGoesStraightToProductsAndTheAgeCheckIsTheFooter() {
+    /// 16 Nov 2026: "How it works" sits between Welcome and the first question, and asks nothing.
+    @Test func welcomeGoesToHowItWorksThenProductsAndTheAgeCheckIsTheFooter() {
         let model = makeModel()
-        #expect(model.sequence.prefix(2) == [.welcome, .products])
+        #expect(model.sequence.prefix(3) == [.welcome, .howItWorks, .products])
+        model.next()
+        #expect(model.step == .howItWorks)
+        #expect(model.canContinue)
         model.next()
         #expect(model.step == .products)
         #expect(!model.canContinue)
     }
 
+    /// The three screens that show what DayXero is never wait for an answer, and each can be backed out of.
+    @Test func theTourScreensNeverBlockAndCanGoBack() {
+        let model = makeModel()
+        model.products = [.cigarettes]
+        for step in [OnboardingStep.howItWorks, .cravingSOS, .yourDay] {
+            while model.step != step { model.next() }
+            #expect(model.canContinue)
+            #expect(model.canGoBack)
+        }
+        model.next()
+        #expect(model.step == .quitDay)
+    }
+
     @Test func stepsRunInTheNewOrder() {
         let model = makeModel()
         model.products = [.cigarettes, .vape]
-        #expect(model.sequence == [.welcome, .products, .baseline(.cigarettes), .baseline(.vape), .baselineSummary, .triggers,
-                                   .personal, .obstacles, .nrt, .quitDay, .building, .reveal, .trial])
+        #expect(model.sequence == [.welcome, .howItWorks, .products, .baseline(.cigarettes), .baseline(.vape), .baselineSummary,
+                                   .triggers, .cravingSOS, .personal, .obstacles, .nrt, .yourDay, .quitDay, .building, .reveal,
+                                   .trial])
     }
 
     @Test func progressNeverMovesBackWhenASecondProductIsPicked() {
@@ -117,6 +135,8 @@ struct OnboardingModelTests {
         model.triggers = [.coffee]
         #expect(model.canContinue)
 
+        model.next()
+        #expect(model.step == .cravingSOS)
         model.next()
         #expect(model.step == .personal)
         model.name = "  "
