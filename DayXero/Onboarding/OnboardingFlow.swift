@@ -73,7 +73,8 @@ struct OnboardingFlow: View {
 
     /// Steps whose hero art runs under the status bar: the header floats over the art instead of pushing it down.
     private var overlaysTopBar: Bool {
-        false
+        // How it works opens on a full-bleed sunrise (v5 tour, 16 Nov 2026).
+        model.step == .howItWorks
     }
 
     private var transition: AnyTransition {

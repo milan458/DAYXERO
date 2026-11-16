@@ -12,23 +12,47 @@ public enum HorizonKind: String, CaseIterable, Sendable {
 public struct HorizonScene: View {
     public enum Fit: Sendable { case top, middle, bottom }
 
+    /// Where the dawn sun sits, in the scene's 400 × 300 space (Horizon2 `sunX`, `sunR`, `sunDy`), and whether the
+    /// clouds and the sparkle are drawn. The tour screens (16 Nov 2026) move a smaller sun off Xero's shoulder.
+    public struct DawnSun: Sendable, Equatable {
+        public var x: Double
+        public var radius: Double
+        public var drop: Double
+        public var clouds: Bool
+
+        public init(x: Double = 200, radius: Double = 70, drop: Double = 0, clouds: Bool = true) {
+            self.x = x
+            self.radius = radius
+            self.drop = drop
+            self.clouds = clouds
+        }
+
+        public static let standard = DawnSun()
+    }
+
     let kind: HorizonKind
     let clarity: Int
     let fit: Fit
     let animate: Bool
+    let sun: DawnSun
+    /// Keep the daylight scene in dark mode (a window onto the morning), instead of the midnight meadow.
+    let daylightInDark: Bool
     @State private var appeared = Date()
     private let motion = MotionPolicy()
     @Environment(\.colorScheme) private var colorScheme
 
-    public init(_ kind: HorizonKind, clarity: Int = 100, fit: Fit = .middle, animate: Bool = true) {
+    public init(_ kind: HorizonKind, clarity: Int = 100, fit: Fit = .middle, animate: Bool = true, sun: DawnSun = .standard,
+                daylightInDark: Bool = false) {
         self.kind = kind
         self.clarity = min(100, max(0, clarity))
         self.fit = fit
         self.animate = animate
+        self.sun = sun
+        self.daylightInDark = daylightInDark
     }
 
     public var body: some View {
-        if colorScheme == .dark {
+        if colorScheme == .dark && !daylightInDark {
             // v5 (kit.js `charSvg`): in dark mode every horizon is repainted as the midnight meadow, never a dimmed
             // day: the night scene keeps its moon, every other scene gets the pre-dawn glow.
             NightSky(dawn: kind != .night, animate: animate)
@@ -39,7 +63,7 @@ public struct HorizonScene: View {
 
     @ViewBuilder private var daylight: some View {
         let moving = animate && !motion.reduce
-        let kind = kind, clarity = clarity, fit = fit, appeared = appeared, dark = false
+        let kind = kind, clarity = clarity, fit = fit, appeared = appeared, dark = false, sun = sun
         TimelineView(.animation(paused: !moving)) { timeline in
             Canvas { ctx, size in
                 // preserveAspectRatio "xMid… slice": cover, centred horizontally.
@@ -55,7 +79,8 @@ public struct HorizonScene: View {
                 ctx.scaleBy(x: scale, y: scale)
                 let t = timeline.date.timeIntervalSinceReferenceDate
                 let sinceAppear = timeline.date.timeIntervalSince(appeared)
-                Horizon.draw(&ctx, kind: kind, clarity: clarity, time: t, sinceAppear: sinceAppear, animate: moving, dark: dark)
+                Horizon.draw(&ctx, kind: kind, clarity: clarity, time: t, sinceAppear: sinceAppear, animate: moving, dark: dark,
+                             sun: sun)
             }
         }
         .clipped()
@@ -163,7 +188,7 @@ enum Horizon {
     }
 
     static func draw(_ ctx: inout GraphicsContext, kind: HorizonKind, clarity: Int, time t: Double, sinceAppear: Double, animate on: Bool,
-                     dark: Bool = false) {
+                     dark: Bool = false, sun: HorizonScene.DawnSun = .standard) {
         let fog = 1 - Double(clarity) / 100
         let haze: UInt32 = kind == .night ? 0x8E80C9 : (kind == .dusk ? 0xE9D6F0 : 0xF3ECE3)
         func hazeRect(_ opacity: Double) {
@@ -195,12 +220,15 @@ enum Horizon {
 
         case .dawn:
             sky(&ctx, dawnSky)
-            glowDisc(&ctx, 200, 168, pulse, opacity: 0.6)
-            let sunY = 168 + (fog * 20).rounded()
+            let sunScale = sun.radius / 70
+            glowDisc(&ctx, sun.x, 168 + sun.drop, pulse * sunScale, opacity: 0.6)
+            let sunY = 168 + sun.drop + (fog * 20).rounded()
             // The sun rises 60 pt over 2.6 s when the scene appears, then stays.
             let rise = on ? ArtTrack.cubic(sinceAppear / 2.6, 0.2, 0.7, 0.2, 1) : 1
-            sunDisc(&ctx, 200, sunY + 60 * (1 - rise), 70)
-            clouds(&ctx, [(70, 86, 46, 14), (98, 74, 28, 14), (330, 62, 40, 12)], 0xFFF4E6, opacity: 0.85, period: 24, time: t, animate: on)
+            sunDisc(&ctx, sun.x, sunY + 60 * sunScale * (1 - rise), sun.radius)
+            if sun.clouds {
+                clouds(&ctx, [(70, 86, 46, 14), (98, 74, 28, 14), (330, 62, 40, 12)], 0xFFF4E6, opacity: 0.85, period: 24, time: t, animate: on)
+            }
             hazeRect(fog * 0.7)
             layer(&ctx, "M0 192 C60 162 120 172 180 187 C250 204 320 172 400 166 L400 300 L0 300 Z", 0xFF9D6E)
             let middle = "M0 222 C80 196 150 206 220 224 C290 240 350 216 400 206 L400 300 L0 300 Z"
@@ -208,9 +236,11 @@ enum Horizon {
             layer(&ctx, "M0 252 C70 233 140 241 210 256 C280 271 340 251 400 243 L400 300 L0 300 Z", 0xE85A3E)
             layer(&ctx, "M0 282 C90 267 180 273 260 283 C320 291 360 285 400 279 L400 300 L0 300 Z", 0xC2402A)
             ctx.fill(SVGPath.path(middle), with: .linearGradient(sheen, startPoint: CGPoint(x: 0, y: 196), endPoint: CGPoint(x: 0, y: 300)))
-            var star = ctx
-            star.opacity = twinkle(t, period: 2.2, animate: on)
-            star.fill(SVGPath.path("M330 34 Q330 46 342 46 Q330 46 330 58 Q330 46 318 46 Q330 46 330 34 Z"), with: .color(Color(hex: 0xFFF8EE)))
+            if sun.clouds {
+                var star = ctx
+                star.opacity = twinkle(t, period: 2.2, animate: on)
+                star.fill(SVGPath.path("M330 34 Q330 46 342 46 Q330 46 330 58 Q330 46 318 46 Q330 46 330 34 Z"), with: .color(Color(hex: 0xFFF8EE)))
+            }
 
         case .dusk:
             sky(&ctx, duskSky)

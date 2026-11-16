@@ -35,7 +35,7 @@ final class JourneyUITests: XCTestCase {
         tap(button(app, "Coffee"))
         tapSettled(app, "Continue")
         // Craving SOS, for the trigger just picked.
-        XCTAssert(app.staticTexts["If it's after coffee, you'll have this."].waitForExistence(timeout: 5), "The SOS screen didn't follow the triggers")
+        XCTAssert(app.staticTexts["In for 4, out for 6."].waitForExistence(timeout: 5), "The SOS screen didn't follow the triggers")
         snap(app, "03b-craving-sos")
         tapSettled(app, "Continue")
         // Name, then the reason: submitting the name moves to the reason field.

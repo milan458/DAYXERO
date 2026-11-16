@@ -538,22 +538,27 @@ All screens are 390×844 with props `theme` (light | dark), `motion` (bool) and 
 - "I already have an account".
 - Small print with **Terms and Privacy links** and the 18+ line.
 
-**How it works** · apricot (added 16 Nov 2026, code only: `TourScreens.swift`, no canvas artboard)
-- After Welcome. Title "How your quit works" with the hand-drawn mark on "works".
-- A dawn horizon card (h 148, radius 24). Its clarity starts at 20 and settles to 48, then 100, as the three stops land.
-- A road with three stops, text straight on the ground: Prep (open ring), Quit Day (the one large solid stop), Four weeks (small solid).
+**How it works** · apricot (added 16 Nov 2026; v5 from the canvas "DayXero onboarding: three new screens", critic best 8.3)
+- After Welcome. A full-bleed dawn (356 pt from the top) runs under the status bar; the header floats over it. Xero 112 on
+  the near ridge, the sun (r 70, x 254) to his right, no clouds; the art blends into the page through a paper-cut edge.
+  Dark: the pre-dawn night sky with a soft sun and a warm horizon band.
+- Title "How your quit works" with the mark on "works"; "Your sky brightens every day you stay clear."
+- Three stops: Prep (open ring), Quit Day (the sun, popping in), Four weeks (filled). The haze clears 20 → 48 → 100 as they land.
 - Nothing is asked. "Continue" is live from the start.
 
-**Craving SOS** · ocean (added 16 Nov 2026, code only)
-- After the triggers. Title "If it's after coffee, you'll have this." (`Trigger.situation` of their first trigger).
-- Three cream rings and the real "Breathe in" / "…and out" words on the shared 4 s / 6 s clock. No countdown, no prediction.
-- A navy card with Jelli at 40: "Jelli rides each wave with you and never judges. In prep you'll also plan for your biggest moments: coffee and stress."
-- On ocean the header's back button takes the navy card and the progress bar the bright green #2FD08A (the deep green is 1.0:1 on ocean).
+**Craving SOS** · ocean (v5, critic best 8.4)
+- After the triggers. Centred title "When a craving hits, / Jelli has you." (gold mark).
+- The SOS ring (248): Jelli 144 and "Breathe in" / "and out" inside, a cream arc filling on the 4 s in and unwinding on 6 s out.
+- "In for 4, out for 6. / Most cravings pass in a few minutes."
+- A glass tab-bar preview with the raised SOS button (its halo breathing), then "Craving SOS is one tap away in your tab bar."
+  and "In prep, you'll plan for coffee and stress." (their first two triggers).
 
-**Your day** · apricot over violet (added 16 Nov 2026, code only)
-- After NRT, before the Quit Day pick. Title "Each day opens and closes the same way".
-- Morning on apricot: Xero 88, "A ten-second pledge", and a card with the pledge line and their reason.
-- Night: a violet sheet with a paper-edge top settles up (Settle, 56 pt). Glim at 40, "A one-minute check-in", the four drawn mood faces as a picture (not selectable), "Miss one and nothing breaks. No guilt, ever."
+**Your day** · apricot (v5, critic best 8.1)
+- Before the Quit Day pick. Title "Each day opens and closes the same way" with the mark on "same way".
+- Two windows. Morning: a daylight dawn (kept in dark mode) with Xero 70; "Morning with Xero" and a "10-second hold" chip;
+  the pledge line and their reason. Night: the moonlit hill with Glim 70; "Night with Glim" and a "One minute" chip; the
+  four mood faces as a picture, Proud shown as the example answer. The night window settles up at 500 ms.
+- "Miss one and nothing breaks. No guilt, ever." centred under the windows.
 
 **F03 Questions** · lilac (chat)
 - Header: Xero avatar 40, a progress bar (green #0F6E43, 3/6 → 50%), close.
