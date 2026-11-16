@@ -41,6 +41,8 @@ struct LogEntryCounts: TimelineEntry {
     let daysClear: Int?
     let prepDay: Int?
     let items: [Item]
+    /// No active plan: the widget shows the subscribe state.
+    var locked = false
 }
 
 struct LogProvider: TimelineProvider {
@@ -60,6 +62,9 @@ struct LogProvider: TimelineProvider {
     }
 
     static func entry(at date: Date) -> LogEntryCounts {
+        guard PlanGate.isActive else {
+            return LogEntryCounts(date: date, isPrep: false, daysClear: nil, prepDay: nil, items: [], locked: true)
+        }
         guard let container = try? DataStore.makeContainer(),
               let profile = try? ModelContext(container).fetch(FetchDescriptor<UserProfile>()).first else {
             return LogEntryCounts(date: date, isPrep: false, daysClear: nil, prepDay: nil, items: [])
@@ -95,7 +100,9 @@ struct LogWidgetView: View {
     @Environment(\.widgetFamily) private var family
 
     var body: some View {
-        if entry.isPrep, !entry.items.isEmpty {
+        if entry.locked {
+            WidgetSubscribeView(onViolet: false)
+        } else if entry.isPrep, !entry.items.isEmpty {
             VStack(alignment: .leading, spacing: DX.Space.xs) {
                 Text("Prep day \(entry.prepDay ?? 1) · today").font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 700)).textCase(.uppercase).foregroundStyle(DX.Ground.reading.muted)
                 let columns = family == .systemMedium ? 2 : 1

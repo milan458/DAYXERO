@@ -41,6 +41,7 @@ struct LogWaterIntent: AppIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult & ProvidesDialog {
+        guard PlanGate.isActive else { return .result(dialog: "DayXero needs an active plan. Open the app to start one.") }
         let container = try SOSBridge.container ?? DataStore.makeContainer()
         let context = container.mainContext
         let drink = (try? context.fetch(FetchDescriptor<WaterProfile>()).first)?.selectedDrink ?? .glass
@@ -77,6 +78,7 @@ struct StartBreathingIntent: LiveActivityIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult {
+        guard PlanGate.isActive else { return .result() }
         let data = OrbData.bundled
         let pattern = data.pattern(UserDefaults.standard.string(forKey: "dx.breathePattern") ?? "box")
         let cycle = BreathPhase.allCases.reduce(0) { $0 + pattern.seconds($1) }
@@ -118,6 +120,7 @@ struct GuardWindowIntent: LiveActivityIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult {
+        guard PlanGate.isActive else { return .result() }
         let snapshot = WidgetSnapshot.load()
         let now = Date.now
         let window = snapshot?.nextWindow.flatMap { $0.start.timeIntervalSince(now) < 3 * 3600 ? $0 : nil }

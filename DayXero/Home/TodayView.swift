@@ -582,7 +582,7 @@ struct TodayView: View {
             case .fallback:
                 upgradeTitle = title
                 showUpgrade = true
-            case .unlocked: entitlement.grant()
+            case .unlocked: entitlement.grantFromElsewhere()
             case .closed: break
             }
         }

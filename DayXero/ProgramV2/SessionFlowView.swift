@@ -877,11 +877,14 @@ struct SessionCompletion: View {
         case .scheduled(.tomorrow): String(localized: "Next: \(next.label) · \(title), tomorrow")
         case let .scheduled(.dayXero(date)): String(localized: "Day Xero is \(date.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)))")
         case let .scheduled(.quitDay(days)): String(localized: "Next session on Day \(ProgramUnlock.counterDay(daysSinceQuit: days))")
+        case let .scheduled(.trialEnds(date)):
+            String(localized: "Next: \(next.label) · \(title), after your free trial, on \(date.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)))")
         default: nil
         }
     }
 
-    /// After the last free session (Prep 3), for someone without the full program: "Prep 4 starts the full program…".
+    /// After a free session, for someone without the full program. No session is free now (16 Nov 2026), so this
+    /// stays nil; kept for the recap's layout should a free taste come back.
     private var opensFullProgram: String? {
         guard FullProgram.isFree(sessionId: session.id), let next = ctx.store.content?.session(after: session.id),
               ProgramV2Access.needsUpgrade(next.id, isPro: entitlement.isPro) else { return nil }

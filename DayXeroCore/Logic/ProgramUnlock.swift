@@ -28,6 +28,8 @@ public struct ProgramUnlock: Sendable {
         case dayXero(Date)
         /// Opens this many days after Day Xero (the session's `minDay`). Shown with `counterDay`: "Unlocks on Day 11".
         case quitDay(Int)
+        /// Held until a free trial ends: the trial opens Prep 1 to 3 only. "Opens after your free trial, on Thu 19 Nov".
+        case trialEnds(Date)
     }
 
     /// The Today counter's number for the day that falls `daysSinceQuit` days after Day Xero. The counter calls
@@ -155,6 +157,24 @@ public struct ProgramUnlock: Sendable {
             previousFinished = nil
         }
         return out
+    }
+
+    /// The same states for someone in a free trial that ends at `trialEnd`: sessions outside `open` that would be
+    /// ready now, tomorrow, or on a Quit Day before the trial ends wait for the trial to end instead. A session
+    /// already started or finished is left alone, and so is anything that opens later anyway.
+    public static func holding(_ states: [(id: String, state: State)], untilTrialEnds trialEnd: Date,
+                               open: Set<String>) -> [(id: String, state: State)] {
+        states.map { item in
+            guard !open.contains(item.id) else { return item }
+            switch item.state {
+            case .available, .scheduled(.tomorrow):
+                return (item.id, .scheduled(.trialEnds(trialEnd)))
+            case let .scheduled(.dayXero(date)) where date < trialEnd:
+                return (item.id, .scheduled(.trialEnds(trialEnd)))
+            default:
+                return item
+            }
+        }
     }
 
     /// The session to show on Home: the one open or waiting next, nil once everything is finished.

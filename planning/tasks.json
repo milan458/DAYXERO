@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-11-04T18:53:13.073Z"
+    "updated": "2026-11-16T11:17:02.235Z"
   },
   "now": {
     "section": "S30",
@@ -3177,9 +3177,141 @@
           "completed": null
         }
       ]
+    },
+    {
+      "id": "S33",
+      "title": "Paywall after onboarding: yearly with a 3-day trial, or 3 months (Milan, 16 Nov)",
+      "goal": "Replaces MON-01. Free forever: counter, Craving SOS, calm tools with voice, logging and the if-then slip plan. Paid: the program path, the NRT schedule, trigger heatmaps. The paywall follows onboarding and can be closed. Yearly $39.99 with a 3-day trial, or 3 months $19.99 (India ₹1,499); monthly and lifetime are no longer sold. During the trial only Prep 1 to 3 open, one a day.",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S33.1",
+          "title": "Access rules: no free program session; trial opens Prep 1 to 3 only, the rest waits for the trial to end",
+          "status": "in_progress",
+          "notes": "FullProgram, ProgramUnlock.holding, ProgramStore.states, Entitlement.trialEndsAt. Built; waiting on CI.\n16 Nov: FullProgram and ProgramUnlock compiled and their tests passed in a Swift 6 Linux container (16 tests). Not yet built in Xcode: iOS CI runs 277 and 278 failed at start with no log, like every run since 15 Nov 10:09.",
+          "created": "2026-11-16T09:56:57.326Z",
+          "completed": null
+        },
+        {
+          "id": "S33.2",
+          "title": "First-run paywall after onboarding (Superwall onboarding_complete, DayXero's own as fallback); two plans; copy on every paywall, the plan reveal and Settings",
+          "status": "in_progress",
+          "notes": "Built; waiting on CI.\n16 Nov: syntax-checked only; needs the iOS build (CI runner failing at start).",
+          "created": "2026-11-16T09:56:57.364Z",
+          "completed": null
+        },
+        {
+          "id": "S33.3",
+          "title": "Audio carries on from where it was paused, after leaving the app or closing it",
+          "status": "in_progress",
+          "notes": "A saved place was never applied to a recording (the player didn't exist yet), so it restarted from the top. Deck listen cards now save their place too. Built; waiting on CI.\n16 Nov: syntax-checked only; needs the iOS build and a check on a phone.",
+          "created": "2026-11-16T09:56:57.396Z",
+          "completed": null
+        },
+        {
+          "id": "S33.4",
+          "title": "Milan: run the Store setup workflow for dayxero.quarterly ($19.99, India ₹1,499); check the yearly trial is 3 days in App Store Connect; build the onboarding_complete paywall in Superwall",
+          "status": "blocked",
+          "notes": "store_setup.py adds the product, RevenueCat package $rc_three_month and the India price; it can't change a trial that already exists.",
+          "created": "2026-11-16T09:56:57.426Z",
+          "completed": null
+        },
+        {
+          "id": "S33.5",
+          "title": "Hard paywall: no close button, shown whenever there's no active plan; free-tier copy removed",
+          "status": "in_progress",
+          "notes": "Milan, 16 Nov: non-closable. HardPaywall in RootView; PaywallView(closable: false). The last store answer is remembered so subscribers don't see it at launch. Test builds get a Demo mode link. Syntax-checked only.\nMilan, 16 Nov: SOS locked too. RootView only presents Craving SOS, the log sheet and the NRT sheet with an active plan, so the widget, Siri and dayxero:// links can't open them. Still open: Siri and widget actions that work without opening the app (log a use, water, Lock Screen breathing, guard window).\n16 Nov: Siri and widget actions locked too. PlanGate (app-group flag written by Entitlement) is checked by LogUseIntent, LogWaterIntent, StartBreathingIntent and GuardWindowIntent. Widgets still show the counter from their last snapshot.\n16 Nov: widgets blank to a subscribe state without a plan (WidgetSubscribeView on all six widgets, every size); the app reloads them when the plan changes. Syntax-checked only.",
+          "created": "2026-11-16T11:05:03.408Z",
+          "completed": null
+        }
+      ]
     }
   ],
   "log": [
+    {
+      "time": "2026-11-16T11:17:02.235Z",
+      "type": "note",
+      "message": "S33.5: 16 Nov: widgets blank to a subscribe state without a plan (WidgetSubscribeView on all six widgets, every size); the app reloads them when the plan changes. Syntax-checked only."
+    },
+    {
+      "time": "2026-11-16T11:15:35.818Z",
+      "type": "note",
+      "message": "S33.5: 16 Nov: Siri and widget actions locked too. PlanGate (app-group flag written by Entitlement) is checked by LogUseIntent, LogWaterIntent, StartBreathingIntent and GuardWindowIntent. Widgets still show the counter from their last snapshot."
+    },
+    {
+      "time": "2026-11-16T11:09:44.010Z",
+      "type": "note",
+      "message": "S33.5: Milan, 16 Nov: SOS locked too. RootView only presents Craving SOS, the log sheet and the NRT sheet with an active plan, so the widget, Siri and dayxero:// links can't open them. Still open: Siri and widget actions that work without opening the app (log a use, water, Lock Screen breathing, guard window)."
+    },
+    {
+      "time": "2026-11-16T11:05:03.454Z",
+      "type": "status",
+      "message": "S33.5 pending → in_progress"
+    },
+    {
+      "time": "2026-11-16T11:05:03.408Z",
+      "type": "task_added",
+      "message": "S33.5 added: Hard paywall: no close button, shown whenever there's no active plan; free-tier copy removed"
+    },
+    {
+      "time": "2026-11-16T10:01:04.385Z",
+      "type": "note",
+      "message": "S33.3: 16 Nov: syntax-checked only; needs the iOS build and a check on a phone."
+    },
+    {
+      "time": "2026-11-16T10:01:04.351Z",
+      "type": "note",
+      "message": "S33.2: 16 Nov: syntax-checked only; needs the iOS build (CI runner failing at start)."
+    },
+    {
+      "time": "2026-11-16T10:01:04.316Z",
+      "type": "note",
+      "message": "S33.1: 16 Nov: FullProgram and ProgramUnlock compiled and their tests passed in a Swift 6 Linux container (16 tests). Not yet built in Xcode: iOS CI runs 277 and 278 failed at start with no log, like every run since 15 Nov 10:09."
+    },
+    {
+      "time": "2026-11-16T09:56:57.513Z",
+      "type": "status",
+      "message": "S33.3 pending → in_progress"
+    },
+    {
+      "time": "2026-11-16T09:56:57.483Z",
+      "type": "status",
+      "message": "S33.2 pending → in_progress"
+    },
+    {
+      "time": "2026-11-16T09:56:57.457Z",
+      "type": "status",
+      "message": "S33.1 pending → in_progress"
+    },
+    {
+      "time": "2026-11-16T09:56:57.426Z",
+      "type": "task_added",
+      "message": "S33.4 added: Milan: run the Store setup workflow for dayxero.quarterly ($19.99, India ₹1,499); check the yearly trial is 3 days in App Store Connect; build the onboarding_complete paywall in Superwall"
+    },
+    {
+      "time": "2026-11-16T09:56:57.396Z",
+      "type": "task_added",
+      "message": "S33.3 added: Audio carries on from where it was paused, after leaving the app or closing it"
+    },
+    {
+      "time": "2026-11-16T09:56:57.364Z",
+      "type": "task_added",
+      "message": "S33.2 added: First-run paywall after onboarding (Superwall onboarding_complete, DayXero's own as fallback); two plans; copy on every paywall, the plan reveal and Settings"
+    },
+    {
+      "time": "2026-11-16T09:56:57.326Z",
+      "type": "task_added",
+      "message": "S33.1 added: Access rules: no free program session; trial opens Prep 1 to 3 only, the rest waits for the trial to end"
+    },
+    {
+      "time": "2026-11-16T09:56:57.294Z",
+      "type": "section_added",
+      "message": "S33 added: Paywall after onboarding: yearly with a 3-day trial, or 3 months (Milan, 16 Nov)"
+    },
     {
       "time": "2026-11-04T18:53:13.038Z",
       "type": "status",

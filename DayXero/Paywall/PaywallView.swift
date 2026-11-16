@@ -43,6 +43,8 @@ struct PaywallView: View {
     var onPurchaseStarted: () -> Void = {}
     /// The person's spend for the price anchor, where there's no profile yet (onboarding). Otherwise it's the profile's.
     var spend: PaywallModel.Spend?
+    /// False for the hard paywall: no close button and no "continue with free".
+    var closable = true
 
     @Query private var profiles: [UserProfile]
 
@@ -62,10 +64,11 @@ struct PaywallView: View {
             case .pending:
                 PaywallMessage(systemImage: "clock", tint: .accent, title: "Waiting for approval",
                                message: "Your purchase needs approval (for example, Ask to Buy). We'll unlock everything as soon as it goes through.",
-                               button: "Back to my day", action: onClose)
+                               button: closable ? "Back to my day" : "Back to the plans",
+                               action: leavePending)
             case .unlocked:
                 PaywallMessage(systemImage: "checkmark", tint: .sage, title: allSetTitle,
-                               message: unlockedMessage, button: "Back to my day",
+                               message: unlockedMessage, button: closable ? "Back to my day" : "Start",
                                action: onClose)
                     .sensoryFeedback(DX.Haptic.commit, trigger: model.phase)
             }
@@ -86,13 +89,22 @@ struct PaywallView: View {
         .sheet(isPresented: $showBilling) { BillingSheet().presentationDetents([.medium, .large]) }
     }
 
+    /// From "Waiting for approval": back to the app, or on the hard paywall back to the plans.
+    private func leavePending() {
+        if closable {
+            onClose()
+        } else {
+            Task { await model.load() }
+        }
+    }
+
     private var unlockedMessage: LocalizedStringKey {
         if let end = model.trialEndDate, model.selectedOption?.trialDays != nil {
             return model.canRemind
-                ? "Your free trial runs until \(end, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)). We'll remind you \(reminderLead) before it ends."
-                : "Your free trial runs until \(end, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated))."
+                ? "Your free trial runs until \(end, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)). Prep 1 to 3 open one a day. We'll remind you \(reminderLead) before it ends."
+                : "Your free trial runs until \(end, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)). Prep 1 to 3 open one a day."
         }
-        return "The full program is unlocked. Prep 4 is ready when you are."
+        return "The full program is unlocked."
     }
 
     /// "Milan, your plan is ready", or "Your plan is ready" when there's no name to use.
@@ -107,20 +119,11 @@ struct PaywallView: View {
         return "You're all set, \(name)"
     }
 
-    /// Where the trial ends against the Quit Day, said plainly whichever side it falls (MON-01).
+    /// What the free trial opens, said before anyone starts it: Prep 1 to 3, one a day (16 Nov 2026).
     @ViewBuilder
     private var trialNote: some View {
-        if let days = model.trialEndsAfterQuitDay {
-            Group {
-                if days > 0 {
-                    Text(days == 1 ? "Your trial runs past your Quit Day: it ends the day after."
-                         : "Your trial runs past your Quit Day: it ends \(days) days after.")
-                } else if days == 0 {
-                    Text("Your trial ends on your Quit Day.")
-                } else {
-                    Text(days == -1 ? "Your trial ends the day before your Quit Day." : "Your trial ends \(-days) days before your Quit Day.")
-                }
-            }
+        if model.selectedOption?.trialDays != nil {
+            Text("During the free trial, Prep 1 to 3 open one a day. The rest of the program opens when the trial ends.")
             .dxFont(14, weight: 400, style: .footnote)
             .foregroundStyle(PW.muted)
             .fixedSize(horizontal: false, vertical: true)
@@ -152,7 +155,7 @@ struct PaywallView: View {
                                 .fixedSize(horizontal: false, vertical: true)
                                 .accessibilityAddTraits(.isHeader)
                                 .dxArrive(0)
-                            Text("Craving SOS stays free, always.")
+                            Text("Everything for your \(quitDay, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)) Quit Day.")
                                 .dxType(.footnote).foregroundStyle(PW.muted)
                                 .dxArrive(1)
                         }
@@ -165,11 +168,11 @@ struct PaywallView: View {
                             .dxSettle(delay: 0.15)
                             .accessibilityHidden(true)
                     }
-                    // MON-01: what the full program adds, in the order the person meets it.
+                    // What the full program adds, in the order the person meets it (hard paywall, 16 Nov 2026).
                     VStack(alignment: .leading, spacing: 9) {
-                        included("Weeks 1 to 4 of coaching after Quit Day", index: 0)
-                        included("Jelli's voice in SOS and Glim's check-ins", index: 1)
-                        included("Prep 4 to 7 and your Day Xero badge", index: 2)
+                        included("Your prep days and your Day Xero badge", index: 0)
+                        included("Weeks 1 to 4 of coaching after Quit Day", index: 1)
+                        included("A 12-week NRT schedule and trigger heatmaps", index: 2)
                     }
                     .padding(.top, 18)
                     plans.padding(.top, 24)
@@ -219,6 +222,7 @@ struct PaywallView: View {
 
     private var header: some View {
         HStack {
+            if closable {
             Button {
                 model.dismissed()
                 onClose()
@@ -229,7 +233,8 @@ struct PaywallView: View {
                     .background(PW.surface, in: Circle())
             }
             .buttonStyle(.dxPress)
-            .accessibilityLabel(Text("Back. Continue with the free version"))
+            .accessibilityLabel(Text("Close"))
+            }
             Spacer()
         }
         .frame(height: 52)
@@ -249,7 +254,7 @@ struct PaywallView: View {
     private var plans: some View {
         VStack(spacing: 8) {
             if model.plans.isEmpty {
-                ForEach(0..<3, id: \.self) { i in
+                ForEach(0..<Plan.offered.count, id: \.self) { i in
                     RoundedRectangle(cornerRadius: 18, style: .continuous).fill(PW.surface).frame(height: i == 0 ? 80 : 52)
                 }
                 .accessibilityHidden(true)
@@ -313,6 +318,8 @@ struct PaywallView: View {
             switch option.plan {
             case .annual:
                 Text("\(Text("\(option.priceText) today").dxRun(14, weight: 700)), then every year until you cancel.")
+            case .quarterly:
+                Text("\(Text("\(option.priceText) today").dxRun(14, weight: 700)), then every 3 months until you cancel.")
             case .monthly:
                 Text("\(Text("\(option.priceText) today").dxRun(14, weight: 700)), then every month until you cancel.")
             case .lifetime:
@@ -329,6 +336,7 @@ struct PaywallView: View {
         case .annual:
             if let days = option.trialDays { return "Start my \(days)-day free trial" }
             return "Subscribe for \(option.priceText) a year"
+        case .quarterly: return "Subscribe for \(option.priceText) every 3 months"
         case .monthly: return "Subscribe for \(option.priceText) a month"
         case .lifetime: return "Buy lifetime for \(option.priceText)"
         }
@@ -368,15 +376,17 @@ struct PaywallView: View {
             header.padding(.horizontal, DX.Layout.gutter).padding(.top, DX.Space.xs).dxReadableColumn()
             Spacer()
             V4StateView(.error, systemImage: "exclamationmark.circle", title: "Couldn't reach the App Store",
-                        message: "Check your connection and try again. Prep 1 to 3, your counter and Craving SOS work without it.",
+                        message: "Check your connection and try again.",
                         actionTitle: "Try again") { Task { await model.load() } }
             Spacer()
-            Button("Continue with free") {
-                model.dismissed()
-                onClose()
+            if closable {
+                Button("Close") {
+                    model.dismissed()
+                    onClose()
+                }
+                .buttonStyle(.dx(.quiet, on: .apricot))
+                .padding(.bottom, DX.Space.xs)
             }
-            .buttonStyle(.dx(.quiet, on: .apricot))
-            .padding(.bottom, DX.Space.xs)
         }
     }
 }
@@ -436,6 +446,7 @@ private struct PlanRow: View {
     private var title: LocalizedStringKey {
         switch option.plan {
         case .annual: "Yearly"
+        case .quarterly: "3 months"
         case .monthly: "Monthly"
         case .lifetime: "Lifetime"
         }
@@ -444,6 +455,7 @@ private struct PlanRow: View {
     private var period: LocalizedStringKey {
         switch option.plan {
         case .annual: "a year"
+        case .quarterly: "every 3 months"
         case .monthly: "a month"
         case .lifetime: "once"
         }
@@ -627,11 +639,6 @@ struct BillingSheet: View {
         }
         .accessibilityElement(children: .combine)
     }
-}
-
-/// The line every screen that sells the full program shows about what stays free (S27.2, MON-01).
-enum FreeLine {
-    static var text: LocalizedStringKey { "Always free: Prep 1 to 3, your counter, Craving SOS and a 60-second breathing timer." }
 }
 
 /// "Costs 8 days of smoking" with where the number comes from (MON-03).

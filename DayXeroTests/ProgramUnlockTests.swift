@@ -47,6 +47,52 @@ struct ProgramUnlockTests {
         #expect(states(done, now: at(2, 5))["P3"] == .locked)
     }
 
+    // MARK: The free trial opens Prep 1 to 3 only (16 Nov 2026)
+
+    func held(_ records: [String: ProgramUnlock.Record], quitDay: Int = 10, trialEnds: Date, open: Set<String>, now: Date)
+        -> [String: ProgramUnlock.State] {
+        let all = unlock.states(records: records, quitDay: at(quitDay, 0), quitTimestamp: nil, now: now)
+        return Dictionary(uniqueKeysWithValues: ProgramUnlock.holding(all, untilTrialEnds: trialEnds, open: open).map { ($0.id, $0.state) })
+    }
+
+    @Test func duringTheTrialItsSessionsStillOpenOneADay() {
+        let done: [String: ProgramUnlock.Record] = ["P1": .init(startedAt: at(1, 9), completedAt: at(1, 9))]
+        let s = held(done, trialEnds: at(4, 9), open: ["P1", "P2"], now: at(1, 22))
+        #expect(s["P2"] == .scheduled(.tomorrow))
+        #expect(held(done, trialEnds: at(4, 9), open: ["P1", "P2"], now: at(2, 5))["P2"] == .available)
+    }
+
+    @Test func theSessionAfterTheTrialsOnesWaitsForTheTrialToEnd() {
+        let done: [String: ProgramUnlock.Record] = [
+            "P1": .init(completedAt: at(1)), "P2": .init(completedAt: at(2)),
+        ]
+        // P3 is outside the trial here: ready by the one-a-day rule, held until the trial ends.
+        #expect(held(done, trialEnds: at(4, 9), open: ["P1", "P2"], now: at(3))["P3"] == .scheduled(.trialEnds(at(4, 9))))
+        // Finished the same day: "tomorrow" would be a promise the trial can't keep.
+        #expect(held(done, trialEnds: at(4, 9), open: ["P1", "P2"], now: at(2, 13))["P3"] == .scheduled(.trialEnds(at(4, 9))))
+        // Further off, it stays locked as before.
+        #expect(held(done, trialEnds: at(4, 9), open: ["P1", "P2"], now: at(3))["DX"] == .locked)
+    }
+
+    @Test func aQuitDayInsideTheTrialWaitsForItsEndAndALaterOneKeepsItsDate() {
+        let prep: [String: ProgramUnlock.Record] = [
+            "P1": .init(completedAt: at(1)), "P2": .init(completedAt: at(2)), "P3": .init(completedAt: at(3)),
+        ]
+        let open: Set<String> = ["P1", "P2", "P3"]
+        #expect(held(prep, quitDay: 4, trialEnds: at(4, 9), open: open, now: at(3, 13))["DX"] == .scheduled(.trialEnds(at(4, 9))))
+        #expect(held(prep, quitDay: 4, trialEnds: at(4, 9), open: open, now: at(4, 5))["DX"] == .scheduled(.trialEnds(at(4, 9))))
+        #expect(held(prep, quitDay: 10, trialEnds: at(4, 9), open: open, now: at(3, 13))["DX"] == .scheduled(.dayXero(at(10, 0))))
+    }
+
+    @Test func aSessionAlreadyStartedIsNeverTakenBack() {
+        let records: [String: ProgramUnlock.Record] = [
+            "P1": .init(completedAt: at(1)), "P2": .init(completedAt: at(2)), "P3": .init(startedAt: at(3, 9)),
+        ]
+        let s = held(records, trialEnds: at(6), open: ["P1"], now: at(3, 10))
+        #expect(s["P2"] == .completed(at(2)))
+        #expect(s["P3"] == .inProgress)
+    }
+
     @Test func aStartedSessionIsInProgress() {
         let s = states(["P1": .init(startedAt: at(1, 9))], now: at(1, 10))
         #expect(s["P1"] == .inProgress)

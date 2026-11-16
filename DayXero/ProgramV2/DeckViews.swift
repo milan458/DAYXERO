@@ -628,7 +628,15 @@ struct DeckListenView: View {
             guard narrator == nil else { return }
             let transcript = paragraphs.joined(separator: " ")
             let n = LessonNarrator(transcript: transcript, url: recording, seconds: card.minutes * 60)
-            n.onFinish = { unlocked = true }
+            n.onFinish = {
+                unlocked = true
+                if let recording { UserDefaults.standard.removeObject(forKey: Self.positionKey(recording)) }
+            }
+            // Carry on from where this card was left (main, 16 Nov), unless it is a replay.
+            if let recording, !ctx.isReplay {
+                let saved = UserDefaults.standard.double(forKey: Self.positionKey(recording))
+                if saved > 1 { n.seek(to: saved) }
+            }
             narrator = n
             withAnimation(motion.reduce ? nil : .linear(duration: 0.01).delay(0.2)) { grown = true }
             Task {
@@ -636,7 +644,17 @@ struct DeckListenView: View {
                 if !Task.isCancelled, !ctx.isReplay { narrator?.play() }
             }
         }
-        .onDisappear { narrator?.stop() }
+        .onDisappear {
+            if let recording, let narrator, !narrator.finished {
+                UserDefaults.standard.set(narrator.elapsed(), forKey: Self.positionKey(recording))
+            }
+            narrator?.stop()
+        }
+    }
+
+    /// Where a listen card's place is kept, so leaving part-way and coming back carries on from the same point.
+    static func positionKey(_ recording: URL) -> String {
+        "dx.audioPosition.\(recording.deletingPathExtension().lastPathComponent)"
     }
 
     /// Light: apricot, warm toward the top. Dark: the same player at deep dusk with a warm glow behind the sun.

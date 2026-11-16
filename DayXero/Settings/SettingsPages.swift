@@ -748,6 +748,7 @@ struct SubscriptionSettingsView: View {
         guard let plan = current?.plan else { return entitlement.isPro ? "DayXero Pro" : "DayXero Free" }
         return switch plan {
         case .annual: String(localized: "DayXero Yearly")
+        case .quarterly: String(localized: "DayXero 3 months")
         case .monthly: String(localized: "DayXero Monthly")
         case .lifetime: String(localized: "DayXero Lifetime")
         }
@@ -756,6 +757,7 @@ struct SubscriptionSettingsView: View {
     private func unit(_ plan: Plan) -> LocalizedStringKey {
         switch plan {
         case .annual: "a year"
+        case .quarterly: "every 3 months"
         case .monthly: "a month"
         case .lifetime: "once"
         }
@@ -765,7 +767,7 @@ struct SubscriptionSettingsView: View {
         Paywalls.present(.upgradeFromSettings) { outcome in
             switch outcome {
             case .fallback: showPaywall = true
-            case .unlocked: entitlement.grant()
+            case .unlocked: entitlement.grantFromElsewhere()
             case .closed: break
             }
         }
@@ -777,7 +779,7 @@ struct SubscriptionSettingsView: View {
             restored = nil
             let found = (try? await entitlement.store.restore()) ?? false
             Analytics.track(.purchasesRestored(success: found))
-            if found { entitlement.grant() }
+            if found { entitlement.grantFromElsewhere() }
             current = await entitlement.store.currentPlan()
             restoring = false
             restored = found

@@ -714,8 +714,8 @@ private extension String {
 // MARK: F06 Your plan is ready · apricot (v5, 012)
 
 /// The Day Xero medallion as the hero, Xero cheering beside it on the near paper ground, the date, and the prep stamps.
-/// Prep 1 to 3 are free; the 7-day trial is offered at Prep 4 (MON-01), and the paywall carries its terms. Nothing is
-/// charged here.
+/// The hard paywall follows onboarding (16 Nov 2026): yearly with a 3-day trial, or 3 months, and it carries the terms.
+/// Nothing is charged here.
 ///
 /// Motion (012): the underline draws under "ready"; the far and near grounds fade in (150, 250 ms); the coin pops in
 /// (700 ms spring, from 300 ms) seated behind the ridge; Xero settles beside it (from 450 ms) and cheers, bobbing. The

@@ -58,6 +58,7 @@ struct SettingsSheet: View {
             if let plan = await entitlement.store.currentPlan()?.plan {
                 planName = switch plan {
                 case .annual: String(localized: "Yearly")
+                case .quarterly: String(localized: "3 months")
                 case .monthly: String(localized: "Monthly")
                 case .lifetime: String(localized: "Lifetime")
                 }
