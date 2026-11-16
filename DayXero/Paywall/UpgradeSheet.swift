@@ -65,9 +65,8 @@ struct UpgradeSheet: View {
                     .padding(.top, DX.Space.xs)
             }
             Button("See all plans", action: showAllPlans).buttonStyle(.dx(.quiet, on: .reading)).frame(maxWidth: .infinity)
-            // Every screen that sells a subscription names what stays free and links Terms and Privacy (S27.2, S27.1).
+            // Every screen that sells a subscription links Terms and Privacy (S27.1).
             VStack(spacing: 2) {
-                Text(FreeLine.text)
                 HStack(spacing: 6) {
                     Link("Terms", destination: AppLinks.terms).underline()
                     if let privacy = AppLinks.privacy {

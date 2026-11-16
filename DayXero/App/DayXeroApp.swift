@@ -64,8 +64,8 @@ struct DayXeroApp: App {
     }
 }
 
-/// Routes between onboarding, the first-run paywall and Home. The paywall follows onboarding (16 Nov 2026) and can
-/// be closed: the counter, Craving SOS, the calm tools and logging are free; the program, NRT and heatmaps aren't.
+/// Routes between onboarding, the hard paywall and Home (16 Nov 2026). Without an active plan the paywall is the
+/// only screen after onboarding, and it can't be closed.
 struct RootView: View {
     @Query private var profiles: [UserProfile]
     @AppStorage("dx.underAge") private var underAge = false
@@ -79,10 +79,8 @@ struct RootView: View {
     /// Onboarding saves the profile before its last screen (reminders). This keeps that screen up until it's done,
     /// instead of the new profile swapping Home in underneath it.
     @State private var finishingOnboarding = false
-    /// The paywall owed after onboarding. Stored, so closing the app on it doesn't skip it.
-    @AppStorage(FirstRunPaywall.key) private var firstRunPaywallDue = false
-    /// Once a purchase or restore starts there, the paywall stays up for its "You're all set" screen.
-    @State private var firstRunPurchaseStarted = false
+    /// Once a purchase or restore starts on the paywall, it stays up for its "You're all set" screen.
+    @State private var paywallPurchaseStarted = false
     /// The forest wordmark grows over whatever opens first, on a cold start only.
     @State private var launching = LaunchGrowOverlay.shouldPlay
     private let motion = MotionPolicy()
@@ -204,19 +202,16 @@ struct RootView: View {
         if underAge {
             UnderAgeScreen().background(Read4.background.ignoresSafeArea())
         } else if let profile = profiles.first, !finishingOnboarding {
-            if firstRunPaywallDue, !entitlement.isPro || firstRunPurchaseStarted {
-                FirstRunPaywall(profile: profile, onPurchaseStarted: { firstRunPurchaseStarted = true }) {
-                    withAnimation(motion.animation(.easeInOut(duration: 0.3))) { firstRunPaywallDue = false }
+            if !entitlement.isPro || paywallPurchaseStarted {
+                HardPaywall(profile: profile, onPurchaseStarted: { paywallPurchaseStarted = true }) {
+                    withAnimation(motion.animation(.easeInOut(duration: 0.3))) { paywallPurchaseStarted = false }
                 }
                 .transition(.opacity)
             } else {
                 home(profile)
             }
         } else {
-            OnboardingFlow(onSaving: {
-                finishingOnboarding = true
-                firstRunPaywallDue = !entitlement.isPro
-            }, onFinished: {
+            OnboardingFlow(onSaving: { finishingOnboarding = true }, onFinished: {
                 // "Start my prep week" queued Prep 1 (FirstLesson); Home opens it once it has faded in.
                 withAnimation(motion.animation(.easeInOut(duration: 0.3))) { finishingOnboarding = false }
             })
@@ -241,14 +236,13 @@ struct RootView: View {
     }
 }
 
-/// The paywall straight after onboarding (16 Nov 2026). Superwall's paywall when a campaign has one for
-/// `onboarding_complete`; DayXero's own otherwise. Closing it leads to Home with the free tools.
-struct FirstRunPaywall: View {
-    static let key = "dx.firstRunPaywallDue"
-
+/// The hard paywall (16 Nov 2026): shown whenever there's no active plan, straight after onboarding and after a
+/// subscription ends. There's no way past it but a purchase or a restore. Superwall's paywall shows first when a
+/// campaign has one for `onboarding_complete`; closing that one leads to DayXero's own, not into the app.
+struct HardPaywall: View {
     let profile: UserProfile
     let onPurchaseStarted: () -> Void
-    let onClose: () -> Void
+    let onDone: () -> Void
 
     @Environment(Entitlement.self) private var entitlement
     @State private var asked = false
@@ -260,7 +254,17 @@ struct FirstRunPaywall: View {
             if showOwn {
                 PaywallView(name: profile.name, quitDay: profile.quitDay,
                             model: PaywallModel(store: entitlement.store, entitlement: entitlement),
-                            onClose: onClose, onPurchaseStarted: onPurchaseStarted)
+                            onClose: onDone, onPurchaseStarted: onPurchaseStarted, closable: false)
+            }
+        }
+        .safeAreaInset(edge: .bottom) {
+            // Test builds only (debug and TestFlight): the way in without a purchase.
+            if DemoMode.isAvailable, showOwn {
+                Button("Demo mode (test builds)") { entitlement.setDemo(true) }
+                    .dxFont(12, weight: 500, style: .caption2)
+                    .foregroundStyle(Read4.muted)
+                    .buttonStyle(.plain)
+                    .padding(.bottom, 2)
             }
         }
         .task {
@@ -268,13 +272,11 @@ struct FirstRunPaywall: View {
             asked = true
             Paywalls.present(.onboardingComplete) { outcome in
                 switch outcome {
-                case .fallback:
-                    showOwn = true
                 case .unlocked:
                     entitlement.grantFromElsewhere()
-                    onClose()
-                case .closed:
-                    onClose()
+                    onDone()
+                case .fallback, .closed:
+                    showOwn = true
                 }
             }
         }

@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-11-16T10:01:04.385Z"
+    "updated": "2026-11-16T11:05:03.454Z"
   },
   "now": {
     "section": "S30",
@@ -3219,11 +3219,29 @@
           "notes": "store_setup.py adds the product, RevenueCat package $rc_three_month and the India price; it can't change a trial that already exists.",
           "created": "2026-11-16T09:56:57.426Z",
           "completed": null
+        },
+        {
+          "id": "S33.5",
+          "title": "Hard paywall: no close button, shown whenever there's no active plan; free-tier copy removed",
+          "status": "in_progress",
+          "notes": "Milan, 16 Nov: non-closable. HardPaywall in RootView; PaywallView(closable: false). The last store answer is remembered so subscribers don't see it at launch. Test builds get a Demo mode link. Syntax-checked only.",
+          "created": "2026-11-16T11:05:03.408Z",
+          "completed": null
         }
       ]
     }
   ],
   "log": [
+    {
+      "time": "2026-11-16T11:05:03.454Z",
+      "type": "status",
+      "message": "S33.5 pending → in_progress"
+    },
+    {
+      "time": "2026-11-16T11:05:03.408Z",
+      "type": "task_added",
+      "message": "S33.5 added: Hard paywall: no close button, shown whenever there's no active plan; free-tier copy removed"
+    },
     {
       "time": "2026-11-16T10:01:04.385Z",
       "type": "note",

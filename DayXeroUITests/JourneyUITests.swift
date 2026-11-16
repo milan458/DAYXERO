@@ -1,7 +1,7 @@
 import XCTest
 
 /// The whole journey on a real build (S16.1): onboarding → prep → Quit Day → first week → maintenance.
-/// The paywall follows onboarding (16 Nov 2026): the run starts the free trial there on the mock store.
+/// The hard paywall follows onboarding (16 Nov 2026): the run starts the free trial there on the mock store.
 /// The clock can't move forward in a UI test, so the later stages launch with a seeded scenario.
 /// Each step saves a screenshot: as a test attachment, and to $DX_SHOTS when CI sets it (S16.2).
 @MainActor
@@ -64,7 +64,7 @@ final class JourneyUITests: XCTestCase {
         XCTAssert(cta.waitForExistence(timeout: 10), "The paywall didn't follow onboarding")
         snap(app, "06-paywall")
         tapWhenStill(app, cta, name: "Start trial")
-        tapSettled(app, "Back to my day")
+        tapSettled(app, "Start")
         // Prep 1 opens by itself after the paywall; close it to reach Home.
         let closeLesson = button(app, "Your place is saved")
         XCTAssert(closeLesson.waitForExistence(timeout: 10), "Prep day 1 didn't open after onboarding")

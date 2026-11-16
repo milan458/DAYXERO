@@ -1,11 +1,10 @@
 # Free vs full program, price anchor, 90-second read (MON-01, MON-03, MON-04; 2 Nov 2026)
 
-> **Superseded on 16 Nov 2026 (Milan; S33 in `planning/tasks.json`).** The paywall now follows onboarding and can be
-> closed. Two plans: yearly ($39.99, 3-day trial) and 3 months ($19.99, India ₹1,499); monthly and lifetime are no
-> longer sold. **Free forever:** the counter, Craving SOS, the calm tools with Jelli's voice, logging and the if-then
-> slip plan. **Paid:** the program path (every session, Prep 1 included), the 12-week NRT schedule and trigger
-> heatmaps. During the free trial only Prep 1 to 3 open, one a day; the rest opens when the trial ends. The rule
-> still lives in `DayXeroCore/Logic/FullProgram.swift`. What follows is the 2 Nov design, kept for history.
+> **Superseded on 16 Nov 2026 (Milan; S33 in `planning/tasks.json`).** DayXero has a **hard paywall**: it follows
+> onboarding, shows whenever there is no active plan, and cannot be closed. Nothing in the app is free. Two plans:
+> yearly ($39.99, 3-day trial) and 3 months ($19.99, India ₹1,499); monthly and lifetime are no longer sold. During
+> the free trial only Prep 1 to 3 open, one a day; the rest opens when the trial ends. Test builds have a "Demo
+> mode" link under the paywall. What follows is the 2 Nov design, kept for history.
 
 The proposal: v1's paywall came too early (Prep Day 2) and v2 gave too much away. The fix is a free taste of prep,
 then a 7-day trial. This replaces **decision 15** (whole prep week free, trial sold only from Quit Day) and most of

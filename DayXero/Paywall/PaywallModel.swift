@@ -24,8 +24,14 @@ final class Entitlement {
     /// The trial's end for the same code, and for `ProgramStore`, which holds Prep 4 onwards until then.
     private(set) static var trialEndsNow: Date?
 
+    /// The last answer from the real store, so a subscriber opening the app (or offline) isn't shown the hard
+    /// paywall while the store is asked again. Stand-in stores (tests, screenshots) never read or write it.
+    private static let rememberedKey = "dx.proRemembered"
+    private var remembers: Bool { store is Subscriptions }
+
     init(store: PurchaseStore) {
         self.store = store
+        if store is Subscriptions { purchased = UserDefaults.standard.bool(forKey: Self.rememberedKey) }
         publish()
     }
 
@@ -81,6 +87,7 @@ final class Entitlement {
     }
 
     private func publish() {
+        if remembers { UserDefaults.standard.set(purchased, forKey: Self.rememberedKey) }
         Self.isProNow = isPro
         Self.trialEndsNow = demo ? nil : trialEndsAt
     }

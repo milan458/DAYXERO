@@ -74,7 +74,7 @@ struct QuitDayOffer: View {
                         .background(Read4.surface, in: Circle())
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel(Text("Close and continue with the free version"))
+                .accessibilityLabel(Text("Close"))
             }
             .padding(.horizontal, DX.Layout.gutter)
             .padding(.top, DX.Space.xs)
@@ -88,8 +88,6 @@ struct QuitDayOffer: View {
                         included("Weeks 1 to 4 of the program path")
                         included("A 12-week NRT schedule")
                         included("Trigger heatmaps")
-                        Text(FreeLine.text).dxType(.footnote).foregroundStyle(Read4.muted)
-                            .padding(.top, 2)
                     }
                     .v4Card()
                     .dxArrive(2)

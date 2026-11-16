@@ -10,9 +10,9 @@ enum AppLinks {
     static let privacy: URL? = URL(string: "https://dayxero.app/privacy/")
 }
 
-/// The full paywall (S3.1–S3.6): shown straight after onboarding (16 Nov 2026), and opened from "See all plans",
-/// Settings, Program, Today and the locked features. The close button is always there: the counter, Craving SOS,
-/// the calm tools and logging stay free. Two plans: yearly with the 3-day trial, and 3 months.
+/// The full paywall (S3.1–S3.6). As the hard paywall (16 Nov 2026) it has no close button: `closable` is false and
+/// the only ways on are a purchase or a restore. It can still be closed where it's a preview ("See all plans" in
+/// onboarding). Two plans: yearly with the 3-day trial, and 3 months.
 struct PaywallView: View {
     let name: String
     let quitDay: Date
@@ -22,6 +22,8 @@ struct PaywallView: View {
     var onPurchaseStarted: () -> Void = {}
     /// The person's spend for the price anchor, where there's no profile yet (onboarding). Otherwise it's the profile's.
     var spend: PaywallModel.Spend?
+    /// False for the hard paywall: no close button and no "continue with free".
+    var closable = true
 
     @Query private var profiles: [UserProfile]
 
@@ -41,10 +43,11 @@ struct PaywallView: View {
             case .pending:
                 PaywallMessage(systemImage: "clock", tint: .accent, title: "Waiting for approval",
                                message: "Your purchase needs approval (for example, Ask to Buy). We'll unlock everything as soon as it goes through.",
-                               button: "Back to my day", action: onClose)
+                               button: closable ? "Back to my day" : "Back to the plans",
+                               action: leavePending)
             case .unlocked:
                 PaywallMessage(systemImage: "checkmark", tint: .sage, title: allSetTitle,
-                               message: unlockedMessage, button: "Back to my day",
+                               message: unlockedMessage, button: closable ? "Back to my day" : "Start",
                                action: onClose)
                     .sensoryFeedback(DX.Haptic.commit, trigger: model.phase)
             }
@@ -63,6 +66,15 @@ struct PaywallView: View {
             await model.load()
         }
         .sheet(isPresented: $showBilling) { BillingSheet().presentationDetents([.medium, .large]) }
+    }
+
+    /// From "Waiting for approval": back to the app, or on the hard paywall back to the plans.
+    private func leavePending() {
+        if closable {
+            onClose()
+        } else {
+            Task { await model.load() }
+        }
     }
 
     private var unlockedMessage: LocalizedStringKey {
@@ -124,9 +136,7 @@ struct PaywallView: View {
                         included("Trigger heatmaps")
                     }
                     .padding(.top, DX.Space.s)
-                    Text(FreeLine.text)
-                        .dxFont(14, weight: 400, style: .footnote).foregroundStyle(Read4.muted)
-                        .padding(.bottom, DX.Space.s)
+                    Color.clear.frame(height: DX.Space.s)
                     anchor
                     plans
                     if typeSize.isAccessibilitySize {
@@ -157,6 +167,7 @@ struct PaywallView: View {
 
     private var header: some View {
         HStack {
+            if closable {
             Button {
                 model.dismissed()
                 onClose()
@@ -168,7 +179,8 @@ struct PaywallView: View {
                     .overlay(Circle().strokeBorder(Read4.hairline))
             }
             .buttonStyle(.plain)
-            .accessibilityLabel(Text("Close and continue with the free version"))
+            .accessibilityLabel(Text("Close"))
+            }
             Spacer()
             Button("Restore purchases") {
                 onPurchaseStarted()
@@ -301,15 +313,17 @@ struct PaywallView: View {
             header.padding(.horizontal, DX.Space.m).padding(.top, DX.Space.xs).dxReadableColumn()
             Spacer()
             V4StateView(.error, systemImage: "exclamationmark.circle", title: "Couldn't reach the App Store",
-                        message: "Check your connection and try again. Your counter, Craving SOS, the calm tools and logging work without it.",
+                        message: "Check your connection and try again.",
                         actionTitle: "Try again") { Task { await model.load() } }
             Spacer()
-            Button("Continue with free") {
-                model.dismissed()
-                onClose()
+            if closable {
+                Button("Close") {
+                    model.dismissed()
+                    onClose()
+                }
+                .buttonStyle(.dx(.quiet, on: .reading))
+                .padding(.bottom, DX.Space.xs)
             }
-            .buttonStyle(.dx(.quiet, on: .reading))
-            .padding(.bottom, DX.Space.xs)
         }
     }
 }
@@ -493,11 +507,6 @@ struct BillingSheet: View {
         }
         .accessibilityElement(children: .combine)
     }
-}
-
-/// The line every screen that sells the full program shows about what stays free (S27.2; list of 16 Nov 2026).
-enum FreeLine {
-    static var text: LocalizedStringKey { "Always free: your counter, Craving SOS, the calm tools and logging." }
 }
 
 /// "Costs 8 days of smoking" with where the number comes from (MON-03).

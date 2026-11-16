@@ -440,8 +440,8 @@ private extension String {
 
 // MARK: F06 Your plan is ready · mint
 
-/// The plan, what's free and what the full program adds. The paywall follows onboarding (16 Nov 2026): yearly with a
-/// 3-day trial, or 3 months. Nothing is charged here.
+/// The plan and what it includes. The hard paywall follows onboarding (16 Nov 2026): yearly with a 3-day trial, or
+/// 3 months. Nothing is charged here.
 struct PlanRevealScreen: View {
     let model: OnboardingModel
     let onContinue: () -> Void
@@ -556,8 +556,7 @@ struct PlanRevealScreen: View {
 
     private var includes: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("**Always free:** your counter, Craving SOS, the calm tools, logging and evening check-ins")
-            Text("**With the full program:** your prep days, your Day Xero launch kit, Weeks 1 to 4, a 12-week NRT schedule and trigger heatmaps")
+            Text("**Your plan includes:** your prep days, your Day Xero launch kit, Weeks 1 to 4, Craving SOS and the calm tools, your counter and logging, a 12-week NRT schedule and trigger heatmaps")
         }
         .dxType(.footnote)
         .foregroundStyle(ground.ink)
