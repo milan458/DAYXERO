@@ -1,5 +1,12 @@
 // Shared build settings. Keys live in Secrets.xcconfig, which git ignores.
 // Copy Secrets.example.xcconfig to Secrets.xcconfig and fill it in.
+
+// PostHog's project token (project 681922, US Cloud). Write-only and public by design, like RevenueCat's, so it
+// lives here and every Release build sends analytics without a build secret. It sits above the include so a
+// Secrets.xcconfig can still point a build at another project. Debug builds send nothing (see project.yml).
+DX_POSTHOG_API_KEY_RELEASE = phc_ykmrm3ZqFDyKKvLKy3Tz72txDue7aWTPxqLX3ViCyZwJ
+DX_POSTHOG_HOST = https:/$()/us.i.posthog.com
+
 #include? "Secrets.xcconfig"
 
 // RevenueCat's public SDK key. It ships inside the app by design, so it lives here rather than in Secrets.
