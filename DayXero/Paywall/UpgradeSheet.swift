@@ -2,8 +2,8 @@ import DayXeroCore
 import SwiftData
 import SwiftUI
 
-/// The free tier's upgrade point (S3.5): shown when someone taps a locked session, first Prep 4 after the free taste of
-/// Prep 1 to 3 (MON-01). Same honest terms as the paywall, one plan up front, all plans one tap away. The 7-day trial
+/// The free tier's upgrade point (S3.5): shown when someone without the full program taps a program session; none is
+/// free (16 Nov 2026). Same honest terms as the paywall, one plan up front, both plans one tap away. The 3-day trial
 /// is sold here whenever the Quit Day is, with the price in the person's own habit (MON-03).
 struct UpgradeSheet: View {
     let dayTitle: String
@@ -15,8 +15,8 @@ struct UpgradeSheet: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DX.Space.xs) {
-            Text("Keep going with \(dayTitle)").v4Text(.title).dxFont(24, weight: 700, style: .title2)
-            Text("Prep 1 to 3 were the free taste. The full program carries on from here: the rest of prep, your Day Xero launch kit and Weeks 1 to 4.")
+            Text("Unlock \(dayTitle)").v4Text(.title).dxFont(24, weight: 700, style: .title2)
+            Text("It's part of the full program: your prep days, your Day Xero launch kit and Weeks 1 to 4.")
                 .v4Text(.subtitle)
             if let option = model.plans.first(where: { $0.plan == .annual }), let anchor = model.anchor(for: option) {
                 PriceAnchorLine(anchor: anchor).padding(.top, DX.Space.s)
@@ -59,8 +59,8 @@ struct UpgradeSheet: View {
             } else if model.phase == .loading {
                 ProgressView().frame(maxWidth: .infinity).padding(.vertical, DX.Space.l)
             }
-            if let days = model.trialEndsAfterQuitDay, days > 0 {
-                Text(days == 1 ? "That's the day after your Quit Day, so Day Xero is covered." : "That's \(days) days after your Quit Day, so Day Xero is covered.")
+            if model.selectedOption?.trialDays != nil {
+                Text("During the free trial, Prep 1 to 3 open one a day. The rest opens when the trial ends.")
                     .v4Text(.subtitle)
                     .padding(.top, DX.Space.xs)
             }

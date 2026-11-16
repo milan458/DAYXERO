@@ -180,8 +180,7 @@ jobs:
           P="-dx.paywallPreview YES -dx.store"
           shoot dark large pw-annual-dark $P mock
           shoot light large pw-annual-light $P mock
-          shoot dark large pw-monthly-dark $P mock -dx.paywallPlan monthly
-          shoot dark large pw-lifetime-dark $P mock -dx.paywallPlan lifetime
+          shoot dark large pw-quarterly-dark $P mock -dx.paywallPlan quarterly
           shoot dark large pw-loading-dark $P slow
           shoot dark large pw-failed-dark $P failing
           shoot dark large pw-unlocked-dark $P mock -dx.paywallPhase unlocked

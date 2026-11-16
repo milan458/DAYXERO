@@ -60,9 +60,7 @@ struct SettingsSheet: View {
                 } header: {
                     Text("App")
                 } footer: {
-                    // MON-01: the voice is part of the full program; the setting is kept for when it's unlocked.
-                    Text(entitlement.isPro ? "Other haptics follow System Haptics in iPhone Settings."
-                         : "Other haptics follow System Haptics in iPhone Settings. Jelli's voice coaching comes with the full program.")
+                    Text("Other haptics follow System Haptics in iPhone Settings.")
                 }
                 if DemoMode.isAvailable {
                     Section {
@@ -564,12 +562,11 @@ struct SubscriptionSettingsView: View {
                     Text("DayXero Pro is active.")
                 } else {
                     Button("Unlock the full program") {
-                        // The trial is sold whenever the Quit Day is (MON-01), so Superwall's paywall is fine any day.
                         // Superwall's paywall when a campaign has one here; DayXero's otherwise (S20).
                         Paywalls.present(.upgradeFromSettings) { outcome in
                             switch outcome {
                             case .fallback: showPaywall = true
-                            case .unlocked: entitlement.grant()
+                            case .unlocked: entitlement.grantFromElsewhere()
                             case .closed: break
                             }
                         }
@@ -580,7 +577,7 @@ struct SubscriptionSettingsView: View {
                         restoring = true
                         let found = (try? await entitlement.store.restore()) ?? false
                         Analytics.track(.purchasesRestored(success: found))
-                        if found { entitlement.grant() }
+                        if found { entitlement.grantFromElsewhere() }
                         current = await entitlement.store.currentPlan()
                         restoreNote = found ? String(localized: "Purchases restored.") : String(localized: "No purchases found for this Apple ID.")
                         restoring = false
@@ -609,12 +606,14 @@ struct SubscriptionSettingsView: View {
         let price = plans.first { $0.plan == current.plan }?.priceText
         let name: String = switch current.plan {
         case .annual: String(localized: "Annual")
+        case .quarterly: String(localized: "3 months")
         case .monthly: String(localized: "Monthly")
         case .lifetime: String(localized: "Lifetime")
         }
         guard let price else { return name }
         return switch current.plan {
         case .annual: String(localized: "\(name) · \(price) a year")
+        case .quarterly: String(localized: "\(name) · \(price) every 3 months")
         case .monthly: String(localized: "\(name) · \(price) a month")
         case .lifetime: String(localized: "\(name) · \(price)")
         }

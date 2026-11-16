@@ -10,9 +10,9 @@ enum AppLinks {
     static let privacy: URL? = URL(string: "https://dayxero.app/privacy/")
 }
 
-/// The full paywall (S3.1–S3.6), opened from "See all plans", Settings, Program, Today and the locked features.
-/// There is no paywall after onboarding (S27.2): the close button is always there and nothing here is a first run.
-/// Every plan is sold whenever the Quit Day is; the 7-day trial starts the day it's bought (MON-01).
+/// The full paywall (S3.1–S3.6): shown straight after onboarding (16 Nov 2026), and opened from "See all plans",
+/// Settings, Program, Today and the locked features. The close button is always there: the counter, Craving SOS,
+/// the calm tools and logging stay free. Two plans: yearly with the 3-day trial, and 3 months.
 struct PaywallView: View {
     let name: String
     let quitDay: Date
@@ -68,10 +68,10 @@ struct PaywallView: View {
     private var unlockedMessage: LocalizedStringKey {
         if let end = model.trialEndDate, model.selectedOption?.trialDays != nil {
             return model.canRemind
-                ? "Your free trial runs until \(end, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)). We'll remind you \(reminderLead) before it ends."
-                : "Your free trial runs until \(end, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated))."
+                ? "Your free trial runs until \(end, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)). Prep 1 to 3 open one a day. We'll remind you \(reminderLead) before it ends."
+                : "Your free trial runs until \(end, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)). Prep 1 to 3 open one a day."
         }
-        return "The full program is unlocked. Prep 4 is ready when you are."
+        return "The full program is unlocked."
     }
 
     /// "Milan, your plan is ready", or "Your plan is ready" when there's no name to use.
@@ -86,20 +86,11 @@ struct PaywallView: View {
         return "You're all set, \(name)"
     }
 
-    /// Where the trial ends against the Quit Day, said plainly whichever side it falls (MON-01).
+    /// What the free trial opens, said before anyone starts it: Prep 1 to 3, one a day (16 Nov 2026).
     @ViewBuilder
     private var trialNote: some View {
-        if let days = model.trialEndsAfterQuitDay {
-            Group {
-                if days > 0 {
-                    Text(days == 1 ? "Your trial runs past your Quit Day: it ends the day after."
-                         : "Your trial runs past your Quit Day: it ends \(days) days after.")
-                } else if days == 0 {
-                    Text("Your trial ends on your Quit Day.")
-                } else {
-                    Text(days == -1 ? "Your trial ends the day before your Quit Day." : "Your trial ends \(-days) days before your Quit Day.")
-                }
-            }
+        if model.selectedOption?.trialDays != nil {
+            Text("During the free trial, Prep 1 to 3 open one a day. The rest of the program opens when the trial ends.")
             .dxFont(14, weight: 400, style: .footnote)
             .foregroundStyle(Read4.muted)
             .fixedSize(horizontal: false, vertical: true)
@@ -125,12 +116,11 @@ struct PaywallView: View {
                     Text(verbatim: Self.readyTitle(name: name)).v4Text(.title).accessibilityAddTraits(.isHeader)
                     Text("Everything for your \(quitDay, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated)) Quit Day.")
                         .v4Text(.subtitle)
-                    // MON-01: what the full program adds, in the order the person meets it.
+                    // What the full program adds, in the order the person meets it.
                     VStack(alignment: .leading, spacing: 7) {
-                        included("Prep 4 to 7 and your Day Xero launch kit")
+                        included("Your prep days and your Day Xero launch kit")
                         included("Weeks 1 to 4 of the program path")
-                        included("Jelli's voice coaching")
-                        included("If-then slip planner and a 12-week NRT schedule")
+                        included("A 12-week NRT schedule")
                         included("Trigger heatmaps")
                     }
                     .padding(.top, DX.Space.s)
@@ -203,7 +193,7 @@ struct PaywallView: View {
     private var plans: some View {
         VStack(spacing: DX.Space.xs) {
             if model.plans.isEmpty {
-                ForEach(0..<3, id: \.self) { _ in
+                ForEach(0..<Plan.offered.count, id: \.self) { _ in
                     RoundedRectangle(cornerRadius: 20, style: .continuous).fill(Read4.surface).frame(height: 60)
                 }
                 .accessibilityHidden(true)
@@ -253,6 +243,8 @@ struct PaywallView: View {
                 } else {
                     Text("\(Text("\(option.priceText) today").bold()), then every year until you cancel.")
                 }
+            case .quarterly:
+                Text("\(Text("\(option.priceText) today").bold()), then every 3 months until you cancel.")
             case .monthly:
                 Text("\(Text("\(option.priceText) today").bold()), then every month until you cancel.")
             case .lifetime:
@@ -269,6 +261,7 @@ struct PaywallView: View {
         case .annual:
             if let days = option.trialDays { return "Start my \(days)-day free trial" }
             return "Subscribe for \(option.priceText) a year"
+        case .quarterly: return "Subscribe for \(option.priceText) every 3 months"
         case .monthly: return "Subscribe for \(option.priceText) a month"
         case .lifetime: return "Buy lifetime for \(option.priceText)"
         }
@@ -308,7 +301,7 @@ struct PaywallView: View {
             header.padding(.horizontal, DX.Space.m).padding(.top, DX.Space.xs).dxReadableColumn()
             Spacer()
             V4StateView(.error, systemImage: "exclamationmark.circle", title: "Couldn't reach the App Store",
-                        message: "Check your connection and try again. Prep 1 to 3, your counter and Craving SOS work without it.",
+                        message: "Check your connection and try again. Your counter, Craving SOS, the calm tools and logging work without it.",
                         actionTitle: "Try again") { Task { await model.load() } }
             Spacer()
             Button("Continue with free") {
@@ -378,6 +371,7 @@ private struct PlanRow: View {
     private var title: LocalizedStringKey {
         switch option.plan {
         case .annual: "Yearly"
+        case .quarterly: "3 months"
         case .monthly: "Monthly"
         case .lifetime: "Lifetime"
         }
@@ -392,6 +386,7 @@ private struct PlanRow: View {
                 return "\(perMonth) a month"
             }
             return "Billed yearly"
+        case .quarterly: return "Billed every 3 months"
         case .monthly: return "Cancel anytime"
         case .lifetime: return "Pay once"
         }
@@ -400,6 +395,7 @@ private struct PlanRow: View {
     private var period: LocalizedStringKey {
         switch option.plan {
         case .annual: "per year"
+        case .quarterly: "per 3 months"
         case .monthly: "per month"
         case .lifetime: "one time"
         }
@@ -499,9 +495,9 @@ struct BillingSheet: View {
     }
 }
 
-/// The line every screen that sells the full program shows about what stays free (S27.2, MON-01).
+/// The line every screen that sells the full program shows about what stays free (S27.2; list of 16 Nov 2026).
 enum FreeLine {
-    static var text: LocalizedStringKey { "Always free: Prep 1 to 3, your counter, Craving SOS and a 60-second breathing timer." }
+    static var text: LocalizedStringKey { "Always free: your counter, Craving SOS, the calm tools and logging." }
 }
 
 /// "Costs 8 days of smoking" with where the number comes from (MON-03).

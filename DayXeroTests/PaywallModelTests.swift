@@ -7,6 +7,8 @@ import Testing
 final class StubStore: PurchaseStore {
     var plans: [PlanOption] = [
         PlanOption(plan: .annual, price: 39.99, currencyCode: "USD", priceText: "$39.99", perMonthText: "$3.33", trialDays: 3),
+        PlanOption(plan: .quarterly, price: 19.99, currencyCode: "USD", priceText: "$19.99", perMonthText: nil, trialDays: nil),
+        // Still in the store, no longer sold: the paywall leaves them out.
         PlanOption(plan: .monthly, price: 9.99, currencyCode: "USD", priceText: "$9.99", perMonthText: nil, trialDays: nil),
         PlanOption(plan: .lifetime, price: 79.99, currencyCode: "USD", priceText: "$79.99", perMonthText: nil, trialDays: nil),
     ]
@@ -46,15 +48,15 @@ struct PaywallModelTests {
     @Test func noTrialDateForPlansWithoutATrial() async {
         let (model, _) = make(StubStore())
         await model.load()
-        model.select(.monthly)
+        model.select(.quarterly)
         #expect(model.trialEndDate == nil)
     }
 
     @Test func savingIsRoundedDownSoItsNeverOverstated() async {
         let (model, _) = make(StubStore())
         await model.load()
-        // 39.99 vs 12 × 9.99 = 119.88 → 66.6% → shown as 66%.
-        #expect(model.annualSavingPercent == 66)
+        // 39.99 vs 4 × 19.99 = 79.96 → 49.99% → shown as 49%.
+        #expect(model.annualSavingPercent == 49)
     }
 
     @Test func noSavingShownWhenItIsntReal() async {
@@ -76,7 +78,7 @@ struct PaywallModelTests {
     @Test func purchaseUnlocks() async {
         let (model, entitlement) = make(StubStore())
         await model.load()
-        model.select(.lifetime)
+        model.select(.quarterly)
         await model.purchase()
         #expect(model.phase == .unlocked)
         #expect(entitlement.isPro)
@@ -104,13 +106,13 @@ struct PaywallModelTests {
         #expect(!entitlement.isPro)
     }
 
-    // MARK: The trial is sold whenever the Quit Day is (MON-01)
+    // MARK: Yearly and 3 months are sold whenever the Quit Day is
 
-    @Test func beforeQuitDayEveryPlanIsSoldWithItsTrial() async {
+    @Test func onlyYearlyAndThreeMonthsAreSold() async {
         let (model, _) = make(StubStore())
         model.quitDay = now.addingTimeInterval(7 * 86_400)
         await model.load()
-        #expect(model.plans.map(\.plan) == [.annual, .monthly, .lifetime])
+        #expect(model.plans.map(\.plan) == [.annual, .quarterly])
         #expect(model.selected == .annual)
         #expect(model.trialEndDate == now.addingTimeInterval(3 * 86_400))
         // The stub's 3-day trial ends 4 days before a Quit Day a week away; the paywall says so.
@@ -122,27 +124,25 @@ struct PaywallModelTests {
         model.quitDay = now.addingTimeInterval(86_400)
         await model.load()
         #expect(model.trialEndsAfterQuitDay == 2)
-        model.select(.monthly)
+        model.select(.quarterly)
         #expect(model.trialEndsAfterQuitDay == nil)
     }
 
     @Test func withoutAQuitDayThereIsNoComparison() async {
         let (model, _) = make(StubStore())
         await model.load()
-        #expect(model.plans.count == 3)
+        #expect(model.plans.count == 2)
         #expect(model.trialEndsAfterQuitDay == nil)
     }
 
-    /// Prep 4 in a 7-day prep: a 7-day trial bought that day ends 3 days after the Quit Day (MON-01).
-    @Test func aSevenDayTrialFromPrepFourEndsJustAfterQuitDay() {
+    /// A 3-day trial started with a week of prep to go ends 4 days before the Quit Day.
+    @Test func aThreeDayTrialEndsBeforeAWeekOfPrepDoes() {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = TimeZone(identifier: "UTC")!
-        let prep1 = now
-        let quitDay = calendar.date(byAdding: .day, value: 7, to: prep1)!
-        let prep4 = FullProgram.earliestPaywallDay(firstDay: prep1, calendar: calendar)
-        #expect(prep4 == calendar.date(byAdding: .day, value: 3, to: calendar.startOfDay(for: prep1)))
-        let end = FullProgram.trialEnd(startingOn: prep4, calendar: calendar)
-        #expect(FullProgram.trialEndsDaysAfterQuitDay(trialEnd: end, quitDay: quitDay, calendar: calendar) == 3)
+        let quitDay = calendar.date(byAdding: .day, value: 7, to: now)!
+        let end = FullProgram.trialEnd(startingOn: now, calendar: calendar)
+        #expect(end == calendar.date(byAdding: .day, value: 3, to: now))
+        #expect(FullProgram.trialEndsDaysAfterQuitDay(trialEnd: end, quitDay: quitDay, calendar: calendar) == -4)
     }
 
     // MARK: Price anchor (MON-03)
@@ -177,27 +177,57 @@ struct PaywallModelTests {
         #expect(PaywallView.readyTitle(name: "  ") == "Your plan is ready")
     }
 
-    /// MON-01: Prep 1 to 3 are the free taste; Prep 4 onwards, Day Xero and the weeks need the full program.
-    @Test func freeSessionsArePrepOneToThree() {
-        #expect(ProgramV2Access.freeSessions == ["P1", "P2", "P3"])
-        #expect(!ProgramV2Access.needsUpgrade("P3", isPro: false))
+    /// 16 Nov 2026: no program session is free; the calm tools' voice and the if-then plan are, NRT and heatmaps aren't.
+    @Test func theProgramNeedsTheFullProgram() {
+        #expect(ProgramV2Access.freeSessions.isEmpty)
+        #expect(ProgramV2Access.needsUpgrade("P1", isPro: false))
         #expect(ProgramV2Access.needsUpgrade("P4", isPro: false))
         #expect(ProgramV2Access.needsUpgrade("DX", isPro: false))
         #expect(ProgramV2Access.needsUpgrade("W1D1", isPro: false))
-        #expect(!ProgramV2Access.needsUpgrade("P4", isPro: true))
+        #expect(!ProgramV2Access.needsUpgrade("P1", isPro: true))
         // A session finished while subscribed stays open for replay.
         #expect(!FullProgram.needsUpgrade(sessionId: "P5", isPro: false, completed: true))
-        #expect(FullProgram.Feature.allCases.allSatisfy { FullProgram.has($0, isPro: true) && !FullProgram.has($0, isPro: false) })
+        #expect(FullProgram.Feature.allCases.allSatisfy { FullProgram.has($0, isPro: true) })
+        #expect(FullProgram.has(.voiceCoaching, isPro: false))
+        #expect(FullProgram.has(.ifThenPlanner, isPro: false))
+        #expect(!FullProgram.has(.nrtScheduler, isPro: false))
+        #expect(!FullProgram.has(.triggerHeatmaps, isPro: false))
     }
 
-    /// The old day-based program follows the same line: prep days 1 to 3 free, the rest needs Pro.
-    @Test func prepDaysOneToThreeAreFree() {
+    /// The old day-based program follows the same line: no prep day is free.
+    @Test func noPrepDayIsFree() {
         let outline = (1...4).map { ProgramDayID(phase: .prep, index: $0) } + [ProgramDayID(phase: .quit, index: 1)]
         let engine = ProgramEngine(outline: outline)
-        #expect(FreeTier.canOpen(outline[0], engine: engine, completed: [], isPro: false))
-        #expect(FreeTier.canOpen(outline[2], engine: engine, completed: Set(outline[0...1]), isPro: false))
-        #expect(!FreeTier.canOpen(outline[3], engine: engine, completed: Set(outline[0...2]), isPro: false))
+        #expect(!FreeTier.canOpen(outline[0], engine: engine, completed: [], isPro: false))
+        #expect(FreeTier.canOpen(outline[0], engine: engine, completed: [], isPro: true))
         #expect(FreeTier.canOpen(outline[3], engine: engine, completed: Set(outline[0...2]), isPro: true))
+        #expect(!FreeTier.isFree(outline[0], in: outline))
         #expect(!FreeTier.isFree(outline[4], in: outline))
+    }
+
+    // MARK: The trial (16 Nov 2026)
+
+    /// The trial's end is kept while it runs, for `ProgramStore` to hold Prep 4 onwards. Set and cleared in one go:
+    /// it's shared state, and other suites read program states.
+    @Test func aTrialKeepsItsEndAndAPaidPlanHasNone() {
+        let (_, entitlement) = make(StubStore())
+        let end = now.addingTimeInterval(3 * 86_400)
+        entitlement.grant(trialEndsAt: end)
+        #expect(entitlement.isPro)
+        #expect(entitlement.trialEndsAt == end)
+        #expect(Entitlement.trialEndsNow == end)
+        entitlement.grant()
+        #expect(entitlement.isPro)
+        #expect(entitlement.trialEndsAt == nil)
+        #expect(Entitlement.trialEndsNow == nil)
+    }
+
+    @Test func threeMonthsHasNoTrialToWaitOut() async {
+        let (model, entitlement) = make(StubStore())
+        await model.load()
+        model.select(.quarterly)
+        await model.purchase()
+        #expect(entitlement.isPro)
+        #expect(entitlement.trialEndsAt == nil)
     }
 }

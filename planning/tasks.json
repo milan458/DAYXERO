@@ -2,7 +2,7 @@
   "meta": {
     "project": "DayXero v1",
     "source": "docs/DAYXERO_V1_HANDOFF.md",
-    "updated": "2026-11-04T18:53:13.073Z"
+    "updated": "2026-11-16T09:56:57.513Z"
   },
   "now": {
     "section": "S30",
@@ -3177,9 +3177,93 @@
           "completed": null
         }
       ]
+    },
+    {
+      "id": "S33",
+      "title": "Paywall after onboarding: yearly with a 3-day trial, or 3 months (Milan, 16 Nov)",
+      "goal": "Replaces MON-01. Free forever: counter, Craving SOS, calm tools with voice, logging and the if-then slip plan. Paid: the program path, the NRT schedule, trigger heatmaps. The paywall follows onboarding and can be closed. Yearly $39.99 with a 3-day trial, or 3 months $19.99 (India ₹1,499); monthly and lifetime are no longer sold. During the trial only Prep 1 to 3 open, one a day.",
+      "signoff": {
+        "state": "not_started",
+        "history": []
+      },
+      "mockups": [],
+      "tasks": [
+        {
+          "id": "S33.1",
+          "title": "Access rules: no free program session; trial opens Prep 1 to 3 only, the rest waits for the trial to end",
+          "status": "in_progress",
+          "notes": "FullProgram, ProgramUnlock.holding, ProgramStore.states, Entitlement.trialEndsAt. Built; waiting on CI.",
+          "created": "2026-11-16T09:56:57.326Z",
+          "completed": null
+        },
+        {
+          "id": "S33.2",
+          "title": "First-run paywall after onboarding (Superwall onboarding_complete, DayXero's own as fallback); two plans; copy on every paywall, the plan reveal and Settings",
+          "status": "in_progress",
+          "notes": "Built; waiting on CI.",
+          "created": "2026-11-16T09:56:57.364Z",
+          "completed": null
+        },
+        {
+          "id": "S33.3",
+          "title": "Audio carries on from where it was paused, after leaving the app or closing it",
+          "status": "in_progress",
+          "notes": "A saved place was never applied to a recording (the player didn't exist yet), so it restarted from the top. Deck listen cards now save their place too. Built; waiting on CI.",
+          "created": "2026-11-16T09:56:57.396Z",
+          "completed": null
+        },
+        {
+          "id": "S33.4",
+          "title": "Milan: run the Store setup workflow for dayxero.quarterly ($19.99, India ₹1,499); check the yearly trial is 3 days in App Store Connect; build the onboarding_complete paywall in Superwall",
+          "status": "blocked",
+          "notes": "store_setup.py adds the product, RevenueCat package $rc_three_month and the India price; it can't change a trial that already exists.",
+          "created": "2026-11-16T09:56:57.426Z",
+          "completed": null
+        }
+      ]
     }
   ],
   "log": [
+    {
+      "time": "2026-11-16T09:56:57.513Z",
+      "type": "status",
+      "message": "S33.3 pending → in_progress"
+    },
+    {
+      "time": "2026-11-16T09:56:57.483Z",
+      "type": "status",
+      "message": "S33.2 pending → in_progress"
+    },
+    {
+      "time": "2026-11-16T09:56:57.457Z",
+      "type": "status",
+      "message": "S33.1 pending → in_progress"
+    },
+    {
+      "time": "2026-11-16T09:56:57.426Z",
+      "type": "task_added",
+      "message": "S33.4 added: Milan: run the Store setup workflow for dayxero.quarterly ($19.99, India ₹1,499); check the yearly trial is 3 days in App Store Connect; build the onboarding_complete paywall in Superwall"
+    },
+    {
+      "time": "2026-11-16T09:56:57.396Z",
+      "type": "task_added",
+      "message": "S33.3 added: Audio carries on from where it was paused, after leaving the app or closing it"
+    },
+    {
+      "time": "2026-11-16T09:56:57.364Z",
+      "type": "task_added",
+      "message": "S33.2 added: First-run paywall after onboarding (Superwall onboarding_complete, DayXero's own as fallback); two plans; copy on every paywall, the plan reveal and Settings"
+    },
+    {
+      "time": "2026-11-16T09:56:57.326Z",
+      "type": "task_added",
+      "message": "S33.1 added: Access rules: no free program session; trial opens Prep 1 to 3 only, the rest waits for the trial to end"
+    },
+    {
+      "time": "2026-11-16T09:56:57.294Z",
+      "type": "section_added",
+      "message": "S33 added: Paywall after onboarding: yearly with a 3-day trial, or 3 months (Milan, 16 Nov)"
+    },
     {
       "time": "2026-11-04T18:53:13.038Z",
       "type": "status",

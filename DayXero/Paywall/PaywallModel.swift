@@ -10,6 +10,8 @@ import UserNotifications
 final class Entitlement {
     /// Bought, restored or in the trial.
     private(set) var purchased = false
+    /// When the free trial ends, while the person is in one. The trial opens Prep 1 to 3 only (16 Nov 2026).
+    private(set) var trialEndsAt: Date?
     /// Demo mode unlocks everything without a purchase (TestFlight and debug builds only).
     private(set) var demo = DemoMode.isOn
     let store: PurchaseStore
@@ -19,31 +21,73 @@ final class Entitlement {
     /// The latest answer, for code that runs outside the SwiftUI environment, such as a voice cue in Craving SOS
     /// (which can be presented above the app's environment) or the notification plan.
     private(set) static var isProNow = DemoMode.isOn
+    /// The trial's end for the same code, and for `ProgramStore`, which holds Prep 4 onwards until then.
+    private(set) static var trialEndsNow: Date?
 
     init(store: PurchaseStore) {
         self.store = store
-        Self.isProNow = isPro
+        publish()
     }
 
     func refresh() async {
         purchased = await store.hasPro()
-        Self.isProNow = isPro
+        if purchased {
+            trialEndsAt = await store.trialEnd()
+        } else {
+            trialEndsAt = nil
+        }
+        publish()
     }
 
-    func grant() {
+    /// On coming back to the app: picks up a trial that has become a paid plan, or a purchase made elsewhere. It
+    /// only takes access away once a trial it knew about is over and the store says nothing is active; anything
+    /// else waits for the next launch, so it can't undo a purchase the store is still confirming.
+    func refreshOnReturn(now: Date = .now) async {
+        guard await store.hasPro() else {
+            guard purchased, let end = trialEndsAt, end <= now else { return }
+            purchased = false
+            trialEndsAt = nil
+            publish()
+            return
+        }
+        let end = await store.trialEnd()
         purchased = true
-        Self.isProNow = isPro
+        trialEndsAt = end
+        publish()
+    }
+
+    /// After a purchase or restore on DayXero's paywall. `trialEndsAt` is the trial's end when it started one.
+    func grant(trialEndsAt: Date? = nil) {
+        purchased = true
+        self.trialEndsAt = trialEndsAt
+        publish()
+    }
+
+    /// After a purchase or restore somewhere that doesn't say what was bought (Superwall's paywall, Settings):
+    /// unlocks at once, then asks the store whether it's a trial.
+    func grantFromElsewhere() {
+        purchased = true
+        publish()
+        Task {
+            trialEndsAt = await store.trialEnd()
+            publish()
+        }
     }
 
     func setDemo(_ on: Bool) {
         UserDefaults.standard.set(on, forKey: DemoMode.key)
         demo = DemoMode.isOn
+        publish()
+    }
+
+    private func publish() {
         Self.isProNow = isPro
+        Self.trialEndsNow = demo ? nil : trialEndsAt
     }
 }
 
-/// Jelli's voice coaching is part of the full program (MON-01). Free, the same sessions run with subtitles and
-/// haptics, silent. Anyone who turned Voice guidance off in Settings stays silent either way.
+/// Jelli's voice coaching in Craving SOS and the calm tools is free (16 Nov 2026; it was paid under MON-01).
+/// Anyone who turned Voice guidance off in Settings stays silent.
 @MainActor
 enum VoiceCoaching {
     static func speaks(_ voiceGuidance: Bool) -> Bool {
@@ -70,8 +114,7 @@ final class PaywallModel {
     var notice: LocalizedStringResource?
     /// Whether we can keep the "we'll remind you" promise (notifications allowed or not yet asked).
     private(set) var canRemind = true
-    /// The Quit Day, so a paywall can say where the trial ends against it. Every plan is sold whenever the Quit Day is:
-    /// the 7-day trial starts at the Prep 4 paywall (MON-01), replacing the hold until Quit Day (decision 15).
+    /// The Quit Day, so a paywall can say where the trial ends against it. Every plan is sold whenever the Quit Day is.
     var quitDay: Date?
     /// The person's usual nicotine spend, for the price anchor (MON-03). nil hides it.
     var spend: Spend?
@@ -131,13 +174,13 @@ final class PaywallModel {
                                 spendCurrency: spend.currencyCode, products: spend.products)
     }
 
-    /// Yearly's saving against twelve months of monthly, only when it's a real saving in this region.
+    /// Yearly's saving against four lots of 3 months, only when it's a real saving in this region.
     var annualSavingPercent: Int? {
         guard let annual = plans.first(where: { $0.plan == .annual }),
-              let monthly = plans.first(where: { $0.plan == .monthly }),
-              monthly.price > 0 else { return nil }
-        let yearOfMonthly = NSDecimalNumber(decimal: monthly.price * 12).doubleValue
-        let saving = 1 - NSDecimalNumber(decimal: annual.price).doubleValue / yearOfMonthly
+              let quarterly = plans.first(where: { $0.plan == .quarterly }),
+              quarterly.price > 0 else { return nil }
+        let yearOfQuarters = NSDecimalNumber(decimal: quarterly.price * 4).doubleValue
+        let saving = 1 - NSDecimalNumber(decimal: annual.price).doubleValue / yearOfQuarters
         let percent = Int((saving * 100).rounded(.down))
         return percent >= 5 ? percent : nil
     }
@@ -147,7 +190,9 @@ final class PaywallModel {
         phase = .loading
         if trackView { Analytics.track(.paywallViewed) }
         do {
-            plans = try await store.loadPlans()
+            // Only yearly and 3 months are sold; a monthly or lifetime product still in the offering isn't shown.
+            plans = try await store.loadPlans().filter { Plan.offered.contains($0.plan) }
+            guard !plans.isEmpty else { throw StoreError.noPlans }
             if !plans.contains(where: { $0.plan == selected }), let first = plans.first { selected = first.plan }
             phase = .ready
         } catch {
@@ -160,7 +205,7 @@ final class PaywallModel {
     }
 
     #if DEBUG
-    /// For screenshots: `-dx.paywallPlan monthly|lifetime` and `-dx.paywallPhase unlocked|pending`.
+    /// For screenshots: `-dx.paywallPlan quarterly` and `-dx.paywallPhase unlocked|pending`.
     func applyDebugOverrides() {
         let defaults = UserDefaults.standard
         if let plan = defaults.string(forKey: "dx.paywallPlan").flatMap({ raw in Plan.allCases.first { "\($0)" == raw } }) {
@@ -187,7 +232,7 @@ final class PaywallModel {
         do {
             switch try await store.purchase(option.plan) {
             case .purchased:
-                entitlement.grant()
+                entitlement.grant(trialEndsAt: trialEndDate)
                 if let end = trialEndDate, TrialReminder.wanted {
                     await TrialReminder.schedule(trialEndsAt: end, price: option.priceText, now: now())
                 }
@@ -210,7 +255,8 @@ final class PaywallModel {
             let found = try await store.restore()
             Analytics.track(.purchasesRestored(success: found))
             if found {
-                entitlement.grant()
+                let trialEnd = await store.trialEnd()
+                entitlement.grant(trialEndsAt: trialEnd)
                 phase = .unlocked
             } else {
                 notice = "No purchases found. Make sure you're signed in with the Apple ID you bought with."

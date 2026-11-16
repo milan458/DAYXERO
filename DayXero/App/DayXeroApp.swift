@@ -64,8 +64,8 @@ struct DayXeroApp: App {
     }
 }
 
-/// Routes between onboarding and Home. There's no paywall after onboarding: the prep week and Day Xero are free,
-/// and the trial is offered on Quit Day after the Day Xero session (decisions 15 and 23).
+/// Routes between onboarding, the first-run paywall and Home. The paywall follows onboarding (16 Nov 2026) and can
+/// be closed: the counter, Craving SOS, the calm tools and logging are free; the program, NRT and heatmaps aren't.
 struct RootView: View {
     @Query private var profiles: [UserProfile]
     @AppStorage("dx.underAge") private var underAge = false
@@ -79,6 +79,10 @@ struct RootView: View {
     /// Onboarding saves the profile before its last screen (reminders). This keeps that screen up until it's done,
     /// instead of the new profile swapping Home in underneath it.
     @State private var finishingOnboarding = false
+    /// The paywall owed after onboarding. Stored, so closing the app on it doesn't skip it.
+    @AppStorage(FirstRunPaywall.key) private var firstRunPaywallDue = false
+    /// Once a purchase or restore starts there, the paywall stays up for its "You're all set" screen.
+    @State private var firstRunPurchaseStarted = false
     /// The forest wordmark grows over whatever opens first, on a cold start only.
     @State private var launching = LaunchGrowOverlay.shouldPlay
     private let motion = MotionPolicy()
@@ -139,6 +143,8 @@ struct RootView: View {
                 WidgetSync.refresh(in: modelContext, isPro: entitlement.isPro)
                 NRTReminders.refresh(profile: profiles.first)
                 if let profile = profiles.first { Paywalls.setAttributes(for: profile) }
+                // A trial that has turned into a paid plan, or one that ended unpaid, shows up here.
+                Task { await entitlement.refreshOnReturn() }
                 DailyReminders.isPro = entitlement.isPro
                 DailyReminders.refresh(in: modelContext)
                 SOSBridge.openSession = { [sos] source in sos.open(source: source) }
@@ -198,24 +204,79 @@ struct RootView: View {
         if underAge {
             UnderAgeScreen().background(Read4.background.ignoresSafeArea())
         } else if let profile = profiles.first, !finishingOnboarding {
-            #if DEBUG
-            if let session = UserDefaults.standard.string(forKey: "dx.openSession") {
-                // Screenshots: a program v2 session, at the step given by -dx.sessionStep.
-                SessionFlowView(sessionId: session, profile: profile)
-            } else {
-                HomeView(profile: profile)
-                    .transition(.opacity)
-            }
-            #else
-            HomeView(profile: profile)
+            if firstRunPaywallDue, !entitlement.isPro || firstRunPurchaseStarted {
+                FirstRunPaywall(profile: profile, onPurchaseStarted: { firstRunPurchaseStarted = true }) {
+                    withAnimation(motion.animation(.easeInOut(duration: 0.3))) { firstRunPaywallDue = false }
+                }
                 .transition(.opacity)
-            #endif
+            } else {
+                home(profile)
+            }
         } else {
-            OnboardingFlow(onSaving: { finishingOnboarding = true }, onFinished: {
+            OnboardingFlow(onSaving: {
+                finishingOnboarding = true
+                firstRunPaywallDue = !entitlement.isPro
+            }, onFinished: {
                 // "Start my prep week" queued Prep 1 (FirstLesson); Home opens it once it has faded in.
                 withAnimation(motion.animation(.easeInOut(duration: 0.3))) { finishingOnboarding = false }
             })
             .transition(.opacity)
+        }
+    }
+
+    @ViewBuilder
+    private func home(_ profile: UserProfile) -> some View {
+        #if DEBUG
+        if let session = UserDefaults.standard.string(forKey: "dx.openSession") {
+            // Screenshots: a program v2 session, at the step given by -dx.sessionStep.
+            SessionFlowView(sessionId: session, profile: profile)
+        } else {
+            HomeView(profile: profile)
+                .transition(.opacity)
+        }
+        #else
+        HomeView(profile: profile)
+            .transition(.opacity)
+        #endif
+    }
+}
+
+/// The paywall straight after onboarding (16 Nov 2026). Superwall's paywall when a campaign has one for
+/// `onboarding_complete`; DayXero's own otherwise. Closing it leads to Home with the free tools.
+struct FirstRunPaywall: View {
+    static let key = "dx.firstRunPaywallDue"
+
+    let profile: UserProfile
+    let onPurchaseStarted: () -> Void
+    let onClose: () -> Void
+
+    @Environment(Entitlement.self) private var entitlement
+    @State private var asked = false
+    @State private var showOwn = false
+
+    var body: some View {
+        ZStack {
+            Read4.background.ignoresSafeArea()
+            if showOwn {
+                PaywallView(name: profile.name, quitDay: profile.quitDay,
+                            model: PaywallModel(store: entitlement.store, entitlement: entitlement),
+                            onClose: onClose, onPurchaseStarted: onPurchaseStarted)
+            }
+        }
+        .task {
+            guard !asked else { return }
+            asked = true
+            Paywalls.present(.onboardingComplete) { outcome in
+                switch outcome {
+                case .fallback:
+                    showOwn = true
+                case .unlocked:
+                    entitlement.grantFromElsewhere()
+                    onClose()
+                case .closed:
+                    onClose()
+                }
+            }
         }
     }
 }

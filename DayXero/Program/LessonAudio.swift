@@ -32,6 +32,8 @@ final class LessonNarrator: NSObject, AVSpeechSynthesizerDelegate {
     /// When the on-device voice last started a word, and how long that word is.
     @ObservationIgnored private var wordAt: Date?
     @ObservationIgnored private var wordLength = 0
+    /// Where a seek is heading until the player gets there, so the position reads right in between.
+    @ObservationIgnored private var seekTarget: Double?
 
     init(transcript: String, url: URL?, seconds: Int) {
         sentences = Self.split(transcript)
@@ -125,6 +127,7 @@ final class LessonNarrator: NSObject, AVSpeechSynthesizerDelegate {
     /// Seconds into the audio, at normal speed.
     func elapsed(at now: Date = .now) -> Double {
         if finished { return total }
+        if let seekTarget, player != nil { return min(max(seekTarget, 0), total) }
         if let player { return min(max(player.currentTime().seconds.isFinite ? player.currentTime().seconds : 0, 0), total) }
         guard starts.indices.contains(index) else { return 0 }
         let into = playing ? (sentenceStartedAt.map { now.timeIntervalSince($0) * speed } ?? 0) : 0
@@ -166,8 +169,17 @@ final class LessonNarrator: NSObject, AVSpeechSynthesizerDelegate {
 
     func seek(to seconds: Double) {
         finished = false
+        // A recording's player is made on first play. Make it now, or a place saved earlier would be dropped and
+        // the audio would start again from the top.
+        if player == nil, let url { makePlayer(url) }
         if let player {
-            player.seek(to: CMTime(seconds: seconds, preferredTimescale: 600))
+            seekTarget = seconds
+            player.seek(to: CMTime(seconds: seconds, preferredTimescale: 600)) { [weak self] _ in
+                Task { @MainActor [weak self] in
+                    guard let self, self.seekTarget == seconds else { return }
+                    self.seekTarget = nil
+                }
+            }
             index = sentence(at: seconds)
         } else {
             index = sentence(at: seconds)
@@ -194,6 +206,7 @@ final class LessonNarrator: NSObject, AVSpeechSynthesizerDelegate {
         if let observer { player?.removeTimeObserver(observer) }
         observer = nil
         player = nil
+        seekTarget = nil
         try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
     }
 
@@ -204,7 +217,7 @@ final class LessonNarrator: NSObject, AVSpeechSynthesizerDelegate {
         self.player = player
         observer = player.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.25, preferredTimescale: 600), queue: .main) { [weak self] time in
             MainActor.assumeIsolated {
-                guard let self else { return }
+                guard let self, self.seekTarget == nil else { return }
                 let t = time.seconds
                 if t.isFinite { self.index = self.sentence(at: t) }
                 if t >= self.total - 0.3, self.playing { self.reachedEnd() }
@@ -281,6 +294,9 @@ struct LessonAudioStep: View {
 
     @State private var narrator: LessonNarrator
     @State private var scrubbing: Double?
+    @Environment(\.scenePhase) private var scenePhase
+    /// The saved place is restored once, not every time the step comes back on screen.
+    @State private var restored = false
     /// Where to start, for a session resumed mid-audio.
     private var startAt: Double = 0
     /// Called every few seconds and on pause with the position, so a closed session resumes there.
@@ -329,9 +345,19 @@ struct LessonAudioStep: View {
         }
         .onAppear {
             narrator.onFinish = { finished() }
-            if startAt > 0 { narrator.seek(to: startAt) }
+            guard !restored else { return }
+            restored = true
+            // A place saved at the very end means it was heard through: start from the top, not on the last second.
+            if startAt > 0, startAt < narrator.total - 1 { narrator.seek(to: startAt) }
         }
         .onChange(of: narrator.playing) { _, playing in if !playing { onPosition?(narrator.elapsed()) } }
+        .onChange(of: scenePhase) { _, phase in
+            // Leaving the app pauses the audio and saves the place, so coming back carries on from the same point.
+            guard phase == .background else { return }
+            let position = narrator.elapsed()
+            if narrator.playing { narrator.pause() }
+            onPosition?(position)
+        }
         .task(id: narrator.playing) {
             // Every few seconds while playing, so a force-quit loses at most a moment.
             while narrator.playing, !Task.isCancelled {

@@ -105,6 +105,7 @@ enum DailyReminders {
         case let .scheduled(.dayXero(date)): date
         case let .scheduled(.quitDay(n)): store.profile.progress?.quitTimestamp
             .flatMap { clock.calendar.date(byAdding: .day, value: n, to: clock.day(containing: $0)) }
+        case let .scheduled(.trialEnds(date)): clock.day(containing: date)
         case .locked, .completed: nil
         }
         return day.map { [($0, name, store.minutes(of: session))] } ?? []
