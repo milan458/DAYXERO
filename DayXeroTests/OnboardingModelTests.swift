@@ -61,6 +61,8 @@ struct OnboardingModelTests {
     @Test func progressNeverMovesBackWhenASecondProductIsPicked() {
         let model = makeModel()
         model.next()
+        #expect(model.step == .howItWorks)
+        model.next()
         #expect(model.step == .products)
         let before = model.progress
         model.products = [.cigarettes]
