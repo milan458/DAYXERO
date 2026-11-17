@@ -666,6 +666,7 @@ struct DeckListenView: View {
             let n = LessonNarrator(transcript: transcript, url: audio, seconds: card.minutes * 60)
             starts = audio == nil ? [] : loadStarts()
             n.onFinish = { unlocked = true }
+            n.nowPlayingTitle = ctx.text(card.title)
             narrator = n
             withAnimation(motion.reduce ? nil : .linear(duration: 0.01).delay(0.2)) { grown = true }
             Task {

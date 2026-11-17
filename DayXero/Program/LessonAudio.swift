@@ -1,5 +1,6 @@
 import AVFoundation
 import DayXeroCore
+import MediaPlayer
 import NaturalLanguage
 import SwiftUI
 
@@ -32,6 +33,13 @@ final class LessonNarrator: NSObject, AVSpeechSynthesizerDelegate {
     /// When the on-device voice last started a word, and how long that word is.
     @ObservationIgnored private var wordAt: Date?
     @ObservationIgnored private var wordLength = 0
+    /// The lesson's name on the lock screen and in Control Centre.
+    @ObservationIgnored var nowPlayingTitle = "DayXero"
+    /// The lock screen's play, pause and skip buttons, kept so they can be taken away again.
+    @ObservationIgnored private var remotes: [(command: MPRemoteCommand, target: Any)] = []
+    @ObservationIgnored private var interruption: NSObjectProtocol?
+    /// True while a call or another app has taken the sound from a lesson that was playing.
+    @ObservationIgnored private var interrupted = false
 
     init(transcript: String, url: URL?, seconds: Int) {
         sentences = Self.split(transcript)
@@ -166,6 +174,7 @@ final class LessonNarrator: NSObject, AVSpeechSynthesizerDelegate {
         } else {
             speak(from: index)
         }
+        publish()
     }
 
     func pause() {
@@ -173,6 +182,7 @@ final class LessonNarrator: NSObject, AVSpeechSynthesizerDelegate {
         player?.pause()
         stopSpeech()
         sentenceStartedAt = nil
+        publish()
     }
 
     func skip(_ seconds: Double) {
@@ -188,6 +198,7 @@ final class LessonNarrator: NSObject, AVSpeechSynthesizerDelegate {
             index = sentence(at: seconds)
             if playing { speak(from: index) }
         }
+        publish(at: seconds)
     }
 
     func jump(toSentence i: Int) {
@@ -202,6 +213,7 @@ final class LessonNarrator: NSObject, AVSpeechSynthesizerDelegate {
         if playing {
             if player != nil { player?.rate = Float(speed) } else { speak(from: index) }
         }
+        publish()
     }
 
     func stop() {
@@ -209,6 +221,11 @@ final class LessonNarrator: NSObject, AVSpeechSynthesizerDelegate {
         if let observer { player?.removeTimeObserver(observer) }
         observer = nil
         player = nil
+        for remote in remotes { remote.command.removeTarget(remote.target) }
+        remotes = []
+        if let interruption { NotificationCenter.default.removeObserver(interruption) }
+        interruption = nil
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
         try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
     }
 
@@ -276,6 +293,7 @@ final class LessonNarrator: NSObject, AVSpeechSynthesizerDelegate {
         sentenceStartedAt = nil
         index = max(sentences.count - 1, 0)
         player?.pause()
+        publish()
         onFinish?()
     }
 
@@ -283,6 +301,63 @@ final class LessonNarrator: NSObject, AVSpeechSynthesizerDelegate {
         let session = AVAudioSession.sharedInstance()
         try? session.setCategory(.playback, mode: .spokenAudio)
         try? session.setActive(true)
+        connectLockScreen()
+    }
+
+    // MARK: Locked phone
+
+    /// The lesson keeps playing with the phone locked (the app's `audio` background mode). This puts its name and
+    /// position on the lock screen, answers the play, pause and skip buttons there and on headphones, and picks up
+    /// again after a phone call.
+    private func connectLockScreen() {
+        guard remotes.isEmpty else { return }
+        let centre = MPRemoteCommandCenter.shared()
+        func add(_ command: MPRemoteCommand, _ action: @escaping @MainActor (LessonNarrator) -> Void) {
+            command.isEnabled = true
+            let target = command.addTarget { [weak self] _ in
+                Task { @MainActor in
+                    if let self { action(self) }
+                }
+                return .success
+            }
+            remotes.append((command, target))
+        }
+        add(centre.playCommand) { if !$0.playing { $0.play() } }
+        add(centre.pauseCommand) { if $0.playing { $0.pause() } }
+        add(centre.togglePlayPauseCommand) { $0.toggle() }
+        centre.skipForwardCommand.preferredIntervals = [15]
+        centre.skipBackwardCommand.preferredIntervals = [15]
+        add(centre.skipForwardCommand) { $0.skip(15) }
+        add(centre.skipBackwardCommand) { $0.skip(-15) }
+
+        interruption = NotificationCenter.default.addObserver(forName: AVAudioSession.interruptionNotification, object: nil,
+                                                              queue: .main) { [weak self] note in
+            let kind = (note.userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt).flatMap { AVAudioSession.InterruptionType(rawValue: $0) }
+            let options = AVAudioSession.InterruptionOptions(rawValue: note.userInfo?[AVAudioSessionInterruptionOptionKey] as? UInt ?? 0)
+            MainActor.assumeIsolated {
+                guard let self else { return }
+                if kind == .began {
+                    self.interrupted = self.playing
+                    if self.playing { self.pause() }
+                } else if kind == .ended {
+                    if self.interrupted, options.contains(.shouldResume) { self.play() }
+                    self.interrupted = false
+                }
+            }
+        }
+    }
+
+    /// Tells the lock screen what is playing and where it has got to.
+    private func publish(at seconds: Double? = nil) {
+        guard !remotes.isEmpty else { return }
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = [
+            MPMediaItemPropertyTitle: nowPlayingTitle,
+            MPMediaItemPropertyArtist: "DayXero",
+            MPMediaItemPropertyPlaybackDuration: total,
+            MPNowPlayingInfoPropertyElapsedPlaybackTime: seconds ?? elapsed(),
+            MPNowPlayingInfoPropertyPlaybackRate: playing ? speed : 0,
+            MPNowPlayingInfoPropertyDefaultPlaybackRate: 1.0,
+        ]
     }
 }
 
@@ -380,6 +455,7 @@ struct LessonAudioStep: View {
         .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         .onAppear {
             narrator.onFinish = { finished() }
+            narrator.nowPlayingTitle = title
             if startAt > 0 { narrator.seek(to: startAt) }
         }
         .task {
