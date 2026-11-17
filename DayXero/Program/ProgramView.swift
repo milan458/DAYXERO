@@ -169,6 +169,7 @@ struct ProgramView: View {
                 let opens: Date = switch wait {
                 case .tomorrow: clock.calendar.date(byAdding: .day, value: 1, to: today) ?? today
                 case let .dayXero(date): clock.startOfDate(date)
+                case let .trialEnds(date): clock.startOfDate(date)
                 case let .quitDay(days): clock.calendar.date(byAdding: .day, value: days, to: clock.startOfDate(profile.quitDay)) ?? today
                 }
                 cursor = opens
