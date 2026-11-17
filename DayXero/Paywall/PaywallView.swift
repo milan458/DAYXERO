@@ -124,7 +124,7 @@ struct PaywallView: View {
     private var trialNote: some View {
         if model.selectedOption?.trialDays != nil {
             Text("During the free trial, Prep 1 to 3 open one a day. The rest of the program opens when the trial ends.")
-            .dxFont(14, weight: 400, style: .footnote)
+            .dxFace(.body, 14, weight: 400)
             .foregroundStyle(PW.muted)
             .fixedSize(horizontal: false, vertical: true)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -326,7 +326,7 @@ struct PaywallView: View {
                 Text("\(Text("\(option.priceText) once.").dxRun(14, weight: 700)) No subscription, nothing to cancel.")
             }
         }
-        .dxFont(14, weight: 400, style: .footnote)
+        .dxFace(.body, 14, weight: 400)
         .foregroundStyle(PW.muted)
     }
 
@@ -567,8 +567,8 @@ private struct PaywallMessage: View {
                 .frame(width: 76, height: 76)
                 .background(tint == .sage ? PW.accent : PW.accentSoft, in: Circle())
                 .accessibilityHidden(true)
-            Text(title).v4Text(.title).multilineTextAlignment(.center)
-            Text(message).v4Text(.subtitle).multilineTextAlignment(.center)
+            Text(title).dxType(.title).foregroundStyle(DX.Ground.reading.ink).multilineTextAlignment(.center)
+            Text(message).dxType(.footnote).foregroundStyle(DX.Ground.reading.muted).multilineTextAlignment(.center)
             Spacer()
             Button(button, action: action).buttonStyle(.dx(.primary, on: .apricot))
         }
@@ -585,10 +585,10 @@ private struct NoticeBanner: View {
     var body: some View {
         HStack(alignment: .top, spacing: 10) {
             Image(systemName: "exclamationmark.circle").foregroundStyle(PW.amber)
-            Text(text).dxFont(14, weight: 400, style: .footnote).foregroundStyle(PW.ink)
+            Text(text).dxFace(.body, 14, weight: 400).foregroundStyle(PW.ink)
                 .frame(maxWidth: .infinity, alignment: .leading)
             Button(action: onDismiss) {
-                Image(systemName: "xmark").font(.system(size: 11, weight: .semibold)).foregroundStyle(PW.muted)
+                DXIcon(.close, size: 11, weight: 2.6).foregroundStyle(PW.muted)
             }
             .buttonStyle(.plain)
             .accessibilityLabel(Text("Dismiss"))
@@ -608,17 +608,17 @@ struct BillingSheet: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DX.Space.xs) {
-                Text("How billing works").v4Text(.title).dxFont(24, weight: 700, style: .title2)
-                Text("Plain and simple. Apple handles every payment.").v4Text(.subtitle)
-                Text("Cancel in two taps").v4Text(.micro).padding(.top, DX.Space.m)
+                Text("How billing works").dxType(.title).foregroundStyle(DX.Ground.reading.ink).dxFace(.display, 24, weight: 700)
+                Text("Plain and simple. Apple handles every payment.").dxType(.footnote).foregroundStyle(DX.Ground.reading.muted)
+                Text("Cancel in two taps").dxType(.caption).foregroundStyle(DX.Ground.reading.muted).padding(.top, DX.Space.m)
                 step(1, "Tap **Manage subscription** below")
                 step(2, "Tap **Cancel subscription**")
-                Text("Free trial").v4Text(.micro).padding(.top, DX.Space.s)
-                Text("Cancel any time before it ends and you pay nothing. We'll remind you 2 days before.").v4Text(.subtitle)
-                Text("Refunds").v4Text(.micro).padding(.top, DX.Space.s)
-                Text("Refunds go through Apple. You can request one at reportaproblem.apple.com.").v4Text(.subtitle)
+                Text("Free trial").dxType(.caption).foregroundStyle(DX.Ground.reading.muted).padding(.top, DX.Space.s)
+                Text("Cancel any time before it ends and you pay nothing. We'll remind you 2 days before.").dxType(.footnote).foregroundStyle(DX.Ground.reading.muted)
+                Text("Refunds").dxType(.caption).foregroundStyle(DX.Ground.reading.muted).padding(.top, DX.Space.s)
+                Text("Refunds go through Apple. You can request one at reportaproblem.apple.com.").dxType(.footnote).foregroundStyle(DX.Ground.reading.muted)
                 Button("Manage subscription") { manage = true }
-                    .buttonStyle(.v4Secondary)
+                    .buttonStyle(.dx(.ghost, on: .reading))
                     .frame(maxWidth: .infinity)
                     .padding(.top, DX.Space.m)
             }
@@ -631,11 +631,11 @@ struct BillingSheet: View {
     private func step(_ number: Int, _ text: LocalizedStringKey) -> some View {
         HStack(spacing: 10) {
             Text(verbatim: "\(number)")
-                .dxFont(12, weight: 700, style: .caption2)
+                .dxFace(.body, 12, weight: 700)
                 .foregroundStyle(PW.ink)
                 .frame(width: 24, height: 24)
                 .background(PW.surface, in: Circle())
-            Text(text).dxFont(14, weight: 400, style: .footnote).foregroundStyle(PW.ink)
+            Text(text).dxFace(.body, 14, weight: 400).foregroundStyle(PW.ink)
         }
         .accessibilityElement(children: .combine)
     }
@@ -648,9 +648,9 @@ struct PriceAnchorLine: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
-            Text(verbatim: Self.title(anchor)).dxFont(16, weight: 700, style: .headline).foregroundStyle(ground.ink)
+            Text(verbatim: Self.title(anchor)).dxFace(.body, 16, weight: 700).foregroundStyle(ground.ink)
             Text("A year of the full program, against what you told us you spend.")
-                .dxFont(12, weight: 400, style: .caption1).foregroundStyle(ground.muted)
+                .dxFace(.body, 12, weight: 400).foregroundStyle(ground.muted)
                 .fixedSize(horizontal: false, vertical: true)
         }
         .padding(.vertical, 10).padding(.horizontal, 14)

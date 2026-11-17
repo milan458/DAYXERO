@@ -63,7 +63,12 @@ struct FinaleView: View {
             .scrollBounceBehavior(.basedOnSize)
             VStack(spacing: 4) {
                 Button("Keep going", action: onDone).buttonStyle(.dx(.primary, on: ground))
-                Button { sharing = true } label: { Label("Share my card", systemImage: "square.and.arrow.up") }
+                Button { sharing = true } label: {
+                    HStack(spacing: 8) {
+                        DXIcon(.share, size: 18)
+                        Text("Share my card")
+                    }
+                }
                     .buttonStyle(.dx(.quiet, on: ground))
             }
             .dynamicTypeSize(...DynamicTypeSize.xxxLarge)

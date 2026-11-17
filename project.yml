@@ -79,6 +79,8 @@ targets:
           UIColorName: LaunchPaper
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         NSSupportsLiveActivities: true
+        # A lesson's audio keeps playing with the phone locked or the app in the background.
+        UIBackgroundModes: [audio]
         CFBundleURLTypes:
           - CFBundleURLName: in.dayxero.app
             CFBundleURLSchemes: [dayxero]

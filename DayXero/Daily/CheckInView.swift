@@ -309,7 +309,7 @@ struct CheckInView: View {
                 .accessibilityLabel(Text("Anything to remember"))
         } else {
             Button { addingNote = true } label: {
-                Label("Anything to remember? · optional", systemImage: "square.and.pencil")
+                HStack(spacing: 6) { DXIcon(.note, size: 16); Text("Anything to remember? · optional") }
                     .dxType(.footnote).foregroundStyle(ground.ink).frame(minHeight: 44)
             }
             .buttonStyle(.plain)

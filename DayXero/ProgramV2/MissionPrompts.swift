@@ -96,11 +96,11 @@ struct FollowUpSheet: View {
         let store = ProgramStore(context: context, profile: profile)
         VStack(alignment: .leading, spacing: DX.Space.s) {
             if let session = store.content?.session(sessionId), let beats = session.mission?.followUp, beats.indices.contains(index) {
-                Text(verbatim: header(session, store: store, step: index, of: beats.count)).v4Text(.micro).foregroundStyle(Read4.accent)
+                Text(verbatim: header(session, store: store, step: index, of: beats.count)).dxType(.caption).foregroundStyle(DX.Ground.reading.muted)
                     .padding(.top, DX.Space.l)
                 // The mission in one line, so the sheet makes sense on its own (S27.14).
                 if let mission = session.mission {
-                    Text(verbatim: missionLine(mission, store: store)).v4Text(.subtitle).lineLimit(2)
+                    Text(verbatim: missionLine(mission, store: store)).dxType(.headline).foregroundStyle(DX.Ground.reading.ink).lineLimit(2)
                 }
                 BeatScreen(beat: beats[index],
                            ctx: BeatContext(store: store, session: session, variant: store.variant, nrtActive: store.nrtActive(),
@@ -112,7 +112,8 @@ struct FollowUpSheet: View {
         }
         .padding(.horizontal, DX.Space.l)
         .padding(.bottom, DX.Space.s)
-        .background(Read4.background.ignoresSafeArea())
+        .background(DX.Ground.reading.background.ignoresSafeArea())
+        .environment(\.dxGround, .reading)
     }
 
     /// "Prep 1 mission · Check-in 2 of 3 · 1 of 3" for a follow-up that comes back; "Prep 3 mission · 1 of 2" otherwise.
@@ -203,15 +204,16 @@ struct MissionQuestion: View {
     var body: some View {
         let store = ProgramStore(context: context, profile: profile)
         VStack(alignment: .leading, spacing: DX.Space.m) {
-            Text("Today's mission").v4Text(.micro).foregroundStyle(Read4.accent).padding(.top, DX.Space.l)
+            Text("Today's mission").dxType(.caption).foregroundStyle(DX.Ground.reading.muted).padding(.top, DX.Space.l)
             // The mission in one line, so the question makes sense on its own (S27.14).
             if let mission = store.content?.session(sessionId)?.mission {
-                Text(verbatim: store.placeholders().fillDropping(mission.text.resolve(store.variant) ?? "")).v4Text(.subtitle).lineLimit(2)
+                Text(verbatim: store.placeholders().fillDropping(mission.text.resolve(store.variant) ?? ""))
+                    .dxType(.headline).foregroundStyle(DX.Ground.reading.ink).lineLimit(2)
             }
             if let trend {
                 trendView(trend)
             } else {
-                Text(question).dxFont(24, weight: 700, style: .title2).foregroundStyle(Read4.ink)
+                Text(question).dxType(.title).foregroundStyle(DX.Ground.reading.ink)
                 if type == .surfPractice {
                     BeatSlider(value: $peak, minLabel: String(localized: "Barely there"), maxLabel: String(localized: "Overwhelming"), large: true)
                     Button("Save") { save(String(Int(peak))) }.buttonStyle(.dx(.primary, on: .reading))
@@ -225,7 +227,8 @@ struct MissionQuestion: View {
             Spacer()
         }
         .padding(.horizontal, DX.Space.l)
-        .background(Read4.background.ignoresSafeArea())
+        .background(DX.Ground.reading.background.ignoresSafeArea())
+        .environment(\.dxGround, .reading)
     }
 
     private func save(_ answer: String) {

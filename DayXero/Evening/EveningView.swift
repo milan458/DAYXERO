@@ -117,7 +117,7 @@ struct WindDownView: View {
                     Text("In for 4, out for 6. The same rhythm as SOS.").dxType(.footnote).foregroundStyle(Color(hex: 0x3A2A7A))
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                Image(systemName: "play.fill").font(.system(size: 16, weight: .bold)).foregroundStyle(DX.Fill.cream)
+                DXIcon(.play, size: 16, weight: 2.4, filled: true).foregroundStyle(DX.Fill.cream)
                     .frame(width: 44, height: 44)
                     .background(DX.Ground.violet.card2, in: Circle())
                     .accessibilityHidden(true)
@@ -191,9 +191,9 @@ struct WindDownView: View {
         if let showWater {
             Button(action: showWater) {
                 HStack {
-                    Label("Water", systemImage: "drop").dxFont(16, weight: 700, style: .body).foregroundStyle(ground.ink)
+                    HStack(spacing: 6) { DXIcon(.drop, size: 16); Text("Water") }.dxFont(16, weight: 700, style: .body).foregroundStyle(ground.ink)
                     Spacer()
-                    Image(systemName: "chevron.right").font(.system(size: 13, weight: .bold)).foregroundStyle(ground.muted)
+                    DXIcon(.chev, size: 13, weight: 2.6).foregroundStyle(ground.muted)
                         .accessibilityHidden(true)
                 }
                 .padding(14)
@@ -230,7 +230,7 @@ struct GlimBreathingView: View {
             HStack {
                 Spacer()
                 Button(action: onDone) {
-                    Image(systemName: "xmark").font(.system(size: 18, weight: .bold)).foregroundStyle(ground.ink)
+                    DXIcon(.close, size: 18, weight: 2.6).foregroundStyle(ground.ink)
                         .frame(width: 44, height: 44)
                 }
                 .buttonStyle(.plain)

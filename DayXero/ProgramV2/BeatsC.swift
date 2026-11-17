@@ -39,7 +39,7 @@ struct BodyMapBeat: View {
                   onSkip: { ctx.finish(beat, skipped: true); onDone() }) {
             BeatPrompt(text: ctx.text(beat.prompt))
             if let footer = beat.footer {
-                Text(verbatim: ctx.text(footer)).dxType(.footnote).foregroundStyle(Read4.muted)
+                Text(verbatim: ctx.text(footer)).dxType(.footnote).foregroundStyle(DX.Ground.table.muted)
                     .fixedSize(horizontal: false, vertical: true)
             }
             figure
@@ -56,10 +56,10 @@ struct BodyMapBeat: View {
         .onAppear(perform: restore)
     }
 
+    /// v5: a paper-cut figure on its own card. Each place is a kit chip; a chosen place glows warm behind its chip.
     private var figure: some View {
         let width: CGFloat = 220, height: CGFloat = 330
         return ZStack {
-            // A plain figure: head, body, arms and legs in the reading ground's inset fill.
             Group {
                 Circle().frame(width: 58, height: 58).position(x: width / 2, y: 34)
                 RoundedRectangle(cornerRadius: 30, style: .continuous).frame(width: 96, height: 130).position(x: width / 2, y: 140)
@@ -68,28 +68,32 @@ struct BodyMapBeat: View {
                 Capsule().frame(width: 30, height: 120).position(x: width / 2 - 22, y: 262)
                 Capsule().frame(width: 30, height: 120).position(x: width / 2 + 22, y: 262)
             }
-            .foregroundStyle(Read4.surface)
+            .foregroundStyle(Color(light: 0xFFD9B8, dark: 0x2A3560))
+            .shadow(color: .black.opacity(0.1), radius: 0, y: 3)
             .accessibilityHidden(true)
             ForEach(onFigure) { option in
                 let spot = Self.spots[option.id] ?? .center
-                let on = selected.contains(option.id)
-                Button { toggle(option.id) } label: {
-                    Text(verbatim: option.text)
-                        .dxFont(14, weight: on ? 700 : 600, style: .footnote)
-                        .foregroundStyle(on ? Read4.background : Read4.ink)
-                        .padding(.horizontal, 12)
-                        .frame(minHeight: 36)
-                        .background(on ? Read4.accent : Read4.card, in: Capsule())
-                        .overlay(Capsule().strokeBorder(on ? Read4.accent : Read4.hairline, lineWidth: 1))
-                        .frame(minWidth: 44, minHeight: 44)
-                        .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
-                .accessibilityAddTraits(on ? .isSelected : [])
-                .position(x: spot.x * width, y: spot.y * height)
+                Circle().fill(DX.Fill.coral.opacity(0.3))
+                    .frame(width: 72, height: 72)
+                    .blur(radius: 8)
+                    .scaleEffect(selected.contains(option.id) ? 1 : 0.4)
+                    .opacity(selected.contains(option.id) ? 1 : 0)
+                    .position(x: spot.x * width, y: spot.y * height)
+                    .accessibilityHidden(true)
+            }
+            ForEach(onFigure) { option in
+                let spot = Self.spots[option.id] ?? .center
+                BeatChip(text: option.text, on: selected.contains(option.id)) { toggle(option.id) }
+                    .position(x: spot.x * width, y: spot.y * height)
             }
         }
         .frame(width: width, height: height)
+        .animation(.spring(response: 0.35, dampingFraction: 0.7), value: selected)
+        .padding(.vertical, 16)
+        .frame(maxWidth: .infinity)
+        .background(DX.Ground.table.card, in: RoundedRectangle(cornerRadius: 26, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 26, style: .continuous).strokeBorder(DX.Ground.table.line))
+        .sensoryFeedback(DX.Haptic.select, trigger: selected)
     }
 
     private func toggle(_ id: String) {
@@ -133,9 +137,9 @@ struct ScaleBeat: View {
             HStack(spacing: 22) {
                 stepButton("minus", label: "Less") { set(value - 1) }
                 Text(verbatim: "\(value)")
-                    .dxFont(88, weight: 800, style: .largeTitle)
+                    .dxFace(.display, 88, weight: 800)
                     .monospacedDigit()
-                    .foregroundStyle(Read4.ink)
+                    .foregroundStyle(DX.Ground.table.ink)
                     .frame(minWidth: 120)
                     .contentTransition(motion.reduce ? ContentTransition.identity : .numericText())
                     .accessibilityHidden(true)
@@ -156,7 +160,7 @@ struct ScaleBeat: View {
                 ForEach(0...10, id: \.self) { step in
                     Button { set(step) } label: {
                         Circle()
-                            .fill(step <= value ? Read4.accent : Read4.surface)
+                            .fill(step <= value ? DX.Ground.table.sel : DX.Ground.table.card2)
                             .frame(width: 22, height: 22)
                             .frame(maxWidth: .infinity, minHeight: 36)
                             .contentShape(Rectangle())
@@ -166,14 +170,14 @@ struct ScaleBeat: View {
             }
             .accessibilityHidden(true)
             HStack {
-                Text(verbatim: ctx.text(beat.minLabel)).dxType(.footnote).foregroundStyle(Read4.muted)
+                Text(verbatim: ctx.text(beat.minLabel)).dxType(.footnote).foregroundStyle(DX.Ground.table.muted)
                 Spacer(minLength: DX.Space.s)
-                Text(verbatim: ctx.text(beat.maxLabel)).dxType(.footnote).foregroundStyle(Read4.muted)
+                Text(verbatim: ctx.text(beat.maxLabel)).dxType(.footnote).foregroundStyle(DX.Ground.table.muted)
                     .multilineTextAlignment(.trailing)
             }
             if touched || ctx.isReplay {
                 if let earlier {
-                    Text(verbatim: compareLine(earlier)).dxType(.headline).foregroundStyle(Read4.ink)
+                    Text(verbatim: compareLine(earlier)).dxType(.headline).foregroundStyle(DX.Ground.table.ink)
                         .padding(.top, DX.Space.xs)
                 }
                 if let feedback = beat.feedback {
@@ -194,9 +198,9 @@ struct ScaleBeat: View {
     private func stepButton(_ symbol: String, label: LocalizedStringKey, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Image(systemName: symbol).font(.system(size: 22, weight: .bold))
-                .foregroundStyle(Read4.ink)
+                .foregroundStyle(DX.Ground.table.ink)
                 .frame(width: 60, height: 60)
-                .background(Read4.surface, in: Circle())
+                .background(DX.Ground.table.card2, in: Circle())
         }
         .buttonStyle(.plain)
         .accessibilityLabel(Text(label))
@@ -235,20 +239,20 @@ struct TimedHoldBeat: View {
                   onSkip: { ctx.finish(beat, skipped: true); onDone() }) {
             BeatPrompt(text: ctx.text(beat.title ?? beat.prompt))
             if let body = beat.body {
-                Text(verbatim: ctx.text(body)).dxType(.body).foregroundStyle(Read4.ink)
+                Text(verbatim: ctx.text(body)).dxType(.body).foregroundStyle(DX.Ground.table.ink)
                     .fixedSize(horizontal: false, vertical: true)
             }
             ZStack {
-                Circle().stroke(Read4.surface, lineWidth: 10)
+                Circle().stroke(DX.Ground.table.card2, lineWidth: 10)
                 Circle()
                     .trim(from: 0, to: CGFloat(left) / CGFloat(total))
-                    .stroke(Read4.accent, style: StrokeStyle(lineWidth: 10, lineCap: .round))
+                    .stroke(DX.Ground.table.sel, style: StrokeStyle(lineWidth: 10, lineCap: .round))
                     .rotationEffect(.degrees(-90))
                     .animation(motion.reduce ? nil : .linear(duration: 1), value: left)
                 Text(verbatim: done ? String(localized: "Done") : "\(left)")
-                    .dxFont(44, weight: 800, style: .largeTitle)
+                    .dxFace(.display, 44, weight: 800)
                     .monospacedDigit()
-                    .foregroundStyle(Read4.ink)
+                    .foregroundStyle(DX.Ground.table.ink)
             }
             .frame(width: 180, height: 180)
             .frame(maxWidth: .infinity)
@@ -290,7 +294,7 @@ struct SOSPracticeBeat: View {
                   onContinue: { ctx.finish(beat); onDone() }, onSkip: { ctx.finish(beat, skipped: true); onDone() }) {
             BeatPrompt(text: ctx.text(beat.title ?? beat.prompt))
             if let body = beat.body {
-                Text(verbatim: ctx.text(body)).dxType(.body).foregroundStyle(Read4.ink)
+                Text(verbatim: ctx.text(body)).dxType(.body).foregroundStyle(DX.Ground.table.ink)
                     .fixedSize(horizontal: false, vertical: true)
             }
             Button {
@@ -303,7 +307,7 @@ struct SOSPracticeBeat: View {
             .accessibilityIdentifier("program.sosPractice")
             if tried {
                 Label(String(localized: "Practised. You know where it is now."), systemImage: "checkmark")
-                    .dxType(.footnote).foregroundStyle(Read4.accent)
+                    .dxType(.footnote).foregroundStyle(DX.Ground.table.ink)
             }
         }
         .fullScreenCover(isPresented: $showing) {
@@ -336,19 +340,19 @@ struct PerItemBeat: View {
             BeatFrame(beat: beat, onContinue: { ctx.finish(beat, skipped: true); onDone() }) {
                 BeatPrompt(text: String(localized: "Nothing to map yet"))
                 Text(String(localized: "Pick a few moments first, and they'll each get a screen here."))
-                    .dxType(.body).foregroundStyle(Read4.muted)
+                    .dxType(.body).foregroundStyle(DX.Ground.table.muted)
             }
         } else {
             let item = items[min(index, items.count - 1)]
             BeatFrame(beat: beat, canContinue: ready(index), onContinue: next,
                       onSkip: { ctx.finish(beat, skipped: true); onDone() }) {
                 Text(verbatim: String(localized: "\(index + 1) of \(items.count) · \(item)"))
-                    .dxType(.caption).foregroundStyle(Read4.accent)
+                    .dxType(.caption).foregroundStyle(DX.Ground.table.ink)
                 ForEach(questions, id: \.id) { question in
                     VStack(alignment: .leading, spacing: 10) {
                         Text(verbatim: prompt(question, item: item))
-                            .dxFont(20, weight: 700, style: .title3)
-                            .foregroundStyle(Read4.ink)
+                            .dxFace(.display, 20, weight: 700)
+                            .foregroundStyle(DX.Ground.table.ink)
                             .fixedSize(horizontal: false, vertical: true)
                             .accessibilityAddTraits(.isHeader)
                         DXFlowLayout(spacing: 8) {

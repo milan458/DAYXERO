@@ -399,9 +399,9 @@ struct SessionFlowView: View {
                 .accessibilityLabel(Text("\(session.label), step \(index + 1) of \(steps.count)"))
             if isReplay {
                 Text("Replay").dxType(.caption)
-                    .foregroundStyle(Read4.muted)
+                    .foregroundStyle(stepGround.muted)
                     .padding(.horizontal, 10).padding(.vertical, 6)
-                    .background(Read4.surface, in: Capsule())
+                    .background(stepGround.card2, in: Capsule())
             }
         }
         .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
@@ -428,11 +428,14 @@ struct SessionFlowView: View {
             VStack(spacing: DX.Space.xs) {
                 if !(session.cards ?? []).isEmpty {
                     Button { switchLesson(to: .cards) } label: {
-                        Label("Read it in \(ProgramContent.cardStackSeconds) seconds instead", systemImage: "rectangle.stack")
-                            .dxFont(14, weight: 600, style: .footnote)
+                        HStack(spacing: 6) {
+                            DXIcon(.text, size: 17)
+                            Text("Read it in \(ProgramContent.cardStackSeconds) seconds instead")
+                        }
+                        .dxFace(.body, 14, weight: 600)
                     }
                     .buttonStyle(.plain)
-                    .foregroundStyle(Read4.accent)
+                    .foregroundStyle(stepGround.ink)
                     .frame(maxWidth: .infinity, minHeight: DX.Layout.touchTarget, alignment: .leading)
                 }
                 ProgramAudioStep(session: session, ctx: ctx, record: record, onDone: advance)
@@ -679,7 +682,8 @@ struct ProgramAudioStep: View {
     var body: some View {
         VStack(spacing: DX.Space.s) {
             if let narrator {
-                LessonAudioStep(title: session.title.resolve(ctx.variant) ?? "", narrator: narrator,
+                LessonAudioStep(title: session.title.resolve(ctx.variant) ?? "",
+                                subtitle: String(localized: "\(session.label) lesson"), narrator: narrator,
                                 startAt: ctx.isReplay ? 0 : record?.audioPosition ?? 0,
                                 onPosition: { seconds in
                                     guard !ctx.isReplay, let record else { return }
@@ -687,11 +691,8 @@ struct ProgramAudioStep: View {
                                     record.audioVariant = variantName
                                     try? context.save()
                                 },
-                                onFinish: { finished = true })
+                                onFinish: { finished = true }, onDone: onDone)
                     .frame(maxHeight: .infinity)
-                if finished || ctx.isReplay {
-                    Button("Continue", action: onDone).buttonStyle(.dx(.primary, on: .reading)).dynamicTypeSize(...DynamicTypeSize.accessibility1)
-                }
             } else {
                 noRecording
             }
@@ -891,22 +892,15 @@ struct SessionCompletion: View {
         return String(localized: "\(next.label) starts the full program. You can try it free for \(FullProgram.trialDays) days.")
     }
 
-    private var clarity: Int {
-        let profile = ctx.store.profile
-        let stats = ProgressStats(quitDay: profile.quitDay, baselines: [], clock: DayClock(boundaryHour: profile.dayBoundaryHour))
-        return stats.isPrep(at: .now) ? CrewGrowth.prepClarity : CrewGrowth.clarity(daysClear: stats.daysClear(at: .now))
-    }
-
     var body: some View {
         if session.id == ProgramV2Access.offerAfter, !isReplay {
             dayXeroDone
-        } else if session.isDeck {
-            DeckRecapView(session: session, ctx: ctx, isReplay: isReplay, next: next, opensFullProgram: opensFullProgram, onDone: onDone)
-        } else if session.beats.contains(where: { $0.sets == "graduated_at" }), !isReplay {
+        } else if !session.isDeck, session.beats.contains(where: { $0.sets == "graduated_at" }), !isReplay {
             // F18: the graduation session ends on the finale, the only screen with confetti.
             FinaleView(profile: ctx.store.profile, label: session.label, onDone: onDone)
         } else {
-            lessonDone
+            // v5 (032): every other day, prep or after, closes on the medal, the rays and Xero cheering.
+            DeckRecapView(session: session, ctx: ctx, isReplay: isReplay, next: next, opensFullProgram: opensFullProgram, onDone: onDone)
         }
     }
 
@@ -919,11 +913,20 @@ struct SessionCompletion: View {
         return VStack(spacing: DX.Space.m) {
             ScrollView {
                 VStack(spacing: 12) {
-                    XeroView(mood: shown ? .cheer : .hello, stage: 1, size: .hero)
-                        .scaleEffect(shown || motion.reduce ? 1 : DX.Move.celebrateFromScale)
-                        .opacity(shown ? 1 : 0)
-                        .frame(height: 220, alignment: .bottom)
-                        .accessibilityHidden(true)
+                    // v5 (032, 039): the Day Xero medal stamps in before its rays, Xero cheering beside it.
+                    ZStack {
+                        SlowRays(color: Color(light: 0xFFF3C4, dark: 0xE8B24A))
+                            .frame(width: 300, height: 300)
+                        DXBadge(.xero, size: 150)
+                            .scaleEffect(shown || motion.reduce ? 1 : 1.8)
+                            .rotationEffect(.degrees(shown || motion.reduce ? 0 : -14))
+                            .opacity(shown ? 1 : 0)
+                        XeroView(mood: .cheer, stage: 0, points: 96)
+                            .offset(x: 112, y: 62)
+                            .dxSettle(2)
+                    }
+                    .frame(height: 250)
+                    .accessibilityHidden(true)
                     Text(verbatim: ctx.text(session.completionText))
                         .dxType(.large).foregroundStyle(ground.ink)
                         .multilineTextAlignment(.center)
@@ -974,53 +977,6 @@ struct SessionCompletion: View {
         }
         .fullScreenCover(isPresented: $showOffer, onDismiss: onDone) {
             QuitDayOffer(profile: ctx.store.profile) { showOffer = false }
-        }
-    }
-
-    private var lessonDone: some View {
-        VStack(spacing: DX.Space.m) {
-            ScrollView {
-                VStack(spacing: 10) {
-                    ZStack(alignment: .bottom) {
-                        HorizonScene(.path, clarity: clarity, fit: .bottom)
-                        XeroView(mood: .calm, stage: 1, size: .scene)
-                            .offset(y: shown || motion.reduce ? -4 : 30)
-                            .opacity(shown ? 1 : 0)
-                    }
-                    .frame(height: 220)
-                    .clipShape(RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
-                    .accessibilityHidden(true)
-                    .padding(.top, DX.Space.m)
-                    Text("\(session.label) done").dxType(.caption).foregroundStyle(Read4.muted)
-                        .padding(.top, DX.Space.s)
-                    Text(verbatim: ctx.text(session.completionText))
-                        .dxType(.large)
-                        .multilineTextAlignment(.center)
-                        .foregroundStyle(Read4.ink)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .accessibilityAddTraits(.isHeader)
-                    if let next, !isReplay {
-                        Label(next, systemImage: "calendar")
-                            .dxType(.footnote).foregroundStyle(Read4.ink)
-                            .v4Card()
-                            .padding(.top, DX.Space.s)
-                    }
-                    if let opensFullProgram, !isReplay {
-                        // MON-01: the end of the free taste says what comes next, before the paywall does.
-                        Text(opensFullProgram).dxType(.footnote).foregroundStyle(Read4.muted)
-                            .multilineTextAlignment(.center)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                }
-            }
-            .scrollBounceBehavior(.basedOnSize)
-            Button("Done", action: onDone)
-                .buttonStyle(.dx(.primary, on: .reading))
-                .dynamicTypeSize(...DynamicTypeSize.accessibility1)
-        }
-        .sensoryFeedback(.success, trigger: shown)
-        .onAppear {
-            withAnimation(motion.animation(DX.Move.settle)) { shown = true }
         }
     }
 }

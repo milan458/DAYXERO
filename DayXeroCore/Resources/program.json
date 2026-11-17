@@ -27,7 +27,7 @@
       "label": "Prep 1",
       "title": "You don't have to quit today",
       "subtitle": "How the prep week works",
-      "durationMinutes": 31,
+      "durationMinutes": 28,
       "unlock": {
         "rule": "first"
       },
@@ -44,7 +44,7 @@
           "id": "P1.1",
           "format": "listen",
           "title": "Keep using. Just watch.",
-          "minutes": 6,
+          "minutes": 5,
           "ground": "apricot",
           "commit": "I'll just watch today",
           "intro": "Put your headphones in if you can. Nothing to do but listen.",
@@ -293,7 +293,7 @@
           "id": "P1.5",
           "format": "listen",
           "title": "Tonight: what you noticed",
-          "minutes": 7,
+          "minutes": 5,
           "ground": "violet",
           "commit": "I'm ready for tomorrow",
           "after": "You looked. That's the start.",
@@ -429,7 +429,7 @@
       "label": "Prep 2",
       "title": "The first one of the day",
       "subtitle": "Loosen the morning routine",
-      "durationMinutes": 30,
+      "durationMinutes": 28,
       "unlock": {
         "rule": "next_day_after_previous"
       },
@@ -446,7 +446,7 @@
           "id": "P2.1",
           "format": "listen",
           "title": "The autopilot",
-          "minutes": 6,
+          "minutes": 5,
           "ground": "apricot",
           "commit": "I'll catch the cue",
           "intro": "Yesterday you watched the gap. Today, what sets it off.",
@@ -892,7 +892,7 @@
           "id": "P2.5",
           "format": "listen",
           "title": "Tonight: one small wait",
-          "minutes": 5,
+          "minutes": 4,
           "ground": "violet",
           "commit": "I'm set for the morning",
           "after": "One moment, one short wait.",
@@ -954,7 +954,7 @@
       "label": "Prep 3",
       "title": "Use with your eyes open",
       "subtitle": "One session, full attention",
-      "durationMinutes": 30,
+      "durationMinutes": 28,
       "unlock": {
         "rule": "next_day_after_previous"
       },
@@ -971,7 +971,7 @@
           "id": "P3.1",
           "format": "listen",
           "title": "Curiosity beats craving",
-          "minutes": 6,
+          "minutes": 5,
           "ground": "apricot",
           "commit": "I'll look today",
           "intro": "Listen now. The guided use comes later.",
@@ -984,7 +984,7 @@
               },
               {
                 "title": "What attention does",
-                "text": "Some years ago, a research team ran a study with people who smoked and wanted to stop. One group joined a well-established quit program, the standard kind. The other group learned something simpler. They practiced paying close attention, to their cravings and to smoking itself. Not fighting it. Not feeling bad about it. Just noticing, with real curiosity, what was actually going on.\n\nThe group that learned to pay attention did better than the group on the standard program.\n\n[pause]\n\nWhy would that work? Here's how I think about it.\n\nYour brain keeps a kind of summary of nicotine. It wrote that summary a long time ago, and it rarely checks it. The summary says something like: this helps, this feels good, I need this. And because most uses happen on autopilot, with your attention on your phone, or a conversation, or the next thing on your list, the summary almost never gets tested.\n\nSo you end up reaching for a memory of how it feels, more than for how it actually feels today.\n\nAttention is how the summary gets checked. When you really look, your brain gets fresh information. And fresh information is hard to argue with."
+                "text": "Here's something simple, and it's worth trying for yourself. Instead of fighting a craving, you pay close attention to it, and to the moment of using itself. Not fighting it. Not feeling bad about it. Just noticing, with real curiosity, what's actually going on.\n\nMany people find that paying close attention changes how it feels.\n\n[pause]\n\nWhy would that work? Here's how I think about it.\n\nYour brain keeps a kind of summary of nicotine. It wrote that summary a long time ago, and it rarely checks it. The summary says something like: this helps, this feels good, I need this. And because most uses happen on autopilot, with your attention on your phone, or a conversation, or the next thing on your list, the summary almost never gets tested.\n\nSo you end up reaching for a memory of how it feels, more than for how it actually feels today.\n\nAttention is how the summary gets checked. When you really look, your brain gets fresh information. And fresh information is hard to argue with."
               },
               {
                 "title": "The story and the experience",
@@ -1037,7 +1037,7 @@
           "id": "P3.3",
           "format": "listen",
           "title": "One with full attention",
-          "minutes": 6,
+          "minutes": 5,
           "ground": "apricot",
           "commit": "I really looked",
           "canSaveForLater": true,
@@ -1503,7 +1503,7 @@
       "label": "Prep 4",
       "title": "The stress loop",
       "subtitle": "A breath that works in the moment",
-      "durationMinutes": 28,
+      "durationMinutes": 27,
       "unlock": {
         "rule": "next_day_after_previous"
       },
@@ -1520,7 +1520,7 @@
           "id": "P4.1",
           "format": "listen",
           "title": "Why it feels like it calms you",
-          "minutes": 6,
+          "minutes": 5,
           "ground": "apricot",
           "commit": "I've felt that loop",
           "script": {
@@ -1941,7 +1941,7 @@
       "label": "Prep 5",
       "title": "Riding the wave",
       "subtitle": "The skill that matters most",
-      "durationMinutes": 28,
+      "durationMinutes": 25,
       "unlock": {
         "rule": "next_day_after_previous"
       },
@@ -1958,7 +1958,7 @@
           "id": "P5.1",
           "format": "listen",
           "title": "Surfing the urge",
-          "minutes": 7,
+          "minutes": 5,
           "ground": "apricot",
           "commit": "I can ride it",
           "intro": "A guided practice, about seven minutes. Find somewhere to sit. If you can, have your {product} where you can see it. You won't use it during the track. Still in prep: you can use as normal afterwards if you want to.",
@@ -2196,7 +2196,7 @@
           "id": "P5.5",
           "format": "listen",
           "title": "Thoughts are not orders",
-          "minutes": 5,
+          "minutes": 4,
           "ground": "violet",
           "commit": "Noticed, not obeyed",
           "intro": "A short, quiet practice for the evening. About five minutes. Somewhere comfortable is best.",
@@ -2245,7 +2245,7 @@
       "label": "Prep 6",
       "title": "Make it easy on yourself",
       "subtitle": "Set up your space and your support",
-      "durationMinutes": 29,
+      "durationMinutes": 28,
       "unlock": {
         "rule": "next_day_after_previous"
       },
@@ -2262,11 +2262,11 @@
           "id": "P6.1",
           "format": "listen",
           "title": "You don't have to white-knuckle it",
-          "minutes": 6,
+          "minutes": 5,
           "ground": "apricot",
           "commit": "I'll make it easy",
           "script": {
-            "voice": "Warm, practical and steady, a touch brisker than yesterday; matter-of-fact and reassuring on the NRT section, never salesy; slow down on the safety list and the two medicine names.",
+            "voice": "Warm, practical and steady, a touch brisker than yesterday; matter-of-fact and reassuring on the NRT section, never salesy; slow down on the safety list and the medicine name.",
             "chapters": [
               {
                 "title": "Holding on isn't a plan",
@@ -2278,11 +2278,11 @@
               },
               {
                 "title": "NRT, honestly",
-                "text": "[calmly] Now, nicotine replacement. Some people feel uneasy about it, so let's be clear about what it is. [pause]\n\nNicotine replacement, or NRT, means patches, gum, lozenges, sprays and inhalers. They give you nicotine as a tested medicine, in measured doses. A patch releases it slowly and steadily through the day, without the ups and downs of {s: cigarette after cigarette | v: hit after hit | p: pouch after pouch}. And the whole plan is built to step down to zero. [pause]\n\nWhat we've worked on all week takes away the wanting: the belief that nicotine gives you something. NRT works on a different part: the physical edge in the first weeks, while your body adjusts. Different jobs. They work well together. [pause]\n\nAnd it isn't cheating. A Cochrane review of more than a hundred trials found that people who use NRT are around fifty to sixty percent more likely to quit than people who don't. Another Cochrane review found that a patch plus a faster form, like gum or a lozenge, works better than either one alone. [pause]\n\nIf you choose it, a few things matter. You start NRT on Day Xero, the morning you stop {s: smoking | v: vaping | p: using pouches}, not while you're still using. You follow the pack, and the app's NRT plan reminds you of each step. And some people should check with a doctor or pharmacist before starting. [slowly] If you're pregnant or breastfeeding. If you've recently had a heart attack or a stroke, or you have a heart condition. If you take other medicines. Or if you're under eighteen. [pause]\n\n{s: | v: | p: You have one more option, too. If there's time before Day Xero, you can step down your pouch strength first, and the app can plan that with you. [pause]}\n\nNot using NRT is fine too. Plenty of people quit without it. Either choice is a good one, as long as you make it with your eyes open."
+                "text": "[calmly] Now, nicotine replacement. Some people feel uneasy about it, so let's be clear about what it is. [pause]\n\nNicotine replacement means patches, gum, lozenges, sprays and inhalers. They give you nicotine as a tested medicine, in measured doses. A patch releases it slowly and steadily through the day, without the ups and downs of {s: cigarette after cigarette | v: hit after hit | p: pouch after pouch}. And the whole plan is built to step down to zero. [pause]\n\nWhat we've worked on all week takes away the wanting: the belief that nicotine gives you something. Nicotine replacement works on a different part: the physical edge in the first weeks, while your body adjusts. Different jobs. They work well together. [pause]\n\nAnd it isn't cheating. A Cochrane review of more than a hundred trials found that people who use nicotine replacement are around fifty to sixty percent more likely to quit than people who don't. Another Cochrane review found that a patch plus a faster form, like gum or a lozenge, works better than either one alone. [pause]\n\nIf you choose it, a few things matter. You start nicotine replacement on Day Xero, the morning you stop {s: smoking | v: vaping | p: using pouches}, not while you're still using. You follow the pack, and the app's plan reminds you of each step. And some people should check with a doctor or pharmacist before starting. [slowly] If you're pregnant or breastfeeding. If you've recently had a heart attack or a stroke, or you have a heart condition. If you take other medicines. Or if you're under eighteen. [pause]\n\n{s: | v: | p: You have one more option, too. If there's time before Day Xero, you can step down your pouch strength first, and the app can plan that with you. [pause]}\n\nNot using it is fine too. Plenty of people quit without it. Either choice is a good one, as long as you make it with your eyes open."
               },
               {
                 "title": "Other options",
-                "text": "There are also prescription medicines that help people quit. Two you might hear about are varenicline /vəˈrɛnɪkliːn/ and cytisine /ˈsɪtɪsiːn/. Neither one is nicotine. They act on the same parts of the brain that nicotine does, which can take the edge off cravings and make nicotine feel less rewarding. What's available depends on where you live, and they aren't right for everyone. If you're curious, ask your doctor. [pause]\n\nToday's job is setting up. Next, you'll get a clear picture of NRT, check a few common worries about it, set up your space and choose your people. None of it needs to be perfect. [pause]\n\n[warmly] Here's the thing to hold on to. Making it easy on yourself isn't a sign that you can't do it. It's how hard things get done. You're not relying on a clenched fist. You're arranging your days so the next good choice is the obvious one. [pause]\n\nLet's get you set up."
+                "text": "There are also prescription medicines that help people quit. One you might hear about is varenicline /vəˈrɛnɪkliːn/. It isn't nicotine. It acts on the same parts of the brain that nicotine does, which can take the edge off cravings and make nicotine feel less rewarding. What's available depends on where you live, and it isn't right for everyone. If you're curious, ask your doctor. [pause]\n\nToday's job is setting up. Next, you'll get a clear picture of nicotine replacement, check a few common worries about it, set up your space and choose your people. None of it needs to be perfect. [pause]\n\n[warmly] Here's the thing to hold on to. Making it easy on yourself isn't a sign that you can't do it. It's how hard things get done. You're not relying on a clenched fist. You're arranging your days so the next good choice is the obvious one. [pause]\n\nLet's get you set up."
               }
             ]
           }
@@ -2616,7 +2616,7 @@
       "label": "Prep 7",
       "title": "The night before",
       "subtitle": "Clear out and get ready",
-      "durationMinutes": 31,
+      "durationMinutes": 27,
       "unlock": {
         "rule": "next_day_after_previous"
       },
@@ -2633,7 +2633,7 @@
           "id": "P7.1",
           "format": "listen",
           "title": "What you're actually giving up",
-          "minutes": 7,
+          "minutes": 5,
           "ground": "apricot",
           "commit": "I'm not giving anything up",
           "intro": "About 7 minutes. Keep using as normal today.",
@@ -2926,7 +2926,7 @@
           "id": "P7.5",
           "format": "listen",
           "title": "The last one",
-          "minutes": 7,
+          "minutes": 5,
           "ground": "violet",
           "commit": "I'm ready for tomorrow",
           "intro": "About 7 minutes. Have your last one ready, or just listen if you've already had it.",
@@ -3021,7 +3021,7 @@
       "label": "Day Xero",
       "title": "Day Xero",
       "subtitle": "Your first day",
-      "durationMinutes": 30,
+      "durationMinutes": 27,
       "unlock": {
         "rule": "day_xero"
       },
@@ -3038,7 +3038,7 @@
           "id": "DX.1",
           "format": "listen",
           "title": "Day Xero",
-          "minutes": 6,
+          "minutes": 5,
           "ground": "apricot",
           "commit": "I've started",
           "script": {
@@ -3058,7 +3058,7 @@
               },
               {
                 "title": "If it gets hard",
-                "text": "Some moments today might be tough. That's not a sign you're doing it wrong. It's what a first day can feel like. [pause] So, a few things to keep close.\n\nIf you're using nicotine replacement, use it the way your pack says. It takes the edge off the physical side, and it isn't cheating. Not using it is fine too.\n\nTell someone that today's the day. A message back from a friend can carry you through a wave.\n\nEat proper meals, keep water close, and if you drink coffee, {s: have about half your usual. Now that you've stopped smoking, the same cup hits harder. | v: notice whether it leaves you jittery. That can feel a lot like a craving. | p: notice whether it leaves you jittery. That can feel a lot like a craving.}\n\nAnd if you slip, [pause] it doesn't wipe anything out. Your count isn't reset. Tap \"I slipped,\" be kind to yourself, notice what set it off, and carry on from right there. A slip is information, not the end of anything. The very next choice is the one that matters."
+                "text": "Some moments today might be tough. That's not a sign you're doing it wrong. It's what a first day can feel like. [pause] So, a few things to keep close.\n\nIf you're using nicotine replacement, use it the way your pack says. It takes the edge off the physical side, and it isn't cheating. Not using it is fine too.\n\nTell someone that today's the day. A message back from a friend can carry you through a wave.\n\nEat proper meals, keep water close, and if you drink coffee, {s: make it a smaller cup, earlier in the day. Now that you've stopped smoking, the same cup hits harder. | v: notice whether it leaves you jittery. That can feel a lot like a craving. | p: notice whether it leaves you jittery. That can feel a lot like a craving.}\n\nAnd if you slip, [pause] it doesn't wipe anything out. Your count isn't reset. Tap \"I slipped,\" be kind to yourself, notice what set it off, and carry on from right there. A slip is information, not the end of anything. The very next choice is the one that matters."
               },
               {
                 "title": "Starting",
@@ -3503,7 +3503,7 @@
           "id": "DX.5",
           "format": "listen",
           "title": "One day",
-          "minutes": 7,
+          "minutes": 5,
           "ground": "violet",
           "commit": "One day done",
           "intro": "About 7 minutes. A good one to hear somewhere quiet, close to bed.",
@@ -3555,7 +3555,7 @@
       "id": "W1D1", "phaseId": "w1", "label": "Day 2",
       "title": "Look after the basics", "subtitle": "Food, water, sleep", "durationMinutes": 3,
       "unlock": { "rule": "days_since_quit", "minDay": 1 },
-      "audio": { "variants": ["default"] },
+      "audio": { "variants": ["smoking", "vaping", "pouches"] },
       "cards": [
         { "front": "Why the basics, now?", "back": "Hungry, thirsty and tired can all feel a bit like a craving. Look after them and cravings are easier to spot." },
         { "front": "Hungrier than usual?", "back": "Common in the first weeks. Keep easy snacks around: fruit, nuts, crunchy veg." },
@@ -3684,7 +3684,7 @@
       "id": "W1D6", "phaseId": "w1", "label": "Day 7",
       "title": "“Just one”", "subtitle": "Play the tape forward", "durationMinutes": 4,
       "unlock": { "rule": "days_since_quit", "minDay": 6 },
-      "audio": { "variants": ["default"] },
+      "audio": { "variants": ["smoking", "vaping", "pouches"] },
       "cards": [
         { "front": "“Just one won't hurt”", "back": "Play the tape forward: one, then this weekend, then whenever you're stressed." },
         { "front": "“I've proven I can quit”", "back": "You have. Keep the proof." },
@@ -4009,7 +4009,7 @@
       "id": "W4S3", "phaseId": "w4", "label": "Day 31",
       "title": "Graduation", "subtitle": "“I don't use nicotine”", "durationMinutes": 5,
       "unlock": { "rule": "days_since_quit", "minDay": 30 },
-      "audio": { "variants": ["smoking","vaping","pouches"] },
+      "audio": { "variants": ["default"] },
       "cards": [
         { "front": "You did the program", "back": "Prep, Day Xero and four weeks after. All of it." },
         { "front": "Who you are now", "back": "Not “I'm trying to quit”. Pick a line that's yours, like “I don't use nicotine”." },

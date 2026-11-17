@@ -180,7 +180,7 @@ struct NRTSetupView: View {
                 .padding(.top, 10)
                 .dxArrive(1)
             if !schedulerUnlocked {
-                Label("The 12-week NRT schedule comes with the full program.", systemImage: "lock.fill")
+                HStack(spacing: 6) { DXIcon(.lock, size: 16); Text("The 12-week NRT schedule comes with the full program.") }
                     .dxType(.footnote).foregroundStyle(g.ink)
                     .padding(.top, 12)
             }
@@ -731,7 +731,7 @@ struct NRTSetupView: View {
         Button(action: action) {
             HStack(spacing: 8) {
                 if done {
-                    Image(systemName: "checkmark")
+                    DXIcon(.check, size: 18, weight: 2.6)
                         .font(.system(size: 11, weight: .heavy))
                         .foregroundStyle(.white)
                         .frame(width: 20, height: 20)

@@ -12,11 +12,11 @@ struct LockedFeatureCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: DX.Space.xs) {
             Label {
-                Text(title).dxFont(16, weight: 700, style: .headline).foregroundStyle(ground.ink)
+                Text(title).dxFace(.body, 16, weight: 700).foregroundStyle(ground.ink)
             } icon: {
-                Image(systemName: "lock.fill").font(.system(size: 13, weight: .bold)).foregroundStyle(ground.ink)
+                DXIcon(.lock, size: 14, weight: 2.6).foregroundStyle(ground.ink)
             }
-            Text(line).dxFont(14, weight: 400, style: .footnote).foregroundStyle(ground.muted)
+            Text(line).dxFace(.body, 14, weight: 400).foregroundStyle(ground.muted)
                 .fixedSize(horizontal: false, vertical: true)
             Button("Unlock the full program", action: onUnlock)
                 .buttonStyle(.dx(.secondary, on: ground))

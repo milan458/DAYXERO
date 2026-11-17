@@ -18,21 +18,21 @@ struct NRTCard: View {
         V4Card(padding: 14) {
             VStack(alignment: .leading, spacing: DX.Space.xs) {
                 HStack(spacing: DX.Space.s) {
-                    Image(systemName: Self.icon(plan.type))
-                        .font(.system(size: 17))
-                        .foregroundStyle(Read4.accent)
-                        .frame(width: 38, height: 38)
-                        .background(Read4.accentSoft, in: Circle())
+                    DXIcon(plan.type == .inhaler ? .lungs : .patch, size: 20)
+                        .foregroundStyle(DX.Ground.reading.ink)
+                        .frame(width: 40, height: 40)
+                        .background(DX.Ground.reading.card2, in: Circle())
+                        .accessibilityHidden(true)
                     // The product's icon says it's NRT; the line says what this week is (S18.10).
                     VStack(alignment: .leading, spacing: 1) {
                         Text(verbatim: headline(schedule, current: current))
-                            .dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.ink)
+                            .dxFace(.body, 16, weight: 600).foregroundStyle(DX.Ground.reading.ink)
                     }
                 }
                 if let current {
                     let stepDays = max(current.step.weeks * 7, 1)
                     let into = (clock.calendar.dateComponents([.day], from: current.start, to: clock.day(containing: now)).day ?? 0) + 1
-                    V4ProgressBar(value: Double(into) / Double(stepDays))
+                    DXProgress(Double(into) / Double(stepDays))
                     HStack {
                         Text("Day \(into) of \(stepDays)")
                         Spacer()
@@ -42,20 +42,24 @@ struct NRTCard: View {
                             Text("Last step")
                         }
                     }
-                    .v4Text(.subtitle)
-                    if let note = current.step.note { Text(verbatim: note).v4Text(.subtitle) }
+                    .dxType(.footnote).foregroundStyle(DX.Ground.reading.muted)
+                    if let note = current.step.note { Text(verbatim: note).dxType(.footnote).foregroundStyle(DX.Ground.reading.muted) }
                     if plan.type == .patch, !showAllSteps { patchCheck }
                     if plan.type == .patch { bedtimeToggle }
                     if plan.type == .gum {
                         Button { showGumGuide = true } label: {
-                            Label("How to chew and park", systemImage: "questionmark.circle").frame(maxWidth: .infinity)
+                            HStack(spacing: 8) {
+                                DXIcon(.note, size: 18)
+                                Text("How to chew and park")
+                            }
+                            .frame(maxWidth: .infinity)
                         }
-                        .buttonStyle(.v4Secondary)
+                        .buttonStyle(.dx(.ghost, on: .reading))
                     }
                 } else if !schedule.hasStarted(at: now), let start = schedule.start {
-                    Text("Starts \(start.formatted(.dateTime.weekday(.wide).day().month()))").v4Text(.subtitle)
+                    Text("Starts \(start.formatted(.dateTime.weekday(.wide).day().month()))").dxType(.footnote).foregroundStyle(DX.Ground.reading.muted)
                 } else {
-                    Text("Plan finished. Well done for seeing it through.").v4Text(.subtitle)
+                    Text("Plan finished. Well done for seeing it through.").dxType(.footnote).foregroundStyle(DX.Ground.reading.muted)
                 }
                 if showAllSteps {
                     VStack(spacing: 0) {
@@ -64,21 +68,21 @@ struct NRTCard: View {
                         }
                     }
                     .padding(.top, DX.Space.xxs)
-                    Text("Follow the label on your pack and ask a pharmacist or doctor.").v4Text(.subtitle)
+                    Text("Follow the label on your pack and ask a pharmacist or doctor.").dxType(.footnote).foregroundStyle(DX.Ground.reading.muted)
                 }
             }
         }
         .sheet(isPresented: $showGumGuide) {
             ScrollView {
                 VStack(alignment: .leading, spacing: DX.Space.s) {
-                    Text("Chew and park").v4Text(.title).padding(.top, DX.Space.l)
+                    Text("Chew and park").dxType(.title).foregroundStyle(DX.Ground.reading.ink).padding(.top, DX.Space.l)
                     ChewAndParkGuide()
                     LabelNotice()
                 }
                 .padding(.horizontal, DX.Layout.gutter)
                 .dxReadableColumn()
             }
-            .background(Read4.background.ignoresSafeArea())
+            .background(DX.Ground.reading.background.ignoresSafeArea())
             .presentationDetents([.large])
             .presentationDragIndicator(.visible)
         }
@@ -98,12 +102,12 @@ struct NRTCard: View {
             NRTReminders.refresh(profile: try? context.fetch(FetchDescriptor<UserProfile>()).first)
         })) {
             VStack(alignment: .leading, spacing: 1) {
-                Text("Off at bedtime").dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.ink)
+                Text("Off at bedtime").dxFace(.body, 16, weight: 600).foregroundStyle(DX.Ground.reading.ink)
                 Text(plan.offAtBedtime ? "16 hours a day. Helps if dreams or sleep are disturbed." as LocalizedStringKey : "On overnight, 24 hours a day")
-                    .v4Text(.subtitle)
+                    .dxType(.footnote).foregroundStyle(DX.Ground.reading.muted)
             }
         }
-        .tint(Read4.accent)
+        .tint(DX.Ground.reading.sel)
     }
 
     /// "Patch on today": a one-tap check that also silences today's reminder.
@@ -114,10 +118,13 @@ struct NRTCard: View {
             try? context.save()
             NRTReminders.refresh(profile: try? context.fetch(FetchDescriptor<UserProfile>()).first)
         } label: {
-            Label(done ? "Patch on today" : "Mark patch on", systemImage: done ? "checkmark.circle.fill" : "circle")
-                .frame(maxWidth: .infinity)
+            HStack(spacing: 8) {
+                DXIcon(.check, size: 18, weight: 2.6).opacity(done ? 1 : 0.3)
+                Text(done ? "Patch on today" as LocalizedStringKey : "Mark patch on")
+            }
+            .frame(maxWidth: .infinity)
         }
-        .buttonStyle(.v4Secondary)
+        .buttonStyle(.dx(.ghost, on: .reading))
         .sensoryFeedback(DX.Haptic.select, trigger: done)
         .accessibilityAddTraits(done ? .isSelected : [])
     }
@@ -142,21 +149,21 @@ struct TaperCard: View {
         let schedule = StepSchedule(startDate: taper.startDate, steps: taper.steps, clock: clock)
         V4Card(padding: 14) {
             VStack(alignment: .leading, spacing: DX.Space.xs) {
-                Text("Your pouch taper").v4Text(.cardHeading)
+                Text("Your pouch taper").dxType(.headline).foregroundStyle(DX.Ground.reading.ink)
                 if let current = schedule.current(at: now) {
                     Text("\(NRTReminderPlan.strength(current.step.strengthMg)) this week · step \(current.index + 1) of \(schedule.spans.count)")
-                        .dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.ink)
+                        .dxFace(.body, 16, weight: 600).foregroundStyle(DX.Ground.reading.ink)
                     if let next = schedule.next(after: current) {
-                        Text("\(NRTReminderPlan.strength(next.step.strengthMg)) from \(next.start.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)))").v4Text(.subtitle)
+                        Text("\(NRTReminderPlan.strength(next.step.strengthMg)) from \(next.start.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)))").dxType(.footnote).foregroundStyle(DX.Ground.reading.muted)
                     } else {
-                        Text("Then Quit Day").v4Text(.subtitle)
+                        Text("Then Quit Day").dxType(.footnote).foregroundStyle(DX.Ground.reading.muted)
                     }
                 } else if let start = schedule.start, !schedule.hasStarted(at: now) {
                     Text("Starts \(start.formatted(.dateTime.weekday(.wide).day().month()))")
-                        .dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.ink)
+                        .dxFace(.body, 16, weight: 600).foregroundStyle(DX.Ground.reading.ink)
                 } else {
-                    Text("Taper done. Quit Day is next.").dxFont(16, weight: 600, style: .body)
-                        .foregroundStyle(Read4.ink)
+                    Text("Taper done. Quit Day is next.").dxFace(.body, 16, weight: 600)
+                        .foregroundStyle(DX.Ground.reading.ink)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -178,11 +185,11 @@ struct NRTInviteRow: View {
                     .frame(width: 40, height: 40).background(DX.Fill.surface, in: Circle())
                     .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(title).dxFont(16, weight: 700, style: .body).foregroundStyle(DX.Ground.reading.ink)
+                    Text(title).dxFace(.body, 16, weight: 700).foregroundStyle(DX.Ground.reading.ink)
                     Text(detail).dxType(.footnote).foregroundStyle(DX.Ground.reading.muted)
                 }
                 Spacer(minLength: DX.Space.xs)
-                Image(systemName: "chevron.right").font(.system(size: 13, weight: .bold)).foregroundStyle(DX.Ground.reading.muted)
+                DXIcon(.chev, size: 14, weight: 2.6).foregroundStyle(DX.Ground.reading.muted)
                     .accessibilityHidden(true)
             }
             .padding(14)

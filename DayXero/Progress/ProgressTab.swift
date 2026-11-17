@@ -281,7 +281,7 @@ struct ProgressTab: View {
                 .fixedSize(horizontal: false, vertical: true)
         }
         Button { showHealth = true } label: {
-            Label("See the whole timeline", systemImage: "chevron.right")
+            HStack(spacing: 6) { Text("See the whole timeline"); DXIcon(.chev, size: 14, weight: 2.6) }
                 .labelStyle(TrailingIcon())
                 .dxFont(14, weight: 700, style: .footnote)
                 .foregroundStyle(Read4.ink)
@@ -450,7 +450,8 @@ struct ProgressTab: View {
         let weeks = insights.weeks()
         let most = max(weeks.map(\.cravings).max() ?? 1, 1)
         let current = weeks.last
-        return V4Card(padding: 14) {
+        // v5: the same panel as the other patterns, this week's bar in the patterns' coral.
+        return patternPanel {
             VStack(alignment: .leading, spacing: DX.Space.s) {
                 HStack(alignment: .firstTextBaseline) {
                     Text("Cravings by week").v4Text(.cardHeading)
@@ -463,7 +464,7 @@ struct ProgressTab: View {
                             Text(verbatim: week.cravings.formatted()).dxFont(12, weight: 600, style: .caption1)
                                 .foregroundStyle(Read4.ink)
                             RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                .fill(week.isCurrent ? Read4.accent : Read4.track)
+                                .fill(week.isCurrent ? DX.Fill.coral : Read4.track)
                                 .frame(height: max(4, 72 * CGFloat(week.cravings) / CGFloat(most)))
                             Text(weekLabel(week, back: weeks.count - 1 - index))
                                 .dxFont(12, weight: 400, style: .caption2)
@@ -580,7 +581,7 @@ struct LogButton: View {
 
     var body: some View {
         Button(action: action) {
-            Label("Log", systemImage: "plus")
+            HStack(spacing: 6) { DXIcon(.plus, size: 16); Text("Log") }
                 .dxFont(14, weight: 600, style: .footnote)
                 .foregroundStyle(Read4.ink)
                 .padding(.horizontal, 14)

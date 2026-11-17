@@ -164,7 +164,7 @@ private struct LessonCard: View {
 }
 
 /// The turn: the rear shows until halfway, then the face, so it reads as one card turning over.
-private struct LessonFlip: ViewModifier, Animatable {
+struct LessonFlip: ViewModifier, Animatable {
     nonisolated var animatableData: Double
     let isRear: Bool
 
