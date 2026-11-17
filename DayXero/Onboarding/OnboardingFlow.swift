@@ -46,7 +46,14 @@ struct OnboardingFlow: View {
             }
         }
         .foregroundStyle(ground.ink)
-        .background(ground.background.ignoresSafeArea())
+        .background {
+            // Craving SOS sits on a lit sea that runs behind the header too; every other step is its flat ground.
+            if model.step == .cravingSOS && breathed {
+                CravingSOSIntroScreen.Sea().ignoresSafeArea()
+            } else {
+                ground.background.ignoresSafeArea()
+            }
+        }
         .environment(\.dxGround, ground)
         .animation(motion.animation(DX.Move.settle), value: model.step)
         .animation(motion.animation(.easeInOut(duration: 0.5)), value: breathed)

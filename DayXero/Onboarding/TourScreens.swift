@@ -338,16 +338,21 @@ struct CravingSOSIntroScreen: View {
                 .padding(.top, 12)
                 .padding(.bottom, DX.Space.xs)
         }
-        // A lit sea: lighter at the top and behind the ring, deep at the bottom so Continue sits on calm water.
-        .background {
+    }
+
+    /// A lit sea: lighter at the top and behind the ring, deep at the bottom so Continue sits on calm water. The flow
+    /// draws it behind the whole screen, header included, so there is no seam under the progress bar.
+    struct Sea: View {
+        @Environment(\.colorScheme) private var scheme
+
+        var body: some View {
             ZStack {
                 LinearGradient(colors: scheme == .dark ? [Color(hex: 0x13295F), Color(hex: 0x0E1F4C), Color(hex: 0x0A1638)]
                                                        : [Color(hex: 0x2E5AB8), Color(hex: 0x24469E), Color(hex: 0x1A3480)],
                                startPoint: .top, endPoint: .bottom)
                 RadialGradient(colors: [Color.white.opacity(scheme == .dark ? 0.06 : 0.12), .clear],
-                               center: UnitPoint(x: 0.5, y: 0.36), startRadius: 0, endRadius: 260)
+                               center: UnitPoint(x: 0.5, y: 0.42), startRadius: 0, endRadius: 260)
             }
-            .ignoresSafeArea()
         }
     }
 }
@@ -471,11 +476,18 @@ struct YourDayScreen: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
-                MarkedTitle(String(localized: "Each day opens and closes the "), marking: String(localized: "same way"), color: ground.mark)
-                    .dxType(.large)
-                    .foregroundStyle(ground.ink)
-                    .accessibilityAddTraits(.isHeader)
-                    .dxArrive(0)
+                // Two lines, as on the canvas: one line shrank the lead to an ellipsis.
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("Each day opens and")
+                        .lineLimit(1).minimumScaleFactor(0.6)
+                    MarkedTitle(String(localized: "closes the "), marking: String(localized: "same way"), color: ground.mark)
+                }
+                .dxType(.large)
+                .foregroundStyle(ground.ink)
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(Text("Each day opens and closes the same way"))
+                .accessibilityAddTraits(.isHeader)
+                .dxArrive(0)
                 morning
                     .padding(.top, 22)
                     .dxArrive(1)
