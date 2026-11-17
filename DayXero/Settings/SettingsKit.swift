@@ -130,6 +130,7 @@ enum SettingsGlyph {
     static let display = "M12 21a9 9 0 100-18 9 9 0 000 18zM12 3v18M12 7h5M12 11h7M12 15h6"
     static let flag = "M6 21V4M6 4h11l-2 4 2 4H6"
     static let doc = "M6 3.5h9l3 3V20.5H6zM9 11h6M9 15h6"
+    static let star = "M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.8z"
 }
 
 /// One settings row (061): the tile, the title (16 pt semibold) with an optional line under it, a muted value and the

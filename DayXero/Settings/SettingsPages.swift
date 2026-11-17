@@ -957,6 +957,10 @@ struct HelpSettingsView: View {
                     }
                     .buttonStyle(.dxPress)
                 }
+                Link(destination: AppLinks.writeReview) {
+                    SettingsRow(Text("Rate DayXero"), icon: SettingsGlyph.star, detail: Text("A rating helps other people find it"), minHeight: 66)
+                }
+                .buttonStyle(.dxPress)
                 NavigationLink(value: SettingsSheet.Page.health) {
                     SettingsRow("Health information", icon: .heart, detail: Text("Support, not treatment"), minHeight: 66)
                 }

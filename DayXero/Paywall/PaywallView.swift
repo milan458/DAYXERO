@@ -8,6 +8,8 @@ import SwiftUI
 enum AppLinks {
     static let terms = URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!
     static let privacy: URL? = URL(string: "https://dayxero.app/privacy/")
+    /// DayXero's App Store page, opened on its "Write a Review" sheet (Apple ID 6822799921).
+    static let writeReview = URL(string: "https://apps.apple.com/app/id6822799921?action=write-review")!
 }
 
 /// The full paywall (S3.1–S3.6), opened from "See all plans", Settings, Program, Today and the locked features.
