@@ -1,4 +1,5 @@
 import DayXeroCore
+import StoreKit
 import SwiftData
 import SwiftUI
 
@@ -13,6 +14,7 @@ struct SessionFlowView: View {
 
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.requestReview) private var requestReview
     private let motion = MotionPolicy()
 
     @State private var steps: [FlowStep] = []
@@ -449,7 +451,13 @@ struct SessionFlowView: View {
                 }
             }
         case .completion:
-            SessionCompletion(session: session, ctx: ctx, isReplay: isReplay, onDone: { dismiss() })
+            SessionCompletion(session: session, ctx: ctx, isReplay: isReplay, onDone: {
+                // A rating is asked for as Prep 1 and Day Xero close, the first time each is finished.
+                if completed, let moment = ReviewAsk.moment(forSession: session.id) {
+                    ReviewPrompt.ask(moment, joined: profile.createdAt, request: requestReview)
+                }
+                dismiss()
+            })
         case .hand:
             let order = session.playOrder(savedForLater: heldCards(session))
             DeckHandView(session: session, ctx: ctx, cards: order, played: playedCards(),

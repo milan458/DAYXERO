@@ -1,4 +1,5 @@
 import DayXeroCore
+import StoreKit
 import SwiftData
 import SwiftUI
 import UIKit
@@ -39,6 +40,7 @@ struct CravingSOSView: View {
     @Environment(\.modelContext) private var context
     private let motion = MotionPolicy()
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.requestReview) private var requestReview
     @AppStorage("dx.sosHaptics") private var hapticsOn = true
     @Query(filter: #Predicate<LogEntry> { $0.kindRaw == "craving" }) private var cravings: [LogEntry]
 
@@ -364,6 +366,10 @@ struct CravingSOSView: View {
     }
 
     private func close() {
+        // A rating is asked for after a craving ridden out, from the third day with the app (never after a slip).
+        if stage == .passed, let profile {
+            ReviewPrompt.ask(.sosPassed, joined: profile.createdAt, request: requestReview)
+        }
         if stage == .session { finish(.closed) } else { onClose() }
     }
 

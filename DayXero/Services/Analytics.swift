@@ -43,6 +43,8 @@ enum AnalyticsEvent {
     case waterGoalMet
     /// Settings (S18.17): the currency code only.
     case currencyChanged(code: String)
+    /// The app asked the system for the App Store rating sheet. Whether it showed is not known.
+    case reviewRequested(moment: String)
     /// A Superwall paywall or purchase event (S20), by Superwall's own name, e.g. "paywall_open".
     case superwallEvent(name: String)
 
@@ -78,6 +80,7 @@ enum AnalyticsEvent {
         case .waterLogged: "water_logged"
         case .waterGoalMet: "water_goal_met"
         case .currencyChanged: "currency_changed"
+        case .reviewRequested: "review_requested"
         case .superwallEvent: "superwall_event"
         }
     }
@@ -105,6 +108,7 @@ enum AnalyticsEvent {
         case let .waterGoalSet(source, goalBucket): ["source": source, "goal_bucket": goalBucket]
         case let .waterLogged(source, drink): ["source": source, "drink": drink]
         case let .currencyChanged(code): ["code": code]
+        case let .reviewRequested(moment): ["moment": moment]
         case let .superwallEvent(name): ["event": name]
         case .onboardingCompleted, .paywallViewed, .paywallDismissed, .waterGoalMet: [:]
         }
