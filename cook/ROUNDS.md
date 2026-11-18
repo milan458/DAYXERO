@@ -182,3 +182,13 @@ Changes:
   or lighter support" and the source. Larger Xero and objects. Dark sun disc is a navy tone. Caveat centred.
 - S5: leaf redrawn in the same paper-cut style; radio circles removed (check badge on the selected row only).
 Stills: `cook/stills/r07/` | Pairs: `cook/compare/r07/` | 3 critics
+Scores, eyeballed, raw (Opus / Sonnet / Fable -> median; round 4 in brackets):
+S2 overall 8.1/7.9/8.3 = 8.1 (8.1/7.8/8.3 = 8.1) | S2 art 8.2/8.0/8.4 = 8.2 (7.8/7.3/8.2 = 7.8)
+S5 overall 7.8/7.6/8.2 = 7.8 (7.8/7.7/7.9 = 7.8) | S5 art 7.8/7.5/8.3 = 7.8 (7.2/7.0/7.7 = 7.2)
+Set 8.2/7.9/8.3 = 8.2 (8.2)
+Read: the drawings raise the art mark by about 0.4 to 0.6 on both screens; the overall mark is level with round 4.
+The agreed test was "beat round 4". Overall: not beaten, level. Kept in `cook/canvas/project/` as the current state (not lower on
+either median); the round 4 versions are at commit d49534a. No further screens illustrated until the user decides.
+Remaining asks on these two: S2 four type sizes in the stat block, objects not centred over their columns; S5 still three jobs on one
+screen (the pregnancy question is product content), "50 to 60% higher" beside "1.5 to 1.6x".
+Stop check: bar no | user decision pending on continuing the illustration pass.
