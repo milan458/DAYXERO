@@ -52,8 +52,12 @@ body{margin:0}
     </g>
   </sc-if>
   <sc-if value="{{is.leaf}}" hint-placeholder-val="{{false}}">
-    <path d="M11 53 C11 27 27 12 54 10 C54 37 38 53 13 53 Z" fill="#3FB37F"></path>
-    <path d="M13 53 L40 25 M24 42 h12 M31 35 v-10" fill="none" stroke="#1F7A52" stroke-width="3" stroke-linecap="round"></path>
+    <g transform="rotate(-4 32 32)">
+      <path d="M11 53 C11 27 27 12 54 10 C54 37 38 53 13 53 Z" fill="#3FB37F"></path>
+      <path d="M54 10 C54 37 38 53 13 53 L40 25 Z" fill="#2F9A6A"></path>
+      <path d="M13 53 L40 25" fill="none" stroke="#FFF8EE" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="4 4"></path>
+      <path d="M17 34 C20 25 27 19 36 16" fill="none" stroke="#8FE0B6" stroke-width="3" stroke-linecap="round" opacity="0.8"></path>
+    </g>
   </sc-if>
 </svg>
 </x-dc>

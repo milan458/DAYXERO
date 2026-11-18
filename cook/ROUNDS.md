@@ -167,3 +167,18 @@ Changes:
   Frame 900 -> 950 tall.
 - Other six screens: round 4, unchanged.
 Stills: `cook/stills/r06/` | Pairs: `cook/compare/r06/` | 3 critics
+Scores, eyeballed, raw overall (Opus / Sonnet / Fable -> median; round 4 median):
+S2 7.8/7.8/8.3 = 7.8 (8.1, down) | S5 7.6/7.7/7.9 = 7.7 (7.8, down) | Set 8.1/8.0/8.3 = 8.1 (8.2)
+Art sub-scores rose (S2 art 8.0/8.0/8.3 against 7.8/7.3/8.2; S5 art 7.4/7.8/7.9 against 7.2/7.0/7.7) but hierarchy fell:
+the S2 card held a scene, two labels, a stat, bars and a source; the "about 80% / more likely to quit" lockup wrapped badly;
+the dark sun disc read as muddy brown; S5 mixed object styles and a radio beside "Pick all you use".
+Not kept as is. One fix pass (round 7) on those named flaws.
+
+## Round 07
+
+Focus: S2 and S5 only, the round 6 flaws.
+Changes:
+- S2: bars removed. The card is the scene, the two labels, then a centred "about 80% more likely to quit than with brief advice
+  or lighter support" and the source. Larger Xero and objects. Dark sun disc is a navy tone. Caveat centred.
+- S5: leaf redrawn in the same paper-cut style; radio circles removed (check badge on the selected row only).
+Stills: `cook/stills/r07/` | Pairs: `cook/compare/r07/` | 3 critics
