@@ -5,8 +5,8 @@ Time: no floor | cap 6 rounds
 Bar: 9.0 per screen on layout, hierarchy, color, type and components, art and data graphics, polish (critic median after calibration)
 Calibration offset: -0.15 (user says 7.5 on 18 Nov; raw critic baseline 7.6 and 7.7)
 Usage: not readable
-Gate: stills approved no | final: the canvas is updated in place each kept round
-Best so far: round 1, `cook/stills/r01/`
+Gate: stills approved no | canvas publish blocked (permission denied on 18 Nov), sources ready in `cook/canvas/project/`
+Best so far: round 4, `cook/stills/r04/`, commit d49534a (sources restored to it in `cook/canvas/project/`)
 
 ## Decisions
 
@@ -132,3 +132,21 @@ Changes:
 - S3: larger cheering Xero on the summary card. S6: "6 fewer" legend under the second grid, warmer empty dots.
 - S1: tighter number, pictogram and label; lighter ghost bean. S7: cleaner dark halo, stronger icon wells.
 Stills: `cook/stills/r05/` | Pairs: `cook/compare/r05/` | 3 critics
+Scores, eyeballed, raw overall (Opus / Sonnet / Fable -> median; round 4 median):
+S1 8.3/8.1/8.3 = 8.3 (8.5) | S2 8.1/7.8/8.0 = 8.0 (8.1) | S3 8.0/8.0/8.1 = 8.0 (8.2) | S4 8.0/8.0/7.9 = 8.0 (8.2) | S5 7.8/7.6/7.6 = 7.6 (7.8)
+S6 8.1/7.9/7.8 = 7.9 (8.4) | S7 8.4/8.2/8.3 = 8.3 (8.5) | S8 7.9/7.8/7.8 = 7.8 (8.0) | Set 8.1/7.9/8.0 = 8.0, calibrated 7.85
+Lower on every screen. Real defect introduced: the S6 button touched the dot card (legend line made the card taller).
+Decision: whole round reverted; `cook/canvas/project/` restored to round 4 (d49534a).
+
+## Stop (cap reached in effect: round 5 lost, rounds 3 and 4 flat)
+
+Final state = round 4. Raw set median 8.2 (Opus 8.2, Sonnet 7.9, Fable 8.3), calibrated 8.05. Start was 7.5 (user) / 7.65 raw.
+Bar 9.0 not met on any screen. Calibrated per screen: S1 8.35, S2 7.95, S3 8.05, S4 8.05, S5 7.65, S6 8.25, S7 8.35, S8 7.85.
+Round 6 not run: it would have repeated round 4 (same sources), and five rounds show the critics moving +/-0.15 on unchanged screens.
+Still below the bar, by how often critics named it:
+1. S5 and S8 have no bespoke art; S2 to S5 use line icons in discs where S1 and S7 have drawn scenes.
+2. Xero reads coral-red, not apricot, and sits on card edges instead of in scenes (Xero is a shared part, left untouched).
+3. Copy density on S2, S4, S5, S6 (the caveats are fact-checked wording, so they were shortened only where meaning held).
+4. Ragged chip rows on S3 and S4; S6 and S7 show the prep week in two different forms.
+Canvas publish: attempted once, denied by the permission classifier. Not retried. The round 4 files and the updated
+`canvas.json` (EvQuitDay 930 tall, EvPlan 1090 tall) are in `cook/canvas/project/`.

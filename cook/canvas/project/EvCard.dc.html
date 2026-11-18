@@ -22,11 +22,10 @@ body{margin:0}
     </div>
   </div>
   <div style="display: flex; flex-direction: column; gap: 6px">
-    <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 10px"><span style="font-size: 14px; font-weight: 600; color: {{t.muted}}">{{bLabel}}</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 18px; white-space: nowrap">{{bText}}</span></div>
+    <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 10px"><span style="font-size: 14px; font-weight: 600; color: {{t.muted}}; display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap">{{bLabel}}<sc-if value="{{hasGap}}" hint-placeholder-val="{{true}}"><span style="display: inline-flex; align-items: center; gap: 4px; font-weight: 500"><span style="width: 9px; height: 9px; border-radius: 50%; box-sizing: border-box; box-shadow: inset 0 0 0 1.5px {{t.a}}"></span>{{gapText}}</span></sc-if></span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 18px; white-space: nowrap">{{bText}}</span></div>
     <div role="img" aria-label="{{bAria}}" style="display: grid; grid-template-columns: repeat(25, minmax(0, 1fr)); gap: 3px">
       <sc-for list="{{dotsB}}" as="d" hint-placeholder-count="100"><span style="aspect-ratio: 1; border-radius: 50%; box-sizing: border-box; {{d.c}}"></span></sc-for>
     </div>
-    <sc-if value="{{hasGap}}" hint-placeholder-val="{{true}}"><span style="display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; color: {{t.muted}}; align-self: flex-end"><span style="width: 9px; height: 9px; border-radius: 50%; box-sizing: border-box; box-shadow: inset 0 0 0 1.5px {{t.a}}"></span>{{gapText}}</span></sc-if>
   </div>
   <sc-if value="{{hasNote}}" hint-placeholder-val="{{false}}">
     <div style="font-size: 13px; font-weight: 500; line-height: 1.4; color: {{t.muted}}">{{note}}</div>
@@ -40,7 +39,7 @@ class Component extends DCLogic {
     const dark = (this.props.theme ?? 'light') === 'dark';
     const t = dark
       ? { fg: '#FFF8EE', muted: '#B3BACC', card: '#1B2439', ring: 'inset 0 0 0 1px rgba(255,255,255,0.22)', a: '#FF8A65', b: '#FF8A65', off: 'rgba(255,255,255,0.2)' }
-      : { fg: '#1E1A3A', muted: '#4A2810', card: '#FFFAF5', ring: 'none', a: '#F2603C', b: '#F2603C', off: 'rgba(120,70,40,0.16)' };
+      : { fg: '#1E1A3A', muted: '#4A2810', card: '#FFFAF5', ring: 'none', a: '#F2603C', b: '#F2603C', off: 'rgba(30,26,58,0.15)' };
     const aN = Number(this.props.aN ?? 23), bN = Number(this.props.bN ?? 15);
     const unit = String(this.props.unit ?? '');
     const hi = Math.max(aN, bN);

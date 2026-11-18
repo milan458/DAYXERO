@@ -14,7 +14,7 @@ body{margin:0}
 </style>
 </helmet>
 <div style="width: 390px; height: 844px; box-sizing: border-box; background: {{t.scrim}}; color: {{t.fg}}; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; display: flex; flex-direction: column; justify-content: flex-end">
-  <div aria-hidden="true" style="position: absolute; left: 0; top: -292px; width: 390px; height: 1090px"><dc-import name="EvPlan" theme="{{theme}}" hint-size="390px,1090px"></dc-import></div>
+  <div aria-hidden="true" style="position: absolute; left: -12px; top: -12px; width: 390px; height: 1090px; transform: scale(1.07); transform-origin: 50% 0; filter: blur(9px) saturate(0.75)"><dc-import name="EvPlan" theme="{{theme}}" hint-size="390px,1090px"></dc-import></div>
   <div aria-hidden="true" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; background: {{t.dim}}"></div>
   <div style="position: relative; background: {{t.sheet}}; box-shadow: {{t.sheetEdge}}; border-radius: 28px 28px 0 0; padding: 10px 22px 30px 22px; display: flex; flex-direction: column">
     <div style="width: 40px; height: 5px; border-radius: 99px; background: {{t.grab}}; align-self: center"></div>
@@ -22,13 +22,13 @@ body{margin:0}
       <div style="display: flex; align-items: center; gap: 8px"><div style="width: 48px; height: 48px; flex: none; margin: -4px 0 -4px -6px"><dc-import name="Xero" mood="hello" stage="1" animate="true" size="48" hint-size="48px,48px"></dc-import></div><h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 26px; letter-spacing: -0.7px">The research</h1></div>
       <button aria-label="Close" style="width: 44px; height: 44px; border-radius: 99px; border: 0; padding: 0; background: {{t.card2}}; color: {{t.fg}}; display: flex; align-items: center; justify-content: center; flex: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M5 5 L19 19 M19 5 L5 19"></path></svg></button>
     </div>
-    <p style="margin: 8px 0 0 0; font-size: 15px; font-weight: 500; line-height: 1.45; color: {{t.muted}}; text-wrap: balance">Every number in DayXero comes from published research on ways of quitting, not from using DayXero, which hasn’t been tested in a clinical trial.</p>
+    <p style="margin: 8px 0 0 0; font-size: 15px; font-weight: 500; line-height: 1.45; color: {{t.muted}}; text-wrap: pretty">Every number in DayXero comes from published research on ways of quitting, not from using DayXero, which hasn’t been tested in a clinical trial.</p>
 
     <div style="margin-top: 14px; display: flex; flex-direction: column">
       <sc-for list="{{items}}" as="s" hint-placeholder-count="6">
         <a href="#" style="display: flex; align-items: flex-start; gap: 12px; min-height: 66px; box-sizing: border-box; padding: 12px 0 10px 0; border-top: 1px solid {{t.line}}; color: {{t.fg}}; text-decoration: none">
-          <span style="width: 60px; height: 26px; border-radius: 99px; background: {{s.bg}}; flex: none; align-self: flex-start; margin-top: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: {{t.fg}}">{{s.k}}</span>
-          <span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: -0.2px">{{s.t}}</span><span style="font-size: 13px; font-weight: 500; line-height: 1.4; color: {{t.muted}}; text-wrap: pretty">{{s.d}}</span></span>
+          <span style="width: 60px; height: 26px; border-radius: 99px; background: {{t.well}}; flex: none; align-self: flex-start; margin-top: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: {{t.fg}}">{{s.k}}</span>
+          <span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: -0.2px">{{s.t}}</span><span style="font-size: 14px; font-weight: 500; line-height: 1.35; color: {{t.muted}}; text-wrap: pretty">{{s.d}}</span></span>
           <span style="width: 20px; height: 26px; color: {{t.fg}}; flex: none; display: flex; align-items: center; justify-content: center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5 h11 v11 M19 5 L6 18"></path></svg></span>
         </a>
       </sc-for>
@@ -43,7 +43,7 @@ class Component extends DCLogic {
     const dark = (this.props.theme ?? 'light') === 'dark';
     const t = dark
       ? { scrim: '#05070F', dim: 'rgba(3,5,12,0.62)', sheet: '#151C30', sheetEdge: 'inset 0 1px 0 rgba(255,255,255,0.16)', well: '#232C45', arrowBg: '#2E3957', arrowFg: '#FFF8EE', fg: '#FFF8EE', muted: '#B3BACC', card2: '#212A41', line: 'rgba(255,255,255,0.14)', grab: 'rgba(255,255,255,0.3)' }
-      : { scrim: '#8A6648', dim: 'rgba(30,22,40,0.36)', sheet: '#FFFAF5', sheetEdge: 'none', well: '#FFEBDD', arrowBg: '#FFE2CF', arrowFg: '#1E1A3A', fg: '#1E1A3A', muted: '#4A2810', card2: '#FFE7D0', line: 'rgba(30,26,58,0.14)', grab: 'rgba(30,26,58,0.25)' };
+      : { scrim: '#8A6648', dim: 'rgba(70,30,18,0.52)', sheet: '#FFFAF5', sheetEdge: 'none', well: '#FFEBDD', arrowBg: '#FFE2CF', arrowFg: '#1E1A3A', fg: '#1E1A3A', muted: '#4A2810', card2: '#FFE7D0', line: 'rgba(30,26,58,0.14)', grab: 'rgba(30,26,58,0.25)' };
     const items = [
       { t: 'Medicine plus support', k: 'Review', d: 'Cochrane, 52 trials, 2016. Support came from trained advisers.' },
       { t: 'Nicotine replacement', k: 'Review', d: 'Cochrane, 133 trials, 2018. People quitting cigarettes.' },
@@ -52,8 +52,6 @@ class Component extends DCLogic {
       { t: 'Stopping all at once', k: 'Trial', d: 'One trial of 697 smokers, 2016, and a Cochrane review of 22 trials, 2019.' },
       { t: 'Withdrawal over time', k: 'Paper', d: 'Hughes, Nicotine and Tobacco Research, 2007.' }
     ];
-    const tint = dark ? { Review: '#4D2F2C', NHS: '#243D6E', Trial: '#4C4220', Paper: '#33385A' } : { Review: '#FFD9C7', NHS: '#D5E5FF', Trial: '#FFE7A3', Paper: '#E9E4F1' };
-    items.forEach((i) => { i.bg = tint[i.k]; });
     return { t, items, theme: dark ? 'dark' : 'light' };
   }
 }
