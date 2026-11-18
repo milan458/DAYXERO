@@ -27,11 +27,18 @@ final class JourneyUITests: XCTestCase {
         tap(button(app, "Disposables"), timeout: 10)
         snap(app, "02-products")
         tapSettled(app, "Continue")
+        // Good company: the vaping figure. Nothing to answer.
+        XCTAssert(app.staticTexts["adults who vape intend to quit"].waitForExistence(timeout: 5), "Good company didn't follow the products")
+        snap(app, "02b-good-company")
+        tapSettled(app, "Continue")
         // The vape baseline starts on the region's usual price, so it can go straight on.
         snap(app, "03-baseline")
         tapSettled(app, "Calculate my baseline")
         XCTAssert(app.staticTexts["Your nicotine, counted in cigarettes"].waitForExistence(timeout: 5), "Baseline summary didn't appear")
         tapSettled(app, "Continue")
+        // What works: medicine plus support. Nothing to answer.
+        snap(app, "03a-what-works")
+        tapSettled(app, "Build my plan")
         tap(button(app, "Coffee"))
         tapSettled(app, "Continue")
         // Craving SOS, for the trigger just picked.

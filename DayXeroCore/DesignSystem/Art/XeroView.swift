@@ -15,7 +15,7 @@ public struct XeroView: View {
     /// Kit poses on top of a mood (001, 002): breath puffs that leave his mouth on the out-breath (in place of the
     /// marks beside his arm), or a raised right arm that waves twice from 1.2 s. Both run on a clock that starts at
     /// `since`, so they line up with the rest of the screen.
-    public enum Pose: Sendable { case standard, breathPuffs, wave, holdFlag, headphones }
+    public enum Pose: Sendable { case standard, breathPuffs, wave, holdFlag, headphones, hold }
 
     public init(mood: CrewMood = .hello, stage: Int = 1, size: DX.CharacterSize = .scene, animate: Bool = true) {
         self.init(mood: mood, stage: stage, points: size.rawValue, animate: animate)
@@ -92,8 +92,12 @@ public struct XeroView: View {
         Crew.fill(&g, Crew.ellipse(84, 188, 12, 7), look.feet)
         Crew.fill(&g, Crew.ellipse(116, 188, 12, 7), look.feet)
         let coral = look.body
-        Crew.stroke(&g, cheer ? "M38 112 C28 98 24 86 26 74" : "M36 124 C26 132 22 142 24 152", coral, 12)
-        if pose == .wave {
+        // `hold`: both arms out to the sides, carrying an object the screen draws over each hand (evidence story).
+        let holding = pose == .hold
+        Crew.stroke(&g, holding ? "M38 118 C26 116 16 108 12 96" : cheer ? "M38 112 C28 98 24 86 26 74" : "M36 124 C26 132 22 142 24 152", coral, 12)
+        if holding {
+            Crew.stroke(&g, "M162 118 C174 116 184 108 188 96", coral, 12)
+        } else if pose == .wave {
             // Two 16° swings from 1.2 s (2 × 800 ms), then it rests raised.
             let local = on ? t - 1.2 : 2
             let swing = local <= 0 || local >= 1.6 ? 0 : -16 * sin(local / 0.8 * .pi).magnitude

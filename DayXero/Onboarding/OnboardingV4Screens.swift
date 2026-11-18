@@ -266,20 +266,20 @@ struct WelcomeScreen: View {
     }
 }
 
-// MARK: F04 Quit Day · apricot (v5, 010)
+// MARK: F04 Quit Day · apricot (canvas "Evidence story", board 6)
 
-/// The prep week on one card (a tile per prep day, today in a coral disc, a prep dot under each), the Quit Day row that
-/// opens the date wheel, Xero on his hill with a flag, and the hold.
+/// The date on one card (the sun badge, the date, "Change", then the prep week as numbered days ending on the sun),
+/// the one trial that compared stopping all at once with cutting down as two groups of 100, and the hold.
 ///
-/// Motion (010): title, the week card (tiles rise 45 ms apart, dots pop left to right), the Quit Day row, Xero and the
-/// hold arrive in order. Holding fills the button over 1500 ms; on complete it shows "Quit Day set", the flag runs up
-/// its pole (34 pt, 700 ms) while Xero bumps, and the row's caption swaps to "Quit Day set" with a green tick. 1200 ms
-/// later the button crossfades into Continue.
+/// Motion: title, the date card (the days pop left to right), the evidence card and the hold arrive in order. Holding
+/// fills the button over 1500 ms; on complete it shows "Quit Day set", the sun badge bumps and the caption swaps to
+/// "Quit Day set" with a green tick. 1200 ms later the button crossfades into Continue.
 struct QuitDayScreen: View {
     @Bindable var model: OnboardingModel
     @State private var picking = false
     @State private var committed = false
     @State private var showContinue = false
+    @State private var research = false
     private let motion = MotionPolicy()
     private let ground = DX.Ground.apricot
 
@@ -300,7 +300,7 @@ struct QuitDayScreen: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 10) {
-                Text(model.name.isEmpty ? "Pick your Quit Day" : "Pick your Quit Day, \(model.name)")
+                Text(model.name.isEmpty ? "Pick your\nQuit Day" : "Pick your\nQuit Day, \(model.name)")
                     .dxType(.large).foregroundStyle(ground.ink)
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityAddTraits(.isHeader)
@@ -309,12 +309,18 @@ struct QuitDayScreen: View {
                     .dxType(.body).foregroundStyle(ground.muted)
                     .fixedSize(horizontal: false, vertical: true)
                     .dxArrive(1)
-                weekCard.padding(.top, 12).dxArrive(2)
-                hero.padding(.top, 2)
+                dateCard.padding(.top, 8).dxArrive(2)
+                EvDotsCard(kicker: "Still quit at six months, in one trial",
+                           aLabel: "Stopped all at once", a: 22, bLabel: "Cut down first", b: 16,
+                           note: "That is one trial. Across 22 trials neither way came out ahead, so a clean stop on a set day works at least as well as cutting down.",
+                           source: "Lindson-Hawley et al., 2016") { research = true }
+                    .padding(.top, 2)
+                    .dxArrive(4)
             }
             .padding(.horizontal, DX.Layout.gutter)
             .dxReadableColumn()
             .padding(.top, DX.Space.m)
+            .padding(.bottom, DX.Space.s)
         }
         .scrollBounceBehavior(.basedOnSize)
         .safeAreaInset(edge: .bottom, spacing: 0) {
@@ -374,195 +380,106 @@ struct QuitDayScreen: View {
             }
             .presentationDetents([.medium, .large])
         }
+        .researchSheet(isPresented: $research, product: model.evidenceProduct)
     }
 
-    private var weekCard: some View {
-        VStack(alignment: .leading, spacing: 0) {
+    /// The sun badge, the date and "Change" over a hairline, then the prep week.
+    private var dateCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Button { picking = true } label: {
+                HStack(spacing: 12) {
+                    SunBadge(size: 44).dxBump(committed)
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text(model.quitDay, format: .dateTime.weekday(.abbreviated).month(.abbreviated).day())
+                            .dxFace(.display, 26, weight: 800, tracking: -0.7).foregroundStyle(ground.ink)
+                            .lineLimit(1).minimumScaleFactor(0.7)
+                        ZStack(alignment: .leading) {
+                            Text(recommended ? "Recommended" : "Your Quit Day")
+                                .dxFace(.body, 14, weight: 500).foregroundStyle(ground.muted)
+                                .opacity(committed ? 0 : 1)
+                            HStack(spacing: 4) {
+                                Text("Quit Day set").foregroundStyle(ground.ink)
+                                DXIcon(.check, size: 11, weight: 3.4).foregroundStyle(.white)
+                                    .frame(width: 16, height: 16).background(DX.Fill.done, in: Circle())
+                                    .padding(.leading, 2)
+                            }
+                            .dxFace(.body, 14, weight: 700)
+                            .opacity(committed ? 1 : 0)
+                        }
+                        .animation(.timingCurve(0.2, 0.7, 0.2, 1, duration: 0.3), value: committed)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    Text("Change")
+                        .dxFace(.body, 15, weight: 600).foregroundStyle(ground.ink)
+                        .padding(.horizontal, 14)
+                        .frame(height: 44)
+                        .background(Color(light: 0xFFDCC2, dark: 0x2E3957), in: Capsule())
+                }
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.dxPress)
+            .accessibilityLabel(Text("Quit Day, \(model.quitDay.formatted(.dateTime.weekday(.wide).day().month(.wide)))"))
+            .accessibilityHint(Text("Change the date"))
+            Rectangle().fill(Color(light: (0x1E1A3A, 0.12), dark: (0xFFFFFF, 0.12))).frame(height: 1)
             HStack(alignment: .firstTextBaseline) {
                 Text("Your prep week").dxFace(.body, 15, weight: 700).foregroundStyle(ground.ink)
                 Spacer()
-                Text("^[\(prepDays.count) short session](inflect: true)").dxType(.footnote).foregroundStyle(ground.muted)
+                Text("^[\(prepDays.count) short session](inflect: true)").dxFace(.body, 14, weight: 500).foregroundStyle(ground.muted)
             }
-            .padding(.horizontal, 4).padding(.bottom, 10)
-            if !prepDays.isEmpty {
-                HStack(spacing: 6) {
-                    ForEach(Array(prepDays.enumerated()), id: \.element) { i, day in
-                        dayTile(day, today: i == 0)
-                            .dxArrive(0, delay: 0.225 + Double(i) * 0.045)
-                    }
-                    // Keep the tiles a week wide when prep is shorter.
-                    ForEach(prepDays.count..<7, id: \.self) { _ in Color.clear.frame(maxWidth: .infinity, minHeight: 82) }
+            HStack(spacing: 2) {
+                ForEach(Array(prepDays.enumerated()), id: \.element) { i, day in
+                    dayStop(day, n: i + 1).dxPop(0, delay: 0.35 + Double(i) * 0.06)
                 }
+                VStack(spacing: 5) {
+                    SunBadge(size: 32)
+                    Text(initial(model.quitDay)).dxFace(.body, 13, weight: 700).foregroundStyle(ground.ink)
+                }
+                .frame(maxWidth: .infinity)
+                .dxPop(0, delay: 0.35 + Double(prepDays.count) * 0.06)
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(Text("Quit Day, \(model.quitDay.formatted(.dateTime.weekday(.wide).day().month(.wide)))"))
             }
-            quitRow.padding(.top, 8).dxArrive(6)
         }
-        .padding(.top, 14).padding(.horizontal, 12).padding(.bottom, 12)
-        .background(ground.card, in: RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous).strokeBorder(Onb.chipLine, lineWidth: 1))
+        .padding(.top, 14).padding(.horizontal, 16).padding(.bottom, 16)
+        .evCard()
     }
 
-    private func dayTile(_ day: Date, today: Bool) -> some View {
-        VStack(spacing: 4) {
-            Text(today ? String(localized: "Today") : day.formatted(.dateTime.weekday(.abbreviated)))
-                .dxFace(.body, 13, weight: today ? 700 : 600)
-                .foregroundStyle(today ? ground.ink : ground.muted)
-                .lineLimit(1).minimumScaleFactor(0.7)
-            Text(day, format: .dateTime.day())
-                .dxFace(.display, today ? 18 : 22, weight: 800, tracking: today ? -0.4 : -0.5)
-                .foregroundStyle(today ? Color.white : ground.ink)
-                .frame(width: today ? 30 : nil, height: today ? 30 : nil)
-                .background { if today { Circle().fill(DX.Fill.coral) } }
-                .padding(.vertical, today ? -4 : 0)
-            Circle().fill(Color(hex: 0xFF9A5C)).frame(width: 8, height: 8).padding(.top, 2)
-                .dxPop(0, delay: 0.7 + Double(prepDays.firstIndex(of: day) ?? 0) * 0.09)
+    /// One prep day: its number in a ring (today's filled with ink) over the weekday's initial.
+    private func dayStop(_ day: Date, n: Int) -> some View {
+        let today = n == 1
+        return VStack(spacing: 5) {
+            Text(verbatim: "\(n)")
+                .dxFace(.display, 14, weight: 700)
+                .foregroundStyle(today ? Ev.selFg : ground.muted)
+                .frame(width: 32, height: 32)
+                .background { if today { Circle().fill(Ev.sel) } else { Circle().strokeBorder(Color(light: (0x1E1A3A, 0.42), dark: (0xFFFFFF, 0.42)), lineWidth: 1.5) } }
+            Text(initial(day)).dxFace(.body, 13, weight: 600).foregroundStyle(ground.muted)
         }
-        .frame(maxWidth: .infinity, minHeight: 82)
-        .background(ground.card2, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .frame(maxWidth: .infinity)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(day, format: .dateTime.weekday(.wide).day().month(.wide)))
-        .accessibilityValue(Text("Prep day"))
+        .accessibilityValue(Text("Prep day \(n)"))
     }
 
-    /// The tappable Quit Day: a cream card with an apricot date page, the date, its caption and "Change".
-    private var quitRow: some View {
-        Button { picking = true } label: {
-            HStack(spacing: 14) {
-                VStack(spacing: 0) {
-                    Text(model.quitDay, format: .dateTime.month(.abbreviated))
-                        .dxFace(.body, 11, weight: 700).tracking(0.2)
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity).frame(height: 16)
-                        .background(Color(hex: 0xFF7155))
-                    Text(model.quitDay, format: .dateTime.day())
-                        .dxFace(.display, 24, weight: 800, tracking: -0.6)
-                        .foregroundStyle(DX.Fill.navy)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                }
-                .frame(width: 48, height: 52)
-                .background(Color(hex: 0xFFC38A))
-                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                .shadow(color: Color(red: 110 / 255, green: 50 / 255, blue: 20 / 255).opacity(0.16), radius: 0, y: 2)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(model.quitDay, format: .dateTime.weekday(.abbreviated).month(.abbreviated).day())
-                        .dxFace(.display, 20, weight: 700, tracking: -0.2).foregroundStyle(ground.ink)
-                        .lineLimit(1).minimumScaleFactor(0.8)
-                    ZStack(alignment: .leading) {
-                        Text(recommended ? "Quit Day, recommended" : "Quit Day")
-                            .foregroundStyle(ground.muted)
-                            .opacity(committed ? 0 : 1)
-                        HStack(spacing: 4) {
-                            Text("Quit Day set").foregroundStyle(ground.ink)
-                            DXIcon(.check, size: 11, weight: 3.4).foregroundStyle(.white)
-                                .frame(width: 16, height: 16).background(DX.Fill.done, in: Circle())
-                                .padding(.leading, 2)
-                        }
-                        .dxFace(.body, 13, weight: 700)
-                        .opacity(committed ? 1 : 0)
-                    }
-                    .dxType(.caption)
-                    .animation(.timingCurve(0.2, 0.7, 0.2, 1, duration: 0.3), value: committed)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                HStack(spacing: 2) {
-                    Text("Change").dxFace(.body, 14, weight: 600)
-                    DXIcon(.chev, size: 18)
-                }
-                .foregroundStyle(ground.muted)
-            }
-            .padding(.leading, 10).padding(.trailing, 14).padding(.vertical, 10)
-            .frame(minHeight: 70)
-            .background(Color(light: 0xFFF8EE, dark: 0x212A41), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .strokeBorder(Color(light: (0x1E1A3A, 0.12), dark: (0xFFFFFF, 0.14)), lineWidth: 1))
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.dxPress)
-        .accessibilityLabel(Text("Quit Day, \(model.quitDay.formatted(.dateTime.weekday(.wide).day().month(.wide)))"))
-        .accessibilityHint(Text("Change the date"))
+    /// "W" for Wednesday.
+    private func initial(_ day: Date) -> String {
+        day.formatted(.dateTime.weekday(.narrow))
     }
+}
 
-    /// Xero on his own small paper hill, holding a yellow flag that runs up its pole when Quit Day is set.
-    private var hero: some View {
-        Color.clear
-            .frame(height: 230)
-            .overlay(alignment: .top) {
-                QuitHill()
-                    .frame(width: 390, height: 104)
-                    .offset(y: 118)
-            }
-            .overlay(alignment: .top) {
-                XeroView(mood: .hello, stage: 0, points: 128, pose: .holdFlag)
-                    .background(alignment: .topLeading) {
-                        FlagPole(raised: committed)
-                            .frame(width: 128, height: 128)
-                    }
-                    .offset(x: -4, y: 30)
-                    .dxBump(committed)
-                    .dxSettle(delay: 0.45)
-            }
+/// The Quit Day sun: a yellow disc with an amber ring and a line sun inside.
+private struct SunBadge: View {
+    let size: CGFloat
+
+    var body: some View {
+        EvGlyph(d: "M12 8 a4 4 0 1 0 0.01 0 M12 2 v2 M12 20 v2 M2 12 h2 M20 12 h2 M4.9 4.9 l1.4 1.4 M17.7 17.7 l1.4 1.4 M4.9 19.1 l1.4 -1.4 M17.7 6.3 l1.4 -1.4",
+                size: size / 2, weight: 2.3)
+            .foregroundStyle(Color(hex: 0x1E1A3A))
+            .frame(width: size, height: size)
+            .background(Color(hex: 0xFFC93C), in: Circle())
+            .overlay(Circle().strokeBorder(Color(hex: 0xF29A2E), lineWidth: 2.5))
+            .shadow(color: Color(hex: 0xFFC93C).opacity(size > 40 ? 0.45 : 0), radius: 6)
             .accessibilityHidden(true)
-    }
-}
-
-/// The yellow pennant on its pole (010), in Xero's 200-unit space, so it scales with him.
-private struct FlagPole: View {
-    let raised: Bool
-
-    var body: some View {
-        GeometryReader { proxy in
-            let s = proxy.size.width / 200
-            ZStack(alignment: .topLeading) {
-                Path { p in p.move(to: CGPoint(x: 188, y: 154)); p.addLine(to: CGPoint(x: 188, y: 30)) }
-                    .stroke(Color(hex: 0x8A5A3C), style: StrokeStyle(lineWidth: 4, lineCap: .round))
-                Circle().fill(Color(hex: 0xF5B83D)).frame(width: 8, height: 8).offset(x: 184, y: 24)
-                Pennant().fill(Color(hex: 0xFFD966))
-                    .overlay(Pennant().stroke(Color(hex: 0xF5B83D), style: StrokeStyle(lineWidth: 2, lineJoin: .round)))
-                    .offset(y: raised ? 0 : 34)
-            }
-            .frame(width: 200, height: 200, alignment: .topLeading)
-            .scaleEffect(s, anchor: .topLeading)
-        }
-    }
-
-    private struct Pennant: Shape {
-        func path(in rect: CGRect) -> Path {
-            Path { p in
-                p.move(to: CGPoint(x: 190, y: 33)); p.addLine(to: CGPoint(x: 216, y: 42)); p.addLine(to: CGPoint(x: 190, y: 52)); p.closeSubpath()
-            }
-        }
-    }
-}
-
-/// Xero's small hill: apricot fading into the ground before the dock, with a soft light edge.
-private struct QuitHill: View {
-    @Environment(\.colorScheme) private var scheme
-
-    var body: some View {
-        let dark = scheme == .dark
-        let top = dark ? Color(hex: 0x212A41) : Color(hex: 0xFFAE7A)
-        let g = DX.Ground.apricot.background
-        ZStack {
-            HillShape(closed: true)
-                .fill(LinearGradient(stops: [.init(color: top, location: 0), .init(color: top, location: 0.22),
-                                             .init(color: top.mix(with: g, by: 0.38), location: 0.5),
-                                             .init(color: top.mix(with: g, by: 0.8), location: 0.78), .init(color: g, location: 1)],
-                                     startPoint: .top, endPoint: .bottom))
-            HillShape(closed: false)
-                .stroke(LinearGradient(stops: [.init(color: dark ? Color(red: 190 / 255, green: 205 / 255, blue: 1).opacity(0.22) : .white.opacity(0.6), location: 0),
-                                               .init(color: .clear, location: 0.7)], startPoint: .top, endPoint: .bottom), lineWidth: 2)
-        }
-    }
-
-    private struct HillShape: Shape {
-        let closed: Bool
-        func path(in rect: CGRect) -> Path {
-            var p = Path()
-            p.move(to: CGPoint(x: 10, y: 104))
-            p.addCurve(to: CGPoint(x: 195, y: 26), control1: CGPoint(x: 50, y: 52), control2: CGPoint(x: 130, y: 26))
-            p.addCurve(to: CGPoint(x: 380, y: 104), control1: CGPoint(x: 260, y: 26), control2: CGPoint(x: 340, y: 52))
-            if closed { p.closeSubpath() }
-            return p.applying(CGAffineTransform(translationX: (rect.width - 390) / 2, y: 0))
-        }
     }
 }
 
@@ -711,16 +628,17 @@ private extension String {
     var capitalizedFirst: String { prefix(1).uppercased() + dropFirst() }
 }
 
-// MARK: F06 Your plan is ready · apricot (v5, 012)
+// MARK: F06 Your plan is ready · apricot (canvas "Evidence story", board 7)
 
-/// The Day Xero medallion as the hero, Xero cheering beside it on the near paper ground, the date, and the prep stamps.
+/// The dawn across the top with the Day 0 medallion as its sun and Xero cheering beside it, the plan in one sentence
+/// (prep days, the date, the money back in a year), what the plan is built on (each method with what was found for
+/// it, and the plain line that DayXero itself hasn't been trialled), and the first prep stamp.
 /// The hard paywall follows onboarding (16 Nov 2026): yearly with a 3-day trial, or 3 months, and it carries the terms.
 /// Nothing is charged here.
 ///
-/// Motion (012): the underline draws under "ready"; the far and near grounds fade in (150, 250 ms); the coin pops in
-/// (700 ms spring, from 300 ms) seated behind the ridge; Xero settles beside it (from 450 ms) and cheers, bobbing. The
-/// caption, then the stamps card: Prep 1 in its up-next form and Prep 2 to 7 quieter, popping 90 ms apart from 900 ms.
-/// A light haptic as the medallion lands.
+/// Motion: the medallion pops in (700 ms spring, from 300 ms), Xero settles beside it (from 450 ms) and cheers; the
+/// underline draws under "ready"; the lead, the two cards and the button arrive in order. A light haptic as the
+/// medallion lands.
 struct PlanRevealScreen: View {
     let model: OnboardingModel
     let onContinue: () -> Void
@@ -729,47 +647,40 @@ struct PlanRevealScreen: View {
     @Environment(\.colorScheme) private var scheme
     @State private var showPlans = false
     @State private var landed = false
+    @State private var research = false
+    private let motion = MotionPolicy()
     private let ground = DX.Ground.apricot
 
-    private var near: Color { Color(light: 0xFFAF7A, dark: 0x161F38) }
-    private var far: Color { Color(light: 0xFFD3A6, dark: 0x1F2950) }
+    private static let heroHeight: CGFloat = 300
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
-                VStack(alignment: .leading, spacing: 8) {
+                hero
+                VStack(alignment: .leading, spacing: 0) {
                     MarkedTitle(String(localized: "Your plan is "), marking: String(localized: "ready"), color: DX.Mark.color(on: ground))
                         .dxType(.large).foregroundStyle(ground.ink)
                         .accessibilityAddTraits(.isHeader)
                         .dxArrive(0)
-                    Text(verbatim: lead).dxType(.body).foregroundStyle(ground.muted)
+                    lead
+                        .dxType(.body).foregroundStyle(ground.muted)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.top, 14)
                         .dxArrive(1)
+                    builtOn.padding(.top, 18).dxArrive(2)
+                    stamps.padding(.top, 12).dxArrive(4)
                 }
                 .padding(.horizontal, DX.Layout.gutter)
-                hero.padding(.top, 58)
-                VStack(spacing: 4) {
-                    Text(verbatim: "Day Xero · \(model.quitDay.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day()))")
-                        .dxType(.title).foregroundStyle(ground.ink)
-                    Text("Your Quit Day. This medallion is yours that day.")
-                        .dxType(.footnote).foregroundStyle(ground.muted)
-                }
-                .multilineTextAlignment(.center)
-                .frame(maxWidth: .infinity)
-                .padding(.horizontal, DX.Layout.gutter)
-                .padding(.top, 24)
-                .dxArrive(3)
-                stamps
-                    .padding(.horizontal, DX.Layout.gutter)
-                    .padding(.top, 28)
-                    .dxArrive(5)
+                .padding(.top, 6)
+                .padding(.bottom, DX.Space.m)
+                .dxReadableColumn()
             }
-            .padding(.top, DX.Space.s)
-            .padding(.bottom, DX.Space.l)
-            .dxReadableColumn()
         }
         .scrollBounceBehavior(.basedOnSize)
+        // The dawn runs up under the status bar; the flow floats the header over it (`overlaysTopBar`).
+        .ignoresSafeArea(edges: .top)
         .safeAreaInset(edge: .bottom, spacing: 0) {
-            VStack(spacing: 10) {
+            VStack(spacing: 6) {
                 Button("Start my prep week") {
                     landed.toggle()
                     onContinue()
@@ -789,11 +700,10 @@ struct PlanRevealScreen: View {
             }
             .padding(.horizontal, DX.Layout.gutter)
             .dxReadableColumn()
-            .padding(.top, 36)
+            .padding(.top, 28)
             .padding(.bottom, DX.Space.xs)
             .background {
-                // The dock fades into the near ground, not the sky.
-                LinearGradient(stops: [.init(color: near.opacity(0), location: 0), .init(color: near, location: 0.34)],
+                LinearGradient(stops: [.init(color: ground.background.opacity(0), location: 0), .init(color: ground.background, location: 0.34)],
                                startPoint: .top, endPoint: .bottom)
                     .ignoresSafeArea(edges: .bottom)
             }
@@ -809,126 +719,208 @@ struct PlanRevealScreen: View {
                         spend: PaywallModel.Spend(perYear: model.stats.moneyPerYear, currencyCode: model.currencyCode,
                                                   products: model.orderedProducts))
         }
+        .researchSheet(isPresented: $research, product: model.evidenceProduct)
+        #if DEBUG
+        // Screenshots: launch with `-dx.research YES` to open the research sheet over the plan.
+        .onAppear { if UserDefaults.standard.bool(forKey: "dx.research") { research = true } }
+        #endif
     }
 
-    /// "Seven prep days, then your Quit Day."
-    private var lead: String {
+    private var dateText: String { model.quitDay.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day()) }
+
+    /// "Seven prep days, then your Quit Day on Wed, Nov 25. About $1,825 back in your pocket in a year."
+    private var lead: Text {
         let n = max(model.prepDays, 0)
-        if n == 0 { return String(localized: "Your Quit Day is today.") }
-        let f = NumberFormatter()
-        f.numberStyle = .spellOut
-        let word = (f.string(from: n as NSNumber) ?? "\(n)").capitalizedFirst
-        return n == 1 ? String(localized: "One prep day, then your Quit Day.") : String(localized: "\(word) prep days, then your Quit Day.")
+        let strong = { (s: String) in Text(verbatim: s).dxRun(16, weight: 700).foregroundStyle(ground.ink) }
+        var text: Text
+        if n == 0 {
+            text = Text("Your Quit Day is today.")
+        } else {
+            let f = NumberFormatter()
+            f.numberStyle = .spellOut
+            let word = (f.string(from: n as NSNumber) ?? "\(n)").capitalizedFirst
+            text = (n == 1 ? Text("One prep day, then your Quit Day on ") : Text("\(word) prep days, then your Quit Day on "))
+                + strong(dateText) + Text(verbatim: ".")
+        }
+        let perYear = model.stats.moneyPerYear
+        if perYear > 0 {
+            let money = perYear.formatted(.currency(code: model.currencyCode).precision(.fractionLength(0)))
+            text = text + Text(" About ") + strong(money) + Text(" back in your pocket in a year.")
+        }
+        return text
     }
 
-    /// The two paper grounds, the coin with the waiting medallion, and Xero. The near ground runs on down the page.
+    /// The dawn (dusk-dawn in dark) with the medallion and Xero, settling into the page through a paper edge.
     private var hero: some View {
         let dark = scheme == .dark
-        let lift = dark ? Color.black.opacity(0.5) : Color(red: 120 / 255, green: 44 / 255, blue: 20 / 255).opacity(0.15)
-        return Color.clear
-            .frame(height: 196)
-            .overlay(alignment: .topLeading) {
-                ZStack(alignment: .topLeading) {
-                    GridShape(d: "M0 44 C60 30 110 34 150 46 C190 58 230 30 290 18 C330 10 365 12 390 18 V640 H0Z", grid: 390)
-                        .fill(far)
-                        .frame(width: 390, height: 390)
-                        .shadow(color: lift, radius: 2, y: -2)
-                        .offset(y: 104)
-                        .dxFade(delay: 0.15)
-                    coin
-                        .offset(x: 152, y: 0)
-                        .dxPop(delay: 0.3)
-                    GridShape(d: "M0 40 C90 26 170 22 242 26 C300 29 350 34 390 38 V640 H0Z", grid: 390)
-                        .fill(near)
-                        .frame(width: 390, height: 390)
-                        .shadow(color: lift, radius: 3, y: -3)
-                        .offset(y: 140)
-                        .dxFade(delay: 0.25)
-                    XeroView(mood: .cheer, stage: 0, points: 100)
-                        .dxBob()
-                        .offset(x: 47, y: 77)
-                        .dxSettle(delay: 0.45)
+        let g = ground.background
+        return GeometryReader { proxy in
+            // The medallion and Xero keep their canvas spacing and stay centred on wider screens.
+            let x0 = (proxy.size.width - 390) / 2
+            ZStack(alignment: .topLeading) {
+                if dark {
+                    NightSky(dawn: true, animate: !motion.reduce,
+                             options: .init(sunAt: 0.67, sunScale: 0, sunLift: 12, softSun: true, stars: false, fade: false))
+                } else {
+                    HorizonScene(.dawn, clarity: 100, fit: .bottom, animate: !motion.reduce,
+                                 sun: .init(x: 262, radius: 0, drop: -20, clouds: false))
                 }
-                .frame(width: 390, alignment: .topLeading)
-                .frame(maxWidth: .infinity)
+                medallion
+                    .offset(x: x0 + 192, y: 58)
+                    .dxPop(delay: 0.3)
+                Ellipse()
+                    .fill(RadialGradient(colors: [dark ? Color.black.opacity(0.55) : Color(hex: 0x50140A).opacity(0.35), .clear],
+                                         center: .center, startRadius: 0, endRadius: 44))
+                    .frame(width: 88, height: 14)
+                    .offset(x: x0 + 66, y: 250)
+                XeroView(mood: .cheer, stage: 0, points: 116, animate: !motion.reduce)
+                    .shadow(color: dark ? Color(hex: 0xFFAA5A).opacity(0.45) : Ev.cream.opacity(0.95), radius: dark ? 8 : 2.5,
+                            x: dark ? 4 : 0, y: dark ? -2 : 0)
+                    .shadow(color: dark ? .clear : Color(hex: 0x781E0A).opacity(0.22), radius: 10, y: 6)
+                    .frame(width: 116, height: 116)
+                    .offset(x: x0 + 52, y: 142)
+                    .dxSettle(delay: 0.45)
+                VStack(spacing: 0) {
+                    Spacer(minLength: 0)
+                    ZStack(alignment: .bottom) {
+                        LinearGradient(colors: [g.opacity(0), g.opacity(0.85)], startPoint: .top, endPoint: .bottom).frame(height: 56)
+                        PlanEdge().fill(g).frame(height: 30)
+                    }
+                }
             }
-            .zIndex(-1)
-            .accessibilityElement()
-            .accessibilityLabel(Text("The Day Xero medallion, waiting for your Quit Day, with Xero cheering beside it."))
+        }
+        .frame(height: Self.heroHeight)
+        .clipped()
+        .accessibilityElement()
+        .accessibilityLabel(Text("The Day Xero medallion, waiting for your Quit Day, with Xero cheering beside it."))
     }
 
-    private var coin: some View {
+    /// "DAY 0" on the sun-yellow coin, ringed twice, with a soft glow.
+    private var medallion: some View {
         let dark = scheme == .dark
-        return ZStack {
-            if dark {
-                Circle().fill(Color(red: 1, green: 160 / 255, blue: 60 / 255).opacity(0.24)).frame(width: 180 + 44, height: 180 + 44).blur(radius: 40)
-                Circle().fill(Color(red: 1, green: 190 / 255, blue: 90 / 255).opacity(0.5)).frame(width: 180 + 16, height: 180 + 16).blur(radius: 13)
-                Circle().fill(Color(red: 1, green: 214 / 255, blue: 140 / 255).opacity(0.6)).frame(width: 186, height: 186)
-            } else {
-                Circle().fill(Color(red: 1, green: 206 / 255, blue: 110 / 255).opacity(0.55)).frame(width: 220, height: 220).blur(radius: 23)
-                Circle().fill(Color(hex: 0xFFF8EE).opacity(0.2)).frame(width: 220, height: 220)
-                Circle().fill(Color(hex: 0xFFF8EE).opacity(0.55)).frame(width: 198, height: 198)
-            }
-            Circle().fill(Color(hex: 0xFFF8EE)).frame(width: 180, height: 180)
-            DXBadge(.xero, state: .next(nil), size: 150)
-                .ring(dark ? Color(hex: 0xF5B83D) : Color(hex: 0xB9800F))
-                .environment(\.dxGround, .reading)
-                .environment(\.colorScheme, .light)
+        return VStack(spacing: 0) {
+            Text(verbatim: "DAY").dxFace(.body, 12, weight: 700, tracking: 1)
+            Text(verbatim: "0").dxFace(.display, 46, weight: 800, tracking: -1).padding(.top, -6)
         }
-        .frame(width: 180, height: 180)
+        .foregroundStyle(Color(hex: 0x8A4A08))
+        .frame(width: 140, height: 140)
+        .background {
+            ZStack {
+                Circle().fill(dark ? Color(hex: 0xFFAA50).opacity(0.32) : Color(hex: 0xFFF0C8).opacity(0.7)).frame(width: 196, height: 196).blur(radius: 18)
+                Circle().fill(dark ? Color(hex: 0xFFC93C).opacity(0.10) : Ev.cream.opacity(0.34)).frame(width: dark ? 160 : 164, height: dark ? 160 : 164)
+                Circle().fill(Color(hex: 0xFFC93C))
+                Circle().strokeBorder(Color(hex: 0xFFD966), lineWidth: 11)
+                Circle().strokeBorder(Color(hex: 0xF29A2E), lineWidth: 5)
+            }
+        }
+        .accessibilityHidden(true)
     }
 
-    /// One stamp a prep day: Prep 1 up next (an apricot ring on a warm fill), the rest locked and quieter.
-    private var stamps: some View {
-        let count = max(min(model.prepDays, 7), 1)
-        return VStack(alignment: .leading, spacing: 16) {
-            HStack(alignment: .firstTextBaseline) {
-                Text("Prep stamps").dxType(.headline).foregroundStyle(ground.ink)
-                Spacer()
-                Text("One a day").dxType(.footnote).foregroundStyle(ground.muted)
+    private struct BuiltRow: Identifiable {
+        let id: Int
+        let illo: EvIllo.Kind
+        let title: LocalizedStringKey
+        let detail: String
+    }
+
+    /// The methods this plan uses, from the answers given: nicotine replacement only if it was wanted, the when-then
+    /// plans named by trigger.
+    private var builtRows: [BuiltRow] {
+        var rows: [BuiltRow] = []
+        if model.nrtInterest == .using || model.nrtInterest == .wantIt {
+            rows.append(BuiltRow(id: 0, illo: .patch, title: "Nicotine replacement",
+                                 detail: model.pregnancy == .yes
+                                     ? String(localized: "Talk to your midwife or doctor first.")
+                                     : String(localized: "In trials, quit rates rose 50 to 60%.")))
+        }
+        let picked = Trigger.allCases.filter(model.triggers.contains)
+            .map { $0 == .other ? String(localized: "other moments") : String(localized: $0.title).lowercased() }
+        if !picked.isEmpty {
+            let detail: String
+            switch picked.count {
+            case 1: detail = String(localized: "For \(picked[0]).")
+            case 2: detail = String(localized: "For \(picked[0]) and for \(picked[1]).")
+            default: detail = String(localized: "For \(picked[0]), \(picked[1]) and \(picked.count - 2) more.")
             }
-            HStack(spacing: 0) {
-                ForEach(1...count, id: \.self) { i in
-                    PrepStamp(n: i, next: i == 1)
-                        .dxPop(0, delay: 0.9 + Double(i) * 0.09)
-                    if i < count { Spacer(minLength: 0) }
+            rows.append(BuiltRow(id: 1, illo: .plan, title: "Your when-then plans", detail: detail))
+        }
+        rows.append(BuiltRow(id: 2, illo: .bubble, title: "A check-in every day", detail: String(localized: "A morning pledge and a night check-in.")))
+        rows.append(BuiltRow(id: 3, illo: .sun, title: "A clean stop on Quit Day",
+                             detail: String(localized: "First goal: 28 days. The NHS says that makes you 5 times more likely to stay quit.")))
+        return rows
+    }
+
+    private var builtOn: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text("What it’s built on")
+                .dxFace(.display, 19, weight: 700, tracking: -0.2).foregroundStyle(ground.ink)
+                .accessibilityAddTraits(.isHeader)
+            VStack(alignment: .leading, spacing: 12) {
+                ForEach(builtRows) { row in
+                    HStack(alignment: .top, spacing: 12) {
+                        EvIllo(kind: row.illo, size: 36)
+                        VStack(alignment: .leading, spacing: 1) {
+                            Text(row.title).dxFace(.display, 16, weight: 700, tracking: -0.2).foregroundStyle(ground.ink)
+                            Text(verbatim: row.detail).dxFace(.body, 14, weight: 500).foregroundStyle(ground.muted)
+                                .lineSpacing(2)
+                        }
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.top, 1)
+                    }
+                    .accessibilityElement(children: .combine)
                 }
             }
-            .padding(.horizontal, -2)
+            .padding(.top, 12)
+            Rectangle().fill(Color(light: (0x1E1A3A, 0.12), dark: (0xFFFFFF, 0.12))).frame(height: 1)
+                .padding(.top, 14).padding(.bottom, 10)
+            Text("These methods were studied in trials. DayXero itself hasn’t been.")
+                .dxFace(.body, 14, weight: 500).foregroundStyle(ground.muted)
+                .lineSpacing(2)
+                .fixedSize(horizontal: false, vertical: true)
+            Button { research = true } label: {
+                Text("See the research").underline()
+                    .dxFace(.body, 14, weight: 600).foregroundStyle(ground.ink)
+                    .frame(minHeight: 36)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityIdentifier("reveal.research")
         }
-        .padding(.top, 22).padding(.horizontal, 18).padding(.bottom, 24)
-        .background(Color(light: 0xFFFFFF, dark: 0x212A41).opacity(scheme == .dark ? 1 : 0.92),
-                    in: RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous).strokeBorder(Onb.chipLine, lineWidth: 1))
+        .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .evCard()
+    }
+
+    /// The first prep stamp, sun-yellow with a scalloped edge, and the line that it's waiting.
+    private var stamps: some View {
+        HStack(spacing: 14) {
+            ZStack {
+                Circle().stroke(Color(hex: 0xFFC93C), style: StrokeStyle(lineWidth: 7.3, lineCap: .round, dash: [0.01, 11.5]))
+                    .frame(width: 44, height: 44)
+                Circle().fill(Color(hex: 0xFFC93C)).frame(width: 40, height: 40)
+                Circle().strokeBorder(Color(hex: 0xF29A2E), lineWidth: 2).frame(width: 34, height: 34)
+                Text(verbatim: "1").dxFace(.display, 22, weight: 800).foregroundStyle(Color(hex: 0x5A2E06))
+            }
+            .frame(width: 56, height: 56)
+            VStack(alignment: .leading, spacing: 1) {
+                Text("Prep stamps").dxFace(.display, 17, weight: 700, tracking: -0.2).foregroundStyle(ground.ink)
+                Text("One a day. Your first is waiting.").dxFace(.body, 14, weight: 500).foregroundStyle(ground.muted)
+            }
+            .fixedSize(horizontal: false, vertical: true)
+            Spacer(minLength: 0)
+        }
+        .padding(.horizontal, 16).padding(.vertical, 12)
+        .evCard()
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Text("Prep stamps, one a day. Prep 1 is up next."))
     }
 }
 
-/// A 42 pt prep stamp (012): up next, a solid apricot ring on a warm fill; locked, a faint ring and a 14 pt numeral at
-/// 64% ink.
-private struct PrepStamp: View {
-    let n: Int
-    let next: Bool
-    @Environment(\.colorScheme) private var scheme
-
-    var body: some View {
-        let ink = DX.Ground.apricot.ink
-        let dark = scheme == .dark
-        ZStack {
-            if next {
-                Circle().fill(dark ? Color(hex: 0xFF9A5C).opacity(0.2) : Color(hex: 0xFFE2C6))
-                Circle().strokeBorder(dark ? Color(hex: 0xFFA46B) : Color(hex: 0xF2884A), lineWidth: 1.5)
-            } else {
-                Circle().fill(ink.opacity(0.06))
-                Circle().strokeBorder(ink.opacity(0.22), lineWidth: 1.3)
-            }
-            Text(verbatim: "\(n)")
-                .dxFace(.display, 14, weight: 800, tracking: -0.4)
-                .foregroundStyle(next ? ink : ink.opacity(0.64))
-        }
-        .frame(width: 38, height: 38)
-        .padding(2)
+/// The paper edge where the dawn meets the page (390 × 30, stretched to the width).
+private struct PlanEdge: Shape {
+    func path(in rect: CGRect) -> Path {
+        SVGPath.path("M0 16 C110 3 250 4 390 14 L390 30 L0 30 Z")
+            .applying(CGAffineTransform(scaleX: rect.width / 390, y: rect.height / 30))
     }
 }
 

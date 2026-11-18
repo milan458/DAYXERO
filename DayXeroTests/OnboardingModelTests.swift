@@ -53,9 +53,56 @@ struct OnboardingModelTests {
     @Test func stepsRunInTheNewOrder() {
         let model = makeModel()
         model.products = [.cigarettes, .vape]
-        #expect(model.sequence == [.welcome, .howItWorks, .products, .baseline(.cigarettes), .baseline(.vape), .baselineSummary,
-                                   .triggers, .cravingSOS, .personal, .obstacles, .nrt, .yourDay, .quitDay, .building, .reveal,
-                                   .trial])
+        #expect(model.sequence == [.welcome, .howItWorks, .products, .goodCompany, .baseline(.cigarettes), .baseline(.vape),
+                                   .baselineSummary, .whatWorks, .triggers, .cravingSOS, .personal, .obstacles, .nrt, .pregnancy,
+                                   .yourDay, .quitDay, .building, .reveal, .trial])
+    }
+
+    /// 18 Nov 2026: the evidence story. "Good company" and "What works" ask nothing; the pregnancy question follows
+    /// nicotine replacement unless the answer there was "Not for me".
+    @Test func theEvidenceScreensNeverBlockAndPregnancyFollowsNRT() {
+        defer { UserDefaults.standard.removeObject(forKey: PregnancyAnswer.key) }
+        UserDefaults.standard.removeObject(forKey: PregnancyAnswer.key)
+        let model = makeModel()
+        model.products = [.cigarettes]
+        for step in [OnboardingStep.goodCompany, .whatWorks] {
+            while model.step != step { model.next() }
+            #expect(model.canContinue)
+            #expect(model.canGoBack)
+        }
+        while model.step != .nrt { model.next() }
+        model.nrtInterest = .wantIt
+        model.next()
+        #expect(model.step == .pregnancy)
+        #expect(!model.canContinue)
+        model.setPregnancy(.no)
+        #expect(model.canContinue)
+        model.back()
+        #expect(model.step == .nrt)
+        model.nrtInterest = .notInterested
+        model.next()
+        #expect(model.step == .yourDay)
+        model.back()
+        #expect(model.step == .nrt)
+    }
+
+    /// The numbers come from trials in people who smoke: cigarettes lead when they're among the picks, and people who
+    /// don't smoke them are told where the figures come from.
+    @Test func theEvidenceSpeaksToTheProductPicked() {
+        let model = makeModel()
+        model.products = [.vape, .cigarettes]
+        #expect(model.evidenceProduct == .cigarettes)
+        #expect(!model.evidenceIsFromSmoking)
+        model.products = [.vape, .pouches]
+        #expect(model.evidenceProduct == .vape)
+        #expect(model.evidenceIsFromSmoking)
+        model.products = [.pouches]
+        #expect(model.evidenceProduct == .pouches)
+    }
+
+    /// The withdrawal curve's source covers irritability, sleep, restlessness and focus, not craving or hunger.
+    @Test func onlyWithdrawalSymptomsGetTheWithdrawalLine() {
+        #expect(Obstacle.allCases.filter(\.isWithdrawalSymptom) == [.irritability, .sleep, .restlessness, .focus])
     }
 
     @Test func progressNeverMovesBackWhenASecondProductIsPicked() {

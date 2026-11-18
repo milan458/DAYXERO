@@ -20,7 +20,7 @@ on:
         type: boolean
         default: false
       only:
-        description: "With screenshots: 'paywall' takes just the paywall pages, pushed to ci-screens-v4 (a few minutes)"
+        description: "With screenshots: 'paywall' or 'evidence' takes just those screens, pushed to ci-screens-v4 (a few minutes)"
         type: string
         default: ""
 
@@ -123,6 +123,8 @@ jobs:
             done
             echo "::warning title=Blank screenshot::$name was still blank after 15 seconds"
           }
+          ONLY="${{ inputs.only }}"
+          if [ "$ONLY" = "" ] || [ "$ONLY" = "paywall" ]; then
           # Paywall v2: the three pages and the 3-month offer, light and dark; the offer at the largest text.
           PW2="-dx.paywallPreview YES -dx.store mock"
           for mode in light dark; do
@@ -133,8 +135,26 @@ jobs:
           done
           shoot light accessibility-extra-extra-extra-large pw2-3-light-ax5 $PW2 -dx.paywallStep 3
           shoot light large pw2-inapp-light $PW2
-          ONLY="${{ inputs.only }}"
-          if [ "$ONLY" != "paywall" ]; then
+          fi
+          # The evidence story (18 Nov 2026): the two new screens, the reworked ones and the research sheet.
+          if [ "$ONLY" = "" ] || [ "$ONLY" = "evidence" ]; then
+          for mode in light dark; do
+            for step in good_company what_works triggers obstacles nrt pregnancy quit_day reveal; do
+              shoot $mode large "ev-$step-$mode" -dx.onboardingStep "$step"
+            done
+            shoot $mode large "ev-research-$mode" -dx.onboardingStep reveal -dx.research YES
+          done
+          for product in vape pouches; do
+            for step in good_company what_works nrt; do
+              shoot light large "ev-$step-$product-light" -dx.onboardingStep "$step" -dx.onboardingProduct "$product"
+            done
+          done
+          for step in good_company what_works obstacles nrt quit_day reveal; do
+            shoot light accessibility-extra-extra-extra-large "ev-$step-light-ax5" -dx.onboardingStep "$step"
+          done
+          xcrun simctl ui "$UDID" content_size large
+          fi
+          if [ "$ONLY" = "" ]; then
           # v4 foundation pages (V4Gallery), light and dark.
           for page in type scenes xero jelli glim buttons program; do
             shoot light large "v4-$page-light" -dx.v4Gallery "$page"
@@ -187,7 +207,7 @@ jobs:
           shoot light large v4-today-yourday-light -dx.homeScenario day3 -dx.store pro -dx.todaySlot morning -dx.forceDaily pledge -dx.homeScroll lower
           fi
           BRANCH=ci-screens
-          if [ "${{ inputs.v4_only }}" = "true" ] || [ "$ONLY" = "paywall" ]; then
+          if [ "${{ inputs.v4_only }}" = "true" ] || [ "$ONLY" != "" ]; then
             BRANCH=ci-screens-v4
           else
           for step in breathe welcome products baseline_cigarettes baseline_vape baseline_summary triggers personal obstacles nrt quit_day building reveal trial; do

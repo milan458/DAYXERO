@@ -14,12 +14,12 @@ public enum HealthSources {
         url: URL(string: "https://www.cochrane.org/evidence/CD000146_can-nicotine-replacement-therapy-nrt-help-people-quit-smoking")!
     )
 
-    /// Lindson N et al. Different doses, durations and modes of delivery of nicotine replacement therapy for smoking
-    /// cessation. Cochrane Database Syst Rev 2019;4:CD013308. Combination NRT (a patch plus a fast-acting form)
-    /// beat a single form: RR 1.25, high-certainty evidence (S27.6).
-    public static let nrtCombinationCochrane2019 = HealthSource(
-        label: "Source: Cochrane review of combination NRT, 2019",
-        url: URL(string: "https://www.cochranelibrary.com/cdsr/doi/10.1002/14651858.CD013308/full")!
+    /// Theodoulou A, Chepkin SC, Ye W, et al. Different doses, durations and modes of delivery of nicotine replacement
+    /// therapy for smoking cessation. Cochrane Database Syst Rev 2023;6:CD013308.pub2. Combination NRT (a patch plus
+    /// a fast-acting form) beat a single form: RR 1.27, 16 studies, 12,169 people, high-certainty evidence.
+    public static let nrtCombinationCochrane2023 = HealthSource(
+        label: "Source: Cochrane review of combination NRT, 2023",
+        url: URL(string: "https://pubmed.ncbi.nlm.nih.gov/37335995/")!
     )
 
     // NRT label schedules (S9.2). Each preset shows its source: the regulators' label databases (DailyMed for the
@@ -70,5 +70,46 @@ extension HealthSources {
     public static let caffeineAfterQuitting = HealthSource(
         label: "Source: BMJ, caffeine levels in people who stop smoking, 1989",
         url: URL(string: "https://pmc.ncbi.nlm.nih.gov/articles/PMC1836474")!
+    )
+}
+
+// The onboarding evidence story (18 Nov 2026). Each figure was read at its source; none is a result of using DayXero.
+extension HealthSources {
+    /// VanFrank B et al. Adult Smoking Cessation, United States, 2022. MMWR 2024;73(29). 67.7% of adults who smoked
+    /// wanted to quit.
+    public static let wantToQuitCDC2022 = HealthSource(
+        label: "Source: CDC, 2022 survey of US adults",
+        url: URL(string: "https://www.cdc.gov/mmwr/volumes/73/wr/mm7329a1.htm")!
+    )
+    /// Rosen RL, Steinberg ML. Drug Alcohol Depend 2021;227:108973. PATH Study Wave 4 (2017 to 2018): 60% of adult
+    /// e-cigarette users intended to quit completely.
+    public static let vapeQuitIntentPATH = HealthSource(
+        label: "Source: US PATH Study, 2017 to 2018",
+        url: URL(string: "https://pubmed.ncbi.nlm.nih.gov/34482034/")!
+    )
+    /// Stead LF et al. Combined pharmacotherapy and behavioural interventions for smoking cessation. Cochrane
+    /// Database Syst Rev 2016;3:CD008286.pub3. RR 1.83, 52 studies, 19,488 people, against usual care, brief advice
+    /// or less intensive behavioural support.
+    public static let medicinePlusSupportCochrane2016 = HealthSource(
+        label: "Source: Cochrane review of 52 trials, 2016",
+        url: URL(string: "https://pubmed.ncbi.nlm.nih.gov/27009521/")!
+    )
+    /// "If you can make it to 28 days smoke-free, you're 5 times more likely to quit for good." The NHS cites no study.
+    public static let nhs28Days = HealthSource(
+        label: "Source: NHS Better Health",
+        url: URL(string: "https://www.nhs.uk/better-health/quit-smoking/")!
+    )
+    /// Lindson-Hawley N et al. Gradual versus abrupt smoking cessation. Ann Intern Med 2016;164:585. Six-month
+    /// abstinence 22.0% abrupt, 15.5% gradual (n = 697). A 2019 Cochrane review of 22 trials found no difference.
+    public static let abruptVsGradual2016 = HealthSource(
+        label: "Source: Lindson-Hawley et al., 2016",
+        url: URL(string: "https://pubmed.ncbi.nlm.nih.gov/26975007/")!
+    )
+    /// Hughes JR. Effects of abstinence from tobacco: valid symptoms and time course. Nicotine Tob Res 2007;9:315.
+    /// Symptoms peak in the first week and last two to four weeks. Covers irritability, sleep, restlessness and
+    /// concentration, not craving or hunger.
+    public static let withdrawalHughes2007 = HealthSource(
+        label: "Source: Hughes, Nicotine and Tobacco Research, 2007",
+        url: URL(string: "https://pubmed.ncbi.nlm.nih.gov/17365764/")!
     )
 }

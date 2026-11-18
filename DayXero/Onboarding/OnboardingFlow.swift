@@ -80,8 +80,8 @@ struct OnboardingFlow: View {
 
     /// Steps whose hero art runs under the status bar: the header floats over the art instead of pushing it down.
     private var overlaysTopBar: Bool {
-        // How it works opens on a full-bleed sunrise (v5 tour, 16 Nov 2026).
-        model.step == .howItWorks
+        // How it works opens on a full-bleed sunrise (v5 tour, 16 Nov 2026); so does the plan (18 Nov 2026).
+        model.step == .howItWorks || model.step == .reveal
     }
 
     private var transition: AnyTransition {
@@ -117,13 +117,16 @@ struct OnboardingFlow: View {
         case .welcome: WelcomeScreen(model: model)
         case .howItWorks: HowItWorksScreen(model: model)
         case .products: ProductsScreen(model: model)
+        case .goodCompany: GoodCompanyScreen(model: model)
         case let .baseline(product): BaselineScreen(model: model, product: product)
         case .baselineSummary: BaselineSummaryScreen(model: model)
+        case .whatWorks: WhatWorksScreen(model: model)
         case .triggers: TriggersScreen(model: model)
         case .cravingSOS: CravingSOSIntroScreen(model: model)
         case .personal: PersonalScreen(model: model)
         case .obstacles: ObstaclesScreen(model: model)
         case .nrt: NRTScreen(model: model)
+        case .pregnancy: PregnancyScreen(model: model)
         case .yourDay: YourDayScreen(model: model)
         case .quitDay: QuitDayScreen(model: model)
         case .building: BuildingScreen(model: model)

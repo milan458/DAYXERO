@@ -713,94 +713,113 @@ struct BaselineSummaryScreen: View {
 
 // MARK: Screen 6: mornings and triggers
 
-/// v5 (006): moments and feelings as kit chips at natural widths in balanced rows, with Xero's count card.
+/// Moments and feelings as icon chips, then a card: Xero on a hillside that runs from sunrise to night, a coffee cup
+/// in one hand and a lightning bolt in the other, over the count and what the picks become (a when-then plan each).
+/// Canvas "Evidence story", board 3 (18 Nov 2026).
 ///
-/// Motion (006): question, the two labelled chip groups and the count card arrive in reading order (600 ms, 90 ms
-/// stagger). A pick takes the warm tint and outline with a 520 ms spring bump (1.1) and a selection haptic; the count
-/// names what's picked.
+/// Motion: question, the two labelled chip groups and the card arrive in reading order (600 ms, 90 ms stagger). A pick
+/// fills with ink, its icon lands on a coral disc with a 520 ms spring bump and a selection haptic; the count names
+/// what's picked.
 struct TriggersScreen: View {
     @Bindable var model: OnboardingModel
 
-    private static let moments: [[Trigger]] = [[.morning, .meals, .work], [.coffee, .driving, .alcohol, .evening]]
-    private static let feelings: [[Trigger]] = [[.stress, .boredom, .lowMood], [.anxiety, .social, .other]]
+    private static let moments: [Trigger] = [.morning, .meals, .work, .coffee, .driving, .alcohol, .evening]
+    private static let feelings: [Trigger] = [.stress, .anxiety, .lowMood, .boredom, .social, .other]
 
     var body: some View {
-        OnboardingScaffold(title: "When do cravings hit hardest?",
-                           subtitle: "Choose the moments and feelings that set them off. As many as you like.",
-                           model: model) {
-            group("Moments in your day", Self.moments).dxArrive(2)
-            group("Feelings and people", Self.feelings).padding(.top, 6).dxArrive(3)
-            HStack(spacing: 12) {
-                XeroView(mood: .hello, stage: 0, points: 56)
-                    .frame(width: 56, height: 56)
-                    .accessibilityHidden(true)
+        OnboardingScaffold(title: "When do cravings hit hardest?", subtitle: "Pick as many as you like.", model: model) {
+            group("Moments in your day", Self.moments).padding(.top, -6).dxArrive(2)
+            group("Feelings and people", Self.feelings).padding(.top, 2).dxArrive(3)
+            VStack(alignment: .leading, spacing: 0) {
+                TriggerDayArt()
                 countLine
-                    .dxType(.footnote).foregroundStyle(Onb.ink)
+                    .dxFace(.body, 15, weight: 500).foregroundStyle(Onb.muted)
+                    .lineSpacing(3)
                     .fixedSize(horizontal: false, vertical: true)
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.top, 10).padding(.horizontal, 16).padding(.bottom, 12)
                     .animation(.easeInOut(duration: 0.25), value: model.triggers)
             }
-            .padding(.leading, 10).padding(.trailing, 16).padding(.vertical, 8)
-            .background(DX.Ground.apricot.card, in: RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous).strokeBorder(Onb.chipLine, lineWidth: 1))
-            .padding(.top, 4)
+            .background(Ev.card)
+            .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(Ev.ring, lineWidth: 1))
+            .padding(.top, 8)
             .accessibilityElement(children: .combine)
             .dxArrive(4)
         }
     }
 
-    private func group(_ label: LocalizedStringKey, _ rows: [[Trigger]]) -> some View {
+    private func group(_ label: LocalizedStringKey, _ triggers: [Trigger]) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             Text(label).dxFace(.body, 14, weight: 600).foregroundStyle(Onb.muted)
-            // Hand-balanced rows at natural widths; at large text sizes they wrap instead.
-            ViewThatFits(in: .horizontal) {
-                VStack(alignment: .leading, spacing: 10) {
-                    ForEach(rows.indices, id: \.self) { r in
-                        HStack(spacing: 8) { ForEach(rows[r], id: \.self) { chip($0) } }
-                    }
-                }
-                DXFlowLayout { ForEach(rows.flatMap { $0 }, id: \.self) { chip($0) } }
-            }
+            DXFlowLayout(spacing: 8) { ForEach(triggers, id: \.self) { chip($0) } }
         }
     }
 
     private func chip(_ trigger: Trigger) -> some View {
-        TriggerChip(text: trigger == .other ? String(localized: "Other") : trigger.chipTitle, isOn: model.triggers.contains(trigger)) {
+        EvChip(text: trigger == .other ? String(localized: "Other") : trigger.chipTitle, icon: trigger.evIcon,
+               isOn: model.triggers.contains(trigger)) {
             if model.triggers.contains(trigger) { model.triggers.remove(trigger) } else { model.triggers.insert(trigger) }
         }
     }
 
-    /// "2 picked. Coffee and stress. I'll check in around them."
+    /// "2 picked. Coffee and stress. I'll write a when-then plan for each."
     private var countLine: Text {
-        let order = (Self.moments + Self.feelings).flatMap { $0 }
+        let order = Self.moments + Self.feelings
         let picked = order.filter(model.triggers.contains).map { $0 == .other ? String(localized: "other moments") : String(localized: $0.title).lowercased() }
-        guard !picked.isEmpty else { return Text("Pick any that apply. I'll check in around them.") }
+        guard !picked.isEmpty else { return Text("Pick any that apply. I’ll write a when-then plan for each.") }
         var names = picked.count <= 3 ? BaselineScreenCopy.list(picked) : String(localized: "\(picked.prefix(2).joined(separator: ", ")) and \(picked.count - 2) more")
         names = names.prefix(1).uppercased() + names.dropFirst()
-        return Text("\(picked.count) picked.").dxRun(15, weight: 700) + Text(verbatim: " \(names). ") + Text("I'll check in around them.")
+        let plan = picked.count == 1 ? Text("I’ll write a when-then plan for it.") : Text("I’ll write a when-then plan for each.")
+        return Text("\(picked.count) picked.").dxRun(15, weight: 700).foregroundStyle(Onb.ink) + Text(verbatim: " \(names). ") + plan
     }
 }
 
-/// A trigger chip: the kit chip at its natural width, 48 pt tall with 12 pt sides (006).
-private struct TriggerChip: View {
-    let text: String
-    let isOn: Bool
-    let action: () -> Void
-    @State private var taps = 0
-    @State private var land = 0
+/// The day in one strip: a sky that runs from sunrise on the left to night on the right over three hills, with Xero
+/// in the middle holding a coffee cup and a lightning bolt (108 pt tall, the card's full width).
+private struct TriggerDayArt: View {
+    @Environment(\.colorScheme) private var scheme
+    private let motion = MotionPolicy()
 
     var body: some View {
-        Button {
-            taps += 1
-            if !isOn { land += 1 }
-            action()
-        } label: {
-            OnbChipFace(text: text, isOn: isOn, side: 12, height: 48, land: land)
-                .fixedSize()
+        let dark = scheme == .dark
+        let sky: [UInt32] = dark ? [0xA9563C, 0xB98258, 0x77779A, 0x2E3C68, 0x111933] : [0xFF9D6E, 0xFFCF9C, 0xB9D8FF, 0x6F8FCB, 0x24335C]
+        let hills: [(String, UInt32, UInt32)] = [
+            ("M0 88 C60 72 120 78 180 86 C250 96 300 78 346 74 V124 H0 Z", dark ? 0xC2553A : 0xFF9D6E, dark ? 0x3A4878 : 0x5F78B4),
+            ("M0 102 C80 88 150 94 220 104 C280 112 320 100 346 96 V124 H0 Z", dark ? 0x9C3F2C : 0xFF7A55, dark ? 0x27345C : 0x3F5594),
+            ("M0 116 C90 106 180 110 260 116 C310 120 330 116 346 114 V124 H0 Z", dark ? 0x7A2E22 : 0xE85A3E, dark ? 0x172244 : 0x27386E),
+        ]
+        let at: [CGFloat] = [0, 0.32, 0.56, 0.8, 1]
+        let stops = sky.indices.map { Gradient.Stop(color: Color(hex: sky[$0]), location: at[$0]) }
+        return ZStack(alignment: .top) {
+            LinearGradient(stops: stops, startPoint: .leading, endPoint: .trailing)
+            Strip(d: "M22 84 a24 24 0 1 0 48 0 a24 24 0 1 0 -48 0 Z").fill(Color(hex: 0xFFC93C))
+            Strip(d: "M300 18 a15 15 0 1 0 14 22 a12 12 0 1 1 -14 -22 Z").fill(Color(hex: 0xFFF1C2))
+            ForEach(hills.indices, id: \.self) { i in
+                Strip(d: hills[i].0)
+                    .fill(LinearGradient(colors: [Color(hex: hills[i].1), Color(hex: hills[i].2)], startPoint: .leading, endPoint: .trailing))
+            }
+            XeroView(mood: .hello, stage: 0, points: 100, animate: !motion.reduce, pose: .hold)
+                .shadow(color: Ev.cream.opacity(0.9), radius: 2)
+                .frame(width: 100, height: 100)
+                .offset(y: 4)
+            EvIllo(kind: .cup, size: 58).offset(x: -69, y: 16)
+            EvIllo(kind: .bolt, size: 58).offset(x: 71, y: 12)
         }
-        .buttonStyle(.dxPress)
-        .sensoryFeedback(DX.Haptic.select, trigger: taps)
-        .accessibilityAddTraits(isOn ? [.isButton, .isSelected] : .isButton)
+        .frame(maxWidth: .infinity)
+        .frame(height: 108, alignment: .top)
+        .clipped()
+        .accessibilityHidden(true)
+    }
+
+    /// A path in the strip's 346 × 108 space (the canvas's view box starts 16 units down), stretched to the width.
+    private struct Strip: Shape {
+        let d: String
+        func path(in rect: CGRect) -> Path {
+            SVGPath.path(d)
+                .applying(CGAffineTransform(translationX: 0, y: -16))
+                .applying(CGAffineTransform(scaleX: rect.width / 346, y: rect.height / 108))
+        }
     }
 }
 
@@ -1021,238 +1040,287 @@ private struct FieldStyle: ViewModifier {
 
 /// What tends to get in the way (S27.10). The answers shape the plan (`Obstacle.planLine`).
 ///
-/// v5 (008): the chips in 006's pattern (natural widths, rows of three, three and two), then what each pick adds: one row
-/// per pick, the obstacle on the left and the tool on the right; a new row settles in (700 ms) as it's picked.
+/// Canvas "Evidence story", board 4 (18 Nov 2026): icon chips, then one card: what each pick adds (the obstacle, an
+/// arrow, the tool), and, when any pick is a withdrawal symptom, the line that it passes with the four-week curve.
+/// The curve's source covers irritability, sleep, restlessness and focus, so the line only speaks for those.
 struct ObstaclesScreen: View {
     @Bindable var model: OnboardingModel
+    @State private var research = false
     private let motion = MotionPolicy()
 
-    private static let rows: [[Obstacle]] = [[.irritability, .social, .hunger], [.weight, .sleep, .restlessness], [.focus, .motivation]]
+    private static let order: [Obstacle] = [.irritability, .sleep, .hunger, .social, .restlessness, .weight, .focus, .motivation]
 
     var body: some View {
         OnboardingScaffold(title: "What usually gets in the way?",
-                           subtitle: "Pick any that might trip you up after Quit Day. I'll plan for each.",
+                           subtitle: "Pick any that might trip you up after Quit Day.",
                            model: model, skipTitle: "Skip for now") {
-            ViewThatFits(in: .horizontal) {
-                VStack(alignment: .leading, spacing: 10) {
-                    ForEach(Self.rows.indices, id: \.self) { r in
-                        HStack(spacing: 8) { ForEach(Self.rows[r], id: \.self) { chip($0) } }
-                    }
-                }
-                DXFlowLayout { ForEach(Self.rows.flatMap { $0 }, id: \.self) { chip($0) } }
-            }
-            .padding(.top, 2)
-            .dxArrive(2)
-            let picked = Self.rows.flatMap { $0 }.filter(model.obstacles.contains)
+            DXFlowLayout(spacing: 8) { ForEach(Self.order, id: \.self) { chip($0) } }
+                .padding(.top, -2)
+                .dxArrive(2)
+            let picked = Self.order.filter(model.obstacles.contains)
             if !picked.isEmpty {
-                VStack(alignment: .leading, spacing: 10) {
-                    (Text("\(picked.count) picked.").dxRun(15, weight: 700).foregroundStyle(Onb.ink) + Text(" Here's what each one adds"))
-                        .dxType(.footnote).foregroundStyle(Onb.muted)
-                    DXList(on: .apricot) {
-                        ForEach(picked, id: \.self) { obstacle in
-                            ObstacleRow(obstacle: obstacle)
-                                .transition(.asymmetric(insertion: .offset(y: 48).combined(with: .opacity), removal: .opacity))
-                        }
-                    }
-                }
-                .padding(.top, 6)
-                .transition(.opacity)
-                .dxArrive(3)
+                card(picked)
+                    .padding(.top, 10)
+                    .transition(.opacity)
+                    .dxArrive(3)
             }
         }
         .animation(motion.animation(DX.Move.settle.speed(0.9 / 0.7)), value: model.obstacles)
+        .researchSheet(isPresented: $research, product: model.evidenceProduct)
     }
 
     private func chip(_ obstacle: Obstacle) -> some View {
-        TriggerChip(text: String(localized: obstacle.title), isOn: model.obstacles.contains(obstacle)) {
+        EvChip(text: obstacle.evChipTitle, icon: obstacle.evIcon, isOn: model.obstacles.contains(obstacle)) {
             if model.obstacles.contains(obstacle) { model.obstacles.remove(obstacle) } else { model.obstacles.insert(obstacle) }
         }
     }
+
+    private func card(_ picked: [Obstacle]) -> some View {
+        let symptoms = picked.filter(\.isWithdrawalSymptom)
+        return VStack(alignment: .leading, spacing: 0) {
+            (Text("\(picked.count) picked.").dxRun(15, weight: 700).foregroundStyle(Onb.ink)
+                + (picked.count == 1 ? Text(" Here’s what it adds.") : Text(" Here’s what each one adds.")))
+                .dxFace(.body, 15, weight: 500).foregroundStyle(Onb.muted)
+                .padding(.top, 12).padding(.bottom, 4)
+            ForEach(picked, id: \.self) { obstacle in
+                ObstacleRow(obstacle: obstacle)
+                    .transition(.asymmetric(insertion: .offset(y: 24).combined(with: .opacity), removal: .opacity))
+            }
+            if !symptoms.isEmpty {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(withdrawalLine(symptoms, of: picked))
+                        .dxFace(.body, 15, weight: 600).foregroundStyle(Onb.ink)
+                        .lineSpacing(3)
+                        .fixedSize(horizontal: false, vertical: true)
+                    WithdrawalCurve().padding(.top, 12)
+                    EvSourceLink(text: "Hughes, 2007 · people who stopped smoking") {
+                        research = true
+                    }
+                    .padding(.vertical, -2)
+                }
+                .padding(.top, 10).padding(.bottom, 6)
+                .overlay(alignment: .top) { Rectangle().fill(Ev.line).frame(height: 1) }
+                .padding(.top, 8)
+                .transition(.opacity)
+            }
+        }
+        .padding(.horizontal, 16).padding(.bottom, symptoms.isEmpty ? 10 : 0)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .evCard()
+    }
+
+    /// "Both are withdrawal, and it passes. Usually worst in week one, easing over two to four."
+    private func withdrawalLine(_ symptoms: [Obstacle], of picked: [Obstacle]) -> String {
+        let tail = String(localized: "Usually worst in week one, easing over two to four.")
+        let names = symptoms.map { String(localized: $0.title) }
+        let lead: String
+        if symptoms.count == 1 {
+            lead = String(localized: "\(names[0]) is withdrawal, and it passes.")
+        } else if symptoms.count == 2 && picked.count == 2 {
+            lead = String(localized: "Both are withdrawal, and it passes.")
+        } else {
+            let list = BaselineScreenCopy.list([names[0]] + names.dropFirst().map { $0.lowercased() })
+            lead = String(localized: "\(list) are withdrawal, and it passes.")
+        }
+        return lead + " " + tail
+    }
 }
 
-/// "Irritability → 1-minute reset", with the tool's art in a 40 pt tile.
+/// "Irritability → 1-minute reset": the obstacle's icon on a coral disc, its name, an arrow and the tool.
 private struct ObstacleRow: View {
     let obstacle: Obstacle
 
     var body: some View {
-        HStack(spacing: 12) {
-            art
-                .frame(width: 40, height: 40)
-                .background(DX.Ground.apricot.card2, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-            HStack(alignment: .firstTextBaseline, spacing: 8) {
-                Text(obstacle.title).dxFace(.body, 15, weight: 500).foregroundStyle(Onb.muted).lineLimit(1)
-                DXIcon(.chev, size: 13, weight: 2.6).foregroundStyle(Onb.ink)
-                if let tool = obstacle.tool {
-                    Text(tool).dxFace(.display, 16, weight: 700, tracking: -0.2).foregroundStyle(Onb.ink).lineLimit(1).minimumScaleFactor(0.8)
-                }
+        HStack(spacing: 10) {
+            EvGlyph(d: obstacle.evIcon, size: 18)
+                .foregroundStyle(Ev.cream)
+                .frame(width: 32, height: 32)
+                .background(Ev.badge, in: Circle())
+            Text(verbatim: obstacle.evChipTitle)
+                .dxFace(.body, 15, weight: 500).foregroundStyle(Onb.muted)
+                .lineLimit(1).minimumScaleFactor(0.8)
+                .frame(width: 96, alignment: .leading)
+            GridShape(d: "M1 9h15M11.5 4.5L16 9l-4.5 4.5", grid: 18)
+                .stroke(Ev.arrow, style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round))
+                .frame(width: 18, height: 18)
+                .accessibilityHidden(true)
+            if let tool = obstacle.tool {
+                Text(tool).dxFace(.display, 17, weight: 700, tracking: -0.2).foregroundStyle(Onb.ink)
+                    .lineLimit(1).minimumScaleFactor(0.75)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            Spacer(minLength: 0)
         }
-        .padding(.horizontal, 14).padding(.vertical, 10)
-        .frame(minHeight: 64)
+        .frame(minHeight: 38)
         .accessibilityElement(children: .combine)
     }
-
-    @ViewBuilder private var art: some View {
-        switch obstacle {
-        case .irritability: ToolArt(kind: .reset)
-        case .social: ToolArt(kind: .talk)
-        default:
-            DXIcon(icon, size: 22).foregroundStyle(Onb.ink)
-        }
-    }
-
-    private var icon: DX.Icon {
-        switch obstacle {
-        case .hunger: .drop
-        case .weight: .leaf
-        case .sleep: .moon
-        case .restlessness: .hand
-        case .focus: .eye
-        case .motivation: .heart
-        case .cravings: .wave
-        case .stress: .sun
-        default: .sparkle
-        }
-    }
 }
 
-/// The two paper-cut tool objects from 008, on a 32 × 32 grid: a sun-timer for the reset, two speech bubbles for what to say.
-private struct ToolArt: View {
-    enum Kind { case reset, talk }
-    let kind: Kind
+/// Withdrawal over four weeks: two coral hills that start high in week one and run down to nothing, a small sun at
+/// the far end, and Xero walking down the slope.
+private struct WithdrawalCurve: View {
     @Environment(\.colorScheme) private var scheme
+    private let motion = MotionPolicy()
 
     var body: some View {
-        let shadow = scheme == .dark ? Color.black.opacity(0.55) : Color(red: 120 / 255, green: 52 / 255, blue: 24 / 255).opacity(0.24)
-        ZStack {
-            switch kind {
-            case .reset:
-                ZStack {
-                    p("M14.3 2 h3.4 a1.8 1.8 0 0 1 1.8 1.8 v.8 a1.8 1.8 0 0 1 -1.8 1.8 h-3.4 a1.8 1.8 0 0 1 -1.8 -1.8 v-.8 a1.8 1.8 0 0 1 1.8 -1.8 z").fill(Color(hex: 0xFF7155))
-                    p("M17.8 2 h.3 a1.4 1.4 0 0 1 1.4 1.4 v1.6 a1.4 1.4 0 0 1 -1.4 1.4 h-.3 a1.4 1.4 0 0 1 -1.4 -1.4 v-1.6 a1.4 1.4 0 0 1 1.4 -1.4 z").fill(Color(hex: 0xE85A3E))
-                }.shadow(color: shadow, radius: 1, y: 1.6)
-                ZStack {
-                    p("M16 6.7 a11.8 11.8 0 1 1 0 23.6 a11.8 11.8 0 1 1 0 -23.6 z").fill(Color(hex: 0xFFF8EE))
-                    p("M22.5 8.6 A11.8 11.8 0 0 1 16 30.3 A13 13 0 0 0 22.5 8.6 Z").fill(Color(hex: 0xEFE1CF))
-                }.shadow(color: shadow, radius: 1, y: 1.6)
-                p("M16 18.5 V9.4 A9.1 9.1 0 0 1 24.9 16.6 Z").fill(Color(hex: 0xFFC93C)).shadow(color: shadow, radius: 1, y: 1.6)
-                p("M7.6 15 C8.4 12.6 10 10.8 12.2 9.8").stroke(.white, style: StrokeStyle(lineWidth: 1.6, lineCap: .round))
-                p("M16 16.4 a2.1 2.1 0 1 1 0 4.2 a2.1 2.1 0 1 1 0 -4.2 z").fill(Color(hex: 0x1E1A3A))
-            case .talk:
-                ZStack {
-                    p("M6 5 h14 a4.5 4.5 0 0 1 4.5 4.5 v6 a4.5 4.5 0 0 1 -4.5 4.5 h-8 l-5 4 v-4 h-1 a4.5 4.5 0 0 1 -4.5 -4.5 v-6 a4.5 4.5 0 0 1 4.5 -4.5 z").fill(Color(hex: 0xFF7155))
-                    p("M20.5 5.2 a4.5 4.5 0 0 1 4 4.3 v6 a4.5 4.5 0 0 1 -4.5 4.5 h-2 c2.4 -.6 3.6 -2.4 3.6 -4.6 v-6 c0 -1.8 -.4 -3.2 -1.1 -4.2 z").fill(Color(hex: 0xE85A3E))
-                    p("M4.6 12 C4.8 9.6 5.8 8.2 7.6 7.6").stroke(Color(hex: 0xFFB09C), style: StrokeStyle(lineWidth: 1.6, lineCap: .round))
-                }.shadow(color: shadow, radius: 1, y: 1.6)
-                ZStack {
-                    p("M16.5 13 h10 a3.6 3.6 0 0 1 3.6 3.6 v5 a3.6 3.6 0 0 1 -3.6 3.6 h-.8 v3.8 l-4.6 -3.8 h-4.6 a3.6 3.6 0 0 1 -3.6 -3.6 v-5 a3.6 3.6 0 0 1 3.6 -3.6 z").fill(Color(hex: 0xFFF8EE))
-                    p("M13 21.6 c.4 2 1.8 3.4 3.8 3.6 h4.4 l1.2 1 h-5.9 a3.6 3.6 0 0 1 -3.5 -3.6 z").fill(Color(hex: 0xEFE1CF))
-                }.shadow(color: shadow, radius: 1, y: 1.6)
-                ForEach([18.4, 21.6, 24.8], id: \.self) { x in
-                    Circle().fill(Color(hex: 0xFF7155)).frame(width: 2.7, height: 2.7).position(x: x, y: 19.2)
+        let dark = scheme == .dark
+        VStack(spacing: 4) {
+            ZStack(alignment: .topLeading) {
+                Color(light: 0xFFE3C2, dark: 0x2A3554)
+                Curve(d: "M281 40 a11 11 0 1 0 22 0 a11 11 0 1 0 -22 0 Z").fill(Color(hex: 0xFFC93C))
+                Curve(d: "M0 62 L0 14 C46 12 70 14 96 26 C150 50 226 54 314 56 L314 62 Z").fill(Color(hex: dark ? 0xE0603F : 0xFF8F68))
+                Curve(d: "M0 62 L0 34 C50 32 80 36 110 44 C170 58 240 58 314 59 L314 62 Z").fill(Color(hex: dark ? 0xB8452E : 0xF2603C))
+            }
+            .frame(height: 50)
+            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .overlay(alignment: .topLeading) {
+                GeometryReader { proxy in
+                    XeroView(mood: .hello, stage: 0, points: 42, animate: !motion.reduce)
+                        .shadow(color: Ev.cream.opacity(0.9), radius: 1.5)
+                        .frame(width: 42, height: 42)
+                        .rotationEffect(.degrees(9))
+                        .offset(x: proxy.size.width * 78 / 314, y: -12)
                 }
             }
+            HStack(spacing: 0) {
+                ForEach(1...4, id: \.self) { week in
+                    Text("Week \(week)").frame(maxWidth: .infinity)
+                }
+            }
+            .dxFace(.body, 13, weight: 600).foregroundStyle(Onb.muted)
+            .lineLimit(1).minimumScaleFactor(0.7)
         }
-        .frame(width: 32, height: 32)
-        .scaleEffect(30 / 32)
-        .frame(width: 30, height: 30)
-        .accessibilityHidden(true)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text("Withdrawal is strongest in week 1 and eases by weeks 2 to 4"))
     }
 
-    private func p(_ d: String) -> Grid32 { Grid32(d: d) }
-}
-
-private struct Grid32: Shape {
-    let d: String
-    func path(in rect: CGRect) -> Path {
-        SVGPath.path(d).applying(CGAffineTransform(scaleX: rect.width / 32, y: rect.height / 32)).offsetBy(dx: rect.minX, dy: rect.minY)
+    /// A path in the curve's 314 × 62 space, stretched to the frame.
+    private struct Curve: Shape {
+        let d: String
+        func path(in rect: CGRect) -> Path {
+            SVGPath.path(d).applying(CGAffineTransform(scaleX: rect.width / 314, y: rect.height / 62))
+        }
     }
 }
 
 // MARK: Screen 9: nicotine replacement
 
-/// v5 (009): one short evidence line with a Sources link (the citations open in a sheet), and three option rows. The
-/// first shares its card with the product chips, which unfold inside it when it's picked (420 ms settle); picked
-/// products fill with a warm tint and a small tick, never a second outline.
+/// Canvas "Evidence story", board 5 (18 Nov 2026): what trials found (quit rates 50 to 60% higher, as two bars), that
+/// a patch plus a faster form did better than one form alone, the source, then the three answers, each with its drawn
+/// object. "Yes, I'm already using it" unfolds the product chips inside its row (420 ms settle). The pregnancy
+/// question has its own step after this one (`PregnancyScreen`).
 struct NRTScreen: View {
     @Bindable var model: OnboardingModel
     private let motion = MotionPolicy()
-    @State private var sources = false
+    @State private var research = false
 
     var body: some View {
         OnboardingScaffold(title: "Want to use nicotine replacement?", subtitle: nil, model: model) {
-            VStack(alignment: .leading, spacing: 2) {
-                Text("It raises your odds of quitting by 50 to 60%. A patch plus a faster form works best.")
-                    .dxType(.body).foregroundStyle(Onb.muted)
+            evidence.padding(.top, -6).dxArrive(1)
+            if model.evidenceIsFromSmoking {
+                Text("Those trials were in people quitting cigarettes. For vapes and pouches the evidence is thin, so check with a pharmacist.")
+                    .dxFace(.body, 15, weight: 500).foregroundStyle(Onb.muted)
+                    .lineSpacing(3)
                     .fixedSize(horizontal: false, vertical: true)
-                Button { sources = true } label: {
-                    HStack(spacing: 6) {
-                        Image(systemName: "info.circle").font(.system(size: 14, weight: .semibold))
-                        Text("Sources").underline()
-                    }
-                    .dxFace(.body, 13, weight: 600)
-                    .foregroundStyle(Onb.muted)
-                    .frame(minHeight: 32)
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel(Text("Sources: Cochrane reviews, 2018 and 2019"))
+                    .padding(.horizontal, 2).padding(.top, -4)
+                    .dxArrive(2)
             }
-            .padding(.top, -14)
-            .dxArrive(1)
-            usingCard.padding(.top, 8).dxArrive(3)
-            OnbOptionCard("I'd like to try it", detail: "I'll help you plan it with a pharmacist", minHeight: 72,
-                          isSelected: model.nrtInterest == .wantIt) { model.nrtInterest = .wantIt }
-                .dxArrive(4)
-            OnbOptionCard("Not for me", detail: "Behavioral prep only", minHeight: 72,
-                          isSelected: model.nrtInterest == .notInterested) { model.nrtInterest = .notInterested }
-                .dxArrive(5)
-            // S27.6: pregnancy changes the advice (behavioural support first; NRT only with a midwife or doctor).
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Pregnant or breastfeeding?").dxFace(.body, 14, weight: 600).foregroundStyle(Onb.muted)
-                HStack(spacing: 8) {
-                    ForEach(PregnancyAnswer.allCases, id: \.self) { answer in
-                        OnboardingChip(text: answer.chipTitle, isOn: model.pregnancy == answer) { model.setPregnancy(answer) }
-                    }
-                }
-                if model.pregnancy == .yes {
-                    Text(verbatim: PregnancyAnswer.caution)
-                        .dxType(.footnote).foregroundStyle(Onb.ink)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .transition(.opacity)
-                }
+            VStack(spacing: 8) {
+                option(.using, "Yes, I’m already using it", "Pick all you use", .patch).dxArrive(3)
+                option(.wantIt, "I’d like to try it", "I’ll help you plan it with a pharmacist", .plan).dxArrive(4)
+                option(.notInterested, "Not for me", "Behavioral prep only", .leaf).dxArrive(5)
             }
-            .padding(.top, 10)
-            .dxArrive(6)
+            .padding(.top, 2)
         }
         .animation(motion.animation(DX.Move.settle.speed(0.9 / 0.42)), value: model.nrtInterest)
-        .animation(motion.animation(DX.Move.settle), value: model.pregnancy)
-        .sheet(isPresented: $sources) { NRTSourcesSheet().presentationDetents([.medium]) }
+        .researchSheet(isPresented: $research, product: model.evidenceProduct)
     }
 
-    /// "Yes, I'm already using it" and its product chips share one card; picked, the whole card takes the selection.
-    private var usingCard: some View {
-        let g = DX.Ground.apricot
-        let on = model.nrtInterest == .using
-        let shape = RoundedRectangle(cornerRadius: DX.Layout.optionRadius, style: .continuous)
-        return VStack(alignment: .leading, spacing: 0) {
-            Button { model.nrtInterest = .using } label: {
-                HStack(spacing: 14) {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Yes, I'm already using it").dxFace(.display, 17, weight: 700).foregroundStyle(Onb.ink)
-                        Text("Pick all you use").dxType(.footnote).foregroundStyle(Onb.muted)
+    /// "In trials, quit rates were 50 to 60% higher", the two bars, the combination line and the source.
+    private var evidence: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text("In trials, quit rates were").dxFace(.body, 14, weight: 600).foregroundStyle(Onb.muted)
+            Text("50 to 60% higher")
+                .dxFace(.display, 30, weight: 800, tracking: -1).foregroundStyle(Onb.ink)
+                .lineLimit(1).minimumScaleFactor(0.7)
+                .padding(.top, 2)
+            VStack(alignment: .leading, spacing: 8) {
+                bar("With nicotine replacement", "1.5 to 1.6 times", share: 1, fill: Ev.coral, strong: true)
+                bar("With a placebo or none", "baseline", share: 0.645,
+                    fill: Color(light: (0x784628, 0.24), dark: (0xFFFFFF, 0.3)), strong: false)
+            }
+            .padding(.top, 14)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(Text("Nicotine replacement compared with a placebo or none: quit rates 50 to 60% higher"))
+            HStack(spacing: 10) {
+                HStack(spacing: 4) {
+                    EvIllo(kind: .patch, size: 46)
+                    EvGlyph(d: "M12 5v14M5 12h14", size: 14, weight: 3.4).foregroundStyle(Onb.ink)
+                    ZStack(alignment: .topLeading) {
+                        EvIllo(kind: .gum, size: 44)
+                        EvIllo(kind: .lozenge, size: 34).offset(x: 30, y: 12)
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    DXRadio(isOn: on, ground: g)
+                    .frame(width: 64, height: 46, alignment: .topLeading)
                 }
-                .padding(.horizontal, 16).padding(.vertical, 12)
-                .frame(minHeight: 72)
+                .accessibilityHidden(true)
+                Text("A patch plus a faster form did better than one form alone.")
+                    .dxFace(.body, 14, weight: 500).foregroundStyle(Onb.ink)
+                    .lineSpacing(2)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .padding(.leading, 10).padding(.trailing, 12).padding(.vertical, 10)
+            .background(Ev.well, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .padding(.top, 14)
+            EvSourceLink(text: "Cochrane reviews, 2018 and 2023") { research = true }
+                .padding(.top, 2)
+        }
+        .padding(.top, 14).padding(.horizontal, 16).padding(.bottom, 6)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .evCard()
+    }
+
+    private func bar(_ label: LocalizedStringKey, _ value: LocalizedStringKey, share: CGFloat, fill: Color, strong: Bool) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(alignment: .firstTextBaseline) {
+                Text(label).foregroundStyle(strong ? Onb.ink : Onb.muted)
+                Spacer(minLength: 8)
+                Text(value).foregroundStyle(Onb.muted)
+            }
+            .dxFace(.body, 13, weight: 600)
+            .lineLimit(1).minimumScaleFactor(0.75)
+            Color.clear.frame(height: 16)
+                .overlay(alignment: .leading) {
+                    GeometryReader { proxy in Capsule().fill(fill).frame(width: proxy.size.width * share) }
+                }
+        }
+    }
+
+    /// One answer: its drawn object, the title and detail; picked, the row fills with ink and takes the coral tick.
+    /// The first row carries the product chips, which unfold inside it when it's picked.
+    private func option(_ interest: NRTInterest, _ title: LocalizedStringKey, _ detail: LocalizedStringKey, _ illo: EvIllo.Kind) -> some View {
+        let on = model.nrtInterest == interest
+        let shape = RoundedRectangle(cornerRadius: 20, style: .continuous)
+        return VStack(alignment: .leading, spacing: 0) {
+            Button { model.nrtInterest = interest } label: {
+                HStack(spacing: 10) {
+                    EvIllo(kind: illo, size: 40)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(title).dxFace(.display, 17, weight: 700, tracking: -0.2).foregroundStyle(on ? Ev.selFg : Onb.ink)
+                        Text(detail).dxFace(.body, 13, weight: 500).foregroundStyle(on ? Ev.selSub : Onb.muted)
+                    }
+                    .multilineTextAlignment(.leading)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    EvTick(isOn: on)
+                }
+                .padding(.leading, 10).padding(.trailing, 14).padding(.vertical, 8)
+                .frame(minHeight: 64)
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
             .sensoryFeedback(DX.Haptic.select, trigger: on)
             .accessibilityAddTraits(on ? [.isButton, .isSelected] : .isButton)
-            if on {
+            if on && interest == .using {
                 LazyVGrid(columns: [GridItem(.flexible(), spacing: 8), GridItem(.flexible(), spacing: 8)], spacing: 8) {
                     ForEach(NRTType.allCases, id: \.self) { type in
                         NRTFormatChip(text: type.chipTitle, isOn: model.nrtFormats.contains(type)) {
@@ -1260,18 +1328,19 @@ struct NRTScreen: View {
                         }
                     }
                 }
-                .padding(.horizontal, 16).padding(.bottom, 16)
+                .padding(.horizontal, 14).padding(.top, 4).padding(.bottom, 14)
                 .transition(.opacity)
             }
         }
-        .background(on ? g.selTint : g.card, in: shape)
-        .overlay(shape.strokeBorder(on ? g.selEdge : g.line, lineWidth: on ? 2 : 1))
+        .background(on ? Ev.sel : Ev.card, in: shape)
+        .overlay { if !on { shape.strokeBorder(Ev.ring, lineWidth: 1) } }
         .clipShape(shape)
         .animation(DX.Move.arrive.speed(2.4), value: on)
     }
 }
 
-/// A nested pick inside the selected card: a filled warm tint and a small tick, no outline.
+/// A nested pick inside the picked (ink) row: an outline on the ink; chosen, it fills with the row's text colour and
+/// takes a small tick.
 private struct NRTFormatChip: View {
     let text: String
     let isOn: Bool
@@ -1279,7 +1348,6 @@ private struct NRTFormatChip: View {
     @State private var taps = 0
 
     var body: some View {
-        let g = DX.Ground.apricot
         let shape = RoundedRectangle(cornerRadius: DX.Layout.chipRadius, style: .continuous)
         Button {
             taps += 1
@@ -1290,39 +1358,16 @@ private struct NRTFormatChip: View {
                 Text(verbatim: text).lineLimit(1).minimumScaleFactor(0.8)
             }
             .dxFace(.body, 15, weight: isOn ? 700 : 600)
-            .foregroundStyle(g.ink)
+            .foregroundStyle(isOn ? Ev.sel : Ev.selFg)
             .padding(.horizontal, 10)
             .frame(maxWidth: .infinity, minHeight: 44)
-            .background(isOn ? Color(light: 0xFFC4A0, dark: 0x3A3A44) : g.card, in: shape)
-            .overlay { if !isOn { shape.strokeBorder(g.line, lineWidth: 1) } }
+            .background(isOn ? Ev.selFg : Color.clear, in: shape)
+            .overlay { if !isOn { shape.strokeBorder(Ev.selFg.opacity(0.45), lineWidth: 1) } }
+            .contentShape(shape)
             .animation(.timingCurve(0.2, 0.7, 0.2, 1, duration: 0.25), value: isOn)
         }
         .buttonStyle(.dxPress)
         .sensoryFeedback(DX.Haptic.select, trigger: taps)
         .accessibilityAddTraits(isOn ? [.isButton, .isSelected] : .isButton)
-    }
-}
-
-/// The citations behind 009's line, and the note about stop-smoking medicines.
-private struct NRTSourcesSheet: View {
-    var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            Text("Sources").dxType(.title).foregroundStyle(Onb.ink).padding(.top, 28)
-            ForEach([HealthSources.nrtCochrane2018, HealthSources.nrtCombinationCochrane2019], id: \.url) { source in
-                Link(destination: source.url) {
-                    HStack(alignment: .top, spacing: 10) {
-                        DXIcon(.note, size: 18, weight: 2.6).foregroundStyle(Onb.muted)
-                        Text(source.label).dxType(.footnote).underline().foregroundStyle(Onb.ink).multilineTextAlignment(.leading)
-                    }
-                }
-            }
-            Text("Always follow the product label. Stop-smoking medicines such as varenicline or cytisine help too: ask a pharmacist or doctor what suits you.")
-                .dxType(.footnote).foregroundStyle(Onb.muted)
-                .fixedSize(horizontal: false, vertical: true)
-            Spacer()
-        }
-        .padding(.horizontal, DX.Layout.gutter)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .dxGround(.apricot)
     }
 }

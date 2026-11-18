@@ -24,7 +24,7 @@ enum PregnancyAnswer: String, CaseIterable, Sendable {
         switch self {
         case .no: String(localized: "No")
         case .yes: String(localized: "Yes")
-        case .preferNotToSay: String(localized: "Prefer not to say")
+        case .preferNotToSay: String(localized: "Rather not say")
         }
     }
 
@@ -97,9 +97,11 @@ struct ReasonDraft: Identifiable, Equatable {
 
 /// The onboarding steps (S22). The age check is the welcome screen's footer; the name is asked with the reason.
 /// `howItWorks`, `cravingSOS` and `yourDay` ask nothing: they show what DayXero is (16 Nov 2026, TourScreens.swift).
+/// `goodCompany` and `whatWorks` ask nothing either: they open the evidence story (18 Nov 2026, EvidenceScreens.swift).
+/// `pregnancy` follows `nrt` unless the answer there was "Not for me".
 enum OnboardingStep: Hashable {
-    case welcome, howItWorks, products, baseline(Product), baselineSummary, triggers, cravingSOS, personal, obstacles,
-         nrt, yourDay, quitDay, building, reveal, trial
+    case welcome, howItWorks, products, goodCompany, baseline(Product), baselineSummary, whatWorks, triggers, cravingSOS,
+         personal, obstacles, nrt, pregnancy, yourDay, quitDay, building, reveal, trial
 
     /// Analytics and screenshot name.
     var key: String {
@@ -107,13 +109,16 @@ enum OnboardingStep: Hashable {
         case .welcome: "welcome"
         case .howItWorks: "how_it_works"
         case .products: "products"
+        case .goodCompany: "good_company"
         case let .baseline(product): "baseline_\(product.rawValue)"
         case .baselineSummary: "baseline_summary"
+        case .whatWorks: "what_works"
         case .triggers: "triggers"
         case .cravingSOS: "craving_sos"
         case .personal: "personal"
         case .obstacles: "obstacles"
         case .nrt: "nrt"
+        case .pregnancy: "pregnancy"
         case .yourDay: "your_day"
         case .quitDay: "quit_day"
         case .building: "building"
@@ -184,8 +189,9 @@ final class OnboardingModel {
 
     /// Steps in order for the current answers. Baselines repeat per product.
     var sequence: [OnboardingStep] {
-        [.welcome, .howItWorks, .products] + orderedProducts.map(OnboardingStep.baseline)
-            + [.baselineSummary, .triggers, .cravingSOS, .personal, .obstacles, .nrt, .yourDay, .quitDay, .building, .reveal, .trial]
+        [.welcome, .howItWorks, .products, .goodCompany] + orderedProducts.map(OnboardingStep.baseline)
+            + [.baselineSummary, .whatWorks, .triggers, .cravingSOS, .personal, .obstacles, .nrt, .pregnancy, .yourDay, .quitDay,
+               .building, .reveal, .trial]
     }
 
     /// The steps the bar counts: the baseline screens share one slot, so the total is the same whatever is picked.
@@ -229,6 +235,7 @@ final class OnboardingModel {
         case .personal: !trimmedName.isEmpty && !why.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         case .obstacles: !obstacles.isEmpty
         case .nrt: nrtInterest != nil
+        case .pregnancy: pregnancy != nil
         case .quitDay: quitDayRange.contains(calendar.startOfDay(for: quitDay))
         default: true
         }
@@ -241,8 +248,20 @@ final class OnboardingModel {
     func next() {
         let steps = sequence
         guard let index = steps.firstIndex(of: step), index + 1 < steps.count else { return }
-        path.append(steps[index + 1])
+        var target = steps[index + 1]
+        // The pregnancy question only matters when nicotine replacement is being planned.
+        if target == .pregnancy, nrtInterest == .notInterested, index + 2 < steps.count { target = steps[index + 2] }
+        path.append(target)
     }
+
+    /// The product the evidence screens speak to: cigarettes when they're among the picks (the trials were in people
+    /// who smoke), else the vape, else pouches.
+    var evidenceProduct: Product {
+        products.contains(.cigarettes) ? .cigarettes : products.contains(.vape) ? .vape : (orderedProducts.first ?? .cigarettes)
+    }
+
+    /// The trials behind the numbers were in people quitting cigarettes; say so to people who don't smoke them.
+    var evidenceIsFromSmoking: Bool { !products.isEmpty && !products.contains(.cigarettes) }
 
     /// Optional questions (the name and reason, what gets in the way) can be skipped (S27.10). Whatever was typed is
     /// kept; an empty name saves as none (the app then says "you") and an empty reason adds no reason. Skipping the
@@ -276,9 +295,10 @@ final class OnboardingModel {
         firstUse = .withinThirty
         triggers = [.coffee, .stress]
         why = ReasonDraft(text: "Run with Aria without stopping to catch my breath")
-        obstacles = [.irritability, .social]
-        nrtInterest = .using
-        nrtFormats = [.patch, .gum]
+        obstacles = [.irritability, .sleep]
+        nrtInterest = .wantIt
+        if UserDefaults.standard.string(forKey: "dx.onboardingProduct") == "vape" { products = [.vape] }
+        if UserDefaults.standard.string(forKey: "dx.onboardingProduct") == "pouches" { products = [.pouches] }
         let steps = sequence
         if let target = steps.first(where: { $0.key == key }) {
             path = [.welcome, target]

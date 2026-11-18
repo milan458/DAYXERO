@@ -208,7 +208,7 @@ struct NRTSetupView: View {
                 .padding(.top, 4)
                 .dxCard()
                 .dxArrive(2)
-                // S27.6: combination NRT is the best-evidenced option (Cochrane 2019, RR 1.25, high certainty).
+                // S27.6: combination NRT is the best-evidenced option (Cochrane 2023, RR 1.27, high certainty).
                 HStack(spacing: 16) {
                     XeroView(mood: .hello, stage: 0, points: 92)
                         .dxBob()
@@ -221,7 +221,7 @@ struct NRTSetupView: View {
                         Text("A patch plus a faster form beats either alone.")
                             .dxFace(.display, 17, weight: 700).foregroundStyle(g.ink)
                             .fixedSize(horizontal: false, vertical: true)
-                        SourceLink(source: HealthSources.nrtCombinationCochrane2019)
+                        SourceLink(source: HealthSources.nrtCombinationCochrane2023)
                     }
                 }
                 .padding(.vertical, -4)
