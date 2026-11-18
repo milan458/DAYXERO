@@ -35,7 +35,7 @@ body{margin:0}
         <sc-for list="{{rows}}" as="r" hint-placeholder-count="4">
           <div style="display: flex; align-items: flex-start; gap: 12px">
             <div style="width: 36px; height: 36px; border-radius: 99px; background: {{r.bg}}; color: {{r.fg}}; display: flex; align-items: center; justify-content: center; flex: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{r.icon}}"></path></svg></div>
-            <div style="min-width: 0; padding-top: 1px"><div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: -0.2px">{{r.t}}</div><div style="margin-top: 1px; font-size: 14px; font-weight: 500; line-height: 1.4; color: {{t.muted}}; text-wrap: balance">{{r.d}}</div></div>
+            <div style="min-width: 0; padding-top: 1px"><div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: -0.2px">{{r.t}}</div><div style="margin-top: 1px; font-size: 14px; font-weight: 500; line-height: 1.4; color: {{t.muted}}; text-wrap: pretty">{{r.d}}</div></div>
           </div>
         </sc-for>
       </div>
@@ -62,7 +62,7 @@ class Component extends DCLogic {
   renderVals() {
     const dark = (this.props.theme ?? 'light') === 'dark';
     const t = dark
-      ? { g: '#0E1322', fg: '#FFF8EE', muted: '#B3BACC', card: '#1B2439', card2: '#212A41', well: '#232C45', stamp: '#303B5C', line: 'rgba(255,255,255,0.12)', ring: 'inset 0 0 0 1px rgba(255,255,255,0.22)', mark: '#FF8A65', coral: '#E0603F', sel: '#FFF8EE', selFg: '#0E1322', off: 'rgba(255,255,255,0.3)', btn: '#FFF8EE', btnFg: '#0E1322', btnShadow: '0 6px 18px rgba(255,248,238,0.14)' }
+      ? { g: '#0E1322', fg: '#FFF8EE', muted: '#B3BACC', card: '#1B2439', card2: '#212A41', well: '#232C45', stamp: '#3B4873', line: 'rgba(255,255,255,0.12)', ring: 'inset 0 0 0 1px rgba(255,255,255,0.22)', mark: '#FF8A65', coral: '#E0603F', sel: '#FFF8EE', selFg: '#0E1322', off: 'rgba(255,255,255,0.3)', btn: '#FFF8EE', btnFg: '#0E1322', btnShadow: '0 6px 18px rgba(255,248,238,0.14)' }
       : { g: '#FFC38A', fg: '#1E1A3A', muted: '#4A2810', card: '#FFFAF5', card2: '#FFE7D0', well: '#FFEBDD', stamp: '#FFDCC6', line: 'rgba(30,26,58,0.12)', ring: 'none', mark: '#FF7A55', coral: '#D9492A', sel: '#1E1A3A', selFg: '#FFF8EE', off: 'rgba(30,26,58,0.28)', btn: '#1E1A3A', btnFg: '#FFF8EE', btnShadow: '0 6px 18px rgba(30,26,58,0.22)' };
     const patch = 'M7 4 h10 a3 3 0 0 1 3 3 v10 a3 3 0 0 1 -3 3 H7 a3 3 0 0 1 -3 -3 V7 a3 3 0 0 1 3 -3 Z M9 12 h6 M12 9 v6';
     const chat = 'M4 5 h16 v11 H9 l-5 4 Z';
@@ -70,12 +70,12 @@ class Component extends DCLogic {
     const sun = 'M12 8 a4 4 0 1 0 0.01 0 M12 2 v2 M12 20 v2 M2 12 h2 M20 12 h2 M4.9 4.9 l1.4 1.4 M17.7 17.7 l1.4 1.4 M4.9 19.1 l1.4 -1.4 M17.7 6.3 l1.4 -1.4';
     const med = { bg: t.well, fg: t.fg }, sup = med;
     const rows = [
-      { ...med, icon: patch, t: 'Nicotine replacement', d: 'In trials it raised quit rates by 50 to 60%.' },
+      { ...med, icon: patch, t: 'Nicotine replacement', d: 'In trials, quit rates rose 50 to 60%.' },
       { ...sup, icon: chat, t: 'Your when-then plans', d: 'For coffee and for stress.' },
       { ...sup, icon: moon, t: 'A check-in every day', d: 'A morning pledge and a night check-in.' },
       { ...sup, icon: sun, t: 'A clean stop on Quit Day', d: 'First goal: 28 days. The NHS says that makes you 5 times more likely to stay quit.' }
     ];
-    const stamps = [1, 2, 3, 4, 5, 6, 7].map((n) => ({ n: String(n), c: n === 1 ? '#FFC93C' : t.stamp, in: n === 1 ? '#F29A2E' : t.off, fg: n === 1 ? '#5A2E06' : t.muted }));
+    const stamps = [1, 2, 3, 4, 5, 6, 7].map((n) => ({ n: String(n), c: n === 1 ? '#FFC93C' : t.stamp, in: n === 1 ? '#F29A2E' : t.off, fg: n === 1 ? '#5A2E06' : t.fg }));
     const g = dark ? '14,19,34' : '255,195,138';
     return { t, light: !dark, dark, rows, stamps, coinGlow: dark ? '0 0 0 10px rgba(255,201,60,0.10), 0 0 44px 12px rgba(255,170,80,0.32)' : '0 0 0 12px rgba(255,248,238,0.34), 0 0 44px 16px rgba(255,240,200,0.7)',
       shadow: dark ? 'rgba(0,0,0,0.55)' : 'rgba(80,20,10,0.35)', blend: `linear-gradient(rgba(${g},0), rgba(${g},0.85))`,

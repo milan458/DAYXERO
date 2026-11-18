@@ -76,3 +76,21 @@ Changes:
 - S7: wraps, stronger stamps and glow. S8: blurred backdrop, type tags in a left column, shorter intro.
 - Dark cards one step lighter with a stronger edge on all screens.
 Stills: `cook/stills/r02/` | Pairs: `cook/compare/r02/`
+Scores, eyeballed, raw overall (Opus / Sonnet -> median; round 1 median):
+S1 8.5/8.1 = 8.3 (8.3) | S2 7.9/7.3 = 7.6 (7.9, down) | S3 8.2/7.9 = 8.05 (7.75) | S4 8.0/7.8 = 7.9 (7.7) | S5 7.8/7.6 = 7.7 (7.8, down)
+S6 8.5/8.3 = 8.4 (8.25) | S7 8.5/8.3 = 8.4 (8.35) | S8 7.9/7.7 = 7.8 (7.75) | Set 8.2/7.9 = 8.05, calibrated 7.9
+S2 and S5 dropped: both critics read the labelled extra segment on the split bar as a stray pill, and the "+" joint as a collision.
+Decision: not reverted to round 1; the bars go back to two plain proportional bars (round 1 form) in round 3, joint moved into the gap.
+Stop check: bar no -> next round.
+
+## Round 03
+
+Time: 19:50 to 20:20 UTC
+Focus: S2 and S5 (down in round 2), then contrast and wraps.
+Changes:
+- S2: plain proportional bars (1.8 : 1), Xero stands on the first ingredient card next to the headline, small "+" in a wider gap.
+- S5: plain proportional bars (about 1.55 : 1), calm Xero in the stat card, pregnancy question lighter with outlined chips.
+- S3: Xero fully above the summary card. S4: aligned arrows, unbroken dark card edge, slower curve.
+- S6: "6 fewer" legend for the ring dots, stronger day rings. S7: one-line first row, stronger dark stamps.
+- S8: neutral blurred backdrop, tags top-aligned, solid arrow buttons, Xero by the title. S1: larger pictogram, darker third figure.
+Stills: `cook/stills/r03/` | Pairs: `cook/compare/r03/` | 3 critics (Opus, Sonnet, Fable)

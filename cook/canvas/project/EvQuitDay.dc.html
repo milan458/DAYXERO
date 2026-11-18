@@ -58,8 +58,8 @@ class Component extends DCLogic {
     const theme = this.props.theme ?? 'light';
     const dark = theme === 'dark';
     const t = dark
-      ? { g: '#0E1322', fg: '#FFF8EE', muted: '#B3BACC', card: '#1B2439', card2: '#212A41', line: 'rgba(255,255,255,0.12)', ring: 'inset 0 0 0 1px rgba(255,255,255,0.22)', navBtn: 'rgba(255,255,255,0.14)', navTrack: 'rgba(255,255,255,0.2)', coral: '#FF8A65', off: 'rgba(255,255,255,0.3)', btn: '#FFF8EE', btnFg: '#0E1322', btnShadow: '0 6px 18px rgba(255,248,238,0.14)' }
-      : { g: '#FFC38A', fg: '#1E1A3A', muted: '#4A2810', card: '#FFFAF5', card2: '#FFE7D0', line: 'rgba(30,26,58,0.12)', ring: 'none', navBtn: 'rgba(255,255,255,0.72)', navTrack: 'rgba(30,26,58,0.24)', coral: '#F2603C', off: 'rgba(30,26,58,0.28)', btn: '#1E1A3A', btnFg: '#FFF8EE', btnShadow: '0 6px 18px rgba(30,26,58,0.22)' };
+      ? { g: '#0E1322', fg: '#FFF8EE', muted: '#B3BACC', card: '#1B2439', card2: '#212A41', line: 'rgba(255,255,255,0.12)', ring: 'inset 0 0 0 1px rgba(255,255,255,0.22)', navBtn: 'rgba(255,255,255,0.14)', navTrack: 'rgba(255,255,255,0.2)', coral: '#FF8A65', off: 'rgba(255,255,255,0.42)', btn: '#FFF8EE', btnFg: '#0E1322', btnShadow: '0 6px 18px rgba(255,248,238,0.14)' }
+      : { g: '#FFC38A', fg: '#1E1A3A', muted: '#4A2810', card: '#FFFAF5', card2: '#FFE7D0', line: 'rgba(30,26,58,0.12)', ring: 'none', navBtn: 'rgba(255,255,255,0.72)', navTrack: 'rgba(30,26,58,0.24)', coral: '#F2603C', off: 'rgba(30,26,58,0.42)', btn: '#1E1A3A', btnFg: '#FFF8EE', btnShadow: '0 6px 18px rgba(30,26,58,0.22)' };
     const names = ['W', 'T', 'F', 'S', 'S', 'M', 'T'];
     const days = names.map((w, i) => ({ w, n: String(i + 1), s: i === 0 ? `background: ${t.btn}; color: ${t.btnFg}` : `box-shadow: inset 0 0 0 1.5px ${t.off}; color: ${t.muted}` }));
     return { t, theme, days };
