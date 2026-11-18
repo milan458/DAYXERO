@@ -743,7 +743,7 @@ struct TriggersScreen: View {
             .background(Ev.card)
             .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
             .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(Ev.ring, lineWidth: 1))
-            .padding(.top, 8)
+            .padding(.top, 2)
             .accessibilityElement(children: .combine)
             .dxArrive(4)
         }
@@ -757,7 +757,7 @@ struct TriggersScreen: View {
     }
 
     private func chip(_ trigger: Trigger) -> some View {
-        EvChip(text: trigger == .other ? String(localized: "Other") : trigger.chipTitle, icon: trigger.evIcon,
+        EvChip(text: trigger.evChipTitle, icon: trigger.evIcon,
                isOn: model.triggers.contains(trigger)) {
             if model.triggers.contains(trigger) { model.triggers.remove(trigger) } else { model.triggers.insert(trigger) }
         }
@@ -766,7 +766,7 @@ struct TriggersScreen: View {
     /// "2 picked. Coffee and stress. I'll write a when-then plan for each."
     private var countLine: Text {
         let order = Self.moments + Self.feelings
-        let picked = order.filter(model.triggers.contains).map { $0 == .other ? String(localized: "other moments") : String(localized: $0.title).lowercased() }
+        let picked = order.filter(model.triggers.contains).map(\.evPlanWord)
         guard !picked.isEmpty else { return Text("Pick any that apply. I’ll write a when-then plan for each.") }
         var names = picked.count <= 3 ? BaselineScreenCopy.list(picked) : String(localized: "\(picked.prefix(2).joined(separator: ", ")) and \(picked.count - 2) more")
         names = names.prefix(1).uppercased() + names.dropFirst()
@@ -1060,7 +1060,7 @@ struct ObstaclesScreen: View {
             let picked = Self.order.filter(model.obstacles.contains)
             if !picked.isEmpty {
                 card(picked)
-                    .padding(.top, 10)
+                    .padding(.top, 2)
                     .transition(.opacity)
                     .dxArrive(3)
             }
@@ -1092,7 +1092,7 @@ struct ObstaclesScreen: View {
                         .dxFace(.body, 15, weight: 600).foregroundStyle(Onb.ink)
                         .lineSpacing(3)
                         .fixedSize(horizontal: false, vertical: true)
-                    WithdrawalCurve().padding(.top, 12)
+                    WithdrawalCurve().padding(.top, 10)
                     EvSourceLink(text: "Hughes, 2007 · people who stopped smoking") {
                         research = true
                     }
@@ -1241,7 +1241,7 @@ struct NRTScreen: View {
             Text("In trials, quit rates were").dxFace(.body, 14, weight: 600).foregroundStyle(Onb.muted)
             Text("50 to 60% higher")
                 .dxFace(.display, 30, weight: 800, tracking: -1).foregroundStyle(Onb.ink)
-                .lineLimit(1).minimumScaleFactor(0.7)
+                .fixedSize(horizontal: false, vertical: true)
                 .padding(.top, 2)
             VStack(alignment: .leading, spacing: 8) {
                 bar("With nicotine replacement", "1.5 to 1.6 times", share: 1, fill: Ev.coral, strong: true)
@@ -1287,7 +1287,7 @@ struct NRTScreen: View {
                 Text(value).foregroundStyle(Onb.muted)
             }
             .dxFace(.body, 13, weight: 600)
-            .lineLimit(1).minimumScaleFactor(0.75)
+            .fixedSize(horizontal: false, vertical: true)
             Color.clear.frame(height: 16)
                 .overlay(alignment: .leading) {
                     GeometryReader { proxy in Capsule().fill(fill).frame(width: proxy.size.width * share) }

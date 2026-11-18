@@ -71,6 +71,36 @@ extension Trigger {
     }
 }
 
+extension Trigger {
+    /// The short name on the onboarding chip (canvas `EvTriggers`).
+    var evChipTitle: String {
+        switch self {
+        case .morning: String(localized: "Morning")
+        case .meals: String(localized: "After meals")
+        case .work: String(localized: "At work")
+        case .alcohol: String(localized: "Alcohol")
+        case .evening: String(localized: "Evening")
+        case .social: String(localized: "Social")
+        case .other: String(localized: "Other")
+        default: chipTitle
+        }
+    }
+
+    /// The trigger as it reads inside a sentence: "For coffee and for stress."
+    var evPlanWord: String {
+        switch self {
+        case .morning: String(localized: "mornings")
+        case .meals: String(localized: "meals")
+        case .work: String(localized: "work")
+        case .alcohol: String(localized: "drinking")
+        case .evening: String(localized: "evenings")
+        case .social: String(localized: "time with friends")
+        case .other: String(localized: "other moments")
+        default: String(localized: title).lowercased()
+        }
+    }
+}
+
 extension Obstacle {
     /// The chip's line icon (canvas `EvObstacles`).
     var evIcon: String {

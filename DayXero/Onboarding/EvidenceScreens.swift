@@ -80,7 +80,7 @@ struct GoodCompanyScreen: View {
                             .foregroundStyle(Onb.ink)
                             .multilineTextAlignment(.center)
                             .fixedSize(horizontal: false, vertical: true)
-                            .padding(.horizontal, 28)
+                            .padding(.horizontal, 40)
                             .padding(.top, 8)
                             .dxArrive(3)
                     } else {
@@ -187,6 +187,7 @@ struct GoodCompanyScreen: View {
 struct WhatWorksScreen: View {
     let model: OnboardingModel
     @State private var research = false
+    @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.colorScheme) private var scheme
     private let motion = MotionPolicy()
 
@@ -231,9 +232,11 @@ struct WhatWorksScreen: View {
     private var card: some View {
         VStack(spacing: 0) {
             art
-            HStack(alignment: .top, spacing: 30) {
-                ingredient("A stop-smoking\nmedicine", "Like a nicotine patch or gum")
-                ingredient("Steady\nsupport", "A plan, a daily check-in, help in the moment")
+            // Side by side under his hands; one above the other at the accessibility text sizes.
+            let layout = typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(spacing: 14)) : AnyLayout(HStackLayout(alignment: .top, spacing: 30))
+            layout {
+                ingredient(typeSize.isAccessibilitySize ? "A stop-smoking medicine" : "A stop-smoking\nmedicine", "Like a nicotine patch or gum")
+                ingredient(typeSize.isAccessibilitySize ? "Steady support" : "Steady\nsupport", "A plan, a daily check-in, help in the moment")
             }
             .padding(.top, 12)
             Rectangle().fill(Ev.line).frame(height: 1).padding(.vertical, 12)

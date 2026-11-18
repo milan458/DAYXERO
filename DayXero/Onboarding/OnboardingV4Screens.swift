@@ -651,7 +651,10 @@ struct PlanRevealScreen: View {
     private let motion = MotionPolicy()
     private let ground = DX.Ground.apricot
 
-    private static let heroHeight: CGFloat = 300
+    /// The scene's height from the top of the screen, status bar and the floating header included: the canvas's 300
+    /// plus the room the header takes above the medallion.
+    private static let heroHeight: CGFloat = 356
+    private static let heroDrop: CGFloat = 56
 
     var body: some View {
         ScrollView {
@@ -766,19 +769,19 @@ struct PlanRevealScreen: View {
                                  sun: .init(x: 262, radius: 0, drop: -20, clouds: false))
                 }
                 medallion
-                    .offset(x: x0 + 192, y: 58)
+                    .offset(x: x0 + 192, y: 58 + Self.heroDrop)
                     .dxPop(delay: 0.3)
                 Ellipse()
                     .fill(RadialGradient(colors: [dark ? Color.black.opacity(0.55) : Color(hex: 0x50140A).opacity(0.35), .clear],
                                          center: .center, startRadius: 0, endRadius: 44))
                     .frame(width: 88, height: 14)
-                    .offset(x: x0 + 66, y: 250)
+                    .offset(x: x0 + 66, y: 250 + Self.heroDrop)
                 XeroView(mood: .cheer, stage: 0, points: 116, animate: !motion.reduce)
                     .shadow(color: dark ? Color(hex: 0xFFAA5A).opacity(0.45) : Ev.cream.opacity(0.95), radius: dark ? 8 : 2.5,
                             x: dark ? 4 : 0, y: dark ? -2 : 0)
                     .shadow(color: dark ? .clear : Color(hex: 0x781E0A).opacity(0.22), radius: 10, y: 6)
                     .frame(width: 116, height: 116)
-                    .offset(x: x0 + 52, y: 142)
+                    .offset(x: x0 + 52, y: 142 + Self.heroDrop)
                     .dxSettle(delay: 0.45)
                 VStack(spacing: 0) {
                     Spacer(minLength: 0)
@@ -833,8 +836,7 @@ struct PlanRevealScreen: View {
                                      ? String(localized: "Talk to your midwife or doctor first.")
                                      : String(localized: "In trials, quit rates rose 50 to 60%.")))
         }
-        let picked = Trigger.allCases.filter(model.triggers.contains)
-            .map { $0 == .other ? String(localized: "other moments") : String(localized: $0.title).lowercased() }
+        let picked = Trigger.allCases.filter(model.triggers.contains).map(\.evPlanWord)
         if !picked.isEmpty {
             let detail: String
             switch picked.count {
