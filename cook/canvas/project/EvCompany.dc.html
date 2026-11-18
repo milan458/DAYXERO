@@ -27,7 +27,7 @@ body{margin:0}
     <div style="position: relative; width: 248px; height: 248px; flex: none">
       <div style="position: absolute; left: 0; top: 0; width: 248px; height: 248px; border-radius: 50%; overflow: hidden; background: {{discBg}}; box-shadow: {{discRing}}">
         <sc-if value="{{light}}" hint-placeholder-val="{{true}}"><dc-import name="Horizon2" scene="dawn" clarity="100" clouds="false" sun-x="250" sun-r="0" sun-dy="-10" w="248" h="248" fit="xMidYMax slice" animate="true" hint-size="248px,248px"></dc-import></sc-if>
-        <sc-if value="{{dark}}" hint-placeholder-val="{{false}}"><dc-import name="NightSky" theme="dark" dawn="true" warm="true" stars="false" hills="true" sun-scale="0" sun-lift="10" sun-at="0.5" fade="false" w="248" h="248" animate="true" hint-size="248px,248px"></dc-import></sc-if>
+        <sc-if value="{{dark}}" hint-placeholder-val="{{false}}"><dc-import name="NightSky" theme="dark" dawn="true" warm="true" stars="false" hills="true" sun-scale="0" sun-lift="10" sun-at="0.5" fade="true" w="248" h="248" animate="true" hint-size="248px,248px"></dc-import></sc-if>
         <div style="position: absolute; left: 14px; top: 52px; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(closest-side, {{halo}}, rgba(255,240,200,0))"></div>
       </div>
       <div style="position: absolute; width: 96px; height: 15px; border-radius: 50%; background: radial-gradient(closest-side, {{shadow}}, rgba(20,10,30,0)); left: 70px; top: 204px"></div>

@@ -33,11 +33,11 @@ body{margin:0}
       </sc-for>
     </div>
 
-    <div style="margin-top: auto; margin-bottom: 20px; position: relative">
+    <div style="margin-top: auto; margin-bottom: 14px; position: relative">
       <div style="position: relative; background: {{t.solid}}; box-shadow: {{t.ringOut}}; border-radius: 20px; overflow: hidden">
         <p style="margin: 0; padding: 14px 16px 4px 16px; font-size: 15px; font-weight: 500; line-height: 1.4; color: {{t.muted}}"><b style="font-weight: 700; color: {{t.fg}}">2 picked.</b> Here’s what each one adds.</p>
         <sc-for list="{{adds}}" as="r" hint-placeholder-count="2">
-          <div style="display: flex; align-items: center; gap: 10px; min-height: 44px; box-sizing: border-box; padding: 2px 16px">
+          <div style="display: flex; align-items: center; gap: 10px; min-height: 40px; box-sizing: border-box; padding: 0 16px">
             <span style="width: 32px; height: 32px; border-radius: 99px; flex: none; display: flex; align-items: center; justify-content: center; background: {{t.badge}}; color: {{t.badgeFg}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{r.ic}}"></path></svg></span>
             <span style="width: 80px; flex: none; font-size: 15px; font-weight: 500; color: {{t.muted}}">{{r.a}}</span>
             <svg width="18" height="12" viewBox="0 0 18 12" fill="none" stroke="{{t.arrow}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M1 6h15M11.5 1.5L16 6l-4.5 4.5"></path></svg>
@@ -47,7 +47,10 @@ body{margin:0}
         <div style="margin: 8px 16px 0 16px; border-top: 1px solid {{t.line}}; padding: 12px 0 8px 0; display: flex; flex-direction: column; gap: 8px">
           <p style="margin: 0; font-size: 15px; font-weight: 600; line-height: 1.4; text-wrap: pretty">Both are withdrawal, and it passes. Usually worst in week one, easing over two to four.</p>
           <div role="img" aria-label="Withdrawal is strongest in week 1 and eases by weeks 2 to 4" style="display: flex; flex-direction: column; gap: 4px">
-            <svg width="100%" height="34" viewBox="0 0 314 34" preserveAspectRatio="none" aria-hidden="true" style="display: block"><path d="M0 34 L0 5 C46 4 70 5 96 11 C150 24 226 29 314 31 L314 34 Z" fill="{{t.area}}"></path><path d="M0 5 C46 4 70 5 96 11 C150 24 226 29 314 31" fill="none" stroke="{{t.barA}}" stroke-width="3" stroke-linecap="round" vector-effect="non-scaling-stroke"></path></svg>
+<div style="position: relative; height: 62px; margin-top: 14px">
+              <svg width="100%" height="62" viewBox="0 0 314 62" preserveAspectRatio="none" aria-hidden="true" style="display: block; border-radius: 12px; background: {{t.sky}}"><circle cx="286" cy="22" r="9" fill="#FFC93C"></circle><path d="M0 62 L0 14 C46 12 70 14 96 26 C150 50 226 54 314 56 L314 62 Z" fill="{{t.hillA}}"></path><path d="M0 62 L0 34 C50 32 80 36 110 44 C170 58 240 58 314 59 L314 62 Z" fill="{{t.hillB}}"></path></svg>
+              <div style="position: absolute; left: 76px; top: -16px; width: 50px; height: 50px; transform: rotate(9deg); filter: drop-shadow(0 0 1.5px rgba(255,248,238,0.9))"><dc-import name="Xero" mood="hello" stage="1" animate="true" size="50" hint-size="50px,50px"></dc-import></div>
+            </div>
             <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); text-align: center; font-size: 13px; font-weight: 600; color: {{t.muted}}"><span>Week 1</span><span>Week 2</span><span>Week 3</span><span>Week 4</span></div>
           </div>
           <a href="#" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; min-height: 28px; font-size: 13px; font-weight: 600; color: {{t.muted}}; text-decoration: underline; text-underline-offset: 2px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 a9 9 0 1 0 0.01 0 M12 11 v6 M12 7.5 v0.5"></path></svg>Hughes, 2007 · people who stopped smoking</a>
@@ -56,7 +59,7 @@ body{margin:0}
     </div>
   </div>
 
-  <div style="padding: 0 22px 22px 22px; flex: none; display: flex; flex-direction: column; gap: 2px">
+  <div style="padding: 0 22px 14px 22px; flex: none; display: flex; flex-direction: column; gap: 0">
     <button style="width: 100%; height: 58px; border-radius: 999px; border: 0; background: {{t.btn}}; color: {{t.btnFg}}; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 17px; box-shadow: {{t.btnShadow}}">Continue</button>
     <button style="width: 100%; height: 44px; border: 0; background: transparent; color: {{t.fg}}; font-family: 'DM Sans', system-ui, sans-serif; font-weight: 600; font-size: 15px">Skip for now</button>
   </div>
@@ -67,8 +70,8 @@ class Component extends DCLogic {
   renderVals() {
     const dark = (this.props.theme ?? 'light') === 'dark';
     const t = dark
-      ? { g: '#0E1322', fg: '#FFF8EE', muted: '#B3BACC', card: '#1B2439', card2: '#212A41', tint: '#212A41', line: 'rgba(255,255,255,0.12)', ring: 'inset 0 0 0 1px rgba(255,255,255,0.22)', navBtn: 'rgba(255,255,255,0.14)', navTrack: 'rgba(255,255,255,0.2)', sel: '#FFF8EE', selFg: '#0E1322', badge: '#F26A45', badgeFg: '#FFF8EE', solid: '#1B2439', ringOut: '0 0 0 1px rgba(255,255,255,0.22)', arrow: 'rgba(255,255,255,0.45)', barA: '#FF8A65', area: 'rgba(255,138,101,0.16)', btn: '#FFF8EE', btnFg: '#0E1322', btnShadow: '0 6px 18px rgba(255,248,238,0.14)' }
-      : { g: '#FFC38A', fg: '#1E1A3A', muted: '#4A2810', card: '#FFFAF5', card2: '#FFE7D0', tint: '#FFEBDD', line: 'rgba(30,26,58,0.12)', ring: 'none', navBtn: 'rgba(255,255,255,0.72)', navTrack: 'rgba(30,26,58,0.24)', sel: '#1E1A3A', selFg: '#FFF8EE', badge: '#F26A45', badgeFg: '#FFF8EE', solid: '#FFFAF5', ringOut: 'none', arrow: 'rgba(30,26,58,0.45)', barA: '#F2603C', area: 'rgba(242,96,60,0.2)', btn: '#1E1A3A', btnFg: '#FFF8EE', btnShadow: '0 6px 18px rgba(30,26,58,0.22)' };
+      ? { g: '#0E1322', fg: '#FFF8EE', muted: '#B3BACC', card: '#1B2439', card2: '#212A41', tint: '#212A41', line: 'rgba(255,255,255,0.12)', ring: 'inset 0 0 0 1px rgba(255,255,255,0.22)', navBtn: 'rgba(255,255,255,0.14)', navTrack: 'rgba(255,255,255,0.2)', sel: '#FFF8EE', selFg: '#0E1322', badge: '#F26A45', badgeFg: '#FFF8EE', solid: '#1B2439', ringOut: '0 0 0 1px rgba(255,255,255,0.22)', arrow: 'rgba(255,255,255,0.45)', sky: '#2A3554', hillA: '#E0603F', hillB: '#B8452E', btn: '#FFF8EE', btnFg: '#0E1322', btnShadow: '0 6px 18px rgba(255,248,238,0.14)' }
+      : { g: '#FFC38A', fg: '#1E1A3A', muted: '#4A2810', card: '#FFFAF5', card2: '#FFE7D0', tint: '#FFEBDD', line: 'rgba(30,26,58,0.12)', ring: 'none', navBtn: 'rgba(255,255,255,0.72)', navTrack: 'rgba(30,26,58,0.24)', sel: '#1E1A3A', selFg: '#FFF8EE', badge: '#F26A45', badgeFg: '#FFF8EE', solid: '#FFFAF5', ringOut: 'none', arrow: 'rgba(30,26,58,0.45)', sky: '#FFE3C2', hillA: '#FF8F68', hillB: '#F2603C', btn: '#1E1A3A', btnFg: '#FFF8EE', btnShadow: '0 6px 18px rgba(30,26,58,0.22)' };
     const I = {
       bolt: 'M13 3L5 13.5h6L10 21l8-10.5h-6z',
       people: 'M9 11a3 3 0 100-6 3 3 0 000 6zM3.5 19a5.5 5.5 0 0111 0M16 11a2.6 2.6 0 100-5.2M17 14.2a4.8 4.8 0 013.5 4.8',

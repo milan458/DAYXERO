@@ -192,3 +192,21 @@ either median); the round 4 versions are at commit d49534a. No further screens i
 Remaining asks on these two: S2 four type sizes in the stat block, objects not centred over their columns; S5 still three jobs on one
 screen (the pregnancy question is product content), "50 to 60% higher" beside "1.5 to 1.6x".
 Stop check: bar no | user decision pending on continuing the illustration pass.
+
+## User feedback (19 Nov)
+- "keep the illustrated versions, and lets continue with the rest of the screens in the same way. move the pregnancy question out" | round 8 | open
+
+## Round 08
+
+Focus: user request. Drawn scenes on the remaining screens; pregnancy question off S5.
+Changes:
+- New screen `EvPregnancy.dc.html` (rendered as S9, not in the critic set): "Pregnant or breastfeeding?" as its own step with
+  three plain answers, none preselected. New line of copy, for the user to review: "One quick question before we plan nicotine replacement."
+- S5: pregnancy block removed, frame back to 844, duplicate "1.5 to 1.6x / 1x" labels removed.
+- S3: summary card is a day strip (sunrise to night) with Xero holding a coffee cup and a bolt, the two picks; original summary sentence restored.
+- S4: the withdrawal curve is a hill Xero stands on, steep in week one, flat by week four.
+- S8: a drawn mark per source type (stack, shield, clipboard, page) in place of tag pills; Xero stands on the sheet holding a page.
+- S2: labels centred under the objects; stat block is three text sizes.
+- S6/S7: one prep-week component (seven numbered circles, day one filled, then the Quit Day sun). S1: dark disc fades at its base.
+- EvIllo: five more objects (cup, bolt, stack, page, shield).
+Stills: `cook/stills/r08/` (sheets include S9) | Pairs: `cook/compare/r08/` | 3 critics

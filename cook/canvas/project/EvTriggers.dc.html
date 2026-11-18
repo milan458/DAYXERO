@@ -27,29 +27,41 @@ body{margin:0}
     <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 32px; line-height: 1.06; letter-spacing: -1px; text-wrap: balance">When do cravings hit hardest?</h1>
     <p style="margin: 10px 0 0 0; font-size: 16px; font-weight: 500; line-height: 1.5; color: {{t.muted}}">Pick as many as you like.</p>
 
-    <div style="margin-top: 20px; font-size: 14px; font-weight: 600; color: {{t.muted}}">Moments in your day</div>
+    <div style="margin-top: 16px; font-size: 14px; font-weight: 600; color: {{t.muted}}">Moments in your day</div>
     <div style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px 8px">
       <sc-for list="{{moments}}" as="c" hint-placeholder-count="7">
         <button aria-pressed="{{c.on}}" style="height: 44px; padding: 0 12px 0 9px; border: 0; border-radius: 99px; display: inline-flex; align-items: center; gap: 6px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 15px; font-weight: 600; color: {{c.fg}}; background: {{c.bg}}; box-shadow: {{c.ring}}"><span style="width: 24px; height: 24px; border-radius: 99px; flex: none; display: flex; align-items: center; justify-content: center; background: {{c.dot}}; color: {{c.ink}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{c.ic}}"></path></svg></span>{{c.t}}</button>
       </sc-for>
     </div>
-    <div style="margin-top: 18px; font-size: 14px; font-weight: 600; color: {{t.muted}}">Feelings and people</div>
+    <div style="margin-top: 14px; font-size: 14px; font-weight: 600; color: {{t.muted}}">Feelings and people</div>
     <div style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px 8px">
       <sc-for list="{{feelings}}" as="c" hint-placeholder-count="6">
         <button aria-pressed="{{c.on}}" style="height: 44px; padding: 0 12px 0 9px; border: 0; border-radius: 99px; display: inline-flex; align-items: center; gap: 6px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 15px; font-weight: 600; color: {{c.fg}}; background: {{c.bg}}; box-shadow: {{c.ring}}"><span style="width: 24px; height: 24px; border-radius: 99px; flex: none; display: flex; align-items: center; justify-content: center; background: {{c.dot}}; color: {{c.ink}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{c.ic}}"></path></svg></span>{{c.t}}</button>
       </sc-for>
     </div>
 
-    <div style="margin-top: auto; margin-bottom: 18px; position: relative; padding-top: 64px">
-      <div style="position: relative; background: {{t.solid}}; box-shadow: {{t.ring}}; border-radius: 20px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px">
-        <p style="margin: 0; font-size: 15px; font-weight: 500; line-height: 1.4; color: {{t.muted}}"><b style="font-weight: 700; color: {{t.fg}}">2 picked.</b> Each gets a when-then plan.</p>
-        <div style="display: flex; gap: 8px">
-          <sc-for list="{{picked}}" as="p" hint-placeholder-count="2">
-            <div style="flex: 1 1 0; min-width: 0; display: flex; align-items: center; gap: 8px; height: 44px; box-sizing: border-box; padding: 0 12px 0 9px; border-radius: 14px; background: {{t.well}}"><span style="width: 26px; height: 26px; border-radius: 99px; flex: none; display: flex; align-items: center; justify-content: center; background: {{t.badge}}; color: {{t.badgeFg}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{p.ic}}"></path></svg></span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: -0.2px"><span style="font-weight: 500">When </span>{{p.t}}</span></div>
-          </sc-for>
-        </div>
+    <div style="margin-top: auto; margin-bottom: 18px; background: {{t.solid}}; box-shadow: {{t.ringOut}}; border-radius: 20px; overflow: hidden">
+      <div role="img" aria-label="Xero on a hillside between sunrise and night, holding a coffee cup and a lightning bolt" style="position: relative; height: 108px">
+        <svg width="346" height="108" viewBox="0 16 346 108" preserveAspectRatio="none" aria-hidden="true" style="display: block; position: absolute; left: 0; top: 0">
+          <defs>
+            <linearGradient id="evDaySky-{{theme}}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="{{sky.a}}"></stop><stop offset="0.32" stop-color="{{sky.b}}"></stop><stop offset="0.56" stop-color="{{sky.c}}"></stop><stop offset="0.8" stop-color="{{sky.d}}"></stop><stop offset="1" stop-color="{{sky.e}}"></stop></linearGradient>
+            <linearGradient id="evDayH1-{{theme}}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="{{hill.a1}}"></stop><stop offset="1" stop-color="{{hill.b1}}"></stop></linearGradient>
+            <linearGradient id="evDayH2-{{theme}}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="{{hill.a2}}"></stop><stop offset="1" stop-color="{{hill.b2}}"></stop></linearGradient>
+            <linearGradient id="evDayH3-{{theme}}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="{{hill.a3}}"></stop><stop offset="1" stop-color="{{hill.b3}}"></stop></linearGradient>
+          </defs>
+          <rect width="346" height="124" fill="url(#evDaySky-{{theme}})"></rect>
+          <circle cx="46" cy="84" r="24" fill="#FFC93C"></circle>
+          <path d="M300 18 a15 15 0 1 0 14 22 a12 12 0 1 1 -14 -22 Z" fill="#FFF1C2"></path>
+          <circle cx="262" cy="22" r="1.6" fill="#FFF8EE"></circle><circle cx="326" cy="58" r="1.4" fill="#FFF8EE"></circle><circle cx="282" cy="50" r="1.2" fill="#FFF8EE"></circle>
+          <path d="M0 88 C60 72 120 78 180 86 C250 96 300 78 346 74 V124 H0 Z" fill="url(#evDayH1-{{theme}})"></path>
+          <path d="M0 102 C80 88 150 94 220 104 C280 112 320 100 346 96 V124 H0 Z" fill="url(#evDayH2-{{theme}})"></path>
+          <path d="M0 116 C90 106 180 110 260 116 C310 120 330 116 346 114 V124 H0 Z" fill="url(#evDayH3-{{theme}})"></path>
+        </svg>
+        <div style="position: absolute; left: 50%; top: 4px; width: 100px; height: 100px; margin-left: -50px; filter: drop-shadow(0 0 2px rgba(255,248,238,0.9))"><dc-import name="Xero" mood="hello" pose="hold" stage="1" animate="true" size="100" hint-size="100px,100px"></dc-import></div>
+        <div style="position: absolute; left: 50%; top: 16px; width: 56px; height: 56px; margin-left: -98px"><dc-import name="EvIllo" kind="cup" theme="{{theme}}" size="58" hint-size="58px,58px"></dc-import></div>
+        <div style="position: absolute; left: 50%; top: 12px; width: 56px; height: 56px; margin-left: 42px"><dc-import name="EvIllo" kind="bolt" theme="{{theme}}" size="58" hint-size="58px,58px"></dc-import></div>
       </div>
-      <div style="position: absolute; right: 18px; top: 0; width: 72px; height: 72px; filter: drop-shadow(0 3px 3px {{t.perch}})"><dc-import name="Xero" mood="hello" stage="1" animate="true" size="72" hint-size="72px,72px"></dc-import></div>
+      <p style="margin: 0; padding: 10px 16px 12px 16px; font-size: 15px; font-weight: 500; line-height: 1.4; color: {{t.muted}}"><b style="font-weight: 700; color: {{t.fg}}">2 picked.</b> Coffee and stress. I’ll write a when-then plan for each.</p>
     </div>
 
   </div>
@@ -65,8 +77,8 @@ class Component extends DCLogic {
     const theme = this.props.theme ?? 'light';
     const dark = theme === 'dark';
     const t = dark
-      ? { g: '#0E1322', fg: '#FFF8EE', muted: '#B3BACC', card: '#1B2439', ring: 'inset 0 0 0 1px rgba(255,255,255,0.22)', navBtn: 'rgba(255,255,255,0.14)', navTrack: 'rgba(255,255,255,0.2)', sel: '#FFF8EE', selFg: '#0E1322', badge: '#F26A45', badgeFg: '#FFF8EE', well: '#212A41', perch: 'rgba(0,0,0,0.35)', solid: '#182034', btn: '#FFF8EE', btnFg: '#0E1322', btnShadow: '0 6px 18px rgba(255,248,238,0.14)' }
-      : { g: '#FFC38A', fg: '#1E1A3A', muted: '#4A2810', card: '#FFFAF5', ring: 'none', navBtn: 'rgba(255,255,255,0.72)', navTrack: 'rgba(30,26,58,0.24)', sel: '#1E1A3A', selFg: '#FFF8EE', badge: '#F26A45', badgeFg: '#FFF8EE', well: '#FFEBDD', perch: 'rgba(120,40,10,0.22)', solid: '#FFFAF5', btn: '#1E1A3A', btnFg: '#FFF8EE', btnShadow: '0 6px 18px rgba(30,26,58,0.22)' };
+      ? { g: '#0E1322', fg: '#FFF8EE', muted: '#B3BACC', card: '#1B2439', ring: 'inset 0 0 0 1px rgba(255,255,255,0.22)', navBtn: 'rgba(255,255,255,0.14)', navTrack: 'rgba(255,255,255,0.2)', sel: '#FFF8EE', selFg: '#0E1322', badge: '#F26A45', badgeFg: '#FFF8EE', well: '#212A41', ringOut: '0 0 0 1px rgba(255,255,255,0.22)', perch: 'rgba(0,0,0,0.35)', solid: '#182034', btn: '#FFF8EE', btnFg: '#0E1322', btnShadow: '0 6px 18px rgba(255,248,238,0.14)' }
+      : { g: '#FFC38A', fg: '#1E1A3A', muted: '#4A2810', card: '#FFFAF5', ring: 'none', navBtn: 'rgba(255,255,255,0.72)', navTrack: 'rgba(30,26,58,0.24)', sel: '#1E1A3A', selFg: '#FFF8EE', badge: '#F26A45', badgeFg: '#FFF8EE', well: '#FFEBDD', ringOut: 'none', perch: 'rgba(120,40,10,0.22)', solid: '#FFFAF5', btn: '#1E1A3A', btnFg: '#FFF8EE', btnShadow: '0 6px 18px rgba(30,26,58,0.22)' };
     const I = {
       sunrise: 'M4 18h16M7 18a5 5 0 0110 0M12 6v3M5.5 9.5l1.8 1.8M18.5 9.5l-1.8 1.8',
       meal: 'M6 3v6a2.5 2.5 0 005 0V3M8.5 3v18M17 21V3c-2.2 1.6-3 4.2-3 7.5V13h3',
@@ -84,7 +96,9 @@ class Component extends DCLogic {
     };
     const check = 'M5.5 12.5l4.2 4L18.5 7.5';
     const chip = (label, ic, on) => ({ t: label, ic: I[ic], on: String(on), fg: on ? t.selFg : t.fg, bg: on ? t.sel : t.card, ring: on ? 'none' : t.ring, dot: on ? t.badge : 'transparent', ink: on ? t.badgeFg : t.muted });
-    return { t, theme,
+    const sky = dark ? { a: '#A9563C', b: '#B98258', c: '#77779A', d: '#2E3C68', e: '#111933' } : { a: '#FF9D6E', b: '#FFD3A0', c: '#CFE6FF', d: '#6F8FCB', e: '#24335C' };
+    const hill = dark ? { a1: '#C2553A', b1: '#3A4878', a2: '#9C3F2C', b2: '#27345C', a3: '#7A2E22', b3: '#172244' } : { a1: '#FF9D6E', b1: '#5F78B4', a2: '#FF7A55', b2: '#3F5594', a3: '#E85A3E', b3: '#27386E' };
+    return { t, theme, sky, hill,
       picked: [{ t: 'Coffee', ic: I.coffee }, { t: 'Stress', ic: I.bolt }],
       moments: [chip('Morning', 'sunrise', false), chip('After meals', 'meal', false), chip('At work', 'work', false), chip('Coffee', 'coffee', true), chip('Driving', 'car', false), chip('Alcohol', 'glass', false), chip('Evening', 'moon', false)],
       feelings: [chip('Stress', 'bolt', true), chip('Anxiety', 'pulse', false), chip('Low mood', 'cloud', false), chip('Boredom', 'clock', false), chip('Social', 'people', false), chip('Other', 'dots', false)] };
