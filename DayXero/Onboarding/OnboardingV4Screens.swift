@@ -653,8 +653,8 @@ struct PlanRevealScreen: View {
 
     /// The scene's height from the top of the screen, status bar and the floating header included: the canvas's 300
     /// plus the room the header takes above the medallion.
-    private static let heroHeight: CGFloat = 356
-    private static let heroDrop: CGFloat = 56
+    private static let heroHeight: CGFloat = 370
+    private static let heroDrop: CGFloat = 70
 
     var body: some View {
         ScrollView {
