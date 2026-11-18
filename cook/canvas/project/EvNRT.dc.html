@@ -13,7 +13,7 @@
 body{margin:0}
 </style>
 </helmet>
-<div style="width: 390px; height: 900px; box-sizing: border-box; background: {{t.g}}; color: {{t.fg}}; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; display: flex; flex-direction: column">
+<div style="width: 390px; height: 950px; box-sizing: border-box; background: {{t.g}}; color: {{t.fg}}; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; display: flex; flex-direction: column">
 
   <div style="height: 52px; margin-top: 50px; padding: 0 26px 0 16px; display: flex; align-items: center; gap: 12px; flex: none">
     <button aria-label="Back" style="width: 44px; height: 44px; border-radius: 999px; border: 0; padding: 0; background: {{t.navBtn}}; color: {{t.fg}}; display: flex; align-items: center; justify-content: center; flex: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5 L8 12 L15 19"></path></svg></button>
@@ -35,7 +35,10 @@ body{margin:0}
           <div style="display: flex; flex-direction: column; gap: 4px"><span style="display: flex; justify-content: space-between; align-items: baseline; font-size: 13px; font-weight: 600; color: {{t.fg}}">With nicotine replacement<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 14px; color: {{t.fg}}">1.5 to 1.6x</span></span><div style="height: 16px; border-radius: 99px; background: {{t.barA}}; width: 100%"></div></div>
           <div style="display: flex; flex-direction: column; gap: 4px"><span style="display: flex; justify-content: space-between; align-items: baseline; font-size: 13px; font-weight: 600; color: {{t.muted}}">With a placebo or none<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 14px; color: {{t.muted}}">1x</span></span><div style="height: 16px; border-radius: 99px; background: {{t.barB}}; width: 64.5%"></div></div>
         </div>
-        <p style="margin: 12px 0 0 0; font-size: 15px; font-weight: 500; line-height: 1.4; color: {{t.muted}}; text-wrap: pretty">A patch plus a faster form did better than one form alone.</p>
+        <div style="margin-top: 14px; padding: 10px 12px; border-radius: 16px; background: {{t.well}}; display: flex; align-items: center; gap: 12px">
+          <div role="img" aria-label="A patch plus gum or a lozenge" style="flex: none; display: flex; align-items: center; gap: 4px; color: {{t.fg}}"><div style="width: 46px; height: 46px"><dc-import name="EvIllo" kind="patch" theme="{{theme}}" size="46" hint-size="46px,46px"></dc-import></div><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg><div style="position: relative; width: 62px; height: 46px"><div style="position: absolute; left: 0; top: 4px; width: 42px; height: 42px"><dc-import name="EvIllo" kind="gum" theme="{{theme}}" size="42" hint-size="42px,42px"></dc-import></div><div style="position: absolute; left: 26px; top: 6px; width: 36px; height: 36px"><dc-import name="EvIllo" kind="lozenge" theme="{{theme}}" size="36" hint-size="36px,36px"></dc-import></div></div></div>
+          <p style="margin: 0; font-size: 15px; font-weight: 500; line-height: 1.35; color: {{t.fg}}; text-wrap: pretty">A patch plus a faster form did better than one form alone.</p>
+        </div>
         <a href="#" style="margin-top: 2px; align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; min-height: 32px; font-size: 13px; font-weight: 600; color: {{t.muted}}; text-decoration: underline; text-underline-offset: 2px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 a9 9 0 1 0 0.01 0 M12 11 v6 M12 7.5 v0.5"></path></svg>Cochrane reviews, 2018 and 2023</a>
       </div>
     </div>
@@ -45,9 +48,10 @@ body{margin:0}
 
     <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px">
       <sc-for list="{{options}}" as="o" hint-placeholder-count="3">
-        <button aria-pressed="{{o.on}}" style="display: flex; align-items: center; gap: 12px; min-height: 64px; box-sizing: border-box; padding: 8px 16px 8px 12px; border: 0; border-radius: 20px; text-align: left; background: {{o.bg}}; box-shadow: {{o.ring}}; color: {{o.fg}}; font-family: 'DM Sans', system-ui, sans-serif">
-          <span style="width: 40px; height: 40px; border-radius: 99px; flex: none; display: flex; align-items: center; justify-content: center; background: {{o.dot}}; color: {{o.ink}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{o.ic}}"></path></svg></span>
-          <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: -0.2px">{{o.t}}</span><span style="font-size: 14px; font-weight: 500; color: {{o.sub}}">{{o.d}}</span></span>
+        <button aria-pressed="{{o.on}}" style="display: flex; align-items: center; gap: 10px; min-height: 64px; box-sizing: border-box; padding: 8px 14px 8px 10px; border: 0; border-radius: 20px; text-align: left; background: {{o.bg}}; box-shadow: {{o.ring}}; color: {{o.fg}}; font-family: 'DM Sans', system-ui, sans-serif">
+          <span style="width: 40px; height: 40px; flex: none; display: flex; align-items: center; justify-content: center"><dc-import name="EvIllo" kind="{{o.k}}" theme="{{theme}}" size="40" hint-size="40px,40px"></dc-import></span>
+          <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: -0.2px">{{o.t}}</span><span style="font-size: 13px; font-weight: 500; color: {{o.sub}}">{{o.d}}</span></span>
+          <span style="width: 26px; height: 26px; box-sizing: border-box; border-radius: 99px; flex: none; display: flex; align-items: center; justify-content: center; {{o.radio}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{o.tick}}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 L10 17 L19 7"></path></svg></span>
         </button>
       </sc-for>
     </div>
@@ -63,21 +67,21 @@ body{margin:0}
   </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"product":{"editor":"enum","options":["cigarettes","vape","pouches"],"default":"cigarettes"},"$preview":{"width":390,"height":900}}'>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"product":{"editor":"enum","options":["cigarettes","vape","pouches"],"default":"cigarettes"},"$preview":{"width":390,"height":950}}'>
 class Component extends DCLogic {
   renderVals() {
     const theme = this.props.theme ?? 'light';
     const dark = theme === 'dark';
     const t = dark
-      ? { g: '#0E1322', fg: '#FFF8EE', muted: '#B3BACC', card: '#1B2439', ring: 'inset 0 0 0 1px rgba(255,255,255,0.22)', navBtn: 'rgba(255,255,255,0.14)', navTrack: 'rgba(255,255,255,0.2)', sel: '#FFF8EE', selFg: '#0E1322', selSub: '#4A5068', badge: '#F26A45', badgeFg: '#FFF8EE', well: '#212A41', solid: '#1B2439', line: 'rgba(255,255,255,0.14)', barA: '#FF8A65', barX: '#FFC6B0', barXFg: '#5A1D0A', barB: 'rgba(255,255,255,0.3)', off: 'rgba(255,255,255,0.4)', btn: '#FFF8EE', btnFg: '#0E1322', btnShadow: '0 6px 18px rgba(255,248,238,0.14)' }
-      : { g: '#FFC38A', fg: '#1E1A3A', muted: '#4A2810', card: '#FFFAF5', ring: 'none', navBtn: 'rgba(255,255,255,0.72)', navTrack: 'rgba(30,26,58,0.24)', sel: '#1E1A3A', selFg: '#FFF8EE', selSub: '#D8D3E6', badge: '#F26A45', badgeFg: '#FFF8EE', well: '#FFE2CF', solid: '#FFFAF5', line: 'rgba(30,26,58,0.16)', barA: '#F2603C', barX: '#FFC3AE', barXFg: '#5A1D0A', barB: 'rgba(30,26,58,0.26)', off: 'rgba(30,26,58,0.38)', btn: '#1E1A3A', btnFg: '#FFF8EE', btnShadow: '0 6px 18px rgba(30,26,58,0.22)' };
+      ? { g: '#0E1322', fg: '#FFF8EE', muted: '#B3BACC', card: '#1B2439', ring: 'inset 0 0 0 1px rgba(255,255,255,0.22)', navBtn: 'rgba(255,255,255,0.14)', navTrack: 'rgba(255,255,255,0.2)', sel: '#FFF8EE', selFg: '#0E1322', selSub: '#4A5068', badge: '#F26A45', badgeFg: '#FFF8EE', well: '#232C45', radioOff: 'rgba(255,255,255,0.42)', solid: '#1B2439', line: 'rgba(255,255,255,0.14)', barA: '#FF8A65', barX: '#FFC6B0', barXFg: '#5A1D0A', barB: 'rgba(255,255,255,0.3)', off: 'rgba(255,255,255,0.4)', btn: '#FFF8EE', btnFg: '#0E1322', btnShadow: '0 6px 18px rgba(255,248,238,0.14)' }
+      : { g: '#FFC38A', fg: '#1E1A3A', muted: '#4A2810', card: '#FFFAF5', ring: 'none', navBtn: 'rgba(255,255,255,0.72)', navTrack: 'rgba(30,26,58,0.24)', sel: '#1E1A3A', selFg: '#FFF8EE', selSub: '#D8D3E6', badge: '#F26A45', badgeFg: '#FFF8EE', well: '#FFE2CF', radioOff: 'rgba(30,26,58,0.4)', solid: '#FFFAF5', line: 'rgba(30,26,58,0.16)', barA: '#F2603C', barX: '#FFC3AE', barXFg: '#5A1D0A', barB: 'rgba(30,26,58,0.26)', off: 'rgba(30,26,58,0.38)', btn: '#1E1A3A', btnFg: '#FFF8EE', btnShadow: '0 6px 18px rgba(30,26,58,0.22)' };
     const check = 'M5.5 12.5l4.2 4L18.5 7.5';
     const patch = 'M7 4h10a3 3 0 013 3v10a3 3 0 01-3 3H7a3 3 0 01-3-3V7a3 3 0 013-3zM9 12h6M12 9v6';
     const spark = 'M12 4v4M12 16v4M4 12h4M16 12h4M12 9.5a2.5 2.5 0 100 5 2.5 2.5 0 000-5z';
     const leaf = 'M5 19c0-8 5-13 14-14 0 9-5 14-13 14zM5 19l7-7';
-    const opt = (title, detail, ic, on) => ({ t: title, d: detail, on: String(on), ic: on ? check : ic, fg: on ? t.selFg : t.fg, sub: on ? t.selSub : t.muted, bg: on ? t.sel : t.card, ring: on ? 'none' : t.ring, dot: on ? t.badge : t.well, ink: on ? t.badgeFg : t.fg });
+    const opt = (title, detail, k, on) => ({ t: title, d: detail, on: String(on), k, radio: on ? `background: ${t.badge}` : `border: 2px solid ${t.radioOff}`, tick: on ? t.badgeFg : 'transparent', fg: on ? t.selFg : t.fg, sub: on ? t.selSub : t.muted, bg: on ? t.sel : t.card, ring: on ? 'none' : t.ring, dot: on ? t.badge : t.well, ink: on ? t.badgeFg : t.fg });
     return { t, theme, other: (this.props.product ?? 'cigarettes') !== 'cigarettes',
-      options: [opt('Yes, I’m already using it', 'Pick all you use', patch, false), opt('I’d like to try it', 'I’ll help you plan it with a pharmacist', spark, true), opt('Not for me', 'Behavioral prep only', leaf, false)] };
+      options: [opt('Yes, I’m already using it', 'Pick all you use', 'patch', false), opt('I’d like to try it', 'I’ll help you plan it with a pharmacist', 'plan', true), opt('Not for me', 'Behavioral prep only', 'leaf', false)] };
   }
 }
 </script>

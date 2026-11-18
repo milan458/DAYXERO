@@ -150,3 +150,20 @@ Still below the bar, by how often critics named it:
 4. Ragged chip rows on S3 and S4; S6 and S7 show the prep week in two different forms.
 Canvas publish: attempted once, denied by the permission classifier. Not retried. The round 4 files and the updated
 `canvas.json` (EvQuitDay 930 tall, EvPlan 1090 tall) are in `cook/canvas/project/`.
+
+## User feedback (19 Nov, after the stop)
+- "and what about illustrations? what are you proposing?" then "yes, start with those two screens" | round 6 | open
+  Agreed scope: illustrate What works (S2) and Nicotine replacement (S5) first, score them, continue only if they beat round 4.
+
+## Round 06
+
+Focus: user request, drawn art on S2 and S5.
+Changes:
+- Xero part: new optional `pose` prop ("hold": arms out to the sides). Default unchanged, so other pages render as before.
+- New part `EvIllo.dc.html`: six paper-cut objects (patch, speech bubble, gum strip, lozenge, plan clipboard, leaf), light and dark.
+- S2: one card. Xero in front of a low sun holds the patch and the bubble; the two ingredients are labelled under each hand;
+  then "about 80% more likely to quit", the bars and the source.
+- S5: a patch + gum and lozenge strip beside the patch line; each option has its own drawing on the left and a radio on the right.
+  Frame 900 -> 950 tall.
+- Other six screens: round 4, unchanged.
+Stills: `cook/stills/r06/` | Pairs: `cook/compare/r06/` | 3 critics

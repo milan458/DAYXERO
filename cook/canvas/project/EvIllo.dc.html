@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Evidence objects</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<svg width="{{size}}" height="{{size}}" viewBox="0 0 64 64" aria-hidden="true" style="display: block; overflow: visible; filter: drop-shadow(0 2px 2px {{shade}})">
+  <sc-if value="{{is.patch}}" hint-placeholder-val="{{true}}">
+    <g transform="rotate(-8 32 32)">
+      <rect x="8" y="8" width="48" height="48" rx="14" fill="{{coral}}"></rect>
+      <path d="M8 34 V22 a14 14 0 0 1 14 -14 h12" fill="none" stroke="#FFB09C" stroke-width="3" stroke-linecap="round" opacity="0.75" transform="translate(4 4)"></path>
+      <rect x="19" y="19" width="26" height="26" rx="7" fill="none" stroke="#FFF8EE" stroke-width="2.5" stroke-dasharray="4 4" stroke-linecap="round"></rect>
+      <path d="M32 27 v10 M27 32 h10" fill="none" stroke="#FFF8EE" stroke-width="3" stroke-linecap="round"></path>
+    </g>
+  </sc-if>
+  <sc-if value="{{is.bubble}}" hint-placeholder-val="{{false}}">
+    <g transform="rotate(6 32 32)">
+      <path d="M13 9 h38 a9 9 0 0 1 9 9 v21 a9 9 0 0 1 -9 9 H31 l-13 10 v-10 h-5 a9 9 0 0 1 -9 -9 V18 a9 9 0 0 1 9 -9 Z" fill="{{ink}}"></path>
+      <path d="M22 29 l7 7 l14 -15" fill="none" stroke="{{paper}}" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"></path>
+    </g>
+  </sc-if>
+  <sc-if value="{{is.gum}}" hint-placeholder-val="{{false}}">
+    <g transform="rotate(-6 32 32)">
+      <rect x="5" y="15" width="54" height="34" rx="9" fill="#C9D8F2"></rect>
+      <rect x="11" y="22" width="12" height="20" rx="5" fill="#FFFFFF"></rect>
+      <rect x="26" y="22" width="12" height="20" rx="5" fill="#FFFFFF"></rect>
+      <rect x="41" y="22" width="12" height="20" rx="5" fill="#FFFFFF"></rect>
+      <path d="M14 38 h6 M29 38 h6 M44 38 h6" fill="none" stroke="#A9BDE0" stroke-width="2" stroke-linecap="round"></path>
+    </g>
+  </sc-if>
+  <sc-if value="{{is.lozenge}}" hint-placeholder-val="{{false}}">
+    <g transform="rotate(-14 32 32)">
+      <ellipse cx="32" cy="32" rx="24" ry="16" fill="#FFC93C"></ellipse>
+      <ellipse cx="32" cy="32" rx="15" ry="8.5" fill="none" stroke="#F29A2E" stroke-width="2.5"></ellipse>
+      <path d="M13 27 C17 21 23 18 30 18" fill="none" stroke="#FFF1C4" stroke-width="3" stroke-linecap="round"></path>
+    </g>
+  </sc-if>
+  <sc-if value="{{is.plan}}" hint-placeholder-val="{{false}}">
+    <g transform="rotate(4 32 32)">
+      <rect x="12" y="10" width="40" height="48" rx="8" fill="{{board}}"></rect>
+      <rect x="23" y="5" width="18" height="11" rx="5" fill="{{ink}}"></rect>
+      <path d="M21 31 l4 4 l7 -8" fill="none" stroke="{{coral}}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"></path>
+      <path d="M37 31 h7 M21 44 h23" fill="none" stroke="{{ink}}" stroke-width="3" stroke-linecap="round" opacity="0.55"></path>
+    </g>
+  </sc-if>
+  <sc-if value="{{is.leaf}}" hint-placeholder-val="{{false}}">
+    <path d="M11 53 C11 27 27 12 54 10 C54 37 38 53 13 53 Z" fill="#3FB37F"></path>
+    <path d="M13 53 L40 25 M24 42 h12 M31 35 v-10" fill="none" stroke="#1F7A52" stroke-width="3" stroke-linecap="round"></path>
+  </sc-if>
+</svg>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"kind":{"editor":"enum","options":["patch","bubble","gum","lozenge","plan","leaf"],"default":"patch"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"size":{"editor":"int","min":24,"max":240,"default":64},"$preview":{"width":64,"height":64}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const kind = this.props.kind ?? 'patch';
+    const dark = (this.props.theme ?? 'light') === 'dark';
+    const is = {};
+    ['patch', 'bubble', 'gum', 'lozenge', 'plan', 'leaf'].forEach((k) => { is[k] = k === kind; });
+    return { is, size: Number(this.props.size ?? 64),
+      coral: dark ? '#FF8A65' : '#F2603C', ink: dark ? '#FFF8EE' : '#1E1A3A', paper: dark ? '#0E1322' : '#FFF8EE',
+      board: dark ? '#3A4670' : '#FFDCC6', shade: dark ? 'rgba(0,0,0,0.4)' : 'rgba(90,30,10,0.22)' };
+  }
+}
+</script>
+</body>
+</html>
