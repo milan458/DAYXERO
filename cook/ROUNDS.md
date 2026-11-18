@@ -6,7 +6,7 @@ Bar: 9.0 per screen on layout, hierarchy, color, type and components, art and da
 Calibration offset: -0.15 (user says 7.5 on 18 Nov; raw critic baseline 7.6 and 7.7)
 Usage: not readable
 Gate: stills approved no | canvas publish blocked (permission denied on 18 Nov), sources ready in `cook/canvas/project/`
-Best so far: round 4, `cook/stills/r04/`, commit d49534a (sources restored to it in `cook/canvas/project/`)
+Best so far: round 9, `cook/stills/r09/`, sources in `cook/canvas/project/` (round 4 at commit d49534a)
 
 ## Decisions
 
@@ -228,3 +228,12 @@ Changes:
 - S2: "about" set small before the figure. S3: no stars, bluer midday sky. S1: third figure is a pale ghost. S8: larger source marks.
 - EvIllo: sun object. EvidenceDark row includes the pregnancy step (4150 wide).
 Stills: `cook/stills/r09/` | Pairs: `cook/compare/r09/` | 3 critics
+Scores, eyeballed, raw overall (Opus / Sonnet / Fable -> median; previous best in brackets):
+S1 8.6/8.3/8.6 = 8.6 (8.5) | S2 8.2/8.1/8.4 = 8.2 (8.1) | S3 8.3/8.2/8.3 = 8.3 (8.2) | S4 8.0/8.0/8.2 = 8.0 (8.2, round 4)
+S5 8.2/8.2/8.3 = 8.2 (8.1) | S6 8.5/8.3/8.3 = 8.3 (8.4) | S7 8.3/8.5/8.4 = 8.4 (8.5) | S8 8.1/8.0/7.9 = 8.0 (8.0)
+Set 8.3/8.2/8.3 = 8.3, calibrated 8.15. Highest set score of the run, and the highest from each critic. Kept.
+S4 is the one screen below its round 4 mark (hill chart read as small, tight bottom spacing). S9 (pregnancy step) not scored.
+Open asks, repeated across critics: S8 rows (three identical review marks, Xero's face hidden by the page), S4 chart size and
+bottom spacing, one object style for every spot icon, uneven two-column captions on S2, copy density on S2, S6, S7.
+Canvas: not published (blocked once on 18 Nov, not retried; waiting for the user's go-ahead).
+Stop check: bar no (8.15 against 9.0) | user decision pending.
