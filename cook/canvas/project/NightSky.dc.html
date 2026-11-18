@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Night sky</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<svg width="{{w}}" height="{{h}}" viewBox="{{vb}}" aria-hidden="true" style="display: block">
+  <defs>
+    <linearGradient id="nsSky-{{key}}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{{c0}}"></stop><stop offset="0.55" stop-color="{{c1}}"></stop><stop offset="1" stop-color="{{c2}}"></stop></linearGradient>
+    <radialGradient id="nsMoon-{{key}}"><stop offset="0" stop-color="#F6E7C1" stop-opacity="0.32"></stop><stop offset="1" stop-color="#F6E7C1" stop-opacity="0"></stop></radialGradient>
+    <radialGradient id="nsDawn-{{key}}"><stop offset="0" stop-color="#FFD27A" stop-opacity="0.55"></stop><stop offset="0.35" stop-color="#FFB25E" stop-opacity="0.22"></stop><stop offset="1" stop-color="#FFB25E" stop-opacity="0"></stop></radialGradient>
+    <radialGradient id="nsFly-{{key}}"><stop offset="0" stop-color="#FFD37A" stop-opacity="0.9"></stop><stop offset="1" stop-color="#FFD37A" stop-opacity="0"></stop></radialGradient>
+    <radialGradient id="nsSun-{{key}}" cx="0.4" cy="0.35" r="0.7"><stop offset="0" stop-color="#FFF1C4"></stop><stop offset="1" stop-color="#FFC25A"></stop></radialGradient>
+    <radialGradient id="nsHz-{{key}}"><stop offset="0" stop-color="#FF9E5A" stop-opacity="0.42"></stop><stop offset="0.6" stop-color="#FF8A5A" stop-opacity="0.12"></stop><stop offset="1" stop-color="#FF8A5A" stop-opacity="0"></stop></radialGradient>
+    <linearGradient id="nsFade-{{key}}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{{ground}}" stop-opacity="0"></stop><stop offset="1" stop-color="{{ground}}"></stop></linearGradient>
+  </defs>
+  <rect width="{{w}}" height="{{h}}" fill="url(#nsSky-{{key}})"></rect>
+  <sc-if value="{{dawn}}" hint-placeholder-val="{{false}}">
+    <ellipse cx="{{sunX}}" cy="{{hzY}}" rx="{{hzRx}}" ry="{{hzRy}}" fill="url(#nsHz-{{key}})"></ellipse>
+    <circle cx="{{sunX}}" cy="{{sunY}}" r="{{sunGlowR}}" fill="url(#nsDawn-{{key}})"></circle>
+    <circle cx="{{sunX}}" cy="{{sunY}}" r="{{sunR}}" fill="url(#nsSun-{{key}})"></circle>
+  </sc-if>
+  <sc-if value="{{moon}}" hint-placeholder-val="{{true}}">
+    <circle cx="{{moonX}}" cy="{{moonY}}" r="{{moonGlow}}" fill="url(#nsMoon-{{key}})"></circle>
+    <circle cx="{{moonX}}" cy="{{moonY}}" r="{{moonR}}" fill="#F6E7C1"></circle>
+  </sc-if>
+  <sc-for list="{{stars}}" as="s" hint-placeholder-count="12">
+    <circle cx="{{s.x}}" cy="{{s.y}}" r="{{s.r}}" fill="#FFFFFF" opacity="{{s.o}}"><animate attributeName="opacity" values="{{s.tw}}" dur="{{s.dur}}" repeatCount="indefinite"></animate></circle>
+  </sc-for>
+  <sc-if value="{{hills}}" hint-placeholder-val="{{true}}">
+    <path d="{{hill0}}" fill="{{h0}}"></path>
+    <path d="{{hill1}}" fill="{{h1}}"></path>
+    <path d="{{hill2}}" fill="{{h2}}"></path>
+  </sc-if>
+  <sc-for list="{{flies}}" as="f" hint-placeholder-count="4">
+    <g><animateTransform attributeName="transform" type="translate" values="{{f.drift}}" dur="{{f.dur}}" repeatCount="indefinite"></animateTransform><circle cx="{{f.x}}" cy="{{f.y}}" r="9" fill="url(#nsFly-{{key}})"></circle><circle cx="{{f.x}}" cy="{{f.y}}" r="1.8" fill="#FFD37A"></circle></g>
+  </sc-for>
+  <rect y="{{fadeY}}" width="{{w}}" height="{{fadeH}}" fill="url(#nsFade-{{key}})"></rect>
+</svg>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"dawn":{"editor":"boolean","default":false},"hills":{"editor":"boolean","default":true},"animate":{"editor":"boolean","default":true},"w":{"editor":"int","min":40,"max":1200,"default":390},"h":{"editor":"int","min":40,"max":1200,"default":300},"$preview":{"width":390,"height":300}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const dark = (this.props.theme ?? 'light') === 'dark';
+    const dawn = String(this.props.dawn ?? false) === 'true';
+    const hills = String(this.props.hills ?? true) !== 'false';
+    const on = String(this.props.animate ?? true) !== 'false';
+    const w = Number(this.props.w ?? 390), h = Number(this.props.h ?? 300);
+    const sky = dawn && String(this.props.warm ?? false) === 'true' ? ['#141A30', '#2E2A44', '#6E4A44'] : dawn ? ['#0D1630', '#24335C', '#5B5578'] : dark ? ['#08101F', '#111D38', '#22315A'] : ['#1E2B55', '#3E4C7E', '#A88A98'];
+    const hc = dark ? ['#16233F', '#0F1A31', '#0A1326'] : ['#2A3A62', '#1C2A4D', '#0F1B33'];
+    const ground = dark ? '#0A1326' : '#0F1B33';
+    const sx = w / 390, hy = (y) => (y / 430 * h).toFixed(1), X = (x) => (x * sx).toFixed(1);
+    const st = [[.15, .09], [.38, .07], [.64, .15], [.82, .05], [.1, .26], [.51, .22], [.9, .28], [.28, .35], [.74, .4], [.05, .47], [.46, .14], [.95, .16]];
+    const cz = String(this.props.clear ?? '').split(',').map(Number);
+    const inClear = (x, y) => cz.length === 4 && x >= cz[0] && x <= cz[2] && y >= cz[1] && y <= cz[3];
+    const stars = (String(this.props.stars ?? true) === 'false' ? [] : st).filter((_, i) => !dawn || String(this.props.dense ?? false) === 'true' || i % 2 === 0).filter(([x, y]) => !inClear(x * w, y * h)).map(([x, y], i) => {
+      const o = i % 2 ? 0.5 : 0.85;
+      return { x: (x * w).toFixed(1), y: (y * h).toFixed(1), r: i % 3 ? 1.2 : 1.8, o, tw: on ? (i % 2 ? '.5;.15;.5' : '.85;.35;.85') : `${o};${o};${o}`, dur: (1.6 + (i % 5) * 0.35).toFixed(2) + 's' };
+    });
+    const flies = (dawn || !hills ? [] : [[.18, 320], [.3, 352], [.77, 346], [.88, 312]].slice(0, Number(this.props.flies ?? 4))).map(([x, y], i) => ({
+      x: (x * w).toFixed(1), y: hy(y), dur: (5 + i) + 's', drift: on ? `0 0;${i % 2 ? 6 : -6} -8;0 0` : '0 0;0 0;0 0'
+    }));
+    return {
+      w, h, vb: `0 0 ${w} ${h}`,
+      key: `${dark ? 'd' : 'l'}${dawn ? 'a' : 'n'}${hills ? 'h' : 'x'}${w}x${h}`,
+      c0: sky[0], c1: hills ? sky[1] : sky[0], c2: hills ? sky[2] : ground, ground,
+      h0: hc[0], h1: hc[1], h2: hc[2],
+      dawn, moon: !dawn && String(this.props.moon ?? true) !== 'false', hills,
+      sunX: (w * Number(this.props.sunAt ?? 0.5)).toFixed(1), sunY: (Number(hy(300)) - Number(this.props.sunLift ?? 0)).toFixed(1), sunGlowR: (96 * sx * Number(this.props.sunScale ?? 1)).toFixed(1), sunR: (22 * sx * Number(this.props.sunScale ?? 1)).toFixed(1),
+      hzY: hy(300), hzRx: (w * 0.75).toFixed(1), hzRy: (h * 0.2).toFixed(1),
+      moonR: Number(this.props.moonR ?? 20), moonGlow: Number(this.props.moonR ?? 20) * 3.5,
+      moonX: Number(this.props.moonX ?? w - 54), moonY: Number(this.props.moonY ?? (hills ? h * 0.55 : h * 0.34)),
+      stars, flies,
+      hill0: `M0 ${hy(300)} C${X(70)} ${hy(270)} ${X(140)} ${hy(282)} ${X(210)} ${hy(296)} S${X(330)} ${hy(300)} ${w} ${hy(270)} V${h} H0z`,
+      hill1: `M0 ${hy(340)} C${X(90)} ${hy(316)} ${X(170)} ${hy(340)} ${X(250)} ${hy(332)} S${X(350)} ${hy(318)} ${w} ${hy(326)} V${h} H0z`,
+      hill2: `M0 ${hy(380)} C${X(80)} ${hy(368)} ${X(160)} ${hy(386)} ${X(240)} ${hy(378)} S${X(350)} ${hy(366)} ${w} ${hy(372)} V${h} H0z`,
+      fadeY: String(this.props.fade ?? true) === 'false' ? h : (hills ? h - 70 : Math.round(h * 0.6)), fadeH: String(this.props.fade ?? true) === 'false' ? 0 : (hills ? 70 : h - Math.round(h * 0.6))
+    };
+  }
+}
+</script>
+</body>
+</html>

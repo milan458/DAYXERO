@@ -1,13 +1,12 @@
-# Brief: DayXero UI/UX redesign (screens only)
+# Brief: Evidence story screens, 7.5 to 9
 
-Target: redesign every DayXero screen as UI/UX mockups in one Artifact (phone-framed HTML, light and dark, live motion). No app code; SwiftUI comes later. Stack: static HTML/CSS/JS built on the v4 kit (design/handoff), characters converted from the .dc.html sources.
-References: cook/BASELINE.md (current app 70 screens, artifact 9NKmFKhgwauGJyaHjMCdZH), Kwit recordings (V: 727c5fd3, 76e6dc24, c14ea730), Calm (b5cb3a2b), Headspace (user's top benchmark, public screens only). Keep DayXero identity, tighten it, surprise in places.
-Bar: every screen >= 9.2 overall, light and dark, critic median after calibration; dimensions: consistency, color, typography, layout, illustration, motion, feedback, polish.
-Calibration: user 13 Nov: DayXero 6.5, Kwit 7.5, Calm 8, Headspace 8.5-9. Raw critic baseline: DayXero 7.5, Kwit 6.6, Calm 8.2.
-  Critics over-rate DayXero by 1.0 and under-rate Kwit by 0.9, so a flat offset is wrong. Fix: anchored critics (rubric carries the user's
-  scores for Kwit/Calm/Headspace as anchors, and the baseline DayXero sheet as 6.5). Residual offset measured in round 1.
-Rules: identity intact (Xero, Jelli, Glim, horizon art, Bricolage + DM Sans). Free to change colors, layouts, boxes, orientation. Characters, prices, program content words stay. Eyebrow caps mostly removed; no purple gradients; slop ban list applies. Gamification about 30-40% of Kwit: milestones (prep days to Day Xero, after-quit milestones), completion animations on every finishing action; a points system only if applied everywhere. May polish the app icon and the launch wordmark animation (now 2D, unpolished); launch/intro animation 2-3 s instead of 1.5 s. Copy: may shorten and restructure; program content keeps its words. One consistent persona (Sam, reason about Aria, one Quit Day, one set of figures).
-Time: started 2026-11-13 16:50 UTC. The 2h cap was lifted at 17:57 by the user: keep going until every screen reaches 9.2.
-Deliverable: one private Artifact, gallery of all screens, light/dark, tap to replay motion, key flows clickable, motion note per screen.
-Permissions: commit to claude/happy-planck-imkanm, push yes, no PR, artifact private.
-User's words: "keep dayxero's identity, but tighten it... Right now it's all over, there are so many colors, so don't go with just my directions. Surprise me also in some cases, but keep the identity intact." / "One thing is missing from the entire app would be, I think, finishing actions and completion animations" / "if you are adding a proper level point system, then make sure that is applied everywhere in the app."
+Target: lift the eight "Evidence story" screens of the DayXero onboarding canvas (https://claude.ai/artifact/AmNXYoPcgoDCM8a3skHMsM, page "Evidence story") from the user's 7.5 to 9, light and dark. Stack: the canvas's own `.dc.html` artboards (EvCompany, EvWorks, EvTriggers, EvObstacles, EvNRT, EvQuitDay, EvPlan, EvSources, plus EvCard and the EvidenceDark row). Local copy in `cook/canvas/project/`.
+References: no image references given. The bar rests on the rubric, anchored critics and the user's estimates (13 Nov scale: Kwit 7.5, Calm 8, Headspace 8.5 to 9). Baseline stills: `cook/stills/r00/`.
+Bar (UI mapping), each >= 9.0 per screen, light and dark, critic median after calibration: layout and spacing, hierarchy, color, typography and components, illustration and data graphics, polish and consistency. Motion is not scored from stills.
+Calibration: user says the page is at 7.5 now (18 Nov). Offset = 7.5 minus the raw critic median of round 0.
+Rules: DayXero identity intact (Xero, Jelli, Glim, horizon art, Bricolage Grotesque + DM Sans, apricot day ground, navy dark ground). Every research claim, number and source line keeps its meaning and its figures: these were fact-checked, so no new statistics and no stronger wording. Copy may be shortened. Slop ban list applies. Canvas rules apply (inline styles, real buttons, 44px targets, 4.5:1 text, no emoji, 13px floor).
+Scope: only the Evidence story page and the parts it owns. Shared parts (Xero, Horizon2, NightSky) are used by other pages and stay as they are unless a change is additive.
+Time: started 2026-11-18 18:10 UTC. No floor. Cap: 6 rounds or the bar, whichever comes first; a round that lowers a screen's median is reverted for that screen.
+Deliverable: the same canvas, same artboards updated in place. Stills sent each round.
+Permissions: update the canvas (private) yes. Commit cook state and sources to claude/vigilant-darwin-wzo5t3 and push. No PR.
+User's words: "make the screens in the [artifact] - within the artifact there is a folder named evidence story. I think right now it is at 7.5. I want you to take it to 9."

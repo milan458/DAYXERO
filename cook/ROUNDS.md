@@ -1,197 +1,46 @@
-# Cook ledger: DayXero UI/UX redesign
+# Cook ledger: Evidence story screens, 7.5 to 9
 
-Started: 2026-11-13 16:50 UTC
-Time: cap 2h lifted at 17:57 by the user ("keep going till it hits 9.2"); run continues until the bar is met
-Bar: every screen >= 9.2 overall (light and dark), critic median after calibration
-Calibration offset: anchored critics (see BRIEF); residual measured in round 1
-Gate: stills approved [no]
-Best so far: none yet
+Started: 2026-11-18 18:10 UTC
+Time: no floor | cap 6 rounds
+Bar: 9.0 per screen on layout, hierarchy, color, type and components, art and data graphics, polish (critic median after calibration)
+Calibration offset: -0.15 (user says 7.5 on 18 Nov; raw critic baseline 7.6 and 7.7)
+Usage: not readable
+Gate: stills approved no | final: the canvas is updated in place each kept round
+Best so far: round 1, `cook/stills/r01/`
 
 ## Decisions
-- 18:51 Keep-best rule: when a section's round scores lower than the previous round on both critics, revert its screens to the best round and re-score (slips-checkin round 6 regressed on all 13 screens: 8.2/8.4 vs 8.5/8.7; reverted to commit 55006fd; round 6 versions kept in scratchpad e_r6_backup).
-- 17:57 Plateau plan: rounds 1-3 moved 8.2 -> 8.3 with fixes; next lever is reduction (Headspace-style: one art, one headline, few elements per screen), per-section critics with full-size (390px) tiles so type is judged at real size, and a fixer-critic loop per section.
-- 17:08 Night ground for Glim: Midnight meadow (direction A of cook/night-directions.png) replaces teal after user rejected the flat swatches; full sky art makes night read rich without glare.
-- 17:04 (superseded) Night ground for Glim: deep teal night #152733 / #0C1A23 chosen from 6 candidates (scratchpad night.png): dimmest comfortable option that still separates from reading navy and ocean; Glim's purple and yellow glow read best on it. Glim's own design unchanged.
-- 16:55 Deliverable is a multi-file Artifact: kit (tokens, components, motion, characters) + one HTML file per screen + gallery index, because 70 screens x 2 modes need one shared system to stay consistent.
-- 16:58 Characters and horizon scenes converted from design/handoff/canvas/project/*.dc.html by cook/tools/dc2js.mjs, because identity must stay intact.
-- 17:00 Grounds cut from 7 in use to 5 with one rule each: apricot = Xero/days, ocean = Jelli/SOS, violet = Glim/evening, mint = plan/program, reading (cream | navy) = reading, settings, slips, health, NRT, paywall. Sun only inside celebrations. Sky retired as a ground.
-- 17:00 One primary button: ink pill on light grounds, cream pill on dark grounds. Never green, purple, yellow or peach.
-- 17:00 One leading control (back or close) top-left; one selection chip and one option row style; CTA dock with a fade so nothing is clipped.
-- 17:00 No XP or levels. Badges instead: prep stamps (Prep 1-7), Day Xero, after-quit milestones, wave badges, shown everywhere progress appears. Reason: user asked 30-40% of Kwit and "points only if everywhere"; badges fit the design system's restraint.
-- 17:00 "reduce ... from 1.5 seconds to 2 to 3 seconds" read as: launch/intro animation runs 2.4 s (longer, more polished), since 2-3 s > 1.5 s.
-- 17:00 Onboarding becomes one continuous ground: the horizon rises from dawn to day as answers are given (surprise), instead of orange/blue/green switching.
-- 17:00 The prep session "hand" sits on a deep ink card table in both modes; cards carry the colour, replacing the violet ground (violet stays Glim's).
 
-- 17:14 Dark mode primary button is cream on every ground (was the ground hue on apricot/mint), because button colour drift was the baseline critics' top consistency complaint.
-- 17:14 Kit: DX.beat (scripted steps also land in stills), autohold buttons render held in stills, next badges get a track ring, tinted tiles on colour grounds (builder report).
-
-- 17:26 App icon redesigned (user allowed it): the 0 of DayXero is Xero's body with the sunrise window; light, dark, tinted and a with-face alternative (cook/site/icon/, screen 000-app-icon).
-- 17:22 Prep week aligned to the real program: today is Mon Nov 2, Prep 4 The stress loop (program.json), session cards use the real Prep 4 card titles.
+Made without asking, one line each.
+- 18:10 No intake questions: target, bar and scope were in the prompt; no references given, so the bar rests on anchored critics.
+- 18:10 Old run (shipped 13 Nov) moved to `cook-archive/2026-11-13/`.
+- 18:10 Research claims keep their figures and meaning; graphics only show ratios the copy already states (80% more = bars 1.8 : 1, 50 to 60% = 1.5 to 1.6 : 1). No absolute quit rates are invented.
+- 18:40 Selected state is a solid fill (ink in light, cream in dark) with a coral check badge, on chips and option rows, because both critics called the tint-plus-edge state too weak.
+- 18:50 Withdrawal graphic is schematic (four falling bars, week 1 to 4), labelled by week only, no values.
+- 19:00 "No" is no longer preselected on the pregnancy question (critic: no default on a medical question).
+- 19:05 Evidence dot card uses one accent for both rows (critic: two hues read as categories).
 
 ## User feedback inbox
-- 17:57 "keep going till it hits 9.2" | open: cap lifted, rounds continue until critic median >= 9.2
-- 17:03 "the dark navy purple ... background, even when the evening glim comes in, it seems very shiny for anybody's eyes ... explore ... some other color" | round 1 | teal rejected ("No, they all look bad" 17:06, about flat swatches); 4 full-screen directions rendered (cook/night-directions.png); A Midnight meadow applied: ground #0F1B33 / #0A1326, DX.nightSky art
-- 16:50 "keep dayxero's identity, but tighten it ... so many colors" | open
-- 16:50 "finishing actions and completion animations" missing | open
-- 16:50 milestones prep days to Day Xero and after quit, with animations | open
-- 16:50 polish launch wordmark animation, 2-3 s | open
+
+- none yet
 
 ---
 
-## Round 01
+## Round 00 (baseline, the canvas as found)
 
-Time: 16:50 to 17:19 | total elapsed 0.5h
-Focus: build all 71 screens on one kit (7 parallel builders), because nothing existed yet.
-Changes: kit (tokens, components, motion, badges, night sky), 71 screens light + dark, gallery artifact https://claude.ai/artifact/Rr6N6a8AJjTMecrzUZBXXp
-Stills: cook/stills/r01/ | Critic sheets: scratchpad crit1/
-Scores, eyeballed: anchored critics (rubric anchors: before app 6.5, Kwit 7.5, Calm 8.0, Headspace 8.5-9), 3 critics (2 Opus, 1 Sonnet)
-Overall per critic: 8.2 / 8.2 / 8.0, median 8.2. Lowest screens: 041 (7.5-7.8), 059 (7.4-7.7), 057 (7.5-7.8), 023 (7.7-7.8), 010 (7.7-8.2).
-Calibration: anchors carry the user's scale; residual offset not measurable without a new user score (none yet).
-Own score (not decisive): 8.0
-Measured: render problems 0 (render.mjs: no page errors, no missing .screen). Motion strips for 14 screens captured.
-Not checked: real-device performance; VoiceOver.
-Next focus: type floor, voids, waiting badge, ocean, session light mode, generic utility screens, collisions (cook/critic/r02-fixes.md).
+Stills: `cook/stills/r00/` | Pairs: `cook/compare/r00/`
+Scores, eyeballed, raw (2 critics: Opus, Sonnet): overall per screen
 
----
+| Shot | Opus | Sonnet | Median | Calibrated |
+|---|---|---|---|---|
+| S1 Good company | 8.2 | 8.3 | 8.25 | 8.1 |
+| S2 What works | 7.4 | 7.7 | 7.55 | 7.4 |
+| S3 Triggers | 7.4 | 7.6 | 7.5 | 7.35 |
+| S4 Obstacles | 7.0 | 7.1 | 7.05 | 6.9 |
+| S5 NRT | 7.3 | 7.4 | 7.35 | 7.2 |
+| S6 Quit Day | 7.9 | 8.2 | 8.05 | 7.9 |
+| S7 Plan | 7.9 | 8.1 | 8.0 | 7.85 |
+| S8 Research | 7.4 | 7.4 | 7.4 | 7.25 |
+| Set | 7.6 | 7.7 | 7.65 | 7.5 |
 
-## Round 02
+Top gaps: weak selected state on chips; S2 and S5 state a number in a paragraph with no graphic; S4 note card touches the button; S8 flat brown scrim and plain list; S7 coin overlaps the sun; widows.
 
-Time: 17:19 to 17:38 | total elapsed 0.8h
-Focus: type floor, voids, waiting badge, calmer ocean, session light mode, characters on utility screens, collisions; Prep 4 content.
-Changes: 6 fixer groups over all screens; kit: ocean #1F3C8C, table cream in light, toast above dock, scrim blur, 2px selection, tab labels 12px; app icon screen added.
-Scores, eyeballed (anchored, 3 critics; tiles enlarged to 300px): overall 8.2 / 8.2 / 8.3. Median 8.2 (flat vs round 1).
-Read: fixes landed (critics now flag second-order issues), but the bar moved with them; systemic items remain: two dark neutrals,
-two success greens, grey waiting badge, density on choice screens, toasts near buttons, voids.
-Own score (not decisive): 8.4.
-Next focus (round 3, cook/critic/r03-fixes.md): one dark neutral, one success green, waiting badge redesign, per-screen layout bugs.
-- 17:38 Kit: dark mode uses one neutral #0E1322 for every ground except ocean and night; success green #1F9D63 in both modes; done buttons keep the primary colour plus a green check; waiting badges are a dashed family-colour ring with a readable numeral.
-
----
-
-## Round 03
-
-Time: 17:38 to 17:52 | total elapsed 1.0h
-Focus: one dark neutral, one success green, waiting badge, per-screen layout bugs, dates and copy contradictions.
-Scores, eyeballed (anchored, 3 critics, 300px tiles): 8.3 / 8.2 / 8.3, median 8.3 (round 2: 8.2).
-Screens at 9.0 by at least one critic: 000-launch, 039, 055. Weakest: 036 (7.8-8.0), 022 (8.0-8.1), 023 (7.9-8.3), 041 (7.9-8.3).
-Own score (not decisive): 8.5.
-Kit after round 3: dark horizon art repainted as the midnight-meadow night (no brown overlays); toggles use the brand ink/cream;
-dark selection is cream everywhere; SOS tab button raised with a label on the shared baseline.
-Next focus (round 4, cook/critic/r04-fixes.md): one idea per screen, badge sizes, session pips, list hierarchy, dead bands.
-
----
-
-## Round 04
-
-Time: 17:52 to 18:08 | total elapsed 1.3h
-Focus: one idea per screen, badge sizes, session pips, list hierarchy, dead bands; then a switch to section critics at real size.
-Critic method change: per-section critics (2 per section: Opus + Sonnet) on full-size 390px [light | dark] tiles, rubric RUBRIC-S
-(9.2 = Apple Design Award submission). Scores are not directly comparable with rounds 1-3 (smaller tiles, whole app).
-Section scores (Opus / Sonnet): onboarding 8.3 / 8.5; Today-SOS-Program 8.5 / 8.7; session 8.4 / 8.5; lesson-log 8.2 / 8.8;
-slips-checkin (Sonnet) 8.5; calm-settings (Sonnet) 8.6. Median of section medians: 8.5.
-Screens at or above 9.0 by a critic: 039 (9.2), 018, 019, 034, 038, 046, 032 (9.0).
-Kit after round 4: Day Xero badge is the brand mark; 5-slot tab bar with SOS centred and a Calm tab; night badge moon motif;
-dark mornings use a pre-dawn sky; chips fill-only; toggles brand ink.
-
----
-
-## Round 05 (section loop)
-
-Time: 18:08 to 18:27 | total elapsed 1.6h
-Section scores at real size (Opus / Sonnet): Today-SOS-Program 8.3 / 8.7 (r4 8.5 / 8.7); session 8.4 / 8.7 (r4 8.4 / 8.5).
-Onboarding, slips-checkin: being scored. Lesson-log, calm-settings: fixers running.
-Read: plateau around 8.5; each round fixes the named items and the stricter critic finds a new layer. Systemic repeats are moved
-into the kit as they appear (button lip, "+" sparkles, tab fade, selection style, Day Xero mark, tab bar).
-Kit after round 5: soft button shadow (no grey lip); star sparkles; 170px tab fade; selected chips white + 2px outline; radio
-rings 3:1; waiting Day Xero on a cream coin.
-
-Round 05 complete (all sections, real-size critics, Opus / Sonnet):
-onboarding 8.5 / 8.6; Today-SOS-Program 8.3 / 8.7; session 8.4 / 8.7; lesson-log 8.4 / 8.5; slips-checkin 8.5 / 8.7;
-calm-settings 8.7 / 8.8. Section medians 8.55, 8.5, 8.55, 8.45, 8.6, 8.75 -> app median 8.55 (round 4: 8.5).
-Screens at >= 9.0 by a critic: 018, 019, 024, 029, 032, 035, 039, 046, 053, 054, 055, 059, 060, 064, 066 (9.0-9.1).
-Kit after round 5: warm selection tint, `.opt.multi` checkboxes, coral toggles, brighter pre-dawn sun.
-Round 06: all six sections are in fixers.
-
-Round 06 partial (real-size critics, Opus / Sonnet): Today-SOS-Program 8.4 / 8.6; session 8.5 / 8.7; slips-checkin (Sonnet) 8.4.
-Plateau 8.5-8.7 (+/- 0.2 per round). 18 screens at >= 9.0 by a critic. Asked the user (non-blocking) for their own score of the
-current gallery to recalibrate against their eye, since rounds 1-6 fix named items and the stricter critic finds a new layer.
-Kit in round 6: night waiting ring visible, lit-sea ocean ground, light-mode dusk sky.
-Round 06 more: lesson-log 8.6 / 8.7 (r5 8.4 / 8.5; 039 at 9.2, 038 at 9.0 by Sonnet). Slips-checkin reverted to its r5 best
-after a regression on both critics (re-scored 8.6 / 8.7). Calm-settings round 6 fixes landed (056-070), critics running.
-
-## Round 07 (careful, keep-best)
-Rule: fixers change only the items critics listed and compare each screen with the previous best still; a section that drops
-on both critics reverts. Fixers running: onboarding 000-014, Today-SOS-Program 015-022 (concept redesign of 016/017/022),
-session 023-032, lesson-log 033-042, slips-checkin 043-055.
-- Calm-settings round 6 scored 8.6 / 8.4 (r5 8.7 / 8.8): reverted to round 5 (8c832b2), backup of the r6 files in scratchpad.
-  Critics' main r6 faults: character stickers on card corners and flat-cut half-domes, heavy banner art, many pastel icon tints,
-  factual slips (box duration, weekday). Careful round 7 started on the r5 base.
-- Today-SOS-Program round 7 (016, 017, 022 redesigned): Sonnet 8.6 (r6 8.6); Opus pending. Main fault: cards sliced by the tab
-  bar (015-017). Kit: inactive tab labels 72% ink.
-- Today-SOS-Program round 7: Opus 8.6 / Sonnet 8.6 (r6 8.4 / 8.6): kept. Kit after: Day Xero mark redrawn as a typographic
-  zero with the sunrise window (critics read the old round mark as an egg); day/prep badge sun moved clear of the numeral;
-  190px eased tab fade (no sliced cards; local short fades removed); SOS label on the tab label baseline.
-- Session round 7: Opus 8.7 / Sonnet 8.7 (r6 8.5 / 8.7): kept. Slips-checkin round 7: Opus 8.7 / Sonnet 8.5 (best 8.6 / 8.7):
-  mixed, kept (not lower on both). Kit: warm selection in dark mode (peach tint over card + apricot edge) on the neutral dark
-  ground; ocean and night keep cream. Both section critics named slate dark selections as the top systemic fault.
-- Onboarding round 7: Opus 8.6 / Sonnet 8.7 (r5 8.5 / 8.6): kept. Kit: onboarding progress sun is a small glowing dot at the
-  fill tip (critics read the ringed 18px sun as a slider knob).
-- Calm-settings round 7 (careful, on the r5 base): Opus 8.7 / Sonnet 8.4 (r5 8.7 / 8.8): kept (equal on Opus; it carries the
-  factual fixes: 1 min box breathing, +1 calm minute, no pre-selected answer, Health tile in the app's own style).
-- Lesson-log round 7: Sonnet 8.8 (best 8.7); Opus pending. Kit: subtler dark selection tint (13% apricot over card).
-- User asked to stop after this round: no new fixers; remaining round 8 fixers finish, get scored, keep-best applied.
-- Lesson-log round 7: Opus 8.4 / Sonnet 8.8 (r6 8.6 / 8.7): mixed, kept. Fixed the 037/038 timing contradiction by hand
-  (038 now "Starts around Day 14 / You are on Day 7", matching 037's "Ahead · in about a week").
-- User (mid-round 8): "dont stop after round 8, stop after reaching 9.2". The loop continues until every section reaches 9.2.
-- Today-SOS-Program round 8: Opus 8.8 / Sonnet 8.8 (r7 8.6 / 8.6): kept. Slips-checkin round 8: Sonnet 8.7 (r7 8.5); Opus
-  pending. Session round 8 done, critics next. Pledge (053) stays on Day 7 (it is the daily after-quit pledge).
-- Kit: dark dawn sun is a soft radial glow (critics saw flat grey discs); progress badges in the next state use a solid faint
-  track (the dashed half-ring read as a spinner); tab fade 150px with a short 30-40% ramp so peeking rows keep full opacity.
-- Kit: dark selection fill is a neutral-warm lift (11% pale peach over card) with the apricot edge; the orange tint read brown.
-- Slips-checkin round 8: Opus 8.6 / Sonnet 8.7 (r7 8.7 / 8.5): mixed, kept. 053 motion spec corrected to the after-quit daily
-  pledge (Day 7). Onboarding round 8 done, critics running.
-- Session round 8: Opus 8.7 / Sonnet 8.7 (r7 8.7 / 8.7): equal, kept. Onboarding round 8: Sonnet 8.7 (r7 8.7); Opus pending.
-- Kit: day/prep badges under 44px drop the little sun (critics read it as a smudge at stamp size).
-- Onboarding round 8: Opus 8.6 / Sonnet 8.7 (r7 8.6 / 8.7): equal, kept.
-- Kit: light selection is a pale apricot tint with a coral 2px edge (critics: the salmon fill looked dimmer than unselected
-  cream rows, and the navy edge read as a form); now one selection language in both modes (warm edge). Progress sun has an
-  amber rim so it shows on peach.
-- Session round 9: Opus 8.6 / Sonnet 8.6 (r8 8.7 / 8.7): lower on both, reverted to round 8 (43ec593). Onboarding round 9:
-  Opus 8.5 / Sonnet 8.6 (r8 8.6 / 8.7): lower on both, reverted to round 8 (001562b). Backups of the r9 files in scratchpad.
-- Lesson-log round 8: Sonnet 8.8 (039 at 9.2, the first screen at the bar); Opus pending.
-- Kit: dark selection tint between the two extremes (15% pale peach over card): orange read brown, neutral read cool grey.
-- Read: sections now move +/-0.1-0.2 per round around 8.6-8.8; three of six reverts or flats in round 9. The remaining gap is
-  mostly composition (dead bands above the CTA on form screens, small secondary art) and critic noise.
-- Lesson-log round 8: Opus 8.7 / Sonnet 8.8 (r7 8.4 / 8.8): kept. 038 timing now reads "Starts in about a week / Around Day 14",
-  the same words as the 037 row.
-- Today-SOS-Program round 9: Opus 8.6 / Sonnet 8.3 (r8 8.8 / 8.8): lower on both, reverted to round 8 (backup in scratchpad).
-  Kit: SOS disc 4px higher so its label clears it.
-- Slips-checkin round 9: Opus 8.6 / Sonnet 8.6 (r8 8.6 / 8.7): kept (equal on Opus). Calm-settings round 8 done, critics next.
-- Calm-settings round 8: Opus 8.6 / Sonnet 8.7 (r7 8.7 / 8.4): mixed, kept. 059 at 9.1 and 057 at 9.0 (Sonnet).
-- Kit: toggles and the light selection edge use one apricot-coral (#F26A45), less red than before.
-- Session round 10 (on r8): Opus 8.6 / Sonnet 8.8 (r8 8.7 / 8.7): mixed, kept (carries the 027/030 content fix). 032 at 9.1, 028 and 031 at 9.0 (Sonnet).
-- Today-SOS-Program round 10 (022 only): Opus 8.5 / Sonnet 8.7 (r8 8.8 / 8.8): lower on both, 022 reverted to round 8 (r10 file kept in scratchpad).
-- Lesson-log round 9: Opus 8.5 / Sonnet 8.6 (r8 8.7 / 8.8): lower on both, reverted to round 8 (e8f2d70).
-- Onboarding round 10 (horizon strip, on r8): Opus 8.3 / Sonnet 8.7 (r8 8.6 / 8.7): not lower on both, kept. Opus wants varied, larger cast poses on the strip and warmer dark selection.
-- Calm-settings round 9: Opus 8.6 / Sonnet 8.8 (r8 8.6 / 8.7): kept. 059 9.1, 057 and 064 9.0 (Sonnet).
-- Kit: off toggles 30% ink (critics: off tracks vanished on white cards).
-State after rounds 8-10 (best kept per section, Opus / Sonnet): onboarding 8.3 / 8.7 (r10) [r8 8.6 / 8.7]; Today-SOS-Program
-8.8 / 8.8 (r8); session 8.6 / 8.8 (r10); lesson-log 8.7 / 8.8 (r8); slips-checkin 8.6 / 8.6 (r9); calm-settings 8.6 / 8.8 (r9).
-App median about 8.7. Screens at >= 9.0 by a critic: 039 (9.2), 032, 059 (9.1), 018, 019, 028, 031, 046, 053, 057, 064 (9.0).
-- Onboarding round 11: Opus 8.5 / Sonnet 8.4. Against the true best (round 8: 8.6 / 8.7) rounds 10 and 11 are lower or equal on
-  both critics, and critics now call the repeated horizon strip a template. Reverted onboarding to round 8 (001562b); r10/r11
-  files kept in scratchpad.
-## Option 2 (user, after round 11): push the hero screens (13 screens at ~9.0) to a genuine 9.2; form screens stay at their current best.
-- Hero critics: three per pass (Opus, Sonnet, Fable, per the user); a screen's score is the median of the three, and a change is kept unless the median drops.
-- Kit: the hand-drawn underline is coral in both modes on day grounds (critics flagged coral in light, yellow/apricot in dark on 012, 039, 046, 053). Ocean and night keep their gold.
-- Hero baseline h0 (Opus / Sonnet / Fable -> median): 000 8.8/8.7/8.7=8.7; 012 8.6/8.5/8.5=8.5; 018 8.6/8.7/8.6=8.6;
-  019 8.9/8.8/8.9=8.9; 028 8.6/8.7/8.8=8.7; 031 8.8/8.9/8.5=8.8; 032 8.6/9.0/8.7=8.7; 039 8.9/8.8/8.8=8.8; 046 8.6/8.6/8.5=8.6;
-  053 8.7/8.9/8.7=8.7; 057 8.7/8.8/8.7=8.7; 059 8.8/8.9/8.6=8.8; 064 8.5/8.9/8.5=8.5.
-- Hero pass h1 (O / S / F -> median, h0 median): 000 8.7/8.6/8.8=8.7 (8.7) kept; 012 8.4/8.5/8.6=8.5 (8.5) kept;
-  018 8.5/8.4/8.7=8.5 (8.6) reverted; 019 8.6/8.6/8.9=8.6 (8.9) reverted; 028 8.6/8.3/8.5=8.5 (8.7) reverted;
-  031 8.6/8.5/8.6=8.6 (8.8) reverted; 032 8.4/8.7/8.5=8.5 (8.7) reverted; 039 8.6/8.4/8.7=8.6 (8.8) reverted;
-  046 8.6/8.3/8.7=8.6 (8.6) kept; 053 8.8/8.7/8.9=8.8 (8.7) kept; 057 8.7/8.5/8.6=8.6 (8.7) reverted;
-  059 8.6/8.6/8.6=8.6 (8.8) reverted; 064 8.7/8.6/8.8=8.7 (8.5) kept. Reverted files restored from 7b22813 (h1 files in scratchpad).
-  Read: even with three critics and one screen per fixer, 8 of 13 hero screens went down. The critics' ceiling for these
-  mockups sits around 8.6-8.9; each pass trades one set of named flaws for a new set.
-## Stopped by the user after the hero pass. Final summary in cook/FINAL.md.
